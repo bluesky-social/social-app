@@ -1,28 +1,28 @@
-import React from 'react'
-
+import {memo, useState} from 'react'
 import {ActivityIndicator, Dimensions, StyleSheet} from 'react-native'
-import {Image} from 'expo-image'
+import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import Animated, {
   runOnJS,
+  useAnimatedReaction,
   useAnimatedRef,
   useAnimatedStyle,
-  useAnimatedReaction,
   useSharedValue,
   withDecay,
   withSpring,
 } from 'react-native-reanimated'
-import {GestureDetector, Gesture} from 'react-native-gesture-handler'
+import {Image} from 'expo-image'
+
+import type {Dimensions as ImageDimensions, ImageSource} from '../../@types'
 import useImageDimensions from '../../hooks/useImageDimensions'
 import {
-  createTransform,
-  readTransform,
   applyRounding,
+  createTransform,
   prependPan,
   prependPinch,
   prependTransform,
+  readTransform,
   TransformMatrix,
 } from '../../transforms'
-import type {ImageSource, Dimensions as ImageDimensions} from '../../@types'
 
 const SCREEN = Dimensions.get('window')
 const MIN_DOUBLE_TAP_SCALE = 2
@@ -46,8 +46,8 @@ const ImageItem = ({
   onRequestClose,
   isScrollViewBeingDragged,
 }: Props) => {
-  const [isScaled, setIsScaled] = React.useState(false)
-  const [isLoaded, setIsLoaded] = React.useState(false)
+  const [isScaled, setIsScaled] = useState(false)
+  const [isLoaded, setIsLoaded] = useState(false)
   const imageDimensions = useImageDimensions(imageSrc)
   const committedTransform = useSharedValue(initialTransform)
   const panTranslation = useSharedValue({x: 0, y: 0})
@@ -384,4 +384,4 @@ function withClampedSpring(value: any) {
   return withSpring(value, {overshootClamping: true})
 }
 
-export default React.memo(ImageItem)
+export default memo(ImageItem)

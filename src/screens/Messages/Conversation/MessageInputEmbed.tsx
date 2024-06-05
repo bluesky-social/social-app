@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useEffect, useMemo, useState} from 'react'
 import {LayoutAnimation, View} from 'react-native'
 import {
   AppBskyEmbedImages,
@@ -39,7 +39,7 @@ export function useMessageEmbed() {
   const navigation = useNavigation<NavigationProp>()
   const embedFromParams = route.params.embed
 
-  const [embedUri, setEmbed] = React.useState(embedFromParams)
+  const [embedUri, setEmbed] = useState(embedFromParams)
 
   if (embedFromParams && embedUri !== embedFromParams) {
     setEmbed(embedFromParams)
@@ -47,7 +47,7 @@ export function useMessageEmbed() {
 
   return {
     embedUri,
-    setEmbed: React.useCallback(
+    setEmbed: useCallback(
       (embedUrl: string | undefined) => {
         if (!embedUrl) {
           navigation.setParams({embed: ''})
@@ -86,7 +86,7 @@ export function useExtractEmbedFromFacets(
     }
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (uriFromFacet) {
       setEmbed(uriFromFacet)
     }
@@ -106,13 +106,13 @@ export function MessageInputEmbed({
   const {data: post, status} = usePostQuery(embedUri)
 
   const moderationOpts = useModerationOpts()
-  const moderation = React.useMemo(
+  const moderation = useMemo(
     () =>
       moderationOpts && post ? moderatePost(post, moderationOpts) : undefined,
     [moderationOpts, post],
   )
 
-  const {rt, record} = React.useMemo(() => {
+  const {rt, record} = useMemo(() => {
     if (
       post &&
       AppBskyFeedPost.isRecord(post.record) &&

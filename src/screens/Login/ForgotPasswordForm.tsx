@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {ActivityIndicator, Keyboard, View} from 'react-native'
 import {ComAtprotoServerDescribeServer} from '@atproto/api'
 import {BskyAgent} from '@atproto/api'
@@ -39,16 +39,16 @@ export const ForgotPasswordForm = ({
   onEmailSent: () => void
 }) => {
   const t = useTheme()
-  const [isProcessing, setIsProcessing] = React.useState<boolean>(false)
-  const [email, setEmail] = React.useState<string>('')
+  const [isProcessing, setIsProcessing] = useState<boolean>(false)
+  const [email, setEmail] = useState<string>('')
   const {screen} = useAnalytics()
   const {_} = useLingui()
 
-  React.useEffect(() => {
+  useEffect(() => {
     screen('Signin:ForgotPassword')
   }, [screen])
 
-  const onPressSelectService = React.useCallback(() => {
+  const onPressSelectService = useCallback(() => {
     Keyboard.dismiss()
   }, [])
 

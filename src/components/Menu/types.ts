@@ -1,13 +1,13 @@
-import React from 'react'
+import {ComponentType, KeyboardEvent, PropsWithChildren, ReactNode} from 'react'
 import {
+  AccessibilityProps,
   GestureResponderEvent,
   PressableProps,
-  AccessibilityProps,
 } from 'react-native'
 
-import {Props as SVGIconProps} from '#/components/icons/common'
-import * as Dialog from '#/components/Dialog'
 import {TextStyleProp, ViewStyleProp} from '#/alf'
+import * as Dialog from '#/components/Dialog'
+import {Props as SVGIconProps} from '#/components/icons/common'
 
 export type ContextType = {
   control: Dialog.DialogOuterProps['control']
@@ -22,7 +22,7 @@ export type RadixPassThroughTriggerProps = {
   ['aria-controls']?: string
   ['aria-haspopup']?: boolean
   ['aria-expanded']?: AccessibilityProps['aria-expanded']
-  onKeyDown: (e: React.KeyboardEvent) => void
+  onKeyDown: (e: KeyboardEvent) => void
   /**
    * Radix provides this, but we override on web to use `onPress` instead,
    * which is less sensitive while scrolling.
@@ -30,7 +30,7 @@ export type RadixPassThroughTriggerProps = {
   onPointerDown: PressableProps['onPointerDown']
 }
 export type TriggerProps = {
-  children(props: TriggerChildProps): React.ReactNode
+  children(props: TriggerChildProps): ReactNode
   label: string
 }
 export type TriggerChildProps =
@@ -82,7 +82,7 @@ export type TriggerChildProps =
       }
     }
 
-export type ItemProps = React.PropsWithChildren<
+export type ItemProps = PropsWithChildren<
   Omit<PressableProps, 'style'> &
     ViewStyleProp & {
       label: string
@@ -90,10 +90,10 @@ export type ItemProps = React.PropsWithChildren<
     }
 >
 
-export type ItemTextProps = React.PropsWithChildren<TextStyleProp & {}>
-export type ItemIconProps = React.PropsWithChildren<{
-  icon: React.ComponentType<SVGIconProps>
+export type ItemTextProps = PropsWithChildren<TextStyleProp & {}>
+export type ItemIconProps = PropsWithChildren<{
+  icon: ComponentType<SVGIconProps>
   position?: 'left' | 'right'
 }>
 
-export type GroupProps = React.PropsWithChildren<ViewStyleProp & {}>
+export type GroupProps = PropsWithChildren<ViewStyleProp & {}>

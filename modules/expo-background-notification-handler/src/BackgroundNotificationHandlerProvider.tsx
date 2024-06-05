@@ -1,4 +1,11 @@
-import React from 'react'
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 
 import {BackgroundNotificationHandlerPreferences} from './ExpoBackgroundNotificationHandler.types'
 import {BackgroundNotificationHandler} from './ExpoBackgroundNotificationHandlerModule'
@@ -11,30 +18,29 @@ interface BackgroundNotificationPreferencesContext {
   ) => void
 }
 
-const Context = React.createContext<BackgroundNotificationPreferencesContext>(
+const Context = createContext<BackgroundNotificationPreferencesContext>(
   {} as BackgroundNotificationPreferencesContext,
 )
-export const useBackgroundNotificationPreferences = () =>
-  React.useContext(Context)
+export const useBackgroundNotificationPreferences = () => useContext(Context)
 
 export function BackgroundNotificationPreferencesProvider({
   children,
 }: {
-  children: React.ReactNode
+  children: ReactNode
 }) {
   const [preferences, setPreferences] =
-    React.useState<BackgroundNotificationHandlerPreferences>({
+    useState<BackgroundNotificationHandlerPreferences>({
       playSoundChat: true,
     })
 
-  React.useEffect(() => {
+  useEffect(() => {
     ;(async () => {
       const prefs = await BackgroundNotificationHandler.getAllPrefsAsync()
       setPreferences(prefs)
     })()
   }, [])
 
-  const value = React.useMemo(
+  const value = useMemo(
     () => ({
       preferences,
       setPref: async <

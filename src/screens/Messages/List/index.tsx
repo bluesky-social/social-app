@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useEffect, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {ChatBskyConvoDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -56,7 +56,7 @@ export function MessagesScreen({navigation, route}: Props) {
   // this tab. We should immediately push to the conversation after pressing the notification.
   // After we push, reset with `setParams` so that this effect will fire next time we press a notification, even if
   // the conversation is the same as before
-  React.useEffect(() => {
+  useEffect(() => {
     if (pushToConversation) {
       navigation.navigate('MessagesConversation', {
         conversation: pushToConversation,
@@ -71,7 +71,7 @@ export function MessagesScreen({navigation, route}: Props) {
   const state = useAppState()
   const isActive = state === 'active'
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       if (isActive) {
         const unsub = messagesBus.requestPollInterval(
           MESSAGE_SCREEN_POLL_INTERVAL,
@@ -81,7 +81,7 @@ export function MessagesScreen({navigation, route}: Props) {
     }, [messagesBus, isActive]),
   )
 
-  const renderButton = React.useCallback(() => {
+  const renderButton = useCallback(() => {
     return (
       <Link
         to="/messages/settings"
@@ -97,7 +97,7 @@ export function MessagesScreen({navigation, route}: Props) {
   }, [_, t])
 
   const initialNumToRender = useInitialNumToRender(80)
-  const [isPTRing, setIsPTRing] = React.useState(false)
+  const [isPTRing, setIsPTRing] = useState(false)
 
   const {
     data,
@@ -112,14 +112,14 @@ export function MessagesScreen({navigation, route}: Props) {
 
   useRefreshOnFocus(refetch)
 
-  const conversations = React.useMemo(() => {
+  const conversations = useMemo(() => {
     if (data?.pages) {
       return data.pages.flatMap(page => page.convos)
     }
     return []
   }, [data])
 
-  const onRefresh = React.useCallback(async () => {
+  const onRefresh = useCallback(async () => {
     setIsPTRing(true)
     try {
       await refetch()
@@ -129,7 +129,7 @@ export function MessagesScreen({navigation, route}: Props) {
     setIsPTRing(false)
   }, [refetch, setIsPTRing])
 
-  const onEndReached = React.useCallback(async () => {
+  const onEndReached = useCallback(async () => {
     if (isFetchingNextPage || !hasNextPage || isError) return
     try {
       await fetchNextPage()
@@ -138,13 +138,13 @@ export function MessagesScreen({navigation, route}: Props) {
     }
   }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
-  const onNewChat = React.useCallback(
+  const onNewChat = useCallback(
     (conversation: string) =>
       navigation.navigate('MessagesConversation', {conversation}),
     [navigation],
   )
 
-  const onNavigateToSettings = React.useCallback(() => {
+  const onNavigateToSettings = useCallback(() => {
     navigation.navigate('MessagesSettings')
   }, [navigation])
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useState} from 'react'
 import {StyleSheet, TextInput, TouchableOpacity, View} from 'react-native'
 import {setStringAsync} from 'expo-clipboard'
 import {
@@ -68,14 +68,14 @@ export function Component({}: {}) {
   const {data: passwords} = useAppPasswordsQuery()
   const {mutateAsync: mutateAppPassword, isPending} =
     useAppPasswordCreateMutation()
-  const [name, setName] = React.useState(
+  const [name, setName] = useState(
     shadesOfBlue[Math.floor(Math.random() * shadesOfBlue.length)],
   )
-  const [appPassword, setAppPassword] = React.useState<string>()
-  const [wasCopied, setWasCopied] = React.useState(false)
-  const [privileged, setPrivileged] = React.useState(false)
+  const [appPassword, setAppPassword] = useState<string>()
+  const [wasCopied, setWasCopied] = useState(false)
+  const [privileged, setPrivileged] = useState(false)
 
-  const onCopy = React.useCallback(() => {
+  const onCopy = useCallback(() => {
     if (appPassword) {
       setStringAsync(appPassword)
       Toast.show(_(msg`Copied to clipboard`))
@@ -83,7 +83,7 @@ export function Component({}: {}) {
     }
   }, [appPassword, _])
 
-  const onDone = React.useCallback(() => {
+  const onDone = useCallback(() => {
     closeModal()
   }, [closeModal])
 

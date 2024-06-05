@@ -1,4 +1,4 @@
-import React from 'react'
+import {Fragment, useEffect, useRef} from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import BottomSheet from '@discord/bottom-sheet/src'
@@ -34,7 +34,7 @@ const HANDLE_HEIGHT = 24
 export function ModalsContainer() {
   const {isModalActive, activeModals} = useModals()
   const {closeModal} = useModalControls()
-  const bottomSheetRef = React.useRef<BottomSheet>(null)
+  const bottomSheetRef = useRef<BottomSheet>(null)
   const pal = usePalette('default')
   const activeModal = activeModals[activeModals.length - 1]
 
@@ -49,7 +49,7 @@ export function ModalsContainer() {
     closeModal()
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isModalActive) {
       bottomSheetRef.current?.snapToIndex(0)
     } else {
@@ -128,7 +128,7 @@ export function ModalsContainer() {
     )
   }
 
-  const Container = activeModal ? FullWindowOverlay : React.Fragment
+  const Container = activeModal ? FullWindowOverlay : Fragment
 
   return (
     <Container>

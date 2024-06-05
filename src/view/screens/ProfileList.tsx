@@ -1,4 +1,12 @@
-import React from 'react'
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import {AppBskyGraphDefs, AtUri, RichText as RichTextAPI} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -119,8 +127,8 @@ function ProfileListScreenLoaded({
   const {openComposer} = useComposerControls()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {rkey} = route.params
-  const feedSectionRef = React.useRef<SectionRef>(null)
-  const aboutSectionRef = React.useRef<SectionRef>(null)
+  const feedSectionRef = useRef<SectionRef>(null)
+  const aboutSectionRef = useRef<SectionRef>(null)
   const {openModal} = useModalControls()
   const isCurateList = list.purpose === 'app.bsky.graph.defs#curatelist'
   const isScreenFocused = useIsFocused()
@@ -128,12 +136,12 @@ function ProfileListScreenLoaded({
   useSetTitle(list.name)
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setMinimalShellMode(false)
     }, [setMinimalShellMode]),
   )
 
-  const onPressAddUser = React.useCallback(() => {
+  const onPressAddUser = useCallback(() => {
     openModal({
       name: 'list-add-remove-users',
       list,
@@ -145,7 +153,7 @@ function ProfileListScreenLoaded({
     })
   }, [openModal, list, isCurateList, queryClient])
 
-  const onCurrentPageSelected = React.useCallback(
+  const onCurrentPageSelected = useCallback(
     (index: number) => {
       if (index === 0) {
         feedSectionRef.current?.scrollToTop()
@@ -156,7 +164,7 @@ function ProfileListScreenLoaded({
     [feedSectionRef],
   )
 
-  const renderHeader = React.useCallback(() => {
+  const renderHeader = useCallback(() => {
     return <Header rkey={rkey} list={list} />
   }, [rkey, list])
 
@@ -272,7 +280,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
   )
   const isPinned = Boolean(savedFeedConfig?.pinned)
 
-  const onTogglePinned = React.useCallback(async () => {
+  const onTogglePinned = useCallback(async () => {
     playHaptic()
 
     try {
@@ -312,7 +320,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     savedFeedConfig,
   ])
 
-  const onRemoveFromSavedFeeds = React.useCallback(async () => {
+  const onRemoveFromSavedFeeds = useCallback(async () => {
     playHaptic()
     if (!savedFeedConfig) return
     try {
@@ -324,7 +332,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     }
   }, [playHaptic, removeSavedFeed, _, savedFeedConfig])
 
-  const onSubscribeMute = React.useCallback(async () => {
+  const onSubscribeMute = useCallback(async () => {
     try {
       await listMuteMutation.mutateAsync({uri: list.uri, mute: true})
       Toast.show(_(msg`List muted`))
@@ -338,7 +346,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     }
   }, [list, listMuteMutation, track, _])
 
-  const onUnsubscribeMute = React.useCallback(async () => {
+  const onUnsubscribeMute = useCallback(async () => {
     try {
       await listMuteMutation.mutateAsync({uri: list.uri, mute: false})
       Toast.show(_(msg`List unmuted`))
@@ -352,7 +360,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     }
   }, [list, listMuteMutation, track, _])
 
-  const onSubscribeBlock = React.useCallback(async () => {
+  const onSubscribeBlock = useCallback(async () => {
     try {
       await listBlockMutation.mutateAsync({uri: list.uri, block: true})
       Toast.show(_(msg`List blocked`))
@@ -366,7 +374,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     }
   }, [list, listBlockMutation, track, _])
 
-  const onUnsubscribeBlock = React.useCallback(async () => {
+  const onUnsubscribeBlock = useCallback(async () => {
     try {
       await listBlockMutation.mutateAsync({uri: list.uri, block: false})
       Toast.show(_(msg`List unblocked`))
@@ -380,14 +388,14 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     }
   }, [list, listBlockMutation, track, _])
 
-  const onPressEdit = React.useCallback(() => {
+  const onPressEdit = useCallback(() => {
     openModal({
       name: 'create-or-edit-list',
       list,
     })
   }, [openModal, list])
 
-  const onPressDelete = React.useCallback(async () => {
+  const onPressDelete = useCallback(async () => {
     await listDeleteMutation.mutateAsync({uri: list.uri})
 
     if (savedFeedConfig) {
@@ -411,17 +419,17 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     savedFeedConfig,
   ])
 
-  const onPressReport = React.useCallback(() => {
+  const onPressReport = useCallback(() => {
     reportDialogControl.open()
   }, [reportDialogControl])
 
-  const onPressShare = React.useCallback(() => {
+  const onPressShare = useCallback(() => {
     const url = toShareUrl(`/profile/${list.creator.did}/lists/${rkey}`)
     shareUrl(url)
     track('Lists:Share')
   }, [list, rkey, track])
 
-  const dropdownItems: DropdownItem[] = React.useMemo(() => {
+  const dropdownItems: DropdownItem[] = useMemo(() => {
     let items: DropdownItem[] = [
       {
         testID: 'listHeaderDropdownShareBtn',
@@ -565,7 +573,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     onRemoveFromSavedFeeds,
   ])
 
-  const subscribeDropdownItems: DropdownItem[] = React.useMemo(() => {
+  const subscribeDropdownItems: DropdownItem[] = useMemo(() => {
     return [
       {
         testID: 'subscribeDropdownMuteBtn',
@@ -698,15 +706,15 @@ interface FeedSectionProps {
   scrollElRef: ListRef
   isFocused: boolean
 }
-const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
+const FeedSection = forwardRef<SectionRef, FeedSectionProps>(
   function FeedSectionImpl({feed, scrollElRef, headerHeight, isFocused}, ref) {
     const queryClient = useQueryClient()
-    const [hasNew, setHasNew] = React.useState(false)
-    const [isScrolledDown, setIsScrolledDown] = React.useState(false)
+    const [hasNew, setHasNew] = useState(false)
+    const [isScrolledDown, setIsScrolledDown] = useState(false)
     const isScreenFocused = useIsFocused()
     const {_} = useLingui()
 
-    const onScrollToTop = React.useCallback(() => {
+    const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({
         animated: isNative,
         offset: -headerHeight,
@@ -714,18 +722,18 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
       queryClient.resetQueries({queryKey: FEED_RQKEY(feed)})
       setHasNew(false)
     }, [scrollElRef, headerHeight, queryClient, feed, setHasNew])
-    React.useImperativeHandle(ref, () => ({
+    useImperativeHandle(ref, () => ({
       scrollToTop: onScrollToTop,
     }))
 
-    React.useEffect(() => {
+    useEffect(() => {
       if (!isScreenFocused) {
         return
       }
       return listenSoftReset(onScrollToTop)
     }, [onScrollToTop, isScreenFocused])
 
-    const renderPostsEmpty = React.useCallback(() => {
+    const renderPostsEmpty = useCallback(() => {
       return <EmptyState icon="feed" message={_(msg`This feed is empty!`)} />
     }, [_])
 
@@ -761,7 +769,7 @@ interface AboutSectionProps {
   headerHeight: number
   scrollElRef: ListRef
 }
-const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
+const AboutSection = forwardRef<SectionRef, AboutSectionProps>(
   function AboutSectionImpl(
     {list, onPressAddUser, headerHeight, scrollElRef},
     ref,
@@ -771,11 +779,11 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
     const {_} = useLingui()
     const {isMobile} = useWebMediaQueries()
     const {currentAccount} = useSession()
-    const [isScrolledDown, setIsScrolledDown] = React.useState(false)
+    const [isScrolledDown, setIsScrolledDown] = useState(false)
     const isCurateList = list.purpose === 'app.bsky.graph.defs#curatelist'
     const isOwner = list.creator.did === currentAccount?.did
 
-    const descriptionRT = React.useMemo(
+    const descriptionRT = useMemo(
       () =>
         list.description
           ? new RichTextAPI({
@@ -786,18 +794,18 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
       [list],
     )
 
-    const onScrollToTop = React.useCallback(() => {
+    const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({
         animated: isNative,
         offset: -headerHeight,
       })
     }, [scrollElRef, headerHeight])
 
-    React.useImperativeHandle(ref, () => ({
+    useImperativeHandle(ref, () => ({
       scrollToTop: onScrollToTop,
     }))
 
-    const renderHeader = React.useCallback(() => {
+    const renderHeader = useCallback(() => {
       return (
         <View>
           <View
@@ -900,7 +908,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
       onPressAddUser,
     ])
 
-    const renderEmptyState = React.useCallback(() => {
+    const renderEmptyState = useCallback(() => {
       return (
         <EmptyState
           icon="users-slash"
@@ -938,7 +946,7 @@ function ErrorScreen({error}: {error: string}) {
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
 
-  const onPressBack = React.useCallback(() => {
+  const onPressBack = useCallback(() => {
     if (navigation.canGoBack()) {
       navigation.goBack()
     } else {

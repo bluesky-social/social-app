@@ -1,23 +1,24 @@
-import React from 'react'
+import {useState} from 'react'
 import {ScrollView, View} from 'react-native'
-import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
-import {ViewHeader} from '../com/util/ViewHeader'
-import {ThemeProvider, PaletteColorName} from 'lib/ThemeContext'
-import {usePalette} from 'lib/hooks/usePalette'
-import {s} from 'lib/styles'
-import * as Toast from 'view/com/util/Toast'
-import {Text} from '../com/util/text/Text'
-import {ViewSelector} from '../com/util/ViewSelector'
-import {EmptyState} from '../com/util/EmptyState'
-import * as LoadingPlaceholder from '../com/util/LoadingPlaceholder'
-import {Button, ButtonType} from '../com/util/forms/Button'
-import {DropdownButton, DropdownItem} from '../com/util/forms/DropdownButton'
-import {ToggleButton} from '../com/util/forms/ToggleButton'
-import {RadioGroup} from '../com/util/forms/RadioGroup'
-import {ErrorScreen} from '../com/util/error/ErrorScreen'
-import {ErrorMessage} from '../com/util/error/ErrorMessage'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+
+import {usePalette} from 'lib/hooks/usePalette'
+import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
+import {s} from 'lib/styles'
+import {PaletteColorName, ThemeProvider} from 'lib/ThemeContext'
+import * as Toast from 'view/com/util/Toast'
+import {EmptyState} from '../com/util/EmptyState'
+import {ErrorMessage} from '../com/util/error/ErrorMessage'
+import {ErrorScreen} from '../com/util/error/ErrorScreen'
+import {Button, ButtonType} from '../com/util/forms/Button'
+import {DropdownButton, DropdownItem} from '../com/util/forms/DropdownButton'
+import {RadioGroup} from '../com/util/forms/RadioGroup'
+import {ToggleButton} from '../com/util/forms/ToggleButton'
+import * as LoadingPlaceholder from '../com/util/LoadingPlaceholder'
+import {Text} from '../com/util/text/Text'
+import {ViewHeader} from '../com/util/ViewHeader'
+import {ViewSelector} from '../com/util/ViewSelector'
 
 const MAIN_VIEWS = ['Base', 'Controls', 'Error', 'Notifs']
 
@@ -25,9 +26,7 @@ export const DebugScreen = ({}: NativeStackScreenProps<
   CommonNavigatorParams,
   'Debug'
 >) => {
-  const [colorScheme, setColorScheme] = React.useState<'light' | 'dark'>(
-    'light',
-  )
+  const [colorScheme, setColorScheme] = useState<'light' | 'dark'>('light')
   const onToggleColorScheme = () => {
     setColorScheme(colorScheme === 'light' ? 'dark' : 'light')
   }
@@ -48,7 +47,7 @@ function DebugInner({
   colorScheme: 'light' | 'dark'
   onToggleColorScheme: () => void
 }) {
-  const [currentView, setCurrentView] = React.useState<number>(0)
+  const [currentView, setCurrentView] = useState<number>(0)
   const pal = usePalette('default')
   const {_} = useLingui()
 
@@ -433,7 +432,7 @@ function DropdownButtonsView() {
 function ToggleButtonsView() {
   const defaultPal = usePalette('default')
   const buttonStyles = s.mb5
-  const [isSelected, setIsSelected] = React.useState(false)
+  const [isSelected, setIsSelected] = useState(false)
   const onToggle = () => setIsSelected(!isSelected)
   return (
     <View style={[defaultPal.view]}>
@@ -509,7 +508,7 @@ const RADIO_BUTTON_ITEMS = [
 ]
 function RadioButtonsView() {
   const defaultPal = usePalette('default')
-  const [rgType, setRgType] = React.useState<ButtonType>('default-light')
+  const [rgType, setRgType] = useState<ButtonType>('default-light')
   return (
     <View style={[defaultPal.view]}>
       <RadioGroup

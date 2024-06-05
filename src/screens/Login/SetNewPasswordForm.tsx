@@ -1,4 +1,4 @@
-import React from 'react'
+import {useEffect, useState} from 'react'
 import {ActivityIndicator, View} from 'react-native'
 import {BskyAgent} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -35,13 +35,13 @@ export const SetNewPasswordForm = ({
   const {_} = useLingui()
   const t = useTheme()
 
-  React.useEffect(() => {
+  useEffect(() => {
     screen('Signin:SetNewPasswordForm')
   }, [screen])
 
-  const [isProcessing, setIsProcessing] = React.useState<boolean>(false)
-  const [resetCode, setResetCode] = React.useState<string>('')
-  const [password, setPassword] = React.useState<string>('')
+  const [isProcessing, setIsProcessing] = useState<boolean>(false)
+  const [resetCode, setResetCode] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
 
   const onPressNext = async () => {
     // Check that the code is correct. We do this again just incase the user enters the code after their pw and we

@@ -1,10 +1,17 @@
-import React from 'react'
 import {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useMemo,
+  useState,
+} from 'react'
+import {
+  AppBskyActorDefs,
   AppBskyEmbedRecord,
   AppBskyRichtextFacet,
   ModerationDecision,
-  AppBskyActorDefs,
 } from '@atproto/api'
+
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 
 export interface ComposerOptsPostRef {
@@ -45,16 +52,16 @@ type ControlsContext = {
   closeComposer: () => boolean
 }
 
-const stateContext = React.createContext<StateContext>(undefined)
-const controlsContext = React.createContext<ControlsContext>({
+const stateContext = createContext<StateContext>(undefined)
+const controlsContext = createContext<ControlsContext>({
   openComposer(_opts: ComposerOpts) {},
   closeComposer() {
     return false
   },
 })
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [state, setState] = React.useState<StateContext>()
+export function Provider({children}: PropsWithChildren<{}>) {
+  const [state, setState] = useState<StateContext>()
 
   const openComposer = useNonReactiveCallback((opts: ComposerOpts) => {
     setState(opts)
@@ -66,7 +73,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     return wasOpen
   })
 
-  const api = React.useMemo(
+  const api = useMemo(
     () => ({
       openComposer,
       closeComposer,
@@ -84,9 +91,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 export function useComposerState() {
-  return React.useContext(stateContext)
+  return useContext(stateContext)
 }
 
 export function useComposerControls() {
-  return React.useContext(controlsContext)
+  return useContext(controlsContext)
 }

@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -72,7 +72,7 @@ function BirthdayInner({
   preferences: UsePreferencesQueryResponse
 }) {
   const {_} = useLingui()
-  const [date, setDate] = React.useState(preferences.birthDate || new Date())
+  const [date, setDate] = useState(preferences.birthDate || new Date())
   const {
     isPending,
     isError,
@@ -81,7 +81,7 @@ function BirthdayInner({
   } = usePreferencesSetBirthDateMutation()
   const hasChanged = date !== preferences.birthDate
 
-  const onSave = React.useCallback(async () => {
+  const onSave = useCallback(async () => {
     try {
       // skip if date is the same
       if (hasChanged) {

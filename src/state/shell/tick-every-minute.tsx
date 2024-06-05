@@ -1,12 +1,18 @@
-import React from 'react'
+import {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 
 type StateContext = number
 
-const stateContext = React.createContext<StateContext>(0)
+const stateContext = createContext<StateContext>(0)
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [tick, setTick] = React.useState(Date.now())
-  React.useEffect(() => {
+export function Provider({children}: PropsWithChildren<{}>) {
+  const [tick, setTick] = useState(Date.now())
+  useEffect(() => {
     const i = setInterval(() => {
       setTick(Date.now())
     }, 60_000)
@@ -16,5 +22,5 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 export function useTickEveryMinute() {
-  return React.useContext(stateContext)
+  return useContext(stateContext)
 }

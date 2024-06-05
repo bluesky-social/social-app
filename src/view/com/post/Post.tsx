@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {
   AppBskyFeedDefs,
@@ -50,7 +50,7 @@ export function Post({
   style?: StyleProp<ViewStyle>
 }) {
   const moderationOpts = useModerationOpts()
-  const record = React.useMemo<AppBskyFeedPost.Record | undefined>(
+  const record = useMemo<AppBskyFeedPost.Record | undefined>(
     () =>
       AppBskyFeedPost.isRecord(post.record) &&
       AppBskyFeedPost.validateRecord(post.record).success
@@ -59,7 +59,7 @@ export function Post({
     [post],
   )
   const postShadowed = usePostShadow(post)
-  const richText = React.useMemo(
+  const richText = useMemo(
     () =>
       record
         ? new RichTextAPI({
@@ -69,7 +69,7 @@ export function Post({
         : undefined,
     [record],
   )
-  const moderation = React.useMemo(
+  const moderation = useMemo(
     () => (moderationOpts ? moderatePost(post, moderationOpts) : undefined),
     [moderationOpts, post],
   )
@@ -113,7 +113,7 @@ function PostInner({
   const pal = usePalette('default')
   const {_} = useLingui()
   const {openComposer} = useComposerControls()
-  const [limitLines, setLimitLines] = React.useState(
+  const [limitLines, setLimitLines] = useState(
     () => countLines(richText?.text) >= MAX_POST_LINES,
   )
   const itemUrip = new AtUri(post.uri)
@@ -124,7 +124,7 @@ function PostInner({
     replyAuthorDid = urip.hostname
   }
 
-  const onPressReply = React.useCallback(() => {
+  const onPressReply = useCallback(() => {
     openComposer({
       replyTo: {
         uri: post.uri,
@@ -137,11 +137,11 @@ function PostInner({
     })
   }, [openComposer, post, record, moderation])
 
-  const onPressShowMore = React.useCallback(() => {
+  const onPressShowMore = useCallback(() => {
     setLimitLines(false)
   }, [setLimitLines])
 
-  const onBeforePress = React.useCallback(() => {
+  const onBeforePress = useCallback(() => {
     precacheProfile(queryClient, post.author)
   }, [queryClient, post.author])
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import {useState} from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -29,7 +29,7 @@ export function Component({
   const pal = usePalette('default')
   const {closeModal} = useModalControls()
   const {isMobile} = useWebMediaQueries()
-  const [selected, setSelected] = React.useState(labels)
+  const [selected, setSelected] = useState(labels)
   const {_} = useLingui()
 
   const toggleAdultLabel = (label: string) => {

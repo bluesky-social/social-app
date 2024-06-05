@@ -1,18 +1,19 @@
-import React from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {AppBskyActorDefs as ActorDefs} from '@atproto/api'
-import {CenteredView} from '../util/Views'
-import {List} from '../util/List'
+
+import {cleanError} from '#/lib/strings/errors'
+import {logger} from '#/logger'
+import {usePostRepostedByQuery} from '#/state/queries/post-reposted-by'
+import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
 import {ErrorMessage} from '../util/error/ErrorMessage'
-import {logger} from '#/logger'
+import {List} from '../util/List'
 import {LoadingScreen} from '../util/LoadingScreen'
-import {useResolveUriQuery} from '#/state/queries/resolve-uri'
-import {usePostRepostedByQuery} from '#/state/queries/post-reposted-by'
-import {cleanError} from '#/lib/strings/errors'
+import {CenteredView} from '../util/Views'
 
 export function PostRepostedBy({uri}: {uri: string}) {
-  const [isPTRing, setIsPTRing] = React.useState(false)
+  const [isPTRing, setIsPTRing] = useState(false)
   const {
     data: resolvedUri,
     error: resolveError,
@@ -29,13 +30,13 @@ export function PostRepostedBy({uri}: {uri: string}) {
     error,
     refetch,
   } = usePostRepostedByQuery(resolvedUri?.uri)
-  const repostedBy = React.useMemo(() => {
+  const repostedBy = useMemo(() => {
     if (data?.pages) {
       return data.pages.flatMap(page => page.repostedBy)
     }
   }, [data])
 
-  const onRefresh = React.useCallback(async () => {
+  const onRefresh = useCallback(async () => {
     setIsPTRing(true)
     try {
       await refetch()
@@ -45,7 +46,7 @@ export function PostRepostedBy({uri}: {uri: string}) {
     setIsPTRing(false)
   }, [refetch, setIsPTRing])
 
-  const onEndReached = React.useCallback(async () => {
+  const onEndReached = useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
     try {
       await fetchNextPage()
@@ -54,7 +55,7 @@ export function PostRepostedBy({uri}: {uri: string}) {
     }
   }, [isFetching, hasNextPage, isError, fetchNextPage])
 
-  const renderItem = React.useCallback(
+  const renderItem = useCallback(
     ({item}: {item: ActorDefs.ProfileViewBasic}) => {
       return <ProfileCardWithFollowBtn key={item.did} profile={item} />
     },

@@ -1,4 +1,4 @@
-import React from 'react'
+import {PropsWithChildren, useState} from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {ModerationUI} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -22,7 +22,7 @@ export function ContentHider({
   style,
   childContainerStyle,
   children,
-}: React.PropsWithChildren<{
+}: PropsWithChildren<{
   testID?: string
   modui: ModerationUI | undefined
   ignoreMute?: boolean
@@ -32,7 +32,7 @@ export function ContentHider({
   const t = useTheme()
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
-  const [override, setOverride] = React.useState(false)
+  const [override, setOverride] = useState(false)
   const control = useModerationDetailsDialogControl()
 
   const blur = modui?.blurs[0]

@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {TouchableOpacity, View} from 'react-native'
 import {AppBskyEmbedExternal} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -38,7 +38,7 @@ export function GifAltText({
   const {_} = useLingui()
   const t = useTheme()
 
-  const {link, params} = React.useMemo(() => {
+  const {link, params} = useMemo(() => {
     return {
       link: {
         title: linkProp.meta?.title ?? linkProp.uri,
@@ -50,7 +50,7 @@ export function GifAltText({
     }
   }, [linkProp])
 
-  const onPressSubmit = React.useCallback(
+  const onPressSubmit = useCallback(
     (alt: string) => {
       control.close(() => {
         onSubmit(alt)
@@ -125,10 +125,10 @@ function AltTextInner({
   initialValue: string
 }) {
   const {_} = useLingui()
-  const [altText, setAltText] = React.useState(initalValue)
+  const [altText, setAltText] = useState(initalValue)
   const control = Dialog.useDialogContext()
 
-  const onPressSubmit = React.useCallback(() => {
+  const onPressSubmit = useCallback(() => {
     onSubmit(altText)
   }, [onSubmit, altText])
 

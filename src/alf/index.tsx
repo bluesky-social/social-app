@@ -1,4 +1,11 @@
-import React from 'react'
+import {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import {Dimensions} from 'react-native'
 
 import * as themes from '#/alf/themes'
@@ -38,7 +45,7 @@ function getActiveBreakpoints({width}: {width: number}) {
 /*
  * Context
  */
-export const Context = React.createContext<{
+export const Context = createContext<{
   themeName: themes.ThemeName
   theme: themes.Theme
   breakpoints: {
@@ -61,13 +68,13 @@ export const Context = React.createContext<{
 export function ThemeProvider({
   children,
   theme: themeName,
-}: React.PropsWithChildren<{theme: themes.ThemeName}>) {
+}: PropsWithChildren<{theme: themes.ThemeName}>) {
   const theme = themes[themeName]
-  const [breakpoints, setBreakpoints] = React.useState(() =>
+  const [breakpoints, setBreakpoints] = useState(() =>
     getActiveBreakpoints({width: Dimensions.get('window').width}),
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     const listener = Dimensions.addEventListener('change', ({window}) => {
       const bp = getActiveBreakpoints({width: window.width})
       if (bp.active !== breakpoints.active) setBreakpoints(bp)
@@ -78,7 +85,7 @@ export function ThemeProvider({
 
   return (
     <Context.Provider
-      value={React.useMemo(
+      value={useMemo(
         () => ({
           themeName: themeName,
           theme: theme,
@@ -92,9 +99,9 @@ export function ThemeProvider({
 }
 
 export function useTheme() {
-  return React.useContext(Context).theme
+  return useContext(Context).theme
 }
 
 export function useBreakpoints() {
-  return React.useContext(Context).breakpoints
+  return useContext(Context).breakpoints
 }

@@ -1,4 +1,4 @@
-import React from 'react'
+import {memo, ReactNode, useCallback, useMemo} from 'react'
 import {
   Pressable,
   type PressableProps,
@@ -89,7 +89,7 @@ let PostDropdownBtn = ({
   hitSlop?: PressableProps['hitSlop']
   size?: 'lg' | 'md' | 'sm'
   timestamp: string
-}): React.ReactNode => {
+}): ReactNode => {
   const {hasSession, currentAccount} = useSession()
   const theme = useTheme()
   const alf = useAlf()
@@ -118,7 +118,7 @@ let PostDropdownBtn = ({
   const isPostHidden = hiddenPosts && hiddenPosts.includes(postUri)
   const isAuthor = postAuthor.did === currentAccount?.did
 
-  const href = React.useMemo(() => {
+  const href = useMemo(() => {
     const urip = new AtUri(postUri)
     return makeProfileLink(postAuthor, 'post', urip.rkey)
   }, [postUri, postAuthor])
@@ -128,7 +128,7 @@ let PostDropdownBtn = ({
     langPrefs.primaryLanguage,
   )
 
-  const onDeletePost = React.useCallback(() => {
+  const onDeletePost = useCallback(() => {
     postDeleteMutation.mutateAsync({uri: postUri}).then(
       () => {
         Toast.show(_(msg`Post deleted`))
@@ -165,7 +165,7 @@ let PostDropdownBtn = ({
     _,
   ])
 
-  const onToggleThreadMute = React.useCallback(() => {
+  const onToggleThreadMute = useCallback(() => {
     try {
       const muted = toggleThreadMute(rootUri)
       if (muted) {
@@ -180,14 +180,14 @@ let PostDropdownBtn = ({
     }
   }, [rootUri, toggleThreadMute, _])
 
-  const onCopyPostText = React.useCallback(() => {
+  const onCopyPostText = useCallback(() => {
     const str = richTextToString(richText, true)
 
     Clipboard.setStringAsync(str)
     Toast.show(_(msg`Copied to clipboard`))
   }, [_, richText])
 
-  const onPressTranslate = React.useCallback(() => {
+  const onPressTranslate = useCallback(() => {
     if (
       isNativeTranslationAvailable &&
       isLanguageSupported(record?.langs?.at(0))
@@ -199,22 +199,22 @@ let PostDropdownBtn = ({
     }
   }, [openLink, record?.langs, richText, translatorUrl])
 
-  const onHidePost = React.useCallback(() => {
+  const onHidePost = useCallback(() => {
     hidePost({uri: postUri})
   }, [postUri, hidePost])
 
-  const hideInPWI = React.useMemo(() => {
+  const hideInPWI = useMemo(() => {
     return !!postAuthor.labels?.find(
       label => label.val === '!no-unauthenticated',
     )
   }, [postAuthor])
 
-  const onSharePost = React.useCallback(() => {
+  const onSharePost = useCallback(() => {
     const url = toShareUrl(href)
     shareUrl(url)
   }, [href])
 
-  const onPressShowMore = React.useCallback(() => {
+  const onPressShowMore = useCallback(() => {
     feedFeedback.sendInteraction({
       event: 'app.bsky.feed.defs#requestMore',
       item: postUri,
@@ -223,7 +223,7 @@ let PostDropdownBtn = ({
     Toast.show('Feedback sent!')
   }, [feedFeedback, postUri, postFeedContext])
 
-  const onPressShowLess = React.useCallback(() => {
+  const onPressShowLess = useCallback(() => {
     feedFeedback.sendInteraction({
       event: 'app.bsky.feed.defs#requestLess',
       item: postUri,
@@ -232,7 +232,7 @@ let PostDropdownBtn = ({
     Toast.show('Feedback sent!')
   }, [feedFeedback, postUri, postFeedContext])
 
-  const onSelectChatToShareTo = React.useCallback(
+  const onSelectChatToShareTo = useCallback(
     (conversation: string) => {
       navigation.navigate('MessagesConversation', {
         conversation,
@@ -483,5 +483,5 @@ let PostDropdownBtn = ({
   )
 }
 
-PostDropdownBtn = React.memo(PostDropdownBtn)
+PostDropdownBtn = memo(PostDropdownBtn)
 export {PostDropdownBtn}

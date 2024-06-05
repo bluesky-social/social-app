@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {AppBskyGraphDefs, AtUri, RichText} from '@atproto/api'
 import {Trans} from '@lingui/macro'
@@ -34,7 +34,7 @@ export const ListCard = ({
   const pal = usePalette('default')
   const {currentAccount} = useSession()
 
-  const rkey = React.useMemo(() => {
+  const rkey = useMemo(() => {
     try {
       const urip = new AtUri(list.uri)
       return urip.rkey
@@ -43,7 +43,7 @@ export const ListCard = ({
     }
   }, [list])
 
-  const descriptionRichText = React.useMemo(() => {
+  const descriptionRichText = useMemo(() => {
     if (list.description) {
       return new RichText({
         text: list.description,

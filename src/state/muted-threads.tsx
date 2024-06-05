@@ -1,19 +1,27 @@
-import React from 'react'
-import * as persisted from '#/state/persisted'
+import {
+  createContext,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
+
 import {track} from '#/lib/analytics/analytics'
+import * as persisted from '#/state/persisted'
 
 type StateContext = persisted.Schema['mutedThreads']
 type ToggleContext = (uri: string) => boolean
 
-const stateContext = React.createContext<StateContext>(
+const stateContext = createContext<StateContext>(
   persisted.defaults.mutedThreads,
 )
-const toggleContext = React.createContext<ToggleContext>((_: string) => false)
+const toggleContext = createContext<ToggleContext>((_: string) => false)
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [state, setState] = React.useState(persisted.get('mutedThreads'))
+export function Provider({children}: PropsWithChildren<{}>) {
+  const [state, setState] = useState(persisted.get('mutedThreads'))
 
-  const toggleThreadMute = React.useCallback(
+  const toggleThreadMute = useCallback(
     (uri: string) => {
       let muted = false
       setState((arr: string[]) => {
@@ -34,7 +42,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [setState],
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     return persisted.onUpdate(() => {
       setState(persisted.get('mutedThreads'))
     })
@@ -50,11 +58,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 export function useMutedThreads() {
-  return React.useContext(stateContext)
+  return useContext(stateContext)
 }
 
 export function useToggleThreadMute() {
-  return React.useContext(toggleContext)
+  return useContext(toggleContext)
 }
 
 export function isThreadMuted(uri: string) {

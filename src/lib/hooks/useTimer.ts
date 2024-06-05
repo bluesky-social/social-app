@@ -1,13 +1,13 @@
-import * as React from 'react'
+import {useCallback, useEffect, useRef} from 'react'
 
 /**
  * Helper hook to run persistent timers on views
  */
 export function useTimer(time: number, handler: () => void) {
-  const timer = React.useRef<undefined | NodeJS.Timeout>(undefined)
+  const timer = useRef<undefined | NodeJS.Timeout>(undefined)
 
   // function to restart the timer
-  const reset = React.useCallback(() => {
+  const reset = useCallback(() => {
     if (timer.current) {
       clearTimeout(timer.current)
     }
@@ -15,7 +15,7 @@ export function useTimer(time: number, handler: () => void) {
   }, [time, timer, handler])
 
   // function to cancel the timer
-  const cancel = React.useCallback(() => {
+  const cancel = useCallback(() => {
     if (timer.current) {
       clearTimeout(timer.current)
       timer.current = undefined
@@ -23,7 +23,7 @@ export function useTimer(time: number, handler: () => void) {
   }, [timer])
 
   // start the timer immediately
-  React.useEffect(() => {
+  useEffect(() => {
     reset()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

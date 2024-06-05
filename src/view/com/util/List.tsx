@@ -1,4 +1,11 @@
-import React from 'react'
+import {
+  forwardRef,
+  memo,
+  MutableRefObject,
+  ReactElement,
+  Ref,
+  useMemo,
+} from 'react'
 import {FlatListProps, RefreshControl, ViewToken} from 'react-native'
 import {runOnJS, useSharedValue} from 'react-native-reanimated'
 
@@ -29,7 +36,7 @@ export type ListProps<ItemT> = Omit<
   // Web only prop to disable a perf optimization (which would otherwise be on).
   disableContentVisibility?: boolean
 }
-export type ListRef = React.MutableRefObject<FlatList_INTERNAL | null>
+export type ListRef = MutableRefObject<FlatList_INTERNAL | null>
 
 const SCROLLED_DOWN_LIMIT = 200
 
@@ -43,7 +50,7 @@ function ListImpl<ItemT>(
     style,
     ...props
   }: ListProps<ItemT>,
-  ref: React.Ref<ListMethods>,
+  ref: Ref<ListMethods>,
 ) {
   const isScrolledDown = useSharedValue(false)
   const pal = usePalette('default')
@@ -85,7 +92,7 @@ function ListImpl<ItemT>(
     },
   })
 
-  const [onViewableItemsChanged, viewabilityConfig] = React.useMemo(() => {
+  const [onViewableItemsChanged, viewabilityConfig] = useMemo(() => {
     if (!onItemSeen) {
       return [undefined, undefined]
     }
@@ -141,6 +148,6 @@ function ListImpl<ItemT>(
   )
 }
 
-export const List = React.memo(React.forwardRef(ListImpl)) as <ItemT>(
-  props: ListProps<ItemT> & {ref?: React.Ref<ListMethods>},
-) => React.ReactElement
+export const List = memo(forwardRef(ListImpl)) as <ItemT>(
+  props: ListProps<ItemT> & {ref?: Ref<ListMethods>},
+) => ReactElement

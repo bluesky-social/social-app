@@ -1,4 +1,12 @@
-import React from 'react'
+import {
+  ComponentType,
+  createContext,
+  PropsWithChildren,
+  RefObject,
+  useContext,
+  useMemo,
+  useRef,
+} from 'react'
 import {
   AccessibilityProps,
   StyleSheet,
@@ -16,8 +24,8 @@ import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
 
-const Context = React.createContext<{
-  inputRef: React.RefObject<TextInput> | null
+const Context = createContext<{
+  inputRef: RefObject<TextInput> | null
   isInvalid: boolean
   hovered: boolean
   onHoverIn: () => void
@@ -36,10 +44,10 @@ const Context = React.createContext<{
   onBlur: () => {},
 })
 
-export type RootProps = React.PropsWithChildren<{isInvalid?: boolean}>
+export type RootProps = PropsWithChildren<{isInvalid?: boolean}>
 
 export function Root({children, isInvalid = false}: RootProps) {
-  const inputRef = React.useRef<TextInput>(null)
+  const inputRef = useRef<TextInput>(null)
   const {
     state: hovered,
     onIn: onHoverIn,
@@ -47,7 +55,7 @@ export function Root({children, isInvalid = false}: RootProps) {
   } = useInteractionState()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
 
-  const context = React.useMemo(
+  const context = useMemo(
     () => ({
       inputRef,
       hovered,
@@ -87,7 +95,7 @@ export function Root({children, isInvalid = false}: RootProps) {
 
 export function useSharedInputStyles() {
   const t = useTheme()
-  return React.useMemo(() => {
+  return useMemo(() => {
     const hover: ViewStyle[] = [
       {
         borderColor: t.palette.contrast_100,
@@ -129,7 +137,7 @@ export type InputProps = Omit<TextInputProps, 'value' | 'onChangeText'> & {
   value?: string
   onChangeText?: (value: string) => void
   isInvalid?: boolean
-  inputRef?: React.RefObject<TextInput>
+  inputRef?: RefObject<TextInput>
 }
 
 export function createInput(Component: typeof TextInput) {
@@ -143,7 +151,7 @@ export function createInput(Component: typeof TextInput) {
     ...rest
   }: InputProps) {
     const t = useTheme()
-    const ctx = React.useContext(Context)
+    const ctx = useContext(Context)
     const withinRoot = Boolean(ctx.inputRef)
 
     const {chromeHover, chromeFocus, chromeError, chromeErrorHover} =
@@ -228,7 +236,7 @@ export const Input = createInput(TextInput)
 export function LabelText({
   nativeID,
   children,
-}: React.PropsWithChildren<{nativeID?: string}>) {
+}: PropsWithChildren<{nativeID?: string}>) {
   const t = useTheme()
   return (
     <Text
@@ -239,10 +247,10 @@ export function LabelText({
   )
 }
 
-export function Icon({icon: Comp}: {icon: React.ComponentType<SVGIconProps>}) {
+export function Icon({icon: Comp}: {icon: ComponentType<SVGIconProps>}) {
   const t = useTheme()
-  const ctx = React.useContext(Context)
-  const {hover, focus, errorHover, errorFocus} = React.useMemo(() => {
+  const ctx = useContext(Context)
+  const {hover, focus, errorHover, errorFocus} = useMemo(() => {
     const hover: TextStyle[] = [
       {
         color: t.palette.contrast_800,
@@ -292,12 +300,12 @@ export function SuffixText({
   children,
   label,
   accessibilityHint,
-}: React.PropsWithChildren<{
+}: PropsWithChildren<{
   label: string
   accessibilityHint?: AccessibilityProps['accessibilityHint']
 }>) {
   const t = useTheme()
-  const ctx = React.useContext(Context)
+  const ctx = useContext(Context)
   return (
     <Text
       accessibilityLabel={label}

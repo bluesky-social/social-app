@@ -1,4 +1,4 @@
-import React from 'react'
+import {useState} from 'react'
 import {
   ActivityIndicator,
   SafeAreaView,
@@ -43,11 +43,11 @@ export function Component({}: {}) {
   const {_} = useLingui()
   const {closeModal} = useModalControls()
   const {isMobile} = useWebMediaQueries()
-  const [isEmailSent, setIsEmailSent] = React.useState<boolean>(false)
-  const [confirmCode, setConfirmCode] = React.useState<string>('')
-  const [password, setPassword] = React.useState<string>('')
-  const [isProcessing, setIsProcessing] = React.useState<boolean>(false)
-  const [error, setError] = React.useState<string>('')
+  const [isEmailSent, setIsEmailSent] = useState<boolean>(false)
+  const [confirmCode, setConfirmCode] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
+  const [isProcessing, setIsProcessing] = useState<boolean>(false)
+  const [error, setError] = useState<string>('')
   const deactivateAccountControl = useDialogControl()
   const onPressSendEmail = async () => {
     setError('')

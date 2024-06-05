@@ -1,9 +1,10 @@
-import React from 'react'
+import {createRef, useMemo, useRef, useState} from 'react'
 import {Animated, Pressable, StyleSheet, View} from 'react-native'
-import {Text} from './text/Text'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {usePalette} from 'lib/hooks/usePalette'
+import {Text} from './text/Text'
 
 interface Layout {
   x: number
@@ -22,17 +23,17 @@ export function Selector({
   onSelect?: (index: number) => void
 }) {
   const {_} = useLingui()
-  const containerRef = React.useRef<View>(null)
+  const containerRef = useRef<View>(null)
   const pal = usePalette('default')
-  const [itemLayouts, setItemLayouts] = React.useState<undefined | Layout[]>(
+  const [itemLayouts, setItemLayouts] = useState<undefined | Layout[]>(
     undefined,
   )
-  const itemRefs = React.useMemo(
-    () => Array.from({length: items.length}).map(() => React.createRef<View>()),
+  const itemRefs = useMemo(
+    () => Array.from({length: items.length}).map(() => createRef<View>()),
     [items.length],
   )
 
-  const currentLayouts = React.useMemo(() => {
+  const currentLayouts = useMemo(() => {
     const left = itemLayouts?.[selectedIndex - 1] || {x: 0, width: 0}
     const middle = itemLayouts?.[selectedIndex] || {x: 0, width: 0}
     const right = itemLayouts?.[selectedIndex + 1] || {

@@ -1,4 +1,11 @@
-import React from 'react'
+import {
+  ComponentProps,
+  memo,
+  MouseEvent,
+  ReactNode,
+  useCallback,
+  useMemo,
+} from 'react'
 import {
   GestureResponderEvent,
   Platform,
@@ -32,16 +39,14 @@ import {router} from '../../../routes'
 import {PressableWithHover} from './PressableWithHover'
 import {Text} from './text/Text'
 
-type Event =
-  | React.MouseEvent<HTMLAnchorElement, MouseEvent>
-  | GestureResponderEvent
+type Event = MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
 
-interface Props extends React.ComponentProps<typeof TouchableOpacity> {
+interface Props extends ComponentProps<typeof TouchableOpacity> {
   testID?: string
   style?: StyleProp<ViewStyle>
   href?: string
   title?: string
-  children?: React.ReactNode
+  children?: ReactNode
   hoverStyle?: StyleProp<ViewStyle>
   noFeedback?: boolean
   asAnchor?: boolean
@@ -52,7 +57,7 @@ interface Props extends React.ComponentProps<typeof TouchableOpacity> {
   onBeforePress?: () => void
 }
 
-export const Link = React.memo(function Link({
+export const Link = memo(function Link({
   testID,
   style,
   href,
@@ -74,7 +79,7 @@ export const Link = React.memo(function Link({
   const anchorHref = asAnchor ? sanitizeUrl(href) : undefined
   const openLink = useOpenLink()
 
-  const onPress = React.useCallback(
+  const onPress = useCallback(
     (e?: Event) => {
       onBeforePress?.()
       if (typeof href === 'string') {
@@ -153,7 +158,7 @@ export const Link = React.memo(function Link({
   )
 })
 
-export const TextLink = React.memo(function TextLink({
+export const TextLink = memo(function TextLink({
   testID,
   type = 'md',
   style,
@@ -174,7 +179,7 @@ export const TextLink = React.memo(function TextLink({
   type?: TypographyVariant
   style?: StyleProp<TextStyle>
   href: string
-  text: string | JSX.Element | React.ReactNode
+  text: string | JSX.Element | ReactNode
   numberOfLines?: number
   lineHeight?: number
   dataSet?: any
@@ -198,7 +203,7 @@ export const TextLink = React.memo(function TextLink({
     dataSet.noUnderline = 1
   }
 
-  props.onPress = React.useCallback(
+  props.onPress = useCallback(
     (e?: Event) => {
       const requiresWarning =
         !disableMismatchWarning &&
@@ -215,7 +220,7 @@ export const TextLink = React.memo(function TextLink({
         isWeb &&
         href !== '#' &&
         e != null &&
-        isModifiedEvent(e as React.MouseEvent)
+        isModifiedEvent(e as MouseEvent)
       ) {
         // Let the browser handle opening in new tab etc.
         return
@@ -248,7 +253,7 @@ export const TextLink = React.memo(function TextLink({
       openLink,
     ],
   )
-  const hrefAttrs = React.useMemo(() => {
+  const hrefAttrs = useMemo(() => {
     const isExternal = isExternalUrl(href)
     if (isExternal) {
       return {
@@ -298,7 +303,7 @@ interface TextLinkOnWebOnlyProps extends TextProps {
   onPointerEnter?: () => void
   anchorNoUnderline?: boolean
 }
-export const TextLinkOnWebOnly = React.memo(function DesktopWebTextLink({
+export const TextLinkOnWebOnly = memo(function DesktopWebTextLink({
   testID,
   type = 'md',
   style,
@@ -415,7 +420,7 @@ function onPressInner(
   }
 }
 
-function isModifiedEvent(e: React.MouseEvent): boolean {
+function isModifiedEvent(e: MouseEvent): boolean {
   const eventTarget = e.currentTarget as HTMLAnchorElement
   const target = eventTarget.getAttribute('target')
   return (

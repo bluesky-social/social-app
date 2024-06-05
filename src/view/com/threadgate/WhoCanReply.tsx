@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {StyleProp, View, ViewStyle} from 'react-native'
 import {
   AppBskyFeedDefs,
@@ -48,7 +48,7 @@ export function WhoCanReply({
     {color: colors.gray7},
     {color: colors.blue1},
   )
-  const record = React.useMemo(
+  const record = useMemo(
     () =>
       post.threadgate &&
       AppBskyFeedThreadgate.isRecord(post.threadgate.record) &&

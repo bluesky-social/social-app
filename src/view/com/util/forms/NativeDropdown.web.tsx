@@ -1,4 +1,13 @@
-import React from 'react'
+import {
+  ComponentProps,
+  CSSProperties,
+  PropsWithChildren,
+  Ref,
+  RefObject,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import {Pressable, StyleSheet, Text, View, ViewStyle} from 'react-native'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -14,10 +23,10 @@ import {useTheme} from 'lib/ThemeContext'
 export const DropdownMenuRoot = DropdownMenu.Root
 export const DropdownMenuContent = DropdownMenu.Content
 
-type ItemProps = React.ComponentProps<(typeof DropdownMenu)['Item']>
+type ItemProps = ComponentProps<(typeof DropdownMenu)['Item']>
 export const DropdownMenuItem = (props: ItemProps & {testID?: string}) => {
   const theme = useTheme()
-  const [focused, setFocused] = React.useState(false)
+  const [focused, setFocused] = useState(false)
   const backgroundColor = theme.colorScheme === 'dark' ? '#fff1' : '#0001'
 
   return (
@@ -64,12 +73,12 @@ export function NativeDropdown({
   accessibilityLabel,
   accessibilityHint,
   triggerStyle,
-}: React.PropsWithChildren<Props>) {
-  const [open, setOpen] = React.useState(false)
-  const buttonRef = React.useRef<HTMLButtonElement>(null)
-  const menuRef = React.useRef<HTMLDivElement>(null)
+}: PropsWithChildren<Props>) {
+  const [open, setOpen] = useState(false)
+  const buttonRef = useRef<HTMLButtonElement>(null)
+  const menuRef = useRef<HTMLDivElement>(null)
 
-  React.useEffect(() => {
+  useEffect(() => {
     function clickHandler(e: MouseEvent) {
       const t = e.target
 
@@ -111,7 +120,7 @@ export function NativeDropdown({
     <DropdownMenuRoot open={open} onOpenChange={o => setOpen(o)}>
       <DropdownMenu.Trigger asChild>
         <Pressable
-          ref={buttonRef as unknown as React.Ref<View>}
+          ref={buttonRef as unknown as Ref<View>}
           testID={testID}
           accessibilityRole="button"
           accessibilityLabel={accessibilityLabel}
@@ -148,7 +157,7 @@ function DropdownContent({
   menuRef,
 }: {
   items: DropdownItem[]
-  menuRef: React.RefObject<HTMLDivElement>
+  menuRef: RefObject<HTMLDivElement>
 }) {
   const pal = usePalette('default')
   const theme = useTheme()
@@ -164,7 +173,7 @@ function DropdownContent({
         StyleSheet.flatten([
           styles.content,
           dropDownBackgroundColor,
-        ]) as React.CSSProperties
+        ]) as CSSProperties
       }
       loop>
       {items.map((item, index) => {
@@ -176,7 +185,7 @@ function DropdownContent({
                 StyleSheet.flatten([
                   styles.separator,
                   {backgroundColor: separatorColor},
-                ]) as React.CSSProperties
+                ]) as CSSProperties
               }
             />
           )

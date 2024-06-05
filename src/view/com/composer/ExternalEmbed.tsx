@@ -1,4 +1,4 @@
-import React from 'react'
+import {ReactNode, useMemo} from 'react'
 import {StyleProp, TouchableOpacity, View, ViewStyle} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
@@ -24,7 +24,7 @@ export const ExternalEmbed = ({
   const t = useTheme()
   const {_} = useLingui()
 
-  const linkInfo = React.useMemo(
+  const linkInfo = useMemo(
     () =>
       link && {
         title: link.meta?.title ?? link.uri,
@@ -98,7 +98,7 @@ function Container({
   children,
 }: {
   style?: StyleProp<ViewStyle>
-  children: React.ReactNode
+  children: ReactNode
 }) {
   const t = useTheme()
   return (

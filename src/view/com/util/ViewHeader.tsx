@@ -1,4 +1,4 @@
-import React from 'react'
+import {ReactNode, useCallback} from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -46,7 +46,7 @@ export function ViewHeader({
   const {isDesktop, isTablet} = useWebMediaQueries()
   const t = useTheme()
 
-  const onPressBack = React.useCallback(() => {
+  const onPressBack = useCallback(() => {
     if (navigation.canGoBack()) {
       navigation.goBack()
     } else {
@@ -54,7 +54,7 @@ export function ViewHeader({
     }
   }, [navigation])
 
-  const onPressMenu = React.useCallback(() => {
+  const onPressMenu = useCallback(() => {
     track('ViewHeader:MenuButtonClicked')
     setDrawerOpen(true)
   }, [track, setDrawerOpen])
@@ -192,7 +192,7 @@ function Container({
   hideOnScroll,
   showBorder,
 }: {
-  children: React.ReactNode
+  children: ReactNode
   hideOnScroll: boolean
   showBorder?: boolean
 }) {

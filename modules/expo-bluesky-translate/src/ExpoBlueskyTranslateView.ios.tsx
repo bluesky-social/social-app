@@ -1,4 +1,4 @@
-import React from 'react'
+import {ComponentType} from 'react'
 import {Platform} from 'react-native'
 import {requireNativeModule, requireNativeViewManager} from 'expo-modules-core'
 
@@ -7,7 +7,7 @@ import {ExpoBlueskyTranslateModule} from './ExpoBlueskyTranslate.types'
 export const NativeTranslationModule =
   requireNativeModule<ExpoBlueskyTranslateModule>('ExpoBlueskyTranslate')
 
-const NativeView: React.ComponentType = requireNativeViewManager(
+const NativeView: ComponentType = requireNativeViewManager(
   'ExpoBlueskyTranslate',
 )
 

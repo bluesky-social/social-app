@@ -1,4 +1,10 @@
-import React from 'react'
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from 'react'
 import {findNodeHandle, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -24,72 +30,71 @@ interface FeedSectionProps {
   ignoreFilterFor?: string
   setScrollViewTag: (tag: number | null) => void
 }
-export const ProfileFeedSection = React.forwardRef<
-  SectionRef,
-  FeedSectionProps
->(function FeedSectionImpl(
-  {
-    feed,
-    headerHeight,
-    isFocused,
-    scrollElRef,
-    ignoreFilterFor,
-    setScrollViewTag,
-  },
-  ref,
-) {
-  const {_} = useLingui()
-  const queryClient = useQueryClient()
-  const [hasNew, setHasNew] = React.useState(false)
-  const [isScrolledDown, setIsScrolledDown] = React.useState(false)
+export const ProfileFeedSection = forwardRef<SectionRef, FeedSectionProps>(
+  function FeedSectionImpl(
+    {
+      feed,
+      headerHeight,
+      isFocused,
+      scrollElRef,
+      ignoreFilterFor,
+      setScrollViewTag,
+    },
+    ref,
+  ) {
+    const {_} = useLingui()
+    const queryClient = useQueryClient()
+    const [hasNew, setHasNew] = useState(false)
+    const [isScrolledDown, setIsScrolledDown] = useState(false)
 
-  const onScrollToTop = React.useCallback(() => {
-    scrollElRef.current?.scrollToOffset({
-      animated: isNative,
-      offset: -headerHeight,
-    })
-    truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
-    setHasNew(false)
-  }, [scrollElRef, headerHeight, queryClient, feed, setHasNew])
-  React.useImperativeHandle(ref, () => ({
-    scrollToTop: onScrollToTop,
-  }))
+    const onScrollToTop = useCallback(() => {
+      scrollElRef.current?.scrollToOffset({
+        animated: isNative,
+        offset: -headerHeight,
+      })
+      truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
+      setHasNew(false)
+    }, [scrollElRef, headerHeight, queryClient, feed, setHasNew])
+    useImperativeHandle(ref, () => ({
+      scrollToTop: onScrollToTop,
+    }))
 
-  const renderPostsEmpty = React.useCallback(() => {
-    return <EmptyState icon="feed" message={_(msg`This feed is empty!`)} />
-  }, [_])
+    const renderPostsEmpty = useCallback(() => {
+      return <EmptyState icon="feed" message={_(msg`This feed is empty!`)} />
+    }, [_])
 
-  React.useEffect(() => {
-    if (isFocused && scrollElRef.current) {
-      const nativeTag = findNodeHandle(scrollElRef.current)
-      setScrollViewTag(nativeTag)
-    }
-  }, [isFocused, scrollElRef, setScrollViewTag])
+    useEffect(() => {
+      if (isFocused && scrollElRef.current) {
+        const nativeTag = findNodeHandle(scrollElRef.current)
+        setScrollViewTag(nativeTag)
+      }
+    }, [isFocused, scrollElRef, setScrollViewTag])
 
-  return (
-    <View>
-      <Feed
-        testID="postsFeed"
-        enabled={isFocused}
-        feed={feed}
-        scrollElRef={scrollElRef}
-        onHasNew={setHasNew}
-        onScrolledDownChange={setIsScrolledDown}
-        renderEmptyState={renderPostsEmpty}
-        headerOffset={headerHeight}
-        renderEndOfFeed={ProfileEndOfFeed}
-        ignoreFilterFor={ignoreFilterFor}
-      />
-      {(isScrolledDown || hasNew) && (
-        <LoadLatestBtn
-          onPress={onScrollToTop}
-          label={_(msg`Load new posts`)}
-          showIndicator={hasNew}
+    return (
+      <View>
+        <Feed
+          testID="postsFeed"
+          enabled={isFocused}
+          feed={feed}
+          scrollElRef={scrollElRef}
+          onHasNew={setHasNew}
+          onScrolledDownChange={setIsScrolledDown}
+          renderEmptyState={renderPostsEmpty}
+          headerOffset={headerHeight}
+          renderEndOfFeed={ProfileEndOfFeed}
+          ignoreFilterFor={ignoreFilterFor}
         />
-      )}
-    </View>
-  )
-})
+        {(isScrolledDown || hasNew) && (
+          <LoadLatestBtn
+            onPress={onScrollToTop}
+            label={_(msg`Load new posts`)}
+            showIndicator={hasNew}
+          />
+        )}
+      </View>
+    )
+  },
+)
 
 function ProfileEndOfFeed() {
   const pal = usePalette('default')

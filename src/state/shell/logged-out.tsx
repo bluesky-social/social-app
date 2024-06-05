@@ -1,4 +1,10 @@
-import React from 'react'
+import {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useMemo,
+  useState,
+} from 'react'
 
 type State = {
   showLoggedOut: boolean
@@ -31,24 +37,24 @@ type Controls = {
   clearRequestedAccount: () => void
 }
 
-const StateContext = React.createContext<State>({
+const StateContext = createContext<State>({
   showLoggedOut: false,
   requestedAccountSwitchTo: undefined,
 })
 
-const ControlsContext = React.createContext<Controls>({
+const ControlsContext = createContext<Controls>({
   setShowLoggedOut: () => {},
   requestSwitchToAccount: () => {},
   clearRequestedAccount: () => {},
 })
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [state, setState] = React.useState<State>({
+export function Provider({children}: PropsWithChildren<{}>) {
+  const [state, setState] = useState<State>({
     showLoggedOut: false,
     requestedAccountSwitchTo: undefined,
   })
 
-  const controls = React.useMemo<Controls>(
+  const controls = useMemo<Controls>(
     () => ({
       setShowLoggedOut(show) {
         setState(s => ({
@@ -83,9 +89,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 export function useLoggedOutView() {
-  return React.useContext(StateContext)
+  return useContext(StateContext)
 }
 
 export function useLoggedOutViewControls() {
-  return React.useContext(ControlsContext)
+  return useContext(ControlsContext)
 }

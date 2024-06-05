@@ -1,15 +1,15 @@
-import React from 'react'
-import {AppBskyActorGetProfile as GetProfile} from '@atproto/api'
 import {StyleProp, StyleSheet, TextStyle} from 'react-native'
-import {TextLinkOnWebOnly} from './Link'
-import {Text} from './text/Text'
-import {LoadingPlaceholder} from './LoadingPlaceholder'
-import {TypographyVariant} from 'lib/ThemeContext'
+import {AppBskyActorGetProfile as GetProfile} from '@atproto/api'
+
+import {STALE} from '#/state/queries'
+import {useProfileQuery} from '#/state/queries/profile'
+import {makeProfileLink} from 'lib/routes/links'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {makeProfileLink} from 'lib/routes/links'
-import {useProfileQuery} from '#/state/queries/profile'
-import {STALE} from '#/state/queries'
+import {TypographyVariant} from 'lib/ThemeContext'
+import {TextLinkOnWebOnly} from './Link'
+import {LoadingPlaceholder} from './LoadingPlaceholder'
+import {Text} from './text/Text'
 
 export function UserInfoText({
   type = 'md',

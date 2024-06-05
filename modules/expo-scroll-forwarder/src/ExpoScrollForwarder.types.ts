@@ -1,6 +1,6 @@
-import React from 'react'
+import {ReactNode} from 'react'
 
 export interface ExpoScrollForwarderViewProps {
   scrollViewTag: number | null
-  children: React.ReactNode
+  children: ReactNode
 }

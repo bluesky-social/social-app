@@ -8,16 +8,21 @@
 // Original code copied and simplified from the link below as the codebase is currently not maintained:
 // https://github.com/jobtoday/react-native-image-viewing
 
-import React from 'react'
-import {StyleSheet, View, Platform} from 'react-native'
-
-import ImageItem from './components/ImageItem/ImageItem'
-import ImageDefaultHeader from './components/ImageDefaultHeader'
-
-import {ImageSource} from './@types'
+import {
+  ComponentType,
+  createElement,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react'
+import {Platform, StyleSheet, View} from 'react-native'
+import PagerView from 'react-native-pager-view'
 import Animated, {useAnimatedStyle, withSpring} from 'react-native-reanimated'
 import {Edge, SafeAreaView} from 'react-native-safe-area-context'
-import PagerView from 'react-native-pager-view'
+
+import {ImageSource} from './@types'
+import ImageDefaultHeader from './components/ImageDefaultHeader'
+import ImageItem from './components/ImageItem/ImageItem'
 
 type Props = {
   images: ImageSource[]
@@ -25,8 +30,8 @@ type Props = {
   visible: boolean
   onRequestClose: () => void
   backgroundColor?: string
-  HeaderComponent?: React.ComponentType<{imageIndex: number}>
-  FooterComponent?: React.ComponentType<{imageIndex: number}>
+  HeaderComponent?: ComponentType<{imageIndex: number}>
+  FooterComponent?: ComponentType<{imageIndex: number}>
 }
 
 const DEFAULT_BG_COLOR = '#000'
@@ -40,10 +45,10 @@ function ImageViewing({
   HeaderComponent,
   FooterComponent,
 }: Props) {
-  const [isScaled, setIsScaled] = React.useState(false)
-  const [isDragging, setIsDragging] = React.useState(false)
-  const [imageIndex, setImageIndex] = React.useState(initialImageIndex)
-  const [showControls, setShowControls] = React.useState(true)
+  const [isScaled, setIsScaled] = useState(false)
+  const [isDragging, setIsDragging] = useState(false)
+  const [imageIndex, setImageIndex] = useState(initialImageIndex)
+  const [showControls, setShowControls] = useState(true)
 
   const animatedHeaderStyle = useAnimatedStyle(() => ({
     pointerEvents: showControls ? 'auto' : 'none',
@@ -64,18 +69,18 @@ function ImageViewing({
     ],
   }))
 
-  const onTap = React.useCallback(() => {
+  const onTap = useCallback(() => {
     setShowControls(show => !show)
   }, [])
 
-  const onZoom = React.useCallback((nextIsScaled: boolean) => {
+  const onZoom = useCallback((nextIsScaled: boolean) => {
     setIsScaled(nextIsScaled)
     if (nextIsScaled) {
       setShowControls(false)
     }
   }, [])
 
-  const edges = React.useMemo(() => {
+  const edges = useMemo(() => {
     if (Platform.OS === 'android') {
       return ['top', 'bottom', 'left', 'right'] satisfies Edge[]
     }
@@ -95,7 +100,7 @@ function ImageViewing({
       <View style={[styles.container, {backgroundColor}]}>
         <Animated.View style={[styles.header, animatedHeaderStyle]}>
           {typeof HeaderComponent !== 'undefined' ? (
-            React.createElement(HeaderComponent, {
+            createElement(HeaderComponent, {
               imageIndex,
             })
           ) : (
@@ -129,7 +134,7 @@ function ImageViewing({
         </PagerView>
         {typeof FooterComponent !== 'undefined' && (
           <Animated.View style={[styles.footer, animatedFooterStyle]}>
-            {React.createElement(FooterComponent, {
+            {createElement(FooterComponent, {
               imageIndex,
             })}
           </Animated.View>

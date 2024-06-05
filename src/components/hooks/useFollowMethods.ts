@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {AppBskyActorDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -25,7 +25,7 @@ export function useFollowMethods({
     logContext,
   )
 
-  const follow = React.useCallback(() => {
+  const follow = useCallback(() => {
     requireAuth(async () => {
       try {
         await queueFollow()
@@ -38,7 +38,7 @@ export function useFollowMethods({
     })
   }, [_, queueFollow, requireAuth])
 
-  const unfollow = React.useCallback(() => {
+  const unfollow = useCallback(() => {
     requireAuth(async () => {
       try {
         await queueUnfollow()

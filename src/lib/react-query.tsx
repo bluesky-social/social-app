@@ -1,4 +1,4 @@
-import React from 'react'
+import {ReactNode, useRef, useState} from 'react'
 import {AppState, AppStateStatus} from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {createAsyncStoragePersister} from '@tanstack/query-async-storage-persister'
@@ -74,7 +74,7 @@ export function QueryProvider({
   children,
   currentDid,
 }: {
-  children: React.ReactNode
+  children: ReactNode
   currentDid: string | undefined
 }) {
   return (
@@ -92,10 +92,10 @@ function QueryProviderInner({
   children,
   currentDid,
 }: {
-  children: React.ReactNode
+  children: ReactNode
   currentDid: string | undefined
 }) {
-  const initialDid = React.useRef(currentDid)
+  const initialDid = useRef(currentDid)
   if (currentDid !== initialDid.current) {
     throw Error(
       'Something is very wrong. Expected did to be stable due to key above.',
@@ -103,8 +103,8 @@ function QueryProviderInner({
   }
   // We create the query client here so that it's scoped to a specific DID.
   // Do not move the query client creation outside of this component.
-  const [queryClient, _setQueryClient] = React.useState(() => createQueryClient())
-  const [persistOptions, _setPersistOptions] = React.useState(() => {
+  const [queryClient, _setQueryClient] = useState(() => createQueryClient())
+  const [persistOptions, _setPersistOptions] = useState(() => {
     const asyncPersister = createAsyncStoragePersister({
       storage: AsyncStorage,
       key: 'queryClient-' + (currentDid ?? 'logged-out'),

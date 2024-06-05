@@ -1,4 +1,4 @@
-import React from 'react'
+import {PropsWithChildren, RefObject} from 'react'
 import type {
   AccessibilityProps,
   GestureResponderEvent,
@@ -31,7 +31,7 @@ export type DialogControlRefProps = {
  */
 export type DialogControlProps = DialogControlRefProps & {
   id: string
-  ref: React.RefObject<DialogControlRefProps>
+  ref: RefObject<DialogControlRefProps>
   isOpen?: boolean
 }
 
@@ -59,7 +59,7 @@ export type DialogOuterProps = {
   testID?: string
 }
 
-type DialogInnerPropsBase<T> = React.PropsWithChildren<ViewStyleProp> & T
+type DialogInnerPropsBase<T> = PropsWithChildren<ViewStyleProp> & T
 export type DialogInnerProps =
   | DialogInnerPropsBase<{
       label?: undefined

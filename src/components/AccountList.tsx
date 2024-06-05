@@ -1,4 +1,4 @@
-import React from 'react'
+import {Fragment, useCallback} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -27,7 +27,7 @@ export function AccountList({
   const t = useTheme()
   const {_} = useLingui()
 
-  const onPressAddAccount = React.useCallback(() => {
+  const onPressAddAccount = useCallback(() => {
     onSelectOther()
   }, [onSelectOther])
 
@@ -41,7 +41,7 @@ export function AccountList({
         t.atoms.border_contrast_low,
       ]}>
       {accounts.map(account => (
-        <React.Fragment key={account.did}>
+        <Fragment key={account.did}>
           <AccountItem
             account={account}
             onSelect={onSelectAccount}
@@ -49,7 +49,7 @@ export function AccountList({
             isPendingAccount={account.did === pendingDid}
           />
           <View style={[{borderBottomWidth: 1}, t.atoms.border_contrast_low]} />
-        </React.Fragment>
+        </Fragment>
       ))}
       <Button
         testID="chooseAddAccountBtn"
@@ -98,7 +98,7 @@ function AccountItem({
   const {_} = useLingui()
   const {data: profile} = useProfileQuery({did: account.did})
 
-  const onPress = React.useCallback(() => {
+  const onPress = useCallback(() => {
     onSelect(account)
   }, [account, onSelect])
 

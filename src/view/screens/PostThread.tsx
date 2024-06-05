@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -33,15 +33,15 @@ export function PostThreadScreen({route}: Props) {
   const {name, rkey} = route.params
   const {isMobile} = useWebMediaQueries()
   const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
-  const [canReply, setCanReply] = React.useState(false)
+  const [canReply, setCanReply] = useState(false)
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setMinimalShellMode(false)
     }, [setMinimalShellMode]),
   )
 
-  const onPressReply = React.useCallback(() => {
+  const onPressReply = useCallback(() => {
     if (!uri) {
       return
     }

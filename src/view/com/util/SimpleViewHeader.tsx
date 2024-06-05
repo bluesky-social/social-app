@@ -1,4 +1,4 @@
-import React from 'react'
+import {PropsWithChildren, useCallback} from 'react'
 import {
   StyleProp,
   StyleSheet,
@@ -8,13 +8,14 @@ import {
 } from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
-import {CenteredView} from './Views'
+
+import {isWeb} from '#/platform/detection'
+import {useSetDrawerOpen} from '#/state/shell'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {useAnalytics} from 'lib/analytics/analytics'
 import {NavigationProp} from 'lib/routes/types'
-import {useSetDrawerOpen} from '#/state/shell'
-import {isWeb} from '#/platform/detection'
+import {CenteredView} from './Views'
 
 const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 
@@ -22,7 +23,7 @@ export function SimpleViewHeader({
   showBackButton = true,
   style,
   children,
-}: React.PropsWithChildren<{
+}: PropsWithChildren<{
   showBackButton?: boolean
   style?: StyleProp<ViewStyle>
 }>) {
@@ -33,7 +34,7 @@ export function SimpleViewHeader({
   const {isMobile} = useWebMediaQueries()
   const canGoBack = navigation.canGoBack()
 
-  const onPressBack = React.useCallback(() => {
+  const onPressBack = useCallback(() => {
     if (navigation.canGoBack()) {
       navigation.goBack()
     } else {
@@ -41,7 +42,7 @@ export function SimpleViewHeader({
     }
   }, [navigation])
 
-  const onPressMenu = React.useCallback(() => {
+  const onPressMenu = useCallback(() => {
     track('ViewHeader:MenuButtonClicked')
     setDrawerOpen(true)
   }, [track, setDrawerOpen])

@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo, useReducer} from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -11,11 +11,11 @@ import {Portal} from '#/components/Portal'
 
 export function Onboarding() {
   const {_} = useLingui()
-  const [state, dispatch] = React.useReducer(reducer, {
+  const [state, dispatch] = useReducer(reducer, {
     ...initialState,
   })
 
-  const interestsDisplayNames = React.useMemo(() => {
+  const interestsDisplayNames = useMemo(() => {
     return {
       news: _(msg`News`),
       journalism: _(msg`Journalism`),
@@ -46,7 +46,7 @@ export function Onboarding() {
     <Portal>
       <OnboardingControls.Provider>
         <Context.Provider
-          value={React.useMemo(
+          value={useMemo(
             () => ({state, dispatch, interestsDisplayNames}),
             [state, dispatch, interestsDisplayNames],
           )}>

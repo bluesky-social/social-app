@@ -1,11 +1,11 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {createClient} from '@segment/analytics-react'
 import {sha256} from 'js-sha256'
 import {Browser} from 'sentry-expo'
 
-import {ScreenPropertiesMap, TrackPropertiesMap} from './types'
-import {useSession, SessionAccount} from '#/state/session'
 import {logger} from '#/logger'
+import {SessionAccount, useSession} from '#/state/session'
+import {ScreenPropertiesMap, TrackPropertiesMap} from './types'
 
 type SegmentClient = ReturnType<typeof createClient>
 
@@ -39,7 +39,7 @@ export const track = async <E extends keyof TrackPropertiesMap>(
 export function useAnalytics() {
   const {hasSession} = useSession()
 
-  return React.useMemo(() => {
+  return useMemo(() => {
     if (hasSession) {
       return {
         async screen<E extends keyof ScreenPropertiesMap>(

@@ -1,4 +1,4 @@
-import React from 'react'
+import {Fragment, useCallback, useMemo} from 'react'
 import {TextStyle} from 'react-native'
 import {AppBskyRichtextFacet, RichText as RichTextAPI} from '@atproto/api'
 import {msg} from '@lingui/macro'
@@ -41,7 +41,7 @@ export function RichText({
     interactiveStyle?: TextStyle
     emojiMultiplier?: number
   }) {
-  const richText = React.useMemo(
+  const richText = useMemo(
     () =>
       value instanceof RichTextAPI ? value : new RichTextAPI({text: value}),
     [value],
@@ -192,13 +192,13 @@ function RichTextTag({
   } = useInteractionState()
   const navigation = useNavigation<NavigationProp>()
 
-  const navigateToPage = React.useCallback(() => {
+  const navigateToPage = useCallback(() => {
     navigation.push('Hashtag', {
       tag: encodeURIComponent(tag),
     })
   }, [navigation, tag])
 
-  const openDialog = React.useCallback(() => {
+  const openDialog = useCallback(() => {
     control.open()
   }, [control])
 
@@ -208,7 +208,7 @@ function RichTextTag({
    */
 
   return (
-    <React.Fragment>
+    <Fragment>
       <TagMenu control={control} tag={tag} authorHandle={authorHandle}>
         <Text
           selectable={selectable}
@@ -243,7 +243,7 @@ function RichTextTag({
           {text}
         </Text>
       </TagMenu>
-    </React.Fragment>
+    </Fragment>
   )
 }
 

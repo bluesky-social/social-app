@@ -1,16 +1,24 @@
-import * as React from 'react'
+import {
+  Children,
+  cloneElement,
+  isValidElement,
+  PropsWithChildren,
+  ReactElement,
+  ReactNode,
+} from 'react'
 import {StyleSheet, View} from 'react-native'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useTheme} from 'lib/ThemeContext'
-import {Text} from './text/Text'
-import {TextLink} from './Link'
 import {
   H1 as ExpoH1,
   H2 as ExpoH2,
   H3 as ExpoH3,
   H4 as ExpoH4,
 } from '@expo/html-elements'
+
+import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {useTheme} from 'lib/ThemeContext'
+import {TextLink} from './Link'
+import {Text} from './text/Text'
 
 /**
  * These utilities are used to define long documents in an html-like
@@ -22,11 +30,11 @@ interface IsChildProps {
 }
 
 // type ReactNodeWithIsChildProp =
-//   | React.ReactElement<IsChildProps>
-//   | React.ReactElement<IsChildProps>[]
-//   | React.ReactNode
+//   | ReactElement<IsChildProps>
+//   | ReactElement<IsChildProps>[]
+//   | ReactNode
 
-export function H1({children}: React.PropsWithChildren<{}>) {
+export function H1({children}: PropsWithChildren<{}>) {
   const styles = useStyles()
   const pal = usePalette('default')
   const typography = useTheme().typography['title-xl']
@@ -34,7 +42,7 @@ export function H1({children}: React.PropsWithChildren<{}>) {
   return <ExpoH1 style={[typography, pal.text, styles.h1]}>{children}</ExpoH1>
 }
 
-export function H2({children}: React.PropsWithChildren<{}>) {
+export function H2({children}: PropsWithChildren<{}>) {
   const styles = useStyles()
   const pal = usePalette('default')
   const typography = useTheme().typography['title-lg']
@@ -42,7 +50,7 @@ export function H2({children}: React.PropsWithChildren<{}>) {
   return <ExpoH2 style={[typography, pal.text, styles.h2]}>{children}</ExpoH2>
 }
 
-export function H3({children}: React.PropsWithChildren<{}>) {
+export function H3({children}: PropsWithChildren<{}>) {
   const styles = useStyles()
   const pal = usePalette('default')
   const typography = useTheme().typography.title
@@ -50,7 +58,7 @@ export function H3({children}: React.PropsWithChildren<{}>) {
   return <ExpoH3 style={[typography, pal.text, styles.h3]}>{children}</ExpoH3>
 }
 
-export function H4({children}: React.PropsWithChildren<{}>) {
+export function H4({children}: PropsWithChildren<{}>) {
   const styles = useStyles()
   const pal = usePalette('default')
   const typography = useTheme().typography['title-sm']
@@ -58,7 +66,7 @@ export function H4({children}: React.PropsWithChildren<{}>) {
   return <ExpoH4 style={[typography, pal.text, styles.h4]}>{children}</ExpoH4>
 }
 
-export function P({children}: React.PropsWithChildren<{}>) {
+export function P({children}: PropsWithChildren<{}>) {
   const styles = useStyles()
   const pal = usePalette('default')
   return (
@@ -68,7 +76,7 @@ export function P({children}: React.PropsWithChildren<{}>) {
   )
 }
 
-export function UL({children, isChild}: React.PropsWithChildren<IsChildProps>) {
+export function UL({children, isChild}: PropsWithChildren<IsChildProps>) {
   const styles = useStyles()
   return (
     <View style={[styles.ul, isChild && styles.ulChild]}>
@@ -77,7 +85,7 @@ export function UL({children, isChild}: React.PropsWithChildren<IsChildProps>) {
   )
 }
 
-export function OL({children, isChild}: React.PropsWithChildren<IsChildProps>) {
+export function OL({children, isChild}: PropsWithChildren<IsChildProps>) {
   const styles = useStyles()
   return (
     <View style={[styles.ol, isChild && styles.olChild]}>
@@ -86,10 +94,7 @@ export function OL({children, isChild}: React.PropsWithChildren<IsChildProps>) {
   )
 }
 
-export function LI({
-  children,
-  value,
-}: React.PropsWithChildren<{value?: string}>) {
+export function LI({children, value}: PropsWithChildren<{value?: string}>) {
   const styles = useStyles()
   const pal = usePalette('default')
   return (
@@ -102,7 +107,7 @@ export function LI({
   )
 }
 
-export function A({children, href}: React.PropsWithChildren<{href: string}>) {
+export function A({children, href}: PropsWithChildren<{href: string}>) {
   const styles = useStyles()
   const pal = usePalette('default')
   return (
@@ -115,7 +120,7 @@ export function A({children, href}: React.PropsWithChildren<{href: string}>) {
   )
 }
 
-export function STRONG({children}: React.PropsWithChildren<{}>) {
+export function STRONG({children}: PropsWithChildren<{}>) {
   const pal = usePalette('default')
   return (
     <Text type="md-medium" style={[pal.text]}>
@@ -124,7 +129,7 @@ export function STRONG({children}: React.PropsWithChildren<{}>) {
   )
 }
 
-export function EM({children}: React.PropsWithChildren<{}>) {
+export function EM({children}: PropsWithChildren<{}>) {
   const styles = useStyles()
   const pal = usePalette('default')
   return (
@@ -134,13 +139,12 @@ export function EM({children}: React.PropsWithChildren<{}>) {
   )
 }
 
-function markChildProps(children: React.ReactNode) {
-  return React.Children.map(children, child => {
-    if (React.isValidElement(child)) {
-      return React.cloneElement<IsChildProps>(
-        child as React.ReactElement<IsChildProps>,
-        {isChild: true},
-      )
+function markChildProps(children: ReactNode) {
+  return Children.map(children, child => {
+    if (isValidElement(child)) {
+      return cloneElement<IsChildProps>(child as ReactElement<IsChildProps>, {
+        isChild: true,
+      })
     }
     return child
   })

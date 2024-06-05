@@ -1,4 +1,4 @@
-import React from 'react'
+import {PropsWithChildren} from 'react'
 
 import {Provider as AltTextRequiredProvider} from './alt-text-required'
 import {Provider as AutoplayProvider} from './autoplay'
@@ -23,7 +23,7 @@ export * from './hidden-posts'
 export {useLabelDefinitions} from './label-defs'
 export {useLanguagePrefs, useLanguagePrefsApi} from './languages'
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
+export function Provider({children}: PropsWithChildren<{}>) {
   return (
     <LanguagesProvider>
       <AltTextRequiredProvider>

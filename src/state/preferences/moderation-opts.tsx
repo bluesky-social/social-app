@@ -1,4 +1,4 @@
-import React from 'react'
+import {createContext, PropsWithChildren, useContext, useMemo} from 'react'
 import {BSKY_LABELER_DID, ModerationOpts} from '@atproto/api'
 
 import {useHiddenPosts, useLabelDefinitions} from '#/state/preferences'
@@ -6,21 +6,21 @@ import {DEFAULT_LOGGED_OUT_LABEL_PREFERENCES} from '#/state/queries/preferences/
 import {useSession} from '#/state/session'
 import {usePreferencesQuery} from '../queries/preferences'
 
-export const moderationOptsContext = React.createContext<ModerationOpts | undefined>(
+export const moderationOptsContext = createContext<ModerationOpts | undefined>(
   undefined,
 )
 
 // used in the moderation state devtool
-export const moderationOptsOverrideContext = React.createContext<
+export const moderationOptsOverrideContext = createContext<
   ModerationOpts | undefined
 >(undefined)
 
 export function useModerationOpts() {
-  return React.useContext(moderationOptsContext)
+  return useContext(moderationOptsContext)
 }
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  const override = React.useContext(moderationOptsOverrideContext)
+export function Provider({children}: PropsWithChildren<{}>) {
+  const override = useContext(moderationOptsOverrideContext)
   const {currentAccount} = useSession()
   const prefs = usePreferencesQuery()
   const {labelDefs} = useLabelDefinitions()
@@ -28,7 +28,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const userDid = currentAccount?.did
   const moderationPrefs = prefs.data?.moderationPrefs
-  const value = React.useMemo<ModerationOpts | undefined>(() => {
+
+  const value = useMemo<ModerationOpts | undefined>(() => {
     if (override) {
       return override
     }

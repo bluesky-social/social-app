@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -37,7 +37,7 @@ export function FeedShutdownMsg({feedUri}: {feedUri: string}) {
   const hasFeedPinned = Boolean(feedConfig)
   const hasDiscoverPinned = Boolean(discoverFeedConfig?.pinned)
 
-  const onRemoveFeed = React.useCallback(async () => {
+  const onRemoveFeed = useCallback(async () => {
     try {
       if (feedConfig) {
         await removeFeed(feedConfig)
@@ -56,7 +56,7 @@ export function FeedShutdownMsg({feedUri}: {feedUri: string}) {
     }
   }, [removeFeed, feedConfig, _, hasDiscoverPinned, setSelectedFeed])
 
-  const onReplaceFeed = React.useCallback(async () => {
+  const onReplaceFeed = useCallback(async () => {
     try {
       await replaceFeedWithDiscover({
         forYouFeedConfig: feedConfig,

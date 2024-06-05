@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useState} from 'react'
 import {
   ActivityIndicator,
   StyleSheet,
@@ -73,20 +73,20 @@ export function Inner({
     useUpdateHandleMutation()
   const agent = useAgent()
 
-  const [error, setError] = React.useState<string>('')
+  const [error, setError] = useState<string>('')
 
-  const [isCustom, setCustom] = React.useState<boolean>(false)
-  const [handle, setHandle] = React.useState<string>('')
-  const [canSave, setCanSave] = React.useState<boolean>(false)
+  const [isCustom, setCustom] = useState<boolean>(false)
+  const [handle, setHandle] = useState<string>('')
+  const [canSave, setCanSave] = useState<boolean>(false)
 
   const userDomain = serviceInfo.availableUserDomains?.[0]
 
   // events
   // =
-  const onPressCancel = React.useCallback(() => {
+  const onPressCancel = useCallback(() => {
     closeModal()
   }, [closeModal])
-  const onToggleCustom = React.useCallback(() => {
+  const onToggleCustom = useCallback(() => {
     // toggle between a provided domain vs a custom one
     setHandle('')
     setCanSave(false)
@@ -95,7 +95,7 @@ export function Inner({
       isCustom ? 'EditHandle:ViewCustomForm' : 'EditHandle:ViewProvidedForm',
     )
   }, [setCustom, isCustom, track])
-  const onPressSave = React.useCallback(async () => {
+  const onPressSave = useCallback(async () => {
     if (!userDomain) {
       logger.error(`ChangeHandle: userDomain is undefined`, {
         service: serviceInfo,
@@ -228,7 +228,7 @@ function ProvidedHandleForm({
 
   // events
   // =
-  const onChangeHandle = React.useCallback(
+  const onChangeHandle = useCallback(
     (v: string) => {
       const newHandle = makeValidHandle(v)
       setHandle(newHandle)
@@ -309,24 +309,24 @@ function CustomHandleForm({
   const palError = usePalette('error')
   const theme = useTheme()
   const {_} = useLingui()
-  const [isVerifying, setIsVerifying] = React.useState(false)
-  const [error, setError] = React.useState<string>('')
-  const [isDNSForm, setDNSForm] = React.useState<boolean>(true)
+  const [isVerifying, setIsVerifying] = useState(false)
+  const [error, setError] = useState<string>('')
+  const [isDNSForm, setDNSForm] = useState<boolean>(true)
   const fetchDid = useFetchDid()
   // events
   // =
-  const onPressCopy = React.useCallback(() => {
+  const onPressCopy = useCallback(() => {
     setStringAsync(isDNSForm ? `did=${currentAccount.did}` : currentAccount.did)
     Toast.show(_(msg`Copied to clipboard`))
   }, [currentAccount, isDNSForm, _])
-  const onChangeHandle = React.useCallback(
+  const onChangeHandle = useCallback(
     (v: string) => {
       setHandle(v)
       setCanSave(false)
     },
     [setHandle, setCanSave],
   )
-  const onPressVerify = React.useCallback(async () => {
+  const onPressVerify = useCallback(async () => {
     if (canSave) {
       onPressSave()
     }

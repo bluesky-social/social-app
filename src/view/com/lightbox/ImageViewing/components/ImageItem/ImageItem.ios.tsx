@@ -6,10 +6,9 @@
  *
  */
 
-import React from 'react'
-
+import {memo, useState} from 'react'
 import {Dimensions, StyleSheet} from 'react-native'
-import {Image} from 'expo-image'
+import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import Animated, {
   interpolate,
   runOnJS,
@@ -17,12 +16,11 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
+import {Image} from 'expo-image'
+
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
-import {Gesture, GestureDetector} from 'react-native-gesture-handler'
-
+import {Dimensions as ImageDimensions, ImageSource} from '../../@types'
 import useImageDimensions from '../../hooks/useImageDimensions'
-
-import {ImageSource, Dimensions as ImageDimensions} from '../../@types'
 import {ImageLoading} from './ImageLoading'
 
 const SWIPE_CLOSE_OFFSET = 75
@@ -51,8 +49,8 @@ const ImageItem = ({
 }: Props) => {
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
   const translationY = useSharedValue(0)
-  const [loaded, setLoaded] = React.useState(false)
-  const [scaled, setScaled] = React.useState(false)
+  const [loaded, setLoaded] = useState(false)
+  const [scaled, setScaled] = useState(false)
   const imageDimensions = useImageDimensions(imageSrc)
   const maxZoomScale = imageDimensions
     ? (imageDimensions.width / SCREEN.width) * MAX_ORIGINAL_IMAGE_ZOOM
@@ -260,4 +258,4 @@ const getZoomRectAfterDoubleTap = (
   }
 }
 
-export default React.memo(ImageItem)
+export default memo(ImageItem)

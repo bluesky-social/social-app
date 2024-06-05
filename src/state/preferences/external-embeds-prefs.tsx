@@ -1,4 +1,11 @@
-import React from 'react'
+import {
+  createContext,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 
 import * as persisted from '#/state/persisted'
 import {EmbedPlayerSource} from 'lib/strings/embed-player'
@@ -9,15 +16,15 @@ type SetContext = (
   value: 'show' | 'hide' | undefined,
 ) => void
 
-const stateContext = React.createContext<StateContext>(
+const stateContext = createContext<StateContext>(
   persisted.defaults.externalEmbeds,
 )
-const setContext = React.createContext<SetContext>({} as SetContext)
+const setContext = createContext<SetContext>({} as SetContext)
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [state, setState] = React.useState(persisted.get('externalEmbeds'))
+export function Provider({children}: PropsWithChildren<{}>) {
+  const [state, setState] = useState(persisted.get('externalEmbeds'))
 
-  const setStateWrapped = React.useCallback(
+  const setStateWrapped = useCallback(
     (source: EmbedPlayerSource, value: 'show' | 'hide' | undefined) => {
       setState(prev => {
         persisted.write('externalEmbeds', {
@@ -34,7 +41,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [setState],
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     return persisted.onUpdate(() => {
       setState(persisted.get('externalEmbeds'))
     })
@@ -50,9 +57,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 export function useExternalEmbedsPrefs() {
-  return React.useContext(stateContext)
+  return useContext(stateContext)
 }
 
 export function useSetExternalEmbedPref() {
-  return React.useContext(setContext)
+  return useContext(setContext)
 }

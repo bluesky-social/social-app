@@ -2,7 +2,7 @@
  * Note: the dataSet properties are used to leverage custom CSS in public/index.html
  */
 
-import React from 'react'
+import {FC, useEffect, useState} from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import {
   FontAwesomeIcon,
@@ -26,10 +26,10 @@ let toastTimeout: NodeJS.Timeout | undefined
 // components
 // =
 type ToastContainerProps = {}
-export const ToastContainer: React.FC<ToastContainerProps> = ({}) => {
-  const [activeToast, setActiveToast] = React.useState<ActiveToast | undefined>()
+export const ToastContainer: FC<ToastContainerProps> = ({}) => {
+  const [activeToast, setActiveToast] = useState<ActiveToast | undefined>()
 
-  React.useEffect(() => {
+  useEffect(() => {
     globalSetActiveToast = (t: ActiveToast | undefined) => {
       setActiveToast(t)
     }

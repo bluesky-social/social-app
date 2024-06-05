@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {
   ActivityIndicator,
   StyleSheet,
@@ -55,7 +55,7 @@ export function Inner({invites}: {invites: InviteCodesQueryResponse}) {
   const {closeModal} = useModalControls()
   const {isTabletOrDesktop} = useWebMediaQueries()
 
-  const onClose = React.useCallback(() => {
+  const onClose = useCallback(() => {
     closeModal()
   }, [closeModal])
 
@@ -148,7 +148,7 @@ function InviteCode({
   const {setInviteCopied} = useInvitesAPI()
   const uses = invite.uses
 
-  const onPress = React.useCallback(() => {
+  const onPress = useCallback(() => {
     setStringAsync(invite.code)
     Toast.show(_(msg`Copied to clipboard`))
     setInviteCopied(invite.code)

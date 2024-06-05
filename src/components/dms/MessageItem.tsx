@@ -1,4 +1,4 @@
-import React from 'react'
+import {memo, ReactNode, useCallback, useMemo, useRef} from 'react'
 import {
   GestureResponderEvent,
   LayoutAnimation,
@@ -28,7 +28,7 @@ let MessageItem = ({
   item,
 }: {
   item: ConvoItem & {type: 'message' | 'pending-message'}
-}): React.ReactNode => {
+}): ReactNode => {
   const t = useTheme()
   const {currentAccount} = useSession()
 
@@ -41,7 +41,7 @@ let MessageItem = ({
     ChatBskyConvoDefs.isMessageView(nextMessage) &&
     nextMessage.sender?.did === currentAccount?.did
 
-  const isLastInGroup = React.useMemo(() => {
+  const isLastInGroup = useMemo(() => {
     // if this message is pending, it means the next message is pending too
     if (isPending && nextMessage) {
       return false
@@ -66,7 +66,7 @@ let MessageItem = ({
     return true
   }, [message, nextMessage, isFromSelf, isNextFromSelf, isPending])
 
-  const lastInGroupRef = React.useRef(isLastInGroup)
+  const lastInGroupRef = useRef(isLastInGroup)
   if (lastInGroupRef.current !== isLastInGroup) {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     lastInGroupRef.current = isLastInGroup
@@ -75,7 +75,7 @@ let MessageItem = ({
   const pendingColor =
     t.name === 'light' ? t.palette.primary_200 : t.palette.primary_800
 
-  const rt = React.useMemo(() => {
+  const rt = useMemo(() => {
     return new RichTextAPI({text: message.text, facets: message.facets})
   }, [message.text, message.facets])
 
@@ -133,7 +133,7 @@ let MessageItem = ({
     </View>
   )
 }
-MessageItem = React.memo(MessageItem)
+MessageItem = memo(MessageItem)
 export {MessageItem}
 
 let MessageItemMetadata = ({
@@ -142,12 +142,12 @@ let MessageItemMetadata = ({
 }: {
   item: ConvoItem & {type: 'message' | 'pending-message'}
   style: StyleProp<TextStyle>
-}): React.ReactNode => {
+}): ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
   const {message} = item
 
-  const handleRetry = React.useCallback(
+  const handleRetry = useCallback(
     (e: GestureResponderEvent) => {
       if (item.type === 'pending-message' && item.retry) {
         e.preventDefault()
@@ -158,7 +158,7 @@ let MessageItemMetadata = ({
     [item],
   )
 
-  const relativeTimestamp = React.useCallback(
+  const relativeTimestamp = useCallback(
     (timestamp: string) => {
       const date = new Date(timestamp)
       const now = new Date()
@@ -248,7 +248,7 @@ let MessageItemMetadata = ({
   )
 }
 
-MessageItemMetadata = React.memo(MessageItemMetadata)
+MessageItemMetadata = memo(MessageItemMetadata)
 export {MessageItemMetadata}
 
 function localDateString(date: Date) {

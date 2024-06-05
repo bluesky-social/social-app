@@ -1,4 +1,4 @@
-import React from 'react'
+import {ReactNode, useEffect, useMemo, useRef, useState} from 'react'
 import {TextInput, View} from 'react-native'
 import {AppBskyActorDefs, AppBskyFeedPost, AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -24,7 +24,7 @@ type EmbedDialogProps = {
   timestamp: string
 }
 
-let EmbedDialog = ({control, ...rest}: EmbedDialogProps): React.ReactNode => {
+let EmbedDialog = ({control, ...rest}: EmbedDialogProps): ReactNode => {
   return (
     <Dialog.Outer control={control}>
       <Dialog.Handle />
@@ -32,7 +32,7 @@ let EmbedDialog = ({control, ...rest}: EmbedDialogProps): React.ReactNode => {
     </Dialog.Outer>
   )
 }
-EmbedDialog = React.memo(EmbedDialog)
+EmbedDialog = memo(EmbedDialog)
 export {EmbedDialog}
 
 function EmbedDialogInner({
@@ -44,11 +44,11 @@ function EmbedDialogInner({
 }: Omit<EmbedDialogProps, 'control'>) {
   const t = useTheme()
   const {_} = useLingui()
-  const ref = React.useRef<TextInput>(null)
-  const [copied, setCopied] = React.useState(false)
+  const ref = useRef<TextInput>(null)
+  const [copied, setCopied] = useState(false)
 
   // reset copied state after 2 seconds
-  React.useEffect(() => {
+  useEffect(() => {
     if (copied) {
       const timeout = setTimeout(() => {
         setCopied(false)
@@ -57,7 +57,7 @@ function EmbedDialogInner({
     }
   }, [copied])
 
-  const snippet = React.useMemo(() => {
+  const snippet = useMemo(() => {
     function toEmbedUrl(href: string) {
       return toShareUrl(href) + '?ref_src=embed'
     }

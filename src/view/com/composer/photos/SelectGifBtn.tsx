@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useRef} from 'react'
 import {Keyboard} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -18,10 +18,10 @@ type Props = {
 
 export function SelectGifBtn({onClose, onSelectGif, disabled}: Props) {
   const {_} = useLingui()
-  const ref = React.useRef<{open: () => void}>(null)
+  const ref = useRef<{open: () => void}>(null)
   const t = useTheme()
 
-  const onPressSelectGif = React.useCallback(async () => {
+  const onPressSelectGif = useCallback(async () => {
     logEvent('composer:gif:open', {})
     Keyboard.dismiss()
     ref.current?.open()

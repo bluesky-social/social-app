@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {View} from 'react-native'
 import {ChatBskyActorDeclaration} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -23,7 +23,7 @@ export function MessagesNUX() {
     did: currentAccount!.did,
   })
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (profile && typeof profile.associated?.chat === 'undefined') {
       const timeout = setTimeout(() => {
         control.open()
@@ -54,14 +54,14 @@ function DialogInner({
   const {_} = useLingui()
   const t = useTheme()
 
-  const [initialized, setInitialzed] = React.useState(false)
+  const [initialized, setInitialzed] = useState(false)
   const {mutate: updateDeclaration} = useUpdateActorDeclaration({
     onError: () => {
       Toast.show(_(msg`Failed to update settings`))
     },
   })
 
-  const onSelectItem = React.useCallback(
+  const onSelectItem = useCallback(
     (keys: string[]) => {
       const key = keys[0]
       if (!key) return
@@ -70,7 +70,7 @@ function DialogInner({
     [updateDeclaration],
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!chatDeclation && !initialized) {
       updateDeclaration('following')
       setInitialzed(true)

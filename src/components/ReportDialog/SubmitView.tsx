@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import {AppBskyLabelerDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -37,14 +37,14 @@ export function SubmitView({
   const t = useTheme()
   const {_} = useLingui()
   const agent = useAgent()
-  const [details, setDetails] = React.useState<string>('')
-  const [submitting, setSubmitting] = React.useState<boolean>(false)
-  const [selectedServices, setSelectedServices] = React.useState<string[]>([
+  const [details, setDetails] = useState<string>('')
+  const [submitting, setSubmitting] = useState<boolean>(false)
+  const [selectedServices, setSelectedServices] = useState<string[]>([
     selectedLabeler,
   ])
-  const [error, setError] = React.useState('')
+  const [error, setError] = useState('')
 
-  const submit = React.useCallback(async () => {
+  const submit = useCallback(async () => {
     setSubmitting(true)
     setError('')
 

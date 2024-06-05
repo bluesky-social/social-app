@@ -1,17 +1,16 @@
-import React from 'react'
+import {ComponentType, createRef, PureComponent, RefObject} from 'react'
 import {requireNativeModule} from 'expo'
 import {requireNativeViewManager} from 'expo-modules-core'
 
 import {GifViewProps} from './GifView.types'
 
 const NativeModule = requireNativeModule('ExpoBlueskyGifView')
-const NativeView: React.ComponentType<
-  GifViewProps & {ref: React.RefObject<any>}
-> = requireNativeViewManager('ExpoBlueskyGifView')
+const NativeView: ComponentType<GifViewProps & {ref: RefObject<any>}> =
+  requireNativeViewManager('ExpoBlueskyGifView')
 
-export class GifView extends React.PureComponent<GifViewProps> {
+export class GifView extends PureComponent<GifViewProps> {
   // TODO native types, should all be the same as those in this class
-  private nativeRef: React.RefObject<any> = React.createRef()
+  private nativeRef: RefObject<any> = createRef()
 
   constructor(props: GifViewProps | Readonly<GifViewProps>) {
     super(props)

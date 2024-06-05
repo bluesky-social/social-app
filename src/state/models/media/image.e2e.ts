@@ -1,8 +1,9 @@
 import {Image as RNImage} from 'react-native-image-crop-picker'
-import {makeAutoObservable} from 'mobx'
-import {POST_IMG_MAX} from 'lib/constants'
 import {ActionCrop} from 'expo-image-manipulator'
+import {makeAutoObservable} from 'mobx'
 import {Position} from 'react-avatar-editor'
+
+import {POST_IMG_MAX} from 'lib/constants'
 import {Dimensions} from 'lib/media/types'
 
 export interface ImageManipulationAttributes {

@@ -1,4 +1,4 @@
-import React from 'react'
+import {useEffect, useState} from 'react'
 import {
   ActivityIndicator,
   Pressable,
@@ -44,16 +44,16 @@ export function Component({
   const agent = useAgent()
   const {currentAccount} = useSession()
   const {_} = useLingui()
-  const [stage, setStage] = React.useState<Stages>(
+  const [stage, setStage] = useState<Stages>(
     showReminder ? Stages.Reminder : Stages.Email,
   )
-  const [confirmationCode, setConfirmationCode] = React.useState<string>('')
-  const [isProcessing, setIsProcessing] = React.useState<boolean>(false)
-  const [error, setError] = React.useState<string>('')
+  const [confirmationCode, setConfirmationCode] = useState<string>('')
+  const [isProcessing, setIsProcessing] = useState<boolean>(false)
+  const [error, setError] = useState<string>('')
   const {isMobile} = useWebMediaQueries()
   const {openModal, closeModal} = useModalControls()
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!currentAccount) {
       logger.error(`VerifyEmail modal opened without currentAccount`)
       closeModal()

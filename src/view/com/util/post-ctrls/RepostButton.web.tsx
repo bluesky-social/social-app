@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {Pressable, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -33,7 +33,7 @@ export const RepostButton = ({
   const {hasSession} = useSession()
   const requireAuth = useRequireAuth()
 
-  const color = React.useMemo(
+  const color = useMemo(
     () => ({
       color: isReposted ? t.palette.positive_600 : t.palette.contrast_500,
     }),

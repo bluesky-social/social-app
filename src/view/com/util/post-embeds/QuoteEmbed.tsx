@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useMemo} from 'react'
 import {
   StyleProp,
   StyleSheet,
@@ -103,7 +103,7 @@ function QuoteEmbedModerated({
   allowNestedQuotes?: boolean
 }) {
   const moderationOpts = useModerationOpts()
-  const moderation = React.useMemo(() => {
+  const moderation = useMemo(() => {
     return moderationOpts
       ? moderatePost(viewRecordToPostView(viewRecord), moderationOpts)
       : undefined
@@ -149,7 +149,7 @@ export function QuoteEmbed({
   const itemHref = makeProfileLink(quote.author, 'post', itemUrip.rkey)
   const itemTitle = `Post by ${quote.author.handle}`
 
-  const richText = React.useMemo(
+  const richText = useMemo(
     () =>
       quote.text.trim()
         ? new RichTextAPI({text: quote.text, facets: quote.facets})
@@ -157,7 +157,7 @@ export function QuoteEmbed({
     [quote.text, quote.facets],
   )
 
-  const embed = React.useMemo(() => {
+  const embed = useMemo(() => {
     const e = quote.embeds?.[0]
 
     if (allowNestedQuotes) {
@@ -175,7 +175,7 @@ export function QuoteEmbed({
     }
   }, [quote.embeds, allowNestedQuotes])
 
-  const onBeforePress = React.useCallback(() => {
+  const onBeforePress = useCallback(() => {
     precacheProfile(queryClient, quote.author)
     onOpen?.()
   }, [queryClient, quote.author, onOpen])

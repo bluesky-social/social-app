@@ -1,4 +1,4 @@
-import React from 'react'
+import {FC, useCallback, useEffect, useMemo} from 'react'
 import {
   BackHandler,
   DimensionValue,
@@ -44,16 +44,16 @@ function ShellInner() {
   const setIsDrawerOpen = useSetDrawerOpen()
   const winDim = useWindowDimensions()
   const safeAreaInsets = useSafeAreaInsets()
-  const containerPadding = React.useMemo(
+  const containerPadding = useMemo(
     () => ({height: '100%' as DimensionValue, paddingTop: safeAreaInsets.top}),
     [safeAreaInsets],
   )
-  const renderDrawerContent = React.useCallback(() => <DrawerContent />, [])
-  const onOpenDrawer = React.useCallback(
+  const renderDrawerContent = useCallback(() => <DrawerContent />, [])
+  const onOpenDrawer = useCallback(
     () => setIsDrawerOpen(true),
     [setIsDrawerOpen],
   )
-  const onCloseDrawer = React.useCallback(
+  const onCloseDrawer = useCallback(
     () => setIsDrawerOpen(false),
     [setIsDrawerOpen],
   )
@@ -65,7 +65,7 @@ function ShellInner() {
   useNotificationsRegistration()
   useNotificationsHandler()
 
-  React.useEffect(() => {
+  useEffect(() => {
     let listener = {remove() {}}
     if (isAndroid) {
       listener = BackHandler.addEventListener('hardwareBackPress', () => {
@@ -105,10 +105,10 @@ function ShellInner() {
   )
 }
 
-export const Shell: React.FC = function ShellImpl() {
+export const Shell: FC = function ShellImpl() {
   const pal = usePalette('default')
   const theme = useTheme()
-  React.useEffect(() => {
+  useEffect(() => {
     if (isAndroid) {
       NavigationBar.setBackgroundColorAsync(theme.palette.default.background)
       NavigationBar.setBorderColorAsync(theme.palette.default.background)

@@ -1,4 +1,11 @@
-import React from 'react'
+import {
+  RefObject,
+  useCallback,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import type {TextInput as TextInputType} from 'react-native'
 import {View} from 'react-native'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
@@ -57,11 +64,11 @@ export function SearchablePeopleList({
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
   const control = Dialog.useDialogContext()
-  const listRef = React.useRef<BottomSheetFlatListMethods>(null)
+  const listRef = useRef<BottomSheetFlatListMethods>(null)
   const {currentAccount} = useSession()
-  const inputRef = React.useRef<TextInputType>(null)
+  const inputRef = useRef<TextInputType>(null)
 
-  const [searchText, setSearchText] = React.useState('')
+  const [searchText, setSearchText] = useState('')
 
   const {
     data: results,
@@ -70,7 +77,7 @@ export function SearchablePeopleList({
   } = useActorAutocompleteQuery(searchText, true, 12)
   const {data: follows} = useProfileFollowsQuery(currentAccount?.did)
 
-  const items = React.useMemo(() => {
+  const items = useMemo(() => {
     let _items: Item[] = []
 
     if (isError) {
@@ -132,7 +139,7 @@ export function SearchablePeopleList({
     items.push({type: 'empty', key: 'empty', message: _(msg`No results`)})
   }
 
-  const renderItems = React.useCallback(
+  const renderItems = useCallback(
     ({item}: {item: Item}) => {
       switch (item.type) {
         case 'profile': {
@@ -159,7 +166,7 @@ export function SearchablePeopleList({
     [moderationOpts, onSelectChat],
   )
 
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     if (isWeb) {
       setImmediate(() => {
         inputRef?.current?.focus()
@@ -167,7 +174,7 @@ export function SearchablePeopleList({
     }
   }, [])
 
-  const listHeader = React.useMemo(() => {
+  const listHeader = useMemo(() => {
     return (
       <View
         style={[
@@ -291,7 +298,7 @@ function ProfileCard({
     moderation.ui('displayName'),
   )
 
-  const handleOnPress = React.useCallback(() => {
+  const handleOnPress = useCallback(() => {
     onPress(profile.did)
   }, [onPress, profile.did])
 
@@ -402,7 +409,7 @@ function SearchInput({
   value: string
   onChangeText: (text: string) => void
   onEscape: () => void
-  inputRef: React.RefObject<TextInputType>
+  inputRef: RefObject<TextInputType>
 }) {
   const t = useTheme()
   const {_} = useLingui()

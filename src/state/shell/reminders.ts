@@ -1,7 +1,7 @@
 import * as persisted from '#/state/persisted'
 import {toHashCode} from 'lib/strings/helpers'
-import {isOnboardingActive} from './onboarding'
 import {SessionAccount} from '../session'
+import {isOnboardingActive} from './onboarding'
 
 export function shouldRequestEmailConfirmation(account: SessionAccount) {
   if (!account) {

@@ -1,15 +1,16 @@
-import React from 'react'
-import {TextStyle, StyleProp} from 'react-native'
-import {RichText as RichTextObj, AppBskyRichtextFacet} from '@atproto/api'
-import {TextLink} from '../Link'
-import {Text} from './Text'
-import {lh} from 'lib/styles'
-import {toShortUrl} from 'lib/strings/url-helpers'
-import {useTheme, TypographyVariant} from 'lib/ThemeContext'
+import {Fragment, useCallback} from 'react'
+import {StyleProp, TextStyle} from 'react-native'
+import {AppBskyRichtextFacet, RichText as RichTextObj} from '@atproto/api'
+
+import {isNative} from '#/platform/detection'
 import {usePalette} from 'lib/hooks/usePalette'
 import {makeTagLink} from 'lib/routes/links'
+import {toShortUrl} from 'lib/strings/url-helpers'
+import {lh} from 'lib/styles'
+import {TypographyVariant, useTheme} from 'lib/ThemeContext'
 import {TagMenu, useTagMenuControl} from '#/components/TagMenu'
-import {isNative} from '#/platform/detection'
+import {TextLink} from '../Link'
+import {Text} from './Text'
 
 const WORD_WRAP = {wordWrap: 1}
 
@@ -168,12 +169,12 @@ function RichTextTag({
   const pal = usePalette('default')
   const control = useTagMenuControl()
 
-  const open = React.useCallback(() => {
+  const open = useCallback(() => {
     control.open()
   }, [control])
 
   return (
-    <React.Fragment>
+    <Fragment>
       <TagMenu control={control} tag={tag}>
         {isNative ? (
           <TextLink
@@ -195,6 +196,6 @@ function RichTextTag({
           </Text>
         )}
       </TagMenu>
-    </React.Fragment>
+    </Fragment>
   )
 }

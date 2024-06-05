@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -22,18 +22,18 @@ export const ChooseAccountForm = ({
   onSelectAccount: (account?: SessionAccount) => void
   onPressBack: () => void
 }) => {
-  const [pendingDid, setPendingDid] = React.useState<string | null>(null)
+  const [pendingDid, setPendingDid] = useState<string | null>(null)
   const {track, screen} = useAnalytics()
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const {resumeSession} = useSessionApi()
   const {setShowLoggedOut} = useLoggedOutViewControls()
 
-  React.useEffect(() => {
+  useEffect(() => {
     screen('Choose Account')
   }, [screen])
 
-  const onSelect = React.useCallback(
+  const onSelect = useCallback(
     async (account: SessionAccount) => {
       if (pendingDid) {
         // The session API isn't resilient to race conditions so let's just ignore this.

@@ -1,4 +1,14 @@
-import React from 'react'
+import {
+  createContext,
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {View} from 'react-native'
 import {Image as ExpoImage} from 'expo-image'
 import {
@@ -55,11 +65,11 @@ export interface Avatar {
 
 interface IAvatarContext {
   avatar: Avatar
-  setAvatar: React.Dispatch<React.SetStateAction<Avatar>>
+  setAvatar: Dispatch<SetStateAction<Avatar>>
 }
 
-const AvatarContext = React.createContext<IAvatarContext>({} as IAvatarContext)
-export const useAvatar = () => React.useContext(AvatarContext)
+const AvatarContext = createContext<IAvatarContext>({} as IAvatarContext)
+export const useAvatar = () => useContext(AvatarContext)
 
 const randomColor =
   avatarColors[Math.floor(Math.random() * avatarColors.length)]
@@ -74,10 +84,10 @@ export function StepProfile() {
   const requestNotificationsPermission = useRequestNotificationsPermission()
 
   const creatorControl = Dialog.useDialogControl()
-  const [error, setError] = React.useState('')
+  const [error, setError] = useState('')
 
-  const {state, dispatch} = React.useContext(Context)
-  const [avatar, setAvatar] = React.useState<Avatar>({
+  const {state, dispatch} = useContext(Context)
+  const [avatar, setAvatar] = useState<Avatar>({
     image: state.profileStepResults?.image,
     placeholder: state.profileStepResults.creatorState?.emoji || emojiItems.at,
     backgroundColor:
@@ -85,17 +95,17 @@ export function StepProfile() {
     useCreatedAvatar: state.profileStepResults.isCreatedAvatar,
   })
 
-  const canvasRef = React.useRef<PlaceholderCanvasRef>(null)
+  const canvasRef = useRef<PlaceholderCanvasRef>(null)
 
-  React.useEffect(() => {
+  useEffect(() => {
     track('OnboardingV2:StepProfile:Start')
   }, [track])
 
-  React.useEffect(() => {
+  useEffect(() => {
     requestNotificationsPermission('StartOnboarding')
   }, [gate, requestNotificationsPermission])
 
-  const openPicker = React.useCallback(
+  const openPicker = useCallback(
     async (opts?: ImagePickerOptions) => {
       const response = await launchImageLibraryAsync({
         exif: false,
@@ -129,7 +139,7 @@ export function StepProfile() {
     [_, setError],
   )
 
-  const onContinue = React.useCallback(async () => {
+  const onContinue = useCallback(async () => {
     let imageUri = avatar?.image?.path
     if (!imageUri || avatar.useCreatedAvatar) {
       imageUri = await canvasRef.current?.capture()
@@ -154,7 +164,7 @@ export function StepProfile() {
     logEvent('onboarding:profile:nextPressed', {})
   }, [avatar, dispatch, track])
 
-  const onDoneCreating = React.useCallback(() => {
+  const onDoneCreating = useCallback(() => {
     setAvatar(prev => ({
       ...prev,
       image: undefined,
@@ -163,7 +173,7 @@ export function StepProfile() {
     creatorControl.close()
   }, [creatorControl])
 
-  const openLibrary = React.useCallback(async () => {
+  const openLibrary = useCallback(async () => {
     if (!(await requestPhotoAccessIfNeeded())) {
       return
     }
@@ -200,7 +210,7 @@ export function StepProfile() {
     }))
   }, [requestPhotoAccessIfNeeded, setAvatar, openPicker, setError])
 
-  const onSecondaryPress = React.useCallback(() => {
+  const onSecondaryPress = useCallback(() => {
     if (avatar.useCreatedAvatar) {
       openLibrary()
     } else {
@@ -208,7 +218,7 @@ export function StepProfile() {
     }
   }, [avatar.useCreatedAvatar, creatorControl, openLibrary])
 
-  const value = React.useMemo(
+  const value = useMemo(
     () => ({
       avatar,
       setAvatar,

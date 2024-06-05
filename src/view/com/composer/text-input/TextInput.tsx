@@ -1,4 +1,12 @@
-import React from 'react'
+import {
+  ComponentProps,
+  forwardRef,
+  useCallback,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {
   NativeSyntheticEvent,
   StyleSheet,
@@ -33,7 +41,7 @@ export interface TextInputRef {
   getCursorPosition: () => DOMRect | undefined
 }
 
-interface TextInputProps extends React.ComponentProps<typeof RNTextInput> {
+interface TextInputProps extends ComponentProps<typeof RNTextInput> {
   richtext: RichText
   placeholder: string
   setRichText: (v: RichText | ((v: RichText) => RichText)) => void
@@ -48,7 +56,7 @@ interface Selection {
   end: number
 }
 
-export const TextInput = React.forwardRef(function TextInputImpl(
+export const TextInput = forwardRef(function TextInputImpl(
   {
     richtext,
     placeholder,
@@ -61,13 +69,13 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   ref,
 ) {
   const pal = usePalette('default')
-  const textInput = React.useRef<PasteInputRef>(null)
-  const textInputSelection = React.useRef<Selection>({start: 0, end: 0})
+  const textInput = useRef<PasteInputRef>(null)
+  const textInputSelection = useRef<Selection>({start: 0, end: 0})
   const theme = useTheme()
-  const [autocompletePrefix, setAutocompletePrefix] = React.useState('')
-  const prevLength = React.useRef(richtext.length)
+  const [autocompletePrefix, setAutocompletePrefix] = useState('')
+  const prevLength = useRef(richtext.length)
 
-  React.useImperativeHandle(ref, () => ({React.
+  useImperativeHandle(ref, () => ({
     focus: () => textInput.current?.focus(),
     blur: () => {
       textInput.current?.blur()
@@ -75,9 +83,9 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     getCursorPosition: () => undefined, // Not implemented on native
   }))
 
-  const pastSuggestedUris = React.useRef(new Set<string>())
-  const prevDetectedUris = React.useRef(new Map<string, LinkFacetMatch>())
-  const onChangeText = React.useCallback(
+  const pastSuggestedUris = useRef(new Set<string>())
+  const prevDetectedUris = useRef(new Map<string, LinkFacetMatch>())
+  const onChangeText = useCallback(
     (newText: string) => {
       /*
        * This is a hack to bump the rendering of our styled
@@ -147,7 +155,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     [setRichText, autocompletePrefix, onPhotoPasted, onNewLink],
   )
 
-  const onPaste = React.useCallback(
+  const onPaste = useCallback(
     async (err: string | undefined, files: PastedFile[]) => {
       if (err) {
         return onError(cleanError(err))
@@ -163,7 +171,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     [onError, onPhotoPasted],
   )
 
-  const onSelectionChange = React.useCallback(
+  const onSelectionChange = useCallback(
     (evt: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => {
       // NOTE we track the input selection using a ref to avoid excessive renders -prf
       textInputSelection.current = evt.nativeEvent.selection
@@ -171,7 +179,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     [textInputSelection],
   )
 
-  const onSelectAutocompleteItem = React.useCallback(
+  const onSelectAutocompleteItem = useCallback(
     (item: string) => {
       onChangeText(
         insertMentionAt(
@@ -185,7 +193,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     [onChangeText, richtext, setAutocompletePrefix],
   )
 
-  const textDecorated = React.useMemo(() => {
+  const textDecorated = useMemo(() => {
     let i = 0
 
     return Array.from(richtext.segments()).map(segment => {

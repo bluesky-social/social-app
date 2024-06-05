@@ -1,4 +1,4 @@
-import React from 'react'
+import {forwardRef, useImperativeHandle, useMemo, useRef} from 'react'
 import {View} from 'react-native'
 import ViewShot from 'react-native-view-shot'
 
@@ -13,13 +13,13 @@ export interface PlaceholderCanvasRef {
 
 // This component is supposed to be invisible to the user. We only need this for ViewShot to have something to
 // "screenshot".
-export const PlaceholderCanvas = React.forwardRef<PlaceholderCanvasRef, {}>(
+export const PlaceholderCanvas = forwardRef<PlaceholderCanvasRef, {}>(
   function PlaceholderCanvas({}, ref) {
     const {avatar} = useAvatar()
-    const viewshotRef = React.useRef()
+    const viewshotRef = useRef()
     const Icon = avatar.placeholder.component
 
-    const styles = React.useMemo(
+    const styles = useMemo(
       () => ({
         container: [a.absolute, {top: -2000}],
         imageContainer: [
@@ -31,7 +31,7 @@ export const PlaceholderCanvas = React.forwardRef<PlaceholderCanvasRef, {}>(
       [],
     )
 
-    React.useImperativeHandle(ref, () => ({
+    useImperativeHandle(ref, () => ({
       // @ts-ignore this library doesn't have types
       capture: viewshotRef.current.capture,
     }))

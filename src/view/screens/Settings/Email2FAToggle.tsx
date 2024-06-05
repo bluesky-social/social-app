@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -15,7 +15,7 @@ export function Email2FAToggle() {
   const disableDialogCtrl = useDialogControl()
   const agent = useAgent()
 
-  const enableEmailAuthFactor = React.useCallback(async () => {
+  const enableEmailAuthFactor = useCallback(async () => {
     if (currentAccount?.email) {
       await agent.com.atproto.server.updateEmail({
         email: currentAccount.email,
@@ -25,7 +25,7 @@ export function Email2FAToggle() {
     }
   }, [currentAccount, agent])
 
-  const onToggle = React.useCallback(() => {
+  const onToggle = useCallback(() => {
     if (!currentAccount) {
       return
     }

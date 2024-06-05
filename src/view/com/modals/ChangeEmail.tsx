@@ -1,4 +1,4 @@
-import React from 'react'
+import {useState} from 'react'
 import {ActivityIndicator, SafeAreaView, StyleSheet, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -29,11 +29,11 @@ export function Component() {
   const {currentAccount} = useSession()
   const agent = useAgent()
   const {_} = useLingui()
-  const [stage, setStage] = React.useState<Stages>(Stages.InputEmail)
-  const [email, setEmail] = React.useState<string>(currentAccount?.email || '')
-  const [confirmationCode, setConfirmationCode] = React.useState<string>('')
-  const [isProcessing, setIsProcessing] = React.useState<boolean>(false)
-  const [error, setError] = React.useState<string>('')
+  const [stage, setStage] = useState<Stages>(Stages.InputEmail)
+  const [email, setEmail] = useState<string>(currentAccount?.email || '')
+  const [confirmationCode, setConfirmationCode] = useState<string>('')
+  const [isProcessing, setIsProcessing] = useState<boolean>(false)
+  const [error, setError] = useState<string>('')
   const {isMobile} = useWebMediaQueries()
   const {openModal, closeModal} = useModalControls()
 

@@ -1,4 +1,13 @@
-import * as React from 'react'
+import {
+  forwardRef,
+  memo,
+  MutableRefObject,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import {
   LayoutChangeEvent,
   NativeScrollEvent,
@@ -27,7 +36,7 @@ import {TabBar} from './TabBar'
 export interface PagerWithHeaderChildParams {
   headerHeight: number
   isFocused: boolean
-  scrollElRef: React.MutableRefObject<ListMethods | ScrollView | null>
+  scrollElRef: MutableRefObject<ListMethods | ScrollView | null>
 }
 
 export interface PagerWithHeaderProps {
@@ -42,7 +51,7 @@ export interface PagerWithHeaderProps {
   onPageSelected?: (index: number) => void
   onCurrentPageSelected?: (index: number) => void
 }
-export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
+export const PagerWithHeader = forwardRef<PagerRef, PagerWithHeaderProps>(
   function PageWithHeaderImpl(
     {
       children,
@@ -56,9 +65,9 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     }: PagerWithHeaderProps,
     ref,
   ) {
-    const [currentPage, setCurrentPage] = React.useState(0)
-    const [tabBarHeight, setTabBarHeight] = React.useState(0)
-    const [headerOnlyHeight, setHeaderOnlyHeight] = React.useState(0)
+    const [currentPage, setCurrentPage] = useState(0)
+    const [tabBarHeight, setTabBarHeight] = useState(0)
+    const [headerOnlyHeight, setHeaderOnlyHeight] = useState(0)
     const scrollY = useSharedValue(0)
     const headerHeight = headerOnlyHeight + tabBarHeight
 
@@ -77,7 +86,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       }
     })
 
-    const renderTabBar = React.useCallback(
+    const renderTabBar = useCallback(
       (props: RenderTabBarFnProps) => {
         return (
           <PagerTabBar
@@ -110,7 +119,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     )
 
     const scrollRefs = useSharedValue<Array<AnimatedRef<any> | null>>([])
-    const registerRef = React.useCallback(
+    const registerRef = useCallback(
       (scrollRef: AnimatedRef<any> | null, atIndex: number) => {
         scrollRefs.modify(refs => {
           'worklet'
@@ -138,9 +147,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       }
     }
 
-    const throttleTimeout = React.useRef<ReturnType<typeof setTimeout> | null>(
-      null,
-    )
+    const throttleTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
     const queueThrottledOnScroll = useNonReactiveCallback(() => {
       if (!throttleTimeout.current) {
         throttleTimeout.current = setTimeout(() => {
@@ -150,7 +157,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       }
     })
 
-    const onScrollWorklet = React.useCallback(
+    const onScrollWorklet = useCallback(
       (e: NativeScrollEvent) => {
         'worklet'
         const nextScrollY = e.contentOffset.y
@@ -160,7 +167,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       [scrollY, queueThrottledOnScroll],
     )
 
-    const onPageSelectedInner = React.useCallback(
+    const onPageSelectedInner = useCallback(
       (index: number) => {
         setCurrentPage(index)
         onPageSelected?.(index)
@@ -168,7 +175,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       [onPageSelected, setCurrentPage],
     )
 
-    const onPageSelecting = React.useCallback((index: number) => {
+    const onPageSelecting = useCallback((index: number) => {
       setCurrentPage(index)
     }, [])
 
@@ -228,7 +235,7 @@ let PagerTabBar = ({
   onTabBarLayout: (e: LayoutChangeEvent) => void
   onCurrentPageSelected?: (index: number) => void
   onSelect?: (index: number) => void
-}): React.ReactNode => {
+}): ReactNode => {
   const headerTransform = useAnimatedStyle(() => ({
     transform: [
       {
@@ -236,7 +243,9 @@ let PagerTabBar = ({
       },
     ],
   }))
-  const headerRef = React.useRef(null)
+
+  const headerRef = useRef(null)
+
   return (
     <Animated.View
       pointerEvents={isIOS ? 'auto' : 'box-none'}
@@ -286,7 +295,7 @@ let PagerTabBar = ({
     </Animated.View>
   )
 }
-PagerTabBar = React.memo(PagerTabBar)
+PagerTabBar = memo(PagerTabBar)
 
 function PagerItem({
   headerHeight,
@@ -307,7 +316,7 @@ function PagerItem({
 }) {
   const scrollElRef = useAnimatedRef()
 
-  React.useEffect(() => {
+  useEffect(() => {
     registerRef(scrollElRef, index)
     return () => {
       registerRef(null, index)
@@ -323,7 +332,7 @@ function PagerItem({
       {renderTab({
         headerHeight,
         isFocused,
-        scrollElRef: scrollElRef as React.MutableRefObject<
+        scrollElRef: scrollElRef as MutableRefObject<
           ListMethods | ScrollView | null
         >,
       })}

@@ -1,12 +1,12 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {
-  DEFAULT_LABEL_SETTINGS,
   BskyAgent,
+  DEFAULT_LABEL_SETTINGS,
   interpretLabelValueDefinitions,
 } from '@atproto/api'
 
-import {usePreferencesQuery} from './index'
 import {useLabelersDetailedInfoQuery} from '../labeler'
+import {usePreferencesQuery} from './index'
 
 /**
  * More strict than our default settings for logged in users.
@@ -28,7 +28,7 @@ export function useMyLabelersQuery() {
   const labelers = useLabelersDetailedInfoQuery({dids})
   const isLoading = prefs.isLoading || labelers.isLoading
   const error = prefs.error || labelers.error
-  return React.useMemo(() => {
+  return useMemo(() => {
     return {
       isLoading,
       error,
@@ -39,7 +39,7 @@ export function useMyLabelersQuery() {
 
 export function useLabelDefinitionsQuery() {
   const labelers = useMyLabelersQuery()
-  return React.useMemo(() => {
+  return useMemo(() => {
     return {
       labelDefs: Object.fromEntries(
         (labelers.data || []).map(labeler => [

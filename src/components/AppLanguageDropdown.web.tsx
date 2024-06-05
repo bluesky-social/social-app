@@ -1,4 +1,4 @@
-import React from 'react'
+import {ChangeEvent, useCallback} from 'react'
 import {View} from 'react-native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -19,8 +19,8 @@ export function AppLanguageDropdown() {
 
   const sanitizedLang = sanitizeAppLanguageSetting(langPrefs.appLanguage)
 
-  const onChangeAppLanguage = React.useCallback(
-    (ev: React.ChangeEvent<HTMLSelectElement>) => {
+  const onChangeAppLanguage = useCallback(
+    (ev: ChangeEvent<HTMLSelectElement>) => {
       const value = ev.target.value
 
       if (!value) return

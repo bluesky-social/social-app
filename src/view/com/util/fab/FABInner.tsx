@@ -1,4 +1,4 @@
-import React from 'react'
+import {ComponentProps} from 'react'
 import {StyleSheet, TouchableWithoutFeedback} from 'react-native'
 import Animated, {useAnimatedStyle, withTiming} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -12,7 +12,7 @@ import {isWeb} from '#/platform/detection'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 
 export interface FABProps
-  extends React.ComponentProps<typeof TouchableWithoutFeedback> {
+  extends ComponentProps<typeof TouchableWithoutFeedback> {
   testID?: string
   icon: JSX.Element
 }

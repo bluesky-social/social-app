@@ -1,29 +1,30 @@
-import React from 'react'
+import {useEffect, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
-import lande from 'lande'
-import {Trans, msg} from '@lingui/macro'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {Text} from '../../util/text/Text'
-import {Button} from '../../util/forms/Button'
+import lande from 'lande'
+
+import {usePalette} from '#/lib/hooks/usePalette'
+import {s} from '#/lib/styles'
 import {code3ToCode2Strict, codeToLanguageName} from '#/locale/helpers'
 import {
   toPostLanguages,
   useLanguagePrefs,
   useLanguagePrefsApi,
 } from '#/state/preferences/languages'
-import {usePalette} from '#/lib/hooks/usePalette'
-import {s} from '#/lib/styles'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
+import {Button} from '../../util/forms/Button'
+import {Text} from '../../util/text/Text'
 
 // fallbacks for safari
 const onIdle = globalThis.requestIdleCallback || (cb => setTimeout(cb, 1))
 const cancelIdle = globalThis.cancelIdleCallback || clearTimeout
 
 export function SuggestedLanguage({text}: {text: string}) {
-  const [suggestedLanguage, setSuggestedLanguage] = React.useState<
+  const [suggestedLanguage, setSuggestedLanguage] = useState<
     string | undefined
   >()
   const langPrefs = useLanguagePrefs()
@@ -31,7 +32,7 @@ export function SuggestedLanguage({text}: {text: string}) {
   const pal = usePalette('default')
   const {_} = useLingui()
 
-  React.useEffect(() => {
+  useEffect(() => {
     const textTrimmed = text.trim()
 
     // Don't run the language model on small posts, the results are likely

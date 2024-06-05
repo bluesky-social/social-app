@@ -1,16 +1,17 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {View} from 'react-native'
-import {useFocusEffect} from '@react-navigation/native'
-import {Text} from 'view/com/util/text/Text'
-import {TextLink} from 'view/com/util/Link'
-import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
-import {ViewHeader} from '../com/util/ViewHeader'
-import {ScrollView} from 'view/com/util/Views'
-import {usePalette} from 'lib/hooks/usePalette'
-import {s} from 'lib/styles'
-import {useSetMinimalShellMode} from '#/state/shell'
-import {Trans, msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useFocusEffect} from '@react-navigation/native'
+
+import {useSetMinimalShellMode} from '#/state/shell'
+import {usePalette} from 'lib/hooks/usePalette'
+import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
+import {s} from 'lib/styles'
+import {TextLink} from 'view/com/util/Link'
+import {Text} from 'view/com/util/text/Text'
+import {ScrollView} from 'view/com/util/Views'
+import {ViewHeader} from '../com/util/ViewHeader'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PrivacyPolicy'>
 export const PrivacyPolicyScreen = (_props: Props) => {
@@ -19,7 +20,7 @@ export const PrivacyPolicyScreen = (_props: Props) => {
   const setMinimalShellMode = useSetMinimalShellMode()
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setMinimalShellMode(false)
     }, [setMinimalShellMode]),
   )

@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo, useRef, useState} from 'react'
 import {FlatList, View} from 'react-native'
 
 import {ScrollProvider} from 'lib/ScrollContext'
@@ -8,10 +8,10 @@ import * as Toggle from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
 
 export function ListContained() {
-  const [animated, setAnimated] = React.useState(false)
-  const ref = React.useRef<FlatList>(null)
+  const [animated, setAnimated] = useState(false)
+  const ref = useRef<FlatList>(null)
 
-  const data = React.useMemo(() => {
+  const data = useMemo(() => {
     return Array.from({length: 100}, (_, i) => ({
       id: i,
       text: `Message ${i}`,

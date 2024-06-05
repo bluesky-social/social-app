@@ -1,13 +1,13 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {AppState, AppStateStatus} from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {createClient, SegmentClient} from '@segment/analytics-react-native'
 import {sha256} from 'js-sha256'
 import {Native} from 'sentry-expo'
 
-import {useSession, SessionAccount} from '#/state/session'
-import {ScreenPropertiesMap, TrackPropertiesMap} from './types'
 import {logger} from '#/logger'
+import {SessionAccount, useSession} from '#/state/session'
+import {ScreenPropertiesMap, TrackPropertiesMap} from './types'
 
 type AppInfo = {
   build?: string | undefined
@@ -39,7 +39,7 @@ export const track = async <E extends keyof TrackPropertiesMap>(
 export function useAnalytics() {
   const {hasSession} = useSession()
 
-  return React.useMemo(() => {
+  return useMemo(() => {
     if (hasSession) {
       return {
         async screen<E extends keyof ScreenPropertiesMap>(

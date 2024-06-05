@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useMemo, useRef} from 'react'
 import {StyleSheet} from 'react-native'
 import {WebView, WebViewNavigation} from 'react-native-webview'
 import {ShouldStartLoadRequest} from 'react-native-webview/lib/WebViewTypes'
@@ -28,7 +28,7 @@ export function CaptchaWebView({
   onSuccess: (code: string) => void
   onError: (error: unknown) => void
 }) {
-  const redirectHost = React.useMemo(() => {
+  const redirectHost = useMemo(() => {
     if (!state?.serviceUrl) return 'bsky.app'
 
     return state?.serviceUrl &&
@@ -37,9 +37,9 @@ export function CaptchaWebView({
       : 'bsky.app'
   }, [state?.serviceUrl])
 
-  const wasSuccessful = React.useRef(false)
+  const wasSuccessful = useRef(false)
 
-  const onShouldStartLoadWithRequest = React.useCallback(
+  const onShouldStartLoadWithRequest = useCallback(
     (event: ShouldStartLoadRequest) => {
       const urlp = new URL(event.url)
       return ALLOWED_HOSTS.includes(urlp.host)
@@ -47,7 +47,7 @@ export function CaptchaWebView({
     [],
   )
 
-  const onNavigationStateChange = React.useCallback(
+  const onNavigationStateChange = useCallback(
     (e: WebViewNavigation) => {
       if (wasSuccessful.current) return
 

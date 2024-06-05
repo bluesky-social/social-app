@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {LayoutChangeEvent, ScrollView, StyleSheet, View} from 'react-native'
 
 import {isNative} from '#/platform/detection'
@@ -31,17 +31,17 @@ export function TabBar({
   onPressSelected,
 }: TabBarProps) {
   const pal = usePalette('default')
-  const scrollElRef = React.useRef<ScrollView>(null)
-  const itemRefs = React.useRef<Array<Element>>([])
-  const [itemXs, setItemXs] = React.useState<number[]>([])
-  const indicatorStyle = React.useMemo(
+  const scrollElRef = useRef<ScrollView>(null)
+  const itemRefs = useRef<Array<Element>>([])
+  const [itemXs, setItemXs] = useState<number[]>([])
+  const indicatorStyle = useMemo(
     () => ({borderBottomColor: indicatorColor || pal.colors.link}),
     [indicatorColor, pal],
   )
   const {isDesktop, isTablet} = useWebMediaQueries()
   const styles = isDesktop || isTablet ? desktopStyles : mobileStyles
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isNative) {
       // On native, the primary interaction is swiping.
       // We adjust the scroll little by little on every tab change.
@@ -95,7 +95,7 @@ export function TabBar({
     }
   }, [scrollElRef, itemXs, selectedPage, styles])
 
-  const onPressItem = React.useCallback(
+  const onPressItem = useCallback(
     (index: number) => {
       onSelect?.(index)
       if (index === selectedPage) {
@@ -106,17 +106,14 @@ export function TabBar({
   )
 
   // calculates the x position of each item on mount and on layout change
-  const onItemLayout = React.useCallback(
-    (e: LayoutChangeEvent, index: number) => {
-      const x = e.nativeEvent.layout.x
-      setItemXs(prev => {
-        const Xs = [...prev]
-        Xs[index] = x
-        return Xs
-      })
-    },
-    [],
-  )
+  const onItemLayout = useCallback((e: LayoutChangeEvent, index: number) => {
+    const x = e.nativeEvent.layout.x
+    setItemXs(prev => {
+      const Xs = [...prev]
+      Xs[index] = x
+      return Xs
+    })
+  }, [])
 
   return (
     <View testID={testID} style={[pal.view, styles.outer]}>

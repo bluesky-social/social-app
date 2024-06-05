@@ -1,9 +1,9 @@
-import React from 'react'
+import {useRef} from 'react'
 
 export const useDedupe = () => {
-  const canDo = React.useRef(true)
+  const canDo = useRef(true)
 
-  return React.useRef((cb: () => unknown) => {
+  return useRef((cb: () => unknown) => {
     if (canDo.current) {
       canDo.current = false
       setTimeout(() => {

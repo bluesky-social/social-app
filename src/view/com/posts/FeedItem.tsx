@@ -1,4 +1,4 @@
-import React from 'react'
+import {memo, ReactNode, useCallback, useMemo, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {
   AppBskyActorDefs,
@@ -70,9 +70,9 @@ export function FeedItem({
   isThreadLastChild,
   isThreadParent,
   hideTopBorder,
-}: FeedItemProps & {post: AppBskyFeedDefs.PostView}): React.ReactNode {
+}: FeedItemProps & {post: AppBskyFeedDefs.PostView}): ReactNode {
   const postShadowed = usePostShadow(post)
-  const richText = React.useMemo(
+  const richText = useMemo(
     () =>
       new RichTextAPI({
         text: record.text,
@@ -122,18 +122,19 @@ let FeedItemInner = ({
 }: FeedItemProps & {
   richText: RichTextAPI
   post: Shadow<AppBskyFeedDefs.PostView>
-}): React.ReactNode => {
+}): ReactNode => {
   const queryClient = useQueryClient()
   const {openComposer} = useComposerControls()
   const pal = usePalette('default')
   const {_} = useLingui()
-  const href = React.useMemo(() => {
+
+  const href = useMemo(() => {
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey)
   }, [post.uri, post.author])
   const {sendInteraction} = useFeedFeedbackContext()
 
-  const onPressReply = React.useCallback(() => {
+  const onPressReply = useCallback(() => {
     sendInteraction({
       item: post.uri,
       event: 'app.bsky.feed.defs#interactionReply',
@@ -151,7 +152,7 @@ let FeedItemInner = ({
     })
   }, [post, record, openComposer, moderation, sendInteraction, feedContext])
 
-  const onOpenAuthor = React.useCallback(() => {
+  const onOpenAuthor = useCallback(() => {
     sendInteraction({
       item: post.uri,
       event: 'app.bsky.feed.defs#clickthroughAuthor',
@@ -159,7 +160,7 @@ let FeedItemInner = ({
     })
   }, [sendInteraction, post, feedContext])
 
-  const onOpenReposter = React.useCallback(() => {
+  const onOpenReposter = useCallback(() => {
     sendInteraction({
       item: post.uri,
       event: 'app.bsky.feed.defs#clickthroughReposter',
@@ -167,7 +168,7 @@ let FeedItemInner = ({
     })
   }, [sendInteraction, post, feedContext])
 
-  const onOpenEmbed = React.useCallback(() => {
+  const onOpenEmbed = useCallback(() => {
     sendInteraction({
       item: post.uri,
       event: 'app.bsky.feed.defs#clickthroughEmbed',
@@ -175,7 +176,7 @@ let FeedItemInner = ({
     })
   }, [sendInteraction, post, feedContext])
 
-  const onBeforePress = React.useCallback(() => {
+  const onBeforePress = useCallback(() => {
     sendInteraction({
       item: post.uri,
       event: 'app.bsky.feed.defs#clickthroughItem',
@@ -343,7 +344,7 @@ let FeedItemInner = ({
     </Link>
   )
 }
-FeedItemInner = React.memo(FeedItemInner)
+FeedItemInner = memo(FeedItemInner)
 
 let PostContent = ({
   moderation,
@@ -357,14 +358,14 @@ let PostContent = ({
   postEmbed: AppBskyFeedDefs.PostView['embed']
   postAuthor: AppBskyFeedDefs.PostView['author']
   onOpenEmbed: () => void
-}): React.ReactNode => {
+}): ReactNode => {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const [limitLines, setLimitLines] = React.useState(
+  const [limitLines, setLimitLines] = useState(
     () => countLines(richText.text) >= MAX_POST_LINES,
   )
 
-  const onPressShowMore = React.useCallback(() => {
+  const onPressShowMore = useCallback(() => {
     setLimitLines(false)
   }, [setLimitLines])
 
@@ -407,7 +408,7 @@ let PostContent = ({
     </ContentHider>
   )
 }
-PostContent = React.memo(PostContent)
+PostContent = memo(PostContent)
 
 function ReplyToLabel({profile}: {profile: AppBskyActorDefs.ProfileViewBasic}) {
   const pal = usePalette('default')

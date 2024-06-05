@@ -1,4 +1,4 @@
-import React from 'react'
+import {memo, ReactNode, useCallback, useMemo} from 'react'
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import Svg, {Circle, Path, Rect} from 'react-native-svg'
@@ -64,7 +64,7 @@ let DefaultAvatar = ({
 }: {
   type: UserAvatarType
   size: number
-}): React.ReactNode => {
+}): ReactNode => {
   if (type === 'algo') {
     // Font Awesome Pro 6.4.0 by @fontawesome -https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc.
     return (
@@ -154,7 +154,7 @@ let DefaultAvatar = ({
     </Svg>
   )
 }
-DefaultAvatar = React.memo(DefaultAvatar)
+DefaultAvatar = memo(DefaultAvatar)
 export {DefaultAvatar}
 
 let UserAvatar = ({
@@ -163,11 +163,11 @@ let UserAvatar = ({
   avatar,
   moderation,
   usePlainRNImage = false,
-}: UserAvatarProps): React.ReactNode => {
+}: UserAvatarProps): ReactNode => {
   const pal = usePalette('default')
   const backgroundColor = pal.colors.backgroundLight
 
-  const aviStyle = React.useMemo(() => {
+  const aviStyle = useMemo(() => {
     if (type === 'algo' || type === 'list' || type === 'labeler') {
       return {
         width: size,
@@ -184,7 +184,7 @@ let UserAvatar = ({
     }
   }, [type, size, backgroundColor])
 
-  const alert = React.useMemo(() => {
+  const alert = useMemo(() => {
     if (!moderation?.alert) {
       return null
     }
@@ -229,7 +229,7 @@ let UserAvatar = ({
     </View>
   )
 }
-UserAvatar = React.memo(UserAvatar)
+UserAvatar = memo(UserAvatar)
 export {UserAvatar}
 
 let EditableUserAvatar = ({
@@ -237,14 +237,14 @@ let EditableUserAvatar = ({
   size,
   avatar,
   onSelectNewAvatar,
-}: EditableUserAvatarProps): React.ReactNode => {
+}: EditableUserAvatarProps): ReactNode => {
   const t = useTheme()
   const pal = usePalette('default')
   const {_} = useLingui()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
 
-  const aviStyle = React.useMemo(() => {
+  const aviStyle = useMemo(() => {
     if (type === 'algo' || type === 'list') {
       return {
         width: size,
@@ -259,7 +259,7 @@ let EditableUserAvatar = ({
     }
   }, [type, size])
 
-  const onOpenCamera = React.useCallback(async () => {
+  const onOpenCamera = useCallback(async () => {
     if (!(await requestCameraAccessIfNeeded())) {
       return
     }
@@ -273,7 +273,7 @@ let EditableUserAvatar = ({
     )
   }, [onSelectNewAvatar, requestCameraAccessIfNeeded])
 
-  const onOpenLibrary = React.useCallback(async () => {
+  const onOpenLibrary = useCallback(async () => {
     if (!(await requestPhotoAccessIfNeeded())) {
       return
     }
@@ -303,7 +303,7 @@ let EditableUserAvatar = ({
     }
   }, [onSelectNewAvatar, requestPhotoAccessIfNeeded])
 
-  const onRemoveAvatar = React.useCallback(() => {
+  const onRemoveAvatar = useCallback(() => {
     onSelectNewAvatar(null)
   }, [onSelectNewAvatar])
 
@@ -379,7 +379,7 @@ let EditableUserAvatar = ({
     </Menu.Root>
   )
 }
-EditableUserAvatar = React.memo(EditableUserAvatar)
+EditableUserAvatar = memo(EditableUserAvatar)
 export {EditableUserAvatar}
 
 let PreviewableUserAvatar = ({
@@ -389,11 +389,11 @@ let PreviewableUserAvatar = ({
   onBeforePress,
   accessible = true,
   ...rest
-}: PreviewableUserAvatarProps): React.ReactNode => {
+}: PreviewableUserAvatarProps): ReactNode => {
   const {_} = useLingui()
   const queryClient = useQueryClient()
 
-  const onPress = React.useCallback(() => {
+  const onPress = useCallback(() => {
     onBeforePress?.()
     precacheProfile(queryClient, profile)
   }, [profile, queryClient, onBeforePress])
@@ -417,7 +417,7 @@ let PreviewableUserAvatar = ({
     </ProfileHoverCard>
   )
 }
-PreviewableUserAvatar = React.memo(PreviewableUserAvatar)
+PreviewableUserAvatar = memo(PreviewableUserAvatar)
 export {PreviewableUserAvatar}
 
 const styles = StyleSheet.create({

@@ -1,4 +1,4 @@
-import React from 'react'
+import {ComponentProps, useCallback, useState} from 'react'
 import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {AppBskyActorDefs, ModerationUI} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -17,7 +17,7 @@ import {
 } from '#/components/moderation/ModerationDetailsDialog'
 import {Text} from '#/components/Typography'
 
-interface Props extends React.ComponentProps<typeof Link> {
+interface Props extends ComponentProps<typeof Link> {
   disabled: boolean
   iconSize: number
   iconStyles: StyleProp<ViewStyle>
@@ -42,13 +42,13 @@ export function PostHider({
   const queryClient = useQueryClient()
   const t = useTheme()
   const {_} = useLingui()
-  const [override, setOverride] = React.useState(false)
+  const [override, setOverride] = useState(false)
   const control = useModerationDetailsDialogControl()
   const blur =
     modui.blurs[0] || (interpretFilterAsBlur ? modui.filters[0] : undefined)
   const desc = useModerationCauseDescription(blur)
 
-  const onBeforePress = React.useCallback(() => {
+  const onBeforePress = useCallback(() => {
     precacheProfile(queryClient, profile)
   }, [queryClient, profile])
 

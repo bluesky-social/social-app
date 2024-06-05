@@ -1,4 +1,12 @@
-import React from 'react'
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {StyleSheet, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {AppBskyRichtextFacet, RichText} from '@atproto/api'
@@ -48,7 +56,7 @@ interface TextInputProps {
 
 export const textInputWebEmitter = new EventEmitter()
 
-export const TextInput = React.forwardRef(function TextInputImpl(
+export const TextInput = forwardRef(function TextInputImpl(
   {
     richtext,
     placeholder,
@@ -64,9 +72,9 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   const pal = usePalette('default')
   const modeClass = useColorSchemeStyle('ProseMirror-light', 'ProseMirror-dark')
 
-  const [isDropping, setIsDropping] = React.useState(false)
+  const [isDropping, setIsDropping] = useState(false)
 
-  const extensions = React.useMemo(
+  const extensions = useMemo(
     () => [
       Document,
       LinkDecorator,
@@ -88,20 +96,20 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     [autocomplete, placeholder],
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     textInputWebEmitter.addListener('publish', onPressPublish)
     return () => {
       textInputWebEmitter.removeListener('publish', onPressPublish)
     }
   }, [onPressPublish])
-  React.useEffect(() => {
+  useEffect(() => {
     textInputWebEmitter.addListener('photo-pasted', onPhotoPasted)
     return () => {
       textInputWebEmitter.removeListener('photo-pasted', onPhotoPasted)
     }
   }, [onPhotoPasted])
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleDrop = (event: DragEvent) => {
       const transfer = event.dataTransfer
       if (transfer) {
@@ -141,8 +149,8 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     }
   }, [setIsDropping])
 
-  const pastSuggestedUris = React.useRef(new Set<string>())
-  const prevDetectedUris = React.useRef(new Map<string, LinkFacetMatch>())
+  const pastSuggestedUris = useRef(new Set<string>())
+  const prevDetectedUris = useRef(new Map<string, LinkFacetMatch>())
   const editor = useEditor(
     {
       extensions,
@@ -217,20 +225,20 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     [modeClass],
   )
 
-  const onEmojiInserted = React.useCallback(
+  const onEmojiInserted = useCallback(
     (emoji: Emoji) => {
       editor?.chain().focus().insertContent(emoji.native).run()
     },
     [editor],
   )
-  React.useEffect(() => {
+  useEffect(() => {
     textInputWebEmitter.addListener('emoji-inserted', onEmojiInserted)
     return () => {
       textInputWebEmitter.removeListener('emoji-inserted', onEmojiInserted)
     }
   }, [onEmojiInserted])
 
-  React.useImperativeHandle(ref, () => ({
+  useImperativeHandle(ref, () => ({
     focus: () => {}, // TODO
     blur: () => {}, // TODO
     getCursorPosition: () => {

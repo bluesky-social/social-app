@@ -1,4 +1,12 @@
-import React from 'react'
+import {
+  ComponentType,
+  createContext,
+  ReactElement,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from 'react'
 import {
   AccessibilityProps,
   Pressable,
@@ -59,8 +67,8 @@ export type ButtonState = {
 export type ButtonContext = VariantProps & ButtonState
 
 type NonTextElements =
-  | React.ReactElement
-  | Iterable<React.ReactElement | null | undefined | boolean>
+  | ReactElement
+  | Iterable<ReactElement | null | undefined | boolean>
 
 export type ButtonProps = Pick<
   PressableProps,
@@ -77,7 +85,7 @@ export type ButtonProps = Pick<
 
 export type ButtonTextProps = TextProps & VariantProps & {disabled?: boolean}
 
-const Context = React.createContext<VariantProps & ButtonState>({
+const Context = createContext<VariantProps & ButtonState>({
   hovered: false,
   focused: false,
   pressed: false,
@@ -85,7 +93,7 @@ const Context = React.createContext<VariantProps & ButtonState>({
 })
 
 export function useButtonContext() {
-  return React.useContext(Context)
+  return useContext(Context)
 }
 
 export function Button({
@@ -101,50 +109,50 @@ export function Button({
   ...rest
 }: ButtonProps) {
   const t = useTheme()
-  const [state, setState] = React.useState({
+  const [state, setState] = useState({
     pressed: false,
     hovered: false,
     focused: false,
   })
 
-  const onPressIn = React.useCallback(() => {
+  const onPressIn = useCallback(() => {
     setState(s => ({
       ...s,
       pressed: true,
     }))
   }, [setState])
-  const onPressOut = React.useCallback(() => {
+  const onPressOut = useCallback(() => {
     setState(s => ({
       ...s,
       pressed: false,
     }))
   }, [setState])
-  const onHoverIn = React.useCallback(() => {
+  const onHoverIn = useCallback(() => {
     setState(s => ({
       ...s,
       hovered: true,
     }))
   }, [setState])
-  const onHoverOut = React.useCallback(() => {
+  const onHoverOut = useCallback(() => {
     setState(s => ({
       ...s,
       hovered: false,
     }))
   }, [setState])
-  const onFocus = React.useCallback(() => {
+  const onFocus = useCallback(() => {
     setState(s => ({
       ...s,
       focused: true,
     }))
   }, [setState])
-  const onBlur = React.useCallback(() => {
+  const onBlur = useCallback(() => {
     setState(s => ({
       ...s,
       focused: false,
     }))
   }, [setState])
 
-  const {baseStyles, hoverStyles} = React.useMemo(() => {
+  const {baseStyles, hoverStyles} = useMemo(() => {
     const baseStyles: ViewStyle[] = []
     const hoverStyles: ViewStyle[] = []
     const light = t.name === 'light'
@@ -321,7 +329,7 @@ export function Button({
   }, [t, variant, color, size, shape, disabled])
 
   const {gradientColors, gradientHoverColors, gradientLocations} =
-    React.useMemo(() => {
+    useMemo(() => {
       const colors: string[] = []
       const hoverColors: string[] = []
       const locations: number[] = []
@@ -350,7 +358,7 @@ export function Button({
       }
     }, [variant, color])
 
-  const context = React.useMemo<ButtonContext>(
+  const context = useMemo<ButtonContext>(
     () => ({
       ...state,
       variant,
@@ -422,7 +430,8 @@ export function Button({
 export function useSharedButtonTextStyles() {
   const t = useTheme()
   const {color, variant, disabled, size} = useButtonContext()
-  return React.useMemo(() => {
+
+  return useMemo(() => {
     const baseStyles: TextStyle[] = []
     const light = t.name === 'light'
 
@@ -542,7 +551,7 @@ export function ButtonIcon({
   position,
   size: iconSize,
 }: {
-  icon: React.ComponentType<SVGIconProps>
+  icon: ComponentType<SVGIconProps>
   position?: 'left' | 'right'
   size?: SVGIconProps['size']
 }) {

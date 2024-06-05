@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {ActivityIndicator, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -20,10 +20,10 @@ export function StepCaptcha() {
   const {state, dispatch} = useSignupContext()
   const submit = useSubmitSignup({state, dispatch})
 
-  const [completed, setCompleted] = React.useState(false)
+  const [completed, setCompleted] = useState(false)
 
-  const stateParam = React.useMemo(() => nanoid(15), [])
-  const url = React.useMemo(() => {
+  const stateParam = useMemo(() => nanoid(15), [])
+  const url = useMemo(() => {
     const newUrl = new URL(state.serviceUrl)
     newUrl.pathname = CAPTCHA_PATH
     newUrl.searchParams.set(
@@ -36,7 +36,7 @@ export function StepCaptcha() {
     return newUrl.href
   }, [state.serviceUrl, state.handle, state.userDomain, stateParam, theme.name])
 
-  const onSuccess = React.useCallback(
+  const onSuccess = useCallback(
     (code: string) => {
       setCompleted(true)
       submit(code)
@@ -44,7 +44,7 @@ export function StepCaptcha() {
     [submit],
   )
 
-  const onError = React.useCallback(
+  const onError = useCallback(
     (error?: unknown) => {
       dispatch({
         type: 'setError',

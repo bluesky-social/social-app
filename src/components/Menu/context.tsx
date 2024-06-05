@@ -1,8 +1,8 @@
-import React from 'react'
+import {createContext} from 'react'
 
 import type {ContextType} from '#/components/Menu/types'
 
-export const Context = React.createContext<ContextType>({
+export const Context = createContext<ContextType>({
   // @ts-ignore
   control: null,
 })

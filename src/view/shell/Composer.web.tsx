@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
@@ -19,12 +19,12 @@ export function Composer({}: {winHeight: number}) {
   const isActive = !!state
   useWebBodyScrollLock(isActive)
 
-  const [pickerState, setPickerState] = React.useState<EmojiPickerState>({
+  const [pickerState, setPickerState] = useState<EmojiPickerState>({
     isOpen: false,
     pos: {top: 0, left: 0, right: 0, bottom: 0},
   })
 
-  const onOpenPicker = React.useCallback((pos: DOMRect | undefined) => {
+  const onOpenPicker = useCallback((pos: DOMRect | undefined) => {
     if (!pos) return
     setPickerState({
       isOpen: true,
@@ -32,7 +32,7 @@ export function Composer({}: {winHeight: number}) {
     })
   }, [])
 
-  const onClosePicker = React.useCallback(() => {
+  const onClosePicker = useCallback(() => {
     setPickerState(prev => ({
       ...prev,
       isOpen: false,

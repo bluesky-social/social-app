@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {View} from 'react-native'
 import {TID} from '@atproto/common-web'
 import {msg, Trans} from '@lingui/macro'
@@ -22,7 +22,7 @@ export function NoSavedFeedsOfAnyType() {
   const {isPending, mutateAsync: overwriteSavedFeeds} =
     useOverwriteSavedFeedsMutation()
 
-  const addRecommendedFeeds = React.useCallback(async () => {
+  const addRecommendedFeeds = useCallback(async () => {
     await overwriteSavedFeeds(
       RECOMMENDED_SAVED_FEEDS.map(f => ({
         ...f,

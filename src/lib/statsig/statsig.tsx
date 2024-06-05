@@ -1,4 +1,12 @@
-import React from 'react'
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import {Platform} from 'react-native'
 import {AppState, AppStateStatus} from 'react-native'
 import {sha256} from 'js-sha256'
@@ -131,18 +139,18 @@ export function logEvent<E extends keyof LogEvents>(
 // We roll our own cache in front of Statsig because it is a singleton
 // and it's been difficult to get it to behave in a predictable way.
 // Our own cache ensures consistent evaluation within a single session.
-const GateCache = React.createContext<Map<string, boolean> | null>(null)
+const GateCache = createContext<Map<string, boolean> | null>(null)
 
 type GateOptions = {
   dangerouslyDisableExposureLogging?: boolean
 }
 
 export function useGate(): (gateName: Gate, options?: GateOptions) => boolean {
-  const cache = React.useContext(GateCache)
+  const cache = useContext(GateCache)
   if (!cache) {
     throw Error('useGate() cannot be called outside StatsigProvider.')
   }
-  const gate = React.useCallback(
+  const gate = useCallback(
     (gateName: Gate, options: GateOptions = {}): boolean => {
       const cachedValue = cache.get(gateName)
       if (cachedValue !== undefined) {
@@ -171,13 +179,13 @@ export function useDangerousSetGate(): (
   gateName: Gate,
   value: boolean,
 ) => void {
-  const cache = React.useContext(GateCache)
+  const cache = useContext(GateCache)
   if (!cache) {
     throw Error(
       'useDangerousSetGate() cannot be called outside StatsigProvider.',
     )
   }
-  const dangerousSetGate = React.useCallback(
+  const dangerousSetGate = useCallback(
     (gateName: Gate, value: boolean) => {
       cache.set(gateName, value)
     },
@@ -254,28 +262,28 @@ export async function tryFetchGates(
   }
 }
 
-export function Provider({children}: {children: React.ReactNode}) {
+export function Provider({children}: {children: ReactNode}) {
   const {currentAccount, accounts} = useSession()
   const did = currentAccount?.did
-  const currentStatsigUser = React.useMemo(() => toStatsigUser(did), [did])
+  const currentStatsigUser = useMemo(() => toStatsigUser(did), [did])
 
   const otherDidsConcatenated = accounts
     .map(account => account.did)
     .filter(accountDid => accountDid !== did)
     .join(' ') // We're only interested in DID changes.
-  const otherStatsigUsers = React.useMemo(
+  const otherStatsigUsers = useMemo(
     () => otherDidsConcatenated.split(' ').map(toStatsigUser),
     [otherDidsConcatenated],
   )
-  const statsigOptions = React.useMemo(
+  const statsigOptions = useMemo(
     () => createStatsigOptions(otherStatsigUsers),
     [otherStatsigUsers],
   )
 
   // Have our own cache in front of Statsig.
   // This ensures the results remain stable until the active DID changes.
-  const [gateCache, setGateCache] = React.useState(() => new Map())
-  const [prevDid, setPrevDid] = React.useState(did)
+  const [gateCache, setGateCache] = useState(() => new Map())
+  const [prevDid, setPrevDid] = useState(did)
   if (did !== prevDid) {
     setPrevDid(did)
     setGateCache(new Map())
@@ -290,7 +298,8 @@ export function Provider({children}: {children: React.ReactNode}) {
       Statsig.prefetchUsers([currentStatsigUser, ...otherStatsigUsers])
     }
   })
-  React.useEffect(() => {
+
+  useEffect(() => {
     const id = setInterval(handleIntervalTick, 60e3 /* 1 min */)
     return () => clearInterval(id)
   }, [handleIntervalTick])

@@ -1,4 +1,4 @@
-import React from 'react'
+import {ComponentProps, memo, ReactNode, useCallback} from 'react'
 import {
   Linking,
   SafeAreaView,
@@ -67,7 +67,7 @@ let DrawerProfileCard = ({
 }: {
   account: SessionAccount
   onPressProfile: () => void
-}): React.ReactNode => {
+}): ReactNode => {
   const {_} = useLingui()
   const pal = usePalette('default')
   const {data: profile} = useProfileQuery({did: account.did})
@@ -123,10 +123,10 @@ let DrawerProfileCard = ({
     </TouchableOpacity>
   )
 }
-DrawerProfileCard = React.memo(DrawerProfileCard)
+DrawerProfileCard = memo(DrawerProfileCard)
 export {DrawerProfileCard}
 
-let DrawerContent = ({}: {}): React.ReactNode => {
+let DrawerContent = ({}: {}): ReactNode => {
   const theme = useTheme()
   const t = useAlfTheme()
   const pal = usePalette('default')
@@ -142,7 +142,7 @@ let DrawerContent = ({}: {}): React.ReactNode => {
   // events
   // =
 
-  const onPressTab = React.useCallback(
+  const onPressTab = useCallback(
     (tab: string) => {
       track('Menu:ItemClicked', {url: tab})
       const state = navigation.getState()
@@ -170,40 +170,34 @@ let DrawerContent = ({}: {}): React.ReactNode => {
     [track, navigation, setDrawerOpen, currentAccount],
   )
 
-  const onPressHome = React.useCallback(() => onPressTab('Home'), [onPressTab])
+  const onPressHome = useCallback(() => onPressTab('Home'), [onPressTab])
 
-  const onPressSearch = React.useCallback(
-    () => onPressTab('Search'),
-    [onPressTab],
-  )
+  const onPressSearch = useCallback(() => onPressTab('Search'), [onPressTab])
 
-  const onPressNotifications = React.useCallback(
+  const onPressNotifications = useCallback(
     () => onPressTab('Notifications'),
     [onPressTab],
   )
 
-  const onPressProfile = React.useCallback(() => {
+  const onPressProfile = useCallback(() => {
     onPressTab('MyProfile')
   }, [onPressTab])
 
-  const onPressMyFeeds = React.useCallback(
-    () => onPressTab('Feeds'),
-    [onPressTab],
-  )
+  const onPressMyFeeds = useCallback(() => onPressTab('Feeds'), [onPressTab])
 
-  const onPressLists = React.useCallback(() => {
+  const onPressLists = useCallback(() => {
     track('Menu:ItemClicked', {url: 'Lists'})
     navigation.navigate('Lists')
     setDrawerOpen(false)
   }, [navigation, track, setDrawerOpen])
 
-  const onPressSettings = React.useCallback(() => {
+  const onPressSettings = useCallback(() => {
     track('Menu:ItemClicked', {url: 'Settings'})
     navigation.navigate('Settings')
     setDrawerOpen(false)
   }, [navigation, track, setDrawerOpen])
 
-  const onPressFeedback = React.useCallback(() => {
+  const onPressFeedback = useCallback(() => {
     track('Menu:FeedbackClicked')
     Linking.openURL(
       FEEDBACK_FORM_URL({
@@ -213,7 +207,7 @@ let DrawerContent = ({}: {}): React.ReactNode => {
     )
   }, [track, currentAccount])
 
-  const onPressHelp = React.useCallback(() => {
+  const onPressHelp = useCallback(() => {
     track('Menu:HelpClicked')
     Linking.openURL(HELP_DESK_URL)
   }, [track])
@@ -308,7 +302,7 @@ let DrawerContent = ({}: {}): React.ReactNode => {
     </View>
   )
 }
-DrawerContent = React.memo(DrawerContent)
+DrawerContent = memo(DrawerContent)
 export {DrawerContent}
 
 let DrawerFooter = ({
@@ -317,7 +311,7 @@ let DrawerFooter = ({
 }: {
   onPressFeedback: () => void
   onPressHelp: () => void
-}): React.ReactNode => {
+}): ReactNode => {
   const theme = useTheme()
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -357,9 +351,9 @@ let DrawerFooter = ({
     </View>
   )
 }
-DrawerFooter = React.memo(DrawerFooter)
+DrawerFooter = memo(DrawerFooter)
 
-interface MenuItemProps extends React.ComponentProps<typeof TouchableOpacity> {
+interface MenuItemProps extends ComponentProps<typeof TouchableOpacity> {
   icon: JSX.Element
   label: string
   count?: string
@@ -372,7 +366,7 @@ let SearchMenuItem = ({
 }: {
   isActive: boolean
   onPress: () => void
-}): React.ReactNode => {
+}): ReactNode => {
   const {_} = useLingui()
   const pal = usePalette('default')
   return (
@@ -398,7 +392,7 @@ let SearchMenuItem = ({
     />
   )
 }
-SearchMenuItem = React.memo(SearchMenuItem)
+SearchMenuItem = memo(SearchMenuItem)
 
 let HomeMenuItem = ({
   isActive,
@@ -406,7 +400,7 @@ let HomeMenuItem = ({
 }: {
   isActive: boolean
   onPress: () => void
-}): React.ReactNode => {
+}): ReactNode => {
   const {_} = useLingui()
   const pal = usePalette('default')
   return (
@@ -429,7 +423,7 @@ let HomeMenuItem = ({
     />
   )
 }
-HomeMenuItem = React.memo(HomeMenuItem)
+HomeMenuItem = memo(HomeMenuItem)
 
 let NotificationsMenuItem = ({
   isActive,
@@ -437,7 +431,7 @@ let NotificationsMenuItem = ({
 }: {
   isActive: boolean
   onPress: () => void
-}): React.ReactNode => {
+}): ReactNode => {
   const {_} = useLingui()
   const pal = usePalette('default')
   const numUnreadNotifications = useUnreadNotifications()
@@ -466,7 +460,7 @@ let NotificationsMenuItem = ({
     />
   )
 }
-NotificationsMenuItem = React.memo(NotificationsMenuItem)
+NotificationsMenuItem = memo(NotificationsMenuItem)
 
 let FeedsMenuItem = ({
   isActive,
@@ -474,7 +468,7 @@ let FeedsMenuItem = ({
 }: {
   isActive: boolean
   onPress: () => void
-}): React.ReactNode => {
+}): ReactNode => {
   const {_} = useLingui()
   const pal = usePalette('default')
   return (
@@ -497,9 +491,9 @@ let FeedsMenuItem = ({
     />
   )
 }
-FeedsMenuItem = React.memo(FeedsMenuItem)
+FeedsMenuItem = memo(FeedsMenuItem)
 
-let ListsMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
+let ListsMenuItem = ({onPress}: {onPress: () => void}): ReactNode => {
   const {_} = useLingui()
   const pal = usePalette('default')
   return (
@@ -512,7 +506,7 @@ let ListsMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
     />
   )
 }
-ListsMenuItem = React.memo(ListsMenuItem)
+ListsMenuItem = memo(ListsMenuItem)
 
 let ProfileMenuItem = ({
   isActive,
@@ -520,7 +514,7 @@ let ProfileMenuItem = ({
 }: {
   isActive: boolean
   onPress: () => void
-}): React.ReactNode => {
+}): ReactNode => {
   const {_} = useLingui()
   const pal = usePalette('default')
   return (
@@ -545,9 +539,9 @@ let ProfileMenuItem = ({
     />
   )
 }
-ProfileMenuItem = React.memo(ProfileMenuItem)
+ProfileMenuItem = memo(ProfileMenuItem)
 
-let SettingsMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
+let SettingsMenuItem = ({onPress}: {onPress: () => void}): ReactNode => {
   const {_} = useLingui()
   const pal = usePalette('default')
   return (
@@ -562,7 +556,7 @@ let SettingsMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
     />
   )
 }
-SettingsMenuItem = React.memo(SettingsMenuItem)
+SettingsMenuItem = memo(SettingsMenuItem)
 
 function MenuItem({
   icon,

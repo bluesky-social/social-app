@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {Trans} from '@lingui/macro'
 import {useFocusEffect} from '@react-navigation/native'
@@ -33,7 +33,7 @@ export function PreferencesExternalEmbeds({}: Props) {
   const {isMobile} = useWebMediaQueries()
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       screen('PreferencesExternalEmbeds')
       setMinimalShellMode(false)
     }, [screen, setMinimalShellMode]),

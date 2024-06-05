@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useEffect} from 'react'
 import {StyleSheet} from 'react-native'
 
 // @ts-ignore web only, we will always redirect to the app on web (CORS)
@@ -15,7 +15,7 @@ export function CaptchaWebView({
   onSuccess: (code: string) => void
   onError: (error: unknown) => void
 }) {
-  React.useEffect(() => {
+  useEffect(() => {
     const timeout = setTimeout(() => {
       onError({
         errorMessage: 'User did not complete the captcha within 30 seconds',
@@ -27,7 +27,7 @@ export function CaptchaWebView({
     }
   }, [onError])
 
-  const onLoad = React.useCallback(() => {
+  const onLoad = useCallback(() => {
     // @ts-ignore web
     const frame: HTMLIFrameElement = document.getElementById(
       'captcha-iframe',

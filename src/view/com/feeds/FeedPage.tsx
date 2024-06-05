@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
@@ -52,15 +52,15 @@ export function FeedPage({
   const navigation = useNavigation<NavigationProp<AllNavigatorParams>>()
   const queryClient = useQueryClient()
   const {openComposer} = useComposerControls()
-  const [isScrolledDown, setIsScrolledDown] = React.useState(false)
+  const [isScrolledDown, setIsScrolledDown] = useState(false)
   const setMinimalShellMode = useSetMinimalShellMode()
   const {screen, track} = useAnalytics()
   const headerOffset = useHeaderOffset()
   const feedFeedback = useFeedFeedback(feed, hasSession)
-  const scrollElRef = React.useRef<ListMethods>(null)
-  const [hasNew, setHasNew] = React.useState(false)
+  const scrollElRef = useRef<ListMethods>(null)
+  const [hasNew, setHasNew] = useState(false)
 
-  const scrollToTop = React.useCallback(() => {
+  const scrollToTop = useCallback(() => {
     scrollElRef.current?.scrollToOffset({
       animated: isNative,
       offset: -headerOffset,
@@ -68,7 +68,7 @@ export function FeedPage({
     setMinimalShellMode(false)
   }, [headerOffset, setMinimalShellMode])
 
-  const onSoftReset = React.useCallback(() => {
+  const onSoftReset = useCallback(() => {
     const isScreenFocused =
       getTabState(getRootNavigation(navigation).getState(), 'Home') ===
       TabState.InsideAtRoot
@@ -85,7 +85,7 @@ export function FeedPage({
   }, [navigation, isPageFocused, scrollToTop, queryClient, feed, setHasNew])
 
   // fires when page within screen is activated/deactivated
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isPageFocused) {
       return
     }
@@ -93,12 +93,12 @@ export function FeedPage({
     return listenSoftReset(onSoftReset)
   }, [onSoftReset, screen, isPageFocused])
 
-  const onPressCompose = React.useCallback(() => {
+  const onPressCompose = useCallback(() => {
     track('HomeScreen:PressCompose')
     openComposer({})
   }, [openComposer, track])
 
-  const onPressLoadLatest = React.useCallback(() => {
+  const onPressLoadLatest = useCallback(() => {
     scrollToTop()
     truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
     setHasNew(false)

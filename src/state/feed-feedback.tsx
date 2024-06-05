@@ -1,4 +1,11 @@
-import React from 'react'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react'
 import {AppState, AppStateStatus} from 'react-native'
 import {AppBskyFeedDefs, BskyAgent} from '@atproto/api'
 import throttle from 'lodash.throttle'
@@ -18,7 +25,7 @@ type StateContext = {
   sendInteraction: (interaction: AppBskyFeedDefs.Interaction) => void
 }
 
-const stateContext = React.createContext<StateContext>({
+const stateContext = createContext<StateContext>({
   enabled: false,
   onItemSeen: (_item: any) => {},
   sendInteraction: (_interaction: AppBskyFeedDefs.Interaction) => {},
@@ -27,14 +34,13 @@ const stateContext = React.createContext<StateContext>({
 export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
   const agent = useAgent()
   const enabled = isDiscoverFeed(feed) && hasSession
-  const queue = React.useRef<Set<string>>(new Set())
-  const history = React.useRef<
-    // Use a WeakSet so that we don't need to clear it.
+  const queue = useRef<Set<string>>(new Set())
+  const history = useRef<
     // This assumes that referential identity of slice items maps 1:1 to feed (re)fetches.
     WeakSet<FeedPostSliceItem | AppBskyFeedDefs.Interaction>
   >(new WeakSet())
 
-  const sendToFeedNoDelay = React.useCallback(() => {
+  const sendToFeedNoDelay = useCallback(() => {
     const proxyAgent = agent.withProxy(
       // @ts-ignore TODO need to update withProxy() to support this key -prf
       'bsky_fg',
@@ -52,7 +58,7 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
       })
   }, [agent])
 
-  const sendToFeed = React.useMemo(
+  const sendToFeed = useMemo(
     () =>
       throttle(sendToFeedNoDelay, 15e3, {
         leading: false,
@@ -61,7 +67,7 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
     [sendToFeedNoDelay],
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!enabled) {
       return
     }
@@ -73,7 +79,7 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
     return () => sub.remove()
   }, [enabled, sendToFeed])
 
-  const onItemSeen = React.useCallback(
+  const onItemSeen = useCallback(
     (slice: any) => {
       if (!enabled) {
         return
@@ -98,7 +104,7 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
     [enabled, sendToFeed],
   )
 
-  const sendInteraction = React.useCallback(
+  const sendInteraction = useCallback(
     (interaction: AppBskyFeedDefs.Interaction) => {
       if (!enabled) {
         return
@@ -112,7 +118,7 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
     [enabled, sendToFeed],
   )
 
-  return React.useMemo(() => {
+  return useMemo(() => {
     return {
       enabled,
       // pass this method to the <List> onItemSeen
@@ -127,7 +133,7 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
 export const FeedFeedbackProvider = stateContext.Provider
 
 export function useFeedFeedbackContext() {
-  return React.useContext(stateContext)
+  return useContext(stateContext)
 }
 
 // TODO

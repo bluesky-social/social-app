@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -23,13 +23,13 @@ export function ServerInputDialog({
   const {_} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
-  const [pdsAddressHistory, setPdsAddressHistory] = React.useState<string[]>(
+  const [pdsAddressHistory, setPdsAddressHistory] = useState<string[]>(
     persisted.get('pdsAddressHistory') || [],
   )
-  const [fixedOption, setFixedOption] = React.useState([BSKY_SERVICE])
-  const [customAddress, setCustomAddress] = React.useState('')
+  const [fixedOption, setFixedOption] = useState([BSKY_SERVICE])
+  const [customAddress, setCustomAddress] = useState('')
 
-  const onClose = React.useCallback(() => {
+  const onClose = useCallback(() => {
     let url
     if (fixedOption[0] === 'custom') {
       url = customAddress.trim().toLowerCase()

@@ -1,11 +1,12 @@
-import React from 'react'
-import Picker from '@emoji-mart/react'
+import {useEffect, useMemo, useRef} from 'react'
 import {
   StyleSheet,
   TouchableWithoutFeedback,
   useWindowDimensions,
   View,
 } from 'react-native'
+import Picker from '@emoji-mart/react'
+
 import {textInputWebEmitter} from '../TextInput.web'
 
 const HEIGHT_OFFSET = 40
@@ -37,9 +38,9 @@ interface IProps {
 export function EmojiPicker({state, close}: IProps) {
   const {height, width} = useWindowDimensions()
 
-  const isShiftDown = React.useRef(false)
+  const isShiftDown = useRef(false)
 
-  const position = React.useMemo(() => {
+  const position = useMemo(() => {
     const fitsBelow = state.pos.top + PICKER_HEIGHT < height
     const fitsAbove = PICKER_HEIGHT < state.pos.top
     const placeOnLeft = PICKER_WIDTH < state.pos.left
@@ -64,7 +65,7 @@ export function EmojiPicker({state, close}: IProps) {
     }
   }, [state.pos, height, width])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!state.isOpen) return
 
     const onKeyDown = (e: KeyboardEvent) => {

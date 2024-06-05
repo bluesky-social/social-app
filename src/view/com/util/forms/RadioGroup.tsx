@@ -1,4 +1,4 @@
-import React from 'react'
+import {useState} from 'react'
 import {View} from 'react-native'
 
 import {s} from 'lib/styles'
@@ -23,7 +23,7 @@ export function RadioGroup({
   initialSelection?: string
   onSelect: (key: string) => void
 }) {
-  const [selection, setSelection] = React.useState<string>(initialSelection)
+  const [selection, setSelection] = useState<string>(initialSelection)
 
   const onSelectInner = (key: string) => {
     setSelection(key)

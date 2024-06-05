@@ -1,4 +1,4 @@
-import React from 'react'
+import {memo, PropsWithChildren, ReactNode, useCallback, useMemo} from 'react'
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
 import {AppBskyActorDefs, ModerationDecision} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -33,7 +33,7 @@ let ProfileHeaderShell = ({
   moderation,
   hideBackButton = false,
   isPlaceholderProfile,
-}: React.PropsWithChildren<Props>): React.ReactNode => {
+}: PropsWithChildren<Props>): ReactNode => {
   const t = useTheme()
   const {currentAccount} = useSession()
   const {_} = useLingui()
@@ -41,7 +41,7 @@ let ProfileHeaderShell = ({
   const navigation = useNavigation<NavigationProp>()
   const {isDesktop} = useWebMediaQueries()
 
-  const onPressBack = React.useCallback(() => {
+  const onPressBack = useCallback(() => {
     if (navigation.canGoBack()) {
       navigation.goBack()
     } else {
@@ -49,14 +49,14 @@ let ProfileHeaderShell = ({
     }
   }, [navigation])
 
-  const onPressAvi = React.useCallback(() => {
+  const onPressAvi = useCallback(() => {
     const modui = moderation.ui('avatar')
     if (profile.avatar && !(modui.blur && modui.noOverride)) {
       openLightbox(new ProfileImageLightbox(profile))
     }
   }, [openLightbox, profile, moderation])
 
-  const isMe = React.useMemo(
+  const isMe = useMemo(
     () => currentAccount?.did === profile.did,
     [currentAccount, profile],
   )
@@ -128,7 +128,7 @@ let ProfileHeaderShell = ({
     </View>
   )
 }
-ProfileHeaderShell = React.memo(ProfileHeaderShell)
+ProfileHeaderShell = memo(ProfileHeaderShell)
 export {ProfileHeaderShell}
 
 const styles = StyleSheet.create({

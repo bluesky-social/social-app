@@ -1,14 +1,23 @@
-import React from 'react'
+import {
+  createContext,
+  Dispatch,
+  ReactNode,
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+} from 'react'
 
 import {useCurrentConvoId} from './current-convo-id'
 
-const MessageDraftsContext = React.createContext<{
+const MessageDraftsContext = createContext<{
   state: State
-  dispatch: React.Dispatch<Actions>
+  dispatch: Dispatch<Actions>
 } | null>(null)
 
 function useMessageDraftsContext() {
-  const ctx = React.useContext(MessageDraftsContext)
+  const ctx = useContext(MessageDraftsContext)
   if (!ctx) {
     throw new Error(
       'useMessageDrafts must be used within a MessageDraftsContext',
@@ -21,7 +30,7 @@ export function useMessageDraft() {
   const {currentConvoId} = useCurrentConvoId()
   const {state, dispatch} = useMessageDraftsContext()
 
-  return React.useMemo(
+  return useMemo(
     () => ({
       getDraft: () => (currentConvoId && state[currentConvoId]) || '',
       clearDraft: () => {
@@ -37,10 +46,10 @@ export function useMessageDraft() {
 export function useSaveMessageDraft(message: string) {
   const {currentConvoId} = useCurrentConvoId()
   const {dispatch} = useMessageDraftsContext()
-  const messageRef = React.useRef(message)
+  const messageRef = useRef(message)
   messageRef.current = message
 
-  React.useEffect(() => {
+  useEffect(() => {
     return () => {
       if (currentConvoId) {
         dispatch({
@@ -69,10 +78,10 @@ function reducer(state: State, action: Actions): State {
   }
 }
 
-export function MessageDraftsProvider({children}: {children: React.ReactNode}) {
-  const [state, dispatch] = React.useReducer(reducer, {})
+export function MessageDraftsProvider({children}: {children: ReactNode}) {
+  const [state, dispatch] = useReducer(reducer, {})
 
-  const ctx = React.useMemo(() => {
+  const ctx = useMemo(() => {
     return {state, dispatch}
   }, [state])
 

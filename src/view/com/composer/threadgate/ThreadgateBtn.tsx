@@ -1,4 +1,3 @@
-import React from 'react'
 import {Keyboard, StyleProp, ViewStyle} from 'react-native'
 import Animated, {AnimatedStyle} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'

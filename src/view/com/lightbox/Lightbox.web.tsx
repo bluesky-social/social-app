@@ -1,31 +1,32 @@
-import React from 'react'
+import {useCallback, useEffect, useMemo, useState} from 'react'
 import {
   Image,
   ImageStyle,
+  Pressable,
+  StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  StyleSheet,
   View,
-  Pressable,
   ViewStyle,
 } from 'react-native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {colors, s} from 'lib/styles'
-import ImageDefaultHeader from './ImageViewing/components/ImageDefaultHeader'
-import {Text} from '../util/text/Text'
-import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
-import {
-  useLightbox,
-  useLightboxControls,
-  ImagesLightbox,
-  ProfileImageLightbox,
-} from '#/state/lightbox'
+import {useLingui} from '@lingui/react'
+
 import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {
+  ImagesLightbox,
+  ProfileImageLightbox,
+  useLightbox,
+  useLightboxControls,
+} from '#/state/lightbox'
+import {colors, s} from 'lib/styles'
+import {Text} from '../util/text/Text'
+import ImageDefaultHeader from './ImageViewing/components/ImageDefaultHeader'
 
 interface Img {
   uri: string
@@ -79,23 +80,23 @@ function LightboxInner({
   onClose: () => void
 }) {
   const {_} = useLingui()
-  const [index, setIndex] = React.useState<number>(initialIndex)
-  const [isAltExpanded, setAltExpanded] = React.useState(false)
+  const [index, setIndex] = useState<number>(initialIndex)
+  const [isAltExpanded, setAltExpanded] = useState(false)
 
   const canGoLeft = index >= 1
   const canGoRight = index < imgs.length - 1
-  const onPressLeft = React.useCallback(() => {
+  const onPressLeft = useCallback(() => {
     if (canGoLeft) {
       setIndex(index - 1)
     }
   }, [index, canGoLeft])
-  const onPressRight = React.useCallback(() => {
+  const onPressRight = useCallback(() => {
     if (canGoRight) {
       setIndex(index + 1)
     }
   }, [index, canGoRight])
 
-  const onKeyDown = React.useCallback(
+  const onKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         onClose()
@@ -108,16 +109,16 @@ function LightboxInner({
     [onClose, onPressLeft, onPressRight],
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [onKeyDown])
 
   const {isTabletOrDesktop} = useWebMediaQueries()
-  const btnStyle = React.useMemo(() => {
+  const btnStyle = useMemo(() => {
     return isTabletOrDesktop ? styles.btnTablet : styles.btnMobile
   }, [isTabletOrDesktop])
-  const iconSize = React.useMemo(() => {
+  const iconSize = useMemo(() => {
     return isTabletOrDesktop ? 32 : 24
   }, [isTabletOrDesktop])
 

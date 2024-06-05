@@ -1,4 +1,10 @@
-import React from 'react'
+import {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useMemo,
+  useState,
+} from 'react'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
 
@@ -158,7 +164,7 @@ export type Modal =
   | LinkWarningModal
   | InAppBrowserConsentModal
 
-const ModalContext = React.createContext<{
+const ModalContext = createContext<{
   isModalActive: boolean
   activeModals: Modal[]
 }>({
@@ -166,7 +172,7 @@ const ModalContext = React.createContext<{
   activeModals: [],
 })
 
-const ModalControlContext = React.createContext<{
+const ModalControlContext = createContext<{
   openModal: (modal: Modal) => void
   closeModal: () => boolean
   closeAllModals: () => void
@@ -190,8 +196,8 @@ export let unstable__closeModal: () => boolean = () => {
   throw new Error(`ModalContext is not initialized`)
 }
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [activeModals, setActiveModals] = React.useState<Modal[]>([])
+export function Provider({children}: PropsWithChildren<{}>) {
+  const [activeModals, setActiveModals] = useState<Modal[]>([])
 
   const openModal = useNonReactiveCallback((modal: Modal) => {
     setActiveModals(modals => [...modals, modal])
@@ -212,7 +218,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   unstable__openModal = openModal
   unstable__closeModal = closeModal
 
-  const state = React.useMemo(
+  const state = useMemo(
     () => ({
       isModalActive: activeModals.length > 0,
       activeModals,
@@ -220,7 +226,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [activeModals],
   )
 
-  const methods = React.useMemo(
+  const methods = useMemo(
     () => ({
       openModal,
       closeModal,
@@ -239,9 +245,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 export function useModals() {
-  return React.useContext(ModalContext)
+  return useContext(ModalContext)
 }
 
 export function useModalControls() {
-  return React.useContext(ModalControlContext)
+  return useContext(ModalControlContext)
 }

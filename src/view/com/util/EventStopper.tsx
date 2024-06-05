@@ -1,4 +1,4 @@
-import React from 'react'
+import {PropsWithChildren} from 'react'
 import {View, ViewStyle} from 'react-native'
 
 /**
@@ -9,7 +9,7 @@ export function EventStopper({
   children,
   style,
   onKeyDown = true,
-}: React.PropsWithChildren<{
+}: PropsWithChildren<{
   style?: ViewStyle | ViewStyle[]
   /**
    * Default `true`. Set to `false` to allow onKeyDown to propagate

@@ -1,7 +1,8 @@
-import React from 'react'
+import {useCallback, useState} from 'react'
 import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
 // @ts-ignore types not available -prf
 import {unstable_createElement} from 'react-native-web'
+
 import {usePalette} from 'lib/hooks/usePalette'
 
 interface Props {
@@ -19,9 +20,9 @@ interface Props {
 
 export function DateInput(props: Props) {
   const pal = usePalette('default')
-  const [value, setValue] = React.useState(toDateInputValue(props.value))
+  const [value, setValue] = useState(toDateInputValue(props.value))
 
-  const onChangeInternal = React.useCallback(
+  const onChangeInternal = useCallback(
     (v: Date) => {
       if (!v) {
         return

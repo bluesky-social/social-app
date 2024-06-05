@@ -1,5 +1,12 @@
-import React from 'react'
+import {
+  forwardRef,
+  PropsWithChildren,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from 'react'
 import {Animated, StyleProp, View, ViewStyle} from 'react-native'
+
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 
 type CreateAnimFn = (interp: Animated.Value) => Animated.CompositeAnimation
@@ -16,24 +23,20 @@ export interface TriggerableAnimatedRef {
   trigger: (anim: TriggeredAnimation, onFinish?: FinishCb) => void
 }
 
-type TriggerableAnimatedProps = React.PropsWithChildren<{}>
+type TriggerableAnimatedProps = PropsWithChildren<{}>
 
 type PropsInner = TriggerableAnimatedProps & {
   anim: TriggeredAnimation
   onFinish: () => void
 }
 
-export const TriggerableAnimated = React.forwardRef<
+export const TriggerableAnimated = forwardRef<
   TriggerableAnimatedRef,
   TriggerableAnimatedProps
 >(function TriggerableAnimatedImpl({children, ...props}, ref) {
-  const [anim, setAnim] = React.useState<TriggeredAnimation | undefined>(
-    undefined,
-  )
-  const [finishCb, setFinishCb] = React.useState<FinishCb | undefined>(
-    undefined,
-  )
-  React.useImperativeHandle(ref, () => ({
+  const [anim, setAnim] = useState<TriggeredAnimation | undefined>(undefined)
+  const [finishCb, setFinishCb] = useState<FinishCb | undefined>(undefined)
+  useImperativeHandle(ref, () => ({
     trigger(v: TriggeredAnimation, cb?: FinishCb) {
       setFinishCb(() => cb) // note- wrap in function due to react behaviors around setstate
       setAnim(v)
@@ -61,9 +64,9 @@ function AnimatingView({
   anim,
   onFinish,
   children,
-}: React.PropsWithChildren<PropsInner>) {
+}: PropsWithChildren<PropsInner>) {
   const interp = useAnimatedValue(0)
-  React.useEffect(() => {
+  useEffect(() => {
     anim?.start(interp).start(() => {
       onFinish()
     })

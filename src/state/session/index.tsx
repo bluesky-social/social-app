@@ -1,4 +1,13 @@
-import React from 'react'
+import {
+  createContext,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+} from 'react'
 import {AtpSessionEvent, BskyAgent} from '@atproto/api'
 
 import {track} from '#/lib/analytics/analytics'
@@ -21,15 +30,15 @@ export {isSignupQueued} from './util'
 export type {SessionAccount} from '#/state/session/types'
 import {SessionApiContext, SessionStateContext} from '#/state/session/types'
 
-const StateContext = React.createContext<SessionStateContext>({
+const StateContext = createContext<SessionStateContext>({
   accounts: [],
   currentAccount: undefined,
   hasSession: false,
 })
 
-const AgentContext = React.createContext<BskyAgent | null>(null)
+const AgentContext = createContext<BskyAgent | null>(null)
 
-const ApiContext = React.createContext<SessionApiContext>({
+const ApiContext = createContext<SessionApiContext>({
   createAccount: async () => {},
   login: async () => {},
   logout: async () => {},
@@ -37,13 +46,13 @@ const ApiContext = React.createContext<SessionApiContext>({
   removeAccount: () => {},
 })
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
+export function Provider({children}: PropsWithChildren<{}>) {
   const cancelPendingTask = useOneTaskAtATime()
-  const [state, dispatch] = React.useReducer(reducer, null, () =>
+  const [state, dispatch] = useReducer(reducer, null, () =>
     getInitialState(persisted.get('session').accounts),
   )
 
-  const onAgentSessionChange = React.useCallback(
+  const onAgentSessionChange = useCallback(
     (agent: BskyAgent, accountDid: string, sessionEvent: AtpSessionEvent) => {
       const refreshedAccount = agentToSessionAccount(agent) // Mutable, so snapshot it right away.
       if (sessionEvent === 'expired' || sessionEvent === 'create-failed') {
@@ -60,7 +69,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [],
   )
 
-  const createAccount = React.useCallback<SessionApiContext['createAccount']>(
+  const createAccount = useCallback<SessionApiContext['createAccount']>(
     async params => {
       const signal = cancelPendingTask()
       track('Try Create Account')
@@ -84,7 +93,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [onAgentSessionChange, cancelPendingTask],
   )
 
-  const login = React.useCallback<SessionApiContext['login']>(
+  const login = useCallback<SessionApiContext['login']>(
     async (params, logContext) => {
       const signal = cancelPendingTask()
       const {agent, account} = await createAgentAndLogin(
@@ -106,7 +115,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [onAgentSessionChange, cancelPendingTask],
   )
 
-  const logout = React.useCallback<SessionApiContext['logout']>(
+  const logout = useCallback<SessionApiContext['logout']>(
     logContext => {
       cancelPendingTask()
       dispatch({
@@ -117,7 +126,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [cancelPendingTask],
   )
 
-  const resumeSession = React.useCallback<SessionApiContext['resumeSession']>(
+  const resumeSession = useCallback<SessionApiContext['resumeSession']>(
     async storedAccount => {
       const signal = cancelPendingTask()
       const {agent, account} = await createAgentAndResume(
@@ -137,7 +146,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [onAgentSessionChange, cancelPendingTask],
   )
 
-  const removeAccount = React.useCallback<SessionApiContext['removeAccount']>(
+  const removeAccount = useCallback<SessionApiContext['removeAccount']>(
     account => {
       cancelPendingTask()
       dispatch({
@@ -148,7 +157,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [cancelPendingTask],
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (state.needsPersist) {
       state.needsPersist = false
       persisted.write('session', {
@@ -160,7 +169,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     }
   }, [state])
 
-  React.useEffect(() => {
+  useEffect(() => {
     return persisted.onUpdate(() => {
       const synced = persisted.get('session')
       dispatch({
@@ -182,7 +191,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     })
   }, [state, resumeSession])
 
-  const stateContext = React.useMemo(
+  const stateContext = useMemo(
     () => ({
       accounts: state.accounts,
       currentAccount: state.accounts.find(
@@ -193,7 +202,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [state],
   )
 
-  const api = React.useMemo(
+  const api = useMemo(
     () => ({
       createAccount,
       login,
@@ -208,8 +217,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   if (IS_DEV && isWeb) window.agent = state.currentAgentState.agent
 
   const agent = state.currentAgentState.agent as BskyAgent
-  const currentAgentRef = React.useRef(agent)
-  React.useEffect(() => {
+  const currentAgentRef = useRef(agent)
+
+  useEffect(() => {
     if (currentAgentRef.current !== agent) {
       // Read the previous value and immediately advance the pointer.
       const prevAgent = currentAgentRef.current
@@ -231,8 +241,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 function useOneTaskAtATime() {
-  const abortController = React.useRef<AbortController | null>(null)
-  const cancelPendingTask = React.useCallback(() => {
+  const abortController = useRef<AbortController | null>(null)
+  const cancelPendingTask = useCallback(() => {
     if (abortController.current) {
       abortController.current.abort()
     }
@@ -243,11 +253,11 @@ function useOneTaskAtATime() {
 }
 
 export function useSession() {
-  return React.useContext(StateContext)
+  return useContext(StateContext)
 }
 
 export function useSessionApi() {
-  return React.useContext(ApiContext)
+  return useContext(ApiContext)
 }
 
 export function useRequireAuth() {
@@ -255,7 +265,7 @@ export function useRequireAuth() {
   const closeAll = useCloseAllActiveElements()
   const {signinDialogControl} = useGlobalDialogsControlContext()
 
-  return React.useCallback(
+  return useCallback(
     (fn: () => void) => {
       if (hasSession) {
         fn()
@@ -269,7 +279,7 @@ export function useRequireAuth() {
 }
 
 export function useAgent(): BskyAgent {
-  const agent = React.useContext(AgentContext)
+  const agent = useContext(AgentContext)
   if (!agent) {
     throw Error('useAgent() must be below <SessionProvider>.')
   }

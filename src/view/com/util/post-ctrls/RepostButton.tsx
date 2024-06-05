@@ -1,4 +1,4 @@
-import React from 'react'
+import {memo, ReactNode, useCallback, useMemo} from 'react'
 import {View} from 'react-native'
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -26,21 +26,21 @@ let RepostButton = ({
   onRepost,
   onQuote,
   big,
-}: Props): React.ReactNode => {
+}: Props): ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
   const requireAuth = useRequireAuth()
   const dialogControl = Dialog.useDialogControl()
   const playHaptic = useHaptics()
 
-  const color = React.useMemo(
+  const color = useMemo(
     () => ({
       color: isReposted ? t.palette.positive_600 : t.palette.contrast_500,
     }),
     [t, isReposted],
   )
 
-  const close = React.useCallback(() => dialogControl.close(), [dialogControl])
+  const close = useCallback(() => dialogControl.close(), [dialogControl])
 
   return (
     <>
@@ -140,5 +140,5 @@ let RepostButton = ({
     </>
   )
 }
-RepostButton = React.memo(RepostButton)
+RepostButton = memo(RepostButton)
 export {RepostButton}

@@ -1,8 +1,8 @@
-import React from 'react'
-import {Pressable, ViewStyle, StyleProp, StyleSheet} from 'react-native'
-import {Text} from '../text/Text'
+import {Pressable, StyleProp, StyleSheet, ViewStyle} from 'react-native'
+
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {Text} from '../text/Text'
 
 interface SelectableBtnProps {
   testID?: string

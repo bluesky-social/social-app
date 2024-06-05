@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useMemo, useRef, useState} from 'react'
 import {
   ActivityIndicator,
   type FlatList,
@@ -131,8 +131,8 @@ export function FeedsScreen(_props: Props) {
   const pal = usePalette('default')
   const {openComposer} = useComposerControls()
   const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
-  const [query, setQuery] = React.useState('')
-  const [isPTR, setIsPTR] = React.useState(false)
+  const [query, setQuery] = useState('')
+  const [isPTR, setIsPTR] = useState(false)
   const {
     data: preferences,
     isLoading: isPreferencesLoading,
@@ -158,21 +158,21 @@ export function FeedsScreen(_props: Props) {
     error: searchError,
   } = useSearchPopularFeedsMutation()
   const {hasSession} = useSession()
-  const listRef = React.useRef<FlatList>(null)
-  const searchInputRef = React.useRef<SearchInputRef>(null)
+  const listRef = useRef<FlatList>(null)
+  const searchInputRef = useRef<SearchInputRef>(null)
 
   /**
    * A search query is present. We may not have search results yet.
    */
   const isUserSearching = query.length > 1
-  const debouncedSearch = React.useMemo(
+  const debouncedSearch = useMemo(
     () => debounce(q => search(q), 500), // debounce for 500ms
     [search],
   )
-  const onPressCompose = React.useCallback(() => {
+  const onPressCompose = useCallback(() => {
     openComposer({})
   }, [openComposer])
-  const onChangeQuery = React.useCallback(
+  const onChangeQuery = useCallback(
     (text: string) => {
       setQuery(text)
       if (text.length > 1) {
@@ -184,15 +184,15 @@ export function FeedsScreen(_props: Props) {
     },
     [setQuery, refetchPopularFeeds, debouncedSearch, resetSearch],
   )
-  const onPressCancelSearch = React.useCallback(() => {
+  const onPressCancelSearch = useCallback(() => {
     setQuery('')
     refetchPopularFeeds()
     resetSearch()
   }, [refetchPopularFeeds, setQuery, resetSearch])
-  const onSubmitQuery = React.useCallback(() => {
+  const onSubmitQuery = useCallback(() => {
     debouncedSearch(query)
   }, [query, debouncedSearch])
-  const onPullToRefresh = React.useCallback(async () => {
+  const onPullToRefresh = useCallback(async () => {
     setIsPTR(true)
     await Promise.all([
       refetchPreferences().catch(_e => undefined),
@@ -200,7 +200,7 @@ export function FeedsScreen(_props: Props) {
     ])
     setIsPTR(false)
   }, [setIsPTR, refetchPreferences, refetchPopularFeeds])
-  const onEndReached = React.useCallback(() => {
+  const onEndReached = useCallback(() => {
     if (
       isPopularFeedsFetching ||
       isUserSearching ||
@@ -218,12 +218,12 @@ export function FeedsScreen(_props: Props) {
   ])
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setMinimalShellMode(false)
     }, [setMinimalShellMode]),
   )
 
-  const items = React.useMemo(() => {
+  const items = useMemo(() => {
     let slices: FlatlistSlice[] = []
 
     if (hasSession) {
@@ -396,7 +396,7 @@ export function FeedsScreen(_props: Props) {
     isUserSearching,
   ])
 
-  const renderHeaderBtn = React.useCallback(() => {
+  const renderHeaderBtn = useCallback(() => {
     return (
       <View style={styles.headerBtnGroup}>
         <Pressable
@@ -425,7 +425,7 @@ export function FeedsScreen(_props: Props) {
     item => item.type === 'popularFeedsHeader',
   )
 
-  const onChangeSearchFocus = React.useCallback(
+  const onChangeSearchFocus = useCallback(
     (focus: boolean) => {
       if (focus && searchBarIndex > -1) {
         if (isNative) {
@@ -450,7 +450,7 @@ export function FeedsScreen(_props: Props) {
     [searchBarIndex, isMobile],
   )
 
-  const renderItem = React.useCallback(
+  const renderItem = useCallback(
     ({item}: {item: FlatlistSlice}) => {
       if (item.type === 'error') {
         return <ErrorMessage message={item.error} />

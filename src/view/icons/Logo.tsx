@@ -1,4 +1,4 @@
-import React from 'react'
+import {forwardRef} from 'react'
 import {StyleSheet, TextProps} from 'react-native'
 import Svg, {
   Defs,
@@ -20,13 +20,13 @@ type Props = {
   style?: TextProps['style']
 } & Omit<SvgProps, 'style'>
 
-export const Logo = React.forwardRef(function LogoImpl(props: Props, ref) {
+export const Logo = forwardRef(function LogoImpl(props: Props, ref) {
   const {fill, ...rest} = props
   const gradient = fill === 'sky'
   const styles = StyleSheet.flatten(props.style)
   const _fill = gradient ? 'url(#sky)' : fill || styles?.color || colors.blue3
   // @ts-ignore it's fiiiiine
-  const size = parseInt(rest.width || 32)
+  const size = parseInt(rest.width || '32', 10)
 
   const isKawaii = useKawaiiMode()
 

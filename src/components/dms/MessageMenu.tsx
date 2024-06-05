@@ -1,4 +1,4 @@
-import React from 'react'
+import {memo, ReactNode, useCallback} from 'react'
 import {LayoutAnimation, Pressable, View} from 'react-native'
 import * as Clipboard from 'expo-clipboard'
 import {ChatBskyConvoDefs, RichText} from '@atproto/api'
@@ -32,7 +32,7 @@ export let MessageMenu = ({
   triggerOpacity?: number
   message: ChatBskyConvoDefs.MessageView
   control: Menu.MenuControlProps
-}): React.ReactNode => {
+}): ReactNode => {
   const {_} = useLingui()
   const t = useTheme()
   const {currentAccount} = useSession()
@@ -44,7 +44,7 @@ export let MessageMenu = ({
 
   const isFromSelf = message.sender?.did === currentAccount?.did
 
-  const onCopyMessage = React.useCallback(() => {
+  const onCopyMessage = useCallback(() => {
     const str = richTextToString(
       new RichText({
         text: message.text,
@@ -57,7 +57,7 @@ export let MessageMenu = ({
     Toast.show(_(msg`Copied to clipboard`))
   }, [_, message.text, message.facets])
 
-  const onPressTranslateMessage = React.useCallback(() => {
+  const onPressTranslateMessage = useCallback(() => {
     const translatorUrl = getTranslatorLink(
       message.text,
       langPrefs.primaryLanguage,
@@ -65,7 +65,7 @@ export let MessageMenu = ({
     openLink(translatorUrl)
   }, [langPrefs.primaryLanguage, message.text, openLink])
 
-  const onDelete = React.useCallback(() => {
+  const onDelete = useCallback(() => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     convo
       .deleteMessage(message.id)
@@ -155,4 +155,4 @@ export let MessageMenu = ({
     </>
   )
 }
-MessageMenu = React.memo(MessageMenu)
+MessageMenu = memo(MessageMenu)

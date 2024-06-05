@@ -1,4 +1,11 @@
-import React from 'react'
+import {
+  FocusEventHandler,
+  memo,
+  ReactNode,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react'
 import {GestureResponderEvent, View} from 'react-native'
 import {
   AppBskyActorDefs,
@@ -36,7 +43,7 @@ export let ChatListItem = ({
   convo,
 }: {
   convo: ChatBskyConvoDefs.ConvoView
-}): React.ReactNode => {
+}): ReactNode => {
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
 
@@ -57,7 +64,7 @@ export let ChatListItem = ({
   )
 }
 
-ChatListItem = React.memo(ChatListItem)
+ChatListItem = memo(ChatListItem)
 
 function ChatListItemReady({
   convo,
@@ -74,13 +81,13 @@ function ChatListItemReady({
   const menuControl = useMenuControl()
   const {gtMobile} = useBreakpoints()
   const profile = useProfileShadow(profileUnshadowed)
-  const moderation = React.useMemo(
+  const moderation = useMemo(
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
   )
   const playHaptic = useHaptics()
 
-  const blockInfo = React.useMemo(() => {
+  const blockInfo = useMemo(() => {
     const modui = moderation.ui('profileView')
     const blocks = modui.alerts.filter(alert => alert.type === 'blocking')
     const listBlocks = blocks.filter(alert => alert.source.type === 'list')
@@ -101,7 +108,7 @@ function ChatListItemReady({
 
   const isDimStyle = convo.muted || moderation.blocked || isDeletedAccount
 
-  const {lastMessage, lastMessageSentAt} = React.useMemo(() => {
+  const {lastMessage, lastMessageSentAt} = useMemo(() => {
     let lastMessage = _(msg`No messages yet`)
     let lastMessageSentAt: string | null = null
 
@@ -160,22 +167,22 @@ function ChatListItemReady({
     }
   }, [_, convo.lastMessage, currentAccount?.did, isDeletedAccount])
 
-  const [showActions, setShowActions] = React.useState(false)
+  const [showActions, setShowActions] = useState(false)
 
-  const onMouseEnter = React.useCallback(() => {
+  const onMouseEnter = useCallback(() => {
     setShowActions(true)
   }, [])
 
-  const onMouseLeave = React.useCallback(() => {
+  const onMouseLeave = useCallback(() => {
     setShowActions(false)
   }, [])
 
-  const onFocus = React.useCallback<React.FocusEventHandler>(e => {
+  const onFocus = useCallback<FocusEventHandler>(e => {
     if (e.nativeEvent.relatedTarget == null) return
     setShowActions(true)
   }, [])
 
-  const onPress = React.useCallback(
+  const onPress = useCallback(
     (e: GestureResponderEvent) => {
       if (isDeletedAccount) {
         e.preventDefault()
@@ -187,7 +194,7 @@ function ChatListItemReady({
     [isDeletedAccount],
   )
 
-  const onLongPress = React.useCallback(() => {
+  const onLongPress = useCallback(() => {
     playHaptic()
     menuControl.open()
   }, [playHaptic, menuControl])

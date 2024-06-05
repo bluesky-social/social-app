@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -28,7 +28,7 @@ export function EmbedConsentDialog({
   const setExternalEmbedPref = useSetExternalEmbedPref()
   const {gtMobile} = useBreakpoints()
 
-  const onShowAllPress = React.useCallback(() => {
+  const onShowAllPress = useCallback(() => {
     for (const key of embedPlayerSources) {
       setExternalEmbedPref(key, 'show')
     }
@@ -36,13 +36,13 @@ export function EmbedConsentDialog({
     control.close()
   }, [control, onAccept, setExternalEmbedPref])
 
-  const onShowPress = React.useCallback(() => {
+  const onShowPress = useCallback(() => {
     setExternalEmbedPref(source, 'show')
     onAccept()
     control.close()
   }, [control, onAccept, setExternalEmbedPref, source])
 
-  const onHidePress = React.useCallback(() => {
+  const onHidePress = useCallback(() => {
     setExternalEmbedPref(source, 'hide')
     control.close()
   }, [control, setExternalEmbedPref, source])

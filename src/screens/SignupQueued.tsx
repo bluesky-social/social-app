@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, plural, Trans} from '@lingui/macro'
@@ -26,15 +26,15 @@ export function SignupQueued() {
   const {logout} = useSessionApi()
   const agent = useAgent()
 
-  const [isProcessing, setProcessing] = React.useState(false)
-  const [estimatedTime, setEstimatedTime] = React.useState<string | undefined>(
+  const [isProcessing, setProcessing] = useState(false)
+  const [estimatedTime, setEstimatedTime] = useState<string | undefined>(
     undefined,
   )
-  const [placeInQueue, setPlaceInQueue] = React.useState<number | undefined>(
+  const [placeInQueue, setPlaceInQueue] = useState<number | undefined>(
     undefined,
   )
 
-  const checkStatus = React.useCallback(async () => {
+  const checkStatus = useCallback(async () => {
     setProcessing(true)
     try {
       const res = await agent.com.atproto.temp.checkSignupQueue()
@@ -64,7 +64,7 @@ export function SignupQueued() {
     agent,
   ])
 
-  React.useEffect(() => {
+  useEffect(() => {
     checkStatus()
     const interval = setInterval(checkStatus, 60e3)
     return () => clearInterval(interval)

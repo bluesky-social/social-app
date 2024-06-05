@@ -1,4 +1,4 @@
-import React from 'react'
+import {MouseEvent, useCallback, useMemo, useState} from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {
   FontAwesomeIcon,
@@ -107,7 +107,7 @@ function BackBtn() {
   const {_} = useLingui()
   const shouldShow = useNavigationState(state => !isStateAtTabRoot(state))
 
-  const onPressBack = React.useCallback(() => {
+  const onPressBack = useCallback(() => {
     if (navigation.canGoBack()) {
       navigation.goBack()
     } else {
@@ -146,7 +146,7 @@ function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
   const pal = usePalette('default')
   const {currentAccount} = useSession()
   const {isDesktop, isTablet} = useWebMediaQueries()
-  const [pathName] = React.useMemo(() => router.matchPath(href), [href])
+  const [pathName] = useMemo(() => router.matchPath(href), [href])
   const currentRouteInfo = useNavigationState(state => {
     if (!state) {
       return {name: 'Home'}
@@ -160,8 +160,8 @@ function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
           currentAccount?.handle
       : isTab(currentRouteInfo.name, pathName)
   const {onPress} = useLinkProps({to: href})
-  const onPressWrapped = React.useCallback(
-    (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+  const onPressWrapped = useCallback(
+    (e: MouseEvent<HTMLAnchorElement, MouseEvent>) => {
       if (e.ctrlKey || e.metaKey || e.altKey) {
         return
       }
@@ -219,7 +219,7 @@ function ComposeBtn() {
   const {openComposer} = useComposerControls()
   const {_} = useLingui()
   const {isTablet} = useWebMediaQueries()
-  const [isFetchingHandle, setIsFetchingHandle] = React.useState(false)
+  const [isFetchingHandle, setIsFetchingHandle] = useState(false)
   const fetchHandle = useFetchHandle()
 
   const getProfileHandle = async () => {

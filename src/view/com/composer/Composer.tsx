@@ -1,4 +1,12 @@
-import React from 'react'
+import {
+  RefObject,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {
   ActivityIndicator,
   Keyboard,
@@ -101,7 +109,7 @@ export const ComposePost = observer(function ComposePost({
   imageUris: initImageUris,
   cancelRef,
 }: Props & {
-  cancelRef?: React.RefObject<CancelRef>
+  cancelRef?: RefObject<CancelRef>
 }) {
   const {currentAccount} = useSession()
   const agent = useAgent()
@@ -115,16 +123,16 @@ export const ComposePost = observer(function ComposePost({
   const requireAltTextEnabled = useRequireAltTextEnabled()
   const langPrefs = useLanguagePrefs()
   const setLangPrefs = useLanguagePrefsApi()
-  const textInput = React.useRef<TextInputRef>(null)
+  const textInput = useRef<TextInputRef>(null)
   const discardPromptControl = Prompt.usePromptControl()
   const {closeAllDialogs} = useDialogStateControlContext()
   const t = useTheme()
 
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
-  const [isProcessing, setIsProcessing] = React.useState(false)
-  const [processingState, setProcessingState] = React.useState('')
-  const [error, setError] = React.useState('')
-  const [richtext, setRichText] = React.useState(
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [processingState, setProcessingState] = useState('')
+  const [error, setError] = useState('')
+  const [richtext, setRichText] = useState(
     new RichText({
       text: initText
         ? initText
@@ -137,26 +145,26 @@ export const ComposePost = observer(function ComposePost({
         : '',
     }),
   )
-  const graphemeLength = React.useMemo(() => {
+  const graphemeLength = useMemo(() => {
     return shortenLinks(richtext).graphemeLength
   }, [richtext])
-  const [quote, setQuote] = React.useState<ComposerOpts['quote'] | undefined>(
+  const [quote, setQuote] = useState<ComposerOpts['quote'] | undefined>(
     initQuote,
   )
   const {extLink, setExtLink} = useExternalLinkFetch({setQuote})
-  const [extGif, setExtGif] = React.useState<Gif>()
-  const [labels, setLabels] = React.useState<string[]>([])
-  const [threadgate, setThreadgate] = React.useState<ThreadgateSetting[]>([])
-  const gallery = React.useMemo(
+  const [extGif, setExtGif] = useState<Gif>()
+  const [labels, setLabels] = useState<string[]>([])
+  const [threadgate, setThreadgate] = useState<ThreadgateSetting[]>([])
+  const gallery = useMemo(
     () => new GalleryModel(initImageUris),
     [initImageUris],
   )
-  const onClose = React.useCallback(() => {
+  const onClose = useCallback(() => {
     closeComposer()
   }, [closeComposer])
 
   const insets = useSafeAreaInsets()
-  const viewStyles = React.useMemo(
+  const viewStyles = useMemo(
     () => ({
       paddingBottom:
         isAndroid || (isIOS && !isKeyboardVisible) ? insets.bottom : 0,
@@ -164,7 +172,7 @@ export const ComposePost = observer(function ComposePost({
     [insets, isKeyboardVisible],
   )
 
-  const onPressCancel = React.useCallback(() => {
+  const onPressCancel = useCallback(() => {
     if (graphemeLength > 0 || !gallery.isEmpty || extGif) {
       closeAllDialogs()
       if (Keyboard) {
@@ -183,10 +191,10 @@ export const ComposePost = observer(function ComposePost({
     onClose,
   ])
 
-  React.useImperativeHandle(cancelRef, () => ({onPressCancel}))
+  useImperativeHandle(cancelRef, () => ({onPressCancel}))
 
   // listen to escape key on desktop web
-  const onEscape = React.useCallback(
+  const onEscape = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         onPressCancel()
@@ -195,14 +203,14 @@ export const ComposePost = observer(function ComposePost({
     [onPressCancel],
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isWeb && !isModalActive) {
       window.addEventListener('keydown', onEscape)
       return () => window.removeEventListener('keydown', onEscape)
     }
   }, [onEscape, isModalActive])
 
-  const onNewLink = React.useCallback(
+  const onNewLink = useCallback(
     (uri: string) => {
       if (extLink != null) return
       setExtLink({uri, isLoading: true})
@@ -210,7 +218,7 @@ export const ComposePost = observer(function ComposePost({
     [extLink, setExtLink],
   )
 
-  const onPhotoPasted = React.useCallback(
+  const onPhotoPasted = useCallback(
     async (uri: string) => {
       track('Composer:PastedPhotos')
       await gallery.paste(uri)
@@ -218,7 +226,7 @@ export const ComposePost = observer(function ComposePost({
     [gallery, track],
   )
 
-  const isAltTextRequiredAndMissing = React.useMemo(() => {
+  const isAltTextRequiredAndMissing = useMemo(() => {
     if (!requireAltTextEnabled) return false
 
     if (gallery.needsAltText) return true
@@ -318,7 +326,7 @@ export const ComposePost = observer(function ComposePost({
     )
   }
 
-  const canPost = React.useMemo(
+  const canPost = useMemo(
     () => graphemeLength <= MAX_GRAPHEME_LENGTH && !isAltTextRequiredAndMissing,
     [graphemeLength, isAltTextRequiredAndMissing],
   )
@@ -329,15 +337,15 @@ export const ComposePost = observer(function ComposePost({
   const canSelectImages = gallery.size < 4 && !extLink
   const hasMedia = gallery.size > 0 || Boolean(extLink)
 
-  const onEmojiButtonPress = React.useCallback(() => {
+  const onEmojiButtonPress = useCallback(() => {
     openPicker?.(textInput.current?.getCursorPosition())
   }, [openPicker])
 
-  const focusTextInput = React.useCallback(() => {
+  const focusTextInput = useCallback(() => {
     textInput.current?.focus()
   }, [])
 
-  const onSelectGif = React.useCallback(
+  const onSelectGif = useCallback(
     (gif: Gif) => {
       setExtLink({
         uri: `${gif.media_formats.gif.url}?hh=${gif.media_formats.gif.dims[1]}&ww=${gif.media_formats.gif.dims[0]}`,
@@ -355,7 +363,7 @@ export const ComposePost = observer(function ComposePost({
     [setExtLink],
   )
 
-  const handleChangeGifAltText = React.useCallback(
+  const handleChangeGifAltText = useCallback(
     (altText: string) => {
       setExtLink(ext =>
         ext && ext.meta
@@ -611,7 +619,7 @@ export const ComposePost = observer(function ComposePost({
 })
 
 export function useComposerCancelRef() {
-  return React.useRef<CancelRef>(null)
+  return useRef<CancelRef>(null)
 }
 
 function useAnimatedBorders() {
@@ -625,7 +633,7 @@ function useAnimatedBorders() {
   /**
    * Make sure to run this on the UI thread!
    */
-  const showHideBottomBorder = React.useCallback(
+  const showHideBottomBorder = useCallback(
     ({
       newContentHeight,
       newContentOffset,
@@ -665,7 +673,7 @@ function useAnimatedBorders() {
     },
   })
 
-  const onScrollViewContentSizeChange = React.useCallback(
+  const onScrollViewContentSizeChange = useCallback(
     (_width: number, height: number) => {
       'worklet'
       showHideBottomBorder({
@@ -675,7 +683,7 @@ function useAnimatedBorders() {
     [showHideBottomBorder],
   )
 
-  const onScrollViewLayout = React.useCallback(
+  const onScrollViewLayout = useCallback(
     (evt: LayoutChangeEvent) => {
       'worklet'
       showHideBottomBorder({

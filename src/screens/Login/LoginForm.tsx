@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useRef, useState} from 'react'
 import {
   ActivityIndicator,
   Keyboard,
@@ -58,19 +58,19 @@ export const LoginForm = ({
 }) => {
   const {track} = useAnalytics()
   const t = useTheme()
-  const [isProcessing, setIsProcessing] = React.useState<boolean>(false)
+  const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [isAuthFactorTokenNeeded, setIsAuthFactorTokenNeeded] =
-    React.useState<boolean>(false)
-  const [identifier, setIdentifier] = React.useState<string>(initialHandle)
-  const [password, setPassword] = React.useState<string>('')
-  const [authFactorToken, setAuthFactorToken] = React.useState<string>('')
-  const passwordInputRef = React.useRef<TextInput>(null)
+    useState<boolean>(false)
+  const [identifier, setIdentifier] = useState<string>(initialHandle)
+  const [password, setPassword] = useState<string>('')
+  const [authFactorToken, setAuthFactorToken] = useState<string>('')
+  const passwordInputRef = useRef<TextInput>(null)
   const {_} = useLingui()
   const {login} = useSessionApi()
   const requestNotificationsPermission = useRequestNotificationsPermission()
   const {setShowLoggedOut} = useLoggedOutViewControls()
 
-  const onPressSelectService = React.useCallback(() => {
+  const onPressSelectService = useCallback(() => {
     Keyboard.dismiss()
     track('Signin:PressedSelectService')
   }, [track])

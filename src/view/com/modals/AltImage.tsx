@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {
   ImageStyle,
   ScrollView as RNScrollView,
@@ -35,15 +35,15 @@ export function Component({image}: Props) {
   const pal = usePalette('default')
   const theme = useTheme()
   const {_} = useLingui()
-  const [altText, setAltText] = React.useState(image.altText)
+  const [altText, setAltText] = useState(image.altText)
   const windim = useWindowDimensions()
   const {closeModal} = useModalControls()
-  const inputRef = React.useRef<RNTextInput>(null)
-  const scrollViewRef = React.useRef<RNScrollView>(null)
+  const inputRef = useRef<RNTextInput>(null)
+  const scrollViewRef = useRef<RNScrollView>(null)
   const keyboardShown = useIsKeyboardVisible()
 
   // Autofocus hack when we open the modal. We have to wait for the animation to complete first
-  React.useEffect(() => {
+  useEffect(() => {
     if (isAndroid) return
     setTimeout(() => {
       inputRef.current?.focus()
@@ -52,13 +52,13 @@ export function Component({image}: Props) {
 
   // We'd rather be at the bottom here so that we can easily dismiss the modal instead of having to scroll
   // (especially on android, it acts weird)
-  React.useEffect(() => {
+  useEffect(() => {
     if (keyboardShown[0]) {
       scrollViewRef.current?.scrollToEnd()
     }
   }, [keyboardShown])
 
-  const imageStyles = React.useMemo<ImageStyle>(() => {
+  const imageStyles = useMemo<ImageStyle>(() => {
     const maxWidth = isWeb ? 450 : windim.width
     if (image.height > image.width) {
       return {
@@ -75,7 +75,7 @@ export function Component({image}: Props) {
     }
   }, [image, windim])
 
-  const onUpdate = React.useCallback(
+  const onUpdate = useCallback(
     (v: string) => {
       v = enforceLen(v, MAX_ALT_TEXT)
       setAltText(v)
@@ -84,7 +84,7 @@ export function Component({image}: Props) {
     [setAltText, image],
   )
 
-  const onPressSave = React.useCallback(() => {
+  const onPressSave = useCallback(() => {
     image.setAltText(altText)
     closeModal()
   }, [closeModal, image, altText])

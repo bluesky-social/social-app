@@ -1,4 +1,4 @@
-import React from 'react'
+import {memo, ReactNode, useCallback, useEffect, useMemo, useState} from 'react'
 import {
   Animated,
   Pressable,
@@ -70,13 +70,13 @@ let FeedItem = ({
   item: FeedNotification
   moderationOpts: ModerationOpts
   hideTopBorder?: boolean
-}): React.ReactNode => {
+}): ReactNode => {
   const queryClient = useQueryClient()
   const pal = usePalette('default')
   const {_} = useLingui()
   const t = useTheme()
-  const [isAuthorsExpanded, setAuthorsExpanded] = React.useState<boolean>(false)
-  const itemHref = React.useMemo(() => {
+  const [isAuthorsExpanded, setAuthorsExpanded] = useState<boolean>(false)
+  const itemHref = useMemo(() => {
     if (item.type === 'post-like' || item.type === 'repost') {
       if (item.subjectUri) {
         const urip = new AtUri(item.subjectUri)
@@ -100,11 +100,11 @@ let FeedItem = ({
     setAuthorsExpanded(currentlyExpanded => !currentlyExpanded)
   }
 
-  const onBeforePress = React.useCallback(() => {
+  const onBeforePress = useCallback(() => {
     precacheProfile(queryClient, item.notification.author)
   }, [queryClient, item.notification.author])
 
-  const authors: Author[] = React.useMemo(() => {
+  const authors: Author[] = useMemo(() => {
     return [
       {
         profile: item.notification.author,
@@ -291,7 +291,7 @@ let FeedItem = ({
     </Link>
   )
 }
-FeedItem = React.memo(FeedItem)
+FeedItem = memo(FeedItem)
 export {FeedItem}
 
 function ExpandListPressable({
@@ -300,7 +300,7 @@ function ExpandListPressable({
   onToggleAuthorsExpanded,
 }: {
   hasMultipleAuthors: boolean
-  children: React.ReactNode
+  children: ReactNode
   onToggleAuthorsExpanded: () => void
 }) {
   if (hasMultipleAuthors) {
@@ -410,7 +410,7 @@ function ExpandedAuthorsList({
     height: Animated.multiply(heightInterp, targetHeight),
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     Animated.timing(heightInterp, {
       toValue: visible ? 1 : 0,
       duration: 200,

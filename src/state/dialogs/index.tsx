@@ -1,4 +1,12 @@
-import React from 'react'
+import {
+  createContext,
+  MutableRefObject,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useMemo,
+  useRef,
+} from 'react'
 import {SharedValue, useSharedValue} from 'react-native-reanimated'
 
 import {DialogControlRefProps} from '#/components/Dialog'
@@ -8,14 +16,14 @@ interface IDialogContext {
   /**
    * The currently active `useDialogControl` hooks.
    */
-  activeDialogs: React.MutableRefObject<
-    Map<string, React.MutableRefObject<DialogControlRefProps>>
+  activeDialogs: MutableRefObject<
+    Map<string, MutableRefObject<DialogControlRefProps>>
   >
   /**
    * The currently open dialogs, referenced by their IDs, generated from
    * `useId`.
    */
-  openDialogs: React.MutableRefObject<Set<string>>
+  openDialogs: MutableRefObject<Set<string>>
   /**
    * The counterpart to `accessibilityViewIsModal` for Android. This property
    * applies to the parent of all non-modal views, and prevents TalkBack from
@@ -26,9 +34,9 @@ interface IDialogContext {
   importantForAccessibility: SharedValue<'auto' | 'no-hide-descendants'>
 }
 
-const DialogContext = React.createContext<IDialogContext>({} as IDialogContext)
+const DialogContext = createContext<IDialogContext>({} as IDialogContext)
 
-const DialogControlContext = React.createContext<{
+const DialogControlContext = createContext<{
   closeAllDialogs(): boolean
   setDialogIsOpen(id: string, isOpen: boolean): void
 }>({
@@ -37,23 +45,23 @@ const DialogControlContext = React.createContext<{
 })
 
 export function useDialogStateContext() {
-  return React.useContext(DialogContext)
+  return useContext(DialogContext)
 }
 
 export function useDialogStateControlContext() {
-  return React.useContext(DialogControlContext)
+  return useContext(DialogControlContext)
 }
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  const activeDialogs = React.useRef<
-    Map<string, React.MutableRefObject<DialogControlRefProps>>
+export function Provider({children}: PropsWithChildren<{}>) {
+  const activeDialogs = useRef<
+    Map<string, MutableRefObject<DialogControlRefProps>>
   >(new Map())
-  const openDialogs = React.useRef<Set<string>>(new Set())
+  const openDialogs = useRef<Set<string>>(new Set())
   const importantForAccessibility = useSharedValue<
     'auto' | 'no-hide-descendants'
   >('auto')
 
-  const closeAllDialogs = React.useCallback(() => {
+  const closeAllDialogs = useCallback(() => {
     openDialogs.current.forEach(id => {
       const dialog = activeDialogs.current.get(id)
       if (dialog) dialog.current.close()
@@ -61,7 +69,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     return openDialogs.current.size > 0
   }, [])
 
-  const setDialogIsOpen = React.useCallback(
+  const setDialogIsOpen = useCallback(
     (id: string, isOpen: boolean) => {
       if (isOpen) {
         openDialogs.current.add(id)
@@ -76,7 +84,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [importantForAccessibility],
   )
 
-  const context = React.useMemo<IDialogContext>(
+  const context = useMemo<IDialogContext>(
     () => ({
       activeDialogs,
       openDialogs,
@@ -84,7 +92,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     }),
     [importantForAccessibility, activeDialogs, openDialogs],
   )
-  const controls = React.useMemo(
+  const controls = useMemo(
     () => ({closeAllDialogs, setDialogIsOpen}),
     [closeAllDialogs, setDialogIsOpen],
   )

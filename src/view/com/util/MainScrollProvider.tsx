@@ -1,4 +1,4 @@
-import React from 'react'
+import {ReactNode, useCallback, useEffect} from 'react'
 import {NativeScrollEvent} from 'react-native'
 import {interpolate, useSharedValue} from 'react-native-reanimated'
 import EventEmitter from 'eventemitter3'
@@ -15,7 +15,7 @@ function clamp(num: number, min: number, max: number) {
   return Math.min(Math.max(num, min), max)
 }
 
-export function MainScrollProvider({children}: {children: React.ReactNode}) {
+export function MainScrollProvider({children}: {children: ReactNode}) {
   const {headerHeight} = useShellLayout()
   const mode = useMinimalShellMode()
   const setMode = useSetMinimalShellMode()
@@ -23,7 +23,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
   const startMode = useSharedValue<number | null>(null)
   const didJustRestoreScroll = useSharedValue<boolean>(false)
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isWeb) {
       return listenToForcedWindowScroll(() => {
         startDragOffset.value = null
@@ -33,7 +33,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
     }
   })
 
-  const snapToClosestState = React.useCallback(
+  const snapToClosestState = useCallback(
     (e: NativeScrollEvent) => {
       'worklet'
       if (isNative) {
@@ -58,7 +58,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
     [startDragOffset, startMode, setMode, mode, headerHeight],
   )
 
-  const onBeginDrag = React.useCallback(
+  const onBeginDrag = useCallback(
     (e: NativeScrollEvent) => {
       'worklet'
       if (isNative) {
@@ -69,7 +69,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
     [mode, startDragOffset, startMode],
   )
 
-  const onEndDrag = React.useCallback(
+  const onEndDrag = useCallback(
     (e: NativeScrollEvent) => {
       'worklet'
       if (isNative) {
@@ -83,7 +83,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
     [snapToClosestState],
   )
 
-  const onMomentumEnd = React.useCallback(
+  const onMomentumEnd = useCallback(
     (e: NativeScrollEvent) => {
       'worklet'
       if (isNative) {
@@ -93,7 +93,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
     [snapToClosestState],
   )
 
-  const onScroll = React.useCallback(
+  const onScroll = useCallback(
     (e: NativeScrollEvent) => {
       'worklet'
       if (isNative) {

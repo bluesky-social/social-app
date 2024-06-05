@@ -1,4 +1,13 @@
-import React from 'react'
+import {
+  memo,
+  ReactNode,
+  RefObject,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {
   ActivityIndicator,
   Image,
@@ -132,7 +141,7 @@ function useSuggestedFollows(): [
     fetchNextPage,
   } = useSuggestedFollowsQuery()
 
-  const onEndReached = React.useCallback(async () => {
+  const onEndReached = useCallback(async () => {
     if (isFetchingNextPage || !hasNextPage || isError) return
     try {
       await fetchNextPage()
@@ -158,7 +167,7 @@ function useSuggestedFollows(): [
   return [items, onEndReached]
 }
 
-let SearchScreenSuggestedFollows = (_props: {}): React.ReactNode => {
+let SearchScreenSuggestedFollows = (_props: {}): ReactNode => {
   const pal = usePalette('default')
   const [suggestions, onEndReached] = useSuggestedFollows()
 
@@ -182,7 +191,7 @@ let SearchScreenSuggestedFollows = (_props: {}): React.ReactNode => {
     </CenteredView>
   )
 }
-SearchScreenSuggestedFollows = React.memo(SearchScreenSuggestedFollows)
+SearchScreenSuggestedFollows = memo(SearchScreenSuggestedFollows)
 
 type SearchResultSlice =
   | {
@@ -203,12 +212,12 @@ let SearchScreenPostResults = ({
   query: string
   sort?: 'top' | 'latest'
   active: boolean
-}): React.ReactNode => {
+}): ReactNode => {
   const {_} = useLingui()
   const {currentAccount} = useSession()
-  const [isPTR, setIsPTR] = React.useState(false)
+  const [isPTR, setIsPTR] = useState(false)
 
-  const augmentedQuery = React.useMemo(() => {
+  const augmentedQuery = useMemo(() => {
     return augmentSearchQuery(query || '', {did: currentAccount?.did})
   }, [query, currentAccount])
 
@@ -223,20 +232,20 @@ let SearchScreenPostResults = ({
     hasNextPage,
   } = useSearchPostsQuery({query: augmentedQuery, sort, enabled: active})
 
-  const onPullToRefresh = React.useCallback(async () => {
+  const onPullToRefresh = useCallback(async () => {
     setIsPTR(true)
     await refetch()
     setIsPTR(false)
   }, [setIsPTR, refetch])
-  const onEndReached = React.useCallback(() => {
+  const onEndReached = useCallback(() => {
     if (isFetching || !hasNextPage || error) return
     fetchNextPage()
   }, [isFetching, error, hasNextPage, fetchNextPage])
 
-  const posts = React.useMemo(() => {
+  const posts = useMemo(() => {
     return results?.pages.flatMap(page => page.posts) || []
   }, [results])
-  const items = React.useMemo(() => {
+  const items = useMemo(() => {
     let temp: SearchResultSlice[] = []
 
     const seenUris = new Set()
@@ -301,7 +310,7 @@ let SearchScreenPostResults = ({
     </>
   )
 }
-SearchScreenPostResults = React.memo(SearchScreenPostResults)
+SearchScreenPostResults = memo(SearchScreenPostResults)
 
 let SearchScreenUserResults = ({
   query,
@@ -309,7 +318,7 @@ let SearchScreenUserResults = ({
 }: {
   query: string
   active: boolean
-}): React.ReactNode => {
+}): ReactNode => {
   const {_} = useLingui()
 
   const {data: results, isFetched} = useActorSearch({
@@ -338,18 +347,18 @@ let SearchScreenUserResults = ({
     <Loader />
   )
 }
-SearchScreenUserResults = React.memo(SearchScreenUserResults)
+SearchScreenUserResults = memo(SearchScreenUserResults)
 
-let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
+let SearchScreenInner = ({query}: {query?: string}): ReactNode => {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
   const {hasSession} = useSession()
   const {isDesktop} = useWebMediaQueries()
-  const [activeTab, setActiveTab] = React.useState(0)
+  const [activeTab, setActiveTab] = useState(0)
   const {_} = useLingui()
 
-  const onPageSelected = React.useCallback(
+  const onPageSelected = useCallback(
     (index: number) => {
       setMinimalShellMode(false)
       setDrawerSwipeDisabled(index > 0)
@@ -358,7 +367,7 @@ let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
     [setDrawerSwipeDisabled, setMinimalShellMode],
   )
 
-  const sections = React.useMemo(() => {
+  const sections = useMemo(() => {
     if (!query) return []
     return [
       {
@@ -472,13 +481,13 @@ let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
     </CenteredView>
   )
 }
-SearchScreenInner = React.memo(SearchScreenInner)
+SearchScreenInner = memo(SearchScreenInner)
 
 export function SearchScreen(
   props: NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>,
 ) {
   const navigation = useNavigation<NavigationProp>()
-  const textInput = React.useRef<TextInput>(null)
+  const textInput = useRef<TextInput>(null)
   const {_} = useLingui()
   const pal = usePalette('default')
   const {track} = useAnalytics()
@@ -488,13 +497,13 @@ export function SearchScreen(
 
   // Query terms
   const queryParam = props.route?.params?.q ?? ''
-  const [searchText, setSearchText] = React.useState<string>(queryParam)
+  const [searchText, setSearchText] = useState<string>(queryParam)
   const {data: autocompleteData, isFetching: isAutocompleteFetching} =
     useActorAutocompleteQuery(searchText, true)
 
-  const [showAutocomplete, setShowAutocomplete] = React.useState(false)
-  const [searchHistory, setSearchHistory] = React.useState<string[]>([])
-  const [selectedProfiles, setSelectedProfiles] = React.useState<
+  const [showAutocomplete, setShowAutocomplete] = useState(false)
+  const [searchHistory, setSearchHistory] = useState<string[]>([])
+  const [selectedProfiles, setSelectedProfiles] = useState<
     AppBskyActorDefs.ProfileViewBasic[]
   >([])
 
@@ -506,7 +515,7 @@ export function SearchScreen(
     }),
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     const loadSearchHistory = async () => {
       try {
         const history = await AsyncStorage.getItem('searchHistory')
@@ -525,30 +534,30 @@ export function SearchScreen(
     loadSearchHistory()
   }, [])
 
-  const onPressMenu = React.useCallback(() => {
+  const onPressMenu = useCallback(() => {
     track('ViewHeader:MenuButtonClicked')
     setDrawerOpen(true)
   }, [track, setDrawerOpen])
 
-  const onPressClearQuery = React.useCallback(() => {
+  const onPressClearQuery = useCallback(() => {
     scrollToTopWeb()
     setSearchText('')
     textInput.current?.focus()
   }, [])
 
-  const onPressCancelSearch = React.useCallback(() => {
+  const onPressCancelSearch = useCallback(() => {
     scrollToTopWeb()
     textInput.current?.blur()
     setShowAutocomplete(false)
     setSearchText(queryParam)
   }, [queryParam])
 
-  const onChangeText = React.useCallback(async (text: string) => {
+  const onChangeText = useCallback(async (text: string) => {
     scrollToTopWeb()
     setSearchText(text)
   }, [])
 
-  const updateSearchHistory = React.useCallback(
+  const updateSearchHistory = useCallback(
     async (newQuery: string) => {
       newQuery = newQuery.trim()
       if (newQuery) {
@@ -575,7 +584,7 @@ export function SearchScreen(
     [searchHistory, setSearchHistory],
   )
 
-  const updateSelectedProfiles = React.useCallback(
+  const updateSelectedProfiles = useCallback(
     async (profile: AppBskyActorDefs.ProfileViewBasic) => {
       let newProfiles = [
         profile,
@@ -599,7 +608,7 @@ export function SearchScreen(
     [selectedProfiles, setSelectedProfiles],
   )
 
-  const navigateToItem = React.useCallback(
+  const navigateToItem = useCallback(
     (item: string) => {
       scrollToTopWeb()
       setShowAutocomplete(false)
@@ -615,11 +624,11 @@ export function SearchScreen(
     [updateSearchHistory, navigation],
   )
 
-  const onSubmit = React.useCallback(() => {
+  const onSubmit = useCallback(() => {
     navigateToItem(searchText)
   }, [navigateToItem, searchText])
 
-  const onAutocompleteResultPress = React.useCallback(() => {
+  const onAutocompleteResultPress = useCallback(() => {
     if (isWeb) {
       setShowAutocomplete(false)
     } else {
@@ -627,7 +636,7 @@ export function SearchScreen(
     }
   }, [])
 
-  const handleHistoryItemClick = React.useCallback(
+  const handleHistoryItemClick = useCallback(
     (item: string) => {
       setSearchText(item)
       navigateToItem(item)
@@ -635,7 +644,7 @@ export function SearchScreen(
     [navigateToItem],
   )
 
-  const handleProfileClick = React.useCallback(
+  const handleProfileClick = useCallback(
     (profile: AppBskyActorDefs.ProfileViewBasic) => {
       // Slight delay to avoid updating during push nav animation.
       setTimeout(() => {
@@ -645,7 +654,7 @@ export function SearchScreen(
     [updateSelectedProfiles],
   )
 
-  const onSoftReset = React.useCallback(() => {
+  const onSoftReset = useCallback(() => {
     if (isWeb) {
       // Empty params resets the URL to be /search rather than /search?q=
       navigation.replace('Search', {})
@@ -656,13 +665,13 @@ export function SearchScreen(
   }, [navigation])
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setMinimalShellMode(false)
       return listenSoftReset(onSoftReset)
     }, [onSoftReset, setMinimalShellMode]),
   )
 
-  const handleRemoveHistoryItem = React.useCallback(
+  const handleRemoveHistoryItem = useCallback(
     (itemToRemove: string) => {
       const updatedHistory = searchHistory.filter(item => item !== itemToRemove)
       setSearchHistory(updatedHistory)
@@ -676,7 +685,7 @@ export function SearchScreen(
     [searchHistory],
   )
 
-  const handleRemoveProfile = React.useCallback(
+  const handleRemoveProfile = useCallback(
     (profileToRemove: AppBskyActorDefs.ProfileViewBasic) => {
       const updatedProfiles = selectedProfiles.filter(
         profile => profile.did !== profileToRemove.did,
@@ -785,14 +794,14 @@ let SearchInputBox = ({
   onSubmit,
   onPressClearQuery,
 }: {
-  textInput: React.RefObject<TextInput>
+  textInput: RefObject<TextInput>
   searchText: string
   showAutocomplete: boolean
   setShowAutocomplete: (show: boolean) => void
   onChangeText: (text: string) => void
   onSubmit: () => void
   onPressClearQuery: () => void
-}): React.ReactNode => {
+}): ReactNode => {
   const pal = usePalette('default')
   const {_} = useLingui()
   const theme = useTheme()
@@ -873,7 +882,7 @@ let SearchInputBox = ({
     </Pressable>
   )
 }
-SearchInputBox = React.memo(SearchInputBox)
+SearchInputBox = memo(SearchInputBox)
 
 let AutocompleteResults = ({
   isAutocompleteFetching,
@@ -889,7 +898,7 @@ let AutocompleteResults = ({
   onSubmit: () => void
   onResultPress: () => void
   onProfileClick: (profile: AppBskyActorDefs.ProfileViewBasic) => void
-}): React.ReactNode => {
+}): ReactNode => {
   const moderationOpts = useModerationOpts()
   const {_} = useLingui()
   return (
@@ -931,7 +940,7 @@ let AutocompleteResults = ({
     </>
   )
 }
-AutocompleteResults = React.memo(AutocompleteResults)
+AutocompleteResults = memo(AutocompleteResults)
 
 function truncateText(text: string, maxLength: number) {
   if (text.length > maxLength) {

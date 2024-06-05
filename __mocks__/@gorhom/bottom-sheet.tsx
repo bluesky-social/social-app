@@ -1,14 +1,14 @@
-import React from 'react'
-import {View, ScrollView, Modal, FlatList, TextInput} from 'react-native'
+import {Component, createContext, ReactNode} from 'react'
+import {FlatList, Modal, ScrollView, TextInput, View} from 'react-native'
 
-const BottomSheetModalContext = React.createContext(null)
+const BottomSheetModalContext = createContext(null)
 
 const BottomSheetModalProvider = (props: any) => {
   return <BottomSheetModalContext.Provider {...props} value={{}} />
 }
-class BottomSheet extends React.Component<{
+class BottomSheet extends Component<{
   onClose?: () => void
-  children?: React.ReactNode
+  children?: ReactNode
 }> {
   snapToIndex() {}
   snapToPosition() {}
@@ -47,13 +47,13 @@ export {useBottomSheetInternal}
 export {useBottomSheetDynamicSnapPoints}
 
 export {
-  BottomSheetModalProvider,
   BottomSheetBackdrop,
+  BottomSheetFlatList,
+  BottomSheetFooter,
   BottomSheetHandle,
   BottomSheetModal,
-  BottomSheetFooter,
+  BottomSheetModalProvider,
   BottomSheetScrollView,
-  BottomSheetFlatList,
   BottomSheetTextInput,
 }
 

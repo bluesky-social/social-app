@@ -1,4 +1,4 @@
-import React from 'react'
+import {ReactNode, useCallback} from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -23,7 +23,7 @@ import {Link} from '../util/Link'
 export function HomeHeaderLayoutMobile({
   children,
 }: {
-  children: React.ReactNode
+  children: ReactNode
   tabBarAnchor: JSX.Element | null | undefined
 }) {
   const pal = usePalette('default')
@@ -33,7 +33,7 @@ export function HomeHeaderLayoutMobile({
   const {headerMinimalShellTransform} = useMinimalShellMode()
   const {hasSession} = useSession()
 
-  const onPressAvi = React.useCallback(() => {
+  const onPressAvi = useCallback(() => {
     setDrawerOpen(true)
   }, [setDrawerOpen])
 

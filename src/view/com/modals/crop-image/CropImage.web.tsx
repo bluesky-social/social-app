@@ -1,4 +1,4 @@
-import React from 'react'
+import {useRef, useState} from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {LinearGradient} from 'expo-linear-gradient'
@@ -46,9 +46,9 @@ export function Component({
   const defaultAspectStyle = dimensions
     ? AspectRatio.Custom
     : AspectRatio.Square
-  const [as, setAs] = React.useState<AspectRatio>(defaultAspectStyle)
-  const [scale, setScale] = React.useState<number>(1)
-  const editorRef = React.useRef<ImageEditor>(null)
+  const [as, setAs] = useState<AspectRatio>(defaultAspectStyle)
+  const [scale, setScale] = useState<number>(1)
+  const editorRef = useRef<ImageEditor>(null)
   const imageEditorWidth = dimensions ? dimensions.width : DIMS[as].width
   const imageEditorHeight = dimensions ? dimensions.height : DIMS[as].height
 

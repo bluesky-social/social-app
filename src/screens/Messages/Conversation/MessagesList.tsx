@@ -1,4 +1,12 @@
-import React from 'react'
+import {
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import {FlatList, LayoutChangeEvent, View} from 'react-native'
 import {
   KeyboardStickyView,
@@ -81,9 +89,9 @@ export function MessagesList({
   footer,
 }: {
   hasScrolled: boolean
-  setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
+  setHasScrolled: Dispatch<SetStateAction<boolean>>
   blocked?: boolean
-  footer?: React.ReactNode
+  footer?: ReactNode
 }) {
   const convoState = useConvoActive()
   const agent = useAgent()
@@ -92,7 +100,7 @@ export function MessagesList({
 
   const flatListRef = useAnimatedRef<FlatList>()
 
-  const [newMessagesPill, setNewMessagesPill] = React.useState({
+  const [newMessagesPill, setNewMessagesPill] = useState({
     show: false,
     startContentOffset: 0,
   })
@@ -107,13 +115,14 @@ export function MessagesList({
 
   // Used to keep track of the current content height. We'll need this in `onScroll` so we know when to start allowing
   // onStartReached to fire.
-  const prevContentHeight = React.useRef(0)
-  const prevItemCount = React.useRef(0)
+  const prevContentHeight = useRef(0)
+  const prevItemCount = useRef(0)
 
   // -- Keep track of background state and positioning for new pill
   const layoutHeight = useSharedValue(0)
-  const didBackground = React.useRef(false)
-  React.useEffect(() => {
+  const didBackground = useRef(false)
+
+  useEffect(() => {
     if (convoState.status === ConvoStatus.Backgrounded) {
       didBackground.current = true
     }
@@ -131,7 +140,7 @@ export function MessagesList({
   // Subsequent resizes will only scroll to the bottom if the user is at the bottom of the list (within 100 pixels of
   // the bottom). Therefore, any new messages that come in or are sent will result in an animated scroll to end. However
   // we will not scroll whenever new items get prepended to the top.
-  const onContentSizeChange = React.useCallback(
+  const onContentSizeChange = useCallback(
     (_: number, height: number) => {
       // Because web does not have `maintainVisibleContentPosition` support, we will need to manually scroll to the
       // previous off whenever we add new content to the previous offset whenever we add new content to the list.
@@ -198,13 +207,13 @@ export function MessagesList({
     ],
   )
 
-  const onStartReached = React.useCallback(() => {
+  const onStartReached = useCallback(() => {
     if (hasScrolled && prevContentHeight.current > layoutHeight.value) {
       convoState.fetchMessageHistory()
     }
   }, [convoState, hasScrolled, layoutHeight.value])
 
-  const onScroll = React.useCallback(
+  const onScroll = useCallback(
     (e: ReanimatedScrollEvent) => {
       'worklet'
       layoutHeight.value = e.layoutMeasurement.height
@@ -271,7 +280,7 @@ export function MessagesList({
   }))
 
   // -- Message sending
-  const onSendMessage = React.useCallback(
+  const onSendMessage = useCallback(
     async (text: string) => {
       let rt = new RichText({text: text.trimEnd()}, {cleanNewlines: true})
 
@@ -351,7 +360,7 @@ export function MessagesList({
   )
 
   // -- List layout changes (opening emoji keyboard, etc.)
-  const onListLayout = React.useCallback(
+  const onListLayout = useCallback(
     (e: LayoutChangeEvent) => {
       layoutHeight.value = e.nativeEvent.layout.height
 
@@ -370,7 +379,7 @@ export function MessagesList({
     ],
   )
 
-  const scrollToEndOnPress = React.useCallback(() => {
+  const scrollToEndOnPress = useCallback(() => {
     flatListRef.current?.scrollToOffset({
       offset: prevContentHeight.current,
       animated: true,

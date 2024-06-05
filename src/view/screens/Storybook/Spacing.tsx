@@ -1,8 +1,7 @@
-import React from 'react'
 import {View} from 'react-native'
 
 import {atoms as a, useTheme} from '#/alf'
-import {Text, H1} from '#/components/Typography'
+import {H1, Text} from '#/components/Typography'
 
 export function Spacing() {
   const t = useTheme()

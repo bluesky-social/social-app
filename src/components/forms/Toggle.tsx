@@ -1,4 +1,13 @@
-import React from 'react'
+import {
+  createContext,
+  PropsWithChildren,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import {Pressable, View, ViewStyle} from 'react-native'
 
 import {HITSLOP_10} from 'lib/constants'
@@ -24,7 +33,7 @@ export type ItemState = {
   focused: boolean
 }
 
-const ItemContext = React.createContext<ItemState>({
+const ItemContext = createContext<ItemState>({
   name: '',
   selected: false,
   disabled: false,
@@ -34,7 +43,7 @@ const ItemContext = React.createContext<ItemState>({
   focused: false,
 })
 
-const GroupContext = React.createContext<{
+const GroupContext = createContext<{
   values: string[]
   disabled: boolean
   type: 'radio' | 'checkbox'
@@ -48,7 +57,7 @@ const GroupContext = React.createContext<{
   setFieldValue: () => {},
 })
 
-export type GroupProps = React.PropsWithChildren<{
+export type GroupProps = PropsWithChildren<{
   type?: 'radio' | 'checkbox'
   values: string[]
   maxSelections?: number
@@ -65,11 +74,11 @@ export type ItemProps = ViewStyleProp & {
   disabled?: boolean
   onChange?: (selected: boolean) => void
   isInvalid?: boolean
-  children: ((props: ItemState) => React.ReactNode) | React.ReactNode
+  children: ((props: ItemState) => ReactNode) | ReactNode
 }
 
 export function useItemContext() {
-  return React.useContext(ItemContext)
+  return useContext(ItemContext)
 }
 
 export function Group({
@@ -83,9 +92,9 @@ export function Group({
 }: GroupProps) {
   const groupRole = type === 'radio' ? 'radiogroup' : undefined
   const values = type === 'radio' ? providedValues.slice(0, 1) : providedValues
-  const [maxReached, setMaxReached] = React.useState(false)
+  const [maxReached, setMaxReached] = useState(false)
 
-  const setFieldValue = React.useCallback<
+  const setFieldValue = useCallback<
     (props: {name: string; value: boolean}) => void
   >(
     ({name, value}) => {
@@ -100,7 +109,7 @@ export function Group({
     [type, onChange, values],
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (type === 'checkbox') {
       if (
         maxSelections &&
@@ -118,7 +127,7 @@ export function Group({
     }
   }, [type, values.length, maxSelections, maxReached, setMaxReached])
 
-  const context = React.useMemo(
+  const context = useMemo(
     () => ({
       values,
       type,
@@ -165,7 +174,7 @@ export function Item({
     disabled: groupDisabled,
     setFieldValue,
     maxSelectionsReached,
-  } = React.useContext(GroupContext)
+  } = useContext(GroupContext)
   const {
     state: hovered,
     onIn: onHoverIn,
@@ -183,13 +192,13 @@ export function Item({
   const disabled =
     groupDisabled || itemDisabled || (!selected && maxSelectionsReached)
 
-  const onPress = React.useCallback(() => {
+  const onPress = useCallback(() => {
     const next = !selected
     setFieldValue({name, value: next})
     onChange?.(next)
   }, [name, selected, onChange, setFieldValue])
 
-  const state = React.useMemo(
+  const state = useMemo(
     () => ({
       name,
       selected,
@@ -234,10 +243,7 @@ export function Item({
   )
 }
 
-export function LabelText({
-  children,
-  style,
-}: React.PropsWithChildren<TextStyleProp>) {
+export function LabelText({children, style}: PropsWithChildren<TextStyleProp>) {
   const t = useTheme()
   const {disabled} = useItemContext()
   return (
@@ -420,7 +426,7 @@ export function Switch() {
 export function Radio() {
   const t = useTheme()
   const {selected, hovered, focused, disabled, isInvalid} =
-    React.useContext(ItemContext)
+    useContext(ItemContext)
   const {baseStyles, baseHoverStyles, indicatorStyles} =
     createSharedToggleStyles({
       theme: t,

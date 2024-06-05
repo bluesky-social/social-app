@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useMemo} from 'react'
 import {Keyboard, StyleSheet} from 'react-native'
 import {
   FontAwesomeIcon,
@@ -31,7 +31,7 @@ export function SelectLangBtn() {
   const langPrefs = useLanguagePrefs()
   const setLangPrefs = useLanguagePrefsApi()
 
-  const onPressMore = React.useCallback(async () => {
+  const onPressMore = useCallback(async () => {
     if (isNative) {
       if (Keyboard.isVisible()) {
         Keyboard.dismiss()
@@ -41,7 +41,7 @@ export function SelectLangBtn() {
   }, [openModal])
 
   const postLanguagesPref = toPostLanguages(langPrefs.postLanguage)
-  const items: DropdownItem[] = React.useMemo(() => {
+  const items: DropdownItem[] = useMemo(() => {
     let arr: DropdownItemButton[] = []
 
     function add(commaSeparatedLangCodes: string) {

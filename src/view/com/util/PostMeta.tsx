@@ -1,4 +1,4 @@
-import React from 'react'
+import {memo, ReactNode, useCallback} from 'react'
 import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
 import {AppBskyActorDefs, ModerationDecision, ModerationUI} from '@atproto/api'
 import {useQueryClient} from '@tanstack/react-query'
@@ -32,7 +32,7 @@ interface PostMetaOpts {
   style?: StyleProp<ViewStyle>
 }
 
-let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
+let PostMeta = (opts: PostMetaOpts): ReactNode => {
   const pal = usePalette('default')
   const displayName = opts.author.displayName || opts.author.handle
   const handle = opts.author.handle
@@ -46,12 +46,12 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
   const queryClient = useQueryClient()
   const onOpenAuthor = opts.onOpenAuthor
 
-  const onBeforePressAuthor = React.useCallback(() => {
+  const onBeforePressAuthor = useCallback(() => {
     precacheProfile(queryClient, opts.author)
     onOpenAuthor?.()
   }, [queryClient, opts.author, onOpenAuthor])
 
-  const onBeforePressPost = React.useCallback(() => {
+  const onBeforePressPost = useCallback(() => {
     precacheProfile(queryClient, opts.author)
   }, [queryClient, opts.author])
 
@@ -127,7 +127,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
     </View>
   )
 }
-PostMeta = React.memo(PostMeta)
+PostMeta = memo(PostMeta)
 export {PostMeta}
 
 const styles = StyleSheet.create({

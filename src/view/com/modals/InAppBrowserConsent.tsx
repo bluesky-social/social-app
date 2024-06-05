@@ -1,19 +1,18 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {StyleSheet, View} from 'react-native'
-
-import {s} from 'lib/styles'
-import {Text} from '../util/text/Text'
-import {Button} from '../util/forms/Button'
-import {ScrollView} from './util'
-import {usePalette} from 'lib/hooks/usePalette'
-
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+
 import {useModalControls} from '#/state/modals'
 import {
   useOpenLink,
   useSetInAppBrowser,
 } from '#/state/preferences/in-app-browser'
+import {usePalette} from 'lib/hooks/usePalette'
+import {s} from 'lib/styles'
+import {Button} from '../util/forms/Button'
+import {Text} from '../util/text/Text'
+import {ScrollView} from './util'
 
 export const snapPoints = [350]
 
@@ -24,13 +23,13 @@ export function Component({href}: {href: string}) {
   const setInAppBrowser = useSetInAppBrowser()
   const openLink = useOpenLink()
 
-  const onUseIAB = React.useCallback(() => {
+  const onUseIAB = useCallback(() => {
     setInAppBrowser(true)
     closeModal()
     openLink(href, true)
   }, [closeModal, setInAppBrowser, href, openLink])
 
-  const onUseLinking = React.useCallback(() => {
+  const onUseLinking = useCallback(() => {
     setInAppBrowser(false)
     closeModal()
     openLink(href, false)

@@ -1,4 +1,13 @@
-import React from 'react'
+import {
+  createContext,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
+
 import * as persisted from '#/state/persisted'
 
 type SetStateCb = (
@@ -10,18 +19,16 @@ type ApiContext = {
   unhidePost: ({uri}: {uri: string}) => void
 }
 
-const stateContext = React.createContext<StateContext>(
-  persisted.defaults.hiddenPosts,
-)
-const apiContext = React.createContext<ApiContext>({
+const stateContext = createContext<StateContext>(persisted.defaults.hiddenPosts)
+const apiContext = createContext<ApiContext>({
   hidePost: () => {},
   unhidePost: () => {},
 })
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [state, setState] = React.useState(persisted.get('hiddenPosts'))
+export function Provider({children}: PropsWithChildren<{}>) {
+  const [state, setState] = useState(persisted.get('hiddenPosts'))
 
-  const setStateWrapped = React.useCallback(
+  const setStateWrapped = useCallback(
     (fn: SetStateCb) => {
       const s = fn(persisted.get('hiddenPosts'))
       setState(s)
@@ -30,7 +37,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [setState],
   )
 
-  const api = React.useMemo(
+  const api = useMemo(
     () => ({
       hidePost: ({uri}: {uri: string}) => {
         setStateWrapped(s => [...(s || []), uri])
@@ -42,7 +49,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [setStateWrapped],
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     return persisted.onUpdate(() => {
       setState(persisted.get('hiddenPosts'))
     })
@@ -56,9 +63,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 export function useHiddenPosts() {
-  return React.useContext(stateContext)
+  return useContext(stateContext)
 }
 
 export function useHiddenPostsApi() {
-  return React.useContext(apiContext)
+  return useContext(apiContext)
 }

@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {
   Platform,
   Pressable,
@@ -208,19 +208,19 @@ export function SettingsScreen({}: Props) {
   })
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       screen('Settings')
       setMinimalShellMode(false)
     }, [screen, setMinimalShellMode]),
   )
 
-  const onPressAddAccount = React.useCallback(() => {
+  const onPressAddAccount = useCallback(() => {
     track('Settings:AddAccountButtonClicked')
     setShowLoggedOut(true)
     closeAllActiveElements()
   }, [track, setShowLoggedOut, closeAllActiveElements])
 
-  const onPressChangeHandle = React.useCallback(() => {
+  const onPressChangeHandle = useCallback(() => {
     track('Settings:ChangeHandleButtonClicked')
     openModal({
       name: 'change-handle',
@@ -235,81 +235,81 @@ export function SettingsScreen({}: Props) {
     })
   }, [track, queryClient, openModal, currentAccount])
 
-  const onPressExportRepository = React.useCallback(() => {
+  const onPressExportRepository = useCallback(() => {
     exportCarControl.open()
   }, [exportCarControl])
 
-  const onPressLanguageSettings = React.useCallback(() => {
+  const onPressLanguageSettings = useCallback(() => {
     navigation.navigate('LanguageSettings')
   }, [navigation])
 
-  const onPressDeleteAccount = React.useCallback(() => {
+  const onPressDeleteAccount = useCallback(() => {
     openModal({name: 'delete-account'})
   }, [openModal])
 
-  const onPressResetPreferences = React.useCallback(async () => {
+  const onPressResetPreferences = useCallback(async () => {
     clearPreferences()
   }, [clearPreferences])
 
-  const onPressResetOnboarding = React.useCallback(async () => {
+  const onPressResetOnboarding = useCallback(async () => {
     onboardingDispatch({type: 'start'})
     Toast.show(_(msg`Onboarding reset`))
   }, [onboardingDispatch, _])
 
-  const onPressBuildInfo = React.useCallback(() => {
+  const onPressBuildInfo = useCallback(() => {
     setStringAsync(
       `Build version: ${appVersion}; Bundle info: ${bundleInfo}; Bundle date: ${BUNDLE_DATE}; Platform: ${Platform.OS}`,
     )
     Toast.show(_(msg`Copied build version to clipboard`))
   }, [_])
 
-  const openFollowingFeedPreferences = React.useCallback(() => {
+  const openFollowingFeedPreferences = useCallback(() => {
     navigation.navigate('PreferencesFollowingFeed')
   }, [navigation])
 
-  const openThreadsPreferences = React.useCallback(() => {
+  const openThreadsPreferences = useCallback(() => {
     navigation.navigate('PreferencesThreads')
   }, [navigation])
 
-  const onPressAppPasswords = React.useCallback(() => {
+  const onPressAppPasswords = useCallback(() => {
     navigation.navigate('AppPasswords')
   }, [navigation])
 
-  const onPressSystemLog = React.useCallback(() => {
+  const onPressSystemLog = useCallback(() => {
     navigation.navigate('Log')
   }, [navigation])
 
-  const onPressStorybook = React.useCallback(() => {
+  const onPressStorybook = useCallback(() => {
     navigation.navigate('Debug')
   }, [navigation])
 
-  const onPressDebugModeration = React.useCallback(() => {
+  const onPressDebugModeration = useCallback(() => {
     navigation.navigate('DebugMod')
   }, [navigation])
 
-  const onPressSavedFeeds = React.useCallback(() => {
+  const onPressSavedFeeds = useCallback(() => {
     navigation.navigate('SavedFeeds')
   }, [navigation])
 
-  const onPressAccessibilitySettings = React.useCallback(() => {
+  const onPressAccessibilitySettings = useCallback(() => {
     navigation.navigate('AccessibilitySettings')
   }, [navigation])
 
-  const onPressBirthday = React.useCallback(() => {
+  const onPressBirthday = useCallback(() => {
     birthdayControl.open()
   }, [birthdayControl])
 
-  const clearAllStorage = React.useCallback(async () => {
+  const clearAllStorage = useCallback(async () => {
     await clearStorage()
     Toast.show(_(msg`Storage cleared, you need to restart the app now.`))
   }, [_])
-  const clearAllLegacyStorage = React.useCallback(async () => {
+  const clearAllLegacyStorage = useCallback(async () => {
     await clearLegacyStorage()
     Toast.show(_(msg`Legacy storage cleared, you need to restart the app now.`))
   }, [_])
 
   const deactivateAccountControl = useDialogControl()
-  const onPressDeactivateAccount = React.useCallback(() => {
+  const onPressDeactivateAccount = useCallback(() => {
     deactivateAccountControl.open()
   }, [deactivateAccountControl])
 

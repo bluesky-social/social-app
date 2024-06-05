@@ -1,4 +1,19 @@
-import React from 'react'
+import {
+  forwardRef,
+  isValidElement,
+  memo,
+  MutableRefObject,
+  ReactElement,
+  ReactNode,
+  Ref,
+  RefObject,
+  startTransition,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react'
 import {FlatListProps, StyleSheet, View, ViewProps} from 'react-native'
 import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes'
 
@@ -27,7 +42,7 @@ export type ListProps<ItemT> = Omit<
   sideBorders?: boolean
   disableContentVisibility?: boolean
 }
-export type ListRef = React.MutableRefObject<any | null> // TODO: Better types.
+export type ListRef = MutableRefObject<any | null> // TODO: Better types.
 
 const ON_ITEM_SEEN_WAIT_DURATION = 1.5e3 // when we consider post to  be "seen"
 const ON_ITEM_SEEN_INTERSECTION_OPTS = {
@@ -60,7 +75,7 @@ function ListImpl<ItemT>(
     disableContentVisibility,
     ...props
   }: ListProps<ItemT>,
-  ref: React.Ref<ListMethods>,
+  ref: Ref<ListMethods>,
 ) {
   const contextScrollHandlers = useScrollHandlers()
   const pal = usePalette('default')
@@ -74,7 +89,7 @@ function ListImpl<ItemT>(
 
   let header: JSX.Element | null = null
   if (ListHeaderComponent != null) {
-    if (React.isValidElement(ListHeaderComponent)) {
+    if (isValidElement(ListHeaderComponent)) {
       header = ListHeaderComponent
     } else {
       // @ts-ignore Nah it's fine.
@@ -84,7 +99,7 @@ function ListImpl<ItemT>(
 
   let footer: JSX.Element | null = null
   if (ListFooterComponent != null) {
-    if (React.isValidElement(ListFooterComponent)) {
+    if (isValidElement(ListFooterComponent)) {
       footer = ListFooterComponent
     } else {
       // @ts-ignore Nah it's fine.
@@ -98,7 +113,7 @@ function ListImpl<ItemT>(
     })
   }
 
-  const getScrollableNode = React.useCallback(() => {
+  const getScrollableNode = useCallback(() => {
     if (containWeb) {
       const element = nativeRef.current as HTMLDivElement | null
       if (!element) return
@@ -171,8 +186,8 @@ function ListImpl<ItemT>(
     }
   }, [containWeb])
 
-  const nativeRef = React.useRef<HTMLDivElement>(null)
-  React.useImperativeHandle(
+  const nativeRef = useRef<HTMLDivElement>(null)
+  useImperativeHandle(
     ref,
     () =>
       ({
@@ -206,11 +221,11 @@ function ListImpl<ItemT>(
   )
 
   // --- onContentSizeChange, maintainVisibleContentPosition ---
-  const containerRef = React.useRef(null)
+  const containerRef = useRef(null)
   useResizeObserver(containerRef, onContentSizeChange)
 
   // --- onScroll ---
-  const [isInsideVisibleTree, setIsInsideVisibleTree] = React.useState(false)
+  const [isInsideVisibleTree, setIsInsideVisibleTree] = useState(false)
   const handleScroll = useNonReactiveCallback(() => {
     if (!isInsideVisibleTree) return
 
@@ -241,7 +256,7 @@ function ListImpl<ItemT>(
     )
   })
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isInsideVisibleTree) {
       // Prevents hidden tabs from firing scroll events.
       // Only one list is expected to be firing these at a time.
@@ -257,12 +272,12 @@ function ListImpl<ItemT>(
   }, [isInsideVisibleTree, handleScroll, containWeb, getScrollableNode])
 
   // --- onScrolledDownChange ---
-  const isScrolledDown = React.useRef(false)
+  const isScrolledDown = useRef(false)
   function handleAboveTheFoldVisibleChange(isAboveTheFold: boolean) {
     const didScrollDown = !isAboveTheFold
     if (isScrolledDown.current !== didScrollDown) {
       isScrolledDown.current = didScrollDown
-      React.startTransition(() => {
+      startTransition(() => {
         onScrolledDownChange?.(didScrollDown)
       })
     }
@@ -359,12 +374,12 @@ function ListImpl<ItemT>(
 }
 
 function useResizeObserver(
-  ref: React.RefObject<Element>,
+  ref: RefObject<Element>,
   onResize: undefined | ((w: number, h: number) => void),
 ) {
   const handleResize = useNonReactiveCallback(onResize ?? (() => {}))
   const isActive = !!onResize
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isActive) {
       return
     }
@@ -397,13 +412,13 @@ let Row = function RowImpl<ItemT>({
   renderItem:
     | null
     | undefined
-    | ((data: {index: number; item: any; separators: any}) => React.ReactNode)
+    | ((data: {index: number; item: any; separators: any}) => ReactNode)
   extraData: any
   onItemSeen: ((item: any) => void) | undefined
   disableContentVisibility?: boolean
-}): React.ReactNode {
-  const rowRef = React.useRef(null)
-  const intersectionTimeout = React.useRef<NodeJS.Timer | undefined>(undefined)
+}): ReactNode {
+  const rowRef = useRef(null)
+  const intersectionTimeout = useRef<NodeJS.Timer | undefined>(undefined)
 
   const handleIntersection = useNonReactiveCallback(
     (entries: IntersectionObserverEntry[]) => {
@@ -430,7 +445,7 @@ let Row = function RowImpl<ItemT>({
     },
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!onItemSeen) {
       return
     }
@@ -462,7 +477,7 @@ let Row = function RowImpl<ItemT>({
     </View>
   )
 }
-Row = React.memo(Row)
+Row = memo(Row)
 
 let Visibility = ({
   root,
@@ -471,14 +486,14 @@ let Visibility = ({
   onVisibleChange,
   style,
 }: {
-  root?: React.RefObject<HTMLDivElement> | null
+  root?: RefObject<HTMLDivElement> | null
   topMargin?: string
   bottomMargin?: string
   onVisibleChange: (isVisible: boolean) => void
   style?: ViewProps['style']
-}): React.ReactNode => {
-  const tailRef = React.useRef(null)
-  const isIntersecting = React.useRef(false)
+}): ReactNode => {
+  const tailRef = useRef(null)
+  const isIntersecting = useRef(false)
 
   const handleIntersection = useNonReactiveCallback(
     (entries: IntersectionObserverEntry[]) => {
@@ -493,7 +508,7 @@ let Visibility = ({
     },
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     const observer = new IntersectionObserver(handleIntersection, {
       root: root?.current ?? null,
       rootMargin: `${topMargin} 0px ${bottomMargin} 0px`,
@@ -509,11 +524,11 @@ let Visibility = ({
     <View ref={tailRef} style={addStyle(styles.visibilityDetector, style)} />
   )
 }
-Visibility = React.memo(Visibility)
+Visibility = memo(Visibility)
 
-export const List = React.memo(React.forwardRef(ListImpl)) as <ItemT>(
-  props: ListProps<ItemT> & {ref?: React.Ref<ListMethods>},
-) => React.ReactElement
+export const List = memo(forwardRef(ListImpl)) as <ItemT>(
+  props: ListProps<ItemT> & {ref?: Ref<ListMethods>},
+) => ReactElement
 
 // https://stackoverflow.com/questions/7944460/detect-safari-browser
 

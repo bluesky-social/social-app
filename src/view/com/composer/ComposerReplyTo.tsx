@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {LayoutAnimation, Pressable, StyleSheet, View} from 'react-native'
 import {Image} from 'expo-image'
 import {
@@ -23,9 +23,9 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
   const {_} = useLingui()
   const {embed} = replyTo
 
-  const [showFull, setShowFull] = React.useState(false)
+  const [showFull, setShowFull] = useState(false)
 
-  const onPress = React.useCallback(() => {
+  const onPress = useCallback(() => {
     setShowFull(prev => !prev)
     LayoutAnimation.configureNext({
       duration: 350,
@@ -33,7 +33,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
     })
   }, [])
 
-  const quote = React.useMemo(() => {
+  const quote = useMemo(() => {
     if (
       AppBskyEmbedRecord.isView(embed) &&
       AppBskyEmbedRecord.isViewRecord(embed.record) &&
@@ -62,7 +62,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
     }
   }, [embed])
 
-  const images = React.useMemo(() => {
+  const images = useMemo(() => {
     if (AppBskyEmbedImages.isView(embed)) {
       return embed.images
     } else if (

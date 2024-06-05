@@ -1,5 +1,5 @@
 /* eslint-disable react-native-a11y/has-valid-accessibility-ignores-invert-colors */
-import React from 'react'
+import {useCallback} from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -22,7 +22,7 @@ export function SelectPhotoBtn({gallery, disabled}: Props) {
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
   const t = useTheme()
 
-  const onPressSelectPhotos = React.useCallback(async () => {
+  const onPressSelectPhotos = useCallback(async () => {
     track('Composer:GalleryOpened')
 
     if (isNative && !(await requestPhotoAccessIfNeeded())) {

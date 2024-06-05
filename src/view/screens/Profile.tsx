@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {StyleSheet} from 'react-native'
 import {
   AppBskyActorDefs,
@@ -70,7 +70,7 @@ export function ProfileScreen({route}: Props) {
     did: resolvedDid,
   })
 
-  const onPressTryAgain = React.useCallback(() => {
+  const onPressTryAgain = useCallback(() => {
     if (resolveError) {
       refetchDid()
     } else {
@@ -79,7 +79,7 @@ export function ProfileScreen({route}: Props) {
   }, [resolveError, refetchDid, refetchProfile])
 
   // When we open the profile, we want to reset the posts query if we are blocked.
-  React.useEffect(() => {
+  useEffect(() => {
     if (resolvedDid && profile?.viewer?.blockedBy) {
       resetProfilePostsQueries(queryClient, resolvedDid)
     }
@@ -150,19 +150,19 @@ function ProfileScreenLoaded({
     did: profile.did,
     enabled: !!profile.associated?.labeler,
   })
-  const [currentPage, setCurrentPage] = React.useState(0)
+  const [currentPage, setCurrentPage] = useState(0)
   const {_} = useLingui()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
 
-  const [scrollViewTag, setScrollViewTag] = React.useState<number | null>(null)
+  const [scrollViewTag, setScrollViewTag] = useState<number | null>(null)
 
-  const postsSectionRef = React.useRef<SectionRef>(null)
-  const repliesSectionRef = React.useRef<SectionRef>(null)
-  const mediaSectionRef = React.useRef<SectionRef>(null)
-  const likesSectionRef = React.useRef<SectionRef>(null)
-  const feedsSectionRef = React.useRef<SectionRef>(null)
-  const listsSectionRef = React.useRef<SectionRef>(null)
-  const labelsSectionRef = React.useRef<SectionRef>(null)
+  const postsSectionRef = useRef<SectionRef>(null)
+  const repliesSectionRef = useRef<SectionRef>(null)
+  const mediaSectionRef = useRef<SectionRef>(null)
+  const likesSectionRef = useRef<SectionRef>(null)
+  const feedsSectionRef = useRef<SectionRef>(null)
+  const listsSectionRef = useRef<SectionRef>(null)
+  const labelsSectionRef = useRef<SectionRef>(null)
 
   useSetTitle(combinedDisplayName(profile))
 
@@ -170,7 +170,7 @@ function ProfileScreenLoaded({
   const hasDescription = description !== ''
   const [descriptionRT, isResolvingDescriptionRT] = useRichText(description)
   const showPlaceholder = isPlaceholderProfile || isResolvingDescriptionRT
-  const moderation = React.useMemo(
+  const moderation = useMemo(
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
   )
@@ -186,7 +186,7 @@ function ProfileScreenLoaded({
   const showListsTab =
     hasSession && (isMe || (profile.associated?.lists || 0) > 0)
 
-  const sectionTitles = React.useMemo<string[]>(() => {
+  const sectionTitles = useMemo<string[]>(() => {
     return [
       showFiltersTab ? _(msg`Labels`) : undefined,
       showListsTab && hasLabeler ? _(msg`Lists`) : undefined,
@@ -239,7 +239,7 @@ function ProfileScreenLoaded({
     listsIndex = nextIndex++
   }
 
-  const scrollSectionToTop = React.useCallback(
+  const scrollSectionToTop = useCallback(
     (index: number) => {
       if (index === filtersIndex) {
         labelsSectionRef.current?.scrollToTop()
@@ -269,7 +269,7 @@ function ProfileScreenLoaded({
   )
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setMinimalShellMode(false)
       screen('Profile')
       return listenSoftReset(() => {
@@ -279,7 +279,7 @@ function ProfileScreenLoaded({
   )
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setDrawerSwipeDisabled(currentPage > 0)
       return () => {
         setDrawerSwipeDisabled(false)
@@ -290,7 +290,7 @@ function ProfileScreenLoaded({
   // events
   // =
 
-  const onPressCompose = React.useCallback(() => {
+  const onPressCompose = useCallback(() => {
     track('ProfileScreen:PressCompose')
     const mention =
       profile.handle === currentAccount?.handle ||
@@ -300,11 +300,11 @@ function ProfileScreenLoaded({
     openComposer({mention})
   }, [openComposer, currentAccount, track, profile])
 
-  const onPageSelected = React.useCallback((i: number) => {
+  const onPageSelected = useCallback((i: number) => {
     setCurrentPage(i)
   }, [])
 
-  const onCurrentPageSelected = React.useCallback(
+  const onCurrentPageSelected = useCallback(
     (index: number) => {
       scrollSectionToTop(index)
     },
@@ -314,7 +314,7 @@ function ProfileScreenLoaded({
   // rendering
   // =
 
-  const renderHeader = React.useCallback(() => {
+  const renderHeader = useCallback(() => {
     return (
       <ExpoScrollForwarderView scrollViewTag={scrollViewTag}>
         <ProfileHeader
@@ -471,16 +471,16 @@ function ProfileScreenLoaded({
 
 function useRichText(text: string): [RichTextAPI, boolean] {
   const agent = useAgent()
-  const [prevText, setPrevText] = React.useState(text)
-  const [rawRT, setRawRT] = React.useState(() => new RichTextAPI({text}))
-  const [resolvedRT, setResolvedRT] = React.useState<RichTextAPI | null>(null)
+  const [prevText, setPrevText] = useState(text)
+  const [rawRT, setRawRT] = useState(() => new RichTextAPI({text}))
+  const [resolvedRT, setResolvedRT] = useState<RichTextAPI | null>(null)
   if (text !== prevText) {
     setPrevText(text)
     setRawRT(new RichTextAPI({text}))
     setResolvedRT(null)
     // This will queue an immediate re-render
   }
-  React.useEffect(() => {
+  useEffect(() => {
     let ignore = false
     async function resolveRTFacets() {
       // new each time

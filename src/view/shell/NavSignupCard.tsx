@@ -1,4 +1,4 @@
-import React from 'react'
+import {memo, ReactNode, useCallback} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -14,18 +14,18 @@ import {atoms as a} from '#/alf'
 import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Link} from '#/components/Link'
 
-let NavSignupCard = ({}: {}): React.ReactNode => {
+let NavSignupCard = ({}: {}): ReactNode => {
   const {_} = useLingui()
   const pal = usePalette('default')
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
 
-  const showSignIn = React.useCallback(() => {
+  const showSignIn = useCallback(() => {
     closeAllActiveElements()
     requestSwitchToAccount({requestedAccount: 'none'})
   }, [requestSwitchToAccount, closeAllActiveElements])
 
-  const showCreateAccount = React.useCallback(() => {
+  const showCreateAccount = useCallback(() => {
     closeAllActiveElements()
     requestSwitchToAccount({requestedAccount: 'new'})
     // setShowLoggedOut(true)
@@ -80,5 +80,5 @@ let NavSignupCard = ({}: {}): React.ReactNode => {
     </View>
   )
 }
-NavSignupCard = React.memo(NavSignupCard)
+NavSignupCard = memo(NavSignupCard)
 export {NavSignupCard}

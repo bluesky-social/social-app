@@ -1,4 +1,11 @@
-import React from 'react'
+import {
+  memo,
+  PropsWithChildren,
+  ReactNode,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {
   AppBskyFeedDefs,
@@ -85,7 +92,7 @@ export function PostThreadItem({
   hideTopBorder?: boolean
 }) {
   const postShadowed = usePostShadow(post)
-  const richText = React.useMemo(
+  const richText = useMemo(
     () =>
       new RichTextAPI({
         text: record.text,
@@ -177,29 +184,33 @@ let PostThreadItemLoaded = ({
   overrideBlur: boolean
   onPostReply: () => void
   hideTopBorder?: boolean
-}): React.ReactNode => {
+}): ReactNode => {
   const pal = usePalette('default')
   const {_} = useLingui()
   const langPrefs = useLanguagePrefs()
   const {openComposer} = useComposerControls()
-  const [limitLines, setLimitLines] = React.useState(
+  const [limitLines, setLimitLines] = useState(
     () => countLines(richText?.text) >= MAX_POST_LINES,
   )
   const {currentAccount} = useSession()
   const rootUri = record.reply?.root?.uri || post.uri
-  const postHref = React.useMemo(() => {
+
+  const postHref = useMemo(() => {
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey)
   }, [post.uri, post.author])
+
   const itemTitle = _(msg`Post by ${post.author.handle}`)
   const authorHref = makeProfileLink(post.author)
   const authorTitle = post.author.handle
-  const likesHref = React.useMemo(() => {
+
+  const likesHref = useMemo(() => {
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey, 'liked-by')
   }, [post.uri, post.author])
   const likesTitle = _(msg`Likes on this post`)
-  const repostsHref = React.useMemo(() => {
+
+  const repostsHref = useMemo(() => {
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey, 'reposted-by')
   }, [post.uri, post.author])
@@ -209,7 +220,7 @@ let PostThreadItemLoaded = ({
     record?.text || '',
     langPrefs.primaryLanguage,
   )
-  const needsTranslation = React.useMemo(
+  const needsTranslation = useMemo(
     () =>
       Boolean(
         langPrefs.primaryLanguage &&
@@ -218,7 +229,7 @@ let PostThreadItemLoaded = ({
     [post, langPrefs.primaryLanguage],
   )
 
-  const onPressReply = React.useCallback(() => {
+  const onPressReply = useCallback(() => {
     openComposer({
       replyTo: {
         uri: post.uri,
@@ -232,7 +243,7 @@ let PostThreadItemLoaded = ({
     })
   }, [openComposer, post, record, onPostReply, moderation])
 
-  const onPressShowMore = React.useCallback(() => {
+  const onPressShowMore = useCallback(() => {
     setLimitLines(false)
   }, [setLimitLines])
 
@@ -258,7 +269,6 @@ let PostThreadItemLoaded = ({
             </View>
           </View>
         )}
-
         <View
           testID={`postThreadItem-by-${post.author.handle}`}
           style={[
@@ -590,7 +600,7 @@ let PostThreadItemLoaded = ({
     )
   }
 }
-PostThreadItemLoaded = React.memo(PostThreadItemLoaded)
+PostThreadItemLoaded = memo(PostThreadItemLoaded)
 
 function PostOuterWrapper({
   post,
@@ -600,7 +610,7 @@ function PostOuterWrapper({
   hasPrecedingItem,
   hideTopBorder,
   children,
-}: React.PropsWithChildren<{
+}: PropsWithChildren<{
   post: AppBskyFeedDefs.PostView
   treeView: boolean
   depth: number
@@ -668,7 +678,7 @@ function ExpandedPostDetails({
 
   const text = record?.text || ''
 
-  const onTranslatePress = React.useCallback(() => {
+  const onTranslatePress = useCallback(() => {
     if (
       isNativeTranslationAvailable &&
       isLanguageSupported(record?.langs?.at(0))

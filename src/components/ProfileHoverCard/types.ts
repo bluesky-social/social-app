@@ -1,7 +1,7 @@
-import React from 'react'
+import {ReactElement} from 'react'
 
 export type ProfileHoverCardProps = {
-  children: React.ReactElement
+  children: ReactElement
   did: string
   inline?: boolean
   disable?: boolean

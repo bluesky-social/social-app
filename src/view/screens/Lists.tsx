@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {AtUri} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -27,12 +27,12 @@ export function ListsScreen({}: Props) {
   const {openModal} = useModalControls()
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setMinimalShellMode(false)
     }, [setMinimalShellMode]),
   )
 
-  const onPressNewList = React.useCallback(() => {
+  const onPressNewList = useCallback(() => {
     openModal({
       name: 'create-or-edit-list',
       purpose: 'app.bsky.graph.defs#curatelist',

@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {AppBskyFeedGetLikes as GetLikes} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -23,7 +23,7 @@ function keyExtractor(item: GetLikes.Like) {
 export function LikedByList({uri}: {uri: string}) {
   const {_} = useLingui()
   const initialNumToRender = useInitialNumToRender()
-  const [isPTRing, setIsPTRing] = React.useState(false)
+  const [isPTRing, setIsPTRing] = useState(false)
 
   const {
     data: resolvedUri,
@@ -43,14 +43,14 @@ export function LikedByList({uri}: {uri: string}) {
   const error = resolveError || likedByError
   const isError = !!resolveError || !!likedByError
 
-  const likes = React.useMemo(() => {
+  const likes = useMemo(() => {
     if (data?.pages) {
       return data.pages.flatMap(page => page.likes)
     }
     return []
   }, [data])
 
-  const onRefresh = React.useCallback(async () => {
+  const onRefresh = useCallback(async () => {
     setIsPTRing(true)
     try {
       await refetch()
@@ -60,7 +60,7 @@ export function LikedByList({uri}: {uri: string}) {
     setIsPTRing(false)
   }, [refetch, setIsPTRing])
 
-  const onEndReached = React.useCallback(async () => {
+  const onEndReached = useCallback(async () => {
     if (isFetchingNextPage || !hasNextPage || isError) return
     try {
       await fetchNextPage()

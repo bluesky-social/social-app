@@ -1,6 +1,7 @@
-import {useEffect, useRef, useMemo, ForwardedRef} from 'react'
-import {Platform, findNodeHandle} from 'react-native'
+import {ForwardedRef, useEffect, useMemo, useRef} from 'react'
 import type {ScrollView} from 'react-native'
+import {findNodeHandle, Platform} from 'react-native'
+
 import {mergeRefs} from 'lib/merge-refs'
 
 type Props<Scrollable extends ScrollView = ScrollView> = {

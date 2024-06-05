@@ -1,4 +1,4 @@
-import React from 'react'
+import {FC, ReactChild, useCallback} from 'react'
 import {View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -51,12 +51,12 @@ export function BottomBarWeb() {
   const closeAllActiveElements = useCloseAllActiveElements()
   const iconWidth = 26
 
-  const showSignIn = React.useCallback(() => {
+  const showSignIn = useCallback(() => {
     closeAllActiveElements()
     requestSwitchToAccount({requestedAccount: 'none'})
   }, [requestSwitchToAccount, closeAllActiveElements])
 
-  const showCreateAccount = React.useCallback(() => {
+  const showCreateAccount = useCallback(() => {
     closeAllActiveElements()
     requestSwitchToAccount({requestedAccount: 'new'})
     // setShowLoggedOut(true)
@@ -192,8 +192,8 @@ export function BottomBarWeb() {
   )
 }
 
-const NavItem: React.FC<{
-  children: (props: {isActive: boolean}) => React.ReactChild
+const NavItem: FC<{
+  children: (props: {isActive: boolean}) => ReactChild
   href: string
   routeName: string
 }> = ({children, href, routeName}) => {

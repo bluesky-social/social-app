@@ -1,20 +1,31 @@
-import React from 'react'
 import {
-  NativeSyntheticEvent,
+  ComponentType,
+  forwardRef,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+import {
   NativeScrollEvent,
+  NativeSyntheticEvent,
   Pressable,
   RefreshControl,
+  ScrollView,
   StyleSheet,
   View,
-  ScrollView,
 } from 'react-native'
-import {FlatList_INTERNAL} from './Views'
+
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
-import {Text} from './text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {clamp} from 'lib/numbers'
-import {s, colors} from 'lib/styles'
+import {colors, s} from 'lib/styles'
 import {isAndroid} from 'platform/detection'
+import {Text} from './text/Text'
+import {FlatList_INTERNAL} from './Views'
 
 const HEADER_ITEM = {_reactKey: '__header__'}
 const SELECTOR_ITEM = {_reactKey: '__selector__'}
@@ -24,7 +35,7 @@ export type ViewSelectorHandle = {
   scrollToTop: () => void
 }
 
-export const ViewSelector = React.forwardRef<
+export const ViewSelector = forwardRef<
   ViewSelectorHandle,
   {
     sections: string[]
@@ -33,11 +44,7 @@ export const ViewSelector = React.forwardRef<
     swipeEnabled?: boolean
     renderHeader?: () => JSX.Element
     renderItem: (item: any) => JSX.Element
-    ListFooterComponent?:
-      | React.ComponentType<any>
-      | React.ReactElement
-      | null
-      | undefined
+    ListFooterComponent?: ComponentType<any> | ReactElement | null | undefined
     onSelectView?: (viewIndex: number) => void
     onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
     onRefresh?: () => void
@@ -59,24 +66,24 @@ export const ViewSelector = React.forwardRef<
   ref,
 ) {
   const pal = usePalette('default')
-  const [selectedIndex, setSelectedIndex] = React.useState<number>(0)
-  const flatListRef = React.useRef<FlatList_INTERNAL>(null)
+  const [selectedIndex, setSelectedIndex] = useState<number>(0)
+  const flatListRef = useRef<FlatList_INTERNAL>(null)
 
   // events
   // =
 
-  const keyExtractor = React.useCallback((item: any) => item._reactKey, [])
+  const keyExtractor = useCallback((item: any) => item._reactKey, [])
 
-  const onPressSelection = React.useCallback(
+  const onPressSelection = useCallback(
     (index: number) => setSelectedIndex(clamp(index, 0, sections.length)),
     [setSelectedIndex, sections],
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     onSelectView?.(selectedIndex)
   }, [selectedIndex, onSelectView])
 
-  React.useImperativeHandle(ref, () => ({
+  useImperativeHandle(ref, () => ({
     scrollToTop: () => {
       flatListRef.current?.scrollToOffset({offset: 0})
     },
@@ -85,7 +92,7 @@ export const ViewSelector = React.forwardRef<
   // rendering
   // =
 
-  const renderItemInternal = React.useCallback(
+  const renderItemInternal = useCallback(
     ({item}: {item: any}) => {
       if (item === HEADER_ITEM) {
         if (renderHeader) {
@@ -107,10 +114,7 @@ export const ViewSelector = React.forwardRef<
     [sections, selectedIndex, onPressSelection, renderHeader, renderItem],
   )
 
-  const data = React.useMemo(
-    () => [HEADER_ITEM, SELECTOR_ITEM, ...items],
-    [items],
-  )
+  const data = useMemo(() => [HEADER_ITEM, SELECTOR_ITEM, ...items], [items])
   return (
     <FlatList_INTERNAL
       ref={flatListRef}

@@ -1,17 +1,18 @@
-import React from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
+import DatePicker from 'react-native-date-picker'
+import {getLocales} from 'expo-localization'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {isIOS, isAndroid} from 'platform/detection'
-import {Button, ButtonType} from './Button'
-import {Text} from '../text/Text'
+
+import {usePalette} from 'lib/hooks/usePalette'
 import {TypographyVariant} from 'lib/ThemeContext'
 import {useTheme} from 'lib/ThemeContext'
-import {usePalette} from 'lib/hooks/usePalette'
-import {getLocales} from 'expo-localization'
-import DatePicker from 'react-native-date-picker'
+import {isAndroid, isIOS} from 'platform/detection'
+import {Text} from '../text/Text'
+import {Button, ButtonType} from './Button'
 
 const LOCALE = getLocales()[0]
 
@@ -30,17 +31,17 @@ interface Props {
 }
 
 export function DateInput(props: Props) {
-  const [show, setShow] = React.useState(false)
+  const [show, setShow] = useState(false)
   const theme = useTheme()
   const pal = usePalette('default')
 
-  const formatter = React.useMemo(() => {
+  const formatter = useMemo(() => {
     return new Intl.DateTimeFormat(LOCALE.languageTag, {
       timeZone: props.handleAsUTC ? 'UTC' : undefined,
     })
   }, [props.handleAsUTC])
 
-  const onChangeInternal = React.useCallback(
+  const onChangeInternal = useCallback(
     (date: Date) => {
       setShow(false)
       props.onChange(date)
@@ -48,11 +49,11 @@ export function DateInput(props: Props) {
     [setShow, props],
   )
 
-  const onPress = React.useCallback(() => {
+  const onPress = useCallback(() => {
     setShow(true)
   }, [setShow])
 
-  const onCancel = React.useCallback(() => {
+  const onCancel = useCallback(() => {
     setShow(false)
   }, [])
 

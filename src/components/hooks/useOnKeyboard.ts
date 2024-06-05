@@ -1,8 +1,8 @@
-import React from 'react'
+import {useEffect} from 'react'
 import {Keyboard} from 'react-native'
 
 export function useOnKeyboardDidShow(cb: () => unknown) {
-  React.useEffect(() => {
+  useEffect(() => {
     const subscription = Keyboard.addListener('keyboardDidShow', cb)
 
     return () => {

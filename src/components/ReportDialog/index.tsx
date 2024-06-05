@@ -1,4 +1,4 @@
-import React from 'react'
+import {useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -40,7 +40,7 @@ function ReportDialogInner(props: ReportDialogProps) {
   } = useMyLabelersQuery()
   const isLoading = useDelayedLoading(500, isLabelerLoading)
 
-  const ref = React.useRef<BottomSheetScrollViewMethods>(null)
+  const ref = useRef<BottomSheetScrollViewMethods>(null)
   useOnKeyboardDidShow(() => {
     ref.current?.scrollToEnd({animated: true})
   })
@@ -71,10 +71,10 @@ function ReportDialogLoaded(
     labelers: AppBskyLabelerDefs.LabelerViewDetailed[]
   },
 ) {
-  const [selectedLabeler, setSelectedLabeler] = React.useState<
-    string | undefined
-  >(props.labelers.length === 1 ? props.labelers[0].creator.did : undefined)
-  const [selectedReportOption, setSelectedReportOption] = React.useState<
+  const [selectedLabeler, setSelectedLabeler] = useState<string | undefined>(
+    props.labelers.length === 1 ? props.labelers[0].creator.did : undefined,
+  )
+  const [selectedReportOption, setSelectedReportOption] = useState<
     ReportOption | undefined
   >()
 

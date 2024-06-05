@@ -1,4 +1,4 @@
-import React from 'react'
+import {memo, ReactNode, useCallback} from 'react'
 import {TouchableOpacity, View} from 'react-native'
 import {
   AppBskyActorDefs,
@@ -38,13 +38,13 @@ export let MessagesListHeader = ({
     listBlocks: ModerationCause[]
     userBlock?: ModerationCause
   }
-}): React.ReactNode => {
+}): ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
   const {gtTablet} = useBreakpoints()
   const navigation = useNavigation<NavigationProp>()
 
-  const onPressBack = React.useCallback(() => {
+  const onPressBack = useCallback(() => {
     if (isWeb) {
       navigation.replace('Messages', {})
     } else {
@@ -126,7 +126,7 @@ export let MessagesListHeader = ({
     </View>
   )
 }
-MessagesListHeader = React.memo(MessagesListHeader)
+MessagesListHeader = memo(MessagesListHeader)
 
 function HeaderReady({
   profile: profileUnshadowed,

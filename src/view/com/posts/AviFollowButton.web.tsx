@@ -1,5 +1,5 @@
-import React from 'react'
+import {ReactNode} from 'react'
 
-export function AviFollowButton({children}: {children: React.ReactNode}) {
+export function AviFollowButton({children}: {children: ReactNode}) {
   return children
 }

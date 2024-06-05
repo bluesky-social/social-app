@@ -1,4 +1,3 @@
-import React from 'react'
 import {useKeyboardHandler} from 'react-native-keyboard-controller'
 import Animated, {
   useAnimatedStyle,

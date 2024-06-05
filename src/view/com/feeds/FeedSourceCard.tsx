@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {AtUri} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -104,7 +104,7 @@ export function FeedSourceCardLoaded({
   )
   const isSaved = Boolean(savedFeedConfig)
 
-  const onSave = React.useCallback(async () => {
+  const onSave = useCallback(async () => {
     if (!feed || isSaved) return
 
     try {
@@ -122,7 +122,7 @@ export function FeedSourceCardLoaded({
     }
   }, [_, feed, pinOnSave, addSavedFeeds, isSaved])
 
-  const onUnsave = React.useCallback(async () => {
+  const onUnsave = useCallback(async () => {
     if (!savedFeedConfig) return
 
     try {
@@ -135,7 +135,7 @@ export function FeedSourceCardLoaded({
     }
   }, [_, removeFeed, savedFeedConfig])
 
-  const onToggleSaved = React.useCallback(async () => {
+  const onToggleSaved = useCallback(async () => {
     if (isSaved) {
       removePromptControl.open()
     } else {

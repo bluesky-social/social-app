@@ -1,4 +1,4 @@
-import React from 'react'
+import {memo, ReactNode, useCallback, useMemo} from 'react'
 import {
   Pressable,
   type PressableStateCallbackType,
@@ -60,7 +60,7 @@ let PostCtrls = ({
   style?: StyleProp<ViewStyle>
   onPressReply: () => void
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
-}): React.ReactNode => {
+}): ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
   const {openComposer} = useComposerControls()
@@ -74,20 +74,20 @@ let PostCtrls = ({
   const {sendInteraction} = useFeedFeedbackContext()
   const playHaptic = useHaptics()
 
-  const shouldShowLoggedOutWarning = React.useMemo(() => {
+  const shouldShowLoggedOutWarning = useMemo(() => {
     return !!post.author.labels?.find(
       label => label.val === '!no-unauthenticated',
     )
   }, [post])
 
-  const defaultCtrlColor = React.useMemo(
+  const defaultCtrlColor = useMemo(
     () => ({
       color: t.palette.contrast_500,
     }),
     [t],
   ) as StyleProp<ViewStyle>
 
-  const onPressToggleLike = React.useCallback(async () => {
+  const onPressToggleLike = useCallback(async () => {
     try {
       if (!post.viewer?.like) {
         playHaptic()
@@ -115,7 +115,7 @@ let PostCtrls = ({
     feedContext,
   ])
 
-  const onRepost = React.useCallback(async () => {
+  const onRepost = useCallback(async () => {
     try {
       if (!post.viewer?.repost) {
         sendInteraction({
@@ -141,7 +141,7 @@ let PostCtrls = ({
     feedContext,
   ])
 
-  const onQuote = React.useCallback(() => {
+  const onQuote = useCallback(() => {
     sendInteraction({
       item: post.uri,
       event: 'app.bsky.feed.defs#interactionQuote',
@@ -167,7 +167,7 @@ let PostCtrls = ({
     feedContext,
   ])
 
-  const onShare = React.useCallback(() => {
+  const onShare = useCallback(() => {
     const urip = new AtUri(post.uri)
     const href = makeProfileLink(post.author, 'post', urip.rkey)
     const url = toShareUrl(href)
@@ -179,7 +179,7 @@ let PostCtrls = ({
     })
   }, [post.uri, post.author, sendInteraction, feedContext])
 
-  const btnStyle = React.useCallback(
+  const btnStyle = useCallback(
     ({pressed, hovered}: PressableStateCallbackType) => [
       a.gap_xs,
       a.rounded_full,
@@ -331,5 +331,5 @@ let PostCtrls = ({
     </View>
   )
 }
-PostCtrls = React.memo(PostCtrls)
+PostCtrls = memo(PostCtrls)
 export {PostCtrls}

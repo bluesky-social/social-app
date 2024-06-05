@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {
   ActivityIndicator,
   FlatList,
@@ -37,7 +37,7 @@ export function ModerationBlockedAccounts({}: Props) {
   const {isTabletOrDesktop} = useWebMediaQueries()
   const {screen} = useAnalytics()
 
-  const [isPTRing, setIsPTRing] = React.useState(false)
+  const [isPTRing, setIsPTRing] = useState(false)
   const {
     data,
     isFetching,
@@ -49,7 +49,7 @@ export function ModerationBlockedAccounts({}: Props) {
     isFetchingNextPage,
   } = useMyBlockedAccountsQuery()
   const isEmpty = !isFetching && !data?.pages[0]?.blocks.length
-  const profiles = React.useMemo(() => {
+  const profiles = useMemo(() => {
     if (data?.pages) {
       return data.pages.flatMap(page => page.blocks)
     }
@@ -57,13 +57,13 @@ export function ModerationBlockedAccounts({}: Props) {
   }, [data])
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       screen('BlockedAccounts')
       setMinimalShellMode(false)
     }, [screen, setMinimalShellMode]),
   )
 
-  const onRefresh = React.useCallback(async () => {
+  const onRefresh = useCallback(async () => {
     setIsPTRing(true)
     try {
       await refetch()
@@ -73,7 +73,7 @@ export function ModerationBlockedAccounts({}: Props) {
     setIsPTRing(false)
   }, [refetch, setIsPTRing])
 
-  const onEndReached = React.useCallback(async () => {
+  const onEndReached = useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
 
     try {
@@ -158,6 +158,7 @@ export function ModerationBlockedAccounts({}: Props) {
           initialNumToRender={15}
           // FIXME(dan)
 
+          // eslint-disable-next-line react/no-unstable-nested-components
           ListFooterComponent={() => (
             <View style={styles.footer}>
               {(isFetching || isFetchingNextPage) && <ActivityIndicator />}

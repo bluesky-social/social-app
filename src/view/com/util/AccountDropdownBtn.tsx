@@ -1,16 +1,16 @@
-import React from 'react'
 import {Pressable} from 'react-native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {s} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
-import {DropdownItem, NativeDropdown} from './forms/NativeDropdown'
-import * as Toast from '../../com/util/Toast'
-import {useSessionApi, SessionAccount} from '#/state/session'
-import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {SessionAccount, useSessionApi} from '#/state/session'
+import {usePalette} from 'lib/hooks/usePalette'
+import {s} from 'lib/styles'
+import * as Toast from '../../com/util/Toast'
+import {DropdownItem, NativeDropdown} from './forms/NativeDropdown'
 
 export function AccountDropdownBtn({account}: {account: SessionAccount}) {
   const pal = usePalette('default')

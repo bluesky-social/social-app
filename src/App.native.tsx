@@ -2,7 +2,7 @@ import 'react-native-url-polyfill/auto'
 import 'lib/sentry' // must be near top
 import 'view/icons'
 
-import React from 'react'
+import {Fragment, useEffect, useState} from 'react'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import {KeyboardProvider} from 'react-native-keyboard-controller'
 import {RootSiblingParent} from 'react-native-root-siblings'
@@ -55,7 +55,7 @@ import {listenSessionDropped} from './state/events'
 SplashScreen.preventAutoHideAsync()
 
 function InnerApp() {
-  const [isReady, setIsReady] = React.useState(false)
+  const [isReady, setIsReady] = useState(false)
   const {currentAccount} = useSession()
   const {resumeSession} = useSessionApi()
   const theme = useColorModeTheme()
@@ -64,7 +64,7 @@ function InnerApp() {
   useIntentHandler()
 
   // init
-  React.useEffect(() => {
+  useEffect(() => {
     async function onLaunch(account?: SessionAccount) {
       try {
         if (account) {
@@ -80,7 +80,7 @@ function InnerApp() {
     onLaunch(account)
   }, [resumeSession])
 
-  React.useEffect(() => {
+  useEffect(() => {
     return listenSessionDropped(() => {
       Toast.show(_(msg`Sorry! Your session expired. Please log in again.`))
     })
@@ -92,7 +92,7 @@ function InnerApp() {
         <ThemeProvider theme={theme}>
           <Splash isReady={isReady}>
             <RootSiblingParent>
-              <React.Fragment
+              <Fragment
                 // Resets the entire tree below when it changes:
                 key={currentAccount?.did}>
                 <QueryProvider currentDid={currentAccount?.did}>
@@ -118,7 +118,7 @@ function InnerApp() {
                     </MessagesProvider>
                   </StatsigProvider>
                 </QueryProvider>
-              </React.Fragment>
+              </Fragment>
             </RootSiblingParent>
           </Splash>
         </ThemeProvider>
@@ -128,9 +128,9 @@ function InnerApp() {
 }
 
 function App() {
-  const [isReady, setReady] = React.useState(false)
+  const [isReady, setReady] = useState(false)
 
-  React.useEffect(() => {
+  useEffect(() => {
     initPersistedState().then(() => setReady(true))
   }, [])
 

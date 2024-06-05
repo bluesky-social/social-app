@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
@@ -21,7 +21,7 @@ export function MessageProfileButton({
 
   const {data: convo, isPending} = useMaybeConvoForUser(profile.did)
 
-  const onPress = React.useCallback(() => {
+  const onPress = useCallback(() => {
     if (convo && !convo.lastMessage) {
       logEvent('chat:create', {logContext: 'ProfileHeader'})
     }

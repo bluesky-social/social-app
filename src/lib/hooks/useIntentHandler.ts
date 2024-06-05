@@ -1,8 +1,9 @@
-import React from 'react'
+import {useCallback, useEffect} from 'react'
 import * as Linking from 'expo-linking'
+
 import {isNative} from 'platform/detection'
-import {useComposerControls} from 'state/shell'
 import {useSession} from 'state/session'
+import {useComposerControls} from 'state/shell'
 import {useCloseAllActiveElements} from 'state/util'
 
 type IntentType = 'compose'
@@ -13,7 +14,7 @@ export function useIntentHandler() {
   const incomingUrl = Linking.useURL()
   const composeIntent = useComposeIntent()
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleIncomingURL = (url: string) => {
       // We want to be able to support bluesky:// deeplinks. It's unnatural for someone to use a deeplink with three
       // slashes, like bluesky:///intent/follow. However, supporting just two slashes causes us to have to take care
@@ -52,7 +53,7 @@ function useComposeIntent() {
   const {openComposer} = useComposerControls()
   const {hasSession} = useSession()
 
-  return React.useCallback(
+  return useCallback(
     ({
       text,
       imageUrisStr,

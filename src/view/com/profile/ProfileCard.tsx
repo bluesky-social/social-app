@@ -1,4 +1,4 @@
-import React from 'react'
+import {ReactNode, useCallback, useMemo} from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {
   AppBskyActorDefs,
@@ -46,7 +46,7 @@ export function ProfileCard({
   followers?: AppBskyActorDefs.ProfileView[] | undefined
   renderButton?: (
     profile: Shadow<AppBskyActorDefs.ProfileViewBasic>,
-  ) => React.ReactNode
+  ) => ReactNode
   onPress?: () => void
   style?: StyleProp<ViewStyle>
 }) {
@@ -56,7 +56,7 @@ export function ProfileCard({
   const moderationOpts = useModerationOpts()
   const isLabeler = profile?.associated?.labeler
 
-  const onBeforePress = React.useCallback(() => {
+  const onBeforePress = useCallback(() => {
     onPress?.()
     precacheProfile(queryClient, profile)
   }, [onPress, profile, queryClient])
@@ -200,7 +200,7 @@ function FollowersList({
   const pal = usePalette('default')
   const moderationOpts = useModerationOpts()
 
-  const followersWithMods = React.useMemo(() => {
+  const followersWithMods = useMemo(() => {
     if (!followers || !moderationOpts) {
       return []
     }

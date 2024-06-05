@@ -1,4 +1,12 @@
-import React from 'react'
+import {
+  Children,
+  forwardRef,
+  PropsWithChildren,
+  useCallback,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react'
 import {View} from 'react-native'
 import {flushSync} from 'react-dom'
 
@@ -21,21 +29,21 @@ interface Props {
     reason: LogEvents['home:feedDisplayed:sampled']['reason'],
   ) => void
 }
-export const Pager = React.forwardRef(function PagerImpl(
+export const Pager = forwardRef(function PagerImpl(
   {
     children,
     initialPage = 0,
     renderTabBar,
     onPageSelected,
     onPageSelecting,
-  }: React.PropsWithChildren<Props>,
+  }: PropsWithChildren<Props>,
   ref,
 ) {
-  const [selectedPage, setSelectedPage] = React.useState(initialPage)
-  const scrollYs = React.useRef<Array<number | null>>([])
-  const anchorRef = React.useRef(null)
+  const [selectedPage, setSelectedPage] = useState(initialPage)
+  const scrollYs = useRef<Array<number | null>>([])
+  const anchorRef = useRef(null)
 
-  React.useImperativeHandle(ref, () => ({
+  useImperativeHandle(ref, () => ({
     setPage: (
       index: number,
       reason: LogEvents['home:feedDisplayed:sampled']['reason'],
@@ -44,7 +52,7 @@ export const Pager = React.forwardRef(function PagerImpl(
     },
   }))
 
-  const onTabBarSelect = React.useCallback(
+  const onTabBarSelect = useCallback(
     (
       index: number,
       reason: LogEvents['home:feedDisplayed:sampled']['reason'],
@@ -88,7 +96,7 @@ export const Pager = React.forwardRef(function PagerImpl(
         tabBarAnchor: <View ref={anchorRef} />,
         onSelect: e => onTabBarSelect(e, 'tabbar-click'),
       })}
-      {React.Children.map(children, (child, i) => (
+      {Children.map(children, (child, i) => (
         <View style={selectedPage === i ? s.flex1 : s.hidden} key={`page-${i}`}>
           {child}
         </View>

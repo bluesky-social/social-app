@@ -1,4 +1,11 @@
-import React from 'react'
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+} from 'react'
 import {
   ChatBskyConvoDefs,
   ChatBskyConvoListConvos,
@@ -41,19 +48,19 @@ export function useListConvosQuery() {
   })
 }
 
-const ListConvosContext = React.createContext<ChatBskyConvoDefs.ConvoView[] | null>(
+const ListConvosContext = createContext<ChatBskyConvoDefs.ConvoView[] | null>(
   null,
 )
 
 export function useListConvos() {
-  const ctx = React.useContext(ListConvosContext)
+  const ctx = useContext(ListConvosContext)
   if (!ctx) {
     throw new Error('useListConvos must be used within a ListConvosProvider')
   }
   return ctx
 }
 
-export function ListConvosProvider({children}: {children: React.ReactNode}) {
+export function ListConvosProvider({children}: {children: ReactNode}) {
   const {hasSession} = useSession()
 
   if (!hasSession) {
@@ -67,18 +74,14 @@ export function ListConvosProvider({children}: {children: React.ReactNode}) {
   return <ListConvosProviderInner>{children}</ListConvosProviderInner>
 }
 
-export function ListConvosProviderInner({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export function ListConvosProviderInner({children}: {children: ReactNode}) {
   const {refetch, data} = useListConvosQuery()
   const messagesBus = useMessagesEventBus()
   const queryClient = useQueryClient()
   const {currentConvoId} = useCurrentConvoId()
   const {currentAccount} = useSession()
 
-  React.useEffect(() => {
+  useEffect(() => {
     const unsub = messagesBus.on(
       events => {
         if (events.type !== 'logs') return
@@ -174,7 +177,7 @@ export function ListConvosProviderInner({
     return () => unsub()
   }, [messagesBus, currentConvoId, refetch, queryClient, currentAccount?.did])
 
-  const ctx = React.useMemo(() => {
+  const ctx = useMemo(() => {
     return data?.pages.flatMap(page => page.convos) ?? []
   }, [data])
 
@@ -191,7 +194,7 @@ export function useUnreadMessageCount() {
   const convos = useListConvos()
   const moderationOpts = useModerationOpts()
 
-  const count = React.useMemo(() => {
+  const count = useMemo(() => {
     return (
       convos
         .filter(convo => convo.id !== currentConvoId)
@@ -214,7 +217,7 @@ export function useUnreadMessageCount() {
     )
   }, [convos, currentAccount?.did, currentConvoId, moderationOpts])
 
-  return React.useMemo(() => {
+  return useMemo(() => {
     return {
       count,
       numUnread: count > 0 ? (count > 30 ? '30+' : String(count)) : undefined,
@@ -230,7 +233,7 @@ type ConvoListQueryData = {
 export function useOnMarkAsRead() {
   const queryClient = useQueryClient()
 
-  return React.useCallback(
+  return useCallback(
     (chatId: string) => {
       queryClient.setQueryData(RQKEY, (old: ConvoListQueryData) => {
         return optimisticUpdate(chatId, old, convo => ({

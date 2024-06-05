@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
@@ -16,7 +16,7 @@ export function useFetchHandle() {
   const queryClient = useQueryClient()
   const agent = useAgent()
 
-  return React.useCallback(
+  return useCallback(
     async (handleOrDid: string) => {
       if (handleOrDid.startsWith('did:')) {
         const res = await queryClient.fetchQuery({
@@ -52,7 +52,7 @@ export function useFetchDid() {
   const queryClient = useQueryClient()
   const agent = useAgent()
 
-  return React.useCallback(
+  return useCallback(
     async (handleOrDid: string) => {
       return queryClient.fetchQuery({
         staleTime: STALE.INFINITY,

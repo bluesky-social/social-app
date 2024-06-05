@@ -1,4 +1,13 @@
-import React from 'react'
+import {
+  forwardRef,
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {
   Dimensions,
   Keyboard,
@@ -53,7 +62,7 @@ function Backdrop(props: BottomSheetBackdropProps) {
     }
   })
 
-  const onPress = React.useCallback(() => {
+  const onPress = useCallback(() => {
     bottomSheet.close()
   }, [bottomSheet])
 
@@ -87,26 +96,26 @@ export function Outer({
   onClose,
   nativeOptions,
   testID,
-}: React.PropsWithChildren<DialogOuterProps>) {
+}: PropsWithChildren<DialogOuterProps>) {
   const t = useTheme()
-  const sheet = React.useRef<BottomSheet>(null)
+  const sheet = useRef<BottomSheet>(null)
   const sheetOptions = nativeOptions?.sheet || {}
   const hasSnapPoints = !!sheetOptions.snapPoints
   const insets = useSafeAreaInsets()
-  const closeCallbacks = React.useRef<(() => void)[]>([])
+  const closeCallbacks = useRef<(() => void)[]>([])
   const {setDialogIsOpen} = useDialogStateControlContext()
 
   /*
    * Used to manage open/closed, but index is otherwise handled internally by `BottomSheet`
    */
-  const [openIndex, setOpenIndex] = React.useState(-1)
+  const [openIndex, setOpenIndex] = useState(-1)
 
   /*
    * `openIndex` is the index of the snap point to open the bottom sheet to. If >0, the bottom sheet is open.
    */
   const isOpen = openIndex > -1
 
-  const callQueuedCallbacks = React.useCallback(() => {
+  const callQueuedCallbacks = useCallback(() => {
     for (const cb of closeCallbacks.current) {
       try {
         cb()
@@ -118,7 +127,7 @@ export function Outer({
     closeCallbacks.current = []
   }, [])
 
-  const open = React.useCallback<DialogControlProps['open']>(
+  const open = useCallback<DialogControlProps['open']>(
     ({index} = {}) => {
       // Run any leftover callbacks that might have been queued up before calling `.open()`
       callQueuedCallbacks()
@@ -132,7 +141,7 @@ export function Outer({
   )
 
   // This is the function that we call when we want to dismiss the dialog.
-  const close = React.useCallback<DialogControlProps['close']>(cb => {
+  const close = useCallback<DialogControlProps['close']>(cb => {
     if (typeof cb === 'function') {
       closeCallbacks.current.push(cb)
     }
@@ -141,7 +150,7 @@ export function Outer({
 
   // This is the actual thing we are doing once we "confirm" the dialog. We want the dialog's close animation to
   // happen before we run this. It is passed to the `BottomSheet` component.
-  const onCloseAnimationComplete = React.useCallback(() => {
+  const onCloseAnimationComplete = useCallback(() => {
     // This removes the dialog from our list of stored dialogs. Not super necessary on iOS, but on Android this
     // tells us that we need to toggle the accessibility overlay setting
     setDialogIsOpen(control.id, false)
@@ -151,7 +160,7 @@ export function Outer({
     onClose?.()
   }, [callQueuedCallbacks, control.id, onClose, setDialogIsOpen])
 
-  React.useImperativeHandle(
+  useImperativeHandle(
     control.ref,
     () => ({
       open,
@@ -160,13 +169,13 @@ export function Outer({
     [open, close],
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     return () => {
       setDialogIsOpen(control.id, false)
     }
   }, [control.id, setDialogIsOpen])
 
-  const context = React.useMemo(() => ({close}), [close])
+  const context = useMemo(() => ({close}), [close])
 
   return (
     isOpen && (
@@ -239,7 +248,7 @@ export function Inner({children, style}: DialogInnerProps) {
   )
 }
 
-export const ScrollableInner = React.forwardRef<
+export const ScrollableInner = forwardRef<
   BottomSheetScrollViewMethods,
   DialogInnerProps
 >(function ScrollableInner({children, style}, ref) {
@@ -266,7 +275,7 @@ export const ScrollableInner = React.forwardRef<
   )
 })
 
-export const InnerFlatList = React.forwardRef<
+export const InnerFlatList = forwardRef<
   BottomSheetFlatListMethods,
   BottomSheetFlatListProps<any> & {webInnerStyle?: StyleProp<ViewStyle>}
 >(function InnerFlatList({style, contentContainerStyle, ...props}, ref) {

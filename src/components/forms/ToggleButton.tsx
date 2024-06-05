@@ -1,4 +1,4 @@
-import React from 'react'
+import {PropsWithChildren, ReactElement, ReactNode, useMemo} from 'react'
 import {AccessibilityProps, TextStyle, View, ViewStyle} from 'react-native'
 
 import {atoms as a, native, useTheme} from '#/alf'
@@ -7,7 +7,7 @@ import {Text} from '#/components/Typography'
 
 type ItemProps = Omit<Toggle.ItemProps, 'style' | 'role' | 'children'> &
   AccessibilityProps & {
-    children: React.ReactElement
+    children: ReactElement
     testID?: string
   }
 
@@ -42,11 +42,11 @@ export function Button({children, ...props}: ItemProps) {
   )
 }
 
-function ButtonInner({children}: React.PropsWithChildren<{}>) {
+function ButtonInner({children}: PropsWithChildren<{}>) {
   const t = useTheme()
   const state = Toggle.useItemContext()
 
-  const {baseStyles, hoverStyles, activeStyles} = React.useMemo(() => {
+  const {baseStyles, hoverStyles, activeStyles} = useMemo(() => {
     const base: ViewStyle[] = []
     const hover: ViewStyle[] = []
     const active: ViewStyle[] = []
@@ -107,11 +107,11 @@ function ButtonInner({children}: React.PropsWithChildren<{}>) {
   )
 }
 
-export function ButtonText({children}: {children: React.ReactNode}) {
+export function ButtonText({children}: {children: ReactNode}) {
   const t = useTheme()
   const state = Toggle.useItemContext()
 
-  const textStyles = React.useMemo(() => {
+  const textStyles = useMemo(() => {
     const text: TextStyle[] = []
     if (state.selected) {
       text.push(t.atoms.text_inverted)

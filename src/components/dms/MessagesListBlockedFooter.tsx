@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {View} from 'react-native'
 import {AppBskyActorDefs, ModerationCause} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -42,7 +42,7 @@ export function MessagesListBlockedFooter({
   const {listBlocks, userBlock} = blockInfo
   const isBlocking = !!userBlock || !!listBlocks.length
 
-  const onUnblockPress = React.useCallback(() => {
+  const onUnblockPress = useCallback(() => {
     if (listBlocks.length) {
       blockedByListControl.open()
     } else {

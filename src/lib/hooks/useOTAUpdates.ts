@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useEffect, useRef} from 'react'
 import {Alert, AppState, AppStateStatus} from 'react-native'
 import {nativeBuildVersion} from 'expo-application'
 import {
@@ -32,13 +32,13 @@ async function setExtraParams() {
 export function useOTAUpdates() {
   const shouldReceiveUpdates = isEnabled && !__DEV__
 
-  const appState = React.useRef<AppStateStatus>('active')
-  const lastMinimize = React.useRef(0)
-  const ranInitialCheck = React.useRef(false)
-  const timeout = React.useRef<NodeJS.Timeout>()
+  const appState = useRef<AppStateStatus>('active')
+  const lastMinimize = useRef(0)
+  const ranInitialCheck = useRef(false)
+  const timeout = useRef<NodeJS.Timeout>()
   const {isUpdatePending} = useUpdates()
 
-  const setCheckTimeout = React.useCallback(() => {
+  const setCheckTimeout = useCallback(() => {
     timeout.current = setTimeout(async () => {
       try {
         await setExtraParams()
@@ -58,7 +58,7 @@ export function useOTAUpdates() {
     }, 10e3)
   }, [])
 
-  const onIsTestFlight = React.useCallback(async () => {
+  const onIsTestFlight = useCallback(async () => {
     try {
       await setExtraParams()
 
@@ -89,7 +89,7 @@ export function useOTAUpdates() {
     }
   }, [])
 
-  React.useEffect(() => {
+  useEffect(() => {
     // We use this setTimeout to allow Statsig to initialize before we check for an update
     // For Testflight users, we can prompt the user to update immediately whenever there's an available update. This
     // is suspect however with the Apple App Store guidelines, so we don't want to prompt production users to update
@@ -107,7 +107,7 @@ export function useOTAUpdates() {
 
   // After the app has been minimized for 15 minutes, we want to either A. install an update if one has become available
   // or B check for an update again.
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isEnabled) return
 
     const subscription = AppState.addEventListener(

@@ -1,4 +1,4 @@
-import React from 'react'
+import {useState} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -32,10 +32,10 @@ export function DisableEmail2FADialog({
   const {currentAccount} = useSession()
   const agent = useAgent()
 
-  const [stage, setStage] = React.useState<Stages>(Stages.Email)
-  const [confirmationCode, setConfirmationCode] = React.useState<string>('')
-  const [isProcessing, setIsProcessing] = React.useState<boolean>(false)
-  const [error, setError] = React.useState<string>('')
+  const [stage, setStage] = useState<Stages>(Stages.Email)
+  const [confirmationCode, setConfirmationCode] = useState<string>('')
+  const [isProcessing, setIsProcessing] = useState<boolean>(false)
+  const [error, setError] = useState<string>('')
 
   const onSendEmail = async () => {
     setError('')

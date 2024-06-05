@@ -1,4 +1,4 @@
-import React from 'react'
+import {memo, ReactNode, useCallback} from 'react'
 import {Keyboard, Pressable, View} from 'react-native'
 import {
   AppBskyActorDefs,
@@ -57,7 +57,7 @@ let ConvoMenu = ({
     userBlock?: ModerationCause
   }
   style?: ViewStyleProp['style']
-}): React.ReactNode => {
+}): ReactNode => {
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
   const t = useTheme()
@@ -72,7 +72,7 @@ let ConvoMenu = ({
 
   const {data: convo} = useConvoQuery(initialConvo)
 
-  const onNavigateToProfile = React.useCallback(() => {
+  const onNavigateToProfile = useCallback(() => {
     navigation.navigate('Profile', {name: profile.did})
   }, [navigation, profile.did])
 
@@ -91,7 +91,7 @@ let ConvoMenu = ({
 
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
 
-  const toggleBlock = React.useCallback(() => {
+  const toggleBlock = useCallback(() => {
     if (listBlocks.length) {
       blockedByListControl.open()
       return
@@ -230,6 +230,6 @@ let ConvoMenu = ({
     </>
   )
 }
-ConvoMenu = React.memo(ConvoMenu)
+ConvoMenu = memo(ConvoMenu)
 
 export {ConvoMenu}

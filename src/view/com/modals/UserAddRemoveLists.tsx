@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {
   ActivityIndicator,
   StyleSheet,
@@ -52,11 +52,11 @@ export function Component({
   const {_} = useLingui()
   const {data: memberships} = useDangerousListMembershipsQuery()
 
-  const onPressDone = React.useCallback(() => {
+  const onPressDone = useCallback(() => {
     closeModal()
   }, [closeModal])
 
-  const listStyle = React.useMemo(() => {
+  const listStyle = useMemo(() => {
     if (isMobileWeb) {
       return [pal.border, {height: screenHeight / 2}]
     } else if (isWeb) {
@@ -135,15 +135,15 @@ function ListItem({
   const pal = usePalette('default')
   const {_} = useLingui()
   const {currentAccount} = useSession()
-  const [isProcessing, setIsProcessing] = React.useState(false)
-  const membership = React.useMemo(
+  const [isProcessing, setIsProcessing] = useState(false)
+  const membership = useMemo(
     () => getMembership(memberships, list.uri, subject),
     [memberships, list.uri, subject],
   )
   const listMembershipAddMutation = useListMembershipAddMutation()
   const listMembershipRemoveMutation = useListMembershipRemoveMutation()
 
-  const onToggleMembership = React.useCallback(async () => {
+  const onToggleMembership = useCallback(async () => {
     if (typeof membership === 'undefined') {
       return
     }

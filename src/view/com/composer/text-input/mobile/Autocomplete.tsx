@@ -1,13 +1,14 @@
-import React from 'react'
-import {Animated, TouchableOpacity, StyleSheet, View} from 'react-native'
+import {useEffect, useRef} from 'react'
+import {Animated, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {AppBskyActorDefs} from '@atproto/api'
+import {Trans} from '@lingui/macro'
+
+import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {useGrapheme} from '../hooks/useGrapheme'
-import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
-import {Trans} from '@lingui/macro'
-import {AppBskyActorDefs} from '@atproto/api'
 
 export function Autocomplete({
   prefix,
@@ -21,14 +22,14 @@ export function Autocomplete({
   const {getGraphemeString} = useGrapheme()
   const isActive = !!prefix
   const {data: suggestions, isFetching} = useActorAutocompleteQuery(prefix)
-  const suggestionsRef = React.useRef<
+  const suggestionsRef = useRef<
     AppBskyActorDefs.ProfileViewBasic[] | undefined
   >(undefined)
   if (suggestions) {
     suggestionsRef.current = suggestions
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     Animated.timing(positionInterp, {
       toValue: isActive ? 1 : 0,
       duration: 200,

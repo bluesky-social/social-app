@@ -1,4 +1,4 @@
-import React from 'react'
+import {ComponentType, Fragment, useCallback} from 'react'
 import {View} from 'react-native'
 import {useSafeAreaFrame} from 'react-native-safe-area-context'
 import {ComAtprotoLabelDefs} from '@atproto/api'
@@ -127,7 +127,7 @@ function SubItem({
   style,
 }: ViewStyleProp & {
   title: string
-  icon: React.ComponentType<SVGIconProps>
+  icon: ComponentType<SVGIconProps>
 }) {
   const t = useTheme()
   return (
@@ -172,7 +172,7 @@ export function ModerationScreenInner({
   } = useMyLabelersQuery()
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       screen('Moderation')
       setMinimalShellMode(false)
     }, [screen, setMinimalShellMode]),
@@ -187,7 +187,7 @@ export function ModerationScreenInner({
   const ageNotSet = !preferences.userAge
   const isUnderage = (preferences.userAge || 0) < 18
 
-  const onToggleAdultContentEnabled = React.useCallback(
+  const onToggleAdultContentEnabled = useCallback(
     async (selected: boolean) => {
       try {
         await setAdultContentPref({
@@ -391,7 +391,7 @@ export function ModerationScreenInner({
         <View style={[a.rounded_sm, t.atoms.bg_contrast_25]}>
           {labelers.map((labeler, i) => {
             return (
-              <React.Fragment key={labeler.creator.did}>
+              <Fragment key={labeler.creator.did}>
                 {i !== 0 && <Divider />}
                 <LabelingService.Link labeler={labeler}>
                   {state => (
@@ -425,7 +425,7 @@ export function ModerationScreenInner({
                     </LabelingService.Outer>
                   )}
                 </LabelingService.Link>
-              </React.Fragment>
+              </Fragment>
             )
           })}
         </View>
@@ -460,7 +460,7 @@ function PwiOptOut() {
     profile?.labels?.some(l => l.val === '!no-unauthenticated') || false
   const canToggle = profile && !updateProfile.isPending
 
-  const onToggleOptOut = React.useCallback(() => {
+  const onToggleOptOut = useCallback(() => {
     if (!profile) {
       return
     }

@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import Animated, {
   runOnJS,
@@ -24,11 +24,11 @@ export function ChatEmptyPill() {
   const t = useTheme()
   const {_} = useLingui()
   const playHaptic = useHaptics()
-  const [promptIndex, setPromptIndex] = React.useState(lastIndex)
+  const [promptIndex, setPromptIndex] = useState(lastIndex)
 
   const scale = useSharedValue(1)
 
-  const prompts = React.useMemo(() => {
+  const prompts = useMemo(() => {
     return [
       _(msg`Say hello!`),
       _(msg`Share your favorite feed!`),
@@ -40,17 +40,17 @@ export function ChatEmptyPill() {
     ]
   }, [_])
 
-  const onPressIn = React.useCallback(() => {
+  const onPressIn = useCallback(() => {
     if (isWeb) return
     scale.value = withTiming(1.075, {duration: 100})
   }, [scale])
 
-  const onPressOut = React.useCallback(() => {
+  const onPressOut = useCallback(() => {
     if (isWeb) return
     scale.value = withTiming(1, {duration: 100})
   }, [scale])
 
-  const onPress = React.useCallback(() => {
+  const onPress = useCallback(() => {
     runOnJS(playHaptic)()
     let randomPromptIndex = Math.floor(Math.random() * prompts.length)
     while (randomPromptIndex === lastIndex) {

@@ -1,4 +1,11 @@
-import React from 'react'
+import {
+  ChangeEvent,
+  KeyboardEvent,
+  ReactNode,
+  useCallback,
+  useRef,
+  useState,
+} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -27,21 +34,21 @@ export function MessageInput({
   onSendMessage: (message: string) => void
   hasEmbed: boolean
   setEmbed: (embedUrl: string | undefined) => void
-  children?: React.ReactNode
+  children?: ReactNode
 }) {
   const {isTabletOrDesktop} = useWebMediaQueries()
   const {_} = useLingui()
   const t = useTheme()
   const {getDraft, clearDraft} = useMessageDraft()
-  const [message, setMessage] = React.useState(getDraft)
+  const [message, setMessage] = useState(getDraft)
 
   const inputStyles = useSharedInputStyles()
-  const isComposing = React.useRef(false)
-  const [isFocused, setIsFocused] = React.useState(false)
-  const [isHovered, setIsHovered] = React.useState(false)
-  const [textAreaHeight, setTextAreaHeight] = React.useState(38)
+  const isComposing = useRef(false)
+  const [isFocused, setIsFocused] = useState(false)
+  const [isHovered, setIsHovered] = useState(false)
+  const [textAreaHeight, setTextAreaHeight] = useState(38)
 
-  const onSubmit = React.useCallback(() => {
+  const onSubmit = useCallback(() => {
     if (!hasEmbed && message.trim() === '') {
       return
     }
@@ -55,8 +62,8 @@ export function MessageInput({
     setEmbed(undefined)
   }, [message, onSendMessage, _, clearDraft, hasEmbed, setEmbed])
 
-  const onKeyDown = React.useCallback(
-    (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const onKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLTextAreaElement>) => {
       // Don't submit the form when the Japanese or any other IME is composing
       if (isComposing.current) return
 
@@ -87,12 +94,9 @@ export function MessageInput({
     [onSubmit],
   )
 
-  const onChange = React.useCallback(
-    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      setMessage(e.target.value)
-    },
-    [],
-  )
+  const onChange = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
+    setMessage(e.target.value)
+  }, [])
 
   useSaveMessageDraft(message)
   useExtractEmbedFromFacets(message, setEmbed)

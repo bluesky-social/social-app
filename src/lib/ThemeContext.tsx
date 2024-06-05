@@ -1,7 +1,8 @@
-import React from 'react'
+import {createContext, FC, ReactNode, useContext} from 'react'
 import {TextStyle, ViewStyle} from 'react-native'
-import {darkTheme, defaultTheme, dimTheme} from './themes'
+
 import {ThemeName} from '#/alf/themes'
+import {darkTheme, defaultTheme, dimTheme} from './themes'
 
 export type ColorScheme = 'light' | 'dark'
 
@@ -79,13 +80,13 @@ export interface Theme {
 }
 
 export interface ThemeProviderProps {
-  children?: React.ReactNode
+  children?: ReactNode
   theme: ThemeName
 }
 
-export const ThemeContext = React.createContext<Theme>(defaultTheme)
+export const ThemeContext = createContext<Theme>(defaultTheme)
 
-export const useTheme = () => React.useContext(ThemeContext)
+export const useTheme = () => useContext(ThemeContext)
 
 function getTheme(theme: ThemeName) {
   switch (theme) {
@@ -100,10 +101,7 @@ function getTheme(theme: ThemeName) {
   }
 }
 
-export const ThemeProvider: React.FC<ThemeProviderProps> = ({
-  theme,
-  children,
-}) => {
+export const ThemeProvider: FC<ThemeProviderProps> = ({theme, children}) => {
   const themeValue = getTheme(theme)
 
   return (
