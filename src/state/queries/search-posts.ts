@@ -2,6 +2,7 @@ import {
   AppBskyActorDefs,
   AppBskyFeedDefs,
   AppBskyFeedSearchPosts,
+  AtUri,
 } from '@atproto/api'
 import {
   InfiniteData,
@@ -11,7 +12,11 @@ import {
 } from '@tanstack/react-query'
 
 import {useAgent} from '#/state/session'
-import {embedViewRecordToPostView, getEmbeddedPost} from './util'
+import {
+  didOrHandleUriMatches,
+  embedViewRecordToPostView,
+  getEmbeddedPost,
+} from './util'
 
 const searchPostsQueryKeyRoot = 'search-posts'
 const searchPostsQueryKey = ({query, sort}: {query: string; sort?: string}) => [
@@ -62,17 +67,20 @@ export function* findAllPostsInQueryData(
   >({
     queryKey: [searchPostsQueryKeyRoot],
   })
+  const atUri = new AtUri(uri)
+
   for (const [_queryKey, queryData] of queryDatas) {
     if (!queryData?.pages) {
       continue
     }
     for (const page of queryData?.pages) {
       for (const post of page.posts) {
-        if (post.uri === uri) {
+        if (didOrHandleUriMatches(atUri, post)) {
           yield post
         }
+
         const quotedPost = getEmbeddedPost(post.embed)
-        if (quotedPost?.uri === uri) {
+        if (quotedPost && didOrHandleUriMatches(atUri, quotedPost)) {
           yield embedViewRecordToPostView(quotedPost)
         }
       }

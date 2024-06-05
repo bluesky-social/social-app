@@ -46,6 +46,7 @@ export function SendViaChatDialog({
       <SearchablePeopleList
         title={_(msg`Send post to...`)}
         onSelectChat={onCreateChat}
+        showRecentConvos
       />
     </Dialog.Outer>
   )

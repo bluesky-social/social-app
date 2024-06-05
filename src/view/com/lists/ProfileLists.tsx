@@ -7,22 +7,21 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {cleanError} from '#/lib/strings/errors'
 import {useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {RQKEY, useProfileListsQuery} from '#/state/queries/profile-lists'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {usePalette} from 'lib/hooks/usePalette'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {EmptyState} from 'view/com/util/EmptyState'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {List, ListRef} from '../util/List'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
-import {Text} from '../util/text/Text'
 import {ListCard} from './ListCard'
 
 const LOADING = {_reactKey: '__loading__'}
@@ -49,7 +48,6 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
     {did, scrollElRef, headerOffset, enabled, style, testID, setScrollViewTag},
     ref,
   ) {
-    const pal = usePalette('default')
     const theme = useTheme()
     const {track} = useAnalytics()
     const {_} = useLingui()
@@ -142,11 +140,11 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
       ({item, index}: ListRenderItemInfo<any>) => {
         if (item === EMPTY) {
           return (
-            <View testID="listsEmpty" style={[{padding: 18}, pal.border]}>
-              <Text style={pal.textLight}>
-                <Trans>You have no lists.</Trans>
-              </Text>
-            </View>
+            <EmptyState
+              icon="list-ul"
+              message={_(msg`You have no lists.`)}
+              testID="listsEmpty"
+            />
           )
         } else if (item === ERROR_ITEM) {
           return (
@@ -172,11 +170,11 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
             list={item}
             testID={`list-${item.name}`}
             style={styles.item}
-            noBorder={index === 0}
+            noBorder={index === 0 && !isWeb}
           />
         )
       },
-      [error, refetch, onPressRetryLoadMore, pal, _],
+      [error, refetch, onPressRetryLoadMore, _],
     )
 
     React.useEffect(() => {

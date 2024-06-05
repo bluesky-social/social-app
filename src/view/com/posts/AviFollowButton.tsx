@@ -97,8 +97,8 @@ export function AviFollowButton({
             }),
             a.absolute,
             {
-              bottom: 0,
-              right: 0,
+              bottom: -1,
+              right: -1,
               borderWidth: 1,
               borderColor: t.atoms.bg.backgroundColor,
             },

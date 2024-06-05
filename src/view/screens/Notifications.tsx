@@ -29,6 +29,7 @@ import {colors, s} from 'lib/styles'
 import {TextLink} from 'view/com/util/Link'
 import {ListMethods} from 'view/com/util/List'
 import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
+import {CenteredView} from 'view/com/util/Views'
 import {Feed} from '../com/notifications/Feed'
 import {FAB} from '../com/util/fab/FAB'
 import {MainScrollProvider} from '../com/util/MainScrollProvider'
@@ -145,7 +146,10 @@ export function NotificationsScreen({}: Props) {
   }, [isDesktop, pal, hasNew])
 
   return (
-    <View testID="notificationsScreen" style={s.hContentRegion}>
+    <CenteredView
+      testID="notificationsScreen"
+      style={s.hContentRegion}
+      sideBorders={true}>
       <ViewHeader
         title={_(msg`Notifications`)}
         canGoBack={false}
@@ -173,6 +177,6 @@ export function NotificationsScreen({}: Props) {
         accessibilityLabel={_(msg`New post`)}
         accessibilityHint=""
       />
-    </View>
+    </CenteredView>
   )
 }

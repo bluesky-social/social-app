@@ -32,6 +32,7 @@ import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
 import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
 import {atoms as a, useTheme} from '#/alf'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 const HITSLOP_TOP = {
   top: 20,
@@ -92,7 +93,7 @@ export function SavedFeeds({}: Props) {
       <ViewHeader title={_(msg`Edit My Feeds`)} showOnDesktop showBorder />
       <ScrollView style={s.flex1} contentContainerStyle={[styles.noBorder]}>
         {noSavedFeedsOfAnyType && (
-          <View style={[pal.border, {borderBottomWidth: 1}]}>
+          <View style={[pal.border, {borderBottomWidth: hairlineWidth}]}>
             <NoSavedFeedsOfAnyType />
           </View>
         )}
@@ -134,7 +135,7 @@ export function SavedFeeds({}: Props) {
         )}
 
         {noFollowingFeed && (
-          <View style={[pal.border, {borderBottomWidth: 1}]}>
+          <View style={[pal.border, {borderBottomWidth: hairlineWidth}]}>
             <NoFollowingFeed />
           </View>
         )}
@@ -298,9 +299,10 @@ function ListItem({
         <FeedSourceCard
           key={feedUri}
           feedUri={feedUri}
-          style={[styles.noTopBorder, isPinned && {paddingRight: 8}]}
+          style={[isPinned && {paddingRight: 8}]}
           showMinimalPlaceholder
           showSaveBtn={!isPinned}
+          hideTopBorder={true}
         />
       )}
       {isPinned ? (
@@ -435,15 +437,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingTop: 20,
     paddingBottom: 10,
-    borderBottomWidth: 1,
+    borderBottomWidth: hairlineWidth,
   },
   itemContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderBottomWidth: 1,
-  },
-  noTopBorder: {
-    borderTopWidth: 0,
+    borderBottomWidth: hairlineWidth,
   },
   footerText: {
     paddingHorizontal: 26,
