@@ -186,7 +186,6 @@ let FeedItem = ({
   } else if (item.type === 'feedgen-like') {
     action = _(msg`liked your custom feed`)
   } else if (item.type === 'starter-pack-signup') {
-    console.log('has one')
     icon = (
       <View style={{height: 30, width: 30}}>
         <StarterPackIcon />
