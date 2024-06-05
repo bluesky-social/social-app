@@ -91,6 +91,9 @@ import {TextInput, TextInputRef} from './text-input/TextInput'
 import {ThreadgateBtn} from './threadgate/ThreadgateBtn'
 import {useExternalLinkFetch} from './useExternalLinkFetch'
 import hairlineWidth = StyleSheet.hairlineWidth
+import {SelectVideoBtn} from './videos/SelectVideoBtn'
+import {useVideoState} from './videos/state'
+import {VideoPreview} from './videos/VideoPreview'
 
 type CancelRef = {
   onPressCancel: () => void
@@ -150,6 +153,9 @@ export const ComposePost = observer(function ComposePost({
   const [quote, setQuote] = useState<ComposerOpts['quote'] | undefined>(
     initQuote,
   )
+  const {video, onSelectVideo, setVideoPending, videoPending} = useVideoState({
+    setError,
+  })
   const {extLink, setExtLink} = useExternalLinkFetch({setQuote})
   const [extGif, setExtGif] = useState<Gif>()
   const [labels, setLabels] = useState<string[]>([])
@@ -358,8 +364,8 @@ export const ComposePost = observer(function ComposePost({
     ? _(msg`Write your reply`)
     : _(msg`What's up?`)
 
-  const canSelectImages = gallery.size < 4 && !extLink
-  const hasMedia = gallery.size > 0 || Boolean(extLink)
+  const canSelectImages = gallery.size < 4 && !extLink && !video
+  const hasMedia = gallery.size > 0 || Boolean(extLink) || Boolean(video)
 
   const onEmojiButtonPress = useCallback(() => {
     openPicker?.(textInput.current?.getCursorPosition())
@@ -583,7 +589,8 @@ export const ComposePost = observer(function ComposePost({
                 <QuoteX onRemove={() => setQuote(undefined)} />
               )}
             </View>
-          ) : undefined}
+          ) : null}
+          {video && <VideoPreview video={video} />}
         </Animated.ScrollView>
         <SuggestedLanguage text={richtext.text} />
 
@@ -602,6 +609,12 @@ export const ComposePost = observer(function ComposePost({
           ]}>
           <View style={[a.flex_row, a.align_center, a.gap_xs]}>
             <SelectPhotoBtn gallery={gallery} disabled={!canSelectImages} />
+            <SelectVideoBtn
+              onSelectVideo={onSelectVideo}
+              disabled={!canSelectImages}
+              pending={videoPending}
+              setPending={setVideoPending}
+            />
             <OpenCameraBtn gallery={gallery} disabled={!canSelectImages} />
             <SelectGifBtn
               onClose={focusTextInput}
