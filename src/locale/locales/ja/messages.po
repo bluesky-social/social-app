@@ -8,14 +8,18 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-06-01 14:10+0900\n"
+"PO-Revision-Date: 2024-06-05 11:06+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
 
+#: src/screens/Messages/List/ChatListItem.tsx:119
+msgid "(contains embedded content)"
+msgstr "（埋め込みコンテンツあり）"
+
 #: src/view/com/modals/VerifyEmail.tsx:150
 msgid "(no email)"
-msgstr "メールがありません"
+msgstr "（メールがありません）"
 
 #: src/view/com/notifications/FeedItem.tsx:239
 msgid "{0, plural, one {{formattedCount} other} other {{formattedCount} others}}"
@@ -45,7 +49,7 @@ msgstr "{0, plural, other {フォロー中}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:245
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
-msgstr "{0, plural, other {いいね (#個のいいね)}}"
+msgstr "{0, plural, other {いいね（#個のいいね）}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:358
 msgid "{0, plural, one {like} other {likes}}"
@@ -61,7 +65,7 @@ msgstr "{0, plural, other {投稿}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:204
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
-msgstr "{0, plural, other {返信 (#件の返信)}}"
+msgstr "{0, plural, other {返信（#件の返信）}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:338
 msgid "{0, plural, one {repost} other {reposts}}"
@@ -69,7 +73,7 @@ msgstr "{0, plural, other {リポスト}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:241
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
-msgstr "{0, plural, other {いいねを外す (#個のいいね)}}"
+msgstr "{0, plural, other {いいねを外す（#個のいいね）}}"
 
 #: src/view/com/util/UserAvatar.tsx:406
 msgid "{0}'s avatar"
@@ -705,6 +709,10 @@ msgstr "プロフィールの編集をキャンセル"
 msgid "Cancel quote post"
 msgstr "引用をキャンセル"
 
+#: src/screens/Deactivated.tsx:113
+msgid "Cancel reactivation and log out"
+msgstr "再有効化をキャンセルしてログアウト"
+
 #: src/view/com/modals/ListAddRemoveUsers.tsx:87
 #: src/view/shell/desktop/Search.tsx:214
 msgid "Cancel search"
@@ -845,6 +853,14 @@ msgstr "すべてのストレージデータをクリア"
 #: src/view/screens/Support.tsx:40
 msgid "click here"
 msgstr "こちらをクリック"
+
+#: src/view/com/modals/DeleteAccount.tsx:208
+msgid "Click here for more information on deactivating your account"
+msgstr "アカウントの無効化について詳しくはこちらをクリック"
+
+#: src/view/com/modals/DeleteAccount.tsx:216
+msgid "Click here for more information."
+msgstr "詳しい情報についてはここをクリック。"
 
 #: src/components/TagMenu/index.web.tsx:138
 msgid "Click here to open tag menu for {tag}"
@@ -1068,7 +1084,7 @@ msgstr "続行"
 
 #: src/components/AccountList.tsx:113
 msgid "Continue as {0} (currently signed in)"
-msgstr "{0}として続行 (現在サインイン中)"
+msgstr "{0}として続行（現在サインイン中）"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:151
 #: src/screens/Onboarding/StepInterests/index.tsx:260
@@ -1243,6 +1259,15 @@ msgstr "ダークテーマ"
 msgid "Date of birth"
 msgstr "生年月日"
 
+#: src/screens/Settings/components/DeactivateAccountDialog.tsx:22
+#: src/view/screens/Settings/index.tsx:806
+msgid "Deactivate account"
+msgstr "アカウントを無効化"
+
+#: src/view/screens/Settings/index.tsx:818
+msgid "Deactivate my account"
+msgstr "アカウントを無効化"
+
 #: src/view/screens/Settings/index.tsx:843
 msgid "Debug Moderation"
 msgstr "モデレーションをデバッグ"
@@ -1297,11 +1322,11 @@ msgstr "メッセージの宛先から自分を削除"
 
 #: src/view/com/modals/DeleteAccount.tsx:233
 msgid "Delete my account"
-msgstr "マイアカウントを削除"
+msgstr "アカウントを削除"
 
 #: src/view/screens/Settings/index.tsx:810
 msgid "Delete My Account…"
-msgstr "マイアカウントを削除…"
+msgstr "アカウントを削除…"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:373
 #: src/view/com/util/forms/PostDropdownBtn.tsx:375
@@ -2307,6 +2332,10 @@ msgstr "この投稿を削除すると、復元できなくなります。"
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
 msgstr "パスワードを変更する場合は、あなたのアカウントであることを確認するためのコードをお送りします。"
 
+#: src/screens/Settings/components/DeactivateAccountDialog.tsx:41
+msgid "If you're trying to change your handle or email, do so before you deactivate."
+msgstr "ハンドルやメールアドレスを変えるのであれば、無効化の前に変更してください。"
+
 #: src/lib/moderation/useReportOptions.ts:37
 msgid "Illegal and Urgent"
 msgstr "違法かつ緊急"
@@ -2630,6 +2659,11 @@ msgstr "読み込み中…"
 #: src/Navigation.tsx:228
 msgid "Log"
 msgstr "ログ"
+
+#: src/screens/Deactivated.tsx:157
+#: src/screens/Deactivated.tsx:163
+msgid "Log in or sign up"
+msgstr "ログインまたはサインアップ"
 
 #: src/screens/Deactivated.tsx:155
 #: src/screens/Deactivated.tsx:158
@@ -3356,9 +3390,13 @@ msgstr "GIFの選択のダイアログを開く"
 msgid "Opens list of invite codes"
 msgstr "招待コードのリストを開く"
 
+#: src/view/screens/Settings/index.tsx:808
+msgid "Opens modal for account deactivation confirmation"
+msgstr "アカウント無効化の確認のモーダルを開く"
+
 #: src/view/screens/Settings/index.tsx:800
 msgid "Opens modal for account deletion confirmation. Requires email code"
-msgstr "アカウントの削除確認用の表示を開きます。メールアドレスのコードが必要です"
+msgstr "アカウントの削除確認用のモーダルを開きます。メールアドレスのコードが必要です"
 
 #: src/view/screens/Settings/index.tsx:758
 msgid "Opens modal for changing your Bluesky password"
@@ -3439,6 +3477,14 @@ msgstr "オプションとして、以下に追加情報をご記入ください
 #: src/view/com/modals/Threadgate.tsx:89
 msgid "Or combine these options:"
 msgstr "または以下のオプションを組み合わせてください："
+
+#: src/screens/Deactivated.tsx:154
+msgid "Or, continue with another account."
+msgstr "または、他のアカウントで続行する。"
+
+#: src/screens/Deactivated.tsx:137
+msgid "Or, log into one of your other accounts."
+msgstr "または、あなたの他のアカウントにログインする。"
 
 #: src/lib/moderation/useReportOptions.ts:26
 msgid "Other"
@@ -3792,6 +3838,10 @@ msgstr "ランダムな順番で表示（別名「投稿者のルーレット」
 msgid "Ratios"
 msgstr "比率"
 
+#: src/screens/Deactivated.tsx:103
+msgid "Reactivate your account"
+msgstr "あなたのアカウントを再有効化"
+
 #: src/components/dms/ReportDialog.tsx:172
 msgid "Reason:"
 msgstr "理由："
@@ -3866,6 +3916,14 @@ msgstr "イメージプレビューを削除"
 #: src/components/dialogs/MutedWords.tsx:331
 msgid "Remove mute word from your list"
 msgstr "リストからミュートワードを削除"
+
+#: src/view/screens/Search/Search.tsx:1014
+msgid "Remove profile"
+msgstr "プロフィールを削除"
+
+#: src/view/screens/Search/Search.tsx:1016
+msgid "Remove profile from search history"
+msgstr "検索履歴からプロフィールを削除する"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:223
 msgid "Remove quote"
@@ -4735,6 +4793,11 @@ msgstr "一部の人が返信可能"
 msgid "Something went wrong"
 msgstr "何らかの問題が発生しました"
 
+#: src/screens/Deactivated.tsx:94
+#: src/screens/Settings/components/DeactivateAccountDialog.tsx:59
+msgid "Something went wrong, please try again"
+msgstr "なにか間違っているようなので、もう一度お試しください"
+
 #: src/components/ReportDialog/index.tsx:59
 #: src/screens/Moderation/index.tsx:114
 #: src/screens/Profile/Sections/Labels.tsx:87
@@ -4979,6 +5042,10 @@ msgstr "サポートフォームは移動しました。サポートが必要な
 #: src/view/screens/TermsOfService.tsx:33
 msgid "The Terms of Service have been moved to"
 msgstr "サービス規約は移動しました"
+
+#: src/screens/Settings/components/DeactivateAccountDialog.tsx:35
+msgid "There is no time limit for account deactivation, come back any time."
+msgstr "アカウントの無効化に期限はありません。いつでも戻ってこれます。"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:115
 #: src/view/screens/ProfileFeed.tsx:541
@@ -5782,6 +5849,10 @@ msgstr "大変申し訳ありません！お探しのページは見つかりま
 msgid "We're sorry! You can only subscribe to ten labelers, and you've reached your limit of ten."
 msgstr "大変申し訳ありません！ラベラーは10までしか登録できず、すでに上限に達しています。"
 
+#: src/screens/Deactivated.tsx:87
+msgid "Welcome back!"
+msgstr "おかえりなさい！"
+
 #: src/screens/Onboarding/StepInterests/index.tsx:145
 msgid "What are your interests?"
 msgstr "なにに興味がありますか？"
@@ -5870,6 +5941,14 @@ msgstr "ライター"
 msgid "Yes"
 msgstr "はい"
 
+#: src/screens/Settings/components/DeactivateAccountDialog.tsx:52
+msgid "Yes, deactivate"
+msgstr "はい、無効化します"
+
+#: src/screens/Deactivated.tsx:109
+msgid "Yes, reactivate my account"
+msgstr "はい、アカウントを再有効化します"
+
 #: src/components/dms/MessageItem.tsx:174
 msgid "Yesterday, {time}"
 msgstr "昨日、{time}"
@@ -5887,6 +5966,10 @@ msgstr "あなたはまだだれもフォローしていません。"
 msgid "You can also discover new Custom Feeds to follow."
 msgstr "また、あなたはフォローすべき新しいカスタムフィードを発見できます。"
 
+#: src/view/com/modals/DeleteAccount.tsx:202
+msgid "You can also temporarily deactivate your account instead, and reactivate it at any time."
+msgstr "代わりにアカウントを一時的に無効化して、いつでも再有効化することもできます。"
+
 #: src/components/dms/MessagesNUX.tsx:119
 msgid "You can change this at any time."
 msgstr "これはいつでも変更できます。"
@@ -5899,6 +5982,10 @@ msgstr "どの設定を選択しても進行中の会話は続けることがで
 #: src/screens/Login/PasswordUpdatedForm.tsx:33
 msgid "You can now sign in with your new password."
 msgstr "新しいパスワードでサインインできるようになりました。"
+
+#: src/screens/Deactivated.tsx:95
+msgid "You can reactivate your account to continue logging in. Your profile and posts will be visible to other users."
+msgstr "アカウントを再有効化してログインし続けることができます。あなたのプロフィールと投稿は他のユーザーに見えるようになります。"
 
 #: src/view/com/profile/ProfileFollowers.tsx:86
 msgid "You do not have any followers."
@@ -6003,6 +6090,10 @@ msgstr "サインアップするには、13歳以上である必要がありま�
 msgid "You must select at least one labeler for a report"
 msgstr "報告をするには少なくとも１つのラベラーを選択する必要があります"
 
+#: src/screens/Deactivated.tsx:90
+msgid "You previously deactivated @{0}."
+msgstr "以前、あなたは@{0}を無効化しました。"
+
 #: src/view/com/util/forms/PostDropdownBtn.tsx:158
 msgid "You will no longer receive notifications for this thread"
 msgstr "これ以降、このスレッドに関する通知を受け取ることはできなくなります"
@@ -6019,11 +6110,24 @@ msgstr "「リセットコード」が記載されたメールが届きます。
 msgid "You: {0}"
 msgstr "あなた： {0}"
 
+#: src/screens/Messages/List/ChatListItem.tsx:142
+msgid "You: {defaultEmbeddedContentMessage}"
+msgstr "あなた： {defaultEmbeddedContentMessage}"
+
+#: src/screens/Messages/List/ChatListItem.tsx:135
+msgid "You: {short}"
+msgstr "あなた： {short}"
+
 #: src/screens/Deactivated.tsx:93
 #: src/screens/Deactivated.tsx:94
 #: src/screens/Deactivated.tsx:109
 msgid "You're in line"
 msgstr "あなたは並んでいます。"
+
+#: src/screens/Deactivated.tsx:89
+#: src/screens/Settings/components/DeactivateAccountDialog.tsx:54
+msgid "You're logged in with an App Password. Please log in with your main password to continue deactivating your account."
+msgstr "アプリパスワードでログイン中です。アカウントの無効化を続けるにはメインのパスワードでログインしてください。"
 
 #: src/screens/Onboarding/StepFinished.tsx:193
 msgid "You're ready to go!"
@@ -6107,6 +6211,10 @@ msgstr "投稿、いいね、ブロックは公開されます。ミュートは
 #: src/view/screens/Settings/index.tsx:146
 msgid "Your profile"
 msgstr "あなたのプロフィール"
+
+#: src/screens/Settings/components/DeactivateAccountDialog.tsx:24
+msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
+msgstr "あなたのプロフィール、投稿、フィード、そしてリストは他のBlueskyユーザーに見えなくなります。ログインすることでいつでもアカウントを再有効化できます。"
 
 #: src/view/com/composer/Composer.tsx:315
 msgid "Your reply has been published"
