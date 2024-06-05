@@ -1,5 +1,5 @@
 import React from 'react'
-import {Keyboard, View} from 'react-native'
+import {Keyboard, LayoutAnimation, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -8,9 +8,9 @@ import {isNative} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import * as ToggleButton from '#/components/forms/ToggleButton'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {Text} from '#/components/Typography'
-import {SelectableBtn} from '../../util/forms/SelectableBtn'
 
 const ADULT_CONTENT_LABELS = ['sexual', 'nudity', 'porn']
 
@@ -27,22 +27,20 @@ export function LabelsBtn({
   const t = useTheme()
   const {_} = useLingui()
 
-  const toggleAdultLabel = (label: string) => {
-    const hadLabel = labels.includes(label)
-    const stripped = labels.filter(l => !ADULT_CONTENT_LABELS.includes(l))
-    const final = !hadLabel ? stripped.concat([label]) : stripped
-    onChange(final)
-  }
-
   const removeAdultLabel = () => {
     const final = labels.filter(l => !ADULT_CONTENT_LABELS.includes(l))
     onChange(final)
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
   }
 
   const hasAdultSelection =
     labels.includes('sexual') ||
     labels.includes('nudity') ||
     labels.includes('porn')
+
+  if (!hasMedia && hasAdultSelection) {
+    removeAdultLabel()
+  }
 
   return (
     <>
@@ -92,47 +90,50 @@ export function LabelsBtn({
                 <Text style={[a.font_bold, a.text_lg]}>
                   <Trans>Adult Content</Trans>
                 </Text>
-                {hasAdultSelection ? (
-                  <Button
-                    label={_(msg`Remove`)}
-                    variant="ghost"
-                    onPress={removeAdultLabel}>
-                    <ButtonText>
-                      <Trans>Remove</Trans>
-                    </ButtonText>
-                  </Button>
-                ) : null}
+
+                <Button
+                  label={_(msg`Remove`)}
+                  variant="ghost"
+                  color="primary"
+                  size="xsmall"
+                  onPress={removeAdultLabel}
+                  disabled={!hasAdultSelection}
+                  style={{opacity: hasAdultSelection ? 1 : 0}}
+                  aria-hidden={!hasAdultSelection}>
+                  <ButtonText>
+                    <Trans>Remove</Trans>
+                  </ButtonText>
+                </Button>
               </View>
               {hasMedia ? (
                 <>
-                  <View style={a.flex_row}>
-                    <SelectableBtn
-                      testID="sexualLabelBtn"
-                      selected={labels.includes('sexual')}
-                      left
-                      label={_(msg`Suggestive`)}
-                      onSelect={() => toggleAdultLabel('sexual')}
-                      accessibilityHint=""
-                      style={a.flex_1}
-                    />
-                    <SelectableBtn
-                      testID="nudityLabelBtn"
-                      selected={labels.includes('nudity')}
-                      label={_(msg`Nudity`)}
-                      onSelect={() => toggleAdultLabel('nudity')}
-                      accessibilityHint=""
-                      style={a.flex_1}
-                    />
-                    <SelectableBtn
-                      testID="pornLabelBtn"
-                      selected={labels.includes('porn')}
-                      label={_(msg`Porn`)}
-                      right
-                      onSelect={() => toggleAdultLabel('porn')}
-                      accessibilityHint=""
-                      style={a.flex_1}
-                    />
-                  </View>
+                  <ToggleButton.Group
+                    label={_(msg`Adult Content labels`)}
+                    values={labels}
+                    onChange={values => {
+                      onChange(values)
+                      LayoutAnimation.configureNext(
+                        LayoutAnimation.Presets.easeInEaseOut,
+                      )
+                    }}>
+                    <ToggleButton.Button
+                      name="sexual"
+                      label={_(msg`Suggestive`)}>
+                      <ToggleButton.ButtonText>
+                        <Trans>Suggestive</Trans>
+                      </ToggleButton.ButtonText>
+                    </ToggleButton.Button>
+                    <ToggleButton.Button name="nudity" label={_(msg`Nudity`)}>
+                      <ToggleButton.ButtonText>
+                        <Trans>Nudity</Trans>
+                      </ToggleButton.ButtonText>
+                    </ToggleButton.Button>
+                    <ToggleButton.Button name="porn" label={_(msg`Porn`)}>
+                      <ToggleButton.ButtonText>
+                        <Trans>Porn</Trans>
+                      </ToggleButton.ButtonText>
+                    </ToggleButton.Button>
+                  </ToggleButton.Group>
 
                   <Text style={[a.mt_sm, t.atoms.text_contrast_medium]}>
                     {labels.includes('sexual') ? (
