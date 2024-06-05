@@ -1,7 +1,7 @@
 module.exports = {
   root: true,
   extends: [
-    '@react-native-community',
+    '@react-native',
     'plugin:react/recommended',
     'plugin:react-native-a11y/ios',
     'prettier',
@@ -20,7 +20,6 @@ module.exports = {
     'prettier/prettier': 0,
     'react/no-unescaped-entities': 0,
     'react/react-in-jsx-scope': 0,
-    'react/jsx-uses-react': 1,
     'react-native/no-inline-styles': 0,
     'no-restricted-imports': [
       'error',
