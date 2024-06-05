@@ -157,7 +157,8 @@ export const ComposePost = observer(function ComposePost({
 
   React.useEffect(() => {
     if (!isAndroid) return
-    setTimeout(() => textInput.current?.focus(), 100)
+    const id = setTimeout(() => textInput.current?.focus(), 100)
+    return () => clearTimeout(id)
   }, [])
 
   const gallery = useMemo(
