@@ -154,6 +154,11 @@ export const ComposePost = observer(function ComposePost({
   const [extGif, setExtGif] = useState<Gif>()
   const [labels, setLabels] = useState<string[]>([])
   const [threadgate, setThreadgate] = useState<ThreadgateSetting[]>([])
+
+  React.useEffect(() => {
+    setTimeout(() => textInput.current?.focus(), 100)
+  }, [])
+
   const gallery = useMemo(
     () => new GalleryModel(initImageUris),
     [initImageUris],
@@ -517,7 +522,7 @@ export const ComposePost = observer(function ComposePost({
                 ref={textInput}
                 richtext={richtext}
                 placeholder={selectTextInputPlaceholder}
-                autoFocus={true}
+                autoFocus={isIOS}
                 setRichText={setRichText}
                 onPhotoPasted={onPhotoPasted}
                 onPressPublish={onPressPublish}
