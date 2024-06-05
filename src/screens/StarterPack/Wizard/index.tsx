@@ -85,21 +85,37 @@ function WizardInner() {
     })
   }, [navigation])
 
-  const wizardUiStrings: Record<WizardStep, {header: string; nextBtn: string}> =
-    {
-      Details: {
-        header: _(msg`Starter Pack`),
-        nextBtn: _(msg`Next`),
-      },
-      Profiles: {
-        header: _(msg`Profiles`),
-        nextBtn: _(msg`Next`),
-      },
-      Feeds: {
-        header: _(msg`Feeds`),
-        nextBtn: _(msg`Finish`),
-      },
+  const continueIsCta = () => {
+    if (state.currentStep === 'Details') {
+      return true
+    } else if (state.currentStep === 'Profiles') {
+      return state.profiles.length > 0
+    } else if (state.currentStep === 'Feeds') {
+      return state.feeds.length > 0
     }
+  }
+
+  const wizardUiStrings: Record<
+    WizardStep,
+    {header: string; nextBtn: string; subtitle?: string}
+  > = {
+    Details: {
+      header: _(msg`Starter Pack`),
+      nextBtn: _(msg`Next`),
+    },
+    Profiles: {
+      header: _(msg`Profiles`),
+      nextBtn: _(msg`Next`),
+      subtitle: _(
+        msg`Add people to your starter pack that you think others will enjoy following`,
+      ),
+    },
+    Feeds: {
+      header: _(msg`Feeds`),
+      nextBtn: _(msg`Finish`),
+      subtitle: _(msg`Some subtitle`),
+    },
+  }
 
   const uiStrings = wizardUiStrings[state.currentStep]
 
@@ -132,44 +148,31 @@ function WizardInner() {
       sideBorders>
       <View
         style={[
-          a.flex_row,
-          a.justify_between,
-          a.align_center,
-          a.px_md,
           a.pb_sm,
+          a.px_md,
           a.border_b,
           t.atoms.border_contrast_medium,
+          a.gap_sm,
         ]}>
-        <View style={[{width: 65}]}>
-          {state.currentStep !== 'Details' && (
-            <Button
-              label={_(msg`Back`)}
-              variant="solid"
-              color="secondary"
-              size="xsmall"
-              onPress={() => dispatch({type: 'Back'})}>
-              <ButtonText>
-                <Trans>Back</Trans>
-              </ButtonText>
-            </Button>
-          )}
-        </View>
-        <Text
-          type="title"
-          style={[a.flex_1, a.font_bold, a.text_lg, a.text_center]}>
-          {uiStrings.header}
-        </Text>
-        <View style={[{width: 65}]}>
-          <Button
-            label={uiStrings.nextBtn}
-            variant="solid"
-            color="primary"
-            size="xsmall"
-            onPress={onNext}>
-            <ButtonText>
-              <Trans>{uiStrings.nextBtn}</Trans>
-            </ButtonText>
-          </Button>
+        <View style={[a.flex_row, a.justify_between, a.align_center]}>
+          <View style={[{width: 65}]}>
+            {state.currentStep !== 'Details' && (
+              <Button
+                label={_(msg`Back`)}
+                variant="ghost"
+                color="secondary"
+                size="xsmall"
+                onPress={() => dispatch({type: 'Back'})}>
+                <ButtonText>
+                  <Trans>Back</Trans>
+                </ButtonText>
+              </Button>
+            )}
+          </View>
+          <Text style={[a.flex_1, a.font_bold, a.text_lg, a.text_center]}>
+            {uiStrings.header}
+          </Text>
+          <View style={[{width: 65}]} />
         </View>
       </View>
 
@@ -177,23 +180,35 @@ function WizardInner() {
         <StepView />
       </Container>
 
-      {state.currentStep !== 'Details' && (
+      <View style={[a.gap_sm]}>
+        {state.currentStep !== 'Details' && (
+          <Button
+            label={_(msg`Cancel`)}
+            onPress={addDialogControl.open}
+            variant={!continueIsCta() ? 'solid' : 'ghost'}
+            color="primary"
+            size="medium"
+            style={[a.mx_2xl]}>
+            <ButtonText>
+              {state.currentStep === 'Profiles' ? (
+                <Trans>Find People</Trans>
+              ) : (
+                <Trans>Find Feeds</Trans>
+              )}
+            </ButtonText>
+          </Button>
+        )}
+
         <Button
           label={_(msg`Cancel`)}
-          onPress={addDialogControl.open}
-          variant="solid"
+          onPress={onNext}
+          variant={continueIsCta() ? 'solid' : 'ghost'}
           color="primary"
           size="medium"
           style={[a.mx_2xl]}>
-          <ButtonText>
-            {state.currentStep === 'Profiles' ? (
-              <Trans>Find People</Trans>
-            ) : (
-              <Trans>Find Feeds</Trans>
-            )}
-          </ButtonText>
+          <ButtonText>{uiStrings.nextBtn}</ButtonText>
         </Button>
-      )}
+      </View>
 
       {(state.currentStep === 'Profiles' || state.currentStep === 'Feeds') && (
         <WizardAddDialog
