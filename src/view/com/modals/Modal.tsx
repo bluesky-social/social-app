@@ -1,10 +1,11 @@
-import React, {useEffect, useRef} from 'react'
+import React, {Fragment, useEffect, useRef} from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import BottomSheet from '@discord/bottom-sheet/src'
 
 import {useModalControls, useModals} from '#/state/modals'
 import {usePalette} from 'lib/hooks/usePalette'
+import {FullWindowOverlay} from '#/components/FullWindowOverlay'
 import {KeyboardPadding} from '#/components/KeyboardPadding'
 import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
 import * as AddAppPassword from './AddAppPasswords'
@@ -127,24 +128,28 @@ export function ModalsContainer() {
     )
   }
 
+  const Container = activeModal ? FullWindowOverlay : Fragment
+
   return (
-    <BottomSheet
-      ref={bottomSheetRef}
-      snapPoints={snapPoints}
-      handleHeight={HANDLE_HEIGHT}
-      index={isModalActive ? 0 : -1}
-      enablePanDownToClose
-      android_keyboardInputMode="adjustResize"
-      keyboardBlurBehavior="restore"
-      backdropComponent={
-        isModalActive ? createCustomBackdrop(onClose) : undefined
-      }
-      handleIndicatorStyle={{backgroundColor: pal.text.color}}
-      handleStyle={[styles.handle, pal.view]}
-      onChange={onBottomSheetChange}>
-      {element}
-      <KeyboardPadding />
-    </BottomSheet>
+    <Container>
+      <BottomSheet
+        ref={bottomSheetRef}
+        snapPoints={snapPoints}
+        handleHeight={HANDLE_HEIGHT}
+        index={isModalActive ? 0 : -1}
+        enablePanDownToClose
+        android_keyboardInputMode="adjustResize"
+        keyboardBlurBehavior="restore"
+        backdropComponent={
+          isModalActive ? createCustomBackdrop(onClose) : undefined
+        }
+        handleIndicatorStyle={{backgroundColor: pal.text.color}}
+        handleStyle={[styles.handle, pal.view]}
+        onChange={onBottomSheetChange}>
+        {element}
+        <KeyboardPadding />
+      </BottomSheet>
+    </Container>
   )
 }
 

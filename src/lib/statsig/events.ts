@@ -13,7 +13,7 @@ export type LogEvents = {
     withPassword: boolean
   }
   'account:loggedOut': {
-    logContext: 'SwitchAccount' | 'Settings' | 'Deactivated'
+    logContext: 'SwitchAccount' | 'Settings' | 'SignupQueued' | 'Deactivated'
   }
   'notifications:openApp': {}
   'notifications:request': {
@@ -130,10 +130,14 @@ export type LogEvents = {
       | 'AvatarButton'
   }
   'chat:create': {
-    logContext: 'ProfileHeader' | 'NewChatDialog'
+    logContext: 'ProfileHeader' | 'NewChatDialog' | 'SendViaChatDialog'
   }
   'chat:open': {
-    logContext: 'ProfileHeader' | 'NewChatDialog' | 'ChatsList'
+    logContext:
+      | 'ProfileHeader'
+      | 'NewChatDialog'
+      | 'ChatsList'
+      | 'SendViaChatDialog'
   }
 
   'test:all:always': {}

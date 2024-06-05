@@ -45,10 +45,12 @@ export function MaybeQuoteEmbed({
   embed,
   onOpen,
   style,
+  allowNestedQuotes,
 }: {
   embed: AppBskyEmbedRecord.View
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
+  allowNestedQuotes?: boolean
 }) {
   const pal = usePalette('default')
   if (
@@ -62,6 +64,7 @@ export function MaybeQuoteEmbed({
         postRecord={embed.record.value}
         onOpen={onOpen}
         style={style}
+        allowNestedQuotes={allowNestedQuotes}
       />
     )
   } else if (AppBskyEmbedRecord.isViewBlocked(embed.record)) {
@@ -91,11 +94,13 @@ function QuoteEmbedModerated({
   postRecord,
   onOpen,
   style,
+  allowNestedQuotes,
 }: {
   viewRecord: AppBskyEmbedRecord.ViewRecord
   postRecord: AppBskyFeedPost.Record
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
+  allowNestedQuotes?: boolean
 }) {
   const moderationOpts = useModerationOpts()
   const moderation = React.useMemo(() => {
@@ -120,6 +125,7 @@ function QuoteEmbedModerated({
       moderation={moderation}
       onOpen={onOpen}
       style={style}
+      allowNestedQuotes={allowNestedQuotes}
     />
   )
 }
@@ -129,11 +135,13 @@ export function QuoteEmbed({
   moderation,
   onOpen,
   style,
+  allowNestedQuotes,
 }: {
   quote: ComposerOptsQuote
   moderation?: ModerationDecision
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
+  allowNestedQuotes?: boolean
 }) {
   const queryClient = useQueryClient()
   const pal = usePalette('default')
@@ -152,16 +160,20 @@ export function QuoteEmbed({
   const embed = React.useMemo(() => {
     const e = quote.embeds?.[0]
 
-    if (AppBskyEmbedImages.isView(e) || AppBskyEmbedExternal.isView(e)) {
+    if (allowNestedQuotes) {
       return e
-    } else if (
-      AppBskyEmbedRecordWithMedia.isView(e) &&
-      (AppBskyEmbedImages.isView(e.media) ||
-        AppBskyEmbedExternal.isView(e.media))
-    ) {
-      return e.media
+    } else {
+      if (AppBskyEmbedImages.isView(e) || AppBskyEmbedExternal.isView(e)) {
+        return e
+      } else if (
+        AppBskyEmbedRecordWithMedia.isView(e) &&
+        (AppBskyEmbedImages.isView(e.media) ||
+          AppBskyEmbedExternal.isView(e.media))
+      ) {
+        return e.media
+      }
     }
-  }, [quote.embeds])
+  }, [quote.embeds, allowNestedQuotes])
 
   const onBeforePress = React.useCallback(() => {
     precacheProfile(queryClient, quote.author)
@@ -169,9 +181,11 @@ export function QuoteEmbed({
   }, [queryClient, quote.author, onOpen])
 
   return (
-    <ContentHider modui={moderation?.ui('contentList')}>
+    <ContentHider
+      modui={moderation?.ui('contentList')}
+      style={[styles.container, pal.borderDark, style]}
+      childContainerStyle={[a.pt_sm]}>
       <Link
-        style={[styles.container, pal.borderDark, style]}
         hoverStyle={{borderColor: pal.colors.borderLinkHover}}
         href={itemHref}
         title={itemTitle}
@@ -192,7 +206,7 @@ export function QuoteEmbed({
         {richText ? (
           <RichText
             value={richText}
-            style={[a.text_md]}
+            style={a.text_md}
             numberOfLines={20}
             disableLinks
           />
@@ -249,11 +263,6 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 12,
     borderWidth: hairlineWidth,
-  },
-  quotePost: {
-    flex: 1,
-    paddingLeft: 13,
-    paddingRight: 8,
   },
   errorContainer: {
     flexDirection: 'row',

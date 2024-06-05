@@ -1,5 +1,6 @@
 import React from 'react'
-import {Keyboard, View} from 'react-native'
+import {Keyboard, StyleProp, ViewStyle} from 'react-native'
+import Animated, {AnimatedStyle} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -7,7 +8,7 @@ import {isNative} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
 import {ThreadgateSetting} from '#/state/queries/threadgate'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/components/icons/CircleBanSign'
 import {Earth_Stroke2_Corner0_Rounded as Earth} from '#/components/icons/Globe'
@@ -16,12 +17,15 @@ import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
 export function ThreadgateBtn({
   threadgate,
   onChange,
+  style,
 }: {
   threadgate: ThreadgateSetting[]
   onChange: (v: ThreadgateSetting[]) => void
+  style?: StyleProp<AnimatedStyle<ViewStyle>>
 }) {
   const {track} = useAnalytics()
   const {_} = useLingui()
+  const t = useTheme()
   const {openModal} = useModalControls()
 
   const onPress = () => {
@@ -45,7 +49,7 @@ export function ThreadgateBtn({
     : _(msg`Some people can reply`)
 
   return (
-    <View style={[a.flex_row, a.pb_sm, a.px_md]}>
+    <Animated.View style={[a.flex_row, a.p_sm, t.atoms.bg, style]}>
       <Button
         variant="solid"
         color="secondary"
@@ -58,6 +62,6 @@ export function ThreadgateBtn({
         />
         <ButtonText>{label}</ButtonText>
       </Button>
-    </View>
+    </Animated.View>
   )
 }

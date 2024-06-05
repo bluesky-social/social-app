@@ -16,7 +16,7 @@ import {
   configureModerationForGuest,
 } from './moderation'
 import {SessionAccount} from './types'
-import {isSessionDeactivated, isSessionExpired} from './util'
+import {isSessionExpired, isSignupQueued} from './util'
 
 export function createPublicAgent() {
   configureModerationForGuest() // Side effect but only relevant for tests
@@ -46,12 +46,17 @@ export async function createAgentAndResume(
     emailConfirmed: storedAccount.emailConfirmed,
     handle: storedAccount.handle,
     refreshJwt: storedAccount.refreshJwt ?? '',
+    /**
+     * @see https://github.com/bluesky-social/atproto/blob/c5d36d5ba2a2c2a5c4f366a5621c06a5608e361e/packages/api/src/agent.ts#L188
+     */
+    active: storedAccount.active ?? true,
+    status: storedAccount.status,
   }
   if (isSessionExpired(storedAccount)) {
     await networkRetry(1, () => agent.resumeSession(prevSession))
   } else {
     agent.session = prevSession
-    if (!storedAccount.deactivated) {
+    if (!storedAccount.signupQueued) {
       // Intentionally not awaited to unblock the UI:
       networkRetry(3, () => agent.resumeSession(prevSession)).catch(
         (e: any) => {
@@ -135,7 +140,7 @@ export async function createAgentAndCreateAccount(
   const account = agentToSessionAccountOrThrow(agent)
   const gates = tryFetchGates(account.did, 'prefer-fresh-gates')
   const moderation = configureModerationForAccount(agent, account)
-  if (!account.deactivated) {
+  if (!account.signupQueued) {
     /*dont await*/ agent.upsertProfile(_existing => {
       return {
         displayName: '',
@@ -234,7 +239,9 @@ export function agentToSessionAccount(
     emailAuthFactor: agent.session.emailAuthFactor || false,
     refreshJwt: agent.session.refreshJwt,
     accessJwt: agent.session.accessJwt,
-    deactivated: isSessionDeactivated(agent.session.accessJwt),
+    signupQueued: isSignupQueued(agent.session.accessJwt),
+    active: agent.session.active,
+    status: agent.session.status as SessionAccount['status'],
     pdsUrl: agent.pdsUrl?.toString(),
   }
 }
