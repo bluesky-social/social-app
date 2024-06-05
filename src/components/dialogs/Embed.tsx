@@ -1,4 +1,4 @@
-import {ReactNode, useEffect, useMemo, useRef, useState} from 'react'
+import {memo, ReactNode, useEffect, useMemo, useRef, useState} from 'react'
 import {TextInput, View} from 'react-native'
 import {AppBskyActorDefs, AppBskyFeedPost, AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
