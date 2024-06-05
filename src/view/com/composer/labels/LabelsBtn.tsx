@@ -59,7 +59,7 @@ export function LabelsBtn({
         }}>
         <ShieldExclamation style={{color: t.palette.primary_500}} size={24} />
         {labels.length > 0 ? (
-          <Check size="md" fill={t.palette.primary_500} />
+          <Check size="sm" fill={t.palette.primary_500} />
         ) : null}
       </Button>
 
