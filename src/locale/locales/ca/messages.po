@@ -4217,7 +4217,7 @@ msgstr "O continua amb un altre compte."
 
 #: src/screens/Deactivated.tsx:194
 msgid "Or, log into one of your other accounts."
-msgstr "O inicia sessió en un altre dels teus comptes"
+msgstr "O inicia sessió en un altre dels teus comptes."
 
 #: src/lib/moderation/useReportOptions.ts:26
 msgid "Other"
