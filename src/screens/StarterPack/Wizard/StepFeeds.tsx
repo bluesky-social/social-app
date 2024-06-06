@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import {ListRenderItemInfo, View} from 'react-native'
+import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import debounce from 'lodash.debounce'
 
@@ -66,6 +67,8 @@ export function StepFeeds() {
         keyExtractor={keyExtractor}
         style={[a.flex_1]}
         onEndReached={!query ? () => fetchNextPage() : undefined}
+        onEndReachedThreshold={2}
+        renderScrollComponent={props => <KeyboardAwareScrollView {...props} />}
       />
     </>
   )
