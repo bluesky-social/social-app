@@ -155,10 +155,16 @@ export const ComposePost = observer(function ComposePost({
   const [labels, setLabels] = useState<string[]>([])
   const [threadgate, setThreadgate] = useState<ThreadgateSetting[]>([])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isAndroid) return
-    const id = setTimeout(() => textInput.current?.focus(), 100)
-    return () => clearTimeout(id)
+    const id = setInterval(() => {
+      if (Keyboard.isVisible()) {
+        clearInterval(id)
+      } else {
+        textInput.current?.focus()
+      }
+    }, 50)
+    return () => clearInterval(id)
   }, [])
 
   const gallery = useMemo(
@@ -181,9 +187,7 @@ export const ComposePost = observer(function ComposePost({
   const onPressCancel = useCallback(() => {
     if (graphemeLength > 0 || !gallery.isEmpty || extGif) {
       closeAllDialogs()
-      if (Keyboard) {
-        Keyboard.dismiss()
-      }
+      Keyboard.dismiss()
       discardPromptControl.open()
     } else {
       onClose()
