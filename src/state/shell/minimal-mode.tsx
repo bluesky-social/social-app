@@ -1,5 +1,5 @@
 import React from 'react'
-import {SharedValue, useSharedValue, withSpring} from 'react-native-reanimated'
+import {cancelAnimation, SharedValue, useSharedValue, withSpring} from 'react-native-reanimated'
 
 type StateContext = SharedValue<number>
 type SetContext = (v: boolean) => void
@@ -17,6 +17,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const setMode = React.useCallback(
     (v: boolean) => {
       'worklet'
+      // Cancel any existing animation
+      cancelAnimation(mode)
       mode.value = withSpring(v ? 1 : 0, {
         overshootClamping: true,
       })
