@@ -1,10 +1,14 @@
-import React from 'react'
-import {ListRenderItemInfo} from 'react-native'
+import React, {useState} from 'react'
+import {ListRenderItemInfo, View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
 
+import {useActorAutocompleteQuery} from 'state/queries/actor-autocomplete'
+import {useProfileFollowsQuery} from 'state/queries/profile-follows'
+import {useSession} from 'state/session'
+import {SearchInput} from 'view/com/util/forms/SearchInput'
 import {List} from 'view/com/util/List'
 import {useWizardState} from '#/screens/StarterPack/Wizard/State'
-import {WizardListEmpty} from '#/components/StarterPack/Wizard/WizardListEmpty'
+import {atoms as a} from '#/alf'
 import {WizardProfileCard} from '#/components/StarterPack/Wizard/WizardProfileCard'
 
 function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic) {
@@ -13,6 +17,19 @@ function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic) {
 
 export function StepProfiles() {
   const [state, dispatch] = useWizardState()
+  const [query, setQuery] = useState('')
+
+  const {currentAccount} = useSession()
+  const {data: followsPages, fetchNextPage} = useProfileFollowsQuery(
+    currentAccount?.did,
+  )
+  const follows = followsPages?.pages.flatMap(page => page.follows) || []
+
+  const {data: results} = useActorAutocompleteQuery(
+    query || encodeURIComponent('*'),
+    true,
+    12,
+  )
 
   const renderItem = ({
     item,
@@ -23,11 +40,21 @@ export function StepProfiles() {
   }
 
   return (
-    <List
-      data={state.profiles}
-      renderItem={renderItem}
-      keyExtractor={keyExtractor}
-      ListEmptyComponent={<WizardListEmpty type="profiles" />}
-    />
+    <>
+      <View style={[a.my_sm, a.px_md, {height: 40}]}>
+        <SearchInput
+          query={query}
+          onChangeQuery={setQuery}
+          onPressCancelSearch={() => setQuery('')}
+          onSubmitQuery={() => {}}
+        />
+      </View>
+      <List
+        data={query ? results : follows}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        onEndReached={!query ? () => fetchNextPage() : undefined}
+      />
+    </>
   )
 }

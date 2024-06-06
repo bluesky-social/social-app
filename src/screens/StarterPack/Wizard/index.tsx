@@ -1,16 +1,20 @@
 import React from 'react'
 import {Keyboard, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
-import {msg, Trans} from '@lingui/macro'
+import {AppBskyActorDefs, AppBskyFeedDefs} from '@atproto/api'
+import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {useBottomBarOffset} from 'lib/hooks/useBottomBarOffset'
 import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
+import {enforceLen} from 'lib/strings/helpers'
 import {isAndroid, isWeb} from 'platform/detection'
 import {useProfileQuery} from 'state/queries/profile'
 import {useSession} from 'state/session'
+import {useSetMinimalShellMode} from 'state/shell'
+import {UserAvatar} from 'view/com/util/UserAvatar'
 import {CenteredView} from 'view/com/util/Views'
 import {useWizardState, WizardStep} from '#/screens/StarterPack/Wizard/State'
 import {StepDetails} from '#/screens/StarterPack/Wizard/StepDetails'
@@ -71,7 +75,6 @@ function WizardInner() {
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
   const t = useTheme()
-  const bottomOffset = useBottomBarOffset()
   const [state, dispatch] = useWizardState()
   const {currentAccount} = useSession()
   const {data: currentProfile} = useProfileQuery({
@@ -80,22 +83,20 @@ function WizardInner() {
   })
   const addDialogControl = useDialogControl()
 
+  const setMinimalShellMode = useSetMinimalShellMode()
+
   React.useEffect(() => {
     navigation.setOptions({
       gestureEnabled: false,
     })
   }, [navigation])
 
-  // TODO move to state if we keep this
-  const continueIsCta = () => {
-    if (state.currentStep === 'Details') {
-      return true
-    } else if (state.currentStep === 'Profiles') {
-      return state.profiles.length > 0
-    } else if (state.currentStep === 'Feeds') {
-      return state.feeds.length > 0
-    }
-  }
+  useFocusEffect(
+    React.useCallback(() => {
+      setMinimalShellMode(true)
+      return () => setMinimalShellMode(false)
+    }, [setMinimalShellMode]),
+  )
 
   const wizardUiStrings: Record<
     WizardStep,
@@ -145,9 +146,7 @@ function WizardInner() {
   }
 
   return (
-    <CenteredView
-      style={[a.flex_1, {marginBottom: bottomOffset + 20}]}
-      sideBorders>
+    <CenteredView style={[a.flex_1]} sideBorders>
       <View style={[]}>
         <View
           style={[
@@ -187,35 +186,19 @@ function WizardInner() {
         <StepView />
       </Container>
 
-      <View style={[a.gap_sm]}>
-        {state.currentStep !== 'Details' && (
-          <Button
-            label={_(msg`Cancel`)}
-            onPress={addDialogControl.open}
-            variant="ghost"
-            color="primary"
-            size="medium"
-            style={[a.mx_2xl]}>
-            <ButtonText>
-              {state.currentStep === 'Profiles' ? (
-                <Trans>Find People</Trans>
-              ) : (
-                <Trans>Find Feeds</Trans>
-              )}
-            </ButtonText>
-          </Button>
-        )}
-
+      {state.currentStep === 'Details' && (
         <Button
-          label={_(msg`Cancel`)}
-          onPress={onNext}
-          variant={continueIsCta() ? 'solid' : 'ghost'}
-          color={continueIsCta() ? 'primary' : 'secondary'}
+          label={uiStrings.nextBtn}
+          variant="solid"
+          color="primary"
           size="medium"
-          style={[a.mx_2xl]}>
+          style={[a.mx_xl, a.my_5xl]}
+          onPress={onNext}>
           <ButtonText>{uiStrings.nextBtn}</ButtonText>
         </Button>
-      </View>
+      )}
+
+      <Footer onNext={onNext} nextBtnText={uiStrings.nextBtn} />
 
       {(state.currentStep === 'Profiles' || state.currentStep === 'Feeds') && (
         <WizardAddDialog
@@ -255,4 +238,136 @@ function StepView() {
   if (state.currentStep === 'Feeds') {
     return <StepFeeds />
   }
+}
+
+function Footer({
+  onNext,
+  nextBtnText,
+}: {
+  onNext: () => void
+  nextBtnText: string
+}) {
+  const {_} = useLingui()
+  const t = useTheme()
+  const [state] = useWizardState()
+
+  const items = state.currentStep === 'Profiles' ? state.profiles : state.feeds
+
+  return (
+    <View
+      style={[
+        a.border_t,
+        a.border_l,
+        a.border_r,
+        a.align_center,
+        a.px_md,
+        a.pt_lg,
+        a.pb_5xl,
+        a.gap_sm,
+        t.atoms.bg,
+        t.atoms.shadow_md,
+        t.atoms.border_contrast_medium,
+        {
+          height: 190,
+          borderTopLeftRadius: 14,
+          borderTopRightRadius: 14,
+        },
+      ]}>
+      <View style={[a.flex_row, a.gap_xs]}>
+        {items.slice(0, 5).map(p => (
+          <UserAvatar
+            key={p.did}
+            avatar={p.avatar}
+            size={28}
+            type={state.currentStep === 'Profiles' ? 'user' : 'algo'}
+          />
+        ))}
+      </View>
+
+      {items.length === 0 ? (
+        <View style={[a.gap_sm]}>
+          <Text style={[a.font_bold, a.text_center]}>
+            {state.currentStep === 'Profiles' ? (
+              <Trans>You haven't added anyone to your starter pack yet!</Trans>
+            ) : (
+              <Trans>You haven't added any suggested feeds yet!</Trans>
+            )}
+          </Text>
+          <Text style={[a.text_center]}>
+            {state.currentStep === 'Profiles' ? (
+              <Trans>
+                Search for people that you want to suggest to others, or skip
+                for now and add some later.
+              </Trans>
+            ) : (
+              <Trans>
+                Search for feeds that you want to suggest to others, or skip for
+                now and add some later.
+              </Trans>
+            )}
+          </Text>
+        </View>
+      ) : (
+        <Text style={[a.text_center]}>
+          {items.length === 1 ? (
+            <Trans>
+              <Text style={[a.font_bold]}>{getName(items[0])}</Text> is included
+              in your starter pack
+            </Trans>
+          ) : items.length === 2 ? (
+            <Trans>
+              <Text style={[a.font_bold]}>{getName(items[0])} </Text>
+              and
+              <Text> </Text>
+              <Text style={[a.font_bold]}>{getName(items[1])} </Text>
+              are included in your starter pack
+            </Trans>
+          ) : (
+            <Trans>
+              <Text style={[a.font_bold]}>{getName(items[0])}, </Text>
+              <Text style={[a.font_bold]}>{getName(items[1])}, </Text>
+              and {state.profiles.length - 2}{' '}
+              <Plural
+                value={state.profiles.length - 2}
+                one="other"
+                other="others"
+              />{' '}
+              are included in your starter pack
+            </Trans>
+          )}
+        </Text>
+      )}
+
+      <View
+        style={[a.flex_row, a.w_full, a.justify_between, {marginTop: 'auto'}]}>
+        <Button
+          label={_(msg`Edit`)}
+          variant="ghost"
+          color="primary"
+          size="small">
+          <ButtonText>
+            <Trans>Edit</Trans>
+          </ButtonText>
+        </Button>
+        <Button
+          label={nextBtnText}
+          variant="solid"
+          color="primary"
+          size="small"
+          onPress={onNext}>
+          <ButtonText>{nextBtnText}</ButtonText>
+        </Button>
+      </View>
+    </View>
+  )
+}
+
+function getName(item: AppBskyActorDefs.ProfileViewBasic | GeneratorView) {
+  if (AppBskyActorDefs.isProfileView(item)) {
+    return enforceLen(item.displayName || item.handle, 16)
+  }
+  if (AppBskyFeedDefs.isGeneratorView(item)) {
+    return enforceLen(item.displayName, 16)
+  }
+  return ''
 }

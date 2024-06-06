@@ -29,8 +29,7 @@ export function WizardListEmpty({type}: {type: 'profiles' | 'feeds'}) {
       <Text style={[a.text_md, a.text_center, t.atoms.text_contrast_medium]}>
         {type === 'profiles' ? (
           <Trans>
-            Add people to your starter pack that you think others will enjoy
-            following
+            Search for people that you want to suggest others to follow
           </Trans>
         ) : (
           <Trans>Add some cool feeds!</Trans>
