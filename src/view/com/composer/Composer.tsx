@@ -138,7 +138,7 @@ export const ComposePost = observer(function ComposePost({
     return () => {
       context.setEnabled(true)
     }
-  })
+  }, [context])
 
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isProcessing, setIsProcessing] = useState(false)
