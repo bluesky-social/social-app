@@ -1,4 +1,4 @@
-import React from 'react'
+import {ReactNode} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
@@ -11,8 +11,8 @@ export function FormContainer({
   style,
 }: {
   testID?: string
-  titleText?: React.ReactNode
-  children: React.ReactNode
+  titleText?: ReactNode
+  children: ReactNode
   style?: StyleProp<ViewStyle>
 }) {
   const {gtMobile} = useBreakpoints()

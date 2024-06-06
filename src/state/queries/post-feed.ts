@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef} from 'react'
+import {useCallback, useEffect, useMemo, useRef} from 'react'
 import {AppState} from 'react-native'
 import {
   AppBskyActorDefs,
@@ -130,7 +130,7 @@ export function usePostFeedQuery(
   const lastPageCountRef = useRef(0)
 
   // Make sure this doesn't invalidate unless really needed.
-  const selectArgs = React.useMemo(
+  const selectArgs = useMemo(
     () => ({
       feedTuners,
       disableTuner: params?.disableTuner,

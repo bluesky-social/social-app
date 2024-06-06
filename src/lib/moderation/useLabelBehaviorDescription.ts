@@ -1,6 +1,6 @@
 import {InterpretedLabelValueDefinition, LabelPreference} from '@atproto/api'
-import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export function useLabelBehaviorDescription(
   labelValueDef: InterpretedLabelValueDefinition,

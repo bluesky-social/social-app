@@ -1,4 +1,12 @@
-import React, {useCallback, useMemo} from 'react'
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -86,7 +94,7 @@ export function ProfileFeedScreen(props: Props) {
   )
   const {error, data: resolvedUri} = useResolveUriQuery(uri)
 
-  const onPressBack = React.useCallback(() => {
+  const onPressBack = useCallback(() => {
     if (navigation.canGoBack()) {
       navigation.goBack()
     } else {
@@ -159,7 +167,7 @@ export function ProfileFeedScreenInner({
   const {openComposer} = useComposerControls()
   const {track} = useAnalytics()
   const playHaptic = useHaptics()
-  const feedSectionRef = React.useRef<SectionRef>(null)
+  const feedSectionRef = useRef<SectionRef>(null)
   const isScreenFocused = useIsFocused()
 
   const {mutateAsync: addSavedFeeds, isPending: isAddSavedFeedPending} =
@@ -182,7 +190,7 @@ export function ProfileFeedScreenInner({
   // event handlers
   //
 
-  const onToggleSaved = React.useCallback(async () => {
+  const onToggleSaved = useCallback(async () => {
     try {
       playHaptic()
 
@@ -209,7 +217,7 @@ export function ProfileFeedScreenInner({
     }
   }, [_, playHaptic, feedInfo, removeFeed, addSavedFeeds, savedFeedConfig])
 
-  const onTogglePinned = React.useCallback(async () => {
+  const onTogglePinned = useCallback(async () => {
     try {
       playHaptic()
 
@@ -242,17 +250,17 @@ export function ProfileFeedScreenInner({
     addSavedFeeds,
   ])
 
-  const onPressShare = React.useCallback(() => {
+  const onPressShare = useCallback(() => {
     const url = toShareUrl(feedInfo.route.href)
     shareUrl(url)
     track('CustomFeed:Share')
   }, [feedInfo, track])
 
-  const onPressReport = React.useCallback(() => {
+  const onPressReport = useCallback(() => {
     reportDialogControl.open()
   }, [reportDialogControl])
 
-  const onCurrentPageSelected = React.useCallback(
+  const onCurrentPageSelected = useCallback(
     (index: number) => {
       if (index === 0) {
         feedSectionRef.current?.scrollToTop()
@@ -437,11 +445,11 @@ interface FeedSectionProps {
   scrollElRef: ListRef
   isFocused: boolean
 }
-const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
+const FeedSection = forwardRef<SectionRef, FeedSectionProps>(
   function FeedSectionImpl({feed, headerHeight, scrollElRef, isFocused}, ref) {
     const {_} = useLingui()
-    const [hasNew, setHasNew] = React.useState(false)
-    const [isScrolledDown, setIsScrolledDown] = React.useState(false)
+    const [hasNew, setHasNew] = useState(false)
+    const [isScrolledDown, setIsScrolledDown] = useState(false)
     const queryClient = useQueryClient()
     const isScreenFocused = useIsFocused()
     const {hasSession} = useSession()
@@ -456,11 +464,11 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
       setHasNew(false)
     }, [scrollElRef, headerHeight, queryClient, feed, setHasNew])
 
-    React.useImperativeHandle(ref, () => ({
+    useImperativeHandle(ref, () => ({
       scrollToTop: onScrollToTop,
     }))
 
-    React.useEffect(() => {
+    useEffect(() => {
       if (!isScreenFocused) {
         return
       }
@@ -510,7 +518,7 @@ function AboutSection({
   const t = useTheme()
   const pal = usePalette('default')
   const {_} = useLingui()
-  const [likeUri, setLikeUri] = React.useState(feedInfo.likeUri)
+  const [likeUri, setLikeUri] = useState(feedInfo.likeUri)
   const {hasSession} = useSession()
   const {track} = useAnalytics()
   const playHaptic = useHaptics()
@@ -522,7 +530,7 @@ function AboutSection({
   const likeCount =
     isLiked && likeUri ? (feedInfo.likeCount || 0) + 1 : feedInfo.likeCount
 
-  const onToggleLiked = React.useCallback(async () => {
+  const onToggleLiked = useCallback(async () => {
     try {
       playHaptic()
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import {createContext, PropsWithChildren, useContext, useMemo} from 'react'
 
 import * as Dialog from '#/components/Dialog'
 
@@ -9,19 +9,19 @@ type ControlsContext = {
   signinDialogControl: Control
 }
 
-const ControlsContext = React.createContext({
+const ControlsContext = createContext({
   mutedWordsDialogControl: {} as Control,
   signinDialogControl: {} as Control,
 })
 
 export function useGlobalDialogsControlContext() {
-  return React.useContext(ControlsContext)
+  return useContext(ControlsContext)
 }
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
+export function Provider({children}: PropsWithChildren<{}>) {
   const mutedWordsDialogControl = Dialog.useDialogControl()
   const signinDialogControl = Dialog.useDialogControl()
-  const ctx = React.useMemo<ControlsContext>(
+  const ctx = useMemo<ControlsContext>(
     () => ({mutedWordsDialogControl, signinDialogControl}),
     [mutedWordsDialogControl, signinDialogControl],
   )

@@ -1,4 +1,4 @@
-import React from 'react'
+import {createContext, Dispatch} from 'react'
 
 import {logger} from '#/logger'
 import {AvatarColor, Emoji} from '#/screens/Onboarding/StepProfile/types'
@@ -117,9 +117,9 @@ export const initialState: OnboardingState = {
   },
 }
 
-export const Context = React.createContext<{
+export const Context = createContext<{
   state: OnboardingState
-  dispatch: React.Dispatch<OnboardingAction>
+  dispatch: Dispatch<OnboardingAction>
   interestsDisplayNames: {[key: string]: string}
 }>({
   state: {...initialState},

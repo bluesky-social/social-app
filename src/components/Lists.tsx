@@ -1,4 +1,4 @@
-import React, {memo} from 'react'
+import {memo, ReactNode} from 'react'
 import {StyleProp, View, ViewStyle} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -161,7 +161,7 @@ let ListMaybePlaceholder = ({
   hideBackButton?: boolean
   sideBorders?: boolean
   topBorder?: boolean
-}): React.ReactNode => {
+}): ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
   const {gtMobile, gtTablet} = useBreakpoints()

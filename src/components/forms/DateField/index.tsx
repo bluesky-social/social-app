@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {View} from 'react-native'
 import DatePicker from 'react-native-date-picker'
 import {msg, Trans} from '@lingui/macro'
@@ -34,7 +34,7 @@ export function DateField({
   const t = useTheme()
   const control = Dialog.useDialogControl()
 
-  const onChangeInternal = React.useCallback(
+  const onChangeInternal = useCallback(
     (date: Date | undefined) => {
       if (date) {
         const formatted = toSimpleDateString(date)

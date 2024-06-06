@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -33,7 +33,7 @@ export function Error({
   const {gtMobile} = useBreakpoints()
 
   const canGoBack = navigation.canGoBack()
-  const onGoBack = React.useCallback(() => {
+  const onGoBack = useCallback(() => {
     if (onGoBackProp) {
       onGoBackProp()
       return

@@ -1,4 +1,10 @@
-import React from 'react'
+import {
+  Dispatch,
+  PropsWithChildren,
+  SetStateAction,
+  useMemo,
+  useState,
+} from 'react'
 import {View} from 'react-native'
 import {
   AppBskyActorDefs,
@@ -56,13 +62,13 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
   'DebugMod'
 >) => {
   const t = useTheme()
-  const [scenario, setScenario] = React.useState<string[]>(['label'])
-  const [scenarioSwitches, setScenarioSwitches] = React.useState<string[]>([])
-  const [label, setLabel] = React.useState<string[]>([LABEL_VALUES[0]])
-  const [target, setTarget] = React.useState<string[]>(['account'])
-  const [visibility, setVisiblity] = React.useState<string[]>(['warn'])
+  const [scenario, setScenario] = useState<string[]>(['label'])
+  const [scenarioSwitches, setScenarioSwitches] = useState<string[]>([])
+  const [label, setLabel] = useState<string[]>([LABEL_VALUES[0]])
+  const [target, setTarget] = useState<string[]>(['account'])
+  const [visibility, setVisiblity] = useState<string[]>(['warn'])
   const [customLabelDef, setCustomLabelDef] =
-    React.useState<ComAtprotoLabelDefs.LabelValueDefinition>({
+    useState<ComAtprotoLabelDefs.LabelValueDefinition>({
       identifier: 'custom',
       blurs: 'content',
       severity: 'alert',
@@ -75,7 +81,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
         },
       ],
     })
-  const [view, setView] = React.useState<string[]>(['post'])
+  const [view, setView] = useState<string[]>(['post'])
   const labelStrings = useGlobalLabelStrings()
   const {currentAccount} = useSession()
 
@@ -92,7 +98,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
   const did =
     isTargetMe && currentAccount ? currentAccount.did : 'did:web:bob.test'
 
-  const profile = React.useMemo(() => {
+  const profile = useMemo(() => {
     const mockedProfile = mock.profileViewBasic({
       handle: `bob.test`,
       displayName: 'Bob Robertson',
@@ -136,7 +142,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
     return mockedProfile
   }, [scenario, target, label, isSelfLabel, did, isFollowing, currentAccount])
 
-  const post = React.useMemo(() => {
+  const post = useMemo(() => {
     return mock.postView({
       record: mock.post({
         text: "This is the body of the post. It's where the text goes. You get the idea.",
@@ -185,7 +191,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
     })
   }, [scenario, label, target, profile, isSelfLabel, did])
 
-  const replyNotif = React.useMemo(() => {
+  const replyNotif = useMemo(() => {
     const notif = mock.replyNotification({
       record: mock.post({
         text: "This is the body of the post. It's where the text goes. You get the idea.",
@@ -221,7 +227,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
     return item
   }, [scenario, label, target, profile, isSelfLabel, did])
 
-  const followNotif = React.useMemo(() => {
+  const followNotif = useMemo(() => {
     const notif = mock.followNotification({
       author: profile,
       subjectDid: currentAccount?.did || '',
@@ -230,7 +236,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
     return item
   }, [profile, currentAccount])
 
-  const modOpts = React.useMemo(() => {
+  const modOpts = useMemo(() => {
     return {
       userDid: isLoggedOut ? '' : isTargetMe ? did : 'did:web:alice.test',
       prefs: {
@@ -255,10 +261,10 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
     }
   }, [label, visibility, noAdult, isLoggedOut, isTargetMe, did, customLabelDef])
 
-  const profileModeration = React.useMemo(() => {
+  const profileModeration = useMemo(() => {
     return moderateProfile(profile, modOpts)
   }, [profile, modOpts])
-  const postModeration = React.useMemo(() => {
+  const postModeration = useMemo(() => {
     return moderatePost(post, modOpts)
   }, [post, modOpts])
 
@@ -586,9 +592,7 @@ function CustomLabelForm({
   setDef,
 }: {
   def: ComAtprotoLabelDefs.LabelValueDefinition
-  setDef: React.Dispatch<
-    React.SetStateAction<ComAtprotoLabelDefs.LabelValueDefinition>
-  >
+  setDef: Dispatch<SetStateAction<ComAtprotoLabelDefs.LabelValueDefinition>>
 }) {
   const t = useTheme()
   return (
@@ -676,9 +680,9 @@ function CustomLabelForm({
   )
 }
 
-function Toggler({label, children}: React.PropsWithChildren<{label: string}>) {
+function Toggler({label, children}: PropsWithChildren<{label: string}>) {
   const t = useTheme()
-  const [show, setShow] = React.useState(false)
+  const [show, setShow] = useState(false)
   return (
     <View style={a.mb_md}>
       <View
@@ -706,11 +710,8 @@ function Toggler({label, children}: React.PropsWithChildren<{label: string}>) {
   )
 }
 
-function SmallToggler({
-  label,
-  children,
-}: React.PropsWithChildren<{label: string}>) {
-  const [show, setShow] = React.useState(false)
+function SmallToggler({label, children}: PropsWithChildren<{label: string}>) {
+  const [show, setShow] = useState(false)
   return (
     <View>
       <View style={[a.flex_row]}>

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import {useWindowDimensions} from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient'

@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {
   ActivityIndicator,
   StyleSheet,
@@ -56,7 +56,7 @@ export function Component({
     closeModal()
   }, [closeModal])
 
-  const listStyle = React.useMemo(() => {
+  const listStyle = useMemo(() => {
     if (isMobileWeb) {
       return [pal.border, {height: screenHeight / 2}]
     } else if (isWeb) {
@@ -135,8 +135,8 @@ function ListItem({
   const pal = usePalette('default')
   const {_} = useLingui()
   const {currentAccount} = useSession()
-  const [isProcessing, setIsProcessing] = React.useState(false)
-  const membership = React.useMemo(
+  const [isProcessing, setIsProcessing] = useState(false)
+  const membership = useMemo(
     () => getMembership(memberships, list.uri, subject),
     [memberships, list.uri, subject],
   )

@@ -1,4 +1,4 @@
-import React from 'react'
+import {PropsWithChildren, useCallback} from 'react'
 import {GestureResponderEvent} from 'react-native'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import {StackActions, useLinkProps} from '@react-navigation/native'
@@ -89,7 +89,7 @@ export function useLink({
   const {openModal, closeModal} = useModalControls()
   const openLink = useOpenLink()
 
-  const onPress = React.useCallback(
+  const onPress = useCallback(
     (e: GestureResponderEvent) => {
       const exitEarlyIfFalse = outerOnPress?.(e)
 
@@ -168,7 +168,7 @@ export function useLink({
     ],
   )
 
-  const handleLongPress = React.useCallback(() => {
+  const handleLongPress = useCallback(() => {
     const requiresWarning = Boolean(
       !disableMismatchWarning &&
         displayText &&
@@ -250,7 +250,7 @@ export function Link({
   )
 }
 
-export type InlineLinkProps = React.PropsWithChildren<
+export type InlineLinkProps = PropsWithChildren<
   BaseLinkProps & TextStyleProp & Pick<TextProps, 'selectable'>
 >
 

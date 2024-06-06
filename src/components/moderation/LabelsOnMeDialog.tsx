@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {ComAtprotoLabelDefs, ComAtprotoModerationDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -49,12 +49,12 @@ export function LabelsOnMeDialog(props: LabelsOnMeDialogProps) {
 function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
-  const [appealingLabel, setAppealingLabel] = React.useState<
+  const [appealingLabel, setAppealingLabel] = useState<
     ComAtprotoLabelDefs.Label | undefined
   >(undefined)
   const {subject, labels} = props
   const isAccount = 'did' in subject
-  const containsSelfLabel = React.useMemo(
+  const containsSelfLabel = useMemo(
     () => labels.some(l => l.src === currentAccount?.did),
     [currentAccount?.did, labels],
   )
@@ -200,7 +200,7 @@ function AppealForm({
   const {_} = useLingui()
   const {labeler, strings} = useLabelInfo(label)
   const {gtMobile} = useBreakpoints()
-  const [details, setDetails] = React.useState('')
+  const [details, setDetails] = useState('')
   const isAccountReport = 'did' in subject
   const agent = useAgent()
 
@@ -230,7 +230,7 @@ function AppealForm({
     },
   })
 
-  const onSubmit = React.useCallback(() => mutate(), [mutate])
+  const onSubmit = useCallback(() => mutate(), [mutate])
 
   return (
     <>

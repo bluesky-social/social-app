@@ -1,7 +1,8 @@
-import React from 'react'
+import {PropsWithChildren} from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
-import {usePalette} from 'lib/hooks/usePalette'
+
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
+import {usePalette} from 'lib/hooks/usePalette'
 
 interface Props {
   testID?: string
@@ -18,7 +19,7 @@ export function TitleColumnLayout({
   children,
   titleStyle,
   contentStyle,
-}: React.PropsWithChildren<Props>) {
+}: PropsWithChildren<Props>) {
   const pal = usePalette('default')
   const titleBg = useColorSchemeStyle(pal.viewLight, pal.view)
   const contentBg = useColorSchemeStyle(pal.view, {

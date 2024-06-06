@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {ActivityIndicator, Pressable, StyleSheet, View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -77,7 +77,7 @@ export function SavedFeeds({}: Props) {
     currentFeeds.every(f => f.type !== 'timeline') && !noSavedFeedsOfAnyType
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       screen('SavedFeeds')
       setMinimalShellMode(false)
     }, [screen, setMinimalShellMode]),
@@ -221,7 +221,7 @@ function ListItem({
     useUpdateSavedFeedsMutation()
   const feedUri = feed.value
 
-  const onTogglePinned = React.useCallback(async () => {
+  const onTogglePinned = useCallback(async () => {
     playHaptic()
 
     try {
@@ -239,7 +239,7 @@ function ListItem({
     }
   }, [_, playHaptic, feed, updateSavedFeeds, resetSaveFeedsMutationState])
 
-  const onPressUp = React.useCallback(async () => {
+  const onPressUp = useCallback(async () => {
     if (!isPinned) return
 
     const nextFeeds = currentFeeds.slice()
@@ -265,7 +265,7 @@ function ListItem({
     }
   }, [feed, isPinned, overwriteSavedFeeds, currentFeeds, _])
 
-  const onPressDown = React.useCallback(async () => {
+  const onPressDown = useCallback(async () => {
     if (!isPinned) return
 
     const nextFeeds = currentFeeds.slice()

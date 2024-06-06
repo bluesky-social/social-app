@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {
   ActivityIndicator,
   ListRenderItemInfo,
@@ -43,7 +43,7 @@ export function Feed({
 }) {
   const initialNumToRender = useInitialNumToRender()
 
-  const [isPTRing, setIsPTRing] = React.useState(false)
+  const [isPTRing, setIsPTRing] = useState(false)
   const pal = usePalette('default')
   const {isTabletOrMobile} = useWebMediaQueries()
 
@@ -62,7 +62,7 @@ export function Feed({
   } = useNotificationFeedQuery({enabled: !!moderationOpts})
   const isEmpty = !isFetching && !data?.pages[0]?.items.length
 
-  const items = React.useMemo(() => {
+  const items = useMemo(() => {
     let arr: any[] = []
     if (isFetched) {
       if (isEmpty) {
@@ -81,7 +81,7 @@ export function Feed({
     return arr
   }, [isFetched, isError, isEmpty, data])
 
-  const onRefresh = React.useCallback(async () => {
+  const onRefresh = useCallback(async () => {
     try {
       setIsPTRing(true)
       await checkUnread({invalidate: true})
@@ -94,7 +94,7 @@ export function Feed({
     }
   }, [checkUnread, setIsPTRing])
 
-  const onEndReached = React.useCallback(async () => {
+  const onEndReached = useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
 
     try {
@@ -104,11 +104,11 @@ export function Feed({
     }
   }, [isFetching, hasNextPage, isError, fetchNextPage])
 
-  const onPressRetryLoadMore = React.useCallback(() => {
+  const onPressRetryLoadMore = useCallback(() => {
     fetchNextPage()
   }, [fetchNextPage])
 
-  const renderItem = React.useCallback(
+  const renderItem = useCallback(
     ({item, index}: ListRenderItemInfo<any>) => {
       if (item === EMPTY_FEED_ITEM) {
         return (
@@ -149,7 +149,7 @@ export function Feed({
     [moderationOpts, isTabletOrMobile, _, onPressRetryLoadMore, pal.border],
   )
 
-  const FeedFooter = React.useCallback(
+  const FeedFooter = useCallback(
     () =>
       isFetchingNextPage ? (
         <View style={styles.feedFooter}>

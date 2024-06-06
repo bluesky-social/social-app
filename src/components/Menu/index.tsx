@@ -1,4 +1,11 @@
-import React from 'react'
+import {
+  cloneElement,
+  Fragment,
+  isValidElement,
+  PropsWithChildren,
+  useContext,
+  useMemo,
+} from 'react'
 import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -26,17 +33,17 @@ export {
 } from '#/components/Dialog'
 
 export function useMemoControlContext() {
-  return React.useContext(Context)
+  return useContext(Context)
 }
 
 export function Root({
   children,
   control,
-}: React.PropsWithChildren<{
+}: PropsWithChildren<{
   control?: Dialog.DialogOuterProps['control']
 }>) {
   const defaultControl = Dialog.useDialogControl()
-  const context = React.useMemo<ContextType>(
+  const context = useMemo<ContextType>(
     () => ({
       control: control || defaultControl,
     }),
@@ -47,7 +54,7 @@ export function Root({
 }
 
 export function Trigger({children, label}: TriggerProps) {
-  const {control} = React.useContext(Context)
+  const {control} = useContext(Context)
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const {
     state: pressed,
@@ -77,11 +84,11 @@ export function Trigger({children, label}: TriggerProps) {
 export function Outer({
   children,
   showCancel,
-}: React.PropsWithChildren<{
+}: PropsWithChildren<{
   showCancel?: boolean
   style?: StyleProp<ViewStyle>
 }>) {
-  const context = React.useContext(Context)
+  const context = useContext(Context)
 
   return (
     <Dialog.Outer control={context.control}>
@@ -103,7 +110,7 @@ export function Outer({
 
 export function Item({children, label, style, onPress, ...rest}: ItemProps) {
   const t = useTheme()
-  const {control} = React.useContext(Context)
+  const {control} = useContext(Context)
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const {
     state: pressed,
@@ -181,19 +188,19 @@ export function Group({children, style}: GroupProps) {
         style,
       ]}>
       {flattenReactChildren(children).map((child, i) => {
-        return React.isValidElement(child) && child.type === Item ? (
-          <React.Fragment key={i}>
+        return isValidElement(child) && child.type === Item ? (
+          <Fragment key={i}>
             {i > 0 ? (
               <View style={[a.border_b, t.atoms.border_contrast_low]} />
             ) : null}
-            {React.cloneElement(child, {
+            {cloneElement(child, {
               // @ts-ignore
               style: {
                 borderRadius: 0,
                 borderWidth: 0,
               },
             })}
-          </React.Fragment>
+          </Fragment>
         ) : null
       })}
     </View>
@@ -202,7 +209,7 @@ export function Group({children, style}: GroupProps) {
 
 function Cancel() {
   const {_} = useLingui()
-  const {control} = React.useContext(Context)
+  const {control} = useContext(Context)
 
   return (
     <Button

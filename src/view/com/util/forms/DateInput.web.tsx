@@ -1,7 +1,8 @@
-import React, {useState, useCallback} from 'react'
+import {useCallback, useState} from 'react'
 import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
 // @ts-ignore types not available -prf
 import {unstable_createElement} from 'react-native-web'
+
 import {usePalette} from 'lib/hooks/usePalette'
 
 interface Props {

@@ -1,4 +1,4 @@
-import React from 'react'
+import {ReactNode} from 'react'
 import {View} from 'react-native'
 import {KeyboardStickyView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -6,7 +6,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {isWeb} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 
-export function KeyboardAccessory({children}: {children: React.ReactNode}) {
+export function KeyboardAccessory({children}: {children: ReactNode}) {
   const t = useTheme()
   const {bottom} = useSafeAreaInsets()
 

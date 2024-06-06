@@ -1,7 +1,8 @@
-import React from 'react'
-import {CustomTextProps, Text} from './Text'
+import {PropsWithChildren} from 'react'
+
 import {usePalette} from 'lib/hooks/usePalette'
 import {addStyle} from 'lib/styles'
+import {CustomTextProps, Text} from './Text'
 
 export type ThemedTextProps = CustomTextProps & {
   fg?: 'default' | 'light' | 'error' | 'inverted' | 'inverted-light'
@@ -17,7 +18,7 @@ export function ThemedText({
   style,
   children,
   ...props
-}: React.PropsWithChildren<ThemedTextProps>) {
+}: PropsWithChildren<ThemedTextProps>) {
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
   const palError = usePalette('error')

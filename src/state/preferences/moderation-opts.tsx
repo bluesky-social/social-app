@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useMemo} from 'react'
+import {createContext, PropsWithChildren, useContext, useMemo} from 'react'
 import {BSKY_LABELER_DID, ModerationOpts} from '@atproto/api'
 
 import {useHiddenPosts, useLabelDefinitions} from '#/state/preferences'
@@ -19,7 +19,7 @@ export function useModerationOpts() {
   return useContext(moderationOptsContext)
 }
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
+export function Provider({children}: PropsWithChildren<{}>) {
   const override = useContext(moderationOptsOverrideContext)
   const {currentAccount} = useSession()
   const prefs = usePreferencesQuery()
@@ -28,6 +28,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const userDid = currentAccount?.did
   const moderationPrefs = prefs.data?.moderationPrefs
+
   const value = useMemo<ModerationOpts | undefined>(() => {
     if (override) {
       return override

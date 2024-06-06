@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {AppBskyActorDefs as ActorDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -30,7 +30,7 @@ export function ProfileFollowers({name}: {name: string}) {
   const initialNumToRender = useInitialNumToRender()
   const {currentAccount} = useSession()
 
-  const [isPTRing, setIsPTRing] = React.useState(false)
+  const [isPTRing, setIsPTRing] = useState(false)
   const {
     data: resolvedDid,
     isLoading: isDidLoading,
@@ -49,14 +49,14 @@ export function ProfileFollowers({name}: {name: string}) {
   const isError = !!resolveError || !!error
   const isMe = resolvedDid === currentAccount?.did
 
-  const followers = React.useMemo(() => {
+  const followers = useMemo(() => {
     if (data?.pages) {
       return data.pages.flatMap(page => page.followers)
     }
     return []
   }, [data])
 
-  const onRefresh = React.useCallback(async () => {
+  const onRefresh = useCallback(async () => {
     setIsPTRing(true)
     try {
       await refetch()
@@ -66,7 +66,7 @@ export function ProfileFollowers({name}: {name: string}) {
     setIsPTRing(false)
   }, [refetch, setIsPTRing])
 
-  const onEndReached = React.useCallback(async () => {
+  const onEndReached = useCallback(async () => {
     if (isFetchingNextPage || !hasNextPage || !!error) return
     try {
       await fetchNextPage()

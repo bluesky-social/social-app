@@ -1,4 +1,4 @@
-import React from 'react'
+import {useLayoutEffect} from 'react'
 import {ColorSchemeName, useColorScheme} from 'react-native'
 import * as SystemUI from 'expo-system-ui'
 
@@ -9,7 +9,7 @@ import {dark, dim, light, ThemeName} from '#/alf/themes'
 export function useColorModeTheme(): ThemeName {
   const theme = useThemeName()
 
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     updateDocument(theme)
     SystemUI.setBackgroundColorAsync(getBackgroundColor(theme))
   }, [theme])

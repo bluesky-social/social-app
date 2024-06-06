@@ -1,4 +1,4 @@
-import React, {memo, useMemo, useState} from 'react'
+import {memo, ReactNode, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {
   ChatBskyConvoDefs,
@@ -37,7 +37,7 @@ let ReportDialog = ({
 }: {
   control: Dialog.DialogControlProps
   params: ReportDialogParams
-}): React.ReactNode => {
+}): ReactNode => {
   const {_} = useLingui()
   return (
     <Dialog.Outer

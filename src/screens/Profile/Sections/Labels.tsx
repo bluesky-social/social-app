@@ -1,4 +1,11 @@
-import React from 'react'
+import {
+  forwardRef,
+  Fragment,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+} from 'react'
 import {findNodeHandle, View} from 'react-native'
 import {useSafeAreaFrame} from 'react-native-safe-area-context'
 import {
@@ -35,69 +42,68 @@ interface LabelsSectionProps {
   isFocused: boolean
   setScrollViewTag: (tag: number | null) => void
 }
-export const ProfileLabelsSection = React.forwardRef<
-  SectionRef,
-  LabelsSectionProps
->(function LabelsSectionImpl(
-  {
-    isLabelerLoading,
-    labelerInfo,
-    labelerError,
-    moderationOpts,
-    scrollElRef,
-    headerHeight,
-    isFocused,
-    setScrollViewTag,
+export const ProfileLabelsSection = forwardRef<SectionRef, LabelsSectionProps>(
+  function LabelsSectionImpl(
+    {
+      isLabelerLoading,
+      labelerInfo,
+      labelerError,
+      moderationOpts,
+      scrollElRef,
+      headerHeight,
+      isFocused,
+      setScrollViewTag,
+    },
+    ref,
+  ) {
+    const {_} = useLingui()
+    const {height: minHeight} = useSafeAreaFrame()
+
+    const onScrollToTop = useCallback(() => {
+      // @ts-ignore TODO fix this
+      scrollElRef.current?.scrollTo({
+        animated: isNative,
+        x: 0,
+        y: -headerHeight,
+      })
+    }, [scrollElRef, headerHeight])
+
+    useImperativeHandle(ref, () => ({
+      scrollToTop: onScrollToTop,
+    }))
+
+    useEffect(() => {
+      if (isFocused && scrollElRef.current) {
+        const nativeTag = findNodeHandle(scrollElRef.current)
+        setScrollViewTag(nativeTag)
+      }
+    }, [isFocused, scrollElRef, setScrollViewTag])
+
+    return (
+      <CenteredView style={{flex: 1, minHeight}} sideBorders>
+        {isLabelerLoading ? (
+          <View style={[a.w_full, a.align_center]}>
+            <Loader size="xl" />
+          </View>
+        ) : labelerError || !labelerInfo ? (
+          <ErrorState
+            error={
+              labelerError?.toString() ||
+              _(msg`Something went wrong, please try again.`)
+            }
+          />
+        ) : (
+          <ProfileLabelsSectionInner
+            moderationOpts={moderationOpts}
+            labelerInfo={labelerInfo}
+            scrollElRef={scrollElRef}
+            headerHeight={headerHeight}
+          />
+        )}
+      </CenteredView>
+    )
   },
-  ref,
-) {
-  const {_} = useLingui()
-  const {height: minHeight} = useSafeAreaFrame()
-
-  const onScrollToTop = React.useCallback(() => {
-    // @ts-ignore TODO fix this
-    scrollElRef.current?.scrollTo({
-      animated: isNative,
-      x: 0,
-      y: -headerHeight,
-    })
-  }, [scrollElRef, headerHeight])
-
-  React.useImperativeHandle(ref, () => ({
-    scrollToTop: onScrollToTop,
-  }))
-
-  React.useEffect(() => {
-    if (isFocused && scrollElRef.current) {
-      const nativeTag = findNodeHandle(scrollElRef.current)
-      setScrollViewTag(nativeTag)
-    }
-  }, [isFocused, scrollElRef, setScrollViewTag])
-
-  return (
-    <CenteredView style={{flex: 1, minHeight}} sideBorders>
-      {isLabelerLoading ? (
-        <View style={[a.w_full, a.align_center]}>
-          <Loader size="xl" />
-        </View>
-      ) : labelerError || !labelerInfo ? (
-        <ErrorState
-          error={
-            labelerError?.toString() ||
-            _(msg`Something went wrong, please try again.`)
-          }
-        />
-      ) : (
-        <ProfileLabelsSectionInner
-          moderationOpts={moderationOpts}
-          labelerInfo={labelerInfo}
-          scrollElRef={scrollElRef}
-          headerHeight={headerHeight}
-        />
-      )}
-    </CenteredView>
-  )
-})
+)
 
 export function ProfileLabelsSectionInner({
   moderationOpts,
@@ -137,7 +143,7 @@ export function ProfileLabelsSectionInner({
 
   const {labelValues} = labelerInfo.policies
   const isSubscribed = isLabelerSubscribed(labelerInfo, moderationOpts)
-  const labelDefs = React.useMemo(() => {
+  const labelDefs = useMemo(() => {
     const customDefs = interpretLabelValueDefinitions(labelerInfo)
     return labelValues
       .map(val => lookupLabelValueDefinition(val, customDefs))
@@ -215,14 +221,14 @@ export function ProfileLabelsSectionInner({
             ]}>
             {labelDefs.map((labelDef, i) => {
               return (
-                <React.Fragment key={labelDef.identifier}>
+                <Fragment key={labelDef.identifier}>
                   {i !== 0 && <Divider />}
                   <LabelerLabelPreference
                     disabled={isSubscribed ? undefined : true}
                     labelDefinition={labelDef}
                     labelerDid={labelerInfo.creator.did}
                   />
-                </React.Fragment>
+                </Fragment>
               )
             })}
           </View>

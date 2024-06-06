@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import {createContext, Dispatch, useCallback, useContext} from 'react'
 import {LayoutAnimation} from 'react-native'
 import {
   ComAtprotoServerCreateAccount,
@@ -188,10 +188,10 @@ export function reducer(s: SignupState, a: SignupAction): SignupState {
 
 interface IContext {
   state: SignupState
-  dispatch: React.Dispatch<SignupAction>
+  dispatch: Dispatch<SignupAction>
 }
-export const SignupContext = React.createContext<IContext>({} as IContext)
-export const useSignupContext = () => React.useContext(SignupContext)
+export const SignupContext = createContext<IContext>({} as IContext)
+export const useSignupContext = () => useContext(SignupContext)
 
 export function useSubmitSignup({
   state,

@@ -1,4 +1,4 @@
-import React from 'react'
+import {useEffect} from 'react'
 import * as Notifications from 'expo-notifications'
 import {CommonActions, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
@@ -64,7 +64,7 @@ export function useNotificationsHandler() {
   // which has the sounds we want in the configuration for that channel. These two
   // channels allow for the mute/unmute functionality we want for the background
   // handler.
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isAndroid) return
     Notifications.setNotificationChannelAsync('chat-messages', {
       name: 'Chat',
@@ -85,7 +85,7 @@ export function useNotificationsHandler() {
     })
   }, [])
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleNotification = (payload?: NotificationPayload) => {
       if (!payload) return
 

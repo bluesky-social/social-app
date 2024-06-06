@@ -1,4 +1,13 @@
-import React, {useImperativeHandle} from 'react'
+import {
+  forwardRef,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useState,
+} from 'react'
 import {
   FlatList,
   FlatListProps,
@@ -35,19 +44,19 @@ export function Outer({
   children,
   control,
   onClose,
-}: React.PropsWithChildren<DialogOuterProps>) {
+}: PropsWithChildren<DialogOuterProps>) {
   const {_} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
-  const [isOpen, setIsOpen] = React.useState(false)
+  const [isOpen, setIsOpen] = useState(false)
   const {setDialogIsOpen} = useDialogStateControlContext()
 
-  const open = React.useCallback(() => {
+  const open = useCallback(() => {
     setDialogIsOpen(control.id, true)
     setIsOpen(true)
   }, [setIsOpen, setDialogIsOpen, control.id])
 
-  const close = React.useCallback<DialogControlProps['close']>(
+  const close = useCallback<DialogControlProps['close']>(
     cb => {
       setDialogIsOpen(control.id, false)
       setIsOpen(false)
@@ -71,7 +80,7 @@ export function Outer({
     [control.id, onClose, setDialogIsOpen],
   )
 
-  const handleBackgroundPress = React.useCallback(async () => {
+  const handleBackgroundPress = useCallback(async () => {
     close()
   }, [close])
 
@@ -84,7 +93,7 @@ export function Outer({
     [close, open],
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isOpen) return
 
     function handler(e: KeyboardEvent) {
@@ -96,7 +105,7 @@ export function Outer({
     return () => document.removeEventListener('keydown', handler)
   }, [close, isOpen])
 
-  const context = React.useMemo(
+  const context = useMemo(
     () => ({
       close,
     }),
@@ -199,7 +208,7 @@ export function Inner({
 
 export const ScrollableInner = Inner
 
-export const InnerFlatList = React.forwardRef<
+export const InnerFlatList = forwardRef<
   FlatList,
   FlatListProps<any> & {label: string} & {webInnerStyle?: StyleProp<ViewStyle>}
 >(function InnerFlatList({label, style, webInnerStyle, ...props}, ref) {
@@ -231,7 +240,8 @@ export function Handle() {
 
 export function Close() {
   const {_} = useLingui()
-  const {close} = React.useContext(Context)
+  const {close} = useContext(Context)
+
   return (
     <View
       style={[

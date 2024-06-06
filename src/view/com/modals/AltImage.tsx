@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {
   ImageStyle,
   ScrollView as RNScrollView,
@@ -38,12 +38,12 @@ export function Component({image}: Props) {
   const [altText, setAltText] = useState(image.altText)
   const windim = useWindowDimensions()
   const {closeModal} = useModalControls()
-  const inputRef = React.useRef<RNTextInput>(null)
-  const scrollViewRef = React.useRef<RNScrollView>(null)
+  const inputRef = useRef<RNTextInput>(null)
+  const scrollViewRef = useRef<RNScrollView>(null)
   const keyboardShown = useIsKeyboardVisible()
 
   // Autofocus hack when we open the modal. We have to wait for the animation to complete first
-  React.useEffect(() => {
+  useEffect(() => {
     if (isAndroid) return
     setTimeout(() => {
       inputRef.current?.focus()
@@ -52,7 +52,7 @@ export function Component({image}: Props) {
 
   // We'd rather be at the bottom here so that we can easily dismiss the modal instead of having to scroll
   // (especially on android, it acts weird)
-  React.useEffect(() => {
+  useEffect(() => {
     if (keyboardShown[0]) {
       scrollViewRef.current?.scrollToEnd()
     }

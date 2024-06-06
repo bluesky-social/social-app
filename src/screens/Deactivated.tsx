@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, Trans} from '@lingui/macro'
@@ -45,12 +45,12 @@ export function Deactivated() {
   const queryClient = useQueryClient()
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setMinimalShellMode(true)
     }, [setMinimalShellMode]),
   )
 
-  const onSelectAccount = React.useCallback(
+  const onSelectAccount = useCallback(
     (account: SessionAccount) => {
       if (account.did !== currentAccount?.did) {
         onPressSwitchAccount(account, 'SwitchAccount')
@@ -59,11 +59,11 @@ export function Deactivated() {
     [currentAccount, onPressSwitchAccount],
   )
 
-  const onPressAddAccount = React.useCallback(() => {
+  const onPressAddAccount = useCallback(() => {
     setShowLoggedOut(true)
   }, [setShowLoggedOut])
 
-  const onPressLogout = React.useCallback(() => {
+  const onPressLogout = useCallback(() => {
     if (isWeb) {
       // We're switching accounts, which remounts the entire app.
       // On mobile, this gets us Home, but on the web we also need reset the URL.

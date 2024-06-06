@@ -1,4 +1,12 @@
-import React from 'react'
+import {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
+
 import * as persisted from '#/state/persisted'
 
 type StateContext = {
@@ -10,17 +18,17 @@ type SetContext = {
   setDarkTheme: (v: persisted.Schema['darkTheme']) => void
 }
 
-const stateContext = React.createContext<StateContext>({
+const stateContext = createContext<StateContext>({
   colorMode: 'system',
   darkTheme: 'dark',
 })
-const setContext = React.createContext<SetContext>({} as SetContext)
+const setContext = createContext<SetContext>({} as SetContext)
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [colorMode, setColorMode] = React.useState(persisted.get('colorMode'))
-  const [darkTheme, setDarkTheme] = React.useState(persisted.get('darkTheme'))
+export function Provider({children}: PropsWithChildren<{}>) {
+  const [colorMode, setColorMode] = useState(persisted.get('colorMode'))
+  const [darkTheme, setDarkTheme] = useState(persisted.get('darkTheme'))
 
-  const stateContextValue = React.useMemo(
+  const stateContextValue = useMemo(
     () => ({
       colorMode,
       darkTheme,
@@ -28,7 +36,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [colorMode, darkTheme],
   )
 
-  const setContextValue = React.useMemo(
+  const setContextValue = useMemo(
     () => ({
       setColorMode: (_colorMode: persisted.Schema['colorMode']) => {
         setColorMode(_colorMode)
@@ -42,7 +50,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [],
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     return persisted.onUpdate(() => {
       setColorMode(persisted.get('colorMode'))
       setDarkTheme(persisted.get('darkTheme'))
@@ -59,9 +67,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 export function useThemePrefs() {
-  return React.useContext(stateContext)
+  return useContext(stateContext)
 }
 
 export function useSetThemePrefs() {
-  return React.useContext(setContext)
+  return useContext(setContext)
 }

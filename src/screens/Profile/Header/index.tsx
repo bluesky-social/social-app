@@ -1,4 +1,4 @@
-import React, {memo} from 'react'
+import {memo, ReactNode} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {
   AppBskyActorDefs,
@@ -6,13 +6,13 @@ import {
   ModerationOpts,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
+
 import {usePalette} from 'lib/hooks/usePalette'
-
-import {ProfileHeaderStandard} from './ProfileHeaderStandard'
+import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {ProfileHeaderLabeler} from './ProfileHeaderLabeler'
+import {ProfileHeaderStandard} from './ProfileHeaderStandard'
 
-let ProfileHeaderLoading = (_props: {}): React.ReactNode => {
+let ProfileHeaderLoading = (_props: {}): ReactNode => {
   const pal = usePalette('default')
   return (
     <View style={pal.view}>
@@ -41,7 +41,7 @@ interface Props {
   isPlaceholderProfile?: boolean
 }
 
-let ProfileHeader = (props: Props): React.ReactNode => {
+let ProfileHeader = (props: Props): ReactNode => {
   if (props.profile.associated?.labeler) {
     if (!props.labeler) {
       return <ProfileHeaderLoading />

@@ -1,4 +1,4 @@
-import React from 'react'
+import {PropsWithChildren} from 'react'
 import {View} from 'react-native'
 import {InterpretedLabelValueDefinition, LabelPreference} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -17,7 +17,7 @@ import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '../icons/CircleInfo'
 
-export function Outer({children}: React.PropsWithChildren<{}>) {
+export function Outer({children}: PropsWithChildren<{}>) {
   return (
     <View
       style={[
@@ -37,7 +37,7 @@ export function Content({
   children,
   name,
   description,
-}: React.PropsWithChildren<{
+}: PropsWithChildren<{
   name: string
   description: string
 }>) {

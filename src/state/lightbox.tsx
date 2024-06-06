@@ -1,5 +1,12 @@
-import React from 'react'
+import {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useMemo,
+  useState,
+} from 'react'
 import {AppBskyActorDefs} from '@atproto/api'
+
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 
 interface Lightbox {
@@ -24,13 +31,13 @@ export class ImagesLightbox implements Lightbox {
   }
 }
 
-const LightboxContext = React.createContext<{
+const LightboxContext = createContext<{
   activeLightbox: Lightbox | null
 }>({
   activeLightbox: null,
 })
 
-const LightboxControlContext = React.createContext<{
+const LightboxControlContext = createContext<{
   openLightbox: (lightbox: Lightbox) => void
   closeLightbox: () => boolean
 }>({
@@ -38,10 +45,8 @@ const LightboxControlContext = React.createContext<{
   closeLightbox: () => false,
 })
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [activeLightbox, setActiveLightbox] = React.useState<Lightbox | null>(
-    null,
-  )
+export function Provider({children}: PropsWithChildren<{}>) {
+  const [activeLightbox, setActiveLightbox] = useState<Lightbox | null>(null)
 
   const openLightbox = useNonReactiveCallback((lightbox: Lightbox) => {
     setActiveLightbox(lightbox)
@@ -53,14 +58,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     return wasActive
   })
 
-  const state = React.useMemo(
+  const state = useMemo(
     () => ({
       activeLightbox,
     }),
     [activeLightbox],
   )
 
-  const methods = React.useMemo(
+  const methods = useMemo(
     () => ({
       openLightbox,
       closeLightbox,
@@ -78,9 +83,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 export function useLightbox() {
-  return React.useContext(LightboxContext)
+  return useContext(LightboxContext)
 }
 
 export function useLightboxControls() {
-  return React.useContext(LightboxControlContext)
+  return useContext(LightboxControlContext)
 }

@@ -1,4 +1,10 @@
-import React from 'react'
+import {
+  createContext,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useState,
+} from 'react'
 
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
@@ -7,8 +13,8 @@ import {FeedDescriptor} from '#/state/queries/post-feed'
 type StateContext = FeedDescriptor | null
 type SetContext = (v: FeedDescriptor) => void
 
-const stateContext = React.createContext<StateContext>(null)
-const setContext = React.createContext<SetContext>((_: string) => {})
+const stateContext = createContext<StateContext>(null)
+const setContext = createContext<SetContext>((_: string) => {})
 
 function getInitialFeed(): FeedDescriptor | null {
   if (isWeb) {
@@ -37,10 +43,10 @@ function getInitialFeed(): FeedDescriptor | null {
   return null
 }
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [state, setState] = React.useState(() => getInitialFeed())
+export function Provider({children}: PropsWithChildren<{}>) {
+  const [state, setState] = useState(() => getInitialFeed())
 
-  const saveState = React.useCallback((feed: FeedDescriptor) => {
+  const saveState = useCallback((feed: FeedDescriptor) => {
     setState(feed)
     if (isWeb) {
       try {
@@ -58,9 +64,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 export function useSelectedFeed() {
-  return React.useContext(stateContext)
+  return useContext(stateContext)
 }
 
 export function useSetSelectedFeed() {
-  return React.useContext(setContext)
+  return useContext(setContext)
 }

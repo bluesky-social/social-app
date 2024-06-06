@@ -1,4 +1,10 @@
-import React from 'react'
+import {
+  FocusEventHandler,
+  ReactNode,
+  useCallback,
+  useRef,
+  useState,
+} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {ChatBskyConvoDefs} from '@atproto/api'
 
@@ -13,24 +19,24 @@ export function ActionsWrapper({
 }: {
   message: ChatBskyConvoDefs.MessageView
   isFromSelf: boolean
-  children: React.ReactNode
+  children: ReactNode
 }) {
   const menuControl = useMenuControl()
-  const viewRef = React.useRef(null)
+  const viewRef = useRef(null)
 
-  const [showActions, setShowActions] = React.useState(false)
+  const [showActions, setShowActions] = useState(false)
 
-  const onMouseEnter = React.useCallback(() => {
+  const onMouseEnter = useCallback(() => {
     setShowActions(true)
   }, [])
 
-  const onMouseLeave = React.useCallback(() => {
+  const onMouseLeave = useCallback(() => {
     setShowActions(false)
   }, [])
 
   // We need to handle the `onFocus` separately because we want to know if there is a related target (the element
   // that is losing focus). If there isn't that means the focus is coming from a dropdown that is now closed.
-  const onFocus = React.useCallback<React.FocusEventHandler>(e => {
+  const onFocus = useCallback<FocusEventHandler>(e => {
     if (e.nativeEvent.relatedTarget == null) return
     setShowActions(true)
   }, [])

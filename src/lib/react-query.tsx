@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react'
+import {ReactNode, useRef, useState} from 'react'
 import {AppState, AppStateStatus} from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {createAsyncStoragePersister} from '@tanstack/query-async-storage-persister'
@@ -74,7 +74,7 @@ export function QueryProvider({
   children,
   currentDid,
 }: {
-  children: React.ReactNode
+  children: ReactNode
   currentDid: string | undefined
 }) {
   return (
@@ -92,7 +92,7 @@ function QueryProviderInner({
   children,
   currentDid,
 }: {
-  children: React.ReactNode
+  children: ReactNode
   currentDid: string | undefined
 }) {
   const initialDid = useRef(currentDid)

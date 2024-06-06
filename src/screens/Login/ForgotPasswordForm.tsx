@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {ActivityIndicator, Keyboard, View} from 'react-native'
 import {ComAtprotoServerDescribeServer} from '@atproto/api'
 import {BskyAgent} from '@atproto/api'
@@ -48,7 +48,7 @@ export const ForgotPasswordForm = ({
     screen('Signin:ForgotPassword')
   }, [screen])
 
-  const onPressSelectService = React.useCallback(() => {
+  const onPressSelectService = useCallback(() => {
     Keyboard.dismiss()
   }, [])
 

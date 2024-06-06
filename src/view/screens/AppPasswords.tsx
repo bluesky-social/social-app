@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {
   ActivityIndicator,
   StyleSheet,
@@ -45,13 +45,13 @@ export function AppPasswords({}: Props) {
   const {data: appPasswords, error} = useAppPasswordsQuery()
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       screen('AppPasswords')
       setMinimalShellMode(false)
     }, [screen, setMinimalShellMode]),
   )
 
-  const onAdd = React.useCallback(async () => {
+  const onAdd = useCallback(async () => {
     openModal({name: 'add-app-password'})
   }, [openModal])
 
@@ -223,12 +223,12 @@ function AppPassword({
   const {contentLanguages} = useLanguagePrefs()
   const deleteMutation = useAppPasswordDeleteMutation()
 
-  const onDelete = React.useCallback(async () => {
+  const onDelete = useCallback(async () => {
     await deleteMutation.mutateAsync({name})
     Toast.show(_(msg`App password deleted`))
   }, [deleteMutation, name, _])
 
-  const onPress = React.useCallback(() => {
+  const onPress = useCallback(() => {
     control.open()
   }, [control])
 

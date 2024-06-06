@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {Image} from 'expo-image'
@@ -44,7 +44,7 @@ export function UserBanner({
   const {requestCameraAccessIfNeeded} = useCameraPermission()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
 
-  const onOpenCamera = React.useCallback(async () => {
+  const onOpenCamera = useCallback(async () => {
     if (!(await requestCameraAccessIfNeeded())) {
       return
     }
@@ -56,7 +56,7 @@ export function UserBanner({
     )
   }, [onSelectNewBanner, requestCameraAccessIfNeeded])
 
-  const onOpenLibrary = React.useCallback(async () => {
+  const onOpenLibrary = useCallback(async () => {
     if (!(await requestPhotoAccessIfNeeded())) {
       return
     }
@@ -81,7 +81,7 @@ export function UserBanner({
     }
   }, [onSelectNewBanner, requestPhotoAccessIfNeeded])
 
-  const onRemoveBanner = React.useCallback(() => {
+  const onRemoveBanner = useCallback(() => {
     onSelectNewBanner?.(null)
   }, [onSelectNewBanner])
 

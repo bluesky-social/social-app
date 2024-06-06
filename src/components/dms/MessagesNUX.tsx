@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {View} from 'react-native'
 import {ChatBskyActorDeclaration} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -54,7 +54,7 @@ function DialogInner({
   const {_} = useLingui()
   const t = useTheme()
 
-  const [initialized, setInitialzed] = React.useState(false)
+  const [initialized, setInitialzed] = useState(false)
   const {mutate: updateDeclaration} = useUpdateActorDeclaration({
     onError: () => {
       Toast.show(_(msg`Failed to update settings`))

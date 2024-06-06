@@ -1,18 +1,23 @@
-import React from 'react'
+import {
+  createContext,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
 
 type StateContext = persisted.Schema['kawaii']
 
-const stateContext = React.createContext<StateContext>(
-  persisted.defaults.kawaii,
-)
+const stateContext = createContext<StateContext>(persisted.defaults.kawaii)
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [state, setState] = React.useState(persisted.get('kawaii'))
+export function Provider({children}: PropsWithChildren<{}>) {
+  const [state, setState] = useState(persisted.get('kawaii'))
 
-  const setStateWrapped = React.useCallback(
+  const setStateWrapped = useCallback(
     (kawaii: persisted.Schema['kawaii']) => {
       setState(kawaii)
       persisted.write('kawaii', kawaii)
@@ -20,13 +25,13 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [setState],
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     return persisted.onUpdate(() => {
       setState(persisted.get('kawaii'))
     })
   }, [setStateWrapped])
 
-  React.useEffect(() => {
+  useEffect(() => {
     // dumb and stupid but it's web only so just refresh the page if you want to change it
 
     if (isWeb) {
@@ -46,5 +51,5 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 export function useKawaiiMode() {
-  return React.useContext(stateContext)
+  return useContext(stateContext)
 }

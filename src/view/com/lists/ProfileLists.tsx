@@ -1,4 +1,11 @@
-import React from 'react'
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useState,
+} from 'react'
 import {
   findNodeHandle,
   ListRenderItemInfo,
@@ -43,7 +50,7 @@ interface ProfileListsProps {
   setScrollViewTag: (tag: number | null) => void
 }
 
-export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
+export const ProfileLists = forwardRef<SectionRef, ProfileListsProps>(
   function ProfileListsImpl(
     {did, scrollElRef, headerOffset, enabled, style, testID, setScrollViewTag},
     ref,
@@ -51,8 +58,8 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
     const theme = useTheme()
     const {track} = useAnalytics()
     const {_} = useLingui()
-    const [isPTRing, setIsPTRing] = React.useState(false)
-    const opts = React.useMemo(() => ({enabled}), [enabled])
+    const [isPTRing, setIsPTRing] = useState(false)
+    const opts = useMemo(() => ({enabled}), [enabled])
     const {
       data,
       isFetching,
@@ -65,7 +72,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
     } = useProfileListsQuery(did, opts)
     const isEmpty = !isFetching && !data?.pages[0]?.lists.length
 
-    const items = React.useMemo(() => {
+    const items = useMemo(() => {
       let items: any[] = []
       if (isError && isEmpty) {
         items = items.concat([ERROR_ITEM])
@@ -95,7 +102,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
 
     const queryClient = useQueryClient()
 
-    const onScrollToTop = React.useCallback(() => {
+    const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({
         animated: isNative,
         offset: -headerOffset,
@@ -103,11 +110,11 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
       queryClient.invalidateQueries({queryKey: RQKEY(did)})
     }, [scrollElRef, queryClient, headerOffset, did])
 
-    React.useImperativeHandle(ref, () => ({
+    useImperativeHandle(ref, () => ({
       scrollToTop: onScrollToTop,
     }))
 
-    const onRefresh = React.useCallback(async () => {
+    const onRefresh = useCallback(async () => {
       track('Lists:onRefresh')
       setIsPTRing(true)
       try {
@@ -118,7 +125,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
       setIsPTRing(false)
     }, [refetch, track, setIsPTRing])
 
-    const onEndReached = React.useCallback(async () => {
+    const onEndReached = useCallback(async () => {
       if (isFetching || !hasNextPage || isError) return
 
       track('Lists:onEndReached')
@@ -129,14 +136,14 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
       }
     }, [isFetching, hasNextPage, isError, fetchNextPage, track])
 
-    const onPressRetryLoadMore = React.useCallback(() => {
+    const onPressRetryLoadMore = useCallback(() => {
       fetchNextPage()
     }, [fetchNextPage])
 
     // rendering
     // =
 
-    const renderItemInner = React.useCallback(
+    const renderItemInner = useCallback(
       ({item, index}: ListRenderItemInfo<any>) => {
         if (item === EMPTY) {
           return (
@@ -177,7 +184,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
       [error, refetch, onPressRetryLoadMore, _],
     )
 
-    React.useEffect(() => {
+    useEffect(() => {
       if (enabled && scrollElRef.current) {
         const nativeTag = findNodeHandle(scrollElRef.current)
         setScrollViewTag(nativeTag)

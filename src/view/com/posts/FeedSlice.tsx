@@ -1,4 +1,4 @@
-import React, {memo} from 'react'
+import {memo, ReactNode, useMemo} from 'react'
 import {StyleSheet, View} from 'react-native'
 import Svg, {Circle, Line} from 'react-native-svg'
 import {AtUri} from '@atproto/api'
@@ -17,7 +17,7 @@ let FeedSlice = ({
 }: {
   slice: FeedPostSlice
   hideTopBorder?: boolean
-}): React.ReactNode => {
+}): ReactNode => {
   if (slice.isThread && slice.items.length > 3) {
     const last = slice.items.length - 1
     return (
@@ -93,7 +93,7 @@ export {FeedSlice}
 
 function ViewFullThread({slice}: {slice: FeedPostSlice}) {
   const pal = usePalette('default')
-  const itemHref = React.useMemo(() => {
+  const itemHref = useMemo(() => {
     const urip = new AtUri(slice.rootUri)
     return makeProfileLink({did: urip.hostname, handle: ''}, 'post', urip.rkey)
   }, [slice.rootUri])

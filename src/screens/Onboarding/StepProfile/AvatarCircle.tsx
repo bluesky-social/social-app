@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {View} from 'react-native'
 import {Image as ExpoImage} from 'expo-image'
 import {msg} from '@lingui/macro'
@@ -22,7 +22,7 @@ export function AvatarCircle({
   const t = useTheme()
   const {avatar} = useAvatar()
 
-  const styles = React.useMemo(
+  const styles = useMemo(
     () => ({
       imageContainer: [
         a.rounded_full,

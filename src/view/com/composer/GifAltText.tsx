@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {TouchableOpacity, View} from 'react-native'
 import {AppBskyEmbedExternal} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -38,7 +38,7 @@ export function GifAltText({
   const {_} = useLingui()
   const t = useTheme()
 
-  const {link, params} = React.useMemo(() => {
+  const {link, params} = useMemo(() => {
     return {
       link: {
         title: linkProp.meta?.title ?? linkProp.uri,

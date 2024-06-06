@@ -1,4 +1,4 @@
-import React from 'react'
+import {ReactNode} from 'react'
 import {StyleSheet, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {
@@ -20,7 +20,7 @@ import {Link} from '../util/Link'
 import {HomeHeaderLayoutMobile} from './HomeHeaderLayoutMobile'
 
 export function HomeHeaderLayout(props: {
-  children: React.ReactNode
+  children: ReactNode
   tabBarAnchor: JSX.Element | null | undefined
 }) {
   const {isMobile} = useWebMediaQueries()
@@ -35,7 +35,7 @@ function HomeHeaderLayoutDesktopAndTablet({
   children,
   tabBarAnchor,
 }: {
-  children: React.ReactNode
+  children: ReactNode
   tabBarAnchor: JSX.Element | null | undefined
 }) {
   const pal = usePalette('default')

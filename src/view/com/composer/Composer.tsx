@@ -1,4 +1,5 @@
-import React, {
+import {
+  RefObject,
   useCallback,
   useEffect,
   useImperativeHandle,
@@ -108,7 +109,7 @@ export const ComposePost = observer(function ComposePost({
   imageUris: initImageUris,
   cancelRef,
 }: Props & {
-  cancelRef?: React.RefObject<CancelRef>
+  cancelRef?: RefObject<CancelRef>
 }) {
   const {currentAccount} = useSession()
   const agent = useAgent()
@@ -208,6 +209,7 @@ export const ComposePost = observer(function ComposePost({
     },
     [onPressCancel],
   )
+
   useEffect(() => {
     if (isWeb && !isModalActive) {
       window.addEventListener('keydown', onEscape)

@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 
 import {atoms as a} from '#/alf'
@@ -11,13 +11,17 @@ import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
 import {H1, H3} from '#/components/Typography'
 
 export function Forms() {
-  const [toggleGroupAValues, setToggleGroupAValues] = React.useState(['a'])
-  const [toggleGroupBValues, setToggleGroupBValues] = React.useState(['a', 'b'])
-  const [toggleGroupCValues, setToggleGroupCValues] = React.useState(['a', 'b'])
-  const [toggleGroupDValues, setToggleGroupDValues] = React.useState(['warn'])
+  const [toggleGroupAValues, setToggleGroupAValues] = useState(['a'])
+  const [toggleGroupBValues, setToggleGroupBValues] = useState(['a', 'b'])
+  const [toggleGroupCValues, setToggleGroupCValues] = useState(['a', 'b'])
+  const [toggleGroupDValues, setToggleGroupDValues] = useState(['warn'])
 
-  const [value, setValue] = React.useState('')
-  const [date, setDate] = React.useState('2001-01-01')
+  const [value, setValue] = useState('')
+  const [date, setDate] = useState('2001-01-01')
+
+  const onChangeDate = useCallback(date => {
+    setDate(date)
+  }, [])
 
   return (
     <View style={[a.gap_4xl, a.align_start]}>
@@ -74,10 +78,7 @@ export function Forms() {
           <DateField
             testID="date"
             value={date}
-            onChangeDate={date => {
-              console.log(date)
-              setDate(date)
-            }}
+            onChangeDate={onChangeDate}
             label="Input"
           />
         </View>

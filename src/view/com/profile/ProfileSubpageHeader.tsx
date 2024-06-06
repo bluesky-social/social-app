@@ -1,4 +1,4 @@
-import React from 'react'
+import {PropsWithChildren, useCallback} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
@@ -31,7 +31,7 @@ export function ProfileSubpageHeader({
   creator,
   avatarType,
   children,
-}: React.PropsWithChildren<{
+}: PropsWithChildren<{
   isLoading?: boolean
   href: string
   title: string | undefined
@@ -53,7 +53,7 @@ export function ProfileSubpageHeader({
   const pal = usePalette('default')
   const canGoBack = navigation.canGoBack()
 
-  const onPressBack = React.useCallback(() => {
+  const onPressBack = useCallback(() => {
     if (navigation.canGoBack()) {
       navigation.goBack()
     } else {
@@ -61,11 +61,11 @@ export function ProfileSubpageHeader({
     }
   }, [navigation])
 
-  const onPressMenu = React.useCallback(() => {
+  const onPressMenu = useCallback(() => {
     setDrawerOpen(true)
   }, [setDrawerOpen])
 
-  const onPressAvi = React.useCallback(() => {
+  const onPressAvi = useCallback(() => {
     if (
       avatar // TODO && !(view.moderation.avatar.blur && view.moderation.avatar.noOverride)
     ) {

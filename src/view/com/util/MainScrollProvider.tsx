@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react'
+import {ReactNode, useCallback, useEffect} from 'react'
 import {NativeScrollEvent} from 'react-native'
 import {interpolate, useSharedValue} from 'react-native-reanimated'
 import EventEmitter from 'eventemitter3'
@@ -15,7 +15,7 @@ function clamp(num: number, min: number, max: number) {
   return Math.min(Math.max(num, min), max)
 }
 
-export function MainScrollProvider({children}: {children: React.ReactNode}) {
+export function MainScrollProvider({children}: {children: ReactNode}) {
   const {headerHeight} = useShellLayout()
   const mode = useMinimalShellMode()
   const setMode = useSetMinimalShellMode()

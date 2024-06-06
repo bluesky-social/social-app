@@ -1,16 +1,16 @@
-import React from 'react'
+import {useCallback, useMemo, useState} from 'react'
 
 export function useInteractionState() {
-  const [state, setState] = React.useState(false)
+  const [state, setState] = useState(false)
 
-  const onIn = React.useCallback(() => {
+  const onIn = useCallback(() => {
     setState(true)
   }, [setState])
-  const onOut = React.useCallback(() => {
+  const onOut = useCallback(() => {
     setState(false)
   }, [setState])
 
-  return React.useMemo(
+  return useMemo(
     () => ({
       state,
       onIn,

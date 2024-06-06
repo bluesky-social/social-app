@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useEffect, useMemo, useState} from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -52,10 +52,10 @@ function PostThreadFollowBtnLoaded({
 
   const isFollowing = !!profile.viewer?.following
   const isFollowedBy = !!profile.viewer?.followedBy
-  const [wasFollowing, setWasFollowing] = React.useState<boolean>(isFollowing)
+  const [wasFollowing, setWasFollowing] = useState<boolean>(isFollowing)
 
   // This prevents the button from disappearing as soon as we follow.
-  const showFollowBtn = React.useMemo(
+  const showFollowBtn = useMemo(
     () => !isFollowing || !wasFollowing,
     [isFollowing, wasFollowing],
   )
@@ -71,7 +71,7 @@ function PostThreadFollowBtnLoaded({
    * sudden rendering of the button. However, on web if we do this, there's an obvious flicker once the
    * button renders. So, we update the state in both cases.
    */
-  React.useEffect(() => {
+  useEffect(() => {
     const updateWasFollowing = () => {
       if (wasFollowing !== isFollowing) {
         setWasFollowing(isFollowing)
@@ -87,7 +87,7 @@ function PostThreadFollowBtnLoaded({
     }
   }, [isFollowing, wasFollowing, navigation])
 
-  const onPress = React.useCallback(() => {
+  const onPress = useCallback(() => {
     if (!isFollowing) {
       requireAuth(async () => {
         try {

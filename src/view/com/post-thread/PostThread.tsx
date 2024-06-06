@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {useWindowDimensions, View} from 'react-native'
 import {runOnJS} from 'react-native-reanimated'
 import {AppBskyFeedDefs} from '@atproto/api'
@@ -94,7 +94,7 @@ export function PostThread({
   const {isMobile, isTabletOrMobile} = useWebMediaQueries()
   const initialNumToRender = useInitialNumToRender()
   const {height: windowHeight} = useWindowDimensions()
-  const [hiddenRepliesState, setHiddenRepliesState] = React.useState(
+  const [hiddenRepliesState, setHiddenRepliesState] = useState(
     HiddenRepliesState.Hide,
   )
 
@@ -107,7 +107,7 @@ export function PostThread({
     data: thread,
   } = usePostThreadQuery(uri)
 
-  const treeView = React.useMemo(
+  const treeView = useMemo(
     () =>
       !!preferences?.threadViewPrefs?.lab_treeViewEnabled &&
       hasBranchingReplies(thread),
@@ -117,7 +117,7 @@ export function PostThread({
   const rootPostRecord = thread?.type === 'post' ? thread.record : undefined
 
   const moderationOpts = useModerationOpts()
-  const isNoPwi = React.useMemo(() => {
+  const isNoPwi = useMemo(() => {
     const mod =
       rootPost && moderationOpts
         ? moderatePost(rootPost, moderationOpts)
@@ -134,10 +134,10 @@ export function PostThread({
   // Values used for proper rendering of parents
   const ref = useRef<ListMethods>(null)
   const highlightedPostRef = useRef<View | null>(null)
-  const [maxParents, setMaxParents] = React.useState(
+  const [maxParents, setMaxParents] = useState(
     isWeb ? Infinity : PARENTS_CHUNK_SIZE,
   )
-  const [maxReplies, setMaxReplies] = React.useState(50)
+  const [maxReplies, setMaxReplies] = useState(50)
 
   useSetTitle(
     rootPost && !isNoPwi
@@ -151,9 +151,9 @@ export function PostThread({
   // This ensures that the first render contains no parents--even if they are already available in the cache.
   // We need to delay showing them so that we can use maintainVisibleContentPosition to keep the main post on screen.
   // On the web this is not necessary because we can synchronously adjust the scroll in onContentSizeChange instead.
-  const [deferParents, setDeferParents] = React.useState(isNative)
+  const [deferParents, setDeferParents] = useState(isNative)
 
-  const threadModerationCache = React.useMemo(() => {
+  const threadModerationCache = useMemo(() => {
     const cache: ThreadModerationCache = new WeakMap()
     if (thread && moderationOpts) {
       fillThreadModerationCache(cache, thread, moderationOpts)
@@ -161,7 +161,7 @@ export function PostThread({
     return cache
   }, [thread, moderationOpts])
 
-  const skeleton = React.useMemo(() => {
+  const skeleton = useMemo(() => {
     const threadViewPrefs = preferences?.threadViewPrefs
     if (!threadViewPrefs || !thread) return null
 
@@ -181,7 +181,7 @@ export function PostThread({
     hiddenRepliesState,
   ])
 
-  const error = React.useMemo(() => {
+  const error = useMemo(() => {
     if (AppBskyFeedDefs.isNotFoundPost(thread)) {
       return {
         title: _(msg`Post not found`),
@@ -217,7 +217,7 @@ export function PostThread({
   }, [rootPost, onCanReply, error])
 
   // construct content
-  const posts = React.useMemo(() => {
+  const posts = useMemo(() => {
     if (!skeleton) return []
 
     const {parents, highlightedPost, replies} = skeleton
@@ -257,7 +257,7 @@ export function PostThread({
   // This is only used on the web to keep the post in view when its parents load.
   // On native, we rely on `maintainVisibleContentPosition` instead.
   const didAdjustScrollWeb = useRef<boolean>(false)
-  const onContentSizeChangeWeb = React.useCallback(() => {
+  const onContentSizeChangeWeb = useCallback(() => {
     // only run once
     if (didAdjustScrollWeb.current) {
       return
@@ -285,13 +285,13 @@ export function PostThread({
   // has a bug that causes the content to jump around if too many items are getting
   // prepended at once. It also jumps around if items get prepended during scroll.
   // To work around this, we prepend rows after scroll bumps against the top and rests.
-  const needsBumpMaxParents = React.useRef(false)
-  const onStartReached = React.useCallback(() => {
+  const needsBumpMaxParents = useRef(false)
+  const onStartReached = useCallback(() => {
     if (skeleton?.parents && maxParents < skeleton.parents.length) {
       needsBumpMaxParents.current = true
     }
   }, [maxParents, skeleton?.parents])
-  const bumpMaxParentsIfNeeded = React.useCallback(() => {
+  const bumpMaxParentsIfNeeded = useCallback(() => {
     if (!isNative) {
       return
     }
@@ -301,12 +301,12 @@ export function PostThread({
     }
   }, [])
   const onScrollToTop = bumpMaxParentsIfNeeded
-  const onMomentumEnd = React.useCallback(() => {
+  const onMomentumEnd = useCallback(() => {
     'worklet'
     runOnJS(bumpMaxParentsIfNeeded)()
   }, [bumpMaxParentsIfNeeded])
 
-  const onEndReached = React.useCallback(() => {
+  const onEndReached = useCallback(() => {
     if (isFetching || posts.length < maxReplies) return
     setMaxReplies(prev => prev + 50)
   }, [isFetching, maxReplies, posts.length])

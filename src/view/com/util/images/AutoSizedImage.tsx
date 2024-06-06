@@ -1,11 +1,12 @@
-import React from 'react'
-import {StyleProp, StyleSheet, Pressable, View, ViewStyle} from 'react-native'
+import {ReactNode, useEffect, useState} from 'react'
+import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
-import {clamp} from 'lib/numbers'
-import {Dimensions} from 'lib/media/types'
-import * as imageSizes from 'lib/media/image-sizes'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+
+import * as imageSizes from 'lib/media/image-sizes'
+import {Dimensions} from 'lib/media/types'
+import {clamp} from 'lib/numbers'
 
 const MIN_ASPECT_RATIO = 0.33 // 1/3
 const MAX_ASPECT_RATIO = 10 // 10/1
@@ -18,7 +19,7 @@ interface Props {
   onLongPress?: () => void
   onPressIn?: () => void
   style?: StyleProp<ViewStyle>
-  children?: React.ReactNode
+  children?: ReactNode
 }
 
 export function AutoSizedImage({
@@ -32,13 +33,12 @@ export function AutoSizedImage({
   children = null,
 }: Props) {
   const {_} = useLingui()
-  const [dim, setDim] = React.useState<Dimensions | undefined>(
+  const [dim, setDim] = useState<Dimensions | undefined>(
     dimensionsHint || imageSizes.get(uri),
   )
-  const [aspectRatio, setAspectRatio] = React.useState<number>(
-    dim ? calc(dim) : 1,
-  )
-  React.useEffect(() => {
+  const [aspectRatio, setAspectRatio] = useState<number>(dim ? calc(dim) : 1)
+
+  useEffect(() => {
     let aborted = false
     if (dim) {
       return

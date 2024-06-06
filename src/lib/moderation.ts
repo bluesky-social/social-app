@@ -1,11 +1,11 @@
 import {
-  ModerationCause,
-  ModerationUI,
-  InterpretedLabelValueDefinition,
-  LABELS,
   AppBskyLabelerDefs,
   BskyAgent,
+  InterpretedLabelValueDefinition,
+  LABELS,
+  ModerationCause,
   ModerationOpts,
+  ModerationUI,
 } from '@atproto/api'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'

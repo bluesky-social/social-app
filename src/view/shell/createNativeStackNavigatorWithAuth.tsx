@@ -1,4 +1,4 @@
-import * as React from 'react'
+import {useEffect} from 'react'
 import {View} from 'react-native'
 // Based on @react-navigation/native-stack/src/createNativeStackNavigator.ts
 // MIT License
@@ -65,7 +65,7 @@ function NativeStackNavigator({
       screenListeners,
       screenOptions,
     })
-  React.useEffect(
+  useEffect(
     () =>
       // @ts-expect-error: there may not be a tab navigator in parent
       navigation?.addListener?.('tabPress', (e: any) => {

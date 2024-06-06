@@ -1,4 +1,11 @@
-import React from 'react'
+import {
+  createContext,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 import {Linking} from 'react-native'
 import * as WebBrowser from 'expo-web-browser'
 
@@ -15,17 +22,17 @@ import {useModalControls} from '../modals'
 type StateContext = persisted.Schema['useInAppBrowser']
 type SetContext = (v: persisted.Schema['useInAppBrowser']) => void
 
-const stateContext = React.createContext<StateContext>(
+const stateContext = createContext<StateContext>(
   persisted.defaults.useInAppBrowser,
 )
-const setContext = React.createContext<SetContext>(
+const setContext = createContext<SetContext>(
   (_: persisted.Schema['useInAppBrowser']) => {},
 )
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [state, setState] = React.useState(persisted.get('useInAppBrowser'))
+export function Provider({children}: PropsWithChildren<{}>) {
+  const [state, setState] = useState(persisted.get('useInAppBrowser'))
 
-  const setStateWrapped = React.useCallback(
+  const setStateWrapped = useCallback(
     (inAppBrowser: persisted.Schema['useInAppBrowser']) => {
       setState(inAppBrowser)
       persisted.write('useInAppBrowser', inAppBrowser)
@@ -33,7 +40,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [setState],
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     return persisted.onUpdate(() => {
       setState(persisted.get('useInAppBrowser'))
     })
@@ -49,11 +56,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 export function useInAppBrowser() {
-  return React.useContext(stateContext)
+  return useContext(stateContext)
 }
 
 export function useSetInAppBrowser() {
-  return React.useContext(setContext)
+  return useContext(setContext)
 }
 
 export function useOpenLink() {
@@ -61,7 +68,7 @@ export function useOpenLink() {
   const enabled = useInAppBrowser()
   const pal = usePalette('default')
 
-  const openLink = React.useCallback(
+  const openLink = useCallback(
     (url: string, override?: boolean) => {
       if (isBskyRSSUrl(url) && isRelativeUrl(url)) {
         url = createBskyAppAbsoluteUrl(url)

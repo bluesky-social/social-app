@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useContext, useEffect, useState} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -34,9 +34,9 @@ export function StepInterests() {
   const {gtMobile} = useBreakpoints()
   const {track} = useAnalytics()
 
-  const {state, dispatch, interestsDisplayNames} = React.useContext(Context)
-  const [saving, setSaving] = React.useState(false)
-  const [interests, setInterests] = React.useState<string[]>(
+  const {state, dispatch, interestsDisplayNames} = useContext(Context)
+  const [saving, setSaving] = useState(false)
+  const [interests, setInterests] = useState<string[]>(
     state.interestsStepResults.selectedInterests.map(i => i),
   )
   const onboardDispatch = useOnboardingDispatch()
@@ -92,7 +92,7 @@ export function StepInterests() {
     },
   })
 
-  const saveInterests = React.useCallback(async () => {
+  const saveInterests = useCallback(async () => {
     setSaving(true)
 
     try {
@@ -118,13 +118,13 @@ export function StepInterests() {
     }
   }, [interests, data, setSaving, dispatch, track])
 
-  const skipOnboarding = React.useCallback(() => {
+  const skipOnboarding = useCallback(() => {
     onboardDispatch({type: 'finish'})
     dispatch({type: 'finish'})
     track('OnboardingV2:Skip')
   }, [onboardDispatch, dispatch, track])
 
-  React.useEffect(() => {
+  useEffect(() => {
     track('OnboardingV2:Begin')
     track('OnboardingV2:StepInterests:Start')
   }, [track])

@@ -1,4 +1,4 @@
-import React from 'react'
+import {PropsWithChildren} from 'react'
 import {Text as RNText, TextProps} from 'react-native'
 import {UITextView} from 'react-native-uitextview'
 
@@ -28,7 +28,7 @@ export function Text({
   dataSet,
   selectable,
   ...props
-}: React.PropsWithChildren<CustomTextProps>) {
+}: PropsWithChildren<CustomTextProps>) {
   const theme = useTheme()
   const typography = theme.typography[type]
   const lineHeightStyle = lineHeight ? lh(theme, type, lineHeight) : undefined

@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useRef} from 'react'
+import {memo, ReactNode, useCallback, useMemo, useRef} from 'react'
 import {
   GestureResponderEvent,
   LayoutAnimation,
@@ -28,7 +28,7 @@ let MessageItem = ({
   item,
 }: {
   item: ConvoItem & {type: 'message' | 'pending-message'}
-}): React.ReactNode => {
+}): ReactNode => {
   const t = useTheme()
   const {currentAccount} = useSession()
 
@@ -133,7 +133,7 @@ let MessageItem = ({
     </View>
   )
 }
-MessageItem = React.memo(MessageItem)
+MessageItem = memo(MessageItem)
 export {MessageItem}
 
 let MessageItemMetadata = ({
@@ -142,7 +142,7 @@ let MessageItemMetadata = ({
 }: {
   item: ConvoItem & {type: 'message' | 'pending-message'}
   style: StyleProp<TextStyle>
-}): React.ReactNode => {
+}): ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
   const {message} = item
@@ -248,7 +248,7 @@ let MessageItemMetadata = ({
   )
 }
 
-MessageItemMetadata = React.memo(MessageItemMetadata)
+MessageItemMetadata = memo(MessageItemMetadata)
 export {MessageItemMetadata}
 
 function localDateString(date: Date) {

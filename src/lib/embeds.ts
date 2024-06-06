@@ -1,7 +1,7 @@
 import {
-  AppBskyFeedDefs,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
+  AppBskyFeedDefs,
 } from '@atproto/api'
 
 export function isEmbedByEmbedder(

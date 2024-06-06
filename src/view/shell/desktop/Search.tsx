@@ -1,4 +1,4 @@
-import React from 'react'
+import {memo, ReactNode, useCallback, useState} from 'react'
 import {
   ActivityIndicator,
   StyleSheet,
@@ -41,7 +41,7 @@ let SearchLinkCard = ({
   to?: string
   onPress?: () => void
   style?: ViewStyle
-}): React.ReactNode => {
+}): ReactNode => {
   const pal = usePalette('default')
 
   const inner = (
@@ -79,7 +79,7 @@ let SearchLinkCard = ({
     </Link>
   )
 }
-SearchLinkCard = React.memo(SearchLinkCard)
+SearchLinkCard = memo(SearchLinkCard)
 export {SearchLinkCard}
 
 let SearchProfileCard = ({
@@ -90,11 +90,11 @@ let SearchProfileCard = ({
   profile: AppBskyActorDefs.ProfileViewBasic
   moderation: ModerationDecision
   onPress: () => void
-}): React.ReactNode => {
+}): ReactNode => {
   const pal = usePalette('default')
   const queryClient = useQueryClient()
 
-  const onPress = React.useCallback(() => {
+  const onPress = useCallback(() => {
     precacheProfile(queryClient, profile)
     onPressInner()
   }, [queryClient, profile, onPressInner])
@@ -143,15 +143,15 @@ let SearchProfileCard = ({
     </Link>
   )
 }
-SearchProfileCard = React.memo(SearchProfileCard)
+SearchProfileCard = memo(SearchProfileCard)
 export {SearchProfileCard}
 
 export function DesktopSearch() {
   const {_} = useLingui()
   const pal = usePalette('default')
   const navigation = useNavigation<NavigationProp>()
-  const [isActive, setIsActive] = React.useState<boolean>(false)
-  const [query, setQuery] = React.useState<string>('')
+  const [isActive, setIsActive] = useState<boolean>(false)
+  const [query, setQuery] = useState<string>('')
   const {data: autocompleteData, isFetching} = useActorAutocompleteQuery(
     query,
     true,
@@ -159,23 +159,23 @@ export function DesktopSearch() {
 
   const moderationOpts = useModerationOpts()
 
-  const onChangeText = React.useCallback((text: string) => {
+  const onChangeText = useCallback((text: string) => {
     setQuery(text)
     setIsActive(text.length > 0)
   }, [])
 
-  const onPressCancelSearch = React.useCallback(() => {
+  const onPressCancelSearch = useCallback(() => {
     setQuery('')
     setIsActive(false)
   }, [setQuery])
 
-  const onSubmit = React.useCallback(() => {
+  const onSubmit = useCallback(() => {
     setIsActive(false)
     if (!query.length) return
     navigation.dispatch(StackActions.push('Search', {q: query}))
   }, [query, navigation])
 
-  const onSearchProfileCardPress = React.useCallback(() => {
+  const onSearchProfileCardPress = useCallback(() => {
     setQuery('')
     setIsActive(false)
   }, [])

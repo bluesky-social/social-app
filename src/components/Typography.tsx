@@ -1,4 +1,3 @@
-import React from 'react'
 import {StyleProp, TextProps as RNTextProps, TextStyle} from 'react-native'
 import {UITextView} from 'react-native-uitextview'
 

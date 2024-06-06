@@ -1,4 +1,12 @@
-import React, {useContext, useState, useSyncExternalStore} from 'react'
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+  useSyncExternalStore,
+} from 'react'
 import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -21,7 +29,7 @@ import {useAgent} from '#/state/session'
 
 export * from '#/state/messages/convo/util'
 
-const ChatContext = React.createContext<ConvoState | null>(null)
+const ChatContext = createContext<ConvoState | null>(null)
 
 export function useConvo() {
   const ctx = useContext(ChatContext)
@@ -56,7 +64,7 @@ export function useConvoActive() {
 export function ConvoProvider({
   children,
   convoId,
-}: Pick<ConvoParams, 'convoId'> & {children: React.ReactNode}) {
+}: Pick<ConvoParams, 'convoId'> & {children: ReactNode}) {
   const queryClient = useQueryClient()
   const agent = useAgent()
   const events = useMessagesEventBus()
@@ -73,8 +81,9 @@ export function ConvoProvider({
 
   const appState = useAppState()
   const isActive = appState === 'active'
+
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       if (isActive) {
         convo.resume()
         markAsRead({convoId})
@@ -87,7 +96,7 @@ export function ConvoProvider({
     }, [isActive, convo, convoId, markAsRead]),
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     return convo.on(event => {
       switch (event.type) {
         case 'invalidate-block-state': {

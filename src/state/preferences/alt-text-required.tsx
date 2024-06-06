@@ -1,22 +1,28 @@
-import React from 'react'
+import {
+  createContext,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
+
 import * as persisted from '#/state/persisted'
 
 type StateContext = persisted.Schema['requireAltTextEnabled']
 type SetContext = (v: persisted.Schema['requireAltTextEnabled']) => void
 
-const stateContext = React.createContext<StateContext>(
+const stateContext = createContext<StateContext>(
   persisted.defaults.requireAltTextEnabled,
 )
-const setContext = React.createContext<SetContext>(
+const setContext = createContext<SetContext>(
   (_: persisted.Schema['requireAltTextEnabled']) => {},
 )
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [state, setState] = React.useState(
-    persisted.get('requireAltTextEnabled'),
-  )
+export function Provider({children}: PropsWithChildren<{}>) {
+  const [state, setState] = useState(persisted.get('requireAltTextEnabled'))
 
-  const setStateWrapped = React.useCallback(
+  const setStateWrapped = useCallback(
     (requireAltTextEnabled: persisted.Schema['requireAltTextEnabled']) => {
       setState(requireAltTextEnabled)
       persisted.write('requireAltTextEnabled', requireAltTextEnabled)
@@ -24,7 +30,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [setState],
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     return persisted.onUpdate(() => {
       setState(persisted.get('requireAltTextEnabled'))
     })
@@ -40,9 +46,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 export function useRequireAltTextEnabled() {
-  return React.useContext(stateContext)
+  return useContext(stateContext)
 }
 
 export function useSetRequireAltTextEnabled() {
-  return React.useContext(setContext)
+  return useContext(setContext)
 }

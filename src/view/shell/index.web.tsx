@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import {FC, useEffect} from 'react'
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -71,7 +71,7 @@ function ShellInner() {
   )
 }
 
-export const Shell: React.FC = function ShellImpl() {
+export const Shell: FC = function ShellImpl() {
   const pageBg = useColorSchemeStyle(styles.bgLight, styles.bgDark)
   return (
     <View style={[s.hContentRegion, pageBg]}>

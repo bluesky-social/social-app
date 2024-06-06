@@ -1,4 +1,4 @@
-import React, {memo, useMemo} from 'react'
+import {memo, ReactNode, useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {
   AppBskyActorDefs,
@@ -51,7 +51,7 @@ let ProfileHeaderStandard = ({
   moderationOpts,
   hideBackButton = false,
   isPlaceholderProfile,
-}: Props): React.ReactNode => {
+}: Props): ReactNode => {
   const profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> =
     useProfileShadow(profileUnshadowed)
   const t = useTheme()
@@ -63,7 +63,7 @@ let ProfileHeaderStandard = ({
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
   )
-  const [showSuggestedFollows, setShowSuggestedFollows] = React.useState(false)
+  const [showSuggestedFollows, setShowSuggestedFollows] = useState(false)
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
     profile,
     'ProfileHeader',
@@ -72,7 +72,7 @@ let ProfileHeaderStandard = ({
   const unblockPromptControl = Prompt.usePromptControl()
   const requireAuth = useRequireAuth()
 
-  const onPressEditProfile = React.useCallback(() => {
+  const onPressEditProfile = useCallback(() => {
     track('ProfileHeader:EditProfileButtonClicked')
     openModal({
       name: 'edit-profile',
@@ -124,7 +124,7 @@ let ProfileHeaderStandard = ({
     })
   }
 
-  const unblockAccount = React.useCallback(async () => {
+  const unblockAccount = useCallback(async () => {
     track('ProfileHeader:UnblockAccountButtonClicked')
     try {
       await queueUnblock()
@@ -137,7 +137,7 @@ let ProfileHeaderStandard = ({
     }
   }, [_, queueUnblock, track])
 
-  const isMe = React.useMemo(
+  const isMe = useMemo(
     () => currentAccount?.did === profile.did,
     [currentAccount, profile],
   )

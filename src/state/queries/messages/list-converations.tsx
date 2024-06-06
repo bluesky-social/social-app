@@ -1,5 +1,6 @@
-import React, {
+import {
   createContext,
+  ReactNode,
   useCallback,
   useContext,
   useEffect,
@@ -64,7 +65,7 @@ export function useListConvos() {
   return ctx
 }
 
-export function ListConvosProvider({children}: {children: React.ReactNode}) {
+export function ListConvosProvider({children}: {children: ReactNode}) {
   const {hasSession} = useSession()
 
   if (!hasSession) {
@@ -78,11 +79,7 @@ export function ListConvosProvider({children}: {children: React.ReactNode}) {
   return <ListConvosProviderInner>{children}</ListConvosProviderInner>
 }
 
-export function ListConvosProviderInner({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export function ListConvosProviderInner({children}: {children: ReactNode}) {
   const {refetch, data} = useListConvosQuery()
   const messagesBus = useMessagesEventBus()
   const queryClient = useQueryClient()

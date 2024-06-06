@@ -1,4 +1,4 @@
-import React, {useLayoutEffect} from 'react'
+import {ReactNode, useLayoutEffect} from 'react'
 import {Modal, View} from 'react-native'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import {RootSiblingParent} from 'react-native-root-siblings'
@@ -52,13 +52,7 @@ export const Composer = observer(function ComposerImpl({}: {
   )
 })
 
-function Providers({
-  children,
-  open,
-}: {
-  children: React.ReactNode
-  open: boolean
-}) {
+function Providers({children, open}: {children: ReactNode; open: boolean}) {
   // on iOS, it's a native formSheet. We use FullWindowOverlay to make
   // the dialogs appear over it
   if (isIOS) {

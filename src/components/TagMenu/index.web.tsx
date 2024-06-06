@@ -1,18 +1,18 @@
-import React from 'react'
+import {PropsWithChildren, useMemo} from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {isInvalidHandle} from '#/lib/strings/handles'
-import {EventStopper} from '#/view/com/util/EventStopper'
-import {NativeDropdown} from '#/view/com/util/forms/NativeDropdown'
 import {NavigationProp} from '#/lib/routes/types'
+import {isInvalidHandle} from '#/lib/strings/handles'
+import {enforceLen} from '#/lib/strings/helpers'
 import {
   usePreferencesQuery,
-  useUpsertMutedWordsMutation,
   useRemoveMutedWordMutation,
+  useUpsertMutedWordsMutation,
 } from '#/state/queries/preferences'
-import {enforceLen} from '#/lib/strings/helpers'
+import {EventStopper} from '#/view/com/util/EventStopper'
+import {NativeDropdown} from '#/view/com/util/forms/NativeDropdown'
 import {web} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 
@@ -34,7 +34,7 @@ export function TagMenu({
   children,
   tag,
   authorHandle,
-}: React.PropsWithChildren<{
+}: PropsWithChildren<{
   /**
    * This should be the sanitized tag value from the facet itself, not the
    * "display" value with a leading `#`.
@@ -60,7 +60,7 @@ export function TagMenu({
   )
   const truncatedTag = '#' + enforceLen(tag, 15, true, 'middle')
 
-  const dropdownItems = React.useMemo(() => {
+  const dropdownItems = useMemo(() => {
     return [
       {
         label: _(msg`See ${truncatedTag} posts`),

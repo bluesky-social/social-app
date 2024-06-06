@@ -1,4 +1,4 @@
-import React from 'react'
+import {useState} from 'react'
 import {ScrollView, View} from 'react-native'
 
 import {useSetThemePrefs} from '#/state/shell'
@@ -32,7 +32,7 @@ export function Storybook() {
 function StorybookInner() {
   const t = useTheme()
   const {setColorMode, setDarkTheme} = useSetThemePrefs()
-  const [showContainedList, setShowContainedList] = React.useState(false)
+  const [showContainedList, setShowContainedList] = useState(false)
 
   return (
     <CenteredView style={[t.atoms.bg]}>

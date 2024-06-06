@@ -1,4 +1,4 @@
-import React, {ComponentProps} from 'react'
+import {ComponentProps, useCallback} from 'react'
 import {GestureResponderEvent, TouchableOpacity, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -75,18 +75,18 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const playHaptic = useHaptics()
   const iconWidth = 28
 
-  const showSignIn = React.useCallback(() => {
+  const showSignIn = useCallback(() => {
     closeAllActiveElements()
     requestSwitchToAccount({requestedAccount: 'none'})
   }, [requestSwitchToAccount, closeAllActiveElements])
 
-  const showCreateAccount = React.useCallback(() => {
+  const showCreateAccount = useCallback(() => {
     closeAllActiveElements()
     requestSwitchToAccount({requestedAccount: 'new'})
     // setShowLoggedOut(true)
   }, [requestSwitchToAccount, closeAllActiveElements])
 
-  const onPressTab = React.useCallback(
+  const onPressTab = useCallback(
     (tab: TabOptions) => {
       track(`MobileShell:${tab}ButtonPressed`)
       const state = navigation.getState()
@@ -101,23 +101,20 @@ export function BottomBar({navigation}: BottomTabBarProps) {
     },
     [track, navigation, dedupe],
   )
-  const onPressHome = React.useCallback(() => onPressTab('Home'), [onPressTab])
-  const onPressSearch = React.useCallback(
-    () => onPressTab('Search'),
-    [onPressTab],
-  )
-  const onPressNotifications = React.useCallback(
+  const onPressHome = useCallback(() => onPressTab('Home'), [onPressTab])
+  const onPressSearch = useCallback(() => onPressTab('Search'), [onPressTab])
+  const onPressNotifications = useCallback(
     () => onPressTab('Notifications'),
     [onPressTab],
   )
-  const onPressProfile = React.useCallback(() => {
+  const onPressProfile = useCallback(() => {
     onPressTab('MyProfile')
   }, [onPressTab])
-  const onPressMessages = React.useCallback(() => {
+  const onPressMessages = useCallback(() => {
     onPressTab('Messages')
   }, [onPressTab])
 
-  const onLongPressProfile = React.useCallback(() => {
+  const onLongPressProfile = useCallback(() => {
     playHaptic()
     accountSwitchControl.open()
   }, [accountSwitchControl, playHaptic])

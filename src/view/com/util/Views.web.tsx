@@ -12,7 +12,7 @@
  * need to match layout but which aren't scrolled.
  */
 
-import React from 'react'
+import {forwardRef, PropsWithChildren, Ref} from 'react'
 import {
   FlatList,
   FlatListProps,
@@ -32,16 +32,16 @@ interface AddedProps {
   desktopFixedHeight?: boolean | number
 }
 
-export const CenteredView = React.forwardRef(function CenteredView(
+export const CenteredView = forwardRef(function CenteredView(
   {
     style,
     sideBorders,
     topBorder,
     ...props
-  }: React.PropsWithChildren<
+  }: PropsWithChildren<
     ViewProps & {sideBorders?: boolean; topBorder?: boolean}
   >,
-  ref: React.Ref<View>,
+  ref: Ref<View>,
 ) {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
@@ -64,15 +64,15 @@ export const CenteredView = React.forwardRef(function CenteredView(
   return <View ref={ref} style={style} {...props} />
 })
 
-export const FlatList_INTERNAL = React.forwardRef(function FlatListImpl<ItemT>(
+export const FlatList_INTERNAL = forwardRef(function FlatListImpl<ItemT>(
   {
     contentContainerStyle,
     style,
     contentOffset,
     desktopFixedHeight,
     ...props
-  }: React.PropsWithChildren<FlatListProps<ItemT> & AddedProps>,
-  ref: React.Ref<FlatList<ItemT>>,
+  }: PropsWithChildren<FlatListProps<ItemT> & AddedProps>,
+  ref: Ref<FlatList<ItemT>>,
 ) {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
@@ -134,9 +134,9 @@ export const FlatList_INTERNAL = React.forwardRef(function FlatListImpl<ItemT>(
   )
 })
 
-export const ScrollView = React.forwardRef(function ScrollViewImpl(
-  {contentContainerStyle, ...props}: React.PropsWithChildren<ScrollViewProps>,
-  ref: React.Ref<Animated.ScrollView>,
+export const ScrollView = forwardRef(function ScrollViewImpl(
+  {contentContainerStyle, ...props}: PropsWithChildren<ScrollViewProps>,
+  ref: Ref<Animated.ScrollView>,
 ) {
   const pal = usePalette('default')
 

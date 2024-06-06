@@ -1,4 +1,4 @@
-import React from 'react'
+import {ReactNode, useCallback} from 'react'
 import {Keyboard} from 'react-native'
 import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import Animated, {
@@ -25,7 +25,7 @@ export function ActionsWrapper({
 }: {
   message: ChatBskyConvoDefs.MessageView
   isFromSelf: boolean
-  children: React.ReactNode
+  children: ReactNode
 }) {
   const {_} = useLingui()
   const playHaptic = useHaptics()
@@ -37,13 +37,13 @@ export function ActionsWrapper({
     transform: [{scale: scale.value}],
   }))
 
-  const open = React.useCallback(() => {
+  const open = useCallback(() => {
     playHaptic()
     Keyboard.dismiss()
     menuControl.open()
   }, [menuControl, playHaptic])
 
-  const shrink = React.useCallback(() => {
+  const shrink = useCallback(() => {
     'worklet'
     cancelAnimation(scale)
     scale.value = withTiming(1, {duration: 200})

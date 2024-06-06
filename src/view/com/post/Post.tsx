@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {
   AppBskyFeedDefs,
@@ -124,7 +124,7 @@ function PostInner({
     replyAuthorDid = urip.hostname
   }
 
-  const onPressReply = React.useCallback(() => {
+  const onPressReply = useCallback(() => {
     openComposer({
       replyTo: {
         uri: post.uri,
@@ -137,11 +137,11 @@ function PostInner({
     })
   }, [openComposer, post, record, moderation])
 
-  const onPressShowMore = React.useCallback(() => {
+  const onPressShowMore = useCallback(() => {
     setLimitLines(false)
   }, [setLimitLines])
 
-  const onBeforePress = React.useCallback(() => {
+  const onBeforePress = useCallback(() => {
     precacheProfile(queryClient, post.author)
   }, [queryClient, post.author])
 

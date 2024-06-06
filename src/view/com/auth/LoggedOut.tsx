@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
@@ -37,7 +37,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   const setMinimalShellMode = useSetMinimalShellMode()
   const {screen} = useAnalytics()
   const {requestedAccountSwitchTo} = useLoggedOutView()
-  const [screenState, setScreenState] = React.useState<ScreenState>(
+  const [screenState, setScreenState] = useState<ScreenState>(
     requestedAccountSwitchTo
       ? requestedAccountSwitchTo === 'new'
         ? ScreenState.S_CreateAccount
@@ -49,19 +49,19 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   const navigation = useNavigation<NavigationProp>()
   const isFirstScreen = screenState === ScreenState.S_LoginOrCreateAccount
 
-  React.useEffect(() => {
+  useEffect(() => {
     screen('Login')
     setMinimalShellMode(true)
   }, [screen, setMinimalShellMode])
 
-  const onPressDismiss = React.useCallback(() => {
+  const onPressDismiss = useCallback(() => {
     if (onDismiss) {
       onDismiss()
     }
     clearRequestedAccount()
   }, [clearRequestedAccount, onDismiss])
 
-  const onPressSearch = React.useCallback(() => {
+  const onPressSearch = useCallback(() => {
     navigation.navigate(`SearchTab`)
   }, [navigation])
 

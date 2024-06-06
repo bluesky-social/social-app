@@ -1,7 +1,7 @@
 import 'lib/sentry' // must be near top
 import 'view/icons'
 
-import React, {useEffect, useState} from 'react'
+import {Fragment, useEffect, useState} from 'react'
 import {KeyboardProvider} from 'react-native-keyboard-controller'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
@@ -45,7 +45,7 @@ import I18nProvider from './locale/i18nProvider'
 import {listenSessionDropped} from './state/events'
 
 function InnerApp() {
-  const [isReady, setIsReady] = React.useState(false)
+  const [isReady, setIsReady] = useState(false)
   const {currentAccount} = useSession()
   const {resumeSession} = useSessionApi()
   const theme = useColorModeTheme()
@@ -83,7 +83,7 @@ function InnerApp() {
       <Alf theme={theme}>
         <ThemeProvider theme={theme}>
           <RootSiblingParent>
-            <React.Fragment
+            <Fragment
               // Resets the entire tree below when it changes:
               key={currentAccount?.did}>
               <QueryProvider currentDid={currentAccount?.did}>
@@ -108,7 +108,7 @@ function InnerApp() {
                   </MessagesProvider>
                 </StatsigProvider>
               </QueryProvider>
-            </React.Fragment>
+            </Fragment>
             <ToastContainer />
           </RootSiblingParent>
         </ThemeProvider>
@@ -120,7 +120,7 @@ function InnerApp() {
 function App() {
   const [isReady, setReady] = useState(false)
 
-  React.useEffect(() => {
+  useEffect(() => {
     initPersistedState().then(() => setReady(true))
   }, [])
 

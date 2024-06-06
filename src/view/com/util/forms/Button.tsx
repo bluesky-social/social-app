@@ -1,20 +1,21 @@
-import React from 'react'
+import {PropsWithChildren, useCallback, useState} from 'react'
 import {
+  ActivityIndicator,
   GestureResponderEvent,
+  NativeSyntheticEvent,
+  NativeTouchEvent,
+  Pressable,
+  PressableStateCallbackType,
   StyleProp,
   StyleSheet,
   TextStyle,
-  Pressable,
-  ViewStyle,
-  PressableStateCallbackType,
-  ActivityIndicator,
   View,
-  NativeSyntheticEvent,
-  NativeTouchEvent,
+  ViewStyle,
 } from 'react-native'
-import {Text} from '../text/Text'
-import {useTheme} from 'lib/ThemeContext'
+
 import {choose} from 'lib/functions'
+import {useTheme} from 'lib/ThemeContext'
+import {Text} from '../text/Text'
 
 export type ButtonType =
   | 'primary'
@@ -51,7 +52,7 @@ export function Button({
   onAccessibilityEscape,
   withLoading = false,
   disabled = false,
-}: React.PropsWithChildren<{
+}: PropsWithChildren<{
   type?: ButtonType
   label?: string
   style?: StyleProp<ViewStyle>
@@ -144,8 +145,8 @@ export function Button({
     },
   )
 
-  const [isLoading, setIsLoading] = React.useState(false)
-  const onPressWrapped = React.useCallback(
+  const [isLoading, setIsLoading] = useState(false)
+  const onPressWrapped = useCallback(
     async (event: GestureResponderEvent) => {
       event.stopPropagation()
       event.preventDefault()
@@ -156,7 +157,7 @@ export function Button({
     [onPress, withLoading],
   )
 
-  const getStyle = React.useCallback(
+  const getStyle = useCallback(
     (state: PressableStateCallbackType) => {
       const arr = [typeOuterStyle, styles.outer, style]
       if (state.pressed) {
@@ -169,7 +170,7 @@ export function Button({
     [typeOuterStyle, style],
   )
 
-  const renderChildern = React.useCallback(() => {
+  const renderChildern = useCallback(() => {
     if (!label) {
       return children
     }

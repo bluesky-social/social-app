@@ -1,4 +1,12 @@
-import React from 'react'
+import {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
+
 import * as persisted from '#/state/persisted'
 
 type StateContext = persisted.Schema['invites']
@@ -6,17 +14,15 @@ type ApiContext = {
   setInviteCopied: (code: string) => void
 }
 
-const stateContext = React.createContext<StateContext>(
-  persisted.defaults.invites,
-)
-const apiContext = React.createContext<ApiContext>({
+const stateContext = createContext<StateContext>(persisted.defaults.invites)
+const apiContext = createContext<ApiContext>({
   setInviteCopied(_: string) {},
 })
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [state, setState] = React.useState(persisted.get('invites'))
+export function Provider({children}: PropsWithChildren<{}>) {
+  const [state, setState] = useState(persisted.get('invites'))
 
-  const api = React.useMemo(
+  const api = useMemo(
     () => ({
       setInviteCopied(code: string) {
         setState(state => {
@@ -34,7 +40,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [setState],
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     return persisted.onUpdate(() => {
       setState(persisted.get('invites'))
     })
@@ -48,9 +54,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 export function useInvitesState() {
-  return React.useContext(stateContext)
+  return useContext(stateContext)
 }
 
 export function useInvitesAPI() {
-  return React.useContext(apiContext)
+  return useContext(apiContext)
 }

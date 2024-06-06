@@ -1,4 +1,4 @@
-import React from 'react'
+import {createContext, PropsWithChildren, useCallback, useContext} from 'react'
 import {
   Easing,
   SharedValue,
@@ -9,17 +9,17 @@ import {
 type StateContext = SharedValue<number>
 type SetContext = (v: boolean) => void
 
-const stateContext = React.createContext<StateContext>({
+const stateContext = createContext<StateContext>({
   value: 0,
   addListener() {},
   removeListener() {},
   modify() {},
 })
-const setContext = React.createContext<SetContext>((_: boolean) => {})
+const setContext = createContext<SetContext>((_: boolean) => {})
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
+export function Provider({children}: PropsWithChildren<{}>) {
   const mode = useSharedValue(0)
-  const setMode = React.useCallback(
+  const setMode = useCallback(
     (v: boolean) => {
       'worklet'
       mode.value = withTiming(v ? 1 : 0, {
@@ -37,9 +37,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 export function useMinimalShellMode() {
-  return React.useContext(stateContext)
+  return useContext(stateContext)
 }
 
 export function useSetMinimalShellMode() {
-  return React.useContext(setContext)
+  return useContext(setContext)
 }

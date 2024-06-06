@@ -1,4 +1,12 @@
-import React from 'react'
+import {
+  createContext,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 
 import {AppLanguage} from '#/locale/languages'
 import * as persisted from '#/state/persisted'
@@ -17,10 +25,10 @@ type ApiContext = {
   setAppLanguage: (code2: AppLanguage) => void
 }
 
-const stateContext = React.createContext<StateContext>(
+const stateContext = createContext<StateContext>(
   persisted.defaults.languagePrefs,
 )
-const apiContext = React.createContext<ApiContext>({
+const apiContext = createContext<ApiContext>({
   setPrimaryLanguage: (_: string) => {},
   setPostLanguage: (_: string) => {},
   setContentLanguage: (_: string) => {},
@@ -30,10 +38,10 @@ const apiContext = React.createContext<ApiContext>({
   setAppLanguage: (_: AppLanguage) => {},
 })
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [state, setState] = React.useState(persisted.get('languagePrefs'))
+export function Provider({children}: PropsWithChildren<{}>) {
+  const [state, setState] = useState(persisted.get('languagePrefs'))
 
-  const setStateWrapped = React.useCallback(
+  const setStateWrapped = useCallback(
     (fn: SetStateCb) => {
       const s = fn(persisted.get('languagePrefs'))
       setState(s)
@@ -42,13 +50,13 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [setState],
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     return persisted.onUpdate(() => {
       setState(persisted.get('languagePrefs'))
     })
   }, [setStateWrapped])
 
-  const api = React.useMemo(
+  const api = useMemo(
     () => ({
       setPrimaryLanguage(code2: string) {
         setStateWrapped(s => ({...s, primaryLanguage: code2}))
@@ -128,11 +136,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 export function useLanguagePrefs() {
-  return React.useContext(stateContext)
+  return useContext(stateContext)
 }
 
 export function useLanguagePrefsApi() {
-  return React.useContext(apiContext)
+  return useContext(apiContext)
 }
 
 export function getContentLanguages() {

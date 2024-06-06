@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {SafeAreaView, StyleSheet, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
@@ -116,7 +116,7 @@ export function Component({
 
 function LinkBox({href}: {href: string}) {
   const pal = usePalette('default')
-  const [scheme, hostname, rest] = React.useMemo(() => {
+  const [scheme, hostname, rest] = useMemo(() => {
     try {
       const urlp = new URL(href)
       const [subdomain, apexdomain] = splitApexDomain(urlp.hostname)

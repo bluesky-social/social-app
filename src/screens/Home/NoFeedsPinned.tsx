@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {View} from 'react-native'
 import {TID} from '@atproto/common-web'
 import {msg, Trans} from '@lingui/macro'
@@ -30,7 +30,7 @@ export function NoFeedsPinned({
   const {isPending, mutateAsync: overwriteSavedFeeds} =
     useOverwriteSavedFeedsMutation()
 
-  const addRecommendedFeeds = React.useCallback(async () => {
+  const addRecommendedFeeds = useCallback(async () => {
     let skippedTimeline = false
     let skippedDiscover = false
     let remainingSavedFeeds = []
@@ -66,7 +66,7 @@ export function NoFeedsPinned({
     await overwriteSavedFeeds(toSave)
   }, [overwriteSavedFeeds, preferences.savedFeeds])
 
-  const onPressFeedsLink = React.useCallback(() => {
+  const onPressFeedsLink = useCallback(() => {
     if (isNative) {
       // Hack that's necessary due to how our navigators are set up.
       navigation.navigate('FeedsTab')

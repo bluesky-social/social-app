@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react'
+import {useCallback, useRef, useState} from 'react'
 import {
   ActivityIndicator,
   Keyboard,
@@ -70,7 +70,7 @@ export const LoginForm = ({
   const requestNotificationsPermission = useRequestNotificationsPermission()
   const {setShowLoggedOut} = useLoggedOutViewControls()
 
-  const onPressSelectService = React.useCallback(() => {
+  const onPressSelectService = useCallback(() => {
     Keyboard.dismiss()
     track('Signin:PressedSelectService')
   }, [track])

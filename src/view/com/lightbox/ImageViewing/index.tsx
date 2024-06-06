@@ -8,16 +8,21 @@
 // Original code copied and simplified from the link below as the codebase is currently not maintained:
 // https://github.com/jobtoday/react-native-image-viewing
 
-import React, {ComponentType, useCallback, useMemo, useState} from 'react'
-import {StyleSheet, View, Platform} from 'react-native'
-
-import ImageItem from './components/ImageItem/ImageItem'
-import ImageDefaultHeader from './components/ImageDefaultHeader'
-
-import {ImageSource} from './@types'
+import {
+  ComponentType,
+  createElement,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react'
+import {Platform, StyleSheet, View} from 'react-native'
+import PagerView from 'react-native-pager-view'
 import Animated, {useAnimatedStyle, withSpring} from 'react-native-reanimated'
 import {Edge, SafeAreaView} from 'react-native-safe-area-context'
-import PagerView from 'react-native-pager-view'
+
+import {ImageSource} from './@types'
+import ImageDefaultHeader from './components/ImageDefaultHeader'
+import ImageItem from './components/ImageItem/ImageItem'
 
 type Props = {
   images: ImageSource[]
@@ -95,7 +100,7 @@ function ImageViewing({
       <View style={[styles.container, {backgroundColor}]}>
         <Animated.View style={[styles.header, animatedHeaderStyle]}>
           {typeof HeaderComponent !== 'undefined' ? (
-            React.createElement(HeaderComponent, {
+            createElement(HeaderComponent, {
               imageIndex,
             })
           ) : (
@@ -129,7 +134,7 @@ function ImageViewing({
         </PagerView>
         {typeof FooterComponent !== 'undefined' && (
           <Animated.View style={[styles.footer, animatedFooterStyle]}>
-            {React.createElement(FooterComponent, {
+            {createElement(FooterComponent, {
               imageIndex,
             })}
           </Animated.View>

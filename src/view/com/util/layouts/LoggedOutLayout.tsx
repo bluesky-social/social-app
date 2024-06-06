@@ -1,4 +1,4 @@
-import React from 'react'
+import {PropsWithChildren} from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 
 import {isWeb} from '#/platform/detection'
@@ -14,7 +14,7 @@ export const LoggedOutLayout = ({
   description,
   children,
   scrollable,
-}: React.PropsWithChildren<{
+}: PropsWithChildren<{
   leadin: string
   title: string
   description: string

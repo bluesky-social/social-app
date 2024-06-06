@@ -1,4 +1,4 @@
-import React from 'react'
+import {PropsWithChildren, useCallback, useState} from 'react'
 import {Keyboard, View} from 'react-native'
 import {AppBskyActorDefs, sanitizeMutedWordValue} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -53,11 +53,11 @@ function MutedWordsInner() {
     error: preferencesError,
   } = usePreferencesQuery()
   const {isPending, mutateAsync: addMutedWord} = useUpsertMutedWordsMutation()
-  const [field, setField] = React.useState('')
-  const [options, setOptions] = React.useState(['content'])
-  const [error, setError] = React.useState('')
+  const [field, setField] = useState('')
+  const [options, setOptions] = useState(['content'])
+  const [error, setError] = useState('')
 
-  const submit = React.useCallback(async () => {
+  const submit = useCallback(async () => {
     const sanitizedValue = sanitizeMutedWordValue(field)
     const targets = ['tag', options.includes('content') && 'content'].filter(
       Boolean,
@@ -271,7 +271,7 @@ function MutedWordRow({
   const {isPending, mutateAsync: removeMutedWord} = useRemoveMutedWordMutation()
   const control = Prompt.usePromptControl()
 
-  const remove = React.useCallback(async () => {
+  const remove = useCallback(async () => {
     control.close()
     removeMutedWord(word)
   }, [removeMutedWord, word, control])
@@ -343,7 +343,7 @@ function MutedWordRow({
   )
 }
 
-function TargetToggle({children}: React.PropsWithChildren<{}>) {
+function TargetToggle({children}: PropsWithChildren<{}>) {
   const t = useTheme()
   const ctx = Toggle.useItemContext()
   const {gtMobile} = useBreakpoints()

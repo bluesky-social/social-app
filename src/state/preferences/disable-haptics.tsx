@@ -1,21 +1,26 @@
-import React from 'react'
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 
 import * as persisted from '#/state/persisted'
 
 type StateContext = boolean
 type SetContext = (v: boolean) => void
 
-const stateContext = React.createContext<StateContext>(
+const stateContext = createContext<StateContext>(
   Boolean(persisted.defaults.disableHaptics),
 )
-const setContext = React.createContext<SetContext>((_: boolean) => {})
+const setContext = createContext<SetContext>((_: boolean) => {})
 
-export function Provider({children}: {children: React.ReactNode}) {
-  const [state, setState] = React.useState(
-    Boolean(persisted.get('disableHaptics')),
-  )
+export function Provider({children}: {children: ReactNode}) {
+  const [state, setState] = useState(Boolean(persisted.get('disableHaptics')))
 
-  const setStateWrapped = React.useCallback(
+  const setStateWrapped = useCallback(
     (hapticsEnabled: persisted.Schema['disableHaptics']) => {
       setState(Boolean(hapticsEnabled))
       persisted.write('disableHaptics', hapticsEnabled)
@@ -23,7 +28,7 @@ export function Provider({children}: {children: React.ReactNode}) {
     [setState],
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     return persisted.onUpdate(() => {
       setState(Boolean(persisted.get('disableHaptics')))
     })
@@ -38,5 +43,5 @@ export function Provider({children}: {children: React.ReactNode}) {
   )
 }
 
-export const useHapticsDisabled = () => React.useContext(stateContext)
-export const useSetHapticsDisabled = () => React.useContext(setContext)
+export const useHapticsDisabled = () => useContext(stateContext)
+export const useSetHapticsDisabled = () => useContext(setContext)

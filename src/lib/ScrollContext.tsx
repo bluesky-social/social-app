@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useMemo} from 'react'
+import {createContext, ReactNode, useContext, useMemo} from 'react'
 import {ScrollHandlers} from 'react-native-reanimated'
 
 const ScrollContext = createContext<ScrollHandlers<any>>({
@@ -12,7 +12,7 @@ export function useScrollHandlers(): ScrollHandlers<any> {
   return useContext(ScrollContext)
 }
 
-type ProviderProps = {children: React.ReactNode} & ScrollHandlers<any>
+type ProviderProps = {children: ReactNode} & ScrollHandlers<any>
 
 // Note: this completely *overrides* the parent handlers.
 // It's up to you to compose them with the parent ones via useScrollHandlers() if needed.

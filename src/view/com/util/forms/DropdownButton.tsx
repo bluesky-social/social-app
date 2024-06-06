@@ -1,4 +1,4 @@
-import React, {PropsWithChildren, useMemo, useRef} from 'react'
+import {PropsWithChildren, ReactNode, useMemo, useRef} from 'react'
 import {
   Dimensions,
   GestureResponderEvent,
@@ -59,7 +59,7 @@ interface DropdownButtonProps {
   items: MaybeDropdownItem[]
   label?: string
   menuWidth?: number
-  children?: React.ReactNode
+  children?: ReactNode
   openToRight?: boolean
   openUpwards?: boolean
   rightOffset?: number

@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {Pressable, ScrollView, StyleSheet, View} from 'react-native'
 import {AppBskyActorDefs, moderateProfile} from '@atproto/api'
 import {
@@ -179,7 +179,7 @@ function SuggestedFollow({
     'ProfileHeaderSuggestedFollows',
   )
 
-  const onPressFollow = React.useCallback(async () => {
+  const onPressFollow = useCallback(async () => {
     try {
       track('ProfileHeader:SuggestedFollowFollowed')
       await queueFollow()
@@ -190,7 +190,7 @@ function SuggestedFollow({
     }
   }, [queueFollow, track, _])
 
-  const onPressUnfollow = React.useCallback(async () => {
+  const onPressUnfollow = useCallback(async () => {
     try {
       await queueUnfollow()
     } catch (e: any) {

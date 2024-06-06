@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useState} from 'react'
 import {LayoutAnimation, StyleSheet, View} from 'react-native'
 import * as MediaLibrary from 'expo-media-library'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -22,7 +22,7 @@ import ImageView from './ImageViewing'
 export function Lightbox() {
   const {activeLightbox} = useLightbox()
   const {closeLightbox} = useLightboxControls()
-  const onClose = React.useCallback(() => {
+  const onClose = useCallback(() => {
     closeLightbox()
   }, [closeLightbox])
 
@@ -58,10 +58,10 @@ export function Lightbox() {
 function LightboxFooter({imageIndex}: {imageIndex: number}) {
   const {_} = useLingui()
   const {activeLightbox} = useLightbox()
-  const [isAltExpanded, setAltExpanded] = React.useState(false)
+  const [isAltExpanded, setAltExpanded] = useState(false)
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions()
 
-  const saveImageToAlbumWithToasts = React.useCallback(
+  const saveImageToAlbumWithToasts = useCallback(
     async (uri: string) => {
       if (!permissionResponse || permissionResponse.granted === false) {
         Toast.show(_(msg`Permission to access camera roll is required.`))

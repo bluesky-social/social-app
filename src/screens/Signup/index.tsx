@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useEffect, useReducer} from 'react'
 import {View} from 'react-native'
 import {LayoutAnimationConfig} from 'react-native-reanimated'
 import {msg, Trans} from '@lingui/macro'
@@ -33,7 +33,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
   const {_} = useLingui()
   const t = useTheme()
   const {screen} = useAnalytics()
-  const [state, dispatch] = React.useReducer(reducer, initialState)
+  const [state, dispatch] = useReducer(reducer, initialState)
   const submit = useSubmitSignup({state, dispatch})
   const {gtMobile} = useBreakpoints()
   const agent = useAgent()
@@ -45,11 +45,11 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
     refetch,
   } = useServiceQuery(state.serviceUrl)
 
-  React.useEffect(() => {
+  useEffect(() => {
     screen('CreateAccount')
   }, [screen])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isFetching) {
       dispatch({type: 'setIsLoading', value: true})
     } else if (!isFetching) {
@@ -57,7 +57,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
     }
   }, [isFetching])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isError) {
       dispatch({type: 'setServiceDescription', value: undefined})
       dispatch({
@@ -72,7 +72,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
     }
   }, [_, serviceInfo, isError])
 
-  const onNextPress = React.useCallback(async () => {
+  const onNextPress = useCallback(async () => {
     if (state.activeStep === SignupStep.HANDLE) {
       try {
         dispatch({type: 'setIsLoading', value: true})
@@ -118,7 +118,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
     agent,
   ])
 
-  const onBackPress = React.useCallback(() => {
+  const onBackPress = useCallback(() => {
     if (state.activeStep !== SignupStep.INFO) {
       if (state.activeStep === SignupStep.CAPTCHA) {
         logger.error('Signup Flow Error', {

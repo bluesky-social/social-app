@@ -1,13 +1,14 @@
-import RootSiblings from 'react-native-root-siblings'
-import React from 'react'
+import {useEffect} from 'react'
 import {Animated, StyleSheet, View} from 'react-native'
+import RootSiblings from 'react-native-root-siblings'
 import {Props as FontAwesomeProps} from '@fortawesome/react-native-fontawesome'
-import {Text} from './text/Text'
+
+import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
+import {usePalette} from 'lib/hooks/usePalette'
 import {colors} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {IS_TEST} from '#/env'
+import {Text} from './text/Text'
 
 const TIMEOUT = 4e3
 
@@ -27,7 +28,7 @@ function Toast({message}: {message: string}) {
   const pal = usePalette('default')
   const interp = useAnimatedValue(0)
 
-  React.useEffect(() => {
+  useEffect(() => {
     Animated.sequence([
       Animated.timing(interp, {
         toValue: 1,

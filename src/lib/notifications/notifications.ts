@@ -1,4 +1,4 @@
-import React from 'react'
+import {useEffect} from 'react'
 import * as Notifications from 'expo-notifications'
 import {getBadgeCountAsync, setBadgeCountAsync} from 'expo-notifications'
 import {BskyAgent} from '@atproto/api'
@@ -50,7 +50,7 @@ export function useNotificationsRegistration() {
   const agent = useAgent()
   const {currentAccount} = useSession()
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!currentAccount) {
       return
     }

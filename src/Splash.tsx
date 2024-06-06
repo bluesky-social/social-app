@@ -1,28 +1,33 @@
-import React, {useCallback, useEffect} from 'react'
 import {
-  View,
-  StyleSheet,
-  Image as RNImage,
+  forwardRef,
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react'
+import {
   AccessibilityInfo,
+  Image as RNImage,
+  StyleSheet,
   useColorScheme,
+  View,
 } from 'react-native'
-import * as SplashScreen from 'expo-splash-screen'
-import {Image} from 'expo-image'
 import Animated, {
+  Easing,
   interpolate,
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-  Easing,
 } from 'react-native-reanimated'
-import MaskedView from '@react-native-masked-view/masked-view'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import Svg, {Path, SvgProps} from 'react-native-svg'
+import {Image} from 'expo-image'
+import * as SplashScreen from 'expo-splash-screen'
+import MaskedView from '@react-native-masked-view/masked-view'
 
 import {isAndroid} from '#/platform/detection'
 import {Logotype} from '#/view/icons/Logotype'
-
 // @ts-ignore
 import splashImagePointer from '../assets/splash.png'
 // @ts-ignore
@@ -32,7 +37,7 @@ const darkSplashImageUri = RNImage.resolveAssetSource(
   darkSplashImagePointer,
 ).uri
 
-export const Logo = React.forwardRef(function LogoImpl(props: SvgProps, ref) {
+export const Logo = forwardRef(function LogoImpl(props: SvgProps, ref) {
   const width = 1000
   const height = width * (67 / 64)
   return (
@@ -56,18 +61,16 @@ type Props = {
 
 const AnimatedLogo = Animated.createAnimatedComponent(Logo)
 
-export function Splash(props: React.PropsWithChildren<Props>) {
+export function Splash(props: PropsWithChildren<Props>) {
   const insets = useSafeAreaInsets()
   const intro = useSharedValue(0)
   const outroLogo = useSharedValue(0)
   const outroApp = useSharedValue(0)
   const outroAppOpacity = useSharedValue(0)
-  const [isAnimationComplete, setIsAnimationComplete] = React.useState(false)
-  const [isImageLoaded, setIsImageLoaded] = React.useState(false)
-  const [isLayoutReady, setIsLayoutReady] = React.useState(false)
-  const [reduceMotion, setReduceMotion] = React.useState<boolean | undefined>(
-    false,
-  )
+  const [isAnimationComplete, setIsAnimationComplete] = useState(false)
+  const [isImageLoaded, setIsImageLoaded] = useState(false)
+  const [isLayoutReady, setIsLayoutReady] = useState(false)
+  const [reduceMotion, setReduceMotion] = useState<boolean | undefined>(false)
   const isReady =
     props.isReady &&
     isImageLoaded &&
@@ -212,7 +215,6 @@ export function Splash(props: React.PropsWithChildren<Props>) {
           </Animated.View>
         </View>
       )}
-
       {isReady &&
         (isAndroid || reduceMotion === true ? (
           // Use a simple fade on older versions of android (work around a bug)
@@ -220,7 +222,6 @@ export function Splash(props: React.PropsWithChildren<Props>) {
             <Animated.View style={[{flex: 1}, appAnimation]}>
               {props.children}
             </Animated.View>
-
             {!isAnimationComplete && (
               <Animated.View
                 style={[

@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useLayoutEffect, useMemo, useRef} from 'react'
 import {ActivityIndicator, AppState, StyleSheet, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 
@@ -58,7 +58,7 @@ function HomeScreenReady({
   preferences: UsePreferencesQueryResponse
   pinnedFeedInfos: SavedFeedSourceInfo[]
 }) {
-  const allFeeds = React.useMemo(
+  const allFeeds = useMemo(
     () => pinnedFeedInfos.map(f => f.feedDescriptor),
     [pinnedFeedInfos],
   )
@@ -71,9 +71,9 @@ function HomeScreenReady({
   useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName)
   useOTAUpdates()
 
-  const pagerRef = React.useRef<PagerRef>(null)
-  const lastPagerReportedIndexRef = React.useRef(selectedIndex)
-  React.useLayoutEffect(() => {
+  const pagerRef = useRef<PagerRef>(null)
+  const lastPagerReportedIndexRef = useRef(selectedIndex)
+  useLayoutEffect(() => {
     // Since the pager is not a controlled component, adjust it imperatively
     // if the selected index gets out of sync with what it last reported.
     // This is supposed to only happen on the web when you use the right nav.
@@ -87,7 +87,7 @@ function HomeScreenReady({
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setMinimalShellMode(false)
       setDrawerSwipeDisabled(selectedIndex > 0)
       return () => {
@@ -112,7 +112,7 @@ function HomeScreenReady({
   const mode = useMinimalShellMode()
   const {isMobile} = useWebMediaQueries()
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       const listener = AppState.addEventListener('change', nextAppState => {
         if (nextAppState === 'active') {
           if (isMobile && mode.value === 1) {
@@ -128,7 +128,7 @@ function HomeScreenReady({
     }, [setMinimalShellMode, mode, isMobile]),
   )
 
-  const onPageSelected = React.useCallback(
+  const onPageSelected = useCallback(
     (index: number) => {
       setMinimalShellMode(false)
       setDrawerSwipeDisabled(index > 0)
@@ -139,7 +139,7 @@ function HomeScreenReady({
     [setDrawerSwipeDisabled, setSelectedFeed, setMinimalShellMode, allFeeds],
   )
 
-  const onPageSelecting = React.useCallback(
+  const onPageSelecting = useCallback(
     (
       index: number,
       reason: LogEvents['home:feedDisplayed:sampled']['reason'],
@@ -155,11 +155,11 @@ function HomeScreenReady({
     [allFeeds],
   )
 
-  const onPressSelected = React.useCallback(() => {
+  const onPressSelected = useCallback(() => {
     emitSoftReset()
   }, [])
 
-  const onPageScrollStateChanged = React.useCallback(
+  const onPageScrollStateChanged = useCallback(
     (state: 'idle' | 'dragging' | 'settling') => {
       if (state === 'dragging') {
         setMinimalShellMode(false)
@@ -168,7 +168,7 @@ function HomeScreenReady({
     [setMinimalShellMode],
   )
 
-  const renderTabBar = React.useCallback(
+  const renderTabBar = useCallback(
     (props: RenderTabBarFnProps) => {
       return (
         <HomeHeader
@@ -183,15 +183,15 @@ function HomeScreenReady({
     [onPressSelected, pinnedFeedInfos],
   )
 
-  const renderFollowingEmptyState = React.useCallback(() => {
+  const renderFollowingEmptyState = useCallback(() => {
     return <FollowingEmptyState />
   }, [])
 
-  const renderCustomFeedEmptyState = React.useCallback(() => {
+  const renderCustomFeedEmptyState = useCallback(() => {
     return <CustomFeedEmptyState />
   }, [])
 
-  const homeFeedParams = React.useMemo<FeedParams>(() => {
+  const homeFeedParams = useMemo<FeedParams>(() => {
     return {
       mergeFeedEnabled: Boolean(preferences.feedViewPrefs.lab_mergeFeedEnabled),
       mergeFeedSources: preferences.feedViewPrefs.lab_mergeFeedEnabled

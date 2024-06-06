@@ -1,4 +1,4 @@
-import React from 'react'
+import {useState} from 'react'
 
 import {useTickEveryMinute} from '#/state/shell'
 import {ago} from 'lib/strings/time'
@@ -13,11 +13,9 @@ export function TimeElapsed({
   timeToString?: (timeElapsed: string) => string
 }) {
   const tick = useTickEveryMinute()
-  const [timeElapsed, setTimeAgo] = React.useState(() =>
-    timeToString(timestamp),
-  )
+  const [timeElapsed, setTimeAgo] = useState(() => timeToString(timestamp))
 
-  const [prevTick, setPrevTick] = React.useState(tick)
+  const [prevTick, setPrevTick] = useState(tick)
   if (prevTick !== tick) {
     setPrevTick(tick)
     setTimeAgo(timeToString(timestamp))

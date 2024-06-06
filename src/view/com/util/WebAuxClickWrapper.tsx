@@ -1,7 +1,7 @@
-import React from 'react'
+import {MouseEvent, PropsWithChildren} from 'react'
 import {Platform} from 'react-native'
 
-const onMouseUp = (e: React.MouseEvent & {target: HTMLElement}) => {
+const onMouseUp = (e: MouseEvent & {target: HTMLElement}) => {
   // Only handle whenever it is the middle button
   if (e.button !== 1 || e.target.closest('a') || e.target.tagName === 'A') {
     return
@@ -12,13 +12,13 @@ const onMouseUp = (e: React.MouseEvent & {target: HTMLElement}) => {
   )
 }
 
-const onMouseDown = (e: React.MouseEvent) => {
+const onMouseDown = (e: MouseEvent) => {
   // Prevents the middle click scroll from enabling
   if (e.button !== 1) return
   e.preventDefault()
 }
 
-export function WebAuxClickWrapper({children}: React.PropsWithChildren<{}>) {
+export function WebAuxClickWrapper({children}: PropsWithChildren<{}>) {
   if (Platform.OS !== 'web') return children
 
   return (

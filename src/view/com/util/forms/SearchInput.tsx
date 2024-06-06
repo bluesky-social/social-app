@@ -1,4 +1,4 @@
-import React from 'react'
+import {forwardRef, useCallback, useImperativeHandle, useRef} from 'react'
 import {
   StyleProp,
   StyleSheet,
@@ -11,12 +11,13 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
 import {HITSLOP_10} from 'lib/constants'
+import {usePalette} from 'lib/hooks/usePalette'
 import {MagnifyingGlassIcon} from 'lib/icons'
 import {useTheme} from 'lib/ThemeContext'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
 
 interface Props {
   query: string
@@ -31,7 +32,7 @@ export interface SearchInputRef {
   focus?: () => void
 }
 
-export const SearchInput = React.forwardRef<SearchInputRef, Props>(
+export const SearchInput = forwardRef<SearchInputRef, Props>(
   function SearchInput(
     {
       query,
@@ -46,14 +47,14 @@ export const SearchInput = React.forwardRef<SearchInputRef, Props>(
     const theme = useTheme()
     const pal = usePalette('default')
     const {_} = useLingui()
-    const textInput = React.useRef<TextInput>(null)
+    const textInput = useRef<TextInput>(null)
 
-    const onPressCancelSearchInner = React.useCallback(() => {
+    const onPressCancelSearchInner = useCallback(() => {
       onPressCancelSearch()
       textInput.current?.blur()
     }, [onPressCancelSearch, textInput])
 
-    React.useImperativeHandle(ref, () => ({
+    useImperativeHandle(ref, () => ({
       focus: () => textInput.current?.focus(),
       blur: () => textInput.current?.blur(),
     }))

@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useRef, useState} from 'react'
 import {
   ActivityIndicator,
   GestureResponderEvent,
@@ -31,21 +31,21 @@ export function ExternalGifEmbed({
   const {_} = useLingui()
   const consentDialogControl = useDialogControl()
 
-  const thumbHasLoaded = React.useRef(false)
-  const viewWidth = React.useRef(0)
+  const thumbHasLoaded = useRef(false)
+  const viewWidth = useRef(0)
 
   // Tracking if the placer has been activated
-  const [isPlayerActive, setIsPlayerActive] = React.useState(false)
+  const [isPlayerActive, setIsPlayerActive] = useState(false)
   // Tracking whether the gif has been loaded yet
-  const [isPrefetched, setIsPrefetched] = React.useState(false)
+  const [isPrefetched, setIsPrefetched] = useState(false)
   // Tracking whether the image is animating
-  const [isAnimating, setIsAnimating] = React.useState(true)
-  const [imageDims, setImageDims] = React.useState({height: 100, width: 1})
+  const [isAnimating, setIsAnimating] = useState(true)
+  const [imageDims, setImageDims] = useState({height: 100, width: 1})
 
   // Used for controlling animation
-  const imageRef = React.useRef<Image>(null)
+  const imageRef = useRef<Image>(null)
 
-  const load = React.useCallback(() => {
+  const load = useCallback(() => {
     setIsPlayerActive(true)
     Image.prefetch(params.playerUri).then(() => {
       // Replace the image once it's fetched
@@ -53,7 +53,7 @@ export function ExternalGifEmbed({
     })
   }, [params.playerUri])
 
-  const onPlayPress = React.useCallback(
+  const onPlayPress = useCallback(
     (event: GestureResponderEvent) => {
       // Don't propagate on web
       event.preventDefault()
@@ -92,13 +92,13 @@ export function ExternalGifEmbed({
     ],
   )
 
-  const onLoad = React.useCallback((e: ImageLoadEventData) => {
+  const onLoad = useCallback((e: ImageLoadEventData) => {
     if (thumbHasLoaded.current) return
     setImageDims(getGifDims(e.source.height, e.source.width, viewWidth.current))
     thumbHasLoaded.current = true
   }, [])
 
-  const onLayout = React.useCallback((e: LayoutChangeEvent) => {
+  const onLayout = useCallback((e: LayoutChangeEvent) => {
     viewWidth.current = e.nativeEvent.layout.width
   }, [])
 
@@ -109,7 +109,6 @@ export function ExternalGifEmbed({
         source={params.source}
         onAccept={load}
       />
-
       <Pressable
         style={[
           {height: imageDims.height},

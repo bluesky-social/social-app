@@ -1,9 +1,9 @@
 import {
-  ComAtprotoLabelDefs,
   AppBskyLabelerDefs,
-  LABELS,
-  interpretLabelValueDefinition,
+  ComAtprotoLabelDefs,
   InterpretedLabelValueDefinition,
+  interpretLabelValueDefinition,
+  LABELS,
 } from '@atproto/api'
 import {useLingui} from '@lingui/react'
 import * as bcp47Match from 'bcp-47-match'

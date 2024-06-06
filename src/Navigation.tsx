@@ -1,4 +1,4 @@
-import * as React from 'react'
+import {PropsWithChildren, useCallback, useRef} from 'react'
 import {JSX} from 'react/jsx-runtime'
 import {i18n, MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/macro'
@@ -315,7 +315,7 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
  * in 3 distinct tab-stacks with a different root screen on each.
  */
 function TabsNavigator() {
-  const tabBar = React.useCallback(
+  const tabBar = useCallback(
     (props: JSX.IntrinsicAttributes & BottomTabBarProps) => (
       <BottomBar {...props} />
     ),
@@ -590,11 +590,11 @@ const LINKING = {
   },
 }
 
-function RoutesContainer({children}: React.PropsWithChildren<{}>) {
+function RoutesContainer({children}: PropsWithChildren<{}>) {
   const theme = useColorSchemeStyle(DefaultTheme, DarkTheme)
   const {currentAccount} = useSession()
   const {openModal} = useModalControls()
-  const prevLoggedRouteName = React.useRef<string | undefined>(undefined)
+  const prevLoggedRouteName = useRef<string | undefined>(undefined)
 
   function onReady() {
     prevLoggedRouteName.current = getCurrentRouteName()

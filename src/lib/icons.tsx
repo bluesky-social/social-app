@@ -1,4 +1,3 @@
-import React from 'react'
 import {StyleProp, TextStyle, ViewStyle} from 'react-native'
 import Svg, {Ellipse, Line, Path, Rect} from 'react-native-svg'
 

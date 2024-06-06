@@ -1,4 +1,4 @@
-import React from 'react'
+import {ReactNode} from 'react'
 import {View} from 'react-native'
 import {AppBskyActorDefs, ModerationDecision} from '@atproto/api'
 import {msg} from '@lingui/macro'
@@ -28,7 +28,7 @@ export function AviFollowButton({
 }: {
   author: AppBskyActorDefs.ProfileViewBasic
   moderation: ModerationDecision
-  children: React.ReactNode
+  children: ReactNode
 }) {
   const {_} = useLingui()
   const t = useTheme()

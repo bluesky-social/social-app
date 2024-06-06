@@ -1,4 +1,4 @@
-import React from 'react'
+import {Fragment} from 'react'
 import {View} from 'react-native'
 import {ModerationCause} from '@atproto/api'
 import {msg} from '@lingui/macro'
@@ -25,7 +25,6 @@ export function BlockedByListDialog({
   return (
     <Prompt.Outer control={control} testID="blockedByListDialog">
       <Prompt.TitleText>{_(msg`User blocked by list`)}</Prompt.TitleText>
-
       <View style={[a.gap_sm, a.pb_lg]}>
         <Text
           selectable
@@ -39,23 +38,21 @@ export function BlockedByListDialog({
           {_(msg`Lists blocking this user:`)}{' '}
           {listBlocks.map((block, i) =>
             block.source.type === 'list' ? (
-              <React.Fragment key={block.source.list.uri}>
+              <Fragment key={block.source.list.uri}>
                 {i === 0 ? null : ', '}
                 <InlineLinkText
                   to={listUriToHref(block.source.list.uri)}
                   style={[a.text_md, a.leading_snug]}>
                   {block.source.list.name}
                 </InlineLinkText>
-              </React.Fragment>
+              </Fragment>
             ) : null,
           )}
         </Text>
       </View>
-
       <Prompt.Actions>
         <Prompt.Action cta={_(msg`I understand`)} onPress={() => {}} />
       </Prompt.Actions>
-
       <Dialog.Close />
     </Prompt.Outer>
   )

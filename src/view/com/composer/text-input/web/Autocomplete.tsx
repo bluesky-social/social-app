@@ -1,23 +1,19 @@
-import React, {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useState,
-} from 'react'
+import {forwardRef, useEffect, useImperativeHandle, useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
+import {Trans} from '@lingui/macro'
 import {ReactRenderer} from '@tiptap/react'
-import tippy, {Instance as TippyInstance} from 'tippy.js'
 import {
+  SuggestionKeyDownProps,
   SuggestionOptions,
   SuggestionProps,
-  SuggestionKeyDownProps,
 } from '@tiptap/suggestion'
+import tippy, {Instance as TippyInstance} from 'tippy.js'
+
 import {ActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {useGrapheme} from '../hooks/useGrapheme'
-import {Trans} from '@lingui/macro'
 
 interface MentionListRef {
   onKeyDown: (props: SuggestionKeyDownProps) => boolean

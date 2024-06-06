@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -42,8 +42,8 @@ type Props = NativeStackScreenProps<
 export function NotificationsScreen({}: Props) {
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const [isScrolledDown, setIsScrolledDown] = React.useState(false)
-  const scrollElRef = React.useRef<ListMethods>(null)
+  const [isScrolledDown, setIsScrolledDown] = useState(false)
+  const scrollElRef = useRef<ListMethods>(null)
   const {screen} = useAnalytics()
   const pal = usePalette('default')
   const {isDesktop} = useWebMediaQueries()
@@ -56,12 +56,12 @@ export function NotificationsScreen({}: Props) {
 
   // event handlers
   // =
-  const scrollToTop = React.useCallback(() => {
+  const scrollToTop = useCallback(() => {
     scrollElRef.current?.scrollToOffset({animated: isNative, offset: 0})
     setMinimalShellMode(false)
   }, [scrollElRef, setMinimalShellMode])
 
-  const onPressLoadLatest = React.useCallback(() => {
+  const onPressLoadLatest = useCallback(() => {
     scrollToTop()
     if (hasNew) {
       // render what we have now
@@ -89,21 +89,21 @@ export function NotificationsScreen({}: Props) {
   // on-visible setup
   // =
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setMinimalShellMode(false)
       logger.debug('NotificationsScreen: Focus')
       screen('Notifications')
       onFocusCheckLatest()
     }, [screen, setMinimalShellMode, onFocusCheckLatest]),
   )
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isScreenFocused) {
       return
     }
     return listenSoftReset(onPressLoadLatest)
   }, [onPressLoadLatest, isScreenFocused])
 
-  const ListHeaderComponent = React.useCallback(() => {
+  const ListHeaderComponent = useCallback(() => {
     if (isDesktop) {
       return (
         <View

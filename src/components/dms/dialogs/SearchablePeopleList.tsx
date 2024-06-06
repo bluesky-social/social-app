@@ -1,4 +1,5 @@
-import React, {
+import {
+  RefObject,
   useCallback,
   useLayoutEffect,
   useMemo,
@@ -474,7 +475,7 @@ function SearchInput({
   value: string
   onChangeText: (text: string) => void
   onEscape: () => void
-  inputRef: React.RefObject<TextInputType>
+  inputRef: RefObject<TextInputType>
 }) {
   const t = useTheme()
   const {_} = useLingui()

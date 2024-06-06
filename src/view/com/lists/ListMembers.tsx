@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {
   ActivityIndicator,
   Dimensions,
@@ -7,21 +7,22 @@ import {
   ViewStyle,
 } from 'react-native'
 import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
-import {List, ListRef} from '../util/List'
-import {ProfileCardFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
-import {ProfileCard} from '../profile/ProfileCard'
-import {Button} from '../util/forms/Button'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {useListMembersQuery} from '#/state/queries/list-members'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
+import {useListMembersQuery} from '#/state/queries/list-members'
 import {useSession} from '#/state/session'
-import {cleanError} from '#/lib/strings/errors'
-import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {ProfileCard} from '../profile/ProfileCard'
+import {ErrorMessage} from '../util/error/ErrorMessage'
+import {Button} from '../util/forms/Button'
+import {List, ListRef} from '../util/List'
+import {ProfileCardFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
+import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_ITEM = {_reactKey: '__empty__'}
@@ -53,7 +54,7 @@ export function ListMembers({
 }) {
   const {track} = useAnalytics()
   const {_} = useLingui()
-  const [isRefreshing, setIsRefreshing] = React.useState(false)
+  const [isRefreshing, setIsRefreshing] = useState(false)
   const {isMobile} = useWebMediaQueries()
   const {openModal} = useModalControls()
   const {currentAccount} = useSession()
@@ -72,7 +73,7 @@ export function ListMembers({
   const isOwner =
     currentAccount && data?.pages[0].list.creator.did === currentAccount.did
 
-  const items = React.useMemo(() => {
+  const items = useMemo(() => {
     let items: any[] = []
     if (isFetched) {
       if (isEmpty && isError) {
@@ -97,7 +98,7 @@ export function ListMembers({
   // events
   // =
 
-  const onRefresh = React.useCallback(async () => {
+  const onRefresh = useCallback(async () => {
     track('Lists:onRefresh')
     setIsRefreshing(true)
     try {
@@ -108,7 +109,7 @@ export function ListMembers({
     setIsRefreshing(false)
   }, [refetch, track, setIsRefreshing])
 
-  const onEndReached = React.useCallback(async () => {
+  const onEndReached = useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
     track('Lists:onEndReached')
     try {
@@ -118,11 +119,11 @@ export function ListMembers({
     }
   }, [isFetching, hasNextPage, isError, fetchNextPage, track])
 
-  const onPressRetryLoadMore = React.useCallback(() => {
+  const onPressRetryLoadMore = useCallback(() => {
     fetchNextPage()
   }, [fetchNextPage])
 
-  const onPressEditMembership = React.useCallback(
+  const onPressEditMembership = useCallback(
     (profile: AppBskyActorDefs.ProfileViewBasic) => {
       openModal({
         name: 'user-add-remove-lists',
@@ -137,7 +138,7 @@ export function ListMembers({
   // rendering
   // =
 
-  const renderMemberButton = React.useCallback(
+  const renderMemberButton = useCallback(
     (profile: AppBskyActorDefs.ProfileViewBasic) => {
       if (!isOwner) {
         return null
@@ -154,7 +155,7 @@ export function ListMembers({
     [isOwner, onPressEditMembership, _],
   )
 
-  const renderItem = React.useCallback(
+  const renderItem = useCallback(
     ({item}: {item: any}) => {
       if (item === EMPTY_ITEM) {
         return renderEmptyState()
@@ -200,7 +201,7 @@ export function ListMembers({
     ],
   )
 
-  const Footer = React.useCallback(
+  const Footer = useCallback(
     () => (
       <View style={{paddingTop: 20, paddingBottom: 400}}>
         {isFetching && <ActivityIndicator />}

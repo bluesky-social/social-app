@@ -1,4 +1,11 @@
-import React from 'react'
+import {
+  createContext,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useId,
+  useMemo,
+} from 'react'
 import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -10,7 +17,7 @@ import {Text} from '#/components/Typography'
 
 export {useDialogControl as usePromptControl} from '#/components/Dialog'
 
-const Context = React.createContext<{
+const Context = createContext<{
   titleId: string
   descriptionId: string
 }>({
@@ -22,15 +29,15 @@ export function Outer({
   children,
   control,
   testID,
-}: React.PropsWithChildren<{
+}: PropsWithChildren<{
   control: Dialog.DialogOuterProps['control']
   testID?: string
 }>) {
   const {gtMobile} = useBreakpoints()
-  const titleId = React.useId()
-  const descriptionId = React.useId()
+  const titleId = useId()
+  const descriptionId = useId()
 
-  const context = React.useMemo(
+  const context = useMemo(
     () => ({titleId, descriptionId}),
     [titleId, descriptionId],
   )
@@ -53,8 +60,9 @@ export function Outer({
   )
 }
 
-export function TitleText({children}: React.PropsWithChildren<{}>) {
-  const {titleId} = React.useContext(Context)
+export function TitleText({children}: PropsWithChildren<{}>) {
+  const {titleId} = useContext(Context)
+
   return (
     <Text nativeID={titleId} style={[a.text_2xl, a.font_bold, a.pb_sm]}>
       {children}
@@ -65,9 +73,10 @@ export function TitleText({children}: React.PropsWithChildren<{}>) {
 export function DescriptionText({
   children,
   selectable,
-}: React.PropsWithChildren<{selectable?: boolean}>) {
+}: PropsWithChildren<{selectable?: boolean}>) {
   const t = useTheme()
-  const {descriptionId} = React.useContext(Context)
+  const {descriptionId} = useContext(Context)
+
   return (
     <Text
       nativeID={descriptionId}
@@ -78,7 +87,7 @@ export function DescriptionText({
   )
 }
 
-export function Actions({children}: React.PropsWithChildren<{}>) {
+export function Actions({children}: PropsWithChildren<{}>) {
   const {gtMobile} = useBreakpoints()
 
   return (
@@ -107,7 +116,8 @@ export function Cancel({
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const {close} = Dialog.useDialogContext()
-  const onPress = React.useCallback(() => {
+
+  const onPress = useCallback(() => {
     close()
   }, [close])
 
@@ -147,7 +157,8 @@ export function Action({
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const {close} = Dialog.useDialogContext()
-  const handleOnPress = React.useCallback(() => {
+
+  const handleOnPress = useCallback(() => {
     close(onPress)
   }, [close, onPress])
 
@@ -173,7 +184,7 @@ export function Basic({
   onConfirm,
   confirmButtonColor,
   showCancel = true,
-}: React.PropsWithChildren<{
+}: PropsWithChildren<{
   control: Dialog.DialogOuterProps['control']
   title: string
   description: string

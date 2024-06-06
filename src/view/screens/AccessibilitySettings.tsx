@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -43,7 +43,7 @@ export function AccessibilitySettingsScreen({}: Props) {
   const setHapticsDisabled = useSetHapticsDisabled()
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       screen('PreferencesExternalEmbeds')
       setMinimalShellMode(false)
     }, [screen, setMinimalShellMode]),

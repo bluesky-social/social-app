@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {View} from 'react-native'
 import RNPickerSelect, {PickerSelectProps} from 'react-native-picker-select'
 import {useQueryClient} from '@tanstack/react-query'
@@ -18,7 +18,7 @@ export function AppLanguageDropdown() {
   const setLangPrefs = useLanguagePrefsApi()
   const sanitizedLang = sanitizeAppLanguageSetting(langPrefs.appLanguage)
 
-  const onChangeAppLanguage = React.useCallback(
+  const onChangeAppLanguage = useCallback(
     (value: Parameters<PickerSelectProps['onValueChange']>[0]) => {
       if (!value) return
       if (sanitizedLang !== value) {

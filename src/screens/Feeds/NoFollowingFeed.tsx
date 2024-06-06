@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -14,7 +14,7 @@ export function NoFollowingFeed() {
   const {_} = useLingui()
   const {mutateAsync: addSavedFeeds} = useAddSavedFeedsMutation()
 
-  const addRecommendedFeeds = React.useCallback(
+  const addRecommendedFeeds = useCallback(
     (e: any) => {
       e.preventDefault()
 

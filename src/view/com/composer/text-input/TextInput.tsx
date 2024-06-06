@@ -1,7 +1,8 @@
-import React, {
+import {
   ComponentProps,
   forwardRef,
   useCallback,
+  useImperativeHandle,
   useMemo,
   useRef,
   useState,
@@ -72,9 +73,9 @@ export const TextInput = forwardRef(function TextInputImpl(
   const textInputSelection = useRef<Selection>({start: 0, end: 0})
   const theme = useTheme()
   const [autocompletePrefix, setAutocompletePrefix] = useState('')
-  const prevLength = React.useRef(richtext.length)
+  const prevLength = useRef(richtext.length)
 
-  React.useImperativeHandle(ref, () => ({
+  useImperativeHandle(ref, () => ({
     focus: () => textInput.current?.focus(),
     blur: () => {
       textInput.current?.blur()

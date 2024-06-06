@@ -1,4 +1,3 @@
-import React from 'react'
 import {StyleProp, View, ViewStyle} from 'react-native'
 import {BSKY_LABELER_DID, ModerationCause, ModerationUI} from '@atproto/api'
 

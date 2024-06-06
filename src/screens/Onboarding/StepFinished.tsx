@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useContext, useEffect, useState} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -35,14 +35,14 @@ export function StepFinished() {
   const {_} = useLingui()
   const t = useTheme()
   const {track} = useAnalytics()
-  const {state, dispatch} = React.useContext(Context)
+  const {state, dispatch} = useContext(Context)
   const onboardDispatch = useOnboardingDispatch()
-  const [saving, setSaving] = React.useState(false)
+  const [saving, setSaving] = useState(false)
   const queryClient = useQueryClient()
   const agent = useAgent()
   const requestNotificationsPermission = useRequestNotificationsPermission()
 
-  const finishOnboarding = React.useCallback(async () => {
+  const finishOnboarding = useCallback(async () => {
     setSaving(true)
 
     const {interestsStepResults, profileStepResults} = state
@@ -111,7 +111,7 @@ export function StepFinished() {
     requestNotificationsPermission,
   ])
 
-  React.useEffect(() => {
+  useEffect(() => {
     track('OnboardingV2:StepFinished:Start')
   }, [track])
 

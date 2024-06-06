@@ -1,31 +1,32 @@
-import React, {useCallback, useEffect, useState} from 'react'
+import {useCallback, useEffect, useMemo, useState} from 'react'
 import {
   Image,
   ImageStyle,
+  Pressable,
+  StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  StyleSheet,
   View,
-  Pressable,
   ViewStyle,
 } from 'react-native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {colors, s} from 'lib/styles'
-import ImageDefaultHeader from './ImageViewing/components/ImageDefaultHeader'
-import {Text} from '../util/text/Text'
-import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
-import {
-  useLightbox,
-  useLightboxControls,
-  ImagesLightbox,
-  ProfileImageLightbox,
-} from '#/state/lightbox'
+import {useLingui} from '@lingui/react'
+
 import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {
+  ImagesLightbox,
+  ProfileImageLightbox,
+  useLightbox,
+  useLightboxControls,
+} from '#/state/lightbox'
+import {colors, s} from 'lib/styles'
+import {Text} from '../util/text/Text'
+import ImageDefaultHeader from './ImageViewing/components/ImageDefaultHeader'
 
 interface Img {
   uri: string
@@ -114,10 +115,10 @@ function LightboxInner({
   }, [onKeyDown])
 
   const {isTabletOrDesktop} = useWebMediaQueries()
-  const btnStyle = React.useMemo(() => {
+  const btnStyle = useMemo(() => {
     return isTabletOrDesktop ? styles.btnTablet : styles.btnMobile
   }, [isTabletOrDesktop])
-  const iconSize = React.useMemo(() => {
+  const iconSize = useMemo(() => {
     return isTabletOrDesktop ? 32 : 24
   }, [isTabletOrDesktop])
 

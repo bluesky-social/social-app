@@ -1,9 +1,9 @@
-import React from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
-import {usePalette} from 'lib/hooks/usePalette'
-import {ListCard} from 'view/com/lists/ListCard'
 import {AppBskyGraphDefs} from '@atproto/api'
+
+import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
+import {ListCard} from 'view/com/lists/ListCard'
 
 export function ListEmbed({
   item,

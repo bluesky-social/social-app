@@ -1,4 +1,4 @@
-import React, {memo} from 'react'
+import {memo, ReactNode, useCallback, useMemo} from 'react'
 import {TouchableOpacity} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -44,7 +44,7 @@ let ProfileMenu = ({
   profile,
 }: {
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
-}): React.ReactNode => {
+}): ReactNode => {
   const {_} = useLingui()
   const {currentAccount, hasSession} = useSession()
   const t = useTheme()
@@ -70,22 +70,22 @@ let ProfileMenu = ({
   const blockPromptControl = Prompt.usePromptControl()
   const loggedOutWarningPromptControl = Prompt.usePromptControl()
 
-  const showLoggedOutWarning = React.useMemo(() => {
+  const showLoggedOutWarning = useMemo(() => {
     return !!profile.labels?.find(label => label.val === '!no-unauthenticated')
   }, [profile.labels])
 
-  const invalidateProfileQuery = React.useCallback(() => {
+  const invalidateProfileQuery = useCallback(() => {
     queryClient.invalidateQueries({
       queryKey: profileQueryKey(profile.did),
     })
   }, [queryClient, profile.did])
 
-  const onPressShare = React.useCallback(() => {
+  const onPressShare = useCallback(() => {
     track('ProfileHeader:ShareButtonClicked')
     shareUrl(toShareUrl(makeProfileLink(profile)))
   }, [track, profile])
 
-  const onPressAddRemoveLists = React.useCallback(() => {
+  const onPressAddRemoveLists = useCallback(() => {
     track('ProfileHeader:AddToListsButtonClicked')
     openModal({
       name: 'user-add-remove-lists',
@@ -97,7 +97,7 @@ let ProfileMenu = ({
     })
   }, [track, profile, openModal, invalidateProfileQuery])
 
-  const onPressMuteAccount = React.useCallback(async () => {
+  const onPressMuteAccount = useCallback(async () => {
     if (profile.viewer?.muted) {
       track('ProfileHeader:UnmuteAccountButtonClicked')
       try {
@@ -123,7 +123,7 @@ let ProfileMenu = ({
     }
   }, [profile.viewer?.muted, track, queueUnmute, _, queueMute])
 
-  const blockAccount = React.useCallback(async () => {
+  const blockAccount = useCallback(async () => {
     if (profile.viewer?.blocking) {
       track('ProfileHeader:UnblockAccountButtonClicked')
       try {
@@ -149,7 +149,7 @@ let ProfileMenu = ({
     }
   }, [profile.viewer?.blocking, track, _, queueUnblock, queueBlock])
 
-  const onPressFollowAccount = React.useCallback(async () => {
+  const onPressFollowAccount = useCallback(async () => {
     track('ProfileHeader:FollowButtonClicked')
     try {
       await queueFollow()
@@ -162,7 +162,7 @@ let ProfileMenu = ({
     }
   }, [_, queueFollow, track])
 
-  const onPressUnfollowAccount = React.useCallback(async () => {
+  const onPressUnfollowAccount = useCallback(async () => {
     track('ProfileHeader:UnfollowButtonClicked')
     try {
       await queueUnfollow()
@@ -175,7 +175,7 @@ let ProfileMenu = ({
     }
   }, [_, queueUnfollow, track])
 
-  const onPressReportAccount = React.useCallback(() => {
+  const onPressReportAccount = useCallback(() => {
     track('ProfileHeader:ReportAccountButtonClicked')
     reportDialogControl.open()
   }, [track, reportDialogControl])

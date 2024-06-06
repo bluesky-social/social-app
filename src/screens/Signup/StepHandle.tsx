@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -23,7 +23,7 @@ export function StepHandle() {
   const t = useTheme()
   const {state, dispatch} = useSignupContext()
 
-  const [validCheck, setValidCheck] = React.useState<IsValidHandle>({
+  const [validCheck, setValidCheck] = useState<IsValidHandle>({
     handleChars: false,
     hyphenStartOrEnd: false,
     frontLength: false,
@@ -32,12 +32,12 @@ export function StepHandle() {
   })
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setValidCheck(validateHandle(state.handle, state.userDomain))
     }, [state.handle, state.userDomain]),
   )
 
-  const onHandleChange = React.useCallback(
+  const onHandleChange = useCallback(
     (value: string) => {
       if (state.error) {
         dispatch({type: 'setError', value: ''})

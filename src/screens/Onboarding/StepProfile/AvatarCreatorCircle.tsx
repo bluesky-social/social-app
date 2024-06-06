@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {View} from 'react-native'
 
 import {Avatar} from '#/screens/Onboarding/StepProfile/index'
@@ -14,7 +14,7 @@ export function AvatarCreatorCircle({
   const t = useTheme()
   const Icon = avatar.placeholder.component
 
-  const styles = React.useMemo(
+  const styles = useMemo(
     () => ({
       imageContainer: [
         a.rounded_full,

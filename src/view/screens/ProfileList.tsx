@@ -1,4 +1,12 @@
-import React, {useCallback, useMemo} from 'react'
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import {AppBskyGraphDefs, AtUri, RichText as RichTextAPI} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -119,8 +127,8 @@ function ProfileListScreenLoaded({
   const {openComposer} = useComposerControls()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {rkey} = route.params
-  const feedSectionRef = React.useRef<SectionRef>(null)
-  const aboutSectionRef = React.useRef<SectionRef>(null)
+  const feedSectionRef = useRef<SectionRef>(null)
+  const aboutSectionRef = useRef<SectionRef>(null)
   const {openModal} = useModalControls()
   const isCurateList = list.purpose === 'app.bsky.graph.defs#curatelist'
   const isScreenFocused = useIsFocused()
@@ -145,7 +153,7 @@ function ProfileListScreenLoaded({
     })
   }, [openModal, list, isCurateList, queryClient])
 
-  const onCurrentPageSelected = React.useCallback(
+  const onCurrentPageSelected = useCallback(
     (index: number) => {
       if (index === 0) {
         feedSectionRef.current?.scrollToTop()
@@ -272,7 +280,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
   )
   const isPinned = Boolean(savedFeedConfig?.pinned)
 
-  const onTogglePinned = React.useCallback(async () => {
+  const onTogglePinned = useCallback(async () => {
     playHaptic()
 
     try {
@@ -312,7 +320,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     savedFeedConfig,
   ])
 
-  const onRemoveFromSavedFeeds = React.useCallback(async () => {
+  const onRemoveFromSavedFeeds = useCallback(async () => {
     playHaptic()
     if (!savedFeedConfig) return
     try {
@@ -698,11 +706,11 @@ interface FeedSectionProps {
   scrollElRef: ListRef
   isFocused: boolean
 }
-const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
+const FeedSection = forwardRef<SectionRef, FeedSectionProps>(
   function FeedSectionImpl({feed, scrollElRef, headerHeight, isFocused}, ref) {
     const queryClient = useQueryClient()
-    const [hasNew, setHasNew] = React.useState(false)
-    const [isScrolledDown, setIsScrolledDown] = React.useState(false)
+    const [hasNew, setHasNew] = useState(false)
+    const [isScrolledDown, setIsScrolledDown] = useState(false)
     const isScreenFocused = useIsFocused()
     const {_} = useLingui()
 
@@ -714,11 +722,11 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
       queryClient.resetQueries({queryKey: FEED_RQKEY(feed)})
       setHasNew(false)
     }, [scrollElRef, headerHeight, queryClient, feed, setHasNew])
-    React.useImperativeHandle(ref, () => ({
+    useImperativeHandle(ref, () => ({
       scrollToTop: onScrollToTop,
     }))
 
-    React.useEffect(() => {
+    useEffect(() => {
       if (!isScreenFocused) {
         return
       }
@@ -761,7 +769,7 @@ interface AboutSectionProps {
   headerHeight: number
   scrollElRef: ListRef
 }
-const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
+const AboutSection = forwardRef<SectionRef, AboutSectionProps>(
   function AboutSectionImpl(
     {list, onPressAddUser, headerHeight, scrollElRef},
     ref,
@@ -771,7 +779,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
     const {_} = useLingui()
     const {isMobile} = useWebMediaQueries()
     const {currentAccount} = useSession()
-    const [isScrolledDown, setIsScrolledDown] = React.useState(false)
+    const [isScrolledDown, setIsScrolledDown] = useState(false)
     const isCurateList = list.purpose === 'app.bsky.graph.defs#curatelist'
     const isOwner = list.creator.did === currentAccount?.did
 
@@ -793,11 +801,11 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
       })
     }, [scrollElRef, headerHeight])
 
-    React.useImperativeHandle(ref, () => ({
+    useImperativeHandle(ref, () => ({
       scrollToTop: onScrollToTop,
     }))
 
-    const renderHeader = React.useCallback(() => {
+    const renderHeader = useCallback(() => {
       return (
         <View>
           <View
@@ -937,6 +945,7 @@ function ErrorScreen({error}: {error: string}) {
   const pal = usePalette('default')
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
+
   const onPressBack = useCallback(() => {
     if (navigation.canGoBack()) {
       navigation.goBack()

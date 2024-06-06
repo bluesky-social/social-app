@@ -1,4 +1,4 @@
-import React from 'react'
+import {PropsWithChildren, useContext, useEffect, useRef} from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
@@ -27,17 +27,17 @@ const COL_WIDTH = 420
 
 export const OnboardingControls = createPortalGroup()
 
-export function Layout({children}: React.PropsWithChildren<{}>) {
+export function Layout({children}: PropsWithChildren<{}>) {
   const {_} = useLingui()
   const t = useTheme()
   const insets = useSafeAreaInsets()
   const {gtMobile} = useBreakpoints()
   const onboardDispatch = useOnboardingDispatch()
-  const {state, dispatch} = React.useContext(Context)
-  const scrollview = React.useRef<ScrollView>(null)
-  const prevActiveStep = React.useRef<string>(state.activeStep)
+  const {state, dispatch} = useContext(Context)
+  const scrollview = useRef<ScrollView>(null)
+  const prevActiveStep = useRef<string>(state.activeStep)
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (state.activeStep !== prevActiveStep.current) {
       prevActiveStep.current = state.activeStep
       scrollview.current?.scrollTo({y: 0, animated: false})
@@ -202,10 +202,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
   )
 }
 
-export function TitleText({
-  children,
-  style,
-}: React.PropsWithChildren<TextStyleProp>) {
+export function TitleText({children, style}: PropsWithChildren<TextStyleProp>) {
   return (
     <Text
       style={[
@@ -225,7 +222,7 @@ export function TitleText({
 export function DescriptionText({
   children,
   style,
-}: React.PropsWithChildren<TextStyleProp>) {
+}: PropsWithChildren<TextStyleProp>) {
   const t = useTheme()
   return (
     <P style={[t.atoms.text_contrast_medium, flatten(style)]}>{children}</P>

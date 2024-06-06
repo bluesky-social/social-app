@@ -1,20 +1,21 @@
-import React from 'react'
+import {useCallback, useMemo} from 'react'
 import {StyleSheet, View} from 'react-native'
-import {ScrollView} from '../util'
-import {Text} from '../../util/text/Text'
+import {Trans} from '@lingui/macro'
+
+import {useModalControls} from '#/state/modals'
+import {
+  hasPostLanguage,
+  useLanguagePrefs,
+  useLanguagePrefsApi,
+} from '#/state/preferences/languages'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {deviceLocales} from 'platform/detection'
-import {LANGUAGES, LANGUAGES_MAP_CODE2} from '../../../../locale/languages'
-import {ConfirmLanguagesButton} from './ConfirmLanguagesButton'
 import {ToggleButton} from 'view/com/util/forms/ToggleButton'
-import {Trans} from '@lingui/macro'
-import {useModalControls} from '#/state/modals'
-import {
-  useLanguagePrefs,
-  useLanguagePrefsApi,
-  hasPostLanguage,
-} from '#/state/preferences/languages'
+import {LANGUAGES, LANGUAGES_MAP_CODE2} from '../../../../locale/languages'
+import {Text} from '../../util/text/Text'
+import {ScrollView} from '../util'
+import {ConfirmLanguagesButton} from './ConfirmLanguagesButton'
 
 export const snapPoints = ['100%']
 
@@ -24,11 +25,11 @@ export function Component() {
   const setLangPrefs = useLanguagePrefsApi()
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
-  const onPressDone = React.useCallback(() => {
+  const onPressDone = useCallback(() => {
     closeModal()
   }, [closeModal])
 
-  const languages = React.useMemo(() => {
+  const languages = useMemo(() => {
     const langs = LANGUAGES.filter(
       lang =>
         !!lang.code2.trim() &&
@@ -49,7 +50,7 @@ export function Component() {
     return langs
   }, [langPrefs])
 
-  const onPress = React.useCallback(
+  const onPress = useCallback(
     (code2: string) => {
       setLangPrefs.togglePostLanguage(code2)
     },

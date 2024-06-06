@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useState} from 'react'
 import DatePicker from 'react-native-date-picker'
 
 import {useTheme} from '#/alf'
@@ -19,9 +19,9 @@ export function DateField({
   accessibilityHint,
 }: DateFieldProps) {
   const t = useTheme()
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = useState(false)
 
-  const onChangeInternal = React.useCallback(
+  const onChangeInternal = useCallback(
     (date: Date) => {
       setOpen(false)
 
@@ -31,11 +31,11 @@ export function DateField({
     [onChangeDate, setOpen],
   )
 
-  const onPress = React.useCallback(() => {
+  const onPress = useCallback(() => {
     setOpen(true)
   }, [])
 
-  const onCancel = React.useCallback(() => {
+  const onCancel = useCallback(() => {
     setOpen(false)
   }, [])
 

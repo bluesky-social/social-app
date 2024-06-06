@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useMemo} from 'react'
 import {StyleSheet, View} from 'react-native'
 import RNPickerSelect, {PickerSelectProps} from 'react-native-picker-select'
 import {
@@ -37,18 +37,18 @@ export function LanguageSettingsScreen(_props: Props) {
   const {openModal} = useModalControls()
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       screen('Settings')
       setMinimalShellMode(false)
     }, [screen, setMinimalShellMode]),
   )
 
-  const onPressContentLanguages = React.useCallback(() => {
+  const onPressContentLanguages = useCallback(() => {
     track('Settings:ContentlanguagesButtonClicked')
     openModal({name: 'content-languages-settings'})
   }, [track, openModal])
 
-  const onChangePrimaryLanguage = React.useCallback(
+  const onChangePrimaryLanguage = useCallback(
     (value: Parameters<PickerSelectProps['onValueChange']>[0]) => {
       if (!value) return
       if (langPrefs.primaryLanguage !== value) {
@@ -58,7 +58,7 @@ export function LanguageSettingsScreen(_props: Props) {
     [langPrefs, setLangPrefs],
   )
 
-  const onChangeAppLanguage = React.useCallback(
+  const onChangeAppLanguage = useCallback(
     (value: Parameters<PickerSelectProps['onValueChange']>[0]) => {
       if (!value) return
       if (langPrefs.appLanguage !== value) {
@@ -68,7 +68,7 @@ export function LanguageSettingsScreen(_props: Props) {
     [langPrefs, setLangPrefs],
   )
 
-  const myLanguages = React.useMemo(() => {
+  const myLanguages = useMemo(() => {
     return (
       langPrefs.contentLanguages
         .map(lang => LANGUAGES.find(l => l.code2 === lang))

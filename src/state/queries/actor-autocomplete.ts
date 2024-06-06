@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
 import {keepPreviousData, useQuery, useQueryClient} from '@tanstack/react-query'
 
@@ -43,7 +43,7 @@ export function useActorAutocompleteQuery(
         : undefined
       return res?.data.actors || []
     },
-    select: React.useCallback(
+    select: useCallback(
       (data: AppBskyActorDefs.ProfileViewBasic[]) => {
         return computeSuggestions(data, moderationOpts || DEFAULT_MOD_OPTS)
       },
@@ -59,7 +59,7 @@ export function useActorAutocompleteFn() {
   const moderationOpts = useModerationOpts()
   const agent = useAgent()
 
-  return React.useCallback(
+  return useCallback(
     async ({query, limit = 8}: {query: string; limit?: number}) => {
       query = query.toLowerCase()
       let res

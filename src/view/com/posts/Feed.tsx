@@ -1,4 +1,12 @@
-import React, {memo} from 'react'
+import {
+  memo,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {
   ActivityIndicator,
   AppState,
@@ -89,7 +97,7 @@ let Feed = ({
   ListHeaderComponent?: () => JSX.Element
   extraData?: any
   savedFeedConfig?: AppBskyActorDefs.SavedFeed
-}): React.ReactNode => {
+}): ReactNode => {
   const theme = useTheme()
   const {track} = useAnalytics()
   const {_} = useLingui()
@@ -97,12 +105,12 @@ let Feed = ({
   const {currentAccount} = useSession()
   const initialNumToRender = useInitialNumToRender()
   const feedFeedback = useFeedFeedbackContext()
-  const [isPTRing, setIsPTRing] = React.useState(false)
-  const checkForNewRef = React.useRef<(() => void) | null>(null)
-  const lastFetchRef = React.useRef<number>(Date.now())
+  const [isPTRing, setIsPTRing] = useState(false)
+  const checkForNewRef = useRef<(() => void) | null>(null)
+  const lastFetchRef = useRef<number>(Date.now())
   const [feedType, feedUri] = feed.split('|')
 
-  const opts = React.useMemo(
+  const opts = useMemo(
     () => ({enabled, ignoreFilterFor}),
     [enabled, ignoreFilterFor],
   )
@@ -120,12 +128,12 @@ let Feed = ({
   if (data?.pages[0]) {
     lastFetchRef.current = data?.pages[0].fetchedAt
   }
-  const isEmpty = React.useMemo(
+  const isEmpty = useMemo(
     () => !isFetching && !data?.pages?.some(page => page.slices.length),
     [isFetching, data],
   )
 
-  const checkForNew = React.useCallback(async () => {
+  const checkForNew = useCallback(async () => {
     if (!data?.pages[0] || isFetching || !onHasNew || !enabled || disablePoll) {
       return
     }
@@ -139,7 +147,7 @@ let Feed = ({
   }, [feed, data, isFetching, onHasNew, enabled, disablePoll])
 
   const myDid = currentAccount?.did || ''
-  const onPostCreated = React.useCallback(() => {
+  const onPostCreated = useCallback(() => {
     // NOTE
     // only invalidate if there's 1 page
     // more than 1 page can trigger some UI freakouts on iOS and android
@@ -152,16 +160,16 @@ let Feed = ({
       queryClient.invalidateQueries({queryKey: RQKEY(feed)})
     }
   }, [queryClient, feed, data, myDid])
-  React.useEffect(() => {
+  useEffect(() => {
     return listenPostCreated(onPostCreated)
   }, [onPostCreated])
 
-  React.useEffect(() => {
+  useEffect(() => {
     // we store the interval handler in a ref to avoid needless
     // reassignments in other effects
     checkForNewRef.current = checkForNew
   }, [checkForNew])
-  React.useEffect(() => {
+  useEffect(() => {
     if (enabled) {
       const timeSinceFirstLoad = Date.now() - lastFetchRef.current
       // DISABLED need to check if this is causing random feed refreshes -prf
@@ -178,7 +186,7 @@ let Feed = ({
       }
     }
   }, [enabled, feed, queryClient, scrollElRef])
-  React.useEffect(() => {
+  useEffect(() => {
     let cleanup1: () => void | undefined, cleanup2: () => void | undefined
     const subscription = AppState.addEventListener('change', nextAppState => {
       // check for new on app foreground
@@ -198,7 +206,7 @@ let Feed = ({
     }
   }, [pollInterval])
 
-  const feedItems = React.useMemo(() => {
+  const feedItems = useMemo(() => {
     let arr: any[] = []
     if (KNOWN_SHUTDOWN_FEEDS.includes(feedUri)) {
       arr = arr.concat([FEED_SHUTDOWN_MSG_ITEM])
@@ -225,7 +233,7 @@ let Feed = ({
   // events
   // =
 
-  const onRefresh = React.useCallback(async () => {
+  const onRefresh = useCallback(async () => {
     track('Feed:onRefresh')
     logEvent('feed:refresh:sampled', {
       feedType: feedType,
@@ -242,7 +250,7 @@ let Feed = ({
     setIsPTRing(false)
   }, [refetch, track, setIsPTRing, onHasNew, feed, feedType])
 
-  const onEndReached = React.useCallback(async () => {
+  const onEndReached = useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
 
     logEvent('feed:endReached:sampled', {
@@ -267,19 +275,19 @@ let Feed = ({
     feedItems.length,
   ])
 
-  const onPressTryAgain = React.useCallback(() => {
+  const onPressTryAgain = useCallback(() => {
     refetch()
     onHasNew?.(false)
   }, [refetch, onHasNew])
 
-  const onPressRetryLoadMore = React.useCallback(() => {
+  const onPressRetryLoadMore = useCallback(() => {
     fetchNextPage()
   }, [fetchNextPage])
 
   // rendering
   // =
 
-  const renderItem = React.useCallback(
+  const renderItem = useCallback(
     ({item, index}: ListRenderItemInfo<any>) => {
       if (item === EMPTY_FEED_ITEM) {
         return renderEmptyState()
@@ -328,7 +336,7 @@ let Feed = ({
 
   const shouldRenderEndOfFeed =
     !hasNextPage && !isEmpty && !isFetching && !isError && !!renderEndOfFeed
-  const FeedFooter = React.useCallback(() => {
+  const FeedFooter = useCallback(() => {
     /**
      * A bit of padding at the bottom of the feed as you scroll and when you
      * reach the end, so that content isn't cut off by the bottom of the

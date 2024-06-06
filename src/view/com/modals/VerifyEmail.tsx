@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import {useEffect, useState} from 'react'
 import {
   ActivityIndicator,
   Pressable,
@@ -53,7 +53,7 @@ export function Component({
   const {isMobile} = useWebMediaQueries()
   const {openModal, closeModal} = useModalControls()
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!currentAccount) {
       logger.error(`VerifyEmail modal opened without currentAccount`)
       closeModal()

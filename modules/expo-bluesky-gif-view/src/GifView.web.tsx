@@ -1,11 +1,10 @@
-import * as React from 'react'
+import {createRef, PureComponent, RefObject} from 'react'
 import {StyleSheet} from 'react-native'
 
 import {GifViewProps} from './GifView.types'
 
-export class GifView extends React.PureComponent<GifViewProps> {
-  private readonly videoPlayerRef: React.RefObject<HTMLMediaElement> =
-    React.createRef()
+export class GifView extends PureComponent<GifViewProps> {
+  private readonly videoPlayerRef: RefObject<HTMLMediaElement> = createRef()
   private isLoaded = false
 
   constructor(props: GifViewProps | Readonly<GifViewProps>) {

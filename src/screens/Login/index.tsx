@@ -1,4 +1,4 @@
-import React from 'react'
+import {useEffect, useState} from 'react'
 import {KeyboardAvoidingView} from 'react-native'
 import {LayoutAnimationConfig} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
@@ -37,14 +37,14 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
     acc => acc.did === requestedAccountSwitchTo,
   )
 
-  const [error, setError] = React.useState<string>('')
-  const [serviceUrl, setServiceUrl] = React.useState<string>(
+  const [error, setError] = useState<string>('')
+  const [serviceUrl, setServiceUrl] = useState<string>(
     requestedAccount?.service || DEFAULT_SERVICE,
   )
-  const [initialHandle, setInitialHandle] = React.useState<string>(
+  const [initialHandle, setInitialHandle] = useState<string>(
     requestedAccount?.handle || '',
   )
-  const [currentForm, setCurrentForm] = React.useState<Forms>(
+  const [currentForm, setCurrentForm] = useState<Forms>(
     requestedAccount
       ? Forms.Login
       : accounts.length
@@ -71,7 +71,7 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
     setCurrentForm(form)
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (serviceError) {
       setError(
         _(

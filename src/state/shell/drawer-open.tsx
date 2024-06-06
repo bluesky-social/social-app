@@ -1,13 +1,13 @@
-import React from 'react'
+import {createContext, PropsWithChildren, useContext, useState} from 'react'
 
 type StateContext = boolean
 type SetContext = (v: boolean) => void
 
-const stateContext = React.createContext<StateContext>(false)
-const setContext = React.createContext<SetContext>((_: boolean) => {})
+const stateContext = createContext<StateContext>(false)
+const setContext = createContext<SetContext>((_: boolean) => {})
 
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [state, setState] = React.useState(false)
+export function Provider({children}: PropsWithChildren<{}>) {
+  const [state, setState] = useState(false)
 
   return (
     <stateContext.Provider value={state}>
@@ -17,9 +17,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 export function useIsDrawerOpen() {
-  return React.useContext(stateContext)
+  return useContext(stateContext)
 }
 
 export function useSetDrawerOpen() {
-  return React.useContext(setContext)
+  return useContext(setContext)
 }

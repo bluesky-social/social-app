@@ -1,4 +1,5 @@
-import React, {
+import {
+  RefObject,
   useCallback,
   useImperativeHandle,
   useMemo,
@@ -34,7 +35,7 @@ export function GifSelectDialog({
   onClose,
   onSelectGif: onSelectGifProp,
 }: {
-  controlRef: React.RefObject<{open: () => void}>
+  controlRef: RefObject<{open: () => void}>
   onClose: () => void
   onSelectGif: (gif: Gif) => void
 }) {
@@ -111,7 +112,7 @@ function GifList({
     [onSelectGif],
   )
 
-  const onEndReached = React.useCallback(() => {
+  const onEndReached = useCallback(() => {
     if (isFetchingNextPage || !hasNextPage || error) return
     fetchNextPage()
   }, [isFetchingNextPage, hasNextPage, error, fetchNextPage])

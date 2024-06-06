@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useEffect, useMemo, useState} from 'react'
 import {
   ActivityIndicator,
   GestureResponderEvent,
@@ -80,7 +80,7 @@ function Player({
 }) {
   // ensures we only load what's requested
   // when it's a youtube video, we need to allow both bsky.app and youtube.com
-  const onShouldStartLoadWithRequest = React.useCallback(
+  const onShouldStartLoadWithRequest = useCallback(
     (event: ShouldStartLoadRequest) =>
       event.url === params.playerUri ||
       (params.source.startsWith('youtube') &&
@@ -124,10 +124,10 @@ export function ExternalPlayer({
   const externalEmbedsPrefs = useExternalEmbedsPrefs()
   const consentDialogControl = useDialogControl()
 
-  const [isPlayerActive, setPlayerActive] = React.useState(false)
-  const [isLoading, setIsLoading] = React.useState(true)
+  const [isPlayerActive, setPlayerActive] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
-  const aspect = React.useMemo(() => {
+  const aspect = useMemo(() => {
     return getPlayerAspect({
       type: params.type,
       width: windowDims.width,
@@ -161,7 +161,7 @@ export function ExternalPlayer({
   }, false) // False here disables autostarting the callback
 
   // watch for leaving the viewport due to scrolling
-  React.useEffect(() => {
+  useEffect(() => {
     // We don't want to do anything if the player isn't active
     if (!isPlayerActive) return
 
@@ -180,11 +180,11 @@ export function ExternalPlayer({
     }
   }, [navigation, isPlayerActive, frameCallback])
 
-  const onLoad = React.useCallback(() => {
+  const onLoad = useCallback(() => {
     setIsLoading(false)
   }, [])
 
-  const onPlayPress = React.useCallback(
+  const onPlayPress = useCallback(
     (event: GestureResponderEvent) => {
       // Prevent this from propagating upward on web
       event.preventDefault()
@@ -199,7 +199,7 @@ export function ExternalPlayer({
     [externalEmbedsPrefs, consentDialogControl, params.source],
   )
 
-  const onAcceptConsent = React.useCallback(() => {
+  const onAcceptConsent = useCallback(() => {
     setPlayerActive(true)
   }, [])
 

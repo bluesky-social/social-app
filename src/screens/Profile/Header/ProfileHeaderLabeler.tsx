@@ -1,4 +1,4 @@
-import React, {memo, useMemo} from 'react'
+import {memo, ReactNode, useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {
   AppBskyActorDefs,
@@ -56,7 +56,7 @@ let ProfileHeaderLabeler = ({
   moderationOpts,
   hideBackButton = false,
   isPlaceholderProfile,
-}: Props): React.ReactNode => {
+}: Props): ReactNode => {
   const profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> =
     useProfileShadow(profileUnshadowed)
   const t = useTheme()
@@ -86,12 +86,10 @@ let ProfileHeaderLabeler = ({
   const {mutateAsync: likeMod, isPending: isLikePending} = useLikeMutation()
   const {mutateAsync: unlikeMod, isPending: isUnlikePending} =
     useUnlikeMutation()
-  const [likeUri, setLikeUri] = React.useState<string>(
-    labeler.viewer?.like || '',
-  )
-  const [likeCount, setLikeCount] = React.useState(labeler.likeCount || 0)
+  const [likeUri, setLikeUri] = useState<string>(labeler.viewer?.like || '')
+  const [likeCount, setLikeCount] = useState(labeler.likeCount || 0)
 
-  const onToggleLiked = React.useCallback(async () => {
+  const onToggleLiked = useCallback(async () => {
     if (!labeler) {
       return
     }
@@ -119,7 +117,7 @@ let ProfileHeaderLabeler = ({
     }
   }, [labeler, playHaptic, likeUri, unlikeMod, track, likeMod, _])
 
-  const onPressEditProfile = React.useCallback(() => {
+  const onPressEditProfile = useCallback(() => {
     track('ProfileHeader:EditProfileButtonClicked')
     openModal({
       name: 'edit-profile',
@@ -127,7 +125,7 @@ let ProfileHeaderLabeler = ({
     })
   }, [track, openModal, profile])
 
-  const onPressSubscribe = React.useCallback(
+  const onPressSubscribe = useCallback(
     () =>
       requireAuth(async (): Promise<void> => {
         if (!canSubscribe) {
@@ -154,7 +152,7 @@ let ProfileHeaderLabeler = ({
     ],
   )
 
-  const isMe = React.useMemo(
+  const isMe = useMemo(
     () => currentAccount?.did === profile.did,
     [currentAccount, profile],
   )

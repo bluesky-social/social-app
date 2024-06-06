@@ -1,6 +1,16 @@
 /* eslint-disable react/prop-types */
 
-import React from 'react'
+import {
+  forwardRef,
+  PropsWithChildren,
+  ReactNode,
+  Ref,
+  useCallback,
+  useContext,
+  useId,
+  useMemo,
+  useState,
+} from 'react'
 import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -23,10 +33,10 @@ import {Portal} from '#/components/Portal'
 import {Text} from '#/components/Typography'
 
 export function useMenuControl(): Dialog.DialogControlProps {
-  const id = React.useId()
-  const [isOpen, setIsOpen] = React.useState(false)
+  const id = useId()
+  const [isOpen, setIsOpen] = useState(false)
 
-  return React.useMemo(
+  return useMemo(
     () => ({
       id,
       ref: {current: null},
@@ -43,24 +53,24 @@ export function useMenuControl(): Dialog.DialogControlProps {
 }
 
 export function useMemoControlContext() {
-  return React.useContext(Context)
+  return useContext(Context)
 }
 
 export function Root({
   children,
   control,
-}: React.PropsWithChildren<{
+}: PropsWithChildren<{
   control?: Dialog.DialogOuterProps['control']
 }>) {
   const {_} = useLingui()
   const defaultControl = useMenuControl()
-  const context = React.useMemo<ContextType>(
+  const context = useMemo<ContextType>(
     () => ({
       control: control || defaultControl,
     }),
     [control, defaultControl],
   )
-  const onOpenChange = React.useCallback(
+  const onOpenChange = useCallback(
     (open: boolean) => {
       if (context.control.isOpen && !open) {
         context.control.close()
@@ -94,14 +104,14 @@ export function Root({
   )
 }
 
-const RadixTriggerPassThrough = React.forwardRef(
+const RadixTriggerPassThrough = forwardRef(
   (
     props: {
       children: (
         props: RadixPassThroughTriggerProps & {
-          ref: React.Ref<any>
+          ref: Ref<any>
         },
-      ) => React.ReactNode
+      ) => ReactNode
     },
     ref,
   ) => {
@@ -112,7 +122,7 @@ const RadixTriggerPassThrough = React.forwardRef(
 RadixTriggerPassThrough.displayName = 'RadixTriggerPassThrough'
 
 export function Trigger({children, label}: TriggerProps) {
-  const {control} = React.useContext(Context)
+  const {control} = useContext(Context)
   const {
     state: hovered,
     onIn: onMouseEnter,
@@ -166,7 +176,7 @@ export function Trigger({children, label}: TriggerProps) {
 export function Outer({
   children,
   style,
-}: React.PropsWithChildren<{
+}: PropsWithChildren<{
   showCancel?: boolean
   style?: StyleProp<ViewStyle>
 }>) {
@@ -202,7 +212,7 @@ export function Outer({
 
 export function Item({children, label, onPress, ...rest}: ItemProps) {
   const t = useTheme()
-  const {control} = React.useContext(Context)
+  const {control} = useContext(Context)
   const {
     state: hovered,
     onIn: onMouseEnter,

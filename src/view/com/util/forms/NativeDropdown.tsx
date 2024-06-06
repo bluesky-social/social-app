@@ -1,13 +1,14 @@
-import React from 'react'
+import {ComponentProps, PropsWithChildren, useRef, useState} from 'react'
+import {Platform, Pressable, StyleSheet, View, ViewStyle} from 'react-native'
+import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as DropdownMenu from 'zeego/dropdown-menu'
-import {Pressable, StyleSheet, Platform, View, ViewStyle} from 'react-native'
-import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {MenuItemCommonProps} from 'zeego/lib/typescript/menu'
-import {usePalette} from 'lib/hooks/usePalette'
-import {isWeb} from 'platform/detection'
-import {useTheme} from 'lib/ThemeContext'
+
 import {HITSLOP_10} from 'lib/constants'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useTheme} from 'lib/ThemeContext'
+import {isWeb} from 'platform/detection'
 
 // Custom Dropdown Menu Components
 // ==
@@ -16,10 +17,10 @@ export const DropdownMenuRoot = DropdownMenu.Root
 export const DropdownMenuContent = DropdownMenu.Content
 
 type TriggerProps = Omit<
-  React.ComponentProps<(typeof DropdownMenu)['Trigger']>,
+  ComponentProps<(typeof DropdownMenu)['Trigger']>,
   'children'
 > &
-  React.PropsWithChildren<{
+  PropsWithChildren<{
     testID?: string
     accessibilityLabel?: string
     accessibilityHint?: string
@@ -28,7 +29,7 @@ export const DropdownMenuTrigger = DropdownMenu.create(
   (props: TriggerProps) => {
     const theme = useTheme()
     const defaultCtrlColor = theme.palette.default.postCtrl
-    const ref = React.useRef<View>(null)
+    const ref = useRef<View>(null)
 
     // HACK
     // fire a click event on the keyboard press to trigger the dropdown
@@ -70,11 +71,11 @@ export const DropdownMenuTrigger = DropdownMenu.create(
   'Trigger',
 )
 
-type ItemProps = React.ComponentProps<(typeof DropdownMenu)['Item']>
+type ItemProps = ComponentProps<(typeof DropdownMenu)['Item']>
 export const DropdownMenuItem = DropdownMenu.create(
   (props: ItemProps & {testID?: string}) => {
     const theme = useTheme()
-    const [focused, setFocused] = React.useState(false)
+    const [focused, setFocused] = useState(false)
     const backgroundColor = theme.colorScheme === 'dark' ? '#fff1' : '#0001'
 
     return (
@@ -95,7 +96,7 @@ export const DropdownMenuItem = DropdownMenu.create(
   'Item',
 )
 
-type TitleProps = React.ComponentProps<(typeof DropdownMenu)['ItemTitle']>
+type TitleProps = ComponentProps<(typeof DropdownMenu)['ItemTitle']>
 export const DropdownMenuItemTitle = DropdownMenu.create(
   (props: TitleProps) => {
     const pal = usePalette('default')
@@ -109,12 +110,12 @@ export const DropdownMenuItemTitle = DropdownMenu.create(
   'ItemTitle',
 )
 
-type IconProps = React.ComponentProps<(typeof DropdownMenu)['ItemIcon']>
+type IconProps = ComponentProps<(typeof DropdownMenu)['ItemIcon']>
 export const DropdownMenuItemIcon = DropdownMenu.create((props: IconProps) => {
   return <DropdownMenu.ItemIcon {...props} />
 }, 'ItemIcon')
 
-type SeparatorProps = React.ComponentProps<(typeof DropdownMenu)['Separator']>
+type SeparatorProps = ComponentProps<(typeof DropdownMenu)['Separator']>
 export const DropdownMenuSeparator = DropdownMenu.create(
   (props: SeparatorProps) => {
     const pal = usePalette('default')
@@ -158,7 +159,7 @@ type Props = {
  * It also creates a animated custom dropdown for web that uses
  * Radix UI primitives under the hood
  * @prop {DropdownItem[]} items - An array of dropdown items
- * @prop {React.ReactNode} children - A custom dropdown trigger
+ * @prop {ReactNode} children - A custom dropdown trigger
  */
 export function NativeDropdown({
   items,
@@ -166,7 +167,7 @@ export function NativeDropdown({
   testID,
   accessibilityLabel,
   accessibilityHint,
-}: React.PropsWithChildren<Props>) {
+}: PropsWithChildren<Props>) {
   const pal = usePalette('default')
   const theme = useTheme()
   const dropDownBackgroundColor =

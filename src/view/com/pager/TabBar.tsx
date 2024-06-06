@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {LayoutChangeEvent, ScrollView, StyleSheet, View} from 'react-native'
 
 import {isNative} from '#/platform/detection'
@@ -106,17 +106,14 @@ export function TabBar({
   )
 
   // calculates the x position of each item on mount and on layout change
-  const onItemLayout = React.useCallback(
-    (e: LayoutChangeEvent, index: number) => {
-      const x = e.nativeEvent.layout.x
-      setItemXs(prev => {
-        const Xs = [...prev]
-        Xs[index] = x
-        return Xs
-      })
-    },
-    [],
-  )
+  const onItemLayout = useCallback((e: LayoutChangeEvent, index: number) => {
+    const x = e.nativeEvent.layout.x
+    setItemXs(prev => {
+      const Xs = [...prev]
+      Xs[index] = x
+      return Xs
+    })
+  }, [])
 
   return (
     <View testID={testID} style={[pal.view, styles.outer]}>

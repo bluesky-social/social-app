@@ -1,4 +1,4 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {View} from 'react-native'
 import {AppBskyLabelerDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -39,7 +39,7 @@ export function SelectReportOptionView({
   const allReportOptions = useReportOptions()
   const reportOptions = allReportOptions[props.params.type]
 
-  const i18n = React.useMemo(() => {
+  const i18n = useMemo(() => {
     let title = _(msg`Report this content`)
     let description = _(msg`Why should this content be reviewed?`)
 

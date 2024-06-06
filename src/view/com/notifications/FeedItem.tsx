@@ -1,4 +1,4 @@
-import React, {memo, useEffect, useMemo, useState} from 'react'
+import {memo, ReactNode, useCallback, useEffect, useMemo, useState} from 'react'
 import {
   Animated,
   Pressable,
@@ -70,7 +70,7 @@ let FeedItem = ({
   item: FeedNotification
   moderationOpts: ModerationOpts
   hideTopBorder?: boolean
-}): React.ReactNode => {
+}): ReactNode => {
   const queryClient = useQueryClient()
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -100,7 +100,7 @@ let FeedItem = ({
     setAuthorsExpanded(currentlyExpanded => !currentlyExpanded)
   }
 
-  const onBeforePress = React.useCallback(() => {
+  const onBeforePress = useCallback(() => {
     precacheProfile(queryClient, item.notification.author)
   }, [queryClient, item.notification.author])
 
@@ -300,7 +300,7 @@ function ExpandListPressable({
   onToggleAuthorsExpanded,
 }: {
   hasMultipleAuthors: boolean
-  children: React.ReactNode
+  children: ReactNode
   onToggleAuthorsExpanded: () => void
 }) {
   if (hasMultipleAuthors) {
@@ -409,6 +409,7 @@ function ExpandedAuthorsList({
   const heightStyle = {
     height: Animated.multiply(heightInterp, targetHeight),
   }
+
   useEffect(() => {
     Animated.timing(heightInterp, {
       toValue: visible ? 1 : 0,

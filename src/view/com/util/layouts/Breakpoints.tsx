@@ -1,11 +1,9 @@
-import React from 'react'
+import {PropsWithChildren} from 'react'
 
-export const Desktop = ({}: React.PropsWithChildren<{}>) => null
-export const TabletOrDesktop = ({}: React.PropsWithChildren<{}>) => null
-export const Tablet = ({}: React.PropsWithChildren<{}>) => null
-export const TabletOrMobile = ({children}: React.PropsWithChildren<{}>) => (
+export const Desktop = ({}: PropsWithChildren<{}>) => null
+export const TabletOrDesktop = ({}: PropsWithChildren<{}>) => null
+export const Tablet = ({}: PropsWithChildren<{}>) => null
+export const TabletOrMobile = ({children}: PropsWithChildren<{}>) => (
   <>{children}</>
 )
-export const Mobile = ({children}: React.PropsWithChildren<{}>) => (
-  <>{children}</>
-)
+export const Mobile = ({children}: PropsWithChildren<{}>) => <>{children}</>

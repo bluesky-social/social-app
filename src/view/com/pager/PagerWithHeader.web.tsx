@@ -1,16 +1,24 @@
-import * as React from 'react'
+import {
+  forwardRef,
+  memo,
+  MutableRefObject,
+  ReactNode,
+  useCallback,
+  useState,
+} from 'react'
 import {FlatList, ScrollView, StyleSheet, View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
-import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
-import {TabBar} from './TabBar'
+
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {ListMethods} from '../util/List'
+import {TabBar} from './TabBar'
 
 export interface PagerWithHeaderChildParams {
   headerHeight: number
   isFocused: boolean
-  scrollElRef: React.MutableRefObject<FlatList<any> | ScrollView | null>
+  scrollElRef: MutableRefObject<FlatList<any> | ScrollView | null>
 }
 
 export interface PagerWithHeaderProps {
@@ -25,7 +33,7 @@ export interface PagerWithHeaderProps {
   onPageSelected?: (index: number) => void
   onCurrentPageSelected?: (index: number) => void
 }
-export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
+export const PagerWithHeader = forwardRef<PagerRef, PagerWithHeaderProps>(
   function PageWithHeaderImpl(
     {
       children,
@@ -39,9 +47,9 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     }: PagerWithHeaderProps,
     ref,
   ) {
-    const [currentPage, setCurrentPage] = React.useState(0)
+    const [currentPage, setCurrentPage] = useState(0)
 
-    const renderTabBar = React.useCallback(
+    const renderTabBar = useCallback(
       (props: RenderTabBarFnProps) => {
         return (
           <PagerTabBar
@@ -66,7 +74,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       ],
     )
 
-    const onPageSelectedInner = React.useCallback(
+    const onPageSelectedInner = useCallback(
       (index: number) => {
         setCurrentPage(index)
         onPageSelected?.(index)
@@ -74,7 +82,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       [onPageSelected, setCurrentPage],
     )
 
-    const onPageSelecting = React.useCallback((index: number) => {
+    const onPageSelecting = useCallback((index: number) => {
       setCurrentPage(index)
     }, [])
 
@@ -124,7 +132,7 @@ let PagerTabBar = ({
   onCurrentPageSelected?: (index: number) => void
   onSelect?: (index: number) => void
   tabBarAnchor?: JSX.Element | null | undefined
-}): React.ReactNode => {
+}): ReactNode => {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
   return (
@@ -160,7 +168,7 @@ let PagerTabBar = ({
     </>
   )
 }
-PagerTabBar = React.memo(PagerTabBar)
+PagerTabBar = memo(PagerTabBar)
 
 function PagerItem({
   isFocused,
@@ -176,7 +184,7 @@ function PagerItem({
   return renderTab({
     headerHeight: 0,
     isFocused,
-    scrollElRef: scrollElRef as React.MutableRefObject<
+    scrollElRef: scrollElRef as MutableRefObject<
       ListMethods | ScrollView | null
     >,
   })

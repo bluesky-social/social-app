@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {ListRenderItemInfo, Pressable, StyleSheet, View} from 'react-native'
 import {PostView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import {msg} from '@lingui/macro'
@@ -41,20 +41,20 @@ export default function HashtagScreen({
   const {_} = useLingui()
   const pal = usePalette('default')
 
-  const fullTag = React.useMemo(() => {
+  const fullTag = useMemo(() => {
     return `#${decodeURIComponent(tag)}`
   }, [tag])
 
-  const headerTitle = React.useMemo(() => {
+  const headerTitle = useMemo(() => {
     return enforceLen(fullTag.toLowerCase(), 24, true, 'middle')
   }, [fullTag])
 
-  const sanitizedAuthor = React.useMemo(() => {
+  const sanitizedAuthor = useMemo(() => {
     if (!author) return
     return sanitizeHandle(author)
   }, [author])
 
-  const onShare = React.useCallback(() => {
+  const onShare = useCallback(() => {
     const url = new URL('https://bsky.app')
     url.pathname = `/hashtag/${decodeURIComponent(tag)}`
     if (author) {
@@ -63,17 +63,17 @@ export default function HashtagScreen({
     shareUrl(url.toString())
   }, [tag, author])
 
-  const [activeTab, setActiveTab] = React.useState(0)
+  const [activeTab, setActiveTab] = useState(0)
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       setMinimalShellMode(false)
     }, [setMinimalShellMode]),
   )
 
-  const onPageSelected = React.useCallback(
+  const onPageSelected = useCallback(
     (index: number) => {
       setMinimalShellMode(false)
       setDrawerSwipeDisabled(index > 0)
@@ -82,7 +82,7 @@ export default function HashtagScreen({
     [setDrawerSwipeDisabled, setMinimalShellMode],
   )
 
-  const sections = React.useMemo(() => {
+  const sections = useMemo(() => {
     return [
       {
         title: _(msg`Top`),
@@ -165,9 +165,9 @@ function HashtagScreenTab({
 }) {
   const {_} = useLingui()
   const initialNumToRender = useInitialNumToRender()
-  const [isPTR, setIsPTR] = React.useState(false)
+  const [isPTR, setIsPTR] = useState(false)
 
-  const queryParam = React.useMemo(() => {
+  const queryParam = useMemo(() => {
     if (!author) return fullTag
     return `${fullTag} from:${sanitizeHandle(author)}`
   }, [fullTag, author])
@@ -184,17 +184,17 @@ function HashtagScreenTab({
     hasNextPage,
   } = useSearchPostsQuery({query: queryParam, sort, enabled: active})
 
-  const posts = React.useMemo(() => {
+  const posts = useMemo(() => {
     return data?.pages.flatMap(page => page.posts) || []
   }, [data])
 
-  const onRefresh = React.useCallback(async () => {
+  const onRefresh = useCallback(async () => {
     setIsPTR(true)
     await refetch()
     setIsPTR(false)
   }, [refetch])
 
-  const onEndReached = React.useCallback(() => {
+  const onEndReached = useCallback(() => {
     if (isFetchingNextPage || !hasNextPage || error) return
     fetchNextPage()
   }, [isFetchingNextPage, hasNextPage, error, fetchNextPage])

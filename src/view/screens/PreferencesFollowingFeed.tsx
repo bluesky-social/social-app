@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import {useMemo, useRef, useState} from 'react'
 import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Plural, Trans} from '@lingui/macro'
@@ -30,8 +30,8 @@ function RepliesThresholdInput({
   const pal = usePalette('default')
   const [value, setValue] = useState(initialValue)
   const {mutate: setFeedViewPref} = useSetFeedViewPreferencesMutation()
-  const preValue = React.useRef(initialValue)
-  const save = React.useMemo(
+  const preValue = useRef(initialValue)
+  const save = useMemo(
     () =>
       debounce(
         threshold =>

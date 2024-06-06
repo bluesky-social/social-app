@@ -1,4 +1,4 @@
-import React, {useCallback, useRef} from 'react'
+import {useCallback, useRef} from 'react'
 import {Keyboard} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'

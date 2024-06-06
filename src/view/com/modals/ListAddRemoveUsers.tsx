@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {
   ActivityIndicator,
   Pressable,
@@ -7,32 +7,33 @@ import {
   View,
 } from 'react-native'
 import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
-import {ScrollView, TextInput} from './util'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Text} from '../util/text/Text'
-import {Button} from '../util/forms/Button'
-import {UserAvatar} from '../util/UserAvatar'
-import * as Toast from '../util/Toast'
-import {s, colors} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
-import {isWeb} from 'platform/detection'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {useIsKeyboardVisible} from 'lib/hooks/useIsKeyboardVisible'
-import {cleanError} from 'lib/strings/errors'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {sanitizeHandle} from 'lib/strings/handles'
-import {HITSLOP_20} from '#/lib/constants'
-import {Trans, msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+
+import {HITSLOP_20} from '#/lib/constants'
 import {useModalControls} from '#/state/modals'
+import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {
-  useDangerousListMembershipsQuery,
   getMembership,
   ListMembersip,
+  useDangerousListMembershipsQuery,
   useListMembershipAddMutation,
   useListMembershipRemoveMutation,
 } from '#/state/queries/list-memberships'
-import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
+import {useIsKeyboardVisible} from 'lib/hooks/useIsKeyboardVisible'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {cleanError} from 'lib/strings/errors'
+import {sanitizeHandle} from 'lib/strings/handles'
+import {colors, s} from 'lib/styles'
+import {isWeb} from 'platform/detection'
+import {Button} from '../util/forms/Button'
+import {Text} from '../util/text/Text'
+import * as Toast from '../util/Toast'
+import {UserAvatar} from '../util/UserAvatar'
+import {ScrollView, TextInput} from './util'
 
 export const snapPoints = ['90%']
 
@@ -170,7 +171,7 @@ function UserResult({
   const pal = usePalette('default')
   const {_} = useLingui()
   const [isProcessing, setIsProcessing] = useState(false)
-  const membership = React.useMemo(
+  const membership = useMemo(
     () => getMembership(memberships, list.uri, profile.did),
     [memberships, list.uri, profile.did],
   )

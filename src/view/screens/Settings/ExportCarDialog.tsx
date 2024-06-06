@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -22,9 +22,9 @@ export function ExportCarDialog({
   const {_} = useLingui()
   const t = useTheme()
   const agent = useAgent()
-  const [loading, setLoading] = React.useState(false)
+  const [loading, setLoading] = useState(false)
 
-  const download = React.useCallback(async () => {
+  const download = useCallback(async () => {
     if (!agent.session) {
       return // shouldnt ever happen
     }

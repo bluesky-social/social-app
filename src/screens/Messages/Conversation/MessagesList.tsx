@@ -1,4 +1,12 @@
-import React, {useCallback, useRef} from 'react'
+import {
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import {FlatList, LayoutChangeEvent, View} from 'react-native'
 import {
   KeyboardStickyView,
@@ -81,9 +89,9 @@ export function MessagesList({
   footer,
 }: {
   hasScrolled: boolean
-  setHasScrolled: React.Dispatch<React.SetStateAction<boolean>>
+  setHasScrolled: Dispatch<SetStateAction<boolean>>
   blocked?: boolean
-  footer?: React.ReactNode
+  footer?: ReactNode
 }) {
   const convoState = useConvoActive()
   const agent = useAgent()
@@ -92,7 +100,7 @@ export function MessagesList({
 
   const flatListRef = useAnimatedRef<FlatList>()
 
-  const [newMessagesPill, setNewMessagesPill] = React.useState({
+  const [newMessagesPill, setNewMessagesPill] = useState({
     show: false,
     startContentOffset: 0,
   })
@@ -112,8 +120,9 @@ export function MessagesList({
 
   // -- Keep track of background state and positioning for new pill
   const layoutHeight = useSharedValue(0)
-  const didBackground = React.useRef(false)
-  React.useEffect(() => {
+  const didBackground = useRef(false)
+
+  useEffect(() => {
     if (convoState.status === ConvoStatus.Backgrounded) {
       didBackground.current = true
     }
@@ -204,7 +213,7 @@ export function MessagesList({
     }
   }, [convoState, hasScrolled, layoutHeight.value])
 
-  const onScroll = React.useCallback(
+  const onScroll = useCallback(
     (e: ReanimatedScrollEvent) => {
       'worklet'
       layoutHeight.value = e.layoutMeasurement.height
@@ -351,7 +360,7 @@ export function MessagesList({
   )
 
   // -- List layout changes (opening emoji keyboard, etc.)
-  const onListLayout = React.useCallback(
+  const onListLayout = useCallback(
     (e: LayoutChangeEvent) => {
       layoutHeight.value = e.nativeEvent.layout.height
 
@@ -370,7 +379,7 @@ export function MessagesList({
     ],
   )
 
-  const scrollToEndOnPress = React.useCallback(() => {
+  const scrollToEndOnPress = useCallback(() => {
     flatListRef.current?.scrollToOffset({
       offset: prevContentHeight.current,
       animated: true,

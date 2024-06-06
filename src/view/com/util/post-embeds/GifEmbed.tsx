@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useMemo, useRef, useState} from 'react'
 import {Pressable, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {AppBskyEmbedExternal} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -96,9 +96,9 @@ export function GifEmbed({
   const {_} = useLingui()
   const autoplayDisabled = useAutoplayDisabled()
 
-  const playerRef = React.useRef<GifView>(null)
+  const playerRef = useRef<GifView>(null)
 
-  const [playerState, setPlayerState] = React.useState<{
+  const [playerState, setPlayerState] = useState<{
     isPlaying: boolean
     isLoaded: boolean
   }>({
@@ -106,18 +106,15 @@ export function GifEmbed({
     isLoaded: false,
   })
 
-  const onPlayerStateChange = React.useCallback(
-    (e: GifViewStateChangeEvent) => {
-      setPlayerState(e.nativeEvent)
-    },
-    [],
-  )
+  const onPlayerStateChange = useCallback((e: GifViewStateChangeEvent) => {
+    setPlayerState(e.nativeEvent)
+  }, [])
 
-  const onPress = React.useCallback(() => {
+  const onPress = useCallback(() => {
     playerRef.current?.toggleAsync()
   }, [])
 
-  const parsedAlt = React.useMemo(
+  const parsedAlt = useMemo(
     () => parseAltFromGIFDescription(link.description),
     [link],
   )

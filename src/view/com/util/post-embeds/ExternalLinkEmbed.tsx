@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import {ReactNode, useCallback, useMemo} from 'react'
 import {StyleProp, View, ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
 import {AppBskyEmbedExternal} from '@atproto/api'
@@ -32,7 +32,7 @@ export const ExternalLinkEmbed = ({
   const {isMobile} = useWebMediaQueries()
   const externalEmbedPrefs = useExternalEmbedsPrefs()
 
-  const embedPlayerParams = React.useMemo(() => {
+  const embedPlayerParams = useMemo(() => {
     const params = parseEmbedPlayerFromUrl(link.uri)
 
     if (params && externalEmbedPrefs?.[params.source] !== 'hide') {
@@ -106,7 +106,7 @@ function LinkWrapper({
   link: AppBskyEmbedExternal.ViewExternal
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
-  children: React.ReactNode
+  children: ReactNode
 }) {
   const t = useTheme()
 

@@ -1,4 +1,4 @@
-import React, {Component, ErrorInfo, ReactNode} from 'react'
+import {Component, ErrorInfo, ReactNode} from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

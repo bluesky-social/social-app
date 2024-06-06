@@ -1,4 +1,4 @@
-import React from 'react'
+import {memo, ReactNode} from 'react'
 import {View} from 'react-native'
 import {AppBskyEmbedRecord} from '@atproto/api'
 
@@ -9,7 +9,7 @@ let MessageItemEmbed = ({
   embed,
 }: {
   embed: AppBskyEmbedRecord.View
-}): React.ReactNode => {
+}): ReactNode => {
   const t = useTheme()
 
   return (
@@ -18,5 +18,5 @@ let MessageItemEmbed = ({
     </View>
   )
 }
-MessageItemEmbed = React.memo(MessageItemEmbed)
+MessageItemEmbed = memo(MessageItemEmbed)
 export {MessageItemEmbed}

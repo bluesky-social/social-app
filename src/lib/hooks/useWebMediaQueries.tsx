@@ -1,4 +1,5 @@
 import {useMediaQuery} from 'react-responsive'
+
 import {isNative} from 'platform/detection'
 
 export function useWebMediaQueries() {

@@ -1,9 +1,9 @@
-import React from 'react'
+import {PropsWithChildren} from 'react'
 
 import {ExpoScrollForwarderViewProps} from './ExpoScrollForwarder.types'
 
 export function ExpoScrollForwarderView({
   children,
-}: React.PropsWithChildren<ExpoScrollForwarderViewProps>) {
+}: PropsWithChildren<ExpoScrollForwarderViewProps>) {
   return children
 }

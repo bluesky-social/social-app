@@ -1,12 +1,13 @@
-import React from 'react'
-import {isNative} from 'platform/detection'
+import {ComponentType, FC} from 'react'
+
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {isNative} from 'platform/detection'
 
 export const withBreakpoints = <P extends object>(
-  Mobile: React.ComponentType<P>,
-  Tablet: React.ComponentType<P>,
-  Desktop: React.ComponentType<P>,
-): React.FC<P> =>
+  Mobile: ComponentType<P>,
+  Tablet: ComponentType<P>,
+  Desktop: ComponentType<P>,
+): FC<P> =>
   function WithBreakpoints(props: P) {
     const {isMobile, isTabletOrMobile} = useWebMediaQueries()
 

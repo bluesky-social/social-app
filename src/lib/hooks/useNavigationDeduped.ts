@@ -1,9 +1,10 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {useNavigation} from '@react-navigation/core'
-import {AllNavigatorParams, NavigationProp} from 'lib/routes/types'
-import type {NavigationAction} from '@react-navigation/routers'
 import {NavigationState} from '@react-navigation/native'
+import type {NavigationAction} from '@react-navigation/routers'
+
 import {useDedupe} from 'lib/hooks/useDedupe'
+import {AllNavigatorParams, NavigationProp} from 'lib/routes/types'
 
 export type DebouncedNavigationProp = Pick<
   NavigationProp,
@@ -21,7 +22,7 @@ export function useNavigationDeduped() {
   const navigation = useNavigation<NavigationProp>()
   const dedupe = useDedupe()
 
-  return React.useMemo(
+  return useMemo(
     (): DebouncedNavigationProp => ({
       // Types from @react-navigation/routers/lib/typescript/src/StackRouter.ts
       push: <RouteName extends keyof AllNavigatorParams>(

@@ -1,4 +1,4 @@
-import React from 'react'
+import {ReactNode, useCallback, useState} from 'react'
 import {Pressable, TextInput, useWindowDimensions, View} from 'react-native'
 import {
   useFocusedInputHandler,
@@ -40,7 +40,7 @@ export function MessageInput({
   onSendMessage: (message: string) => void
   hasEmbed: boolean
   setEmbed: (embedUrl: string | undefined) => void
-  children?: React.ReactNode
+  children?: ReactNode
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -55,14 +55,14 @@ export function MessageInput({
   const isInputScrollable = useSharedValue(false)
 
   const inputStyles = useSharedInputStyles()
-  const [isFocused, setIsFocused] = React.useState(false)
-  const [message, setMessage] = React.useState(getDraft)
+  const [isFocused, setIsFocused] = useState(false)
+  const [message, setMessage] = useState(getDraft)
   const inputRef = useAnimatedRef<TextInput>()
 
   useSaveMessageDraft(message)
   useExtractEmbedFromFacets(message, setEmbed)
 
-  const onSubmit = React.useCallback(() => {
+  const onSubmit = useCallback(() => {
     if (!hasEmbed && message.trim() === '') {
       return
     }

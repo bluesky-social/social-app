@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react'
+import {FC, useMemo} from 'react'
 import {TouchableWithoutFeedback} from 'react-native'
 import Animated, {
   Extrapolation,
@@ -11,7 +11,7 @@ import {useLingui} from '@lingui/react'
 
 export function createCustomBackdrop(
   onClose?: (() => void) | undefined,
-): React.FC<BottomSheetBackdropProps> {
+): FC<BottomSheetBackdropProps> {
   const CustomBackdrop = ({animatedIndex, style}: BottomSheetBackdropProps) => {
     const {_} = useLingui()
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
 import {AppBskyActorDefs, AppBskyFeedGetAuthorFeed, AtUri} from '@atproto/api'
 import {msg as msgLingui, Trans} from '@lingui/macro'
@@ -42,7 +42,7 @@ export function FeedErrorMessage({
   savedFeedConfig?: AppBskyActorDefs.SavedFeed
 }) {
   const {_: _l} = useLingui()
-  const knownError = React.useMemo(
+  const knownError = useMemo(
     () => detectKnownError(feedDesc, error),
     [feedDesc, error],
   )
@@ -94,7 +94,7 @@ function FeedgenErrorMessage({
   const pal = usePalette('default')
   const {_: _l} = useLingui()
   const navigation = useNavigation<NavigationProp>()
-  const msg = React.useMemo(
+  const msg = useMemo(
     () =>
       ({
         [KnownError.Unknown]: '',
@@ -128,15 +128,15 @@ function FeedgenErrorMessage({
   const removePromptControl = Prompt.usePromptControl()
   const {mutateAsync: removeFeed} = useRemoveFeedMutation()
 
-  const onViewProfile = React.useCallback(() => {
+  const onViewProfile = useCallback(() => {
     navigation.navigate('Profile', {name: ownerDid})
   }, [navigation, ownerDid])
 
-  const onPressRemoveFeed = React.useCallback(() => {
+  const onPressRemoveFeed = useCallback(() => {
     removePromptControl.open()
   }, [removePromptControl])
 
-  const onRemoveFeed = React.useCallback(async () => {
+  const onRemoveFeed = useCallback(async () => {
     try {
       if (!savedFeedConfig) return
       await removeFeed(savedFeedConfig)
@@ -150,7 +150,7 @@ function FeedgenErrorMessage({
     }
   }, [removeFeed, _l, savedFeedConfig])
 
-  const cta = React.useMemo(() => {
+  const cta = useMemo(() => {
     switch (knownError) {
       case KnownError.FeedNSFPublic: {
         return null
