@@ -14,9 +14,9 @@ export function useVideoState({setError}: {setError: (error: string) => void}) {
   const {mutate, data, isPending, isError, reset, variables} = useMutation({
     mutationFn: async (asset: ImagePickerAsset) => {
       const compressed = await compressVideo(asset.uri, {
-        onStatistics: async statistics => {
+        onProgress: progressMs => {
           if (asset.duration) {
-            setProgress(statistics.getTime() / asset.duration)
+            setProgress(progressMs / asset.duration)
           }
         },
       })

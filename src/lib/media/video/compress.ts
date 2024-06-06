@@ -2,9 +2,7 @@ import * as FileSystem from 'expo-file-system'
 import {
   FFmpegKit,
   FFmpegSessionCompleteCallback,
-  LogCallback,
   ReturnCode,
-  StatisticsCallback,
 } from 'ffmpeg-kit-react-native'
 
 const PRESET = 'faster'
@@ -12,12 +10,10 @@ const PRESET = 'faster'
 export async function compressVideo(
   file: string,
   callbacks?: {
-    onLog?: LogCallback
-    onStatistics?: StatisticsCallback
+    onProgress: (progress: number) => void
   },
 ) {
-  const {onLog, onStatistics} = callbacks || {}
-
+  const {onProgress} = callbacks || {}
   const ext = file.split('.').pop()
   const newFile = file.replace(`.${ext}`, '.compressed.mp4')
 
@@ -25,8 +21,8 @@ export async function compressVideo(
     FFmpegKit.executeAsync(
       `-i ${file} -c:v libx264 -crf 25 -preset ${PRESET} -b:v 4M -vf "scale='if(gt(a,1),min(1920,iw),-1)':'if(gt(a,1),-1,min(1920,ih))'" -t 90 -c:a aac -b:a 320k -movflags +faststart ${newFile}`,
       resolve,
-      onLog,
-      onStatistics,
+      undefined,
+      stats => onProgress?.(stats.getTime()),
     ),
   )
 
