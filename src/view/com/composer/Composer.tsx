@@ -107,7 +107,9 @@ export const ComposePost = observer(function ComposePost({
   text: initText,
   imageUris: initImageUris,
   cancelRef,
+  visible,
 }: Props & {
+  visible?: boolean
   cancelRef?: React.RefObject<CancelRef>
 }) {
   const {currentAccount} = useSession()
@@ -154,33 +156,6 @@ export const ComposePost = observer(function ComposePost({
   const [extGif, setExtGif] = useState<Gif>()
   const [labels, setLabels] = useState<string[]>([])
   const [threadgate, setThreadgate] = useState<ThreadgateSetting[]>([])
-
-  useEffect(() => {
-    if (!isAndroid) return
-
-    // optimistic first try to focus keyboard
-    const timeout = setTimeout(() => {
-      textInput.current?.focus()
-    }, 50)
-
-    // however, sometimes that fires too soon, and the keyboard doesn't show
-    // so we try a few more times
-    let numTries = 5
-    const interval = setInterval(() => {
-      if (Keyboard.isVisible() || numTries-- <= 0) {
-        clearInterval(interval)
-      } else {
-        // focusing doesn't open keyboard if it's already focused
-        textInput.current?.blur()
-        textInput.current?.focus()
-      }
-    }, 250)
-
-    return () => {
-      clearTimeout(timeout)
-      clearInterval(interval)
-    }
-  }, [])
 
   const gallery = useMemo(
     () => new GalleryModel(initImageUris),
@@ -543,7 +518,9 @@ export const ComposePost = observer(function ComposePost({
                 ref={textInput}
                 richtext={richtext}
                 placeholder={selectTextInputPlaceholder}
-                autoFocus={!isAndroid}
+                // fixes autofocus on android
+                key={isAndroid ? (visible ? 'visible' : 'hidden') : 'static'}
+                autoFocus
                 setRichText={setRichText}
                 onPhotoPasted={onPhotoPasted}
                 onPressPublish={onPressPublish}
