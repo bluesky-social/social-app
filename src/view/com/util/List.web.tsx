@@ -73,23 +73,23 @@ function ListImpl<ItemT>(
     )
   }
 
-  let header: JSX.Element | null = null
+  let headerComponent: JSX.Element | null = null
   if (ListHeaderComponent != null) {
     if (isValidElement(ListHeaderComponent)) {
-      header = ListHeaderComponent
+      headerComponent = ListHeaderComponent
     } else {
       // @ts-ignore Nah it's fine.
-      header = <ListHeaderComponent />
+      headerComponent = <ListHeaderComponent />
     }
   }
 
-  let footer: JSX.Element | null = null
+  let footerComponent: JSX.Element | null = null
   if (ListFooterComponent != null) {
     if (isValidElement(ListFooterComponent)) {
-      footer = ListFooterComponent
+      footerComponent = ListFooterComponent
     } else {
       // @ts-ignore Nah it's fine.
-      footer = <ListFooterComponent />
+      footerComponent = <ListFooterComponent />
     }
   }
 
@@ -341,7 +341,7 @@ function ListImpl<ItemT>(
             topMargin={(onStartReachedThreshold ?? 0) * 100 + '%'}
           />
         )}
-        {header}
+        {headerComponent}
         {!data || data.length === 0
           ? emptyComponent
           : (data as Array<ItemT>)?.map((item, index) => {
@@ -365,7 +365,7 @@ function ListImpl<ItemT>(
             bottomMargin={(onEndReachedThreshold ?? 0) * 100 + '%'}
           />
         )}
-        {footer}
+        {footerComponent}
       </View>
     </View>
   )
