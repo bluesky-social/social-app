@@ -8,6 +8,7 @@ import {Provider as HiddenPostsProvider} from './hidden-posts'
 import {Provider as InAppBrowserProvider} from './in-app-browser'
 import {Provider as KawaiiProvider} from './kawaii'
 import {Provider as LanguagesProvider} from './languages'
+import {Provider as HighSaturationEnabledProvider} from './saturation' //Agreado para el botón de saturación **********************
 
 export {
   useRequireAltTextEnabled,
@@ -22,22 +23,30 @@ export {
 export * from './hidden-posts'
 export {useLabelDefinitions} from './label-defs'
 export {useLanguagePrefs, useLanguagePrefsApi} from './languages'
+export {
+  useHighSaturationEnabled,
+  useSetHighSaturationEnabled,
+} from './saturation' //Agreado para el botón de saturación **********************
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   return (
     <LanguagesProvider>
       <AltTextRequiredProvider>
-        <ExternalEmbedsProvider>
-          <HiddenPostsProvider>
-            <InAppBrowserProvider>
-              <DisableHapticsProvider>
-                <AutoplayProvider>
-                  <KawaiiProvider>{children}</KawaiiProvider>
-                </AutoplayProvider>
-              </DisableHapticsProvider>
-            </InAppBrowserProvider>
-          </HiddenPostsProvider>
-        </ExternalEmbedsProvider>
+        <HighSaturationEnabledProvider>
+          {/*Agreado para el botón de saturación ***********************/}
+          <ExternalEmbedsProvider>
+            <HiddenPostsProvider>
+              <InAppBrowserProvider>
+                <DisableHapticsProvider>
+                  <AutoplayProvider>
+                    <KawaiiProvider>{children}</KawaiiProvider>
+                  </AutoplayProvider>
+                </DisableHapticsProvider>
+              </InAppBrowserProvider>
+            </HiddenPostsProvider>
+          </ExternalEmbedsProvider>
+        </HighSaturationEnabledProvider>
+        {/*Agreado para el botón de saturación ***********************/}
       </AltTextRequiredProvider>
     </LanguagesProvider>
   )

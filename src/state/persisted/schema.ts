@@ -60,6 +60,7 @@ export const schema = z.object({
     appLanguage: z.string(),
   }),
   requireAltTextEnabled: z.boolean(), // should move to server
+  highSaturationEnabled: z.boolean(), //Agreado para el botón de saturación **********************
   externalEmbeds: z
     .object({
       giphy: z.enum(externalEmbedOptions).optional(),
@@ -111,6 +112,7 @@ export const defaults: Schema = {
     appLanguage: deviceLocales[0] || 'en',
   },
   requireAltTextEnabled: false,
+  highSaturationEnabled: false, //Agreado para el botón de saturación **********************
   externalEmbeds: {},
   mutedThreads: [],
   invites: {

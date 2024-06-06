@@ -55,6 +55,7 @@ export type LegacySchema = {
     savedFeeds: string[]
     pinnedFeeds: string[]
     requireAltTextEnabled: boolean
+    highSaturationEnabled: boolean //Agreado para el botón de saturación **********************
   }
   invitedUsers: {
     seenDids: string[]
@@ -101,6 +102,10 @@ export function transform(legacy: Partial<LegacySchema>): Schema {
     requireAltTextEnabled:
       legacy.preferences?.requireAltTextEnabled ||
       defaults.requireAltTextEnabled,
+    //Agreado para el botón de saturación **********************
+    highSaturationEnabled:
+      legacy.preferences?.highSaturationEnabled ||
+      defaults.highSaturationEnabled,
     mutedThreads: legacy.mutedThreads?.uris || defaults.mutedThreads,
     invites: {
       copiedInvites:

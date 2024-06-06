@@ -60,6 +60,7 @@ export const LEGACY_DATA_DUMP: LegacySchema = {
     savedFeeds: ['feed_a', 'feed_b', 'feed_c'],
     pinnedFeeds: ['feed_a', 'feed_b'],
     requireAltTextEnabled: false,
+    highSaturationEnabled: false, //Agreado para el botón de saturación **********************
   },
   invitedUsers: {seenDids: [], copiedInvites: []},
   mutedThreads: {uris: []},
