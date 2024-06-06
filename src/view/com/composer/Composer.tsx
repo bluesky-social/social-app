@@ -17,6 +17,7 @@ import {
 import {
   KeyboardAvoidingView,
   KeyboardStickyView,
+  useKeyboardContext,
 } from 'react-native-keyboard-controller'
 import Animated, {
   interpolateColor,
@@ -128,6 +129,15 @@ export const ComposePost = observer(function ComposePost({
   const discardPromptControl = Prompt.usePromptControl()
   const {closeAllDialogs} = useDialogStateControlContext()
   const t = useTheme()
+
+  const context = useKeyboardContext()
+
+  React.useEffect(() => {
+    context.setEnabled(false)
+    return () => {
+      context.setEnabled(true)
+    }
+  })
 
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isProcessing, setIsProcessing] = useState(false)
