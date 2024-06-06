@@ -17,6 +17,7 @@ import {
 import {
   KeyboardAvoidingView,
   KeyboardStickyView,
+  useKeyboardContext,
 } from 'react-native-keyboard-controller'
 import Animated, {
   interpolateColor,
@@ -128,6 +129,17 @@ export const ComposePost = observer(function ComposePost({
   const discardPromptControl = Prompt.usePromptControl()
   const {closeAllDialogs} = useDialogStateControlContext()
   const t = useTheme()
+
+  // Disable this in the composer to prevent any extra keyboard height being applied.
+  // See https://github.com/bluesky-social/social-app/pull/4399
+  const {setEnabled} = useKeyboardContext()
+  React.useEffect(() => {
+    setEnabled(false)
+
+    return () => {
+      setEnabled(true)
+    }
+  }, [setEnabled])
 
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isProcessing, setIsProcessing] = useState(false)
