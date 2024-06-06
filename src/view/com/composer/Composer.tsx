@@ -157,15 +157,29 @@ export const ComposePost = observer(function ComposePost({
 
   useEffect(() => {
     if (!isAndroid) return
-    let numTries = 20
-    const id = setInterval(() => {
+
+    // optimistic first try to focus keyboard
+    const timeout = setTimeout(() => {
+      textInput.current?.focus()
+    }, 50)
+
+    // however, sometimes that fires too soon, and the keyboard doesn't show
+    // so we try a few more times
+    let numTries = 5
+    const interval = setInterval(() => {
       if (Keyboard.isVisible() || numTries-- <= 0) {
-        clearInterval(id)
+        clearInterval(interval)
       } else {
+        // focusing doesn't open keyboard if it's already focused
+        textInput.current?.blur()
         textInput.current?.focus()
       }
-    }, 50)
-    return () => clearInterval(id)
+    }, 250)
+
+    return () => {
+      clearTimeout(timeout)
+      clearInterval(interval)
+    }
   }, [])
 
   const gallery = useMemo(
