@@ -1,5 +1,10 @@
 import React from 'react'
-import {cancelAnimation, SharedValue, useSharedValue, withSpring} from 'react-native-reanimated'
+import {
+  cancelAnimation,
+  SharedValue,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated'
 
 type StateContext = SharedValue<number>
 type SetContext = (v: boolean) => void
