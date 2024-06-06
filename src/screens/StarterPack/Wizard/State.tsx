@@ -2,6 +2,8 @@ import React from 'react'
 import {AppBskyActorDefs} from '@atproto/api'
 import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 
+import {useAgent, useSession} from 'state/session'
+
 const steps = ['Details', 'Profiles', 'Feeds'] as const
 type Step = (typeof steps)[number]
 
@@ -28,11 +30,12 @@ interface State {
   processing: boolean
 }
 
-type TStateContext = [State, (action: Action) => void]
+type TStateContext = [State, (action: Action) => void, () => Promise<void>]
 
 const StateContext = React.createContext<TStateContext>([
   {} as State,
   (_: Action) => {},
+  async () => {},
 ])
 export const useWizardState = () => React.useContext(StateContext)
 
@@ -107,7 +110,10 @@ export function Provider({
   initialStep?: Step
   children: React.ReactNode
 }) {
-  const stateAndReducer = React.useReducer(
+  const agent = useAgent()
+  const {currentAccount} = useSession()
+
+  const [state, dispatch] = React.useReducer(
     reducer,
     initialState
       ? {
@@ -123,8 +129,60 @@ export function Provider({
         },
   )
 
+  const submit = async () => {
+    dispatch({type: 'SetProcessing', processing: true})
+
+    try {
+      const list = await agent.app.bsky.graph.list.create(
+        {repo: currentAccount?.did},
+        {
+          name: state.name ?? '',
+          description: state.description ?? '',
+          descriptionFacets: [],
+          avatar: undefined,
+          createdAt: new Date().toISOString(),
+          purpose: 'app.bsky.graph.defs#referencelist',
+        },
+      )
+
+      await agent.com.atproto.repo.applyWrites({
+        repo: currentAccount!.did,
+        writes: state.profiles.map(p => ({
+          collection: 'app.bsky.graph.listitem',
+          value: {
+            $type: 'app.bsky.graph.listitem',
+            subject: p.did,
+            list: list.uri,
+            createdAt: new Date().toISOString(),
+          },
+        })),
+      })
+
+      await agent.app.bsky.graph.starterpack.create(
+        {
+          repo: currentAccount!.did,
+        },
+        {
+          name: state.name ?? '',
+          description: state.description ?? '',
+          descriptionFacets: [],
+          list: list.uri,
+          feeds: state.feeds.map(f => ({
+            uri: f.uri,
+          })),
+          createdAt: new Date().toISOString(),
+        },
+      )
+    } catch (e) {
+      // TODO add error to state
+      console.error(e)
+    } finally {
+      dispatch({type: 'SetProcessing', processing: false})
+    }
+  }
+
   return (
-    <StateContext.Provider value={stateAndReducer}>
+    <StateContext.Provider value={[state, dispatch, submit]}>
       {children}
     </StateContext.Provider>
   )

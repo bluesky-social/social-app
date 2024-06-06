@@ -75,7 +75,7 @@ function WizardInner() {
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
   const t = useTheme()
-  const [state, dispatch] = useWizardState()
+  const [state, dispatch, submit] = useWizardState()
   const {currentAccount} = useSession()
   const {data: currentProfile} = useProfileQuery({
     did: currentAccount?.did,
@@ -130,7 +130,7 @@ function WizardInner() {
         ),
       })
     } else if (state.currentStep === 'Feeds') {
-      dispatch({type: 'SetProcessing', processing: true})
+      submit()
       return
     }
 

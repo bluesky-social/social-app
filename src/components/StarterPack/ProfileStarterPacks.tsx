@@ -8,16 +8,14 @@ import {
 } from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useQueryClient} from '@tanstack/react-query'
 
 import {cleanError} from '#/lib/strings/errors'
 import {useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
-import {hydrateFeedGenerator} from '#/state/queries/feed'
-import {usePreferencesQuery} from '#/state/queries/preferences'
-import {RQKEY, useProfileFeedgensQuery} from '#/state/queries/profile-feedgens'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useActorStarterPacksQuery} from 'state/queries/actor-starter-packs'
+import {usePreferencesQuery} from 'state/queries/preferences'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 import {List, ListRef} from 'view/com/util/List'
@@ -55,19 +53,22 @@ export const ProfileStarterPacks = React.forwardRef<
   const {_} = useLingui()
   const theme = useTheme()
   const [isPTRing, setIsPTRing] = React.useState(false)
-  const opts = React.useMemo(() => ({enabled}), [enabled])
+
   const {
     data,
     isFetching,
-    isFetched,
-    hasNextPage,
-    fetchNextPage,
     isError,
-    error,
+    isFetched,
+    fetchNextPage,
     refetch,
-  } = useProfileFeedgensQuery(did, opts)
-  const isEmpty = !isFetching && !data?.pages[0]?.feeds.length
+    hasNextPage,
+    error,
+  } = useActorStarterPacksQuery({
+    did,
+  })
   const {data: preferences} = usePreferencesQuery()
+
+  const isEmpty = !isFetching && data?.pages.length === 0
 
   const items = React.useMemo(() => {
     let items: any[] = []
@@ -80,7 +81,7 @@ export const ProfileStarterPacks = React.forwardRef<
       items = items.concat([EMPTY])
     } else if (data?.pages) {
       for (const page of data?.pages) {
-        items = items.concat(page.feeds.map(feed => hydrateFeedGenerator(feed)))
+        items = page.starterPacks
       }
     }
     if (isError && !isEmpty) {
@@ -89,18 +90,8 @@ export const ProfileStarterPacks = React.forwardRef<
     return items
   }, [isError, isEmpty, isFetched, isFetching, data])
 
-  const queryClient = useQueryClient()
-
-  const onScrollToTop = React.useCallback(() => {
-    scrollElRef.current?.scrollToOffset({
-      animated: isNative,
-      offset: -headerOffset,
-    })
-    queryClient.invalidateQueries({queryKey: RQKEY(did)})
-  }, [scrollElRef, queryClient, headerOffset, did])
-
   React.useImperativeHandle(ref, () => ({
-    scrollToTop: onScrollToTop,
+    scrollToTop: () => {},
   }))
 
   const onRefresh = React.useCallback(async () => {
