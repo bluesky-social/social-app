@@ -7241,7 +7241,7 @@ msgstr "Pots canviar-ho quan vulguis."
 
 #: src/screens/Messages/Settings.tsx:111
 msgid "You can continue ongoing conversations regardless of which setting you choose."
-msgstr "Pots continuar les converses en curs independentment de la configuració que trïis."
+msgstr "Pots continuar les converses en curs independentment de la configuració que triïs."
 
 #: src/screens/Login/index.tsx:158
 #: src/screens/Login/PasswordUpdatedForm.tsx:33
