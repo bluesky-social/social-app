@@ -107,7 +107,9 @@ export const ComposePost = observer(function ComposePost({
   text: initText,
   imageUris: initImageUris,
   cancelRef,
+  isModalReady,
 }: Props & {
+  isModalReady: boolean
   cancelRef?: React.RefObject<CancelRef>
 }) {
   const {currentAccount} = useSession()
@@ -155,12 +157,6 @@ export const ComposePost = observer(function ComposePost({
   const [labels, setLabels] = useState<string[]>([])
   const [threadgate, setThreadgate] = useState<ThreadgateSetting[]>([])
 
-  React.useEffect(() => {
-    if (!isAndroid) return
-    const id = setTimeout(() => textInput.current?.focus(), 100)
-    return () => clearTimeout(id)
-  }, [])
-
   const gallery = useMemo(
     () => new GalleryModel(initImageUris),
     [initImageUris],
@@ -181,9 +177,7 @@ export const ComposePost = observer(function ComposePost({
   const onPressCancel = useCallback(() => {
     if (graphemeLength > 0 || !gallery.isEmpty || extGif) {
       closeAllDialogs()
-      if (Keyboard) {
-        Keyboard.dismiss()
-      }
+      Keyboard.dismiss()
       discardPromptControl.open()
     } else {
       onClose()
@@ -524,7 +518,11 @@ export const ComposePost = observer(function ComposePost({
                 ref={textInput}
                 richtext={richtext}
                 placeholder={selectTextInputPlaceholder}
-                autoFocus={!isAndroid}
+                // fixes autofocus on android
+                key={
+                  isAndroid ? (isModalReady ? 'ready' : 'animating') : 'static'
+                }
+                autoFocus={isAndroid ? isModalReady : true}
                 setRichText={setRichText}
                 onPhotoPasted={onPhotoPasted}
                 onPressPublish={onPressPublish}
