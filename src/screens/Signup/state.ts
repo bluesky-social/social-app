@@ -267,7 +267,6 @@ export function useSubmitSignup({
          */
         onboardingDispatch({type: 'start'})
       } catch (e: any) {
-        onboardingDispatch({type: 'skip'}) // undo starting the onboard
         let errMsg = e.toString()
         if (e instanceof ComAtprotoServerCreateAccount.InvalidInviteCodeError) {
           dispatch({
