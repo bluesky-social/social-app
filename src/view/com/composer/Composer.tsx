@@ -130,8 +130,9 @@ export const ComposePost = observer(function ComposePost({
   const {closeAllDialogs} = useDialogStateControlContext()
   const t = useTheme()
 
+  // Disable this in the composer to prevent any extra keyboard height being applied.
+  // See https://github.com/bluesky-social/social-app/pull/4399
   const context = useKeyboardContext()
-
   React.useEffect(() => {
     context.setEnabled(false)
     return () => {
