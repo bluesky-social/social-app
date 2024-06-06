@@ -73,6 +73,8 @@ function ListImpl<ItemT>(
     )
   }
 
+  const isEmpty = !data || data.length === 0
+
   let headerComponent: JSX.Element | null = null
   if (ListHeaderComponent != null) {
     if (isValidElement(ListHeaderComponent)) {
@@ -334,7 +336,7 @@ function ListImpl<ItemT>(
           onVisibleChange={handleAboveTheFoldVisibleChange}
           style={[styles.aboveTheFoldDetector, {height: headerOffset}]}
         />
-        {onStartReached && (
+        {onStartReached && !isEmpty && (
           <Visibility
             root={containWeb ? nativeRef : null}
             onVisibleChange={onHeadVisibilityChange}
@@ -342,7 +344,7 @@ function ListImpl<ItemT>(
           />
         )}
         {headerComponent}
-        {!data || data.length === 0
+        {isEmpty
           ? emptyComponent
           : (data as Array<ItemT>)?.map((item, index) => {
               const key = keyExtractor!(item, index)
@@ -358,7 +360,7 @@ function ListImpl<ItemT>(
                 />
               )
             })}
-        {onEndReached && (
+        {onEndReached && !isEmpty && (
           <Visibility
             root={containWeb ? nativeRef : null}
             onVisibleChange={onTailVisibilityChange}
