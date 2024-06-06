@@ -121,7 +121,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
         const newValue = clamp(startMode.value + dProgress, 0, 1)
         if (newValue !== mode.value) {
           // Manually adjust the value. This won't be (and shouldn't be) animated.
-          // Cancel any animations that are currently running.
+          // Cancel any any existing animation
           cancelAnimation(mode)
           mode.value = newValue
         }
