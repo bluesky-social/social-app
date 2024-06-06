@@ -38,6 +38,7 @@ function ListImpl<ItemT>(
   {
     ListHeaderComponent,
     ListFooterComponent,
+    ListEmptyComponent,
     containWeb,
     contentContainerStyle,
     data,
@@ -89,6 +90,16 @@ function ListImpl<ItemT>(
     } else {
       // @ts-ignore Nah it's fine.
       footer = <ListFooterComponent />
+    }
+  }
+
+  let emptyComponent: JSX.Element | null = null
+  if (ListEmptyComponent != null) {
+    if (isValidElement(ListEmptyComponent)) {
+      emptyComponent = ListEmptyComponent
+    } else {
+      // @ts-ignore Nah it's fine.
+      emptyComponent = <ListEmptyComponent />
     }
   }
 
@@ -331,20 +342,22 @@ function ListImpl<ItemT>(
           />
         )}
         {header}
-        {(data as Array<ItemT>).map((item, index) => {
-          const key = keyExtractor!(item, index)
-          return (
-            <Row<ItemT>
-              key={key}
-              item={item}
-              index={index}
-              renderItem={renderItem}
-              extraData={extraData}
-              onItemSeen={onItemSeen}
-              disableContentVisibility={disableContentVisibility}
-            />
-          )
-        })}
+        {!data || data.length === 0
+          ? emptyComponent
+          : (data as Array<ItemT>)?.map((item, index) => {
+              const key = keyExtractor!(item, index)
+              return (
+                <Row<ItemT>
+                  key={key}
+                  item={item}
+                  index={index}
+                  renderItem={renderItem}
+                  extraData={extraData}
+                  onItemSeen={onItemSeen}
+                  disableContentVisibility={disableContentVisibility}
+                />
+              )
+            })}
         {onEndReached && (
           <Visibility
             root={containWeb ? nativeRef : null}
