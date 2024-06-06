@@ -65,6 +65,7 @@ import {
 import {AccessibilitySettingsScreen} from './view/screens/AccessibilitySettings'
 import {CommunityGuidelinesScreen} from './view/screens/CommunityGuidelines'
 import {CopyrightPolicyScreen} from './view/screens/CopyrightPolicy'
+import {DebugAppcomScreen} from './view/screens/DebugAppcom'
 import {DebugModScreen} from './view/screens/DebugMod'
 import {FeedsScreen} from './view/screens/Feeds'
 import {HomeScreen} from './view/screens/Home'
@@ -232,6 +233,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="DebugMod"
         getComponent={() => DebugModScreen}
         options={{title: title(msg`Moderation states`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="DebugAppcom"
+        getComponent={() => DebugAppcomScreen}
+        options={{title: title(msg`Application components`), requireAuth: true}}
       />
       <Stack.Screen
         name="Log"

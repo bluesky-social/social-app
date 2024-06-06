@@ -25,6 +25,7 @@ export const router = new Router({
   ProfileLabelerLikedBy: '/profile/:name/labeler/liked-by',
   Debug: '/sys/debug',
   DebugMod: '/sys/debug-mod',
+  DebugAppcom: '/sys/debug-appcom',
   Log: '/sys/log',
   AppPasswords: '/settings/app-passwords',
   PreferencesFollowingFeed: '/settings/following-feed',
