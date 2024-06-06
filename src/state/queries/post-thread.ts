@@ -5,7 +5,6 @@ import {
   AppBskyFeedGetPostThread,
   AppBskyFeedPost,
   AtUri,
-  BskyAgent,
   ModerationDecision,
   ModerationOpts,
 } from '@atproto/api'
@@ -42,6 +41,8 @@ export interface ThreadCtx {
   hasMore?: boolean
   isParentLoading?: boolean
   isChildLoading?: boolean
+  isSelfThread?: boolean
+  hasMoreSelfThread?: boolean
 }
 
 export type ThreadPost = {
@@ -89,9 +90,12 @@ export function usePostThreadQuery(uri: string | undefined) {
     gcTime: 0,
     queryKey: RQKEY(uri || ''),
     async queryFn() {
-      const res = await getPostThread(agent, uri!)
+      const res = await agent.getPostThread({uri: uri!, depth: 10})
       if (res.success) {
-        return responseToThreadNodes(res.data.thread)
+        const thread = responseToThreadNodes(res.data.thread)
+        annotateSelfThread(thread)
+        console.log(thread)
+        return thread
       }
       return {type: 'unknown', uri: uri!}
     },
@@ -105,32 +109,6 @@ export function usePostThreadQuery(uri: string | undefined) {
       return undefined
     },
   })
-}
-
-async function getPostThread(
-  agent: BskyAgent,
-  uri: string,
-): Promise<AppBskyFeedGetPostThread.Response> {
-  const res = await agent.getPostThread({uri})
-
-  if (AppBskyFeedDefs.isThreadViewPost(res.data.thread)) {
-    // check for a self-thread with posts yet-unloaded
-    const selfThreadTerminus = findSelfThreadPrematureEnd(
-      res.data.thread.post.author.did,
-      res.data.thread,
-    )
-    if (selfThreadTerminus) {
-      // tack on one more page to get more of the thread
-      const continuation = await agent.getPostThread({
-        uri: selfThreadTerminus.post.uri,
-      })
-      if (AppBskyFeedDefs.isThreadViewPost(continuation.data.thread)) {
-        selfThreadTerminus.replies = continuation.data.thread.replies
-      }
-    }
-  }
-
-  return res
 }
 
 export function fillThreadModerationCache(
@@ -261,6 +239,8 @@ function responseToThreadNodes(
         isHighlightedPost: depth === 0,
         hasMore:
           direction === 'down' && !node.replies?.length && !!node.replyCount,
+        isSelfThread: false, // populated `annotateSelfThread`
+        hasMoreSelfThread: false, // populated in `annotateSelfThread`
       },
     }
   } else if (AppBskyFeedDefs.isBlockedPost(node)) {
@@ -269,6 +249,48 @@ function responseToThreadNodes(
     return {type: 'not-found', _reactKey: node.uri, uri: node.uri, ctx: {depth}}
   } else {
     return {type: 'unknown', uri: ''}
+  }
+}
+
+function annotateSelfThread(thread: ThreadNode) {
+  if (thread.type !== 'post') {
+    return
+  }
+  const selfThreadNodes: ThreadPost[] = [thread]
+
+  let parent: ThreadNode | undefined = thread.parent
+  while (parent) {
+    if (
+      parent.type !== 'post' ||
+      parent.post.author.did !== thread.post.author.did
+    ) {
+      // not a self-thread
+      return
+    }
+    selfThreadNodes.push(parent)
+    parent = parent.parent
+  }
+
+  let node = thread
+  for (let i = 0; i < 10; i++) {
+    const reply = node.replies?.find(
+      r => r.type === 'post' && r.post.author.did === thread.post.author.did,
+    )
+    if (reply?.type !== 'post') {
+      break
+    }
+    selfThreadNodes.push(reply)
+    node = reply
+  }
+
+  if (selfThreadNodes.length > 1) {
+    for (const selfThreadNode of selfThreadNodes) {
+      selfThreadNode.ctx.isSelfThread = true
+    }
+    const last = selfThreadNodes.at(-1)
+    if (last && last.post.replyCount && !last.replies?.length) {
+      last.ctx.hasMoreSelfThread = true
+    }
   }
 }
 
@@ -444,36 +466,4 @@ function embedViewRecordToPlaceholderThread(
       isChildLoading: true, // not available, so assume yes (to show the spinner)
     },
   }
-}
-
-/**
- * Helper to find the last LOADED post of a self-thread, if it exists
- */
-function findSelfThreadPrematureEnd(
-  authorDid: string,
-  node: AppBskyFeedDefs.ThreadViewPost,
-): AppBskyFeedDefs.ThreadViewPost | undefined {
-  let parent = node.parent
-  while (parent && AppBskyFeedDefs.isThreadViewPost(parent)) {
-    if (parent.post.author.did !== authorDid) {
-      // not a self-thread
-      return undefined
-    }
-    parent = parent.parent
-  }
-
-  for (let i = 0; i < 10; i++) {
-    if (node.post.replyCount && !node.replies?.length) {
-      return node
-    }
-    const reply = node.replies?.find(
-      r =>
-        AppBskyFeedDefs.isThreadViewPost(r) && r.post.author.did === authorDid,
-    )
-    if (!AppBskyFeedDefs.isThreadViewPost(reply)) {
-      return undefined
-    }
-    node = reply
-  }
-  return undefined
 }
