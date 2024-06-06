@@ -8,12 +8,18 @@ import {useMutation} from '@tanstack/react-query'
 import {compressVideo} from '#/lib/media/video/compress'
 
 export function useVideoState({setError}: {setError: (error: string) => void}) {
-  const [pending, setVideoPending] = useState(false)
   const {_} = useLingui()
+  const [progress, setProgress] = useState(0)
 
-  const {mutate, data, isPending, isError, reset} = useMutation({
+  const {mutate, data, isPending, isError, reset, variables} = useMutation({
     mutationFn: async (asset: ImagePickerAsset) => {
-      const compressed = await compressVideo(asset.uri)
+      const compressed = await compressVideo(asset.uri, {
+        onStatistics: async statistics => {
+          if (asset.duration) {
+            setProgress(statistics.getTime() / asset.duration)
+          }
+        },
+      })
       if (!compressed.uri) {
         throw new Error('Failed to compress video')
       }
@@ -37,14 +43,18 @@ export function useVideoState({setError}: {setError: (error: string) => void}) {
       console.error('error', error)
       setError(_(msg`Could not compress video`))
     },
+    onMutate: () => {
+      setProgress(0)
+    },
   })
 
   return {
     video: data,
     onSelectVideo: mutate,
-    videoPending: pending || isPending,
-    setVideoPending,
+    videoPending: isPending,
+    videoProcessingData: variables,
     videoError: isError,
     clearVideo: reset,
+    videoProcessingProgress: progress,
   }
 }
