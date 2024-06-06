@@ -1106,7 +1106,7 @@ msgstr "Clica aquí per a més informació sobre desactivar el teu compte"
 
 #: src/view/com/modals/DeleteAccount.tsx:216
 msgid "Click here for more information."
-msgstr "Clica aquí per a més informació"
+msgstr "Clica aquí per a més informació."
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:46
 #~ msgid "Click here to add one."
