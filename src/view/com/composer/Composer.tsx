@@ -157,8 +157,9 @@ export const ComposePost = observer(function ComposePost({
 
   useEffect(() => {
     if (!isAndroid) return
+    let numTries = 20
     const id = setInterval(() => {
-      if (Keyboard.isVisible()) {
+      if (Keyboard.isVisible() || numTries-- <= 0) {
         clearInterval(id)
       } else {
         textInput.current?.focus()
