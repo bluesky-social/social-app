@@ -15,8 +15,24 @@ export function SendViaChatDialog({
   control: Dialog.DialogControlProps
   onSelectChat: (chatId: string) => void
 }) {
-  const {_} = useLingui()
+  return (
+    <Dialog.Outer
+      control={control}
+      testID="sendViaChatChatDialog"
+      nativeOptions={{sheet: {snapPoints: ['100%']}}}>
+      <SendViaChatDialogInner control={control} onSelectChat={onSelectChat} />
+    </Dialog.Outer>
+  )
+}
 
+function SendViaChatDialogInner({
+  control,
+  onSelectChat,
+}: {
+  control: Dialog.DialogControlProps
+  onSelectChat: (chatId: string) => void
+}) {
+  const {_} = useLingui()
   const {mutate: createChat} = useGetConvoForMembers({
     onSuccess: data => {
       onSelectChat(data.convo.id)
@@ -39,15 +55,10 @@ export function SendViaChatDialog({
   )
 
   return (
-    <Dialog.Outer
-      control={control}
-      testID="sendViaChatChatDialog"
-      nativeOptions={{sheet: {snapPoints: ['100%']}}}>
-      <SearchablePeopleList
-        title={_(msg`Send post to...`)}
-        onSelectChat={onCreateChat}
-        showRecentConvos
-      />
-    </Dialog.Outer>
+    <SearchablePeopleList
+      title={_(msg`Send post to...`)}
+      onSelectChat={onCreateChat}
+      showRecentConvos
+    />
   )
 }

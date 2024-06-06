@@ -1,4 +1,4 @@
-import React, {useLayoutEffect} from 'react'
+import React, {useLayoutEffect, useState} from 'react'
 import {Modal, View} from 'react-native'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import {RootSiblingParent} from 'react-native-root-siblings'
@@ -24,8 +24,16 @@ export const Composer = observer(function ComposerImpl({}: {
   const t = useTheme()
   const state = useComposerState()
   const ref = useComposerCancelRef()
+  const [isModalReady, setIsModalReady] = useState(false)
 
   const open = !!state
+  const [prevOpen, setPrevOpen] = useState(open)
+  if (open !== prevOpen) {
+    setPrevOpen(open)
+    if (!open) {
+      setIsModalReady(false)
+    }
+  }
 
   return (
     <Modal
@@ -34,10 +42,12 @@ export const Composer = observer(function ComposerImpl({}: {
       visible={open}
       presentationStyle="formSheet"
       animationType="slide"
+      onShow={() => setIsModalReady(true)}
       onRequestClose={() => ref.current?.onPressCancel()}>
       <View style={[t.atoms.bg, a.flex_1]}>
         <Providers open={open}>
           <ComposePost
+            isModalReady={isModalReady}
             cancelRef={ref}
             replyTo={state?.replyTo}
             onPost={state?.onPost}
