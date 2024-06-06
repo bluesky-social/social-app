@@ -12,6 +12,7 @@ import {SearchInput} from 'view/com/util/forms/SearchInput'
 import {List} from 'view/com/util/List'
 import {useWizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a} from '#/alf'
+import {Loader} from '#/components/Loader'
 import {WizardFeedCard} from '#/components/StarterPack/Wizard/WizardFeedCard'
 
 function keyExtractor(item: GeneratorView) {
@@ -69,6 +70,11 @@ export function StepFeeds() {
         onEndReached={!query ? () => fetchNextPage() : undefined}
         onEndReachedThreshold={2}
         renderScrollComponent={props => <KeyboardAwareScrollView {...props} />}
+        ListEmptyComponent={
+          <View style={[a.flex_1, a.align_center, a.mt_lg]}>
+            <Loader size="lg" />
+          </View>
+        }
       />
     </>
   )

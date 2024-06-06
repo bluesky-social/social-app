@@ -23,7 +23,7 @@ import {StepProfiles} from '#/screens/StarterPack/Wizard/StepProfiles'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
-import {WizardAddDialog} from '#/components/StarterPack/Wizard/WizardAddDialog'
+import {WizardEditListDialog} from '#/components/StarterPack/Wizard/WizardEditListDialog'
 import {Text} from '#/components/Typography'
 import {Provider} from './State'
 
@@ -81,7 +81,6 @@ function WizardInner() {
     did: currentAccount?.did,
     staleTime: 0,
   })
-  const addDialogControl = useDialogControl()
 
   const setMinimalShellMode = useSetMinimalShellMode()
 
@@ -200,15 +199,6 @@ function WizardInner() {
       ) : (
         <Footer onNext={onNext} nextBtnText={uiStrings.nextBtn} />
       )}
-
-      {(state.currentStep === 'Profiles' || state.currentStep === 'Feeds') && (
-        <WizardAddDialog
-          control={addDialogControl}
-          state={state}
-          dispatch={dispatch}
-          type={state.currentStep === 'Profiles' ? 'profiles' : 'feeds'}
-        />
-      )}
     </CenteredView>
   )
 }
@@ -250,7 +240,8 @@ function Footer({
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const [state] = useWizardState()
+  const [state, dispatch] = useWizardState()
+  const editDialogControl = useDialogControl()
 
   const items = state.currentStep === 'Profiles' ? state.profiles : state.feeds
 
@@ -345,7 +336,9 @@ function Footer({
           label={_(msg`Edit`)}
           variant="ghost"
           color="primary"
-          size="small">
+          size="small"
+          disabled={items.length === 0}
+          onPress={editDialogControl.open}>
           <ButtonText>
             <Trans>Edit</Trans>
           </ButtonText>
@@ -359,6 +352,12 @@ function Footer({
           <ButtonText>{nextBtnText}</ButtonText>
         </Button>
       </View>
+
+      <WizardEditListDialog
+        control={editDialogControl}
+        state={state}
+        dispatch={dispatch}
+      />
     </View>
   )
 }

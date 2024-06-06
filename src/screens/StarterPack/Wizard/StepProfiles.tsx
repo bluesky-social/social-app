@@ -10,6 +10,7 @@ import {SearchInput} from 'view/com/util/forms/SearchInput'
 import {List} from 'view/com/util/List'
 import {useWizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a} from '#/alf'
+import {Loader} from '#/components/Loader'
 import {WizardProfileCard} from '#/components/StarterPack/Wizard/WizardProfileCard'
 
 function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic) {
@@ -57,6 +58,11 @@ export function StepProfiles() {
         onEndReached={!query ? () => fetchNextPage() : undefined}
         onEndReachedThreshold={2}
         renderScrollComponent={props => <KeyboardAwareScrollView {...props} />}
+        ListEmptyComponent={
+          <View style={[a.flex_1, a.align_center, a.mt_lg]}>
+            <Loader size="lg" />
+          </View>
+        }
       />
     </>
   )
