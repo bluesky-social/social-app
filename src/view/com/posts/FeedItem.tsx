@@ -196,9 +196,20 @@ let FeedItemInner = ({
     },
   ]
 
+  let blockedParentAuthorState: boolean = false
+  if (parentAuthor) {
+    if (
+      parentAuthor.viewer?.blockedBy == true ||
+      parentAuthor.viewer?.blocking ||
+      parentAuthor.viewer?.blockingByList
+    ) {
+      blockedParentAuthorState = true
+    }
+  }
+
   let blockedParentAuthor: AppBskyActorDefs.ProfileViewBasic = {
     did: '',
-    displayName: '[user blocked you]',
+    displayName: '[blocked user]',
     handle: '',
   }
 
@@ -328,9 +339,7 @@ let FeedItemInner = ({
           {!isThreadChild && showReplyTo && parentAuthor && (
             <ReplyToLabel
               profile={
-                parentAuthor.viewer?.blockedBy
-                  ? blockedParentAuthor
-                  : parentAuthor
+                blockedParentAuthorState ? blockedParentAuthor : parentAuthor
               }
             />
           )}
