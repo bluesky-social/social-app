@@ -111,7 +111,7 @@
     "email-validator": "^2.0.4",
     "emoji-mart": "^5.5.2",
     "eventemitter3": "^5.0.1",
-    "expo": "^51.0.8",
+    "expo": "^51.0.10",
     "expo-application": "^5.9.1",
     "expo-build-properties": "^0.12.1",
     "expo-camera": "~15.0.9",
