@@ -133,14 +133,14 @@ export const ComposePost = observer(function ComposePost({
   // Disable this in the composer to prevent any extra keyboard height being applied.
   // See https://github.com/bluesky-social/social-app/pull/4399
   const keyboardContext = useKeyboardContext()
+  const {setEnabled} = keyboardContext
   React.useEffect(() => {
-    const {setEnabled} = keyboardContext
     setEnabled(false)
 
     return () => {
       setEnabled(true)
     }
-  }, [keyboardContext])
+  }, [setEnabled])
 
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isProcessing, setIsProcessing] = useState(false)
