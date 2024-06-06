@@ -182,7 +182,7 @@ export function Feed({
         refreshing={isPTRing}
         onRefresh={onRefresh}
         onEndReached={onEndReached}
-        onEndReachedThreshold={2}
+        onEndReachedThreshold={0.6}
         onScrolledDownChange={onScrolledDownChange}
         contentContainerStyle={s.contentContainer}
         // @ts-ignore our .web version only -prf
