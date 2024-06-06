@@ -1240,7 +1240,7 @@ msgstr "Настройка медиа со сторонних веб-сайто�
 #: src/view/screens/Settings/index.tsx:458
 #: src/view/screens/Settings/index.tsx:484
 msgid "Dark"
-msgstr "Темная"
+msgstr "Черная"
 
 #: src/view/screens/Debug.tsx:63
 msgid "Dark mode"
@@ -1365,7 +1365,7 @@ msgstr "Вы хотели что-то написать?"
 
 #: src/view/screens/Settings/index.tsx:477
 msgid "Dim"
-msgstr "Тусклый"
+msgstr "Тусклая"
 
 #: src/components/dms/MessagesNUX.tsx:88
 msgid "Direct messages are here!"
@@ -2549,7 +2549,7 @@ msgstr "Взлетаем!"
 
 #: src/view/screens/Settings/index.tsx:452
 msgid "Light"
-msgstr "Светлые"
+msgstr "Светлая"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:267
 #: src/view/screens/ProfileFeed.tsx:570
@@ -2910,7 +2910,7 @@ msgstr "Игнорируемые учетные записи"
 
 #: src/view/screens/ModerationMutedAccounts.tsx:117
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
-msgstr "Игнорируемые учетные записи автоматически удаляются из вашей ленты и уведомлений. Игнорирование является полностью частным."
+msgstr "Игнорируемые учетные записи автоматически убираются из вашей ленты и уведомлений. Игнорирование является полностью частным."
 
 #: src/lib/moderation/useModerationCauseDescription.ts:87
 msgid "Muted by \"{0}\""
@@ -4486,23 +4486,23 @@ msgstr "Изменение пароля"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:224
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
-msgstr "\"Отключите\" этот параметр, чтобы скрыть все цитируемые посты в вашей ленте. Не влияет на репосты без цитирования."
+msgstr "Отключите этот параметр, чтобы скрыть все цитируемые посты в вашей ленте. Не влияет на репосты без цитирования."
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:121
 msgid "Set this setting to \"No\" to hide all replies from your feed."
-msgstr "\"Отключите\" этот параметр, чтобы скрыть все ответы в вашей ленте."
+msgstr "Отключите этот параметр, чтобы скрыть все ответы в вашей ленте."
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:190
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
-msgstr "\"Отключите\" этот параметр, чтобы скрыть все репосты в вашей ленте."
+msgstr "Отключите этот параметр, чтобы скрыть все репосты в вашей ленте."
 
 #: src/view/screens/PreferencesThreads.tsx:122
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
-msgstr "\"Включите\" эту настройку, чтобы показывать ответы в виде веток. Это экспериментальная функция."
+msgstr "Включите эту настройку, чтобы показывать ответы в виде веток. Это экспериментальная функция."
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:260
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your Following feed. This is an experimental feature."
-msgstr "\"Включите\" эту настройку, чтобы иногда видеть посты из сохраненных лент в вашей домашней ленте. Это экспериментальная функция."
+msgstr "Включите эту настройку, чтобы иногда видеть посты из сохраненных лент в вашей домашней ленте. Это экспериментальная функция."
 
 #: src/screens/Onboarding/Layout.tsx:48
 msgid "Set up your account"
