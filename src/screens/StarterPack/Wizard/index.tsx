@@ -1,7 +1,7 @@
 import React from 'react'
 import {Keyboard, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
-import {AppBskyActorDefs, AppBskyFeedDefs} from '@atproto/api'
+import {AppBskyActorDefs} from '@atproto/api'
 import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -186,19 +186,20 @@ function WizardInner() {
         <StepView />
       </Container>
 
-      {state.currentStep === 'Details' && (
+      {state.currentStep === 'Details' ? (
         <Button
           label={uiStrings.nextBtn}
           variant="solid"
           color="primary"
           size="medium"
           style={[a.mx_xl, a.my_5xl]}
-          onPress={onNext}>
+          onPress={onNext}
+          disabled={!state.canNext}>
           <ButtonText>{uiStrings.nextBtn}</ButtonText>
         </Button>
+      ) : (
+        <Footer onNext={onNext} nextBtnText={uiStrings.nextBtn} />
       )}
-
-      <Footer onNext={onNext} nextBtnText={uiStrings.nextBtn} />
 
       {(state.currentStep === 'Profiles' || state.currentStep === 'Feeds') && (
         <WizardAddDialog
@@ -274,9 +275,9 @@ function Footer({
         },
       ]}>
       <View style={[a.flex_row, a.gap_xs]}>
-        {items.slice(0, 5).map(p => (
+        {items.slice(0, 5).map((p, index) => (
           <UserAvatar
-            key={p.did}
+            key={index}
             avatar={p.avatar}
             size={28}
             type={state.currentStep === 'Profiles' ? 'user' : 'algo'}
@@ -363,11 +364,11 @@ function Footer({
 }
 
 function getName(item: AppBskyActorDefs.ProfileViewBasic | GeneratorView) {
-  if (AppBskyActorDefs.isProfileView(item)) {
-    return enforceLen(item.displayName || item.handle, 16)
-  }
-  if (AppBskyFeedDefs.isGeneratorView(item)) {
-    return enforceLen(item.displayName, 16)
+  // TODO hack for now since these are not full profiles and wont validate
+  if (typeof item.displayName === 'string') {
+    return enforceLen(item.displayName, 16, true)
+  } else if (typeof item.handle === 'string') {
+    return enforceLen(item.handle, 16, true)
   }
   return ''
 }

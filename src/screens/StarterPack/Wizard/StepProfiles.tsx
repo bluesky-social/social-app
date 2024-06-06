@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import {ListRenderItemInfo, View} from 'react-native'
+import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {AppBskyActorDefs} from '@atproto/api'
 
 import {useActorAutocompleteQuery} from 'state/queries/actor-autocomplete'
@@ -54,6 +55,7 @@ export function StepProfiles() {
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         onEndReached={!query ? () => fetchNextPage() : undefined}
+        renderScrollComponent={props => <KeyboardAwareScrollView {...props} />}
       />
     </>
   )
