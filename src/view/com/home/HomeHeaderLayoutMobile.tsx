@@ -17,7 +17,7 @@ import {useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
 import {ColorPalette_Stroke2_Corner0_Rounded as ColorPalette} from '#/components/icons/ColorPalette'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
-import {SettingsSliderVertical_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/SettingsSlider'
+import {Pin_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/Pin'
 import {Link} from '#/components/Link'
 import {IS_DEV} from '#/env'
 
@@ -89,10 +89,11 @@ export function HomeHeaderLayoutMobile({
               style={[
                 a.justify_center,
                 {
+                  marginTop: 2,
                   marginRight: -6,
                 },
               ]}>
-              <FeedsIcon size="md" fill={t.atoms.text_contrast_medium.color} />
+              <FeedsIcon size="lg" fill={t.atoms.text_contrast_medium.color} />
             </Link>
           )}
         </View>
