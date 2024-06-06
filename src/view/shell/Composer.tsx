@@ -24,14 +24,14 @@ export const Composer = observer(function ComposerImpl({}: {
   const t = useTheme()
   const state = useComposerState()
   const ref = useComposerCancelRef()
-  const [shown, setShown] = useState(false)
+  const [isModalReady, setIsModalReady] = useState(false)
 
   const open = !!state
   const [prevOpen, setPrevOpen] = useState(open)
   if (open !== prevOpen) {
     setPrevOpen(open)
-    if (!open && shown) {
-      setShown(false)
+    if (!open) {
+      setIsModalReady(false)
     }
   }
 
@@ -42,12 +42,12 @@ export const Composer = observer(function ComposerImpl({}: {
       visible={open}
       presentationStyle="formSheet"
       animationType="slide"
-      onShow={() => setShown(true)}
+      onShow={() => setIsModalReady(true)}
       onRequestClose={() => ref.current?.onPressCancel()}>
       <View style={[t.atoms.bg, a.flex_1]}>
         <Providers open={open}>
           <ComposePost
-            visible={shown}
+            isModalReady={isModalReady}
             cancelRef={ref}
             replyTo={state?.replyTo}
             onPost={state?.onPost}

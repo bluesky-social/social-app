@@ -107,9 +107,9 @@ export const ComposePost = observer(function ComposePost({
   text: initText,
   imageUris: initImageUris,
   cancelRef,
-  visible,
+  isModalReady,
 }: Props & {
-  visible?: boolean
+  isModalReady: boolean
   cancelRef?: React.RefObject<CancelRef>
 }) {
   const {currentAccount} = useSession()
@@ -519,8 +519,10 @@ export const ComposePost = observer(function ComposePost({
                 richtext={richtext}
                 placeholder={selectTextInputPlaceholder}
                 // fixes autofocus on android
-                key={isAndroid ? (visible ? 'visible' : 'hidden') : 'static'}
-                autoFocus={isAndroid ? visible : true}
+                key={
+                  isAndroid ? (isModalReady ? 'ready' : 'animating') : 'static'
+                }
+                autoFocus={isAndroid ? isModalReady : true}
                 setRichText={setRichText}
                 onPhotoPasted={onPhotoPasted}
                 onPressPublish={onPressPublish}
