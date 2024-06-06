@@ -27,9 +27,12 @@ export const Composer = observer(function ComposerImpl({}: {
   const [shown, setShown] = useState(false)
 
   const open = !!state
-
-  if (!open && shown) {
-    setShown(false)
+  const [prevOpen, setPrevOpen] = useState(open)
+  if (open !== prevOpen) {
+    setPrevOpen(open)
+    if (!open && shown) {
+      setShown(false)
+    }
   }
 
   return (
