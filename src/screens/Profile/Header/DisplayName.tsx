@@ -1,11 +1,12 @@
 import React from 'react'
 import {View} from 'react-native'
 import {AppBskyActorDefs, ModerationDecision} from '@atproto/api'
-import {sanitizeHandle} from 'lib/strings/handles'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {Shadow} from '#/state/cache/types'
 
+import {Shadow} from '#/state/cache/types'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {sanitizeHandle} from 'lib/strings/handles'
 import {atoms as a, useTheme} from '#/alf'
+import {NewskieDialog} from '#/components/StarterPack/NewskieDialog'
 import {Text} from '#/components/Typography'
 
 export function ProfileHeaderDisplayName({
@@ -17,7 +18,7 @@ export function ProfileHeaderDisplayName({
 }) {
   const t = useTheme()
   return (
-    <View pointerEvents="none">
+    <View style={[a.flex_row, a.align_center, a.gap_md]}>
       <Text
         testID="profileHeaderDisplayName"
         style={[t.atoms.text, a.text_4xl, {fontWeight: '500'}]}>
@@ -26,6 +27,9 @@ export function ProfileHeaderDisplayName({
           moderation.ui('displayName'),
         )}
       </Text>
+      <View style={[a.h_full]}>
+        <NewskieDialog profile={profile} />
+      </View>
     </View>
   )
 }
