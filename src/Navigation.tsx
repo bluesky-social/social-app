@@ -310,8 +310,6 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         options={{title: title(msg`Chat settings`), requireAuth: true}}
       />
       <Stack.Screen
-        // TODO figure out what is up with this
-        // @ts-ignore what the absolute fuck is going on here??
         name="StarterPack"
         getComponent={() => StarterPackScreen}
         options={{title: title(msg`Starter Pack`), requireAuth: true}}
