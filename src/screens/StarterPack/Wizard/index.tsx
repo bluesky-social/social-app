@@ -399,9 +399,9 @@ function Footer({
             <Trans>
               <Text style={[a.font_bold]}>{getName(items[0])}, </Text>
               <Text style={[a.font_bold]}>{getName(items[1])}, </Text>
-              and {state.profiles.length - 2}{' '}
+              and {state.feeds.length - 2}{' '}
               <Plural
-                value={state.profiles.length - 2}
+                value={state.feeds.length - 2}
                 one="other"
                 other="others"
               />{' '}
