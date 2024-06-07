@@ -8,6 +8,7 @@ import {Provider as HiddenPostsProvider} from './hidden-posts'
 import {Provider as InAppBrowserProvider} from './in-app-browser'
 import {Provider as KawaiiProvider} from './kawaii'
 import {Provider as LanguagesProvider} from './languages'
+import {Provider as StarterPackProvider} from './starter-pack'
 
 export {
   useRequireAltTextEnabled,
@@ -32,7 +33,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             <InAppBrowserProvider>
               <DisableHapticsProvider>
                 <AutoplayProvider>
-                  <KawaiiProvider>{children}</KawaiiProvider>
+                  <KawaiiProvider>
+                    <StarterPackProvider>{children}</StarterPackProvider>
+                  </KawaiiProvider>
                 </AutoplayProvider>
               </DisableHapticsProvider>
             </InAppBrowserProvider>

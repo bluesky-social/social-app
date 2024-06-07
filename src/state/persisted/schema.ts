@@ -88,6 +88,7 @@ export const schema = z.object({
   disableHaptics: z.boolean().optional(),
   disableAutoplay: z.boolean().optional(),
   kawaii: z.boolean().optional(),
+  starterPackId: z.string().optional(),
 })
 export type Schema = z.infer<typeof schema>
 
@@ -126,4 +127,5 @@ export const defaults: Schema = {
   disableHaptics: false,
   disableAutoplay: prefersReducedMotion,
   kawaii: false,
+  starterPackId: undefined,
 }
