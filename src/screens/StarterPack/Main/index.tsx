@@ -53,8 +53,10 @@ export function StarterPackScreen({
 
   const items = [
     ...(starterPack.list ? ['People'] : []),
-    ...(starterPack.feeds ? ['Feeds'] : []),
+    ...(starterPack.feeds.length ? ['Feeds'] : []),
   ]
+
+  console.log(starterPack.feeds)
 
   return (
     <CenteredView style={[a.h_full_vh]}>
