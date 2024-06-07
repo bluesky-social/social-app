@@ -130,7 +130,7 @@ function LandingScreenInner({
             {!!feeds?.length && (
               <>
                 <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-                  <Trans>Join Bluesky now to subscribe to these feeds:</Trans>
+                  <Trans>What's in this starter pack?</Trans>
                 </Text>
                 <View
                   style={[
