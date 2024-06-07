@@ -173,12 +173,15 @@ function WizardInner() {
       )
 
       const rkey = new AtUri(res.uri).rkey
-      navigation.replace('StarterPack', {name: currentAccount!.did, rkey})
+
+      // TODO hack?
+      setTimeout(() => {
+        navigation.replace('StarterPack', {name: currentAccount!.handle, rkey})
+        dispatch({type: 'SetProcessing', processing: false})
+      }, 1000)
     } catch (e) {
-      // TODO add error to state
-      console.error(e)
-    } finally {
-      // dispatch({type: 'SetProcessing', processing: false})
+      // TODO handle the error here
+      dispatch({type: 'SetProcessing', processing: false})
     }
   }
 
@@ -234,7 +237,11 @@ function WizardInner() {
                 dispatch({type: 'Back'})
               }
             }}>
-            <FontAwesomeIcon size={18} icon="angle-left" />
+            <FontAwesomeIcon
+              size={18}
+              icon="angle-left"
+              color={t.atoms.text.color}
+            />
           </TouchableOpacity>
         </View>
         <Text style={[a.flex_1, a.font_bold, a.text_lg, a.text_center]}>
