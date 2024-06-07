@@ -26,14 +26,17 @@ async function main() {
           await server.mocker.users.alice.agent.upsertProfile(() => ({
             displayName: 'Alice',
             description: 'Test user 1',
+            website: 'https://www.alice.com',
           }))
           await server.mocker.users.bob.agent.upsertProfile(() => ({
             displayName: 'Bob',
             description: 'Test user 2',
+            website: 'https://www.bob.com',
           }))
           await server.mocker.users.carla.agent.upsertProfile(() => ({
             displayName: 'Carla',
             description: 'Test user 3',
+            website: 'https://www.carla.com',
           }))
           if (inviteRequired) {
             await server.mocker.createInvite(server.mocker.users.alice.did)
@@ -80,18 +83,22 @@ async function main() {
           await server.mocker.users.alice.agent.upsertProfile(() => ({
             displayName: 'Alice',
             description: 'Test user 1',
+            website: 'https://www.alice.com',
           }))
           await server.mocker.users.bob.agent.upsertProfile(() => ({
             displayName: 'Bob',
             description: 'Test user 2',
+            website: 'https://www.bob.com',
           }))
           await server.mocker.users.carla.agent.upsertProfile(() => ({
             displayName: 'Carla',
             description: 'Test user 3',
+            website: 'https://www.carla.com',
           }))
           await server.mocker.users.dan.agent.upsertProfile(() => ({
             displayName: 'Dan',
             description: 'Test user 4',
+            website: 'https://www.dan.com',
           }))
           console.log('Generating mock follows')
           await server.mocker.follow('alice', 'bob')

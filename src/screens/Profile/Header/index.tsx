@@ -36,6 +36,7 @@ interface Props {
   profile: AppBskyActorDefs.ProfileViewDetailed
   labeler: AppBskyLabelerDefs.LabelerViewDetailed | undefined
   descriptionRT: RichTextAPI | null
+  websiteRT: RichTextAPI | null
   moderationOpts: ModerationOpts
   hideBackButton?: boolean
   isPlaceholderProfile?: boolean

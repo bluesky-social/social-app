@@ -167,9 +167,12 @@ function ProfileScreenLoaded({
   useSetTitle(combinedDisplayName(profile))
 
   const description = profile.description ?? ''
+  const website = (profile.website) as string ?? ''
+  const hasWebsite = website !== ''
   const hasDescription = description !== ''
+  const [websiteRT, isResolvingWebsiteRT] = useRichText(website)
   const [descriptionRT, isResolvingDescriptionRT] = useRichText(description)
-  const showPlaceholder = isPlaceholderProfile || isResolvingDescriptionRT
+  const showPlaceholder = isPlaceholderProfile || isResolvingDescriptionRT || isResolvingWebsiteRT
   const moderation = useMemo(
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
@@ -321,6 +324,7 @@ function ProfileScreenLoaded({
           profile={profile}
           labeler={labelerInfo}
           descriptionRT={hasDescription ? descriptionRT : null}
+          websiteRT = {hasWebsite ? websiteRT : null}
           moderationOpts={moderationOpts}
           hideBackButton={hideBackButton}
           isPlaceholderProfile={showPlaceholder}
@@ -331,7 +335,9 @@ function ProfileScreenLoaded({
     scrollViewTag,
     profile,
     labelerInfo,
+    hasWebsite,
     hasDescription,
+    websiteRT,
     descriptionRT,
     moderationOpts,
     hideBackButton,

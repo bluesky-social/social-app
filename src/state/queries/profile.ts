@@ -153,6 +153,7 @@ export function useProfileUpdateMutation() {
         } else {
           existing.displayName = updates.displayName
           existing.description = updates.description
+          existing.website = updates.website
         }
         if (newUserAvatarPromise) {
           const res = await newUserAvatarPromise
@@ -196,7 +197,8 @@ export function useProfileUpdateMutation() {
             }
             return (
               res.data.displayName === updates.displayName &&
-              res.data.description === updates.description
+              res.data.description === updates.description &&
+              res.data.website === updates.website
             )
           }),
       )

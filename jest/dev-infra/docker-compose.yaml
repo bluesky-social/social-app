@@ -1,7 +1,7 @@
 version: '3.8'
 services:
-  # An ephermerally-stored postgres database for single-use test runs
-  db_test: &db_test
+  # An ephemerally-stored postgres database for single-use test runs
+  db_test:
     image: postgres:14.4-alpine
     environment:
       - POSTGRES_USER=pg
@@ -14,17 +14,24 @@ services:
       interval: 500ms
       timeout: 10s
       retries: 20
+    profiles:
+      - test
+
   # A persistently-stored postgres database
   db:
-    <<: *db_test
+    image: postgres:14.4-alpine
+    environment:
+      - POSTGRES_USER=pg
+      - POSTGRES_PASSWORD=password
     ports:
       - '5432:5432'
-    healthcheck:
-      disable: true
     volumes:
       - atp_db:/var/lib/postgresql/data
-  # An ephermerally-stored redis cache for single-use test runs
-  redis_test: &redis_test
+    profiles:
+      - production
+
+  # An ephemerally-stored redis cache for single-use test runs
+  redis_test:
     image: redis:7.0-alpine
     ports:
       - '6380:6379'
@@ -34,16 +41,20 @@ services:
       interval: 500ms
       timeout: 10s
       retries: 20
+    profiles:
+      - test
+
   # A persistently-stored redis cache
   redis:
-    <<: *redis_test
+    image: redis:7.0-alpine
     command: redis-server --save 60 1 --loglevel warning
     ports:
       - '6379:6379'
-    healthcheck:
-      disable: true
     volumes:
       - atp_redis:/data
+    profiles:
+      - production
+
 volumes:
   atp_db:
   atp_redis:

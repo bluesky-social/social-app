@@ -39,6 +39,7 @@ import {ProfileHeaderShell} from './Shell'
 
 interface Props {
   profile: AppBskyActorDefs.ProfileViewDetailed
+  websiteRT: RichTextAPI | null
   descriptionRT: RichTextAPI | null
   moderationOpts: ModerationOpts
   hideBackButton?: boolean
@@ -48,6 +49,7 @@ interface Props {
 let ProfileHeaderStandard = ({
   profile: profileUnshadowed,
   descriptionRT,
+  websiteRT,
   moderationOpts,
   hideBackButton = false,
   isPlaceholderProfile,
@@ -252,25 +254,36 @@ let ProfileHeaderStandard = ({
         <View style={[a.flex_col, a.gap_xs, a.pb_sm]}>
           <ProfileHeaderDisplayName profile={profile} moderation={moderation} />
           <ProfileHeaderHandle profile={profile} />
-        </View>
-        {!isPlaceholderProfile && (
-          <>
-            <ProfileHeaderMetrics profile={profile} />
-            {descriptionRT && !moderation.ui('profileView').blur ? (
-              <View pointerEvents="auto">
-                <RichText
-                  testID="profileHeaderDescription"
-                  style={[a.text_md]}
-                  numberOfLines={15}
-                  value={descriptionRT}
-                  enableTags
-                  authorHandle={profile.handle}
-                />
-              </View>
-            ) : undefined}
-          </>
-        )}
-      </View>
+          </View>
+            {!isPlaceholderProfile && (
+              <>
+                <ProfileHeaderMetrics profile={profile} />
+                {descriptionRT && !moderation.ui('profileView').blur ? (
+                  <View pointerEvents="auto">
+                    <RichText
+                      testID="profileHeaderDescription"
+                      style={[a.text_md]}
+                      numberOfLines={15}
+                      value={descriptionRT}
+                      enableTags
+                      authorHandle={profile.handle}
+                    />
+                  </View>
+                ) : null}
+                {websiteRT && (
+                  <View pointerEvents="auto">
+                    <RichText
+                      testID="profileHeaderWebsite"
+                      style={[a.text_md]}
+                      numberOfLines={2}
+                      value={websiteRT}
+                      authorHandle={profile.handle}
+                    />
+                  </View>
+                )}
+              </>
+            )}
+          </View>
       {showSuggestedFollows && (
         <ProfileHeaderSuggestedFollows
           actorDid={profile.did}

@@ -1,5 +1,4 @@
-import React from 'react'
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {StyleProp, StyleSheet, View, ViewStyle, Linking} from 'react-native'
 import {
   AppBskyActorDefs,
   moderateProfile,
@@ -25,7 +24,7 @@ import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {FollowButton} from './FollowButton'
-import hairlineWidth = StyleSheet.hairlineWidth
+import React from 'react'
 
 export function ProfileCard({
   testID,
@@ -122,6 +121,17 @@ export function ProfileCard({
         <View style={styles.details}>
           <Text style={pal.text} numberOfLines={4}>
             {profile.description as string}
+          </Text>
+        </View>
+      ) : null}
+      {profile.website ? (
+        <View style={styles.details}>
+          <Text
+            style={[pal.text, { color: 'blue' }]}
+            numberOfLines={4}
+            onPress={() => Linking.openURL(profile.website)} 
+          >
+            {profile.website}
           </Text>
         </View>
       ) : null}
@@ -281,7 +291,7 @@ export function ProfileCardWithFollowBtn({
 
 const styles = StyleSheet.create({
   outer: {
-    borderTopWidth: hairlineWidth,
+    borderTopWidth: 1,
     paddingHorizontal: 6,
     paddingVertical: 4,
   },

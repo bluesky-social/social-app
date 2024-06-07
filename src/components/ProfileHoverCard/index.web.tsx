@@ -364,6 +364,7 @@ function Inner({
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
   )
+  const [websiteRT] = useRichText((profile.website) as string ?? '');
   const [descriptionRT] = useRichText(profile.description ?? '')
   const profileShadow = useProfileShadow(profile)
   const {follow, unfollow} = useFollowMethods({
@@ -465,14 +466,24 @@ function Inner({
           </View>
 
           {profile.description?.trim() && !moderation.ui('profileView').blur ? (
+          <View style={[a.pt_md]}>
+            <RichText
+              numberOfLines={8}
+              value={descriptionRT}
+              onLinkPress={hide}
+            />
+          </View>
+        ) : null}
+
+          {profile.website?.trim() ? (
             <View style={[a.pt_md]}>
               <RichText
-                numberOfLines={8}
-                value={descriptionRT}
+                numberOfLines={1}
+                value={websiteRT}
                 onLinkPress={hide}
               />
-            </View>
-          ) : undefined}
+          </View>
+        ) : null}
         </>
       )}
     </View>

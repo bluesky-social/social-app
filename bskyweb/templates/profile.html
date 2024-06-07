@@ -25,6 +25,10 @@
   <meta name="description" content="{{ profileView.Description }}">
   <meta property="og:description" content="{{ profileView.Description }}">
   {% endif -%}
+  {%- if profileView.Website %}
+  <meta name="website" content="{{ profileView.Website }}">
+  <meta property="og:website" content="{{ profileView.Website }}">
+  {% endif -%}
   {%- if profileView.Banner %}
   <meta property="og:image" content="{{ profileView.Banner }}">
   <meta name="twitter:card" content="summary_large_image">
@@ -48,6 +52,7 @@
   <p id="bsky_handle">{{ profileView.Handle }}</p>
   <p id="bsky_did">{{ profileView.Did }}</p>
   <p id="bsky_profile_description">{{ profileView.Description }}</p>
+  <p id="bsky_profile_website">{{ profileView.Website }}</p>
 </div>
 {% endif -%}
 {%- endblock %}

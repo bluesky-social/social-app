@@ -7,4 +7,4 @@
 dir=$(dirname $0)
 . ${dir}/_common.sh
 
-SERVICES="db_test redis_test" main "$@"
+SERVICES="db redis" main "$@"

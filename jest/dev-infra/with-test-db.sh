@@ -6,4 +6,4 @@
 dir=$(dirname $0)
 . ${dir}/_common.sh
 
-SERVICES="db_test" main "$@"
+SERVICES="db" main "$@"

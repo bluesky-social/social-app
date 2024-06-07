@@ -43,6 +43,7 @@ import {ProfileHeaderShell} from './Shell'
 interface Props {
   profile: AppBskyActorDefs.ProfileViewDetailed
   labeler: AppBskyLabelerDefs.LabelerViewDetailed
+  websiteRT: RichTextAPI | null
   descriptionRT: RichTextAPI | null
   moderationOpts: ModerationOpts
   hideBackButton?: boolean
@@ -53,6 +54,7 @@ let ProfileHeaderLabeler = ({
   profile: profileUnshadowed,
   labeler,
   descriptionRT,
+  websiteRT,
   moderationOpts,
   hideBackButton = false,
   isPlaceholderProfile,
@@ -254,6 +256,15 @@ let ProfileHeaderLabeler = ({
                   enableTags
                   authorHandle={profile.handle}
                 />
+                {websiteRT && ( 
+                  <RichText
+                      testID="profileHeaderWebsite"
+                      style={[a.text_md]}
+                      numberOfLines={2}
+                      value={websiteRT}
+                      authorHandle={profile.handle}
+                  />
+                )}
               </View>
             ) : undefined}
             {!isAppLabeler(profile.did) && (

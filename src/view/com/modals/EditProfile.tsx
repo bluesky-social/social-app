@@ -41,7 +41,7 @@ export const snapPoints = ['fullscreen']
 export function Component({
   profile,
   onUpdate,
-}: {
+}: { //Esto es lo que Cambia Flavia
   profile: AppBskyActorDefs.ProfileViewDetailed
   onUpdate?: () => void
 }) {
@@ -57,6 +57,9 @@ export function Component({
   )
   const [description, setDescription] = useState<string>(
     profile.description || '',
+  )
+  const [website, setWebsite] = useState<string>(
+    (profile.website) as string || '',
   )
   const [userBanner, setUserBanner] = useState<string | undefined | null>(
     profile.banner,
@@ -122,6 +125,7 @@ export function Component({
         updates: {
           displayName,
           description,
+          website,
         },
         newUserAvatar,
         newUserBanner,
@@ -139,6 +143,7 @@ export function Component({
     onUpdate,
     closeModal,
     displayName,
+    website,
     description,
     newUserAvatar,
     newUserBanner,
@@ -194,7 +199,7 @@ export function Component({
               accessibilityHint={_(msg`Edit your display name`)}
             />
           </View>
-          <View style={s.pb10}>
+          <View>
             <Text style={[styles.label, pal.text]}>
               <Trans>Description</Trans>
             </Text>
@@ -210,6 +215,24 @@ export function Component({
               accessible={true}
               accessibilityLabel={_(msg`Description`)}
               accessibilityHint={_(msg`Edit your profile description`)}
+            />
+          </View>
+          <View style={s.pb10}>
+            <Text style={[styles.label, pal.text]}>
+              <Trans>Link to Social Media</Trans>
+            </Text>
+            <TextInput
+              testID="editLinkInput"
+              style={[styles.textInput, pal.border, pal.text]}
+              placeholder={_(msg`e.g. https://linktr.ee/yourname`)}
+              placeholderTextColor={colors.gray4}
+              value={website}
+              onChangeText={v =>
+                setWebsite(enforceLen(v, MAX_DISPLAY_NAME))
+              }
+              accessible={true}
+              accessibilityLabel={_(msg`Display social media link`)}
+              accessibilityHint={_(msg`Edit your social media link`)}
             />
           </View>
           {updateMutation.isPending ? (

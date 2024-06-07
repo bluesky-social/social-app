@@ -92,6 +92,7 @@ export async function createServer(
     {
       displayName: 'Dev-env Moderation',
       description: `The pretend version of mod.bsky.app`,
+      website: 'https://github.com/',
     },
   )
 
@@ -203,16 +204,19 @@ class Mocker {
     await this.users.alice.agent.upsertProfile(() => ({
       displayName: 'Alice',
       description: 'Test user 1',
+      website: 'https:www.alice.com',
     }))
 
     await this.users.bob.agent.upsertProfile(() => ({
       displayName: 'Bob',
       description: 'Test user 2',
+      website: 'https:www.bob.com',
     }))
 
     await this.users.carla.agent.upsertProfile(() => ({
       displayName: 'Carla',
       description: 'Test user 3',
+      website: 'https:www.carla.com',
     }))
 
     await this.follow('alice', 'bob')
