@@ -148,6 +148,7 @@ export function Provider({
       await agent.com.atproto.repo.applyWrites({
         repo: currentAccount!.did,
         writes: state.profiles.map(p => ({
+          $type: 'com.atproto.repo.applyWrites#create',
           collection: 'app.bsky.graph.listitem',
           value: {
             $type: 'app.bsky.graph.listitem',
@@ -161,6 +162,7 @@ export function Provider({
       await agent.app.bsky.graph.starterpack.create(
         {
           repo: currentAccount!.did,
+          validate: false,
         },
         {
           name: state.name ?? '',
