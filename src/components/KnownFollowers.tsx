@@ -77,7 +77,7 @@ function KnownFollowersInner({
         a.flex_1,
         a.flex_row,
         a.gap_md,
-        a.align_start,
+        a.align_center,
         {marginLeft: -AVI_BORDER},
       ]}>
       {({hovered, pressed}) => (
@@ -119,7 +119,6 @@ function KnownFollowersInner({
           <Text
             style={[
               textStyle,
-              a.pt_xs,
               hovered && {
                 textDecorationLine: 'underline',
                 textDecorationColor: t.atoms.text_contrast_medium.color,
@@ -128,7 +127,7 @@ function KnownFollowersInner({
                 opacity: 0.5,
               },
             ]}
-            numberOfLines={3}>
+            numberOfLines={2}>
             <Trans>Followed by</Trans>{' '}
             {count > 2 ? (
               <>
