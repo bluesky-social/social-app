@@ -15,12 +15,12 @@ const SERVICE_DID = (serviceUrl?: string) =>
     : 'did:web:api.bsky.app'
 
 async function registerPushToken(
-  getAgent: () => BskyAgent,
+  agent: BskyAgent,
   account: SessionAccount,
   token: Notifications.DevicePushToken,
 ) {
   try {
-    await getAgent().api.app.bsky.notification.registerPush({
+    await agent.api.app.bsky.notification.registerPush({
       serviceDid: SERVICE_DID(account.service),
       platform: devicePlatform,
       token: token.data,
@@ -48,7 +48,7 @@ async function getPushToken(skipPermissionCheck = false) {
 }
 
 export function useNotificationsRegistration() {
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   const {currentAccount} = useSession()
 
   React.useEffect(() => {
@@ -61,57 +61,52 @@ export function useNotificationsRegistration() {
     // According to the Expo docs, there is a chance that the token will change while the app is open in some rare
     // cases. This will fire `registerPushToken` whenever that happens.
     const subscription = Notifications.addPushTokenListener(async newToken => {
-      registerPushToken(getAgent, currentAccount, newToken)
+      registerPushToken(agent, currentAccount, newToken)
     })
 
     return () => {
       subscription.remove()
     }
-  }, [currentAccount, getAgent])
+  }, [currentAccount, agent])
 }
 
 export function useRequestNotificationsPermission() {
   const gate = useGate()
-  const {currentAccount} = useSession()
 
-  return React.useCallback(
-    async (context: 'StartOnboarding' | 'AfterOnboarding' | 'Login') => {
-      const permissions = await Notifications.getPermissionsAsync()
+  return async (context: 'StartOnboarding' | 'AfterOnboarding' | 'Login') => {
+    const permissions = await Notifications.getPermissionsAsync()
 
-      if (
-        !currentAccount ||
-        !isNative ||
-        permissions?.status === 'granted' ||
-        (permissions?.status === 'denied' && !permissions?.canAskAgain)
-      ) {
-        return
-      }
-      if (
-        context === 'StartOnboarding' &&
-        gate('request_notifications_permission_after_onboarding')
-      ) {
-        return
-      }
-      if (
-        context === 'AfterOnboarding' &&
-        !gate('request_notifications_permission_after_onboarding')
-      ) {
-        return
-      }
+    if (
+      !isNative ||
+      permissions?.status === 'granted' ||
+      permissions?.status === 'denied'
+    ) {
+      return
+    }
+    if (
+      context === 'StartOnboarding' &&
+      gate('request_notifications_permission_after_onboarding_v2')
+    ) {
+      return
+    }
+    if (
+      context === 'AfterOnboarding' &&
+      !gate('request_notifications_permission_after_onboarding_v2')
+    ) {
+      return
+    }
 
-      const res = await Notifications.requestPermissionsAsync()
-      logEvent('notifications:request', {
-        context: context,
-        status: res.status,
-      })
+    const res = await Notifications.requestPermissionsAsync()
+    logEvent('notifications:request', {
+      context: context,
+      status: res.status,
+    })
 
-      if (res.granted) {
-        // This will fire a pushTokenEvent, which will handle registration of the token
-        getPushToken(true)
-      }
-    },
-    [gate, currentAccount],
-  )
+    if (res.granted) {
+      // This will fire a pushTokenEvent, which will handle registration of the token
+      getPushToken(true)
+    }
+  }
 }
 
 export async function decrementBadgeCount(by: number | 'reset' = 1) {

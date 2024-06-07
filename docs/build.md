@@ -4,7 +4,10 @@
 
 - Set up your environment [using the expo instructions](https://docs.expo.dev/guides/local-app-development/).
   - make sure that the JAVA_HOME points to the zulu-17 directory in your `.zshrc` or `.bashrc` file: `export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home`. DO NOT use another JDK or you will encounter build errors.
-- If you're running macOS, make sure you are running the correct versions of Ruby and Cocoapods:
+- If you're running macOS, make sure you are running the correct versions of Ruby and Cocoapods:- 
+  - If you are using Apple Silicon and this is the first time you are building for RN 0.74+, you may need to run:
+    - `arch -arm64 brew install llvm`
+    - `sudo gem install ffi`
   - Check if you've installed Cocoapods through `homebrew`. If you have, remove it:
     - `brew info cocoapods`
     - If output says `Installed`:

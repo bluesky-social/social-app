@@ -30,7 +30,7 @@ export function DisableEmail2FADialog({
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {currentAccount} = useSession()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
 
   const [stage, setStage] = useState<Stages>(Stages.Email)
   const [confirmationCode, setConfirmationCode] = useState<string>('')
@@ -41,7 +41,7 @@ export function DisableEmail2FADialog({
     setError('')
     setIsProcessing(true)
     try {
-      await getAgent().com.atproto.server.requestEmailUpdate()
+      await agent.com.atproto.server.requestEmailUpdate()
       setStage(Stages.ConfirmCode)
     } catch (e) {
       setError(cleanError(String(e)))
@@ -55,12 +55,12 @@ export function DisableEmail2FADialog({
     setIsProcessing(true)
     try {
       if (currentAccount?.email) {
-        await getAgent().com.atproto.server.updateEmail({
+        await agent.com.atproto.server.updateEmail({
           email: currentAccount!.email,
           token: confirmationCode.trim(),
           emailAuthFactor: false,
         })
-        await getAgent().resumeSession(getAgent().session!)
+        await agent.resumeSession(agent.session!)
         Toast.show(_(msg`Email 2FA disabled`))
       }
       control.close()

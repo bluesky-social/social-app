@@ -17,7 +17,7 @@ import {
 } from './agent'
 import {getInitialState, reducer} from './reducer'
 
-export {isSessionDeactivated} from './util'
+export {isSignupQueued} from './util'
 export type {SessionAccount} from '#/state/session/types'
 import {SessionApiContext, SessionStateContext} from '#/state/session/types'
 
@@ -268,17 +268,10 @@ export function useRequireAuth() {
   )
 }
 
-export function useAgent(): {getAgent: () => BskyAgent} {
+export function useAgent(): BskyAgent {
   const agent = React.useContext(AgentContext)
   if (!agent) {
     throw Error('useAgent() must be below <SessionProvider>.')
   }
-  return React.useMemo(
-    () => ({
-      getAgent() {
-        return agent
-      },
-    }),
-    [agent],
-  )
+  return agent
 }

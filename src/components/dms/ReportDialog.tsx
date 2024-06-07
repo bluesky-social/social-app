@@ -102,7 +102,7 @@ function SubmitStep({
   const t = useTheme()
   const [details, setDetails] = useState('')
   const control = Dialog.useDialogContext()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
 
   const {
     mutate: submit,
@@ -124,7 +124,7 @@ function SubmitStep({
           reason: details,
         } satisfies ComAtprotoModerationCreateReport.InputSchema
 
-        await getAgent().createModerationReport(report)
+        await agent.createModerationReport(report)
       }
     },
     onSuccess: () => {

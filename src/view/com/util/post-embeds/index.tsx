@@ -27,6 +27,7 @@ import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
 import {ExternalLinkEmbed} from './ExternalLinkEmbed'
 import {ListEmbed} from './ListEmbed'
 import {MaybeQuoteEmbed} from './QuoteEmbed'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -40,11 +41,13 @@ export function PostEmbeds({
   moderation,
   onOpen,
   style,
+  allowNestedQuotes,
 }: {
   embed?: Embed
   moderation?: ModerationDecision
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
+  allowNestedQuotes?: boolean
 }) {
   const pal = usePalette('default')
   const {openLightbox} = useLightboxControls()
@@ -86,7 +89,14 @@ export function PostEmbeds({
 
     // quote post
     // =
-    return <MaybeQuoteEmbed embed={embed} style={style} onOpen={onOpen} />
+    return (
+      <MaybeQuoteEmbed
+        embed={embed}
+        style={style}
+        onOpen={onOpen}
+        allowNestedQuotes={allowNestedQuotes}
+      />
+    )
   }
 
   // image embed
@@ -183,11 +193,11 @@ const styles = StyleSheet.create({
   },
   alt: {
     color: 'white',
-    fontSize: 6,
+    fontSize: 7,
     fontWeight: 'bold',
   },
   customFeedOuter: {
-    borderWidth: 1,
+    borderWidth: hairlineWidth,
     borderRadius: 8,
     marginTop: 4,
     paddingHorizontal: 12,

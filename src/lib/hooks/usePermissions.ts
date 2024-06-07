@@ -1,6 +1,7 @@
-import {Camera} from 'expo-camera'
-import * as MediaLibrary from 'expo-media-library'
 import {Linking} from 'react-native'
+import {Camera} from 'expo-camera/legacy' // TODO: Migrate to the new one.
+import * as MediaLibrary from 'expo-media-library'
+
 import {isWeb} from 'platform/detection'
 import {Alert} from 'view/com/util/Alert'
 

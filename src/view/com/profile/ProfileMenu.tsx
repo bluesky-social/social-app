@@ -30,8 +30,10 @@ import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
 import {ListSparkle_Stroke2_Corner0_Rounded as List} from '#/components/icons/ListSparkle'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
 import {PeopleRemove2_Stroke2_Corner0_Rounded as UserMinus} from '#/components/icons/PeopleRemove2'
-import {PersonCheck_Stroke2_Corner0_Rounded as PersonCheck} from '#/components/icons/PersonCheck'
-import {PersonX_Stroke2_Corner0_Rounded as PersonX} from '#/components/icons/PersonX'
+import {
+  PersonCheck_Stroke2_Corner0_Rounded as PersonCheck,
+  PersonX_Stroke2_Corner0_Rounded as PersonX,
+} from '#/components/icons/Person'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
 import * as Menu from '#/components/Menu'

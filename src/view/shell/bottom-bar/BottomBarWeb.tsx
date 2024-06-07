@@ -16,6 +16,9 @@ import {s} from '#/lib/styles'
 import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
+import {useGate} from 'lib/statsig/statsig'
+import {useUnreadMessageCount} from 'state/queries/messages/list-converations'
+import {useUnreadNotifications} from 'state/queries/notifications/unread'
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import {Logo} from '#/view/icons/Logo'
@@ -46,10 +49,14 @@ export function BottomBarWeb() {
   const {hasSession, currentAccount} = useSession()
   const pal = usePalette('default')
   const safeAreaInsets = useSafeAreaInsets()
+  const gate = useGate()
   const {footerMinimalShellTransform} = useMinimalShellMode()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
   const iconWidth = 26
+
+  const unreadMessageCount = useUnreadMessageCount()
+  const notificationCountStr = useUnreadNotifications()
 
   const showSignIn = React.useCallback(() => {
     closeAllActiveElements()
@@ -103,10 +110,20 @@ export function BottomBarWeb() {
                 {({isActive}) => {
                   const Icon = isActive ? MessageFilled : Message
                   return (
-                    <Icon
-                      width={iconWidth - 1}
-                      style={[styles.ctrlIcon, pal.text, styles.messagesIcon]}
-                    />
+                    <>
+                      <Icon
+                        width={iconWidth - 1}
+                        style={[styles.ctrlIcon, pal.text, styles.messagesIcon]}
+                      />
+                      {unreadMessageCount.count > 0 &&
+                        gate('show_notification_badge_mobile_web') && (
+                          <View style={styles.notificationCount}>
+                            <Text style={styles.notificationCountLabel}>
+                              {unreadMessageCount.numUnread}
+                            </Text>
+                          </View>
+                        )}
+                    </>
                   )
                 }}
               </NavItem>
@@ -114,10 +131,20 @@ export function BottomBarWeb() {
                 {({isActive}) => {
                   const Icon = isActive ? BellFilled : Bell
                   return (
-                    <Icon
-                      width={iconWidth}
-                      style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
-                    />
+                    <>
+                      <Icon
+                        width={iconWidth}
+                        style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
+                      />
+                      {notificationCountStr !== '' &&
+                        gate('show_notification_badge_mobile_web') && (
+                          <View style={styles.notificationCount}>
+                            <Text style={styles.notificationCountLabel}>
+                              {notificationCountStr}
+                            </Text>
+                          </View>
+                        )}
+                    </>
                   )
                 }}
               </NavItem>
