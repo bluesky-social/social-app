@@ -37,7 +37,9 @@ export function QrCodeDialog({
       })
 
       await saveImageToMediaLibrary({uri: filename})
-      Toast.show(_(msg`QR code saved to your camera roll!`))
+      control.close(() => {
+        Toast.show(_(msg`QR code saved to your camera roll!`))
+      })
     })
   }
 
