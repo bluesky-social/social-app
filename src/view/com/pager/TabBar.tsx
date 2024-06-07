@@ -191,7 +191,7 @@ const mobileStyles = StyleSheet.create({
   },
   contentContainer: {
     backgroundColor: 'transparent',
-    paddingHorizontal: 8,
+    paddingHorizontal: 6,
   },
   item: {
     paddingTop: 10,
