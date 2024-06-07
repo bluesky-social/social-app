@@ -25,6 +25,7 @@ import {useProfileShadow} from 'state/cache/profile-shadow'
 import {ProfileHeaderSuggestedFollows} from '#/view/com/profile/ProfileHeaderSuggestedFollows'
 import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import * as Toast from '#/view/com/util/Toast'
+import {KnownFollowers} from '#/screens/Profile/KnownFollowers'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {MessageProfileButton} from '#/components/dms/MessageProfileButton'
@@ -268,6 +269,13 @@ let ProfileHeaderStandard = ({
                 />
               </View>
             ) : undefined}
+
+            <View style={[a.flex_row, a.align_center, a.gap_sm, a.pt_md]}>
+              <KnownFollowers
+                knownFollowers={profile.viewer?.knownFollowers}
+                moderationOpts={moderationOpts}
+              />
+            </View>
           </>
         )}
       </View>
