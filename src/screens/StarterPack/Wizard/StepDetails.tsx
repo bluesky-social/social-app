@@ -25,7 +25,7 @@ export function StepDetails() {
   return (
     <ScreenTransition>
       <View style={[a.px_xl, a.gap_xl, a.mt_4xl]}>
-        <View style={[{height: 65}]}>
+        <View style={[{height: 90}]}>
           <StarterPackIcon />
         </View>
         <View style={[a.gap_md, a.align_center, a.px_md, a.mb_md]}>
@@ -34,13 +34,14 @@ export function StepDetails() {
           </Text>
           <Text style={[a.text_center, a.text_md, a.px_md]}>
             <Trans>
-              Create a starter pack to invite new users to Bluesky and give them
-              your favorite feeds and follows.
+              Invite friends directly to your favorite feeds and people
             </Trans>
           </Text>
         </View>
         <View>
-          <TextField.LabelText>{_(msg`Name`)}</TextField.LabelText>
+          <TextField.LabelText>
+            <Trans>What do you want to call your starter pack?</Trans>
+          </TextField.LabelText>
           <TextField.Input
             label={_(
               msg`${
@@ -52,11 +53,15 @@ export function StepDetails() {
           />
         </View>
         <View>
-          <TextField.LabelText>{_(msg`Description`)}</TextField.LabelText>
+          <TextField.LabelText>
+            <Trans>Tell us a little more</Trans>
+          </TextField.LabelText>
           <TextField.Root>
             <TextField.Input
               label={_(
-                msg`Write a short description of your starter pack. What can new users expect?`,
+                msg`${
+                  currentProfile?.displayName || currentProfile?.handle
+                }'s favorite feeds and people - join me!`,
               )}
               value={state.description}
               onChangeText={text =>
