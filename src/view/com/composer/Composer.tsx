@@ -411,7 +411,7 @@ export const ComposePost = observer(function ComposePost({
           textInput.current?.blur()
           textInput.current?.focus()
         }
-      }, 200)
+      }, 300)
     }
   }, [isModalReady])
 
