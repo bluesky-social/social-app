@@ -5,11 +5,10 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-
-import {usePalette} from 'lib/hooks/usePalette'
-import {UserGroupIcon} from 'lib/icons'
-import {isWeb} from 'platform/detection'
 import {Text} from './text/Text'
+import {UserGroupIcon} from 'lib/icons'
+import {usePalette} from 'lib/hooks/usePalette'
+import {isWeb} from 'platform/detection'
 
 export function EmptyState({
   testID,
