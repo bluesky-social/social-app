@@ -84,7 +84,11 @@ function InnerApp() {
 
   return (
     //Aplica filtro para la saturación
-    <div style={{filter: highSaturationEnabled ? 'saturate(8)' : 'none'}}>
+    <div
+      style={{
+        filter: highSaturationEnabled ? 'saturate(8)' : 'none',
+        flex: 1,
+      }}>
       <KeyboardProvider enabled={false}>
         <Alf theme={theme}>
           <ThemeProvider theme={theme}>
