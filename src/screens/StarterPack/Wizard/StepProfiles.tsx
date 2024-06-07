@@ -10,7 +10,7 @@ import {SearchInput} from 'view/com/util/forms/SearchInput'
 import {List} from 'view/com/util/List'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {useWizardState} from '#/screens/StarterPack/Wizard/State'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
 import {WizardProfileCard} from '#/components/StarterPack/Wizard/WizardProfileCard'
 
@@ -19,6 +19,7 @@ function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic) {
 }
 
 export function StepProfiles() {
+  const t = useTheme()
   const [state, dispatch] = useWizardState()
   const [query, setQuery] = useState('')
 
@@ -43,14 +44,16 @@ export function StepProfiles() {
   }
 
   return (
-    <ScreenTransition>
-      <View style={[a.my_sm, a.px_md, {height: 40}]}>
-        <SearchInput
-          query={query}
-          onChangeQuery={setQuery}
-          onPressCancelSearch={() => setQuery('')}
-          onSubmitQuery={() => {}}
-        />
+    <ScreenTransition style={[a.flex_1]}>
+      <View style={[a.border_b, t.atoms.border_contrast_medium]}>
+        <View style={[a.my_sm, a.px_md, {height: 40}]}>
+          <SearchInput
+            query={query}
+            onChangeQuery={setQuery}
+            onPressCancelSearch={() => setQuery('')}
+            onSubmitQuery={() => {}}
+          />
+        </View>
       </View>
       <List
         data={query ? results : follows}
@@ -61,6 +64,7 @@ export function StepProfiles() {
         renderScrollComponent={props => <KeyboardAwareScrollView {...props} />}
         containWeb={true}
         sideBorders={false}
+        style={[a.flex_1]}
         ListEmptyComponent={
           <View style={[a.flex_1, a.align_center, a.mt_lg]}>
             <Loader size="lg" />
