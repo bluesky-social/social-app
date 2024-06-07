@@ -52,7 +52,6 @@ import {PreviewableUserAvatar, UserAvatar} from '../util/UserAvatar'
 
 import hairlineWidth = StyleSheet.hairlineWidth
 import {StarterPackIcon} from '#/components/icons/StarterPackIcon'
-import {StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 
 const MAX_AUTHORS = 5
 
@@ -305,9 +304,11 @@ let FeedItem = ({
             showLikes
           />
         ) : null}
-        {item.type === 'starter-pack-signup' ? (
-          <StarterPackCard type="notification" />
-        ) : null}
+        {item.type === 'starter-pack-signup'
+          ? // TODO
+            null
+          : // <StarterPackCard type="notification" starterPack={sta} />
+            null}
       </View>
     </Link>
   )

@@ -67,6 +67,7 @@ export function StarterPackScreen({
             ? ({headerHeight, scrollElRef}) => (
                 <ProfilesList
                   key={0}
+                  // @ts-expect-error TODO
                   listUri={starterPack.list.uri}
                   headerHeight={headerHeight}
                   // @ts-expect-error
@@ -78,6 +79,7 @@ export function StarterPackScreen({
             ? ({headerHeight, scrollElRef}) => (
                 <FeedsList
                   key={1}
+                  // @ts-expect-error TODO
                   feeds={starterPack.feeds}
                   headerHeight={headerHeight}
                   // @ts-expect-error
