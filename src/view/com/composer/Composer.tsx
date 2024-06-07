@@ -134,8 +134,8 @@ export const ComposePost = observer(function ComposePost({
   // See https://github.com/bluesky-social/social-app/pull/4399
   const {setEnabled} = useKeyboardContext()
   React.useEffect(() => {
+    if (!isAndroid) return
     setEnabled(false)
-
     return () => {
       setEnabled(true)
     }
