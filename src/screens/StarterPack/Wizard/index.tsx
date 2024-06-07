@@ -172,7 +172,7 @@ function WizardInner() {
         },
       )
 
-      navigation.navigate('StarterPack', {id: res.uri})
+      navigation.replace('StarterPack', {id: res.uri})
     } catch (e) {
       // TODO add error to state
       console.error(e)

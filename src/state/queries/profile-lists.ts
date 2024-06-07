@@ -26,7 +26,16 @@ export function useProfileListsQuery(did: string, opts?: {enabled?: boolean}) {
         limit: PAGE_SIZE,
         cursor: pageParam,
       })
+
       return res.data
+
+      // TODO filter out reference lists
+      // return {
+      //   ...res.data,
+      //   lists: res.data.lists.filter(
+      //     l => l.purpose !== 'app.bsky.graph.defs#referencelist',
+      //   ),
+      // }
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
