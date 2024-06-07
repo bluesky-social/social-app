@@ -1,6 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyGraphStarterpack} from '@atproto/api'
+import {AppBskyGraphStarterpack, AtUri} from '@atproto/api'
 import {StarterPackViewBasic} from '@atproto/api/dist/client/types/app/bsky/graph/defs'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -26,14 +26,19 @@ export function StarterPackCard({
   const {_} = useLingui()
   const t = useTheme()
   const {currentAccount} = useSession()
-  const {record, creator, joinedAllTimeCount} = starterPack
+  const {uri, record, creator, joinedAllTimeCount} = starterPack
+  const rkey = new AtUri(uri).rkey
 
   if (!AppBskyGraphStarterpack.isRecord(record)) {
     return null
   }
 
   return (
-    <Link to={{screen: 'StarterPack', params: {id: starterPack.uri}}}>
+    <Link
+      to={{
+        screen: 'StarterPack',
+        params: {name: creator.handle || creator.did, rkey},
+      }}>
       <View
         style={[
           a.flex_row,
