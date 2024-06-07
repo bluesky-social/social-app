@@ -8,6 +8,7 @@ import {useProfileFollowsQuery} from 'state/queries/profile-follows'
 import {useSession} from 'state/session'
 import {SearchInput} from 'view/com/util/forms/SearchInput'
 import {List} from 'view/com/util/List'
+import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {useWizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a} from '#/alf'
 import {Loader} from '#/components/Loader'
@@ -42,7 +43,7 @@ export function StepProfiles() {
   }
 
   return (
-    <>
+    <ScreenTransition>
       <View style={[a.my_sm, a.px_md, {height: 40}]}>
         <SearchInput
           query={query}
@@ -64,6 +65,6 @@ export function StepProfiles() {
           </View>
         }
       />
-    </>
+    </ScreenTransition>
   )
 }

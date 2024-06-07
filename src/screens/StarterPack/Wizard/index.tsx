@@ -221,17 +221,21 @@ function WizardInner() {
           isWeb && [a.py_md],
         ]}>
         <View style={[{width: 65}]}>
-          {state.currentStep !== 'Details' && (
-            <TouchableOpacity
-              testID="viewHeaderDrawerBtn"
-              onPress={() => dispatch({type: 'Back'})}
-              hitSlop={HITSLOP_10}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Back`)}
-              accessibilityHint={_(msg`Go back to the previous step`)}>
-              <FontAwesomeIcon size={18} icon="angle-left" />
-            </TouchableOpacity>
-          )}
+          <TouchableOpacity
+            testID="viewHeaderDrawerBtn"
+            hitSlop={HITSLOP_10}
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`Back`)}
+            accessibilityHint={_(msg`Go back to the previous step`)}
+            onPress={() => {
+              if (state.currentStep === 'Details') {
+                navigation.goBack()
+              } else {
+                dispatch({type: 'Back'})
+              }
+            }}>
+            <FontAwesomeIcon size={18} icon="angle-left" />
+          </TouchableOpacity>
         </View>
         <Text style={[a.flex_1, a.font_bold, a.text_lg, a.text_center]}>
           {uiStrings.header}
