@@ -34,6 +34,5 @@ export async function compressVideo(
 
   return {
     uri: success ? newFile : null,
-    session: result,
   }
 }
