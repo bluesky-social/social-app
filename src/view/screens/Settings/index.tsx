@@ -896,7 +896,7 @@ export function SettingsScreen({}: Props) {
             <TouchableOpacity
               style={[pal.view, styles.linkCardNoIcon]}
               onPress={() => {
-                navigation.navigate('StarterPack', {
+                navigation.navigate('StarterPackLanding', {
                   name: 'alice.test',
                   rkey: '1234567',
                 })
