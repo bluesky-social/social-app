@@ -174,7 +174,7 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="ProfileKnownFollowers"
         getComponent={() => ProfileKnownFollowersScreen}
         options={({route}) => ({
-          title: title(msg`People you know who follow @${route.params.name}`),
+          title: title(msg`Followers of @${route.params.name} that you know`),
         })}
       />
       <Stack.Screen
