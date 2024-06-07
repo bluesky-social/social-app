@@ -80,13 +80,16 @@ function KnownFollowersInner({
         a.align_start,
         {marginLeft: -AVI_BORDER},
       ]}>
-      {({hovered}) => (
+      {({hovered, pressed}) => (
         <>
           <View
             style={[
               {
                 height: AVI_SIZE,
                 width: AVI_SIZE + (slice.length - 1) * a.gap_md.gap,
+              },
+              pressed && {
+                opacity: 0.5,
               },
             ]}>
             {slice.map(({profile, moderation}, i) => (
@@ -120,6 +123,9 @@ function KnownFollowersInner({
               hovered && {
                 textDecorationLine: 'underline',
                 textDecorationColor: t.atoms.text_contrast_medium.color,
+              },
+              pressed && {
+                opacity: 0.5,
               },
             ]}
             numberOfLines={3}>
