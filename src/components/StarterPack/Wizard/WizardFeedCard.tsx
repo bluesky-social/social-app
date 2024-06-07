@@ -1,5 +1,5 @@
 import React from 'react'
-import {View} from 'react-native'
+import {Keyboard, View} from 'react-native'
 import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -24,6 +24,7 @@ export function WizardFeedCard({
 
   const includesFeed = state.feeds.some(f => f.uri === generator.uri)
   const onAdd = () => {
+    Keyboard.dismiss()
     if (includesFeed) {
       dispatch({type: 'RemoveFeed', feedUri: generator.uri})
     } else {

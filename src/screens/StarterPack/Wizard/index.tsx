@@ -270,7 +270,9 @@ function Container({children}: {children: React.ReactNode}) {
   }
 
   return (
-    <KeyboardAwareScrollView style={[a.flex_1]}>
+    <KeyboardAwareScrollView
+      style={[a.flex_1]}
+      keyboardShouldPersistTaps="handled">
       {children}
       {state.currentStep === 'Details' && (
         <Button

@@ -1,5 +1,5 @@
 import React from 'react'
-import {View} from 'react-native'
+import {Keyboard, View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -25,8 +25,9 @@ export function WizardProfileCard({
   const includesProfile = state.profiles.some(p => p.did === profile.did)
 
   const onPressAddRemove = () => {
-    if (!profile?.did) return
+    Keyboard.dismiss()
 
+    if (!profile?.did) return
     if (!includesProfile) {
       dispatch({type: 'AddProfile', profile})
     } else {
