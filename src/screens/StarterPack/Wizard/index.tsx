@@ -311,6 +311,8 @@ function Footer({
 
   const items = state.currentStep === 'Profiles' ? state.profiles : state.feeds
 
+  const textStyles = [isWeb && a.text_md]
+
   return (
     <View
       style={[
@@ -348,14 +350,14 @@ function Footer({
 
       {items.length === 0 ? (
         <View style={[a.gap_sm]}>
-          <Text style={[a.font_bold, a.text_center]}>
+          <Text style={[a.font_bold, a.text_center, textStyles]}>
             {state.currentStep === 'Profiles' ? (
               <Trans>You haven't added anyone to your starter pack yet!</Trans>
             ) : (
               <Trans>You haven't added any suggested feeds yet!</Trans>
             )}
           </Text>
-          <Text style={[a.text_center]}>
+          <Text style={[a.text_center, textStyles]}>
             {state.currentStep === 'Profiles' ? (
               <Trans>
                 Search for people that you want to suggest to others, or skip
@@ -370,7 +372,7 @@ function Footer({
           </Text>
         </View>
       ) : (
-        <Text style={[a.text_center]}>
+        <Text style={[a.text_center, textStyles]}>
           {items.length === 1 ? (
             <Trans>
               <Text style={[a.font_bold]}>{getName(items[0])}</Text> is included
