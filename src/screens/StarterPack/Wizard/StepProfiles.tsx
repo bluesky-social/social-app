@@ -59,6 +59,8 @@ export function StepProfiles() {
         onEndReached={!query ? () => fetchNextPage() : undefined}
         onEndReachedThreshold={2}
         renderScrollComponent={props => <KeyboardAwareScrollView {...props} />}
+        containWeb={true}
+        sideBorders={false}
         ListEmptyComponent={
           <View style={[a.flex_1, a.align_center, a.mt_lg]}>
             <Loader size="lg" />

@@ -63,9 +63,11 @@ export function StarterPackCard({
               </Trans>
             </Text>
           </View>
-          <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
-            {joinedAllTimeCount} users have joined!
-          </Text>
+          {!!joinedAllTimeCount && joinedAllTimeCount >= 50 && (
+            <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
+              {joinedAllTimeCount} users have joined!
+            </Text>
+          )}
           {record.description && (
             <Text numberOfLines={3}>{record.description}</Text>
           )}
