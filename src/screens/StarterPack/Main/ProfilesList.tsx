@@ -29,7 +29,7 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
     const bottomBarOffset = useBottomBarOffset(20)
 
     const {data} = useListMembersQuery(listUri)
-    const profiles = data?.pages.flatMap(p => p.items[0].subject)
+    const profiles = data?.pages.flatMap(p => p.items.map(i => i.subject))
 
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({
