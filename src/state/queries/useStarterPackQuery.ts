@@ -1,22 +1,24 @@
-import {AppBskyGraphGetStarterPack} from '@atproto/api'
-import {useMutation} from '@tanstack/react-query'
-import {useQuery} from 'react-query'
+import {StarterPackView} from '@atproto/api/dist/client/types/app/bsky/graph/defs'
+import {useMutation, useQuery} from '@tanstack/react-query'
 
 import {STALE} from 'state/queries/index'
 import {useAgent, useSession} from 'state/session'
 
 const RQKEY_ROOT = 'starter-pack'
 
-export function useStarterPackQuery({id}: {id: string}) {
+export function useStarterPackQuery({did, rkey}: {did?: string; rkey: string}) {
   const agent = useAgent()
-  return useQuery<AppBskyGraphGetStarterPack.OutputSchema>({
-    queryKey: [RQKEY_ROOT, id],
+  const uri = `at://${did}/app.bsky.graph.starterpack/${rkey}`
+
+  return useQuery<StarterPackView>({
+    queryKey: [RQKEY_ROOT, did, rkey],
     queryFn: async () => {
       const res = await agent.app.bsky.graph.getStarterPack({
-        starterPack: id,
+        starterPack: uri,
       })
-      return res.data
+      return res.data.starterPack
     },
+    enabled: Boolean(did),
     staleTime: STALE.MINUTES.FIVE,
   })
 }

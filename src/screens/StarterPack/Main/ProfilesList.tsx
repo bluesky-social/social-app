@@ -4,6 +4,7 @@ import {AppBskyActorDefs} from '@atproto/api'
 
 import {useBottomBarOffset} from 'lib/hooks/useBottomBarOffset'
 import {isNative} from 'platform/detection'
+import {useListMembersQuery} from 'state/queries/list-members'
 import {ProfileCardWithFollowBtn} from 'view/com/profile/ProfileCard'
 import {List, ListRef} from 'view/com/util/List'
 import {SectionRef} from '#/screens/Profile/Sections/types'
@@ -17,15 +18,18 @@ function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic, index: number) {
 }
 
 interface ProfilesListProps {
-  profiles: AppBskyActorDefs.ProfileViewBasic[]
+  listUri: string
   headerHeight: number
   scrollElRef: ListRef
 }
 
 export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
-  function ProfilesListImpl({profiles, headerHeight, scrollElRef}, ref) {
+  function ProfilesListImpl({listUri, headerHeight, scrollElRef}, ref) {
     const [initialHeaderHeight] = React.useState(headerHeight)
     const bottomBarOffset = useBottomBarOffset(20)
+
+    const {data} = useListMembersQuery(listUri)
+    const profiles = data?.pages.flatMap(p => p.items[0].subject)
 
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({
@@ -49,7 +53,6 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
           <View style={[{height: initialHeaderHeight + bottomBarOffset}]} />
         }
         showsVerticalScrollIndicator={false}
-        // @ts-ignore
         desktopFixedHeight
       />
     )
