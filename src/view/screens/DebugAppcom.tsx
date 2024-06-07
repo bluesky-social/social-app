@@ -74,7 +74,39 @@ const DEFAULT_AC = h('Stack', {gap: 10}, [
     h('Label', {text: 'Display TODO'}),
     h('Label', {text: 'Inputs TODO'}),
     h('Label', {text: 'Forms TODO'}),
-    h('Label', {text: 'ATProto TODO'}),
+    h('Stack', {gap: 10, pad: {t: 20}}, [
+      h('Box', {pad: {x: 10}}, [
+        h('Label', {text: 'Embed (Actor)', size: 10, weight: 'bold'}),
+      ]),
+      h('Box', {border: 'secondary', corner: 8}, [
+        h('Embed', {uri: 'bsky.app'}),
+      ]),
+      h('Box', {border: 'secondary', corner: 8}, [
+        h('Embed', {uri: 'at://atproto.com/'}),
+      ]),
+      h('Box', {border: 'secondary', corner: 8}, [
+        h('Embed', {uri: 'at://pfrazee.com'}),
+      ]),
+      h('Box', {pad: {x: 10}}, [
+        h('Label', {text: 'Embed (Post)', size: 10, weight: 'bold'}),
+      ]),
+      h('Box', {border: 'secondary', corner: 8}, [
+        h('Embed', {uri: 'at://pfrazee.com/app.bsky.feed.post/3ku7fbojcqs25'}),
+      ]),
+      h('Box', {border: 'secondary', corner: 8}, [
+        h('Embed', {uri: 'at://bsky.app/app.bsky.feed.post/3ku73zs755e27'}),
+      ]),
+      h('Box', {pad: {x: 10}}, [
+        h('Label', {
+          text: 'Embed (Unsupported record type)',
+          size: 10,
+          weight: 'bold',
+        }),
+      ]),
+      h('Box', {border: 'secondary', corner: 8}, [
+        h('Embed', {uri: 'at://pfrazee.com/com.example.unknown/123'}),
+      ]),
+    ]),
   ]),
 ])
 
