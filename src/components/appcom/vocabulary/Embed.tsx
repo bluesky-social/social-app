@@ -14,12 +14,11 @@ const embedProps = z.object({
   uri: z.string(),
 })
 
-export type ProfileCardProps = z.infer<typeof embedProps>
+export type EmbedProps = z.infer<typeof embedProps>
 
-export function Embed(props: React.PropsWithChildren<ProfileCardProps>) {
+export function Embed(props: React.PropsWithChildren<EmbedProps>) {
   const propsParsed = embedProps.parse(props)
   const urip = new AtUri(propsParsed.uri)
-  console.log(urip)
 
   if (!urip.pathname || urip.pathname === '/') {
     return <Actor actor={urip.host} />

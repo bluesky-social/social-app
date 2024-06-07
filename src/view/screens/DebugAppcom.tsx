@@ -76,6 +76,16 @@ const DEFAULT_AC = h('Stack', {gap: 10}, [
     h('Label', {text: 'Forms TODO'}),
     h('Stack', {gap: 10, pad: {t: 20}}, [
       h('Box', {pad: {x: 10}}, [
+        h('Label', {text: 'Avatar', size: 10, weight: 'bold'}),
+      ]),
+      h('Box', {border: 'secondary', corner: 8, pad: {x: 16, y: 12}}, [
+        h('Stack', {direction: 'row', gap: 10}, [
+          h('Avatar', {uri: 'bsky.app'}),
+          h('Avatar', {uri: 'at://atproto.com'}),
+          h('Avatar', {uri: 'at://pfrazee.com/'}),
+        ]),
+      ]),
+      h('Box', {pad: {x: 10}}, [
         h('Label', {text: 'Embed (Actor)', size: 10, weight: 'bold'}),
       ]),
       h('Box', {border: 'secondary', corner: 8}, [
