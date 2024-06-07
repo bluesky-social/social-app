@@ -15,7 +15,6 @@ export function useStarterPackQuery({id}: {id: string}) {
       const res = await agent.app.bsky.graph.getStarterPack({
         starterPack: id,
       })
-
       return res.data
     },
     staleTime: STALE.MINUTES.FIVE,

@@ -80,9 +80,9 @@ export const ProfileStarterPacks = React.forwardRef<
     } else if (isEmpty) {
       items = items.concat([EMPTY])
     } else if (data?.pages) {
-      for (const page of data?.pages) {
-        items = page.starterPacks
-      }
+      console.log('has pages')
+      console.log(data?.pages)
+      items = data?.pages.flatMap(page => page.starterPacks)
     }
     if (isError && !isEmpty) {
       items = items.concat([LOAD_MORE_ERROR_ITEM])
@@ -147,7 +147,13 @@ export const ProfileStarterPacks = React.forwardRef<
         return <FeedLoadingPlaceholder />
       }
       if (preferences) {
-        return <StarterPackCard type="list" hideTopBorder={index === 0} />
+        return (
+          <StarterPackCard
+            starterPack={item}
+            type="list"
+            hideTopBorder={index === 0}
+          />
+        )
       }
       return null
     },
@@ -175,7 +181,6 @@ export const ProfileStarterPacks = React.forwardRef<
         contentContainerStyle={isNative && {paddingBottom: headerOffset + 100}}
         indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
         removeClippedSubviews={true}
-        // @ts-ignore our .web version only -prf
         desktopFixedHeight
         onEndReached={onEndReached}
       />

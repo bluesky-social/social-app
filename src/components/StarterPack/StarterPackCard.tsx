@@ -1,5 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
+import {StarterPackViewBasic} from '@atproto/api/dist/client/types/app/bsky/graph/defs'
 
 import {atoms as a, useTheme} from '#/alf'
 import {StarterPackIcon} from '#/components/icons/StarterPackIcon'
@@ -7,16 +8,18 @@ import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
 export function StarterPackCard({
+  starterPack,
   type,
   hideTopBorder,
 }: {
+  starterPack: StarterPackViewBasic
   hideTopBorder?: boolean
   type: 'list' | 'notification'
 }) {
   const t = useTheme()
 
   return (
-    <Link to={{screen: 'StarterPack', params: {id: '123'}}}>
+    <Link to={{screen: 'StarterPack', params: {id: starterPack.uri}}}>
       <View
         style={[
           a.flex_row,
