@@ -402,6 +402,19 @@ export const ComposePost = observer(function ComposePost({
     bottomBarAnimatedStyle,
   } = useAnimatedBorders()
 
+  // Backup focus on android, if the keyboard *still* refuses to show
+  useEffect(() => {
+    if (!isAndroid) return
+    if (isModalReady) {
+      setTimeout(() => {
+        if (!Keyboard.isVisible()) {
+          textInput.current?.blur()
+          textInput.current?.focus()
+        }
+      }, 300)
+    }
+  }, [isModalReady])
+
   return (
     <>
       <KeyboardAvoidingView
