@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react'
 import {TouchableWithoutFeedback} from 'react-native'
 import Animated, {
-  Extrapolate,
+  Extrapolation,
   interpolate,
   useAnimatedStyle,
 } from 'react-native-reanimated'
@@ -21,7 +21,7 @@ export function createCustomBackdrop(
         animatedIndex.value, // current snap index
         [-1, 0], // input range
         [0, 0.5], // output range
-        Extrapolate.CLAMP,
+        Extrapolation.CLAMP,
       ),
     }))
 

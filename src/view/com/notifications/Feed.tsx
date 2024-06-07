@@ -1,22 +1,31 @@
 import React from 'react'
-import {ActivityIndicator, StyleSheet, View} from 'react-native'
+import {
+  ActivityIndicator,
+  ListRenderItemInfo,
+  StyleSheet,
+  View,
+} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {cleanError} from '#/lib/strings/errors'
+import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useNotificationFeedQuery} from '#/state/queries/notifications/feed'
 import {useUnreadNotificationsApi} from '#/state/queries/notifications/unread'
-import {s} from 'lib/styles'
-import {EmptyState} from '../util/EmptyState'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {List, ListRef} from '../util/List'
-import {NotificationFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
-import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
-import {CenteredView} from '../util/Views'
+import {EmptyState} from '#/view/com/util/EmptyState'
+import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
+import {List, ListRef} from '#/view/com/util/List'
+import {NotificationFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
+import {CenteredView} from '#/view/com/util/Views'
 import {FeedItem} from './FeedItem'
+import hairlineWidth = StyleSheet.hairlineWidth
+import {isWeb} from '#/platform/detection'
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
@@ -33,8 +42,11 @@ export function Feed({
   onScrolledDownChange: (isScrolledDown: boolean) => void
   ListHeaderComponent?: () => JSX.Element
 }) {
+  const initialNumToRender = useInitialNumToRender()
+
   const [isPTRing, setIsPTRing] = React.useState(false)
   const pal = usePalette('default')
+  const {isTabletOrMobile} = useWebMediaQueries()
 
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
@@ -97,12 +109,8 @@ export function Feed({
     fetchNextPage()
   }, [fetchNextPage])
 
-  // TODO optimize renderItem or FeedItem, we're getting this notice from RN: -prf
-  //   VirtualizedList: You have a large list that is slow to update - make sure your
-  //   renderItem function renders components that follow React performance best practices
-  //   like PureComponent, shouldComponentUpdate, etc
   const renderItem = React.useCallback(
-    ({item}: {item: any}) => {
+    ({item, index}: ListRenderItemInfo<any>) => {
       if (item === EMPTY_FEED_ITEM) {
         return (
           <EmptyState
@@ -122,14 +130,24 @@ export function Feed({
         )
       } else if (item === LOADING_ITEM) {
         return (
-          <View style={[pal.border, {borderTopWidth: 1}]}>
+          <View
+            style={[
+              pal.border,
+              !isTabletOrMobile && {borderTopWidth: hairlineWidth},
+            ]}>
             <NotificationFeedLoadingPlaceholder />
           </View>
         )
       }
-      return <FeedItem item={item} moderationOpts={moderationOpts!} />
+      return (
+        <FeedItem
+          item={item}
+          moderationOpts={moderationOpts!}
+          hideTopBorder={index === 0 && isTabletOrMobile}
+        />
+      )
     },
-    [onPressRetryLoadMore, moderationOpts, _, pal.border],
+    [moderationOpts, isTabletOrMobile, _, onPressRetryLoadMore, pal.border],
   )
 
   const FeedFooter = React.useCallback(
@@ -165,11 +183,22 @@ export function Feed({
         refreshing={isPTRing}
         onRefresh={onRefresh}
         onEndReached={onEndReached}
-        onEndReachedThreshold={0.6}
+        onEndReachedThreshold={
+          /*
+          NOTE:
+          web's intersection observer struggles with the 2x threshold
+          and leads to missed pagination, so we keep it <1
+          -prf
+          */
+          isWeb ? 0.6 : 2
+        }
         onScrolledDownChange={onScrolledDownChange}
         contentContainerStyle={s.contentContainer}
         // @ts-ignore our .web version only -prf
         desktopFixedHeight
+        initialNumToRender={initialNumToRender}
+        windowSize={11}
+        sideBorders={false}
       />
     </View>
   )

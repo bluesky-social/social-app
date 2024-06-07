@@ -193,7 +193,7 @@ export function Embed({
 function Info({children}: {children: ComponentChildren}) {
   return (
     <div className="w-full rounded-lg border py-2 px-2.5 flex-row flex gap-2 bg-neutral-50">
-      <img src={infoIcon as string} className="w-4 h-4 shrink-0 mt-0.5" />
+      <img src={infoIcon} className="w-4 h-4 shrink-0 mt-0.5" />
       <p className="text-sm text-textLight">{children}</p>
     </div>
   )
@@ -293,7 +293,8 @@ function ExternalEmbed({
   return (
     <Link
       href={content.external.uri}
-      className="w-full rounded-lg overflow-hidden border flex flex-col items-stretch">
+      className="w-full rounded-lg overflow-hidden border flex flex-col items-stretch"
+      disableTracking>
       {content.external.thumb && (
         <img
           src={content.external.thumb}

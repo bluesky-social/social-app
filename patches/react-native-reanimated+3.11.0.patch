@@ -1,0 +1,237 @@
+diff --git a/node_modules/react-native-reanimated/src/createAnimatedComponent/commonTypes.ts b/node_modules/react-native-reanimated/src/createAnimatedComponent/commonTypes.ts
+index 92ebe62..5f8207e 100644
+--- a/node_modules/react-native-reanimated/src/createAnimatedComponent/commonTypes.ts
++++ b/node_modules/react-native-reanimated/src/createAnimatedComponent/commonTypes.ts
+@@ -96,7 +96,8 @@ export interface AnimatedComponentRef extends Component {
+ export interface IAnimatedComponentInternal {
+   _styles: StyleProps[] | null;
+   _animatedProps?: Partial<AnimatedComponentProps<AnimatedProps>>;
+-  _viewTag: number;
++  _componentViewTag: number;
++  _eventViewTag: number;
+   _isFirstRender: boolean;
+   jestAnimatedStyle: { value: StyleProps };
+   _component: AnimatedComponentRef | HTMLElement | null;
+diff --git a/node_modules/react-native-reanimated/src/createAnimatedComponent/createAnimatedComponent.tsx b/node_modules/react-native-reanimated/src/createAnimatedComponent/createAnimatedComponent.tsx
+index 88b3fdf..2488ebc 100644
+--- a/node_modules/react-native-reanimated/src/createAnimatedComponent/createAnimatedComponent.tsx
++++ b/node_modules/react-native-reanimated/src/createAnimatedComponent/createAnimatedComponent.tsx
+@@ -122,7 +122,8 @@ export function createAnimatedComponent(
+   {
+     _styles: StyleProps[] | null = null;
+     _animatedProps?: Partial<AnimatedComponentProps<AnimatedProps>>;
+-    _viewTag = -1;
++    _componentViewTag = -1;
++    _eventViewTag = -1;
+     _isFirstRender = true;
+     jestAnimatedStyle: { value: StyleProps } = { value: {} };
+     _component: AnimatedComponentRef | HTMLElement | null = null;
+@@ -143,7 +144,8 @@ export function createAnimatedComponent(
+     }
+
+     componentDidMount() {
+-      this._viewTag = this._getViewInfo().viewTag as number;
++      this._setComponentViewTag();
++      this._setEventViewTag();
+       this._attachNativeEvents();
+       this._jsPropsUpdater.addOnJSPropsChangeListener(this);
+       this._attachAnimatedStyles();
+@@ -185,7 +187,10 @@ export function createAnimatedComponent(
+       if (this.props.sharedTransitionTag) {
+         this._configureSharedTransition(true);
+       }
+-      this._sharedElementTransition?.unregisterTransition(this._viewTag, true);
++      this._sharedElementTransition?.unregisterTransition(
++        this._componentViewTag,
++        true
++      );
+
+       const exiting = this.props.exiting;
+       if (
+@@ -209,7 +214,7 @@ export function createAnimatedComponent(
+             : getReduceMotionFromConfig();
+         if (!reduceMotionInExiting) {
+           updateLayoutAnimations(
+-            this._viewTag,
++            this._componentViewTag,
+             LayoutAnimationType.EXITING,
+             maybeBuild(
+               exiting,
+@@ -221,12 +226,22 @@ export function createAnimatedComponent(
+       }
+     }
+
+-    _getEventViewRef() {
+-      // Make sure to get the scrollable node for components that implement
+-      // `ScrollResponder.Mixin`.
+-      return (this._component as AnimatedComponentRef)?.getScrollableNode
+-        ? (this._component as AnimatedComponentRef).getScrollableNode?.()
+-        : this._component;
++    _setComponentViewTag() {
++      this._componentViewTag = this._getViewInfo().viewTag as number;
++    }
++
++    _setEventViewTag() {
++      // Setting the tag for registering events - since the event emitting view can be nested inside the main component
++      const componentAnimatedRef = this._component as AnimatedComponentRef;
++      if (componentAnimatedRef.getScrollableNode) {
++        const scrollableNode = componentAnimatedRef.getScrollableNode();
++        this._eventViewTag = findNodeHandle(scrollableNode) ?? -1;
++      } else {
++        this._eventViewTag =
++          findNodeHandle(
++            options?.setNativeProps ? this : componentAnimatedRef
++          ) ?? -1;
++      }
+     }
+
+     _attachNativeEvents() {
+@@ -236,7 +251,7 @@ export function createAnimatedComponent(
+           has('workletEventHandler', prop) &&
+           prop.workletEventHandler instanceof WorkletEventHandler
+         ) {
+-          prop.workletEventHandler.registerForEvents(this._viewTag, key);
++          prop.workletEventHandler.registerForEvents(this._eventViewTag, key);
+         }
+       }
+     }
+@@ -248,7 +263,7 @@ export function createAnimatedComponent(
+           has('workletEventHandler', prop) &&
+           prop.workletEventHandler instanceof WorkletEventHandler
+         ) {
+-          prop.workletEventHandler.unregisterFromEvents(this._viewTag);
++          prop.workletEventHandler.unregisterFromEvents(this._eventViewTag);
+         }
+       }
+     }
+@@ -258,15 +273,17 @@ export function createAnimatedComponent(
+         for (const style of this._styles) {
+           style.viewsRef.remove(this);
+         }
+-      } else if (this._viewTag !== -1 && this._styles !== null) {
++      } else if (this._componentViewTag !== -1 && this._styles !== null) {
+         for (const style of this._styles) {
+-          style.viewDescriptors.remove(this._viewTag);
++          style.viewDescriptors.remove(this._componentViewTag);
+         }
+         if (this.props.animatedProps?.viewDescriptors) {
+-          this.props.animatedProps.viewDescriptors.remove(this._viewTag);
++          this.props.animatedProps.viewDescriptors.remove(
++            this._componentViewTag
++          );
+         }
+         if (isFabric()) {
+-          removeFromPropsRegistry(this._viewTag);
++          removeFromPropsRegistry(this._componentViewTag);
+         }
+       }
+     }
+@@ -283,15 +300,19 @@ export function createAnimatedComponent(
+           const newProp = this.props[key];
+           if (!newProp) {
+             // Prop got deleted
+-            prevProp.workletEventHandler.unregisterFromEvents(this._viewTag);
++            prevProp.workletEventHandler.unregisterFromEvents(
++              this._eventViewTag
++            );
+           } else if (
+             has('workletEventHandler', newProp) &&
+             newProp.workletEventHandler instanceof WorkletEventHandler &&
+             newProp.workletEventHandler !== prevProp.workletEventHandler
+           ) {
+             // Prop got changed
+-            prevProp.workletEventHandler.unregisterFromEvents(this._viewTag);
+-            newProp.workletEventHandler.registerForEvents(this._viewTag);
++            prevProp.workletEventHandler.unregisterFromEvents(
++              this._eventViewTag
++            );
++            newProp.workletEventHandler.registerForEvents(this._eventViewTag);
+           }
+         }
+       }
+@@ -304,7 +325,7 @@ export function createAnimatedComponent(
+           !prevProps[key]
+         ) {
+           // Prop got added
+-          newProp.workletEventHandler.registerForEvents(this._viewTag);
++          newProp.workletEventHandler.registerForEvents(this._eventViewTag);
+         }
+       }
+     }
+@@ -381,7 +402,7 @@ export function createAnimatedComponent(
+         adaptViewConfig(viewConfig);
+       }
+
+-      this._viewTag = viewTag as number;
++      this._componentViewTag = viewTag as number;
+
+       // remove old styles
+       if (prevStyles) {
+@@ -487,7 +508,11 @@ export function createAnimatedComponent(
+             AnimatedComponent.displayName
+           )
+         : undefined;
+-      updateLayoutAnimations(this._viewTag, LayoutAnimationType.LAYOUT, layout);
++      updateLayoutAnimations(
++        this._componentViewTag,
++        LayoutAnimationType.LAYOUT,
++        layout
++      );
+     }
+
+     _configureSharedTransition(isUnmounting = false) {
+@@ -497,7 +522,7 @@ export function createAnimatedComponent(
+       const { sharedTransitionTag } = this.props;
+       if (!sharedTransitionTag) {
+         this._sharedElementTransition?.unregisterTransition(
+-          this._viewTag,
++          this._componentViewTag,
+           isUnmounting
+         );
+         this._sharedElementTransition = null;
+@@ -508,7 +533,7 @@ export function createAnimatedComponent(
+         this._sharedElementTransition ??
+         new SharedTransition();
+       sharedElementTransition.registerTransition(
+-        this._viewTag,
++        this._componentViewTag,
+         sharedTransitionTag,
+         isUnmounting
+       );
+@@ -527,7 +552,7 @@ export function createAnimatedComponent(
+           ? (ref as HTMLElement)
+           : findNodeHandle(ref as Component);
+
+-        this._viewTag = tag as number;
++        this._componentViewTag = tag as number;
+
+         const { layout, entering, exiting, sharedTransitionTag } = this.props;
+         if (
+diff --git a/node_modules/react-native-reanimated/lib/module/reanimated2/index.js b/node_modules/react-native-reanimated/lib/module/reanimated2/index.js
+index ac9be5d..86d4605 100644
+--- a/node_modules/react-native-reanimated/lib/module/reanimated2/index.js
++++ b/node_modules/react-native-reanimated/lib/module/reanimated2/index.js
+@@ -47,4 +47,5 @@ export { LayoutAnimationConfig } from './component/LayoutAnimationConfig';
+ export { PerformanceMonitor } from './component/PerformanceMonitor';
+ export { startMapper, stopMapper } from './mappers';
+ export { startScreenTransition, finishScreenTransition, ScreenTransition } from './screenTransition';
++export { isReducedMotion } from './PlatformChecker';
+ //# sourceMappingURL=index.js.map
+diff --git a/node_modules/react-native-reanimated/lib/typescript/reanimated2/index.d.ts b/node_modules/react-native-reanimated/lib/typescript/reanimated2/index.d.ts
+index f01dc57..161ef22 100644
+--- a/node_modules/react-native-reanimated/lib/typescript/reanimated2/index.d.ts
++++ b/node_modules/react-native-reanimated/lib/typescript/reanimated2/index.d.ts
+@@ -36,3 +36,4 @@ export type { FlatListPropsWithLayout } from './component/FlatList';
+ export { startMapper, stopMapper } from './mappers';
+ export { startScreenTransition, finishScreenTransition, ScreenTransition, } from './screenTransition';
+ export type { AnimatedScreenTransition, GoBackGesture, ScreenTransitionConfig, } from './screenTransition';
++export { isReducedMotion } from './PlatformChecker';
+diff --git a/node_modules/react-native-reanimated/src/reanimated2/index.ts b/node_modules/react-native-reanimated/src/reanimated2/index.ts
+index 5885fa1..a3c693f 100644
+--- a/node_modules/react-native-reanimated/src/reanimated2/index.ts
++++ b/node_modules/react-native-reanimated/src/reanimated2/index.ts
+@@ -284,3 +284,4 @@ export type {
+   GoBackGesture,
+   ScreenTransitionConfig,
+ } from './screenTransition';
++export { isReducedMotion } from './PlatformChecker';

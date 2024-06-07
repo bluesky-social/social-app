@@ -50,8 +50,10 @@ interface EditableUserAvatarProps extends BaseUserAvatarProps {
 
 interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
   moderation?: ModerationUI
-  onBeforePress?: () => void
   profile: AppBskyActorDefs.ProfileViewBasic
+  disableHoverCard?: boolean
+  onBeforePress?: () => void
+  accessible?: boolean
 }
 
 const BLUR_AMOUNT = isWeb ? 5 : 100
@@ -383,7 +385,9 @@ export {EditableUserAvatar}
 let PreviewableUserAvatar = ({
   moderation,
   profile,
+  disableHoverCard,
   onBeforePress,
+  accessible = true,
   ...rest
 }: PreviewableUserAvatarProps): React.ReactNode => {
   const {_} = useLingui()
@@ -395,9 +399,14 @@ let PreviewableUserAvatar = ({
   }, [profile, queryClient, onBeforePress])
 
   return (
-    <ProfileHoverCard did={profile.did}>
+    <ProfileHoverCard did={profile.did} disable={disableHoverCard}>
       <Link
-        label={_(msg`See profile`)}
+        label={
+          accessible
+            ? _(msg`${profile.displayName || profile.handle}'s avatar`)
+            : undefined
+        }
+        accessibilityHint={accessible ? _(msg`Opens this profile`) : undefined}
         to={makeProfileLink({
           did: profile.did,
           handle: profile.handle,

@@ -5,9 +5,11 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {Text} from './text/Text'
-import {UserGroupIcon} from 'lib/icons'
+
 import {usePalette} from 'lib/hooks/usePalette'
+import {UserGroupIcon} from 'lib/icons'
+import {isWeb} from 'platform/detection'
+import {Text} from './text/Text'
 
 export function EmptyState({
   testID,
@@ -22,7 +24,9 @@ export function EmptyState({
 }) {
   const pal = usePalette('default')
   return (
-    <View testID={testID} style={[styles.container, pal.border, style]}>
+    <View
+      testID={testID}
+      style={[styles.container, isWeb && pal.border, style]}>
       <View style={styles.iconContainer}>
         {icon === 'user-group' ? (
           <UserGroupIcon size="64" style={styles.icon} />
@@ -48,9 +52,9 @@ export function EmptyState({
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 20,
+    paddingVertical: 24,
     paddingHorizontal: 36,
-    borderTopWidth: 1,
+    borderTopWidth: isWeb ? 1 : undefined,
   },
   iconContainer: {
     flexDirection: 'row',

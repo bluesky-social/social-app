@@ -4,18 +4,27 @@ export type LogEvents = {
     initMs: number
   }
   'account:loggedIn': {
-    logContext: 'LoginForm' | 'SwitchAccount' | 'ChooseAccountForm' | 'Settings'
+    logContext:
+      | 'LoginForm'
+      | 'SwitchAccount'
+      | 'ChooseAccountForm'
+      | 'Settings'
+      | 'Notification'
     withPassword: boolean
   }
   'account:loggedOut': {
-    logContext: 'SwitchAccount' | 'Settings' | 'Deactivated'
+    logContext: 'SwitchAccount' | 'Settings' | 'SignupQueued' | 'Deactivated'
   }
   'notifications:openApp': {}
-  'state:background': {
+  'notifications:request': {
+    context: 'StartOnboarding' | 'AfterOnboarding' | 'Login'
+    status: 'granted' | 'denied' | 'undetermined'
+  }
+  'state:background:sampled': {
     secondsActive: number
   }
-  'state:foreground': {}
-  'router:navigate': {}
+  'state:foreground:sampled': {}
+  'router:navigate:sampled': {}
 
   // Screen events
   'splash:signInPressed': {}
@@ -43,19 +52,23 @@ export type LogEvents = {
     selectedFeedsLength: number
   }
   'onboarding:moderation:nextPressed': {}
+  'onboarding:profile:nextPressed': {}
   'onboarding:finished:nextPressed': {}
-  'home:feedDisplayed': {
+  'onboarding:finished:avatarResult': {
+    avatarResult: 'default' | 'created' | 'uploaded'
+  }
+  'home:feedDisplayed:sampled': {
     feedUrl: string
     feedType: string
     index: number
     reason: 'focus' | 'tabbar-click' | 'pager-swipe' | 'desktop-sidebar-click'
   }
-  'feed:endReached': {
+  'feed:endReached:sampled': {
     feedUrl: string
     feedType: string
     itemCount: number
   }
-  'feed:refresh': {
+  'feed:refresh:sampled': {
     feedUrl: string
     feedType: string
     reason: 'pull-to-refresh' | 'soft-reset' | 'load-latest'
@@ -102,6 +115,7 @@ export type LogEvents = {
       | 'ProfileHeaderSuggestedFollows'
       | 'ProfileMenu'
       | 'ProfileHoverCard'
+      | 'AvatarButton'
   }
   'profile:unfollow': {
     logContext:
@@ -112,6 +126,18 @@ export type LogEvents = {
       | 'ProfileHeaderSuggestedFollows'
       | 'ProfileMenu'
       | 'ProfileHoverCard'
+      | 'Chat'
+      | 'AvatarButton'
+  }
+  'chat:create': {
+    logContext: 'ProfileHeader' | 'NewChatDialog' | 'SendViaChatDialog'
+  }
+  'chat:open': {
+    logContext:
+      | 'ProfileHeader'
+      | 'NewChatDialog'
+      | 'ChatsList'
+      | 'SendViaChatDialog'
   }
 
   'test:all:always': {}

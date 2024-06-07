@@ -110,7 +110,7 @@ module.exports = function (config) {
             {
               NSPrivacyAccessedAPIType:
                 'NSPrivacyAccessedAPICategoryUserDefaults',
-              NSPrivacyAccessedAPITypeReasons: ['CA92.1'],
+              NSPrivacyAccessedAPITypeReasons: ['CA92.1', '1C8F.1'],
             },
           ],
         },
@@ -175,7 +175,6 @@ module.exports = function (config) {
         checkAutomatically: 'NEVER',
         channel: UPDATES_CHANNEL,
       },
-      assetBundlePatterns: ['**/*'],
       plugins: [
         'expo-localization',
         Boolean(process.env.SENTRY_AUTH_TOKEN) && 'sentry-expo',
@@ -183,7 +182,7 @@ module.exports = function (config) {
           'expo-build-properties',
           {
             ios: {
-              deploymentTarget: '13.4',
+              deploymentTarget: '14.0',
               newArchEnabled: false,
             },
             android: {
@@ -200,6 +199,7 @@ module.exports = function (config) {
           {
             icon: './assets/icon-android-notification.png',
             color: '#1185fe',
+            sounds: PLATFORM === 'ios' ? ['assets/dm.aiff'] : ['assets/dm.mp3'],
           },
         ],
         './plugins/withAndroidManifestPlugin.js',
@@ -208,6 +208,7 @@ module.exports = function (config) {
         './plugins/withAndroidStylesAccentColorPlugin.js',
         './plugins/withAndroidSplashScreenStatusBarTranslucentPlugin.js',
         './plugins/shareExtension/withShareExtensions.js',
+        './plugins/notificationsExtension/withNotificationsExtension.js',
       ].filter(Boolean),
       extra: {
         eas: {
@@ -218,6 +219,15 @@ module.exports = function (config) {
                   {
                     targetName: 'Share-with-Bluesky',
                     bundleIdentifier: 'xyz.blueskyweb.app.Share-with-Bluesky',
+                    entitlements: {
+                      'com.apple.security.application-groups': [
+                        'group.app.bsky',
+                      ],
+                    },
+                  },
+                  {
+                    targetName: 'BlueskyNSE',
+                    bundleIdentifier: 'xyz.blueskyweb.app.BlueskyNSE',
                     entitlements: {
                       'com.apple.security.application-groups': [
                         'group.app.bsky',

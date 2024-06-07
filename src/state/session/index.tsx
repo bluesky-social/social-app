@@ -17,7 +17,7 @@ import {
 } from './agent'
 import {getInitialState, reducer} from './reducer'
 
-export {isSessionDeactivated} from './util'
+export {isSignupQueued} from './util'
 export type {SessionAccount} from '#/state/session/types'
 import {SessionApiContext, SessionStateContext} from '#/state/session/types'
 
@@ -208,6 +208,19 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   if (IS_DEV && isWeb) window.agent = state.currentAgentState.agent
 
   const agent = state.currentAgentState.agent as BskyAgent
+  const currentAgentRef = React.useRef(agent)
+  React.useEffect(() => {
+    if (currentAgentRef.current !== agent) {
+      // Read the previous value and immediately advance the pointer.
+      const prevAgent = currentAgentRef.current
+      currentAgentRef.current = agent
+      // We never reuse agents so let's fully neutralize the previous one.
+      // This ensures it won't try to consume any refresh tokens.
+      prevAgent.session = undefined
+      prevAgent.setPersistSessionHandler(undefined)
+    }
+  }, [agent])
+
   return (
     <AgentContext.Provider value={agent}>
       <StateContext.Provider value={stateContext}>
@@ -255,17 +268,10 @@ export function useRequireAuth() {
   )
 }
 
-export function useAgent(): {getAgent: () => BskyAgent} {
+export function useAgent(): BskyAgent {
   const agent = React.useContext(AgentContext)
   if (!agent) {
     throw Error('useAgent() must be below <SessionProvider>.')
   }
-  return React.useMemo(
-    () => ({
-      getAgent() {
-        return agent
-      },
-    }),
-    [agent],
-  )
+  return agent
 }

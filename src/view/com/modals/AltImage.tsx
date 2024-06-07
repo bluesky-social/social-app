@@ -20,7 +20,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {enforceLen} from 'lib/strings/helpers'
 import {gradients, s} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
-import {isWeb} from 'platform/detection'
+import {isAndroid, isWeb} from 'platform/detection'
 import {ImageModel} from 'state/models/media/image'
 import {Text} from '../util/text/Text'
 import {ScrollView, TextInput} from './util'
@@ -44,6 +44,7 @@ export function Component({image}: Props) {
 
   // Autofocus hack when we open the modal. We have to wait for the animation to complete first
   React.useEffect(() => {
+    if (isAndroid) return
     setTimeout(() => {
       inputRef.current?.focus()
     }, 500)

@@ -7,6 +7,7 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {PressableWithHover} from '../util/PressableWithHover'
 import {Text} from '../util/text/Text'
 import {DraggableScrollView} from './DraggableScrollView'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 export interface TabBarProps {
   testID?: string
@@ -140,7 +141,10 @@ export function TabBar({
                 <Text
                   type={isDesktop || isTablet ? 'xl-bold' : 'lg-bold'}
                   testID={testID ? `${testID}-${item}` : undefined}
-                  style={selected ? pal.text : pal.textLight}>
+                  style={[
+                    selected ? pal.text : pal.textLight,
+                    {lineHeight: 20},
+                  ]}>
                   {item}
                 </Text>
               </View>
@@ -204,6 +208,6 @@ const mobileStyles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: -1,
-    borderBottomWidth: 1,
+    borderBottomWidth: hairlineWidth,
   },
 })
