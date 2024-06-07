@@ -84,18 +84,18 @@ function InnerApp() {
 
   return (
     //Aplica filtro para la saturación
-    <div
-      style={{
-        filter: highSaturationEnabled ? 'saturate(8)' : 'none',
-        flex: 1,
-      }}>
-      <KeyboardProvider enabled={false}>
-        <Alf theme={theme}>
-          <ThemeProvider theme={theme}>
-            <RootSiblingParent>
-              <React.Fragment
-                // Resets the entire tree below when it changes:
-                key={currentAccount?.did}>
+    <KeyboardProvider enabled={false}>
+      <Alf theme={theme}>
+        <ThemeProvider theme={theme}>
+          <RootSiblingParent>
+            <React.Fragment
+              // Resets the entire tree below when it changes:
+              key={currentAccount?.did}>
+              <div
+                style={{
+                  filter: highSaturationEnabled ? 'saturate(8)' : 'none',
+                  flex: 1,
+                }}>
                 <QueryProvider currentDid={currentAccount?.did}>
                   <StatsigProvider>
                     <MessagesProvider>
@@ -118,13 +118,13 @@ function InnerApp() {
                     </MessagesProvider>
                   </StatsigProvider>
                 </QueryProvider>
-              </React.Fragment>
-              <ToastContainer />
-            </RootSiblingParent>
-          </ThemeProvider>
-        </Alf>
-      </KeyboardProvider>
-    </div>
+              </div>
+            </React.Fragment>
+            <ToastContainer />
+          </RootSiblingParent>
+        </ThemeProvider>
+      </Alf>
+    </KeyboardProvider>
   )
 }
 
