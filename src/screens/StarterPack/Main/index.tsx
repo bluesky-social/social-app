@@ -17,7 +17,7 @@ import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
 import {CenteredView} from 'view/com/util/Views'
 import {FeedsList} from '#/screens/StarterPack/Main/FeedsList'
 import {ProfilesList} from '#/screens/StarterPack/Main/ProfilesList'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBox} from '#/components/icons/ArrowOutOfBox'
@@ -101,6 +101,7 @@ function Header({
   starterPack: AppBskyGraphDefs.StarterPackView
 }) {
   const {_} = useLingui()
+  const t = useTheme()
   const {currentAccount} = useSession()
   const qrCodeDialogControl = useDialogControl()
 
@@ -178,10 +179,12 @@ function Header({
           )}
         </View>
       </ProfileSubpageHeader>
-      <View style={[a.px_md, a.py_lg]}>
+      <View style={[a.px_md, a.py_lg, a.gap_md]}>
         <Text style={[a.text_md]}>{record.description}</Text>
+        <Text style={[a.font_bold, a.text_md, t.atoms.text_contrast_medium]}>
+          {starterPack.joinedAllTimeCount} people joined this week!
+        </Text>
       </View>
-
       <QrCodeDialog control={qrCodeDialogControl} url="https://bsky.app" />
     </>
   )
