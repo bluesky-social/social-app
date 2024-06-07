@@ -140,7 +140,7 @@ function KnownFollowersInner({
             ) : count === 2 ? (
               slice.map(({profile}, i) => (
                 <Text key={profile.did} style={textStyle}>
-                  {profile.displayName} {i === 0 ? _(msg`and`) : ''}{' '}
+                  {profile.displayName} {i === 0 ? _(msg`and`) + ' ' : ''}
                 </Text>
               ))
             ) : (
