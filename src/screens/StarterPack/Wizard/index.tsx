@@ -406,9 +406,9 @@ function Footer({
           color="primary"
           size="small"
           onPress={onNext}
-          disabled={state.canNext || state.processing}>
+          disabled={!state.canNext || state.processing}>
           <ButtonText>{nextBtnText}</ButtonText>
-          <Loader size="xs" style={{color: 'white'}} />
+          {state.processing && <Loader size="xs" style={{color: 'white'}} />}
         </Button>
       </View>
 
