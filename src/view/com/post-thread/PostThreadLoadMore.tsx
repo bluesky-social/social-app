@@ -20,10 +20,34 @@ export function PostThreadLoadMore({post}: {post: AppBskyFeedDefs.PostView}) {
   return (
     <Link
       href={postHref}
-      style={[a.flex_row, a.align_center, a.px_xl, a.py_md]}
+      style={[a.flex_row, a.align_center, a.py_md, {paddingHorizontal: 14}]}
       hoverStyle={[t.atoms.bg_contrast_25]}>
-      <UserAvatar avatar={post.author.avatar} size={30} />
-      <View style={[a.px_lg]}>
+      <View style={[a.flex_row]}>
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: 34,
+            height: 34,
+            borderRadius: 18,
+            backgroundColor: t.atoms.bg.backgroundColor,
+            marginRight: -20,
+          }}>
+          <UserAvatar avatar={post.author.avatar} size={30} />
+        </View>
+        <View
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: 34,
+            height: 34,
+            borderRadius: 18,
+            backgroundColor: t.atoms.bg.backgroundColor,
+          }}>
+          <UserAvatar avatar={post.author.avatar} size={30} />
+        </View>
+      </View>
+      <View style={[a.px_sm]}>
         <Text style={[{color: t.palette.primary_500}, a.text_md]}>
           <Trans>Continue thread...</Trans>
         </Text>
