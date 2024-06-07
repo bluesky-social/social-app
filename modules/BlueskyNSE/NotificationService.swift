@@ -32,10 +32,12 @@ class NotificationService: UNNotificationServiceExtension {
   }
   
   func mutateWithBadge(_ content: UNMutableNotificationContent) {
-    let currentCount = prefs?.integer(forKey: "badgeCount") ?? 0
+    var count = prefs?.integer(forKey: "badgeCount") ?? 0
+    count += 1
     
-    content.badge = NSNumber(value: currentCount + 1)
-    prefs?.setValue(currentCount + 1, forKey: "badgeCount")
+    // Set the new badge number for the notification, then store that value for using later
+    content.badge = NSNumber(value: count)
+    prefs?.setValue(count, forKey: "badgeCount")
   }
   
   func mutateWithChatMessage(_ content: UNMutableNotificationContent) {
