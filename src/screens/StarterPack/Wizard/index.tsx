@@ -1,7 +1,7 @@
 import React from 'react'
 import {Keyboard, TouchableOpacity, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
-import {AppBskyActorDefs} from '@atproto/api'
+import {AppBskyActorDefs, AtUri} from '@atproto/api'
 import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Plural, Trans} from '@lingui/macro'
@@ -172,7 +172,8 @@ function WizardInner() {
         },
       )
 
-      navigation.replace('StarterPack', {id: res.uri})
+      const rkey = new AtUri(res.uri).rkey
+      navigation.replace('StarterPack', {name: currentAccount!.did, rkey})
     } catch (e) {
       // TODO add error to state
       console.error(e)
