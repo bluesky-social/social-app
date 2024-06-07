@@ -53,7 +53,7 @@ export function StarterPackScreen({
 
   const items = [
     ...(starterPack.list ? ['People'] : []),
-    ...(starterPack.feeds.length ? ['Feeds'] : []),
+    ...(starterPack.feeds?.length ? ['Feeds'] : []),
   ]
 
   console.log(starterPack.feeds)
