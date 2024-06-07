@@ -182,7 +182,10 @@ function Header({
       <View style={[a.px_md, a.py_lg, a.gap_md]}>
         <Text style={[a.text_md]}>{record.description}</Text>
         <Text style={[a.font_bold, a.text_md, t.atoms.text_contrast_medium]}>
-          {starterPack.joinedAllTimeCount} people joined this week!
+          <Trans>
+            {starterPack.joinedAllTimeCount} people have joined this starter
+            pack!
+          </Trans>
         </Text>
       </View>
       <QrCodeDialog control={qrCodeDialogControl} url="https://bsky.app" />
