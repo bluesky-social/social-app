@@ -34,9 +34,6 @@ import {MessagesEventBus} from '#/state/messages/events/agent'
 import {MessagesEventBusError} from '#/state/messages/events/types'
 import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 
-// TODO temporary
-let DEBUG_ACTIVE_CHAT: string | undefined
-
 export function isConvoItemMessage(
   item: ConvoItem,
 ): item is ConvoItem & {type: 'message'} {
@@ -102,14 +99,6 @@ export class Convo {
     this.ingestFirehose = this.ingestFirehose.bind(this)
     this.onFirehoseConnect = this.onFirehoseConnect.bind(this)
     this.onFirehoseError = this.onFirehoseError.bind(this)
-
-    if (DEBUG_ACTIVE_CHAT) {
-      logger.error(`Convo: another chat was already active`, {
-        convoId: this.convoId,
-      })
-    } else {
-      DEBUG_ACTIVE_CHAT = this.convoId
-    }
   }
 
   private commit() {
@@ -152,6 +141,7 @@ export class Convo {
           fetchMessageHistory: undefined,
         }
       }
+      case ConvoStatus.Disabled:
       case ConvoStatus.Suspended:
       case ConvoStatus.Backgrounded:
       case ConvoStatus.Ready: {
@@ -241,6 +231,13 @@ export class Convo {
             this.withdrawRequestedPollInterval()
             break
           }
+          case ConvoDispatchEvent.Disable: {
+            this.status = ConvoStatus.Disabled
+            this.fetchMessageHistory() // finish init
+            this.cleanupFirehoseConnection?.()
+            this.withdrawRequestedPollInterval()
+            break
+          }
         }
         break
       }
@@ -265,6 +262,12 @@ export class Convo {
           case ConvoDispatchEvent.Error: {
             this.status = ConvoStatus.Error
             this.error = action.payload
+            this.cleanupFirehoseConnection?.()
+            this.withdrawRequestedPollInterval()
+            break
+          }
+          case ConvoDispatchEvent.Disable: {
+            this.status = ConvoStatus.Disabled
             this.cleanupFirehoseConnection?.()
             this.withdrawRequestedPollInterval()
             break
@@ -303,6 +306,12 @@ export class Convo {
             this.withdrawRequestedPollInterval()
             break
           }
+          case ConvoDispatchEvent.Disable: {
+            this.status = ConvoStatus.Disabled
+            this.cleanupFirehoseConnection?.()
+            this.withdrawRequestedPollInterval()
+            break
+          }
         }
         break
       }
@@ -319,6 +328,10 @@ export class Convo {
           case ConvoDispatchEvent.Error: {
             this.status = ConvoStatus.Error
             this.error = action.payload
+            break
+          }
+          case ConvoDispatchEvent.Disable: {
+            this.status = ConvoStatus.Disabled
             break
           }
         }
@@ -343,7 +356,15 @@ export class Convo {
             this.error = action.payload
             break
           }
+          case ConvoDispatchEvent.Disable: {
+            this.status = ConvoStatus.Disabled
+            break
+          }
         }
+        break
+      }
+      case ConvoStatus.Disabled: {
+        // can't do anything
         break
       }
       default:
@@ -424,9 +445,13 @@ export class Convo {
         throw new Error('Convo: could not find recipients in convo')
       }
 
-      // await new Promise(y => setTimeout(y, 2000))
-      // throw new Error('UNCOMMENT TO TEST INIT FAILURE')
-      this.dispatch({event: ConvoDispatchEvent.Ready})
+      const userIsDisabled = this.sender.chatDisabled as boolean
+
+      if (userIsDisabled) {
+        this.dispatch({event: ConvoDispatchEvent.Disable})
+      } else {
+        this.dispatch({event: ConvoDispatchEvent.Ready})
+      }
     } catch (e: any) {
       logger.error(e, {context: 'Convo: setup failed'})
 
@@ -458,7 +483,6 @@ export class Convo {
 
   suspend() {
     this.dispatch({event: ConvoDispatchEvent.Suspend})
-    DEBUG_ACTIVE_CHAT = undefined
   }
 
   /**
@@ -566,15 +590,6 @@ export class Convo {
       this.isFetchingHistory = true
       this.commit()
 
-      /*
-       * Delay if paginating while scrolled to prevent momentum scrolling from
-       * jerking the list around, plus makes it feel a little more human.
-       */
-      if (this.pastMessages.size > 0) {
-        await new Promise(y => setTimeout(y, 500))
-        // throw new Error('UNCOMMENT TO TEST RETRY')
-      }
-
       const nextCursor = this.oldestRev // for TS
       const response = await networkRetry(2, () => {
         return this.agent.api.chat.bsky.convo.getMessages(
@@ -643,6 +658,9 @@ export class Convo {
           }
         }
       },
+      /*
+       * This is VERY important — we only want events for this convo.
+       */
       {convoId: this.convoId},
     )
   }
@@ -689,12 +707,6 @@ export class Convo {
            */
           this.latestRev = ev.rev
 
-          /*
-           * This is VERY important. We don't want to insert any messages from
-           * your other chats.
-           */
-          if (ev.convoId !== this.convoId) continue
-
           if (
             ChatBskyConvoDefs.isLogCreateMessage(ev) &&
             ChatBskyConvoDefs.isMessageView(ev.message)
@@ -739,9 +751,9 @@ export class Convo {
 
   private pendingMessageFailure: 'recoverable' | 'unrecoverable' | null = null
 
-  async sendMessage(message: ChatBskyConvoSendMessage.InputSchema['message']) {
+  sendMessage(message: ChatBskyConvoSendMessage.InputSchema['message']) {
     // Ignore empty messages for now since they have no other purpose atm
-    if (!message.text.trim()) return
+    if (!message.text.trim() && !message.embed) return
 
     logger.debug('Convo: send message', {}, logger.DebugContext.convo)
 
@@ -781,16 +793,17 @@ export class Convo {
 
       const {id, message} = pendingMessage
 
-      const response = await networkRetry(2, () => {
-        return this.agent.api.chat.bsky.convo.sendMessage(
-          {
-            convoId: this.convoId,
-            message,
-          },
-          {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
-        )
-      })
+      const response = await this.agent.api.chat.bsky.convo.sendMessage(
+        {
+          convoId: this.convoId,
+          message,
+        },
+        {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
+      )
       const res = response.data
+
+      // remove from queue
+      this.pendingMessages.delete(id)
 
       /*
        * Insert into `newMessages` as soon as we have a real ID. That way, when
@@ -800,15 +813,14 @@ export class Convo {
         ...res,
         $type: 'chat.bsky.convo.defs#messageView',
       })
-      this.pendingMessages.delete(id)
-
-      await this.processPendingMessages()
-
+      // render new message state, prior to firehose
       this.commit()
+
+      // continue queue processing
+      await this.processPendingMessages()
     } catch (e: any) {
       logger.error(e, {context: `Convo: failed to send message`})
       this.handleSendMessageFailure(e)
-    } finally {
       this.isProcessingPendingMessages = false
     }
   }
@@ -818,9 +830,10 @@ export class Convo {
       if (NETWORK_FAILURE_STATUSES.includes(e.status)) {
         this.pendingMessageFailure = 'recoverable'
       } else {
+        this.pendingMessageFailure = 'unrecoverable'
+
         switch (e.message) {
           case 'block between recipient and sender':
-            this.pendingMessageFailure = 'unrecoverable'
             this.emitter.emit('event', {
               type: 'invalidate-block-state',
               accountDids: [
@@ -828,6 +841,15 @@ export class Convo {
                 ...this.recipients!.map(r => r.did),
               ],
             })
+            break
+          case 'Account is disabled':
+            this.dispatch({event: ConvoDispatchEvent.Disable})
+            break
+          case 'Convo not found':
+          case 'Account does not exist':
+          case 'recipient does not exist':
+          case 'recipient requires incoming messages to come from someone they follow':
+          case 'recipient has disabled incoming messages':
             break
           default:
             logger.warn(
@@ -841,6 +863,7 @@ export class Convo {
         }
       }
     } else {
+      this.pendingMessageFailure = 'unrecoverable'
       logger.error(e, {
         context: `Convo handleSendMessageFailure received unknown error`,
       })
@@ -865,18 +888,15 @@ export class Convo {
     )
 
     try {
-      // throw new Error('UNCOMMENT TO TEST RETRY')
-      const {data} = await networkRetry(2, () => {
-        return this.agent.api.chat.bsky.convo.sendMessageBatch(
-          {
-            items: messageArray.map(({message}) => ({
-              convoId: this.convoId,
-              message,
-            })),
-          },
-          {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
-        )
-      })
+      const {data} = await this.agent.api.chat.bsky.convo.sendMessageBatch(
+        {
+          items: messageArray.map(({message}) => ({
+            convoId: this.convoId,
+            message,
+          })),
+        },
+        {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
+      )
       const {items} = data
 
       /*
@@ -998,6 +1018,7 @@ export class Convo {
         key: m.id,
         message: {
           ...m.message,
+          embed: undefined,
           $type: 'chat.bsky.convo.defs#messageView',
           id: nanoid(),
           rev: '__fake__',

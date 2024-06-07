@@ -147,7 +147,7 @@ export function getAvatarTypeFromUri(uri: string) {
 
 export function useFeedSourceInfoQuery({uri}: {uri: string}) {
   const type = getFeedTypeFromUri(uri)
-  const {getAgent} = useAgent()
+  const agent = useAgent()
 
   return useQuery({
     staleTime: STALE.INFINITY,
@@ -156,10 +156,10 @@ export function useFeedSourceInfoQuery({uri}: {uri: string}) {
       let view: FeedSourceInfo
 
       if (type === 'feed') {
-        const res = await getAgent().app.bsky.feed.getFeedGenerator({feed: uri})
+        const res = await agent.app.bsky.feed.getFeedGenerator({feed: uri})
         view = hydrateFeedGenerator(res.data.view)
       } else {
-        const res = await getAgent().app.bsky.graph.getList({
+        const res = await agent.app.bsky.graph.getList({
           list: uri,
           limit: 1,
         })
@@ -174,7 +174,7 @@ export function useFeedSourceInfoQuery({uri}: {uri: string}) {
 export const useGetPopularFeedsQueryKey = ['getPopularFeeds']
 
 export function useGetPopularFeedsQuery() {
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   return useInfiniteQuery<
     AppBskyUnspeccedGetPopularFeedGenerators.OutputSchema,
     Error,
@@ -184,7 +184,7 @@ export function useGetPopularFeedsQuery() {
   >({
     queryKey: useGetPopularFeedsQueryKey,
     queryFn: async ({pageParam}) => {
-      const res = await getAgent().app.bsky.unspecced.getPopularFeedGenerators({
+      const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
         limit: 10,
         cursor: pageParam,
       })
@@ -196,10 +196,10 @@ export function useGetPopularFeedsQuery() {
 }
 
 export function useSearchPopularFeedsMutation() {
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   return useMutation({
     mutationFn: async (query: string) => {
-      const res = await getAgent().app.bsky.unspecced.getPopularFeedGenerators({
+      const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
         limit: 10,
         query: query,
       })
@@ -241,7 +241,7 @@ const pinnedFeedInfosQueryKeyRoot = 'pinnedFeedsInfos'
 
 export function usePinnedFeedsInfos() {
   const {hasSession} = useSession()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   const {data: preferences, isLoading: isLoadingPrefs} = usePreferencesQuery()
   const pinnedItems = preferences?.savedFeeds.filter(feed => feed.pinned) ?? []
 
@@ -264,8 +264,8 @@ export function usePinnedFeedsInfos() {
       const pinnedFeeds = pinnedItems.filter(feed => feed.type === 'feed')
       let feedsPromise = Promise.resolve()
       if (pinnedFeeds.length > 0) {
-        feedsPromise = getAgent()
-          .app.bsky.feed.getFeedGenerators({
+        feedsPromise = agent.app.bsky.feed
+          .getFeedGenerators({
             feeds: pinnedFeeds.map(f => f.value),
           })
           .then(res => {
@@ -279,8 +279,8 @@ export function usePinnedFeedsInfos() {
       // Get all lists. This currently has to be done individually.
       const pinnedLists = pinnedItems.filter(feed => feed.type === 'list')
       const listsPromises = pinnedLists.map(list =>
-        getAgent()
-          .app.bsky.graph.getList({
+        agent.app.bsky.graph
+          .getList({
             list: list.value,
             limit: 1,
           })

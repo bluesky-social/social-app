@@ -46,6 +46,20 @@
         "EXPO_PUBLIC_ENV": "production"
       }
     },
+    "production-apk": {
+      "extends": "base",
+      "distribution": "internal",
+      "ios": {
+        "autoIncrement": false
+      },
+      "android": {
+        "autoIncrement": false
+      },
+      "channel": "production",
+      "env": {
+        "EXPO_PUBLIC_ENV": "production"
+      }
+    },
     "testflight": {
       "extends": "base",
       "ios": {

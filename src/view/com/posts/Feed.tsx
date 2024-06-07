@@ -3,6 +3,7 @@ import {
   ActivityIndicator,
   AppState,
   Dimensions,
+  ListRenderItemInfo,
   StyleProp,
   StyleSheet,
   View,
@@ -226,7 +227,7 @@ let Feed = ({
 
   const onRefresh = React.useCallback(async () => {
     track('Feed:onRefresh')
-    logEvent('feed:refresh', {
+    logEvent('feed:refresh:sampled', {
       feedType: feedType,
       feedUrl: feed,
       reason: 'pull-to-refresh',
@@ -244,7 +245,7 @@ let Feed = ({
   const onEndReached = React.useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
 
-    logEvent('feed:endReached', {
+    logEvent('feed:endReached:sampled', {
       feedType: feedType,
       feedUrl: feed,
       itemCount: feedItems.length,
@@ -279,7 +280,7 @@ let Feed = ({
   // =
 
   const renderItem = React.useCallback(
-    ({item}: {item: any}) => {
+    ({item, index}: ListRenderItemInfo<any>) => {
       if (item === EMPTY_FEED_ITEM) {
         return renderEmptyState()
       } else if (item === ERROR_ITEM) {
@@ -311,17 +312,17 @@ let Feed = ({
         // -prf
         return <DiscoverFallbackHeader />
       }
-      return <FeedSlice slice={item} />
+      return <FeedSlice slice={item} hideTopBorder={index === 0 && !isWeb} />
     },
     [
+      renderEmptyState,
       feed,
-      feedUri,
       error,
       onPressTryAgain,
-      onPressRetryLoadMore,
-      renderEmptyState,
-      _,
       savedFeedConfig,
+      _,
+      onPressRetryLoadMore,
+      feedUri,
     ],
   )
 
