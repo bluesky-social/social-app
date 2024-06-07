@@ -14,11 +14,13 @@ import {s} from 'lib/styles'
 import {
   useAutoplayDisabled,
   useHapticsDisabled,
+  useHighSaturationEnabled,
   useRequireAltTextEnabled,
   useSetAutoplayDisabled,
   useSetHapticsDisabled,
+  useSetHighSaturationEnabled,
   useSetRequireAltTextEnabled,
-} from 'state/preferences'
+} from 'state/preferences' // Agregare useHighSaturationEnabled y useSetHighSaturationEnabled para el botón de saturación
 import {ToggleButton} from 'view/com/util/forms/ToggleButton'
 import {SimpleViewHeader} from '../com/util/SimpleViewHeader'
 import {Text} from '../com/util/text/Text'
@@ -41,6 +43,10 @@ export function AccessibilitySettingsScreen({}: Props) {
   const setAutoplayDisabled = useSetAutoplayDisabled()
   const hapticsDisabled = useHapticsDisabled()
   const setHapticsDisabled = useSetHapticsDisabled()
+
+  // Constantes para el botón de saturación *************
+  const highSaturationEnabled = useHighSaturationEnabled()
+  const setHighSaturationEnabled = useSetHighSaturationEnabled()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -72,6 +78,10 @@ export function AccessibilitySettingsScreen({}: Props) {
           s.flex1,
           {paddingBottom: 200},
           isMobile && pal.viewLight,
+          {
+            /*
+          highSaturationEnabled && { backgroundColor: '#FFFFFF', opacity: 0.6 }*/
+          },
         ]}>
         <Text type="xl-bold" style={[pal.text, styles.heading]}>
           <Trans>Alt text</Trans>
@@ -113,6 +123,20 @@ export function AccessibilitySettingsScreen({}: Props) {
             </View>
           </>
         )}
+        {/* Botón de saturación*/}
+        <Text type="xl-bold" style={[pal.text, styles.heading]}>
+          <Trans>Saturation</Trans>
+        </Text>
+        <View style={[pal.view, styles.toggleCard]}>
+          <ToggleButton
+            type="default-light"
+            label={_(msg`High Saturation`)}
+            labelType="lg"
+            isSelected={highSaturationEnabled}
+            onPress={() => setHighSaturationEnabled(!highSaturationEnabled)}
+          />
+        </View>
+        {/* Botón de saturación*/}
       </ScrollView>
     </View>
   )

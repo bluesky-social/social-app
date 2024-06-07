@@ -101,6 +101,7 @@ export function transform(legacy: Partial<LegacySchema>): Schema {
     requireAltTextEnabled:
       legacy.preferences?.requireAltTextEnabled ||
       defaults.requireAltTextEnabled,
+    highSaturationEnabled: defaults.highSaturationEnabled,
     mutedThreads: legacy.mutedThreads?.uris || defaults.mutedThreads,
     invites: {
       copiedInvites:
