@@ -12,7 +12,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {HITSLOP_10} from 'lib/constants'
 import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
 import {enforceLen} from 'lib/strings/helpers'
-import {isAndroid, isWeb} from 'platform/detection'
+import {isAndroid, isNative, isWeb} from 'platform/detection'
 import {useProfileQuery} from 'state/queries/profile'
 import {useAgent, useSession} from 'state/session'
 import {useSetMinimalShellMode} from 'state/shell'
@@ -315,21 +315,25 @@ function Footer({
     <View
       style={[
         a.border_t,
-        a.border_l,
-        a.border_r,
         a.align_center,
         a.px_md,
         a.pt_lg,
         a.pb_5xl,
         a.gap_sm,
         t.atoms.bg,
-        t.atoms.shadow_md,
         t.atoms.border_contrast_medium,
         {
           height: 190,
-          borderTopLeftRadius: 14,
-          borderTopRightRadius: 14,
         },
+        isNative && [
+          a.border_l,
+          a.border_r,
+          t.atoms.shadow_md,
+          {
+            borderTopLeftRadius: 14,
+            borderTopRightRadius: 14,
+          },
+        ],
       ]}>
       <View style={[a.flex_row, a.gap_xs]}>
         {items.slice(0, 5).map((p, index) => (
@@ -431,7 +435,6 @@ function Footer({
 }
 
 function getName(item: AppBskyActorDefs.ProfileViewBasic | GeneratorView) {
-  // TODO hack for now since these are not full profiles and wont validate
   if (typeof item.displayName === 'string') {
     return enforceLen(item.displayName, 16, true)
   } else if (typeof item.handle === 'string') {
