@@ -25,12 +25,12 @@ import {useProfileShadow} from 'state/cache/profile-shadow'
 import {ProfileHeaderSuggestedFollows} from '#/view/com/profile/ProfileHeaderSuggestedFollows'
 import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import * as Toast from '#/view/com/util/Toast'
-import {KnownFollowers} from '#/screens/Profile/KnownFollowers'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {MessageProfileButton} from '#/components/dms/MessageProfileButton'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import {KnownFollowers} from '#/components/KnownFollowers'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {ProfileHeaderDisplayName} from './DisplayName'
@@ -270,12 +270,14 @@ let ProfileHeaderStandard = ({
               </View>
             ) : undefined}
 
-            <View style={[a.flex_row, a.align_center, a.gap_sm, a.pt_md]}>
-              <KnownFollowers
-                knownFollowers={profile.viewer?.knownFollowers}
-                moderationOpts={moderationOpts}
-              />
-            </View>
+            {!isMe && (
+              <View style={[a.flex_row, a.align_center, a.gap_sm, a.pt_md]}>
+                <KnownFollowers
+                  profile={profile}
+                  moderationOpts={moderationOpts}
+                />
+              </View>
+            )}
           </>
         )}
       </View>
