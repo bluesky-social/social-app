@@ -80,8 +80,6 @@ export const ProfileStarterPacks = React.forwardRef<
     } else if (isEmpty) {
       items = items.concat([EMPTY])
     } else if (data?.pages) {
-      console.log('has pages')
-      console.log(data?.pages)
       items = data?.pages.flatMap(page => page.starterPacks)
     }
     if (isError && !isEmpty) {
