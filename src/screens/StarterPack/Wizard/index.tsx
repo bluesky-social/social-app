@@ -247,18 +247,7 @@ function WizardInner() {
         <StepView />
       </Container>
 
-      {state.currentStep === 'Details' ? (
-        <Button
-          label={uiStrings.nextBtn}
-          variant="solid"
-          color="primary"
-          size="medium"
-          style={[a.mx_xl, a.my_5xl]}
-          onPress={onNext}
-          disabled={!state.canNext}>
-          <ButtonText>{uiStrings.nextBtn}</ButtonText>
-        </Button>
-      ) : (
+      {state.currentStep !== 'Details' && (
         <Footer onNext={onNext} nextBtnText={uiStrings.nextBtn} />
       )}
     </CenteredView>
@@ -266,7 +255,8 @@ function WizardInner() {
 }
 
 function Container({children}: {children: React.ReactNode}) {
-  const [state] = useWizardState()
+  const {_} = useLingui()
+  const [state, dispatch] = useWizardState()
 
   if (state.currentStep === 'Profiles' || state.currentStep === 'Feeds') {
     return <View style={[a.flex_1]}>{children}</View>
@@ -275,6 +265,20 @@ function Container({children}: {children: React.ReactNode}) {
   return (
     <KeyboardAwareScrollView style={[a.flex_1]}>
       {children}
+      {state.currentStep === 'Details' && (
+        <Button
+          label={_(msg`Next`)}
+          variant="solid"
+          color="primary"
+          size="medium"
+          style={[a.mx_xl, a.mb_lg, {marginTop: 60}]}
+          onPress={() => dispatch({type: 'Next'})}
+          disabled={!state.canNext}>
+          <ButtonText>
+            <Trans>Next</Trans>
+          </ButtonText>
+        </Button>
+      )}
     </KeyboardAwareScrollView>
   )
 }
