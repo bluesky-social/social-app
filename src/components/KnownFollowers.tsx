@@ -22,15 +22,8 @@ export function KnownFollowers({
   profile: AppBskyActorDefs.ProfileViewDetailed
   moderationOpts: ModerationOpts
 }) {
-  const t = useTheme()
-
   if (!profile.viewer?.knownFollowers) {
-    return (
-      <Text
-        style={[a.flex_1, a.text_sm, a.italic, t.atoms.text_contrast_medium]}>
-        <Trans>Not followed by anyone you know</Trans>
-      </Text>
-    )
+    return null
   }
 
   return (

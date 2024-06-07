@@ -270,14 +270,16 @@ let ProfileHeaderStandard = ({
               </View>
             ) : undefined}
 
-            {!isMe && (
-              <View style={[a.flex_row, a.align_center, a.gap_sm, a.pt_md]}>
-                <KnownFollowers
-                  profile={profile}
-                  moderationOpts={moderationOpts}
-                />
-              </View>
-            )}
+            {!isMe &&
+              profile.viewer?.knownFollowers &&
+              profile.viewer.knownFollowers.count > 0 && (
+                <View style={[a.flex_row, a.align_center, a.gap_sm, a.pt_md]}>
+                  <KnownFollowers
+                    profile={profile}
+                    moderationOpts={moderationOpts}
+                  />
+                </View>
+              )}
           </>
         )}
       </View>
