@@ -1,18 +1,20 @@
 import React from 'react'
-import {Keyboard, View} from 'react-native'
+import {Keyboard, TouchableOpacity, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {AppBskyActorDefs} from '@atproto/api'
 import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {HITSLOP_10} from 'lib/constants'
 import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
 import {enforceLen} from 'lib/strings/helpers'
 import {isAndroid, isWeb} from 'platform/detection'
 import {useProfileQuery} from 'state/queries/profile'
-import {useSession} from 'state/session'
+import {useAgent, useSession} from 'state/session'
 import {useSetMinimalShellMode} from 'state/shell'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {CenteredView} from 'view/com/util/Views'
@@ -23,6 +25,7 @@ import {StepProfiles} from '#/screens/StarterPack/Wizard/StepProfiles'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
+import {Loader} from '#/components/Loader'
 import {WizardEditListDialog} from '#/components/StarterPack/Wizard/WizardEditListDialog'
 import {Text} from '#/components/Typography'
 import {Provider} from './State'
@@ -75,7 +78,8 @@ function WizardInner() {
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
   const t = useTheme()
-  const [state, dispatch, submit] = useWizardState()
+  const [state, dispatch] = useWizardState()
+  const agent = useAgent()
   const {currentAccount} = useSession()
   const {data: currentProfile} = useProfileQuery({
     did: currentAccount?.did,
@@ -121,6 +125,62 @@ function WizardInner() {
 
   const uiStrings = wizardUiStrings[state.currentStep]
 
+  const submit = async () => {
+    dispatch({type: 'SetProcessing', processing: true})
+
+    try {
+      const list = await agent.app.bsky.graph.list.create(
+        {repo: currentAccount?.did},
+        {
+          name: state.name ?? '',
+          description: state.description ?? '',
+          descriptionFacets: [],
+          avatar: undefined,
+          createdAt: new Date().toISOString(),
+          purpose: 'app.bsky.graph.defs#referencelist',
+        },
+      )
+
+      await agent.com.atproto.repo.applyWrites({
+        repo: currentAccount!.did,
+        writes: state.profiles.map(p => ({
+          $type: 'com.atproto.repo.applyWrites#create',
+          collection: 'app.bsky.graph.listitem',
+          value: {
+            $type: 'app.bsky.graph.listitem',
+            subject: p.did,
+            list: list.uri,
+            createdAt: new Date().toISOString(),
+          },
+        })),
+      })
+
+      const res = await agent.app.bsky.graph.starterpack.create(
+        {
+          repo: currentAccount!.did,
+          validate: false,
+        },
+        {
+          name: state.name ?? '',
+          description: state.description ?? '',
+          descriptionFacets: [],
+          list: list.uri,
+          feeds: state.feeds.map(f => ({
+            uri: f.uri,
+          })),
+          createdAt: new Date().toISOString(),
+        },
+      )
+
+      navigation.navigate('StarterPack', {id: res.uri})
+    } catch (e) {
+      // TODO add error to state
+      console.error(e)
+    } finally {
+      // dispatch({type: 'SetProcessing', processing: false})
+    }
+  }
+
   const onNext = () => {
     if (state.currentStep === 'Details' && !state.name) {
       dispatch({
@@ -146,39 +206,36 @@ function WizardInner() {
 
   return (
     <CenteredView style={[a.flex_1]} sideBorders>
-      <View style={[]}>
-        <View
-          style={[
-            a.flex_row,
-            a.pb_sm,
-            a.px_md,
-            a.border_b,
-            t.atoms.border_contrast_medium,
-            a.gap_sm,
-            a.justify_between,
-            a.align_center,
-            isAndroid && a.pt_sm,
-            isWeb && [a.py_md],
-          ]}>
-          <View style={[{width: 65}]}>
-            {state.currentStep !== 'Details' && (
-              <Button
-                label={_(msg`Back`)}
-                variant="ghost"
-                color="secondary"
-                size="xsmall"
-                onPress={() => dispatch({type: 'Back'})}>
-                <ButtonText>
-                  <Trans>Back</Trans>
-                </ButtonText>
-              </Button>
-            )}
-          </View>
-          <Text style={[a.flex_1, a.font_bold, a.text_lg, a.text_center]}>
-            {uiStrings.header}
-          </Text>
-          <View style={[{width: 65}]} />
+      <View
+        style={[
+          a.flex_row,
+          a.pb_sm,
+          a.px_md,
+          a.border_b,
+          t.atoms.border_contrast_medium,
+          a.gap_sm,
+          a.justify_between,
+          a.align_center,
+          isAndroid && a.pt_sm,
+          isWeb && [a.py_md],
+        ]}>
+        <View style={[{width: 65}]}>
+          {state.currentStep !== 'Details' && (
+            <TouchableOpacity
+              testID="viewHeaderDrawerBtn"
+              onPress={() => dispatch({type: 'Back'})}
+              hitSlop={HITSLOP_10}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Back`)}
+              accessibilityHint={_(msg`Go back to the previous step`)}>
+              <FontAwesomeIcon size={18} icon="angle-left" />
+            </TouchableOpacity>
+          )}
         </View>
+        <Text style={[a.flex_1, a.font_bold, a.text_lg, a.text_center]}>
+          {uiStrings.header}
+        </Text>
+        <View style={[{width: 65}]} />
       </View>
 
       <Container>
@@ -348,8 +405,10 @@ function Footer({
           variant="solid"
           color="primary"
           size="small"
-          onPress={onNext}>
+          onPress={onNext}
+          disabled={state.canNext || state.processing}>
           <ButtonText>{nextBtnText}</ButtonText>
+          <Loader size="xs" style={{color: 'white'}} />
         </Button>
       </View>
 
