@@ -4461,7 +4461,7 @@ msgstr "{0} 님에게 신고 보내기"
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:119
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:122
 msgid "Send verification email"
-msgstr "인증 메일 보내기"
+msgstr "인증 이메일 보내기"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:299
 #: src/view/com/util/forms/PostDropdownBtn.tsx:302
