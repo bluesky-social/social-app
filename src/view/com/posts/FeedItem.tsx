@@ -16,6 +16,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {isWeb} from '#/platform/detection'
 import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useComposerControls} from '#/state/shell/composer'
@@ -196,6 +197,7 @@ let FeedItemInner = ({
     },
   ]
 
+  const [hover, setHover] = useState(false)
   return (
     <Link
       testID={`feedItem-by-${post.author.handle}`}
@@ -204,7 +206,29 @@ let FeedItemInner = ({
       noFeedback
       accessible={false}
       onBeforePress={onBeforePress}
-      dataSet={{feedContext}}>
+      dataSet={{feedContext}}
+      onPointerEnter={() => {
+        setHover(true)
+      }}
+      onPointerLeave={() => {
+        setHover(false)
+      }}>
+      {isWeb && (
+        <View
+          style={{
+            position: 'absolute',
+            backgroundColor: 'white', // TODO
+            opacity: hover ? 0.01 : 0, // TODO
+            left: 0,
+            right: 0,
+            bottom: 0,
+            top: 0,
+            pointerEvents: 'none',
+            // @ts-ignore web-only
+            transition: '0.05s ease-in-out opacity',
+          }}
+        />
+      )}
       <View style={{flexDirection: 'row', gap: 10, paddingLeft: 8}}>
         <View style={{width: 52}}>
           {isThreadChild && (
