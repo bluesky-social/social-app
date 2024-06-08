@@ -857,7 +857,7 @@ msgstr "點擊這裡"
 
 #: src/view/com/modals/DeleteAccount.tsx:208
 msgid "Click here for more information on deactivating your account"
-msgstr "點擊這裡以了解有關停用帳號的更多信息"
+msgstr "點擊這裡以瞭解有關停用帳號的詳細資訊"
 
 #: src/view/com/modals/DeleteAccount.tsx:216
 msgid "Click here for more information."
