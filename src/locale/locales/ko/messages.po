@@ -1845,7 +1845,7 @@ msgstr "게시물을 삭제하지 못했습니다. 다시 시도해 주세요"
 #: src/components/dialogs/GifSelect.ios.tsx:196
 #: src/components/dialogs/GifSelect.tsx:212
 msgid "Failed to load GIFs"
-msgstr "GIF 불러오기 실패"
+msgstr "GIF를 불러오지 못했습니다"
 
 #: src/screens/Messages/Conversation/MessageListError.tsx:23
 msgid "Failed to load past messages"
