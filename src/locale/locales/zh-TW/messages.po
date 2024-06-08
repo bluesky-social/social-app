@@ -6130,7 +6130,7 @@ msgstr "輪到您了"
 #: src/screens/Deactivated.tsx:89
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:54
 msgid "You're logged in with an App Password. Please log in with your main password to continue deactivating your account."
-msgstr "您使用應用程式專用密碼登入。請使用您的主密碼登錄，以繼續停用您的帳號。"
+msgstr "您正在使用應用程式專用密碼登入。請使用您的主密碼登錄，以繼續停用您的帳號。"
 
 #: src/screens/Onboarding/StepFinished.tsx:123
 msgid "You're ready to go!"
