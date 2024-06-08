@@ -5284,7 +5284,7 @@ msgstr "此用戶已封鎖您，您無法查看他們的內容。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:30
 msgid "This user has requested that their content only be shown to signed-in users."
-msgstr "此用戶要求僅將其內容顯示給已登錄的用戶。"
+msgstr "此用戶要求僅將其內容顯示給已登入的用戶。"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:55
 msgid "This user is included in the <0>{0}</0> list which you have blocked."
@@ -6130,7 +6130,7 @@ msgstr "輪到您了"
 #: src/screens/Deactivated.tsx:89
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:54
 msgid "You're logged in with an App Password. Please log in with your main password to continue deactivating your account."
-msgstr "您正在使用應用程式專用密碼登入。請使用您的主密碼登錄，以繼續停用您的帳號。"
+msgstr "您正在使用應用程式專用密碼登入。請使用您的主密碼登入，以繼續停用您的帳號。"
 
 #: src/screens/Onboarding/StepFinished.tsx:123
 msgid "You're ready to go!"
