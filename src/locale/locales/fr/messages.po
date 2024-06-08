@@ -6130,7 +6130,7 @@ msgstr "Vous êtes dans la file d’attente"
 #: src/screens/Deactivated.tsx:89
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:54
 msgid "You're logged in with an App Password. Please log in with your main password to continue deactivating your account."
-msgstr "Vous êtes connecté avec un mot de passe d’application. Veuillez vous connecter avec votre mot de passe principal pour continuer à désactiver votre compte."
+msgstr "Vous êtes connecté·e avec un mot de passe d’application. Veuillez vous connecter avec votre mot de passe principal pour continuer à désactiver votre compte."
 
 #: src/screens/Onboarding/StepFinished.tsx:123
 msgid "You're ready to go!"
