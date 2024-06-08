@@ -5044,7 +5044,7 @@ msgstr "服務條款已遷移到"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:86
 msgid "There is no time limit for account deactivation, come back any time."
-msgstr "帳號停用沒有時間限制，隨時都可以充新啟用。"
+msgstr "帳號停用沒有時間限制，隨時都可以重新啟用。"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:115
 #: src/view/screens/ProfileFeed.tsx:541
