@@ -17,7 +17,7 @@ import {
 } from './agent'
 import {getInitialState, reducer} from './reducer'
 
-export {isSessionDeactivated} from './util'
+export {isSignupQueued} from './util'
 export type {SessionAccount} from '#/state/session/types'
 import {SessionApiContext, SessionStateContext} from '#/state/session/types'
 

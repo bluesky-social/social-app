@@ -9,6 +9,7 @@ import React, {
 import {
   ActivityIndicator,
   Keyboard,
+  LayoutChangeEvent,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -16,6 +17,7 @@ import {
 import {
   KeyboardAvoidingView,
   KeyboardStickyView,
+  useKeyboardContext,
 } from 'react-native-keyboard-controller'
 import Animated, {
   interpolateColor,
@@ -106,7 +108,9 @@ export const ComposePost = observer(function ComposePost({
   text: initText,
   imageUris: initImageUris,
   cancelRef,
+  isModalReady,
 }: Props & {
+  isModalReady: boolean
   cancelRef?: React.RefObject<CancelRef>
 }) {
   const {currentAccount} = useSession()
@@ -116,7 +120,7 @@ export const ComposePost = observer(function ComposePost({
   const {closeComposer} = useComposerControls()
   const {track} = useAnalytics()
   const pal = usePalette('default')
-  const {isTabletOrDesktop, isMobile} = useWebMediaQueries()
+  const {isMobile} = useWebMediaQueries()
   const {_} = useLingui()
   const requireAltTextEnabled = useRequireAltTextEnabled()
   const langPrefs = useLanguagePrefs()
@@ -125,6 +129,17 @@ export const ComposePost = observer(function ComposePost({
   const discardPromptControl = Prompt.usePromptControl()
   const {closeAllDialogs} = useDialogStateControlContext()
   const t = useTheme()
+
+  // Disable this in the composer to prevent any extra keyboard height being applied.
+  // See https://github.com/bluesky-social/social-app/pull/4399
+  const {setEnabled} = useKeyboardContext()
+  React.useEffect(() => {
+    if (!isAndroid) return
+    setEnabled(false)
+    return () => {
+      setEnabled(true)
+    }
+  }, [setEnabled])
 
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isProcessing, setIsProcessing] = useState(false)
@@ -153,6 +168,7 @@ export const ComposePost = observer(function ComposePost({
   const [extGif, setExtGif] = useState<Gif>()
   const [labels, setLabels] = useState<string[]>([])
   const [threadgate, setThreadgate] = useState<ThreadgateSetting[]>([])
+
   const gallery = useMemo(
     () => new GalleryModel(initImageUris),
     [initImageUris],
@@ -170,33 +186,16 @@ export const ComposePost = observer(function ComposePost({
     [insets, isKeyboardVisible],
   )
 
-  const hasScrolled = useSharedValue(0)
-  const scrollHandler = useAnimatedScrollHandler({
-    onScroll: event => {
-      hasScrolled.value = withTiming(event.contentOffset.y > 0 ? 1 : 0)
-    },
-  })
-  const topBarAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      borderColor: interpolateColor(
-        hasScrolled.value,
-        [0, 1],
-        ['transparent', t.atoms.border_contrast_medium.borderColor],
-      ),
-    }
-  })
-
   const onPressCancel = useCallback(() => {
-    if (graphemeLength > 0 || !gallery.isEmpty) {
+    if (graphemeLength > 0 || !gallery.isEmpty || extGif) {
       closeAllDialogs()
-      if (Keyboard) {
-        Keyboard.dismiss()
-      }
+      Keyboard.dismiss()
       discardPromptControl.open()
     } else {
       onClose()
     }
   }, [
+    extGif,
     graphemeLength,
     gallery.isEmpty,
     closeAllDialogs,
@@ -395,23 +394,57 @@ export const ComposePost = observer(function ComposePost({
     [setExtLink],
   )
 
+  const {
+    scrollHandler,
+    onScrollViewContentSizeChange,
+    onScrollViewLayout,
+    topBarAnimatedStyle,
+    bottomBarAnimatedStyle,
+  } = useAnimatedBorders()
+
+  // Backup focus on android, if the keyboard *still* refuses to show
+  useEffect(() => {
+    if (!isAndroid) return
+    if (!isModalReady) return
+
+    function tryFocus() {
+      if (!Keyboard.isVisible()) {
+        textInput.current?.blur()
+        textInput.current?.focus()
+      }
+    }
+
+    tryFocus()
+    // Retry with enough gap to avoid interrupting the previous attempt.
+    // Unfortunately we don't know which attempt will succeed.
+    const retryInterval = setInterval(tryFocus, 500)
+
+    function stopTrying() {
+      clearInterval(retryInterval)
+    }
+
+    // Deactivate this fallback as soon as anything happens.
+    const sub1 = Keyboard.addListener('keyboardDidShow', stopTrying)
+    const sub2 = Keyboard.addListener('keyboardDidHide', stopTrying)
+    return () => {
+      clearInterval(retryInterval)
+      sub1.remove()
+      sub2.remove()
+    }
+  }, [isModalReady])
+
   return (
     <>
       <KeyboardAvoidingView
         testID="composePostView"
         behavior="padding"
         style={a.flex_1}
-        keyboardVerticalOffset={replyTo ? 120 : isAndroid ? 180 : 150}>
+        keyboardVerticalOffset={replyTo ? 115 : isAndroid ? 180 : 162}>
         <View
           style={[a.flex_1, viewStyles]}
           aria-modal
           accessibilityViewIsModal>
-          <Animated.View
-            style={[
-              styles.topbar,
-              topBarAnimatedStyle,
-              isWeb && isTabletOrDesktop && styles.topbarDesktop,
-            ]}>
+          <Animated.View style={topBarAnimatedStyle}>
             <View style={styles.topbarInner}>
               <TouchableOpacity
                 testID="composerDiscardButton"
@@ -509,7 +542,9 @@ export const ComposePost = observer(function ComposePost({
           <Animated.ScrollView
             onScroll={scrollHandler}
             style={styles.scrollView}
-            keyboardShouldPersistTaps="always">
+            keyboardShouldPersistTaps="always"
+            onContentSizeChange={onScrollViewContentSizeChange}
+            onLayout={onScrollViewLayout}>
             {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
 
             <View
@@ -526,7 +561,11 @@ export const ComposePost = observer(function ComposePost({
                 ref={textInput}
                 richtext={richtext}
                 placeholder={selectTextInputPlaceholder}
-                autoFocus={true}
+                // fixes autofocus on android
+                key={
+                  isAndroid ? (isModalReady ? 'ready' : 'animating') : 'static'
+                }
+                autoFocus={isAndroid ? isModalReady : true}
                 setRichText={setRichText}
                 onPhotoPasted={onPhotoPasted}
                 onPressPublish={onPressPublish}
@@ -575,7 +614,11 @@ export const ComposePost = observer(function ComposePost({
       <KeyboardStickyView
         offset={{closed: isIOS ? -insets.bottom : 0, opened: 0}}>
         {replyTo ? null : (
-          <ThreadgateBtn threadgate={threadgate} onChange={setThreadgate} />
+          <ThreadgateBtn
+            threadgate={threadgate}
+            onChange={setThreadgate}
+            style={bottomBarAnimatedStyle}
+          />
         )}
         <View
           style={[
@@ -625,15 +668,108 @@ export function useComposerCancelRef() {
   return useRef<CancelRef>(null)
 }
 
+function useAnimatedBorders() {
+  const t = useTheme()
+  const hasScrolledTop = useSharedValue(0)
+  const hasScrolledBottom = useSharedValue(0)
+  const contentOffset = useSharedValue(0)
+  const scrollViewHeight = useSharedValue(Infinity)
+  const contentHeight = useSharedValue(0)
+
+  /**
+   * Make sure to run this on the UI thread!
+   */
+  const showHideBottomBorder = useCallback(
+    ({
+      newContentHeight,
+      newContentOffset,
+      newScrollViewHeight,
+    }: {
+      newContentHeight?: number
+      newContentOffset?: number
+      newScrollViewHeight?: number
+    }) => {
+      'worklet'
+
+      if (typeof newContentHeight === 'number')
+        contentHeight.value = Math.floor(newContentHeight)
+      if (typeof newContentOffset === 'number')
+        contentOffset.value = Math.floor(newContentOffset)
+      if (typeof newScrollViewHeight === 'number')
+        scrollViewHeight.value = Math.floor(newScrollViewHeight)
+
+      hasScrolledBottom.value = withTiming(
+        contentHeight.value - contentOffset.value - 5 > scrollViewHeight.value
+          ? 1
+          : 0,
+      )
+    },
+    [contentHeight, contentOffset, scrollViewHeight, hasScrolledBottom],
+  )
+
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: event => {
+      'worklet'
+      hasScrolledTop.value = withTiming(event.contentOffset.y > 0 ? 1 : 0)
+      showHideBottomBorder({
+        newContentOffset: event.contentOffset.y,
+        newContentHeight: event.contentSize.height,
+        newScrollViewHeight: event.layoutMeasurement.height,
+      })
+    },
+  })
+
+  const onScrollViewContentSizeChange = useCallback(
+    (_width: number, height: number) => {
+      'worklet'
+      showHideBottomBorder({
+        newContentHeight: height,
+      })
+    },
+    [showHideBottomBorder],
+  )
+
+  const onScrollViewLayout = useCallback(
+    (evt: LayoutChangeEvent) => {
+      'worklet'
+      showHideBottomBorder({
+        newScrollViewHeight: evt.nativeEvent.layout.height,
+      })
+    },
+    [showHideBottomBorder],
+  )
+
+  const topBarAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      borderBottomWidth: hairlineWidth,
+      borderColor: interpolateColor(
+        hasScrolledTop.value,
+        [0, 1],
+        ['transparent', t.atoms.border_contrast_medium.borderColor],
+      ),
+    }
+  })
+  const bottomBarAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      borderTopWidth: hairlineWidth,
+      borderColor: interpolateColor(
+        hasScrolledBottom.value,
+        [0, 1],
+        ['transparent', t.atoms.border_contrast_medium.borderColor],
+      ),
+    }
+  })
+
+  return {
+    scrollHandler,
+    onScrollViewContentSizeChange,
+    onScrollViewLayout,
+    topBarAnimatedStyle,
+    bottomBarAnimatedStyle,
+  }
+}
+
 const styles = StyleSheet.create({
-  topbar: {
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
-  topbarDesktop: {
-    paddingTop: 10,
-    paddingBottom: 10,
-    height: 50,
-  },
   topbarInner: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -698,7 +834,8 @@ const styles = StyleSheet.create({
   bottomBar: {
     flexDirection: 'row',
     paddingVertical: 4,
-    paddingLeft: 8,
+    // should be 8 but due to visual alignment we have to fudge it
+    paddingLeft: 7,
     paddingRight: 16,
     alignItems: 'center',
     borderTopWidth: hairlineWidth,
