@@ -6217,7 +6217,7 @@ msgstr "Votre profil"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:75
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
-msgstr "Votre profil, vos posts, vos fils d’actu et vos listes ne seront plus visibles pour les autres personnes sur Bluesky. Vous pouvez réactiver votre compte à tout moment en vous connectant."
+msgstr "Votre profil, vos posts, vos fils d’actu et vos listes ne seront plus visibles par d’autres personnes sur Bluesky. Vous pouvez réactiver votre compte à tout moment en vous connectant."
 
 #: src/view/com/composer/Composer.tsx:329
 msgid "Your reply has been published"
