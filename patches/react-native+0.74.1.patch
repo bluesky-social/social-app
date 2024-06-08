@@ -67,3 +67,19 @@ index b09e653..4c32b31 100644
 +}
 +
  @end
+diff --git a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/modules/core/JavaTimerManager.java b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/modules/core/JavaTimerManager.java
+index 5f5e1ab..aac00b6 100644
+--- a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/modules/core/JavaTimerManager.java
++++ b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/modules/core/JavaTimerManager.java
+@@ -99,8 +99,9 @@ public class JavaTimerManager {
+       }
+ 
+       // If the JS thread is busy for multiple frames we cancel any other pending runnable.
+-      if (mCurrentIdleCallbackRunnable != null) {
+-        mCurrentIdleCallbackRunnable.cancel();
++      IdleCallbackRunnable currentRunnable = mCurrentIdleCallbackRunnable;
++      if (currentRunnable != null) {
++        currentRunnable.cancel();
+       }
+ 
+       mCurrentIdleCallbackRunnable = new IdleCallbackRunnable(frameTimeNanos);
