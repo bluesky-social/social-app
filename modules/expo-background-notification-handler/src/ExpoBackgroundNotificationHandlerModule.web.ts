@@ -24,5 +24,5 @@ export const BackgroundNotificationHandler = {
   removeFromStringArrayAsync: async (_: string, __: string) => {},
   addManyToStringArrayAsync: async (_: string, __: string[]) => {},
   removeManyFromStringArrayAsync: async (_: string, __: string[]) => {},
-  setBadgeCountAsync: async (_: number) => {},
+  setBadgeCountAsync: async (_: 'generic' | 'messages', __: number) => {},
 } as ExpoBackgroundNotificationHandlerModule

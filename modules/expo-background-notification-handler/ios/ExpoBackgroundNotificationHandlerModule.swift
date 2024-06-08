@@ -114,8 +114,22 @@ public class ExpoBackgroundNotificationHandlerModule: Module {
       }
     }
     
-    AsyncFunction("setBadgeCountAsync") { (count: Int) in
-      userDefaults?.setValue(count, forKey: "badgeCount")
+    AsyncFunction("setBadgeCountAsync") { (type: BadgeCountType, count: Int) in
+      userDefaults?.setValue(count, forKey: type.toKeyName())
+    }
+  }
+}
+
+enum BadgeCountType : String, Enumerable {
+  case generic
+  case messages
+  
+  func toKeyName() -> String {
+    switch self {
+    case .generic:
+      return "badgeCountGeneric"
+    case .messages:
+      return "badgeCountMessages"
     }
   }
 }

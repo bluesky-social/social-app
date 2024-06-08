@@ -31,7 +31,10 @@ export type ExpoBackgroundNotificationHandlerModule = {
     forKey: keyof BackgroundNotificationHandlerPreferences,
     value: string[],
   ) => Promise<void>
-  setBadgeCountAsync: (count: number) => Promise<void>
+  setBadgeCountAsync: (
+    type: 'generic' | 'messages',
+    count: number,
+  ) => Promise<void>
 }
 
 // TODO there are more preferences in the native code, however they have not been added here yet.

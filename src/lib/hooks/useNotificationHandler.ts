@@ -26,6 +26,8 @@ type NotificationReason =
   | 'reply'
   | 'quote'
   | 'chat-message'
+  | 'mark-read-generic'
+  | 'mark-read-messages'
 
 type NotificationPayload =
   | {
@@ -191,6 +193,20 @@ export function useNotificationsHandler() {
         ) {
           return {
             shouldShowAlert: payload.convoId !== currentConvoId,
+            shouldPlaySound: false,
+            shouldSetBadge: false,
+          }
+        } else if (
+          payload.reason === 'mark-read-generic' ||
+          payload.reason === 'mark-read-messages'
+        ) {
+          logger.debug(
+            `Notifications: ${payload.reason}`,
+            {},
+            logger.DebugContext.notifications,
+          )
+          return {
+            shouldShowAlert: false,
             shouldPlaySound: false,
             shouldSetBadge: false,
           }

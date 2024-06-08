@@ -3,6 +3,17 @@ package expo.modules.backgroundnotificationhandler
 import android.content.Context
 import com.google.firebase.messaging.RemoteMessage
 
+enum class NotificationType(val type: String) {
+  Like("like"),
+  Repost("repost"),
+  Follow("follow"),
+  Reply("reply"),
+  Quote("quote"),
+  ChatMessage("chat-message"),
+  MarkReadGeneric("mark-read-generic"),
+  MarkReadMessages("mark-read-messages"),
+}
+
 class BackgroundNotificationHandler(
   private val context: Context,
   private val notifInterface: BackgroundNotificationHandlerInterface
@@ -13,8 +24,12 @@ class BackgroundNotificationHandler(
       return
     }
 
-    if (remoteMessage.data["reason"] == "chat-message") {
+    val type = NotificationType.valueOf(remoteMessage.data["reason"] ?: return)
+
+    if (type == NotificationType.ChatMessage) {
       mutateWithChatMessage(remoteMessage)
+    } else if (type == NotificationType.MarkReadGeneric || type == NotificationType.MarkReadMessages) {
+      return
     }
 
     notifInterface.showMessage(remoteMessage)
