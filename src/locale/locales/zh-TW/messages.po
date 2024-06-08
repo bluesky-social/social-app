@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: zh-TW for bluesky-social-app\n"
 "POT-Creation-Date: \n"
 "Report-Msgid-Bugs-To: Kuwa Lee <kuwalee1069@gmail.com>, Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-06-08 21:23+0800\n"
+"PO-Revision-Date: 2024-06-08 21:32+0800\n"
 "Last-Translator: \n"
 "Language-Team: Frudrax Cheng <i@cynosura.one>, Kuwa Lee <kuwalee1069@gmail.com>, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Language: zh_TW\n"
@@ -1474,7 +1474,7 @@ msgstr "完成"
 
 #: src/view/com/modals/lang-settings/ConfirmLanguagesButton.tsx:43
 msgid "Done{extraText}"
-msgstr "完成 {extraText}"
+msgstr "完成{extraText}"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:77
 #: src/view/screens/Settings/ExportCarDialog.tsx:81
