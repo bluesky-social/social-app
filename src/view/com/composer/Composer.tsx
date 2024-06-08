@@ -561,11 +561,7 @@ export const ComposePost = observer(function ComposePost({
                 ref={textInput}
                 richtext={richtext}
                 placeholder={selectTextInputPlaceholder}
-                // fixes autofocus on android
-                key={
-                  isAndroid ? (isModalReady ? 'ready' : 'animating') : 'static'
-                }
-                autoFocus={isAndroid ? isModalReady : true}
+                autoFocus={!isAndroid}
                 setRichText={setRichText}
                 onPhotoPasted={onPhotoPasted}
                 onPressPublish={onPressPublish}
