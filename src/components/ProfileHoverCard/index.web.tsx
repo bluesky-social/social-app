@@ -5,6 +5,7 @@ import {flip, offset, shift, size, useFloating} from '@floating-ui/react-dom'
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {getModerationCauseKey} from '#/lib/moderation'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -27,6 +28,7 @@ import {Loader} from '#/components/Loader'
 import {Portal} from '#/components/Portal'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import {ProfileLabel} from '../moderation/ProfileHeaderAlerts'
 import {ProfileHoverCardProps} from './types'
 
 const floatingMiddlewares = [
@@ -401,29 +403,41 @@ function Inner({
           />
         </Link>
 
-        {!isMe && (
-          <Button
-            size="small"
-            color={profileShadow.viewer?.following ? 'secondary' : 'primary'}
-            variant="solid"
-            label={
-              profileShadow.viewer?.following
-                ? _(msg`Following`)
-                : _(msg`Follow`)
-            }
-            style={[a.rounded_full]}
-            onPress={profileShadow.viewer?.following ? unfollow : follow}>
-            <ButtonIcon
-              position="left"
-              icon={profileShadow.viewer?.following ? Check : Plus}
-            />
-            <ButtonText>
-              {profileShadow.viewer?.following
-                ? _(msg`Following`)
-                : _(msg`Follow`)}
-            </ButtonText>
-          </Button>
-        )}
+        {!isMe &&
+          (blockHide ? (
+            <Link to={profileURL} label={_(msg`View profile`)} onPress={hide}>
+              <Button
+                size="small"
+                color={'secondary'}
+                variant="solid"
+                label={_(msg`Unblock`)}
+                style={[a.rounded_full]}>
+                <ButtonText>{_(msg`View profile`)}</ButtonText>
+              </Button>
+            </Link>
+          ) : (
+            <Button
+              size="small"
+              color={profileShadow.viewer?.following ? 'secondary' : 'primary'}
+              variant="solid"
+              label={
+                profileShadow.viewer?.following
+                  ? _(msg`Following`)
+                  : _(msg`Follow`)
+              }
+              style={[a.rounded_full]}
+              onPress={profileShadow.viewer?.following ? unfollow : follow}>
+              <ButtonIcon
+                position="left"
+                icon={profileShadow.viewer?.following ? Check : Plus}
+              />
+              <ButtonText>
+                {profileShadow.viewer?.following
+                  ? _(msg`Following`)
+                  : _(msg`Follow`)}
+              </ButtonText>
+            </Button>
+          ))}
       </View>
 
       <Link to={profileURL} label={_(msg`View profile`)} onPress={hide}>
@@ -438,6 +452,18 @@ function Inner({
           <ProfileHeaderHandle profile={profileShadow} />
         </View>
       </Link>
+
+      {blockHide && (
+        <View style={[a.flex_row, a.flex_wrap, a.gap_xs]}>
+          {moderation.ui('profileView').alerts.map(cause => (
+            <ProfileLabel
+              key={getModerationCauseKey(cause)}
+              cause={cause}
+              withModerationDetailsDialog={false}
+            />
+          ))}
+        </View>
+      )}
 
       {!blockHide && (
         <>
