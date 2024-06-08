@@ -5988,7 +5988,7 @@ msgstr "您現在可以使用新密碼登入。"
 
 #: src/screens/Deactivated.tsx:136
 msgid "You can reactivate your account to continue logging in. Your profile and posts will be visible to other users."
-msgstr "您可以登入以重新啟用帳號。其他用戶可以看到您的個人檔案和貼文。"
+msgstr "您可以登入以重新啟用帳號。其他用戶將可以重新看到您的個人檔案和貼文。"
 
 #: src/view/com/profile/ProfileFollowers.tsx:86
 msgid "You do not have any followers."
