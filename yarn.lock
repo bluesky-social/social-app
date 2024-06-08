@@ -12180,10 +12180,10 @@ expo-navigation-bar@~3.0.4:
     "@react-native/normalize-colors" "~0.74.83"
     debug "^4.3.2"
 
-expo-notifications@~0.28.3:
-  version "0.28.3"
-  resolved "https://registry.yarnpkg.com/expo-notifications/-/expo-notifications-0.28.3.tgz#9076c2bd69c3de3338a2e2161c8bd5f18cb440cb"
-  integrity sha512-Xaj82eQUJzJXa8+giZr708ih86GGtkGS8N01epoiDkTKC8Z9783UJ8Pf8+PSFSfHsY3Sd8TJpQrD9n7QnGHwGQ==
+expo-notifications@~0.28.7:
+  version "0.28.7"
+  resolved "https://registry.yarnpkg.com/expo-notifications/-/expo-notifications-0.28.7.tgz#14826c10d126b1dd16d1604add2a4766aecf7591"
+  integrity sha512-P68/IlnxTtKjfHy22nC+o/H4VSgBVrmTQcx42JCevTbVQB8JTITmR42hvpZh8GUecB7jNOsuVokTTDZDE6aSyg==
   dependencies:
     "@expo/image-utils" "^0.5.0"
     "@ide/backoff" "^1.0.0"
