@@ -43,7 +43,13 @@ export function ProfileHeaderAlerts({
   )
 }
 
-function ProfileLabel({cause}: {cause: ModerationCause}) {
+export function ProfileLabel({
+  cause,
+  withModerationDetailsDialog = true,
+}: {
+  cause: ModerationCause
+  withModerationDetailsDialog?: boolean
+}) {
   const t = useTheme()
   const control = useModerationDetailsDialogControl()
   const desc = useModerationCauseDescription(cause)
@@ -87,7 +93,9 @@ function ProfileLabel({cause}: {cause: ModerationCause}) {
         )}
       </Button>
 
-      <ModerationDetailsDialog control={control} modcause={cause} />
+      {withModerationDetailsDialog && (
+        <ModerationDetailsDialog control={control} modcause={cause} />
+      )}
     </>
   )
 }
