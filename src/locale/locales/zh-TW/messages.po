@@ -861,7 +861,7 @@ msgstr "點擊這裡以瞭解有關停用帳號的詳細資訊"
 
 #: src/view/com/modals/DeleteAccount.tsx:216
 msgid "Click here for more information."
-msgstr "點擊這裡以了解更多信息。"
+msgstr "點擊這裡以瞭解更多資訊。"
 
 #: src/components/TagMenu/index.web.tsx:138
 msgid "Click here to open tag menu for {tag}"
