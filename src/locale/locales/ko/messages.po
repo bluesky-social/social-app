@@ -3636,7 +3636,7 @@ msgstr "{0} 님이 이 라벨을 잘못 적용했다고 생각하는 이유를 �
 
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:110
 msgid "Please explain why you think your chats were incorrectly disabled"
-msgstr "채팅이 잘못 비활성화되었다고 생각하는 이유를 설명해 주세요"
+msgstr "대화가 잘못 비활성화되었다고 생각하는 이유를 설명해 주세요"
 
 #: src/lib/hooks/useAccountSwitcher.ts:48
 #: src/lib/hooks/useAccountSwitcher.ts:58
@@ -3773,7 +3773,7 @@ msgstr "개인정보 처리방침"
 
 #: src/components/dms/MessagesNUX.tsx:91
 msgid "Privately chat with other users."
-msgstr "다른 사용자와 비공개로 채팅하세요."
+msgstr "다른 사용자와 비공개로 대화하세요."
 
 #: src/screens/Login/ForgotPasswordForm.tsx:156
 msgid "Processing..."
@@ -5159,7 +5159,7 @@ msgstr "이 이의신청은 Bluesky Moderation Service로 보내집니다."
 
 #: src/screens/Messages/Conversation/MessageListError.tsx:18
 msgid "This chat was disconnected"
-msgstr "이 채팅은 연결이 끊어졌습니다"
+msgstr "이 대화는 연결이 끊어졌습니다"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:19
 msgid "This content has been hidden by the moderators."
