@@ -1,5 +1,9 @@
 import React from 'react'
-import {AppBskyActorDefs} from '@atproto/api'
+import {
+  AppBskyActorDefs,
+  AppBskyGraphDefs,
+  AppBskyGraphStarterpack,
+} from '@atproto/api'
 import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 
 const steps = ['Details', 'Profiles', 'Feeds'] as const
@@ -22,7 +26,6 @@ interface State {
   currentStep: Step
   name?: string
   description?: string
-  avatar?: string
   profiles: AppBskyActorDefs.ProfileViewBasic[]
   feeds: GeneratorView[]
   processing: boolean
@@ -99,29 +102,35 @@ function reducer(state: State, action: Action): State {
 
 // TODO supply the initial state to this component
 export function Provider({
-  initialState,
-  initialStep = 'Details',
+  starterPack,
   children,
 }: {
-  initialState?: any // TODO update this type
-  initialStep?: Step
+  starterPack?: AppBskyGraphDefs.StarterPackView
   children: React.ReactNode
 }) {
-  const [state, dispatch] = React.useReducer(
-    reducer,
-    initialState
-      ? {
-          ...initialState,
-          step: initialStep,
-        }
-      : {
-          canNext: false,
-          currentStep: initialStep,
-          profiles: [],
-          feeds: [],
-          processing: false,
-        },
-  )
+  const createInitialState = (): State => {
+    if (starterPack && AppBskyGraphStarterpack.isRecord(starterPack.record)) {
+      return {
+        canNext: false,
+        currentStep: 'Details',
+        name: starterPack.record.name,
+        description: starterPack.record.description,
+        profiles: starterPack.listItemsSample?.map(item => item.subject) || [],
+        feeds: starterPack.feeds || [],
+        processing: false,
+      }
+    }
+
+    return {
+      canNext: false,
+      currentStep: 'Details',
+      profiles: [],
+      feeds: [],
+      processing: false,
+    }
+  }
+
+  const [state, dispatch] = React.useReducer(reducer, createInitialState())
 
   return (
     <StateContext.Provider value={[state, dispatch]}>

@@ -6,7 +6,13 @@ import {useAgent, useSession} from 'state/session'
 
 const RQKEY_ROOT = 'starter-pack'
 
-export function useStarterPackQuery({did, rkey}: {did?: string; rkey: string}) {
+export function useStarterPackQuery({
+  did,
+  rkey,
+}: {
+  did?: string
+  rkey?: string
+}) {
   const agent = useAgent()
   const uri = `at://${did}/app.bsky.graph.starterpack/${rkey}`
 
@@ -18,7 +24,7 @@ export function useStarterPackQuery({did, rkey}: {did?: string; rkey: string}) {
       })
       return res.data.starterPack
     },
-    enabled: Boolean(did),
+    enabled: Boolean(did) && Boolean(rkey),
     staleTime: STALE.MINUTES.FIVE,
   })
 }

@@ -43,9 +43,8 @@ export type CommonNavigatorParams = {
   StarterPack: {name: string; rkey: string}
   StarterPackLanding: {name: string; rkey: string}
   StarterPackWizard: {
-    mode: 'Create' | 'Edit'
-    id?: string
-    initialStep?: 'Details' | 'Profiles' | 'Feeds'
+    name?: string
+    rkey?: string
   }
 }
 
@@ -107,9 +106,8 @@ export type AllNavigatorParams = CommonNavigatorParams & {
   StarterPack: {name: string; rkey: string}
   StarterPackLanding: {name: string; rkey: string}
   StarterPackWizard: {
-    mode: 'Create' | 'Edit'
-    id?: string
-    initialStep?: 'Details' | 'Profiles' | 'Feeds'
+    name?: string
+    rkey?: string
   }
 }
 

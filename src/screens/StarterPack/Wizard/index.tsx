@@ -1,7 +1,7 @@
 import React from 'react'
 import {Keyboard, TouchableOpacity, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
-import {AppBskyActorDefs, AtUri} from '@atproto/api'
+import {AppBskyActorDefs, AppBskyGraphDefs, AtUri} from '@atproto/api'
 import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Plural, Trans} from '@lingui/macro'
@@ -14,6 +14,8 @@ import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
 import {enforceLen} from 'lib/strings/helpers'
 import {isAndroid, isNative, isWeb} from 'platform/detection'
 import {useProfileQuery} from 'state/queries/profile'
+import {useResolveDidQuery} from 'state/queries/resolve-uri'
+import {useStarterPackQuery} from 'state/queries/useStarterPackQuery'
 import {useAgent, useSession} from 'state/session'
 import {useSetMinimalShellMode} from 'state/shell'
 import {UserAvatar} from 'view/com/util/UserAvatar'
@@ -25,6 +27,7 @@ import {StepProfiles} from '#/screens/StarterPack/Wizard/StepProfiles'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
+import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {WizardEditListDialog} from '#/components/StarterPack/Wizard/WizardEditListDialog'
 import {Text} from '#/components/Typography'
@@ -34,41 +37,42 @@ export function Wizard({
   route,
 }: NativeStackScreenProps<CommonNavigatorParams, 'StarterPackWizard'>) {
   const params = route.params
-  const {mode, initialStep, id} = params ?? {}
+  const {name, rkey} = params ?? {}
+
+  const {_} = useLingui()
 
   // TODO load query here
-  const starterPack = {}
+  const {
+    data: did,
+    isLoading: isLoadingDid,
+    isError: isErrorDid,
+  } = useResolveDidQuery(name)
+  const {
+    data: starterPack,
+    isLoading: isLoadingStarterPack,
+    isError: isErrorStarterPAck,
+  } = useStarterPackQuery({did, rkey})
 
-  // TODO use this to wait for loading the starterpack for editing
-  if (mode === 'Edit' && false) {
-    // Await here
-    return
+  if (name && rkey && !starterPack) {
+    return (
+      <ListMaybePlaceholder
+        isLoading={isLoadingDid || isLoadingStarterPack}
+        isError={isErrorDid || isErrorStarterPAck}
+        errorMessage={_(msg`Could not find that starter pack`)}
+      />
+    )
   }
 
-  return (
-    <WizardReady
-      mode={mode}
-      id={id}
-      initialStep={initialStep}
-      starterPack={starterPack}
-    />
-  )
+  return <WizardReady starterPack={starterPack} />
 }
 
 function WizardReady({
-  mode,
-  initialStep,
   starterPack,
 }: {
-  mode: 'Create' | 'Edit'
-  id?: string
-  initialStep?: 'Details' | 'Profiles' | 'Feeds'
-  starterPack?: any
+  starterPack?: AppBskyGraphDefs.StarterPackView
 }) {
   return (
-    <Provider
-      initialState={mode === 'Edit' ? starterPack : undefined}
-      initialStep={initialStep}>
+    <Provider starterPack={starterPack}>
       <WizardInner />
     </Provider>
   )
