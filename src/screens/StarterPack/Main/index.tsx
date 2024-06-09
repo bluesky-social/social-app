@@ -132,10 +132,12 @@ function Header({
                     a.justify_center,
                     a.rounded_sm,
                     {backgroundColor: t.palette.primary_500},
-                    state.hovered && {backgroundColor: t.palette.primary_600},
+                    (state.hovered || state.pressed) && {
+                      backgroundColor: t.palette.primary_600,
+                    },
                   ]}
                   {...props}>
-                  <Text style={[a.font_bold]}>
+                  <Text style={[a.font_bold, {color: 'white'}]}>
                     <Trans>Share</Trans>
                   </Text>
                 </Pressable>
