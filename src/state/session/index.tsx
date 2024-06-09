@@ -14,6 +14,7 @@ import {
   createAgentAndCreateAccount,
   createAgentAndLogin,
   createAgentAndResume,
+  sessionAccountToSession,
 } from './agent'
 import {getInitialState, reducer} from './reducer'
 
@@ -176,8 +177,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           resumeSession(syncedAccount)
         } else {
           const agent = state.currentAgentState.agent as BskyAgent
-          // @ts-ignore TODO
-          agent.session = syncedAccount
+          agent.session = sessionAccountToSession(syncedAccount)
         }
       }
     })
