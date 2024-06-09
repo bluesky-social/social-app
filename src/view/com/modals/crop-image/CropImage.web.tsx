@@ -204,7 +204,8 @@ const styles = StyleSheet.create({
     height: 400,
   },
   imageEditor: {
-    maxWidth: '100%',
+    width: '100%',
+    height: '100%',
   },
   ctrls: {
     flexDirection: 'row',
