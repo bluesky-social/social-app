@@ -3,10 +3,11 @@ import {Pressable, View} from 'react-native'
 import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {makeProfileLink} from 'lib/routes/links'
-import {CommonNavigatorParams} from 'lib/routes/types'
+import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
 import {shareUrl} from 'lib/sharing'
 import {isWeb} from 'platform/detection'
 import {useResolveDidQuery} from 'state/queries/resolve-uri'
@@ -62,7 +63,9 @@ export function StarterPackScreen({
         <PagerWithHeader
           items={items}
           isHeaderReady={true}
-          renderHeader={() => <Header starterPack={starterPack} />}>
+          renderHeader={() => (
+            <Header starterPack={starterPack} name={name} rkey={rkey} />
+          )}>
           {starterPack.list
             ? ({headerHeight, scrollElRef}) => (
                 <ProfilesList
@@ -95,11 +98,16 @@ export function StarterPackScreen({
 
 function Header({
   starterPack,
+  name,
+  rkey,
 }: {
   starterPack: AppBskyGraphDefs.StarterPackView
+  name: string
+  rkey: string
 }) {
   const {_} = useLingui()
   const t = useTheme()
+  const navigation = useNavigation<NavigationProp>()
   const {currentAccount} = useSession()
   const qrCodeDialogControl = useDialogControl()
 
@@ -174,7 +182,9 @@ function Header({
               variant="solid"
               color="secondary"
               size="small"
-              onPress={() => {}}>
+              onPress={() =>
+                navigation.navigate('StarterPackWizard', {name, rkey})
+              }>
               <ButtonText>
                 <Trans>Edit</Trans>
               </ButtonText>
