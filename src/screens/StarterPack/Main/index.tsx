@@ -1,5 +1,5 @@
 import React from 'react'
-import {View} from 'react-native'
+import {Pressable, View} from 'react-native'
 import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -123,20 +123,23 @@ function Header({
         <View style={[a.flex_row, a.gap_sm]}>
           <Menu.Root>
             <Menu.Trigger label={_(msg`Repost or quote post`)}>
-              {({props}) => {
-                return (
-                  <Button
-                    label={_(msg`Share`)}
-                    variant="solid"
-                    color="primary"
-                    size="small"
-                    {...props}>
-                    <ButtonText>
-                      <Trans>Share</Trans>
-                    </ButtonText>
-                  </Button>
-                )
-              }}
+              {({props, state}) => (
+                <Pressable
+                  style={[
+                    a.px_lg,
+                    a.py_xs,
+                    a.align_center,
+                    a.justify_center,
+                    a.rounded_sm,
+                    {backgroundColor: t.palette.primary_500},
+                    state.hovered && {backgroundColor: t.palette.primary_600},
+                  ]}
+                  {...props}>
+                  <Text style={[a.font_bold]}>
+                    <Trans>Share</Trans>
+                  </Text>
+                </Pressable>
+              )}
             </Menu.Trigger>
             <Menu.Outer style={{minWidth: 170}}>
               <Menu.Group>
