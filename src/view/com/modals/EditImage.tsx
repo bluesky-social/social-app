@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {Pressable, StyleSheet, View} from 'react-native'
+import {Pressable, ScrollView, StyleSheet, View} from 'react-native'
 import {useWindowDimensions} from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient'
 import {MaterialIcons} from '@expo/vector-icons'
@@ -194,9 +194,9 @@ export const Component = observer(function EditImageImpl({
   }
 
   return (
-    <View
+    <ScrollView
       testID="editImageModal"
-      style={[
+      contentContainerStyle={[
         pal.view,
         styles.container,
         s.flex1,
@@ -336,7 +336,7 @@ export const Component = observer(function EditImageImpl({
           </LinearGradient>
         </Pressable>
       </View>
-    </View>
+    </ScrollView>
   )
 })
 
