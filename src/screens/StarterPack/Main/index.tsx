@@ -56,8 +56,6 @@ export function StarterPackScreen({
     ...(starterPack.feeds?.length ? ['Feeds'] : []),
   ]
 
-  console.log(starterPack.feeds)
-
   return (
     <CenteredView style={[a.h_full_vh]}>
       <View style={isWeb ? {minHeight: '100%'} : {height: '100%'}}>
