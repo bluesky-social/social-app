@@ -1,7 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
 import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
@@ -183,8 +183,13 @@ function Header({
         <Text style={[a.text_md]}>{record.description}</Text>
         <Text style={[a.font_bold, a.text_md, t.atoms.text_contrast_medium]}>
           <Trans>
-            {starterPack.joinedAllTimeCount} people have joined this starter
-            pack!
+            {starterPack.joinedAllTimeCount || 0}{' '}
+            <Plural
+              value={starterPack.joinedAllTimeCount || 0}
+              one="person has"
+              other="people have"
+            />{' '}
+            joined this starter pack!
           </Trans>
         </Text>
       </View>
