@@ -1,7 +1,7 @@
 import React from 'react'
 import {Keyboard, TouchableOpacity, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
-import {AppBskyActorDefs, AppBskyGraphDefs, AtUri} from '@atproto/api'
+import {AppBskyActorDefs, AtUri} from '@atproto/api'
 import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Plural, Trans} from '@lingui/macro'
@@ -13,6 +13,7 @@ import {HITSLOP_10} from 'lib/constants'
 import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
 import {enforceLen} from 'lib/strings/helpers'
 import {isAndroid, isNative, isWeb} from 'platform/detection'
+import {useListMembersQuery} from 'state/queries/list-members'
 import {useProfileQuery} from 'state/queries/profile'
 import {useResolveDidQuery} from 'state/queries/resolve-uri'
 import {useStarterPackQuery} from 'state/queries/useStarterPackQuery'
@@ -50,29 +51,26 @@ export function Wizard({
   const {
     data: starterPack,
     isLoading: isLoadingStarterPack,
-    isError: isErrorStarterPAck,
+    isError: isErrorStarterPack,
   } = useStarterPackQuery({did, rkey})
 
-  if (name && rkey && !starterPack) {
+  const listUri = starterPack?.list?.uri
+
+  const {data} = useListMembersQuery(listUri)
+  const profiles = data?.pages.flatMap(p => p.items.map(i => i.subject))
+
+  if (name && rkey && !starterPack && (!listUri || (listUri && !profiles))) {
     return (
       <ListMaybePlaceholder
         isLoading={isLoadingDid || isLoadingStarterPack}
-        isError={isErrorDid || isErrorStarterPAck}
+        isError={isErrorDid || isErrorStarterPack}
         errorMessage={_(msg`Could not find that starter pack`)}
       />
     )
   }
 
-  return <WizardReady starterPack={starterPack} />
-}
-
-function WizardReady({
-  starterPack,
-}: {
-  starterPack?: AppBskyGraphDefs.StarterPackView
-}) {
   return (
-    <Provider starterPack={starterPack}>
+    <Provider starterPack={starterPack} profiles={profiles}>
       <WizardInner />
     </Provider>
   )
