@@ -86,6 +86,25 @@ const DEFAULT_AC = h('Stack', {gap: 10}, [
         ]),
       ]),
       h('Box', {pad: {x: 10}}, [
+        h('Label', {text: 'ActorLabel', size: 10, weight: 'bold'}),
+      ]),
+      h('Box', {border: 'secondary', corner: 8, pad: {x: 16, y: 12}}, [
+        h('Stack', {gap: 10}, [
+          h('Stack', {direction: 'row', gap: 8}, [
+            h('Label', {weight: 'bold', text: 'Display Name:'}),
+            h('ActorLabel', {uri: 'bsky.app', field: 'displayName'}),
+          ]),
+          h('Stack', {direction: 'row', gap: 8}, [
+            h('Label', {weight: 'bold', text: 'Handle:'}),
+            h('ActorLabel', {uri: 'bsky.app', field: 'handle'}),
+          ]),
+          h('Stack', {direction: 'row', gap: 8}, [
+            h('Label', {weight: 'bold', text: 'Description:'}),
+            h('ActorLabel', {uri: 'bsky.app', field: 'description'}),
+          ]),
+        ]),
+      ]),
+      h('Box', {pad: {x: 10}}, [
         h('Label', {text: 'Embed (Actor)', size: 10, weight: 'bold'}),
       ]),
       h('Box', {border: 'secondary', corner: 8}, [

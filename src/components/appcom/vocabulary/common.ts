@@ -30,3 +30,7 @@ export const pad = z
       })),
   ])
   .optional()
+
+export const color = z
+  .enum(['default', 'primary', 'secondary', 'positive', 'negative', 'inverted'])
+  .default('default')

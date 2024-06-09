@@ -5,6 +5,7 @@ import {ZodError} from 'zod'
 
 import {Text} from '#/components/Typography'
 import type {AppComNode} from '../types'
+import {ActorLabel} from './ActorLabel'
 import {Avatar} from './Avatar'
 import {Box} from './Box'
 import {Embed} from './Embed'
@@ -14,6 +15,7 @@ import {Stack} from './Stack'
 import {Tabs} from './Tabs'
 
 export const VOCAB: Record<string, React.ComponentType<any>> = {
+  ActorLabel,
   Avatar,
   Box,
   Embed,

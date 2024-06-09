@@ -2,20 +2,12 @@ import React from 'react'
 import {z} from 'zod'
 
 import {Text} from '#/components/Typography'
+import {color} from './common'
 import {useFontColor} from './hooks'
 
-const labelProps = z.object({
+export const labelProps = z.object({
   text: z.string(),
-  color: z
-    .enum([
-      'default',
-      'primary',
-      'secondary',
-      'positive',
-      'negative',
-      'inverted',
-    ])
-    .default('default'),
+  color,
   size: z
     .number()
     .positive()
