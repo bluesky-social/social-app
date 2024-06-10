@@ -82,9 +82,16 @@ function HomeScreenReady({
   React.useLayoutEffect(() => {
     let initialIndex = selectedIndex
     if (usedStarterPack) {
-      initialIndex = allFeeds.findIndex(
-        f => f === `feedgen|${usedStarterPack.initialFeed}`,
-      )
+      if (usedStarterPack.initialFeed === 'following') {
+        initialIndex = allFeeds.findIndex(f => f === 'following')
+      } else {
+        initialIndex = allFeeds.findIndex(
+          f => f === `feedgen|${usedStarterPack.initialFeed}`,
+        )
+      }
+      if (initialIndex === -1) {
+        initialIndex = 0
+      }
       setUsedStarterPack(undefined)
     }
 

@@ -136,7 +136,7 @@ export function StepFinished() {
       if (usedStarterPack) {
         setUsedStarterPack({
           ...usedStarterPack,
-          initialFeed: starterPack?.feeds?.[0].uri ?? undefined,
+          initialFeed: starterPack?.feeds?.[0].uri ?? 'following',
         })
       }
     } catch (e: any) {
