@@ -17,7 +17,6 @@ import {
 import {
   KeyboardAvoidingView,
   KeyboardStickyView,
-  useKeyboardContext,
 } from 'react-native-keyboard-controller'
 import Animated, {
   interpolateColor,
@@ -108,9 +107,7 @@ export const ComposePost = observer(function ComposePost({
   text: initText,
   imageUris: initImageUris,
   cancelRef,
-  isModalReady,
 }: Props & {
-  isModalReady: boolean
   cancelRef?: React.RefObject<CancelRef>
 }) {
   const {currentAccount} = useSession()
@@ -129,17 +126,6 @@ export const ComposePost = observer(function ComposePost({
   const discardPromptControl = Prompt.usePromptControl()
   const {closeAllDialogs} = useDialogStateControlContext()
   const t = useTheme()
-
-  // Disable this in the composer to prevent any extra keyboard height being applied.
-  // See https://github.com/bluesky-social/social-app/pull/4399
-  const {setEnabled} = useKeyboardContext()
-  React.useEffect(() => {
-    if (!isAndroid) return
-    setEnabled(false)
-    return () => {
-      setEnabled(true)
-    }
-  }, [setEnabled])
 
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isProcessing, setIsProcessing] = useState(false)
@@ -180,6 +166,7 @@ export const ComposePost = observer(function ComposePost({
   const insets = useSafeAreaInsets()
   const viewStyles = useMemo(
     () => ({
+      paddingTop: isAndroid ? insets.top : 0,
       paddingBottom:
         isAndroid || (isIOS && !isKeyboardVisible) ? insets.bottom : 0,
     }),
@@ -402,37 +389,6 @@ export const ComposePost = observer(function ComposePost({
     bottomBarAnimatedStyle,
   } = useAnimatedBorders()
 
-  // Backup focus on android, if the keyboard *still* refuses to show
-  useEffect(() => {
-    if (!isAndroid) return
-    if (!isModalReady) return
-
-    function tryFocus() {
-      if (!Keyboard.isVisible()) {
-        textInput.current?.blur()
-        textInput.current?.focus()
-      }
-    }
-
-    tryFocus()
-    // Retry with enough gap to avoid interrupting the previous attempt.
-    // Unfortunately we don't know which attempt will succeed.
-    const retryInterval = setInterval(tryFocus, 500)
-
-    function stopTrying() {
-      clearInterval(retryInterval)
-    }
-
-    // Deactivate this fallback as soon as anything happens.
-    const sub1 = Keyboard.addListener('keyboardDidShow', stopTrying)
-    const sub2 = Keyboard.addListener('keyboardDidHide', stopTrying)
-    return () => {
-      clearInterval(retryInterval)
-      sub1.remove()
-      sub2.remove()
-    }
-  }, [isModalReady])
-
   return (
     <>
       <KeyboardAvoidingView
@@ -561,11 +517,7 @@ export const ComposePost = observer(function ComposePost({
                 ref={textInput}
                 richtext={richtext}
                 placeholder={selectTextInputPlaceholder}
-                // fixes autofocus on android
-                key={
-                  isAndroid ? (isModalReady ? 'ready' : 'animating') : 'static'
-                }
-                autoFocus={isAndroid ? isModalReady : true}
+                autoFocus
                 setRichText={setRichText}
                 onPhotoPasted={onPhotoPasted}
                 onPressPublish={onPressPublish}
