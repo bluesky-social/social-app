@@ -17,7 +17,7 @@ import {
   ModerationOpts,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
-import {msg, plural, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
