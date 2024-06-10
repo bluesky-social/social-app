@@ -8,7 +8,7 @@ import {useNavigation} from '@react-navigation/native'
 
 import {useSetDrawerOpen} from '#/state/shell'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {useMinimalShellHeaderTransform} from 'lib/hooks/useMinimalShellHeaderTransform'
+import {useMinimalShellHeaderTransform} from 'lib/hooks/useMinimalShellTransform'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {NavigationProp} from 'lib/routes/types'

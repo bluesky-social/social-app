@@ -14,7 +14,7 @@ import {
 import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
-import {useMinimalShellFabTransform} from 'lib/hooks/useMinimalShellFabTransform'
+import {useMinimalShellFabTransform} from 'lib/hooks/useMinimalShellTransform'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {makeRecordUri} from 'lib/strings/url-helpers'

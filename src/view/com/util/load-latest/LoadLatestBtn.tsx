@@ -6,7 +6,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useMediaQuery} from 'react-responsive'
 
 import {HITSLOP_20} from '#/lib/constants'
-import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellFabTransform'
+import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {clamp} from '#/lib/numbers'

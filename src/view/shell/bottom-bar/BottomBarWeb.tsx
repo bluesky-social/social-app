@@ -6,7 +6,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigationState} from '@react-navigation/native'
 
-import {useMinimalShellFooterTransform} from '#/lib/hooks/useMinimalShellFooterTransform'
+import {useMinimalShellFooterTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {clamp} from '#/lib/numbers'
 import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
