@@ -40,9 +40,13 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
   const prefetchProfileQuery = usePrefetchProfileQuery()
 
   const profileLink = makeProfileLink(opts.author)
-  const onPointerEnter = isWeb
-    ? () => prefetchProfileQuery(opts.author.did)
-    : undefined
+  const prefetchedProfile = React.useRef(false)
+  const onPointerMove = React.useCallback(() => {
+    if (!prefetchedProfile.current) {
+      prefetchedProfile.current = true
+      prefetchProfileQuery(opts.author.did)
+    }
+  }, [opts.author.did, prefetchProfileQuery])
 
   const queryClient = useQueryClient()
   const onOpenAuthor = opts.onOpenAuthor
@@ -67,7 +71,9 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
         </View>
       )}
       <ProfileHoverCard inline did={opts.author.did}>
-        <View onPointerMove={onPointerEnter} style={[a.flex_1]}>
+        <View
+          onPointerMove={isWeb ? onPointerMove : undefined}
+          style={[a.flex_1]}>
           <Text
             numberOfLines={1}
             style={[styles.maxWidth, pal.textLight, opts.displayNameStyle]}>
