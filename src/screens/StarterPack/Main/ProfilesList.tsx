@@ -10,7 +10,12 @@ import {List, ListRef} from 'view/com/util/List'
 import {SectionRef} from '#/screens/Profile/Sections/types'
 
 function renderItem({item}: {item: AppBskyActorDefs.ProfileViewBasic}) {
-  return <ProfileCardWithFollowBtn profile={item} />
+  return (
+    <ProfileCardWithFollowBtn
+      profile={item}
+      logContext="StarterPackProfilesList"
+    />
+  )
 }
 
 function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic, index: number) {
