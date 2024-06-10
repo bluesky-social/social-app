@@ -114,13 +114,13 @@ public class ExpoBackgroundNotificationHandlerModule: Module {
       }
     }
     
-    AsyncFunction("setBadgeCountAsync") { (type: BadgeCountType, count: Int) in
+    AsyncFunction("setBadgeCountAsync") { (type: BadgeType, count: Int) in
       userDefaults?.setValue(count, forKey: type.toKeyName())
     }
   }
 }
 
-enum BadgeCountType : String, Enumerable {
+enum BadgeType : String, Enumerable {
   case generic
   case messages
   
