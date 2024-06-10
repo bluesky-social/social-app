@@ -72,8 +72,11 @@ export function useNotificationsRegistration() {
 
 export function useRequestNotificationsPermission() {
   const gate = useGate()
+  const {currentAccount} = useSession()
 
-  return async (context: 'StartOnboarding' | 'AfterOnboarding' | 'Login') => {
+  return async (
+    context: 'StartOnboarding' | 'AfterOnboarding' | 'Login' | 'Home',
+  ) => {
     const permissions = await Notifications.getPermissionsAsync()
 
     if (
@@ -93,6 +96,9 @@ export function useRequestNotificationsPermission() {
       context === 'AfterOnboarding' &&
       !gate('request_notifications_permission_after_onboarding_v2')
     ) {
+      return
+    }
+    if (context === 'Home' && !currentAccount) {
       return
     }
 
