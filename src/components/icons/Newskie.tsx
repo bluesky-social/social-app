@@ -3,7 +3,13 @@ import {View} from 'react-native'
 import Svg, {Path} from 'react-native-svg'
 export function Newskie({size}: {size: number}) {
   return (
-    <View style={{height: size, width: size}}>
+    <View
+      style={{
+        height: size,
+        width: size,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
       <Svg fill="none" viewBox="0 0 21 11">
         <Path
           fill="#FFC404"
