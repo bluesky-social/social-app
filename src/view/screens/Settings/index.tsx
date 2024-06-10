@@ -910,9 +910,7 @@ export function SettingsScreen({}: Props) {
             </TouchableOpacity>
             <TouchableOpacity
               style={[pal.view, styles.linkCardNoIcon]}
-              onPress={() =>
-                navigation.navigate('StarterPackWizard', {mode: 'Create'})
-              }
+              onPress={() => navigation.navigate('StarterPackWizard', {})}
               accessibilityRole="button"
               accessibilityLabel={_(msg`Navigate to Starter Pack Wizard`)}
               accessibilityHint={_(msg`Navigates to Starter Pack Wizard`)}>
