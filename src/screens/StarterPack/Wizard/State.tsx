@@ -5,6 +5,9 @@ import {
   AppBskyGraphStarterpack,
 } from '@atproto/api'
 import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
+import {msg} from '@lingui/macro'
+
+import * as Toast from '#/view/com/util/Toast'
 
 const steps = ['Details', 'Profiles', 'Feeds'] as const
 type Step = (typeof steps)[number]
@@ -20,6 +23,7 @@ type Action =
   | {type: 'AddFeed'; feed: GeneratorView}
   | {type: 'RemoveFeed'; feedUri: string}
   | {type: 'SetProcessing'; processing: boolean}
+  | {type: 'SetError'; error: string}
 
 interface State {
   canNext: boolean
@@ -29,6 +33,7 @@ interface State {
   profiles: AppBskyActorDefs.ProfileViewBasic[]
   feeds: GeneratorView[]
   processing: boolean
+  error?: string
 }
 
 type TStateContext = [State, (action: Action) => void]
@@ -58,7 +63,11 @@ function reducer(state: State, action: Action): State {
       updatedState = {...state, description: action.description}
       break
     case 'AddProfile':
-      updatedState = {...state, profiles: [...state.profiles, action.profile]}
+      if (state.profiles.length >= 51) {
+        Toast.show(msg`You may only add up to 50 profiles`.message ?? '')
+      } else {
+        updatedState = {...state, profiles: [...state.profiles, action.profile]}
+      }
       break
     case 'RemoveProfile':
       updatedState = {
@@ -69,7 +78,11 @@ function reducer(state: State, action: Action): State {
       }
       break
     case 'AddFeed':
-      updatedState = {...state, feeds: [...state.feeds, action.feed]}
+      if (state.feeds.length >= 50) {
+        Toast.show(msg`You may only add up to 50 feeds`.message ?? '')
+      } else {
+        updatedState = {...state, feeds: [...state.feeds, action.feed]}
+      }
       break
     case 'RemoveFeed':
       updatedState = {

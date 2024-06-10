@@ -60,7 +60,7 @@ export function Wizard({
     data: profilesData,
     isLoading: isLoadingProfiles,
     isError: isErrorProfiles,
-  } = useListMembersQuery(listUri, 50)
+  } = useListMembersQuery(listUri, 51) // 51 because we also include the current user
   const profiles = profilesData?.pages.flatMap(p => p.items.map(i => i.subject))
 
   if (name && rkey && (!starterPack || (starterPack && listUri && !profiles))) {
