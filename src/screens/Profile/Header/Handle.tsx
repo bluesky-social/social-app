@@ -10,6 +10,8 @@ import {atoms as a, useTheme, web} from '#/alf'
 import {NewskieDialog} from '#/components/StarterPack/NewskieDialog'
 import {Text} from '#/components/Typography'
 
+const DAYS_TO_SHOW_NEWSKIE = 7
+
 export function ProfileHeaderHandle({
   profile,
 }: {
@@ -18,13 +20,22 @@ export function ProfileHeaderHandle({
   const t = useTheme()
   const invalidHandle = isInvalidHandle(profile.handle)
   const blockHide = profile.viewer?.blocking || profile.viewer?.blockedBy
+
+  const isNewskie =
+    profile.createdAt &&
+    Date.now() + 60e3 * 24 * DAYS_TO_SHOW_NEWSKIE >
+      new Date(profile.createdAt).getTime()
+
   return (
     <View
       style={[a.flex_row, a.gap_xs, a.align_center]}
       pointerEvents={isAndroid ? 'box-only' : 'auto'}>
-      <View style={[a.mr_xs]}>
-        <NewskieDialog profile={profile} />
-      </View>
+      {isNewskie && (
+        <View style={[a.mr_xs]}>
+          <NewskieDialog profile={profile} />
+        </View>
+      )}
+
       {profile.viewer?.followedBy && !blockHide ? (
         <View style={[t.atoms.bg_contrast_25, a.rounded_xs, a.px_sm, a.py_xs]}>
           <Text style={[t.atoms.text, a.text_sm]}>
