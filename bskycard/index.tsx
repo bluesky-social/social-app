@@ -43,6 +43,7 @@ async function main() {
 
 const HEIGHT = 630
 const WIDTH = 1200
+const TILE_SIZE = HEIGHT / 3
 
 async function render() {
   const inter = readFileSync('./assets/Inter-Regular.ttf')
@@ -80,8 +81,8 @@ async function render() {
           display: 'flex',
           flexWrap: 'wrap',
           alignItems: 'stretch',
-          width: WIDTH - 75 * 2,
-          height: HEIGHT,
+          width: TILE_SIZE * 5,
+          height: TILE_SIZE * 3,
         }}>
         {[...Array(15)].map((_, i) => {
           const image = images.at(i)
@@ -89,10 +90,9 @@ async function render() {
             <div
               key={i}
               style={{
-                flex: '1 0 20%',
-                height: HEIGHT / 3,
-                width: HEIGHT / 3,
                 display: 'flex',
+                height: TILE_SIZE,
+                width: TILE_SIZE,
               }}>
               {image && (
                 <img
@@ -119,13 +119,13 @@ async function render() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            width: 297,
-            height: 297,
+            width: Math.ceil(TILE_SIZE * Math.SQRT2),
+            height: Math.ceil(TILE_SIZE * Math.SQRT2),
             borderRadius: '50%',
             backgroundImage:
               'linear-gradient(to bottom right, #3D83F6, #5999FF)',
           }}>
-          <Butterfly style={{color: 'white', height: 165, width: 165}} />
+          <Butterfly style={{color: 'white'}} width={175} />
         </div>
       </div>
     </div>,
