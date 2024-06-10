@@ -169,7 +169,6 @@ let FeedItem = ({
   )
 
   let action: ReactElement
-  let actionPlural: ReactElement
   let icon = (
     <HeartIconFilled
       size="xl"
@@ -181,67 +180,75 @@ let FeedItem = ({
   )
 
   if (item.type === 'post-like') {
-    action = <Trans>{author} liked your post</Trans>
-    actionPlural = (
-      <Trans>
-        {author} and{' '}
-        <Text style={[pal.text, s.bold]}>
-          <Plural
-            value={authors.length - 1}
-            one={`${formattedCount} other`}
-            other={`${formattedCount} others`}
-          />
-        </Text>{' '}
-        liked your post
-      </Trans>
-    )
+    action =
+      authors.length > 1 ? (
+        <Trans>
+          {author} and{' '}
+          <Text style={[pal.text, s.bold]}>
+            <Plural
+              value={authors.length - 1}
+              one={`${formattedCount} other`}
+              other={`${formattedCount} others`}
+            />
+          </Text>{' '}
+          liked your post
+        </Trans>
+      ) : (
+        <Trans>{author} liked your post</Trans>
+      )
   } else if (item.type === 'repost') {
-    action = <Trans>{author} reposted your post</Trans>
-    actionPlural = (
-      <Trans>
-        {author} and{' '}
-        <Text style={[pal.text, s.bold]}>
-          <Plural
-            value={authors.length - 1}
-            one={`${formattedCount} other`}
-            other={`${formattedCount} others`}
-          />
-        </Text>{' '}
-        reposted your post
-      </Trans>
-    )
+    action =
+      authors.length > 1 ? (
+        <Trans>
+          {author} and{' '}
+          <Text style={[pal.text, s.bold]}>
+            <Plural
+              value={authors.length - 1}
+              one={`${formattedCount} other`}
+              other={`${formattedCount} others`}
+            />
+          </Text>{' '}
+          reposted your post
+        </Trans>
+      ) : (
+        <Trans>{author} reposted your post</Trans>
+      )
     icon = <RepostIcon size="xl" style={{color: t.palette.positive_600}} />
   } else if (item.type === 'follow') {
-    action = <Trans>{author} followed you</Trans>
-    actionPlural = (
-      <Trans>
-        {author} and{' '}
-        <Text style={[pal.text, s.bold]}>
-          <Plural
-            value={authors.length - 1}
-            one={`${formattedCount} other`}
-            other={`${formattedCount} others`}
-          />
-        </Text>{' '}
-        followed you
-      </Trans>
-    )
+    action =
+      authors.length > 1 ? (
+        <Trans>
+          {author} and{' '}
+          <Text style={[pal.text, s.bold]}>
+            <Plural
+              value={authors.length - 1}
+              one={`${formattedCount} other`}
+              other={`${formattedCount} others`}
+            />
+          </Text>{' '}
+          followed you
+        </Trans>
+      ) : (
+        <Trans>{author} followed you</Trans>
+      )
     icon = <PersonPlusIcon size="xl" style={{color: t.palette.primary_500}} />
   } else if (item.type === 'feedgen-like') {
-    action = <Trans>{author} liked your custom feed</Trans>
-    actionPlural = (
-      <Trans>
-        {author} and{' '}
-        <Text style={[pal.text, s.bold]}>
-          <Plural
-            value={authors.length - 1}
-            one={`${formattedCount} other`}
-            other={`${formattedCount} others`}
-          />
-        </Text>{' '}
-        liked your custom feed
-      </Trans>
-    )
+    action =
+      authors.length > 1 ? (
+        <Trans>
+          {author} and{' '}
+          <Text style={[pal.text, s.bold]}>
+            <Plural
+              value={authors.length - 1}
+              one={`${formattedCount} other`}
+              other={`${formattedCount} others`}
+            />
+          </Text>{' '}
+          liked your custom feed
+        </Trans>
+      ) : (
+        <Trans>{author} liked your custom feed</Trans>
+      )
   } else {
     return null
   }
@@ -309,7 +316,7 @@ let FeedItem = ({
           />
           <ExpandedAuthorsList visible={isAuthorsExpanded} authors={authors} />
           <Text style={[styles.meta, pal.text]}>
-            {authors.length > 1 ? actionPlural : action}
+            {action}
             <TimeElapsed timestamp={item.notification.indexedAt}>
               {({timeElapsed}) => (
                 <Text
