@@ -94,7 +94,7 @@ export function ListConvosProviderInner({
     () =>
       throttle(() => refetch, 500, {
         leading: true,
-        trailing: false,
+        trailing: true,
       }),
     [refetch],
   )
