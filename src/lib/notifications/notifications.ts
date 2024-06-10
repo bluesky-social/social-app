@@ -43,7 +43,7 @@ async function getPushToken(skipPermissionCheck = false) {
   const granted =
     skipPermissionCheck || (await Notifications.getPermissionsAsync()).granted
   if (granted) {
-    Notifications.getDevicePushTokenAsync()
+    return Notifications.getDevicePushTokenAsync()
   }
 }
 
@@ -56,17 +56,16 @@ export function useNotificationsRegistration() {
       return
     }
 
-    getPushToken()
+    // TEMPORARY. We want to use `Notifications.addPushTokenListener()` specifically on Android for this, since the token
+    // can change at points
+    ;(async () => {
+      const pushToken = await getPushToken()
 
-    // According to the Expo docs, there is a chance that the token will change while the app is open in some rare
-    // cases. This will fire `registerPushToken` whenever that happens.
-    const subscription = Notifications.addPushTokenListener(async newToken => {
-      registerPushToken(agent, currentAccount, newToken)
-    })
+      // If we don't get a push token back, it means that permission was denied
+      if (!pushToken) return
 
-    return () => {
-      subscription.remove()
-    }
+      registerPushToken(agent, currentAccount, pushToken)
+    })()
   }, [currentAccount, agent])
 }
 
@@ -107,11 +106,6 @@ export function useRequestNotificationsPermission() {
       context: context,
       status: res.status,
     })
-
-    if (res.granted) {
-      // This will fire a pushTokenEvent, which will handle registration of the token
-      getPushToken(true)
-    }
   }
 }
 
