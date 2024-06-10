@@ -173,7 +173,7 @@ export function useFeedSourceInfoQuery({uri}: {uri: string}) {
 
 export const useGetPopularFeedsQueryKey = ['getPopularFeeds']
 
-export function useGetPopularFeedsQuery({limit = 10}: {limit?: number}) {
+export function useGetPopularFeedsQuery(limit: number = 10) {
   const agent = useAgent()
   return useInfiniteQuery<
     AppBskyUnspeccedGetPopularFeedGenerators.OutputSchema,

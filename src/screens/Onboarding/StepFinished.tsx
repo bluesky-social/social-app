@@ -1,5 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
+import {AppBskyGraphDefs, AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -14,6 +15,10 @@ import {useAgent} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {uploadBlob} from 'lib/api'
 import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
+import {
+  useSetUsedStarterPack,
+  useUsedStarterPack,
+} from 'state/preferences/starter-pack'
 import {
   DescriptionText,
   OnboardingControls,
@@ -41,15 +46,49 @@ export function StepFinished() {
   const queryClient = useQueryClient()
   const agent = useAgent()
   const requestNotificationsPermission = useRequestNotificationsPermission()
+  const usedStarterPack = useUsedStarterPack()
+  const setUsedStarterPack = useSetUsedStarterPack()
 
   const finishOnboarding = React.useCallback(async () => {
     setSaving(true)
-
-    const {interestsStepResults, profileStepResults} = state
-    const {selectedInterests} = interestsStepResults
     try {
+      let starterPack: AppBskyGraphDefs.StarterPackView | undefined
+      let listItems: AppBskyGraphDefs.ListItemView[] | undefined
+      if (usedStarterPack) {
+        const spRes = await agent.app.bsky.graph.getStarterPack({
+          starterPack: usedStarterPack.uri,
+        })
+        starterPack = spRes.data.starterPack
+
+        if (starterPack.list) {
+          const listRes = await agent.app.bsky.graph.getList({
+            list: starterPack.list.uri,
+            limit: 51,
+          })
+          listItems = listRes.data.items
+        }
+      }
+
+      const {interestsStepResults, profileStepResults} = state
+      const {selectedInterests} = interestsStepResults
+
       await Promise.all([
-        bulkWriteFollows(agent, [BSKY_APP_ACCOUNT_DID]),
+        bulkWriteFollows(agent, [
+          BSKY_APP_ACCOUNT_DID,
+          ...(listItems?.map(i => i.subject.did) ?? []),
+        ]),
+        (async () => {
+          if (starterPack?.feeds?.length) {
+            await agent.addSavedFeeds(
+              starterPack.feeds.map(f => ({
+                type: 'feed',
+                value: f.uri,
+                pinned: true,
+                id: new AtUri(f.uri).rkey,
+              })),
+            )
+          }
+        })(),
         (async () => {
           await agent.setInterestsPref({tags: selectedInterests})
         })(),
@@ -63,9 +102,20 @@ export function StepFinished() {
               if (res.data.blob) {
                 existing.avatar = res.data.blob
               }
+
+              existing.createdAt = new Date().toISOString()
+
+              if (starterPack) {
+                existing.joinedViaStarterPack = {
+                  uri: starterPack.uri,
+                  cid: starterPack.cid,
+                }
+              }
+
               return existing
             })
           }
+
           logEvent('onboarding:finished:avatarResult', {
             avatarResult: profileStepResults.isCreatedAvatar
               ? 'created'
@@ -96,6 +146,7 @@ export function StepFinished() {
     })
 
     setSaving(false)
+    setUsedStarterPack(undefined)
     dispatch({type: 'finish'})
     onboardDispatch({type: 'finish'})
     track('OnboardingV2:StepFinished:End')
@@ -105,10 +156,12 @@ export function StepFinished() {
     state,
     queryClient,
     agent,
+    setUsedStarterPack,
     dispatch,
     onboardDispatch,
     track,
     requestNotificationsPermission,
+    usedStarterPack,
   ])
 
   React.useEffect(() => {

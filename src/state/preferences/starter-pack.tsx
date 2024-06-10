@@ -2,23 +2,23 @@ import React from 'react'
 
 import * as persisted from '#/state/persisted'
 
-type StateContext = string | undefined
-type SetContext = (v: string) => void
+type StateContext = {uri: string; cid: string} | undefined
+type SetContext = (v: StateContext) => void
 
 const stateContext = React.createContext<StateContext>(undefined)
-const setContext = React.createContext<SetContext>((_: string) => {})
+const setContext = React.createContext<SetContext>((_: StateContext) => {})
 
 export function Provider({children}: {children: React.ReactNode}) {
-  const [state, setState] = React.useState<string>()
+  const [state, setState] = React.useState<StateContext>()
 
-  const setStateWrapped = (v: string) => {
+  const setStateWrapped = (v: StateContext) => {
     setState(v)
-    persisted.write('starterPackId', v)
+    persisted.write('usedStarterPack', v)
   }
 
   React.useEffect(() => {
     return persisted.onUpdate(() => {
-      setState(persisted.get('starterPackId'))
+      setState(persisted.get('usedStarterPack'))
     })
   }, [])
 
@@ -31,5 +31,5 @@ export function Provider({children}: {children: React.ReactNode}) {
   )
 }
 
-export const useStarterPack = () => React.useContext(stateContext)
-export const useSetStarterPack = () => React.useContext(setContext)
+export const useUsedStarterPack = () => React.useContext(stateContext)
+export const useSetUsedStarterPack = () => React.useContext(setContext)

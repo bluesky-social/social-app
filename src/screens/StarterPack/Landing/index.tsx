@@ -8,10 +8,13 @@ import {
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {useNavigation} from '@react-navigation/native'
 
-import {CommonNavigatorParams} from 'lib/routes/types'
+import {NavigationProp} from 'lib/routes/types'
+import {useSetUsedStarterPack} from 'state/preferences/starter-pack'
+import {useSession} from 'state/session'
 import {useSetMinimalShellMode} from 'state/shell'
+import {useLoggedOutViewControls} from 'state/shell/logged-out'
 import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {CenteredView} from 'view/com/util/Views'
@@ -116,10 +119,10 @@ const mockSP = {
   ],
 }
 
-export function LandingScreen({
-  navigation,
-}: NativeStackScreenProps<CommonNavigatorParams, 'StarterPackLanding'>) {
+export function LandingScreen({}) {
   // const {name, rkey} = route.params
+  const navigation = useNavigation<NavigationProp>()
+  const {currentAccount} = useSession()
   const setMinimalShellMode = useSetMinimalShellMode()
 
   // const {
@@ -134,11 +137,16 @@ export function LandingScreen({
   // } = useStarterPackQuery({did, rkey})
 
   React.useEffect(() => {
+    if (currentAccount) {
+      navigation.navigate('Home')
+      return
+    }
+
     setMinimalShellMode(true)
     return () => {
       setMinimalShellMode(false)
     }
-  }, [navigation, setMinimalShellMode])
+  }, [currentAccount, navigation, setMinimalShellMode])
 
   // if (!did || !starterPack) {
   //   return (
@@ -160,6 +168,8 @@ function LandingScreenInner({
   const {record, creator, listItemsSample, feeds, joinedWeekCount} = starterPack
   const {_} = useLingui()
   const t = useTheme()
+  const {requestSwitchToAccount} = useLoggedOutViewControls()
+  const setUsedStarterPack = useSetUsedStarterPack()
 
   const gradient =
     t.name === 'light'
@@ -205,7 +215,13 @@ function LandingScreenInner({
           )}
           <Button
             label={_(msg`Join Bluesky now`)}
-            onPress={() => {}}
+            onPress={() => {
+              setUsedStarterPack({
+                uri: starterPack.uri,
+                cid: starterPack.cid,
+              })
+              requestSwitchToAccount({requestedAccount: 'new'})
+            }}
             variant="solid"
             color="primary"
             size="large">
