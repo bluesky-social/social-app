@@ -113,7 +113,7 @@ export function Provider({
   const createInitialState = (): State => {
     if (starterPack && AppBskyGraphStarterpack.isRecord(starterPack.record)) {
       return {
-        canNext: false,
+        canNext: true,
         currentStep: 'Details',
         name: starterPack.record.name,
         description: starterPack.record.description,

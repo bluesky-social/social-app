@@ -59,7 +59,7 @@ export function Wizard({
   const {data} = useListMembersQuery(listUri)
   const profiles = data?.pages.flatMap(p => p.items.map(i => i.subject))
 
-  if (name && rkey && !starterPack && (!listUri || (listUri && !profiles))) {
+  if (name && rkey && (!starterPack || (starterPack && listUri && !profiles))) {
     return (
       <ListMaybePlaceholder
         isLoading={isLoadingDid || isLoadingStarterPack}
