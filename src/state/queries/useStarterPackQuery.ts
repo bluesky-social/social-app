@@ -1,10 +1,10 @@
 import {StarterPackView} from '@atproto/api/dist/client/types/app/bsky/graph/defs'
-import {useMutation, useQuery} from '@tanstack/react-query'
+import {QueryClient, useMutation, useQuery} from '@tanstack/react-query'
 
-import {STALE} from 'state/queries/index'
 import {useAgent, useSession} from 'state/session'
 
 const RQKEY_ROOT = 'starter-pack'
+const RQKEY = (did?: string, rkey?: string) => [RQKEY_ROOT, did, rkey]
 
 export function useStarterPackQuery({
   did,
@@ -17,7 +17,7 @@ export function useStarterPackQuery({
   const uri = `at://${did}/app.bsky.graph.starterpack/${rkey}`
 
   return useQuery<StarterPackView>({
-    queryKey: [RQKEY_ROOT, did, rkey],
+    queryKey: RQKEY(did, rkey),
     queryFn: async () => {
       const res = await agent.app.bsky.graph.getStarterPack({
         starterPack: uri,
@@ -25,7 +25,6 @@ export function useStarterPackQuery({
       return res.data.starterPack
     },
     enabled: Boolean(did) && Boolean(rkey),
-    staleTime: STALE.MINUTES.FIVE,
   })
 }
 
@@ -40,13 +39,32 @@ export function useDeleteStarterPackMutation({
   const {currentAccount} = useSession()
 
   return useMutation({
-    mutationFn: async (rkey: string) => {
+    mutationFn: async (rkey: string, listRkey?: string) => {
       await agent.app.bsky.graph.starterpack.delete({
         repo: currentAccount!.did,
         rkey,
       })
+
+      if (listRkey) {
+        await agent.app.bsky.graph.list.delete({
+          repo: currentAccount!.did,
+          rkey: listRkey,
+        })
+      }
     },
     onError,
     onSuccess,
   })
+}
+
+export async function invalidateStarterPack({
+  queryClient,
+  did,
+  rkey,
+}: {
+  queryClient: QueryClient
+  did: string
+  rkey: string
+}) {
+  await queryClient.invalidateQueries({queryKey: RQKEY(did, rkey)})
 }

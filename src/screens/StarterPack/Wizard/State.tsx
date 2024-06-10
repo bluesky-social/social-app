@@ -116,11 +116,11 @@ function reducer(state: State, action: Action): State {
 // TODO supply the initial state to this component
 export function Provider({
   starterPack,
-  profiles,
+  listItems,
   children,
 }: {
   starterPack?: AppBskyGraphDefs.StarterPackView
-  profiles?: AppBskyActorDefs.ProfileViewBasic[]
+  listItems?: AppBskyGraphDefs.ListItemView[]
   children: React.ReactNode
 }) {
   const createInitialState = (): State => {
@@ -130,7 +130,7 @@ export function Provider({
         currentStep: 'Details',
         name: starterPack.record.name,
         description: starterPack.record.description,
-        profiles: profiles ?? [],
+        profiles: listItems?.map(i => i.subject) ?? [],
         feeds: starterPack.feeds ?? [],
         processing: false,
       }

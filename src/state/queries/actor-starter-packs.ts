@@ -1,10 +1,15 @@
 import {AppBskyGraphGetActorStarterPacks} from '@atproto/api'
-import {InfiniteData, QueryKey, useInfiniteQuery} from '@tanstack/react-query'
+import {
+  InfiniteData,
+  QueryClient,
+  QueryKey,
+  useInfiniteQuery,
+} from '@tanstack/react-query'
 
-import {STALE} from 'state/queries/index'
 import {useAgent} from 'state/session'
 
 const RQKEY_ROOT = 'actor-starter-packs'
+const RQKEY = (did?: string) => [RQKEY_ROOT, did]
 
 export function useActorStarterPacksQuery({did}: {did?: string}) {
   const agent = useAgent()
@@ -16,7 +21,7 @@ export function useActorStarterPacksQuery({did}: {did?: string}) {
     QueryKey,
     string | undefined
   >({
-    queryKey: [RQKEY_ROOT, did],
+    queryKey: RQKEY(did),
     queryFn: async ({pageParam}: {pageParam?: string}) => {
       const res = await agent.app.bsky.graph.getActorStarterPacks({
         actor: did!,
@@ -28,6 +33,15 @@ export function useActorStarterPacksQuery({did}: {did?: string}) {
     enabled: Boolean(did),
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
-    staleTime: STALE.MINUTES.ONE,
   })
+}
+
+export async function invalidateActorStarterPacksQuery({
+  queryClient,
+  did,
+}: {
+  queryClient: QueryClient
+  did: string
+}) {
+  await queryClient.invalidateQueries({queryKey: RQKEY(did)})
 }

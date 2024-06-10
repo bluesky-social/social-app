@@ -40,6 +40,16 @@ export function useListMembersQuery(uri?: string, limit: number = PAGE_SIZE) {
   })
 }
 
+export async function invalidateListMembersQuery({
+  queryClient,
+  uri,
+}: {
+  queryClient: QueryClient
+  uri: string
+}) {
+  await queryClient.invalidateQueries({queryKey: RQKEY(uri)})
+}
+
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,

@@ -1,22 +1,35 @@
 import React from 'react'
 import {Keyboard, TouchableOpacity, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
-import {AppBskyActorDefs, AtUri} from '@atproto/api'
+import {
+  AppBskyActorDefs,
+  AppBskyGraphDefs,
+  AppBskyGraphStarterpack,
+  AtUri,
+} from '@atproto/api'
 import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {HITSLOP_10} from 'lib/constants'
 import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
 import {enforceLen} from 'lib/strings/helpers'
 import {isAndroid, isNative, isWeb} from 'platform/detection'
-import {useListMembersQuery} from 'state/queries/list-members'
+import {invalidateActorStarterPacksQuery} from 'state/queries/actor-starter-packs'
+import {
+  invalidateListMembersQuery,
+  useListMembersQuery,
+} from 'state/queries/list-members'
 import {useProfileQuery} from 'state/queries/profile'
 import {useResolveDidQuery} from 'state/queries/resolve-uri'
-import {useStarterPackQuery} from 'state/queries/useStarterPackQuery'
+import {
+  invalidateStarterPack,
+  useStarterPackQuery,
+} from 'state/queries/useStarterPackQuery'
 import {useAgent, useSession} from 'state/session'
 import {useSetMinimalShellMode} from 'state/shell'
 import {UserAvatar} from 'view/com/util/UserAvatar'
@@ -61,9 +74,13 @@ export function Wizard({
     isLoading: isLoadingProfiles,
     isError: isErrorProfiles,
   } = useListMembersQuery(listUri, 51) // 51 because we also include the current user
-  const profiles = profilesData?.pages.flatMap(p => p.items.map(i => i.subject))
+  const listItems = profilesData?.pages.flatMap(p => p.items)
 
-  if (name && rkey && (!starterPack || (starterPack && listUri && !profiles))) {
+  if (
+    name &&
+    rkey &&
+    (!starterPack || (starterPack && listUri && !listItems))
+  ) {
     return (
       <ListMaybePlaceholder
         isLoading={isLoadingDid || isLoadingStarterPack || isLoadingProfiles}
@@ -74,16 +91,39 @@ export function Wizard({
   }
 
   return (
-    <Provider starterPack={starterPack} profiles={profiles}>
-      <WizardInner />
+    <Provider starterPack={starterPack} listItems={listItems}>
+      <WizardInner
+        did={did}
+        rkey={rkey}
+        createdAt={
+          AppBskyGraphStarterpack.isRecord(starterPack?.record)
+            ? starterPack.record.createdAt
+            : undefined
+        }
+        listItems={listItems}
+        listUri={listUri}
+      />
     </Provider>
   )
 }
 
-function WizardInner() {
+function WizardInner({
+  did,
+  rkey,
+  createdAt: initialCreatedAt,
+  listUri: initialListUri,
+  listItems: initialListItems,
+}: {
+  did?: string
+  rkey?: string
+  createdAt?: string
+  listUri?: string
+  listItems?: AppBskyGraphDefs.ListItemView[]
+}) {
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
   const t = useTheme()
+  const queryClient = useQueryClient()
   const [state, dispatch] = useWizardState()
   const agent = useAgent()
   const {currentAccount} = useSession()
@@ -131,63 +171,163 @@ function WizardInner() {
 
   const uiStrings = wizardUiStrings[state.currentStep]
 
+  const createList = async (): Promise<
+    {uri: string; cid: string} | undefined
+  > => {
+    if (state.profiles.length === 0) return
+
+    const list = await agent.app.bsky.graph.list.create(
+      {repo: currentAccount?.did},
+      {
+        name: state.name ?? '',
+        description: state.description ?? '',
+        descriptionFacets: [],
+        avatar: undefined,
+        createdAt: new Date().toISOString(),
+        purpose: 'app.bsky.graph.defs#referencelist',
+      },
+    )
+    if (!list) throw new Error('List creation failed')
+    await agent.com.atproto.repo.applyWrites({
+      repo: currentAccount!.did,
+      writes: state.profiles.map(p => ({
+        $type: 'com.atproto.repo.applyWrites#create',
+        collection: 'app.bsky.graph.listitem',
+        value: {
+          $type: 'app.bsky.graph.listitem',
+          subject: p.did,
+          list: list?.uri,
+          createdAt: new Date().toISOString(),
+        },
+      })),
+    })
+
+    return list
+  }
+
   const submit = async () => {
     dispatch({type: 'SetProcessing', processing: true})
 
     try {
-      const list = await agent.app.bsky.graph.list.create(
-        {repo: currentAccount?.did},
-        {
-          name: state.name ?? '',
-          description: state.description ?? '',
-          descriptionFacets: [],
-          avatar: undefined,
-          createdAt: new Date().toISOString(),
-          purpose: 'app.bsky.graph.defs#referencelist',
-        },
-      )
+      if (did && rkey) {
+        // Editing an existing starter pack
+        let list: {uri: string; cid: string} | undefined = initialListUri
+          ? {uri: initialListUri, cid: ''}
+          : undefined
+        if (initialListUri) {
+          const removedItems = initialListItems?.filter(
+            i => !state.profiles.find(p => p.did === i.subject.did),
+          )
+          if (removedItems && removedItems.length > 0) {
+            await agent.com.atproto.repo.applyWrites({
+              repo: currentAccount!.did,
+              writes: removedItems.map(i => ({
+                $type: 'com.atproto.repo.applyWrites#delete',
+                collection: 'app.bsky.graph.listitem',
+                rkey: new AtUri(i.uri).rkey,
+              })),
+            })
+          }
 
-      await agent.com.atproto.repo.applyWrites({
-        repo: currentAccount!.did,
-        writes: state.profiles.map(p => ({
-          $type: 'com.atproto.repo.applyWrites#create',
-          collection: 'app.bsky.graph.listitem',
-          value: {
-            $type: 'app.bsky.graph.listitem',
-            subject: p.did,
-            list: list.uri,
+          const addedProfiles = state.profiles.filter(
+            p => !initialListItems?.find(i => i.subject.did === p.did),
+          )
+
+          if (addedProfiles.length > 0) {
+            await agent.com.atproto.repo.applyWrites({
+              repo: currentAccount!.did,
+              writes: addedProfiles.map(p => ({
+                $type: 'com.atproto.repo.applyWrites#create',
+                collection: 'app.bsky.graph.listitem',
+                value: {
+                  $type: 'app.bsky.graph.listitem',
+                  subject: p.did,
+                  list: list?.uri,
+                  createdAt: new Date().toISOString(),
+                },
+              })),
+            })
+          }
+        } else {
+          list = await createList()
+        }
+
+        await agent.com.atproto.repo.putRecord({
+          repo: currentAccount!.did,
+          collection: 'app.bsky.graph.starterpack',
+          rkey,
+          record: {
+            name: state.name ?? '',
+            description: state.description ?? '',
+            descriptionFacets: [],
+            list: list?.uri,
+            feeds: state.feeds.map(f => ({
+              uri: f.uri,
+            })),
+            createdAt: initialCreatedAt,
+            updatedAt: new Date().toISOString(),
+          },
+        })
+
+        if (initialListUri) {
+          await invalidateListMembersQuery({queryClient, uri: initialListUri})
+        }
+        await invalidateActorStarterPacksQuery({
+          queryClient,
+          did,
+        })
+        await invalidateStarterPack({
+          queryClient,
+          did,
+          rkey,
+        })
+
+        setTimeout(() => {
+          if (navigation.canGoBack()) {
+            navigation.goBack()
+          } else {
+            navigation.replace('StarterPack', {
+              name: currentAccount!.handle,
+              rkey,
+            })
+          }
+          dispatch({type: 'SetProcessing', processing: false})
+        }, 1000)
+      } else {
+        // Creating a new starter pack
+        const list = await createList()
+        const res = await agent.app.bsky.graph.starterpack.create(
+          {
+            repo: currentAccount!.did,
+            validate: false,
+          },
+          {
+            name: state.name ?? '',
+            description: state.description ?? '',
+            descriptionFacets: [],
+            list: list?.uri,
+            feeds: state.feeds.map(f => ({
+              uri: f.uri,
+            })),
             createdAt: new Date().toISOString(),
           },
-        })),
-      })
+        )
 
-      const res = await agent.app.bsky.graph.starterpack.create(
-        {
-          repo: currentAccount!.did,
-          validate: false,
-        },
-        {
-          name: state.name ?? '',
-          description: state.description ?? '',
-          descriptionFacets: [],
-          list: list.uri,
-          feeds: state.feeds.map(f => ({
-            uri: f.uri,
-          })),
-          createdAt: new Date().toISOString(),
-        },
-      )
+        const newRkey = new AtUri(res.uri).rkey
 
-      const rkey = new AtUri(res.uri).rkey
-
-      // TODO hack?
-      setTimeout(() => {
-        navigation.replace('StarterPack', {name: currentAccount!.handle, rkey})
-        dispatch({type: 'SetProcessing', processing: false})
-      }, 1000)
+        // TODO hack?
+        setTimeout(() => {
+          navigation.replace('StarterPack', {
+            name: currentAccount!.handle,
+            rkey: newRkey,
+          })
+          dispatch({type: 'SetProcessing', processing: false})
+        }, 1000)
+      }
     } catch (e) {
       // TODO handle the error here
       dispatch({type: 'SetProcessing', processing: false})
+      return
     }
   }
 
