@@ -12,6 +12,10 @@ import {useFocusEffect} from '@react-navigation/native'
 import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {useModalControls} from '#/state/modals'
 import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
+import {
+  useNativeTranslationDisabled,
+  useSetNativeTranslationDisabled,
+} from '#/state/preferences/disable-native-translation'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {APP_LANGUAGES, LANGUAGES} from 'lib/../locale/languages'
 import {useAnalytics} from 'lib/analytics/analytics'
@@ -22,7 +26,12 @@ import {s} from 'lib/styles'
 import {Button} from 'view/com/util/forms/Button'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
+import {atoms as a, useBreakpoints, web} from '#/alf'
+import {Divider} from '#/components/Divider'
+import * as Toggle from '#/components/forms/Toggle'
+import {isAvailable as isNativeTranslationAvailable} from '../../../modules/expo-bluesky-translate'
 import {Text} from '../com/util/text/Text'
+import {ScrollView} from '../com/util/Views'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'LanguageSettings'>
 
@@ -35,6 +44,9 @@ export function LanguageSettingsScreen(_props: Props) {
   const {screen, track} = useAnalytics()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {openModal} = useModalControls()
+  const nativeTranslationDisabled = useNativeTranslationDisabled()
+  const setNativeTranslationDisabled = useSetNativeTranslationDisabled()
+  const {gtMobile} = useBreakpoints()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -87,9 +99,16 @@ export function LanguageSettingsScreen(_props: Props) {
         styles.container,
         isTabletOrDesktop && styles.desktopContainer,
       ]}>
-      <ViewHeader title={_(msg`Language Settings`)} showOnDesktop />
+      <ViewHeader title={_(msg`Language Settings`)} showOnDesktop showBorder />
 
-      <View style={{paddingTop: 20, paddingHorizontal: 20}}>
+      <ScrollView
+        contentContainerStyle={[
+          a.border_0,
+          a.pt_2xl,
+          a.px_lg,
+          gtMobile && a.px_2xl,
+          web({minHeight: '100%'}),
+        ]}>
         {/* APP LANGUAGE */}
         <View style={{paddingBottom: 20}}>
           <Text type="title-sm" style={[pal.text, s.pb5]}>
@@ -175,13 +194,7 @@ export function LanguageSettingsScreen(_props: Props) {
           </View>
         </View>
 
-        <View
-          style={{
-            height: 1,
-            backgroundColor: pal.border.borderColor,
-            marginBottom: 20,
-          }}
-        />
+        <Divider style={{marginBottom: 20}} />
 
         {/* PRIMARY LANGUAGE */}
         <View style={{paddingBottom: 20}}>
@@ -266,13 +279,7 @@ export function LanguageSettingsScreen(_props: Props) {
           </View>
         </View>
 
-        <View
-          style={{
-            height: 1,
-            backgroundColor: pal.border.borderColor,
-            marginBottom: 20,
-          }}
-        />
+        <Divider style={{marginBottom: 20}} />
 
         {/* CONTENT LANGUAGES */}
         <View style={{paddingBottom: 20}}>
@@ -302,7 +309,51 @@ export function LanguageSettingsScreen(_props: Props) {
             </Text>
           </Button>
         </View>
-      </View>
+
+        {/* NATIVE TRANSLATION */}
+        {isNativeTranslationAvailable && (
+          <View style={{paddingBottom: 20}}>
+            <Divider style={{marginBottom: 20}} />
+
+            <Text type="title-sm" style={[pal.text, s.pb5]}>
+              <Trans>Native Translations</Trans>
+            </Text>
+            <Text style={[pal.text, s.pb10]}>
+              <Trans>
+                Translations are provided the operating system, where available.
+                Unfortuntely, the number of languages supported by this feature
+                is limited, so you may want to disable this and fall back to
+                opening a translation in your web browser.
+              </Trans>
+            </Text>
+
+            <Toggle.Group
+              label={_(msg`Enable native translation`)}
+              type="radio"
+              values={[nativeTranslationDisabled ? 'disabled' : 'enabled']}
+              onChange={value =>
+                setNativeTranslationDisabled(
+                  value[0] === 'enabled' ? false : true,
+                )
+              }>
+              <View style={[a.gap_sm, a.py_sm]}>
+                <Toggle.Item name="enabled" label={_(msg`Enabled`)}>
+                  <Toggle.Radio />
+                  <Toggle.LabelText>
+                    <Trans>Enabled</Trans>
+                  </Toggle.LabelText>
+                </Toggle.Item>
+                <Toggle.Item name="disabled" label={_(msg`Disabled`)}>
+                  <Toggle.Radio />
+                  <Toggle.LabelText>
+                    <Trans>Disabled</Trans>
+                  </Toggle.LabelText>
+                </Toggle.Item>
+              </View>
+            </Toggle.Group>
+          </View>
+        )}
+      </ScrollView>
     </CenteredView>
   )
 }
@@ -315,7 +366,7 @@ const styles = StyleSheet.create({
   desktopContainer: {
     borderLeftWidth: 1,
     borderRightWidth: 1,
-    paddingBottom: 40,
+    paddingBottom: 0,
   },
   button: {
     flexDirection: 'row',

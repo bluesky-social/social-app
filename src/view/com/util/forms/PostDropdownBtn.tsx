@@ -19,14 +19,12 @@ import {useNavigation} from '@react-navigation/native'
 import {makeProfileLink} from '#/lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
-import {getTranslatorLink} from '#/locale/helpers'
+import {useTranslate} from '#/lib/translate'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useMutedThreads, useToggleThreadMute} from '#/state/muted-threads'
-import {useLanguagePrefs} from '#/state/preferences'
 import {useHiddenPosts, useHiddenPostsApi} from '#/state/preferences'
-import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {usePostDeleteMutation} from '#/state/queries/post'
 import {useSession} from '#/state/session'
 import {getCurrentRoute} from 'lib/routes/helpers'
@@ -57,11 +55,6 @@ import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/War
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
-import {
-  isAvailable as isNativeTranslationAvailable,
-  isLanguageSupported,
-  NativeTranslationModule,
-} from '../../../../../modules/expo-bluesky-translate'
 import {EventStopper} from '../EventStopper'
 import * as Toast from '../Toast'
 
@@ -96,14 +89,12 @@ let PostDropdownBtn = ({
   const {gtMobile} = useBreakpoints()
   const {_} = useLingui()
   const defaultCtrlColor = theme.palette.default.postCtrl
-  const langPrefs = useLanguagePrefs()
   const mutedThreads = useMutedThreads()
   const toggleThreadMute = useToggleThreadMute()
   const postDeleteMutation = usePostDeleteMutation()
   const hiddenPosts = useHiddenPosts()
   const {hidePost} = useHiddenPostsApi()
   const feedFeedback = useFeedFeedbackContext()
-  const openLink = useOpenLink()
   const navigation = useNavigation<NavigationProp>()
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
   const reportDialogControl = useReportDialogControl()
@@ -122,11 +113,6 @@ let PostDropdownBtn = ({
     const urip = new AtUri(postUri)
     return makeProfileLink(postAuthor, 'post', urip.rkey)
   }, [postUri, postAuthor])
-
-  const translatorUrl = getTranslatorLink(
-    record.text,
-    langPrefs.primaryLanguage,
-  )
 
   const onDeletePost = React.useCallback(() => {
     postDeleteMutation.mutateAsync({uri: postUri}).then(
@@ -187,17 +173,11 @@ let PostDropdownBtn = ({
     Toast.show(_(msg`Copied to clipboard`))
   }, [_, richText])
 
+  const translate = useTranslate()
   const onPressTranslate = React.useCallback(() => {
-    if (
-      isNativeTranslationAvailable &&
-      isLanguageSupported(record?.langs?.at(0))
-    ) {
-      const text = richTextToString(richText, true)
-      NativeTranslationModule.presentAsync(text)
-    } else {
-      openLink(translatorUrl)
-    }
-  }, [openLink, record?.langs, richText, translatorUrl])
+    const text = richTextToString(richText, true)
+    translate(text, record.langs?.[0])
+  }, [record.langs, richText, translate])
 
   const onHidePost = React.useCallback(() => {
     hidePost({uri: postUri})
