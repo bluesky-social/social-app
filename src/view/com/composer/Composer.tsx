@@ -405,13 +405,31 @@ export const ComposePost = observer(function ComposePost({
   // Backup focus on android, if the keyboard *still* refuses to show
   useEffect(() => {
     if (!isAndroid) return
-    if (isModalReady) {
-      setTimeout(() => {
-        if (!Keyboard.isVisible()) {
-          textInput.current?.blur()
-          textInput.current?.focus()
-        }
-      }, 300)
+    if (!isModalReady) return
+
+    function tryFocus() {
+      if (!Keyboard.isVisible()) {
+        textInput.current?.blur()
+        textInput.current?.focus()
+      }
+    }
+
+    tryFocus()
+    // Retry with enough gap to avoid interrupting the previous attempt.
+    // Unfortunately we don't know which attempt will succeed.
+    const retryInterval = setInterval(tryFocus, 500)
+
+    function stopTrying() {
+      clearInterval(retryInterval)
+    }
+
+    // Deactivate this fallback as soon as anything happens.
+    const sub1 = Keyboard.addListener('keyboardDidShow', stopTrying)
+    const sub2 = Keyboard.addListener('keyboardDidHide', stopTrying)
+    return () => {
+      clearInterval(retryInterval)
+      sub1.remove()
+      sub2.remove()
     }
   }, [isModalReady])
 
