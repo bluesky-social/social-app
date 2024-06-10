@@ -156,12 +156,13 @@ export const TextInput = React.forwardRef(function TextInputImpl(
           if (clipboardData) {
             if (clipboardData.types.includes('text/html')) {
               // Rich-text formatting is pasted, try retrieving plain text
-              event.preventDefault()
-
               const text = clipboardData.getData('text/plain')
 
-              // `pasteText` will invoke this handler again, but `clipboardData` will be empty.
+              // `pasteText` will invoke this handler again, but `clipboardData` will be null.
               view.pasteText(text)
+
+              // Return `true` to prevent ProseMirror's default paste behavior.
+              return true
             } else {
               // Otherwise, try retrieving images from the clipboard
 
