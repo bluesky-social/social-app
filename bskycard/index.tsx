@@ -41,6 +41,9 @@ async function main() {
   console.log('closed')
 }
 
+const HEIGHT = 630
+const WIDTH = 1200
+
 async function render() {
   const inter = readFileSync('./assets/Inter-Regular.ttf')
   const appview = new AtpAgent({service: 'https://api.bsky.app'})
@@ -52,7 +55,7 @@ async function render() {
   const images = await Promise.all(
     followers
       .filter(p => p.avatar)
-      .slice(0, 8)
+      .slice(0, 15)
       .map(async p => {
         if (!p.avatar) return
         const res = await fetch(p.avatar)
@@ -65,36 +68,45 @@ async function render() {
     <div
       style={{
         display: 'flex',
-        flexWrap: 'wrap',
-        alignItems: 'stretch',
-        width: 1200,
-        height: 630,
+        justifyContent: 'center',
+        width: WIDTH,
+        height: HEIGHT,
         backgroundColor: 'black',
         color: 'white',
         fontFamily: 'Inter',
       }}>
-      {[...Array(8)].map((_, i) => {
-        const image = images.at(i)
-        return (
-          <div
-            key={i}
-            style={{
-              flex: '1 0 25%',
-              height: 315,
-              display: 'flex',
-            }}>
-            {image && (
-              <img
-                src={`data:image/jpeg;base64,${image.toString('base64')}`}
-                height="100%"
-                width="100%"
-              />
-            )}
-          </div>
-        )
-      })}
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          alignItems: 'stretch',
+          width: WIDTH - 75 * 2,
+          height: HEIGHT,
+        }}>
+        {[...Array(15)].map((_, i) => {
+          const image = images.at(i)
+          return (
+            <div
+              key={i}
+              style={{
+                flex: '1 0 20%',
+                height: HEIGHT / 3,
+                width: HEIGHT / 3,
+                display: 'flex',
+              }}>
+              {image && (
+                <img
+                  src={`data:image/jpeg;base64,${image.toString('base64')}`}
+                  height="100%"
+                  width="100%"
+                />
+              )}
+            </div>
+          )
+        })}
+      </div>
     </div>,
-    {fonts: [{data: inter, name: 'Inter'}], height: 630, width: 1200},
+    {fonts: [{data: inter, name: 'Inter'}], height: HEIGHT, width: WIDTH},
   )
   return resvg.renderAsync(svg)
 }
