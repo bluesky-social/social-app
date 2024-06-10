@@ -1,7 +1,10 @@
+/* eslint bsky-internal/avoid-unwrapped-text: 0 */ // --> OFF
+
 import {once} from 'node:events'
 import {readFileSync} from 'node:fs'
 import {createServer} from 'node:http'
 
+import React from 'react'
 import {AtpAgent} from '@atproto/api'
 import resvg from '@resvg/resvg-js'
 import satori from 'satori'
@@ -59,45 +62,38 @@ async function render() {
       }),
   )
   const svg = await satori(
-    {
-      type: 'div',
-      props: {
-        style: {
-          display: 'flex',
-          flexWrap: 'wrap',
-          alignItems: 'stretch',
-          width: 1200,
-          height: 630,
-          backgroundColor: 'black',
-          color: 'white',
-          fontFamily: 'Inter',
-        },
-        children: [...Array(8)].map((bg, i) => {
-          const image = images.at(i)
-          return {
-            type: 'div',
-            props: {
-              style: {
-                flex: '1 0 25%',
-                height: 315,
-                display: 'flex',
-              },
-              children: image
-                ? {
-                    type: 'img',
-                    props: {
-                      src: `data:image/jpeg;base64,${image.toString('base64')}`,
-                      width: '100%',
-                      height: '100%',
-                    },
-                  }
-                : '',
-            },
-          }
-        }),
-      },
-      key: 'none',
-    },
+    <div
+      style={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        alignItems: 'stretch',
+        width: 1200,
+        height: 630,
+        backgroundColor: 'black',
+        color: 'white',
+        fontFamily: 'Inter',
+      }}>
+      {[...Array(8)].map((_, i) => {
+        const image = images.at(i)
+        return (
+          <div
+            key={i}
+            style={{
+              flex: '1 0 25%',
+              height: 315,
+              display: 'flex',
+            }}>
+            {image && (
+              <img
+                src={`data:image/jpeg;base64,${image.toString('base64')}`}
+                height="100%"
+                width="100%"
+              />
+            )}
+          </div>
+        )
+      })}
+    </div>,
     {fonts: [{data: inter, name: 'Inter'}], height: 630, width: 1200},
   )
   return resvg.renderAsync(svg)
