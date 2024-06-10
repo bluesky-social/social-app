@@ -13,7 +13,13 @@ export async function write(value: Schema) {
 export async function read(): Promise<Schema | undefined> {
   const rawData = await AsyncStorage.getItem(BSKY_STORAGE)
   const objData = rawData ? JSON.parse(rawData) : undefined
+
+  // new user
+  if (!objData) return undefined
+
+  // existing user, validate
   const parsed = schema.safeParse(objData)
+
   if (parsed.success) {
     return objData
   } else {
