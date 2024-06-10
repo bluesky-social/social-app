@@ -26,9 +26,38 @@ export function StepFeeds() {
   const [query, setQuery] = useState('')
 
   const {data: popularFeedsPages, fetchNextPage} = useGetPopularFeedsQuery(30)
+  // const popularFeeds =
+  //   popularFeedsPages?.pages.flatMap(page => page.feeds) || []
 
-  const popularFeeds =
-    popularFeedsPages?.pages.flatMap(page => page.feeds) || []
+  const popularFeeds = [
+    {
+      uri: 'at://did:plc:6262fucmqlkgz23yaslhuuq6/app.bsky.feed.generator/alice-favs',
+      cid: 'bafyreidgvy4vlvvhx3lhpyej2qido3m5sk2l5643bhbmqtgfuxwz53xqlm',
+      did: 'did:plc:epfqsozl6rso6ebd6mkfyzpl',
+      creator: {
+        did: 'did:plc:vyhhvdf4xw5nziakfxxsynwk',
+        handle: 'alice.test',
+        displayName: 'Alice',
+        viewer: {
+          muted: false,
+          blockedBy: false,
+        },
+        labels: [],
+        description: 'Test user 1',
+        indexedAt: '2024-06-10T17:37:36.662Z',
+      },
+      displayName: 'alices feed',
+      description: 'all my fav stuff',
+      avatar:
+        'http://localhost:2584/img/avatar/plain/did:plc:vyhhvdf4xw5nziakfxxsynwk/bafkreihem6nzbu462kcx5cqnrkonpq75fe5dlbhgnzcmuvvhqk7s5vcq3u@jpeg',
+      likeCount: 3,
+      labels: [],
+      viewer: {
+        like: 'at://did:plc:vyhhvdf4xw5nziakfxxsynwk/app.bsky.feed.like/3kulmhjxuoc2g',
+      },
+      indexedAt: '2022-07-15T00:51:16.914Z',
+    },
+  ]
 
   const {
     data: searchedFeeds,

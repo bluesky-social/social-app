@@ -1,6 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyGraphDefs, AppBskyGraphStarterpack, AtUri} from '@atproto/api'
+import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -78,19 +78,17 @@ export function StepFinished() {
           ...(listItems?.map(i => i.subject.did) ?? []),
         ]),
         (async () => {
+          await agent.setInterestsPref({tags: selectedInterests})
+
           if (starterPack?.feeds?.length) {
             await agent.addSavedFeeds(
               starterPack.feeds.map(f => ({
                 type: 'feed',
                 value: f.uri,
                 pinned: true,
-                id: new AtUri(f.uri).rkey,
               })),
             )
           }
-        })(),
-        (async () => {
-          await agent.setInterestsPref({tags: selectedInterests})
         })(),
         (async () => {
           const {imageUri, imageMime} = profileStepResults

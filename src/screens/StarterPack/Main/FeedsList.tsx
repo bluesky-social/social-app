@@ -1,5 +1,6 @@
 import React, {useCallback} from 'react'
 import {View} from 'react-native'
+import {AppBskyFeedDefs} from '@atproto/api'
 
 import {useBottomBarOffset} from 'lib/hooks/useBottomBarOffset'
 import {isNative} from 'platform/detection'
@@ -7,16 +8,16 @@ import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {List, ListRef} from 'view/com/util/List'
 import {SectionRef} from '#/screens/Profile/Sections/types'
 
-function renderItem({item}: {item: string}) {
-  return <FeedSourceCard feedUri={item} />
+function renderItem({item}: {item: AppBskyFeedDefs.GeneratorView}) {
+  return <FeedSourceCard feedUri={item.uri} />
 }
 
-function keyExtractor(item: string) {
-  return item
+function keyExtractor(item: AppBskyFeedDefs.GeneratorView) {
+  return item.uri
 }
 
 interface ProfilesListProps {
-  feeds: string[]
+  feeds: AppBskyFeedDefs.GeneratorView[]
   headerHeight: number
   scrollElRef: ListRef
 }
