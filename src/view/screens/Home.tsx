@@ -93,7 +93,7 @@ function HomeScreenReady({
     // This is supposed to only happen on the web when you use the right nav.
     if (initialIndex !== selectedIndex) {
       lastPagerReportedIndexRef.current = initialIndex
-      pagerRef.current?.setPage(initialIndex, 'desktop-sidebar-click')
+      pagerRef.current?.setPage(initialIndex, 'starter-pack-initial-feed')
     } else if (selectedIndex !== lastPagerReportedIndexRef.current) {
       lastPagerReportedIndexRef.current = selectedIndex
       pagerRef.current?.setPage(selectedIndex, 'desktop-sidebar-click')

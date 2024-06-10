@@ -65,7 +65,12 @@ export type LogEvents = {
     feedUrl: string
     feedType: string
     index: number
-    reason: 'focus' | 'tabbar-click' | 'pager-swipe' | 'desktop-sidebar-click'
+    reason:
+      | 'focus'
+      | 'tabbar-click'
+      | 'pager-swipe'
+      | 'desktop-sidebar-click'
+      | 'starter-pack-initial-feed'
   }
   'feed:endReached:sampled': {
     feedUrl: string
