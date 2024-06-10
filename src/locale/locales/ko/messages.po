@@ -1301,7 +1301,7 @@ msgstr "대화 신고 기록 삭제"
 
 #: src/components/dms/MessageMenu.tsx:124
 msgid "Delete for me"
-msgstr "내게서 삭제"
+msgstr "나에게서 삭제"
 
 #: src/view/screens/ProfileList.tsx:471
 msgid "Delete List"
