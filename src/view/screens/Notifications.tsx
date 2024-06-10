@@ -154,8 +154,8 @@ export function NotificationsScreen({}: Props) {
 
   const renderHeaderSpinner = React.useCallback(() => {
     return (
-      <View style={{width: 20}}>
-        {isLoadingLatest ? <Loader size="sm" /> : <></>}
+      <View style={{width: 30, height: 20, alignItems: 'flex-end'}}>
+        {isLoadingLatest ? <Loader width={20} /> : <></>}
       </View>
     )
   }, [isLoadingLatest])
