@@ -56,7 +56,7 @@ export function Wizard({
 
   const listUri = starterPack?.list?.uri
 
-  const {data} = useListMembersQuery(listUri)
+  const {data} = useListMembersQuery(listUri, 50)
   const profiles = data?.pages.flatMap(p => p.items.map(i => i.subject))
 
   if (name && rkey && (!starterPack || (starterPack && listUri && !profiles))) {
