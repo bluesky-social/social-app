@@ -16,13 +16,13 @@ export type InviteCodesQueryResponse = Exclude<
   undefined
 >
 export function useInviteCodesQuery() {
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   return useQuery({
     staleTime: STALE.MINUTES.FIVE,
     queryKey: [inviteCodesQueryKeyRoot],
     queryFn: async () => {
-      const res = await getAgent()
-        .com.atproto.server.getAccountInviteCodes({})
+      const res = await agent.com.atproto.server
+        .getAccountInviteCodes({})
         .catch(e => {
           if (cleanError(e) === 'Bad token scope') {
             return null

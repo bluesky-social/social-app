@@ -12,4 +12,5 @@ export type ReportDialogProps = {
         type: 'account'
         did: string
       }
+    | {type: 'convoMessage'}
 }

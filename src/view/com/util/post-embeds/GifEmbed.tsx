@@ -5,7 +5,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {HITSLOP_10} from '#/lib/constants'
+import {HITSLOP_20} from '#/lib/constants'
 import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
 import {isWeb} from '#/platform/detection'
 import {EmbedPlayerParams} from 'lib/strings/embed-player'
@@ -166,7 +166,7 @@ function AltText({text}: {text: string}) {
         accessibilityRole="button"
         accessibilityLabel={_(msg`Show alt text`)}
         accessibilityHint=""
-        hitSlop={HITSLOP_10}
+        hitSlop={HITSLOP_20}
         onPress={control.open}
         style={styles.altContainer}>
         <Text style={styles.alt} accessible={false}>
@@ -195,18 +195,18 @@ const styles = StyleSheet.create({
   altContainer: {
     backgroundColor: 'rgba(0, 0, 0, 0.75)',
     borderRadius: 6,
-    paddingHorizontal: 6,
-    paddingVertical: 3,
+    paddingHorizontal: isWeb ? 8 : 6,
+    paddingVertical: isWeb ? 6 : 3,
     position: 'absolute',
     // Related to margin/gap hack. This keeps the alt label in the same position
     // on all platforms
-    left: isWeb ? 8 : 5,
+    right: isWeb ? 8 : 5,
     bottom: isWeb ? 8 : 5,
     zIndex: 2,
   },
   alt: {
     color: 'white',
-    fontSize: 10,
+    fontSize: isWeb ? 10 : 7,
     fontWeight: 'bold',
   },
 })

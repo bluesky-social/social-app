@@ -470,7 +470,7 @@ function ProfileScreenLoaded({
 }
 
 function useRichText(text: string): [RichTextAPI, boolean] {
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   const [prevText, setPrevText] = React.useState(text)
   const [rawRT, setRawRT] = React.useState(() => new RichTextAPI({text}))
   const [resolvedRT, setResolvedRT] = React.useState<RichTextAPI | null>(null)
@@ -485,7 +485,7 @@ function useRichText(text: string): [RichTextAPI, boolean] {
     async function resolveRTFacets() {
       // new each time
       const resolvedRT = new RichTextAPI({text})
-      await resolvedRT.detectFacets(getAgent())
+      await resolvedRT.detectFacets(agent)
       if (!ignore) {
         setResolvedRT(resolvedRT)
       }
@@ -494,7 +494,7 @@ function useRichText(text: string): [RichTextAPI, boolean] {
     return () => {
       ignore = true
     }
-  }, [text, getAgent])
+  }, [text, agent])
   const isResolving = resolvedRT === null
   return [resolvedRT ?? rawRT, isResolving]
 }

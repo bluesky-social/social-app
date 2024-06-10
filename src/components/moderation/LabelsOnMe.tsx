@@ -3,10 +3,10 @@ import {StyleProp, View, ViewStyle} from 'react-native'
 import {AppBskyFeedDefs, ComAtprotoLabelDefs} from '@atproto/api'
 import {msg, Plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useSession} from '#/state/session'
 
+import {useSession} from '#/state/session'
 import {atoms as a} from '#/alf'
-import {Button, ButtonText, ButtonIcon, ButtonSize} from '#/components/Button'
+import {Button, ButtonIcon, ButtonSize, ButtonText} from '#/components/Button'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {
   LabelsOnMeDialog,
@@ -32,9 +32,7 @@ export function LabelsOnMe({
   if (!labels || !currentAccount) {
     return null
   }
-  labels = labels.filter(
-    l => !l.val.startsWith('!') && l.src !== currentAccount.did,
-  )
+  labels = labels.filter(l => !l.val.startsWith('!'))
   if (!labels.length) {
     return null
   }
@@ -57,13 +55,13 @@ export function LabelsOnMe({
             <Plural
               value={labels.length}
               one="# label has been placed on this account"
-              other="# labels has been placed on this account"
+              other="# labels have been placed on this account"
             />
           ) : (
             <Plural
               value={labels.length}
               one="# label has been placed on this content"
-              other="# labels has been placed on this content"
+              other="# labels have been placed on this content"
             />
           )}
         </ButtonText>

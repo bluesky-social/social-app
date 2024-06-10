@@ -18,21 +18,25 @@ import {
 import {Text} from '#/components/Typography'
 
 interface Props extends ComponentProps<typeof Link> {
+  disabled: boolean
   iconSize: number
   iconStyles: StyleProp<ViewStyle>
   modui: ModerationUI
   profile: AppBskyActorDefs.ProfileViewBasic
+  interpretFilterAsBlur?: boolean
 }
 
 export function PostHider({
   testID,
   href,
+  disabled,
   modui,
   style,
   children,
   iconSize,
   iconStyles,
   profile,
+  interpretFilterAsBlur,
   ...props
 }: Props) {
   const queryClient = useQueryClient()
@@ -40,14 +44,15 @@ export function PostHider({
   const {_} = useLingui()
   const [override, setOverride] = React.useState(false)
   const control = useModerationDetailsDialogControl()
-  const blur = modui.blurs[0]
+  const blur =
+    modui.blurs[0] || (interpretFilterAsBlur ? modui.filters[0] : undefined)
   const desc = useModerationCauseDescription(blur)
 
   const onBeforePress = React.useCallback(() => {
     precacheProfile(queryClient, profile)
   }, [queryClient, profile])
 
-  if (!blur) {
+  if (!blur || (disabled && !modui.noOverride)) {
     return (
       <Link
         testID={testID}

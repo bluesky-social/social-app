@@ -1,10 +1,14 @@
-import {BskyAgent, ChatBskyConvoGetConvoForMembers} from '@atproto-labs/api'
-import {useMutation, useQueryClient} from '@tanstack/react-query'
+import {ChatBskyConvoGetConvoForMembers} from '@atproto/api'
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
-import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
+import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
+import {useAgent} from '#/state/session'
+import {STALE} from '..'
 import {RQKEY as CONVO_KEY} from './conversation'
-import {useHeaders} from './temp-headers'
+
+const RQKEY_ROOT = 'convo-for-user'
+export const RQKEY = (did: string) => [RQKEY_ROOT, did]
 
 export function useGetConvoForMembers({
   onSuccess,
@@ -14,15 +18,13 @@ export function useGetConvoForMembers({
   onError?: (error: Error) => void
 }) {
   const queryClient = useQueryClient()
-  const headers = useHeaders()
-  const {serviceUrl} = useDmServiceUrlStorage()
+  const agent = useAgent()
 
   return useMutation({
     mutationFn: async (members: string[]) => {
-      const agent = new BskyAgent({service: serviceUrl})
       const {data} = await agent.api.chat.bsky.convo.getConvoForMembers(
         {members: members},
-        {headers},
+        {headers: DM_SERVICE_HEADERS},
       )
 
       return data
@@ -35,5 +37,28 @@ export function useGetConvoForMembers({
       logger.error(error)
       onError?.(error)
     },
+  })
+}
+
+/**
+ * Gets the conversation ID for a given DID. Returns null if it's not possible to message them.
+ */
+export function useMaybeConvoForUser(did: string) {
+  const agent = useAgent()
+
+  return useQuery({
+    queryKey: RQKEY(did),
+    queryFn: async () => {
+      const convo = await agent.api.chat.bsky.convo
+        .getConvoForMembers({members: [did]}, {headers: DM_SERVICE_HEADERS})
+        .catch(() => ({success: null}))
+
+      if (convo.success) {
+        return convo.data.convo
+      } else {
+        return null
+      }
+    },
+    staleTime: STALE.INFINITY,
   })
 }

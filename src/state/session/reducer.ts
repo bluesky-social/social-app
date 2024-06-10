@@ -37,15 +37,6 @@ export type Action =
       newAccount: SessionAccount
     }
   | {
-      type: 'updated-current-account'
-      updatedFields: Partial<
-        Pick<
-          SessionAccount,
-          'handle' | 'email' | 'emailConfirmed' | 'emailAuthFactor'
-        >
-      >
-    }
-  | {
       type: 'removed-account'
       accountDid: string
     }
@@ -77,8 +68,13 @@ export function reducer(state: State, action: Action): State {
   switch (action.type) {
     case 'received-agent-event': {
       const {agent, accountDid, refreshedAccount, sessionEvent} = action
-      if (agent !== state.currentAgentState.agent) {
-        // Only consider events from the active agent.
+      if (
+        refreshedAccount === undefined &&
+        agent !== state.currentAgentState.agent
+      ) {
+        // If the session got cleared out (e.g. due to expiry or network error) but
+        // this account isn't the active one, don't clear it out at this time.
+        // This way, if the problem is transient, it'll work on next resume.
         return state
       }
       if (sessionEvent === 'network-error') {
@@ -131,23 +127,6 @@ export function reducer(state: State, action: Action): State {
           did: newAccount.did,
           agent: newAgent,
         },
-        needsPersist: true,
-      }
-    }
-    case 'updated-current-account': {
-      const {updatedFields} = action
-      return {
-        accounts: state.accounts.map(a => {
-          if (a.did === state.currentAgentState.did) {
-            return {
-              ...a,
-              ...updatedFields,
-            }
-          } else {
-            return a
-          }
-        }),
-        currentAgentState: state.currentAgentState,
         needsPersist: true,
       }
     }

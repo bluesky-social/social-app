@@ -1,32 +1,33 @@
 import React from 'react'
 
 import {logger} from '#/logger'
+import {AvatarColor, Emoji} from '#/screens/Onboarding/StepProfile/types'
 
 export type OnboardingState = {
   hasPrev: boolean
   totalSteps: number
-  activeStep:
-    | 'interests'
-    | 'suggestedAccounts'
-    | 'followingFeed'
-    | 'algoFeeds'
-    | 'topicalFeeds'
-    | 'moderation'
-    | 'finished'
+  activeStep: 'profile' | 'interests' | 'finished'
   activeStepIndex: number
 
   interestsStepResults: {
     selectedInterests: string[]
     apiResponse: ApiResponseMap
   }
-  suggestedAccountsStepResults: {
-    accountDids: string[]
-  }
-  algoFeedsStepResults: {
-    feedUris: string[]
-  }
-  topicalFeedsStepResults: {
-    feedUris: string[]
+  profileStepResults: {
+    isCreatedAvatar: boolean
+    image?: {
+      path: string
+      mime: string
+      size: number
+      width: number
+      height: number
+    }
+    imageUri?: string
+    imageMime?: string
+    creatorState?: {
+      emoji: Emoji
+      backgroundColor: AvatarColor
+    }
   }
 }
 
@@ -46,16 +47,15 @@ export type OnboardingAction =
       apiResponse: ApiResponseMap
     }
   | {
-      type: 'setSuggestedAccountsStepResults'
-      accountDids: string[]
-    }
-  | {
-      type: 'setAlgoFeedsStepResults'
-      feedUris: string[]
-    }
-  | {
-      type: 'setTopicalFeedsStepResults'
-      feedUris: string[]
+      type: 'setProfileStepResults'
+      isCreatedAvatar: boolean
+      image?: OnboardingState['profileStepResults']['image']
+      imageUri: string
+      imageMime: string
+      creatorState?: {
+        emoji: Emoji
+        backgroundColor: AvatarColor
+      }
     }
 
 export type ApiResponseMap = {
@@ -66,31 +66,6 @@ export type ApiResponseMap = {
   suggestedFeedUris: {
     [key: string]: string[]
   }
-}
-
-export const initialState: OnboardingState = {
-  hasPrev: false,
-  totalSteps: 7,
-  activeStep: 'interests',
-  activeStepIndex: 1,
-
-  interestsStepResults: {
-    selectedInterests: [],
-    apiResponse: {
-      interests: [],
-      suggestedAccountDids: {},
-      suggestedFeedUris: {},
-    },
-  },
-  suggestedAccountsStepResults: {
-    accountDids: [],
-  },
-  algoFeedsStepResults: {
-    feedUris: [],
-  },
-  topicalFeedsStepResults: {
-    feedUris: [],
-  },
 }
 
 export const INTEREST_TO_DISPLAY_NAME_DEFAULTS: {
@@ -120,6 +95,28 @@ export const INTEREST_TO_DISPLAY_NAME_DEFAULTS: {
   cooking: 'Cooking',
 }
 
+export const initialState: OnboardingState = {
+  hasPrev: false,
+  totalSteps: 3,
+  activeStep: 'profile',
+  activeStepIndex: 1,
+
+  interestsStepResults: {
+    selectedInterests: [],
+    apiResponse: {
+      interests: [],
+      suggestedAccountDids: {},
+      suggestedFeedUris: {},
+    },
+  },
+  profileStepResults: {
+    isCreatedAvatar: false,
+    image: undefined,
+    imageUri: '',
+    imageMime: '',
+  },
+}
+
 export const Context = React.createContext<{
   state: OnboardingState
   dispatch: React.Dispatch<OnboardingAction>
@@ -138,46 +135,22 @@ export function reducer(
 
   switch (a.type) {
     case 'next': {
-      if (s.activeStep === 'interests') {
-        next.activeStep = 'suggestedAccounts'
+      if (s.activeStep === 'profile') {
+        next.activeStep = 'interests'
         next.activeStepIndex = 2
-      } else if (s.activeStep === 'suggestedAccounts') {
-        next.activeStep = 'followingFeed'
-        next.activeStepIndex = 3
-      } else if (s.activeStep === 'followingFeed') {
-        next.activeStep = 'algoFeeds'
-        next.activeStepIndex = 4
-      } else if (s.activeStep === 'algoFeeds') {
-        next.activeStep = 'topicalFeeds'
-        next.activeStepIndex = 5
-      } else if (s.activeStep === 'topicalFeeds') {
-        next.activeStep = 'moderation'
-        next.activeStepIndex = 6
-      } else if (s.activeStep === 'moderation') {
+      } else if (s.activeStep === 'interests') {
         next.activeStep = 'finished'
-        next.activeStepIndex = 7
+        next.activeStepIndex = 3
       }
       break
     }
     case 'prev': {
-      if (s.activeStep === 'suggestedAccounts') {
-        next.activeStep = 'interests'
+      if (s.activeStep === 'interests') {
+        next.activeStep = 'profile'
         next.activeStepIndex = 1
-      } else if (s.activeStep === 'followingFeed') {
-        next.activeStep = 'suggestedAccounts'
-        next.activeStepIndex = 2
-      } else if (s.activeStep === 'algoFeeds') {
-        next.activeStep = 'followingFeed'
-        next.activeStepIndex = 3
-      } else if (s.activeStep === 'topicalFeeds') {
-        next.activeStep = 'algoFeeds'
-        next.activeStepIndex = 4
-      } else if (s.activeStep === 'moderation') {
-        next.activeStep = 'topicalFeeds'
-        next.activeStepIndex = 5
       } else if (s.activeStep === 'finished') {
-        next.activeStep = 'moderation'
-        next.activeStepIndex = 6
+        next.activeStep = 'interests'
+        next.activeStepIndex = 2
       }
       break
     }
@@ -192,23 +165,13 @@ export function reducer(
       }
       break
     }
-    case 'setSuggestedAccountsStepResults': {
-      next.suggestedAccountsStepResults = {
-        accountDids: next.suggestedAccountsStepResults.accountDids.concat(
-          a.accountDids,
-        ),
-      }
-      break
-    }
-    case 'setAlgoFeedsStepResults': {
-      next.algoFeedsStepResults = {
-        feedUris: a.feedUris,
-      }
-      break
-    }
-    case 'setTopicalFeedsStepResults': {
-      next.topicalFeedsStepResults = {
-        feedUris: next.topicalFeedsStepResults.feedUris.concat(a.feedUris),
+    case 'setProfileStepResults': {
+      next.profileStepResults = {
+        isCreatedAvatar: a.isCreatedAvatar,
+        image: a.image,
+        imageUri: a.imageUri,
+        imageMime: a.imageMime,
+        creatorState: a.creatorState,
       }
       break
     }
@@ -216,7 +179,7 @@ export function reducer(
 
   const state = {
     ...next,
-    hasPrev: next.activeStep !== 'interests',
+    hasPrev: next.activeStep !== 'profile',
   }
 
   logger.debug(`onboarding`, {
@@ -226,9 +189,7 @@ export function reducer(
     interestsStepResults: {
       selectedInterests: state.interestsStepResults.selectedInterests,
     },
-    suggestedAccountsStepResults: state.suggestedAccountsStepResults,
-    algoFeedsStepResults: state.algoFeedsStepResults,
-    topicalFeedsStepResults: state.topicalFeedsStepResults,
+    profileStepResults: state.profileStepResults,
   })
 
   if (s.activeStep !== state.activeStep) {

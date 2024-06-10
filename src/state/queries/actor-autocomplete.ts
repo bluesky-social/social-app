@@ -20,9 +20,10 @@ export const RQKEY = (prefix: string) => [RQKEY_ROOT, prefix]
 export function useActorAutocompleteQuery(
   prefix: string,
   maintainData?: boolean,
+  limit?: number,
 ) {
   const moderationOpts = useModerationOpts()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
 
   prefix = prefix.toLowerCase().trim()
   if (prefix.endsWith('.')) {
@@ -35,9 +36,9 @@ export function useActorAutocompleteQuery(
     queryKey: RQKEY(prefix || ''),
     async queryFn() {
       const res = prefix
-        ? await getAgent().searchActorsTypeahead({
+        ? await agent.searchActorsTypeahead({
             q: prefix,
-            limit: 8,
+            limit: limit || 8,
           })
         : undefined
       return res?.data.actors || []
@@ -56,7 +57,7 @@ export type ActorAutocompleteFn = ReturnType<typeof useActorAutocompleteFn>
 export function useActorAutocompleteFn() {
   const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
 
   return React.useCallback(
     async ({query, limit = 8}: {query: string; limit?: number}) => {
@@ -68,7 +69,7 @@ export function useActorAutocompleteFn() {
             staleTime: STALE.MINUTES.ONE,
             queryKey: RQKEY(query || ''),
             queryFn: () =>
-              getAgent().searchActorsTypeahead({
+              agent.searchActorsTypeahead({
                 q: query,
                 limit,
               }),
@@ -85,7 +86,7 @@ export function useActorAutocompleteFn() {
         moderationOpts || DEFAULT_MOD_OPTS,
       )
     },
-    [queryClient, moderationOpts, getAgent],
+    [queryClient, moderationOpts, agent],
   )
 }
 

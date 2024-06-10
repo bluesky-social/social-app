@@ -1,9 +1,9 @@
 import React from 'react'
 import {
-  Easing,
+  cancelAnimation,
   SharedValue,
   useSharedValue,
-  withTiming,
+  withSpring,
 } from 'react-native-reanimated'
 
 type StateContext = SharedValue<number>
@@ -22,9 +22,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const setMode = React.useCallback(
     (v: boolean) => {
       'worklet'
-      mode.value = withTiming(v ? 1 : 0, {
-        duration: 400,
-        easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+      // Cancel any existing animation
+      cancelAnimation(mode)
+      mode.value = withSpring(v ? 1 : 0, {
+        overshootClamping: true,
       })
     },
     [mode],

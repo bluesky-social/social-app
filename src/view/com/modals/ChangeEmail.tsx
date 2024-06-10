@@ -4,7 +4,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useModalControls} from '#/state/modals'
-import {useAgent, useSession, useSessionApi} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError} from 'lib/strings/errors'
@@ -27,8 +27,7 @@ export const snapPoints = ['90%']
 export function Component() {
   const pal = usePalette('default')
   const {currentAccount} = useSession()
-  const {getAgent} = useAgent()
-  const {updateCurrentAccount} = useSessionApi()
+  const agent = useAgent()
   const {_} = useLingui()
   const [stage, setStage] = useState<Stages>(Stages.InputEmail)
   const [email, setEmail] = useState<string>(currentAccount?.email || '')
@@ -46,15 +45,12 @@ export function Component() {
     setError('')
     setIsProcessing(true)
     try {
-      const res = await getAgent().com.atproto.server.requestEmailUpdate()
+      const res = await agent.com.atproto.server.requestEmailUpdate()
       if (res.data.tokenRequired) {
         setStage(Stages.ConfirmCode)
       } else {
-        await getAgent().com.atproto.server.updateEmail({email: email.trim()})
-        updateCurrentAccount({
-          email: email.trim(),
-          emailConfirmed: false,
-        })
+        await agent.com.atproto.server.updateEmail({email: email.trim()})
+        await agent.resumeSession(agent.session!)
         Toast.show(_(msg`Email updated`))
         setStage(Stages.Done)
       }
@@ -79,14 +75,11 @@ export function Component() {
     setError('')
     setIsProcessing(true)
     try {
-      await getAgent().com.atproto.server.updateEmail({
+      await agent.com.atproto.server.updateEmail({
         email: email.trim(),
         token: confirmationCode.trim(),
       })
-      updateCurrentAccount({
-        email: email.trim(),
-        emailConfirmed: false,
-      })
+      await agent.resumeSession(agent.session!)
       Toast.show(_(msg`Email updated`))
       setStage(Stages.Done)
     } catch (e) {

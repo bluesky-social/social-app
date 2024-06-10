@@ -26,6 +26,7 @@ import {
   useInAppBrowser,
   useSetInAppBrowser,
 } from '#/state/preferences/in-app-browser'
+import {useDeleteActorDeclaration} from '#/state/queries/messages/actor-declaration'
 import {useClearPreferencesMutation} from '#/state/queries/preferences'
 import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
 import {useProfileQuery} from '#/state/queries/profile'
@@ -59,12 +60,14 @@ import {Text} from 'view/com/util/text/Text'
 import * as Toast from 'view/com/util/Toast'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {ScrollView} from 'view/com/util/Views'
+import {DeactivateAccountDialog} from '#/screens/Settings/components/DeactivateAccountDialog'
 import {useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
 import {navigate, resetToTab} from '#/Navigation'
 import {Email2FAToggle} from './Email2FAToggle'
 import {ExportCarDialog} from './ExportCarDialog'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 function SettingsAccountCard({
   account,
@@ -101,10 +104,10 @@ function SettingsAccountCard({
         />
       </View>
       <View style={[s.flex1]}>
-        <Text type="md-bold" style={pal.text}>
+        <Text type="md-bold" style={pal.text} numberOfLines={1}>
           {profile?.displayName || account.handle}
         </Text>
-        <Text type="sm" style={pal.textLight}>
+        <Text type="sm" style={pal.textLight} numberOfLines={1}>
           {account.handle}
         </Text>
       </View>
@@ -305,6 +308,13 @@ export function SettingsScreen({}: Props) {
     Toast.show(_(msg`Legacy storage cleared, you need to restart the app now.`))
   }, [_])
 
+  const deactivateAccountControl = useDialogControl()
+  const onPressDeactivateAccount = React.useCallback(() => {
+    deactivateAccountControl.open()
+  }, [deactivateAccountControl])
+
+  const {mutate: onPressDeleteChatDeclaration} = useDeleteActorDeclaration()
+
   return (
     <View style={s.hContentRegion} testID="settingsScreen">
       <ExportCarDialog control={exportCarControl} />
@@ -314,7 +324,7 @@ export function SettingsScreen({}: Props) {
         showBackButton={isMobile}
         style={[
           pal.border,
-          {borderBottomWidth: 1},
+          {borderBottomWidth: hairlineWidth},
           !isMobile && {borderLeftWidth: 1, borderRightWidth: 1},
         ]}>
         <View style={{flex: 1}}>
@@ -324,8 +334,7 @@ export function SettingsScreen({}: Props) {
         </View>
       </SimpleViewHeader>
       <ScrollView
-        style={s.hContentRegion}
-        contentContainerStyle={isMobile && pal.viewLight}
+        style={[s.hContentRegion, isMobile && pal.viewLight]}
         scrollIndicatorInsets={{right: 1}}
         // @ts-ignore web only -prf
         dataSet={{'stable-gutters': 1}}>
@@ -378,7 +387,7 @@ export function SettingsScreen({}: Props) {
             {!currentAccount.emailConfirmed && <EmailConfirmationNotice />}
 
             <View style={[s.flexRow, styles.heading]}>
-              <Text type="xl-bold" style={pal.text}>
+              <Text type="xl-bold" style={pal.text} numberOfLines={1}>
                 <Trans>Signed in as</Trans>
               </Text>
               <View style={s.flex1} />
@@ -613,6 +622,31 @@ export function SettingsScreen({}: Props) {
             <Trans>My Saved Feeds</Trans>
           </Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          testID="linkToChatSettingsBtn"
+          style={[
+            styles.linkCard,
+            pal.view,
+            isSwitchingAccounts && styles.dimmed,
+          ]}
+          onPress={
+            isSwitchingAccounts
+              ? undefined
+              : () => navigation.navigate('MessagesSettings')
+          }
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Chat settings`)}
+          accessibilityHint={_(msg`Opens chat settings`)}>
+          <View style={[styles.iconContainer, pal.btn]}>
+            <FontAwesomeIcon
+              icon={['far', 'comment-dots']}
+              style={pal.text as FontAwesomeIconStyle}
+            />
+          </View>
+          <Text type="lg" style={pal.text}>
+            <Trans>Chat Settings</Trans>
+          </Text>
+        </TouchableOpacity>
 
         <View style={styles.spacer20} />
 
@@ -763,6 +797,29 @@ export function SettingsScreen({}: Props) {
             <Trans>Export My Data</Trans>
           </Text>
         </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[pal.view, styles.linkCard]}
+          onPress={onPressDeactivateAccount}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Deactivate account`)}
+          accessibilityHint={_(
+            msg`Opens modal for account deactivation confirmation`,
+          )}>
+          <View style={[styles.iconContainer, dangerBg]}>
+            <FontAwesomeIcon
+              icon={'users-slash'}
+              style={dangerText as FontAwesomeIconStyle}
+              size={18}
+            />
+          </View>
+          <Text type="lg" style={dangerText}>
+            <Trans>Deactivate my account</Trans>
+          </Text>
+        </TouchableOpacity>
+        <DeactivateAccountDialog control={deactivateAccountControl} />
+
         <TouchableOpacity
           style={[pal.view, styles.linkCard]}
           onPress={onPressDeleteAccount}
@@ -824,6 +881,16 @@ export function SettingsScreen({}: Props) {
               accessibilityHint={_(msg`Resets the preferences state`)}>
               <Text type="lg" style={pal.text}>
                 <Trans>Reset preferences state</Trans>
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[pal.view, styles.linkCardNoIcon]}
+              onPress={() => onPressDeleteChatDeclaration()}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Delete chat declaration record`)}
+              accessibilityHint={_(msg`Deletes the chat declaration record`)}>
+              <Text type="lg" style={pal.text}>
+                <Trans>Delete chat declaration record</Trans>
               </Text>
             </TouchableOpacity>
             <TouchableOpacity

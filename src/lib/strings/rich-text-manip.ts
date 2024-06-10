@@ -1,4 +1,5 @@
-import {RichText, UnicodeString} from '@atproto/api'
+import {AppBskyRichtextFacet, RichText, UnicodeString} from '@atproto/api'
+
 import {toShortUrl} from './url-helpers'
 
 export function shortenLinks(rt: RichText): RichText {
@@ -9,9 +10,7 @@ export function shortenLinks(rt: RichText): RichText {
   // enumerate the link facets
   if (rt.facets) {
     for (const facet of rt.facets) {
-      const isLink = !!facet.features.find(
-        f => f.$type === 'app.bsky.richtext.facet#link',
-      )
+      const isLink = !!facet.features.find(AppBskyRichtextFacet.isLink)
       if (!isLink) {
         continue
       }
@@ -29,6 +28,24 @@ export function shortenLinks(rt: RichText): RichText {
       // remove the old URL
       rt.delete(byteStart + shortened.length, byteEnd + shortened.length)
     }
+  }
+  return rt
+}
+
+// filter out any mention facets that didn't map to a user
+export function stripInvalidMentions(rt: RichText): RichText {
+  if (!rt.facets?.length) {
+    return rt
+  }
+  rt = rt.clone()
+  if (rt.facets) {
+    rt.facets = rt.facets?.filter(facet => {
+      const mention = facet.features.find(AppBskyRichtextFacet.isMention)
+      if (mention && !mention.did) {
+        return false
+      }
+      return true
+    })
   }
   return rt
 }

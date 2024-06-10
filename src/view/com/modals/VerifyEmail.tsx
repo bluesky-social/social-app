@@ -13,7 +13,7 @@ import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
-import {useAgent, useSession, useSessionApi} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError} from 'lib/strings/errors'
@@ -41,9 +41,8 @@ export function Component({
   onSuccess?: () => void
 }) {
   const pal = usePalette('default')
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   const {currentAccount} = useSession()
-  const {updateCurrentAccount} = useSessionApi()
   const {_} = useLingui()
   const [stage, setStage] = useState<Stages>(
     showReminder ? Stages.Reminder : Stages.Email,
@@ -65,7 +64,7 @@ export function Component({
     setError('')
     setIsProcessing(true)
     try {
-      await getAgent().com.atproto.server.requestEmailConfirmation()
+      await agent.com.atproto.server.requestEmailConfirmation()
       setStage(Stages.ConfirmCode)
     } catch (e) {
       setError(cleanError(String(e)))
@@ -78,11 +77,11 @@ export function Component({
     setError('')
     setIsProcessing(true)
     try {
-      await getAgent().com.atproto.server.confirmEmail({
+      await agent.com.atproto.server.confirmEmail({
         email: (currentAccount?.email || '').trim(),
         token: confirmationCode.trim(),
       })
-      updateCurrentAccount({emailConfirmed: true})
+      await agent.resumeSession(agent.session!)
       Toast.show(_(msg`Email verified`))
       closeModal()
       onSuccess?.()
