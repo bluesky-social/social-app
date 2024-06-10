@@ -1,6 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyGraphDefs, AtUri} from '@atproto/api'
+import {AppBskyGraphDefs, AppBskyGraphStarterpack, AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -122,6 +122,14 @@ export function StepFinished() {
               : profileStepResults.image
               ? 'uploaded'
               : 'default',
+            usedStarterPack: Boolean(starterPack),
+            starterPackName: AppBskyGraphStarterpack.isRecord(
+              starterPack?.record,
+            )
+              ? starterPack.record.name
+              : undefined,
+            starterPackCreator: starterPack?.creator.did,
+            starterPackUri: starterPack?.uri,
           })
         })(),
         requestNotificationsPermission('AfterOnboarding'),

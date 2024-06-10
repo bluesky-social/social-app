@@ -56,6 +56,10 @@ export type LogEvents = {
   'onboarding:finished:nextPressed': {}
   'onboarding:finished:avatarResult': {
     avatarResult: 'default' | 'created' | 'uploaded'
+    usedStarterPack: boolean
+    starterPackName?: string
+    starterPackCreator?: string
+    starterPackUri?: string
   }
   'home:feedDisplayed:sampled': {
     feedUrl: string
