@@ -119,7 +119,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         // update & broadcast
         setNumUnread('')
         broadcast.postMessage({event: ''})
-        resetBadgeCount()
+        resetBadgeCount('generic')
       },
 
       async checkUnread({
