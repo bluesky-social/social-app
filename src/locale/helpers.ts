@@ -134,6 +134,7 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
       case 'hi':
         return AppLanguage.hi
       case 'id':
+      case 'in': // some android devices wrongly report 'in' instead of 'id'
         return AppLanguage.id
       case 'it':
         return AppLanguage.it

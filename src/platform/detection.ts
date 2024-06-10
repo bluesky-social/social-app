@@ -17,8 +17,16 @@ export const isMobileWeb =
 
 export const deviceLocales = dedupArray(
   getLocales?.()
-    .map?.(locale => locale.languageCode)
+    .map?.(locale => fixLanguageCode(locale.languageCode))
     .filter(code => typeof code === 'string'),
 ) as string[]
 
 export const prefersReducedMotion = isReducedMotion()
+
+function fixLanguageCode(code: string | null): string | null {
+  // some android devices incorrectly report 'in' for indonesian
+  if (code === 'in') {
+    return 'id'
+  }
+  return code
+}
