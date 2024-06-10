@@ -6,7 +6,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigationState} from '@react-navigation/native'
 
-import {useMinimalShellMode} from '#/lib/hooks/useMinimalShellMode'
+import {useMinimalShellFooterTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {clamp} from '#/lib/numbers'
 import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
@@ -50,7 +50,7 @@ export function BottomBarWeb() {
   const pal = usePalette('default')
   const safeAreaInsets = useSafeAreaInsets()
   const gate = useGate()
-  const {footerMinimalShellTransform} = useMinimalShellMode()
+  const footerMinimalShellTransform = useMinimalShellFooterTransform()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
   const iconWidth = 26
