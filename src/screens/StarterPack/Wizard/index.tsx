@@ -56,14 +56,18 @@ export function Wizard({
 
   const listUri = starterPack?.list?.uri
 
-  const {data} = useListMembersQuery(listUri, 50)
-  const profiles = data?.pages.flatMap(p => p.items.map(i => i.subject))
+  const {
+    data: profilesData,
+    isLoading: isLoadingProfiles,
+    isError: isErrorProfiles,
+  } = useListMembersQuery(listUri, 50)
+  const profiles = profilesData?.pages.flatMap(p => p.items.map(i => i.subject))
 
   if (name && rkey && (!starterPack || (starterPack && listUri && !profiles))) {
     return (
       <ListMaybePlaceholder
-        isLoading={isLoadingDid || isLoadingStarterPack}
-        isError={isErrorDid || isErrorStarterPack}
+        isLoading={isLoadingDid || isLoadingStarterPack || isLoadingProfiles}
+        isError={isErrorDid || isErrorStarterPack || isErrorProfiles}
         errorMessage={_(msg`Could not find that starter pack`)}
       />
     )
