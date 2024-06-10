@@ -56,6 +56,10 @@ export function useNotificationsRegistration() {
       return
     }
 
+    // HACK - see https://github.com/bluesky-social/social-app/pull/4467
+    // An apparent regression in expo-notifications causes `addPushTokenListener` to not fire on Android whenever the
+    // token changes by calling `getPushToken()`. This is a workaround to ensure we register the token once it is
+    // generated on Android.
     if (isAndroid) {
       ;(async () => {
         const token = await getPushToken()
