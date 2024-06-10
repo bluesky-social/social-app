@@ -290,8 +290,8 @@ let EditableUserAvatar = ({
       const croppedImage = await openCropper({
         mediaType: 'photo',
         cropperCircleOverlay: true,
-        height: item.height,
-        width: item.width,
+        height: 1000,
+        width: 1000,
         path: item.path,
       })
 
