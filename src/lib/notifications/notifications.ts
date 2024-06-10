@@ -6,7 +6,7 @@ import {BskyAgent} from '@atproto/api'
 import {logger} from '#/logger'
 import {SessionAccount, useAgent, useSession} from '#/state/session'
 import {logEvent, useGate} from 'lib/statsig/statsig'
-import {devicePlatform, isNative} from 'platform/detection'
+import {devicePlatform, isAndroid, isNative} from 'platform/detection'
 import BackgroundNotificationHandler from '../../../modules/expo-background-notification-handler'
 
 const SERVICE_DID = (serviceUrl?: string) =>
@@ -56,16 +56,31 @@ export function useNotificationsRegistration() {
       return
     }
 
-    // TEMPORARY. We want to use `Notifications.addPushTokenListener()` specifically on Android for this, since the token
-    // can change at points
-    ;(async () => {
-      const pushToken = await getPushToken()
+    if (isAndroid) {
+      ;(async () => {
+        const token = await getPushToken()
 
-      // If we don't get a push token back, it means that permission was denied
-      if (!pushToken) return
+        // Token will be undefined if we don't have notifications permission
+        if (token) {
+          registerPushToken(agent, currentAccount, token)
+        }
+      })()
+    } else {
+      getPushToken()
+    }
 
-      registerPushToken(agent, currentAccount, pushToken)
-    })()
+    // According to the Expo docs, there is a chance that the token will change while the app is open in some rare
+    // cases. This will fire `registerPushToken` whenever that happens.
+    const subscription = Notifications.addPushTokenListener(async newToken => {
+      registerPushToken(agent, currentAccount, {
+        data: newToken.data,
+        type: 'android',
+      })
+    })
+
+    return () => {
+      subscription.remove()
+    }
   }, [currentAccount, agent])
 }
 
@@ -106,6 +121,11 @@ export function useRequestNotificationsPermission() {
       context: context,
       status: res.status,
     })
+
+    if (res.granted) {
+      // This will fire a pushTokenEvent, which will handle registration of the token
+      getPushToken(true)
+    }
   }
 }
 
