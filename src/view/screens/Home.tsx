@@ -21,6 +21,10 @@ import {
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
 import {useOTAUpdates} from 'lib/hooks/useOTAUpdates'
 import {HomeTabNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
+import {
+  useSetUsedStarterPack,
+  useUsedStarterPack,
+} from 'state/preferences/starter-pack'
 import {FeedPage} from 'view/com/feeds/FeedPage'
 import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
@@ -67,6 +71,8 @@ function HomeScreenReady({
   const maybeFoundIndex = allFeeds.indexOf(rawSelectedFeed)
   const selectedIndex = Math.max(0, maybeFoundIndex)
   const selectedFeed = allFeeds[selectedIndex]
+  const usedStarterPack = useUsedStarterPack()
+  const setUsedStarterPack = useSetUsedStarterPack()
 
   useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName)
   useOTAUpdates()
@@ -74,14 +80,25 @@ function HomeScreenReady({
   const pagerRef = React.useRef<PagerRef>(null)
   const lastPagerReportedIndexRef = React.useRef(selectedIndex)
   React.useLayoutEffect(() => {
+    let initialIndex = selectedIndex
+    if (usedStarterPack) {
+      initialIndex = allFeeds.findIndex(
+        f => f === `feedgen|${usedStarterPack.initialFeed}`,
+      )
+      setUsedStarterPack(undefined)
+    }
+
     // Since the pager is not a controlled component, adjust it imperatively
     // if the selected index gets out of sync with what it last reported.
     // This is supposed to only happen on the web when you use the right nav.
-    if (selectedIndex !== lastPagerReportedIndexRef.current) {
+    if (initialIndex !== selectedIndex) {
+      lastPagerReportedIndexRef.current = initialIndex
+      pagerRef.current?.setPage(initialIndex, 'desktop-sidebar-click')
+    } else if (selectedIndex !== lastPagerReportedIndexRef.current) {
       lastPagerReportedIndexRef.current = selectedIndex
       pagerRef.current?.setPage(selectedIndex, 'desktop-sidebar-click')
     }
-  }, [selectedIndex])
+  }, [selectedIndex, usedStarterPack, setUsedStarterPack, allFeeds])
 
   const {hasSession} = useSession()
   const setMinimalShellMode = useSetMinimalShellMode()

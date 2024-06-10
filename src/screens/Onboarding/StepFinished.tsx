@@ -132,6 +132,13 @@ export function StepFinished() {
         })(),
         requestNotificationsPermission('AfterOnboarding'),
       ])
+
+      if (usedStarterPack) {
+        setUsedStarterPack({
+          ...usedStarterPack,
+          initialFeed: starterPack?.feeds?.[0].uri ?? undefined,
+        })
+      }
     } catch (e: any) {
       logger.info(`onboarding: bulk save failed`)
       logger.error(e)
@@ -152,7 +159,6 @@ export function StepFinished() {
     })
 
     setSaving(false)
-    setUsedStarterPack(undefined)
     dispatch({type: 'finish'})
     onboardDispatch({type: 'finish'})
     track('OnboardingV2:StepFinished:End')

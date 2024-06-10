@@ -92,6 +92,7 @@ export const schema = z.object({
     .object({
       uri: z.string(),
       cid: z.string(),
+      initialFeed: z.string().optional(),
     })
     .optional(),
 })

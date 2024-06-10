@@ -2,7 +2,7 @@ import React from 'react'
 
 import * as persisted from '#/state/persisted'
 
-type StateContext = {uri: string; cid: string} | undefined
+type StateContext = {uri: string; cid: string; initialFeed?: string} | undefined
 type SetContext = (v: StateContext) => void
 
 const stateContext = React.createContext<StateContext>(undefined)
