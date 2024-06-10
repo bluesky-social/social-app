@@ -79,7 +79,7 @@ export function useRequestNotificationsPermission() {
     if (
       !isNative ||
       permissions?.status === 'granted' ||
-      permissions?.status === 'denied'
+      (permissions?.status === 'denied' && !permissions.canAskAgain)
     ) {
       return
     }
