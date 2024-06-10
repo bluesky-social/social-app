@@ -2,6 +2,7 @@ import {Platform} from 'react-native'
 import {isReducedMotion} from 'react-native-reanimated'
 import {getLocales} from 'expo-localization'
 
+import {fixLegacyLanguageCode} from '#/locale/helpers'
 import {dedupArray} from 'lib/functions'
 
 export const isIOS = Platform.OS === 'ios'
@@ -17,16 +18,8 @@ export const isMobileWeb =
 
 export const deviceLocales = dedupArray(
   getLocales?.()
-    .map?.(locale => fixLanguageCode(locale.languageCode))
+    .map?.(locale => fixLegacyLanguageCode(locale.languageCode))
     .filter(code => typeof code === 'string'),
 ) as string[]
 
 export const prefersReducedMotion = isReducedMotion()
-
-function fixLanguageCode(code: string | null): string | null {
-  // some android devices incorrectly report 'in' for indonesian
-  if (code === 'in') {
-    return 'id'
-  }
-  return code
-}
