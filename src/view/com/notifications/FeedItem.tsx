@@ -316,7 +316,7 @@ let FeedItem = ({
                   style={[pal.textLight, styles.pointer]}
                   title={niceDate(item.notification.indexedAt)}>
                   {' '}
-                  &middot;{' ' + timeElapsed}
+                  &middot; {timeElapsed}
                 </Text>
               )}
             </TimeElapsed>
