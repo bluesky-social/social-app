@@ -305,7 +305,13 @@ export const ComposePost = observer(function ComposePost({
           localThumb: undefined,
         } as apilib.ExternalEmbedDraft)
       }
-      setError(cleanError(e.message))
+      let err = cleanError(e.message)
+      if (err.includes('not locate record')) {
+        err = _(
+          msg`We're sorry! The post you are replying to has been deleted.`,
+        )
+      }
+      setError(err)
       setIsProcessing(false)
       return
     } finally {
@@ -785,11 +791,12 @@ const styles = StyleSheet.create({
   },
   errorLine: {
     flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: colors.red1,
     borderRadius: 6,
     marginHorizontal: 16,
-    paddingHorizontal: 8,
-    paddingVertical: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
     marginBottom: 8,
   },
   reminderLine: {
