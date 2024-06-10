@@ -92,7 +92,7 @@ export function ListConvosProviderInner({
 
   const debouncedRefetch = useMemo(
     () =>
-      throttle(() => refetch, 500, {
+      throttle(refetch, 500, {
         leading: true,
         trailing: true,
       }),
