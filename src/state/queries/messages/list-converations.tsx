@@ -16,7 +16,7 @@ import {
   useInfiniteQuery,
   useQueryClient,
 } from '@tanstack/react-query'
-import debounce from 'lodash.debounce'
+import throttle from 'lodash.throttle'
 
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {useMessagesEventBus} from '#/state/messages/events'
@@ -91,7 +91,11 @@ export function ListConvosProviderInner({
   const {currentAccount} = useSession()
 
   const debouncedRefetch = useMemo(
-    () => debounce(() => refetch, 500),
+    () =>
+      throttle(refetch, 500, {
+        leading: true,
+        trailing: true,
+      }),
     [refetch],
   )
 
