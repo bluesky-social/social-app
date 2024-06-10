@@ -66,7 +66,8 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
                   text={_(msg`Feedback`)}
                 />
                 <Text type="md" style={pal.textLight}>
-                  &nbsp;&middot;&nbsp;
+                  {' '}
+                  &middot;{' '}
                 </Text>
               </>
             )}
@@ -77,7 +78,8 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
               text={_(msg`Privacy`)}
             />
             <Text type="md" style={pal.textLight}>
-              &nbsp;&middot;&nbsp;
+              {' '}
+              &middot;{' '}
             </Text>
             <TextLink
               type="md"
@@ -86,7 +88,8 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
               text={_(msg`Terms`)}
             />
             <Text type="md" style={pal.textLight}>
-              &nbsp;&middot;&nbsp;
+              {' '}
+              &middot;{' '}
             </Text>
             <TextLink
               type="md"
