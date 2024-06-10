@@ -545,13 +545,9 @@ function Footer({
             <Trans>
               <Text style={[a.font_bold]}>{getName(items[0])}, </Text>
               <Text style={[a.font_bold]}>{getName(items[1])}, </Text>
-              and {state.feeds.length - 2}{' '}
-              <Plural
-                value={state.feeds.length - 2}
-                one="other"
-                other="others"
-              />{' '}
-              are included in your starter pack
+              and {items.length - 2}{' '}
+              <Plural value={items.length - 2} one="other" other="others" /> are
+              included in your starter pack
             </Trans>
           )}
         </Text>
