@@ -25,7 +25,9 @@ export function StepFeeds() {
   const [state, dispatch] = useWizardState()
   const [query, setQuery] = useState('')
 
-  const {data: popularFeedsPages, fetchNextPage} = useGetPopularFeedsQuery()
+  const {data: popularFeedsPages, fetchNextPage} = useGetPopularFeedsQuery({
+    limit: 30,
+  })
 
   const popularFeeds =
     popularFeedsPages?.pages.flatMap(page => page.feeds) || []

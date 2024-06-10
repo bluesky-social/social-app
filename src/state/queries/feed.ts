@@ -173,7 +173,7 @@ export function useFeedSourceInfoQuery({uri}: {uri: string}) {
 
 export const useGetPopularFeedsQueryKey = ['getPopularFeeds']
 
-export function useGetPopularFeedsQuery() {
+export function useGetPopularFeedsQuery({limit = 10}: {limit?: number}) {
   const agent = useAgent()
   return useInfiniteQuery<
     AppBskyUnspeccedGetPopularFeedGenerators.OutputSchema,
@@ -185,7 +185,7 @@ export function useGetPopularFeedsQuery() {
     queryKey: useGetPopularFeedsQueryKey,
     queryFn: async ({pageParam}) => {
       const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
-        limit: 10,
+        limit,
         cursor: pageParam,
       })
       return res.data
