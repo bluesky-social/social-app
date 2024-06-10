@@ -91,7 +91,7 @@ export function ListConvosProviderInner({
   const {currentAccount} = useSession()
 
   const debouncedRefetch = useMemo(
-    () => debounce(() => refetch, 500),
+    () => debounce(() => refetch, 2_000),
     [refetch],
   )
 
