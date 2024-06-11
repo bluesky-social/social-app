@@ -171,6 +171,7 @@ function LandingScreenInner({
 }: {
   starterPack: AppBskyGraphDefs.StarterPackView
 }) {
+  const navigation = useNavigation<NavigationProp>()
   const {record, creator, listItemsSample, feeds, joinedWeekCount} = starterPack
   const {_} = useLingui()
   const t = useTheme()
@@ -199,7 +200,12 @@ function LandingScreenInner({
         contentContainerStyle={{paddingBottom: 100}}>
         <LinearGradient
           colors={gradient}
-          style={[a.align_center, a.gap_sm, a.py_2xl]}>
+          style={[
+            a.align_center,
+            a.gap_sm,
+            a.py_2xl,
+            {borderBottomLeftRadius: 10, borderBottomRightRadius: 10},
+          ]}>
           <View style={[a.flex_row, a.gap_md, a.pb_sm]}>
             <Logo width={76} fill="white" />
           </View>
@@ -213,12 +219,12 @@ function LandingScreenInner({
           </View>
         </LinearGradient>
         <View style={[a.gap_md, a.mt_lg, a.mx_lg]}>
-          {!!joinedWeekCount && joinedWeekCount >= 50 && (
-            <Text
-              style={[a.text_md, a.text_center, t.atoms.text_contrast_medium]}>
-              {joinedWeekCount} joined this week!
-            </Text>
-          )}
+          {/*{!!joinedWeekCount && joinedWeekCount >= -1 && (*/}
+          <Text
+            style={[a.text_md, a.text_center, t.atoms.text_contrast_medium]}>
+            180 joined this week!
+          </Text>
+          {/*)}*/}
           <Button
             label={_(msg`Join Bluesky now`)}
             onPress={() => {
@@ -235,34 +241,42 @@ function LandingScreenInner({
               <Trans>Join Bluesky now</Trans>
             </ButtonText>
           </Button>
-          <View style={[a.gap_xl, a.mt_md]}>
+          <View style={[a.gap_3xl, a.mt_md]}>
             <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
               {record.description}
             </Text>
             <Divider />
-            <Text />
-            {starterPack.feeds?.length && (
-              <View
-                style={[
-                  t.atoms.bg_contrast_25,
-                  a.rounded_sm,
-                  {pointerEvents: 'none'},
-                ]}>
-                {starterPack.feeds?.map(feed => (
-                  <FeedSourceCard key={feed.uri} feedUri={feed.uri} />
-                ))}
-                {/*<FeedSourceCard*/}
-                {/*  feedUri="at://did:plc:jfhpnnst6flqway4eaeqzj2a/app.bsky.feed.generator/for-science"*/}
-                {/*  hideTopBorder={true}*/}
-                {/*/>*/}
-                {/*<FeedSourceCard feedUri="at://did:plc:upmfcx5muayjhkg5sltj625o/app.bsky.feed.generator/aaachrckxlsh2" />*/}
+            {Boolean(starterPack.feeds?.length) && (
+              <View style={[a.gap_md]}>
+                <Text style={[a.font_bold, a.text_lg]}>
+                  Join Bluesky now to subscribe to these feeds
+                </Text>
+
+                <View
+                  style={[
+                    t.atoms.bg_contrast_25,
+                    a.rounded_sm,
+                    {pointerEvents: 'none'},
+                  ]}>
+                  {starterPack.feeds?.map((feed, index) => (
+                    <FeedSourceCard
+                      key={feed.uri}
+                      feedUri={feed.uri}
+                      hideTopBorder={index === 0}
+                    />
+                  ))}
+                  {/*<FeedSourceCard*/}
+                  {/*  feedUri="at://did:plc:jfhpnnst6flqway4eaeqzj2a/app.bsky.feed.generator/for-science"*/}
+                  {/*  hideTopBorder={true}*/}
+                  {/*/>*/}
+                  {/*<FeedSourceCard feedUri="at://did:plc:upmfcx5muayjhkg5sltj625o/app.bsky.feed.generator/aaachrckxlsh2" />*/}
+                </View>
               </View>
             )}
 
             {sampleProfiles?.length && (
-              <>
-                <Text
-                  style={[a.mt_sm, a.text_md, t.atoms.text_contrast_medium]}>
+              <View style={[a.gap_md]}>
+                <Text style={[a.font_bold, a.text_lg]}>
                   {feeds?.length ? (
                     <Trans>
                       You'll also follow these people and many others!
@@ -288,7 +302,7 @@ function LandingScreenInner({
                     <ProfilesSet profiles={userSets.second} />
                   )}
                 </View>
-              </>
+              </View>
             )}
           </View>
         </View>

@@ -3,6 +3,12 @@ import {View} from 'react-native'
 import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {
+  CommonActions,
+  StackActions,
+  useNavigation,
+  useNavigationContainerRef,
+} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
@@ -15,6 +21,7 @@ import {useAgent} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {uploadBlob} from 'lib/api'
 import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
+import {NavigationProp} from 'lib/routes/types'
 import {
   useSetUsedStarterPack,
   useUsedStarterPack,
@@ -165,15 +172,15 @@ export function StepFinished() {
     track('OnboardingV2:Complete')
     logEvent('onboarding:finished:nextPressed', {})
   }, [
-    state,
     queryClient,
     agent,
-    setUsedStarterPack,
     dispatch,
     onboardDispatch,
     track,
-    requestNotificationsPermission,
     usedStarterPack,
+    state,
+    requestNotificationsPermission,
+    setUsedStarterPack,
   ])
 
   React.useEffect(() => {

@@ -135,7 +135,7 @@ function Header({
                 <Pressable
                   style={[
                     a.px_lg,
-                    a.py_xs,
+                    a.py_sm,
                     a.align_center,
                     a.justify_center,
                     a.rounded_sm,
