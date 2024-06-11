@@ -6,7 +6,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useMediaQuery} from 'react-responsive'
 
 import {HITSLOP_20} from '#/lib/constants'
-import {useMinimalShellMode} from '#/lib/hooks/useMinimalShellMode'
+import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {clamp} from '#/lib/numbers'
@@ -30,7 +30,7 @@ export function LoadLatestBtn({
   const pal = usePalette('default')
   const {hasSession} = useSession()
   const {isDesktop, isTablet, isMobile, isTabletOrMobile} = useWebMediaQueries()
-  const {fabMinimalShellTransform} = useMinimalShellMode()
+  const fabMinimalShellTransform = useMinimalShellFabTransform()
   const insets = useSafeAreaInsets()
 
   // move button inline if it starts overlapping the left nav

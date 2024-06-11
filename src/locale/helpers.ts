@@ -116,7 +116,7 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
   const langs = appLanguage.split(',').filter(Boolean)
 
   for (const lang of langs) {
-    switch (lang) {
+    switch (fixLegacyLanguageCode(lang)) {
       case 'en':
         return AppLanguage.en
       case 'ca':
@@ -156,4 +156,21 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
     }
   }
   return AppLanguage.en
+}
+
+export function fixLegacyLanguageCode(code: string | null): string | null {
+  // handle some legacy code conversions, see https://xml.coverpages.org/iso639a.html
+  if (code === 'in') {
+    // indonesian
+    return 'id'
+  }
+  if (code === 'iw') {
+    // hebrew
+    return 'he'
+  }
+  if (code === 'ji') {
+    // yiddish
+    return 'yi'
+  }
+  return code
 }

@@ -49,8 +49,7 @@ export function FeedErrorMessage({
   if (
     typeof knownError !== 'undefined' &&
     knownError !== KnownError.Unknown &&
-    (savedFeedConfig?.type === 'feed' ||
-      knownError === KnownError.FeedNSFPublic)
+    feedDesc.startsWith('feedgen')
   ) {
     return (
       <FeedgenErrorMessage
@@ -272,7 +271,7 @@ function detectKnownError(
   ) {
     return KnownError.FeedgenMisconfigured
   }
-  if (error.includes('feed provided an invalid response')) {
+  if (error.includes('invalid response')) {
     return KnownError.FeedgenBadResponse
   }
   return KnownError.FeedgenUnknown

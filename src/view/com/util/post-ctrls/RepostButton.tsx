@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {HITSLOP_10, HITSLOP_20} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useRequireAuth} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
@@ -64,7 +65,8 @@ let RepostButton = ({
         } (${plural(repostCount || 0, {one: '# repost', other: '# reposts'})})`}
         shape="round"
         variant="ghost"
-        color="secondary">
+        color="secondary"
+        hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
         <Repost style={color} width={big ? 22 : 18} />
         {typeof repostCount !== 'undefined' && repostCount > 0 ? (
           <Text
