@@ -174,7 +174,8 @@ function KnownFollowersInner({
                     {prof.displayName}
                     {i === 0 && ', '}
                   </Text>
-                ))}{' '}
+                ))}
+                {', '}
                 {plural(count - 2, {
                   one: 'and # other',
                   other: 'and # others',
