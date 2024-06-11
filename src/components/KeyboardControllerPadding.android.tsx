@@ -5,7 +5,7 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated'
 
-export function KeyboardPadding({maxHeight}: {maxHeight?: number}) {
+export function KeyboardControllerPadding({maxHeight}: {maxHeight?: number}) {
   const keyboardHeight = useSharedValue(0)
 
   useKeyboardHandler(

@@ -59,6 +59,7 @@ import {CenteredView, ScrollView} from '#/view/com/util/Views'
 import {SearchLinkCard, SearchProfileCard} from '#/view/shell/desktop/Search'
 import {ProfileCardFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {atoms as a} from '#/alf'
+import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 
 function Loader() {
   const pal = usePalette('default')
@@ -712,11 +713,7 @@ export function SearchScreen(
             accessibilityRole="button"
             accessibilityLabel={_(msg`Menu`)}
             accessibilityHint={_(msg`Access navigation links and settings`)}>
-            <FontAwesomeIcon
-              icon="bars"
-              size={18}
-              color={pal.colors.textLight}
-            />
+            <Menu size="lg" fill={pal.colors.textLight} />
           </Pressable>
         )}
         <SearchInputBox
@@ -1073,13 +1070,14 @@ function scrollToTopWeb() {
   }
 }
 
-const HEADER_HEIGHT = 50
+const HEADER_HEIGHT = 46
 
 const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 12,
+    paddingLeft: 13,
     paddingVertical: 4,
     height: HEADER_HEIGHT,
     // @ts-ignore web only
@@ -1092,7 +1090,6 @@ const styles = StyleSheet.create({
     height: 30,
     borderRadius: 30,
     marginRight: 6,
-    paddingBottom: 2,
     alignItems: 'center',
     justifyContent: 'center',
   },
