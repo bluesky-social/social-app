@@ -143,7 +143,7 @@ function App() {
    * that is set up in the InnerApp component above.
    */
   return (
-    <KeyboardProvider enabled={true} statusBarTranslucent={true}>
+    <KeyboardProvider enabled={false} statusBarTranslucent={true}>
       <SessionProvider>
         <ShellStateProvider>
           <PrefsStateProvider>

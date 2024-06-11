@@ -18,7 +18,6 @@ import {
 import {
   KeyboardAvoidingView,
   KeyboardStickyView,
-  useKeyboardController,
 } from 'react-native-keyboard-controller'
 import Animated, {
   interpolateColor,
@@ -130,17 +129,6 @@ export const ComposePost = observer(function ComposePost({
   const {closeAllDialogs} = useDialogStateControlContext()
   const {closeAllModals} = useModalControls()
   const t = useTheme()
-
-  // Disable this in the composer to prevent any extra keyboard height being applied.
-  // See https://github.com/bluesky-social/social-app/pull/4399
-  const {setEnabled} = useKeyboardController()
-  React.useEffect(() => {
-    if (!isAndroid) return
-    setEnabled(false)
-    return () => {
-      setEnabled(true)
-    }
-  }, [setEnabled])
 
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isProcessing, setIsProcessing] = useState(false)
@@ -591,7 +579,7 @@ export const ComposePost = observer(function ComposePost({
               </View>
             )}
             {quote ? (
-              <View style={[s.mt5, isWeb && s.mb10]}>
+              <View style={[s.mt5, s.mb2, isWeb && s.mb10]}>
                 <View style={{pointerEvents: 'none'}}>
                   <QuoteEmbed quote={quote} />
                 </View>
