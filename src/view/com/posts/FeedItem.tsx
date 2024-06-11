@@ -204,8 +204,6 @@ let FeedItemInner = ({
     ) ||
     (!parentAuthor?.displayName && !parentAuthor?.handle)
 
-  console.log({isParentBlocked, parentAuthor})
-
   return (
     <Link
       testID={`feedItem-by-${post.author.handle}`}
