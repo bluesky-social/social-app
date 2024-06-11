@@ -60,7 +60,7 @@ export function StarterPackCard({
           ],
         ]}>
         {type !== 'notification' && <StarterPackIcon width={36} height={36} />}
-        <View style={a.gap_xs}>
+        <View style={[a.flex_1, a.gap_xs]}>
           <View style={[isWeb && a.gap_xs]}>
             <Text style={[a.font_bold, a.text_md]}>{record.name}</Text>
             {!hideBy && (
