@@ -196,6 +196,23 @@ let FeedItemInner = ({
     },
   ]
 
+  let blockedParentAuthorState: boolean = false
+  if (parentAuthor) {
+    if (
+      parentAuthor.viewer?.blockedBy == true ||
+      parentAuthor.viewer?.blocking ||
+      parentAuthor.viewer?.blockingByList
+    ) {
+      blockedParentAuthorState = true
+    }
+  }
+
+  let blockedParentAuthor: AppBskyActorDefs.ProfileViewBasic = {
+    did: '',
+    displayName: '[blocked user]',
+    handle: '',
+  }
+
   return (
     <Link
       testID={`feedItem-by-${post.author.handle}`}
@@ -320,7 +337,11 @@ let FeedItemInner = ({
             onOpenAuthor={onOpenAuthor}
           />
           {!isThreadChild && showReplyTo && parentAuthor && (
-            <ReplyToLabel profile={parentAuthor} />
+            <ReplyToLabel
+              profile={
+                blockedParentAuthorState ? blockedParentAuthor : parentAuthor
+              }
+            />
           )}
           <LabelsOnMyPost post={post} />
           <PostContent
