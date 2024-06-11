@@ -204,7 +204,13 @@ function ChatListItemReady({
       <Link
         to={`/messages/${convo.id}`}
         label={displayName}
-        accessibilityHint={_(msg`Go to conversation with ${profile.handle}`)}
+        accessibilityHint={
+          !isDeletedAccount
+            ? _(msg`Go to conversation with ${profile.handle}`)
+            : _(
+                msg`The recipient of this chat has deleted their account. Click for options.`,
+              )
+        }
         accessibilityActions={
           isNative
             ? [
