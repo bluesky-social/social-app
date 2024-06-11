@@ -41,7 +41,6 @@ export function QrCodeDialog({
       })
     })
   }
-
   return (
     <Dialog.Outer control={control}>
       <Dialog.Handle />

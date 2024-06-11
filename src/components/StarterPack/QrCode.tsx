@@ -6,6 +6,7 @@ import {LinearGradient} from 'expo-linear-gradient'
 import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
+import {UserAvatar} from 'view/com/util/UserAvatar'
 import {Logo} from 'view/icons/Logo'
 import {Logotype} from 'view/icons/Logotype'
 import {useTheme} from '#/alf'
@@ -34,7 +35,7 @@ export function QrCode({
       <LinearGradient
         colors={gradient}
         style={[
-          a.flex_1,
+          {width: 580, height: 280},
           a.align_center,
           a.flex_row,
           a.gap_sm,
@@ -42,15 +43,35 @@ export function QrCode({
           a.rounded_sm,
           a.px_sm,
         ]}>
-        <View style={[a.gap_5xl, a.align_center, {width: '60%'}]}>
+        <View style={[a.gap_4xl, a.align_center, {width: '55%'}]}>
           <Text
             style={[a.font_bold, a.text_xl, a.text_center, {color: 'white'}]}>
             <Trans>Join the conversation</Trans>
           </Text>
-          <Text
-            style={[a.font_bold, a.text_4xl, a.text_center, {color: 'white'}]}>
-            {record.name}
-          </Text>
+          <View style={[a.gap_sm]}>
+            <View style={[a.flex_row, a.align_center, a.justify_center]}>
+              {starterPack.listItemsSample?.map(p => (
+                <View
+                  style={[
+                    {marginLeft: -6, borderColor: 'white', borderWidth: 2},
+                    a.rounded_full,
+                    a.shadow_lg,
+                  ]}
+                  key={p.subject.did}>
+                  <UserAvatar size={28} avatar={p.subject.avatar} />
+                </View>
+              ))}
+            </View>
+            <Text
+              style={[
+                a.font_bold,
+                a.text_4xl,
+                a.text_center,
+                {color: 'white'},
+              ]}>
+              {record.name}
+            </Text>
+          </View>
           <View style={[a.flex_row, a.align_center, a.gap_sm]}>
             <Text
               style={[a.font_bold, a.text_xl, a.text_center, {color: 'white'}]}>
@@ -64,7 +85,7 @@ export function QrCode({
             />
           </View>
         </View>
-        <View style={[{width: '40%'}]}>
+        <View style={[{width: '35%'}]}>
           <QrCodeInner url="https://bsky.app" />
         </View>
       </LinearGradient>
