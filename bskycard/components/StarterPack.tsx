@@ -49,6 +49,17 @@ export function StarterPack(props: {
             </div>
           )
         })}
+        {/* background overlay */}
+        <div
+          style={{
+            display: 'flex',
+            width: '100%',
+            height: '100%',
+            position: 'absolute',
+            backgroundImage: 'linear-gradient(#3D83F6, #78a8f5)',
+            opacity: 0.8,
+          }}
+        />
       </div>
       {/*  butterfly overlay */}
       <div
@@ -70,6 +81,7 @@ export function StarterPack(props: {
             borderRadius: '50%',
             backgroundImage:
               'linear-gradient(to bottom right, #3D83F6, #5999FF)',
+            boxShadow: '0px 0px 150px rgba(0, 0, 0, .5)',
           }}>
           <Butterfly style={{color: 'white'}} width="60%" />
         </div>
