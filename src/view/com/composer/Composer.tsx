@@ -419,8 +419,8 @@ export const ComposePost = observer(function ComposePost({
     <KeyboardAvoidingView
       testID="composePostView"
       behavior={isIOS ? 'padding' : 'height'}
-      style={[styles.outer]}
-      keyboardVerticalOffset={isIOS ? 70 : 0}>
+      keyboardVerticalOffset={isIOS ? 70 : 0}
+      style={[a.flex_1]}>
       <View style={[a.flex_1, viewStyles]} aria-modal accessibilityViewIsModal>
         <Animated.View style={topBarAnimatedStyle}>
           <View style={styles.topbarInner}>
@@ -742,11 +742,6 @@ function useAnimatedBorders() {
 }
 
 const styles = StyleSheet.create({
-  outer: {
-    flexDirection: 'column',
-    flex: 1,
-    height: '100%',
-  },
   topbarInner: {
     flexDirection: 'row',
     alignItems: 'center',
