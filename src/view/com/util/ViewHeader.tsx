@@ -8,7 +8,7 @@ import {useNavigation} from '@react-navigation/native'
 
 import {useSetDrawerOpen} from '#/state/shell'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
+import {useMinimalShellHeaderTransform} from 'lib/hooks/useMinimalShellTransform'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {NavigationProp} from 'lib/routes/types'
@@ -197,7 +197,7 @@ function Container({
   showBorder?: boolean
 }) {
   const pal = usePalette('default')
-  const {headerMinimalShellTransform} = useMinimalShellMode()
+  const headerMinimalShellTransform = useMinimalShellHeaderTransform()
 
   if (!hideOnScroll) {
     return (

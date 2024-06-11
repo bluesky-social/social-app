@@ -726,7 +726,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     }, [onScrollToTop, isScreenFocused])
 
     const renderPostsEmpty = useCallback(() => {
-      return <EmptyState icon="feed" message={_(msg`This feed is empty!`)} />
+      return <EmptyState icon="hashtag" message={_(msg`This feed is empty.`)} />
     }, [_])
 
     return (

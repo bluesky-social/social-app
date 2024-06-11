@@ -11,7 +11,7 @@ import {useLingui} from '@lingui/react'
 import {CogIcon} from '#/lib/icons'
 import {useSession} from '#/state/session'
 import {useShellLayout} from '#/state/shell/shell-layout'
-import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
+import {useMinimalShellHeaderTransform} from 'lib/hooks/useMinimalShellTransform'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {Logo} from '#/view/icons/Logo'
@@ -39,7 +39,7 @@ function HomeHeaderLayoutDesktopAndTablet({
   tabBarAnchor: JSX.Element | null | undefined
 }) {
   const pal = usePalette('default')
-  const {headerMinimalShellTransform} = useMinimalShellMode()
+  const headerMinimalShellTransform = useMinimalShellHeaderTransform()
   const {headerHeight} = useShellLayout()
   const {hasSession} = useSession()
   const {_} = useLingui()
