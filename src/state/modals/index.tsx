@@ -173,7 +173,7 @@ const ModalControlContext = React.createContext<{
 }>({
   openModal: () => {},
   closeModal: () => false,
-  closeAllModals: () => {},
+  closeAllModals: () => false,
 })
 
 /**
