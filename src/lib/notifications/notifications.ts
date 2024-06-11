@@ -120,6 +120,7 @@ export function useRequestNotificationsPermission() {
     const res = await Notifications.requestPermissionsAsync({
       ios: {
         allowBadge: true,
+        allowSound: true,
       },
     })
     logEvent('notifications:request', {
