@@ -221,7 +221,7 @@ function Header({
           </Trans>
         </Text>
       </View>
-      <QrCodeDialog control={qrCodeDialogControl} url="https://bsky.app" />
+      <QrCodeDialog control={qrCodeDialogControl} starterPack={starterPack} />
     </>
   )
 }

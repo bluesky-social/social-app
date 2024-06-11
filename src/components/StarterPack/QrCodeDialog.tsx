@@ -1,29 +1,28 @@
 import React from 'react'
 import {View} from 'react-native'
-import QRCode from 'react-native-qrcode-styled'
 import * as FS from 'expo-file-system'
+import {AppBskyGraphDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {nanoid} from 'nanoid/non-secure'
 
 import {saveImageToMediaLibrary} from 'lib/media/manip'
 import * as Toast from '#/view/com/util/Toast'
-import {useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {DialogControlProps} from '#/components/Dialog'
+import {QrCode} from '#/components/StarterPack/QrCode'
 import {Text} from '#/components/Typography'
 
 export function QrCodeDialog({
   control,
-  url,
+  starterPack,
 }: {
   control: DialogControlProps
-  url: string
+  starterPack: AppBskyGraphDefs.StarterPackView
 }) {
   const {_} = useLingui()
-  const t = useTheme()
 
   // No types for this
   // See https://github.com/tokkozhin/react-native-qrcode-styled/blob/main/example/src/examples/DownloadQR.tsx for usage
@@ -52,38 +51,7 @@ export function QrCodeDialog({
           <Text style={[a.font_bold, a.text_xl, a.text_center]}>
             Share this starter pack with friends!
           </Text>
-          <View style={[t.atoms.bg_contrast_25, a.rounded_md]}>
-            <QRCode
-              data={url}
-              style={[{height: 200, width: 200}]}
-              pieceSize={8}
-              padding={20}
-              // pieceLiquidRadius={2}
-              pieceBorderRadius={4.5}
-              outerEyesOptions={{
-                topLeft: {
-                  borderRadius: [12, 12, 0, 12],
-                  color: t.palette.primary_500,
-                },
-                topRight: {
-                  borderRadius: [12, 12, 12, 0],
-                  color: t.palette.primary_500,
-                },
-                bottomLeft: {
-                  borderRadius: [12, 0, 12, 12],
-                  color: t.palette.primary_500,
-                },
-              }}
-              innerEyesOptions={{borderRadius: 3}}
-              logo={{
-                href: require('../../../assets/logo.png'),
-                scale: 1.2,
-                padding: 2,
-                hidePieces: true,
-              }}
-              ref={qrCodeRef}
-            />
-          </View>
+          <QrCode starterPack={starterPack} />
           <Button
             label={_(msg`Save QR code`)}
             variant="solid"
