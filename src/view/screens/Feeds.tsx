@@ -1,11 +1,5 @@
 import React from 'react'
-import {
-  ActivityIndicator,
-  type FlatList,
-  Pressable,
-  StyleSheet,
-  View,
-} from 'react-native'
+import {ActivityIndicator, type FlatList, StyleSheet, View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
@@ -25,18 +19,17 @@ import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
-import {HITSLOP_10} from 'lib/constants'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {CogIcon, ComposeIcon2, MagnifyingGlassIcon2} from 'lib/icons'
+import {ComposeIcon2} from 'lib/icons'
 import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {cleanError} from 'lib/strings/errors'
 import {s} from 'lib/styles'
 import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 import {FAB} from 'view/com/util/fab/FAB'
-import {SearchInput, SearchInputRef} from 'view/com/util/forms/SearchInput'
-import {Link} from 'view/com/util/Link'
+import {SearchInput} from 'view/com/util/forms/SearchInput'
+import {Link, TextLink} from 'view/com/util/Link'
 import {List} from 'view/com/util/List'
 import {
   FeedFeedLoadingPlaceholder,
@@ -159,7 +152,6 @@ export function FeedsScreen(_props: Props) {
   } = useSearchPopularFeedsMutation()
   const {hasSession} = useSession()
   const listRef = React.useRef<FlatList>(null)
-  const searchInputRef = React.useRef<SearchInputRef>(null)
 
   /**
    * A search query is present. We may not have search results yet.
@@ -399,24 +391,14 @@ export function FeedsScreen(_props: Props) {
   const renderHeaderBtn = React.useCallback(() => {
     return (
       <View style={styles.headerBtnGroup}>
-        <Pressable
-          accessibilityRole="button"
-          hitSlop={HITSLOP_10}
-          onPress={searchInputRef.current?.focus}>
-          <MagnifyingGlassIcon2
-            size={22}
-            strokeWidth={2}
-            style={pal.textLight}
-          />
-        </Pressable>
-        <Link
+        <TextLink
+          type="lg-medium"
           href="/settings/saved-feeds"
-          hitSlop={10}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Edit Saved Feeds`)}
-          accessibilityHint={_(msg`Opens screen to edit Saved Feeds`)}>
-          <CogIcon size={22} strokeWidth={2} style={pal.textLight} />
-        </Link>
+          accessibilityLabel={_(msg`Edit My Feeds`)}
+          accessibilityHint=""
+          text={_(msg`Edit`)}
+          style={[pal.link, a.pr_xs]}
+        />
       </View>
     )
   }, [pal, _])
@@ -480,22 +462,14 @@ export function FeedsScreen(_props: Props) {
                   <Trans>Feeds</Trans>
                 </Text>
                 <View style={styles.headerBtnGroup}>
-                  <Pressable
-                    accessibilityRole="button"
-                    hitSlop={HITSLOP_10}
-                    onPress={searchInputRef.current?.focus}>
-                    <MagnifyingGlassIcon2
-                      size={22}
-                      strokeWidth={2}
-                      style={pal.icon}
-                    />
-                  </Pressable>
-                  <Link
+                  <TextLink
+                    type="lg"
                     href="/settings/saved-feeds"
                     accessibilityLabel={_(msg`Edit My Feeds`)}
-                    accessibilityHint="">
-                    <CogIcon strokeWidth={1.5} style={pal.icon} size={28} />
-                  </Link>
+                    accessibilityHint=""
+                    text={_(msg`Edit`)}
+                    style={[pal.link]}
+                  />
                 </View>
               </View>
             )}
@@ -522,7 +496,6 @@ export function FeedsScreen(_props: Props) {
             <FeedsAboutHeader />
             <View style={{paddingHorizontal: 12, paddingBottom: 12}}>
               <SearchInput
-                ref={searchInputRef}
                 query={query}
                 onChangeQuery={onChangeQuery}
                 onPressCancelSearch={onPressCancelSearch}
@@ -577,8 +550,8 @@ export function FeedsScreen(_props: Props) {
       pal.view,
       pal.border,
       pal.text,
-      pal.icon,
       pal.textLight,
+      pal.link,
       _,
       query,
       onChangeQuery,
