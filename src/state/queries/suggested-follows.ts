@@ -31,7 +31,7 @@ const suggestedFollowsByActorQueryKey = (did: string) => [
   did,
 ]
 
-export function useSuggestedFollowsQuery() {
+export function useSuggestedFollowsQuery(options?: {limit?: number}) {
   const {currentAccount} = useSession()
   const agent = useAgent()
   const moderationOpts = useModerationOpts()
@@ -51,7 +51,7 @@ export function useSuggestedFollowsQuery() {
       const contentLangs = getContentLanguages().join(',')
       const res = await agent.app.bsky.actor.getSuggestions(
         {
-          limit: 25,
+          limit: options?.limit || 25,
           cursor: pageParam,
         },
         {

@@ -29,13 +29,14 @@ import {MagnifyingGlassIcon} from '#/lib/icons'
 import {makeProfileLink} from '#/lib/routes/links'
 import {NavigationProp} from '#/lib/routes/types'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
-import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {isIOS, isNative, isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {useActorSearch} from '#/state/queries/actor-search'
+import {useGetPopularFeedsQuery} from '#/state/queries/feed'
+import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
 import {useSuggestedFollowsQuery} from '#/state/queries/suggested-follows'
 import {useSession} from '#/state/session'
@@ -47,6 +48,7 @@ import {
   NativeStackScreenProps,
   SearchTabNavigatorParams,
 } from 'lib/routes/types'
+import {cleanError} from 'lib/strings/errors'
 import {useTheme} from 'lib/ThemeContext'
 import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
@@ -56,10 +58,23 @@ import {Link} from '#/view/com/util/Link'
 import {List} from '#/view/com/util/List'
 import {Text} from '#/view/com/util/text/Text'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
+import {KNOWN_AUTHED_ONLY_FEEDS} from '#/view/screens/Feeds'
 import {SearchLinkCard, SearchProfileCard} from '#/view/shell/desktop/Search'
-import {ProfileCardFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
-import {atoms as a} from '#/alf'
+import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
+import {
+  FeedFeedLoadingPlaceholder,
+  ProfileCardFeedLoadingPlaceholder,
+} from 'view/com/util/LoadingPlaceholder'
+import {atoms as a, useTheme as useThemeNew} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {IconCircle} from '#/components/IconCircle'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import {Props as SVGIconProps} from '#/components/icons/common'
+import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
+import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import {Loader as LoaderIcon} from '#/components/Loader'
+import {Text as TextNew} from '#/components/Typography'
 
 function Loader() {
   const pal = usePalette('default')
@@ -122,69 +137,399 @@ function EmptyState({message, error}: {message: string; error?: string}) {
   )
 }
 
-function useSuggestedFollows(): [
-  AppBskyActorDefs.ProfileViewBasic[],
-  () => void,
-] {
-  const {
-    data: suggestions,
-    hasNextPage,
-    isFetchingNextPage,
-    isError,
-    fetchNextPage,
-  } = useSuggestedFollowsQuery()
+function SuggestedItemsHeader({
+  title,
+  description,
+  icon,
+}: {
+  title: string
+  description: string
+  icon: React.ComponentType<SVGIconProps>
+}) {
+  const t = useThemeNew()
 
-  const onEndReached = React.useCallback(async () => {
-    if (isFetchingNextPage || !hasNextPage || isError) return
+  return (
+    <View
+      style={
+        isWeb
+          ? [
+              a.flex_row,
+              a.px_md,
+              a.py_lg,
+              a.gap_md,
+              t.atoms.border_contrast_low,
+            ]
+          : [
+              {flexDirection: 'row-reverse'},
+              a.p_lg,
+              a.gap_md,
+              t.atoms.border_contrast_low,
+            ]
+      }>
+      <IconCircle icon={icon} size="lg" />
+      <View style={[a.flex_1, a.gap_xs]}>
+        <Text style={[a.flex_1, a.text_2xl, a.font_bold, t.atoms.text]}>
+          {title}
+        </Text>
+        <Text style={[t.atoms.text_contrast_high]}>{description}</Text>
+      </View>
+    </View>
+  )
+}
+
+type ExploreScreenItems =
+  | {
+      type: 'header'
+      key: string
+      title: string
+      description: string
+      icon: React.ComponentType<SVGIconProps>
+    }
+  | {
+      type: 'profile'
+      key: string
+      profile: AppBskyActorDefs.ProfileViewBasic
+    }
+  | {
+      type: 'feed'
+      key: string
+      feed: AppBskyFeedDefs.GeneratorView
+    }
+  | {
+      type: 'loadMore'
+      key: string
+      isLoadingMore: boolean
+      onLoadMore: () => void
+    }
+  | {
+      type: 'profilePlaceholder'
+      key: string
+    }
+  | {
+      type: 'feedPlaceholder'
+      key: string
+    }
+  | {
+      type: 'error'
+      key: string
+      message: string
+      error: string
+    }
+
+function ExploreScreen() {
+  const {_} = useLingui()
+  const t = useThemeNew()
+  const {hasSession} = useSession()
+  const {data: preferences, error: preferencesError} = usePreferencesQuery()
+  const {
+    data: profiles,
+    hasNextPage: hasNextProfilesPage,
+    isLoading: isLoadingProfiles,
+    isFetchingNextPage: isFetchingNextProfilesPage,
+    error: profilesError,
+    fetchNextPage: fetchNextProfilesPage,
+  } = useSuggestedFollowsQuery({limit: 5})
+  const {
+    data: feeds,
+    hasNextPage: hasNextFeedsPage,
+    isLoading: isLoadingFeeds,
+    isFetchingNextPage: isFetchingNextFeedsPage,
+    error: feedsError,
+    fetchNextPage: fetchNextFeedsPage,
+  } = useGetPopularFeedsQuery({limit: 5})
+
+  const isLoadingMoreProfiles = isFetchingNextProfilesPage && !isLoadingProfiles
+  const onLoadMoreProfiles = React.useCallback(async () => {
+    if (isFetchingNextProfilesPage || !hasNextProfilesPage || profilesError)
+      return
     try {
-      await fetchNextPage()
+      await fetchNextProfilesPage()
     } catch (err) {
       logger.error('Failed to load more suggested follows', {message: err})
     }
-  }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
+  }, [
+    isFetchingNextProfilesPage,
+    hasNextProfilesPage,
+    profilesError,
+    fetchNextProfilesPage,
+  ])
 
-  const items: AppBskyActorDefs.ProfileViewBasic[] = []
-  if (suggestions) {
-    // Currently the responses contain duplicate items.
-    // Needs to be fixed on backend, but let's dedupe to be safe.
-    let seen = new Set()
-    for (const page of suggestions.pages) {
-      for (const actor of page.actors) {
-        if (!seen.has(actor.did)) {
-          seen.add(actor.did)
-          items.push(actor)
+  const isLoadingMoreFeeds = isFetchingNextFeedsPage && !isLoadingFeeds
+  const onLoadMoreFeeds = React.useCallback(async () => {
+    if (isFetchingNextFeedsPage || !hasNextFeedsPage || feedsError) return
+    try {
+      await fetchNextFeedsPage()
+    } catch (err) {
+      logger.error('Failed to load more suggested follows', {message: err})
+    }
+  }, [
+    isFetchingNextFeedsPage,
+    hasNextFeedsPage,
+    feedsError,
+    fetchNextFeedsPage,
+  ])
+
+  const items = React.useMemo<ExploreScreenItems[]>(() => {
+    const i: ExploreScreenItems[] = [
+      {
+        type: 'header',
+        key: 'suggested-follows-header',
+        title: _(msg`Suggested follows`),
+        description: _(msg`Find new friends or interesting accounts`),
+        icon: ListSparkle,
+      },
+    ]
+
+    if (profiles) {
+      // Currently the responses contain duplicate items.
+      // Needs to be fixed on backend, but let's dedupe to be safe.
+      let seen = new Set()
+      for (const page of profiles.pages) {
+        for (const actor of page.actors) {
+          if (!seen.has(actor.did)) {
+            seen.add(actor.did)
+            i.push({
+              type: 'profile',
+              key: actor.did,
+              profile: actor,
+            })
+          }
         }
       }
+
+      i.push({
+        type: 'loadMore',
+        key: 'loadMoreProfiles',
+        isLoadingMore: isLoadingMoreProfiles,
+        onLoadMore: onLoadMoreProfiles,
+      })
+    } else {
+      if (profilesError) {
+        i.push({
+          type: 'error',
+          key: 'profilesError',
+          message: _(msg`Failed to load suggested follows`),
+          error: cleanError(profilesError),
+        })
+      } else {
+        i.push({type: 'profilePlaceholder', key: 'profilePlaceholder'})
+      }
     }
-  }
-  return [items, onEndReached]
-}
 
-let SearchScreenSuggestedFollows = (_props: {}): React.ReactNode => {
-  const pal = usePalette('default')
-  const [suggestions, onEndReached] = useSuggestedFollows()
+    i.push({
+      type: 'header',
+      key: 'suggested-feeds-header',
+      title: _(msg`Suggested feeds`),
+      description: _(msg`Discover new content`),
+      icon: ListSparkle,
+    })
 
-  return suggestions.length ? (
+    if (feeds && preferences) {
+      const filtered = feeds.pages.map(page => {
+        page.feeds = page.feeds.filter(feed => {
+          if (!hasSession && KNOWN_AUTHED_ONLY_FEEDS.includes(feed.uri)) {
+            return false
+          }
+          const alreadySaved = Boolean(
+            preferences?.savedFeeds?.find(f => {
+              return f.value === feed.uri
+            }),
+          )
+          return !alreadySaved
+        })
+
+        return page
+      })
+
+      // Currently the responses contain duplicate items.
+      // Needs to be fixed on backend, but let's dedupe to be safe.
+      let seen = new Set()
+      for (const page of filtered) {
+        for (const feed of page.feeds) {
+          if (!seen.has(feed.uri)) {
+            seen.add(feed.uri)
+            i.push({
+              type: 'feed',
+              key: feed.uri,
+              feed,
+            })
+          }
+        }
+      }
+
+      if (feedsError) {
+        i.push({
+          type: 'error',
+          key: 'feedsError',
+          message: _(msg`Failed to load suggested feeds`),
+          error: cleanError(feedsError),
+        })
+      } else if (preferencesError) {
+        i.push({
+          type: 'error',
+          key: 'preferencesError',
+          message: _(msg`Failed to load feeds preferences`),
+          error: cleanError(preferencesError),
+        })
+      } else {
+        i.push({
+          type: 'loadMore',
+          key: 'loadMoreFeeds',
+          isLoadingMore: isLoadingMoreFeeds,
+          onLoadMore: onLoadMoreFeeds,
+        })
+      }
+    } else {
+      if (feedsError) {
+        i.push({
+          type: 'error',
+          key: 'feedsError',
+          message: _(msg`Failed to load suggested feeds`),
+          error: cleanError(feedsError),
+        })
+      } else if (preferencesError) {
+        i.push({
+          type: 'error',
+          key: 'preferencesError',
+          message: _(msg`Failed to load feeds preferences`),
+          error: cleanError(preferencesError),
+        })
+      } else {
+        i.push({type: 'feedPlaceholder', key: 'feedPlaceholder'})
+      }
+    }
+
+    return i
+  }, [
+    _,
+    hasSession,
+    profiles,
+    feeds,
+    preferences,
+    onLoadMoreFeeds,
+    onLoadMoreProfiles,
+    isLoadingMoreProfiles,
+    isLoadingMoreFeeds,
+    profilesError,
+    feedsError,
+    preferencesError,
+  ])
+
+  const renderItem = React.useCallback(
+    ({item}: {item: ExploreScreenItems}) => {
+      switch (item.type) {
+        case 'header': {
+          return (
+            <SuggestedItemsHeader
+              title={item.title}
+              description={item.description}
+              icon={item.icon}
+            />
+          )
+        }
+        case 'profile': {
+          return <ProfileCardWithFollowBtn profile={item.profile} noBg />
+        }
+        case 'feed': {
+          return (
+            <FeedSourceCard
+              feedUri={item.feed.uri}
+              showSaveBtn={hasSession}
+              showDescription
+              showLikes
+              pinOnSave
+            />
+          )
+        }
+        case 'loadMore': {
+          return (
+            <View
+              style={[
+                a.px_md,
+                a.py_md,
+                a.pb_5xl,
+                a.flex_row,
+                a.justify_center,
+                a.border_t,
+                a.border_b,
+                t.atoms.border_contrast_low,
+              ]}>
+              <Button
+                label={_(msg`Load more`)}
+                size="small"
+                variant="solid"
+                color="secondary"
+                onPress={item.onLoadMore}>
+                <ButtonText>
+                  <Trans>Load more</Trans>
+                </ButtonText>
+                <ButtonIcon
+                  icon={item.isLoadingMore ? LoaderIcon : Plus}
+                  position="right"
+                />
+              </Button>
+            </View>
+          )
+        }
+        case 'profilePlaceholder': {
+          return <ProfileCardFeedLoadingPlaceholder />
+        }
+        case 'feedPlaceholder': {
+          return <FeedFeedLoadingPlaceholder />
+        }
+        case 'error': {
+          return (
+            <View
+              style={[
+                a.border_t,
+                a.pt_md,
+                a.px_md,
+                t.atoms.border_contrast_low,
+              ]}>
+              <View
+                style={[
+                  a.flex_row,
+                  a.gap_md,
+                  a.p_lg,
+                  a.rounded_sm,
+                  t.atoms.bg_contrast_25,
+                ]}>
+                <CircleInfo size="md" fill={t.palette.negative_400} />
+                <View style={[a.flex_1, a.gap_sm]}>
+                  <TextNew style={[a.font_bold, a.leading_snug]}>
+                    {item.message}
+                  </TextNew>
+                  <TextNew
+                    style={[
+                      a.italic,
+                      a.leading_snug,
+                      t.atoms.text_contrast_medium,
+                    ]}>
+                    {item.error}
+                  </TextNew>
+                </View>
+              </View>
+            </View>
+          )
+        }
+      }
+    },
+    [_, t, hasSession],
+  )
+
+  return (
     <List
-      data={suggestions}
-      renderItem={({item}) => <ProfileCardWithFollowBtn profile={item} noBg />}
-      keyExtractor={item => item.did}
+      data={items}
+      renderItem={renderItem}
+      keyExtractor={item => item.key}
       // @ts-ignore web only -prf
       desktopFixedHeight
       contentContainerStyle={{paddingBottom: 200}}
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode="on-drag"
-      onEndReached={onEndReached}
-      onEndReachedThreshold={2}
     />
-  ) : (
-    <CenteredView sideBorders style={[pal.border, s.hContentRegion]}>
-      <ProfileCardFeedLoadingPlaceholder />
-      <ProfileCardFeedLoadingPlaceholder />
-    </CenteredView>
   )
 }
-SearchScreenSuggestedFollows = React.memo(SearchScreenSuggestedFollows)
 
 type SearchResultSlice =
   | {
@@ -408,26 +753,7 @@ let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
       ))}
     </Pager>
   ) : hasSession ? (
-    <View>
-      <CenteredView sideBorders style={pal.border}>
-        <Text
-          type="title"
-          style={[
-            pal.text,
-            pal.border,
-            {
-              display: 'flex',
-              paddingVertical: 12,
-              paddingHorizontal: 18,
-              fontWeight: 'bold',
-            },
-          ]}>
-          <Trans>Suggested Follows</Trans>
-        </Text>
-      </CenteredView>
-
-      <SearchScreenSuggestedFollows />
-    </View>
+    <ExploreScreen />
   ) : (
     <CenteredView sideBorders style={pal.border}>
       <View
