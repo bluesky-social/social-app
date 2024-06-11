@@ -20,6 +20,7 @@ export function StarterPack(props: {
         color: 'white',
         fontFamily: 'Inter',
       }}>
+      {/* image tiles */}
       <div
         style={{
           display: 'flex',
@@ -49,6 +50,7 @@ export function StarterPack(props: {
           )
         })}
       </div>
+      {/*  butterfly overlay */}
       <div
         style={{
           display: 'flex',
@@ -69,7 +71,7 @@ export function StarterPack(props: {
             backgroundImage:
               'linear-gradient(to bottom right, #3D83F6, #5999FF)',
           }}>
-          <Butterfly style={{color: 'white'}} width={175} />
+          <Butterfly style={{color: 'white'}} width="60%" />
         </div>
       </div>
     </div>
