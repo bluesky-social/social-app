@@ -129,6 +129,20 @@ function Header({
         creator={creator}
         avatarType="starter-pack">
         <View style={[a.flex_row, a.gap_sm]}>
+          {__DEV__ && (
+            <Button
+              label={_(msg`Edit`)}
+              variant="solid"
+              color="secondary"
+              size="small"
+              onPress={() =>
+                navigation.replace('StarterPackLanding', {name, rkey})
+              }>
+              <ButtonText>
+                <Trans>Debug</Trans>
+              </ButtonText>
+            </Button>
+          )}
           <Menu.Root>
             <Menu.Trigger label={_(msg`Repost or quote post`)}>
               {({props, state}) => (

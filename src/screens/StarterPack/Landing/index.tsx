@@ -11,6 +11,7 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
 import {useSetUsedStarterPack} from 'state/preferences/starter-pack'
 import {useResolveDidQuery} from 'state/queries/resolve-uri'
@@ -27,101 +28,6 @@ import {Button, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Text} from '#/components/Typography'
-
-// const mockSP = {
-//   uri: 'at://did:plc:t5nrviyjxkdhd5ymyra772dm/app.bsky.graph.starterpack/3kuec35ms422t',
-//   cid: 'bafyreigrvmj3qd4urr5q6lqku7uzj4xmazepik6oobuxtvunx3g7d6e6xi',
-//   record: {
-//     list: 'at://did:plc:t5nrviyjxkdhd5ymyra772dm/app.bsky.graph.list/3kuec35kvkj2t',
-//     name: 'Bluesky Team',
-//     $type: 'app.bsky.graph.starterpack',
-//     feeds: [
-//       {
-//         uri: 'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/bsky-team',
-//       },
-//       {
-//         uri: 'at://did:plc:oio4hkxaop4ao4wz2pp3f4cr/app.bsky.feed.generator/atproto',
-//       },
-//     ],
-//     createdAt: '2024-06-07T19:43:07.211Z',
-//     description:
-//       'A starter pack including all the members of the Bluesky Team!',
-//     descriptionFacets: [],
-//   },
-//   creator: {
-//     did: 'did:plc:t5nrviyjxkdhd5ymyra772dm',
-//     handle: 'haileyok.com',
-//     displayName: 'hailey',
-//     associated: {
-//       chat: {
-//         allowIncoming: 'following',
-//       },
-//     },
-//     viewer: {
-//       muted: false,
-//       blockedBy: false,
-//     },
-//     labels: [],
-//   },
-//   feedCount: 0,
-//   joinedAllTimeCount: 302,
-//   joinedWeekCount: 143,
-//   listItemCount: 2,
-//   labels: [],
-//   indexedAt: '2024-06-07T19:43:07.211Z',
-//   feeds: [],
-//   list: {
-//     uri: 'at://did:plc:oisofpd7lj26yvgiivf3lxsi/app.bsky.graph.list/3kuc6z2xxd22j',
-//     cid: 'bafyreibnigtususbzhjzadhsqconcf7s5wan6dl7h6s56jhxd6ebfvflrq',
-//     name: 'Bluesky Team',
-//     purpose: 'app.bsky.graph.defs#referencelist',
-//     indexedAt: '2024-06-07T19:43:07.122Z',
-//     labels: [],
-//     viewer: {
-//       muted: false,
-//     },
-//   },
-//   listItemsSample: [
-//     {
-//       uri: 'at://did:plc:t5nrviyjxkdhd5ymyra772dm/app.bsky.graph.listitem/3kuec35m2o22t',
-//       subject: {
-//         did: 'did:plc:5warwwnoavxfhchjhcjlqyqi',
-//         handle: 'bob.test',
-//         displayName: 'Bob',
-//         viewer: {
-//           muted: false,
-//           blockedBy: false,
-//           following:
-//             'at://did:plc:t5nrviyjxkdhd5ymyra772dm/app.bsky.graph.follow/3kudwno6ck22t',
-//           followedBy:
-//             'at://did:plc:5warwwnoavxfhchjhcjlqyqi/app.bsky.graph.follow/3kudwno6nbs2t',
-//         },
-//         labels: [],
-//         description: 'Test user 2',
-//         indexedAt: '2024-06-07T16:18:43.414Z',
-//       },
-//     },
-//     {
-//       uri: 'at://did:plc:t5nrviyjxkdhd5ymyra772dm/app.bsky.graph.listitem/3kuec35m2nz2t',
-//       subject: {
-//         did: 'did:plc:cvdwnci2mr5srh4slty7lndz',
-//         handle: 'carla.test',
-//         displayName: 'Carla',
-//         viewer: {
-//           muted: false,
-//           blockedBy: false,
-//           following:
-//             'at://did:plc:t5nrviyjxkdhd5ymyra772dm/app.bsky.graph.follow/3kudwno6hgc2t',
-//           followedBy:
-//             'at://did:plc:cvdwnci2mr5srh4slty7lndz/app.bsky.graph.follow/3kudwno6x2c2t',
-//         },
-//         labels: [],
-//         description: 'Test user 3',
-//         indexedAt: '2024-06-07T16:18:43.462Z',
-//       },
-//     },
-//   ],
-// }
 
 export function LandingScreen({
   route,
@@ -143,11 +49,6 @@ export function LandingScreen({
   } = useStarterPackQuery({did, rkey})
 
   React.useEffect(() => {
-    // if (currentAccount) {
-    //   navigation.navigate('Home')
-    //   return
-    // }
-
     setMinimalShellMode(true)
     return () => {
       setMinimalShellMode(false)
@@ -171,12 +72,12 @@ function LandingScreenInner({
 }: {
   starterPack: AppBskyGraphDefs.StarterPackView
 }) {
-  const navigation = useNavigation<NavigationProp>()
   const {record, creator, listItemsSample, feeds, joinedWeekCount} = starterPack
   const {_} = useLingui()
   const t = useTheme()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const setUsedStarterPack = useSetUsedStarterPack()
+  const {isTabletOrDesktop} = useWebMediaQueries()
 
   const gradient =
     t.name === 'light'
@@ -204,13 +105,22 @@ function LandingScreenInner({
             a.align_center,
             a.gap_sm,
             a.py_2xl,
-            {borderBottomLeftRadius: 10, borderBottomRightRadius: 10},
+            isTabletOrDesktop && {
+              borderBottomLeftRadius: 10,
+              borderBottomRightRadius: 10,
+            },
           ]}>
           <View style={[a.flex_row, a.gap_md, a.pb_sm]}>
             <Logo width={76} fill="white" />
           </View>
           <View style={[a.align_center, a.gap_xs]}>
-            <Text style={[a.font_bold, a.text_5xl, {color: 'white'}]}>
+            <Text
+              style={[
+                a.font_bold,
+                a.text_5xl,
+                a.text_center,
+                {color: 'white'},
+              ]}>
               {record.name}
             </Text>
             <Text style={[a.font_bold, a.text_md, {color: 'white'}]}>
@@ -218,13 +128,10 @@ function LandingScreenInner({
             </Text>
           </View>
         </LinearGradient>
-        <View style={[a.gap_md, a.mt_lg, a.mx_lg]}>
-          {/*{!!joinedWeekCount && joinedWeekCount >= -1 && (*/}
-          <Text
-            style={[a.text_md, a.text_center, t.atoms.text_contrast_medium]}>
-            180 joined this week!
+        <View style={[a.gap_2xl, a.mt_lg, a.mx_lg]}>
+          <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
+            {record.description}
           </Text>
-          {/*)}*/}
           <Button
             label={_(msg`Join Bluesky now`)}
             onPress={() => {
@@ -241,11 +148,19 @@ function LandingScreenInner({
               <Trans>Join Bluesky now</Trans>
             </ButtonText>
           </Button>
-          <View style={[a.gap_3xl, a.mt_md]}>
-            <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-              {record.description}
+          {!!joinedWeekCount && joinedWeekCount >= -1 && (
+            <Text
+              style={[
+                a.font_bold,
+                a.text_md,
+                a.text_center,
+                t.atoms.text_contrast_medium,
+              ]}>
+              180 joined this week!
             </Text>
-            <Divider />
+          )}
+          <Divider />
+          <View style={[a.gap_3xl]}>
             {Boolean(starterPack.feeds?.length) && (
               <View style={[a.gap_md]}>
                 <Text style={[a.font_bold, a.text_lg]}>
@@ -265,11 +180,6 @@ function LandingScreenInner({
                       hideTopBorder={index === 0}
                     />
                   ))}
-                  {/*<FeedSourceCard*/}
-                  {/*  feedUri="at://did:plc:jfhpnnst6flqway4eaeqzj2a/app.bsky.feed.generator/for-science"*/}
-                  {/*  hideTopBorder={true}*/}
-                  {/*/>*/}
-                  {/*<FeedSourceCard feedUri="at://did:plc:upmfcx5muayjhkg5sltj625o/app.bsky.feed.generator/aaachrckxlsh2" />*/}
                 </View>
               </View>
             )}
@@ -278,12 +188,10 @@ function LandingScreenInner({
               <View style={[a.gap_md]}>
                 <Text style={[a.font_bold, a.text_lg]}>
                   {feeds?.length ? (
-                    <Trans>
-                      You'll also follow these people and many others!
-                    </Trans>
+                    <Trans>Also follow these people and many others!</Trans>
                   ) : (
                     <Trans>
-                      Follow these people and many others to get started!
+                      Get started by following these people and many others!
                     </Trans>
                   )}
                 </Text>
