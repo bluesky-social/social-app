@@ -511,15 +511,23 @@ function Footer({
           },
         ],
       ]}>
+      <View style={[a.absolute, {right: 14, top: 23}]}>
+        <Text style={[a.font_bold]}>
+          {items.length}/{state.currentStep === 'Profiles' ? 50 : 3}
+        </Text>
+      </View>
+
       <View style={[a.flex_row, a.gap_xs]}>
-        {items.slice(0, 6).map((p, index) => (
-          <UserAvatar
-            key={index}
-            avatar={p.avatar}
-            size={28}
-            type={state.currentStep === 'Profiles' ? 'user' : 'algo'}
-          />
-        ))}
+        <View style={[a.flex_row]}>
+          {items.slice(0, 6).map((p, index) => (
+            <UserAvatar
+              key={index}
+              avatar={p.avatar}
+              size={28}
+              type={state.currentStep === 'Profiles' ? 'user' : 'algo'}
+            />
+          ))}
+        </View>
       </View>
 
       {items.length === 0 ? (

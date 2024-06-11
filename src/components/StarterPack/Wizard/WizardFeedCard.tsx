@@ -60,6 +60,7 @@ export function WizardFeedCard({
         color={includesFeed ? 'secondary' : 'primary'}
         size="small"
         style={{paddingVertical: 6}}
+        disabled={!includesFeed && state.feeds.length >= 3}
         onPress={onAdd}>
         <ButtonText>
           {includesFeed ? <Trans>Remove</Trans> : <Trans>Add</Trans>}

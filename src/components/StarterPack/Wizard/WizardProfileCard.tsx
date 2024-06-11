@@ -66,6 +66,7 @@ export function WizardProfileCard({
           color={includesProfile ? 'secondary' : 'primary'}
           size="small"
           style={{paddingVertical: 6}}
+          disabled={!includesProfile && state.profiles.length >= 50}
           onPress={onPressAddRemove}>
           <ButtonText>
             {includesProfile ? <Trans>Remove</Trans> : <Trans>Add</Trans>}
