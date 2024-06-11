@@ -107,6 +107,9 @@ function KnownFollowersInner({
 
   return (
     <Link
+      label={_(
+        msg`Press to view followers of this account that you also follow`,
+      )}
       to={makeProfileLink(profile, 'known-followers')}
       style={[
         a.flex_1,
