@@ -1,6 +1,7 @@
 import React from 'react'
 import {Keyboard, TouchableOpacity, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {
   AppBskyActorDefs,
   AppBskyGraphDefs,
@@ -478,6 +479,7 @@ function Footer({
   const t = useTheme()
   const [state, dispatch] = useWizardState()
   const editDialogControl = useDialogControl()
+  const {bottom: bottomInset} = useSafeAreaInsets()
 
   const items = state.currentStep === 'Profiles' ? state.profiles : state.feeds
 
@@ -493,13 +495,13 @@ function Footer({
         a.border_t,
         a.align_center,
         a.px_md,
-        a.pt_lg,
-        a.pb_5xl,
-        a.gap_sm,
+        a.pt_xl,
+        a.gap_md,
         t.atoms.bg,
         t.atoms.border_contrast_medium,
         {
-          height: 190,
+          height: 220,
+          paddingBottom: 12 + bottomInset,
         },
         isNative && [
           a.border_l,
@@ -512,7 +514,7 @@ function Footer({
         ],
       ]}>
       {items.length > 0 && (
-        <View style={[a.absolute, {right: 14, top: 23}]}>
+        <View style={[a.absolute, {right: 14, top: 26}]}>
           <Text style={[a.font_bold]}>
             {items.length}/{state.currentStep === 'Profiles' ? 50 : 3}
           </Text>
