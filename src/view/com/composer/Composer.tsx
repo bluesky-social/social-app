@@ -17,7 +17,7 @@ import {
 import {
   KeyboardAvoidingView,
   KeyboardStickyView,
-  useKeyboardContext,
+  useKeyboardController,
 } from 'react-native-keyboard-controller'
 import Animated, {
   interpolateColor,
@@ -130,7 +130,7 @@ export const ComposePost = observer(function ComposePost({
 
   // Disable this in the composer to prevent any extra keyboard height being applied.
   // See https://github.com/bluesky-social/social-app/pull/4399
-  const {setEnabled} = useKeyboardContext()
+  const {setEnabled} = useKeyboardController()
   React.useEffect(() => {
     if (!isAndroid) return
     setEnabled(false)
