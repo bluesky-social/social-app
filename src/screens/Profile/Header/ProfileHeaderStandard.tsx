@@ -272,7 +272,7 @@ let ProfileHeaderStandard = ({
 
             {!isMe &&
               profile.viewer?.knownFollowers &&
-              profile.viewer.knownFollowers.count > 0 && (
+              profile.viewer.knownFollowers.followers.length > 0 && (
                 <View style={[a.flex_row, a.align_center, a.gap_sm, a.pt_md]}>
                   <KnownFollowers
                     profile={profile}

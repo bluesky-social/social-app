@@ -22,13 +22,16 @@ export function KnownFollowers({
   profile: AppBskyActorDefs.ProfileViewDetailed
   moderationOpts: ModerationOpts
 }) {
-  if (!profile.viewer?.knownFollowers) {
-    return null
+  if (
+    profile.viewer?.knownFollowers &&
+    profile.viewer.knownFollowers.followers.length > 0
+  ) {
+    return (
+      <KnownFollowersInner profile={profile} moderationOpts={moderationOpts} />
+    )
   }
 
-  return (
-    <KnownFollowersInner profile={profile} moderationOpts={moderationOpts} />
-  )
+  return null
 }
 
 function KnownFollowersInner({
@@ -48,7 +51,15 @@ function KnownFollowersInner({
     a.leading_snug,
     t.atoms.text_contrast_medium,
   ]
-  const count = knownFollowers.count
+
+  // list of users, minus blocks
+  const returnedCount = knownFollowers.followers.length
+  // db count, includes blocks
+  const fullCount = knownFollowers.count
+  // if we have less than a page returned, use whichever is less
+  const count =
+    returnedCount < 50 ? Math.min(fullCount, returnedCount) : fullCount
+
   const slice = knownFollowers.followers.slice(0, 3).map(f => {
     const moderation = moderateProfile(f, moderationOpts)
     return {
