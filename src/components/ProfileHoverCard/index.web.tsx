@@ -372,7 +372,10 @@ function Inner({
     profile: profileShadow,
     logContext: 'ProfileHoverCard',
   })
-  const blockHide = profile.viewer?.blocking || profile.viewer?.blockedBy
+  const isBlockedUser =
+    profile.viewer?.blocking ||
+    profile.viewer?.blockedBy ||
+    profile.viewer?.blockingByList
   const following = formatCount(profile.followsCount || 0)
   const followers = formatCount(profile.followersCount || 0)
   const pluralizedFollowers = plural(profile.followersCount || 0, {
@@ -404,16 +407,16 @@ function Inner({
         </Link>
 
         {!isMe &&
-          (blockHide ? (
-            <Link to={profileURL} label={_(msg`View profile`)} onPress={hide}>
-              <Button
-                size="small"
-                color={'secondary'}
-                variant="solid"
-                label={_(msg`Unblock`)}
-                style={[a.rounded_full]}>
-                <ButtonText>{_(msg`View profile`)}</ButtonText>
-              </Button>
+          (isBlockedUser ? (
+            <Link
+              to={profileURL}
+              label={_(msg`View blocked user's profile`)}
+              onPress={hide}
+              size="small"
+              color="secondary"
+              variant="solid"
+              style={[a.rounded_full]}>
+              <ButtonText>{_(msg`View profile`)}</ButtonText>
             </Link>
           ) : (
             <Button
@@ -453,19 +456,19 @@ function Inner({
         </View>
       </Link>
 
-      {blockHide && (
+      {isBlockedUser && (
         <View style={[a.flex_row, a.flex_wrap, a.gap_xs]}>
           {moderation.ui('profileView').alerts.map(cause => (
             <ProfileLabel
               key={getModerationCauseKey(cause)}
               cause={cause}
-              withModerationDetailsDialog={false}
+              disableDetailsDialog
             />
           ))}
         </View>
       )}
 
-      {!blockHide && (
+      {!isBlockedUser && (
         <>
           <View style={[a.flex_row, a.flex_wrap, a.gap_md, a.pt_xs]}>
             <InlineLinkText

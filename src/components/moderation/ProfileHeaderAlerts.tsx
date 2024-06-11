@@ -45,10 +45,10 @@ export function ProfileHeaderAlerts({
 
 export function ProfileLabel({
   cause,
-  withModerationDetailsDialog = true,
+  disableDetailsDialog,
 }: {
   cause: ModerationCause
-  withModerationDetailsDialog?: boolean
+  disableDetailsDialog?: boolean
 }) {
   const t = useTheme()
   const control = useModerationDetailsDialogControl()
@@ -57,6 +57,7 @@ export function ProfileLabel({
   return (
     <>
       <Button
+        disabled={disableDetailsDialog}
         label={desc.name}
         onPress={() => {
           control.open()
@@ -93,7 +94,7 @@ export function ProfileLabel({
         )}
       </Button>
 
-      {withModerationDetailsDialog && (
+      {!disableDetailsDialog && (
         <ModerationDetailsDialog control={control} modcause={cause} />
       )}
     </>
