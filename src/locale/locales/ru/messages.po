@@ -770,7 +770,7 @@ msgstr "Чат"
 
 #: src/components/dms/ConvoMenu.tsx:82
 msgid "Chat muted"
-msgstr "Чат заглушен"
+msgstr "Чат без звука"
 
 #: src/components/dms/ConvoMenu.tsx:112
 #: src/components/dms/MessageMenu.tsx:81
@@ -787,7 +787,7 @@ msgstr "Настройки чата"
 
 #: src/components/dms/ConvoMenu.tsx:84
 msgid "Chat unmuted"
-msgstr "Чат разглушен"
+msgstr "Чат со звуком"
 
 #: src/screens/SignupQueued.tsx:78
 #: src/screens/SignupQueued.tsx:82
@@ -2012,7 +2012,7 @@ msgstr "Подписчики"
 #: src/view/screens/ProfileFollows.tsx:25
 #: src/view/screens/SavedFeeds.tsx:415
 msgid "Following"
-msgstr "Подписан"
+msgstr "В подписках"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:90
 msgid "Following {0}"
@@ -2520,7 +2520,7 @@ msgstr "Выйти из чата"
 #: src/components/dms/ConvoMenu.tsx:211
 #: src/components/dms/LeaveConvoPrompt.tsx:46
 msgid "Leave conversation"
-msgstr "Уйти от беседы"
+msgstr "Выйти из беседы"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:82
 msgid "Leave them all unchecked to see any language."
