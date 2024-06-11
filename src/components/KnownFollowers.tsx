@@ -15,6 +15,18 @@ import {Text} from '#/components/Typography'
 const AVI_SIZE = 26
 const AVI_BORDER = isNative ? 1 : 1
 
+/**
+ * Shared logic to determine if `KnownFollowers` should be shown.
+ *
+ * Checks the # of actual returned users instead of the `count` value, because
+ * `count` includes blocked users and `followers` does not.
+ */
+export function shouldShowKnownFollowers(
+  knownFollowers?: AppBskyActorDefs.KnownFollowers,
+) {
+  return knownFollowers && knownFollowers.followers.length > 0
+}
+
 export function KnownFollowers({
   profile,
   moderationOpts,
@@ -22,10 +34,7 @@ export function KnownFollowers({
   profile: AppBskyActorDefs.ProfileViewDetailed
   moderationOpts: ModerationOpts
 }) {
-  if (
-    profile.viewer?.knownFollowers &&
-    profile.viewer.knownFollowers.followers.length > 0
-  ) {
+  if (shouldShowKnownFollowers(profile.viewer?.knownFollowers)) {
     return (
       <KnownFollowersInner profile={profile} moderationOpts={moderationOpts} />
     )
