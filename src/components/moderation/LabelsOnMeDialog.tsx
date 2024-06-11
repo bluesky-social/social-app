@@ -14,7 +14,6 @@ import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {KeyboardPadding} from '#/components/KeyboardPadding'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {Divider} from '../Divider'
@@ -110,7 +109,6 @@ function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
         </>
       )}
       <Dialog.Close />
-      <KeyboardPadding />
     </Dialog.ScrollableInner>
   )
 }
