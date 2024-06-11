@@ -29,7 +29,7 @@ import {HITSLOP_10} from 'lib/constants'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {CogIcon, ComposeIcon2, MagnifyingGlassIcon2} from 'lib/icons'
-import {FeedsTabNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
+import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {cleanError} from 'lib/strings/errors'
 import {s} from 'lib/styles'
 import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
@@ -54,7 +54,7 @@ import {ListMagnifyingGlass_Stroke2_Corner0_Rounded} from '#/components/icons/Li
 import {ListSparkle_Stroke2_Corner0_Rounded} from '#/components/icons/ListSparkle'
 import hairlineWidth = StyleSheet.hairlineWidth
 
-type Props = NativeStackScreenProps<FeedsTabNavigatorParams, 'Feeds'>
+type Props = NativeStackScreenProps<CommonNavigatorParams, 'Feeds'>
 
 type FlatlistSlice =
   | {
@@ -594,7 +594,6 @@ export function FeedsScreen(_props: Props) {
       {isMobile && (
         <ViewHeader
           title={_(msg`Feeds`)}
-          canGoBack={false}
           renderButton={renderHeaderBtn}
           showBorder
         />

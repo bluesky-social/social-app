@@ -22,7 +22,6 @@ import {buildStateObject} from 'lib/routes/helpers'
 import {
   AllNavigatorParams,
   BottomTabNavigatorParams,
-  FeedsTabNavigatorParams,
   FlatNavigatorParams,
   HomeTabNavigatorParams,
   MessagesTabNavigatorParams,
@@ -91,7 +90,6 @@ const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
 const HomeTab = createNativeStackNavigatorWithAuth<HomeTabNavigatorParams>()
 const SearchTab = createNativeStackNavigatorWithAuth<SearchTabNavigatorParams>()
-const FeedsTab = createNativeStackNavigatorWithAuth<FeedsTabNavigatorParams>()
 const NotificationsTab =
   createNativeStackNavigatorWithAuth<NotificationsTabNavigatorParams>()
 const MyProfileTab =
@@ -306,6 +304,7 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         getComponent={() => MessagesSettingsScreen}
         options={{title: title(msg`Chat settings`), requireAuth: true}}
       />
+      <Stack.Screen name="Feeds" getComponent={() => FeedsScreen} />
     </>
   )
 }
@@ -330,7 +329,6 @@ function TabsNavigator() {
       tabBar={tabBar}>
       <Tab.Screen name="HomeTab" getComponent={() => HomeTabNavigator} />
       <Tab.Screen name="SearchTab" getComponent={() => SearchTabNavigator} />
-      <Tab.Screen name="FeedsTab" getComponent={() => FeedsTabNavigator} />
       <Tab.Screen
         name="NotificationsTab"
         getComponent={() => NotificationsTabNavigator}
@@ -381,24 +379,6 @@ function SearchTabNavigator() {
       <SearchTab.Screen name="Search" getComponent={() => SearchScreen} />
       {commonScreens(SearchTab as typeof HomeTab)}
     </SearchTab.Navigator>
-  )
-}
-
-function FeedsTabNavigator() {
-  const pal = usePalette('default')
-  return (
-    <FeedsTab.Navigator
-      screenOptions={{
-        animation: isAndroid ? 'ios' : undefined,
-        animationDuration: 285,
-        gestureEnabled: true,
-        fullScreenGestureEnabled: true,
-        headerShown: false,
-        contentStyle: pal.view,
-      }}>
-      <FeedsTab.Screen name="Feeds" getComponent={() => FeedsScreen} />
-      {commonScreens(FeedsTab as typeof HomeTab)}
-    </FeedsTab.Navigator>
   )
 }
 
@@ -504,11 +484,6 @@ const FlatNavigator = () => {
         name="Search"
         getComponent={() => SearchScreen}
         options={{title: title(msg`Search`)}}
-      />
-      <Flat.Screen
-        name="Feeds"
-        getComponent={() => FeedsScreen}
-        options={{title: title(msg`Feeds`)}}
       />
       <Flat.Screen
         name="Notifications"
