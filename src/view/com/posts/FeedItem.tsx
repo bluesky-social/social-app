@@ -196,6 +196,12 @@ let FeedItemInner = ({
     },
   ]
 
+  const isParentBlocked = Boolean(
+    parentAuthor?.viewer?.blockedBy ||
+      parentAuthor?.viewer?.blocking ||
+      parentAuthor?.viewer?.blockingByList,
+  )
+
   return (
     <Link
       testID={`feedItem-by-${post.author.handle}`}
@@ -320,7 +326,16 @@ let FeedItemInner = ({
             onOpenAuthor={onOpenAuthor}
           />
           {!isThreadChild && showReplyTo && parentAuthor && (
-            <ReplyToLabel profile={parentAuthor} />
+            <ReplyToLabel
+              profile={
+                isParentBlocked
+                  ? {
+                      ...parentAuthor,
+                      displayName: _(msg`a blocked user`),
+                    }
+                  : parentAuthor
+              }
+            />
           )}
           <LabelsOnMyPost post={post} />
           <PostContent
