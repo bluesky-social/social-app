@@ -215,12 +215,7 @@ function ChatListItemReady({
         }
         onPress={onPress}
         onLongPress={isNative ? onLongPress : undefined}
-        onAccessibilityAction={onLongPress}
-        style={[
-          web({
-            cursor: 'pointer',
-          }),
-        ]}>
+        onAccessibilityAction={onLongPress}>
         {({hovered, pressed, focused}) => (
           <View
             style={[
