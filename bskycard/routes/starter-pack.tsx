@@ -1,28 +1,26 @@
 import assert from 'node:assert'
-import {readFileSync} from 'node:fs'
 import {IncomingMessage, ServerResponse} from 'node:http'
 
 import React from 'react'
-import {AtpAgent} from '@atproto/api'
 import resvg from '@resvg/resvg-js'
 import satori from 'satori'
 
 import {StarterPack} from '../components/StarterPack.js'
+import {AppContext} from '../context.js'
 
 const HEIGHT = 630
 const WIDTH = 1200
 
 // GET /followers/{handle}
 export async function handler(
+  ctx: AppContext,
   _req: IncomingMessage,
   res: ServerResponse,
   [_, actor]: string[],
 ) {
-  const inter = readFileSync('./assets/Inter-Regular.ttf')
-  const appview = new AtpAgent({service: 'https://api.bsky.app'})
   const {
     data: {followers},
-  } = await appview.api.app.bsky.graph.getFollowers({actor})
+  } = await ctx.appviewAgent.api.app.bsky.graph.getFollowers({actor})
   const images = await Promise.all(
     followers
       .filter(p => p.avatar)
@@ -35,7 +33,7 @@ export async function handler(
   const svg = await satori(
     <StarterPack images={images} height={HEIGHT} width={WIDTH} />,
     {
-      fonts: [{data: inter, name: 'Inter'}],
+      fonts: ctx.fonts,
       height: HEIGHT,
       width: WIDTH,
     },

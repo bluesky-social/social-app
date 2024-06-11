@@ -2,13 +2,21 @@
 
 import assert from 'node:assert'
 import {once} from 'node:events'
+import {readFileSync} from 'node:fs'
 import {createServer, IncomingMessage, ServerResponse} from 'node:http'
 
+import {AtpAgent} from '@atproto/api'
+
+import {AppContext} from './context.js'
 import * as starterPack from './routes/starter-pack.js'
 
 const PORT = 3000
 
 async function main() {
+  const ctx: AppContext = {
+    appviewAgent: new AtpAgent({service: 'https://api.bsky.app'}),
+    fonts: [{name: 'Inter', data: readFileSync('./assets/Inter-Regular.ttf')}],
+  }
   const server = createServer(async (req, res) => {
     try {
       const url = req.url
@@ -19,7 +27,7 @@ async function main() {
         url.pathname === '/'
           ? []
           : url.pathname.slice(1).replace(/\/$/, '').split('/')
-      const routed = await router(req, res, pathParts)
+      const routed = await router(ctx, req, res, pathParts)
       if (routed === false) {
         res.statusCode = 404
         res.setHeader('content-type', 'text/plain')
@@ -42,6 +50,7 @@ async function main() {
 }
 
 async function router(
+  ctx: AppContext,
   req: IncomingMessage,
   res: ServerResponse,
   pathParts: string[],
@@ -51,7 +60,7 @@ async function router(
     pathParts[0] === 'followers' &&
     pathParts.length === 2
   ) {
-    await starterPack.handler(req, res, pathParts)
+    await starterPack.handler(ctx, req, res, pathParts)
     return
   }
   return false
