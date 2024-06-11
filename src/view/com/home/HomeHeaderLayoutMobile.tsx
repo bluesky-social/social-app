@@ -12,7 +12,7 @@ import {useShellLayout} from '#/state/shell/shell-layout'
 import {HITSLOP_10} from 'lib/constants'
 import {useMinimalShellHeaderTransform} from 'lib/hooks/useMinimalShellTransform'
 import {usePalette} from 'lib/hooks/usePalette'
-import {isWeb} from 'platform/detection'
+import {isNativeTablet, isWeb} from 'platform/detection'
 import {Logo} from '#/view/icons/Logo'
 import {atoms} from '#/alf'
 import {ColorPalette_Stroke2_Corner0_Rounded as ColorPalette} from '#/components/icons/ColorPalette'
@@ -44,23 +44,28 @@ export function HomeHeaderLayoutMobile({
         headerHeight.value = e.nativeEvent.layout.height
       }}>
       <View style={[pal.view, styles.topBar]}>
-        <View style={[pal.view, {width: 100}]}>
-          <TouchableOpacity
-            testID="viewHeaderDrawerBtn"
-            onPress={onPressAvi}
-            accessibilityRole="button"
-            accessibilityLabel={_(msg`Open navigation`)}
-            accessibilityHint={_(
-              msg`Access profile and other navigation links`,
-            )}
-            hitSlop={HITSLOP_10}>
-            <FontAwesomeIcon
-              icon="bars"
-              size={18}
-              color={pal.colors.textLight}
-            />
-          </TouchableOpacity>
-        </View>
+        {!isNativeTablet ? (
+          <View style={[pal.view, {width: 100}]}>
+            <TouchableOpacity
+              testID="viewHeaderDrawerBtn"
+              onPress={onPressAvi}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Open navigation`)}
+              accessibilityHint={_(
+                msg`Access profile and other navigation links`,
+              )}
+              hitSlop={HITSLOP_10}>
+              <FontAwesomeIcon
+                icon="bars"
+                size={18}
+                color={pal.colors.textLight}
+              />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          // subtract width of LeftNav
+          <View style={{width: 100 - 77}} />
+        )}
         <View>
           <Logo width={30} />
         </View>

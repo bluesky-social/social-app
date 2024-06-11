@@ -297,7 +297,7 @@ function ChatNavItem() {
   )
 }
 
-export function DesktopLeftNav() {
+export function LeftNav() {
   const {hasSession, currentAccount} = useSession()
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -397,17 +397,19 @@ export function DesktopLeftNav() {
 }
 
 const styles = StyleSheet.create({
-  leftNav: {
-    // @ts-ignore web only
-    position: 'fixed',
-    top: 10,
-    // @ts-ignore web only
-    left: 'calc(50vw - 300px - 220px - 20px)',
-    width: 220,
-    // @ts-ignore web only
-    maxHeight: 'calc(100vh - 10px)',
-    overflowY: 'auto',
-  },
+  // @ts-ignore web only
+  leftNav: isWeb
+    ? {
+        position: 'fixed',
+        top: 10,
+        left: 'calc(50vw - 300px - 220px - 20px)',
+        width: 220,
+        maxHeight: 'calc(100vh - 10px)',
+        overflowY: 'auto',
+      }
+    : {
+        paddingTop: 12,
+      },
   leftNavTablet: {
     top: 0,
     left: 0,
@@ -465,6 +467,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingHorizontal: 4,
     borderRadius: 6,
+    overflow: 'hidden',
   },
   navItemCountTablet: {
     left: 18,

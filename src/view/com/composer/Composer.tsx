@@ -66,7 +66,13 @@ import {cleanError} from 'lib/strings/errors'
 import {insertMentionAt} from 'lib/strings/mention-manip'
 import {shortenLinks} from 'lib/strings/rich-text-manip'
 import {colors, gradients, s} from 'lib/styles'
-import {isAndroid, isIOS, isNative, isWeb} from 'platform/detection'
+import {
+  isAndroid,
+  isIOS,
+  isNative,
+  isNativeTablet,
+  isWeb,
+} from 'platform/detection'
 import {useDialogStateControlContext} from 'state/dialogs'
 import {GalleryModel} from 'state/models/media/gallery'
 import {ComposerOpts} from 'state/shell/composer'
@@ -627,7 +633,7 @@ export const ComposePost = observer(function ComposePost({
               onSelectGif={onSelectGif}
               disabled={hasMedia}
             />
-            {!isMobile ? (
+            {!isMobile && !isNativeTablet ? (
               <Button
                 onPress={onEmojiButtonPress}
                 style={a.p_sm}

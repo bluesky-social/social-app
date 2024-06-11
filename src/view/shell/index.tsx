@@ -25,7 +25,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useNotificationsRegistration} from 'lib/notifications/notifications'
 import {isStateAtTabRoot} from 'lib/routes/helpers'
 import {useTheme} from 'lib/ThemeContext'
-import {isAndroid} from 'platform/detection'
+import {isAndroid, isNativeTablet} from 'platform/detection'
 import {useDialogStateContext} from 'state/dialogs'
 import {Lightbox} from 'view/com/lightbox/Lightbox'
 import {ModalsContainer} from 'view/com/modals/Modal'
@@ -83,15 +83,19 @@ function ShellInner() {
         style={containerPadding}
         importantForAccessibility={importantForAccessibility}>
         <ErrorBoundary>
-          <Drawer
-            renderDrawerContent={renderDrawerContent}
-            open={isDrawerOpen}
-            onOpen={onOpenDrawer}
-            onClose={onCloseDrawer}
-            swipeEdgeWidth={winDim.width / 2}
-            swipeEnabled={!canGoBack && hasSession && !isDrawerSwipeDisabled}>
+          {!isNativeTablet ? (
+            <Drawer
+              renderDrawerContent={renderDrawerContent}
+              open={isDrawerOpen}
+              onOpen={onOpenDrawer}
+              onClose={onCloseDrawer}
+              swipeEdgeWidth={winDim.width / 2}
+              swipeEnabled={!canGoBack && hasSession && !isDrawerSwipeDisabled}>
+              <TabsNavigator />
+            </Drawer>
+          ) : (
             <TabsNavigator />
-          </Drawer>
+          )}
         </ErrorBoundary>
       </Animated.View>
       <NativeTranslationView />

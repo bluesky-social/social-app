@@ -485,7 +485,7 @@ export function SearchScreen(
   const {track} = useAnalytics()
   const setDrawerOpen = useSetDrawerOpen()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {isTabletOrDesktop, isTabletOrMobile} = useWebMediaQueries()
+  const {isTabletOrDesktop, isMobile} = useWebMediaQueries()
 
   // Query terms
   const queryParam = props.route?.params?.q ?? ''
@@ -702,8 +702,8 @@ export function SearchScreen(
           pal.view,
           isTabletOrDesktop && {paddingTop: 10},
         ]}
-        sideBorders={isTabletOrDesktop}>
-        {isTabletOrMobile && (
+        sideBorders={isMobile}>
+        {isMobile && (
           <Pressable
             testID="viewHeaderBackOrMenuBtn"
             onPress={onPressMenu}

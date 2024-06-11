@@ -1,7 +1,6 @@
 import React from 'react'
 import {ScrollView, StyleSheet, View} from 'react-native'
 
-import {isWeb} from '#/platform/detection'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -73,9 +72,7 @@ export const LoggedOutLayout = ({
             contentContainerStyle={styles.scrollViewContentContainer}
             keyboardShouldPersistTaps="handled"
             keyboardDismissMode="on-drag">
-            <View style={[styles.contentWrapper, isWeb && a.my_auto]}>
-              {children}
-            </View>
+            <View style={[styles.contentWrapper]}>{children}</View>
           </ScrollView>
         </View>
       ) : (
@@ -92,6 +89,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     // @ts-ignore web only
     height: '100vh',
+    flex: 1,
   },
   side: {
     flex: 1,
@@ -111,8 +109,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollViewContentContainer: {
-    flex: 1,
+    flexGrow: 1,
     paddingHorizontal: 40,
+    justifyContent: 'center',
   },
   leadinText: {
     fontSize: 36,

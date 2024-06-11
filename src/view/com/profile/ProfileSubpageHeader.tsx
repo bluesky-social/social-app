@@ -14,7 +14,7 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {makeProfileLink} from 'lib/routes/links'
 import {NavigationProp} from 'lib/routes/types'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {isNative} from 'platform/detection'
+import {isNative, isNativeTablet} from 'platform/detection'
 import {TextLink} from '../util/Link'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {Text} from '../util/text/Text'
@@ -73,9 +73,11 @@ export function ProfileSubpageHeader({
     }
   }, [openLightbox, avatar])
 
+  const isMobileLayout = isMobile || isNativeTablet
+
   return (
     <CenteredView style={pal.view}>
-      {isMobile && (
+      {isMobileLayout && (
         <View
           style={[
             {
@@ -84,7 +86,7 @@ export function ProfileSubpageHeader({
               borderBottomWidth: hairlineWidth,
               paddingTop: isNative ? 0 : 8,
               paddingBottom: 8,
-              paddingHorizontal: isMobile ? 12 : 14,
+              paddingHorizontal: isMobileLayout ? 12 : 14,
             },
             pal.border,
           ]}>
@@ -121,7 +123,7 @@ export function ProfileSubpageHeader({
           gap: 10,
           paddingTop: 14,
           paddingBottom: 6,
-          paddingHorizontal: isMobile ? 12 : 14,
+          paddingHorizontal: isMobileLayout ? 12 : 14,
         }}>
         <Pressable
           testID="headerAviButton"
@@ -172,7 +174,7 @@ export function ProfileSubpageHeader({
             </Text>
           )}
         </View>
-        {!isMobile && (
+        {!isMobileLayout && (
           <View
             style={{
               flexDirection: 'row',
