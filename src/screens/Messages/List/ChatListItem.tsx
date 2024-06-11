@@ -179,12 +179,13 @@ function ChatListItemReady({
     (e: GestureResponderEvent) => {
       if (isDeletedAccount) {
         e.preventDefault()
+        menuControl.open()
         return false
       } else {
         logEvent('chat:open', {logContext: 'ChatsList'})
       }
     },
-    [isDeletedAccount],
+    [isDeletedAccount, menuControl],
   )
 
   const onLongPress = useCallback(() => {
@@ -203,11 +204,7 @@ function ChatListItemReady({
       <Link
         to={`/messages/${convo.id}`}
         label={displayName}
-        accessibilityHint={
-          !isDeletedAccount
-            ? _(msg`Go to conversation with ${profile.handle}`)
-            : undefined
-        }
+        accessibilityHint={_(msg`Go to conversation with ${profile.handle}`)}
         accessibilityActions={
           isNative
             ? [
@@ -221,7 +218,7 @@ function ChatListItemReady({
         onAccessibilityAction={onLongPress}
         style={[
           web({
-            cursor: isDeletedAccount ? 'default' : 'pointer',
+            cursor: 'pointer',
           }),
         ]}>
         {({hovered, pressed, focused}) => (
@@ -233,9 +230,7 @@ function ChatListItemReady({
               a.px_lg,
               a.py_md,
               a.gap_md,
-              (hovered || pressed || focused) &&
-                !isDeletedAccount &&
-                t.atoms.bg_contrast_25,
+              (hovered || pressed || focused) && t.atoms.bg_contrast_25,
               t.atoms.border_contrast_low,
             ]}>
             <UserAvatar
