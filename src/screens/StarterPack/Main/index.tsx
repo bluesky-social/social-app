@@ -127,6 +127,7 @@ function Header({
         isOwner={isOwn}
         avatar={undefined}
         creator={creator}
+        starterPack={starterPack}
         avatarType="starter-pack">
         <View style={[a.flex_row, a.gap_sm]}>
           {__DEV__ && (

@@ -21,7 +21,9 @@ import {Text} from '../util/text/Text'
 import {UserAvatar, UserAvatarType} from '../util/UserAvatar'
 import {CenteredView} from '../util/Views'
 import hairlineWidth = StyleSheet.hairlineWidth
-import {StarterPackIcon} from '#/components/icons/StarterPackIcon'
+import {AppBskyGraphDefs} from '@atproto/api'
+
+import {StarterPackAvatarsIcon} from '#/components/StarterPack/StarterPackAvatarsIcon'
 
 export function ProfileSubpageHeader({
   isLoading,
@@ -31,6 +33,7 @@ export function ProfileSubpageHeader({
   isOwner,
   creator,
   avatarType,
+  starterPack,
   children,
 }: React.PropsWithChildren<{
   isLoading?: boolean
@@ -44,6 +47,7 @@ export function ProfileSubpageHeader({
         handle: string
       }
     | undefined
+  starterPack?: AppBskyGraphDefs.StarterPackView
   avatarType: UserAvatarType | 'starter-pack'
 }>) {
   const setDrawerOpen = useSetDrawerOpen()
@@ -132,7 +136,7 @@ export function ProfileSubpageHeader({
           accessibilityHint=""
           style={{width: 58}}>
           {avatarType === 'starter-pack' ? (
-            <StarterPackIcon width={58} height={58} />
+            <StarterPackAvatarsIcon starterPack={starterPack} />
           ) : (
             <UserAvatar type={avatarType} size={58} avatar={avatar} />
           )}
