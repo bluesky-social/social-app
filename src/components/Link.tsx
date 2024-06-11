@@ -12,7 +12,8 @@ import {
   isExternalUrl,
   linkRequiresWarning,
 } from '#/lib/strings/url-helpers'
-import {isNative, isWeb} from '#/platform/detection'
+import {isNative} from '#/platform/detection'
+import {shouldClickOpenNewTab} from '#/platform/urls'
 import {useModalControls} from '#/state/modals'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {useNavigationDeduped} from 'lib/hooks/useNavigationDeduped'
@@ -116,16 +117,7 @@ export function useLink({
         if (isExternal) {
           openLink(href)
         } else {
-          /**
-           * A `GestureResponderEvent`, but cast to `any` to avoid using a bunch
-           * of @ts-ignore below.
-           */
-          const event = e as any
-          const isMiddleClick = isWeb && event.button === 1
-          const isMetaKey =
-            isWeb &&
-            (event.metaKey || event.altKey || event.ctrlKey || event.shiftKey)
-          const shouldOpenInNewTab = isMetaKey || isMiddleClick
+          const shouldOpenInNewTab = shouldClickOpenNewTab(e)
 
           if (isBskyDownloadUrl(href)) {
             shareUrl(BSKY_DOWNLOAD_URL)

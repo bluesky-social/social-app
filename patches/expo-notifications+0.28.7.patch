@@ -63,7 +63,7 @@ index f1fed19..80afe9e 100644
 
 +  @Nullable
 +  public String getChannelId() {
-+    return mTitle;
++    return mChannelId;
 +  }
 +
    @Nullable

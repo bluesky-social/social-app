@@ -4,7 +4,7 @@ import Animated, {useAnimatedStyle, withTiming} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {LinearGradient} from 'expo-linear-gradient'
 
-import {useMinimalShellMode} from '#/lib/hooks/useMinimalShellMode'
+import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {clamp} from '#/lib/numbers'
 import {gradients} from '#/lib/styles'
@@ -20,7 +20,7 @@ export interface FABProps
 export function FABInner({testID, icon, ...props}: FABProps) {
   const insets = useSafeAreaInsets()
   const {isMobile, isTablet} = useWebMediaQueries()
-  const {fabMinimalShellTransform} = useMinimalShellMode()
+  const fabMinimalShellTransform = useMinimalShellFabTransform()
   const {
     state: pressed,
     onIn: onPressIn,

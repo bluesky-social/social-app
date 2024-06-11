@@ -3,7 +3,7 @@ import {InfiniteData, QueryKey, useInfiniteQuery} from '@tanstack/react-query'
 
 import {useAgent} from '#/state/session'
 
-const PAGE_SIZE = 30
+const PAGE_SIZE = 50
 type RQPageParam = string | undefined
 
 // TODO refactor invalidate on mutate?
@@ -29,6 +29,9 @@ export function useProfileFeedgensQuery(
         actor: did,
         limit: PAGE_SIZE,
         cursor: pageParam,
+      })
+      res.data.feeds.sort((a, b) => {
+        return (b.likeCount || 0) - (a.likeCount || 0)
       })
       return res.data
     },
