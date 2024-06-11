@@ -5198,12 +5198,6 @@ msgstr "该功能正在测试，你可以在<0>这篇博客文章</0>中获得�
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
 msgstr "该资讯源当前使用人数较多，服务暂时不可用。请稍后再试。"
 
-#: src/screens/Profile/Sections/Feed.tsx:59
-#: src/view/screens/ProfileFeed.tsx:471
-#: src/view/screens/ProfileList.tsx:729
-#~ msgid "This feed is empty!"
-#~ msgstr "这里是空的！"
-
 #: src/view/com/posts/CustomFeedEmptyState.tsx:37
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
 msgstr "这个资讯源是空的！你或许需要先关注更多的用户，或检查你的语言设置。"
