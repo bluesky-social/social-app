@@ -8,14 +8,14 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-06-04 07:58+0900\n"
+"PO-Revision-Date: 2024-06-08 15:32+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
 
 #: src/screens/Messages/List/ChatListItem.tsx:119
 msgid "(contains embedded content)"
-msgstr ""
+msgstr "(임베드 콘텐츠 포함)"
 
 #: src/view/com/modals/VerifyEmail.tsx:150
 msgid "(no email)"
@@ -33,7 +33,7 @@ msgstr "이 계정에 {0, plural, other {#}}개의 라벨이 지정됨"
 msgid "{0, plural, one {# label has been placed on this content} other {# labels have been placed on this content}}"
 msgstr "이 콘텐츠에 {0, plural, other {#}}개의 라벨이 지정됨"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:64
+#: src/view/com/util/post-ctrls/RepostButton.tsx:65
 msgid "{0, plural, one {# repost} other {# reposts}}"
 msgstr "{0, plural, other {#}}개"
 
@@ -55,7 +55,7 @@ msgstr "좋아요 ({0, plural, other {#}}개)"
 msgid "{0, plural, one {like} other {likes}}"
 msgstr "좋아요"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:280
+#: src/view/com/feeds/FeedSourceCard.tsx:301
 msgid "{0, plural, one {Liked by # user} other {Liked by # users}}"
 msgstr "{0, plural, other {#}}명의 사용자가 좋아함"
 
@@ -271,7 +271,7 @@ msgstr "도메인에 다음 DNS 레코드를 추가하세요:"
 msgid "Add to Lists"
 msgstr "리스트에 추가"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:246
+#: src/view/com/feeds/FeedSourceCard.tsx:267
 msgid "Add to my feeds"
 msgstr "내 피드에 추가"
 
@@ -280,7 +280,7 @@ msgstr "내 피드에 추가"
 msgid "Added to list"
 msgstr "리스트에 추가됨"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:118
+#: src/view/com/feeds/FeedSourceCard.tsx:126
 msgid "Added to my feeds"
 msgstr "내 피드에 추가됨"
 
@@ -460,11 +460,11 @@ msgstr "정말 이 메시지를 삭제하시겠습니까? 나에게 보이는 �
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
 msgstr "정말 이 대화에서 나가시겠습니까? 나에게 보이는 메시지는 삭제되지만 상대방에게는 삭제되지 않습니다."
 
-#: src/view/com/feeds/FeedSourceCard.tsx:293
+#: src/view/com/feeds/FeedSourceCard.tsx:314
 msgid "Are you sure you want to remove {0} from your feeds?"
 msgstr "피드에서 {0}을(를) 제거하시겠습니까?"
 
-#: src/view/com/composer/Composer.tsx:617
+#: src/view/com/composer/Composer.tsx:651
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "이 초안을 삭제하시겠습니까?"
 
@@ -572,7 +572,7 @@ msgstr "차단한 계정은 내 스레드에 답글을 달거나 나를 멘션�
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "차단한 계정은 내 스레드에 답글을 달거나 나를 멘션하거나 기타 다른 방식으로 나와 상호작용할 수 없습니다. 차단한 계정의 콘텐츠를 볼 수 없으며 해당 계정도 내 콘텐츠를 볼 수 없게 됩니다."
 
-#: src/view/com/post-thread/PostThread.tsx:363
+#: src/view/com/post-thread/PostThread.tsx:362
 msgid "Blocked post."
 msgstr "차단된 게시물."
 
@@ -659,8 +659,8 @@ msgstr "글자, 숫자, 공백, 대시, 밑줄만 포함할 수 있습니다. �
 #: src/components/Prompt.tsx:121
 #: src/components/TagMenu/index.tsx:268
 #: src/screens/Deactivated.tsx:161
-#: src/view/com/composer/Composer.tsx:417
-#: src/view/com/composer/Composer.tsx:423
+#: src/view/com/composer/Composer.tsx:451
+#: src/view/com/composer/Composer.tsx:457
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangeHandle.tsx:148
@@ -676,7 +676,7 @@ msgstr "글자, 숫자, 공백, 대시, 밑줄만 포함할 수 있습니다. �
 #: src/view/com/modals/LinkWarning.tsx:107
 #: src/view/com/modals/VerifyEmail.tsx:255
 #: src/view/com/modals/VerifyEmail.tsx:261
-#: src/view/com/util/post-ctrls/RepostButton.tsx:136
+#: src/view/com/util/post-ctrls/RepostButton.tsx:138
 #: src/view/screens/Search/Search.tsx:738
 #: src/view/shell/desktop/Search.tsx:218
 msgid "Cancel"
@@ -706,13 +706,13 @@ msgstr "이미지 자르기 취소"
 msgid "Cancel profile editing"
 msgstr "프로필 편집 취소"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:130
+#: src/view/com/util/post-ctrls/RepostButton.tsx:132
 msgid "Cancel quote post"
 msgstr "게시물 인용 취소"
 
 #: src/screens/Deactivated.tsx:155
 msgid "Cancel reactivation and log out"
-msgstr ""
+msgstr "재활성화 취소 및 로그아웃"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:87
 #: src/view/shell/desktop/Search.tsx:214
@@ -857,11 +857,11 @@ msgstr "이곳을 클릭"
 
 #: src/view/com/modals/DeleteAccount.tsx:208
 msgid "Click here for more information on deactivating your account"
-msgstr ""
+msgstr "계정 비활성화에 대한 자세한 내용을 보려면 이곳을 클릭하세요"
 
 #: src/view/com/modals/DeleteAccount.tsx:216
 msgid "Click here for more information."
-msgstr ""
+msgstr "자세한 내용을 보려면 이곳을 클릭하세요."
 
 #: src/components/TagMenu/index.web.tsx:138
 msgid "Click here to open tag menu for {tag}"
@@ -939,7 +939,7 @@ msgstr "하단 탐색 막대를 닫습니다"
 msgid "Closes password update alert"
 msgstr "비밀번호 변경 알림을 닫습니다"
 
-#: src/view/com/composer/Composer.tsx:419
+#: src/view/com/composer/Composer.tsx:453
 msgid "Closes post composer and discards post draft"
 msgstr "게시물 작성 상자를 닫고 게시물 초안을 삭제합니다"
 
@@ -976,7 +976,7 @@ msgstr "온보딩 완료 후 계정 사용 시작"
 msgid "Complete the challenge"
 msgstr "챌린지 완료하기"
 
-#: src/view/com/composer/Composer.tsx:536
+#: src/view/com/composer/Composer.tsx:570
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "최대 {MAX_GRAPHEME_LENGTH}자 길이까지 글을 작성할 수 있습니다"
 
@@ -1077,7 +1077,7 @@ msgid "Context menu backdrop, click to close the menu."
 msgstr "컨텍스트 메뉴 배경을 클릭하여 메뉴를 닫습니다."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:253
-#: src/screens/Onboarding/StepProfile/index.tsx:268
+#: src/screens/Onboarding/StepProfile/index.tsx:269
 msgid "Continue"
 msgstr "계속"
 
@@ -1086,7 +1086,7 @@ msgid "Continue as {0} (currently signed in)"
 msgstr "{0}(으)로 계속하기 (현재 로그인)"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:250
-#: src/screens/Onboarding/StepProfile/index.tsx:265
+#: src/screens/Onboarding/StepProfile/index.tsx:266
 #: src/screens/Signup/index.tsx:213
 msgid "Continue to next step"
 msgstr "다음 단계로 계속하기"
@@ -1195,7 +1195,7 @@ msgstr "계정 만들기"
 msgid "Create an account"
 msgstr "계정 만들기"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:282
+#: src/screens/Onboarding/StepProfile/index.tsx:283
 msgid "Create an avatar instead"
 msgstr "대신 아바타 만들기"
 
@@ -1257,11 +1257,11 @@ msgstr "생년월일"
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:73
 #: src/view/screens/Settings/index.tsx:806
 msgid "Deactivate account"
-msgstr ""
+msgstr "계정 비활성화"
 
 #: src/view/screens/Settings/index.tsx:818
 msgid "Deactivate my account"
-msgstr ""
+msgstr "내 계정 비활성화"
 
 #: src/view/screens/Settings/index.tsx:873
 msgid "Debug Moderation"
@@ -1301,7 +1301,7 @@ msgstr "대화 신고 기록 삭제"
 
 #: src/components/dms/MessageMenu.tsx:124
 msgid "Delete for me"
-msgstr "내게서 삭제"
+msgstr "나에게서 삭제"
 
 #: src/view/screens/ProfileList.tsx:471
 msgid "Delete List"
@@ -1340,7 +1340,7 @@ msgstr "이 게시물을 삭제하시겠습니까?"
 msgid "Deleted"
 msgstr "삭제됨"
 
-#: src/view/com/post-thread/PostThread.tsx:349
+#: src/view/com/post-thread/PostThread.tsx:348
 msgid "Deleted post."
 msgstr "삭제된 게시물."
 
@@ -1359,7 +1359,7 @@ msgstr "설명"
 msgid "Descriptive alt text"
 msgstr "설명이 포함된 대체 텍스트"
 
-#: src/view/com/composer/Composer.tsx:264
+#: src/view/com/composer/Composer.tsx:292
 msgid "Did you want to say anything?"
 msgstr "하고 싶은 말이 없나요?"
 
@@ -1392,11 +1392,11 @@ msgstr "햅틱 피드백 끄기"
 msgid "Disabled"
 msgstr "사용 안 함"
 
-#: src/view/com/composer/Composer.tsx:619
+#: src/view/com/composer/Composer.tsx:653
 msgid "Discard"
 msgstr "삭제"
 
-#: src/view/com/composer/Composer.tsx:616
+#: src/view/com/composer/Composer.tsx:650
 msgid "Discard draft?"
 msgstr "초안 삭제"
 
@@ -1446,8 +1446,8 @@ msgstr "도메인을 확인했습니다."
 #: src/components/dialogs/BirthDateSettings.tsx:125
 #: src/components/forms/DateField/index.tsx:74
 #: src/components/forms/DateField/index.tsx:80
-#: src/screens/Onboarding/StepProfile/index.tsx:321
-#: src/screens/Onboarding/StepProfile/index.tsx:324
+#: src/screens/Onboarding/StepProfile/index.tsx:322
+#: src/screens/Onboarding/StepProfile/index.tsx:325
 #: src/view/com/auth/server-input/index.tsx:169
 #: src/view/com/auth/server-input/index.tsx:170
 #: src/view/com/modals/AddAppPasswords.tsx:243
@@ -1845,7 +1845,7 @@ msgstr "게시물을 삭제하지 못했습니다. 다시 시도해 주세요"
 #: src/components/dialogs/GifSelect.ios.tsx:196
 #: src/components/dialogs/GifSelect.tsx:212
 msgid "Failed to load GIFs"
-msgstr "GIF 불러오기 실패"
+msgstr "GIF를 불러오지 못했습니다"
 
 #: src/screens/Messages/Conversation/MessageListError.tsx:23
 msgid "Failed to load past messages"
@@ -1873,7 +1873,7 @@ msgstr "설정을 업데이트하지 못했습니다"
 msgid "Feed"
 msgstr "피드"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:230
+#: src/view/com/feeds/FeedSourceCard.tsx:251
 msgid "Feed by {0}"
 msgstr "{0} 님의 피드"
 
@@ -2093,7 +2093,7 @@ msgstr "시작하기"
 msgid "Get Started"
 msgstr "시작하기"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:224
+#: src/screens/Onboarding/StepProfile/index.tsx:225
 msgid "Give your profile a face"
 msgstr "프로필에 얼굴 달기"
 
@@ -2138,7 +2138,7 @@ msgstr "홈으로 이동"
 msgid "Go Home"
 msgstr "홈으로 이동"
 
-#: src/screens/Messages/List/ChatListItem.tsx:208
+#: src/screens/Messages/List/ChatListItem.tsx:209
 msgid "Go to conversation with {0}"
 msgstr "{0} 님과의 대화로 이동합니다"
 
@@ -2188,7 +2188,7 @@ msgstr "문제가 있나요?"
 msgid "Help"
 msgstr "도움말"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:227
+#: src/screens/Onboarding/StepProfile/index.tsx:228
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
 msgstr "사진을 업로드하거나 아바타를 만들어 사람들이 내가 봇이 아니라는 사실을 알 수 있도록 하세요."
 
@@ -2230,23 +2230,23 @@ msgstr "이 게시물을 숨기시겠습니까?"
 msgid "Hide user list"
 msgstr "사용자 리스트 숨기기"
 
-#: src/view/com/posts/FeedErrorMessage.tsx:118
+#: src/view/com/posts/FeedErrorMessage.tsx:117
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
 msgstr "피드 서버에 연결하는 중 어떤 문제가 발생했습니다. 피드 소유자에게 이 문제에 대해 알려주세요."
 
-#: src/view/com/posts/FeedErrorMessage.tsx:106
+#: src/view/com/posts/FeedErrorMessage.tsx:105
 msgid "Hmm, the feed server appears to be misconfigured. Please let the feed owner know about this issue."
 msgstr "피드 서버가 잘못 구성된 것 같습니다. 피드 소유자에게 이 문제에 대해 알려주세요."
 
-#: src/view/com/posts/FeedErrorMessage.tsx:112
+#: src/view/com/posts/FeedErrorMessage.tsx:111
 msgid "Hmm, the feed server appears to be offline. Please let the feed owner know about this issue."
 msgstr "피드 서버가 오프라인 상태인 것 같습니다. 피드 소유자에게 이 문제에 대해 알려주세요."
 
-#: src/view/com/posts/FeedErrorMessage.tsx:109
+#: src/view/com/posts/FeedErrorMessage.tsx:108
 msgid "Hmm, the feed server gave a bad response. Please let the feed owner know about this issue."
 msgstr "피드 서버에서 잘못된 응답을 보냈습니다. 피드 소유자에게 이 문제에 대해 알려주세요."
 
-#: src/view/com/posts/FeedErrorMessage.tsx:103
+#: src/view/com/posts/FeedErrorMessage.tsx:102
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
 msgstr "이 피드를 찾는 데 문제가 있습니다. 피드가 삭제되었을 수 있습니다."
 
@@ -2293,7 +2293,7 @@ msgstr "인증 코드가 있습니다"
 
 #: src/view/com/modals/ChangeHandle.tsx:278
 msgid "I have my own domain"
-msgstr "내 도메인을 가지고 있습니다"
+msgstr "도메인을 가지고 있음"
 
 #: src/components/dms/BlockedByListDialog.tsx:56
 #: src/components/dms/ReportConversationPrompt.tsx:22
@@ -2322,11 +2322,11 @@ msgstr "이 게시물을 삭제하면 다시 복구할 수 없습니다."
 
 #: src/view/com/modals/ChangePassword.tsx:149
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
-msgstr "비밀번호를 변경하고 싶다면 본인 계정임을 확인할 수 있는 코드를 보내드리겠습니다."
+msgstr "비밀번호를 변경하고 싶다면 본인 계정임을 확인할 수 있는 코드를 보내드립니다."
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:92
 msgid "If you're trying to change your handle or email, do so before you deactivate."
-msgstr ""
+msgstr "핸들이나 이메일을 변경하려는 경우 비활성화하기 전에 변경하세요."
 
 #: src/lib/moderation/useReportOptions.ts:37
 msgid "Illegal and Urgent"
@@ -2596,7 +2596,7 @@ msgstr "리스트 아바타"
 msgid "List blocked"
 msgstr "리스트 차단됨"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:232
+#: src/view/com/feeds/FeedSourceCard.tsx:253
 msgid "List by {0}"
 msgstr "{0} 님의 리스트"
 
@@ -2633,7 +2633,7 @@ msgstr "리스트"
 msgid "Lists blocking this user:"
 msgstr "이 사용자를 차단한 리스트:"
 
-#: src/view/screens/Notifications.tsx:168
+#: src/view/screens/Notifications.tsx:184
 msgid "Load new notifications"
 msgstr "새 알림 불러오기"
 
@@ -2655,7 +2655,7 @@ msgstr "로그"
 #: src/screens/Deactivated.tsx:214
 #: src/screens/Deactivated.tsx:220
 msgid "Log in or sign up"
-msgstr ""
+msgstr "로그인 또는 가입"
 
 #: src/screens/SignupQueued.tsx:155
 #: src/screens/SignupQueued.tsx:158
@@ -2732,7 +2732,7 @@ msgstr "{0} 님에게 메시지 보내기"
 msgid "Message deleted"
 msgstr "메시지 삭제됨"
 
-#: src/view/com/posts/FeedErrorMessage.tsx:201
+#: src/view/com/posts/FeedErrorMessage.tsx:200
 msgid "Message from server: {0}"
 msgstr "서버에서 보낸 메시지: {0}"
 
@@ -3023,7 +3023,7 @@ msgid "New post"
 msgstr "새 게시물"
 
 #: src/view/screens/Feeds.tsx:627
-#: src/view/screens/Notifications.tsx:177
+#: src/view/screens/Notifications.tsx:193
 #: src/view/screens/Profile.tsx:464
 #: src/view/screens/ProfileFeed.tsx:426
 #: src/view/screens/ProfileList.tsx:201
@@ -3104,7 +3104,7 @@ msgstr "아직 메시지가 없습니다"
 msgid "No more conversations to show"
 msgstr "더 이상 표시할 대화가 없습니다"
 
-#: src/view/com/notifications/Feed.tsx:117
+#: src/view/com/notifications/Feed.tsx:118
 msgid "No notifications yet!"
 msgstr "아직 알림이 없습니다."
 
@@ -3114,6 +3114,10 @@ msgstr "아직 알림이 없습니다."
 #: src/screens/Messages/Settings.tsx:96
 msgid "No one"
 msgstr "없음"
+
+#: src/screens/Profile/Sections/Feed.tsx:59
+msgid "No posts yet."
+msgstr "아직 게시물이 없습니다."
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:101
 #: src/view/com/composer/text-input/web/Autocomplete.tsx:195
@@ -3198,8 +3202,8 @@ msgid "Notification Sounds"
 msgstr "알림음"
 
 #: src/Navigation.tsx:516
-#: src/view/screens/Notifications.tsx:126
-#: src/view/screens/Notifications.tsx:154
+#: src/view/screens/Notifications.tsx:132
+#: src/view/screens/Notifications.tsx:169
 #: src/view/shell/bottom-bar/BottomBar.tsx:227
 #: src/view/shell/desktop/LeftNav.tsx:350
 #: src/view/shell/Drawer.tsx:456
@@ -3249,11 +3253,11 @@ msgstr "오래된 순"
 msgid "Onboarding reset"
 msgstr "온보딩 재설정"
 
-#: src/view/com/composer/Composer.tsx:488
+#: src/view/com/composer/Composer.tsx:522
 msgid "One or more images is missing alt text."
 msgstr "하나 이상의 이미지에 대체 텍스트가 누락되었습니다."
 
-#: src/screens/Onboarding/StepProfile/index.tsx:116
+#: src/screens/Onboarding/StepProfile/index.tsx:117
 msgid "Only .jpg and .png files are supported"
 msgstr ".jpg 및 .png 파일만 지원합니다"
 
@@ -3283,17 +3287,17 @@ msgstr "공개성"
 msgid "Open {name} profile shortcut menu"
 msgstr "{name} 님의 프로필 단축 메뉴 열기"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:276
+#: src/screens/Onboarding/StepProfile/index.tsx:277
 msgid "Open avatar creator"
 msgstr "아바타 생성기 열기"
 
-#: src/screens/Messages/List/ChatListItem.tsx:214
-#: src/screens/Messages/List/ChatListItem.tsx:215
+#: src/screens/Messages/List/ChatListItem.tsx:217
+#: src/screens/Messages/List/ChatListItem.tsx:218
 msgid "Open conversation options"
 msgstr "대화 옵션 열기"
 
-#: src/view/com/composer/Composer.tsx:600
-#: src/view/com/composer/Composer.tsx:601
+#: src/view/com/composer/Composer.tsx:634
+#: src/view/com/composer/Composer.tsx:635
 msgid "Open emoji picker"
 msgstr "이모티콘 선택기 열기"
 
@@ -3386,7 +3390,7 @@ msgstr "초대 코드 목록을 엽니다"
 
 #: src/view/screens/Settings/index.tsx:808
 msgid "Opens modal for account deactivation confirmation"
-msgstr ""
+msgstr "계정 비활성화 확인을 위한 대화 상자를 엽니다"
 
 #: src/view/screens/Settings/index.tsx:830
 msgid "Opens modal for account deletion confirmation. Requires email code"
@@ -3474,11 +3478,11 @@ msgstr "또는 다음 옵션을 결합하세요:"
 
 #: src/screens/Deactivated.tsx:211
 msgid "Or, continue with another account."
-msgstr ""
+msgstr "또는 다른 계정으로 계속 진행하세요."
 
 #: src/screens/Deactivated.tsx:194
 msgid "Or, log into one of your other accounts."
-msgstr ""
+msgstr "또는 다른 계정 중 하나로 로그인하세요."
 
 #: src/lib/moderation/useReportOptions.ts:26
 msgid "Other"
@@ -3636,7 +3640,7 @@ msgstr "{0} 님이 이 라벨을 잘못 적용했다고 생각하는 이유를 �
 
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:110
 msgid "Please explain why you think your chats were incorrectly disabled"
-msgstr "채팅이 잘못 비활성화되었다고 생각하는 이유를 설명해 주세요"
+msgstr "대화가 잘못 비활성화되었다고 생각하는 이유를 설명해 주세요"
 
 #: src/lib/hooks/useAccountSwitcher.ts:48
 #: src/lib/hooks/useAccountSwitcher.ts:58
@@ -3647,7 +3651,7 @@ msgstr "@{0}(으)로 로그인하세요"
 msgid "Please Verify Your Email"
 msgstr "이메일 인증하기"
 
-#: src/view/com/composer/Composer.tsx:268
+#: src/view/com/composer/Composer.tsx:296
 msgid "Please wait for your link card to finish loading"
 msgstr "링크 카드를 완전히 불러올 때까지 기다려주세요"
 
@@ -3659,13 +3663,13 @@ msgstr "정치"
 msgid "Porn"
 msgstr "음란물"
 
-#: src/view/com/composer/Composer.tsx:462
-#: src/view/com/composer/Composer.tsx:470
+#: src/view/com/composer/Composer.tsx:496
+#: src/view/com/composer/Composer.tsx:504
 msgctxt "action"
 msgid "Post"
 msgstr "게시하기"
 
-#: src/view/com/post-thread/PostThread.tsx:427
+#: src/view/com/post-thread/PostThread.tsx:426
 msgctxt "description"
 msgid "Post"
 msgstr "게시물"
@@ -3684,7 +3688,7 @@ msgstr "@{0} 님의 게시물"
 msgid "Post deleted"
 msgstr "게시물 삭제됨"
 
-#: src/view/com/post-thread/PostThread.tsx:193
+#: src/view/com/post-thread/PostThread.tsx:192
 msgid "Post hidden"
 msgstr "게시물 숨김"
 
@@ -3706,8 +3710,8 @@ msgstr "게시물 언어"
 msgid "Post Languages"
 msgstr "게시물 언어"
 
-#: src/view/com/post-thread/PostThread.tsx:188
-#: src/view/com/post-thread/PostThread.tsx:200
+#: src/view/com/post-thread/PostThread.tsx:187
+#: src/view/com/post-thread/PostThread.tsx:199
 msgid "Post not found"
 msgstr "게시물을 찾을 수 없음"
 
@@ -3723,7 +3727,7 @@ msgstr "게시물"
 msgid "Posts can be muted based on their text, their tags, or both."
 msgstr "게시물의 글 및 태그에 따라 게시물을 뮤트할 수 있습니다."
 
-#: src/view/com/posts/FeedErrorMessage.tsx:69
+#: src/view/com/posts/FeedErrorMessage.tsx:68
 msgid "Posts hidden"
 msgstr "게시물 숨겨짐"
 
@@ -3773,7 +3777,7 @@ msgstr "개인정보 처리방침"
 
 #: src/components/dms/MessagesNUX.tsx:91
 msgid "Privately chat with other users."
-msgstr "다른 사용자와 비공개로 채팅하세요."
+msgstr "다른 사용자와 비공개로 대화하세요."
 
 #: src/screens/Login/ForgotPasswordForm.tsx:156
 msgid "Processing..."
@@ -3812,16 +3816,16 @@ msgstr "일괄 뮤트하거나 차단할 수 있는 공개적이고 공유 가�
 msgid "Public, shareable lists which can drive feeds."
 msgstr "피드를 탐색할 수 있는 공개적이고 공유 가능한 목록입니다."
 
-#: src/view/com/composer/Composer.tsx:447
+#: src/view/com/composer/Composer.tsx:481
 msgid "Publish post"
 msgstr "게시물 게시하기"
 
-#: src/view/com/composer/Composer.tsx:447
+#: src/view/com/composer/Composer.tsx:481
 msgid "Publish reply"
 msgstr "답글 게시하기"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:113
-#: src/view/com/util/post-ctrls/RepostButton.tsx:125
+#: src/view/com/util/post-ctrls/RepostButton.tsx:115
+#: src/view/com/util/post-ctrls/RepostButton.tsx:127
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:78
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:81
 msgid "Quote post"
@@ -3837,7 +3841,7 @@ msgstr "비율"
 
 #: src/screens/Deactivated.tsx:144
 msgid "Reactivate your account"
-msgstr ""
+msgstr "계정 재활성화"
 
 #: src/components/dms/ReportDialog.tsx:172
 msgid "Reason:"
@@ -3856,11 +3860,11 @@ msgid "Reload conversations"
 msgstr "대화 다시 불러오기"
 
 #: src/components/dialogs/MutedWords.tsx:288
-#: src/view/com/feeds/FeedSourceCard.tsx:296
+#: src/view/com/feeds/FeedSourceCard.tsx:317
 #: src/view/com/modals/ListAddRemoveUsers.tsx:268
 #: src/view/com/modals/SelfLabel.tsx:84
 #: src/view/com/modals/UserAddRemoveLists.tsx:230
-#: src/view/com/posts/FeedErrorMessage.tsx:213
+#: src/view/com/posts/FeedErrorMessage.tsx:212
 msgid "Remove"
 msgstr "제거"
 
@@ -3880,25 +3884,25 @@ msgstr "배너 제거"
 msgid "Remove embed"
 msgstr "임베드 제거"
 
-#: src/view/com/posts/FeedErrorMessage.tsx:169
+#: src/view/com/posts/FeedErrorMessage.tsx:168
 #: src/view/com/posts/FeedShutdownMsg.tsx:113
 #: src/view/com/posts/FeedShutdownMsg.tsx:117
 msgid "Remove feed"
 msgstr "피드 제거"
 
-#: src/view/com/posts/FeedErrorMessage.tsx:210
+#: src/view/com/posts/FeedErrorMessage.tsx:209
 msgid "Remove feed?"
 msgstr "피드를 제거하시겠습니까?"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:180
-#: src/view/com/feeds/FeedSourceCard.tsx:245
+#: src/view/com/feeds/FeedSourceCard.tsx:188
+#: src/view/com/feeds/FeedSourceCard.tsx:266
 #: src/view/screens/ProfileFeed.tsx:330
 #: src/view/screens/ProfileFeed.tsx:336
 #: src/view/screens/ProfileList.tsx:443
 msgid "Remove from my feeds"
 msgstr "내 피드에서 제거"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:291
+#: src/view/com/feeds/FeedSourceCard.tsx:312
 msgid "Remove from my feeds?"
 msgstr "내 피드에서 제거하시겠습니까?"
 
@@ -3916,22 +3920,22 @@ msgstr "목록에서 뮤트한 단어 제거"
 
 #: src/view/screens/Search/Search.tsx:1014
 msgid "Remove profile"
-msgstr ""
+msgstr "프로필 제거"
 
 #: src/view/screens/Search/Search.tsx:1016
 msgid "Remove profile from search history"
-msgstr ""
+msgstr "검색 기록에서 프로필을 제거합니다"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:238
 msgid "Remove quote"
 msgstr "인용 제거"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:90
-#: src/view/com/util/post-ctrls/RepostButton.tsx:106
+#: src/view/com/util/post-ctrls/RepostButton.tsx:92
+#: src/view/com/util/post-ctrls/RepostButton.tsx:108
 msgid "Remove repost"
 msgstr "재게시를 취소합니다"
 
-#: src/view/com/posts/FeedErrorMessage.tsx:211
+#: src/view/com/posts/FeedErrorMessage.tsx:210
 msgid "Remove this feed from your saved feeds"
 msgstr "저장한 피드에서 이 피드를 제거합니다"
 
@@ -3940,7 +3944,7 @@ msgstr "저장한 피드에서 이 피드를 제거합니다"
 msgid "Removed from list"
 msgstr "리스트에서 제거됨"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:131
+#: src/view/com/feeds/FeedSourceCard.tsx:139
 msgid "Removed from my feeds"
 msgstr "내 피드에서 제거됨"
 
@@ -3971,7 +3975,7 @@ msgstr "답글"
 msgid "Replies to this thread are disabled"
 msgstr "이 스레드에 대한 답글이 비활성화됩니다."
 
-#: src/view/com/composer/Composer.tsx:460
+#: src/view/com/composer/Composer.tsx:494
 msgctxt "action"
 msgid "Reply"
 msgstr "답글"
@@ -4051,9 +4055,9 @@ msgstr "이 게시물 신고하기"
 msgid "Report this user"
 msgstr "이 사용자 신고하기"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:63
-#: src/view/com/util/post-ctrls/RepostButton.tsx:91
-#: src/view/com/util/post-ctrls/RepostButton.tsx:107
+#: src/view/com/util/post-ctrls/RepostButton.tsx:64
+#: src/view/com/util/post-ctrls/RepostButton.tsx:93
+#: src/view/com/util/post-ctrls/RepostButton.tsx:109
 msgctxt "action"
 msgid "Repost"
 msgstr "재게시"
@@ -4063,7 +4067,7 @@ msgstr "재게시"
 msgid "Repost"
 msgstr "재게시"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:83
+#: src/view/com/util/post-ctrls/RepostButton.tsx:85
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:46
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:92
 msgid "Repost or quote post"
@@ -4443,7 +4447,7 @@ msgstr "피드백 보내기"
 msgid "Send message"
 msgstr "메시지 보내기"
 
-#: src/components/dms/dialogs/ShareViaChatDialog.tsx:47
+#: src/components/dms/dialogs/ShareViaChatDialog.tsx:59
 msgid "Send post to..."
 msgstr "게시물을 다음으로 보내기"
 
@@ -4461,7 +4465,7 @@ msgstr "{0} 님에게 신고 보내기"
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:119
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:122
 msgid "Send verification email"
-msgstr "인증 메일 보내기"
+msgstr "인증 이메일 보내기"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:299
 #: src/view/com/util/forms/PostDropdownBtn.tsx:302
@@ -4712,9 +4716,9 @@ msgstr "피드에 {0} 님의 게시물을 표시합니다"
 #: src/view/shell/bottom-bar/BottomBar.tsx:312
 #: src/view/shell/bottom-bar/BottomBar.tsx:313
 #: src/view/shell/bottom-bar/BottomBar.tsx:315
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:181
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:182
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:184
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:204
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:205
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:207
 #: src/view/shell/NavSignupCard.tsx:69
 #: src/view/shell/NavSignupCard.tsx:70
 #: src/view/shell/NavSignupCard.tsx:72
@@ -4745,9 +4749,9 @@ msgstr "로그아웃"
 #: src/view/shell/bottom-bar/BottomBar.tsx:302
 #: src/view/shell/bottom-bar/BottomBar.tsx:303
 #: src/view/shell/bottom-bar/BottomBar.tsx:305
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:171
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:172
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:174
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:194
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:195
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:197
 #: src/view/shell/NavSignupCard.tsx:60
 #: src/view/shell/NavSignupCard.tsx:61
 #: src/view/shell/NavSignupCard.tsx:63
@@ -4795,7 +4799,7 @@ msgstr "알 수 없는 오류가 발생했습니다"
 #: src/screens/Deactivated.tsx:94
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:59
 msgid "Something went wrong, please try again"
-msgstr ""
+msgstr "알 수 없는 오류가 발생했습니다. 다시 시도해 주세요"
 
 #: src/components/ReportDialog/index.tsx:59
 #: src/screens/Moderation/index.tsx:114
@@ -5025,8 +5029,8 @@ msgstr "내 콘텐츠에 다음 라벨이 적용되었습니다."
 msgid "The following steps will help customize your Bluesky experience."
 msgstr "다음 단계는 Bluesky 환경을 맞춤 설정하는 데 도움이 됩니다."
 
-#: src/view/com/post-thread/PostThread.tsx:189
-#: src/view/com/post-thread/PostThread.tsx:201
+#: src/view/com/post-thread/PostThread.tsx:188
+#: src/view/com/post-thread/PostThread.tsx:200
 msgid "The post may have been deleted."
 msgstr "게시물이 삭제되었을 수 있습니다."
 
@@ -5044,14 +5048,14 @@ msgstr "서비스 이용약관을 다음으로 이동했습니다:"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:86
 msgid "There is no time limit for account deactivation, come back any time."
-msgstr ""
+msgstr "계정 비활성화에는 시간 제한이 없으므로 언제든지 다시 돌아올 수 있습니다."
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:115
 #: src/view/screens/ProfileFeed.tsx:541
 msgid "There was an an issue contacting the server, please check your internet connection and try again."
 msgstr "서버에 연결하는 동안 문제가 발생했습니다. 인터넷 연결을 확인한 후 다시 시도하세요."
 
-#: src/view/com/posts/FeedErrorMessage.tsx:146
+#: src/view/com/posts/FeedErrorMessage.tsx:145
 msgid "There was an an issue removing this feed. Please check your internet connection and try again."
 msgstr "이 피드를 삭제하는 동안 문제가 발생했습니다. 인터넷 연결을 확인한 후 다시 시도하세요."
 
@@ -5075,12 +5079,12 @@ msgstr "Tenor에 연결하는 동안 문제가 발생했습니다."
 msgid "There was an issue contacting the server"
 msgstr "서버에 연결하는 동안 문제가 발생했습니다"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:120
-#: src/view/com/feeds/FeedSourceCard.tsx:133
+#: src/view/com/feeds/FeedSourceCard.tsx:128
+#: src/view/com/feeds/FeedSourceCard.tsx:141
 msgid "There was an issue contacting your server"
 msgstr "서버에 연결하는 동안 문제가 발생했습니다"
 
-#: src/view/com/notifications/Feed.tsx:125
+#: src/view/com/notifications/Feed.tsx:126
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "알림을 가져오는 동안 문제가 발생했습니다. 이곳을 탭하여 다시 시도하세요."
 
@@ -5135,7 +5139,7 @@ msgstr "애플리케이션에 예기치 않은 문제가 발생했습니다. 이
 
 #: src/screens/SignupQueued.tsx:112
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
-msgstr "Bluesky에 신규 사용자가 몰리고 있습니다! 최대한 빨리 계정을 활성화해 드리겠습니다."
+msgstr "Bluesky에 신규 사용자가 몰리고 있습니다! 최대한 빨리 계정을 활성화하겠습니다."
 
 #: src/components/moderation/ScreenHider.tsx:116
 msgid "This {screenDescription} has been flagged:"
@@ -5159,7 +5163,7 @@ msgstr "이 이의신청은 Bluesky Moderation Service로 보내집니다."
 
 #: src/screens/Messages/Conversation/MessageListError.tsx:18
 msgid "This chat was disconnected"
-msgstr "이 채팅은 연결이 끊어졌습니다"
+msgstr "이 대화는 연결이 끊어졌습니다"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:19
 msgid "This content has been hidden by the moderators."
@@ -5178,27 +5182,30 @@ msgstr "이 콘텐츠는 {0}에서 호스팅됩니다. 외부 미디어를 사�
 msgid "This content is not available because one of the users involved has blocked the other."
 msgstr "관련 사용자 중 한 명이 다른 사용자를 차단했기 때문에 이 콘텐츠를 사용할 수 없습니다."
 
-#: src/view/com/posts/FeedErrorMessage.tsx:115
+#: src/view/com/posts/FeedErrorMessage.tsx:114
 msgid "This content is not viewable without a Bluesky account."
 msgstr "이 콘텐츠는 Bluesky 계정이 없으면 볼 수 없습니다."
+
+#: src/screens/Messages/List/ChatListItem.tsx:211
+msgid "This conversation is with a deleted or a deactivated account. Press for options."
+msgstr "이 대화는 삭제되었거나 비활성화된 계정과의 대화입니다. 옵션을 보려면 누르세요."
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:93
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
 msgstr "이 기능은 베타 버전입니다. 저장소 내보내기에 대한 자세한 내용은 <0>이 블로그 글</0>에서 확인할 수 있습니다."
 
-#: src/view/com/posts/FeedErrorMessage.tsx:121
+#: src/view/com/posts/FeedErrorMessage.tsx:120
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
 msgstr "이 피드는 현재 트래픽이 많아 일시적으로 사용할 수 없습니다. 나중에 다시 시도해 주세요."
-
-#: src/screens/Profile/Sections/Feed.tsx:59
-#: src/view/screens/ProfileFeed.tsx:471
-#: src/view/screens/ProfileList.tsx:729
-msgid "This feed is empty!"
-msgstr "이 피드는 비어 있습니다."
 
 #: src/view/com/posts/CustomFeedEmptyState.tsx:37
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
 msgstr "이 피드는 비어 있습니다. 더 많은 사용자를 팔로우하거나 언어 설정을 조정해 보세요."
+
+#: src/view/screens/ProfileFeed.tsx:471
+#: src/view/screens/ProfileList.tsx:729
+msgid "This feed is empty."
+msgstr "이 피드는 비어 있습니다."
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:97
 msgid "This feed is no longer online. We are showing <0>Discover</0> instead."
@@ -5426,7 +5433,7 @@ msgstr "계정 차단 해제"
 msgid "Unblock Account?"
 msgstr "계정을 차단 해제하시겠습니까?"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:62
+#: src/view/com/util/post-ctrls/RepostButton.tsx:63
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:69
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:73
 msgid "Undo repost"
@@ -5523,7 +5530,7 @@ msgstr "{handle}로 변경"
 msgid "Updating..."
 msgstr "업데이트 중…"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:280
+#: src/screens/Onboarding/StepProfile/index.tsx:281
 msgid "Upload a photo instead"
 msgstr "대신 사진 업로드하기"
 
@@ -5743,7 +5750,7 @@ msgstr "이 라벨에 대한 정보 보기"
 #: src/components/ProfileHoverCard/index.web.tsx:396
 #: src/components/ProfileHoverCard/index.web.tsx:429
 #: src/view/com/posts/AviFollowButton.tsx:58
-#: src/view/com/posts/FeedErrorMessage.tsx:175
+#: src/view/com/posts/FeedErrorMessage.tsx:174
 msgid "View profile"
 msgstr "프로필 보기"
 
@@ -5842,6 +5849,10 @@ msgstr "죄송하지만 현재 뮤트한 단어를 불러올 수 없습니다. �
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "죄송하지만 검색을 완료할 수 없습니다. 몇 분 후에 다시 시도해 주세요."
 
+#: src/view/com/composer/Composer.tsx:333
+msgid "We're sorry! The post you are replying to has been deleted."
+msgstr "죄송하지만 답글을 달려는 게시물이 삭제되었습니다."
+
 #: src/components/Lists.tsx:212
 #: src/view/screens/NotFound.tsx:48
 msgid "We're sorry! We can't find the page you were looking for."
@@ -5853,7 +5864,7 @@ msgstr "죄송합니다. 라벨러는 10개까지만 구독할 수 있으며 10�
 
 #: src/screens/Deactivated.tsx:128
 msgid "Welcome back!"
-msgstr ""
+msgstr "다시 돌아오셨군요!"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:135
 msgid "What are your interests?"
@@ -5861,7 +5872,7 @@ msgstr "어떤 관심사가 있으신가요?"
 
 #: src/view/com/auth/SplashScreen.tsx:40
 #: src/view/com/auth/SplashScreen.web.tsx:86
-#: src/view/com/composer/Composer.tsx:340
+#: src/view/com/composer/Composer.tsx:374
 msgid "What's up?"
 msgstr "무슨 일이 일어나고 있나요?"
 
@@ -5920,11 +5931,11 @@ msgstr "가로"
 msgid "Write a message"
 msgstr "메시지를 입력하세요"
 
-#: src/view/com/composer/Composer.tsx:534
+#: src/view/com/composer/Composer.tsx:568
 msgid "Write post"
 msgstr "게시물 작성"
 
-#: src/view/com/composer/Composer.tsx:339
+#: src/view/com/composer/Composer.tsx:373
 #: src/view/com/composer/Prompt.tsx:39
 msgid "Write your reply"
 msgstr "답글 작성하기"
@@ -5946,11 +5957,11 @@ msgstr "예"
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:106
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:108
 msgid "Yes, deactivate"
-msgstr ""
+msgstr "비활성화"
 
 #: src/screens/Deactivated.tsx:150
 msgid "Yes, reactivate my account"
-msgstr ""
+msgstr "내 계정 재활성화"
 
 #: src/components/dms/MessageItem.tsx:188
 msgid "Yesterday, {time}"
@@ -5971,7 +5982,7 @@ msgstr "팔로우할 새로운 맞춤 피드를 찾을 수도 있습니다."
 
 #: src/view/com/modals/DeleteAccount.tsx:202
 msgid "You can also temporarily deactivate your account instead, and reactivate it at any time."
-msgstr ""
+msgstr "대신 계정을 일시적으로 비활성화한 후 언제든지 재활성화할 수도 있습니다."
 
 #: src/components/dms/MessagesNUX.tsx:119
 msgid "You can change this at any time."
@@ -5988,7 +5999,7 @@ msgstr "이제 새 비밀번호로 로그인할 수 있습니다."
 
 #: src/screens/Deactivated.tsx:136
 msgid "You can reactivate your account to continue logging in. Your profile and posts will be visible to other users."
-msgstr ""
+msgstr "계정을 재활성화하여 로그인을 계속할 수 있습니다. 내 프로필과 글이 다른 사용자에게 표시됩니다."
 
 #: src/view/com/profile/ProfileFollowers.tsx:86
 msgid "You do not have any followers."
@@ -6006,7 +6017,7 @@ msgstr "고정한 피드가 없습니다."
 msgid "You don't have any saved feeds."
 msgstr "저장한 피드가 없습니다."
 
-#: src/view/com/post-thread/PostThread.tsx:195
+#: src/view/com/post-thread/PostThread.tsx:194
 msgid "You have blocked the author or you have been blocked by the author."
 msgstr "작성자를 차단했거나 작성자가 나를 차단했습니다."
 
@@ -6095,7 +6106,7 @@ msgstr "신고하려면 하나 이상의 라벨을 선택해야 합니다."
 
 #: src/screens/Deactivated.tsx:131
 msgid "You previously deactivated @{0}."
-msgstr ""
+msgstr "이전에 @{0}을(를) 비활성화했습니다."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:173
 msgid "You will no longer receive notifications for this thread"
@@ -6115,11 +6126,11 @@ msgstr "나: {0}"
 
 #: src/screens/Messages/List/ChatListItem.tsx:142
 msgid "You: {defaultEmbeddedContentMessage}"
-msgstr ""
+msgstr "나: {defaultEmbeddedContentMessage}"
 
 #: src/screens/Messages/List/ChatListItem.tsx:135
 msgid "You: {short}"
-msgstr ""
+msgstr "나: {short}"
 
 #: src/screens/SignupQueued.tsx:93
 #: src/screens/SignupQueued.tsx:94
@@ -6130,7 +6141,7 @@ msgstr "대기 중입니다"
 #: src/screens/Deactivated.tsx:89
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:54
 msgid "You're logged in with an App Password. Please log in with your main password to continue deactivating your account."
-msgstr ""
+msgstr "앱 비밀번호로 로그인했습니다. 계정 비활성화를 계속하려면 원래 비밀번호로 로그인하세요."
 
 #: src/screens/Onboarding/StepFinished.tsx:123
 msgid "You're ready to go!"
@@ -6185,7 +6196,7 @@ msgstr "이메일이 아직 인증되지 않았습니다. 이는 중요한 보�
 
 #: src/view/com/posts/FollowingEmptyState.tsx:47
 msgid "Your following feed is empty! Follow more users to see what's happening."
-msgstr "팔로우 중 피드가 비어 있습니다! 더 많은 사용자를 팔로우하여 무슨 일이 일어나고 있는지 확인하세요."
+msgstr "팔로우 중 피드가 비어 있습니다. 더 많은 사용자를 팔로우하여 무슨 일이 일어나고 있는지 확인하세요."
 
 #: src/screens/Signup/StepHandle.tsx:73
 msgid "Your full handle will be"
@@ -6203,7 +6214,7 @@ msgstr "뮤트한 단어"
 msgid "Your password has been changed successfully!"
 msgstr "비밀번호를 성공적으로 변경했습니다."
 
-#: src/view/com/composer/Composer.tsx:330
+#: src/view/com/composer/Composer.tsx:364
 msgid "Your post has been published"
 msgstr "게시물을 게시했습니다"
 
@@ -6217,9 +6228,9 @@ msgstr "내 프로필"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:75
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
-msgstr ""
+msgstr "내 프로필, 글, 피드 및 리스트가 더 이상 다른 Bluesky 사용자에게 표시되지 않습니다. 언제든지 로그인하여 계정을 재활성화할 수 있습니다."
 
-#: src/view/com/composer/Composer.tsx:329
+#: src/view/com/composer/Composer.tsx:363
 msgid "Your reply has been published"
 msgstr "내 답글을 게시했습니다"
 
