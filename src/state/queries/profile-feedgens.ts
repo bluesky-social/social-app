@@ -30,7 +30,7 @@ export function useProfileFeedgensQuery(
         limit: PAGE_SIZE,
         cursor: pageParam,
       })
-      res.data.feeds = res.data.feeds.sort((a, b) => {
+      res.data.feeds.sort((a, b) => {
         return (b.likeCount || 0) - (a.likeCount || 0)
       })
       return res.data
