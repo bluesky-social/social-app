@@ -45,7 +45,7 @@ export function NewskieDialog({
         <Dialog.ScrollableInner label={_(msg`New user info dialog`)}>
           <View style={[a.gap_md, isNative && {marginBottom: 40}]}>
             <Text style={[a.font_bold, a.text_xl]}>
-              <Trans>{profileName} is new here!</Trans>
+              <Trans>Say hello!</Trans>
             </Text>
             <Text style={[a.text_md]}>
               {AppBskyGraphStarterpack.isRecord(joinedVia?.record) &&
