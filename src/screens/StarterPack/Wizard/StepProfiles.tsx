@@ -59,6 +59,7 @@ export function StepProfiles() {
         data={query ? results : follows}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
+        contentContainerStyle={{paddingTop: 8}}
         onEndReached={!query ? () => fetchNextPage() : undefined}
         onEndReachedThreshold={2}
         renderScrollComponent={props => <KeyboardAwareScrollView {...props} />}
