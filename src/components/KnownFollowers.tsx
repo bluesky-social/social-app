@@ -5,7 +5,6 @@ import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {makeProfileLink} from '#/lib/routes/links'
-import {isNative} from '#/platform/detection'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
@@ -13,7 +12,7 @@ import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
 const AVI_SIZE = 30
-const AVI_BORDER = isNative ? 1 : 1
+const AVI_BORDER = 1
 
 /**
  * Shared logic to determine if `KnownFollowers` should be shown.
