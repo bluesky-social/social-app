@@ -511,11 +511,13 @@ function Footer({
           },
         ],
       ]}>
-      <View style={[a.absolute, {right: 14, top: 23}]}>
-        <Text style={[a.font_bold]}>
-          {items.length}/{state.currentStep === 'Profiles' ? 50 : 3}
-        </Text>
-      </View>
+      {items.length > 0 && (
+        <View style={[a.absolute, {right: 14, top: 23}]}>
+          <Text style={[a.font_bold]}>
+            {items.length}/{state.currentStep === 'Profiles' ? 50 : 3}
+          </Text>
+        </View>
+      )}
 
       <View style={[a.flex_row, a.gap_xs]}>
         <View style={[a.flex_row]}>
@@ -533,24 +535,13 @@ function Footer({
       {items.length === 0 ? (
         <View style={[a.gap_sm]}>
           <Text style={[a.font_bold, a.text_center, textStyles]}>
-            {state.currentStep === 'Profiles' ? (
-              <Trans>You haven't added anyone to your starter pack yet!</Trans>
-            ) : (
-              <Trans>You haven't added any suggested feeds yet!</Trans>
-            )}
+            <Trans>Optionally, add some feeds to your starter pack!</Trans>
           </Text>
           <Text style={[a.text_center, textStyles]}>
-            {state.currentStep === 'Profiles' ? (
-              <Trans>
-                Search for people that you want to suggest to others, or skip
-                for now and add some later.
-              </Trans>
-            ) : (
-              <Trans>
-                Search for feeds that you want to suggest to others, or skip for
-                now and add some later.
-              </Trans>
-            )}
+            <Trans>
+              Search for feeds that you want to suggest to others, or skip for
+              now and add some later.
+            </Trans>
           </Text>
         </View>
       ) : (
@@ -584,15 +575,9 @@ function Footer({
           )}
         </Text>
       )}
-
-      {isEditEnabled && (
-        <View
-          style={[
-            a.flex_row,
-            a.w_full,
-            a.justify_between,
-            {marginTop: 'auto'},
-          ]}>
+      <View
+        style={[a.flex_row, a.w_full, a.justify_between, {marginTop: 'auto'}]}>
+        {isEditEnabled ? (
           <Button
             label={_(msg`Edit`)}
             variant="ghost"
@@ -603,18 +588,20 @@ function Footer({
               <Trans>Edit</Trans>
             </ButtonText>
           </Button>
-          <Button
-            label={nextBtnText}
-            variant="solid"
-            color="primary"
-            size="small"
-            onPress={onNext}
-            disabled={!state.canNext || state.processing}>
-            <ButtonText>{nextBtnText}</ButtonText>
-            {state.processing && <Loader size="xs" style={{color: 'white'}} />}
-          </Button>
-        </View>
-      )}
+        ) : (
+          <View />
+        )}
+        <Button
+          label={nextBtnText}
+          variant="solid"
+          color="primary"
+          size="small"
+          onPress={onNext}
+          disabled={!state.canNext || state.processing}>
+          <ButtonText>{nextBtnText}</ButtonText>
+          {state.processing && <Loader size="xs" style={{color: 'white'}} />}
+        </Button>
+      </View>
 
       <WizardEditListDialog
         control={editDialogControl}
