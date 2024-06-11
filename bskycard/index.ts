@@ -17,36 +17,40 @@ async function main() {
     appviewAgent: new AtpAgent({service: 'https://api.bsky.app'}),
     fonts: [{name: 'Inter', data: readFileSync('./assets/Inter-Regular.ttf')}],
   }
-  const server = createServer(async (req, res) => {
-    try {
-      const url = req.url
-        ? new URL(req.url, 'https://domain.invalid')
-        : undefined
-      assert(url)
-      const pathParts =
-        url.pathname === '/'
-          ? []
-          : url.pathname.slice(1).replace(/\/$/, '').split('/')
-      const routed = await router(ctx, req, res, pathParts)
-      if (routed === false) {
-        res.statusCode = 404
-        res.setHeader('content-type', 'text/plain')
-        return res.end('not found')
-      }
-    } catch (err) {
-      console.error(err)
-      if (!res.headersSent) {
-        res.statusCode = 500
-        res.setHeader('content-type', 'text/plain')
-        return res.end('server error')
-      }
-    }
-  })
+  const server = createServer((req, res) => handler(ctx, req, res))
   await once(server.listen(PORT), 'listening')
   console.log('listening')
   process.once('SIGINT', () => server.close())
   await once(server, 'close')
   console.log('closed')
+}
+
+async function handler(
+  ctx: AppContext,
+  req: IncomingMessage,
+  res: ServerResponse,
+) {
+  try {
+    const url = req.url ? new URL(req.url, 'https://domain.invalid') : undefined
+    assert(url)
+    const pathParts =
+      url.pathname === '/'
+        ? []
+        : url.pathname.slice(1).replace(/\/$/, '').split('/')
+    const routed = await router(ctx, req, res, pathParts)
+    if (routed === false) {
+      res.statusCode = 404
+      res.setHeader('content-type', 'text/plain')
+      return res.end('not found')
+    }
+  } catch (err) {
+    console.error(err)
+    if (!res.headersSent) {
+      res.statusCode = 500
+      res.setHeader('content-type', 'text/plain')
+      return res.end('server error')
+    }
+  }
 }
 
 async function router(
