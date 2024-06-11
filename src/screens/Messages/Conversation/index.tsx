@@ -36,13 +36,15 @@ export function MessagesConversationScreen({route}: Props) {
   const {setCurrentConvoId} = useCurrentConvoId()
 
   const {setEnabled} = useKeyboardController()
-  React.useEffect(() => {
-    if (isWeb) return
-    setEnabled(true)
-    return () => {
-      setEnabled(false)
-    }
-  }, [setEnabled])
+  useFocusEffect(
+    useCallback(() => {
+      if (isWeb) return
+      setEnabled(true)
+      return () => {
+        setEnabled(false)
+      }
+    }, [setEnabled]),
+  )
 
   useFocusEffect(
     useCallback(() => {
