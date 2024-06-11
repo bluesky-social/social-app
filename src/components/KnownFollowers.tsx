@@ -12,7 +12,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
-const AVI_SIZE = 26
+const AVI_SIZE = 30
 const AVI_BORDER = isNative ? 1 : 1
 
 /**
@@ -34,9 +34,30 @@ export function KnownFollowers({
   profile: AppBskyActorDefs.ProfileViewDetailed
   moderationOpts: ModerationOpts
 }) {
-  if (shouldShowKnownFollowers(profile.viewer?.knownFollowers)) {
+  const cache = React.useRef<Map<string, AppBskyActorDefs.KnownFollowers>>(
+    new Map(),
+  )
+
+  /*
+   * Results for `knownFollowers` are not sorted consistently, so when
+   * revalidating we can see a flash of this data updating. This cache prevents
+   * this happening for screens that remain in memory. When pushing a new
+   * screen, or once this one is popped, this cache is empty, so new data is
+   * displayed.
+   */
+  if (profile.viewer?.knownFollowers && !cache.current.has(profile.did)) {
+    cache.current.set(profile.did, profile.viewer.knownFollowers)
+  }
+
+  const cachedKnownFollowers = cache.current.get(profile.did)
+
+  if (cachedKnownFollowers && shouldShowKnownFollowers(cachedKnownFollowers)) {
     return (
-      <KnownFollowersInner profile={profile} moderationOpts={moderationOpts} />
+      <KnownFollowersInner
+        profile={profile}
+        cachedKnownFollowers={cachedKnownFollowers}
+        moderationOpts={moderationOpts}
+      />
     )
   }
 
@@ -46,13 +67,14 @@ export function KnownFollowers({
 function KnownFollowersInner({
   profile,
   moderationOpts,
+  cachedKnownFollowers,
 }: {
   profile: AppBskyActorDefs.ProfileViewDetailed
   moderationOpts: ModerationOpts
+  cachedKnownFollowers: AppBskyActorDefs.KnownFollowers
 }) {
   const t = useTheme()
   const {_} = useLingui()
-  const knownFollowers = profile.viewer!.knownFollowers!
 
   const textStyle = [
     a.flex_1,
@@ -62,14 +84,14 @@ function KnownFollowersInner({
   ]
 
   // list of users, minus blocks
-  const returnedCount = knownFollowers.followers.length
+  const returnedCount = cachedKnownFollowers.followers.length
   // db count, includes blocks
-  const fullCount = knownFollowers.count
+  const fullCount = cachedKnownFollowers.count
   // if we have less than a page returned, use whichever is less
   const count =
     returnedCount < 50 ? Math.min(fullCount, returnedCount) : fullCount
 
-  const slice = knownFollowers.followers.slice(0, 3).map(f => {
+  const slice = cachedKnownFollowers.followers.slice(0, 3).map(f => {
     const moderation = moderateProfile(f, moderationOpts)
     return {
       profile: {
@@ -105,9 +127,9 @@ function KnownFollowersInner({
                 opacity: 0.5,
               },
             ]}>
-            {slice.map(({profile, moderation}, i) => (
+            {slice.map(({profile: prof, moderation}, i) => (
               <View
-                key={profile.did}
+                key={prof.did}
                 style={[
                   a.absolute,
                   a.rounded_full,
@@ -122,7 +144,7 @@ function KnownFollowersInner({
                 ]}>
                 <UserAvatar
                   size={AVI_SIZE}
-                  avatar={profile.avatar}
+                  avatar={prof.avatar}
                   moderation={moderation.ui('avatar')}
                 />
               </View>
@@ -144,9 +166,9 @@ function KnownFollowersInner({
             <Trans>Followed by</Trans>{' '}
             {count > 2 ? (
               <>
-                {slice.slice(0, 2).map(({profile}, i) => (
-                  <Text key={profile.did} style={textStyle}>
-                    {profile.displayName}
+                {slice.slice(0, 2).map(({profile: prof}, i) => (
+                  <Text key={prof.did} style={textStyle}>
+                    {prof.displayName}
                     {i === 0 && ', '}
                   </Text>
                 ))}{' '}
@@ -156,9 +178,9 @@ function KnownFollowersInner({
                 })}
               </>
             ) : count === 2 ? (
-              slice.map(({profile}, i) => (
-                <Text key={profile.did} style={textStyle}>
-                  {profile.displayName} {i === 0 ? _(msg`and`) + ' ' : ''}
+              slice.map(({profile: prof}, i) => (
+                <Text key={prof.did} style={textStyle}>
+                  {prof.displayName} {i === 0 ? _(msg`and`) + ' ' : ''}
                 </Text>
               ))
             ) : (
