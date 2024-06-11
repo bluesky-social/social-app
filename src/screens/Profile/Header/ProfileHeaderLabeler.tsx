@@ -24,7 +24,7 @@ import {isIOS} from 'platform/detection'
 import {useProfileShadow} from 'state/cache/profile-shadow'
 import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, tokens, useTheme} from '#/alf'
+import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {DialogOuterProps} from '#/components/Dialog'
 import {
@@ -60,6 +60,7 @@ let ProfileHeaderLabeler = ({
   const profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> =
     useProfileShadow(profileUnshadowed)
   const t = useTheme()
+  const {gtMobile} = useBreakpoints()
   const {_} = useLingui()
   const {currentAccount, hasSession} = useSession()
   const {openModal} = useModalControls()
@@ -128,7 +129,7 @@ let ProfileHeaderLabeler = ({
 
   const onPressSubscribe = React.useCallback(
     () =>
-      requireAuth(async () => {
+      requireAuth(async (): Promise<void> => {
         if (!canSubscribe) {
           cantSubscribePrompt.open()
           return
@@ -197,7 +198,7 @@ let ProfileHeaderLabeler = ({
                   <View
                     style={[
                       {
-                        paddingVertical: 12,
+                        paddingVertical: gtMobile ? 12 : 10,
                         backgroundColor:
                           isSubscribed || !canSubscribe
                             ? state.hovered || state.pressed

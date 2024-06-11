@@ -10,12 +10,11 @@ import {StackActions} from '@react-navigation/native'
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {useHaptics} from '#/lib/haptics'
 import {useDedupe} from '#/lib/hooks/useDedupe'
-import {useMinimalShellMode} from '#/lib/hooks/useMinimalShellMode'
+import {useMinimalShellFooterTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {clamp} from '#/lib/numbers'
 import {getTabState, TabState} from '#/lib/routes/helpers'
-import {useGate} from '#/lib/statsig/statsig'
 import {s} from '#/lib/styles'
 import {emitSoftReset} from '#/state/events'
 import {useUnreadMessageCount} from '#/state/queries/messages/list-converations'
@@ -36,10 +35,6 @@ import {
   Bell_Filled_Corner0_Rounded as BellFilled,
   Bell_Stroke2_Corner0_Rounded as Bell,
 } from '#/components/icons/Bell'
-import {
-  Hashtag_Filled_Corner0_Rounded as HashtagFilled,
-  Hashtag_Stroke2_Corner0_Rounded as Hashtag,
-} from '#/components/icons/Hashtag'
 import {
   HomeOpen_Filled_Corner0_Rounded as HomeFilled,
   HomeOpen_Stoke2_Corner0_Rounded as Home,
@@ -67,24 +62,17 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const safeAreaInsets = useSafeAreaInsets()
   const {track} = useAnalytics()
   const {footerHeight} = useShellLayout()
-  const {
-    isAtHome,
-    isAtSearch,
-    isAtFeeds,
-    isAtNotifications,
-    isAtMyProfile,
-    isAtMessages,
-  } = useNavigationTabState()
+  const {isAtHome, isAtSearch, isAtNotifications, isAtMyProfile, isAtMessages} =
+    useNavigationTabState()
   const numUnreadNotifications = useUnreadNotifications()
   const numUnreadMessages = useUnreadMessageCount()
-  const {footerMinimalShellTransform} = useMinimalShellMode()
+  const footerMinimalShellTransform = useMinimalShellFooterTransform()
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
   const dedupe = useDedupe()
   const accountSwitchControl = useDialogControl()
   const playHaptic = useHaptics()
-  const gate = useGate()
   const iconWidth = 28
 
   const showSignIn = React.useCallback(() => {
@@ -118,10 +106,6 @@ export function BottomBar({navigation}: BottomTabBarProps) {
     () => onPressTab('Search'),
     [onPressTab],
   )
-  const onPressFeeds = React.useCallback(
-    () => onPressTab('Feeds'),
-    [onPressTab],
-  )
   const onPressNotifications = React.useCallback(
     () => onPressTab('Notifications'),
     [onPressTab],
@@ -129,7 +113,6 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const onPressProfile = React.useCallback(() => {
     onPressTab('MyProfile')
   }, [onPressTab])
-
   const onPressMessages = React.useCallback(() => {
     onPressTab('Messages')
   }, [onPressTab])
@@ -196,56 +179,32 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               accessibilityLabel={_(msg`Search`)}
               accessibilityHint=""
             />
-            {gate('dms') ? (
-              <Btn
-                testID="bottomBarMessagesBtn"
-                icon={
-                  isAtMessages ? (
-                    <MessageFilled
-                      width={iconWidth - 1}
-                      style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
-                    />
-                  ) : (
-                    <Message
-                      width={iconWidth - 1}
-                      style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
-                    />
-                  )
-                }
-                onPress={onPressMessages}
-                notificationCount={numUnreadMessages.numUnread}
-                accessible={true}
-                accessibilityRole="tab"
-                accessibilityLabel={_(msg`Chat`)}
-                accessibilityHint={
-                  numUnreadMessages.count > 0
-                    ? `${numUnreadMessages.numUnread} unread`
-                    : ''
-                }
-              />
-            ) : (
-              <Btn
-                testID="bottomBarFeedsBtn"
-                icon={
-                  isAtFeeds ? (
-                    <HashtagFilled
-                      width={iconWidth + 1}
-                      style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
-                    />
-                  ) : (
-                    <Hashtag
-                      width={iconWidth + 1}
-                      style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
-                    />
-                  )
-                }
-                onPress={onPressFeeds}
-                accessible={true}
-                accessibilityRole="tab"
-                accessibilityLabel={_(msg`Feeds`)}
-                accessibilityHint=""
-              />
-            )}
+            <Btn
+              testID="bottomBarMessagesBtn"
+              icon={
+                isAtMessages ? (
+                  <MessageFilled
+                    width={iconWidth - 1}
+                    style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
+                  />
+                ) : (
+                  <Message
+                    width={iconWidth - 1}
+                    style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
+                  />
+                )
+              }
+              onPress={onPressMessages}
+              notificationCount={numUnreadMessages.numUnread}
+              accessible={true}
+              accessibilityRole="tab"
+              accessibilityLabel={_(msg`Chat`)}
+              accessibilityHint={
+                numUnreadMessages.count > 0
+                  ? `${numUnreadMessages.numUnread} unread`
+                  : ''
+              }
+            />
             <Btn
               testID="bottomBarNotificationsBtn"
               icon={

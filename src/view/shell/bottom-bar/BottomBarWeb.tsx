@@ -6,17 +6,18 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigationState} from '@react-navigation/native'
 
-import {useMinimalShellMode} from '#/lib/hooks/useMinimalShellMode'
+import {useMinimalShellFooterTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {clamp} from '#/lib/numbers'
 import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
 import {CommonNavigatorParams} from '#/lib/routes/types'
-import {useGate} from '#/lib/statsig/statsig'
 import {s} from '#/lib/styles'
 import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
+import {useUnreadMessageCount} from 'state/queries/messages/list-converations'
+import {useUnreadNotifications} from 'state/queries/notifications/unread'
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import {Logo} from '#/view/icons/Logo'
@@ -26,10 +27,6 @@ import {
   Bell_Filled_Corner0_Rounded as BellFilled,
   Bell_Stroke2_Corner0_Rounded as Bell,
 } from '#/components/icons/Bell'
-import {
-  Hashtag_Filled_Corner0_Rounded as HashtagFilled,
-  Hashtag_Stroke2_Corner0_Rounded as Hashtag,
-} from '#/components/icons/Hashtag'
 import {
   HomeOpen_Filled_Corner0_Rounded as HomeFilled,
   HomeOpen_Stoke2_Corner0_Rounded as Home,
@@ -51,11 +48,13 @@ export function BottomBarWeb() {
   const {hasSession, currentAccount} = useSession()
   const pal = usePalette('default')
   const safeAreaInsets = useSafeAreaInsets()
-  const {footerMinimalShellTransform} = useMinimalShellMode()
+  const footerMinimalShellTransform = useMinimalShellFooterTransform()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
-  const gate = useGate()
   const iconWidth = 26
+
+  const unreadMessageCount = useUnreadMessageCount()
+  const notificationCountStr = useUnreadNotifications()
 
   const showSignIn = React.useCallback(() => {
     closeAllActiveElements()
@@ -105,39 +104,43 @@ export function BottomBarWeb() {
 
           {hasSession && (
             <>
-              {gate('dms') ? (
-                <NavItem routeName="Messages" href="/messages">
-                  {({isActive}) => {
-                    const Icon = isActive ? MessageFilled : Message
-                    return (
+              <NavItem routeName="Messages" href="/messages">
+                {({isActive}) => {
+                  const Icon = isActive ? MessageFilled : Message
+                  return (
+                    <>
                       <Icon
                         width={iconWidth - 1}
                         style={[styles.ctrlIcon, pal.text, styles.messagesIcon]}
                       />
-                    )
-                  }}
-                </NavItem>
-              ) : (
-                <NavItem routeName="Feeds" href="/feeds">
-                  {({isActive}) => {
-                    const Icon = isActive ? HashtagFilled : Hashtag
-                    return (
-                      <Icon
-                        width={iconWidth + 1}
-                        style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
-                      />
-                    )
-                  }}
-                </NavItem>
-              )}
+                      {unreadMessageCount.count > 0 && (
+                        <View style={styles.notificationCount}>
+                          <Text style={styles.notificationCountLabel}>
+                            {unreadMessageCount.numUnread}
+                          </Text>
+                        </View>
+                      )}
+                    </>
+                  )
+                }}
+              </NavItem>
               <NavItem routeName="Notifications" href="/notifications">
                 {({isActive}) => {
                   const Icon = isActive ? BellFilled : Bell
                   return (
-                    <Icon
-                      width={iconWidth}
-                      style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
-                    />
+                    <>
+                      <Icon
+                        width={iconWidth}
+                        style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
+                      />
+                      {notificationCountStr !== '' && (
+                        <View style={styles.notificationCount}>
+                          <Text style={styles.notificationCountLabel}>
+                            {notificationCountStr}
+                          </Text>
+                        </View>
+                      )}
+                    </>
                   )
                 }}
               </NavItem>

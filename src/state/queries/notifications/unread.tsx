@@ -11,7 +11,7 @@ import BroadcastChannel from '#/lib/broadcast'
 import {logger} from '#/logger'
 import {useMutedThreads} from '#/state/muted-threads'
 import {useAgent, useSession} from '#/state/session'
-import {decrementBadgeCount} from 'lib/notifications/notifications'
+import {resetBadgeCount} from 'lib/notifications/notifications'
 import {useModerationOpts} from '../../preferences/moderation-opts'
 import {truncateAndInvalidate} from '../util'
 import {RQKEY as RQKEY_NOTIFS} from './feed'
@@ -45,7 +45,7 @@ const apiContext = React.createContext<ApiContext>({
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const {hasSession} = useSession()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
   const threadMutes = useMutedThreads()
@@ -112,14 +112,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     return {
       async markAllRead() {
         // update server
-        await getAgent().updateSeenNotifications(
+        await agent.updateSeenNotifications(
           cacheRef.current.syncedAt.toISOString(),
         )
 
         // update & broadcast
         setNumUnread('')
         broadcast.postMessage({event: ''})
-        decrementBadgeCount(Math.min(cacheRef.current.unreadCount, 30))
+        resetBadgeCount()
       },
 
       async checkUnread({
@@ -127,7 +127,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         isPoll,
       }: {invalidate?: boolean; isPoll?: boolean} = {}) {
         try {
-          if (!getAgent().session) return
+          if (!agent.session) return
           if (AppState.currentState !== 'active') {
             return
           }
@@ -142,7 +142,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
           // count
           const {page, indexedAt: lastIndexed} = await fetchPage({
-            getAgent,
+            agent,
             cursor: undefined,
             limit: 40,
             queryClient,
@@ -192,7 +192,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
       },
     }
-  }, [setNumUnread, queryClient, moderationOpts, threadMutes, getAgent])
+  }, [setNumUnread, queryClient, moderationOpts, threadMutes, agent])
   checkUnreadRef.current = api.checkUnread
 
   return (

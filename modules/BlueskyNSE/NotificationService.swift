@@ -1,4 +1,5 @@
 import UserNotifications
+import UIKit
 
 let APP_GROUP = "group.app.bsky"
 
@@ -6,7 +7,7 @@ class NotificationService: UNNotificationServiceExtension {
   var prefs = UserDefaults(suiteName: APP_GROUP)
 
   override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
-    guard var bestAttempt = createCopy(request.content),
+    guard let bestAttempt = createCopy(request.content),
           let reason = request.content.userInfo["reason"] as? String
     else {
       contentHandler(request.content)
@@ -15,10 +16,9 @@ class NotificationService: UNNotificationServiceExtension {
     
     if reason == "chat-message" {
       mutateWithChatMessage(bestAttempt)
+    } else {
+      mutateWithBadge(bestAttempt)
     }
-    
-    // The badge should always be incremented when in the background
-    mutateWithBadge(bestAttempt)
     
     contentHandler(bestAttempt)
   }
@@ -32,7 +32,12 @@ class NotificationService: UNNotificationServiceExtension {
   }
   
   func mutateWithBadge(_ content: UNMutableNotificationContent) {
-    content.badge = 1
+    var count = prefs?.integer(forKey: "badgeCount") ?? 0
+    count += 1
+    
+    // Set the new badge number for the notification, then store that value for using later
+    content.badge = NSNumber(value: count)
+    prefs?.setValue(count, forKey: "badgeCount")
   }
   
   func mutateWithChatMessage(_ content: UNMutableNotificationContent) {

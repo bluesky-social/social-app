@@ -52,7 +52,7 @@ function PwiOptOut({thread}: {thread: AppBskyFeedDefs.ThreadViewPost}) {
       <Link
         href={href}
         className="transition-transform hover:scale-110 absolute top-4 right-4">
-        <img src={logo as string} className="h-6" />
+        <img src={logo} className="h-6" />
       </Link>
       <div className="w-full py-12 gap-4 flex flex-col items-center">
         <p className="max-w-80 text-center w-full text-textLight">
@@ -75,7 +75,7 @@ function ErrorMessage() {
       <Link
         href="https://bsky.app/"
         className="transition-transform hover:scale-110 absolute top-4 right-4">
-        <img src={logo as string} className="h-6" />
+        <img src={logo} className="h-6" />
       </Link>
       <p className="my-16 text-center w-full text-textLight">
         Post not found, it may have been deleted.

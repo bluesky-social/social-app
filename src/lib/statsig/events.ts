@@ -13,18 +13,18 @@ export type LogEvents = {
     withPassword: boolean
   }
   'account:loggedOut': {
-    logContext: 'SwitchAccount' | 'Settings' | 'Deactivated'
+    logContext: 'SwitchAccount' | 'Settings' | 'SignupQueued' | 'Deactivated'
   }
   'notifications:openApp': {}
   'notifications:request': {
-    context: 'StartOnboarding' | 'AfterOnboarding' | 'Login'
+    context: 'StartOnboarding' | 'AfterOnboarding' | 'Login' | 'Home'
     status: 'granted' | 'denied' | 'undetermined'
   }
-  'state:background': {
+  'state:background:sampled': {
     secondsActive: number
   }
-  'state:foreground': {}
-  'router:navigate': {}
+  'state:foreground:sampled': {}
+  'router:navigate:sampled': {}
 
   // Screen events
   'splash:signInPressed': {}
@@ -57,18 +57,18 @@ export type LogEvents = {
   'onboarding:finished:avatarResult': {
     avatarResult: 'default' | 'created' | 'uploaded'
   }
-  'home:feedDisplayed': {
+  'home:feedDisplayed:sampled': {
     feedUrl: string
     feedType: string
     index: number
     reason: 'focus' | 'tabbar-click' | 'pager-swipe' | 'desktop-sidebar-click'
   }
-  'feed:endReached': {
+  'feed:endReached:sampled': {
     feedUrl: string
     feedType: string
     itemCount: number
   }
-  'feed:refresh': {
+  'feed:refresh:sampled': {
     feedUrl: string
     feedType: string
     reason: 'pull-to-refresh' | 'soft-reset' | 'load-latest'
@@ -115,6 +115,7 @@ export type LogEvents = {
       | 'ProfileHeaderSuggestedFollows'
       | 'ProfileMenu'
       | 'ProfileHoverCard'
+      | 'AvatarButton'
   }
   'profile:unfollow': {
     logContext:
@@ -125,6 +126,18 @@ export type LogEvents = {
       | 'ProfileHeaderSuggestedFollows'
       | 'ProfileMenu'
       | 'ProfileHoverCard'
+      | 'Chat'
+      | 'AvatarButton'
+  }
+  'chat:create': {
+    logContext: 'ProfileHeader' | 'NewChatDialog' | 'SendViaChatDialog'
+  }
+  'chat:open': {
+    logContext:
+      | 'ProfileHeader'
+      | 'NewChatDialog'
+      | 'ChatsList'
+      | 'SendViaChatDialog'
   }
 
   'test:all:always': {}

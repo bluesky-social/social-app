@@ -50,7 +50,7 @@ appId: xyz.blueskyweb.app
     text: "1"
 - tapOn:
     id: "repostBtn"
-- tapOn: "Undo repost"
+- tapOn: "Remove repost"
 - assertNotVisible:
     id: "repostCount"
 

@@ -10,7 +10,8 @@ let DEFAULTS: [String:Any] = [
   "playSoundQuote": false,
   "playSoundReply": false,
   "playSoundRepost": false,
-  "mutedThreads": [:] as! [String:[String]]
+  "mutedThreads": [:] as! [String:[String]],
+  "badgeCount": 0,
 ]
 
 /*
@@ -111,6 +112,10 @@ public class ExpoBackgroundNotificationHandlerModule: Module {
         }
         userDefaults?.setValue(curr, forKey: forKey)
       }
+    }
+    
+    AsyncFunction("setBadgeCountAsync") { (count: Int) in
+      userDefaults?.setValue(count, forKey: "badgeCount")
     }
   }
 }
