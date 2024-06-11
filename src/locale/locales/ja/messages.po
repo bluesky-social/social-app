@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-06-05 11:06+0900\n"
+"PO-Revision-Date: 2024-06-11 16:06+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -3115,6 +3115,10 @@ msgstr "お知らせはありません！"
 msgid "No one"
 msgstr "誰からも受け取らない"
 
+#: src/screens/Profile/Sections/Feed.tsx:59
+msgid "No posts yet."
+msgstr "まだ投稿がありません。"
+
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:101
 #: src/view/com/composer/text-input/web/Autocomplete.tsx:195
 msgid "No result"
@@ -5182,6 +5186,10 @@ msgstr "このコンテンツは関係するユーザーの一方が他方をブ
 msgid "This content is not viewable without a Bluesky account."
 msgstr "このコンテンツはBlueskyのアカウントがないと閲覧できません。"
 
+#: src/screens/Messages/List/ChatListItem.tsx:211
+msgid "This conversation is with a deleted or a deactivated account. Press for options."
+msgstr "削除あるいは無効化されたアカウントとの会話です。押すと選択肢が表示されます。"
+
 #: src/view/screens/Settings/ExportCarDialog.tsx:93
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
 msgstr "この機能はベータ版です。リポジトリのエクスポートの詳細については、<0>このブログ投稿</0>を参照してください。"
@@ -5190,15 +5198,14 @@ msgstr "この機能はベータ版です。リポジトリのエクスポート
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
 msgstr "現在このフィードにはアクセスが集中しており、一時的にご利用いただけません。時間をおいてもう一度お試しください。"
 
-#: src/screens/Profile/Sections/Feed.tsx:59
-#: src/view/screens/ProfileFeed.tsx:471
-#: src/view/screens/ProfileList.tsx:729
-msgid "This feed is empty!"
-msgstr "このフィードは空です！"
-
 #: src/view/com/posts/CustomFeedEmptyState.tsx:37
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
 msgstr "このフィードは空です！もっと多くのユーザーをフォローするか、言語の設定を調整する必要があるかもしれません。"
+
+#: src/view/screens/ProfileFeed.tsx:471
+#: src/view/screens/ProfileList.tsx:729
+msgid "This feed is empty."
+msgstr "このフィードは空です。"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:97
 msgid "This feed is no longer online. We are showing <0>Discover</0> instead."
@@ -5841,6 +5848,10 @@ msgstr "大変申し訳ありませんが、現在ミュートされたワード
 #: src/view/screens/Search/Search.tsx:269
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "大変申し訳ありませんが、検索を完了できませんでした。数分後に再試行してください。"
+
+#: src/view/com/composer/Composer.tsx:333
+msgid "We're sorry! The post you are replying to has been deleted."
+msgstr "大変申し訳ありません！返信しようとしている投稿は削除されました。"
 
 #: src/components/Lists.tsx:212
 #: src/view/screens/NotFound.tsx:48
