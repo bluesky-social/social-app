@@ -171,7 +171,7 @@ function WizardInner({
       nextBtn: _(msg`Next`),
     },
     Profiles: {
-      header: _(msg`Profiles`),
+      header: _(msg`People`),
       nextBtn: _(msg`Next`),
       subtitle: _(
         msg`Add people to your starter pack that you think others will enjoy following`,

@@ -75,7 +75,7 @@ export function WizardEditListDialog({
             ]}>
             <Text style={[a.font_bold, a.text_xl]}>
               {state.currentStep === 'Profiles' ? (
-                <Trans>Edit Profiles</Trans>
+                <Trans>Edit People</Trans>
               ) : (
                 <Trans>Edit Feeds</Trans>
               )}
