@@ -6,7 +6,7 @@ import {BskyAgent} from '@atproto/api'
 import {logger} from '#/logger'
 import {SessionAccount, useAgent, useSession} from '#/state/session'
 import {logEvent, useGate} from 'lib/statsig/statsig'
-import {devicePlatform, isNative} from 'platform/detection'
+import {devicePlatform, isAndroid, isNative} from 'platform/detection'
 import BackgroundNotificationHandler from '../../../modules/expo-background-notification-handler'
 
 const SERVICE_DID = (serviceUrl?: string) =>
@@ -43,7 +43,7 @@ async function getPushToken(skipPermissionCheck = false) {
   const granted =
     skipPermissionCheck || (await Notifications.getPermissionsAsync()).granted
   if (granted) {
-    Notifications.getDevicePushTokenAsync()
+    return Notifications.getDevicePushTokenAsync()
   }
 }
 
@@ -56,7 +56,22 @@ export function useNotificationsRegistration() {
       return
     }
 
-    getPushToken()
+    // HACK - see https://github.com/bluesky-social/social-app/pull/4467
+    // An apparent regression in expo-notifications causes `addPushTokenListener` to not fire on Android whenever the
+    // token changes by calling `getPushToken()`. This is a workaround to ensure we register the token once it is
+    // generated on Android.
+    if (isAndroid) {
+      ;(async () => {
+        const token = await getPushToken()
+
+        // Token will be undefined if we don't have notifications permission
+        if (token) {
+          registerPushToken(agent, currentAccount, token)
+        }
+      })()
+    } else {
+      getPushToken()
+    }
 
     // According to the Expo docs, there is a chance that the token will change while the app is open in some rare
     // cases. This will fire `registerPushToken` whenever that happens.
