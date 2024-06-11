@@ -8,14 +8,14 @@ msgstr ""
 "Language: fr\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-06-03 00:18+0200\n"
-"Last-Translator: Stanislas Signoud (@signez.fr)\n"
+"PO-Revision-Date: 2024-06-11 14:30+0100\n"
+"Last-Translator: surfdude29\n"
 "Language-Team: Stanislas Signoud (@signez.fr), surfdude29\n"
 "Plural-Forms: \n"
 
 #: src/screens/Messages/List/ChatListItem.tsx:119
 msgid "(contains embedded content)"
-msgstr ""
+msgstr "(contient du contenu intégré)"
 
 #: src/view/com/modals/VerifyEmail.tsx:150
 msgid "(no email)"
@@ -335,7 +335,7 @@ msgstr "ALT"
 #: src/view/com/modals/EditImage.tsx:316
 #: src/view/screens/AccessibilitySettings.tsx:77
 msgid "Alt text"
-msgstr "Texte Alt"
+msgstr "Texte alt"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:179
 msgid "Alt Text"
@@ -343,7 +343,7 @@ msgstr "Texte alt"
 
 #: src/view/com/composer/photos/Gallery.tsx:224
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
-msgstr "Le texte Alt décrit les images pour les personnes aveugles et malvoyantes, et aide à donner un contexte à tout le monde."
+msgstr "Le texte alt décrit les images pour les personnes aveugles et malvoyantes, et aide à donner un contexte à tout le monde."
 
 #: src/view/com/modals/VerifyEmail.tsx:132
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:96
@@ -712,7 +712,7 @@ msgstr "Annuler la citation"
 
 #: src/screens/Deactivated.tsx:155
 msgid "Cancel reactivation and log out"
-msgstr ""
+msgstr "Annuler la réactivation et se déconnecter"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:87
 #: src/view/shell/desktop/Search.tsx:214
@@ -857,11 +857,11 @@ msgstr "cliquez ici"
 
 #: src/view/com/modals/DeleteAccount.tsx:208
 msgid "Click here for more information on deactivating your account"
-msgstr ""
+msgstr "Cliquez ici pour plus d’informations sur la désactivation de votre compte"
 
 #: src/view/com/modals/DeleteAccount.tsx:216
 msgid "Click here for more information."
-msgstr ""
+msgstr "Cliquez ici pour plus d’informations."
 
 #: src/components/TagMenu/index.web.tsx:138
 msgid "Click here to open tag menu for {tag}"
@@ -1257,11 +1257,11 @@ msgstr "Date de naissance"
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:73
 #: src/view/screens/Settings/index.tsx:806
 msgid "Deactivate account"
-msgstr ""
+msgstr "Désactiver le compte"
 
 #: src/view/screens/Settings/index.tsx:818
 msgid "Deactivate my account"
-msgstr ""
+msgstr "Désactiver mon compte"
 
 #: src/view/screens/Settings/index.tsx:873
 msgid "Debug Moderation"
@@ -2302,7 +2302,7 @@ msgstr "Je comprends"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:185
 msgid "If alt text is long, toggles alt text expanded state"
-msgstr "Si le texte alternatif est trop long, change son mode d’affichage"
+msgstr "Si le texte alt est trop long, change son mode d’affichage"
 
 #: src/view/com/modals/SelfLabel.tsx:128
 msgid "If none are selected, suitable for all ages."
@@ -2326,7 +2326,7 @@ msgstr "Si vous souhaitez modifier votre mot de passe, nous vous enverrons un co
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:92
 msgid "If you're trying to change your handle or email, do so before you deactivate."
-msgstr ""
+msgstr "Si vous essayez de changer de pseudo ou d’adresse e-mail, faites-le avant de désactiver votre compte."
 
 #: src/lib/moderation/useReportOptions.ts:37
 msgid "Illegal and Urgent"
@@ -2655,7 +2655,7 @@ msgstr "Journaux"
 #: src/screens/Deactivated.tsx:214
 #: src/screens/Deactivated.tsx:220
 msgid "Log in or sign up"
-msgstr ""
+msgstr "Se connecter ou s’inscrire"
 
 #: src/screens/SignupQueued.tsx:155
 #: src/screens/SignupQueued.tsx:158
@@ -3115,6 +3115,10 @@ msgstr "Pas encore de notifications !"
 msgid "No one"
 msgstr "Personne"
 
+#: src/screens/Profile/Sections/Feed.tsx:59
+msgid "No posts yet."
+msgstr "Pas encore de posts."
+
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:101
 #: src/view/com/composer/text-input/web/Autocomplete.tsx:195
 msgid "No result"
@@ -3386,7 +3390,7 @@ msgstr "Ouvre la liste des codes d’invitation"
 
 #: src/view/screens/Settings/index.tsx:808
 msgid "Opens modal for account deactivation confirmation"
-msgstr ""
+msgstr "Ouvre la fenêtre modale pour confirmer la désactivation du compte"
 
 #: src/view/screens/Settings/index.tsx:830
 msgid "Opens modal for account deletion confirmation. Requires email code"
@@ -3474,11 +3478,11 @@ msgstr "Ou une combinaison de ces options :"
 
 #: src/screens/Deactivated.tsx:211
 msgid "Or, continue with another account."
-msgstr ""
+msgstr "Ou continuer avec un autre compte."
 
 #: src/screens/Deactivated.tsx:194
 msgid "Or, log into one of your other accounts."
-msgstr ""
+msgstr "Ou connectez-vous à l’un de vos autres comptes."
 
 #: src/lib/moderation/useReportOptions.ts:26
 msgid "Other"
@@ -3494,7 +3498,7 @@ msgstr "Autre…"
 
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:28
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
-msgstr "Notre modération a examiné les signalements qu’elle a reçu et a décidé de désactiver vos accès aux discussion sur Bluesky."
+msgstr "Notre modération a examiné les signalements qu’elle a reçu et a décidé de désactiver votre accès aux discussions sur Bluesky."
 
 #: src/components/Lists.tsx:208
 #: src/view/screens/NotFound.tsx:45
@@ -3837,7 +3841,7 @@ msgstr "Ratios"
 
 #: src/screens/Deactivated.tsx:144
 msgid "Reactivate your account"
-msgstr ""
+msgstr "Réactiver votre compte"
 
 #: src/components/dms/ReportDialog.tsx:172
 msgid "Reason:"
@@ -3916,11 +3920,11 @@ msgstr "Supprimer le mot masqué de votre liste"
 
 #: src/view/screens/Search/Search.tsx:1014
 msgid "Remove profile"
-msgstr ""
+msgstr "Supprimer le profil"
 
 #: src/view/screens/Search/Search.tsx:1016
 msgid "Remove profile from search history"
-msgstr ""
+msgstr "Supprimer le profil de l’historique de recherche"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:238
 msgid "Remove quote"
@@ -4795,7 +4799,7 @@ msgstr "Quelque chose n’a pas marché"
 #: src/screens/Deactivated.tsx:94
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:59
 msgid "Something went wrong, please try again"
-msgstr ""
+msgstr "Quelque chose n’a pas marché, veuillez réessayer"
 
 #: src/components/ReportDialog/index.tsx:59
 #: src/screens/Moderation/index.tsx:114
@@ -5044,7 +5048,7 @@ msgstr "Nos conditions d’utilisation ont été déplacées vers"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:86
 msgid "There is no time limit for account deactivation, come back any time."
-msgstr ""
+msgstr "Il n’y a pas de limite de temps pour la désactivation du compte, revenez quand vous voulez."
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:115
 #: src/view/screens/ProfileFeed.tsx:541
@@ -5182,6 +5186,10 @@ msgstr "Ce contenu n’est pas disponible car l’un des comptes impliqués a bl
 msgid "This content is not viewable without a Bluesky account."
 msgstr "Ce contenu n’est pas visible sans un compte Bluesky."
 
+#: src/screens/Messages/List/ChatListItem.tsx:211
+msgid "This conversation is with a deleted or a deactivated account. Press for options."
+msgstr "Cette conversation concerne un compte supprimé ou désactivé. Appuyez pour obtenir des options."
+
 #: src/view/screens/Settings/ExportCarDialog.tsx:93
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
 msgstr "Cette fonctionnalité est en version bêta. Vous pouvez en savoir plus sur les exportations de dépôts dans <0>ce blogpost</0>."
@@ -5190,15 +5198,14 @@ msgstr "Cette fonctionnalité est en version bêta. Vous pouvez en savoir plus s
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
 msgstr "Ce fil d’actu reçoit actuellement un trafic important, il est temporairement indisponible. Veuillez réessayer plus tard."
 
-#: src/screens/Profile/Sections/Feed.tsx:59
-#: src/view/screens/ProfileFeed.tsx:471
-#: src/view/screens/ProfileList.tsx:729
-msgid "This feed is empty!"
-msgstr "Ce fil d’actu est vide !"
-
 #: src/view/com/posts/CustomFeedEmptyState.tsx:37
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
 msgstr "Ce fil d’actu est vide ! Vous devriez peut-être suivre plus de comptes ou ajuster vos paramètres de langue."
+
+#: src/view/screens/ProfileFeed.tsx:471
+#: src/view/screens/ProfileList.tsx:729
+msgid "This feed is empty."
+msgstr "Ce fil d’actu est vide."
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:97
 msgid "This feed is no longer online. We are showing <0>Discover</0> instead."
@@ -5496,7 +5503,7 @@ msgstr "Supprimer la liste de modération"
 
 #: src/view/screens/ProfileList.tsx:290
 msgid "Unpinned from your feeds"
-msgstr "Désépingler de vos fil d’actu"
+msgstr "Désépinglé de vos fils d’actu"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:228
 msgid "Unsubscribe"
@@ -5842,6 +5849,10 @@ msgstr "Nous sommes désolés, mais nous n’avons pas pu charger vos mots masqu
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "Nous sommes désolés, mais votre recherche a été annulée. Veuillez réessayer dans quelques minutes."
 
+#: src/view/com/composer/Composer.tsx:311
+msgid "We're sorry! The post you are replying to has been deleted."
+msgstr "Nous sommes désolés ! Le post auquel vous répondez a été supprimé."
+
 #: src/components/Lists.tsx:212
 #: src/view/screens/NotFound.tsx:48
 msgid "We're sorry! We can't find the page you were looking for."
@@ -5853,7 +5864,7 @@ msgstr "Nous sommes désolés ! Vous ne pouvez vous abonner qu’à dix étique
 
 #: src/screens/Deactivated.tsx:128
 msgid "Welcome back!"
-msgstr ""
+msgstr "Bienvenue !"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:135
 msgid "What are your interests?"
@@ -5946,11 +5957,11 @@ msgstr "Oui"
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:106
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:108
 msgid "Yes, deactivate"
-msgstr ""
+msgstr "Oui, désactiver"
 
 #: src/screens/Deactivated.tsx:150
 msgid "Yes, reactivate my account"
-msgstr ""
+msgstr "Oui, réactiver mon compte"
 
 #: src/components/dms/MessageItem.tsx:188
 msgid "Yesterday, {time}"
@@ -5971,7 +5982,7 @@ msgstr "Vous pouvez aussi découvrir de nouveaux fils d’actu personnalisés à
 
 #: src/view/com/modals/DeleteAccount.tsx:202
 msgid "You can also temporarily deactivate your account instead, and reactivate it at any time."
-msgstr ""
+msgstr "Vous pouvez également désactiver temporairement votre compte et le réactiver quand vous voulez."
 
 #: src/components/dms/MessagesNUX.tsx:119
 msgid "You can change this at any time."
@@ -5988,7 +5999,7 @@ msgstr "Vous pouvez maintenant vous connecter avec votre nouveau mot de passe."
 
 #: src/screens/Deactivated.tsx:136
 msgid "You can reactivate your account to continue logging in. Your profile and posts will be visible to other users."
-msgstr ""
+msgstr "Vous pouvez réactiver votre compte pour continuer à vous connecter. Votre profil et vos posts seront visibles par les autres personnes."
 
 #: src/view/com/profile/ProfileFollowers.tsx:86
 msgid "You do not have any followers."
@@ -6000,11 +6011,11 @@ msgstr "Vous n’avez encore aucun code d’invitation ! Nous vous en enverrons
 
 #: src/view/screens/SavedFeeds.tsx:117
 msgid "You don't have any pinned feeds."
-msgstr "Vous n’avez encore aucun fil épinglé."
+msgstr "Vous n’avez encore aucun fil d’actu épinglé."
 
 #: src/view/screens/SavedFeeds.tsx:158
 msgid "You don't have any saved feeds."
-msgstr "Vous n’avez encore aucun fil enregistré."
+msgstr "Vous n’avez encore aucun fil d’actu enregistré."
 
 #: src/view/com/post-thread/PostThread.tsx:195
 msgid "You have blocked the author or you have been blocked by the author."
@@ -6095,7 +6106,7 @@ msgstr "Vous devez sélectionner au moins un étiqueteur pour un rapport"
 
 #: src/screens/Deactivated.tsx:131
 msgid "You previously deactivated @{0}."
-msgstr ""
+msgstr "Vous avez précédemment désactivé @{0}."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:173
 msgid "You will no longer receive notifications for this thread"
@@ -6115,11 +6126,11 @@ msgstr "Vous : {0}"
 
 #: src/screens/Messages/List/ChatListItem.tsx:142
 msgid "You: {defaultEmbeddedContentMessage}"
-msgstr ""
+msgstr "Vous : {defaultEmbeddedContentMessage}"
 
 #: src/screens/Messages/List/ChatListItem.tsx:135
 msgid "You: {short}"
-msgstr ""
+msgstr "Vous : {short}"
 
 #: src/screens/SignupQueued.tsx:93
 #: src/screens/SignupQueued.tsx:94
@@ -6130,7 +6141,7 @@ msgstr "Vous êtes dans la file d’attente"
 #: src/screens/Deactivated.tsx:89
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:54
 msgid "You're logged in with an App Password. Please log in with your main password to continue deactivating your account."
-msgstr ""
+msgstr "Vous êtes connecté·e avec un mot de passe d’application. Veuillez vous connecter avec votre mot de passe principal pour continuer à désactiver votre compte."
 
 #: src/screens/Onboarding/StepFinished.tsx:123
 msgid "You're ready to go!"
@@ -6217,7 +6228,7 @@ msgstr "Votre profil"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:75
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
-msgstr ""
+msgstr "Votre profil, vos posts, vos fils d’actu et vos listes ne seront plus visibles par d’autres personnes sur Bluesky. Vous pouvez réactiver votre compte à tout moment en vous connectant."
 
 #: src/view/com/composer/Composer.tsx:329
 msgid "Your reply has been published"
