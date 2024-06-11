@@ -8,6 +8,7 @@ import React, {
 } from 'react'
 import {
   ActivityIndicator,
+  BackHandler,
   Keyboard,
   LayoutChangeEvent,
   StyleSheet,
@@ -42,6 +43,7 @@ import {LikelyType} from '#/lib/link-meta/link-meta'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {emitPostCreated} from '#/state/events'
+import {useModalControls} from '#/state/modals'
 import {useModals} from '#/state/modals'
 import {useRequireAltTextEnabled} from '#/state/preferences'
 import {
@@ -126,6 +128,7 @@ export const ComposePost = observer(function ComposePost({
   const textInput = useRef<TextInputRef>(null)
   const discardPromptControl = Prompt.usePromptControl()
   const {closeAllDialogs} = useDialogStateControlContext()
+  const {closeAllModals} = useModalControls()
   const t = useTheme()
 
   // Disable this in the composer to prevent any extra keyboard height being applied.
@@ -203,6 +206,26 @@ export const ComposePost = observer(function ComposePost({
   ])
 
   useImperativeHandle(cancelRef, () => ({onPressCancel}))
+
+  // On Android, pressing Back should ask confirmation.
+  useEffect(() => {
+    if (!isAndroid) {
+      return
+    }
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        if (closeAllDialogs() || closeAllModals()) {
+          return true
+        }
+        onPressCancel()
+        return true
+      },
+    )
+    return () => {
+      backHandler.remove()
+    }
+  }, [onPressCancel, closeAllDialogs, closeAllModals])
 
   // listen to escape key on desktop web
   const onEscape = useCallback(
