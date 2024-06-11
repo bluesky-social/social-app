@@ -1,11 +1,15 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react'
+import React, {
+  useCallback,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {TextInput, View} from 'react-native'
-import {Image} from 'expo-image'
 import {BottomSheetFlatListMethods} from '@discord/bottom-sheet'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {isWeb} from '#/platform/detection'
 import {
@@ -23,16 +27,23 @@ import {ArrowLeft_Stroke2_Corner0_Rounded as Arrow} from '#/components/icons/Arr
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
 import {Button, ButtonIcon, ButtonText} from '../Button'
 import {ListFooter, ListMaybePlaceholder} from '../Lists'
+import {GifPreview} from './GifSelect.shared'
 
 export function GifSelectDialog({
-  control,
+  controlRef,
   onClose,
   onSelectGif: onSelectGifProp,
 }: {
-  control: Dialog.DialogControlProps
+  controlRef: React.RefObject<{open: () => void}>
   onClose: () => void
   onSelectGif: (gif: Gif) => void
 }) {
+  const control = Dialog.useDialogControl()
+
+  useImperativeHandle(controlRef, () => ({
+    open: () => control.open(),
+  }))
+
   const onSelectGif = useCallback(
     (gif: Gif) => {
       control.close(() => onSelectGifProp(gif))
@@ -197,6 +208,7 @@ function GifList({
                 onGoBack={onGoBack}
                 emptyType="results"
                 sideBorders={false}
+                topBorder={false}
                 errorTitle={_(msg`Failed to load GIFs`)}
                 errorMessage={_(msg`There was an issue connecting to Tenor.`)}
                 emptyMessage={
@@ -229,50 +241,6 @@ function GifList({
         }
       />
     </>
-  )
-}
-
-function GifPreview({
-  gif,
-  onSelectGif,
-}: {
-  gif: Gif
-  onSelectGif: (gif: Gif) => void
-}) {
-  const {gtTablet} = useBreakpoints()
-  const {_} = useLingui()
-  const t = useTheme()
-
-  const onPress = useCallback(() => {
-    logEvent('composer:gif:select', {})
-    onSelectGif(gif)
-  }, [onSelectGif, gif])
-
-  return (
-    <Button
-      label={_(msg`Select GIF "${gif.title}"`)}
-      style={[a.flex_1, gtTablet ? {maxWidth: '33%'} : {maxWidth: '50%'}]}
-      onPress={onPress}>
-      {({pressed}) => (
-        <Image
-          style={[
-            a.flex_1,
-            a.mb_sm,
-            a.rounded_sm,
-            {aspectRatio: 1, opacity: pressed ? 0.8 : 1},
-            t.atoms.bg_contrast_25,
-          ]}
-          source={{
-            uri: gif.media_formats.tinygif.url,
-          }}
-          contentFit="cover"
-          accessibilityLabel={gif.title}
-          accessibilityHint=""
-          cachePolicy="none"
-          accessibilityIgnoresInvertColors
-        />
-      )}
-    </Button>
   )
 }
 

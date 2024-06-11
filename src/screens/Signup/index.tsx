@@ -36,7 +36,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
   const [state, dispatch] = React.useReducer(reducer, initialState)
   const submit = useSubmitSignup({state, dispatch})
   const {gtMobile} = useBreakpoints()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
 
   const {
     data: serviceInfo,
@@ -77,7 +77,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
       try {
         dispatch({type: 'setIsLoading', value: true})
 
-        const res = await getAgent().resolveHandle({
+        const res = await agent.resolveHandle({
           handle: createFullHandle(state.handle, state.userDomain),
         })
 
@@ -115,7 +115,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
     state.serviceDescription?.phoneVerificationRequired,
     state.userDomain,
     submit,
-    getAgent,
+    agent,
   ])
 
   const onBackPress = React.useCallback(() => {

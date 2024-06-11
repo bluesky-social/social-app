@@ -1,21 +1,22 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyFeedGetAuthorFeed, AtUri} from '@atproto/api'
-import {Text} from '../util/text/Text'
-import {Button} from '../util/forms/Button'
-import * as Toast from '../util/Toast'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useNavigation} from '@react-navigation/native'
-import {NavigationProp} from 'lib/routes/types'
-import {logger} from '#/logger'
+import {AppBskyActorDefs, AppBskyFeedGetAuthorFeed, AtUri} from '@atproto/api'
 import {msg as msgLingui, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {FeedDescriptor} from '#/state/queries/post-feed'
-import {EmptyState} from '../util/EmptyState'
+import {useNavigation} from '@react-navigation/native'
+
 import {cleanError} from '#/lib/strings/errors'
+import {logger} from '#/logger'
+import {FeedDescriptor} from '#/state/queries/post-feed'
 import {useRemoveFeedMutation} from '#/state/queries/preferences'
+import {usePalette} from 'lib/hooks/usePalette'
+import {NavigationProp} from 'lib/routes/types'
 import * as Prompt from '#/components/Prompt'
+import {EmptyState} from '../util/EmptyState'
+import {ErrorMessage} from '../util/error/ErrorMessage'
+import {Button} from '../util/forms/Button'
+import {Text} from '../util/text/Text'
+import * as Toast from '../util/Toast'
 
 export enum KnownError {
   Block = 'Block',
@@ -33,10 +34,12 @@ export function FeedErrorMessage({
   feedDesc,
   error,
   onPressTryAgain,
+  savedFeedConfig,
 }: {
   feedDesc: FeedDescriptor
   error?: Error
   onPressTryAgain: () => void
+  savedFeedConfig?: AppBskyActorDefs.SavedFeed
 }) {
   const {_: _l} = useLingui()
   const knownError = React.useMemo(
@@ -46,13 +49,14 @@ export function FeedErrorMessage({
   if (
     typeof knownError !== 'undefined' &&
     knownError !== KnownError.Unknown &&
-    (feedDesc.startsWith('feedgen') || knownError === KnownError.FeedNSFPublic)
+    feedDesc.startsWith('feedgen')
   ) {
     return (
       <FeedgenErrorMessage
         feedDesc={feedDesc}
         knownError={knownError}
         rawError={error}
+        savedFeedConfig={savedFeedConfig}
       />
     )
   }
@@ -79,10 +83,12 @@ function FeedgenErrorMessage({
   feedDesc,
   knownError,
   rawError,
+  savedFeedConfig,
 }: {
   feedDesc: FeedDescriptor
   knownError: KnownError
   rawError?: Error
+  savedFeedConfig?: AppBskyActorDefs.SavedFeed
 }) {
   const pal = usePalette('default')
   const {_: _l} = useLingui()
@@ -131,7 +137,8 @@ function FeedgenErrorMessage({
 
   const onRemoveFeed = React.useCallback(async () => {
     try {
-      await removeFeed({uri})
+      if (!savedFeedConfig) return
+      await removeFeed(savedFeedConfig)
     } catch (err) {
       Toast.show(
         _l(
@@ -140,7 +147,7 @@ function FeedgenErrorMessage({
       )
       logger.error('Failed to remove feed', {message: err})
     }
-  }, [uri, removeFeed, _l])
+  }, [removeFeed, _l, savedFeedConfig])
 
   const cta = React.useMemo(() => {
     switch (knownError) {
@@ -154,13 +161,14 @@ function FeedgenErrorMessage({
       case KnownError.FeedgenUnknown: {
         return (
           <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
-            {knownError === KnownError.FeedgenDoesNotExist && (
-              <Button
-                type="inverted"
-                label={_l(msgLingui`Remove feed`)}
-                onPress={onRemoveFeed}
-              />
-            )}
+            {knownError === KnownError.FeedgenDoesNotExist &&
+              savedFeedConfig && (
+                <Button
+                  type="inverted"
+                  label={_l(msgLingui`Remove feed`)}
+                  onPress={onRemoveFeed}
+                />
+              )}
             <Button
               type="default-light"
               label={_l(msgLingui`View profile`)}
@@ -170,7 +178,7 @@ function FeedgenErrorMessage({
         )
       }
     }
-  }, [knownError, onViewProfile, onRemoveFeed, _l])
+  }, [knownError, onViewProfile, onRemoveFeed, _l, savedFeedConfig])
 
   return (
     <>
@@ -263,7 +271,7 @@ function detectKnownError(
   ) {
     return KnownError.FeedgenMisconfigured
   }
-  if (error.includes('feed provided an invalid response')) {
+  if (error.includes('invalid response')) {
     return KnownError.FeedgenBadResponse
   }
   return KnownError.FeedgenUnknown

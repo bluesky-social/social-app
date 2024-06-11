@@ -2,6 +2,7 @@ import 'lib/sentry' // must be near top
 import 'view/icons'
 
 import React, {useEffect, useState} from 'react'
+import {KeyboardProvider} from 'react-native-keyboard-controller'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
@@ -39,6 +40,7 @@ import {Shell} from 'view/shell/index'
 import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {Provider as PortalProvider} from '#/components/Portal'
+import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import I18nProvider from './locale/i18nProvider'
 import {listenSessionDropped} from './state/events'
 
@@ -77,37 +79,41 @@ function InnerApp() {
   if (!isReady) return null
 
   return (
-    <Alf theme={theme}>
-      <ThemeProvider theme={theme}>
-        <RootSiblingParent>
-          <React.Fragment
-            // Resets the entire tree below when it changes:
-            key={currentAccount?.did}>
-            <QueryProvider currentDid={currentAccount?.did}>
-              <StatsigProvider>
-                <MessagesProvider>
-                  {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                  <LabelDefsProvider>
-                    <ModerationOptsProvider>
-                      <LoggedOutViewProvider>
-                        <SelectedFeedProvider>
-                          <UnreadNotifsProvider>
-                            <SafeAreaProvider>
-                              <Shell />
-                            </SafeAreaProvider>
-                          </UnreadNotifsProvider>
-                        </SelectedFeedProvider>
-                      </LoggedOutViewProvider>
-                    </ModerationOptsProvider>
-                  </LabelDefsProvider>
-                </MessagesProvider>
-              </StatsigProvider>
-            </QueryProvider>
-          </React.Fragment>
-          <ToastContainer />
-        </RootSiblingParent>
-      </ThemeProvider>
-    </Alf>
+    <KeyboardProvider enabled={false}>
+      <Alf theme={theme}>
+        <ThemeProvider theme={theme}>
+          <RootSiblingParent>
+            <React.Fragment
+              // Resets the entire tree below when it changes:
+              key={currentAccount?.did}>
+              <QueryProvider currentDid={currentAccount?.did}>
+                <StatsigProvider>
+                  <MessagesProvider>
+                    {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                    <LabelDefsProvider>
+                      <ModerationOptsProvider>
+                        <LoggedOutViewProvider>
+                          <SelectedFeedProvider>
+                            <UnreadNotifsProvider>
+                              <BackgroundNotificationPreferencesProvider>
+                                <SafeAreaProvider>
+                                  <Shell />
+                                </SafeAreaProvider>
+                              </BackgroundNotificationPreferencesProvider>
+                            </UnreadNotifsProvider>
+                          </SelectedFeedProvider>
+                        </LoggedOutViewProvider>
+                      </ModerationOptsProvider>
+                    </LabelDefsProvider>
+                  </MessagesProvider>
+                </StatsigProvider>
+              </QueryProvider>
+            </React.Fragment>
+            <ToastContainer />
+          </RootSiblingParent>
+        </ThemeProvider>
+      </Alf>
+    </KeyboardProvider>
   )
 }
 

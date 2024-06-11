@@ -1,5 +1,6 @@
 import {NavigationProp} from '@react-navigation/native'
-import {State, RouteParams} from './types'
+
+import {RouteParams, State} from './types'
 
 export function getRootNavigation<T extends {}>(
   nav: NavigationProp<T>,
@@ -10,7 +11,11 @@ export function getRootNavigation<T extends {}>(
   return nav
 }
 
-export function getCurrentRoute(state: State) {
+export function getCurrentRoute(state?: State) {
+  if (!state) {
+    return {name: 'Home'}
+  }
+
   let node = state.routes[state.index || 0]
   while (node.state?.routes && typeof node.state?.index === 'number') {
     node = node.state?.routes[node.state?.index]

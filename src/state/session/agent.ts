@@ -1,17 +1,22 @@
-import {BskyAgent} from '@atproto/api'
-import {AtpSessionEvent} from '@atproto-labs/api'
+import {AtpSessionData, AtpSessionEvent, BskyAgent} from '@atproto/api'
+import {TID} from '@atproto/common-web'
 
 import {networkRetry} from '#/lib/async/retry'
-import {PUBLIC_BSKY_SERVICE} from '#/lib/constants'
+import {
+  DISCOVER_SAVED_FEED,
+  IS_PROD_SERVICE,
+  PUBLIC_BSKY_SERVICE,
+  TIMELINE_SAVED_FEED,
+} from '#/lib/constants'
 import {tryFetchGates} from '#/lib/statsig/statsig'
+import {getAge} from '#/lib/strings/time'
+import {logger} from '#/logger'
 import {
   configureModerationForAccount,
   configureModerationForGuest,
 } from './moderation'
 import {SessionAccount} from './types'
-import {isSessionDeactivated, isSessionExpired} from './util'
-import {IS_PROD_SERVICE} from '#/lib/constants'
-import {DEFAULT_PROD_FEEDS} from '../queries/preferences'
+import {isSessionExpired, isSignupQueued} from './util'
 
 export function createPublicAgent() {
   configureModerationForGuest() // Side effect but only relevant for tests
@@ -32,19 +37,38 @@ export async function createAgentAndResume(
   }
   const gates = tryFetchGates(storedAccount.did, 'prefer-low-latency')
   const moderation = configureModerationForAccount(agent, storedAccount)
-  const prevSession = {
+  const prevSession: AtpSessionData = {
+    // Sorted in the same property order as when returned by BskyAgent (alphabetical).
     accessJwt: storedAccount.accessJwt ?? '',
-    refreshJwt: storedAccount.refreshJwt ?? '',
     did: storedAccount.did,
+    email: storedAccount.email,
+    emailAuthFactor: storedAccount.emailAuthFactor,
+    emailConfirmed: storedAccount.emailConfirmed,
     handle: storedAccount.handle,
+    refreshJwt: storedAccount.refreshJwt ?? '',
+    /**
+     * @see https://github.com/bluesky-social/atproto/blob/c5d36d5ba2a2c2a5c4f366a5621c06a5608e361e/packages/api/src/agent.ts#L188
+     */
+    active: storedAccount.active ?? true,
+    status: storedAccount.status,
   }
   if (isSessionExpired(storedAccount)) {
     await networkRetry(1, () => agent.resumeSession(prevSession))
   } else {
     agent.session = prevSession
-    if (!storedAccount.deactivated) {
+    if (!storedAccount.signupQueued) {
       // Intentionally not awaited to unblock the UI:
-      networkRetry(1, () => agent.resumeSession(prevSession))
+      networkRetry(3, () => agent.resumeSession(prevSession)).catch(
+        (e: any) => {
+          logger.error(`networkRetry failed to resume session`, {
+            status: e?.status || 'unknown',
+            // this field name is ignored by Sentry scrubbers
+            safeMessage: e?.message || 'unknown',
+          })
+
+          throw e
+        },
+      )
     }
   }
 
@@ -116,7 +140,7 @@ export async function createAgentAndCreateAccount(
   const account = agentToSessionAccountOrThrow(agent)
   const gates = tryFetchGates(account.did, 'prefer-fresh-gates')
   const moderation = configureModerationForAccount(agent, account)
-  if (!account.deactivated) {
+  if (!account.signupQueued) {
     /*dont await*/ agent.upsertProfile(_existing => {
       return {
         displayName: '',
@@ -131,9 +155,40 @@ export async function createAgentAndCreateAccount(
 
   // Not awaited so that we can still get into onboarding.
   // This is OK because we won't let you toggle adult stuff until you set the date.
-  agent.setPersonalDetails({birthDate: birthDate.toISOString()})
   if (IS_PROD_SERVICE(service)) {
-    agent.setSavedFeeds(DEFAULT_PROD_FEEDS.saved, DEFAULT_PROD_FEEDS.pinned)
+    try {
+      networkRetry(1, async () => {
+        await agent.setPersonalDetails({birthDate: birthDate.toISOString()})
+        await agent.overwriteSavedFeeds([
+          {
+            ...DISCOVER_SAVED_FEED,
+            id: TID.nextStr(),
+          },
+          {
+            ...TIMELINE_SAVED_FEED,
+            id: TID.nextStr(),
+          },
+        ])
+
+        if (getAge(birthDate) < 18) {
+          await agent.api.com.atproto.repo.putRecord({
+            repo: account.did,
+            collection: 'chat.bsky.actor.declaration',
+            rkey: 'self',
+            record: {
+              $type: 'chat.bsky.actor.declaration',
+              allowIncoming: 'none',
+            },
+          })
+        }
+      })
+    } catch (e: any) {
+      logger.error(e, {
+        context: `session: createAgentAndCreateAccount failed to save personal details and feeds`,
+      })
+    }
+  } else {
+    agent.setPersonalDetails({birthDate: birthDate.toISOString()})
   }
 
   return prepareAgent(agent, gates, moderation, onSessionChange)
@@ -184,7 +239,9 @@ export function agentToSessionAccount(
     emailAuthFactor: agent.session.emailAuthFactor || false,
     refreshJwt: agent.session.refreshJwt,
     accessJwt: agent.session.accessJwt,
-    deactivated: isSessionDeactivated(agent.session.accessJwt),
+    signupQueued: isSignupQueued(agent.session.accessJwt),
+    active: agent.session.active,
+    status: agent.session.status as SessionAccount['status'],
     pdsUrl: agent.pdsUrl?.toString(),
   }
 }

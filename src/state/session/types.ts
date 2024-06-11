@@ -37,12 +37,4 @@ export type SessionApiContext = {
   logout: (logContext: LogEvents['account:loggedOut']['logContext']) => void
   resumeSession: (account: SessionAccount) => Promise<void>
   removeAccount: (account: SessionAccount) => void
-  updateCurrentAccount: (
-    account: Partial<
-      Pick<
-        SessionAccount,
-        'handle' | 'email' | 'emailConfirmed' | 'emailAuthFactor'
-      >
-    >,
-  ) => void
 }

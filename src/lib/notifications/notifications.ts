@@ -1,37 +1,26 @@
-import {useEffect} from 'react'
+import React from 'react'
 import * as Notifications from 'expo-notifications'
+import {getBadgeCountAsync, setBadgeCountAsync} from 'expo-notifications'
 import {BskyAgent} from '@atproto/api'
-import {QueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
-import {RQKEY as RQKEY_NOTIFS} from '#/state/queries/notifications/feed'
-import {invalidateCachedUnreadPage} from '#/state/queries/notifications/unread'
-import {truncateAndInvalidate} from '#/state/queries/util'
-import {SessionAccount} from '#/state/session'
-import {track} from 'lib/analytics/analytics'
-import {devicePlatform, isIOS} from 'platform/detection'
-import {resetToTab} from '../../Navigation'
-import {logEvent} from '../statsig/statsig'
+import {SessionAccount, useAgent, useSession} from '#/state/session'
+import {logEvent, useGate} from 'lib/statsig/statsig'
+import {devicePlatform, isNative} from 'platform/detection'
+import BackgroundNotificationHandler from '../../../modules/expo-background-notification-handler'
 
 const SERVICE_DID = (serviceUrl?: string) =>
   serviceUrl?.includes('staging')
     ? 'did:web:api.staging.bsky.dev'
     : 'did:web:api.bsky.app'
 
-export async function requestPermissionsAndRegisterToken(
-  getAgent: () => BskyAgent,
+async function registerPushToken(
+  agent: BskyAgent,
   account: SessionAccount,
+  token: Notifications.DevicePushToken,
 ) {
-  // request notifications permission once the user has logged in
-  const perms = await Notifications.getPermissionsAsync()
-  if (!perms.granted) {
-    await Notifications.requestPermissionsAsync()
-  }
-
-  // register the push token with the server
-  const token = await Notifications.getDevicePushTokenAsync()
   try {
-    await getAgent().api.app.bsky.notification.registerPush({
+    await agent.api.app.bsky.notification.registerPush({
       serviceDid: SERVICE_DID(account.service),
       platform: devicePlatform,
       token: token.data,
@@ -50,102 +39,96 @@ export async function requestPermissionsAndRegisterToken(
   }
 }
 
-export function registerTokenChangeHandler(
-  getAgent: () => BskyAgent,
-  account: SessionAccount,
-): () => void {
-  // listens for new changes to the push token
-  // In rare situations, a push token may be changed by the push notification service while the app is running. When a token is rolled, the old one becomes invalid and sending notifications to it will fail. A push token listener will let you handle this situation gracefully by registering the new token with your backend right away.
-  const sub = Notifications.addPushTokenListener(async newToken => {
-    logger.debug(
-      'Notifications: Push token changed',
-      {tokenType: newToken.data, token: newToken.type},
-      logger.DebugContext.notifications,
-    )
-    try {
-      await getAgent().api.app.bsky.notification.registerPush({
-        serviceDid: SERVICE_DID(account.service),
-        platform: devicePlatform,
-        token: newToken.data,
-        appId: 'xyz.blueskyweb.app',
-      })
-      logger.debug(
-        'Notifications: Sent push token (event)',
-        {
-          tokenType: newToken.type,
-          token: newToken.data,
-        },
-        logger.DebugContext.notifications,
-      )
-    } catch (error) {
-      logger.error('Notifications: Failed to set push token', {message: error})
-    }
-  })
-  return () => {
-    sub.remove()
+async function getPushToken(skipPermissionCheck = false) {
+  const granted =
+    skipPermissionCheck || (await Notifications.getPermissionsAsync()).granted
+  if (granted) {
+    Notifications.getDevicePushTokenAsync()
   }
 }
 
-export function useNotificationsListener(queryClient: QueryClient) {
-  useEffect(() => {
-    // handle notifications that are received, both in the foreground or background
-    // NOTE: currently just here for debug logging
-    const sub1 = Notifications.addNotificationReceivedListener(event => {
-      invalidateCachedUnreadPage()
-      logger.debug(
-        'Notifications: received',
-        {event},
-        logger.DebugContext.notifications,
-      )
-      if (event.request.trigger.type === 'push') {
-        // handle payload-based deeplinks
-        let payload
-        if (isIOS) {
-          payload = event.request.trigger.payload
-        } else {
-          // TODO: handle android payload deeplink
-        }
-        if (payload) {
-          logger.debug(
-            'Notifications: received payload',
-            payload,
-            logger.DebugContext.notifications,
-          )
-          // TODO: deeplink notif here
-        }
-      }
+export function useNotificationsRegistration() {
+  const agent = useAgent()
+  const {currentAccount} = useSession()
+
+  React.useEffect(() => {
+    if (!currentAccount) {
+      return
+    }
+
+    getPushToken()
+
+    // According to the Expo docs, there is a chance that the token will change while the app is open in some rare
+    // cases. This will fire `registerPushToken` whenever that happens.
+    const subscription = Notifications.addPushTokenListener(async newToken => {
+      registerPushToken(agent, currentAccount, newToken)
     })
 
-    // handle notifications that are tapped on
-    const sub2 = Notifications.addNotificationResponseReceivedListener(
-      response => {
-        logger.debug(
-          'Notifications: response received',
-          {
-            actionIdentifier: response.actionIdentifier,
-          },
-          logger.DebugContext.notifications,
-        )
-        if (
-          response.actionIdentifier === Notifications.DEFAULT_ACTION_IDENTIFIER
-        ) {
-          logger.debug(
-            'User pressed a notification, opening notifications tab',
-            {},
-            logger.DebugContext.notifications,
-          )
-          track('Notificatons:OpenApp')
-          logEvent('notifications:openApp', {})
-          invalidateCachedUnreadPage()
-          truncateAndInvalidate(queryClient, RQKEY_NOTIFS())
-          resetToTab('NotificationsTab') // open notifications tab
-        }
-      },
-    )
-
     return () => {
-      sub1.remove()
-      sub2.remove()
+      subscription.remove()
     }
-  }, [queryClient])
+  }, [currentAccount, agent])
+}
+
+export function useRequestNotificationsPermission() {
+  const gate = useGate()
+  const {currentAccount} = useSession()
+
+  return async (
+    context: 'StartOnboarding' | 'AfterOnboarding' | 'Login' | 'Home',
+  ) => {
+    const permissions = await Notifications.getPermissionsAsync()
+
+    if (
+      !isNative ||
+      permissions?.status === 'granted' ||
+      (permissions?.status === 'denied' && !permissions.canAskAgain)
+    ) {
+      return
+    }
+    if (
+      context === 'StartOnboarding' &&
+      gate('request_notifications_permission_after_onboarding_v2')
+    ) {
+      return
+    }
+    if (
+      context === 'AfterOnboarding' &&
+      !gate('request_notifications_permission_after_onboarding_v2')
+    ) {
+      return
+    }
+    if (context === 'Home' && !currentAccount) {
+      return
+    }
+
+    const res = await Notifications.requestPermissionsAsync()
+    logEvent('notifications:request', {
+      context: context,
+      status: res.status,
+    })
+
+    if (res.granted) {
+      // This will fire a pushTokenEvent, which will handle registration of the token
+      getPushToken(true)
+    }
+  }
+}
+
+export async function decrementBadgeCount(by: number) {
+  if (!isNative) return
+
+  let count = await getBadgeCountAsync()
+  count -= by
+  if (count < 0) {
+    count = 0
+  }
+
+  await BackgroundNotificationHandler.setBadgeCountAsync(count)
+  await setBadgeCountAsync(count)
+}
+
+export async function resetBadgeCount() {
+  await BackgroundNotificationHandler.setBadgeCountAsync(0)
+  await setBadgeCountAsync(0)
 }

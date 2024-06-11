@@ -304,7 +304,7 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       <Stack.Screen
         name="MessagesSettings"
         getComponent={() => MessagesSettingsScreen}
-        options={{title: title(msg`Messaging settings`), requireAuth: true}}
+        options={{title: title(msg`Chat settings`), requireAuth: true}}
       />
     </>
   )
@@ -353,11 +353,11 @@ function HomeTabNavigator() {
   return (
     <HomeTab.Navigator
       screenOptions={{
-        animation: isAndroid ? 'none' : undefined,
+        animation: isAndroid ? 'ios' : undefined,
+        animationDuration: 285,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
-        animationDuration: 250,
         contentStyle: pal.view,
       }}>
       <HomeTab.Screen name="Home" getComponent={() => HomeScreen} />
@@ -371,11 +371,11 @@ function SearchTabNavigator() {
   return (
     <SearchTab.Navigator
       screenOptions={{
-        animation: isAndroid ? 'none' : undefined,
+        animation: isAndroid ? 'ios' : undefined,
+        animationDuration: 285,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
-        animationDuration: 250,
         contentStyle: pal.view,
       }}>
       <SearchTab.Screen name="Search" getComponent={() => SearchScreen} />
@@ -389,11 +389,11 @@ function FeedsTabNavigator() {
   return (
     <FeedsTab.Navigator
       screenOptions={{
-        animation: isAndroid ? 'none' : undefined,
+        animation: isAndroid ? 'ios' : undefined,
+        animationDuration: 285,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
-        animationDuration: 250,
         contentStyle: pal.view,
       }}>
       <FeedsTab.Screen name="Feeds" getComponent={() => FeedsScreen} />
@@ -407,11 +407,11 @@ function NotificationsTabNavigator() {
   return (
     <NotificationsTab.Navigator
       screenOptions={{
-        animation: isAndroid ? 'none' : undefined,
+        animation: isAndroid ? 'ios' : undefined,
+        animationDuration: 285,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
-        animationDuration: 250,
         contentStyle: pal.view,
       }}>
       <NotificationsTab.Screen
@@ -429,11 +429,11 @@ function MyProfileTabNavigator() {
   return (
     <MyProfileTab.Navigator
       screenOptions={{
-        animation: isAndroid ? 'none' : undefined,
+        animation: isAndroid ? 'ios' : undefined,
+        animationDuration: 285,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
-        animationDuration: 250,
         contentStyle: pal.view,
       }}>
       <MyProfileTab.Screen
@@ -454,17 +454,20 @@ function MessagesTabNavigator() {
   return (
     <MessagesTab.Navigator
       screenOptions={{
-        animation: isAndroid ? 'none' : undefined,
+        animation: isAndroid ? 'ios' : undefined,
+        animationDuration: 285,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
-        animationDuration: 250,
         contentStyle: pal.view,
       }}>
       <MessagesTab.Screen
         name="Messages"
         getComponent={() => MessagesScreen}
-        options={{requireAuth: true}}
+        options={({route}) => ({
+          requireAuth: true,
+          animationTypeForReplace: route.params?.animation ?? 'push',
+        })}
       />
       {commonScreens(MessagesTab as typeof HomeTab)}
     </MessagesTab.Navigator>
@@ -485,10 +488,11 @@ const FlatNavigator = () => {
     <Flat.Navigator
       screenListeners={screenListeners}
       screenOptions={{
+        animation: isAndroid ? 'ios' : undefined,
+        animationDuration: 285,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
-        animationDuration: 250,
         contentStyle: pal.view,
       }}>
       <Flat.Screen
@@ -608,7 +612,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       linking={LINKING}
       theme={theme}
       onStateChange={() => {
-        logEvent('router:navigate', {
+        logEvent('router:navigate:sampled', {
           from: prevLoggedRouteName.current,
         })
         prevLoggedRouteName.current = getCurrentRouteName()
@@ -617,7 +621,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
         attachRouteToLogEvents(getCurrentRouteName)
         logModuleInitTime()
         onReady()
-        logEvent('router:navigate', {})
+        logEvent('router:navigate:sampled', {})
       }}>
       {children}
     </NavigationContainer>
