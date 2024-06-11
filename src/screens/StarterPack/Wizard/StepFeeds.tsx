@@ -4,6 +4,7 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import debounce from 'lodash.debounce'
 
+import {DISCOVER_FEED_URI} from 'lib/constants'
 import {
   useGetPopularFeedsQuery,
   useSearchPopularFeedsMutation,
@@ -29,36 +30,6 @@ export function StepFeeds() {
   const popularFeeds =
     popularFeedsPages?.pages.flatMap(page => page.feeds) || []
 
-  // const popularFeeds = [
-  //   {
-  //     uri: 'at://did:plc:i2g4cq5neuol2n5kadpffqok/app.bsky.feed.generator/alice-favs',
-  //     cid: 'bafyreidgvy4vlvvhx3lhpyej2qido3m5sk2l5643bhbmqtgfuxwz53xqlm',
-  //     did: 'did:plc:epfqsozl6rso6ebd6mkfyzpl',
-  //     creator: {
-  //       did: 'did:plc:vyhhvdf4xw5nziakfxxsynwk',
-  //       handle: 'alice.test',
-  //       displayName: 'Alice',
-  //       viewer: {
-  //         muted: false,
-  //         blockedBy: false,
-  //       },
-  //       labels: [],
-  //       description: 'Test user 1',
-  //       indexedAt: '2024-06-10T17:37:36.662Z',
-  //     },
-  //     displayName: 'alices feed',
-  //     description: 'all my fav stuff',
-  //     avatar:
-  //       'http://localhost:2584/img/avatar/plain/did:plc:vyhhvdf4xw5nziakfxxsynwk/bafkreihem6nzbu462kcx5cqnrkonpq75fe5dlbhgnzcmuvvhqk7s5vcq3u@jpeg',
-  //     likeCount: 3,
-  //     labels: [],
-  //     viewer: {
-  //       like: 'at://did:plc:vyhhvdf4xw5nziakfxxsynwk/app.bsky.feed.like/3kulmhjxuoc2g',
-  //     },
-  //     indexedAt: '2022-07-15T00:51:16.914Z',
-  //   },
-  // ]
-
   const {
     data: searchedFeeds,
     mutate: search,
@@ -79,6 +50,10 @@ export function StepFeeds() {
     }
   }
 
+  const filterFeeds = (feeds?: GeneratorView[]) => {
+    return feeds?.filter(feed => feed.uri !== DISCOVER_FEED_URI)
+  }
+
   const renderItem = ({item}: ListRenderItemInfo<GeneratorView>) => {
     return <WizardFeedCard generator={item} state={state} dispatch={dispatch} />
   }
@@ -96,7 +71,7 @@ export function StepFeeds() {
         </View>
       </View>
       <List
-        data={query ? searchedFeeds : popularFeeds}
+        data={filterFeeds(query ? searchedFeeds : popularFeeds)}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         onEndReached={!query ? () => fetchNextPage() : undefined}

@@ -481,6 +481,10 @@ function Footer({
 
   const items = state.currentStep === 'Profiles' ? state.profiles : state.feeds
 
+  const isEditEnabled =
+    (state.currentStep === 'Profiles' && items.length > 1) ||
+    (state.currentStep === 'Feeds' && items.length > 0)
+
   const textStyles = [isWeb && a.text_md]
 
   return (
@@ -573,30 +577,36 @@ function Footer({
         </Text>
       )}
 
-      <View
-        style={[a.flex_row, a.w_full, a.justify_between, {marginTop: 'auto'}]}>
-        <Button
-          label={_(msg`Edit`)}
-          variant="ghost"
-          color="primary"
-          size="small"
-          disabled={items.length === 0}
-          onPress={editDialogControl.open}>
-          <ButtonText>
-            <Trans>Edit</Trans>
-          </ButtonText>
-        </Button>
-        <Button
-          label={nextBtnText}
-          variant="solid"
-          color="primary"
-          size="small"
-          onPress={onNext}
-          disabled={!state.canNext || state.processing}>
-          <ButtonText>{nextBtnText}</ButtonText>
-          {state.processing && <Loader size="xs" style={{color: 'white'}} />}
-        </Button>
-      </View>
+      {isEditEnabled && (
+        <View
+          style={[
+            a.flex_row,
+            a.w_full,
+            a.justify_between,
+            {marginTop: 'auto'},
+          ]}>
+          <Button
+            label={_(msg`Edit`)}
+            variant="ghost"
+            color="primary"
+            size="small"
+            onPress={editDialogControl.open}>
+            <ButtonText>
+              <Trans>Edit</Trans>
+            </ButtonText>
+          </Button>
+          <Button
+            label={nextBtnText}
+            variant="solid"
+            color="primary"
+            size="small"
+            onPress={onNext}
+            disabled={!state.canNext || state.processing}>
+            <ButtonText>{nextBtnText}</ButtonText>
+            {state.processing && <Loader size="xs" style={{color: 'white'}} />}
+          </Button>
+        </View>
+      )}
 
       <WizardEditListDialog
         control={editDialogControl}
