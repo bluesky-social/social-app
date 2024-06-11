@@ -7,6 +7,7 @@ import {BottomSheetFlatListMethods} from '@discord/bottom-sheet'
 import {Trans} from '@lingui/macro'
 
 import {isWeb} from 'platform/detection'
+import {useSession} from 'state/session'
 import {WizardAction, WizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import * as Dialog from '#/components/Dialog'
@@ -30,10 +31,23 @@ export function WizardEditListDialog({
   state: WizardState
   dispatch: (action: WizardAction) => void
 }) {
+  const {currentAccount} = useSession()
   const t = useTheme()
 
   const listRef = useRef<BottomSheetFlatListMethods>(null)
   const inputRef = useRef<RNTextInput>(null)
+
+  const getData = () => {
+    if (state.currentStep === 'Feeds') return state.feeds
+
+    const myIndex = state.profiles.findIndex(p => p.did === currentAccount?.did)
+
+    return [
+      state.profiles[myIndex],
+      ...state.profiles.slice(0, myIndex),
+      ...state.profiles.slice(myIndex + 1),
+    ]
+  }
 
   useLayoutEffect(() => {
     if (isWeb) {
@@ -58,7 +72,7 @@ export function WizardEditListDialog({
       <Dialog.Handle />
       <Dialog.InnerFlatList
         ref={listRef}
-        data={state.currentStep === 'Profiles' ? state.profiles : state.feeds}
+        data={getData()}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         ListHeaderComponent={
