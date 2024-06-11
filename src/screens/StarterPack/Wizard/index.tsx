@@ -179,7 +179,7 @@ function WizardInner({
     },
     Feeds: {
       header: _(msg`Feeds`),
-      nextBtn: _(msg`Finish`),
+      nextBtn: state.feeds.length === 0 ? _(msg`Skip`) : _(msg`Finish`),
       subtitle: _(msg`Some subtitle`),
     },
   }
@@ -535,13 +535,10 @@ function Footer({
       {items.length === 0 ? (
         <View style={[a.gap_sm]}>
           <Text style={[a.font_bold, a.text_center, textStyles]}>
-            <Trans>Optionally, add some feeds to your starter pack!</Trans>
+            <Trans>Add some feeds to your starter pack!</Trans>
           </Text>
           <Text style={[a.text_center, textStyles]}>
-            <Trans>
-              Search for feeds that you want to suggest to others, or skip for
-              now and add some later.
-            </Trans>
+            <Trans>Search for feeds that you want to suggest to others.</Trans>
           </Text>
         </View>
       ) : (
