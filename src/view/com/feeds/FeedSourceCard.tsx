@@ -1,5 +1,12 @@
 import React from 'react'
-import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {
+  Linking,
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native'
 import {AtUri} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Plural, Trans} from '@lingui/macro'
@@ -26,6 +33,7 @@ import {RichText} from '#/components/RichText'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
 import hairlineWidth = StyleSheet.hairlineWidth
+import {shouldClickOpenNewTab} from '#/platform/urls'
 
 export function FeedSourceCard({
   feedUri,
@@ -203,17 +211,30 @@ export function FeedSourceCardLoaded({
           style,
           {borderTopWidth: hideTopBorder ? 0 : hairlineWidth},
         ]}
-        onPress={() => {
+        onPress={e => {
+          const shouldOpenInNewTab = shouldClickOpenNewTab(e)
           if (feed.type === 'feed') {
-            navigation.push('ProfileFeed', {
-              name: feed.creatorDid,
-              rkey: new AtUri(feed.uri).rkey,
-            })
+            if (shouldOpenInNewTab) {
+              Linking.openURL(
+                `/profile/${feed.creatorDid}/feed/${new AtUri(feed.uri).rkey}`,
+              )
+            } else {
+              navigation.push('ProfileFeed', {
+                name: feed.creatorDid,
+                rkey: new AtUri(feed.uri).rkey,
+              })
+            }
           } else if (feed.type === 'list') {
-            navigation.push('ProfileList', {
-              name: feed.creatorDid,
-              rkey: new AtUri(feed.uri).rkey,
-            })
+            if (shouldOpenInNewTab) {
+              Linking.openURL(
+                `/profile/${feed.creatorDid}/lists/${new AtUri(feed.uri).rkey}`,
+              )
+            } else {
+              navigation.push('ProfileList', {
+                name: feed.creatorDid,
+                rkey: new AtUri(feed.uri).rkey,
+              })
+            }
           }
         }}
         key={feed.uri}>

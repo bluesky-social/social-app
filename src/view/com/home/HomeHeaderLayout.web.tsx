@@ -6,7 +6,7 @@ import {useLingui} from '@lingui/react'
 
 import {useSession} from '#/state/session'
 import {useShellLayout} from '#/state/shell/shell-layout'
-import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
+import {useMinimalShellHeaderTransform} from 'lib/hooks/useMinimalShellTransform'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
@@ -35,7 +35,7 @@ function HomeHeaderLayoutDesktopAndTablet({
   tabBarAnchor: JSX.Element | null | undefined
 }) {
   const t = useTheme()
-  const {headerMinimalShellTransform} = useMinimalShellMode()
+  const headerMinimalShellTransform = useMinimalShellHeaderTransform()
   const {headerHeight} = useShellLayout()
   const {hasSession} = useSession()
   const {_} = useLingui()

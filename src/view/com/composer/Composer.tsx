@@ -8,6 +8,7 @@ import React, {
 } from 'react'
 import {
   ActivityIndicator,
+  BackHandler,
   Keyboard,
   LayoutChangeEvent,
   StyleSheet,
@@ -17,6 +18,7 @@ import {
 import {
   KeyboardAvoidingView,
   KeyboardStickyView,
+  useKeyboardController,
 } from 'react-native-keyboard-controller'
 import Animated, {
   interpolateColor,
@@ -41,6 +43,7 @@ import {LikelyType} from '#/lib/link-meta/link-meta'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {emitPostCreated} from '#/state/events'
+import {useModalControls} from '#/state/modals'
 import {useModals} from '#/state/modals'
 import {useRequireAltTextEnabled} from '#/state/preferences'
 import {
@@ -125,7 +128,19 @@ export const ComposePost = observer(function ComposePost({
   const textInput = useRef<TextInputRef>(null)
   const discardPromptControl = Prompt.usePromptControl()
   const {closeAllDialogs} = useDialogStateControlContext()
+  const {closeAllModals} = useModalControls()
   const t = useTheme()
+
+  // Disable this in the composer to prevent any extra keyboard height being applied.
+  // See https://github.com/bluesky-social/social-app/pull/4399
+  const {setEnabled} = useKeyboardController()
+  React.useEffect(() => {
+    if (!isAndroid) return
+    setEnabled(false)
+    return () => {
+      setEnabled(true)
+    }
+  }, [setEnabled])
 
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isProcessing, setIsProcessing] = useState(false)
@@ -154,6 +169,7 @@ export const ComposePost = observer(function ComposePost({
   const [extGif, setExtGif] = useState<Gif>()
   const [labels, setLabels] = useState<string[]>([])
   const [threadgate, setThreadgate] = useState<ThreadgateSetting[]>([])
+
   const gallery = useMemo(
     () => new GalleryModel(initImageUris),
     [initImageUris],
@@ -165,6 +181,7 @@ export const ComposePost = observer(function ComposePost({
   const insets = useSafeAreaInsets()
   const viewStyles = useMemo(
     () => ({
+      paddingTop: isAndroid ? insets.top : 0,
       paddingBottom:
         isAndroid || (isIOS && !isKeyboardVisible) ? insets.bottom : 0,
     }),
@@ -174,9 +191,7 @@ export const ComposePost = observer(function ComposePost({
   const onPressCancel = useCallback(() => {
     if (graphemeLength > 0 || !gallery.isEmpty || extGif) {
       closeAllDialogs()
-      if (Keyboard) {
-        Keyboard.dismiss()
-      }
+      Keyboard.dismiss()
       discardPromptControl.open()
     } else {
       onClose()
@@ -191,6 +206,26 @@ export const ComposePost = observer(function ComposePost({
   ])
 
   useImperativeHandle(cancelRef, () => ({onPressCancel}))
+
+  // On Android, pressing Back should ask confirmation.
+  useEffect(() => {
+    if (!isAndroid) {
+      return
+    }
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        if (closeAllDialogs() || closeAllModals()) {
+          return true
+        }
+        onPressCancel()
+        return true
+      },
+    )
+    return () => {
+      backHandler.remove()
+    }
+  }, [onPressCancel, closeAllDialogs, closeAllModals])
 
   // listen to escape key on desktop web
   const onEscape = useCallback(
@@ -292,7 +327,13 @@ export const ComposePost = observer(function ComposePost({
           localThumb: undefined,
         } as apilib.ExternalEmbedDraft)
       }
-      setError(cleanError(e.message))
+      let err = cleanError(e.message)
+      if (err.includes('not locate record')) {
+        err = _(
+          msg`We're sorry! The post you are replying to has been deleted.`,
+        )
+      }
+      setError(err)
       setIsProcessing(false)
       return
     } finally {
@@ -517,7 +558,7 @@ export const ComposePost = observer(function ComposePost({
                 ref={textInput}
                 richtext={richtext}
                 placeholder={selectTextInputPlaceholder}
-                autoFocus={true}
+                autoFocus
                 setRichText={setRichText}
                 onPhotoPasted={onPhotoPasted}
                 onPressPublish={onPressPublish}
@@ -737,11 +778,12 @@ const styles = StyleSheet.create({
   },
   errorLine: {
     flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: colors.red1,
     borderRadius: 6,
     marginHorizontal: 16,
-    paddingHorizontal: 8,
-    paddingVertical: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
     marginBottom: 8,
   },
   reminderLine: {

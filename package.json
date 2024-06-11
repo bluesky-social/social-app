@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.85.0",
+  "version": "1.86.0",
   "private": true,
   "engines": {
     "node": ">=18"
@@ -49,7 +49,7 @@
     "open-analyzer": "EXPO_PUBLIC_OPEN_ANALYZER=1 yarn build-web"
   },
   "dependencies": {
-    "@atproto/api": "^0.12.14",
+    "@atproto/api": "^0.12.16",
     "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@braintree/sanitize-url": "^6.0.2",
     "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
@@ -116,7 +116,6 @@
     "expo-build-properties": "^0.12.1",
     "expo-camera": "~15.0.9",
     "expo-clipboard": "^6.0.3",
-    "expo-constants": "~16.0.1",
     "expo-dev-client": "^4.0.14",
     "expo-device": "~6.0.2",
     "expo-file-system": "^17.0.1",
@@ -129,7 +128,7 @@
     "expo-localization": "~15.0.3",
     "expo-media-library": "~16.0.3",
     "expo-navigation-bar": "~3.0.4",
-    "expo-notifications": "~0.28.3",
+    "expo-notifications": "~0.28.7",
     "expo-sharing": "^12.0.1",
     "expo-splash-screen": "~0.27.4",
     "expo-status-bar": "~1.12.1",
@@ -272,6 +271,8 @@
   "resolutions": {
     "@types/react": "^18",
     "**/zeed-dom": "0.10.9",
+    "**/expo-constants": "16.0.1",
+    "**/expo-device": "6.0.2",
     "@react-native/babel-preset": "0.74.1"
   },
   "jest": {

@@ -6,7 +6,8 @@ import {BskyAgent} from '@atproto/api'
 import {logger} from '#/logger'
 import {SessionAccount, useAgent, useSession} from '#/state/session'
 import {logEvent, useGate} from 'lib/statsig/statsig'
-import {devicePlatform, isNative} from 'platform/detection'
+import {devicePlatform, isAndroid, isNative} from 'platform/detection'
+import BackgroundNotificationHandler from '../../../modules/expo-background-notification-handler'
 
 const SERVICE_DID = (serviceUrl?: string) =>
   serviceUrl?.includes('staging')
@@ -42,7 +43,7 @@ async function getPushToken(skipPermissionCheck = false) {
   const granted =
     skipPermissionCheck || (await Notifications.getPermissionsAsync()).granted
   if (granted) {
-    Notifications.getDevicePushTokenAsync()
+    return Notifications.getDevicePushTokenAsync()
   }
 }
 
@@ -55,7 +56,22 @@ export function useNotificationsRegistration() {
       return
     }
 
-    getPushToken()
+    // HACK - see https://github.com/bluesky-social/social-app/pull/4467
+    // An apparent regression in expo-notifications causes `addPushTokenListener` to not fire on Android whenever the
+    // token changes by calling `getPushToken()`. This is a workaround to ensure we register the token once it is
+    // generated on Android.
+    if (isAndroid) {
+      ;(async () => {
+        const token = await getPushToken()
+
+        // Token will be undefined if we don't have notifications permission
+        if (token) {
+          registerPushToken(agent, currentAccount, token)
+        }
+      })()
+    } else {
+      getPushToken()
+    }
 
     // According to the Expo docs, there is a chance that the token will change while the app is open in some rare
     // cases. This will fire `registerPushToken` whenever that happens.
@@ -71,14 +87,17 @@ export function useNotificationsRegistration() {
 
 export function useRequestNotificationsPermission() {
   const gate = useGate()
+  const {currentAccount} = useSession()
 
-  return async (context: 'StartOnboarding' | 'AfterOnboarding' | 'Login') => {
+  return async (
+    context: 'StartOnboarding' | 'AfterOnboarding' | 'Login' | 'Home',
+  ) => {
     const permissions = await Notifications.getPermissionsAsync()
 
     if (
       !isNative ||
       permissions?.status === 'granted' ||
-      permissions?.status === 'denied'
+      (permissions?.status === 'denied' && !permissions.canAskAgain)
     ) {
       return
     }
@@ -92,6 +111,9 @@ export function useRequestNotificationsPermission() {
       context === 'AfterOnboarding' &&
       !gate('request_notifications_permission_after_onboarding_v2')
     ) {
+      return
+    }
+    if (context === 'Home' && !currentAccount) {
       return
     }
 
@@ -108,19 +130,20 @@ export function useRequestNotificationsPermission() {
   }
 }
 
-export async function decrementBadgeCount(by: number | 'reset' = 1) {
+export async function decrementBadgeCount(by: number) {
   if (!isNative) return
 
-  const currCount = await getBadgeCountAsync()
-
-  if (by === 'reset') {
-    await setBadgeCountAsync(0)
-    return
+  let count = await getBadgeCountAsync()
+  count -= by
+  if (count < 0) {
+    count = 0
   }
 
-  let newCount = currCount - by
-  if (newCount < 0) {
-    newCount = 0
-  }
-  await setBadgeCountAsync(newCount)
+  await BackgroundNotificationHandler.setBadgeCountAsync(count)
+  await setBadgeCountAsync(count)
+}
+
+export async function resetBadgeCount() {
+  await BackgroundNotificationHandler.setBadgeCountAsync(0)
+  await setBadgeCountAsync(0)
 }

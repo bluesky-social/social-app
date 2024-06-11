@@ -8,7 +8,7 @@ import {useSession} from '#/state/session'
 import {useSetDrawerOpen} from '#/state/shell/drawer-open'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {HITSLOP_10} from 'lib/constants'
-import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
+import {useMinimalShellHeaderTransform} from 'lib/hooks/useMinimalShellTransform'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
 import {Logo} from '#/view/icons/Logo'
@@ -32,7 +32,7 @@ export function HomeHeaderLayoutMobile({
   const {_} = useLingui()
   const setDrawerOpen = useSetDrawerOpen()
   const {headerHeight} = useShellLayout()
-  const {headerMinimalShellTransform} = useMinimalShellMode()
+  const headerMinimalShellTransform = useMinimalShellHeaderTransform()
   const {hasSession} = useSession()
 
   const onPressAvi = React.useCallback(() => {

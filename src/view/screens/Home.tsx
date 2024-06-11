@@ -20,6 +20,7 @@ import {
 } from '#/state/shell'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
 import {useOTAUpdates} from 'lib/hooks/useOTAUpdates'
+import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
 import {HomeTabNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {FeedPage} from 'view/com/feeds/FeedPage'
 import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
@@ -67,9 +68,14 @@ function HomeScreenReady({
   const maybeFoundIndex = allFeeds.indexOf(rawSelectedFeed)
   const selectedIndex = Math.max(0, maybeFoundIndex)
   const selectedFeed = allFeeds[selectedIndex]
+  const requestNotificationsPermission = useRequestNotificationsPermission()
 
   useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName)
   useOTAUpdates()
+
+  React.useEffect(() => {
+    requestNotificationsPermission('Home')
+  }, [requestNotificationsPermission])
 
   const pagerRef = React.useRef<PagerRef>(null)
   const lastPagerReportedIndexRef = React.useRef(selectedIndex)
