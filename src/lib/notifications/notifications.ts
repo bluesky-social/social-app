@@ -117,7 +117,11 @@ export function useRequestNotificationsPermission() {
       return
     }
 
-    const res = await Notifications.requestPermissionsAsync()
+    const res = await Notifications.requestPermissionsAsync({
+      ios: {
+        allowBadge: true,
+      },
+    })
     logEvent('notifications:request', {
       context: context,
       status: res.status,
