@@ -370,10 +370,7 @@ function Inner({
     profile: profileShadow,
     logContext: 'ProfileHoverCard',
   })
-  const isProfileBlocked =
-    profile.viewer?.blocking ||
-    profile.viewer?.blockedBy ||
-    profile.viewer?.blockingByList
+  const blockHide = profile.viewer?.blocking || profile.viewer?.blockedBy
   const following = formatCount(profile.followsCount || 0)
   const followers = formatCount(profile.followersCount || 0)
   const pluralizedFollowers = plural(profile.followersCount || 0, {
@@ -404,7 +401,7 @@ function Inner({
           />
         </Link>
 
-        {!isMe && !isProfileBlocked && (
+        {!isMe && (
           <Button
             size="small"
             color={profileShadow.viewer?.following ? 'secondary' : 'primary'}
@@ -442,7 +439,7 @@ function Inner({
         </View>
       </Link>
 
-      {!isProfileBlocked && (
+      {!blockHide && (
         <>
           <View style={[a.flex_row, a.flex_wrap, a.gap_md, a.pt_xs]}>
             <InlineLinkText
