@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: zh-TW for bluesky-social-app\n"
 "POT-Creation-Date: \n"
 "Report-Msgid-Bugs-To: Kuwa Lee <kuwalee1069@gmail.com>, Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-06-11 01:49+0800\n"
+"PO-Revision-Date: 2024-06-11 16:18+0800\n"
 "Last-Translator: \n"
 "Language-Team: Frudrax Cheng <i@cynosura.one>, Kuwa Lee <kuwalee1069@gmail.com>, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Language: zh_TW\n"
@@ -33,7 +33,7 @@ msgstr "{0, plural, one {該帳號有 # 個標記} other {該帳號有 # 個標�
 msgid "{0, plural, one {# label has been placed on this content} other {# labels have been placed on this content}}"
 msgstr "{0, plural, one {該內容有 # 個標記} other {該內容有 # 個標記}}"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:64
+#: src/view/com/util/post-ctrls/RepostButton.tsx:65
 msgid "{0, plural, one {# repost} other {# reposts}}"
 msgstr "{0, plural, one {# 個轉貼} other {# 個轉貼}}"
 
@@ -55,7 +55,7 @@ msgstr "{0, plural, one {喜歡（# 個喜歡）} other {喜歡（# 個喜歡）
 msgid "{0, plural, one {like} other {likes}}"
 msgstr "{0, plural, one {喜歡} other {喜歡}}"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:280
+#: src/view/com/feeds/FeedSourceCard.tsx:301
 msgid "{0, plural, one {Liked by # user} other {Liked by # users}}"
 msgstr "{0, plural,one {# 個用戶已喜歡} other {# 個用戶已喜歡}}"
 
@@ -271,7 +271,7 @@ msgstr "將以下 DNS 記錄新增到您的網域："
 msgid "Add to Lists"
 msgstr "新增至列表"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:246
+#: src/view/com/feeds/FeedSourceCard.tsx:267
 msgid "Add to my feeds"
 msgstr "加入到我的動態源"
 
@@ -280,7 +280,7 @@ msgstr "加入到我的動態源"
 msgid "Added to list"
 msgstr "新增至列表"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:118
+#: src/view/com/feeds/FeedSourceCard.tsx:126
 msgid "Added to my feeds"
 msgstr "加入到我的動態源"
 
@@ -460,11 +460,11 @@ msgstr "您確定要刪除這則訊息嗎？該訊息將為您刪除，但不會
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
 msgstr "您確定要離開此對話嗎？您的訊息將為您刪除，但不會為其他參與者刪除。"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:293
+#: src/view/com/feeds/FeedSourceCard.tsx:314
 msgid "Are you sure you want to remove {0} from your feeds?"
 msgstr "您確定要從您的動態中移除 {0} 嗎？"
 
-#: src/view/com/composer/Composer.tsx:617
+#: src/view/com/composer/Composer.tsx:664
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "您確定要捨棄此草稿嗎？"
 
@@ -659,8 +659,8 @@ msgstr "只能包含字母、數字、空格、破折號及底線。長度必須
 #: src/components/Prompt.tsx:121
 #: src/components/TagMenu/index.tsx:268
 #: src/screens/Deactivated.tsx:161
-#: src/view/com/composer/Composer.tsx:417
-#: src/view/com/composer/Composer.tsx:423
+#: src/view/com/composer/Composer.tsx:460
+#: src/view/com/composer/Composer.tsx:466
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangeHandle.tsx:148
@@ -676,7 +676,7 @@ msgstr "只能包含字母、數字、空格、破折號及底線。長度必須
 #: src/view/com/modals/LinkWarning.tsx:107
 #: src/view/com/modals/VerifyEmail.tsx:255
 #: src/view/com/modals/VerifyEmail.tsx:261
-#: src/view/com/util/post-ctrls/RepostButton.tsx:136
+#: src/view/com/util/post-ctrls/RepostButton.tsx:138
 #: src/view/screens/Search/Search.tsx:738
 #: src/view/shell/desktop/Search.tsx:218
 msgid "Cancel"
@@ -706,7 +706,7 @@ msgstr "取消圖片裁剪"
 msgid "Cancel profile editing"
 msgstr "取消編輯個人檔案"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:130
+#: src/view/com/util/post-ctrls/RepostButton.tsx:132
 msgid "Cancel quote post"
 msgstr "取消引用貼文"
 
@@ -939,7 +939,7 @@ msgstr "關閉底部導覽列"
 msgid "Closes password update alert"
 msgstr "關閉密碼更新警告"
 
-#: src/view/com/composer/Composer.tsx:419
+#: src/view/com/composer/Composer.tsx:462
 msgid "Closes post composer and discards post draft"
 msgstr "關閉貼文編輯頁並捨棄草稿"
 
@@ -976,7 +976,7 @@ msgstr "完成初始設定並開始使用您的帳號"
 msgid "Complete the challenge"
 msgstr "完成驗證"
 
-#: src/view/com/composer/Composer.tsx:536
+#: src/view/com/composer/Composer.tsx:583
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "撰寫貼文的長度最多為 {MAX_GRAPHEME_LENGTH} 個字元"
 
@@ -1077,7 +1077,7 @@ msgid "Context menu backdrop, click to close the menu."
 msgstr "彈出式選單背景，點擊以關閉選單。"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:253
-#: src/screens/Onboarding/StepProfile/index.tsx:268
+#: src/screens/Onboarding/StepProfile/index.tsx:269
 msgid "Continue"
 msgstr "繼續"
 
@@ -1086,7 +1086,7 @@ msgid "Continue as {0} (currently signed in)"
 msgstr "以 {0} 繼續 (目前已登入)"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:250
-#: src/screens/Onboarding/StepProfile/index.tsx:265
+#: src/screens/Onboarding/StepProfile/index.tsx:266
 #: src/screens/Signup/index.tsx:213
 msgid "Continue to next step"
 msgstr "繼續下一步"
@@ -1195,7 +1195,7 @@ msgstr "建立帳號"
 msgid "Create an account"
 msgstr "建立一個帳號"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:282
+#: src/screens/Onboarding/StepProfile/index.tsx:283
 msgid "Create an avatar instead"
 msgstr "或是建立一個頭像"
 
@@ -1359,7 +1359,7 @@ msgstr "描述"
 msgid "Descriptive alt text"
 msgstr "生動的替代文字"
 
-#: src/view/com/composer/Composer.tsx:264
+#: src/view/com/composer/Composer.tsx:270
 msgid "Did you want to say anything?"
 msgstr "有什麼想說的嗎？"
 
@@ -1392,11 +1392,11 @@ msgstr "關閉觸覺回饋"
 msgid "Disabled"
 msgstr "停用"
 
-#: src/view/com/composer/Composer.tsx:619
+#: src/view/com/composer/Composer.tsx:666
 msgid "Discard"
 msgstr "捨棄"
 
-#: src/view/com/composer/Composer.tsx:616
+#: src/view/com/composer/Composer.tsx:663
 msgid "Discard draft?"
 msgstr "捨棄草稿？"
 
@@ -1446,8 +1446,8 @@ msgstr "網域已驗證！"
 #: src/components/dialogs/BirthDateSettings.tsx:125
 #: src/components/forms/DateField/index.tsx:74
 #: src/components/forms/DateField/index.tsx:80
-#: src/screens/Onboarding/StepProfile/index.tsx:321
-#: src/screens/Onboarding/StepProfile/index.tsx:324
+#: src/screens/Onboarding/StepProfile/index.tsx:322
+#: src/screens/Onboarding/StepProfile/index.tsx:325
 #: src/view/com/auth/server-input/index.tsx:169
 #: src/view/com/auth/server-input/index.tsx:170
 #: src/view/com/modals/AddAppPasswords.tsx:243
@@ -1873,7 +1873,7 @@ msgstr "無法更新設定"
 msgid "Feed"
 msgstr "動態"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:230
+#: src/view/com/feeds/FeedSourceCard.tsx:251
 msgid "Feed by {0}"
 msgstr "{0} 建立的動態源"
 
@@ -2093,7 +2093,7 @@ msgstr "開始"
 msgid "Get Started"
 msgstr "開始"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:224
+#: src/screens/Onboarding/StepProfile/index.tsx:225
 msgid "Give your profile a face"
 msgstr "為您的個人檔案增添新顏"
 
@@ -2138,7 +2138,7 @@ msgstr "前往首頁"
 msgid "Go Home"
 msgstr "前往首頁"
 
-#: src/screens/Messages/List/ChatListItem.tsx:208
+#: src/screens/Messages/List/ChatListItem.tsx:209
 msgid "Go to conversation with {0}"
 msgstr "與 {0} 對話"
 
@@ -2188,7 +2188,7 @@ msgstr "遇到問題？"
 msgid "Help"
 msgstr "幫助"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:227
+#: src/screens/Onboarding/StepProfile/index.tsx:228
 msgid "Help people know you're not a bot by uploading a picture or creating an avatar."
 msgstr "透過上傳圖片或建立頭像來幫助人們知道您不是機器人。"
 
@@ -2230,23 +2230,23 @@ msgstr "隱藏這則貼文？"
 msgid "Hide user list"
 msgstr "隱藏用戶列表"
 
-#: src/view/com/posts/FeedErrorMessage.tsx:118
+#: src/view/com/posts/FeedErrorMessage.tsx:117
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
 msgstr "抱歉，與動態源的伺服器連線時發生了某種問題。請向該動態源的擁有者報告這個問題。"
 
-#: src/view/com/posts/FeedErrorMessage.tsx:106
+#: src/view/com/posts/FeedErrorMessage.tsx:105
 msgid "Hmm, the feed server appears to be misconfigured. Please let the feed owner know about this issue."
 msgstr "抱歉，動態源的伺服器似乎設定錯誤。請向該動態源的擁有者報告這個問題。"
 
-#: src/view/com/posts/FeedErrorMessage.tsx:112
+#: src/view/com/posts/FeedErrorMessage.tsx:111
 msgid "Hmm, the feed server appears to be offline. Please let the feed owner know about this issue."
 msgstr "抱歉，動態源的伺服器似乎已離線。請向該動態源的擁有者報告這個問題。"
 
-#: src/view/com/posts/FeedErrorMessage.tsx:109
+#: src/view/com/posts/FeedErrorMessage.tsx:108
 msgid "Hmm, the feed server gave a bad response. Please let the feed owner know about this issue."
 msgstr "抱歉，動態源的伺服器給出了錯誤的回應。請向該動態源的擁有者報告這個問題。"
 
-#: src/view/com/posts/FeedErrorMessage.tsx:103
+#: src/view/com/posts/FeedErrorMessage.tsx:102
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
 msgstr "抱歉，我們無法找到這個動態源，它可能已被刪除。"
 
@@ -2596,7 +2596,7 @@ msgstr "列表頭像"
 msgid "List blocked"
 msgstr "列表已封鎖"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:232
+#: src/view/com/feeds/FeedSourceCard.tsx:253
 msgid "List by {0}"
 msgstr "列表由 {0} 建立"
 
@@ -2633,7 +2633,7 @@ msgstr "列表"
 msgid "Lists blocking this user:"
 msgstr "封鎖此用戶的列表："
 
-#: src/view/screens/Notifications.tsx:168
+#: src/view/screens/Notifications.tsx:184
 msgid "Load new notifications"
 msgstr "載入新的通知"
 
@@ -2732,7 +2732,7 @@ msgstr "給 {0} 傳送訊息"
 msgid "Message deleted"
 msgstr "訊息已刪除"
 
-#: src/view/com/posts/FeedErrorMessage.tsx:201
+#: src/view/com/posts/FeedErrorMessage.tsx:200
 msgid "Message from server: {0}"
 msgstr "來自伺服器的訊息：{0}"
 
@@ -3023,7 +3023,7 @@ msgid "New post"
 msgstr "新貼文"
 
 #: src/view/screens/Feeds.tsx:627
-#: src/view/screens/Notifications.tsx:177
+#: src/view/screens/Notifications.tsx:193
 #: src/view/screens/Profile.tsx:464
 #: src/view/screens/ProfileFeed.tsx:426
 #: src/view/screens/ProfileList.tsx:201
@@ -3104,7 +3104,7 @@ msgstr "還沒有訊息"
 msgid "No more conversations to show"
 msgstr "已經沒有對話啦！"
 
-#: src/view/com/notifications/Feed.tsx:117
+#: src/view/com/notifications/Feed.tsx:118
 msgid "No notifications yet!"
 msgstr "還沒有通知！"
 
@@ -3114,6 +3114,10 @@ msgstr "還沒有通知！"
 #: src/screens/Messages/Settings.tsx:96
 msgid "No one"
 msgstr "沒有人"
+
+#: src/screens/Profile/Sections/Feed.tsx:59
+msgid "No posts yet."
+msgstr "目前還沒有貼文。"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:101
 #: src/view/com/composer/text-input/web/Autocomplete.tsx:195
@@ -3198,8 +3202,8 @@ msgid "Notification Sounds"
 msgstr "通知音效"
 
 #: src/Navigation.tsx:516
-#: src/view/screens/Notifications.tsx:126
-#: src/view/screens/Notifications.tsx:154
+#: src/view/screens/Notifications.tsx:132
+#: src/view/screens/Notifications.tsx:169
 #: src/view/shell/bottom-bar/BottomBar.tsx:227
 #: src/view/shell/desktop/LeftNav.tsx:350
 #: src/view/shell/Drawer.tsx:456
@@ -3249,11 +3253,11 @@ msgstr "最舊的回覆優先"
 msgid "Onboarding reset"
 msgstr "重新開始引導流程"
 
-#: src/view/com/composer/Composer.tsx:488
+#: src/view/com/composer/Composer.tsx:531
 msgid "One or more images is missing alt text."
 msgstr "至少有一張圖片缺失了替代文字。"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:116
+#: src/screens/Onboarding/StepProfile/index.tsx:117
 msgid "Only .jpg and .png files are supported"
 msgstr "僅支援 .jpg 或 .png 格式的圖片"
 
@@ -3283,17 +3287,17 @@ msgstr "開啟"
 msgid "Open {name} profile shortcut menu"
 msgstr "開啟 {name} 個人檔案快捷選單"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:276
+#: src/screens/Onboarding/StepProfile/index.tsx:277
 msgid "Open avatar creator"
 msgstr "開啟頭像建立工具"
 
-#: src/screens/Messages/List/ChatListItem.tsx:214
-#: src/screens/Messages/List/ChatListItem.tsx:215
+#: src/screens/Messages/List/ChatListItem.tsx:217
+#: src/screens/Messages/List/ChatListItem.tsx:218
 msgid "Open conversation options"
 msgstr "開啟對話選項"
 
-#: src/view/com/composer/Composer.tsx:600
-#: src/view/com/composer/Composer.tsx:601
+#: src/view/com/composer/Composer.tsx:647
+#: src/view/com/composer/Composer.tsx:648
 msgid "Open emoji picker"
 msgstr "開啟表情符號選擇器"
 
@@ -3647,7 +3651,7 @@ msgstr "請以 @{0} 的身分登入"
 msgid "Please Verify Your Email"
 msgstr "請驗證您的電子郵件地址"
 
-#: src/view/com/composer/Composer.tsx:268
+#: src/view/com/composer/Composer.tsx:274
 msgid "Please wait for your link card to finish loading"
 msgstr "請等待您的連結預覽載入完畢"
 
@@ -3659,8 +3663,8 @@ msgstr "政治"
 msgid "Porn"
 msgstr "色情內容"
 
-#: src/view/com/composer/Composer.tsx:462
-#: src/view/com/composer/Composer.tsx:470
+#: src/view/com/composer/Composer.tsx:505
+#: src/view/com/composer/Composer.tsx:513
 msgctxt "action"
 msgid "Post"
 msgstr "發佈"
@@ -3723,7 +3727,7 @@ msgstr "貼文"
 msgid "Posts can be muted based on their text, their tags, or both."
 msgstr "可以靜音貼文所包含的文字和標籤。"
 
-#: src/view/com/posts/FeedErrorMessage.tsx:69
+#: src/view/com/posts/FeedErrorMessage.tsx:68
 msgid "Posts hidden"
 msgstr "貼文已隱藏"
 
@@ -3812,16 +3816,16 @@ msgstr "公開且可共享的批量靜音或封鎖列表。"
 msgid "Public, shareable lists which can drive feeds."
 msgstr "公開且可共享的列表，可作為動態源使用。"
 
-#: src/view/com/composer/Composer.tsx:447
+#: src/view/com/composer/Composer.tsx:490
 msgid "Publish post"
 msgstr "發佈貼文"
 
-#: src/view/com/composer/Composer.tsx:447
+#: src/view/com/composer/Composer.tsx:490
 msgid "Publish reply"
 msgstr "發佈回覆"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:113
-#: src/view/com/util/post-ctrls/RepostButton.tsx:125
+#: src/view/com/util/post-ctrls/RepostButton.tsx:115
+#: src/view/com/util/post-ctrls/RepostButton.tsx:127
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:78
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:81
 msgid "Quote post"
@@ -3856,11 +3860,11 @@ msgid "Reload conversations"
 msgstr "重新載入對話"
 
 #: src/components/dialogs/MutedWords.tsx:288
-#: src/view/com/feeds/FeedSourceCard.tsx:296
+#: src/view/com/feeds/FeedSourceCard.tsx:317
 #: src/view/com/modals/ListAddRemoveUsers.tsx:268
 #: src/view/com/modals/SelfLabel.tsx:84
 #: src/view/com/modals/UserAddRemoveLists.tsx:230
-#: src/view/com/posts/FeedErrorMessage.tsx:213
+#: src/view/com/posts/FeedErrorMessage.tsx:212
 msgid "Remove"
 msgstr "刪除"
 
@@ -3880,25 +3884,25 @@ msgstr "刪除橫幅"
 msgid "Remove embed"
 msgstr "刪除嵌入"
 
-#: src/view/com/posts/FeedErrorMessage.tsx:169
+#: src/view/com/posts/FeedErrorMessage.tsx:168
 #: src/view/com/posts/FeedShutdownMsg.tsx:113
 #: src/view/com/posts/FeedShutdownMsg.tsx:117
 msgid "Remove feed"
 msgstr "刪除動態源"
 
-#: src/view/com/posts/FeedErrorMessage.tsx:210
+#: src/view/com/posts/FeedErrorMessage.tsx:209
 msgid "Remove feed?"
 msgstr "刪除動態源？"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:180
-#: src/view/com/feeds/FeedSourceCard.tsx:245
+#: src/view/com/feeds/FeedSourceCard.tsx:188
+#: src/view/com/feeds/FeedSourceCard.tsx:266
 #: src/view/screens/ProfileFeed.tsx:330
 #: src/view/screens/ProfileFeed.tsx:336
 #: src/view/screens/ProfileList.tsx:443
 msgid "Remove from my feeds"
 msgstr "從我的動態源中刪除"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:291
+#: src/view/com/feeds/FeedSourceCard.tsx:312
 msgid "Remove from my feeds?"
 msgstr "從我的動態源中刪除？"
 
@@ -3926,12 +3930,12 @@ msgstr "刪除搜尋紀錄中的個人檔案"
 msgid "Remove quote"
 msgstr "刪除引用貼文"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:90
-#: src/view/com/util/post-ctrls/RepostButton.tsx:106
+#: src/view/com/util/post-ctrls/RepostButton.tsx:92
+#: src/view/com/util/post-ctrls/RepostButton.tsx:108
 msgid "Remove repost"
 msgstr "刪除轉貼貼文"
 
-#: src/view/com/posts/FeedErrorMessage.tsx:211
+#: src/view/com/posts/FeedErrorMessage.tsx:210
 msgid "Remove this feed from your saved feeds"
 msgstr "將這個動態源從您已儲存之動態源列表中刪除"
 
@@ -3940,7 +3944,7 @@ msgstr "將這個動態源從您已儲存之動態源列表中刪除"
 msgid "Removed from list"
 msgstr "從列表中刪除"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:131
+#: src/view/com/feeds/FeedSourceCard.tsx:139
 msgid "Removed from my feeds"
 msgstr "已從我的動態源中刪除"
 
@@ -3971,7 +3975,7 @@ msgstr "回覆"
 msgid "Replies to this thread are disabled"
 msgstr "對此討論串的回覆已停用"
 
-#: src/view/com/composer/Composer.tsx:460
+#: src/view/com/composer/Composer.tsx:503
 msgctxt "action"
 msgid "Reply"
 msgstr "回覆"
@@ -4051,9 +4055,9 @@ msgstr "檢舉這則貼文"
 msgid "Report this user"
 msgstr "檢舉這個用戶"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:63
-#: src/view/com/util/post-ctrls/RepostButton.tsx:91
-#: src/view/com/util/post-ctrls/RepostButton.tsx:107
+#: src/view/com/util/post-ctrls/RepostButton.tsx:64
+#: src/view/com/util/post-ctrls/RepostButton.tsx:93
+#: src/view/com/util/post-ctrls/RepostButton.tsx:109
 msgctxt "action"
 msgid "Repost"
 msgstr "轉貼"
@@ -4063,7 +4067,7 @@ msgstr "轉貼"
 msgid "Repost"
 msgstr "轉貼"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:83
+#: src/view/com/util/post-ctrls/RepostButton.tsx:85
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:46
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:92
 msgid "Repost or quote post"
@@ -4443,7 +4447,7 @@ msgstr "提交意見"
 msgid "Send message"
 msgstr "重送訊息"
 
-#: src/components/dms/dialogs/ShareViaChatDialog.tsx:47
+#: src/components/dms/dialogs/ShareViaChatDialog.tsx:59
 msgid "Send post to..."
 msgstr "傳送貼文給…"
 
@@ -4712,9 +4716,9 @@ msgstr "在您的動態中顯示來自 {0} 的貼文"
 #: src/view/shell/bottom-bar/BottomBar.tsx:312
 #: src/view/shell/bottom-bar/BottomBar.tsx:313
 #: src/view/shell/bottom-bar/BottomBar.tsx:315
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:208
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:209
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:211
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:204
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:205
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:207
 #: src/view/shell/NavSignupCard.tsx:69
 #: src/view/shell/NavSignupCard.tsx:70
 #: src/view/shell/NavSignupCard.tsx:72
@@ -4745,9 +4749,9 @@ msgstr "登出"
 #: src/view/shell/bottom-bar/BottomBar.tsx:302
 #: src/view/shell/bottom-bar/BottomBar.tsx:303
 #: src/view/shell/bottom-bar/BottomBar.tsx:305
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:198
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:199
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:201
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:194
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:195
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:197
 #: src/view/shell/NavSignupCard.tsx:60
 #: src/view/shell/NavSignupCard.tsx:61
 #: src/view/shell/NavSignupCard.tsx:63
@@ -5051,7 +5055,7 @@ msgstr "帳號停用沒有時間限制，隨時都可以重新啟用。"
 msgid "There was an an issue contacting the server, please check your internet connection and try again."
 msgstr "連線至伺服器時出現問題，請檢查您的網路連線並重試。"
 
-#: src/view/com/posts/FeedErrorMessage.tsx:146
+#: src/view/com/posts/FeedErrorMessage.tsx:145
 msgid "There was an an issue removing this feed. Please check your internet connection and try again."
 msgstr "刪除動態源時出現問題，請檢查您的網路連線並重試。"
 
@@ -5075,12 +5079,12 @@ msgstr "連線到 Tenor 時出現問題。"
 msgid "There was an issue contacting the server"
 msgstr "連線伺服器時出現問題"
 
-#: src/view/com/feeds/FeedSourceCard.tsx:120
-#: src/view/com/feeds/FeedSourceCard.tsx:133
+#: src/view/com/feeds/FeedSourceCard.tsx:128
+#: src/view/com/feeds/FeedSourceCard.tsx:141
 msgid "There was an issue contacting your server"
 msgstr "連線伺服器時出現問題"
 
-#: src/view/com/notifications/Feed.tsx:125
+#: src/view/com/notifications/Feed.tsx:126
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "取得通知時發生問題，點擊這裡重試。"
 
@@ -5178,27 +5182,30 @@ msgstr "此內容由 {0} 託管。是否要啟用外部媒體？"
 msgid "This content is not available because one of the users involved has blocked the other."
 msgstr "由於其中一個用戶封鎖了另一個用戶，無法查看此內容。"
 
-#: src/view/com/posts/FeedErrorMessage.tsx:115
+#: src/view/com/posts/FeedErrorMessage.tsx:114
 msgid "This content is not viewable without a Bluesky account."
 msgstr "沒有 Bluesky 帳號，無法查看此內容。"
+
+#: src/screens/Messages/List/ChatListItem.tsx:211
+msgid "This conversation is with a deleted or a deactivated account. Press for options."
+msgstr "此對話是與已刪除或停用的帳號進行的。點擊以查看選項。"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:93
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
 msgstr "此功能目前為測試版本。您可以在<0>這篇部落格文章</0>中瞭解更多有關資訊。"
 
-#: src/view/com/posts/FeedErrorMessage.tsx:121
+#: src/view/com/posts/FeedErrorMessage.tsx:120
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
 msgstr "此動態源由於目前使用人數眾多而暫時無法使用。請稍後再試。"
-
-#: src/screens/Profile/Sections/Feed.tsx:59
-#: src/view/screens/ProfileFeed.tsx:471
-#: src/view/screens/ProfileList.tsx:729
-msgid "This feed is empty!"
-msgstr "這裡是空的！"
 
 #: src/view/com/posts/CustomFeedEmptyState.tsx:37
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
 msgstr "這個動態源是空的！您或許需要先跟隨更多的人或檢查您的語言設定。"
+
+#: src/view/screens/ProfileFeed.tsx:471
+#: src/view/screens/ProfileList.tsx:729
+msgid "This feed is empty."
+msgstr "這裡是空的。"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:97
 msgid "This feed is no longer online. We are showing <0>Discover</0> instead."
@@ -5426,7 +5433,7 @@ msgstr "解除封鎖帳號"
 msgid "Unblock Account?"
 msgstr "解除封鎖？"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:62
+#: src/view/com/util/post-ctrls/RepostButton.tsx:63
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:69
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:73
 msgid "Undo repost"
@@ -5523,7 +5530,7 @@ msgstr "更新至 {handle}"
 msgid "Updating..."
 msgstr "更新中…"
 
-#: src/screens/Onboarding/StepProfile/index.tsx:280
+#: src/screens/Onboarding/StepProfile/index.tsx:281
 msgid "Upload a photo instead"
 msgstr "或是上傳圖片"
 
@@ -5743,7 +5750,7 @@ msgstr "查看有關這些標記的資訊"
 #: src/components/ProfileHoverCard/index.web.tsx:396
 #: src/components/ProfileHoverCard/index.web.tsx:429
 #: src/view/com/posts/AviFollowButton.tsx:58
-#: src/view/com/posts/FeedErrorMessage.tsx:175
+#: src/view/com/posts/FeedErrorMessage.tsx:174
 msgid "View profile"
 msgstr "查看資料"
 
@@ -5842,6 +5849,10 @@ msgstr "很抱歉，我們目前無法載入您的靜音文字。請稍後再試
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "很抱歉，無法完成您的搜尋請求。請稍後再試。"
 
+#: src/view/com/composer/Composer.tsx:311
+msgid "We're sorry! The post you are replying to has been deleted."
+msgstr "很抱歉！您回覆的貼文已被刪除。"
+
 #: src/components/Lists.tsx:212
 #: src/view/screens/NotFound.tsx:48
 msgid "We're sorry! We can't find the page you were looking for."
@@ -5861,7 +5872,7 @@ msgstr "您感興趣的是什麼？"
 
 #: src/view/com/auth/SplashScreen.tsx:40
 #: src/view/com/auth/SplashScreen.web.tsx:86
-#: src/view/com/composer/Composer.tsx:340
+#: src/view/com/composer/Composer.tsx:352
 msgid "What's up?"
 msgstr "發生了什麼新鮮事？"
 
@@ -5920,11 +5931,11 @@ msgstr "寬"
 msgid "Write a message"
 msgstr "撰寫訊息"
 
-#: src/view/com/composer/Composer.tsx:534
+#: src/view/com/composer/Composer.tsx:581
 msgid "Write post"
 msgstr "撰寫貼文"
 
-#: src/view/com/composer/Composer.tsx:339
+#: src/view/com/composer/Composer.tsx:351
 #: src/view/com/composer/Prompt.tsx:39
 msgid "Write your reply"
 msgstr "撰寫您的回覆"
@@ -6203,7 +6214,7 @@ msgstr "您的靜音文字"
 msgid "Your password has been changed successfully!"
 msgstr "您的密碼已成功更改！"
 
-#: src/view/com/composer/Composer.tsx:330
+#: src/view/com/composer/Composer.tsx:342
 msgid "Your post has been published"
 msgstr "您的貼文已發佈"
 
@@ -6219,7 +6230,7 @@ msgstr "您的個人檔案"
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "其他 Bluesky 用戶將無法再看到您的個人檔案、貼文、動態和列表。您可以隨時登入以重新啟用您的帳號。"
 
-#: src/view/com/composer/Composer.tsx:329
+#: src/view/com/composer/Composer.tsx:341
 msgid "Your reply has been published"
 msgstr "您的回覆已發佈"
 
