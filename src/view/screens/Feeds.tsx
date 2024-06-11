@@ -392,6 +392,7 @@ export function FeedsScreen(_props: Props) {
     return (
       <View style={styles.headerBtnGroup}>
         <TextLink
+          testID="editFeedsBtn"
           type="lg-medium"
           href="/settings/saved-feeds"
           accessibilityLabel={_(msg`Edit My Feeds`)}
