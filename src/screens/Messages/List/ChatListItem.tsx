@@ -20,6 +20,7 @@ import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
 import {useHaptics} from 'lib/haptics'
+import {decrementBadgeCount} from 'lib/notifications/notifications'
 import {logEvent} from 'lib/statsig/statsig'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
@@ -177,6 +178,7 @@ function ChatListItemReady({
 
   const onPress = useCallback(
     (e: GestureResponderEvent) => {
+      decrementBadgeCount(convo.unreadCount)
       if (isDeletedAccount) {
         e.preventDefault()
         menuControl.open()
@@ -185,7 +187,7 @@ function ChatListItemReady({
         logEvent('chat:open', {logContext: 'ChatsList'})
       }
     },
-    [isDeletedAccount, menuControl],
+    [convo.unreadCount, isDeletedAccount, menuControl],
   )
 
   const onLongPress = useCallback(() => {
