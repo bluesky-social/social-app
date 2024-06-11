@@ -117,10 +117,12 @@ function reducer(state: State, action: Action): State {
 export function Provider({
   starterPack,
   listItems,
+  profile,
   children,
 }: {
   starterPack?: AppBskyGraphDefs.StarterPackView
   listItems?: AppBskyGraphDefs.ListItemView[]
+  profile: AppBskyActorDefs.ProfileView
   children: React.ReactNode
 }) {
   const createInitialState = (): State => {
@@ -139,7 +141,7 @@ export function Provider({
     return {
       canNext: false,
       currentStep: 'Details',
-      profiles: [],
+      profiles: [profile],
       feeds: [],
       processing: false,
     }

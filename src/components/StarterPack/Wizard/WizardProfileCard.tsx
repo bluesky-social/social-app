@@ -4,6 +4,7 @@ import {AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useSession} from 'state/session'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {WizardAction, WizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a, useTheme} from '#/alf'
@@ -21,6 +22,7 @@ export function WizardProfileCard({
 }) {
   const {_} = useLingui()
   const t = useTheme()
+  const {currentAccount} = useSession()
 
   const includesProfile = state.profiles.some(p => p.did === profile.did)
 
@@ -57,17 +59,19 @@ export function WizardProfileCard({
           @{profile?.handle}
         </Text>
       </View>
-      <Button
-        label={includesProfile ? _(msg`Remove`) : _(msg`Add`)}
-        variant="solid"
-        color={includesProfile ? 'secondary' : 'primary'}
-        size="small"
-        style={{paddingVertical: 6}}
-        onPress={onPressAddRemove}>
-        <ButtonText>
-          {includesProfile ? <Trans>Remove</Trans> : <Trans>Add</Trans>}
-        </ButtonText>
-      </Button>
+      {profile.did !== currentAccount?.did && (
+        <Button
+          label={includesProfile ? _(msg`Remove`) : _(msg`Add`)}
+          variant="solid"
+          color={includesProfile ? 'secondary' : 'primary'}
+          size="small"
+          style={{paddingVertical: 6}}
+          onPress={onPressAddRemove}>
+          <ButtonText>
+            {includesProfile ? <Trans>Remove</Trans> : <Trans>Add</Trans>}
+          </ButtonText>
+        </Button>
+      )}
     </View>
   )
 }

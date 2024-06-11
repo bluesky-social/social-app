@@ -52,6 +52,7 @@ export function Wizard({
 }: NativeStackScreenProps<CommonNavigatorParams, 'StarterPackWizard'>) {
   const params = route.params
   const {name, rkey} = params ?? {}
+  const {currentAccount} = useSession()
 
   const {_} = useLingui()
 
@@ -76,6 +77,12 @@ export function Wizard({
   } = useListMembersQuery(listUri, 51) // 51 because we also include the current user
   const listItems = profilesData?.pages.flatMap(p => p.items)
 
+  const {
+    data: profile,
+    isLoading: isLoadingProfile,
+    isError: isErrorProfile,
+  } = useProfileQuery({did: currentAccount?.did})
+
   if (
     name &&
     rkey &&
@@ -88,10 +95,18 @@ export function Wizard({
         errorMessage={_(msg`Could not find that starter pack`)}
       />
     )
+  } else if (!profile) {
+    return (
+      <ListMaybePlaceholder
+        isLoading={isLoadingProfile}
+        isError={isErrorProfile}
+        errorMessage={_(msg`Could not load your profile`)}
+      />
+    )
   }
 
   return (
-    <Provider starterPack={starterPack} listItems={listItems}>
+    <Provider starterPack={starterPack} listItems={listItems} profile={profile}>
       <WizardInner
         did={did}
         rkey={rkey}
@@ -493,7 +508,7 @@ function Footer({
         ],
       ]}>
       <View style={[a.flex_row, a.gap_xs]}>
-        {items.slice(0, 5).map((p, index) => (
+        {items.slice(0, 6).map((p, index) => (
           <UserAvatar
             key={index}
             avatar={p.avatar}
@@ -528,7 +543,12 @@ function Footer({
         </View>
       ) : (
         <Text style={[a.text_center, textStyles]}>
-          {items.length === 1 ? (
+          {state.currentStep === 'Profiles' && items.length === 1 ? (
+            <Trans>
+              It's just you right now! Add more people to your starter pack by
+              searching above.
+            </Trans>
+          ) : items.length === 1 ? (
             <Trans>
               <Text style={[a.font_bold]}>{getName(items[0])}</Text> is included
               in your starter pack
