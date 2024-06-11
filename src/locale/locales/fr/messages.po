@@ -3117,7 +3117,7 @@ msgstr "Personne"
 
 #: src/screens/Profile/Sections/Feed.tsx:59
 msgid "No posts yet."
-msgstr "Aucun post n’a encore été publié."
+msgstr "Pas encore de posts."
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:101
 #: src/view/com/composer/text-input/web/Autocomplete.tsx:195
@@ -5048,7 +5048,7 @@ msgstr "Nos conditions d’utilisation ont été déplacées vers"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:86
 msgid "There is no time limit for account deactivation, come back any time."
-msgstr "Il n’y a pas de limite de temps pour la désactivation du compte, revenez à tout moment."
+msgstr "Il n’y a pas de limite de temps pour la désactivation du compte, revenez quand vous voulez."
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:115
 #: src/view/screens/ProfileFeed.tsx:541
@@ -5982,7 +5982,7 @@ msgstr "Vous pouvez aussi découvrir de nouveaux fils d’actu personnalisés à
 
 #: src/view/com/modals/DeleteAccount.tsx:202
 msgid "You can also temporarily deactivate your account instead, and reactivate it at any time."
-msgstr "Vous pouvez également désactiver temporairement votre compte et le réactiver à tout moment."
+msgstr "Vous pouvez également désactiver temporairement votre compte et le réactiver quand vous voulez."
 
 #: src/components/dms/MessagesNUX.tsx:119
 msgid "You can change this at any time."
