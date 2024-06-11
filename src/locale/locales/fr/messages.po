@@ -5186,6 +5186,10 @@ msgstr "Ce contenu n’est pas disponible car l’un des comptes impliqués a bl
 msgid "This content is not viewable without a Bluesky account."
 msgstr "Ce contenu n’est pas visible sans un compte Bluesky."
 
+#: src/screens/Messages/List/ChatListItem.tsx:211
+msgid "This conversation is with a deleted or a deactivated account. Press for options."
+msgstr "Cette conversation concerne un compte supprimé ou désactivé. Appuyez pour obtenir des options."
+
 #: src/view/screens/Settings/ExportCarDialog.tsx:93
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
 msgstr "Cette fonctionnalité est en version bêta. Vous pouvez en savoir plus sur les exportations de dépôts dans <0>ce blogpost</0>."
