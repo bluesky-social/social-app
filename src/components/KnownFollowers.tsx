@@ -87,9 +87,10 @@ function KnownFollowersInner({
   const returnedCount = cachedKnownFollowers.followers.length
   // db count, includes blocks
   const fullCount = cachedKnownFollowers.count
-  // if we have less than a page returned, use whichever is less
+  // knownFollowers can return up to 5 users, but will exclude blocks
+  // therefore, if we have less 5 users, use whichever count is lower
   const count =
-    returnedCount < 50 ? Math.min(fullCount, returnedCount) : fullCount
+    returnedCount < 5 ? Math.min(fullCount, returnedCount) : fullCount
 
   const slice = cachedKnownFollowers.followers.slice(0, 3).map(f => {
     const moderation = moderateProfile(f, moderationOpts)
