@@ -41,6 +41,7 @@ import {PreferencesThreads} from 'view/screens/PreferencesThreads'
 import {SavedFeeds} from 'view/screens/SavedFeeds'
 import HashtagScreen from '#/screens/Hashtag'
 import {ModerationScreen} from '#/screens/Moderation'
+import {ProfileKnownFollowersScreen} from '#/screens/Profile/KnownFollowers'
 import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
 import {init as initAnalytics} from './lib/analytics/analytics'
 import {useWebScrollRestoration} from './lib/hooks/useWebScrollRestoration'
@@ -167,6 +168,13 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         getComponent={() => ProfileFollowsScreen}
         options={({route}) => ({
           title: title(msg`People followed by @${route.params.name}`),
+        })}
+      />
+      <Stack.Screen
+        name="ProfileKnownFollowers"
+        getComponent={() => ProfileKnownFollowersScreen}
+        options={({route}) => ({
+          title: title(msg`Followers of @${route.params.name} that you know`),
         })}
       />
       <Stack.Screen
