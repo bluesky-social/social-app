@@ -2138,7 +2138,7 @@ msgstr "홈으로 이동"
 msgid "Go Home"
 msgstr "홈으로 이동"
 
-#: src/screens/Messages/List/ChatListItem.tsx:208
+#: src/screens/Messages/List/ChatListItem.tsx:209
 msgid "Go to conversation with {0}"
 msgstr "{0} 님과의 대화로 이동합니다"
 
@@ -3291,8 +3291,8 @@ msgstr "{name} 님의 프로필 단축 메뉴 열기"
 msgid "Open avatar creator"
 msgstr "아바타 생성기 열기"
 
-#: src/screens/Messages/List/ChatListItem.tsx:214
-#: src/screens/Messages/List/ChatListItem.tsx:215
+#: src/screens/Messages/List/ChatListItem.tsx:217
+#: src/screens/Messages/List/ChatListItem.tsx:218
 msgid "Open conversation options"
 msgstr "대화 옵션 열기"
 
@@ -5185,6 +5185,10 @@ msgstr "관련 사용자 중 한 명이 다른 사용자를 차단했기 때문�
 #: src/view/com/posts/FeedErrorMessage.tsx:114
 msgid "This content is not viewable without a Bluesky account."
 msgstr "이 콘텐츠는 Bluesky 계정이 없으면 볼 수 없습니다."
+
+#: src/screens/Messages/List/ChatListItem.tsx:211
+msgid "This conversation is with a deleted or a deactivated account. Press for options."
+msgstr "이 대화는 삭제되었거나 비활성화된 계정과의 대화입니다. 옵션을 보려면 누르세요."
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:93
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
