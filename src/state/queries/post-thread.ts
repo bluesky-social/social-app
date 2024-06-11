@@ -94,7 +94,6 @@ export function usePostThreadQuery(uri: string | undefined) {
       if (res.success) {
         const thread = responseToThreadNodes(res.data.thread)
         annotateSelfThread(thread)
-        console.log(thread)
         return thread
       }
       return {type: 'unknown', uri: uri!}
@@ -267,7 +266,7 @@ function annotateSelfThread(thread: ThreadNode) {
       // not a self-thread
       return
     }
-    selfThreadNodes.push(parent)
+    selfThreadNodes.unshift(parent)
     parent = parent.parent
   }
 
@@ -287,7 +286,7 @@ function annotateSelfThread(thread: ThreadNode) {
     for (const selfThreadNode of selfThreadNodes) {
       selfThreadNode.ctx.isSelfThread = true
     }
-    const last = selfThreadNodes.at(-1)
+    const last = selfThreadNodes[selfThreadNodes.length - 1]
     if (last && last.post.replyCount && !last.replies?.length) {
       last.ctx.hasMoreSelfThread = true
     }
