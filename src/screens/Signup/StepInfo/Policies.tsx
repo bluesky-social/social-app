@@ -1,8 +1,7 @@
-import React from 'react'
+import React, {ReactElement} from 'react'
 import {View} from 'react-native'
 import {ComAtprotoServerDescribeServer} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 
 import {atoms as a, useTheme} from '#/alf'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
@@ -19,7 +18,6 @@ export const Policies = ({
   under13: boolean
 }) => {
   const t = useTheme()
-  const {_} = useLingui()
 
   if (!serviceDescription) {
     return <View />
@@ -42,39 +40,48 @@ export const Policies = ({
     )
   }
 
-  const els = []
-  if (tos) {
-    els.push(
-      <InlineLinkText key="tos" to={tos}>
-        {_(msg`Terms of Service`)}
-      </InlineLinkText>,
-    )
-  }
-  if (pp) {
-    els.push(
-      <InlineLinkText key="pp" to={pp}>
-        {_(msg`Privacy Policy`)}
-      </InlineLinkText>,
-    )
-  }
-  if (els.length === 2) {
-    els.splice(
-      1,
-      0,
+  let els: ReactElement
+  if (tos && pp) {
+    els = (
       <Trans>
-        <Text key="and" style={[t.atoms.text_contrast_medium]}>
-          <Text> </Text>
-          and{' '}
-        </Text>
-      </Trans>,
+        By creating an account you agree to the{' '}
+        <InlineLinkText key="tos" to={tos}>
+          Terms of Service
+        </InlineLinkText>{' '}
+        and{' '}
+        <InlineLinkText key="pp" to={pp}>
+          Privacy Policy
+        </InlineLinkText>
+        .
+      </Trans>
     )
+  } else if (tos) {
+    els = (
+      <Trans>
+        By creating an account you agree to the{' '}
+        <InlineLinkText key="tos" to={tos}>
+          Terms of Service
+        </InlineLinkText>
+        .
+      </Trans>
+    )
+  } else if (pp) {
+    els = (
+      <Trans>
+        By creating an account you agree to the{' '}
+        <InlineLinkText key="pp" to={pp}>
+          Privacy Policy
+        </InlineLinkText>
+        .
+      </Trans>
+    )
+  } else {
+    return null
   }
 
   return (
     <View style={[a.gap_sm]}>
-      <Text style={[a.leading_snug, t.atoms.text_contrast_medium]}>
-        <Trans>By creating an account you agree to the {els}.</Trans>
-      </Text>
+      <Text style={[a.leading_snug, t.atoms.text_contrast_medium]}>{els}</Text>
 
       {under13 ? (
         <Text style={[a.font_bold, a.leading_snug, t.atoms.text_contrast_high]}>
