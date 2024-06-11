@@ -3115,6 +3115,10 @@ msgstr "Pas encore de notifications !"
 msgid "No one"
 msgstr "Personne"
 
+#: src/screens/Profile/Sections/Feed.tsx:59
+msgid "No posts yet."
+msgstr "Aucun post n’a encore été publié."
+
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:101
 #: src/view/com/composer/text-input/web/Autocomplete.tsx:195
 msgid "No result"
@@ -5190,15 +5194,14 @@ msgstr "Cette fonctionnalité est en version bêta. Vous pouvez en savoir plus s
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
 msgstr "Ce fil d’actu reçoit actuellement un trafic important, il est temporairement indisponible. Veuillez réessayer plus tard."
 
-#: src/screens/Profile/Sections/Feed.tsx:59
-#: src/view/screens/ProfileFeed.tsx:471
-#: src/view/screens/ProfileList.tsx:729
-msgid "This feed is empty!"
-msgstr "Ce fil d’actu est vide !"
-
 #: src/view/com/posts/CustomFeedEmptyState.tsx:37
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
 msgstr "Ce fil d’actu est vide ! Vous devriez peut-être suivre plus de comptes ou ajuster vos paramètres de langue."
+
+#: src/view/screens/ProfileFeed.tsx:471
+#: src/view/screens/ProfileList.tsx:729
+msgid "This feed is empty."
+msgstr "Ce fil d’actu est vide."
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:97
 msgid "This feed is no longer online. We are showing <0>Discover</0> instead."
@@ -5841,6 +5844,10 @@ msgstr "Nous sommes désolés, mais nous n’avons pas pu charger vos mots masqu
 #: src/view/screens/Search/Search.tsx:269
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "Nous sommes désolés, mais votre recherche a été annulée. Veuillez réessayer dans quelques minutes."
+
+#: src/view/com/composer/Composer.tsx:311
+msgid "We're sorry! The post you are replying to has been deleted."
+msgstr "Nous sommes désolés ! Le post auquel vous répondez a été supprimé."
 
 #: src/components/Lists.tsx:212
 #: src/view/screens/NotFound.tsx:48
