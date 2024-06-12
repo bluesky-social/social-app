@@ -350,7 +350,6 @@ function WizardInner({
 
         const newRkey = new AtUri(res.uri).rkey
 
-        // TODO hack?
         setTimeout(() => {
           navigation.replace('StarterPack', {
             name: currentAccount!.handle,
@@ -376,15 +375,12 @@ function WizardInner({
         repo: currentAccount!.did,
         rkey: new AtUri(initialListUri).rkey,
       })
-
       await agent.app.bsky.graph.starterpack.delete({
         repo: currentAccount!.did,
         rkey,
       })
-
       await invalidateQueries()
-
-      navigation.replace('Profile', {name: currentAccount!.handle})
+      navigation.popToTop()
     } catch (e) {
       Toast.show(_(msg`Failed to delete starter pack`))
     } finally {
