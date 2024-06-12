@@ -316,7 +316,6 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       />
       <Stack.Screen name="Feeds" getComponent={() => FeedsScreen} />
       <Stack.Screen
-        // @ts-ignore What the fuck?
         name="StarterPack"
         getComponent={() => StarterPackScreen}
         options={{title: title(msg`Starter Pack`), requireAuth: true}}
