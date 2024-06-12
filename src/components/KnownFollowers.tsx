@@ -1,7 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
-import {msg, plural, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {makeProfileLink} from '#/lib/routes/links'
@@ -166,31 +166,34 @@ function KnownFollowersInner({
               },
             ]}
             numberOfLines={2}>
-            <Trans>Followed by</Trans>{' '}
             {count > 2 ? (
-              <>
+              <Trans>
+                Followed by{' '}
                 {slice.slice(0, 2).map(({profile: prof}, i) => (
                   <Text key={prof.did} style={textStyle}>
                     {prof.displayName}
                     {i === 0 && ', '}
                   </Text>
                 ))}
-                {', '}
-                {plural(count - 2, {
-                  one: 'and # other',
-                  other: 'and # others',
-                })}
-              </>
+                , and{' '}
+                <Plural value={count - 2} one="# other" other="# others" />
+              </Trans>
             ) : count === 2 ? (
-              slice.map(({profile: prof}, i) => (
-                <Text key={prof.did} style={textStyle}>
-                  {prof.displayName} {i === 0 ? _(msg`and`) + ' ' : ''}
-                </Text>
-              ))
+              <Trans>
+                Followed by{' '}
+                {slice.map(({profile: prof}, i) => (
+                  <Text key={prof.did} style={textStyle}>
+                    {prof.displayName} {i === 0 ? _(msg`and`) + ' ' : ''}
+                  </Text>
+                ))}
+              </Trans>
             ) : (
-              <Text key={slice[0].profile.did} style={textStyle}>
-                {slice[0].profile.displayName}
-              </Text>
+              <Trans>
+                Followed by{' '}
+                <Text key={slice[0].profile.did} style={textStyle}>
+                  {slice[0].profile.displayName}
+                </Text>
+              </Trans>
             )}
           </Text>
         </>
