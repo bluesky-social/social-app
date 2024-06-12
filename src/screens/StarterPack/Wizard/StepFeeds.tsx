@@ -74,7 +74,7 @@ export function StepFeeds() {
         data={filterFeeds(query ? searchedFeeds : popularFeeds)}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
-        contentContainerStyle={{paddingTop: 8}}
+        contentContainerStyle={{paddingTop: 12}}
         onEndReached={!query ? () => fetchNextPage() : undefined}
         onEndReachedThreshold={2}
         renderScrollComponent={props => <KeyboardAwareScrollView {...props} />}
