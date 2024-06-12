@@ -196,6 +196,9 @@ let PostDropdownBtn = ({
     )
   }, [postAuthor])
 
+  const showLoggedOutWarning =
+    postAuthor.did !== currentAccount?.did && hideInPWI
+
   const onSharePost = React.useCallback(() => {
     const url = toShareUrl(href)
     shareUrl(url)
@@ -296,7 +299,7 @@ let PostDropdownBtn = ({
               testID="postDropdownShareBtn"
               label={isWeb ? _(msg`Copy link to post`) : _(msg`Share`)}
               onPress={() => {
-                if (hideInPWI) {
+                if (showLoggedOutWarning) {
                   loggedOutWarningPromptControl.open()
                 } else {
                   onSharePost()
