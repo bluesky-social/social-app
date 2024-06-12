@@ -23,6 +23,7 @@ import {CenteredView} from '../util/Views'
 import hairlineWidth = StyleSheet.hairlineWidth
 import {AppBskyGraphDefs} from '@atproto/api'
 
+import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {StarterPackAvatarsIcon} from '#/components/StarterPack/StarterPackAvatarsIcon'
 
 export function ProfileSubpageHeader({
@@ -108,11 +109,7 @@ export function ProfileSubpageHeader({
                 style={[styles.backIcon, pal.text]}
               />
             ) : (
-              <FontAwesomeIcon
-                size={18}
-                icon="bars"
-                style={[styles.backIcon, pal.textLight]}
-              />
+              <Menu size="lg" style={[{marginTop: 4}, pal.textLight]} />
             )}
           </Pressable>
           <View style={{flex: 1}} />
@@ -203,7 +200,7 @@ const styles = StyleSheet.create({
   backBtnWide: {
     width: 20,
     height: 30,
-    paddingHorizontal: 6,
+    marginRight: 4,
   },
   backIcon: {
     marginTop: 6,

@@ -22,7 +22,6 @@ import {buildStateObject} from 'lib/routes/helpers'
 import {
   AllNavigatorParams,
   BottomTabNavigatorParams,
-  FeedsTabNavigatorParams,
   FlatNavigatorParams,
   HomeTabNavigatorParams,
   MessagesTabNavigatorParams,
@@ -42,6 +41,7 @@ import {PreferencesThreads} from 'view/screens/PreferencesThreads'
 import {SavedFeeds} from 'view/screens/SavedFeeds'
 import HashtagScreen from '#/screens/Hashtag'
 import {ModerationScreen} from '#/screens/Moderation'
+import {ProfileKnownFollowersScreen} from '#/screens/Profile/KnownFollowers'
 import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
 import {LandingScreen} from '#/screens/StarterPack/Landing'
 import {StarterPackScreen} from '#/screens/StarterPack/Main'
@@ -94,7 +94,6 @@ const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
 const HomeTab = createNativeStackNavigatorWithAuth<HomeTabNavigatorParams>()
 const SearchTab = createNativeStackNavigatorWithAuth<SearchTabNavigatorParams>()
-const FeedsTab = createNativeStackNavigatorWithAuth<FeedsTabNavigatorParams>()
 const NotificationsTab =
   createNativeStackNavigatorWithAuth<NotificationsTabNavigatorParams>()
 const MyProfileTab =
@@ -172,6 +171,13 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         getComponent={() => ProfileFollowsScreen}
         options={({route}) => ({
           title: title(msg`People followed by @${route.params.name}`),
+        })}
+      />
+      <Stack.Screen
+        name="ProfileKnownFollowers"
+        getComponent={() => ProfileKnownFollowersScreen}
+        options={({route}) => ({
+          title: title(msg`Followers of @${route.params.name} that you know`),
         })}
       />
       <Stack.Screen
@@ -309,6 +315,7 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         getComponent={() => MessagesSettingsScreen}
         options={{title: title(msg`Chat settings`), requireAuth: true}}
       />
+      <Stack.Screen name="Feeds" getComponent={() => FeedsScreen} />
       <Stack.Screen
         // @ts-ignore What the fuck?
         name="StarterPack"
@@ -349,7 +356,6 @@ function TabsNavigator() {
       tabBar={tabBar}>
       <Tab.Screen name="HomeTab" getComponent={() => HomeTabNavigator} />
       <Tab.Screen name="SearchTab" getComponent={() => SearchTabNavigator} />
-      <Tab.Screen name="FeedsTab" getComponent={() => FeedsTabNavigator} />
       <Tab.Screen
         name="NotificationsTab"
         getComponent={() => NotificationsTabNavigator}
@@ -400,24 +406,6 @@ function SearchTabNavigator() {
       <SearchTab.Screen name="Search" getComponent={() => SearchScreen} />
       {commonScreens(SearchTab as typeof HomeTab)}
     </SearchTab.Navigator>
-  )
-}
-
-function FeedsTabNavigator() {
-  const pal = usePalette('default')
-  return (
-    <FeedsTab.Navigator
-      screenOptions={{
-        animation: isAndroid ? 'ios' : undefined,
-        animationDuration: 285,
-        gestureEnabled: true,
-        fullScreenGestureEnabled: true,
-        headerShown: false,
-        contentStyle: pal.view,
-      }}>
-      <FeedsTab.Screen name="Feeds" getComponent={() => FeedsScreen} />
-      {commonScreens(FeedsTab as typeof HomeTab)}
-    </FeedsTab.Navigator>
   )
 }
 
@@ -523,11 +511,6 @@ const FlatNavigator = () => {
         name="Search"
         getComponent={() => SearchScreen}
         options={{title: title(msg`Search`)}}
-      />
-      <Flat.Screen
-        name="Feeds"
-        getComponent={() => FeedsScreen}
-        options={{title: title(msg`Feeds`)}}
       />
       <Flat.Screen
         name="Notifications"

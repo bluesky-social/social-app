@@ -15,6 +15,7 @@ export const router = new Router({
   Profile: ['/profile/:name', '/profile/:name/rss'],
   ProfileFollowers: '/profile/:name/followers',
   ProfileFollows: '/profile/:name/follows',
+  ProfileKnownFollowers: '/profile/:name/known-followers',
   ProfileList: '/profile/:name/lists/:rkey',
   PostThread: '/profile/:name/post/:rkey',
   PostLikedBy: '/profile/:name/post/:rkey/liked-by',

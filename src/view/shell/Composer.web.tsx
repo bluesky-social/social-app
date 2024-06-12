@@ -56,7 +56,6 @@ export function Composer({}: {winHeight: number}) {
           t.atoms.border_contrast_medium,
         ]}>
         <ComposePost
-          isModalReady={true}
           replyTo={state.replyTo}
           quote={state.quote}
           onPost={state.onPost}

@@ -57,11 +57,6 @@ import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/War
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
-import {
-  isAvailable as isNativeTranslationAvailable,
-  isLanguageSupported,
-  NativeTranslationModule,
-} from '../../../../../modules/expo-bluesky-translate'
 import {EventStopper} from '../EventStopper'
 import * as Toast from '../Toast'
 
@@ -188,16 +183,8 @@ let PostDropdownBtn = ({
   }, [_, richText])
 
   const onPressTranslate = React.useCallback(() => {
-    if (
-      isNativeTranslationAvailable &&
-      isLanguageSupported(record?.langs?.at(0))
-    ) {
-      const text = richTextToString(richText, true)
-      NativeTranslationModule.presentAsync(text)
-    } else {
-      openLink(translatorUrl)
-    }
-  }, [openLink, record?.langs, richText, translatorUrl])
+    openLink(translatorUrl)
+  }, [openLink, translatorUrl])
 
   const onHidePost = React.useCallback(() => {
     hidePost({uri: postUri})

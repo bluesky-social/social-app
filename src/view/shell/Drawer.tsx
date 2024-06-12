@@ -186,10 +186,11 @@ let DrawerContent = ({}: {}): React.ReactNode => {
     onPressTab('MyProfile')
   }, [onPressTab])
 
-  const onPressMyFeeds = React.useCallback(
-    () => onPressTab('Feeds'),
-    [onPressTab],
-  )
+  const onPressMyFeeds = React.useCallback(() => {
+    track('Menu:ItemClicked', {url: 'Feeds'})
+    navigation.navigate('Feeds')
+    setDrawerOpen(false)
+  }, [navigation, setDrawerOpen, track])
 
   const onPressLists = React.useCallback(() => {
     track('Menu:ItemClicked', {url: 'Lists'})

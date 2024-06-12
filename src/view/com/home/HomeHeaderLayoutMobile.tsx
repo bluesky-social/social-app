@@ -1,8 +1,6 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import Animated from 'react-native-reanimated'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -15,10 +13,13 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
 import {Logo} from '#/view/icons/Logo'
 import {atoms} from '#/alf'
+import {useTheme} from '#/alf'
+import {atoms as a} from '#/alf'
 import {ColorPalette_Stroke2_Corner0_Rounded as ColorPalette} from '#/components/icons/ColorPalette'
-import {Link as Link2} from '#/components/Link'
+import {Hashtag_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/Hashtag'
+import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
+import {Link} from '#/components/Link'
 import {IS_DEV} from '#/env'
-import {Link} from '../util/Link'
 
 export function HomeHeaderLayoutMobile({
   children,
@@ -26,6 +27,7 @@ export function HomeHeaderLayoutMobile({
   children: React.ReactNode
   tabBarAnchor: JSX.Element | null | undefined
 }) {
+  const t = useTheme()
   const pal = usePalette('default')
   const {_} = useLingui()
   const setDrawerOpen = useSetDrawerOpen()
@@ -54,11 +56,7 @@ export function HomeHeaderLayoutMobile({
               msg`Access profile and other navigation links`,
             )}
             hitSlop={HITSLOP_10}>
-            <FontAwesomeIcon
-              icon="bars"
-              size={18}
-              color={pal.colors.textLight}
-            />
+            <Menu size="lg" fill={t.atoms.text_contrast_medium.color} />
           </TouchableOpacity>
         </View>
         <View>
@@ -74,22 +72,28 @@ export function HomeHeaderLayoutMobile({
             {width: 100},
           ]}>
           {IS_DEV && (
-            <Link2 to="/sys/debug">
+            <Link to="/sys/debug">
               <ColorPalette size="md" />
-            </Link2>
+            </Link>
           )}
           {hasSession && (
             <Link
               testID="viewHeaderHomeFeedPrefsBtn"
-              href="/settings/following-feed"
+              to="/feeds"
               hitSlop={HITSLOP_10}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Following Feed Preferences`)}
-              accessibilityHint="">
-              <FontAwesomeIcon
-                icon="sliders"
-                style={pal.textLight as FontAwesomeIconStyle}
-              />
+              label={_(msg`View your feeds and explore more`)}
+              size="small"
+              variant="ghost"
+              color="secondary"
+              shape="square"
+              style={[
+                a.justify_center,
+                {
+                  marginTop: 2,
+                  marginRight: -6,
+                },
+              ]}>
+              <FeedsIcon size="lg" fill={t.atoms.text_contrast_medium.color} />
             </Link>
           )}
         </View>
@@ -113,8 +117,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 18,
-    paddingVertical: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 5,
     width: '100%',
   },
   title: {

@@ -28,6 +28,8 @@ appId: xyz.blueskyweb.app
 - tapOn: "Pin to Home"
 - tapOn:
     id: "bottomBarHomeBtn"
+- tapOn:
+    id: "viewHeaderDrawerBtn"
 - assertNotVisible: "Feeds ✨"
 
 - tapOn:

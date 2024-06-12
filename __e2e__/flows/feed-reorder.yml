@@ -36,12 +36,15 @@ appId: xyz.blueskyweb.app
     id: "viewHeaderDrawerBtn"
 - tapOn:
     id: "menuItemButton-Feeds"
-- tapOn: "Edit Saved Feeds"
+- tapOn: 
+    id: "editFeedsBtn"
 - tapOn:
     label: "Tap on down arrow"
     point: "79%,23%"
 - tapOn:
-    id: "bottomBarHomeBtn"
+    id: "viewHeaderDrawerBtn"
+- tapOn:
+    id: "viewHeaderDrawerBtn"
 - assertVisible:
     id: "homeScreenFeedTabs-selector-0"
     text: "alice-favs"
@@ -54,11 +57,15 @@ appId: xyz.blueskyweb.app
     id: "viewHeaderDrawerBtn"
 - tapOn:
     id: "menuItemButton-Feeds"
+- tapOn: 
+    id: "editFeedsBtn"
 - tapOn:
     label: "Tap on down arrow"
     point: "79%,23%"
 - tapOn:
-    id: "bottomBarHomeBtn"
+    id: "viewHeaderDrawerBtn"
+- tapOn:
+    id: "viewHeaderDrawerBtn"
 - assertVisible:
     id: "homeScreenFeedTabs-selector-0"
     text: "Following"
@@ -71,11 +78,15 @@ appId: xyz.blueskyweb.app
     id: "viewHeaderDrawerBtn"
 - tapOn:
     id: "menuItemButton-Feeds"
+- tapOn: 
+    id: "editFeedsBtn"
 - tapOn:
     label: "Tap on unpin"
     point: "91%,23%"
 - tapOn:
-    id: "bottomBarHomeBtn"
+    id: "viewHeaderDrawerBtn"
+- tapOn:
+    id: "viewHeaderDrawerBtn"
 - assertVisible:
     id: "homeScreenFeedTabs-selector-0"
     text: "alice-favs"
