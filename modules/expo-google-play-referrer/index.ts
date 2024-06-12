@@ -1,3 +1,3 @@
-import {GooglePlayReferrerModule} from './src/ExpoGooglePlayReferrerModule'
+import {GooglePlayReferrer} from './src/ExpoGooglePlayReferrerModule'
 
-export default GooglePlayReferrerModule
+export default GooglePlayReferrer

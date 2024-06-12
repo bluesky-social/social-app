@@ -46,6 +46,7 @@ import * as Toast from 'view/com/util/Toast'
 import {Shell} from 'view/shell'
 import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
+import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {Splash} from '#/Splash'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
@@ -62,6 +63,7 @@ function InnerApp() {
   const {_} = useLingui()
 
   useIntentHandler()
+  const hasCheckedReferrer = useStarterPackEntry()
 
   // init
   useEffect(() => {
@@ -90,7 +92,7 @@ function InnerApp() {
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <Alf theme={theme}>
         <ThemeProvider theme={theme}>
-          <Splash isReady={isReady}>
+          <Splash isReady={isReady && hasCheckedReferrer}>
             <RootSiblingParent>
               <React.Fragment
                 // Resets the entire tree below when it changes:

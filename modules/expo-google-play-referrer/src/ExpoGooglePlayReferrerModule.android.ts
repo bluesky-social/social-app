@@ -2,5 +2,5 @@ import {requireNativeModule} from 'expo-modules-core'
 
 import {ExpoGooglePlayReferrerModule} from './ExpoGooglePlayReferrer.types'
 
-export const BackgroundNotificationHandler =
+export const GooglePlayReferrer =
   requireNativeModule<ExpoGooglePlayReferrerModule>('ExpoGooglePlayReferrer')
