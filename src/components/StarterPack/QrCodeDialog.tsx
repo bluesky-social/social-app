@@ -2,6 +2,7 @@ import React from 'react'
 import {View} from 'react-native'
 import ViewShot from 'react-native-view-shot'
 import * as FS from 'expo-file-system'
+import {requestMediaLibraryPermissionsAsync} from 'expo-image-picker'
 import {AppBskyGraphDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -29,6 +30,15 @@ export function QrCodeDialog({
 
   const onSavePress = () => {
     ref.current?.capture?.().then(async (uri: string) => {
+      const res = await requestMediaLibraryPermissionsAsync()
+
+      if (!res) {
+        Toast.show(
+          _(msg`You must grant access to your photo library to save a QR code`),
+        )
+        return
+      }
+
       const filename = `${FS.cacheDirectory}/${nanoid(12)}.png`
       await FS.copyAsync({from: uri, to: filename})
 
