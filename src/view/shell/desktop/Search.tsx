@@ -259,12 +259,13 @@ export function DesktopSearch() {
 const styles = StyleSheet.create({
   container: {
     position: 'relative',
-    width: 300,
+    width: '100%',
+    maxWidth: 300,
   },
   search: {
     paddingHorizontal: 16,
     paddingVertical: 2,
-    width: 300,
+    width: '100%',
     borderRadius: 20,
   },
   inputContainer: {
