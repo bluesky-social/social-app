@@ -2,6 +2,7 @@ import React, {useCallback, useMemo} from 'react'
 import {StyleSheet} from 'react-native'
 import {
   AppBskyActorDefs,
+  AppBskyGraphGetActorStarterPacks,
   moderateProfile,
   ModerationOpts,
   RichText as RichTextAPI,
@@ -9,7 +10,11 @@ import {
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
-import {useQueryClient} from '@tanstack/react-query'
+import {
+  InfiniteData,
+  UseInfiniteQueryResult,
+  useQueryClient,
+} from '@tanstack/react-query'
 
 import {cleanError} from '#/lib/strings/errors'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -29,6 +34,7 @@ import {combinedDisplayName} from 'lib/strings/display-names'
 import {isInvalidHandle} from 'lib/strings/handles'
 import {colors, s} from 'lib/styles'
 import {listenSoftReset} from 'state/events'
+import {useActorStarterPacksQuery} from 'state/queries/actor-starter-packs'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
@@ -70,6 +76,7 @@ export function ProfileScreen({route}: Props) {
   } = useProfileQuery({
     did: resolvedDid,
   })
+  const starterPacksQuery = useActorStarterPacksQuery({did: resolvedDid})
 
   const onPressTryAgain = React.useCallback(() => {
     if (resolveError) {
@@ -87,7 +94,7 @@ export function ProfileScreen({route}: Props) {
   }, [queryClient, profile?.viewer?.blockedBy, resolvedDid])
 
   // Most pushes will happen here, since we will have only placeholder data
-  if (isLoadingDid || isLoadingProfile) {
+  if (isLoadingDid || isLoadingProfile || starterPacksQuery.isLoading) {
     return (
       <CenteredView>
         <ProfileHeaderLoading />
@@ -109,6 +116,7 @@ export function ProfileScreen({route}: Props) {
     return (
       <ProfileScreenLoaded
         profile={profile}
+        starterPacksQuery={starterPacksQuery}
         moderationOpts={moderationOpts}
         isPlaceholderProfile={isPlaceholderProfile}
         hideBackButton={!!route.params.hideBackButton}
@@ -132,11 +140,16 @@ function ProfileScreenLoaded({
   isPlaceholderProfile,
   moderationOpts,
   hideBackButton,
+  starterPacksQuery,
 }: {
   profile: AppBskyActorDefs.ProfileViewDetailed
   moderationOpts: ModerationOpts
   hideBackButton: boolean
   isPlaceholderProfile: boolean
+  starterPacksQuery: UseInfiniteQueryResult<
+    InfiniteData<AppBskyGraphGetActorStarterPacks.OutputSchema, unknown>,
+    Error
+  >
 }) {
   const profile = useProfileShadow(profileUnshadowed)
   const {hasSession, currentAccount} = useSession()
@@ -185,9 +198,12 @@ function ProfileScreenLoaded({
   const showMediaTab = !hasLabeler
   const showLikesTab = isMe
   const showFeedsTab = isMe || (profile.associated?.feedgens || 0) > 0
-  const showStarterPacksTab = isMe || true
+  const showStarterPacksTab =
+    isMe || !!starterPacksQuery.data?.pages?.[0].starterPacks.length
   const showListsTab =
     hasSession && (isMe || (profile.associated?.lists || 0) > 0)
+
+  console.log(starterPacksQuery.data?.pages)
 
   const sectionTitles = [
     showFiltersTab ? _(msg`Labels`) : undefined,
@@ -433,7 +449,7 @@ function ProfileScreenLoaded({
           ? ({headerHeight, isFocused, scrollElRef}) => (
               <ProfileStarterPacks
                 ref={starterPacksSectionRef}
-                did={profile.did}
+                starterPacksQuery={starterPacksQuery}
                 scrollElRef={scrollElRef as ListRef}
                 headerOffset={headerHeight}
                 enabled={isFocused}

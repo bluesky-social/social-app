@@ -6,20 +6,17 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {AppBskyGraphGetActorStarterPacks} from '@atproto/api'
+import {Trans} from '@lingui/macro'
+import {InfiniteData, UseInfiniteQueryResult} from '@tanstack/react-query'
 
-import {cleanError} from '#/lib/strings/errors'
 import {useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useActorStarterPacksQuery} from 'state/queries/actor-starter-packs'
 import {usePreferencesQuery} from 'state/queries/preferences'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 import {List, ListRef} from 'view/com/util/List'
-import {LoadMoreRetryBtn} from 'view/com/util/LoadMoreRetryBtn'
 import {Text} from 'view/com/util/text/Text'
 import {StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 
@@ -33,7 +30,10 @@ interface SectionRef {
 }
 
 interface ProfileFeedgensProps {
-  did: string
+  starterPacksQuery: UseInfiniteQueryResult<
+    InfiniteData<AppBskyGraphGetActorStarterPacks.OutputSchema, unknown>,
+    Error
+  >
   scrollElRef: ListRef
   headerOffset: number
   enabled?: boolean
@@ -46,47 +46,40 @@ export const ProfileStarterPacks = React.forwardRef<
   SectionRef,
   ProfileFeedgensProps
 >(function ProfileFeedgensImpl(
-  {did, scrollElRef, headerOffset, enabled, style, testID, setScrollViewTag},
+  {
+    starterPacksQuery: query,
+    scrollElRef,
+    headerOffset,
+    enabled,
+    style,
+    testID,
+    setScrollViewTag,
+  },
   ref,
 ) {
   const pal = usePalette('default')
-  const {_} = useLingui()
   const theme = useTheme()
   const [isPTRing, setIsPTRing] = React.useState(false)
-
-  const {
-    data,
-    isFetching,
-    isError,
-    isFetched,
-    fetchNextPage,
-    refetch,
-    hasNextPage,
-    error,
-  } = useActorStarterPacksQuery({
-    did,
-  })
+  const {data: pages, refetch, isFetching, hasNextPage, fetchNextPage} = query
   const {data: preferences} = usePreferencesQuery()
 
-  const isEmpty = !isFetching && data?.pages.length === 0
+  const isEmpty = pages?.pages.length === 0
 
   const items = React.useMemo(() => {
     let items: any[] = []
-    if (isError && isEmpty) {
+    if (isEmpty) {
       items = items.concat([ERROR_ITEM])
     }
-    if (!isFetched && isFetching) {
-      items = items.concat([LOADING])
-    } else if (isEmpty) {
+    if (isEmpty) {
       items = items.concat([EMPTY])
-    } else if (data?.pages) {
-      items = data?.pages.flatMap(page => page.starterPacks)
+    } else if (pages?.pages) {
+      items = pages?.pages.flatMap(page => page.starterPacks)
     }
-    if (isError && !isEmpty) {
+    if (!isEmpty) {
       items = items.concat([LOAD_MORE_ERROR_ITEM])
     }
     return items
-  }, [isError, isEmpty, isFetched, isFetching, data])
+  }, [isEmpty, pages])
 
   React.useImperativeHandle(ref, () => ({
     scrollToTop: () => {},
@@ -103,18 +96,14 @@ export const ProfileStarterPacks = React.forwardRef<
   }, [refetch, setIsPTRing])
 
   const onEndReached = React.useCallback(async () => {
-    if (isFetching || !hasNextPage || isError) return
+    if (isFetching || !hasNextPage) return
 
     try {
       await fetchNextPage()
     } catch (err) {
       logger.error('Failed to load more starter packs', {message: err})
     }
-  }, [isFetching, hasNextPage, isError, fetchNextPage])
-
-  const onPressRetryLoadMore = React.useCallback(() => {
-    fetchNextPage()
-  }, [fetchNextPage])
+  }, [isFetching, hasNextPage, fetchNextPage])
 
   const renderItem = React.useCallback(
     ({item, index}: ListRenderItemInfo<any>) => {
@@ -127,19 +116,6 @@ export const ProfileStarterPacks = React.forwardRef<
               <Trans>You have no feeds.</Trans>
             </Text>
           </View>
-        )
-      } else if (item === ERROR_ITEM) {
-        return (
-          <ErrorMessage message={cleanError(error)} onPressTryAgain={refetch} />
-        )
-      } else if (item === LOAD_MORE_ERROR_ITEM) {
-        return (
-          <LoadMoreRetryBtn
-            label={_(
-              msg`There was an issue fetching your lists. Tap here to try again.`,
-            )}
-            onPress={onPressRetryLoadMore}
-          />
         )
       } else if (item === LOADING) {
         return <FeedLoadingPlaceholder />
@@ -155,7 +131,7 @@ export const ProfileStarterPacks = React.forwardRef<
       }
       return null
     },
-    [error, refetch, onPressRetryLoadMore, pal, preferences, _],
+    [pal, preferences],
   )
 
   React.useEffect(() => {
