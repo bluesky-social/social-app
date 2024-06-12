@@ -10,9 +10,11 @@ import {makeProfileLink} from 'lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
 import {shareUrl} from 'lib/sharing'
 import {isWeb} from 'platform/detection'
+import {useSetUsedStarterPack} from 'state/preferences/starter-pack'
 import {useResolveDidQuery} from 'state/queries/resolve-uri'
 import {useStarterPackQuery} from 'state/queries/useStarterPackQuery'
 import {useSession} from 'state/session'
+import {useLoggedOutViewControls} from 'state/shell/logged-out'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
 import {CenteredView} from 'view/com/util/Views'
@@ -110,6 +112,8 @@ function Header({
   const navigation = useNavigation<NavigationProp>()
   const {currentAccount} = useSession()
   const qrCodeDialogControl = useDialogControl()
+  const setUsedStarterPack = useSetUsedStarterPack()
+  const {setShowLoggedOut} = useLoggedOutViewControls()
 
   const {record, creator} = starterPack
   const isOwn = creator.did === currentAccount?.did
@@ -136,9 +140,10 @@ function Header({
               variant="solid"
               color="secondary"
               size="small"
-              onPress={() =>
-                navigation.replace('StarterPackLanding', {name, rkey})
-              }>
+              onPress={() => {
+                setUsedStarterPack({uri: starterPack.uri})
+                setShowLoggedOut(true)
+              }}>
               <ButtonText>
                 <Trans>Debug</Trans>
               </ButtonText>
