@@ -1,5 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
+import ViewShot from 'react-native-view-shot'
 import * as FS from 'expo-file-system'
 import {AppBskyGraphDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -24,23 +25,21 @@ export function QrCodeDialog({
 }) {
   const {_} = useLingui()
 
-  // No types for this
-  // See https://github.com/tokkozhin/react-native-qrcode-styled/blob/main/example/src/examples/DownloadQR.tsx for usage
-  const qrCodeRef = React.useRef<any>()
+  const ref = React.useRef<ViewShot>(null)
 
   const onSavePress = () => {
-    qrCodeRef.current?.toDataURL(async (base64Code: string) => {
+    ref.current?.capture?.().then(async (uri: string) => {
       const filename = `${FS.cacheDirectory}/${nanoid(12)}.png`
-      await FS.writeAsStringAsync(filename, base64Code, {
-        encoding: FS.EncodingType.Base64,
-      })
+      await FS.copyAsync({from: uri, to: filename})
 
       await saveImageToMediaLibrary({uri: filename})
-      control.close(() => {
-        Toast.show(_(msg`QR code saved to your camera roll!`))
-      })
+      await FS.deleteAsync(filename)
+      Toast.show(_(msg`QR code saved to your camera roll!`))
+
+      control.close()
     })
   }
+
   return (
     <Dialog.Outer control={control}>
       <Dialog.Handle />
@@ -50,7 +49,7 @@ export function QrCodeDialog({
           <Text style={[a.font_bold, a.text_xl, a.text_center]}>
             Share this starter pack with friends!
           </Text>
-          <QrCode starterPack={starterPack} />
+          <QrCode starterPack={starterPack} ref={ref} />
           <Button
             label={_(msg`Save QR code`)}
             variant="solid"
