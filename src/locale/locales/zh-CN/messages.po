@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh_CN\n"
 "Project-Id-Version: zh-CN for bluesky-social-app\n"
 "Report-Msgid-Bugs-To: Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-06-11 16:23+0800\n"
+"PO-Revision-Date: 2024-06-12 09:01+0800\n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
 "Language-Team: Frudrax Cheng (auroursa), Simon Chan (RitsukiP), U2FsdGVkX1, Mikan Harada (mitian233), IceCodeNew\n"
 "Plural-Forms: \n"
@@ -1360,7 +1360,7 @@ msgstr "已删除"
 
 #: src/view/com/post-thread/PostThread.tsx:348
 msgid "Deleted post."
-msgstr "已删除帖子。"
+msgstr "已删除的帖子。"
 
 #: src/view/screens/Settings/index.tsx:891
 msgid "Deletes the chat declaration record"

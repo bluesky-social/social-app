@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: zh-TW for bluesky-social-app\n"
 "POT-Creation-Date: \n"
 "Report-Msgid-Bugs-To: Kuwa Lee <kuwalee1069@gmail.com>, Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-06-12 08:47+0800\n"
+"PO-Revision-Date: 2024-06-12 09:00+0800\n"
 "Last-Translator: \n"
 "Language-Team: Frudrax Cheng <i@cynosura.one>, Kuwa Lee <kuwalee1069@gmail.com>, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Language: zh_TW\n"
@@ -1351,7 +1351,7 @@ msgstr "已刪除"
 
 #: src/view/com/post-thread/PostThread.tsx:349
 msgid "Deleted post."
-msgstr "已刪除貼文。"
+msgstr "已刪除的貼文。"
 
 #: src/view/screens/Settings/index.tsx:891
 msgid "Deletes the chat declaration record"
