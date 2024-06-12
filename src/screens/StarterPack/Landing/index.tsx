@@ -148,7 +148,7 @@ function LandingScreenInner({
               <Trans>Join Bluesky now</Trans>
             </ButtonText>
           </Button>
-          {!!joinedWeekCount && joinedWeekCount >= -1 && (
+          {joinedWeekCount && joinedWeekCount >= 25 && (
             <Text
               style={[
                 a.font_bold,
@@ -156,7 +156,7 @@ function LandingScreenInner({
                 a.text_center,
                 t.atoms.text_contrast_medium,
               ]}>
-              180 joined this week!
+              {joinedWeekCount} joined this week!
             </Text>
           )}
           <Divider />

@@ -12,7 +12,7 @@ import {useLingui} from '@lingui/react'
 import {cleanError} from '#/lib/strings/errors'
 import {useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useActorStarterPacksQuery} from 'state/queries/actor-starter-packs'
 import {usePreferencesQuery} from 'state/queries/preferences'
@@ -149,7 +149,7 @@ export const ProfileStarterPacks = React.forwardRef<
           <StarterPackCard
             starterPack={item}
             type="list"
-            hideTopBorder={index === 0}
+            hideTopBorder={!isWeb && index === 0}
           />
         )
       }
