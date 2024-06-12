@@ -176,6 +176,12 @@ function WizardInner({
     }, [setMinimalShellMode]),
   )
 
+  const defaultName = _(
+    msg`${
+      currentProfile?.displayName || `@${currentProfile?.handle}`
+    }'s Starter Pack`,
+  )
+
   const wizardUiStrings: Record<
     WizardStep,
     {header: string; nextBtn: string; subtitle?: string}
@@ -208,13 +214,7 @@ function WizardInner({
     const list = await agent.app.bsky.graph.list.create(
       {repo: currentAccount?.did},
       {
-        name:
-          state.name ??
-          _(
-            msg`${
-              currentProfile?.displayName || `@${currentProfile?.handle}`
-            }'s Starter Pack`,
-          ),
+        name: state.name ?? defaultName,
         description: state.description,
         descriptionFacets: [],
         avatar: undefined,
@@ -309,8 +309,8 @@ function WizardInner({
           collection: 'app.bsky.graph.starterpack',
           rkey,
           record: {
-            name: state.name ?? '',
-            description: state.description ?? '',
+            name: state.name ?? defaultName,
+            description: state.description,
             descriptionFacets: [],
             list: list?.uri,
             feeds: state.feeds.map(f => ({
@@ -343,8 +343,8 @@ function WizardInner({
             validate: false,
           },
           {
-            name: state.name ?? '',
-            description: state.description ?? '',
+            name: state.name ?? defaultName,
+            description: state.description,
             descriptionFacets: [],
             list: list?.uri,
             feeds: state.feeds.map(f => ({
@@ -395,14 +395,7 @@ function WizardInner({
   }
 
   const onNext = () => {
-    if (state.currentStep === 'Details' && !state.name) {
-      dispatch({
-        type: 'SetName',
-        name: _(
-          msg`${currentProfile?.displayName || currentProfile?.handle}'s`,
-        ),
-      })
-    } else if (state.currentStep === 'Feeds') {
+    if (state.currentStep === 'Feeds') {
       submit()
       return
     }

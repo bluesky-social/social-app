@@ -148,7 +148,7 @@ function LandingScreenInner({
               <Trans>Join Bluesky now</Trans>
             </ButtonText>
           </Button>
-          {joinedWeekCount && joinedWeekCount >= 25 && (
+          {joinedWeekCount && joinedWeekCount >= 25 ? (
             <Text
               style={[
                 a.font_bold,
@@ -158,10 +158,10 @@ function LandingScreenInner({
               ]}>
               {joinedWeekCount} joined this week!
             </Text>
-          )}
+          ) : null}
           <Divider />
           <View style={[a.gap_3xl]}>
-            {Boolean(starterPack.feeds?.length) && (
+            {starterPack.feeds?.length ? (
               <View style={[a.gap_md]}>
                 <Text style={[a.font_bold, a.text_lg]}>
                   Join Bluesky now to subscribe to these feeds
@@ -182,9 +182,9 @@ function LandingScreenInner({
                   ))}
                 </View>
               </View>
-            )}
+            ) : null}
 
-            {sampleProfiles?.length && (
+            {Boolean(sampleProfiles?.length) && (
               <View style={[a.gap_md]}>
                 <Text style={[a.font_bold, a.text_lg]}>
                   {feeds?.length ? (
@@ -203,12 +203,12 @@ function LandingScreenInner({
                     a.py_md,
                     a.gap_xl,
                   ]}>
-                  {!!userSets.first?.length && (
+                  {userSets.first?.length ? (
                     <ProfilesSet profiles={userSets.first} />
-                  )}
-                  {!!userSets.second?.length && (
+                  ) : null}
+                  {userSets.second?.length ? (
                     <ProfilesSet profiles={userSets.second} />
-                  )}
+                  ) : null}
                 </View>
               </View>
             )}
