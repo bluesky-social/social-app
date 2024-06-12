@@ -30,6 +30,7 @@ import {precacheProfile} from 'state/queries/profile'
 import {Link} from '#/view/com/util/Link'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Text} from 'view/com/util/text/Text'
+import {atoms as a} from '#/alf'
 
 let SearchLinkCard = ({
   label,
@@ -225,30 +226,28 @@ export function DesktopSearch() {
 
       {query !== '' && isActive && moderationOpts && (
         <View style={[pal.view, pal.borderDark, styles.resultsContainer]}>
+          <SearchLinkCard
+            label={_(msg`Search for "${query}"`)}
+            to={`/search?q=${encodeURIComponent(query)}`}
+            style={
+              (autocompleteData?.length ?? 0) > 0
+                ? {borderBottomWidth: 1}
+                : undefined
+            }
+          />
           {isFetching && !autocompleteData?.length ? (
-            <View style={{padding: 8}}>
+            <View style={a.py_lg}>
               <ActivityIndicator />
             </View>
           ) : (
-            <>
-              <SearchLinkCard
-                label={_(msg`Search for "${query}"`)}
-                to={`/search?q=${encodeURIComponent(query)}`}
-                style={
-                  (autocompleteData?.length ?? 0) > 0
-                    ? {borderBottomWidth: 1}
-                    : undefined
-                }
+            autocompleteData?.map(item => (
+              <SearchProfileCard
+                key={item.did}
+                profile={item}
+                moderation={moderateProfile(item, moderationOpts)}
+                onPress={onSearchProfileCardPress}
               />
-              {autocompleteData?.map(item => (
-                <SearchProfileCard
-                  key={item.did}
-                  profile={item}
-                  moderation={moderateProfile(item, moderationOpts)}
-                  onPress={onSearchProfileCardPress}
-                />
-              ))}
-            </>
+            ))
           )}
         </View>
       )}
