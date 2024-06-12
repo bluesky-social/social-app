@@ -223,7 +223,7 @@ function ExploreScreen() {
     isFetchingNextPage: isFetchingNextProfilesPage,
     error: profilesError,
     fetchNextPage: fetchNextProfilesPage,
-  } = useSuggestedFollowsQuery({limit: 5})
+  } = useSuggestedFollowsQuery({limit: 4})
   const {
     data: feeds,
     hasNextPage: hasNextFeedsPage,
@@ -231,7 +231,7 @@ function ExploreScreen() {
     isFetchingNextPage: isFetchingNextFeedsPage,
     error: feedsError,
     fetchNextPage: fetchNextFeedsPage,
-  } = useGetPopularFeedsQuery({limit: 5})
+  } = useGetPopularFeedsQuery({limit: 4})
 
   const isLoadingMoreProfiles = isFetchingNextProfilesPage && !isLoadingProfiles
   const onLoadMoreProfiles = React.useCallback(async () => {
@@ -437,7 +437,7 @@ function ExploreScreen() {
         }
         case 'loadMore': {
           return (
-            <View style={[a.pb_2xl, a.border_t, t.atoms.border_contrast_low]}>
+            <View style={[a.border_t, t.atoms.border_contrast_low]}>
               <Button
                 label={_(msg`Load more`)}
                 onPress={item.onLoadMore}
