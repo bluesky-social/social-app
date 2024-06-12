@@ -1,14 +1,16 @@
 import React from 'react'
-import {Keyboard, View} from 'react-native'
+import {Keyboard, Pressable, View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {isWeb} from 'platform/detection'
 import {useSession} from 'state/session'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {WizardAction, WizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import * as Toggle from '#/components/forms/Toggle'
+import {Checkbox} from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
 
 export function WizardProfileCard({
@@ -36,7 +38,8 @@ export function WizardProfileCard({
   }
 
   return (
-    <View
+    <Pressable
+      accessibilityRole="button"
       style={[
         a.flex_row,
         a.align_center,
@@ -45,7 +48,12 @@ export function WizardProfileCard({
         a.gap_md,
         a.border_b,
         t.atoms.border_contrast_low,
-      ]}>
+        // @ts-expect-error web only
+        isWeb && {
+          cursor: 'default',
+        },
+      ]}
+      onPress={onPressAddRemove}>
       <UserAvatar size={45} avatar={profile?.avatar} />
       <View style={[a.flex_1]}>
         <Text style={[a.flex_1, a.font_bold, a.text_md]} numberOfLines={1}>
@@ -58,19 +66,26 @@ export function WizardProfileCard({
         </Text>
       </View>
       {profile.did !== currentAccount?.did && (
-        <Button
-          label={includesProfile ? _(msg`Remove`) : _(msg`Add`)}
-          variant="solid"
-          color={includesProfile ? 'secondary' : 'primary'}
-          size="small"
-          style={{paddingVertical: 6}}
-          disabled={!includesProfile && state.profiles.length >= 50}
-          onPress={onPressAddRemove}>
-          <ButtonText>
-            {includesProfile ? <Trans>Remove</Trans> : <Trans>Add</Trans>}
-          </ButtonText>
-        </Button>
+        <Toggle.Item
+          name={_(msg`Person toggle`)}
+          label={
+            includesProfile
+              ? _(
+                  msg`Remove ${
+                    profile.displayName || profile.handle
+                  } from starter pack`,
+                )
+              : _(
+                  msg`Add ${
+                    profile.displayName || profile.handle
+                  } to starter pack`,
+                )
+          }
+          value={includesProfile}
+          onChange={onPressAddRemove}>
+          <Checkbox />
+        </Toggle.Item>
       )}
-    </View>
+    </Pressable>
   )
 }
