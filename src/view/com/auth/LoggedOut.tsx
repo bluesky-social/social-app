@@ -24,7 +24,7 @@ import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Text} from '#/view/com/util/text/Text'
 import {Login} from '#/screens/Login'
 import {Signup} from '#/screens/Signup'
-import {LandingScreen} from '#/screens/StarterPack/Landing'
+import {LandingScreen} from '#/screens/StarterPack'
 import {SplashScreen} from './SplashScreen'
 
 enum ScreenState {
