@@ -34,7 +34,7 @@ export function StepDetails() {
           </Text>
           <Text style={[a.text_center, a.text_md, a.px_md]}>
             <Trans>
-              Invite friends directly to follow your favorite feeds and people{' '}
+              Invite your friends to follow your favorite feeds and people
             </Trans>
           </Text>
         </View>

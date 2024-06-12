@@ -56,8 +56,7 @@ import {Provider} from './State'
 export function Wizard({
   route,
 }: NativeStackScreenProps<CommonNavigatorParams, 'StarterPackWizard'>) {
-  const params = route.params
-  const {name, rkey} = params
+  const {name, rkey} = route.params ?? {}
   const {currentAccount} = useSession()
 
   const {_} = useLingui()
@@ -562,7 +561,7 @@ function Footer({
     (state.currentStep === 'Profiles' && items.length > 1) ||
     (state.currentStep === 'Feeds' && items.length > 0)
 
-  const textStyles = [isWeb && a.text_md]
+  const textStyles = [a.text_md]
 
   return (
     <View
@@ -575,8 +574,8 @@ function Footer({
         t.atoms.bg,
         t.atoms.border_contrast_medium,
         {
-          height: 220,
-          paddingBottom: 12 + bottomInset,
+          height: 224,
+          paddingBottom: 20 + bottomInset,
         },
         isNative && [
           a.border_l,
@@ -589,7 +588,7 @@ function Footer({
         ],
       ]}>
       {items.length > 0 && (
-        <View style={[a.absolute, {right: 14, top: 26}]}>
+        <View style={[a.absolute, {right: 14, top: 31}]}>
           <Text style={[a.font_bold]}>
             {items.length}/{state.currentStep === 'Profiles' ? 50 : 3}
           </Text>
@@ -601,7 +600,7 @@ function Footer({
           <UserAvatar
             key={index}
             avatar={p.avatar}
-            size={28}
+            size={32}
             type={state.currentStep === 'Profiles' ? 'user' : 'algo'}
           />
         ))}
@@ -625,12 +624,14 @@ function Footer({
             </Trans>
           ) : items.length === 1 ? (
             <Trans>
-              <Text style={[a.font_bold]}>{getName(items[0])}</Text> is included
-              in your starter pack
+              <Text style={[a.font_bold, textStyles]}>{getName(items[0])}</Text>{' '}
+              is included in your starter pack
             </Trans>
           ) : items.length === 2 ? (
             <Trans>
-              <Text style={[a.font_bold]}>{getName(items[0])} </Text>
+              <Text style={[a.font_bold, textStyles]}>
+                {getName(items[0])}{' '}
+              </Text>
               and
               <Text> </Text>
               <Text style={[a.font_bold]}>{getName(items[1])} </Text>
@@ -638,8 +639,12 @@ function Footer({
             </Trans>
           ) : (
             <Trans>
-              <Text style={[a.font_bold]}>{getName(items[0])}, </Text>
-              <Text style={[a.font_bold]}>{getName(items[1])}, </Text>
+              <Text style={[a.font_bold, textStyles]}>
+                {getName(items[0])},{' '}
+              </Text>
+              <Text style={[a.font_bold, textStyles]}>
+                {getName(items[1])},{' '}
+              </Text>
               and {items.length - 2}{' '}
               <Plural value={items.length - 2} one="other" other="others" /> are
               included in your starter pack
@@ -652,7 +657,7 @@ function Footer({
         {isEditEnabled ? (
           <Button
             label={_(msg`Edit`)}
-            variant="ghost"
+            variant="outline"
             color="primary"
             size="small"
             onPress={editDialogControl.open}>

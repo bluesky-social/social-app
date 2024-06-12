@@ -9,10 +9,12 @@ import {
 import {AppBskyGraphDefs, AppBskyGraphGetActorStarterPacks} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 import {InfiniteData, UseInfiniteQueryResult} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
+import {NavigationProp} from 'lib/routes/types'
 import {List, ListRef} from 'view/com/util/List'
 import {Text} from 'view/com/util/text/Text'
 import {atoms as a, useTheme} from '#/alf'
@@ -130,6 +132,7 @@ export const ProfileStarterPacks = React.forwardRef<
 function EmptyComponent() {
   const {_} = useLingui()
   const t = useTheme()
+  const navigation = useNavigation<NavigationProp>()
 
   return (
     <View style={[a.mt_xl, a.px_2xl, a.gap_2xl]}>
@@ -150,7 +153,8 @@ function EmptyComponent() {
         label={_(msg`Create a starter pack`)}
         variant="solid"
         color="primary"
-        size="medium">
+        size="medium"
+        onPress={() => navigation.navigate('StarterPackWizard')}>
         <ButtonText>
           <Trans>Create a starter pack</Trans>
         </ButtonText>
