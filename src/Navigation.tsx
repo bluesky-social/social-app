@@ -43,7 +43,6 @@ import HashtagScreen from '#/screens/Hashtag'
 import {ModerationScreen} from '#/screens/Moderation'
 import {ProfileKnownFollowersScreen} from '#/screens/Profile/KnownFollowers'
 import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
-import {LandingScreen} from '#/screens/StarterPack/Landing'
 import {StarterPackScreen} from '#/screens/StarterPack/Main'
 import {Wizard} from '#/screens/StarterPack/Wizard'
 import {init as initAnalytics} from './lib/analytics/analytics'
@@ -321,11 +320,6 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="StarterPack"
         getComponent={() => StarterPackScreen}
         options={{title: title(msg`Starter Pack`), requireAuth: true}}
-      />
-      <Stack.Screen
-        name="StarterPackLanding"
-        getComponent={() => LandingScreen}
-        options={{title: title(msg`Join Bluesky Today!`)}}
       />
       <Stack.Screen
         name="StarterPackWizard"

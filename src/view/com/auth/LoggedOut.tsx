@@ -137,7 +137,9 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
           </Pressable>
         ) : null}
 
-        {screenState === ScreenState.S_LoginOrCreateAccount ? (
+        {screenState === ScreenState.S_StarterPack ? (
+          <View />
+        ) : screenState === ScreenState.S_LoginOrCreateAccount ? (
           <SplashScreen
             onPressSignin={() => {
               setScreenState(ScreenState.S_Login)
