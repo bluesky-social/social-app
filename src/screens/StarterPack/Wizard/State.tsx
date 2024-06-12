@@ -95,20 +95,7 @@ function reducer(state: State, action: Action): State {
       break
   }
 
-  switch (updatedState.currentStep) {
-    case 'Details':
-      updatedState = {
-        ...updatedState,
-        canNext: Boolean(updatedState.description),
-      }
-      break
-    default: {
-      updatedState = {
-        ...updatedState,
-        canNext: true,
-      }
-    }
-  }
+  updatedState.canNext = !updatedState.processing
 
   return updatedState
 }

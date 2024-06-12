@@ -113,7 +113,7 @@ export const ProfileStarterPacks = React.forwardRef<
             testID="listsEmpty"
             style={[{padding: 18, borderTopWidth: 1}, pal.border]}>
             <Text style={pal.textLight}>
-              <Trans>You have no feeds.</Trans>
+              <Trans>You have no starter packs.</Trans>
             </Text>
           </View>
         )

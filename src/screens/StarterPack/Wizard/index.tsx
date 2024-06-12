@@ -1,6 +1,9 @@
 import React from 'react'
 import {Keyboard, TouchableOpacity, View} from 'react-native'
-import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
+import {
+  KeyboardAwareScrollView,
+  useKeyboardController,
+} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {
   AppBskyActorDefs,
@@ -44,6 +47,7 @@ import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
+import * as Prompt from '#/components/Prompt'
 import {WizardEditListDialog} from '#/components/StarterPack/Wizard/WizardEditListDialog'
 import {Text} from '#/components/Typography'
 import {Provider} from './State'
@@ -52,12 +56,11 @@ export function Wizard({
   route,
 }: NativeStackScreenProps<CommonNavigatorParams, 'StarterPackWizard'>) {
   const params = route.params
-  const {name, rkey} = params ?? {}
+  const {name, rkey} = params
   const {currentAccount} = useSession()
 
   const {_} = useLingui()
 
-  // TODO load query here
   const {
     data: did,
     isLoading: isLoadingDid,
@@ -147,6 +150,16 @@ function WizardInner({
     did: currentAccount?.did,
     staleTime: 0,
   })
+  const {setEnabled} = useKeyboardController()
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setEnabled(true)
+      return () => {
+        setEnabled(false)
+      }
+    }, [setEnabled]),
+  )
 
   const setMinimalShellMode = useSetMinimalShellMode()
 
@@ -347,6 +360,8 @@ function WizardInner({
     }
   }
 
+  const deleteStarterPack = async () => {}
+
   const onNext = () => {
     if (state.currentStep === 'Details' && !state.name) {
       dispatch({
@@ -412,7 +427,9 @@ function WizardInner({
         <View style={[{width: 65}]} />
       </View>
 
-      <Container>
+      <Container
+        showDeleteBtn={Boolean(did && rkey)}
+        deleteStarterPack={deleteStarterPack}>
         <StepView />
       </Container>
 
@@ -423,9 +440,18 @@ function WizardInner({
   )
 }
 
-function Container({children}: {children: React.ReactNode}) {
+function Container({
+  showDeleteBtn,
+  deleteStarterPack,
+  children,
+}: {
+  showDeleteBtn: boolean
+  deleteStarterPack: () => Promise<void>
+  children: React.ReactNode
+}) {
   const {_} = useLingui()
   const [state, dispatch] = useWizardState()
+  const control = useDialogControl()
 
   if (state.currentStep === 'Profiles' || state.currentStep === 'Feeds') {
     return <View style={[a.flex_1]}>{children}</View>
@@ -437,35 +463,53 @@ function Container({children}: {children: React.ReactNode}) {
       keyboardShouldPersistTaps="handled">
       {children}
       {state.currentStep === 'Details' && (
-        <Button
-          label={_(msg`Next`)}
-          variant="solid"
-          color="primary"
-          size="medium"
-          style={[a.mx_xl, a.mb_lg, {marginTop: 60}]}
-          onPress={() => dispatch({type: 'Next'})}
-          disabled={!state.canNext}>
-          <ButtonText>
-            <Trans>Next</Trans>
-          </ButtonText>
-        </Button>
+        <>
+          <Button
+            label={_(msg`Next`)}
+            variant="solid"
+            color="primary"
+            size="medium"
+            style={[a.mx_xl, a.mb_lg, {marginTop: 35}]}
+            onPress={() => dispatch({type: 'Next'})}
+            disabled={!state.canNext}>
+            <ButtonText>
+              <Trans>Next</Trans>
+            </ButtonText>
+          </Button>
+          {showDeleteBtn && (
+            <Button
+              label={_(msg`Next`)}
+              variant="outline"
+              color="negative"
+              size="medium"
+              style={[a.mx_xl, a.mb_lg]}
+              onPress={control.open}
+              disabled={!state.canNext}>
+              <ButtonText>
+                <Trans>Delete</Trans>
+              </ButtonText>
+            </Button>
+          )}
+          <Prompt.Outer control={control}>
+            <Prompt.TitleText>
+              <Trans>Delete starter pack?</Trans>
+            </Prompt.TitleText>
+            <Prompt.DescriptionText>
+              <Trans>Are you sure you want delete this starter pack?</Trans>
+            </Prompt.DescriptionText>
+            <Prompt.Actions>
+              <Prompt.Action
+                onPress={deleteStarterPack}
+                color="negative"
+                cta={_(msg`Delete`)}
+              />
+              <Prompt.Cancel />
+            </Prompt.Actions>
+          </Prompt.Outer>
+        </>
       )}
     </KeyboardAwareScrollView>
   )
-}
-
-function StepView() {
-  const [state] = useWizardState()
-
-  if (state.currentStep === 'Details') {
-    return <StepDetails />
-  }
-  if (state.currentStep === 'Profiles') {
-    return <StepProfiles />
-  }
-  if (state.currentStep === 'Feeds') {
-    return <StepFeeds />
-  }
 }
 
 function Footer({
@@ -522,16 +566,14 @@ function Footer({
       )}
 
       <View style={[a.flex_row, a.gap_xs]}>
-        <View style={[a.flex_row]}>
-          {items.slice(0, 6).map((p, index) => (
-            <UserAvatar
-              key={index}
-              avatar={p.avatar}
-              size={28}
-              type={state.currentStep === 'Profiles' ? 'user' : 'algo'}
-            />
-          ))}
-        </View>
+        {items.slice(0, 6).map((p, index) => (
+          <UserAvatar
+            key={index}
+            avatar={p.avatar}
+            size={28}
+            type={state.currentStep === 'Profiles' ? 'user' : 'algo'}
+          />
+        ))}
       </View>
 
       {items.length === 0 ? (
@@ -596,7 +638,7 @@ function Footer({
           color="primary"
           size="small"
           onPress={onNext}
-          disabled={!state.canNext || state.processing}>
+          disabled={!state.canNext}>
           <ButtonText>{nextBtnText}</ButtonText>
           {state.processing && <Loader size="xs" style={{color: 'white'}} />}
         </Button>
@@ -618,4 +660,18 @@ function getName(item: AppBskyActorDefs.ProfileViewBasic | GeneratorView) {
     return enforceLen(item.handle, 16, true)
   }
   return ''
+}
+
+function StepView() {
+  const [state] = useWizardState()
+
+  if (state.currentStep === 'Details') {
+    return <StepDetails />
+  }
+  if (state.currentStep === 'Profiles') {
+    return <StepProfiles />
+  }
+  if (state.currentStep === 'Feeds') {
+    return <StepFeeds />
+  }
 }
