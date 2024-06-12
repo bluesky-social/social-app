@@ -79,7 +79,7 @@ export function Wizard({
     data: profilesData,
     isLoading: isLoadingProfiles,
     isError: isErrorProfiles,
-  } = useListMembersQuery(listUri, 51) // 51 because we also include the current user
+  } = useListMembersQuery(listUri, 50)
   const listItems = profilesData?.pages.flatMap(p => p.items)
 
   const {
