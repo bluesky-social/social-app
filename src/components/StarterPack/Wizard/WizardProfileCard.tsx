@@ -28,8 +28,6 @@ export function WizardProfileCard({
 
   const onPressAddRemove = () => {
     Keyboard.dismiss()
-
-    if (!profile?.did) return
     if (!includesProfile) {
       dispatch({type: 'AddProfile', profile})
     } else {
