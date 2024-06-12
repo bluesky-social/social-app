@@ -57,6 +57,7 @@ import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
 import {Link} from '#/view/com/util/Link'
 import {List} from '#/view/com/util/List'
 import {Text} from '#/view/com/util/text/Text'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
 import {KNOWN_AUTHED_ONLY_FEEDS} from '#/view/screens/Feeds'
 import {SearchLinkCard, SearchProfileCard} from '#/view/shell/desktop/Search'
@@ -66,12 +67,11 @@ import {
   ProfileCardFeedLoadingPlaceholder,
 } from 'view/com/util/LoadingPlaceholder'
 import {atoms as a, useTheme as useThemeNew} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {Button} from '#/components/Button'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
-import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {Loader as LoaderIcon} from '#/components/Loader'
-import {Text as TextNew} from '#/components/Typography'
+import {Text as TextNewText} from '#/components/Typography'
 
 function Loader() {
   const pal = usePalette('default')
@@ -193,6 +193,7 @@ type ExploreScreenItems =
       key: string
       isLoadingMore: boolean
       onLoadMore: () => void
+      items: ExploreScreenItems[]
     }
   | {
       type: 'profilePlaceholder'
@@ -214,6 +215,7 @@ function ExploreScreen() {
   const t = useThemeNew()
   const {hasSession} = useSession()
   const {data: preferences, error: preferencesError} = usePreferencesQuery()
+  const moderationOpts = useModerationOpts()
   const {
     data: profiles,
     hasNextPage: hasNextProfilesPage,
@@ -294,6 +296,7 @@ function ExploreScreen() {
         key: 'loadMoreProfiles',
         isLoadingMore: isLoadingMoreProfiles,
         onLoadMore: onLoadMoreProfiles,
+        items: i.filter(item => item.type === 'profile').slice(-3),
       })
     } else {
       if (profilesError) {
@@ -368,6 +371,7 @@ function ExploreScreen() {
           key: 'loadMoreFeeds',
           isLoadingMore: isLoadingMoreFeeds,
           onLoadMore: onLoadMoreFeeds,
+          items: i.filter(item => item.type === 'feed').slice(-3),
         })
       }
     } else {
@@ -433,29 +437,84 @@ function ExploreScreen() {
         }
         case 'loadMore': {
           return (
-            <View
-              style={[
-                a.px_md,
-                a.py_md,
-                a.pb_5xl,
-                a.flex_row,
-                a.justify_center,
-                a.border_t,
-                t.atoms.border_contrast_low,
-              ]}>
+            <View style={[a.pb_2xl, a.border_t, t.atoms.border_contrast_low]}>
               <Button
                 label={_(msg`Load more`)}
-                size="small"
-                variant="solid"
-                color="secondary"
-                onPress={item.onLoadMore}>
-                <ButtonText>
-                  <Trans>Load more</Trans>
-                </ButtonText>
-                <ButtonIcon
-                  icon={item.isLoadingMore ? LoaderIcon : Plus}
-                  position="right"
-                />
+                onPress={item.onLoadMore}
+                style={[a.relative, a.w_full]}>
+                {({hovered}) => (
+                  <View
+                    style={[
+                      a.flex_1,
+                      a.flex_row,
+                      a.align_center,
+                      a.px_md,
+                      a.py_md,
+                      hovered && t.atoms.bg_contrast_25,
+                    ]}>
+                    <View
+                      style={[
+                        a.relative,
+                        {
+                          height: 32,
+                          width: 52,
+                        },
+                      ]}>
+                      {item.items.map((_item, i) => {
+                        return (
+                          <View
+                            key={_item.key}
+                            style={[
+                              a.border,
+                              t.atoms.bg_contrast_25,
+                              a.absolute,
+                              {
+                                width: 30,
+                                height: 30,
+                                left: i * 10,
+                                borderColor: t.atoms.bg.backgroundColor,
+                                borderRadius:
+                                  _item.type === 'profile' ? 999 : 4,
+                              },
+                            ]}>
+                            {moderationOpts && (
+                              <>
+                                {_item.type === 'profile' ? (
+                                  <UserAvatar
+                                    size={28}
+                                    avatar={_item.profile.avatar}
+                                    moderation={moderateProfile(
+                                      _item.profile,
+                                      moderationOpts!,
+                                    ).ui('avatar')}
+                                  />
+                                ) : _item.type === 'feed' ? (
+                                  <UserAvatar
+                                    size={28}
+                                    avatar={_item.feed.avatar}
+                                    type="algo"
+                                  />
+                                ) : null}
+                              </>
+                            )}
+                          </View>
+                        )
+                      })}
+                    </View>
+
+                    <TextNewText
+                      style={[
+                        a.pl_sm,
+                        hovered ? t.atoms.text : t.atoms.text_contrast_medium,
+                      ]}>
+                      <Trans>Load more suggestions like these</Trans>
+                    </TextNewText>
+
+                    <View style={[a.flex_1, a.align_end]}>
+                      {item.isLoadingMore && <LoaderIcon size="lg" />}
+                    </View>
+                  </View>
+                )}
               </Button>
             </View>
           )
@@ -485,17 +544,17 @@ function ExploreScreen() {
                 ]}>
                 <CircleInfo size="md" fill={t.palette.negative_400} />
                 <View style={[a.flex_1, a.gap_sm]}>
-                  <TextNew style={[a.font_bold, a.leading_snug]}>
+                  <TextNewText style={[a.font_bold, a.leading_snug]}>
                     {item.message}
-                  </TextNew>
-                  <TextNew
+                  </TextNewText>
+                  <TextNewText
                     style={[
                       a.italic,
                       a.leading_snug,
                       t.atoms.text_contrast_medium,
                     ]}>
                     {item.error}
-                  </TextNew>
+                  </TextNewText>
                 </View>
               </View>
             </View>
@@ -503,7 +562,7 @@ function ExploreScreen() {
         }
       }
     },
-    [_, t, hasSession],
+    [_, t, hasSession, moderationOpts],
   )
 
   return (
