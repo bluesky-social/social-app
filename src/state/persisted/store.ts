@@ -28,7 +28,7 @@ export async function read(): Promise<Schema | undefined> {
         code: e.code,
         // @ts-ignore exists on some types
         expected: e?.expected,
-        path: e.path,
+        path: e.path?.join('.'),
       })) || []
     logger.error(`persisted store: data failed validation on read`, {errors})
     return undefined
