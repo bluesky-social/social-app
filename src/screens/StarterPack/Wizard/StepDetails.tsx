@@ -5,11 +5,11 @@ import {useLingui} from '@lingui/react'
 
 import {useProfileQuery} from 'state/queries/profile'
 import {useSession} from 'state/session'
-import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {useWizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a} from '#/alf'
 import * as TextField from '#/components/forms/TextField'
 import {StarterPackIcon} from '#/components/icons/StarterPackIcon'
+import {ScreenTransition} from '#/components/StarterPack/Wizard/ScreenTransition'
 import {Text} from '#/components/Typography'
 
 export function StepDetails() {
@@ -23,7 +23,7 @@ export function StepDetails() {
   })
 
   return (
-    <ScreenTransition>
+    <ScreenTransition direction={state.transitionDirection}>
       <View style={[a.px_xl, a.gap_xl, a.mt_4xl]}>
         <View style={[{height: 90}]}>
           <StarterPackIcon />

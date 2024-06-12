@@ -11,10 +11,10 @@ import {
 } from 'state/queries/feed'
 import {SearchInput} from 'view/com/util/forms/SearchInput'
 import {List} from 'view/com/util/List'
-import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {useWizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
+import {ScreenTransition} from '#/components/StarterPack/Wizard/ScreenTransition'
 import {WizardFeedCard} from '#/components/StarterPack/Wizard/WizardFeedCard'
 
 function keyExtractor(item: GeneratorView) {
@@ -59,7 +59,7 @@ export function StepFeeds() {
   }
 
   return (
-    <ScreenTransition style={[a.flex_1]}>
+    <ScreenTransition style={[a.flex_1]} direction={state.transitionDirection}>
       <View style={[a.border_b, t.atoms.border_contrast_medium]}>
         <View style={[a.my_sm, a.px_md, {height: 40}]}>
           <SearchInput

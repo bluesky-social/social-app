@@ -34,6 +34,7 @@ interface State {
   feeds: GeneratorView[]
   processing: boolean
   error?: string
+  transitionDirection: 'Backward' | 'Forward'
 }
 
 type TStateContext = [State, (action: Action) => void]
@@ -50,9 +51,17 @@ function reducer(state: State, action: Action): State {
   // -- Navigation
   const currentIndex = steps.indexOf(state.currentStep)
   if (action.type === 'Next' && state.currentStep !== 'Feeds') {
-    updatedState = {...state, currentStep: steps[currentIndex + 1]}
+    updatedState = {
+      ...state,
+      currentStep: steps[currentIndex + 1],
+      transitionDirection: 'Forward',
+    }
   } else if (action.type === 'Back' && state.currentStep !== 'Details') {
-    updatedState = {...state, currentStep: steps[currentIndex - 1]}
+    updatedState = {
+      ...state,
+      currentStep: steps[currentIndex - 1],
+      transitionDirection: 'Backward',
+    }
   }
 
   switch (action.type) {
@@ -122,6 +131,7 @@ export function Provider({
         profiles: listItems?.map(i => i.subject) ?? [],
         feeds: starterPack.feeds ?? [],
         processing: false,
+        transitionDirection: 'Forward',
       }
     }
 
@@ -131,6 +141,7 @@ export function Provider({
       profiles: [profile],
       feeds: [],
       processing: false,
+      transitionDirection: 'Forward',
     }
   }
 
