@@ -149,7 +149,7 @@ function LandingScreenInner({
             </Text>
           ) : null}
           <Button
-            label={_(msg`Join Bluesky now`)}
+            label={_(msg`Join now!`)}
             onPress={() => {
               setUsedStarterPack({
                 uri: starterPack.uri,
@@ -161,7 +161,7 @@ function LandingScreenInner({
             color="primary"
             size="large">
             <ButtonText style={[a.text_lg]}>
-              <Trans>Join Bluesky now</Trans>
+              <Trans>Join now!</Trans>
             </ButtonText>
           </Button>
           {joinedWeekCount && joinedWeekCount >= 25 ? (
