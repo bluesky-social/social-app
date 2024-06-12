@@ -116,7 +116,6 @@ export const ProfileStarterPacks = React.forwardRef<
         data={items}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
-        scrollEnabled={items?.length !== 0}
         refreshing={isPTRing}
         headerOffset={headerOffset}
         contentContainerStyle={isNative && {paddingBottom: headerOffset + 100}}
