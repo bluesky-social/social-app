@@ -6,7 +6,6 @@ import {LinearGradient} from 'expo-linear-gradient'
 import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
-import {UserAvatar} from 'view/com/util/UserAvatar'
 import {Logo} from 'view/icons/Logo'
 import {Logotype} from 'view/icons/Logotype'
 import {useTheme} from '#/alf'
@@ -35,58 +34,75 @@ export function QrCode({
       <LinearGradient
         colors={gradient}
         style={[
-          {width: 580, height: 280},
+          {width: 300, height: 440}, //😎
           a.align_center,
-          a.flex_row,
-          a.gap_sm,
-          a.py_2xl,
-          a.rounded_sm,
           a.px_sm,
+          a.py_5xl,
+          a.rounded_sm,
+          a.justify_between,
         ]}>
-        <View style={[a.gap_4xl, a.align_center, {width: '55%'}]}>
+        <View
+          style={[
+            a.absolute,
+            a.z_20,
+            {
+              top: 0,
+              left: 'auto',
+              right: 'auto',
+              height: 24,
+              width: 48,
+              borderBottomLeftRadius: 100,
+              borderBottomRightRadius: 100,
+              backgroundColor: 'transparent',
+            },
+          ]}
+        />
+        <View
+          style={[
+            a.absolute,
+            a.z_20,
+            {
+              bottom: 0,
+              left: 'auto',
+              right: 'auto',
+              height: 24,
+              width: 48,
+              borderTopLeftRadius: 100,
+              borderTopRightRadius: 100,
+              backgroundColor: 'transparent',
+            },
+          ]}
+        />
+
+        <View style={[a.gap_sm]}>
           <Text
-            style={[a.font_bold, a.text_xl, a.text_center, {color: 'white'}]}>
-            <Trans>Join the conversation</Trans>
+            style={[a.font_bold, a.text_3xl, a.text_center, {color: 'white'}]}>
+            {record.name}
           </Text>
-          <View style={[a.gap_sm]}>
-            <View style={[a.flex_row, a.align_center, a.justify_center]}>
-              {starterPack.listItemsSample?.map(p => (
-                <View
-                  style={[
-                    {marginLeft: -6, borderColor: 'white', borderWidth: 2},
-                    a.rounded_full,
-                    a.shadow_lg,
-                  ]}
-                  key={p.subject.did}>
-                  <UserAvatar size={28} avatar={p.subject.avatar} />
-                </View>
-              ))}
-            </View>
-            <Text
-              style={[
-                a.font_bold,
-                a.text_4xl,
-                a.text_center,
-                {color: 'white'},
-              ]}>
-              {record.name}
-            </Text>
-          </View>
-          <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-            <Text
-              style={[a.font_bold, a.text_xl, a.text_center, {color: 'white'}]}>
-              <Trans>on</Trans>
-            </Text>
-            <Logo width={30} fill="white" />
-            <Logotype
-              width={70}
-              fill="white"
-              style={{marginTop: 8, marginLeft: 2}}
-            />
-          </View>
         </View>
-        <View style={[{width: '35%'}]}>
+        <Text
+          style={[a.font_bold, a.text_center, {color: 'white', fontSize: 18}]}>
+          <Trans>Join the conversation</Trans>
+        </Text>
+        <View style={[]}>
           <QrCodeInner url="https://bsky.app" />
+        </View>
+
+        <View style={[a.flex_row, a.align_center, {gap: 5}]}>
+          <Text
+            style={[
+              a.font_bold,
+              a.text_center,
+              {color: 'white', fontSize: 18},
+            ]}>
+            <Trans>on</Trans>
+          </Text>
+          <Logo width={26} fill="white" />
+          <Logotype
+            width={66}
+            fill="white"
+            style={{marginTop: 6, marginLeft: 2}}
+          />
         </View>
       </LinearGradient>
     </ViewShot>
