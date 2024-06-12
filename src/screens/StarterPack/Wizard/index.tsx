@@ -36,6 +36,7 @@ import {
 } from 'state/queries/useStarterPackQuery'
 import {useAgent, useSession} from 'state/session'
 import {useSetMinimalShellMode} from 'state/shell'
+import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {CenteredView} from 'view/com/util/Views'
 import {useWizardState, WizardStep} from '#/screens/StarterPack/Wizard/State'
@@ -234,6 +235,23 @@ function WizardInner({
     return list
   }
 
+  const invalidateQueries = async () => {
+    if (!did || !rkey) return
+
+    if (initialListUri) {
+      await invalidateListMembersQuery({queryClient, uri: initialListUri})
+    }
+    await invalidateActorStarterPacksQuery({
+      queryClient,
+      did,
+    })
+    await invalidateStarterPack({
+      queryClient,
+      did,
+      rkey,
+    })
+  }
+
   const submit = async () => {
     dispatch({type: 'SetProcessing', processing: true})
 
@@ -298,18 +316,7 @@ function WizardInner({
           },
         })
 
-        if (initialListUri) {
-          await invalidateListMembersQuery({queryClient, uri: initialListUri})
-        }
-        await invalidateActorStarterPacksQuery({
-          queryClient,
-          did,
-        })
-        await invalidateStarterPack({
-          queryClient,
-          did,
-          rkey,
-        })
+        await invalidateQueries()
 
         setTimeout(() => {
           if (navigation.canGoBack()) {
@@ -354,13 +361,37 @@ function WizardInner({
         }, 1000)
       }
     } catch (e) {
-      // TODO handle the error here
+      Toast.show(_(msg`Failed to create starter pack`))
       dispatch({type: 'SetProcessing', processing: false})
       return
     }
   }
 
-  const deleteStarterPack = async () => {}
+  const deleteStarterPack = async () => {
+    if (!rkey || !initialListUri) return
+
+    dispatch({type: 'SetProcessing', processing: true})
+
+    try {
+      await agent.app.bsky.graph.list.delete({
+        repo: currentAccount!.did,
+        rkey: new AtUri(initialListUri).rkey,
+      })
+
+      await agent.app.bsky.graph.starterpack.delete({
+        repo: currentAccount!.did,
+        rkey,
+      })
+
+      await invalidateQueries()
+
+      navigation.replace('Profile', {name: currentAccount!.handle})
+    } catch (e) {
+      Toast.show(_(msg`Failed to delete starter pack`))
+    } finally {
+      dispatch({type: 'SetProcessing', processing: false})
+    }
+  }
 
   const onNext = () => {
     if (state.currentStep === 'Details' && !state.name) {
