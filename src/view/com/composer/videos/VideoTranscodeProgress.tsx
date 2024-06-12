@@ -7,6 +7,7 @@ import {ImagePickerAsset} from 'expo-image-picker'
 import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {VideoTranscodeBackdrop} from './VideoTranscodeBackdrop'
 
 export function VideoTranscodeProgress({
   input,
@@ -18,16 +19,24 @@ export function VideoTranscodeProgress({
   const t = useTheme()
 
   return (
-    <View style={a.mt_md}>
+    <View
+      style={[
+        a.w_full,
+        a.mt_md,
+        t.atoms.bg_contrast_50,
+        a.rounded_md,
+        a.overflow_hidden,
+        {aspectRatio: Math.max(input.width / input.height, 16 / 9)},
+      ]}>
+      <VideoTranscodeBackdrop uri={input.uri} />
       <View
         style={[
           a.flex_1,
-          t.atoms.bg_contrast_50,
-          a.rounded_md,
           a.align_center,
           a.justify_center,
           a.gap_lg,
-          {aspectRatio: Math.max(input.width / input.height, 16 / 9)},
+          a.absolute,
+          a.inset_0,
         ]}>
         {input.duration ? (
           <ProgressPie
@@ -40,7 +49,7 @@ export function VideoTranscodeProgress({
         ) : (
           <Loader size="xl" />
         )}
-        <Text>Transcoding...</Text>
+        <Text>Compressing...</Text>
       </View>
     </View>
   )
