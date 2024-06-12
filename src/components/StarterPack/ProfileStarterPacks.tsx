@@ -236,8 +236,8 @@ function EmptyComponent() {
         </Prompt.TitleText>
         <Prompt.DescriptionText>
           <Trans>
-            You can customize your starter pack with feeds and labelers if you
-            create one on your own.
+            You can customize your starter pack with feeds and your favorite
+            people if you create your own.
           </Trans>
         </Prompt.DescriptionText>
         <Prompt.Actions>
