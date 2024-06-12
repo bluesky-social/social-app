@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-06-11 16:06+0900\n"
+"PO-Revision-Date: 2024-06-12 20:38+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -1092,7 +1092,7 @@ msgstr "{0}として続行（現在サインイン中）"
 
 #: src/view/com/post-thread/PostThreadLoadMore.tsx:52
 msgid "Continue thread..."
-msgstr ""
+msgstr "スレッドの続き…"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:250
 #: src/screens/Onboarding/StepProfile/index.tsx:266
@@ -1534,13 +1534,13 @@ msgstr "例：返信として広告を繰り返し送ってくるユーザー。
 msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr "それぞれのコードは一回限り有効です。定期的に追加の招待コードをお送りします。"
 
-#: src/view/screens/Feeds.tsx:400
-#: src/view/screens/Feeds.tsx:471
-msgid "Edit"
-msgstr ""
-
 #: src/view/com/lists/ListMembers.tsx:149
 msgctxt "action"
+msgid "Edit"
+msgstr "編集"
+
+#: src/view/screens/Feeds.tsx:400
+#: src/view/screens/Feeds.tsx:471
 msgid "Edit"
 msgstr "編集"
 
@@ -2023,12 +2023,12 @@ msgstr "フォロワー"
 
 #: src/Navigation.tsx:177
 msgid "Followers of @{0} that you know"
-msgstr ""
+msgstr "あなたが知っている@{0}のフォロワー"
 
 #: src/screens/Profile/KnownFollowers.tsx:108
 #: src/screens/Profile/KnownFollowers.tsx:118
 msgid "Followers you know"
-msgstr ""
+msgstr "あなたが知ってるフォロワー"
 
 #: src/components/ProfileHoverCard/index.web.tsx:411
 #: src/components/ProfileHoverCard/index.web.tsx:422
@@ -3777,7 +3777,7 @@ msgstr "再実行する"
 
 #: src/components/KnownFollowers.tsx:111
 msgid "Press to view followers of this account that you also follow"
-msgstr ""
+msgstr "あなたもフォローしているこのアカウントのフォロワーを見る"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:150
 msgid "Previous image"
@@ -5798,7 +5798,7 @@ msgstr "このフィードにいいねしたユーザーを見る"
 #: src/view/com/home/HomeHeaderLayout.web.tsx:78
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:84
 msgid "View your feeds and explore more"
-msgstr ""
+msgstr "フィードを表示し、さらにフィードを探す"
 
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
@@ -6041,7 +6041,7 @@ msgstr "あなたはまだだれもフォロワーがいません。"
 
 #: src/screens/Profile/KnownFollowers.tsx:99
 msgid "You don't follow any users who follow @{name}."
-msgstr ""
+msgstr "@{name}をフォローしているユーザーを誰もフォローしていません。"
 
 #: src/view/com/modals/InviteCodes.tsx:67
 msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
