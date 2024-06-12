@@ -82,15 +82,6 @@ function KnownFollowersInner({
     t.atoms.text_contrast_medium,
   ]
 
-  // list of users, minus blocks
-  const returnedCount = cachedKnownFollowers.followers.length
-  // db count, includes blocks
-  const fullCount = cachedKnownFollowers.count
-  // knownFollowers can return up to 5 users, but will exclude blocks
-  // therefore, if we have less 5 users, use whichever count is lower
-  const count =
-    returnedCount < 5 ? Math.min(fullCount, returnedCount) : fullCount
-
   const slice = cachedKnownFollowers.followers.slice(0, 3).map(f => {
     const moderation = moderateProfile(f, moderationOpts)
     return {
@@ -104,6 +95,7 @@ function KnownFollowersInner({
       moderation,
     }
   })
+  const count = cachedKnownFollowers.count - Math.min(slice.length, 2)
 
   return (
     <Link
