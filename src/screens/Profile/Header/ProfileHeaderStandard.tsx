@@ -30,6 +30,10 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {MessageProfileButton} from '#/components/dms/MessageProfileButton'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import {
+  KnownFollowers,
+  shouldShowKnownFollowers,
+} from '#/components/KnownFollowers'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {ProfileHeaderDisplayName} from './DisplayName'
@@ -268,6 +272,16 @@ let ProfileHeaderStandard = ({
                 />
               </View>
             ) : undefined}
+
+            {!isMe &&
+              shouldShowKnownFollowers(profile.viewer?.knownFollowers) && (
+                <View style={[a.flex_row, a.align_center, a.gap_sm, a.pt_md]}>
+                  <KnownFollowers
+                    profile={profile}
+                    moderationOpts={moderationOpts}
+                  />
+                </View>
+              )}
           </>
         )}
       </View>

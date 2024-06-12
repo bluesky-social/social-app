@@ -30,11 +30,6 @@ import {useSession} from 'state/session'
 import {PostThreadFollowBtn} from 'view/com/post-thread/PostThreadFollowBtn'
 import {atoms as a} from '#/alf'
 import {RichText} from '#/components/RichText'
-import {
-  isAvailable as isNativeTranslationAvailable,
-  isLanguageSupported,
-  NativeTranslationModule,
-} from '../../../../modules/expo-bluesky-translate'
 import {ContentHider} from '../../../components/moderation/ContentHider'
 import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
 import {PostAlerts} from '../../../components/moderation/PostAlerts'
@@ -344,7 +339,6 @@ let PostThreadItemLoaded = ({
             </ContentHider>
             <ExpandedPostDetails
               post={post}
-              record={record}
               translatorUrl={translatorUrl}
               needsTranslation={needsTranslation}
             />
@@ -653,12 +647,10 @@ function PostOuterWrapper({
 
 function ExpandedPostDetails({
   post,
-  record,
   needsTranslation,
   translatorUrl,
 }: {
   post: AppBskyFeedDefs.PostView
-  record?: AppBskyFeedPost.Record
   needsTranslation: boolean
   translatorUrl: string
 }) {
@@ -666,18 +658,9 @@ function ExpandedPostDetails({
   const {_} = useLingui()
   const openLink = useOpenLink()
 
-  const text = record?.text || ''
-
   const onTranslatePress = React.useCallback(() => {
-    if (
-      isNativeTranslationAvailable &&
-      isLanguageSupported(record?.langs?.at(0))
-    ) {
-      NativeTranslationModule.presentAsync(text)
-    } else {
-      openLink(translatorUrl)
-    }
-  }, [openLink, text, translatorUrl, record])
+    openLink(translatorUrl)
+  }, [openLink, translatorUrl])
 
   return (
     <View style={[s.flexRow, s.mt2, s.mb10]}>
