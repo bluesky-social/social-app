@@ -63,7 +63,7 @@ export function StepFinished() {
         if (starterPack.list) {
           const listRes = await agent.app.bsky.graph.getList({
             list: starterPack.list.uri,
-            limit: 51,
+            limit: 50,
           })
           listItems = listRes.data.items
         }
@@ -78,8 +78,8 @@ export function StepFinished() {
           ...(listItems?.map(i => i.subject.did) ?? []),
         ]),
         (async () => {
+          // Interests need to get saved first, then we can write the feeds to prefs
           await agent.setInterestsPref({tags: selectedInterests})
-
           if (starterPack?.feeds?.length) {
             await agent.addSavedFeeds(
               starterPack.feeds.map(f => ({
