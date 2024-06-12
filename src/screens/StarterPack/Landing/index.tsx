@@ -214,32 +214,25 @@ function LandingScreenInner({
   )
 }
 
-function User({displayName, avatar}: {displayName: string; avatar?: string}) {
-  const {isTabletOrDesktop} = useWebMediaQueries()
-
-  return (
-    <View style={[a.flex_1, a.align_center, a.gap_sm]}>
-      <UserAvatar size={isTabletOrDesktop ? 58 : 48} avatar={avatar} />
-      <Text style={[a.flex_1, a.text_sm, a.font_bold]} numberOfLines={1}>
-        {displayName}
-      </Text>
-    </View>
-  )
-}
-
 function ProfilesSet({
   profiles,
 }: {
   profiles: AppBskyActorDefs.ProfileViewBasic[]
 }) {
+  const {isTabletOrDesktop} = useWebMediaQueries()
+
   return (
     <View style={[a.flex_row, a.gap_xs, a.align_center, a.justify_between]}>
       {profiles.map(profile => (
-        <User
-          key={profile.did}
-          displayName={profile.displayName || `@${profile.handle}`}
-          avatar={profile.avatar}
-        />
+        <View style={[a.flex_1, a.align_center, a.gap_sm]} key={profile.did}>
+          <UserAvatar
+            size={isTabletOrDesktop ? 58 : 48}
+            avatar={profile.avatar}
+          />
+          <Text style={[a.flex_1, a.text_sm, a.font_bold]} numberOfLines={1}>
+            {profile.displayName}
+          </Text>
+        </View>
       ))}
     </View>
   )
