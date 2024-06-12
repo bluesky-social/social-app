@@ -166,32 +166,34 @@ function KnownFollowersInner({
               },
             ]}
             numberOfLines={2}>
-            <Trans>Followed by</Trans>{' '}
-            {count > 2 ? (
-              <>
-                {slice.slice(0, 2).map(({profile: prof}, i) => (
+            <Trans>
+              Followed by{' '}
+              {count > 2 ? (
+                <>
+                  {slice.slice(0, 2).map(({profile: prof}, i) => (
+                    <Text key={prof.did} style={textStyle}>
+                      {prof.displayName}
+                      {i === 0 && ', '}
+                    </Text>
+                  ))}
+                  {', '}
+                  {plural(count - 2, {
+                    one: 'and # other',
+                    other: 'and # others',
+                  })}
+                </>
+              ) : count === 2 ? (
+                slice.map(({profile: prof}, i) => (
                   <Text key={prof.did} style={textStyle}>
-                    {prof.displayName}
-                    {i === 0 && ', '}
+                    {prof.displayName} {i === 0 ? _(msg`and`) + ' ' : ''}
                   </Text>
-                ))}
-                {', '}
-                {plural(count - 2, {
-                  one: 'and # other',
-                  other: 'and # others',
-                })}
-              </>
-            ) : count === 2 ? (
-              slice.map(({profile: prof}, i) => (
-                <Text key={prof.did} style={textStyle}>
-                  {prof.displayName} {i === 0 ? _(msg`and`) + ' ' : ''}
+                ))
+              ) : (
+                <Text key={slice[0].profile.did} style={textStyle}>
+                  {slice[0].profile.displayName}
                 </Text>
-              ))
-            ) : (
-              <Text key={slice[0].profile.did} style={textStyle}>
-                {slice[0].profile.displayName}
-              </Text>
-            )}
+              )}
+            </Trans>
           </Text>
         </>
       )}
