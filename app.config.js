@@ -93,7 +93,7 @@ module.exports = function (config) {
         entitlements: {
           'com.apple.security.application-groups': 'group.app.bsky',
           'com.apple.developer.associated-appclip-app-identifiers':
-            'xyz.blueskysocial.app.appclip',
+            'xyz.blueskyweb.app.appclip',
         },
         privacyManifests: {
           NSPrivacyAccessedAPITypes: [
