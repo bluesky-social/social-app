@@ -752,8 +752,8 @@ function useAnimatedBorders() {
 
 function useKeyboardVerticalOffset() {
   const {height: windowHeight} = useWindowDimensions()
-
-  const [viewHeight, setViewHeight] = useState(0)
+  // estimate height to avoid potential jumping on first render
+  const [viewHeight, setViewHeight] = useState(windowHeight - 69)
 
   return [
     isIOS ? windowHeight - viewHeight : 0,
