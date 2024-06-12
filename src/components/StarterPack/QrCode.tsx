@@ -2,14 +2,15 @@ import React from 'react'
 import {View} from 'react-native'
 import QRCode from 'react-native-qrcode-styled'
 import ViewShot from 'react-native-view-shot'
-import {LinearGradient} from 'expo-linear-gradient'
 import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
+import {makeStarterPackLink} from 'lib/routes/links'
 import {Logo} from 'view/icons/Logo'
 import {Logotype} from 'view/icons/Logotype'
 import {useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
+import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {Text} from '#/components/Typography'
 
 interface Props {
@@ -20,13 +21,7 @@ export const QrCode = React.forwardRef<ViewShot, Props>(function QrCode(
   {starterPack},
   ref,
 ) {
-  const t = useTheme()
   const {record} = starterPack
-
-  const gradient =
-    t.name === 'light'
-      ? [t.palette.primary_500, t.palette.primary_300]
-      : [t.palette.primary_600, t.palette.primary_400]
 
   if (!AppBskyGraphStarterpack.isRecord(record)) {
     return null
@@ -34,8 +29,7 @@ export const QrCode = React.forwardRef<ViewShot, Props>(function QrCode(
 
   return (
     <ViewShot ref={ref}>
-      <LinearGradient
-        colors={gradient}
+      <LinearGradientBackground
         style={[
           {width: 300, height: 440},
           a.align_center,
@@ -56,7 +50,7 @@ export const QrCode = React.forwardRef<ViewShot, Props>(function QrCode(
           <Trans>Join the conversation</Trans>
         </Text>
         <View style={[a.rounded_sm, a.overflow_hidden]}>
-          <QrCodeInner url="https://bsky.app" />
+          <QrCodeInner url={makeStarterPackLink(starterPack)} />
         </View>
 
         <View style={[a.flex_row, a.align_center, {gap: 5}]}>
@@ -75,7 +69,7 @@ export const QrCode = React.forwardRef<ViewShot, Props>(function QrCode(
             style={{marginTop: 6, marginLeft: 2}}
           />
         </View>
-      </LinearGradient>
+      </LinearGradientBackground>
     </ViewShot>
   )
 })

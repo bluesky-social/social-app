@@ -6,7 +6,6 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {LinearGradient} from 'expo-linear-gradient'
 import {AppBskyGraphDefs, AppBskyGraphGetActorStarterPacks} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -20,6 +19,7 @@ import {List, ListRef} from 'view/com/util/List'
 import {Text} from 'view/com/util/text/Text'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
+import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 
 interface SectionRef {
@@ -134,14 +134,9 @@ function EmptyComponent() {
   const {_} = useLingui()
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
-  const gradient =
-    t.name === 'light'
-      ? [t.palette.primary_500, t.palette.primary_400]
-      : [t.palette.primary_600, t.palette.primary_500]
 
   return (
-    <LinearGradient
-      colors={gradient}
+    <LinearGradientBackground
       style={[
         a.px_md,
         a.py_xl,
@@ -176,6 +171,6 @@ function EmptyComponent() {
           <Trans>Create</Trans>
         </ButtonText>
       </Button>
-    </LinearGradient>
+    </LinearGradientBackground>
   )
 }

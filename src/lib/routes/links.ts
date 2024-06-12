@@ -46,7 +46,7 @@ export function makeStarterPackLink(
   rkey?: string,
 ) {
   if (typeof starterPackOrName === 'string') {
-    return `/starter-pack/${starterPackOrName}/${rkey}`
+    return `/start/${starterPackOrName}/${rkey}`
   } else {
     const rkey = new AtUri(starterPackOrName.uri).rkey
     return makeProfileLink(starterPackOrName.creator, 'starter-pack', rkey)

@@ -1,6 +1,5 @@
 import React from 'react'
 import {ScrollView, View} from 'react-native'
-import {LinearGradient} from 'expo-linear-gradient'
 import {
   AppBskyActorDefs,
   AppBskyGraphDefs,
@@ -25,6 +24,7 @@ import {Logo} from 'view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
+import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Text} from '#/components/Typography'
 
@@ -78,11 +78,6 @@ function LandingScreenInner({
   const setUsedStarterPack = useSetUsedStarterPack()
   const {isTabletOrDesktop} = useWebMediaQueries()
 
-  const gradient =
-    t.name === 'light'
-      ? [t.palette.primary_500, t.palette.primary_300]
-      : [t.palette.primary_600, t.palette.primary_400]
-
   const sampleProfiles = listItemsSample?.map(item => item.subject)
   const userSets = {
     first: sampleProfiles?.slice(0, 4),
@@ -98,8 +93,7 @@ function LandingScreenInner({
       <ScrollView
         style={[a.flex_1]}
         contentContainerStyle={{paddingBottom: 100}}>
-        <LinearGradient
-          colors={gradient}
+        <LinearGradientBackground
           style={[
             a.align_center,
             a.gap_sm,
@@ -126,7 +120,7 @@ function LandingScreenInner({
               Starter pack by {creator.displayName || `@${creator.handle}`}
             </Text>
           </View>
-        </LinearGradient>
+        </LinearGradientBackground>
         <View style={[a.gap_2xl, a.mt_lg, a.mx_lg]}>
           {record.description ? (
             <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
