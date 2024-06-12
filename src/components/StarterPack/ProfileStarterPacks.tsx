@@ -158,7 +158,7 @@ function EmptyComponent() {
             t.atoms.text_contrast_medium,
             {color: 'white'},
           ]}>
-          You have not created a starter pack yet!
+          You haven't created a starter pack yet!
         </Text>
         <Text style={[a.text_md, {color: 'white'}]}>
           Starter packs let you easily share your favorite feeds and people with
