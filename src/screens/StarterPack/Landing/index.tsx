@@ -9,18 +9,14 @@ import {
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
 
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {NavigationProp} from 'lib/routes/types'
 import {
   useSetUsedStarterPack,
   useUsedStarterPack,
 } from 'state/preferences/starter-pack'
 import {useResolveDidQuery} from 'state/queries/resolve-uri'
 import {useStarterPackQuery} from 'state/queries/useStarterPackQuery'
-import {useSession} from 'state/session'
-import {useSetMinimalShellMode} from 'state/shell'
 import {LoggedOutScreenState} from 'view/com/auth/LoggedOut'
 import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {UserAvatar} from 'view/com/util/UserAvatar'
@@ -41,10 +37,6 @@ export function LandingScreen({
   const atUri = new AtUri(usedStarterPack!.uri)
   const {hostname: name, rkey} = atUri
 
-  const navigation = useNavigation<NavigationProp>()
-  const {currentAccount} = useSession()
-  const setMinimalShellMode = useSetMinimalShellMode()
-
   const {
     data: did,
     isLoading: isLoadingDid,
@@ -55,13 +47,6 @@ export function LandingScreen({
     isLoading: isLoadingStarterPack,
     isError: isErrorStarterPack,
   } = useStarterPackQuery({did, rkey})
-
-  React.useEffect(() => {
-    setMinimalShellMode(true)
-    return () => {
-      setMinimalShellMode(false)
-    }
-  }, [currentAccount, navigation, setMinimalShellMode])
 
   if (!did || !starterPack) {
     return (
