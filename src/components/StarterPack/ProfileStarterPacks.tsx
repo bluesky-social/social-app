@@ -116,15 +116,16 @@ export const ProfileStarterPacks = React.forwardRef<
         data={items}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
+        scrollEnabled={items?.length !== 0}
         refreshing={isPTRing}
-        onRefresh={onRefresh}
         headerOffset={headerOffset}
         contentContainerStyle={isNative && {paddingBottom: headerOffset + 100}}
         indicatorStyle={t.name === 'light' ? 'black' : 'white'}
         removeClippedSubviews={true}
         desktopFixedHeight
         onEndReached={onEndReached}
-        ListEmptyComponent={<EmptyComponent />}
+        onRefresh={onRefresh}
+        ListEmptyComponent={EmptyComponent}
       />
     </View>
   )
@@ -142,7 +143,14 @@ function EmptyComponent() {
   return (
     <LinearGradient
       colors={gradient}
-      style={[a.px_md, a.py_xl, a.justify_between, a.gap_md, a.shadow_lg]}>
+      style={[
+        a.px_md,
+        a.py_xl,
+        a.justify_between,
+        a.gap_lg,
+        a.shadow_lg,
+        {marginTop: 2},
+      ]}>
       <View style={[a.gap_xs]}>
         <Text
           style={[
@@ -153,7 +161,7 @@ function EmptyComponent() {
           ]}>
           You have not created a starter pack yet!
         </Text>
-        <Text style={[{color: 'white'}]}>
+        <Text style={[a.text_md, {color: 'white'}]}>
           Starter packs let you easily share your favorite feeds and people with
           your friends.
         </Text>
