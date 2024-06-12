@@ -1,12 +1,11 @@
-import React, {useLayoutEffect, useRef} from 'react'
-import type {ListRenderItemInfo, TextInput as RNTextInput} from 'react-native'
+import React, {useRef} from 'react'
+import type {ListRenderItemInfo} from 'react-native'
 import {View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
 import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import {BottomSheetFlatListMethods} from '@discord/bottom-sheet'
 import {Trans} from '@lingui/macro'
 
-import {isWeb} from 'platform/detection'
 import {useSession} from 'state/session'
 import {WizardAction, WizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a, native, useTheme, web} from '#/alf'
@@ -35,7 +34,6 @@ export function WizardEditListDialog({
   const t = useTheme()
 
   const listRef = useRef<BottomSheetFlatListMethods>(null)
-  const inputRef = useRef<RNTextInput>(null)
 
   const getData = () => {
     if (state.currentStep === 'Feeds') return state.feeds
@@ -48,14 +46,6 @@ export function WizardEditListDialog({
       ...state.profiles.slice(myIndex + 1),
     ]
   }
-
-  useLayoutEffect(() => {
-    if (isWeb) {
-      setImmediate(() => {
-        inputRef?.current?.focus()
-      })
-    }
-  }, [])
 
   const renderItem = ({item}: ListRenderItemInfo<any>) =>
     state.currentStep === 'Profiles' ? (
