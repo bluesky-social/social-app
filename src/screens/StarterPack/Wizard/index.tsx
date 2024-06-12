@@ -551,10 +551,8 @@ function Footer({
   const editDialogControl = useDialogControl()
   const {bottom: bottomInset} = useSafeAreaInsets()
 
-  const items =
-    state.currentStep === 'Profiles'
-      ? [...state.profiles.slice(1), state.profiles[0]]
-      : state.feeds
+  const items = state.currentStep === 'Profiles' ? state.profiles : state.feeds
+  const initialNamesIndex = state.currentStep === 'Profiles' ? 1 : 0
 
   const isEditEnabled =
     (state.currentStep === 'Profiles' && items.length > 1) ||
@@ -623,26 +621,30 @@ function Footer({
             </Trans>
           ) : items.length === 1 ? (
             <Trans>
-              <Text style={[a.font_bold, textStyles]}>{getName(items[0])}</Text>{' '}
+              <Text style={[a.font_bold, textStyles]}>
+                {getName(items[initialNamesIndex])}
+              </Text>{' '}
               is included in your starter pack
             </Trans>
           ) : items.length === 2 ? (
             <Trans>
               <Text style={[a.font_bold, textStyles]}>
-                {getName(items[0])}{' '}
+                {getName(items[initialNamesIndex])}{' '}
               </Text>
               and
               <Text> </Text>
-              <Text style={[a.font_bold]}>{getName(items[1])} </Text>
+              <Text style={[a.font_bold, textStyles]}>
+                {getName(items[state.currentStep === 'Profiles' ? 0 : 1])}{' '}
+              </Text>
               are included in your starter pack
             </Trans>
           ) : (
             <Trans>
               <Text style={[a.font_bold, textStyles]}>
-                {getName(items[0])},{' '}
+                {getName(items[initialNamesIndex])},{' '}
               </Text>
               <Text style={[a.font_bold, textStyles]}>
-                {getName(items[1])},{' '}
+                {getName(items[initialNamesIndex + 1])},{' '}
               </Text>
               and {items.length - 2}{' '}
               <Plural value={items.length - 2} one="other" other="others" /> are
