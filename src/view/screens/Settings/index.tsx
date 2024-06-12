@@ -895,31 +895,6 @@ export function SettingsScreen({}: Props) {
             </TouchableOpacity>
             <TouchableOpacity
               style={[pal.view, styles.linkCardNoIcon]}
-              onPress={() => {
-                navigation.navigate('StarterPackLanding', {
-                  name: 'alice.test',
-                  rkey: '1234567',
-                })
-              }}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Navigate to Starter Pack`)}
-              accessibilityHint={_(msg`Navigate to Starter Pack`)}>
-              <Text type="lg" style={pal.text}>
-                <Trans>Navigate to Starter Pack</Trans>
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[pal.view, styles.linkCardNoIcon]}
-              onPress={() => navigation.navigate('StarterPackWizard', {})}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Navigate to Starter Pack Wizard`)}
-              accessibilityHint={_(msg`Navigates to Starter Pack Wizard`)}>
-              <Text type="lg" style={pal.text}>
-                <Trans>Navigate to Starter Pack Wizard</Trans>
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[pal.view, styles.linkCardNoIcon]}
               onPress={onPressResetOnboarding}
               accessibilityRole="button"
               accessibilityLabel={_(msg`Reset onboarding state`)}
