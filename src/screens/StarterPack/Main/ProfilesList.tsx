@@ -40,9 +40,7 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
 
     const getSortedProfiles = () => {
       if (!profiles) return
-
       const myIndex = profiles.findIndex(p => p.did === currentAccount?.did)
-
       return [
         profiles[myIndex],
         ...profiles.slice(0, myIndex),

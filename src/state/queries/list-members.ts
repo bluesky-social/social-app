@@ -28,7 +28,7 @@ export function useListMembersQuery(uri?: string, limit: number = PAGE_SIZE) {
     queryKey: RQKEY(uri ?? ''),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       const res = await agent.app.bsky.graph.getList({
-        list: uri!,
+        list: uri!, // the enabled flag will prevent this from running until uri is set
         limit,
         cursor: pageParam,
       })
