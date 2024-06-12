@@ -143,9 +143,11 @@ function LandingScreenInner({
           </View>
         </LinearGradient>
         <View style={[a.gap_2xl, a.mt_lg, a.mx_lg]}>
-          <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-            {record.description}
-          </Text>
+          {record.description ? (
+            <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
+              {record.description}
+            </Text>
+          ) : null}
           <Button
             label={_(msg`Join Bluesky now`)}
             onPress={() => {
@@ -178,7 +180,7 @@ function LandingScreenInner({
             {starterPack.feeds?.length ? (
               <View style={[a.gap_md]}>
                 <Text style={[a.font_bold, a.text_lg]}>
-                  Join Bluesky now to subscribe to these feeds
+                  Join Bluesky and subscribe to these feeds
                 </Text>
 
                 <View
