@@ -6,6 +6,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
+import {LinearGradient} from 'expo-linear-gradient'
 import {AppBskyGraphDefs, AppBskyGraphGetActorStarterPacks} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -133,32 +134,41 @@ function EmptyComponent() {
   const {_} = useLingui()
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
+  const gradient =
+    t.name === 'light'
+      ? [t.palette.primary_500, t.palette.primary_400]
+      : [t.palette.primary_600, t.palette.primary_500]
 
   return (
-    <View style={[a.mt_xl, a.px_2xl, a.gap_2xl]}>
-      <Text
-        style={[
-          a.font_bold,
-          a.text_lg,
-          a.text_center,
-          t.atoms.text_contrast_medium,
-        ]}>
-        You have not created any starter packs yet!
-      </Text>
-      <Text style={[a.text_center]}>
-        Create a starter pack now to share your favorite people and feeds with
-        friends!
-      </Text>
+    <LinearGradient
+      colors={gradient}
+      style={[a.px_md, a.py_xl, a.justify_between, a.gap_md, a.shadow_lg]}>
+      <View style={[a.gap_xs]}>
+        <Text
+          style={[
+            a.font_bold,
+            a.text_lg,
+            t.atoms.text_contrast_medium,
+            {color: 'white'},
+          ]}>
+          You have not created a starter pack yet!
+        </Text>
+        <Text style={[{color: 'white'}]}>
+          Starter packs let you easily share your favorite feeds and people with
+          your friends.
+        </Text>
+      </View>
       <Button
         label={_(msg`Create a starter pack`)}
-        variant="solid"
+        variant="outline"
         color="primary"
-        size="medium"
-        onPress={() => navigation.navigate('StarterPackWizard')}>
+        size="small"
+        onPress={() => navigation.navigate('StarterPackWizard', {})}
+        style={[{width: 100, marginLeft: 'auto'}]}>
         <ButtonText>
-          <Trans>Create a starter pack</Trans>
+          <Trans>Create</Trans>
         </ButtonText>
       </Button>
-    </View>
+    </LinearGradient>
   )
 }
