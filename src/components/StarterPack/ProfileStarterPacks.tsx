@@ -6,7 +6,11 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {AppBskyGraphDefs, AppBskyGraphGetActorStarterPacks} from '@atproto/api'
+import {
+  AppBskyGraphDefs,
+  AppBskyGraphGetActorStarterPacks,
+  AtUri,
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -14,12 +18,17 @@ import {InfiniteData, UseInfiniteQueryResult} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
+import {generateStarterpack} from 'lib/generate-starterpack'
 import {NavigationProp} from 'lib/routes/types'
+import {useAgent} from 'state/session'
 import {List, ListRef} from 'view/com/util/List'
 import {Text} from 'view/com/util/text/Text'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
+import {Loader} from '#/components/Loader'
+import * as Prompt from '#/components/Prompt'
 import {StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 
 interface SectionRef {
@@ -134,6 +143,35 @@ function EmptyComponent() {
   const {_} = useLingui()
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
+  const agent = useAgent()
+  const confirmDialogControl = useDialogControl()
+  const followersDialogControl = useDialogControl()
+  const errorDialogControl = useDialogControl()
+
+  const [isGenerating, setIsGenerating] = React.useState(false)
+
+  const generate = async () => {
+    setIsGenerating(true)
+
+    const res = await generateStarterpack({agent})
+
+    if (res === 'NOT_ENOUGH_FOLLOWERS') {
+      followersDialogControl.open()
+      setIsGenerating(false)
+    } else if (res === 'ERROR') {
+      errorDialogControl.open()
+      setIsGenerating(false)
+    } else {
+      const atUri = new AtUri(res)
+      setTimeout(() => {
+        navigation.push('StarterPack', {
+          name: atUri.hostname,
+          rkey: atUri.rkey,
+        })
+        setIsGenerating(false)
+      }, 1000)
+    }
+  }
 
   return (
     <LinearGradientBackground
@@ -160,17 +198,81 @@ function EmptyComponent() {
           your friends.
         </Text>
       </View>
-      <Button
-        label={_(msg`Create a starter pack`)}
-        variant="outline"
-        color="primary"
-        size="small"
-        onPress={() => navigation.navigate('StarterPackWizard', {})}
-        style={[{width: 100, marginLeft: 'auto'}]}>
-        <ButtonText>
-          <Trans>Create</Trans>
-        </ButtonText>
-      </Button>
+      <View style={[a.flex_row, a.gap_md, {marginLeft: 'auto'}]}>
+        <Button
+          label={_(msg`Create a starter pack for me`)}
+          variant="ghost"
+          color="primary"
+          size="small"
+          disabled={isGenerating}
+          onPress={confirmDialogControl.open}
+          style={{backgroundColor: 'transparent'}}>
+          <ButtonText style={{color: 'white'}}>
+            <Trans>Make one for me</Trans>
+          </ButtonText>
+          {isGenerating && <Loader size="md" />}
+        </Button>
+        <Button
+          label={_(msg`Create a starter pack`)}
+          variant="ghost"
+          color="primary"
+          size="small"
+          disabled={isGenerating}
+          onPress={() => navigation.navigate('StarterPackWizard', {})}
+          style={{
+            backgroundColor: 'white',
+            borderColor: 'white',
+            width: 100,
+          }}>
+          <ButtonText>
+            <Trans>Create</Trans>
+          </ButtonText>
+        </Button>
+      </View>
+
+      <Prompt.Outer control={confirmDialogControl}>
+        <Prompt.TitleText>
+          <Trans>Generate a starter pack?</Trans>
+        </Prompt.TitleText>
+        <Prompt.DescriptionText>
+          <Trans>
+            You can customize your starter pack with feeds and labelers if you
+            create one on your own.
+          </Trans>
+        </Prompt.DescriptionText>
+        <Prompt.Actions>
+          <Prompt.Action
+            color="primary"
+            cta={_(msg`I'll create one`)}
+            onPress={() => {
+              navigation.navigate('StarterPackWizard', {})
+            }}
+          />
+          <Prompt.Action
+            color="secondary"
+            cta={_(msg`Generate anyway`)}
+            onPress={generate}
+          />
+        </Prompt.Actions>
+      </Prompt.Outer>
+      <Prompt.Basic
+        control={followersDialogControl}
+        title={_(msg`Oops!`)}
+        description={_(
+          msg`You must be following at least seven other people to generate a starter pack.`,
+        )}
+        onConfirm={() => {}}
+        showCancel={false}
+      />
+      <Prompt.Basic
+        control={errorDialogControl}
+        title={_(msg`Oops!`)}
+        description={_(
+          msg`An error occurred while generating your starter pack. Want to try again?`,
+        )}
+        onConfirm={generate}
+        confirmButtonCta={_(msg`Retry`)}
+      />
     </LinearGradientBackground>
   )
 }

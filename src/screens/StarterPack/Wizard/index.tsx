@@ -20,6 +20,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {HITSLOP_10} from 'lib/constants'
+import {createStarterPackList} from 'lib/generate-starterpack'
 import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
 import {enforceLen} from 'lib/strings/helpers'
 import {isAndroid, isNative, isWeb} from 'platform/detection'
@@ -206,40 +207,6 @@ function WizardInner({
 
   const uiStrings = wizardUiStrings[state.currentStep]
 
-  const createList = async (): Promise<
-    {uri: string; cid: string} | undefined
-  > => {
-    if (state.profiles.length === 0) return
-
-    const list = await agent.app.bsky.graph.list.create(
-      {repo: currentAccount?.did},
-      {
-        name: state.name ?? defaultName,
-        description: state.description,
-        descriptionFacets: [],
-        avatar: undefined,
-        createdAt: new Date().toISOString(),
-        purpose: 'app.bsky.graph.defs#referencelist',
-      },
-    )
-    if (!list) throw new Error('List creation failed')
-    await agent.com.atproto.repo.applyWrites({
-      repo: currentAccount!.did,
-      writes: state.profiles.map(p => ({
-        $type: 'com.atproto.repo.applyWrites#create',
-        collection: 'app.bsky.graph.listitem',
-        value: {
-          $type: 'app.bsky.graph.listitem',
-          subject: p.did,
-          list: list?.uri,
-          createdAt: new Date().toISOString(),
-        },
-      })),
-    })
-
-    return list
-  }
-
   const invalidateQueries = async () => {
     if (!did || !rkey) return
 
@@ -301,7 +268,13 @@ function WizardInner({
             })
           }
         } else {
-          list = await createList()
+          list = await createStarterPackList({
+            name: state.name ?? defaultName,
+            description: state.description,
+            descriptionFacets: [],
+            profiles: state.profiles,
+            agent,
+          })
         }
 
         await agent.com.atproto.repo.putRecord({
@@ -336,7 +309,13 @@ function WizardInner({
         }, 1000)
       } else {
         // Creating a new starter pack
-        const list = await createList()
+        const list = await createStarterPackList({
+          name: state.name ?? defaultName,
+          description: state.description,
+          descriptionFacets: [],
+          profiles: state.profiles,
+          agent,
+        })
         const res = await agent.app.bsky.graph.starterpack.create(
           {
             repo: currentAccount!.did,
