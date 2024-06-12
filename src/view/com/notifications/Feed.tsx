@@ -79,38 +79,6 @@ export function Feed({
     } else {
       arr.push(LOADING_ITEM)
     }
-
-    // TODO remove this temp plc
-    arr = [
-      {
-        type: 'starter-pack-signup',
-        _reactKey: 'plc',
-        notification: {
-          uri: 'https://blueskyweb.xyz',
-          cid: 'abcdefg',
-          author: {
-            did: 'did:plc:temp',
-            handle: 'hailey alt',
-            avatar: undefined,
-            viewer: {
-              muted: false,
-              blockedBy: false,
-            },
-            labels: [],
-            description: '',
-            indexedAt: '2024-05-27T21:52:22.554Z',
-          },
-          reason: 'starter-pack-signup',
-          reasonSubject: 'at://did:plc:temp/app.bsky.starterpack/abcdefg',
-          record: {},
-          isRead: true,
-          indexedAt: '2024-06-04T23:57:19.521Z',
-          labels: [],
-        },
-        subjectUri: 'at://did:plc:temp/app.bsky.starterpack/abcdefg',
-      },
-      ...arr,
-    ]
     return arr
   }, [isFetched, isError, isEmpty, data])
 
