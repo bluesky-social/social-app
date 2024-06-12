@@ -29,7 +29,6 @@ export function ViewHeader({
   showOnDesktop,
   showBorder,
   renderButton,
-  onBackPress: onPressBackOverride,
 }: {
   title: string
   subtitle?: string
@@ -39,7 +38,6 @@ export function ViewHeader({
   showOnDesktop?: boolean
   showBorder?: boolean
   renderButton?: () => JSX.Element
-  onBackPress?: () => void
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -51,15 +49,11 @@ export function ViewHeader({
 
   const onPressBack = React.useCallback(() => {
     if (navigation.canGoBack()) {
-      if (typeof onPressBackOverride === 'function') {
-        onPressBackOverride()
-      } else {
-        navigation.goBack()
-      }
+      navigation.goBack()
     } else {
       navigation.navigate('Home')
     }
-  }, [navigation, onPressBackOverride])
+  }, [navigation])
 
   const onPressMenu = React.useCallback(() => {
     track('ViewHeader:MenuButtonClicked')
