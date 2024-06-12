@@ -17,6 +17,7 @@ import {
   useLoggedOutViewControls,
 } from '#/state/shell/logged-out'
 import {useSetMinimalShellMode} from '#/state/shell/minimal-mode'
+import {IS_DEV, IS_TESTFLIGHT} from 'lib/app-info'
 import {NavigationProp} from 'lib/routes/types'
 import {useUsedStarterPack} from 'state/preferences/starter-pack'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
@@ -47,7 +48,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
       ? requestedAccountSwitchTo === 'new'
         ? ScreenState.S_CreateAccount
         : ScreenState.S_Login
-      : usedStarterPack?.uri
+      : usedStarterPack?.uri && (IS_TESTFLIGHT || IS_DEV)
       ? ScreenState.S_StarterPack
       : ScreenState.S_LoginOrCreateAccount,
   )

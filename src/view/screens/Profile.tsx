@@ -27,6 +27,7 @@ import {useAgent, useSession} from '#/state/session'
 import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
 import {useAnalytics} from 'lib/analytics/analytics'
+import {IS_DEV, IS_TESTFLIGHT} from 'lib/app-info'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {ComposeIcon2} from 'lib/icons'
 import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
@@ -199,7 +200,8 @@ function ProfileScreenLoaded({
   const showLikesTab = isMe
   const showFeedsTab = isMe || (profile.associated?.feedgens || 0) > 0
   const showStarterPacksTab =
-    isMe || !!starterPacksQuery.data?.pages?.[0].starterPacks.length
+    (isMe || !!starterPacksQuery.data?.pages?.[0].starterPacks.length) &&
+    (IS_TESTFLIGHT || IS_DEV)
   const showListsTab =
     hasSession && (isMe || (profile.associated?.lists || 0) > 0)
 
