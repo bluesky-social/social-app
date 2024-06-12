@@ -202,6 +202,13 @@ module.exports = function (config) {
             sounds: PLATFORM === 'ios' ? ['assets/dm.aiff'] : ['assets/dm.mp3'],
           },
         ],
+        [
+          'react-native-app-clip',
+          {
+            name: 'BlueskyAppClip',
+            groupIdentifier: 'group.app.bsky',
+          },
+        ],
         './plugins/withAndroidManifestPlugin.js',
         './plugins/withAndroidManifestFCMIconPlugin.js',
         './plugins/withAndroidStylesWindowBackgroundPlugin.js',
