@@ -21,11 +21,12 @@ export function NewskieDialog({
   profile: AppBskyActorDefs.ProfileViewDetailed
 }) {
   const {_} = useLingui()
-  const control = useDialogControl()
-
-  const profileName = profile.displayName || `@${profile.handle}`
-  const joinedVia = profile.joinedViaStarterPack
   const {currentAccount} = useSession()
+  const control = useDialogControl()
+  const {joinedViaStarterPack} = profile
+  const profileName = profile.displayName || `@${profile.handle}`
+
+  if (!profile.createdAt) return null
 
   return (
     <>
@@ -48,22 +49,31 @@ export function NewskieDialog({
               <Trans>Say hello!</Trans>
             </Text>
             <Text style={[a.text_md]}>
-              {AppBskyGraphStarterpack.isRecord(joinedVia?.record) &&
-              profile.createdAt ? (
+              {AppBskyGraphStarterpack.isRecord(
+                joinedViaStarterPack?.record,
+              ) ? (
                 <Trans>
                   {profileName} joined Bluesky {ago(profile.createdAt, true)}{' '}
                   ago with{' '}
-                  {joinedVia?.creator.did === currentAccount?.did
+                  {joinedViaStarterPack?.creator.did === currentAccount?.did
                     ? 'your'
-                    : `${joinedVia?.creator.displayName}'s` ||
-                      `@${joinedVia?.creator.handle}'s`}{' '}
+                    : `${joinedViaStarterPack?.creator.displayName}'s` ||
+                      `@${joinedViaStarterPack?.creator.handle}'s`}{' '}
                   starter pack.
                 </Trans>
               ) : (
-                <Trans>{profileName} recently joined Bluesky 3 days ago</Trans>
+                <Trans>
+                  {profileName} recently joined Bluesky {ago(profile.createdAt)}{' '}
+                  ago
+                </Trans>
               )}
             </Text>
-            <StarterPackCard starterPack={joinedVia} type="dialog" />
+            {joinedViaStarterPack && (
+              <StarterPackCard
+                starterPack={joinedViaStarterPack}
+                type="dialog"
+              />
+            )}
           </View>
         </Dialog.ScrollableInner>
       </Dialog.Outer>
