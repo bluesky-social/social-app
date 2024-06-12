@@ -208,8 +208,14 @@ function WizardInner({
     const list = await agent.app.bsky.graph.list.create(
       {repo: currentAccount?.did},
       {
-        name: state.name ?? '',
-        description: state.description ?? '',
+        name:
+          state.name ??
+          _(
+            msg`${
+              currentProfile?.displayName || `@${currentProfile?.handle}`
+            }'s Starter Pack`,
+          ),
+        description: state.description,
         descriptionFacets: [],
         avatar: undefined,
         createdAt: new Date().toISOString(),
