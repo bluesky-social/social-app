@@ -7,6 +7,11 @@ import {
 
 const PRESET = 'faster'
 
+export type CompressedVideo = {
+  uri: string
+  size: number
+}
+
 export async function compressVideo(
   file: string,
   callbacks?: {
@@ -30,9 +35,18 @@ export async function compressVideo(
 
   if (success) {
     await FileSystem.deleteAsync(file)
-  }
+    const res = await FileSystem.getInfoAsync(newFile, {size: true})
+    if (res.exists) {
+      console.log('compressed size', (res.size / 1024 / 1024).toFixed(2) + 'mb')
 
-  return {
-    uri: success ? newFile : null,
+      return {
+        success,
+        video: {uri: newFile, size: res.size} as CompressedVideo,
+      }
+    } else {
+      throw new Error('Could not find output video')
+    }
+  } else {
+    return {success: false}
   }
 }

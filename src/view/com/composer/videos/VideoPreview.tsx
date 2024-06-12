@@ -1,6 +1,6 @@
 import React from 'react'
-import * as FileSystem from 'expo-file-system'
 
+import {CompressedVideo} from '#/lib/media/video/compress'
 import {Button, ButtonText} from '#/components/Button'
 import {Text} from '#/components/Typography'
 
@@ -8,7 +8,7 @@ export function VideoPreview({
   video,
   clear,
 }: {
-  video: FileSystem.FileInfo
+  video: CompressedVideo
   clear: () => void
 }) {
   return (

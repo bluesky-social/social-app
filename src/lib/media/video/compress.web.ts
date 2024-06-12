@@ -56,71 +56,86 @@ export async function compressVideo(
   if (!ctx) throw new Error('Could not get canvas context')
   ctx.fillStyle = '#fff'
 
-  console.log('canvas', canvas)
+  try {
+    let wasTruncated = false
+    const videoBlob = await new Promise<Blob>(async resolve => {
+      const chunks: Blob[] = []
+      let options = {
+        mimeType: getSupportedMimeType(),
+        videoBitsPerSecond: 200000,
+      }
+      const recorder = new MediaRecorder(canvas.captureStream(25), options)
 
-  let wasTruncated = false
-  const videoBlob = await new Promise<Blob>(async resolve => {
-    const chunks: Blob[] = []
-    let options = {
-      mimeType: 'video/webm;codecs=h264',
-      videoBitsPerSecond: 200000,
-    }
-    const recorder = new MediaRecorder(canvas.captureStream(25), options)
+      recorder.onerror = console.log
+      recorder.ondataavailable = e => {
+        let size = chunks.reduce((acc, chunk) => acc + chunk.size, 0)
+        if (size + e.data.size > MAX_VIDEO_SIZE) {
+          wasTruncated = true
+          recorder.stop()
+        } else {
+          chunks.push(e.data)
+        }
+      }
+      recorder.onstop = () => {
+        resolve(new Blob(chunks, {type: recorder.mimeType}))
+      }
 
-    recorder.onerror = console.log
-    recorder.ondataavailable = e => {
-      let size = chunks.reduce((acc, chunk) => acc + chunk.size, 0)
-      if (size + e.data.size > MAX_VIDEO_SIZE) {
-        wasTruncated = true
+      videoEl.play()
+      recorder.start()
+
+      let lastCapture = Date.now()
+      while (
+        recorder.state === 'recording' &&
+        videoEl.currentTime < videoEl.duration
+      ) {
+        await new Promise(r => setTimeout(r, 1)) // NOTE: don't use requestAnimationFrame because it pauses with the tab isnt focused
+        onProgress?.(videoEl.currentTime / videoEl.duration)
+        ctx.fillRect(0, 0, outputWidth, outputHeight)
+        ctx.drawImage(
+          videoEl,
+          0,
+          0,
+          videoWidth,
+          videoHeight,
+          0,
+          0,
+          outputWidth,
+          outputHeight,
+        )
+
+        if (Date.now() - lastCapture > 500) {
+          recorder.requestData()
+          lastCapture = Date.now()
+        }
+      }
+      if (recorder.state === 'recording') {
         recorder.stop()
-      } else {
-        chunks.push(e.data)
       }
-    }
-    recorder.onstop = () => {
-      resolve(new Blob(chunks, {type: recorder.mimeType}))
+    })
+
+    if (wasTruncated) {
+      Toast.show('Video was too long and was truncated')
     }
 
-    videoEl.play()
-    recorder.start()
-
-    let lastCapture = Date.now()
-    while (
-      recorder.state === 'recording' &&
-      videoEl.currentTime < videoEl.duration
-    ) {
-      await new Promise(r => setTimeout(r, 1)) // NOTE: don't use requestAnimationFrame because it pauses with the tab isnt focused
-      onProgress?.(videoEl.currentTime / videoEl.duration)
-      ctx.fillRect(0, 0, outputWidth, outputHeight)
-      ctx.drawImage(
-        videoEl,
-        0,
-        0,
-        videoWidth,
-        videoHeight,
-        0,
-        0,
-        outputWidth,
-        outputHeight,
-      )
-
-      if (Date.now() - lastCapture > 500) {
-        recorder.requestData()
-        lastCapture = Date.now()
-      }
+    return {
+      uri: URL.createObjectURL(videoBlob),
     }
-    if (recorder.state === 'recording') {
-      recorder.stop()
-    }
-  })
-
-  if (wasTruncated) {
-    Toast.show('Video was too long and was truncated')
+  } catch (err) {
+    console.error(err)
+    Toast.show('Failed to compress video')
+  } finally {
+    URL.revokeObjectURL(objectUrl)
   }
+}
 
-  URL.revokeObjectURL(objectUrl)
-
-  return {
-    uri: URL.createObjectURL(videoBlob),
+function getSupportedMimeType() {
+  if (MediaRecorder.isTypeSupported('video/mp4;codecs=h264')) {
+    return 'video/mp4;codecs=h264'
+  } else if (MediaRecorder.isTypeSupported('video/webm;codecs=h264')) {
+    return 'video/webm;codecs=h264'
+  } else if (MediaRecorder.isTypeSupported('video/webm;codecs=vp9')) {
+    return 'video/webm;codecs=vp9'
+  } else {
+    throw new Error('No supported video codec found')
   }
 }
