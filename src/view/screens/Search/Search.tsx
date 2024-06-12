@@ -67,10 +67,7 @@ import {
 } from 'view/com/util/LoadingPlaceholder'
 import {atoms as a, useTheme as useThemeNew} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {IconCircle} from '#/components/IconCircle'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {Props as SVGIconProps} from '#/components/icons/common'
-import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {Loader as LoaderIcon} from '#/components/Loader'
@@ -140,11 +137,9 @@ function EmptyState({message, error}: {message: string; error?: string}) {
 function SuggestedItemsHeader({
   title,
   description,
-  icon,
 }: {
   title: string
   description: string
-  icon: React.ComponentType<SVGIconProps>
 }) {
   const t = useThemeNew()
 
@@ -154,7 +149,7 @@ function SuggestedItemsHeader({
         isWeb
           ? [
               a.flex_row,
-              a.px_md,
+              a.px_lg,
               a.py_lg,
               a.gap_md,
               t.atoms.border_contrast_low,
@@ -166,7 +161,6 @@ function SuggestedItemsHeader({
               t.atoms.border_contrast_low,
             ]
       }>
-      <IconCircle icon={icon} size="lg" />
       <View style={[a.flex_1, a.gap_xs]}>
         <Text style={[a.flex_1, a.text_2xl, a.font_bold, t.atoms.text]}>
           {title}
@@ -183,7 +177,6 @@ type ExploreScreenItems =
       key: string
       title: string
       description: string
-      icon: React.ComponentType<SVGIconProps>
     }
   | {
       type: 'profile'
@@ -276,7 +269,6 @@ function ExploreScreen() {
         key: 'suggested-follows-header',
         title: _(msg`Suggested follows`),
         description: _(msg`Find new friends or interesting accounts`),
-        icon: ListSparkle,
       },
     ]
 
@@ -321,7 +313,6 @@ function ExploreScreen() {
       key: 'suggested-feeds-header',
       title: _(msg`Suggested feeds`),
       description: _(msg`Discover new content`),
-      icon: ListSparkle,
     })
 
     if (feeds && preferences) {
@@ -423,7 +414,6 @@ function ExploreScreen() {
             <SuggestedItemsHeader
               title={item.title}
               description={item.description}
-              icon={item.icon}
             />
           )
         }
@@ -451,7 +441,6 @@ function ExploreScreen() {
                 a.flex_row,
                 a.justify_center,
                 a.border_t,
-                a.border_b,
                 t.atoms.border_contrast_low,
               ]}>
               <Button
