@@ -6,24 +6,18 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {AppBskyGraphGetActorStarterPacks} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {AppBskyGraphDefs, AppBskyGraphGetActorStarterPacks} from '@atproto/api'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {InfiniteData, UseInfiniteQueryResult} from '@tanstack/react-query'
 
-import {useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
-import {usePalette} from 'lib/hooks/usePalette'
-import {usePreferencesQuery} from 'state/queries/preferences'
-import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {List, ListRef} from 'view/com/util/List'
 import {Text} from 'view/com/util/text/Text'
+import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
 import {StarterPackCard} from '#/components/StarterPack/StarterPackCard'
-
-const LOADING = {_reactKey: '__loading__'}
-const EMPTY = {_reactKey: '__empty__'}
-const ERROR_ITEM = {_reactKey: '__error__'}
-const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
 
 interface SectionRef {
   scrollToTop: () => void
@@ -42,6 +36,23 @@ interface ProfileFeedgensProps {
   setScrollViewTag: (tag: number | null) => void
 }
 
+function renderItem({
+  item,
+  index,
+}: ListRenderItemInfo<AppBskyGraphDefs.StarterPackView>) {
+  return (
+    <StarterPackCard
+      starterPack={item}
+      type="list"
+      hideTopBorder={!isWeb && index === 0}
+    />
+  )
+}
+
+function keyExtractor(item: AppBskyGraphDefs.StarterPackView) {
+  return item.uri
+}
+
 export const ProfileStarterPacks = React.forwardRef<
   SectionRef,
   ProfileFeedgensProps
@@ -57,29 +68,11 @@ export const ProfileStarterPacks = React.forwardRef<
   },
   ref,
 ) {
-  const pal = usePalette('default')
-  const theme = useTheme()
+  const t = useTheme()
   const [isPTRing, setIsPTRing] = React.useState(false)
-  const {data: pages, refetch, isFetching, hasNextPage, fetchNextPage} = query
-  const {data: preferences} = usePreferencesQuery()
+  const {data, refetch, isFetching, hasNextPage, fetchNextPage} = query
 
-  const isEmpty = pages?.pages.length === 0
-
-  const items = React.useMemo(() => {
-    let items: any[] = []
-    if (isEmpty) {
-      items = items.concat([ERROR_ITEM])
-    }
-    if (isEmpty) {
-      items = items.concat([EMPTY])
-    } else if (pages?.pages) {
-      items = pages?.pages.flatMap(page => page.starterPacks)
-    }
-    if (!isEmpty) {
-      items = items.concat([LOAD_MORE_ERROR_ITEM])
-    }
-    return items
-  }, [isEmpty, pages])
+  const items = data?.pages.flatMap(page => page.starterPacks)
 
   React.useImperativeHandle(ref, () => ({
     scrollToTop: () => {},
@@ -105,35 +98,6 @@ export const ProfileStarterPacks = React.forwardRef<
     }
   }, [isFetching, hasNextPage, fetchNextPage])
 
-  const renderItem = React.useCallback(
-    ({item, index}: ListRenderItemInfo<any>) => {
-      if (item === EMPTY) {
-        return (
-          <View
-            testID="listsEmpty"
-            style={[{padding: 18, borderTopWidth: 1}, pal.border]}>
-            <Text style={pal.textLight}>
-              <Trans>You have no starter packs.</Trans>
-            </Text>
-          </View>
-        )
-      } else if (item === LOADING) {
-        return <FeedLoadingPlaceholder />
-      }
-      if (preferences) {
-        return (
-          <StarterPackCard
-            starterPack={item}
-            type="list"
-            hideTopBorder={!isWeb && index === 0}
-          />
-        )
-      }
-      return null
-    },
-    [pal, preferences],
-  )
-
   React.useEffect(() => {
     if (enabled && scrollElRef.current) {
       const nativeTag = findNodeHandle(scrollElRef.current)
@@ -147,17 +111,50 @@ export const ProfileStarterPacks = React.forwardRef<
         testID={testID ? `${testID}-flatlist` : undefined}
         ref={scrollElRef}
         data={items}
-        keyExtractor={(item: any) => item._reactKey || item.uri}
         renderItem={renderItem}
+        keyExtractor={keyExtractor}
         refreshing={isPTRing}
         onRefresh={onRefresh}
         headerOffset={headerOffset}
         contentContainerStyle={isNative && {paddingBottom: headerOffset + 100}}
-        indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
+        indicatorStyle={t.name === 'light' ? 'black' : 'white'}
         removeClippedSubviews={true}
         desktopFixedHeight
         onEndReached={onEndReached}
+        ListEmptyComponent={<EmptyComponent />}
       />
     </View>
   )
 })
+
+function EmptyComponent() {
+  const {_} = useLingui()
+  const t = useTheme()
+
+  return (
+    <View style={[a.mt_xl, a.px_2xl, a.gap_2xl]}>
+      <Text
+        style={[
+          a.font_bold,
+          a.text_lg,
+          a.text_center,
+          t.atoms.text_contrast_medium,
+        ]}>
+        You have not created any starter packs yet!
+      </Text>
+      <Text style={[a.text_center]}>
+        Create a starter pack now to share your favorite people and feeds with
+        friends!
+      </Text>
+      <Button
+        label={_(msg`Create a starter pack`)}
+        variant="solid"
+        color="primary"
+        size="medium">
+        <ButtonText>
+          <Trans>Create a starter pack</Trans>
+        </ButtonText>
+      </Button>
+    </View>
+  )
+}
