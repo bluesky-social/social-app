@@ -126,7 +126,7 @@ export function Provider({
     }
 
     return {
-      canNext: false,
+      canNext: true,
       currentStep: 'Details',
       profiles: [profile],
       feeds: [],

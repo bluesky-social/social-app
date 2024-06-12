@@ -551,7 +551,10 @@ function Footer({
   const editDialogControl = useDialogControl()
   const {bottom: bottomInset} = useSafeAreaInsets()
 
-  const items = state.currentStep === 'Profiles' ? state.profiles : state.feeds
+  const items =
+    state.currentStep === 'Profiles'
+      ? [...state.profiles.slice(1), state.profiles[0]]
+      : state.feeds
 
   const isEditEnabled =
     (state.currentStep === 'Profiles' && items.length > 1) ||
