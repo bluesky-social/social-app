@@ -48,12 +48,15 @@ export function LandingScreen({
     isError: isErrorStarterPack,
   } = useStarterPackQuery({did, rkey})
 
+  React.useEffect(() => {
+    if (isErrorDid || isErrorStarterPack) {
+      setScreenState(LoggedOutScreenState.S_LoginOrCreateAccount)
+    }
+  }, [isErrorDid, isErrorStarterPack, setScreenState])
+
   if (!did || !starterPack) {
     return (
-      <ListMaybePlaceholder
-        isLoading={isLoadingDid || isLoadingStarterPack}
-        isError={isErrorDid || isErrorStarterPack}
-      />
+      <ListMaybePlaceholder isLoading={isLoadingDid || isLoadingStarterPack} />
     )
   }
 
