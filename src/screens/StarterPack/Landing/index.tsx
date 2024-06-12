@@ -5,20 +5,23 @@ import {
   AppBskyActorDefs,
   AppBskyGraphDefs,
   AppBskyGraphStarterpack,
+  AtUri,
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
-import {useSetUsedStarterPack} from 'state/preferences/starter-pack'
+import {NavigationProp} from 'lib/routes/types'
+import {
+  useSetUsedStarterPack,
+  useUsedStarterPack,
+} from 'state/preferences/starter-pack'
 import {useResolveDidQuery} from 'state/queries/resolve-uri'
 import {useStarterPackQuery} from 'state/queries/useStarterPackQuery'
 import {useSession} from 'state/session'
 import {useSetMinimalShellMode} from 'state/shell'
-import {useLoggedOutViewControls} from 'state/shell/logged-out'
+import {LoggedOutScreenState} from 'view/com/auth/LoggedOut'
 import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {CenteredView} from 'view/com/util/Views'
@@ -30,9 +33,14 @@ import {ListMaybePlaceholder} from '#/components/Lists'
 import {Text} from '#/components/Typography'
 
 export function LandingScreen({
-  route,
-}: NativeStackScreenProps<CommonNavigatorParams, 'StarterPackLanding'>) {
-  const {name, rkey} = route.params
+  setScreenState,
+}: {
+  setScreenState: (state: LoggedOutScreenState) => void
+}) {
+  const usedStarterPack = useUsedStarterPack()
+  const atUri = new AtUri(usedStarterPack!.uri)
+  const {hostname: name, rkey} = atUri
+
   const navigation = useNavigation<NavigationProp>()
   const {currentAccount} = useSession()
   const setMinimalShellMode = useSetMinimalShellMode()
@@ -64,18 +72,24 @@ export function LandingScreen({
     )
   }
 
-  return <LandingScreenInner starterPack={starterPack} />
+  return (
+    <LandingScreenInner
+      starterPack={starterPack}
+      setScreenState={setScreenState}
+    />
+  )
 }
 
 function LandingScreenInner({
   starterPack,
+  setScreenState,
 }: {
   starterPack: AppBskyGraphDefs.StarterPackView
+  setScreenState: (state: LoggedOutScreenState) => void
 }) {
   const {record, creator, listItemsSample, feeds, joinedWeekCount} = starterPack
   const {_} = useLingui()
   const t = useTheme()
-  const {requestSwitchToAccount} = useLoggedOutViewControls()
   const setUsedStarterPack = useSetUsedStarterPack()
   const {isTabletOrDesktop} = useWebMediaQueries()
 
@@ -139,7 +153,7 @@ function LandingScreenInner({
                 uri: starterPack.uri,
                 cid: starterPack.cid,
               })
-              requestSwitchToAccount({requestedAccount: 'new'})
+              setScreenState(LoggedOutScreenState.S_CreateAccount)
             }}
             variant="solid"
             color="primary"
@@ -220,9 +234,11 @@ function LandingScreenInner({
 }
 
 function User({displayName, avatar}: {displayName: string; avatar?: string}) {
+  const {isTabletOrDesktop} = useWebMediaQueries()
+
   return (
     <View style={[a.flex_1, a.align_center, a.gap_sm]}>
-      <UserAvatar size={64} avatar={avatar} />
+      <UserAvatar size={isTabletOrDesktop ? 58 : 48} avatar={avatar} />
       <Text style={[a.flex_1, a.text_sm, a.font_bold]} numberOfLines={1}>
         {displayName}
       </Text>

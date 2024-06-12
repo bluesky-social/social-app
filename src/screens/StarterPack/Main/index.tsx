@@ -32,7 +32,7 @@ import {Text} from '#/components/Typography'
 
 export function StarterPackScreen({
   route,
-}: NativeStackScreenProps<CommonNavigatorParams, 'StarterPackLanding'>) {
+}: NativeStackScreenProps<CommonNavigatorParams, 'StarterPack'>) {
   const {name, rkey} = route.params
   const {
     data: did,

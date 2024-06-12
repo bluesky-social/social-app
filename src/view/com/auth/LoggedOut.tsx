@@ -23,6 +23,7 @@ import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Text} from '#/view/com/util/text/Text'
 import {Login} from '#/screens/Login'
 import {Signup} from '#/screens/Signup'
+import {LandingScreen} from '#/screens/StarterPack/Landing'
 import {SplashScreen} from './SplashScreen'
 
 enum ScreenState {
@@ -31,6 +32,7 @@ enum ScreenState {
   S_CreateAccount,
   S_StarterPack,
 }
+export {ScreenState as LoggedOutScreenState}
 
 export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   const {hasSession} = useSession()
@@ -41,19 +43,19 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   const usedStarterPack = useUsedStarterPack()
   const {requestedAccountSwitchTo} = useLoggedOutView()
   const [screenState, setScreenState] = React.useState<ScreenState>(
-    usedStarterPack?.uri
-      ? ScreenState.S_StarterPack
-      : requestedAccountSwitchTo
+    requestedAccountSwitchTo
       ? requestedAccountSwitchTo === 'new'
         ? ScreenState.S_CreateAccount
         : ScreenState.S_Login
+      : usedStarterPack?.uri
+      ? ScreenState.S_StarterPack
       : ScreenState.S_LoginOrCreateAccount,
   )
   const {isMobile} = useWebMediaQueries()
   const {clearRequestedAccount} = useLoggedOutViewControls()
   const navigation = useNavigation<NavigationProp>()
-  const isFirstScreen = screenState === ScreenState.S_LoginOrCreateAccount
 
+  const isFirstScreen = screenState === ScreenState.S_LoginOrCreateAccount
   React.useEffect(() => {
     screen('Login')
     setMinimalShellMode(true)
@@ -78,11 +80,14 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
         pal.view,
         {
           // only needed if dismiss button is present
-          paddingTop: onDismiss && isMobile ? 40 : 0,
+          paddingTop:
+            onDismiss && isMobile && screenState !== ScreenState.S_StarterPack
+              ? 40
+              : 0,
         },
       ]}>
       <ErrorBoundary>
-        {onDismiss ? (
+        {onDismiss && screenState !== ScreenState.S_StarterPack ? (
           <Pressable
             accessibilityHint={_(msg`Go back`)}
             accessibilityLabel={_(msg`Go back`)}
@@ -138,7 +143,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
         ) : null}
 
         {screenState === ScreenState.S_StarterPack ? (
-          <View />
+          <LandingScreen setScreenState={setScreenState} />
         ) : screenState === ScreenState.S_LoginOrCreateAccount ? (
           <SplashScreen
             onPressSignin={() => {
