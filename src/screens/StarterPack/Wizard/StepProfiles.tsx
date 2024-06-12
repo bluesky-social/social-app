@@ -64,7 +64,6 @@ export function StepProfiles() {
         onEndReachedThreshold={2}
         renderScrollComponent={props => <KeyboardAwareScrollView {...props} />}
         keyboardShouldPersistTaps="handled"
-        keyboardDismissMode="on-drag"
         containWeb={true}
         sideBorders={false}
         style={[a.flex_1]}
