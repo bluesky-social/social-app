@@ -27,6 +27,8 @@ export function useProfileListsQuery(did: string, opts?: {enabled?: boolean}) {
         cursor: pageParam,
       })
 
+      // Starter packs use a reference list, which we do not want to show on profiles. At some point we could probably
+      // just filter this out on the backend instead of in the client.
       return {
         ...res.data,
         lists: res.data.lists.filter(
