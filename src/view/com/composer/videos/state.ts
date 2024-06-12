@@ -1,5 +1,4 @@
 import {useState} from 'react'
-import * as FileSystem from 'expo-file-system'
 import {ImagePickerAsset} from 'expo-image-picker'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -13,6 +12,10 @@ export function useVideoState({setError}: {setError: (error: string) => void}) {
 
   const {mutate, data, isPending, isError, reset, variables} = useMutation({
     mutationFn: async (asset: ImagePickerAsset) => {
+      console.log(
+        'uncompressed size',
+        ((asset.fileSize ?? 0) / 1024 / 1024).toFixed(2) + 'mb',
+      )
       const compressed = await compressVideo(asset.uri, {
         onProgress: progressMs => {
           if (asset.duration) {
@@ -20,24 +23,8 @@ export function useVideoState({setError}: {setError: (error: string) => void}) {
           }
         },
       })
-      if (!compressed.uri) {
-        throw new Error('Failed to compress video')
-      }
 
-      const res = await FileSystem.getInfoAsync(compressed.uri, {size: true})
-      if (res.exists) {
-        console.log(
-          'uncompressed size',
-          (asset.fileSize! / 1024 / 1024).toFixed(2) + 'mb',
-        )
-        console.log(
-          'compressed size',
-          (res.size / 1024 / 1024).toFixed(2) + 'mb',
-        )
-        return res
-      } else {
-        throw new Error('Could not find output video')
-      }
+      return compressed
     },
     onError: error => {
       console.error('error', error)
@@ -49,7 +36,7 @@ export function useVideoState({setError}: {setError: (error: string) => void}) {
   })
 
   return {
-    video: data,
+    video: data?.video,
     onSelectVideo: mutate,
     videoPending: isPending,
     videoProcessingData: variables,
