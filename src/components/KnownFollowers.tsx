@@ -169,12 +169,13 @@ function KnownFollowersInner({
             {count > 2 ? (
               <Trans>
                 Followed by{' '}
-                {slice.slice(0, 2).map(({profile: prof}, i) => (
-                  <Text key={prof.did} style={textStyle}>
-                    {prof.displayName}
-                    {i === 0 && ', '}
-                  </Text>
-                ))}
+                <Text key={slice[0].profile.did} style={textStyle}>
+                  {slice[0].profile.displayName}
+                </Text>
+                ,{' '}
+                <Text key={slice[1].profile.did} style={textStyle}>
+                  {slice[1].profile.displayName}
+                </Text>
                 , and{' '}
                 <Plural value={count - 2} one="# other" other="# others" />
               </Trans>
