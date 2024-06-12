@@ -203,8 +203,6 @@ function ProfileScreenLoaded({
   const showListsTab =
     hasSession && (isMe || (profile.associated?.lists || 0) > 0)
 
-  console.log(starterPacksQuery.data?.pages)
-
   const sectionTitles = [
     showFiltersTab ? _(msg`Labels`) : undefined,
     showListsTab && hasLabeler ? _(msg`Lists`) : undefined,
