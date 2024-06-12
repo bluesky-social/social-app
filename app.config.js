@@ -22,6 +22,8 @@ const DARK_SPLASH_CONFIG_ANDROID = {
   resizeMode: 'cover',
 }
 
+const ASSOCIATED_DOMAINS = ['applinks:bsky.app', 'applinks:staging.bsky.app']
+
 module.exports = function (config) {
   /**
    * App version number. Should be incremented as part of a release cycle.
@@ -83,7 +85,7 @@ module.exports = function (config) {
           NSPhotoLibraryUsageDescription:
             'Used for profile pictures, posts, and other kinds of content',
         },
-        associatedDomains: ['applinks:bsky.app', 'applinks:staging.bsky.app'],
+        associatedDomains: ASSOCIATED_DOMAINS,
         splash: {
           ...SPLASH_CONFIG,
           dark: DARK_SPLASH_CONFIG,
@@ -250,10 +252,8 @@ module.exports = function (config) {
                       'com.apple.security.application-groups': [
                         'group.app.bsky',
                       ],
-                      'com.apple.developer.associated-domains': [
-                        'applinks:bsky.app',
-                        'applinks:staging.bsky.app',
-                      ],
+                      'com.apple.developer.associated-domains':
+                        ASSOCIATED_DOMAINS,
                       'com.apple.developer.on-demand-install-capable': true,
                     },
                   },
