@@ -12,10 +12,10 @@ export function StarterPackAvatarsIcon({
   starterPack?: AppBskyGraphDefs.StarterPackView
   size?: number
 }) {
-  if (!starterPack) return null
+  // TODO listItemsSample shouldn't be optional
+  if (!starterPack || !starterPack.listItemsSample) return null
 
-  // TODO be sure we get this back from the server
-  const avatars = starterPack.listItemsSample?.map(item => item.subject.avatar)
+  const avatars = starterPack.listItemsSample.map(item => item.subject.avatar)
 
   return (
     <View
