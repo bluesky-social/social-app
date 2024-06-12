@@ -91,7 +91,7 @@ module.exports = function (config) {
         entitlements: {
           'com.apple.security.application-groups': 'group.app.bsky',
           'com.apple.developer.associated-appclip-app-identifiers':
-            'xyz.blueskysocial.app.clip',
+            'xyz.blueskysocial.app.appclip',
         },
         privacyManifests: {
           NSPrivacyAccessedAPITypes: [
@@ -245,13 +245,14 @@ module.exports = function (config) {
                   },
                   {
                     targetName: 'BlueskyAppClip',
-                    bundleIdentifier: 'xyz.blueskyweb.app.clip',
+                    bundleIdentifier: 'xyz.blueskyweb.app.appclip',
                     entitlements: {
                       'com.apple.security.application-groups': [
                         'group.app.bsky',
                       ],
                       'com.apple.developer.associated-domains': [
-                        'https://bsky.app',
+                        'applinks:bsky.app',
+                        'applinks:staging.bsky.app',
                       ],
                       'com.apple.developer.on-demand-install-capable': true,
                     },
