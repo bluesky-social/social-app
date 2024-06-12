@@ -4,8 +4,10 @@ import {AppBskyActorDefs, AppBskyGraphStarterpack} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {HITSLOP_10} from 'lib/constants'
 import {isNative} from 'platform/detection'
+import {useSession} from 'state/session'
 import {atoms as a} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {useDialogControl} from '#/components/Dialog'
@@ -18,10 +20,13 @@ export function NewskieDialog({
   profile: AppBskyActorDefs.ProfileViewDetailed
 }) {
   const {_} = useLingui()
+  const {currentAccount} = useSession()
   const control = useDialogControl()
-
+  const {joinedViaStarterPack} = profile
   const profileName = profile.displayName || `@${profile.handle}`
-  const joinedVia = profile.joinedViaStarterPack
+  const timeAgo = useGetTimeAgo()
+
+  if (!profile.createdAt) return null
 
   return (
     <>
@@ -43,17 +48,23 @@ export function NewskieDialog({
             <Text style={[a.font_bold, a.text_xl]}>
               <Trans>Say hello!</Trans>
             </Text>
-            <Text style={[]}>
-              {AppBskyGraphStarterpack.isRecord(joinedVia?.record) ? (
+            <Text style={[a.text_md]}>
+              {AppBskyGraphStarterpack.isRecord(
+                joinedViaStarterPack?.record,
+              ) ? (
                 <Trans>
-                  {profileName} recently joined Bluesky with{' '}
-                  {joinedVia?.creator.displayName ||
-                    `@${joinedVia?.creator.handle}`}
-                  's starter pack!
+                  {profileName} joined Bluesky{' '}
+                  {timeAgo(profile.createdAt, {format: 'long'})} ago with{' '}
+                  {joinedViaStarterPack?.creator.did === currentAccount?.did
+                    ? 'your'
+                    : `${joinedViaStarterPack?.creator.displayName}'s` ||
+                      `@${joinedViaStarterPack?.creator.handle}'s`}{' '}
+                  starter pack.
                 </Trans>
               ) : (
                 <Trans>
-                  {profileName} recently joined Bluesky on {profile.createdAt}.
+                  {profileName} recently joined Bluesky{' '}
+                  {timeAgo(profile.createdAt)} ago
                 </Trans>
               )}
             </Text>
