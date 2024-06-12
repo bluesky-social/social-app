@@ -11,6 +11,7 @@ import {sanitizeHandle} from 'lib/strings/handles'
 import {niceDate} from 'lib/strings/time'
 import {TypographyVariant} from 'lib/ThemeContext'
 import {isAndroid, isWeb} from 'platform/detection'
+import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {TextLinkOnWebOnly} from './Link'
 import {Text} from './text/Text'
@@ -53,75 +54,83 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
     precacheProfile(queryClient, opts.author)
   }, [queryClient, opts.author])
 
+  const contentViewModeration = opts.moderation
+    ? opts.moderation.ui('contentView')
+    : undefined
+
   return (
-    <View style={[styles.container, opts.style]}>
-      {opts.showAvatar && (
-        <View style={styles.avatar}>
-          <PreviewableUserAvatar
-            size={opts.avatarSize || 16}
-            profile={opts.author}
-            moderation={opts.avatarModeration}
-            type={opts.author.associated?.labeler ? 'labeler' : 'user'}
-          />
-        </View>
-      )}
-      <ProfileHoverCard inline did={opts.author.did}>
-        <Text
-          numberOfLines={1}
-          style={[styles.maxWidth, pal.textLight, opts.displayNameStyle]}>
-          <TextLinkOnWebOnly
-            type={opts.displayNameType || 'lg-bold'}
-            style={[pal.text]}
-            lineHeight={1.2}
-            disableMismatchWarning
-            text={
-              <>
-                {sanitizeDisplayName(
-                  displayName,
-                  opts.moderation?.ui('displayName'),
-                )}
-              </>
-            }
-            href={profileLink}
-            onBeforePress={onBeforePressAuthor}
-            onPointerEnter={onPointerEnter}
-          />
-          <TextLinkOnWebOnly
-            type="md"
-            disableMismatchWarning
-            style={[pal.textLight, {flexShrink: 4}]}
-            text={'\xa0' + sanitizeHandle(handle, '@')}
-            href={profileLink}
-            onBeforePress={onBeforePressAuthor}
-            onPointerEnter={onPointerEnter}
-            anchorNoUnderline
-          />
-        </Text>
-      </ProfileHoverCard>
-      {!isAndroid && (
-        <Text
-          type="md"
-          style={pal.textLight}
-          lineHeight={1.2}
-          accessible={false}>
-          &middot;
-        </Text>
-      )}
-      <TimeElapsed timestamp={opts.timestamp}>
-        {({timeElapsed}) => (
-          <TextLinkOnWebOnly
+    <View>
+      <View style={[styles.container, opts.style]}>
+        {opts.showAvatar && (
+          <View style={styles.avatar}>
+            <PreviewableUserAvatar
+              size={opts.avatarSize || 16}
+              profile={opts.author}
+              moderation={opts.avatarModeration}
+              type={opts.author.associated?.labeler ? 'labeler' : 'user'}
+            />
+          </View>
+        )}
+
+        <ProfileHoverCard inline did={opts.author.did}>
+          <Text
+            numberOfLines={1}
+            style={[styles.maxWidth, pal.textLight, opts.displayNameStyle]}>
+            <TextLinkOnWebOnly
+              type={opts.displayNameType || 'lg-bold'}
+              style={[pal.text]}
+              lineHeight={1.2}
+              disableMismatchWarning
+              text={
+                <>
+                  {sanitizeDisplayName(
+                    displayName,
+                    opts.moderation?.ui('displayName'),
+                  )}
+                </>
+              }
+              href={profileLink}
+              onBeforePress={onBeforePressAuthor}
+              onPointerEnter={onPointerEnter}
+            />
+            <TextLinkOnWebOnly
+              type="md"
+              disableMismatchWarning
+              style={[pal.textLight, {flexShrink: 4}]}
+              text={'\xa0' + sanitizeHandle(handle, '@')}
+              href={profileLink}
+              onBeforePress={onBeforePressAuthor}
+              onPointerEnter={onPointerEnter}
+              anchorNoUnderline
+            />
+          </Text>
+        </ProfileHoverCard>
+        {!isAndroid && (
+          <Text
             type="md"
             style={pal.textLight}
             lineHeight={1.2}
-            text={timeElapsed}
-            accessibilityLabel={niceDate(opts.timestamp)}
-            title={niceDate(opts.timestamp)}
-            accessibilityHint=""
-            href={opts.postHref}
-            onBeforePress={onBeforePressPost}
-          />
+            accessible={false}>
+            &middot;
+          </Text>
         )}
-      </TimeElapsed>
+        <TimeElapsed timestamp={opts.timestamp}>
+          {({timeElapsed}) => (
+            <TextLinkOnWebOnly
+              type="md"
+              style={pal.textLight}
+              lineHeight={1.2}
+              text={timeElapsed}
+              accessibilityLabel={niceDate(opts.timestamp)}
+              title={niceDate(opts.timestamp)}
+              accessibilityHint=""
+              href={opts.postHref}
+              onBeforePress={onBeforePressPost}
+            />
+          )}
+        </TimeElapsed>
+      </View>
+      {contentViewModeration && <PostAlerts modui={contentViewModeration} />}
     </View>
   )
 }
