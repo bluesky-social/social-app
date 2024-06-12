@@ -9,9 +9,11 @@ export const RQKEY = (query: string) => [RQKEY_ROOT, query]
 
 export function useActorSearch({
   query,
+  limit = 20,
   enabled,
 }: {
   query: string
+  limit?: number
   enabled?: boolean
 }) {
   const agent = useAgent()
@@ -21,6 +23,7 @@ export function useActorSearch({
     async queryFn() {
       const res = await agent.searchActors({
         q: query,
+        limit,
       })
       return res.data.actors
     },

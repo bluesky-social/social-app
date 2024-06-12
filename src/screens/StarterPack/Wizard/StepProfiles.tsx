@@ -4,8 +4,7 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {AppBskyActorDefs} from '@atproto/api'
 
 import {useActorAutocompleteQuery} from 'state/queries/actor-autocomplete'
-import {useProfileFollowsQuery} from 'state/queries/profile-follows'
-import {useSession} from 'state/session'
+import {useActorSearch} from 'state/queries/actor-search'
 import {SearchInput} from 'view/com/util/forms/SearchInput'
 import {List} from 'view/com/util/List'
 import {useWizardState} from '#/screens/StarterPack/Wizard/State'
@@ -23,17 +22,11 @@ export function StepProfiles() {
   const [state, dispatch] = useWizardState()
   const [query, setQuery] = useState('')
 
-  const {currentAccount} = useSession()
-  const {data: followsPages, fetchNextPage} = useProfileFollowsQuery(
-    currentAccount?.did,
-  )
-  const follows = followsPages?.pages.flatMap(page => page.follows) || []
-
-  const {data: results} = useActorAutocompleteQuery(
-    query || encodeURIComponent('*'),
-    true,
-    12,
-  )
+  const {data: topFollowers} = useActorSearch({
+    query: encodeURIComponent('*'),
+    limit: 50,
+  })
+  const {data: results} = useActorAutocompleteQuery(query, true, 12)
 
   const renderItem = ({
     item,
@@ -56,12 +49,10 @@ export function StepProfiles() {
         </View>
       </View>
       <List
-        data={query ? results : follows}
+        data={query ? results : topFollowers}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         contentContainerStyle={{paddingTop: 12}}
-        onEndReached={!query ? () => fetchNextPage() : undefined}
-        onEndReachedThreshold={2}
         renderScrollComponent={props => <KeyboardAwareScrollView {...props} />}
         keyboardShouldPersistTaps="handled"
         containWeb={true}
