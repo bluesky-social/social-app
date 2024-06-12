@@ -82,7 +82,6 @@ function KnownFollowersInner({
     t.atoms.text_contrast_medium,
   ]
 
-  const count = cachedKnownFollowers.count
   const slice = cachedKnownFollowers.followers.slice(0, 3).map(f => {
     const moderation = moderateProfile(f, moderationOpts)
     return {
@@ -96,6 +95,7 @@ function KnownFollowersInner({
       moderation,
     }
   })
+  const count = cachedKnownFollowers.count - Math.min(slice.length, 2)
 
   return (
     <Link
