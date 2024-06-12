@@ -272,13 +272,13 @@ function ProfileScreenLoaded({
       }
     },
     [
-      feedsIndex,
       filtersIndex,
-      likesIndex,
-      listsIndex,
-      mediaIndex,
       postsIndex,
       repliesIndex,
+      mediaIndex,
+      likesIndex,
+      feedsIndex,
+      listsIndex,
       starterPacksIndex,
     ],
   )
