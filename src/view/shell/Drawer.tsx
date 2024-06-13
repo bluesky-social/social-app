@@ -254,7 +254,6 @@ let DrawerContent = ({}: {}): React.ReactNode => {
                 onPress={onPressNotifications}
               />
               <FeedsMenuItem isActive={isAtFeeds} onPress={onPressMyFeeds} />
-              <StarterPacksMenuItem onPress={onPressLists} />
               <ListsMenuItem onPress={onPressLists} />
               <ProfileMenuItem
                 isActive={isAtMyProfile}
@@ -565,27 +564,6 @@ let SettingsMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
   )
 }
 SettingsMenuItem = React.memo(SettingsMenuItem)
-
-let StarterPacksMenuItem = ({
-  onPress,
-}: {
-  onPress: () => void
-}): React.ReactNode => {
-  const {_} = useLingui()
-  const pal = usePalette('default')
-  return (
-    <MenuItem
-      icon={
-        <Settings style={pal.text as StyleProp<ViewStyle>} width={iconWidth} />
-      }
-      label={_(msg`Starter Packs`)}
-      accessibilityLabel={_(msg`Starter Packs`)}
-      accessibilityHint=""
-      onPress={onPress}
-    />
-  )
-}
-StarterPacksMenuItem = React.memo(StarterPacksMenuItem)
 
 function MenuItem({
   icon,
