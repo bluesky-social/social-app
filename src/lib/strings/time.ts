@@ -1,3 +1,5 @@
+import {plural} from '@lingui/macro'
+
 const NOW = 5
 const MINUTE = 60
 const HOUR = MINUTE * 60
@@ -17,13 +19,24 @@ export function ago(date: number | string | Date, long = false): string {
   if (diffSeconds < NOW) {
     return `now`
   } else if (diffSeconds < MINUTE) {
-    return `${diffSeconds}${long ? ' seconds' : 's'}`
+    return `${diffSeconds}${
+      long ? ` ${plural(diffSeconds, {one: 'second', other: 'seconds'})}` : 's'
+    }`
   } else if (diffSeconds < HOUR) {
-    return `${Math.floor(diffSeconds / MINUTE)}${long ? ' minutes' : 'm'}`
+    const diff = Math.floor(diffSeconds / MINUTE)
+    return `${diff}${
+      long ? ` ${plural(diff, {one: 'minute', other: 'minutes'})}` : 'm'
+    }`
   } else if (diffSeconds < DAY) {
-    return `${Math.floor(diffSeconds / HOUR)}${long ? ' hours' : 'h'}`
+    const diff = Math.floor(diffSeconds / HOUR)
+    return `${diff}${
+      long ? ` ${plural(diff, {one: 'hour', other: 'hours'})}` : 'h'
+    }`
   } else if (diffSeconds < MONTH_30) {
-    return `${Math.round(diffSeconds / DAY)}${long ? ' days' : 'd'}`
+    const diff = Math.round(diffSeconds / DAY)
+    return `${diff}${
+      long ? ` ${plural(diff, {one: 'day', other: 'days'})}` : 'd'
+    }`
   } else {
     let months = diffSeconds / MONTH
     if (months % 1 >= 0.9) {
