@@ -26,6 +26,7 @@ import {
   useSetUsedStarterPack,
   useUsedStarterPack,
 } from 'state/preferences/starter-pack'
+import {useLoggedOutViewControls} from 'state/shell/logged-out'
 import {FeedPage} from 'view/com/feeds/FeedPage'
 import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
@@ -39,6 +40,16 @@ export function HomeScreen(props: Props) {
   const {data: preferences} = usePreferencesQuery()
   const {data: pinnedFeedInfos, isLoading: isPinnedFeedsLoading} =
     usePinnedFeedsInfos()
+  const usedStarterPack = useUsedStarterPack()
+  const setUsedStarterPack = useSetUsedStarterPack()
+  const {setShowLoggedOut} = useLoggedOutViewControls()
+
+  React.useEffect(() => {
+    if (usedStarterPack && !usedStarterPack.initialFeed) {
+      setShowLoggedOut(true)
+    }
+  }, [usedStarterPack, setUsedStarterPack, setShowLoggedOut])
+
   if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
     return (
       <HomeScreenReady

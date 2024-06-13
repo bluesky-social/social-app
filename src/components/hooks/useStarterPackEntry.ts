@@ -6,16 +6,21 @@ export function useStarterPackEntry() {
   const setUsedStarterPack = useSetUsedStarterPack()
 
   React.useEffect(() => {
-    const url = new URL(window.href)
+    const url = new URL(window.location.href)
 
-    if (url.href.startsWith('https://bsky.app/start/')) {
+    if (url.pathname.startsWith('/start/')) {
+      console.log('yes sp')
       const [_, _start, name, rkey] = url.pathname.split('/')
+
+      console.log()
 
       if (name && rkey) {
         setUsedStarterPack({
           uri: window.href,
         })
       }
+    } else {
+      console.log('no sp')
     }
   }, [setUsedStarterPack])
 
