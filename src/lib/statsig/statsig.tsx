@@ -43,12 +43,19 @@ if (isWeb && typeof window !== 'undefined') {
   refUrl = decodeURIComponent(params.get('ref_url') ?? '')
 }
 
-if (isWeb && typeof document !== 'undefined' && document != null) {
-  const url = new URL(document.referrer)
-  if (url.hostname !== 'bsky.app') {
-    referrer = document.referrer
-    referrerHostname = url.hostname
-  }
+if (
+  isWeb &&
+  typeof document !== 'undefined' &&
+  document != null &&
+  document.referrer
+) {
+  try {
+    const url = new URL(document.referrer)
+    if (url.hostname !== 'bsky.app') {
+      referrer = document.referrer
+      referrerHostname = url.hostname
+    }
+  } catch {}
 }
 
 export type {LogEvents}
