@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-06-12 20:38+0900\n"
+"PO-Revision-Date: 2024-06-13 13:51+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -2028,7 +2028,7 @@ msgstr "あなたが知っている@{0}のフォロワー"
 #: src/screens/Profile/KnownFollowers.tsx:108
 #: src/screens/Profile/KnownFollowers.tsx:118
 msgid "Followers you know"
-msgstr "あなたが知ってるフォロワー"
+msgstr "あなたが知っているフォロワー"
 
 #: src/components/ProfileHoverCard/index.web.tsx:411
 #: src/components/ProfileHoverCard/index.web.tsx:422
