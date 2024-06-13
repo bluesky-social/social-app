@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-06-13 13:51+0900\n"
+"PO-Revision-Date: 2024-06-13 14:05+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -36,10 +36,6 @@ msgstr "{0, plural, other {#個のラベルがこのコンテンツに適用さ�
 #: src/view/com/util/post-ctrls/RepostButton.tsx:65
 msgid "{0, plural, one {# repost} other {# reposts}}"
 msgstr "{0, plural, other {#回のリポスト}}"
-
-#: src/components/KnownFollowers.tsx:179
-msgid "{0, plural, one {and # other} other {and # others}}"
-msgstr ""
 
 #: src/components/ProfileHoverCard/index.web.tsx:376
 #: src/screens/Profile/Header/Metrics.tsx:23
@@ -1996,13 +1992,21 @@ msgstr "アカウントをフォロー"
 msgid "Follow Back"
 msgstr "フォローバック"
 
-#: src/components/KnownFollowers.tsx:169
-msgid "Followed by"
-msgstr ""
-
 #: src/view/com/profile/ProfileCard.tsx:227
 msgid "Followed by {0}"
 msgstr "{0}がフォロー中"
+
+#: src/components/KnownFollowers.tsx:192
+msgid "Followed by <0>{0}</0>"
+msgstr "<0>{0}</0>がフォロー中"
+
+#: src/components/KnownFollowers.tsx:181
+msgid "Followed by <0>{0}</0> and <1>{1}</1>"
+msgstr "<0>{0}</0>と<1>{1}</1>がフォロー中"
+
+#: src/components/KnownFollowers.tsx:168
+msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
+msgstr "<0>{0}</0>、<1>{1}</1>および{2, plural, other {他#人}}がフォロー中"
 
 #: src/view/com/modals/Threadgate.tsx:99
 msgid "Followed users"
@@ -5755,6 +5759,10 @@ msgstr "{0}のアバターを表示"
 #: src/view/com/notifications/FeedItem.tsx:213
 msgid "View {0}'s profile"
 msgstr "{0}のプロフィールを表示"
+
+#: src/components/ProfileHoverCard/index.web.tsx:417
+msgid "View blocked user's profile"
+msgstr "ブロック中のユーザーのプロフィールを表示"
 
 #: src/view/screens/Log.tsx:52
 msgid "View debug entry"
