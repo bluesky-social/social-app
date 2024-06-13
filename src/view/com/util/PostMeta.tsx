@@ -11,6 +11,7 @@ import {sanitizeHandle} from 'lib/strings/handles'
 import {niceDate} from 'lib/strings/time'
 import {TypographyVariant} from 'lib/ThemeContext'
 import {isAndroid, isWeb} from 'platform/detection'
+import {atoms as a} from '#/alf'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {TextLinkOnWebOnly} from './Link'
 import {Text} from './text/Text'
@@ -39,9 +40,13 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
   const prefetchProfileQuery = usePrefetchProfileQuery()
 
   const profileLink = makeProfileLink(opts.author)
-  const onPointerEnter = isWeb
-    ? () => prefetchProfileQuery(opts.author.did)
-    : undefined
+  const prefetchedProfile = React.useRef(false)
+  const onPointerMove = React.useCallback(() => {
+    if (!prefetchedProfile.current) {
+      prefetchedProfile.current = true
+      prefetchProfileQuery(opts.author.did)
+    }
+  }, [opts.author.did, prefetchProfileQuery])
 
   const queryClient = useQueryClient()
   const onOpenAuthor = opts.onOpenAuthor
@@ -66,37 +71,39 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
         </View>
       )}
       <ProfileHoverCard inline did={opts.author.did}>
-        <Text
-          numberOfLines={1}
-          style={[styles.maxWidth, pal.textLight, opts.displayNameStyle]}>
-          <TextLinkOnWebOnly
-            type={opts.displayNameType || 'lg-bold'}
-            style={[pal.text]}
-            lineHeight={1.2}
-            disableMismatchWarning
-            text={
-              <>
-                {sanitizeDisplayName(
-                  displayName,
-                  opts.moderation?.ui('displayName'),
-                )}
-              </>
-            }
-            href={profileLink}
-            onBeforePress={onBeforePressAuthor}
-            onPointerEnter={onPointerEnter}
-          />
-          <TextLinkOnWebOnly
-            type="md"
-            disableMismatchWarning
-            style={[pal.textLight, {flexShrink: 4}]}
-            text={'\xa0' + sanitizeHandle(handle, '@')}
-            href={profileLink}
-            onBeforePress={onBeforePressAuthor}
-            onPointerEnter={onPointerEnter}
-            anchorNoUnderline
-          />
-        </Text>
+        <View
+          onPointerMove={isWeb ? onPointerMove : undefined}
+          style={[a.flex_1]}>
+          <Text
+            numberOfLines={1}
+            style={[styles.maxWidth, pal.textLight, opts.displayNameStyle]}>
+            <TextLinkOnWebOnly
+              type={opts.displayNameType || 'lg-bold'}
+              style={[pal.text]}
+              lineHeight={1.2}
+              disableMismatchWarning
+              text={
+                <>
+                  {sanitizeDisplayName(
+                    displayName,
+                    opts.moderation?.ui('displayName'),
+                  )}
+                </>
+              }
+              href={profileLink}
+              onBeforePress={onBeforePressAuthor}
+            />
+            <TextLinkOnWebOnly
+              type="md"
+              disableMismatchWarning
+              style={[pal.textLight, {flexShrink: 4}]}
+              text={'\xa0' + sanitizeHandle(handle, '@')}
+              href={profileLink}
+              onBeforePress={onBeforePressAuthor}
+              anchorNoUnderline
+            />
+          </Text>
+        </View>
       </ProfileHoverCard>
       {!isAndroid && (
         <Text
