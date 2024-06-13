@@ -89,23 +89,31 @@ export function Wizard({
   } = useProfileQuery({did: currentAccount?.did})
 
   if (
-    name &&
-    rkey &&
-    (!starterPack || (starterPack && listUri && !listItems))
+    (name &&
+      rkey &&
+      (!starterPack || (starterPack && listUri && !listItems))) ||
+    !profile
   ) {
     return (
       <ListMaybePlaceholder
-        isLoading={isLoadingDid || isLoadingStarterPack || isLoadingProfiles}
-        isError={isErrorDid || isErrorStarterPack || isErrorProfiles}
+        isLoading={
+          isLoadingDid ||
+          isLoadingStarterPack ||
+          isLoadingProfiles ||
+          isLoadingProfile
+        }
+        isError={
+          isErrorDid || isErrorStarterPack || isErrorProfiles || isErrorProfile
+        }
         errorMessage={_(msg`Could not find that starter pack`)}
       />
     )
-  } else if (!profile) {
+  } else if (name && rkey && starterPack?.creator.did !== currentAccount?.did) {
     return (
       <ListMaybePlaceholder
-        isLoading={isLoadingProfile}
-        isError={isErrorProfile}
-        errorMessage={_(msg`Could not load your profile`)}
+        isLoading={false}
+        isError={true}
+        errorMessage={_(msg`Could not find that starter pack`)}
       />
     )
   }
