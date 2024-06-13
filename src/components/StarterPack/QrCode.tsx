@@ -31,7 +31,7 @@ export const QrCode = React.forwardRef<ViewShot, Props>(function QrCode(
     <ViewShot ref={ref}>
       <LinearGradientBackground
         style={[
-          {width: 300, height: 440},
+          {width: 300, minHeight: 390},
           a.align_center,
           a.px_sm,
           a.py_xl,
@@ -45,29 +45,33 @@ export const QrCode = React.forwardRef<ViewShot, Props>(function QrCode(
             {record.name}
           </Text>
         </View>
-        <Text
-          style={[a.font_bold, a.text_center, {color: 'white', fontSize: 18}]}>
-          <Trans>Join the conversation</Trans>
-        </Text>
-        <View style={[a.rounded_sm, a.overflow_hidden]}>
-          <QrCodeInner url={makeStarterPackLink(starterPack)} />
-        </View>
-
-        <View style={[a.flex_row, a.align_center, {gap: 5}]}>
+        <View style={[a.gap_xl, a.align_center]}>
           <Text
             style={[
               a.font_bold,
               a.text_center,
               {color: 'white', fontSize: 18},
             ]}>
-            <Trans>on</Trans>
+            <Trans>Join the conversation</Trans>
           </Text>
-          <Logo width={26} fill="white" />
-          <Logotype
-            width={66}
-            fill="white"
-            style={{marginTop: 6, marginLeft: 2}}
-          />
+          <View style={[a.rounded_sm, a.overflow_hidden]}>
+            <QrCodeInner url={makeStarterPackLink(starterPack)} />
+          </View>
+
+          <View style={[a.flex_row, a.align_center, {gap: 5}]}>
+            <Text
+              style={[
+                a.font_bold,
+                a.text_center,
+                {color: 'white', fontSize: 18},
+              ]}>
+              <Trans>on</Trans>
+            </Text>
+            <Logo width={26} fill="white" />
+            <View style={[{marginTop: 7, marginLeft: 3}]}>
+              <Logotype width={68} fill="white" />
+            </View>
+          </View>
         </View>
       </LinearGradientBackground>
     </ViewShot>
