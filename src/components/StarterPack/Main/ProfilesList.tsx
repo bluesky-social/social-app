@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react'
-import {View} from 'react-native'
+import {ListRenderItemInfo, View} from 'react-native'
 import {AppBskyActorDefs, AtUri} from '@atproto/api'
 
 import {useBottomBarOffset} from 'lib/hooks/useBottomBarOffset'
@@ -10,11 +10,15 @@ import {ProfileCardWithFollowBtn} from 'view/com/profile/ProfileCard'
 import {List, ListRef} from 'view/com/util/List'
 import {SectionRef} from '#/screens/Profile/Sections/types'
 
-function renderItem({item}: {item: AppBskyActorDefs.ProfileViewBasic}) {
+function renderItem({
+  item,
+  index,
+}: ListRenderItemInfo<AppBskyActorDefs.ProfileViewBasic>) {
   return (
     <ProfileCardWithFollowBtn
       profile={item}
       logContext="StarterPackProfilesList"
+      noBorder={isNative && index === 0}
     />
   )
 }
