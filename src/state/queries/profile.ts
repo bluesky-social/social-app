@@ -94,6 +94,7 @@ export function usePrefetchProfileQuery() {
   const prefetchProfileQuery = useCallback(
     async (did: string) => {
       await queryClient.prefetchQuery({
+        staleTime: STALE.SECONDS.THIRTY,
         queryKey: RQKEY(did),
         queryFn: async () => {
           const res = await agent.getProfile({actor: did || ''})
