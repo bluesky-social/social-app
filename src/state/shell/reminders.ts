@@ -1,38 +1,53 @@
+import {toSimpleDateString} from '#/lib/strings/time'
+import {logger} from '#/logger'
 import * as persisted from '#/state/persisted'
-import {toHashCode} from 'lib/strings/helpers'
 import {SessionAccount} from '../session'
 import {isOnboardingActive} from './onboarding'
 
 export function shouldRequestEmailConfirmation(account: SessionAccount) {
-  if (!account) {
+  // ignore logged out
+  if (!account) return false
+  // ignore confirmed accounts, this is the success state of this reminder
+  if (account.emailConfirmed) return false
+  // wait for onboarding to complete
+  if (isOnboardingActive()) return false
+
+  const stored = persisted.get('reminders').lastEmailConfirm
+  const today = toSimpleDateString(new Date())
+  const snoozedAt = stored ? toSimpleDateString(new Date(stored)) : undefined
+
+  logger.debug('Checking email confirmation reminder', {
+    today,
+    snoozedAt,
+  })
+
+  // never been snoozed, new account
+  if (!snoozedAt) {
+    snooze()
+    return true
+  }
+
+  // already snoozed today
+  if (snoozedAt === today) {
     return false
   }
-  if (account.emailConfirmed) {
-    return false
+
+  // snoozed recently
+  if (snoozedAt !== today) {
+    snooze()
+    return true
   }
-  if (isOnboardingActive()) {
-    return false
-  }
-  // only prompt once
-  if (persisted.get('reminders').lastEmailConfirm) {
-    return false
-  }
-  const now = new Date()
-  const today = now.getDay()
-  const tomorrow = (today + 1) % 7
-  // shard the users into 2 day of the week buckets
-  // (this is to avoid a sudden influx of email updates when
-  // this feature rolls out)
-  const day = toHashCode(account.did) % 7
-  if (day !== today && day !== tomorrow) {
-    return false
-  }
+
   return true
 }
 
-export function setEmailConfirmationRequested() {
+export function snooze() {
+  const lastEmailConfirm = new Date().toISOString()
+  logger.debug('Snoozing email confirmation reminder', {
+    snoozedAt: lastEmailConfirm,
+  })
   persisted.write('reminders', {
     ...persisted.get('reminders'),
-    lastEmailConfirm: new Date().toISOString(),
+    lastEmailConfirm,
   })
 }
