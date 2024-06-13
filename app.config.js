@@ -207,21 +207,21 @@ module.exports = function (config) {
             sounds: PLATFORM === 'ios' ? ['assets/dm.aiff'] : ['assets/dm.mp3'],
           },
         ],
-        [
-          'react-native-app-clip',
-          {
-            name: 'BlueskyAppClip',
-            groupIdentifier: 'group.app.bsky',
-            excludedPackages: [
-              '@bam.tech/react-native-image-resizer',
-              '@braintree/sanitize-url',
-              '@discord/bottom-sheet',
-              '@emoji-mart/react',
-              '@floating-ui/dom',
-              '@floating-ui/react-dom',
-            ],
-          },
-        ],
+        // [
+        //   'react-native-app-clip',
+        //   {
+        //     name: 'BlueskyAppClip',
+        //     groupIdentifier: 'group.app.bsky',
+        //     excludedPackages: [
+        //       '@bam.tech/react-native-image-resizer',
+        //       '@braintree/sanitize-url',
+        //       '@discord/bottom-sheet',
+        //       '@emoji-mart/react',
+        //       '@floating-ui/dom',
+        //       '@floating-ui/react-dom',
+        //     ],
+        //   },
+        // ],
         './plugins/withAndroidManifestPlugin.js',
         './plugins/withAndroidManifestFCMIconPlugin.js',
         './plugins/withAndroidStylesWindowBackgroundPlugin.js',
