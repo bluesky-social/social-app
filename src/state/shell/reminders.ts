@@ -13,8 +13,8 @@ export function shouldRequestEmailConfirmation(account: SessionAccount) {
   if (isOnboardingActive()) return false
 
   const stored = persisted.get('reminders').lastEmailConfirm
-  const today = toSimpleDateString(new Date())
   const snoozedAt = stored ? toSimpleDateString(new Date(stored)) : undefined
+  const today = toSimpleDateString(new Date())
 
   logger.debug('Checking email confirmation reminder', {
     today,
@@ -38,6 +38,8 @@ export function shouldRequestEmailConfirmation(account: SessionAccount) {
     return true
   }
 
+  // should never happen
+  snooze()
   return true
 }
 
