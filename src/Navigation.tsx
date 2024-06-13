@@ -315,7 +315,7 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       <Stack.Screen
         name="Feeds"
         getComponent={() => FeedsScreen}
-        options={{title: title(msg`Feeds`), requireAuth: true}}
+        options={{title: title(msg`Feeds`)}}
       />
     </>
   )
