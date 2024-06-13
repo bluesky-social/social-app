@@ -5,25 +5,30 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {makeProfileLink} from 'lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
 import {shareUrl} from 'lib/sharing'
 import {isWeb} from 'platform/detection'
 import {useSetUsedStarterPack} from 'state/preferences/starter-pack'
+import {RQKEY} from 'state/queries/list-members'
 import {useResolveDidQuery} from 'state/queries/resolve-uri'
 import {useStarterPackQuery} from 'state/queries/useStarterPackQuery'
-import {useSession} from 'state/session'
+import {useAgent, useSession} from 'state/session'
 import {useLoggedOutViewControls} from 'state/shell/logged-out'
+import * as Toast from '#/view/com/util/Toast'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
 import {CenteredView} from 'view/com/util/Views'
+import {bulkWriteFollows} from '#/screens/Onboarding/util'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBox} from '#/components/icons/ArrowOutOfBox'
 import {QrCode_Stroke2_Corner0_Rounded as QrCode} from '#/components/icons/QrCode'
 import {ListMaybePlaceholder} from '#/components/Lists'
+import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
 import {FeedsList} from '#/components/StarterPack/Main/FeedsList'
 import {ProfilesList} from '#/components/StarterPack/Main/ProfilesList'
@@ -111,12 +116,43 @@ function Header({
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
   const {currentAccount} = useSession()
+  const agent = useAgent()
+  const queryClient = useQueryClient()
   const qrCodeDialogControl = useDialogControl()
   const setUsedStarterPack = useSetUsedStarterPack()
   const {setShowLoggedOut} = useLoggedOutViewControls()
 
+  const [isProcessing, setIsProcessing] = React.useState(false)
+
   const {record, creator} = starterPack
-  const isOwn = creator.did === currentAccount?.did
+  const isOwn = creator?.did === currentAccount?.did
+
+  const onFollowAll = async () => {
+    if (!starterPack.list) return
+
+    setIsProcessing(true)
+
+    try {
+      const list = await agent.app.bsky.graph.getList({
+        list: starterPack.list.uri,
+      })
+      const dids = list.data.items
+        .filter(li => !li.subject.viewer?.following)
+        .map(li => li.subject.did)
+
+      await bulkWriteFollows(agent, dids)
+
+      await queryClient.refetchQueries({
+        queryKey: RQKEY(starterPack.list.uri),
+      })
+
+      Toast.show(_(msg`All accounts have been followed!`))
+    } catch (e) {
+      Toast.show(_(msg`An error occurred while trying to follow all`))
+    } finally {
+      setIsProcessing(false)
+    }
+  }
 
   if (!AppBskyGraphStarterpack.isRecord(record)) {
     return null
@@ -165,11 +201,21 @@ function Header({
                         : t.palette.contrast_25,
                     },
                     (state.hovered || state.pressed) && {
-                      backgroundColor: t.palette.primary_600,
+                      backgroundColor: isOwn
+                        ? t.palette.primary_600
+                        : t.palette.contrast_50,
                     },
                   ]}
                   {...props}>
-                  <Text style={[a.font_bold, {color: 'white'}]}>
+                  <Text
+                    style={[
+                      a.font_bold,
+                      {
+                        color: isOwn
+                          ? 'white'
+                          : t.atoms.text_contrast_medium.color,
+                      },
+                    ]}>
                     <Trans>Share</Trans>
                   </Text>
                 </Pressable>
@@ -200,7 +246,7 @@ function Header({
               </Menu.Group>
             </Menu.Outer>
           </Menu.Root>
-          {isOwn && (
+          {isOwn ? (
             <Button
               label={_(msg`Edit`)}
               variant="solid"
@@ -211,6 +257,19 @@ function Header({
               }>
               <ButtonText>
                 <Trans>Edit</Trans>
+              </ButtonText>
+            </Button>
+          ) : (
+            <Button
+              label={_(msg`Follow all`)}
+              variant="solid"
+              color="primary"
+              size="small"
+              disabled={isProcessing}
+              onPress={onFollowAll}>
+              <ButtonText>
+                <Trans>Follow all</Trans>
+                {isProcessing && <Loader size="xs" />}
               </ButtonText>
             </Button>
           )}

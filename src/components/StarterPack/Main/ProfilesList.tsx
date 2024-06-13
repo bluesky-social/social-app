@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react'
 import {View} from 'react-native'
-import {AppBskyActorDefs} from '@atproto/api'
+import {AppBskyActorDefs, AtUri} from '@atproto/api'
 
 import {useBottomBarOffset} from 'lib/hooks/useBottomBarOffset'
 import {isNative} from 'platform/detection'
@@ -37,9 +37,11 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
 
     const {data} = useListMembersQuery(listUri)
     const profiles = data?.pages.flatMap(p => p.items.map(i => i.subject))
+    const isOwn = new AtUri(listUri).host === currentAccount?.did
 
     const getSortedProfiles = () => {
       if (!profiles) return
+      if (!isOwn) return profiles
       const myIndex = profiles.findIndex(p => p.did === currentAccount?.did)
       return [
         profiles[myIndex],
