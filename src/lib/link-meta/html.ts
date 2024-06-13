@@ -43,16 +43,16 @@ export const extractHtmlMeta = ({
       case 'title':
       case 'og:title':
       case 'twitter:title':
-        res.title = propValue?.trim()
+        res.title = res.title || propValue?.trim()
         break
       case 'description':
       case 'og:description':
       case 'twitter:description':
-        res.description = propValue?.trim()
+        res.description = res.description || propValue?.trim()
         break
       case 'og:image':
       case 'twitter:image':
-        res.image = propValue?.trim()
+        res.image = res.image || propValue?.trim()
         break
     }
   }
