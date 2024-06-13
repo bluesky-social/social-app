@@ -59,7 +59,6 @@ import {List} from '#/view/com/util/List'
 import {Text} from '#/view/com/util/text/Text'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
-import {KNOWN_AUTHED_ONLY_FEEDS} from '#/view/screens/Feeds'
 import {SearchLinkCard, SearchProfileCard} from '#/view/shell/desktop/Search'
 import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {
@@ -145,22 +144,15 @@ function SuggestedItemsHeader({
 
   return (
     <View
-      style={
+      style={[
         isWeb
-          ? [
-              a.flex_row,
-              a.px_lg,
-              a.py_lg,
-              a.gap_md,
-              t.atoms.border_contrast_low,
-            ]
-          : [
-              {flexDirection: 'row-reverse'},
-              a.p_lg,
-              a.gap_md,
-              t.atoms.border_contrast_low,
-            ]
-      }>
+          ? [a.flex_row, a.px_lg, a.py_lg, a.gap_md]
+          : [{flexDirection: 'row-reverse'}, a.p_lg, a.gap_md],
+        {
+          borderBottomWidth: 4,
+          borderColor: t.palette.primary_500,
+        },
+      ]}>
       <View style={[a.flex_1, a.gap_xs]}>
         <Text style={[a.flex_1, a.text_2xl, a.font_bold, t.atoms.text]}>
           {title}
@@ -223,7 +215,7 @@ function ExploreScreen() {
     isFetchingNextPage: isFetchingNextProfilesPage,
     error: profilesError,
     fetchNextPage: fetchNextProfilesPage,
-  } = useSuggestedFollowsQuery({limit: 4})
+  } = useSuggestedFollowsQuery({limit: 3})
   const {
     data: feeds,
     hasNextPage: hasNextFeedsPage,
@@ -231,7 +223,7 @@ function ExploreScreen() {
     isFetchingNextPage: isFetchingNextFeedsPage,
     error: feedsError,
     fetchNextPage: fetchNextFeedsPage,
-  } = useGetPopularFeedsQuery({limit: 4})
+  } = useGetPopularFeedsQuery({limit: 3})
 
   const isLoadingMoreProfiles = isFetchingNextProfilesPage && !isLoadingProfiles
   const onLoadMoreProfiles = React.useCallback(async () => {
@@ -319,26 +311,10 @@ function ExploreScreen() {
     })
 
     if (feeds && preferences) {
-      const filtered = feeds.pages.map(page => {
-        page.feeds = page.feeds.filter(feed => {
-          if (!hasSession && KNOWN_AUTHED_ONLY_FEEDS.includes(feed.uri)) {
-            return false
-          }
-          const alreadySaved = Boolean(
-            preferences?.savedFeeds?.find(f => {
-              return f.value === feed.uri
-            }),
-          )
-          return !alreadySaved
-        })
-
-        return page
-      })
-
       // Currently the responses contain duplicate items.
       // Needs to be fixed on backend, but let's dedupe to be safe.
       let seen = new Set()
-      for (const page of filtered) {
+      for (const page of feeds.pages) {
         for (const feed of page.feeds) {
           if (!seen.has(feed.uri)) {
             seen.add(feed.uri)
@@ -397,7 +373,6 @@ function ExploreScreen() {
     return i
   }, [
     _,
-    hasSession,
     profiles,
     feeds,
     preferences,
@@ -437,7 +412,7 @@ function ExploreScreen() {
         }
         case 'loadMore': {
           return (
-            <View style={[a.border_t, t.atoms.border_contrast_low]}>
+            <View style={[a.border_t, a.pb_md, t.atoms.border_contrast_low]}>
               <Button
                 label={_(msg`Load more`)}
                 onPress={item.onLoadMore}
@@ -505,9 +480,10 @@ function ExploreScreen() {
                     <TextNewText
                       style={[
                         a.pl_sm,
+                        a.leading_snug,
                         hovered ? t.atoms.text : t.atoms.text_contrast_medium,
                       ]}>
-                      <Trans>Load more suggestions like these</Trans>
+                      <Trans>Load more suggestions</Trans>
                     </TextNewText>
 
                     <View style={[a.flex_1, a.align_end]}>
