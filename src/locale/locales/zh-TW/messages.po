@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: zh-TW for bluesky-social-app\n"
 "POT-Creation-Date: \n"
 "Report-Msgid-Bugs-To: Kuwa Lee <kuwalee1069@gmail.com>, Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-06-14 01:45+0800\n"
+"PO-Revision-Date: 2024-06-14 01:57+0800\n"
 "Last-Translator: \n"
 "Language-Team: Frudrax Cheng <i@cynosura.one>, Kuwa Lee <kuwalee1069@gmail.com>, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Language: zh_TW\n"
@@ -2000,7 +2000,7 @@ msgstr "已被你跟隨的 <0>{0}</0> 和 <1>{1}</1> 跟隨"
 
 #: src/components/KnownFollowers.tsx:168
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
-msgstr "已被你跟隨的 <0>{0}</0>, <1>{1}</1>, 和 {2, plural, one {其他 # 人跟隨} other {其他 # 人跟隨}}"
+msgstr "已被你跟隨的 <0>{0}</0>, <1>{1}</1> 和{2, plural, one {其他 # 人跟隨} other {其他 # 人跟隨}}"
 
 #: src/view/com/modals/Threadgate.tsx:99
 msgid "Followed users"
