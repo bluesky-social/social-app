@@ -54,6 +54,10 @@ function SuggestedItemsHeader({
         isWeb
           ? [a.flex_row, a.px_lg, a.py_lg, a.pt_2xl, a.gap_md]
           : [{flexDirection: 'row-reverse'}, a.p_lg, a.pt_2xl, a.gap_md],
+        {
+          borderBottomWidth: 1,
+          borderColor: t.palette.primary_500,
+        },
         style,
       ]}>
       <View style={[a.flex_1, a.gap_sm]}>
@@ -120,7 +124,7 @@ function LoadMore({
   }, [item.items, moderationOpts])
 
   return (
-    <View style={[a.border_t, t.atoms.border_contrast_low]}>
+    <View style={[]}>
       <Button
         label={_(msg`Load more`)}
         onPress={item.onLoadMore}
@@ -465,17 +469,24 @@ export function Explore() {
           )
         }
         case 'profile': {
-          return <ProfileCardWithFollowBtn profile={item.profile} noBg />
+          return (
+            <View style={[a.border_b, t.atoms.border_contrast_low]}>
+              <ProfileCardWithFollowBtn profile={item.profile} noBg noBorder />
+            </View>
+          )
         }
         case 'feed': {
           return (
-            <FeedSourceCard
-              feedUri={item.feed.uri}
-              showSaveBtn={hasSession}
-              showDescription
-              showLikes
-              pinOnSave
-            />
+            <View style={[a.border_b, t.atoms.border_contrast_low]}>
+              <FeedSourceCard
+                feedUri={item.feed.uri}
+                showSaveBtn={hasSession}
+                showDescription
+                showLikes
+                pinOnSave
+                hideTopBorder
+              />
+            </View>
           )
         }
         case 'loadMore': {
