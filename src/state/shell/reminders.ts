@@ -1,7 +1,7 @@
 import * as persisted from '#/state/persisted'
 import {toHashCode} from 'lib/strings/helpers'
-import {isOnboardingActive} from './onboarding'
 import {SessionAccount} from '../session'
+import {isOnboardingActive} from './onboarding'
 
 export function shouldRequestEmailConfirmation(account: SessionAccount) {
   if (!account) {
@@ -17,12 +17,14 @@ export function shouldRequestEmailConfirmation(account: SessionAccount) {
   if (persisted.get('reminders').lastEmailConfirm) {
     return false
   }
-  const today = new Date()
+  const now = new Date()
+  const today = now.getDay()
+  const tomorrow = (today + 1) % 7
   // shard the users into 2 day of the week buckets
   // (this is to avoid a sudden influx of email updates when
   // this feature rolls out)
-  const code = toHashCode(account.did) % 7
-  if (code !== today.getDay() && code !== (today.getDay() + 1) % 7) {
+  const day = toHashCode(account.did) % 7
+  if (day !== today && day !== tomorrow) {
     return false
   }
   return true
