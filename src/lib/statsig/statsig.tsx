@@ -43,7 +43,7 @@ if (isWeb && typeof window !== 'undefined') {
   refUrl = decodeURIComponent(params.get('ref_url') ?? '')
 }
 
-if (isWeb && document !== 'undefined' && document != null) {
+if (isWeb && typeof document !== 'undefined' && document != null) {
   const url = new URL(document.referrer)
   if (url.hostname !== 'bsky.app') {
     referrer = document.referrer
