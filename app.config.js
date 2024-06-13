@@ -93,7 +93,7 @@ module.exports = function (config) {
         entitlements: {
           'com.apple.security.application-groups': 'group.app.bsky',
           'com.apple.developer.associated-appclip-app-identifiers': [
-            'xyz.blueskyweb.app.appclip',
+            'xyz.blueskyweb.app.AppClip',
           ],
         },
         privacyManifests: {
@@ -256,7 +256,7 @@ module.exports = function (config) {
                   },
                   {
                     targetName: 'BlueskyAppClip',
-                    bundleIdentifier: 'xyz.blueskyweb.app.appclip',
+                    bundleIdentifier: 'xyz.blueskyweb.app.AppClip',
                     entitlements: {
                       'com.apple.security.application-groups': [
                         'group.app.bsky',
