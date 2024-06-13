@@ -28,6 +28,7 @@ import {
 } from 'view/com/util/LoadingPlaceholder'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
+import {ArrowBottom_Stroke2_Corner0_Rounded as ArrowBottom} from '#/components/icons/Arrow'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -122,7 +123,7 @@ function LoadMore({
               a.flex_1,
               a.flex_row,
               a.align_center,
-              a.px_md,
+              a.px_lg,
               a.py_md,
               (hovered || pressed) && t.atoms.bg_contrast_25,
             ]}>
@@ -131,9 +132,28 @@ function LoadMore({
                 a.relative,
                 {
                   height: 32,
-                  width: 52,
+                  width: 62,
                 },
               ]}>
+              <View
+                style={[
+                  a.align_center,
+                  a.justify_center,
+                  a.border,
+                  t.atoms.bg_contrast_25,
+                  a.absolute,
+                  {
+                    width: 30,
+                    height: 30,
+                    left: 0,
+                    backgroundColor: t.palette.primary_500,
+                    borderColor: t.atoms.bg.backgroundColor,
+                    borderRadius: items[0].type === 'profile' ? 999 : 4,
+                    zIndex: 4,
+                  },
+                ]}>
+                <ArrowBottom fill={t.palette.white} />
+              </View>
               {items.map((_item, i) => {
                 return (
                   <View
@@ -145,9 +165,10 @@ function LoadMore({
                       {
                         width: 30,
                         height: 30,
-                        left: i * 10,
+                        left: (i + 1) * 10,
                         borderColor: t.atoms.bg.backgroundColor,
                         borderRadius: _item.type === 'profile' ? 999 : 4,
+                        zIndex: 3 - i,
                       },
                     ]}>
                     {moderationOpts && (
