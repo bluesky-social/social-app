@@ -65,8 +65,6 @@ export function QrCodeDialog({
 
         await saveImageToMediaLibrary({uri: filename})
         await FS.deleteAsync(filename)
-
-        control.close()
       } else {
         if (!AppBskyGraphStarterpack.isRecord(starterPack.record)) {
           return
@@ -87,13 +85,15 @@ export function QrCodeDialog({
       }
 
       Toast.show(_(msg`QR code saved to your camera roll!`))
+      control.close()
     })
   }
 
   const onCopyPress = async () => {
     ref.current?.capture?.().then(async (uri: string) => {
       if (isNative) {
-        await setImageAsync(uri)
+        const base64 = await FS.readAsStringAsync(uri, {encoding: 'base64'})
+        await setImageAsync(base64)
       } else {
         const canvas = await getCanvas(uri)
         canvas.toBlob((blob: Blob) => {
@@ -103,6 +103,7 @@ export function QrCodeDialog({
       }
 
       Toast.show(_(msg`QR code copied to your clipboard!`))
+      control.close()
     })
   }
 

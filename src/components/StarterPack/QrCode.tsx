@@ -6,6 +6,7 @@ import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
 import {makeStarterPackLink} from 'lib/routes/links'
+import {isWeb} from 'platform/detection'
 import {Logo} from 'view/icons/Logo'
 import {Logotype} from 'view/icons/Logotype'
 import {useTheme} from '#/alf'
@@ -86,12 +87,12 @@ export function QrCodeInner({url}: {url: string}) {
       data={url}
       style={[
         a.rounded_sm,
-        {height: 200, width: 200, backgroundColor: '#f3f3f3'},
+        {height: 225, width: 225, backgroundColor: '#f3f3f3'},
       ]}
-      pieceSize={8}
+      pieceSize={isWeb ? 8 : 6}
       padding={20}
       // pieceLiquidRadius={2}
-      pieceBorderRadius={4.5}
+      pieceBorderRadius={isWeb ? 4.5 : 3.5}
       outerEyesOptions={{
         topLeft: {
           borderRadius: [12, 12, 0, 12],
