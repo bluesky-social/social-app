@@ -120,7 +120,7 @@ export function Description({description}: {description?: string}) {
       />
     </View>
   ) : (
-    <RichText value={rt} numberOfLines={2} style={[a.leading_snug]} />
+    <RichText value={rt} style={[a.leading_snug]} />
   )
 }
 
