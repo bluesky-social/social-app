@@ -92,8 +92,9 @@ module.exports = function (config) {
         },
         entitlements: {
           'com.apple.security.application-groups': 'group.app.bsky',
-          'com.apple.developer.associated-appclip-app-identifiers':
+          'com.apple.developer.associated-appclip-app-identifiers': [
             'xyz.blueskyweb.app.appclip',
+          ],
         },
         privacyManifests: {
           NSPrivacyAccessedAPITypes: [
@@ -211,6 +212,14 @@ module.exports = function (config) {
           {
             name: 'BlueskyAppClip',
             groupIdentifier: 'group.app.bsky',
+            excludedPackages: [
+              '@bam.tech/react-native-image-resizer',
+              '@braintree/sanitize-url',
+              '@discord/bottom-sheet',
+              '@emoji-mart/react',
+              '@floating-ui/dom',
+              '@floating-ui/react-dom',
+            ],
           },
         ],
         './plugins/withAndroidManifestPlugin.js',
@@ -255,6 +264,9 @@ module.exports = function (config) {
                       'com.apple.developer.associated-domains':
                         ASSOCIATED_DOMAINS,
                       'com.apple.developer.on-demand-install-capable': true,
+                      'com.apple.developer.parent-application-identifiers': [
+                        'xyz.blueskyweb.app',
+                      ],
                     },
                   },
                 ],

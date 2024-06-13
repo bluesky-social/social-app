@@ -18824,8 +18824,8 @@ react-keyed-flatten-children@^3.0.0:
     react-is "^18.2.0"
 
 react-native-app-clip@bluesky-social/react-native-app-clip:
-  version "0.2.4"
-  resolved "https://codeload.github.com/bluesky-social/react-native-app-clip/tar.gz/ad3968586ee4a5f301af9ebb86b467ee71019646"
+  version "0.3.0"
+  resolved "https://codeload.github.com/bluesky-social/react-native-app-clip/tar.gz/1e57a54516cdbb229d4a6f3effbb70d195f6d970"
   dependencies:
     "@expo/config-plugins" "~7.2.5"
     "@expo/plist" "^0.0.20"
