@@ -1,11 +1,5 @@
+import {getVideoMetaData, Video} from 'react-native-compressor'
 import * as FileSystem from 'expo-file-system'
-import {
-  FFmpegKit,
-  FFmpegSessionCompleteCallback,
-  ReturnCode,
-} from 'ffmpeg-kit-react-native'
-
-const PRESET = 'faster'
 
 export type CompressedVideo = {
   uri: string
@@ -14,39 +8,35 @@ export type CompressedVideo = {
 
 export async function compressVideo(
   file: string,
-  callbacks?: {
-    onProgress: (progress: number) => void
+  opts?: {
+    getCancellationId?: (id: string) => void
+    onProgress?: (progress: number) => void
   },
 ) {
-  const {onProgress} = callbacks || {}
-  const ext = file.split('.').pop()
-  const newFile = file.replace(`.${ext}`, '.compressed.mp4')
+  const {onProgress, getCancellationId} = opts || {}
 
-  const result = await new Promise((resolve: FFmpegSessionCompleteCallback) =>
-    FFmpegKit.executeAsync(
-      `-i ${file} -c:v libx264 -crf 25 -preset ${PRESET} -b:v 3M -vf "scale='if(gt(a,1),min(1920,iw),-1)':'if(gt(a,1),-1,min(1920,ih))'" -t 90 -c:a aac -b:a 320k -movflags +faststart ${newFile}`,
-      resolve,
-      undefined,
-      stats => onProgress?.(stats.getTime()),
-    ),
-  )
+  try {
+    const compressed = await Video.compress(
+      file,
+      {
+        getCancellationId,
+        compressionMethod: 'auto',
+        maxSize: 1920,
+      },
+      onProgress,
+    )
 
-  const success = ReturnCode.isSuccess(await result.getReturnCode())
-
-  if (success) {
     await FileSystem.deleteAsync(file)
-    const res = await FileSystem.getInfoAsync(newFile, {size: true})
-    if (res.exists) {
-      console.log('compressed size', (res.size / 1024 / 1024).toFixed(2) + 'mb')
+    const info = await getVideoMetaData(compressed)
+    console.log('compressed size', (info.size / 1024 / 1024).toFixed(2) + 'mb')
+    console.log(JSON.stringify(info, null, 2))
 
-      return {
-        success,
-        video: {uri: newFile, size: res.size} as CompressedVideo,
-      }
-    } else {
-      throw new Error('Could not find output video')
+    return {
+      success: true,
+      video: {uri: compressed, size: info.size} as CompressedVideo,
     }
-  } else {
+  } catch (error) {
+    console.error('compressVideo error', error)
     return {success: false}
   }
 }
