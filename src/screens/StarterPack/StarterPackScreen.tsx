@@ -159,7 +159,11 @@ function Header({
                     a.align_center,
                     a.justify_center,
                     a.rounded_sm,
-                    {backgroundColor: t.palette.primary_500},
+                    {
+                      backgroundColor: isOwn
+                        ? t.palette.primary_500
+                        : t.palette.contrast_25,
+                    },
                     (state.hovered || state.pressed) && {
                       backgroundColor: t.palette.primary_600,
                     },

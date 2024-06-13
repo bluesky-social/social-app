@@ -63,8 +63,8 @@ export function NewskieDialog({
                 </Trans>
               ) : (
                 <Trans>
-                  {profileName} recently joined Bluesky {ago(profile.createdAt)}{' '}
-                  ago
+                  <Text style={[a.font_bold, a.text_md]}>{profileName}</Text>{' '}
+                  recently joined Bluesky {ago(profile.createdAt, true)} ago
                 </Trans>
               )}
             </Text>
