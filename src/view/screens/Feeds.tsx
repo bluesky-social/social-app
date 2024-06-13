@@ -465,7 +465,7 @@ export function FeedsScreen(_props: Props) {
         return (
           <>
             <FeedsAboutHeader />
-            <View style={{paddingHorizontal: 12, paddingBottom: 8}}>
+            <View style={{paddingHorizontal: 12, paddingBottom: 4}}>
               <SearchInput
                 query={query}
                 onChangeQuery={onChangeQuery}
