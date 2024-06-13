@@ -56,7 +56,9 @@ function SuggestedItemsHeader({
         <Text style={[a.flex_1, a.text_2xl, a.font_bold, t.atoms.text]}>
           {title}
         </Text>
-        <Text style={[t.atoms.text_contrast_high]}>{description}</Text>
+        <Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
+          {description}
+        </Text>
       </View>
     </View>
   )
@@ -287,8 +289,10 @@ export function Explore() {
       {
         type: 'header',
         key: 'suggested-follows-header',
-        title: _(msg`Suggested follows`),
-        description: _(msg`Find new friends or interesting accounts`),
+        title: _(msg`Suggested accounts`),
+        description: _(
+          msg`Follow more accounts to get connected to your interests and build your network.`,
+        ),
       },
     ]
 
@@ -332,8 +336,10 @@ export function Explore() {
     i.push({
       type: 'header',
       key: 'suggested-feeds-header',
-      title: _(msg`Suggested feeds`),
-      description: _(msg`Discover new content`),
+      title: _(msg`Discover new feeds`),
+      description: _(
+        msg`Custom feeds built by the community bring you new experiences and help you find the content you love.`,
+      ),
     })
 
     if (feeds && preferences) {
