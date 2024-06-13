@@ -333,7 +333,7 @@ function CantSubscribePrompt({
         </Trans>
       </Prompt.DescriptionText>
       <Prompt.Actions>
-        <Prompt.Action onPress={control.close} cta={_(msg`OK`)} />
+        <Prompt.Action onPress={() => control.close()} cta={_(msg`OK`)} />
       </Prompt.Actions>
     </Prompt.Outer>
   )
