@@ -299,6 +299,34 @@ export function useSearchPopularFeedsMutation() {
   })
 }
 
+const popularFeedsSearchQueryKeyRoot = 'actor-search'
+export const createPopularFeedsSearchQueryKey = (query: string) => [
+  popularFeedsSearchQueryKeyRoot,
+  query,
+]
+
+export function usePopularFeedsSearch({
+  query,
+  enabled,
+}: {
+  query: string
+  enabled?: boolean
+}) {
+  const agent = useAgent()
+  return useQuery({
+    enabled,
+    queryKey: createPopularFeedsSearchQueryKey(query),
+    queryFn: async () => {
+      const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
+        limit: 10,
+        query: query,
+      })
+
+      return res.data.feeds
+    },
+  })
+}
+
 export type SavedFeedSourceInfo = FeedSourceInfo & {
   savedFeed: AppBskyActorDefs.SavedFeed
 }

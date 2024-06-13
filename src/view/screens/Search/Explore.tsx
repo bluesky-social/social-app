@@ -1,6 +1,12 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyActorDefs, AppBskyFeedDefs, moderateProfile} from '@atproto/api'
+import {
+  AppBskyActorDefs,
+  AppBskyFeedDefs,
+  moderateProfile,
+  ModerationDecision,
+  ModerationOpts,
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -20,7 +26,7 @@ import {
   FeedFeedLoadingPlaceholder,
   ProfileCardFeedLoadingPlaceholder,
 } from 'view/com/util/LoadingPlaceholder'
-import {atoms as a, useTheme as useThemeNew} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Loader} from '#/components/Loader'
@@ -33,14 +39,14 @@ function SuggestedItemsHeader({
   title: string
   description: string
 }) {
-  const t = useThemeNew()
+  const t = useTheme()
 
   return (
     <View
       style={[
         isWeb
-          ? [a.flex_row, a.px_lg, a.py_lg, a.gap_md]
-          : [{flexDirection: 'row-reverse'}, a.p_lg, a.gap_md],
+          ? [a.flex_row, a.px_lg, a.py_lg, a.pt_3xl, a.gap_md]
+          : [{flexDirection: 'row-reverse'}, a.p_lg, a.pt_2xl, a.gap_md],
         {
           borderBottomWidth: 4,
           borderColor: t.palette.primary_500,
@@ -52,6 +58,133 @@ function SuggestedItemsHeader({
         </Text>
         <Text style={[t.atoms.text_contrast_high]}>{description}</Text>
       </View>
+    </View>
+  )
+}
+
+type LoadMoreItems =
+  | {
+      type: 'profile'
+      key: string
+      avatar: string
+      moderation: ModerationDecision
+    }
+  | {
+      type: 'feed'
+      key: string
+      avatar: string
+      moderation: undefined
+    }
+
+function LoadMore({
+  item,
+  moderationOpts,
+}: {
+  item: ExploreScreenItems & {type: 'loadMore'}
+  moderationOpts?: ModerationOpts
+}) {
+  const t = useTheme()
+  const {_} = useLingui()
+  const items = React.useMemo(() => {
+    return item.items
+      .map(_item => {
+        if (_item.type === 'profile') {
+          return {
+            type: 'profile',
+            key: _item.profile.did,
+            avatar: _item.profile.avatar,
+            moderation: moderateProfile(_item.profile, moderationOpts!),
+          }
+        } else if (_item.type === 'feed') {
+          return {
+            type: 'feed',
+            key: _item.feed.uri,
+            avatar: _item.feed.avatar,
+            moderation: undefined,
+          }
+        }
+        return undefined
+      })
+      .filter(Boolean) as LoadMoreItems[]
+  }, [item.items, moderationOpts])
+
+  return (
+    <View style={[a.border_t, t.atoms.border_contrast_low]}>
+      <Button
+        label={_(msg`Load more`)}
+        onPress={item.onLoadMore}
+        style={[a.relative, a.w_full]}>
+        {({hovered, pressed}) => (
+          <View
+            style={[
+              a.flex_1,
+              a.flex_row,
+              a.align_center,
+              a.px_md,
+              a.py_md,
+              (hovered || pressed) && t.atoms.bg_contrast_25,
+            ]}>
+            <View
+              style={[
+                a.relative,
+                {
+                  height: 32,
+                  width: 52,
+                },
+              ]}>
+              {items.map((_item, i) => {
+                return (
+                  <View
+                    key={_item.key}
+                    style={[
+                      a.border,
+                      t.atoms.bg_contrast_25,
+                      a.absolute,
+                      {
+                        width: 30,
+                        height: 30,
+                        left: i * 10,
+                        borderColor: t.atoms.bg.backgroundColor,
+                        borderRadius: _item.type === 'profile' ? 999 : 4,
+                      },
+                    ]}>
+                    {moderationOpts && (
+                      <>
+                        {_item.type === 'profile' ? (
+                          <UserAvatar
+                            size={28}
+                            avatar={_item.avatar}
+                            moderation={_item.moderation.ui('avatar')}
+                          />
+                        ) : _item.type === 'feed' ? (
+                          <UserAvatar
+                            size={28}
+                            avatar={_item.avatar}
+                            type="algo"
+                          />
+                        ) : null}
+                      </>
+                    )}
+                  </View>
+                )
+              })}
+            </View>
+
+            <Text
+              style={[
+                a.pl_sm,
+                a.leading_snug,
+                hovered ? t.atoms.text : t.atoms.text_contrast_medium,
+              ]}>
+              <Trans>Load more suggestions</Trans>
+            </Text>
+
+            <View style={[a.flex_1, a.align_end]}>
+              {item.isLoadingMore && <Loader size="lg" />}
+            </View>
+          </View>
+        )}
+      </Button>
     </View>
   )
 }
@@ -97,7 +230,7 @@ type ExploreScreenItems =
 
 export function Explore() {
   const {_} = useLingui()
-  const t = useThemeNew()
+  const t = useTheme()
   const {hasSession} = useSession()
   const {data: preferences, error: preferencesError} = usePreferencesQuery()
   const moderationOpts = useModerationOpts()
@@ -304,89 +437,7 @@ export function Explore() {
           )
         }
         case 'loadMore': {
-          return (
-            <View style={[a.border_t, a.pb_md, t.atoms.border_contrast_low]}>
-              <Button
-                label={_(msg`Load more`)}
-                onPress={item.onLoadMore}
-                style={[a.relative, a.w_full]}>
-                {({hovered}) => (
-                  <View
-                    style={[
-                      a.flex_1,
-                      a.flex_row,
-                      a.align_center,
-                      a.px_md,
-                      a.py_md,
-                      hovered && t.atoms.bg_contrast_25,
-                    ]}>
-                    <View
-                      style={[
-                        a.relative,
-                        {
-                          height: 32,
-                          width: 52,
-                        },
-                      ]}>
-                      {item.items.map((_item, i) => {
-                        return (
-                          <View
-                            key={_item.key}
-                            style={[
-                              a.border,
-                              t.atoms.bg_contrast_25,
-                              a.absolute,
-                              {
-                                width: 30,
-                                height: 30,
-                                left: i * 10,
-                                borderColor: t.atoms.bg.backgroundColor,
-                                borderRadius:
-                                  _item.type === 'profile' ? 999 : 4,
-                              },
-                            ]}>
-                            {moderationOpts && (
-                              <>
-                                {_item.type === 'profile' ? (
-                                  <UserAvatar
-                                    size={28}
-                                    avatar={_item.profile.avatar}
-                                    moderation={moderateProfile(
-                                      _item.profile,
-                                      moderationOpts!,
-                                    ).ui('avatar')}
-                                  />
-                                ) : _item.type === 'feed' ? (
-                                  <UserAvatar
-                                    size={28}
-                                    avatar={_item.feed.avatar}
-                                    type="algo"
-                                  />
-                                ) : null}
-                              </>
-                            )}
-                          </View>
-                        )
-                      })}
-                    </View>
-
-                    <Text
-                      style={[
-                        a.pl_sm,
-                        a.leading_snug,
-                        hovered ? t.atoms.text : t.atoms.text_contrast_medium,
-                      ]}>
-                      <Trans>Load more suggestions</Trans>
-                    </Text>
-
-                    <View style={[a.flex_1, a.align_end]}>
-                      {item.isLoadingMore && <Loader size="lg" />}
-                    </View>
-                  </View>
-                )}
-              </Button>
-            </View>
-          )
+          return <LoadMore item={item} moderationOpts={moderationOpts} />
         }
         case 'profilePlaceholder': {
           return <ProfileCardFeedLoadingPlaceholder />
@@ -431,7 +482,7 @@ export function Explore() {
         }
       }
     },
-    [_, t, hasSession, moderationOpts],
+    [t, hasSession, moderationOpts],
   )
 
   return (

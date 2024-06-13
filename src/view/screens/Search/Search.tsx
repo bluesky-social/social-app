@@ -35,6 +35,7 @@ import {listenSoftReset} from '#/state/events'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {useActorSearch} from '#/state/queries/actor-search'
+import {usePopularFeedsSearch} from '#/state/queries/feed'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
 import {useSession} from '#/state/session'
 import {useSetDrawerOpen} from '#/state/shell'
@@ -56,6 +57,7 @@ import {Text} from '#/view/com/util/text/Text'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
 import {Explore} from '#/view/screens/Search/Explore'
 import {SearchLinkCard, SearchProfileCard} from '#/view/shell/desktop/Search'
+import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {atoms as a} from '#/alf'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 
@@ -276,6 +278,50 @@ let SearchScreenUserResults = ({
 }
 SearchScreenUserResults = React.memo(SearchScreenUserResults)
 
+let SearchScreenFeedsResults = ({
+  query,
+  active,
+}: {
+  query: string
+  active: boolean
+}): React.ReactNode => {
+  const {_} = useLingui()
+  const {hasSession} = useSession()
+
+  const {data: results, isFetched} = usePopularFeedsSearch({
+    query,
+    enabled: active,
+  })
+
+  return isFetched && results ? (
+    <>
+      {results.length ? (
+        <List
+          data={results}
+          renderItem={({item}) => (
+            <FeedSourceCard
+              feedUri={item.uri}
+              showSaveBtn={hasSession}
+              showDescription
+              showLikes
+              pinOnSave
+            />
+          )}
+          keyExtractor={item => item.did}
+          // @ts-ignore web only -prf
+          desktopFixedHeight
+          contentContainerStyle={{paddingBottom: 100}}
+        />
+      ) : (
+        <EmptyState message={_(msg`No results found for ${query}`)} />
+      )}
+    </>
+  ) : (
+    <Loader />
+  )
+}
+SearchScreenFeedsResults = React.memo(SearchScreenFeedsResults)
+
 let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
@@ -321,6 +367,12 @@ let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
         title: _(msg`People`),
         component: (
           <SearchScreenUserResults query={query} active={activeTab === 2} />
+        ),
+      },
+      {
+        title: _(msg`Feeds`),
+        component: (
+          <SearchScreenFeedsResults query={query} active={activeTab === 3} />
         ),
       },
     ]
