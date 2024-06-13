@@ -22,6 +22,10 @@ import {useFollowMethods} from '#/components/hooks/useFollowMethods'
 import {useRichText} from '#/components/hooks/useRichText'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import {
+  KnownFollowers,
+  shouldShowKnownFollowers,
+} from '#/components/KnownFollowers'
 import {InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Portal} from '#/components/Portal'
@@ -473,6 +477,17 @@ function Inner({
               />
             </View>
           ) : undefined}
+
+          {!isMe &&
+            shouldShowKnownFollowers(profile.viewer?.knownFollowers) && (
+              <View style={[a.flex_row, a.align_center, a.gap_sm, a.pt_md]}>
+                <KnownFollowers
+                  profile={profile}
+                  moderationOpts={moderationOpts}
+                  onLinkPress={hide}
+                />
+              </View>
+            )}
         </>
       )}
     </View>

@@ -8,7 +8,7 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
-import {Link} from '#/components/Link'
+import {Link, LinkProps} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
 const AVI_SIZE = 30
@@ -29,9 +29,11 @@ export function shouldShowKnownFollowers(
 export function KnownFollowers({
   profile,
   moderationOpts,
+  onLinkPress,
 }: {
   profile: AppBskyActorDefs.ProfileViewDetailed
   moderationOpts: ModerationOpts
+  onLinkPress?: LinkProps['onPress']
 }) {
   const cache = React.useRef<Map<string, AppBskyActorDefs.KnownFollowers>>(
     new Map(),
@@ -56,6 +58,7 @@ export function KnownFollowers({
         profile={profile}
         cachedKnownFollowers={cachedKnownFollowers}
         moderationOpts={moderationOpts}
+        onLinkPress={onLinkPress}
       />
     )
   }
@@ -67,10 +70,12 @@ function KnownFollowersInner({
   profile,
   moderationOpts,
   cachedKnownFollowers,
+  onLinkPress,
 }: {
   profile: AppBskyActorDefs.ProfileViewDetailed
   moderationOpts: ModerationOpts
   cachedKnownFollowers: AppBskyActorDefs.KnownFollowers
+  onLinkPress?: LinkProps['onPress']
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -102,6 +107,7 @@ function KnownFollowersInner({
       label={_(
         msg`Press to view followers of this account that you also follow`,
       )}
+      onPress={onLinkPress}
       to={makeProfileLink(profile, 'known-followers')}
       style={[
         a.flex_1,
