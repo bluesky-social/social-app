@@ -484,6 +484,7 @@ function Inner({
                 <KnownFollowers
                   profile={profile}
                   moderationOpts={moderationOpts}
+                  onLinkPress={hide}
                 />
               </View>
             )}
