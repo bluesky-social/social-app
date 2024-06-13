@@ -203,7 +203,7 @@
     "tippy.js": "^6.3.7",
     "tlds": "^1.234.0",
     "tldts": "^6.1.46",
-    "unicode-segmenter": "^0.7.0",
+    "unicode-segmenter": "^0.9.0",
     "zeego": "^1.6.2",
     "zod": "^3.20.2"
   },
