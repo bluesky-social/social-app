@@ -14,7 +14,11 @@ import * as SplashScreen from 'expo-splash-screen'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
+import {
+  initialize,
+  Provider as StatsigProvider,
+  tryFetchGates,
+} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {MessagesProvider} from '#/state/messages'
 import {init as initPersistedState} from '#/state/persisted'
@@ -69,6 +73,9 @@ function InnerApp() {
       try {
         if (account) {
           await resumeSession(account)
+        } else {
+          await initialize()
+          await tryFetchGates(undefined, 'prefer-fresh-gates')
         }
       } catch (e) {
         logger.error(`session: resume failed`, {message: e})
