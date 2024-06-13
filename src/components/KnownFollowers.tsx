@@ -1,14 +1,14 @@
 import React from 'react'
 import {View} from 'react-native'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
-import {msg, plural, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
-import {Link} from '#/components/Link'
+import {Link, LinkProps} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
 const AVI_SIZE = 30
@@ -29,9 +29,11 @@ export function shouldShowKnownFollowers(
 export function KnownFollowers({
   profile,
   moderationOpts,
+  onLinkPress,
 }: {
   profile: AppBskyActorDefs.ProfileViewDetailed
   moderationOpts: ModerationOpts
+  onLinkPress?: LinkProps['onPress']
 }) {
   const cache = React.useRef<Map<string, AppBskyActorDefs.KnownFollowers>>(
     new Map(),
@@ -56,6 +58,7 @@ export function KnownFollowers({
         profile={profile}
         cachedKnownFollowers={cachedKnownFollowers}
         moderationOpts={moderationOpts}
+        onLinkPress={onLinkPress}
       />
     )
   }
@@ -67,10 +70,12 @@ function KnownFollowersInner({
   profile,
   moderationOpts,
   cachedKnownFollowers,
+  onLinkPress,
 }: {
   profile: AppBskyActorDefs.ProfileViewDetailed
   moderationOpts: ModerationOpts
   cachedKnownFollowers: AppBskyActorDefs.KnownFollowers
+  onLinkPress?: LinkProps['onPress']
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -81,15 +86,6 @@ function KnownFollowersInner({
     a.leading_snug,
     t.atoms.text_contrast_medium,
   ]
-
-  // list of users, minus blocks
-  const returnedCount = cachedKnownFollowers.followers.length
-  // db count, includes blocks
-  const fullCount = cachedKnownFollowers.count
-  // knownFollowers can return up to 5 users, but will exclude blocks
-  // therefore, if we have less 5 users, use whichever count is lower
-  const count =
-    returnedCount < 5 ? Math.min(fullCount, returnedCount) : fullCount
 
   const slice = cachedKnownFollowers.followers.slice(0, 3).map(f => {
     const moderation = moderateProfile(f, moderationOpts)
@@ -104,12 +100,14 @@ function KnownFollowersInner({
       moderation,
     }
   })
+  const count = cachedKnownFollowers.count - Math.min(slice.length, 2)
 
   return (
     <Link
       label={_(
         msg`Press to view followers of this account that you also follow`,
       )}
+      onPress={onLinkPress}
       to={makeProfileLink(profile, 'known-followers')}
       style={[
         a.flex_1,
@@ -166,31 +164,37 @@ function KnownFollowersInner({
               },
             ]}
             numberOfLines={2}>
-            <Trans>Followed by</Trans>{' '}
             {count > 2 ? (
-              <>
-                {slice.slice(0, 2).map(({profile: prof}, i) => (
-                  <Text key={prof.did} style={textStyle}>
-                    {prof.displayName}
-                    {i === 0 && ', '}
-                  </Text>
-                ))}
-                {', '}
-                {plural(count - 2, {
-                  one: 'and # other',
-                  other: 'and # others',
-                })}
-              </>
-            ) : count === 2 ? (
-              slice.map(({profile: prof}, i) => (
-                <Text key={prof.did} style={textStyle}>
-                  {prof.displayName} {i === 0 ? _(msg`and`) + ' ' : ''}
+              <Trans>
+                Followed by{' '}
+                <Text key={slice[0].profile.did} style={textStyle}>
+                  {slice[0].profile.displayName}
                 </Text>
-              ))
+                ,{' '}
+                <Text key={slice[1].profile.did} style={textStyle}>
+                  {slice[1].profile.displayName}
+                </Text>
+                , and{' '}
+                <Plural value={count - 2} one="# other" other="# others" />
+              </Trans>
+            ) : count === 2 ? (
+              <Trans>
+                Followed by{' '}
+                <Text key={slice[0].profile.did} style={textStyle}>
+                  {slice[0].profile.displayName}
+                </Text>{' '}
+                and{' '}
+                <Text key={slice[1].profile.did} style={textStyle}>
+                  {slice[1].profile.displayName}
+                </Text>
+              </Trans>
             ) : (
-              <Text key={slice[0].profile.did} style={textStyle}>
-                {slice[0].profile.displayName}
-              </Text>
+              <Trans>
+                Followed by{' '}
+                <Text key={slice[0].profile.did} style={textStyle}>
+                  {slice[0].profile.displayName}
+                </Text>
+              </Trans>
             )}
           </Text>
         </>

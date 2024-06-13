@@ -5,6 +5,7 @@ import {flip, offset, shift, size, useFloating} from '@floating-ui/react-dom'
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {getModerationCauseKey} from '#/lib/moderation'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -22,11 +23,16 @@ import {useFollowMethods} from '#/components/hooks/useFollowMethods'
 import {useRichText} from '#/components/hooks/useRichText'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import {
+  KnownFollowers,
+  shouldShowKnownFollowers,
+} from '#/components/KnownFollowers'
 import {InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Portal} from '#/components/Portal'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import {ProfileLabel} from '../moderation/ProfileHeaderAlerts'
 import {ProfileHoverCardProps} from './types'
 
 const floatingMiddlewares = [
@@ -370,7 +376,10 @@ function Inner({
     profile: profileShadow,
     logContext: 'ProfileHoverCard',
   })
-  const blockHide = profile.viewer?.blocking || profile.viewer?.blockedBy
+  const isBlockedUser =
+    profile.viewer?.blocking ||
+    profile.viewer?.blockedBy ||
+    profile.viewer?.blockingByList
   const following = formatCount(profile.followsCount || 0)
   const followers = formatCount(profile.followersCount || 0)
   const pluralizedFollowers = plural(profile.followersCount || 0, {
@@ -401,29 +410,41 @@ function Inner({
           />
         </Link>
 
-        {!isMe && (
-          <Button
-            size="small"
-            color={profileShadow.viewer?.following ? 'secondary' : 'primary'}
-            variant="solid"
-            label={
-              profileShadow.viewer?.following
-                ? _(msg`Following`)
-                : _(msg`Follow`)
-            }
-            style={[a.rounded_full]}
-            onPress={profileShadow.viewer?.following ? unfollow : follow}>
-            <ButtonIcon
-              position="left"
-              icon={profileShadow.viewer?.following ? Check : Plus}
-            />
-            <ButtonText>
-              {profileShadow.viewer?.following
-                ? _(msg`Following`)
-                : _(msg`Follow`)}
-            </ButtonText>
-          </Button>
-        )}
+        {!isMe &&
+          (isBlockedUser ? (
+            <Link
+              to={profileURL}
+              label={_(msg`View blocked user's profile`)}
+              onPress={hide}
+              size="small"
+              color="secondary"
+              variant="solid"
+              style={[a.rounded_full]}>
+              <ButtonText>{_(msg`View profile`)}</ButtonText>
+            </Link>
+          ) : (
+            <Button
+              size="small"
+              color={profileShadow.viewer?.following ? 'secondary' : 'primary'}
+              variant="solid"
+              label={
+                profileShadow.viewer?.following
+                  ? _(msg`Following`)
+                  : _(msg`Follow`)
+              }
+              style={[a.rounded_full]}
+              onPress={profileShadow.viewer?.following ? unfollow : follow}>
+              <ButtonIcon
+                position="left"
+                icon={profileShadow.viewer?.following ? Check : Plus}
+              />
+              <ButtonText>
+                {profileShadow.viewer?.following
+                  ? _(msg`Following`)
+                  : _(msg`Follow`)}
+              </ButtonText>
+            </Button>
+          ))}
       </View>
 
       <Link to={profileURL} label={_(msg`View profile`)} onPress={hide}>
@@ -439,7 +460,19 @@ function Inner({
         </View>
       </Link>
 
-      {!blockHide && (
+      {isBlockedUser && (
+        <View style={[a.flex_row, a.flex_wrap, a.gap_xs]}>
+          {moderation.ui('profileView').alerts.map(cause => (
+            <ProfileLabel
+              key={getModerationCauseKey(cause)}
+              cause={cause}
+              disableDetailsDialog
+            />
+          ))}
+        </View>
+      )}
+
+      {!isBlockedUser && (
         <>
           <View style={[a.flex_row, a.flex_wrap, a.gap_md, a.pt_xs]}>
             <InlineLinkText
@@ -473,6 +506,17 @@ function Inner({
               />
             </View>
           ) : undefined}
+
+          {!isMe &&
+            shouldShowKnownFollowers(profile.viewer?.knownFollowers) && (
+              <View style={[a.flex_row, a.align_center, a.gap_sm, a.pt_md]}>
+                <KnownFollowers
+                  profile={profile}
+                  moderationOpts={moderationOpts}
+                  onLinkPress={hide}
+                />
+              </View>
+            )}
         </>
       )}
     </View>
