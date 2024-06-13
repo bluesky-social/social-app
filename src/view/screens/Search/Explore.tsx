@@ -26,37 +26,45 @@ import {
   FeedFeedLoadingPlaceholder,
   ProfileCardFeedLoadingPlaceholder,
 } from 'view/com/util/LoadingPlaceholder'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
 import {Button} from '#/components/Button'
 import {ArrowBottom_Stroke2_Corner0_Rounded as ArrowBottom} from '#/components/icons/Arrow'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import {Props as SVGIconProps} from '#/components/icons/common'
+import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
+import {UserCircle_Stroke2_Corner0_Rounded as Person} from '#/components/icons/UserCircle'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
 function SuggestedItemsHeader({
   title,
   description,
+  style,
+  icon: Icon,
 }: {
   title: string
   description: string
-}) {
+  icon: React.ComponentType<SVGIconProps>
+} & ViewStyleProp) {
   const t = useTheme()
 
   return (
     <View
       style={[
         isWeb
-          ? [a.flex_row, a.px_lg, a.py_lg, a.pt_3xl, a.gap_md]
+          ? [a.flex_row, a.px_lg, a.py_lg, a.pt_2xl, a.gap_md]
           : [{flexDirection: 'row-reverse'}, a.p_lg, a.pt_2xl, a.gap_md],
-        {
-          borderBottomWidth: 4,
-          borderColor: t.palette.primary_500,
-        },
+        style,
       ]}>
-      <View style={[a.flex_1, a.gap_xs]}>
-        <Text style={[a.flex_1, a.text_2xl, a.font_bold, t.atoms.text]}>
-          {title}
-        </Text>
+      <View style={[a.flex_1, a.gap_sm]}>
+        <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+          <Icon
+            size="lg"
+            fill={t.palette.primary_500}
+            style={{marginLeft: -2}}
+          />
+          <Text style={[a.text_2xl, a.font_bold, t.atoms.text]}>{title}</Text>
+        </View>
         <Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
           {description}
         </Text>
@@ -218,6 +226,8 @@ type ExploreScreenItems =
       key: string
       title: string
       description: string
+      style?: ViewStyleProp['style']
+      icon: React.ComponentType<SVGIconProps>
     }
   | {
       type: 'profile'
@@ -314,6 +324,7 @@ export function Explore() {
         description: _(
           msg`Follow more accounts to get connected to your interests and build your network.`,
         ),
+        icon: Person,
       },
     ]
 
@@ -361,6 +372,8 @@ export function Explore() {
       description: _(
         msg`Custom feeds built by the community bring you new experiences and help you find the content you love.`,
       ),
+      style: [a.pt_5xl],
+      icon: ListSparkle,
     })
 
     if (feeds && preferences) {
@@ -446,6 +459,8 @@ export function Explore() {
             <SuggestedItemsHeader
               title={item.title}
               description={item.description}
+              style={item.style}
+              icon={item.icon}
             />
           )
         }
