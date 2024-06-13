@@ -38,15 +38,15 @@ msgid "{0, plural, one {# repost} other {# reposts}}"
 msgstr "{0, plural, other {#}}개"
 
 #: src/components/KnownFollowers.tsx:177
-msgid "{0, plural, one {and # other} other {and # others}}"
-msgstr "외 {0, plural, other {#}}명"
+#~ msgid "{0, plural, one {and # other} other {and # others}}"
+#~ msgstr "외 {0, plural, other {#}}명"
 
-#: src/components/ProfileHoverCard/index.web.tsx:380
+#: src/components/ProfileHoverCard/index.web.tsx:385
 #: src/screens/Profile/Header/Metrics.tsx:23
 msgid "{0, plural, one {follower} other {followers}}"
 msgstr "팔로워"
 
-#: src/components/ProfileHoverCard/index.web.tsx:384
+#: src/components/ProfileHoverCard/index.web.tsx:389
 #: src/screens/Profile/Header/Metrics.tsx:27
 msgid "{0, plural, one {following} other {following}}"
 msgstr "팔로우 중"
@@ -95,7 +95,7 @@ msgstr "시간"
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
 msgstr "분"
 
-#: src/components/ProfileHoverCard/index.web.tsx:461
+#: src/components/ProfileHoverCard/index.web.tsx:490
 #: src/screens/Profile/Header/Metrics.tsx:50
 msgid "{following} following"
 msgstr "{following} 팔로우 중"
@@ -379,7 +379,6 @@ msgstr "문제가 발생했습니다. 다시 시도해 주세요."
 msgid "an unknown error occurred"
 msgstr "알 수 없는 오류가 발생했습니다"
 
-#: src/components/KnownFollowers.tsx:185
 #: src/view/com/notifications/FeedItem.tsx:258
 #: src/view/com/threadgate/WhoCanReply.tsx:180
 msgid "and"
@@ -1965,8 +1964,8 @@ msgstr "가로로 뒤집기"
 msgid "Flip vertically"
 msgstr "세로로 뒤집기"
 
-#: src/components/ProfileHoverCard/index.web.tsx:416
-#: src/components/ProfileHoverCard/index.web.tsx:427
+#: src/components/ProfileHoverCard/index.web.tsx:433
+#: src/components/ProfileHoverCard/index.web.tsx:444
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:248
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:146
 #: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:247
@@ -1996,13 +1995,21 @@ msgstr "계정 팔로우"
 msgid "Follow Back"
 msgstr "맞팔로우"
 
-#: src/components/KnownFollowers.tsx:167
-msgid "Followed by"
-msgstr ""
-
 #: src/view/com/profile/ProfileCard.tsx:227
 msgid "Followed by {0}"
 msgstr "{0} 님이 팔로우함"
+
+#: src/components/KnownFollowers.tsx:192
+msgid "Followed by <0>{0}</0>"
+msgstr "<0>{0}</0> 님이 팔로우함"
+
+#: src/components/KnownFollowers.tsx:181
+msgid "Followed by <0>{0}</0> and <1>{1}</1>"
+msgstr "<0>{0}</0> 님과 <1>{1}</1> 님이 팔로우함"
+
+#: src/components/KnownFollowers.tsx:168
+msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
+msgstr "<0>{0}</0> 님, <1>{1}</1> 님 외 {2, plural, other {#}}명이 팔로우함"
 
 #: src/view/com/modals/Threadgate.tsx:99
 msgid "Followed users"
@@ -2030,8 +2037,8 @@ msgstr "내가 아는 @{0} 님의 팔로워"
 msgid "Followers you know"
 msgstr "내가 아는 팔로워"
 
-#: src/components/ProfileHoverCard/index.web.tsx:415
-#: src/components/ProfileHoverCard/index.web.tsx:426
+#: src/components/ProfileHoverCard/index.web.tsx:432
+#: src/components/ProfileHoverCard/index.web.tsx:443
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:246
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:149
 #: src/view/com/profile/ProfileFollows.tsx:104
@@ -5756,6 +5763,10 @@ msgstr "{0} 님의 아바타를 봅니다"
 msgid "View {0}'s profile"
 msgstr "{0} 님의 프로필 보기"
 
+#: src/components/ProfileHoverCard/index.web.tsx:417
+msgid "View blocked user's profile"
+msgstr "차단한 사용자의 프로필 보기"
+
 #: src/view/screens/Log.tsx:52
 msgid "View debug entry"
 msgstr "디버그 항목 보기"
@@ -5776,8 +5787,9 @@ msgstr "전체 스레드 보기"
 msgid "View information about these labels"
 msgstr "이 라벨에 대한 정보 보기"
 
-#: src/components/ProfileHoverCard/index.web.tsx:400
-#: src/components/ProfileHoverCard/index.web.tsx:433
+#: src/components/ProfileHoverCard/index.web.tsx:405
+#: src/components/ProfileHoverCard/index.web.tsx:423
+#: src/components/ProfileHoverCard/index.web.tsx:450
 #: src/view/com/posts/AviFollowButton.tsx:58
 #: src/view/com/posts/FeedErrorMessage.tsx:174
 msgid "View profile"
