@@ -9,6 +9,7 @@ import {
   ViewStyleProp,
 } from '#/alf'
 import {Props} from '#/components/icons/common'
+import {Growth_Stroke2_Corner0_Rounded as Growth} from '#/components/icons/Growth'
 
 export function IconCircle({
   icon: Icon,
@@ -16,7 +17,7 @@ export function IconCircle({
   style,
   iconStyle,
 }: ViewStyleProp & {
-  icon: React.ComponentType<Props>
+  icon: typeof Growth
   size?: Props['size']
   iconStyle?: TextStyleProp['style']
 }) {
