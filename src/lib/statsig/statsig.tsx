@@ -26,6 +26,7 @@ type StatsigUser = {
     bundleDate: number
     refSrc: string
     refUrl: string
+    referrer: string
     appLanguage: string
     contentLanguages: string[]
   }
@@ -33,10 +34,18 @@ type StatsigUser = {
 
 let refSrc = ''
 let refUrl = ''
+let referrer = ''
 if (isWeb && typeof window !== 'undefined') {
   const params = new URLSearchParams(window.location.search)
   refSrc = params.get('ref_src') ?? ''
   refUrl = decodeURIComponent(params.get('ref_url') ?? '')
+}
+
+if (isWeb && document != null) {
+  const url = new URL(document.referrer)
+  if (url.hostname !== 'bsky.app') {
+    referrer = document.referrer
+  }
 }
 
 export type {LogEvents}
@@ -198,6 +207,7 @@ function toStatsigUser(did: string | undefined): StatsigUser {
     custom: {
       refSrc,
       refUrl,
+      referrer,
       platform: Platform.OS as 'ios' | 'android' | 'web',
       bundleIdentifier: BUNDLE_IDENTIFIER,
       bundleDate: BUNDLE_DATE,
