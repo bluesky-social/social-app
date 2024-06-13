@@ -536,6 +536,8 @@ function Footer({
     (state.currentStep === 'Profiles' && items.length > 1) ||
     (state.currentStep === 'Feeds' && items.length > 0)
 
+  const minimumItems = state.currentStep === 'Profiles' ? 8 : 0
+
   const textStyles = [a.text_md]
 
   return (
@@ -562,7 +564,7 @@ function Footer({
           },
         ],
       ]}>
-      {items.length > 0 && (
+      {items.length > minimumItems && (
         <View style={[a.absolute, {right: 14, top: 31}]}>
           <Text style={[a.font_bold]}>
             {items.length}/{state.currentStep === 'Profiles' ? 50 : 3}
@@ -631,33 +633,54 @@ function Footer({
           )}
         </Text>
       )}
-      <View
-        style={[a.flex_row, a.w_full, a.justify_between, {marginTop: 'auto'}]}>
-        {isEditEnabled ? (
+      {state.currentStep === 'Profiles' && items.length < 8 && !__DEV__ ? (
+        <Text
+          style={[
+            a.font_bold,
+            textStyles,
+            t.atoms.text_contrast_medium,
+            {marginTop: 'auto'},
+          ]}>
+          <Trans>
+            Add {8 - items.length} more{' '}
+            <Plural value={8 - items.length} one="person" other="people" /> to
+            continue
+          </Trans>
+        </Text>
+      ) : (
+        <View
+          style={[
+            a.flex_row,
+            a.w_full,
+            a.justify_between,
+            {marginTop: 'auto'},
+          ]}>
+          {isEditEnabled ? (
+            <Button
+              label={_(msg`Edit`)}
+              variant="outline"
+              color="primary"
+              size="small"
+              onPress={editDialogControl.open}>
+              <ButtonText>
+                <Trans>Edit</Trans>
+              </ButtonText>
+            </Button>
+          ) : (
+            <View />
+          )}
           <Button
-            label={_(msg`Edit`)}
-            variant="outline"
+            label={nextBtnText}
+            variant="solid"
             color="primary"
             size="small"
-            onPress={editDialogControl.open}>
-            <ButtonText>
-              <Trans>Edit</Trans>
-            </ButtonText>
+            onPress={onNext}
+            disabled={!state.canNext}>
+            <ButtonText>{nextBtnText}</ButtonText>
+            {state.processing && <Loader size="xs" style={{color: 'white'}} />}
           </Button>
-        ) : (
-          <View />
-        )}
-        <Button
-          label={nextBtnText}
-          variant="solid"
-          color="primary"
-          size="small"
-          onPress={onNext}
-          disabled={!state.canNext}>
-          <ButtonText>{nextBtnText}</ButtonText>
-          {state.processing && <Loader size="xs" style={{color: 'white'}} />}
-        </Button>
-      </View>
+        </View>
+      )}
 
       <WizardEditListDialog
         control={editDialogControl}
