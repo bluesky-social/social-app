@@ -1,4 +1,8 @@
-import React from 'react'
+import React, {useEffect} from 'react'
+import {BskyAgent} from '@atproto/api'
+
+import * as persisted from '#/state/persisted'
+import {useAgent} from '../session'
 
 type StateContext = Map<string, boolean>
 type SetStateContext = (uri: string, value: boolean) => void
@@ -10,6 +14,11 @@ const setStateContext = React.createContext<SetStateContext>(
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [state, setState] = React.useState<StateContext>(() => new Map())
+  const agent = useAgent()
+
+  useEffect(() => {
+    migrateThreadMutes(agent)
+  }, [agent])
 
   const setThreadMute = React.useCallback(
     (uri: string, value: boolean) => {
@@ -41,4 +50,19 @@ export function useIsThreadMuted(uri: string, defaultValue = false) {
 
 export function useSetThreadMute() {
   return React.useContext(setStateContext)
+}
+
+function migrateThreadMutes(agent: BskyAgent) {
+  const threadMutes = persisted.get('mutedThreads')
+  if (threadMutes.length > 0) {
+    console.log('migrating', threadMutes.length, 'thread mutes')
+    for (const thread of threadMutes) {
+      // failure is acceptable here, as the thread may have been deleted
+      agent.api.app.bsky.graph
+        .muteThread({root: thread})
+        .catch(err => console.error('failed to migrate thread mute', err))
+    }
+
+    persisted.write('mutedThreads', [])
+  }
 }
