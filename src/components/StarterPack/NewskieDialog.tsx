@@ -27,8 +27,6 @@ export function NewskieDialog({
   const {joinedViaStarterPack} = profile
   const profileName = profile.displayName || `@${profile.handle}`
 
-  if (!profile.createdAt) return null
-
   return (
     <>
       <Pressable

@@ -20,11 +20,19 @@ export function ProfileHeaderHandle({
   const t = useTheme()
   const invalidHandle = isInvalidHandle(profile.handle)
   const blockHide = profile.viewer?.blocking || profile.viewer?.blockedBy
+  const createdAt = new Date(profile.createdAt).getTime()
 
   const isNewskie =
-    profile.createdAt &&
+    createdAt > 0 &&
     Date.now() + 60e3 * 24 * DAYS_TO_SHOW_NEWSKIE >
       new Date(profile.createdAt).getTime()
+
+  console.log({
+    date: Date.now() + 60e3 * 24 * DAYS_TO_SHOW_NEWSKIE,
+    createdAt: new Date(profile.createdAt).getTime(),
+  })
+
+  console.log(isNewskie)
 
   return (
     <View
