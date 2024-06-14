@@ -415,12 +415,14 @@ export const ComposePost = observer(function ComposePost({
     bottomBarAnimatedStyle,
   } = useAnimatedBorders()
 
+  const keyboardVerticalOffset = useKeyboardVerticalOffset()
+
   return (
     <KeyboardAvoidingView
       testID="composePostView"
       behavior={isIOS ? 'padding' : 'height'}
-      keyboardVerticalOffset={isIOS ? 70 : 0}
-      style={[a.flex_1]}>
+      keyboardVerticalOffset={keyboardVerticalOffset}
+      style={a.flex_1}>
       <View style={[a.flex_1, viewStyles]} aria-modal accessibilityViewIsModal>
         <Animated.View style={topBarAnimatedStyle}>
           <View style={styles.topbarInner}>
@@ -739,6 +741,19 @@ function useAnimatedBorders() {
     topBarAnimatedStyle,
     bottomBarAnimatedStyle,
   }
+}
+
+function useKeyboardVerticalOffset() {
+  const {top} = useSafeAreaInsets()
+
+  // Android etc
+  if (!isIOS) return 0
+
+  // iPhone SE
+  if (top === 20) return 40
+
+  // all other iPhones
+  return top + 10
 }
 
 const styles = StyleSheet.create({
