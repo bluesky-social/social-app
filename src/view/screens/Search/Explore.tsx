@@ -55,9 +55,7 @@ function SuggestedItemsHeader({
           ? [a.flex_row, a.px_lg, a.py_lg, a.pt_2xl, a.gap_md]
           : [{flexDirection: 'row-reverse'}, a.p_lg, a.pt_2xl, a.gap_md],
         a.border_b,
-        {
-          borderColor: t.palette.primary_500,
-        },
+        t.atoms.border_contrast_low,
         style,
       ]}>
       <View style={[a.flex_1, a.gap_sm]}>
