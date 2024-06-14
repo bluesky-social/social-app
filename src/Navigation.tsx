@@ -31,7 +31,7 @@ import {
 } from 'lib/routes/types'
 import {RouteParams, State} from 'lib/routes/types'
 import {bskyTitle} from 'lib/strings/headings'
-import {isAndroid, isNative} from 'platform/detection'
+import {isAndroid, isNative, isWeb} from 'platform/detection'
 import {PreferencesExternalEmbeds} from '#/view/screens/PreferencesExternalEmbeds'
 import {AppPasswords} from 'view/screens/AppPasswords'
 import {ModerationBlockedAccounts} from 'view/screens/ModerationBlockedAccounts'
@@ -43,6 +43,7 @@ import HashtagScreen from '#/screens/Hashtag'
 import {ModerationScreen} from '#/screens/Moderation'
 import {ProfileKnownFollowersScreen} from '#/screens/Profile/KnownFollowers'
 import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
+import {GetReferrerModule} from '../modules/expo-get-referrer/src/ExpoGetReferrerModule'
 import {init as initAnalytics} from './lib/analytics/analytics'
 import {useWebScrollRestoration} from './lib/hooks/useWebScrollRestoration'
 import {attachRouteToLogEvents, logEvent} from './lib/statsig/statsig'
@@ -727,6 +728,17 @@ function logModuleInitTime() {
   logEvent('init', {
     initMs,
   })
+
+  if (isWeb) {
+    GetReferrerModule.getReferrerInfoAsync().then(info => {
+      if (info && info.hostname !== 'bsky.app') {
+        logEvent('deepLink:referrerReceived', {
+          referrer: info?.referrer,
+          hostname: info?.hostname,
+        })
+      }
+    })
+  }
 
   if (__DEV__) {
     // This log is noisy, so keep false committed

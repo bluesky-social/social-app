@@ -25,6 +25,10 @@ export type LogEvents = {
   }
   'state:foreground:sampled': {}
   'router:navigate:sampled': {}
+  'deepLink:referrerReceived': {
+    referrer: string
+    hostname: string
+  }
 
   // Screen events
   'splash:signInPressed': {}

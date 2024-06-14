@@ -209,6 +209,7 @@ module.exports = function (config) {
         './plugins/withAndroidSplashScreenStatusBarTranslucentPlugin.js',
         './plugins/shareExtension/withShareExtensions.js',
         './plugins/notificationsExtension/withNotificationsExtension.js',
+        './plugins/withAppDelegateReferrer.js',
       ].filter(Boolean),
       extra: {
         eas: {
