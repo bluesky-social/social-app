@@ -190,8 +190,10 @@ export const KNOWN_AUTHED_ONLY_FEEDS = [
 
 type GetPopularFeedsOptions = {limit?: number}
 
-export function createGetPopularFeedsQueryKey(...args: any[]) {
-  return ['getPopularFeeds', ...args]
+export function createGetPopularFeedsQueryKey(
+  options?: GetPopularFeedsOptions,
+) {
+  return ['getPopularFeeds', options]
 }
 
 export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
@@ -299,7 +301,7 @@ export function useSearchPopularFeedsMutation() {
   })
 }
 
-const popularFeedsSearchQueryKeyRoot = 'actor-search'
+const popularFeedsSearchQueryKeyRoot = 'popularFeedsSearch'
 export const createPopularFeedsSearchQueryKey = (query: string) => [
   popularFeedsSearchQueryKeyRoot,
   query,
