@@ -46,7 +46,7 @@ export function HomeScreen(props: Props) {
   React.useEffect(() => {
     if (usedStarterPack && !usedStarterPack.initialFeed) {
       setShowLoggedOut(true)
-      requestSwitchToAccount('starterpack')
+      requestSwitchToAccount({requestedAccount: 'starterpack'})
     }
   }, [usedStarterPack, setShowLoggedOut, requestSwitchToAccount])
 
