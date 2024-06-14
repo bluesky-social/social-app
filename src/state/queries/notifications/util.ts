@@ -1,5 +1,4 @@
 import {
-  AppBskyEmbedRecord,
   AppBskyFeedDefs,
   AppBskyFeedLike,
   AppBskyFeedPost,
@@ -28,7 +27,6 @@ export async function fetchPage({
   limit,
   queryClient,
   moderationOpts,
-  threadMutes,
   fetchAdditionalData,
 }: {
   agent: BskyAgent
@@ -36,7 +34,6 @@ export async function fetchPage({
   limit: number
   queryClient: QueryClient
   moderationOpts: ModerationOpts | undefined
-  threadMutes: string[]
   fetchAdditionalData: boolean
 }): Promise<{page: FeedPage; indexedAt: string | undefined}> {
   const res = await agent.listNotifications({
@@ -66,11 +63,6 @@ export async function fetchPage({
       }
     }
   }
-
-  // apply thread muting
-  notifsGrouped = notifsGrouped.filter(
-    notif => !isThreadMuted(notif, threadMutes),
-  )
 
   let seenAt = res.data.seenAt ? new Date(res.data.seenAt) : new Date()
   if (Number.isNaN(seenAt.getTime())) {
@@ -206,46 +198,4 @@ function getSubjectUri(
   } else if (type === 'feedgen-like') {
     return notif.reasonSubject
   }
-}
-
-export function isThreadMuted(notif: FeedNotification, threadMutes: string[]) {
-  // If there's a subject we want to use that. This will always work on the notifications tab
-  if (notif.subject) {
-    const record = notif.subject.record as AppBskyFeedPost.Record
-    // Check for a quote record
-    if (
-      (record.reply && threadMutes.includes(record.reply.root.uri)) ||
-      (notif.subject.uri && threadMutes.includes(notif.subject.uri))
-    ) {
-      return true
-    } else if (
-      AppBskyEmbedRecord.isMain(record.embed) &&
-      threadMutes.includes(record.embed.record.uri)
-    ) {
-      return true
-    }
-  } else {
-    // Otherwise we just do the best that we can
-    const record = notif.notification.record
-    if (AppBskyFeedPost.isRecord(record)) {
-      if (record.reply && threadMutes.includes(record.reply.root.uri)) {
-        // We can always filter replies
-        return true
-      } else if (
-        AppBskyEmbedRecord.isMain(record.embed) &&
-        threadMutes.includes(record.embed.record.uri)
-      ) {
-        // We can also filter quotes if the quoted post is the root
-        return true
-      }
-    } else if (
-      AppBskyFeedRepost.isRecord(record) &&
-      threadMutes.includes(record.subject.uri)
-    ) {
-      // Finally we can filter reposts, again if the post is the root
-      return true
-    }
-  }
-
-  return false
 }
