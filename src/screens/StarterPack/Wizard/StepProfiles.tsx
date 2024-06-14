@@ -52,7 +52,7 @@ export function StepProfiles() {
         data={query ? results : topFollowers}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
-        contentContainerStyle={{paddingTop: 12}}
+        contentContainerStyle={{paddingTop: 6}}
         renderScrollComponent={props => <KeyboardAwareScrollView {...props} />}
         keyboardShouldPersistTaps="handled"
         containWeb={true}
