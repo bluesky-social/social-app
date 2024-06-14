@@ -1,6 +1,6 @@
 import React from 'react'
 import {ActivityIndicator, type FlatList, StyleSheet, View} from 'react-native'
-import {AppBskyActorDefs} from '@atproto/api'
+import {AppBskyActorDefs, AppBskyFeedDefs} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
@@ -25,7 +25,6 @@ import {ComposeIcon2} from 'lib/icons'
 import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {cleanError} from 'lib/strings/errors'
 import {s} from 'lib/styles'
-import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 import {FAB} from 'view/com/util/fab/FAB'
 import {SearchInput} from 'view/com/util/forms/SearchInput'
@@ -46,6 +45,8 @@ import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/compon
 import {ListMagnifyingGlass_Stroke2_Corner0_Rounded} from '#/components/icons/ListMagnifyingGlass'
 import {ListSparkle_Stroke2_Corner0_Rounded} from '#/components/icons/ListSparkle'
 import hairlineWidth = StyleSheet.hairlineWidth
+import {Divider} from '#/components/Divider'
+import * as FeedCard from '#/components/FeedCard'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Feeds'>
 
@@ -94,6 +95,7 @@ type FlatlistSlice =
       type: 'popularFeed'
       key: string
       feedUri: string
+      feed: AppBskyFeedDefs.GeneratorView
     }
   | {
       type: 'popularFeedsLoadingMore'
@@ -300,6 +302,7 @@ export function FeedsScreen(_props: Props) {
                 key: `popularFeed:${feed.uri}`,
                 type: 'popularFeed',
                 feedUri: feed.uri,
+                feed,
               })),
             )
           }
@@ -323,6 +326,7 @@ export function FeedsScreen(_props: Props) {
                   key: `popularFeed:${feed.uri}`,
                   type: 'popularFeed',
                   feedUri: feed.uri,
+                  feed,
                 })),
               )
             }
@@ -461,7 +465,7 @@ export function FeedsScreen(_props: Props) {
         return (
           <>
             <FeedsAboutHeader />
-            <View style={{paddingHorizontal: 12, paddingBottom: 12}}>
+            <View style={{paddingHorizontal: 12, paddingBottom: 4}}>
               <SearchInput
                 query={query}
                 onChangeQuery={onChangeQuery}
@@ -476,13 +480,10 @@ export function FeedsScreen(_props: Props) {
         return <FeedFeedLoadingPlaceholder />
       } else if (item.type === 'popularFeed') {
         return (
-          <FeedSourceCard
-            feedUri={item.feedUri}
-            showSaveBtn={hasSession}
-            showDescription
-            showLikes
-            pinOnSave
-          />
+          <View style={[a.px_lg, a.pt_lg, a.gap_lg]}>
+            <FeedCard.Default feed={item.feed} />
+            <Divider />
+          </View>
         )
       } else if (item.type === 'popularFeedsNoResults') {
         return (
@@ -525,7 +526,6 @@ export function FeedsScreen(_props: Props) {
       onPressCancelSearch,
       onSubmitQuery,
       onChangeSearchFocus,
-      hasSession,
     ],
   )
 
