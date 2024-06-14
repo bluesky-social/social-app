@@ -100,7 +100,7 @@ function KnownFollowersInner({
       moderation,
     }
   })
-  const count = cachedKnownFollowers.count - Math.min(slice.length, 2)
+  const count = cachedKnownFollowers.count
 
   return (
     <Link
