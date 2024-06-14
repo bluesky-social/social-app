@@ -307,7 +307,7 @@ let SearchScreenFeedsResults = ({
               pinOnSave
             />
           )}
-          keyExtractor={item => item.did}
+          keyExtractor={item => item.uri}
           // @ts-ignore web only -prf
           desktopFixedHeight
           contentContainerStyle={{paddingBottom: 100}}
