@@ -57,6 +57,7 @@ function HomeHeaderLayoutDesktopAndTablet({
             t.atoms.bg,
             t.atoms.border_contrast_low,
             styles.bar,
+            kawaii && {paddingTop: 22, paddingBottom: 16},
           ]}>
           <View
             style={[
@@ -66,7 +67,7 @@ function HomeHeaderLayoutDesktopAndTablet({
               a.m_auto,
               kawaii && {paddingTop: 4, paddingBottom: 0},
               {
-                width: kawaii ? 60 : 28,
+                width: kawaii ? 84 : 28,
               },
             ]}>
             <Logo width={kawaii ? 60 : 28} />
