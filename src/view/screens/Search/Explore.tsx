@@ -142,7 +142,7 @@ function LoadMore({
                 a.relative,
                 {
                   height: 32,
-                  width: 62,
+                  width: 32 + 15 * 3,
                 },
               ]}>
               <View
@@ -175,7 +175,7 @@ function LoadMore({
                       {
                         width: 30,
                         height: 30,
-                        left: (i + 1) * 10,
+                        left: (i + 1) * 15,
                         borderColor: t.atoms.bg.backgroundColor,
                         borderRadius: _item.type === 'profile' ? 999 : 4,
                         zIndex: 3 - i,
