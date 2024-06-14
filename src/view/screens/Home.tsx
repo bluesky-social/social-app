@@ -41,14 +41,14 @@ export function HomeScreen(props: Props) {
   const {data: pinnedFeedInfos, isLoading: isPinnedFeedsLoading} =
     usePinnedFeedsInfos()
   const usedStarterPack = useUsedStarterPack()
-  const setUsedStarterPack = useSetUsedStarterPack()
-  const {setShowLoggedOut} = useLoggedOutViewControls()
+  const {setShowLoggedOut, requestSwitchToAccount} = useLoggedOutViewControls()
 
   React.useEffect(() => {
     if (usedStarterPack && !usedStarterPack.initialFeed) {
       setShowLoggedOut(true)
+      requestSwitchToAccount('starterpack')
     }
-  }, [usedStarterPack, setUsedStarterPack, setShowLoggedOut])
+  }, [usedStarterPack, setShowLoggedOut, requestSwitchToAccount])
 
   if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
     return (

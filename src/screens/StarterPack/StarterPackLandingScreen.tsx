@@ -34,7 +34,7 @@ export function LandingScreen({
   setScreenState: (state: LoggedOutScreenState) => void
 }) {
   const usedStarterPack = useUsedStarterPack()
-  const atUri = new AtUri(usedStarterPack!.uri)
+  const atUri = new AtUri(usedStarterPack?.uri ?? '')
   const {hostname: name, rkey} = atUri
 
   const {

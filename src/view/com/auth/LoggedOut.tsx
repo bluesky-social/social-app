@@ -18,7 +18,6 @@ import {
 } from '#/state/shell/logged-out'
 import {useSetMinimalShellMode} from '#/state/shell/minimal-mode'
 import {NavigationProp} from 'lib/routes/types'
-import {useUsedStarterPack} from 'state/preferences/starter-pack'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Text} from '#/view/com/util/text/Text'
 import {Login} from '#/screens/Login'
@@ -40,13 +39,14 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
   const {screen} = useAnalytics()
-  const usedStarterPack = useUsedStarterPack()
   const {requestedAccountSwitchTo} = useLoggedOutView()
   const [screenState, setScreenState] = React.useState<ScreenState>(
     requestedAccountSwitchTo
       ? requestedAccountSwitchTo === 'new'
         ? ScreenState.S_CreateAccount
         : ScreenState.S_Login
+      : requestedAccountSwitchTo === 'starterpack'
+      ? ScreenState.S_StarterPack
       : ScreenState.S_LoginOrCreateAccount,
   )
   const {isMobile} = useWebMediaQueries()
@@ -58,10 +58,6 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
     screen('Login')
     setMinimalShellMode(true)
   }, [screen, setMinimalShellMode])
-
-  React.useEffect(() => {
-    setScreenState(ScreenState.S_StarterPack)
-  }, [usedStarterPack?.uri])
 
   const onPressDismiss = React.useCallback(() => {
     if (onDismiss) {
