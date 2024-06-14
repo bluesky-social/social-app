@@ -120,6 +120,7 @@ function LoadMore({
       })
       .filter(Boolean) as LoadMoreItems[]
   }, [item.items, moderationOpts])
+  const type = items[0].type
 
   return (
     <View style={[]}>
@@ -158,7 +159,7 @@ function LoadMore({
                     left: 0,
                     backgroundColor: t.palette.primary_500,
                     borderColor: t.atoms.bg.backgroundColor,
-                    borderRadius: items[0].type === 'profile' ? 999 : 4,
+                    borderRadius: type === 'profile' ? 999 : 4,
                     zIndex: 4,
                   },
                 ]}>
@@ -209,7 +210,11 @@ function LoadMore({
                 a.leading_snug,
                 hovered ? t.atoms.text : t.atoms.text_contrast_medium,
               ]}>
-              <Trans>Load more suggestions</Trans>
+              {type === 'profile' ? (
+                <Trans>Load more suggested follows</Trans>
+              ) : (
+                <Trans>Load more suggested feeds</Trans>
+              )}
             </Text>
 
             <View style={[a.flex_1, a.align_end]}>
