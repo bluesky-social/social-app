@@ -155,8 +155,8 @@ export function TabBar({
           )
         })}
         <Indicator
-          x={itemLayouts[selectedPage]?.[0] || 0}
-          width={itemLayouts[selectedPage]?.[1] || 0}
+          x={itemLayouts[selectedPage]?.[0]}
+          width={itemLayouts[selectedPage]?.[1]}
           color={indicatorColor || pal.colors.link}
         />
       </DraggableScrollView>
@@ -166,12 +166,12 @@ export function TabBar({
 }
 
 function Indicator({
-  x,
-  width,
+  x = 0,
+  width = 0,
   color,
 }: {
-  x: number
-  width: number
+  x?: number
+  width?: number
   color: string
 }) {
   const sharedX = useSharedValue(x)
@@ -179,7 +179,7 @@ function Indicator({
 
   useEffect(() => {
     sharedX.value = withTiming(x)
-    sharedWidth.value = withTiming(width)
+    sharedWidth.value = sharedWidth.value ? withTiming(width) : width
   })
 
   const styles = useAnimatedStyle(() => ({
