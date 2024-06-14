@@ -656,26 +656,22 @@ function Footer({
             variant="ghost"
             color="primary"
             size="small"
-            style={{width: 50}}
+            style={{width: 70}}
             onPress={editDialogControl.open}>
             <ButtonText>
               <Trans>Edit</Trans>
             </ButtonText>
           </Button>
         ) : (
-          <View style={{width: 50}} />
+          <View style={{width: 70, height: 35}} />
         )}
         {state.currentStep === 'Profiles' && items.length < 8 ? (
           <>
             <Text
               style={[a.font_bold, textStyles, t.atoms.text_contrast_medium]}>
-              <Trans>
-                Add {8 - items.length} more{' '}
-                <Plural value={8 - items.length} one="person" other="people" />{' '}
-                to continue
-              </Trans>
+              <Trans>Add {8 - items.length} more to continue</Trans>
             </Text>
-            <View style={{width: 50}} />
+            <View style={{width: 70}} />
           </>
         ) : (
           <Button
@@ -683,7 +679,7 @@ function Footer({
             variant="solid"
             color="primary"
             size="small"
-            style={{width: 50}}
+            style={{width: 70}}
             onPress={onNext}
             disabled={!state.canNext}>
             <ButtonText>{nextBtnText}</ButtonText>
