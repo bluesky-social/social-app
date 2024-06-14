@@ -491,7 +491,7 @@ function Container({
           {showDeleteBtn && (
             <Button
               label={_(msg`Next`)}
-              variant="outline"
+              variant="ghost"
               color="negative"
               size="medium"
               style={[a.mx_xl, a.mb_lg]}
@@ -666,7 +666,7 @@ function Footer({
           {isEditEnabled ? (
             <Button
               label={_(msg`Edit`)}
-              variant="outline"
+              variant="ghost"
               color="primary"
               size="small"
               onPress={editDialogControl.open}>

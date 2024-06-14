@@ -4,11 +4,14 @@ import {View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
 import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import {BottomSheetFlatListMethods} from '@discord/bottom-sheet'
-import {Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
+import {isWeb} from 'platform/detection'
 import {useSession} from 'state/session'
 import {WizardAction, WizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a, native, useTheme, web} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {WizardFeedCard} from '#/components/StarterPack/Wizard/WizardFeedCard'
 import {WizardProfileCard} from '#/components/StarterPack/Wizard/WizardProfileCard'
@@ -30,8 +33,9 @@ export function WizardEditListDialog({
   state: WizardState
   dispatch: (action: WizardAction) => void
 }) {
-  const {currentAccount} = useSession()
+  const {_} = useLingui()
   const t = useTheme()
+  const {currentAccount} = useSession()
 
   const listRef = useRef<BottomSheetFlatListMethods>(null)
 
@@ -68,15 +72,29 @@ export function WizardEditListDialog({
         ListHeaderComponent={
           <View
             style={[
-              a.align_center,
-              a.justify_end,
+              a.flex_row,
+              a.justify_between,
               a.border_b,
-              a.pb_sm,
+              a.px_sm,
               a.mb_sm,
               t.atoms.bg,
               t.atoms.border_contrast_medium,
-              {height: 68},
+              isWeb
+                ? [
+                    a.align_center,
+                    {
+                      height: 48,
+                    },
+                  ]
+                : [
+                    a.pb_sm,
+                    a.align_end,
+                    {
+                      height: 68,
+                    },
+                  ],
             ]}>
+            <View style={{width: 60}} />
             <Text style={[a.font_bold, a.text_xl]}>
               {state.currentStep === 'Profiles' ? (
                 <Trans>Edit People</Trans>
@@ -84,6 +102,20 @@ export function WizardEditListDialog({
                 <Trans>Edit Feeds</Trans>
               )}
             </Text>
+            <View style={{width: 60}}>
+              {isWeb && (
+                <Button
+                  label={_(msg`Close`)}
+                  variant="ghost"
+                  color="primary"
+                  size="xsmall"
+                  onPress={() => control.close()}>
+                  <ButtonText>
+                    <Trans>Close</Trans>
+                  </ButtonText>
+                </Button>
+              )}
+            </View>
           </View>
         }
         stickyHeaderIndices={[0]}

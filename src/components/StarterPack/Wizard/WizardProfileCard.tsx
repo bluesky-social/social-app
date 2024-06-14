@@ -30,6 +30,8 @@ export function WizardProfileCard({
 
   const onPressAddRemove = () => {
     Keyboard.dismiss()
+    if (profile.did === currentAccount?.did) return
+
     if (!includesProfile) {
       dispatch({type: 'AddProfile', profile})
     } else {
