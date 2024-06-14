@@ -17,8 +17,9 @@ import {useNavigation} from '@react-navigation/native'
 import {InfiniteData, UseInfiniteQueryResult} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
-import {isNative, isWeb} from '#/platform/detection'
+import {isWeb} from '#/platform/detection'
 import {generateStarterpack} from 'lib/generate-starterpack'
+import {useBottomBarOffset} from 'lib/hooks/useBottomBarOffset'
 import {NavigationProp} from 'lib/routes/types'
 import {useAgent} from 'state/session'
 import {List, ListRef} from 'view/com/util/List'
@@ -81,6 +82,7 @@ export const ProfileStarterPacks = React.forwardRef<
   ref,
 ) {
   const t = useTheme()
+  const bottomBarOffset = useBottomBarOffset(100)
   const [isPTRing, setIsPTRing] = React.useState(false)
   const {data, refetch, isFetching, hasNextPage, fetchNextPage} = query
 
@@ -127,7 +129,7 @@ export const ProfileStarterPacks = React.forwardRef<
         keyExtractor={keyExtractor}
         refreshing={isPTRing}
         headerOffset={headerOffset}
-        contentContainerStyle={isNative && {paddingBottom: headerOffset + 100}}
+        contentContainerStyle={{paddingBottom: headerOffset + bottomBarOffset}}
         indicatorStyle={t.name === 'light' ? 'black' : 'white'}
         removeClippedSubviews={true}
         desktopFixedHeight
