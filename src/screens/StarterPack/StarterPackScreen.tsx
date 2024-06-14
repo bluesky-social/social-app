@@ -38,6 +38,8 @@ import {Text} from '#/components/Typography'
 export function StarterPackScreen({
   route,
 }: NativeStackScreenProps<CommonNavigatorParams, 'StarterPack'>) {
+  const {_} = useLingui()
+
   const {name, rkey} = route.params
   const {
     data: did,
@@ -50,11 +52,17 @@ export function StarterPackScreen({
     isError: isErrorStarterPack,
   } = useStarterPackQuery({did, rkey})
 
-  if (!did || !starterPack) {
+  const isValid =
+    starterPack &&
+    AppBskyGraphDefs.validateStarterPackView(starterPack) &&
+    AppBskyGraphStarterpack.validateRecord(starterPack.record)
+
+  if (!did || !starterPack || !isValid) {
     return (
       <ListMaybePlaceholder
         isLoading={isLoadingDid || isLoadingStarterPack}
-        isError={isErrorDid || isErrorStarterPack}
+        isError={isErrorDid || isErrorStarterPack || !isValid}
+        errorMessage={_(msg`That starter pack could not be found.`)}
       />
     )
   }
