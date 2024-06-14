@@ -40,15 +40,17 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   const setMinimalShellMode = useSetMinimalShellMode()
   const {screen} = useAnalytics()
   const {requestedAccountSwitchTo} = useLoggedOutView()
-  const [screenState, setScreenState] = React.useState<ScreenState>(
-    requestedAccountSwitchTo
-      ? requestedAccountSwitchTo === 'new'
-        ? ScreenState.S_CreateAccount
-        : ScreenState.S_Login
-      : requestedAccountSwitchTo === 'starterpack'
-      ? ScreenState.S_StarterPack
-      : ScreenState.S_LoginOrCreateAccount,
-  )
+  const [screenState, setScreenState] = React.useState<ScreenState>(() => {
+    if (requestedAccountSwitchTo === 'new') {
+      return ScreenState.S_CreateAccount
+    } else if (requestedAccountSwitchTo === 'starterpack') {
+      return ScreenState.S_StarterPack
+    } else if (requestedAccountSwitchTo != null) {
+      return ScreenState.S_Login
+    } else {
+      return ScreenState.S_LoginOrCreateAccount
+    }
+  })
   const {isMobile} = useWebMediaQueries()
   const {clearRequestedAccount} = useLoggedOutViewControls()
   const navigation = useNavigation<NavigationProp>()
