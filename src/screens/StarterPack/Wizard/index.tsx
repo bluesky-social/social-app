@@ -559,7 +559,7 @@ function Footer({
         t.atoms.bg,
         t.atoms.border_contrast_medium,
         {
-          height: isNative ? 224 : 200,
+          height: 190 + bottomInset,
           paddingBottom: 20 + bottomInset,
         },
         isNative && [

@@ -17,9 +17,9 @@ import {useNavigation} from '@react-navigation/native'
 import {InfiniteData, UseInfiniteQueryResult} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {generateStarterpack} from 'lib/generate-starterpack'
 import {useBottomBarOffset} from 'lib/hooks/useBottomBarOffset'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {NavigationProp} from 'lib/routes/types'
 import {useAgent} from 'state/session'
 import {List, ListRef} from 'view/com/util/List'
@@ -30,7 +30,7 @@ import {useDialogControl} from '#/components/Dialog'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
-import {StarterPackCard} from '#/components/StarterPack/StarterPackCard'
+import {Default as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 
 interface SectionRef {
   scrollToTop: () => void
@@ -47,19 +47,6 @@ interface ProfileFeedgensProps {
   style?: StyleProp<ViewStyle>
   testID?: string
   setScrollViewTag: (tag: number | null) => void
-}
-
-function renderItem({
-  item,
-  index,
-}: ListRenderItemInfo<AppBskyGraphDefs.StarterPackView>) {
-  return (
-    <StarterPackCard
-      starterPack={item}
-      type="list"
-      hideTopBorder={!isWeb && index === 0}
-    />
-  )
 }
 
 function keyExtractor(item: AppBskyGraphDefs.StarterPackView) {
@@ -85,6 +72,7 @@ export const ProfileStarterPacks = React.forwardRef<
   const bottomBarOffset = useBottomBarOffset(100)
   const [isPTRing, setIsPTRing] = React.useState(false)
   const {data, refetch, isFetching, hasNextPage, fetchNextPage} = query
+  const {isTabletOrDesktop} = useWebMediaQueries()
 
   const items = data?.pages.flatMap(page => page.starterPacks)
 
@@ -118,6 +106,22 @@ export const ProfileStarterPacks = React.forwardRef<
       setScrollViewTag(nativeTag)
     }
   }, [enabled, scrollElRef, setScrollViewTag])
+
+  const renderItem = ({
+    item,
+    index,
+  }: ListRenderItemInfo<AppBskyGraphDefs.StarterPackView>) => {
+    return (
+      <View
+        style={[
+          a.p_lg,
+          (isTabletOrDesktop || index !== 0) && a.border_t,
+          t.atoms.border_contrast_low,
+        ]}>
+        <StarterPackCard starterPack={item} />
+      </View>
+    )
+  }
 
   return (
     <View testID={testID} style={style}>

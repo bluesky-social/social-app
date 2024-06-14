@@ -8,11 +8,11 @@ import {HITSLOP_10} from 'lib/constants'
 import {ago} from 'lib/strings/time'
 import {isNative} from 'platform/detection'
 import {useSession} from 'state/session'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {useDialogControl} from '#/components/Dialog'
 import {Newskie} from '#/components/icons/Newskie'
-import {StarterPackCard} from '#/components/StarterPack/StarterPackCard'
+import {Default as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
 
 export function NewskieDialog({
@@ -22,6 +22,7 @@ export function NewskieDialog({
 }) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
+  const t = useTheme()
   const control = useDialogControl()
   const {joinedViaStarterPack} = profile
   const profileName = profile.displayName || `@${profile.handle}`
@@ -69,10 +70,16 @@ export function NewskieDialog({
               )}
             </Text>
             {joinedViaStarterPack && (
-              <StarterPackCard
-                starterPack={joinedViaStarterPack}
-                type="dialog"
-              />
+              <View
+                style={[
+                  a.border,
+                  a.rounded_sm,
+                  t.atoms.border_contrast_low,
+                  a.px_sm,
+                  a.py_md,
+                ]}>
+                <StarterPackCard starterPack={joinedViaStarterPack} />
+              </View>
             )}
           </View>
         </Dialog.ScrollableInner>
