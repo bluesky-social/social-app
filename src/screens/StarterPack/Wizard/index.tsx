@@ -641,7 +641,7 @@ function Footer({
           )}
         </Text>
       )}
-      {state.currentStep === 'Profiles' && items.length < 8 && !__DEV__ ? (
+      {state.currentStep === 'Profiles' && items.length < 8 ? (
         <Text
           style={[
             a.font_bold,
