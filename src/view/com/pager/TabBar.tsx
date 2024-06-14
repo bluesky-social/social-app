@@ -1,9 +1,15 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {LayoutChangeEvent, ScrollView, StyleSheet, View} from 'react-native'
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated'
 
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {isNative} from '#/platform/detection'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {atoms as a} from '#/alf'
 import {PressableWithHover} from '../util/PressableWithHover'
 import {Text} from '../util/text/Text'
 import {DraggableScrollView} from './DraggableScrollView'
@@ -33,11 +39,7 @@ export function TabBar({
   const pal = usePalette('default')
   const scrollElRef = useRef<ScrollView>(null)
   const itemRefs = useRef<Array<Element>>([])
-  const [itemXs, setItemXs] = useState<number[]>([])
-  const indicatorStyle = useMemo(
-    () => ({borderBottomColor: indicatorColor || pal.colors.link}),
-    [indicatorColor, pal],
-  )
+  const [itemLayouts, setItemLayouts] = useState<[number, number][]>([])
   const {isDesktop, isTablet} = useWebMediaQueries()
   const styles = isDesktop || isTablet ? desktopStyles : mobileStyles
 
@@ -46,7 +48,7 @@ export function TabBar({
       // On native, the primary interaction is swiping.
       // We adjust the scroll little by little on every tab change.
       // Scroll into view but keep the end of the previous item visible.
-      let x = itemXs[selectedPage] || 0
+      let x = itemLayouts[selectedPage]?.[0] || 0
       x = Math.max(0, x - OFFSCREEN_ITEM_WIDTH)
       scrollElRef.current?.scrollTo({x})
     } else {
@@ -93,7 +95,7 @@ export function TabBar({
         })
       }
     }
-  }, [scrollElRef, itemXs, selectedPage, styles])
+  }, [scrollElRef, itemLayouts, selectedPage, styles])
 
   const onPressItem = useCallback(
     (index: number) => {
@@ -109,9 +111,10 @@ export function TabBar({
   const onItemLayout = React.useCallback(
     (e: LayoutChangeEvent, index: number) => {
       const x = e.nativeEvent.layout.x
-      setItemXs(prev => {
+      const width = e.nativeEvent.layout.width
+      setItemLayouts(prev => {
         const Xs = [...prev]
-        Xs[index] = x
+        Xs[index] = [x, width]
         return Xs
       })
     },
@@ -137,7 +140,7 @@ export function TabBar({
               style={styles.item}
               hoverStyle={pal.viewLight}
               onPress={() => onPressItem(i)}>
-              <View style={[styles.itemInner, selected && indicatorStyle]}>
+              <View style={styles.itemInner}>
                 <Text
                   type={isDesktop || isTablet ? 'xl-bold' : 'lg-bold'}
                   testID={testID ? `${testID}-${item}` : undefined}
@@ -151,9 +154,48 @@ export function TabBar({
             </PressableWithHover>
           )
         })}
+        <Indicator
+          x={itemLayouts[selectedPage]?.[0] || 0}
+          width={itemLayouts[selectedPage]?.[1] || 0}
+          color={indicatorColor || pal.colors.link}
+        />
       </DraggableScrollView>
       <View style={[pal.border, styles.outerBottomBorder]} />
     </View>
+  )
+}
+
+function Indicator({
+  x,
+  width,
+  color,
+}: {
+  x: number
+  width: number
+  color: string
+}) {
+  const sharedX = useSharedValue(x)
+  const sharedWidth = useSharedValue(width)
+
+  useEffect(() => {
+    sharedX.value = withTiming(x)
+    sharedWidth.value = withTiming(width)
+  })
+
+  const styles = useAnimatedStyle(() => ({
+    width: sharedWidth.value - 12,
+    transform: [{translateX: sharedX.value + 6}],
+  }))
+
+  return (
+    <Animated.View
+      style={[
+        styles,
+        {backgroundColor: color, left: 0, bottom: 0, height: 3},
+        a.absolute,
+        a.rounded_2xs,
+      ]}
+    />
   )
 }
 
@@ -165,6 +207,7 @@ const desktopStyles = StyleSheet.create({
   contentContainer: {
     paddingHorizontal: 0,
     backgroundColor: 'transparent',
+    position: 'relative',
   },
   item: {
     paddingTop: 14,
