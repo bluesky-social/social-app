@@ -17,7 +17,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const agent = useAgent()
 
   useEffect(() => {
-    migrateThreadMutes(agent)
+    if (agent.hasSession) {
+      migrateThreadMutes(agent)
+    }
   }, [agent])
 
   const setThreadMute = React.useCallback(
