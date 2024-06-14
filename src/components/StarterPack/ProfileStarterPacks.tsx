@@ -223,7 +223,8 @@ function EmptyComponent() {
             backgroundColor: 'white',
             borderColor: 'white',
             width: 100,
-          }}>
+          }}
+          hoverStyle={[{backgroundColor: '#dfdfdf'}]}>
           <ButtonText>
             <Trans>Create</Trans>
           </ButtonText>
