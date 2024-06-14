@@ -559,7 +559,7 @@ function Footer({
         t.atoms.bg,
         t.atoms.border_contrast_medium,
         {
-          height: 224,
+          height: isNative ? 224 : 200,
           paddingBottom: 20 + bottomInset,
         },
         isNative && [
@@ -641,54 +641,56 @@ function Footer({
           )}
         </Text>
       )}
-      {state.currentStep === 'Profiles' && items.length < 8 ? (
-        <Text
-          style={[
-            a.font_bold,
-            textStyles,
-            t.atoms.text_contrast_medium,
-            {marginTop: 'auto'},
-          ]}>
-          <Trans>
-            Add {8 - items.length} more{' '}
-            <Plural value={8 - items.length} one="person" other="people" /> to
-            continue
-          </Trans>
-        </Text>
-      ) : (
-        <View
-          style={[
-            a.flex_row,
-            a.w_full,
-            a.justify_between,
-            {marginTop: 'auto'},
-          ]}>
-          {isEditEnabled ? (
-            <Button
-              label={_(msg`Edit`)}
-              variant="ghost"
-              color="primary"
-              size="small"
-              onPress={editDialogControl.open}>
-              <ButtonText>
-                <Trans>Edit</Trans>
-              </ButtonText>
-            </Button>
-          ) : (
-            <View />
-          )}
+
+      <View
+        style={[
+          a.flex_row,
+          a.w_full,
+          a.justify_between,
+          a.align_center,
+          {marginTop: 'auto'},
+        ]}>
+        {isEditEnabled ? (
+          <Button
+            label={_(msg`Edit`)}
+            variant="ghost"
+            color="primary"
+            size="small"
+            style={{width: 50}}
+            onPress={editDialogControl.open}>
+            <ButtonText>
+              <Trans>Edit</Trans>
+            </ButtonText>
+          </Button>
+        ) : (
+          <View style={{width: 50}} />
+        )}
+        {state.currentStep === 'Profiles' && items.length < 8 ? (
+          <>
+            <Text
+              style={[a.font_bold, textStyles, t.atoms.text_contrast_medium]}>
+              <Trans>
+                Add {8 - items.length} more{' '}
+                <Plural value={8 - items.length} one="person" other="people" />{' '}
+                to continue
+              </Trans>
+            </Text>
+            <View style={{width: 50}} />
+          </>
+        ) : (
           <Button
             label={nextBtnText}
             variant="solid"
             color="primary"
             size="small"
+            style={{width: 50}}
             onPress={onNext}
             disabled={!state.canNext}>
             <ButtonText>{nextBtnText}</ButtonText>
             {state.processing && <Loader size="xs" style={{color: 'white'}} />}
           </Button>
-        </View>
-      )}
+        )}
+      </View>
 
       <WizardEditListDialog
         control={editDialogControl}
