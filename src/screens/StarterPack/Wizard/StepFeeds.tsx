@@ -4,7 +4,6 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import debounce from 'lodash.debounce'
 
-import {DISCOVER_FEED_URI} from 'lib/constants'
 import {
   useGetPopularFeedsQuery,
   useSearchPopularFeedsMutation,
@@ -52,10 +51,6 @@ export function StepFeeds() {
     }
   }
 
-  const filterFeeds = (feeds?: GeneratorView[]) => {
-    return feeds?.filter(feed => feed.uri !== DISCOVER_FEED_URI)
-  }
-
   const renderItem = ({item}: ListRenderItemInfo<GeneratorView>) => {
     return <WizardFeedCard generator={item} state={state} dispatch={dispatch} />
   }
@@ -73,7 +68,7 @@ export function StepFeeds() {
         </View>
       </View>
       <List
-        data={filterFeeds(query ? searchedFeeds : popularFeeds)}
+        data={query ? searchedFeeds : popularFeeds}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         contentContainerStyle={{paddingTop: 6}}

@@ -679,7 +679,6 @@ function Footer({
             variant="solid"
             color="primary"
             size="small"
-            style={{width: 70}}
             onPress={onNext}
             disabled={!state.canNext}>
             <ButtonText>{nextBtnText}</ButtonText>

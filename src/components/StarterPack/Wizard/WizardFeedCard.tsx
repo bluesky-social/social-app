@@ -4,6 +4,7 @@ import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {DISCOVER_FEED_URI} from 'lib/constants'
 import {isWeb} from 'platform/detection'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {WizardAction, WizardState} from '#/screens/StarterPack/Wizard/State'
@@ -24,7 +25,10 @@ export function WizardFeedCard({
   const {_} = useLingui()
   const t = useTheme()
 
-  const includesFeed = state.feeds.some(f => f.uri === generator.uri)
+  const isDiscover = generator.uri === DISCOVER_FEED_URI
+  const includesFeed =
+    isDiscover || state.feeds.some(f => f.uri === generator.uri)
+
   const onPressAddRemove = () => {
     Keyboard.dismiss()
     if (includesFeed) {
@@ -70,6 +74,7 @@ export function WizardFeedCard({
             : _(msg`Add ${generator.displayName} to starter pack`)
         }
         value={includesFeed}
+        disabled={isDiscover}
         onChange={onPressAddRemove}>
         <Checkbox />
       </Toggle.Item>
