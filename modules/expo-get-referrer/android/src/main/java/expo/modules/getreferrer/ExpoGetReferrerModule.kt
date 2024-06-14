@@ -11,14 +11,14 @@ import expo.modules.kotlin.Promise
 
 class ExpoGetReferrerModule : Module() {
   private var intent: Intent? = null
-  private var referrer: Uri? = null
+  private var activityReferrer: Uri? = null
 
   override fun definition() = ModuleDefinition {
     Name("ExpoGetReferrer")
 
     OnNewIntent {
       intent = it
-      referrer = appContext.currentActivity?.referrer
+      activityReferrer = appContext.currentActivity?.referrer
     }
 
     AsyncFunction("getReferrerInfoAsync") {
@@ -38,11 +38,11 @@ class ExpoGetReferrerModule : Module() {
       }
 
       // In all other cases, we'll just record the app that sent the intent.
-      if (referrer != null) {
+      if (activityReferrer != null) {
         // referrer could become null here. `.toString()` though can be called on null
         return@AsyncFunction mapOf(
-          "referrer" to referrer.toString(),
-          "hostname" to (referrer?.host ?: ""),
+          "referrer" to activityReferrer.toString(),
+          "hostname" to (activityReferrer?.host ?: ""),
         )
       }
 
