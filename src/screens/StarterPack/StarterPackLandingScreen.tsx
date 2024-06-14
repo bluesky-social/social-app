@@ -4,7 +4,6 @@ import {
   AppBskyActorDefs,
   AppBskyGraphDefs,
   AppBskyGraphStarterpack,
-  AtUri,
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -17,16 +16,25 @@ import {
 import {useResolveDidQuery} from 'state/queries/resolve-uri'
 import {useStarterPackQuery} from 'state/queries/useStarterPackQuery'
 import {LoggedOutScreenState} from 'view/com/auth/LoggedOut'
-import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {CenteredView} from 'view/com/util/Views'
 import {Logo} from 'view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
+import * as FeedCard from '#/components/FeedCard'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Text} from '#/components/Typography'
+
+function parseStarterPackHttpUri(uri: string): {name?: string; rkey?: string} {
+  const parsed = new URL(uri)
+  const [_, _path, name, rkey] = parsed.pathname.split('/')
+  return {
+    name,
+    rkey,
+  }
+}
 
 export function LandingScreen({
   setScreenState,
@@ -34,8 +42,7 @@ export function LandingScreen({
   setScreenState: (state: LoggedOutScreenState) => void
 }) {
   const usedStarterPack = useUsedStarterPack()
-  const atUri = new AtUri(usedStarterPack?.uri ?? '')
-  const {hostname: name, rkey} = atUri
+  const {name, rkey} = parseStarterPackHttpUri(usedStarterPack?.uri || '')
 
   const {
     data: did,
@@ -172,11 +179,15 @@ function LandingScreenInner({
                     {pointerEvents: 'none'},
                   ]}>
                   {starterPack.feeds?.map((feed, index) => (
-                    <FeedSourceCard
-                      key={feed.uri}
-                      feedUri={feed.uri}
-                      hideTopBorder={index === 0}
-                    />
+                    <View
+                      style={[
+                        a.p_lg,
+                        index !== 0 && a.border_t,
+                        t.atoms.border_contrast_low,
+                      ]}
+                      key={feed.uri}>
+                      <FeedCard.Default feed={feed} />
+                    </View>
                   ))}
                 </View>
               </View>
