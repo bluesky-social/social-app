@@ -241,8 +241,6 @@ let PostDropdownBtn = ({
 
   const canEmbed = isWeb && gtMobile && !hideInPWI
 
-  console.log({isThreadMuted})
-
   return (
     <EventStopper onKeyDown={false}>
       <Menu.Root>
