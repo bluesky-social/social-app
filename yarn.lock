@@ -34,10 +34,10 @@
     jsonpointer "^5.0.0"
     leven "^3.1.0"
 
-"@atproto/api@^0.12.18-next.0":
-  version "0.12.18-next.0"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.12.18-next.0.tgz#5c9236aa25e35763cd82e39049b99321d219f0fd"
-  integrity sha512-4QerKuUrZ3vv573vW8eibTdnTEW17AAT66mTtSyDXlZBvvYnjcCTe2nv30nA+Ky5UJTHvWcy9Pqg+KD4k2WqZA==
+"@atproto/api@^0.12.19-next.0":
+  version "0.12.19"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.12.19.tgz#6d842269b6b9cd3fc5864e12824d4fb04cc033cf"
+  integrity sha512-dsiTpjqBhjGwNW/qG/tLSgUQnmOSvd8hsQr5d8GCUDGK2AEHWl0KNgLPbwxIBEIo8Jg9NHsvqV7BMoix8YreIg==
   dependencies:
     "@atproto/common-web" "^0.3.0"
     "@atproto/lexicon" "^0.4.0"
@@ -18825,7 +18825,7 @@ react-keyed-flatten-children@^3.0.0:
 
 react-native-app-clip@bluesky-social/react-native-app-clip:
   version "0.3.0"
-  resolved "https://codeload.github.com/bluesky-social/react-native-app-clip/tar.gz/1e57a54516cdbb229d4a6f3effbb70d195f6d970"
+  resolved "https://codeload.github.com/bluesky-social/react-native-app-clip/tar.gz/4b56a95c25ec092153a9b4f873ce507ed83589b9"
   dependencies:
     "@expo/config-plugins" "~7.2.5"
     "@expo/plist" "^0.0.20"
