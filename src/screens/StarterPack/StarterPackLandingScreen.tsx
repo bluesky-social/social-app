@@ -55,15 +55,22 @@ export function LandingScreen({
     isError: isErrorStarterPack,
   } = useStarterPackQuery({did, rkey})
 
+  const isValid =
+    starterPack &&
+    AppBskyGraphDefs.validateStarterPackView(starterPack) &&
+    AppBskyGraphStarterpack.validateRecord(starterPack.record)
+
   React.useEffect(() => {
-    if (isErrorDid || isErrorStarterPack) {
+    if (isErrorDid || isErrorStarterPack || (starterPack && !isValid)) {
       setScreenState(LoggedOutScreenState.S_LoginOrCreateAccount)
     }
-  }, [isErrorDid, isErrorStarterPack, setScreenState])
+  }, [isErrorDid, isErrorStarterPack, setScreenState, isValid, starterPack])
 
-  if (!did || !starterPack) {
+  if (!did || !starterPack || !isValid) {
     return (
-      <ListMaybePlaceholder isLoading={isLoadingDid || isLoadingStarterPack} />
+      <ListMaybePlaceholder
+        isLoading={isLoadingDid || isLoadingStarterPack || !isValid}
+      />
     )
   }
 
