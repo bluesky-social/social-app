@@ -1,10 +1,10 @@
 Pod::Spec.new do |s|
   s.name           = 'ExpoGetReferrer'
   s.version        = '1.0.0'
-  s.summary        = 'A sample project summary'
-  s.description    = 'A sample project description'
+  s.summary        = ''
+  s.description    = ''
   s.author         = ''
-  s.homepage       = 'https://docs.expo.dev/modules/'
+  s.homepage       = 'https://github.com/bluesky-social/social-app'
   s.platforms      = { :ios => '13.4', :tvos => '13.4' }
   s.source         = { git: '' }
   s.static_framework = true
