@@ -300,6 +300,7 @@ function WizardInner({
             createdAt: initialCreatedAt,
             updatedAt: new Date().toISOString(),
           },
+          validate: false, // TODO remove!
         })
 
         await invalidateQueries()

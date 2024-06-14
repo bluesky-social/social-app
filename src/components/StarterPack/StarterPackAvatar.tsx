@@ -5,7 +5,7 @@ import {AppBskyGraphDefs} from '@atproto/api'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {atoms as a} from '#/alf'
 
-export function StarterPackAvatarsIcon({
+export function StarterPackAvatar({
   starterPack,
   size = 60,
 }: {
@@ -21,6 +21,7 @@ export function StarterPackAvatarsIcon({
     <View
       style={[
         a.rounded_sm,
+        a.overflow_hidden,
         {height: size, width: size, backgroundColor: '#0070FF'},
       ]}>
       <View style={[a.flex_1, a.flex_row]}>

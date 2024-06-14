@@ -24,7 +24,7 @@ import hairlineWidth = StyleSheet.hairlineWidth
 import {AppBskyGraphDefs} from '@atproto/api'
 
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
-import {StarterPackAvatarsIcon} from '#/components/StarterPack/StarterPackAvatarsIcon'
+import {StarterPackIcon} from '#/components/icons/StarterPackIcon'
 
 export function ProfileSubpageHeader({
   isLoading,
@@ -34,7 +34,6 @@ export function ProfileSubpageHeader({
   isOwner,
   creator,
   avatarType,
-  starterPack,
   children,
 }: React.PropsWithChildren<{
   isLoading?: boolean
@@ -133,7 +132,7 @@ export function ProfileSubpageHeader({
           accessibilityHint=""
           style={{width: 58}}>
           {avatarType === 'starter-pack' ? (
-            <StarterPackAvatarsIcon starterPack={starterPack} />
+            <StarterPackIcon width={58} height={58} />
           ) : (
             <UserAvatar type={avatarType} size={58} avatar={avatar} />
           )}
