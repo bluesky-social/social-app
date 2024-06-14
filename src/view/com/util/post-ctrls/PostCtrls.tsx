@@ -27,7 +27,7 @@ import {
   usePostLikeMutationQueue,
   usePostRepostMutationQueue,
 } from '#/state/queries/post'
-import {useRequireAuth} from '#/state/session'
+import {useRequireAuth, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
@@ -64,6 +64,7 @@ let PostCtrls = ({
   const t = useTheme()
   const {_} = useLingui()
   const {openComposer} = useComposerControls()
+  const {currentAccount} = useSession()
   const [queueLike, queueUnlike] = usePostLikeMutationQueue(post, logContext)
   const [queueRepost, queueUnrepost] = usePostRepostMutationQueue(
     post,
@@ -75,10 +76,11 @@ let PostCtrls = ({
   const playHaptic = useHaptics()
 
   const shouldShowLoggedOutWarning = React.useMemo(() => {
-    return !!post.author.labels?.find(
-      label => label.val === '!no-unauthenticated',
+    return (
+      post.author.did !== currentAccount?.did &&
+      !!post.author.labels?.find(label => label.val === '!no-unauthenticated')
     )
-  }, [post])
+  }, [currentAccount, post])
 
   const defaultCtrlColor = React.useMemo(
     () => ({
