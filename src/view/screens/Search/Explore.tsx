@@ -16,18 +16,17 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSuggestedFollowsQuery} from '#/state/queries/suggested-follows'
-import {useSession} from '#/state/session'
 import {cleanError} from 'lib/strings/errors'
 import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
 import {List} from '#/view/com/util/List'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {
   FeedFeedLoadingPlaceholder,
   ProfileCardFeedLoadingPlaceholder,
 } from 'view/com/util/LoadingPlaceholder'
 import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
 import {Button} from '#/components/Button'
+import * as FeedCard from '#/components/FeedCard'
 import {ArrowBottom_Stroke2_Corner0_Rounded as ArrowBottom} from '#/components/icons/Arrow'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Props as SVGIconProps} from '#/components/icons/common'
@@ -271,7 +270,6 @@ type ExploreScreenItems =
 export function Explore() {
   const {_} = useLingui()
   const t = useTheme()
-  const {hasSession} = useSession()
   const {data: preferences, error: preferencesError} = usePreferencesQuery()
   const moderationOpts = useModerationOpts()
   const {
@@ -480,15 +478,14 @@ export function Explore() {
         }
         case 'feed': {
           return (
-            <View style={[a.border_b, t.atoms.border_contrast_low]}>
-              <FeedSourceCard
-                feedUri={item.feed.uri}
-                showSaveBtn={hasSession}
-                showDescription
-                showLikes
-                pinOnSave
-                hideTopBorder
-              />
+            <View
+              style={[
+                a.border_b,
+                t.atoms.border_contrast_low,
+                a.px_lg,
+                a.py_lg,
+              ]}>
+              <FeedCard.Default feed={item.feed} />
             </View>
           )
         }
@@ -538,7 +535,7 @@ export function Explore() {
         }
       }
     },
-    [t, hasSession, moderationOpts],
+    [t, moderationOpts],
   )
 
   return (
