@@ -447,3 +447,87 @@ export function usePinnedFeedsInfos() {
     },
   })
 }
+
+export type SavedFeedItem =
+  | {
+      type: 'feed'
+      config: AppBskyActorDefs.SavedFeed
+      view: AppBskyFeedDefs.GeneratorView
+    }
+  | {
+      type: 'list'
+      config: AppBskyActorDefs.SavedFeed
+      view: AppBskyGraphDefs.ListView
+    }
+  | {
+      type: 'timeline'
+      config: AppBskyActorDefs.SavedFeed
+      view: undefined
+    }
+
+export function useSavedFeeds() {
+  const agent = useAgent()
+  const {data: preferences, isLoading: isLoadingPrefs} = usePreferencesQuery()
+  const savedItems = preferences?.savedFeeds ?? []
+
+  return useQuery({
+    staleTime: STALE.INFINITY,
+    enabled: savedItems.length > 0 && !isLoadingPrefs,
+    queryKey: [pinnedFeedInfosQueryKeyRoot, ...savedItems],
+    queryFn: async () => {
+      const resolvedFeeds = new Map<string, AppBskyFeedDefs.GeneratorView>()
+      const resolvedLists = new Map<string, AppBskyGraphDefs.ListView>()
+
+      const savedFeeds = savedItems.filter(feed => feed.type === 'feed')
+      const savedLists = savedItems.filter(feed => feed.type === 'list')
+
+      let feedsPromise = Promise.resolve()
+      if (savedFeeds.length > 0) {
+        feedsPromise = agent.app.bsky.feed
+          .getFeedGenerators({
+            feeds: savedFeeds.map(f => f.value),
+          })
+          .then(res => {
+            res.data.feeds.forEach(f => {
+              resolvedFeeds.set(f.uri, f)
+            })
+          })
+      }
+
+      const listsPromises = savedLists.map(list =>
+        agent.app.bsky.graph
+          .getList({
+            list: list.value,
+            limit: 1,
+          })
+          .then(res => {
+            const listView = res.data.list
+            resolvedLists.set(listView.uri, listView)
+          }),
+      )
+
+      await Promise.allSettled([feedsPromise, ...listsPromises])
+
+      const res: SavedFeedItem[] = savedItems.map(s => {
+        if (s.type === 'timeline') {
+          return {
+            type: 'timeline',
+            config: s,
+            view: undefined,
+          }
+        }
+
+        return {
+          type: s.type,
+          config: s,
+          view:
+            s.type === 'feed'
+              ? resolvedFeeds.get(s.value)
+              : resolvedLists.get(s.value),
+        }
+      }) as SavedFeedItem[]
+
+      return res
+    },
+  })
+}
