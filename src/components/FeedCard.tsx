@@ -94,31 +94,10 @@ export function TitleAndByline({
 }
 
 export function Description({description}: {description?: string}) {
-  const t = useTheme()
   const [rt, isResolving] = useRichText(description || '')
   if (!description) return null
   return isResolving ? (
-    <View style={[a.gap_xs]}>
-      <View
-        style={[
-          a.rounded_2xs,
-          t.atoms.bg_contrast_25,
-          {
-            height: a.text_sm.fontSize - a.gap_xs.gap,
-          },
-        ]}
-      />
-      <View
-        style={[
-          a.rounded_2xs,
-          t.atoms.bg_contrast_25,
-          {
-            height: a.text_sm.fontSize - a.gap_xs.gap,
-            width: '60%',
-          },
-        ]}
-      />
-    </View>
+    <RichText value={description} style={[a.leading_snug]} />
   ) : (
     <RichText value={rt} style={[a.leading_snug]} />
   )
