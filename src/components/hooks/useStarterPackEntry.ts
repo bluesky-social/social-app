@@ -16,7 +16,7 @@ export function useStarterPackEntry() {
 
       if (name && rkey) {
         setUsedStarterPack({
-          uri: window.href,
+          uri: window.location.href,
         })
       }
     } else {

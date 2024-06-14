@@ -96,6 +96,7 @@ export function QrCodeDialog({
         await setImageAsync(base64)
       } else {
         const canvas = await getCanvas(uri)
+        // @ts-expect-error web only
         canvas.toBlob((blob: Blob) => {
           const item = new ClipboardItem({'image/png': blob})
           navigator.clipboard.write([item])

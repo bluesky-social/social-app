@@ -16,8 +16,8 @@ export const createStarterPackList = async ({
   descriptionFacets?: Facet[]
   profiles: AppBskyActorDefs.ProfileViewBasic[]
   agent: BskyAgent
-}): Promise<{uri: string; cid: string} | undefined> => {
-  if (profiles.length === 0) return
+}): Promise<{uri: string; cid: string}> => {
+  if (profiles.length === 0) throw new Error('No profiles given')
 
   const list = await agent.app.bsky.graph.list.create(
     {repo: agent.session!.did},
@@ -90,7 +90,7 @@ export async function generateStarterpack({
         },
         {
           name: defaultName ?? '',
-          list: list?.uri,
+          list: list.uri,
           createdAt: new Date().toISOString(),
         },
       )

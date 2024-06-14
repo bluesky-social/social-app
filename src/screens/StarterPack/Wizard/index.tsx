@@ -333,7 +333,7 @@ function WizardInner({
             name: state.name ?? defaultName,
             description: state.description,
             descriptionFacets: [],
-            list: list?.uri,
+            list: list.uri,
             feeds: state.feeds.map(f => ({
               uri: f.uri,
             })),
