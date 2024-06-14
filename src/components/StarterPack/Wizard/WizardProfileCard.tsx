@@ -45,7 +45,7 @@ export function WizardProfileCard({
       style={[
         a.flex_row,
         a.align_center,
-        a.px_md,
+        a.px_lg,
         a.py_sm,
         a.gap_md,
         a.border_b,
