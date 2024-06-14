@@ -190,8 +190,10 @@ export const KNOWN_AUTHED_ONLY_FEEDS = [
 
 type GetPopularFeedsOptions = {limit?: number}
 
-export function createGetPopularFeedsQueryKey(...args: any[]) {
-  return ['getPopularFeeds', ...args]
+export function createGetPopularFeedsQueryKey(
+  options?: GetPopularFeedsOptions,
+) {
+  return ['getPopularFeeds', options]
 }
 
 export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
@@ -289,6 +291,34 @@ export function useSearchPopularFeedsMutation() {
   const agent = useAgent()
   return useMutation({
     mutationFn: async (query: string) => {
+      const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
+        limit: 10,
+        query: query,
+      })
+
+      return res.data.feeds
+    },
+  })
+}
+
+const popularFeedsSearchQueryKeyRoot = 'popularFeedsSearch'
+export const createPopularFeedsSearchQueryKey = (query: string) => [
+  popularFeedsSearchQueryKeyRoot,
+  query,
+]
+
+export function usePopularFeedsSearch({
+  query,
+  enabled,
+}: {
+  query: string
+  enabled?: boolean
+}) {
+  const agent = useAgent()
+  return useQuery({
+    enabled,
+    queryKey: createPopularFeedsSearchQueryKey(query),
+    queryFn: async () => {
       const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
         limit: 10,
         query: query,
