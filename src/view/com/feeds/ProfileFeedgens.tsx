@@ -11,7 +11,6 @@ import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {cleanError} from '#/lib/strings/errors'
-import {useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {RQKEY, useProfileFeedgensQuery} from '#/state/queries/profile-feedgens'
@@ -19,7 +18,7 @@ import {useBottomBarOffset} from 'lib/hooks/useBottomBarOffset'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {EmptyState} from 'view/com/util/EmptyState'
-import {atoms as a, useTheme as useAlfTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import * as FeedCard from '#/components/FeedCard'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {List, ListRef} from '../util/List'
@@ -52,8 +51,7 @@ export const ProfileFeedgens = React.forwardRef<
   ref,
 ) {
   const {_} = useLingui()
-  const theme = useTheme()
-  const t = useAlfTheme()
+  const t = useTheme()
   const {isTabletOrDesktop} = useWebMediaQueries()
   const bottomBarOffset = useBottomBarOffset(100)
   const [isPTRing, setIsPTRing] = React.useState(false)
@@ -192,7 +190,7 @@ export const ProfileFeedgens = React.forwardRef<
         contentContainerStyle={
           isNative && {paddingBottom: headerOffset + bottomBarOffset}
         }
-        indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
+        indicatorStyle={t.name === 'light' ? 'black' : 'white'}
         removeClippedSubviews={true}
         // @ts-ignore our .web version only -prf
         desktopFixedHeight
