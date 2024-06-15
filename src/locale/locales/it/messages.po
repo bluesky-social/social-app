@@ -395,7 +395,7 @@ msgstr ""
 #: src/screens/Messages/Settings.tsx:62
 #: src/screens/Messages/Settings.tsx:65
 msgid "Allow new messages from"
-msgstr ""
+msgstr "Consenti nuovi messaggi da"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:178
 #: src/view/com/modals/ChangePassword.tsx:171
@@ -936,12 +936,12 @@ msgstr "Conversazione silenziata"
 #: src/screens/Messages/List/index.tsx:88
 #: src/view/screens/Settings/index.tsx:638
 msgid "Chat settings"
-msgstr ""
+msgstr "Impostazioni messaggi"
 
 #: src/screens/Messages/Settings.tsx:59
 #: src/view/screens/Settings/index.tsx:647
 msgid "Chat Settings"
-msgstr ""
+msgstr "Impostazioni messaggi"
 
 #: src/components/dms/ConvoMenu.tsx:84
 msgid "Chat unmuted"
@@ -3214,7 +3214,7 @@ msgstr "Il messaggio è troppo lungo"
 
 #: src/screens/Messages/List/index.tsx:321
 msgid "Message settings"
-msgstr "Impostazione messaggio"
+msgstr "Impostazioni messaggio"
 
 #: src/Navigation.tsx:504
 #: src/screens/Messages/List/index.tsx:164
@@ -3862,7 +3862,7 @@ msgstr "Apre la fotocamera sul dispositivo"
 
 #: src/view/screens/Settings/index.tsx:639
 msgid "Opens chat settings"
-msgstr ""
+msgstr "Apre impostazioni messaggi"
 
 #: src/view/com/composer/Prompt.tsx:27
 msgid "Opens composer"
@@ -6901,7 +6901,7 @@ msgstr "Puoi modificarlo in qualsiasi momento."
 
 #: src/screens/Messages/Settings.tsx:111
 msgid "You can continue ongoing conversations regardless of which setting you choose."
-msgstr ""
+msgstr "Puoi proseguire le conversazioni in corso indipendentemente da quale settaggio scegli."
 
 #: src/screens/Login/index.tsx:158
 #: src/screens/Login/PasswordUpdatedForm.tsx:33
