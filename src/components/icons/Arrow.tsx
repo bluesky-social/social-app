@@ -7,3 +7,7 @@ export const ArrowTopRight_Stroke2_Corner0_Rounded = createSinglePathSVG({
 export const ArrowLeft_Stroke2_Corner0_Rounded = createSinglePathSVG({
   path: 'M3 12a1 1 0 0 1 .293-.707l6-6a1 1 0 0 1 1.414 1.414L6.414 11H20a1 1 0 1 1 0 2H6.414l4.293 4.293a1 1 0 0 1-1.414 1.414l-6-6A1 1 0 0 1 3 12Z',
 })
+
+export const ArrowBottom_Stroke2_Corner0_Rounded = createSinglePathSVG({
+  path: 'M12 21a1 1 0 0 1-.707-.293l-6-6a1 1 0 1 1 1.414-1.414L11 17.586V4a1 1 0 1 1 2 0v13.586l4.293-4.293a1 1 0 0 1 1.414 1.414l-6 6A1 1 0 0 1 12 21Z',
+})
