@@ -52,7 +52,22 @@ const withXcodeTarget = (config, {targetName}) => {
     }
 
     pbxProject.addTargetAttribute('DevelopmentTeam', 'B3LX46C5HS', targetName)
-    pbxProject.addTargetAttribute('DevelopmentTeam', 'B3LX46C5HS')
+
+    console.log(
+      pbxProject.getTarget(
+        'com.apple.product-type.application.on-demand-install-capable',
+      ),
+    )
+
+    if (!pbxProject.hash.project.objects.PBXTargetDependency) {
+      pbxProject.hash.project.objects.PBXTargetDependency = {}
+    }
+    if (!pbxProject.hash.project.objects.PBXContainerItemProxy) {
+      pbxProject.hash.project.objects.PBXContainerItemProxy = {}
+    }
+    pbxProject.addTargetDependency(pbxProject.getFirstTarget().uuid, [
+      target.uuid,
+    ])
 
     return config
   })
