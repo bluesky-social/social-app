@@ -23,7 +23,10 @@ import {useAgent, useSession} from '#/state/session'
 import {useModerationOpts} from '../preferences/moderation-opts'
 
 const suggestedFollowsQueryKeyRoot = 'suggested-follows'
-const suggestedFollowsQueryKey = [suggestedFollowsQueryKeyRoot]
+const suggestedFollowsQueryKey = (options?: SuggestedFollowsOptions) => [
+  suggestedFollowsQueryKeyRoot,
+  options,
+]
 
 const suggestedFollowsByActorQueryKeyRoot = 'suggested-follows-by-actor'
 const suggestedFollowsByActorQueryKey = (did: string) => [
@@ -31,7 +34,9 @@ const suggestedFollowsByActorQueryKey = (did: string) => [
   did,
 ]
 
-export function useSuggestedFollowsQuery() {
+type SuggestedFollowsOptions = {limit?: number}
+
+export function useSuggestedFollowsQuery(options?: SuggestedFollowsOptions) {
   const {currentAccount} = useSession()
   const agent = useAgent()
   const moderationOpts = useModerationOpts()
@@ -46,12 +51,12 @@ export function useSuggestedFollowsQuery() {
   >({
     enabled: !!moderationOpts && !!preferences,
     staleTime: STALE.HOURS.ONE,
-    queryKey: suggestedFollowsQueryKey,
+    queryKey: suggestedFollowsQueryKey(options),
     queryFn: async ({pageParam}) => {
       const contentLangs = getContentLanguages().join(',')
       const res = await agent.app.bsky.actor.getSuggestions(
         {
-          limit: 25,
+          limit: options?.limit || 25,
           cursor: pageParam,
         },
         {

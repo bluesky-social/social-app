@@ -29,15 +29,14 @@ import {MagnifyingGlassIcon} from '#/lib/icons'
 import {makeProfileLink} from '#/lib/routes/links'
 import {NavigationProp} from '#/lib/routes/types'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
-import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {isIOS, isNative, isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {useActorSearch} from '#/state/queries/actor-search'
+import {usePopularFeedsSearch} from '#/state/queries/feed'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
-import {useSuggestedFollowsQuery} from '#/state/queries/suggested-follows'
 import {useSession} from '#/state/session'
 import {useSetDrawerOpen} from '#/state/shell'
 import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
@@ -56,8 +55,9 @@ import {Link} from '#/view/com/util/Link'
 import {List} from '#/view/com/util/List'
 import {Text} from '#/view/com/util/text/Text'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
+import {Explore} from '#/view/screens/Search/Explore'
 import {SearchLinkCard, SearchProfileCard} from '#/view/shell/desktop/Search'
-import {ProfileCardFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
+import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {atoms as a} from '#/alf'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 
@@ -121,70 +121,6 @@ function EmptyState({message, error}: {message: string; error?: string}) {
     </CenteredView>
   )
 }
-
-function useSuggestedFollows(): [
-  AppBskyActorDefs.ProfileViewBasic[],
-  () => void,
-] {
-  const {
-    data: suggestions,
-    hasNextPage,
-    isFetchingNextPage,
-    isError,
-    fetchNextPage,
-  } = useSuggestedFollowsQuery()
-
-  const onEndReached = React.useCallback(async () => {
-    if (isFetchingNextPage || !hasNextPage || isError) return
-    try {
-      await fetchNextPage()
-    } catch (err) {
-      logger.error('Failed to load more suggested follows', {message: err})
-    }
-  }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
-
-  const items: AppBskyActorDefs.ProfileViewBasic[] = []
-  if (suggestions) {
-    // Currently the responses contain duplicate items.
-    // Needs to be fixed on backend, but let's dedupe to be safe.
-    let seen = new Set()
-    for (const page of suggestions.pages) {
-      for (const actor of page.actors) {
-        if (!seen.has(actor.did)) {
-          seen.add(actor.did)
-          items.push(actor)
-        }
-      }
-    }
-  }
-  return [items, onEndReached]
-}
-
-let SearchScreenSuggestedFollows = (_props: {}): React.ReactNode => {
-  const pal = usePalette('default')
-  const [suggestions, onEndReached] = useSuggestedFollows()
-
-  return suggestions.length ? (
-    <List
-      data={suggestions}
-      renderItem={({item}) => <ProfileCardWithFollowBtn profile={item} noBg />}
-      keyExtractor={item => item.did}
-      // @ts-ignore web only -prf
-      desktopFixedHeight
-      contentContainerStyle={{paddingBottom: 200}}
-      keyboardShouldPersistTaps="handled"
-      keyboardDismissMode="on-drag"
-      onEndReached={onEndReached}
-      onEndReachedThreshold={2}
-    />
-  ) : (
-    <CenteredView sideBorders style={[pal.border, s.hContentRegion]}>
-      <ProfileCardFeedLoadingPlaceholder />
-      <ProfileCardFeedLoadingPlaceholder />
-    </CenteredView>
-  )
-}
-SearchScreenSuggestedFollows = React.memo(SearchScreenSuggestedFollows)
 
 type SearchResultSlice =
   | {
@@ -342,6 +278,50 @@ let SearchScreenUserResults = ({
 }
 SearchScreenUserResults = React.memo(SearchScreenUserResults)
 
+let SearchScreenFeedsResults = ({
+  query,
+  active,
+}: {
+  query: string
+  active: boolean
+}): React.ReactNode => {
+  const {_} = useLingui()
+  const {hasSession} = useSession()
+
+  const {data: results, isFetched} = usePopularFeedsSearch({
+    query,
+    enabled: active,
+  })
+
+  return isFetched && results ? (
+    <>
+      {results.length ? (
+        <List
+          data={results}
+          renderItem={({item}) => (
+            <FeedSourceCard
+              feedUri={item.uri}
+              showSaveBtn={hasSession}
+              showDescription
+              showLikes
+              pinOnSave
+            />
+          )}
+          keyExtractor={item => item.uri}
+          // @ts-ignore web only -prf
+          desktopFixedHeight
+          contentContainerStyle={{paddingBottom: 100}}
+        />
+      ) : (
+        <EmptyState message={_(msg`No results found for ${query}`)} />
+      )}
+    </>
+  ) : (
+    <Loader />
+  )
+}
+SearchScreenFeedsResults = React.memo(SearchScreenFeedsResults)
+
 let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
@@ -389,6 +369,12 @@ let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
           <SearchScreenUserResults query={query} active={activeTab === 2} />
         ),
       },
+      {
+        title: _(msg`Feeds`),
+        component: (
+          <SearchScreenFeedsResults query={query} active={activeTab === 3} />
+        ),
+      },
     ]
   }, [_, query, activeTab])
 
@@ -408,26 +394,7 @@ let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
       ))}
     </Pager>
   ) : hasSession ? (
-    <View>
-      <CenteredView sideBorders style={pal.border}>
-        <Text
-          type="title"
-          style={[
-            pal.text,
-            pal.border,
-            {
-              display: 'flex',
-              paddingVertical: 12,
-              paddingHorizontal: 18,
-              fontWeight: 'bold',
-            },
-          ]}>
-          <Trans>Suggested Follows</Trans>
-        </Text>
-      </CenteredView>
-
-      <SearchScreenSuggestedFollows />
-    </View>
+    <Explore />
   ) : (
     <CenteredView sideBorders style={pal.border}>
       <View

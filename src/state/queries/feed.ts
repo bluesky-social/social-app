@@ -1,3 +1,4 @@
+import {useCallback, useEffect, useMemo, useRef} from 'react'
 import {
   AppBskyActorDefs,
   AppBskyFeedDefs,
@@ -171,34 +172,153 @@ export function useFeedSourceInfoQuery({uri}: {uri: string}) {
   })
 }
 
-export const useGetPopularFeedsQueryKey = ['getPopularFeeds']
+// HACK
+// the protocol doesn't yet tell us which feeds are personalized
+// this list is used to filter out feed recommendations from logged out users
+// for the ones we know need it
+// -prf
+export const KNOWN_AUTHED_ONLY_FEEDS = [
+  'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/with-friends', // popular with friends, by bsky.app
+  'at://did:plc:tenurhgjptubkk5zf5qhi3og/app.bsky.feed.generator/mutuals', // mutuals, by skyfeed
+  'at://did:plc:tenurhgjptubkk5zf5qhi3og/app.bsky.feed.generator/only-posts', // only posts, by skyfeed
+  'at://did:plc:wzsilnxf24ehtmmc3gssy5bu/app.bsky.feed.generator/mentions', // mentions, by flicknow
+  'at://did:plc:q6gjnaw2blty4crticxkmujt/app.bsky.feed.generator/bangers', // my bangers, by jaz
+  'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/mutuals', // mutuals, by bluesky
+  'at://did:plc:q6gjnaw2blty4crticxkmujt/app.bsky.feed.generator/my-followers', // followers, by jaz
+  'at://did:plc:vpkhqolt662uhesyj6nxm7ys/app.bsky.feed.generator/followpics', // the gram, by why
+]
 
-export function useGetPopularFeedsQuery() {
+type GetPopularFeedsOptions = {limit?: number}
+
+export function createGetPopularFeedsQueryKey(
+  options?: GetPopularFeedsOptions,
+) {
+  return ['getPopularFeeds', options]
+}
+
+export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
+  const {hasSession} = useSession()
   const agent = useAgent()
-  return useInfiniteQuery<
+  const limit = options?.limit || 10
+  const {data: preferences} = usePreferencesQuery()
+
+  // Make sure this doesn't invalidate unless really needed.
+  const selectArgs = useMemo(
+    () => ({
+      hasSession,
+      savedFeeds: preferences?.savedFeeds || [],
+    }),
+    [hasSession, preferences?.savedFeeds],
+  )
+  const lastPageCountRef = useRef(0)
+
+  const query = useInfiniteQuery<
     AppBskyUnspeccedGetPopularFeedGenerators.OutputSchema,
     Error,
     InfiniteData<AppBskyUnspeccedGetPopularFeedGenerators.OutputSchema>,
     QueryKey,
     string | undefined
   >({
-    queryKey: useGetPopularFeedsQueryKey,
+    queryKey: createGetPopularFeedsQueryKey(options),
     queryFn: async ({pageParam}) => {
       const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
-        limit: 10,
+        limit,
         cursor: pageParam,
       })
       return res.data
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
+    select: useCallback(
+      (
+        data: InfiniteData<AppBskyUnspeccedGetPopularFeedGenerators.OutputSchema>,
+      ) => {
+        const {savedFeeds, hasSession: hasSessionInner} = selectArgs
+        data?.pages.map(page => {
+          page.feeds = page.feeds.filter(feed => {
+            if (
+              !hasSessionInner &&
+              KNOWN_AUTHED_ONLY_FEEDS.includes(feed.uri)
+            ) {
+              return false
+            }
+            const alreadySaved = Boolean(
+              savedFeeds?.find(f => {
+                return f.value === feed.uri
+              }),
+            )
+            return !alreadySaved
+          })
+
+          return page
+        })
+
+        return data
+      },
+      [selectArgs /* Don't change. Everything needs to go into selectArgs. */],
+    ),
   })
+
+  useEffect(() => {
+    const {isFetching, hasNextPage, data} = query
+    if (isFetching || !hasNextPage) {
+      return
+    }
+
+    // avoid double-fires of fetchNextPage()
+    if (
+      lastPageCountRef.current !== 0 &&
+      lastPageCountRef.current === data?.pages?.length
+    ) {
+      return
+    }
+
+    // fetch next page if we haven't gotten a full page of content
+    let count = 0
+    for (const page of data?.pages || []) {
+      count += page.feeds.length
+    }
+    if (count < limit && (data?.pages.length || 0) < 6) {
+      query.fetchNextPage()
+      lastPageCountRef.current = data?.pages?.length || 0
+    }
+  }, [query, limit])
+
+  return query
 }
 
 export function useSearchPopularFeedsMutation() {
   const agent = useAgent()
   return useMutation({
     mutationFn: async (query: string) => {
+      const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
+        limit: 10,
+        query: query,
+      })
+
+      return res.data.feeds
+    },
+  })
+}
+
+const popularFeedsSearchQueryKeyRoot = 'popularFeedsSearch'
+export const createPopularFeedsSearchQueryKey = (query: string) => [
+  popularFeedsSearchQueryKeyRoot,
+  query,
+]
+
+export function usePopularFeedsSearch({
+  query,
+  enabled,
+}: {
+  query: string
+  enabled?: boolean
+}) {
+  const agent = useAgent()
+  return useQuery({
+    enabled,
+    queryKey: createPopularFeedsSearchQueryKey(query),
+    queryFn: async () => {
       const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
         limit: 10,
         query: query,
