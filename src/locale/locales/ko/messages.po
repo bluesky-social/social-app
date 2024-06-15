@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-06-14 10:13+0900\n"
+"PO-Revision-Date: 2024-06-15 14:46+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -59,6 +59,7 @@ msgstr "좋아요 ({0, plural, other {#}}개)"
 msgid "{0, plural, one {like} other {likes}}"
 msgstr "좋아요"
 
+#: src/components/FeedCard.tsx:110
 #: src/view/com/feeds/FeedSourceCard.tsx:301
 msgid "{0, plural, one {Liked by # user} other {Liked by # users}}"
 msgstr "{0, plural, other {#}}명의 사용자가 좋아함"
@@ -143,7 +144,7 @@ msgid "2FA Confirmation"
 msgstr "2단계 인증"
 
 #: src/view/com/util/ViewHeader.tsx:93
-#: src/view/screens/Search/Search.tsx:715
+#: src/view/screens/Search/Search.tsx:682
 msgid "Access navigation links and settings"
 msgstr "탐색 링크 및 설정으로 이동합니다"
 
@@ -270,6 +271,10 @@ msgstr "내가 팔로우하는 사람의 기본 피드만 추가하기"
 msgid "Add the following DNS record to your domain:"
 msgstr "도메인에 다음 DNS 레코드를 추가하세요:"
 
+#: src/components/FeedCard.tsx:173
+msgid "Add this feed to your feeds"
+msgstr "이 피드를 내 피드에 추가하기"
+
 #: src/view/com/profile/ProfileMenu.tsx:268
 #: src/view/com/profile/ProfileMenu.tsx:271
 msgid "Add to Lists"
@@ -306,7 +311,7 @@ msgstr "성인 콘텐츠가 비활성화되어 있습니다."
 msgid "Advanced"
 msgstr "고급"
 
-#: src/view/screens/Feeds.tsx:771
+#: src/view/screens/Feeds.tsx:737
 msgid "All the feeds you've saved, right in one place."
 msgstr "저장한 모든 피드를 한 곳에서 확인하세요."
 
@@ -467,6 +472,10 @@ msgstr "정말 이 대화에서 나가시겠습니까? 나에게 보이는 메�
 #: src/view/com/feeds/FeedSourceCard.tsx:314
 msgid "Are you sure you want to remove {0} from your feeds?"
 msgstr "피드에서 {0}을(를) 제거하시겠습니까?"
+
+#: src/components/FeedCard.tsx:190
+msgid "Are you sure you want to remove this from your feeds?"
+msgstr "내 피드에서 이 피드를 삭제하시겠습니까?"
 
 #: src/view/com/composer/Composer.tsx:632
 msgid "Are you sure you'd like to discard this draft?"
@@ -681,7 +690,7 @@ msgstr "글자, 숫자, 공백, 대시, 밑줄만 포함할 수 있습니다. �
 #: src/view/com/modals/VerifyEmail.tsx:255
 #: src/view/com/modals/VerifyEmail.tsx:261
 #: src/view/com/util/post-ctrls/RepostButton.tsx:138
-#: src/view/screens/Search/Search.tsx:735
+#: src/view/screens/Search/Search.tsx:702
 #: src/view/shell/desktop/Search.tsx:218
 msgid "Cancel"
 msgstr "취소"
@@ -843,7 +852,7 @@ msgid "Clear all storage data (restart after this)"
 msgstr "모든 스토리지 데이터 지우기 (이후 다시 시작)"
 
 #: src/view/com/util/forms/SearchInput.tsx:88
-#: src/view/screens/Search/Search.tsx:861
+#: src/view/screens/Search/Search.tsx:828
 msgid "Clear search query"
 msgstr "검색어 지우기"
 
@@ -996,8 +1005,8 @@ msgstr "{name} 카테고리에 대한 콘텐츠 필터링 설정을 구성합니
 msgid "Configured in <0>moderation settings</0>."
 msgstr "<0>검토 설정</0>에서 설정합니다."
 
-#: src/components/Prompt.tsx:159
 #: src/components/Prompt.tsx:162
+#: src/components/Prompt.tsx:165
 #: src/view/com/modals/SelfLabel.tsx:155
 #: src/view/com/modals/VerifyEmail.tsx:239
 #: src/view/com/modals/VerifyEmail.tsx:241
@@ -1237,7 +1246,8 @@ msgstr "사용자 지정"
 msgid "Custom domain"
 msgstr "사용자 지정 도메인"
 
-#: src/view/screens/Feeds.tsx:797
+#: src/view/screens/Feeds.tsx:763
+#: src/view/screens/Search/Explore.tsx:380
 msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
 msgstr "커뮤니티에서 구축한 맞춤 피드는 새로운 경험을 제공하고 좋아하는 콘텐츠를 찾을 수 있도록 도와줍니다."
 
@@ -1418,7 +1428,11 @@ msgstr "앱이 로그아웃한 사용자에게 내 계정을 표시하지 않도
 msgid "Discover new custom feeds"
 msgstr "새로운 맞춤 피드 찾아보기"
 
-#: src/view/screens/Feeds.tsx:794
+#: src/view/screens/Search/Explore.tsx:378
+msgid "Discover new feeds"
+msgstr "새 피드 발견하기"
+
+#: src/view/screens/Feeds.tsx:760
 msgid "Discover New Feeds"
 msgstr "새 피드 발견하기"
 
@@ -1538,8 +1552,8 @@ msgctxt "action"
 msgid "Edit"
 msgstr "편집"
 
-#: src/view/screens/Feeds.tsx:400
-#: src/view/screens/Feeds.tsx:471
+#: src/view/screens/Feeds.tsx:370
+#: src/view/screens/Feeds.tsx:441
 msgid "Edit"
 msgstr "편집"
 
@@ -1562,8 +1576,8 @@ msgid "Edit Moderation List"
 msgstr "검토 리스트 편집"
 
 #: src/Navigation.tsx:269
-#: src/view/screens/Feeds.tsx:398
-#: src/view/screens/Feeds.tsx:469
+#: src/view/screens/Feeds.tsx:368
+#: src/view/screens/Feeds.tsx:439
 #: src/view/screens/SavedFeeds.tsx:93
 msgid "Edit My Feeds"
 msgstr "내 피드 편집"
@@ -1856,6 +1870,11 @@ msgstr "메시지를 삭제하지 못했습니다"
 msgid "Failed to delete post, please try again"
 msgstr "게시물을 삭제하지 못했습니다. 다시 시도해 주세요"
 
+#: src/view/screens/Search/Explore.tsx:414
+#: src/view/screens/Search/Explore.tsx:438
+msgid "Failed to load feeds preferences"
+msgstr "피드 환경설정을 불러오지 못했습니다"
+
 #: src/components/dialogs/GifSelect.ios.tsx:196
 #: src/components/dialogs/GifSelect.tsx:212
 msgid "Failed to load GIFs"
@@ -1864,6 +1883,15 @@ msgstr "GIF를 불러오지 못했습니다"
 #: src/screens/Messages/Conversation/MessageListError.tsx:23
 msgid "Failed to load past messages"
 msgstr "지난 메시지를 불러오지 못했습니다"
+
+#: src/view/screens/Search/Explore.tsx:407
+#: src/view/screens/Search/Explore.tsx:431
+msgid "Failed to load suggested feeds"
+msgstr "추천 피드를 불러오지 못했습니다"
+
+#: src/view/screens/Search/Explore.tsx:367
+msgid "Failed to load suggested follows"
+msgstr "추천 팔로우를 불러오지 못했습니다"
 
 #: src/view/com/lightbox/Lightbox.tsx:84
 msgid "Failed to save image: {0}"
@@ -1878,6 +1906,10 @@ msgstr "전송 실패"
 msgid "Failed to submit appeal, please try again."
 msgstr "이의신청을 제출하지 못했습니다. 다시 시도하세요."
 
+#: src/components/FeedCard.tsx:153
+msgid "Failed to update feeds"
+msgstr "피드를 업데이트하지 못했습니다"
+
 #: src/components/dms/MessagesNUX.tsx:60
 #: src/screens/Messages/Settings.tsx:35
 msgid "Failed to update settings"
@@ -1887,11 +1919,12 @@ msgstr "설정을 업데이트하지 못했습니다"
 msgid "Feed"
 msgstr "피드"
 
+#: src/components/FeedCard.tsx:90
 #: src/view/com/feeds/FeedSourceCard.tsx:251
 msgid "Feed by {0}"
 msgstr "{0} 님의 피드"
 
-#: src/view/screens/Feeds.tsx:709
+#: src/view/screens/Feeds.tsx:675
 msgid "Feed offline"
 msgstr "피드 오프라인"
 
@@ -1900,9 +1933,10 @@ msgstr "피드 오프라인"
 msgid "Feedback"
 msgstr "피드백"
 
-#: src/view/screens/Feeds.tsx:463
-#: src/view/screens/Feeds.tsx:570
+#: src/view/screens/Feeds.tsx:433
+#: src/view/screens/Feeds.tsx:536
 #: src/view/screens/Profile.tsx:197
+#: src/view/screens/Search/Search.tsx:373
 #: src/view/shell/desktop/LeftNav.tsx:367
 #: src/view/shell/Drawer.tsx:493
 #: src/view/shell/Drawer.tsx:494
@@ -1912,6 +1946,10 @@ msgstr "피드"
 #: src/view/screens/SavedFeeds.tsx:180
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
 msgstr "피드는 사용자가 약간의 코딩 전문 지식만으로 구축할 수 있는 맞춤 알고리즘입니다. <0/>에서 자세한 내용을 확인하세요."
+
+#: src/components/FeedCard.tsx:150
+msgid "Feeds updated!"
+msgstr "피드 업데이트됨"
 
 #: src/view/com/modals/ChangeHandle.tsx:475
 msgid "File Contents"
@@ -1935,7 +1973,7 @@ msgstr "마무리 중"
 msgid "Find accounts to follow"
 msgstr "팔로우할 계정 찾아보기"
 
-#: src/view/screens/Search/Search.tsx:470
+#: src/view/screens/Search/Search.tsx:437
 msgid "Find posts and users on Bluesky"
 msgstr "Bluesky에서 게시물 및 사용자 찾기"
 
@@ -1995,6 +2033,10 @@ msgstr "계정 팔로우"
 msgid "Follow Back"
 msgstr "맞팔로우"
 
+#: src/view/screens/Search/Explore.tsx:332
+msgid "Follow more accounts to get connected to your interests and build your network."
+msgstr "더 많은 계정을 팔로우하고 관심 분야를 연결하여 네트워크를 구축하세요."
+
 #: src/view/com/profile/ProfileCard.tsx:227
 msgid "Followed by {0}"
 msgstr "{0} 님이 팔로우함"
@@ -2042,7 +2084,7 @@ msgstr "내가 아는 팔로워"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:250
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:149
 #: src/view/com/profile/ProfileFollows.tsx:104
-#: src/view/screens/Feeds.tsx:656
+#: src/view/screens/Feeds.tsx:622
 #: src/view/screens/ProfileFollows.tsx:25
 #: src/view/screens/SavedFeeds.tsx:415
 msgid "Following"
@@ -2511,7 +2553,7 @@ msgid "Languages"
 msgstr "언어"
 
 #: src/screens/Hashtag.tsx:99
-#: src/view/screens/Search/Search.tsx:377
+#: src/view/screens/Search/Search.tsx:357
 msgid "Latest"
 msgstr "최신"
 
@@ -2665,6 +2707,18 @@ msgstr "리스트"
 msgid "Lists blocking this user:"
 msgstr "이 사용자를 차단한 리스트:"
 
+#: src/view/screens/Search/Explore.tsx:128
+msgid "Load more"
+msgstr "더 불러오기"
+
+#: src/view/screens/Search/Explore.tsx:216
+msgid "Load more suggested feeds"
+msgstr "추천 피드 더 불러오기"
+
+#: src/view/screens/Search/Explore.tsx:214
+msgid "Load more suggested follows"
+msgstr "추천 팔로우 더 불러오기"
+
 #: src/view/screens/Notifications.tsx:184
 msgid "Load new notifications"
 msgstr "새 알림 불러오기"
@@ -2751,7 +2805,7 @@ msgid "Mentioned users"
 msgstr "멘션한 사용자"
 
 #: src/view/com/util/ViewHeader.tsx:91
-#: src/view/screens/Search/Search.tsx:714
+#: src/view/screens/Search/Search.tsx:681
 msgid "Menu"
 msgstr "메뉴"
 
@@ -2961,7 +3015,7 @@ msgstr "뮤트 목록은 비공개입니다. 뮤트한 계정은 나와 상호�
 msgid "My Birthday"
 msgstr "내 생년월일"
 
-#: src/view/screens/Feeds.tsx:768
+#: src/view/screens/Feeds.tsx:734
 msgid "My Feeds"
 msgstr "내 피드"
 
@@ -3054,7 +3108,7 @@ msgctxt "action"
 msgid "New post"
 msgstr "새 게시물"
 
-#: src/view/screens/Feeds.tsx:600
+#: src/view/screens/Feeds.tsx:566
 #: src/view/screens/Notifications.tsx:193
 #: src/view/screens/Profile.tsx:464
 #: src/view/screens/ProfileFeed.tsx:426
@@ -3164,13 +3218,14 @@ msgstr "결과 없음"
 msgid "No results found"
 msgstr "결과를 찾을 수 없음"
 
-#: src/view/screens/Feeds.tsx:530
+#: src/view/screens/Feeds.tsx:497
 msgid "No results found for \"{query}\""
 msgstr "\"{query}\"에 대한 결과를 찾을 수 없습니다"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:127
-#: src/view/screens/Search/Search.tsx:297
-#: src/view/screens/Search/Search.tsx:336
+#: src/view/screens/Search/Search.tsx:233
+#: src/view/screens/Search/Search.tsx:272
+#: src/view/screens/Search/Search.tsx:316
 msgid "No results found for {query}"
 msgstr "{query}에 대한 결과를 찾을 수 없습니다"
 
@@ -3564,7 +3619,7 @@ msgstr "비밀번호 변경됨"
 msgid "Pause"
 msgstr "일시 정지"
 
-#: src/view/screens/Search/Search.tsx:387
+#: src/view/screens/Search/Search.tsx:367
 msgid "People"
 msgstr "사람들"
 
@@ -3883,7 +3938,7 @@ msgstr "계정 재활성화"
 msgid "Reason:"
 msgstr "이유:"
 
-#: src/view/screens/Search/Search.tsx:970
+#: src/view/screens/Search/Search.tsx:937
 msgid "Recent Searches"
 msgstr "최근 검색"
 
@@ -3896,6 +3951,7 @@ msgid "Reload conversations"
 msgstr "대화 다시 불러오기"
 
 #: src/components/dialogs/MutedWords.tsx:286
+#: src/components/FeedCard.tsx:193
 #: src/view/com/feeds/FeedSourceCard.tsx:317
 #: src/view/com/modals/ListAddRemoveUsers.tsx:268
 #: src/view/com/modals/SelfLabel.tsx:84
@@ -3938,6 +3994,7 @@ msgstr "피드를 제거하시겠습니까?"
 msgid "Remove from my feeds"
 msgstr "내 피드에서 제거"
 
+#: src/components/FeedCard.tsx:188
 #: src/view/com/feeds/FeedSourceCard.tsx:312
 msgid "Remove from my feeds?"
 msgstr "내 피드에서 제거하시겠습니까?"
@@ -3954,11 +4011,11 @@ msgstr "이미지 미리보기 제거"
 msgid "Remove mute word from your list"
 msgstr "목록에서 뮤트한 단어 제거"
 
-#: src/view/screens/Search/Search.tsx:1011
+#: src/view/screens/Search/Search.tsx:978
 msgid "Remove profile"
 msgstr "프로필 제거"
 
-#: src/view/screens/Search/Search.tsx:1013
+#: src/view/screens/Search/Search.tsx:980
 msgid "Remove profile from search history"
 msgstr "검색 기록에서 프로필을 제거합니다"
 
@@ -4306,9 +4363,9 @@ msgstr "맨 위로 스크롤"
 #: src/view/com/modals/ListAddRemoveUsers.tsx:75
 #: src/view/com/util/forms/SearchInput.tsx:67
 #: src/view/com/util/forms/SearchInput.tsx:79
-#: src/view/screens/Search/Search.tsx:452
-#: src/view/screens/Search/Search.tsx:822
-#: src/view/screens/Search/Search.tsx:850
+#: src/view/screens/Search/Search.tsx:419
+#: src/view/screens/Search/Search.tsx:789
+#: src/view/screens/Search/Search.tsx:817
 #: src/view/shell/bottom-bar/BottomBar.tsx:179
 #: src/view/shell/desktop/LeftNav.tsx:343
 #: src/view/shell/desktop/Search.tsx:194
@@ -4322,7 +4379,7 @@ msgstr "검색"
 msgid "Search for \"{query}\""
 msgstr "\"{query}\"에 대한 검색 결과"
 
-#: src/view/screens/Search/Search.tsx:906
+#: src/view/screens/Search/Search.tsx:873
 msgid "Search for \"{searchText}\""
 msgstr "\"{searchText}\"에 대한 검색 결과"
 
@@ -4933,9 +4990,9 @@ msgstr "이 라벨러 구독하기"
 msgid "Subscribe to this list"
 msgstr "이 리스트 구독하기"
 
-#: src/view/screens/Search/Search.tsx:425
-msgid "Suggested Follows"
-msgstr "팔로우 추천"
+#: src/view/screens/Search/Explore.tsx:330
+msgid "Suggested accounts"
+msgstr "추천 계정"
 
 #: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:65
 msgid "Suggested for you"
@@ -5387,7 +5444,7 @@ msgid "Toggle to enable or disable adult content"
 msgstr "성인 콘텐츠 활성화 또는 비활성화 전환"
 
 #: src/screens/Hashtag.tsx:88
-#: src/view/screens/Search/Search.tsx:367
+#: src/view/screens/Search/Search.tsx:347
 msgid "Top"
 msgstr "인기"
 
@@ -5807,7 +5864,7 @@ msgstr "{0} 님이 제공하는 라벨링 서비스 보기"
 msgid "View users who like this feed"
 msgstr "이 피드를 좋아하는 사용자 보기"
 
-#: src/view/com/home/HomeHeaderLayout.web.tsx:78
+#: src/view/com/home/HomeHeaderLayout.web.tsx:79
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:84
 msgid "View your feeds and explore more"
 msgstr "내 피드를 보거나 새 피드를 탐색합니다"
@@ -5891,7 +5948,7 @@ msgstr "죄송하지만 이 리스트를 불러올 수 없습니다. 이 문제�
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
 msgstr "죄송하지만 현재 뮤트한 단어를 불러올 수 없습니다. 다시 시도해 주세요."
 
-#: src/view/screens/Search/Search.tsx:270
+#: src/view/screens/Search/Search.tsx:206
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "죄송하지만 검색을 완료할 수 없습니다. 몇 분 후에 다시 시도해 주세요."
 
