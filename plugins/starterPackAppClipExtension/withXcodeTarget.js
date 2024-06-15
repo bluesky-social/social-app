@@ -7,7 +7,7 @@ const withXcodeTarget = (config, {targetName}) => {
   return withXcodeProject(config, config => {
     const pbxProject = config.modResults
 
-    const target = pbxProject.addTarget(targetName, 'watch2_app', targetName)
+    const target = pbxProject.addTarget(targetName, 'application', targetName)
     target.pbxNativeTarget.productType = `"com.apple.product-type.application.on-demand-install-capable"`
     pbxProject.addBuildPhase(
       BUILD_PHASE_FILES.map(f => `${targetName}/${f}`),
