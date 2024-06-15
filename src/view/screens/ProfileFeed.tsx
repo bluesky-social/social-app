@@ -303,9 +303,9 @@ export function ProfileFeedScreenInner({
                         a.align_center,
                         a.rounded_full,
                         {height: 36, width: 36},
-                        t.atoms.bg_contrast_50,
+                        t.atoms.bg_contrast_25,
                         (state.hovered || state.pressed) && [
-                          t.atoms.bg_contrast_100,
+                          t.atoms.bg_contrast_50,
                         ],
                       ]}
                       testID="headerDropdownBtn">
