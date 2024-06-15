@@ -26,6 +26,7 @@ export function NewskieDialog({
   const control = useDialogControl()
   const {joinedViaStarterPack} = profile
   const profileName = profile.displayName || `@${profile.handle}`
+  const createdAt = profile.createdAt ?? 0
 
   return (
     <>
@@ -52,8 +53,7 @@ export function NewskieDialog({
                 joinedViaStarterPack?.record,
               ) ? (
                 <Trans>
-                  {profileName} joined Bluesky {ago(profile.createdAt, true)}{' '}
-                  ago with{' '}
+                  {profileName} joined Bluesky {ago(createdAt, true)} ago with{' '}
                   {joinedViaStarterPack?.creator.did === currentAccount?.did
                     ? 'your'
                     : `${joinedViaStarterPack?.creator.displayName}'s` ||
@@ -63,7 +63,7 @@ export function NewskieDialog({
               ) : (
                 <Trans>
                   <Text style={[a.font_bold, a.text_md]}>{profileName}</Text>{' '}
-                  recently joined Bluesky {ago(profile.createdAt, true)} ago
+                  recently joined Bluesky {ago(createdAt, true)} ago
                 </Trans>
               )}
             </Text>

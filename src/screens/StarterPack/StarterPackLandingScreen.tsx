@@ -93,6 +93,7 @@ function LandingScreenInner({
   const {_} = useLingui()
   const t = useTheme()
   const setUsedStarterPack = useSetUsedStarterPack()
+  const usedStarterPack = useUsedStarterPack()
   const {isTabletOrDesktop} = useWebMediaQueries()
 
   const sampleProfiles = listItemsSample?.map(item => item.subject)
@@ -118,6 +119,9 @@ function LandingScreenInner({
             isTabletOrDesktop && {
               borderBottomLeftRadius: 10,
               borderBottomRightRadius: 10,
+            },
+            usedStarterPack?.isClip && {
+              paddingTop: 100,
             },
           ]}>
           <View style={[a.flex_row, a.gap_md, a.pb_sm]}>

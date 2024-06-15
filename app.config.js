@@ -92,9 +92,6 @@ module.exports = function (config) {
         },
         entitlements: {
           'com.apple.security.application-groups': 'group.app.bsky',
-          'com.apple.developer.associated-appclip-app-identifiers': [
-            'xyz.blueskyweb.app.AppClip',
-          ],
         },
         privacyManifests: {
           NSPrivacyAccessedAPITypes: [
@@ -207,21 +204,7 @@ module.exports = function (config) {
             sounds: PLATFORM === 'ios' ? ['assets/dm.aiff'] : ['assets/dm.mp3'],
           },
         ],
-        [
-          'react-native-app-clip',
-          {
-            name: 'BlueskyAppClip',
-            groupIdentifier: 'group.app.bsky',
-            excludedPackages: [
-              '@bam.tech/react-native-image-resizer',
-              '@braintree/sanitize-url',
-              '@discord/bottom-sheet',
-              '@emoji-mart/react',
-              '@floating-ui/dom',
-              '@floating-ui/react-dom',
-            ],
-          },
-        ],
+        './plugins/starterPackAppClipExtension/withStarterPackAppClip.js',
         './plugins/withAndroidManifestPlugin.js',
         './plugins/withAndroidManifestFCMIconPlugin.js',
         './plugins/withAndroidStylesWindowBackgroundPlugin.js',
@@ -255,19 +238,8 @@ module.exports = function (config) {
                     },
                   },
                   {
-                    targetName: 'BlueskyAppClip',
+                    targetName: 'BlueskyClip',
                     bundleIdentifier: 'xyz.blueskyweb.app.AppClip',
-                    entitlements: {
-                      'com.apple.security.application-groups': [
-                        'group.app.bsky',
-                      ],
-                      'com.apple.developer.associated-domains':
-                        ASSOCIATED_DOMAINS,
-                      'com.apple.developer.on-demand-install-capable': true,
-                      'com.apple.developer.parent-application-identifiers': [
-                        'xyz.blueskyweb.app',
-                      ],
-                    },
                   },
                 ],
               },

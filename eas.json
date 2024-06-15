@@ -63,7 +63,7 @@
     "testflight": {
       "extends": "base",
       "ios": {
-        "autoIncrement": false
+        "autoIncrement": true
       },
       "android": {
         "autoIncrement": true

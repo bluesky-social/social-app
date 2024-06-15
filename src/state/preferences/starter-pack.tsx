@@ -3,7 +3,7 @@ import React from 'react'
 import * as persisted from '#/state/persisted'
 
 type StateContext =
-  | {uri: string; cid?: string; initialFeed?: string}
+  | {uri: string; cid?: string; initialFeed?: string; isClip?: boolean}
   | undefined
 type SetContext = (v: StateContext) => void
 
