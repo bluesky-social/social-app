@@ -225,7 +225,7 @@ export function Button({
         if (!disabled) {
           baseStyles.push(t.atoms.bg)
           hoverStyles.push({
-            backgroundColor: t.palette.contrast_100,
+            backgroundColor: t.palette.contrast_25,
           })
         }
       }
