@@ -22,6 +22,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {HITSLOP_10} from 'lib/constants'
 import {createStarterPackList} from 'lib/generate-starterpack'
 import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
+import {logEvent} from 'lib/statsig/statsig'
 import {enforceLen} from 'lib/strings/helpers'
 import {isAndroid, isNative, isWeb} from 'platform/detection'
 import {invalidateActorStarterPacksQuery} from 'state/queries/actor-starter-packs'
@@ -342,8 +343,14 @@ function WizardInner({
           },
         )
 
-        const newRkey = new AtUri(res.uri).rkey
+        logEvent('starterPack:create', {
+          setName: state.name != null,
+          setDescription: state.description != null,
+          profilesCount: state.profiles.length,
+          feedsCount: state.feeds.length,
+        })
 
+        const newRkey = new AtUri(res.uri).rkey
         setTimeout(() => {
           navigation.replace('StarterPack', {
             name: currentAccount!.handle,
@@ -374,6 +381,7 @@ function WizardInner({
         rkey,
       })
       await invalidateQueries()
+      logEvent('starterPack:delete', {})
       navigation.popToTop()
     } catch (e) {
       Toast.show(_(msg`Failed to delete starter pack`))

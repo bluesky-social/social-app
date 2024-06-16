@@ -159,6 +159,13 @@ export type LogEvents = {
     starterPack: string
     followCount: number
   }
+  'starterPack:delete': {}
+  'starterPack:create': {
+    setName: boolean
+    setDescription: boolean
+    profilesCount: number
+    feedsCount: number
+  }
 
   'test:all:always': {}
   'test:all:sometimes': {}
