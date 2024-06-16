@@ -1,10 +1,6 @@
 import React from 'react'
 import {ScrollView, View} from 'react-native'
-import {
-  AppBskyActorDefs,
-  AppBskyGraphDefs,
-  AppBskyGraphStarterpack,
-} from '@atproto/api'
+import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -16,7 +12,7 @@ import {
 import {useResolveDidQuery} from 'state/queries/resolve-uri'
 import {useStarterPackQuery} from 'state/queries/useStarterPackQuery'
 import {LoggedOutScreenState} from 'view/com/auth/LoggedOut'
-import {UserAvatar} from 'view/com/util/UserAvatar'
+import {ProfileCard} from 'view/com/profile/ProfileCard'
 import {CenteredView} from 'view/com/util/Views'
 import {Logo} from 'view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
@@ -96,11 +92,8 @@ function LandingScreenInner({
   const usedStarterPack = useUsedStarterPack()
   const {isTabletOrDesktop} = useWebMediaQueries()
 
+  const listItemsCount = starterPack.list?.listItemCount ?? 0
   const sampleProfiles = listItemsSample?.map(item => item.subject)
-  const userSets = {
-    first: sampleProfiles?.slice(0, 4),
-    second: sampleProfiles?.slice(4, 8),
-  }
 
   if (!AppBskyGraphStarterpack.isRecord(record)) {
     return null
@@ -149,7 +142,7 @@ function LandingScreenInner({
             </Text>
           ) : null}
           <Button
-            label={_(msg`Join now!`)}
+            label={_(msg`Join the conversation now!`)}
             onPress={() => {
               setUsedStarterPack({
                 uri: starterPack.uri,
@@ -161,7 +154,7 @@ function LandingScreenInner({
             color="primary"
             size="large">
             <ButtonText style={[a.text_lg]}>
-              <Trans>Join now!</Trans>
+              <Trans>Join the conversation now!</Trans>
             </ButtonText>
           </Button>
           {joinedWeekCount && joinedWeekCount >= 25 ? (
@@ -208,11 +201,30 @@ function LandingScreenInner({
               <View style={[a.gap_md]}>
                 <Text style={[a.font_bold, a.text_lg]}>
                   {feeds?.length ? (
-                    <Trans>Also follow these people and many others!</Trans>
+                    <>
+                      {listItemsCount <= 8 ? (
+                        <Trans>Also follow these people right away!</Trans>
+                      ) : (
+                        <Trans>
+                          Also follow these people and {listItemsCount - 8}{' '}
+                          others!
+                        </Trans>
+                      )}
+                    </>
                   ) : (
-                    <Trans>
-                      Get started by following these people and many others!
-                    </Trans>
+                    <>
+                      {listItemsCount <= 8 ? (
+                        <Trans>
+                          Get started by following these people right away!
+                        </Trans>
+                      ) : (
+                        <Trans>
+                          Get started by following these people and{' '}
+                          {listItemsCount - 8}
+                          others!
+                        </Trans>
+                      )}
+                    </>
                   )}
                 </Text>
                 <View
@@ -223,12 +235,12 @@ function LandingScreenInner({
                     a.py_md,
                     a.gap_xl,
                   ]}>
-                  {userSets.first?.length ? (
-                    <ProfilesSet profiles={userSets.first} />
-                  ) : null}
-                  {userSets.second?.length ? (
-                    <ProfilesSet profiles={userSets.second} />
-                  ) : null}
+                  {starterPack.listItemsSample?.map(item => (
+                    <ProfileCard
+                      profile={item.subject}
+                      key={item.subject.did}
+                    />
+                  ))}
                 </View>
               </View>
             )}
@@ -236,29 +248,5 @@ function LandingScreenInner({
         </View>
       </ScrollView>
     </CenteredView>
-  )
-}
-
-function ProfilesSet({
-  profiles,
-}: {
-  profiles: AppBskyActorDefs.ProfileViewBasic[]
-}) {
-  const {isTabletOrDesktop} = useWebMediaQueries()
-
-  return (
-    <View style={[a.flex_row, a.gap_xs, a.align_center, a.justify_between]}>
-      {profiles.map(profile => (
-        <View style={[a.flex_1, a.align_center, a.gap_sm]} key={profile.did}>
-          <UserAvatar
-            size={isTabletOrDesktop ? 58 : 48}
-            avatar={profile.avatar}
-          />
-          <Text style={[a.flex_1, a.text_sm, a.font_bold]} numberOfLines={1}>
-            {profile.displayName}
-          </Text>
-        </View>
-      ))}
-    </View>
   )
 }
