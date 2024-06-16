@@ -66,7 +66,7 @@ function reducer(state: State, action: Action): State {
 
   switch (action.type) {
     case 'SetName':
-      updatedState = {...state, name: action.name}
+      updatedState = {...state, name: action.name.slice(0, 50)}
       break
     case 'SetDescription':
       updatedState = {...state, description: action.description}

@@ -6,7 +6,7 @@ import {useLingui} from '@lingui/react'
 import {useProfileQuery} from 'state/queries/profile'
 import {useSession} from 'state/session'
 import {useWizardState} from '#/screens/StarterPack/Wizard/State'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import * as TextField from '#/components/forms/TextField'
 import {StarterPackIcon} from '#/components/icons/StarterPackIcon'
 import {ScreenTransition} from '#/components/StarterPack/Wizard/ScreenTransition'
@@ -14,6 +14,7 @@ import {Text} from '#/components/Typography'
 
 export function StepDetails() {
   const {_} = useLingui()
+  const t = useTheme()
   const [state, dispatch] = useWizardState()
 
   const {currentAccount} = useSession()
@@ -42,15 +43,22 @@ export function StepDetails() {
           <TextField.LabelText>
             <Trans>What do you want to call your starter pack?</Trans>
           </TextField.LabelText>
-          <TextField.Input
-            label={_(
-              msg`${
-                currentProfile?.displayName || currentProfile?.handle
-              }'s starter pack`,
-            )}
-            value={state.name}
-            onChangeText={text => dispatch({type: 'SetName', name: text})}
-          />
+          <TextField.Root>
+            <TextField.Input
+              label={_(
+                msg`${
+                  currentProfile?.displayName || currentProfile?.handle
+                }'s starter pack`,
+              )}
+              value={state.name}
+              onChangeText={text => dispatch({type: 'SetName', name: text})}
+            />
+            <TextField.SuffixText label={_(`${state.name?.length} out of 50`)}>
+              <Text style={[t.atoms.text_contrast_medium]}>
+                {state.name?.length ?? 0}/50
+              </Text>
+            </TextField.SuffixText>
+          </TextField.Root>
         </View>
         <View>
           <TextField.LabelText>

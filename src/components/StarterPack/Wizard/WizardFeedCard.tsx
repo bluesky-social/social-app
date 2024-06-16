@@ -28,8 +28,11 @@ export function WizardFeedCard({
   const isDiscover = generator.uri === DISCOVER_FEED_URI
   const includesFeed =
     isDiscover || state.feeds.some(f => f.uri === generator.uri)
+  const isDisabled = isDiscover || (!includesFeed && state.feeds.length >= 3)
 
   const onPressAddRemove = () => {
+    if (isDisabled) return
+
     Keyboard.dismiss()
     if (includesFeed) {
       dispatch({type: 'RemoveFeed', feedUri: generator.uri})
@@ -74,7 +77,7 @@ export function WizardFeedCard({
             : _(msg`Add ${generator.displayName} to starter pack`)
         }
         value={includesFeed}
-        disabled={isDiscover}
+        disabled={isDisabled}
         onChange={onPressAddRemove}>
         <Checkbox />
       </Toggle.Item>

@@ -189,7 +189,7 @@ function WizardInner({
     msg`${
       currentProfile?.displayName || `@${currentProfile?.handle}`
     }'s Starter Pack`,
-  )
+  ).slice(0, 50)
 
   const wizardUiStrings: Record<
     WizardStep,

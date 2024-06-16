@@ -147,20 +147,11 @@ export const ProfileStarterPacks = React.forwardRef<
 })
 
 function CreateAnother() {
-  const t = useTheme()
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
 
   return (
-    <View
-      style={[
-        a.px_md,
-        a.py_lg,
-        a.justify_between,
-        a.gap_lg,
-        a.border_t,
-        t.atoms.border_contrast_medium,
-      ]}>
+    <View style={[a.px_md, a.py_lg, a.justify_between, a.gap_lg]}>
       <Button
         label={_(msg`Create a starter pack`)}
         variant="ghost"

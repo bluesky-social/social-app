@@ -27,8 +27,12 @@ export function WizardProfileCard({
   const {currentAccount} = useSession()
 
   const includesProfile = state.profiles.some(p => p.did === profile.did)
+  const isMe = profile.did === currentAccount?.did
+  const isDisabled = isMe || state.profiles.length >= 50
 
   const onPressAddRemove = () => {
+    if (isDisabled) return
+
     Keyboard.dismiss()
     if (profile.did === currentAccount?.did) return
 
@@ -67,27 +71,26 @@ export function WizardProfileCard({
           @{profile?.handle}
         </Text>
       </View>
-      {profile.did !== currentAccount?.did && (
-        <Toggle.Item
-          name={_(msg`Person toggle`)}
-          label={
-            includesProfile
-              ? _(
-                  msg`Remove ${
-                    profile.displayName || profile.handle
-                  } from starter pack`,
-                )
-              : _(
-                  msg`Add ${
-                    profile.displayName || profile.handle
-                  } to starter pack`,
-                )
-          }
-          value={includesProfile}
-          onChange={onPressAddRemove}>
-          <Checkbox />
-        </Toggle.Item>
-      )}
+      <Toggle.Item
+        name={_(msg`Person toggle`)}
+        label={
+          includesProfile
+            ? _(
+                msg`Remove ${
+                  profile.displayName || profile.handle
+                } from starter pack`,
+              )
+            : _(
+                msg`Add ${
+                  profile.displayName || profile.handle
+                } to starter pack`,
+              )
+        }
+        value={includesProfile}
+        disabled={isDisabled}
+        onChange={onPressAddRemove}>
+        <Checkbox />
+      </Toggle.Item>
     </Pressable>
   )
 }
