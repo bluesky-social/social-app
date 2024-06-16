@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: zh-TW for bluesky-social-app\n"
 "POT-Creation-Date: \n"
 "Report-Msgid-Bugs-To: Kuwa Lee <kuwalee1069@gmail.com>, Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-06-14 01:57+0800\n"
+"PO-Revision-Date: 2024-06-16 20:31+0800\n"
 "Last-Translator: \n"
 "Language-Team: Frudrax Cheng <i@cynosura.one>, Kuwa Lee <kuwalee1069@gmail.com>, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Language: zh_TW\n"
@@ -37,12 +37,12 @@ msgstr "{0, plural, one {該內容有 # 個標記} other {該內容有 # 個標�
 msgid "{0, plural, one {# repost} other {# reposts}}"
 msgstr "{0, plural, one {# 個轉貼} other {# 個轉貼}}"
 
-#: src/components/ProfileHoverCard/index.web.tsx:385
+#: src/components/ProfileHoverCard/index.web.tsx:398
 #: src/screens/Profile/Header/Metrics.tsx:23
 msgid "{0, plural, one {follower} other {followers}}"
 msgstr "{0, plural, one {個跟隨者} other {個跟隨者}}"
 
-#: src/components/ProfileHoverCard/index.web.tsx:389
+#: src/components/ProfileHoverCard/index.web.tsx:402
 #: src/screens/Profile/Header/Metrics.tsx:27
 msgid "{0, plural, one {following} other {following}}"
 msgstr "{0, plural, one {個跟隨中} other {個跟隨中}}"
@@ -55,6 +55,7 @@ msgstr "{0, plural, one {喜歡（# 個喜歡）} other {喜歡（# 個喜歡）
 msgid "{0, plural, one {like} other {likes}}"
 msgstr "{0, plural, one {喜歡} other {喜歡}}"
 
+#: src/components/FeedCard.tsx:110
 #: src/view/com/feeds/FeedSourceCard.tsx:301
 msgid "{0, plural, one {Liked by # user} other {Liked by # users}}"
 msgstr "{0, plural,one {# 個用戶已喜歡} other {# 個用戶已喜歡}}"
@@ -91,7 +92,7 @@ msgstr "{estimatedTimeHrs, plural, one {時} other {時}}"
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
 msgstr "{estimatedTimeMins, plural, one {分} other {分}}"
 
-#: src/components/ProfileHoverCard/index.web.tsx:490
+#: src/components/ProfileHoverCard/index.web.tsx:503
 #: src/screens/Profile/Header/Metrics.tsx:50
 msgid "{following} following"
 msgstr "{following} 個跟隨中"
@@ -139,7 +140,7 @@ msgid "2FA Confirmation"
 msgstr "雙重驗證"
 
 #: src/view/com/util/ViewHeader.tsx:93
-#: src/view/screens/Search/Search.tsx:715
+#: src/view/screens/Search/Search.tsx:682
 msgid "Access navigation links and settings"
 msgstr "存取導覽連結和設定"
 
@@ -266,6 +267,10 @@ msgstr "新增預設的「Following」動態源，它只會顯示您跟隨的人
 msgid "Add the following DNS record to your domain:"
 msgstr "將以下 DNS 記錄新增到您的網域："
 
+#: src/components/FeedCard.tsx:173
+msgid "Add this feed to your feeds"
+msgstr "添加這則動態至您的動態源"
+
 #: src/view/com/profile/ProfileMenu.tsx:268
 #: src/view/com/profile/ProfileMenu.tsx:271
 msgid "Add to Lists"
@@ -302,7 +307,7 @@ msgstr "成人內容已停用。"
 msgid "Advanced"
 msgstr "進階設定"
 
-#: src/view/screens/Feeds.tsx:771
+#: src/view/screens/Feeds.tsx:737
 msgid "All the feeds you've saved, right in one place."
 msgstr "以下是您儲存的動態源。"
 
@@ -463,6 +468,10 @@ msgstr "您確定要離開此對話嗎？您的訊息將為您刪除，但不會
 #: src/view/com/feeds/FeedSourceCard.tsx:314
 msgid "Are you sure you want to remove {0} from your feeds?"
 msgstr "您確定要從您的動態中移除 {0} 嗎？"
+
+#: src/components/FeedCard.tsx:190
+msgid "Are you sure you want to remove this from your feeds?"
+msgstr "您確定要從您的動態源中移除這個嗎？"
 
 #: src/view/com/composer/Composer.tsx:632
 msgid "Are you sure you'd like to discard this draft?"
@@ -677,7 +686,7 @@ msgstr "只能包含字母、數字、空格、破折號及底線。長度必須
 #: src/view/com/modals/VerifyEmail.tsx:255
 #: src/view/com/modals/VerifyEmail.tsx:261
 #: src/view/com/util/post-ctrls/RepostButton.tsx:138
-#: src/view/screens/Search/Search.tsx:735
+#: src/view/screens/Search/Search.tsx:702
 #: src/view/shell/desktop/Search.tsx:218
 msgid "Cancel"
 msgstr "取消"
@@ -839,7 +848,7 @@ msgid "Clear all storage data (restart after this)"
 msgstr "清除所有資料（並重啟）"
 
 #: src/view/com/util/forms/SearchInput.tsx:88
-#: src/view/screens/Search/Search.tsx:861
+#: src/view/screens/Search/Search.tsx:828
 msgid "Clear search query"
 msgstr "清除搜尋記錄"
 
@@ -992,8 +1001,8 @@ msgstr "為 {name} 配置內容過濾設定"
 msgid "Configured in <0>moderation settings</0>."
 msgstr "已在<0>內容管理設定</0>中配置。"
 
-#: src/components/Prompt.tsx:159
 #: src/components/Prompt.tsx:162
+#: src/components/Prompt.tsx:165
 #: src/view/com/modals/SelfLabel.tsx:155
 #: src/view/com/modals/VerifyEmail.tsx:239
 #: src/view/com/modals/VerifyEmail.tsx:241
@@ -1233,7 +1242,8 @@ msgstr "自訂"
 msgid "Custom domain"
 msgstr "自訂網域"
 
-#: src/view/screens/Feeds.tsx:797
+#: src/view/screens/Feeds.tsx:763
+#: src/view/screens/Search/Explore.tsx:380
 msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
 msgstr "由社群打造的自訂動態源帶來全新體驗，幫助您找到所愛的內容。"
 
@@ -1414,7 +1424,11 @@ msgstr "阻撓應用程式向未登入用戶顯示我的帳號"
 msgid "Discover new custom feeds"
 msgstr "探索新的自訂動態源"
 
-#: src/view/screens/Feeds.tsx:794
+#: src/view/screens/Search/Explore.tsx:378
+msgid "Discover new feeds"
+msgstr "探索新的動態源"
+
+#: src/view/screens/Feeds.tsx:760
 msgid "Discover New Feeds"
 msgstr "探索新的動態源"
 
@@ -1534,8 +1548,8 @@ msgctxt "action"
 msgid "Edit"
 msgstr "編輯"
 
-#: src/view/screens/Feeds.tsx:400
-#: src/view/screens/Feeds.tsx:471
+#: src/view/screens/Feeds.tsx:370
+#: src/view/screens/Feeds.tsx:441
 msgid "Edit"
 msgstr "編輯"
 
@@ -1558,8 +1572,8 @@ msgid "Edit Moderation List"
 msgstr "編輯內容管理列表"
 
 #: src/Navigation.tsx:269
-#: src/view/screens/Feeds.tsx:398
-#: src/view/screens/Feeds.tsx:469
+#: src/view/screens/Feeds.tsx:368
+#: src/view/screens/Feeds.tsx:439
 #: src/view/screens/SavedFeeds.tsx:93
 msgid "Edit My Feeds"
 msgstr "編輯我的動態源"
@@ -1847,6 +1861,11 @@ msgstr "無法刪除訊息"
 msgid "Failed to delete post, please try again"
 msgstr "無法刪除貼文，請重試"
 
+#: src/view/screens/Search/Explore.tsx:414
+#: src/view/screens/Search/Explore.tsx:438
+msgid "Failed to load feeds preferences"
+msgstr "無法載入動態源偏好"
+
 #: src/components/dialogs/GifSelect.ios.tsx:196
 #: src/components/dialogs/GifSelect.tsx:212
 msgid "Failed to load GIFs"
@@ -1855,6 +1874,15 @@ msgstr "無法載入 GIF"
 #: src/screens/Messages/Conversation/MessageListError.tsx:23
 msgid "Failed to load past messages"
 msgstr "無法載入過去的訊息"
+
+#: src/view/screens/Search/Explore.tsx:407
+#: src/view/screens/Search/Explore.tsx:431
+msgid "Failed to load suggested feeds"
+msgstr "無法載入建議的動態源"
+
+#: src/view/screens/Search/Explore.tsx:367
+msgid "Failed to load suggested follows"
+msgstr "無法載入建議的跟隨者"
 
 #: src/view/com/lightbox/Lightbox.tsx:84
 msgid "Failed to save image: {0}"
@@ -1869,6 +1897,10 @@ msgstr "無法傳送"
 msgid "Failed to submit appeal, please try again."
 msgstr "無法提交申訴，請重試。"
 
+#: src/components/FeedCard.tsx:153
+msgid "Failed to update feeds"
+msgstr "無法更新動態"
+
 #: src/components/dms/MessagesNUX.tsx:60
 #: src/screens/Messages/Settings.tsx:35
 msgid "Failed to update settings"
@@ -1878,11 +1910,12 @@ msgstr "無法更新設定"
 msgid "Feed"
 msgstr "動態"
 
+#: src/components/FeedCard.tsx:90
 #: src/view/com/feeds/FeedSourceCard.tsx:251
 msgid "Feed by {0}"
 msgstr "{0} 建立的動態源"
 
-#: src/view/screens/Feeds.tsx:709
+#: src/view/screens/Feeds.tsx:675
 msgid "Feed offline"
 msgstr "動態源已離線"
 
@@ -1891,9 +1924,10 @@ msgstr "動態源已離線"
 msgid "Feedback"
 msgstr "意見回饋"
 
-#: src/view/screens/Feeds.tsx:463
-#: src/view/screens/Feeds.tsx:570
+#: src/view/screens/Feeds.tsx:433
+#: src/view/screens/Feeds.tsx:536
 #: src/view/screens/Profile.tsx:197
+#: src/view/screens/Search/Search.tsx:373
 #: src/view/shell/desktop/LeftNav.tsx:367
 #: src/view/shell/Drawer.tsx:493
 #: src/view/shell/Drawer.tsx:494
@@ -1903,6 +1937,10 @@ msgstr "動態源"
 #: src/view/screens/SavedFeeds.tsx:180
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
 msgstr "動態源是一種自訂演算法，使用者只需掌握一點開發技巧即可輕鬆構建。更多資訊請<0/>。"
+
+#: src/components/FeedCard.tsx:150
+msgid "Feeds updated!"
+msgstr "動態已更新！"
 
 #: src/view/com/modals/ChangeHandle.tsx:475
 msgid "File Contents"
@@ -1926,7 +1964,7 @@ msgstr "正在完成"
 msgid "Find accounts to follow"
 msgstr "尋找一些帳號來跟隨"
 
-#: src/view/screens/Search/Search.tsx:470
+#: src/view/screens/Search/Search.tsx:437
 msgid "Find posts and users on Bluesky"
 msgstr "在 Bluesky 上尋找貼文和用戶"
 
@@ -1955,8 +1993,8 @@ msgstr "水平翻轉"
 msgid "Flip vertically"
 msgstr "垂直翻轉"
 
-#: src/components/ProfileHoverCard/index.web.tsx:433
-#: src/components/ProfileHoverCard/index.web.tsx:444
+#: src/components/ProfileHoverCard/index.web.tsx:446
+#: src/components/ProfileHoverCard/index.web.tsx:457
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:252
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:146
 #: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:247
@@ -1985,6 +2023,10 @@ msgstr "跟隨帳號"
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:144
 msgid "Follow Back"
 msgstr "回追蹤"
+
+#: src/view/screens/Search/Explore.tsx:332
+msgid "Follow more accounts to get connected to your interests and build your network."
+msgstr "跟隨更多帳號以了解您的興趣並建立您的社群網路。"
 
 #: src/view/com/profile/ProfileCard.tsx:227
 msgid "Followed by {0}"
@@ -2028,12 +2070,12 @@ msgstr "您所認識的 @{0} 之跟隨者"
 msgid "Followers you know"
 msgstr "您也認識的跟隨者"
 
-#: src/components/ProfileHoverCard/index.web.tsx:432
-#: src/components/ProfileHoverCard/index.web.tsx:443
+#: src/components/ProfileHoverCard/index.web.tsx:445
+#: src/components/ProfileHoverCard/index.web.tsx:456
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:250
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:149
 #: src/view/com/profile/ProfileFollows.tsx:104
-#: src/view/screens/Feeds.tsx:656
+#: src/view/screens/Feeds.tsx:622
 #: src/view/screens/ProfileFollows.tsx:25
 #: src/view/screens/SavedFeeds.tsx:415
 msgid "Following"
@@ -2502,7 +2544,7 @@ msgid "Languages"
 msgstr "語言"
 
 #: src/screens/Hashtag.tsx:99
-#: src/view/screens/Search/Search.tsx:377
+#: src/view/screens/Search/Search.tsx:357
 msgid "Latest"
 msgstr "最新"
 
@@ -2656,6 +2698,18 @@ msgstr "列表"
 msgid "Lists blocking this user:"
 msgstr "封鎖此用戶的列表："
 
+#: src/view/screens/Search/Explore.tsx:128
+msgid "Load more"
+msgstr "載入更多"
+
+#: src/view/screens/Search/Explore.tsx:216
+msgid "Load more suggested feeds"
+msgstr "載入更多推薦動態"
+
+#: src/view/screens/Search/Explore.tsx:214
+msgid "Load more suggested follows"
+msgstr "載入更多推薦跟隨者"
+
 #: src/view/screens/Notifications.tsx:184
 msgid "Load new notifications"
 msgstr "載入新的通知"
@@ -2742,7 +2796,7 @@ msgid "Mentioned users"
 msgstr "被提及的用戶"
 
 #: src/view/com/util/ViewHeader.tsx:91
-#: src/view/screens/Search/Search.tsx:714
+#: src/view/screens/Search/Search.tsx:681
 msgid "Menu"
 msgstr "選單"
 
@@ -2952,7 +3006,7 @@ msgstr "封鎖是私人的。被封鎖的帳號可以與您互動，但您將無
 msgid "My Birthday"
 msgstr "我的生日"
 
-#: src/view/screens/Feeds.tsx:768
+#: src/view/screens/Feeds.tsx:734
 msgid "My Feeds"
 msgstr "我的動態源"
 
@@ -3045,7 +3099,7 @@ msgctxt "action"
 msgid "New post"
 msgstr "新貼文"
 
-#: src/view/screens/Feeds.tsx:600
+#: src/view/screens/Feeds.tsx:566
 #: src/view/screens/Notifications.tsx:193
 #: src/view/screens/Profile.tsx:464
 #: src/view/screens/ProfileFeed.tsx:426
@@ -3155,13 +3209,14 @@ msgstr "沒有結果"
 msgid "No results found"
 msgstr "未找到結果"
 
-#: src/view/screens/Feeds.tsx:530
+#: src/view/screens/Feeds.tsx:497
 msgid "No results found for \"{query}\""
 msgstr "未找到「{query}」的結果"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:127
-#: src/view/screens/Search/Search.tsx:297
-#: src/view/screens/Search/Search.tsx:336
+#: src/view/screens/Search/Search.tsx:233
+#: src/view/screens/Search/Search.tsx:272
+#: src/view/screens/Search/Search.tsx:316
 msgid "No results found for {query}"
 msgstr "未找到 {query} 的結果"
 
@@ -3550,7 +3605,7 @@ msgstr "密碼已更新！"
 msgid "Pause"
 msgstr "暫停"
 
-#: src/view/screens/Search/Search.tsx:387
+#: src/view/screens/Search/Search.tsx:367
 msgid "People"
 msgstr "用戶"
 
@@ -3869,7 +3924,7 @@ msgstr "重新啟用您的帳號"
 msgid "Reason:"
 msgstr "原因："
 
-#: src/view/screens/Search/Search.tsx:970
+#: src/view/screens/Search/Search.tsx:937
 msgid "Recent Searches"
 msgstr "最近的搜尋結果"
 
@@ -3882,6 +3937,7 @@ msgid "Reload conversations"
 msgstr "重新載入對話"
 
 #: src/components/dialogs/MutedWords.tsx:286
+#: src/components/FeedCard.tsx:193
 #: src/view/com/feeds/FeedSourceCard.tsx:317
 #: src/view/com/modals/ListAddRemoveUsers.tsx:268
 #: src/view/com/modals/SelfLabel.tsx:84
@@ -3924,6 +3980,7 @@ msgstr "刪除動態源？"
 msgid "Remove from my feeds"
 msgstr "從我的動態源中刪除"
 
+#: src/components/FeedCard.tsx:188
 #: src/view/com/feeds/FeedSourceCard.tsx:312
 msgid "Remove from my feeds?"
 msgstr "從我的動態源中刪除？"
@@ -3940,11 +3997,11 @@ msgstr "刪除圖片預覽"
 msgid "Remove mute word from your list"
 msgstr "從您的列表中刪除靜音文字"
 
-#: src/view/screens/Search/Search.tsx:1011
+#: src/view/screens/Search/Search.tsx:978
 msgid "Remove profile"
 msgstr "刪除個人檔案"
 
-#: src/view/screens/Search/Search.tsx:1013
+#: src/view/screens/Search/Search.tsx:980
 msgid "Remove profile from search history"
 msgstr "刪除搜尋紀錄中的個人檔案"
 
@@ -4292,9 +4349,9 @@ msgstr "滾動到頂部"
 #: src/view/com/modals/ListAddRemoveUsers.tsx:75
 #: src/view/com/util/forms/SearchInput.tsx:67
 #: src/view/com/util/forms/SearchInput.tsx:79
-#: src/view/screens/Search/Search.tsx:452
-#: src/view/screens/Search/Search.tsx:822
-#: src/view/screens/Search/Search.tsx:850
+#: src/view/screens/Search/Search.tsx:419
+#: src/view/screens/Search/Search.tsx:789
+#: src/view/screens/Search/Search.tsx:817
 #: src/view/shell/bottom-bar/BottomBar.tsx:179
 #: src/view/shell/desktop/LeftNav.tsx:343
 #: src/view/shell/desktop/Search.tsx:194
@@ -4308,7 +4365,7 @@ msgstr "搜尋"
 msgid "Search for \"{query}\""
 msgstr "搜尋「{query}」"
 
-#: src/view/screens/Search/Search.tsx:906
+#: src/view/screens/Search/Search.tsx:873
 msgid "Search for \"{searchText}\""
 msgstr "搜尋「{searchText}」"
 
@@ -4919,9 +4976,9 @@ msgstr "訂閱這個標記者"
 msgid "Subscribe to this list"
 msgstr "訂閱這個列表"
 
-#: src/view/screens/Search/Search.tsx:425
-msgid "Suggested Follows"
-msgstr "推薦的跟隨者"
+#: src/view/screens/Search/Explore.tsx:330
+msgid "Suggested accounts"
+msgstr "推薦的帳號"
 
 #: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:65
 msgid "Suggested for you"
@@ -4929,7 +4986,7 @@ msgstr "為您推薦"
 
 #: src/view/com/modals/SelfLabel.tsx:96
 msgid "Suggestive"
-msgstr "暗示"
+msgstr "性暗示"
 
 #: src/Navigation.tsx:239
 #: src/view/screens/Support.tsx:30
@@ -5373,7 +5430,7 @@ msgid "Toggle to enable or disable adult content"
 msgstr "切換以啟用或停用成人內容"
 
 #: src/screens/Hashtag.tsx:88
-#: src/view/screens/Search/Search.tsx:367
+#: src/view/screens/Search/Search.tsx:347
 msgid "Top"
 msgstr "熱門"
 
@@ -5749,7 +5806,7 @@ msgstr "查看 {0} 的頭像"
 msgid "View {0}'s profile"
 msgstr "查看 {0} 的個人檔案"
 
-#: src/components/ProfileHoverCard/index.web.tsx:417
+#: src/components/ProfileHoverCard/index.web.tsx:430
 msgid "View blocked user's profile"
 msgstr "查看已封鎖用戶的個人檔案"
 
@@ -5773,9 +5830,9 @@ msgstr "查看整個討論串"
 msgid "View information about these labels"
 msgstr "查看有關這些標記的資訊"
 
-#: src/components/ProfileHoverCard/index.web.tsx:405
-#: src/components/ProfileHoverCard/index.web.tsx:423
-#: src/components/ProfileHoverCard/index.web.tsx:450
+#: src/components/ProfileHoverCard/index.web.tsx:418
+#: src/components/ProfileHoverCard/index.web.tsx:436
+#: src/components/ProfileHoverCard/index.web.tsx:463
 #: src/view/com/posts/AviFollowButton.tsx:58
 #: src/view/com/posts/FeedErrorMessage.tsx:174
 msgid "View profile"
@@ -5793,7 +5850,7 @@ msgstr "查看由 @{0} 提供的標記服務"
 msgid "View users who like this feed"
 msgstr "查看喜歡此動態源的用戶"
 
-#: src/view/com/home/HomeHeaderLayout.web.tsx:78
+#: src/view/com/home/HomeHeaderLayout.web.tsx:79
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:84
 msgid "View your feeds and explore more"
 msgstr "查看您的動態並探索更多內容"
@@ -5877,7 +5934,7 @@ msgstr "很抱歉，我們無法解析此列表。如果問題持續發生，請
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
 msgstr "很抱歉，我們目前無法載入您的靜音文字。請稍後再試。"
 
-#: src/view/screens/Search/Search.tsx:270
+#: src/view/screens/Search/Search.tsx:206
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "很抱歉，無法完成您的搜尋請求。請稍後再試。"
 
