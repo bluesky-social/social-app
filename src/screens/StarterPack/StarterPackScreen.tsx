@@ -10,6 +10,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {makeProfileLink, makeStarterPackLink} from 'lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
 import {shareUrl} from 'lib/sharing'
+import {logEvent} from 'lib/statsig/statsig'
 import {isWeb} from 'platform/detection'
 import {useSetUsedStarterPack} from 'state/preferences/starter-pack'
 import {RQKEY} from 'state/queries/list-members'
@@ -235,6 +236,10 @@ function Header({
                   label={_(msg`Share link`)}
                   testID="shareStarterPackLinkBtn"
                   onPress={() => {
+                    logEvent('starterPack:share', {
+                      starterPack: starterPack.uri,
+                      shareType: 'link',
+                    })
                     shareUrl(makeStarterPackLink(name, rkey))
                   }}>
                   <Menu.ItemText>

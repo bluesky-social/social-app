@@ -10,6 +10,7 @@ import {useLingui} from '@lingui/react'
 import {nanoid} from 'nanoid/non-secure'
 
 import {saveImageToMediaLibrary} from 'lib/media/manip'
+import {logEvent} from 'lib/statsig/statsig'
 import {isNative} from 'platform/detection'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a} from '#/alf'
@@ -84,6 +85,11 @@ export function QrCodeDialog({
         link.click()
       }
 
+      logEvent('starterPack:share', {
+        starterPack: starterPack.uri,
+        shareType: 'qrcode',
+        qrShareType: 'save',
+      })
       Toast.show(_(msg`QR code saved to your camera roll!`))
       control.close()
     })
@@ -103,6 +109,11 @@ export function QrCodeDialog({
         })
       }
 
+      logEvent('starterPack:share', {
+        starterPack: starterPack.uri,
+        shareType: 'qrcode',
+        qrShareType: 'copy',
+      })
       Toast.show(_(msg`QR code copied to your clipboard!`))
       control.close()
     })

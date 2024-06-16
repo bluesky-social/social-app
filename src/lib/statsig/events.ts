@@ -150,6 +150,11 @@ export type LogEvents = {
       | 'ChatsList'
       | 'SendViaChatDialog'
   }
+  'starterPack:share': {
+    starterPack: string
+    shareType: 'link' | 'qrcode'
+    qrShareType?: 'save' | 'copy'
+  }
 
   'test:all:always': {}
   'test:all:sometimes': {}
