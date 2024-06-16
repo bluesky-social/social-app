@@ -46,9 +46,9 @@ export function makeStarterPackLink(
   rkey?: string,
 ) {
   if (typeof starterPackOrName === 'string') {
-    return `/start/${starterPackOrName}/${rkey}`
+    return `https://bsky.app/start/${starterPackOrName}/${rkey}`
   } else {
-    const rkey = new AtUri(starterPackOrName.uri).rkey
-    return makeProfileLink(starterPackOrName.creator, 'starter-pack', rkey)
+    const uriRkey = new AtUri(starterPackOrName.uri).rkey
+    return `https://bsky.app/start/${starterPackOrName.creator.handle}/${uriRkey}`
   }
 }

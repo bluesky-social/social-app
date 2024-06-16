@@ -7,7 +7,7 @@ import {useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {makeProfileLink} from 'lib/routes/links'
+import {makeProfileLink, makeStarterPackLink} from 'lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
 import {shareUrl} from 'lib/sharing'
 import {isWeb} from 'platform/detection'
@@ -235,7 +235,7 @@ function Header({
                   label={_(msg`Share link`)}
                   testID="shareStarterPackLinkBtn"
                   onPress={() => {
-                    shareUrl('https://bsky.app')
+                    shareUrl(makeStarterPackLink(name, rkey))
                   }}>
                   <Menu.ItemText>
                     <Trans>Share link</Trans>
