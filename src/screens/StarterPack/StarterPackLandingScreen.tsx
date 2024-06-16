@@ -12,7 +12,6 @@ import {
 import {useResolveDidQuery} from 'state/queries/resolve-uri'
 import {useStarterPackQuery} from 'state/queries/useStarterPackQuery'
 import {LoggedOutScreenState} from 'view/com/auth/LoggedOut'
-import {ProfileCard} from 'view/com/profile/ProfileCard'
 import {CenteredView} from 'view/com/util/Views'
 import {Logo} from 'view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
@@ -21,6 +20,7 @@ import {Divider} from '#/components/Divider'
 import * as FeedCard from '#/components/FeedCard'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {ListMaybePlaceholder} from '#/components/Lists'
+import {Default as ProfileCardInner} from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 
 function parseStarterPackHttpUri(uri: string): {name?: string; rkey?: string} {
@@ -93,7 +93,6 @@ function LandingScreenInner({
   const {isTabletOrDesktop} = useWebMediaQueries()
 
   const listItemsCount = starterPack.list?.listItemCount ?? 0
-  const sampleProfiles = listItemsSample?.map(item => item.subject)
 
   if (!AppBskyGraphStarterpack.isRecord(record)) {
     return null
@@ -197,7 +196,7 @@ function LandingScreenInner({
               </View>
             ) : null}
 
-            {Boolean(sampleProfiles?.length) && (
+            {Boolean(listItemsSample?.length) && (
               <View style={[a.gap_md]}>
                 <Text style={[a.font_bold, a.text_lg]}>
                   {feeds?.length ? (
@@ -227,20 +226,20 @@ function LandingScreenInner({
                     </>
                   )}
                 </Text>
-                <View
-                  style={[
-                    t.atoms.bg_contrast_25,
-                    a.rounded_sm,
-                    a.px_xs,
-                    a.py_md,
-                    a.gap_xl,
-                  ]}>
-                  {starterPack.listItemsSample?.map(item => (
-                    <ProfileCard
-                      profile={item.subject}
-                      key={item.subject.did}
-                    />
-                  ))}
+                <View style={[t.atoms.bg_contrast_25, a.rounded_sm]}>
+                  {starterPack.listItemsSample
+                    ?.slice(0, 8)
+                    .map((item, index) => (
+                      <View
+                        key={item.subject.did}
+                        style={[
+                          a.p_lg,
+                          index !== 0 && a.border_t,
+                          t.atoms.border_contrast_low,
+                        ]}>
+                        <ProfileCardInner profile={item.subject} />
+                      </View>
+                    ))}
                 </View>
               </View>
             )}
