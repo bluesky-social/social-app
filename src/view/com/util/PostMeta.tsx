@@ -3,15 +3,14 @@ import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
 import {AppBskyActorDefs, ModerationDecision, ModerationUI} from '@atproto/api'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {precacheProfile, usePrefetchProfileQuery} from '#/state/queries/profile'
+import {precacheProfile} from '#/state/queries/profile'
 import {usePalette} from 'lib/hooks/usePalette'
 import {makeProfileLink} from 'lib/routes/links'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {niceDate} from 'lib/strings/time'
 import {TypographyVariant} from 'lib/ThemeContext'
-import {isAndroid, isWeb} from 'platform/detection'
-import {atoms as a} from '#/alf'
+import {isAndroid} from 'platform/detection'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {TextLinkOnWebOnly} from './Link'
 import {Text} from './text/Text'
@@ -37,17 +36,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
   const pal = usePalette('default')
   const displayName = opts.author.displayName || opts.author.handle
   const handle = opts.author.handle
-  const prefetchProfileQuery = usePrefetchProfileQuery()
-
   const profileLink = makeProfileLink(opts.author)
-  const prefetchedProfile = React.useRef(false)
-  const onPointerMove = React.useCallback(() => {
-    if (!prefetchedProfile.current) {
-      prefetchedProfile.current = true
-      prefetchProfileQuery(opts.author.did)
-    }
-  }, [opts.author.did, prefetchProfileQuery])
-
   const queryClient = useQueryClient()
   const onOpenAuthor = opts.onOpenAuthor
   const onBeforePressAuthor = useCallback(() => {
@@ -71,39 +60,35 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
         </View>
       )}
       <ProfileHoverCard inline did={opts.author.did}>
-        <View
-          onPointerMove={isWeb ? onPointerMove : undefined}
-          style={[a.flex_1]}>
-          <Text
-            numberOfLines={1}
-            style={[styles.maxWidth, pal.textLight, opts.displayNameStyle]}>
-            <TextLinkOnWebOnly
-              type={opts.displayNameType || 'lg-bold'}
-              style={[pal.text]}
-              lineHeight={1.2}
-              disableMismatchWarning
-              text={
-                <>
-                  {sanitizeDisplayName(
-                    displayName,
-                    opts.moderation?.ui('displayName'),
-                  )}
-                </>
-              }
-              href={profileLink}
-              onBeforePress={onBeforePressAuthor}
-            />
-            <TextLinkOnWebOnly
-              type="md"
-              disableMismatchWarning
-              style={[pal.textLight, {flexShrink: 4}]}
-              text={'\xa0' + sanitizeHandle(handle, '@')}
-              href={profileLink}
-              onBeforePress={onBeforePressAuthor}
-              anchorNoUnderline
-            />
-          </Text>
-        </View>
+        <Text
+          numberOfLines={1}
+          style={[styles.maxWidth, pal.textLight, opts.displayNameStyle]}>
+          <TextLinkOnWebOnly
+            type={opts.displayNameType || 'lg-bold'}
+            style={[pal.text]}
+            lineHeight={1.2}
+            disableMismatchWarning
+            text={
+              <>
+                {sanitizeDisplayName(
+                  displayName,
+                  opts.moderation?.ui('displayName'),
+                )}
+              </>
+            }
+            href={profileLink}
+            onBeforePress={onBeforePressAuthor}
+          />
+          <TextLinkOnWebOnly
+            type="md"
+            disableMismatchWarning
+            style={[pal.textLight, {flexShrink: 4}]}
+            text={'\xa0' + sanitizeHandle(handle, '@')}
+            href={profileLink}
+            onBeforePress={onBeforePressAuthor}
+            anchorNoUnderline
+          />
+        </Text>
       </ProfileHoverCard>
       {!isAndroid && (
         <Text
