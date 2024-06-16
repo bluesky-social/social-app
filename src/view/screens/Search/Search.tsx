@@ -30,7 +30,7 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {NavigationProp} from '#/lib/routes/types'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
 import {logger} from '#/logger'
-import {isIOS, isNative, isWeb} from '#/platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
@@ -802,12 +802,6 @@ let SearchInputBox = ({
             })
           } else {
             setShowAutocomplete(true)
-            if (isIOS) {
-              // We rely on selectTextOnFocus, but it's broken on iOS:
-              // https://github.com/facebook/react-native/issues/41988
-              textInput.current?.setSelection(0, searchText.length)
-              // We still rely on selectTextOnFocus for it to be instant on Android.
-            }
           }
         }}
         onChangeText={onChangeText}
