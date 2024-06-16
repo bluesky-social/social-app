@@ -155,6 +155,10 @@ export type LogEvents = {
     shareType: 'link' | 'qrcode'
     qrShareType?: 'save' | 'copy'
   }
+  'starterPack:followAll': {
+    starterPack: string
+    followCount: number
+  }
 
   'test:all:always': {}
   'test:all:sometimes': {}

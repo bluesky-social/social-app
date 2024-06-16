@@ -155,6 +155,10 @@ function Header({
         queryKey: RQKEY(starterPack.list.uri),
       })
 
+      logEvent('starterPack:followAll', {
+        starterPack: starterPack.uri,
+        followCount: dids.length,
+      })
       Toast.show(_(msg`All accounts have been followed!`))
     } catch (e) {
       Toast.show(_(msg`An error occurred while trying to follow all`))
