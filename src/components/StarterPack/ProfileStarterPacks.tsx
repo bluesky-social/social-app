@@ -139,13 +139,43 @@ export const ProfileStarterPacks = React.forwardRef<
         desktopFixedHeight
         onEndReached={onEndReached}
         onRefresh={onRefresh}
-        ListEmptyComponent={EmptyComponent}
+        ListEmptyComponent={Empty}
+        ListFooterComponent={items?.length !== 0 ? CreateAnother : undefined}
       />
     </View>
   )
 })
 
-function EmptyComponent() {
+function CreateAnother() {
+  const t = useTheme()
+  const {_} = useLingui()
+  const navigation = useNavigation<NavigationProp>()
+
+  return (
+    <View
+      style={[
+        a.px_md,
+        a.py_lg,
+        a.justify_between,
+        a.gap_lg,
+        a.border_t,
+        t.atoms.border_contrast_medium,
+      ]}>
+      <Button
+        label={_(msg`Create a starter pack`)}
+        variant="ghost"
+        color="primary"
+        size="small"
+        onPress={() => navigation.navigate('StarterPackWizard', {})}>
+        <ButtonText>
+          <Trans>Create another</Trans>
+        </ButtonText>
+      </Button>
+    </View>
+  )
+}
+
+function Empty() {
   const {_} = useLingui()
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
