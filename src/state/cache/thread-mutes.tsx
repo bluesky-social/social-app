@@ -66,14 +66,14 @@ function useMigrateMutes(setThreadMute: SetStateContext) {
 
           if (!root) break
 
+          persisted.write('mutedThreads', threads)
+
           setThreadMute(root, true)
 
           await agent.api.app.bsky.graph
             .muteThread({root})
             // not a big deal if this fails, since the post might have been deleted
             .catch(console.error)
-
-          persisted.write('mutedThreads', threads)
         }
       }
 
