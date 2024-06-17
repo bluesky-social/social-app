@@ -1,5 +1,5 @@
-import {Config} from './config'
-import Database from './db'
+import {Config} from './config.js'
+import Database from './db/index.js'
 
 export type AppContextOptions = {
   cfg: Config

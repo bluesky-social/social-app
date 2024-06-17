@@ -1,4 +1,4 @@
-import {envInt, envStr} from '@atproto/common'
+import {envInt, envList, envStr} from '@atproto/common'
 
 export type Config = {
   service: ServiceConfig
@@ -8,6 +8,8 @@ export type Config = {
 export type ServiceConfig = {
   port: number
   version?: string
+  hostnames: string[]
+  appHostname: string
 }
 
 export type DbConfig = {
@@ -26,6 +28,8 @@ export type DbPoolConfig = {
 export type Environment = {
   port?: number
   version?: string
+  hostnames: string[]
+  appHostname?: string
   dbPostgresUrl?: string
   dbPostgresMigrationUrl?: string
   dbPostgresSchema?: string
@@ -38,6 +42,8 @@ export const readEnv = (): Environment => {
   return {
     port: envInt('LINK_PORT'),
     version: envStr('LINK_VERSION'),
+    hostnames: envList('LINK_HOSTNAMES'),
+    appHostname: envStr('LINK_APP_HOSTNAME'),
     dbPostgresUrl: envStr('LINK_DB_POSTGRES_URL'),
     dbPostgresMigrationUrl: envStr('LINK_DB_POSTGRES_MIGRATION_URL'),
     dbPostgresSchema: envStr('LINK_DB_POSTGRES_SCHEMA'),
@@ -53,6 +59,8 @@ export const envToCfg = (env: Environment): Config => {
   const serviceCfg: ServiceConfig = {
     port: env.port ?? 3000,
     version: env.version,
+    hostnames: env.hostnames,
+    appHostname: env.appHostname || 'bsky.app',
   }
   if (!env.dbPostgresUrl) {
     throw new Error('Must configure postgres url (LINK_DB_POSTGRES_URL)')

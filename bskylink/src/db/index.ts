@@ -10,12 +10,12 @@ import {
   RootOperationNode,
   UnknownRow,
 } from 'kysely'
-import {Pool as PgPool, types as pgTypes} from 'pg'
+import {default as Pg} from 'pg'
 
-import {dbLogger as log} from '../logger'
-import {default as migrations} from './migrations'
-import {DbMigrationProvider} from './migrations/provider'
-import {DbSchema} from './schema'
+import {dbLogger as log} from '../logger.js'
+import {default as migrations} from './migrations/index.js'
+import {DbMigrationProvider} from './migrations/provider.js'
+import {DbSchema} from './schema.js'
 
 export class Database {
   migrator: Migrator
@@ -33,7 +33,7 @@ export class Database {
     const {schema, url, txLockNonce} = opts
     const pool =
       opts.pool ??
-      new PgPool({
+      new Pg.Pool({
         connectionString: url,
         max: opts.poolSize,
         maxUses: opts.poolMaxUses,
@@ -41,7 +41,7 @@ export class Database {
       })
 
     // Select count(*) and other pg bigints as js integer
-    pgTypes.setTypeParser(pgTypes.builtins.INT8, n => parseInt(n, 10))
+    Pg.types.setTypeParser(Pg.types.builtins.INT8, n => parseInt(n, 10))
 
     // Setup schema usage, primarily for test parallelism (each test suite runs in its own pg schema)
     if (schema && !/^[a-z_]+$/i.test(schema)) {
@@ -134,7 +134,7 @@ export class Database {
 export default Database
 
 export type PgConfig = {
-  pool: PgPool
+  pool: Pg.Pool
   url: string
   schema?: string
   txLockNonce?: string
@@ -142,7 +142,7 @@ export type PgConfig = {
 
 type PgOptions = {
   url: string
-  pool?: PgPool
+  pool?: Pg.Pool
   schema?: string
   poolSize?: number
   poolMaxUses?: number

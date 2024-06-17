@@ -1,4 +1,4 @@
-import * as init from './001-init'
+import * as init from './001-init.js'
 
 export default {
   '001': init,

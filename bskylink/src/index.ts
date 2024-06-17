@@ -5,12 +5,13 @@ import cors from 'cors'
 import express from 'express'
 import {createHttpTerminator, HttpTerminator} from 'http-terminator'
 
-import {Config} from './config'
-import {AppContext} from './context'
+import {Config} from './config.js'
+import {AppContext} from './context.js'
+import {default as routes} from './routes/index.js'
 
-export * from './config'
-export * from './db'
-export * from './logger'
+export * from './config.js'
+export * from './db/index.js'
+export * from './logger.js'
 
 export class LinkService {
   public server?: http.Server
@@ -19,12 +20,11 @@ export class LinkService {
   constructor(public app: express.Application, public ctx: AppContext) {}
 
   static async create(cfg: Config): Promise<LinkService> {
-    const app = express()
+    let app = express()
     app.use(cors())
 
     const ctx = await AppContext.fromConfig(cfg)
-
-    // TODO wire up server here
+    app = routes(ctx, app) // TODO: add fallthrough/error handler
 
     return new LinkService(app, ctx)
   }
