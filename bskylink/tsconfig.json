@@ -3,7 +3,8 @@
       "module": "NodeNext",
       "esModuleInterop": true,
       "moduleResolution": "NodeNext",
-      "outDir": "dist"
+      "outDir": "dist",
+      "lib": ["ES2021.String"]
     },
     "ts-node": {"esm": true}
   }
