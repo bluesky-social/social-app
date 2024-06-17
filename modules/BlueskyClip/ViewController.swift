@@ -12,9 +12,15 @@ class ViewController: UIViewController {
     webView.contentMode = .scaleToFill
 
     self.view.addSubview(webView)
-
-    if let url = URL(string: "http://localhost:19006/start/haileyok.com/3kuw7byr7gd2x?clip=true") {
-      webView.load(URLRequest(url: url))
+    
+    self.webView = webView
+  }
+  
+  func handleURL(url: URL) {
+    let urlString = "\(url.absoluteString)?clip=true"
+    
+    if let url = URL(string: urlString) {
+      self.webView?.load(URLRequest(url: url))
     }
   }
 }

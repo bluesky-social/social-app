@@ -22,8 +22,6 @@ const DARK_SPLASH_CONFIG_ANDROID = {
   resizeMode: 'cover',
 }
 
-const ASSOCIATED_DOMAINS = ['applinks:bsky.app', 'applinks:staging.bsky.app']
-
 module.exports = function (config) {
   /**
    * App version number. Should be incremented as part of a release cycle.
@@ -40,6 +38,13 @@ module.exports = function (config) {
   const IS_DEV = process.env.EXPO_PUBLIC_ENV === 'development'
   const IS_TESTFLIGHT = process.env.EXPO_PUBLIC_ENV === 'testflight'
   const IS_PRODUCTION = process.env.EXPO_PUBLIC_ENV === 'production'
+
+  const ASSOCIATED_DOMAINS = [
+    'applinks:bsky.app',
+    'applinks:staging.bsky.app',
+    // When testing local services, enter an ngrok (et al) domain here. It must use a standard HTTP/HTTPS port.
+    ...(IS_DEV ? ['applinks:dc19-24-237-65-73.ngrok-free.app'] : []),
+  ]
 
   const UPDATES_CHANNEL = IS_TESTFLIGHT
     ? 'testflight'
