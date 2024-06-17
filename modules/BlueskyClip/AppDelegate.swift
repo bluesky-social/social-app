@@ -10,7 +10,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     self.window = UIWindow()
     
-    self.controller = ViewController()
+    self.controller = ViewController(window: self.window!)
 
     self.window?.rootViewController = self.controller
     self.window?.makeKeyAndVisible()

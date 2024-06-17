@@ -1,5 +1,6 @@
 import React from 'react'
-import {ScrollView, View} from 'react-native'
+import {Pressable, ScrollView, View} from 'react-native'
+import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -23,6 +24,8 @@ import {ListMaybePlaceholder} from '#/components/Lists'
 import {Default as ProfileCardInner} from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
+
 function parseStarterPackHttpUri(uri: string): {name?: string; rkey?: string} {
   const parsed = new URL(uri)
   const [_, _path, name, rkey] = parsed.pathname.split('/')
@@ -30,6 +33,16 @@ function parseStarterPackHttpUri(uri: string): {name?: string; rkey?: string} {
     name,
     rkey,
   }
+}
+
+interface AppClipMessage {
+  action: 'present' | 'store'
+  keyToStoreAs?: string
+  jsonToStore?: string
+}
+
+function postAppClipMessage(message: AppClipMessage) {
+  window.webkit.messageHandlers.onMessage.postMessage(JSON.stringify(message))
 }
 
 export function LandingScreen({
@@ -92,7 +105,25 @@ function LandingScreenInner({
   const usedStarterPack = useUsedStarterPack()
   const {isTabletOrDesktop} = useWebMediaQueries()
 
+  const [appClipOverlayVisible, setAppClipOverlayVisible] =
+    React.useState(false)
+
   const listItemsCount = starterPack.list?.listItemCount ?? 0
+
+  const onJoinPress = () => {
+    if (usedStarterPack?.isClip) {
+      setAppClipOverlayVisible(true)
+      postAppClipMessage({
+        action: 'present',
+      })
+    } else {
+      setUsedStarterPack({
+        uri: starterPack.uri,
+        cid: starterPack.cid,
+      })
+      setScreenState(LoggedOutScreenState.S_CreateAccount)
+    }
+  }
 
   if (!AppBskyGraphStarterpack.isRecord(record)) {
     return null
@@ -142,13 +173,7 @@ function LandingScreenInner({
           ) : null}
           <Button
             label={_(msg`Join the conversation now!`)}
-            onPress={() => {
-              setUsedStarterPack({
-                uri: starterPack.uri,
-                cid: starterPack.cid,
-              })
-              setScreenState(LoggedOutScreenState.S_CreateAccount)
-            }}
+            onPress={onJoinPress}
             variant="solid"
             color="primary"
             size="large">
@@ -246,6 +271,53 @@ function LandingScreenInner({
           </View>
         </View>
       </ScrollView>
+      <AppClipOverlay
+        visible={appClipOverlayVisible}
+        setIsVisible={setAppClipOverlayVisible}
+      />
     </CenteredView>
+  )
+}
+
+function AppClipOverlay({
+  visible,
+  setIsVisible,
+}: {
+  visible: boolean
+  setIsVisible: (visible: boolean) => void
+}) {
+  if (!visible) return
+
+  return (
+    <AnimatedPressable
+      accessibilityRole="button"
+      style={[
+        a.absolute,
+        {
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.95)',
+          zIndex: 1,
+        },
+      ]}
+      entering={FadeIn}
+      exiting={FadeOut}
+      onPress={() => setIsVisible(false)}>
+      <View style={[a.flex_1, a.px_lg, {marginTop: 250}]}>
+        {/* Webkit needs this to have a zindex of 2? */}
+        <View style={[a.gap_md, {zIndex: 2}]}>
+          <Text
+            style={[a.font_bold, a.text_4xl, {lineHeight: 40, color: 'white'}]}>
+            Download Bluesky to get started!
+          </Text>
+          <Text style={[a.text_lg, {color: 'white'}]}>
+            We'll remember the starter pack you chose and use it when you create
+            an account in the app.
+          </Text>
+        </View>
+      </View>
+    </AnimatedPressable>
   )
 }
