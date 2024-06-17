@@ -1,8 +1,7 @@
 import React, {useEffect} from 'react'
-import {BskyAgent} from '@atproto/api'
 
 import * as persisted from '#/state/persisted'
-import {useAgent} from '../session'
+import {useAgent, useSession} from '../session'
 
 type StateContext = Map<string, boolean>
 type SetStateContext = (uri: string, value: boolean) => void
@@ -14,13 +13,6 @@ const setStateContext = React.createContext<SetStateContext>(
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [state, setState] = React.useState<StateContext>(() => new Map())
-  const agent = useAgent()
-
-  useEffect(() => {
-    if (agent.hasSession) {
-      migrateThreadMutes(agent)
-    }
-  }, [agent])
 
   const setThreadMute = React.useCallback(
     (uri: string, value: boolean) => {
@@ -32,6 +24,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     },
     [setState],
   )
+
+  useMigrateMutes(setThreadMute)
+
   return (
     <stateContext.Provider value={state}>
       <setStateContext.Provider value={setThreadMute}>
@@ -54,17 +49,39 @@ export function useSetThreadMute() {
   return React.useContext(setStateContext)
 }
 
-function migrateThreadMutes(agent: BskyAgent) {
-  const threadMutes = persisted.get('mutedThreads')
-  if (threadMutes.length > 0) {
-    console.log('migrating', threadMutes.length, 'thread mutes')
-    for (const thread of threadMutes) {
-      // failure is acceptable here, as the thread may have been deleted
-      agent.api.app.bsky.graph
-        .muteThread({root: thread})
-        .catch(err => console.error('failed to migrate thread mute', err))
-    }
+function useMigrateMutes(setThreadMute: SetStateContext) {
+  const agent = useAgent()
+  const {currentAccount} = useSession()
+  useEffect(() => {
+    if (currentAccount) {
+      if (persisted.get('mutedThreads').length === 0) return
 
-    persisted.write('mutedThreads', [])
-  }
+      let cancelled = false
+
+      const migrate = async () => {
+        while (!cancelled) {
+          const threads = persisted.get('mutedThreads')
+
+          const root = threads.shift()
+
+          if (!root) break
+
+          setThreadMute(root, true)
+
+          await agent.api.app.bsky.graph
+            .muteThread({root})
+            // not a big deal if this fails, since the post might have been deleted
+            .catch(console.error)
+
+          persisted.write('mutedThreads', threads)
+        }
+      }
+
+      migrate()
+
+      return () => {
+        cancelled = true
+      }
+    }
+  }, [agent, currentAccount, setThreadMute])
 }
