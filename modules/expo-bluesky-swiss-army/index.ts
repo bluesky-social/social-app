@@ -1,2 +1,2 @@
-import {ExpoBlueskySwissArmyModule} from './src/ExpoBlueskySwissArmy'
-export {ExpoBlueskySwissArmyModule as SwissArmyKnife}
+import {ExpoBlueskySwissArmyModule as SwissArmyKnife} from './src/ExpoBlueskySwissArmyModule'
+export default SwissArmyKnife

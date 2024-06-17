@@ -1,4 +1,6 @@
-export const ExpoBlueskySwissArmyModule = {
+import {ExpoBlueskySwissArmyModuleType} from './ExpoBlueskySwissArmy.types'
+
+export const ExpoBlueskySwissArmyModule: ExpoBlueskySwissArmyModuleType = {
   getStringValueAsync(_: string, _?: boolean): Promise<string> {
     throw new Error('getStringValueAsync is not available on Android')
   },

@@ -1,4 +1,4 @@
-type ExpoBlueskySwissArmyModuleType = {
+export type ExpoBlueskySwissArmyModuleType = {
   getStringValueAsync(
     key: string,
     useAppGroup?: boolean,
@@ -9,5 +9,3 @@ type ExpoBlueskySwissArmyModuleType = {
     useAppGroup?: boolean,
   ): Promise<void>
 }
-
-export const ExpoBlueskySwissArmyModule = {} as ExpoBlueskySwissArmyModuleType

@@ -4,7 +4,7 @@ import {makeStarterPackLink} from 'lib/routes/links'
 import {isAndroid} from 'platform/detection'
 import {useSetCurrentStarterPack} from 'state/preferences/starter-pack'
 import {useUsedStarterPacks} from 'state/preferences/used-starter-packs'
-import {SwissArmyKnife} from '../../../modules/expo-bluesky-swiss-army'
+import SwissArmyKnife from '../../../modules/expo-bluesky-swiss-army'
 import GooglePlayReferrer from '../../../modules/expo-google-play-referrer'
 
 export function useStarterPackEntry() {
