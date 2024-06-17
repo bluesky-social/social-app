@@ -150,6 +150,8 @@ function WizardInner({
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
   const t = useTheme()
+  const setMinimalShellMode = useSetMinimalShellMode()
+  const {setEnabled} = useKeyboardController()
   const queryClient = useQueryClient()
   const [state, dispatch] = useWizardState()
   const agent = useAgent()
@@ -158,18 +160,6 @@ function WizardInner({
     did: currentAccount?.did,
     staleTime: 0,
   })
-  const {setEnabled} = useKeyboardController()
-
-  useFocusEffect(
-    React.useCallback(() => {
-      setEnabled(true)
-      return () => {
-        setEnabled(false)
-      }
-    }, [setEnabled]),
-  )
-
-  const setMinimalShellMode = useSetMinimalShellMode()
 
   React.useEffect(() => {
     navigation.setOptions({
@@ -179,9 +169,14 @@ function WizardInner({
 
   useFocusEffect(
     React.useCallback(() => {
+      setEnabled(true)
       setMinimalShellMode(true)
-      return () => setMinimalShellMode(false)
-    }, [setMinimalShellMode]),
+
+      return () => {
+        setMinimalShellMode(false)
+        setEnabled(false)
+      }
+    }, [setMinimalShellMode, setEnabled]),
   )
 
   const defaultName = _(
