@@ -2063,7 +2063,7 @@ msgstr "跟隨者"
 
 #: src/Navigation.tsx:177
 msgid "Followers of @{0} that you know"
-msgstr "您所認識的 @{0} 之跟隨者"
+msgstr "您所認識的這些人也跟隨了 @{0}"
 
 #: src/screens/Profile/KnownFollowers.tsx:108
 #: src/screens/Profile/KnownFollowers.tsx:118
