@@ -120,9 +120,10 @@ function LoadMore({
       })
       .filter(Boolean) as LoadMoreItems[]
   }, [item.items, moderationOpts])
-  const type = items.at(0)?.type
 
   if (items.length === 0) return null
+
+  const type = items[0].type
 
   return (
     <View style={[]}>
