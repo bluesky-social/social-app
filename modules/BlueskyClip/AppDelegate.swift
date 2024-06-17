@@ -6,19 +6,19 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
   var window: UIWindow?
   var controller: ViewController?
-  
+
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     self.window = UIWindow()
-    
+
     self.controller = ViewController(window: self.window!)
 
     self.window?.rootViewController = self.controller
     self.window?.makeKeyAndVisible()
-    
+
     return true
   }
-  
-  func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+
+  func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
     self.controller?.handleURL(url: url)
     return true
   }
