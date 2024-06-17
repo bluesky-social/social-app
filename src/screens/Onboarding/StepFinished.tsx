@@ -83,14 +83,26 @@ export function StepFinished() {
         (async () => {
           // Interests need to get saved first, then we can write the feeds to prefs
           await agent.setInterestsPref({tags: selectedInterests})
-          if (starterPack?.feeds?.length) {
-            await agent.addSavedFeeds(
-              starterPack.feeds.map(f => ({
-                type: 'feed',
-                value: f.uri,
-                pinned: true,
-              })),
-            )
+          if (starterPack) {
+            if (starterPack.feeds?.length) {
+              await agent.addSavedFeeds(
+                starterPack.feeds.map(f => ({
+                  type: 'feed',
+                  value: f.uri,
+                  pinned: true,
+                })),
+              )
+              setCurrentStarterPack({
+                uri: '',
+                initialFeed: starterPack.feeds?.[0].uri,
+              })
+            } else {
+              setCurrentStarterPack({
+                uri: '',
+                initialFeed: 'following',
+              })
+            }
+            addUsedStarterPack(makeStarterPackLink(starterPack))
           }
         })(),
         (async () => {
@@ -135,17 +147,12 @@ export function StepFinished() {
         })(),
         requestNotificationsPermission('AfterOnboarding'),
       ])
-
-      if (currentStarterPack && starterPack) {
-        setCurrentStarterPack({
-          ...currentStarterPack,
-          initialFeed: starterPack?.feeds?.[0].uri ?? 'following',
-        })
-        addUsedStarterPack(makeStarterPackLink(starterPack))
-      }
     } catch (e: any) {
       logger.info(`onboarding: bulk save failed`)
       logger.error(e)
+      // If there was an error encountered, we need to just clear the starter pack so we don't break things for subsequent
+      // app restarts
+      setCurrentStarterPack(undefined)
       // don't alert the user, just let them into their account
     }
 
@@ -177,8 +184,8 @@ export function StepFinished() {
     currentStarterPack,
     state,
     requestNotificationsPermission,
-    setCurrentStarterPack,
     addUsedStarterPack,
+    setCurrentStarterPack,
   ])
 
   React.useEffect(() => {

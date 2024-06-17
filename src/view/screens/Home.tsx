@@ -105,13 +105,10 @@ function HomeScreenReady({
     let initialIndex = selectedIndex
     if (currentStarterPack?.initialFeed) {
       if (currentStarterPack.initialFeed === 'following') {
-        initialIndex = allFeeds.findIndex(f => f === 'following')
-      } else {
-        initialIndex = allFeeds.findIndex(
-          f => f === `feedgen|${currentStarterPack.initialFeed}`,
-        )
-      }
-      if (initialIndex === -1) {
+        initialIndex = 1
+      } else if (allFeeds.length >= 3) {
+        initialIndex = 2
+      } else if (initialIndex === -1) {
         initialIndex = 0
       }
       setCurrentStarterPack(undefined)
