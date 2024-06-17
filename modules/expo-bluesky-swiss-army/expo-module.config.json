@@ -1,0 +1,9 @@
+{
+  "platforms": ["ios", "tvos", "android", "web"],
+  "ios": {
+    "modules": ["ExpoBlueskySwissArmyModule"]
+  },
+  "android": {
+    "modules": ["expo.modules.blueskyswissarmy.ExpoBlueskySwissArmyModule"]
+  }
+}
