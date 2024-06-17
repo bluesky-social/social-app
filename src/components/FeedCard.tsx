@@ -97,14 +97,12 @@ export function TitleAndByline({
 
   return (
     <View style={[a.flex_1]}>
-      <Text
-        style={[a.text_md, a.font_bold, a.flex_1, a.leading_snug]}
-        numberOfLines={1}>
+      <Text style={[a.text_md, a.font_bold, a.leading_snug]} numberOfLines={1}>
         {title}
       </Text>
       {creator && (
         <Text
-          style={[a.flex_1, a.leading_snug, t.atoms.text_contrast_medium]}
+          style={[a.leading_snug, t.atoms.text_contrast_medium]}
           numberOfLines={1}>
           <Trans>Feed by {sanitizeHandle(creator.handle, '@')}</Trans>
         </Text>
