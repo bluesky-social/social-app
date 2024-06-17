@@ -1,19 +1,34 @@
+export function ago(date: number | string | Date): string {
+  return dateDiff(date, Date.now())
+}
+
 const NOW = 5
 const MINUTE = 60
 const HOUR = MINUTE * 60
 const DAY = HOUR * 24
 const MONTH_30 = DAY * 30
-const MONTH = DAY * 30.41675 // This results in 365.001 days in a year, which is close enough for nearly all cases
-export function ago(date: number | string | Date): string {
-  let ts: number
-  if (typeof date === 'string') {
-    ts = Number(new Date(date))
-  } else if (date instanceof Date) {
-    ts = Number(date)
+/** Returns the difference between date1 and date2 in full seconds, minutes, hours etc. All month are considered exactly 30 days. Assuming that date1 <= date2. Differences >= 360 days are returned as the "M/D/YYYY" string. */
+export function dateDiff(
+  date1: number | string | Date,
+  date2: number | string | Date,
+): string {
+  let ts1: number
+  if (typeof date1 === 'string') {
+    ts1 = Number(new Date(date1))
+  } else if (date1 instanceof Date) {
+    ts1 = Number(date1)
   } else {
-    ts = date
+    ts1 = date1
   }
-  const diffSeconds = Math.floor((Date.now() - ts) / 1e3)
+  let ts2: number
+  if (typeof date2 === 'string') {
+    ts2 = Number(new Date(date2))
+  } else if (date2 instanceof Date) {
+    ts2 = Number(date2)
+  } else {
+    ts2 = date2
+  }
+  const diffSeconds = Math.floor((ts2 - ts1) / 1e3)
   if (diffSeconds < NOW) {
     return `now`
   } else if (diffSeconds < MINUTE) {
@@ -23,19 +38,13 @@ export function ago(date: number | string | Date): string {
   } else if (diffSeconds < DAY) {
     return `${Math.floor(diffSeconds / HOUR)}h`
   } else if (diffSeconds < MONTH_30) {
-    return `${Math.round(diffSeconds / DAY)}d`
+    return `${Math.floor(diffSeconds / DAY)}d`
   } else {
-    let months = diffSeconds / MONTH
-    if (months % 1 >= 0.9) {
-      months = Math.ceil(months)
+    const diffMonths30 = Math.floor(diffSeconds / MONTH_30)
+    if (diffMonths30 < 12) {
+      return `${diffMonths30}mo`
     } else {
-      months = Math.floor(months)
-    }
-
-    if (months < 12) {
-      return `${months}mo`
-    } else {
-      return new Date(ts).toLocaleDateString()
+      return new Date(ts1).toLocaleDateString()
     }
   }
 }

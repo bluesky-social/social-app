@@ -6,7 +6,7 @@ import {createFullHandle, makeValidHandle} from '../../src/lib/strings/handles'
 import {enforceLen} from '../../src/lib/strings/helpers'
 import {detectLinkables} from '../../src/lib/strings/rich-text-detection'
 import {shortenLinks} from '../../src/lib/strings/rich-text-manip'
-import {ago} from '../../src/lib/strings/time'
+import {dateDiff} from '../../src/lib/strings/time'
 import {
   makeRecordUri,
   toNiceDomain,
@@ -142,77 +142,86 @@ describe('makeRecordUri', () => {
   })
 })
 
-// FIXME: Reenable after fixing non-deterministic test.
-describe.skip('ago', () => {
-  const oneYearDate = new Date(
-    new Date().setMonth(new Date().getMonth() - 11),
-  ).setDate(new Date().getDate() - 28)
-
-  const inputs = [
-    1671461038,
-    '04 Dec 1995 00:12:00 GMT',
-    new Date(),
-    new Date().setSeconds(new Date().getSeconds() - 10),
-    new Date().setMinutes(new Date().getMinutes() - 10),
-    new Date().setHours(new Date().getHours() - 1),
-    new Date().setDate(new Date().getDate() - 1),
-    new Date().setDate(new Date().getDate() - 20),
-    new Date().setDate(new Date().getDate() - 25),
-    new Date().setDate(new Date().getDate() - 28),
-    new Date().setDate(new Date().getDate() - 29),
-    new Date().setDate(new Date().getDate() - 30),
-    new Date().setMonth(new Date().getMonth() - 1),
-    new Date(new Date().setMonth(new Date().getMonth() - 1)).setDate(
-      new Date().getDate() - 20,
-    ),
-    new Date(new Date().setMonth(new Date().getMonth() - 1)).setDate(
-      new Date().getDate() - 25,
-    ),
-    new Date(new Date().setMonth(new Date().getMonth() - 1)).setDate(
-      new Date().getDate() - 28,
-    ),
-    new Date(new Date().setMonth(new Date().getMonth() - 1)).setDate(
-      new Date().getDate() - 29,
-    ),
-    new Date().setMonth(new Date().getMonth() - 11),
-    new Date(new Date().setMonth(new Date().getMonth() - 11)).setDate(
-      new Date().getDate() - 20,
-    ),
-    new Date(new Date().setMonth(new Date().getMonth() - 11)).setDate(
-      new Date().getDate() - 25,
-    ),
-    oneYearDate,
+describe('dateDiff', () => {
+  type Case = [number | string | Date, number | string | Date, string]
+  const cases: Case[] = [
+    [
+      1671461038,
+      new Date('2034-05-31T22:00Z'),
+      new Date(1671461038).toLocaleDateString(),
+    ],
+    [
+      '04 Dec 1995 00:12:00 GMT',
+      new Date('2024-05-31T22:00Z'),
+      new Date('04 Dec 1995 00:12:00 GMT').toLocaleDateString(),
+    ],
+    [new Date('2010-01-01Z'), new Date('2005-01-01Z'), 'now'],
+    [new Date(), new Date(), 'now'],
+    [
+      new Date('2001-01-01T00:00:00Z'),
+      new Date('2001-01-01T00:00:04.999Z'),
+      'now',
+    ],
+    [new Date('2001-01-01T12:00:00Z'), new Date('2001-01-01T12:00:05Z'), '5s'],
+    [
+      new Date('2001-01-01T21:59:55Z'),
+      new Date('2001-01-01T22:00:05.123Z'),
+      '10s',
+    ],
+    [new Date('2001-01-01Z'), new Date('2001-01-01T00:00:59.999Z'), '59s'],
+    [new Date('2001-01-01Z'), new Date('2001-01-01T00:01:00.000Z'), '1m'],
+    [new Date('2001-01-01T23:59:50Z'), new Date('2001-01-02T00:09:55Z'), '10m'],
+    [
+      new Date('2001-01-01T23:00:00Z'),
+      new Date('2001-01-01T23:59:59.999Z'),
+      '59m',
+    ],
+    [new Date('2001-01-01T23:00:00Z'), new Date('2001-01-02T00:00:00Z'), '1h'],
+    [new Date('2001-01-01Z'), new Date('2001-01-01T23:59:59.999Z'), '23h'],
+    [new Date('2001-01-01Z'), new Date('2001-01-02Z'), '1d'],
+    [new Date('2001-01-01T14:00Z'), new Date('2001-01-02T14:00Z'), '1d'],
+    [new Date('2001-02-25Z'), new Date('2001-03-03Z'), '6d'],
+    [new Date('2004-02-25Z'), new Date('2004-03-03Z'), '7d'],
+    [new Date('2001-01-01Z'), new Date('2001-01-30T00:00Z'), '29d'],
+    [new Date('2004-01-01Z'), new Date('2004-01-30T23:59:59.999Z'), '29d'],
+    [new Date('2001-01-01Z'), new Date('2001-01-31T00:00Z'), '1mo'],
+    [new Date('2001-02-01Z'), new Date('2001-03-01Z'), '28d'],
+    [new Date('2001-01-01Z'), new Date('2001-01-31Z'), '1mo'],
+    [new Date('2001-02-01Z'), new Date('2001-03-01Z'), '28d'],
+    [new Date('2004-02-01Z'), new Date('2004-03-01Z'), '29d'],
+    [new Date('2001-03-01Z'), new Date('2001-04-01Z'), '1mo'],
+    [new Date('2001-01-01Z'), new Date('2001-03-01Z'), '1mo'], // 31 + 28 = 59 days -> 1 months
+    [new Date('2001-01-01Z'), new Date('2001-04-01Z'), '3mo'], // 31 + 28 + 31 = 90 days -> 3 months
+    [new Date('2001-02-01Z'), new Date('2001-05-01Z'), '2mo'], // 28 + 31 + 30 = 89 days -> 2 months
+    [new Date('2001-01-01Z'), new Date('2001-05-01Z'), '4mo'], // 31 + 28 + 31 + 30 = 120 days -> 4 months
+    [new Date('2001-02-01Z'), new Date('2001-06-01Z'), '4mo'], // 28 + 31 + 30 + 31 = 120 days -> 4 months
+    [new Date('2001-01-01Z'), new Date('2001-12-01Z'), '11mo'],
+    [new Date('2001-01-01Z'), new Date('2001-12-26Z'), '11mo'],
+    [new Date('2001-01-01Z'), new Date('2001-12-26T23:59:59.999Z'), '11mo'],
+    [
+      new Date('2001-01-01Z'),
+      new Date('2001-12-27Z'),
+      new Date('2001-01-01Z').toLocaleDateString(),
+    ],
+    [
+      new Date('2001-01-01Z'),
+      new Date('2002-01-01Z'),
+      new Date('2001-01-01Z').toLocaleDateString(),
+    ],
+    [
+      new Date('2050-12-31Z'),
+      new Date('2100-01-01Z'),
+      new Date('2050-12-31Z').toLocaleDateString(),
+    ],
   ]
-  const outputs = [
-    new Date(1671461038).toLocaleDateString(),
-    new Date('04 Dec 1995 00:12:00 GMT').toLocaleDateString(),
-    'now',
-    '10s',
-    '10m',
-    '1h',
-    '1d',
-    '20d',
-    '25d',
-    '28d',
-    '29d',
-    '1mo',
-    '1mo',
-    '1mo',
-    '1mo',
-    '2mo',
-    '2mo',
-    '11mo',
-    '11mo',
-    '11mo',
-    new Date(oneYearDate).toLocaleDateString(),
-  ]
 
-  it('correctly calculates how much time passed, in a string', () => {
-    for (let i = 0; i < inputs.length; i++) {
-      const result = ago(inputs[i])
-      expect(result).toEqual(outputs[i])
-    }
-  })
+  it.each(cases)(
+    'given the dates %p and %p returns %p',
+    (date1, date2, expected) => {
+      const result = dateDiff(date1, date2)
+      expect(result).toEqual(expected)
+    },
+  )
 })
 
 describe('makeValidHandle', () => {
