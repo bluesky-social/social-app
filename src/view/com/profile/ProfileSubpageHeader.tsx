@@ -21,7 +21,6 @@ import {Text} from '../util/text/Text'
 import {UserAvatar, UserAvatarType} from '../util/UserAvatar'
 import {CenteredView} from '../util/Views'
 import hairlineWidth = StyleSheet.hairlineWidth
-import {AppBskyGraphDefs} from '@atproto/api'
 
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {StarterPackIcon} from '#/components/icons/StarterPackIcon'
@@ -47,7 +46,6 @@ export function ProfileSubpageHeader({
         handle: string
       }
     | undefined
-  starterPack?: AppBskyGraphDefs.StarterPackView
   avatarType: UserAvatarType | 'starter-pack'
 }>) {
   const setDrawerOpen = useSetDrawerOpen()
