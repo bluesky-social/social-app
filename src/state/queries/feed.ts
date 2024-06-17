@@ -234,26 +234,28 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
         data: InfiniteData<AppBskyUnspeccedGetPopularFeedGenerators.OutputSchema>,
       ) => {
         const {savedFeeds, hasSession: hasSessionInner} = selectArgs
-        data?.pages.map(page => {
-          page.feeds = page.feeds.filter(feed => {
-            if (
-              !hasSessionInner &&
-              KNOWN_AUTHED_ONLY_FEEDS.includes(feed.uri)
-            ) {
-              return false
-            }
-            const alreadySaved = Boolean(
-              savedFeeds?.find(f => {
-                return f.value === feed.uri
+        return {
+          ...data,
+          pages: data.pages.map(page => {
+            return {
+              ...page,
+              feeds: page.feeds.filter(feed => {
+                if (
+                  !hasSessionInner &&
+                  KNOWN_AUTHED_ONLY_FEEDS.includes(feed.uri)
+                ) {
+                  return false
+                }
+                const alreadySaved = Boolean(
+                  savedFeeds?.find(f => {
+                    return f.value === feed.uri
+                  }),
+                )
+                return !alreadySaved
               }),
-            )
-            return !alreadySaved
-          })
-
-          return page
-        })
-
-        return data
+            }
+          }),
+        }
       },
       [selectArgs /* Don't change. Everything needs to go into selectArgs. */],
     ),
