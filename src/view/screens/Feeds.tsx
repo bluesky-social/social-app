@@ -359,6 +359,7 @@ export function FeedsScreen(_props: Props) {
   ])
 
   const renderHeaderBtn = React.useCallback(() => {
+    if (!hasSession) return <View style={{width: 30}} />
     return (
       <View style={styles.headerBtnGroup}>
         <TextLink
@@ -372,7 +373,7 @@ export function FeedsScreen(_props: Props) {
         />
       </View>
     )
-  }, [pal, _])
+  }, [hasSession, _, pal.link])
 
   const searchBarIndex = items.findIndex(
     item => item.type === 'popularFeedsHeader',
