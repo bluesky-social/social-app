@@ -9,6 +9,7 @@ import {Provider as InAppBrowserProvider} from './in-app-browser'
 import {Provider as KawaiiProvider} from './kawaii'
 import {Provider as LanguagesProvider} from './languages'
 import {Provider as StarterPackProvider} from './starter-pack'
+import {Provider as UsedStarterPacksProvider} from './used-starter-packs'
 
 export {
   useRequireAltTextEnabled,
@@ -34,7 +35,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
               <DisableHapticsProvider>
                 <AutoplayProvider>
                   <KawaiiProvider>
-                    <StarterPackProvider>{children}</StarterPackProvider>
+                    <StarterPackProvider>
+                      <UsedStarterPacksProvider>
+                        {children}
+                      </UsedStarterPacksProvider>
+                    </StarterPackProvider>
                   </KawaiiProvider>
                 </AutoplayProvider>
               </DisableHapticsProvider>

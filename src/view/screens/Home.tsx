@@ -44,7 +44,7 @@ export function HomeScreen(props: Props) {
   const {setShowLoggedOut, requestSwitchToAccount} = useLoggedOutViewControls()
 
   React.useEffect(() => {
-    if (!currentStarterPack?.initialFeed) {
+    if (currentStarterPack && !currentStarterPack?.initialFeed) {
       setShowLoggedOut(true)
       requestSwitchToAccount({requestedAccount: 'starterpack'})
     }
@@ -52,6 +52,7 @@ export function HomeScreen(props: Props) {
     setShowLoggedOut,
     requestSwitchToAccount,
     currentStarterPack?.initialFeed,
+    currentStarterPack,
   ])
 
   if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {

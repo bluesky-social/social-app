@@ -9,16 +9,16 @@ const stateContext = React.createContext<StateContext>([])
 const setContext = React.createContext<SetContext>((_: string) => {})
 
 export function Provider({children}: {children: React.ReactNode}) {
-  const [state, setState] = React.useState<StateContext>()
+  const [state, setState] = React.useState<StateContext>([])
 
-  const setStateWrapped = (v: StateContext) => {
-    persisted.write('usedStarterPacks', [...state, v])
-    setState(prev => [...prev, v])
+  const setStateWrapped = (v: string) => {
+    persisted.write('usedStarterPacks', [...(state ? state : []), v])
+    setState(prev => [...(prev ? prev : []), v])
   }
 
   React.useEffect(() => {
     return persisted.onUpdate(() => {
-      setState(persisted.get('usedStarterPack'))
+      setState(persisted.get('usedStarterPacks'))
     })
   }, [])
 
