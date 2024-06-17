@@ -2,7 +2,7 @@ import React from 'react'
 import {StyleProp, ViewStyle} from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient'
 
-import {useTheme} from '#/alf'
+import {gradients} from '#/alf/tokens'
 
 export function LinearGradientBackground({
   style,
@@ -11,12 +11,9 @@ export function LinearGradientBackground({
   style: StyleProp<ViewStyle>
   children: React.ReactNode
 }) {
-  const t = useTheme()
-
-  const gradient =
-    t.name === 'light'
-      ? [t.palette.primary_500, t.palette.primary_300]
-      : [t.palette.primary_600, t.palette.primary_400]
+  const gradient = gradients.sky.values.map(([_, color]) => {
+    return color
+  })
 
   return (
     <LinearGradient colors={gradient} style={style}>
