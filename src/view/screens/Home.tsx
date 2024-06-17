@@ -113,16 +113,15 @@ function HomeScreenReady({
   const lastPagerReportedIndexRef = React.useRef(selectedIndex)
   React.useLayoutEffect(() => {
     let initialIndex = selectedIndex
-    console.log(
-      'currentStarterPack.initialFeed',
-      currentStarterPack?.initialFeed,
-    )
     if (currentStarterPack?.initialFeed) {
       if (currentStarterPack.initialFeed === 'following') {
-        initialIndex = 1
-      } else if (allFeeds.length >= 3) {
-        initialIndex = 2
-      } else if (initialIndex === -1) {
+        initialIndex = allFeeds.findIndex(f => f === 'following')
+      } else {
+        initialIndex = allFeeds.findIndex(
+          f => f === `feedgen|${currentStarterPack.initialFeed}`,
+        )
+      }
+      if (initialIndex === -1) {
         initialIndex = 0
       }
       setCurrentStarterPack(undefined)
@@ -141,8 +140,8 @@ function HomeScreenReady({
   }, [
     selectedIndex,
     allFeeds,
-    currentStarterPack?.initialFeed,
     setCurrentStarterPack,
+    currentStarterPack?.initialFeed,
   ])
 
   const {hasSession} = useSession()
