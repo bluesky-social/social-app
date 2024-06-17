@@ -116,8 +116,6 @@ export function StepFinished() {
                 existing.avatar = res.data.blob
               }
 
-              existing.createdAt = new Date().toISOString()
-
               if (starterPack) {
                 existing.joinedViaStarterPack = {
                   uri: starterPack.uri,
