@@ -1543,13 +1543,13 @@ msgstr "例如：散布广告内容的用户。"
 msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr "每个邀请码仅可使用一次。你将不定期获得新的邀请码。"
 
-#: src/view/screens/Feeds.tsx:370
-#: src/view/screens/Feeds.tsx:441
+#: src/view/com/lists/ListMembers.tsx:149
+msgctxt "action"
 msgid "Edit"
 msgstr "编辑"
 
-#: src/view/com/lists/ListMembers.tsx:149
-msgctxt "action"
+#: src/view/screens/Feeds.tsx:370
+#: src/view/screens/Feeds.tsx:441
 msgid "Edit"
 msgstr "编辑"
 
