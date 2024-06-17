@@ -471,7 +471,7 @@ msgstr "您確定要從您的動態中移除 {0} 嗎？"
 
 #: src/components/FeedCard.tsx:190
 msgid "Are you sure you want to remove this from your feeds?"
-msgstr "您確定要從您的動態源中移除這個嗎？"
+msgstr "您確定要將此從您的動態源中移除嗎？"
 
 #: src/view/com/composer/Composer.tsx:632
 msgid "Are you sure you'd like to discard this draft?"
