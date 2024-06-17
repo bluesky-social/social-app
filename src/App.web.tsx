@@ -96,9 +96,11 @@ function InnerApp() {
                           <SelectedFeedProvider>
                             <UnreadNotifsProvider>
                               <BackgroundNotificationPreferencesProvider>
-                                <SafeAreaProvider>
-                                  <Shell />
-                                </SafeAreaProvider>
+                                <MutedThreadsProvider>
+                                  <SafeAreaProvider>
+                                    <Shell />
+                                  </SafeAreaProvider>
+                                </MutedThreadsProvider>
                               </BackgroundNotificationPreferencesProvider>
                             </UnreadNotifsProvider>
                           </SelectedFeedProvider>
@@ -136,21 +138,19 @@ function App() {
     <SessionProvider>
       <ShellStateProvider>
         <PrefsStateProvider>
-          <MutedThreadsProvider>
-            <InvitesStateProvider>
-              <ModalStateProvider>
-                <DialogStateProvider>
-                  <LightboxStateProvider>
-                    <I18nProvider>
-                      <PortalProvider>
-                        <InnerApp />
-                      </PortalProvider>
-                    </I18nProvider>
-                  </LightboxStateProvider>
-                </DialogStateProvider>
-              </ModalStateProvider>
-            </InvitesStateProvider>
-          </MutedThreadsProvider>
+          <InvitesStateProvider>
+            <ModalStateProvider>
+              <DialogStateProvider>
+                <LightboxStateProvider>
+                  <I18nProvider>
+                    <PortalProvider>
+                      <InnerApp />
+                    </PortalProvider>
+                  </I18nProvider>
+                </LightboxStateProvider>
+              </DialogStateProvider>
+            </ModalStateProvider>
+          </InvitesStateProvider>
         </PrefsStateProvider>
       </ShellStateProvider>
     </SessionProvider>

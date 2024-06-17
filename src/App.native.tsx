@@ -112,10 +112,12 @@ function InnerApp() {
                             <SelectedFeedProvider>
                               <UnreadNotifsProvider>
                                 <BackgroundNotificationPreferencesProvider>
-                                  <GestureHandlerRootView style={s.h100pct}>
-                                    <TestCtrls />
-                                    <Shell />
-                                  </GestureHandlerRootView>
+                                  <MutedThreadsProvider>
+                                    <GestureHandlerRootView style={s.h100pct}>
+                                      <TestCtrls />
+                                      <Shell />
+                                    </GestureHandlerRootView>
+                                  </MutedThreadsProvider>
                                 </BackgroundNotificationPreferencesProvider>
                               </UnreadNotifsProvider>
                             </SelectedFeedProvider>
@@ -154,21 +156,19 @@ function App() {
       <SessionProvider>
         <ShellStateProvider>
           <PrefsStateProvider>
-            <MutedThreadsProvider>
-              <InvitesStateProvider>
-                <ModalStateProvider>
-                  <DialogStateProvider>
-                    <LightboxStateProvider>
-                      <I18nProvider>
-                        <PortalProvider>
-                          <InnerApp />
-                        </PortalProvider>
-                      </I18nProvider>
-                    </LightboxStateProvider>
-                  </DialogStateProvider>
-                </ModalStateProvider>
-              </InvitesStateProvider>
-            </MutedThreadsProvider>
+            <InvitesStateProvider>
+              <ModalStateProvider>
+                <DialogStateProvider>
+                  <LightboxStateProvider>
+                    <I18nProvider>
+                      <PortalProvider>
+                        <InnerApp />
+                      </PortalProvider>
+                    </I18nProvider>
+                  </LightboxStateProvider>
+                </DialogStateProvider>
+              </ModalStateProvider>
+            </InvitesStateProvider>
           </PrefsStateProvider>
         </ShellStateProvider>
       </SessionProvider>
