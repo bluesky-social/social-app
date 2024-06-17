@@ -152,13 +152,13 @@ function LoadMore({
                 style={[
                   a.align_center,
                   a.justify_center,
-                  a.border,
                   t.atoms.bg_contrast_25,
                   a.absolute,
                   {
                     width: 30,
                     height: 30,
                     left: 0,
+                    borderWidth: 1,
                     backgroundColor: t.palette.primary_500,
                     borderColor: t.atoms.bg.backgroundColor,
                     borderRadius: type === 'profile' ? 999 : 4,
@@ -172,13 +172,13 @@ function LoadMore({
                   <View
                     key={_item.key}
                     style={[
-                      a.border,
                       t.atoms.bg_contrast_25,
                       a.absolute,
                       {
                         width: 30,
                         height: 30,
                         left: (i + 1) * 15,
+                        borderWidth: 1,
                         borderColor: t.atoms.bg.backgroundColor,
                         borderRadius: _item.type === 'profile' ? 999 : 4,
                         zIndex: 3 - i,
