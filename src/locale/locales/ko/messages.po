@@ -37,16 +37,12 @@ msgstr "이 콘텐츠에 {0, plural, other {#}}개의 라벨이 지정됨"
 msgid "{0, plural, one {# repost} other {# reposts}}"
 msgstr "{0, plural, other {#}}개"
 
-#: src/components/KnownFollowers.tsx:177
-#~ msgid "{0, plural, one {and # other} other {and # others}}"
-#~ msgstr "외 {0, plural, other {#}}명"
-
-#: src/components/ProfileHoverCard/index.web.tsx:385
+#: src/components/ProfileHoverCard/index.web.tsx:398
 #: src/screens/Profile/Header/Metrics.tsx:23
 msgid "{0, plural, one {follower} other {followers}}"
 msgstr "팔로워"
 
-#: src/components/ProfileHoverCard/index.web.tsx:389
+#: src/components/ProfileHoverCard/index.web.tsx:402
 #: src/screens/Profile/Header/Metrics.tsx:27
 msgid "{0, plural, one {following} other {following}}"
 msgstr "팔로우 중"
@@ -96,7 +92,7 @@ msgstr "시간"
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
 msgstr "분"
 
-#: src/components/ProfileHoverCard/index.web.tsx:490
+#: src/components/ProfileHoverCard/index.web.tsx:503
 #: src/screens/Profile/Header/Metrics.tsx:50
 msgid "{following} following"
 msgstr "{following} 팔로우 중"
@@ -1596,11 +1592,6 @@ msgstr "프로필 편집"
 msgid "Edit Profile"
 msgstr "프로필 편집"
 
-#: src/view/com/home/HomeHeaderLayout.web.tsx:76
-#: src/view/screens/Feeds.tsx:416
-#~ msgid "Edit Saved Feeds"
-#~ msgstr "저장한 피드 편집"
-
 #: src/view/com/modals/CreateOrEditList.tsx:234
 msgid "Edit User List"
 msgstr "사용자 리스트 편집"
@@ -2002,8 +1993,8 @@ msgstr "가로로 뒤집기"
 msgid "Flip vertically"
 msgstr "세로로 뒤집기"
 
-#: src/components/ProfileHoverCard/index.web.tsx:433
-#: src/components/ProfileHoverCard/index.web.tsx:444
+#: src/components/ProfileHoverCard/index.web.tsx:446
+#: src/components/ProfileHoverCard/index.web.tsx:457
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:252
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:146
 #: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:247
@@ -2079,8 +2070,8 @@ msgstr "내가 아는 @{0} 님의 팔로워"
 msgid "Followers you know"
 msgstr "내가 아는 팔로워"
 
-#: src/components/ProfileHoverCard/index.web.tsx:432
-#: src/components/ProfileHoverCard/index.web.tsx:443
+#: src/components/ProfileHoverCard/index.web.tsx:445
+#: src/components/ProfileHoverCard/index.web.tsx:456
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:250
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:149
 #: src/view/com/profile/ProfileFollows.tsx:104
@@ -3510,11 +3501,6 @@ msgstr "검토 설정을 엽니다"
 #: src/screens/Login/LoginForm.tsx:225
 msgid "Opens password reset form"
 msgstr "비밀번호 재설정 양식을 엽니다"
-
-#: src/view/com/home/HomeHeaderLayout.web.tsx:77
-#: src/view/screens/Feeds.tsx:417
-#~ msgid "Opens screen to edit Saved Feeds"
-#~ msgstr "저장한 피드를 편집할 수 있는 화면을 엽니다"
 
 #: src/view/screens/Settings/index.tsx:617
 msgid "Opens screen with all saved feeds"
@@ -5820,7 +5806,7 @@ msgstr "{0} 님의 아바타를 봅니다"
 msgid "View {0}'s profile"
 msgstr "{0} 님의 프로필 보기"
 
-#: src/components/ProfileHoverCard/index.web.tsx:417
+#: src/components/ProfileHoverCard/index.web.tsx:430
 msgid "View blocked user's profile"
 msgstr "차단한 사용자의 프로필 보기"
 
@@ -5844,9 +5830,9 @@ msgstr "전체 스레드 보기"
 msgid "View information about these labels"
 msgstr "이 라벨에 대한 정보 보기"
 
-#: src/components/ProfileHoverCard/index.web.tsx:405
-#: src/components/ProfileHoverCard/index.web.tsx:423
-#: src/components/ProfileHoverCard/index.web.tsx:450
+#: src/components/ProfileHoverCard/index.web.tsx:418
+#: src/components/ProfileHoverCard/index.web.tsx:436
+#: src/components/ProfileHoverCard/index.web.tsx:463
 #: src/view/com/posts/AviFollowButton.tsx:58
 #: src/view/com/posts/FeedErrorMessage.tsx:174
 msgid "View profile"
