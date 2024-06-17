@@ -13,14 +13,11 @@ public class ExpoBlueskySwissArmyModule: Module {
     Name("ExpoBlueskySwissArmy")
 
     AsyncFunction("getStringValueAsync") { (key: String, useAppGroup: Bool) in
-      let defaults = self.getDefaults(useAppGroup)
-
-      return defaults?.string(forKey: key)
+      return self.getDefaults(useAppGroup)?.string(forKey: key)
     }
 
     AsyncFunction("setStringValueAsync") { (key: String, value: String?, useAppGroup: Bool) in
-      let defaults = self.getDefaults(useAppGroup)
-      defaults?.setValue(value, forKey: key)
+      self.getDefaults(useAppGroup)?.setValue(value, forKey: key)
     }
   }
 }
