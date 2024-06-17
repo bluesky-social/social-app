@@ -52,7 +52,7 @@ function InnerApp() {
   const theme = useColorModeTheme()
   const {_} = useLingui()
   useIntentHandler()
-  useStarterPackEntry()
+  const hasCheckedReferrer = useStarterPackEntry()
 
   // init
   useEffect(() => {
@@ -78,7 +78,7 @@ function InnerApp() {
   }, [_])
 
   // wait for session to resume
-  if (!isReady) return null
+  if (!isReady || !hasCheckedReferrer) return null
 
   return (
     <KeyboardProvider enabled={false}>
