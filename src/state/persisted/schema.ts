@@ -91,7 +91,6 @@ export const schema = z.object({
   usedStarterPack: z
     .object({
       uri: z.string(),
-      cid: z.string().optional(),
       initialFeed: z.string().optional(),
       isClip: z.boolean().optional(),
       lastUsedUri: z.string().optional(),

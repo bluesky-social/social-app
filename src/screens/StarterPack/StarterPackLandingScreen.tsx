@@ -5,6 +5,7 @@ import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {isAndroidWeb} from 'lib/browser'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {
   useSetUsedStarterPack,
@@ -17,14 +18,26 @@ import {CenteredView} from 'view/com/util/Views'
 import {Logo} from 'view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
 import * as FeedCard from '#/components/FeedCard'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Default as ProfileCardInner} from '#/components/ProfileCard'
+import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
+
+interface AppClipMessage {
+  action: 'present' | 'store'
+  keyToStoreAs?: string
+  jsonToStore?: string
+}
+
+function postAppClipMessage(message: AppClipMessage) {
+  window.webkit.messageHandlers.onMessage.postMessage(JSON.stringify(message))
+}
 
 function parseStarterPackHttpUri(uri: string): {name?: string; rkey?: string} {
   const parsed = new URL(uri)
@@ -35,14 +48,8 @@ function parseStarterPackHttpUri(uri: string): {name?: string; rkey?: string} {
   }
 }
 
-interface AppClipMessage {
-  action: 'present' | 'store'
-  keyToStoreAs?: string
-  jsonToStore?: string
-}
-
-function postAppClipMessage(message: AppClipMessage) {
-  window.webkit.messageHandlers.onMessage.postMessage(JSON.stringify(message))
+function createGooglePlayLink(name: string, rkey: string) {
+  return `https://play.google.com/store/apps/details?id=xyz.blueskyweb.app&referrer=utm_source%3Dbluesky%26utm_medium%3Dstarterpack%26utm_content%3Dstarterpack-${name}-${rkey}`
 }
 
 export function LandingScreen({
@@ -104,11 +111,19 @@ function LandingScreenInner({
   const setUsedStarterPack = useSetUsedStarterPack()
   const usedStarterPack = useUsedStarterPack()
   const {isTabletOrDesktop} = useWebMediaQueries()
+  const androidDialogControl = useDialogControl()
 
   const [appClipOverlayVisible, setAppClipOverlayVisible] =
     React.useState(false)
 
   const listItemsCount = starterPack.list?.listItemCount ?? 0
+
+  const onContinue = () => {
+    setUsedStarterPack({
+      uri: starterPack.uri,
+    })
+    setScreenState(LoggedOutScreenState.S_CreateAccount)
+  }
 
   const onJoinPress = () => {
     if (usedStarterPack?.isClip) {
@@ -116,12 +131,10 @@ function LandingScreenInner({
       postAppClipMessage({
         action: 'present',
       })
+    } else if (isAndroidWeb) {
+      androidDialogControl.open()
     } else {
-      setUsedStarterPack({
-        uri: starterPack.uri,
-        cid: starterPack.cid,
-      })
-      setScreenState(LoggedOutScreenState.S_CreateAccount)
+      onContinue()
     }
   }
 
@@ -275,6 +288,27 @@ function LandingScreenInner({
         visible={appClipOverlayVisible}
         setIsVisible={setAppClipOverlayVisible}
       />
+      <Prompt.Outer control={androidDialogControl}>
+        <Prompt.TitleText />
+        <Prompt.DescriptionText />
+        <Prompt.Actions>
+          <Prompt.Action
+            cta="Continue on web"
+            color="secondary"
+            onPress={onContinue}
+          />
+          <Prompt.Action
+            cta="Download on Google Play"
+            color="primary"
+            onPress={() => {
+              const rkey = parseStarterPackHttpUri(starterPack.uri).rkey
+              if (!rkey) return
+
+              window.location.href = createGooglePlayLink(creator.handle, rkey)
+            }}
+          />
+        </Prompt.Actions>
+      </Prompt.Outer>
     </CenteredView>
   )
 }
