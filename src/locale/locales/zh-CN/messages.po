@@ -2030,19 +2030,19 @@ msgstr "关注更多帐户以了解你的兴趣，并逐步建立你的社交网
 
 #: src/view/com/profile/ProfileCard.tsx:227
 msgid "Followed by {0}"
-msgstr "由 {0} 关注"
+msgstr "由 {0} 所关注"
 
 #: src/components/KnownFollowers.tsx:192
 msgid "Followed by <0>{0}</0>"
-msgstr "由 <0>{0}</0> 关注"
+msgstr "由 <0>{0}</0> 所关注"
 
 #: src/components/KnownFollowers.tsx:181
 msgid "Followed by <0>{0}</0> and <1>{1}</1>"
-msgstr "由 <0>{0}</0> 以及 <1>{1}</1> 关注"
+msgstr "由 <0>{0}</0> 以及 <1>{1}</1> 所关注"
 
 #: src/components/KnownFollowers.tsx:168
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
-msgstr "由 <0>{0}</0>、<1>{1}</1> 以及 {2, plural, one {#其他人} other {#其他人}} 关注"
+msgstr "由 <0>{0}</0>、<1>{1}</1> 以及{2, plural, one {其他#人} other {其他#人}}所关注"
 
 #: src/view/com/modals/Threadgate.tsx:99
 msgid "Followed users"
