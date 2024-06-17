@@ -8,17 +8,17 @@ import {handler} from './util.js'
 
 export default function (ctx: AppContext, app: Express) {
   return app.get(
-    '/:id',
+    '/:linkId',
     handler(async (req, res) => {
-      const id = req.params.id
+      const linkId = req.params.linkId
       assert(
-        typeof id === 'string',
+        typeof linkId === 'string',
         'express guarantees id parameter is a string',
       )
       const found = await ctx.db.db
         .selectFrom('link')
         .selectAll()
-        .where('id', '=', id)
+        .where('id', '=', linkId)
         .executeTakeFirst()
       if (!found) {
         // potentially broken or mistyped link— send user to the app

@@ -17,21 +17,19 @@ describe('link service', async () => {
       dbPostgresUrl: process.env.DB_POSTGRES_URL,
     })
     const migrateDb = Database.postgres({
-      url: cfg.db.migrationUrl,
+      url: cfg.db.url,
       schema: cfg.db.schema,
     })
     await migrateDb.migrateToLatestOrThrow()
     await migrateDb.close()
     linkService = await LinkService.create(cfg)
     await linkService.start()
-    const {port} = linkService.server.address() as AddressInfo
+    const {port} = linkService.server?.address() as AddressInfo
     baseUrl = `http://localhost:${port}`
   })
 
   after(async () => {
-    if (linkService) {
-      await linkService.destroy()
-    }
+    await linkService?.destroy()
   })
 
   it('creates a starter pack link', async () => {
@@ -42,12 +40,12 @@ describe('link service', async () => {
   })
 
   it('normalizes input paths and provides same link each time.', async () => {
-    const link1 = await getLink('/start/did%3Aexample%3Abob/yyy/')
-    const link2 = await getLink('/start/did%3Aexample%3Abob/yyy/')
+    const link1 = await getLink('/start/did%3Aexample%3Abob/yyy')
+    const link2 = await getLink('/start/did:example:bob/yyy/')
     assert.strictEqual(link1, link2)
   })
 
-  it('serves permanent redirect.', async () => {
+  it('serves permanent redirect, preserving query params.', async () => {
     const link = await getLink('/start/did:example:carol/zzz/')
     const [status, location] = await getRedirect(`${link}?a=b`)
     assert.strictEqual(status, 301)
@@ -69,7 +67,7 @@ describe('link service', async () => {
       res.status === 301 || res.status === 303,
       'response was not a redirect',
     )
-    return [res.status, res.headers.get('location')]
+    return [res.status, res.headers.get('location') ?? '']
   }
 
   async function getLink(path: string): Promise<string> {

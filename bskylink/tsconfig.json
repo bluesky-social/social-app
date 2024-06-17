@@ -6,5 +6,5 @@
       "outDir": "dist",
       "lib": ["ES2021.String"]
     },
-    "ts-node": {"esm": true}
+    "include": ["./src/index.ts", "./src/bin.ts"]
   }

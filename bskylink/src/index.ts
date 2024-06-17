@@ -7,7 +7,7 @@ import {createHttpTerminator, HttpTerminator} from 'http-terminator'
 
 import {Config} from './config.js'
 import {AppContext} from './context.js'
-import {default as routes} from './routes/index.js'
+import {default as routes, errorHandler} from './routes/index.js'
 
 export * from './config.js'
 export * from './db/index.js'
@@ -24,7 +24,8 @@ export class LinkService {
     app.use(cors())
 
     const ctx = await AppContext.fromConfig(cfg)
-    app = routes(ctx, app) // TODO: add fallthrough/error handler
+    app = routes(ctx, app)
+    app.use(errorHandler)
 
     return new LinkService(app, ctx)
   }
