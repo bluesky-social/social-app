@@ -256,7 +256,7 @@ export function useRequireAuth() {
   const {signinDialogControl} = useGlobalDialogsControlContext()
 
   return React.useCallback(
-    (fn: () => void) => {
+    (fn: () => unknown) => {
       if (hasSession) {
         fn()
       } else {

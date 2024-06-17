@@ -10,6 +10,7 @@ import {
   usePreferencesQuery,
   useRemoveFeedMutation,
 } from '#/state/queries/preferences'
+import {useRequireAuth} from '#/state/session'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import * as Toast from 'view/com/util/Toast'
@@ -128,6 +129,7 @@ export function Action({uri, pin}: {uri: string; pin?: boolean}) {
     )
   }, [preferences?.savedFeeds, uri])
   const removePromptControl = Prompt.usePromptControl()
+  const requireAuth = useRequireAuth()
   const isPending = isAddSavedFeedPending || isRemovePending
 
   const toggleSave = React.useCallback(
@@ -135,28 +137,30 @@ export function Action({uri, pin}: {uri: string; pin?: boolean}) {
       e.preventDefault()
       e.stopPropagation()
 
-      try {
-        if (savedFeedConfig) {
-          await removeFeed(savedFeedConfig)
-        } else {
-          await saveFeeds([
-            {
-              type: 'feed',
-              value: uri,
-              pinned: pin || false,
-            },
-          ])
+      requireAuth(async () => {
+        try {
+          if (savedFeedConfig) {
+            await removeFeed(savedFeedConfig)
+          } else {
+            await saveFeeds([
+              {
+                type: 'feed',
+                value: uri,
+                pinned: pin || false,
+              },
+            ])
+          }
+          Toast.show(_(msg`Feeds updated!`))
+        } catch (err: any) {
+          logger.error(err, {context: `FeedCard: failed to update feeds`, pin})
+          Toast.show(_(msg`Failed to update feeds`))
         }
-        Toast.show(_(msg`Feeds updated!`))
-      } catch (e: any) {
-        logger.error(e, {context: `FeedCard: failed to update feeds`, pin})
-        Toast.show(_(msg`Failed to update feeds`))
-      }
+      })
     },
-    [_, pin, saveFeeds, removeFeed, uri, savedFeedConfig],
+    [requireAuth, savedFeedConfig, _, removeFeed, saveFeeds, uri, pin],
   )
 
-  const onPrompRemoveFeed = React.useCallback(
+  const onPromptRemoveFeed = React.useCallback(
     async (e: GestureResponderEvent) => {
       e.preventDefault()
       e.stopPropagation()
@@ -175,7 +179,7 @@ export function Action({uri, pin}: {uri: string; pin?: boolean}) {
         variant="ghost"
         color="secondary"
         shape="square"
-        onPress={savedFeedConfig ? onPrompRemoveFeed : toggleSave}>
+        onPress={savedFeedConfig ? onPromptRemoveFeed : toggleSave}>
         {savedFeedConfig ? (
           <ButtonIcon size="md" icon={isPending ? Loader : Trash} />
         ) : (
