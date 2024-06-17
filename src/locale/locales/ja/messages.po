@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-06-13 16:20+0900\n"
+"PO-Revision-Date: 2024-06-17 21:49+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -266,6 +266,10 @@ msgstr "フォローしているユーザーのみのデフォルトのフィー
 msgid "Add the following DNS record to your domain:"
 msgstr "次のDNSレコードをドメインに追加してください："
 
+#: src/components/FeedCard.tsx:173
+msgid "Add this feed to your feeds"
+msgstr "このフィードをあなたのフィードに追加する"
+
 #: src/view/com/profile/ProfileMenu.tsx:265
 #: src/view/com/profile/ProfileMenu.tsx:268
 msgid "Add to Lists"
@@ -464,6 +468,10 @@ msgstr "この会話から退出しますか？あなたのメッセージはあ
 #: src/view/com/feeds/FeedSourceCard.tsx:314
 msgid "Are you sure you want to remove {0} from your feeds?"
 msgstr "あなたのフィードから{0}を削除してもよろしいですか？"
+
+#: src/components/FeedCard.tsx:190
+msgid "Are you sure you want to remove this from your feeds?"
+msgstr "本当にこのフィードをあなたのフィードから削除したいですか？"
 
 #: src/view/com/composer/Composer.tsx:630
 msgid "Are you sure you'd like to discard this draft?"
@@ -1415,6 +1423,10 @@ msgstr "アプリがログアウトしたユーザーに自分のアカウント
 msgid "Discover new custom feeds"
 msgstr "新しいカスタムフィードを見つける"
 
+#: src/view/screens/Search/Explore.tsx:378
+msgid "Discover new feeds"
+msgstr "新しいフィードを探す"
+
 #: src/view/screens/Feeds.tsx:794
 msgid "Discover New Feeds"
 msgstr "新しいフィードを探す"
@@ -1853,6 +1865,11 @@ msgstr "メッセージの削除に失敗しました"
 msgid "Failed to delete post, please try again"
 msgstr "投稿の削除に失敗しました。もう一度お試しください。"
 
+#: src/view/screens/Search/Explore.tsx:414
+#: src/view/screens/Search/Explore.tsx:438
+msgid "Failed to load feeds preferences"
+msgstr "フィードの設定の読み込みに失敗しました"
+
 #: src/components/dialogs/GifSelect.ios.tsx:196
 #: src/components/dialogs/GifSelect.tsx:212
 msgid "Failed to load GIFs"
@@ -1861,6 +1878,15 @@ msgstr "GIFの読み込みに失敗しました"
 #: src/screens/Messages/Conversation/MessageListError.tsx:23
 msgid "Failed to load past messages"
 msgstr "過去のメッセージの読み込みに失敗しました"
+
+#: src/view/screens/Search/Explore.tsx:407
+#: src/view/screens/Search/Explore.tsx:431
+msgid "Failed to load suggested feeds"
+msgstr "おすすめのフィードの読み込みに失敗しました"
+
+#: src/view/screens/Search/Explore.tsx:367
+msgid "Failed to load suggested follows"
+msgstr "おすすめのフォローの読み込みに失敗しました"
 
 #: src/view/com/lightbox/Lightbox.tsx:84
 msgid "Failed to save image: {0}"
@@ -1874,6 +1900,10 @@ msgstr "送信に失敗"
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:87
 msgid "Failed to submit appeal, please try again."
 msgstr "異議申し立ての送信に失敗しました。再度試してください。"
+
+#: src/components/FeedCard.tsx:153
+msgid "Failed to update feeds"
+msgstr "フィードの更新に失敗しました"
 
 #: src/components/dms/MessagesNUX.tsx:60
 #: src/screens/Messages/Settings.tsx:35
@@ -1909,6 +1939,10 @@ msgstr "フィード"
 #: src/view/screens/SavedFeeds.tsx:180
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
 msgstr "フィードはユーザーがプログラミングの専門知識を持って構築するカスタムアルゴリズムです。詳細については、<0/>を参照してください。"
+
+#: src/components/FeedCard.tsx:150
+msgid "Feeds updated!"
+msgstr "フィードを更新しました！"
 
 #: src/view/com/modals/ChangeHandle.tsx:475
 msgid "File Contents"
@@ -1991,6 +2025,10 @@ msgstr "アカウントをフォロー"
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:144
 msgid "Follow Back"
 msgstr "フォローバック"
+
+#: src/view/screens/Search/Explore.tsx:332
+msgid "Follow more accounts to get connected to your interests and build your network."
+msgstr "もっとたくさんのアカウントをフォローして、興味あることにつながり、ネットワークを広げましょう。"
 
 #: src/view/com/profile/ProfileCard.tsx:227
 msgid "Followed by {0}"
@@ -2661,6 +2699,18 @@ msgstr "リスト"
 #: src/components/dms/BlockedByListDialog.tsx:39
 msgid "Lists blocking this user:"
 msgstr "このユーザーをブロックしているリスト："
+
+#: src/view/screens/Search/Explore.tsx:128
+msgid "Load more"
+msgstr "さらに読み込む"
+
+#: src/view/screens/Search/Explore.tsx:216
+msgid "Load more suggested feeds"
+msgstr "おすすめのフィードをさらに読み込む"
+
+#: src/view/screens/Search/Explore.tsx:214
+msgid "Load more suggested follows"
+msgstr "おすすめのフォローをさらに読み込む"
 
 #: src/view/screens/Notifications.tsx:184
 msgid "Load new notifications"
@@ -3979,7 +4029,7 @@ msgstr "リストから削除されました"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:139
 msgid "Removed from my feeds"
-msgstr "フィードから削除しました"
+msgstr "マイフィードから削除しました"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:44
 #: src/view/screens/ProfileFeed.tsx:191
@@ -4930,9 +4980,9 @@ msgstr "このラベラーを登録"
 msgid "Subscribe to this list"
 msgstr "このリストに登録"
 
-#: src/view/screens/Search/Search.tsx:425
-msgid "Suggested Follows"
-msgstr "おすすめのフォロー"
+#: src/view/screens/Search/Explore.tsx:330
+msgid "Suggested accounts"
+msgstr "おすすめのアカウント"
 
 #: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:65
 msgid "Suggested for you"
