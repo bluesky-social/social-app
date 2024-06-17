@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-06-15 14:46+0900\n"
+"PO-Revision-Date: 2024-06-17 20:08+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -848,7 +848,7 @@ msgid "Clear all storage data (restart after this)"
 msgstr "모든 스토리지 데이터 지우기 (이후 다시 시작)"
 
 #: src/view/com/util/forms/SearchInput.tsx:88
-#: src/view/screens/Search/Search.tsx:828
+#: src/view/screens/Search/Search.tsx:822
 msgid "Clear search query"
 msgstr "검색어 지우기"
 
@@ -3924,7 +3924,7 @@ msgstr "계정 재활성화"
 msgid "Reason:"
 msgstr "이유:"
 
-#: src/view/screens/Search/Search.tsx:937
+#: src/view/screens/Search/Search.tsx:931
 msgid "Recent Searches"
 msgstr "최근 검색"
 
@@ -3997,11 +3997,11 @@ msgstr "이미지 미리보기 제거"
 msgid "Remove mute word from your list"
 msgstr "목록에서 뮤트한 단어 제거"
 
-#: src/view/screens/Search/Search.tsx:978
+#: src/view/screens/Search/Search.tsx:972
 msgid "Remove profile"
 msgstr "프로필 제거"
 
-#: src/view/screens/Search/Search.tsx:980
+#: src/view/screens/Search/Search.tsx:974
 msgid "Remove profile from search history"
 msgstr "검색 기록에서 프로필을 제거합니다"
 
@@ -4351,7 +4351,7 @@ msgstr "맨 위로 스크롤"
 #: src/view/com/util/forms/SearchInput.tsx:79
 #: src/view/screens/Search/Search.tsx:419
 #: src/view/screens/Search/Search.tsx:789
-#: src/view/screens/Search/Search.tsx:817
+#: src/view/screens/Search/Search.tsx:811
 #: src/view/shell/bottom-bar/BottomBar.tsx:179
 #: src/view/shell/desktop/LeftNav.tsx:343
 #: src/view/shell/desktop/Search.tsx:194
@@ -4365,7 +4365,7 @@ msgstr "검색"
 msgid "Search for \"{query}\""
 msgstr "\"{query}\"에 대한 검색 결과"
 
-#: src/view/screens/Search/Search.tsx:873
+#: src/view/screens/Search/Search.tsx:867
 msgid "Search for \"{searchText}\""
 msgstr "\"{searchText}\"에 대한 검색 결과"
 
