@@ -4,7 +4,7 @@
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc && cp -r src/assets dist/assets"
   },
   "dependencies": {
     "@atproto/api": "0.12.19-next.0",
@@ -17,6 +17,7 @@
     "satori": "^0.10.13"
   },
   "devDependencies": {
+    "@types/node": "^20.14.3",
     "typescript": "^5.4.5"
   }
 }
