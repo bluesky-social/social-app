@@ -12,12 +12,10 @@ import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
 import {shareUrl} from 'lib/sharing'
 import {logEvent} from 'lib/statsig/statsig'
 import {isWeb} from 'platform/detection'
-import {useSetCurrentStarterPack} from 'state/preferences/starter-pack'
 import {RQKEY} from 'state/queries/list-members'
 import {useResolveDidQuery} from 'state/queries/resolve-uri'
 import {useStarterPackQuery} from 'state/queries/useStarterPackQuery'
 import {useAgent, useSession} from 'state/session'
-import {useLoggedOutViewControls} from 'state/shell/logged-out'
 import * as Toast from '#/view/com/util/Toast'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
@@ -128,8 +126,6 @@ function Header({
   const agent = useAgent()
   const queryClient = useQueryClient()
   const qrCodeDialogControl = useDialogControl()
-  const setCurrentStarterPack = useSetCurrentStarterPack()
-  const {setShowLoggedOut} = useLoggedOutViewControls()
 
   const [isProcessing, setIsProcessing] = React.useState(false)
 
@@ -183,21 +179,6 @@ function Header({
         starterPack={starterPack}
         avatarType="starter-pack">
         <View style={[a.flex_row, a.gap_sm]}>
-          {__DEV__ && (
-            <Button
-              label={_(msg`Edit`)}
-              variant="solid"
-              color="secondary"
-              size="small"
-              onPress={() => {
-                setCurrentStarterPack({uri: starterPack.uri})
-                setShowLoggedOut(true)
-              }}>
-              <ButtonText>
-                <Trans>Debug</Trans>
-              </ButtonText>
-            </Button>
-          )}
           <Menu.Root>
             <Menu.Trigger label={_(msg`Repost or quote post`)}>
               {({props, state}) => (
