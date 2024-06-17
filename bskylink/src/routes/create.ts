@@ -1,7 +1,7 @@
 import assert from 'node:assert'
 
 import bodyParser from 'body-parser'
-import {Express, Request, Response} from 'express'
+import {Express, Request} from 'express'
 
 import {AppContext} from '../context.js'
 import {LinkType} from '../db/schema.js'
@@ -32,7 +32,16 @@ export default function (ctx: AppContext, app: Express) {
       const parts = getPathParts(path)
       if (parts.length === 3 && parts[0] === 'start') {
         // link pattern: /start/{did}/{rkey}
-        return handleStarterPackLink(ctx, parts, req, res)
+        if (!parts[1].startsWith('did:')) {
+          // enforce strong links
+          return res.status(400).json({
+            error: 'InvalidPath',
+            message:
+              '"path" parameter for starter pack must contain the actor\'s DID',
+          })
+        }
+        const id = await ensureLink(ctx, LinkType.StarterPack, parts)
+        return res.json({url: getUrl(ctx, req, id)})
       }
       return res.status(400).json({
         error: 'InvalidPath',
@@ -42,46 +51,34 @@ export default function (ctx: AppContext, app: Express) {
   )
 }
 
-const handleStarterPackLink = async (
-  ctx: AppContext,
-  parts: string[],
-  req: Request,
-  res: Response,
-) => {
-  if (!parts[1].startsWith('did:')) {
-    // enforce strong links
-    return res.status(400).json({
-      error: 'InvalidPath',
-      message: '"path" parameter for starter pack must contain the user\'s DID',
-    })
-  }
+const ensureLink = async (ctx: AppContext, type: LinkType, parts: string[]) => {
   const normalizedPath = normalizedPathFromParts(parts)
   const created = await ctx.db.db
     .insertInto('link')
     .values({
       id: randomId(),
-      type: LinkType.StarterPack,
+      type,
       path: normalizedPath,
     })
     .onConflict(oc => oc.column('path').doNothing())
     .returningAll()
     .executeTakeFirst()
   if (created) {
-    return res.json({url: getUrl(ctx, req, created.id)})
+    return created.id
   }
   const found = await ctx.db.db
     .selectFrom('link')
     .selectAll()
     .where('path', '=', normalizedPath)
     .executeTakeFirstOrThrow()
-  return res.json({url: getUrl(ctx, req, found.id)})
+  return found.id
 }
 
 const getUrl = (ctx: AppContext, req: Request, id: string) => {
   if (!ctx.cfg.service.hostnames.length) {
     assert(req.headers.host, 'request must be made with host header')
     const baseUrl =
-      req.protocol === 'http'
+      req.protocol === 'http' && req.headers.host.startsWith('localhost:')
         ? `http://${req.headers.host}`
         : `https://${req.headers.host}`
     return `${baseUrl}/${id}`
@@ -93,13 +90,19 @@ const getUrl = (ctx: AppContext, req: Request, id: string) => {
 }
 
 const normalizedPathFromParts = (parts: string[]): string => {
-  return '/' + parts.map(encodeURIComponent).join('/')
+  return (
+    '/' +
+    parts
+      .map(encodeURIComponent)
+      .map(part => part.replaceAll('%3A', ':')) // preserve colons
+      .join('/')
+  )
 }
 
 const getPathParts = (path: string): string[] => {
   if (path === '/') return []
   if (path.endsWith('/')) {
-    path = path.slice(0, -1)
+    path = path.slice(0, -1) // ignore trailing slash
   }
   return path
     .slice(1) // remove leading slash

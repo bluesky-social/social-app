@@ -2,7 +2,8 @@
     "compilerOptions": {
       "module": "NodeNext",
       "esModuleInterop": true,
-      "moduleResolution": "NodeNext"
+      "moduleResolution": "NodeNext",
+      "outDir": "dist"
     },
     "ts-node": {"esm": true}
   }

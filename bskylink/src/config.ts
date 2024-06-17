@@ -67,7 +67,7 @@ export const envToCfg = (env: Environment): Config => {
   }
   const dbCfg: DbConfig = {
     url: env.dbPostgresUrl,
-    migrationUrl: env.dbPostgresMigrationUrl || env.dbPostgresUrl,
+    migrationUrl: env.dbPostgresMigrationUrl,
     schema: env.dbPostgresSchema,
     pool: {
       idleTimeoutMs: env.dbPostgresPoolIdleTimeoutMs ?? 10000,
