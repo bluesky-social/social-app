@@ -56,6 +56,7 @@ interface FeedItemProps {
   isThreadParent?: boolean
   feedContext: string | undefined
   hideTopBorder?: boolean
+  isParentBlocked?: boolean
 }
 
 export function FeedItem({
@@ -70,6 +71,7 @@ export function FeedItem({
   isThreadLastChild,
   isThreadParent,
   hideTopBorder,
+  isParentBlocked,
 }: FeedItemProps & {post: AppBskyFeedDefs.PostView}): React.ReactNode {
   const postShadowed = usePostShadow(post)
   const richText = useMemo(
@@ -100,6 +102,7 @@ export function FeedItem({
         isThreadLastChild={isThreadLastChild}
         isThreadParent={isThreadParent}
         hideTopBorder={hideTopBorder}
+        isParentBlocked={isParentBlocked}
       />
     )
   }
@@ -119,6 +122,7 @@ let FeedItemInner = ({
   isThreadLastChild,
   isThreadParent,
   hideTopBorder,
+  isParentBlocked,
 }: FeedItemProps & {
   richText: RichTextAPI
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -195,13 +199,6 @@ let FeedItemInner = ({
       borderTopWidth: hideTopBorder || isThreadChild ? 0 : hairlineWidth,
     },
   ]
-
-  const isParentBlocked = Boolean(
-    parentAuthor &&
-      (parentAuthor.viewer?.blockedBy ||
-        parentAuthor.viewer?.blocking ||
-        parentAuthor.viewer?.blockingByList),
-  )
 
   return (
     <Link
