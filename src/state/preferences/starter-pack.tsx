@@ -16,7 +16,9 @@ const stateContext = React.createContext<StateContext>(undefined)
 const setContext = React.createContext<SetContext>((_: StateContext) => {})
 
 export function Provider({children}: {children: React.ReactNode}) {
-  const [state, setState] = React.useState<StateContext>()
+  const [state, setState] = React.useState<StateContext>(() =>
+    persisted.get('currentStarterPack'),
+  )
 
   const setStateWrapped = (v: StateContext) => {
     setState(v)

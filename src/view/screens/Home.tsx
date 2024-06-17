@@ -26,6 +26,7 @@ import {
   useCurrentStarterPack,
   useSetCurrentStarterPack,
 } from 'state/preferences/starter-pack'
+import {useUsedStarterPacks} from 'state/preferences/used-starter-packs'
 import {useLoggedOutViewControls} from 'state/shell/logged-out'
 import {FeedPage} from 'view/com/feeds/FeedPage'
 import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
@@ -41,18 +42,27 @@ export function HomeScreen(props: Props) {
   const {data: pinnedFeedInfos, isLoading: isPinnedFeedsLoading} =
     usePinnedFeedsInfos()
   const currentStarterPack = useCurrentStarterPack()
+  const usedStarterPacks = useUsedStarterPacks()
   const {setShowLoggedOut, requestSwitchToAccount} = useLoggedOutViewControls()
 
   React.useEffect(() => {
     if (currentStarterPack && !currentStarterPack?.initialFeed) {
-      setShowLoggedOut(true)
-      requestSwitchToAccount({requestedAccount: 'starterpack'})
+      // In test environments, the URL won't start with `https://bsky.app`, so we want to find it by the route
+      try {
+        const route = new URL(currentStarterPack.uri).pathname
+        const foundIndex = usedStarterPacks?.findIndex(p => p.includes(route))
+        if (foundIndex === -1) {
+          setShowLoggedOut(true)
+          requestSwitchToAccount({requestedAccount: 'starterpack'})
+        }
+      } catch {}
     }
   }, [
     setShowLoggedOut,
     requestSwitchToAccount,
     currentStarterPack?.initialFeed,
     currentStarterPack,
+    usedStarterPacks,
   ])
 
   if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
@@ -103,6 +113,10 @@ function HomeScreenReady({
   const lastPagerReportedIndexRef = React.useRef(selectedIndex)
   React.useLayoutEffect(() => {
     let initialIndex = selectedIndex
+    console.log(
+      'currentStarterPack.initialFeed',
+      currentStarterPack?.initialFeed,
+    )
     if (currentStarterPack?.initialFeed) {
       if (currentStarterPack.initialFeed === 'following') {
         initialIndex = 1

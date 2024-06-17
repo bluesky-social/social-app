@@ -102,6 +102,7 @@ export function StepFinished() {
                 initialFeed: 'following',
               })
             }
+            console.log('ADDING PACK')
             addUsedStarterPack(makeStarterPackLink(starterPack))
           }
         })(),

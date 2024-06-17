@@ -9,9 +9,12 @@ const stateContext = React.createContext<StateContext>([])
 const setContext = React.createContext<SetContext>((_: string) => {})
 
 export function Provider({children}: {children: React.ReactNode}) {
-  const [state, setState] = React.useState<StateContext>([])
+  const [state, setState] = React.useState<StateContext>(() =>
+    persisted.get('usedStarterPacks'),
+  )
 
   const setStateWrapped = (v: string) => {
+    console.log('ADDING!!!', v)
     persisted.write('usedStarterPacks', [...(state ? state : []), v])
     setState(prev => [...(prev ? prev : []), v])
   }

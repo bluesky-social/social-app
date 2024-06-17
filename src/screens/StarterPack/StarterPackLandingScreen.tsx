@@ -287,6 +287,20 @@ function LandingScreenInner({
             )}
           </View>
         </View>
+        <Button
+          label={_(msg`Signup without a starter pack`)}
+          variant="ghost"
+          color="secondary"
+          size="medium"
+          style={[a.mt_2xl]}
+          onPress={() => {
+            setCurrentStarterPack(undefined)
+            setScreenState(LoggedOutScreenState.S_CreateAccount)
+          }}>
+          <ButtonText>
+            <Trans>Signup without a starter pack</Trans>
+          </ButtonText>
+        </Button>
       </ScrollView>
       <AppClipOverlay
         visible={appClipOverlayVisible}
