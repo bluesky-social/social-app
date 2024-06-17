@@ -7,6 +7,7 @@ import {useLingui} from '@lingui/react'
 
 import {isAndroidWeb} from 'lib/browser'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {isWeb} from 'platform/detection'
 import {
   useCurrentStarterPack,
   useSetCurrentStarterPack,
@@ -335,6 +336,12 @@ function LandingScreenInner({
           />
         </Prompt.Actions>
       </Prompt.Outer>
+      {isWeb && (
+        <meta
+          name="apple-itunes-app"
+          content="app-id=xyz.blueskyweb.app, app-clip-bundle-id=xyz.blueskyweb.app.AppClip, app-clip-display=card"
+        />
+      )}
     </CenteredView>
   )
 }
