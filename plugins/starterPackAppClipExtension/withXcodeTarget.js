@@ -15,20 +15,26 @@ const withXcodeTarget = (config, {targetName}) => {
       'Sources',
       target.uuid,
       'application',
-      '"$(CONTENTS_FOLDER_PATH)/AppClips"',
+      '"AppClips"',
     )
     pbxProject.addBuildPhase(
-      [],
+      [`${targetName}/Images.xcassets`],
       'PBXResourcesBuildPhase',
       'Resources',
       target.uuid,
       'application',
-      '"$(CONTENTS_FOLDER_PATH)/AppClips"',
+      '"AppClips"',
     )
 
-    const pbxGroupKey = pbxProject.pbxCreateGroup(targetName, targetName)
-    pbxProject.addFile(`${targetName}/Info.plist`, pbxGroupKey)
+    const pbxGroup = pbxProject.addPbxGroup([
+      'AppDelegate.swift',
+      'ViewController.swift',
+      'Images.xcassets',
+      `${targetName}.entitlements`,
+      'Info.plist',
+    ])
 
+    pbxProject.addFile(`${targetName}/Info.plist`, pbxGroup.uuid)
     const configurations = pbxProject.pbxXCBuildConfigurationSection()
     for (const key in configurations) {
       if (typeof configurations[key].buildSettings !== 'undefined') {
@@ -68,27 +74,13 @@ const withXcodeTarget = (config, {targetName}) => {
       target.uuid,
     ])
 
-    // pbxProject.addProductFile(targetName, {
-    //   basename: `${targetName}.app`,
-    //   groupName: 'Embed App Clips',
-    //   explicitFileType: 'wrapper.application',
-    //   settings: {
-    //     ATTRIBUTES: ['RemoveHeadersOnCopy'],
-    //   },
-    //   includeInIndex: 0,
-    //   path: `${targetName}.app`,
-    //   sourceTree: 'BUILT_PRODUCTS_DIR',
-    // })
-
-    pbxProject.addToPbxNativeTargetSection(target)
-
     pbxProject.addBuildPhase(
       [`${targetName}.app`],
       'PBXCopyFilesBuildPhase',
       'Embed App Clips',
       pbxProject.getFirstTarget().uuid,
       'application',
-      '"$(CONTENTS_FOLDER_PATH)/AppClips"',
+      '"AppClips"',
     )
 
     return config

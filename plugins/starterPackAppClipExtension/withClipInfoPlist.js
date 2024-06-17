@@ -24,6 +24,7 @@ const withClipInfoPlist = (config, {targetName}) => {
       CFBundleExecutable: '$(EXECUTABLE_NAME)',
       CFBundlePackageType: '$(PRODUCT_BUNDLE_PACKAGE_TYPE)',
       CFBundleShortVersionString: config.version,
+      CFBundleIconName: 'AppIcon',
       UIViewControllerBasedStatusBarAppearance: 'NO',
     })
 

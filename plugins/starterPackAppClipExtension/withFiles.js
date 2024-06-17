@@ -25,6 +25,14 @@ const withFiles = (config, {targetName}) => {
       fs.copyFileSync(sourcePath, targetPath)
     }
 
+    const imagesBasePath = path.join(basePath, 'Images.xcassets')
+    const imagesTargetPath = path.join(
+      config.modRequest.platformProjectRoot,
+      targetName,
+      'Images.xcassets',
+    )
+    fs.cpSync(imagesBasePath, imagesTargetPath, {recursive: true})
+
     return config
   })
 }
