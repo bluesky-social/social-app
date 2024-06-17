@@ -137,6 +137,7 @@ export function StepFinished() {
         setUsedStarterPack({
           ...usedStarterPack,
           initialFeed: starterPack?.feeds?.[0].uri ?? 'following',
+          lastUsedUri: usedStarterPack.uri,
         })
       }
     } catch (e: any) {

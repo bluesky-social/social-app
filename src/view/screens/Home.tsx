@@ -98,7 +98,7 @@ function HomeScreenReady({
   const lastPagerReportedIndexRef = React.useRef(selectedIndex)
   React.useLayoutEffect(() => {
     let initialIndex = selectedIndex
-    if (usedStarterPack) {
+    if (usedStarterPack?.initialFeed) {
       if (usedStarterPack.initialFeed === 'following') {
         initialIndex = allFeeds.findIndex(f => f === 'following')
       } else {
@@ -109,7 +109,10 @@ function HomeScreenReady({
       if (initialIndex === -1) {
         initialIndex = 0
       }
-      setUsedStarterPack(undefined)
+      setUsedStarterPack({
+        ...usedStarterPack,
+        initialFeed: undefined,
+      })
     }
 
     // Since the pager is not a controlled component, adjust it imperatively
