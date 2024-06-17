@@ -8,7 +8,7 @@ import satori from 'satori'
 
 import {StarterPack} from '../components/StarterPack.js'
 import {AppContext} from '../context.js'
-import {handler} from './util.js'
+import {handler, originVerifyMiddleware} from './util.js'
 
 const HEIGHT = 630
 const WIDTH = 1200
@@ -16,6 +16,7 @@ const WIDTH = 1200
 export default function (ctx: AppContext, app: Express) {
   return app.get(
     '/start/:actor/:rkey',
+    originVerifyMiddleware(ctx),
     handler(async (req, res) => {
       const {actor, rkey} = req.params
       const uri = AtUri.make(actor, 'app.bsky.graph.starterpack', rkey)
