@@ -59,9 +59,6 @@ module.exports = function (config) {
       slug: 'bluesky',
       scheme: 'bluesky',
       owner: 'blueskysocial',
-      runtimeVersion: {
-        policy: 'appVersion',
-      },
       orientation: 'portrait',
       icon: './assets/icon.png',
       userInterfaceStyle: 'automatic',
@@ -134,6 +131,7 @@ module.exports = function (config) {
           backgroundImage: './assets/icon-android-background.png',
           backgroundColor: '#1185FE',
         },
+        versionCode: 239,
         googleServicesFile: './google-services.json',
         package: 'xyz.blueskyweb.app',
         intentFilters: [

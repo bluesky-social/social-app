@@ -94,6 +94,7 @@ export const schema = z.object({
       cid: z.string().optional(),
       initialFeed: z.string().optional(),
       isClip: z.boolean().optional(),
+      lastUsedUri: z.string().optional(),
     })
     .optional(),
 })
