@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh_CN\n"
 "Project-Id-Version: zh-CN for bluesky-social-app\n"
 "Report-Msgid-Bugs-To: Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-06-12 09:01+0800\n"
+"PO-Revision-Date: 2024-06-17 10:26+0800\n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
 "Language-Team: Frudrax Cheng (auroursa), Simon Chan (RitsukiP), U2FsdGVkX1, Mikan Harada (mitian233), IceCodeNew\n"
 "Plural-Forms: \n"
@@ -36,10 +36,6 @@ msgstr "{0, plural, one {# 个标签已标记到此内容} other {# 个标签已
 #: src/view/com/util/post-ctrls/RepostButton.tsx:65
 msgid "{0, plural, one {# repost} other {# reposts}}"
 msgstr "{0, plural, one {# 条转发} other {# 条转发}}"
-
-#: src/components/KnownFollowers.tsx:179
-#~ msgid "{0, plural, one {and # other} other {and # others}}"
-#~ msgstr ""
 
 #: src/components/ProfileHoverCard/index.web.tsx:398
 #: src/screens/Profile/Header/Metrics.tsx:23
@@ -1596,11 +1592,6 @@ msgstr "编辑个人资料"
 msgid "Edit Profile"
 msgstr "编辑个人资料"
 
-#: src/view/com/home/HomeHeaderLayout.web.tsx:76
-#: src/view/screens/Feeds.tsx:416
-#~ msgid "Edit Saved Feeds"
-#~ msgstr "编辑保存的资讯源"
-
 #: src/view/com/modals/CreateOrEditList.tsx:234
 msgid "Edit User List"
 msgstr "编辑用户列表"
@@ -2036,10 +2027,6 @@ msgstr "回关"
 #: src/view/screens/Search/Explore.tsx:332
 msgid "Follow more accounts to get connected to your interests and build your network."
 msgstr "关注更多帐户以了解你的兴趣，并逐步建立你的社交网络。"
-
-#: src/components/KnownFollowers.tsx:169
-#~ msgid "Followed by"
-#~ msgstr ""
 
 #: src/view/com/profile/ProfileCard.tsx:227
 msgid "Followed by {0}"
@@ -3514,11 +3501,6 @@ msgstr "开启内容审核设置"
 #: src/screens/Login/LoginForm.tsx:225
 msgid "Opens password reset form"
 msgstr "开启密码重置申请"
-
-#: src/view/com/home/HomeHeaderLayout.web.tsx:77
-#: src/view/screens/Feeds.tsx:417
-#~ msgid "Opens screen to edit Saved Feeds"
-#~ msgstr "开启用于编辑已保存资讯源的界面"
 
 #: src/view/screens/Settings/index.tsx:617
 msgid "Opens screen with all saved feeds"
@@ -4997,10 +4979,6 @@ msgstr "订阅这个列表"
 #: src/view/screens/Search/Explore.tsx:330
 msgid "Suggested accounts"
 msgstr "建议的账号"
-
-#: src/view/screens/Search/Search.tsx:425
-#~ msgid "Suggested Follows"
-#~ msgstr "推荐的关注者"
 
 #: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:65
 msgid "Suggested for you"
