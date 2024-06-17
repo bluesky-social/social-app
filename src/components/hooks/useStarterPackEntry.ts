@@ -1,9 +1,9 @@
 import React from 'react'
 
-import {useSetUsedStarterPack} from 'state/preferences/starter-pack'
+import {useSetCurrentStarterPack} from 'state/preferences/starter-pack'
 
 export function useStarterPackEntry() {
-  const setUsedStarterPack = useSetUsedStarterPack()
+  const setCurrentStarterPack = useSetCurrentStarterPack()
 
   React.useEffect(() => {
     const url = new URL(window.location.href)
@@ -12,13 +12,13 @@ export function useStarterPackEntry() {
       const isClip = url.searchParams.get('clip') === 'true'
 
       if (name && rkey) {
-        setUsedStarterPack({
+        setCurrentStarterPack({
           uri: window.location.href,
           isClip,
         })
       }
     }
-  }, [setUsedStarterPack])
+  }, [setCurrentStarterPack])
 
   return true
 }

@@ -23,8 +23,8 @@ import {useOTAUpdates} from 'lib/hooks/useOTAUpdates'
 import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
 import {HomeTabNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {
-  useSetUsedStarterPack,
-  useUsedStarterPack,
+  useCurrentStarterPack,
+  useSetCurrentStarterPack,
 } from 'state/preferences/starter-pack'
 import {useLoggedOutViewControls} from 'state/shell/logged-out'
 import {FeedPage} from 'view/com/feeds/FeedPage'
@@ -40,15 +40,19 @@ export function HomeScreen(props: Props) {
   const {data: preferences} = usePreferencesQuery()
   const {data: pinnedFeedInfos, isLoading: isPinnedFeedsLoading} =
     usePinnedFeedsInfos()
-  const usedStarterPack = useUsedStarterPack()
+  const currentStarterPack = useCurrentStarterPack()
   const {setShowLoggedOut, requestSwitchToAccount} = useLoggedOutViewControls()
 
   React.useEffect(() => {
-    if (usedStarterPack && !usedStarterPack.initialFeed) {
+    if (!currentStarterPack?.initialFeed) {
       setShowLoggedOut(true)
       requestSwitchToAccount({requestedAccount: 'starterpack'})
     }
-  }, [usedStarterPack, setShowLoggedOut, requestSwitchToAccount])
+  }, [
+    setShowLoggedOut,
+    requestSwitchToAccount,
+    currentStarterPack?.initialFeed,
+  ])
 
   if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
     return (
@@ -84,8 +88,8 @@ function HomeScreenReady({
   const selectedIndex = Math.max(0, maybeFoundIndex)
   const selectedFeed = allFeeds[selectedIndex]
   const requestNotificationsPermission = useRequestNotificationsPermission()
-  const usedStarterPack = useUsedStarterPack()
-  const setUsedStarterPack = useSetUsedStarterPack()
+  const currentStarterPack = useCurrentStarterPack()
+  const setCurrentStarterPack = useSetCurrentStarterPack()
 
   useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName)
   useOTAUpdates()
@@ -98,21 +102,18 @@ function HomeScreenReady({
   const lastPagerReportedIndexRef = React.useRef(selectedIndex)
   React.useLayoutEffect(() => {
     let initialIndex = selectedIndex
-    if (usedStarterPack?.initialFeed) {
-      if (usedStarterPack.initialFeed === 'following') {
+    if (currentStarterPack?.initialFeed) {
+      if (currentStarterPack.initialFeed === 'following') {
         initialIndex = allFeeds.findIndex(f => f === 'following')
       } else {
         initialIndex = allFeeds.findIndex(
-          f => f === `feedgen|${usedStarterPack.initialFeed}`,
+          f => f === `feedgen|${currentStarterPack.initialFeed}`,
         )
       }
       if (initialIndex === -1) {
         initialIndex = 0
       }
-      setUsedStarterPack({
-        ...usedStarterPack,
-        initialFeed: undefined,
-      })
+      setCurrentStarterPack(undefined)
     }
 
     // Since the pager is not a controlled component, adjust it imperatively
@@ -125,7 +126,12 @@ function HomeScreenReady({
       lastPagerReportedIndexRef.current = selectedIndex
       pagerRef.current?.setPage(selectedIndex, 'desktop-sidebar-click')
     }
-  }, [selectedIndex, usedStarterPack, setUsedStarterPack, allFeeds])
+  }, [
+    selectedIndex,
+    allFeeds,
+    currentStarterPack?.initialFeed,
+    setCurrentStarterPack,
+  ])
 
   const {hasSession} = useSession()
   const setMinimalShellMode = useSetMinimalShellMode()

@@ -12,7 +12,7 @@ import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
 import {shareUrl} from 'lib/sharing'
 import {logEvent} from 'lib/statsig/statsig'
 import {isWeb} from 'platform/detection'
-import {useSetUsedStarterPack} from 'state/preferences/starter-pack'
+import {useSetCurrentStarterPack} from 'state/preferences/starter-pack'
 import {RQKEY} from 'state/queries/list-members'
 import {useResolveDidQuery} from 'state/queries/resolve-uri'
 import {useStarterPackQuery} from 'state/queries/useStarterPackQuery'
@@ -128,7 +128,7 @@ function Header({
   const agent = useAgent()
   const queryClient = useQueryClient()
   const qrCodeDialogControl = useDialogControl()
-  const setUsedStarterPack = useSetUsedStarterPack()
+  const setCurrentStarterPack = useSetCurrentStarterPack()
   const {setShowLoggedOut} = useLoggedOutViewControls()
 
   const [isProcessing, setIsProcessing] = React.useState(false)
@@ -190,7 +190,7 @@ function Header({
               color="secondary"
               size="small"
               onPress={() => {
-                setUsedStarterPack({uri: starterPack.uri})
+                setCurrentStarterPack({uri: starterPack.uri})
                 setShowLoggedOut(true)
               }}>
               <ButtonText>

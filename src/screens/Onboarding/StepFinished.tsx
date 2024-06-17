@@ -15,10 +15,12 @@ import {useAgent} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {uploadBlob} from 'lib/api'
 import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
+import {makeStarterPackLink} from 'lib/routes/links'
 import {
-  useSetUsedStarterPack,
-  useUsedStarterPack,
+  useCurrentStarterPack,
+  useSetCurrentStarterPack,
 } from 'state/preferences/starter-pack'
+import {useAddUsedStarterPack} from 'state/preferences/used-starter-packs'
 import {
   DescriptionText,
   OnboardingControls,
@@ -46,17 +48,18 @@ export function StepFinished() {
   const queryClient = useQueryClient()
   const agent = useAgent()
   const requestNotificationsPermission = useRequestNotificationsPermission()
-  const usedStarterPack = useUsedStarterPack()
-  const setUsedStarterPack = useSetUsedStarterPack()
+  const currentStarterPack = useCurrentStarterPack()
+  const setCurrentStarterPack = useSetCurrentStarterPack()
+  const addUsedStarterPack = useAddUsedStarterPack()
 
   const finishOnboarding = React.useCallback(async () => {
     setSaving(true)
     try {
       let starterPack: AppBskyGraphDefs.StarterPackView | undefined
       let listItems: AppBskyGraphDefs.ListItemView[] | undefined
-      if (usedStarterPack) {
+      if (currentStarterPack) {
         const spRes = await agent.app.bsky.graph.getStarterPack({
-          starterPack: usedStarterPack.uri,
+          starterPack: currentStarterPack.uri,
         })
         starterPack = spRes.data.starterPack
 
@@ -133,12 +136,12 @@ export function StepFinished() {
         requestNotificationsPermission('AfterOnboarding'),
       ])
 
-      if (usedStarterPack) {
-        setUsedStarterPack({
-          ...usedStarterPack,
+      if (currentStarterPack && starterPack) {
+        setCurrentStarterPack({
+          ...currentStarterPack,
           initialFeed: starterPack?.feeds?.[0].uri ?? 'following',
-          lastUsedUri: usedStarterPack.uri,
         })
+        addUsedStarterPack(makeStarterPackLink(starterPack))
       }
     } catch (e: any) {
       logger.info(`onboarding: bulk save failed`)
@@ -171,10 +174,11 @@ export function StepFinished() {
     dispatch,
     onboardDispatch,
     track,
-    usedStarterPack,
+    currentStarterPack,
     state,
     requestNotificationsPermission,
-    setUsedStarterPack,
+    setCurrentStarterPack,
+    addUsedStarterPack,
   ])
 
   React.useEffect(() => {

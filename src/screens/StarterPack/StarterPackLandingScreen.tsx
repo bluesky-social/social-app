@@ -1,15 +1,15 @@
 import React from 'react'
 import {Pressable, ScrollView, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
-import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
+import {AppBskyGraphDefs, AppBskyGraphStarterpack, AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {isAndroidWeb} from 'lib/browser'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {
-  useSetUsedStarterPack,
-  useUsedStarterPack,
+  useCurrentStarterPack,
+  useSetCurrentStarterPack,
 } from 'state/preferences/starter-pack'
 import {useResolveDidQuery} from 'state/queries/resolve-uri'
 import {useStarterPackQuery} from 'state/queries/useStarterPackQuery'
@@ -40,11 +40,15 @@ function postAppClipMessage(message: AppClipMessage) {
 }
 
 function parseStarterPackHttpUri(uri: string): {name?: string; rkey?: string} {
-  const parsed = new URL(uri)
-  const [_, _path, name, rkey] = parsed.pathname.split('/')
-  return {
-    name,
-    rkey,
+  try {
+    const parsed = new URL(uri)
+    const [_, _path, name, rkey] = parsed.pathname.split('/')
+    return {
+      name,
+      rkey,
+    }
+  } catch (e) {
+    return {}
   }
 }
 
@@ -57,8 +61,9 @@ export function LandingScreen({
 }: {
   setScreenState: (state: LoggedOutScreenState) => void
 }) {
-  const usedStarterPack = useUsedStarterPack()
-  const {name, rkey} = parseStarterPackHttpUri(usedStarterPack?.uri || '')
+  const currentStarterPack = useCurrentStarterPack()
+  const {name, rkey} =
+    parseStarterPackHttpUri(currentStarterPack?.uri || '') ?? {}
 
   const {
     data: did,
@@ -108,8 +113,8 @@ function LandingScreenInner({
   const {record, creator, listItemsSample, feeds, joinedWeekCount} = starterPack
   const {_} = useLingui()
   const t = useTheme()
-  const setUsedStarterPack = useSetUsedStarterPack()
-  const usedStarterPack = useUsedStarterPack()
+  const currentStarterPack = useCurrentStarterPack()
+  const setCurrentStarterPack = useSetCurrentStarterPack()
   const {isTabletOrDesktop} = useWebMediaQueries()
   const androidDialogControl = useDialogControl()
 
@@ -119,14 +124,14 @@ function LandingScreenInner({
   const listItemsCount = starterPack.list?.listItemCount ?? 0
 
   const onContinue = () => {
-    setUsedStarterPack({
+    setCurrentStarterPack({
       uri: starterPack.uri,
     })
     setScreenState(LoggedOutScreenState.S_CreateAccount)
   }
 
   const onJoinPress = () => {
-    if (usedStarterPack?.isClip) {
+    if (currentStarterPack?.isClip) {
       setAppClipOverlayVisible(true)
       postAppClipMessage({
         action: 'present',
@@ -156,7 +161,7 @@ function LandingScreenInner({
               borderBottomLeftRadius: 10,
               borderBottomRightRadius: 10,
             },
-            usedStarterPack?.isClip && {
+            currentStarterPack?.isClip && {
               paddingTop: 100,
             },
           ]}>
@@ -210,7 +215,7 @@ function LandingScreenInner({
             {starterPack.feeds?.length ? (
               <View style={[a.gap_md]}>
                 <Text style={[a.font_bold, a.text_lg]}>
-                  Join Bluesky and subscribe to these feeds
+                  These great feeds will be available after signing up!
                 </Text>
 
                 <View
@@ -240,24 +245,23 @@ function LandingScreenInner({
                   {feeds?.length ? (
                     <>
                       {listItemsCount <= 8 ? (
-                        <Trans>Also follow these people right away!</Trans>
+                        <Trans>
+                          You'll also follow these people right away!
+                        </Trans>
                       ) : (
                         <Trans>
-                          Also follow these people and {listItemsCount - 8}{' '}
-                          others!
+                          You'll also follow these people and{' '}
+                          {listItemsCount - 8} others!
                         </Trans>
                       )}
                     </>
                   ) : (
                     <>
                       {listItemsCount <= 8 ? (
-                        <Trans>
-                          Get started by following these people right away!
-                        </Trans>
+                        <Trans>You'll follow these people right away!</Trans>
                       ) : (
                         <Trans>
-                          Get started by following these people and{' '}
-                          {listItemsCount - 8}
+                          You'll follow these people and {listItemsCount - 8}
                           others!
                         </Trans>
                       )}
@@ -289,23 +293,30 @@ function LandingScreenInner({
         setIsVisible={setAppClipOverlayVisible}
       />
       <Prompt.Outer control={androidDialogControl}>
-        <Prompt.TitleText />
-        <Prompt.DescriptionText />
+        <Prompt.TitleText>
+          <Trans>Download Bluesky</Trans>
+        </Prompt.TitleText>
+        <Prompt.DescriptionText>
+          <Trans>
+            The experience is better in the app. Download Bluesky now and we'll
+            pick back up where you left off.
+          </Trans>
+        </Prompt.DescriptionText>
         <Prompt.Actions>
-          <Prompt.Action
-            cta="Continue on web"
-            color="secondary"
-            onPress={onContinue}
-          />
           <Prompt.Action
             cta="Download on Google Play"
             color="primary"
             onPress={() => {
-              const rkey = parseStarterPackHttpUri(starterPack.uri).rkey
+              const rkey = new AtUri(starterPack.uri).rkey
               if (!rkey) return
 
               window.location.href = createGooglePlayLink(creator.handle, rkey)
             }}
+          />
+          <Prompt.Action
+            cta="Continue on web"
+            color="secondary"
+            onPress={onContinue}
           />
         </Prompt.Actions>
       </Prompt.Outer>

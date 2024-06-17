@@ -5,9 +5,9 @@ import * as persisted from '#/state/persisted'
 type StateContext =
   | {
       uri: string
+      cid?: string
       initialFeed?: string
       isClip?: boolean
-      lastUsedUri?: string
     }
   | undefined
 type SetContext = (v: StateContext) => void
@@ -20,12 +20,12 @@ export function Provider({children}: {children: React.ReactNode}) {
 
   const setStateWrapped = (v: StateContext) => {
     setState(v)
-    persisted.write('usedStarterPack', v)
+    persisted.write('currentStarterPack', v)
   }
 
   React.useEffect(() => {
     return persisted.onUpdate(() => {
-      setState(persisted.get('usedStarterPack'))
+      setState(persisted.get('currentStarterPack'))
     })
   }, [])
 
@@ -38,5 +38,5 @@ export function Provider({children}: {children: React.ReactNode}) {
   )
 }
 
-export const useUsedStarterPack = () => React.useContext(stateContext)
-export const useSetUsedStarterPack = () => React.useContext(setContext)
+export const useCurrentStarterPack = () => React.useContext(stateContext)
+export const useSetCurrentStarterPack = () => React.useContext(setContext)
