@@ -1,22 +1,23 @@
 import React from 'react'
 
-type StateContext = Record<string, boolean>
+type StateContext = Map<string, boolean>
 type SetStateContext = (uri: string, value: boolean) => void
 
-const stateContext = React.createContext<StateContext>({})
+const stateContext = React.createContext<StateContext>(new Map())
 const setStateContext = React.createContext<SetStateContext>(
   (_: string) => false,
 )
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [state, setState] = React.useState<StateContext>({})
+  const [state, setState] = React.useState<StateContext>(() => new Map())
 
   const setThreadMute = React.useCallback(
     (uri: string, value: boolean) => {
-      setState(prev => ({
-        ...prev,
-        [uri]: value,
-      }))
+      setState(prev => {
+        const next = new Map(prev)
+        next.set(uri, value)
+        return next
+      })
     },
     [setState],
   )
@@ -35,7 +36,7 @@ export function useMutedThreads() {
 
 export function useIsThreadMuted(uri: string, defaultValue = false) {
   const state = React.useContext(stateContext)
-  return state[uri] ?? defaultValue
+  return state.get(uri) ?? defaultValue
 }
 
 export function useSetThreadMute() {
