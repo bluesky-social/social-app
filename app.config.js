@@ -45,14 +45,8 @@ module.exports = function (config) {
     'appclips:bsky.app',
     // When testing local services, enter an ngrok (et al) domain here. It must use a standard HTTP/HTTPS port.
     ...(IS_DEV
-      ? [
-          'appclips:019f-24-237-65-73.ngrok-free.app',
-          'applinks:019f-24-237-65-73.ngrok-free.app',
-        ]
-      : [
-          'appclips:019f-24-237-65-73.ngrok-free.app',
-          'applinks:019f-24-237-65-73.ngrok-free.app',
-        ]),
+      ? ['appclips:sptesting.haileyok.com', 'applinks:sptesting.haileyok.com']
+      : ['appclips:sptesting.haileyok.com', 'applinks:sptesting.haileyok.com']),
   ]
 
   const UPDATES_CHANNEL = IS_TESTFLIGHT
