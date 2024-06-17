@@ -120,7 +120,9 @@ function LoadMore({
       })
       .filter(Boolean) as LoadMoreItems[]
   }, [item.items, moderationOpts])
-  const type = items[0].type
+  const type = items.at(0)?.type
+
+  if (items.length === 0) return null
 
   return (
     <View style={[]}>
@@ -143,7 +145,7 @@ function LoadMore({
                 a.relative,
                 {
                   height: 32,
-                  width: 32 + 15 * 3,
+                  width: 32 + 15 * items.length,
                 },
               ]}>
               <View
@@ -352,13 +354,15 @@ export function Explore() {
         }
       }
 
-      i.push({
-        type: 'loadMore',
-        key: 'loadMoreProfiles',
-        isLoadingMore: isLoadingMoreProfiles,
-        onLoadMore: onLoadMoreProfiles,
-        items: i.filter(item => item.type === 'profile').slice(-3),
-      })
+      if (hasNextProfilesPage) {
+        i.push({
+          type: 'loadMore',
+          key: 'loadMoreProfiles',
+          isLoadingMore: isLoadingMoreProfiles,
+          onLoadMore: onLoadMoreProfiles,
+          items: i.filter(item => item.type === 'profile').slice(-3),
+        })
+      }
     } else {
       if (profilesError) {
         i.push({
@@ -414,7 +418,7 @@ export function Explore() {
           message: _(msg`Failed to load feeds preferences`),
           error: cleanError(preferencesError),
         })
-      } else {
+      } else if (hasNextFeedsPage) {
         i.push({
           type: 'loadMore',
           key: 'loadMoreFeeds',
@@ -456,6 +460,8 @@ export function Explore() {
     profilesError,
     feedsError,
     preferencesError,
+    hasNextProfilesPage,
+    hasNextFeedsPage,
   ])
 
   const renderItem = React.useCallback(
