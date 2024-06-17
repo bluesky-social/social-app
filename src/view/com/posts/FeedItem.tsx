@@ -196,13 +196,12 @@ let FeedItemInner = ({
     },
   ]
 
-  const isParentBlocked =
-    Boolean(
-      parentAuthor?.viewer?.blockedBy ||
-        parentAuthor?.viewer?.blocking ||
-        parentAuthor?.viewer?.blockingByList,
-    ) ||
-    (!parentAuthor?.displayName && !parentAuthor?.handle)
+  const isParentBlocked = Boolean(
+    parentAuthor &&
+      (parentAuthor.viewer?.blockedBy ||
+        parentAuthor.viewer?.blocking ||
+        parentAuthor.viewer?.blockingByList),
+  )
 
   return (
     <Link
