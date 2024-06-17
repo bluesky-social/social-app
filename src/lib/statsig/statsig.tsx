@@ -305,7 +305,7 @@ export function Provider({children}: {children: React.ReactNode}) {
     <GateCache.Provider value={gateCache}>
       <StatsigProvider
         key={did}
-        sdkKey="client-SXJakO39w9vIhl3D44u8UupyzFl4oZ2qPIkjwcvuPsV"
+        sdkKey={SDK_KEY}
         mountKey={currentStatsigUser.userID}
         user={currentStatsigUser}
         // This isn't really blocking due to short initTimeoutMs above.
