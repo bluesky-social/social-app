@@ -14,7 +14,6 @@ export function Provider({children}: {children: React.ReactNode}) {
   )
 
   const setStateWrapped = (v: string) => {
-    console.log('ADDING!!!', v)
     persisted.write('usedStarterPacks', [...(state ? state : []), v])
     setState(prev => [...(prev ? prev : []), v])
   }
