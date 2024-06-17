@@ -11,9 +11,12 @@ export function useStarterPackEntry() {
   const [ready, setReady] = React.useState(false)
   const setCurrentStarterPack = useSetCurrentStarterPack()
   const usedStarterPacks = useUsedStarterPacks()
+  const hasRan = React.useRef(false)
 
   React.useEffect(() => {
-    if (ready) return
+    if (ready || hasRan.current) return
+
+    hasRan.current = true
     ;(async () => {
       let uri: string | null | undefined
 
