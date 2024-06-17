@@ -7,7 +7,6 @@ class ViewController: UIViewController, WKScriptMessageHandler {
 
   var window: UIWindow
   var webView: WKWebView?
-  var userContentController: WKUserContentController?
 
   var starterPackUrl: URL?
 
@@ -31,16 +30,14 @@ class ViewController: UIViewController, WKScriptMessageHandler {
     let webView = WKWebView(frame: self.view.bounds, configuration: configuration)
     webView.translatesAutoresizingMaskIntoConstraints = false
     webView.contentMode = .scaleToFill
-
     self.view.addSubview(webView)
     self.webView = webView
   }
 
   func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
     guard let response = message.body as? String,
-          let data = response.data(using: .utf8, allowLossyConversion: false),
-          let payload = try? JSONDecoder().decode(WebViewActionPayload.self, from: data)
-    else {
+          let data = response.data(using: .utf8),
+          let payload = try? JSONDecoder().decode(WebViewActionPayload.self, from: data) else {
       return
     }
 

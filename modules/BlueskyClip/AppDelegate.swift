@@ -1,19 +1,19 @@
 import UIKit
 
-// https://dc19-24-237-65-73.ngrok-free.app/start/haileyok.com/3kuw7byr7gd2x
-
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
   var window: UIWindow?
   var controller: ViewController?
 
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    let window = UIWindow()
     self.window = UIWindow()
 
-    self.controller = ViewController(window: self.window!)
+    let controller = ViewController(window: window)
+    self.controller = controller
 
-    self.window?.rootViewController = self.controller
-    self.window?.makeKeyAndVisible()
+    window.rootViewController = self.controller
+    window.makeKeyAndVisible()
 
     return true
   }
