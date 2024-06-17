@@ -206,8 +206,7 @@ function WizardInner({
       subtitle: _(msg`Some subtitle`),
     },
   }
-
-  const uiStrings = wizardUiStrings[state.currentStep]
+  const currUiStrings = wizardUiStrings[state.currentStep]
 
   const invalidateQueries = async () => {
     if (!did || !rkey) return
@@ -436,7 +435,7 @@ function WizardInner({
           </TouchableOpacity>
         </View>
         <Text style={[a.flex_1, a.font_bold, a.text_lg, a.text_center]}>
-          {uiStrings.header}
+          {currUiStrings.header}
         </Text>
         <View style={[{width: 65}]} />
       </View>
@@ -448,7 +447,7 @@ function WizardInner({
       </Container>
 
       {state.currentStep !== 'Details' && (
-        <Footer onNext={onNext} nextBtnText={uiStrings.nextBtn} />
+        <Footer onNext={onNext} nextBtnText={currUiStrings.nextBtn} />
       )}
     </CenteredView>
   )
