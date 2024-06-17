@@ -52,7 +52,7 @@ class ViewController: UIViewController, WKScriptMessageHandler {
       }
       
       self.presentAppStoreOverlay()
-      defaults?.setValue(url.absoluteString, forKey: "appClipStarterPackUri")
+      defaults?.setValue(url.absoluteString, forKey: "starterPackUri")
       
     case .store:
       guard let keyToStoreAs = payload.keyToStoreAs, let jsonToStore = payload.jsonToStore else {
