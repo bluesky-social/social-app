@@ -23,7 +23,7 @@ export function shouldRequestEmailConfirmation(account: SessionAccount) {
 
   // never been snoozed, new account
   if (!snoozedAt) {
-    snooze()
+    snoozeEmailConfirmationPrompt()
     return true
   }
 
@@ -34,16 +34,16 @@ export function shouldRequestEmailConfirmation(account: SessionAccount) {
 
   // snoozed recently
   if (snoozedAt !== today) {
-    snooze()
+    snoozeEmailConfirmationPrompt()
     return true
   }
 
   // should never happen
-  snooze()
+  snoozeEmailConfirmationPrompt()
   return true
 }
 
-export function snooze() {
+export function snoozeEmailConfirmationPrompt() {
   const lastEmailConfirm = new Date().toISOString()
   logger.debug('Snoozing email confirmation reminder', {
     snoozedAt: lastEmailConfirm,
