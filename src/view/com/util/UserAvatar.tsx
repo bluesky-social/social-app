@@ -31,7 +31,7 @@ import * as Menu from '#/components/Menu'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
 
-export type UserAvatarType = 'user' | 'algo' | 'list' | 'labeler' | 'square'
+export type UserAvatarType = 'user' | 'algo' | 'list' | 'labeler'
 
 interface BaseUserAvatarProps {
   type?: UserAvatarType
@@ -168,13 +168,6 @@ let UserAvatar = ({
   const backgroundColor = pal.colors.backgroundLight
 
   const aviStyle = useMemo(() => {
-    if (type === 'square') {
-      return {
-        width: size,
-        height: size,
-        backgroundColor,
-      }
-    }
     if (type === 'algo' || type === 'list' || type === 'labeler') {
       return {
         width: size,
