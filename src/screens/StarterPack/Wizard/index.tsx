@@ -68,12 +68,12 @@ export function Wizard({
     isLoading: isLoadingDid,
     isError: isErrorDid,
   } = useResolveDidQuery(name)
+
   const {
     data: starterPack,
     isLoading: isLoadingStarterPack,
     isError: isErrorStarterPack,
   } = useStarterPackQuery({did, rkey})
-
   const listUri = starterPack?.list?.uri
 
   const {
@@ -89,12 +89,10 @@ export function Wizard({
     isError: isErrorProfile,
   } = useProfileQuery({did: currentAccount?.did})
 
-  if (
-    (name &&
-      rkey &&
-      (!starterPack || (starterPack && listUri && !listItems))) ||
-    !profile
-  ) {
+  const isEdit = Boolean(name && rkey)
+  const isReady = (!isEdit || (isEdit && starterPack && listItems)) && profile
+
+  if (!isReady) {
     return (
       <ListMaybePlaceholder
         isLoading={
@@ -109,7 +107,7 @@ export function Wizard({
         errorMessage={_(msg`Could not find that starter pack`)}
       />
     )
-  } else if (name && rkey && starterPack?.creator.did !== currentAccount?.did) {
+  } else if (isEdit && starterPack?.creator.did !== currentAccount?.did) {
     return (
       <ListMaybePlaceholder
         isLoading={false}
