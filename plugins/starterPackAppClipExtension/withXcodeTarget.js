@@ -7,11 +7,8 @@ const withXcodeTarget = (config, {targetName}) => {
   return withXcodeProject(config, config => {
     const pbxProject = config.modResults
 
-    const target = pbxProject.addTarget(
-      targetName,
-      'application_on_demand_install_capable',
-      targetName,
-    )
+    const target = pbxProject.addTarget(targetName, 'application', targetName)
+    target.pbxNativeTarget.productType = `"com.apple.product-type.application.on-demand-install-capable"`
     pbxProject.addBuildPhase(
       BUILD_PHASE_FILES.map(f => `${targetName}/${f}`),
       'PBXSourcesBuildPhase',
@@ -55,6 +52,12 @@ const withXcodeTarget = (config, {targetName}) => {
     }
 
     pbxProject.addTargetAttribute('DevelopmentTeam', 'B3LX46C5HS', targetName)
+
+    console.log(
+      pbxProject.getTarget(
+        'com.apple.product-type.application.on-demand-install-capable',
+      ),
+    )
 
     if (!pbxProject.hash.project.objects.PBXTargetDependency) {
       pbxProject.hash.project.objects.PBXTargetDependency = {}
