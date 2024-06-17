@@ -7,6 +7,10 @@ import {useLingui} from '@lingui/react'
 
 import {isAndroidWeb} from 'lib/browser'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {
+  createStarterPackGooglePlayUri,
+  parseStarterPackHttpUri,
+} from 'lib/strings/starter-pack'
 import {isWeb} from 'platform/detection'
 import {
   useCurrentStarterPack,
@@ -41,24 +45,28 @@ function postAppClipMessage(message: AppClipMessage) {
   window.webkit.messageHandlers.onMessage.postMessage(JSON.stringify(message))
 }
 
-function parseStarterPackHttpUri(uri: string): {name?: string; rkey?: string} {
-  try {
-    const parsed = new URL(uri)
-    const [_, _path, name, rkey] = parsed.pathname.split('/')
-    return {
-      name,
-      rkey,
-    }
-  } catch (e) {
-    return {}
-  }
-}
-
-function createGooglePlayLink(name: string, rkey: string) {
-  return `https://play.google.com/store/apps/details?id=xyz.blueskyweb.app&referrer=utm_source%3Dbluesky%26utm_medium%3Dstarterpack%26utm_content%3Dstarterpack-${name}-${rkey}`
-}
-
 export function LandingScreen({
+  setScreenState,
+}: {
+  setScreenState: (state: LoggedOutScreenState) => void
+}) {
+  const currentStarterPack = useCurrentStarterPack()
+  const parsed = parseStarterPackHttpUri(currentStarterPack?.uri || '')
+
+  React.useEffect(() => {
+    if (!parsed) {
+      setScreenState(LoggedOutScreenState.S_LoginOrCreateAccount)
+    }
+  }, [parsed, setScreenState])
+
+  if (parsed) {
+    return null
+  }
+
+  return <LandingScreenInner setScreenState={setScreenState} />
+}
+
+export function LandingScreenInner({
   setScreenState,
 }: {
   setScreenState: (state: LoggedOutScreenState) => void
@@ -98,14 +106,14 @@ export function LandingScreen({
   }
 
   return (
-    <LandingScreenInner
+    <LandingScreenLoaded
       starterPack={starterPack}
       setScreenState={setScreenState}
     />
   )
 }
 
-function LandingScreenInner({
+function LandingScreenLoaded({
   starterPack,
   setScreenState,
 }: {
@@ -326,7 +334,13 @@ function LandingScreenInner({
               const rkey = new AtUri(starterPack.uri).rkey
               if (!rkey) return
 
-              window.location.href = createGooglePlayLink(creator.handle, rkey)
+              const googlePlayUri = createStarterPackGooglePlayUri(
+                creator.handle,
+                rkey,
+              )
+              if (!googlePlayUri) return
+
+              window.location.href = googlePlayUri
             }}
           />
           <Prompt.Action

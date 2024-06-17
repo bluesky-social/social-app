@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {makeStarterPackLink} from 'lib/routes/links'
+import {createStarterPackLinkFromAndroidReferrer} from 'lib/strings/starter-pack'
 import {isAndroid} from 'platform/detection'
 import {useSetCurrentStarterPack} from 'state/preferences/starter-pack'
 import {useUsedStarterPacks} from 'state/preferences/used-starter-packs'
@@ -24,14 +24,7 @@ export function useStarterPackEntry() {
         const res = await GooglePlayReferrer.getReferrerInfoAsync()
 
         if (res && res.installReferrer) {
-          const parts = res.installReferrer.split('&')
-          const starterPackSource = parts
-            .find(part => part.startsWith('utm_content='))
-            ?.split('=')[1]
-          const sourceParts = starterPackSource?.split('-')
-          if (sourceParts?.length === 3 && sourceParts[0] === 'starterpack') {
-            uri = makeStarterPackLink(sourceParts[1], sourceParts[2])
-          }
+          uri = createStarterPackLinkFromAndroidReferrer(res.installReferrer)
         }
       } else {
         uri = await SwissArmyKnife.getStringValueAsync('starterPackUri', true)

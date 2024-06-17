@@ -1,6 +1,11 @@
 import {RichText} from '@atproto/api'
 
 import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
+import {
+  createStarterPackGooglePlayUri,
+  createStarterPackLinkFromAndroidReferrer,
+  parseStarterPackHttpUri,
+} from 'lib/strings/starter-pack'
 import {cleanError} from '../../src/lib/strings/errors'
 import {createFullHandle, makeValidHandle} from '../../src/lib/strings/handles'
 import {enforceLen} from '../../src/lib/strings/helpers'
@@ -867,6 +872,81 @@ describe('parseEmbedPlayerFromUrl', () => {
       const res = parseEmbedPlayerFromUrl(input)
 
       expect(res).toEqual(output)
+    }
+  })
+})
+
+describe('createStarterPackLinkFromAndroidReferrer', () => {
+  const inputs = [
+    'utm_source=bluesky&utm_medium=starterpack&utm_content=starterpack-haileyok.com-rkey',
+    'utm_source=bluesky&utm_content=starterpack-haileyok.com-rkey&utm_medium=starterpack',
+    'utm_source=bluesky&utm_content=starterpack-haileyok.com-rkey',
+    'utm_content=starterpack-haileyok.com-rkey',
+    'utm_source=redsea&utm_content=starterpack-haileyok.com-rkey',
+    'utm_source=bluesky&utm_content=starterpack-haileyok.com',
+    'utm_source=bluesky&utm_content=starterpack',
+    'utm_source=bluesky&utm_content=nope',
+    'utm_source=bluesky',
+    'utm_content=starterpack-haileyok.com-rkey',
+  ]
+  const outputs = [
+    'https://bsky.app/start/haileyok.com/rkey',
+    'https://bsky.app/start/haileyok.com/rkey',
+    'https://bsky.app/start/haileyok.com/rkey',
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ]
+
+  it('returns a starter pack link when input is valid', () => {
+    for (let i = 0; i < inputs.length; i++) {
+      const result = createStarterPackLinkFromAndroidReferrer(inputs[i])
+      expect(result).toEqual(outputs[i])
+    }
+  })
+})
+
+describe('parseStarterPackHttpUri', () => {
+  const inputs = [
+    'https://bsky.app/start/haileyok.com/rkey',
+    'https://bsky.app/start/haileyok.com/ilovetesting',
+    'https://bsky.app/start/testlover9000.com/rkey',
+    'https://bsky.app/start/testlover9000.com',
+    'https://bsky.app/start/testlover9000.com/rkey/other',
+    'https://bsky.app/start',
+  ]
+  const outputs = [
+    {name: 'haileyok.com', rkey: 'rkey'},
+    {name: 'haileyok.com', rkey: 'ilovetesting'},
+    {name: 'testlover9000.com', rkey: 'rkey'},
+    null,
+    null,
+    null,
+  ]
+
+  it('returns the correct name and rkey when input is valid', () => {
+    for (let i = 0; i < inputs.length; i++) {
+      const result = parseStarterPackHttpUri(inputs[i])
+      expect(result).toEqual(outputs[i])
+    }
+  })
+})
+
+describe('createStarterPackGooglePlayUri', () => {
+  const base =
+    'https://play.google.com/store/apps/details?id=xyz.blueskyweb.app&referrer=utm_source%3Dbluesky%26utm_medium%3Dstarterpack%26utm_content%3Dstarterpack-'
+
+  const inputs = [['name', 'rkey'], ['name'], []]
+  const outputs = [base + 'name-rkey', null, null]
+
+  it('returns valid google play uri when input is valid', () => {
+    for (let i = 0; i < inputs.length; i++) {
+      const result = createStarterPackGooglePlayUri(inputs[i][0], inputs[i][1])
+      expect(result).toEqual(outputs[i])
     }
   })
 })
