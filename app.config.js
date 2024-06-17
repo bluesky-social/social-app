@@ -42,8 +42,9 @@ module.exports = function (config) {
   const ASSOCIATED_DOMAINS = [
     'applinks:bsky.app',
     'applinks:staging.bsky.app',
+    'appclips:bsky.app',
     // When testing local services, enter an ngrok (et al) domain here. It must use a standard HTTP/HTTPS port.
-    ...(IS_DEV ? ['applinks:dc19-24-237-65-73.ngrok-free.app'] : []),
+    ...(IS_DEV ? [] : []),
   ]
 
   const UPDATES_CHANNEL = IS_TESTFLIGHT
