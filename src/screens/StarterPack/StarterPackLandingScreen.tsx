@@ -36,6 +36,7 @@ interface AppClipMessage {
 }
 
 function postAppClipMessage(message: AppClipMessage) {
+  // @ts-expect-error safari webview only
   window.webkit.messageHandlers.onMessage.postMessage(JSON.stringify(message))
 }
 
