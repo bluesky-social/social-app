@@ -55,7 +55,9 @@ export function HomeScreen(props: Props) {
           setShowLoggedOut(true)
           requestSwitchToAccount({requestedAccount: 'starterpack'})
         }
-      } catch {}
+      } catch {
+        // Don't need to handle anything here, just put the user on the home screen
+      }
     }
   }, [
     setShowLoggedOut,
