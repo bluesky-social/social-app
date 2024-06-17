@@ -14,13 +14,18 @@ const withXcodeTarget = (config, {targetName}) => {
       'PBXSourcesBuildPhase',
       'Sources',
       target.uuid,
+      'application',
+      '"$(CONTENTS_FOLDER_PATH)/AppClips"',
     )
     pbxProject.addBuildPhase(
       [],
       'PBXResourcesBuildPhase',
       'Resources',
       target.uuid,
+      'application',
+      '"$(CONTENTS_FOLDER_PATH)/AppClips"',
     )
+
     const pbxGroupKey = pbxProject.pbxCreateGroup(targetName, targetName)
     pbxProject.addFile(`${targetName}/Info.plist`, pbxGroupKey)
 
@@ -53,12 +58,6 @@ const withXcodeTarget = (config, {targetName}) => {
 
     pbxProject.addTargetAttribute('DevelopmentTeam', 'B3LX46C5HS', targetName)
 
-    console.log(
-      pbxProject.getTarget(
-        'com.apple.product-type.application.on-demand-install-capable',
-      ),
-    )
-
     if (!pbxProject.hash.project.objects.PBXTargetDependency) {
       pbxProject.hash.project.objects.PBXTargetDependency = {}
     }
@@ -68,6 +67,29 @@ const withXcodeTarget = (config, {targetName}) => {
     pbxProject.addTargetDependency(pbxProject.getFirstTarget().uuid, [
       target.uuid,
     ])
+
+    // pbxProject.addProductFile(targetName, {
+    //   basename: `${targetName}.app`,
+    //   groupName: 'Embed App Clips',
+    //   explicitFileType: 'wrapper.application',
+    //   settings: {
+    //     ATTRIBUTES: ['RemoveHeadersOnCopy'],
+    //   },
+    //   includeInIndex: 0,
+    //   path: `${targetName}.app`,
+    //   sourceTree: 'BUILT_PRODUCTS_DIR',
+    // })
+
+    pbxProject.addToPbxNativeTargetSection(target)
+
+    pbxProject.addBuildPhase(
+      [`${targetName}.app`],
+      'PBXCopyFilesBuildPhase',
+      'Embed App Clips',
+      pbxProject.getFirstTarget().uuid,
+      'application',
+      '"$(CONTENTS_FOLDER_PATH)/AppClips"',
+    )
 
     return config
   })
