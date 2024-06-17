@@ -117,8 +117,8 @@ export function Likes({count}: {count: number}) {
 }
 
 export function Action({uri, pin}: {uri: string; pin?: boolean}) {
-  const {currentAccount} = useSession()
-  if (!currentAccount) return null
+  const {hasSession} = useSession()
+  if (!hasSession) return null
   return <ActionInner uri={uri} pin={pin} />
 }
 
