@@ -66,7 +66,7 @@ export function StarterPackScreen({
     )
   }
 
-  const items = [
+  const tabs = [
     ...(starterPack.list ? ['People'] : []),
     ...(starterPack.feeds?.length ? ['Feeds'] : []),
   ]
@@ -75,12 +75,12 @@ export function StarterPackScreen({
     <CenteredView style={[a.h_full_vh]}>
       <View style={isWeb ? {minHeight: '100%'} : {height: '100%'}}>
         <PagerWithHeader
-          items={items}
+          items={tabs}
           isHeaderReady={true}
           renderHeader={() => (
             <Header starterPack={starterPack} name={name} rkey={rkey} />
           )}>
-          {starterPack.list
+          {starterPack.list != null
             ? ({headerHeight, scrollElRef}) => (
                 <ProfilesList
                   key={0}
@@ -92,7 +92,7 @@ export function StarterPackScreen({
                 />
               )
             : null}
-          {starterPack.feeds
+          {starterPack.feeds != null
             ? ({headerHeight, scrollElRef}) => (
                 <FeedsList
                   key={1}
