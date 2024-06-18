@@ -14,6 +14,7 @@ import {
   createAgentAndCreateAccount,
   createAgentAndLogin,
   createAgentAndResume,
+  sessionAccountToSession,
 } from './agent'
 import {getInitialState, reducer} from './reducer'
 
@@ -175,8 +176,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         if (syncedAccount.did !== state.currentAgentState.did) {
           resumeSession(syncedAccount)
         } else {
-          // @ts-ignore we checked for `refreshJwt` above
-          state.currentAgentState.agent.session = syncedAccount
+          const agent = state.currentAgentState.agent as BskyAgent
+          agent.session = sessionAccountToSession(syncedAccount)
         }
       }
     })
