@@ -1,6 +1,7 @@
 import React from 'react'
 import {Pressable, View} from 'react-native'
 import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -274,18 +275,25 @@ function Header({
         </View>
       </ProfileSubpageHeader>
       {record.description || joinedWeekCount >= 25 ? (
-        <View style={[a.px_md, a.py_lg, a.gap_md]}>
+        <View style={[a.px_lg, a.pt_md, a.pb_sm, a.gap_md]}>
           {record.description ? (
             <Text style={[a.text_md]}>{record.description}</Text>
           ) : null}
           {joinedWeekCount >= 25 ? (
-            <Text
-              style={[a.font_bold, a.text_md, t.atoms.text_contrast_medium]}>
-              <Trans>
-                {starterPack.joinedAllTimeCount || 0} people have used this
-                starter pack!
-              </Trans>
-            </Text>
+            <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+              <FontAwesomeIcon
+                icon="arrow-trend-up"
+                size={12}
+                color={t.atoms.text_contrast_medium.color}
+              />
+              <Text
+                style={[a.font_bold, a.text_sm, t.atoms.text_contrast_medium]}>
+                <Trans>
+                  {starterPack.joinedAllTimeCount || 0} people have used this
+                  starter pack!
+                </Trans>
+              </Text>
+            </View>
           ) : null}
         </View>
       ) : null}
