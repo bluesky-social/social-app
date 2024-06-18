@@ -95,7 +95,7 @@ export const schema = z.object({
       isClip: z.boolean().optional(),
     })
     .optional(),
-  usedStarterPacks: z.array(z.string()).optional(),
+  hasCheckedForStarterPack: z.boolean().optional(),
 })
 export type Schema = z.infer<typeof schema>
 
@@ -135,5 +135,5 @@ export const defaults: Schema = {
   disableAutoplay: prefersReducedMotion,
   kawaii: false,
   currentStarterPack: undefined,
-  usedStarterPacks: [],
+  hasCheckedForStarterPack: false,
 }

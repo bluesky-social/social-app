@@ -15,12 +15,10 @@ import {useAgent} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {uploadBlob} from 'lib/api'
 import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
-import {makeStarterPackLink} from 'lib/routes/links'
 import {
   useCurrentStarterPack,
   useSetCurrentStarterPack,
 } from 'state/preferences/starter-pack'
-import {useAddUsedStarterPack} from 'state/preferences/used-starter-packs'
 import {
   DescriptionText,
   OnboardingControls,
@@ -50,7 +48,6 @@ export function StepFinished() {
   const requestNotificationsPermission = useRequestNotificationsPermission()
   const currentStarterPack = useCurrentStarterPack()
   const setCurrentStarterPack = useSetCurrentStarterPack()
-  const addUsedStarterPack = useAddUsedStarterPack()
 
   const finishOnboarding = React.useCallback(async () => {
     setSaving(true)
@@ -102,7 +99,6 @@ export function StepFinished() {
                 initialFeed: 'following',
               })
             }
-            addUsedStarterPack(makeStarterPackLink(starterPack))
           }
         })(),
         (async () => {
@@ -182,7 +178,6 @@ export function StepFinished() {
     currentStarterPack,
     state,
     requestNotificationsPermission,
-    addUsedStarterPack,
     setCurrentStarterPack,
   ])
 
