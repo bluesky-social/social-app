@@ -1,0 +1,22 @@
+diff --git a/node_modules/rn-fetch-blob/index.js b/node_modules/rn-fetch-blob/index.js
+index 8ab5e96..9bc8802 100644
+--- a/node_modules/rn-fetch-blob/index.js
++++ b/node_modules/rn-fetch-blob/index.js
+@@ -21,7 +21,7 @@ import fs from './fs'
+ import getUUID from './utils/uuid'
+ import base64 from 'base-64'
+ import polyfill from './polyfill'
+-import _ from 'lodash'
++import reduce from 'lodash.reduce'
+ import android from './android'
+ import ios from './ios'
+ import JSONStream from './json-stream'
+@@ -224,7 +224,7 @@ function fetch(...args:any):Promise {
+ 
+   // # 241 normalize null or undefined headers, in case nil or null string
+   // pass to native context
+-  headers = _.reduce(headers, (result, value, key) => {
++  headers = reduce(headers, (result, value, key) => {
+     result[key] = value || ''
+     return result
+   }, {});
