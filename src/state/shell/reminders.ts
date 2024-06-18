@@ -27,7 +27,7 @@ export function shouldRequestEmailConfirmation(account: SessionAccount) {
   }
 
   // already snoozed today
-  if (simpleAreDatesEqual(new Date(snoozedAt), new Date())) {
+  if (simpleAreDatesEqual(new Date(Date.parse(snoozedAt)), new Date())) {
     return false
   }
 
