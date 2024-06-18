@@ -30,7 +30,7 @@ export function NewskieDialog({
     const moderation = moderateProfile(profile, moderationOpts)
     return sanitizeDisplayName(name, moderation.ui('displayName'))
   }, [moderationOpts, profile])
-  const [now] = React.useState(Date.now())
+  const [now] = React.useState(() => Date.now())
   const timeAgo = useGetTimeAgo()
   const createdAt = profile.createdAt as string | undefined
   const daysOld = React.useMemo(() => {
