@@ -11,6 +11,7 @@ import {
 import {tryFetchGates} from '#/lib/statsig/statsig'
 import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
+import {snoozeEmailConfirmationPrompt} from '#/state/shell/reminders'
 import {
   configureModerationForAccount,
   configureModerationForGuest,
@@ -189,6 +190,13 @@ export async function createAgentAndCreateAccount(
     }
   } else {
     agent.setPersonalDetails({birthDate: birthDate.toISOString()})
+  }
+
+  try {
+    // snooze first prompt after signup, defer to next prompt
+    snoozeEmailConfirmationPrompt()
+  } catch (e: any) {
+    logger.error(e, {context: `session: failed snoozeEmailConfirmationPrompt`})
   }
 
   return prepareAgent(agent, gates, moderation, onSessionChange)
