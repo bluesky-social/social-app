@@ -1,10 +1,10 @@
 import React from 'react'
 import {View} from 'react-native'
 import {AppBskyActorDefs, ModerationDecision} from '@atproto/api'
-
-import {Shadow} from '#/state/cache/types'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {Shadow} from '#/state/cache/types'
+
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 
@@ -17,7 +17,7 @@ export function ProfileHeaderDisplayName({
 }) {
   const t = useTheme()
   return (
-    <View>
+    <View pointerEvents="none">
       <Text
         testID="profileHeaderDisplayName"
         style={[t.atoms.text, a.text_4xl, {fontWeight: '500'}]}>
