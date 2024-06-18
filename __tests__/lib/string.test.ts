@@ -844,11 +844,13 @@ describe('parseStarterPackHttpUri', () => {
     'https://bsky.app/start/testlover9000.com',
     'https://bsky.app/start/testlover9000.com/rkey/other',
     'https://bsky.app/start',
+    undefined,
   ]
   const outputs = [
     {name: 'haileyok.com', rkey: 'rkey'},
     {name: 'haileyok.com', rkey: 'ilovetesting'},
     {name: 'testlover9000.com', rkey: 'rkey'},
+    null,
     null,
     null,
     null,

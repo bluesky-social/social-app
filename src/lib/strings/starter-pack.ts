@@ -24,10 +24,12 @@ export function createStarterPackLinkFromAndroidReferrer(
   }
 }
 
-export function parseStarterPackHttpUri(uri: string): {
+export function parseStarterPackHttpUri(uri?: string): {
   name?: string
   rkey?: string
 } | null {
+  if (!uri) return null
+
   try {
     const url = new URL(uri)
     const parts = url.pathname.split('/')
