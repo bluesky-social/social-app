@@ -2,6 +2,7 @@
 
 module.exports = {
   rules: {
+    'keep-i18n-patch-in-sync': require('./keep-i18n-patch-in-sync'),
     'avoid-unwrapped-text': require('./avoid-unwrapped-text'),
     'use-typed-gates': require('./use-typed-gates'),
   },

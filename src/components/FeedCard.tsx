@@ -11,6 +11,7 @@ import {
   useRemoveFeedMutation,
 } from '#/state/queries/preferences'
 import {sanitizeHandle} from 'lib/strings/handles'
+import {useSession} from 'state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import * as Toast from 'view/com/util/Toast'
 import {useTheme} from '#/alf'
@@ -116,6 +117,12 @@ export function Likes({count}: {count: number}) {
 }
 
 export function Action({uri, pin}: {uri: string; pin?: boolean}) {
+  const {hasSession} = useSession()
+  if (!hasSession) return null
+  return <ActionInner uri={uri} pin={pin} />
+}
+
+function ActionInner({uri, pin}: {uri: string; pin?: boolean}) {
   const {_} = useLingui()
   const {data: preferences} = usePreferencesQuery()
   const {isPending: isAddSavedFeedPending, mutateAsync: saveFeeds} =

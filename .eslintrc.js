@@ -32,6 +32,7 @@ module.exports = {
       },
     ],
     'bsky-internal/use-typed-gates': 'error',
+    'bsky-internal/keep-i18n-patch-in-sync': 'error',
     'simple-import-sort/imports': [
       'warn',
       {
