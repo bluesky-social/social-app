@@ -64,7 +64,7 @@ function SuggestedItemsHeader({
             fill={t.palette.primary_500}
             style={{marginLeft: -2}}
           />
-          <Text style={[a.text_2xl, a.font_bold, t.atoms.text]}>{title}</Text>
+          <Text style={[a.text_2xl, a.font_heavy, t.atoms.text]}>{title}</Text>
         </View>
         <Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
           {description}
@@ -119,6 +119,9 @@ function LoadMore({
       })
       .filter(Boolean) as LoadMoreItems[]
   }, [item.items, moderationOpts])
+
+  if (items.length === 0) return null
+
   const type = items[0].type
 
   return (
@@ -142,20 +145,20 @@ function LoadMore({
                 a.relative,
                 {
                   height: 32,
-                  width: 32 + 15 * 3,
+                  width: 32 + 15 * items.length,
                 },
               ]}>
               <View
                 style={[
                   a.align_center,
                   a.justify_center,
-                  a.border,
                   t.atoms.bg_contrast_25,
                   a.absolute,
                   {
                     width: 30,
                     height: 30,
                     left: 0,
+                    borderWidth: 1,
                     backgroundColor: t.palette.primary_500,
                     borderColor: t.atoms.bg.backgroundColor,
                     borderRadius: type === 'profile' ? 999 : 4,
@@ -169,13 +172,13 @@ function LoadMore({
                   <View
                     key={_item.key}
                     style={[
-                      a.border,
                       t.atoms.bg_contrast_25,
                       a.absolute,
                       {
                         width: 30,
                         height: 30,
                         left: (i + 1) * 15,
+                        borderWidth: 1,
                         borderColor: t.atoms.bg.backgroundColor,
                         borderRadius: _item.type === 'profile' ? 999 : 4,
                         zIndex: 3 - i,
@@ -350,13 +353,15 @@ export function Explore() {
         }
       }
 
-      i.push({
-        type: 'loadMore',
-        key: 'loadMoreProfiles',
-        isLoadingMore: isLoadingMoreProfiles,
-        onLoadMore: onLoadMoreProfiles,
-        items: i.filter(item => item.type === 'profile').slice(-3),
-      })
+      if (hasNextProfilesPage) {
+        i.push({
+          type: 'loadMore',
+          key: 'loadMoreProfiles',
+          isLoadingMore: isLoadingMoreProfiles,
+          onLoadMore: onLoadMoreProfiles,
+          items: i.filter(item => item.type === 'profile').slice(-3),
+        })
+      }
     } else {
       if (profilesError) {
         i.push({
@@ -412,7 +417,7 @@ export function Explore() {
           message: _(msg`Failed to load feeds preferences`),
           error: cleanError(preferencesError),
         })
-      } else {
+      } else if (hasNextFeedsPage) {
         i.push({
           type: 'loadMore',
           key: 'loadMoreFeeds',
@@ -454,6 +459,8 @@ export function Explore() {
     profilesError,
     feedsError,
     preferencesError,
+    hasNextProfilesPage,
+    hasNextFeedsPage,
   ])
 
   const renderItem = React.useCallback(

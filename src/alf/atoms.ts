@@ -267,6 +267,9 @@ export const atoms = {
   font_bold: {
     fontWeight: tokens.fontWeight.bold,
   },
+  font_heavy: {
+    fontWeight: tokens.fontWeight.heavy,
+  },
   italic: {
     fontStyle: 'italic',
   },
