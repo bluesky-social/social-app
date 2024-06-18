@@ -30,7 +30,6 @@ import {Logo} from 'view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
-import {Divider} from '#/components/Divider'
 import * as FeedCard from '#/components/FeedCard'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {ListMaybePlaceholder} from '#/components/Lists'
@@ -179,7 +178,8 @@ function LandingScreenLoaded({
         <LinearGradientBackground
           style={[
             a.align_center,
-            a.gap_sm,
+            a.gap_lg,
+            a.px_lg,
             a.py_2xl,
             isTabletOrDesktop && {
               borderBottomLeftRadius: 10,
@@ -192,22 +192,16 @@ function LandingScreenLoaded({
           <View style={[a.flex_row, a.gap_md, a.pb_sm]}>
             <Logo width={76} fill="white" />
           </View>
-          <View style={[a.align_center, a.gap_xs]}>
-            <Text
-              style={[
-                a.font_bold,
-                a.text_5xl,
-                a.text_center,
-                {color: 'white'},
-              ]}>
-              {record.name}
-            </Text>
-            <Text style={[a.font_bold, a.text_md, {color: 'white'}]}>
-              Starter pack by {creator.displayName || `@${creator.handle}`}
-            </Text>
-          </View>
+          <Text
+            style={[a.font_bold, a.text_5xl, a.text_center, {color: 'white'}]}>
+            {record.name}
+          </Text>
+          <Text
+            style={[a.text_center, a.font_bold, a.text_md, {color: 'white'}]}>
+            Starter pack by {creator.displayName || `@${creator.handle}`}
+          </Text>
         </LinearGradientBackground>
-        <View style={[a.gap_2xl, a.mt_lg, a.mx_lg]}>
+        <View style={[a.gap_2xl, a.mx_lg, {marginTop: 50}]}>
           {record.description ? (
             <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
               {record.description}
@@ -234,7 +228,7 @@ function LandingScreenLoaded({
               {joinedWeekCount} joined this week!
             </Text>
           ) : null}
-          <Divider />
+          <View style={{height: 4}} />
           <View style={[a.gap_3xl]}>
             {starterPack.feeds?.length ? (
               <View style={[a.gap_md]}>
@@ -285,7 +279,7 @@ function LandingScreenLoaded({
                         <Trans>You'll follow these people right away!</Trans>
                       ) : (
                         <Trans>
-                          You'll follow these people and {listItemsCount - 8}
+                          You'll follow these people and {listItemsCount - 8}{' '}
                           others!
                         </Trans>
                       )}
