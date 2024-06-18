@@ -1,4 +1,4 @@
-import {useCallback, useMemo} from 'react'
+import {useCallback} from 'react'
 import {msg, plural} from '@lingui/macro'
 import {I18nContext, useLingui} from '@lingui/react'
 import {differenceInSeconds} from 'date-fns'
@@ -19,16 +19,6 @@ export function useGetTimeAgo() {
     },
     [_],
   )
-}
-
-export function useTimeAgo(
-  date: number | string | Date,
-  options?: Omit<TimeAgoOptions, 'lingui'>,
-): string {
-  const timeAgo = useGetTimeAgo()
-  return useMemo(() => {
-    return timeAgo(date, {...options})
-  }, [date, options, timeAgo])
 }
 
 const NOW = 5
