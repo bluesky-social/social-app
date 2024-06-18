@@ -24,7 +24,6 @@ function renderItem({
 }
 
 function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic, index: number) {
-  console.log(item)
   return `${item.did}-${index}`
 }
 
