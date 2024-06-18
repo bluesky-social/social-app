@@ -1,22 +1,23 @@
 import React from 'react'
 
+import {parseStarterPackHttpUri} from 'lib/strings/starter-pack'
 import {useSetCurrentStarterPack} from 'state/preferences/starter-pack'
 
 export function useStarterPackEntry() {
   const setCurrentStarterPack = useSetCurrentStarterPack()
 
   React.useEffect(() => {
-    const url = new URL(window.location.href)
-    if (url.pathname.startsWith('/start/')) {
-      const [_, _start, name, rkey] = url.pathname.split('/')
+    const href = window.location.href
+    const parsed = parseStarterPackHttpUri(href)
+
+    if (parsed) {
+      const url = new URL(href)
       const isClip = url.searchParams.get('clip') === 'true'
 
-      if (name && rkey) {
-        setCurrentStarterPack({
-          uri: window.location.href,
-          isClip,
-        })
-      }
+      setCurrentStarterPack({
+        uri: href,
+        isClip,
+      })
     }
   }, [setCurrentStarterPack])
 
