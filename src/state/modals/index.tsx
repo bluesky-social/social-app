@@ -70,7 +70,8 @@ export interface SelfLabelModal {
 export interface ThreadgateModal {
   name: 'threadgate'
   settings: ThreadgateSetting[]
-  onChange: (settings: ThreadgateSetting[]) => void
+  onChange?: (settings: ThreadgateSetting[]) => void
+  onConfirm?: (settings: ThreadgateSetting[]) => void
 }
 
 export interface ChangeHandleModal {

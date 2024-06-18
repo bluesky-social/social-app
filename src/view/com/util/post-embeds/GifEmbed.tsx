@@ -181,7 +181,7 @@ function AltText({text}: {text: string}) {
         <Prompt.DescriptionText selectable>{text}</Prompt.DescriptionText>
         <Prompt.Actions>
           <Prompt.Action
-            onPress={control.close}
+            onPress={() => control.close()}
             cta={_(msg`Close`)}
             color="secondary"
           />
