@@ -96,7 +96,7 @@ describe('dateDiff', () => {
     expect(dateDiff(then, base, {lingui})).toEqual('11mo')
   })
   it(`values >= 360 days return the earlier value`, () => {
-    const then = subDays(base, 361)
+    const then = subDays(base, 360)
     expect(dateDiff(then, base, {lingui})).toEqual(then.toLocaleDateString())
   })
 })
