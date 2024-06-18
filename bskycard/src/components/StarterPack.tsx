@@ -3,9 +3,14 @@ import React from 'react'
 import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 
 import {Butterfly} from './Butterfly.js'
+import {Img} from './Img.js'
 
 export const STARTERPACK_HEIGHT = 630
 export const STARTERPACK_WIDTH = 1200
+
+const GRADIENT_TOP = '#0A7AFF'
+const GRADIENT_BOTTOM = '#59B9FF'
+const IMAGE_STROKE = '#359CFF'
 
 export function StarterPack(props: {
   starterPack: AppBskyGraphDefs.StarterPackView
@@ -68,13 +73,7 @@ export function StarterPack(props: {
                 height: tileSize,
                 width: tileSize,
               }}>
-              {image && (
-                <img
-                  height="100%"
-                  width="100%"
-                  src={`data:image/jpeg;base64,${image.toString('base64')}`}
-                />
-              )}
+              {image && <Img height="100%" width="100%" src={image} />}
             </div>
           )
         })}
@@ -85,7 +84,7 @@ export function StarterPack(props: {
             width: '100%',
             height: '100%',
             position: 'absolute',
-            backgroundImage: 'linear-gradient(to bottom, #0A7AFF, #59B9FF)',
+            backgroundImage: `linear-gradient(to bottom, ${GRADIENT_TOP}, ${GRADIENT_BOTTOM})`,
             opacity: 0.9,
           }}
         />
@@ -109,7 +108,7 @@ export function StarterPack(props: {
           }}>
           JOIN THE CONVERSATION
         </div>
-        <div style={{display: 'flex', flexDirection: 'row'}}>
+        <div style={{display: 'flex'}}>
           {imagesAcross.map((image, i) => {
             return (
               <div
@@ -118,18 +117,12 @@ export function StarterPack(props: {
                   display: 'flex',
                   height: 172 + 15 * 2,
                   width: 172 + 15 * 2,
-                  border: '15px solid #359CFF',
-                  borderRadius: '50%',
                   margin: -15,
+                  border: `15px solid ${IMAGE_STROKE}`,
+                  borderRadius: '50%',
                   overflow: 'hidden',
                 }}>
-                {image && (
-                  <img
-                    height="100%"
-                    width="100%"
-                    src={`data:image/jpeg;base64,${image.toString('base64')}`}
-                  />
-                )}
+                {image && <Img height="100%" width="100%" src={image} />}
               </div>
             )
           })}
@@ -145,11 +138,10 @@ export function StarterPack(props: {
           style={{
             display: 'flex',
             fontSize: 40,
-            flex: 1,
             justifyContent: 'center',
             padding: '30px 30px 10px',
           }}>
-          on <Butterfly width="65" style={{margin: '0 10px'}} /> Bluesky
+          on <Butterfly width="65" style={{margin: '-7px 10px 0'}} /> Bluesky
         </div>
       </div>
     </div>
