@@ -17,11 +17,7 @@ export function useVideoState({setError}: {setError: (error: string) => void}) {
         ((asset.fileSize ?? 0) / 1024 / 1024).toFixed(2) + 'mb',
       )
       const compressed = await compressVideo(asset.uri, {
-        onProgress: progressMs => {
-          if (asset.duration) {
-            setProgress(progressMs / asset.duration)
-          }
-        },
+        onProgress: num => setProgress(trunc2dp(num)),
       })
 
       return compressed
@@ -44,4 +40,8 @@ export function useVideoState({setError}: {setError: (error: string) => void}) {
     clearVideo: reset,
     videoProcessingProgress: progress,
   }
+}
+
+function trunc2dp(num: number) {
+  return Math.trunc(num * 100) / 100
 }
