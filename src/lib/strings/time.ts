@@ -46,7 +46,14 @@ export function ago(date: number | string | Date, long = false): string {
     }
 
     if (months < 12) {
-      return `${months}${long ? ' months' : 'mo'}`
+      return `${months} ${
+        long
+          ? plural(months, {
+              one: 'month',
+              other: 'months',
+            })
+          : 'mo'
+      }`
     } else {
       const str = new Date(ts).toLocaleDateString()
 
