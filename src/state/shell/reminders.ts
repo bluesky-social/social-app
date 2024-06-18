@@ -32,13 +32,7 @@ export function shouldRequestEmailConfirmation(account: SessionAccount) {
     return false
   }
 
-  // snoozed recently
-  if (snoozedAt !== today) {
-    snoozeEmailConfirmationPrompt()
-    return true
-  }
-
-  // should never happen
+  // snooze and re-prompt
   snoozeEmailConfirmationPrompt()
   return true
 }
