@@ -469,7 +469,7 @@ function Inner({
             )}
           </Text>
 
-          <ProfileHeaderHandle profile={profileShadow} />
+          <ProfileHeaderHandle profile={profileShadow} disableTaps />
         </View>
       </Link>
 
