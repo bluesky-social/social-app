@@ -1,12 +1,14 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyActorDefs} from '@atproto/api'
+import {AppBskyActorDefs, moderateProfile} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {differenceInSeconds} from 'date-fns'
 
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {HITSLOP_10} from 'lib/constants'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {atoms as a} from '#/alf'
 import {Button} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -20,15 +22,19 @@ export function NewskieDialog({
   profile: AppBskyActorDefs.ProfileViewDetailed
 }) {
   const {_} = useLingui()
+  const moderationOpts = useModerationOpts()
   const control = useDialogControl()
-  const profileName = profile.displayName || `@${profile.handle}`
+  const profileName = React.useMemo(() => {
+    const name = profile.displayName || profile.handle
+    if (!moderationOpts) return name
+    const moderation = moderateProfile(profile, moderationOpts)
+    return sanitizeDisplayName(name, moderation.ui('displayName'))
+  }, [moderationOpts, profile])
   const timeAgo = useGetTimeAgo()
   const createdAt = profile.createdAt as string | undefined
   const daysOld = React.useMemo(() => {
     if (!createdAt) return Infinity
-    return (
-      differenceInSeconds(new Date(), new Date(createdAt as string)) / 86400
-    )
+    return differenceInSeconds(new Date(), new Date(createdAt)) / 86400
   }, [createdAt])
 
   if (!createdAt || daysOld > 7) return null
