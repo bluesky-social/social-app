@@ -87,7 +87,7 @@ export const schema = z.object({
   disableHaptics: z.boolean().optional(),
   disableAutoplay: z.boolean().optional(),
   kawaii: z.boolean().optional(),
-  // deprecated
+  /** @deprecated */
   mutedThreads: z.array(z.string()),
 })
 export type Schema = z.infer<typeof schema>
