@@ -2026,7 +2026,7 @@ msgstr "回追蹤"
 
 #: src/view/screens/Search/Explore.tsx:332
 msgid "Follow more accounts to get connected to your interests and build your network."
-msgstr "跟隨更多帳號以了解您的興趣並建立您的社群網路。"
+msgstr "跟隨更多帳號以瞭解您的興趣，並建立您的社群網路。"
 
 #: src/view/com/profile/ProfileCard.tsx:227
 msgid "Followed by {0}"
