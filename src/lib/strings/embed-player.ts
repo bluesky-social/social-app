@@ -502,48 +502,47 @@ export function parseTenorGif(urlp: URL):
       playerUri: string
       dimensions: {height: number; width: number}
     } {
-  if (urlp.hostname !== 'media.tenor.com') return {success: false}
-  try {
-    let [_, id, filename] = urlp.pathname.split('/')
-
-    if (!id || !filename) {
-      throw new Error('Missing id or filename')
-    }
-
-    if (!id.includes('AAAAC')) {
-      throw new Error('Invalid tenor media type')
-    }
-
-    const h = urlp.searchParams.get('hh')
-    const w = urlp.searchParams.get('ww')
-
-    if (!h || !w) {
-      throw new Error('Missing dimensions')
-    }
-
-    const dimensions = {
-      height: Number(h),
-      width: Number(w),
-    }
-
-    if (isWeb) {
-      if (isSafari) {
-        id = id.replace('AAAAC', 'AAAP1')
-        filename = filename.replace('.gif', '.mp4')
-      } else {
-        id = id.replace('AAAAC', 'AAAP3')
-        filename = filename.replace('.gif', '.webm')
-      }
-    } else {
-      id = id.replace('AAAAC', 'AAAAM')
-    }
-
-    return {
-      success: true,
-      playerUri: `https://t.gifs.bsky.app/${id}/${filename}`,
-      dimensions,
-    }
-  } catch {
+  if (urlp.hostname !== 'media.tenor.com') {
     return {success: false}
+  }
+
+  let [_, id, filename] = urlp.pathname.split('/')
+
+  if (!id || !filename) {
+    return {success: false}
+  }
+
+  if (!id.includes('AAAAC')) {
+    return {success: false}
+  }
+
+  const h = urlp.searchParams.get('hh')
+  const w = urlp.searchParams.get('ww')
+
+  if (!h || !w) {
+    return {success: false}
+  }
+
+  const dimensions = {
+    height: Number(h),
+    width: Number(w),
+  }
+
+  if (isWeb) {
+    if (isSafari) {
+      id = id.replace('AAAAC', 'AAAP1')
+      filename = filename.replace('.gif', '.mp4')
+    } else {
+      id = id.replace('AAAAC', 'AAAP3')
+      filename = filename.replace('.gif', '.webm')
+    }
+  } else {
+    id = id.replace('AAAAC', 'AAAAM')
+  }
+
+  return {
+    success: true,
+    playerUri: `https://t.gifs.bsky.app/${id}/${filename}`,
+    dimensions,
   }
 }
