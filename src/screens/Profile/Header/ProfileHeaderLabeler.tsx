@@ -82,7 +82,7 @@ let ProfileHeaderLabeler = ({
     preferences?.moderationPrefs.labelers.find(l => l.did === profile.did)
   const canSubscribe =
     isSubscribed ||
-    (preferences ? preferences?.moderationPrefs.labelers.length < 9 : false)
+    (preferences ? preferences?.moderationPrefs.labelers.length <= 20 : false)
   const {mutateAsync: likeMod, isPending: isLikePending} = useLikeMutation()
   const {mutateAsync: unlikeMod, isPending: isUnlikePending} =
     useUnlikeMutation()
@@ -328,8 +328,8 @@ function CantSubscribePrompt({
       <Prompt.TitleText>Unable to subscribe</Prompt.TitleText>
       <Prompt.DescriptionText>
         <Trans>
-          We're sorry! You can only subscribe to ten labelers, and you've
-          reached your limit of ten.
+          We're sorry! You can only subscribe to twenty labelers, and you've
+          reached your limit of twenty.
         </Trans>
       </Prompt.DescriptionText>
       <Prompt.Actions>
