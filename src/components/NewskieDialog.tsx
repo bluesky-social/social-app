@@ -7,7 +7,6 @@ import {differenceInSeconds} from 'date-fns'
 
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {HITSLOP_10} from 'lib/constants'
-import {isNative} from 'platform/detection'
 import {atoms as a} from '#/alf'
 import {Button} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -32,36 +31,45 @@ export function NewskieDialog({
     )
   }, [profile.createdAt])
 
-  if (!profile.createdAt) return null
   if (daysOld > 7) return null
 
   return (
-    <>
+    <View style={[a.pr_2xs]}>
       <Button
         label={_(
           msg`This user is new here. Press for more info about when they joined.`,
         )}
         hitSlop={HITSLOP_10}
         onPress={control.open}>
-        <Newskie size="lg" fill="#FFC404" />
+        {({hovered, pressed}) => (
+          <Newskie
+            size="lg"
+            fill="#FFC404"
+            style={{
+              opacity: hovered || pressed ? 0.5 : 1,
+            }}
+          />
+        )}
       </Button>
 
       <Dialog.Outer control={control}>
         <Dialog.Handle />
-        <Dialog.ScrollableInner label={_(msg`New user info dialog`)}>
-          <View style={[a.gap_md, isNative && {marginBottom: 40}]}>
+        <Dialog.ScrollableInner
+          label={_(msg`New user info dialog`)}
+          style={[{width: 'auto', maxWidth: 400, minWidth: 200}]}>
+          <View style={[a.gap_md]}>
             <Text style={[a.font_bold, a.text_xl]}>
               <Trans>Say hello!</Trans>
             </Text>
             <Text style={[a.text_md]}>
               <Trans>
-                {profileName} recently joined Bluesky{' '}
+                {profileName} joined Bluesky{' '}
                 {timeAgo(profile.createdAt as string, {format: 'long'})} ago
               </Trans>
             </Text>
           </View>
         </Dialog.ScrollableInner>
       </Dialog.Outer>
-    </>
+    </View>
   )
 }
