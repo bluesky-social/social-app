@@ -2,6 +2,7 @@ import React from 'react'
 
 import * as persisted from '#/state/persisted'
 import {httpStarterPackUriToAtUri} from 'lib/strings/starter-pack'
+import {isIOS} from 'platform/detection'
 import SwissArmyKnife from '../../../modules/expo-bluesky-swiss-army'
 
 type StateContext =
@@ -27,7 +28,7 @@ export function Provider({children}: {children: React.ReactNode}) {
       v = {...v, uri: atUri}
     }
 
-    if (v == null) {
+    if (isIOS && v == null) {
       SwissArmyKnife.setStringValueAsync('starterPackUri', null)
     }
 
