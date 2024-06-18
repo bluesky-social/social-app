@@ -1,4 +1,5 @@
 const pkg = require('./package.json')
+const {IS_TEST} = require('#/env')
 
 const SPLASH_CONFIG = {
   backgroundColor: '#ffffff',
@@ -44,9 +45,9 @@ module.exports = function (config) {
     'applinks:staging.bsky.app',
     'appclips:bsky.app',
     // When testing local services, enter an ngrok (et al) domain here. It must use a standard HTTP/HTTPS port.
-    ...(IS_DEV
+    ...(IS_DEV || IS_TESTFLIGHT
       ? ['appclips:sptesting.haileyok.com', 'applinks:sptesting.haileyok.com']
-      : ['appclips:sptesting.haileyok.com', 'applinks:sptesting.haileyok.com']),
+      : []),
   ]
 
   const UPDATES_CHANNEL = IS_TESTFLIGHT
@@ -67,6 +68,9 @@ module.exports = function (config) {
       slug: 'bluesky',
       scheme: 'bluesky',
       owner: 'blueskysocial',
+      runtimeVersion: {
+        policy: 'appVersion',
+      },
       orientation: 'portrait',
       icon: './assets/icon.png',
       userInterfaceStyle: 'automatic',
