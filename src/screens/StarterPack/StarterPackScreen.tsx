@@ -178,6 +178,33 @@ function Header({
         creator={creator}
         avatarType="starter-pack">
         <View style={[a.flex_row, a.gap_sm]}>
+          {isOwn ? (
+            <Button
+              label={_(msg`Edit`)}
+              variant="solid"
+              color="secondary"
+              size="small"
+              onPress={() =>
+                navigation.navigate('StarterPackWizard', {name, rkey})
+              }>
+              <ButtonText>
+                <Trans>Edit</Trans>
+              </ButtonText>
+            </Button>
+          ) : (
+            <Button
+              label={_(msg`Follow all`)}
+              variant="solid"
+              color="primary"
+              size="small"
+              disabled={isProcessing}
+              onPress={onFollowAll}>
+              <ButtonText>
+                <Trans>Follow all</Trans>
+                {isProcessing && <Loader size="xs" />}
+              </ButtonText>
+            </Button>
+          )}
           <Menu.Root>
             <Menu.Trigger label={_(msg`Repost or quote post`)}>
               {({props, state}) => (
@@ -243,33 +270,6 @@ function Header({
               </Menu.Group>
             </Menu.Outer>
           </Menu.Root>
-          {isOwn ? (
-            <Button
-              label={_(msg`Edit`)}
-              variant="solid"
-              color="secondary"
-              size="small"
-              onPress={() =>
-                navigation.navigate('StarterPackWizard', {name, rkey})
-              }>
-              <ButtonText>
-                <Trans>Edit</Trans>
-              </ButtonText>
-            </Button>
-          ) : (
-            <Button
-              label={_(msg`Follow all`)}
-              variant="solid"
-              color="primary"
-              size="small"
-              disabled={isProcessing}
-              onPress={onFollowAll}>
-              <ButtonText>
-                <Trans>Follow all</Trans>
-                {isProcessing && <Loader size="xs" />}
-              </ButtonText>
-            </Button>
-          )}
         </View>
       </ProfileSubpageHeader>
       <View style={[a.px_md, a.py_lg, a.gap_md]}>
