@@ -104,6 +104,12 @@ function KnownFollowersInner({
   // Does not have blocks applied. Always >= slices.length
   const serverCount = cachedKnownFollowers.count
 
+  /*
+   * We check above too, but here for clarity and a reminder to _check for
+   * valid indices_
+   */
+  if (slice.length === 0) return null
+
   return (
     <Link
       label={_(
