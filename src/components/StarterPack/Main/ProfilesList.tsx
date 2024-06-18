@@ -39,7 +39,8 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
     const bottomBarOffset = useBottomBarOffset(20)
     const {currentAccount} = useSession()
 
-    const {data} = useListMembersQuery(listUri)
+    const [isPTRing, setIsPTRing] = React.useState(false)
+    const {data, refetch} = useListMembersQuery(listUri)
     const profiles = data?.pages.flatMap(p => p.items.map(i => i.subject))
     const isOwn = new AtUri(listUri).host === currentAccount?.did
 
@@ -76,6 +77,12 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
         }
         showsVerticalScrollIndicator={false}
         desktopFixedHeight
+        refreshing={isPTRing}
+        onRefresh={async () => {
+          setIsPTRing(true)
+          await refetch()
+          setIsPTRing(false)
+        }}
       />
     )
   },
