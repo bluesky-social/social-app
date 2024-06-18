@@ -30,7 +30,7 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {NavigationProp} from '#/lib/routes/types'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
 import {logger} from '#/logger'
-import {isIOS, isNative, isWeb} from '#/platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
@@ -57,8 +57,8 @@ import {Text} from '#/view/com/util/text/Text'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
 import {Explore} from '#/view/screens/Search/Explore'
 import {SearchLinkCard, SearchProfileCard} from '#/view/shell/desktop/Search'
-import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme as useThemeNew} from '#/alf'
+import * as FeedCard from '#/components/FeedCard'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 
 function Loader() {
@@ -285,8 +285,8 @@ let SearchScreenFeedsResults = ({
   query: string
   active: boolean
 }): React.ReactNode => {
+  const t = useThemeNew()
   const {_} = useLingui()
-  const {hasSession} = useSession()
 
   const {data: results, isFetched} = usePopularFeedsSearch({
     query,
@@ -299,13 +299,15 @@ let SearchScreenFeedsResults = ({
         <List
           data={results}
           renderItem={({item}) => (
-            <FeedSourceCard
-              feedUri={item.uri}
-              showSaveBtn={hasSession}
-              showDescription
-              showLikes
-              pinOnSave
-            />
+            <View
+              style={[
+                a.border_b,
+                t.atoms.border_contrast_low,
+                a.px_lg,
+                a.py_lg,
+              ]}>
+              <FeedCard.Default feed={item} />
+            </View>
           )}
           keyExtractor={item => item.uri}
           // @ts-ignore web only -prf
@@ -802,12 +804,6 @@ let SearchInputBox = ({
             })
           } else {
             setShowAutocomplete(true)
-            if (isIOS) {
-              // We rely on selectTextOnFocus, but it's broken on iOS:
-              // https://github.com/facebook/react-native/issues/41988
-              textInput.current?.setSelection(0, searchText.length)
-              // We still rely on selectTextOnFocus for it to be instant on Android.
-            }
           }
         }}
         onChangeText={onChangeText}
