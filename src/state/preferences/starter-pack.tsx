@@ -2,6 +2,7 @@ import React from 'react'
 
 import * as persisted from '#/state/persisted'
 import {httpStarterPackUriToAtUri} from 'lib/strings/starter-pack'
+import SwissArmyKnife from '../../../modules/expo-bluesky-swiss-army'
 
 type StateContext =
   | {
@@ -25,6 +26,11 @@ export function Provider({children}: {children: React.ReactNode}) {
     if (atUri) {
       v = {...v, uri: atUri}
     }
+
+    if (v == null) {
+      SwissArmyKnife.setStringValueAsync('starterPackUri', null)
+    }
+
     setState(v)
     persisted.write('currentStarterPack', v)
   }

@@ -35,6 +35,7 @@ export function useStarterPackEntry() {
         }
       } else {
         uri = await SwissArmyKnife.getStringValueAsync('starterPackUri', true)
+        SwissArmyKnife.setStringValueAsync('starterPackUri', null, true)
       }
 
       if (uri) {
