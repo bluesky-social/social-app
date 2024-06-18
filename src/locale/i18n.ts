@@ -1,5 +1,5 @@
 import '@formatjs/intl-locale/polyfill'
-import '@formatjs/intl-pluralrules/polyfill'
+import '@formatjs/intl-pluralrules/polyfill-force' // Don't remove -force because detection is very slow
 import '@formatjs/intl-pluralrules/locale-data/en'
 
 import {useEffect} from 'react'
