@@ -12,10 +12,11 @@ export function useGetTimeAgo() {
   const {_} = useLingui()
   return useCallback(
     (
-      date: number | string | Date,
+      earlier: number | string | Date,
+      later: number | string | Date,
       options?: Omit<TimeAgoOptions, 'lingui'>,
     ) => {
-      return dateDiff(date, Date.now(), {lingui: _, format: options?.format})
+      return dateDiff(earlier, later, {lingui: _, format: options?.format})
     },
     [_],
   )

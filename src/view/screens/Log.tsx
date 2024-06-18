@@ -7,6 +7,7 @@ import {useFocusEffect} from '@react-navigation/native'
 
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {getEntries} from '#/logger/logDump'
+import {useTickEveryMinute} from '#/state/shell'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {usePalette} from 'lib/hooks/usePalette'
 import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
@@ -24,6 +25,7 @@ export function LogScreen({}: NativeStackScreenProps<
   const setMinimalShellMode = useSetMinimalShellMode()
   const [expanded, setExpanded] = React.useState<string[]>([])
   const timeAgo = useGetTimeAgo()
+  const tick = useTickEveryMinute()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -72,7 +74,7 @@ export function LogScreen({}: NativeStackScreenProps<
                     />
                   ) : undefined}
                   <Text type="sm" style={[styles.ts, pal.textLight]}>
-                    {timeAgo(entry.timestamp)}
+                    {timeAgo(entry.timestamp, tick)}
                   </Text>
                 </TouchableOpacity>
                 {expanded.includes(entry.id) ? (
