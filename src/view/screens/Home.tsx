@@ -98,14 +98,27 @@ function HomeScreenReady({
     () => pinnedFeedInfos.map(f => f.feedDescriptor),
     [pinnedFeedInfos],
   )
+
+  const currentStarterPack = useCurrentStarterPack()
+  const setCurrentStarterPack = useSetCurrentStarterPack()
+
+  const starterPackInitialFeed = currentStarterPack?.initialFeed
+    ? allFeeds.find(f => {
+        if (currentStarterPack.initialFeed === 'following') {
+          return f === 'following'
+        } else {
+          return f === `feedgen|${currentStarterPack.initialFeed}`
+        }
+      })
+    : undefined
   const rawSelectedFeed = useSelectedFeed() ?? allFeeds[0]
   const setSelectedFeed = useSetSelectedFeed()
-  const maybeFoundIndex = allFeeds.indexOf(rawSelectedFeed)
+  const maybeFoundIndex = allFeeds.indexOf(
+    starterPackInitialFeed ?? rawSelectedFeed,
+  )
   const selectedIndex = Math.max(0, maybeFoundIndex)
   const selectedFeed = allFeeds[selectedIndex]
   const requestNotificationsPermission = useRequestNotificationsPermission()
-  const currentStarterPack = useCurrentStarterPack()
-  const setCurrentStarterPack = useSetCurrentStarterPack()
 
   useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName)
   useOTAUpdates()
@@ -118,20 +131,6 @@ function HomeScreenReady({
   const lastPagerReportedIndexRef = React.useRef(selectedIndex)
   React.useLayoutEffect(() => {
     let initialIndex = selectedIndex
-    if (currentStarterPack?.initialFeed) {
-      if (currentStarterPack.initialFeed === 'following') {
-        initialIndex = allFeeds.findIndex(f => f === 'following')
-      } else {
-        initialIndex = allFeeds.findIndex(
-          f => f === `feedgen|${currentStarterPack.initialFeed}`,
-        )
-      }
-      if (initialIndex === -1) {
-        initialIndex = 0
-      }
-      setCurrentStarterPack(undefined)
-    }
-
     // Since the pager is not a controlled component, adjust it imperatively
     // if the selected index gets out of sync with what it last reported.
     // This is supposed to only happen on the web when you use the right nav.
