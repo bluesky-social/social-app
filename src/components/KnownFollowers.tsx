@@ -167,17 +167,17 @@ function KnownFollowersInner({
             numberOfLines={2}>
             {renderableCount >= 2 ? (
               <Trans>
-                Followed by{' '}
+                {_(msg`Followed by`)}{' '}
                 <Text key={slice[0].profile.did} style={textStyle}>
                   {slice[0].profile.displayName}
                 </Text>
-                {count > 2 ? ', ' : ' and '}
+                {count > 2 ? ', ' : ' ' + _(msg`and`) + ' '}
                 <Text key={slice[1].profile.did} style={textStyle}>
                   {slice[1].profile.displayName}
                 </Text>
                 {count > 2 ? (
                   <>
-                    , and{' '}
+                    {_(msg`, and`)}{' '}
                     {plural(count - 2, {one: '# other', other: '# others'})}
                   </>
                 ) : null}
