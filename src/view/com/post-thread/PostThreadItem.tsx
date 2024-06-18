@@ -189,6 +189,7 @@ let PostThreadItemLoaded = ({
   const itemTitle = _(msg`Post by ${post.author.handle}`)
   const authorHref = makeProfileLink(post.author)
   const authorTitle = post.author.handle
+  const isThreadAuthor = getThreadAuthor(post, record) === currentAccount?.did
   const likesHref = React.useMemo(() => {
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey, 'liked-by')
@@ -395,7 +396,7 @@ let PostThreadItemLoaded = ({
             </View>
           </View>
         </View>
-        <WhoCanReply post={post} />
+        <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
       </>
     )
   } else {
@@ -578,7 +579,9 @@ let PostThreadItemLoaded = ({
           post={post}
           style={{
             marginTop: 4,
+            borderBottomWidth: 1,
           }}
+          isThreadAuthor={isThreadAuthor}
         />
       </>
     )
@@ -679,6 +682,20 @@ function ExpandedPostDetails({
       )}
     </View>
   )
+}
+
+function getThreadAuthor(
+  post: AppBskyFeedDefs.PostView,
+  record: AppBskyFeedPost.Record,
+): string {
+  if (!record.reply) {
+    return post.author.did
+  }
+  try {
+    return new AtUri(record.reply.root.uri).host
+  } catch {
+    return ''
+  }
 }
 
 const styles = StyleSheet.create({
