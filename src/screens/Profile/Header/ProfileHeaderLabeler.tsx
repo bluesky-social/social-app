@@ -82,7 +82,7 @@ let ProfileHeaderLabeler = ({
     preferences?.moderationPrefs.labelers.find(l => l.did === profile.did)
   const canSubscribe =
     isSubscribed ||
-    (preferences ? preferences?.moderationPrefs.labelers.length < 20 : false)
+    (preferences ? preferences?.moderationPrefs.labelers.length <= 20 : false)
   const {mutateAsync: likeMod, isPending: isLikePending} = useLikeMutation()
   const {mutateAsync: unlikeMod, isPending: isUnlikePending} =
     useUnlikeMutation()
