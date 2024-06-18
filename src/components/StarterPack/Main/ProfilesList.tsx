@@ -51,7 +51,7 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
         profiles[myIndex],
         ...profiles.slice(0, myIndex),
         ...profiles.slice(myIndex + 1),
-      ]
+      ].filter(Boolean)
     }
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({
