@@ -19,6 +19,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {logger} from '#/logger'
 import {HITSLOP_10} from 'lib/constants'
 import {createStarterPackList} from 'lib/generate-starterpack'
 import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
@@ -351,7 +352,8 @@ function WizardInner({
           dispatch({type: 'SetProcessing', processing: false})
         }, 1000)
       }
-    } catch (e) {
+    } catch (e: unknown) {
+      logger.error('Failed to create starter pack', {error: e})
       Toast.show(_(msg`Failed to create starter pack`))
       dispatch({type: 'SetProcessing', processing: false})
       return
