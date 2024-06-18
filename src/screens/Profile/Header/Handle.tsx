@@ -7,7 +7,7 @@ import {Shadow} from '#/state/cache/types'
 import {isInvalidHandle} from 'lib/strings/handles'
 import {isAndroid} from 'platform/detection'
 import {atoms as a, useTheme, web} from '#/alf'
-import {NewskieDialog} from '#/components/StarterPack/NewskieDialog'
+import {NewskieDialog} from '#/components/NewskieDialog'
 import {Text} from '#/components/Typography'
 
 export function ProfileHeaderHandle({
@@ -22,9 +22,7 @@ export function ProfileHeaderHandle({
     <View
       style={[a.flex_row, a.gap_xs, a.align_center]}
       pointerEvents={isAndroid ? 'box-only' : 'auto'}>
-      <View style={[a.mr_xs]}>
-        <NewskieDialog profile={profile} />
-      </View>
+      <NewskieDialog profile={profile} />
       {profile.viewer?.followedBy && !blockHide ? (
         <View style={[t.atoms.bg_contrast_25, a.rounded_xs, a.px_sm, a.py_xs]}>
           <Text style={[t.atoms.text, a.text_sm]}>
