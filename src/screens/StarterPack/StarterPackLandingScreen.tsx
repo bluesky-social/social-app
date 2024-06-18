@@ -1,7 +1,12 @@
 import React from 'react'
 import {Pressable, ScrollView, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
-import {AppBskyGraphDefs, AppBskyGraphStarterpack, AtUri} from '@atproto/api'
+import {
+  AppBskyGraphDefs,
+  AppBskyGraphStarterpack,
+  AtUri,
+  ModerationOpts,
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -12,6 +17,7 @@ import {
   parseStarterPackHttpUri,
 } from 'lib/strings/starter-pack'
 import {isWeb} from 'platform/detection'
+import {useModerationOpts} from 'state/preferences/moderation-opts'
 import {
   useCurrentStarterPack,
   useSetCurrentStarterPack,
@@ -28,7 +34,7 @@ import {Divider} from '#/components/Divider'
 import * as FeedCard from '#/components/FeedCard'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {ListMaybePlaceholder} from '#/components/Lists'
-import {Default as ProfileCardInner} from '#/components/ProfileCard'
+import {Default as ProfileCard} from '#/components/ProfileCard'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 
@@ -63,7 +69,12 @@ export function LandingScreen({
     return null
   }
 
-  return <LandingScreenInner setScreenState={setScreenState} />
+  return (
+    <LandingScreenInner
+      setScreenState={setScreenState}
+      moderationOpts={moderationOpts}
+    />
+  )
 }
 
 export function LandingScreenInner({
@@ -71,6 +82,7 @@ export function LandingScreenInner({
 }: {
   setScreenState: (state: LoggedOutScreenState) => void
 }) {
+  const moderationOpts = useModerationOpts()
   const currentStarterPack = useCurrentStarterPack()
   const {name, rkey} =
     parseStarterPackHttpUri(currentStarterPack?.uri || '') ?? {}
@@ -97,10 +109,12 @@ export function LandingScreenInner({
     }
   }, [isErrorDid, isErrorStarterPack, setScreenState, isValid, starterPack])
 
-  if (!did || !starterPack || !isValid) {
+  if (!did || !starterPack || !isValid || !moderationOpts) {
     return (
       <ListMaybePlaceholder
-        isLoading={isLoadingDid || isLoadingStarterPack || !isValid}
+        isLoading={
+          isLoadingDid || isLoadingStarterPack || !isValid || !moderationOpts
+        }
       />
     )
   }
@@ -116,9 +130,13 @@ export function LandingScreenInner({
 function LandingScreenLoaded({
   starterPack,
   setScreenState,
+  // TODO apply this to profile card
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  moderationOpts,
 }: {
   starterPack: AppBskyGraphDefs.StarterPackView
   setScreenState: (state: LoggedOutScreenState) => void
+  moderationOpts: ModerationOpts
 }) {
   const {record, creator, listItemsSample, feeds, joinedWeekCount} = starterPack
   const {_} = useLingui()
@@ -289,7 +307,7 @@ function LandingScreenLoaded({
                           index !== 0 && a.border_t,
                           t.atoms.border_contrast_low,
                         ]}>
-                        <ProfileCardInner profile={item.subject} />
+                        <ProfileCard profile={item.subject} />
                       </View>
                     ))}
                 </View>
