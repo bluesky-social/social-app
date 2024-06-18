@@ -269,7 +269,7 @@ msgstr "將以下 DNS 記錄新增到您的網域："
 
 #: src/components/FeedCard.tsx:173
 msgid "Add this feed to your feeds"
-msgstr "添加這則動態至您的動態源"
+msgstr "將此新增至您的動態源"
 
 #: src/view/com/profile/ProfileMenu.tsx:268
 #: src/view/com/profile/ProfileMenu.tsx:271
