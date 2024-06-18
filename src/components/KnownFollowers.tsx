@@ -1,7 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {makeProfileLink} from '#/lib/routes/links'
@@ -101,6 +101,7 @@ function KnownFollowersInner({
     }
   })
   const count = cachedKnownFollowers.count
+  const renderableCount = slice.length
 
   return (
     <Link
@@ -164,29 +165,22 @@ function KnownFollowersInner({
               },
             ]}
             numberOfLines={2}>
-            {count > 2 ? (
+            {renderableCount >= 2 ? (
               <Trans>
                 Followed by{' '}
                 <Text key={slice[0].profile.did} style={textStyle}>
                   {slice[0].profile.displayName}
                 </Text>
-                ,{' '}
+                {count > 2 ? ', ' : ' and '}
                 <Text key={slice[1].profile.did} style={textStyle}>
                   {slice[1].profile.displayName}
                 </Text>
-                , and{' '}
-                <Plural value={count - 2} one="# other" other="# others" />
-              </Trans>
-            ) : count === 2 ? (
-              <Trans>
-                Followed by{' '}
-                <Text key={slice[0].profile.did} style={textStyle}>
-                  {slice[0].profile.displayName}
-                </Text>{' '}
-                and{' '}
-                <Text key={slice[1].profile.did} style={textStyle}>
-                  {slice[1].profile.displayName}
-                </Text>
+                {count > 2 ? (
+                  <>
+                    , and{' '}
+                    {plural(count - 2, {one: '# other', other: '# others'})}
+                  </>
+                ) : null}
               </Trans>
             ) : (
               <Trans>
