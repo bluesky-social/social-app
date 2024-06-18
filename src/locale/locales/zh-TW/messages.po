@@ -3825,7 +3825,7 @@ msgstr "按下以重試"
 
 #: src/components/KnownFollowers.tsx:108
 msgid "Press to view followers of this account that you also follow"
-msgstr "按下以查看被您跟隨且跟隨此帳戶者"
+msgstr "按下以查看哪些您認識的人跟隨了此帳號"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:150
 msgid "Previous image"
