@@ -16,7 +16,7 @@ import {createFullHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {useServiceQuery} from '#/state/queries/service'
 import {useAgent} from '#/state/session'
-import {parseStarterPackHttpUri} from 'lib/strings/starter-pack'
+import {parseStarterPackUri} from 'lib/strings/starter-pack'
 import {useCurrentStarterPack} from 'state/preferences/starter-pack'
 import {useResolveDidQuery} from 'state/queries/resolve-uri'
 import {useStarterPackQuery} from 'state/queries/useStarterPackQuery'
@@ -49,7 +49,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
   const agent = useAgent()
 
   const currentStarterPack = useCurrentStarterPack()
-  const parsedStarterPackUri = parseStarterPackHttpUri(currentStarterPack?.uri)
+  const parsedStarterPackUri = parseStarterPackUri(currentStarterPack?.uri)
   const {data: did} = useResolveDidQuery(parsedStarterPackUri?.name)
   const {data: starterPack} = useStarterPackQuery({
     did,

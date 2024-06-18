@@ -4,7 +4,7 @@ import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
 import {
   createStarterPackGooglePlayUri,
   createStarterPackLinkFromAndroidReferrer,
-  parseStarterPackHttpUri,
+  parseStarterPackUri,
 } from 'lib/strings/starter-pack'
 import {cleanError} from '../../src/lib/strings/errors'
 import {createFullHandle, makeValidHandle} from '../../src/lib/strings/handles'
@@ -844,6 +844,9 @@ describe('parseStarterPackHttpUri', () => {
     'https://bsky.app/start/testlover9000.com',
     'https://bsky.app/start/testlover9000.com/rkey/other',
     'https://bsky.app/start',
+    'at://did:123/app.bsky.graph.starterpack/rkey',
+    'at://did:123/app.bsky.graph.starterpack',
+    'at://did:123/app.bsky.graph.list/rkey',
     undefined,
   ]
   const outputs = [
@@ -853,12 +856,15 @@ describe('parseStarterPackHttpUri', () => {
     null,
     null,
     null,
+    {name: 'did:123', rkey: 'rkey'},
+    null,
+    null,
     null,
   ]
 
   it('returns the correct name and rkey when input is valid', () => {
     for (let i = 0; i < inputs.length; i++) {
-      const result = parseStarterPackHttpUri(inputs[i])
+      const result = parseStarterPackUri(inputs[i])
       expect(result).toEqual(outputs[i])
     }
   })

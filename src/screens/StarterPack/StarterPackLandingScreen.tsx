@@ -14,7 +14,7 @@ import {isAndroidWeb} from 'lib/browser'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {
   createStarterPackGooglePlayUri,
-  parseStarterPackHttpUri,
+  parseStarterPackUri,
 } from 'lib/strings/starter-pack'
 import {isWeb} from 'platform/detection'
 import {useModerationOpts} from 'state/preferences/moderation-opts'
@@ -56,7 +56,7 @@ export function LandingScreen({
   setScreenState: (state: LoggedOutScreenState) => void
 }) {
   const currentStarterPack = useCurrentStarterPack()
-  const parsed = parseStarterPackHttpUri(currentStarterPack?.uri || '')
+  const parsed = parseStarterPackUri(currentStarterPack?.uri || '')
 
   React.useEffect(() => {
     if (!parsed) {
@@ -78,8 +78,7 @@ export function LandingScreenInner({
 }) {
   const moderationOpts = useModerationOpts()
   const currentStarterPack = useCurrentStarterPack()
-  const {name, rkey} =
-    parseStarterPackHttpUri(currentStarterPack?.uri || '') ?? {}
+  const {name, rkey} = parseStarterPackUri(currentStarterPack?.uri || '') ?? {}
 
   const {
     data: did,
