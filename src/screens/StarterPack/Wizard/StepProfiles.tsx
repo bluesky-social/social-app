@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {ListRenderItemInfo, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
-import {AppBskyActorDefs} from '@atproto/api'
+import {AppBskyActorDefs, ModerationOpts} from '@atproto/api'
 
 import {useActorAutocompleteQuery} from 'state/queries/actor-autocomplete'
 import {useActorSearch} from 'state/queries/actor-search'
@@ -11,13 +11,17 @@ import {useWizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
 import {ScreenTransition} from '#/components/StarterPack/Wizard/ScreenTransition'
-import {WizardProfileCard} from '#/components/StarterPack/Wizard/WizardProfileCard'
+import {WizardProfileCard} from '#/components/StarterPack/Wizard/WizardListCard'
 
 function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic) {
   return item.did
 }
 
-export function StepProfiles() {
+export function StepProfiles({
+  moderationOpts,
+}: {
+  moderationOpts: ModerationOpts
+}) {
   const t = useTheme()
   const [state, dispatch] = useWizardState()
   const [query, setQuery] = useState('')
@@ -32,7 +36,12 @@ export function StepProfiles() {
     item,
   }: ListRenderItemInfo<AppBskyActorDefs.ProfileViewBasic>) => {
     return (
-      <WizardProfileCard profile={item} state={state} dispatch={dispatch} />
+      <WizardProfileCard
+        profile={item}
+        state={state}
+        dispatch={dispatch}
+        moderationOpts={moderationOpts}
+      />
     )
   }
 

@@ -10,6 +10,7 @@ import {
   AppBskyGraphDefs,
   AppBskyGraphStarterpack,
   AtUri,
+  ModerationOpts,
 } from '@atproto/api'
 import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -24,8 +25,11 @@ import {HITSLOP_10} from 'lib/constants'
 import {createStarterPackList} from 'lib/generate-starterpack'
 import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
 import {logEvent} from 'lib/statsig/statsig'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {sanitizeHandle} from 'lib/strings/handles'
 import {enforceLen} from 'lib/strings/helpers'
 import {isAndroid, isNative, isWeb} from 'platform/detection'
+import {useModerationOpts} from 'state/preferences/moderation-opts'
 import {invalidateActorStarterPacksQuery} from 'state/queries/actor-starter-packs'
 import {
   invalidateListMembersQuery,
@@ -61,6 +65,7 @@ export function Wizard({
 }: NativeStackScreenProps<CommonNavigatorParams, 'StarterPackWizard'>) {
   const {name, rkey} = route.params ?? {}
   const {currentAccount} = useSession()
+  const moderationOpts = useModerationOpts()
 
   const {_} = useLingui()
 
@@ -91,7 +96,10 @@ export function Wizard({
   } = useProfileQuery({did: currentAccount?.did})
 
   const isEdit = Boolean(name && rkey)
-  const isReady = (!isEdit || (isEdit && starterPack && listItems)) && profile
+  const isReady =
+    (!isEdit || (isEdit && starterPack && listItems)) &&
+    profile &&
+    moderationOpts
 
   if (!isReady) {
     return (
@@ -130,6 +138,7 @@ export function Wizard({
         }
         listItems={listItems}
         listUri={listUri}
+        moderationOpts={moderationOpts}
       />
     </Provider>
   )
@@ -141,12 +150,14 @@ function WizardInner({
   createdAt: initialCreatedAt,
   listUri: initialListUri,
   listItems: initialListItems,
+  moderationOpts,
 }: {
   did?: string
   rkey?: string
   createdAt?: string
   listUri?: string
   listItems?: AppBskyGraphDefs.ListItemView[]
+  moderationOpts: ModerationOpts
 }) {
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
@@ -445,11 +456,21 @@ function WizardInner({
       <Container
         showDeleteBtn={Boolean(did && rkey)}
         deleteStarterPack={deleteStarterPack}>
-        <StepView />
+        {state.currentStep === 'Details' ? (
+          <StepDetails />
+        ) : state.currentStep === 'Profiles' ? (
+          <StepProfiles moderationOpts={moderationOpts} />
+        ) : state.currentStep === 'Feeds' ? (
+          <StepFeeds moderationOpts={moderationOpts} />
+        ) : null}
       </Container>
 
       {state.currentStep !== 'Details' && (
-        <Footer onNext={onNext} nextBtnText={currUiStrings.nextBtn} />
+        <Footer
+          onNext={onNext}
+          nextBtnText={currUiStrings.nextBtn}
+          moderationOpts={moderationOpts}
+        />
       )}
     </CenteredView>
   )
@@ -530,9 +551,11 @@ function Container({
 function Footer({
   onNext,
   nextBtnText,
+  moderationOpts,
 }: {
   onNext: () => void
   nextBtnText: string
+  moderationOpts: ModerationOpts
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -694,6 +717,7 @@ function Footer({
         control={editDialogControl}
         state={state}
         dispatch={dispatch}
+        moderationOpts={moderationOpts}
       />
     </View>
   )
@@ -701,23 +725,9 @@ function Footer({
 
 function getName(item: AppBskyActorDefs.ProfileViewBasic | GeneratorView) {
   if (typeof item.displayName === 'string') {
-    return enforceLen(item.displayName, 16, true)
+    return enforceLen(sanitizeDisplayName(item.displayName), 16, true)
   } else if (typeof item.handle === 'string') {
-    return enforceLen(item.handle, 16, true)
+    return enforceLen(sanitizeHandle(item.handle), 16, true)
   }
   return ''
-}
-
-function StepView() {
-  const [state] = useWizardState()
-
-  if (state.currentStep === 'Details') {
-    return <StepDetails />
-  }
-  if (state.currentStep === 'Profiles') {
-    return <StepProfiles />
-  }
-  if (state.currentStep === 'Feeds') {
-    return <StepFeeds />
-  }
 }

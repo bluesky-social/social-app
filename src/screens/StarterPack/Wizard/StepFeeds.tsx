@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import {ListRenderItemInfo, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
+import {ModerationOpts} from '@atproto/api'
 import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import debounce from 'lodash.debounce'
 
@@ -14,13 +15,13 @@ import {useWizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
 import {ScreenTransition} from '#/components/StarterPack/Wizard/ScreenTransition'
-import {WizardFeedCard} from '#/components/StarterPack/Wizard/WizardFeedCard'
+import {WizardFeedCard} from '#/components/StarterPack/Wizard/WizardListCard'
 
 function keyExtractor(item: GeneratorView) {
   return item.uri
 }
 
-export function StepFeeds() {
+export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
   const t = useTheme()
   const [state, dispatch] = useWizardState()
   const [query, setQuery] = useState('')
@@ -52,7 +53,14 @@ export function StepFeeds() {
   }
 
   const renderItem = ({item}: ListRenderItemInfo<GeneratorView>) => {
-    return <WizardFeedCard generator={item} state={state} dispatch={dispatch} />
+    return (
+      <WizardFeedCard
+        generator={item}
+        state={state}
+        dispatch={dispatch}
+        moderationOpts={moderationOpts}
+      />
+    )
   }
 
   return (
