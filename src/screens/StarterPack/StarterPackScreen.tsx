@@ -131,7 +131,7 @@ function Header({
 
   const {record, creator} = starterPack
   const isOwn = creator?.did === currentAccount?.did
-  const joinedWeekCount = starterPack.joinedWeekCount ?? 0
+  const joinedAllTimeCount = starterPack.joinedAllTimeCount ?? 0
 
   const onFollowAll = async () => {
     if (!starterPack.list) return
@@ -273,12 +273,12 @@ function Header({
           )}
         </View>
       </ProfileSubpageHeader>
-      {record.description || joinedWeekCount >= 25 ? (
+      {record.description || joinedAllTimeCount >= 25 ? (
         <View style={[a.px_md, a.py_lg, a.gap_md]}>
           {record.description ? (
             <Text style={[a.text_md]}>{record.description}</Text>
           ) : null}
-          {joinedWeekCount >= 25 ? (
+          {joinedAllTimeCount >= 25 ? (
             <Text
               style={[a.font_bold, a.text_md, t.atoms.text_contrast_medium]}>
               <Trans>
