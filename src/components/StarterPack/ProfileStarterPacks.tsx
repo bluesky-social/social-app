@@ -203,8 +203,8 @@ function Empty() {
   return (
     <LinearGradientBackground
       style={[
-        a.px_md,
-        a.py_xl,
+        a.px_lg,
+        a.py_lg,
         a.justify_between,
         a.gap_lg,
         a.shadow_lg,
