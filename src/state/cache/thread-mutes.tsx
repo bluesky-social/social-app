@@ -52,9 +52,16 @@ export function useSetThreadMute() {
 function useMigrateMutes(setThreadMute: SetStateContext) {
   const agent = useAgent()
   const {currentAccount} = useSession()
+
   useEffect(() => {
     if (currentAccount) {
-      if (persisted.get('mutedThreads').length === 0) return
+      if (
+        !persisted
+          .get('mutedThreads')
+          .some(uri => uri.includes(currentAccount.did))
+      ) {
+        return
+      }
 
       let cancelled = false
 
@@ -62,11 +69,14 @@ function useMigrateMutes(setThreadMute: SetStateContext) {
         while (!cancelled) {
           const threads = persisted.get('mutedThreads')
 
-          const root = threads.shift()
+          const root = threads.findLast(uri => uri.includes(currentAccount.did))
 
           if (!root) break
 
-          persisted.write('mutedThreads', threads)
+          persisted.write(
+            'mutedThreads',
+            threads.filter(uri => uri !== root),
+          )
 
           setThreadMute(root, true)
 
