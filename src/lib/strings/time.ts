@@ -1,3 +1,4 @@
+import {plural} from '@lingui/macro'
 import {differenceInSeconds} from 'date-fns'
 
 export function ago(date: number | string | Date): string {
@@ -18,24 +19,46 @@ const MONTH_30 = DAY * 30
 export function dateDiff(
   earlier: number | string | Date,
   later: number | string | Date,
+  options?: {
+    format?: 'long' | 'short'
+  },
 ): string {
+  const format = options?.format || 'short'
+  const long = format === 'long'
   const diffSeconds = differenceInSeconds(new Date(later), new Date(earlier))
+
   if (diffSeconds < NOW) {
     return `now`
   } else if (diffSeconds < MINUTE) {
-    return `${diffSeconds}s`
+    return `${diffSeconds}${
+      long ? ` ${plural(diffSeconds, {one: 'second', other: 'seconds'})}` : 's'
+    }`
   } else if (diffSeconds < HOUR) {
-    return `${Math.floor(diffSeconds / MINUTE)}m`
+    const diff = Math.floor(diffSeconds / MINUTE)
+    return `${diff}${
+      long ? ` ${plural(diff, {one: 'minute', other: 'minutes'})}` : 'm'
+    }`
   } else if (diffSeconds < DAY) {
-    return `${Math.floor(diffSeconds / HOUR)}h`
+    const diff = Math.floor(diffSeconds / HOUR)
+    return `${diff}${
+      long ? ` ${plural(diff, {one: 'hour', other: 'hours'})}` : 'h'
+    }`
   } else if (diffSeconds < MONTH_30) {
-    return `${Math.floor(diffSeconds / DAY)}d`
+    const diff = Math.floor(diffSeconds / DAY)
+    return `${diff}${
+      long ? ` ${plural(diff, {one: 'day', other: 'days'})}` : 'd'
+    }`
   } else {
     const diffMonths30 = Math.floor(diffSeconds / MONTH_30)
     if (diffMonths30 < 12) {
-      return `${diffMonths30}mo`
+      return `${diffMonths30}${long ? ' months' : 'mo'}`
     } else {
-      return new Date(earlier).toLocaleDateString()
+      const str = new Date(earlier).toLocaleDateString()
+
+      if (long) {
+        return `on ${str}`
+      }
+      return str
     }
   }
 }
