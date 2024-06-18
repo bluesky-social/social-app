@@ -20,9 +20,10 @@ export function getAge(birthDate: Date): number {
   return age
 }
 
-export function toSimpleDateString(date: Date) {
-  const mm = date.getMonth() + 1 // 0-indexed
-  const dd = date.getDate()
-  const yyyy = date.getFullYear()
-  return `${yyyy}-${mm}-${dd}`
+/**
+ * Returns date string in yyyy-MM-dd format
+ */
+export function toSimpleDateString(date: Date | string): string {
+  const _date = typeof date === 'string' ? new Date(date) : date
+  return _date.toISOString().split('T')[0]
 }
