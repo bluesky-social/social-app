@@ -1,7 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
-import {msg, plural, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {makeProfileLink} from '#/lib/routes/links'
@@ -166,23 +166,44 @@ function KnownFollowersInner({
             ]}
             numberOfLines={2}>
             {renderableCount >= 2 ? (
+              // 2-n followers, including blocks
+              count > 2 ? (
+                <Trans>
+                  {_(msg`Followed by`)}{' '}
+                  <Text key={slice[0].profile.did} style={textStyle}>
+                    {slice[0].profile.displayName}
+                  </Text>
+                  ,{' '}
+                  <Text key={slice[1].profile.did} style={textStyle}>
+                    {slice[1].profile.displayName}
+                  </Text>
+                  , and{' '}
+                  <Plural value={count - 2} one="# other" other="# others" />
+                </Trans>
+              ) : (
+                // only 2
+                <Trans>
+                  Followed by{' '}
+                  <Text key={slice[0].profile.did} style={textStyle}>
+                    {slice[0].profile.displayName}
+                  </Text>{' '}
+                  and{' '}
+                  <Text key={slice[1].profile.did} style={textStyle}>
+                    {slice[1].profile.displayName}
+                  </Text>
+                </Trans>
+              )
+            ) : count > 1 ? (
+              // 1-n followers, including blocks
               <Trans>
                 {_(msg`Followed by`)}{' '}
                 <Text key={slice[0].profile.did} style={textStyle}>
                   {slice[0].profile.displayName}
-                </Text>
-                {count > 2 ? ', ' : ' ' + _(msg`and`) + ' '}
-                <Text key={slice[1].profile.did} style={textStyle}>
-                  {slice[1].profile.displayName}
-                </Text>
-                {count > 2 ? (
-                  <>
-                    {_(msg`, and`)}{' '}
-                    {plural(count - 2, {one: '# other', other: '# others'})}
-                  </>
-                ) : null}
+                </Text>{' '}
+                and <Plural value={count - 1} one="# other" other="# others" />
               </Trans>
             ) : (
+              // only 1
               <Trans>
                 Followed by{' '}
                 <Text key={slice[0].profile.did} style={textStyle}>
