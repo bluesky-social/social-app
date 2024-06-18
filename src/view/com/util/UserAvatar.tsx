@@ -61,13 +61,14 @@ const BLUR_AMOUNT = isWeb ? 5 : 100
 
 let DefaultAvatar = ({
   type,
-  shape,
+  shape: overrideShape,
   size,
 }: {
   type: UserAvatarType
-  shape: 'square' | 'circle'
+  shape?: 'square' | 'circle'
   size: number
 }): React.ReactNode => {
+  const finalShape = overrideShape ?? (type === 'user' ? 'circle' : 'square')
   if (type === 'algo') {
     // TODO: shape=circle
     // Font Awesome Pro 6.4.0 by @fontawesome -https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc.
@@ -122,7 +123,7 @@ let DefaultAvatar = ({
         viewBox="0 0 32 32"
         fill="none"
         stroke="none">
-        {shape === 'square' ? (
+        {finalShape === 'square' ? (
           <Rect
             x="0"
             y="0"
