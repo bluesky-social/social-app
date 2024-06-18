@@ -260,26 +260,26 @@ function Empty() {
 
       <Prompt.Outer control={confirmDialogControl}>
         <Prompt.TitleText>
-          <Trans>Generate a starter pack?</Trans>
+          <Trans>Generate a starter pack</Trans>
         </Prompt.TitleText>
         <Prompt.DescriptionText>
           <Trans>
-            You can customize your starter pack with feeds and your favorite
-            people if you create your own.
+            Bluesky will choose a set of recommended accounts from people in
+            your network.
           </Trans>
         </Prompt.DescriptionText>
         <Prompt.Actions>
           <Prompt.Action
             color="primary"
-            cta={_(msg`I'll create one`)}
-            onPress={() => {
-              navigation.navigate('StarterPackWizard', {})
-            }}
+            cta={_(msg`Choose for me`)}
+            onPress={generate}
           />
           <Prompt.Action
             color="secondary"
-            cta={_(msg`Generate anyway`)}
-            onPress={generate}
+            cta={_(msg`Let me choose`)}
+            onPress={() => {
+              navigation.navigate('StarterPackWizard', {})
+            }}
           />
         </Prompt.Actions>
       </Prompt.Outer>
