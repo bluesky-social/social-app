@@ -17,7 +17,12 @@ export function useStarterPackEntry() {
   const setHasCheckedForStarterPack = useSetHasCheckedForStarterPack()
 
   React.useEffect(() => {
-    if (ready || hasCheckedForStarterPack) return
+    if (ready) return
+    if (hasCheckedForStarterPack) {
+      setReady(true)
+      return
+    }
+
     setHasCheckedForStarterPack(true)
     ;(async () => {
       let uri: string | null | undefined
