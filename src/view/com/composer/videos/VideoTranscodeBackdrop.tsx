@@ -1,4 +1,5 @@
-import React from 'react'
+import React, {useEffect} from 'react'
+import {clearCache, createVideoThumbnail} from 'react-native-compressor'
 import Animated, {FadeIn} from 'react-native-reanimated'
 import {Image} from 'expo-image'
 import {useQuery} from '@tanstack/react-query'
@@ -9,16 +10,22 @@ export function VideoTranscodeBackdrop({uri}: {uri: string}) {
   const {data: thumbnail} = useQuery({
     queryKey: ['thumbnail', uri],
     queryFn: async () => {
-      throw new Error('Not implemented')
+      return await createVideoThumbnail(uri)
     },
   })
+
+  useEffect(() => {
+    return () => {
+      clearCache()
+    }
+  }, [])
 
   return (
     <Animated.View style={a.flex_1} entering={FadeIn}>
       {thumbnail && (
         <Image
           style={a.flex_1}
-          source={thumbnail}
+          source={thumbnail.path}
           cachePolicy="none"
           accessibilityIgnoresInvertColors
           blurRadius={15}
