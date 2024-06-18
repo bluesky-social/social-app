@@ -477,20 +477,27 @@ function AdditionalPostText({post}: {post?: AppBskyFeedDefs.PostView}) {
       AppBskyEmbedImages.isView(post.embed.media)
     ) {
       images = post.embed.media.images
-    } else if (AppBskyEmbedExternal.isView(post.embed)) {
+    } else if (
+      AppBskyEmbedExternal.isView(post.embed) &&
+      post.embed.external.thumb
+    ) {
+      let url: URL | undefined
       try {
-        const {success} = parseTenorGif(new URL(post.embed.external.uri))
-        if (success && post.embed.external.thumb) {
+        url = new URL(post.embed.external.uri)
+      } catch {}
+      if (url) {
+        const {success} = parseTenorGif(url)
+        if (success) {
           isGif = true
           images = [
             {
               thumb: post.embed.external.thumb,
               alt: post.embed.external.title,
               fullsize: post.embed.external.thumb,
-            } satisfies AppBskyEmbedImages.ViewImage,
+            },
           ]
         }
-      } catch {}
+      }
     }
 
     return (
