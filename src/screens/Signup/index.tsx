@@ -1,8 +1,8 @@
 import React from 'react'
 import {View} from 'react-native'
 import Animated, {
-  FadeInUp,
-  FadeOutUp,
+  FadeIn,
+  FadeOut,
   LayoutAnimationConfig,
 } from 'react-native-reanimated'
 import {AppBskyGraphStarterpack} from '@atproto/api'
@@ -17,10 +17,7 @@ import {logger} from '#/logger'
 import {useServiceQuery} from '#/state/queries/service'
 import {useAgent} from '#/state/session'
 import {parseStarterPackHttpUri} from 'lib/strings/starter-pack'
-import {
-  useCurrentStarterPack,
-  useSetCurrentStarterPack,
-} from 'state/preferences/starter-pack'
+import {useCurrentStarterPack} from 'state/preferences/starter-pack'
 import {useResolveDidQuery} from 'state/queries/resolve-uri'
 import {useStarterPackQuery} from 'state/queries/useStarterPackQuery'
 import {LoggedOutLayout} from '#/view/com/util/layouts/LoggedOutLayout'
@@ -52,7 +49,6 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
   const agent = useAgent()
 
   const currentStarterPack = useCurrentStarterPack()
-  const setCurrentStarterPack = useSetCurrentStarterPack()
   const parsedStarterPackUri = parseStarterPackHttpUri(currentStarterPack?.uri)
   const {data: did} = useResolveDidQuery(parsedStarterPackUri?.name)
   const {data: starterPack} = useStarterPackQuery({
@@ -166,45 +162,25 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
         <View testID="createAccount" style={a.flex_1}>
           {starterPack &&
           AppBskyGraphStarterpack.isRecord(starterPack.record) ? (
-            <Animated.View entering={FadeInUp} exiting={FadeOutUp}>
+            <Animated.View entering={FadeIn} exiting={FadeOut}>
               <LinearGradientBackground
-                style={[
-                  a.px_lg,
-                  a.py_md,
-                  a.gap_sm,
-                  {
-                    borderBottomLeftRadius: 4,
-                    borderBottomRightRadius: 4,
-                  },
-                ]}>
+                style={[a.mx_lg, a.p_lg, a.gap_sm, a.rounded_sm]}>
                 <Text style={[a.font_bold, a.text_xl, {color: 'white'}]}>
                   {starterPack.record.name}
                 </Text>
                 <Text style={[{color: 'white'}]}>
-                  <Trans>
-                    You are signing up with a starter pack! Other users will see
-                    that you have joined using this pack.
-                  </Trans>
+                  {starterPack.feeds?.length ? (
+                    <Trans>
+                      You'll follow the suggested users and feeds once you
+                      finish creating your account!
+                    </Trans>
+                  ) : (
+                    <Trans>
+                      You'll follow the suggested users once you finish creating
+                      your account!
+                    </Trans>
+                  )}
                 </Text>
-                <Button
-                  label={_(msg`Remove starter pack`)}
-                  variant="ghost"
-                  color="primary"
-                  size="small"
-                  onPress={() => {
-                    setCurrentStarterPack(undefined)
-                  }}
-                  style={{
-                    backgroundColor: 'white',
-                    borderColor: 'white',
-                    width: 180,
-                    marginLeft: 'auto',
-                  }}
-                  hoverStyle={[{backgroundColor: '#dfdfdf'}]}>
-                  <ButtonText>
-                    <Trans>Remove starter pack</Trans>
-                  </ButtonText>
-                </Button>
               </LinearGradientBackground>
             </Animated.View>
           ) : null}
