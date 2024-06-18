@@ -25,7 +25,7 @@ import {sanitizeHandle} from 'lib/strings/handles'
 import {countLines} from 'lib/strings/helpers'
 import {niceDate} from 'lib/strings/time'
 import {s} from 'lib/styles'
-import {isWeb} from 'platform/detection'
+import {isNative, isWeb} from 'platform/detection'
 import {useSession} from 'state/session'
 import {PostThreadFollowBtn} from 'view/com/post-thread/PostThreadFollowBtn'
 import {atoms as a} from '#/alf'
@@ -396,7 +396,11 @@ let PostThreadItemLoaded = ({
             </View>
           </View>
         </View>
-        <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
+        <WhoCanReply
+          post={post}
+          isThreadAuthor={isThreadAuthor}
+          style={{borderBottomWidth: isNative ? 1 : 0}}
+        />
       </>
     )
   } else {
