@@ -56,8 +56,8 @@ import {useModalControls} from './state/modals'
 import {useUnreadNotifications} from './state/queries/notifications/unread'
 import {useSession} from './state/session'
 import {
-  setEmailConfirmationRequested,
   shouldRequestEmailConfirmation,
+  snoozeEmailConfirmationPrompt,
 } from './state/shell/reminders'
 import {AccessibilitySettingsScreen} from './view/screens/AccessibilitySettings'
 import {CommunityGuidelinesScreen} from './view/screens/CommunityGuidelines'
@@ -597,7 +597,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
 
     if (currentAccount && shouldRequestEmailConfirmation(currentAccount)) {
       openModal({name: 'verify-email', showReminder: true})
-      setEmailConfirmationRequested()
+      snoozeEmailConfirmationPrompt()
     }
   }
 
