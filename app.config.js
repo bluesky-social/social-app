@@ -1,5 +1,4 @@
 const pkg = require('./package.json')
-const {IS_TEST} = require('#/env')
 
 const SPLASH_CONFIG = {
   backgroundColor: '#ffffff',

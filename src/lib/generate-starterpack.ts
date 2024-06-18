@@ -3,6 +3,7 @@ import {msg} from '@lingui/macro'
 
 import {logger} from '#/logger'
 import {sanitizeHandle} from 'lib/strings/handles'
+import {enforceLen} from 'lib/strings/helpers'
 
 export const createStarterPackList = async ({
   name,
@@ -54,27 +55,41 @@ export async function generateStarterpack({
   agent: BskyAgent
 }): Promise<string | 'NOT_ENOUGH_FOLLOWERS' | 'ERROR'> {
   try {
-    const profileRes = await agent.app.bsky.actor.getProfile({
-      actor: agent.session!.did,
-    })
-    const profile = profileRes.data
+    let profile: AppBskyActorDefs.ProfileViewBasic | undefined
+    let profiles: AppBskyActorDefs.ProfileViewBasic[] | undefined
 
-    const defaultName = `${
-      profile.displayName || `@${sanitizeHandle(profile.handle)}`
-    }${msg`'s Starter Pack`.message!}`
+    await Promise.all([
+      (async () => {
+        profile = (
+          await agent.app.bsky.actor.getProfile({
+            actor: agent.session!.did,
+          })
+        ).data
+      })(),
+      (async () => {
+        profiles = (
+          await agent.app.bsky.actor.searchActors({
+            q: encodeURIComponent('*'),
+            limit: 49,
+          })
+        ).data.actors.filter(p => p.viewer?.following)
+      })(),
+    ])
 
-    const profilesRes = await agent.app.bsky.actor.searchActors({
-      q: encodeURIComponent('*'),
-      limit: 49,
-    })
-    const profiles = [
-      profile,
-      ...profilesRes.data.actors.filter(p => p.viewer?.following),
-    ]
+    if (!profile || !profiles) {
+      return 'ERROR'
+    }
 
+    profiles = [profile, ...profiles]
     if (profiles.length < 8) {
       return 'NOT_ENOUGH_FOLLOWERS'
     }
+
+    const defaultName = `${enforceLen(
+      profile.displayName || `@${sanitizeHandle(profile.handle)}`,
+      25,
+      true,
+    )}${msg`'s Starter Pack`.message!}`
 
     const list = await createStarterPackList({
       name: defaultName ?? '',
