@@ -23,15 +23,15 @@ export function NewskieDialog({
   const control = useDialogControl()
   const profileName = profile.displayName || `@${profile.handle}`
   const timeAgo = useGetTimeAgo()
+  const createdAt = profile.createdAt as string | undefined
   const daysOld = React.useMemo(() => {
-    if (!profile.createdAt) return Infinity
+    if (!createdAt) return Infinity
     return (
-      differenceInSeconds(new Date(), new Date(profile.createdAt as string)) /
-      86400
+      differenceInSeconds(new Date(), new Date(createdAt as string)) / 86400
     )
-  }, [profile.createdAt])
+  }, [createdAt])
 
-  if (daysOld > 7) return null
+  if (!createdAt || daysOld > 7) return null
 
   return (
     <View style={[a.pr_2xs]}>
@@ -64,7 +64,7 @@ export function NewskieDialog({
             <Text style={[a.text_md]}>
               <Trans>
                 {profileName} joined Bluesky{' '}
-                {timeAgo(profile.createdAt as string, {format: 'long'})} ago
+                {timeAgo(createdAt, {format: 'long'})} ago
               </Trans>
             </Text>
           </View>
