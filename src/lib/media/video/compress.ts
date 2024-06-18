@@ -20,7 +20,8 @@ export async function compressVideo(
       file,
       {
         getCancellationId,
-        compressionMethod: 'auto',
+        compressionMethod: 'manual',
+        bitrate: 3_000_000, // 3mbps
         maxSize: 1920,
       },
       onProgress,
@@ -28,7 +29,7 @@ export async function compressVideo(
 
     await FileSystem.deleteAsync(file)
     const info = await getVideoMetaData(compressed)
-    console.log('compressed size', (info.size / 1024 / 1024).toFixed(2) + 'mb')
+    console.log('compressed size', (info.size / 1024).toFixed(2) + 'mb')
     console.log(JSON.stringify(info, null, 2))
 
     return {
