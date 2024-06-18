@@ -22,6 +22,7 @@ import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
 import {useOTAUpdates} from 'lib/hooks/useOTAUpdates'
 import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
 import {HomeTabNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
+import {isWeb} from 'platform/detection'
 import {
   useCurrentStarterPack,
   useSetCurrentStarterPack,
@@ -51,7 +52,7 @@ export function HomeScreen(props: Props) {
       !currentStarterPack?.initialFeed
     ) {
       setShowLoggedOut(true)
-      requestSwitchToAccount({requestedAccount: 'new'})
+      requestSwitchToAccount({requestedAccount: isWeb ? 'starterpack' : 'new'})
     }
   }, [hasSession, setShowLoggedOut, requestSwitchToAccount, currentStarterPack])
 
