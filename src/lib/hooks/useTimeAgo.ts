@@ -38,9 +38,13 @@ const DAY = HOUR * 24
 const MONTH_30 = DAY * 30
 
 /**
- * Returns the difference between date1 and date2 in full seconds, minutes,
- * hours etc. All month are considered exactly 30 days. Assuming that date1 <=
- * date2. Differences >= 360 days are returned as the "M/D/YYYY" string
+ * Returns the difference between `earlier` and `later` dates, formatted as a
+ * natural language string.
+ *
+ * - All month are considered exactly 30 days.
+ * - Dates assume `earlier` <= `later`, and will otherwise return 'now'.
+ * - Differences >= 360 days are returned as the "M/D/YYYY" string
+ * - All values round down
  */
 export function dateDiff(
   earlier: number | string | Date,
