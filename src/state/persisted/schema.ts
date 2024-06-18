@@ -74,7 +74,6 @@ export const schema = z.object({
       flickr: z.enum(externalEmbedOptions).optional(),
     })
     .optional(),
-  mutedThreads: z.array(z.string()), // should move to server
   invites: z.object({
     copiedInvites: z.array(z.string()),
   }),
@@ -88,6 +87,8 @@ export const schema = z.object({
   disableHaptics: z.boolean().optional(),
   disableAutoplay: z.boolean().optional(),
   kawaii: z.boolean().optional(),
+  /** @deprecated */
+  mutedThreads: z.array(z.string()),
 })
 export type Schema = z.infer<typeof schema>
 

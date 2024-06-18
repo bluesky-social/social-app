@@ -31,7 +31,8 @@ import {
   getEmbeddedPost,
 } from './util'
 
-const RQKEY_ROOT = 'post-thread'
+const REPLY_TREE_DEPTH = 10
+export const RQKEY_ROOT = 'post-thread'
 export const RQKEY = (uri: string) => [RQKEY_ROOT, uri]
 type ThreadViewNode = AppBskyFeedGetPostThread.OutputSchema['thread']
 
@@ -90,7 +91,10 @@ export function usePostThreadQuery(uri: string | undefined) {
     gcTime: 0,
     queryKey: RQKEY(uri || ''),
     async queryFn() {
-      const res = await agent.getPostThread({uri: uri!, depth: 10})
+      const res = await agent.getPostThread({
+        uri: uri!,
+        depth: REPLY_TREE_DEPTH,
+      })
       if (res.success) {
         const thread = responseToThreadNodes(res.data.thread)
         annotateSelfThread(thread)
@@ -287,7 +291,12 @@ function annotateSelfThread(thread: ThreadNode) {
       selfThreadNode.ctx.isSelfThread = true
     }
     const last = selfThreadNodes[selfThreadNodes.length - 1]
-    if (last && last.post.replyCount && !last.replies?.length) {
+    if (
+      last &&
+      last.ctx.depth === REPLY_TREE_DEPTH && // at the edge of the tree depth
+      last.post.replyCount && // has replies
+      !last.replies?.length // replies were not hydrated
+    ) {
       last.ctx.hasMoreSelfThread = true
     }
   }
