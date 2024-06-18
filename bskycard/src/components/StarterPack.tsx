@@ -122,7 +122,7 @@ export function StarterPack(props: {
                   borderRadius: '50%',
                   overflow: 'hidden',
                 }}>
-                {image && <Img height="100%" width="100%" src={image} />}
+                <Img height="100%" width="100%" src={image} />
               </div>
             )
           })}
