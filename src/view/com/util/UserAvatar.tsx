@@ -169,7 +169,7 @@ export {DefaultAvatar}
 
 let UserAvatar = ({
   type = 'user',
-  shape,
+  shape: overrideShape,
   size,
   avatar,
   moderation,
@@ -177,10 +177,10 @@ let UserAvatar = ({
 }: UserAvatarProps): React.ReactNode => {
   const pal = usePalette('default')
   const backgroundColor = pal.colors.backgroundLight
-  shape = shape || type === 'user' ? 'circle' : 'square'
+  const finalShape = overrideShape ?? (type === 'user' ? 'circle' : 'square')
 
   const aviStyle = useMemo(() => {
-    if (shape === 'square') {
+    if (finalShape === 'square') {
       return {
         width: size,
         height: size,
@@ -194,7 +194,7 @@ let UserAvatar = ({
       borderRadius: Math.floor(size / 2),
       backgroundColor,
     }
-  }, [shape, size, backgroundColor])
+  }, [finalShape, size, backgroundColor])
 
   const alert = useMemo(() => {
     if (!moderation?.alert) {
@@ -236,7 +236,7 @@ let UserAvatar = ({
     </View>
   ) : (
     <View style={{width: size, height: size}}>
-      <DefaultAvatar type={type} shape={shape} size={size} />
+      <DefaultAvatar type={type} shape={finalShape} size={size} />
       {alert}
     </View>
   )
