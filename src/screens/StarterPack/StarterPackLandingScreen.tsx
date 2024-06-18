@@ -12,17 +12,13 @@ import {useLingui} from '@lingui/react'
 
 import {isAndroidWeb} from 'lib/browser'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {
-  createStarterPackGooglePlayUri,
-  parseStarterPackUri,
-} from 'lib/strings/starter-pack'
+import {createStarterPackGooglePlayUri} from 'lib/strings/starter-pack'
 import {isWeb} from 'platform/detection'
 import {useModerationOpts} from 'state/preferences/moderation-opts'
 import {
   useCurrentStarterPack,
   useSetCurrentStarterPack,
 } from 'state/preferences/starter-pack'
-import {useResolveDidQuery} from 'state/queries/resolve-uri'
 import {useStarterPackQuery} from 'state/queries/useStarterPackQuery'
 import {LoggedOutScreenState} from 'view/com/auth/LoggedOut'
 import {CenteredView} from 'view/com/util/Views'
@@ -56,17 +52,12 @@ export function LandingScreen({
   setScreenState: (state: LoggedOutScreenState) => void
 }) {
   const currentStarterPack = useCurrentStarterPack()
-  const parsed = parseStarterPackUri(currentStarterPack?.uri || '')
 
   React.useEffect(() => {
-    if (!parsed) {
+    if (!currentStarterPack?.uri) {
       setScreenState(LoggedOutScreenState.S_LoginOrCreateAccount)
     }
-  }, [parsed, setScreenState])
-
-  if (!parsed) {
-    return null
-  }
+  }, [currentStarterPack?.uri, setScreenState])
 
   return <LandingScreenInner setScreenState={setScreenState} />
 }
@@ -78,18 +69,12 @@ export function LandingScreenInner({
 }) {
   const moderationOpts = useModerationOpts()
   const currentStarterPack = useCurrentStarterPack()
-  const {name, rkey} = parseStarterPackUri(currentStarterPack?.uri || '') ?? {}
 
-  const {
-    data: did,
-    isLoading: isLoadingDid,
-    isError: isErrorDid,
-  } = useResolveDidQuery(name)
   const {
     data: starterPack,
     isLoading: isLoadingStarterPack,
     isError: isErrorStarterPack,
-  } = useStarterPackQuery({did, rkey})
+  } = useStarterPackQuery({uri: currentStarterPack?.uri})
 
   const isValid =
     starterPack &&
@@ -97,17 +82,15 @@ export function LandingScreenInner({
     AppBskyGraphStarterpack.validateRecord(starterPack.record)
 
   React.useEffect(() => {
-    if (isErrorDid || isErrorStarterPack || (starterPack && !isValid)) {
+    if (isErrorStarterPack || (starterPack && !isValid)) {
       setScreenState(LoggedOutScreenState.S_LoginOrCreateAccount)
     }
-  }, [isErrorDid, isErrorStarterPack, setScreenState, isValid, starterPack])
+  }, [isErrorStarterPack, setScreenState, isValid, starterPack])
 
-  if (!did || !starterPack || !isValid || !moderationOpts) {
+  if (!starterPack || !isValid || !moderationOpts) {
     return (
       <ListMaybePlaceholder
-        isLoading={
-          isLoadingDid || isLoadingStarterPack || !isValid || !moderationOpts
-        }
+        isLoading={isLoadingStarterPack || !isValid || !moderationOpts}
       />
     )
   }
