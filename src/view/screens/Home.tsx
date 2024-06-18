@@ -49,10 +49,9 @@ export function HomeScreen(props: Props) {
 
   React.useEffect(() => {
     if (currentStarterPack?.uri && !currentStarterPack?.initialFeed) {
-      const parsed = parseStarterPackUri(currentStarterPack.uri)
-      if (!parsed) return
-
       if (hasSession) {
+        const parsed = parseStarterPackUri(currentStarterPack.uri)
+        if (!parsed) return
         setCurrentStarterPack(undefined)
         props.navigation.navigate('StarterPack', parsed)
       } else {

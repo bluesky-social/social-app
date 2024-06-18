@@ -68,3 +68,14 @@ export function createStarterPackGooglePlayUri(
   if (!name || !rkey) return null
   return `https://play.google.com/store/apps/details?id=xyz.blueskyweb.app&referrer=utm_source%3Dbluesky%26utm_medium%3Dstarterpack%26utm_content%3Dstarterpack-${name}-${rkey}`
 }
+
+export function httpStarterPackUriToAtUri(httpUri?: string): string | null {
+  if (!httpUri) return null
+
+  const parsed = parseStarterPackUri(httpUri)
+  if (!parsed) return null
+
+  if (httpUri.startsWith('at://')) return httpUri
+
+  return `at://app.bsky.graph.starterpack/${parsed.name}/${parsed.rkey}`
+}

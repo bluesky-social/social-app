@@ -1,6 +1,7 @@
 import React from 'react'
 
 import * as persisted from '#/state/persisted'
+import {httpStarterPackUriToAtUri} from 'lib/strings/starter-pack'
 
 type StateContext =
   | {
@@ -20,6 +21,10 @@ export function Provider({children}: {children: React.ReactNode}) {
   )
 
   const setStateWrapped = (v: StateContext) => {
+    const atUri = httpStarterPackUriToAtUri(v?.uri)
+    if (atUri) {
+      v = {...v, uri: atUri}
+    }
     setState(v)
     persisted.write('currentStarterPack', v)
   }
