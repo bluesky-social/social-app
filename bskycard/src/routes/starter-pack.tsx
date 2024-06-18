@@ -74,8 +74,8 @@ export default function (ctx: AppContext, app: Express) {
 
 async function getImage(url: string) {
   const response = await fetch(url)
-  if (response.status !== 200) return
-  const arrayBuf = await response.arrayBuffer()
+  const arrayBuf = await response.arrayBuffer() // must drain body even if it will be discarded
+  if (response.status !== 200) return null
   return Buffer.from(arrayBuf)
 }
 

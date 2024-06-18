@@ -7,6 +7,7 @@ import {Img} from './Img.js'
 
 export const STARTERPACK_HEIGHT = 630
 export const STARTERPACK_WIDTH = 1200
+export const TILE_SIZE = STARTERPACK_HEIGHT / 3
 
 const GRADIENT_TOP = '#0A7AFF'
 const GRADIENT_BOTTOM = '#59B9FF'
@@ -20,7 +21,6 @@ export function StarterPack(props: {
   const record = AppBskyGraphStarterpack.isRecord(starterPack.record)
     ? starterPack.record
     : null
-  const tileSize = STARTERPACK_HEIGHT / 3
   const imagesArray = [...images.values()]
   const imageOfCreator = images.get(starterPack.creator.did)
   const imagesExceptCreator = [...images.entries()]
@@ -60,8 +60,8 @@ export function StarterPack(props: {
           display: 'flex',
           flexWrap: 'wrap',
           alignItems: 'stretch',
-          width: tileSize * 6,
-          height: tileSize * 3,
+          width: TILE_SIZE * 6,
+          height: TILE_SIZE * 3,
         }}>
         {[...Array(18)].map((_, i) => {
           const image = imagesArray.at(i % imagesArray.length)
@@ -70,8 +70,8 @@ export function StarterPack(props: {
               key={i}
               style={{
                 display: 'flex',
-                height: tileSize,
-                width: tileSize,
+                height: TILE_SIZE,
+                width: TILE_SIZE,
               }}>
               {image && <Img height="100%" width="100%" src={image} />}
             </div>
