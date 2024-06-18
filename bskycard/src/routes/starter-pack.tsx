@@ -1,7 +1,7 @@
 import assert from 'node:assert'
 
 import React from 'react'
-import {AtUri} from '@atproto/api'
+import {AppBskyGraphDefs, AtUri} from '@atproto/api'
 import resvg from '@resvg/resvg-js'
 import {Express} from 'express'
 import satori from 'satori'
@@ -12,6 +12,7 @@ import {
   STARTERPACK_WIDTH,
 } from '../components/StarterPack.js'
 import {AppContext} from '../context.js'
+import {httpLogger} from '../logger.js'
 import {handler, originVerifyMiddleware} from './util.js'
 
 export default function (ctx: AppContext, app: Express) {
@@ -21,11 +22,19 @@ export default function (ctx: AppContext, app: Express) {
     handler(async (req, res) => {
       const {actor, rkey} = req.params
       const uri = AtUri.make(actor, 'app.bsky.graph.starterpack', rkey)
-      const {
-        data: {starterPack},
-      } = await ctx.appviewAgent.api.app.bsky.graph.getStarterPack({
-        starterPack: uri.toString(),
-      })
+      let starterPack: AppBskyGraphDefs.StarterPackView
+      try {
+        const result = await ctx.appviewAgent.api.app.bsky.graph.getStarterPack(
+          {starterPack: uri.toString()},
+        )
+        starterPack = result.data.starterPack
+      } catch (err) {
+        httpLogger.warn(
+          {err, uri: uri.toString()},
+          'could not fetch starter pack',
+        )
+        return res.status(404).end('not found')
+      }
       const imageEntries = await Promise.all(
         starterPack.listItemsSample
           .map(li => li.subject)
