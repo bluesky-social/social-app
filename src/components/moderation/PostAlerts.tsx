@@ -92,6 +92,8 @@ function PostLabel({
               <UserAvatar
                 avatar={desc.sourceAvi}
                 size={size === 'large' ? 16 : 12}
+                type="labeler"
+                shape="circle"
               />
             ) : (
               <desc.icon size="sm" fill={t.atoms.text_contrast_medium.color} />
