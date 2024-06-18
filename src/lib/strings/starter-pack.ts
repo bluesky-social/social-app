@@ -27,8 +27,8 @@ export function createStarterPackLinkFromAndroidReferrer(
 }
 
 export function parseStarterPackUri(uri?: string): {
-  name?: string
-  rkey?: string
+  name: string
+  rkey: string
 } | null {
   if (!uri) return null
 
