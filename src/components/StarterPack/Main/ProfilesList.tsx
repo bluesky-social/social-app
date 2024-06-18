@@ -24,6 +24,7 @@ function renderItem({
 }
 
 function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic, index: number) {
+  console.log(item)
   return `${item.did}-${index}`
 }
 
@@ -48,7 +49,7 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
       if (!isOwn) return profiles
       const myIndex = profiles.findIndex(p => p.did === currentAccount?.did)
       return [
-        profiles[myIndex],
+        ...(myIndex !== -1 ? [profiles[myIndex]] : []),
         ...profiles.slice(0, myIndex),
         ...profiles.slice(myIndex + 1),
       ]
