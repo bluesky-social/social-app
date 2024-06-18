@@ -1,4 +1,4 @@
-import {toSimpleDateString} from '#/lib/strings/time'
+import {simpleAreDatesEqual} from '#/lib/strings/time'
 import {logger} from '#/logger'
 import * as persisted from '#/state/persisted'
 import {SessionAccount} from '../session'
@@ -12,9 +12,8 @@ export function shouldRequestEmailConfirmation(account: SessionAccount) {
   // wait for onboarding to complete
   if (isOnboardingActive()) return false
 
-  const stored = persisted.get('reminders').lastEmailConfirm
-  const snoozedAt = stored ? toSimpleDateString(new Date(stored)) : undefined
-  const today = toSimpleDateString(new Date())
+  const snoozedAt = persisted.get('reminders').lastEmailConfirm
+  const today = new Date()
 
   logger.debug('Checking email confirmation reminder', {
     today,
@@ -28,7 +27,7 @@ export function shouldRequestEmailConfirmation(account: SessionAccount) {
   }
 
   // already snoozed today
-  if (snoozedAt === today) {
+  if (simpleAreDatesEqual(new Date(snoozedAt), new Date())) {
     return false
   }
 
