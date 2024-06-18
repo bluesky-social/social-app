@@ -3,6 +3,7 @@ import {Keyboard, StyleProp, View, ViewStyle} from 'react-native'
 import {AppBskyFeedDefs, AppBskyGraphDefs, AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {createThreadgate} from '#/lib/api'
@@ -13,6 +14,7 @@ import {colors} from '#/lib/styles'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
+import {RQKEY_ROOT as POST_THREAD_RQKEY_ROOT} from '#/state/queries/post-thread'
 import {
   ThreadgateSetting,
   threadgateViewToSettings,
@@ -36,6 +38,7 @@ export function WhoCanReply({
   const {_} = useLingui()
   const pal = usePalette('default')
   const agent = useAgent()
+  const queryClient = useQueryClient()
   const {openModal} = useModalControls()
   const containerStyles = useColorSchemeStyle(
     {
@@ -83,6 +86,9 @@ export function WhoCanReply({
             })
           }
           Toast.show('Thread settings updated')
+          queryClient.invalidateQueries({
+            queryKey: [POST_THREAD_RQKEY_ROOT],
+          })
           track('Post:ThreadgateEdited')
         } catch (err) {
           Toast.show(
