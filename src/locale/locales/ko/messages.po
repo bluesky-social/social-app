@@ -84,9 +84,25 @@ msgstr "좋아요 취소 ({0, plural, other {#}}개)"
 msgid "{0}'s avatar"
 msgstr "{0} 님의 아바타"
 
+#: src/lib/strings/time.ts:29
+msgid "{0}d"
+msgstr "{0}일 전"
+
+#: src/lib/strings/time.ts:27
+msgid "{0}h"
+msgstr "{0}시간 전"
+
+#: src/lib/strings/time.ts:25
+msgid "{0}m"
+msgstr "{0}분 전"
+
 #: src/components/LabelingServiceCard/index.tsx:71
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
 msgstr "{count, plural, other {#}}명의 사용자가 좋아함"
+
+#: src/lib/strings/time.ts:23
+msgid "{diffSeconds}s"
+msgstr "{diffSeconds}초 전"
 
 #: src/screens/SignupQueued.tsx:207
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
@@ -110,6 +126,10 @@ msgstr "{handle} 님에게 메시지를 보낼 수 없습니다"
 #: src/view/screens/ProfileFeed.tsx:585
 msgid "{likeCount, plural, one {Liked by # user} other {Liked by # users}}"
 msgstr "{likeCount, plural, other {#}}명의 사용자가 좋아함"
+
+#: src/lib/strings/time.ts:39
+msgid "{months}mo"
+msgstr "{months}개월 전"
 
 #: src/view/shell/Drawer.tsx:462
 msgid "{numUnreadNotifications} unread"
@@ -1133,7 +1153,7 @@ msgstr "빌드 버전 클립보드에 복사됨"
 msgid "Copied to clipboard"
 msgstr "클립보드에 복사됨"
 
-#: src/components/dialogs/Embed.tsx:134
+#: src/components/dialogs/Embed.tsx:136
 msgid "Copied!"
 msgstr "복사했습니다!"
 
@@ -1149,8 +1169,8 @@ msgstr "복사"
 msgid "Copy {0}"
 msgstr "{0} 복사"
 
-#: src/components/dialogs/Embed.tsx:120
-#: src/components/dialogs/Embed.tsx:139
+#: src/components/dialogs/Embed.tsx:122
+#: src/components/dialogs/Embed.tsx:141
 msgid "Copy code"
 msgstr "코드 복사"
 
@@ -1254,10 +1274,6 @@ msgstr "커뮤니티에서 구축한 맞춤 피드는 새로운 경험을 제공
 #: src/view/screens/PreferencesExternalEmbeds.tsx:56
 msgid "Customize media from external sites."
 msgstr "외부 사이트 미디어를 사용자 지정합니다."
-
-#: src/lib/strings/time.ts:29
-msgid "d"
-msgstr "일 전"
 
 #: src/view/screens/Settings/index.tsx:458
 #: src/view/screens/Settings/index.tsx:484
@@ -1651,17 +1667,17 @@ msgstr "이메일 확인됨"
 msgid "Email:"
 msgstr "이메일:"
 
-#: src/components/dialogs/Embed.tsx:112
+#: src/components/dialogs/Embed.tsx:114
 msgid "Embed HTML code"
 msgstr "임베드 HTML 코드"
 
-#: src/components/dialogs/Embed.tsx:97
+#: src/components/dialogs/Embed.tsx:99
 #: src/view/com/util/forms/PostDropdownBtn.tsx:317
 #: src/view/com/util/forms/PostDropdownBtn.tsx:319
 msgid "Embed post"
 msgstr "게시물 임베드"
 
-#: src/components/dialogs/Embed.tsx:101
+#: src/components/dialogs/Embed.tsx:103
 msgid "Embed this post in your website. Simply copy the following snippet and paste it into the HTML code of your website."
 msgstr "웹사이트에 이 게시물을 임베드하세요. 다음 코드를 복사하여 웹사이트에 HTML 코드로 붙여넣기만 하면 됩니다."
 
@@ -2241,10 +2257,6 @@ msgstr "사용자의 프로필로 가기"
 msgid "Graphic Media"
 msgstr "그래픽 미디어"
 
-#: src/lib/strings/time.ts:27
-msgid "h"
-msgstr "시간 전"
-
 #: src/view/com/modals/ChangeHandle.tsx:260
 msgid "Handle"
 msgstr "핸들"
@@ -2790,10 +2802,6 @@ msgstr "모든 피드를 고정 해제했군요. 하지만 걱정하지 마세�
 msgid "Looks like you're missing a following feed. <0>Click here to add one.</0>"
 msgstr "팔로우 중 피드가 누락된 것 같습니다. <0>이곳을 클릭해 하나 추가하세요.</0>"
 
-#: src/lib/strings/time.ts:25
-msgid "m"
-msgstr "분 전"
-
 #: src/view/com/modals/LinkWarning.tsx:79
 msgid "Make sure this is where you intend to go!"
 msgstr "이곳이 당신이 가고자 하는 곳인지 확인하세요!"
@@ -2861,10 +2869,6 @@ msgstr "메시지"
 #: src/lib/moderation/useReportOptions.ts:46
 msgid "Misleading Account"
 msgstr "오해의 소지가 있는 계정"
-
-#: src/lib/strings/time.ts:39
-msgid "mo"
-msgstr "개월 전"
 
 #: src/Navigation.tsx:125
 #: src/screens/Moderation/index.tsx:104
@@ -4304,10 +4308,6 @@ msgstr "홈 페이지로 돌아갑니다"
 msgid "Returns to previous page"
 msgstr "이전 페이지로 돌아갑니다"
 
-#: src/lib/strings/time.ts:23
-msgid "s"
-msgstr "초 전"
-
 #: src/components/dialogs/BirthDateSettings.tsx:125
 #: src/view/com/composer/GifAltText.tsx:162
 #: src/view/com/composer/GifAltText.tsx:168
@@ -5486,8 +5486,8 @@ msgstr "변형"
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
-#: src/view/com/post-thread/PostThreadItem.tsx:675
 #: src/view/com/post-thread/PostThreadItem.tsx:677
+#: src/view/com/post-thread/PostThreadItem.tsx:679
 #: src/view/com/util/forms/PostDropdownBtn.tsx:270
 #: src/view/com/util/forms/PostDropdownBtn.tsx:272
 msgid "Translate"

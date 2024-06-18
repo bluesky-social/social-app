@@ -88,6 +88,10 @@ msgstr ""
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
 msgstr ""
 
+#: src/view/com/post-thread/PostThreadItem.tsx:669
+#~ msgid "{0}"
+#~ msgstr ""
+
 #: src/view/screens/ProfileList.tsx:286
 #~ msgid "{0} your feeds"
 #~ msgstr ""
@@ -96,8 +100,24 @@ msgstr ""
 msgid "{0}'s avatar"
 msgstr ""
 
+#: src/lib/strings/time.ts:29
+msgid "{0}d"
+msgstr ""
+
+#: src/lib/strings/time.ts:27
+msgid "{0}h"
+msgstr ""
+
+#: src/lib/strings/time.ts:25
+msgid "{0}m"
+msgstr ""
+
 #: src/components/LabelingServiceCard/index.tsx:71
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
+msgstr ""
+
+#: src/lib/strings/time.ts:23
+msgid "{diffSeconds}s"
 msgstr ""
 
 #: src/screens/SignupQueued.tsx:207
@@ -121,6 +141,10 @@ msgstr ""
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:299
 #: src/view/screens/ProfileFeed.tsx:585
 msgid "{likeCount, plural, one {Liked by # user} other {Liked by # users}}"
+msgstr ""
+
+#: src/lib/strings/time.ts:39
+msgid "{months}mo"
 msgstr ""
 
 #: src/view/shell/Drawer.tsx:462
@@ -1271,7 +1295,7 @@ msgstr "Ohjelmiston versio kopioitu leikepöydälle"
 msgid "Copied to clipboard"
 msgstr "Kopioitu leikepöydälle"
 
-#: src/components/dialogs/Embed.tsx:134
+#: src/components/dialogs/Embed.tsx:136
 msgid "Copied!"
 msgstr "Kopioitu!"
 
@@ -1287,8 +1311,8 @@ msgstr "Kopioi"
 msgid "Copy {0}"
 msgstr "Kopioi {0}"
 
-#: src/components/dialogs/Embed.tsx:120
-#: src/components/dialogs/Embed.tsx:139
+#: src/components/dialogs/Embed.tsx:122
+#: src/components/dialogs/Embed.tsx:141
 msgid "Copy code"
 msgstr "Kopioi koodi"
 
@@ -1402,8 +1426,8 @@ msgid "Customize media from external sites."
 msgstr "Muokkaa ulkoisten sivustojen mediasisältöjen asetuksia"
 
 #: src/lib/strings/time.ts:29
-msgid "d"
-msgstr ""
+#~ msgid "d"
+#~ msgstr ""
 
 #: src/view/screens/Settings/index.tsx:458
 #: src/view/screens/Settings/index.tsx:484
@@ -1805,17 +1829,17 @@ msgstr "Sähköpostiosoite vahvistettu"
 msgid "Email:"
 msgstr "Sähköpostiosoite:"
 
-#: src/components/dialogs/Embed.tsx:112
+#: src/components/dialogs/Embed.tsx:114
 msgid "Embed HTML code"
 msgstr "Upotuksen HTML-koodi"
 
-#: src/components/dialogs/Embed.tsx:97
+#: src/components/dialogs/Embed.tsx:99
 #: src/view/com/util/forms/PostDropdownBtn.tsx:317
 #: src/view/com/util/forms/PostDropdownBtn.tsx:319
 msgid "Embed post"
 msgstr "Upota viesti"
 
-#: src/components/dialogs/Embed.tsx:101
+#: src/components/dialogs/Embed.tsx:103
 msgid "Embed this post in your website. Simply copy the following snippet and paste it into the HTML code of your website."
 msgstr "Upota tämä julkaisu verkkosivustollesi. Kopioi vain seuraava koodinpätkä ja liitä se verkkosivustosi HTML-koodiin."
 
@@ -2451,8 +2475,8 @@ msgid "Graphic Media"
 msgstr ""
 
 #: src/lib/strings/time.ts:27
-msgid "h"
-msgstr ""
+#~ msgid "h"
+#~ msgstr ""
 
 #: src/view/com/modals/ChangeHandle.tsx:260
 msgid "Handle"
@@ -3046,8 +3070,8 @@ msgid "Looks like you're missing a following feed. <0>Click here to add one.</0>
 msgstr ""
 
 #: src/lib/strings/time.ts:25
-msgid "m"
-msgstr ""
+#~ msgid "m"
+#~ msgstr ""
 
 #: src/view/com/modals/LinkWarning.tsx:79
 msgid "Make sure this is where you intend to go!"
@@ -3122,8 +3146,8 @@ msgid "Misleading Account"
 msgstr "Harhaanjohtava käyttäjätili"
 
 #: src/lib/strings/time.ts:39
-msgid "mo"
-msgstr ""
+#~ msgid "mo"
+#~ msgstr ""
 
 #: src/Navigation.tsx:125
 #: src/screens/Moderation/index.tsx:104
@@ -4640,8 +4664,8 @@ msgid "Returns to previous page"
 msgstr "Palaa edelliselle sivulle"
 
 #: src/lib/strings/time.ts:23
-msgid "s"
-msgstr ""
+#~ msgid "s"
+#~ msgstr ""
 
 #: src/components/dialogs/BirthDateSettings.tsx:125
 #: src/view/com/composer/GifAltText.tsx:162
@@ -5949,8 +5973,8 @@ msgstr "Muutokset"
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
-#: src/view/com/post-thread/PostThreadItem.tsx:675
 #: src/view/com/post-thread/PostThreadItem.tsx:677
+#: src/view/com/post-thread/PostThreadItem.tsx:679
 #: src/view/com/util/forms/PostDropdownBtn.tsx:270
 #: src/view/com/util/forms/PostDropdownBtn.tsx:272
 msgid "Translate"

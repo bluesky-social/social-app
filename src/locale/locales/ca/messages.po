@@ -95,7 +95,7 @@ msgstr "{0, plural, one {republicació} other {republicacions}}"
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
 msgstr "{0, plural, one {Desmarca m'agrada (# like)} other {Desmarca m'agrada (# likes)}}"
 
-#: src/view/com/modals/Repost.tsx:44
+#: src/view/com/post-thread/PostThreadItem.tsx:669
 #~ msgid "{0}"
 #~ msgstr "{0}"
 
@@ -111,9 +111,25 @@ msgstr "{0, plural, one {Desmarca m'agrada (# like)} other {Desmarca m'agrada (#
 msgid "{0}'s avatar"
 msgstr ""
 
+#: src/lib/strings/time.ts:29
+msgid "{0}d"
+msgstr ""
+
+#: src/lib/strings/time.ts:27
+msgid "{0}h"
+msgstr ""
+
+#: src/lib/strings/time.ts:25
+msgid "{0}m"
+msgstr ""
+
 #: src/components/LabelingServiceCard/index.tsx:71
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
 msgstr "{count, plural, one {Li ha agradat a # user} other {Li ha agradat a # users}}"
+
+#: src/lib/strings/time.ts:23
+msgid "{diffSeconds}s"
+msgstr ""
 
 #: src/screens/SignupQueued.tsx:207
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
@@ -155,6 +171,10 @@ msgstr "{likeCount, plural, one {Li ha agradat a # user} other {Li ha agradat a 
 #: src/view/screens/Search/Search.tsx:87
 #~ msgid "{message}"
 #~ msgstr "{missatge}"
+
+#: src/lib/strings/time.ts:39
+msgid "{months}mo"
+msgstr ""
 
 #: src/view/shell/Drawer.tsx:462
 msgid "{numUnreadNotifications} unread"
@@ -1424,7 +1444,7 @@ msgstr "Número de versió copiat en memòria"
 msgid "Copied to clipboard"
 msgstr "Copiat en memòria"
 
-#: src/components/dialogs/Embed.tsx:134
+#: src/components/dialogs/Embed.tsx:136
 msgid "Copied!"
 msgstr "Copiat"
 
@@ -1440,8 +1460,8 @@ msgstr "Copia"
 msgid "Copy {0}"
 msgstr "Copia {0}"
 
-#: src/components/dialogs/Embed.tsx:120
-#: src/components/dialogs/Embed.tsx:139
+#: src/components/dialogs/Embed.tsx:122
+#: src/components/dialogs/Embed.tsx:141
 msgid "Copy code"
 msgstr "Copia el codi"
 
@@ -1575,8 +1595,8 @@ msgid "Customize media from external sites."
 msgstr "Personalitza el contingut dels llocs externs."
 
 #: src/lib/strings/time.ts:29
-msgid "d"
-msgstr ""
+#~ msgid "d"
+#~ msgstr ""
 
 #: src/view/screens/Settings.tsx:687
 #~ msgid "Danger Zone"
@@ -2018,17 +2038,17 @@ msgstr "Correu verificat"
 msgid "Email:"
 msgstr "Correu:"
 
-#: src/components/dialogs/Embed.tsx:112
+#: src/components/dialogs/Embed.tsx:114
 msgid "Embed HTML code"
 msgstr "Incrusta el codi HTML"
 
-#: src/components/dialogs/Embed.tsx:97
+#: src/components/dialogs/Embed.tsx:99
 #: src/view/com/util/forms/PostDropdownBtn.tsx:317
 #: src/view/com/util/forms/PostDropdownBtn.tsx:319
 msgid "Embed post"
 msgstr "Incrusta la publicació"
 
-#: src/components/dialogs/Embed.tsx:101
+#: src/components/dialogs/Embed.tsx:103
 msgid "Embed this post in your website. Simply copy the following snippet and paste it into the HTML code of your website."
 msgstr "Incrusta aquesta publicació al teu lloc web. Copia el fragment següent i enganxa'l al codi HTML del teu lloc web."
 
@@ -2712,8 +2732,8 @@ msgid "Graphic Media"
 msgstr "Mitjans gràfics"
 
 #: src/lib/strings/time.ts:27
-msgid "h"
-msgstr ""
+#~ msgid "h"
+#~ msgstr ""
 
 #: src/view/com/modals/ChangeHandle.tsx:260
 msgid "Handle"
@@ -3402,8 +3422,8 @@ msgid "Looks like you're missing a following feed. <0>Click here to add one.</0>
 msgstr "Sembla que et falta el canal del Seguits. <0>Clica aquí per a afegir-ne un.</0>"
 
 #: src/lib/strings/time.ts:25
-msgid "m"
-msgstr ""
+#~ msgid "m"
+#~ msgstr ""
 
 #: src/view/com/modals/LinkWarning.tsx:79
 msgid "Make sure this is where you intend to go!"
@@ -3490,8 +3510,8 @@ msgid "Misleading Account"
 msgstr "Compte enganyós"
 
 #: src/lib/strings/time.ts:39
-msgid "mo"
-msgstr ""
+#~ msgid "mo"
+#~ msgstr ""
 
 #: src/Navigation.tsx:125
 #: src/screens/Moderation/index.tsx:104
@@ -5169,8 +5189,8 @@ msgid "Returns to previous page"
 msgstr "Torna a la pàgina anterior"
 
 #: src/lib/strings/time.ts:23
-msgid "s"
-msgstr ""
+#~ msgid "s"
+#~ msgstr ""
 
 #: src/view/shell/desktop/RightNav.tsx:55
 #~ msgid "SANDBOX. Posts and accounts are not permanent."
@@ -6663,8 +6683,8 @@ msgstr "Transformacions"
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
-#: src/view/com/post-thread/PostThreadItem.tsx:675
 #: src/view/com/post-thread/PostThreadItem.tsx:677
+#: src/view/com/post-thread/PostThreadItem.tsx:679
 #: src/view/com/util/forms/PostDropdownBtn.tsx:270
 #: src/view/com/util/forms/PostDropdownBtn.tsx:272
 msgid "Translate"

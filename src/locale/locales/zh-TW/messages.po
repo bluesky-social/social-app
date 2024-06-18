@@ -80,13 +80,33 @@ msgstr "{0, plural, one {轉貼} other {轉貼}}"
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
 msgstr "{0, plural, one {撤回喜歡（# 個喜歡）} other {撤回喜歡（# 個喜歡）}}"
 
+#: src/view/com/post-thread/PostThreadItem.tsx:669
+#~ msgid "{0}"
+#~ msgstr ""
+
 #: src/view/com/util/UserAvatar.tsx:406
 msgid "{0}'s avatar"
 msgstr "{0} 的頭像"
 
+#: src/lib/strings/time.ts:29
+msgid "{0}d"
+msgstr ""
+
+#: src/lib/strings/time.ts:27
+msgid "{0}h"
+msgstr ""
+
+#: src/lib/strings/time.ts:25
+msgid "{0}m"
+msgstr ""
+
 #: src/components/LabelingServiceCard/index.tsx:71
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
 msgstr "{count, plural, one {# 個用戶已喜歡} other {# 個用戶已喜歡}}"
+
+#: src/lib/strings/time.ts:23
+msgid "{diffSeconds}s"
+msgstr ""
 
 #: src/screens/SignupQueued.tsx:207
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
@@ -110,6 +130,10 @@ msgstr "無法傳送訊息給 {handle}"
 #: src/view/screens/ProfileFeed.tsx:585
 msgid "{likeCount, plural, one {Liked by # user} other {Liked by # users}}"
 msgstr "{likeCount, plural, one {# 個用戶已喜歡} other {# 個用戶已喜歡}}"
+
+#: src/lib/strings/time.ts:39
+msgid "{months}mo"
+msgstr ""
 
 #: src/view/shell/Drawer.tsx:462
 msgid "{numUnreadNotifications} unread"
@@ -1133,7 +1157,7 @@ msgstr "已複製建構版本號至剪貼簿"
 msgid "Copied to clipboard"
 msgstr "已複製至剪貼簿"
 
-#: src/components/dialogs/Embed.tsx:134
+#: src/components/dialogs/Embed.tsx:136
 msgid "Copied!"
 msgstr "已複製！"
 
@@ -1149,8 +1173,8 @@ msgstr "複製"
 msgid "Copy {0}"
 msgstr "複製{0}"
 
-#: src/components/dialogs/Embed.tsx:120
-#: src/components/dialogs/Embed.tsx:139
+#: src/components/dialogs/Embed.tsx:122
+#: src/components/dialogs/Embed.tsx:141
 msgid "Copy code"
 msgstr "複製程式碼"
 
@@ -1256,8 +1280,8 @@ msgid "Customize media from external sites."
 msgstr "自訂外部網站的媒體。"
 
 #: src/lib/strings/time.ts:29
-msgid "d"
-msgstr ""
+#~ msgid "d"
+#~ msgstr ""
 
 #: src/view/screens/Settings/index.tsx:458
 #: src/view/screens/Settings/index.tsx:484
@@ -1651,17 +1675,17 @@ msgstr "電子郵件已驗證"
 msgid "Email:"
 msgstr "電子郵件："
 
-#: src/components/dialogs/Embed.tsx:112
+#: src/components/dialogs/Embed.tsx:114
 msgid "Embed HTML code"
 msgstr "嵌入 HTML 程式碼"
 
-#: src/components/dialogs/Embed.tsx:97
+#: src/components/dialogs/Embed.tsx:99
 #: src/view/com/util/forms/PostDropdownBtn.tsx:317
 #: src/view/com/util/forms/PostDropdownBtn.tsx:319
 msgid "Embed post"
 msgstr "嵌入貼文"
 
-#: src/components/dialogs/Embed.tsx:101
+#: src/components/dialogs/Embed.tsx:103
 msgid "Embed this post in your website. Simply copy the following snippet and paste it into the HTML code of your website."
 msgstr "將這則貼文嵌入到您的網站。只需複製以下程式碼片段，並將其貼上到您網站的 HTML 程式碼中即可。"
 
@@ -2242,8 +2266,8 @@ msgid "Graphic Media"
 msgstr "不適宜的圖像媒體"
 
 #: src/lib/strings/time.ts:27
-msgid "h"
-msgstr ""
+#~ msgid "h"
+#~ msgstr ""
 
 #: src/view/com/modals/ChangeHandle.tsx:260
 msgid "Handle"
@@ -2791,8 +2815,8 @@ msgid "Looks like you're missing a following feed. <0>Click here to add one.</0>
 msgstr "您看起來需要「Following」動態源，<0>點選這裡來新增。</0>"
 
 #: src/lib/strings/time.ts:25
-msgid "m"
-msgstr ""
+#~ msgid "m"
+#~ msgstr ""
 
 #: src/view/com/modals/LinkWarning.tsx:79
 msgid "Make sure this is where you intend to go!"
@@ -2863,8 +2887,8 @@ msgid "Misleading Account"
 msgstr "誤導性帳號"
 
 #: src/lib/strings/time.ts:39
-msgid "mo"
-msgstr ""
+#~ msgid "mo"
+#~ msgstr ""
 
 #: src/Navigation.tsx:125
 #: src/screens/Moderation/index.tsx:104
@@ -4305,8 +4329,8 @@ msgid "Returns to previous page"
 msgstr "返回上一頁"
 
 #: src/lib/strings/time.ts:23
-msgid "s"
-msgstr ""
+#~ msgid "s"
+#~ msgstr ""
 
 #: src/components/dialogs/BirthDateSettings.tsx:125
 #: src/view/com/composer/GifAltText.tsx:162
@@ -5486,8 +5510,8 @@ msgstr "轉換"
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
-#: src/view/com/post-thread/PostThreadItem.tsx:675
 #: src/view/com/post-thread/PostThreadItem.tsx:677
+#: src/view/com/post-thread/PostThreadItem.tsx:679
 #: src/view/com/util/forms/PostDropdownBtn.tsx:270
 #: src/view/com/util/forms/PostDropdownBtn.tsx:272
 msgid "Translate"

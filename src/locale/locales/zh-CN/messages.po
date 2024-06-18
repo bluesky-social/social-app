@@ -80,13 +80,33 @@ msgstr "{0, plural, one {转发} other {转发}}"
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
 msgstr "{0, plural, one {取消喜欢 (# 个喜欢)} other {取消喜欢 (# 个喜欢)}}"
 
+#: src/view/com/post-thread/PostThreadItem.tsx:669
+#~ msgid "{0}"
+#~ msgstr ""
+
 #: src/view/com/util/UserAvatar.tsx:406
 msgid "{0}'s avatar"
 msgstr "{0} 的头像"
 
+#: src/lib/strings/time.ts:29
+msgid "{0}d"
+msgstr ""
+
+#: src/lib/strings/time.ts:27
+msgid "{0}h"
+msgstr ""
+
+#: src/lib/strings/time.ts:25
+msgid "{0}m"
+msgstr ""
+
 #: src/components/LabelingServiceCard/index.tsx:71
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
 msgstr "{count, plural, one {# 位用户喜欢} other {# 位用户喜欢}}"
+
+#: src/lib/strings/time.ts:23
+msgid "{diffSeconds}s"
+msgstr ""
 
 #: src/screens/SignupQueued.tsx:207
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
@@ -110,6 +130,10 @@ msgstr "无法给 {handle} 发送私信"
 #: src/view/screens/ProfileFeed.tsx:585
 msgid "{likeCount, plural, one {Liked by # user} other {Liked by # users}}"
 msgstr "{likeCount, plural, one {# 位用户喜欢} other {# 位用户喜欢}}"
+
+#: src/lib/strings/time.ts:39
+msgid "{months}mo"
+msgstr ""
 
 #: src/view/shell/Drawer.tsx:462
 msgid "{numUnreadNotifications} unread"
@@ -1133,7 +1157,7 @@ msgstr "已复制构建版本号至剪贴板"
 msgid "Copied to clipboard"
 msgstr "已复制至剪贴板"
 
-#: src/components/dialogs/Embed.tsx:134
+#: src/components/dialogs/Embed.tsx:136
 msgid "Copied!"
 msgstr "已复制！"
 
@@ -1149,8 +1173,8 @@ msgstr "复制"
 msgid "Copy {0}"
 msgstr "复制{0}"
 
-#: src/components/dialogs/Embed.tsx:120
-#: src/components/dialogs/Embed.tsx:139
+#: src/components/dialogs/Embed.tsx:122
+#: src/components/dialogs/Embed.tsx:141
 msgid "Copy code"
 msgstr "复制代码"
 
@@ -1256,8 +1280,8 @@ msgid "Customize media from external sites."
 msgstr "自定义外部站点的媒体。"
 
 #: src/lib/strings/time.ts:29
-msgid "d"
-msgstr ""
+#~ msgid "d"
+#~ msgstr ""
 
 #: src/view/screens/Settings/index.tsx:458
 #: src/view/screens/Settings/index.tsx:484
@@ -1651,17 +1675,17 @@ msgstr "电子邮箱已验证"
 msgid "Email:"
 msgstr "电子邮箱："
 
-#: src/components/dialogs/Embed.tsx:112
+#: src/components/dialogs/Embed.tsx:114
 msgid "Embed HTML code"
 msgstr "嵌入 HTML 代码"
 
-#: src/components/dialogs/Embed.tsx:97
+#: src/components/dialogs/Embed.tsx:99
 #: src/view/com/util/forms/PostDropdownBtn.tsx:317
 #: src/view/com/util/forms/PostDropdownBtn.tsx:319
 msgid "Embed post"
 msgstr "嵌入帖子"
 
-#: src/components/dialogs/Embed.tsx:101
+#: src/components/dialogs/Embed.tsx:103
 msgid "Embed this post in your website. Simply copy the following snippet and paste it into the HTML code of your website."
 msgstr "将这条帖子嵌入到你的网站。只需复制以下代码片段，并将其粘贴到你网站的 HTML 代码中即可。"
 
@@ -2242,8 +2266,8 @@ msgid "Graphic Media"
 msgstr "图形媒体"
 
 #: src/lib/strings/time.ts:27
-msgid "h"
-msgstr ""
+#~ msgid "h"
+#~ msgstr ""
 
 #: src/view/com/modals/ChangeHandle.tsx:260
 msgid "Handle"
@@ -2791,8 +2815,8 @@ msgid "Looks like you're missing a following feed. <0>Click here to add one.</0>
 msgstr "看起来你似乎缺少\"正在关注\"资讯源。<0>点击这里来重新添加它。</0>"
 
 #: src/lib/strings/time.ts:25
-msgid "m"
-msgstr ""
+#~ msgid "m"
+#~ msgstr ""
 
 #: src/view/com/modals/LinkWarning.tsx:79
 msgid "Make sure this is where you intend to go!"
@@ -2863,8 +2887,8 @@ msgid "Misleading Account"
 msgstr "误导性账户"
 
 #: src/lib/strings/time.ts:39
-msgid "mo"
-msgstr ""
+#~ msgid "mo"
+#~ msgstr ""
 
 #: src/Navigation.tsx:125
 #: src/screens/Moderation/index.tsx:104
@@ -4305,8 +4329,8 @@ msgid "Returns to previous page"
 msgstr "回到上一页"
 
 #: src/lib/strings/time.ts:23
-msgid "s"
-msgstr ""
+#~ msgid "s"
+#~ msgstr ""
 
 #: src/components/dialogs/BirthDateSettings.tsx:125
 #: src/view/com/composer/GifAltText.tsx:162
@@ -5486,8 +5510,8 @@ msgstr "转换"
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
-#: src/view/com/post-thread/PostThreadItem.tsx:675
 #: src/view/com/post-thread/PostThreadItem.tsx:677
+#: src/view/com/post-thread/PostThreadItem.tsx:679
 #: src/view/com/util/forms/PostDropdownBtn.tsx:270
 #: src/view/com/util/forms/PostDropdownBtn.tsx:272
 msgid "Translate"

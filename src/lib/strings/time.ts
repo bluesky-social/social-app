@@ -20,13 +20,13 @@ export function ago(date: number | string | Date): string {
   if (diffSeconds < NOW) {
     return `${t`now`}`
   } else if (diffSeconds < MINUTE) {
-    return `${diffSeconds}${t`s`}`
+    return `${t`${diffSeconds}s`}`
   } else if (diffSeconds < HOUR) {
-    return `${Math.floor(diffSeconds / MINUTE)}${t`m`}`
+    return `${t`${Math.floor(diffSeconds / MINUTE)}m`}`
   } else if (diffSeconds < DAY) {
-    return `${Math.floor(diffSeconds / HOUR)}${t`h`}`
+    return `${t`${Math.floor(diffSeconds / HOUR)}h`}`
   } else if (diffSeconds < MONTH_30) {
-    return `${Math.round(diffSeconds / DAY)}${t`d`}`
+    return `${t`${Math.round(diffSeconds / DAY)}d`}`
   } else {
     let months = diffSeconds / MONTH
     if (months % 1 >= 0.9) {
@@ -36,14 +36,14 @@ export function ago(date: number | string | Date): string {
     }
 
     if (months < 12) {
-      return `${months}${t`mo`}`
+      return `${t`${months}mo`}`
     } else {
       return new Date(ts).toLocaleDateString()
     }
   }
 }
 
-export function niceDate(date: number | string | Date, appLang?: string) {
+export function niceDate(date: number | string | Date, appLang: string) {
   const d = new Date(date)
   return `${d.toLocaleTimeString(appLang || undefined, {
     hour: 'numeric',

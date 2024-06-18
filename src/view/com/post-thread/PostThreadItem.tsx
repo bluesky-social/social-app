@@ -666,7 +666,7 @@ function ExpandedPostDetails({
   return (
     <View style={[s.flexRow, s.mt2, s.mb10]}>
       <Text style={pal.textLight}>
-        <Trans>{niceDate(post.indexedAt, langPrefs.appLanguage)}</Trans>
+        {niceDate(post.indexedAt, langPrefs.appLanguage)}
       </Text>
       {needsTranslation && (
         <>

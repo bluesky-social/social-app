@@ -93,6 +93,10 @@ msgstr "{0, plural, other {posting ulang}}"
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
 msgstr "{0, plural, other {Batal suka (# menyukai)}}"
 
+#: src/view/com/post-thread/PostThreadItem.tsx:669
+#~ msgid "{0}"
+#~ msgstr ""
+
 #: src/view/screens/ProfileList.tsx:286
 #~ msgid "{0} your feeds"
 #~ msgstr ""
@@ -101,9 +105,25 @@ msgstr "{0, plural, other {Batal suka (# menyukai)}}"
 msgid "{0}'s avatar"
 msgstr ""
 
+#: src/lib/strings/time.ts:29
+msgid "{0}d"
+msgstr ""
+
+#: src/lib/strings/time.ts:27
+msgid "{0}h"
+msgstr ""
+
+#: src/lib/strings/time.ts:25
+msgid "{0}m"
+msgstr ""
+
 #: src/components/LabelingServiceCard/index.tsx:71
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
 msgstr "{count, plural, other {Disukai oleh # pengguna}}"
+
+#: src/lib/strings/time.ts:23
+msgid "{diffSeconds}s"
+msgstr ""
 
 #: src/screens/SignupQueued.tsx:207
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
@@ -127,6 +147,10 @@ msgstr "{handle} tidak dapat dikirimi pesan"
 #: src/view/screens/ProfileFeed.tsx:585
 msgid "{likeCount, plural, one {Liked by # user} other {Liked by # users}}"
 msgstr "{likeCount, plural, other {Disukai oleh # pengguna}}"
+
+#: src/lib/strings/time.ts:39
+msgid "{months}mo"
+msgstr ""
 
 #: src/view/shell/Drawer.tsx:462
 msgid "{numUnreadNotifications} unread"
@@ -1288,7 +1312,7 @@ msgstr "Menyalin versi build ke papan klip"
 msgid "Copied to clipboard"
 msgstr "Disalin ke papan klip"
 
-#: src/components/dialogs/Embed.tsx:134
+#: src/components/dialogs/Embed.tsx:136
 msgid "Copied!"
 msgstr "Tersalin!"
 
@@ -1304,8 +1328,8 @@ msgstr "Salin"
 msgid "Copy {0}"
 msgstr "Salin {0}"
 
-#: src/components/dialogs/Embed.tsx:120
-#: src/components/dialogs/Embed.tsx:139
+#: src/components/dialogs/Embed.tsx:122
+#: src/components/dialogs/Embed.tsx:141
 msgid "Copy code"
 msgstr "Salin kode"
 
@@ -1423,8 +1447,8 @@ msgid "Customize media from external sites."
 msgstr "Sesuaikan media dari situs eksternal."
 
 #: src/lib/strings/time.ts:29
-msgid "d"
-msgstr ""
+#~ msgid "d"
+#~ msgstr ""
 
 #: src/view/screens/Settings/index.tsx:458
 #: src/view/screens/Settings/index.tsx:484
@@ -1834,17 +1858,17 @@ msgstr "Email terverifikasi"
 msgid "Email:"
 msgstr "Email:"
 
-#: src/components/dialogs/Embed.tsx:112
+#: src/components/dialogs/Embed.tsx:114
 msgid "Embed HTML code"
 msgstr "Sematkan kode HTML"
 
-#: src/components/dialogs/Embed.tsx:97
+#: src/components/dialogs/Embed.tsx:99
 #: src/view/com/util/forms/PostDropdownBtn.tsx:317
 #: src/view/com/util/forms/PostDropdownBtn.tsx:319
 msgid "Embed post"
 msgstr "Sematkan postingan"
 
-#: src/components/dialogs/Embed.tsx:101
+#: src/components/dialogs/Embed.tsx:103
 msgid "Embed this post in your website. Simply copy the following snippet and paste it into the HTML code of your website."
 msgstr "Sematkan postingan ini di situs web Anda. Salin potongan kode berikut dan tempelkan ke dalam kode HTML situs web Anda."
 
@@ -2488,8 +2512,8 @@ msgid "Graphic Media"
 msgstr "Media Sensitif"
 
 #: src/lib/strings/time.ts:27
-msgid "h"
-msgstr ""
+#~ msgid "h"
+#~ msgstr ""
 
 #: src/view/com/modals/ChangeHandle.tsx:260
 msgid "Handle"
@@ -3083,8 +3107,8 @@ msgid "Looks like you're missing a following feed. <0>Click here to add one.</0>
 msgstr "Sepertinya Anda kehilangan feed mengikuti. <0>Klik di sini untuk menambahkan.</0>"
 
 #: src/lib/strings/time.ts:25
-msgid "m"
-msgstr ""
+#~ msgid "m"
+#~ msgstr ""
 
 #: src/view/com/modals/LinkWarning.tsx:79
 msgid "Make sure this is where you intend to go!"
@@ -3159,8 +3183,8 @@ msgid "Misleading Account"
 msgstr "Akun Menyesatkan"
 
 #: src/lib/strings/time.ts:39
-msgid "mo"
-msgstr ""
+#~ msgid "mo"
+#~ msgstr ""
 
 #: src/Navigation.tsx:125
 #: src/screens/Moderation/index.tsx:104
@@ -4687,8 +4711,8 @@ msgid "Returns to previous page"
 msgstr "Kembali ke halaman sebelumnya"
 
 #: src/lib/strings/time.ts:23
-msgid "s"
-msgstr ""
+#~ msgid "s"
+#~ msgstr ""
 
 #: src/components/dialogs/BirthDateSettings.tsx:125
 #: src/view/com/composer/GifAltText.tsx:162
@@ -6000,8 +6024,8 @@ msgstr "Transformasi"
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
-#: src/view/com/post-thread/PostThreadItem.tsx:675
 #: src/view/com/post-thread/PostThreadItem.tsx:677
+#: src/view/com/post-thread/PostThreadItem.tsx:679
 #: src/view/com/util/forms/PostDropdownBtn.tsx:270
 #: src/view/com/util/forms/PostDropdownBtn.tsx:272
 msgid "Translate"
