@@ -1,6 +1,11 @@
 import React from 'react'
 import {View} from 'react-native'
-import {LayoutAnimationConfig} from 'react-native-reanimated'
+import Animated, {
+  FadeInUp,
+  FadeOutUp,
+  LayoutAnimationConfig,
+} from 'react-native-reanimated'
+import {AppBskyGraphStarterpack} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -11,6 +16,13 @@ import {createFullHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {useServiceQuery} from '#/state/queries/service'
 import {useAgent} from '#/state/session'
+import {parseStarterPackHttpUri} from 'lib/strings/starter-pack'
+import {
+  useCurrentStarterPack,
+  useSetCurrentStarterPack,
+} from 'state/preferences/starter-pack'
+import {useResolveDidQuery} from 'state/queries/resolve-uri'
+import {useStarterPackQuery} from 'state/queries/useStarterPackQuery'
 import {LoggedOutLayout} from '#/view/com/util/layouts/LoggedOutLayout'
 import {
   initialState,
@@ -26,6 +38,7 @@ import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Button, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
+import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
@@ -37,6 +50,15 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
   const submit = useSubmitSignup({state, dispatch})
   const {gtMobile} = useBreakpoints()
   const agent = useAgent()
+
+  const currentStarterPack = useCurrentStarterPack()
+  const setCurrentStarterPack = useSetCurrentStarterPack()
+  const parsedStarterPackUri = parseStarterPackHttpUri(currentStarterPack?.uri)
+  const {data: did} = useResolveDidQuery(parsedStarterPackUri?.name)
+  const {data: starterPack} = useStarterPackQuery({
+    did,
+    rkey: parsedStarterPackUri?.rkey,
+  })
 
   const {
     data: serviceInfo,
@@ -142,6 +164,50 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
         description={_(msg`We're so excited to have you join us!`)}
         scrollable>
         <View testID="createAccount" style={a.flex_1}>
+          {starterPack &&
+          AppBskyGraphStarterpack.isRecord(starterPack.record) ? (
+            <Animated.View entering={FadeInUp} exiting={FadeOutUp}>
+              <LinearGradientBackground
+                style={[
+                  a.px_lg,
+                  a.py_md,
+                  a.gap_sm,
+                  {
+                    borderBottomLeftRadius: 4,
+                    borderBottomRightRadius: 4,
+                  },
+                ]}>
+                <Text style={[a.font_bold, a.text_xl, {color: 'white'}]}>
+                  {starterPack.record.name}
+                </Text>
+                <Text style={[{color: 'white'}]}>
+                  <Trans>
+                    You are signing up with a starter pack! Other users will see
+                    that you have joined using this pack.
+                  </Trans>
+                </Text>
+                <Button
+                  label={_(msg`Remove starter pack`)}
+                  variant="ghost"
+                  color="primary"
+                  size="small"
+                  onPress={() => {
+                    setCurrentStarterPack(undefined)
+                  }}
+                  style={{
+                    backgroundColor: 'white',
+                    borderColor: 'white',
+                    width: 180,
+                    marginLeft: 'auto',
+                  }}
+                  hoverStyle={[{backgroundColor: '#dfdfdf'}]}>
+                  <ButtonText>
+                    <Trans>Remove starter pack</Trans>
+                  </ButtonText>
+                </Button>
+              </LinearGradientBackground>
+            </Animated.View>
+          ) : null}
           <View
             style={[
               a.flex_1,

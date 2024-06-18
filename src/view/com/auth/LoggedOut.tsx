@@ -73,7 +73,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   return (
     <View testID="noSessionView" style={[s.hContentRegion]}>
       <ErrorBoundary>
-        {onDismiss && screenState !== ScreenState.S_StarterPack ? (
+        {onDismiss && screenState === ScreenState.S_LoginOrCreateAccount ? (
           <Pressable
             accessibilityHint={_(msg`Go back`)}
             accessibilityLabel={_(msg`Go back`)}
