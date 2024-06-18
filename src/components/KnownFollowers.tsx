@@ -100,8 +100,9 @@ function KnownFollowersInner({
       moderation,
     }
   })
-  const count = cachedKnownFollowers.count
-  const renderableCount = slice.length
+
+  // Does not have blocks applied. Always >= slices.length
+  const serverCount = cachedKnownFollowers.count
 
   return (
     <Link
@@ -165,9 +166,9 @@ function KnownFollowersInner({
               },
             ]}
             numberOfLines={2}>
-            {renderableCount >= 2 ? (
+            {slice.length >= 2 ? (
               // 2-n followers, including blocks
-              count > 2 ? (
+              serverCount > 2 ? (
                 <Trans>
                   {_(msg`Followed by`)}{' '}
                   <Text key={slice[0].profile.did} style={textStyle}>
@@ -178,7 +179,11 @@ function KnownFollowersInner({
                     {slice[1].profile.displayName}
                   </Text>
                   , and{' '}
-                  <Plural value={count - 2} one="# other" other="# others" />
+                  <Plural
+                    value={serverCount - 2}
+                    one="# other"
+                    other="# others"
+                  />
                 </Trans>
               ) : (
                 // only 2
@@ -193,14 +198,19 @@ function KnownFollowersInner({
                   </Text>
                 </Trans>
               )
-            ) : count > 1 ? (
+            ) : serverCount > 1 ? (
               // 1-n followers, including blocks
               <Trans>
                 {_(msg`Followed by`)}{' '}
                 <Text key={slice[0].profile.did} style={textStyle}>
                   {slice[0].profile.displayName}
                 </Text>{' '}
-                and <Plural value={count - 1} one="# other" other="# others" />
+                and{' '}
+                <Plural
+                  value={serverCount - 1}
+                  one="# other"
+                  other="# others"
+                />
               </Trans>
             ) : (
               // only 1
