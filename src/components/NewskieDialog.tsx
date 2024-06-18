@@ -18,8 +18,10 @@ import {Text} from '#/components/Typography'
 
 export function NewskieDialog({
   profile,
+  disabled,
 }: {
   profile: AppBskyActorDefs.ProfileViewDetailed
+  disabled?: boolean
 }) {
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
@@ -43,6 +45,7 @@ export function NewskieDialog({
   return (
     <View style={[a.pr_2xs]}>
       <Button
+        disabled={disabled}
         label={_(
           msg`This user is new here. Press for more info about when they joined.`,
         )}

@@ -12,8 +12,10 @@ import {Text} from '#/components/Typography'
 
 export function ProfileHeaderHandle({
   profile,
+  disableTaps,
 }: {
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
+  disableTaps?: boolean
 }) {
   const t = useTheme()
   const invalidHandle = isInvalidHandle(profile.handle)
@@ -21,8 +23,8 @@ export function ProfileHeaderHandle({
   return (
     <View
       style={[a.flex_row, a.gap_xs, a.align_center]}
-      pointerEvents={isAndroid ? 'box-only' : 'auto'}>
-      <NewskieDialog profile={profile} />
+      pointerEvents={disableTaps ? 'none' : isAndroid ? 'box-only' : 'auto'}>
+      <NewskieDialog profile={profile} disabled={disableTaps} />
       {profile.viewer?.followedBy && !blockHide ? (
         <View style={[t.atoms.bg_contrast_25, a.rounded_xs, a.px_sm, a.py_xs]}>
           <Text style={[t.atoms.text, a.text_sm]}>
