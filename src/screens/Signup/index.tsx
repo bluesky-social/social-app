@@ -160,7 +160,8 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
         description={_(msg`We're so excited to have you join us!`)}
         scrollable>
         <View testID="createAccount" style={a.flex_1}>
-          {starterPack &&
+          {state.activeStep === SignupStep.INFO &&
+          starterPack &&
           AppBskyGraphStarterpack.isRecord(starterPack.record) ? (
             <Animated.View entering={FadeIn} exiting={FadeOut}>
               <LinearGradientBackground
