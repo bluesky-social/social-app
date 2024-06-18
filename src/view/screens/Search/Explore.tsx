@@ -65,7 +65,7 @@ function SuggestedItemsHeader({
             fill={t.palette.primary_500}
             style={{marginLeft: -2}}
           />
-          <Text style={[a.text_2xl, a.font_bold, t.atoms.text]}>{title}</Text>
+          <Text style={[a.text_2xl, a.font_heavy, t.atoms.text]}>{title}</Text>
         </View>
         <Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
           {description}
