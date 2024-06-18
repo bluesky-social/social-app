@@ -32,7 +32,7 @@ import {
 } from './util'
 
 const REPLY_TREE_DEPTH = 10
-const RQKEY_ROOT = 'post-thread'
+export const RQKEY_ROOT = 'post-thread'
 export const RQKEY = (uri: string) => [RQKEY_ROOT, uri]
 type ThreadViewNode = AppBskyFeedGetPostThread.OutputSchema['thread']
 
