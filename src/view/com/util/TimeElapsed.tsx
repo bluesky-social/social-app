@@ -15,12 +15,14 @@ export function TimeElapsed({
   const ago = useGetTimeAgo()
   const format = timeToString ?? ago
   const tick = useTickEveryMinute()
-  const [timeElapsed, setTimeAgo] = React.useState(() => format(timestamp))
+  const [timeElapsed, setTimeAgo] = React.useState(() =>
+    format(timestamp, tick),
+  )
 
   const [prevTick, setPrevTick] = React.useState(tick)
   if (prevTick !== tick) {
     setPrevTick(tick)
-    setTimeAgo(format(timestamp))
+    setTimeAgo(format(timestamp, tick))
   }
 
   return children({timeElapsed})
