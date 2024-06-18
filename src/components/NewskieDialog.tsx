@@ -43,7 +43,7 @@ export function NewskieDialog({
         )}
         hitSlop={HITSLOP_10}
         onPress={control.open}>
-        <Newskie size={22} />
+        <Newskie size="lg" fill="#FFC404" />
       </Button>
 
       <Dialog.Outer control={control}>
