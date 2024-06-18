@@ -7,6 +7,7 @@ import {useLingui} from '@lingui/react'
 import {EMBED_SCRIPT} from '#/lib/constants'
 import {niceDate} from '#/lib/strings/time'
 import {toShareUrl} from '#/lib/strings/url-helpers'
+import {useLanguagePrefs} from 'state/preferences'
 import {atoms as a, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
@@ -46,6 +47,7 @@ function EmbedDialogInner({
   const {_} = useLingui()
   const ref = useRef<TextInput>(null)
   const [copied, setCopied] = useState(false)
+  const langPrefs = useLanguagePrefs()
 
   // reset copied state after 2 seconds
   React.useEffect(() => {
@@ -86,9 +88,9 @@ function EmbedDialogInner({
     )} (<a href="${escapeHtml(profileHref)}">@${escapeHtml(
       postAuthor.handle,
     )}</a>) <a href="${escapeHtml(href)}">${escapeHtml(
-      niceDate(timestamp),
+      niceDate(timestamp, langPrefs.appLanguage),
     )}</a></blockquote><script async src="${EMBED_SCRIPT}" charset="utf-8"></script>`
-  }, [postUri, postCid, record, timestamp, postAuthor])
+  }, [postUri, postCid, record, timestamp, postAuthor, langPrefs])
 
   return (
     <Dialog.Inner label="Embed post" style={[a.gap_md, {maxWidth: 500}]}>

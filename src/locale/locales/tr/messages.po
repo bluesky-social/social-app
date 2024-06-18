@@ -50,20 +50,20 @@ msgid "{0, plural, one {# repost} other {# reposts}}"
 msgstr ""
 
 #: src/components/KnownFollowers.tsx:179
-msgid "{0, plural, one {and # other} other {and # others}}"
-msgstr ""
+#~ msgid "{0, plural, one {and # other} other {and # others}}"
+#~ msgstr ""
 
-#: src/components/ProfileHoverCard/index.web.tsx:376
+#: src/components/ProfileHoverCard/index.web.tsx:398
 #: src/screens/Profile/Header/Metrics.tsx:23
 msgid "{0, plural, one {follower} other {followers}}"
 msgstr ""
 
-#: src/components/ProfileHoverCard/index.web.tsx:380
+#: src/components/ProfileHoverCard/index.web.tsx:402
 #: src/screens/Profile/Header/Metrics.tsx:27
 msgid "{0, plural, one {following} other {following}}"
 msgstr ""
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:252
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:254
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
 msgstr ""
 
@@ -71,6 +71,7 @@ msgstr ""
 msgid "{0, plural, one {like} other {likes}}"
 msgstr ""
 
+#: src/components/FeedCard.tsx:111
 #: src/view/com/feeds/FeedSourceCard.tsx:301
 msgid "{0, plural, one {Liked by # user} other {Liked by # users}}"
 msgstr ""
@@ -79,7 +80,7 @@ msgstr ""
 msgid "{0, plural, one {post} other {posts}}"
 msgstr ""
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:210
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:212
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
 msgstr ""
 
@@ -87,7 +88,7 @@ msgstr ""
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr ""
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:248
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:250
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
 msgstr ""
 
@@ -111,7 +112,7 @@ msgstr ""
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
 msgstr ""
 
-#: src/components/ProfileHoverCard/index.web.tsx:457
+#: src/components/ProfileHoverCard/index.web.tsx:503
 #: src/screens/Profile/Header/Metrics.tsx:50
 msgid "{following} following"
 msgstr "{following} takip ediliyor"
@@ -204,7 +205,7 @@ msgstr ""
 #~ msgstr "Uygulamanın yeni bir sürümü mevcut. Devam etmek için güncelleyin."
 
 #: src/view/com/util/ViewHeader.tsx:93
-#: src/view/screens/Search/Search.tsx:715
+#: src/view/screens/Search/Search.tsx:684
 msgid "Access navigation links and settings"
 msgstr "Gezinme bağlantılarına ve ayarlara erişin"
 
@@ -236,15 +237,15 @@ msgstr ""
 msgid "Account"
 msgstr "Hesap"
 
-#: src/view/com/profile/ProfileMenu.tsx:142
+#: src/view/com/profile/ProfileMenu.tsx:145
 msgid "Account blocked"
 msgstr "Hesap engellendi"
 
-#: src/view/com/profile/ProfileMenu.tsx:156
+#: src/view/com/profile/ProfileMenu.tsx:159
 msgid "Account followed"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:116
+#: src/view/com/profile/ProfileMenu.tsx:119
 msgid "Account muted"
 msgstr "Hesap susturuldu"
 
@@ -265,16 +266,16 @@ msgstr "Hesap seçenekleri"
 msgid "Account removed from quick access"
 msgstr "Hesap hızlı erişimden kaldırıldı"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:135
-#: src/view/com/profile/ProfileMenu.tsx:131
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:139
+#: src/view/com/profile/ProfileMenu.tsx:134
 msgid "Account unblocked"
 msgstr "Hesap engeli kaldırıldı"
 
-#: src/view/com/profile/ProfileMenu.tsx:169
+#: src/view/com/profile/ProfileMenu.tsx:172
 msgid "Account unfollowed"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:105
+#: src/view/com/profile/ProfileMenu.tsx:108
 msgid "Account unmuted"
 msgstr "Hesap susturulması kaldırıldı"
 
@@ -356,8 +357,12 @@ msgstr ""
 msgid "Add the following DNS record to your domain:"
 msgstr "Alan adınıza aşağıdaki DNS kaydını ekleyin:"
 
-#: src/view/com/profile/ProfileMenu.tsx:265
+#: src/components/FeedCard.tsx:180
+msgid "Add this feed to your feeds"
+msgstr ""
+
 #: src/view/com/profile/ProfileMenu.tsx:268
+#: src/view/com/profile/ProfileMenu.tsx:271
 msgid "Add to Lists"
 msgstr "Listelere Ekle"
 
@@ -400,7 +405,7 @@ msgstr ""
 msgid "Advanced"
 msgstr "Gelişmiş"
 
-#: src/view/screens/Feeds.tsx:771
+#: src/view/screens/Feeds.tsx:737
 msgid "All the feeds you've saved, right in one place."
 msgstr ""
 
@@ -482,7 +487,6 @@ msgstr "Bir sorun oluştu, lütfen tekrar deneyin."
 msgid "an unknown error occurred"
 msgstr ""
 
-#: src/components/KnownFollowers.tsx:187
 #: src/view/com/notifications/FeedItem.tsx:258
 #: src/view/com/threadgate/WhoCanReply.tsx:180
 msgid "and"
@@ -596,7 +600,11 @@ msgstr ""
 msgid "Are you sure you want to remove {0} from your feeds?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:630
+#: src/components/FeedCard.tsx:197
+msgid "Are you sure you want to remove this from your feeds?"
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:632
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "Bu taslağı silmek istediğinizden emin misiniz?"
 
@@ -664,8 +672,8 @@ msgstr "Doğum günü"
 msgid "Birthday:"
 msgstr "Doğum günü:"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:309
-#: src/view/com/profile/ProfileMenu.tsx:363
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:314
+#: src/view/com/profile/ProfileMenu.tsx:366
 msgid "Block"
 msgstr ""
 
@@ -674,12 +682,12 @@ msgstr ""
 msgid "Block account"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:302
-#: src/view/com/profile/ProfileMenu.tsx:309
+#: src/view/com/profile/ProfileMenu.tsx:305
+#: src/view/com/profile/ProfileMenu.tsx:312
 msgid "Block Account"
 msgstr "Hesabı Engelle"
 
-#: src/view/com/profile/ProfileMenu.tsx:346
+#: src/view/com/profile/ProfileMenu.tsx:349
 msgid "Block Account?"
 msgstr ""
 
@@ -713,7 +721,7 @@ msgstr "Engellenen hesaplar"
 msgid "Blocked Accounts"
 msgstr "Engellenen Hesaplar"
 
-#: src/view/com/profile/ProfileMenu.tsx:358
+#: src/view/com/profile/ProfileMenu.tsx:361
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "Engellenen hesaplar, konularınıza yanıt veremez, sizi bahsedemez veya başka şekilde sizinle etkileşime giremez."
 
@@ -733,7 +741,7 @@ msgstr ""
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "Engelleme herkese açıktır. Engellenen hesaplar, konularınıza yanıt veremez, sizi bahsedemez veya başka şekilde sizinle etkileşime giremez."
 
-#: src/view/com/profile/ProfileMenu.tsx:355
+#: src/view/com/profile/ProfileMenu.tsx:358
 msgid "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
 msgstr ""
 
@@ -847,8 +855,8 @@ msgstr "Yalnızca harfler, sayılar, boşluklar, tireler ve alt çizgiler içere
 #: src/components/Prompt.tsx:121
 #: src/components/TagMenu/index.tsx:268
 #: src/screens/Deactivated.tsx:161
-#: src/view/com/composer/Composer.tsx:432
-#: src/view/com/composer/Composer.tsx:438
+#: src/view/com/composer/Composer.tsx:434
+#: src/view/com/composer/Composer.tsx:440
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangeHandle.tsx:148
@@ -865,7 +873,7 @@ msgstr "Yalnızca harfler, sayılar, boşluklar, tireler ve alt çizgiler içere
 #: src/view/com/modals/VerifyEmail.tsx:255
 #: src/view/com/modals/VerifyEmail.tsx:261
 #: src/view/com/util/post-ctrls/RepostButton.tsx:138
-#: src/view/screens/Search/Search.tsx:735
+#: src/view/screens/Search/Search.tsx:704
 #: src/view/shell/desktop/Search.tsx:218
 msgid "Cancel"
 msgstr "İptal"
@@ -1060,7 +1068,7 @@ msgid "Clear all storage data (restart after this)"
 msgstr "Tüm depolama verilerini temizle (bundan sonra yeniden başlat)"
 
 #: src/view/com/util/forms/SearchInput.tsx:88
-#: src/view/screens/Search/Search.tsx:861
+#: src/view/screens/Search/Search.tsx:824
 msgid "Clear search query"
 msgstr "Arama sorgusunu temizle"
 
@@ -1168,7 +1176,7 @@ msgstr "Alt gezinme çubuğunu kapatır"
 msgid "Closes password update alert"
 msgstr "Şifre güncelleme uyarısını kapatır"
 
-#: src/view/com/composer/Composer.tsx:434
+#: src/view/com/composer/Composer.tsx:436
 msgid "Closes post composer and discards post draft"
 msgstr "Gönderi bestecisini kapatır ve gönderi taslağını siler"
 
@@ -1205,7 +1213,7 @@ msgstr "Onboarding'i tamamlayın ve hesabınızı kullanmaya başlayın"
 msgid "Complete the challenge"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:551
+#: src/view/com/composer/Composer.tsx:553
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "En fazla {MAX_GRAPHEME_LENGTH} karakter uzunluğunda gönderiler oluşturun"
 
@@ -1225,8 +1233,8 @@ msgstr ""
 msgid "Configured in <0>moderation settings</0>."
 msgstr ""
 
-#: src/components/Prompt.tsx:159
 #: src/components/Prompt.tsx:162
+#: src/components/Prompt.tsx:165
 #: src/view/com/modals/SelfLabel.tsx:155
 #: src/view/com/modals/VerifyEmail.tsx:239
 #: src/view/com/modals/VerifyEmail.tsx:241
@@ -1411,8 +1419,8 @@ msgstr ""
 msgid "Copy link to list"
 msgstr "Liste bağlantısını kopyala"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:297
-#: src/view/com/util/forms/PostDropdownBtn.tsx:306
+#: src/view/com/util/forms/PostDropdownBtn.tsx:300
+#: src/view/com/util/forms/PostDropdownBtn.tsx:309
 msgid "Copy link to post"
 msgstr "Gönderi bağlantısını kopyala"
 
@@ -1425,8 +1433,8 @@ msgstr "Gönderi bağlantısını kopyala"
 msgid "Copy message text"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:275
-#: src/view/com/util/forms/PostDropdownBtn.tsx:277
+#: src/view/com/util/forms/PostDropdownBtn.tsx:278
+#: src/view/com/util/forms/PostDropdownBtn.tsx:280
 msgid "Copy post text"
 msgstr "Gönderi metnini kopyala"
 
@@ -1527,13 +1535,18 @@ msgstr ""
 msgid "Custom domain"
 msgstr "Özel alan adı"
 
-#: src/view/screens/Feeds.tsx:797
+#: src/view/screens/Feeds.tsx:763
+#: src/view/screens/Search/Explore.tsx:378
 msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
 msgstr "Topluluk tarafından oluşturulan özel beslemeler size yeni deneyimler sunar ve sevdiğiniz içeriği bulmanıza yardımcı olur."
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:56
 msgid "Customize media from external sites."
 msgstr "Harici sitelerden medyayı özelleştirin."
+
+#: src/lib/strings/time.ts:29
+msgid "d"
+msgstr ""
 
 #: src/view/screens/Settings/index.tsx:458
 #: src/view/screens/Settings/index.tsx:484
@@ -1570,7 +1583,7 @@ msgid "Debug panel"
 msgstr "Hata ayıklama paneli"
 
 #: src/components/dms/MessageMenu.tsx:151
-#: src/view/com/util/forms/PostDropdownBtn.tsx:423
+#: src/view/com/util/forms/PostDropdownBtn.tsx:426
 #: src/view/screens/AppPasswords.tsx:285
 #: src/view/screens/ProfileList.tsx:667
 msgid "Delete"
@@ -1625,8 +1638,8 @@ msgstr "Hesabımı sil"
 msgid "Delete My Account…"
 msgstr "Hesabımı Sil…"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:404
-#: src/view/com/util/forms/PostDropdownBtn.tsx:406
+#: src/view/com/util/forms/PostDropdownBtn.tsx:407
+#: src/view/com/util/forms/PostDropdownBtn.tsx:409
 msgid "Delete post"
 msgstr "Gönderiyi sil"
 
@@ -1634,7 +1647,7 @@ msgstr "Gönderiyi sil"
 msgid "Delete this list?"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:418
+#: src/view/com/util/forms/PostDropdownBtn.tsx:421
 msgid "Delete this post?"
 msgstr "Bu gönderiyi sil?"
 
@@ -1706,7 +1719,7 @@ msgstr ""
 msgid "Disabled"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:632
+#: src/view/com/composer/Composer.tsx:634
 msgid "Discard"
 msgstr "Sil"
 
@@ -1714,7 +1727,7 @@ msgstr "Sil"
 #~ msgid "Discard draft"
 #~ msgstr "Taslağı sil"
 
-#: src/view/com/composer/Composer.tsx:629
+#: src/view/com/composer/Composer.tsx:631
 msgid "Discard draft?"
 msgstr ""
 
@@ -1728,11 +1741,11 @@ msgstr "Uygulamaların hesabımı oturum açmamış kullanıcılara göstermesin
 msgid "Discover new custom feeds"
 msgstr "Yeni özel beslemeler keşfet"
 
-#: src/view/screens/Feeds.tsx:441
-#~ msgid "Discover new feeds"
-#~ msgstr "Yeni beslemeler keşfet"
+#: src/view/screens/Search/Explore.tsx:376
+msgid "Discover new feeds"
+msgstr "Yeni beslemeler keşfet"
 
-#: src/view/screens/Feeds.tsx:794
+#: src/view/screens/Feeds.tsx:760
 msgid "Discover New Feeds"
 msgstr ""
 
@@ -1811,7 +1824,7 @@ msgstr "Tamam{extraText}"
 msgid "Download CAR file"
 msgstr ""
 
-#: src/view/com/composer/text-input/TextInput.web.tsx:261
+#: src/view/com/composer/text-input/TextInput.web.tsx:272
 msgid "Drop to add images"
 msgstr "Resim eklemek için bırakın"
 
@@ -1859,15 +1872,15 @@ msgstr "örn: Reklamlarla tekrar tekrar yanıt veren kullanıcılar."
 msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr "Her kod bir kez çalışır. Düzenli aralıklarla daha fazla davet kodu alacaksınız."
 
-#: src/view/screens/Feeds.tsx:400
-#: src/view/screens/Feeds.tsx:471
-msgid "Edit"
-msgstr ""
-
 #: src/view/com/lists/ListMembers.tsx:149
 msgctxt "action"
 msgid "Edit"
 msgstr "Düzenle"
+
+#: src/view/screens/Feeds.tsx:370
+#: src/view/screens/Feeds.tsx:441
+msgid "Edit"
+msgstr ""
 
 #: src/view/com/util/UserAvatar.tsx:312
 #: src/view/com/util/UserBanner.tsx:92
@@ -1888,8 +1901,8 @@ msgid "Edit Moderation List"
 msgstr "Düzenleme Listesini Düzenle"
 
 #: src/Navigation.tsx:269
-#: src/view/screens/Feeds.tsx:398
-#: src/view/screens/Feeds.tsx:469
+#: src/view/screens/Feeds.tsx:368
+#: src/view/screens/Feeds.tsx:439
 #: src/view/screens/SavedFeeds.tsx:93
 msgid "Edit My Feeds"
 msgstr "Beslemelerimi Düzenle"
@@ -1899,12 +1912,12 @@ msgid "Edit my profile"
 msgstr "Profilimi düzenle"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:181
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:175
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:179
 msgid "Edit profile"
 msgstr "Profil düzenle"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:184
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:178
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:182
 msgid "Edit Profile"
 msgstr "Profil Düzenle"
 
@@ -1964,8 +1977,8 @@ msgid "Embed HTML code"
 msgstr ""
 
 #: src/components/dialogs/Embed.tsx:97
-#: src/view/com/util/forms/PostDropdownBtn.tsx:314
-#: src/view/com/util/forms/PostDropdownBtn.tsx:316
+#: src/view/com/util/forms/PostDropdownBtn.tsx:317
+#: src/view/com/util/forms/PostDropdownBtn.tsx:319
 msgid "Embed post"
 msgstr ""
 
@@ -2211,6 +2224,11 @@ msgstr ""
 msgid "Failed to delete post, please try again"
 msgstr "Gönderi silinemedi, lütfen tekrar deneyin"
 
+#: src/view/screens/Search/Explore.tsx:412
+#: src/view/screens/Search/Explore.tsx:436
+msgid "Failed to load feeds preferences"
+msgstr ""
+
 #: src/components/dialogs/GifSelect.ios.tsx:196
 #: src/components/dialogs/GifSelect.tsx:212
 msgid "Failed to load GIFs"
@@ -2229,6 +2247,15 @@ msgstr ""
 #~ msgid "Failed to load recommended feeds"
 #~ msgstr "Önerilen beslemeler yüklenemedi"
 
+#: src/view/screens/Search/Explore.tsx:405
+#: src/view/screens/Search/Explore.tsx:429
+msgid "Failed to load suggested feeds"
+msgstr ""
+
+#: src/view/screens/Search/Explore.tsx:365
+msgid "Failed to load suggested follows"
+msgstr ""
+
 #: src/view/com/lightbox/Lightbox.tsx:84
 msgid "Failed to save image: {0}"
 msgstr ""
@@ -2246,6 +2273,10 @@ msgstr ""
 msgid "Failed to submit appeal, please try again."
 msgstr ""
 
+#: src/components/FeedCard.tsx:160
+msgid "Failed to update feeds"
+msgstr ""
+
 #: src/components/dms/MessagesNUX.tsx:60
 #: src/screens/Messages/Settings.tsx:35
 msgid "Failed to update settings"
@@ -2255,11 +2286,12 @@ msgstr ""
 msgid "Feed"
 msgstr "Besleme"
 
+#: src/components/FeedCard.tsx:91
 #: src/view/com/feeds/FeedSourceCard.tsx:251
 msgid "Feed by {0}"
 msgstr "{0} tarafından besleme"
 
-#: src/view/screens/Feeds.tsx:709
+#: src/view/screens/Feeds.tsx:675
 msgid "Feed offline"
 msgstr "Besleme çevrimdışı"
 
@@ -2272,9 +2304,10 @@ msgstr "Besleme çevrimdışı"
 msgid "Feedback"
 msgstr "Geribildirim"
 
-#: src/view/screens/Feeds.tsx:463
-#: src/view/screens/Feeds.tsx:570
+#: src/view/screens/Feeds.tsx:433
+#: src/view/screens/Feeds.tsx:536
 #: src/view/screens/Profile.tsx:197
+#: src/view/screens/Search/Search.tsx:375
 #: src/view/shell/desktop/LeftNav.tsx:367
 #: src/view/shell/Drawer.tsx:493
 #: src/view/shell/Drawer.tsx:494
@@ -2292,6 +2325,10 @@ msgstr "Beslemeler, kullanıcıların biraz kodlama uzmanlığı ile oluşturdu�
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:80
 #~ msgid "Feeds can be topical as well!"
 #~ msgstr "Beslemeler aynı zamanda konusal olabilir!"
+
+#: src/components/FeedCard.tsx:157
+msgid "Feeds updated!"
+msgstr ""
 
 #: src/view/com/modals/ChangeHandle.tsx:475
 msgid "File Contents"
@@ -2315,7 +2352,7 @@ msgstr "Tamamlanıyor"
 msgid "Find accounts to follow"
 msgstr "Takip edilecek hesaplar bul"
 
-#: src/view/screens/Search/Search.tsx:470
+#: src/view/screens/Search/Search.tsx:439
 msgid "Find posts and users on Bluesky"
 msgstr ""
 
@@ -2360,9 +2397,9 @@ msgstr "Yatay çevir"
 msgid "Flip vertically"
 msgstr "Dikey çevir"
 
-#: src/components/ProfileHoverCard/index.web.tsx:412
-#: src/components/ProfileHoverCard/index.web.tsx:423
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:248
+#: src/components/ProfileHoverCard/index.web.tsx:446
+#: src/components/ProfileHoverCard/index.web.tsx:457
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:252
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:146
 #: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:247
 msgid "Follow"
@@ -2373,7 +2410,7 @@ msgctxt "action"
 msgid "Follow"
 msgstr "Takip et"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:234
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:238
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:128
 msgid "Follow {0}"
 msgstr "{0} takip et"
@@ -2382,8 +2419,8 @@ msgstr "{0} takip et"
 msgid "Follow {name}"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:244
-#: src/view/com/profile/ProfileMenu.tsx:255
+#: src/view/com/profile/ProfileMenu.tsx:247
+#: src/view/com/profile/ProfileMenu.tsx:258
 msgid "Follow Account"
 msgstr ""
 
@@ -2395,6 +2432,10 @@ msgstr ""
 msgid "Follow Back"
 msgstr ""
 
+#: src/view/screens/Search/Explore.tsx:330
+msgid "Follow more accounts to get connected to your interests and build your network."
+msgstr ""
+
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:182
 #~ msgid "Follow selected accounts and continue to the next step"
 #~ msgstr "Seçili hesapları takip edin ve sonraki adıma devam edin"
@@ -2404,12 +2445,24 @@ msgstr ""
 #~ msgstr "Başlamak için bazı kullanıcıları takip edin. Sizi ilginç bulduğunuz kişilere dayanarak size daha fazla kullanıcı önerebiliriz."
 
 #: src/components/KnownFollowers.tsx:169
-msgid "Followed by"
-msgstr ""
+#~ msgid "Followed by"
+#~ msgstr ""
 
 #: src/view/com/profile/ProfileCard.tsx:227
 msgid "Followed by {0}"
 msgstr "{0} tarafından takip ediliyor"
+
+#: src/components/KnownFollowers.tsx:192
+msgid "Followed by <0>{0}</0>"
+msgstr ""
+
+#: src/components/KnownFollowers.tsx:181
+msgid "Followed by <0>{0}</0> and <1>{1}</1>"
+msgstr ""
+
+#: src/components/KnownFollowers.tsx:168
+msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
+msgstr ""
 
 #: src/view/com/modals/Threadgate.tsx:99
 msgid "Followed users"
@@ -2437,18 +2490,18 @@ msgstr ""
 msgid "Followers you know"
 msgstr ""
 
-#: src/components/ProfileHoverCard/index.web.tsx:411
-#: src/components/ProfileHoverCard/index.web.tsx:422
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:246
+#: src/components/ProfileHoverCard/index.web.tsx:445
+#: src/components/ProfileHoverCard/index.web.tsx:456
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:250
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:149
 #: src/view/com/profile/ProfileFollows.tsx:104
-#: src/view/screens/Feeds.tsx:656
+#: src/view/screens/Feeds.tsx:622
 #: src/view/screens/ProfileFollows.tsx:25
 #: src/view/screens/SavedFeeds.tsx:415
 msgid "Following"
 msgstr "Takip edilenler"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:94
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:98
 msgid "Following {0}"
 msgstr "{0} takip ediliyor"
 
@@ -2604,6 +2657,10 @@ msgstr ""
 msgid "Graphic Media"
 msgstr ""
 
+#: src/lib/strings/time.ts:27
+msgid "h"
+msgstr ""
+
 #: src/view/com/modals/ChangeHandle.tsx:260
 msgid "Handle"
 msgstr "Kullanıcı adı"
@@ -2660,7 +2717,7 @@ msgstr "İşte uygulama şifreniz."
 #: src/lib/moderation/useLabelBehaviorDescription.ts:20
 #: src/lib/moderation/useLabelBehaviorDescription.ts:25
 #: src/lib/moderation/useLabelBehaviorDescription.ts:30
-#: src/view/com/util/forms/PostDropdownBtn.tsx:432
+#: src/view/com/util/forms/PostDropdownBtn.tsx:435
 msgid "Hide"
 msgstr "Gizle"
 
@@ -2669,8 +2726,8 @@ msgctxt "action"
 msgid "Hide"
 msgstr "Gizle"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:377
-#: src/view/com/util/forms/PostDropdownBtn.tsx:379
+#: src/view/com/util/forms/PostDropdownBtn.tsx:380
+#: src/view/com/util/forms/PostDropdownBtn.tsx:382
 msgid "Hide post"
 msgstr "Gönderiyi gizle"
 
@@ -2679,7 +2736,7 @@ msgstr "Gönderiyi gizle"
 msgid "Hide the content"
 msgstr "İçeriği gizle"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:429
+#: src/view/com/util/forms/PostDropdownBtn.tsx:432
 msgid "Hide this post?"
 msgstr "Bu gönderiyi gizle?"
 
@@ -2783,7 +2840,7 @@ msgstr ""
 msgid "If you delete this list, you won't be able to recover it."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:420
+#: src/view/com/util/forms/PostDropdownBtn.tsx:423
 msgid "If you remove this post, you won't be able to recover it."
 msgstr ""
 
@@ -3007,7 +3064,7 @@ msgstr "Diller"
 #~ msgstr "Son adım!"
 
 #: src/screens/Hashtag.tsx:99
-#: src/view/screens/Search/Search.tsx:377
+#: src/view/screens/Search/Search.tsx:359
 msgid "Latest"
 msgstr ""
 
@@ -3187,10 +3244,22 @@ msgstr "Listeler"
 msgid "Lists blocking this user:"
 msgstr ""
 
+#: src/view/screens/Search/Explore.tsx:127
+msgid "Load more"
+msgstr ""
+
 #: src/view/com/post-thread/PostThread.tsx:281
 #: src/view/com/post-thread/PostThread.tsx:289
 #~ msgid "Load more posts"
 #~ msgstr "Daha fazla gönderi yükle"
+
+#: src/view/screens/Search/Explore.tsx:215
+msgid "Load more suggested feeds"
+msgstr ""
+
+#: src/view/screens/Search/Explore.tsx:213
+msgid "Load more suggested follows"
+msgstr ""
 
 #: src/view/screens/Notifications.tsx:184
 msgid "Load new notifications"
@@ -3259,6 +3328,10 @@ msgstr ""
 msgid "Looks like you're missing a following feed. <0>Click here to add one.</0>"
 msgstr ""
 
+#: src/lib/strings/time.ts:25
+msgid "m"
+msgstr ""
+
 #: src/view/com/modals/LinkWarning.tsx:79
 msgid "Make sure this is where you intend to go!"
 msgstr "Bu gitmek istediğiniz yer olduğundan emin olun!"
@@ -3286,7 +3359,7 @@ msgid "Mentioned users"
 msgstr "Bahsedilen kullanıcılar"
 
 #: src/view/com/util/ViewHeader.tsx:91
-#: src/view/screens/Search/Search.tsx:714
+#: src/view/screens/Search/Search.tsx:683
 msgid "Menu"
 msgstr "Menü"
 
@@ -3329,6 +3402,10 @@ msgstr ""
 
 #: src/lib/moderation/useReportOptions.ts:46
 msgid "Misleading Account"
+msgstr ""
+
+#: src/lib/strings/time.ts:39
+msgid "mo"
 msgstr ""
 
 #: src/Navigation.tsx:125
@@ -3418,8 +3495,8 @@ msgstr ""
 msgid "Mute {truncatedTag}"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:281
-#: src/view/com/profile/ProfileMenu.tsx:288
+#: src/view/com/profile/ProfileMenu.tsx:284
+#: src/view/com/profile/ProfileMenu.tsx:291
 msgid "Mute Account"
 msgstr "Hesabı Sessize Al"
 
@@ -3469,13 +3546,13 @@ msgstr ""
 msgid "Mute this word in tags only"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:352
-#: src/view/com/util/forms/PostDropdownBtn.tsx:358
+#: src/view/com/util/forms/PostDropdownBtn.tsx:355
+#: src/view/com/util/forms/PostDropdownBtn.tsx:361
 msgid "Mute thread"
 msgstr "Konuyu sessize al"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:368
-#: src/view/com/util/forms/PostDropdownBtn.tsx:370
+#: src/view/com/util/forms/PostDropdownBtn.tsx:371
+#: src/view/com/util/forms/PostDropdownBtn.tsx:373
 msgid "Mute words & tags"
 msgstr ""
 
@@ -3513,7 +3590,7 @@ msgstr "Sessizlik özeldir. Sessize alınan hesaplar sizinle etkileşime geçebi
 msgid "My Birthday"
 msgstr "Doğum Günüm"
 
-#: src/view/screens/Feeds.tsx:768
+#: src/view/screens/Feeds.tsx:734
 msgid "My Feeds"
 msgstr "Beslemelerim"
 
@@ -3616,7 +3693,7 @@ msgctxt "action"
 msgid "New post"
 msgstr "Yeni gönderi"
 
-#: src/view/screens/Feeds.tsx:600
+#: src/view/screens/Feeds.tsx:566
 #: src/view/screens/Notifications.tsx:193
 #: src/view/screens/Profile.tsx:464
 #: src/view/screens/ProfileFeed.tsx:426
@@ -3687,7 +3764,7 @@ msgstr ""
 msgid "No featured GIFs found. There may be an issue with Tenor."
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:116
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:120
 msgid "No longer following {0}"
 msgstr "{0} artık takip edilmiyor"
 
@@ -3731,13 +3808,14 @@ msgstr ""
 msgid "No results found"
 msgstr ""
 
-#: src/view/screens/Feeds.tsx:530
+#: src/view/screens/Feeds.tsx:497
 msgid "No results found for \"{query}\""
 msgstr "\"{query}\" için sonuç bulunamadı"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:127
-#: src/view/screens/Search/Search.tsx:297
-#: src/view/screens/Search/Search.tsx:336
+#: src/view/screens/Search/Search.tsx:233
+#: src/view/screens/Search/Search.tsx:272
+#: src/view/screens/Search/Search.tsx:318
 msgid "No results found for {query}"
 msgstr "{query} için sonuç bulunamadı"
 
@@ -3786,9 +3864,9 @@ msgstr "Bulunamadı"
 msgid "Not right now"
 msgstr "Şu anda değil"
 
-#: src/view/com/profile/ProfileMenu.tsx:370
-#: src/view/com/util/forms/PostDropdownBtn.tsx:446
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:308
+#: src/view/com/profile/ProfileMenu.tsx:373
+#: src/view/com/util/forms/PostDropdownBtn.tsx:449
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:310
 msgid "Note about sharing"
 msgstr ""
 
@@ -3817,6 +3895,10 @@ msgstr ""
 #: src/view/shell/Drawer.tsx:458
 msgid "Notifications"
 msgstr "Bildirimler"
+
+#: src/lib/strings/time.ts:21
+msgid "now"
+msgstr ""
 
 #: src/components/dms/MessageItem.tsx:175
 msgid "Now"
@@ -3864,7 +3946,7 @@ msgstr "En eski yanıtlar önce"
 msgid "Onboarding reset"
 msgstr "Onboarding sıfırlama"
 
-#: src/view/com/composer/Composer.tsx:503
+#: src/view/com/composer/Composer.tsx:505
 msgid "One or more images is missing alt text."
 msgstr "Bir veya daha fazla resimde alternatif metin eksik."
 
@@ -3907,8 +3989,8 @@ msgstr ""
 msgid "Open conversation options"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:613
-#: src/view/com/composer/Composer.tsx:614
+#: src/view/com/composer/Composer.tsx:615
+#: src/view/com/composer/Composer.tsx:616
 msgid "Open emoji picker"
 msgstr "Emoji seçiciyi aç"
 
@@ -3932,7 +4014,7 @@ msgstr ""
 msgid "Open navigation"
 msgstr "Navigasyonu aç"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:237
+#: src/view/com/util/forms/PostDropdownBtn.tsx:240
 msgid "Open post options menu"
 msgstr ""
 
@@ -4183,7 +4265,7 @@ msgstr "Şifre güncellendi!"
 msgid "Pause"
 msgstr ""
 
-#: src/view/screens/Search/Search.tsx:387
+#: src/view/screens/Search/Search.tsx:369
 msgid "People"
 msgstr ""
 
@@ -4340,8 +4422,8 @@ msgstr "Politika"
 msgid "Porn"
 msgstr "Pornografi"
 
-#: src/view/com/composer/Composer.tsx:477
-#: src/view/com/composer/Composer.tsx:485
+#: src/view/com/composer/Composer.tsx:479
+#: src/view/com/composer/Composer.tsx:487
 msgctxt "action"
 msgid "Post"
 msgstr "Gönder"
@@ -4432,7 +4514,7 @@ msgstr ""
 #~ msgid "Press to Retry"
 #~ msgstr ""
 
-#: src/components/KnownFollowers.tsx:111
+#: src/components/KnownFollowers.tsx:108
 msgid "Press to view followers of this account that you also follow"
 msgstr ""
 
@@ -4502,11 +4584,11 @@ msgstr "Toplu olarak sessize almak veya engellemek için herkese açık, paylaş
 msgid "Public, shareable lists which can drive feeds."
 msgstr "Beslemeleri yönlendirebilen herkese açık, paylaşılabilir listeler."
 
-#: src/view/com/composer/Composer.tsx:462
+#: src/view/com/composer/Composer.tsx:464
 msgid "Publish post"
 msgstr "Gönderiyi yayınla"
 
-#: src/view/com/composer/Composer.tsx:462
+#: src/view/com/composer/Composer.tsx:464
 msgid "Publish reply"
 msgstr "Yanıtı yayınla"
 
@@ -4547,7 +4629,7 @@ msgstr ""
 #~ msgid "Reason: {0}"
 #~ msgstr ""
 
-#: src/view/screens/Search/Search.tsx:970
+#: src/view/screens/Search/Search.tsx:933
 msgid "Recent Searches"
 msgstr ""
 
@@ -4568,6 +4650,7 @@ msgid "Reload conversations"
 msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:286
+#: src/components/FeedCard.tsx:200
 #: src/view/com/feeds/FeedSourceCard.tsx:317
 #: src/view/com/modals/ListAddRemoveUsers.tsx:268
 #: src/view/com/modals/SelfLabel.tsx:84
@@ -4614,6 +4697,7 @@ msgstr ""
 msgid "Remove from my feeds"
 msgstr "Beslemelerimden kaldır"
 
+#: src/components/FeedCard.tsx:195
 #: src/view/com/feeds/FeedSourceCard.tsx:312
 msgid "Remove from my feeds?"
 msgstr ""
@@ -4630,11 +4714,11 @@ msgstr "Resim önizlemesini kaldır"
 msgid "Remove mute word from your list"
 msgstr ""
 
-#: src/view/screens/Search/Search.tsx:1011
+#: src/view/screens/Search/Search.tsx:974
 msgid "Remove profile"
 msgstr ""
 
-#: src/view/screens/Search/Search.tsx:1013
+#: src/view/screens/Search/Search.tsx:976
 msgid "Remove profile from search history"
 msgstr ""
 
@@ -4695,7 +4779,7 @@ msgstr "Yanıtlar"
 msgid "Replies to this thread are disabled"
 msgstr "Bu konuya yanıtlar devre dışı bırakıldı"
 
-#: src/view/com/composer/Composer.tsx:475
+#: src/view/com/composer/Composer.tsx:477
 msgctxt "action"
 msgid "Reply"
 msgstr "Yanıtla"
@@ -4731,8 +4815,8 @@ msgstr ""
 #~ msgid "Report account"
 #~ msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:321
 #: src/view/com/profile/ProfileMenu.tsx:324
+#: src/view/com/profile/ProfileMenu.tsx:327
 msgid "Report Account"
 msgstr "Hesabı Raporla"
 
@@ -4759,8 +4843,8 @@ msgstr "Listeyi Raporla"
 msgid "Report message"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:394
-#: src/view/com/util/forms/PostDropdownBtn.tsx:396
+#: src/view/com/util/forms/PostDropdownBtn.tsx:397
+#: src/view/com/util/forms/PostDropdownBtn.tsx:399
 msgid "Report post"
 msgstr "Gönderiyi raporla"
 
@@ -4942,6 +5026,10 @@ msgstr ""
 msgid "Returns to previous page"
 msgstr ""
 
+#: src/lib/strings/time.ts:23
+msgid "s"
+msgstr ""
+
 #: src/view/shell/desktop/RightNav.tsx:59
 #~ msgid "SANDBOX. Posts and accounts are not permanent."
 #~ msgstr "KUM KUTUSU. Gönderiler ve hesaplar kalıcı değildir."
@@ -5033,9 +5121,9 @@ msgstr "Başa kaydır"
 #: src/view/com/modals/ListAddRemoveUsers.tsx:75
 #: src/view/com/util/forms/SearchInput.tsx:67
 #: src/view/com/util/forms/SearchInput.tsx:79
-#: src/view/screens/Search/Search.tsx:452
-#: src/view/screens/Search/Search.tsx:822
-#: src/view/screens/Search/Search.tsx:850
+#: src/view/screens/Search/Search.tsx:421
+#: src/view/screens/Search/Search.tsx:791
+#: src/view/screens/Search/Search.tsx:813
 #: src/view/shell/bottom-bar/BottomBar.tsx:179
 #: src/view/shell/desktop/LeftNav.tsx:343
 #: src/view/shell/desktop/Search.tsx:194
@@ -5049,7 +5137,7 @@ msgstr "Ara"
 msgid "Search for \"{query}\""
 msgstr "\"{query}\" için ara"
 
-#: src/view/screens/Search/Search.tsx:906
+#: src/view/screens/Search/Search.tsx:869
 msgid "Search for \"{searchText}\""
 msgstr ""
 
@@ -5284,8 +5372,8 @@ msgstr ""
 msgid "Send verification email"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:286
 #: src/view/com/util/forms/PostDropdownBtn.tsx:289
+#: src/view/com/util/forms/PostDropdownBtn.tsx:292
 msgid "Send via direct message"
 msgstr ""
 
@@ -5437,11 +5525,11 @@ msgctxt "action"
 msgid "Share"
 msgstr "Paylaş"
 
-#: src/view/com/profile/ProfileMenu.tsx:217
-#: src/view/com/profile/ProfileMenu.tsx:226
-#: src/view/com/util/forms/PostDropdownBtn.tsx:297
-#: src/view/com/util/forms/PostDropdownBtn.tsx:306
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:297
+#: src/view/com/profile/ProfileMenu.tsx:220
+#: src/view/com/profile/ProfileMenu.tsx:229
+#: src/view/com/util/forms/PostDropdownBtn.tsx:300
+#: src/view/com/util/forms/PostDropdownBtn.tsx:309
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:299
 #: src/view/screens/ProfileList.tsx:428
 msgid "Share"
 msgstr "Paylaş"
@@ -5454,9 +5542,9 @@ msgstr ""
 msgid "Share a fun fact!"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:375
-#: src/view/com/util/forms/PostDropdownBtn.tsx:451
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:313
+#: src/view/com/profile/ProfileMenu.tsx:378
+#: src/view/com/util/forms/PostDropdownBtn.tsx:454
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:315
 msgid "Share anyway"
 msgstr ""
 
@@ -5511,7 +5599,7 @@ msgstr ""
 #~ msgid "Show embeds from {0}"
 #~ msgstr "{0} adresinden gömülü öğeleri göster"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:211
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:215
 msgid "Show follows similar to {0}"
 msgstr "{0} adresine benzer takipçileri göster"
 
@@ -5519,8 +5607,8 @@ msgstr "{0} adresine benzer takipçileri göster"
 msgid "Show hidden replies"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:336
-#: src/view/com/util/forms/PostDropdownBtn.tsx:338
+#: src/view/com/util/forms/PostDropdownBtn.tsx:339
+#: src/view/com/util/forms/PostDropdownBtn.tsx:341
 msgid "Show less like this"
 msgstr ""
 
@@ -5530,8 +5618,8 @@ msgstr ""
 msgid "Show More"
 msgstr "Daha Fazla Göster"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:328
-#: src/view/com/util/forms/PostDropdownBtn.tsx:330
+#: src/view/com/util/forms/PostDropdownBtn.tsx:331
+#: src/view/com/util/forms/PostDropdownBtn.tsx:333
 msgid "Show more like this"
 msgstr ""
 
@@ -5741,7 +5829,7 @@ msgstr ""
 #~ msgid "Something went wrong. Check your email and try again."
 #~ msgstr "Bir şeyler yanlış gitti. E-postanızı kontrol edin ve tekrar deneyin."
 
-#: src/App.native.tsx:85
+#: src/App.native.tsx:92
 #: src/App.web.tsx:74
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "Üzgünüz! Oturumunuzun süresi doldu. Lütfen tekrar giriş yapın."
@@ -5856,9 +5944,13 @@ msgstr ""
 msgid "Subscribe to this list"
 msgstr "Bu listeye abone ol"
 
+#: src/view/screens/Search/Explore.tsx:328
+msgid "Suggested accounts"
+msgstr ""
+
 #: src/view/screens/Search/Search.tsx:425
-msgid "Suggested Follows"
-msgstr "Önerilen Takipçiler"
+#~ msgid "Suggested Follows"
+#~ msgstr "Önerilen Takipçiler"
 
 #: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:65
 msgid "Suggested for you"
@@ -5963,8 +6055,8 @@ msgstr ""
 msgid "That handle is already taken."
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:305
-#: src/view/com/profile/ProfileMenu.tsx:351
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:310
+#: src/view/com/profile/ProfileMenu.tsx:354
 msgid "The account will be able to interact with you after unblocking."
 msgstr "Hesap, engeli kaldırdıktan sonra sizinle etkileşime geçebilecek."
 
@@ -6089,17 +6181,17 @@ msgstr ""
 msgid "There was an issue with fetching your app passwords"
 msgstr "Uygulama şifrelerinizi almakta bir sorun oluştu"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:103
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:125
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:139
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:107
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:129
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:143
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:99
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:111
-#: src/view/com/profile/ProfileMenu.tsx:109
-#: src/view/com/profile/ProfileMenu.tsx:120
-#: src/view/com/profile/ProfileMenu.tsx:135
-#: src/view/com/profile/ProfileMenu.tsx:146
-#: src/view/com/profile/ProfileMenu.tsx:160
-#: src/view/com/profile/ProfileMenu.tsx:173
+#: src/view/com/profile/ProfileMenu.tsx:112
+#: src/view/com/profile/ProfileMenu.tsx:123
+#: src/view/com/profile/ProfileMenu.tsx:138
+#: src/view/com/profile/ProfileMenu.tsx:149
+#: src/view/com/profile/ProfileMenu.tsx:163
+#: src/view/com/profile/ProfileMenu.tsx:176
 msgid "There was an issue! {0}"
 msgstr "Bir sorun oluştu! {0}"
 
@@ -6260,16 +6352,16 @@ msgstr "Bu isim zaten kullanılıyor"
 msgid "This post has been deleted."
 msgstr "Bu gönderi silindi."
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:448
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:310
+#: src/view/com/util/forms/PostDropdownBtn.tsx:451
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:312
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:430
+#: src/view/com/util/forms/PostDropdownBtn.tsx:433
 msgid "This post will be hidden from feeds."
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:372
+#: src/view/com/profile/ProfileMenu.tsx:375
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't logged in."
 msgstr ""
 
@@ -6372,7 +6464,7 @@ msgid "Toggle to enable or disable adult content"
 msgstr ""
 
 #: src/screens/Hashtag.tsx:88
-#: src/view/screens/Search/Search.tsx:367
+#: src/view/screens/Search/Search.tsx:349
 msgid "Top"
 msgstr ""
 
@@ -6382,10 +6474,10 @@ msgstr "Dönüşümler"
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
-#: src/view/com/post-thread/PostThreadItem.tsx:674
-#: src/view/com/post-thread/PostThreadItem.tsx:676
-#: src/view/com/util/forms/PostDropdownBtn.tsx:267
-#: src/view/com/util/forms/PostDropdownBtn.tsx:269
+#: src/view/com/post-thread/PostThreadItem.tsx:675
+#: src/view/com/post-thread/PostThreadItem.tsx:677
+#: src/view/com/util/forms/PostDropdownBtn.tsx:270
+#: src/view/com/util/forms/PostDropdownBtn.tsx:272
 msgid "Translate"
 msgstr "Çevir"
 
@@ -6427,14 +6519,14 @@ msgstr "Hizmetinize ulaşılamıyor. Lütfen internet bağlantınızı kontrol e
 #: src/components/dms/MessagesListBlockedFooter.tsx:96
 #: src/components/dms/MessagesListBlockedFooter.tsx:104
 #: src/components/dms/MessagesListBlockedFooter.tsx:111
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:188
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:309
-#: src/view/com/profile/ProfileMenu.tsx:363
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:192
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:314
+#: src/view/com/profile/ProfileMenu.tsx:366
 #: src/view/screens/ProfileList.tsx:626
 msgid "Unblock"
 msgstr "Engeli kaldır"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:193
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:197
 msgctxt "action"
 msgid "Unblock"
 msgstr "Engeli kaldır"
@@ -6444,13 +6536,13 @@ msgstr "Engeli kaldır"
 msgid "Unblock account"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:301
-#: src/view/com/profile/ProfileMenu.tsx:307
+#: src/view/com/profile/ProfileMenu.tsx:304
+#: src/view/com/profile/ProfileMenu.tsx:310
 msgid "Unblock Account"
 msgstr "Hesabın engelini kaldır"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:303
-#: src/view/com/profile/ProfileMenu.tsx:345
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:308
+#: src/view/com/profile/ProfileMenu.tsx:348
 msgid "Unblock Account?"
 msgstr ""
 
@@ -6469,12 +6561,12 @@ msgstr "Takibi bırak"
 msgid "Unfollow"
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:233
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:237
 msgid "Unfollow {0}"
 msgstr "{0} adresini takibi bırak"
 
-#: src/view/com/profile/ProfileMenu.tsx:243
-#: src/view/com/profile/ProfileMenu.tsx:253
+#: src/view/com/profile/ProfileMenu.tsx:246
+#: src/view/com/profile/ProfileMenu.tsx:256
 msgid "Unfollow Account"
 msgstr ""
 
@@ -6499,8 +6591,8 @@ msgstr "Sessizden çıkar"
 msgid "Unmute {truncatedTag}"
 msgstr ""
 
-#: src/view/com/profile/ProfileMenu.tsx:280
-#: src/view/com/profile/ProfileMenu.tsx:286
+#: src/view/com/profile/ProfileMenu.tsx:283
+#: src/view/com/profile/ProfileMenu.tsx:289
 msgid "Unmute Account"
 msgstr "Hesabın sessizliğini kaldır"
 
@@ -6516,8 +6608,8 @@ msgstr ""
 #~ msgid "Unmute notifications"
 #~ msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:352
-#: src/view/com/util/forms/PostDropdownBtn.tsx:357
+#: src/view/com/util/forms/PostDropdownBtn.tsx:355
+#: src/view/com/util/forms/PostDropdownBtn.tsx:360
 msgid "Unmute thread"
 msgstr "Konunun sessizliğini kaldır"
 
@@ -6792,6 +6884,10 @@ msgstr "{0}'ın avatarını görüntüle"
 msgid "View {0}'s profile"
 msgstr ""
 
+#: src/components/ProfileHoverCard/index.web.tsx:430
+msgid "View blocked user's profile"
+msgstr ""
+
 #: src/view/screens/Log.tsx:52
 msgid "View debug entry"
 msgstr "Hata ayıklama girişini görüntüle"
@@ -6812,8 +6908,9 @@ msgstr "Tam konuyu görüntüle"
 msgid "View information about these labels"
 msgstr ""
 
-#: src/components/ProfileHoverCard/index.web.tsx:396
-#: src/components/ProfileHoverCard/index.web.tsx:429
+#: src/components/ProfileHoverCard/index.web.tsx:418
+#: src/components/ProfileHoverCard/index.web.tsx:436
+#: src/components/ProfileHoverCard/index.web.tsx:463
 #: src/view/com/posts/AviFollowButton.tsx:58
 #: src/view/com/posts/FeedErrorMessage.tsx:174
 msgid "View profile"
@@ -6831,7 +6928,7 @@ msgstr ""
 msgid "View users who like this feed"
 msgstr ""
 
-#: src/view/com/home/HomeHeaderLayout.web.tsx:78
+#: src/view/com/home/HomeHeaderLayout.web.tsx:79
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:84
 msgid "View your feeds and explore more"
 msgstr ""
@@ -6927,7 +7024,7 @@ msgstr "Üzgünüz, ancak bu listeyi çözemedik. Bu durum devam ederse, lütfen
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
 msgstr ""
 
-#: src/view/screens/Search/Search.tsx:270
+#: src/view/screens/Search/Search.tsx:206
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "Üzgünüz, ancak aramanız tamamlanamadı. Lütfen birkaç dakika içinde tekrar deneyin."
 
@@ -7021,7 +7118,7 @@ msgstr "Geniş"
 msgid "Write a message"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:549
+#: src/view/com/composer/Composer.tsx:551
 msgid "Write post"
 msgstr "Gönderi yaz"
 

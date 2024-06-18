@@ -11,6 +11,7 @@ import {sanitizeHandle} from 'lib/strings/handles'
 import {niceDate} from 'lib/strings/time'
 import {TypographyVariant} from 'lib/ThemeContext'
 import {isAndroid} from 'platform/detection'
+import {useLanguagePrefs} from 'state/preferences'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {TextLinkOnWebOnly} from './Link'
 import {Text} from './text/Text'
@@ -46,6 +47,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
   const onBeforePressPost = useCallback(() => {
     precacheProfile(queryClient, opts.author)
   }, [queryClient, opts.author])
+  const langPrefs = useLanguagePrefs()
 
   return (
     <View style={[styles.container, opts.style]}>
@@ -106,8 +108,8 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             style={pal.textLight}
             lineHeight={1.2}
             text={timeElapsed}
-            accessibilityLabel={niceDate(opts.timestamp)}
-            title={niceDate(opts.timestamp)}
+            accessibilityLabel={niceDate(opts.timestamp, langPrefs.appLanguage)}
+            title={niceDate(opts.timestamp, langPrefs.appLanguage)}
             accessibilityHint=""
             href={opts.postHref}
             onBeforePress={onBeforePressPost}
