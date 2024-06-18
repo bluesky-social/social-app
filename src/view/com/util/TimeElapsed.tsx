@@ -1,26 +1,26 @@
 import React from 'react'
 
+import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {useTickEveryMinute} from '#/state/shell'
-import {ago} from 'lib/strings/time'
 
 export function TimeElapsed({
   timestamp,
   children,
-  timeToString = ago,
+  timeToString,
 }: {
   timestamp: string
   children: ({timeElapsed}: {timeElapsed: string}) => JSX.Element
   timeToString?: (timeElapsed: string) => string
 }) {
+  const ago = useGetTimeAgo()
+  const format = timeToString ?? ago
   const tick = useTickEveryMinute()
-  const [timeElapsed, setTimeAgo] = React.useState(() =>
-    timeToString(timestamp),
-  )
+  const [timeElapsed, setTimeAgo] = React.useState(() => format(timestamp))
 
   const [prevTick, setPrevTick] = React.useState(tick)
   if (prevTick !== tick) {
     setPrevTick(tick)
-    setTimeAgo(timeToString(timestamp))
+    setTimeAgo(format(timestamp))
   }
 
   return children({timeElapsed})
