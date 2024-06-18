@@ -118,6 +118,7 @@ export function LandingScreenInner({
     <LandingScreenLoaded
       starterPack={starterPack}
       setScreenState={setScreenState}
+      moderationOpts={moderationOpts}
     />
   )
 }
