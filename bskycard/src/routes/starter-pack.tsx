@@ -6,12 +6,13 @@ import resvg from '@resvg/resvg-js'
 import {Express} from 'express'
 import satori from 'satori'
 
-import {StarterPack} from '../components/StarterPack.js'
+import {
+  StarterPack,
+  STARTERPACK_HEIGHT,
+  STARTERPACK_WIDTH,
+} from '../components/StarterPack.js'
 import {AppContext} from '../context.js'
 import {handler, originVerifyMiddleware} from './util.js'
-
-const HEIGHT = 630
-const WIDTH = 1200
 
 export default function (ctx: AppContext, app: Express) {
   return app.get(
@@ -25,20 +26,33 @@ export default function (ctx: AppContext, app: Express) {
       } = await ctx.appviewAgent.api.app.bsky.graph.getStarterPack({
         starterPack: uri.toString(),
       })
-      const images = await Promise.all(
+      const imageEntries = await Promise.all(
         starterPack.listItemsSample
-          .filter(li => li.subject.avatar)
-          .map(li => {
-            assert(li.subject.avatar)
-            return getImage(li.subject.avatar)
+          .map(li => li.subject)
+          .concat(starterPack.creator)
+          // has avatar
+          .filter(p => p.avatar)
+          // no bad labels
+          .filter(p => !p.labels.some(l => hideAvatarLabels.has(l.val)))
+          .map(async p => {
+            assert(p.avatar)
+            try {
+              const image = await getImage(p.avatar)
+              return [p.did, image] as const
+            } catch (_err) {
+              return [p.did, null] as const
+            }
           }),
       )
+      const images = new Map(
+        imageEntries.filter(([_, image]) => image !== null),
+      )
       const svg = await satori(
-        <StarterPack images={images} height={HEIGHT} width={WIDTH} />,
+        <StarterPack starterPack={starterPack} images={images} />,
         {
           fonts: ctx.fonts,
-          height: HEIGHT,
-          width: WIDTH,
+          height: STARTERPACK_HEIGHT,
+          width: STARTERPACK_WIDTH,
         },
       )
       const output = await resvg.renderAsync(svg)
@@ -55,3 +69,21 @@ async function getImage(url: string) {
   const arrayBuf = await response.arrayBuffer()
   return Buffer.from(arrayBuf)
 }
+
+const hideAvatarLabels = new Set([
+  '!hide',
+  '!warn',
+  'porn',
+  'sexual',
+  'nudity',
+  'sexual-figurative',
+  'graphic-media',
+  'self-harm',
+  'sensitive',
+  'security',
+  'impersonation',
+  'scam',
+  'spam',
+  'misleading',
+  'inauthentic',
+])

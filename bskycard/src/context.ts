@@ -31,7 +31,7 @@ export class AppContext {
     const fonts = [
       {
         name: 'Inter',
-        data: readFileSync(path.join(__DIRNAME, 'assets', 'Inter-Regular.ttf')),
+        data: readFileSync(path.join(__DIRNAME, 'assets', 'Inter-Bold.ttf')),
       },
     ]
     return new AppContext({
