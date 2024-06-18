@@ -7,10 +7,8 @@ import {Shadow} from '#/state/cache/types'
 import {isInvalidHandle} from 'lib/strings/handles'
 import {isAndroid} from 'platform/detection'
 import {atoms as a, useTheme, web} from '#/alf'
-import {NewskieDialog} from '#/components/StarterPack/NewskieDialog'
+import {NewskieDialog} from '#/components/NewskieDialog'
 import {Text} from '#/components/Typography'
-
-const DAYS_TO_SHOW_NEWSKIE = 7
 
 export function ProfileHeaderHandle({
   profile,
@@ -20,23 +18,11 @@ export function ProfileHeaderHandle({
   const t = useTheme()
   const invalidHandle = isInvalidHandle(profile.handle)
   const blockHide = profile.viewer?.blocking || profile.viewer?.blockedBy
-  const createdAt = profile.createdAt
-    ? new Date(profile.createdAt).getTime()
-    : 0
-
-  const isNewskie =
-    createdAt > 0 && Date.now() + 60e3 * 24 * DAYS_TO_SHOW_NEWSKIE > createdAt
-
   return (
     <View
       style={[a.flex_row, a.gap_xs, a.align_center]}
       pointerEvents={isAndroid ? 'box-only' : 'auto'}>
-      {isNewskie && (
-        <View style={[a.mr_xs]}>
-          <NewskieDialog profile={profile} />
-        </View>
-      )}
-
+      <NewskieDialog profile={profile} />
       {profile.viewer?.followedBy && !blockHide ? (
         <View style={[t.atoms.bg_contrast_25, a.rounded_xs, a.px_sm, a.py_xs]}>
           <Text style={[t.atoms.text, a.text_sm]}>
