@@ -5,7 +5,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_10} from 'lib/constants'
-import {ago} from 'lib/strings/time'
+import {useTimeAgo} from 'lib/hooks/useTimeAgo'
 import {isNative} from 'platform/detection'
 import {useSession} from 'state/session'
 import {atoms as a, useTheme} from '#/alf'
@@ -27,6 +27,7 @@ export function NewskieDialog({
   const {joinedViaStarterPack} = profile
   const profileName = profile.displayName || `@${profile.handle}`
   const createdAt = profile.createdAt ?? 0
+  const timeAgo = useTimeAgo(createdAt, {format: 'long'})
 
   return (
     <>
@@ -53,7 +54,7 @@ export function NewskieDialog({
                 joinedViaStarterPack?.record,
               ) ? (
                 <Trans>
-                  {profileName} joined Bluesky {ago(createdAt, true)} ago with{' '}
+                  {profileName} joined Bluesky {timeAgo} ago with{' '}
                   {joinedViaStarterPack?.creator.did === currentAccount?.did
                     ? 'your'
                     : `${joinedViaStarterPack?.creator.displayName}'s` ||
@@ -63,7 +64,7 @@ export function NewskieDialog({
               ) : (
                 <Trans>
                   <Text style={[a.font_bold, a.text_md]}>{profileName}</Text>{' '}
-                  recently joined Bluesky {ago(createdAt, true)} ago
+                  recently joined Bluesky {timeAgo} ago
                 </Trans>
               )}
             </Text>
