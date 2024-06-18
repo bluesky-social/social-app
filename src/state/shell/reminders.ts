@@ -22,7 +22,6 @@ export function shouldRequestEmailConfirmation(account: SessionAccount) {
 
   // never been snoozed, new account
   if (!snoozedAt) {
-    snoozeEmailConfirmationPrompt()
     return true
   }
 
@@ -31,8 +30,6 @@ export function shouldRequestEmailConfirmation(account: SessionAccount) {
     return false
   }
 
-  // snooze and re-prompt
-  snoozeEmailConfirmationPrompt()
   return true
 }
 
