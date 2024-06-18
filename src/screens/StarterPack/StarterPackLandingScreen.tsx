@@ -69,12 +69,7 @@ export function LandingScreen({
     return null
   }
 
-  return (
-    <LandingScreenInner
-      setScreenState={setScreenState}
-      moderationOpts={moderationOpts}
-    />
-  )
+  return <LandingScreenInner setScreenState={setScreenState} />
 }
 
 export function LandingScreenInner({
