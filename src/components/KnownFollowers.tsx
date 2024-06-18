@@ -176,7 +176,7 @@ function KnownFollowersInner({
               // 2-n followers, including blocks
               serverCount > 2 ? (
                 <Trans>
-                  {_(msg`Followed by`)}{' '}
+                  Followed by{' '}
                   <Text key={slice[0].profile.did} style={textStyle}>
                     {slice[0].profile.displayName}
                   </Text>
@@ -207,7 +207,7 @@ function KnownFollowersInner({
             ) : serverCount > 1 ? (
               // 1-n followers, including blocks
               <Trans>
-                {_(msg`Followed by`)}{' '}
+                Followed by{' '}
                 <Text key={slice[0].profile.did} style={textStyle}>
                   {slice[0].profile.displayName}
                 </Text>{' '}
