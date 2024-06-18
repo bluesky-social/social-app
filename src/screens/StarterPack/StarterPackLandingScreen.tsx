@@ -59,7 +59,7 @@ export function LandingScreen({
     }
   }, [parsed, setScreenState])
 
-  if (parsed) {
+  if (!parsed) {
     return null
   }
 
