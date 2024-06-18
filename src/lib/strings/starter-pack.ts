@@ -77,5 +77,5 @@ export function httpStarterPackUriToAtUri(httpUri?: string): string | null {
 
   if (httpUri.startsWith('at://')) return httpUri
 
-  return `at://app.bsky.graph.starterpack/${parsed.name}/${parsed.rkey}`
+  return `at://${parsed.name}/app.bsky.graph.starterpack/${parsed.rkey}`
 }
