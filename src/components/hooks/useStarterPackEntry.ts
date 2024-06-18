@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {parseStarterPackHttpUri} from 'lib/strings/starter-pack'
+import {parseStarterPackUri} from 'lib/strings/starter-pack'
 import {useSetCurrentStarterPack} from 'state/preferences/starter-pack'
 
 export function useStarterPackEntry() {
@@ -8,7 +8,7 @@ export function useStarterPackEntry() {
 
   React.useEffect(() => {
     const href = window.location.href
-    const parsed = parseStarterPackHttpUri(href)
+    const parsed = parseStarterPackUri(href)
 
     if (parsed) {
       const url = new URL(href)

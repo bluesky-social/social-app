@@ -1,3 +1,5 @@
+import {AtUri} from '@atproto/api'
+
 import {makeStarterPackLink} from 'lib/routes/links'
 
 export function createStarterPackLinkFromAndroidReferrer(
@@ -24,23 +26,35 @@ export function createStarterPackLinkFromAndroidReferrer(
   }
 }
 
-export function parseStarterPackHttpUri(uri?: string): {
-  name?: string
-  rkey?: string
+export function parseStarterPackUri(uri?: string): {
+  name: string
+  rkey: string
 } | null {
   if (!uri) return null
 
   try {
-    const url = new URL(uri)
-    const parts = url.pathname.split('/')
-    const name = parts[2]
-    const rkey = parts[3]
+    if (uri.startsWith('at://')) {
+      const atUri = new AtUri(uri)
+      if (atUri.collection !== 'app.bsky.graph.starterpack') return null
+      if (atUri.rkey) {
+        return {
+          name: atUri.hostname,
+          rkey: atUri.rkey,
+        }
+      }
+      return null
+    } else {
+      const url = new URL(uri)
+      const parts = url.pathname.split('/')
+      const name = parts[2]
+      const rkey = parts[3]
 
-    if (parts.length !== 4) return null
-    if (!name || !rkey) return null
-    return {
-      name,
-      rkey,
+      if (parts.length !== 4) return null
+      if (!name || !rkey) return null
+      return {
+        name,
+        rkey,
+      }
     }
   } catch (e) {
     return null

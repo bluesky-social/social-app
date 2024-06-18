@@ -22,6 +22,7 @@ import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
 import {useOTAUpdates} from 'lib/hooks/useOTAUpdates'
 import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
 import {HomeTabNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
+import {parseStarterPackUri} from 'lib/strings/starter-pack'
 import {isWeb} from 'platform/detection'
 import {
   useCurrentStarterPack,
@@ -43,18 +44,32 @@ export function HomeScreen(props: Props) {
   const {data: pinnedFeedInfos, isLoading: isPinnedFeedsLoading} =
     usePinnedFeedsInfos()
   const currentStarterPack = useCurrentStarterPack()
+  const setCurrentStarterPack = useSetCurrentStarterPack()
   const {setShowLoggedOut, requestSwitchToAccount} = useLoggedOutViewControls()
 
   React.useEffect(() => {
-    if (
-      !hasSession &&
-      currentStarterPack?.uri &&
-      !currentStarterPack?.initialFeed
-    ) {
-      setShowLoggedOut(true)
-      requestSwitchToAccount({requestedAccount: isWeb ? 'starterpack' : 'new'})
+    if (currentStarterPack?.uri && !currentStarterPack?.initialFeed) {
+      const parsed = parseStarterPackUri(currentStarterPack.uri)
+      if (!parsed) return
+
+      if (hasSession) {
+        setCurrentStarterPack(undefined)
+        props.navigation.navigate('StarterPack', parsed)
+      } else {
+        setShowLoggedOut(true)
+        requestSwitchToAccount({
+          requestedAccount: isWeb ? 'starterpack' : 'new',
+        })
+      }
     }
-  }, [hasSession, setShowLoggedOut, requestSwitchToAccount, currentStarterPack])
+  }, [
+    hasSession,
+    setShowLoggedOut,
+    requestSwitchToAccount,
+    currentStarterPack,
+    setCurrentStarterPack,
+    props.navigation,
+  ])
 
   if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
     return (
