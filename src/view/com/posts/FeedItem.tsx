@@ -421,8 +421,6 @@ function ReplyToLabel({
   blocked?: boolean
 }) {
   const pal = usePalette('default')
-  const {_} = useLingui()
-
   return (
     <View style={[s.flexRow, s.mb2, s.alignCenter]}>
       <FontAwesomeIcon
@@ -435,11 +433,11 @@ function ReplyToLabel({
         style={[pal.textLight, s.mr2]}
         lineHeight={1.2}
         numberOfLines={1}>
-        <Trans context="description">
-          Reply to{' '}
-          {blocked ? (
-            _(msg`a blocked post`)
-          ) : (
+        {blocked ? (
+          <Trans context="description">Reply to a blocked post</Trans>
+        ) : (
+          <Trans context="description">
+            Reply to{' '}
             <ProfileHoverCard inline did={profile.did}>
               <TextLinkOnWebOnly
                 type="md"
@@ -454,8 +452,8 @@ function ReplyToLabel({
                 }
               />
             </ProfileHoverCard>
-          )}
-        </Trans>
+          </Trans>
+        )}
       </Text>
     </View>
   )
