@@ -33,5 +33,5 @@ export function Provider({children}: {children: React.ReactNode}) {
   )
 }
 
-export const useUsedStarterPacks = () => React.useContext(stateContext)
-export const useAddUsedStarterPack = () => React.useContext(setContext)
+export const useHasCheckedForStarterPack = () => React.useContext(stateContext)
+export const useSetHasCheckedForStarterPack = () => React.useContext(setContext)
