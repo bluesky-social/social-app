@@ -37,6 +37,7 @@ import {HomeHeader} from '../com/home/HomeHeader'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export function HomeScreen(props: Props) {
+  const {hasSession} = useSession()
   const {data: preferences} = usePreferencesQuery()
   const {data: pinnedFeedInfos, isLoading: isPinnedFeedsLoading} =
     usePinnedFeedsInfos()
@@ -44,11 +45,15 @@ export function HomeScreen(props: Props) {
   const {setShowLoggedOut, requestSwitchToAccount} = useLoggedOutViewControls()
 
   React.useEffect(() => {
-    if (currentStarterPack?.uri && !currentStarterPack?.initialFeed) {
+    if (
+      !hasSession &&
+      currentStarterPack?.uri &&
+      !currentStarterPack?.initialFeed
+    ) {
       setShowLoggedOut(true)
-      requestSwitchToAccount({requestedAccount: 'starterpack'})
+      requestSwitchToAccount({requestedAccount: 'new'})
     }
-  }, [setShowLoggedOut, requestSwitchToAccount, currentStarterPack])
+  }, [hasSession, setShowLoggedOut, requestSwitchToAccount, currentStarterPack])
 
   if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
     return (
