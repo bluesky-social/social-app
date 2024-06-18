@@ -57,7 +57,7 @@ export function NewskieDialog({
         <Dialog.ScrollableInner
           label={_(msg`New user info dialog`)}
           style={[{width: 'auto', maxWidth: 400, minWidth: 200}]}>
-          <View style={[a.gap_md]}>
+          <View style={[a.gap_sm]}>
             <Text style={[a.font_bold, a.text_xl]}>
               <Trans>Say hello!</Trans>
             </Text>
