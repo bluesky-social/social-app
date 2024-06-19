@@ -9,6 +9,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {nanoid} from 'nanoid/non-secure'
 
+import {logger} from '#/logger'
 import {saveImageToMediaLibrary} from 'lib/media/manip'
 import {logEvent} from 'lib/statsig/statsig'
 import {isNative} from 'platform/detection'
@@ -62,10 +63,17 @@ export function QrCodeDialog({
         }
 
         const filename = `${FS.cacheDirectory}/${nanoid(12)}.png`
-        await FS.copyAsync({from: uri, to: filename})
 
-        await saveImageToMediaLibrary({uri: filename})
-        await FS.deleteAsync(filename)
+        // Incase of a FS failure, don't crash the app
+        try {
+          await FS.copyAsync({from: uri, to: filename})
+          await saveImageToMediaLibrary({uri: filename})
+          await FS.deleteAsync(filename)
+        } catch (e: unknown) {
+          Toast.show(_(msg`An error occurred while saving the QR code!`))
+          logger.error('Failed to save QR code', {error: e})
+          return
+        }
       } else {
         if (!AppBskyGraphStarterpack.isRecord(starterPack.record)) {
           return
