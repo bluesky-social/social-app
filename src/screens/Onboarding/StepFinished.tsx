@@ -55,11 +55,12 @@ export function StepFinished() {
 
   const finishOnboarding = React.useCallback(async () => {
     setSaving(true)
-    try {
-      let starterPack: AppBskyGraphDefs.StarterPackView | undefined
-      let listItems: AppBskyGraphDefs.ListItemView[] | undefined
 
-      if (activeStarterPack?.uri) {
+    let starterPack: AppBskyGraphDefs.StarterPackView | undefined
+    let listItems: AppBskyGraphDefs.ListItemView[] | undefined
+
+    if (activeStarterPack?.uri) {
+      try {
         const spRes = await agent.app.bsky.graph.getStarterPack({
           starterPack: activeStarterPack.uri,
         })
@@ -72,8 +73,13 @@ export function StepFinished() {
           })
           listItems = listRes.data.items
         }
+      } catch (e) {
+        logger.error('Failed to fetch starter pack', {safeMessage: `${e}`})
+        // don't tell the user, just get them through onboarding.
       }
+    }
 
+    try {
       const {interestsStepResults, profileStepResults} = state
       const {selectedInterests} = interestsStepResults
 
