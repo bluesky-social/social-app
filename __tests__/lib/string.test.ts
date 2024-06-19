@@ -906,6 +906,23 @@ describe('parseStarterPackHttpUri', () => {
     expect(parseStarterPackUri(validHttpUri)).toEqual(null)
   })
 
+  it('returns null when the route is not /start or /starter-pack', () => {
+    const validHttpUri = 'https://bsky.app/start/haileyok.com/rkey'
+    expect(parseStarterPackUri(validHttpUri)).toEqual({
+      name: 'haileyok.com',
+      rkey: 'rkey',
+    })
+
+    const validHttpUri2 = 'https://bsky.app/starter-pack/haileyok.com/rkey'
+    expect(parseStarterPackUri(validHttpUri2)).toEqual({
+      name: 'haileyok.com',
+      rkey: 'rkey',
+    })
+
+    const invalidHttpUri = 'https://bsky.app/profile/haileyok.com/rkey'
+    expect(parseStarterPackUri(invalidHttpUri)).toEqual(null)
+  })
+
   it('returns the at uri when the input is a valid starterpack at uri', () => {
     const validAtUri = 'at://did:123/app.bsky.graph.starterpack/rkey'
     expect(parseStarterPackUri(validAtUri)).toEqual({
