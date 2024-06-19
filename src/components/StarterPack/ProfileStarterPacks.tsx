@@ -157,7 +157,7 @@ function CreateAnother() {
         variant="ghost"
         color="primary"
         size="small"
-        onPress={() => navigation.navigate('StarterPackWizard', {})}>
+        onPress={() => navigation.navigate('StarterPackWizard')}>
         <ButtonText>
           <Trans>Create another</Trans>
         </ButtonText>
@@ -245,7 +245,7 @@ function Empty() {
           color="primary"
           size="small"
           disabled={isGenerating}
-          onPress={() => navigation.navigate('StarterPackWizard', {})}
+          onPress={() => navigation.navigate('StarterPackWizard')}
           style={{
             backgroundColor: 'white',
             borderColor: 'white',
@@ -273,7 +273,7 @@ function Empty() {
             color="primary"
             cta={_(msg`I'll create one`)}
             onPress={() => {
-              navigation.navigate('StarterPackWizard', {})
+              navigation.navigate('StarterPackWizard')
             }}
           />
           <Prompt.Action
