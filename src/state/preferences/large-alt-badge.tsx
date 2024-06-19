@@ -2,32 +2,32 @@ import React from 'react'
 
 import * as persisted from '#/state/persisted'
 
-type StateContext = persisted.Schema['requireAltTextEnabled']
-type SetContext = (v: persisted.Schema['requireAltTextEnabled']) => void
+type StateContext = persisted.Schema['largeAltBadgeEnabled']
+type SetContext = (v: persisted.Schema['largeAltBadgeEnabled']) => void
 
 const stateContext = React.createContext<StateContext>(
-  persisted.defaults.requireAltTextEnabled,
+  persisted.defaults.largeAltBadgeEnabled,
 )
 const setContext = React.createContext<SetContext>(
-  (_: persisted.Schema['requireAltTextEnabled']) => {},
+  (_: persisted.Schema['largeAltBadgeEnabled']) => {},
 )
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [state, setState] = React.useState(
-    persisted.get('requireAltTextEnabled'),
+    persisted.get('largeAltBadgeEnabled'),
   )
 
   const setStateWrapped = React.useCallback(
-    (requireAltTextEnabled: persisted.Schema['requireAltTextEnabled']) => {
-      setState(requireAltTextEnabled)
-      persisted.write('requireAltTextEnabled', requireAltTextEnabled)
+    (largeAltBadgeEnabled: persisted.Schema['largeAltBadgeEnabled']) => {
+      setState(largeAltBadgeEnabled)
+      persisted.write('largeAltBadgeEnabled', largeAltBadgeEnabled)
     },
     [setState],
   )
 
   React.useEffect(() => {
     return persisted.onUpdate(() => {
-      setState(persisted.get('requireAltTextEnabled'))
+      setState(persisted.get('largeAltBadgeEnabled'))
     })
   }, [setStateWrapped])
 
@@ -40,10 +40,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 }
 
-export function useRequireAltTextEnabled() {
+export function useLargeAltBadgeEnabled() {
   return React.useContext(stateContext)
 }
 
-export function useSetRequireAltTextEnabled() {
+export function useSetLargeAltBadgeEnabled() {
   return React.useContext(setContext)
 }

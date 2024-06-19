@@ -8,6 +8,7 @@ import {useLingui} from '@lingui/react'
 import {HITSLOP_20} from '#/lib/constants'
 import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
 import {isWeb} from '#/platform/detection'
+import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {EmbedPlayerParams} from 'lib/strings/embed-player'
 import {useAutoplayDisabled} from 'state/preferences'
 import {atoms as a, useTheme} from '#/alf'
@@ -157,6 +158,7 @@ export function GifEmbed({
 
 function AltText({text}: {text: string}) {
   const control = Prompt.usePromptControl()
+  const largeAltBadge = useLargeAltBadgeEnabled()
 
   const {_} = useLingui()
   return (
@@ -169,7 +171,9 @@ function AltText({text}: {text: string}) {
         hitSlop={HITSLOP_20}
         onPress={control.open}
         style={styles.altContainer}>
-        <Text style={styles.alt} accessible={false}>
+        <Text
+          style={[styles.alt, largeAltBadge && a.text_xs]}
+          accessible={false}>
           <Trans>ALT</Trans>
         </Text>
       </TouchableOpacity>
