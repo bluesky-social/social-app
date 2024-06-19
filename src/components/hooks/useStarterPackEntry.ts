@@ -4,6 +4,8 @@ import {httpStarterPackUriToAtUri} from 'lib/strings/starter-pack'
 import {useSetActiveStarterPack} from 'state/shell/starter-pack'
 
 export function useStarterPackEntry() {
+  const [ready, setReady] = React.useState(false)
+
   const setActiveStarterPack = useSetActiveStarterPack()
 
   React.useEffect(() => {
@@ -19,7 +21,9 @@ export function useStarterPackEntry() {
         isClip,
       })
     }
+
+    setReady(true)
   }, [setActiveStarterPack])
 
-  return true
+  return ready
 }
