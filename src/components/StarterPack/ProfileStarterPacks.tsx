@@ -48,6 +48,7 @@ interface ProfileFeedgensProps {
   style?: StyleProp<ViewStyle>
   testID?: string
   setScrollViewTag: (tag: number | null) => void
+  isMe: boolean
 }
 
 function keyExtractor(item: AppBskyGraphDefs.StarterPackView) {
@@ -66,6 +67,7 @@ export const ProfileStarterPacks = React.forwardRef<
     style,
     testID,
     setScrollViewTag,
+    isMe,
   },
   ref,
 ) {
@@ -141,7 +143,9 @@ export const ProfileStarterPacks = React.forwardRef<
         onEndReached={onEndReached}
         onRefresh={onRefresh}
         ListEmptyComponent={Empty}
-        ListFooterComponent={items?.length !== 0 ? CreateAnother : undefined}
+        ListFooterComponent={
+          items?.length !== 0 && isMe ? CreateAnother : undefined
+        }
       />
     </View>
   )
