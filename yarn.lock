@@ -34,10 +34,10 @@
     jsonpointer "^5.0.0"
     leven "^3.1.0"
 
-"@atproto/api@^0.12.18":
-  version "0.12.18"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.12.18.tgz#490a6f22966a3b605c22154fe7befc78bf640821"
-  integrity sha512-Ii3J/uzmyw1qgnfhnvAsmuXa8ObRSCHelsF8TmQrgMWeXCbfypeS/VESm++1Z9+xHK7bHPOwSek3RmWB0cqEbQ==
+"@atproto/api@^0.12.20":
+  version "0.12.20"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.12.20.tgz#2cada08c24bc61eb1775ee4c8010c7ed9dc5d6f3"
+  integrity sha512-nt7ZKUQL9j2yQ3tmCCueiIuc0FwdxZYn2fXdLYqltuxlaO5DmaqqULMBKeYJLq4GbvVl/G+ikPJccoSaMWDYOg==
   dependencies:
     "@atproto/common-web" "^0.3.0"
     "@atproto/lexicon" "^0.4.0"
@@ -22470,12 +22470,7 @@ zod-validation-error@^3.0.3:
   resolved "https://registry.yarnpkg.com/zod-validation-error/-/zod-validation-error-3.3.0.tgz#2cfe81b62d044e0453d1aa3ae7c32a2f36dde9af"
   integrity sha512-Syib9oumw1NTqEv4LT0e6U83Td9aVRk9iTXPUQr1otyV1PuXQKOvOwhMNqZIq5hluzHP2pMgnOmHEo7kPdI2mw==
 
-zod@^3.14.2, zod@^3.20.2:
-  version "3.22.2"
-  resolved "https://registry.yarnpkg.com/zod/-/zod-3.22.2.tgz#3add8c682b7077c05ac6f979fea6998b573e157b"
-  integrity sha512-wvWkphh5WQsJbVk1tbx1l1Ly4yg+XecD+Mq280uBGt9wa5BKSWf4Mhp6GmrkPixhMxmabYY7RbzlwVP32pbGCg==
-
-zod@^3.21.4, zod@^3.22.4:
+zod@3.23.8, zod@^3.14.2, zod@^3.20.2, zod@^3.21.4, zod@^3.22.4:
   version "3.23.8"
   resolved "https://registry.yarnpkg.com/zod/-/zod-3.23.8.tgz#e37b957b5d52079769fb8097099b592f0ef4067d"
   integrity sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==

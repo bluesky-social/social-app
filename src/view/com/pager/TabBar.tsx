@@ -180,7 +180,7 @@ const desktopStyles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     right: 0,
-    bottom: -1,
+    top: '100%',
     borderBottomWidth: 1,
   },
 })
@@ -207,7 +207,7 @@ const mobileStyles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     right: 0,
-    bottom: -1,
+    top: '100%',
     borderBottomWidth: hairlineWidth,
   },
 })

@@ -38,6 +38,7 @@ function ListImpl<ItemT>(
   {
     ListHeaderComponent,
     ListFooterComponent,
+    ListEmptyComponent,
     containWeb,
     contentContainerStyle,
     data,
@@ -72,23 +73,35 @@ function ListImpl<ItemT>(
     )
   }
 
-  let header: JSX.Element | null = null
+  const isEmpty = !data || data.length === 0
+
+  let headerComponent: JSX.Element | null = null
   if (ListHeaderComponent != null) {
     if (isValidElement(ListHeaderComponent)) {
-      header = ListHeaderComponent
+      headerComponent = ListHeaderComponent
     } else {
       // @ts-ignore Nah it's fine.
-      header = <ListHeaderComponent />
+      headerComponent = <ListHeaderComponent />
     }
   }
 
-  let footer: JSX.Element | null = null
+  let footerComponent: JSX.Element | null = null
   if (ListFooterComponent != null) {
     if (isValidElement(ListFooterComponent)) {
-      footer = ListFooterComponent
+      footerComponent = ListFooterComponent
     } else {
       // @ts-ignore Nah it's fine.
-      footer = <ListFooterComponent />
+      footerComponent = <ListFooterComponent />
+    }
+  }
+
+  let emptyComponent: JSX.Element | null = null
+  if (ListEmptyComponent != null) {
+    if (isValidElement(ListEmptyComponent)) {
+      emptyComponent = ListEmptyComponent
+    } else {
+      // @ts-ignore Nah it's fine.
+      emptyComponent = <ListEmptyComponent />
     }
   }
 
@@ -323,36 +336,38 @@ function ListImpl<ItemT>(
           onVisibleChange={handleAboveTheFoldVisibleChange}
           style={[styles.aboveTheFoldDetector, {height: headerOffset}]}
         />
-        {onStartReached && (
+        {onStartReached && !isEmpty && (
           <Visibility
             root={containWeb ? nativeRef : null}
             onVisibleChange={onHeadVisibilityChange}
             topMargin={(onStartReachedThreshold ?? 0) * 100 + '%'}
           />
         )}
-        {header}
-        {(data as Array<ItemT>).map((item, index) => {
-          const key = keyExtractor!(item, index)
-          return (
-            <Row<ItemT>
-              key={key}
-              item={item}
-              index={index}
-              renderItem={renderItem}
-              extraData={extraData}
-              onItemSeen={onItemSeen}
-              disableContentVisibility={disableContentVisibility}
-            />
-          )
-        })}
-        {onEndReached && (
+        {headerComponent}
+        {isEmpty
+          ? emptyComponent
+          : (data as Array<ItemT>)?.map((item, index) => {
+              const key = keyExtractor!(item, index)
+              return (
+                <Row<ItemT>
+                  key={key}
+                  item={item}
+                  index={index}
+                  renderItem={renderItem}
+                  extraData={extraData}
+                  onItemSeen={onItemSeen}
+                  disableContentVisibility={disableContentVisibility}
+                />
+              )
+            })}
+        {onEndReached && !isEmpty && (
           <Visibility
             root={containWeb ? nativeRef : null}
             onVisibleChange={onTailVisibilityChange}
             bottomMargin={(onEndReachedThreshold ?? 0) * 100 + '%'}
           />
         )}
-        {footer}
+        {footerComponent}
       </View>
     </View>
   )
