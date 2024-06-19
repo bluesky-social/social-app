@@ -68,7 +68,7 @@ export function WhoCanReplyInline({
         onPress={isThreadAuthor ? onPressEdit : infoDialogControl.open}
         hitSlop={HITSLOP_10}>
         {({hovered}) => (
-          <View style={[a.flex_1, a.flex_row, a.align_center, a.gap_xs, style]}>
+          <View style={[a.flex_row, a.align_center, a.gap_xs, style]}>
             <Icon
               color={t.palette.contrast_400}
               width={16}
