@@ -106,7 +106,6 @@ function BackBtn() {
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
   const shouldShow = useNavigationState(state => {
-    console.log(state.routes[state.routes.length - 1])
     return (
       !isStateAtTabRoot(state) &&
       state.routes[state.routes.length - 1]?.name !== 'StarterPackWizard'
