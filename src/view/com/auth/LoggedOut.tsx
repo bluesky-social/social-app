@@ -71,7 +71,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   }, [navigation])
 
   return (
-    <View testID="noSessionView" style={[s.hContentRegion]}>
+    <View testID="noSessionView" style={[s.hContentRegion, pal.view]}>
       <ErrorBoundary>
         {onDismiss && screenState === ScreenState.S_LoginOrCreateAccount ? (
           <Pressable
