@@ -2,6 +2,7 @@ import React from 'react'
 import {StyleSheet, TextProps} from 'react-native'
 import type {PathProps, SvgProps} from 'react-native-svg'
 import {Defs, LinearGradient, Stop} from 'react-native-svg'
+import {nanoid} from 'nanoid/non-secure'
 
 import {tokens} from '#/alf'
 
@@ -28,19 +29,20 @@ export function useCommonSVGProps(props: Props) {
   let gradientDef = null
 
   if (gradient && tokens.gradients[gradient]) {
+    const id = gradient + '_' + nanoid()
     const config = tokens.gradients[gradient]
-    _fill = `url(#${gradient})`
+    _fill = `url(#${id})`
     gradientDef = (
       <Defs>
         <LinearGradient
-          id={gradient}
+          id={id}
           x1="0"
           y1="0"
           x2="100%"
           y2="0"
           gradientTransform="rotate(45)">
           {config.values.map(([stop, fill]) => (
-            <Stop key={stop} offset={stop} stopColor={fill} stopOpacity="1" />
+            <Stop key={stop} offset={stop} stopColor={fill} />
           ))}
         </LinearGradient>
       </Defs>
