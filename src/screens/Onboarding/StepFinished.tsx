@@ -16,9 +16,9 @@ import {useOnboardingDispatch} from '#/state/shell'
 import {uploadBlob} from 'lib/api'
 import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
 import {
-  useCurrentStarterPack,
-  useSetCurrentStarterPack,
-} from 'state/preferences/starter-pack'
+  useActiveStarterPack,
+  useSetActiveStarterPack,
+} from 'state/shell/starter-pack'
 import {
   DescriptionText,
   OnboardingControls,
@@ -46,17 +46,18 @@ export function StepFinished() {
   const queryClient = useQueryClient()
   const agent = useAgent()
   const requestNotificationsPermission = useRequestNotificationsPermission()
-  const currentStarterPack = useCurrentStarterPack()
-  const setCurrentStarterPack = useSetCurrentStarterPack()
+  const activeStarterPack = useActiveStarterPack()
+  const setActiveStarterPack = useSetActiveStarterPack()
 
   const finishOnboarding = React.useCallback(async () => {
     setSaving(true)
     try {
       let starterPack: AppBskyGraphDefs.StarterPackView | undefined
       let listItems: AppBskyGraphDefs.ListItemView[] | undefined
-      if (currentStarterPack) {
+
+      if (activeStarterPack?.uri) {
         const spRes = await agent.app.bsky.graph.getStarterPack({
-          starterPack: currentStarterPack.uri,
+          starterPack: activeStarterPack.uri,
         })
         starterPack = spRes.data.starterPack
 
@@ -89,13 +90,11 @@ export function StepFinished() {
                   pinned: true,
                 })),
               )
-              setCurrentStarterPack({
-                uri: '',
+              setActiveStarterPack({
                 initialFeed: starterPack.feeds?.[0].uri,
               })
             } else {
-              setCurrentStarterPack({
-                uri: '',
+              setActiveStarterPack({
                 initialFeed: 'following',
               })
             }
@@ -146,7 +145,7 @@ export function StepFinished() {
       logger.error(e)
       // If there was an error encountered, we need to just clear the starter pack so we don't break things for subsequent
       // app restarts
-      setCurrentStarterPack(undefined)
+      setActiveStarterPack(undefined)
       // don't alert the user, just let them into their account
     }
 
@@ -175,10 +174,10 @@ export function StepFinished() {
     dispatch,
     onboardDispatch,
     track,
-    currentStarterPack,
+    activeStarterPack,
     state,
     requestNotificationsPermission,
-    setCurrentStarterPack,
+    setActiveStarterPack,
   ])
 
   React.useEffect(() => {

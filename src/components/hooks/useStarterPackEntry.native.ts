@@ -2,17 +2,17 @@ import React from 'react'
 
 import {createStarterPackLinkFromAndroidReferrer} from 'lib/strings/starter-pack'
 import {isAndroid} from 'platform/detection'
-import {useSetCurrentStarterPack} from 'state/preferences/starter-pack'
 import {
   useHasCheckedForStarterPack,
   useSetHasCheckedForStarterPack,
 } from 'state/preferences/used-starter-packs'
+import {useSetActiveStarterPack} from 'state/shell/starter-pack'
 import SwissArmyKnife from '../../../modules/expo-bluesky-swiss-army'
 import GooglePlayReferrer from '../../../modules/expo-google-play-referrer'
 
 export function useStarterPackEntry() {
   const [ready, setReady] = React.useState(false)
-  const setCurrentStarterPack = useSetCurrentStarterPack()
+  const setCurrentStarterPack = useSetActiveStarterPack()
   const hasCheckedForStarterPack = useHasCheckedForStarterPack()
   const setHasCheckedForStarterPack = useSetHasCheckedForStarterPack()
 
@@ -23,7 +23,11 @@ export function useStarterPackEntry() {
       return
     }
 
-    setHasCheckedForStarterPack(true)
+    // Safety for Android. Very unlike this could happen, but just in case. The response should be nearly immediate
+    const timeout = setTimeout(() => {
+      setReady(true)
+    }, 500)
+
     ;(async () => {
       let uri: string | null | undefined
 
@@ -46,6 +50,10 @@ export function useStarterPackEntry() {
 
       setReady(true)
     })()
+
+    return () => {
+      clearTimeout(timeout)
+    }
   }, [
     ready,
     setCurrentStarterPack,

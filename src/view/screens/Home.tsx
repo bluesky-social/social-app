@@ -24,11 +24,11 @@ import {useRequestNotificationsPermission} from 'lib/notifications/notifications
 import {HomeTabNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {parseStarterPackUri} from 'lib/strings/starter-pack'
 import {isWeb} from 'platform/detection'
-import {
-  useCurrentStarterPack,
-  useSetCurrentStarterPack,
-} from 'state/preferences/starter-pack'
 import {useLoggedOutViewControls} from 'state/shell/logged-out'
+import {
+  useActiveStarterPack,
+  useSetActiveStarterPack,
+} from 'state/shell/starter-pack'
 import {FeedPage} from 'view/com/feeds/FeedPage'
 import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
@@ -43,8 +43,8 @@ export function HomeScreen(props: Props) {
   const {data: preferences} = usePreferencesQuery()
   const {data: pinnedFeedInfos, isLoading: isPinnedFeedsLoading} =
     usePinnedFeedsInfos()
-  const currentStarterPack = useCurrentStarterPack()
-  const setCurrentStarterPack = useSetCurrentStarterPack()
+  const currentStarterPack = useActiveStarterPack()
+  const setCurrentStarterPack = useSetActiveStarterPack()
   const {setShowLoggedOut, requestSwitchToAccount} = useLoggedOutViewControls()
 
   React.useEffect(() => {
@@ -99,15 +99,15 @@ function HomeScreenReady({
     [pinnedFeedInfos],
   )
 
-  const currentStarterPack = useCurrentStarterPack()
-  const setCurrentStarterPack = useSetCurrentStarterPack()
+  const activeStarterPack = useActiveStarterPack()
+  const setActiveStarterPack = useSetActiveStarterPack()
 
-  const starterPackInitialFeed = currentStarterPack?.initialFeed
+  const starterPackInitialFeed = activeStarterPack?.initialFeed
     ? allFeeds.find(f => {
-        if (currentStarterPack.initialFeed === 'following') {
+        if (activeStarterPack.initialFeed === 'following') {
           return f === 'following'
         } else {
-          return f === `feedgen|${currentStarterPack.initialFeed}`
+          return f === `feedgen|${activeStarterPack.initialFeed}`
         }
       })
     : undefined
@@ -144,8 +144,8 @@ function HomeScreenReady({
   }, [
     selectedIndex,
     allFeeds,
-    setCurrentStarterPack,
-    currentStarterPack?.initialFeed,
+    setActiveStarterPack,
+    activeStarterPack?.initialFeed,
   ])
 
   const {hasSession} = useSession()
