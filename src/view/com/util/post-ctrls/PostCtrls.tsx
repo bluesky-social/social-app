@@ -39,6 +39,7 @@ import {
 } from '#/components/icons/Heart2'
 import * as Prompt from '#/components/Prompt'
 import {PostDropdownBtn} from '../forms/PostDropdownBtn'
+import {formatCount} from '../numeric/format'
 import {Text} from '../text/Text'
 import {RepostButton} from './RepostButton'
 
@@ -194,6 +195,9 @@ let PostCtrls = ({
     [t.atoms.bg_contrast_25],
   )
 
+  const replyCountFormatted = formatCount(post.replyCount || 0)
+  const likeCountFormatted = formatCount(post.likeCount || 0)
+
   return (
     <View style={[a.flex_row, a.justify_between, a.align_center, style]}>
       <View
@@ -226,7 +230,7 @@ let PostCtrls = ({
                 big ? a.text_md : {fontSize: 15},
                 a.user_select_none,
               ]}>
-              {post.replyCount}
+              {replyCountFormatted}
             </Text>
           ) : undefined}
         </Pressable>
@@ -278,7 +282,7 @@ let PostCtrls = ({
                     : defaultCtrlColor,
                 ],
               ]}>
-              {post.likeCount}
+              {likeCountFormatted}
             </Text>
           ) : undefined}
         </Pressable>

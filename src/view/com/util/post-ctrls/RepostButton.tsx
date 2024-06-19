@@ -12,6 +12,7 @@ import * as Dialog from '#/components/Dialog'
 import {CloseQuote_Stroke2_Corner1_Rounded as Quote} from '#/components/icons/Quote'
 import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
 import {Text} from '#/components/Typography'
+import {formatCount} from '../numeric/format'
 
 interface Props {
   isReposted: boolean
@@ -40,6 +41,8 @@ let RepostButton = ({
     }),
     [t, isReposted],
   )
+
+  const repostCountFormatted = formatCount(repostCount || 0)
 
   const close = useCallback(() => dialogControl.close(), [dialogControl])
 
@@ -76,7 +79,7 @@ let RepostButton = ({
               big ? a.text_md : {fontSize: 15},
               isReposted && a.font_bold,
             ]}>
-            {repostCount}
+            {repostCountFormatted}
           </Text>
         ) : undefined}
       </Button>
