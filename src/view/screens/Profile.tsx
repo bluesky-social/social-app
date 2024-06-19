@@ -447,6 +447,7 @@ function ProfileScreenLoaded({
           ? ({headerHeight, isFocused, scrollElRef}) => (
               <ProfileStarterPacks
                 ref={starterPacksSectionRef}
+                isMe={isMe}
                 starterPacksQuery={starterPacksQuery}
                 scrollElRef={scrollElRef as ListRef}
                 headerOffset={headerHeight}

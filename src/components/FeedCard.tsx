@@ -54,7 +54,11 @@ export function Link({
     const handleOrDid = feed.creator.handle || feed.creator.did
     return `/profile/${handleOrDid}/feed/${urip.rkey}`
   }, [feed])
-  return <InternalLink to={href}>{children}</InternalLink>
+  return (
+    <InternalLink to={href} label={feed.displayName}>
+      {children}
+    </InternalLink>
+  )
 }
 
 export function Outer({children}: {children: React.ReactNode}) {

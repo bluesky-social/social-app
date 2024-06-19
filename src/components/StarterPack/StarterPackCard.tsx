@@ -8,7 +8,7 @@ import {useLingui} from '@lingui/react'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {useSession} from 'state/session'
 import {atoms as a, useTheme} from '#/alf'
-import {StarterPackIcon} from '#/components/icons/StarterPackIcon'
+import {StarterPack} from '#/components/icons/StarterPack'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
@@ -25,9 +25,9 @@ export function Default({starterPack}: {starterPack: StarterPackViewBasic}) {
   }
 
   return (
-    <Wrapper creator={starterPack.creator} rkey={rkey}>
-      <View style={[a.flex_row, a.gap_md]}>
-        <StarterPackIcon width={36} height={36} />
+    <Wrapper creator={starterPack.creator} name={record.name} rkey={rkey}>
+      <View style={[a.flex_row, a.gap_sm]}>
+        <StarterPack width={40} gradient="sky" />
         <View>
           <Text style={[a.text_md, a.font_bold, a.leading_snug]}>
             {record.name}
@@ -43,7 +43,9 @@ export function Default({starterPack}: {starterPack: StarterPackViewBasic}) {
         </View>
       </View>
       {record.description && (
-        <Text numberOfLines={3}>{record.description}</Text>
+        <Text numberOfLines={3} style={[a.leading_snug]}>
+          {record.description}
+        </Text>
       )}
       {!!joinedAllTimeCount && joinedAllTimeCount >= 50 && (
         <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
@@ -55,10 +57,12 @@ export function Default({starterPack}: {starterPack: StarterPackViewBasic}) {
 }
 
 function Wrapper({
+  name,
   creator,
   children,
   rkey,
 }: {
+  name: string
   creator: AppBskyActorDefs.ProfileViewBasic
   rkey: string
   children: React.ReactNode
@@ -68,7 +72,8 @@ function Wrapper({
       to={{
         screen: 'StarterPack',
         params: {name: creator.handle || creator.did, rkey},
-      }}>
+      }}
+      label={name}>
       <View style={[a.flex_1, a.gap_md]}>{children}</View>
     </Link>
   )

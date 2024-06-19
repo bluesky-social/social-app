@@ -69,7 +69,7 @@ export const QrCode = React.forwardRef<ViewShot, Props>(function QrCode(
               <Trans>on</Trans>
             </Text>
             <Logo width={26} fill="white" />
-            <View style={[{marginTop: 7, marginLeft: 3}]}>
+            <View style={[{marginTop: 5, marginLeft: 2.5}]}>
               <Logotype width={68} fill="white" />
             </View>
           </View>

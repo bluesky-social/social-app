@@ -55,11 +55,12 @@ export function StepFinished() {
 
   const finishOnboarding = React.useCallback(async () => {
     setSaving(true)
-    try {
-      let starterPack: AppBskyGraphDefs.StarterPackView | undefined
-      let listItems: AppBskyGraphDefs.ListItemView[] | undefined
 
-      if (activeStarterPack?.uri) {
+    let starterPack: AppBskyGraphDefs.StarterPackView | undefined
+    let listItems: AppBskyGraphDefs.ListItemView[] | undefined
+
+    if (activeStarterPack?.uri) {
+      try {
         const spRes = await agent.app.bsky.graph.getStarterPack({
           starterPack: activeStarterPack.uri,
         })
@@ -72,8 +73,13 @@ export function StepFinished() {
           })
           listItems = listRes.data.items
         }
+      } catch (e) {
+        logger.error('Failed to fetch starter pack', {safeMessage: e})
+        // don't tell the user, just get them through onboarding.
       }
+    }
 
+    try {
       const {interestsStepResults, profileStepResults} = state
       const {selectedInterests} = interestsStepResults
 
@@ -144,9 +150,6 @@ export function StepFinished() {
     } catch (e: any) {
       logger.info(`onboarding: bulk save failed`)
       logger.error(e)
-      // If there was an error encountered, we need to just clear the starter pack so we don't break things for subsequent
-      // app restarts
-      setActiveStarterPack(undefined)
       // don't alert the user, just let them into their account
     }
 

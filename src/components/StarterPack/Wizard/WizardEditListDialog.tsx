@@ -31,11 +31,13 @@ export function WizardEditListDialog({
   state,
   dispatch,
   moderationOpts,
+  profile,
 }: {
   control: Dialog.DialogControlProps
   state: WizardState
   dispatch: (action: WizardAction) => void
   moderationOpts: ModerationOpts
+  profile: AppBskyActorDefs.ProfileViewBasic
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -46,12 +48,9 @@ export function WizardEditListDialog({
   const getData = () => {
     if (state.currentStep === 'Feeds') return state.feeds
 
-    const myIndex = state.profiles.findIndex(p => p.did === currentAccount?.did)
-
     return [
-      state.profiles[myIndex],
-      ...state.profiles.slice(0, myIndex),
-      ...state.profiles.slice(myIndex + 1),
+      profile,
+      ...state.profiles.filter(p => p.did !== currentAccount?.did),
     ]
   }
 

@@ -7,7 +7,6 @@ import {useNavigation} from '@react-navigation/native'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {usePalette} from '#/lib/hooks/usePalette'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {logEvent} from '#/lib/statsig/statsig'
 import {s} from '#/lib/styles'
 import {isIOS, isNative} from '#/platform/detection'
@@ -51,7 +50,6 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
       return ScreenState.S_LoginOrCreateAccount
     }
   })
-  const {isMobile} = useWebMediaQueries()
   const {clearRequestedAccount} = useLoggedOutViewControls()
   const navigation = useNavigation<NavigationProp>()
 
@@ -73,21 +71,9 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   }, [navigation])
 
   return (
-    <View
-      testID="noSessionView"
-      style={[
-        s.hContentRegion,
-        pal.view,
-        {
-          // only needed if dismiss button is present
-          paddingTop:
-            onDismiss && isMobile && screenState !== ScreenState.S_StarterPack
-              ? 40
-              : 0,
-        },
-      ]}>
+    <View testID="noSessionView" style={[s.hContentRegion, pal.view]}>
       <ErrorBoundary>
-        {onDismiss && screenState !== ScreenState.S_StarterPack ? (
+        {onDismiss && screenState === ScreenState.S_LoginOrCreateAccount ? (
           <Pressable
             accessibilityHint={_(msg`Go back`)}
             accessibilityLabel={_(msg`Go back`)}

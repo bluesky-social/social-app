@@ -53,7 +53,7 @@ import {PreviewableUserAvatar, UserAvatar} from '../util/UserAvatar'
 
 import hairlineWidth = StyleSheet.hairlineWidth
 import {parseTenorGif} from '#/lib/strings/embed-player'
-import {StarterPackIcon} from '#/components/icons/StarterPackIcon'
+import {StarterPack} from '#/components/icons/StarterPack'
 
 const MAX_AUTHORS = 5
 
@@ -189,7 +189,7 @@ let FeedItem = ({
   } else if (item.type === 'starter-pack-signup') {
     icon = (
       <View style={{height: 30, width: 30}}>
-        <StarterPackIcon />
+        <StarterPack width={30} gradient="sky" />
       </View>
     )
     action = _(msg`signed up with your starter pack`)

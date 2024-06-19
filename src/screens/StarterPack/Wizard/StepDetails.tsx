@@ -8,7 +8,7 @@ import {useSession} from 'state/session'
 import {useWizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a, useTheme} from '#/alf'
 import * as TextField from '#/components/forms/TextField'
-import {StarterPackIcon} from '#/components/icons/StarterPackIcon'
+import {StarterPack} from '#/components/icons/StarterPack'
 import {ScreenTransition} from '#/components/StarterPack/Wizard/ScreenTransition'
 import {Text} from '#/components/Typography'
 
@@ -26,10 +26,8 @@ export function StepDetails() {
   return (
     <ScreenTransition direction={state.transitionDirection}>
       <View style={[a.px_xl, a.gap_xl, a.mt_4xl]}>
-        <View style={[{height: 90}]}>
-          <StarterPackIcon />
-        </View>
         <View style={[a.gap_md, a.align_center, a.px_md, a.mb_md]}>
+          <StarterPack width={90} gradient="sky" />
           <Text style={[a.font_bold, a.text_3xl]}>
             <Trans>Invites, but personal</Trans>
           </Text>

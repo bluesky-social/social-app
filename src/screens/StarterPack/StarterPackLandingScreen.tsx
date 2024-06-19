@@ -7,6 +7,7 @@ import {
   AtUri,
   ModerationOpts,
 } from '@atproto/api'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -139,12 +140,12 @@ function LandingScreenLoaded({
   return (
     <CenteredView style={a.flex_1}>
       <ScrollView
-        style={[a.flex_1]}
+        style={[a.flex_1, t.atoms.bg]}
         contentContainerStyle={{paddingBottom: 100}}>
         <LinearGradientBackground
           style={[
             a.align_center,
-            a.gap_lg,
+            a.gap_sm,
             a.px_lg,
             a.py_2xl,
             isTabletOrDesktop && {
@@ -159,60 +160,102 @@ function LandingScreenLoaded({
             <Logo width={76} fill="white" />
           </View>
           <Text
-            style={[a.font_bold, a.text_5xl, a.text_center, {color: 'white'}]}>
+            style={[
+              a.font_bold,
+              a.text_4xl,
+              a.text_center,
+              a.leading_tight,
+              {color: 'white'},
+            ]}>
             {record.name}
           </Text>
           <Text
-            style={[a.text_center, a.font_bold, a.text_md, {color: 'white'}]}>
+            style={[
+              a.text_center,
+              a.font_semibold,
+              a.text_md,
+              {color: 'white'},
+            ]}>
             Starter pack by {creator.displayName || `@${creator.handle}`}
           </Text>
         </LinearGradientBackground>
-        <View style={[a.gap_2xl, a.mx_lg, {marginTop: 50}]}>
+        <View style={[a.gap_2xl, a.mx_lg, a.my_2xl]}>
           {record.description ? (
             <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
               {record.description}
             </Text>
           ) : null}
-          <Button
-            label={_(msg`Join the conversation now!`)}
-            onPress={onJoinPress}
-            variant="solid"
-            color="primary"
-            size="large">
-            <ButtonText style={[a.text_lg]}>
-              <Trans>Join the conversation now!</Trans>
-            </ButtonText>
-          </Button>
-          {joinedWeekCount && joinedWeekCount >= 25 ? (
-            <Text
-              style={[
-                a.font_bold,
-                a.text_md,
-                a.text_center,
-                t.atoms.text_contrast_medium,
-              ]}>
-              {joinedWeekCount} joined this week!
-            </Text>
-          ) : null}
-          <View style={{height: 4}} />
+          <View style={[a.gap_sm]}>
+            <Button
+              label={_(msg`Join Bluesky`)}
+              onPress={onJoinPress}
+              variant="solid"
+              color="primary"
+              size="large">
+              <ButtonText style={[a.text_lg]}>
+                <Trans>Join Bluesky</Trans>
+              </ButtonText>
+            </Button>
+            {joinedWeekCount && joinedWeekCount >= 25 ? (
+              <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                <FontAwesomeIcon
+                  icon="arrow-trend-up"
+                  size={12}
+                  color={t.atoms.text_contrast_medium.color}
+                />
+                <Text
+                  style={[
+                    a.font_semibold,
+                    a.text_sm,
+                    t.atoms.text_contrast_medium,
+                  ]}
+                  numberOfLines={1}>
+                  123,659 joined this week
+                </Text>
+              </View>
+            ) : null}
+          </View>
           <View style={[a.gap_3xl]}>
-            {starterPack.feeds?.length ? (
+            {Boolean(listItemsSample?.length) && (
               <View style={[a.gap_md]}>
-                <Text style={[a.font_bold, a.text_lg]}>
-                  These great feeds will be available after signing up!
+                <Text style={[a.font_heavy, a.text_lg]}>
+                  {listItemsCount <= 8 ? (
+                    <Trans>You'll follow these people right away</Trans>
+                  ) : (
+                    <Trans>
+                      You'll follow these people and {listItemsCount - 8} others
+                    </Trans>
+                  )}
+                </Text>
+                <View>
+                  {starterPack.listItemsSample?.slice(0, 8).map(item => (
+                    <View
+                      key={item.subject.did}
+                      style={[
+                        a.py_lg,
+                        a.px_md,
+                        a.border_t,
+                        t.atoms.border_contrast_low,
+                      ]}>
+                      <ProfileCard profile={item.subject} />
+                    </View>
+                  ))}
+                </View>
+              </View>
+            )}
+            {feeds?.length ? (
+              <View style={[a.gap_md]}>
+                <Text style={[a.font_heavy, a.text_lg]}>
+                  <Trans>You'll stay updated with these feeds</Trans>
                 </Text>
 
-                <View
-                  style={[
-                    t.atoms.bg_contrast_25,
-                    a.rounded_sm,
-                    {pointerEvents: 'none'},
-                  ]}>
-                  {starterPack.feeds?.map((feed, index) => (
+                <View style={[{pointerEvents: 'none'}]}>
+                  {feeds?.map(feed => (
                     <View
                       style={[
-                        a.p_lg,
-                        index !== 0 && a.border_t,
+                        a.py_lg,
+                        a.px_md,
+                        a.border_t,
                         t.atoms.border_contrast_low,
                       ]}
                       key={feed.uri}>
@@ -222,69 +265,22 @@ function LandingScreenLoaded({
                 </View>
               </View>
             ) : null}
-
-            {Boolean(listItemsSample?.length) && (
-              <View style={[a.gap_md]}>
-                <Text style={[a.font_bold, a.text_lg]}>
-                  {feeds?.length ? (
-                    <>
-                      {listItemsCount <= 8 ? (
-                        <Trans>
-                          You'll also follow these people right away!
-                        </Trans>
-                      ) : (
-                        <Trans>
-                          You'll also follow these people and{' '}
-                          {listItemsCount - 8} others!
-                        </Trans>
-                      )}
-                    </>
-                  ) : (
-                    <>
-                      {listItemsCount <= 8 ? (
-                        <Trans>You'll follow these people right away!</Trans>
-                      ) : (
-                        <Trans>
-                          You'll follow these people and {listItemsCount - 8}{' '}
-                          others!
-                        </Trans>
-                      )}
-                    </>
-                  )}
-                </Text>
-                <View style={[t.atoms.bg_contrast_25, a.rounded_sm]}>
-                  {starterPack.listItemsSample
-                    ?.slice(0, 8)
-                    .map((item, index) => (
-                      <View
-                        key={item.subject.did}
-                        style={[
-                          a.p_lg,
-                          index !== 0 && a.border_t,
-                          t.atoms.border_contrast_low,
-                        ]}>
-                        <ProfileCard profile={item.subject} />
-                      </View>
-                    ))}
-                </View>
-              </View>
-            )}
           </View>
+          <Button
+            label={_(msg`Signup without a starter pack`)}
+            variant="solid"
+            color="secondary"
+            size="medium"
+            style={[a.py_lg]}
+            onPress={() => {
+              setActiveStarterPack(undefined)
+              setScreenState(LoggedOutScreenState.S_CreateAccount)
+            }}>
+            <ButtonText>
+              <Trans>Signup without a starter pack</Trans>
+            </ButtonText>
+          </Button>
         </View>
-        <Button
-          label={_(msg`Signup without a starter pack`)}
-          variant="ghost"
-          color="secondary"
-          size="medium"
-          style={[a.mt_2xl]}
-          onPress={() => {
-            setActiveStarterPack(undefined)
-            setScreenState(LoggedOutScreenState.S_CreateAccount)
-          }}>
-          <ButtonText>
-            <Trans>Signup without a starter pack</Trans>
-          </ButtonText>
-        </Button>
       </ScrollView>
       <AppClipOverlay
         visible={appClipOverlayVisible}

@@ -1,5 +1,8 @@
 import React from 'react'
 
+import {useSession} from 'state/session'
+import {useActiveStarterPack} from 'state/shell/starter-pack'
+
 type State = {
   showLoggedOut: boolean
   /**
@@ -22,7 +25,7 @@ type Controls = {
     /**
      * The did of the account to populate the login form with.
      */
-    requestedAccount?: string | 'none' | 'new'
+    requestedAccount?: string | 'none' | 'new' | 'starterpack'
   }) => void
   /**
    * Clears the requested account so that next time the logged out view is
@@ -43,9 +46,12 @@ const ControlsContext = React.createContext<Controls>({
 })
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
+  const activeStarterPack = useActiveStarterPack()
+  const {hasSession} = useSession()
+  const shouldShowStarterPack = Boolean(activeStarterPack?.uri) && !hasSession
   const [state, setState] = React.useState<State>({
-    showLoggedOut: false,
-    requestedAccountSwitchTo: undefined,
+    showLoggedOut: shouldShowStarterPack,
+    requestedAccountSwitchTo: shouldShowStarterPack ? 'starterpack' : undefined,
   })
 
   const controls = React.useMemo<Controls>(

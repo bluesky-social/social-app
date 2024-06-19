@@ -808,15 +808,21 @@ describe('createStarterPackLinkFromAndroidReferrer', () => {
   it('returns a link when input contains utm_source and utm_content', () => {
     expect(
       createStarterPackLinkFromAndroidReferrer(
-        'utm_source=bluesky&utm_content=starterpack-haileyok.com-rkey',
+        'utm_source=bluesky&utm_content=starterpack_haileyok.com_rkey',
       ),
     ).toEqual(validOutput)
+
+    expect(
+      createStarterPackLinkFromAndroidReferrer(
+        'utm_source=bluesky&utm_content=starterpack_test-lover-9000.com_rkey',
+      ),
+    ).toEqual('https://bsky.app/start/test-lover-9000.com/rkey')
   })
 
   it('returns a link when input contains utm_source and utm_content in different order', () => {
     expect(
       createStarterPackLinkFromAndroidReferrer(
-        'utm_content=starterpack-haileyok.com-rkey&utm_source=bluesky',
+        'utm_content=starterpack_haileyok.com_rkey&utm_source=bluesky',
       ),
     ).toEqual(validOutput)
   })
@@ -824,7 +830,7 @@ describe('createStarterPackLinkFromAndroidReferrer', () => {
   it('returns a link when input contains other parameters as well', () => {
     expect(
       createStarterPackLinkFromAndroidReferrer(
-        'utm_source=bluesky&utm_medium=starterpack&utm_content=starterpack-haileyok.com-rkey',
+        'utm_source=bluesky&utm_medium=starterpack&utm_content=starterpack_haileyok.com_rkey',
       ),
     ).toEqual(validOutput)
   })
@@ -832,7 +838,7 @@ describe('createStarterPackLinkFromAndroidReferrer', () => {
   it('returns null when utm_source is not present', () => {
     expect(
       createStarterPackLinkFromAndroidReferrer(
-        'utm_content=starterpack-haileyok.com-rkey',
+        'utm_content=starterpack_haileyok.com_rkey',
       ),
     ).toEqual(null)
   })
@@ -846,7 +852,7 @@ describe('createStarterPackLinkFromAndroidReferrer', () => {
   it('returns null when utm_content is malformed', () => {
     expect(
       createStarterPackLinkFromAndroidReferrer(
-        'utm_content=starterpack-haileyok.com',
+        'utm_content=starterpack_haileyok.com',
       ),
     ).toEqual(null)
 
@@ -856,13 +862,13 @@ describe('createStarterPackLinkFromAndroidReferrer', () => {
 
     expect(
       createStarterPackLinkFromAndroidReferrer(
-        'utm_content=starterpack-haileyok.com-rkey-more',
+        'utm_content=starterpack_haileyok.com_rkey_more',
       ),
     ).toEqual(null)
 
     expect(
       createStarterPackLinkFromAndroidReferrer(
-        'utm_content=notastarterpack-haileyok.com-rkey',
+        'utm_content=notastarterpack_haileyok.com_rkey',
       ),
     ).toEqual(null)
   })
@@ -906,6 +912,23 @@ describe('parseStarterPackHttpUri', () => {
     expect(parseStarterPackUri(validHttpUri)).toEqual(null)
   })
 
+  it('returns null when the route is not /start or /starter-pack', () => {
+    const validHttpUri = 'https://bsky.app/start/haileyok.com/rkey'
+    expect(parseStarterPackUri(validHttpUri)).toEqual({
+      name: 'haileyok.com',
+      rkey: 'rkey',
+    })
+
+    const validHttpUri2 = 'https://bsky.app/starter-pack/haileyok.com/rkey'
+    expect(parseStarterPackUri(validHttpUri2)).toEqual({
+      name: 'haileyok.com',
+      rkey: 'rkey',
+    })
+
+    const invalidHttpUri = 'https://bsky.app/profile/haileyok.com/rkey'
+    expect(parseStarterPackUri(invalidHttpUri)).toEqual(null)
+  })
+
   it('returns the at uri when the input is a valid starterpack at uri', () => {
     const validAtUri = 'at://did:123/app.bsky.graph.starterpack/rkey'
     expect(parseStarterPackUri(validAtUri)).toEqual({
@@ -931,11 +954,11 @@ describe('parseStarterPackHttpUri', () => {
 
 describe('createStarterPackGooglePlayUri', () => {
   const base =
-    'https://play.google.com/store/apps/details?id=xyz.blueskyweb.app&referrer=utm_source%3Dbluesky%26utm_medium%3Dstarterpack%26utm_content%3Dstarterpack-'
+    'https://play.google.com/store/apps/details?id=xyz.blueskyweb.app&referrer=utm_source%3Dbluesky%26utm_medium%3Dstarterpack%26utm_content%3Dstarterpack_'
 
   it('returns valid google play uri when input is valid', () => {
     expect(createStarterPackGooglePlayUri('name', 'rkey')).toEqual(
-      `${base}name-rkey`,
+      `${base}name_rkey`,
     )
   })
 

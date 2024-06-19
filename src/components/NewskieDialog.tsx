@@ -9,11 +9,12 @@ import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {HITSLOP_10} from 'lib/constants'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useDialogControl} from '#/components/Dialog'
 import {Newskie} from '#/components/icons/Newskie'
+import {Default as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
 
 export function NewskieDialog({
@@ -24,6 +25,7 @@ export function NewskieDialog({
   disabled?: boolean
 }) {
   const {_} = useLingui()
+  const t = useTheme()
   const moderationOpts = useModerationOpts()
   const control = useDialogControl()
   const profileName = React.useMemo(() => {
@@ -72,11 +74,30 @@ export function NewskieDialog({
               <Trans>Say hello!</Trans>
             </Text>
             <Text style={[a.text_md]}>
-              <Trans>
-                {profileName} joined Bluesky{' '}
-                {timeAgo(createdAt, now, {format: 'long'})} ago
-              </Trans>
+              {profile.joinedViaStarterPack ? (
+                <Trans>
+                  {profileName} joined Bluesky using a starter pack{' '}
+                  {timeAgo(createdAt, now, {format: 'long'})} ago
+                </Trans>
+              ) : (
+                <Trans>
+                  {profileName} joined Bluesky{' '}
+                  {timeAgo(createdAt, now, {format: 'long'})} ago
+                </Trans>
+              )}
             </Text>
+            {profile.joinedViaStarterPack ? (
+              <View
+                style={[
+                  a.mt_lg,
+                  a.p_lg,
+                  a.border,
+                  a.rounded_sm,
+                  t.atoms.border_contrast_low,
+                ]}>
+                <StarterPackCard starterPack={profile.joinedViaStarterPack} />
+              </View>
+            ) : null}
           </View>
         </Dialog.ScrollableInner>
       </Dialog.Outer>

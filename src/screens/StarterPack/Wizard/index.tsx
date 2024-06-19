@@ -104,7 +104,7 @@ export function Wizard({
           isLoadingStarterPack || isLoadingProfiles || isLoadingProfile
         }
         isError={isErrorStarterPack || isErrorProfiles || isErrorProfile}
-        errorMessage={_(msg`Could not find that starter pack`)}
+        errorMessage={_(msg`That starter pack could not be found.`)}
       />
     )
   } else if (isEdit && starterPack?.creator.did !== currentAccount?.did) {
@@ -112,7 +112,7 @@ export function Wizard({
       <ListMaybePlaceholder
         isLoading={false}
         isError={true}
-        errorMessage={_(msg`Could not find that starter pack`)}
+        errorMessage={_(msg`That starter pack could not be found.`)}
       />
     )
   }
@@ -182,11 +182,18 @@ function WizardInner({
     }, [setMinimalShellMode, setEnabled]),
   )
 
-  const defaultName = _(
-    msg`${
-      currentProfile?.displayName || `@${currentProfile?.handle}`
-    }'s Starter Pack`,
-  ).slice(0, 50)
+  const getDefaultName = () => {
+    let displayName
+    if (
+      currentProfile?.displayName != null &&
+      currentProfile?.displayName !== ''
+    ) {
+      displayName = sanitizeDisplayName(currentProfile.displayName)
+    } else {
+      displayName = sanitizeHandle(currentProfile!.handle)
+    }
+    return _(msg`${displayName}'s Starter Pack`).slice(0, 50)
+  }
 
   const wizardUiStrings: Record<
     WizardStep,
@@ -273,7 +280,7 @@ function WizardInner({
           }
         } else {
           list = await createStarterPackList({
-            name: state.name ?? defaultName,
+            name: state.name ?? getDefaultName(),
             description: state.description,
             descriptionFacets: [],
             profiles: state.profiles,
@@ -286,7 +293,7 @@ function WizardInner({
           collection: 'app.bsky.graph.starterpack',
           rkey,
           record: {
-            name: state.name ?? defaultName,
+            name: state.name ?? getDefaultName(),
             description: state.description,
             descriptionFacets: [],
             list: list?.uri,
@@ -299,9 +306,8 @@ function WizardInner({
           validate: false, // TODO remove!
         })
 
-        await invalidateQueries()
-
-        setTimeout(() => {
+        setTimeout(async () => {
+          await invalidateQueries()
           if (navigation.canGoBack()) {
             navigation.goBack()
           } else {
@@ -311,11 +317,11 @@ function WizardInner({
             })
           }
           dispatch({type: 'SetProcessing', processing: false})
-        }, 1000)
+        }, 2000)
       } else {
         // Creating a new starter pack
         const list = await createStarterPackList({
-          name: state.name ?? defaultName,
+          name: state.name ?? getDefaultName(),
           description: state.description,
           descriptionFacets: [],
           profiles: state.profiles,
@@ -327,7 +333,7 @@ function WizardInner({
             validate: false,
           },
           {
-            name: state.name ?? defaultName,
+            name: state.name ?? getDefaultName(),
             description: state.description,
             descriptionFacets: [],
             list: list.uri,
@@ -346,16 +352,18 @@ function WizardInner({
         })
 
         const newRkey = new AtUri(res.uri).rkey
-        setTimeout(() => {
+
+        setTimeout(async () => {
+          await invalidateQueries()
           navigation.replace('StarterPack', {
             name: currentAccount!.handle,
             rkey: newRkey,
           })
           dispatch({type: 'SetProcessing', processing: false})
-        }, 1000)
+        }, 2000)
       }
     } catch (e: unknown) {
-      logger.error('Failed to create starter pack', {error: e})
+      logger.error('Failed to create starter pack', {safeMessage: e})
       Toast.show(_(msg`Failed to create starter pack`))
       dispatch({type: 'SetProcessing', processing: false})
       return
@@ -376,9 +384,12 @@ function WizardInner({
         repo: currentAccount!.did,
         rkey,
       })
-      await invalidateQueries()
-      logEvent('starterPack:delete', {})
-      navigation.popToTop()
+
+      setTimeout(async () => {
+        await invalidateQueries()
+        logEvent('starterPack:delete', {})
+        navigation.popToTop()
+      }, 2000)
     } catch (e) {
       Toast.show(_(msg`Failed to delete starter pack`))
     } finally {
@@ -426,7 +437,7 @@ function WizardInner({
             accessibilityHint={_(msg`Go back to the previous step`)}
             onPress={() => {
               if (state.currentStep === 'Details') {
-                navigation.goBack()
+                navigation.pop()
               } else {
                 dispatch({type: 'Back'})
               }
@@ -715,6 +726,7 @@ function Footer({
         state={state}
         dispatch={dispatch}
         moderationOpts={moderationOpts}
+        profile={profile}
       />
     </View>
   )

@@ -1,6 +1,7 @@
 import React from 'react'
 import {Pressable, View} from 'react-native'
 import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -136,6 +137,7 @@ function Header({
 
   const {record, creator} = starterPack
   const isOwn = creator?.did === currentAccount?.did
+  const joinedAllTimeCount = starterPack.joinedAllTimeCount ?? 0
 
   const onFollowAll = async () => {
     if (!starterPack.list) return
@@ -182,7 +184,7 @@ function Header({
         avatar={undefined}
         creator={creator}
         avatarType="starter-pack">
-        <View style={[a.gap_sm, isOwn ? a.flex_row_reverse : a.flex_row]}>
+        <View style={[a.flex_row, a.gap_sm]}>
           {isOwn ? (
             <Button
               label={_(msg`Edit`)}
@@ -217,17 +219,29 @@ function Header({
           />
         </View>
       </ProfileSubpageHeader>
-      <View style={[a.px_md, a.py_lg, a.gap_md]}>
-        <Text style={[a.text_md]}>{record.description}</Text>
-        {starterPack.joinedWeekCount && starterPack.joinedWeekCount >= 25 ? (
-          <Text style={[a.font_bold, a.text_md, t.atoms.text_contrast_medium]}>
-            <Trans>
-              {starterPack.joinedAllTimeCount || 0} people have used this
-              starter pack!
-            </Trans>
-          </Text>
-        ) : null}
-      </View>
+      {record.description || joinedAllTimeCount >= 25 ? (
+        <View style={[a.px_lg, a.pt_md, a.pb_sm, a.gap_md]}>
+          {record.description ? (
+            <Text style={[a.text_md]}>{record.description}</Text>
+          ) : null}
+          {joinedAllTimeCount >= 25 ? (
+            <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+              <FontAwesomeIcon
+                icon="arrow-trend-up"
+                size={12}
+                color={t.atoms.text_contrast_medium.color}
+              />
+              <Text
+                style={[a.font_bold, a.text_sm, t.atoms.text_contrast_medium]}>
+                <Trans>
+                  {starterPack.joinedAllTimeCount || 0} people have used this
+                  starter pack!
+                </Trans>
+              </Text>
+            </View>
+          ) : null}
+        </View>
+      ) : null}
       <QrCodeDialog control={qrCodeDialogControl} starterPack={starterPack} />
       <ReportDialog
         control={reportDialogControl}

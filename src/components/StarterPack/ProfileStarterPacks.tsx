@@ -25,12 +25,13 @@ import {useAgent} from 'state/session'
 import {List, ListRef} from 'view/com/util/List'
 import {Text} from 'view/com/util/text/Text'
 import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Default as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
+import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '../icons/Plus'
 
 interface SectionRef {
   scrollToTop: () => void
@@ -47,6 +48,7 @@ interface ProfileFeedgensProps {
   style?: StyleProp<ViewStyle>
   testID?: string
   setScrollViewTag: (tag: number | null) => void
+  isMe: boolean
 }
 
 function keyExtractor(item: AppBskyGraphDefs.StarterPackView) {
@@ -65,6 +67,7 @@ export const ProfileStarterPacks = React.forwardRef<
     style,
     testID,
     setScrollViewTag,
+    isMe,
   },
   ref,
 ) {
@@ -140,7 +143,9 @@ export const ProfileStarterPacks = React.forwardRef<
         onEndReached={onEndReached}
         onRefresh={onRefresh}
         ListEmptyComponent={Empty}
-        ListFooterComponent={items?.length !== 0 ? CreateAnother : undefined}
+        ListFooterComponent={
+          items?.length !== 0 && isMe ? CreateAnother : undefined
+        }
       />
     </View>
   )
@@ -148,19 +153,29 @@ export const ProfileStarterPacks = React.forwardRef<
 
 function CreateAnother() {
   const {_} = useLingui()
+  const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
 
   return (
-    <View style={[a.px_md, a.py_lg, a.justify_between, a.gap_lg]}>
+    <View
+      style={[
+        a.pr_md,
+        a.pt_lg,
+        a.gap_lg,
+        a.border_t,
+        t.atoms.border_contrast_low,
+      ]}>
       <Button
         label={_(msg`Create a starter pack`)}
-        variant="ghost"
-        color="primary"
+        variant="solid"
+        color="secondary"
         size="small"
+        style={[a.self_center]}
         onPress={() => navigation.navigate('StarterPackWizard')}>
         <ButtonText>
           <Trans>Create another</Trans>
         </ButtonText>
+        <ButtonIcon icon={Plus} position="right" />
       </Button>
     </View>
   )
@@ -203,8 +218,8 @@ function Empty() {
   return (
     <LinearGradientBackground
       style={[
-        a.px_md,
-        a.py_xl,
+        a.px_lg,
+        a.py_lg,
         a.justify_between,
         a.gap_lg,
         a.shadow_lg,
@@ -260,26 +275,26 @@ function Empty() {
 
       <Prompt.Outer control={confirmDialogControl}>
         <Prompt.TitleText>
-          <Trans>Generate a starter pack?</Trans>
+          <Trans>Generate a starter pack</Trans>
         </Prompt.TitleText>
         <Prompt.DescriptionText>
           <Trans>
-            You can customize your starter pack with feeds and your favorite
-            people if you create your own.
+            Bluesky will choose a set of recommended accounts from people in
+            your network.
           </Trans>
         </Prompt.DescriptionText>
         <Prompt.Actions>
           <Prompt.Action
             color="primary"
-            cta={_(msg`I'll create one`)}
-            onPress={() => {
-              navigation.navigate('StarterPackWizard')
-            }}
+            cta={_(msg`Choose for me`)}
+            onPress={generate}
           />
           <Prompt.Action
             color="secondary"
-            cta={_(msg`Generate anyway`)}
-            onPress={generate}
+            cta={_(msg`Let me choose`)}
+            onPress={() => {
+              navigation.navigate('StarterPackWizard')
+            }}
           />
         </Prompt.Actions>
       </Prompt.Outer>

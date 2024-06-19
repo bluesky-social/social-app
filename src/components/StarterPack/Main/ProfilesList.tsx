@@ -40,19 +40,26 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
     const {currentAccount} = useSession()
 
     const [isPTRing, setIsPTRing] = React.useState(false)
-    const {data, refetch} = useListMembersQuery(listUri)
-    const profiles = data?.pages.flatMap(p => p.items.map(i => i.subject))
+    const {data, refetch} = useListMembersQuery(listUri, 50)
+
+    // The server returns these sorted by descending creation date, so we want to invert
+    const profiles = data?.pages
+      .flatMap(p => p.items.map(i => i.subject))
+      .reverse()
     const isOwn = new AtUri(listUri).host === currentAccount?.did
 
     const getSortedProfiles = () => {
       if (!profiles) return
       if (!isOwn) return profiles
+
       const myIndex = profiles.findIndex(p => p.did === currentAccount?.did)
-      return [
-        profiles[myIndex],
-        ...profiles.slice(0, myIndex),
-        ...profiles.slice(myIndex + 1),
-      ]
+      return myIndex !== -1
+        ? [
+            profiles[myIndex],
+            ...profiles.slice(0, myIndex),
+            ...profiles.slice(myIndex + 1),
+          ]
+        : profiles
     }
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({

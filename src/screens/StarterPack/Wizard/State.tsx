@@ -7,6 +7,7 @@ import {
 import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import {msg} from '@lingui/macro'
 
+import {useSession} from 'state/session'
 import * as Toast from '#/view/com/util/Toast'
 
 const steps = ['Details', 'Profiles', 'Feeds'] as const
@@ -119,6 +120,8 @@ export function Provider({
   listItems?: AppBskyGraphDefs.ListItemView[]
   children: React.ReactNode
 }) {
+  const {currentAccount} = useSession()
+
   const createInitialState = (): State => {
     if (starterPack && AppBskyGraphStarterpack.isRecord(starterPack.record)) {
       return {
@@ -126,7 +129,10 @@ export function Provider({
         currentStep: 'Details',
         name: starterPack.record.name,
         description: starterPack.record.description,
-        profiles: listItems?.map(i => i.subject) ?? [],
+        profiles:
+          listItems
+            ?.map(i => i.subject)
+            .filter(p => p.did !== currentAccount?.did) ?? [],
         feeds: starterPack.feeds ?? [],
         processing: false,
         transitionDirection: 'Forward',
