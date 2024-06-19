@@ -25,7 +25,7 @@ export function Default({starterPack}: {starterPack: StarterPackViewBasic}) {
   }
 
   return (
-    <Wrapper creator={starterPack.creator} rkey={rkey}>
+    <Wrapper creator={starterPack.creator} name={record.name} rkey={rkey}>
       <View style={[a.flex_row, a.gap_sm]}>
         <StarterPack width={40} gradient="sky" />
         <View>
@@ -57,10 +57,12 @@ export function Default({starterPack}: {starterPack: StarterPackViewBasic}) {
 }
 
 function Wrapper({
+  name,
   creator,
   children,
   rkey,
 }: {
+  name: string
   creator: AppBskyActorDefs.ProfileViewBasic
   rkey: string
   children: React.ReactNode
@@ -71,7 +73,7 @@ function Wrapper({
         screen: 'StarterPack',
         params: {name: creator.handle || creator.did, rkey},
       }}
-      label={creator.displayName || creator.handle}>
+      label={name}>
       <View style={[a.flex_1, a.gap_md]}>{children}</View>
     </Link>
   )

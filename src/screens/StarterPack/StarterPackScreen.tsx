@@ -181,7 +181,7 @@ function Header({
         avatarType="starter-pack">
         <View style={[a.flex_row, a.gap_sm]}>
           <Menu.Root>
-            <Menu.Trigger label={_(msg`Repost or quote post`)}>
+            <Menu.Trigger label={_(msg`Share starter pack`)}>
               {({props, state}) => (
                 <Pressable
                   style={[
