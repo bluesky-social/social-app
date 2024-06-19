@@ -1,11 +1,21 @@
 import {StarterPackView} from '@atproto/api/dist/client/types/app/bsky/graph/defs'
 import {QueryClient, useQuery} from '@tanstack/react-query'
 
-import {httpStarterPackUriToAtUri} from 'lib/strings/starter-pack'
+import {
+  httpStarterPackUriToAtUri,
+  parseStarterPackUri,
+} from 'lib/strings/starter-pack'
 import {useAgent} from 'state/session'
 
 const RQKEY_ROOT = 'starter-pack'
-const RQKEY = (did?: string, rkey?: string) => [RQKEY_ROOT, did, rkey]
+const RQKEY = (did?: string, rkey?: string) => {
+  if (did?.startsWith('https://') || did?.startsWith('at://')) {
+    const parsed = parseStarterPackUri(did)
+    return [RQKEY_ROOT, parsed?.name, parsed?.rkey]
+  } else {
+    return [RQKEY_ROOT, did, rkey]
+  }
+}
 
 export function useStarterPackQuery({
   uri,
