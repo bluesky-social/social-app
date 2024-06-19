@@ -14,8 +14,8 @@ export function createStarterPackLinkFromAndroidReferrer(
     if (!utmContent) return null
     if (utmSource !== 'bluesky') return null
 
-    // This should be a string like `starterpack-haileyok.com-rkey`
-    const contentParts = utmContent.split('-')
+    // This should be a string like `starterpack_haileyok.com_rkey`
+    const contentParts = utmContent.split('_')
 
     if (contentParts[0] !== 'starterpack') return null
     if (contentParts.length !== 3) return null
@@ -66,7 +66,7 @@ export function createStarterPackGooglePlayUri(
   rkey: string,
 ): string | null {
   if (!name || !rkey) return null
-  return `https://play.google.com/store/apps/details?id=xyz.blueskyweb.app&referrer=utm_source%3Dbluesky%26utm_medium%3Dstarterpack%26utm_content%3Dstarterpack-${name}-${rkey}`
+  return `https://play.google.com/store/apps/details?id=xyz.blueskyweb.app&referrer=utm_source%3Dbluesky%26utm_medium%3Dstarterpack%26utm_content%3Dstarterpack_${name}_${rkey}`
 }
 
 export function httpStarterPackUriToAtUri(httpUri?: string): string | null {
