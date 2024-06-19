@@ -78,6 +78,7 @@ export interface FeedPostSliceItem {
   feedContext: string | undefined
   moderation: ModerationDecision
   parentAuthor?: AppBskyActorDefs.ProfileViewBasic
+  isParentBlocked?: boolean
 }
 
 export interface FeedPostSlice {
@@ -311,6 +312,10 @@ export function usePostFeedQuery(
                           const parentAuthor =
                             item.reply?.parent?.author ??
                             slice.items[i + 1]?.reply?.grandparentAuthor
+                          const replyRef = item.reply
+                          const isParentBlocked = AppBskyFeedDefs.isBlockedPost(
+                            replyRef?.parent,
+                          )
 
                           return {
                             _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
@@ -324,6 +329,7 @@ export function usePostFeedQuery(
                             feedContext: item.feedContext || slice.feedContext,
                             moderation: moderations[i],
                             parentAuthor,
+                            isParentBlocked,
                           }
                         }
                         return undefined

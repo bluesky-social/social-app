@@ -38,21 +38,7 @@ export async function createAgentAndResume(
   }
   const gates = tryFetchGates(storedAccount.did, 'prefer-low-latency')
   const moderation = configureModerationForAccount(agent, storedAccount)
-  const prevSession: AtpSessionData = {
-    // Sorted in the same property order as when returned by BskyAgent (alphabetical).
-    accessJwt: storedAccount.accessJwt ?? '',
-    did: storedAccount.did,
-    email: storedAccount.email,
-    emailAuthFactor: storedAccount.emailAuthFactor,
-    emailConfirmed: storedAccount.emailConfirmed,
-    handle: storedAccount.handle,
-    refreshJwt: storedAccount.refreshJwt ?? '',
-    /**
-     * @see https://github.com/bluesky-social/atproto/blob/c5d36d5ba2a2c2a5c4f366a5621c06a5608e361e/packages/api/src/agent.ts#L188
-     */
-    active: storedAccount.active ?? true,
-    status: storedAccount.status,
-  }
+  const prevSession: AtpSessionData = sessionAccountToSession(storedAccount)
   if (isSessionExpired(storedAccount)) {
     await networkRetry(1, () => agent.resumeSession(prevSession))
   } else {
@@ -251,5 +237,25 @@ export function agentToSessionAccount(
     active: agent.session.active,
     status: agent.session.status as SessionAccount['status'],
     pdsUrl: agent.pdsUrl?.toString(),
+  }
+}
+
+export function sessionAccountToSession(
+  account: SessionAccount,
+): AtpSessionData {
+  return {
+    // Sorted in the same property order as when returned by BskyAgent (alphabetical).
+    accessJwt: account.accessJwt ?? '',
+    did: account.did,
+    email: account.email,
+    emailAuthFactor: account.emailAuthFactor,
+    emailConfirmed: account.emailConfirmed,
+    handle: account.handle,
+    refreshJwt: account.refreshJwt ?? '',
+    /**
+     * @see https://github.com/bluesky-social/atproto/blob/c5d36d5ba2a2c2a5c4f366a5621c06a5608e361e/packages/api/src/agent.ts#L188
+     */
+    active: account.active ?? true,
+    status: account.status,
   }
 }
