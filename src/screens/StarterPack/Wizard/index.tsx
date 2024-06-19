@@ -127,7 +127,7 @@ export function Wizard({
   }
 
   return (
-    <Provider starterPack={starterPack} listItems={listItems} profile={profile}>
+    <Provider starterPack={starterPack} listItems={listItems}>
       <WizardInner
         did={did}
         rkey={rkey}
@@ -138,6 +138,7 @@ export function Wizard({
         }
         listItems={listItems}
         listUri={listUri}
+        profile={profile}
         moderationOpts={moderationOpts}
       />
     </Provider>
@@ -150,6 +151,7 @@ function WizardInner({
   createdAt: initialCreatedAt,
   listUri: initialListUri,
   listItems: initialListItems,
+  profile,
   moderationOpts,
 }: {
   did?: string
@@ -157,6 +159,7 @@ function WizardInner({
   createdAt?: string
   listUri?: string
   listItems?: AppBskyGraphDefs.ListItemView[]
+  profile: AppBskyActorDefs.ProfileViewBasic
   moderationOpts: ModerationOpts
 }) {
   const navigation = useNavigation<NavigationProp>()
@@ -470,6 +473,7 @@ function WizardInner({
           onNext={onNext}
           nextBtnText={currUiStrings.nextBtn}
           moderationOpts={moderationOpts}
+          profile={profile}
         />
       )}
     </CenteredView>
@@ -552,10 +556,12 @@ function Footer({
   onNext,
   nextBtnText,
   moderationOpts,
+  profile,
 }: {
   onNext: () => void
   nextBtnText: string
   moderationOpts: ModerationOpts
+  profile: AppBskyActorDefs.ProfileViewBasic
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -563,7 +569,10 @@ function Footer({
   const editDialogControl = useDialogControl()
   const {bottom: bottomInset} = useSafeAreaInsets()
 
-  const items = state.currentStep === 'Profiles' ? state.profiles : state.feeds
+  const items =
+    state.currentStep === 'Profiles'
+      ? [profile, ...state.profiles]
+      : state.feeds
   const initialNamesIndex = state.currentStep === 'Profiles' ? 1 : 0
 
   const isEditEnabled =

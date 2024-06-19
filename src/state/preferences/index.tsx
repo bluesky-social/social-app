@@ -1,5 +1,6 @@
 import React from 'react'
 
+import {Provider as StarterPackProvider} from '../shell/starter-pack'
 import {Provider as AltTextRequiredProvider} from './alt-text-required'
 import {Provider as AutoplayProvider} from './autoplay'
 import {Provider as DisableHapticsProvider} from './disable-haptics'
@@ -8,7 +9,6 @@ import {Provider as HiddenPostsProvider} from './hidden-posts'
 import {Provider as InAppBrowserProvider} from './in-app-browser'
 import {Provider as KawaiiProvider} from './kawaii'
 import {Provider as LanguagesProvider} from './languages'
-import {Provider as StarterPackProvider} from './starter-pack'
 import {Provider as UsedStarterPacksProvider} from './used-starter-packs'
 
 export {

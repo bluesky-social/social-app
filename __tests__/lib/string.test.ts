@@ -4,7 +4,7 @@ import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
 import {
   createStarterPackGooglePlayUri,
   createStarterPackLinkFromAndroidReferrer,
-  parseStarterPackHttpUri,
+  parseStarterPackUri,
 } from 'lib/strings/starter-pack'
 import {cleanError} from '../../src/lib/strings/errors'
 import {createFullHandle, makeValidHandle} from '../../src/lib/strings/handles'
@@ -803,62 +803,129 @@ describe('parseEmbedPlayerFromUrl', () => {
 })
 
 describe('createStarterPackLinkFromAndroidReferrer', () => {
-  const inputs = [
-    'utm_source=bluesky&utm_medium=starterpack&utm_content=starterpack-haileyok.com-rkey',
-    'utm_source=bluesky&utm_content=starterpack-haileyok.com-rkey&utm_medium=starterpack',
-    'utm_source=bluesky&utm_content=starterpack-haileyok.com-rkey',
-    'utm_content=starterpack-haileyok.com-rkey',
-    'utm_source=redsea&utm_content=starterpack-haileyok.com-rkey',
-    'utm_source=bluesky&utm_content=starterpack-haileyok.com',
-    'utm_source=bluesky&utm_content=starterpack',
-    'utm_source=bluesky&utm_content=nope',
-    'utm_source=bluesky',
-    'utm_content=starterpack-haileyok.com-rkey',
-  ]
-  const outputs = [
-    'https://bsky.app/start/haileyok.com/rkey',
-    'https://bsky.app/start/haileyok.com/rkey',
-    'https://bsky.app/start/haileyok.com/rkey',
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-  ]
+  const validOutput = 'https://bsky.app/start/haileyok.com/rkey'
 
-  it('returns a starter pack link when input is valid', () => {
-    for (let i = 0; i < inputs.length; i++) {
-      const result = createStarterPackLinkFromAndroidReferrer(inputs[i])
-      expect(result).toEqual(outputs[i])
-    }
+  it('returns a link when input contains utm_source and utm_content', () => {
+    expect(
+      createStarterPackLinkFromAndroidReferrer(
+        'utm_source=bluesky&utm_content=starterpack-haileyok.com-rkey',
+      ),
+    ).toEqual(validOutput)
+  })
+
+  it('returns a link when input contains utm_source and utm_content in different order', () => {
+    expect(
+      createStarterPackLinkFromAndroidReferrer(
+        'utm_content=starterpack-haileyok.com-rkey&utm_source=bluesky',
+      ),
+    ).toEqual(validOutput)
+  })
+
+  it('returns a link when input contains other parameters as well', () => {
+    expect(
+      createStarterPackLinkFromAndroidReferrer(
+        'utm_source=bluesky&utm_medium=starterpack&utm_content=starterpack-haileyok.com-rkey',
+      ),
+    ).toEqual(validOutput)
+  })
+
+  it('returns null when utm_source is not present', () => {
+    expect(
+      createStarterPackLinkFromAndroidReferrer(
+        'utm_content=starterpack-haileyok.com-rkey',
+      ),
+    ).toEqual(null)
+  })
+
+  it('returns null when utm_content is not present', () => {
+    expect(
+      createStarterPackLinkFromAndroidReferrer('utm_source=bluesky'),
+    ).toEqual(null)
+  })
+
+  it('returns null when utm_content is malformed', () => {
+    expect(
+      createStarterPackLinkFromAndroidReferrer(
+        'utm_content=starterpack-haileyok.com',
+      ),
+    ).toEqual(null)
+
+    expect(
+      createStarterPackLinkFromAndroidReferrer('utm_content=starterpack'),
+    ).toEqual(null)
+
+    expect(
+      createStarterPackLinkFromAndroidReferrer(
+        'utm_content=starterpack-haileyok.com-rkey-more',
+      ),
+    ).toEqual(null)
+
+    expect(
+      createStarterPackLinkFromAndroidReferrer(
+        'utm_content=notastarterpack-haileyok.com-rkey',
+      ),
+    ).toEqual(null)
   })
 })
 
 describe('parseStarterPackHttpUri', () => {
-  const inputs = [
-    'https://bsky.app/start/haileyok.com/rkey',
-    'https://bsky.app/start/haileyok.com/ilovetesting',
-    'https://bsky.app/start/testlover9000.com/rkey',
-    'https://bsky.app/start/testlover9000.com',
-    'https://bsky.app/start/testlover9000.com/rkey/other',
-    'https://bsky.app/start',
-  ]
-  const outputs = [
-    {name: 'haileyok.com', rkey: 'rkey'},
-    {name: 'haileyok.com', rkey: 'ilovetesting'},
-    {name: 'testlover9000.com', rkey: 'rkey'},
-    null,
-    null,
-    null,
-  ]
+  const baseUri = 'https://bsky.app/start'
 
-  it('returns the correct name and rkey when input is valid', () => {
-    for (let i = 0; i < inputs.length; i++) {
-      const result = parseStarterPackHttpUri(inputs[i])
-      expect(result).toEqual(outputs[i])
-    }
+  it('returns a valid at uri when http uri is valid', () => {
+    const validHttpUri = `${baseUri}/haileyok.com/rkey`
+    expect(parseStarterPackUri(validHttpUri)).toEqual({
+      name: 'haileyok.com',
+      rkey: 'rkey',
+    })
+
+    const validHttpUri2 = `${baseUri}/haileyok.com/ilovetesting`
+    expect(parseStarterPackUri(validHttpUri2)).toEqual({
+      name: 'haileyok.com',
+      rkey: 'ilovetesting',
+    })
+
+    const validHttpUri3 = `${baseUri}/testlover9000.com/rkey`
+    expect(parseStarterPackUri(validHttpUri3)).toEqual({
+      name: 'testlover9000.com',
+      rkey: 'rkey',
+    })
+  })
+
+  it('returns null when there is no rkey', () => {
+    const validHttpUri = `${baseUri}/haileyok.com`
+    expect(parseStarterPackUri(validHttpUri)).toEqual(null)
+  })
+
+  it('returns null when there is an extra path', () => {
+    const validHttpUri = `${baseUri}/haileyok.com/rkey/other`
+    expect(parseStarterPackUri(validHttpUri)).toEqual(null)
+  })
+
+  it('returns null when there is no handle or rkey', () => {
+    const validHttpUri = `${baseUri}`
+    expect(parseStarterPackUri(validHttpUri)).toEqual(null)
+  })
+
+  it('returns the at uri when the input is a valid starterpack at uri', () => {
+    const validAtUri = 'at://did:123/app.bsky.graph.starterpack/rkey'
+    expect(parseStarterPackUri(validAtUri)).toEqual({
+      name: 'did:123',
+      rkey: 'rkey',
+    })
+  })
+
+  it('returns null when the at uri has no rkey', () => {
+    const validAtUri = 'at://did:123/app.bsky.graph.starterpack'
+    expect(parseStarterPackUri(validAtUri)).toEqual(null)
+  })
+
+  it('returns null when the collection is not app.bsky.graph.starterpack', () => {
+    const validAtUri = 'at://did:123/app.bsky.graph.list/rkey'
+    expect(parseStarterPackUri(validAtUri)).toEqual(null)
+  })
+
+  it('returns null when the input is undefined', () => {
+    expect(parseStarterPackUri(undefined)).toEqual(null)
   })
 })
 
@@ -866,13 +933,24 @@ describe('createStarterPackGooglePlayUri', () => {
   const base =
     'https://play.google.com/store/apps/details?id=xyz.blueskyweb.app&referrer=utm_source%3Dbluesky%26utm_medium%3Dstarterpack%26utm_content%3Dstarterpack-'
 
-  const inputs = [['name', 'rkey'], ['name'], []]
-  const outputs = [base + 'name-rkey', null, null]
-
   it('returns valid google play uri when input is valid', () => {
-    for (let i = 0; i < inputs.length; i++) {
-      const result = createStarterPackGooglePlayUri(inputs[i][0], inputs[i][1])
-      expect(result).toEqual(outputs[i])
-    }
+    expect(createStarterPackGooglePlayUri('name', 'rkey')).toEqual(
+      `${base}name-rkey`,
+    )
+  })
+
+  it('returns null when no rkey is supplied', () => {
+    // @ts-expect-error test
+    expect(createStarterPackGooglePlayUri('name', undefined)).toEqual(null)
+  })
+
+  it('returns null when no name or rkey are supplied', () => {
+    // @ts-expect-error test
+    expect(createStarterPackGooglePlayUri(undefined, undefined)).toEqual(null)
+  })
+
+  it('returns null when rkey is supplied but no name', () => {
+    // @ts-expect-error test
+    expect(createStarterPackGooglePlayUri(undefined, 'rkey')).toEqual(null)
   })
 })
