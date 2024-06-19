@@ -104,7 +104,7 @@ export const defaults: Schema = {
   },
   languagePrefs: {
     primaryLanguage: deviceLocales[0] || 'en',
-    contentLanguages: deviceLocales || [],
+    contentLanguages: [],
     postLanguage: deviceLocales[0] || 'en',
     postLanguageHistory: (deviceLocales || [])
       .concat(['en', 'ja', 'pt', 'de'])
