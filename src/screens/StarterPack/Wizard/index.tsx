@@ -8,7 +8,6 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {
   AppBskyActorDefs,
   AppBskyGraphDefs,
-  AppBskyGraphStarterpack,
   AtUri,
   ModerationOpts,
 } from '@atproto/api'
@@ -18,28 +17,24 @@ import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
-import {useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {HITSLOP_10} from 'lib/constants'
-import {createStarterPackList} from 'lib/generate-starterpack'
 import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
 import {logEvent} from 'lib/statsig/statsig'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {enforceLen} from 'lib/strings/helpers'
+import {parseStarterPackUri} from 'lib/strings/starter-pack'
 import {isAndroid, isNative, isWeb} from 'platform/detection'
 import {useModerationOpts} from 'state/preferences/moderation-opts'
-import {invalidateActorStarterPacksQuery} from 'state/queries/actor-starter-packs'
-import {
-  invalidateListMembersQuery,
-  useListMembersQuery,
-} from 'state/queries/list-members'
+import {useListMembersQuery} from 'state/queries/list-members'
 import {useProfileQuery} from 'state/queries/profile'
 import {
-  invalidateStarterPack,
+  useCreateStarterPackMutation,
+  useEditStarterPackMutation,
   useStarterPackQuery,
-} from 'state/queries/useStarterPackQuery'
+} from 'state/queries/starter-pack'
 import {useAgent, useSession} from 'state/session'
 import {useSetMinimalShellMode} from 'state/shell'
 import * as Toast from '#/view/com/util/Toast'
@@ -120,14 +115,8 @@ export function Wizard({
   return (
     <Provider starterPack={starterPack} listItems={listItems}>
       <WizardInner
-        rkey={rkey}
-        createdAt={
-          AppBskyGraphStarterpack.isRecord(starterPack?.record)
-            ? starterPack.record.createdAt
-            : undefined
-        }
-        listItems={listItems}
-        listUri={listUri}
+        currentStarterPack={starterPack}
+        currentListItems={listItems}
         profile={profile}
         moderationOpts={moderationOpts}
       />
@@ -136,17 +125,13 @@ export function Wizard({
 }
 
 function WizardInner({
-  rkey,
-  createdAt: initialCreatedAt,
-  listUri: initialListUri,
-  listItems: initialListItems,
+  currentStarterPack,
+  currentListItems,
   profile,
   moderationOpts,
 }: {
-  rkey?: string
-  createdAt?: string
-  listUri?: string
-  listItems?: AppBskyGraphDefs.ListItemView[]
+  currentStarterPack?: AppBskyGraphDefs.StarterPackView
+  currentListItems?: AppBskyGraphDefs.ListItemView[]
   profile: AppBskyActorDefs.ProfileViewBasic
   moderationOpts: ModerationOpts
 }) {
@@ -155,7 +140,6 @@ function WizardInner({
   const t = useTheme()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {setEnabled} = useKeyboardController()
-  const queryClient = useQueryClient()
   const [state, dispatch] = useWizardState()
   const agent = useAgent()
   const {currentAccount} = useSession()
@@ -163,6 +147,7 @@ function WizardInner({
     did: currentAccount?.did,
     staleTime: 0,
   })
+  const parsed = parseStarterPackUri(currentStarterPack?.uri)
 
   React.useEffect(() => {
     navigation.setOptions({
@@ -218,178 +203,88 @@ function WizardInner({
   }
   const currUiStrings = wizardUiStrings[state.currentStep]
 
-  const invalidateQueries = async () => {
-    if (!rkey) return
-
-    if (initialListUri) {
-      await invalidateListMembersQuery({queryClient, uri: initialListUri})
-    }
-    await invalidateActorStarterPacksQuery({
-      queryClient,
-      did: currentAccount!.did,
+  const onSuccessCreate = (data: {uri: string; cid: string}) => {
+    const rkey = new AtUri(data.uri).rkey
+    logEvent('starterPack:create', {
+      setName: state.name != null,
+      setDescription: state.description != null,
+      profilesCount: state.profiles.length,
+      feedsCount: state.feeds.length,
     })
-    await invalidateStarterPack({
-      queryClient,
-      did: currentAccount!.did,
+    dispatch({type: 'SetProcessing', processing: false})
+    navigation.replace('StarterPack', {
+      name: currentAccount!.handle,
       rkey,
     })
   }
 
+  const onSuccessEdit = () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack()
+    } else {
+      navigation.replace('StarterPack', {
+        name: currentAccount!.handle,
+        rkey: parsed!.rkey,
+      })
+    }
+  }
+
+  const onError = (e: Error) => {
+    logger.error('Failed to create starter pack', {safeMessage: e})
+    dispatch({type: 'SetProcessing', processing: false})
+    Toast.show(_(msg`Failed to create starter pack`))
+  }
+
+  const {mutate: createStarterPack} = useCreateStarterPackMutation({
+    onSuccess: onSuccessCreate,
+    onError,
+  })
+  const {mutate: editStarterPack} = useEditStarterPackMutation({
+    onSuccess: onSuccessEdit,
+    onError,
+  })
+
   const submit = async () => {
     dispatch({type: 'SetProcessing', processing: true})
-
-    try {
-      if (rkey) {
-        // Editing an existing starter pack
-        let list: {uri: string; cid: string} | undefined = initialListUri
-          ? {uri: initialListUri, cid: ''}
-          : undefined
-        if (initialListUri) {
-          const removedItems = initialListItems?.filter(
-            i => !state.profiles.find(p => p.did === i.subject.did),
-          )
-          if (removedItems && removedItems.length > 0) {
-            await agent.com.atproto.repo.applyWrites({
-              repo: currentAccount!.did,
-              writes: removedItems.map(i => ({
-                $type: 'com.atproto.repo.applyWrites#delete',
-                collection: 'app.bsky.graph.listitem',
-                rkey: new AtUri(i.uri).rkey,
-              })),
-            })
-          }
-
-          const addedProfiles = state.profiles.filter(
-            p => !initialListItems?.find(i => i.subject.did === p.did),
-          )
-
-          if (addedProfiles.length > 0) {
-            await agent.com.atproto.repo.applyWrites({
-              repo: currentAccount!.did,
-              writes: addedProfiles.map(p => ({
-                $type: 'com.atproto.repo.applyWrites#create',
-                collection: 'app.bsky.graph.listitem',
-                value: {
-                  $type: 'app.bsky.graph.listitem',
-                  subject: p.did,
-                  list: list?.uri,
-                  createdAt: new Date().toISOString(),
-                },
-              })),
-            })
-          }
-        } else {
-          list = await createStarterPackList({
-            name: state.name ?? getDefaultName(),
-            description: state.description,
-            descriptionFacets: [],
-            profiles: state.profiles,
-            agent,
-          })
-        }
-
-        await agent.com.atproto.repo.putRecord({
-          repo: currentAccount!.did,
-          collection: 'app.bsky.graph.starterpack',
-          rkey,
-          record: {
-            name: state.name ?? getDefaultName(),
-            description: state.description,
-            descriptionFacets: [],
-            list: list?.uri,
-            feeds: state.feeds.map(f => ({
-              uri: f.uri,
-            })),
-            createdAt: initialCreatedAt,
-            updatedAt: new Date().toISOString(),
-          },
-          validate: false, // TODO remove!
-        })
-
-        setTimeout(async () => {
-          await invalidateQueries()
-          if (navigation.canGoBack()) {
-            navigation.goBack()
-          } else {
-            navigation.replace('StarterPack', {
-              name: currentAccount!.handle,
-              rkey,
-            })
-          }
-          dispatch({type: 'SetProcessing', processing: false})
-        }, 2000)
-      } else {
-        // Creating a new starter pack
-        const list = await createStarterPackList({
-          name: state.name ?? getDefaultName(),
-          description: state.description,
-          descriptionFacets: [],
-          profiles: state.profiles,
-          agent,
-        })
-        const res = await agent.app.bsky.graph.starterpack.create(
-          {
-            repo: currentAccount!.did,
-            validate: false,
-          },
-          {
-            name: state.name ?? getDefaultName(),
-            description: state.description,
-            descriptionFacets: [],
-            list: list.uri,
-            feeds: state.feeds.map(f => ({
-              uri: f.uri,
-            })),
-            createdAt: new Date().toISOString(),
-          },
-        )
-
-        logEvent('starterPack:create', {
-          setName: state.name != null,
-          setDescription: state.description != null,
-          profilesCount: state.profiles.length,
-          feedsCount: state.feeds.length,
-        })
-
-        const newRkey = new AtUri(res.uri).rkey
-
-        setTimeout(async () => {
-          await invalidateQueries()
-          navigation.replace('StarterPack', {
-            name: currentAccount!.handle,
-            rkey: newRkey,
-          })
-          dispatch({type: 'SetProcessing', processing: false})
-        }, 2000)
-      }
-    } catch (e: unknown) {
-      logger.error('Failed to create starter pack', {safeMessage: e})
-      Toast.show(_(msg`Failed to create starter pack`))
-      dispatch({type: 'SetProcessing', processing: false})
-      return
+    if (currentStarterPack && currentListItems) {
+      editStarterPack({
+        name: state.name ?? getDefaultName(),
+        description: state.description,
+        descriptionFacets: [],
+        profiles: state.profiles,
+        feeds: state.feeds,
+        currentStarterPack: currentStarterPack,
+        currentListItems: currentListItems,
+      })
+    } else {
+      createStarterPack({
+        name: state.name ?? getDefaultName(),
+        description: state.description,
+        descriptionFacets: [],
+        profiles: state.profiles,
+        feeds: state.feeds,
+      })
     }
   }
 
   const deleteStarterPack = async () => {
-    if (!rkey || !initialListUri) return
+    if (!currentStarterPack || !currentListItems) return
 
     dispatch({type: 'SetProcessing', processing: true})
 
     try {
       await agent.app.bsky.graph.list.delete({
         repo: currentAccount!.did,
-        rkey: new AtUri(initialListUri).rkey,
+        // TODO list is required, so shouldn't need this assertion
+        rkey: new AtUri(currentStarterPack.list!.uri).rkey,
       })
       await agent.app.bsky.graph.starterpack.delete({
         repo: currentAccount!.did,
-        rkey,
+        rkey: new AtUri(currentStarterPack.uri).rkey,
       })
 
-      setTimeout(async () => {
-        await invalidateQueries()
-        logEvent('starterPack:delete', {})
-        navigation.popToTop()
-      }, 2000)
+      logEvent('starterPack:delete', {})
+      navigation.popToTop()
     } catch (e) {
       Toast.show(_(msg`Failed to delete starter pack`))
     } finally {
@@ -456,7 +351,7 @@ function WizardInner({
       </View>
 
       <Container
-        showDeleteBtn={Boolean(rkey)}
+        showDeleteBtn={Boolean(currentStarterPack)}
         deleteStarterPack={deleteStarterPack}>
         {state.currentStep === 'Details' ? (
           <StepDetails />

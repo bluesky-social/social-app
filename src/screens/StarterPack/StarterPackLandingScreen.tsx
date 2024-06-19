@@ -16,7 +16,7 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {createStarterPackGooglePlayUri} from 'lib/strings/starter-pack'
 import {isWeb} from 'platform/detection'
 import {useModerationOpts} from 'state/preferences/moderation-opts'
-import {useStarterPackQuery} from 'state/queries/useStarterPackQuery'
+import {useStarterPackQuery} from 'state/queries/starter-pack'
 import {
   useActiveStarterPack,
   useSetActiveStarterPack,
