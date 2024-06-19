@@ -15,11 +15,11 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {createStarterPackGooglePlayUri} from 'lib/strings/starter-pack'
 import {isWeb} from 'platform/detection'
 import {useModerationOpts} from 'state/preferences/moderation-opts'
-import {
-  useCurrentStarterPack,
-  useSetCurrentStarterPack,
-} from 'state/preferences/starter-pack'
 import {useStarterPackQuery} from 'state/queries/useStarterPackQuery'
+import {
+  useActiveStarterPack,
+  useSetActiveStarterPack,
+} from 'state/shell/starter-pack'
 import {LoggedOutScreenState} from 'view/com/auth/LoggedOut'
 import {CenteredView} from 'view/com/util/Views'
 import {Logo} from 'view/icons/Logo'
@@ -51,30 +51,14 @@ export function LandingScreen({
 }: {
   setScreenState: (state: LoggedOutScreenState) => void
 }) {
-  const currentStarterPack = useCurrentStarterPack()
-
-  React.useEffect(() => {
-    if (!currentStarterPack?.uri) {
-      setScreenState(LoggedOutScreenState.S_LoginOrCreateAccount)
-    }
-  }, [currentStarterPack?.uri, setScreenState])
-
-  return <LandingScreenInner setScreenState={setScreenState} />
-}
-
-export function LandingScreenInner({
-  setScreenState,
-}: {
-  setScreenState: (state: LoggedOutScreenState) => void
-}) {
   const moderationOpts = useModerationOpts()
-  const currentStarterPack = useCurrentStarterPack()
+  const activeStarterPack = useActiveStarterPack()
 
   const {
     data: starterPack,
     isLoading: isLoadingStarterPack,
     isError: isErrorStarterPack,
-  } = useStarterPackQuery({uri: currentStarterPack?.uri})
+  } = useStarterPackQuery({uri: activeStarterPack?.uri})
 
   const isValid =
     starterPack &&
@@ -118,8 +102,8 @@ function LandingScreenLoaded({
   const {record, creator, listItemsSample, feeds, joinedWeekCount} = starterPack
   const {_} = useLingui()
   const t = useTheme()
-  const currentStarterPack = useCurrentStarterPack()
-  const setCurrentStarterPack = useSetCurrentStarterPack()
+  const activeStarterPack = useActiveStarterPack()
+  const setActiveStarterPack = useSetActiveStarterPack()
   const {isTabletOrDesktop} = useWebMediaQueries()
   const androidDialogControl = useDialogControl()
 
@@ -129,14 +113,14 @@ function LandingScreenLoaded({
   const listItemsCount = starterPack.list?.listItemCount ?? 0
 
   const onContinue = () => {
-    setCurrentStarterPack({
+    setActiveStarterPack({
       uri: starterPack.uri,
     })
     setScreenState(LoggedOutScreenState.S_CreateAccount)
   }
 
   const onJoinPress = () => {
-    if (currentStarterPack?.isClip) {
+    if (activeStarterPack?.isClip) {
       setAppClipOverlayVisible(true)
       postAppClipMessage({
         action: 'present',
@@ -167,7 +151,7 @@ function LandingScreenLoaded({
               borderBottomLeftRadius: 10,
               borderBottomRightRadius: 10,
             },
-            currentStarterPack?.isClip && {
+            activeStarterPack?.isClip && {
               paddingTop: 100,
             },
           ]}>
@@ -294,7 +278,7 @@ function LandingScreenLoaded({
           size="medium"
           style={[a.mt_2xl]}
           onPress={() => {
-            setCurrentStarterPack(undefined)
+            setActiveStarterPack(undefined)
             setScreenState(LoggedOutScreenState.S_CreateAccount)
           }}>
           <ButtonText>

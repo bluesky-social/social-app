@@ -16,10 +16,8 @@ import {createFullHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {useServiceQuery} from '#/state/queries/service'
 import {useAgent} from '#/state/session'
-import {parseStarterPackUri} from 'lib/strings/starter-pack'
-import {useCurrentStarterPack} from 'state/preferences/starter-pack'
-import {useResolveDidQuery} from 'state/queries/resolve-uri'
 import {useStarterPackQuery} from 'state/queries/useStarterPackQuery'
+import {useActiveStarterPack} from 'state/shell/starter-pack'
 import {LoggedOutLayout} from '#/view/com/util/layouts/LoggedOutLayout'
 import {
   initialState,
@@ -48,12 +46,9 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
   const {gtMobile} = useBreakpoints()
   const agent = useAgent()
 
-  const currentStarterPack = useCurrentStarterPack()
-  const parsedStarterPackUri = parseStarterPackUri(currentStarterPack?.uri)
-  const {data: did} = useResolveDidQuery(parsedStarterPackUri?.name)
+  const activeStarterPack = useActiveStarterPack()
   const {data: starterPack} = useStarterPackQuery({
-    did,
-    rkey: parsedStarterPackUri?.rkey,
+    uri: activeStarterPack?.uri,
   })
 
   const {

@@ -24,11 +24,11 @@ import {useRequestNotificationsPermission} from 'lib/notifications/notifications
 import {HomeTabNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {parseStarterPackUri} from 'lib/strings/starter-pack'
 import {isWeb} from 'platform/detection'
-import {
-  useCurrentStarterPack,
-  useSetCurrentStarterPack,
-} from 'state/preferences/starter-pack'
 import {useLoggedOutViewControls} from 'state/shell/logged-out'
+import {
+  useActiveStarterPack,
+  useSetActiveStarterPack,
+} from 'state/shell/starter-pack'
 import {FeedPage} from 'view/com/feeds/FeedPage'
 import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
@@ -39,21 +39,23 @@ import {HomeHeader} from '../com/home/HomeHeader'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export function HomeScreen(props: Props) {
+  const {navigation} = props
   const {hasSession} = useSession()
   const {data: preferences} = usePreferencesQuery()
   const {data: pinnedFeedInfos, isLoading: isPinnedFeedsLoading} =
     usePinnedFeedsInfos()
-  const currentStarterPack = useCurrentStarterPack()
-  const setCurrentStarterPack = useSetCurrentStarterPack()
+  const activeStarterPack = useActiveStarterPack()
+  const setActiveStarterPack = useSetActiveStarterPack()
   const {setShowLoggedOut, requestSwitchToAccount} = useLoggedOutViewControls()
 
   React.useEffect(() => {
-    if (currentStarterPack?.uri && !currentStarterPack?.initialFeed) {
+    // This will be true if the app was launched with a starter pack referral.
+    if (activeStarterPack?.uri) {
       if (hasSession) {
-        const parsed = parseStarterPackUri(currentStarterPack.uri)
+        const parsed = parseStarterPackUri(activeStarterPack.uri)
         if (!parsed) return
-        setCurrentStarterPack(undefined)
-        props.navigation.navigate('StarterPack', parsed)
+        setActiveStarterPack(undefined)
+        navigation.navigate('StarterPack', parsed)
       } else {
         setShowLoggedOut(true)
         requestSwitchToAccount({
@@ -65,9 +67,9 @@ export function HomeScreen(props: Props) {
     hasSession,
     setShowLoggedOut,
     requestSwitchToAccount,
-    currentStarterPack,
-    setCurrentStarterPack,
-    props.navigation,
+    activeStarterPack,
+    setActiveStarterPack,
+    navigation,
   ])
 
   if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
@@ -99,23 +101,9 @@ function HomeScreenReady({
     [pinnedFeedInfos],
   )
 
-  const currentStarterPack = useCurrentStarterPack()
-  const setCurrentStarterPack = useSetCurrentStarterPack()
-
-  const starterPackInitialFeed = currentStarterPack?.initialFeed
-    ? allFeeds.find(f => {
-        if (currentStarterPack.initialFeed === 'following') {
-          return f === 'following'
-        } else {
-          return f === `feedgen|${currentStarterPack.initialFeed}`
-        }
-      })
-    : undefined
   const rawSelectedFeed = useSelectedFeed() ?? allFeeds[0]
   const setSelectedFeed = useSetSelectedFeed()
-  const maybeFoundIndex = allFeeds.indexOf(
-    starterPackInitialFeed ?? rawSelectedFeed,
-  )
+  const maybeFoundIndex = allFeeds.indexOf(rawSelectedFeed)
   const selectedIndex = Math.max(0, maybeFoundIndex)
   const selectedFeed = allFeeds[selectedIndex]
   const requestNotificationsPermission = useRequestNotificationsPermission()
@@ -141,12 +129,7 @@ function HomeScreenReady({
       lastPagerReportedIndexRef.current = selectedIndex
       pagerRef.current?.setPage(selectedIndex, 'desktop-sidebar-click')
     }
-  }, [
-    selectedIndex,
-    allFeeds,
-    setCurrentStarterPack,
-    currentStarterPack?.initialFeed,
-  ])
+  }, [selectedIndex, allFeeds])
 
   const {hasSession} = useSession()
   const setMinimalShellMode = useSetMinimalShellMode()

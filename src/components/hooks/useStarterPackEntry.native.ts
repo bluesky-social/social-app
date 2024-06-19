@@ -2,28 +2,31 @@ import React from 'react'
 
 import {createStarterPackLinkFromAndroidReferrer} from 'lib/strings/starter-pack'
 import {isAndroid} from 'platform/detection'
-import {useSetCurrentStarterPack} from 'state/preferences/starter-pack'
-import {
-  useHasCheckedForStarterPack,
-  useSetHasCheckedForStarterPack,
-} from 'state/preferences/used-starter-packs'
+import {useHasCheckedForStarterPack} from 'state/preferences/used-starter-packs'
+import {useSetActiveStarterPack} from 'state/shell/starter-pack'
 import SwissArmyKnife from '../../../modules/expo-bluesky-swiss-army'
 import GooglePlayReferrer from '../../../modules/expo-google-play-referrer'
 
 export function useStarterPackEntry() {
   const [ready, setReady] = React.useState(false)
-  const setCurrentStarterPack = useSetCurrentStarterPack()
+  const setActiveStarterPack = useSetActiveStarterPack()
   const hasCheckedForStarterPack = useHasCheckedForStarterPack()
-  const setHasCheckedForStarterPack = useSetHasCheckedForStarterPack()
 
   React.useEffect(() => {
     if (ready) return
+
+    // On Android, we cannot clear the referral link. It gets stored for 90 days and all we can do is query for it. So,
+    // let's just ensure we never check again after the first time.
     if (hasCheckedForStarterPack) {
       setReady(true)
       return
     }
 
-    setHasCheckedForStarterPack(true)
+    // Safety for Android. Very unlike this could happen, but just in case. The response should be nearly immediate
+    const timeout = setTimeout(() => {
+      setReady(true)
+    }, 500)
+
     ;(async () => {
       let uri: string | null | undefined
 
@@ -39,19 +42,18 @@ export function useStarterPackEntry() {
       }
 
       if (uri) {
-        setCurrentStarterPack({
+        setActiveStarterPack({
           uri,
         })
       }
 
       setReady(true)
     })()
-  }, [
-    ready,
-    setCurrentStarterPack,
-    setHasCheckedForStarterPack,
-    hasCheckedForStarterPack,
-  ])
+
+    return () => {
+      clearTimeout(timeout)
+    }
+  }, [ready, setActiveStarterPack, hasCheckedForStarterPack])
 
   return ready
 }

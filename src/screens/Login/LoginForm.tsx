@@ -21,6 +21,7 @@ import {logger} from '#/logger'
 import {useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
+import {useSetHasCheckedForStarterPack} from 'state/preferences/used-starter-packs'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {FormError} from '#/components/forms/FormError'
@@ -69,6 +70,7 @@ export const LoginForm = ({
   const {login} = useSessionApi()
   const requestNotificationsPermission = useRequestNotificationsPermission()
   const {setShowLoggedOut} = useLoggedOutViewControls()
+  const setHasCheckedForStarterPack = useSetHasCheckedForStarterPack()
 
   const onPressSelectService = React.useCallback(() => {
     Keyboard.dismiss()
@@ -116,6 +118,7 @@ export const LoginForm = ({
         'LoginForm',
       )
       setShowLoggedOut(false)
+      setHasCheckedForStarterPack(true)
       requestNotificationsPermission('Login')
     } catch (e: any) {
       const errMsg = e.toString()
