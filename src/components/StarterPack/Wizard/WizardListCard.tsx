@@ -112,7 +112,7 @@ export function WizardProfileCard({
 
   const included = state.profiles.some(p => p.did === profile.did)
   const isMe = profile.did === currentAccount?.did
-  const disabled = isMe || state.profiles.length >= 50
+  const disabled = isMe || state.profiles.length >= 49
   const moderationUi = moderateProfile(profile, moderationOpts).ui('avatar')
   const displayName = profile.displayName
     ? sanitizeDisplayName(profile.displayName)
