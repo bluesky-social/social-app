@@ -166,7 +166,8 @@ function CreateAnother() {
         variant="ghost"
         color="primary"
         size="small"
-        onPress={() => navigation.navigate('StarterPackWizard', {})}>
+        style={[a.self_center]}
+        onPress={() => navigation.navigate('StarterPackWizard')}>
         <ButtonIcon icon={Plus} position="left" />
         <ButtonText>
           <Trans>Create another</Trans>
