@@ -219,7 +219,7 @@ function Header({
             <Menu.Outer style={{minWidth: 170}}>
               <Menu.Group>
                 <Menu.Item
-                  label={_(msg`Share link`)}
+                  label={isWeb ? _(msg`Copy link`) : _(msg`Share link`)}
                   testID="shareStarterPackLinkBtn"
                   onPress={() => {
                     logEvent('starterPack:share', {
@@ -229,7 +229,11 @@ function Header({
                     shareUrl(makeStarterPackLink(name, rkey))
                   }}>
                   <Menu.ItemText>
-                    <Trans>Share link</Trans>
+                    {isWeb ? (
+                      <Trans>Copy link</Trans>
+                    ) : (
+                      <Trans>Share Link</Trans>
+                    )}
                   </Menu.ItemText>
                   <Menu.ItemIcon icon={ArrowOutOfBox} position="right" />
                 </Menu.Item>
