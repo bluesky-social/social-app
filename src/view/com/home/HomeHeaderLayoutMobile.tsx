@@ -120,6 +120,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 5,
     width: '100%',
+    minHeight: 46,
   },
   title: {
     fontSize: 21,
