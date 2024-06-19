@@ -6,6 +6,14 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
+import Animated, {
+  Easing,
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withSequence,
+  withTiming,
+} from 'react-native-reanimated'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
@@ -21,6 +29,7 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {shareUrl} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {s} from '#/lib/styles'
+import {isWeb} from '#/platform/detection'
 import {Shadow} from '#/state/cache/types'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {
@@ -74,6 +83,7 @@ let PostCtrls = ({
   const requireAuth = useRequireAuth()
   const loggedOutWarningPromptControl = useDialogControl()
   const {sendInteraction} = useFeedFeedbackContext()
+  const likeAnimValue = useSharedValue(0)
   const playHaptic = useHaptics()
 
   const shouldShowLoggedOutWarning = React.useMemo(() => {
@@ -90,6 +100,17 @@ let PostCtrls = ({
     [t],
   ) as StyleProp<ViewStyle>
 
+  const likeAnimStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          scale: interpolate(likeAnimValue.value, [0, 1], [0, 3], 'clamp'),
+        },
+      ],
+      opacity: interpolate(likeAnimValue.value, [0, 1], [0.6, 0], 'clamp'),
+    }
+  })
+
   const onPressToggleLike = React.useCallback(async () => {
     try {
       if (!post.viewer?.like) {
@@ -99,6 +120,15 @@ let PostCtrls = ({
           event: 'app.bsky.feed.defs#interactionLike',
           feedContext,
         })
+        likeAnimValue.value = withSequence(
+          withTiming(1, {
+            duration: isWeb ? 400 : 500,
+            easing: Easing.out(Easing.cubic),
+          }),
+          withTiming(0, {
+            duration: 0,
+          }),
+        )
         await queueLike()
       } else {
         await queueUnlike()
@@ -116,6 +146,7 @@ let PostCtrls = ({
     queueUnlike,
     sendInteraction,
     feedContext,
+    likeAnimValue,
   ])
 
   const onRepost = useCallback(async () => {
@@ -259,14 +290,19 @@ let PostCtrls = ({
           }
           accessibilityHint=""
           hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
-          {post.viewer?.like ? (
-            <HeartIconFilled style={s.likeColor} width={big ? 22 : 18} />
-          ) : (
-            <HeartIconOutline
-              style={[defaultCtrlColor, {pointerEvents: 'none'}]}
-              width={big ? 22 : 18}
-            />
-          )}
+          <View style={[a.relative]}>
+            <Animated.View style={[a.absolute, likeAnimStyle]}>
+              <HeartIconOutline style={[s.likeColor]} width={big ? 22 : 18} />
+            </Animated.View>
+            {post.viewer?.like ? (
+              <HeartIconFilled style={s.likeColor} width={big ? 22 : 18} />
+            ) : (
+              <HeartIconOutline
+                style={[defaultCtrlColor, {pointerEvents: 'none'}]}
+                width={big ? 22 : 18}
+              />
+            )}
+          </View>
           {typeof post.likeCount !== 'undefined' && post.likeCount > 0 ? (
             <Text
               testID="likeCount"
