@@ -23,7 +23,7 @@ import {CenteredView} from '../util/Views'
 import hairlineWidth = StyleSheet.hairlineWidth
 
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
-import {StarterPackIcon} from '#/components/icons/StarterPackIcon'
+import {StarterPack} from '#/components/icons/StarterPack'
 
 export function ProfileSubpageHeader({
   isLoading,
@@ -130,7 +130,7 @@ export function ProfileSubpageHeader({
           accessibilityHint=""
           style={{width: 58}}>
           {avatarType === 'starter-pack' ? (
-            <StarterPackIcon width={58} height={58} />
+            <StarterPack width={58} height={58} gradient="sky" />
           ) : (
             <UserAvatar type={avatarType} size={58} avatar={avatar} />
           )}

@@ -8,7 +8,7 @@ import {useLingui} from '@lingui/react'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {useSession} from 'state/session'
 import {atoms as a, useTheme} from '#/alf'
-import {StarterPackIcon} from '#/components/icons/StarterPackIcon'
+import {StarterPack} from '#/components/icons/StarterPack'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
@@ -26,8 +26,8 @@ export function Default({starterPack}: {starterPack: StarterPackViewBasic}) {
 
   return (
     <Wrapper creator={starterPack.creator} rkey={rkey}>
-      <View style={[a.flex_row, a.gap_md]}>
-        <StarterPackIcon width={36} height={36} />
+      <View style={[a.flex_row, a.gap_sm]}>
+        <StarterPack width={40} gradient="sky" />
         <View>
           <Text style={[a.text_md, a.font_bold, a.leading_snug]}>
             {record.name}
