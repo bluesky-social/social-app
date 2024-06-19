@@ -105,12 +105,11 @@ function BackBtn() {
   const pal = usePalette('default')
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
-  const shouldShow = useNavigationState(state => {
-    return (
+  const shouldShow = useNavigationState(
+    state =>
       !isStateAtTabRoot(state) &&
-      state.routes[state.routes.length - 1]?.name !== 'StarterPackWizard'
-    )
-  })
+      state.routes[state.routes.length - 1]?.name !== 'StarterPackWizard',
+  )
 
   const onPressBack = React.useCallback(() => {
     if (navigation.canGoBack()) {
