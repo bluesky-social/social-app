@@ -45,6 +45,7 @@ import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
 import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
+import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
 import {TestCtrls} from '#/view/com/testing/TestCtrls'
 import * as Toast from '#/view/com/util/Toast'
 import {Shell} from '#/view/shell'
@@ -111,18 +112,20 @@ function InnerApp() {
                       <LabelDefsProvider>
                         <ModerationOptsProvider>
                           <LoggedOutViewProvider>
-                            <SelectedFeedProvider>
-                              <UnreadNotifsProvider>
-                                <BackgroundNotificationPreferencesProvider>
-                                  <MutedThreadsProvider>
-                                    <GestureHandlerRootView style={s.h100pct}>
-                                      <TestCtrls />
-                                      <Shell />
-                                    </GestureHandlerRootView>
-                                  </MutedThreadsProvider>
-                                </BackgroundNotificationPreferencesProvider>
-                              </UnreadNotifsProvider>
-                            </SelectedFeedProvider>
+                            <StarterPackProvider>
+                              <SelectedFeedProvider>
+                                <UnreadNotifsProvider>
+                                  <BackgroundNotificationPreferencesProvider>
+                                    <MutedThreadsProvider>
+                                      <GestureHandlerRootView style={s.h100pct}>
+                                        <TestCtrls />
+                                        <Shell />
+                                      </GestureHandlerRootView>
+                                    </MutedThreadsProvider>
+                                  </BackgroundNotificationPreferencesProvider>
+                                </UnreadNotifsProvider>
+                              </SelectedFeedProvider>
+                            </StarterPackProvider>
                           </LoggedOutViewProvider>
                         </ModerationOptsProvider>
                       </LabelDefsProvider>

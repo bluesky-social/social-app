@@ -34,6 +34,7 @@ import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
 import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
+import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
 import * as Toast from '#/view/com/util/Toast'
 import {ToastContainer} from '#/view/com/util/Toast.web'
 import {Shell} from '#/view/shell/index'
@@ -95,17 +96,19 @@ function InnerApp() {
                     <LabelDefsProvider>
                       <ModerationOptsProvider>
                         <LoggedOutViewProvider>
-                          <SelectedFeedProvider>
-                            <UnreadNotifsProvider>
-                              <BackgroundNotificationPreferencesProvider>
-                                <MutedThreadsProvider>
-                                  <SafeAreaProvider>
-                                    <Shell />
-                                  </SafeAreaProvider>
-                                </MutedThreadsProvider>
-                              </BackgroundNotificationPreferencesProvider>
-                            </UnreadNotifsProvider>
-                          </SelectedFeedProvider>
+                          <StarterPackProvider>
+                            <SelectedFeedProvider>
+                              <UnreadNotifsProvider>
+                                <BackgroundNotificationPreferencesProvider>
+                                  <MutedThreadsProvider>
+                                    <SafeAreaProvider>
+                                      <Shell />
+                                    </SafeAreaProvider>
+                                  </MutedThreadsProvider>
+                                </BackgroundNotificationPreferencesProvider>
+                              </UnreadNotifsProvider>
+                            </SelectedFeedProvider>
+                          </StarterPackProvider>
                         </LoggedOutViewProvider>
                       </ModerationOptsProvider>
                     </LabelDefsProvider>
