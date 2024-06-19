@@ -70,7 +70,8 @@ function Wrapper({
       to={{
         screen: 'StarterPack',
         params: {name: creator.handle || creator.did, rkey},
-      }}>
+      }}
+      label={creator.displayName || creator.handle}>
       <View style={[a.flex_1, a.gap_md]}>{children}</View>
     </Link>
   )
