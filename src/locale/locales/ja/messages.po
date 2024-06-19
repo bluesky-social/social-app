@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-06-17 21:49+0900\n"
+"PO-Revision-Date: 2024-06-19 11:10+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -83,6 +83,26 @@ msgstr "{0}のアバター"
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
 msgstr "{count, plural, other {#人のユーザーがいいね}}"
 
+#: src/lib/hooks/useTimeAgo.ts:69
+msgid "{diff, plural, one {day} other {days}}"
+msgstr "{diff, plural, other {日}}"
+
+#: src/lib/hooks/useTimeAgo.ts:64
+msgid "{diff, plural, one {hour} other {hours}}"
+msgstr "{diff, plural, other {時間}}"
+
+#: src/lib/hooks/useTimeAgo.ts:59
+msgid "{diff, plural, one {minute} other {minutes}}"
+msgstr "{diff, plural, other {分}}"
+
+#: src/lib/hooks/useTimeAgo.ts:75
+msgid "{diff, plural, one {month} other {months}}"
+msgstr "{diff, plural, other {ヶ月}}"
+
+#: src/lib/hooks/useTimeAgo.ts:54
+msgid "{diffSeconds, plural, one {second} other {seconds}}"
+msgstr "{diffSeconds, plural, other {秒}}"
+
 #: src/screens/SignupQueued.tsx:207
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
 msgstr "{estimatedTimeHrs, plural, other {時間}}"
@@ -109,6 +129,10 @@ msgstr "{likeCount, plural, other {#人のユーザーがいいね}}"
 #: src/view/shell/Drawer.tsx:462
 msgid "{numUnreadNotifications} unread"
 msgstr "{numUnreadNotifications}件の未読"
+
+#: src/components/NewskieDialog.tsx:75
+msgid "{profileName} joined Bluesky {0} ago"
+msgstr "{profileName}はBlueskyに{0}前に参加しました"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:67
 msgid "{value, plural, =0 {Show all replies} one {Show replies with at least # like} other {Show replies with at least # likes}}"
@@ -1591,11 +1615,6 @@ msgstr "プロフィールを編集"
 msgid "Edit Profile"
 msgstr "プロフィールを編集"
 
-#: src/view/com/home/HomeHeaderLayout.web.tsx:76
-#: src/view/screens/Feeds.tsx:416
-#~ msgid "Edit Saved Feeds"
-#~ msgstr "保存されたフィードを編集"
-
 #: src/view/com/modals/CreateOrEditList.tsx:234
 msgid "Edit User List"
 msgstr "ユーザーリストを編集"
@@ -1762,6 +1781,10 @@ msgstr "全員"
 msgid "Everybody can reply"
 msgstr "誰でも返信可能"
 
+#: src/view/com/threadgate/WhoCanReply.tsx:129
+msgid "Everybody can reply."
+msgstr "誰でも返信可能です。"
+
 #: src/components/dms/MessagesNUX.tsx:131
 #: src/components/dms/MessagesNUX.tsx:134
 #: src/screens/Messages/Settings.tsx:75
@@ -1901,6 +1924,10 @@ msgstr "送信に失敗"
 msgid "Failed to submit appeal, please try again."
 msgstr "異議申し立ての送信に失敗しました。再度試してください。"
 
+#: src/view/com/util/forms/PostDropdownBtn.tsx:180
+msgid "Failed to toggle thread mute, please try again"
+msgstr "スレッドのミュートの切り替えに失敗しました。再度試してください"
+
 #: src/components/FeedCard.tsx:153
 msgid "Failed to update feeds"
 msgstr "フィードの更新に失敗しました"
@@ -2038,6 +2065,10 @@ msgstr "{0}がフォロー中"
 msgid "Followed by <0>{0}</0>"
 msgstr "<0>{0}</0>がフォロー中"
 
+#: src/components/KnownFollowers.tsx:209
+msgid "Followed by <0>{0}</0> and {1, plural, one {# other} other {# others}}"
+msgstr "<0>{0}</0>および{1, plural, other {他#人}}がフォロー中"
+
 #: src/components/KnownFollowers.tsx:181
 msgid "Followed by <0>{0}</0> and <1>{1}</1>"
 msgstr "<0>{0}</0>と<1>{1}</1>がフォロー中"
@@ -2159,6 +2190,10 @@ msgstr "始める"
 #: src/view/com/modals/VerifyEmail.tsx:199
 msgid "Get Started"
 msgstr "開始"
+
+#: src/view/com/util/images/ImageHorzList.tsx:35
+msgid "GIF"
+msgstr "GIF"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:225
 msgid "Give your profile a face"
@@ -3116,6 +3151,10 @@ msgctxt "action"
 msgid "New Post"
 msgstr "新しい投稿"
 
+#: src/components/NewskieDialog.tsx:68
+msgid "New user info dialog"
+msgstr "新しいユーザー情報ダイアログ"
+
 #: src/view/com/modals/CreateOrEditList.tsx:236
 msgid "New User List"
 msgstr "新しいユーザーリスト"
@@ -3290,6 +3329,10 @@ msgstr "通知音"
 msgid "Notifications"
 msgstr "通知"
 
+#: src/lib/hooks/useTimeAgo.ts:51
+msgid "now"
+msgstr "今"
+
 #: src/components/dms/MessageItem.tsx:175
 msgid "Now"
 msgstr "今"
@@ -3327,6 +3370,10 @@ msgstr "OK"
 #: src/view/screens/PreferencesThreads.tsx:78
 msgid "Oldest replies first"
 msgstr "古い順に返信を表示"
+
+#: src/lib/hooks/useTimeAgo.ts:81
+msgid "on {str}"
+msgstr "{str}"
 
 #: src/view/screens/Settings/index.tsx:256
 msgid "Onboarding reset"
@@ -3502,11 +3549,6 @@ msgstr "モデレーションの設定を開く"
 #: src/screens/Login/LoginForm.tsx:225
 msgid "Opens password reset form"
 msgstr "パスワードリセットのフォームを開く"
-
-#: src/view/com/home/HomeHeaderLayout.web.tsx:77
-#: src/view/screens/Feeds.tsx:417
-#~ msgid "Opens screen to edit Saved Feeds"
-#~ msgstr "保存されたフィードの編集画面を開く"
 
 #: src/view/screens/Settings/index.tsx:617
 msgid "Opens screen with all saved feeds"
@@ -4054,9 +4096,9 @@ msgstr "Discoverで置き換える"
 msgid "Replies"
 msgstr "返信"
 
-#: src/view/com/threadgate/WhoCanReply.tsx:98
-msgid "Replies to this thread are disabled"
-msgstr "このスレッドへの返信はできません"
+#: src/view/com/threadgate/WhoCanReply.tsx:131
+msgid "Replies to this thread are disabled."
+msgstr "このスレッドへの返信はできません。"
 
 #: src/view/com/composer/Composer.tsx:475
 msgctxt "action"
@@ -4072,6 +4114,11 @@ msgstr "返信のフィルター"
 msgctxt "description"
 msgid "Reply to <0><1/></0>"
 msgstr "<0><1/></0>に返信"
+
+#: src/view/com/posts/FeedItem.tsx:437
+msgctxt "description"
+msgid "Reply to a blocked post"
+msgstr "ブロックした投稿への返信"
 
 #: src/components/dms/MessageMenu.tsx:132
 #: src/components/dms/MessagesListBlockedFooter.tsx:77
@@ -5384,6 +5431,10 @@ msgstr "このユーザーはブロックした<0>{0}</0>リストに含まれ�
 msgid "This user is included in the <0>{0}</0> list which you have muted."
 msgstr "このユーザーはミュートした<0>{0}</0>リストに含まれています。"
 
+#: src/components/NewskieDialog.tsx:50
+msgid "This user is new here. Press for more info about when they joined."
+msgstr "新しいユーザーです。ここを押すといつ参加したかの情報が表示されます。"
+
 #: src/view/com/profile/ProfileFollows.tsx:87
 msgid "This user isn't following anyone."
 msgstr "このユーザーは誰もフォローしていません。"
@@ -5951,8 +6002,8 @@ msgid "We're sorry! We can't find the page you were looking for."
 msgstr "大変申し訳ありません！お探しのページは見つかりません。"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:330
-msgid "We're sorry! You can only subscribe to ten labelers, and you've reached your limit of ten."
-msgstr "大変申し訳ありません！ラベラーは10までしか登録できず、すでに上限に達しています。"
+msgid "We're sorry! You can only subscribe to twenty labelers, and you've reached your limit of twenty."
+msgstr "大変申し訳ありません！ラベラーは20までしか登録できず、すでに上限に達しています。"
 
 #: src/screens/Deactivated.tsx:128
 msgid "Welcome back!"
