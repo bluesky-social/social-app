@@ -155,7 +155,7 @@ export type LogEvents = {
   'starterPack:share': {
     starterPack: string
     shareType: 'link' | 'qrcode'
-    qrShareType?: 'save' | 'copy'
+    qrShareType?: 'save' | 'copy' | 'share'
   }
   'starterPack:followAll': {
     starterPack: string

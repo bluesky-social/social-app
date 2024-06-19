@@ -1,9 +1,9 @@
 import React from 'react'
 import {View} from 'react-native'
 import ViewShot from 'react-native-view-shot'
-import {setImageAsync} from 'expo-clipboard'
 import * as FS from 'expo-file-system'
 import {requestMediaLibraryPermissionsAsync} from 'expo-image-picker'
+import * as Sharing from 'expo-sharing'
 import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -11,14 +11,14 @@ import {nanoid} from 'nanoid/non-secure'
 
 import {saveImageToMediaLibrary} from 'lib/media/manip'
 import {logEvent} from 'lib/statsig/statsig'
-import {isNative} from 'platform/detection'
+import {isNative, isWeb} from 'platform/detection'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {DialogControlProps} from '#/components/Dialog'
+import {Loader} from '#/components/Loader'
 import {QrCode} from '#/components/StarterPack/QrCode'
-import {Text} from '#/components/Typography'
 
 export function QrCodeDialog({
   control,
@@ -28,6 +28,7 @@ export function QrCodeDialog({
   starterPack: AppBskyGraphDefs.StarterPackView
 }) {
   const {_} = useLingui()
+  const [isProcessing, setIsProcessing] = React.useState(false)
 
   const ref = React.useRef<ViewShot>(null)
 
@@ -67,12 +68,15 @@ export function QrCodeDialog({
         await saveImageToMediaLibrary({uri: filename})
         await FS.deleteAsync(filename)
       } else {
+        setIsProcessing(true)
+
         if (!AppBskyGraphStarterpack.isRecord(starterPack.record)) {
           return
         }
 
         const canvas = await getCanvas(uri)
         const imgHref = canvas
+          // @ts-expect-error web only
           .toDataURL('image/png')
           .replace('image/png', 'image/octet-stream')
 
@@ -90,24 +94,21 @@ export function QrCodeDialog({
         shareType: 'qrcode',
         qrShareType: 'save',
       })
+      setIsProcessing(false)
       Toast.show(_(msg`QR code saved to your camera roll!`))
       control.close()
     })
   }
 
   const onCopyPress = async () => {
+    setIsProcessing(true)
     ref.current?.capture?.().then(async (uri: string) => {
-      if (isNative) {
-        const base64 = await FS.readAsStringAsync(uri, {encoding: 'base64'})
-        await setImageAsync(base64)
-      } else {
-        const canvas = await getCanvas(uri)
-        // @ts-expect-error web only
-        canvas.toBlob((blob: Blob) => {
-          const item = new ClipboardItem({'image/png': blob})
-          navigator.clipboard.write([item])
-        })
-      }
+      const canvas = await getCanvas(uri)
+      // @ts-expect-error web only
+      canvas.toBlob((blob: Blob) => {
+        const item = new ClipboardItem({'image/png': blob})
+        navigator.clipboard.write([item])
+      })
 
       logEvent('starterPack:share', {
         starterPack: starterPack.uri,
@@ -115,7 +116,24 @@ export function QrCodeDialog({
         qrShareType: 'copy',
       })
       Toast.show(_(msg`QR code copied to your clipboard!`))
+      setIsProcessing(false)
       control.close()
+    })
+  }
+
+  const onSharePress = async () => {
+    ref.current?.capture?.().then(async (uri: string) => {
+      control.close(() => {
+        Sharing.shareAsync(uri, {mimeType: 'image/png', UTI: 'image/png'}).then(
+          () => {
+            logEvent('starterPack:share', {
+              starterPack: starterPack.uri,
+              shareType: 'qrcode',
+              qrShareType: 'share',
+            })
+          },
+        )
+      })
     })
   }
 
@@ -125,32 +143,35 @@ export function QrCodeDialog({
       <Dialog.ScrollableInner
         label={_(msg`Create a QR code for a starter pack`)}>
         <View style={[a.flex_1, a.align_center, a.gap_5xl]}>
-          <Text style={[a.font_bold, a.text_xl, a.text_center]}>
-            Share this starter pack with friends!
-          </Text>
           <QrCode starterPack={starterPack} ref={ref} />
-          <View style={[a.flex_row, a.gap_md]}>
-            <Button
-              label={_(msg`Save QR code`)}
-              variant="solid"
-              color="primary"
-              size="medium"
-              onPress={onSavePress}>
-              <ButtonText>
-                <Trans>Save</Trans>
-              </ButtonText>
-            </Button>
-            <Button
-              label={_(msg`Copy QR code`)}
-              variant="solid"
-              color="primary"
-              size="medium"
-              onPress={onCopyPress}>
-              <ButtonText>
-                <Trans>Copy</Trans>
-              </ButtonText>
-            </Button>
-          </View>
+          {isProcessing ? (
+            <View>
+              <Loader size="xl" />
+            </View>
+          ) : (
+            <View style={[a.w_full, a.gap_md]}>
+              <Button
+                label={_(msg`Copy QR code`)}
+                variant="solid"
+                color="primary"
+                size="medium"
+                onPress={isWeb ? onCopyPress : onSharePress}>
+                <ButtonText>
+                  {isWeb ? <Trans>Copy</Trans> : <Trans>Share</Trans>}
+                </ButtonText>
+              </Button>
+              <Button
+                label={_(msg`Save QR code`)}
+                variant="solid"
+                color="secondary"
+                size="medium"
+                onPress={onSavePress}>
+                <ButtonText>
+                  <Trans>Save</Trans>
+                </ButtonText>
+              </Button>
+            </View>
+          )}
         </View>
       </Dialog.ScrollableInner>
     </Dialog.Outer>
