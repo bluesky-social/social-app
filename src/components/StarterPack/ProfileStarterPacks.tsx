@@ -160,7 +160,7 @@ function CreateAnother() {
     <View
       style={[
         a.pr_md,
-        a.pt_sm,
+        a.pt_lg,
         a.gap_lg,
         a.border_t,
         t.atoms.border_contrast_low,
