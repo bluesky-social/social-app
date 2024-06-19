@@ -86,23 +86,23 @@ msgstr "{count, plural, other {#}}명의 사용자가 좋아함"
 
 #: src/lib/hooks/useTimeAgo.ts:69
 msgid "{diff, plural, one {day} other {days}}"
-msgstr ""
+msgstr "일"
 
 #: src/lib/hooks/useTimeAgo.ts:64
 msgid "{diff, plural, one {hour} other {hours}}"
-msgstr ""
+msgstr "시간"
 
 #: src/lib/hooks/useTimeAgo.ts:59
 msgid "{diff, plural, one {minute} other {minutes}}"
-msgstr ""
+msgstr "분"
 
 #: src/lib/hooks/useTimeAgo.ts:75
 msgid "{diff, plural, one {month} other {months}}"
-msgstr ""
+msgstr "개월"
 
 #: src/lib/hooks/useTimeAgo.ts:54
 msgid "{diffSeconds, plural, one {second} other {seconds}}"
-msgstr ""
+msgstr "초"
 
 #: src/screens/SignupQueued.tsx:207
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
@@ -133,7 +133,7 @@ msgstr "{numUnreadNotifications}개 읽지 않음"
 
 #: src/components/NewskieDialog.tsx:75
 msgid "{profileName} joined Bluesky {0} ago"
-msgstr ""
+msgstr "{profileName} 님은 {0} 전에 Bluesky에 가입했습니다."
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:67
 msgid "{value, plural, =0 {Show all replies} one {Show replies with at least # like} other {Show replies with at least # likes}}"
@@ -1786,7 +1786,7 @@ msgstr "누구나 답글을 달 수 있음"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:129
 msgid "Everybody can reply."
-msgstr ""
+msgstr "누구나 답글을 달 수 있습니다."
 
 #: src/components/dms/MessagesNUX.tsx:131
 #: src/components/dms/MessagesNUX.tsx:134
@@ -1925,11 +1925,11 @@ msgstr "전송 실패"
 #: src/components/moderation/LabelsOnMeDialog.tsx:223
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:87
 msgid "Failed to submit appeal, please try again."
-msgstr "이의신청을 제출하지 못했습니다. 다시 시도하세요."
+msgstr "이의신청을 제출하지 못했습니다. 다시 시도해 주세요."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:180
 msgid "Failed to toggle thread mute, please try again"
-msgstr ""
+msgstr "스레드 뮤트를 전환하지 못했습니다. 다시 시도해 주세요"
 
 #: src/components/FeedCard.tsx:160
 msgid "Failed to update feeds"
@@ -2072,7 +2072,7 @@ msgstr "<0>{0}</0> 님이 팔로우함"
 
 #: src/components/KnownFollowers.tsx:209
 msgid "Followed by <0>{0}</0> and {1, plural, one {# other} other {# others}}"
-msgstr ""
+msgstr "<0>{0}</0> 님 외 {1, plural, other {#}}명이 팔로우함"
 
 #: src/components/KnownFollowers.tsx:196
 msgid "Followed by <0>{0}</0> and <1>{1}</1>"
@@ -2198,7 +2198,7 @@ msgstr "시작하기"
 
 #: src/view/com/util/images/ImageHorzList.tsx:35
 msgid "GIF"
-msgstr ""
+msgstr "GIF"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:225
 msgid "Give your profile a face"
@@ -3158,7 +3158,7 @@ msgstr "새 게시물"
 
 #: src/components/NewskieDialog.tsx:68
 msgid "New user info dialog"
-msgstr ""
+msgstr "새 사용자 정보 대화 상자"
 
 #: src/view/com/modals/CreateOrEditList.tsx:236
 msgid "New User List"
@@ -3337,7 +3337,7 @@ msgstr "알림"
 
 #: src/lib/hooks/useTimeAgo.ts:51
 msgid "now"
-msgstr ""
+msgstr "지금"
 
 #: src/components/dms/MessageItem.tsx:175
 msgid "Now"
@@ -4126,7 +4126,7 @@ msgstr "<0><1/></0> 님에게 보내는 답글"
 #: src/view/com/posts/FeedItem.tsx:437
 msgctxt "description"
 msgid "Reply to a blocked post"
-msgstr ""
+msgstr "차단된 게시물에 보내는 답글"
 
 #: src/components/dms/MessageMenu.tsx:132
 #: src/components/dms/MessagesListBlockedFooter.tsx:77
@@ -5442,7 +5442,7 @@ msgstr "이 사용자는 내가 뮤트한 <0>{0}</0> 리스트에 포함되어 �
 
 #: src/components/NewskieDialog.tsx:50
 msgid "This user is new here. Press for more info about when they joined."
-msgstr ""
+msgstr "이 사용자는 새로 가입했습니다. 언제 가입했는지 자세한 정보를 보려면 누르세요."
 
 #: src/view/com/profile/ProfileFollows.tsx:87
 msgid "This user isn't following anyone."
