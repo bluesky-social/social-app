@@ -102,7 +102,11 @@ export function QrCodeDialog({
         qrShareType: 'save',
       })
       setIsProcessing(false)
-      Toast.show(_(msg`QR code saved to your camera roll!`))
+      Toast.show(
+        isWeb
+          ? _(msg`QR code has been downloaded!`)
+          : _(msg`QR code saved to your camera roll!`),
+      )
       control.close()
     })
   }
