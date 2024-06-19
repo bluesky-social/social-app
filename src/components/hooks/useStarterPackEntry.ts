@@ -1,25 +1,25 @@
 import React from 'react'
 
-import {parseStarterPackHttpUri} from 'lib/strings/starter-pack'
-import {useSetCurrentStarterPack} from 'state/preferences/starter-pack'
+import {httpStarterPackUriToAtUri} from 'lib/strings/starter-pack'
+import {useSetActiveStarterPack} from 'state/shell/starter-pack'
 
 export function useStarterPackEntry() {
-  const setCurrentStarterPack = useSetCurrentStarterPack()
+  const setActiveStarterPack = useSetActiveStarterPack()
 
   React.useEffect(() => {
     const href = window.location.href
-    const parsed = parseStarterPackHttpUri(href)
+    const atUri = httpStarterPackUriToAtUri(href)
 
-    if (parsed) {
+    if (atUri) {
       const url = new URL(href)
+      // Determines if an App Clip is loading this landing page
       const isClip = url.searchParams.get('clip') === 'true'
-
-      setCurrentStarterPack({
-        uri: href,
+      setActiveStarterPack({
+        uri: atUri,
         isClip,
       })
     }
-  }, [setCurrentStarterPack])
+  }, [setActiveStarterPack])
 
   return true
 }

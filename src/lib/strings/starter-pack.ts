@@ -1,3 +1,5 @@
+import {AtUri} from '@atproto/api'
+
 import {makeStarterPackLink} from 'lib/routes/links'
 
 export function createStarterPackLinkFromAndroidReferrer(
@@ -24,21 +26,35 @@ export function createStarterPackLinkFromAndroidReferrer(
   }
 }
 
-export function parseStarterPackHttpUri(uri: string): {
-  name?: string
-  rkey?: string
+export function parseStarterPackUri(uri?: string): {
+  name: string
+  rkey: string
 } | null {
-  try {
-    const url = new URL(uri)
-    const parts = url.pathname.split('/')
-    const name = parts[2]
-    const rkey = parts[3]
+  if (!uri) return null
 
-    if (parts.length !== 4) return null
-    if (!name || !rkey) return null
-    return {
-      name,
-      rkey,
+  try {
+    if (uri.startsWith('at://')) {
+      const atUri = new AtUri(uri)
+      if (atUri.collection !== 'app.bsky.graph.starterpack') return null
+      if (atUri.rkey) {
+        return {
+          name: atUri.hostname,
+          rkey: atUri.rkey,
+        }
+      }
+      return null
+    } else {
+      const url = new URL(uri)
+      const parts = url.pathname.split('/')
+      const name = parts[2]
+      const rkey = parts[3]
+
+      if (parts.length !== 4) return null
+      if (!name || !rkey) return null
+      return {
+        name,
+        rkey,
+      }
     }
   } catch (e) {
     return null
@@ -51,4 +67,15 @@ export function createStarterPackGooglePlayUri(
 ): string | null {
   if (!name || !rkey) return null
   return `https://play.google.com/store/apps/details?id=xyz.blueskyweb.app&referrer=utm_source%3Dbluesky%26utm_medium%3Dstarterpack%26utm_content%3Dstarterpack-${name}-${rkey}`
+}
+
+export function httpStarterPackUriToAtUri(httpUri?: string): string | null {
+  if (!httpUri) return null
+
+  const parsed = parseStarterPackUri(httpUri)
+  if (!parsed) return null
+
+  if (httpUri.startsWith('at://')) return httpUri
+
+  return `at://${parsed.name}/app.bsky.graph.starterpack/${parsed.rkey}`
 }
