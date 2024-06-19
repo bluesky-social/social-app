@@ -203,8 +203,8 @@ function Empty() {
   return (
     <LinearGradientBackground
       style={[
-        a.px_lg,
-        a.py_lg,
+        a.px_md,
+        a.py_xl,
         a.justify_between,
         a.gap_lg,
         a.shadow_lg,
@@ -260,26 +260,26 @@ function Empty() {
 
       <Prompt.Outer control={confirmDialogControl}>
         <Prompt.TitleText>
-          <Trans>Generate a starter pack</Trans>
+          <Trans>Generate a starter pack?</Trans>
         </Prompt.TitleText>
         <Prompt.DescriptionText>
           <Trans>
-            Bluesky will choose a set of recommended accounts from people in
-            your network.
+            You can customize your starter pack with feeds and your favorite
+            people if you create your own.
           </Trans>
         </Prompt.DescriptionText>
         <Prompt.Actions>
           <Prompt.Action
             color="primary"
-            cta={_(msg`Choose for me`)}
-            onPress={generate}
-          />
-          <Prompt.Action
-            color="secondary"
-            cta={_(msg`Let me choose`)}
+            cta={_(msg`I'll create one`)}
             onPress={() => {
               navigation.navigate('StarterPackWizard', {})
             }}
+          />
+          <Prompt.Action
+            color="secondary"
+            cta={_(msg`Generate anyway`)}
+            onPress={generate}
           />
         </Prompt.Actions>
       </Prompt.Outer>
