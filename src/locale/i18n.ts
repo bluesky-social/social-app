@@ -1,6 +1,8 @@
 import '@formatjs/intl-locale/polyfill'
 import '@formatjs/intl-pluralrules/polyfill-force' // Don't remove -force because detection is very slow
 import '@formatjs/intl-pluralrules/locale-data/en'
+import '@formatjs/intl-numberformat/polyfill'
+import '@formatjs/intl-numberformat/locale-data/en'
 
 import {useEffect} from 'react'
 import {i18n} from '@lingui/core'
