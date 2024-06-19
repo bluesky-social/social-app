@@ -34,16 +34,32 @@ export const createStarterPackList = async ({
   if (!list) throw new Error('List creation failed')
   await agent.com.atproto.repo.applyWrites({
     repo: agent.session!.did,
-    writes: profiles.map(p => ({
-      $type: 'com.atproto.repo.applyWrites#create',
-      collection: 'app.bsky.graph.listitem',
-      value: {
-        $type: 'app.bsky.graph.listitem',
-        subject: p.did,
-        list: list?.uri,
-        createdAt: new Date().toISOString(),
+    writes: [
+      {
+        $type: 'com.atproto.repo.applyWrites#create',
+        collection: 'app.bsky.graph.listitem',
+        value: {
+          $type: 'app.bsky.graph.listitem',
+          subject: agent.session!.did,
+          list: list.uri,
+          createdAt: new Date().toISOString(),
+        },
       },
-    })),
+    ].concat(
+      profiles
+        // Ensure we don't have ourselves in this list twice
+        .filter(p => p.did !== agent.session!.did)
+        .map(p => ({
+          $type: 'com.atproto.repo.applyWrites#create',
+          collection: 'app.bsky.graph.listitem',
+          value: {
+            $type: 'app.bsky.graph.listitem',
+            subject: p.did,
+            list: list.uri,
+            createdAt: new Date().toISOString(),
+          },
+        })),
+    ),
   })
 
   return list
@@ -80,8 +96,8 @@ export async function generateStarterpack({
       return 'ERROR'
     }
 
-    profiles = [profile, ...profiles]
-    if (profiles.length < 8) {
+    // We include ourselves when we make the list
+    if (profiles.length < 7) {
       return 'NOT_ENOUGH_FOLLOWERS'
     }
 
