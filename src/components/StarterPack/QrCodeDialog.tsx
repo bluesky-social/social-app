@@ -76,7 +76,6 @@ export function QrCodeDialog({
 
         const canvas = await getCanvas(uri)
         const imgHref = canvas
-          // @ts-expect-error web only
           .toDataURL('image/png')
           .replace('image/png', 'image/octet-stream')
 

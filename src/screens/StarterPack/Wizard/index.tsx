@@ -715,6 +715,7 @@ function Footer({
         state={state}
         dispatch={dispatch}
         moderationOpts={moderationOpts}
+        profile={profile}
       />
     </View>
   )

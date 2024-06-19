@@ -256,7 +256,7 @@ function Empty() {
           color="primary"
           size="small"
           disabled={isGenerating}
-          onPress={() => navigation.navigate('StarterPackWizard', {})}
+          onPress={() => navigation.navigate('StarterPackWizard')}
           style={{
             backgroundColor: 'white',
             borderColor: 'white',
@@ -289,7 +289,7 @@ function Empty() {
             color="secondary"
             cta={_(msg`Let me choose`)}
             onPress={() => {
-              navigation.navigate('StarterPackWizard', {})
+              navigation.navigate('StarterPackWizard')
             }}
           />
         </Prompt.Actions>

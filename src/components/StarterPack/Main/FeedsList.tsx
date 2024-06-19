@@ -4,8 +4,7 @@ import {AppBskyFeedDefs} from '@atproto/api'
 import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 
 import {useBottomBarOffset} from 'lib/hooks/useBottomBarOffset'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {isNative} from 'platform/detection'
+import {isNative, isWeb} from 'platform/detection'
 import {List, ListRef} from 'view/com/util/List'
 import {SectionRef} from '#/screens/Profile/Sections/types'
 import {atoms as a, useTheme} from '#/alf'
@@ -25,7 +24,6 @@ export const FeedsList = React.forwardRef<SectionRef, ProfilesListProps>(
   function FeedsListImpl({feeds, headerHeight, scrollElRef}, ref) {
     const [initialHeaderHeight] = React.useState(headerHeight)
     const bottomBarOffset = useBottomBarOffset(20)
-    const {isTabletOrDesktop} = useWebMediaQueries()
     const t = useTheme()
 
     const onScrollToTop = useCallback(() => {
@@ -44,7 +42,7 @@ export const FeedsList = React.forwardRef<SectionRef, ProfilesListProps>(
         <View
           style={[
             a.p_lg,
-            (isTabletOrDesktop || index !== 0) && a.border_t,
+            (isWeb || index !== 0) && a.border_t,
             t.atoms.border_contrast_low,
           ]}>
           <FeedCard.Default feed={item} />

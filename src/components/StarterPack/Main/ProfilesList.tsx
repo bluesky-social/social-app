@@ -39,19 +39,22 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
     const bottomBarOffset = useBottomBarOffset(20)
     const {currentAccount} = useSession()
 
-    const {data} = useListMembersQuery(listUri)
+    const {data} = useListMembersQuery(listUri, 50)
     const profiles = data?.pages.flatMap(p => p.items.map(i => i.subject))
     const isOwn = new AtUri(listUri).host === currentAccount?.did
 
     const getSortedProfiles = () => {
       if (!profiles) return
       if (!isOwn) return profiles
+
       const myIndex = profiles.findIndex(p => p.did === currentAccount?.did)
-      return [
-        ...(myIndex !== -1 ? [profiles[myIndex]] : []),
-        ...profiles.slice(0, myIndex),
-        ...profiles.slice(myIndex + 1),
-      ].filter(Boolean)
+      return myIndex !== -1
+        ? [
+            profiles[myIndex],
+            ...profiles.slice(0, myIndex),
+            ...profiles.slice(myIndex + 1),
+          ]
+        : profiles
     }
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({
