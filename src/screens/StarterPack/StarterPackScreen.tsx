@@ -222,7 +222,9 @@ function Header({
       {record.description || joinedAllTimeCount >= 25 ? (
         <View style={[a.px_lg, a.pt_md, a.pb_sm, a.gap_md]}>
           {record.description ? (
-            <Text style={[a.text_md]}>{record.description}</Text>
+            <Text style={[a.text_md, a.leading_snug]}>
+              {record.description}
+            </Text>
           ) : null}
           {joinedAllTimeCount >= 25 ? (
             <View style={[a.flex_row, a.align_center, a.gap_sm]}>
