@@ -167,15 +167,15 @@ function CreateAnother() {
       ]}>
       <Button
         label={_(msg`Create a starter pack`)}
-        variant="ghost"
-        color="primary"
+        variant="solid"
+        color="secondary"
         size="small"
         style={[a.self_center]}
         onPress={() => navigation.navigate('StarterPackWizard')}>
-        <ButtonIcon icon={Plus} position="left" />
         <ButtonText>
           <Trans>Create another</Trans>
         </ButtonText>
+        <ButtonIcon icon={Plus} position="right" />
       </Button>
     </View>
   )
