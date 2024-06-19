@@ -2,8 +2,7 @@ import React from 'react'
 
 type StateContext =
   | {
-      uri?: string
-      initialFeed?: string
+      uri: string
       isClip?: boolean
     }
   | undefined

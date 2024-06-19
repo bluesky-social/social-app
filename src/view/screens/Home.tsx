@@ -101,23 +101,9 @@ function HomeScreenReady({
     [pinnedFeedInfos],
   )
 
-  const activeStarterPack = useActiveStarterPack()
-  const setActiveStarterPack = useSetActiveStarterPack()
-
-  const starterPackInitialFeed = activeStarterPack?.initialFeed
-    ? allFeeds.find(f => {
-        if (activeStarterPack.initialFeed === 'following') {
-          return f === 'following'
-        } else {
-          return f === `feedgen|${activeStarterPack.initialFeed}`
-        }
-      })
-    : undefined
   const rawSelectedFeed = useSelectedFeed() ?? allFeeds[0]
   const setSelectedFeed = useSetSelectedFeed()
-  const maybeFoundIndex = allFeeds.indexOf(
-    starterPackInitialFeed ?? rawSelectedFeed,
-  )
+  const maybeFoundIndex = allFeeds.indexOf(rawSelectedFeed)
   const selectedIndex = Math.max(0, maybeFoundIndex)
   const selectedFeed = allFeeds[selectedIndex]
   const requestNotificationsPermission = useRequestNotificationsPermission()
@@ -143,12 +129,7 @@ function HomeScreenReady({
       lastPagerReportedIndexRef.current = selectedIndex
       pagerRef.current?.setPage(selectedIndex, 'desktop-sidebar-click')
     }
-  }, [
-    selectedIndex,
-    allFeeds,
-    setActiveStarterPack,
-    activeStarterPack?.initialFeed,
-  ])
+  }, [selectedIndex, allFeeds])
 
   const {hasSession} = useSession()
   const setMinimalShellMode = useSetMinimalShellMode()
