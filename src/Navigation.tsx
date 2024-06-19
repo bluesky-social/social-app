@@ -325,6 +325,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         getComponent={() => Wizard}
         options={{title: title(msg`Create a starter pack`), requireAuth: true}}
       />
+      <Stack.Screen
+        name="StarterPackEdit"
+        getComponent={() => Wizard}
+        options={{title: title(msg`Edit your starter pack`), requireAuth: true}}
+      />
     </>
   )
 }
