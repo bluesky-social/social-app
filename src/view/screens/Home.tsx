@@ -39,21 +39,23 @@ import {HomeHeader} from '../com/home/HomeHeader'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export function HomeScreen(props: Props) {
+  const {navigation} = props
   const {hasSession} = useSession()
   const {data: preferences} = usePreferencesQuery()
   const {data: pinnedFeedInfos, isLoading: isPinnedFeedsLoading} =
     usePinnedFeedsInfos()
-  const currentStarterPack = useActiveStarterPack()
-  const setCurrentStarterPack = useSetActiveStarterPack()
+  const activeStarterPack = useActiveStarterPack()
+  const setActiveStarterPack = useSetActiveStarterPack()
   const {setShowLoggedOut, requestSwitchToAccount} = useLoggedOutViewControls()
 
   React.useEffect(() => {
-    if (currentStarterPack?.uri && !currentStarterPack?.initialFeed) {
+    // This will be true if the app was launched with a starter pack referral.
+    if (activeStarterPack?.uri) {
       if (hasSession) {
-        const parsed = parseStarterPackUri(currentStarterPack.uri)
+        const parsed = parseStarterPackUri(activeStarterPack.uri)
         if (!parsed) return
-        setCurrentStarterPack(undefined)
-        props.navigation.navigate('StarterPack', parsed)
+        setActiveStarterPack(undefined)
+        navigation.navigate('StarterPack', parsed)
       } else {
         setShowLoggedOut(true)
         requestSwitchToAccount({
@@ -65,9 +67,9 @@ export function HomeScreen(props: Props) {
     hasSession,
     setShowLoggedOut,
     requestSwitchToAccount,
-    currentStarterPack,
-    setCurrentStarterPack,
-    props.navigation,
+    activeStarterPack,
+    setActiveStarterPack,
+    navigation,
   ])
 
   if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {

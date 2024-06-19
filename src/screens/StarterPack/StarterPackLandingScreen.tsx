@@ -102,8 +102,8 @@ function LandingScreenLoaded({
   const {record, creator, listItemsSample, feeds, joinedWeekCount} = starterPack
   const {_} = useLingui()
   const t = useTheme()
-  const currentStarterPack = useActiveStarterPack()
-  const setCurrentStarterPack = useSetActiveStarterPack()
+  const activeStarterPack = useActiveStarterPack()
+  const setActiveStarterPack = useSetActiveStarterPack()
   const {isTabletOrDesktop} = useWebMediaQueries()
   const androidDialogControl = useDialogControl()
 
@@ -113,14 +113,14 @@ function LandingScreenLoaded({
   const listItemsCount = starterPack.list?.listItemCount ?? 0
 
   const onContinue = () => {
-    setCurrentStarterPack({
+    setActiveStarterPack({
       uri: starterPack.uri,
     })
     setScreenState(LoggedOutScreenState.S_CreateAccount)
   }
 
   const onJoinPress = () => {
-    if (currentStarterPack?.isClip) {
+    if (activeStarterPack?.isClip) {
       setAppClipOverlayVisible(true)
       postAppClipMessage({
         action: 'present',
@@ -151,7 +151,7 @@ function LandingScreenLoaded({
               borderBottomLeftRadius: 10,
               borderBottomRightRadius: 10,
             },
-            currentStarterPack?.isClip && {
+            activeStarterPack?.isClip && {
               paddingTop: 100,
             },
           ]}>
@@ -278,7 +278,7 @@ function LandingScreenLoaded({
           size="medium"
           style={[a.mt_2xl]}
           onPress={() => {
-            setCurrentStarterPack(undefined)
+            setActiveStarterPack(undefined)
             setScreenState(LoggedOutScreenState.S_CreateAccount)
           }}>
           <ButtonText>
