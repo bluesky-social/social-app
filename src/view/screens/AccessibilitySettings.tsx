@@ -92,7 +92,7 @@ export function AccessibilitySettingsScreen({}: Props) {
           />
           <ToggleButton
             type="default-light"
-            label={_(msg`Use large alt text badges`)}
+            label={_(msg`Display larger alt text badges`)}
             labelType="lg"
             isSelected={!!largeAltBadgeEnabled}
             onPress={() => setLargeAltBadgeEnabled(!largeAltBadgeEnabled)}
