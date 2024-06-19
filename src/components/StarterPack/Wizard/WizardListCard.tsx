@@ -51,6 +51,10 @@ function WizardListCard({
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityLabel={displayName}
+      accessibilityHint={
+        included ? _(msg`Remove from list`) : _(msg`Add to list`)
+      }
       style={[
         a.flex_row,
         a.align_center,
@@ -81,18 +85,20 @@ function WizardListCard({
           {subtitle}
         </Text>
       </View>
-      <Toggle.Item
-        name={type === 'user' ? _(msg`Person toggle`) : _(msg`Feed toggle`)}
-        label={
-          included
-            ? _(msg`Remove ${displayName} from starter pack`)
-            : _(msg`Add ${displayName} to starter pack`)
-        }
-        value={included}
-        disabled={disabled}
-        onChange={onPress}>
-        <Checkbox />
-      </Toggle.Item>
+      <View accessible={false}>
+        <Toggle.Item
+          name={type === 'user' ? _(msg`Person toggle`) : _(msg`Feed toggle`)}
+          label={
+            included
+              ? _(msg`Remove ${displayName} from starter pack`)
+              : _(msg`Add ${displayName} to starter pack`)
+          }
+          value={included}
+          disabled={disabled}
+          onChange={onPress}>
+          <Checkbox />
+        </Toggle.Item>
+      </View>
     </Pressable>
   )
 }
