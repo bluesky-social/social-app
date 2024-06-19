@@ -3,8 +3,9 @@ import {ListRenderItemInfo, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {AppBskyActorDefs, ModerationOpts} from '@atproto/api'
 
+import {isNative} from 'platform/detection'
 import {useActorAutocompleteQuery} from 'state/queries/actor-autocomplete'
-import {useActorSearch} from 'state/queries/actor-search'
+import {useActorSearchPaginated} from 'state/queries/actor-search'
 import {SearchInput} from 'view/com/util/forms/SearchInput'
 import {List} from 'view/com/util/List'
 import {useWizardState} from '#/screens/StarterPack/Wizard/State'
@@ -14,7 +15,7 @@ import {ScreenTransition} from '#/components/StarterPack/Wizard/ScreenTransition
 import {WizardProfileCard} from '#/components/StarterPack/Wizard/WizardListCard'
 
 function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic) {
-  return item.did
+  return item?.did ?? ''
 }
 
 export function StepProfiles({
@@ -26,10 +27,11 @@ export function StepProfiles({
   const [state, dispatch] = useWizardState()
   const [query, setQuery] = useState('')
 
-  const {data: topFollowers} = useActorSearch({
+  const {data: topPages, fetchNextPage} = useActorSearchPaginated({
     query: encodeURIComponent('*'),
-    limit: 50,
   })
+  const topFollowers = topPages?.pages.flatMap(p => p.actors)
+
   const {data: results} = useActorAutocompleteQuery(query, true, 12)
 
   const renderItem = ({
@@ -67,6 +69,11 @@ export function StepProfiles({
         containWeb={true}
         sideBorders={false}
         style={[a.flex_1]}
+        onEndReached={() => {
+          console.log('test')
+          fetchNextPage()
+        }}
+        onEndReachedThreshold={isNative ? 2 : 0.25}
         ListEmptyComponent={
           <View style={[a.flex_1, a.align_center, a.mt_lg]}>
             <Loader size="lg" />
