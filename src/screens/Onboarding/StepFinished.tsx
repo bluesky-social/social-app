@@ -15,6 +15,7 @@ import {useAgent} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {uploadBlob} from 'lib/api'
 import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
+import {useSetHasCheckedForStarterPack} from 'state/preferences/used-starter-packs'
 import {
   useActiveStarterPack,
   useSetActiveStarterPack,
@@ -48,6 +49,7 @@ export function StepFinished() {
   const requestNotificationsPermission = useRequestNotificationsPermission()
   const activeStarterPack = useActiveStarterPack()
   const setActiveStarterPack = useSetActiveStarterPack()
+  const setHasCheckedForStarterPack = useSetHasCheckedForStarterPack()
 
   const finishOnboarding = React.useCallback(async () => {
     setSaving(true)
@@ -163,6 +165,7 @@ export function StepFinished() {
     })
 
     setSaving(false)
+    setHasCheckedForStarterPack(true)
     dispatch({type: 'finish'})
     onboardDispatch({type: 'finish'})
     track('OnboardingV2:StepFinished:End')
@@ -178,6 +181,7 @@ export function StepFinished() {
     state,
     requestNotificationsPermission,
     setActiveStarterPack,
+    setHasCheckedForStarterPack,
   ])
 
   React.useEffect(() => {
