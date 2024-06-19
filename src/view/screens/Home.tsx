@@ -22,13 +22,6 @@ import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
 import {useOTAUpdates} from 'lib/hooks/useOTAUpdates'
 import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
 import {HomeTabNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
-import {parseStarterPackUri} from 'lib/strings/starter-pack'
-import {isWeb} from 'platform/detection'
-import {useLoggedOutViewControls} from 'state/shell/logged-out'
-import {
-  useActiveStarterPack,
-  useSetActiveStarterPack,
-} from 'state/shell/starter-pack'
 import {FeedPage} from 'view/com/feeds/FeedPage'
 import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
@@ -39,38 +32,9 @@ import {HomeHeader} from '../com/home/HomeHeader'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home' | 'Start'>
 export function HomeScreen(props: Props) {
-  const {navigation} = props
-  const {hasSession} = useSession()
   const {data: preferences} = usePreferencesQuery()
   const {data: pinnedFeedInfos, isLoading: isPinnedFeedsLoading} =
     usePinnedFeedsInfos()
-  const activeStarterPack = useActiveStarterPack()
-  const setActiveStarterPack = useSetActiveStarterPack()
-  const {setShowLoggedOut, requestSwitchToAccount} = useLoggedOutViewControls()
-
-  React.useEffect(() => {
-    // This will be true if the app was launched with a starter pack referral.
-    if (activeStarterPack?.uri) {
-      if (hasSession) {
-        const parsed = parseStarterPackUri(activeStarterPack.uri)
-        if (!parsed) return
-        setActiveStarterPack(undefined)
-        navigation.navigate('StarterPack', parsed)
-      } else {
-        setShowLoggedOut(true)
-        requestSwitchToAccount({
-          requestedAccount: isWeb ? 'starterpack' : 'new',
-        })
-      }
-    }
-  }, [
-    hasSession,
-    setShowLoggedOut,
-    requestSwitchToAccount,
-    activeStarterPack,
-    setActiveStarterPack,
-    navigation,
-  ])
 
   if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
     return (
