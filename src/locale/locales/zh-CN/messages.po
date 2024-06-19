@@ -4104,10 +4104,6 @@ msgstr "替换为\"Discover\""
 msgid "Replies"
 msgstr "回复"
 
-#: src/view/com/threadgate/WhoCanReply.tsx:98
-#~ msgid "Replies to this thread are disabled"
-#~ msgstr "对这条讨论串的回复已被禁用"
-
 #: src/view/com/threadgate/WhoCanReply.tsx:131
 msgid "Replies to this thread are disabled."
 msgstr "该讨论串的回复已被禁用。"
@@ -6014,10 +6010,6 @@ msgstr "很抱歉！你所回复的帖文已被删除。"
 #: src/view/screens/NotFound.tsx:48
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr "很抱歉！我们找不到你正在寻找的页面。"
-
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:330
-#~ msgid "We're sorry! You can only subscribe to ten labelers, and you've reached your limit of ten."
-#~ msgstr "很抱歉！你目前只能订阅 10 个标记者，你已达到 10 个的限制。"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:330
 msgid "We're sorry! You can only subscribe to twenty labelers, and you've reached your limit of twenty."
