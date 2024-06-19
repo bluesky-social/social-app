@@ -252,7 +252,6 @@ export function useSubmitSignup({
       dispatch({type: 'setIsLoading', value: true})
 
       try {
-        onboardingDispatch({type: 'start'}) // start now to avoid flashing the wrong view
         await createAccount({
           service: state.serviceUrl,
           email: state.email,
@@ -262,8 +261,12 @@ export function useSubmitSignup({
           inviteCode: state.inviteCode.trim(),
           verificationCode: verificationCode,
         })
+        /*
+         * Must happen last so that if the user has multiple tabs open and
+         * createAccount fails, one tab is not stuck in onboarding — Eric
+         */
+        onboardingDispatch({type: 'start'})
       } catch (e: any) {
-        onboardingDispatch({type: 'skip'}) // undo starting the onboard
         let errMsg = e.toString()
         if (e instanceof ComAtprotoServerCreateAccount.InvalidInviteCodeError) {
           dispatch({

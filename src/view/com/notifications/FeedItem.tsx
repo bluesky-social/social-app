@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 import {
   AppBskyActorDefs,
+  AppBskyEmbedExternal,
   AppBskyEmbedImages,
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
@@ -51,6 +52,7 @@ import {TimeElapsed} from '../util/TimeElapsed'
 import {PreviewableUserAvatar, UserAvatar} from '../util/UserAvatar'
 
 import hairlineWidth = StyleSheet.hairlineWidth
+import {parseTenorGif} from '#/lib/strings/embed-player'
 
 const MAX_AUTHORS = 5
 
@@ -465,17 +467,48 @@ function AdditionalPostText({post}: {post?: AppBskyFeedDefs.PostView}) {
   const pal = usePalette('default')
   if (post && AppBskyFeedPost.isRecord(post?.record)) {
     const text = post.record.text
-    const images = AppBskyEmbedImages.isView(post.embed)
-      ? post.embed.images
-      : AppBskyEmbedRecordWithMedia.isView(post.embed) &&
-        AppBskyEmbedImages.isView(post.embed.media)
-      ? post.embed.media.images
-      : undefined
+    let images
+    let isGif = false
+
+    if (AppBskyEmbedImages.isView(post.embed)) {
+      images = post.embed.images
+    } else if (
+      AppBskyEmbedRecordWithMedia.isView(post.embed) &&
+      AppBskyEmbedImages.isView(post.embed.media)
+    ) {
+      images = post.embed.media.images
+    } else if (
+      AppBskyEmbedExternal.isView(post.embed) &&
+      post.embed.external.thumb
+    ) {
+      let url: URL | undefined
+      try {
+        url = new URL(post.embed.external.uri)
+      } catch {}
+      if (url) {
+        const {success} = parseTenorGif(url)
+        if (success) {
+          isGif = true
+          images = [
+            {
+              thumb: post.embed.external.thumb,
+              alt: post.embed.external.title,
+              fullsize: post.embed.external.thumb,
+            },
+          ]
+        }
+      }
+    }
+
     return (
       <>
         {text?.length > 0 && <Text style={pal.textLight}>{text}</Text>}
         {images && images.length > 0 && (
-          <ImageHorzList images={images} style={styles.additionalPostImages} />
+          <ImageHorzList
+            images={images}
+            style={styles.additionalPostImages}
+            gif={isGif}
+          />
         )}
       </>
     )

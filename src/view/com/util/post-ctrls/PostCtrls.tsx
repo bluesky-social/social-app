@@ -319,9 +319,7 @@ let PostCtrls = ({
       <View style={big ? a.align_center : [a.flex_1, a.align_start]}>
         <PostDropdownBtn
           testID="postDropdownBtn"
-          postAuthor={post.author}
-          postCid={post.cid}
-          postUri={post.uri}
+          post={post}
           postFeedContext={feedContext}
           record={record}
           richText={richText}
