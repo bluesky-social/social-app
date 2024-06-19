@@ -24,7 +24,7 @@ export async function compressVideo(
 
   const result = await new Promise((resolve: FFmpegSessionCompleteCallback) =>
     FFmpegKit.executeAsync(
-      `-i ${file} -c:v libx264 -crf 25 -preset ${PRESET} -b:v 4M -vf "scale='if(gt(a,1),min(1920,iw),-1)':'if(gt(a,1),-1,min(1920,ih))'" -t 90 -c:a aac -b:a 320k -movflags +faststart ${newFile}`,
+      `-i ${file} -c:v libx264 -crf 25 -preset ${PRESET} -b:v 3M -vf "scale='if(gt(a,1),min(1920,iw),-1)':'if(gt(a,1),-1,min(1920,ih))'" -t 90 -c:a aac -b:a 320k -movflags +faststart ${newFile}`,
       resolve,
       undefined,
       stats => onProgress?.(stats.getTime()),
