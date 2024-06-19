@@ -52,7 +52,7 @@ export function WizardEditListDialog({
       state.profiles[myIndex],
       ...state.profiles.slice(0, myIndex),
       ...state.profiles.slice(myIndex + 1),
-    ]
+    ].filter(Boolean)
   }
 
   const renderItem = ({item}: ListRenderItemInfo<any>) =>
