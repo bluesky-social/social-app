@@ -25,12 +25,13 @@ import {useAgent} from 'state/session'
 import {List, ListRef} from 'view/com/util/List'
 import {Text} from 'view/com/util/text/Text'
 import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Default as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
+import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '../icons/Plus'
 
 interface SectionRef {
   scrollToTop: () => void
@@ -148,16 +149,25 @@ export const ProfileStarterPacks = React.forwardRef<
 
 function CreateAnother() {
   const {_} = useLingui()
+  const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
 
   return (
-    <View style={[a.px_md, a.py_lg, a.justify_between, a.gap_lg]}>
+    <View
+      style={[
+        a.pr_md,
+        a.pt_sm,
+        a.gap_lg,
+        a.border_t,
+        t.atoms.border_contrast_low,
+      ]}>
       <Button
         label={_(msg`Create a starter pack`)}
         variant="ghost"
         color="primary"
         size="small"
         onPress={() => navigation.navigate('StarterPackWizard', {})}>
+        <ButtonIcon icon={Plus} position="left" />
         <ButtonText>
           <Trans>Create another</Trans>
         </ButtonText>
