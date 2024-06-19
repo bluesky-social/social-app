@@ -1,7 +1,8 @@
-import {Dimensions, Platform} from 'react-native'
+import {Dimensions} from 'react-native'
 
 import {isSafari} from 'lib/browser'
 import {isWeb} from 'platform/detection'
+
 const {height: SCREEN_HEIGHT} = Dimensions.get('window')
 
 const IFRAME_HOST = isWeb
@@ -342,40 +343,17 @@ export function parseEmbedPlayerFromUrl(
     }
   }
 
-  if (urlp.hostname === 'media.tenor.com') {
-    let [_, id, filename] = urlp.pathname.split('/')
+  const tenorGif = parseTenorGif(urlp)
+  if (tenorGif.success) {
+    const {playerUri, dimensions} = tenorGif
 
-    const h = urlp.searchParams.get('hh')
-    const w = urlp.searchParams.get('ww')
-    let dimensions
-    if (h && w) {
-      dimensions = {
-        height: Number(h),
-        width: Number(w),
-      }
-    }
-
-    if (id && filename && dimensions && id.includes('AAAAC')) {
-      if (Platform.OS === 'web') {
-        if (isSafari) {
-          id = id.replace('AAAAC', 'AAAP1')
-          filename = filename.replace('.gif', '.mp4')
-        } else {
-          id = id.replace('AAAAC', 'AAAP3')
-          filename = filename.replace('.gif', '.webm')
-        }
-      } else {
-        id = id.replace('AAAAC', 'AAAAM')
-      }
-
-      return {
-        type: 'tenor_gif',
-        source: 'tenor',
-        isGif: true,
-        hideDetails: true,
-        playerUri: `https://t.gifs.bsky.app/${id}/${filename}`,
-        dimensions,
-      }
+    return {
+      type: 'tenor_gif',
+      source: 'tenor',
+      isGif: true,
+      hideDetails: true,
+      playerUri,
+      dimensions,
     }
   }
 
@@ -514,5 +492,57 @@ export function getGiphyMetaUri(url: URL) {
     if (params && params.type === 'giphy_gif') {
       return params.metaUri
     }
+  }
+}
+
+export function parseTenorGif(urlp: URL):
+  | {success: false}
+  | {
+      success: true
+      playerUri: string
+      dimensions: {height: number; width: number}
+    } {
+  if (urlp.hostname !== 'media.tenor.com') {
+    return {success: false}
+  }
+
+  let [_, id, filename] = urlp.pathname.split('/')
+
+  if (!id || !filename) {
+    return {success: false}
+  }
+
+  if (!id.includes('AAAAC')) {
+    return {success: false}
+  }
+
+  const h = urlp.searchParams.get('hh')
+  const w = urlp.searchParams.get('ww')
+
+  if (!h || !w) {
+    return {success: false}
+  }
+
+  const dimensions = {
+    height: Number(h),
+    width: Number(w),
+  }
+
+  if (isWeb) {
+    if (isSafari) {
+      id = id.replace('AAAAC', 'AAAP1')
+      filename = filename.replace('.gif', '.mp4')
+    } else {
+      id = id.replace('AAAAC', 'AAAP3')
+      filename = filename.replace('.gif', '.webm')
+    }
+  } else {
+    id = id.replace('AAAAC', 'AAAAM')
+  }
+
+  return {
+    success: true,
+    playerUri: `https://t.gifs.bsky.app/${id}/${filename}`,
+    dimensions,
   }
 }

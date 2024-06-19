@@ -1,36 +1,45 @@
+import {simpleAreDatesEqual} from '#/lib/strings/time'
+import {logger} from '#/logger'
 import * as persisted from '#/state/persisted'
-import {toHashCode} from 'lib/strings/helpers'
-import {isOnboardingActive} from './onboarding'
 import {SessionAccount} from '../session'
+import {isOnboardingActive} from './onboarding'
 
 export function shouldRequestEmailConfirmation(account: SessionAccount) {
-  if (!account) {
-    return false
-  }
-  if (account.emailConfirmed) {
-    return false
-  }
-  if (isOnboardingActive()) {
-    return false
-  }
-  // only prompt once
-  if (persisted.get('reminders').lastEmailConfirm) {
-    return false
-  }
+  // ignore logged out
+  if (!account) return false
+  // ignore confirmed accounts, this is the success state of this reminder
+  if (account.emailConfirmed) return false
+  // wait for onboarding to complete
+  if (isOnboardingActive()) return false
+
+  const snoozedAt = persisted.get('reminders').lastEmailConfirm
   const today = new Date()
-  // shard the users into 2 day of the week buckets
-  // (this is to avoid a sudden influx of email updates when
-  // this feature rolls out)
-  const code = toHashCode(account.did) % 7
-  if (code !== today.getDay() && code !== (today.getDay() + 1) % 7) {
+
+  logger.debug('Checking email confirmation reminder', {
+    today,
+    snoozedAt,
+  })
+
+  // never been snoozed, new account
+  if (!snoozedAt) {
+    return true
+  }
+
+  // already snoozed today
+  if (simpleAreDatesEqual(new Date(Date.parse(snoozedAt)), new Date())) {
     return false
   }
+
   return true
 }
 
-export function setEmailConfirmationRequested() {
+export function snoozeEmailConfirmationPrompt() {
+  const lastEmailConfirm = new Date().toISOString()
+  logger.debug('Snoozing email confirmation reminder', {
+    snoozedAt: lastEmailConfirm,
+  })
   persisted.write('reminders', {
     ...persisted.get('reminders'),
-    lastEmailConfirm: new Date().toISOString(),
+    lastEmailConfirm,
   })
 }

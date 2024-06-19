@@ -18,8 +18,10 @@ import {Text} from '#/components/Typography'
 
 export function NewskieDialog({
   profile,
+  disabled,
 }: {
   profile: AppBskyActorDefs.ProfileViewDetailed
+  disabled?: boolean
 }) {
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
@@ -30,18 +32,20 @@ export function NewskieDialog({
     const moderation = moderateProfile(profile, moderationOpts)
     return sanitizeDisplayName(name, moderation.ui('displayName'))
   }, [moderationOpts, profile])
+  const [now] = React.useState(() => Date.now())
   const timeAgo = useGetTimeAgo()
   const createdAt = profile.createdAt as string | undefined
   const daysOld = React.useMemo(() => {
     if (!createdAt) return Infinity
-    return differenceInSeconds(new Date(), new Date(createdAt)) / 86400
-  }, [createdAt])
+    return differenceInSeconds(now, new Date(createdAt)) / 86400
+  }, [createdAt, now])
 
   if (!createdAt || daysOld > 7) return null
 
   return (
     <View style={[a.pr_2xs]}>
       <Button
+        disabled={disabled}
         label={_(
           msg`This user is new here. Press for more info about when they joined.`,
         )}
@@ -70,7 +74,7 @@ export function NewskieDialog({
             <Text style={[a.text_md]}>
               <Trans>
                 {profileName} joined Bluesky{' '}
-                {timeAgo(createdAt, {format: 'long'})} ago
+                {timeAgo(createdAt, now, {format: 'long'})} ago
               </Trans>
             </Text>
           </View>
