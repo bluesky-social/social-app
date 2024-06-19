@@ -26,9 +26,11 @@ export const snapPoints = ['60%']
 export function Component({
   settings,
   onChange,
+  onConfirm,
 }: {
   settings: ThreadgateSetting[]
-  onChange: (settings: ThreadgateSetting[]) => void
+  onChange?: (settings: ThreadgateSetting[]) => void
+  onConfirm?: (settings: ThreadgateSetting[]) => void
 }) {
   const pal = usePalette('default')
   const {closeModal} = useModalControls()
@@ -38,12 +40,12 @@ export function Component({
 
   const onPressEverybody = () => {
     setSelected([])
-    onChange([])
+    onChange?.([])
   }
 
   const onPressNobody = () => {
     setSelected([{type: 'nobody'}])
-    onChange([{type: 'nobody'}])
+    onChange?.([{type: 'nobody'}])
   }
 
   const onPressAudience = (setting: ThreadgateSetting) => {
@@ -57,7 +59,7 @@ export function Component({
       newSelected.splice(i, 1)
     }
     setSelected(newSelected)
-    onChange(newSelected)
+    onChange?.(newSelected)
   }
 
   return (
@@ -124,6 +126,7 @@ export function Component({
           testID="confirmBtn"
           onPress={() => {
             closeModal()
+            onConfirm?.(selected)
           }}
           style={styles.btn}
           accessibilityRole="button"
