@@ -40,7 +40,10 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
     const {currentAccount} = useSession()
 
     const {data} = useListMembersQuery(listUri, 50)
-    const profiles = data?.pages.flatMap(p => p.items.map(i => i.subject))
+    // The server returns these sorted by descending creation date, so we want to invert
+    const profiles = data?.pages
+      .flatMap(p => p.items.map(i => i.subject))
+      .reverse()
     const isOwn = new AtUri(listUri).host === currentAccount?.did
 
     const getSortedProfiles = () => {
