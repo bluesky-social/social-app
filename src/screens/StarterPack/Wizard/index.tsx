@@ -438,7 +438,7 @@ function WizardInner({
             accessibilityHint={_(msg`Go back to the previous step`)}
             onPress={() => {
               if (state.currentStep === 'Details') {
-                navigation.goBack()
+                navigation.pop()
               } else {
                 dispatch({type: 'Back'})
               }

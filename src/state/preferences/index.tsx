@@ -1,6 +1,5 @@
 import React from 'react'
 
-import {Provider as StarterPackProvider} from '../shell/starter-pack'
 import {Provider as AltTextRequiredProvider} from './alt-text-required'
 import {Provider as AutoplayProvider} from './autoplay'
 import {Provider as DisableHapticsProvider} from './disable-haptics'
@@ -35,11 +34,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
               <DisableHapticsProvider>
                 <AutoplayProvider>
                   <KawaiiProvider>
-                    <StarterPackProvider>
-                      <UsedStarterPacksProvider>
-                        {children}
-                      </UsedStarterPacksProvider>
-                    </StarterPackProvider>
+                    <UsedStarterPacksProvider>
+                      {children}
+                    </UsedStarterPacksProvider>
                   </KawaiiProvider>
                 </AutoplayProvider>
               </DisableHapticsProvider>
