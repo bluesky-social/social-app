@@ -1,9 +1,10 @@
 {
-  "name": "bskycard",
+  "name": "bskyogcard",
   "version": "0.0.0",
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
+    "start": "node --loader ts-node/esm ./src/bin.ts",
     "build": "tsc && cp -r src/assets dist/assets"
   },
   "dependencies": {

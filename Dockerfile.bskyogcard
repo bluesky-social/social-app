@@ -3,11 +3,11 @@ FROM node:20.11-alpine3.18 as build
 # Move files into the image and install
 WORKDIR /app
 
-COPY ./bskycard/package.json ./
-COPY ./bskycard/yarn.lock ./
+COPY ./bskyogcard/package.json ./
+COPY ./bskyogcard/yarn.lock ./
 RUN yarn install --frozen-lockfile
 
-COPY ./bskycard ./
+COPY ./bskyogcard ./
 
 # build then prune dev deps
 RUN yarn build

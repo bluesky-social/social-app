@@ -1,4 +1,4 @@
-name: build-and-push-bskycard-aws
+name: build-and-push-ogcard-aws
 on:
   push:
     branches:
@@ -8,10 +8,10 @@ env:
   REGISTRY: ${{ secrets.AWS_ECR_REGISTRY_USEAST2_PACKAGES_REGISTRY }}
   USERNAME: ${{ secrets.AWS_ECR_REGISTRY_USEAST2_PACKAGES_USERNAME }}
   PASSWORD: ${{ secrets.AWS_ECR_REGISTRY_USEAST2_PACKAGES_PASSWORD }}
-  IMAGE_NAME: bskycard
+  IMAGE_NAME: bskyogcard
 
 jobs:
-  bskycard-container-aws:
+  ogcard-container-aws:
     if: github.repository == 'bluesky-social/social-app'
     runs-on: ubuntu-latest
     permissions:
@@ -48,7 +48,7 @@ jobs:
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
-          file: ./Dockerfile.bskycard
+          file: ./Dockerfile.bskyogcard
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
