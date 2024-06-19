@@ -104,7 +104,7 @@ export function Wizard({
           isLoadingStarterPack || isLoadingProfiles || isLoadingProfile
         }
         isError={isErrorStarterPack || isErrorProfiles || isErrorProfile}
-        errorMessage={_(msg`Could not find that starter pack`)}
+        errorMessage={_(msg`That starter pack could not be found.`)}
       />
     )
   } else if (isEdit && starterPack?.creator.did !== currentAccount?.did) {
@@ -112,7 +112,7 @@ export function Wizard({
       <ListMaybePlaceholder
         isLoading={false}
         isError={true}
-        errorMessage={_(msg`Could not find that starter pack`)}
+        errorMessage={_(msg`That starter pack could not be found.`)}
       />
     )
   }
