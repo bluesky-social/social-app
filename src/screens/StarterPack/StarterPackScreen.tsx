@@ -249,9 +249,7 @@ function Header({
               variant="solid"
               color="secondary"
               size="small"
-              onPress={() =>
-                navigation.navigate('StarterPackWizard', {name, rkey})
-              }>
+              onPress={() => navigation.navigate('StarterPackEdit', {rkey})}>
               <ButtonText>
                 <Trans>Edit</Trans>
               </ButtonText>

@@ -36,7 +36,6 @@ import {
   useListMembersQuery,
 } from 'state/queries/list-members'
 import {useProfileQuery} from 'state/queries/profile'
-import {useResolveDidQuery} from 'state/queries/resolve-uri'
 import {
   invalidateStarterPack,
   useStarterPackQuery,
@@ -62,24 +61,21 @@ import {Provider} from './State'
 
 export function Wizard({
   route,
-}: NativeStackScreenProps<CommonNavigatorParams, 'StarterPackWizard'>) {
-  const {name, rkey} = route.params ?? {}
+}: NativeStackScreenProps<
+  CommonNavigatorParams,
+  'StarterPackEdit' | 'StarterPackWizard'
+>) {
+  const {rkey} = route.params ?? {}
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
 
   const {_} = useLingui()
 
   const {
-    data: did,
-    isLoading: isLoadingDid,
-    isError: isErrorDid,
-  } = useResolveDidQuery(name)
-
-  const {
     data: starterPack,
     isLoading: isLoadingStarterPack,
     isError: isErrorStarterPack,
-  } = useStarterPackQuery({did, rkey})
+  } = useStarterPackQuery({did: currentAccount!.did, rkey})
   const listUri = starterPack?.list?.uri
 
   const {
@@ -95,7 +91,7 @@ export function Wizard({
     isError: isErrorProfile,
   } = useProfileQuery({did: currentAccount?.did})
 
-  const isEdit = Boolean(name && rkey)
+  const isEdit = Boolean(rkey)
   const isReady =
     (!isEdit || (isEdit && starterPack && listItems)) &&
     profile &&
@@ -105,14 +101,9 @@ export function Wizard({
     return (
       <ListMaybePlaceholder
         isLoading={
-          isLoadingDid ||
-          isLoadingStarterPack ||
-          isLoadingProfiles ||
-          isLoadingProfile
+          isLoadingStarterPack || isLoadingProfiles || isLoadingProfile
         }
-        isError={
-          isErrorDid || isErrorStarterPack || isErrorProfiles || isErrorProfile
-        }
+        isError={isErrorStarterPack || isErrorProfiles || isErrorProfile}
         errorMessage={_(msg`Could not find that starter pack`)}
       />
     )
@@ -129,7 +120,6 @@ export function Wizard({
   return (
     <Provider starterPack={starterPack} listItems={listItems}>
       <WizardInner
-        did={did}
         rkey={rkey}
         createdAt={
           AppBskyGraphStarterpack.isRecord(starterPack?.record)
@@ -146,7 +136,6 @@ export function Wizard({
 }
 
 function WizardInner({
-  did,
   rkey,
   createdAt: initialCreatedAt,
   listUri: initialListUri,
@@ -154,7 +143,6 @@ function WizardInner({
   profile,
   moderationOpts,
 }: {
-  did?: string
   rkey?: string
   createdAt?: string
   listUri?: string
@@ -224,18 +212,18 @@ function WizardInner({
   const currUiStrings = wizardUiStrings[state.currentStep]
 
   const invalidateQueries = async () => {
-    if (!did || !rkey) return
+    if (!rkey) return
 
     if (initialListUri) {
       await invalidateListMembersQuery({queryClient, uri: initialListUri})
     }
     await invalidateActorStarterPacksQuery({
       queryClient,
-      did,
+      did: currentAccount!.did,
     })
     await invalidateStarterPack({
       queryClient,
-      did,
+      did: currentAccount!.did,
       rkey,
     })
   }
@@ -244,7 +232,7 @@ function WizardInner({
     dispatch({type: 'SetProcessing', processing: true})
 
     try {
-      if (did && rkey) {
+      if (rkey) {
         // Editing an existing starter pack
         let list: {uri: string; cid: string} | undefined = initialListUri
           ? {uri: initialListUri, cid: ''}
@@ -457,7 +445,7 @@ function WizardInner({
       </View>
 
       <Container
-        showDeleteBtn={Boolean(did && rkey)}
+        showDeleteBtn={Boolean(rkey)}
         deleteStarterPack={deleteStarterPack}>
         {state.currentStep === 'Details' ? (
           <StepDetails />

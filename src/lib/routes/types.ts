@@ -43,8 +43,8 @@ export type CommonNavigatorParams = {
   MessagesSettings: undefined
   Feeds: undefined
   StarterPack: {name: string; rkey: string}
-  StarterPackWizard: {
-    name?: string
+  StarterPackWizard: undefined
+  StarterPackEdit: {
     rkey?: string
   }
 }
@@ -99,8 +99,8 @@ export type AllNavigatorParams = CommonNavigatorParams & {
   MessagesTab: undefined
   Messages: {animation?: 'push' | 'pop'}
   StarterPack: {name: string; rkey: string}
-  StarterPackWizard: {
-    name?: string
+  StarterPackWizard: undefined
+  StarterPackEdit: {
     rkey?: string
   }
 }
