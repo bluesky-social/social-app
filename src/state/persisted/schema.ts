@@ -113,6 +113,7 @@ export const defaults: Schema = {
     appLanguage: deviceLocales[0] || 'en',
   },
   requireAltTextEnabled: false,
+  largeAltBadgeEnabled: false,
   externalEmbeds: {},
   mutedThreads: [],
   invites: {
