@@ -35,30 +35,12 @@ export const createStarterPackList = async ({
   await agent.com.atproto.repo.applyWrites({
     repo: agent.session!.did,
     writes: [
-      {
-        $type: 'com.atproto.repo.applyWrites#create',
-        collection: 'app.bsky.graph.listitem',
-        value: {
-          $type: 'app.bsky.graph.listitem',
-          subject: agent.session!.did,
-          list: list.uri,
-          createdAt: new Date().toISOString(),
-        },
-      },
+      createListItem({did: agent.session!.did, listUri: list.uri}),
     ].concat(
       profiles
         // Ensure we don't have ourselves in this list twice
         .filter(p => p.did !== agent.session!.did)
-        .map(p => ({
-          $type: 'com.atproto.repo.applyWrites#create',
-          collection: 'app.bsky.graph.listitem',
-          value: {
-            $type: 'app.bsky.graph.listitem',
-            subject: p.did,
-            list: list.uri,
-            createdAt: new Date().toISOString(),
-          },
-        })),
+        .map(p => createListItem({did: p.did, listUri: list.uri})),
     ),
   })
 
@@ -129,5 +111,18 @@ export async function generateStarterpack({
   } catch (e: unknown) {
     logger.error('Failed to generate starter pack', {error: e})
     return 'ERROR'
+  }
+}
+
+function createListItem({did, listUri}: {did: string; listUri: string}) {
+  return {
+    $type: 'com.atproto.repo.applyWrites#create',
+    collection: 'app.bsky.graph.listitem',
+    value: {
+      $type: 'app.bsky.graph.listitem',
+      subject: did,
+      list: listUri,
+      createdAt: new Date().toISOString(),
+    },
   }
 }
