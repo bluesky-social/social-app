@@ -195,9 +195,6 @@ let PostCtrls = ({
     [t.atoms.bg_contrast_25],
   )
 
-  const replyCountFormatted = formatCount(post.replyCount || 0)
-  const likeCountFormatted = formatCount(post.likeCount || 0)
-
   return (
     <View style={[a.flex_row, a.justify_between, a.align_center, style]}>
       <View
@@ -230,7 +227,7 @@ let PostCtrls = ({
                 big ? a.text_md : {fontSize: 15},
                 a.user_select_none,
               ]}>
-              {replyCountFormatted}
+              {formatCount(post.replyCount)}
             </Text>
           ) : undefined}
         </Pressable>
@@ -282,7 +279,7 @@ let PostCtrls = ({
                     : defaultCtrlColor,
                 ],
               ]}>
-              {likeCountFormatted}
+              {formatCount(post.likeCount)}
             </Text>
           ) : undefined}
         </Pressable>

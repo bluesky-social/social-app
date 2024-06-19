@@ -42,8 +42,6 @@ let RepostButton = ({
     [t, isReposted],
   )
 
-  const repostCountFormatted = formatCount(repostCount || 0)
-
   const close = useCallback(() => dialogControl.close(), [dialogControl])
 
   return (
@@ -79,7 +77,7 @@ let RepostButton = ({
               big ? a.text_md : {fontSize: 15},
               isReposted && a.font_bold,
             ]}>
-            {repostCountFormatted}
+            {formatCount(repostCount)}
           </Text>
         ) : undefined}
       </Button>
