@@ -62,7 +62,7 @@ export function StarterPackScreen({
       <ListMaybePlaceholder
         isLoading={isLoadingDid || isLoadingStarterPack}
         isError={isErrorDid || isErrorStarterPack || !isValid}
-        errorMessage={_(msg`That starter pack could not be foundddd.`)}
+        errorMessage={_(msg`That starter pack could not be found.`)}
       />
     )
   }
