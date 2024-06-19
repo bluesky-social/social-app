@@ -811,6 +811,12 @@ describe('createStarterPackLinkFromAndroidReferrer', () => {
         'utm_source=bluesky&utm_content=starterpack_haileyok.com_rkey',
       ),
     ).toEqual(validOutput)
+
+    expect(
+      createStarterPackLinkFromAndroidReferrer(
+        'utm_source=bluesky&utm_content=starterpack_test-lover-9000.com_rkey',
+      ),
+    ).toEqual('https://bsky.app/start/test-lover-9000.com/rkey')
   })
 
   it('returns a link when input contains utm_source and utm_content in different order', () => {
