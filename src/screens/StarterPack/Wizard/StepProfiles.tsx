@@ -70,8 +70,9 @@ export function StepProfiles({
         sideBorders={false}
         style={[a.flex_1]}
         onEndReached={() => {
-          console.log('test')
-          fetchNextPage()
+          if (!query) {
+            fetchNextPage()
+          }
         }}
         onEndReachedThreshold={isNative ? 2 : 0.25}
         ListEmptyComponent={
