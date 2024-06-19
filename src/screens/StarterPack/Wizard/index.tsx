@@ -362,7 +362,7 @@ function WizardInner({
         }, 1000)
       }
     } catch (e: unknown) {
-      logger.error('Failed to create starter pack', {safeMessage: `${e}`})
+      logger.error('Failed to create starter pack', {safeMessage: e})
       Toast.show(_(msg`Failed to create starter pack`))
       dispatch({type: 'SetProcessing', processing: false})
       return

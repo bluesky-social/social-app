@@ -109,7 +109,7 @@ export async function generateStarterpack({
       )
     ).uri
   } catch (e: unknown) {
-    logger.error('Failed to generate starter pack', {safeMessage: `${e}`})
+    logger.error('Failed to generate starter pack', {safeMessage: e})
     return 'ERROR'
   }
 }

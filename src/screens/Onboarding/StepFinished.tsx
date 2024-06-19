@@ -74,7 +74,7 @@ export function StepFinished() {
           listItems = listRes.data.items
         }
       } catch (e) {
-        logger.error('Failed to fetch starter pack', {safeMessage: `${e}`})
+        logger.error('Failed to fetch starter pack', {safeMessage: e})
         // don't tell the user, just get them through onboarding.
       }
     }
