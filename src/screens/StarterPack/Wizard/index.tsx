@@ -182,11 +182,18 @@ function WizardInner({
     }, [setMinimalShellMode, setEnabled]),
   )
 
-  const defaultName = _(
-    msg`${
-      currentProfile?.displayName || `@${currentProfile?.handle}`
-    }'s Starter Pack`,
-  ).slice(0, 50)
+  const getDefaultName = () => {
+    let displayName
+    if (
+      currentProfile?.displayName != null &&
+      currentProfile?.displayName !== ''
+    ) {
+      displayName = sanitizeDisplayName(currentProfile.displayName)
+    } else {
+      displayName = sanitizeHandle(currentProfile!.handle)
+    }
+    return _(msg`${displayName}'s Starter Pack`).slice(0, 50)
+  }
 
   const wizardUiStrings: Record<
     WizardStep,
@@ -273,7 +280,7 @@ function WizardInner({
           }
         } else {
           list = await createStarterPackList({
-            name: state.name ?? defaultName,
+            name: state.name ?? getDefaultName(),
             description: state.description,
             descriptionFacets: [],
             profiles: state.profiles,
@@ -286,7 +293,7 @@ function WizardInner({
           collection: 'app.bsky.graph.starterpack',
           rkey,
           record: {
-            name: state.name ?? defaultName,
+            name: state.name ?? getDefaultName(),
             description: state.description,
             descriptionFacets: [],
             list: list?.uri,
@@ -315,7 +322,7 @@ function WizardInner({
       } else {
         // Creating a new starter pack
         const list = await createStarterPackList({
-          name: state.name ?? defaultName,
+          name: state.name ?? getDefaultName(),
           description: state.description,
           descriptionFacets: [],
           profiles: state.profiles,
@@ -327,7 +334,7 @@ function WizardInner({
             validate: false,
           },
           {
-            name: state.name ?? defaultName,
+            name: state.name ?? getDefaultName(),
             description: state.description,
             descriptionFacets: [],
             list: list.uri,
