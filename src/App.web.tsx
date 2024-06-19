@@ -96,19 +96,17 @@ function InnerApp() {
                     <LabelDefsProvider>
                       <ModerationOptsProvider>
                         <LoggedOutViewProvider>
-                          <StarterPackProvider>
-                            <SelectedFeedProvider>
-                              <UnreadNotifsProvider>
-                                <BackgroundNotificationPreferencesProvider>
-                                  <MutedThreadsProvider>
-                                    <SafeAreaProvider>
-                                      <Shell />
-                                    </SafeAreaProvider>
-                                  </MutedThreadsProvider>
-                                </BackgroundNotificationPreferencesProvider>
-                              </UnreadNotifsProvider>
-                            </SelectedFeedProvider>
-                          </StarterPackProvider>
+                          <SelectedFeedProvider>
+                            <UnreadNotifsProvider>
+                              <BackgroundNotificationPreferencesProvider>
+                                <MutedThreadsProvider>
+                                  <SafeAreaProvider>
+                                    <Shell />
+                                  </SafeAreaProvider>
+                                </MutedThreadsProvider>
+                              </BackgroundNotificationPreferencesProvider>
+                            </UnreadNotifsProvider>
+                          </SelectedFeedProvider>
                         </LoggedOutViewProvider>
                       </ModerationOptsProvider>
                     </LabelDefsProvider>
@@ -149,7 +147,9 @@ function App() {
                 <LightboxStateProvider>
                   <I18nProvider>
                     <PortalProvider>
-                      <InnerApp />
+                      <StarterPackProvider>
+                        <InnerApp />
+                      </StarterPackProvider>
                     </PortalProvider>
                   </I18nProvider>
                 </LightboxStateProvider>
