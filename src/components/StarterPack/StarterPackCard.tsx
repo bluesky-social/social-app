@@ -43,7 +43,9 @@ export function Default({starterPack}: {starterPack: StarterPackViewBasic}) {
         </View>
       </View>
       {record.description && (
-        <Text numberOfLines={3}>{record.description}</Text>
+        <Text numberOfLines={3} style={[a.leading_snug]}>
+          {record.description}
+        </Text>
       )}
       {!!joinedAllTimeCount && joinedAllTimeCount >= 50 && (
         <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
