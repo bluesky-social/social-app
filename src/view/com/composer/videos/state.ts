@@ -32,7 +32,7 @@ export function useVideoState({setError}: {setError: (error: string) => void}) {
   })
 
   return {
-    video: data?.video,
+    video: data,
     onSelectVideo: mutate,
     videoPending: isPending,
     videoProcessingData: variables,

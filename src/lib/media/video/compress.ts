@@ -12,32 +12,24 @@ export async function compressVideo(
     getCancellationId?: (id: string) => void
     onProgress?: (progress: number) => void
   },
-) {
+): Promise<CompressedVideo> {
   const {onProgress, getCancellationId} = opts || {}
 
-  try {
-    const compressed = await Video.compress(
-      file,
-      {
-        getCancellationId,
-        compressionMethod: 'manual',
-        bitrate: 3_000_000, // 3mbps
-        maxSize: 1920,
-      },
-      onProgress,
-    )
+  const compressed = await Video.compress(
+    file,
+    {
+      getCancellationId,
+      compressionMethod: 'manual',
+      bitrate: 3_000_000, // 3mbps
+      maxSize: 1920,
+    },
+    onProgress,
+  )
 
-    await FileSystem.deleteAsync(file)
-    const info = await getVideoMetaData(compressed)
-    console.log('compressed size', (info.size / 1024).toFixed(2) + 'mb')
-    console.log(JSON.stringify(info, null, 2))
+  await FileSystem.deleteAsync(file)
+  const info = await getVideoMetaData(compressed)
+  console.log('compressed size', (info.size / 1024).toFixed(2) + 'mb')
+  console.log(JSON.stringify(info, null, 2))
 
-    return {
-      success: true,
-      video: {uri: compressed, size: info.size} as CompressedVideo,
-    }
-  } catch (error) {
-    console.error('compressVideo error', error)
-    return {success: false}
-  }
+  return {uri: compressed, size: info.size}
 }

@@ -4,12 +4,17 @@ const MAX_WIDTH = 1920
 const MAX_HEIGHT = 1920
 const MAX_VIDEO_SIZE = 1024 * 1024 * 100 // 100MB
 
+export type CompressedVideo = {
+  uri: string
+  size: number
+}
+
 export async function compressVideo(
   file: string,
   callbacks?: {
     onProgress: (progress: number) => void
   },
-) {
+): Promise<CompressedVideo> {
   const {onProgress} = callbacks || {}
   const blob = await fetch(file).then(res => res.blob())
   const objectUrl = URL.createObjectURL(blob)
@@ -62,7 +67,7 @@ export async function compressVideo(
       const chunks: Blob[] = []
       let options = {
         mimeType: getSupportedMimeType(),
-        videoBitsPerSecond: 200000,
+        videoBitsPerSecond: 3_000_000, // 3mbps,
       }
       const recorder = new MediaRecorder(canvas.captureStream(25), options)
 
@@ -118,11 +123,9 @@ export async function compressVideo(
     }
 
     return {
+      size: videoBlob.size,
       uri: URL.createObjectURL(videoBlob),
     }
-  } catch (err) {
-    console.error(err)
-    Toast.show('Failed to compress video')
   } finally {
     URL.revokeObjectURL(objectUrl)
   }
