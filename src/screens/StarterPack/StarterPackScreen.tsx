@@ -1,6 +1,10 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
+import {
+  AppBskyGraphDefs,
+  AppBskyGraphStarterpack,
+  ModerationOpts,
+} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -20,6 +24,7 @@ import {isWeb} from 'platform/detection'
 import {useModerationOpts} from 'state/preferences/moderation-opts'
 import {RQKEY} from 'state/queries/list-members'
 import {useResolveDidQuery} from 'state/queries/resolve-uri'
+import {useShortenLink} from 'state/queries/shorten-link'
 import {useStarterPackQuery} from 'state/queries/starter-packs'
 import {useAgent, useSession} from 'state/session'
 import * as Toast from '#/view/com/util/Toast'
@@ -83,10 +88,41 @@ export function StarterPackScreen({route}: StarterPackScreeProps) {
     )
   }
 
+  return (
+    <StarterPackScreenInner
+      starterPack={starterPack}
+      routeParams={route.params}
+      moderationOpts={moderationOpts}
+    />
+  )
+}
+
+function StarterPackScreenInner({
+  starterPack,
+  routeParams,
+  moderationOpts,
+}: {
+  starterPack: AppBskyGraphDefs.StarterPackView
+  routeParams: StarterPackScreeProps['route']['params']
+  moderationOpts: ModerationOpts
+}) {
+  const shortenLink = useShortenLink()
+
   const tabs = [
     ...(starterPack.list ? ['People'] : []),
     ...(starterPack.feeds?.length ? ['Feeds'] : []),
   ]
+
+  const onShareLink = async () => {
+    const res = await shortenLink(
+      makeStarterPackLink(starterPack.creator.did, routeParams.rkey),
+    )
+    shareUrl(res.url)
+    logEvent('starterPack:share', {
+      starterPack: starterPack.uri,
+      shareType: 'link',
+    })
+  }
 
   return (
     <CenteredView style={[a.h_full_vh]}>
@@ -95,7 +131,11 @@ export function StarterPackScreen({route}: StarterPackScreeProps) {
           items={tabs}
           isHeaderReady={true}
           renderHeader={() => (
-            <Header starterPack={starterPack} routeParams={route.params} />
+            <Header
+              starterPack={starterPack}
+              routeParams={routeParams}
+              onShareLink={onShareLink}
+            />
           )}>
           {starterPack.list != null
             ? ({headerHeight, scrollElRef}) => (
@@ -131,9 +171,11 @@ export function StarterPackScreen({route}: StarterPackScreeProps) {
 function Header({
   starterPack,
   routeParams,
+  onShareLink,
 }: {
   starterPack: AppBskyGraphDefs.StarterPackView
   routeParams: StarterPackScreeProps['route']['params']
+  onShareLink: () => void
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -195,8 +237,8 @@ function Header({
         <View style={[a.flex_row, a.gap_sm, a.align_center]}>
           {isOwn ? (
             <OwnerShareMenu
-              routeParams={routeParams}
               starterPack={starterPack}
+              onShareLink={onShareLink}
             />
           ) : (
             <Button
@@ -212,7 +254,11 @@ function Header({
               </ButtonText>
             </Button>
           )}
-          <OverflowMenu routeParams={routeParams} starterPack={starterPack} />
+          <OverflowMenu
+            routeParams={routeParams}
+            starterPack={starterPack}
+            onShareLink={onShareLink}
+          />
         </View>
       </ProfileSubpageHeader>
       {record.description || joinedAllTimeCount >= 25 ? (
@@ -247,9 +293,11 @@ function Header({
 function OverflowMenu({
   starterPack,
   routeParams,
+  onShareLink,
 }: {
   starterPack: AppBskyGraphDefs.StarterPackView
   routeParams: StarterPackScreeProps['route']['params']
+  onShareLink: () => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -259,6 +307,7 @@ function OverflowMenu({
   const reportDialogControl = useReportDialogControl()
   const deleteDialogControl = useDialogControl()
   const navigation = useNavigation<NavigationProp>()
+
   const {
     mutate: deleteStarterPack,
     isPending: isDeletePending,
@@ -342,15 +391,7 @@ function OverflowMenu({
                 <Menu.Item
                   label={_(msg`Share link`)}
                   testID="shareStarterPackLinkBtn"
-                  onPress={() => {
-                    logEvent('starterPack:share', {
-                      starterPack: starterPack.uri,
-                      shareType: 'link',
-                    })
-                    shareUrl(
-                      makeStarterPackLink(routeParams.name, routeParams.rkey),
-                    )
-                  }}>
+                  onPress={onShareLink}>
                   <Menu.ItemText>
                     <Trans>Share link</Trans>
                   </Menu.ItemText>
@@ -439,10 +480,10 @@ function OverflowMenu({
 
 function OwnerShareMenu({
   starterPack,
-  routeParams,
+  onShareLink,
 }: {
   starterPack: AppBskyGraphDefs.StarterPackView
-  routeParams: StarterPackScreeProps['route']['params']
+  onShareLink: () => void
 }) {
   const {_} = useLingui()
   const qrCodeDialogControl = useDialogControl()
@@ -471,15 +512,7 @@ function OwnerShareMenu({
             <Menu.Item
               label={_(msg`Share link`)}
               testID="shareStarterPackLinkBtn"
-              onPress={() => {
-                logEvent('starterPack:share', {
-                  starterPack: starterPack.uri,
-                  shareType: 'link',
-                })
-                shareUrl(
-                  makeStarterPackLink(routeParams.name, routeParams.rkey),
-                )
-              }}>
+              onPress={onShareLink}>
               <Menu.ItemText>
                 <Trans>Share link</Trans>
               </Menu.ItemText>

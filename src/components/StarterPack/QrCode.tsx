@@ -5,7 +5,6 @@ import ViewShot from 'react-native-view-shot'
 import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
-import {makeStarterPackLink} from 'lib/routes/links'
 import {isWeb} from 'platform/detection'
 import {Logo} from 'view/icons/Logo'
 import {Logotype} from 'view/icons/Logotype'
@@ -16,10 +15,11 @@ import {Text} from '#/components/Typography'
 
 interface Props {
   starterPack: AppBskyGraphDefs.StarterPackView
+  link: string
 }
 
 export const QrCode = React.forwardRef<ViewShot, Props>(function QrCode(
-  {starterPack},
+  {starterPack, link},
   ref,
 ) {
   const {record} = starterPack
@@ -56,7 +56,7 @@ export const QrCode = React.forwardRef<ViewShot, Props>(function QrCode(
             <Trans>Join the conversation</Trans>
           </Text>
           <View style={[a.rounded_sm, a.overflow_hidden]}>
-            <QrCodeInner url={makeStarterPackLink(starterPack)} />
+            <QrCodeInner link={link} />
           </View>
 
           <View style={[a.flex_row, a.align_center, {gap: 5}]}>
@@ -79,12 +79,12 @@ export const QrCode = React.forwardRef<ViewShot, Props>(function QrCode(
   )
 })
 
-export function QrCodeInner({url}: {url: string}) {
+export function QrCodeInner({link}: {link: string}) {
   const t = useTheme()
 
   return (
     <QRCode
-      data={url}
+      data={link}
       style={[
         a.rounded_sm,
         {height: 225, width: 225, backgroundColor: '#f3f3f3'},

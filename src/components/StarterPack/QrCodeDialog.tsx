@@ -4,15 +4,17 @@ import ViewShot from 'react-native-view-shot'
 import * as FS from 'expo-file-system'
 import {requestMediaLibraryPermissionsAsync} from 'expo-image-picker'
 import * as Sharing from 'expo-sharing'
-import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
+import {AppBskyGraphDefs, AppBskyGraphStarterpack, AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {nanoid} from 'nanoid/non-secure'
 
 import {logger} from '#/logger'
 import {saveImageToMediaLibrary} from 'lib/media/manip'
+import {makeStarterPackLink} from 'lib/routes/links'
 import {logEvent} from 'lib/statsig/statsig'
 import {isNative, isWeb} from 'platform/detection'
+import {useShortenLink} from 'state/queries/shorten-link'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -28,10 +30,37 @@ export function QrCodeDialog({
   control: DialogControlProps
   starterPack: AppBskyGraphDefs.StarterPackView
 }) {
+  return (
+    <Dialog.Outer control={control}>
+      <Inner starterPack={starterPack} control={control} />
+    </Dialog.Outer>
+  )
+}
+
+function Inner({
+  starterPack,
+  control,
+}: {
+  starterPack: AppBskyGraphDefs.StarterPackView
+  control: DialogControlProps
+}) {
   const {_} = useLingui()
   const [isProcessing, setIsProcessing] = React.useState(false)
+  const [link, setLink] = React.useState<string>()
+  const shortenLink = useShortenLink()
 
   const ref = React.useRef<ViewShot>(null)
+
+  React.useEffect(() => {
+    if (link) return
+    ;(async () => {
+      const rkey = new AtUri(starterPack.uri).rkey
+      const res = await shortenLink(
+        makeStarterPackLink(starterPack.creator.did, rkey),
+      )
+      setLink(res.url)
+    })()
+  }, [link, shortenLink, starterPack.creator.did, starterPack.uri])
 
   const getCanvas = (base64: string): Promise<HTMLCanvasElement> => {
     return new Promise(resolve => {
@@ -149,42 +178,50 @@ export function QrCodeDialog({
   }
 
   return (
-    <Dialog.Outer control={control}>
+    <>
       <Dialog.Handle />
       <Dialog.ScrollableInner
         label={_(msg`Create a QR code for a starter pack`)}>
         <View style={[a.flex_1, a.align_center, a.gap_5xl]}>
-          <QrCode starterPack={starterPack} ref={ref} />
-          {isProcessing ? (
-            <View>
+          {!link ? (
+            <View style={[a.align_center, a.p_xl]}>
               <Loader size="xl" />
             </View>
           ) : (
-            <View style={[a.w_full, a.gap_md]}>
-              <Button
-                label={_(msg`Copy QR code`)}
-                variant="solid"
-                color="primary"
-                size="medium"
-                onPress={isWeb ? onCopyPress : onSharePress}>
-                <ButtonText>
-                  {isWeb ? <Trans>Copy</Trans> : <Trans>Share</Trans>}
-                </ButtonText>
-              </Button>
-              <Button
-                label={_(msg`Save QR code`)}
-                variant="solid"
-                color="secondary"
-                size="medium"
-                onPress={onSavePress}>
-                <ButtonText>
-                  <Trans>Save</Trans>
-                </ButtonText>
-              </Button>
-            </View>
+            <>
+              <QrCode starterPack={starterPack} link={link} ref={ref} />
+              {isProcessing ? (
+                <View>
+                  <Loader size="xl" />
+                </View>
+              ) : (
+                <View style={[a.w_full, a.gap_md]}>
+                  <Button
+                    label={_(msg`Copy QR code`)}
+                    variant="solid"
+                    color="primary"
+                    size="medium"
+                    onPress={isWeb ? onCopyPress : onSharePress}>
+                    <ButtonText>
+                      {isWeb ? <Trans>Copy</Trans> : <Trans>Share</Trans>}
+                    </ButtonText>
+                  </Button>
+                  <Button
+                    label={_(msg`Save QR code`)}
+                    variant="solid"
+                    color="secondary"
+                    size="medium"
+                    onPress={onSavePress}>
+                    <ButtonText>
+                      <Trans>Save</Trans>
+                    </ButtonText>
+                  </Button>
+                </View>
+              )}
+            </>
           )}
         </View>
       </Dialog.ScrollableInner>
-    </Dialog.Outer>
+    </>
   )
 }
