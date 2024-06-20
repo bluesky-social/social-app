@@ -181,8 +181,8 @@ export function StepProfile() {
       image = await openCropper({
         mediaType: 'photo',
         cropperCircleOverlay: true,
-        height: image.height,
-        width: image.width,
+        height: 1000,
+        width: 1000,
         path: image.path,
       })
     }
