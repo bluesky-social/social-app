@@ -116,7 +116,7 @@ export function useCreateStarterPackMutation({
     },
     onSuccess: async data => {
       await whenAppViewReady(agent, data.uri, v => {
-        return typeof v?.uri === 'string'
+        return typeof v?.data.starterPack.uri === 'string'
       })
       await invalidateActorStarterPacksQuery({
         queryClient,
