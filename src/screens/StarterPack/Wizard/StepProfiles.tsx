@@ -3,6 +3,7 @@ import {ListRenderItemInfo, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {AppBskyActorDefs, ModerationOpts} from '@atproto/api'
 
+import {useA11y} from '#/state/a11y'
 import {isNative} from 'platform/detection'
 import {useActorAutocompleteQuery} from 'state/queries/actor-autocomplete'
 import {useActorSearchPaginated} from 'state/queries/actor-search'
@@ -26,6 +27,7 @@ export function StepProfiles({
   const t = useTheme()
   const [state, dispatch] = useWizardState()
   const [query, setQuery] = useState('')
+  const {screenReaderEnabled} = useA11y()
 
   const {data: topPages, fetchNextPage} = useActorSearchPaginated({
     query: encodeURIComponent('*'),
@@ -68,11 +70,9 @@ export function StepProfiles({
         containWeb={true}
         sideBorders={false}
         style={[a.flex_1]}
-        onEndReached={() => {
-          if (!query) {
-            fetchNextPage()
-          }
-        }}
+        onEndReached={
+          !query && !screenReaderEnabled ? () => fetchNextPage() : undefined
+        }
         onEndReachedThreshold={isNative ? 2 : 0.25}
         ListEmptyComponent={
           <View style={[a.flex_1, a.align_center, a.mt_lg]}>

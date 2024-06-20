@@ -5,6 +5,7 @@ import {ModerationOpts} from '@atproto/api'
 import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import debounce from 'lodash.debounce'
 
+import {useA11y} from '#/state/a11y'
 import {
   useGetPopularFeedsQuery,
   useSearchPopularFeedsMutation,
@@ -25,6 +26,7 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
   const t = useTheme()
   const [state, dispatch] = useWizardState()
   const [query, setQuery] = useState('')
+  const {screenReaderEnabled} = useA11y()
 
   const {data: popularFeedsPages, fetchNextPage} = useGetPopularFeedsQuery({
     limit: 30,
@@ -80,7 +82,9 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         contentContainerStyle={{paddingTop: 6}}
-        onEndReached={!query ? () => fetchNextPage() : undefined}
+        onEndReached={
+          !query && !screenReaderEnabled ? () => fetchNextPage() : undefined
+        }
         onEndReachedThreshold={2}
         renderScrollComponent={props => <KeyboardAwareScrollView {...props} />}
         keyboardShouldPersistTaps="handled"
