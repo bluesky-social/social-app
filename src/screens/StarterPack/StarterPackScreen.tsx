@@ -368,10 +368,14 @@ function OverflowMenu({
   const isOwn = starterPack.creator.did === currentAccount?.did
 
   const onDeleteStarterPack = async () => {
+    if (!starterPack.list) {
+      logger.error(`Unable to delete starterpack because list is missing`)
+      return
+    }
+
     deleteStarterPack({
       rkey: routeParams.rkey,
-      // TODO need to fix types
-      listUri: starterPack.list!.uri,
+      listUri: starterPack.list.uri,
     })
     logEvent('starterPack:delete', {})
   }
@@ -449,14 +453,16 @@ function OverflowMenu({
         </Menu.Outer>
       </Menu.Root>
 
-      <ReportDialog
-        params={{
-          type: 'starterpack',
-          uri: starterPack.list!.uri,
-          cid: starterPack.list!.cid,
-        }}
-        control={reportDialogControl}
-      />
+      {starterPack.list && (
+        <ReportDialog
+          control={reportDialogControl}
+          params={{
+            type: 'starterpack',
+            uri: starterPack.list.uri,
+            cid: starterPack.list.cid,
+          }}
+        />
+      )}
 
       <Prompt.Outer control={deleteDialogControl}>
         <Prompt.TitleText>

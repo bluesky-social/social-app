@@ -89,3 +89,13 @@ export function getStarterPackOgCard(
     return `https://ogcard.cdn.bsky.app/start/${didOrStarterPack.creator.did}/${rkey}`
   }
 }
+
+export function createStarterPackUri({
+  did,
+  rkey,
+}: {
+  did: string
+  rkey: string
+}): string | null {
+  return new AtUri(`at://${did}/app.bsky.graph.starterpack/${rkey}`).toString()
+}

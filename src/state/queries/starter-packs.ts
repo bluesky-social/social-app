@@ -18,6 +18,7 @@ import {
 import {until} from 'lib/async/until'
 import {createStarterPackList} from 'lib/generate-starterpack'
 import {
+  createStarterPackUri,
   httpStarterPackUriToAtUri,
   parseStarterPackUri,
 } from 'lib/strings/starter-pack'
@@ -261,7 +262,6 @@ export function useDeleteStarterPackMutation({
         throw new Error(`Requires logged in user`)
       }
 
-      // TODO parallel?
       await agent.app.bsky.graph.list.delete({
         repo: agent.session.did,
         rkey: new AtUri(listUri).rkey,
@@ -272,6 +272,17 @@ export function useDeleteStarterPackMutation({
       })
     },
     onSuccess: async (_, {listUri, rkey}) => {
+      const uri = createStarterPackUri({
+        did: agent.session!.did,
+        rkey,
+      })
+
+      if (uri) {
+        await whenAppViewReady(agent, uri, v => {
+          return Boolean(v?.data?.starterPack) === false
+        })
+      }
+
       await invalidateListMembersQuery({queryClient, uri: listUri})
       await invalidateActorStarterPacksQuery({
         queryClient,
