@@ -2,6 +2,7 @@ import {
   AppBskyActorDefs,
   AppBskyFeedDefs,
   AppBskyGraphDefs,
+  AppBskyGraphGetStarterPack,
   AppBskyGraphStarterpack,
   AtUri,
   BskyAgent,
@@ -220,7 +221,7 @@ export function useEditStarterPackMutation({
     onSuccess: async (_, {currentStarterPack}) => {
       const parsed = parseStarterPackUri(currentStarterPack.uri)
       await whenAppViewReady(agent, currentStarterPack.uri, v => {
-        return currentStarterPack.cid !== v?.cid
+        return currentStarterPack.cid !== v?.data.starterPack.cid
       })
       await invalidateActorStarterPacksQuery({
         queryClient,
@@ -248,15 +249,12 @@ export function useEditStarterPackMutation({
 async function whenAppViewReady(
   agent: BskyAgent,
   uri: string,
-  fn: (res?: AppBskyGraphDefs.StarterPackView) => boolean,
+  fn: (res?: AppBskyGraphGetStarterPack.Response) => boolean,
 ) {
   await until(
-    10, // 5 tries
-    1e5, // 1s delay between tries
+    5, // 5 tries
+    1e3, // 1s delay between tries
     fn,
-    () =>
-      agent.app.bsky.graph.getStarterPack({
-        starterPack: uri,
-      }),
+    () => agent.app.bsky.graph.getStarterPack({starterPack: uri}),
   )
 }
