@@ -474,7 +474,7 @@ export function useSavedFeeds() {
 
   return useQuery({
     staleTime: STALE.INFINITY,
-    enabled: savedItems.length > 0 && !isLoadingPrefs,
+    enabled: !isLoadingPrefs,
     queryKey: [pinnedFeedInfosQueryKeyRoot, ...savedItems],
     placeholderData: {
       count: savedItems.length,
