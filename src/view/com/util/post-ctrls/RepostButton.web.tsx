@@ -12,6 +12,7 @@ import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repos
 import * as Menu from '#/components/Menu'
 import {Text} from '#/components/Typography'
 import {EventStopper} from '../EventStopper'
+import {formatCount} from '../numeric/format'
 
 interface Props {
   isReposted: boolean
@@ -115,20 +116,22 @@ const RepostInner = ({
   color: {color: string}
   repostCount?: number
   big?: boolean
-}) => (
-  <View style={[a.flex_row, a.align_center, a.gap_xs, {padding: 5}]}>
-    <Repost style={color} width={big ? 22 : 18} />
-    {typeof repostCount !== 'undefined' && repostCount > 0 ? (
-      <Text
-        testID="repostCount"
-        style={[
-          color,
-          big ? a.text_md : {fontSize: 15},
-          isReposted && [a.font_bold],
-          a.user_select_none,
-        ]}>
-        {repostCount}
-      </Text>
-    ) : undefined}
-  </View>
-)
+}) => {
+  return (
+    <View style={[a.flex_row, a.align_center, a.gap_xs, {padding: 5}]}>
+      <Repost style={color} width={big ? 22 : 18} />
+      {typeof repostCount !== 'undefined' && repostCount > 0 ? (
+        <Text
+          testID="repostCount"
+          style={[
+            color,
+            big ? a.text_md : {fontSize: 15},
+            isReposted && [a.font_bold],
+            a.user_select_none,
+          ]}>
+          {formatCount(repostCount)}
+        </Text>
+      ) : undefined}
+    </View>
+  )
+}

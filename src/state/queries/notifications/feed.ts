@@ -26,7 +26,6 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
-import {useMutedThreads} from '#/state/muted-threads'
 import {useAgent} from '#/state/session'
 import {useModerationOpts} from '../../preferences/moderation-opts'
 import {STALE} from '..'
@@ -54,7 +53,6 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
   const agent = useAgent()
   const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
-  const threadMutes = useMutedThreads()
   const unreads = useUnreadNotificationsApi()
   const enabled = opts?.enabled !== false
   const lastPageCountRef = useRef(0)
@@ -82,7 +80,6 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
             cursor: pageParam,
             queryClient,
             moderationOpts,
-            threadMutes,
             fetchAdditionalData: true,
           })
         ).page

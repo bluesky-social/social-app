@@ -103,6 +103,8 @@ export type LogEvents = {
   'post:unrepost': {
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
   }
+  'post:mute': {}
+  'post:unmute': {}
   'profile:follow': {
     didBecomeMutual: boolean | undefined
     followeeClout: number | undefined

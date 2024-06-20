@@ -60,6 +60,7 @@ export const schema = z.object({
     appLanguage: z.string(),
   }),
   requireAltTextEnabled: z.boolean(), // should move to server
+  largeAltBadgeEnabled: z.boolean().optional(),
   externalEmbeds: z
     .object({
       giphy: z.enum(externalEmbedOptions).optional(),
@@ -74,7 +75,6 @@ export const schema = z.object({
       flickr: z.enum(externalEmbedOptions).optional(),
     })
     .optional(),
-  mutedThreads: z.array(z.string()), // should move to server
   invites: z.object({
     copiedInvites: z.array(z.string()),
   }),
@@ -88,6 +88,8 @@ export const schema = z.object({
   disableHaptics: z.boolean().optional(),
   disableAutoplay: z.boolean().optional(),
   kawaii: z.boolean().optional(),
+  /** @deprecated */
+  mutedThreads: z.array(z.string()),
 })
 export type Schema = z.infer<typeof schema>
 
@@ -111,6 +113,7 @@ export const defaults: Schema = {
     appLanguage: deviceLocales[0] || 'en',
   },
   requireAltTextEnabled: false,
+  largeAltBadgeEnabled: false,
   externalEmbeds: {},
   mutedThreads: [],
   invites: {
