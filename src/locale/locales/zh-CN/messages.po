@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh_CN\n"
 "Project-Id-Version: zh-CN for bluesky-social-app\n"
 "Report-Msgid-Bugs-To: Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-06-20 16:32+0800\n"
+"PO-Revision-Date: 2024-06-20 16:34+0800\n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
 "Language-Team: Frudrax Cheng (auroursa), Simon Chan (RitsukiP), U2FsdGVkX1, Mikan Harada (mitian233), IceCodeNew\n"
 "Plural-Forms: \n"
@@ -1794,10 +1794,6 @@ msgstr "所有人"
 msgid "Everybody can reply"
 msgstr "所有人都可以回复"
 
-#: src/view/com/threadgate/WhoCanReply.tsx:129
-#~ msgid "Everybody can reply."
-#~ msgstr "所有人都可以回复"
-
 #: src/components/dms/MessagesNUX.tsx:131
 #: src/components/dms/MessagesNUX.tsx:134
 #: src/screens/Messages/Settings.tsx:75
@@ -3407,10 +3403,6 @@ msgstr "目前只支持上传 .jpg 或 .png 格式的图片文件"
 msgid "Only {0} can reply"
 msgstr "只有 {0} 可以回复"
 
-#: src/view/com/threadgate/WhoCanReply.tsx:133
-#~ msgid "Only {0} can reply."
-#~ msgstr "只有{0}可以回复。"
-
 #: src/screens/Signup/StepHandle.tsx:98
 msgid "Only contains letters, numbers, and hyphens"
 msgstr "仅限字母、数字和连字符"
@@ -4129,10 +4121,6 @@ msgstr "该讨论串的回复已被禁用"
 #: src/view/com/threadgate/WhoCanReply.tsx:237
 msgid "Replies to this thread are disabled"
 msgstr "该讨论串的回复已被禁用"
-
-#: src/view/com/threadgate/WhoCanReply.tsx:131
-#~ msgid "Replies to this thread are disabled."
-#~ msgstr "该讨论串的回复已被禁用。"
 
 #: src/view/com/composer/Composer.tsx:477
 msgctxt "action"
