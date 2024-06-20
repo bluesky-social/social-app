@@ -63,7 +63,7 @@ export function QrCodeDialog({
           return
         }
 
-        const filename = `${FS.cacheDirectory}/${nanoid(12)}.png`
+        const filename = `${FS.documentDirectory}/${nanoid(12)}.png`
 
         // Incase of a FS failure, don't crash the app
         try {
