@@ -1,27 +1,14 @@
 import React, {useCallback} from 'react'
 import {ListRenderItemInfo, View} from 'react-native'
-import {AppBskyActorDefs, AtUri} from '@atproto/api'
+import {AppBskyActorDefs, AtUri, ModerationOpts} from '@atproto/api'
 
 import {useBottomBarOffset} from 'lib/hooks/useBottomBarOffset'
 import {isNative} from 'platform/detection'
 import {useListMembersQuery} from 'state/queries/list-members'
 import {useSession} from 'state/session'
-import {ProfileCardWithFollowBtn} from 'view/com/profile/ProfileCard'
 import {List, ListRef} from 'view/com/util/List'
 import {SectionRef} from '#/screens/Profile/Sections/types'
-
-function renderItem({
-  item,
-  index,
-}: ListRenderItemInfo<AppBskyActorDefs.ProfileViewBasic>) {
-  return (
-    <ProfileCardWithFollowBtn
-      profile={item}
-      logContext="StarterPackProfilesList"
-      noBorder={isNative && index === 0}
-    />
-  )
-}
+import {Default as ProfileCard} from '#/components/ProfileCard'
 
 function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic, index: number) {
   return `${item.did}-${index}`
@@ -31,10 +18,14 @@ interface ProfilesListProps {
   listUri: string
   headerHeight: number
   scrollElRef: ListRef
+  moderationOpts: ModerationOpts
 }
 
 export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
-  function ProfilesListImpl({listUri, headerHeight, scrollElRef}, ref) {
+  function ProfilesListImpl(
+    {listUri, headerHeight, scrollElRef, moderationOpts},
+    ref,
+  ) {
     const [initialHeaderHeight] = React.useState(headerHeight)
     const bottomBarOffset = useBottomBarOffset(20)
     const {currentAccount} = useSession()
@@ -71,6 +62,12 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
     React.useImperativeHandle(ref, () => ({
       scrollToTop: onScrollToTop,
     }))
+
+    const renderItem = ({
+      item,
+    }: ListRenderItemInfo<AppBskyActorDefs.ProfileViewBasic>) => {
+      return <ProfileCard profile={item} moderationOpts={moderationOpts} />
+    }
 
     return (
       <List

@@ -1,9 +1,10 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyActorDefs} from '@atproto/api'
+import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
 
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
+import {ProfileCardPills} from 'view/com/profile/ProfileCard'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {Link} from '#/components/Link'
@@ -11,8 +12,10 @@ import {Text} from '#/components/Typography'
 
 export function Default({
   profile,
+  moderationOpts,
 }: {
   profile: AppBskyActorDefs.ProfileViewDetailed
+  moderationOpts: ModerationOpts
 }) {
   const t = useTheme()
 
@@ -22,13 +25,22 @@ export function Default({
       ? sanitizeDisplayName(profile.displayName)
       : handle
 
+  const moderation = moderateProfile(profile, moderationOpts)
+
   return (
     <Wrapper did={profile.did}>
       <View style={[a.flex_row, a.gap_sm]}>
         <UserAvatar
           size={42}
           avatar={profile.avatar}
-          type={profile.associated?.labeler ? 'algo' : 'user'}
+          type={
+            profile.associated?.labeler
+              ? 'labeler'
+              : profile.associated?.feedgens
+              ? 'algo'
+              : 'user'
+          }
+          moderation={moderation.ui('avatar')}
         />
         <View>
           <Text style={[a.text_md, a.font_bold, a.leading_snug]}>{name}</Text>
@@ -36,6 +48,10 @@ export function Default({
             {handle}
           </Text>
         </View>
+        <ProfileCardPills
+          followedBy={Boolean(profile.viewer?.followedBy)}
+          moderation={moderation}
+        />
       </View>
       {profile.description && (
         <Text numberOfLines={3}>{profile.description}</Text>

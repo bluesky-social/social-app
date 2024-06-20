@@ -8,8 +8,8 @@ import {useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {logger} from '#/logger'
 import {cleanError} from '#/lib/strings/errors'
+import {logger} from '#/logger'
 import {useDeleteStarterPackMutation} from '#/state/queries/starter-packs'
 import {HITSLOP_20} from 'lib/constants'
 import {makeProfileLink, makeStarterPackLink} from 'lib/routes/links'
@@ -17,6 +17,7 @@ import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
 import {shareUrl} from 'lib/sharing'
 import {logEvent} from 'lib/statsig/statsig'
 import {isWeb} from 'platform/detection'
+import {useModerationOpts} from 'state/preferences/moderation-opts'
 import {RQKEY} from 'state/queries/list-members'
 import {useResolveDidQuery} from 'state/queries/resolve-uri'
 import {useStarterPackQuery} from 'state/queries/starter-packs'
@@ -55,6 +56,7 @@ export function StarterPackScreen({route}: StarterPackScreeProps) {
   const {_} = useLingui()
 
   const {name, rkey} = route.params
+  const moderationOpts = useModerationOpts()
   const {
     data: did,
     isLoading: isLoadingDid,
@@ -71,10 +73,10 @@ export function StarterPackScreen({route}: StarterPackScreeProps) {
     AppBskyGraphDefs.validateStarterPackView(starterPack) &&
     AppBskyGraphStarterpack.validateRecord(starterPack.record)
 
-  if (!did || !starterPack || !isValid) {
+  if (!did || !starterPack || !isValid || !moderationOpts) {
     return (
       <ListMaybePlaceholder
-        isLoading={isLoadingDid || isLoadingStarterPack}
+        isLoading={isLoadingDid || isLoadingStarterPack || !moderationOpts}
         isError={isErrorDid || isErrorStarterPack || !isValid}
         errorMessage={_(msg`That starter pack could not be found.`)}
       />
@@ -104,6 +106,7 @@ export function StarterPackScreen({route}: StarterPackScreeProps) {
                   headerHeight={headerHeight}
                   // @ts-expect-error
                   scrollElRef={scrollElRef}
+                  moderationOpts={moderationOpts}
                 />
               )
             : null}
