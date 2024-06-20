@@ -416,14 +416,13 @@ function Footer({
       style={[
         a.border_t,
         a.align_center,
-        a.px_md,
+        a.px_lg,
         a.pt_xl,
         a.gap_md,
         t.atoms.bg,
         t.atoms.border_contrast_medium,
         {
-          height: 190 + bottomInset,
-          paddingBottom: 20 + bottomInset,
+          paddingBottom: a.pb_lg.paddingBottom + bottomInset,
         },
         isNative && [
           a.border_l,
@@ -511,13 +510,13 @@ function Footer({
           a.w_full,
           a.justify_between,
           a.align_center,
-          {marginTop: 'auto'},
+          isNative ? a.mt_sm : a.mt_md,
         ]}>
         {isEditEnabled ? (
           <Button
             label={_(msg`Edit`)}
-            variant="ghost"
-            color="primary"
+            variant="solid"
+            color="secondary"
             size="small"
             style={{width: 70}}
             onPress={editDialogControl.open}>
