@@ -1792,7 +1792,7 @@ msgstr "모두"
 #: src/view/com/threadgate/WhoCanReply.tsx:121
 #: src/view/com/threadgate/WhoCanReply.tsx:235
 msgid "Everybody can reply"
-msgstr "누구나 답글을 달 수 있습니다"
+msgstr "누구나 답글을 달 수 있음"
 
 #: src/components/dms/MessagesNUX.tsx:131
 #: src/components/dms/MessagesNUX.tsx:134
@@ -3401,7 +3401,7 @@ msgstr ".jpg 및 .png 파일만 지원합니다"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:239
 msgid "Only {0} can reply"
-msgstr "{0}만 답글을 달 수 있습니다"
+msgstr "{0}만 답글을 달 수 있음"
 
 #: src/screens/Signup/StepHandle.tsx:98
 msgid "Only contains letters, numbers, and hyphens"
@@ -4116,15 +4116,11 @@ msgstr "답글 비활성화됨"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:123
 msgid "Replies on this thread are disabled"
-msgstr "이 스레드에 대한 답글이 비활성화됩니다"
+msgstr "이 스레드에 대한 답글이 비활성화됨"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:237
 msgid "Replies to this thread are disabled"
-msgstr "이 스레드에 대한 답글이 비활성화됩니다"
-
-#: src/view/com/threadgate/WhoCanReply.tsx:131
-#~ msgid "Replies to this thread are disabled."
-#~ msgstr "이 스레드에 대한 답글이 비활성화됩니다."
+msgstr "이 스레드에 대한 답글이 비활성화됨"
 
 #: src/view/com/composer/Composer.tsx:477
 msgctxt "action"
