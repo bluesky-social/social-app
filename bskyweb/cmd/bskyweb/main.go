@@ -41,6 +41,12 @@ func run(args []string) {
 					EnvVars: []string{"ATP_APPVIEW_HOST", "ATP_PDS_HOST"},
 				},
 				&cli.StringFlag{
+					Name:  "ogcard-host",
+					Usage: "scheme, hostname, and port of ogcard service",
+					Required: false,
+					EnvVars: []string{"OGCARD_HOST"},
+				},
+				&cli.StringFlag{
 					Name:     "http-address",
 					Usage:    "Specify the local IP/port to bind to",
 					Required: false,

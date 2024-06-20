@@ -30,12 +30,21 @@ type Server struct {
 	echo  *echo.Echo
 	httpd *http.Server
 	xrpcc *xrpc.Client
+	cfg   *Config
+}
+
+type Config struct {
+	debug       bool
+	httpAddress string
+	appviewHost string
+	ogcardHost  string
 }
 
 func serve(cctx *cli.Context) error {
 	debug := cctx.Bool("debug")
 	httpAddress := cctx.String("http-address")
 	appviewHost := cctx.String("appview-host")
+	ogcardHost := cctx.String("ogcard-host")
 
 	// Echo
 	e := echo.New()
@@ -71,6 +80,12 @@ func serve(cctx *cli.Context) error {
 	server := &Server{
 		echo:  e,
 		xrpcc: xrpcc,
+		cfg: &Config{
+			debug:       debug,
+			httpAddress: httpAddress,
+			appviewHost: appviewHost,
+			ogcardHost:  ogcardHost,
+		},
 	}
 
 	// Create the HTTP server.
@@ -220,6 +235,9 @@ func serve(cctx *cli.Context) error {
 	e.GET("/profile/:handleOrDID/post/:rkey", server.WebPost)
 	e.GET("/profile/:handleOrDID/post/:rkey/liked-by", server.WebGeneric)
 	e.GET("/profile/:handleOrDID/post/:rkey/reposted-by", server.WebGeneric)
+
+	// starter pack endpoint
+	e.GET("/start/:handleOrDID/:rkey", server.WebStarterPack)
 
 	// Start the server.
 	log.Infof("starting server address=%s", httpAddress)
@@ -375,6 +393,30 @@ func (srv *Server) WebPost(c echo.Context) error {
 	}
 
 	return c.Render(http.StatusOK, "post.html", data)
+}
+
+func (srv *Server) WebStarterPack(c echo.Context) error {
+	req := c.Request()
+	data := pongo2.Context{}
+	data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
+	// TODO get starter pack name for use in og:title
+	if srv.cfg.ogcardHost != "" {
+		// sanity check arguments. don't 4xx, just let app handle if not expected format
+		rkeyParam := c.Param("rkey")
+		rkey, err := syntax.ParseRecordKey(rkeyParam)
+		if err != nil {
+			return c.Render(http.StatusOK, "starterpack.html", data)
+		}
+		handleOrDIDParam := c.Param("handleOrDID")
+		handleOrDID, err := syntax.ParseAtIdentifier(handleOrDIDParam)
+		if err != nil {
+			return c.Render(http.StatusOK, "starterpack.html", data)
+		}
+		identifier := handleOrDID.Normalize().String()
+		data["imgThumbUrl"] = fmt.Sprintf("%s/start/%s/%s", srv.cfg.ogcardHost, identifier, rkey)
+		log.Infof("hi %s", data["imgThumbUrl"])
+	}
+	return c.Render(http.StatusOK, "starterpack.html", data)
 }
 
 func (srv *Server) WebProfile(c echo.Context) error {
