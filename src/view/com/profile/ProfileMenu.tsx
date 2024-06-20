@@ -9,7 +9,6 @@ import {useQueryClient} from '@tanstack/react-query'
 import {logger} from '#/logger'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {HITSLOP_10} from 'lib/constants'
-import {usePalette} from 'lib/hooks/usePalette'
 import {makeProfileLink} from 'lib/routes/links'
 import {shareUrl} from 'lib/sharing'
 import {toShareUrl} from 'lib/strings/url-helpers'
@@ -24,7 +23,7 @@ import {
 import {useSession} from 'state/session'
 import {EventStopper} from 'view/com/util/EventStopper'
 import * as Toast from 'view/com/util/Toast'
-import {useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
 import {ListSparkle_Stroke2_Corner0_Rounded as List} from '#/components/icons/ListSparkle'
@@ -49,7 +48,7 @@ let ProfileMenu = ({
   const {currentAccount, hasSession} = useSession()
   const t = useTheme()
   // TODO ALF this
-  const pal = usePalette('default')
+  const alf = useTheme()
   const {track} = useAnalytics()
   const {openModal} = useModalControls()
   const reportDialogControl = useReportDialogControl()
@@ -187,21 +186,21 @@ let ProfileMenu = ({
     <EventStopper onKeyDown={false}>
       <Menu.Root>
         <Menu.Trigger label={_(`More options`)}>
-          {({props}) => {
+          {({props, state}) => {
             return (
               <TouchableOpacity
                 {...props}
                 hitSlop={HITSLOP_10}
                 testID="profileHeaderDropdownBtn"
                 style={[
-                  {
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: 8,
-                    borderRadius: 50,
-                  },
-                  pal.btn,
+                  a.rounded_full,
+                  a.justify_center,
+                  a.align_center,
+                  {width: 36, height: 36},
+                  alf.atoms.bg_contrast_25,
+                  (state.hovered || state.pressed) && [
+                    alf.atoms.bg_contrast_50,
+                  ],
                 ]}>
                 <FontAwesomeIcon
                   icon="ellipsis"
