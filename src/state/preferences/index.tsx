@@ -8,6 +8,7 @@ import {Provider as HiddenPostsProvider} from './hidden-posts'
 import {Provider as InAppBrowserProvider} from './in-app-browser'
 import {Provider as KawaiiProvider} from './kawaii'
 import {Provider as LanguagesProvider} from './languages'
+import {Provider as LargeAltBadgeProvider} from './large-alt-badge'
 
 export {
   useRequireAltTextEnabled,
@@ -27,17 +28,19 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   return (
     <LanguagesProvider>
       <AltTextRequiredProvider>
-        <ExternalEmbedsProvider>
-          <HiddenPostsProvider>
-            <InAppBrowserProvider>
-              <DisableHapticsProvider>
-                <AutoplayProvider>
-                  <KawaiiProvider>{children}</KawaiiProvider>
-                </AutoplayProvider>
-              </DisableHapticsProvider>
-            </InAppBrowserProvider>
-          </HiddenPostsProvider>
-        </ExternalEmbedsProvider>
+        <LargeAltBadgeProvider>
+          <ExternalEmbedsProvider>
+            <HiddenPostsProvider>
+              <InAppBrowserProvider>
+                <DisableHapticsProvider>
+                  <AutoplayProvider>
+                    <KawaiiProvider>{children}</KawaiiProvider>
+                  </AutoplayProvider>
+                </DisableHapticsProvider>
+              </InAppBrowserProvider>
+            </HiddenPostsProvider>
+          </ExternalEmbedsProvider>
+        </LargeAltBadgeProvider>
       </AltTextRequiredProvider>
     </LanguagesProvider>
   )

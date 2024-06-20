@@ -25,7 +25,7 @@ import {sanitizeHandle} from 'lib/strings/handles'
 import {countLines} from 'lib/strings/helpers'
 import {niceDate} from 'lib/strings/time'
 import {s} from 'lib/styles'
-import {isNative, isWeb} from 'platform/detection'
+import {isWeb} from 'platform/detection'
 import {useSession} from 'state/session'
 import {PostThreadFollowBtn} from 'view/com/post-thread/PostThreadFollowBtn'
 import {atoms as a} from '#/alf'
@@ -35,7 +35,7 @@ import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
 import {PostAlerts} from '../../../components/moderation/PostAlerts'
 import {PostHider} from '../../../components/moderation/PostHider'
 import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
-import {WhoCanReply} from '../threadgate/WhoCanReply'
+import {WhoCanReplyBlock, WhoCanReplyInline} from '../threadgate/WhoCanReply'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Link, TextLink} from '../util/Link'
 import {formatCount} from '../util/numeric/format'
@@ -340,6 +340,7 @@ let PostThreadItemLoaded = ({
             </ContentHider>
             <ExpandedPostDetails
               post={post}
+              isThreadAuthor={isThreadAuthor}
               translatorUrl={translatorUrl}
               needsTranslation={needsTranslation}
             />
@@ -396,11 +397,6 @@ let PostThreadItemLoaded = ({
             </View>
           </View>
         </View>
-        <WhoCanReply
-          post={post}
-          isThreadAuthor={isThreadAuthor}
-          style={{borderBottomWidth: isNative ? 1 : 0}}
-        />
       </>
     )
   } else {
@@ -579,14 +575,7 @@ let PostThreadItemLoaded = ({
             ) : undefined}
           </PostHider>
         </PostOuterWrapper>
-        <WhoCanReply
-          post={post}
-          style={{
-            marginTop: 4,
-            borderBottomWidth: 1,
-          }}
-          isThreadAuthor={isThreadAuthor}
-        />
+        <WhoCanReplyBlock post={post} isThreadAuthor={isThreadAuthor} />
       </>
     )
   }
@@ -654,10 +643,12 @@ function PostOuterWrapper({
 
 function ExpandedPostDetails({
   post,
+  isThreadAuthor,
   needsTranslation,
   translatorUrl,
 }: {
   post: AppBskyFeedDefs.PostView
+  isThreadAuthor: boolean
   needsTranslation: boolean
   translatorUrl: string
 }) {
@@ -670,14 +661,23 @@ function ExpandedPostDetails({
   }, [openLink, translatorUrl])
 
   return (
-    <View style={[s.flexRow, s.mt2, s.mb10]}>
-      <Text style={pal.textLight}>{niceDate(post.indexedAt)}</Text>
+    <View
+      style={[
+        a.flex_row,
+        a.align_center,
+        a.flex_wrap,
+        a.gap_sm,
+        s.mt2,
+        s.mb10,
+      ]}>
+      <Text style={[a.text_sm, pal.textLight]}>{niceDate(post.indexedAt)}</Text>
+      <WhoCanReplyInline post={post} isThreadAuthor={isThreadAuthor} />
       {needsTranslation && (
         <>
-          <Text style={pal.textLight}> &middot; </Text>
+          <Text style={[a.text_sm, pal.textLight]}>&middot;</Text>
 
           <Text
-            style={pal.link}
+            style={[a.text_sm, pal.link]}
             title={_(msg`Translate`)}
             onPress={onTranslatePress}>
             <Trans>Translate</Trans>
