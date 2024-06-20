@@ -152,15 +152,14 @@ export function WhoCanReply({
             <Trans>
               Only{' '}
               {settings.map((rule, i) => (
-                <>
+                <React.Fragment key={`rule-${i}`}>
                   <Rule
-                    key={`rule-${i}`}
                     rule={rule}
                     post={post}
                     lists={post.threadgate!.lists}
                   />
                   <Separator key={`sep-${i}`} i={i} length={settings.length} />
-                </>
+                </React.Fragment>
               ))}{' '}
               can reply.
             </Trans>
