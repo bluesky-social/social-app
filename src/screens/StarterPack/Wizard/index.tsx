@@ -213,6 +213,7 @@ function WizardInner({
     navigation.replace('StarterPack', {
       name: currentAccount!.handle,
       rkey,
+      new: true,
     })
   }
 
