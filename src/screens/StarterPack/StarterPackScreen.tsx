@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {
   AppBskyGraphDefs,
   AppBskyGraphStarterpack,
+  AtUri,
   ModerationOpts,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -34,7 +35,8 @@ import {CenteredView} from 'view/com/util/Views'
 import {bulkWriteFollows} from '#/screens/Onboarding/util'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {useDialogControl} from '#/components/Dialog'
+import {DialogControlProps, useDialogControl} from '#/components/Dialog'
+import * as Dialog from '#/components/Dialog'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBox} from '#/components/icons/ArrowOutOfBox'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
@@ -106,22 +108,10 @@ function StarterPackScreenInner({
   routeParams: StarterPackScreeProps['route']['params']
   moderationOpts: ModerationOpts
 }) {
-  const shortenLink = useShortenLink()
-
   const tabs = [
     ...(starterPack.list ? ['People'] : []),
     ...(starterPack.feeds?.length ? ['Feeds'] : []),
   ]
-
-  const onShareLink = async () => {
-    const fullUrl = makeStarterPackLink(routeParams.name, routeParams.rkey)
-    const res = await shortenLink(fullUrl)
-    shareUrl(res.url)
-    logEvent('starterPack:share', {
-      starterPack: starterPack.uri,
-      shareType: 'link',
-    })
-  }
 
   return (
     <CenteredView style={[a.h_full_vh]}>
@@ -130,11 +120,7 @@ function StarterPackScreenInner({
           items={tabs}
           isHeaderReady={true}
           renderHeader={() => (
-            <Header
-              starterPack={starterPack}
-              routeParams={routeParams}
-              onShareLink={onShareLink}
-            />
+            <Header starterPack={starterPack} routeParams={routeParams} />
           )}>
           {starterPack.list != null
             ? ({headerHeight, scrollElRef}) => (
@@ -170,11 +156,9 @@ function StarterPackScreenInner({
 function Header({
   starterPack,
   routeParams,
-  onShareLink,
 }: {
   starterPack: AppBskyGraphDefs.StarterPackView
   routeParams: StarterPackScreeProps['route']['params']
-  onShareLink: () => void
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -235,10 +219,7 @@ function Header({
         avatarType="starter-pack">
         <View style={[a.flex_row, a.gap_sm, a.align_center]}>
           {isOwn ? (
-            <OwnerShareMenu
-              starterPack={starterPack}
-              onShareLink={onShareLink}
-            />
+            <OwnerShareMenu starterPack={starterPack} />
           ) : (
             <Button
               label={_(msg`Follow all`)}
@@ -253,11 +234,7 @@ function Header({
               </ButtonText>
             </Button>
           )}
-          <OverflowMenu
-            routeParams={routeParams}
-            starterPack={starterPack}
-            onShareLink={onShareLink}
-          />
+          <OverflowMenu routeParams={routeParams} starterPack={starterPack} />
         </View>
       </ProfileSubpageHeader>
       {record.description || joinedAllTimeCount >= 25 ? (
@@ -550,5 +527,34 @@ function OwnerShareMenu({
         setIsOpen={setIsQrDialogOpen}
       />
     </>
+  )
+}
+
+function ShareDialog({
+  starterPack,
+  control,
+}: {
+  starterPack: AppBskyGraphDefs.StarterPackView
+  control: DialogControlProps
+}) {
+  const shortenLink = useShortenLink()
+  const rkey = new AtUri(starterPack.uri).rkey
+
+  const onShareLink = async () => {
+    const fullUrl = makeStarterPackLink(starterPack.creator.did, rkey)
+    const res = await shortenLink(fullUrl)
+    shareUrl(res.url)
+    logEvent('starterPack:share', {
+      starterPack: starterPack.uri,
+      shareType: 'link',
+    })
+  }
+
+  return (
+    <Dialog.Outer control={control}>
+      <Dialog.ScrollableInner>
+        <View />
+      </Dialog.ScrollableInner>
+    </Dialog.Outer>
   )
 }

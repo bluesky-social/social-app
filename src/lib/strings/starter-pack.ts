@@ -1,4 +1,4 @@
-import {AtUri} from '@atproto/api'
+import {AppBskyGraphDefs, AtUri} from '@atproto/api'
 
 export function createStarterPackLinkFromAndroidReferrer(
   referrerQueryString: string,
@@ -76,4 +76,11 @@ export function httpStarterPackUriToAtUri(httpUri?: string): string | null {
   if (httpUri.startsWith('at://')) return httpUri
 
   return `at://${parsed.name}/app.bsky.graph.starterpack/${parsed.rkey}`
+}
+
+export function starterPackToOgCard(
+  starterPack: AppBskyGraphDefs.StarterPackView,
+) {
+  const rkey = new AtUri(starterPack.uri).rkey
+  return `https://ogcard.bsky.app/start/${starterPack.creator.did}/${rkey}`
 }
