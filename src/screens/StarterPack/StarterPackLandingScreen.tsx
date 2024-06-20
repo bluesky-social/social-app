@@ -133,6 +133,18 @@ function LandingScreenLoaded({
     }
   }
 
+  const onJoinWithoutPress = () => {
+    if (activeStarterPack?.isClip) {
+      setAppClipOverlayVisible(true)
+      postAppClipMessage({
+        action: 'present',
+      })
+    } else {
+      setActiveStarterPack(undefined)
+      setScreenState(LoggedOutScreenState.S_CreateAccount)
+    }
+  }
+
   if (!AppBskyGraphStarterpack.isRecord(record)) {
     return null
   }
@@ -272,10 +284,7 @@ function LandingScreenLoaded({
             color="secondary"
             size="medium"
             style={[a.py_lg]}
-            onPress={() => {
-              setActiveStarterPack(undefined)
-              setScreenState(LoggedOutScreenState.S_CreateAccount)
-            }}>
+            onPress={onJoinWithoutPress}>
             <ButtonText>
               <Trans>Signup without a starter pack</Trans>
             </ButtonText>
