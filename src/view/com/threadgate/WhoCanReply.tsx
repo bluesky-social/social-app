@@ -1,12 +1,19 @@
 import React from 'react'
 import {Keyboard, StyleProp, View, ViewStyle} from 'react-native'
-import {AppBskyFeedDefs, AppBskyGraphDefs, AtUri} from '@atproto/api'
+import {
+  AppBskyFeedDefs,
+  AppBskyFeedGetPostThread,
+  AppBskyGraphDefs,
+  AtUri,
+  BskyAgent,
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {createThreadgate} from '#/lib/api'
+import {until} from '#/lib/async/until'
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {makeListLink, makeProfileLink} from '#/lib/routes/links'
@@ -85,6 +92,18 @@ export function WhoCanReply({
               rkey: new AtUri(post.uri).rkey,
             })
           }
+          await whenAppViewReady(agent, post.uri, res => {
+            const thread = res.data.thread
+            if (AppBskyFeedDefs.isThreadViewPost(thread)) {
+              const fetchedSettings = threadgateViewToSettings(
+                thread.post.threadgate,
+              )
+              return (
+                JSON.stringify(fetchedSettings) === JSON.stringify(newSettings)
+              )
+            }
+            return false
+          })
           Toast.show('Thread settings updated')
           queryClient.invalidateQueries({
             queryKey: [POST_THREAD_RQKEY_ROOT],
@@ -133,15 +152,14 @@ export function WhoCanReply({
             <Trans>
               Only{' '}
               {settings.map((rule, i) => (
-                <>
+                <React.Fragment key={`rule-${i}`}>
                   <Rule
-                    key={`rule-${i}`}
                     rule={rule}
                     post={post}
                     lists={post.threadgate!.lists}
                   />
                   <Separator key={`sep-${i}`} i={i} length={settings.length} />
-                </>
+                </React.Fragment>
               ))}{' '}
               can reply.
             </Trans>
@@ -226,4 +244,21 @@ function Separator({i, length}: {i: number; length: number}) {
     )
   }
   return <>, </>
+}
+
+async function whenAppViewReady(
+  agent: BskyAgent,
+  uri: string,
+  fn: (res: AppBskyFeedGetPostThread.Response) => boolean,
+) {
+  await until(
+    5, // 5 tries
+    1e3, // 1s delay between tries
+    fn,
+    () =>
+      agent.app.bsky.feed.getPostThread({
+        uri,
+        depth: 0,
+      }),
+  )
 }
