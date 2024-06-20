@@ -1,15 +1,21 @@
 import React from 'react'
 import {View} from 'react-native'
+import * as FS from 'expo-file-system'
 import {Image} from 'expo-image'
+import {requestMediaLibraryPermissionsAsync} from 'expo-image-picker'
 import {AppBskyGraphDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {nanoid} from 'nanoid/non-secure'
 
+import {logger} from '#/logger'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {saveImageToMediaLibrary} from 'lib/media/manip'
 import {shareUrl} from 'lib/sharing'
 import {logEvent} from 'lib/statsig/statsig'
 import {getStarterPackOgCard} from 'lib/strings/starter-pack'
-import {isWeb} from 'platform/detection'
+import {isNative, isWeb} from 'platform/detection'
+import * as Toast from 'view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {DialogControlProps} from '#/components/Dialog'
@@ -54,6 +60,38 @@ function ShareDialogInner({
       shareType: 'link',
     })
     control.close()
+  }
+
+  const onSave = async () => {
+    const res = await requestMediaLibraryPermissionsAsync()
+
+    if (!res) {
+      Toast.show(
+        _(msg`You must grant access to your photo library to save the image.`),
+      )
+      return
+    }
+
+    const cachePath = await Image.getCachePathAsync(imageUrl)
+    const filename = `${FS.documentDirectory}/${nanoid(12)}.png`
+
+    if (!cachePath) {
+      Toast.show(_(msg`An error occurred while saving the image.`))
+      return
+    }
+
+    try {
+      await FS.copyAsync({from: cachePath, to: filename})
+      await saveImageToMediaLibrary({uri: filename})
+      await FS.deleteAsync(filename)
+
+      Toast.show(_(msg`Image saved to your camera roll!`))
+      control.close()
+    } catch (e: unknown) {
+      Toast.show(_(msg`An error occurred while saving the QR code!`))
+      logger.error('Failed to save QR code', {error: e})
+      return
+    }
   }
 
   return (
@@ -120,6 +158,19 @@ function ShareDialogInner({
                   <Trans>Create QR code</Trans>
                 </ButtonText>
               </Button>
+              {isNative && (
+                <Button
+                  label={_(msg`Save image`)}
+                  variant="ghost"
+                  color="primary"
+                  size="small"
+                  style={[isWeb && a.self_center]}
+                  onPress={onSave}>
+                  <ButtonText>
+                    <Trans>Save image</Trans>
+                  </ButtonText>
+                </Button>
+              )}
             </View>
           </View>
         )}
