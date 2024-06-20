@@ -89,32 +89,38 @@ function ShareDialogInner({
               ]}
               accessibilityIgnoresInvertColors={true}
             />
-            <Button
-              label="Share link"
-              variant="solid"
-              color="secondary"
-              size="small"
-              style={[isWeb && a.self_center]}
-              onPress={onShareLink}>
-              <ButtonText>
-                {isWeb ? <Trans>Copy Link</Trans> : <Trans>Share Link</Trans>}
-              </ButtonText>
-            </Button>
-            <Button
-              label="Create QR code"
-              variant="solid"
-              color="secondary"
-              size="small"
-              style={[isWeb && a.self_center]}
-              onPress={() => {
-                control.close(() => {
-                  qrDialogControl.open()
-                })
-              }}>
-              <ButtonText>
-                <Trans>Create QR code</Trans>
-              </ButtonText>
-            </Button>
+            <View
+              style={[
+                a.gap_md,
+                isWeb && [a.gap_sm, a.flex_row_reverse, {marginLeft: 'auto'}],
+              ]}>
+              <Button
+                label="Share link"
+                variant="solid"
+                color="secondary"
+                size="small"
+                style={[isWeb && a.self_center]}
+                onPress={onShareLink}>
+                <ButtonText>
+                  {isWeb ? <Trans>Copy Link</Trans> : <Trans>Share Link</Trans>}
+                </ButtonText>
+              </Button>
+              <Button
+                label="Create QR code"
+                variant="solid"
+                color="secondary"
+                size="small"
+                style={[isWeb && a.self_center]}
+                onPress={() => {
+                  control.close(() => {
+                    qrDialogControl.open()
+                  })
+                }}>
+                <ButtonText>
+                  <Trans>Create QR code</Trans>
+                </ButtonText>
+              </Button>
+            </View>
           </View>
         )}
       </Dialog.ScrollableInner>
