@@ -3,11 +3,12 @@ import {ListRenderItemInfo, View} from 'react-native'
 import {AppBskyActorDefs, AtUri, ModerationOpts} from '@atproto/api'
 
 import {useBottomBarOffset} from 'lib/hooks/useBottomBarOffset'
-import {isNative} from 'platform/detection'
+import {isNative, isWeb} from 'platform/detection'
 import {useListMembersQuery} from 'state/queries/list-members'
 import {useSession} from 'state/session'
 import {List, ListRef} from 'view/com/util/List'
 import {SectionRef} from '#/screens/Profile/Sections/types'
+import {atoms as a, useTheme} from '#/alf'
 import {Default as ProfileCard} from '#/components/ProfileCard'
 
 function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic, index: number) {
@@ -26,6 +27,7 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
     {listUri, headerHeight, scrollElRef, moderationOpts},
     ref,
   ) {
+    const t = useTheme()
     const [initialHeaderHeight] = React.useState(headerHeight)
     const bottomBarOffset = useBottomBarOffset(20)
     const {currentAccount} = useSession()
@@ -65,8 +67,22 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
 
     const renderItem = ({
       item,
+      index,
     }: ListRenderItemInfo<AppBskyActorDefs.ProfileViewBasic>) => {
-      return <ProfileCard profile={item} moderationOpts={moderationOpts} />
+      return (
+        <View
+          style={[
+            a.p_lg,
+            t.atoms.border_contrast_low,
+            (isWeb || index !== 0) && a.border_t,
+          ]}>
+          <ProfileCard
+            profile={item}
+            moderationOpts={moderationOpts}
+            logContext="StarterPackProfilesList"
+          />
+        </View>
+      )
     }
 
     return (

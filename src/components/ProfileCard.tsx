@@ -2,8 +2,10 @@ import React from 'react'
 import {View} from 'react-native'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
 
-import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {createSanitizedDisplayName} from 'lib/moderation/create-sanitized-display-name'
 import {sanitizeHandle} from 'lib/strings/handles'
+import {useProfileShadow} from 'state/cache/profile-shadow'
+import {FollowButton} from 'view/com/profile/FollowButton'
 import {ProfileCardPills} from 'view/com/profile/ProfileCard'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
@@ -11,20 +13,19 @@ import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
 export function Default({
-  profile,
+  profile: profileUnshadowed,
   moderationOpts,
+  logContext,
 }: {
   profile: AppBskyActorDefs.ProfileViewDetailed
   moderationOpts: ModerationOpts
+  logContext: 'ProfileCard' | 'StarterPackProfilesList'
 }) {
   const t = useTheme()
 
+  const profile = useProfileShadow(profileUnshadowed)
+  const name = createSanitizedDisplayName(profile)
   const handle = `@${sanitizeHandle(profile.handle)}`
-  const name =
-    profile.displayName != null && profile.displayName !== ''
-      ? sanitizeDisplayName(profile.displayName)
-      : handle
-
   const moderation = moderateProfile(profile, moderationOpts)
 
   return (
@@ -48,6 +49,11 @@ export function Default({
             {handle}
           </Text>
         </View>
+        <View style={[a.justify_center, {marginLeft: 'auto'}]}>
+          <FollowButton profile={profile} logContext={logContext} />
+        </View>
+      </View>
+      <View style={[a.mb_xs]}>
         <ProfileCardPills
           followedBy={Boolean(profile.viewer?.followedBy)}
           moderation={moderation}
@@ -67,7 +73,7 @@ function Wrapper({did, children}: {did: string; children: React.ReactNode}) {
         screen: 'Profile',
         params: {name: did},
       }}>
-      <View style={[a.flex_1, a.gap_md]}>{children}</View>
+      <View style={[a.flex_1, a.gap_xs]}>{children}</View>
     </Link>
   )
 }
