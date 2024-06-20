@@ -2,6 +2,7 @@ import React from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {
+  AppBskyActorDefs,
   AppBskyGraphDefs,
   AppBskyGraphStarterpack,
   AtUri,
@@ -16,6 +17,7 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {useProfileQuery} from '#/state/queries/profile'
 import {useDeleteStarterPackMutation} from '#/state/queries/starter-packs'
 import {HITSLOP_20} from 'lib/constants'
 import {makeProfileLink, makeStarterPackLink} from 'lib/routes/links'
@@ -38,6 +40,7 @@ import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBox} from '#/components/icons/ArrowOutOfBox'
+import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
 import {Pencil_Stroke2_Corner0_Rounded as Pencil} from '#/components/icons/Pencil'
@@ -62,6 +65,7 @@ export function StarterPackScreen({route}: StarterPackScreeProps) {
   const {_} = useLingui()
 
   const {name, rkey} = route.params
+  const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
   const {
     data: did,
@@ -73,17 +77,27 @@ export function StarterPackScreen({route}: StarterPackScreeProps) {
     isLoading: isLoadingStarterPack,
     isError: isErrorStarterPack,
   } = useStarterPackQuery({did, rkey})
+  const {
+    data: profile,
+    isError: isProfileError,
+    isLoading: isLoadingProfile,
+  } = useProfileQuery({did: currentAccount!.did})
 
   const isValid =
     starterPack &&
     AppBskyGraphDefs.validateStarterPackView(starterPack) &&
     AppBskyGraphStarterpack.validateRecord(starterPack.record)
 
-  if (!did || !starterPack || !isValid || !moderationOpts) {
+  if (!did || !starterPack || !isValid || !moderationOpts || !profile) {
     return (
       <ListMaybePlaceholder
-        isLoading={isLoadingDid || isLoadingStarterPack || !moderationOpts}
-        isError={isErrorDid || isErrorStarterPack || !isValid}
+        isLoading={
+          isLoadingDid ||
+          isLoadingStarterPack ||
+          !moderationOpts ||
+          isLoadingProfile
+        }
+        isError={isErrorDid || isErrorStarterPack || !isValid || isProfileError}
         errorMessage={_(msg`That starter pack could not be found.`)}
       />
     )
@@ -94,6 +108,7 @@ export function StarterPackScreen({route}: StarterPackScreeProps) {
       starterPack={starterPack}
       routeParams={route.params}
       moderationOpts={moderationOpts}
+      profile={profile}
     />
   )
 }
@@ -102,15 +117,18 @@ function StarterPackScreenInner({
   starterPack,
   routeParams,
   moderationOpts,
+  profile,
 }: {
   starterPack: AppBskyGraphDefs.StarterPackView
   routeParams: StarterPackScreeProps['route']['params']
   moderationOpts: ModerationOpts
+  profile: AppBskyActorDefs.ProfileViewDetailed
 }) {
   const tabs = [
     ...(starterPack.list ? ['People'] : []),
     ...(starterPack.feeds?.length ? ['Feeds'] : []),
   ]
+  const alreadyJoined = starterPack.uri === profile.joinedViaStarterPack?.uri
 
   const qrCodeDialogControl = useDialogControl()
   const shareDialogControl = useDialogControl()
@@ -153,6 +171,7 @@ function StarterPackScreenInner({
               starterPack={starterPack}
               routeParams={routeParams}
               onOpenShareDialog={onOpenShareDialog}
+              alreadyJoined={alreadyJoined}
             />
           )}>
           {starterPack.list != null
@@ -203,10 +222,12 @@ function Header({
   starterPack,
   routeParams,
   onOpenShareDialog,
+  alreadyJoined,
 }: {
   starterPack: AppBskyGraphDefs.StarterPackView
   routeParams: StarterPackScreeProps['route']['params']
   onOpenShareDialog: () => void
+  alreadyJoined: boolean
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -284,12 +305,19 @@ function Header({
               variant="solid"
               color="primary"
               size="small"
-              disabled={isProcessing}
+              disabled={isProcessing || alreadyJoined}
               onPress={onFollowAll}>
               <ButtonText>
-                <Trans>Follow all</Trans>
-                {isProcessing && <Loader size="xs" />}
+                {alreadyJoined ? (
+                  <Trans>Joined</Trans>
+                ) : (
+                  <Trans>Follow all</Trans>
+                )}
               </ButtonText>
+              {isProcessing && <ButtonIcon icon={Loader} position="right" />}
+              {alreadyJoined && (
+                <ButtonIcon icon={Check} position="right" size="xs" />
+              )}
             </Button>
           )}
           <OverflowMenu
