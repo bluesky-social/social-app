@@ -33,7 +33,7 @@ msgstr "{0, plural, one {# 个标签已标记到这个账户} other {# 个标签
 msgid "{0, plural, one {# label has been placed on this content} other {# labels have been placed on this content}}"
 msgstr "{0, plural, one {# 个标签已标记到此内容} other {# 个标签已标记到此内容}}"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:65
+#: src/view/com/util/post-ctrls/RepostButton.tsx:66
 msgid "{0, plural, one {# repost} other {# reposts}}"
 msgstr "{0, plural, one {# 条转发} other {# 条转发}}"
 
@@ -47,7 +47,7 @@ msgstr "{0, plural, one {关注者} other {关注者}}"
 msgid "{0, plural, one {following} other {following}}"
 msgstr "{0, plural, one {正在关注} other {正在关注}}"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:254
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:255
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
 msgstr "{0, plural, one {喜欢 (# 个喜欢)} other {喜欢 (# 个喜欢)}}"
 
@@ -64,7 +64,7 @@ msgstr "{0, plural, one {# 位用户喜欢} other {# 位用户喜欢}}"
 msgid "{0, plural, one {post} other {posts}}"
 msgstr "{0, plural, one {帖文} other {帖文}}"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:212
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:213
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
 msgstr "{0, plural, one {回复 (# 个回复)} other {回复 (# 个回复)}}"
 
@@ -72,7 +72,7 @@ msgstr "{0, plural, one {回复 (# 个回复)} other {回复 (# 个回复)}}"
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr "{0, plural, one {转发} other {转发}}"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:250
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:251
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
 msgstr "{0, plural, one {取消喜欢 (# 个喜欢)} other {取消喜欢 (# 个喜欢)}}"
 
@@ -182,7 +182,7 @@ msgid "Accessibility settings"
 msgstr "无障碍设置"
 
 #: src/Navigation.tsx:296
-#: src/view/screens/AccessibilitySettings.tsx:63
+#: src/view/screens/AccessibilitySettings.tsx:69
 msgid "Accessibility Settings"
 msgstr "无障碍设置"
 
@@ -263,7 +263,7 @@ msgstr "添加账户"
 #: src/view/com/composer/photos/Gallery.tsx:187
 #: src/view/com/modals/AltImage.tsx:118
 msgid "Add alt text"
-msgstr "新增替代文字"
+msgstr "新增替代文本"
 
 #: src/view/screens/AppPasswords.tsx:106
 #: src/view/screens/AppPasswords.tsx:148
@@ -356,23 +356,23 @@ msgstr "已以@{0}身份登录"
 
 #: src/view/com/composer/GifAltText.tsx:93
 #: src/view/com/composer/photos/Gallery.tsx:144
-#: src/view/com/util/post-embeds/GifEmbed.tsx:173
+#: src/view/com/util/post-embeds/GifEmbed.tsx:177
 msgid "ALT"
 msgstr "ALT"
 
 #: src/view/com/composer/GifAltText.tsx:144
 #: src/view/com/modals/EditImage.tsx:316
-#: src/view/screens/AccessibilitySettings.tsx:77
+#: src/view/screens/AccessibilitySettings.tsx:83
 msgid "Alt text"
-msgstr "替代文字"
+msgstr "替代文本"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:179
+#: src/view/com/util/post-embeds/GifEmbed.tsx:183
 msgid "Alt Text"
-msgstr "替代文字"
+msgstr "替代文本"
 
 #: src/view/com/composer/photos/Gallery.tsx:224
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
-msgstr "为图片新增替代文字，以帮助盲人及视障群体了解图片内容。"
+msgstr "为图片新增替代文本，以帮助盲人及视障群体了解图片内容。"
 
 #: src/view/com/modals/VerifyEmail.tsx:132
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:96
@@ -413,7 +413,7 @@ msgstr "和"
 msgid "Animals"
 msgstr "动物"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:148
+#: src/view/com/util/post-embeds/GifEmbed.tsx:149
 msgid "Animated GIF"
 msgstr "GIF 动画"
 
@@ -709,7 +709,7 @@ msgstr "只能包含字母、数字、空格、破折号及下划线。 长度�
 #: src/view/com/modals/LinkWarning.tsx:107
 #: src/view/com/modals/VerifyEmail.tsx:255
 #: src/view/com/modals/VerifyEmail.tsx:261
-#: src/view/com/util/post-ctrls/RepostButton.tsx:138
+#: src/view/com/util/post-ctrls/RepostButton.tsx:139
 #: src/view/screens/Search/Search.tsx:704
 #: src/view/shell/desktop/Search.tsx:218
 msgid "Cancel"
@@ -739,7 +739,7 @@ msgstr "取消裁剪图片"
 msgid "Cancel profile editing"
 msgstr "取消编辑个人资料"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:132
+#: src/view/com/util/post-ctrls/RepostButton.tsx:133
 msgid "Cancel quote post"
 msgstr "取消引用帖文"
 
@@ -917,7 +917,7 @@ msgstr "哒哒🐴哒哒🐴"
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:261
 #: src/view/com/modals/ChangePassword.tsx:268
 #: src/view/com/modals/ChangePassword.tsx:271
-#: src/view/com/util/post-embeds/GifEmbed.tsx:185
+#: src/view/com/util/post-embeds/GifEmbed.tsx:189
 msgid "Close"
 msgstr "关闭"
 
@@ -1395,7 +1395,7 @@ msgstr "描述"
 
 #: src/view/com/composer/GifAltText.tsx:140
 msgid "Descriptive alt text"
-msgstr "描述替代文字"
+msgstr "描述替代文本"
 
 #: src/view/com/composer/Composer.tsx:277
 msgid "Did you want to say anything?"
@@ -1409,7 +1409,7 @@ msgstr "暗淡"
 msgid "Direct messages are here!"
 msgstr "隆重介绍私信功能！"
 
-#: src/view/screens/AccessibilitySettings.tsx:94
+#: src/view/screens/AccessibilitySettings.tsx:107
 msgid "Disable autoplay for GIFs"
 msgstr "关闭 GIF 自动播放"
 
@@ -1417,7 +1417,7 @@ msgstr "关闭 GIF 自动播放"
 msgid "Disable Email 2FA"
 msgstr "关闭电子邮件两步验证"
 
-#: src/view/screens/AccessibilitySettings.tsx:108
+#: src/view/screens/AccessibilitySettings.tsx:121
 msgid "Disable haptic feedback"
 msgstr "关闭触感反馈"
 
@@ -1455,6 +1455,10 @@ msgstr "探索新的资讯源"
 #: src/view/screens/Feeds.tsx:760
 msgid "Discover New Feeds"
 msgstr "探索新的资讯源"
+
+#: src/view/screens/AccessibilitySettings.tsx:95
+msgid "Display larger alt text badges"
+msgstr "显示更大的替代文本标签"
 
 #: src/view/com/modals/EditProfile.tsx:193
 msgid "Display name"
@@ -2270,7 +2274,7 @@ msgstr "图形媒体"
 msgid "Handle"
 msgstr "用户识别符"
 
-#: src/view/screens/AccessibilitySettings.tsx:103
+#: src/view/screens/AccessibilitySettings.tsx:116
 msgid "Haptics"
 msgstr "触感"
 
@@ -2439,7 +2443,7 @@ msgstr "如果你想更改你的用户识别符或电子邮件，请在停用之
 msgid "Illegal and Urgent"
 msgstr "违法"
 
-#: src/view/com/util/images/Gallery.tsx:39
+#: src/view/com/util/images/Gallery.tsx:42
 msgid "Image"
 msgstr "图片"
 
@@ -2824,7 +2828,7 @@ msgstr "管理你的隐藏词和标签"
 msgid "Mark as read"
 msgstr "标记为已读"
 
-#: src/view/screens/AccessibilitySettings.tsx:89
+#: src/view/screens/AccessibilitySettings.tsx:102
 #: src/view/screens/Profile.tsx:195
 msgid "Media"
 msgstr "媒体"
@@ -3305,7 +3309,7 @@ msgstr "暂时不需要"
 
 #: src/view/com/profile/ProfileMenu.tsx:373
 #: src/view/com/util/forms/PostDropdownBtn.tsx:456
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:310
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:311
 msgid "Note about sharing"
 msgstr "分享注意事项"
 
@@ -3387,7 +3391,7 @@ msgstr "重新开始引导流程"
 
 #: src/view/com/composer/Composer.tsx:505
 msgid "One or more images is missing alt text."
-msgstr "至少有一张图片缺失了替代文字。"
+msgstr "至少有一张图片缺失了替代文本。"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:117
 msgid "Only .jpg and .png files are supported"
@@ -3655,7 +3659,7 @@ msgstr "密码已更新"
 msgid "Password updated!"
 msgstr "密码已更新！"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:36
+#: src/view/com/util/post-embeds/GifEmbed.tsx:37
 msgid "Pause"
 msgstr "暂停"
 
@@ -3704,7 +3708,7 @@ msgstr "固定资讯源列表"
 msgid "Pinned to your feeds"
 msgstr "固定到你的资讯源"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:36
+#: src/view/com/util/post-embeds/GifEmbed.tsx:37
 msgid "Play"
 msgstr "播放"
 
@@ -3712,7 +3716,7 @@ msgstr "播放"
 msgid "Play {0}"
 msgstr "播放 {0}"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:35
+#: src/view/com/util/post-embeds/GifEmbed.tsx:36
 msgid "Play or pause the GIF"
 msgstr "播放或暂停 GIF"
 
@@ -3955,10 +3959,10 @@ msgstr "发布帖文"
 msgid "Publish reply"
 msgstr "发布回复"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:115
-#: src/view/com/util/post-ctrls/RepostButton.tsx:127
-#: src/view/com/util/post-ctrls/RepostButton.web.tsx:78
-#: src/view/com/util/post-ctrls/RepostButton.web.tsx:81
+#: src/view/com/util/post-ctrls/RepostButton.tsx:116
+#: src/view/com/util/post-ctrls/RepostButton.tsx:128
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:79
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:82
 msgid "Quote post"
 msgstr "引用帖文"
 
@@ -4063,8 +4067,8 @@ msgstr "从搜索历史中删除个人资料"
 msgid "Remove quote"
 msgstr "删除引用"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:92
-#: src/view/com/util/post-ctrls/RepostButton.tsx:108
+#: src/view/com/util/post-ctrls/RepostButton.tsx:93
+#: src/view/com/util/post-ctrls/RepostButton.tsx:109
 msgid "Remove repost"
 msgstr "删除转发"
 
@@ -4193,21 +4197,21 @@ msgstr "举报这条帖文"
 msgid "Report this user"
 msgstr "举报这个用户"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:64
-#: src/view/com/util/post-ctrls/RepostButton.tsx:93
-#: src/view/com/util/post-ctrls/RepostButton.tsx:109
+#: src/view/com/util/post-ctrls/RepostButton.tsx:65
+#: src/view/com/util/post-ctrls/RepostButton.tsx:94
+#: src/view/com/util/post-ctrls/RepostButton.tsx:110
 msgctxt "action"
 msgid "Repost"
 msgstr "转发"
 
-#: src/view/com/util/post-ctrls/RepostButton.web.tsx:69
-#: src/view/com/util/post-ctrls/RepostButton.web.tsx:73
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:70
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:74
 msgid "Repost"
 msgstr "转发"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:85
-#: src/view/com/util/post-ctrls/RepostButton.web.tsx:46
-#: src/view/com/util/post-ctrls/RepostButton.web.tsx:92
+#: src/view/com/util/post-ctrls/RepostButton.tsx:86
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:47
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:93
 msgid "Repost or quote post"
 msgstr "转发或引用帖文"
 
@@ -4241,7 +4245,7 @@ msgstr "请求变更"
 msgid "Request Code"
 msgstr "确认码"
 
-#: src/view/screens/AccessibilitySettings.tsx:82
+#: src/view/screens/AccessibilitySettings.tsx:88
 msgid "Require alt text before posting"
 msgstr "发布时检查媒体是否存在替代文本"
 
@@ -4342,7 +4346,7 @@ msgstr "保存"
 
 #: src/view/com/modals/AltImage.tsx:132
 msgid "Save alt text"
-msgstr "保存替代文字"
+msgstr "保存替代文本"
 
 #: src/components/dialogs/BirthDateSettings.tsx:119
 msgid "Save birthday"
@@ -4716,7 +4720,7 @@ msgstr "分享"
 #: src/view/com/profile/ProfileMenu.tsx:229
 #: src/view/com/util/forms/PostDropdownBtn.tsx:307
 #: src/view/com/util/forms/PostDropdownBtn.tsx:316
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:299
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:300
 #: src/view/screens/ProfileList.tsx:428
 msgid "Share"
 msgstr "分享"
@@ -4731,7 +4735,7 @@ msgstr "分享一个有趣的事实！"
 
 #: src/view/com/profile/ProfileMenu.tsx:378
 #: src/view/com/util/forms/PostDropdownBtn.tsx:461
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:315
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:316
 msgid "Share anyway"
 msgstr "仍然分享"
 
@@ -4760,9 +4764,9 @@ msgstr "分享链接的网站"
 msgid "Show"
 msgstr "显示"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:167
+#: src/view/com/util/post-embeds/GifEmbed.tsx:169
 msgid "Show alt text"
-msgstr "显示替代文字"
+msgstr "显示替代文本"
 
 #: src/components/moderation/ScreenHider.tsx:169
 #: src/components/moderation/ScreenHider.tsx:172
@@ -5395,7 +5399,7 @@ msgid "This post has been deleted."
 msgstr "这条帖文已被删除。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:458
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:312
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:313
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
 msgstr "这条帖文只对已登录用户可见，未登录的用户将无法看到。"
 
@@ -5576,9 +5580,9 @@ msgstr "取消屏蔽账户"
 msgid "Unblock Account?"
 msgstr "取消屏蔽账户？"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:63
-#: src/view/com/util/post-ctrls/RepostButton.web.tsx:69
-#: src/view/com/util/post-ctrls/RepostButton.web.tsx:73
+#: src/view/com/util/post-ctrls/RepostButton.tsx:64
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:70
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:74
 msgid "Undo repost"
 msgstr "取消转发"
 
