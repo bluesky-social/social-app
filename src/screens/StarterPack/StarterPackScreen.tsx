@@ -9,6 +9,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
+import {cleanError} from '#/lib/strings/errors'
 import {useDeleteStarterPackMutation} from '#/state/queries/starter-packs'
 import {HITSLOP_20} from 'lib/constants'
 import {makeProfileLink, makeStarterPackLink} from 'lib/routes/links'
@@ -255,6 +256,7 @@ function OverflowMenu({
   starterPack: AppBskyGraphDefs.StarterPackView
   routeParams: StarterPackScreeProps['route']['params']
 }) {
+  const t = useTheme()
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const {currentAccount} = useSession()
@@ -400,6 +402,27 @@ function OverflowMenu({
         <Prompt.DescriptionText>
           <Trans>Are you sure you want delete this starter pack?</Trans>
         </Prompt.DescriptionText>
+        {deleteError && (
+          <View
+            style={[
+              a.flex_row,
+              a.gap_sm,
+              a.rounded_sm,
+              a.p_md,
+              a.mb_lg,
+              a.border,
+              t.atoms.border_contrast_medium,
+              t.atoms.bg_contrast_25,
+            ]}>
+            <View style={[a.flex_1, a.gap_2xs]}>
+              <Text style={[a.font_bold]}>
+                <Trans>Unable to delete</Trans>
+              </Text>
+              <Text style={[a.leading_snug]}>{cleanError(deleteError)}</Text>
+            </View>
+            <CircleInfo size="sm" fill={t.palette.negative_400} />
+          </View>
+        )}
         <Prompt.Actions>
           <Button
             variant="solid"
@@ -414,12 +437,6 @@ function OverflowMenu({
           </Button>
           <Prompt.Cancel />
         </Prompt.Actions>
-
-        {deleteError && (
-          <View>
-            <Text>{deleteError.toString()}</Text>
-          </View>
-        )}
       </Prompt.Outer>
     </>
   )
