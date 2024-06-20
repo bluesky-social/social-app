@@ -10,8 +10,8 @@ export * from './util.js'
 
 export default function (ctx: AppContext, app: Express) {
   app = health(ctx, app) // GET /_health
-  app = create(ctx, app) // POST /link
   app = siteAssociation(ctx, app) // GET /.well-known/apple-app-site-association
+  app = create(ctx, app) // POST /link
   app = redirect(ctx, app) // GET /:linkId (should go last due to permissive matching)
   return app
 }
