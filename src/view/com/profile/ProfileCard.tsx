@@ -328,6 +328,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     paddingHorizontal: 6,
     paddingVertical: 2,
+    justifyContent: 'center',
   },
   btn: {
     paddingVertical: 7,

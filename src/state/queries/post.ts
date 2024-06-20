@@ -304,8 +304,8 @@ export function useThreadMuteMutationQueue(
 
   const queueToggle = useToggleMutationQueue<boolean>({
     initialState: isThreadMuted,
-    runMutation: async (_prev, shouldLike) => {
-      if (shouldLike) {
+    runMutation: async (_prev, shouldMute) => {
+      if (shouldMute) {
         await threadMuteMutation.mutateAsync({
           uri: rootUri,
         })

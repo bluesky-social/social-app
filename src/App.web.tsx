@@ -13,6 +13,7 @@ import {QueryProvider} from '#/lib/react-query'
 import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
 import {ThemeProvider} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
+import {Provider as A11yProvider} from '#/state/a11y'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
 import {Provider as InvitesStateProvider} from '#/state/invites'
@@ -135,25 +136,27 @@ function App() {
    * that is set up in the InnerApp component above.
    */
   return (
-    <SessionProvider>
-      <ShellStateProvider>
-        <PrefsStateProvider>
-          <InvitesStateProvider>
-            <ModalStateProvider>
-              <DialogStateProvider>
-                <LightboxStateProvider>
-                  <I18nProvider>
-                    <PortalProvider>
-                      <InnerApp />
-                    </PortalProvider>
-                  </I18nProvider>
-                </LightboxStateProvider>
-              </DialogStateProvider>
-            </ModalStateProvider>
-          </InvitesStateProvider>
-        </PrefsStateProvider>
-      </ShellStateProvider>
-    </SessionProvider>
+    <A11yProvider>
+      <SessionProvider>
+        <ShellStateProvider>
+          <PrefsStateProvider>
+            <InvitesStateProvider>
+              <ModalStateProvider>
+                <DialogStateProvider>
+                  <LightboxStateProvider>
+                    <I18nProvider>
+                      <PortalProvider>
+                        <InnerApp />
+                      </PortalProvider>
+                    </I18nProvider>
+                  </LightboxStateProvider>
+                </DialogStateProvider>
+              </ModalStateProvider>
+            </InvitesStateProvider>
+          </PrefsStateProvider>
+        </ShellStateProvider>
+      </SessionProvider>
+    </A11yProvider>
   )
 }
 
