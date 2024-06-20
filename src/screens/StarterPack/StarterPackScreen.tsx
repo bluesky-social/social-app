@@ -119,13 +119,7 @@ function StarterPackScreenInner({
   const [link, setLink] = React.useState<string>()
   const [imageLoaded, setImageLoaded] = React.useState(false)
 
-  React.useEffect(() => {
-    if (routeParams.new) {
-      shareDialogControl.open()
-    }
-  }, [routeParams.new, shareDialogControl])
-
-  const onOpenShareDialog = () => {
+  const onOpenShareDialog = React.useCallback(() => {
     const rkey = new AtUri(starterPack.uri).rkey
     shortenLink(makeStarterPackLink(starterPack.creator.did, rkey)).then(
       res => {
@@ -140,7 +134,13 @@ function StarterPackScreenInner({
         setImageLoaded(true)
       })
     shareDialogControl.open()
-  }
+  }, [shareDialogControl, shortenLink, starterPack])
+
+  React.useEffect(() => {
+    if (routeParams.new) {
+      onOpenShareDialog()
+    }
+  }, [onOpenShareDialog, routeParams.new, shareDialogControl])
 
   return (
     <CenteredView style={[a.h_full_vh]}>

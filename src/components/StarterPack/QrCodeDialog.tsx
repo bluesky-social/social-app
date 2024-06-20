@@ -172,7 +172,7 @@ export function QrCodeDialog({
                   <Button
                     label={_(msg`Copy QR code`)}
                     variant="solid"
-                    color="primary"
+                    color="secondary"
                     size="medium"
                     onPress={isWeb ? onCopyPress : onSharePress}>
                     <ButtonText>
