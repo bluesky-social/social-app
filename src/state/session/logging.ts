@@ -80,7 +80,8 @@ export function addSessionDebugLog(log: Log) {
       return
     }
     const messageIndex = nextMessageIndex++
-    let payload = JSON.stringify(log, replacer)
+    const {type, ...content} = log
+    let payload = JSON.stringify(content, replacer)
 
     let nextSliceIndex = 0
     while (payload.length > 0) {
@@ -90,6 +91,7 @@ export function addSessionDebugLog(log: Log) {
       Statsig.logEvent('session:debug', null, {
         realmId,
         messageIndex: String(messageIndex),
+        messageType: type,
         sliceIndex: String(sliceIndex),
         slice,
       })
