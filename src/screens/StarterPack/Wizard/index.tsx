@@ -34,7 +34,7 @@ import {
   useCreateStarterPackMutation,
   useEditStarterPackMutation,
   useStarterPackQuery,
-} from 'state/queries/starter-pack'
+} from 'state/queries/starter-packs'
 import {useAgent, useSession} from 'state/session'
 import {useSetMinimalShellMode} from 'state/shell'
 import * as Toast from '#/view/com/util/Toast'

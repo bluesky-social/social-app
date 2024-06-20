@@ -16,7 +16,7 @@ import {createFullHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {useServiceQuery} from '#/state/queries/service'
 import {useAgent} from '#/state/session'
-import {useStarterPackQuery} from 'state/queries/starter-pack'
+import {useStarterPackQuery} from 'state/queries/starter-packs'
 import {useActiveStarterPack} from 'state/shell/starter-pack'
 import {LoggedOutLayout} from '#/view/com/util/layouts/LoggedOutLayout'
 import {
