@@ -356,7 +356,7 @@ msgstr "Aggiunto alla lista"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:126
 msgid "Added to my feeds"
-msgstr "Aggiunto ai miei feed
+msgstr "Aggiunto ai miei feed"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:172
 msgid "Adjust the number of likes a reply must have to be shown in your feed."
