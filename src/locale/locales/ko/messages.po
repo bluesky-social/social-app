@@ -33,7 +33,7 @@ msgstr "이 계정에 {0, plural, other {#}}개의 라벨이 지정됨"
 msgid "{0, plural, one {# label has been placed on this content} other {# labels have been placed on this content}}"
 msgstr "이 콘텐츠에 {0, plural, other {#}}개의 라벨이 지정됨"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:65
+#: src/view/com/util/post-ctrls/RepostButton.tsx:66
 msgid "{0, plural, one {# repost} other {# reposts}}"
 msgstr "{0, plural, other {#}}개"
 
@@ -47,11 +47,11 @@ msgstr "팔로워"
 msgid "{0, plural, one {following} other {following}}"
 msgstr "팔로우 중"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:254
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:255
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
 msgstr "좋아요 ({0, plural, other {#}}개)"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:381
+#: src/view/com/post-thread/PostThreadItem.tsx:382
 msgid "{0, plural, one {like} other {likes}}"
 msgstr "좋아요"
 
@@ -64,15 +64,15 @@ msgstr "{0, plural, other {#}}명의 사용자가 좋아함"
 msgid "{0, plural, one {post} other {posts}}"
 msgstr "게시물"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:212
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:213
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
 msgstr "답글 ({0, plural, other {#}}개)"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:361
+#: src/view/com/post-thread/PostThreadItem.tsx:362
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr "재게시"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:250
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:251
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
 msgstr "좋아요 취소 ({0, plural, other {#}}개)"
 
@@ -139,7 +139,7 @@ msgstr "{profileName} 님은 {0} 전에 Bluesky에 가입했습니다."
 msgid "{value, plural, =0 {Show all replies} one {Show replies with at least # like} other {Show replies with at least # likes}}"
 msgstr "{value, plural, =0 {모든 답글 표시} other {좋아요가 #개 이상인 답글 표시}}"
 
-#: src/view/com/threadgate/WhoCanReply.tsx:203
+#: src/view/com/threadgate/WhoCanReply.tsx:290
 msgid "<0/> members"
 msgstr "<0/>의 멤버"
 
@@ -182,7 +182,7 @@ msgid "Accessibility settings"
 msgstr "접근성 설정"
 
 #: src/Navigation.tsx:296
-#: src/view/screens/AccessibilitySettings.tsx:63
+#: src/view/screens/AccessibilitySettings.tsx:69
 msgid "Accessibility Settings"
 msgstr "접근성 설정"
 
@@ -356,17 +356,17 @@ msgstr "이미 @{0}(으)로 로그인했습니다"
 
 #: src/view/com/composer/GifAltText.tsx:93
 #: src/view/com/composer/photos/Gallery.tsx:144
-#: src/view/com/util/post-embeds/GifEmbed.tsx:173
+#: src/view/com/util/post-embeds/GifEmbed.tsx:177
 msgid "ALT"
 msgstr "ALT"
 
 #: src/view/com/composer/GifAltText.tsx:144
 #: src/view/com/modals/EditImage.tsx:316
-#: src/view/screens/AccessibilitySettings.tsx:77
+#: src/view/screens/AccessibilitySettings.tsx:83
 msgid "Alt text"
 msgstr "대체 텍스트"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:179
+#: src/view/com/util/post-embeds/GifEmbed.tsx:183
 msgid "Alt Text"
 msgstr "대체 텍스트"
 
@@ -405,7 +405,7 @@ msgid "an unknown error occurred"
 msgstr "알 수 없는 오류가 발생했습니다"
 
 #: src/view/com/notifications/FeedItem.tsx:260
-#: src/view/com/threadgate/WhoCanReply.tsx:224
+#: src/view/com/threadgate/WhoCanReply.tsx:311
 msgid "and"
 msgstr "및"
 
@@ -413,7 +413,7 @@ msgstr "및"
 msgid "Animals"
 msgstr "동물"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:148
+#: src/view/com/util/post-embeds/GifEmbed.tsx:149
 msgid "Animated GIF"
 msgstr "움직이는 GIF"
 
@@ -709,7 +709,7 @@ msgstr "글자, 숫자, 공백, 대시, 밑줄만 포함할 수 있습니다. �
 #: src/view/com/modals/LinkWarning.tsx:107
 #: src/view/com/modals/VerifyEmail.tsx:255
 #: src/view/com/modals/VerifyEmail.tsx:261
-#: src/view/com/util/post-ctrls/RepostButton.tsx:138
+#: src/view/com/util/post-ctrls/RepostButton.tsx:139
 #: src/view/screens/Search/Search.tsx:704
 #: src/view/shell/desktop/Search.tsx:218
 msgid "Cancel"
@@ -739,7 +739,7 @@ msgstr "이미지 자르기 취소"
 msgid "Cancel profile editing"
 msgstr "프로필 편집 취소"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:132
+#: src/view/com/util/post-ctrls/RepostButton.tsx:133
 msgid "Cancel quote post"
 msgstr "게시물 인용 취소"
 
@@ -917,7 +917,7 @@ msgstr "다그닥 🐴 다그닥 🐴"
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:261
 #: src/view/com/modals/ChangePassword.tsx:268
 #: src/view/com/modals/ChangePassword.tsx:271
-#: src/view/com/util/post-embeds/GifEmbed.tsx:185
+#: src/view/com/util/post-embeds/GifEmbed.tsx:189
 msgid "Close"
 msgstr "닫기"
 
@@ -1409,7 +1409,7 @@ msgstr "어둑함"
 msgid "Direct messages are here!"
 msgstr "다이렉트 메시지가 생겼습니다!"
 
-#: src/view/screens/AccessibilitySettings.tsx:94
+#: src/view/screens/AccessibilitySettings.tsx:107
 msgid "Disable autoplay for GIFs"
 msgstr "GIF 자동 재생 끄기"
 
@@ -1417,7 +1417,7 @@ msgstr "GIF 자동 재생 끄기"
 msgid "Disable Email 2FA"
 msgstr "이메일 2단계 인증 끄기"
 
-#: src/view/screens/AccessibilitySettings.tsx:108
+#: src/view/screens/AccessibilitySettings.tsx:121
 msgid "Disable haptic feedback"
 msgstr "햅틱 피드백 끄기"
 
@@ -1455,6 +1455,10 @@ msgstr "새 피드 발견하기"
 #: src/view/screens/Feeds.tsx:760
 msgid "Discover New Feeds"
 msgstr "새 피드 발견하기"
+
+#: src/view/screens/AccessibilitySettings.tsx:95
+msgid "Display larger alt text badges"
+msgstr "더 큰 대체 텍스트 배지 표시"
 
 #: src/view/com/modals/EditProfile.tsx:193
 msgid "Display name"
@@ -1572,8 +1576,6 @@ msgctxt "action"
 msgid "Edit"
 msgstr "편집"
 
-#: src/view/com/threadgate/WhoCanReply.tsx:153
-#: src/view/com/threadgate/WhoCanReply.tsx:161
 #: src/view/screens/Feeds.tsx:370
 #: src/view/screens/Feeds.tsx:441
 msgid "Edit"
@@ -1621,6 +1623,11 @@ msgstr "프로필 편집"
 #: src/view/com/modals/CreateOrEditList.tsx:234
 msgid "Edit User List"
 msgstr "사용자 리스트 편집"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:73
+#: src/view/com/threadgate/WhoCanReply.tsx:130
+msgid "Edit who can reply"
+msgstr "답글을 달 수 있는 사람 편집"
 
 #: src/view/com/modals/EditProfile.tsx:194
 msgid "Edit your display name"
@@ -1781,12 +1788,11 @@ msgid "Everybody"
 msgstr "모두"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:46
+#: src/view/com/threadgate/WhoCanReply.tsx:64
+#: src/view/com/threadgate/WhoCanReply.tsx:121
+#: src/view/com/threadgate/WhoCanReply.tsx:235
 msgid "Everybody can reply"
-msgstr "누구나 답글을 달 수 있음"
-
-#: src/view/com/threadgate/WhoCanReply.tsx:129
-msgid "Everybody can reply."
-msgstr "누구나 답글을 달 수 있습니다."
+msgstr "누구나 답글을 달 수 있습니다"
 
 #: src/components/dms/MessagesNUX.tsx:131
 #: src/components/dms/MessagesNUX.tsx:134
@@ -2270,7 +2276,7 @@ msgstr "그래픽 미디어"
 msgid "Handle"
 msgstr "핸들"
 
-#: src/view/screens/AccessibilitySettings.tsx:103
+#: src/view/screens/AccessibilitySettings.tsx:116
 msgid "Haptics"
 msgstr "햅틱"
 
@@ -2439,7 +2445,7 @@ msgstr "핸들이나 이메일을 변경하려는 경우 비활성화하기 전�
 msgid "Illegal and Urgent"
 msgstr "불법 및 긴급 사항"
 
-#: src/view/com/util/images/Gallery.tsx:39
+#: src/view/com/util/images/Gallery.tsx:42
 msgid "Image"
 msgstr "이미지"
 
@@ -2824,12 +2830,12 @@ msgstr "뮤트한 단어 및 태그 관리"
 msgid "Mark as read"
 msgstr "읽음으로 표시"
 
-#: src/view/screens/AccessibilitySettings.tsx:89
+#: src/view/screens/AccessibilitySettings.tsx:102
 #: src/view/screens/Profile.tsx:195
 msgid "Media"
 msgstr "미디어"
 
-#: src/view/com/threadgate/WhoCanReply.tsx:183
+#: src/view/com/threadgate/WhoCanReply.tsx:270
 msgid "mentioned users"
 msgstr "멘션한 사용자"
 
@@ -2938,7 +2944,7 @@ msgstr "검토 도구"
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr "검토자가 콘텐츠에 일반 경고를 설정했습니다."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:571
+#: src/view/com/post-thread/PostThreadItem.tsx:567
 msgid "More"
 msgstr "더 보기"
 
@@ -3305,7 +3311,7 @@ msgstr "나중에 하기"
 
 #: src/view/com/profile/ProfileMenu.tsx:373
 #: src/view/com/util/forms/PostDropdownBtn.tsx:456
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:310
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:311
 msgid "Note about sharing"
 msgstr "공유 관련 참고 사항"
 
@@ -3393,9 +3399,9 @@ msgstr "하나 이상의 이미지에 대체 텍스트가 누락되었습니다.
 msgid "Only .jpg and .png files are supported"
 msgstr ".jpg 및 .png 파일만 지원합니다"
 
-#: src/view/com/threadgate/WhoCanReply.tsx:133
-msgid "Only {0} can reply."
-msgstr "{0}만 답글을 달 수 있습니다."
+#: src/view/com/threadgate/WhoCanReply.tsx:239
+msgid "Only {0} can reply"
+msgstr "{0}만 답글을 달 수 있습니다"
 
 #: src/screens/Signup/StepHandle.tsx:98
 msgid "Only contains letters, numbers, and hyphens"
@@ -3655,7 +3661,7 @@ msgstr "비밀번호 변경됨"
 msgid "Password updated!"
 msgstr "비밀번호 변경됨"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:36
+#: src/view/com/util/post-embeds/GifEmbed.tsx:37
 msgid "Pause"
 msgstr "일시 정지"
 
@@ -3704,7 +3710,7 @@ msgstr "고정한 피드"
 msgid "Pinned to your feeds"
 msgstr "내 피드에 고정됨"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:36
+#: src/view/com/util/post-embeds/GifEmbed.tsx:37
 msgid "Play"
 msgstr "재생"
 
@@ -3712,7 +3718,7 @@ msgstr "재생"
 msgid "Play {0}"
 msgstr "{0} 재생"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:35
+#: src/view/com/util/post-embeds/GifEmbed.tsx:36
 msgid "Play or pause the GIF"
 msgstr "GIP를 재생하거나 일시 정지합니다"
 
@@ -3955,10 +3961,10 @@ msgstr "게시물 게시하기"
 msgid "Publish reply"
 msgstr "답글 게시하기"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:115
-#: src/view/com/util/post-ctrls/RepostButton.tsx:127
-#: src/view/com/util/post-ctrls/RepostButton.web.tsx:78
-#: src/view/com/util/post-ctrls/RepostButton.web.tsx:81
+#: src/view/com/util/post-ctrls/RepostButton.tsx:116
+#: src/view/com/util/post-ctrls/RepostButton.tsx:128
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:79
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:82
 msgid "Quote post"
 msgstr "게시물 인용"
 
@@ -4063,8 +4069,8 @@ msgstr "검색 기록에서 프로필을 제거합니다"
 msgid "Remove quote"
 msgstr "인용 제거"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:92
-#: src/view/com/util/post-ctrls/RepostButton.tsx:108
+#: src/view/com/util/post-ctrls/RepostButton.tsx:93
+#: src/view/com/util/post-ctrls/RepostButton.tsx:109
 msgid "Remove repost"
 msgstr "재게시를 취소합니다"
 
@@ -4104,9 +4110,21 @@ msgstr "Discover로 교체"
 msgid "Replies"
 msgstr "답글"
 
+#: src/view/com/threadgate/WhoCanReply.tsx:66
+msgid "Replies disabled"
+msgstr "답글 비활성화됨"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:123
+msgid "Replies on this thread are disabled"
+msgstr "이 스레드에 대한 답글이 비활성화됩니다"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:237
+msgid "Replies to this thread are disabled"
+msgstr "이 스레드에 대한 답글이 비활성화됩니다"
+
 #: src/view/com/threadgate/WhoCanReply.tsx:131
-msgid "Replies to this thread are disabled."
-msgstr "이 스레드에 대한 답글이 비활성화됩니다."
+#~ msgid "Replies to this thread are disabled."
+#~ msgstr "이 스레드에 대한 답글이 비활성화됩니다."
 
 #: src/view/com/composer/Composer.tsx:477
 msgctxt "action"
@@ -4193,21 +4211,21 @@ msgstr "이 게시물 신고하기"
 msgid "Report this user"
 msgstr "이 사용자 신고하기"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:64
-#: src/view/com/util/post-ctrls/RepostButton.tsx:93
-#: src/view/com/util/post-ctrls/RepostButton.tsx:109
+#: src/view/com/util/post-ctrls/RepostButton.tsx:65
+#: src/view/com/util/post-ctrls/RepostButton.tsx:94
+#: src/view/com/util/post-ctrls/RepostButton.tsx:110
 msgctxt "action"
 msgid "Repost"
 msgstr "재게시"
 
-#: src/view/com/util/post-ctrls/RepostButton.web.tsx:69
-#: src/view/com/util/post-ctrls/RepostButton.web.tsx:73
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:70
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:74
 msgid "Repost"
 msgstr "재게시"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:85
-#: src/view/com/util/post-ctrls/RepostButton.web.tsx:46
-#: src/view/com/util/post-ctrls/RepostButton.web.tsx:92
+#: src/view/com/util/post-ctrls/RepostButton.tsx:86
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:47
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:93
 msgid "Repost or quote post"
 msgstr "재게시 또는 게시물 인용"
 
@@ -4241,7 +4259,7 @@ msgstr "변경 요청"
 msgid "Request Code"
 msgstr "코드 요청"
 
-#: src/view/screens/AccessibilitySettings.tsx:82
+#: src/view/screens/AccessibilitySettings.tsx:88
 msgid "Require alt text before posting"
 msgstr "게시하기 전 대체 텍스트 필수"
 
@@ -4716,7 +4734,7 @@ msgstr "공유"
 #: src/view/com/profile/ProfileMenu.tsx:229
 #: src/view/com/util/forms/PostDropdownBtn.tsx:307
 #: src/view/com/util/forms/PostDropdownBtn.tsx:316
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:299
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:300
 #: src/view/screens/ProfileList.tsx:428
 msgid "Share"
 msgstr "공유"
@@ -4731,7 +4749,7 @@ msgstr "재미있는 사실을 전하세요!"
 
 #: src/view/com/profile/ProfileMenu.tsx:378
 #: src/view/com/util/forms/PostDropdownBtn.tsx:461
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:315
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:316
 msgid "Share anyway"
 msgstr "무시하고 공유"
 
@@ -4760,7 +4778,7 @@ msgstr "연결된 웹사이트를 공유합니다"
 msgid "Show"
 msgstr "표시"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:167
+#: src/view/com/util/post-embeds/GifEmbed.tsx:169
 msgid "Show alt text"
 msgstr "대체 텍스트 표시"
 
@@ -4791,7 +4809,7 @@ msgstr "숨겨진 답글 표시"
 msgid "Show less like this"
 msgstr "이런 항목 덜 보기"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:537
+#: src/view/com/post-thread/PostThreadItem.tsx:533
 #: src/view/com/post/Post.tsx:227
 #: src/view/com/posts/FeedItem.tsx:396
 msgid "Show More"
@@ -4928,8 +4946,10 @@ msgid "Software Dev"
 msgstr "소프트웨어 개발"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:49
+#: src/view/com/threadgate/WhoCanReply.tsx:67
+#: src/view/com/threadgate/WhoCanReply.tsx:124
 msgid "Some people can reply"
-msgstr "몇몇 사람들이 답글을 달 수 있음"
+msgstr "일부 사람들이 답글을 달 수 있음"
 
 #: src/screens/Messages/Conversation/index.tsx:106
 msgid "Something went wrong"
@@ -5395,7 +5415,7 @@ msgid "This post has been deleted."
 msgstr "이 게시물은 삭제되었습니다."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:458
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:312
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:313
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
 msgstr "이 게시물은 로그인한 사용자에게만 표시됩니다. 로그인하지 않은 사용자에게는 표시되지 않습니다."
 
@@ -5576,9 +5596,9 @@ msgstr "계정 차단 해제"
 msgid "Unblock Account?"
 msgstr "계정을 차단 해제하시겠습니까?"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:63
-#: src/view/com/util/post-ctrls/RepostButton.web.tsx:69
-#: src/view/com/util/post-ctrls/RepostButton.web.tsx:73
+#: src/view/com/util/post-ctrls/RepostButton.tsx:64
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:70
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:74
 msgid "Undo repost"
 msgstr "재게시 취소"
 
@@ -5802,7 +5822,7 @@ msgstr "사용자 이름 또는 이메일 주소"
 msgid "Users"
 msgstr "사용자"
 
-#: src/view/com/threadgate/WhoCanReply.tsx:187
+#: src/view/com/threadgate/WhoCanReply.tsx:274
 msgid "users followed by <0/>"
 msgstr "<0/> 님이 팔로우한 사용자"
 
@@ -6043,8 +6063,18 @@ msgid "Who can message you?"
 msgstr "누구의 메시지를 허용하시겠습니까?"
 
 #: src/view/com/modals/Threadgate.tsx:69
+#: src/view/com/threadgate/WhoCanReply.tsx:73
+#: src/view/com/threadgate/WhoCanReply.tsx:130
 msgid "Who can reply"
 msgstr "답글을 달 수 있는 사람"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:206
+msgid "Who can reply dialog"
+msgstr "답글을 달 수 있는 사람 대화 상자"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:210
+msgid "Who can reply?"
+msgstr "누가 답글을 달 수 있나요?"
 
 #: src/screens/Home/NoFeedsPinned.tsx:79
 #: src/screens/Messages/List/index.tsx:185
