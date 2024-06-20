@@ -83,7 +83,7 @@ export function getStarterPackOgCard(
   rkey?: string,
 ) {
   if (typeof didOrStarterPack === 'string') {
-    return `https://ogcard.bsky.app/start/${didOrStarterPack}/${rkey}`
+    return `https://ogcard.cdn.bsky.app/start/${didOrStarterPack}/${rkey}`
   } else {
     const rkey = new AtUri(didOrStarterPack.uri).rkey
     return `https://ogcard.cdn.bsky.app/start/${didOrStarterPack.creator.did}/${rkey}`
