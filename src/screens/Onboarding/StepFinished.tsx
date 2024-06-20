@@ -131,14 +131,6 @@ export function StepFinished() {
               : profileStepResults.image
               ? 'uploaded'
               : 'default',
-            usedStarterPack: Boolean(starterPack),
-            starterPackName: AppBskyGraphStarterpack.isRecord(
-              starterPack?.record,
-            )
-              ? starterPack.record.name
-              : undefined,
-            starterPackCreator: starterPack?.creator.did,
-            starterPackUri: starterPack?.uri,
           })
         })(),
         requestNotificationsPermission('AfterOnboarding'),
@@ -168,7 +160,14 @@ export function StepFinished() {
     onboardDispatch({type: 'finish'})
     track('OnboardingV2:StepFinished:End')
     track('OnboardingV2:Complete')
-    logEvent('onboarding:finished:nextPressed', {})
+    logEvent('onboarding:finished:nextPressed', {
+      usedStarterPack: Boolean(starterPack),
+      starterPackName: AppBskyGraphStarterpack.isRecord(starterPack?.record)
+        ? starterPack.record.name
+        : undefined,
+      starterPackCreator: starterPack?.creator.did,
+      starterPackUri: starterPack?.uri,
+    })
   }, [
     queryClient,
     agent,
