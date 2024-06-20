@@ -60,6 +60,7 @@ export const schema = z.object({
     appLanguage: z.string(),
   }),
   requireAltTextEnabled: z.boolean(), // should move to server
+  largeAltBadgeEnabled: z.boolean().optional(),
   externalEmbeds: z
     .object({
       giphy: z.enum(externalEmbedOptions).optional(),
@@ -112,6 +113,7 @@ export const defaults: Schema = {
     appLanguage: deviceLocales[0] || 'en',
   },
   requireAltTextEnabled: false,
+  largeAltBadgeEnabled: false,
   externalEmbeds: {},
   mutedThreads: [],
   invites: {
