@@ -15,7 +15,7 @@ import {
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {HITSLOP_10, HITSLOP_20} from '#/lib/constants'
+import {POST_CTRL_HITSLOP} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {makeProfileLink} from '#/lib/routes/links'
 import {shareUrl} from '#/lib/sharing'
@@ -215,7 +215,7 @@ let PostCtrls = ({
             other: 'Reply (# replies)',
           })}
           accessibilityHint=""
-          hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
+          hitSlop={POST_CTRL_HITSLOP}>
           <Bubble
             style={[defaultCtrlColor, {pointerEvents: 'none'}]}
             width={big ? 22 : 18}
@@ -258,7 +258,7 @@ let PostCtrls = ({
                 })
           }
           accessibilityHint=""
-          hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
+          hitSlop={POST_CTRL_HITSLOP}>
           {post.viewer?.like ? (
             <HeartIconFilled style={s.likeColor} width={big ? 22 : 18} />
           ) : (
@@ -299,7 +299,7 @@ let PostCtrls = ({
               }}
               accessibilityLabel={_(msg`Share`)}
               accessibilityHint=""
-              hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
+              hitSlop={POST_CTRL_HITSLOP}>
               <ArrowOutOfBox
                 style={[defaultCtrlColor, {pointerEvents: 'none'}]}
                 width={22}
@@ -325,7 +325,7 @@ let PostCtrls = ({
           record={record}
           richText={richText}
           style={{padding: 5}}
-          hitSlop={big ? HITSLOP_20 : HITSLOP_10}
+          hitSlop={POST_CTRL_HITSLOP}
           timestamp={post.indexedAt}
         />
       </View>

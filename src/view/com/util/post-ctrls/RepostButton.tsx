@@ -3,7 +3,7 @@ import {View} from 'react-native'
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {HITSLOP_10, HITSLOP_20} from '#/lib/constants'
+import {POST_CTRL_HITSLOP} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useRequireAuth} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
@@ -67,7 +67,7 @@ let RepostButton = ({
         shape="round"
         variant="ghost"
         color="secondary"
-        hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
+        hitSlop={POST_CTRL_HITSLOP}>
         <Repost style={color} width={big ? 22 : 18} />
         {typeof repostCount !== 'undefined' && repostCount > 0 ? (
           <Text
