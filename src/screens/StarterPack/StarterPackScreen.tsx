@@ -192,7 +192,7 @@ function Header({
         avatar={undefined}
         creator={creator}
         avatarType="starter-pack">
-        <View style={[a.flex_row, a.gap_sm]}>
+        <View style={[a.flex_row, a.gap_sm, a.align_center]}>
           {isOwn ? (
             <OwnerShareMenu
               routeParams={routeParams}
