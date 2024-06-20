@@ -246,7 +246,13 @@ export function useEditStarterPackMutation({
   })
 }
 
-export function useDeleteStarterPackMutation() {
+export function useDeleteStarterPackMutation({
+  onSuccess,
+  onError,
+}: {
+  onSuccess: () => void
+  onError: (error: Error) => void
+}) {
   const agent = useAgent()
   const queryClient = useQueryClient()
 
@@ -277,6 +283,10 @@ export function useDeleteStarterPackMutation() {
         did: agent.session!.did,
         rkey,
       })
+      onSuccess()
+    },
+    onError: async error => {
+      onError(error)
     },
   })
 }

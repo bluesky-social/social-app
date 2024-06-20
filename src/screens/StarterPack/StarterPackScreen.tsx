@@ -8,6 +8,7 @@ import {useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {logger} from '#/logger'
 import {useDeleteStarterPackMutation} from '#/state/queries/starter-packs'
 import {HITSLOP_20} from 'lib/constants'
 import {makeProfileLink, makeStarterPackLink} from 'lib/routes/links'
@@ -262,25 +263,34 @@ function OverflowMenu({
   const deleteDialogControl = useDialogControl()
   const navigation = useNavigation<NavigationProp>()
   const {
-    mutateAsync: deleteStarterPack,
+    mutate: deleteStarterPack,
     isPending: isDeletePending,
     error: deleteError,
-  } = useDeleteStarterPackMutation()
+  } = useDeleteStarterPackMutation({
+    onSuccess: () => {
+      logEvent('starterPack:delete', {})
+      deleteDialogControl.close(() => {
+        if (navigation.canGoBack()) {
+          navigation.popToTop()
+        } else {
+          navigation.navigate('Home')
+        }
+      })
+    },
+    onError: e => {
+      logger.error('Failed to delete starter pack', {safeMessage: e})
+    },
+  })
 
   const isOwn = starterPack.creator.did === currentAccount?.did
 
   const onDeleteStarterPack = async () => {
-    await deleteStarterPack({
+    deleteStarterPack({
       rkey: routeParams.rkey,
       // TODO need to fix types
       listUri: starterPack.list!.uri,
     })
-
     logEvent('starterPack:delete', {})
-
-    deleteDialogControl.close(() => {
-      navigation.popToTop()
-    })
   }
 
   return (
