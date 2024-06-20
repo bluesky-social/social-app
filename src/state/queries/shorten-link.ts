@@ -1,3 +1,5 @@
+import {logger} from '#/logger'
+
 export function useShortenLink() {
   return async (inputUrl: string): Promise<{url: string}> => {
     const url = new URL(inputUrl)
@@ -12,7 +14,8 @@ export function useShortenLink() {
     })
 
     if (!res.ok) {
-      throw new Error('Failed to shorten link')
+      logger.error('Failed to shorten link', {safeMessage: res.status})
+      return {url: inputUrl}
     }
 
     return res.json()

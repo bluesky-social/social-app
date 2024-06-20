@@ -114,15 +114,12 @@ function StarterPackScreenInner({
   ]
 
   const onShareLink = async () => {
+    const fullUrl = makeStarterPackLink(routeParams.name, routeParams.rkey)
+
     try {
-      const fullUrl = makeStarterPackLink(
-        starterPack.creator.did,
-        routeParams.rkey,
-      )
       const res = await shortenLink(fullUrl)
       shareUrl(res.url)
     } catch (e: unknown) {
-      const fullUrl = makeStarterPackLink(routeParams.name, routeParams.rkey)
       logger.error('Failed to shorten link', {safeMessage: e})
       shareUrl(fullUrl)
     } finally {
@@ -316,6 +313,7 @@ function OverflowMenu({
   const reportDialogControl = useReportDialogControl()
   const deleteDialogControl = useDialogControl()
   const navigation = useNavigation<NavigationProp>()
+  const [isQrDialogOpen, setIsQrDialogOpen] = React.useState(false)
 
   const {
     mutate: deleteStarterPack,
@@ -409,7 +407,10 @@ function OverflowMenu({
                 <Menu.Item
                   label={_(msg`Create QR code`)}
                   testID="createQRCodeBtn"
-                  onPress={qrCodeDialogControl.open}>
+                  onPress={() => {
+                    setIsQrDialogOpen(true)
+                    qrCodeDialogControl.open()
+                  }}>
                   <Menu.ItemText>
                     <Trans>Create QR code</Trans>
                   </Menu.ItemText>
@@ -430,7 +431,12 @@ function OverflowMenu({
         </Menu.Outer>
       </Menu.Root>
 
-      <QrCodeDialog control={qrCodeDialogControl} starterPack={starterPack} />
+      <QrCodeDialog
+        control={qrCodeDialogControl}
+        starterPack={starterPack}
+        isOpen={isQrDialogOpen}
+        setIsOpen={setIsQrDialogOpen}
+      />
       <ReportDialog
         control={reportDialogControl}
         params={{
@@ -496,6 +502,7 @@ function OwnerShareMenu({
 }) {
   const {_} = useLingui()
   const qrCodeDialogControl = useDialogControl()
+  const [isQrDialogOpen, setIsQrDialogOpen] = React.useState(false)
 
   return (
     <>
@@ -530,7 +537,10 @@ function OwnerShareMenu({
             <Menu.Item
               label={_(msg`Create QR code`)}
               testID="createQRCodeBtn"
-              onPress={qrCodeDialogControl.open}>
+              onPress={() => {
+                setIsQrDialogOpen(true)
+                qrCodeDialogControl.open()
+              }}>
               <Menu.ItemText>
                 <Trans>Create QR code</Trans>
               </Menu.ItemText>
@@ -540,7 +550,12 @@ function OwnerShareMenu({
         </Menu.Outer>
       </Menu.Root>
 
-      <QrCodeDialog control={qrCodeDialogControl} starterPack={starterPack} />
+      <QrCodeDialog
+        control={qrCodeDialogControl}
+        starterPack={starterPack}
+        isOpen={isQrDialogOpen}
+        setIsOpen={setIsQrDialogOpen}
+      />
     </>
   )
 }
