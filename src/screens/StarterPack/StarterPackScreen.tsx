@@ -114,7 +114,10 @@ function StarterPackScreenInner({
   ]
 
   const onShareLink = async () => {
-    const fullUrl = makeStarterPackLink(routeParams.name, routeParams.rkey)
+    const fullUrl = makeStarterPackLink(
+      starterPack.creator.did,
+      routeParams.rkey,
+    )
     const res = await shortenLink(fullUrl)
     shareUrl(res.url)
     logEvent('starterPack:share', {
