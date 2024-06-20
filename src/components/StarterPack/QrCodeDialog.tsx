@@ -26,13 +26,23 @@ import {QrCode} from '#/components/StarterPack/QrCode'
 export function QrCodeDialog({
   control,
   starterPack,
-  isOpen,
-  setIsOpen,
 }: {
   control: DialogControlProps
   starterPack: AppBskyGraphDefs.StarterPackView
-  isOpen: boolean
-  setIsOpen: (isOpen: boolean) => void
+}) {
+  return (
+    <Dialog.Outer control={control}>
+      <Inner starterPack={starterPack} control={control} />
+    </Dialog.Outer>
+  )
+}
+
+function Inner({
+  starterPack,
+  control,
+}: {
+  starterPack: AppBskyGraphDefs.StarterPackView
+  control: DialogControlProps
 }) {
   const {_} = useLingui()
   const [isProcessing, setIsProcessing] = React.useState(false)
@@ -42,7 +52,7 @@ export function QrCodeDialog({
   const ref = React.useRef<ViewShot>(null)
 
   React.useEffect(() => {
-    if (!isOpen || link) return
+    if (link) return
     ;(async () => {
       const rkey = new AtUri(starterPack.uri).rkey
       const res = await shortenLink(
@@ -50,7 +60,7 @@ export function QrCodeDialog({
       )
       setLink(res.url)
     })()
-  }, [isOpen, link, shortenLink, starterPack.creator.did, starterPack.uri])
+  }, [link, shortenLink, starterPack.creator.did, starterPack.uri])
 
   const getCanvas = (base64: string): Promise<HTMLCanvasElement> => {
     return new Promise(resolve => {
@@ -168,11 +178,7 @@ export function QrCodeDialog({
   }
 
   return (
-    <Dialog.Outer
-      control={control}
-      onClose={() => {
-        setIsOpen(false)
-      }}>
+    <>
       <Dialog.Handle />
       <Dialog.ScrollableInner
         label={_(msg`Create a QR code for a starter pack`)}>
@@ -216,6 +222,6 @@ export function QrCodeDialog({
           )}
         </View>
       </Dialog.ScrollableInner>
-    </Dialog.Outer>
+    </>
   )
 }

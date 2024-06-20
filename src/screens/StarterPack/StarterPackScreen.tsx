@@ -284,7 +284,6 @@ function OverflowMenu({
   const reportDialogControl = useReportDialogControl()
   const deleteDialogControl = useDialogControl()
   const navigation = useNavigation<NavigationProp>()
-  const [isQrDialogOpen, setIsQrDialogOpen] = React.useState(false)
 
   const {
     mutate: deleteStarterPack,
@@ -378,10 +377,7 @@ function OverflowMenu({
                 <Menu.Item
                   label={_(msg`Create QR code`)}
                   testID="createQRCodeBtn"
-                  onPress={() => {
-                    setIsQrDialogOpen(true)
-                    qrCodeDialogControl.open()
-                  }}>
+                  onPress={qrCodeDialogControl.open}>
                   <Menu.ItemText>
                     <Trans>Create QR code</Trans>
                   </Menu.ItemText>
@@ -402,12 +398,7 @@ function OverflowMenu({
         </Menu.Outer>
       </Menu.Root>
 
-      <QrCodeDialog
-        control={qrCodeDialogControl}
-        starterPack={starterPack}
-        isOpen={isQrDialogOpen}
-        setIsOpen={setIsQrDialogOpen}
-      />
+      <QrCodeDialog control={qrCodeDialogControl} starterPack={starterPack} />
       <ReportDialog
         control={reportDialogControl}
         params={{
@@ -473,7 +464,6 @@ function OwnerShareMenu({
 }) {
   const {_} = useLingui()
   const qrCodeDialogControl = useDialogControl()
-  const [isQrDialogOpen, setIsQrDialogOpen] = React.useState(false)
 
   return (
     <>
@@ -508,10 +498,7 @@ function OwnerShareMenu({
             <Menu.Item
               label={_(msg`Create QR code`)}
               testID="createQRCodeBtn"
-              onPress={() => {
-                setIsQrDialogOpen(true)
-                qrCodeDialogControl.open()
-              }}>
+              onPress={qrCodeDialogControl.open}>
               <Menu.ItemText>
                 <Trans>Create QR code</Trans>
               </Menu.ItemText>
@@ -521,12 +508,7 @@ function OwnerShareMenu({
         </Menu.Outer>
       </Menu.Root>
 
-      <QrCodeDialog
-        control={qrCodeDialogControl}
-        starterPack={starterPack}
-        isOpen={isQrDialogOpen}
-        setIsOpen={setIsQrDialogOpen}
-      />
+      <QrCodeDialog control={qrCodeDialogControl} starterPack={starterPack} />
     </>
   )
 }
@@ -544,8 +526,9 @@ function ShareDialog({
   const imageUrl = getStarterPackOgCard(starterPack)
 
   const onShareLink = async () => {
-    const fullUrl = makeStarterPackLink(starterPack.creator.did, rkey)
-    const res = await shortenLink(fullUrl)
+    const res = await shortenLink(
+      makeStarterPackLink(starterPack.creator.did, routeParams.rkey),
+    )
     shareUrl(res.url)
     logEvent('starterPack:share', {
       starterPack: starterPack.uri,
