@@ -476,9 +476,13 @@ export function useSavedFeeds() {
     staleTime: STALE.INFINITY,
     enabled: !isLoadingPrefs,
     queryKey: [pinnedFeedInfosQueryKeyRoot, ...savedItems],
-    placeholderData: {
-      count: savedItems.length,
-      feeds: [],
+    placeholderData: previousData => {
+      return (
+        previousData || {
+          count: savedItems.length,
+          feeds: [],
+        }
+      )
     },
     queryFn: async () => {
       const resolvedFeeds = new Map<string, AppBskyFeedDefs.GeneratorView>()

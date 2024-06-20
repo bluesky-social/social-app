@@ -209,7 +209,7 @@ export function FeedsScreen(_props: Props) {
           error: cleanError(savedFeedsError.toString()),
         })
       } else {
-        if (isSavedFeedsPlaceholder) {
+        if (isSavedFeedsPlaceholder && !savedFeeds?.feeds.length) {
           /*
            * Initial render in placeholder state is 0 on a cold page load,
            * because preferences haven't loaded yet.
