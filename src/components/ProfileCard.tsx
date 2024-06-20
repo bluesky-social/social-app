@@ -45,9 +45,15 @@ export function Default({
           }
           moderation={moderation.ui('avatar')}
         />
-        <View>
-          <Text style={[a.text_md, a.font_bold, a.leading_snug]}>{name}</Text>
-          <Text style={[a.leading_snug, t.atoms.text_contrast_medium]}>
+        <View style={[a.flex_1]}>
+          <Text
+            style={[a.text_md, a.font_bold, a.leading_snug]}
+            numberOfLines={1}>
+            {name}
+          </Text>
+          <Text
+            style={[a.leading_snug, t.atoms.text_contrast_medium]}
+            numberOfLines={1}>
             {handle}
           </Text>
         </View>
