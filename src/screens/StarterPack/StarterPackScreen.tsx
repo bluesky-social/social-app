@@ -30,6 +30,7 @@ import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBox} from '#/components/icons/ArrowOutOfBox'
+import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
 import {Pencil_Stroke2_Corner0_Rounded as Pencil} from '#/components/icons/Pencil'
@@ -133,7 +134,6 @@ function Header({
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const navigation = useNavigation<NavigationProp>()
   const {currentAccount} = useSession()
   const agent = useAgent()
   const queryClient = useQueryClient()
@@ -191,18 +191,10 @@ function Header({
         avatarType="starter-pack">
         <View style={[a.flex_row, a.gap_sm]}>
           {isOwn ? (
-            <Button
-              label={_(msg`Edit`)}
-              variant="solid"
-              color="secondary"
-              size="small"
-              onPress={() =>
-                navigation.navigate('StarterPackEdit', {rkey: routeParams.rkey})
-              }>
-              <ButtonText>
-                <Trans>Edit</Trans>
-              </ButtonText>
-            </Button>
+            <OwnerShareMenu
+              routeParams={routeParams}
+              starterPack={starterPack}
+            />
           ) : (
             <Button
               label={_(msg`Follow all`)}
@@ -438,6 +430,72 @@ function OverflowMenu({
           <Prompt.Cancel />
         </Prompt.Actions>
       </Prompt.Outer>
+    </>
+  )
+}
+
+function OwnerShareMenu({
+  starterPack,
+  routeParams,
+}: {
+  starterPack: AppBskyGraphDefs.StarterPackView
+  routeParams: StarterPackScreeProps['route']['params']
+}) {
+  const {_} = useLingui()
+  const qrCodeDialogControl = useDialogControl()
+
+  return (
+    <>
+      <Menu.Root>
+        <Menu.Trigger label={_(msg`Repost or quote post`)}>
+          {({props}) => (
+            <Button
+              {...props}
+              label={_(msg`Share this starter pack`)}
+              hitSlop={HITSLOP_20}
+              variant="solid"
+              color="primary"
+              size="small">
+              <ButtonText>
+                <Trans>Share</Trans>
+              </ButtonText>
+              <ButtonIcon icon={ChevronDown} position="right" />
+            </Button>
+          )}
+        </Menu.Trigger>
+        <Menu.Outer style={{minWidth: 170}}>
+          <Menu.Group>
+            <Menu.Item
+              label={_(msg`Share link`)}
+              testID="shareStarterPackLinkBtn"
+              onPress={() => {
+                logEvent('starterPack:share', {
+                  starterPack: starterPack.uri,
+                  shareType: 'link',
+                })
+                shareUrl(
+                  makeStarterPackLink(routeParams.name, routeParams.rkey),
+                )
+              }}>
+              <Menu.ItemText>
+                <Trans>Share link</Trans>
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={ArrowOutOfBox} position="right" />
+            </Menu.Item>
+            <Menu.Item
+              label={_(msg`Create QR code`)}
+              testID="createQRCodeBtn"
+              onPress={qrCodeDialogControl.open}>
+              <Menu.ItemText>
+                <Trans>Create QR code</Trans>
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={QrCode} position="right" />
+            </Menu.Item>
+          </Menu.Group>
+        </Menu.Outer>
+      </Menu.Root>
+
+      <QrCodeDialog control={qrCodeDialogControl} starterPack={starterPack} />
     </>
   )
 }
