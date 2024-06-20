@@ -16,11 +16,11 @@ import {Text} from '#/components/Typography'
 export function Default({
   profile: profileUnshadowed,
   moderationOpts,
-  logContext,
+  logContext = 'ProfileCard',
 }: {
   profile: AppBskyActorDefs.ProfileViewDetailed
   moderationOpts: ModerationOpts
-  logContext: 'ProfileCard' | 'StarterPackProfilesList'
+  logContext?: 'ProfileCard' | 'StarterPackProfilesList'
 }) {
   const t = useTheme()
   const {hasSession} = useSession()

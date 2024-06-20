@@ -93,7 +93,7 @@ function LandingScreenLoaded({
   starterPack,
   setScreenState,
   // TODO apply this to profile card
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   moderationOpts,
 }: {
   starterPack: AppBskyGraphDefs.StarterPackView
@@ -237,7 +237,10 @@ function LandingScreenLoaded({
                         a.border_t,
                         t.atoms.border_contrast_low,
                       ]}>
-                      <ProfileCard profile={item.subject} />
+                      <ProfileCard
+                        profile={item.subject}
+                        moderationOpts={moderationOpts}
+                      />
                     </View>
                   ))}
                 </View>
