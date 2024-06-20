@@ -21,6 +21,7 @@ import {makeProfileLink, makeStarterPackLink} from 'lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
 import {shareUrl} from 'lib/sharing'
 import {logEvent} from 'lib/statsig/statsig'
+import {getStarterPackOgCard} from 'lib/strings/starter-pack'
 import {isWeb} from 'platform/detection'
 import {useModerationOpts} from 'state/preferences/moderation-opts'
 import {RQKEY} from 'state/queries/list-members'
@@ -539,6 +540,8 @@ function ShareDialog({
 }) {
   const shortenLink = useShortenLink()
   const rkey = new AtUri(starterPack.uri).rkey
+
+  const imageUrl = getStarterPackOgCard(starterPack)
 
   const onShareLink = async () => {
     const fullUrl = makeStarterPackLink(starterPack.creator.did, rkey)

@@ -78,7 +78,7 @@ export function httpStarterPackUriToAtUri(httpUri?: string): string | null {
   return `at://${parsed.name}/app.bsky.graph.starterpack/${parsed.rkey}`
 }
 
-export function starterPackToOgCard(
+export function getStarterPackOgCard(
   starterPack: AppBskyGraphDefs.StarterPackView,
 ) {
   const rkey = new AtUri(starterPack.uri).rkey
