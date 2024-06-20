@@ -1,6 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyActorDefs, AppBskyGraphStarterpack, AtUri} from '@atproto/api'
+import {AppBskyGraphStarterpack, AtUri} from '@atproto/api'
 import {StarterPackViewBasic} from '@atproto/api/dist/client/types/app/bsky/graph/defs'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -9,11 +9,24 @@ import {sanitizeHandle} from 'lib/strings/handles'
 import {useSession} from 'state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {StarterPack} from '#/components/icons/StarterPack'
-import {Link} from '#/components/Link'
+import {Link as InternalLink, LinkProps} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
 export function Default({starterPack}: {starterPack: StarterPackViewBasic}) {
-  const rkey = new AtUri(starterPack.uri).rkey
+  const {record} = starterPack
+
+  if (!AppBskyGraphStarterpack.isRecord(record)) {
+    return null
+  }
+
+  return (
+    <Link starterPack={starterPack} label={record.name}>
+      <Card starterPack={starterPack} />
+    </Link>
+  )
+}
+
+export function Card({starterPack}: {starterPack: StarterPackViewBasic}) {
   const {record, creator, joinedAllTimeCount} = starterPack
 
   const {_} = useLingui()
@@ -25,7 +38,7 @@ export function Default({starterPack}: {starterPack: StarterPackViewBasic}) {
   }
 
   return (
-    <Wrapper creator={starterPack.creator} name={record.name} rkey={rkey}>
+    <View style={[a.flex_1, a.gap_md]}>
       <View style={[a.flex_row, a.gap_sm]}>
         <StarterPack width={40} gradient="sky" />
         <View>
@@ -52,29 +65,35 @@ export function Default({starterPack}: {starterPack: StarterPackViewBasic}) {
           {joinedAllTimeCount} users have joined!
         </Text>
       )}
-    </Wrapper>
+    </View>
   )
 }
 
-function Wrapper({
-  name,
-  creator,
+export function Link({
+  starterPack,
   children,
-  rkey,
+  ...rest
 }: {
-  name: string
-  creator: AppBskyActorDefs.ProfileViewBasic
-  rkey: string
-  children: React.ReactNode
-}) {
+  starterPack: StarterPackViewBasic
+} & Omit<LinkProps, 'to'>) {
+  const {rkey, handleOrDid} = React.useMemo(() => {
+    const rkey = new AtUri(starterPack.uri).rkey
+    const {creator} = starterPack
+    return {rkey, handleOrDid: creator.handle || creator.did}
+  }, [starterPack])
   return (
-    <Link
+    <InternalLink
+      label={
+        AppBskyGraphStarterpack.isRecord(starterPack.record)
+          ? starterPack.record.name
+          : undefined
+      }
+      {...rest}
       to={{
         screen: 'StarterPack',
-        params: {name: creator.handle || creator.did, rkey},
-      }}
-      label={name}>
-      <View style={[a.flex_1, a.gap_md]}>{children}</View>
-    </Link>
+        params: {name: handleOrDid, rkey},
+      }}>
+      {children}
+    </InternalLink>
   )
 }

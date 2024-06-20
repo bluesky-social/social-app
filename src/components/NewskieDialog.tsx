@@ -14,7 +14,7 @@ import {Button} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useDialogControl} from '#/components/Dialog'
 import {Newskie} from '#/components/icons/Newskie'
-import {Default as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
+import * as StarterPackCard from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
 
 export function NewskieDialog({
@@ -87,16 +87,25 @@ export function NewskieDialog({
               )}
             </Text>
             {profile.joinedViaStarterPack ? (
-              <View
-                style={[
-                  a.mt_lg,
-                  a.p_lg,
-                  a.border,
-                  a.rounded_sm,
-                  t.atoms.border_contrast_low,
-                ]}>
-                <StarterPackCard starterPack={profile.joinedViaStarterPack} />
-              </View>
+              <StarterPackCard.Link
+                starterPack={profile.joinedViaStarterPack}
+                onPress={() => {
+                  control.close()
+                }}>
+                <View
+                  style={[
+                    a.flex_1,
+                    a.mt_lg,
+                    a.p_lg,
+                    a.border,
+                    a.rounded_sm,
+                    t.atoms.border_contrast_low,
+                  ]}>
+                  <StarterPackCard.Card
+                    starterPack={profile.joinedViaStarterPack}
+                  />
+                </View>
+              </StarterPackCard.Link>
             ) : null}
           </View>
         </Dialog.ScrollableInner>
