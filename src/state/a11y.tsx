@@ -14,7 +14,7 @@ export function useA11y() {
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [reduceMotionEnabled, setReduceMotionEnabled] = React.useState(
+  const [reduceMotionEnabled, setReduceMotionEnabled] = React.useState(() =>
     isReducedMotion(),
   )
   const [screenReaderEnabled, setScreenReaderEnabled] = React.useState(false)
