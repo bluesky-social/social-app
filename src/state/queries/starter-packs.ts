@@ -240,7 +240,7 @@ export function useEditStarterPackMutation({
       })
       onSuccess()
     },
-    onError: async error => {
+    onError: error => {
       onError(error)
     },
   })
@@ -285,7 +285,7 @@ export function useDeleteStarterPackMutation({
       })
       onSuccess()
     },
-    onError: async error => {
+    onError: error => {
       onError(error)
     },
   })

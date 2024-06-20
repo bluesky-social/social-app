@@ -6,22 +6,18 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {
-  AppBskyGraphDefs,
-  AppBskyGraphGetActorStarterPacks,
-  AtUri,
-} from '@atproto/api'
+import {AppBskyGraphDefs, AppBskyGraphGetActorStarterPacks} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {InfiniteData, UseInfiniteQueryResult} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
-import {generateStarterpack} from 'lib/generate-starterpack'
+import {useGenerateStarterPackMutation} from 'lib/generate-starterpack'
 import {useBottomBarOffset} from 'lib/hooks/useBottomBarOffset'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {NavigationProp} from 'lib/routes/types'
-import {useAgent} from 'state/session'
+import {parseStarterPackUri} from 'lib/strings/starter-pack'
 import {List, ListRef} from 'view/com/util/List'
 import {Text} from 'view/com/util/text/Text'
 import {atoms as a, useTheme} from '#/alf'
@@ -185,35 +181,33 @@ function Empty() {
   const {_} = useLingui()
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
-  const agent = useAgent()
   const confirmDialogControl = useDialogControl()
   const followersDialogControl = useDialogControl()
   const errorDialogControl = useDialogControl()
 
   const [isGenerating, setIsGenerating] = React.useState(false)
 
-  const generate = async () => {
-    setIsGenerating(true)
-
-    const res = await generateStarterpack({agent})
-
-    if (res === 'NOT_ENOUGH_FOLLOWERS') {
-      followersDialogControl.open()
-      setIsGenerating(false)
-    } else if (res === 'ERROR') {
-      errorDialogControl.open()
-      setIsGenerating(false)
-    } else {
-      const atUri = new AtUri(res)
-      setTimeout(() => {
+  const {mutate: generateStarterPack} = useGenerateStarterPackMutation({
+    onSuccess: ({uri}) => {
+      const parsed = parseStarterPackUri(uri)
+      if (parsed) {
         navigation.push('StarterPack', {
-          name: atUri.hostname,
-          rkey: atUri.rkey,
+          name: parsed.name,
+          rkey: parsed.rkey,
         })
-        setIsGenerating(false)
-      }, 1000)
-    }
-  }
+      }
+      setIsGenerating(false)
+    },
+    onError: e => {
+      logger.error('Failed to generate starter pack', {safeMessage: e})
+      setIsGenerating(false)
+      if (e.name === 'NOT_ENOUGH_FOLLOWERS') {
+        followersDialogControl.open()
+      } else {
+        errorDialogControl.open()
+      }
+    },
+  })
 
   return (
     <LinearGradientBackground
@@ -287,7 +281,7 @@ function Empty() {
           <Prompt.Action
             color="primary"
             cta={_(msg`Choose for me`)}
-            onPress={generate}
+            onPress={generateStarterPack}
           />
           <Prompt.Action
             color="secondary"
@@ -313,7 +307,7 @@ function Empty() {
         description={_(
           msg`An error occurred while generating your starter pack. Want to try again?`,
         )}
-        onConfirm={generate}
+        onConfirm={generateStarterPack}
         confirmButtonCta={_(msg`Retry`)}
       />
     </LinearGradientBackground>

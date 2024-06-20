@@ -1,9 +1,19 @@
-import {AppBskyActorDefs, BskyAgent, Facet} from '@atproto/api'
+import {
+  AppBskyActorDefs,
+  AppBskyGraphGetStarterPack,
+  BskyAgent,
+  Facet,
+} from '@atproto/api'
 import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useMutation} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
+import {until} from 'lib/async/until'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {enforceLen} from 'lib/strings/helpers'
+import {useAgent} from 'state/session'
 
 export const createStarterPackList = async ({
   name,
@@ -45,6 +55,88 @@ export const createStarterPackList = async ({
   })
 
   return list
+}
+
+export function useGenerateStarterPackMutation({
+  onSuccess,
+  onError,
+}: {
+  onSuccess: ({uri, cid}: {uri: string; cid: string}) => void
+  onError: (e: Error) => void
+}) {
+  const {_} = useLingui()
+  const agent = useAgent()
+  const starterPackString = _(msg`Starter Pack`)
+
+  return useMutation<{uri: string; cid: string}, Error, {}>({
+    mutationFn: async () => {
+      let profile: AppBskyActorDefs.ProfileViewBasic | undefined
+      let profiles: AppBskyActorDefs.ProfileViewBasic[] | undefined
+
+      await Promise.all([
+        (async () => {
+          profile = (
+            await agent.app.bsky.actor.getProfile({
+              actor: agent.session!.did,
+            })
+          ).data
+        })(),
+        (async () => {
+          profiles = (
+            await agent.app.bsky.actor.searchActors({
+              q: encodeURIComponent('*'),
+              limit: 49,
+            })
+          ).data.actors.filter(p => p.viewer?.following)
+        })(),
+      ])
+
+      if (!profile || !profiles) {
+        throw new Error('ERROR_DATA')
+      }
+
+      // We include ourselves when we make the list
+      if (profiles.length < 7) {
+        throw new Error('NOT_ENOUGH_FOLLOWERS')
+      }
+
+      const displayName = enforceLen(
+        profile.displayName
+          ? sanitizeDisplayName(profile.displayName)
+          : `@${sanitizeHandle(profile.handle)}`,
+        25,
+        true,
+      )
+      const starterPackName = `${displayName}'s ${starterPackString}`
+
+      const list = await createStarterPackList({
+        name: starterPackName,
+        profiles,
+        agent,
+      })
+
+      return await agent.app.bsky.graph.starterpack.create(
+        {
+          repo: agent.session!.did,
+          validate: false,
+        },
+        {
+          name: starterPackName,
+          list: list.uri,
+          createdAt: new Date().toISOString(),
+        },
+      )
+    },
+    onSuccess: async data => {
+      await whenAppViewReady(agent, data.uri, v => {
+        return typeof v?.data.starterPack.uri === 'string'
+      })
+      onSuccess(data)
+    },
+    onError: error => {
+      onError(error)
+    },
+  })
 }
 
 export async function generateStarterpack({
@@ -125,4 +217,17 @@ function createListItem({did, listUri}: {did: string; listUri: string}) {
       createdAt: new Date().toISOString(),
     },
   }
+}
+
+async function whenAppViewReady(
+  agent: BskyAgent,
+  uri: string,
+  fn: (res?: AppBskyGraphGetStarterPack.Response) => boolean,
+) {
+  await until(
+    5, // 5 tries
+    1e3, // 1s delay between tries
+    fn,
+    () => agent.app.bsky.graph.getStarterPack({starterPack: uri}),
+  )
 }
