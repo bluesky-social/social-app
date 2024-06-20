@@ -9,7 +9,6 @@ export const handler = (runHandler: Handler): RequestHandler => {
   return async (req, res, next) => {
     try {
       await runHandler(req, res)
-      next()
     } catch (err) {
       next(err)
     }
@@ -30,8 +29,8 @@ export function originVerifyMiddleware(ctx: AppContext): RequestHandler {
 
 export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   httpLogger.error({err}, 'request error')
-  if (!res.headersSent) {
-    res.status(500).end('server error')
+  if (res.headersSent) {
+    return next(err)
   }
-  return next()
+  return res.status(500).end('server error')
 }
