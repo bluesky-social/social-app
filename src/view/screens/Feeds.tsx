@@ -55,9 +55,8 @@ type FlatlistSlice =
       key: string
     }
   | {
-      type: 'savedFeedsLoading'
+      type: 'savedFeedPlaceholder'
       key: string
-      // pendingItems: number,
     }
   | {
       type: 'savedFeedNoResults'
@@ -107,7 +106,7 @@ export function FeedsScreen(_props: Props) {
   const [isPTR, setIsPTR] = React.useState(false)
   const {
     data: savedFeeds,
-    isLoading: isSavedFeedsLoading,
+    isPlaceholderData: isSavedFeedsPlaceholder,
     error: savedFeedsError,
     refetch: refetchSavedFeeds,
   } = useSavedFeeds()
@@ -210,17 +209,37 @@ export function FeedsScreen(_props: Props) {
           error: cleanError(savedFeedsError.toString()),
         })
       } else {
-        if (isSavedFeedsLoading || !savedFeeds) {
-          slices.push({
-            key: 'savedFeedsLoading',
-            type: 'savedFeedsLoading',
-          })
+        if (isSavedFeedsPlaceholder) {
+          /*
+           * Initial render in placeholder state is 0 on a cold page load,
+           * because preferences haven't loaded yet.
+           *
+           * In practice, `savedFeeds` is always defined, but we check for TS
+           * and for safety.
+           *
+           * In both cases, we show 4 as the the loading state.
+           */
+          const count = savedFeeds
+            ? savedFeeds.count === 0
+              ? 4
+              : savedFeeds.count
+            : 4
+          Array(count)
+            .fill(0)
+            .forEach((_, i) => {
+              slices.push({
+                key: 'savedFeedPlaceholder' + i,
+                type: 'savedFeedPlaceholder',
+              })
+            })
         } else {
-          if (savedFeeds?.length) {
-            const noFollowingFeed = savedFeeds.every(f => f.type !== 'timeline')
+          if (savedFeeds?.feeds?.length) {
+            const noFollowingFeed = savedFeeds.feeds.every(
+              f => f.type !== 'timeline',
+            )
 
             slices = slices.concat(
-              savedFeeds
+              savedFeeds.feeds
                 .filter(s => {
                   return s.config.pinned
                 })
@@ -231,7 +250,7 @@ export function FeedsScreen(_props: Props) {
                 })),
             )
             slices = slices.concat(
-              savedFeeds
+              savedFeeds.feeds
                 .filter(s => {
                   return !s.config.pinned
                 })
@@ -334,7 +353,7 @@ export function FeedsScreen(_props: Props) {
   }, [
     hasSession,
     savedFeeds,
-    isSavedFeedsLoading,
+    isSavedFeedsPlaceholder,
     savedFeedsError,
     popularFeeds,
     isPopularFeedsFetching,
@@ -395,10 +414,7 @@ export function FeedsScreen(_props: Props) {
     ({item}: {item: FlatlistSlice}) => {
       if (item.type === 'error') {
         return <ErrorMessage message={item.error} />
-      } else if (
-        item.type === 'popularFeedsLoadingMore' ||
-        item.type === 'savedFeedsLoading'
-      ) {
+      } else if (item.type === 'popularFeedsLoadingMore') {
         return (
           <View style={s.p10}>
             <ActivityIndicator size="large" />
@@ -447,6 +463,8 @@ export function FeedsScreen(_props: Props) {
             <NoSavedFeedsOfAnyType />
           </View>
         )
+      } else if (item.type === 'savedFeedPlaceholder') {
+        return <SavedFeedPlaceholder />
       } else if (item.type === 'savedFeed') {
         return <FeedOrFollowing savedFeed={item.savedFeed} />
       } else if (item.type === 'popularFeedsHeader') {
@@ -638,6 +656,25 @@ function SavedFeed({
         </View>
       )}
     </FeedCard.Link>
+  )
+}
+
+function SavedFeedPlaceholder() {
+  const t = useTheme()
+  return (
+    <View
+      style={[
+        a.flex_1,
+        a.px_lg,
+        a.py_md,
+        a.border_b,
+        t.atoms.border_contrast_low,
+      ]}>
+      <FeedCard.Header>
+        <FeedCard.AvatarPlaceholder size={28} />
+        <FeedCard.TitleAndBylinePlaceholder />
+      </FeedCard.Header>
+    </View>
   )
 }
 

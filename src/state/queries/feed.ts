@@ -476,6 +476,10 @@ export function useSavedFeeds() {
     staleTime: STALE.INFINITY,
     enabled: savedItems.length > 0 && !isLoadingPrefs,
     queryKey: [pinnedFeedInfosQueryKeyRoot, ...savedItems],
+    placeholderData: {
+      count: savedItems.length,
+      feeds: [],
+    },
     queryFn: async () => {
       const resolvedFeeds = new Map<string, AppBskyFeedDefs.GeneratorView>()
       const resolvedLists = new Map<string, AppBskyGraphDefs.ListView>()
@@ -529,7 +533,10 @@ export function useSavedFeeds() {
         }
       }) as SavedFeedItem[]
 
-      return res
+      return {
+        count: savedItems.length,
+        feeds: res,
+      }
     },
   })
 }

@@ -83,8 +83,26 @@ export function Header({children}: {children: React.ReactNode}) {
   )
 }
 
-export function Avatar({src, size}: {src: string | undefined; size?: number}) {
-  return <UserAvatar type="algo" size={size || 40} avatar={src} />
+export type AvatarProps = {src: string | undefined; size?: number}
+
+export function Avatar({src, size = 40}: AvatarProps) {
+  return <UserAvatar type="algo" size={size} avatar={src} />
+}
+
+export function AvatarPlaceholder({size = 40}: Omit<AvatarProps, 'src'>) {
+  const t = useTheme()
+  return (
+    <View
+      style={[
+        t.atoms.bg_contrast_25,
+        {
+          width: size,
+          height: size,
+          borderRadius: 8,
+        },
+      ]}
+    />
+  )
 }
 
 export function TitleAndByline({
@@ -107,6 +125,38 @@ export function TitleAndByline({
           numberOfLines={1}>
           <Trans>Feed by {sanitizeHandle(creator.handle, '@')}</Trans>
         </Text>
+      )}
+    </View>
+  )
+}
+
+export function TitleAndBylinePlaceholder({creator}: {creator?: boolean}) {
+  const t = useTheme()
+
+  return (
+    <View style={[a.flex_1, a.gap_xs]}>
+      <View
+        style={[
+          a.rounded_xs,
+          t.atoms.bg_contrast_50,
+          {
+            width: '60%',
+            height: 14,
+          },
+        ]}
+      />
+
+      {creator && (
+        <View
+          style={[
+            a.rounded_xs,
+            t.atoms.bg_contrast_25,
+            {
+              width: '40%',
+              height: 10,
+            },
+          ]}
+        />
       )}
     </View>
   )
