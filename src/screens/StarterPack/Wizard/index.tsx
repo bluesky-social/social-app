@@ -229,19 +229,21 @@ function WizardInner({
     }
   }
 
-  const onError = (e: Error) => {
-    logger.error('Failed to create starter pack', {safeMessage: e})
-    dispatch({type: 'SetProcessing', processing: false})
-    Toast.show(_(msg`Failed to create starter pack`))
-  }
-
   const {mutate: createStarterPack} = useCreateStarterPackMutation({
     onSuccess: onSuccessCreate,
-    onError,
+    onError: e => {
+      logger.error('Failed to create starter pack', {safeMessage: e})
+      dispatch({type: 'SetProcessing', processing: false})
+      Toast.show(_(msg`Failed to create starter pack`))
+    },
   })
   const {mutate: editStarterPack} = useEditStarterPackMutation({
     onSuccess: onSuccessEdit,
-    onError,
+    onError: e => {
+      logger.error('Failed to edit starter pack', {safeMessage: e})
+      dispatch({type: 'SetProcessing', processing: false})
+      Toast.show(_(msg`Failed to create starter pack`))
+    },
   })
 
   const submit = async () => {
