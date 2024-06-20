@@ -79,8 +79,13 @@ export function httpStarterPackUriToAtUri(httpUri?: string): string | null {
 }
 
 export function getStarterPackOgCard(
-  starterPack: AppBskyGraphDefs.StarterPackView,
+  didOrStarterPack: AppBskyGraphDefs.StarterPackView | string,
+  rkey?: string,
 ) {
-  const rkey = new AtUri(starterPack.uri).rkey
-  return `https://ogcard.bsky.app/start/${starterPack.creator.did}/${rkey}`
+  if (typeof didOrStarterPack === 'string') {
+    return `https://ogcard.bsky.app/start/${didOrStarterPack}/${rkey}`
+  } else {
+    const rkey = new AtUri(didOrStarterPack.uri).rkey
+    return `https://ogcard.bsky.app/start/${didOrStarterPack.creator.did}/${rkey}`
+  }
 }
