@@ -16,7 +16,6 @@ import {useOnboardingDispatch} from '#/state/shell'
 import {uploadBlob} from 'lib/api'
 import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
 import {useSetHasCheckedForStarterPack} from 'state/preferences/used-starter-packs'
-import {useSetSelectedFeed} from 'state/shell/selected-feed'
 import {
   useActiveStarterPack,
   useSetActiveStarterPack,
@@ -51,7 +50,6 @@ export function StepFinished() {
   const activeStarterPack = useActiveStarterPack()
   const setActiveStarterPack = useSetActiveStarterPack()
   const setHasCheckedForStarterPack = useSetHasCheckedForStarterPack()
-  const setSelectedFeed = useSetSelectedFeed()
 
   const finishOnboarding = React.useCallback(async () => {
     setSaving(true)
@@ -100,10 +98,8 @@ export function StepFinished() {
                   pinned: true,
                 })),
               )
-              setSelectedFeed(`feedgen|${starterPack.feeds[0].uri}`)
-            } else {
-              setSelectedFeed('following')
             }
+
             setActiveStarterPack(undefined)
           }
         })(),
@@ -184,7 +180,6 @@ export function StepFinished() {
     requestNotificationsPermission,
     setActiveStarterPack,
     setHasCheckedForStarterPack,
-    setSelectedFeed,
   ])
 
   React.useEffect(() => {
