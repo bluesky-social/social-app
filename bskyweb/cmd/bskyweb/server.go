@@ -414,7 +414,6 @@ func (srv *Server) WebStarterPack(c echo.Context) error {
 		}
 		identifier := handleOrDID.Normalize().String()
 		data["imgThumbUrl"] = fmt.Sprintf("%s/start/%s/%s", srv.cfg.ogcardHost, identifier, rkey)
-		log.Infof("hi %s", data["imgThumbUrl"])
 	}
 	return c.Render(http.StatusOK, "starterpack.html", data)
 }
