@@ -178,21 +178,33 @@ function InfoDialog({
   post: AppBskyFeedDefs.PostView
   settings: ThreadgateSetting[]
 }) {
-  const {_} = useLingui()
   return (
     <Dialog.Outer control={control}>
       <Dialog.Handle />
-      <Dialog.ScrollableInner
-        label={_(msg`Who can reply dialog`)}
-        style={[{width: 'auto', maxWidth: 400, minWidth: 200}]}>
-        <View style={[a.gap_sm]}>
-          <Text style={[a.font_bold, a.text_xl]}>
-            <Trans>Who can reply?</Trans>
-          </Text>
-          <Rules post={post} settings={settings} />
-        </View>
-      </Dialog.ScrollableInner>
+      <InfoDialogInner post={post} settings={settings} />
     </Dialog.Outer>
+  )
+}
+
+function InfoDialogInner({
+  post,
+  settings,
+}: {
+  post: AppBskyFeedDefs.PostView
+  settings: ThreadgateSetting[]
+}) {
+  const {_} = useLingui()
+  return (
+    <Dialog.ScrollableInner
+      label={_(msg`Who can reply dialog`)}
+      style={[{width: 'auto', maxWidth: 400, minWidth: 200}]}>
+      <View style={[a.gap_sm]}>
+        <Text style={[a.font_bold, a.text_xl]}>
+          <Trans>Who can reply?</Trans>
+        </Text>
+        <Rules post={post} settings={settings} />
+      </View>
+    </Dialog.ScrollableInner>
   )
 }
 
