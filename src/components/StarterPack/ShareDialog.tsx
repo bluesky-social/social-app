@@ -1,65 +1,50 @@
 import React from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {AppBskyGraphDefs, AtUri} from '@atproto/api'
+import {AppBskyGraphDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {makeStarterPackLink} from 'lib/routes/links'
 import {shareUrl} from 'lib/sharing'
 import {logEvent} from 'lib/statsig/statsig'
 import {getStarterPackOgCard} from 'lib/strings/starter-pack'
 import {isWeb} from 'platform/detection'
-import {useShortenLink} from 'state/queries/shorten-link'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {DialogControlProps} from '#/components/Dialog'
 import * as Dialog from '#/components/Dialog'
 import {Loader} from '#/components/Loader'
+import {Text} from '#/components/Typography'
 
-export function ShareDialog({
-  starterPack,
-  control,
-}: {
+interface Props {
   starterPack: AppBskyGraphDefs.StarterPackView
+  link?: string
+  imageLoaded?: boolean
+  qrDialogControl: DialogControlProps
   control: DialogControlProps
-}) {
+}
+
+export function ShareDialog(props: Props) {
   return (
-    <Dialog.Outer control={control}>
-      <ShareDialogInner starterPack={starterPack} control={control} />
+    <Dialog.Outer control={props.control}>
+      <ShareDialogInner {...props} />
     </Dialog.Outer>
   )
 }
 
 function ShareDialogInner({
   starterPack,
+  link,
+  imageLoaded,
+  qrDialogControl,
   control,
-}: {
-  starterPack: AppBskyGraphDefs.StarterPackView
-  control: DialogControlProps
-}) {
+}: Props) {
   const {_} = useLingui()
+  const t = useTheme()
   const {isTabletOrDesktop} = useWebMediaQueries()
-  const shortenLink = useShortenLink()
-  const rkey = new AtUri(starterPack.uri).rkey
 
   const imageUrl = getStarterPackOgCard(starterPack)
-  const [imageLoaded, setImageLoaded] = React.useState(false)
-  const [link, setLink] = React.useState<string>()
-
-  React.useEffect(() => {
-    ;(async () => {
-      await Image.prefetch([imageUrl])
-      setImageLoaded(true)
-    })()
-    ;(async () => {
-      const res = await shortenLink(
-        makeStarterPackLink(starterPack.creator.did, rkey),
-      )
-      setLink(res.url)
-    })()
-  }, [imageUrl, starterPack, shortenLink, rkey])
 
   const onShareLink = async () => {
     if (!link) return
@@ -75,14 +60,23 @@ function ShareDialogInner({
     <>
       <Dialog.Handle />
       <Dialog.ScrollableInner label={_(msg`Share link dialog`)}>
-        <View style={[!isTabletOrDesktop && a.gap_lg]}>
-          {!imageLoaded ? (
-            <View style={[a.p_xl, a.align_center]}>
-              <Loader size="xl" />
+        {!imageLoaded || !link ? (
+          <View style={[a.p_xl, a.align_center]}>
+            <Loader size="xl" />
+          </View>
+        ) : (
+          <View style={[!isTabletOrDesktop && a.gap_lg]}>
+            <View style={[a.gap_sm]}>
+              <Text style={[a.font_bold, a.text_2xl]}>
+                <Trans>Invite people to this starter pack!</Trans>
+              </Text>
+              <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
+                <Trans>
+                  Share this starter pack and help people join your community on
+                  Bluesky.
+                </Trans>
+              </Text>
             </View>
-          ) : null}
-
-          {imageLoaded ? (
             <Image
               source={{uri: imageUrl}}
               style={[
@@ -95,19 +89,10 @@ function ShareDialogInner({
               ]}
               accessibilityIgnoresInvertColors={true}
             />
-          ) : null}
-
-          {imageLoaded && !link ? (
-            <View style={[a.p_md, a.align_center]}>
-              <Loader size="xl" />
-            </View>
-          ) : null}
-
-          {link ? (
             <Button
               label="Share link"
               variant="solid"
-              color="primary"
+              color="secondary"
               size="small"
               style={[isWeb && a.self_center]}
               onPress={onShareLink}>
@@ -115,8 +100,23 @@ function ShareDialogInner({
                 {isWeb ? <Trans>Copy Link</Trans> : <Trans>Share Link</Trans>}
               </ButtonText>
             </Button>
-          ) : null}
-        </View>
+            <Button
+              label="Create QR code"
+              variant="solid"
+              color="secondary"
+              size="small"
+              style={[isWeb && a.self_center]}
+              onPress={() => {
+                control.close(() => {
+                  qrDialogControl.open()
+                })
+              }}>
+              <ButtonText>
+                <Trans>Create QR code</Trans>
+              </ButtonText>
+            </Button>
+          </View>
+        )}
       </Dialog.ScrollableInner>
     </>
   )
