@@ -39,6 +39,7 @@ import {
 } from '#/components/icons/Heart2'
 import * as Prompt from '#/components/Prompt'
 import {PostDropdownBtn} from '../forms/PostDropdownBtn'
+import {formatCount} from '../numeric/format'
 import {Text} from '../text/Text'
 import {RepostButton} from './RepostButton'
 
@@ -226,7 +227,7 @@ let PostCtrls = ({
                 big ? a.text_md : {fontSize: 15},
                 a.user_select_none,
               ]}>
-              {post.replyCount}
+              {formatCount(post.replyCount)}
             </Text>
           ) : undefined}
         </Pressable>
@@ -278,7 +279,7 @@ let PostCtrls = ({
                     : defaultCtrlColor,
                 ],
               ]}>
-              {post.likeCount}
+              {formatCount(post.likeCount)}
             </Text>
           ) : undefined}
         </Pressable>

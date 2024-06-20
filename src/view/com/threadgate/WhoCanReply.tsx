@@ -1,11 +1,18 @@
 import React from 'react'
 import {Keyboard, StyleProp, View, ViewStyle} from 'react-native'
-import {AppBskyFeedDefs, AppBskyGraphDefs, AtUri} from '@atproto/api'
+import {
+  AppBskyFeedDefs,
+  AppBskyFeedGetPostThread,
+  AppBskyGraphDefs,
+  AtUri,
+  BskyAgent,
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {createThreadgate} from '#/lib/api'
+import {until} from '#/lib/async/until'
 import {HITSLOP_10} from '#/lib/constants'
 import {makeListLink, makeProfileLink} from '#/lib/routes/links'
 import {logger} from '#/logger'
@@ -337,6 +344,18 @@ function useWhoCanReply(post: AppBskyFeedDefs.PostView) {
               rkey: new AtUri(post.uri).rkey,
             })
           }
+          await whenAppViewReady(agent, post.uri, res => {
+            const thread = res.data.thread
+            if (AppBskyFeedDefs.isThreadViewPost(thread)) {
+              const fetchedSettings = threadgateViewToSettings(
+                thread.post.threadgate,
+              )
+              return (
+                JSON.stringify(fetchedSettings) === JSON.stringify(newSettings)
+              )
+            }
+            return false
+          })
           Toast.show('Thread settings updated')
           queryClient.invalidateQueries({
             queryKey: [POST_THREAD_RQKEY_ROOT],
@@ -352,4 +371,21 @@ function useWhoCanReply(post: AppBskyFeedDefs.PostView) {
   }
 
   return {settings, isRootPost, onPressEdit}
+}
+
+async function whenAppViewReady(
+  agent: BskyAgent,
+  uri: string,
+  fn: (res: AppBskyFeedGetPostThread.Response) => boolean,
+) {
+  await until(
+    5, // 5 tries
+    1e3, // 1s delay between tries
+    fn,
+    () =>
+      agent.app.bsky.feed.getPostThread({
+        uri,
+        depth: 0,
+      }),
+  )
 }
