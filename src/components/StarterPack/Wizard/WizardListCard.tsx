@@ -1,5 +1,5 @@
 import React from 'react'
-import {Keyboard, Pressable, View} from 'react-native'
+import {Keyboard, View} from 'react-native'
 import {
   AppBskyActorDefs,
   AppBskyFeedDefs,
@@ -15,7 +15,6 @@ import {useLingui} from '@lingui/react'
 import {DISCOVER_FEED_URI} from 'lib/constants'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {isWeb} from 'platform/detection'
 import {useSession} from 'state/session'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {WizardAction, WizardState} from '#/screens/StarterPack/Wizard/State'
@@ -49,57 +48,45 @@ function WizardListCard({
   const {_} = useLingui()
 
   return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={displayName}
-      accessibilityHint={
-        included ? _(msg`Remove from list`) : _(msg`Add to list`)
+    <Toggle.Item
+      name={type === 'user' ? _(msg`Person toggle`) : _(msg`Feed toggle`)}
+      label={
+        included
+          ? _(msg`Remove ${displayName} from starter pack`)
+          : _(msg`Add ${displayName} to starter pack`)
       }
+      value={included}
+      disabled={disabled}
+      onChange={onPress}
       style={[
         a.flex_row,
         a.align_center,
         a.px_lg,
-        a.py_sm,
+        a.py_md,
         a.gap_md,
         a.border_b,
         t.atoms.border_contrast_low,
-        // @ts-expect-error web only
-        isWeb && {
-          cursor: 'default',
-        },
-      ]}
-      onPress={onPress}>
+      ]}>
       <UserAvatar
         size={45}
         avatar={avatar}
         moderation={moderationUi}
         type={type}
       />
-      <View style={[a.flex_1]}>
-        <Text style={[a.flex_1, a.font_bold, a.text_md]} numberOfLines={1}>
+      <View style={[a.flex_1, a.gap_2xs]}>
+        <Text
+          style={[a.flex_1, a.font_bold, a.text_md, a.leading_tight]}
+          numberOfLines={1}>
           {displayName}
         </Text>
         <Text
-          style={[a.flex_1, t.atoms.text_contrast_medium]}
+          style={[a.flex_1, a.leading_tight, t.atoms.text_contrast_medium]}
           numberOfLines={1}>
           {subtitle}
         </Text>
       </View>
-      <View accessible={false}>
-        <Toggle.Item
-          name={type === 'user' ? _(msg`Person toggle`) : _(msg`Feed toggle`)}
-          label={
-            included
-              ? _(msg`Remove ${displayName} from starter pack`)
-              : _(msg`Add ${displayName} to starter pack`)
-          }
-          value={included}
-          disabled={disabled}
-          onChange={onPress}>
-          <Checkbox />
-        </Toggle.Item>
-      </View>
-    </Pressable>
+      <Checkbox />
+    </Toggle.Item>
   )
 }
 
