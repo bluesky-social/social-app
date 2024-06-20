@@ -23,7 +23,7 @@ export function Default({
   logContext?: 'ProfileCard' | 'StarterPackProfilesList'
 }) {
   const t = useTheme()
-  const {hasSession} = useSession()
+  const {currentAccount, hasSession} = useSession()
 
   const profile = useProfileShadow(profileUnshadowed)
   const name = createSanitizedDisplayName(profile)
@@ -57,7 +57,7 @@ export function Default({
             {handle}
           </Text>
         </View>
-        {hasSession && (
+        {hasSession && profile.did !== currentAccount?.did && (
           <View style={[a.justify_center, {marginLeft: 'auto'}]}>
             <FollowButton profile={profile} logContext={logContext} />
           </View>
