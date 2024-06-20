@@ -66,7 +66,7 @@ function ShareDialogInner({
           </View>
         ) : (
           <View style={[!isTabletOrDesktop && a.gap_lg]}>
-            <View style={[a.gap_sm]}>
+            <View style={[a.gap_sm, isTabletOrDesktop && a.pb_lg]}>
               <Text style={[a.font_bold, a.text_2xl]}>
                 <Trans>Invite people to this starter pack!</Trans>
               </Text>
