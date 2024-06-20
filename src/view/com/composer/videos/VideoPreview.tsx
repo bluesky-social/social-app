@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 import React from 'react'
-import {ToastAndroid, View} from 'react-native'
+import {View} from 'react-native'
 import * as MediaLibrary from 'expo-media-library'
 import * as Sharing from 'expo-sharing'
 import {useVideoPlayer, VideoView} from 'expo-video'
@@ -65,7 +65,6 @@ export function VideoPreview({
               await MediaLibrary.requestPermissionsAsync()
             }
             await MediaLibrary.createAssetAsync(video.uri)
-            ToastAndroid.show('Saved to gallery', ToastAndroid.SHORT)
           }}
           label="Save"
           size="small"
