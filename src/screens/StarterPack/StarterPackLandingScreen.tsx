@@ -148,10 +148,7 @@ function LandingScreenLoaded({
             a.gap_sm,
             a.px_lg,
             a.py_2xl,
-            isTabletOrDesktop && {
-              borderBottomLeftRadius: 10,
-              borderBottomRightRadius: 10,
-            },
+            isTabletOrDesktop && [a.mt_2xl, a.rounded_md],
             activeStarterPack?.isClip && {
               paddingTop: 100,
             },
@@ -176,7 +173,7 @@ function LandingScreenLoaded({
               a.text_md,
               {color: 'white'},
             ]}>
-            Starter pack by {creator.displayName || `@${creator.handle}`}
+            Starter pack by {`@${creator.handle}`}
           </Text>
         </LinearGradientBackground>
         <View style={[a.gap_2xl, a.mx_lg, a.my_2xl]}>
