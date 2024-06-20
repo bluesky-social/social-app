@@ -49,7 +49,6 @@ export function QrCodeDialog({
         makeStarterPackLink(starterPack.creator.did, rkey),
       )
       setLink(res.url)
-      console.log(res.url)
     })()
   }, [isOpen, link, shortenLink, starterPack.creator.did, starterPack.uri])
 
