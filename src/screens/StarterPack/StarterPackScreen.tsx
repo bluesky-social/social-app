@@ -115,19 +115,12 @@ function StarterPackScreenInner({
 
   const onShareLink = async () => {
     const fullUrl = makeStarterPackLink(routeParams.name, routeParams.rkey)
-
-    try {
-      const res = await shortenLink(fullUrl)
-      shareUrl(res.url)
-    } catch (e: unknown) {
-      logger.error('Failed to shorten link', {safeMessage: e})
-      shareUrl(fullUrl)
-    } finally {
-      logEvent('starterPack:share', {
-        starterPack: starterPack.uri,
-        shareType: 'link',
-      })
-    }
+    const res = await shortenLink(fullUrl)
+    shareUrl(res.url)
+    logEvent('starterPack:share', {
+      starterPack: starterPack.uri,
+      shareType: 'link',
+    })
   }
 
   return (
