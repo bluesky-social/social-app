@@ -36,25 +36,28 @@ export default function (ctx: AppContext, app: Express) {
         return res.status(404).end('not found')
       }
       const imageEntries = await Promise.all(
-        starterPack.listItemsSample
-          .map(li => li.subject)
-          .concat(starterPack.creator)
+        [starterPack.creator]
+          .concat(starterPack.listItemsSample.map(li => li.subject))
           // has avatar
           .filter(p => p.avatar)
-          // no bad labels
+          // no sensitive labels
           .filter(p => !p.labels.some(l => hideAvatarLabels.has(l.val)))
           .map(async p => {
-            assert(p.avatar)
             try {
+              assert(p.avatar)
               const image = await getImage(p.avatar)
               return [p.did, image] as const
-            } catch (_err) {
+            } catch (err) {
+              httpLogger.warn(
+                {err, uri: uri.toString(), did: p.did},
+                'could not fetch image',
+              )
               return [p.did, null] as const
             }
           }),
       )
       const images = new Map(
-        imageEntries.filter(([_, image]) => image !== null),
+        imageEntries.filter(([_, image]) => image !== null).slice(0, 7),
       )
       const svg = await satori(
         <StarterPack starterPack={starterPack} images={images} />,
@@ -67,6 +70,7 @@ export default function (ctx: AppContext, app: Express) {
       const output = await resvg.renderAsync(svg)
       res.statusCode = 200
       res.setHeader('content-type', 'image/png')
+      res.setHeader('cdn-tag', [...images.keys()].join(','))
       return res.end(output.asPng())
     }),
   )
