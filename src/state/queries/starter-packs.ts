@@ -165,9 +165,8 @@ export function useEditStarterPackMutation({
 
       const removedItems = currentListItems.filter(
         i =>
-          !profiles.find(
-            p => p.did === i.subject.did && p.did !== agent.session!.did,
-          ),
+          i.subject.did !== agent.session?.did &&
+          !profiles.find(p => p.did === i.subject.did && p.did),
       )
 
       if (removedItems.length !== 0) {
