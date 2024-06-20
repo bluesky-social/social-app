@@ -1,5 +1,6 @@
 import {AtpSessionData} from '@atproto/api'
 import {sha256} from 'js-sha256'
+import {Statsig} from 'statsig-react-native-expo'
 
 import {Schema} from '../persisted'
 import {Action, State} from './reducer'
@@ -66,23 +67,46 @@ export function wrapSessionReducerForLogging(reducer: Reducer): Reducer {
   }
 }
 
+let nextMessageIndex = 0
+const MAX_SLICE_LENGTH = 1000
+
 export function addSessionDebugLog(log: Log) {
   try {
-    const str = JSON.stringify(log, replacer, 2)
-    console.log(str)
+    if (!Statsig.initializeCalled() || !Statsig.getStableID()) {
+      // Drop these logs for now.
+      return
+    }
+    if (!Statsig.checkGate('debug_session')) {
+      return
+    }
+    const messageIndex = nextMessageIndex++
+    let payload = JSON.stringify(log, replacer)
+
+    let nextSliceIndex = 0
+    while (payload.length > 0) {
+      const sliceIndex = nextSliceIndex++
+      const slice = payload.slice(0, MAX_SLICE_LENGTH)
+      payload = payload.slice(MAX_SLICE_LENGTH)
+      Statsig.logEvent('session:debug', null, {
+        realmId,
+        messageIndex: String(messageIndex),
+        sliceIndex: String(sliceIndex),
+        slice,
+      })
+    }
   } catch (e) {
     console.error(e)
   }
 }
 
 let agentIds = new WeakMap<object, string>()
-let sessionId = Math.random().toString(36).slice(2)
+let realmId = Math.random().toString(36).slice(2)
 let nextAgentId = 1
 
 function getAgentId(agent: object) {
   let id = agentIds.get(agent)
   if (id === undefined) {
-    id = sessionId + '::' + nextAgentId++
+    id = realmId + '::' + nextAgentId++
     agentIds.set(agent, id)
   }
   return id
@@ -93,8 +117,17 @@ function replacer(key: string, value: unknown) {
     return getAgentId(value)
   }
   if (
+    key === 'service' ||
+    key === 'email' ||
+    key === 'emailConfirmed' ||
+    key === 'emailAuthFactor' ||
+    key === 'pdsUrl'
+  ) {
+    return undefined
+  }
+  if (
     typeof value === 'string' &&
-    (key === 'email' || key === 'refreshJwt' || key === 'accessJwt')
+    (key === 'refreshJwt' || key === 'accessJwt')
   ) {
     return sha256(value)
   }
