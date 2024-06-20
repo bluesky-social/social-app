@@ -1,8 +1,10 @@
 import React from 'react'
 import {View} from 'react-native'
+import {Image} from 'expo-image'
 import {
   AppBskyGraphDefs,
   AppBskyGraphStarterpack,
+  AtUri,
   ModerationOpts,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -18,8 +20,8 @@ import {useDeleteStarterPackMutation} from '#/state/queries/starter-packs'
 import {HITSLOP_20} from 'lib/constants'
 import {makeProfileLink, makeStarterPackLink} from 'lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
-import {shareUrl} from 'lib/sharing'
 import {logEvent} from 'lib/statsig/statsig'
+import {getStarterPackOgCard} from 'lib/strings/starter-pack'
 import {isWeb} from 'platform/detection'
 import {useModerationOpts} from 'state/preferences/moderation-opts'
 import {RQKEY} from 'state/queries/list-members'
@@ -36,11 +38,9 @@ import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBox} from '#/components/icons/ArrowOutOfBox'
-import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
 import {Pencil_Stroke2_Corner0_Rounded as Pencil} from '#/components/icons/Pencil'
-import {QrCode_Stroke2_Corner0_Rounded as QrCode} from '#/components/icons/QrCode'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
@@ -50,6 +50,7 @@ import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 import {FeedsList} from '#/components/StarterPack/Main/FeedsList'
 import {ProfilesList} from '#/components/StarterPack/Main/ProfilesList'
 import {QrCodeDialog} from '#/components/StarterPack/QrCodeDialog'
+import {ShareDialog} from '#/components/StarterPack/ShareDialog'
 import {Text} from '#/components/Typography'
 
 type StarterPackScreeProps = NativeStackScreenProps<
@@ -106,23 +107,40 @@ function StarterPackScreenInner({
   routeParams: StarterPackScreeProps['route']['params']
   moderationOpts: ModerationOpts
 }) {
-  const shortenLink = useShortenLink()
-
   const tabs = [
     ...(starterPack.list ? ['People'] : []),
     ...(starterPack.feeds?.length ? ['Feeds'] : []),
   ]
 
-  const onShareLink = async () => {
-    const res = await shortenLink(
-      makeStarterPackLink(starterPack.creator.did, routeParams.rkey),
+  const qrCodeDialogControl = useDialogControl()
+  const shareDialogControl = useDialogControl()
+
+  const shortenLink = useShortenLink()
+  const [link, setLink] = React.useState<string>()
+  const [imageLoaded, setImageLoaded] = React.useState(false)
+
+  const onOpenShareDialog = React.useCallback(() => {
+    const rkey = new AtUri(starterPack.uri).rkey
+    shortenLink(makeStarterPackLink(starterPack.creator.did, rkey)).then(
+      res => {
+        setLink(res.url)
+      },
     )
-    shareUrl(res.url)
-    logEvent('starterPack:share', {
-      starterPack: starterPack.uri,
-      shareType: 'link',
-    })
-  }
+    Image.prefetch(getStarterPackOgCard(starterPack))
+      .then(() => {
+        setImageLoaded(true)
+      })
+      .catch(() => {
+        setImageLoaded(true)
+      })
+    shareDialogControl.open()
+  }, [shareDialogControl, shortenLink, starterPack])
+
+  React.useEffect(() => {
+    if (routeParams.new) {
+      onOpenShareDialog()
+    }
+  }, [onOpenShareDialog, routeParams.new, shareDialogControl])
 
   return (
     <CenteredView style={[a.h_full_vh]}>
@@ -134,7 +152,7 @@ function StarterPackScreenInner({
             <Header
               starterPack={starterPack}
               routeParams={routeParams}
-              onShareLink={onShareLink}
+              onOpenShareDialog={onOpenShareDialog}
             />
           )}>
           {starterPack.list != null
@@ -164,6 +182,19 @@ function StarterPackScreenInner({
             : null}
         </PagerWithHeader>
       </View>
+
+      <QrCodeDialog
+        control={qrCodeDialogControl}
+        starterPack={starterPack}
+        link={link}
+      />
+      <ShareDialog
+        control={shareDialogControl}
+        qrDialogControl={qrCodeDialogControl}
+        starterPack={starterPack}
+        link={link}
+        imageLoaded={imageLoaded}
+      />
     </CenteredView>
   )
 }
@@ -171,11 +202,11 @@ function StarterPackScreenInner({
 function Header({
   starterPack,
   routeParams,
-  onShareLink,
+  onOpenShareDialog,
 }: {
   starterPack: AppBskyGraphDefs.StarterPackView
   routeParams: StarterPackScreeProps['route']['params']
-  onShareLink: () => void
+  onOpenShareDialog: () => void
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -236,10 +267,17 @@ function Header({
         avatarType="starter-pack">
         <View style={[a.flex_row, a.gap_sm, a.align_center]}>
           {isOwn ? (
-            <OwnerShareMenu
-              starterPack={starterPack}
-              onShareLink={onShareLink}
-            />
+            <Button
+              label={_(msg`Share this starter pack`)}
+              hitSlop={HITSLOP_20}
+              variant="solid"
+              color="primary"
+              size="small"
+              onPress={onOpenShareDialog}>
+              <ButtonText>
+                <Trans>Share</Trans>
+              </ButtonText>
+            </Button>
           ) : (
             <Button
               label={_(msg`Follow all`)}
@@ -257,7 +295,7 @@ function Header({
           <OverflowMenu
             routeParams={routeParams}
             starterPack={starterPack}
-            onShareLink={onShareLink}
+            onOpenShareDialog={onOpenShareDialog}
           />
         </View>
       </ProfileSubpageHeader>
@@ -293,17 +331,16 @@ function Header({
 function OverflowMenu({
   starterPack,
   routeParams,
-  onShareLink,
+  onOpenShareDialog,
 }: {
   starterPack: AppBskyGraphDefs.StarterPackView
   routeParams: StarterPackScreeProps['route']['params']
-  onShareLink: () => void
+  onOpenShareDialog: () => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const {currentAccount} = useSession()
-  const qrCodeDialogControl = useDialogControl()
   const reportDialogControl = useReportDialogControl()
   const deleteDialogControl = useDialogControl()
   const navigation = useNavigation<NavigationProp>()
@@ -389,22 +426,13 @@ function OverflowMenu({
             <>
               <Menu.Group>
                 <Menu.Item
-                  label={_(msg`Share link`)}
+                  label={_(msg`Share`)}
                   testID="shareStarterPackLinkBtn"
-                  onPress={onShareLink}>
+                  onPress={onOpenShareDialog}>
                   <Menu.ItemText>
                     <Trans>Share link</Trans>
                   </Menu.ItemText>
                   <Menu.ItemIcon icon={ArrowOutOfBox} position="right" />
-                </Menu.Item>
-                <Menu.Item
-                  label={_(msg`Create QR code`)}
-                  testID="createQRCodeBtn"
-                  onPress={qrCodeDialogControl.open}>
-                  <Menu.ItemText>
-                    <Trans>Create QR code</Trans>
-                  </Menu.ItemText>
-                  <Menu.ItemIcon icon={QrCode} position="right" />
                 </Menu.Item>
               </Menu.Group>
 
@@ -421,14 +449,13 @@ function OverflowMenu({
         </Menu.Outer>
       </Menu.Root>
 
-      <QrCodeDialog control={qrCodeDialogControl} starterPack={starterPack} />
       <ReportDialog
-        control={reportDialogControl}
         params={{
           type: 'starterpack',
           uri: starterPack.list!.uri,
           cid: starterPack.list!.cid,
         }}
+        control={reportDialogControl}
       />
 
       <Prompt.Outer control={deleteDialogControl}>
@@ -474,64 +501,6 @@ function OverflowMenu({
           <Prompt.Cancel />
         </Prompt.Actions>
       </Prompt.Outer>
-    </>
-  )
-}
-
-function OwnerShareMenu({
-  starterPack,
-  onShareLink,
-}: {
-  starterPack: AppBskyGraphDefs.StarterPackView
-  onShareLink: () => void
-}) {
-  const {_} = useLingui()
-  const qrCodeDialogControl = useDialogControl()
-
-  return (
-    <>
-      <Menu.Root>
-        <Menu.Trigger label={_(msg`Repost or quote post`)}>
-          {({props}) => (
-            <Button
-              {...props}
-              label={_(msg`Share this starter pack`)}
-              hitSlop={HITSLOP_20}
-              variant="solid"
-              color="primary"
-              size="small">
-              <ButtonText>
-                <Trans>Share</Trans>
-              </ButtonText>
-              <ButtonIcon icon={ChevronDown} position="right" />
-            </Button>
-          )}
-        </Menu.Trigger>
-        <Menu.Outer style={{minWidth: 170}}>
-          <Menu.Group>
-            <Menu.Item
-              label={_(msg`Share link`)}
-              testID="shareStarterPackLinkBtn"
-              onPress={onShareLink}>
-              <Menu.ItemText>
-                <Trans>Share link</Trans>
-              </Menu.ItemText>
-              <Menu.ItemIcon icon={ArrowOutOfBox} position="right" />
-            </Menu.Item>
-            <Menu.Item
-              label={_(msg`Create QR code`)}
-              testID="createQRCodeBtn"
-              onPress={qrCodeDialogControl.open}>
-              <Menu.ItemText>
-                <Trans>Create QR code</Trans>
-              </Menu.ItemText>
-              <Menu.ItemIcon icon={QrCode} position="right" />
-            </Menu.Item>
-          </Menu.Group>
-        </Menu.Outer>
-      </Menu.Root>
-
-      <QrCodeDialog control={qrCodeDialogControl} starterPack={starterPack} />
     </>
   )
 }

@@ -5,6 +5,7 @@ import {
   useKeyboardController,
 } from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {Image} from 'expo-image'
 import {
   AppBskyActorDefs,
   AppBskyGraphDefs,
@@ -25,7 +26,10 @@ import {logEvent} from 'lib/statsig/statsig'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {enforceLen} from 'lib/strings/helpers'
-import {parseStarterPackUri} from 'lib/strings/starter-pack'
+import {
+  getStarterPackOgCard,
+  parseStarterPackUri,
+} from 'lib/strings/starter-pack'
 import {isAndroid, isNative, isWeb} from 'platform/detection'
 import {useModerationOpts} from 'state/preferences/moderation-opts'
 import {useListMembersQuery} from 'state/queries/list-members'
@@ -209,10 +213,12 @@ function WizardInner({
       profilesCount: state.profiles.length,
       feedsCount: state.feeds.length,
     })
+    Image.prefetch([getStarterPackOgCard(currentProfile!.did, rkey)])
     dispatch({type: 'SetProcessing', processing: false})
     navigation.replace('StarterPack', {
       name: currentAccount!.handle,
       rkey,
+      new: true,
     })
   }
 
