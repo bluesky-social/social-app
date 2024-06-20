@@ -316,6 +316,7 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   details: {
+    justifyContent: 'center',
     paddingLeft: 54,
     paddingRight: 10,
     paddingBottom: 10,
@@ -330,6 +331,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     paddingHorizontal: 6,
     paddingVertical: 2,
+    justifyContent: 'center',
   },
   btn: {
     paddingVertical: 7,
@@ -340,7 +342,6 @@ const styles = StyleSheet.create({
 
   followedBy: {
     flexDirection: 'row',
-    alignItems: 'center',
     paddingLeft: 54,
     paddingRight: 20,
     marginBottom: 10,
