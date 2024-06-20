@@ -803,7 +803,7 @@ describe('parseEmbedPlayerFromUrl', () => {
 })
 
 describe('createStarterPackLinkFromAndroidReferrer', () => {
-  const validOutput = 'https://bsky.app/start/haileyok.com/rkey'
+  const validOutput = 'at://haileyok.com/app.bsky.graph.starterpack/rkey'
 
   it('returns a link when input contains utm_source and utm_content', () => {
     expect(
@@ -816,7 +816,7 @@ describe('createStarterPackLinkFromAndroidReferrer', () => {
       createStarterPackLinkFromAndroidReferrer(
         'utm_source=bluesky&utm_content=starterpack_test-lover-9000.com_rkey',
       ),
-    ).toEqual('https://bsky.app/start/test-lover-9000.com/rkey')
+    ).toEqual('at://test-lover-9000.com/app.bsky.graph.starterpack/rkey')
   })
 
   it('returns a link when input contains utm_source and utm_content in different order', () => {
