@@ -1,6 +1,9 @@
 import React from 'react'
 
-import {createStarterPackLinkFromAndroidReferrer} from 'lib/strings/starter-pack'
+import {
+  createStarterPackLinkFromAndroidReferrer,
+  httpStarterPackUriToAtUri,
+} from 'lib/strings/starter-pack'
 import {isAndroid} from 'platform/detection'
 import {useHasCheckedForStarterPack} from 'state/preferences/used-starter-packs'
 import {useSetActiveStarterPack} from 'state/shell/starter-pack'
@@ -37,8 +40,15 @@ export function useStarterPackEntry() {
           uri = createStarterPackLinkFromAndroidReferrer(res.installReferrer)
         }
       } else {
-        uri = await SwissArmyKnife.getStringValueAsync('starterPackUri', true)
-        SwissArmyKnife.setStringValueAsync('starterPackUri', null, true)
+        const res = await SwissArmyKnife.getStringValueAsync(
+          'starterPackUri',
+          true,
+        )
+
+        if (res) {
+          uri = httpStarterPackUriToAtUri(res)
+          SwissArmyKnife.setStringValueAsync('starterPackUri', null, true)
+        }
       }
 
       if (uri) {
