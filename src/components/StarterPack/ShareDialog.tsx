@@ -162,7 +162,7 @@ function ShareDialogInner({
                 <Button
                   label={_(msg`Save image`)}
                   variant="ghost"
-                  color="primary"
+                  color="secondary"
                   size="small"
                   style={[isWeb && a.self_center]}
                   onPress={onSave}>
