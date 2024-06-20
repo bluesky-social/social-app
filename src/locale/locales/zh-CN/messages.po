@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh_CN\n"
 "Project-Id-Version: zh-CN for bluesky-social-app\n"
 "Report-Msgid-Bugs-To: Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-06-20 09:15+0800\n"
+"PO-Revision-Date: 2024-06-20 16:32+0800\n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
 "Language-Team: Frudrax Cheng (auroursa), Simon Chan (RitsukiP), U2FsdGVkX1, Mikan Harada (mitian233), IceCodeNew\n"
 "Plural-Forms: \n"
@@ -51,7 +51,7 @@ msgstr "{0, plural, one {正在关注} other {正在关注}}"
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
 msgstr "{0, plural, one {喜欢 (# 个喜欢)} other {喜欢 (# 个喜欢)}}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:381
+#: src/view/com/post-thread/PostThreadItem.tsx:382
 msgid "{0, plural, one {like} other {likes}}"
 msgstr "{0, plural, one {喜欢} other {喜欢}}"
 
@@ -68,7 +68,7 @@ msgstr "{0, plural, one {帖文} other {帖文}}"
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
 msgstr "{0, plural, one {回复 (# 个回复)} other {回复 (# 个回复)}}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:361
+#: src/view/com/post-thread/PostThreadItem.tsx:362
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr "{0, plural, one {转发} other {转发}}"
 
@@ -139,7 +139,7 @@ msgstr "{profileName} 在 {0} 前加入了 Bluesky"
 msgid "{value, plural, =0 {Show all replies} one {Show replies with at least # like} other {Show replies with at least # likes}}"
 msgstr "{value, plural, =0 {显示所有回复} one {显示至少含有 # 个喜欢数的回复} other {显示至少含有 # 个喜欢数的回复}}"
 
-#: src/view/com/threadgate/WhoCanReply.tsx:203
+#: src/view/com/threadgate/WhoCanReply.tsx:290
 msgid "<0/> members"
 msgstr "<0/> 个成员"
 
@@ -405,7 +405,7 @@ msgid "an unknown error occurred"
 msgstr "出现未知错误"
 
 #: src/view/com/notifications/FeedItem.tsx:260
-#: src/view/com/threadgate/WhoCanReply.tsx:224
+#: src/view/com/threadgate/WhoCanReply.tsx:311
 msgid "and"
 msgstr "和"
 
@@ -1576,8 +1576,6 @@ msgctxt "action"
 msgid "Edit"
 msgstr "编辑"
 
-#: src/view/com/threadgate/WhoCanReply.tsx:153
-#: src/view/com/threadgate/WhoCanReply.tsx:161
 #: src/view/screens/Feeds.tsx:370
 #: src/view/screens/Feeds.tsx:441
 msgid "Edit"
@@ -1625,6 +1623,11 @@ msgstr "编辑个人资料"
 #: src/view/com/modals/CreateOrEditList.tsx:234
 msgid "Edit User List"
 msgstr "编辑用户列表"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:73
+#: src/view/com/threadgate/WhoCanReply.tsx:130
+msgid "Edit who can reply"
+msgstr "编辑谁可以回复"
 
 #: src/view/com/modals/EditProfile.tsx:194
 msgid "Edit your display name"
@@ -1785,12 +1788,15 @@ msgid "Everybody"
 msgstr "所有人"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:46
+#: src/view/com/threadgate/WhoCanReply.tsx:64
+#: src/view/com/threadgate/WhoCanReply.tsx:121
+#: src/view/com/threadgate/WhoCanReply.tsx:235
 msgid "Everybody can reply"
 msgstr "所有人都可以回复"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:129
-msgid "Everybody can reply."
-msgstr "所有人都可以回复"
+#~ msgid "Everybody can reply."
+#~ msgstr "所有人都可以回复"
 
 #: src/components/dms/MessagesNUX.tsx:131
 #: src/components/dms/MessagesNUX.tsx:134
@@ -2833,7 +2839,7 @@ msgstr "标记为已读"
 msgid "Media"
 msgstr "媒体"
 
-#: src/view/com/threadgate/WhoCanReply.tsx:183
+#: src/view/com/threadgate/WhoCanReply.tsx:270
 msgid "mentioned users"
 msgstr "提到的用户"
 
@@ -2942,7 +2948,7 @@ msgstr "内容审核工具"
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr "由内容审核服务提供方对这段内容设置的一般警告。"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:571
+#: src/view/com/post-thread/PostThreadItem.tsx:567
 msgid "More"
 msgstr "更多"
 
@@ -3397,9 +3403,13 @@ msgstr "至少有一张图片缺失了替代文本。"
 msgid "Only .jpg and .png files are supported"
 msgstr "目前只支持上传 .jpg 或 .png 格式的图片文件"
 
+#: src/view/com/threadgate/WhoCanReply.tsx:239
+msgid "Only {0} can reply"
+msgstr "只有 {0} 可以回复"
+
 #: src/view/com/threadgate/WhoCanReply.tsx:133
-msgid "Only {0} can reply."
-msgstr "只有{0}可以回复。"
+#~ msgid "Only {0} can reply."
+#~ msgstr "只有{0}可以回复。"
 
 #: src/screens/Signup/StepHandle.tsx:98
 msgid "Only contains letters, numbers, and hyphens"
@@ -4108,9 +4118,21 @@ msgstr "替换为\"Discover\""
 msgid "Replies"
 msgstr "回复"
 
+#: src/view/com/threadgate/WhoCanReply.tsx:66
+msgid "Replies disabled"
+msgstr "回复已被禁用"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:123
+msgid "Replies on this thread are disabled"
+msgstr "该讨论串的回复已被禁用"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:237
+msgid "Replies to this thread are disabled"
+msgstr "该讨论串的回复已被禁用"
+
 #: src/view/com/threadgate/WhoCanReply.tsx:131
-msgid "Replies to this thread are disabled."
-msgstr "该讨论串的回复已被禁用。"
+#~ msgid "Replies to this thread are disabled."
+#~ msgstr "该讨论串的回复已被禁用。"
 
 #: src/view/com/composer/Composer.tsx:477
 msgctxt "action"
@@ -4795,7 +4817,7 @@ msgstr "显示已隐藏的回复"
 msgid "Show less like this"
 msgstr "更少显示类似这样的"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:537
+#: src/view/com/post-thread/PostThreadItem.tsx:533
 #: src/view/com/post/Post.tsx:227
 #: src/view/com/posts/FeedItem.tsx:396
 msgid "Show More"
@@ -4932,6 +4954,8 @@ msgid "Software Dev"
 msgstr "程序开发"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:49
+#: src/view/com/threadgate/WhoCanReply.tsx:67
+#: src/view/com/threadgate/WhoCanReply.tsx:124
 msgid "Some people can reply"
 msgstr "一些人可以回复"
 
@@ -5806,7 +5830,7 @@ msgstr "用户名或电子邮箱"
 msgid "Users"
 msgstr "用户"
 
-#: src/view/com/threadgate/WhoCanReply.tsx:187
+#: src/view/com/threadgate/WhoCanReply.tsx:274
 msgid "users followed by <0/>"
 msgstr "关注 <0/> 的用户"
 
@@ -6047,8 +6071,18 @@ msgid "Who can message you?"
 msgstr "谁可以给你发送私信？"
 
 #: src/view/com/modals/Threadgate.tsx:69
+#: src/view/com/threadgate/WhoCanReply.tsx:73
+#: src/view/com/threadgate/WhoCanReply.tsx:130
 msgid "Who can reply"
 msgstr "谁可以回复"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:206
+msgid "Who can reply dialog"
+msgstr "谁可以回复对话框"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:210
+msgid "Who can reply?"
+msgstr "谁可以回复？"
 
 #: src/screens/Home/NoFeedsPinned.tsx:79
 #: src/screens/Messages/List/index.tsx:185
