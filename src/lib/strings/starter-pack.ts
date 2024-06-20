@@ -1,7 +1,5 @@
 import {AtUri} from '@atproto/api'
 
-import {makeStarterPackLink} from 'lib/routes/links'
-
 export function createStarterPackLinkFromAndroidReferrer(
   referrerQueryString: string,
 ): string | null {
@@ -20,7 +18,7 @@ export function createStarterPackLinkFromAndroidReferrer(
     if (contentParts[0] !== 'starterpack') return null
     if (contentParts.length !== 3) return null
 
-    return makeStarterPackLink(contentParts[1], contentParts[2])
+    return `at://${contentParts[1]}/app.bsky.graph.starterpack/${contentParts[2]}`
   } catch (e) {
     return null
   }
