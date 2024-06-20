@@ -168,12 +168,13 @@ export function QrCodeDialog({
                   <Loader size="xl" />
                 </View>
               ) : (
-                <View style={[a.w_full, a.gap_md]}>
+                <View
+                  style={[a.w_full, a.gap_md, isWeb && [a.flex_row_reverse]]}>
                   <Button
                     label={_(msg`Copy QR code`)}
                     variant="solid"
                     color="secondary"
-                    size="medium"
+                    size="small"
                     onPress={isWeb ? onCopyPress : onSharePress}>
                     <ButtonText>
                       {isWeb ? <Trans>Copy</Trans> : <Trans>Share</Trans>}
@@ -183,7 +184,7 @@ export function QrCodeDialog({
                     label={_(msg`Save QR code`)}
                     variant="solid"
                     color="secondary"
-                    size="medium"
+                    size="small"
                     onPress={onSavePress}>
                     <ButtonText>
                       <Trans>Save</Trans>
