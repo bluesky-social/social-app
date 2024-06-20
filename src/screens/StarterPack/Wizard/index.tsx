@@ -35,7 +35,7 @@ import {
   useEditStarterPackMutation,
   useStarterPackQuery,
 } from 'state/queries/starter-packs'
-import {useAgent, useSession} from 'state/session'
+import {useSession} from 'state/session'
 import {useSetMinimalShellMode} from 'state/shell'
 import * as Toast from '#/view/com/util/Toast'
 import {UserAvatar} from 'view/com/util/UserAvatar'
@@ -49,7 +49,6 @@ import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
-import * as Prompt from '#/components/Prompt'
 import {WizardEditListDialog} from '#/components/StarterPack/Wizard/WizardEditListDialog'
 import {Text} from '#/components/Typography'
 import {Provider} from './State'
@@ -141,7 +140,6 @@ function WizardInner({
   const setMinimalShellMode = useSetMinimalShellMode()
   const {setEnabled} = useKeyboardController()
   const [state, dispatch] = useWizardState()
-  const agent = useAgent()
   const {currentAccount} = useSession()
   const {data: currentProfile} = useProfileQuery({
     did: currentAccount?.did,
@@ -269,31 +267,6 @@ function WizardInner({
     }
   }
 
-  const deleteStarterPack = async () => {
-    if (!currentStarterPack || !currentListItems) return
-
-    dispatch({type: 'SetProcessing', processing: true})
-
-    try {
-      await agent.app.bsky.graph.list.delete({
-        repo: currentAccount!.did,
-        // TODO list is required, so shouldn't need this assertion
-        rkey: new AtUri(currentStarterPack.list!.uri).rkey,
-      })
-      await agent.app.bsky.graph.starterpack.delete({
-        repo: currentAccount!.did,
-        rkey: new AtUri(currentStarterPack.uri).rkey,
-      })
-
-      logEvent('starterPack:delete', {})
-      navigation.popToTop()
-    } catch (e) {
-      Toast.show(_(msg`Failed to delete starter pack`))
-    } finally {
-      dispatch({type: 'SetProcessing', processing: false})
-    }
-  }
-
   const onNext = () => {
     if (state.currentStep === 'Feeds') {
       submit()
@@ -352,9 +325,7 @@ function WizardInner({
         <View style={[{width: 65}]} />
       </View>
 
-      <Container
-        showDeleteBtn={Boolean(currentStarterPack)}
-        deleteStarterPack={deleteStarterPack}>
+      <Container>
         {state.currentStep === 'Details' ? (
           <StepDetails />
         ) : state.currentStep === 'Profiles' ? (
@@ -376,18 +347,9 @@ function WizardInner({
   )
 }
 
-function Container({
-  showDeleteBtn,
-  deleteStarterPack,
-  children,
-}: {
-  showDeleteBtn: boolean
-  deleteStarterPack: () => Promise<void>
-  children: React.ReactNode
-}) {
+function Container({children}: {children: React.ReactNode}) {
   const {_} = useLingui()
   const [state, dispatch] = useWizardState()
-  const control = useDialogControl()
 
   if (state.currentStep === 'Profiles' || state.currentStep === 'Feeds') {
     return <View style={[a.flex_1]}>{children}</View>
@@ -412,36 +374,6 @@ function Container({
               <Trans>Next</Trans>
             </ButtonText>
           </Button>
-          {showDeleteBtn && (
-            <Button
-              label={_(msg`Next`)}
-              variant="ghost"
-              color="negative"
-              size="medium"
-              style={[a.mx_xl, a.mb_lg]}
-              onPress={control.open}
-              disabled={!state.canNext}>
-              <ButtonText>
-                <Trans>Delete</Trans>
-              </ButtonText>
-            </Button>
-          )}
-          <Prompt.Outer control={control}>
-            <Prompt.TitleText>
-              <Trans>Delete starter pack?</Trans>
-            </Prompt.TitleText>
-            <Prompt.DescriptionText>
-              <Trans>Are you sure you want delete this starter pack?</Trans>
-            </Prompt.DescriptionText>
-            <Prompt.Actions>
-              <Prompt.Action
-                onPress={deleteStarterPack}
-                color="negative"
-                cta={_(msg`Delete`)}
-              />
-              <Prompt.Cancel />
-            </Prompt.Actions>
-          </Prompt.Outer>
         </>
       )}
     </KeyboardAwareScrollView>
