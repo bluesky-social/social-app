@@ -5,6 +5,7 @@ import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
 import {createSanitizedDisplayName} from 'lib/moderation/create-sanitized-display-name'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {useProfileShadow} from 'state/cache/profile-shadow'
+import {useSession} from 'state/session'
 import {FollowButton} from 'view/com/profile/FollowButton'
 import {ProfileCardPills} from 'view/com/profile/ProfileCard'
 import {UserAvatar} from 'view/com/util/UserAvatar'
@@ -22,6 +23,7 @@ export function Default({
   logContext: 'ProfileCard' | 'StarterPackProfilesList'
 }) {
   const t = useTheme()
+  const {hasSession} = useSession()
 
   const profile = useProfileShadow(profileUnshadowed)
   const name = createSanitizedDisplayName(profile)
@@ -49,9 +51,11 @@ export function Default({
             {handle}
           </Text>
         </View>
-        <View style={[a.justify_center, {marginLeft: 'auto'}]}>
-          <FollowButton profile={profile} logContext={logContext} />
-        </View>
+        {hasSession && (
+          <View style={[a.justify_center, {marginLeft: 'auto'}]}>
+            <FollowButton profile={profile} logContext={logContext} />
+          </View>
+        )}
       </View>
       <View style={[a.mb_xs]}>
         <ProfileCardPills
