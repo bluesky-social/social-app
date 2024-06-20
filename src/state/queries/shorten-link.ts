@@ -1,7 +1,3 @@
-export interface ShortenLinkResponse {
-  url: string
-}
-
 export function useShortenLink() {
   return async (inputUrl: string): Promise<{url: string}> => {
     const url = new URL(inputUrl)
