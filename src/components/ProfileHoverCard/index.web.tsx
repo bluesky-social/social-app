@@ -51,10 +51,23 @@ const floatingMiddlewares = [
 ]
 
 export function ProfileHoverCard(props: ProfileHoverCardProps) {
+  const prefetchProfileQuery = usePrefetchProfileQuery()
+  const prefetchedProfile = React.useRef(false)
+  const onPointerMove = () => {
+    if (!prefetchedProfile.current) {
+      prefetchedProfile.current = true
+      prefetchProfileQuery(props.did)
+    }
+  }
+
   if (props.disable || isTouchDevice) {
     return props.children
   } else {
-    return <ProfileHoverCardInner {...props} />
+    return (
+      <View onPointerMove={onPointerMove}>
+        <ProfileHoverCardInner {...props} />
+      </View>
+    )
   }
 }
 
@@ -456,7 +469,7 @@ function Inner({
             )}
           </Text>
 
-          <ProfileHeaderHandle profile={profileShadow} />
+          <ProfileHeaderHandle profile={profileShadow} disableTaps />
         </View>
       </Link>
 

@@ -100,7 +100,15 @@ function KnownFollowersInner({
       moderation,
     }
   })
-  const count = cachedKnownFollowers.count
+
+  // Does not have blocks applied. Always >= slices.length
+  const serverCount = cachedKnownFollowers.count
+
+  /*
+   * We check above too, but here for clarity and a reminder to _check for
+   * valid indices_
+   */
+  if (slice.length === 0) return null
 
   return (
     <Link
@@ -164,31 +172,54 @@ function KnownFollowersInner({
               },
             ]}
             numberOfLines={2}>
-            {count > 2 ? (
-              <Trans>
-                Followed by{' '}
-                <Text key={slice[0].profile.did} style={textStyle}>
-                  {slice[0].profile.displayName}
-                </Text>
-                ,{' '}
-                <Text key={slice[1].profile.did} style={textStyle}>
-                  {slice[1].profile.displayName}
-                </Text>
-                , and{' '}
-                <Plural value={count - 2} one="# other" other="# others" />
-              </Trans>
-            ) : count === 2 ? (
+            {slice.length >= 2 ? (
+              // 2-n followers, including blocks
+              serverCount > 2 ? (
+                <Trans>
+                  Followed by{' '}
+                  <Text key={slice[0].profile.did} style={textStyle}>
+                    {slice[0].profile.displayName}
+                  </Text>
+                  ,{' '}
+                  <Text key={slice[1].profile.did} style={textStyle}>
+                    {slice[1].profile.displayName}
+                  </Text>
+                  , and{' '}
+                  <Plural
+                    value={serverCount - 2}
+                    one="# other"
+                    other="# others"
+                  />
+                </Trans>
+              ) : (
+                // only 2
+                <Trans>
+                  Followed by{' '}
+                  <Text key={slice[0].profile.did} style={textStyle}>
+                    {slice[0].profile.displayName}
+                  </Text>{' '}
+                  and{' '}
+                  <Text key={slice[1].profile.did} style={textStyle}>
+                    {slice[1].profile.displayName}
+                  </Text>
+                </Trans>
+              )
+            ) : serverCount > 1 ? (
+              // 1-n followers, including blocks
               <Trans>
                 Followed by{' '}
                 <Text key={slice[0].profile.did} style={textStyle}>
                   {slice[0].profile.displayName}
                 </Text>{' '}
                 and{' '}
-                <Text key={slice[1].profile.did} style={textStyle}>
-                  {slice[1].profile.displayName}
-                </Text>
+                <Plural
+                  value={serverCount - 1}
+                  one="# other"
+                  other="# others"
+                />
               </Trans>
             ) : (
+              // only 1
               <Trans>
                 Followed by{' '}
                 <Text key={slice[0].profile.did} style={textStyle}>

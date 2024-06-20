@@ -6,11 +6,11 @@ import {
   ModerationOpts,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
-import {usePalette} from 'lib/hooks/usePalette'
 
-import {ProfileHeaderStandard} from './ProfileHeaderStandard'
+import {usePalette} from 'lib/hooks/usePalette'
+import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {ProfileHeaderLabeler} from './ProfileHeaderLabeler'
+import {ProfileHeaderStandard} from './ProfileHeaderStandard'
 
 let ProfileHeaderLoading = (_props: {}): React.ReactNode => {
   const pal = usePalette('default')
@@ -19,11 +19,11 @@ let ProfileHeaderLoading = (_props: {}): React.ReactNode => {
       <LoadingPlaceholder width="100%" height={150} style={{borderRadius: 0}} />
       <View
         style={[pal.view, {borderColor: pal.colors.background}, styles.avi]}>
-        <LoadingPlaceholder width={80} height={80} style={styles.br40} />
+        <LoadingPlaceholder width={90} height={90} style={styles.br45} />
       </View>
       <View style={styles.content}>
         <View style={[styles.buttonsLine]}>
-          <LoadingPlaceholder width={167} height={31} style={styles.br50} />
+          <LoadingPlaceholder width={167} height={36} style={styles.br50} />
         </View>
       </View>
     </View>
@@ -58,13 +58,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 110,
     left: 10,
-    width: 84,
-    height: 84,
-    borderRadius: 42,
+    width: 94,
+    height: 94,
+    borderRadius: 47,
     borderWidth: 2,
   },
   content: {
-    paddingTop: 8,
+    paddingTop: 12,
     paddingHorizontal: 14,
     paddingBottom: 4,
   },
@@ -73,6 +73,6 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
     marginBottom: 12,
   },
-  br40: {borderRadius: 40},
+  br45: {borderRadius: 45},
   br50: {borderRadius: 50},
 })

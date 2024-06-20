@@ -49,7 +49,7 @@
     "open-analyzer": "EXPO_PUBLIC_OPEN_ANALYZER=1 yarn build-web"
   },
   "dependencies": {
-    "@atproto/api": "^0.12.18",
+    "@atproto/api": "^0.12.20",
     "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@braintree/sanitize-url": "^6.0.2",
     "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
@@ -58,8 +58,9 @@
     "@expo/webpack-config": "^19.0.0",
     "@floating-ui/dom": "^1.6.3",
     "@floating-ui/react-dom": "^2.0.8",
-    "@formatjs/intl-locale": "^3.4.3",
-    "@formatjs/intl-pluralrules": "^5.2.10",
+    "@formatjs/intl-locale": "^4.0.0",
+    "@formatjs/intl-numberformat": "^8.10.3",
+    "@formatjs/intl-pluralrules": "^5.2.14",
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
     "@fortawesome/free-regular-svg-icons": "^6.1.1",
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
@@ -271,6 +272,7 @@
   "resolutions": {
     "@types/react": "^18",
     "**/zeed-dom": "0.10.9",
+    "**/zod": "3.23.8",
     "**/expo-constants": "16.0.1",
     "**/expo-device": "6.0.2",
     "@react-native/babel-preset": "0.74.1"
