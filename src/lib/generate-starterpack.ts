@@ -8,7 +8,6 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 
-import {logger} from '#/logger'
 import {until} from 'lib/async/until'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
@@ -68,7 +67,7 @@ export function useGenerateStarterPackMutation({
   const agent = useAgent()
   const starterPackString = _(msg`Starter Pack`)
 
-  return useMutation<{uri: string; cid: string}, Error, {}>({
+  return useMutation<{uri: string; cid: string}, Error, void>({
     mutationFn: async () => {
       let profile: AppBskyActorDefs.ProfileViewBasic | undefined
       let profiles: AppBskyActorDefs.ProfileViewBasic[] | undefined
@@ -137,73 +136,6 @@ export function useGenerateStarterPackMutation({
       onError(error)
     },
   })
-}
-
-export async function generateStarterpack({
-  agent,
-}: {
-  agent: BskyAgent
-}): Promise<string | 'NOT_ENOUGH_FOLLOWERS' | 'ERROR'> {
-  try {
-    let profile: AppBskyActorDefs.ProfileViewBasic | undefined
-    let profiles: AppBskyActorDefs.ProfileViewBasic[] | undefined
-
-    await Promise.all([
-      (async () => {
-        profile = (
-          await agent.app.bsky.actor.getProfile({
-            actor: agent.session!.did,
-          })
-        ).data
-      })(),
-      (async () => {
-        profiles = (
-          await agent.app.bsky.actor.searchActors({
-            q: encodeURIComponent('*'),
-            limit: 49,
-          })
-        ).data.actors.filter(p => p.viewer?.following)
-      })(),
-    ])
-
-    if (!profile || !profiles) {
-      return 'ERROR'
-    }
-
-    // We include ourselves when we make the list
-    if (profiles.length < 7) {
-      return 'NOT_ENOUGH_FOLLOWERS'
-    }
-
-    const defaultName = `${enforceLen(
-      profile.displayName || `@${sanitizeHandle(profile.handle)}`,
-      25,
-      true,
-    )}${msg`'s Starter Pack`.message!}`
-
-    const list = await createStarterPackList({
-      name: defaultName ?? '',
-      profiles,
-      agent,
-    })
-
-    return (
-      await agent.app.bsky.graph.starterpack.create(
-        {
-          repo: agent.session!.did,
-          validate: false,
-        },
-        {
-          name: defaultName ?? '',
-          list: list.uri,
-          createdAt: new Date().toISOString(),
-        },
-      )
-    ).uri
-  } catch (e: unknown) {
-    logger.error('Failed to generate starter pack', {safeMessage: e})
-    return 'ERROR'
-  }
 }
 
 function createListItem({did, listUri}: {did: string; listUri: string}) {

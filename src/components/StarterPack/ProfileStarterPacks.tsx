@@ -209,6 +209,11 @@ function Empty() {
     },
   })
 
+  const generate = () => {
+    setIsGenerating(true)
+    generateStarterPack()
+  }
+
   return (
     <LinearGradientBackground
       style={[
@@ -281,7 +286,7 @@ function Empty() {
           <Prompt.Action
             color="primary"
             cta={_(msg`Choose for me`)}
-            onPress={generateStarterPack}
+            onPress={generate}
           />
           <Prompt.Action
             color="secondary"
@@ -307,7 +312,7 @@ function Empty() {
         description={_(
           msg`An error occurred while generating your starter pack. Want to try again?`,
         )}
-        onConfirm={generateStarterPack}
+        onConfirm={generate}
         confirmButtonCta={_(msg`Retry`)}
       />
     </LinearGradientBackground>
