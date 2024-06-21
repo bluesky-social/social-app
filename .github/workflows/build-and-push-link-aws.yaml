@@ -1,19 +1,17 @@
-name: build-and-push-bskyweb-aws
+name: build-and-push-link-aws
 on:
-  workflow_dispatch:
   push:
     branches:
-      - main
       - divy/bskylink
 
 env:
   REGISTRY: ${{ secrets.AWS_ECR_REGISTRY_USEAST2_PACKAGES_REGISTRY }}
   USERNAME: ${{ secrets.AWS_ECR_REGISTRY_USEAST2_PACKAGES_USERNAME }}
   PASSWORD: ${{ secrets.AWS_ECR_REGISTRY_USEAST2_PACKAGES_PASSWORD }}
-  IMAGE_NAME: bskyweb
+  IMAGE_NAME: bskylink
 
 jobs:
-  bskyweb-container-aws:
+  link-container-aws:
     if: github.repository == 'bluesky-social/social-app'
     runs-on: ubuntu-latest
     permissions:
@@ -44,20 +42,14 @@ jobs:
           tags: |
             type=sha,enable=true,priority=100,prefix=,suffix=,format=long
 
-      - name: Set outputs
-        id: vars
-        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-
       - name: Build and push Docker image
         id: build-and-push
         uses: docker/build-push-action@v4
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
-          file: ./Dockerfile
+          file: ./Dockerfile.bskylink
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          build-args: |
-            EXPO_PUBLIC_BUNDLE_IDENTIFIER=${{ steps.vars.outputs.sha_short }}
