@@ -121,6 +121,12 @@ export function StepFinished() {
                 }
               }
 
+              existing.displayName = ''
+              // HACKFIX
+              // creating a bunch of identical profile objects is breaking the relay
+              // tossing this unspecced field onto it to reduce the size of the problem
+              // -prf
+              existing.createdAt = new Date().toISOString()
               return existing
             })
           }

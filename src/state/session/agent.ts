@@ -127,18 +127,6 @@ export async function createAgentAndCreateAccount(
   const account = agentToSessionAccountOrThrow(agent)
   const gates = tryFetchGates(account.did, 'prefer-fresh-gates')
   const moderation = configureModerationForAccount(agent, account)
-  if (!account.signupQueued) {
-    /*dont await*/ agent.upsertProfile(_existing => {
-      return {
-        displayName: '',
-        // HACKFIX
-        // creating a bunch of identical profile objects is breaking the relay
-        // tossing this unspecced field onto it to reduce the size of the problem
-        // -prf
-        createdAt: new Date().toISOString(),
-      }
-    })
-  }
 
   // Not awaited so that we can still get into onboarding.
   // This is OK because we won't let you toggle adult stuff until you set the date.
