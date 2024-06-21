@@ -1,4 +1,4 @@
-package expo.modules.blueskydeviceprefs
+package expo.modules.blueskyswissarmy.deviceprefs
 
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition

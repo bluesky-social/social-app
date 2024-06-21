@@ -1,4 +1,4 @@
-package expo.modules.blueskyreferrer
+package expo.modules.blueskyswissarmy.referrer
 
 import android.util.Log
 import com.android.installreferrer.api.InstallReferrerClient
