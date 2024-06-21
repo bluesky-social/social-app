@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/fs"
 	"net/http"
+	"net/url"
 	"os"
 	"os/signal"
 	"strings"
@@ -36,6 +37,7 @@ func serve(cctx *cli.Context) error {
 	debug := cctx.Bool("debug")
 	httpAddress := cctx.String("http-address")
 	appviewHost := cctx.String("appview-host")
+	linkHost := cctx.String("link-host")
 
 	// Echo
 	e := echo.New()
@@ -225,6 +227,14 @@ func serve(cctx *cli.Context) error {
 	e.GET("/starter-pack/:handleOrDID/:rkey", server.WebGeneric)
 	e.GET("/start/:handleOrDID/:rkey", server.WebGeneric)
 
+	if linkHost != "" {
+		linkUrl, err := url.Parse(linkHost)
+		if err != nil {
+			return err
+		}
+		e.Group("/:linkId", server.LinkProxyMiddleware(linkUrl))
+	}
+
 	// Start the server.
 	log.Infof("starting server address=%s", httpAddress)
 	go func() {
@@ -294,6 +304,30 @@ func (srv *Server) Download(c echo.Context) error {
 	}
 
 	return c.Redirect(http.StatusFound, "/")
+}
+
+// Handler for proxying top-level paths to link service, which ends up serving a redirect
+func (srv *Server) LinkProxyMiddleware(url *url.URL) echo.MiddlewareFunc {
+	return middleware.ProxyWithConfig(
+		middleware.ProxyConfig{
+			Balancer: middleware.NewRoundRobinBalancer(
+				[]*middleware.ProxyTarget{{URL: url}},
+			),
+			Skipper: func(c echo.Context) bool {
+				req := c.Request()
+				if req.Method == "GET" &&
+					strings.LastIndex(strings.TrimRight(req.URL.Path, "/"), "/") == 0 && // top-level path
+					!strings.HasPrefix(req.URL.Path, "/_") { // e.g. /_health endpoint
+					return false
+				}
+				return true
+			},
+			RetryCount: 2,
+			ErrorHandler: func(c echo.Context, err error) error {
+				return c.Redirect(302, "/")
+			},
+		},
+	)
 }
 
 // handler for endpoint that have no specific server-side handling
