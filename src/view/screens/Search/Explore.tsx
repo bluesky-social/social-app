@@ -282,7 +282,7 @@ export function Explore() {
     isFetchingNextPage: isFetchingNextProfilesPage,
     error: profilesError,
     fetchNextPage: fetchNextProfilesPage,
-  } = useSuggestedFollowsQuery({limit: 3})
+  } = useSuggestedFollowsQuery({limit: 3, subsequentPageLimit: 10})
   const {
     data: feeds,
     hasNextPage: hasNextFeedsPage,
@@ -290,7 +290,7 @@ export function Explore() {
     isFetchingNextPage: isFetchingNextFeedsPage,
     error: feedsError,
     fetchNextPage: fetchNextFeedsPage,
-  } = useGetPopularFeedsQuery({limit: 3})
+  } = useGetPopularFeedsQuery({limit: 10})
 
   const isLoadingMoreProfiles = isFetchingNextProfilesPage && !isLoadingProfiles
   const onLoadMoreProfiles = React.useCallback(async () => {
