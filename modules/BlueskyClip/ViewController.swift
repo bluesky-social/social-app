@@ -2,12 +2,13 @@ import UIKit
 import WebKit
 import StoreKit
 
-class ViewController: UIViewController, WKScriptMessageHandler {
+class ViewController: UIViewController, WKScriptMessageHandler, WKNavigationDelegate {
   let defaults = UserDefaults(suiteName: "group.app.bsky")
 
   var window: UIWindow
   var webView: WKWebView?
 
+  var prevUrl: URL?
   var starterPackUrl: URL?
 
   init(window: UIWindow) {
@@ -30,6 +31,7 @@ class ViewController: UIViewController, WKScriptMessageHandler {
     let webView = WKWebView(frame: self.view.bounds, configuration: configuration)
     webView.translatesAutoresizingMaskIntoConstraints = false
     webView.contentMode = .scaleToFill
+    webView.navigationDelegate = self
     self.view.addSubview(webView)
     self.webView = webView
   }
@@ -59,13 +61,42 @@ class ViewController: UIViewController, WKScriptMessageHandler {
     }
   }
 
-  func handleURL(url: URL) {
-    self.starterPackUrl = url
-    let urlString = "\(url.absoluteString)?clip=true"
-
-    if let url = URL(string: urlString) {
-      self.webView?.load(URLRequest(url: url))
+  func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+    // Detect when we land on the right URL. This is incase of a short link opening the app clip
+    guard let url = navigationAction.request.url,
+          getHost(url) != getHost(prevUrl),
+          url.pathComponents != prevUrl?.pathComponents else {
+      decisionHandler(.cancel)
+      return
     }
+
+    prevUrl = url
+
+    // pathComponents starts with "/" as the first component, then each path name. so...
+    // ["/", "start", "name", "rkey"]
+    if url.pathComponents.count == 4,
+       url.pathComponents[1] == "start" {
+
+      self.starterPackUrl = url
+
+      if let newURL = URL(string: "\(url.absoluteString)?clip=true"),
+         let webView = self.webView {
+        var newReq = URLRequest(url: newURL)
+        newReq.httpMethod = navigationAction.request.httpMethod
+        newReq.allHTTPHeaderFields = navigationAction.request.allHTTPHeaderFields
+        newReq.httpBody = navigationAction.request.httpBody
+        webView.load(newReq)
+
+        decisionHandler(.cancel)
+        return
+      }
+    }
+
+    decisionHandler(.allow)
+  }
+
+  func handleURL(url: URL) {
+    self.webView?.load(URLRequest(url: url))
   }
 
   func presentAppStoreOverlay() {
@@ -77,6 +108,14 @@ class ViewController: UIViewController, WKScriptMessageHandler {
     let overlay = SKOverlay(configuration: configuration)
 
     overlay.present(in: windowScene)
+  }
+
+  func getHost(_ url: URL?) -> String? {
+    if #available(iOS 16.0, *) {
+      return url?.host()
+    } else {
+      return url?.host
+    }
   }
 }
 
