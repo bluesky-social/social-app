@@ -483,8 +483,8 @@ function OverflowMenu({
           control={reportDialogControl}
           params={{
             type: 'starterpack',
-            uri: starterPack.list.uri,
-            cid: starterPack.list.cid,
+            uri: starterPack.uri,
+            cid: starterPack.cid,
           }}
         />
       )}
