@@ -1,6 +1,11 @@
 import React from 'react'
 import {GestureResponderEvent, View} from 'react-native'
-import {AppBskyActorDefs, AppBskyFeedDefs, AtUri} from '@atproto/api'
+import {
+  AppBskyActorDefs,
+  AppBskyFeedDefs,
+  AppBskyGraphDefs,
+  AtUri,
+} from '@atproto/api'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -20,23 +25,35 @@ import {Button, ButtonIcon} from '#/components/Button'
 import {useRichText} from '#/components/hooks/useRichText'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
-import {Link as InternalLink} from '#/components/Link'
+import {Link as InternalLink, LinkProps} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 
-export function Default({feed}: {feed: AppBskyFeedDefs.GeneratorView}) {
+export function Default({
+  type,
+  view,
+}:
+  | {
+      type: 'feed'
+      view: AppBskyFeedDefs.GeneratorView
+    }
+  | {
+      type: 'list'
+      view: AppBskyGraphDefs.ListView
+    }) {
+  const displayName = type === 'feed' ? view.displayName : view.name
   return (
-    <Link feed={feed}>
+    <Link feed={view}>
       <Outer>
         <Header>
-          <Avatar src={feed.avatar} />
-          <TitleAndByline title={feed.displayName} creator={feed.creator} />
-          <Action uri={feed.uri} pin />
+          <Avatar src={view.avatar} />
+          <TitleAndByline title={displayName} creator={view.creator} />
+          <Action uri={view.uri} pin />
         </Header>
-        <Description description={feed.description} />
-        <Likes count={feed.likeCount || 0} />
+        <Description description={view.description} />
+        {type === 'feed' && <Likes count={view.likeCount || 0} />}
       </Outer>
     </Link>
   )
@@ -46,13 +63,10 @@ export function Link({
   children,
   feed,
 }: {
-  children: React.ReactElement
-  feed: AppBskyFeedDefs.GeneratorView
-}) {
+  feed: AppBskyFeedDefs.GeneratorView | AppBskyGraphDefs.ListView
+} & Omit<LinkProps, 'to'>) {
   const href = React.useMemo(() => {
-    const urip = new AtUri(feed.uri)
-    const handleOrDid = feed.creator.handle || feed.creator.did
-    return `/profile/${handleOrDid}/feed/${urip.rkey}`
+    return createProfileFeedHref({feed})
   }, [feed])
   return <InternalLink to={href}>{children}</InternalLink>
 }
@@ -62,11 +76,33 @@ export function Outer({children}: {children: React.ReactNode}) {
 }
 
 export function Header({children}: {children: React.ReactNode}) {
-  return <View style={[a.flex_row, a.align_center, a.gap_md]}>{children}</View>
+  return (
+    <View style={[a.flex_1, a.flex_row, a.align_center, a.gap_md]}>
+      {children}
+    </View>
+  )
 }
 
-export function Avatar({src}: {src: string | undefined}) {
-  return <UserAvatar type="algo" size={40} avatar={src} />
+export type AvatarProps = {src: string | undefined; size?: number}
+
+export function Avatar({src, size = 40}: AvatarProps) {
+  return <UserAvatar type="algo" size={size} avatar={src} />
+}
+
+export function AvatarPlaceholder({size = 40}: Omit<AvatarProps, 'src'>) {
+  const t = useTheme()
+  return (
+    <View
+      style={[
+        t.atoms.bg_contrast_25,
+        {
+          width: size,
+          height: size,
+          borderRadius: 8,
+        },
+      ]}
+    />
+  )
 }
 
 export function TitleAndByline({
@@ -74,22 +110,54 @@ export function TitleAndByline({
   creator,
 }: {
   title: string
-  creator: AppBskyActorDefs.ProfileViewBasic
+  creator?: AppBskyActorDefs.ProfileViewBasic
 }) {
   const t = useTheme()
 
   return (
     <View style={[a.flex_1]}>
-      <Text
-        style={[a.text_md, a.font_bold, a.flex_1, a.leading_snug]}
-        numberOfLines={1}>
+      <Text style={[a.text_md, a.font_bold, a.leading_snug]} numberOfLines={1}>
         {title}
       </Text>
-      <Text
-        style={[a.flex_1, a.leading_snug, t.atoms.text_contrast_medium]}
-        numberOfLines={1}>
-        <Trans>Feed by {sanitizeHandle(creator.handle, '@')}</Trans>
-      </Text>
+      {creator && (
+        <Text
+          style={[a.leading_snug, t.atoms.text_contrast_medium]}
+          numberOfLines={1}>
+          <Trans>Feed by {sanitizeHandle(creator.handle, '@')}</Trans>
+        </Text>
+      )}
+    </View>
+  )
+}
+
+export function TitleAndBylinePlaceholder({creator}: {creator?: boolean}) {
+  const t = useTheme()
+
+  return (
+    <View style={[a.flex_1, a.gap_xs]}>
+      <View
+        style={[
+          a.rounded_xs,
+          t.atoms.bg_contrast_50,
+          {
+            width: '60%',
+            height: 14,
+          },
+        ]}
+      />
+
+      {creator && (
+        <View
+          style={[
+            a.rounded_xs,
+            t.atoms.bg_contrast_25,
+            {
+              width: '40%',
+              height: 10,
+            },
+          ]}
+        />
+      )}
     </View>
   )
 }
@@ -202,4 +270,17 @@ function ActionInner({uri, pin}: {uri: string; pin?: boolean}) {
       />
     </>
   )
+}
+
+export function createProfileFeedHref({
+  feed,
+}: {
+  feed: AppBskyFeedDefs.GeneratorView | AppBskyGraphDefs.ListView
+}) {
+  const urip = new AtUri(feed.uri)
+  const type = urip.collection === 'app.bsky.feed.generator' ? 'feed' : 'list'
+  const handleOrDid = feed.creator.handle || feed.creator.did
+  return `/profile/${handleOrDid}/${type === 'feed' ? 'feed' : 'lists'}/${
+    urip.rkey
+  }`
 }
