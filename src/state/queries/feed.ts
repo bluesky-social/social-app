@@ -13,12 +13,14 @@ import {
   useInfiniteQuery,
   useMutation,
   useQuery,
+  useQueryClient,
 } from '@tanstack/react-query'
 
 import {DISCOVER_FEED_URI, DISCOVER_SAVED_FEED} from '#/lib/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {STALE} from '#/state/queries'
+import {RQKEY as listQueryKey} from '#/state/queries/list'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAgent, useSession} from '#/state/session'
 import {router} from '#/routes'
@@ -201,6 +203,7 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
   const agent = useAgent()
   const limit = options?.limit || 10
   const {data: preferences} = usePreferencesQuery()
+  const queryClient = useQueryClient()
 
   // Make sure this doesn't invalidate unless really needed.
   const selectArgs = useMemo(
@@ -225,6 +228,12 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
         limit,
         cursor: pageParam,
       })
+      for (const feed of res.data.feeds) {
+        queryClient.setQueryData(
+          feedSourceInfoQueryKey({uri: feed.uri}),
+          hydrateFeedGenerator(feed),
+        )
+      }
       return res.data
     },
     initialPageParam: undefined,
@@ -471,6 +480,7 @@ export function useSavedFeeds() {
   const agent = useAgent()
   const {data: preferences, isLoading: isLoadingPrefs} = usePreferencesQuery()
   const savedItems = preferences?.savedFeeds ?? []
+  const queryClient = useQueryClient()
 
   return useQuery({
     staleTime: STALE.INFINITY,
@@ -517,6 +527,16 @@ export function useSavedFeeds() {
       )
 
       await Promise.allSettled([feedsPromise, ...listsPromises])
+
+      resolvedFeeds.forEach(feed => {
+        queryClient.setQueryData(
+          feedSourceInfoQueryKey({uri: feed.uri}),
+          hydrateFeedGenerator(feed),
+        )
+      })
+      resolvedLists.forEach(list => {
+        queryClient.setQueryData(listQueryKey(list.uri), list)
+      })
 
       const res: SavedFeedItem[] = savedItems.map(s => {
         if (s.type === 'timeline') {
