@@ -9,6 +9,7 @@ import {
 } from '@atproto/api'
 import {
   InfiniteData,
+  QueryClient,
   QueryKey,
   useInfiniteQuery,
   useMutation,
@@ -25,6 +26,7 @@ import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAgent, useSession} from '#/state/session'
 import {router} from '#/routes'
 import {FeedDescriptor} from './post-feed'
+import {precacheResolvedUri} from './resolve-uri'
 
 export type FeedSourceFeedInfo = {
   type: 'feed'
@@ -231,10 +233,8 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
 
       // precache feeds
       for (const feed of res.data.feeds) {
-        queryClient.setQueryData<FeedSourceInfo>(
-          feedSourceInfoQueryKey({uri: feed.uri}),
-          hydrateFeedGenerator(feed),
-        )
+        const hydratedFeed = hydrateFeedGenerator(feed)
+        precacheFeed(queryClient, hydratedFeed)
       }
 
       return res.data
@@ -531,19 +531,12 @@ export function useSavedFeeds() {
 
       await Promise.allSettled([feedsPromise, ...listsPromises])
 
-      // precache feeds
       resolvedFeeds.forEach(feed => {
-        queryClient.setQueryData<FeedSourceInfo>(
-          feedSourceInfoQueryKey({uri: feed.uri}),
-          hydrateFeedGenerator(feed),
-        )
+        const hydratedFeed = hydrateFeedGenerator(feed)
+        precacheFeed(queryClient, hydratedFeed)
       })
-      // precache lists
       resolvedLists.forEach(list => {
-        queryClient.setQueryData<AppBskyGraphDefs.ListView>(
-          listQueryKey(list.uri),
-          list,
-        )
+        precacheList(queryClient, list)
       })
 
       const res: SavedFeedItem[] = savedItems.map(s => {
@@ -571,4 +564,27 @@ export function useSavedFeeds() {
       }
     },
   })
+}
+
+function precacheFeed(queryClient: QueryClient, hydratedFeed: FeedSourceInfo) {
+  precacheResolvedUri(
+    queryClient,
+    hydratedFeed.creatorHandle,
+    hydratedFeed.creatorDid,
+  )
+  queryClient.setQueryData<FeedSourceInfo>(
+    feedSourceInfoQueryKey({uri: hydratedFeed.uri}),
+    hydratedFeed,
+  )
+}
+
+function precacheList(
+  queryClient: QueryClient,
+  list: AppBskyGraphDefs.ListView,
+) {
+  precacheResolvedUri(queryClient, list.creator.handle, list.creator.did)
+  queryClient.setQueryData<AppBskyGraphDefs.ListView>(
+    listQueryKey(list.uri),
+    list,
+  )
 }
