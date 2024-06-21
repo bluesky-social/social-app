@@ -175,7 +175,8 @@ function toKnownType(
     notif.reason === 'mention' ||
     notif.reason === 'reply' ||
     notif.reason === 'quote' ||
-    notif.reason === 'follow'
+    notif.reason === 'follow' ||
+    notif.reason === 'starterpack-joined'
   ) {
     return notif.reason as NotificationType
   }
