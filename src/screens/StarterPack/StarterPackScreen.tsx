@@ -264,8 +264,9 @@ function Header({
       })
 
       logEvent('starterPack:followAll', {
+        logContext: 'StarterPackProfilesList',
         starterPack: starterPack.uri,
-        followCount: dids.length,
+        count: dids.length,
       })
       Toast.show(_(msg`All accounts have been followed!`))
     } catch (e) {

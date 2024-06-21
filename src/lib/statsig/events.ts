@@ -161,8 +161,9 @@ export type LogEvents = {
     qrShareType?: 'save' | 'copy' | 'share'
   }
   'starterPack:followAll': {
+    logContext: 'StarterPackProfilesList' | 'Onboarding'
     starterPack: string
-    followCount: number
+    count: number
   }
   'starterPack:delete': {}
   'starterPack:create': {

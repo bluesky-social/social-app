@@ -170,6 +170,13 @@ export function StepFinished() {
       profilesFollowed: listItems?.length ?? 0,
       feedsPinned: starterPack?.feeds?.length ?? 0,
     })
+    if (starterPack && listItems?.length) {
+      logEvent('starterPack:followAll', {
+        logContext: 'Onboarding',
+        starterPack: starterPack.uri,
+        count: listItems?.length,
+      })
+    }
   }, [
     queryClient,
     agent,
