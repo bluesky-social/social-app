@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {
   AppBskyGraphDefs,
+  AppBskyGraphGetList,
   AppBskyGraphStarterpack,
   AtUri,
   ModerationOpts,
@@ -12,7 +13,11 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
-import {useQueryClient} from '@tanstack/react-query'
+import {
+  InfiniteData,
+  UseInfiniteQueryResult,
+  useQueryClient,
+} from '@tanstack/react-query'
 
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
@@ -24,7 +29,7 @@ import {logEvent} from 'lib/statsig/statsig'
 import {getStarterPackOgCard} from 'lib/strings/starter-pack'
 import {isWeb} from 'platform/detection'
 import {useModerationOpts} from 'state/preferences/moderation-opts'
-import {RQKEY} from 'state/queries/list-members'
+import {RQKEY, useListMembersQuery} from 'state/queries/list-members'
 import {useResolveDidQuery} from 'state/queries/resolve-uri'
 import {useShortenLink} from 'state/queries/shorten-link'
 import {useStarterPackQuery} from 'state/queries/starter-packs'
@@ -60,6 +65,7 @@ type StarterPackScreeProps = NativeStackScreenProps<
 
 export function StarterPackScreen({route}: StarterPackScreeProps) {
   const {_} = useLingui()
+  const {currentAccount} = useSession()
 
   const {name, rkey} = route.params
   const moderationOpts = useModerationOpts()
@@ -73,26 +79,39 @@ export function StarterPackScreen({route}: StarterPackScreeProps) {
     isLoading: isLoadingStarterPack,
     isError: isErrorStarterPack,
   } = useStarterPackQuery({did, rkey})
+  const listMembersQuery = useListMembersQuery(starterPack?.list?.uri, 50)
 
   const isValid =
     starterPack &&
+    (starterPack.list || starterPack?.creator?.did === currentAccount?.did) &&
     AppBskyGraphDefs.validateStarterPackView(starterPack) &&
     AppBskyGraphStarterpack.validateRecord(starterPack.record)
 
   if (!did || !starterPack || !isValid || !moderationOpts) {
     return (
       <ListMaybePlaceholder
-        isLoading={isLoadingDid || isLoadingStarterPack || !moderationOpts}
+        isLoading={
+          isLoadingDid ||
+          isLoadingStarterPack ||
+          listMembersQuery.isLoading ||
+          !moderationOpts
+        }
         isError={isErrorDid || isErrorStarterPack || !isValid}
         errorMessage={_(msg`That starter pack could not be found.`)}
+        emptyMessage={_(msg`That starter pack could not be found.`)}
       />
     )
+  }
+
+  if (!starterPack.list && starterPack.creator.did === currentAccount?.did) {
+    return <InvalidStarterPack rkey={rkey} />
   }
 
   return (
     <StarterPackScreenInner
       starterPack={starterPack}
       routeParams={route.params}
+      listMembersQuery={listMembersQuery}
       moderationOpts={moderationOpts}
     />
   )
@@ -101,10 +120,14 @@ export function StarterPackScreen({route}: StarterPackScreeProps) {
 function StarterPackScreenInner({
   starterPack,
   routeParams,
+  listMembersQuery,
   moderationOpts,
 }: {
   starterPack: AppBskyGraphDefs.StarterPackView
   routeParams: StarterPackScreeProps['route']['params']
+  listMembersQuery: UseInfiniteQueryResult<
+    InfiniteData<AppBskyGraphGetList.OutputSchema>
+  >
   moderationOpts: ModerationOpts
 }) {
   const tabs = [
@@ -159,11 +182,12 @@ function StarterPackScreenInner({
             ? ({headerHeight, scrollElRef}) => (
                 <ProfilesList
                   key={0}
-                  // @ts-expect-error TODO
-                  listUri={starterPack.list.uri}
+                  // Validated above
+                  listUri={starterPack!.list!.uri}
                   headerHeight={headerHeight}
                   // @ts-expect-error
                   scrollElRef={scrollElRef}
+                  listMembersQuery={listMembersQuery}
                   moderationOpts={moderationOpts}
                 />
               )
@@ -172,8 +196,8 @@ function StarterPackScreenInner({
             ? ({headerHeight, scrollElRef}) => (
                 <FeedsList
                   key={1}
-                  // @ts-expect-error TODO
-                  feeds={starterPack.feeds}
+                  // @ts-expect-error ?
+                  feeds={starterPack?.feeds}
                   headerHeight={headerHeight}
                   // @ts-expect-error
                   scrollElRef={scrollElRef}
@@ -508,5 +532,95 @@ function OverflowMenu({
         </Prompt.Actions>
       </Prompt.Outer>
     </>
+  )
+}
+
+function InvalidStarterPack({rkey}: {rkey: string}) {
+  const {_} = useLingui()
+  const t = useTheme()
+  const navigation = useNavigation<NavigationProp>()
+  const {gtMobile} = useBreakpoints()
+  const [isProcessing, setIsProcessing] = React.useState(false)
+
+  const goBack = () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack()
+    } else {
+      navigation.replace('Home')
+    }
+  }
+
+  const {mutate: deleteStarterPack} = useDeleteStarterPackMutation({
+    onSuccess: () => {
+      setIsProcessing(false)
+      goBack()
+    },
+    onError: e => {
+      setIsProcessing(false)
+      logger.error('Failed to delete invalid starter pack', {safeMessage: e})
+      Toast.show(_(msg`Failed to delete starter pack`))
+    },
+  })
+
+  return (
+    <CenteredView
+      style={[
+        a.flex_1,
+        a.align_center,
+        a.gap_5xl,
+        !gtMobile && a.justify_between,
+        t.atoms.border_contrast_low,
+        {paddingTop: 175, paddingBottom: 110},
+      ]}
+      sideBorders={true}>
+      <View style={[a.w_full, a.align_center, a.gap_lg]}>
+        <Text style={[a.font_bold, a.text_3xl]}>
+          <Trans>Starter pack is invalid</Trans>
+        </Text>
+        <Text
+          style={[
+            a.text_md,
+            a.text_center,
+            t.atoms.text_contrast_high,
+            {lineHeight: 1.4},
+            gtMobile ? {width: 450} : [a.w_full, a.px_lg],
+          ]}>
+          <Trans>
+            The starter pack that you are trying to view is invalid. You may
+            delete this starter pack instead.
+          </Trans>
+        </Text>
+      </View>
+      <View style={[a.gap_md, gtMobile ? {width: 350} : [a.w_full, a.px_lg]]}>
+        <Button
+          variant="solid"
+          color="primary"
+          label={_(msg`Delete starter pack`)}
+          size="large"
+          style={[a.rounded_sm, a.overflow_hidden, {paddingVertical: 10}]}
+          disabled={isProcessing}
+          onPress={() => {
+            setIsProcessing(true)
+            deleteStarterPack({rkey})
+          }}>
+          <ButtonText>
+            <Trans>Delete</Trans>
+          </ButtonText>
+          {isProcessing && <Loader size="xs" color="white" />}
+        </Button>
+        <Button
+          variant="solid"
+          color="secondary"
+          label={_(msg`Return to previous page`)}
+          size="large"
+          style={[a.rounded_sm, a.overflow_hidden, {paddingVertical: 10}]}
+          disabled={isProcessing}
+          onPress={goBack}>
+          <ButtonText>
+            <Trans>Go Back</Trans>
+          </ButtonText>
+        </Button>
+      </View>
+    </CenteredView>
   )
 }

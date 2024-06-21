@@ -257,15 +257,17 @@ export function useDeleteStarterPackMutation({
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async ({listUri, rkey}: {listUri: string; rkey: string}) => {
+    mutationFn: async ({listUri, rkey}: {listUri?: string; rkey: string}) => {
       if (!agent.session) {
         throw new Error(`Requires logged in user`)
       }
 
-      await agent.app.bsky.graph.list.delete({
-        repo: agent.session.did,
-        rkey: new AtUri(listUri).rkey,
-      })
+      if (listUri) {
+        await agent.app.bsky.graph.list.delete({
+          repo: agent.session.did,
+          rkey: new AtUri(listUri).rkey,
+        })
+      }
       await agent.app.bsky.graph.starterpack.delete({
         repo: agent.session.did,
         rkey,
@@ -283,7 +285,9 @@ export function useDeleteStarterPackMutation({
         })
       }
 
-      await invalidateListMembersQuery({queryClient, uri: listUri})
+      if (listUri) {
+        await invalidateListMembersQuery({queryClient, uri: listUri})
+      }
       await invalidateActorStarterPacksQuery({
         queryClient,
         did: agent.session!.did,

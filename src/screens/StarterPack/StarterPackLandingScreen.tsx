@@ -55,14 +55,13 @@ export function LandingScreen({
   const moderationOpts = useModerationOpts()
   const activeStarterPack = useActiveStarterPack()
 
-  const {
-    data: starterPack,
-    isLoading: isLoadingStarterPack,
-    isError: isErrorStarterPack,
-  } = useStarterPackQuery({uri: activeStarterPack?.uri})
+  const {data: starterPack, isError: isErrorStarterPack} = useStarterPackQuery({
+    uri: activeStarterPack?.uri,
+  })
 
   const isValid =
     starterPack &&
+    starterPack.list &&
     AppBskyGraphDefs.validateStarterPackView(starterPack) &&
     AppBskyGraphStarterpack.validateRecord(starterPack.record)
 
@@ -73,11 +72,7 @@ export function LandingScreen({
   }, [isErrorStarterPack, setScreenState, isValid, starterPack])
 
   if (!starterPack || !isValid || !moderationOpts) {
-    return (
-      <ListMaybePlaceholder
-        isLoading={isLoadingStarterPack || !isValid || !moderationOpts}
-      />
-    )
+    return <ListMaybePlaceholder isLoading={true} />
   }
 
   return (

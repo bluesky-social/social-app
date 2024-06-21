@@ -70,7 +70,9 @@ export function Default({
         />
       </View>
       {profile.description && (
-        <Text numberOfLines={3}>{profile.description}</Text>
+        <Text numberOfLines={3} style={[a.leading_snug]}>
+          {profile.description}
+        </Text>
       )}
     </Wrapper>
   )

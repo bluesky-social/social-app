@@ -1,10 +1,15 @@
 import React, {useCallback} from 'react'
 import {ListRenderItemInfo, View} from 'react-native'
-import {AppBskyActorDefs, AtUri, ModerationOpts} from '@atproto/api'
+import {
+  AppBskyActorDefs,
+  AppBskyGraphGetList,
+  AtUri,
+  ModerationOpts,
+} from '@atproto/api'
+import {InfiniteData, UseInfiniteQueryResult} from '@tanstack/react-query'
 
 import {useBottomBarOffset} from 'lib/hooks/useBottomBarOffset'
 import {isNative, isWeb} from 'platform/detection'
-import {useListMembersQuery} from 'state/queries/list-members'
 import {useSession} from 'state/session'
 import {List, ListRef} from 'view/com/util/List'
 import {SectionRef} from '#/screens/Profile/Sections/types'
@@ -17,14 +22,17 @@ function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic, index: number) {
 
 interface ProfilesListProps {
   listUri: string
+  listMembersQuery: UseInfiniteQueryResult<
+    InfiniteData<AppBskyGraphGetList.OutputSchema>
+  >
+  moderationOpts: ModerationOpts
   headerHeight: number
   scrollElRef: ListRef
-  moderationOpts: ModerationOpts
 }
 
 export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
   function ProfilesListImpl(
-    {listUri, headerHeight, scrollElRef, moderationOpts},
+    {listUri, listMembersQuery, moderationOpts, headerHeight, scrollElRef},
     ref,
   ) {
     const t = useTheme()
@@ -33,7 +41,8 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
     const {currentAccount} = useSession()
 
     const [isPTRing, setIsPTRing] = React.useState(false)
-    const {data, refetch} = useListMembersQuery(listUri, 50)
+
+    const {data, refetch} = listMembersQuery
 
     // The server returns these sorted by descending creation date, so we want to invert
     const profiles = data?.pages
@@ -85,25 +94,26 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
       )
     }
 
-    return (
-      <List
-        data={getSortedProfiles()}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        ref={scrollElRef}
-        headerOffset={headerHeight}
-        ListFooterComponent={
-          <View style={[{height: initialHeaderHeight + bottomBarOffset}]} />
-        }
-        showsVerticalScrollIndicator={false}
-        desktopFixedHeight
-        refreshing={isPTRing}
-        onRefresh={async () => {
-          setIsPTRing(true)
-          await refetch()
-          setIsPTRing(false)
-        }}
-      />
-    )
+    if (listMembersQuery)
+      return (
+        <List
+          data={getSortedProfiles()}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          ref={scrollElRef}
+          headerOffset={headerHeight}
+          ListFooterComponent={
+            <View style={[{height: initialHeaderHeight + bottomBarOffset}]} />
+          }
+          showsVerticalScrollIndicator={false}
+          desktopFixedHeight
+          refreshing={isPTRing}
+          onRefresh={async () => {
+            setIsPTRing(true)
+            await refetch()
+            setIsPTRing(false)
+          }}
+        />
+      )
   },
 )
