@@ -195,8 +195,11 @@ export function FeedsScreen(_props: Props) {
 
   const items = React.useMemo(() => {
     let slices: FlatlistSlice[] = []
-    const isSavedFeedsLoading =
-      isSavedFeedsPlaceholder && !savedFeeds?.feeds.length
+    const hasActualSavedCount =
+      !isSavedFeedsPlaceholder ||
+      (isSavedFeedsPlaceholder && (savedFeeds?.count || 0) > 0)
+    const canShowDiscoverSection =
+      !hasSession || (hasSession && hasActualSavedCount)
 
     if (hasSession) {
       slices.push({
@@ -211,7 +214,7 @@ export function FeedsScreen(_props: Props) {
           error: cleanError(savedFeedsError.toString()),
         })
       } else {
-        if (isSavedFeedsLoading) {
+        if (isSavedFeedsPlaceholder && !savedFeeds?.feeds.length) {
           /*
            * Initial render in placeholder state is 0 on a cold page load,
            * because preferences haven't loaded yet.
@@ -221,11 +224,12 @@ export function FeedsScreen(_props: Props) {
            *
            * In both cases, we show 4 as the the loading state.
            */
+          const min = 8
           const count = savedFeeds
             ? savedFeeds.count === 0
-              ? 4
+              ? min
               : savedFeeds.count
-            : 4
+            : min
           Array(count)
             .fill(0)
             .forEach((_, i) => {
@@ -279,7 +283,7 @@ export function FeedsScreen(_props: Props) {
       }
     }
 
-    if (!hasSession || (hasSession && !isSavedFeedsLoading)) {
+    if (!hasSession || (hasSession && canShowDiscoverSection)) {
       slices.push({
         key: 'popularFeedsHeader',
         type: 'popularFeedsHeader',
