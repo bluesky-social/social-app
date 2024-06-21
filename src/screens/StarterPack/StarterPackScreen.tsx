@@ -83,17 +83,11 @@ export function StarterPackScreen({route}: StarterPackScreeProps) {
 
   const isValid =
     starterPack &&
+    (starterPack.list || starterPack?.creator?.did === currentAccount?.did) &&
     AppBskyGraphDefs.validateStarterPackView(starterPack) &&
     AppBskyGraphStarterpack.validateRecord(starterPack.record)
 
-  if (
-    !did ||
-    !starterPack ||
-    (!listMembersQuery.data &&
-      starterPack?.creator?.did !== currentAccount?.did) ||
-    !isValid ||
-    !moderationOpts
-  ) {
+  if (!did || !starterPack || !isValid || !moderationOpts) {
     return (
       <ListMaybePlaceholder
         isLoading={
@@ -102,24 +96,14 @@ export function StarterPackScreen({route}: StarterPackScreeProps) {
           listMembersQuery.isLoading ||
           !moderationOpts
         }
-        isError={
-          isErrorDid ||
-          isErrorStarterPack ||
-          // We still want this to be visible to the creator even if the list is not found. i.e. takedowns
-          (listMembersQuery.data &&
-            starterPack?.creator?.did !== currentAccount?.did) ||
-          !isValid
-        }
+        isError={isErrorDid || isErrorStarterPack || !isValid}
         errorMessage={_(msg`That starter pack could not be found.`)}
         emptyMessage={_(msg`That starter pack could not be found.`)}
       />
     )
   }
 
-  if (
-    !listMembersQuery.data &&
-    starterPack.creator.did === currentAccount?.did
-  ) {
+  if (!starterPack.list && starterPack.creator.did === currentAccount?.did) {
     return <InvalidStarterPack rkey={rkey} />
   }
 
