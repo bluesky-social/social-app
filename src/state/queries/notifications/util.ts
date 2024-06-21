@@ -120,12 +120,14 @@ export function groupNotifications(
     }
     if (!grouped) {
       const type = toKnownType(notif)
-      groupedNotifs.push({
-        _reactKey: `notif-${notif.uri}`,
-        type,
-        notification: notif,
-        subjectUri: getSubjectUri(type, notif),
-      })
+      if (type !== 'starterpack-joined') {
+        groupedNotifs.push({
+          _reactKey: `notif-${notif.uri}`,
+          type,
+          notification: notif,
+          subjectUri: getSubjectUri(type, notif),
+        })
+      }
     }
   }
   return groupedNotifs
