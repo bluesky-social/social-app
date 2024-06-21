@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-06-19 11:10+0900\n"
+"PO-Revision-Date: 2024-06-21 10:01+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -1455,6 +1455,10 @@ msgstr "新しいフィードを探す"
 msgid "Discover New Feeds"
 msgstr "新しいフィードを探す"
 
+#: src/view/screens/AccessibilitySettings.tsx:95
+msgid "Display larger alt text badges"
+msgstr "大きなALTテキストのバッジを表示"
+
 #: src/view/com/modals/EditProfile.tsx:193
 msgid "Display name"
 msgstr "表示名"
@@ -1618,6 +1622,11 @@ msgstr "プロフィールを編集"
 #: src/view/com/modals/CreateOrEditList.tsx:234
 msgid "Edit User List"
 msgstr "ユーザーリストを編集"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:73
+#: src/view/com/threadgate/WhoCanReply.tsx:130
+msgid "Edit who can reply"
+msgstr "誰が返信できるのかを変更"
 
 #: src/view/com/modals/EditProfile.tsx:194
 msgid "Edit your display name"
@@ -3387,8 +3396,8 @@ msgstr "１つもしくは複数の画像にALTテキストがありません。
 msgid "Only .jpg and .png files are supported"
 msgstr ".jpgと.pngファイルのみに対応しています"
 
-#: src/view/com/threadgate/WhoCanReply.tsx:100
-msgid "Only {0} can reply."
+#: src/view/com/threadgate/WhoCanReply.tsx:239
+msgid "Only {0} can reply"
 msgstr "{0}のみ返信可能"
 
 #: src/screens/Signup/StepHandle.tsx:98
@@ -4096,9 +4105,17 @@ msgstr "Discoverで置き換える"
 msgid "Replies"
 msgstr "返信"
 
-#: src/view/com/threadgate/WhoCanReply.tsx:131
-msgid "Replies to this thread are disabled."
-msgstr "このスレッドへの返信はできません。"
+#: src/view/com/threadgate/WhoCanReply.tsx:66
+msgid "Replies disabled"
+msgstr "返信できません"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:123
+msgid "Replies on this thread are disabled"
+msgstr "このスレッドへの返信はできません"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:237
+msgid "Replies to this thread are disabled"
+msgstr "このスレッドへの返信はできません"
 
 #: src/view/com/composer/Composer.tsx:475
 msgctxt "action"
@@ -6035,6 +6052,14 @@ msgstr "誰があなたへメッセージを送れるか？"
 #: src/view/com/modals/Threadgate.tsx:67
 msgid "Who can reply"
 msgstr "返信できるユーザー"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:206
+msgid "Who can reply dialog"
+msgstr "誰が返信できるのかについてのダイアログ"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:210
+msgid "Who can reply?"
+msgstr "誰が返信できますか？"
 
 #: src/screens/Home/NoFeedsPinned.tsx:79
 #: src/screens/Messages/List/index.tsx:185
