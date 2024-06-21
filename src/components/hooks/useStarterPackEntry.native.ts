@@ -7,8 +7,7 @@ import {
 import {isAndroid} from 'platform/detection'
 import {useHasCheckedForStarterPack} from 'state/preferences/used-starter-packs'
 import {useSetActiveStarterPack} from 'state/shell/starter-pack'
-import SwissArmyKnife from '../../../modules/expo-bluesky-swiss-army'
-import GooglePlayReferrer from '../../../modules/expo-google-play-referrer'
+import {DevicePrefs, Referrer} from '../../../modules/expo-bluesky-swiss-army'
 
 export function useStarterPackEntry() {
   const [ready, setReady] = React.useState(false)
@@ -34,20 +33,20 @@ export function useStarterPackEntry() {
       let uri: string | null | undefined
 
       if (isAndroid) {
-        const res = await GooglePlayReferrer.getReferrerInfoAsync()
+        const res = await Referrer.getGooglePlayReferrerInfoAsync()
 
         if (res && res.installReferrer) {
           uri = createStarterPackLinkFromAndroidReferrer(res.installReferrer)
         }
       } else {
-        const res = await SwissArmyKnife.getStringValueAsync(
+        const res = await DevicePrefs.getStringValueAsync(
           'starterPackUri',
           true,
         )
 
         if (res) {
           uri = httpStarterPackUriToAtUri(res)
-          SwissArmyKnife.setStringValueAsync('starterPackUri', null, true)
+          DevicePrefs.setStringValueAsync('starterPackUri', null, true)
         }
       }
 

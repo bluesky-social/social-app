@@ -5,7 +5,3 @@ export type GooglePlayReferrerInfo =
       installTimestamp?: number
     }
   | undefined
-
-export type ExpoGooglePlayReferrerModule = {
-  getReferrerInfoAsync(): Promise<GooglePlayReferrerInfo>
-}

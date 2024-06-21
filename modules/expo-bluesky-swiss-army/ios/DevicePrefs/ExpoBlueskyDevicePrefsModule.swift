@@ -1,6 +1,6 @@
 import ExpoModulesCore
 
-public class ExpoBlueskySwissArmyModule: Module {
+public class ExpoBlueskyDevicePrefsModule: Module {
   func getDefaults(_ useAppGroup: Bool) -> UserDefaults? {
     if useAppGroup {
       return UserDefaults(suiteName: "group.app.bsky")
@@ -10,7 +10,7 @@ public class ExpoBlueskySwissArmyModule: Module {
   }
 
   public func definition() -> ModuleDefinition {
-    Name("ExpoBlueskySwissArmy")
+    Name("ExpoBlueskyDevicePrefs")
 
     AsyncFunction("getStringValueAsync") { (key: String, useAppGroup: Bool) in
       return self.getDefaults(useAppGroup)?.string(forKey: key)
