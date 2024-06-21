@@ -228,12 +228,15 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
         limit,
         cursor: pageParam,
       })
+
+      // precache feeds
       for (const feed of res.data.feeds) {
-        queryClient.setQueryData(
+        queryClient.setQueryData<FeedSourceInfo>(
           feedSourceInfoQueryKey({uri: feed.uri}),
           hydrateFeedGenerator(feed),
         )
       }
+
       return res.data
     },
     initialPageParam: undefined,
@@ -528,14 +531,19 @@ export function useSavedFeeds() {
 
       await Promise.allSettled([feedsPromise, ...listsPromises])
 
+      // precache feeds
       resolvedFeeds.forEach(feed => {
-        queryClient.setQueryData(
+        queryClient.setQueryData<FeedSourceInfo>(
           feedSourceInfoQueryKey({uri: feed.uri}),
           hydrateFeedGenerator(feed),
         )
       })
+      // precache lists
       resolvedLists.forEach(list => {
-        queryClient.setQueryData(listQueryKey(list.uri), list)
+        queryClient.setQueryData<AppBskyGraphDefs.ListView>(
+          listQueryKey(list.uri),
+          list,
+        )
       })
 
       const res: SavedFeedItem[] = savedItems.map(s => {
