@@ -15,10 +15,6 @@ export function useStarterPackEntry() {
   const hasCheckedForStarterPack = useHasCheckedForStarterPack()
 
   React.useEffect(() => {
-    Referrer.getGooglePlayReferrerInfoAsync().then(res => {
-      console.log(res)
-    })
-
     if (ready) return
 
     // On Android, we cannot clear the referral link. It gets stored for 90 days and all we can do is query for it. So,
