@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>com.apple.security.application-groups</key>
+    <array>
+      <string>group.app.bsky</string>
+    </array>
+    <key>com.apple.developer.parent-application-identifiers</key>
+    <array>
+      <string>$(AppIdentifierPrefix)xyz.blueskyweb.app</string>
+    </array>
+    <key>com.apple.developer.associated-domains</key>
+    <array>
+      <string>applinks:bsky.app</string>
+      <string>applinks:staging.bsky.app</string>
+      <string>appclips:bsky.app</string>
+      <string>appclips:go.bsky.app</string>
+      <string>appclips:sptesting.haileyok.com</string>
+      <string>applinks:sptesting.haileyok.com</string>
+    </array>
+  </dict>
+</plist>
