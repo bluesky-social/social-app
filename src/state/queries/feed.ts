@@ -246,26 +246,39 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
       (
         data: InfiniteData<AppBskyUnspeccedGetPopularFeedGenerators.OutputSchema>,
       ) => {
+        const seen = new Set()
         const {savedFeeds, hasSession: hasSessionInner} = selectArgs
         return {
           ...data,
           pages: data.pages.map(page => {
+            let __tempHasDuplicatesStopPagination__ = false
+
+            const feeds = page.feeds.filter(feed => {
+              if (seen.has(feed.uri)) {
+                __tempHasDuplicatesStopPagination__ = true
+                return false
+              }
+              seen.add(feed.uri)
+              if (
+                !hasSessionInner &&
+                KNOWN_AUTHED_ONLY_FEEDS.includes(feed.uri)
+              ) {
+                return false
+              }
+              const alreadySaved = Boolean(
+                savedFeeds?.find(f => {
+                  return f.value === feed.uri
+                }),
+              )
+              return !alreadySaved
+            })
+
             return {
               ...page,
-              feeds: page.feeds.filter(feed => {
-                if (
-                  !hasSessionInner &&
-                  KNOWN_AUTHED_ONLY_FEEDS.includes(feed.uri)
-                ) {
-                  return false
-                }
-                const alreadySaved = Boolean(
-                  savedFeeds?.find(f => {
-                    return f.value === feed.uri
-                  }),
-                )
-                return !alreadySaved
-              }),
+              cursor: __tempHasDuplicatesStopPagination__
+                ? undefined
+                : page.cursor,
+              feeds,
             }
           }),
         }
