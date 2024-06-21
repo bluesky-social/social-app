@@ -57,6 +57,7 @@ interface FeedItemProps {
   isThreadParent?: boolean
   feedContext: string | undefined
   hideTopBorder?: boolean
+  isParentBlocked?: boolean
 }
 
 export function FeedItem({
@@ -71,6 +72,7 @@ export function FeedItem({
   isThreadLastChild,
   isThreadParent,
   hideTopBorder,
+  isParentBlocked,
 }: FeedItemProps & {post: AppBskyFeedDefs.PostView}): React.ReactNode {
   const postShadowed = usePostShadow(post)
   const richText = useMemo(
@@ -101,6 +103,7 @@ export function FeedItem({
         isThreadLastChild={isThreadLastChild}
         isThreadParent={isThreadParent}
         hideTopBorder={hideTopBorder}
+        isParentBlocked={isParentBlocked}
       />
     )
   }
@@ -120,6 +123,7 @@ let FeedItemInner = ({
   isThreadLastChild,
   isThreadParent,
   hideTopBorder,
+  isParentBlocked,
 }: FeedItemProps & {
   richText: RichTextAPI
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -334,7 +338,7 @@ let FeedItemInner = ({
             onOpenAuthor={onOpenAuthor}
           />
           {!isThreadChild && showReplyTo && parentAuthor && (
-            <ReplyToLabel profile={parentAuthor} />
+            <ReplyToLabel blocked={isParentBlocked} profile={parentAuthor} />
           )}
           <LabelsOnMyPost post={post} />
           <PostContent
@@ -423,7 +427,13 @@ let PostContent = ({
 }
 PostContent = memo(PostContent)
 
-function ReplyToLabel({profile}: {profile: AppBskyActorDefs.ProfileViewBasic}) {
+function ReplyToLabel({
+  profile,
+  blocked,
+}: {
+  profile: AppBskyActorDefs.ProfileViewBasic
+  blocked?: boolean
+}) {
   const pal = usePalette('default')
   const {currentAccount} = useSession()
   const isOwner = profile.did === currentAccount?.did
@@ -442,6 +452,8 @@ function ReplyToLabel({profile}: {profile: AppBskyActorDefs.ProfileViewBasic}) {
         numberOfLines={1}>
         {isOwner ? (
           <Trans context="description">Reply to you</Trans>
+        ) : blocked ? (
+          <Trans context="description">Reply to a blocked post</Trans>
         ) : (
           <Trans context="description">
             Reply to{' '}

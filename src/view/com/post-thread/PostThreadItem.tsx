@@ -30,17 +30,12 @@ import {useSession} from 'state/session'
 import {PostThreadFollowBtn} from 'view/com/post-thread/PostThreadFollowBtn'
 import {atoms as a} from '#/alf'
 import {RichText} from '#/components/RichText'
-import {
-  isAvailable as isNativeTranslationAvailable,
-  isLanguageSupported,
-  NativeTranslationModule,
-} from '../../../../modules/expo-bluesky-translate'
 import {ContentHider} from '../../../components/moderation/ContentHider'
 import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
 import {PostAlerts} from '../../../components/moderation/PostAlerts'
 import {PostHider} from '../../../components/moderation/PostHider'
 import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
-import {WhoCanReply} from '../threadgate/WhoCanReply'
+import {WhoCanReplyBlock, WhoCanReplyInline} from '../threadgate/WhoCanReply'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Link, TextLink} from '../util/Link'
 import {formatCount} from '../util/numeric/format'
@@ -194,6 +189,7 @@ let PostThreadItemLoaded = ({
   const itemTitle = _(msg`Post by ${post.author.handle}`)
   const authorHref = makeProfileLink(post.author)
   const authorTitle = post.author.handle
+  const isThreadAuthor = getThreadAuthor(post, record) === currentAccount?.did
   const likesHref = React.useMemo(() => {
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey, 'liked-by')
@@ -344,7 +340,7 @@ let PostThreadItemLoaded = ({
             </ContentHider>
             <ExpandedPostDetails
               post={post}
-              record={record}
+              isThreadAuthor={isThreadAuthor}
               translatorUrl={translatorUrl}
               needsTranslation={needsTranslation}
             />
@@ -401,7 +397,6 @@ let PostThreadItemLoaded = ({
             </View>
           </View>
         </View>
-        <WhoCanReply post={post} />
       </>
     )
   } else {
@@ -580,12 +575,7 @@ let PostThreadItemLoaded = ({
             ) : undefined}
           </PostHider>
         </PostOuterWrapper>
-        <WhoCanReply
-          post={post}
-          style={{
-            marginTop: 4,
-          }}
-        />
+        <WhoCanReplyBlock post={post} isThreadAuthor={isThreadAuthor} />
       </>
     )
   }
@@ -653,12 +643,12 @@ function PostOuterWrapper({
 
 function ExpandedPostDetails({
   post,
-  record,
+  isThreadAuthor,
   needsTranslation,
   translatorUrl,
 }: {
   post: AppBskyFeedDefs.PostView
-  record?: AppBskyFeedPost.Record
+  isThreadAuthor: boolean
   needsTranslation: boolean
   translatorUrl: string
 }) {
@@ -666,28 +656,28 @@ function ExpandedPostDetails({
   const {_} = useLingui()
   const openLink = useOpenLink()
 
-  const text = record?.text || ''
-
   const onTranslatePress = React.useCallback(() => {
-    if (
-      isNativeTranslationAvailable &&
-      isLanguageSupported(record?.langs?.at(0))
-    ) {
-      NativeTranslationModule.presentAsync(text)
-    } else {
-      openLink(translatorUrl)
-    }
-  }, [openLink, text, translatorUrl, record])
+    openLink(translatorUrl)
+  }, [openLink, translatorUrl])
 
   return (
-    <View style={[s.flexRow, s.mt2, s.mb10]}>
-      <Text style={pal.textLight}>{niceDate(post.indexedAt)}</Text>
+    <View
+      style={[
+        a.flex_row,
+        a.align_center,
+        a.flex_wrap,
+        a.gap_sm,
+        s.mt2,
+        s.mb10,
+      ]}>
+      <Text style={[a.text_sm, pal.textLight]}>{niceDate(post.indexedAt)}</Text>
+      <WhoCanReplyInline post={post} isThreadAuthor={isThreadAuthor} />
       {needsTranslation && (
         <>
-          <Text style={pal.textLight}> &middot; </Text>
+          <Text style={[a.text_sm, pal.textLight]}>&middot;</Text>
 
           <Text
-            style={pal.link}
+            style={[a.text_sm, pal.link]}
             title={_(msg`Translate`)}
             onPress={onTranslatePress}>
             <Trans>Translate</Trans>
@@ -696,6 +686,20 @@ function ExpandedPostDetails({
       )}
     </View>
   )
+}
+
+function getThreadAuthor(
+  post: AppBskyFeedDefs.PostView,
+  record: AppBskyFeedPost.Record,
+): string {
+  if (!record.reply) {
+    return post.author.did
+  }
+  try {
+    return new AtUri(record.reply.root.uri).host
+  } catch {
+    return ''
+  }
 }
 
 const styles = StyleSheet.create({

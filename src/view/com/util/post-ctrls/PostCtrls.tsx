@@ -15,7 +15,7 @@ import {
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {HITSLOP_10, HITSLOP_20} from '#/lib/constants'
+import {POST_CTRL_HITSLOP} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {makeProfileLink} from '#/lib/routes/links'
 import {shareUrl} from '#/lib/sharing'
@@ -27,7 +27,7 @@ import {
   usePostLikeMutationQueue,
   usePostRepostMutationQueue,
 } from '#/state/queries/post'
-import {useRequireAuth} from '#/state/session'
+import {useRequireAuth, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
@@ -39,6 +39,7 @@ import {
 } from '#/components/icons/Heart2'
 import * as Prompt from '#/components/Prompt'
 import {PostDropdownBtn} from '../forms/PostDropdownBtn'
+import {formatCount} from '../numeric/format'
 import {Text} from '../text/Text'
 import {RepostButton} from './RepostButton'
 
@@ -64,6 +65,7 @@ let PostCtrls = ({
   const t = useTheme()
   const {_} = useLingui()
   const {openComposer} = useComposerControls()
+  const {currentAccount} = useSession()
   const [queueLike, queueUnlike] = usePostLikeMutationQueue(post, logContext)
   const [queueRepost, queueUnrepost] = usePostRepostMutationQueue(
     post,
@@ -75,10 +77,11 @@ let PostCtrls = ({
   const playHaptic = useHaptics()
 
   const shouldShowLoggedOutWarning = React.useMemo(() => {
-    return !!post.author.labels?.find(
-      label => label.val === '!no-unauthenticated',
+    return (
+      post.author.did !== currentAccount?.did &&
+      !!post.author.labels?.find(label => label.val === '!no-unauthenticated')
     )
-  }, [post])
+  }, [currentAccount, post])
 
   const defaultCtrlColor = React.useMemo(
     () => ({
@@ -212,7 +215,7 @@ let PostCtrls = ({
             other: 'Reply (# replies)',
           })}
           accessibilityHint=""
-          hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
+          hitSlop={POST_CTRL_HITSLOP}>
           <Bubble
             style={[defaultCtrlColor, {pointerEvents: 'none'}]}
             width={big ? 22 : 18}
@@ -224,7 +227,7 @@ let PostCtrls = ({
                 big ? a.text_md : {fontSize: 15},
                 a.user_select_none,
               ]}>
-              {post.replyCount}
+              {formatCount(post.replyCount)}
             </Text>
           ) : undefined}
         </Pressable>
@@ -255,7 +258,7 @@ let PostCtrls = ({
                 })
           }
           accessibilityHint=""
-          hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
+          hitSlop={POST_CTRL_HITSLOP}>
           {post.viewer?.like ? (
             <HeartIconFilled style={s.likeColor} width={big ? 22 : 18} />
           ) : (
@@ -276,7 +279,7 @@ let PostCtrls = ({
                     : defaultCtrlColor,
                 ],
               ]}>
-              {post.likeCount}
+              {formatCount(post.likeCount)}
             </Text>
           ) : undefined}
         </Pressable>
@@ -296,7 +299,7 @@ let PostCtrls = ({
               }}
               accessibilityLabel={_(msg`Share`)}
               accessibilityHint=""
-              hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
+              hitSlop={POST_CTRL_HITSLOP}>
               <ArrowOutOfBox
                 style={[defaultCtrlColor, {pointerEvents: 'none'}]}
                 width={22}
@@ -317,14 +320,12 @@ let PostCtrls = ({
       <View style={big ? a.align_center : [a.flex_1, a.align_start]}>
         <PostDropdownBtn
           testID="postDropdownBtn"
-          postAuthor={post.author}
-          postCid={post.cid}
-          postUri={post.uri}
+          post={post}
           postFeedContext={feedContext}
           record={record}
           richText={richText}
           style={{padding: 5}}
-          hitSlop={big ? HITSLOP_20 : HITSLOP_10}
+          hitSlop={POST_CTRL_HITSLOP}
           timestamp={post.indexedAt}
         />
       </View>

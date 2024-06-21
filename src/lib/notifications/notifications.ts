@@ -88,6 +88,7 @@ export function useNotificationsRegistration() {
 export function useRequestNotificationsPermission() {
   const gate = useGate()
   const {currentAccount} = useSession()
+  const agent = useAgent()
 
   return async (
     context: 'StartOnboarding' | 'AfterOnboarding' | 'Login' | 'Home',
@@ -125,7 +126,20 @@ export function useRequestNotificationsPermission() {
 
     if (res.granted) {
       // This will fire a pushTokenEvent, which will handle registration of the token
-      getPushToken(true)
+      const token = await getPushToken(true)
+
+      // Same hack as above. We cannot rely on the `addPushTokenListener` to fire on Android due to an Expo bug, so we
+      // will manually register it here. Note that this will occur only:
+      // 1. right after the user signs in, leading to no `currentAccount` account being available - this will be instead
+      // picked up from the useEffect above on `currentAccount` change
+      // 2. right after onboarding. In this case, we _need_ this registration, since `currentAccount` will not change
+      // and we need to ensure the token is registered right after permission is granted. `currentAccount` will already
+      // be available in this case, so the registration will succeed.
+      // We should remove this once expo-notifications (and possibly FCMv1) is fixed and the `addPushTokenListener` is
+      // working again. See https://github.com/expo/expo/issues/28656
+      if (isAndroid && currentAccount && token) {
+        registerPushToken(agent, currentAccount, token)
+      }
     }
   }
 }

@@ -16,6 +16,7 @@ import {useTheme} from '#/alf'
 import {Text} from './text/Text'
 import {CenteredView} from './Views'
 import hairlineWidth = StyleSheet.hairlineWidth
+import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 
 const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 
@@ -98,11 +99,7 @@ export function ViewHeader({
                     style={[styles.backIcon, pal.text]}
                   />
                 ) : !isTablet ? (
-                  <FontAwesomeIcon
-                    size={18}
-                    icon="bars"
-                    style={[styles.backIcon, pal.textLight]}
-                  />
+                  <Menu size="lg" style={[{marginTop: 3}, pal.textLight]} />
                 ) : null}
               </TouchableOpacity>
             ) : null}
@@ -269,7 +266,8 @@ const styles = StyleSheet.create({
   backBtnWide: {
     width: 30,
     height: 30,
-    paddingHorizontal: 6,
+    paddingLeft: 4,
+    marginRight: 4,
   },
   backIcon: {
     marginTop: 6,

@@ -34,6 +34,7 @@ import {ComposePrompt} from '../composer/Prompt'
 import {List, ListMethods} from '../util/List'
 import {ViewHeader} from '../util/ViewHeader'
 import {PostThreadItem} from './PostThreadItem'
+import {PostThreadLoadMore} from './PostThreadLoadMore'
 import {PostThreadShowHiddenReplies} from './PostThreadShowHiddenReplies'
 
 // FlatList maintainVisibleContentPosition breaks if too many items
@@ -330,7 +331,11 @@ export function PostThread({
         <PostThreadShowHiddenReplies
           type={item === SHOW_HIDDEN_REPLIES ? 'hidden' : 'muted'}
           onPress={() =>
-            setHiddenRepliesState(HiddenRepliesState.ShowAndOverridePostHider)
+            setHiddenRepliesState(
+              item === SHOW_HIDDEN_REPLIES
+                ? HiddenRepliesState.Show
+                : HiddenRepliesState.ShowAndOverridePostHider,
+            )
           }
           hideTopBorder={index === 0}
         />
@@ -364,6 +369,9 @@ export function PostThread({
         </View>
       )
     } else if (isThreadPost(item)) {
+      if (!treeView && item.ctx.hasMoreSelfThread) {
+        return <PostThreadLoadMore post={item.post} />
+      }
       const prev = isThreadPost(posts[index - 1])
         ? (posts[index - 1] as ThreadPost)
         : undefined

@@ -1,12 +1,6 @@
 import React from 'react'
-import {
-  ActivityIndicator,
-  type FlatList,
-  Pressable,
-  StyleSheet,
-  View,
-} from 'react-native'
-import {AppBskyActorDefs} from '@atproto/api'
+import {ActivityIndicator, type FlatList, StyleSheet, View} from 'react-native'
+import {AppBskyActorDefs, AppBskyFeedDefs} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
@@ -25,18 +19,16 @@ import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
-import {HITSLOP_10} from 'lib/constants'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {CogIcon, ComposeIcon2, MagnifyingGlassIcon2} from 'lib/icons'
-import {FeedsTabNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
+import {ComposeIcon2} from 'lib/icons'
+import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {cleanError} from 'lib/strings/errors'
 import {s} from 'lib/styles'
-import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 import {FAB} from 'view/com/util/fab/FAB'
-import {SearchInput, SearchInputRef} from 'view/com/util/forms/SearchInput'
-import {Link} from 'view/com/util/Link'
+import {SearchInput} from 'view/com/util/forms/SearchInput'
+import {Link, TextLink} from 'view/com/util/Link'
 import {List} from 'view/com/util/List'
 import {
   FeedFeedLoadingPlaceholder,
@@ -53,8 +45,10 @@ import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/compon
 import {ListMagnifyingGlass_Stroke2_Corner0_Rounded} from '#/components/icons/ListMagnifyingGlass'
 import {ListSparkle_Stroke2_Corner0_Rounded} from '#/components/icons/ListSparkle'
 import hairlineWidth = StyleSheet.hairlineWidth
+import {Divider} from '#/components/Divider'
+import * as FeedCard from '#/components/FeedCard'
 
-type Props = NativeStackScreenProps<FeedsTabNavigatorParams, 'Feeds'>
+type Props = NativeStackScreenProps<CommonNavigatorParams, 'Feeds'>
 
 type FlatlistSlice =
   | {
@@ -101,6 +95,7 @@ type FlatlistSlice =
       type: 'popularFeed'
       key: string
       feedUri: string
+      feed: AppBskyFeedDefs.GeneratorView
     }
   | {
       type: 'popularFeedsLoadingMore'
@@ -110,22 +105,6 @@ type FlatlistSlice =
       type: 'noFollowingFeed'
       key: string
     }
-
-// HACK
-// the protocol doesn't yet tell us which feeds are personalized
-// this list is used to filter out feed recommendations from logged out users
-// for the ones we know need it
-// -prf
-const KNOWN_AUTHED_ONLY_FEEDS = [
-  'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/with-friends', // popular with friends, by bsky.app
-  'at://did:plc:tenurhgjptubkk5zf5qhi3og/app.bsky.feed.generator/mutuals', // mutuals, by skyfeed
-  'at://did:plc:tenurhgjptubkk5zf5qhi3og/app.bsky.feed.generator/only-posts', // only posts, by skyfeed
-  'at://did:plc:wzsilnxf24ehtmmc3gssy5bu/app.bsky.feed.generator/mentions', // mentions, by flicknow
-  'at://did:plc:q6gjnaw2blty4crticxkmujt/app.bsky.feed.generator/bangers', // my bangers, by jaz
-  'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/mutuals', // mutuals, by bluesky
-  'at://did:plc:q6gjnaw2blty4crticxkmujt/app.bsky.feed.generator/my-followers', // followers, by jaz
-  'at://did:plc:vpkhqolt662uhesyj6nxm7ys/app.bsky.feed.generator/followpics', // the gram, by why
-]
 
 export function FeedsScreen(_props: Props) {
   const pal = usePalette('default')
@@ -159,7 +138,6 @@ export function FeedsScreen(_props: Props) {
   } = useSearchPopularFeedsMutation()
   const {hasSession} = useSession()
   const listRef = React.useRef<FlatList>(null)
-  const searchInputRef = React.useRef<SearchInputRef>(null)
 
   /**
    * A search query is present. We may not have search results yet.
@@ -324,6 +302,7 @@ export function FeedsScreen(_props: Props) {
                 key: `popularFeed:${feed.uri}`,
                 type: 'popularFeed',
                 feedUri: feed.uri,
+                feed,
               })),
             )
           }
@@ -335,10 +314,7 @@ export function FeedsScreen(_props: Props) {
             type: 'popularFeedsLoading',
           })
         } else {
-          if (
-            !popularFeeds?.pages ||
-            popularFeeds?.pages[0]?.feeds?.length === 0
-          ) {
+          if (!popularFeeds?.pages) {
             slices.push({
               key: 'popularFeedsNoResults',
               type: 'popularFeedsNoResults',
@@ -346,26 +322,12 @@ export function FeedsScreen(_props: Props) {
           } else {
             for (const page of popularFeeds.pages || []) {
               slices = slices.concat(
-                page.feeds
-                  .filter(feed => {
-                    if (
-                      !hasSession &&
-                      KNOWN_AUTHED_ONLY_FEEDS.includes(feed.uri)
-                    ) {
-                      return false
-                    }
-                    const alreadySaved = Boolean(
-                      preferences?.savedFeeds?.find(f => {
-                        return f.value === feed.uri
-                      }),
-                    )
-                    return !alreadySaved
-                  })
-                  .map(feed => ({
-                    key: `popularFeed:${feed.uri}`,
-                    type: 'popularFeed',
-                    feedUri: feed.uri,
-                  })),
+                page.feeds.map(feed => ({
+                  key: `popularFeed:${feed.uri}`,
+                  type: 'popularFeed',
+                  feedUri: feed.uri,
+                  feed,
+                })),
               )
             }
 
@@ -399,24 +361,15 @@ export function FeedsScreen(_props: Props) {
   const renderHeaderBtn = React.useCallback(() => {
     return (
       <View style={styles.headerBtnGroup}>
-        <Pressable
-          accessibilityRole="button"
-          hitSlop={HITSLOP_10}
-          onPress={searchInputRef.current?.focus}>
-          <MagnifyingGlassIcon2
-            size={22}
-            strokeWidth={2}
-            style={pal.textLight}
-          />
-        </Pressable>
-        <Link
+        <TextLink
+          testID="editFeedsBtn"
+          type="lg-medium"
           href="/settings/saved-feeds"
-          hitSlop={10}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Edit Saved Feeds`)}
-          accessibilityHint={_(msg`Opens screen to edit Saved Feeds`)}>
-          <CogIcon size={22} strokeWidth={2} style={pal.textLight} />
-        </Link>
+          accessibilityLabel={_(msg`Edit My Feeds`)}
+          accessibilityHint=""
+          text={_(msg`Edit`)}
+          style={[pal.link, a.pr_xs]}
+        />
       </View>
     )
   }, [pal, _])
@@ -480,22 +433,14 @@ export function FeedsScreen(_props: Props) {
                   <Trans>Feeds</Trans>
                 </Text>
                 <View style={styles.headerBtnGroup}>
-                  <Pressable
-                    accessibilityRole="button"
-                    hitSlop={HITSLOP_10}
-                    onPress={searchInputRef.current?.focus}>
-                    <MagnifyingGlassIcon2
-                      size={22}
-                      strokeWidth={2}
-                      style={pal.icon}
-                    />
-                  </Pressable>
-                  <Link
+                  <TextLink
+                    type="lg"
                     href="/settings/saved-feeds"
                     accessibilityLabel={_(msg`Edit My Feeds`)}
-                    accessibilityHint="">
-                    <CogIcon strokeWidth={1.5} style={pal.icon} size={28} />
-                  </Link>
+                    accessibilityHint=""
+                    text={_(msg`Edit`)}
+                    style={[pal.link]}
+                  />
                 </View>
               </View>
             )}
@@ -520,9 +465,8 @@ export function FeedsScreen(_props: Props) {
         return (
           <>
             <FeedsAboutHeader />
-            <View style={{paddingHorizontal: 12, paddingBottom: 12}}>
+            <View style={{paddingHorizontal: 12, paddingBottom: 4}}>
               <SearchInput
-                ref={searchInputRef}
                 query={query}
                 onChangeQuery={onChangeQuery}
                 onPressCancelSearch={onPressCancelSearch}
@@ -536,13 +480,10 @@ export function FeedsScreen(_props: Props) {
         return <FeedFeedLoadingPlaceholder />
       } else if (item.type === 'popularFeed') {
         return (
-          <FeedSourceCard
-            feedUri={item.feedUri}
-            showSaveBtn={hasSession}
-            showDescription
-            showLikes
-            pinOnSave
-          />
+          <View style={[a.px_lg, a.pt_lg, a.gap_lg]}>
+            <FeedCard.Default feed={item.feed} />
+            <Divider />
+          </View>
         )
       } else if (item.type === 'popularFeedsNoResults') {
         return (
@@ -577,15 +518,14 @@ export function FeedsScreen(_props: Props) {
       pal.view,
       pal.border,
       pal.text,
-      pal.icon,
       pal.textLight,
+      pal.link,
       _,
       query,
       onChangeQuery,
       onPressCancelSearch,
       onSubmitQuery,
       onChangeSearchFocus,
-      hasSession,
     ],
   )
 
@@ -594,7 +534,6 @@ export function FeedsScreen(_props: Props) {
       {isMobile && (
         <ViewHeader
           title={_(msg`Feeds`)}
-          canGoBack={false}
           renderButton={renderHeaderBtn}
           showBorder
         />
