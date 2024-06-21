@@ -2,12 +2,13 @@ import UIKit
 import WebKit
 import StoreKit
 
-class ViewController: UIViewController, WKScriptMessageHandler {
+class ViewController: UIViewController, WKScriptMessageHandler, WKNavigationDelegate {
   let defaults = UserDefaults(suiteName: "group.app.bsky")
 
   var window: UIWindow
   var webView: WKWebView?
 
+  var prevUrl: URL?
   var starterPackUrl: URL?
 
   init(window: UIWindow) {
@@ -30,6 +31,7 @@ class ViewController: UIViewController, WKScriptMessageHandler {
     let webView = WKWebView(frame: self.view.bounds, configuration: configuration)
     webView.translatesAutoresizingMaskIntoConstraints = false
     webView.contentMode = .scaleToFill
+    webView.navigationDelegate = self
     self.view.addSubview(webView)
     self.webView = webView
   }
@@ -59,10 +61,26 @@ class ViewController: UIViewController, WKScriptMessageHandler {
     }
   }
 
-  func handleURL(url: URL) {
-    self.starterPackUrl = url
-    let urlString = "\(url.absoluteString)?clip=true"
+  func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction) async -> WKNavigationActionPolicy {
+    // Detect when we land on the right URL. This is incase of a short link opening the app clip
+    guard let url = navigationAction.request.url else {
+      return .allow
+    }
 
+    // Store the previous one to compare later, but only set starterPackUrl when we find the right one
+    prevUrl = url
+    // pathComponents starts with "/" as the first component, then each path name. so...
+    // ["/", "start", "name", "rkey"]
+    if url.pathComponents.count == 4,
+       url.pathComponents[1] == "start" {
+      self.starterPackUrl = url
+    }
+
+    return .allow
+  }
+
+  func handleURL(url: URL) {
+    let urlString = "\(url.absoluteString)?clip=true"
     if let url = URL(string: urlString) {
       self.webView?.load(URLRequest(url: url))
     }
@@ -77,6 +95,30 @@ class ViewController: UIViewController, WKScriptMessageHandler {
     let overlay = SKOverlay(configuration: configuration)
 
     overlay.present(in: windowScene)
+  }
+
+  func getHost(_ url: URL?) -> String? {
+    if #available(iOS 16.0, *) {
+      return url?.host()
+    } else {
+      return url?.host
+    }
+  }
+
+  func getQuery(_ url: URL?) -> String? {
+    if #available(iOS 16.0, *) {
+      return url?.query()
+    } else {
+      return url?.query
+    }
+  }
+
+  func urlMatchesPrevious(_ url: URL?) -> Bool {
+    if #available(iOS 16.0, *) {
+      return url?.query() == prevUrl?.query() && url?.host() == prevUrl?.host() && url?.query() == prevUrl?.query()
+    } else {
+      return url?.query == prevUrl?.query && url?.host == prevUrl?.host && url?.query == prevUrl?.query
+    }
   }
 }
 

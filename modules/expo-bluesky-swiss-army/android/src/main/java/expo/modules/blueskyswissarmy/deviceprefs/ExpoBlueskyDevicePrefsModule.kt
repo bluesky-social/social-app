@@ -1,10 +1,10 @@
-package expo.modules.blueskyswissarmy
+package expo.modules.blueskyswissarmy.deviceprefs
 
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 
-class ExpoBlueskySwissArmyModule : Module() {
+class ExpoBlueskyDevicePrefsModule : Module() {
   override fun definition() = ModuleDefinition {
-    Name("ExpoBlueskySwissArmy")
+    Name("ExpoBlueskyDevicePrefs")
   }
 }

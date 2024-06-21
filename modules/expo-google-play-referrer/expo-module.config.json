@@ -1,9 +1,0 @@
-{
-  "platforms": ["android"],
-  "ios": {
-    "modules": ["ExpoGooglePlayReferrerModule"]
-  },
-  "android": {
-    "modules": ["expo.modules.googleplayreferrer.ExpoGooglePlayReferrerModule"]
-  }
-}

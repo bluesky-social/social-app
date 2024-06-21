@@ -1,2 +1,4 @@
-import {ExpoBlueskySwissArmyModule as SwissArmyKnife} from './src/ExpoBlueskySwissArmyModule'
-export default SwissArmyKnife
+import * as DevicePrefs from './src/DevicePrefs'
+import * as Referrer from './src/Referrer'
+
+export {DevicePrefs, Referrer}

@@ -1,6 +1,7 @@
 import {AtpSessionEvent} from '@atproto/api'
 
 import {createPublicAgent} from './agent'
+import {wrapSessionReducerForLogging} from './logging'
 import {SessionAccount} from './types'
 
 // A hack so that the reducer can't read anything from the agent.
@@ -64,7 +65,7 @@ export function getInitialState(persistedAccounts: SessionAccount[]): State {
   }
 }
 
-export function reducer(state: State, action: Action): State {
+let reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case 'received-agent-event': {
       const {agent, accountDid, refreshedAccount, sessionEvent} = action
@@ -166,3 +167,5 @@ export function reducer(state: State, action: Action): State {
     }
   }
 }
+reducer = wrapSessionReducerForLogging(reducer)
+export {reducer}

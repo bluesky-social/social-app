@@ -165,7 +165,7 @@ msgstr ""
 #~ msgstr "<0>{following} </0><1>following</1>"
 
 #~ msgid "<0>Choose your</0><1>Recommended</1><2>Feeds</2>"
-#~ msgstr "<0>Scegli i tuoi</0><1>feeds</1><2>consigliati</2>"
+#~ msgstr "<0>Scegli i tuoi</0><1>feed/1><2>consigliati</2>"
 
 #~ msgid "<0>Follow some</0><1>Recommended</1><2>Users</2>"
 #~ msgstr "<0>Segui alcuni</0><1>utenti</1><2>consigliati</2>"
@@ -356,7 +356,7 @@ msgstr "Aggiunto alla lista"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:126
 msgid "Added to my feeds"
-msgstr "Aggiunto ai miei feeds"
+msgstr "Aggiunto ai miei feed"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:172
 msgid "Adjust the number of likes a reply must have to be shown in your feed."
@@ -395,7 +395,7 @@ msgstr ""
 #: src/screens/Messages/Settings.tsx:62
 #: src/screens/Messages/Settings.tsx:65
 msgid "Allow new messages from"
-msgstr ""
+msgstr "Consenti nuovi messaggi da"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:178
 #: src/view/com/modals/ChangePassword.tsx:171
@@ -936,12 +936,12 @@ msgstr "Conversazione silenziata"
 #: src/screens/Messages/List/index.tsx:88
 #: src/view/screens/Settings/index.tsx:638
 msgid "Chat settings"
-msgstr ""
+msgstr "Impostazioni messaggi"
 
 #: src/screens/Messages/Settings.tsx:59
 #: src/view/screens/Settings/index.tsx:647
 msgid "Chat Settings"
-msgstr ""
+msgstr "Impostazioni messaggi"
 
 #: src/components/dms/ConvoMenu.tsx:84
 msgid "Chat unmuted"
@@ -1043,7 +1043,7 @@ msgstr ""
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:46
 #~ msgid "Click here to add one."
-#~ msgstr ""
+#~ msgstr "Clicca qui per aggiungerne uno."
 
 #: src/components/TagMenu/index.web.tsx:138
 msgid "Click here to open tag menu for {tag}"
@@ -1665,14 +1665,14 @@ msgstr "Scoraggia le app dal mostrare il mio account agli utenti disconnessi"
 #: src/view/com/posts/FollowingEmptyState.tsx:70
 #: src/view/com/posts/FollowingEndOfFeed.tsx:71
 msgid "Discover new custom feeds"
-msgstr "Scopri nuovi feeds personalizzati"
+msgstr "Scopri nuovi feed personalizzati"
 
 #~ msgid "Discover new feeds"
-#~ msgstr "Scopri nuovi feeds"
+#~ msgstr "Scopri nuovi feed"
 
 #: src/view/screens/Feeds.tsx:794
 msgid "Discover New Feeds"
-msgstr "Scopri nuovi feeds"
+msgstr "Scopri nuovi feed"
 
 #: src/view/com/modals/EditProfile.tsx:193
 msgid "Display name"
@@ -1831,7 +1831,7 @@ msgstr "Modifica l'elenco di moderazione"
 #: src/view/screens/Feeds.tsx:469
 #: src/view/screens/SavedFeeds.tsx:93
 msgid "Edit My Feeds"
-msgstr "Modifica i miei feeds"
+msgstr "Modifica i miei feed"
 
 #: src/view/com/modals/EditProfile.tsx:153
 msgid "Edit my profile"
@@ -1850,7 +1850,7 @@ msgstr "Modifica il Profilo"
 #: src/view/com/home/HomeHeaderLayout.web.tsx:76
 #: src/view/screens/Feeds.tsx:416
 #~ msgid "Edit Saved Feeds"
-#~ msgstr "Modifica i feeds memorizzati"
+#~ msgstr "Modifica i feed memorizzati"
 
 #: src/view/com/modals/CreateOrEditList.tsx:234
 msgid "Edit User List"
@@ -1927,7 +1927,7 @@ msgstr "Attiva il contenuto per adulti"
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:78
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:79
 #~ msgid "Enable adult content in your feeds"
-#~ msgstr "Abilita i contenuti per adulti nei tuoi feeds"
+#~ msgstr "Abilita i contenuti per adulti nei tuoi feed"
 
 #: src/components/dialogs/EmbedConsent.tsx:82
 #: src/components/dialogs/EmbedConsent.tsx:89
@@ -2202,7 +2202,7 @@ msgstr "Commenti"
 #: src/view/shell/Drawer.tsx:493
 #: src/view/shell/Drawer.tsx:494
 msgid "Feeds"
-msgstr "Feeds"
+msgstr "Feed"
 
 #~ msgid "Feeds are created by users to curate content. Choose some feeds that you find interesting."
 #~ msgstr "I feed vengono creati dagli utenti per curare i contenuti. Scegli alcuni feed che ritieni interessanti."
@@ -2213,7 +2213,7 @@ msgstr "I feed sono algoritmi personalizzati che gli utenti creano con un minimo
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:80
 #~ msgid "Feeds can be topical as well!"
-#~ msgstr "I feeds possono anche avere tematiche!"
+#~ msgstr "I feed possono anche avere tematiche!"
 
 #: src/view/com/modals/ChangeHandle.tsx:475
 msgid "File Contents"
@@ -3214,7 +3214,7 @@ msgstr "Il messaggio è troppo lungo"
 
 #: src/screens/Messages/List/index.tsx:321
 msgid "Message settings"
-msgstr "Impostazione messaggio"
+msgstr "Impostazioni messaggio"
 
 #: src/Navigation.tsx:504
 #: src/screens/Messages/List/index.tsx:164
@@ -3412,7 +3412,7 @@ msgstr "Il mio Compleanno"
 
 #: src/view/screens/Feeds.tsx:768
 msgid "My Feeds"
-msgstr "I miei Feeds"
+msgstr "I miei Feed"
 
 #: src/view/shell/desktop/LeftNav.tsx:84
 msgid "My Profile"
@@ -3424,7 +3424,7 @@ msgstr "I miei feed salvati"
 
 #: src/view/screens/Settings/index.tsx:622
 msgid "My Saved Feeds"
-msgstr "I miei Feeds Salvati"
+msgstr "I miei Feed Salvati"
 
 #~ msgid "my-server.com"
 #~ msgstr "my-server.com"
@@ -3862,7 +3862,7 @@ msgstr "Apre la fotocamera sul dispositivo"
 
 #: src/view/screens/Settings/index.tsx:639
 msgid "Opens chat settings"
-msgstr ""
+msgstr "Apre impostazioni messaggi"
 
 #: src/view/com/composer/Prompt.tsx:27
 msgid "Opens composer"
@@ -4112,7 +4112,7 @@ msgstr "Fissa su Home"
 
 #: src/view/screens/SavedFeeds.tsx:103
 msgid "Pinned Feeds"
-msgstr "Feeds Fissi"
+msgstr "Feed Fissi"
 
 #: src/view/screens/ProfileList.tsx:289
 msgid "Pinned to your feeds"
@@ -4380,7 +4380,7 @@ msgstr "Elenchi pubblici e condivisibili di utenti da disattivare o bloccare in 
 
 #: src/view/screens/Lists.tsx:66
 msgid "Public, shareable lists which can drive feeds."
-msgstr "Liste pubbliche e condivisibili che possono impulsare i feeds."
+msgstr "Liste pubbliche e condivisibili che possono impulsare i feed."
 
 #: src/view/com/composer/Composer.tsx:462
 msgid "Publish post"
@@ -4431,7 +4431,7 @@ msgid "Recent Searches"
 msgstr "Ricerche recenti"
 
 #~ msgid "Recommended Feeds"
-#~ msgstr "Feeds consigliati"
+#~ msgstr "Feed consigliati"
 
 #~ msgid "Recommended Users"
 #~ msgstr "Utenti consigliati"
@@ -4454,7 +4454,7 @@ msgid "Remove"
 msgstr "Rimuovi"
 
 #~ msgid "Remove {0} from my feeds?"
-#~ msgstr "Rimuovere {0} dai miei feeds?"
+#~ msgstr "Rimuovere {0} dai miei feed?"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:22
 msgid "Remove account"
@@ -4524,14 +4524,14 @@ msgid "Remove repost"
 msgstr "Rimuovi la ripubblicazione"
 
 #~ msgid "Remove this feed from my feeds?"
-#~ msgstr "Rimuovere questo feed dai miei feeds?"
+#~ msgstr "Rimuovere questo feed dai miei feed?"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:210
 msgid "Remove this feed from your saved feeds"
 msgstr "Rimuovi questo feed dai feed salvati"
 
 #~ msgid "Remove this feed from your saved feeds?"
-#~ msgstr "Elimina questo feed dai feeds salvati?"
+#~ msgstr "Elimina questo feed dai feed salvati?"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:199
 #: src/view/com/modals/UserAddRemoveLists.tsx:165
@@ -4540,7 +4540,7 @@ msgstr "Elimina dalla lista"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:139
 msgid "Removed from my feeds"
-msgstr "Rimuovere dai miei feeds"
+msgstr "Rimuovere dai miei feed"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:44
 #: src/view/screens/ProfileFeed.tsx:191
@@ -5047,7 +5047,7 @@ msgstr "Seleziona il servizio che ospita i tuoi dati."
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:100
 #~ msgid "Select topical feeds to follow from the list below"
-#~ msgstr "Seleziona i feeds con temi da seguire dal seguente elenco"
+#~ msgstr "Seleziona i feed con temi da seguire dal seguente elenco"
 
 #: src/screens/Onboarding/StepModeration/index.tsx:63
 #~ msgid "Select what you want to see (or not see), and we’ll handle the rest."
@@ -6154,7 +6154,7 @@ msgid "This will delete {0} from your muted words. You can always add it back la
 msgstr "Questo eliminerà {0} dalle parole disattivate. Puoi sempre aggiungerla nuovamente in seguito."
 
 #~ msgid "This will hide this post from your feeds."
-#~ msgstr "Questo nasconderà il post dai tuoi feeds."
+#~ msgstr "Questo nasconderà il post dai tuoi feed."
 
 #: src/view/screens/Settings/index.tsx:594
 msgid "Thread preferences"
@@ -6783,7 +6783,7 @@ msgstr "Che lingue sono utilizzate in questo post?"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:77
 msgid "Which languages would you like to see in your algorithmic feeds?"
-msgstr "Quali lingue vorresti vedere negli algoritmi dei tuoi feeds?"
+msgstr "Quali lingue vorresti vedere negli algoritmi dei tuoi feed?"
 
 #: src/components/dms/MessagesNUX.tsx:110
 #: src/components/dms/MessagesNUX.tsx:124
@@ -6901,7 +6901,7 @@ msgstr "Puoi modificarlo in qualsiasi momento."
 
 #: src/screens/Messages/Settings.tsx:111
 msgid "You can continue ongoing conversations regardless of which setting you choose."
-msgstr ""
+msgstr "Puoi proseguire le conversazioni in corso indipendentemente da quale settaggio scegli."
 
 #: src/screens/Login/index.tsx:158
 #: src/screens/Login/PasswordUpdatedForm.tsx:33
@@ -6982,7 +6982,7 @@ msgstr "Non hai ancora nessuna conversazione. Avviane una!"
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:141
 msgid "You have no feeds."
-msgstr "Non hai feeds."
+msgstr "Non hai feed."
 
 #: src/view/com/lists/MyLists.tsx:90
 #: src/view/com/lists/ProfileLists.tsx:145
