@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-06-21 10:01+0900\n"
+"PO-Revision-Date: 2024-06-21 16:12+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -1626,7 +1626,7 @@ msgstr "ユーザーリストを編集"
 #: src/view/com/threadgate/WhoCanReply.tsx:73
 #: src/view/com/threadgate/WhoCanReply.tsx:130
 msgid "Edit who can reply"
-msgstr "誰が返信できるのかを変更"
+msgstr "誰が返信できるのかを編集"
 
 #: src/view/com/modals/EditProfile.tsx:194
 msgid "Edit your display name"
