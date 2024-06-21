@@ -13,6 +13,7 @@ import {
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyFeedPost,
+  AppBskyGraphDefs,
   moderateProfile,
   ModerationDecision,
   ModerationOpts,
@@ -42,6 +43,7 @@ import {PersonPlus_Filled_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/com
 import {Repost_Stroke2_Corner2_Rounded as RepostIcon} from '#/components/icons/Repost'
 import {Link as NewLink} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
+import {Default as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {FeedSourceCard} from '../feeds/FeedSourceCard'
 import {Post} from '../post/Post'
 import {ImageHorzList} from '../util/images/ImageHorzList'
@@ -90,15 +92,14 @@ let FeedItem = ({
     } else if (item.type === 'reply') {
       const urip = new AtUri(item.notification.uri)
       return `/profile/${urip.host}/post/${urip.rkey}`
-    } else if (item.type === 'feedgen-like') {
+    } else if (
+      item.type === 'feedgen-like' ||
+      item.type === 'starterpack-joined'
+    ) {
       if (item.subjectUri) {
         const urip = new AtUri(item.subjectUri)
         return `/profile/${urip.host}/feed/${urip.rkey}`
       }
-    } else if (item.type === 'starter-pack-signup') {
-      // TODO create the right href for navigating to the starterpack
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const urip = '/'
     }
     return ''
   }, [item])
@@ -130,7 +131,7 @@ let FeedItem = ({
     item.subjectUri &&
     !item.subject &&
     item.type !== 'feedgen-like' &&
-    item.type !== 'starter-pack-signup'
+    item.type !== 'starterpack-joined'
   ) {
     // don't render anything if the target post was deleted or unfindable
     return <View />
@@ -141,7 +142,7 @@ let FeedItem = ({
     item.type === 'mention' ||
     item.type === 'quote'
   ) {
-    if (!item.subject) {
+    if (!item.subject || !AppBskyFeedDefs.isPostView(item.subject)) {
       return null
     }
     return (
@@ -186,7 +187,7 @@ let FeedItem = ({
     icon = <PersonPlusIcon size="xl" style={{color: t.palette.primary_500}} />
   } else if (item.type === 'feedgen-like') {
     action = _(msg`liked your custom feed`)
-  } else if (item.type === 'starter-pack-signup') {
+  } else if (item.type === 'starterpack-joined') {
     icon = (
       <View style={{height: 30, width: 30}}>
         <StarterPack width={30} gradient="sky" />
@@ -296,7 +297,8 @@ let FeedItem = ({
             </TimeElapsed>
           </Text>
         </ExpandListPressable>
-        {item.type === 'post-like' || item.type === 'repost' ? (
+        {(item.type === 'post-like' || item.type === 'repost') &&
+        AppBskyFeedDefs.isPostView(item.subject) ? (
           <AdditionalPostText post={item.subject} />
         ) : null}
         {item.type === 'feedgen-like' && item.subjectUri ? (
@@ -306,11 +308,10 @@ let FeedItem = ({
             showLikes
           />
         ) : null}
-        {item.type === 'starter-pack-signup'
-          ? // TODO
-            null
-          : // <StarterPackCard type="notification" starterPack={sta} />
-            null}
+        {item.type === 'starterpack-joined' &&
+        AppBskyGraphDefs.isStarterPackViewBasic(item.subject) ? (
+          <StarterPackCard starterPack={item.subject} />
+        ) : null}
       </View>
     </Link>
   )

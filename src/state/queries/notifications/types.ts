@@ -1,5 +1,6 @@
 import {
   AppBskyFeedDefs,
+  AppBskyGraphDefs,
   AppBskyNotificationListNotifications,
 } from '@atproto/api'
 
@@ -11,7 +12,7 @@ export type NotificationType =
   | 'reply'
   | 'quote'
   | 'follow'
-  | 'starter-pack-signup'
+  | 'starterpack-joined'
   | 'unknown'
 
 export interface FeedNotification {
@@ -20,7 +21,7 @@ export interface FeedNotification {
   notification: AppBskyNotificationListNotifications.Notification
   additional?: AppBskyNotificationListNotifications.Notification[]
   subjectUri?: string
-  subject?: AppBskyFeedDefs.PostView
+  subject?: AppBskyFeedDefs.PostView | AppBskyGraphDefs.StarterPackViewBasic
 }
 
 export interface FeedPage {
