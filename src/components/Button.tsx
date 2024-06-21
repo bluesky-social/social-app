@@ -231,7 +231,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
           if (!disabled) {
             baseStyles.push(t.atoms.bg)
             hoverStyles.push({
-              backgroundColor: t.palette.contrast_100,
+              backgroundColor: t.palette.contrast_25,
             })
           }
         }
