@@ -195,6 +195,8 @@ export function FeedsScreen(_props: Props) {
 
   const items = React.useMemo(() => {
     let slices: FlatlistSlice[] = []
+    const isSavedFeedsLoading =
+      isSavedFeedsPlaceholder && !savedFeeds?.feeds.length
 
     if (hasSession) {
       slices.push({
@@ -209,7 +211,7 @@ export function FeedsScreen(_props: Props) {
           error: cleanError(savedFeedsError.toString()),
         })
       } else {
-        if (isSavedFeedsPlaceholder && !savedFeeds?.feeds.length) {
+        if (isSavedFeedsLoading) {
           /*
            * Initial render in placeholder state is 0 on a cold page load,
            * because preferences haven't loaded yet.
@@ -277,59 +279,36 @@ export function FeedsScreen(_props: Props) {
       }
     }
 
-    slices.push({
-      key: 'popularFeedsHeader',
-      type: 'popularFeedsHeader',
-    })
-
-    if (popularFeedsError || searchError) {
+    if (!hasSession || (hasSession && !isSavedFeedsLoading)) {
       slices.push({
-        key: 'popularFeedsError',
-        type: 'error',
-        error: cleanError(
-          popularFeedsError?.toString() ?? searchError?.toString() ?? '',
-        ),
+        key: 'popularFeedsHeader',
+        type: 'popularFeedsHeader',
       })
-    } else {
-      if (isUserSearching) {
-        if (isSearchPending || !searchResults) {
-          slices.push({
-            key: 'popularFeedsLoading',
-            type: 'popularFeedsLoading',
-          })
-        } else {
-          if (!searchResults || searchResults?.length === 0) {
-            slices.push({
-              key: 'popularFeedsNoResults',
-              type: 'popularFeedsNoResults',
-            })
-          } else {
-            slices = slices.concat(
-              searchResults.map(feed => ({
-                key: `popularFeed:${feed.uri}`,
-                type: 'popularFeed',
-                feedUri: feed.uri,
-                feed,
-              })),
-            )
-          }
-        }
+
+      if (popularFeedsError || searchError) {
+        slices.push({
+          key: 'popularFeedsError',
+          type: 'error',
+          error: cleanError(
+            popularFeedsError?.toString() ?? searchError?.toString() ?? '',
+          ),
+        })
       } else {
-        if (isPopularFeedsFetching && !popularFeeds?.pages) {
-          slices.push({
-            key: 'popularFeedsLoading',
-            type: 'popularFeedsLoading',
-          })
-        } else {
-          if (!popularFeeds?.pages) {
+        if (isUserSearching) {
+          if (isSearchPending || !searchResults) {
             slices.push({
-              key: 'popularFeedsNoResults',
-              type: 'popularFeedsNoResults',
+              key: 'popularFeedsLoading',
+              type: 'popularFeedsLoading',
             })
           } else {
-            for (const page of popularFeeds.pages || []) {
+            if (!searchResults || searchResults?.length === 0) {
+              slices.push({
+                key: 'popularFeedsNoResults',
+                type: 'popularFeedsNoResults',
+              })
+            } else {
               slices = slices.concat(
-                page.feeds.map(feed => ({
+                searchResults.map(feed => ({
                   key: `popularFeed:${feed.uri}`,
                   type: 'popularFeed',
                   feedUri: feed.uri,
@@ -337,12 +316,37 @@ export function FeedsScreen(_props: Props) {
                 })),
               )
             }
-
-            if (isPopularFeedsFetchingNextPage) {
+          }
+        } else {
+          if (isPopularFeedsFetching && !popularFeeds?.pages) {
+            slices.push({
+              key: 'popularFeedsLoading',
+              type: 'popularFeedsLoading',
+            })
+          } else {
+            if (!popularFeeds?.pages) {
               slices.push({
-                key: 'popularFeedsLoadingMore',
-                type: 'popularFeedsLoadingMore',
+                key: 'popularFeedsNoResults',
+                type: 'popularFeedsNoResults',
               })
+            } else {
+              for (const page of popularFeeds.pages || []) {
+                slices = slices.concat(
+                  page.feeds.map(feed => ({
+                    key: `popularFeed:${feed.uri}`,
+                    type: 'popularFeed',
+                    feedUri: feed.uri,
+                    feed,
+                  })),
+                )
+              }
+
+              if (isPopularFeedsFetchingNextPage) {
+                slices.push({
+                  key: 'popularFeedsLoadingMore',
+                  type: 'popularFeedsLoadingMore',
+                })
+              }
             }
           }
         }
