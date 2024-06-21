@@ -11,7 +11,7 @@ class ExpoBlueskyReferrerModule : Module() {
   override fun definition() = ModuleDefinition {
     Name("ExpoBlueskyReferrer")
 
-    AsyncFunction("getReferrerInfoAsync") { promise: Promise ->
+    AsyncFunction("getGooglePlayReferrerInfoAsync") { promise: Promise ->
       val referrerClient = InstallReferrerClient.newBuilder(appContext.reactContext).build()
       referrerClient.startConnection(object : InstallReferrerStateListener {
         override fun onInstallReferrerSetupFinished(responseCode: Int) {

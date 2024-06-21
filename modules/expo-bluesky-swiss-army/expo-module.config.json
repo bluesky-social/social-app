@@ -5,8 +5,8 @@
   },
   "android": {
     "modules": [
-      "expo.modules.blueskyswissarmy.ExpoBlueskyDevicePrefsModule",
-      "expo.modules.blueskyswissarmy.ExpoBlueskyReferrerModule"
+      "expo.modules.blueskyswissarmy.deviceprefs.ExpoBlueskyDevicePrefsModule",
+      "expo.modules.blueskyswissarmy.referrer.ExpoBlueskyReferrerModule"
     ]
   }
 }
