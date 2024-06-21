@@ -143,7 +143,6 @@ module.exports = function (config) {
           backgroundImage: './assets/icon-android-background.png',
           backgroundColor: '#1185FE',
         },
-        versionCode: 239,
         googleServicesFile: './google-services.json',
         package: 'xyz.blueskyweb.app',
         intentFilters: [
