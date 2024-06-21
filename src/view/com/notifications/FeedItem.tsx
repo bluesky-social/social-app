@@ -13,7 +13,6 @@ import {
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyFeedPost,
-  AppBskyGraphDefs,
   moderateProfile,
   ModerationDecision,
   ModerationOpts,
@@ -142,7 +141,7 @@ let FeedItem = ({
     item.type === 'mention' ||
     item.type === 'quote'
   ) {
-    if (!item.subject || !AppBskyFeedDefs.isPostView(item.subject)) {
+    if (!item.subject) {
       return null
     }
     return (
@@ -297,8 +296,7 @@ let FeedItem = ({
             </TimeElapsed>
           </Text>
         </ExpandListPressable>
-        {(item.type === 'post-like' || item.type === 'repost') &&
-        AppBskyFeedDefs.isPostView(item.subject) ? (
+        {item.type === 'post-like' || item.type === 'repost' ? (
           <AdditionalPostText post={item.subject} />
         ) : null}
         {item.type === 'feedgen-like' && item.subjectUri ? (
@@ -308,8 +306,7 @@ let FeedItem = ({
             showLikes
           />
         ) : null}
-        {item.type === 'starterpack-joined' &&
-        AppBskyGraphDefs.isStarterPackViewBasic(item.subject) ? (
+        {item.type === 'starterpack-joined' ? (
           <StarterPackCard starterPack={item.subject} />
         ) : null}
       </View>
