@@ -167,6 +167,8 @@ export function StepFinished() {
         : undefined,
       starterPackCreator: starterPack?.creator.did,
       starterPackUri: starterPack?.uri,
+      profilesFollowed: listItems?.length ?? 0,
+      feedsPinned: starterPack?.feeds?.length,
     })
   }, [
     queryClient,

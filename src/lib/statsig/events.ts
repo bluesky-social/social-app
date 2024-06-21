@@ -58,6 +58,8 @@ export type LogEvents = {
     starterPackName?: string
     starterPackCreator?: string
     starterPackUri?: string
+    profilesFollowed: number
+    feedsPinned?: number
   }
   'onboarding:finished:avatarResult': {
     avatarResult: 'default' | 'created' | 'uploaded'
