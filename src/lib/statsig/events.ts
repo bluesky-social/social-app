@@ -58,6 +58,8 @@ export type LogEvents = {
     starterPackName?: string
     starterPackCreator?: string
     starterPackUri?: string
+    profilesFollowed: number
+    feedsPinned: number
   }
   'onboarding:finished:avatarResult': {
     avatarResult: 'default' | 'created' | 'uploaded'
@@ -159,8 +161,9 @@ export type LogEvents = {
     qrShareType?: 'save' | 'copy' | 'share'
   }
   'starterPack:followAll': {
+    logContext: 'StarterPackProfilesList' | 'Onboarding'
     starterPack: string
-    followCount: number
+    count: number
   }
   'starterPack:delete': {}
   'starterPack:create': {

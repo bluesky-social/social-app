@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+      "module": "NodeNext",
+      "esModuleInterop": true,
+      "moduleResolution": "NodeNext",
+      "outDir": "dist",
+      "lib": ["ES2021.String"]
+    },
+    "include": ["./src/index.ts", "./src/bin.ts"]
+  }
