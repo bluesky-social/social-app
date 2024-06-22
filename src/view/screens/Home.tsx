@@ -30,12 +30,11 @@ import {FollowingEndOfFeed} from 'view/com/posts/FollowingEndOfFeed'
 import {NoFeedsPinned} from '#/screens/Home/NoFeedsPinned'
 import {HomeHeader} from '../com/home/HomeHeader'
 
-type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home' | 'Start'>
+type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export function HomeScreen(props: Props) {
   const {data: preferences} = usePreferencesQuery()
   const {data: pinnedFeedInfos, isLoading: isPinnedFeedsLoading} =
     usePinnedFeedsInfos()
-
   if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
     return (
       <HomeScreenReady
@@ -64,7 +63,6 @@ function HomeScreenReady({
     () => pinnedFeedInfos.map(f => f.feedDescriptor),
     [pinnedFeedInfos],
   )
-
   const rawSelectedFeed = useSelectedFeed() ?? allFeeds[0]
   const setSelectedFeed = useSetSelectedFeed()
   const maybeFoundIndex = allFeeds.indexOf(rawSelectedFeed)
@@ -82,18 +80,14 @@ function HomeScreenReady({
   const pagerRef = React.useRef<PagerRef>(null)
   const lastPagerReportedIndexRef = React.useRef(selectedIndex)
   React.useLayoutEffect(() => {
-    let initialIndex = selectedIndex
     // Since the pager is not a controlled component, adjust it imperatively
     // if the selected index gets out of sync with what it last reported.
     // This is supposed to only happen on the web when you use the right nav.
-    if (initialIndex !== selectedIndex) {
-      lastPagerReportedIndexRef.current = initialIndex
-      pagerRef.current?.setPage(initialIndex, 'starter-pack-initial-feed')
-    } else if (selectedIndex !== lastPagerReportedIndexRef.current) {
+    if (selectedIndex !== lastPagerReportedIndexRef.current) {
       lastPagerReportedIndexRef.current = selectedIndex
       pagerRef.current?.setPage(selectedIndex, 'desktop-sidebar-click')
     }
-  }, [selectedIndex, allFeeds])
+  }, [selectedIndex])
 
   const {hasSession} = useSession()
   const setMinimalShellMode = useSetMinimalShellMode()
