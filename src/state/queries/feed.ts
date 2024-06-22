@@ -594,6 +594,5 @@ export function precacheFeedFromGeneratorView(
   view: AppBskyFeedDefs.GeneratorView,
 ) {
   const hydratedFeed = hydrateFeedGenerator(view)
-  console.log(hydratedFeed)
   precacheFeed(queryClient, hydratedFeed)
 }

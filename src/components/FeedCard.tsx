@@ -295,7 +295,6 @@ export function createProfileFeedHref({
 }: {
   feed: AppBskyFeedDefs.GeneratorView | AppBskyGraphDefs.ListView
 }) {
-  console.log(feed.creator)
   const urip = new AtUri(feed.uri)
   const type = urip.collection === 'app.bsky.feed.generator' ? 'feed' : 'list'
   const handleOrDid = feed.creator.handle || feed.creator.did
