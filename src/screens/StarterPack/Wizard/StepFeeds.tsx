@@ -41,12 +41,15 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
   const {data: popularFeedsPages, fetchNextPage} = useGetPopularFeedsQuery({
     limit: 30,
   })
-  const popularFeeds =
-    popularFeedsPages?.pages
-      .flatMap(page => page.feeds)
-      .filter(f => !savedFeeds?.some(sf => sf?.uri === f.uri)) ?? []
+  const popularFeeds = popularFeedsPages?.pages.flatMap(p => p.feeds) ?? []
 
-  const suggestedFeeds = savedFeeds?.concat(popularFeeds)
+  const getSuggestedFeeds = () => {
+    if (savedFeeds.length === 0) {
+      return popularFeeds
+    } else {
+      return popularFeeds.filter(f => !savedFeeds.some(sf => sf.uri === f.uri))
+    }
+  }
 
   const {data: searchedFeeds, isLoading: isLoadingSearch} =
     useSearchPopularFeedsQuery({q: throttledQuery})
@@ -81,7 +84,7 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
           </View>
         </View>
         <List
-          data={query ? searchedFeeds : suggestedFeeds}
+          data={query ? searchedFeeds : getSuggestedFeeds()}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
           contentContainerStyle={{paddingTop: 6}}
