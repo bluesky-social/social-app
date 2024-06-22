@@ -69,10 +69,18 @@ export function NewskieDialog({
         <Dialog.ScrollableInner
           label={_(msg`New user info dialog`)}
           style={[{width: 'auto', maxWidth: 400, minWidth: 200}]}>
-          <View style={[a.gap_sm]}>
-            <Text style={[a.font_bold, a.text_xl]}>
-              <Trans>Say hello!</Trans>
-            </Text>
+          <View style={[a.gap_xs]}>
+            <View style={[a.align_center]}>
+              <Newskie
+                width={64}
+                height={64}
+                fill="#FFC404"
+                style={{marginTop: -10}}
+              />
+              <Text style={[a.font_bold, a.text_xl, {marginTop: -10}]}>
+                <Trans>Say hello!</Trans>
+              </Text>
+            </View>
             <Text style={[a.text_md]}>
               {profile.joinedViaStarterPack ? (
                 <Trans>
@@ -95,7 +103,7 @@ export function NewskieDialog({
                 <View
                   style={[
                     a.flex_1,
-                    a.mt_lg,
+                    a.mt_sm,
                     a.p_lg,
                     a.border,
                     a.rounded_sm,
