@@ -73,6 +73,22 @@ export type LogEvents = {
     feedType: string
     reason: 'pull-to-refresh' | 'soft-reset' | 'load-latest'
   }
+  'discover:showMore': {
+    feedContext: string
+  }
+  'discover:showLess': {
+    feedContext: string
+  }
+  'discover:clickthrough:sampled': {
+    count: number
+  }
+  'discover:engaged:sampled': {
+    count: number
+  }
+  'discover:seen:sampled': {
+    count: number
+  }
+
   'composer:gif:open': {}
   'composer:gif:select': {}
 
