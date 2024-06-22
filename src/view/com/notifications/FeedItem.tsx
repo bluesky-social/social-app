@@ -54,6 +54,7 @@ import {PreviewableUserAvatar, UserAvatar} from '../util/UserAvatar'
 import hairlineWidth = StyleSheet.hairlineWidth
 import {parseTenorGif} from '#/lib/strings/embed-player'
 import {StarterPack} from '#/components/icons/StarterPack'
+import {Notification as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 
 const MAX_AUTHORS = 5
 
@@ -301,7 +302,16 @@ let FeedItem = ({
           />
         ) : null}
         {item.type === 'starterpack-joined' ? (
-          <View style={{height: 100}} />
+          <View
+            style={[
+              a.border,
+              a.p_sm,
+              a.rounded_sm,
+              a.mt_sm,
+              t.atoms.border_contrast_low,
+            ]}>
+            <StarterPackCard starterPack={item.subject} />
+          </View>
         ) : null}
       </View>
     </Link>
