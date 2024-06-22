@@ -12,10 +12,9 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
+import {usePreferencesQuery} from '#/state/queries/preferences'
 import {RQKEY, useProfileFeedgensQuery} from '#/state/queries/profile-feedgens'
-import {useBottomBarOffset} from 'lib/hooks/useBottomBarOffset'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {EmptyState} from 'view/com/util/EmptyState'
 import {atoms as a, useTheme} from '#/alf'
@@ -52,8 +51,6 @@ export const ProfileFeedgens = React.forwardRef<
 ) {
   const {_} = useLingui()
   const t = useTheme()
-  const {isTabletOrDesktop} = useWebMediaQueries()
-  const bottomBarOffset = useBottomBarOffset(100)
   const [isPTRing, setIsPTRing] = React.useState(false)
   const opts = React.useMemo(() => ({enabled}), [enabled])
   const {
@@ -67,6 +64,7 @@ export const ProfileFeedgens = React.forwardRef<
     refetch,
   } = useProfileFeedgensQuery(did, opts)
   const isEmpty = !isFetching && !data?.pages[0]?.feeds.length
+  const {data: preferences} = usePreferencesQuery()
 
   const items = React.useMemo(() => {
     let items: any[] = []
@@ -156,17 +154,20 @@ export const ProfileFeedgens = React.forwardRef<
     } else if (item === LOADING) {
       return <FeedLoadingPlaceholder />
     }
-    return (
-      <View
-        style={[
-          (index !== 0 || isTabletOrDesktop) && a.border_t,
-          t.atoms.border_contrast_low,
-          a.px_lg,
-          a.py_lg,
-        ]}>
-        <FeedCard.Default type="feed" view={item} />
-      </View>
-    )
+    if (preferences) {
+      return (
+        <View
+          style={[
+            (index !== 0 || isWeb) && a.border_t,
+            t.atoms.border_contrast_low,
+            a.px_lg,
+            a.py_lg,
+          ]}>
+          <FeedCard.Default type="feed" view={item} />
+        </View>
+      )
+    }
+    return null
   }
 
   React.useEffect(() => {
@@ -187,9 +188,7 @@ export const ProfileFeedgens = React.forwardRef<
         refreshing={isPTRing}
         onRefresh={onRefresh}
         headerOffset={headerOffset}
-        contentContainerStyle={
-          isNative && {paddingBottom: headerOffset + bottomBarOffset}
-        }
+        contentContainerStyle={isNative && {paddingBottom: headerOffset + 100}}
         indicatorStyle={t.name === 'light' ? 'black' : 'white'}
         removeClippedSubviews={true}
         // @ts-ignore our .web version only -prf
