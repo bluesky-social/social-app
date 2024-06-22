@@ -4,6 +4,7 @@ import {
   AppBskyFeedPost,
   AppBskyFeedRepost,
   AppBskyGraphDefs,
+  AppBskyGraphStarterpack,
   AppBskyNotificationListNotifications,
   BskyAgent,
   moderateNotification,
@@ -198,10 +199,7 @@ async function fetchSubjects(
     }
   }
   for (const pack of packsChunks.flat()) {
-    if (
-      AppBskyFeedPost.isRecord(pack.record) &&
-      AppBskyFeedPost.validateRecord(pack.record).success
-    ) {
+    if (AppBskyGraphStarterpack.isRecord(pack.record)) {
       packsMap.set(pack.uri, pack)
     }
   }
