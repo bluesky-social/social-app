@@ -9,8 +9,9 @@ import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {HITSLOP_10} from 'lib/constants'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {isWeb} from 'platform/detection'
 import {atoms as a, useTheme} from '#/alf'
-import {Button} from '#/components/Button'
+import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useDialogControl} from '#/components/Dialog'
 import {Newskie} from '#/components/icons/Newskie'
@@ -115,6 +116,17 @@ export function NewskieDialog({
                 </View>
               </StarterPackCard.Link>
             ) : null}
+            <Button
+              label={_(msg`Close`)}
+              variant="solid"
+              color="secondary"
+              size="small"
+              style={[a.mt_sm, isWeb && [a.self_center, {marginLeft: 'auto'}]]}
+              onPress={() => control.close()}>
+              <ButtonText>
+                <Trans>Close</Trans>
+              </ButtonText>
+            </Button>
           </View>
         </Dialog.ScrollableInner>
       </Dialog.Outer>
