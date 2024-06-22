@@ -17,7 +17,7 @@ import {
   useRemoveFeedMutation,
 } from '#/state/queries/preferences'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {precacheFeedFromGeneratorView} from 'state/queries/feed'
+import {precacheFeedFromGeneratorView, precacheList} from 'state/queries/feed'
 import {useSession} from 'state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import * as Toast from 'view/com/util/Toast'
@@ -81,6 +81,7 @@ export function Link({
         if (type === 'feed') {
           precacheFeedFromGeneratorView(queryClient, view)
         } else {
+          precacheList(queryClient, view)
         }
       }}>
       {children}
