@@ -374,8 +374,7 @@ function Container({children}: {children: React.ReactNode}) {
             color="primary"
             size="medium"
             style={[a.mx_xl, a.mb_lg, {marginTop: 35}]}
-            onPress={() => dispatch({type: 'Next'})}
-            disabled={!state.canNext}>
+            onPress={() => dispatch({type: 'Next'})}>
             <ButtonText>
               <Trans>Next</Trans>
             </ButtonText>
@@ -548,7 +547,7 @@ function Footer({
             color="primary"
             size="small"
             onPress={onNext}
-            disabled={!state.canNext}>
+            disabled={!state.canNext || state.processing}>
             <ButtonText>{nextBtnText}</ButtonText>
             {state.processing && <Loader size="xs" style={{color: 'white'}} />}
           </Button>

@@ -105,8 +105,6 @@ function reducer(state: State, action: Action): State {
       break
   }
 
-  updatedState.canNext = !updatedState.processing
-
   return updatedState
 }
 
