@@ -8,6 +8,7 @@ import {
 } from '@atproto/api'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {
@@ -16,6 +17,7 @@ import {
   useRemoveFeedMutation,
 } from '#/state/queries/preferences'
 import {sanitizeHandle} from 'lib/strings/handles'
+import {precacheResolvedUri} from 'state/queries/resolve-uri'
 import {useSession} from 'state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import * as Toast from 'view/com/util/Toast'
@@ -67,11 +69,19 @@ export function Link({
   feed: AppBskyFeedDefs.GeneratorView | AppBskyGraphDefs.ListView
   label: string
 } & Omit<LinkProps, 'to'>) {
+  const queryClient = useQueryClient()
+
   const href = React.useMemo(() => {
     return createProfileFeedHref({feed})
   }, [feed])
+
   return (
-    <InternalLink to={href} label={label}>
+    <InternalLink
+      to={href}
+      label={label}
+      onPress={() => {
+        precacheResolvedUri(queryClient, feed.creator.handle, feed.creator.did)
+      }}>
       {children}
     </InternalLink>
   )
