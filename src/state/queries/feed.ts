@@ -588,3 +588,12 @@ function precacheList(
     list,
   )
 }
+
+export function precacheFeedFromGeneratorView(
+  queryClient: QueryClient,
+  view: AppBskyFeedDefs.GeneratorView,
+) {
+  const hydratedFeed = hydrateFeedGenerator(view)
+  console.log(hydratedFeed)
+  precacheFeed(queryClient, hydratedFeed)
+}

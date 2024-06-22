@@ -8,6 +8,7 @@ import {
 } from '@atproto/api'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {
@@ -16,6 +17,7 @@ import {
   useRemoveFeedMutation,
 } from '#/state/queries/preferences'
 import {sanitizeHandle} from 'lib/strings/handles'
+import {precacheFeedFromGeneratorView} from 'state/queries/feed'
 import {useSession} from 'state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import * as Toast from 'view/com/util/Toast'
@@ -31,10 +33,7 @@ import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 
-export function Default({
-  type,
-  view,
-}:
+type Props =
   | {
       type: 'feed'
       view: AppBskyFeedDefs.GeneratorView
@@ -42,10 +41,13 @@ export function Default({
   | {
       type: 'list'
       view: AppBskyGraphDefs.ListView
-    }) {
+    }
+
+export function Default(props: Props) {
+  const {type, view} = props
   const displayName = type === 'feed' ? view.displayName : view.name
   return (
-    <Link feed={view}>
+    <Link label={displayName} {...props}>
       <Outer>
         <Header>
           <Avatar src={view.avatar} />
@@ -60,15 +62,30 @@ export function Default({
 }
 
 export function Link({
+  type,
+  view,
+  label,
   children,
-  feed,
-}: {
-  feed: AppBskyFeedDefs.GeneratorView | AppBskyGraphDefs.ListView
-} & Omit<LinkProps, 'to'>) {
+}: Props & Omit<LinkProps, 'to'>) {
+  const queryClient = useQueryClient()
+
   const href = React.useMemo(() => {
-    return createProfileFeedHref({feed})
-  }, [feed])
-  return <InternalLink to={href}>{children}</InternalLink>
+    return createProfileFeedHref({feed: view})
+  }, [view])
+
+  return (
+    <InternalLink
+      to={href}
+      label={label}
+      onPress={() => {
+        if (type === 'feed') {
+          precacheFeedFromGeneratorView(queryClient, view)
+        } else {
+        }
+      }}>
+      {children}
+    </InternalLink>
+  )
 }
 
 export function Outer({children}: {children: React.ReactNode}) {
@@ -277,6 +294,7 @@ export function createProfileFeedHref({
 }: {
   feed: AppBskyFeedDefs.GeneratorView | AppBskyGraphDefs.ListView
 }) {
+  console.log(feed.creator)
   const urip = new AtUri(feed.uri)
   const type = urip.collection === 'app.bsky.feed.generator' ? 'feed' : 'list'
   const handleOrDid = feed.creator.handle || feed.creator.did
