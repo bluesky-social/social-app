@@ -69,7 +69,7 @@ export function NewskieDialog({
         <Dialog.ScrollableInner
           label={_(msg`New user info dialog`)}
           style={[{width: 'auto', maxWidth: 400, minWidth: 200}]}>
-          <View style={[a.gap_xs]}>
+          <View style={[a.gap_sm]}>
             <View style={[a.align_center]}>
               <Newskie
                 width={64}
@@ -81,7 +81,7 @@ export function NewskieDialog({
                 <Trans>Say hello!</Trans>
               </Text>
             </View>
-            <Text style={[a.text_md]}>
+            <Text style={[a.text_md, a.text_center, a.leading_tight]}>
               {profile.joinedViaStarterPack ? (
                 <Trans>
                   {profileName} joined Bluesky using a starter pack{' '}
