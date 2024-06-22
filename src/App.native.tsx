@@ -46,11 +46,13 @@ import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
 import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
+import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
 import {TestCtrls} from '#/view/com/testing/TestCtrls'
 import * as Toast from '#/view/com/util/Toast'
 import {Shell} from '#/view/shell'
 import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
+import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {Splash} from '#/Splash'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
@@ -67,6 +69,7 @@ function InnerApp() {
   const {_} = useLingui()
 
   useIntentHandler()
+  const hasCheckedReferrer = useStarterPackEntry()
 
   // init
   useEffect(() => {
@@ -98,7 +101,7 @@ function InnerApp() {
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <Alf theme={theme}>
         <ThemeProvider theme={theme}>
-          <Splash isReady={isReady}>
+          <Splash isReady={isReady && hasCheckedReferrer}>
             <RootSiblingParent>
               <React.Fragment
                 // Resets the entire tree below when it changes:
@@ -164,7 +167,9 @@ function App() {
                     <LightboxStateProvider>
                       <I18nProvider>
                         <PortalProvider>
-                          <InnerApp />
+                          <StarterPackProvider>
+                            <InnerApp />
+                          </StarterPackProvider>
                         </PortalProvider>
                       </I18nProvider>
                     </LightboxStateProvider>

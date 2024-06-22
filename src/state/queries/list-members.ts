@@ -15,7 +15,7 @@ type RQPageParam = string | undefined
 const RQKEY_ROOT = 'list-members'
 export const RQKEY = (uri: string) => [RQKEY_ROOT, uri]
 
-export function useListMembersQuery(uri: string) {
+export function useListMembersQuery(uri?: string, limit: number = PAGE_SIZE) {
   const agent = useAgent()
   return useInfiniteQuery<
     AppBskyGraphGetList.OutputSchema,
@@ -25,18 +25,29 @@ export function useListMembersQuery(uri: string) {
     RQPageParam
   >({
     staleTime: STALE.MINUTES.ONE,
-    queryKey: RQKEY(uri),
+    queryKey: RQKEY(uri ?? ''),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       const res = await agent.app.bsky.graph.getList({
-        list: uri,
-        limit: PAGE_SIZE,
+        list: uri!, // the enabled flag will prevent this from running until uri is set
+        limit,
         cursor: pageParam,
       })
       return res.data
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
+    enabled: Boolean(uri),
   })
+}
+
+export async function invalidateListMembersQuery({
+  queryClient,
+  uri,
+}: {
+  queryClient: QueryClient
+  uri: string
+}) {
+  await queryClient.invalidateQueries({queryKey: RQKEY(uri)})
 }
 
 export function* findAllProfilesInQueryData(

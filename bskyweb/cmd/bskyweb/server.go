@@ -223,6 +223,10 @@ func serve(cctx *cli.Context) error {
 	e.GET("/profile/:handleOrDID/post/:rkey/liked-by", server.WebGeneric)
 	e.GET("/profile/:handleOrDID/post/:rkey/reposted-by", server.WebGeneric)
 
+    // starter packs
+	e.GET("/starter-pack/:handleOrDID/:rkey", server.WebGeneric)
+	e.GET("/start/:handleOrDID/:rkey", server.WebGeneric)
+
 	if linkHost != "" {
 		linkUrl, err := url.Parse(linkHost)
 		if err != nil {

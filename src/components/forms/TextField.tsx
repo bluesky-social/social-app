@@ -140,6 +140,7 @@ export function createInput(Component: typeof TextInput) {
     onChangeText,
     isInvalid,
     inputRef,
+    style,
     ...rest
   }: InputProps) {
     const t = useTheme()
@@ -206,6 +207,7 @@ export function createInput(Component: typeof TextInput) {
             android({
               paddingBottom: 16,
             }),
+            style,
           ]}
         />
 

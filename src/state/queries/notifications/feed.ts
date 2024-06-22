@@ -155,8 +155,10 @@ export function* findAllPostsInQueryData(
 
     for (const page of queryData?.pages) {
       for (const item of page.items) {
-        if (item.subject && didOrHandleUriMatches(atUri, item.subject)) {
-          yield item.subject
+        if (item.type !== 'starterpack-joined') {
+          if (item.subject && didOrHandleUriMatches(atUri, item.subject)) {
+            yield item.subject
+          }
         }
 
         const quotedPost = getEmbeddedPost(item.subject?.embed)
@@ -181,7 +183,10 @@ export function* findAllProfilesInQueryData(
     }
     for (const page of queryData?.pages) {
       for (const item of page.items) {
-        if (item.subject?.author.did === did) {
+        if (
+          item.type !== 'starterpack-joined' &&
+          item.subject?.author.did === did
+        ) {
           yield item.subject.author
         }
         const quotedPost = getEmbeddedPost(item.subject?.embed)

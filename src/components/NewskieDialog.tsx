@@ -9,11 +9,13 @@ import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {HITSLOP_10} from 'lib/constants'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {atoms as a} from '#/alf'
-import {Button} from '#/components/Button'
+import {isWeb} from 'platform/detection'
+import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useDialogControl} from '#/components/Dialog'
 import {Newskie} from '#/components/icons/Newskie'
+import * as StarterPackCard from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
 
 export function NewskieDialog({
@@ -24,6 +26,7 @@ export function NewskieDialog({
   disabled?: boolean
 }) {
   const {_} = useLingui()
+  const t = useTheme()
   const moderationOpts = useModerationOpts()
   const control = useDialogControl()
   const profileName = React.useMemo(() => {
@@ -68,15 +71,62 @@ export function NewskieDialog({
           label={_(msg`New user info dialog`)}
           style={[{width: 'auto', maxWidth: 400, minWidth: 200}]}>
           <View style={[a.gap_sm]}>
-            <Text style={[a.font_bold, a.text_xl]}>
-              <Trans>Say hello!</Trans>
+            <View style={[a.align_center]}>
+              <Newskie
+                width={64}
+                height={64}
+                fill="#FFC404"
+                style={{marginTop: -10}}
+              />
+              <Text style={[a.font_bold, a.text_xl, {marginTop: -10}]}>
+                <Trans>Say hello!</Trans>
+              </Text>
+            </View>
+            <Text style={[a.text_md, a.text_center, a.leading_tight]}>
+              {profile.joinedViaStarterPack ? (
+                <Trans>
+                  {profileName} joined Bluesky using a starter pack{' '}
+                  {timeAgo(createdAt, now, {format: 'long'})} ago
+                </Trans>
+              ) : (
+                <Trans>
+                  {profileName} joined Bluesky{' '}
+                  {timeAgo(createdAt, now, {format: 'long'})} ago
+                </Trans>
+              )}
             </Text>
-            <Text style={[a.text_md]}>
-              <Trans>
-                {profileName} joined Bluesky{' '}
-                {timeAgo(createdAt, now, {format: 'long'})} ago
-              </Trans>
-            </Text>
+            {profile.joinedViaStarterPack ? (
+              <StarterPackCard.Link
+                starterPack={profile.joinedViaStarterPack}
+                onPress={() => {
+                  control.close()
+                }}>
+                <View
+                  style={[
+                    a.flex_1,
+                    a.mt_sm,
+                    a.p_lg,
+                    a.border,
+                    a.rounded_sm,
+                    t.atoms.border_contrast_low,
+                  ]}>
+                  <StarterPackCard.Card
+                    starterPack={profile.joinedViaStarterPack}
+                  />
+                </View>
+              </StarterPackCard.Link>
+            ) : null}
+            <Button
+              label={_(msg`Close`)}
+              variant="solid"
+              color="secondary"
+              size="small"
+              style={[a.mt_sm, isWeb && [a.self_center, {marginLeft: 'auto'}]]}
+              onPress={() => control.close()}>
+              <ButtonText>
+                <Trans>Close</Trans>
+              </ButtonText>
+            </Button>
           </View>
         </Dialog.ScrollableInner>
       </Dialog.Outer>
