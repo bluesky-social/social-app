@@ -560,9 +560,9 @@ function Footer({
 
 function getName(item: AppBskyActorDefs.ProfileViewBasic | GeneratorView) {
   if (typeof item.displayName === 'string') {
-    return enforceLen(sanitizeDisplayName(item.displayName), 16, true)
+    return enforceLen(sanitizeDisplayName(item.displayName), 28, true)
   } else if (typeof item.handle === 'string') {
-    return enforceLen(sanitizeHandle(item.handle), 16, true)
+    return enforceLen(sanitizeHandle(item.handle), 28, true)
   }
   return ''
 }
