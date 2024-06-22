@@ -62,7 +62,9 @@ export function Default({
 export function Link({
   children,
   feed,
+  label,
 }: {
+  feed: AppBskyFeedDefs.GeneratorView | AppBskyGraphDefs.ListView
   label: string
 } & Omit<LinkProps, 'to'>) {
   const href = React.useMemo(() => {
