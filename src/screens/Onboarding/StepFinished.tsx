@@ -110,8 +110,8 @@ export function StepFinished() {
 
           // Any starter pack feeds will be pinned _after_ the defaults
           if (starterPack && starterPack.feeds?.length) {
-            feedsToSave.push(
-              ...starterPack.feeds.map(f => ({
+            feedsToSave.concat(
+              starterPack.feeds.map(f => ({
                 type: 'feed',
                 value: f.uri,
                 pinned: true,
