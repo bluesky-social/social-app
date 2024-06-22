@@ -184,14 +184,14 @@ function WizardInner({
       nextBtn: _(msg`Next`),
     },
     Profiles: {
-      header: _(msg`People`),
+      header: _(msg`Choose People`),
       nextBtn: _(msg`Next`),
       subtitle: _(
         msg`Add people to your starter pack that you think others will enjoy following`,
       ),
     },
     Feeds: {
-      header: _(msg`Feeds`),
+      header: _(msg`Choose Feeds`),
       nextBtn: state.feeds.length === 0 ? _(msg`Skip`) : _(msg`Finish`),
       subtitle: _(msg`Some subtitle`),
     },
