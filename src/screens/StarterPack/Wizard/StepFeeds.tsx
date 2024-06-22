@@ -57,6 +57,7 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
     return (
       <WizardFeedCard
         generator={item}
+        btnType="checkbox"
         state={state}
         dispatch={dispatch}
         moderationOpts={moderationOpts}

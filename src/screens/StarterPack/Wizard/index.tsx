@@ -476,13 +476,10 @@ function Footer({
             </Trans>
           ) : items.length === 2 ? (
             <Trans>
-              <Text style={[a.font_bold, textStyles]}>
-                {getName(items[initialNamesIndex])}{' '}
-              </Text>
-              and
+              <Text style={[a.font_bold, textStyles]}>You</Text> and
               <Text> </Text>
               <Text style={[a.font_bold, textStyles]}>
-                {getName(items[state.currentStep === 'Profiles' ? 0 : 1])}{' '}
+                {getName(items[initialNamesIndex])}{' '}
               </Text>
               are included in your starter pack
             </Trans>
