@@ -578,7 +578,7 @@ function precacheFeed(queryClient: QueryClient, hydratedFeed: FeedSourceInfo) {
   )
 }
 
-function precacheList(
+export function precacheList(
   queryClient: QueryClient,
   list: AppBskyGraphDefs.ListView,
 ) {
@@ -587,4 +587,12 @@ function precacheList(
     listQueryKey(list.uri),
     list,
   )
+}
+
+export function precacheFeedFromGeneratorView(
+  queryClient: QueryClient,
+  view: AppBskyFeedDefs.GeneratorView,
+) {
+  const hydratedFeed = hydrateFeedGenerator(view)
+  precacheFeed(queryClient, hydratedFeed)
 }

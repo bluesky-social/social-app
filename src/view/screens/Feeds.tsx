@@ -627,7 +627,7 @@ function FollowingFeed() {
             fill={t.palette.white}
           />
         </View>
-        <FeedCard.TitleAndByline title={_(msg`Following`)} />
+        <FeedCard.TitleAndByline title={_(msg`Following`)} type="feed" />
       </FeedCard.Header>
     </View>
   )
@@ -644,7 +644,7 @@ function SavedFeed({
     savedFeed.type === 'feed' ? savedFeed.view.displayName : savedFeed.view.name
 
   return (
-    <FeedCard.Link testID={`saved-feed-${feed.displayName}`} feed={feed}>
+    <FeedCard.Link testID={`saved-feed-${feed.displayName}`} {...savedFeed}>
       {({hovered, pressed}) => (
         <View
           style={[
@@ -657,7 +657,10 @@ function SavedFeed({
           ]}>
           <FeedCard.Header>
             <FeedCard.Avatar src={feed.avatar} size={28} />
-            <FeedCard.TitleAndByline title={displayName} />
+            <FeedCard.TitleAndByline
+              title={displayName}
+              type={savedFeed.type}
+            />
 
             <ChevronRight size="sm" fill={t.atoms.text_contrast_low.color} />
           </FeedCard.Header>

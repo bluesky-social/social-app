@@ -8,6 +8,7 @@ import {
 } from '@atproto/api'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {
@@ -16,6 +17,7 @@ import {
   useRemoveFeedMutation,
 } from '#/state/queries/preferences'
 import {sanitizeHandle} from 'lib/strings/handles'
+import {precacheFeedFromGeneratorView, precacheList} from 'state/queries/feed'
 import {useSession} from 'state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import * as Toast from 'view/com/util/Toast'
@@ -31,10 +33,7 @@ import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 
-export function Default({
-  type,
-  view,
-}:
+type Props =
   | {
       type: 'feed'
       view: AppBskyFeedDefs.GeneratorView
@@ -42,15 +41,24 @@ export function Default({
   | {
       type: 'list'
       view: AppBskyGraphDefs.ListView
-    }) {
+    }
+
+export function Default(props: Props) {
+  const {type, view} = props
   const displayName = type === 'feed' ? view.displayName : view.name
+  const purpose = type === 'list' ? view.purpose : undefined
   return (
-    <Link feed={view}>
+    <Link label={displayName} {...props}>
       <Outer>
         <Header>
           <Avatar src={view.avatar} />
-          <TitleAndByline title={displayName} creator={view.creator} />
-          <Action uri={view.uri} pin />
+          <TitleAndByline
+            title={displayName}
+            creator={view.creator}
+            type={type}
+            purpose={purpose}
+          />
+          <Action uri={view.uri} pin type={type} purpose={purpose} />
         </Header>
         <Description description={view.description} />
         {type === 'feed' && <Likes count={view.likeCount || 0} />}
@@ -60,15 +68,31 @@ export function Default({
 }
 
 export function Link({
+  type,
+  view,
+  label,
   children,
-  feed,
-}: {
-  feed: AppBskyFeedDefs.GeneratorView | AppBskyGraphDefs.ListView
-} & Omit<LinkProps, 'to'>) {
+}: Props & Omit<LinkProps, 'to'>) {
+  const queryClient = useQueryClient()
+
   const href = React.useMemo(() => {
-    return createProfileFeedHref({feed})
-  }, [feed])
-  return <InternalLink to={href}>{children}</InternalLink>
+    return createProfileFeedHref({feed: view})
+  }, [view])
+
+  return (
+    <InternalLink
+      to={href}
+      label={label}
+      onPress={() => {
+        if (type === 'feed') {
+          precacheFeedFromGeneratorView(queryClient, view)
+        } else {
+          precacheList(queryClient, view)
+        }
+      }}>
+      {children}
+    </InternalLink>
+  )
 }
 
 export function Outer({children}: {children: React.ReactNode}) {
@@ -108,9 +132,13 @@ export function AvatarPlaceholder({size = 40}: Omit<AvatarProps, 'src'>) {
 export function TitleAndByline({
   title,
   creator,
+  type,
+  purpose,
 }: {
   title: string
   creator?: AppBskyActorDefs.ProfileViewBasic
+  type: 'feed' | 'list'
+  purpose?: AppBskyGraphDefs.ListView['purpose']
 }) {
   const t = useTheme()
 
@@ -123,7 +151,15 @@ export function TitleAndByline({
         <Text
           style={[a.leading_snug, t.atoms.text_contrast_medium]}
           numberOfLines={1}>
-          <Trans>Feed by {sanitizeHandle(creator.handle, '@')}</Trans>
+          {type === 'list' && purpose === 'app.bsky.graph.defs#curatelist' ? (
+            <Trans>List by {sanitizeHandle(creator.handle, '@')}</Trans>
+          ) : type === 'list' && purpose === 'app.bsky.graph.defs#modlist' ? (
+            <Trans>
+              Moderation list by {sanitizeHandle(creator.handle, '@')}
+            </Trans>
+          ) : (
+            <Trans>Feed by {sanitizeHandle(creator.handle, '@')}</Trans>
+          )}
         </Text>
       )}
     </View>
@@ -184,13 +220,31 @@ export function Likes({count}: {count: number}) {
   )
 }
 
-export function Action({uri, pin}: {uri: string; pin?: boolean}) {
+export function Action({
+  uri,
+  pin,
+  type,
+  purpose,
+}: {
+  uri: string
+  pin?: boolean
+  type: 'feed' | 'list'
+  purpose?: AppBskyGraphDefs.ListView['purpose']
+}) {
   const {hasSession} = useSession()
-  if (!hasSession) return null
-  return <ActionInner uri={uri} pin={pin} />
+  if (!hasSession || purpose !== 'app.bsky.graph.defs#curatelist') return null
+  return <ActionInner uri={uri} pin={pin} type={type} />
 }
 
-function ActionInner({uri, pin}: {uri: string; pin?: boolean}) {
+function ActionInner({
+  uri,
+  pin,
+  type,
+}: {
+  uri: string
+  pin?: boolean
+  type: 'feed' | 'list'
+}) {
   const {_} = useLingui()
   const {data: preferences} = usePreferencesQuery()
   const {isPending: isAddSavedFeedPending, mutateAsync: saveFeeds} =
@@ -198,9 +252,7 @@ function ActionInner({uri, pin}: {uri: string; pin?: boolean}) {
   const {isPending: isRemovePending, mutateAsync: removeFeed} =
     useRemoveFeedMutation()
   const savedFeedConfig = React.useMemo(() => {
-    return preferences?.savedFeeds?.find(
-      feed => feed.type === 'feed' && feed.value === uri,
-    )
+    return preferences?.savedFeeds?.find(feed => feed.value === uri)
   }, [preferences?.savedFeeds, uri])
   const removePromptControl = Prompt.usePromptControl()
   const isPending = isAddSavedFeedPending || isRemovePending
@@ -216,7 +268,7 @@ function ActionInner({uri, pin}: {uri: string; pin?: boolean}) {
         } else {
           await saveFeeds([
             {
-              type: 'feed',
+              type,
               value: uri,
               pinned: pin || false,
             },
@@ -228,7 +280,7 @@ function ActionInner({uri, pin}: {uri: string; pin?: boolean}) {
         Toast.show(_(msg`Failed to update feeds`))
       }
     },
-    [_, pin, saveFeeds, removeFeed, uri, savedFeedConfig],
+    [_, pin, saveFeeds, removeFeed, uri, savedFeedConfig, type],
   )
 
   const onPrompRemoveFeed = React.useCallback(
