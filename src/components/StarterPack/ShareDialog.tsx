@@ -120,18 +120,18 @@ function ShareDialogInner({
                 isWeb && [a.gap_sm, a.flex_row_reverse, {marginLeft: 'auto'}],
               ]}>
               <Button
-                label="Share link"
+                label={isWeb ? _(msg`Copy link`) : _(msg`Share link`)}
                 variant="solid"
                 color="secondary"
                 size="small"
                 style={[isWeb && a.self_center]}
                 onPress={onShareLink}>
                 <ButtonText>
-                  {isWeb ? <Trans>Copy Link</Trans> : <Trans>Share Link</Trans>}
+                  {isWeb ? <Trans>Copy Link</Trans> : <Trans>Share link</Trans>}
                 </ButtonText>
               </Button>
               <Button
-                label="Create QR code"
+                label={_(msg`Share QR code`)}
                 variant="solid"
                 color="secondary"
                 size="small"
@@ -142,7 +142,7 @@ function ShareDialogInner({
                   })
                 }}>
                 <ButtonText>
-                  <Trans>Create QR code</Trans>
+                  <Trans>Share QR code</Trans>
                 </ButtonText>
               </Button>
               {isNative && (
