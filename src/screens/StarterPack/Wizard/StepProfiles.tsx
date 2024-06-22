@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import {ListRenderItemInfo, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {AppBskyActorDefs, ModerationOpts} from '@atproto/api'
+import {Trans} from '@lingui/macro'
 
 import {useA11y} from '#/state/a11y'
 import {isNative} from 'platform/detection'
@@ -14,6 +15,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
 import {ScreenTransition} from '#/components/StarterPack/Wizard/ScreenTransition'
 import {WizardProfileCard} from '#/components/StarterPack/Wizard/WizardListCard'
+import {Text} from '#/components/Typography'
 
 function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic) {
   return item?.did ?? ''
@@ -34,7 +36,8 @@ export function StepProfiles({
   })
   const topFollowers = topPages?.pages.flatMap(p => p.actors)
 
-  const {data: results} = useActorAutocompleteQuery(query, true, 12)
+  const {data: results, isLoading: isLoadingResults} =
+    useActorAutocompleteQuery(query, true, 12)
 
   const renderItem = ({
     item,
@@ -75,8 +78,21 @@ export function StepProfiles({
         }
         onEndReachedThreshold={isNative ? 2 : 0.25}
         ListEmptyComponent={
-          <View style={[a.flex_1, a.align_center, a.mt_lg]}>
-            <Loader size="lg" />
+          <View style={[a.flex_1, a.align_center, a.mt_lg, a.px_lg]}>
+            {isLoadingResults ? (
+              <Loader size="lg" />
+            ) : (
+              <Text
+                style={[
+                  a.font_bold,
+                  a.text_lg,
+                  a.text_center,
+                  a.mt_lg,
+                  a.leading_snug,
+                ]}>
+                <Trans>Nobody was found. Try searching for someone else.</Trans>
+              </Text>
+            )}
           </View>
         }
       />

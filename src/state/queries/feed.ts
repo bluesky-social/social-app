@@ -9,6 +9,7 @@ import {
 } from '@atproto/api'
 import {
   InfiniteData,
+  keepPreviousData,
   QueryClient,
   QueryKey,
   useInfiniteQuery,
@@ -312,6 +313,22 @@ export function useSearchPopularFeedsMutation() {
 
       return res.data.feeds
     },
+  })
+}
+
+export function useSearchPopularFeedsQuery({q}: {q: string}) {
+  const agent = useAgent()
+  return useQuery({
+    queryKey: ['searchPopularFeeds', q],
+    queryFn: async () => {
+      const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
+        limit: 15,
+        query: q,
+      })
+
+      return res.data.feeds
+    },
+    placeholderData: keepPreviousData,
   })
 }
 

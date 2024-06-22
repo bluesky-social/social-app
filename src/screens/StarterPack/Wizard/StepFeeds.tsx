@@ -2,22 +2,24 @@ import React, {useState} from 'react'
 import {ListRenderItemInfo, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {AppBskyFeedDefs, ModerationOpts} from '@atproto/api'
-import debounce from 'lodash.debounce'
+import {Trans} from '@lingui/macro'
 
 import {useA11y} from '#/state/a11y'
 import {DISCOVER_FEED_URI} from 'lib/constants'
 import {
   useGetPopularFeedsQuery,
   useSavedFeeds,
-  useSearchPopularFeedsMutation,
+  useSearchPopularFeedsQuery,
 } from 'state/queries/feed'
 import {SearchInput} from 'view/com/util/forms/SearchInput'
 import {List} from 'view/com/util/List'
 import {useWizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a, useTheme} from '#/alf'
+import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {Loader} from '#/components/Loader'
 import {ScreenTransition} from '#/components/StarterPack/Wizard/ScreenTransition'
 import {WizardFeedCard} from '#/components/StarterPack/Wizard/WizardListCard'
+import {Text} from '#/components/Typography'
 
 function keyExtractor(item: AppBskyFeedDefs.GeneratorView) {
   return item.uri
@@ -27,6 +29,7 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
   const t = useTheme()
   const [state, dispatch] = useWizardState()
   const [query, setQuery] = useState('')
+  const throttledQuery = useThrottledValue(query, 500)
   const {screenReaderEnabled} = useA11y()
 
   const {data: savedFeedsAndLists} = useSavedFeeds()
@@ -44,25 +47,8 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
 
   const suggestedFeeds = savedFeeds?.concat(popularFeeds)
 
-  const {
-    data: searchedFeeds,
-    mutate: search,
-    reset: resetSearch,
-  } = useSearchPopularFeedsMutation()
-
-  const debouncedSearch = React.useMemo(
-    () => debounce(q => search(q), 500), // debounce for 500ms
-    [search],
-  )
-
-  const onChangeQuery = (text: string) => {
-    setQuery(text)
-    if (text.length > 1) {
-      debouncedSearch(text)
-    } else {
-      resetSearch()
-    }
-  }
+  const {data: searchedFeeds, isLoading: isLoadingSearch} =
+    useSearchPopularFeedsQuery({q: throttledQuery})
 
   const renderItem = ({
     item,
@@ -83,7 +69,7 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
         <View style={[a.my_sm, a.px_md, {height: 40}]}>
           <SearchInput
             query={query}
-            onChangeQuery={onChangeQuery}
+            onChangeQuery={t => setQuery(t)}
             onPressCancelSearch={() => setQuery('')}
             onSubmitQuery={() => {}}
           />
@@ -104,8 +90,21 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
         sideBorders={false}
         style={{flex: 1}}
         ListEmptyComponent={
-          <View style={[a.flex_1, a.align_center, a.mt_lg]}>
-            <Loader size="lg" />
+          <View style={[a.flex_1, a.align_center, a.mt_lg, a.px_lg]}>
+            {isLoadingSearch ? (
+              <Loader size="lg" />
+            ) : (
+              <Text
+                style={[
+                  a.font_bold,
+                  a.text_lg,
+                  a.text_center,
+                  a.mt_lg,
+                  a.leading_snug,
+                ]}>
+                <Trans>No feeds found. Try searching for something else.</Trans>
+              </Text>
+            )}
           </View>
         }
       />
