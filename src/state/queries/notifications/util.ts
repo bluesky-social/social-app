@@ -13,7 +13,6 @@ import {
 import {QueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
 
-import {precacheStarterPack} from 'state/queries/starter-packs'
 import {precacheProfile} from '../profile'
 import {FeedNotification, FeedPage, NotificationType} from './types'
 
@@ -67,9 +66,6 @@ export async function fetchPage({
           notif.subject = subjects.starterPacks.get(
             notif.notification.reasonSubject,
           )
-          if (notif.subject) {
-            precacheStarterPack(queryClient, notif.subject)
-          }
         } else {
           notif.subject = subjects.posts.get(notif.subjectUri)
           if (notif.subject) {
