@@ -117,7 +117,6 @@ export function useGenerateStarterPackMutation({
       return await agent.app.bsky.graph.starterpack.create(
         {
           repo: agent.session!.did,
-          validate: false,
         },
         {
           name: starterPackName,

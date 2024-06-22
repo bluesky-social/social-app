@@ -53,9 +53,9 @@ export function useStarterPackQuery({
       if (!uri) {
         uri = `at://${did}/app.bsky.graph.starterpack/${rkey}`
       } else if (uri && !uri.startsWith('at://')) {
-        // TODO remove this assertion
         uri = httpStarterPackUriToAtUri(uri) as string
       }
+
       const res = await agent.app.bsky.graph.getStarterPack({
         starterPack: uri,
       })
@@ -106,7 +106,6 @@ export function useCreateStarterPackMutation({
       return await agent.app.bsky.graph.starterpack.create(
         {
           repo: agent.session?.did,
-          validate: false, // TODO remove
         },
         {
           ...params,
@@ -215,7 +214,6 @@ export function useEditStarterPackMutation({
           createdAt: currentStarterPack.record.createdAt,
           updatedAt: new Date().toISOString(),
         },
-        validate: false, // TODO remove!
       })
     },
     onSuccess: async (_, {currentStarterPack}) => {
