@@ -2,6 +2,7 @@ import React from 'react'
 import {View} from 'react-native'
 import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 import {SavedFeed} from '@atproto/api/dist/client/types/app/bsky/actor/defs'
+import {TID} from '@atproto/common-web'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -9,7 +10,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {
   BSKY_APP_ACCOUNT_DID,
-  DISCOVER_FEED_URI,
+  DISCOVER_SAVED_FEED,
   TIMELINE_SAVED_FEED,
 } from '#/lib/constants'
 import {logEvent} from '#/lib/statsig/statsig'
@@ -96,15 +97,14 @@ export function StepFinished() {
           await agent.setInterestsPref({tags: selectedInterests})
 
           // Default feeds that every user should have pinned when landing in the app
-          const feedsToSave: Pick<SavedFeed, 'value' | 'type' | 'pinned'>[] = [
+          const feedsToSave: SavedFeed[] = [
             {
-              type: 'feed',
-              value: DISCOVER_FEED_URI,
-              pinned: true,
+              ...DISCOVER_SAVED_FEED,
+              id: TID.nextStr(),
             },
             {
               ...TIMELINE_SAVED_FEED,
-              pinned: true,
+              id: TID.nextStr(),
             },
           ]
 
@@ -115,11 +115,12 @@ export function StepFinished() {
                 type: 'feed',
                 value: f.uri,
                 pinned: true,
+                id: TID.nextStr(),
               })),
             )
           }
 
-          await agent.addSavedFeeds(feedsToSave)
+          await agent.overwriteSavedFeeds(feedsToSave)
         })(),
         (async () => {
           const {imageUri, imageMime} = profileStepResults
