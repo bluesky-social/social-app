@@ -1,12 +1,17 @@
 import React from 'react'
 import {View} from 'react-native'
 import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
+import {SavedFeed} from '@atproto/api/dist/client/types/app/bsky/actor/defs'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
-import {BSKY_APP_ACCOUNT_DID} from '#/lib/constants'
+import {
+  BSKY_APP_ACCOUNT_DID,
+  DISCOVER_FEED_URI,
+  TIMELINE_SAVED_FEED,
+} from '#/lib/constants'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {preferencesQueryKey} from '#/state/queries/preferences'
@@ -89,19 +94,32 @@ export function StepFinished() {
         (async () => {
           // Interests need to get saved first, then we can write the feeds to prefs
           await agent.setInterestsPref({tags: selectedInterests})
-          if (starterPack) {
-            if (starterPack.feeds?.length) {
-              await agent.addSavedFeeds(
-                starterPack.feeds.map(f => ({
-                  type: 'feed',
-                  value: f.uri,
-                  pinned: true,
-                })),
-              )
-            }
 
-            setActiveStarterPack(undefined)
+          // Default feeds that every user should have pinned when landing in the app
+          const feedsToSave: Pick<SavedFeed, 'value' | 'type' | 'pinned'>[] = [
+            {
+              type: 'feed',
+              value: DISCOVER_FEED_URI,
+              pinned: true,
+            },
+            {
+              ...TIMELINE_SAVED_FEED,
+              pinned: true,
+            },
+          ]
+
+          // Any starter pack feeds will be pinned _after_ the defaults
+          if (starterPack && starterPack.feeds?.length) {
+            feedsToSave.push(
+              ...starterPack.feeds.map(f => ({
+                type: 'feed',
+                value: f.uri,
+                pinned: true,
+              })),
+            )
           }
+
+          await agent.addSavedFeeds(feedsToSave)
         })(),
         (async () => {
           const {imageUri, imageMime} = profileStepResults
@@ -161,6 +179,7 @@ export function StepFinished() {
     })
 
     setSaving(false)
+    setActiveStarterPack(undefined)
     setHasCheckedForStarterPack(true)
     dispatch({type: 'finish'})
     onboardDispatch({type: 'finish'})
