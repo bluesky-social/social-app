@@ -147,7 +147,7 @@ export function Provider({
     }
   }
 
-  const [state, dispatch] = React.useReducer(reducer, createInitialState())
+  const [state, dispatch] = React.useReducer(reducer, null, createInitialState)
 
   return (
     <StateContext.Provider value={[state, dispatch]}>
