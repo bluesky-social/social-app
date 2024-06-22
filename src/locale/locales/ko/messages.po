@@ -1709,16 +1709,16 @@ msgstr "예: 반복적으로 광고 답글을 다는 계정."
 msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr "각 코드는 한 번만 사용할 수 있습니다. 주기적으로 더 많은 초대 코드를 받게 됩니다."
 
-#: src/view/com/lists/ListMembers.tsx:149
-msgctxt "action"
-msgid "Edit"
-msgstr "편집"
-
 #: src/screens/StarterPack/StarterPackScreen.tsx:438
 #: src/screens/StarterPack/Wizard/index.tsx:522
 #: src/screens/StarterPack/Wizard/index.tsx:529
 #: src/view/screens/Feeds.tsx:385
 #: src/view/screens/Feeds.tsx:453
+msgid "Edit"
+msgstr "편집"
+
+#: src/view/com/lists/ListMembers.tsx:149
+msgctxt "action"
 msgid "Edit"
 msgstr "편집"
 
@@ -5023,11 +5023,6 @@ msgstr "성행위 또는 선정적인 노출."
 msgid "Sexually Suggestive"
 msgstr "외설적"
 
-#: src/view/com/lightbox/Lightbox.tsx:142
-msgctxt "action"
-msgid "Share"
-msgstr "공유"
-
 #: src/components/StarterPack/QrCodeDialog.tsx:180
 #: src/screens/StarterPack/StarterPackScreen.tsx:303
 #: src/screens/StarterPack/StarterPackScreen.tsx:458
@@ -5037,6 +5032,11 @@ msgstr "공유"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:316
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:304
 #: src/view/screens/ProfileList.tsx:428
+msgid "Share"
+msgstr "공유"
+
+#: src/view/com/lightbox/Lightbox.tsx:142
+msgctxt "action"
 msgid "Share"
 msgstr "공유"
 
