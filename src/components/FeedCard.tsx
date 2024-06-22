@@ -52,7 +52,9 @@ export function Default(props: Props) {
         <Header>
           <Avatar src={view.avatar} />
           <TitleAndByline title={displayName} creator={view.creator} />
-          <Action uri={view.uri} pin />
+          {type === 'list' && view.purpose !== 'app.bsky.graph.defs#modlist' ? (
+            <Action uri={view.uri} pin />
+          ) : null}
         </Header>
         <Description description={view.description} />
         {type === 'feed' && <Likes count={view.likeCount || 0} />}
