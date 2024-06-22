@@ -140,6 +140,7 @@ export function createInput(Component: typeof TextInput) {
     onChangeText,
     isInvalid,
     inputRef,
+    style,
     ...rest
   }: InputProps) {
     const t = useTheme()
@@ -196,9 +197,17 @@ export function createInput(Component: typeof TextInput) {
               textAlignVertical: rest.multiline ? 'top' : undefined,
               minHeight: rest.multiline ? 80 : undefined,
             },
+            // fix for autofill styles covering border
+            web({
+              paddingTop: 12,
+              paddingBottom: 12,
+              marginTop: 2,
+              marginBottom: 2,
+            }),
             android({
               paddingBottom: 16,
             }),
+            style,
           ]}
         />
 

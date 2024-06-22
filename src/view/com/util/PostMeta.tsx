@@ -3,14 +3,14 @@ import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
 import {AppBskyActorDefs, ModerationDecision, ModerationUI} from '@atproto/api'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {precacheProfile, usePrefetchProfileQuery} from '#/state/queries/profile'
+import {precacheProfile} from '#/state/queries/profile'
 import {usePalette} from 'lib/hooks/usePalette'
 import {makeProfileLink} from 'lib/routes/links'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {niceDate} from 'lib/strings/time'
 import {TypographyVariant} from 'lib/ThemeContext'
-import {isAndroid, isWeb} from 'platform/detection'
+import {isAndroid} from 'platform/detection'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {TextLinkOnWebOnly} from './Link'
 import {Text} from './text/Text'
@@ -36,13 +36,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
   const pal = usePalette('default')
   const displayName = opts.author.displayName || opts.author.handle
   const handle = opts.author.handle
-  const prefetchProfileQuery = usePrefetchProfileQuery()
-
   const profileLink = makeProfileLink(opts.author)
-  const onPointerEnter = isWeb
-    ? () => prefetchProfileQuery(opts.author.did)
-    : undefined
-
   const queryClient = useQueryClient()
   const onOpenAuthor = opts.onOpenAuthor
   const onBeforePressAuthor = useCallback(() => {
@@ -84,7 +78,6 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             }
             href={profileLink}
             onBeforePress={onBeforePressAuthor}
-            onPointerEnter={onPointerEnter}
           />
           <TextLinkOnWebOnly
             type="md"
@@ -93,7 +86,6 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             text={'\xa0' + sanitizeHandle(handle, '@')}
             href={profileLink}
             onBeforePress={onBeforePressAuthor}
-            onPointerEnter={onPointerEnter}
             anchorNoUnderline
           />
         </Text>

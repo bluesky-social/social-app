@@ -14,6 +14,8 @@ import {useNonReactiveCallback} from '../hooks/useNonReactiveCallback'
 import {LogEvents} from './events'
 import {Gate} from './gates'
 
+const SDK_KEY = 'client-SXJakO39w9vIhl3D44u8UupyzFl4oZ2qPIkjwcvuPsV'
+
 type StatsigUser = {
   userID: string | undefined
   // TODO: Remove when enough users have custom.platform:
@@ -26,6 +28,8 @@ type StatsigUser = {
     bundleDate: number
     refSrc: string
     refUrl: string
+    referrer: string
+    referrerHostname: string
     appLanguage: string
     contentLanguages: string[]
   }
@@ -33,10 +37,27 @@ type StatsigUser = {
 
 let refSrc = ''
 let refUrl = ''
+let referrer = ''
+let referrerHostname = ''
 if (isWeb && typeof window !== 'undefined') {
   const params = new URLSearchParams(window.location.search)
   refSrc = params.get('ref_src') ?? ''
   refUrl = decodeURIComponent(params.get('ref_url') ?? '')
+}
+
+if (
+  isWeb &&
+  typeof document !== 'undefined' &&
+  document != null &&
+  document.referrer
+) {
+  try {
+    const url = new URL(document.referrer)
+    if (url.hostname !== 'bsky.app') {
+      referrer = document.referrer
+      referrerHostname = url.hostname
+    }
+  } catch {}
 }
 
 export type {LogEvents}
@@ -94,6 +115,9 @@ const DOWNSAMPLED_EVENTS: Set<keyof LogEvents> = new Set([
   'home:feedDisplayed:sampled',
   'feed:endReached:sampled',
   'feed:refresh:sampled',
+  'discover:clickthrough:sampled',
+  'discover:engaged:sampled',
+  'discover:seen:sampled',
 ])
 const isDownsampledSession = Math.random() < 0.9 // 90% likely
 
@@ -198,6 +222,8 @@ function toStatsigUser(did: string | undefined): StatsigUser {
     custom: {
       refSrc,
       refUrl,
+      referrer,
+      referrerHostname,
       platform: Platform.OS as 'ios' | 'android' | 'web',
       bundleIdentifier: BUNDLE_IDENTIFIER,
       bundleDate: BUNDLE_DATE,
@@ -230,7 +256,7 @@ AppState.addEventListener('change', (state: AppStateStatus) => {
 })
 
 export async function tryFetchGates(
-  did: string,
+  did: string | undefined,
   strategy: 'prefer-low-latency' | 'prefer-fresh-gates',
 ) {
   try {
@@ -252,6 +278,10 @@ export async function tryFetchGates(
     // Don't leak errors to the calling code, this is meant to be always safe.
     console.error(e)
   }
+}
+
+export function initialize() {
+  return Statsig.initialize(SDK_KEY, null, createStatsigOptions([]))
 }
 
 export function Provider({children}: {children: React.ReactNode}) {
@@ -299,7 +329,7 @@ export function Provider({children}: {children: React.ReactNode}) {
     <GateCache.Provider value={gateCache}>
       <StatsigProvider
         key={did}
-        sdkKey="client-SXJakO39w9vIhl3D44u8UupyzFl4oZ2qPIkjwcvuPsV"
+        sdkKey={SDK_KEY}
         mountKey={currentStatsigUser.userID}
         user={currentStatsigUser}
         // This isn't really blocking due to short initTimeoutMs above.

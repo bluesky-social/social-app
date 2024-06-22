@@ -26,6 +26,7 @@ type NotificationReason =
   | 'reply'
   | 'quote'
   | 'chat-message'
+  | 'starterpack-joined'
 
 type NotificationPayload =
   | {
@@ -142,6 +143,7 @@ export function useNotificationsHandler() {
           case 'mention':
           case 'quote':
           case 'reply':
+          case 'starterpack-joined':
             resetToTab('NotificationsTab')
             break
           // TODO implement these after we have an idea of how to handle each individual case

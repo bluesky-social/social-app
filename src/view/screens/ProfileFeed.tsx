@@ -1,5 +1,6 @@
 import React, {useCallback, useMemo} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useIsFocused, useNavigation} from '@react-navigation/native'
@@ -54,7 +55,6 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button as NewButton, ButtonText} from '#/components/Button'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
 import {
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
   Heart2_Stroke2_Corner0_Rounded as HeartOutline,
@@ -303,15 +303,16 @@ export function ProfileFeedScreenInner({
                         a.align_center,
                         a.rounded_full,
                         {height: 36, width: 36},
-                        t.atoms.bg_contrast_50,
+                        t.atoms.bg_contrast_25,
                         (state.hovered || state.pressed) && [
-                          t.atoms.bg_contrast_100,
+                          t.atoms.bg_contrast_50,
                         ],
                       ]}
                       testID="headerDropdownBtn">
-                      <Ellipsis
-                        size="lg"
-                        fill={t.atoms.text_contrast_medium.color}
+                      <FontAwesomeIcon
+                        icon="ellipsis"
+                        size={20}
+                        style={t.atoms.text}
                       />
                     </Pressable>
                   )

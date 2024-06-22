@@ -118,6 +118,7 @@ export const fontWeight = {
   normal: '400',
   semibold: '500',
   bold: '600',
+  heavy: '700',
 } as const
 
 export const gradients = {

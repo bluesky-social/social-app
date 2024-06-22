@@ -49,7 +49,7 @@ export function LeaveConvoPrompt({
       )}
       confirmButtonCta={_(msg`Leave`)}
       confirmButtonColor="negative"
-      onConfirm={leaveConvo}
+      onConfirm={() => leaveConvo()}
     />
   )
 }
