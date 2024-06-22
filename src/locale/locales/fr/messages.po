@@ -5045,11 +5045,6 @@ msgstr "Activité sexuelle ou nudité érotique."
 msgid "Sexually Suggestive"
 msgstr "Sexuellement suggestif"
 
-#: src/view/com/lightbox/Lightbox.tsx:142
-msgctxt "action"
-msgid "Share"
-msgstr "Partager"
-
 #: src/components/StarterPack/QrCodeDialog.tsx:180
 #: src/screens/StarterPack/StarterPackScreen.tsx:303
 #: src/screens/StarterPack/StarterPackScreen.tsx:458
@@ -5059,6 +5054,11 @@ msgstr "Partager"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:316
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:304
 #: src/view/screens/ProfileList.tsx:428
+msgid "Share"
+msgstr "Partager"
+
+#: src/view/com/lightbox/Lightbox.tsx:142
+msgctxt "action"
 msgid "Share"
 msgstr "Partager"
 

@@ -1709,16 +1709,16 @@ msgstr "例：返信として広告を繰り返し送ってくるユーザー。
 msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr "それぞれのコードは一回限り有効です。定期的に追加の招待コードをお送りします。"
 
-#: src/view/com/lists/ListMembers.tsx:149
-msgctxt "action"
-msgid "Edit"
-msgstr "編集"
-
 #: src/screens/StarterPack/StarterPackScreen.tsx:438
 #: src/screens/StarterPack/Wizard/index.tsx:522
 #: src/screens/StarterPack/Wizard/index.tsx:529
 #: src/view/screens/Feeds.tsx:385
 #: src/view/screens/Feeds.tsx:453
+msgid "Edit"
+msgstr "編集"
+
+#: src/view/com/lists/ListMembers.tsx:149
+msgctxt "action"
 msgid "Edit"
 msgstr "編集"
 
@@ -5035,11 +5035,6 @@ msgstr "性的行為または性的なヌード。"
 msgid "Sexually Suggestive"
 msgstr "性的にきわどい"
 
-#: src/view/com/lightbox/Lightbox.tsx:142
-msgctxt "action"
-msgid "Share"
-msgstr "共有"
-
 #: src/components/StarterPack/QrCodeDialog.tsx:180
 #: src/screens/StarterPack/StarterPackScreen.tsx:303
 #: src/screens/StarterPack/StarterPackScreen.tsx:458
@@ -5049,6 +5044,11 @@ msgstr "共有"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:316
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:304
 #: src/view/screens/ProfileList.tsx:428
+msgid "Share"
+msgstr "共有"
+
+#: src/view/com/lightbox/Lightbox.tsx:142
+msgctxt "action"
 msgid "Share"
 msgstr "共有"
 
