@@ -164,7 +164,7 @@ export const ProfileFeedgens = React.forwardRef<
           a.px_lg,
           a.py_lg,
         ]}>
-        <FeedCard.Default feed={item} />
+        <FeedCard.Default type="feed" view={item} />
       </View>
     )
   }

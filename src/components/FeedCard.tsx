@@ -45,7 +45,7 @@ export function Default({
     }) {
   const displayName = type === 'feed' ? view.displayName : view.name
   return (
-    <Link feed={view}>
+    <Link feed={view} label={displayName}>
       <Outer>
         <Header>
           <Avatar src={view.avatar} />
@@ -63,13 +63,13 @@ export function Link({
   children,
   feed,
 }: {
-  feed: AppBskyFeedDefs.GeneratorView | AppBskyGraphDefs.ListView
+  label: string
 } & Omit<LinkProps, 'to'>) {
   const href = React.useMemo(() => {
     return createProfileFeedHref({feed})
   }, [feed])
   return (
-    <InternalLink to={href} label={feed.displayName}>
+    <InternalLink to={href} label={label}>
       {children}
     </InternalLink>
   )
