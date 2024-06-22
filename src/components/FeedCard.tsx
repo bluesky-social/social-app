@@ -6,6 +6,7 @@ import {
   AppBskyGraphDefs,
   AtUri,
 } from '@atproto/api'
+import {ListView} from '@atproto/api/dist/client/types/app/bsky/graph/defs'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -52,9 +53,12 @@ export function Default(props: Props) {
         <Header>
           <Avatar src={view.avatar} />
           <TitleAndByline title={displayName} creator={view.creator} />
-          {type === 'list' && view.purpose !== 'app.bsky.graph.defs#modlist' ? (
-            <Action uri={view.uri} pin />
-          ) : null}
+          <Action
+            uri={view.uri}
+            pin
+            type={type}
+            purpose={type === 'list' ? view.purpose : undefined}
+          />
         </Header>
         <Description description={view.description} />
         {type === 'feed' && <Likes count={view.likeCount || 0} />}
@@ -204,13 +208,31 @@ export function Likes({count}: {count: number}) {
   )
 }
 
-export function Action({uri, pin}: {uri: string; pin?: boolean}) {
+export function Action({
+  uri,
+  pin,
+  type,
+  purpose,
+}: {
+  uri: string
+  pin?: boolean
+  type: 'feed' | 'list'
+  purpose?: ListView['purpose']
+}) {
   const {hasSession} = useSession()
-  if (!hasSession) return null
-  return <ActionInner uri={uri} pin={pin} />
+  if (!hasSession || purpose !== 'app.bsky.graph.defs#curatelist') return null
+  return <ActionInner uri={uri} pin={pin} type={type} />
 }
 
-function ActionInner({uri, pin}: {uri: string; pin?: boolean}) {
+function ActionInner({
+  uri,
+  pin,
+  type,
+}: {
+  uri: string
+  pin?: boolean
+  type: 'feed' | 'list'
+}) {
   const {_} = useLingui()
   const {data: preferences} = usePreferencesQuery()
   const {isPending: isAddSavedFeedPending, mutateAsync: saveFeeds} =
@@ -218,9 +240,7 @@ function ActionInner({uri, pin}: {uri: string; pin?: boolean}) {
   const {isPending: isRemovePending, mutateAsync: removeFeed} =
     useRemoveFeedMutation()
   const savedFeedConfig = React.useMemo(() => {
-    return preferences?.savedFeeds?.find(
-      feed => feed.type === 'feed' && feed.value === uri,
-    )
+    return preferences?.savedFeeds?.find(feed => feed.value === uri)
   }, [preferences?.savedFeeds, uri])
   const removePromptControl = Prompt.usePromptControl()
   const isPending = isAddSavedFeedPending || isRemovePending
@@ -236,7 +256,7 @@ function ActionInner({uri, pin}: {uri: string; pin?: boolean}) {
         } else {
           await saveFeeds([
             {
-              type: 'feed',
+              type,
               value: uri,
               pinned: pin || false,
             },
@@ -248,7 +268,7 @@ function ActionInner({uri, pin}: {uri: string; pin?: boolean}) {
         Toast.show(_(msg`Failed to update feeds`))
       }
     },
-    [_, pin, saveFeeds, removeFeed, uri, savedFeedConfig],
+    [_, pin, saveFeeds, removeFeed, uri, savedFeedConfig, type],
   )
 
   const onPrompRemoveFeed = React.useCallback(
