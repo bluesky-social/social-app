@@ -6,7 +6,6 @@ import {
   AppBskyGraphDefs,
   AtUri,
 } from '@atproto/api'
-import {ListView} from '@atproto/api/dist/client/types/app/bsky/graph/defs'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -47,18 +46,19 @@ type Props =
 export function Default(props: Props) {
   const {type, view} = props
   const displayName = type === 'feed' ? view.displayName : view.name
+  const purpose = type === 'list' ? view.purpose : undefined
   return (
     <Link label={displayName} {...props}>
       <Outer>
         <Header>
           <Avatar src={view.avatar} />
-          <TitleAndByline title={displayName} creator={view.creator} />
-          <Action
-            uri={view.uri}
-            pin
+          <TitleAndByline
+            title={displayName}
+            creator={view.creator}
             type={type}
-            purpose={type === 'list' ? view.purpose : undefined}
+            purpose={purpose}
           />
+          <Action uri={view.uri} pin type={type} purpose={purpose} />
         </Header>
         <Description description={view.description} />
         {type === 'feed' && <Likes count={view.likeCount || 0} />}
@@ -132,9 +132,13 @@ export function AvatarPlaceholder({size = 40}: Omit<AvatarProps, 'src'>) {
 export function TitleAndByline({
   title,
   creator,
+  type,
+  purpose,
 }: {
   title: string
   creator?: AppBskyActorDefs.ProfileViewBasic
+  type: 'feed' | 'list'
+  purpose?: AppBskyGraphDefs.ListView['purpose']
 }) {
   const t = useTheme()
 
@@ -147,7 +151,15 @@ export function TitleAndByline({
         <Text
           style={[a.leading_snug, t.atoms.text_contrast_medium]}
           numberOfLines={1}>
-          <Trans>Feed by {sanitizeHandle(creator.handle, '@')}</Trans>
+          {type === 'list' && purpose === 'app.bsky.graph.defs#curatelist' ? (
+            <Trans>List by {sanitizeHandle(creator.handle, '@')}</Trans>
+          ) : type === 'list' && purpose === 'app.bsky.graph.defs#modlist' ? (
+            <Trans>
+              Moderation list by {sanitizeHandle(creator.handle, '@')}
+            </Trans>
+          ) : (
+            <Trans>Feed by {sanitizeHandle(creator.handle, '@')}</Trans>
+          )}
         </Text>
       )}
     </View>
@@ -217,7 +229,7 @@ export function Action({
   uri: string
   pin?: boolean
   type: 'feed' | 'list'
-  purpose?: ListView['purpose']
+  purpose?: AppBskyGraphDefs.ListView['purpose']
 }) {
   const {hasSession} = useSession()
   if (!hasSession || purpose !== 'app.bsky.graph.defs#curatelist') return null
