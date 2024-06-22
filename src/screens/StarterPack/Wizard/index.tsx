@@ -186,14 +186,10 @@ function WizardInner({
     Profiles: {
       header: _(msg`Choose People`),
       nextBtn: _(msg`Next`),
-      subtitle: _(
-        msg`Add people to your starter pack that you think others will enjoy following`,
-      ),
     },
     Feeds: {
       header: _(msg`Choose Feeds`),
       nextBtn: state.feeds.length === 0 ? _(msg`Skip`) : _(msg`Finish`),
-      subtitle: _(msg`Some subtitle`),
     },
   }
   const currUiStrings = wizardUiStrings[state.currentStep]
