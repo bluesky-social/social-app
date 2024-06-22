@@ -4,6 +4,7 @@ import {AppBskyFeedDefs, BskyAgent} from '@atproto/api'
 import throttle from 'lodash.throttle'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
+import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {
   FeedDescriptor,
@@ -34,6 +35,16 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
     WeakSet<FeedPostSliceItem | AppBskyFeedDefs.Interaction>
   >(new WeakSet())
 
+  const aggregatedStats = React.useRef<AggregatedStats | null>(null)
+  const throttledFlushAggregatedStats = React.useMemo(
+    () =>
+      throttle(() => flushToStatsig(aggregatedStats.current), 45e3, {
+        leading: true, // The outer call is already throttled somewhat.
+        trailing: true,
+      }),
+    [],
+  )
+
   const sendToFeedNoDelay = React.useCallback(() => {
     const proxyAgent = agent.withProxy(
       // @ts-ignore TODO need to update withProxy() to support this key -prf
@@ -45,12 +56,20 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
     const interactions = Array.from(queue.current).map(toInteraction)
     queue.current.clear()
 
+    // Send to the feed
     proxyAgent.app.bsky.feed
       .sendInteractions({interactions})
       .catch((e: any) => {
         logger.warn('Failed to send feed interactions', {error: e})
       })
-  }, [agent])
+
+    // Send to Statsig
+    if (aggregatedStats.current === null) {
+      aggregatedStats.current = createAggregatedStats()
+    }
+    sendOrAggregateInteractionsForStats(aggregatedStats.current, interactions)
+    throttledFlushAggregatedStats()
+  }, [agent, throttledFlushAggregatedStats])
 
   const sendToFeed = React.useMemo(
     () =>
@@ -148,4 +167,90 @@ function toString(interaction: AppBskyFeedDefs.Interaction): string {
 function toInteraction(str: string): AppBskyFeedDefs.Interaction {
   const [item, event, feedContext] = str.split('|')
   return {item, event, feedContext}
+}
+
+type AggregatedStats = {
+  clickthroughCount: number
+  engagedCount: number
+  seenCount: number
+}
+
+function createAggregatedStats(): AggregatedStats {
+  return {
+    clickthroughCount: 0,
+    engagedCount: 0,
+    seenCount: 0,
+  }
+}
+
+function sendOrAggregateInteractionsForStats(
+  stats: AggregatedStats,
+  interactions: AppBskyFeedDefs.Interaction[],
+) {
+  for (let interaction of interactions) {
+    switch (interaction.event) {
+      // Pressing "Show more" / "Show less" is relatively uncommon so we won't aggregate them.
+      // This lets us send the feed context together with them.
+      case 'app.bsky.feed.defs#requestLess': {
+        logEvent('discover:showLess', {
+          feedContext: interaction.feedContext ?? '',
+        })
+        break
+      }
+      case 'app.bsky.feed.defs#requestMore': {
+        logEvent('discover:showMore', {
+          feedContext: interaction.feedContext ?? '',
+        })
+        break
+      }
+
+      // The rest of the events are aggregated and sent later in batches.
+      case 'app.bsky.feed.defs#clickthroughAuthor':
+      case 'app.bsky.feed.defs#clickthroughEmbed':
+      case 'app.bsky.feed.defs#clickthroughItem':
+      case 'app.bsky.feed.defs#clickthroughReposter': {
+        stats.clickthroughCount++
+        break
+      }
+      case 'app.bsky.feed.defs#interactionLike':
+      case 'app.bsky.feed.defs#interactionQuote':
+      case 'app.bsky.feed.defs#interactionReply':
+      case 'app.bsky.feed.defs#interactionRepost':
+      case 'app.bsky.feed.defs#interactionShare': {
+        stats.engagedCount++
+        break
+      }
+      case 'app.bsky.feed.defs#interactionSeen': {
+        stats.seenCount++
+        break
+      }
+    }
+  }
+}
+
+function flushToStatsig(stats: AggregatedStats | null) {
+  if (stats === null) {
+    return
+  }
+
+  if (stats.clickthroughCount > 0) {
+    logEvent('discover:clickthrough:sampled', {
+      count: stats.clickthroughCount,
+    })
+    stats.clickthroughCount = 0
+  }
+
+  if (stats.engagedCount > 0) {
+    logEvent('discover:engaged:sampled', {
+      count: stats.engagedCount,
+    })
+    stats.engagedCount = 0
+  }
+
+  if (stats.seenCount > 0) {
+    logEvent('discover:seen:sampled', {
+      count: stats.seenCount,
+    })
+    stats.seenCount = 0
+  }
 }

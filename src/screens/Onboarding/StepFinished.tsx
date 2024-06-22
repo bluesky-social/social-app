@@ -1,11 +1,18 @@
 import React from 'react'
 import {View} from 'react-native'
+import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
+import {SavedFeed} from '@atproto/api/dist/client/types/app/bsky/actor/defs'
+import {TID} from '@atproto/common-web'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
-import {BSKY_APP_ACCOUNT_DID} from '#/lib/constants'
+import {
+  BSKY_APP_ACCOUNT_DID,
+  DISCOVER_SAVED_FEED,
+  TIMELINE_SAVED_FEED,
+} from '#/lib/constants'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {preferencesQueryKey} from '#/state/queries/preferences'
@@ -14,6 +21,11 @@ import {useAgent} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {uploadBlob} from 'lib/api'
 import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
+import {useSetHasCheckedForStarterPack} from 'state/preferences/used-starter-packs'
+import {
+  useActiveStarterPack,
+  useSetActiveStarterPack,
+} from 'state/shell/starter-pack'
 import {
   DescriptionText,
   OnboardingControls,
@@ -41,17 +53,74 @@ export function StepFinished() {
   const queryClient = useQueryClient()
   const agent = useAgent()
   const requestNotificationsPermission = useRequestNotificationsPermission()
+  const activeStarterPack = useActiveStarterPack()
+  const setActiveStarterPack = useSetActiveStarterPack()
+  const setHasCheckedForStarterPack = useSetHasCheckedForStarterPack()
 
   const finishOnboarding = React.useCallback(async () => {
     setSaving(true)
 
-    const {interestsStepResults, profileStepResults} = state
-    const {selectedInterests} = interestsStepResults
+    let starterPack: AppBskyGraphDefs.StarterPackView | undefined
+    let listItems: AppBskyGraphDefs.ListItemView[] | undefined
+
+    if (activeStarterPack?.uri) {
+      try {
+        const spRes = await agent.app.bsky.graph.getStarterPack({
+          starterPack: activeStarterPack.uri,
+        })
+        starterPack = spRes.data.starterPack
+
+        if (starterPack.list) {
+          const listRes = await agent.app.bsky.graph.getList({
+            list: starterPack.list.uri,
+            limit: 50,
+          })
+          listItems = listRes.data.items
+        }
+      } catch (e) {
+        logger.error('Failed to fetch starter pack', {safeMessage: e})
+        // don't tell the user, just get them through onboarding.
+      }
+    }
+
     try {
+      const {interestsStepResults, profileStepResults} = state
+      const {selectedInterests} = interestsStepResults
+
       await Promise.all([
-        bulkWriteFollows(agent, [BSKY_APP_ACCOUNT_DID]),
+        bulkWriteFollows(agent, [
+          BSKY_APP_ACCOUNT_DID,
+          ...(listItems?.map(i => i.subject.did) ?? []),
+        ]),
         (async () => {
+          // Interests need to get saved first, then we can write the feeds to prefs
           await agent.setInterestsPref({tags: selectedInterests})
+
+          // Default feeds that every user should have pinned when landing in the app
+          const feedsToSave: SavedFeed[] = [
+            {
+              ...DISCOVER_SAVED_FEED,
+              id: TID.nextStr(),
+            },
+            {
+              ...TIMELINE_SAVED_FEED,
+              id: TID.nextStr(),
+            },
+          ]
+
+          // Any starter pack feeds will be pinned _after_ the defaults
+          if (starterPack && starterPack.feeds?.length) {
+            feedsToSave.concat(
+              starterPack.feeds.map(f => ({
+                type: 'feed',
+                value: f.uri,
+                pinned: true,
+                id: TID.nextStr(),
+              })),
+            )
+          }
+
+          await agent.overwriteSavedFeeds(feedsToSave)
         })(),
         (async () => {
           const {imageUri, imageMime} = profileStepResults
@@ -63,9 +132,24 @@ export function StepFinished() {
               if (res.data.blob) {
                 existing.avatar = res.data.blob
               }
+
+              if (starterPack) {
+                existing.joinedViaStarterPack = {
+                  uri: starterPack.uri,
+                  cid: starterPack.cid,
+                }
+              }
+
+              existing.displayName = ''
+              // HACKFIX
+              // creating a bunch of identical profile objects is breaking the relay
+              // tossing this unspecced field onto it to reduce the size of the problem
+              // -prf
+              existing.createdAt = new Date().toISOString()
               return existing
             })
           }
+
           logEvent('onboarding:finished:avatarResult', {
             avatarResult: profileStepResults.isCreatedAvatar
               ? 'created'
@@ -96,19 +180,40 @@ export function StepFinished() {
     })
 
     setSaving(false)
+    setActiveStarterPack(undefined)
+    setHasCheckedForStarterPack(true)
     dispatch({type: 'finish'})
     onboardDispatch({type: 'finish'})
     track('OnboardingV2:StepFinished:End')
     track('OnboardingV2:Complete')
-    logEvent('onboarding:finished:nextPressed', {})
+    logEvent('onboarding:finished:nextPressed', {
+      usedStarterPack: Boolean(starterPack),
+      starterPackName: AppBskyGraphStarterpack.isRecord(starterPack?.record)
+        ? starterPack.record.name
+        : undefined,
+      starterPackCreator: starterPack?.creator.did,
+      starterPackUri: starterPack?.uri,
+      profilesFollowed: listItems?.length ?? 0,
+      feedsPinned: starterPack?.feeds?.length ?? 0,
+    })
+    if (starterPack && listItems?.length) {
+      logEvent('starterPack:followAll', {
+        logContext: 'Onboarding',
+        starterPack: starterPack.uri,
+        count: listItems?.length,
+      })
+    }
   }, [
-    state,
     queryClient,
     agent,
     dispatch,
     onboardDispatch,
     track,
+    activeStarterPack,
+    state,
     requestNotificationsPermission,
+    setActiveStarterPack,
+    setHasCheckedForStarterPack,
   ])
 
   React.useEffect(() => {

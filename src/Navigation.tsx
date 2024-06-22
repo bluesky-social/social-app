@@ -43,6 +43,8 @@ import HashtagScreen from '#/screens/Hashtag'
 import {ModerationScreen} from '#/screens/Moderation'
 import {ProfileKnownFollowersScreen} from '#/screens/Profile/KnownFollowers'
 import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
+import {StarterPackScreen} from '#/screens/StarterPack/StarterPackScreen'
+import {Wizard} from '#/screens/StarterPack/Wizard'
 import {init as initAnalytics} from './lib/analytics/analytics'
 import {useWebScrollRestoration} from './lib/hooks/useWebScrollRestoration'
 import {attachRouteToLogEvents, logEvent} from './lib/statsig/statsig'
@@ -312,7 +314,26 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         getComponent={() => MessagesSettingsScreen}
         options={{title: title(msg`Chat settings`), requireAuth: true}}
       />
-      <Stack.Screen name="Feeds" getComponent={() => FeedsScreen} />
+      <Stack.Screen
+        name="Feeds"
+        getComponent={() => FeedsScreen}
+        options={{title: title(msg`Feeds`)}}
+      />
+      <Stack.Screen
+        name="StarterPack"
+        getComponent={() => StarterPackScreen}
+        options={{title: title(msg`Starter Pack`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="StarterPackWizard"
+        getComponent={() => Wizard}
+        options={{title: title(msg`Create a starter pack`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="StarterPackEdit"
+        getComponent={() => Wizard}
+        options={{title: title(msg`Edit your starter pack`), requireAuth: true}}
+      />
     </>
   )
 }
@@ -367,6 +388,7 @@ function HomeTabNavigator() {
         contentStyle: pal.view,
       }}>
       <HomeTab.Screen name="Home" getComponent={() => HomeScreen} />
+      <HomeTab.Screen name="Start" getComponent={() => HomeScreen} />
       {commonScreens(HomeTab)}
     </HomeTab.Navigator>
   )
@@ -502,6 +524,11 @@ const FlatNavigator = () => {
         name="Messages"
         getComponent={() => MessagesScreen}
         options={{title: title(msg`Messages`), requireAuth: true}}
+      />
+      <Flat.Screen
+        name="Start"
+        getComponent={() => HomeScreen}
+        options={{title: title(msg`Home`)}}
       />
       {commonScreens(Flat as typeof HomeTab, numUnread)}
     </Flat.Navigator>

@@ -282,7 +282,7 @@ export function Explore() {
     isFetchingNextPage: isFetchingNextProfilesPage,
     error: profilesError,
     fetchNextPage: fetchNextProfilesPage,
-  } = useSuggestedFollowsQuery({limit: 3})
+  } = useSuggestedFollowsQuery({limit: 6, subsequentPageLimit: 10})
   const {
     data: feeds,
     hasNextPage: hasNextFeedsPage,
@@ -290,7 +290,7 @@ export function Explore() {
     isFetchingNextPage: isFetchingNextFeedsPage,
     error: feedsError,
     fetchNextPage: fetchNextFeedsPage,
-  } = useGetPopularFeedsQuery({limit: 3})
+  } = useGetPopularFeedsQuery({limit: 10})
 
   const isLoadingMoreProfiles = isFetchingNextProfilesPage && !isLoadingProfiles
   const onLoadMoreProfiles = React.useCallback(async () => {
@@ -340,11 +340,12 @@ export function Explore() {
       // Currently the responses contain duplicate items.
       // Needs to be fixed on backend, but let's dedupe to be safe.
       let seen = new Set()
+      const profileItems: ExploreScreenItems[] = []
       for (const page of profiles.pages) {
         for (const actor of page.actors) {
           if (!seen.has(actor.did)) {
             seen.add(actor.did)
-            i.push({
+            profileItems.push({
               type: 'profile',
               key: actor.did,
               profile: actor,
@@ -354,13 +355,19 @@ export function Explore() {
       }
 
       if (hasNextProfilesPage) {
+        // splice off 3 as previews if we have a next page
+        const previews = profileItems.splice(-3)
+        // push remainder
+        i.push(...profileItems)
         i.push({
           type: 'loadMore',
           key: 'loadMoreProfiles',
           isLoadingMore: isLoadingMoreProfiles,
           onLoadMore: onLoadMoreProfiles,
-          items: i.filter(item => item.type === 'profile').slice(-3),
+          items: previews,
         })
+      } else {
+        i.push(...profileItems)
       }
     } else {
       if (profilesError) {
@@ -390,11 +397,12 @@ export function Explore() {
       // Currently the responses contain duplicate items.
       // Needs to be fixed on backend, but let's dedupe to be safe.
       let seen = new Set()
+      const feedItems: ExploreScreenItems[] = []
       for (const page of feeds.pages) {
         for (const feed of page.feeds) {
           if (!seen.has(feed.uri)) {
             seen.add(feed.uri)
-            i.push({
+            feedItems.push({
               type: 'feed',
               key: feed.uri,
               feed,
@@ -403,6 +411,7 @@ export function Explore() {
         }
       }
 
+      // feeds errors can occur during pagination, so feeds is truthy
       if (feedsError) {
         i.push({
           type: 'error',
@@ -418,13 +427,17 @@ export function Explore() {
           error: cleanError(preferencesError),
         })
       } else if (hasNextFeedsPage) {
+        const preview = feedItems.splice(-3)
+        i.push(...feedItems)
         i.push({
           type: 'loadMore',
           key: 'loadMoreFeeds',
           isLoadingMore: isLoadingMoreFeeds,
           onLoadMore: onLoadMoreFeeds,
-          items: i.filter(item => item.type === 'feed').slice(-3),
+          items: preview,
         })
+      } else {
+        i.push(...feedItems)
       }
     } else {
       if (feedsError) {
@@ -492,7 +505,7 @@ export function Explore() {
                 a.px_lg,
                 a.py_lg,
               ]}>
-              <FeedCard.Default feed={item.feed} />
+              <FeedCard.Default type="feed" view={item.feed} />
             </View>
           )
         }
