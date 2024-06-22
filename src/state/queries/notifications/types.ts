@@ -11,7 +11,7 @@ export type NotificationType =
 export type FeedNotification =
   | (FeedNotificationBase & {
       type: StarterPackNotificationType
-      subject: AppBskyGraphDefs.StarterPackViewBasic
+      subject?: AppBskyGraphDefs.StarterPackViewBasic
     })
   | (FeedNotificationBase & {
       type: OtherNotificationType

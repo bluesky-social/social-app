@@ -42,7 +42,6 @@ import {PersonPlus_Filled_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/com
 import {Repost_Stroke2_Corner2_Rounded as RepostIcon} from '#/components/icons/Repost'
 import {Link as NewLink} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
-import {Default as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {FeedSourceCard} from '../feeds/FeedSourceCard'
 import {Post} from '../post/Post'
 import {ImageHorzList} from '../util/images/ImageHorzList'
@@ -126,12 +125,7 @@ let FeedItem = ({
     ]
   }, [item, moderationOpts])
 
-  if (
-    item.subjectUri &&
-    !item.subject &&
-    item.type !== 'feedgen-like' &&
-    item.type !== 'starterpack-joined'
-  ) {
+  if (item.subjectUri && !item.subject && item.type !== 'feedgen-like') {
     // don't render anything if the target post was deleted or unfindable
     return <View />
   }
@@ -307,7 +301,7 @@ let FeedItem = ({
           />
         ) : null}
         {item.type === 'starterpack-joined' ? (
-          <StarterPackCard starterPack={item.subject} />
+          <View style={{height: 100}} />
         ) : null}
       </View>
     </Link>

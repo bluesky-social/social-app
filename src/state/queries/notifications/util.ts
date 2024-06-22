@@ -3,6 +3,7 @@ import {
   AppBskyFeedLike,
   AppBskyFeedPost,
   AppBskyFeedRepost,
+  AppBskyGraphDefs,
   AppBskyNotificationListNotifications,
   BskyAgent,
   moderateNotification,
@@ -11,6 +12,7 @@ import {
 import {QueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
 
+import {precacheStarterPack} from 'state/queries/starter-packs'
 import {precacheProfile} from '../profile'
 import {FeedNotification, FeedPage, NotificationType} from './types'
 
@@ -40,6 +42,7 @@ export async function fetchPage({
     limit,
     cursor,
   })
+
   const indexedAt = res.data.notifications[0]?.indexedAt
 
   // filter out notifs by mod rules
@@ -56,9 +59,21 @@ export async function fetchPage({
     const subjects = await fetchSubjects(agent, notifsGrouped)
     for (const notif of notifsGrouped) {
       if (notif.subjectUri) {
-        notif.subject = subjects.get(notif.subjectUri)
-        if (notif.subject) {
-          precacheProfile(queryClient, notif.subject.author)
+        if (
+          notif.type === 'starterpack-joined' &&
+          notif.notification.reasonSubject
+        ) {
+          notif.subject = subjects.starterPacks.get(
+            notif.notification.reasonSubject,
+          )
+          if (notif.subject) {
+            precacheStarterPack(queryClient, notif.subject)
+          }
+        } else {
+          notif.subject = subjects.posts.get(notif.subjectUri)
+          if (notif.subject) {
+            precacheProfile(queryClient, notif.subject.author)
+          }
         }
       }
     }
@@ -127,6 +142,13 @@ export function groupNotifications(
           notification: notif,
           subjectUri: getSubjectUri(type, notif),
         })
+      } else {
+        groupedNotifs.push({
+          _reactKey: `notif-${notif.uri}`,
+          type: 'starterpack-joined',
+          notification: notif,
+          subjectUri: notif.uri,
+        })
       }
     }
   }
@@ -136,29 +158,57 @@ export function groupNotifications(
 async function fetchSubjects(
   agent: BskyAgent,
   groupedNotifs: FeedNotification[],
-): Promise<Map<string, AppBskyFeedDefs.PostView>> {
-  const uris = new Set<string>()
+): Promise<{
+  posts: Map<string, AppBskyFeedDefs.PostView>
+  starterPacks: Map<string, AppBskyGraphDefs.StarterPackViewBasic>
+}> {
+  const postUris = new Set<string>()
+  const packUris = new Set<string>()
   for (const notif of groupedNotifs) {
     if (notif.subjectUri?.includes('app.bsky.feed.post')) {
-      uris.add(notif.subjectUri)
+      postUris.add(notif.subjectUri)
+    } else if (
+      notif.notification.reasonSubject?.includes('app.bsky.graph.starterpack')
+    ) {
+      packUris.add(notif.notification.reasonSubject)
     }
   }
-  const uriChunks = chunk(Array.from(uris), 25)
+  const postUriChunks = chunk(Array.from(postUris), 25)
+  const packUriChunks = chunk(Array.from(packUris), 25)
   const postsChunks = await Promise.all(
-    uriChunks.map(uris =>
+    postUriChunks.map(uris =>
       agent.app.bsky.feed.getPosts({uris}).then(res => res.data.posts),
     ),
   )
-  const map = new Map<string, AppBskyFeedDefs.PostView>()
+  const packsChunks = await Promise.all(
+    packUriChunks.map(uris =>
+      agent.app.bsky.graph
+        .getStarterPacks({uris})
+        .then(res => res.data.starterPacks),
+    ),
+  )
+  const postsMap = new Map<string, AppBskyFeedDefs.PostView>()
+  const packsMap = new Map<string, AppBskyGraphDefs.StarterPackView>()
   for (const post of postsChunks.flat()) {
     if (
       AppBskyFeedPost.isRecord(post.record) &&
       AppBskyFeedPost.validateRecord(post.record).success
     ) {
-      map.set(post.uri, post)
+      postsMap.set(post.uri, post)
     }
   }
-  return map
+  for (const pack of packsChunks.flat()) {
+    if (
+      AppBskyFeedPost.isRecord(pack.record) &&
+      AppBskyFeedPost.validateRecord(pack.record).success
+    ) {
+      packsMap.set(pack.uri, pack)
+    }
+  }
+  return {
+    posts: postsMap,
+    starterPacks: packsMap,
+  }
 }
 
 function toKnownType(
