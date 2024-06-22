@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-06-05 11:06+0900\n"
+"PO-Revision-Date: 2024-06-19 11:10+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -36,10 +36,6 @@ msgstr "{0, plural, other {#個のラベルがこのコンテンツに適用さ�
 #: src/view/com/util/post-ctrls/RepostButton.tsx:65
 msgid "{0, plural, one {# repost} other {# reposts}}"
 msgstr "{0, plural, other {#回のリポスト}}"
-
-#: src/components/KnownFollowers.tsx:179
-msgid "{0, plural, one {and # other} other {and # others}}"
-msgstr ""
 
 #: src/components/ProfileHoverCard/index.web.tsx:376
 #: src/screens/Profile/Header/Metrics.tsx:23
@@ -87,6 +83,26 @@ msgstr "{0}のアバター"
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
 msgstr "{count, plural, other {#人のユーザーがいいね}}"
 
+#: src/lib/hooks/useTimeAgo.ts:69
+msgid "{diff, plural, one {day} other {days}}"
+msgstr "{diff, plural, other {日}}"
+
+#: src/lib/hooks/useTimeAgo.ts:64
+msgid "{diff, plural, one {hour} other {hours}}"
+msgstr "{diff, plural, other {時間}}"
+
+#: src/lib/hooks/useTimeAgo.ts:59
+msgid "{diff, plural, one {minute} other {minutes}}"
+msgstr "{diff, plural, other {分}}"
+
+#: src/lib/hooks/useTimeAgo.ts:75
+msgid "{diff, plural, one {month} other {months}}"
+msgstr "{diff, plural, other {ヶ月}}"
+
+#: src/lib/hooks/useTimeAgo.ts:54
+msgid "{diffSeconds, plural, one {second} other {seconds}}"
+msgstr "{diffSeconds, plural, other {秒}}"
+
 #: src/screens/SignupQueued.tsx:207
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
 msgstr "{estimatedTimeHrs, plural, other {時間}}"
@@ -113,6 +129,10 @@ msgstr "{likeCount, plural, other {#人のユーザーがいいね}}"
 #: src/view/shell/Drawer.tsx:462
 msgid "{numUnreadNotifications} unread"
 msgstr "{numUnreadNotifications}件の未読"
+
+#: src/components/NewskieDialog.tsx:75
+msgid "{profileName} joined Bluesky {0} ago"
+msgstr "{profileName}はBlueskyに{0}前に参加しました"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:67
 msgid "{value, plural, =0 {Show all replies} one {Show replies with at least # like} other {Show replies with at least # likes}}"
@@ -269,6 +289,10 @@ msgstr "フォローしているユーザーのみのデフォルトのフィー
 #: src/view/com/modals/ChangeHandle.tsx:410
 msgid "Add the following DNS record to your domain:"
 msgstr "次のDNSレコードをドメインに追加してください："
+
+#: src/components/FeedCard.tsx:173
+msgid "Add this feed to your feeds"
+msgstr "このフィードをあなたのフィードに追加する"
 
 #: src/view/com/profile/ProfileMenu.tsx:265
 #: src/view/com/profile/ProfileMenu.tsx:268
@@ -468,6 +492,10 @@ msgstr "この会話から退出しますか？あなたのメッセージはあ
 #: src/view/com/feeds/FeedSourceCard.tsx:314
 msgid "Are you sure you want to remove {0} from your feeds?"
 msgstr "あなたのフィードから{0}を削除してもよろしいですか？"
+
+#: src/components/FeedCard.tsx:190
+msgid "Are you sure you want to remove this from your feeds?"
+msgstr "本当にこのフィードをあなたのフィードから削除したいですか？"
 
 #: src/view/com/composer/Composer.tsx:630
 msgid "Are you sure you'd like to discard this draft?"
@@ -1092,7 +1120,7 @@ msgstr "{0}として続行（現在サインイン中）"
 
 #: src/view/com/post-thread/PostThreadLoadMore.tsx:52
 msgid "Continue thread..."
-msgstr ""
+msgstr "スレッドの続き…"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:250
 #: src/screens/Onboarding/StepProfile/index.tsx:266
@@ -1419,6 +1447,10 @@ msgstr "アプリがログアウトしたユーザーに自分のアカウント
 msgid "Discover new custom feeds"
 msgstr "新しいカスタムフィードを見つける"
 
+#: src/view/screens/Search/Explore.tsx:378
+msgid "Discover new feeds"
+msgstr "新しいフィードを探す"
+
 #: src/view/screens/Feeds.tsx:794
 msgid "Discover New Feeds"
 msgstr "新しいフィードを探す"
@@ -1534,13 +1566,13 @@ msgstr "例：返信として広告を繰り返し送ってくるユーザー。
 msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr "それぞれのコードは一回限り有効です。定期的に追加の招待コードをお送りします。"
 
-#: src/view/screens/Feeds.tsx:400
-#: src/view/screens/Feeds.tsx:471
-msgid "Edit"
-msgstr ""
-
 #: src/view/com/lists/ListMembers.tsx:149
 msgctxt "action"
+msgid "Edit"
+msgstr "編集"
+
+#: src/view/screens/Feeds.tsx:400
+#: src/view/screens/Feeds.tsx:471
 msgid "Edit"
 msgstr "編集"
 
@@ -1582,11 +1614,6 @@ msgstr "プロフィールを編集"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:178
 msgid "Edit Profile"
 msgstr "プロフィールを編集"
-
-#: src/view/com/home/HomeHeaderLayout.web.tsx:76
-#: src/view/screens/Feeds.tsx:416
-#~ msgid "Edit Saved Feeds"
-#~ msgstr "保存されたフィードを編集"
 
 #: src/view/com/modals/CreateOrEditList.tsx:234
 msgid "Edit User List"
@@ -1754,6 +1781,10 @@ msgstr "全員"
 msgid "Everybody can reply"
 msgstr "誰でも返信可能"
 
+#: src/view/com/threadgate/WhoCanReply.tsx:129
+msgid "Everybody can reply."
+msgstr "誰でも返信可能です。"
+
 #: src/components/dms/MessagesNUX.tsx:131
 #: src/components/dms/MessagesNUX.tsx:134
 #: src/screens/Messages/Settings.tsx:75
@@ -1857,6 +1888,11 @@ msgstr "メッセージの削除に失敗しました"
 msgid "Failed to delete post, please try again"
 msgstr "投稿の削除に失敗しました。もう一度お試しください。"
 
+#: src/view/screens/Search/Explore.tsx:414
+#: src/view/screens/Search/Explore.tsx:438
+msgid "Failed to load feeds preferences"
+msgstr "フィードの設定の読み込みに失敗しました"
+
 #: src/components/dialogs/GifSelect.ios.tsx:196
 #: src/components/dialogs/GifSelect.tsx:212
 msgid "Failed to load GIFs"
@@ -1865,6 +1901,15 @@ msgstr "GIFの読み込みに失敗しました"
 #: src/screens/Messages/Conversation/MessageListError.tsx:23
 msgid "Failed to load past messages"
 msgstr "過去のメッセージの読み込みに失敗しました"
+
+#: src/view/screens/Search/Explore.tsx:407
+#: src/view/screens/Search/Explore.tsx:431
+msgid "Failed to load suggested feeds"
+msgstr "おすすめのフィードの読み込みに失敗しました"
+
+#: src/view/screens/Search/Explore.tsx:367
+msgid "Failed to load suggested follows"
+msgstr "おすすめのフォローの読み込みに失敗しました"
 
 #: src/view/com/lightbox/Lightbox.tsx:84
 msgid "Failed to save image: {0}"
@@ -1878,6 +1923,14 @@ msgstr "送信に失敗"
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:87
 msgid "Failed to submit appeal, please try again."
 msgstr "異議申し立ての送信に失敗しました。再度試してください。"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:180
+msgid "Failed to toggle thread mute, please try again"
+msgstr "スレッドのミュートの切り替えに失敗しました。再度試してください"
+
+#: src/components/FeedCard.tsx:153
+msgid "Failed to update feeds"
+msgstr "フィードの更新に失敗しました"
 
 #: src/components/dms/MessagesNUX.tsx:60
 #: src/screens/Messages/Settings.tsx:35
@@ -1913,6 +1966,10 @@ msgstr "フィード"
 #: src/view/screens/SavedFeeds.tsx:180
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
 msgstr "フィードはユーザーがプログラミングの専門知識を持って構築するカスタムアルゴリズムです。詳細については、<0/>を参照してください。"
+
+#: src/components/FeedCard.tsx:150
+msgid "Feeds updated!"
+msgstr "フィードを更新しました！"
 
 #: src/view/com/modals/ChangeHandle.tsx:475
 msgid "File Contents"
@@ -1996,13 +2053,29 @@ msgstr "アカウントをフォロー"
 msgid "Follow Back"
 msgstr "フォローバック"
 
-#: src/components/KnownFollowers.tsx:169
-msgid "Followed by"
-msgstr ""
+#: src/view/screens/Search/Explore.tsx:332
+msgid "Follow more accounts to get connected to your interests and build your network."
+msgstr "もっとたくさんのアカウントをフォローして、興味あることにつながり、ネットワークを広げましょう。"
 
 #: src/view/com/profile/ProfileCard.tsx:227
 msgid "Followed by {0}"
 msgstr "{0}がフォロー中"
+
+#: src/components/KnownFollowers.tsx:192
+msgid "Followed by <0>{0}</0>"
+msgstr "<0>{0}</0>がフォロー中"
+
+#: src/components/KnownFollowers.tsx:209
+msgid "Followed by <0>{0}</0> and {1, plural, one {# other} other {# others}}"
+msgstr "<0>{0}</0>および{1, plural, other {他#人}}がフォロー中"
+
+#: src/components/KnownFollowers.tsx:181
+msgid "Followed by <0>{0}</0> and <1>{1}</1>"
+msgstr "<0>{0}</0>と<1>{1}</1>がフォロー中"
+
+#: src/components/KnownFollowers.tsx:168
+msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
+msgstr "<0>{0}</0>、<1>{1}</1>および{2, plural, other {他#人}}がフォロー中"
 
 #: src/view/com/modals/Threadgate.tsx:99
 msgid "Followed users"
@@ -2023,12 +2096,12 @@ msgstr "フォロワー"
 
 #: src/Navigation.tsx:177
 msgid "Followers of @{0} that you know"
-msgstr ""
+msgstr "あなたが知っている@{0}のフォロワー"
 
 #: src/screens/Profile/KnownFollowers.tsx:108
 #: src/screens/Profile/KnownFollowers.tsx:118
 msgid "Followers you know"
-msgstr ""
+msgstr "あなたが知っているフォロワー"
 
 #: src/components/ProfileHoverCard/index.web.tsx:411
 #: src/components/ProfileHoverCard/index.web.tsx:422
@@ -2117,6 +2190,10 @@ msgstr "始める"
 #: src/view/com/modals/VerifyEmail.tsx:199
 msgid "Get Started"
 msgstr "開始"
+
+#: src/view/com/util/images/ImageHorzList.tsx:35
+msgid "GIF"
+msgstr "GIF"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:225
 msgid "Give your profile a face"
@@ -2658,6 +2735,18 @@ msgstr "リスト"
 msgid "Lists blocking this user:"
 msgstr "このユーザーをブロックしているリスト："
 
+#: src/view/screens/Search/Explore.tsx:128
+msgid "Load more"
+msgstr "さらに読み込む"
+
+#: src/view/screens/Search/Explore.tsx:216
+msgid "Load more suggested feeds"
+msgstr "おすすめのフィードをさらに読み込む"
+
+#: src/view/screens/Search/Explore.tsx:214
+msgid "Load more suggested follows"
+msgstr "おすすめのフォローをさらに読み込む"
+
 #: src/view/screens/Notifications.tsx:184
 msgid "Load new notifications"
 msgstr "最新の通知を読み込む"
@@ -3062,6 +3151,10 @@ msgctxt "action"
 msgid "New Post"
 msgstr "新しい投稿"
 
+#: src/components/NewskieDialog.tsx:68
+msgid "New user info dialog"
+msgstr "新しいユーザー情報ダイアログ"
+
 #: src/view/com/modals/CreateOrEditList.tsx:236
 msgid "New User List"
 msgstr "新しいユーザーリスト"
@@ -3142,7 +3235,7 @@ msgstr "誰からも受け取らない"
 
 #: src/screens/Profile/Sections/Feed.tsx:59
 msgid "No posts yet."
-msgstr ""
+msgstr "まだ投稿がありません。"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:101
 #: src/view/com/composer/text-input/web/Autocomplete.tsx:195
@@ -3236,6 +3329,10 @@ msgstr "通知音"
 msgid "Notifications"
 msgstr "通知"
 
+#: src/lib/hooks/useTimeAgo.ts:51
+msgid "now"
+msgstr "今"
+
 #: src/components/dms/MessageItem.tsx:175
 msgid "Now"
 msgstr "今"
@@ -3273,6 +3370,10 @@ msgstr "OK"
 #: src/view/screens/PreferencesThreads.tsx:78
 msgid "Oldest replies first"
 msgstr "古い順に返信を表示"
+
+#: src/lib/hooks/useTimeAgo.ts:81
+msgid "on {str}"
+msgstr "{str}"
 
 #: src/view/screens/Settings/index.tsx:256
 msgid "Onboarding reset"
@@ -3448,11 +3549,6 @@ msgstr "モデレーションの設定を開く"
 #: src/screens/Login/LoginForm.tsx:225
 msgid "Opens password reset form"
 msgstr "パスワードリセットのフォームを開く"
-
-#: src/view/com/home/HomeHeaderLayout.web.tsx:77
-#: src/view/screens/Feeds.tsx:417
-#~ msgid "Opens screen to edit Saved Feeds"
-#~ msgstr "保存されたフィードの編集画面を開く"
 
 #: src/view/screens/Settings/index.tsx:617
 msgid "Opens screen with all saved feeds"
@@ -3777,7 +3873,7 @@ msgstr "再実行する"
 
 #: src/components/KnownFollowers.tsx:111
 msgid "Press to view followers of this account that you also follow"
-msgstr ""
+msgstr "あなたもフォローしているこのアカウントのフォロワーを見る"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:150
 msgid "Previous image"
@@ -3975,7 +4071,7 @@ msgstr "リストから削除されました"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:139
 msgid "Removed from my feeds"
-msgstr "フィードから削除しました"
+msgstr "マイフィードから削除しました"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:44
 #: src/view/screens/ProfileFeed.tsx:191
@@ -4000,9 +4096,9 @@ msgstr "Discoverで置き換える"
 msgid "Replies"
 msgstr "返信"
 
-#: src/view/com/threadgate/WhoCanReply.tsx:98
-msgid "Replies to this thread are disabled"
-msgstr "このスレッドへの返信はできません"
+#: src/view/com/threadgate/WhoCanReply.tsx:131
+msgid "Replies to this thread are disabled."
+msgstr "このスレッドへの返信はできません。"
 
 #: src/view/com/composer/Composer.tsx:475
 msgctxt "action"
@@ -4018,6 +4114,11 @@ msgstr "返信のフィルター"
 msgctxt "description"
 msgid "Reply to <0><1/></0>"
 msgstr "<0><1/></0>に返信"
+
+#: src/view/com/posts/FeedItem.tsx:437
+msgctxt "description"
+msgid "Reply to a blocked post"
+msgstr "ブロックした投稿への返信"
 
 #: src/components/dms/MessageMenu.tsx:132
 #: src/components/dms/MessagesListBlockedFooter.tsx:77
@@ -4926,9 +5027,9 @@ msgstr "このラベラーを登録"
 msgid "Subscribe to this list"
 msgstr "このリストに登録"
 
-#: src/view/screens/Search/Search.tsx:425
-msgid "Suggested Follows"
-msgstr "おすすめのフォロー"
+#: src/view/screens/Search/Explore.tsx:330
+msgid "Suggested accounts"
+msgstr "おすすめのアカウント"
 
 #: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:65
 msgid "Suggested for you"
@@ -5077,7 +5178,7 @@ msgstr "サービス規約は移動しました"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:86
 msgid "There is no time limit for account deactivation, come back any time."
-msgstr "アカウントの無効化に期限はありません。いつでも戻ってこれます。"
+msgstr "アカウントの無効化に期限はありません。いつでも戻ってこられます。"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:115
 #: src/view/screens/ProfileFeed.tsx:541
@@ -5217,7 +5318,7 @@ msgstr "このコンテンツはBlueskyのアカウントがないと閲覧で�
 
 #: src/screens/Messages/List/ChatListItem.tsx:213
 msgid "This conversation is with a deleted or a deactivated account. Press for options."
-msgstr ""
+msgstr "削除あるいは無効化されたアカウントとの会話です。押すと選択肢が表示されます。"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:93
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
@@ -5227,12 +5328,6 @@ msgstr "この機能はベータ版です。リポジトリのエクスポート
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
 msgstr "現在このフィードにはアクセスが集中しており、一時的にご利用いただけません。時間をおいてもう一度お試しください。"
 
-#: src/screens/Profile/Sections/Feed.tsx:59
-#: src/view/screens/ProfileFeed.tsx:471
-#: src/view/screens/ProfileList.tsx:729
-#~ msgid "This feed is empty!"
-#~ msgstr "このフィードは空です！"
-
 #: src/view/com/posts/CustomFeedEmptyState.tsx:37
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
 msgstr "このフィードは空です！もっと多くのユーザーをフォローするか、言語の設定を調整する必要があるかもしれません。"
@@ -5240,7 +5335,7 @@ msgstr "このフィードは空です！もっと多くのユーザーをフォ
 #: src/view/screens/ProfileFeed.tsx:471
 #: src/view/screens/ProfileList.tsx:729
 msgid "This feed is empty."
-msgstr ""
+msgstr "このフィードは空です。"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:97
 msgid "This feed is no longer online. We are showing <0>Discover</0> instead."
@@ -5335,6 +5430,10 @@ msgstr "このユーザーはブロックした<0>{0}</0>リストに含まれ�
 #: src/components/moderation/ModerationDetailsDialog.tsx:84
 msgid "This user is included in the <0>{0}</0> list which you have muted."
 msgstr "このユーザーはミュートした<0>{0}</0>リストに含まれています。"
+
+#: src/components/NewskieDialog.tsx:50
+msgid "This user is new here. Press for more info about when they joined."
+msgstr "新しいユーザーです。ここを押すといつ参加したかの情報が表示されます。"
 
 #: src/view/com/profile/ProfileFollows.tsx:87
 msgid "This user isn't following anyone."
@@ -5762,6 +5861,10 @@ msgstr "{0}のアバターを表示"
 msgid "View {0}'s profile"
 msgstr "{0}のプロフィールを表示"
 
+#: src/components/ProfileHoverCard/index.web.tsx:417
+msgid "View blocked user's profile"
+msgstr "ブロック中のユーザーのプロフィールを表示"
+
 #: src/view/screens/Log.tsx:52
 msgid "View debug entry"
 msgstr "デバッグエントリーを表示"
@@ -5804,7 +5907,7 @@ msgstr "このフィードにいいねしたユーザーを見る"
 #: src/view/com/home/HomeHeaderLayout.web.tsx:78
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:84
 msgid "View your feeds and explore more"
-msgstr ""
+msgstr "フィードを表示し、さらにフィードを探す"
 
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
@@ -5891,7 +5994,7 @@ msgstr "大変申し訳ありませんが、検索を完了できませんでし
 
 #: src/view/com/composer/Composer.tsx:318
 msgid "We're sorry! The post you are replying to has been deleted."
-msgstr ""
+msgstr "大変申し訳ありません！返信しようとしている投稿は削除されました。"
 
 #: src/components/Lists.tsx:212
 #: src/view/screens/NotFound.tsx:48
@@ -5899,8 +6002,8 @@ msgid "We're sorry! We can't find the page you were looking for."
 msgstr "大変申し訳ありません！お探しのページは見つかりません。"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:330
-msgid "We're sorry! You can only subscribe to ten labelers, and you've reached your limit of ten."
-msgstr "大変申し訳ありません！ラベラーは10までしか登録できず、すでに上限に達しています。"
+msgid "We're sorry! You can only subscribe to twenty labelers, and you've reached your limit of twenty."
+msgstr "大変申し訳ありません！ラベラーは20までしか登録できず、すでに上限に達しています。"
 
 #: src/screens/Deactivated.tsx:128
 msgid "Welcome back!"
@@ -6047,7 +6150,7 @@ msgstr "あなたはまだだれもフォロワーがいません。"
 
 #: src/screens/Profile/KnownFollowers.tsx:99
 msgid "You don't follow any users who follow @{name}."
-msgstr ""
+msgstr "@{name}をフォローしているユーザーを誰もフォローしていません。"
 
 #: src/view/com/modals/InviteCodes.tsx:67
 msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."

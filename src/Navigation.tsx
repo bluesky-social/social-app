@@ -312,7 +312,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         getComponent={() => MessagesSettingsScreen}
         options={{title: title(msg`Chat settings`), requireAuth: true}}
       />
-      <Stack.Screen name="Feeds" getComponent={() => FeedsScreen} />
+      <Stack.Screen
+        name="Feeds"
+        getComponent={() => FeedsScreen}
+        options={{title: title(msg`Feeds`)}}
+      />
     </>
   )
 }

@@ -64,7 +64,7 @@ export function ProfileHoverCard(props: ProfileHoverCardProps) {
     return props.children
   } else {
     return (
-      <View onPointerMove={onPointerMove}>
+      <View onPointerMove={onPointerMove} style={[a.flex_shrink]}>
         <ProfileHoverCardInner {...props} />
       </View>
     )
