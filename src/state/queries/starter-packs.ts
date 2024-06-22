@@ -317,3 +317,10 @@ async function whenAppViewReady(
     () => agent.app.bsky.graph.getStarterPack({starterPack: uri}),
   )
 }
+
+export function precacheStarterPack(
+  queryClient: QueryClient,
+  starterPack: AppBskyGraphDefs.StarterPackViewBasic,
+) {
+  queryClient.setQueryData(RQKEY(starterPack.uri), starterPack)
+}

@@ -54,6 +54,7 @@ import {PreviewableUserAvatar, UserAvatar} from '../util/UserAvatar'
 import hairlineWidth = StyleSheet.hairlineWidth
 import {parseTenorGif} from '#/lib/strings/embed-player'
 import {StarterPack} from '#/components/icons/StarterPack'
+import {Notification as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 
 const MAX_AUTHORS = 5
 
@@ -90,15 +91,14 @@ let FeedItem = ({
     } else if (item.type === 'reply') {
       const urip = new AtUri(item.notification.uri)
       return `/profile/${urip.host}/post/${urip.rkey}`
-    } else if (item.type === 'feedgen-like') {
+    } else if (
+      item.type === 'feedgen-like' ||
+      item.type === 'starterpack-joined'
+    ) {
       if (item.subjectUri) {
         const urip = new AtUri(item.subjectUri)
         return `/profile/${urip.host}/feed/${urip.rkey}`
       }
-    } else if (item.type === 'starter-pack-signup') {
-      // TODO create the right href for navigating to the starterpack
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const urip = '/'
     }
     return ''
   }, [item])
@@ -126,12 +126,7 @@ let FeedItem = ({
     ]
   }, [item, moderationOpts])
 
-  if (
-    item.subjectUri &&
-    !item.subject &&
-    item.type !== 'feedgen-like' &&
-    item.type !== 'starter-pack-signup'
-  ) {
+  if (item.subjectUri && !item.subject && item.type !== 'feedgen-like') {
     // don't render anything if the target post was deleted or unfindable
     return <View />
   }
@@ -186,7 +181,7 @@ let FeedItem = ({
     icon = <PersonPlusIcon size="xl" style={{color: t.palette.primary_500}} />
   } else if (item.type === 'feedgen-like') {
     action = _(msg`liked your custom feed`)
-  } else if (item.type === 'starter-pack-signup') {
+  } else if (item.type === 'starterpack-joined') {
     icon = (
       <View style={{height: 30, width: 30}}>
         <StarterPack width={30} gradient="sky" />
@@ -306,11 +301,18 @@ let FeedItem = ({
             showLikes
           />
         ) : null}
-        {item.type === 'starter-pack-signup'
-          ? // TODO
-            null
-          : // <StarterPackCard type="notification" starterPack={sta} />
-            null}
+        {item.type === 'starterpack-joined' ? (
+          <View
+            style={[
+              a.border,
+              a.p_sm,
+              a.rounded_sm,
+              a.mt_sm,
+              t.atoms.border_contrast_low,
+            ]}>
+            <StarterPackCard starterPack={item.subject} />
+          </View>
+        ) : null}
       </View>
     </Link>
   )
