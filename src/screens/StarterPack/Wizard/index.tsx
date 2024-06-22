@@ -21,6 +21,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {logger} from '#/logger'
 import {HITSLOP_10} from 'lib/constants'
+import {createSanitizedDisplayName} from 'lib/moderation/create-sanitized-display-name'
 import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
 import {logEvent} from 'lib/statsig/statsig'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
@@ -170,15 +171,7 @@ function WizardInner({
   )
 
   const getDefaultName = () => {
-    let displayName
-    if (
-      currentProfile?.displayName != null &&
-      currentProfile?.displayName !== ''
-    ) {
-      displayName = sanitizeDisplayName(currentProfile.displayName)
-    } else {
-      displayName = sanitizeHandle(currentProfile!.handle)
-    }
+    const displayName = createSanitizedDisplayName(currentProfile!, true)
     return _(msg`${displayName}'s Starter Pack`).slice(0, 50)
   }
 
@@ -254,8 +247,8 @@ function WizardInner({
     dispatch({type: 'SetProcessing', processing: true})
     if (currentStarterPack && currentListItems) {
       editStarterPack({
-        name: state.name ?? getDefaultName(),
-        description: state.description,
+        name: state.name?.trim() || getDefaultName(),
+        description: state.description?.trim(),
         descriptionFacets: [],
         profiles: state.profiles,
         feeds: state.feeds,
@@ -264,8 +257,8 @@ function WizardInner({
       })
     } else {
       createStarterPack({
-        name: state.name ?? getDefaultName(),
-        description: state.description,
+        name: state.name?.trim() || getDefaultName(),
+        description: state.description?.trim(),
         descriptionFacets: [],
         profiles: state.profiles,
         feeds: state.feeds,
