@@ -644,7 +644,7 @@ function SavedFeed({
     savedFeed.type === 'feed' ? savedFeed.view.displayName : savedFeed.view.name
 
   return (
-    <FeedCard.Link testID={`saved-feed-${feed.displayName}`} view={feed}>
+    <FeedCard.Link testID={`saved-feed-${feed.displayName}`} {...savedFeed}>
       {({hovered, pressed}) => (
         <View
           style={[
