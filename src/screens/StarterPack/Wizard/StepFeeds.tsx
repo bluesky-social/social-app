@@ -1,13 +1,14 @@
 import React, {useState} from 'react'
 import {ListRenderItemInfo, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
-import {ModerationOpts} from '@atproto/api'
-import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
+import {AppBskyFeedDefs, ModerationOpts} from '@atproto/api'
 import debounce from 'lodash.debounce'
 
 import {useA11y} from '#/state/a11y'
+import {DISCOVER_FEED_URI} from 'lib/constants'
 import {
   useGetPopularFeedsQuery,
+  useSavedFeeds,
   useSearchPopularFeedsMutation,
 } from 'state/queries/feed'
 import {SearchInput} from 'view/com/util/forms/SearchInput'
@@ -18,7 +19,7 @@ import {Loader} from '#/components/Loader'
 import {ScreenTransition} from '#/components/StarterPack/Wizard/ScreenTransition'
 import {WizardFeedCard} from '#/components/StarterPack/Wizard/WizardListCard'
 
-function keyExtractor(item: GeneratorView) {
+function keyExtractor(item: AppBskyFeedDefs.GeneratorView) {
   return item.uri
 }
 
@@ -28,11 +29,20 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
   const [query, setQuery] = useState('')
   const {screenReaderEnabled} = useA11y()
 
+  const {data: savedFeedsAndLists} = useSavedFeeds()
+  const savedFeeds = savedFeedsAndLists?.feeds
+    .filter(f => f.type === 'feed' && f.view.uri !== DISCOVER_FEED_URI)
+    .map(f => f.view) as AppBskyFeedDefs.GeneratorView[]
+
   const {data: popularFeedsPages, fetchNextPage} = useGetPopularFeedsQuery({
     limit: 30,
   })
   const popularFeeds =
-    popularFeedsPages?.pages.flatMap(page => page.feeds) || []
+    popularFeedsPages?.pages
+      .flatMap(page => page.feeds)
+      .filter(f => !savedFeeds?.some(sf => sf?.uri === f.uri)) ?? []
+
+  const suggestedFeeds = savedFeeds?.concat(popularFeeds)
 
   const {
     data: searchedFeeds,
@@ -54,7 +64,9 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
     }
   }
 
-  const renderItem = ({item}: ListRenderItemInfo<GeneratorView>) => {
+  const renderItem = ({
+    item,
+  }: ListRenderItemInfo<AppBskyFeedDefs.GeneratorView>) => {
     return (
       <WizardFeedCard
         generator={item}
@@ -78,7 +90,7 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
         </View>
       </View>
       <List
-        data={query ? searchedFeeds : popularFeeds}
+        data={query ? searchedFeeds : suggestedFeeds}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         contentContainerStyle={{paddingTop: 6}}
