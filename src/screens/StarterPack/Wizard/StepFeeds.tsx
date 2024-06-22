@@ -41,12 +41,14 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
   const {data: popularFeedsPages, fetchNextPage} = useGetPopularFeedsQuery({
     limit: 30,
   })
-  const popularFeeds =
-    popularFeedsPages?.pages
-      .flatMap(page => page.feeds)
-      .filter(f => !savedFeeds?.some(sf => sf?.uri === f.uri)) ?? []
+  const popularFeeds = popularFeedsPages?.pages.flatMap(p => p.feeds) ?? []
 
-  const suggestedFeeds = savedFeeds?.concat(popularFeeds)
+  const suggestedFeeds =
+    savedFeeds.length === 0
+      ? popularFeeds
+      : savedFeeds.concat(
+          popularFeeds.filter(f => !savedFeeds.some(sf => sf.uri === f.uri)),
+        )
 
   const {data: searchedFeeds, isLoading: isLoadingSearch} =
     useSearchPopularFeedsQuery({q: throttledQuery})
