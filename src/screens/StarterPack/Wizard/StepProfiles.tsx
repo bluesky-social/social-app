@@ -13,7 +13,6 @@ import {List} from 'view/com/util/List'
 import {useWizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
-import {BackGestureDetector} from '#/components/StarterPack/Wizard/BackGestureDetector'
 import {ScreenTransition} from '#/components/StarterPack/Wizard/ScreenTransition'
 import {WizardProfileCard} from '#/components/StarterPack/Wizard/WizardListCard'
 import {Text} from '#/components/Typography'
@@ -55,57 +54,49 @@ export function StepProfiles({
   }
 
   return (
-    <BackGestureDetector onBack={() => dispatch({type: 'Back'})}>
-      <ScreenTransition
-        style={[a.flex_1]}
-        direction={state.transitionDirection}>
-        <View style={[a.border_b, t.atoms.border_contrast_medium]}>
-          <View style={[a.my_sm, a.px_md, {height: 40}]}>
-            <SearchInput
-              query={query}
-              onChangeQuery={setQuery}
-              onPressCancelSearch={() => setQuery('')}
-              onSubmitQuery={() => {}}
-            />
-          </View>
+    <ScreenTransition style={[a.flex_1]} direction={state.transitionDirection}>
+      <View style={[a.border_b, t.atoms.border_contrast_medium]}>
+        <View style={[a.my_sm, a.px_md, {height: 40}]}>
+          <SearchInput
+            query={query}
+            onChangeQuery={setQuery}
+            onPressCancelSearch={() => setQuery('')}
+            onSubmitQuery={() => {}}
+          />
         </View>
-        <List
-          data={query ? results : topFollowers}
-          renderItem={renderItem}
-          keyExtractor={keyExtractor}
-          renderScrollComponent={props => (
-            <KeyboardAwareScrollView {...props} />
-          )}
-          keyboardShouldPersistTaps="handled"
-          containWeb={true}
-          sideBorders={false}
-          style={[a.flex_1]}
-          onEndReached={
-            !query && !screenReaderEnabled ? () => fetchNextPage() : undefined
-          }
-          onEndReachedThreshold={isNative ? 2 : 0.25}
-          ListEmptyComponent={
-            <View style={[a.flex_1, a.align_center, a.mt_lg, a.px_lg]}>
-              {isLoadingResults ? (
-                <Loader size="lg" />
-              ) : (
-                <Text
-                  style={[
-                    a.font_bold,
-                    a.text_lg,
-                    a.text_center,
-                    a.mt_lg,
-                    a.leading_snug,
-                  ]}>
-                  <Trans>
-                    Nobody was found. Try searching for someone else.
-                  </Trans>
-                </Text>
-              )}
-            </View>
-          }
-        />
-      </ScreenTransition>
-    </BackGestureDetector>
+      </View>
+      <List
+        data={query ? results : topFollowers}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        renderScrollComponent={props => <KeyboardAwareScrollView {...props} />}
+        keyboardShouldPersistTaps="handled"
+        containWeb={true}
+        sideBorders={false}
+        style={[a.flex_1]}
+        onEndReached={
+          !query && !screenReaderEnabled ? () => fetchNextPage() : undefined
+        }
+        onEndReachedThreshold={isNative ? 2 : 0.25}
+        ListEmptyComponent={
+          <View style={[a.flex_1, a.align_center, a.mt_lg, a.px_lg]}>
+            {isLoadingResults ? (
+              <Loader size="lg" />
+            ) : (
+              <Text
+                style={[
+                  a.font_bold,
+                  a.text_lg,
+                  a.text_center,
+                  a.mt_lg,
+                  a.leading_snug,
+                ]}>
+                <Trans>Nobody was found. Try searching for someone else.</Trans>
+              </Text>
+            )}
+          </View>
+        }
+      />
+    </ScreenTransition>
   )
 }

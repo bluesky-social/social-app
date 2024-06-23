@@ -17,7 +17,6 @@ import {useWizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a, useTheme} from '#/alf'
 import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {Loader} from '#/components/Loader'
-import {BackGestureDetector} from '#/components/StarterPack/Wizard/BackGestureDetector'
 import {ScreenTransition} from '#/components/StarterPack/Wizard/ScreenTransition'
 import {WizardFeedCard} from '#/components/StarterPack/Wizard/WizardListCard'
 import {Text} from '#/components/Typography'
@@ -68,58 +67,50 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
   }
 
   return (
-    <BackGestureDetector onBack={() => dispatch({type: 'Back'})}>
-      <ScreenTransition
-        style={[a.flex_1]}
-        direction={state.transitionDirection}>
-        <View style={[a.border_b, t.atoms.border_contrast_medium]}>
-          <View style={[a.my_sm, a.px_md, {height: 40}]}>
-            <SearchInput
-              query={query}
-              onChangeQuery={t => setQuery(t)}
-              onPressCancelSearch={() => setQuery('')}
-              onSubmitQuery={() => {}}
-            />
-          </View>
+    <ScreenTransition style={[a.flex_1]} direction={state.transitionDirection}>
+      <View style={[a.border_b, t.atoms.border_contrast_medium]}>
+        <View style={[a.my_sm, a.px_md, {height: 40}]}>
+          <SearchInput
+            query={query}
+            onChangeQuery={t => setQuery(t)}
+            onPressCancelSearch={() => setQuery('')}
+            onSubmitQuery={() => {}}
+          />
         </View>
-        <List
-          data={query ? searchedFeeds : suggestedFeeds}
-          renderItem={renderItem}
-          keyExtractor={keyExtractor}
-          contentContainerStyle={{paddingTop: 6}}
-          onEndReached={
-            !query && !screenReaderEnabled ? () => fetchNextPage() : undefined
-          }
-          onEndReachedThreshold={2}
-          renderScrollComponent={props => (
-            <KeyboardAwareScrollView {...props} />
-          )}
-          keyboardShouldPersistTaps="handled"
-          containWeb={true}
-          sideBorders={false}
-          style={{flex: 1}}
-          ListEmptyComponent={
-            <View style={[a.flex_1, a.align_center, a.mt_lg, a.px_lg]}>
-              {isLoadingSearch ? (
-                <Loader size="lg" />
-              ) : (
-                <Text
-                  style={[
-                    a.font_bold,
-                    a.text_lg,
-                    a.text_center,
-                    a.mt_lg,
-                    a.leading_snug,
-                  ]}>
-                  <Trans>
-                    No feeds found. Try searching for something else.
-                  </Trans>
-                </Text>
-              )}
-            </View>
-          }
-        />
-      </ScreenTransition>
-    </BackGestureDetector>
+      </View>
+      <List
+        data={query ? searchedFeeds : suggestedFeeds}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        contentContainerStyle={{paddingTop: 6}}
+        onEndReached={
+          !query && !screenReaderEnabled ? () => fetchNextPage() : undefined
+        }
+        onEndReachedThreshold={2}
+        renderScrollComponent={props => <KeyboardAwareScrollView {...props} />}
+        keyboardShouldPersistTaps="handled"
+        containWeb={true}
+        sideBorders={false}
+        style={{flex: 1}}
+        ListEmptyComponent={
+          <View style={[a.flex_1, a.align_center, a.mt_lg, a.px_lg]}>
+            {isLoadingSearch ? (
+              <Loader size="lg" />
+            ) : (
+              <Text
+                style={[
+                  a.font_bold,
+                  a.text_lg,
+                  a.text_center,
+                  a.mt_lg,
+                  a.leading_snug,
+                ]}>
+                <Trans>No feeds found. Try searching for something else.</Trans>
+              </Text>
+            )}
+          </View>
+        }
+      />
+    </ScreenTransition>
   )
 }
