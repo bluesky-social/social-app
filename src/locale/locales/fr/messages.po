@@ -6528,7 +6528,7 @@ msgstr "Oui, désactiver"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:525
 msgid "Yes, delete this starter pack"
-msgstr "Oui, supprimez ce pack de démarrage"
+msgstr "Oui, supprimer ce pack de démarrage"
 
 #: src/screens/Deactivated.tsx:150
 msgid "Yes, reactivate my account"
