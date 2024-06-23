@@ -251,12 +251,14 @@ export function ProfileCardWithFollowBtn({
   noBorder,
   followers,
   onPress,
+  logContext = 'ProfileCard',
 }: {
   profile: AppBskyActorDefs.ProfileViewBasic
   noBg?: boolean
   noBorder?: boolean
   followers?: AppBskyActorDefs.ProfileView[] | undefined
   onPress?: () => void
+  logContext?: 'ProfileCard' | 'StarterPackProfilesList'
 }) {
   const {currentAccount} = useSession()
   const isMe = profile.did === currentAccount?.did
@@ -271,7 +273,7 @@ export function ProfileCardWithFollowBtn({
         isMe
           ? undefined
           : profileShadow => (
-              <FollowButton profile={profileShadow} logContext="ProfileCard" />
+              <FollowButton profile={profileShadow} logContext={logContext} />
             )
       }
       onPress={onPress}
@@ -314,6 +316,7 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   details: {
+    justifyContent: 'center',
     paddingLeft: 54,
     paddingRight: 10,
     paddingBottom: 10,
@@ -339,7 +342,6 @@ const styles = StyleSheet.create({
 
   followedBy: {
     flexDirection: 'row',
-    alignItems: 'center',
     paddingLeft: 54,
     paddingRight: 20,
     marginBottom: 10,
