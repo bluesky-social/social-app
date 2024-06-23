@@ -493,17 +493,29 @@ function Footer({
               </Text>
               are included in your starter pack
             </Trans>
-          ) : (
-            <Trans>
+          ) : state.currentStep === 'Profiles' ? (
+            <Trans context="profiles">
               <Text style={[a.font_bold, textStyles]}>
                 {getName(items[initialNamesIndex])},{' '}
               </Text>
               <Text style={[a.font_bold, textStyles]}>
                 {getName(items[initialNamesIndex + 1])},{' '}
               </Text>
-              and {items.length - 2}{' '}
-              <Plural value={items.length - 2} one="other" other="others" /> are
-              included in your starter pack
+              and{' '}
+              <Plural value={items.length - 2} one="# other" other="# others" />{' '}
+              are included in your starter pack
+            </Trans>
+          ) : (
+            <Trans context="feeds">
+              <Text style={[a.font_bold, textStyles]}>
+                {getName(items[initialNamesIndex])},{' '}
+              </Text>
+              <Text style={[a.font_bold, textStyles]}>
+                {getName(items[initialNamesIndex + 1])},{' '}
+              </Text>
+              and{' '}
+              <Plural value={items.length - 2} one="# other" other="# others" />{' '}
+              are included in your starter pack
             </Trans>
           )}
         </Text>
