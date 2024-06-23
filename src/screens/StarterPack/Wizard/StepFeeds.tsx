@@ -47,7 +47,9 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
     if (savedFeeds.length === 0) {
       return popularFeeds
     } else {
-      return popularFeeds.filter(f => !savedFeeds.some(sf => sf.uri === f.uri))
+      return savedFeeds.concat(
+        popularFeeds.filter(f => !savedFeeds.some(sf => sf.uri === f.uri)),
+      )
     }
   }
 
