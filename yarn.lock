@@ -3118,11 +3118,6 @@
   resolved "https://registry.yarnpkg.com/@discoveryjs/json-ext/-/json-ext-0.5.7.tgz#1d572bfbbe14b7704e0ba0f39b74815b84870d70"
   integrity sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==
 
-"@dominicstop/ts-event-emitter@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@dominicstop/ts-event-emitter/-/ts-event-emitter-1.1.0.tgz#1f3d3fa878a1ccab686931280757954719cf88e4"
-  integrity sha512-CcxmJIvUb1vsFheuGGVSQf4KdPZC44XolpUT34+vlal+LyQoBUOn31pjFET5M9ctOxEpt8xa0M3/2M7uUiAoJw==
-
 "@egjs/hammerjs@^2.0.17":
   version "2.0.17"
   resolved "https://registry.yarnpkg.com/@egjs/hammerjs/-/hammerjs-2.0.17.tgz#5dc02af75a6a06e4c2db0202cae38c9263895124"
@@ -18882,13 +18877,6 @@ react-native-image-crop-picker@0.40.3:
   resolved "https://registry.yarnpkg.com/react-native-image-crop-picker/-/react-native-image-crop-picker-0.40.3.tgz#a6b135cd1218a33ad126c1a148ec5a1bd01737ff"
   integrity sha512-45PKcTnsnLS+E36YwoXutllQdRSOuOsMN0IRcAcwsFXOuAQIOtugXlAuGGL28JHKb/ATaSSPvqCSrdG65Jv3GA==
 
-react-native-ios-context-menu@^1.15.3:
-  version "1.15.3"
-  resolved "https://registry.yarnpkg.com/react-native-ios-context-menu/-/react-native-ios-context-menu-1.15.3.tgz#c02e6a7af2df8c08d0b3e1c8f3395484b3c9c760"
-  integrity sha512-UNkVl7ocvSpNaEpvBvE1aHOfDy/DFdZ5I+ElfnTXFsRxrVZmxLtST0b1q2wSWGWDmd2Ig2AYd7GRbYtcY222Ag==
-  dependencies:
-    "@dominicstop/ts-event-emitter" "^1.1.0"
-
 react-native-keyboard-controller@^1.12.1:
   version "1.12.1"
   resolved "https://registry.yarnpkg.com/react-native-keyboard-controller/-/react-native-keyboard-controller-1.12.1.tgz#6de22ed4d060528a0dd25621eeaa7f71772ce35f"
@@ -19991,10 +19979,10 @@ setprototypeof@1.2.0:
   resolved "https://registry.yarnpkg.com/setprototypeof/-/setprototypeof-1.2.0.tgz#66c9a24a73f9fc28cbe66b09fed3d33dcaf1b424"
   integrity sha512-E5LDX7Wrp85Kil5bhZv46j8jOeboKq5JMmYM3gVGdGH8xFpPWXUMsNrlODCrkoxMEeNi/XZIwuRvY4XNwYMJpw==
 
-sf-symbols-typescript@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/sf-symbols-typescript/-/sf-symbols-typescript-1.0.0.tgz#94e9210bf27e7583f9749a0d07bd4f4937ea488f"
-  integrity sha512-DkS7q3nN68dEMb4E18HFPDAvyrjDZK9YAQQF2QxeFu9gp2xRDXFMF8qLJ1EmQ/qeEGQmop4lmMM1WtYJTIcCMw==
+sf-symbols-typescript@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/sf-symbols-typescript/-/sf-symbols-typescript-2.0.0.tgz#52548c84d124914faed1868c55bb71bffac472f1"
+  integrity sha512-Fc8Uhhl2plqXMw7GQ8q83t/zj1xhNCJvteDNJUDULaH/4a/Eqw5aW1UYEznyEIgkokw7QYXuQ9hOw8jhBLXL0A==
 
 shallow-clone@^3.0.0:
   version "3.0.1"
@@ -22520,14 +22508,14 @@ zeed-dom@0.10.9, zeed-dom@^0.9.19:
   dependencies:
     css-what "^6.1.0"
 
-zeego@^1.6.2:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/zeego/-/zeego-1.7.0.tgz#8034adb842199c4ccf21bcb19877800bff18606b"
-  integrity sha512-dZP/iUMeYLfKFnWMn+gNBJkHrR5Cu1ySyCeSkBAJmG9wjCsXoBVMyO7kV6/Y7P0ZhD5c/oS+0/Z6duxeDIos0g==
+zeego@^1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/zeego/-/zeego-1.10.0.tgz#4f787e269f3d85b4eb2fdfe58e6765d7e0e8dcf2"
+  integrity sha512-HrPv7DfyAubkp/NOy+Uwcb1rcS3DtkZEtNQFiSDduBoZt2EDf89+1N+aweACj1UnmGOOu+kk56WYiV9sliMpng==
   dependencies:
     "@radix-ui/react-context-menu" "^2.0.1"
     "@radix-ui/react-dropdown-menu" "^2.0.1"
-    sf-symbols-typescript "^1.0.0"
+    sf-symbols-typescript "^2.0.0"
 
 zod-validation-error@^2.1.0:
   version "2.1.0"

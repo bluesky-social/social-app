@@ -11,7 +11,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isNative, isWeb} from '#/platform/detection'
+import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {useModalControls} from '#/state/modals'
 import {
@@ -41,9 +41,7 @@ import {ComposeIcon2} from 'lib/icons'
 import {makeListLink, makeProfileLink} from 'lib/routes/links'
 import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {NavigationProp} from 'lib/routes/types'
-import {shareUrl} from 'lib/sharing'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {toShareUrl} from 'lib/strings/url-helpers'
 import {s} from 'lib/styles'
 import {ListMembers} from '#/view/com/lists/ListMembers'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
@@ -52,7 +50,6 @@ import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
 import {EmptyState} from 'view/com/util/EmptyState'
 import {FAB} from 'view/com/util/fab/FAB'
 import {Button} from 'view/com/util/forms/Button'
-import {DropdownItem, NativeDropdown} from 'view/com/util/forms/NativeDropdown'
 import {TextLink} from 'view/com/util/Link'
 import {ListRef} from 'view/com/util/List'
 import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
@@ -73,6 +70,8 @@ const SECTION_TITLES_MOD = ['About']
 interface SectionRef {
   scrollToTop: () => void
 }
+
+// @TODO Fabric
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileList'>
 export function ProfileListScreen(props: Props) {
@@ -234,13 +233,13 @@ function ProfileListScreenLoaded({
 }
 
 function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
-  const pal = usePalette('default')
-  const palInverted = usePalette('inverted')
+  // const pal = usePalette('default')
+  // const palInverted = usePalette('inverted')
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
   const {currentAccount} = useSession()
   const reportDialogControl = useReportDialogControl()
-  const {openModal} = useModalControls()
+  // const {openModal} = useModalControls()
   const listMuteMutation = useListMuteMutation()
   const listBlockMutation = useListBlockMutation()
   const listDeleteMutation = useListDeleteMutation()
@@ -248,7 +247,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
   const isModList = list.purpose === 'app.bsky.graph.defs#modlist'
   const isBlocking = !!list.viewer?.blocked
   const isMuting = !!list.viewer?.muted
-  const isOwner = list.creator.did === currentAccount?.did
+  // const isOwner = list.creator.did === currentAccount?.did
   const {data: preferences} = usePreferencesQuery()
   const {track} = useAnalytics()
   const playHaptic = useHaptics()
@@ -312,17 +311,17 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     savedFeedConfig,
   ])
 
-  const onRemoveFromSavedFeeds = React.useCallback(async () => {
-    playHaptic()
-    if (!savedFeedConfig) return
-    try {
-      await removeSavedFeed(savedFeedConfig)
-      Toast.show(_(msg`Removed from your feeds`))
-    } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`))
-      logger.error('Failed to remove pinned list', {message: e})
-    }
-  }, [playHaptic, removeSavedFeed, _, savedFeedConfig])
+  // const onRemoveFromSavedFeeds = React.useCallback(async () => {
+  //   playHaptic()
+  //   if (!savedFeedConfig) return
+  //   try {
+  //     await removeSavedFeed(savedFeedConfig)
+  //     Toast.show(_(msg`Removed from your feeds`))
+  //   } catch (e) {
+  //     Toast.show(_(msg`There was an issue contacting the server`))
+  //     logger.error('Failed to remove pinned list', {message: e})
+  //   }
+  // }, [playHaptic, removeSavedFeed, _, savedFeedConfig])
 
   const onSubscribeMute = useCallback(async () => {
     try {
@@ -380,12 +379,12 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     }
   }, [list, listBlockMutation, track, _])
 
-  const onPressEdit = useCallback(() => {
-    openModal({
-      name: 'create-or-edit-list',
-      list,
-    })
-  }, [openModal, list])
+  // const onPressEdit = useCallback(() => {
+  //   openModal({
+  //     name: 'create-or-edit-list',
+  //     list,
+  //   })
+  // }, [openModal, list])
 
   const onPressDelete = useCallback(async () => {
     await listDeleteMutation.mutateAsync({uri: list.uri})
@@ -411,188 +410,188 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     savedFeedConfig,
   ])
 
-  const onPressReport = useCallback(() => {
-    reportDialogControl.open()
-  }, [reportDialogControl])
+  // const onPressReport = useCallback(() => {
+  //   reportDialogControl.open()
+  // }, [reportDialogControl])
+  //
+  // const onPressShare = useCallback(() => {
+  //   const url = toShareUrl(`/profile/${list.creator.did}/lists/${rkey}`)
+  //   shareUrl(url)
+  //   track('Lists:Share')
+  // }, [list, rkey, track])
 
-  const onPressShare = useCallback(() => {
-    const url = toShareUrl(`/profile/${list.creator.did}/lists/${rkey}`)
-    shareUrl(url)
-    track('Lists:Share')
-  }, [list, rkey, track])
+  // const dropdownItems: DropdownItem[] = useMemo(() => {
+  //   let items: DropdownItem[] = [
+  //     {
+  //       testID: 'listHeaderDropdownShareBtn',
+  //       label: isWeb ? _(msg`Copy link to list`) : _(msg`Share`),
+  //       onPress: onPressShare,
+  //       icon: {
+  //         ios: {
+  //           name: 'square.and.arrow.up',
+  //         },
+  //         android: '',
+  //         web: 'share',
+  //       },
+  //     },
+  //   ]
+  //
+  //   if (savedFeedConfig) {
+  //     items.push({
+  //       testID: 'listHeaderDropdownRemoveFromFeedsBtn',
+  //       label: _(msg`Remove from my feeds`),
+  //       onPress: onRemoveFromSavedFeeds,
+  //       icon: {
+  //         ios: {
+  //           name: 'trash',
+  //         },
+  //         android: '',
+  //         web: ['far', 'trash-can'],
+  //       },
+  //     })
+  //   }
+  //
+  //   if (isOwner) {
+  //     items.push({label: 'separator'})
+  //     items.push({
+  //       testID: 'listHeaderDropdownEditBtn',
+  //       label: _(msg`Edit list details`),
+  //       onPress: onPressEdit,
+  //       icon: {
+  //         ios: {
+  //           name: 'pencil',
+  //         },
+  //         android: '',
+  //         web: 'pen',
+  //       },
+  //     })
+  //     items.push({
+  //       testID: 'listHeaderDropdownDeleteBtn',
+  //       label: _(msg`Delete List`),
+  //       onPress: deleteListPromptControl.open,
+  //       icon: {
+  //         ios: {
+  //           name: 'trash',
+  //         },
+  //         android: '',
+  //         web: ['far', 'trash-can'],
+  //       },
+  //     })
+  //   } else {
+  //     items.push({label: 'separator'})
+  //     items.push({
+  //       testID: 'listHeaderDropdownReportBtn',
+  //       label: _(msg`Report List`),
+  //       onPress: onPressReport,
+  //       icon: {
+  //         ios: {
+  //           name: 'exclamationmark.triangle',
+  //         },
+  //         android: '',
+  //         web: 'circle-exclamation',
+  //       },
+  //     })
+  //   }
+  //   if (isModList && isPinned) {
+  //     items.push({label: 'separator'})
+  //     items.push({
+  //       testID: 'listHeaderDropdownUnpinBtn',
+  //       label: _(msg`Unpin moderation list`),
+  //       onPress:
+  //         isPending || !savedFeedConfig
+  //           ? undefined
+  //           : () => removeSavedFeed(savedFeedConfig),
+  //       icon: {
+  //         ios: {
+  //           name: 'pin',
+  //         },
+  //         android: '',
+  //         web: 'thumbtack',
+  //       },
+  //     })
+  //   }
+  //   if (isCurateList && (isBlocking || isMuting)) {
+  //     items.push({label: 'separator'})
+  //
+  //     if (isMuting) {
+  //       items.push({
+  //         testID: 'listHeaderDropdownMuteBtn',
+  //         label: _(msg`Un-mute list`),
+  //         onPress: onUnsubscribeMute,
+  //         icon: {
+  //           ios: {
+  //             name: 'eye',
+  //           },
+  //           android: '',
+  //           web: 'eye',
+  //         },
+  //       })
+  //     }
+  //
+  //     if (isBlocking) {
+  //       items.push({
+  //         testID: 'listHeaderDropdownBlockBtn',
+  //         label: _(msg`Un-block list`),
+  //         onPress: onUnsubscribeBlock,
+  //         icon: {
+  //           ios: {
+  //             name: 'person.fill.xmark',
+  //           },
+  //           android: '',
+  //           web: 'user-slash',
+  //         },
+  //       })
+  //     }
+  //   }
+  //   return items
+  // }, [
+  //   _,
+  //   onPressShare,
+  //   isOwner,
+  //   isModList,
+  //   isPinned,
+  //   isCurateList,
+  //   onPressEdit,
+  //   deleteListPromptControl.open,
+  //   onPressReport,
+  //   isPending,
+  //   isBlocking,
+  //   isMuting,
+  //   onUnsubscribeMute,
+  //   onUnsubscribeBlock,
+  //   removeSavedFeed,
+  //   savedFeedConfig,
+  //   onRemoveFromSavedFeeds,
+  // ])
 
-  const dropdownItems: DropdownItem[] = useMemo(() => {
-    let items: DropdownItem[] = [
-      {
-        testID: 'listHeaderDropdownShareBtn',
-        label: isWeb ? _(msg`Copy link to list`) : _(msg`Share`),
-        onPress: onPressShare,
-        icon: {
-          ios: {
-            name: 'square.and.arrow.up',
-          },
-          android: '',
-          web: 'share',
-        },
-      },
-    ]
-
-    if (savedFeedConfig) {
-      items.push({
-        testID: 'listHeaderDropdownRemoveFromFeedsBtn',
-        label: _(msg`Remove from my feeds`),
-        onPress: onRemoveFromSavedFeeds,
-        icon: {
-          ios: {
-            name: 'trash',
-          },
-          android: '',
-          web: ['far', 'trash-can'],
-        },
-      })
-    }
-
-    if (isOwner) {
-      items.push({label: 'separator'})
-      items.push({
-        testID: 'listHeaderDropdownEditBtn',
-        label: _(msg`Edit list details`),
-        onPress: onPressEdit,
-        icon: {
-          ios: {
-            name: 'pencil',
-          },
-          android: '',
-          web: 'pen',
-        },
-      })
-      items.push({
-        testID: 'listHeaderDropdownDeleteBtn',
-        label: _(msg`Delete List`),
-        onPress: deleteListPromptControl.open,
-        icon: {
-          ios: {
-            name: 'trash',
-          },
-          android: '',
-          web: ['far', 'trash-can'],
-        },
-      })
-    } else {
-      items.push({label: 'separator'})
-      items.push({
-        testID: 'listHeaderDropdownReportBtn',
-        label: _(msg`Report List`),
-        onPress: onPressReport,
-        icon: {
-          ios: {
-            name: 'exclamationmark.triangle',
-          },
-          android: '',
-          web: 'circle-exclamation',
-        },
-      })
-    }
-    if (isModList && isPinned) {
-      items.push({label: 'separator'})
-      items.push({
-        testID: 'listHeaderDropdownUnpinBtn',
-        label: _(msg`Unpin moderation list`),
-        onPress:
-          isPending || !savedFeedConfig
-            ? undefined
-            : () => removeSavedFeed(savedFeedConfig),
-        icon: {
-          ios: {
-            name: 'pin',
-          },
-          android: '',
-          web: 'thumbtack',
-        },
-      })
-    }
-    if (isCurateList && (isBlocking || isMuting)) {
-      items.push({label: 'separator'})
-
-      if (isMuting) {
-        items.push({
-          testID: 'listHeaderDropdownMuteBtn',
-          label: _(msg`Un-mute list`),
-          onPress: onUnsubscribeMute,
-          icon: {
-            ios: {
-              name: 'eye',
-            },
-            android: '',
-            web: 'eye',
-          },
-        })
-      }
-
-      if (isBlocking) {
-        items.push({
-          testID: 'listHeaderDropdownBlockBtn',
-          label: _(msg`Un-block list`),
-          onPress: onUnsubscribeBlock,
-          icon: {
-            ios: {
-              name: 'person.fill.xmark',
-            },
-            android: '',
-            web: 'user-slash',
-          },
-        })
-      }
-    }
-    return items
-  }, [
-    _,
-    onPressShare,
-    isOwner,
-    isModList,
-    isPinned,
-    isCurateList,
-    onPressEdit,
-    deleteListPromptControl.open,
-    onPressReport,
-    isPending,
-    isBlocking,
-    isMuting,
-    onUnsubscribeMute,
-    onUnsubscribeBlock,
-    removeSavedFeed,
-    savedFeedConfig,
-    onRemoveFromSavedFeeds,
-  ])
-
-  const subscribeDropdownItems: DropdownItem[] = useMemo(() => {
-    return [
-      {
-        testID: 'subscribeDropdownMuteBtn',
-        label: _(msg`Mute accounts`),
-        onPress: subscribeMutePromptControl.open,
-        icon: {
-          ios: {
-            name: 'speaker.slash',
-          },
-          android: '',
-          web: 'user-slash',
-        },
-      },
-      {
-        testID: 'subscribeDropdownBlockBtn',
-        label: _(msg`Block accounts`),
-        onPress: subscribeBlockPromptControl.open,
-        icon: {
-          ios: {
-            name: 'person.fill.xmark',
-          },
-          android: '',
-          web: 'ban',
-        },
-      },
-    ]
-  }, [_, subscribeMutePromptControl.open, subscribeBlockPromptControl.open])
+  // const subscribeDropdownItems: DropdownItem[] = useMemo(() => {
+  //   return [
+  //     {
+  //       testID: 'subscribeDropdownMuteBtn',
+  //       label: _(msg`Mute accounts`),
+  //       onPress: subscribeMutePromptControl.open,
+  //       icon: {
+  //         ios: {
+  //           name: 'speaker.slash',
+  //         },
+  //         android: '',
+  //         web: 'user-slash',
+  //       },
+  //     },
+  //     {
+  //       testID: 'subscribeDropdownBlockBtn',
+  //       label: _(msg`Block accounts`),
+  //       onPress: subscribeBlockPromptControl.open,
+  //       icon: {
+  //         ios: {
+  //           name: 'person.fill.xmark',
+  //         },
+  //         android: '',
+  //         web: 'ban',
+  //       },
+  //     },
+  //   ]
+  // }, [_, subscribeMutePromptControl.open, subscribeBlockPromptControl.open])
 
   return (
     <ProfileSubpageHeader
@@ -633,29 +632,28 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
             label={_(msg`Unmute`)}
             onPress={onUnsubscribeMute}
           />
-        ) : (
-          <NativeDropdown
-            testID="subscribeBtn"
-            items={subscribeDropdownItems}
-            accessibilityLabel={_(msg`Subscribe to this list`)}
-            accessibilityHint="">
-            <View style={[palInverted.view, styles.btn]}>
-              <Text style={palInverted.text}>
-                <Trans>Subscribe</Trans>
-              </Text>
-            </View>
-          </NativeDropdown>
-        )
-      ) : null}
-      <NativeDropdown
-        testID="headerDropdownBtn"
-        items={dropdownItems}
-        accessibilityLabel={_(msg`More options`)}
-        accessibilityHint="">
-        <View style={[pal.viewLight, styles.btn]}>
-          <FontAwesomeIcon icon="ellipsis" size={20} color={pal.colors.text} />
-        </View>
-      </NativeDropdown>
+        ) : null
+      ) : // <NativeDropdown
+      //   testID="subscribeBtn"
+      //   items={subscribeDropdownItems}
+      //   accessibilityLabel={_(msg`Subscribe to this list`)}
+      //   accessibilityHint="">
+      //   <View style={[palInverted.view, styles.btn]}>
+      //     <Text style={palInverted.text}>
+      //       <Trans>Subscribe</Trans>
+      //     </Text>
+      //   </View>
+      // </NativeDropdown>
+      null}
+      {/*<NativeDropdown*/}
+      {/*  testID="headerDropdownBtn"*/}
+      {/*  items={dropdownItems}*/}
+      {/*  accessibilityLabel={_(msg`More options`)}*/}
+      {/*  accessibilityHint="">*/}
+      {/*  <View style={[pal.viewLight, styles.btn]}>*/}
+      {/*    <FontAwesomeIcon icon="ellipsis" size={20} color={pal.colors.text} />*/}
+      {/*  </View>*/}
+      {/*</NativeDropdown>*/}
 
       <Prompt.Basic
         control={deleteListPromptControl}
@@ -980,14 +978,14 @@ function ErrorScreen({error}: {error: string}) {
   )
 }
 
-const styles = StyleSheet.create({
-  btn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingVertical: 7,
-    paddingHorizontal: 14,
-    borderRadius: 50,
-    marginLeft: 6,
-  },
-})
+// const styles = StyleSheet.create({
+//   btn: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     gap: 6,
+//     paddingVertical: 7,
+//     paddingHorizontal: 14,
+//     borderRadius: 50,
+//     marginLeft: 6,
+//   },
+// })
