@@ -42,9 +42,21 @@ jest.mock('rn-fetch-blob', () => ({
   fetch: jest.fn(),
 }))
 
-jest.mock('@bam.tech/react-native-image-resizer', () => ({
-  createResizedImage: jest.fn(),
-}))
+jest.mock('expo-image-manipulator', () => {
+  let SaveFormat
+  ;(function (SaveFormat) {
+    SaveFormat.JPEG = 'jpeg'
+    SaveFormat.PNG = 'png'
+    SaveFormat.WEBP = 'webp'
+  })(SaveFormat || (SaveFormat = {}))
+
+  return {
+    manipulateAsync: jest.fn().mockResolvedValue({
+      uri: 'file://resized-image',
+    }),
+    SaveFormat,
+  }
+})
 
 jest.mock('@segment/analytics-react-native', () => ({
   createClient: () => ({

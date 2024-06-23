@@ -1,4 +1,5 @@
-import ImageResizer from '@bam.tech/react-native-image-resizer'
+import {deleteAsync} from 'expo-file-system'
+import {manipulateAsync, SaveFormat} from 'expo-image-manipulator'
 import RNFetchBlob from 'rn-fetch-blob'
 
 import {
@@ -10,17 +11,19 @@ describe('downloadAndResize', () => {
   const errorSpy = jest.spyOn(global.console, 'error')
 
   const mockResizedImage = {
-    path: jest.fn().mockReturnValue('file://resized-image.jpg'),
+    path: 'file://resized-image.jpg',
     size: 100,
-    width: 50,
-    height: 50,
+    width: 100,
+    height: 100,
     mime: 'image/jpeg',
   }
 
   beforeEach(() => {
-    const mockedCreateResizedImage =
-      ImageResizer.createResizedImage as jest.Mock
-    mockedCreateResizedImage.mockResolvedValue(mockResizedImage)
+    const mockedCreateResizedImage = manipulateAsync as jest.Mock
+    mockedCreateResizedImage.mockResolvedValue({
+      uri: 'file://resized-image.jpg',
+      ...mockResizedImage,
+    })
   })
 
   afterEach(() => {
@@ -30,7 +33,7 @@ describe('downloadAndResize', () => {
   it('should return resized image for valid URI and options', async () => {
     const mockedFetch = RNFetchBlob.fetch as jest.Mock
     mockedFetch.mockResolvedValueOnce({
-      path: jest.fn().mockReturnValue('file://downloaded-image.jpg'),
+      path: jest.fn().mockReturnValue('file://resized-image.jpg'),
       info: jest.fn().mockReturnValue({status: 200}),
       flush: jest.fn(),
     })
@@ -54,17 +57,15 @@ describe('downloadAndResize', () => {
       'GET',
       'https://example.com/image.jpg',
     )
-    expect(ImageResizer.createResizedImage).toHaveBeenCalledWith(
-      'file://downloaded-image.jpg',
-      100,
-      100,
-      'JPEG',
-      100,
-      undefined,
-      undefined,
-      undefined,
-      {mode: 'cover'},
+    expect(manipulateAsync).toHaveBeenCalledWith(expect.anything(), [], {
+      format: SaveFormat.JPEG,
+    })
+    expect(manipulateAsync).toHaveBeenCalledWith(
+      expect.anything(),
+      [{resize: {height: opts.height, width: opts.width}}],
+      {format: SaveFormat.JPEG, compress: 0.9},
     )
+    expect(deleteAsync).toHaveBeenCalledWith(expect.anything())
   })
 
   it('should return undefined for invalid URI', async () => {
@@ -109,17 +110,15 @@ describe('downloadAndResize', () => {
       'GET',
       'https://example.com/image',
     )
-    expect(ImageResizer.createResizedImage).toHaveBeenCalledWith(
-      'file://downloaded-image',
-      100,
-      100,
-      'JPEG',
-      100,
-      undefined,
-      undefined,
-      undefined,
-      {mode: 'cover'},
+    expect(manipulateAsync).toHaveBeenCalledWith(expect.anything(), [], {
+      format: SaveFormat.JPEG,
+    })
+    expect(manipulateAsync).toHaveBeenCalledWith(
+      expect.anything(),
+      [{resize: {height: opts.height, width: opts.width}}],
+      {format: SaveFormat.JPEG, compress: 0.9},
     )
+    expect(deleteAsync).toHaveBeenCalledWith(expect.anything())
   })
 
   it('should return undefined for non-200 response', async () => {
