@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-06-23 12:41+0900\n"
+"PO-Revision-Date: 2024-06-23 14:06+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -165,11 +165,11 @@ msgstr "<0/>のメンバー"
 
 #: src/screens/StarterPack/Wizard/index.tsx:485
 msgid "<0>{0} </0>and<1> </1><2>{1} </2>are included in your starter pack"
-msgstr "<0>{0}</0>と<1></1><2>{1}</2>はあなたのスターターパックに含まれています"
+msgstr "<0>{0}</0>と<1></1><2>{1}</2>があなたのスターターパックに含まれています"
 
 #: src/screens/StarterPack/Wizard/index.tsx:497
 msgid "<0>{0}, </0><1>{1}, </1>and {2} {3, plural, one {other} other {others}} are included in your starter pack"
-msgstr "<0>{0}、</0><1>{1}、</1>そして{3, plural, other {他}}{2}はあなたのスターターパックに含まれています"
+msgstr "<0>{0}、</0><1>{1}、</1>そして{3, plural, other {他}}{2}があなたのスターターパックに含まれています"
 
 #: src/view/shell/Drawer.tsx:101
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
@@ -275,7 +275,7 @@ msgstr "追加"
 
 #: src/screens/StarterPack/Wizard/index.tsx:539
 msgid "Add {0} more to continue"
-msgstr "続けるにはさらに{0}追加してください"
+msgstr "続けるにはさらに{0}ユーザー追加してください"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:56
 msgid "Add {displayName} to starter pack"
