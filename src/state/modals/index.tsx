@@ -5,7 +5,6 @@ import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {GalleryModel} from '#/state/models/media/gallery'
 import {ImageModel} from '#/state/models/media/image'
-import {ThreadgateSetting} from '../queries/threadgate'
 
 export interface EditProfileModal {
   name: 'edit-profile'
@@ -65,13 +64,6 @@ export interface SelfLabelModal {
   labels: string[]
   hasMedia: boolean
   onChange: (labels: string[]) => void
-}
-
-export interface ThreadgateModal {
-  name: 'threadgate'
-  settings: ThreadgateSetting[]
-  onChange?: (settings: ThreadgateSetting[]) => void
-  onConfirm?: (settings: ThreadgateSetting[]) => void
 }
 
 export interface ChangeHandleModal {
@@ -149,7 +141,6 @@ export type Modal =
   | CropImageModal
   | EditImageModal
   | SelfLabelModal
-  | ThreadgateModal
 
   // Bluesky access
   | WaitlistModal
