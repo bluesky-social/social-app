@@ -231,14 +231,21 @@ function LandingScreenLoaded({
                     </Trans>
                   )}
                 </Text>
-                <View>
-                  {starterPack.listItemsSample?.slice(0, 8).map(item => (
+                <View
+                  style={
+                    isTabletOrDesktop && [
+                      a.border,
+                      a.rounded_md,
+                      t.atoms.border_contrast_low,
+                    ]
+                  }>
+                  {starterPack.listItemsSample?.slice(0, 8).map((item, i) => (
                     <View
                       key={item.subject.did}
                       style={[
                         a.py_lg,
                         a.px_md,
-                        a.border_t,
+                        (!isTabletOrDesktop || i !== 0) && a.border_t,
                         t.atoms.border_contrast_low,
                         {pointerEvents: 'none'},
                       ]}>
@@ -257,13 +264,21 @@ function LandingScreenLoaded({
                   <Trans>You'll stay updated with these feeds</Trans>
                 </Text>
 
-                <View style={[{pointerEvents: 'none'}]}>
-                  {feeds?.map(feed => (
+                <View
+                  style={[
+                    {pointerEvents: 'none'},
+                    isTabletOrDesktop && [
+                      a.border,
+                      a.rounded_md,
+                      t.atoms.border_contrast_low,
+                    ],
+                  ]}>
+                  {feeds?.map((feed, i) => (
                     <View
                       style={[
                         a.py_lg,
                         a.px_md,
-                        a.border_t,
+                        (!isTabletOrDesktop || i !== 0) && a.border_t,
                         t.atoms.border_contrast_low,
                       ]}
                       key={feed.uri}>
