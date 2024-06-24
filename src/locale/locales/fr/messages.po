@@ -118,7 +118,7 @@ msgstr "{diffSeconds, plural, one {seconde} other {secondes}}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:182
 msgid "{displayName}'s Starter Pack"
-msgstr "Le kit de démarrage de {displayName}"
+msgstr "Kit de démarrage de {displayName}"
 
 #: src/screens/SignupQueued.tsx:207
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
@@ -170,7 +170,7 @@ msgstr "<0>{0} </0>et<1> </1><2>{1} </2>sont inclus dans votre kit de démarrage
 #: src/screens/StarterPack/Wizard/index.tsx:497
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}, </0><1>{1} </1>et {2, plural, one {# autre} other {# autres}} sont inclus dans votre kit de démarrage"
+msgstr "<0>{0}, </0><1>{1} </1>et {2, plural, one {# autre} other {# autres}} font partie de votre kit de démarrage"
 
 #: src/screens/StarterPack/Wizard/index.tsx:509
 msgctxt "feeds"
