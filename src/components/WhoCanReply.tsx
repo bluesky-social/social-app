@@ -229,14 +229,20 @@ function ManagedThreadgateEditorDialog({
   settings: ThreadgateSetting[]
   onConfirm: (settings: ThreadgateSetting[]) => Promise<void>
 }) {
-  const [state, setState] = React.useState<ThreadgateSetting[]>([])
-  const onConfirmInner = () => onConfirm(state)
-  React.useEffect(() => setState(settings), [settings])
+  const [draft, setDraft] = React.useState<ThreadgateSetting[]>(settings)
+  const onConfirmInner = () => onConfirm(draft)
+
+  const [prevSettings, setPrevSettings] = React.useState(settings)
+  if (settings !== prevSettings) {
+    setPrevSettings(settings)
+    setDraft(settings) // Reset draft.
+  }
+
   return (
     <ThreadgateEditorDialog
       control={control}
-      threadgate={state}
-      onChange={setState}
+      threadgate={draft}
+      onChange={setDraft}
       onConfirm={onConfirmInner}
     />
   )
