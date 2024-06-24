@@ -434,22 +434,38 @@ func (srv *Server) WebPost(c echo.Context) error {
 
 func (srv *Server) WebStarterPack(c echo.Context) error {
 	req := c.Request()
+	ctx := req.Context()
 	data := pongo2.Context{}
 	data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
-	// TODO get starter pack name for use in og:title
+	// sanity check arguments. don't 4xx, just let app handle if not expected format
+	rkeyParam := c.Param("rkey")
+	rkey, err := syntax.ParseRecordKey(rkeyParam)
+	if err != nil {
+		log.Errorf("bad rkey: %v", err)
+		return c.Render(http.StatusOK, "starterpack.html", data)
+	}
+	handleOrDIDParam := c.Param("handleOrDID")
+	handleOrDID, err := syntax.ParseAtIdentifier(handleOrDIDParam)
+	if err != nil {
+		log.Errorf("bad identifier: %v", err)
+		return c.Render(http.StatusOK, "starterpack.html", data)
+	}
+	identifier := handleOrDID.Normalize().String()
+	starterPackURI := fmt.Sprintf("at://%s/app.bsky.graph.starterpack/%s", identifier, rkey)
+	spv, err := appbsky.GraphGetStarterPack(ctx, srv.xrpcc, starterPackURI)
+	if err != nil {
+		log.Errorf("failed to fetch starter pack view for: %s\t%v", starterPackURI, err)
+		return c.Render(http.StatusOK, "starterpack.html", data)
+	}
+	if spv.StarterPack == nil || spv.StarterPack.Record == nil {
+		return c.Render(http.StatusOK, "starterpack.html", data)
+	}
+	rec, ok := spv.StarterPack.Record.Val.(*appbsky.GraphStarterpack)
+	if !ok {
+		return c.Render(http.StatusOK, "starterpack.html", data)
+	}
+	data["title"] = rec.Name
 	if srv.cfg.ogcardHost != "" {
-		// sanity check arguments. don't 4xx, just let app handle if not expected format
-		rkeyParam := c.Param("rkey")
-		rkey, err := syntax.ParseRecordKey(rkeyParam)
-		if err != nil {
-			return c.Render(http.StatusOK, "starterpack.html", data)
-		}
-		handleOrDIDParam := c.Param("handleOrDID")
-		handleOrDID, err := syntax.ParseAtIdentifier(handleOrDIDParam)
-		if err != nil {
-			return c.Render(http.StatusOK, "starterpack.html", data)
-		}
-		identifier := handleOrDID.Normalize().String()
 		data["imgThumbUrl"] = fmt.Sprintf("%s/start/%s/%s", srv.cfg.ogcardHost, identifier, rkey)
 	}
 	return c.Render(http.StatusOK, "starterpack.html", data)
