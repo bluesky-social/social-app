@@ -34,6 +34,7 @@ import {Earth_Stroke2_Corner0_Rounded as Earth} from '#/components/icons/Globe'
 import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
 import {Text} from '#/components/Typography'
 import {TextLink} from '../view/com/util/Link'
+import {PencilLine_Stroke2_Corner0_Rounded as PencilLine} from './icons/Pencil'
 
 interface WhoCanReplyProps {
   post: AppBskyFeedDefs.PostView
@@ -87,15 +88,7 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
               {description}
             </Text>
             {isThreadAuthor && (
-              <Text
-                style={[
-                  a.text_sm,
-                  a.leading_tight,
-                  {color: t.palette.primary_500},
-                  hovered && a.underline,
-                ]}>
-                <Trans>Edit</Trans>
-              </Text>
+              <PencilLine width={12} fill={t.palette.primary_500} />
             )}
           </View>
         )}
