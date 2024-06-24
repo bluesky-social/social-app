@@ -31,13 +31,19 @@ export function StepProfiles({
   const [query, setQuery] = useState('')
   const {screenReaderEnabled} = useA11y()
 
-  const {data: topPages, fetchNextPage} = useActorSearchPaginated({
+  const {
+    data: topPages,
+    fetchNextPage,
+    isLoading: isLoadingTopPages,
+  } = useActorSearchPaginated({
     query: encodeURIComponent('*'),
   })
   const topFollowers = topPages?.pages.flatMap(p => p.actors)
 
-  const {data: results, isLoading: isLoadingResults} =
+  const {data: results, isFetching: isFetchingResults} =
     useActorAutocompleteQuery(query, true, 12)
+
+  const isLoading = isLoadingTopPages || isFetchingResults
 
   const renderItem = ({
     item,
@@ -80,7 +86,7 @@ export function StepProfiles({
         onEndReachedThreshold={isNative ? 2 : 0.25}
         ListEmptyComponent={
           <View style={[a.flex_1, a.align_center, a.mt_lg, a.px_lg]}>
-            {isLoadingResults ? (
+            {isLoading ? (
               <Loader size="lg" />
             ) : (
               <Text

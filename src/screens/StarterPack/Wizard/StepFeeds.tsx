@@ -32,12 +32,17 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
   const throttledQuery = useThrottledValue(query, 500)
   const {screenReaderEnabled} = useA11y()
 
-  const {data: savedFeedsAndLists} = useSavedFeeds()
+  const {data: savedFeedsAndLists, isLoading: isLoadingSavedFeeds} =
+    useSavedFeeds()
   const savedFeeds = savedFeedsAndLists?.feeds
     .filter(f => f.type === 'feed' && f.view.uri !== DISCOVER_FEED_URI)
     .map(f => f.view) as AppBskyFeedDefs.GeneratorView[]
 
-  const {data: popularFeedsPages, fetchNextPage} = useGetPopularFeedsQuery({
+  const {
+    data: popularFeedsPages,
+    fetchNextPage,
+    isLoading: isLoadingPopularFeeds,
+  } = useGetPopularFeedsQuery({
     limit: 30,
   })
   const popularFeeds = popularFeedsPages?.pages.flatMap(p => p.feeds) ?? []
@@ -45,8 +50,11 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
     popularFeeds.filter(f => !savedFeeds.some(sf => sf.uri === f.uri)),
   )
 
-  const {data: searchedFeeds, isLoading: isLoadingSearch} =
+  const {data: searchedFeeds, isFetching: isFetchingSearchedFeeds} =
     useSearchPopularFeedsQuery({q: throttledQuery})
+
+  const isLoading =
+    isLoadingSavedFeeds || isLoadingPopularFeeds || isFetchingSearchedFeeds
 
   const renderItem = ({
     item,
@@ -90,7 +98,7 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
         style={{flex: 1}}
         ListEmptyComponent={
           <View style={[a.flex_1, a.align_center, a.mt_lg, a.px_lg]}>
-            {isLoadingSearch ? (
+            {isLoading ? (
               <Loader size="lg" />
             ) : (
               <Text
