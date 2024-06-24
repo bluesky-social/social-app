@@ -251,11 +251,8 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
         return {
           ...data,
           pages: data.pages.map(page => {
-            let __tempHasDuplicatesStopPagination__ = false
-
             const feeds = page.feeds.filter(feed => {
               if (seen.has(feed.uri)) {
-                __tempHasDuplicatesStopPagination__ = true
                 return false
               }
               seen.add(feed.uri)
@@ -275,9 +272,7 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
 
             return {
               ...page,
-              cursor: __tempHasDuplicatesStopPagination__
-                ? undefined
-                : page.cursor,
+              cursor: page.cursor,
               feeds,
             }
           }),
