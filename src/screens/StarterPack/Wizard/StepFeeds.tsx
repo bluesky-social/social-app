@@ -48,7 +48,7 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
   const popularFeeds = popularFeedsPages?.pages.flatMap(p => p.feeds) ?? []
 
   // If we have saved feeds already loaded, display them immediately
-  // Then, if we also have popular feeds we can concat them to the saved feeds
+  // Then, when popular feeds have loaded we can concat them to the saved feeds
   const suggestedFeeds =
     savedFeeds || isFetchedSavedFeeds
       ? popularFeeds
