@@ -90,7 +90,7 @@ msgstr ""
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:47
 msgid "{0}'s starter pack"
-msgstr ""
+msgstr "{0} 님의 스타터 팩"
 
 #: src/components/LabelingServiceCard/index.tsx:71
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
@@ -118,7 +118,7 @@ msgstr "초"
 
 #: src/screens/StarterPack/Wizard/index.tsx:182
 msgid "{displayName}'s Starter Pack"
-msgstr ""
+msgstr "{displayName} 님의 스타터 팩"
 
 #: src/screens/SignupQueued.tsx:207
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
@@ -168,7 +168,13 @@ msgid "<0>{0} </0>and<1> </1><2>{1} </2>are included in your starter pack"
 msgstr ""
 
 #: src/screens/StarterPack/Wizard/index.tsx:497
-msgid "<0>{0}, </0><1>{1}, </1>and {2} {3, plural, one {other} other {others}} are included in your starter pack"
+msgctxt "profiles"
+msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
+msgstr ""
+
+#: src/screens/StarterPack/Wizard/index.tsx:509
+msgctxt "feeds"
+msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
 msgstr ""
 
 #: src/view/shell/Drawer.tsx:101
@@ -273,7 +279,7 @@ msgstr "계정 언뮤트됨"
 msgid "Add"
 msgstr "추가"
 
-#: src/screens/StarterPack/Wizard/index.tsx:539
+#: src/screens/StarterPack/Wizard/index.tsx:551
 msgid "Add {0} more to continue"
 msgstr ""
 
@@ -381,7 +387,7 @@ msgstr "고급"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:271
 msgid "All accounts have been followed!"
-msgstr ""
+msgstr "모든 계정을 팔로우했습니다"
 
 #: src/view/screens/Feeds.tsx:721
 msgid "All the feeds you've saved, right in one place."
@@ -445,16 +451,16 @@ msgstr ""
 
 #: src/components/StarterPack/ShareDialog.tsx:79
 msgid "An error occurred while saving the image."
-msgstr ""
+msgstr "이미지를 저장하는 동안 오류가 발생했습니다"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:76
 #: src/components/StarterPack/ShareDialog.tsx:91
 msgid "An error occurred while saving the QR code!"
-msgstr ""
+msgstr "QR 코드를 저장하는 동안 오류가 발생했습니다"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:273
 msgid "An error occurred while trying to follow all"
-msgstr ""
+msgstr "모두 팔로우하려고 하는 동안 오류가 발생했습니다"
 
 #: src/lib/moderation/useReportOptions.ts:28
 msgid "An issue not included in these options"
@@ -548,7 +554,7 @@ msgstr "기본 추천 피드 적용하기"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:497
 msgid "Are you sure you want delete this starter pack?"
-msgstr ""
+msgstr "이 스타터 팩을 삭제하시겠습니까?"
 
 #: src/view/screens/AppPasswords.tsx:282
 msgid "Are you sure you want to delete the app password \"{name}\"?"
@@ -1325,17 +1331,17 @@ msgstr "새 Bluesky 계정을 만듭니다"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:157
 msgid "Create a QR code for a starter pack"
-msgstr ""
+msgstr "스타터 팩 QR 코드 만들기"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:165
 #: src/components/StarterPack/ProfileStarterPacks.tsx:257
 #: src/Navigation.tsx:330
 msgid "Create a starter pack"
-msgstr ""
+msgstr "스타터 팩 만들기"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:244
 msgid "Create a starter pack for me"
-msgstr ""
+msgstr "나를 위한 스타터 팩 만들기"
 
 #: src/screens/Signup/index.tsx:154
 msgid "Create Account"
@@ -1715,8 +1721,8 @@ msgid "Edit"
 msgstr "편집"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:438
-#: src/screens/StarterPack/Wizard/index.tsx:522
-#: src/screens/StarterPack/Wizard/index.tsx:529
+#: src/screens/StarterPack/Wizard/index.tsx:534
+#: src/screens/StarterPack/Wizard/index.tsx:541
 #: src/view/screens/Feeds.tsx:385
 #: src/view/screens/Feeds.tsx:453
 msgid "Edit"
@@ -5933,7 +5939,7 @@ msgstr "서비스에 연결할 수 없습니다. 인터넷 연결을 확인하�
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:513
 msgid "Unable to delete"
-msgstr ""
+msgstr "삭제할 수 없음"
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:89
 #: src/components/dms/MessagesListBlockedFooter.tsx:96
@@ -6477,7 +6483,7 @@ msgstr "이 게시물을 검토해야 하는 이유는 무엇인가요?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:60
 msgid "Why should this starter pack be reviewed?"
-msgstr ""
+msgstr "이 스타터 팩을 검토해야 하는 이유는 무엇인가요?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:48
 msgid "Why should this user be reviewed?"
@@ -6534,7 +6540,7 @@ msgstr "어제 {time}"
 
 #: src/components/StarterPack/StarterPackCard.tsx:68
 msgid "you"
-msgstr ""
+msgstr "나"
 
 #: src/screens/SignupQueued.tsx:136
 msgid "You are in line."
