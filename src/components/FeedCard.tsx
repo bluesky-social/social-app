@@ -33,18 +33,21 @@ import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 
+type CommonProps = {
+  disableDescriptionFacets?: boolean
+}
 type Props =
-  | {
+  | ({
       type: 'feed'
       view: AppBskyFeedDefs.GeneratorView
-    }
-  | {
+    } & CommonProps)
+  | ({
       type: 'list'
       view: AppBskyGraphDefs.ListView
-    }
+    } & CommonProps)
 
 export function Default(props: Props) {
-  const {type, view} = props
+  const {type, view, disableDescriptionFacets} = props
   const displayName = type === 'feed' ? view.displayName : view.name
   const purpose = type === 'list' ? view.purpose : undefined
   return (
@@ -60,7 +63,10 @@ export function Default(props: Props) {
           />
           <Action uri={view.uri} pin type={type} purpose={purpose} />
         </Header>
-        <Description description={view.description} />
+        <Description
+          description={view.description}
+          disableFacets={disableDescriptionFacets}
+        />
         {type === 'feed' && <Likes count={view.likeCount || 0} />}
       </Outer>
     </Link>
@@ -198,14 +204,25 @@ export function TitleAndBylinePlaceholder({creator}: {creator?: boolean}) {
   )
 }
 
-export function Description({description}: {description?: string}) {
-  const [rt, isResolving] = useRichText(description || '')
+export function Description({
+  description,
+  disableFacets,
+}: {
+  description?: string
+  disableFacets?: boolean
+}) {
   if (!description) return null
-  return isResolving ? (
+  return disableFacets ? (
     <RichText value={description} style={[a.leading_snug]} />
   ) : (
-    <RichText value={rt} style={[a.leading_snug]} />
+    <DescriptionWithFacets description={description} />
   )
+}
+
+export function DescriptionWithFacets({description}: {description?: string}) {
+  const [rt] = useRichText(description || '')
+  if (!description) return null
+  return <RichText value={rt ?? description} style={[a.leading_snug]} />
 }
 
 export function Likes({count}: {count: number}) {
