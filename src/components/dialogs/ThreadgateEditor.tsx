@@ -29,10 +29,7 @@ export function ThreadgateEditorDialog({
     <Dialog.Outer control={control}>
       <Dialog.Handle />
       <DialogContent
-        // The dialog mirrors the threadgate state inside
-        // so we must reset it if a new value flows down.
-        key={JSON.stringify(threadgate)}
-        initialThreadgate={threadgate}
+        seedThreadgate={threadgate}
         onChange={onChange}
         onConfirm={onConfirm}
       />
@@ -41,18 +38,26 @@ export function ThreadgateEditorDialog({
 }
 
 function DialogContent({
-  initialThreadgate,
+  seedThreadgate,
   onChange,
   onConfirm,
 }: {
-  initialThreadgate: ThreadgateSetting[]
+  seedThreadgate: ThreadgateSetting[]
   onChange?: (v: ThreadgateSetting[]) => void
   onConfirm?: (v: ThreadgateSetting[]) => void
 }) {
   const {_} = useLingui()
   const control = Dialog.useDialogContext()
   const {data: lists} = useMyListsQuery('curate')
-  const [draft, setDraft] = React.useState(initialThreadgate)
+  const [draft, setDraft] = React.useState(seedThreadgate)
+
+  const [prevSeedThreadgate, setPrevSeedThreadgate] =
+    React.useState(seedThreadgate)
+  if (seedThreadgate !== prevSeedThreadgate) {
+    // New data flowed from above (e.g. due to update coming through).
+    setPrevSeedThreadgate(seedThreadgate)
+    setDraft(seedThreadgate) // Reset draft.
+  }
 
   function updateThreadgate(nextThreadgate: ThreadgateSetting[]) {
     setDraft(nextThreadgate)
