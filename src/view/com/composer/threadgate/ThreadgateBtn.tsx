@@ -195,22 +195,42 @@ function Selectable({
   onPress: () => void
   style?: StyleProp<ViewStyle>
 }) {
+  const t = useTheme()
   return (
     <Button
       onPress={onPress}
       label={label}
-      style={[a.justify_between, style]}
       accessibilityHint="Select this option"
-      color="primary"
-      size="medium"
-      variant={isSelected ? 'solid' : 'outline'}
       accessibilityRole="checkbox"
       aria-checked={isSelected}
       accessibilityState={{
         checked: isSelected,
-      }}>
-      <ButtonText style={a.text_left}>{label}</ButtonText>
-      {isSelected ? <ButtonIcon icon={Check} /> : <View />}
+      }}
+      style={a.flex_1}>
+      {({hovered}) => (
+        <View
+          style={[
+            a.flex_1,
+            a.flex_row,
+            a.align_center,
+            a.justify_between,
+            a.rounded_sm,
+            a.p_md,
+            {height: 40}, // for consistency with checkmark icon visible or not
+            isSelected ? t.atoms.bg_contrast_50 : t.atoms.bg_contrast_25,
+            hovered && t.atoms.bg_contrast_100,
+            style,
+          ]}>
+          <Text style={[a.text_sm, isSelected && a.font_semibold]}>
+            {label}
+          </Text>
+          {isSelected ? (
+            <Check size="sm" fill={t.palette.primary_500} />
+          ) : (
+            <View />
+          )}
+        </View>
+      )}
     </Button>
   )
 }
