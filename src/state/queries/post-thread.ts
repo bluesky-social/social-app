@@ -31,7 +31,8 @@ import {
   getEmbeddedPost,
 } from './util'
 
-const RQKEY_ROOT = 'post-thread'
+const REPLY_TREE_DEPTH = 10
+export const RQKEY_ROOT = 'post-thread'
 export const RQKEY = (uri: string) => [RQKEY_ROOT, uri]
 type ThreadViewNode = AppBskyFeedGetPostThread.OutputSchema['thread']
 
@@ -41,6 +42,8 @@ export interface ThreadCtx {
   hasMore?: boolean
   isParentLoading?: boolean
   isChildLoading?: boolean
+  isSelfThread?: boolean
+  hasMoreSelfThread?: boolean
 }
 
 export type ThreadPost = {
@@ -88,9 +91,14 @@ export function usePostThreadQuery(uri: string | undefined) {
     gcTime: 0,
     queryKey: RQKEY(uri || ''),
     async queryFn() {
-      const res = await agent.getPostThread({uri: uri!})
+      const res = await agent.getPostThread({
+        uri: uri!,
+        depth: REPLY_TREE_DEPTH,
+      })
       if (res.success) {
-        return responseToThreadNodes(res.data.thread)
+        const thread = responseToThreadNodes(res.data.thread)
+        annotateSelfThread(thread)
+        return thread
       }
       return {type: 'unknown', uri: uri!}
     },
@@ -234,6 +242,8 @@ function responseToThreadNodes(
         isHighlightedPost: depth === 0,
         hasMore:
           direction === 'down' && !node.replies?.length && !!node.replyCount,
+        isSelfThread: false, // populated `annotateSelfThread`
+        hasMoreSelfThread: false, // populated in `annotateSelfThread`
       },
     }
   } else if (AppBskyFeedDefs.isBlockedPost(node)) {
@@ -242,6 +252,53 @@ function responseToThreadNodes(
     return {type: 'not-found', _reactKey: node.uri, uri: node.uri, ctx: {depth}}
   } else {
     return {type: 'unknown', uri: ''}
+  }
+}
+
+function annotateSelfThread(thread: ThreadNode) {
+  if (thread.type !== 'post') {
+    return
+  }
+  const selfThreadNodes: ThreadPost[] = [thread]
+
+  let parent: ThreadNode | undefined = thread.parent
+  while (parent) {
+    if (
+      parent.type !== 'post' ||
+      parent.post.author.did !== thread.post.author.did
+    ) {
+      // not a self-thread
+      return
+    }
+    selfThreadNodes.unshift(parent)
+    parent = parent.parent
+  }
+
+  let node = thread
+  for (let i = 0; i < 10; i++) {
+    const reply = node.replies?.find(
+      r => r.type === 'post' && r.post.author.did === thread.post.author.did,
+    )
+    if (reply?.type !== 'post') {
+      break
+    }
+    selfThreadNodes.push(reply)
+    node = reply
+  }
+
+  if (selfThreadNodes.length > 1) {
+    for (const selfThreadNode of selfThreadNodes) {
+      selfThreadNode.ctx.isSelfThread = true
+    }
+    const last = selfThreadNodes[selfThreadNodes.length - 1]
+    if (
+      last &&
+      last.ctx.depth === REPLY_TREE_DEPTH && // at the edge of the tree depth
+      last.post.replyCount && // has replies
+      !last.replies?.length // replies were not hydrated
+    ) {
+      last.ctx.hasMoreSelfThread = true
+    }
   }
 }
 

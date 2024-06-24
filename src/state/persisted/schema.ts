@@ -18,9 +18,12 @@ const accountSchema = z.object({
   refreshJwt: z.string().optional(), // optional because it can expire
   accessJwt: z.string().optional(), // optional because it can expire
   signupQueued: z.boolean().optional(),
-  status: z
-    .enum(['active', 'takendown', 'suspended', 'deactivated'])
-    .optional(),
+  active: z.boolean().optional(), // optional for backwards compat
+  /**
+   * Known values: takendown, suspended, deactivated
+   * @see https://github.com/bluesky-social/atproto/blob/5441fbde9ed3b22463e91481ec80cb095643e141/lexicons/com/atproto/server/getSession.json
+   */
+  status: z.string().optional(),
   pdsUrl: z.string().optional(),
 })
 export type PersistedAccount = z.infer<typeof accountSchema>
@@ -57,6 +60,7 @@ export const schema = z.object({
     appLanguage: z.string(),
   }),
   requireAltTextEnabled: z.boolean(), // should move to server
+  largeAltBadgeEnabled: z.boolean().optional(),
   externalEmbeds: z
     .object({
       giphy: z.enum(externalEmbedOptions).optional(),
@@ -71,7 +75,6 @@ export const schema = z.object({
       flickr: z.enum(externalEmbedOptions).optional(),
     })
     .optional(),
-  mutedThreads: z.array(z.string()), // should move to server
   invites: z.object({
     copiedInvites: z.array(z.string()),
   }),
@@ -85,6 +88,9 @@ export const schema = z.object({
   disableHaptics: z.boolean().optional(),
   disableAutoplay: z.boolean().optional(),
   kawaii: z.boolean().optional(),
+  hasCheckedForStarterPack: z.boolean().optional(),
+  /** @deprecated */
+  mutedThreads: z.array(z.string()),
 })
 export type Schema = z.infer<typeof schema>
 
@@ -108,6 +114,7 @@ export const defaults: Schema = {
     appLanguage: deviceLocales[0] || 'en',
   },
   requireAltTextEnabled: false,
+  largeAltBadgeEnabled: false,
   externalEmbeds: {},
   mutedThreads: [],
   invites: {
@@ -123,4 +130,5 @@ export const defaults: Schema = {
   disableHaptics: false,
   disableAutoplay: prefersReducedMotion,
   kawaii: false,
+  hasCheckedForStarterPack: false,
 }

@@ -32,14 +32,17 @@ interface AddedProps {
   desktopFixedHeight?: boolean | number
 }
 
-export const CenteredView = React.forwardRef(function CenteredView({
-  style,
-  sideBorders,
-  topBorder,
-  ...props
-}: React.PropsWithChildren<
-  ViewProps & {sideBorders?: boolean; topBorder?: boolean}
->) {
+export const CenteredView = React.forwardRef(function CenteredView(
+  {
+    style,
+    sideBorders,
+    topBorder,
+    ...props
+  }: React.PropsWithChildren<
+    ViewProps & {sideBorders?: boolean; topBorder?: boolean}
+  >,
+  ref: React.Ref<View>,
+) {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
   if (!isMobile) {
@@ -58,7 +61,7 @@ export const CenteredView = React.forwardRef(function CenteredView({
     })
     style = addStyle(style, pal.border)
   }
-  return <View style={style} {...props} />
+  return <View ref={ref} style={style} {...props} />
 })
 
 export const FlatList_INTERNAL = React.forwardRef(function FlatListImpl<ItemT>(

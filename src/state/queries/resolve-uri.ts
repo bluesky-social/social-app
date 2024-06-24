@@ -1,5 +1,10 @@
 import {AppBskyActorDefs, AtUri} from '@atproto/api'
-import {useQuery, useQueryClient, UseQueryResult} from '@tanstack/react-query'
+import {
+  QueryClient,
+  useQuery,
+  useQueryClient,
+  UseQueryResult,
+} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
 import {useAgent} from '#/state/session'
@@ -49,4 +54,12 @@ export function useResolveDidQuery(didOrHandle: string | undefined) {
     },
     enabled: !!didOrHandle,
   })
+}
+
+export function precacheResolvedUri(
+  queryClient: QueryClient,
+  handle: string,
+  did: string,
+) {
+  queryClient.setQueryData<string>(RQKEY(handle), did)
 }

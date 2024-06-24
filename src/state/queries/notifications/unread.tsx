@@ -9,9 +9,8 @@ import EventEmitter from 'eventemitter3'
 
 import BroadcastChannel from '#/lib/broadcast'
 import {logger} from '#/logger'
-import {useMutedThreads} from '#/state/muted-threads'
 import {useAgent, useSession} from '#/state/session'
-import {decrementBadgeCount} from 'lib/notifications/notifications'
+import {resetBadgeCount} from 'lib/notifications/notifications'
 import {useModerationOpts} from '../../preferences/moderation-opts'
 import {truncateAndInvalidate} from '../util'
 import {RQKEY as RQKEY_NOTIFS} from './feed'
@@ -48,7 +47,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const agent = useAgent()
   const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
-  const threadMutes = useMutedThreads()
 
   const [numUnread, setNumUnread] = React.useState('')
 
@@ -119,7 +117,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         // update & broadcast
         setNumUnread('')
         broadcast.postMessage({event: ''})
-        decrementBadgeCount('reset')
+        resetBadgeCount()
       },
 
       async checkUnread({
@@ -147,7 +145,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             limit: 40,
             queryClient,
             moderationOpts,
-            threadMutes,
 
             // only fetch subjects when the page is going to be used
             // in the notifications query, otherwise skip it
@@ -192,7 +189,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
       },
     }
-  }, [setNumUnread, queryClient, moderationOpts, threadMutes, agent])
+  }, [setNumUnread, queryClient, moderationOpts, agent])
   checkUnreadRef.current = api.checkUnread
 
   return (

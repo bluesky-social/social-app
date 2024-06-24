@@ -1,3 +1,4 @@
+import {useCallback, useEffect, useMemo, useRef} from 'react'
 import {
   AppBskyActorDefs,
   AppBskyFeedDefs,
@@ -8,20 +9,25 @@ import {
 } from '@atproto/api'
 import {
   InfiniteData,
+  keepPreviousData,
+  QueryClient,
   QueryKey,
   useInfiniteQuery,
   useMutation,
   useQuery,
+  useQueryClient,
 } from '@tanstack/react-query'
 
 import {DISCOVER_FEED_URI, DISCOVER_SAVED_FEED} from '#/lib/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {STALE} from '#/state/queries'
+import {RQKEY as listQueryKey} from '#/state/queries/list'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAgent, useSession} from '#/state/session'
 import {router} from '#/routes'
 import {FeedDescriptor} from './post-feed'
+import {precacheResolvedUri} from './resolve-uri'
 
 export type FeedSourceFeedInfo = {
   type: 'feed'
@@ -171,34 +177,179 @@ export function useFeedSourceInfoQuery({uri}: {uri: string}) {
   })
 }
 
-export const useGetPopularFeedsQueryKey = ['getPopularFeeds']
+// HACK
+// the protocol doesn't yet tell us which feeds are personalized
+// this list is used to filter out feed recommendations from logged out users
+// for the ones we know need it
+// -prf
+export const KNOWN_AUTHED_ONLY_FEEDS = [
+  'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/with-friends', // popular with friends, by bsky.app
+  'at://did:plc:tenurhgjptubkk5zf5qhi3og/app.bsky.feed.generator/mutuals', // mutuals, by skyfeed
+  'at://did:plc:tenurhgjptubkk5zf5qhi3og/app.bsky.feed.generator/only-posts', // only posts, by skyfeed
+  'at://did:plc:wzsilnxf24ehtmmc3gssy5bu/app.bsky.feed.generator/mentions', // mentions, by flicknow
+  'at://did:plc:q6gjnaw2blty4crticxkmujt/app.bsky.feed.generator/bangers', // my bangers, by jaz
+  'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/mutuals', // mutuals, by bluesky
+  'at://did:plc:q6gjnaw2blty4crticxkmujt/app.bsky.feed.generator/my-followers', // followers, by jaz
+  'at://did:plc:vpkhqolt662uhesyj6nxm7ys/app.bsky.feed.generator/followpics', // the gram, by why
+]
 
-export function useGetPopularFeedsQuery() {
+type GetPopularFeedsOptions = {limit?: number}
+
+export function createGetPopularFeedsQueryKey(
+  options?: GetPopularFeedsOptions,
+) {
+  return ['getPopularFeeds', options]
+}
+
+export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
+  const {hasSession} = useSession()
   const agent = useAgent()
-  return useInfiniteQuery<
+  const limit = options?.limit || 10
+  const {data: preferences} = usePreferencesQuery()
+  const queryClient = useQueryClient()
+
+  // Make sure this doesn't invalidate unless really needed.
+  const selectArgs = useMemo(
+    () => ({
+      hasSession,
+      savedFeeds: preferences?.savedFeeds || [],
+    }),
+    [hasSession, preferences?.savedFeeds],
+  )
+  const lastPageCountRef = useRef(0)
+
+  const query = useInfiniteQuery<
     AppBskyUnspeccedGetPopularFeedGenerators.OutputSchema,
     Error,
     InfiniteData<AppBskyUnspeccedGetPopularFeedGenerators.OutputSchema>,
     QueryKey,
     string | undefined
   >({
-    queryKey: useGetPopularFeedsQueryKey,
+    queryKey: createGetPopularFeedsQueryKey(options),
     queryFn: async ({pageParam}) => {
       const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
-        limit: 10,
+        limit,
         cursor: pageParam,
       })
+
+      // precache feeds
+      for (const feed of res.data.feeds) {
+        const hydratedFeed = hydrateFeedGenerator(feed)
+        precacheFeed(queryClient, hydratedFeed)
+      }
+
       return res.data
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
+    select: useCallback(
+      (
+        data: InfiniteData<AppBskyUnspeccedGetPopularFeedGenerators.OutputSchema>,
+      ) => {
+        const {savedFeeds, hasSession: hasSessionInner} = selectArgs
+        return {
+          ...data,
+          pages: data.pages.map(page => {
+            return {
+              ...page,
+              feeds: page.feeds.filter(feed => {
+                if (
+                  !hasSessionInner &&
+                  KNOWN_AUTHED_ONLY_FEEDS.includes(feed.uri)
+                ) {
+                  return false
+                }
+                const alreadySaved = Boolean(
+                  savedFeeds?.find(f => {
+                    return f.value === feed.uri
+                  }),
+                )
+                return !alreadySaved
+              }),
+            }
+          }),
+        }
+      },
+      [selectArgs /* Don't change. Everything needs to go into selectArgs. */],
+    ),
   })
+
+  useEffect(() => {
+    const {isFetching, hasNextPage, data} = query
+    if (isFetching || !hasNextPage) {
+      return
+    }
+
+    // avoid double-fires of fetchNextPage()
+    if (
+      lastPageCountRef.current !== 0 &&
+      lastPageCountRef.current === data?.pages?.length
+    ) {
+      return
+    }
+
+    // fetch next page if we haven't gotten a full page of content
+    let count = 0
+    for (const page of data?.pages || []) {
+      count += page.feeds.length
+    }
+    if (count < limit && (data?.pages.length || 0) < 6) {
+      query.fetchNextPage()
+      lastPageCountRef.current = data?.pages?.length || 0
+    }
+  }, [query, limit])
+
+  return query
 }
 
 export function useSearchPopularFeedsMutation() {
   const agent = useAgent()
   return useMutation({
     mutationFn: async (query: string) => {
+      const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
+        limit: 10,
+        query: query,
+      })
+
+      return res.data.feeds
+    },
+  })
+}
+
+export function useSearchPopularFeedsQuery({q}: {q: string}) {
+  const agent = useAgent()
+  return useQuery({
+    queryKey: ['searchPopularFeeds', q],
+    queryFn: async () => {
+      const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
+        limit: 15,
+        query: q,
+      })
+
+      return res.data.feeds
+    },
+    placeholderData: keepPreviousData,
+  })
+}
+
+const popularFeedsSearchQueryKeyRoot = 'popularFeedsSearch'
+export const createPopularFeedsSearchQueryKey = (query: string) => [
+  popularFeedsSearchQueryKeyRoot,
+  query,
+]
+
+export function usePopularFeedsSearch({
+  query,
+  enabled,
+}: {
+  query: string
+  enabled?: boolean
+}) {
+  const agent = useAgent()
+  return useQuery({
+    enabled,
+    queryKey: createPopularFeedsSearchQueryKey(query),
+    queryFn: async () => {
       const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
         limit: 10,
         query: query,
@@ -326,4 +477,139 @@ export function usePinnedFeedsInfos() {
       return result
     },
   })
+}
+
+export type SavedFeedItem =
+  | {
+      type: 'feed'
+      config: AppBskyActorDefs.SavedFeed
+      view: AppBskyFeedDefs.GeneratorView
+    }
+  | {
+      type: 'list'
+      config: AppBskyActorDefs.SavedFeed
+      view: AppBskyGraphDefs.ListView
+    }
+  | {
+      type: 'timeline'
+      config: AppBskyActorDefs.SavedFeed
+      view: undefined
+    }
+
+export function useSavedFeeds() {
+  const agent = useAgent()
+  const {data: preferences, isLoading: isLoadingPrefs} = usePreferencesQuery()
+  const savedItems = preferences?.savedFeeds ?? []
+  const queryClient = useQueryClient()
+
+  return useQuery({
+    staleTime: STALE.INFINITY,
+    enabled: !isLoadingPrefs,
+    queryKey: [pinnedFeedInfosQueryKeyRoot, ...savedItems],
+    placeholderData: previousData => {
+      return (
+        previousData || {
+          count: savedItems.length,
+          feeds: [],
+        }
+      )
+    },
+    queryFn: async () => {
+      const resolvedFeeds = new Map<string, AppBskyFeedDefs.GeneratorView>()
+      const resolvedLists = new Map<string, AppBskyGraphDefs.ListView>()
+
+      const savedFeeds = savedItems.filter(feed => feed.type === 'feed')
+      const savedLists = savedItems.filter(feed => feed.type === 'list')
+
+      let feedsPromise = Promise.resolve()
+      if (savedFeeds.length > 0) {
+        feedsPromise = agent.app.bsky.feed
+          .getFeedGenerators({
+            feeds: savedFeeds.map(f => f.value),
+          })
+          .then(res => {
+            res.data.feeds.forEach(f => {
+              resolvedFeeds.set(f.uri, f)
+            })
+          })
+      }
+
+      const listsPromises = savedLists.map(list =>
+        agent.app.bsky.graph
+          .getList({
+            list: list.value,
+            limit: 1,
+          })
+          .then(res => {
+            const listView = res.data.list
+            resolvedLists.set(listView.uri, listView)
+          }),
+      )
+
+      await Promise.allSettled([feedsPromise, ...listsPromises])
+
+      resolvedFeeds.forEach(feed => {
+        const hydratedFeed = hydrateFeedGenerator(feed)
+        precacheFeed(queryClient, hydratedFeed)
+      })
+      resolvedLists.forEach(list => {
+        precacheList(queryClient, list)
+      })
+
+      const res: SavedFeedItem[] = savedItems.map(s => {
+        if (s.type === 'timeline') {
+          return {
+            type: 'timeline',
+            config: s,
+            view: undefined,
+          }
+        }
+
+        return {
+          type: s.type,
+          config: s,
+          view:
+            s.type === 'feed'
+              ? resolvedFeeds.get(s.value)
+              : resolvedLists.get(s.value),
+        }
+      }) as SavedFeedItem[]
+
+      return {
+        count: savedItems.length,
+        feeds: res,
+      }
+    },
+  })
+}
+
+function precacheFeed(queryClient: QueryClient, hydratedFeed: FeedSourceInfo) {
+  precacheResolvedUri(
+    queryClient,
+    hydratedFeed.creatorHandle,
+    hydratedFeed.creatorDid,
+  )
+  queryClient.setQueryData<FeedSourceInfo>(
+    feedSourceInfoQueryKey({uri: hydratedFeed.uri}),
+    hydratedFeed,
+  )
+}
+
+export function precacheList(
+  queryClient: QueryClient,
+  list: AppBskyGraphDefs.ListView,
+) {
+  precacheResolvedUri(queryClient, list.creator.handle, list.creator.did)
+  queryClient.setQueryData<AppBskyGraphDefs.ListView>(
+    listQueryKey(list.uri),
+    list,
+  )
+}
+
+export function precacheFeedFromGeneratorView(
+  queryClient: QueryClient,
+  view: AppBskyFeedDefs.GeneratorView,
+) {
+  const hydratedFeed = hydrateFeedGenerator(view)
+  precacheFeed(queryClient, hydratedFeed)
 }

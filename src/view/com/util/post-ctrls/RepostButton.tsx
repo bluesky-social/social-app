@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {POST_CTRL_HITSLOP} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useRequireAuth} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
@@ -11,6 +12,7 @@ import * as Dialog from '#/components/Dialog'
 import {CloseQuote_Stroke2_Corner1_Rounded as Quote} from '#/components/icons/Quote'
 import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
 import {Text} from '#/components/Typography'
+import {formatCount} from '../numeric/format'
 
 interface Props {
   isReposted: boolean
@@ -64,7 +66,8 @@ let RepostButton = ({
         } (${plural(repostCount || 0, {one: '# repost', other: '# reposts'})})`}
         shape="round"
         variant="ghost"
-        color="secondary">
+        color="secondary"
+        hitSlop={POST_CTRL_HITSLOP}>
         <Repost style={color} width={big ? 22 : 18} />
         {typeof repostCount !== 'undefined' && repostCount > 0 ? (
           <Text
@@ -74,7 +77,7 @@ let RepostButton = ({
               big ? a.text_md : {fontSize: 15},
               isReposted && a.font_bold,
             ]}>
-            {repostCount}
+            {formatCount(repostCount)}
           </Text>
         ) : undefined}
       </Button>
@@ -108,6 +111,7 @@ let RepostButton = ({
                 </Text>
               </Button>
               <Button
+                testID="quoteBtn"
                 style={[a.justify_start, a.px_md]}
                 label={_(msg`Quote post`)}
                 onPress={() => {

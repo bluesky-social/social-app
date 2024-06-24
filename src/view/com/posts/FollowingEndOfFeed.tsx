@@ -1,17 +1,18 @@
 import React from 'react'
-import {StyleSheet, View, Dimensions} from 'react-native'
-import {useNavigation} from '@react-navigation/native'
+import {Dimensions, StyleSheet, View} from 'react-native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {Text} from '../util/text/Text'
-import {Button} from '../util/forms/Button'
-import {NavigationProp} from 'lib/routes/types'
+import {Trans} from '@lingui/macro'
+import {useNavigation} from '@react-navigation/native'
+
 import {usePalette} from 'lib/hooks/usePalette'
+import {NavigationProp} from 'lib/routes/types'
 import {s} from 'lib/styles'
 import {isWeb} from 'platform/detection'
-import {Trans} from '@lingui/macro'
+import {Button} from '../util/forms/Button'
+import {Text} from '../util/text/Text'
 
 export function FollowingEndOfFeed() {
   const pal = usePalette('default')
@@ -28,12 +29,7 @@ export function FollowingEndOfFeed() {
   }, [navigation])
 
   const onPressDiscoverFeeds = React.useCallback(() => {
-    if (isWeb) {
-      navigation.navigate('Feeds')
-    } else {
-      navigation.navigate('FeedsTab')
-      navigation.popToTop()
-    }
+    navigation.navigate('Feeds')
   }, [navigation])
 
   return (

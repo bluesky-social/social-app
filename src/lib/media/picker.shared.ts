@@ -3,8 +3,9 @@ import {
   launchImageLibraryAsync,
   MediaTypeOptions,
 } from 'expo-image-picker'
-import {getDataUriSize} from './util'
+
 import * as Toast from 'view/com/util/Toast'
+import {getDataUriSize} from './util'
 
 export async function openPicker(opts?: ImagePickerOptions) {
   const response = await launchImageLibraryAsync({
@@ -12,6 +13,7 @@ export async function openPicker(opts?: ImagePickerOptions) {
     mediaTypes: MediaTypeOptions.Images,
     quality: 1,
     ...opts,
+    legacy: true,
   })
 
   if (response.assets && response.assets.length > 4) {
