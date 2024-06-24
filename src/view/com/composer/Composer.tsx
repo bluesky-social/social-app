@@ -69,10 +69,7 @@ import {insertMentionAt} from 'lib/strings/mention-manip'
 import {shortenLinks} from 'lib/strings/rich-text-manip'
 import {colors, gradients, s} from 'lib/styles'
 import {isAndroid, isIOS, isNative, isWeb} from 'platform/detection'
-import {
-  useDialogStateContext,
-  useDialogStateControlContext,
-} from 'state/dialogs'
+import {useDialogStateControlContext} from 'state/dialogs'
 import {GalleryModel} from 'state/models/media/gallery'
 import {ComposerOpts} from 'state/shell/composer'
 import {ComposerReplyTo} from 'view/com/composer/ComposerReplyTo'
@@ -122,7 +119,6 @@ export const ComposePost = observer(function ComposePost({
   const agent = useAgent()
   const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
   const {isModalActive} = useModals()
-  const {getAreDialogsActive} = useDialogStateContext()
   const {closeComposer} = useComposerControls()
   const {track} = useAnalytics()
   const pal = usePalette('default')
@@ -225,11 +221,11 @@ export const ComposePost = observer(function ComposePost({
   // listen to escape key on desktop web
   const onEscape = useCallback(
     (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && !getAreDialogsActive()) {
+      if (e.key === 'Escape') {
         onPressCancel()
       }
     },
-    [onPressCancel, getAreDialogsActive],
+    [onPressCancel],
   )
   useEffect(() => {
     if (isWeb && !isModalActive) {

@@ -6,10 +6,6 @@ import {Provider as GlobalDialogsProvider} from '#/components/dialogs/Context'
 
 interface IDialogContext {
   /**
-   * Returns true if any dialogs are currently open.
-   */
-  getAreDialogsActive: () => boolean
-  /**
    * The currently active `useDialogControl` hooks.
    */
   activeDialogs: React.MutableRefObject<
@@ -82,7 +78,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const context = React.useMemo<IDialogContext>(
     () => ({
-      getAreDialogsActive: () => openDialogs.current.size > 0,
       activeDialogs,
       openDialogs,
       importantForAccessibility,
