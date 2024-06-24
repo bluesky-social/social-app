@@ -5,6 +5,7 @@ import {
   AppBskyFeedDefs,
   AppBskyGraphDefs,
   AtUri,
+  RichText as RichTextApi,
 } from '@atproto/api'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -24,7 +25,6 @@ import * as Toast from 'view/com/util/Toast'
 import {useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
-import {useRichText} from '#/components/hooks/useRichText'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {Link as InternalLink, LinkProps} from '#/components/Link'
@@ -33,21 +33,18 @@ import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 
-type CommonProps = {
-  disableDescriptionFacets?: boolean
-}
 type Props =
-  | ({
+  | {
       type: 'feed'
       view: AppBskyFeedDefs.GeneratorView
-    } & CommonProps)
-  | ({
+    }
+  | {
       type: 'list'
       view: AppBskyGraphDefs.ListView
-    } & CommonProps)
+    }
 
 export function Default(props: Props) {
-  const {type, view, disableDescriptionFacets} = props
+  const {type, view} = props
   const displayName = type === 'feed' ? view.displayName : view.name
   const purpose = type === 'list' ? view.purpose : undefined
   return (
@@ -63,10 +60,7 @@ export function Default(props: Props) {
           />
           <Action uri={view.uri} pin type={type} purpose={purpose} />
         </Header>
-        <Description
-          description={view.description}
-          disableFacets={disableDescriptionFacets}
-        />
+        <Description description={view.description} />
         {type === 'feed' && <Likes count={view.likeCount || 0} />}
       </Outer>
     </Link>
@@ -204,25 +198,15 @@ export function TitleAndBylinePlaceholder({creator}: {creator?: boolean}) {
   )
 }
 
-export function Description({
-  description,
-  disableFacets,
-}: {
-  description?: string
-  disableFacets?: boolean
-}) {
-  if (!description) return null
-  return disableFacets ? (
-    <RichText value={description} style={[a.leading_snug]} />
-  ) : (
-    <DescriptionWithFacets description={description} />
-  )
-}
-
-export function DescriptionWithFacets({description}: {description?: string}) {
-  const [rt] = useRichText(description || '')
-  if (!description) return null
-  return <RichText value={rt ?? description} style={[a.leading_snug]} />
+export function Description({description}: {description?: string}) {
+  const [rt] = React.useState(() => {
+    if (!description) return
+    const rt = new RichTextApi({text: description || ''})
+    rt.detectFacetsWithoutResolution()
+    return rt
+  })
+  if (!rt) return null
+  return <RichText value={rt} style={[a.leading_snug]} disableLinks />
 }
 
 export function Likes({count}: {count: number}) {
