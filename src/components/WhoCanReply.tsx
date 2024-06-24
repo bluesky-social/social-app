@@ -106,13 +106,15 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
         }
         return false
       })
-      Toast.show('Thread settings updated')
+      Toast.show(_(msg`Thread settings updated`))
       queryClient.invalidateQueries({
         queryKey: [POST_THREAD_RQKEY_ROOT],
       })
     } catch (err) {
       Toast.show(
-        'There was an issue. Please check your internet connection and try again.',
+        _(
+          msg`There was an issue. Please check your internet connection and try again.`,
+        ),
       )
       logger.error('Failed to edit threadgate', {message: err})
     }
