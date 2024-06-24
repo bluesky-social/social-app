@@ -86,7 +86,7 @@ msgstr "Avatar de {0}"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:68
 msgid "{0}'s favorite feeds and people - join me!"
-msgstr "Les fils d’actu et les personnes préférées de {0} – rejoignez-moi !"
+msgstr "Les fils d’actu et les personnes préférées de {0} – faites comme moi !"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:47
 msgid "{0}'s starter pack"
@@ -2107,7 +2107,7 @@ msgstr "Échec de l’envoi de l’appel, veuillez réessayer."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:180
 msgid "Failed to toggle thread mute, please try again"
-msgstr "Échec de basculer la masquage du fil de discussion, veuillez réessayer"
+msgstr "Échec de l’activation ou désactivation du masquage du fil de discussion, veuillez réessayer"
 
 #: src/components/FeedCard.tsx:280
 msgid "Failed to update feeds"
@@ -2129,7 +2129,7 @@ msgstr "Fil d’actu par {0}"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:52
 msgid "Feed toggle"
-msgstr "Bouton pour le fil d’actu"
+msgstr "Ajouter/enlever le fil d’actu"
 
 #: src/view/shell/desktop/RightNav.tsx:66
 #: src/view/shell/Drawer.tsx:345
@@ -2192,7 +2192,7 @@ msgstr "Affine les fils de discussion."
 
 #: src/screens/StarterPack/Wizard/index.tsx:202
 msgid "Finish"
-msgstr "Finir"
+msgstr "Terminer"
 
 #: src/screens/Onboarding/index.tsx:35
 msgid "Fitness"
@@ -2875,7 +2875,7 @@ msgstr "Stockage ancien effacé, vous devez redémarrer l’application maintena
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:293
 msgid "Let me choose"
-msgstr "Permettez-moi de choisir"
+msgstr "Laissez-moi choisir"
 
 #: src/screens/Login/index.tsx:130
 #: src/screens/Login/index.tsx:145
@@ -2975,7 +2975,7 @@ msgstr "Listes qui bloquent ce compte :"
 
 #: src/view/screens/Search/Explore.tsx:130
 msgid "Load more"
-msgstr "Chargez plus"
+msgstr "Charger plus"
 
 #: src/view/screens/Search/Explore.tsx:218
 msgid "Load more suggested feeds"
@@ -2983,7 +2983,7 @@ msgstr "Charger d’autres fils d’actu suggérés"
 
 #: src/view/screens/Search/Explore.tsx:216
 msgid "Load more suggested follows"
-msgstr "Chargez d’autres suivis suggérés"
+msgstr "Charger d’autres suggestions de suivis"
 
 #: src/view/screens/Notifications.tsx:184
 msgid "Load new notifications"
@@ -3046,7 +3046,7 @@ msgstr "On dirait que vous n’avez plus de fil d’actu « Following ». <0>C
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:252
 msgid "Make one for me"
-msgstr "Faites-en un pour moi"
+msgstr "En faire un pour moi"
 
 #: src/view/com/modals/LinkWarning.tsx:79
 msgid "Make sure this is where you intend to go!"
@@ -3634,7 +3634,7 @@ msgstr "sur"
 
 #: src/lib/hooks/useTimeAgo.ts:81
 msgid "on {str}"
-msgstr "à {str}"
+msgstr "le {str}"
 
 #: src/view/screens/Settings/index.tsx:256
 msgid "Onboarding reset"
@@ -3943,7 +3943,7 @@ msgstr "Permission d’accès à la pellicule refusée. Veuillez l’activer dan
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:52
 msgid "Person toggle"
-msgstr "Bouton per les personnes"
+msgstr "Ajouter/enlever per les personnes"
 
 #: src/screens/Onboarding/index.tsx:28
 msgid "Pets"
@@ -4753,7 +4753,7 @@ msgstr "Rechercher tous les posts avec le mot-clé {displayTag}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:467
 msgid "Search for feeds that you want to suggest to others."
-msgstr "Recherchez les fils d’actu que vous voulez suggérer à d’autres personnes."
+msgstr "Recherchez des fils d’actu que vous voulez suggérer à d’autres personnes."
 
 #: src/view/com/auth/LoggedOut.tsx:101
 #: src/view/com/auth/LoggedOut.tsx:102
@@ -5538,7 +5538,7 @@ msgstr "Notre politique de droits d’auteur a été déplacée vers <0/>"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:298
 msgid "The experience is better in the app. Download Bluesky now and we'll pick back up where you left off."
-msgstr "L’expérience est meilleure dans l’application. Téléchargez Bluesky maintenant et nous reprendrons là où vous vous êtes arrêté."
+msgstr "L’expérience est meilleure dans l’application. Téléchargez Bluesky maintenant et nous reprendrons là où vous en étiez."
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:66
 msgid "The feed has been replaced with Discover."
