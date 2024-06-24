@@ -78,7 +78,7 @@ msgstr "{0, plural, one {Déliker (# like)} other {Déliker (# likes)}}"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:343
 msgid "{0} people have used this starter pack!"
-msgstr "{0} personnes ont utilisé ce pack de démarrage !"
+msgstr "{0} personnes ont utilisé ce kit de démarrage !"
 
 #: src/view/com/util/UserAvatar.tsx:419
 msgid "{0}'s avatar"
@@ -90,7 +90,7 @@ msgstr "Les fils d’actu et les personnes préférées de {0} – rejoignez-moi
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:47
 msgid "{0}'s starter pack"
-msgstr "Pack de démarrage de {0}"
+msgstr "Kit de démarrage de {0}"
 
 #: src/components/LabelingServiceCard/index.tsx:71
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
@@ -118,7 +118,7 @@ msgstr "{diffSeconds, plural, one {seconde} other {secondes}}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:182
 msgid "{displayName}'s Starter Pack"
-msgstr "Le pack de démarrage de {displayName}"
+msgstr "Le kit de démarrage de {displayName}"
 
 #: src/screens/SignupQueued.tsx:207
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
@@ -153,7 +153,7 @@ msgstr "{profileName} a rejoint Bluesky il y a {0}"
 
 #: src/components/NewskieDialog.tsx:87
 msgid "{profileName} joined Bluesky using a starter pack {0} ago"
-msgstr "{profileName} a rejoint Bluesky en utilisant un pack de démarrage il y a {0}"
+msgstr "{profileName} a rejoint Bluesky en utilisant un kit de démarrage il y a {0}"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:67
 msgid "{value, plural, =0 {Show all replies} one {Show replies with at least # like} other {Show replies with at least # likes}}"
@@ -165,17 +165,17 @@ msgstr "<0/> membres"
 
 #: src/screens/StarterPack/Wizard/index.tsx:485
 msgid "<0>{0} </0>and<1> </1><2>{1} </2>are included in your starter pack"
-msgstr "<0>{0} </0>et<1> </1><2>{1} </2>sont inclus dans votre pack de démarrage"
+msgstr "<0>{0} </0>et<1> </1><2>{1} </2>sont inclus dans votre kit de démarrage"
 
 #: src/screens/StarterPack/Wizard/index.tsx:497
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}, </0><1>{1} </1>et {2, plural, one {# autre} other {# autres}} sont inclus dans votre pack de démarrage"
+msgstr "<0>{0}, </0><1>{1} </1>et {2, plural, one {# autre} other {# autres}} sont inclus dans votre kit de démarrage"
 
 #: src/screens/StarterPack/Wizard/index.tsx:509
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}, </0><1>{1} </1>et {2, plural, one {# autre} other {# autres}} sont inclus dans votre pack de démarrage"
+msgstr "<0>{0}, </0><1>{1} </1>et {2, plural, one {# autre} other {# autres}} sont inclus dans votre kit de démarrage"
 
 #: src/view/shell/Drawer.tsx:101
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
@@ -187,7 +187,7 @@ msgstr "<0>{0}</0> {1, plural, one {abonnement} other {abonnements}}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:478
 msgid "<0>{0}</0> is included in your starter pack"
-msgstr "<0>{0}</0> est inclus dans votre pack de démarrage"
+msgstr "<0>{0}</0> est inclus dans votre kit de démarrage"
 
 #: src/view/com/modals/SelfLabel.tsx:135
 msgid "<0>Not Applicable.</0> This warning is only available for posts with media attached."
@@ -285,7 +285,7 @@ msgstr "Ajouter {0} autres pour continuer"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:56
 msgid "Add {displayName} to starter pack"
-msgstr "Ajouter {displayName} au pack de démarrage"
+msgstr "Ajouter {displayName} au kit de démarrage"
 
 #: src/view/com/modals/SelfLabel.tsx:57
 msgid "Add a content warning"
@@ -327,7 +327,7 @@ msgstr "Ajouter des mots et des mots-clés masqués"
 
 #: src/screens/StarterPack/Wizard/index.tsx:197
 msgid "Add people to your starter pack that you think others will enjoy following"
-msgstr "Ajoutez à votre pack de démarrage des personnes que vous pensez que d’autres aimeront suivre"
+msgstr "Ajoutez à votre kit de démarrage des personnes que vous pensez que d’autres aimeront suivre"
 
 #: src/screens/Home/NoFeedsPinned.tsx:99
 msgid "Add recommended feeds"
@@ -335,7 +335,7 @@ msgstr "Ajouter les fils d’actu recommandés"
 
 #: src/screens/StarterPack/Wizard/index.tsx:464
 msgid "Add some feeds to your starter pack!"
-msgstr "Ajoutez des fils d’actu à votre pack de démarrage !"
+msgstr "Ajoutez des fils d’actu à votre kit de démarrage !"
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:41
 msgid "Add the default feed of only people you follow"
@@ -447,7 +447,7 @@ msgstr "Une erreur s’est produite"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:313
 msgid "An error occurred while generating your starter pack. Want to try again?"
-msgstr "Une erreur s’est produite lors de la génération de votre pack de démarrage. Vous voulez réessayer ?"
+msgstr "Une erreur s’est produite lors de la génération de votre kit de démarrage. Vous voulez réessayer ?"
 
 #: src/components/StarterPack/ShareDialog.tsx:79
 msgid "An error occurred while saving the image."
@@ -554,7 +554,7 @@ msgstr "Utiliser les fils d’actu recommandés par défaut"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:497
 msgid "Are you sure you want delete this starter pack?"
-msgstr "Êtes-vous sûr de vouloir supprimer ce pack de démarrage ?"
+msgstr "Êtes-vous sûr de vouloir supprimer ce kit de démarrage ?"
 
 #: src/view/screens/AppPasswords.tsx:282
 msgid "Are you sure you want to delete the app password \"{name}\"?"
@@ -1331,17 +1331,17 @@ msgstr "Créer un compte Bluesky"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:157
 msgid "Create a QR code for a starter pack"
-msgstr "Créer un code QR pour un pack de démarrage"
+msgstr "Créer un code QR pour un kit de démarrage"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:165
 #: src/components/StarterPack/ProfileStarterPacks.tsx:257
 #: src/Navigation.tsx:330
 msgid "Create a starter pack"
-msgstr "Créer un pack de démarrage"
+msgstr "Créer un kit de démarrage"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:244
 msgid "Create a starter pack for me"
-msgstr "Créer un pack de démarrage pour moi"
+msgstr "Créer un kit de démarrage pour moi"
 
 #: src/screens/Signup/index.tsx:154
 msgid "Create Account"
@@ -1500,11 +1500,11 @@ msgstr "Supprimer le post"
 #: src/screens/StarterPack/StarterPackScreen.tsx:443
 #: src/screens/StarterPack/StarterPackScreen.tsx:599
 msgid "Delete starter pack"
-msgstr "Supprimer le pack de démarrage"
+msgstr "Supprimer le kit de démarrage"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:494
 msgid "Delete starter pack?"
-msgstr "Supprimer le pack de démarrage ?"
+msgstr "Supprimer le kit de démarrage ?"
 
 #: src/view/screens/ProfileList.tsx:662
 msgid "Delete this list?"
@@ -1777,7 +1777,7 @@ msgstr "Modifier le profil"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:430
 msgid "Edit starter pack"
-msgstr "Modifier le pack de démarrage"
+msgstr "Modifier le kit de démarrage"
 
 #: src/view/com/modals/CreateOrEditList.tsx:234
 msgid "Edit User List"
@@ -1798,7 +1798,7 @@ msgstr "Modifier votre description de profil"
 
 #: src/Navigation.tsx:335
 msgid "Edit your starter pack"
-msgstr "Modifier votre pack de démarrage"
+msgstr "Modifier votre kit de démarrage"
 
 #: src/screens/Onboarding/index.tsx:31
 msgid "Education"
@@ -2051,7 +2051,7 @@ msgstr "Échec de la création du mot de passe d’application."
 #: src/screens/StarterPack/Wizard/index.tsx:241
 #: src/screens/StarterPack/Wizard/index.tsx:249
 msgid "Failed to create starter pack"
-msgstr "Échec de la création du pack de démarrage"
+msgstr "Échec de la création du kit de démarrage"
 
 #: src/view/com/modals/CreateOrEditList.tsx:194
 msgid "Failed to create the list. Check your internet connection and try again."
@@ -2067,7 +2067,7 @@ msgstr "Échec de la suppression du post, veuillez réessayer"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:562
 msgid "Failed to delete starter pack"
-msgstr "Échec de la suppression du pack de démarrage"
+msgstr "Échec de la suppression du kit de démarrage"
 
 #: src/view/screens/Search/Explore.tsx:426
 #: src/view/screens/Search/Explore.tsx:454
@@ -2378,7 +2378,7 @@ msgstr "Galerie"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:277
 msgid "Generate a starter pack"
-msgstr "Générer un pack de démarrage"
+msgstr "Générer un kit de démarrage"
 
 #: src/components/dms/MessagesNUX.tsx:168
 msgid "Get started"
@@ -2741,7 +2741,7 @@ msgstr "Invitations : 1 code dispo"
 
 #: src/components/StarterPack/ShareDialog.tsx:109
 msgid "Invite people to this starter pack!"
-msgstr "Invitez les gens à ce pack de démarrage !"
+msgstr "Invitez les gens à ce kit de démarrage !"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:35
 msgid "Invite your friends to follow your favorite feeds and people"
@@ -2753,7 +2753,7 @@ msgstr "Invitations, mais personnelles"
 
 #: src/screens/StarterPack/Wizard/index.tsx:473
 msgid "It's just you right now! Add more people to your starter pack by searching above."
-msgstr "Il n’y a que vous pour l’instant ! Ajoutez d’autres personnes à votre pack de démarrage en effectuant une recherche ci-dessus."
+msgstr "Il n’y a que vous pour l’instant ! Ajoutez d’autres personnes à votre kit de démarrage en effectuant une recherche ci-dessus."
 
 #: src/view/com/auth/SplashScreen.web.tsx:157
 msgid "Jobs"
@@ -3716,7 +3716,7 @@ msgstr "Ouvrir le menu d’options du post"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:416
 msgid "Open starter pack menu"
-msgstr "Ouvrir le menu du pack de démarrage"
+msgstr "Ouvrir le menu du kit de démarrage"
 
 #: src/view/screens/Settings/index.tsx:860
 #: src/view/screens/Settings/index.tsx:870
@@ -4280,7 +4280,7 @@ msgstr "Supprimer"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:55
 msgid "Remove {displayName} from starter pack"
-msgstr "Supprimer {displayName} du pack de démarrage"
+msgstr "Supprimer {displayName} du kit de démarrage"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:22
 msgid "Remove account"
@@ -4460,7 +4460,7 @@ msgstr "Signaler le post"
 #: src/screens/StarterPack/StarterPackScreen.tsx:469
 #: src/screens/StarterPack/StarterPackScreen.tsx:472
 msgid "Report starter pack"
-msgstr "Signaler le pack de démarrage"
+msgstr "Signaler le kit de démarrage"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:43
 msgid "Report this content"
@@ -4486,7 +4486,7 @@ msgstr "Signaler ce post"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:59
 msgid "Report this starter pack"
-msgstr "Signaler ce pack de démarrage"
+msgstr "Signaler ce kit de démarrage"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:47
 msgid "Report this user"
@@ -5077,11 +5077,11 @@ msgstr "Dialogue pour le partage d’un lien"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:296
 msgid "Share this starter pack"
-msgstr "Partagez ce pack de démarrage"
+msgstr "Partagez ce kit de démarrage"
 
 #: src/components/StarterPack/ShareDialog.tsx:112
 msgid "Share this starter pack and help people join your community on Bluesky."
-msgstr "Partagez ce pack de démarrage et aidez les gens à rejoindre votre communauté sur Bluesky."
+msgstr "Partagez ce kit de démarrage et aidez les gens à rejoindre votre communauté sur Bluesky."
 
 #: src/components/dms/ChatEmptyPill.tsx:34
 msgid "Share your favorite feed!"
@@ -5255,12 +5255,12 @@ msgstr "Connecté en tant que @{0}"
 
 #: src/view/com/notifications/FeedItem.tsx:197
 msgid "signed up with your starter pack"
-msgstr "s’est inscrit·e avec votre pack de démarrage"
+msgstr "s’est inscrit·e avec votre kit de démarrage"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:277
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:284
 msgid "Signup without a starter pack"
-msgstr "S’inscrire sans pack de démarrage"
+msgstr "S’inscrire sans kit de démarrage"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:240
 #: src/screens/StarterPack/Wizard/index.tsx:202
@@ -5350,15 +5350,15 @@ msgstr "Démarrer les discussions"
 #: src/Navigation.tsx:325
 #: src/screens/StarterPack/Wizard/index.tsx:190
 msgid "Starter Pack"
-msgstr "Pack de démarrage"
+msgstr "Kit de démarrage"
 
 #: src/components/StarterPack/StarterPackCard.tsx:65
 msgid "Starter pack by {0}"
-msgstr "Pack de démarrage par {0}"
+msgstr "Kit de démarrage par {0}"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:579
 msgid "Starter pack is invalid"
-msgstr "Le pack de démarrage n’est pas valide"
+msgstr "Le kit de démarrage n’est pas valide"
 
 #: src/view/screens/Profile.tsx:221
 msgid "Starter Packs"
@@ -5521,7 +5521,7 @@ msgstr "Ce pseudo est déjà occupé."
 #: src/screens/StarterPack/Wizard/index.tsx:105
 #: src/screens/StarterPack/Wizard/index.tsx:113
 msgid "That starter pack could not be found."
-msgstr "Ce pack de démarrage n’a pas pu être trouvé."
+msgstr "Ce kit de démarrage n’a pas pu être trouvé."
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:310
 #: src/view/com/profile/ProfileMenu.tsx:353
@@ -5567,7 +5567,7 @@ msgstr "Notre politique de confidentialité a été déplacée vers <0/>"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:589
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
-msgstr "Le pack de démarrage que vous essayez de consulter n’est pas valide. Vous pouvez supprimer ce pack de démarrage à la place."
+msgstr "Le kit de démarrage que vous essayez de consulter n’est pas valide. Vous pouvez supprimer ce kit de démarrage à la place."
 
 #: src/view/screens/Support.tsx:36
 msgid "The support form has been moved. If you need help, please <0/> or visit {HELP_DESK_URL} to get in touch with us."
@@ -6421,7 +6421,7 @@ msgstr "Quels sont vos centres d’intérêt ?"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:42
 msgid "What do you want to call your starter pack?"
-msgstr "Quel est le nom de votre pack de démarrage ?"
+msgstr "Quel est le nom de votre kit de démarrage ?"
 
 #: src/view/com/auth/SplashScreen.tsx:40
 #: src/view/com/auth/SplashScreen.web.tsx:86
@@ -6483,7 +6483,7 @@ msgstr "Pourquoi ce post devrait-il être examiné ?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:60
 msgid "Why should this starter pack be reviewed?"
-msgstr "Pourquoi ce pack de démarrage devrait-il être examiné ?"
+msgstr "Pourquoi ce kit de démarrage devrait-il être examiné ?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:48
 msgid "Why should this user be reviewed?"
@@ -6528,7 +6528,7 @@ msgstr "Oui, désactiver"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:525
 msgid "Yes, delete this starter pack"
-msgstr "Oui, supprimer ce pack de démarrage"
+msgstr "Oui, supprimer ce kit de démarrage"
 
 #: src/screens/Deactivated.tsx:150
 msgid "Yes, reactivate my account"
@@ -6689,7 +6689,7 @@ msgstr "Vous devez avoir 13 ans ou plus pour vous inscrire."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:304
 msgid "You must be following at least seven other people to generate a starter pack."
-msgstr "Vous devez suivre au moins sept autres personnes pour générer un pack de démarrage."
+msgstr "Vous devez suivre au moins sept autres personnes pour générer un kit de démarrage."
 
 #: src/components/StarterPack/QrCodeDialog.tsx:62
 msgid "You must grant access to your photo library to save a QR code"
