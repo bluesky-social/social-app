@@ -5,7 +5,6 @@ import ProgressPie from 'react-native-progress/Pie'
 import {ImagePickerAsset} from 'expo-image-picker'
 
 import {atoms as a, useTheme} from '#/alf'
-import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {VideoTranscodeBackdrop} from './VideoTranscodeBackdrop'
 
@@ -18,6 +17,8 @@ export function VideoTranscodeProgress({
 }) {
   const t = useTheme()
 
+  const aspectRatio = input.width / input.height
+
   return (
     <View
       style={[
@@ -26,7 +27,7 @@ export function VideoTranscodeProgress({
         t.atoms.bg_contrast_50,
         a.rounded_md,
         a.overflow_hidden,
-        {aspectRatio: Math.max(input.width / input.height, 16 / 9)},
+        {aspectRatio: isNaN(aspectRatio) ? 16 / 9 : aspectRatio},
       ]}>
       <VideoTranscodeBackdrop uri={input.uri} />
       <View
@@ -38,17 +39,13 @@ export function VideoTranscodeProgress({
           a.absolute,
           a.inset_0,
         ]}>
-        {input.duration ? (
-          <ProgressPie
-            size={64}
-            borderWidth={4}
-            borderColor={t.atoms.text.color}
-            color={t.atoms.text.color}
-            progress={progress}
-          />
-        ) : (
-          <Loader size="xl" />
-        )}
+        <ProgressPie
+          size={64}
+          borderWidth={4}
+          borderColor={t.atoms.text.color}
+          color={t.atoms.text.color}
+          progress={progress}
+        />
         <Text>Compressing...</Text>
       </View>
     </View>
