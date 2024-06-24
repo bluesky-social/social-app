@@ -41,13 +41,9 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
     limit: 30,
   })
   const popularFeeds = popularFeedsPages?.pages.flatMap(p => p.feeds) ?? []
-
-  const suggestedFeeds =
-    savedFeeds.length === 0
-      ? popularFeeds
-      : savedFeeds.concat(
-          popularFeeds.filter(f => !savedFeeds.some(sf => sf.uri === f.uri)),
-        )
+  const suggestedFeeds = savedFeeds.concat(
+    popularFeeds.filter(f => !savedFeeds.some(sf => sf.uri === f.uri)),
+  )
 
   const {data: searchedFeeds, isLoading: isLoadingSearch} =
     useSearchPopularFeedsQuery({q: throttledQuery})

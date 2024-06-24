@@ -20,7 +20,9 @@ const openPermissionAlert = (perm: string) => {
 }
 
 export function usePhotoLibraryPermission() {
-  const [res, requestPermission] = MediaLibrary.usePermissions()
+  const [res, requestPermission] = MediaLibrary.usePermissions({
+    granularPermissions: ['photo'],
+  })
   const requestPhotoAccessIfNeeded = async () => {
     // On the, we use <input type="file"> to produce a filepicker
     // This does not need any permission granting.
