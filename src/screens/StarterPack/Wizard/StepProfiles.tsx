@@ -38,10 +38,13 @@ export function StepProfiles({
   } = useActorSearchPaginated({
     query: encodeURIComponent('*'),
   })
-  const topFollowers = topPages?.pages.flatMap(p => p.actors)
+  const topFollowers = topPages?.pages
+    .flatMap(p => p.actors)
+    .filter(p => !p.associated?.labeler)
 
-  const {data: results, isFetching: isFetchingResults} =
+  const {data: resultsUnfiltered, isFetching: isFetchingResults} =
     useActorAutocompleteQuery(query, true, 12)
+  const results = resultsUnfiltered?.filter(p => !p.associated?.labeler)
 
   const isLoading = isLoadingTopPages || isFetchingResults
 
