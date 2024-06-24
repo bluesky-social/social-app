@@ -106,6 +106,7 @@ export function useCreateStarterPackMutation({
       return await agent.app.bsky.graph.starterpack.create(
         {
           repo: agent.session?.did,
+          validate: false,
         },
         {
           ...params,
@@ -204,6 +205,7 @@ export function useEditStarterPackMutation({
       await agent.com.atproto.repo.putRecord({
         repo: agent.session!.did,
         collection: 'app.bsky.graph.starterpack',
+        validate: false,
         rkey,
         record: {
           name,
