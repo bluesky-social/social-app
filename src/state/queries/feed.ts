@@ -509,6 +509,7 @@ export function useSavedFeeds() {
     placeholderData: previousData => {
       return (
         previousData || {
+          // The likely count before we try to resolve them.
           count: savedItems.length,
           feeds: [],
         }
@@ -586,7 +587,7 @@ export function useSavedFeeds() {
       }
 
       return {
-        // TODO: The count property seems superflouous.
+        // By this point we know the real count.
         count: result.length,
         feeds: result,
       }
