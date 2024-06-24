@@ -10,10 +10,30 @@ import {FollowButton} from 'view/com/profile/FollowButton'
 import {ProfileCardPills} from 'view/com/profile/ProfileCard'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
-import {Link} from '#/components/Link'
+import {Link as InternalLink, LinkProps} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
 export function Default({
+  profile,
+  moderationOpts,
+  logContext = 'ProfileCard',
+}: {
+  profile: AppBskyActorDefs.ProfileViewDetailed
+  moderationOpts: ModerationOpts
+  logContext?: 'ProfileCard' | 'StarterPackProfilesList'
+}) {
+  return (
+    <Link did={profile.did}>
+      <Card
+        profile={profile}
+        moderationOpts={moderationOpts}
+        logContext={logContext}
+      />
+    </Link>
+  )
+}
+
+export function Card({
   profile: profileUnshadowed,
   moderationOpts,
   logContext = 'ProfileCard',
@@ -31,7 +51,7 @@ export function Default({
   const moderation = moderateProfile(profile, moderationOpts)
 
   return (
-    <Wrapper did={profile.did}>
+    <View style={[a.flex_1, a.gap_xs]}>
       <View style={[a.flex_row, a.gap_sm]}>
         <UserAvatar
           size={42}
@@ -74,18 +94,18 @@ export function Default({
           {profile.description}
         </Text>
       )}
-    </Wrapper>
+    </View>
   )
 }
 
-function Wrapper({did, children}: {did: string; children: React.ReactNode}) {
+export function Link({did, children}: {did: string} & Omit<LinkProps, 'to'>) {
   return (
-    <Link
+    <InternalLink
       to={{
         screen: 'Profile',
         params: {name: did},
       }}>
-      <View style={[a.flex_1, a.gap_xs]}>{children}</View>
-    </Link>
+      {children}
+    </InternalLink>
   )
 }
