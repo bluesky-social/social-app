@@ -7,6 +7,7 @@ import {
   AppBskyGraphStarterpack,
   AtUri,
   ModerationOpts,
+  RichText as RichTextAPI,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
@@ -52,6 +53,7 @@ import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
+import {RichText} from '#/components/RichText'
 import {FeedsList} from '#/components/StarterPack/Main/FeedsList'
 import {ProfilesList} from '#/components/StarterPack/Main/ProfilesList'
 import {QrCodeDialog} from '#/components/StarterPack/QrCodeDialog'
@@ -280,6 +282,13 @@ function Header({
     return null
   }
 
+  const richText = record.description
+    ? new RichTextAPI({
+        text: record.description,
+        facets: record.descriptionFacets,
+      })
+    : undefined
+
   return (
     <>
       <ProfileSubpageHeader
@@ -324,12 +333,10 @@ function Header({
           />
         </View>
       </ProfileSubpageHeader>
-      {record.description || joinedAllTimeCount >= 25 ? (
+      {richText || joinedAllTimeCount >= 25 ? (
         <View style={[a.px_lg, a.pt_md, a.pb_sm, a.gap_md]}>
-          {record.description ? (
-            <Text style={[a.text_md, a.leading_snug]}>
-              {record.description}
-            </Text>
+          {richText ? (
+            <RichText value={richText} style={[a.text_md, a.leading_snug]} />
           ) : null}
           {joinedAllTimeCount >= 25 ? (
             <View style={[a.flex_row, a.align_center, a.gap_sm]}>
