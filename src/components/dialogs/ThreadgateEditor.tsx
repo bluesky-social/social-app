@@ -80,6 +80,7 @@ function DialogContent({
     updateThreadgate(newSelected)
   }
 
+  const doneLabel = onConfirm ? _(msg`Save`) : _(msg`Done`)
   return (
     <Dialog.ScrollableInner
       label={_(msg`Choose who can reply`)}
@@ -137,7 +138,7 @@ function DialogContent({
         </View>
       </View>
       <Button
-        label={_(msg`Done`)}
+        label={doneLabel}
         onPress={() => {
           control.close()
           onConfirm?.(draft)
@@ -147,9 +148,7 @@ function DialogContent({
         size="medium"
         variant="solid"
         style={a.mt_xl}>
-        <ButtonText>
-          <Trans>Done</Trans>
-        </ButtonText>
+        <ButtonText>{doneLabel}</ButtonText>
       </Button>
       <Dialog.Close />
     </Dialog.ScrollableInner>
