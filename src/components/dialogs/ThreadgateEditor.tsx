@@ -15,8 +15,8 @@ import {Text} from '#/components/Typography'
 interface ThreadgateEditorDialogProps {
   control: Dialog.DialogControlProps
   threadgate: ThreadgateSetting[]
-  onChange: (v: ThreadgateSetting[]) => void
-  onConfirm?: () => void
+  onChange?: (v: ThreadgateSetting[]) => void
+  onConfirm?: (v: ThreadgateSetting[]) => void
 }
 
 export function ThreadgateEditorDialog({
@@ -29,7 +29,10 @@ export function ThreadgateEditorDialog({
     <Dialog.Outer control={control}>
       <Dialog.Handle />
       <DialogContent
-        threadgate={threadgate}
+        // The dialog mirrors the threadgate state inside
+        // so we must reset it if a new value flows down.
+        key={JSON.stringify(threadgate)}
+        initialThreadgate={threadgate}
         onChange={onChange}
         onConfirm={onConfirm}
       />
@@ -38,25 +41,35 @@ export function ThreadgateEditorDialog({
 }
 
 function DialogContent({
-  threadgate,
+  initialThreadgate,
   onChange,
   onConfirm,
-}: Omit<ThreadgateEditorDialogProps, 'control'>) {
+}: {
+  initialThreadgate: ThreadgateSetting[]
+  onChange?: (v: ThreadgateSetting[]) => void
+  onConfirm?: (v: ThreadgateSetting[]) => void
+}) {
   const {_} = useLingui()
   const control = Dialog.useDialogContext()
   const {data: lists} = useMyListsQuery('curate')
+  const [draft, setDraft] = React.useState(initialThreadgate)
+
+  function updateThreadgate(nextThreadgate: ThreadgateSetting[]) {
+    setDraft(nextThreadgate)
+    onChange?.(nextThreadgate)
+  }
 
   const onPressEverybody = () => {
-    onChange([])
+    updateThreadgate([])
   }
 
   const onPressNobody = () => {
-    onChange([{type: 'nobody'}])
+    updateThreadgate([{type: 'nobody'}])
   }
 
   const onPressAudience = (setting: ThreadgateSetting) => {
     // remove nobody
-    let newSelected = threadgate.filter(v => v.type !== 'nobody')
+    let newSelected = draft.filter(v => v.type !== 'nobody')
     // toggle
     const i = newSelected.findIndex(v => isEqual(v, setting))
     if (i === -1) {
@@ -64,7 +77,7 @@ function DialogContent({
     } else {
       newSelected.splice(i, 1)
     }
-    onChange(newSelected)
+    updateThreadgate(newSelected)
   }
 
   return (
@@ -81,13 +94,13 @@ function DialogContent({
         <View style={[a.flex_row, a.gap_sm]}>
           <Selectable
             label={_(msg`Everybody`)}
-            isSelected={threadgate.length === 0}
+            isSelected={draft.length === 0}
             onPress={onPressEverybody}
             style={{flex: 1}}
           />
           <Selectable
             label={_(msg`Nobody`)}
-            isSelected={!!threadgate.find(v => v.type === 'nobody')}
+            isSelected={!!draft.find(v => v.type === 'nobody')}
             onPress={onPressNobody}
             style={{flex: 1}}
           />
@@ -98,12 +111,12 @@ function DialogContent({
         <View style={[a.gap_sm]}>
           <Selectable
             label={_(msg`Mentioned users`)}
-            isSelected={!!threadgate.find(v => v.type === 'mention')}
+            isSelected={!!draft.find(v => v.type === 'mention')}
             onPress={() => onPressAudience({type: 'mention'})}
           />
           <Selectable
             label={_(msg`Followed users`)}
-            isSelected={!!threadgate.find(v => v.type === 'following')}
+            isSelected={!!draft.find(v => v.type === 'following')}
             onPress={() => onPressAudience({type: 'following'})}
           />
           {lists && lists.length > 0
@@ -112,9 +125,7 @@ function DialogContent({
                   key={list.uri}
                   label={_(msg`Users in "${list.name}"`)}
                   isSelected={
-                    !!threadgate.find(
-                      v => v.type === 'list' && v.list === list.uri,
-                    )
+                    !!draft.find(v => v.type === 'list' && v.list === list.uri)
                   }
                   onPress={() =>
                     onPressAudience({type: 'list', list: list.uri})
@@ -129,7 +140,7 @@ function DialogContent({
         label={_(msg`Done`)}
         onPress={() => {
           control.close()
-          onConfirm?.()
+          onConfirm?.(draft)
         }}
         onAccessibilityEscape={control.close}
         color="primary"

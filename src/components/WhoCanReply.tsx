@@ -156,9 +156,9 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
         settings={settings}
       />
       {isThreadAuthor && (
-        <ManagedThreadgateEditorDialog
+        <ThreadgateEditorDialog
           control={editDialogControl}
-          settings={settings}
+          threadgate={settings}
           onConfirm={onEditConfirm}
         />
       )}
@@ -217,34 +217,6 @@ function WhoCanReplyDialogInner({
         <Rules post={post} settings={settings} />
       </View>
     </Dialog.ScrollableInner>
-  )
-}
-
-function ManagedThreadgateEditorDialog({
-  control,
-  settings,
-  onConfirm,
-}: {
-  control: Dialog.DialogControlProps
-  settings: ThreadgateSetting[]
-  onConfirm: (settings: ThreadgateSetting[]) => Promise<void>
-}) {
-  const [draft, setDraft] = React.useState<ThreadgateSetting[]>(settings)
-  const onConfirmInner = () => onConfirm(draft)
-
-  const [prevSettings, setPrevSettings] = React.useState(settings)
-  if (settings !== prevSettings) {
-    setPrevSettings(settings)
-    setDraft(settings) // Reset draft.
-  }
-
-  return (
-    <ThreadgateEditorDialog
-      control={control}
-      threadgate={draft}
-      onChange={setDraft}
-      onConfirm={onConfirmInner}
-    />
   )
 }
 
