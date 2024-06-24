@@ -240,6 +240,7 @@ function LandingScreenLoaded({
                         a.px_md,
                         a.border_t,
                         t.atoms.border_contrast_low,
+                        {pointerEvents: 'none'},
                       ]}>
                       <ProfileCard
                         profile={item.subject}
