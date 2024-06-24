@@ -177,10 +177,6 @@ msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
 msgstr "<0>{0}, </0><1>{1}, </1>以及{2, plural, one {#更多} other {#更多}}包含在你的入门包中"
 
-#: src/screens/StarterPack/Wizard/index.tsx:497
-#~ msgid "<0>{0}, </0><1>{1}, </1>and {2} {3, plural, one {other} other {others}} are included in your starter pack"
-#~ msgstr ""
-
 #: src/view/shell/Drawer.tsx:101
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
 msgstr "<0>{0}</0> {1, plural, one {关注者} other {关注者}}"
@@ -2130,10 +2126,6 @@ msgstr "资讯源"
 #: src/view/com/feeds/FeedSourceCard.tsx:251
 msgid "Feed by {0}"
 msgstr "由 {0} 创建的资讯源"
-
-#: src/view/screens/Feeds.tsx:675
-#~ msgid "Feed offline"
-#~ msgstr "资讯源已离线"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:52
 msgid "Feed toggle"
