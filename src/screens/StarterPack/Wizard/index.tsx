@@ -245,7 +245,6 @@ function WizardInner({
       editStarterPack({
         name: state.name?.trim() || getDefaultName(),
         description: state.description?.trim(),
-        descriptionFacets: [],
         profiles: state.profiles,
         feeds: state.feeds,
         currentStarterPack: currentStarterPack,
@@ -255,7 +254,6 @@ function WizardInner({
       createStarterPack({
         name: state.name?.trim() || getDefaultName(),
         description: state.description?.trim(),
-        descriptionFacets: [],
         profiles: state.profiles,
         feeds: state.feeds,
       })
