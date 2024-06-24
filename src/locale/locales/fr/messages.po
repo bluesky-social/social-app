@@ -187,7 +187,7 @@ msgstr "<0>{0}</0> {1, plural, one {abonnement} other {abonnements}}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:478
 msgid "<0>{0}</0> is included in your starter pack"
-msgstr "<0>{0}</0> est inclus dans votre kit de démarrage"
+msgstr "<0>{0}</0> fait partie de votre kit de démarrage"
 
 #: src/view/com/modals/SelfLabel.tsx:135
 msgid "<0>Not Applicable.</0> This warning is only available for posts with media attached."
