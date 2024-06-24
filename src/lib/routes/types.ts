@@ -42,6 +42,12 @@ export type CommonNavigatorParams = {
   MessagesConversation: {conversation: string; embed?: string}
   MessagesSettings: undefined
   Feeds: undefined
+  Start: {name: string; rkey: string}
+  StarterPack: {name: string; rkey: string; new?: boolean}
+  StarterPackWizard: undefined
+  StarterPackEdit: {
+    rkey?: string
+  }
 }
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {
@@ -93,6 +99,12 @@ export type AllNavigatorParams = CommonNavigatorParams & {
   Hashtag: {tag: string; author?: string}
   MessagesTab: undefined
   Messages: {animation?: 'push' | 'pop'}
+  Start: {name: string; rkey: string}
+  StarterPack: {name: string; rkey: string; new?: boolean}
+  StarterPackWizard: undefined
+  StarterPackEdit: {
+    rkey?: string
+  }
 }
 
 // NOTE

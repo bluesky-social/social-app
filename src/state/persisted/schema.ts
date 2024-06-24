@@ -88,6 +88,7 @@ export const schema = z.object({
   disableHaptics: z.boolean().optional(),
   disableAutoplay: z.boolean().optional(),
   kawaii: z.boolean().optional(),
+  hasCheckedForStarterPack: z.boolean().optional(),
   /** @deprecated */
   mutedThreads: z.array(z.string()),
 })
@@ -129,4 +130,5 @@ export const defaults: Schema = {
   disableHaptics: false,
   disableAutoplay: prefersReducedMotion,
   kawaii: false,
+  hasCheckedForStarterPack: false,
 }
