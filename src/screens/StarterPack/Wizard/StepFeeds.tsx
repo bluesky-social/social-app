@@ -32,8 +32,11 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
   const throttledQuery = useThrottledValue(query, 500)
   const {screenReaderEnabled} = useA11y()
 
-  const {data: savedFeedsAndLists, isLoading: isLoadingSavedFeeds} =
-    useSavedFeeds()
+  const {
+    data: savedFeedsAndLists,
+    isLoading: isLoadingSavedFeeds,
+    isFetchedAfterMount: isFetchedSavedFeeds,
+  } = useSavedFeeds()
   const savedFeeds = savedFeedsAndLists?.feeds
     .filter(f => f.type === 'feed' && f.view.uri !== DISCOVER_FEED_URI)
     .map(f => f.view) as AppBskyFeedDefs.GeneratorView[]
@@ -46,15 +49,21 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
     limit: 30,
   })
   const popularFeeds = popularFeedsPages?.pages.flatMap(p => p.feeds) ?? []
-  const suggestedFeeds = savedFeeds.concat(
-    popularFeeds.filter(f => !savedFeeds.some(sf => sf.uri === f.uri)),
-  )
+  const suggestedFeeds =
+    isFetchedSavedFeeds && !isLoadingSavedFeeds && !isLoadingPopularFeeds
+      ? savedFeeds.concat(
+          popularFeeds.filter(f => !savedFeeds.some(sf => sf.uri === f.uri)),
+        )
+      : undefined
 
   const {data: searchedFeeds, isFetching: isFetchingSearchedFeeds} =
     useSearchPopularFeedsQuery({q: throttledQuery})
 
   const isLoading =
-    isLoadingSavedFeeds || isLoadingPopularFeeds || isFetchingSearchedFeeds
+    !isFetchedSavedFeeds ||
+    isLoadingSavedFeeds ||
+    isLoadingPopularFeeds ||
+    isFetchingSearchedFeeds
 
   const renderItem = ({
     item,
