@@ -1,4 +1,5 @@
 import React, {
+  lazy,
   useCallback,
   useEffect,
   useImperativeHandle,
@@ -97,9 +98,17 @@ import {TextInput, TextInputRef} from './text-input/TextInput'
 import {ThreadgateBtn} from './threadgate/ThreadgateBtn'
 import {useExternalLinkFetch} from './useExternalLinkFetch'
 import hairlineWidth = StyleSheet.hairlineWidth
+// temp, ensure globalThis.expo is defined. hopefully Expo will fix this upstream
+import {ensureNativeModulesAreInstalled} from 'expo-modules-core/build/ensureNativeModulesAreInstalled'
+
+// stupid method to ensure right order of module execution
+ensureNativeModulesAreInstalled()
+const VideoPreview = lazy(async () => {
+  const {VideoPreview} = await import('./videos/VideoPreview')
+  return {default: VideoPreview}
+})
 import {SelectVideoBtn} from './videos/SelectVideoBtn'
 import {useVideoState} from './videos/state'
-import {VideoPreview} from './videos/VideoPreview'
 import {VideoTranscodeProgress} from './videos/VideoTranscodeProgress'
 
 type CancelRef = {

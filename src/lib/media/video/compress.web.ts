@@ -136,8 +136,12 @@ function getSupportedMimeType() {
     return 'video/mp4;codecs=h264'
   } else if (MediaRecorder.isTypeSupported('video/webm;codecs=h264')) {
     return 'video/webm;codecs=h264'
+  } else if (MediaRecorder.isTypeSupported('video/webm;codecs=av1')) {
+    return 'video/webm;codecs=av1'
   } else if (MediaRecorder.isTypeSupported('video/webm;codecs=vp9')) {
     return 'video/webm;codecs=vp9'
+  } else if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8')) {
+    return 'video/webm;codecs=vp8'
   } else {
     throw new Error('No supported video codec found')
   }
