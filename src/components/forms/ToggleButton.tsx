@@ -36,7 +36,7 @@ export function Group({children, multiple, ...props}: GroupProps) {
 
 export function Button({children, ...props}: ItemProps) {
   return (
-    <Toggle.Item {...props} style={[a.flex_grow]}>
+    <Toggle.Item {...props} style={[a.flex_grow, a.flex_1]}>
       <ButtonInner>{children}</ButtonInner>
     </Toggle.Item>
   )
