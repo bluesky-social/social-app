@@ -33,7 +33,8 @@ import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/componen
 import {Earth_Stroke2_Corner0_Rounded as Earth} from '#/components/icons/Globe'
 import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
 import {Text} from '#/components/Typography'
-import {TextLink} from '../util/Link'
+import {TextLink} from '../view/com/util/Link'
+import {PencilLine_Stroke2_Corner0_Rounded as PencilLine} from './icons/Pencil'
 
 interface WhoCanReplyProps {
   post: AppBskyFeedDefs.PostView
@@ -41,11 +42,7 @@ interface WhoCanReplyProps {
   style?: StyleProp<ViewStyle>
 }
 
-export function WhoCanReplyInline({
-  post,
-  isThreadAuthor,
-  style,
-}: WhoCanReplyProps) {
+export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
   const {_} = useLingui()
   const t = useTheme()
   const infoDialogControl = useDialogControl()
@@ -90,73 +87,13 @@ export function WhoCanReplyInline({
               ]}>
               {description}
             </Text>
+            {isThreadAuthor && (
+              <PencilLine width={12} fill={t.palette.primary_500} />
+            )}
           </View>
         )}
       </Button>
-      <InfoDialog control={infoDialogControl} post={post} settings={settings} />
-    </>
-  )
-}
-
-export function WhoCanReplyBlock({
-  post,
-  isThreadAuthor,
-  style,
-}: WhoCanReplyProps) {
-  const {_} = useLingui()
-  const t = useTheme()
-  const infoDialogControl = useDialogControl()
-  const {settings, isRootPost, onPressEdit} = useWhoCanReply(post)
-
-  if (!isRootPost) {
-    return null
-  }
-  if (!settings.length && !isThreadAuthor) {
-    return null
-  }
-
-  const isEverybody = settings.length === 0
-  const isNobody = !!settings.find(gate => gate.type === 'nobody')
-  const description = isEverybody
-    ? _(msg`Everybody can reply`)
-    : isNobody
-    ? _(msg`Replies on this thread are disabled`)
-    : _(msg`Some people can reply`)
-
-  return (
-    <>
-      <Button
-        label={
-          isThreadAuthor ? _(msg`Edit who can reply`) : _(msg`Who can reply`)
-        }
-        onPress={isThreadAuthor ? onPressEdit : infoDialogControl.open}
-        hitSlop={HITSLOP_10}>
-        {({hovered}) => (
-          <View
-            style={[
-              a.flex_1,
-              a.flex_row,
-              a.align_center,
-              a.py_sm,
-              a.pr_lg,
-              style,
-            ]}>
-            <View style={[{paddingLeft: 25, paddingRight: 18}]}>
-              <Icon color={t.palette.contrast_300} settings={settings} />
-            </View>
-            <Text
-              style={[
-                a.text_sm,
-                a.leading_tight,
-                t.atoms.text_contrast_medium,
-                hovered && a.underline,
-              ]}>
-              {description}
-            </Text>
-          </View>
-        )}
-      </Button>
-      <InfoDialog control={infoDialogControl} post={post} settings={settings} />
+      <WhoCanReplyDialog control={infoDialogControl} post={post} />
     </>
   )
 }
@@ -176,31 +113,24 @@ function Icon({
   return <IconComponent fill={color} width={width} />
 }
 
-function InfoDialog({
+export function WhoCanReplyDialog({
   control,
   post,
-  settings,
 }: {
   control: Dialog.DialogControlProps
   post: AppBskyFeedDefs.PostView
-  settings: ThreadgateSetting[]
 }) {
   return (
     <Dialog.Outer control={control}>
       <Dialog.Handle />
-      <InfoDialogInner post={post} settings={settings} />
+      <WhoCanReplyDialogInner post={post} />
     </Dialog.Outer>
   )
 }
 
-function InfoDialogInner({
-  post,
-  settings,
-}: {
-  post: AppBskyFeedDefs.PostView
-  settings: ThreadgateSetting[]
-}) {
+function WhoCanReplyDialogInner({post}: {post: AppBskyFeedDefs.PostView}) {
   const {_} = useLingui()
+  const {settings} = useWhoCanReply(post)
   return (
     <Dialog.ScrollableInner
       label={_(msg`Who can reply dialog`)}
@@ -334,6 +264,9 @@ function useWhoCanReply(post: AppBskyFeedDefs.PostView) {
       name: 'threadgate',
       settings,
       async onConfirm(newSettings: ThreadgateSetting[]) {
+        if (JSON.stringify(settings) === JSON.stringify(newSettings)) {
+          return
+        }
         try {
           if (newSettings.length) {
             await createThreadgate(agent, post.uri, newSettings)

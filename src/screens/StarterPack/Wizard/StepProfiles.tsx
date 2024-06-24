@@ -45,6 +45,7 @@ export function StepProfiles({
     return (
       <WizardProfileCard
         profile={item}
+        btnType="checkbox"
         state={state}
         dispatch={dispatch}
         moderationOpts={moderationOpts}

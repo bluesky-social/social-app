@@ -9,7 +9,7 @@ import {
   ModerationUI,
 } from '@atproto/api'
 import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {DISCOVER_FEED_URI} from 'lib/constants'
@@ -19,12 +19,14 @@ import {useSession} from 'state/session'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {WizardAction, WizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
 import {Checkbox} from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
 
 function WizardListCard({
   type,
+  btnType,
   displayName,
   subtitle,
   onPress,
@@ -34,6 +36,7 @@ function WizardListCard({
   moderationUi,
 }: {
   type: 'user' | 'algo'
+  btnType: 'checkbox' | 'remove'
   profile?: AppBskyActorDefs.ProfileViewBasic
   feed?: AppBskyFeedDefs.GeneratorView
   displayName: string
@@ -56,7 +59,7 @@ function WizardListCard({
           : _(msg`Add ${displayName} to starter pack`)
       }
       value={included}
-      disabled={disabled}
+      disabled={btnType === 'remove' || disabled}
       onChange={onPress}
       style={[
         a.flex_row,
@@ -85,17 +88,33 @@ function WizardListCard({
           {subtitle}
         </Text>
       </View>
-      <Checkbox />
+      {btnType === 'checkbox' ? (
+        <Checkbox />
+      ) : !disabled ? (
+        <Button
+          label={_(msg`Remove`)}
+          variant="solid"
+          color="secondary"
+          size="xsmall"
+          style={[a.self_center, {marginLeft: 'auto'}]}
+          onPress={onPress}>
+          <ButtonText>
+            <Trans>Remove</Trans>
+          </ButtonText>
+        </Button>
+      ) : null}
     </Toggle.Item>
   )
 }
 
 export function WizardProfileCard({
+  btnType,
   state,
   dispatch,
   profile,
   moderationOpts,
 }: {
+  btnType: 'checkbox' | 'remove'
   state: WizardState
   dispatch: (action: WizardAction) => void
   profile: AppBskyActorDefs.ProfileViewBasic
@@ -127,6 +146,7 @@ export function WizardProfileCard({
   return (
     <WizardListCard
       type="user"
+      btnType={btnType}
       displayName={displayName}
       subtitle={`@${sanitizeHandle(profile.handle)}`}
       onPress={onPress}
@@ -139,11 +159,13 @@ export function WizardProfileCard({
 }
 
 export function WizardFeedCard({
+  btnType,
   generator,
   state,
   dispatch,
   moderationOpts,
 }: {
+  btnType: 'checkbox' | 'remove'
   generator: GeneratorView
   state: WizardState
   dispatch: (action: WizardAction) => void
@@ -170,6 +192,7 @@ export function WizardFeedCard({
   return (
     <WizardListCard
       type="algo"
+      btnType={btnType}
       displayName={sanitizeDisplayName(generator.displayName)}
       subtitle={`Feed by @${sanitizeHandle(generator.creator.handle)}`}
       onPress={onPress}

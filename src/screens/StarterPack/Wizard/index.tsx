@@ -21,6 +21,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {logger} from '#/logger'
 import {HITSLOP_10} from 'lib/constants'
+import {createSanitizedDisplayName} from 'lib/moderation/create-sanitized-display-name'
 import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
 import {logEvent} from 'lib/statsig/statsig'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
@@ -170,15 +171,7 @@ function WizardInner({
   )
 
   const getDefaultName = () => {
-    let displayName
-    if (
-      currentProfile?.displayName != null &&
-      currentProfile?.displayName !== ''
-    ) {
-      displayName = sanitizeDisplayName(currentProfile.displayName)
-    } else {
-      displayName = sanitizeHandle(currentProfile!.handle)
-    }
+    const displayName = createSanitizedDisplayName(currentProfile!, true)
     return _(msg`${displayName}'s Starter Pack`).slice(0, 50)
   }
 
@@ -191,16 +184,12 @@ function WizardInner({
       nextBtn: _(msg`Next`),
     },
     Profiles: {
-      header: _(msg`People`),
+      header: _(msg`Choose People`),
       nextBtn: _(msg`Next`),
-      subtitle: _(
-        msg`Add people to your starter pack that you think others will enjoy following`,
-      ),
     },
     Feeds: {
-      header: _(msg`Feeds`),
+      header: _(msg`Choose Feeds`),
       nextBtn: state.feeds.length === 0 ? _(msg`Skip`) : _(msg`Finish`),
-      subtitle: _(msg`Some subtitle`),
     },
   }
   const currUiStrings = wizardUiStrings[state.currentStep]
@@ -254,8 +243,8 @@ function WizardInner({
     dispatch({type: 'SetProcessing', processing: true})
     if (currentStarterPack && currentListItems) {
       editStarterPack({
-        name: state.name ?? getDefaultName(),
-        description: state.description,
+        name: state.name?.trim() || getDefaultName(),
+        description: state.description?.trim(),
         descriptionFacets: [],
         profiles: state.profiles,
         feeds: state.feeds,
@@ -264,8 +253,8 @@ function WizardInner({
       })
     } else {
       createStarterPack({
-        name: state.name ?? getDefaultName(),
-        description: state.description,
+        name: state.name?.trim() || getDefaultName(),
+        description: state.description?.trim(),
         descriptionFacets: [],
         profiles: state.profiles,
         feeds: state.feeds,
@@ -483,13 +472,10 @@ function Footer({
             </Trans>
           ) : items.length === 2 ? (
             <Trans>
-              <Text style={[a.font_bold, textStyles]}>
-                {getName(items[initialNamesIndex])}{' '}
-              </Text>
-              and
+              <Text style={[a.font_bold, textStyles]}>You</Text> and
               <Text> </Text>
               <Text style={[a.font_bold, textStyles]}>
-                {getName(items[state.currentStep === 'Profiles' ? 0 : 1])}{' '}
+                {getName(items[initialNamesIndex])}{' '}
               </Text>
               are included in your starter pack
             </Trans>
@@ -579,9 +565,9 @@ function Footer({
 
 function getName(item: AppBskyActorDefs.ProfileViewBasic | GeneratorView) {
   if (typeof item.displayName === 'string') {
-    return enforceLen(sanitizeDisplayName(item.displayName), 16, true)
+    return enforceLen(sanitizeDisplayName(item.displayName), 28, true)
   } else if (typeof item.handle === 'string') {
-    return enforceLen(sanitizeHandle(item.handle), 16, true)
+    return enforceLen(sanitizeHandle(item.handle), 28, true)
   }
   return ''
 }
