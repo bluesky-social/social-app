@@ -168,7 +168,7 @@ function Selectable({
         checked: isSelected,
       }}
       style={a.flex_1}>
-      {({hovered}) => (
+      {({hovered, focused}) => (
         <View
           style={[
             a.flex_1,
@@ -178,8 +178,14 @@ function Selectable({
             a.rounded_sm,
             a.p_md,
             {height: 40}, // for consistency with checkmark icon visible or not
-            isSelected ? t.atoms.bg_contrast_50 : t.atoms.bg_contrast_25,
-            hovered && t.atoms.bg_contrast_100,
+            t.atoms.bg_contrast_50,
+            (hovered || focused) && t.atoms.bg_contrast_100,
+            isSelected && {
+              backgroundColor:
+                t.name === 'light'
+                  ? t.palette.primary_50
+                  : t.palette.primary_975,
+            },
             style,
           ]}>
           <Text style={[a.text_sm, isSelected && a.font_semibold]}>
