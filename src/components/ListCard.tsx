@@ -39,7 +39,11 @@ export function Default(props: Props) {
       <Outer>
         <Header>
           <Avatar src={view.avatar} />
-          <TitleAndByline title={view.name} creator={view.creator} />
+          <TitleAndByline
+            title={view.name}
+            creator={view.creator}
+            purpose={view.purpose}
+          />
           {showPinButton && <Action uri={view.uri} pin type="list" />}
         </Header>
         <Description description={view.description} />
@@ -73,9 +77,11 @@ export function Link({
 export function TitleAndByline({
   title,
   creator,
+  purpose,
 }: {
   title: string
   creator?: AppBskyActorDefs.ProfileViewBasic
+  purpose: AppBskyGraphDefs.ListView['purpose']
 }) {
   const t = useTheme()
 
@@ -88,7 +94,13 @@ export function TitleAndByline({
         <Text
           style={[a.leading_snug, t.atoms.text_contrast_medium]}
           numberOfLines={1}>
-          <Trans>List by {sanitizeHandle(creator.handle, '@')}</Trans>
+          {purpose === 'app.bsky.graph.defs#curatelist' ? (
+            <Trans>List by {sanitizeHandle(creator.handle, '@')}</Trans>
+          ) : (
+            <Trans>
+              Moderation list by {sanitizeHandle(creator.handle, '@')}
+            </Trans>
+          )}
         </Text>
       )}
     </View>
