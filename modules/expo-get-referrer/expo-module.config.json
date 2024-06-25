@@ -1,6 +1,0 @@
-{
-  "platforms": ["android"],
-  "android": {
-    "modules": ["expo.modules.getreferrer.ExpoGetReferrerModule"]
-  }
-}
