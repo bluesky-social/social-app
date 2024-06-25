@@ -90,7 +90,7 @@ msgstr ""
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:47
 msgid "{0}'s starter pack"
-msgstr ""
+msgstr "{0} 님의 스타터 팩"
 
 #: src/components/LabelingServiceCard/index.tsx:71
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
@@ -118,7 +118,7 @@ msgstr "초"
 
 #: src/screens/StarterPack/Wizard/index.tsx:182
 msgid "{displayName}'s Starter Pack"
-msgstr ""
+msgstr "{displayName} 님의 스타터 팩"
 
 #: src/screens/SignupQueued.tsx:207
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
@@ -168,7 +168,13 @@ msgid "<0>{0} </0>and<1> </1><2>{1} </2>are included in your starter pack"
 msgstr ""
 
 #: src/screens/StarterPack/Wizard/index.tsx:497
-msgid "<0>{0}, </0><1>{1}, </1>and {2} {3, plural, one {other} other {others}} are included in your starter pack"
+msgctxt "profiles"
+msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
+msgstr ""
+
+#: src/screens/StarterPack/Wizard/index.tsx:509
+msgctxt "feeds"
+msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
 msgstr ""
 
 #: src/view/shell/Drawer.tsx:101
@@ -273,7 +279,7 @@ msgstr "계정 언뮤트됨"
 msgid "Add"
 msgstr "추가"
 
-#: src/screens/StarterPack/Wizard/index.tsx:539
+#: src/screens/StarterPack/Wizard/index.tsx:551
 msgid "Add {0} more to continue"
 msgstr ""
 
@@ -381,7 +387,7 @@ msgstr "고급"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:271
 msgid "All accounts have been followed!"
-msgstr ""
+msgstr "모든 계정을 팔로우했습니다"
 
 #: src/view/screens/Feeds.tsx:721
 msgid "All the feeds you've saved, right in one place."
@@ -445,16 +451,16 @@ msgstr ""
 
 #: src/components/StarterPack/ShareDialog.tsx:79
 msgid "An error occurred while saving the image."
-msgstr ""
+msgstr "이미지를 저장하는 동안 오류가 발생했습니다"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:76
 #: src/components/StarterPack/ShareDialog.tsx:91
 msgid "An error occurred while saving the QR code!"
-msgstr ""
+msgstr "QR 코드를 저장하는 동안 오류가 발생했습니다"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:273
 msgid "An error occurred while trying to follow all"
-msgstr ""
+msgstr "모두 팔로우하려고 하는 동안 오류가 발생했습니다"
 
 #: src/lib/moderation/useReportOptions.ts:28
 msgid "An issue not included in these options"
@@ -548,7 +554,7 @@ msgstr "기본 추천 피드 적용하기"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:497
 msgid "Are you sure you want delete this starter pack?"
-msgstr ""
+msgstr "이 스타터 팩을 삭제하시겠습니까?"
 
 #: src/view/screens/AppPasswords.tsx:282
 msgid "Are you sure you want to delete the app password \"{name}\"?"
@@ -1264,7 +1270,7 @@ msgstr "코드 복사"
 
 #: src/components/StarterPack/ShareDialog.tsx:143
 msgid "Copy Link"
-msgstr ""
+msgstr "링크 복사"
 
 #: src/view/screens/ProfileList.tsx:428
 msgid "Copy link to list"
@@ -1287,7 +1293,7 @@ msgstr "게시물 텍스트 복사"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:174
 msgid "Copy QR code"
-msgstr ""
+msgstr "QR 코드 복사"
 
 #: src/Navigation.tsx:261
 #: src/view/screens/CopyrightPolicy.tsx:29
@@ -1312,7 +1318,7 @@ msgstr "대화를 뮤트할 수 없습니다"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:270
 msgid "Create"
-msgstr ""
+msgstr "만들기"
 
 #: src/view/com/auth/SplashScreen.tsx:57
 #: src/view/com/auth/SplashScreen.web.tsx:106
@@ -1325,17 +1331,17 @@ msgstr "새 Bluesky 계정을 만듭니다"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:157
 msgid "Create a QR code for a starter pack"
-msgstr ""
+msgstr "스타터 팩 QR 코드 만들기"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:165
 #: src/components/StarterPack/ProfileStarterPacks.tsx:257
 #: src/Navigation.tsx:330
 msgid "Create a starter pack"
-msgstr ""
+msgstr "스타터 팩 만들기"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:244
 msgid "Create a starter pack for me"
-msgstr ""
+msgstr "나를 위한 스타터 팩 만들기"
 
 #: src/screens/Signup/index.tsx:154
 msgid "Create Account"
@@ -1365,7 +1371,7 @@ msgstr "새 계정 만들기"
 
 #: src/components/StarterPack/ShareDialog.tsx:158
 msgid "Create QR code"
-msgstr ""
+msgstr "QR 코드 만들기"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:101
 msgid "Create report for {0}"
@@ -1494,11 +1500,11 @@ msgstr "게시물 삭제"
 #: src/screens/StarterPack/StarterPackScreen.tsx:443
 #: src/screens/StarterPack/StarterPackScreen.tsx:599
 msgid "Delete starter pack"
-msgstr ""
+msgstr "스타터 팩 삭제"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:494
 msgid "Delete starter pack?"
-msgstr ""
+msgstr "스타터 팩을 삭제하시겠습니까?"
 
 #: src/view/screens/ProfileList.tsx:662
 msgid "Delete this list?"
@@ -1658,7 +1664,7 @@ msgstr "완료{extraText}"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:295
 msgid "Download Bluesky"
-msgstr ""
+msgstr "Bluesky 다운로드"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:77
 #: src/view/screens/Settings/ExportCarDialog.tsx:81
@@ -1709,16 +1715,16 @@ msgstr "예: 반복적으로 광고 답글을 다는 계정."
 msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr "각 코드는 한 번만 사용할 수 있습니다. 주기적으로 더 많은 초대 코드를 받게 됩니다."
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:438
-#: src/screens/StarterPack/Wizard/index.tsx:522
-#: src/screens/StarterPack/Wizard/index.tsx:529
-#: src/view/screens/Feeds.tsx:385
-#: src/view/screens/Feeds.tsx:453
+#: src/view/com/lists/ListMembers.tsx:149
+msgctxt "action"
 msgid "Edit"
 msgstr "편집"
 
-#: src/view/com/lists/ListMembers.tsx:149
-msgctxt "action"
+#: src/screens/StarterPack/StarterPackScreen.tsx:438
+#: src/screens/StarterPack/Wizard/index.tsx:534
+#: src/screens/StarterPack/Wizard/index.tsx:541
+#: src/view/screens/Feeds.tsx:385
+#: src/view/screens/Feeds.tsx:453
 msgid "Edit"
 msgstr "편집"
 
@@ -1729,7 +1735,7 @@ msgstr "아바타 편집"
 
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:115
 msgid "Edit Feeds"
-msgstr ""
+msgstr "피드 편집"
 
 #: src/view/com/composer/photos/Gallery.tsx:151
 #: src/view/com/modals/EditImage.tsx:208
@@ -1757,7 +1763,7 @@ msgstr "내 프로필 편집"
 
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:113
 msgid "Edit People"
-msgstr ""
+msgstr "사람들 편집"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:181
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:179
@@ -1771,7 +1777,7 @@ msgstr "프로필 편집"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:430
 msgid "Edit starter pack"
-msgstr ""
+msgstr "스타터 팩 편집"
 
 #: src/view/com/modals/CreateOrEditList.tsx:234
 msgid "Edit User List"
@@ -1792,7 +1798,7 @@ msgstr "내 프로필 설명 편집"
 
 #: src/Navigation.tsx:335
 msgid "Edit your starter pack"
-msgstr ""
+msgstr "스타터 팩 편집"
 
 #: src/screens/Onboarding/index.tsx:31
 msgid "Education"
@@ -2045,7 +2051,7 @@ msgstr "앱 비밀번호를 만들지 못했습니다."
 #: src/screens/StarterPack/Wizard/index.tsx:241
 #: src/screens/StarterPack/Wizard/index.tsx:249
 msgid "Failed to create starter pack"
-msgstr ""
+msgstr "스타터 팩을 만들지 못했습니다"
 
 #: src/view/com/modals/CreateOrEditList.tsx:194
 msgid "Failed to create the list. Check your internet connection and try again."
@@ -2061,7 +2067,7 @@ msgstr "게시물을 삭제하지 못했습니다. 다시 시도해 주세요"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:562
 msgid "Failed to delete starter pack"
-msgstr ""
+msgstr "스타터 팩을 삭제하지 못했습니다"
 
 #: src/view/screens/Search/Explore.tsx:426
 #: src/view/screens/Search/Explore.tsx:454
@@ -2121,13 +2127,9 @@ msgstr "피드"
 msgid "Feed by {0}"
 msgstr "{0} 님의 피드"
 
-#: src/view/screens/Feeds.tsx:675
-#~ msgid "Feed offline"
-#~ msgstr "피드 오프라인"
-
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:52
 msgid "Feed toggle"
-msgstr ""
+msgstr "피드 켜거나 끄기"
 
 #: src/view/shell/desktop/RightNav.tsx:66
 #: src/view/shell/Drawer.tsx:345
@@ -2190,7 +2192,7 @@ msgstr "대화 스레드를 미세 조정합니다."
 
 #: src/screens/StarterPack/Wizard/index.tsx:202
 msgid "Finish"
-msgstr ""
+msgstr "종료"
 
 #: src/screens/Onboarding/index.tsx:35
 msgid "Fitness"
@@ -2239,7 +2241,7 @@ msgstr "계정 팔로우"
 #: src/screens/StarterPack/StarterPackScreen.tsx:308
 #: src/screens/StarterPack/StarterPackScreen.tsx:315
 msgid "Follow all"
-msgstr ""
+msgstr "모두 팔로우"
 
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:144
 msgid "Follow Back"
@@ -2376,7 +2378,7 @@ msgstr "갤러리"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:277
 msgid "Generate a starter pack"
-msgstr ""
+msgstr "스타터 팩 만들기"
 
 #: src/components/dms/MessagesNUX.tsx:168
 msgid "Get started"
@@ -2431,7 +2433,7 @@ msgstr "이전 단계로 돌아가기"
 
 #: src/screens/StarterPack/Wizard/index.tsx:313
 msgid "Go back to the previous step"
-msgstr ""
+msgstr "이전 단계로 돌아갑니다"
 
 #: src/view/screens/NotFound.tsx:55
 msgid "Go home"
@@ -2646,7 +2648,7 @@ msgstr "이미지 대체 텍스트"
 
 #: src/components/StarterPack/ShareDialog.tsx:88
 msgid "Image saved to your camera roll!"
-msgstr ""
+msgstr "이미지를 앨범에 저장했습니다."
 
 #: src/lib/moderation/useReportOptions.ts:49
 msgid "Impersonation or false claims about identity or affiliation"
@@ -2739,7 +2741,7 @@ msgstr "초대 코드: 1개 사용 가능"
 
 #: src/components/StarterPack/ShareDialog.tsx:109
 msgid "Invite people to this starter pack!"
-msgstr ""
+msgstr "이 스타터 팩을 사용할 사람들을 초대하세요!"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:35
 msgid "Invite your friends to follow your favorite feeds and people"
@@ -2760,11 +2762,11 @@ msgstr "채용"
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:194
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:200
 msgid "Join Bluesky"
-msgstr ""
+msgstr "Bluesky 가입하기"
 
 #: src/components/StarterPack/QrCode.tsx:56
 msgid "Join the conversation"
-msgstr ""
+msgstr "대화에 참여하기"
 
 #: src/screens/Onboarding/index.tsx:21
 msgid "Journalism"
@@ -2873,7 +2875,7 @@ msgstr "레거시 스토리지가 지워졌으며 지금 앱을 다시 시작해
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:293
 msgid "Let me choose"
-msgstr ""
+msgstr "직접 선택하기"
 
 #: src/screens/Login/index.tsx:130
 #: src/screens/Login/index.tsx:145
@@ -3454,7 +3456,7 @@ msgstr "인기 GIF를 찾을 수 없습니다. Tenor에 문제가 있을 수 있
 
 #: src/screens/StarterPack/Wizard/StepFeeds.tsx:105
 msgid "No feeds found. Try searching for something else."
-msgstr ""
+msgstr "피드를 찾을 수 없습니다. 다른 피드를 검색해 보세요."
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:120
 msgid "No longer following {0}"
@@ -3536,7 +3538,7 @@ msgstr "아직 아무도 좋아요를 누르지 않았습니다. 첫 번째가 �
 
 #: src/screens/StarterPack/Wizard/StepProfiles.tsx:93
 msgid "Nobody was found. Try searching for someone else."
-msgstr ""
+msgstr "아무도 찾을 수 없습니다. 다른 사용자를 검색해 보세요."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:42
 msgid "Non-sexual Nudity"
@@ -3714,7 +3716,7 @@ msgstr "게시물 옵션 메뉴 열기"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:416
 msgid "Open starter pack menu"
-msgstr ""
+msgstr "스타터 팩 메뉴 열기"
 
 #: src/view/screens/Settings/index.tsx:860
 #: src/view/screens/Settings/index.tsx:870
@@ -3941,7 +3943,7 @@ msgstr "앨범에 접근할 수 있는 권한이 거부되었습니다. 시스�
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:52
 msgid "Person toggle"
-msgstr ""
+msgstr "사람 켜거나 끄기"
 
 #: src/screens/Onboarding/index.tsx:28
 msgid "Pets"
@@ -4221,15 +4223,15 @@ msgstr "답글 게시하기"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:131
 msgid "QR code copied to your clipboard!"
-msgstr ""
+msgstr "QR 코드를 클립보드에 복사했습니다."
 
 #: src/components/StarterPack/QrCodeDialog.tsx:109
 msgid "QR code has been downloaded!"
-msgstr ""
+msgstr "QR 코드를 다운로드했습니다."
 
 #: src/components/StarterPack/QrCodeDialog.tsx:110
 msgid "QR code saved to your camera roll!"
-msgstr ""
+msgstr "QR 코드를 앨범에 저장했습니다."
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:116
 #: src/view/com/util/post-ctrls/RepostButton.tsx:128
@@ -4278,7 +4280,7 @@ msgstr "제거"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:55
 msgid "Remove {displayName} from starter pack"
-msgstr ""
+msgstr "{displayName} 님을 스타터 팩에서 제거"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:22
 msgid "Remove account"
@@ -4458,7 +4460,7 @@ msgstr "게시물 신고"
 #: src/screens/StarterPack/StarterPackScreen.tsx:469
 #: src/screens/StarterPack/StarterPackScreen.tsx:472
 msgid "Report starter pack"
-msgstr ""
+msgstr "스타터 팩 신고"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:43
 msgid "Report this content"
@@ -4484,7 +4486,7 @@ msgstr "이 게시물 신고하기"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:59
 msgid "Report this starter pack"
-msgstr ""
+msgstr "이 스타터 팩 신고하기"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:47
 msgid "Report this user"
@@ -4660,7 +4662,7 @@ msgstr "핸들 변경 저장"
 #: src/components/StarterPack/ShareDialog.tsx:163
 #: src/components/StarterPack/ShareDialog.tsx:170
 msgid "Save image"
-msgstr ""
+msgstr "이미지 저장"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:169
 msgid "Save image crop"
@@ -4668,7 +4670,7 @@ msgstr "이미지 자르기 저장"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:184
 msgid "Save QR code"
-msgstr ""
+msgstr "QR 코드 저장"
 
 #: src/view/screens/ProfileFeed.tsx:332
 #: src/view/screens/ProfileFeed.tsx:338
@@ -4751,7 +4753,7 @@ msgstr "{displayTag} 태그를 사용한 모든 게시물 검색"
 
 #: src/screens/StarterPack/Wizard/index.tsx:467
 msgid "Search for feeds that you want to suggest to others."
-msgstr ""
+msgstr "다른 사람에게 추천할 피드를 검색하세요."
 
 #: src/view/com/auth/LoggedOut.tsx:101
 #: src/view/com/auth/LoggedOut.tsx:102
@@ -5023,6 +5025,11 @@ msgstr "성행위 또는 선정적인 노출."
 msgid "Sexually Suggestive"
 msgstr "외설적"
 
+#: src/view/com/lightbox/Lightbox.tsx:142
+msgctxt "action"
+msgid "Share"
+msgstr "공유"
+
 #: src/components/StarterPack/QrCodeDialog.tsx:180
 #: src/screens/StarterPack/StarterPackScreen.tsx:303
 #: src/screens/StarterPack/StarterPackScreen.tsx:458
@@ -5032,11 +5039,6 @@ msgstr "외설적"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:316
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:304
 #: src/view/screens/ProfileList.tsx:428
-msgid "Share"
-msgstr "공유"
-
-#: src/view/com/lightbox/Lightbox.tsx:142
-msgctxt "action"
 msgid "Share"
 msgstr "공유"
 
@@ -5061,7 +5063,7 @@ msgstr "피드 공유"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:462
 msgid "Share link"
-msgstr ""
+msgstr "링크 공유"
 
 #: src/components/StarterPack/ShareDialog.tsx:143
 #: src/view/com/modals/LinkWarning.tsx:89
@@ -5071,15 +5073,15 @@ msgstr "링크 공유"
 
 #: src/components/StarterPack/ShareDialog.tsx:100
 msgid "Share link dialog"
-msgstr ""
+msgstr "링크 공유 대화 상자"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:296
 msgid "Share this starter pack"
-msgstr ""
+msgstr "이 스타터 팩 공유하기"
 
 #: src/components/StarterPack/ShareDialog.tsx:112
 msgid "Share this starter pack and help people join your community on Bluesky."
-msgstr ""
+msgstr "이 스타터 팩을 공유하여 사람들이 Bluesky에서 커뮤니티에 참여할 수 있도록 도와주세요."
 
 #: src/components/dms/ChatEmptyPill.tsx:34
 msgid "Share your favorite feed!"
@@ -5253,12 +5255,12 @@ msgstr "@{0}(으)로 로그인했습니다"
 
 #: src/view/com/notifications/FeedItem.tsx:197
 msgid "signed up with your starter pack"
-msgstr ""
+msgstr "(이)가 내 스타터 팩으로 가입했습니다"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:277
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:284
 msgid "Signup without a starter pack"
-msgstr ""
+msgstr "스타터 팩 없이 가입하기"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:240
 #: src/screens/StarterPack/Wizard/index.tsx:202
@@ -5281,7 +5283,7 @@ msgstr "일부 사람들이 답글을 달 수 있음"
 
 #: src/screens/StarterPack/Wizard/index.tsx:203
 msgid "Some subtitle"
-msgstr ""
+msgstr "적당한 부제목"
 
 #: src/screens/Messages/Conversation/index.tsx:106
 msgid "Something went wrong"
@@ -5348,19 +5350,19 @@ msgstr "대화 시작하기"
 #: src/Navigation.tsx:325
 #: src/screens/StarterPack/Wizard/index.tsx:190
 msgid "Starter Pack"
-msgstr ""
+msgstr "스타터 팩"
 
 #: src/components/StarterPack/StarterPackCard.tsx:65
 msgid "Starter pack by {0}"
-msgstr ""
+msgstr "{0} 님의 스타터 팩"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:579
 msgid "Starter pack is invalid"
-msgstr ""
+msgstr "스타터 팩이 유효하지 않음"
 
 #: src/view/screens/Profile.tsx:221
 msgid "Starter Packs"
-msgstr ""
+msgstr "스타터 팩"
 
 #: src/view/screens/Settings/index.tsx:963
 msgid "Status Page"
@@ -5565,7 +5567,7 @@ msgstr "개인정보 처리방침을 <0/>(으)로 이동했습니다"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:589
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
-msgstr ""
+msgstr "이 스타터 팩은 유효하지 않습니다. 대신 이 스타터 팩을 삭제할 수 있습니다."
 
 #: src/view/screens/Support.tsx:36
 msgid "The support form has been moved. If you need help, please <0/> or visit {HELP_DESK_URL} to get in touch with us."
@@ -5937,7 +5939,7 @@ msgstr "서비스에 연결할 수 없습니다. 인터넷 연결을 확인하�
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:513
 msgid "Unable to delete"
-msgstr ""
+msgstr "삭제할 수 없음"
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:89
 #: src/components/dms/MessagesListBlockedFooter.tsx:96
@@ -6481,7 +6483,7 @@ msgstr "이 게시물을 검토해야 하는 이유는 무엇인가요?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:60
 msgid "Why should this starter pack be reviewed?"
-msgstr ""
+msgstr "이 스타터 팩을 검토해야 하는 이유는 무엇인가요?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:48
 msgid "Why should this user be reviewed?"
@@ -6538,7 +6540,7 @@ msgstr "어제 {time}"
 
 #: src/components/StarterPack/StarterPackCard.tsx:68
 msgid "you"
-msgstr ""
+msgstr "나"
 
 #: src/screens/SignupQueued.tsx:136
 msgid "You are in line."
