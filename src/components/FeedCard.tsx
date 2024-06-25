@@ -3,7 +3,6 @@ import {GestureResponderEvent, View} from 'react-native'
 import {
   AppBskyActorDefs,
   AppBskyFeedDefs,
-  AppBskyGraphDefs,
   AtUri,
   RichText as RichTextApi,
 } from '@atproto/api'
@@ -18,7 +17,7 @@ import {
   useRemoveFeedMutation,
 } from '#/state/queries/preferences'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {precacheFeedFromGeneratorView, precacheList} from 'state/queries/feed'
+import {precacheFeedFromGeneratorView} from 'state/queries/feed'
 import {useSession} from 'state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import * as Toast from 'view/com/util/Toast'
@@ -33,45 +32,31 @@ import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 
-type Props =
-  | {
-      type: 'feed'
-      view: AppBskyFeedDefs.GeneratorView
-    }
-  | {
-      type: 'list'
-      view: AppBskyGraphDefs.ListView
-    }
+type Props = {
+  view: AppBskyFeedDefs.GeneratorView
+}
 
 export function Default(props: Props) {
-  const {type, view} = props
-  const displayName = type === 'feed' ? view.displayName : view.name
-  const purpose = type === 'list' ? view.purpose : undefined
+  const {view} = props
   return (
-    <Link label={displayName} {...props}>
+    <Link label={view.displayName} {...props}>
       <Outer>
         <Header>
           <Avatar src={view.avatar} />
-          <TitleAndByline
-            title={displayName}
-            creator={view.creator}
-            type={type}
-            purpose={purpose}
-          />
-          <Action uri={view.uri} pin type={type} purpose={purpose} />
+          <TitleAndByline title={view.displayName} creator={view.creator} />
+          <Action uri={view.uri} pin type="feed" />
         </Header>
         <Description description={view.description} />
-        {type === 'feed' && <Likes count={view.likeCount || 0} />}
+        <Likes count={view.likeCount || 0} />
       </Outer>
     </Link>
   )
 }
 
 export function Link({
-  type,
   view,
-  label,
   children,
+  ...props
 }: Props & Omit<LinkProps, 'to'>) {
   const queryClient = useQueryClient()
 
@@ -79,17 +64,12 @@ export function Link({
     return createProfileFeedHref({feed: view})
   }, [view])
 
+  React.useEffect(() => {
+    precacheFeedFromGeneratorView(queryClient, view)
+  }, [view, queryClient])
+
   return (
-    <InternalLink
-      to={href}
-      label={label}
-      onPress={() => {
-        if (type === 'feed') {
-          precacheFeedFromGeneratorView(queryClient, view)
-        } else {
-          precacheList(queryClient, view)
-        }
-      }}>
+    <InternalLink to={href} {...props}>
       {children}
     </InternalLink>
   )
@@ -132,13 +112,9 @@ export function AvatarPlaceholder({size = 40}: Omit<AvatarProps, 'src'>) {
 export function TitleAndByline({
   title,
   creator,
-  type,
-  purpose,
 }: {
   title: string
   creator?: AppBskyActorDefs.ProfileViewBasic
-  type: 'feed' | 'list'
-  purpose?: AppBskyGraphDefs.ListView['purpose']
 }) {
   const t = useTheme()
 
@@ -151,15 +127,7 @@ export function TitleAndByline({
         <Text
           style={[a.leading_snug, t.atoms.text_contrast_medium]}
           numberOfLines={1}>
-          {type === 'list' && purpose === 'app.bsky.graph.defs#curatelist' ? (
-            <Trans>List by {sanitizeHandle(creator.handle, '@')}</Trans>
-          ) : type === 'list' && purpose === 'app.bsky.graph.defs#modlist' ? (
-            <Trans>
-              Moderation list by {sanitizeHandle(creator.handle, '@')}
-            </Trans>
-          ) : (
-            <Trans>Feed by {sanitizeHandle(creator.handle, '@')}</Trans>
-          )}
+          <Trans>Feed by {sanitizeHandle(creator.handle, '@')}</Trans>
         </Text>
       )}
     </View>
@@ -225,19 +193,13 @@ export function Action({
   uri,
   pin,
   type,
-  purpose,
 }: {
   uri: string
   pin?: boolean
   type: 'feed' | 'list'
-  purpose?: AppBskyGraphDefs.ListView['purpose']
 }) {
   const {hasSession} = useSession()
-  if (
-    !hasSession ||
-    (type === 'list' && purpose !== 'app.bsky.graph.defs#curatelist')
-  )
-    return null
+  if (!hasSession) return null
   return <ActionInner uri={uri} pin={pin} type={type} />
 }
 
@@ -332,12 +294,9 @@ function ActionInner({
 export function createProfileFeedHref({
   feed,
 }: {
-  feed: AppBskyFeedDefs.GeneratorView | AppBskyGraphDefs.ListView
+  feed: AppBskyFeedDefs.GeneratorView
 }) {
   const urip = new AtUri(feed.uri)
-  const type = urip.collection === 'app.bsky.feed.generator' ? 'feed' : 'list'
   const handleOrDid = feed.creator.handle || feed.creator.did
-  return `/profile/${handleOrDid}/${type === 'feed' ? 'feed' : 'lists'}/${
-    urip.rkey
-  }`
+  return `/profile/${handleOrDid}/feed/${urip.rkey}`
 }
