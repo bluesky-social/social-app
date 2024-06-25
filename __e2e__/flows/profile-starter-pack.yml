@@ -1,0 +1,38 @@
+appId: xyz.blueskyweb.app
+---
+- tapOn:
+      id: "bottomBarProfileBtn"
+- tapOn:
+      id: "profilePager-selector-5"
+- assertVisible:
+    id: "createAnotherStarterpackBtn"
+- tapOn: "some name"
+- tapOn:
+      point: "77%,9%"
+- assertVisible: "Invite people to this starter pack!"
+- assertVisible: "Share link"
+- assertVisible: "Share QR code"
+- tapOn:
+      point: "49%,79%"
+- assertVisible: "Add to Reading List"
+- tapOn:
+      id: "UICloseButtonBackground"
+- tapOn:
+      point: "76%,9%"
+- tapOn:
+      point: "50%,85%"
+- assertVisible: "Join the conversation"
+- tapOn:
+      id: "headerDropdownBtn"
+- tapOn:
+      id: "editStarterPackLinkBtn"
+- assertVisible: "Invites, but personal"
+- tapOn:
+      id: "viewHeaderDrawerBtn"
+- tapOn:
+      id: "headerDropdownBtn"
+- tapOn:
+      id: "deleteStarterPackBtn"
+- tapOn: "Delete starter pack?"
+- tapOn: "Cancel"
+

@@ -17,6 +17,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
+import {IS_E2E} from 'lib/app-info'
 import {until} from 'lib/async/until'
 import {createStarterPackList} from 'lib/generate-starterpack'
 import {
@@ -121,6 +122,7 @@ export function useCreateStarterPackMutation({
       return await agent.app.bsky.graph.starterpack.create(
         {
           repo: agent.session?.did,
+          validate: !IS_E2E,
         },
         {
           name,

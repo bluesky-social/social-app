@@ -8,6 +8,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 
+import {IS_E2E} from 'lib/app-info'
 import {until} from 'lib/async/until'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
@@ -117,6 +118,7 @@ export function useGenerateStarterPackMutation({
       return await agent.app.bsky.graph.starterpack.create(
         {
           repo: agent.session!.did,
+          validate: !IS_E2E,
         },
         {
           name: starterPackName,

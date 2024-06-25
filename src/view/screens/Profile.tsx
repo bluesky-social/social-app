@@ -27,7 +27,7 @@ import {useAgent, useSession} from '#/state/session'
 import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {IS_DEV, IS_TESTFLIGHT} from 'lib/app-info'
+import {IS_DEV, IS_E2E, IS_TESTFLIGHT} from 'lib/app-info'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {ComposeIcon2} from 'lib/icons'
 import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
@@ -172,7 +172,10 @@ function ProfileScreenLoaded({
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
   const gate = useGate()
   const starterPacksEnabled =
-    IS_DEV || IS_TESTFLIGHT || (!isWeb && gate('starter_packs_enabled'))
+    IS_DEV ||
+    IS_TESTFLIGHT ||
+    IS_E2E ||
+    (!isWeb && gate('starter_packs_enabled'))
 
   const [scrollViewTag, setScrollViewTag] = React.useState<number | null>(null)
 

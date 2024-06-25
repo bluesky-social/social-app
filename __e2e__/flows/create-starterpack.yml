@@ -1,0 +1,31 @@
+appId: xyz.blueskyweb.app
+---
+- tapOn:
+    id: "bottomBarProfileBtn"
+- tapOn:
+    id: "profilePager-selector-5"
+- tapOn:
+    id: "createStarterpackBtn"
+- tapOn:
+    id: "starterPackName"
+- inputText: "some name"
+- tapOn: "return"
+- tapOn:
+    id: "starterPackDescription"
+- inputText: "just a little description!"
+- tapOn:
+    point: "50%,32%"
+- tapOn: "Next"
+- tapOn: "Search"
+- inputText: "bob"
+- tapOn:
+    point: "50%,21%"
+- tapOn:
+    id: "searchTextInput"
+- inputText: "carla"
+- tapOn:
+    point: "50%,21%"
+- tapOn: "Next"
+- tapOn: "Skip"
+- assertVisible: "just a little description!"
+- assertVisible: "Share this starter pack"

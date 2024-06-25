@@ -20,6 +20,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {logger} from '#/logger'
+import {IS_E2E} from 'lib/app-info'
 import {HITSLOP_10} from 'lib/constants'
 import {createSanitizedDisplayName} from 'lib/moderation/create-sanitized-display-name'
 import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
@@ -57,6 +58,8 @@ import {Loader} from '#/components/Loader'
 import {WizardEditListDialog} from '#/components/StarterPack/Wizard/WizardEditListDialog'
 import {Text} from '#/components/Typography'
 import {Provider} from './State'
+
+const MIN_PROFILES = IS_E2E ? 2 : 8
 
 export function Wizard({
   route,
@@ -399,7 +402,7 @@ function Footer({
     (state.currentStep === 'Profiles' && items.length > 1) ||
     (state.currentStep === 'Feeds' && items.length > 0)
 
-  const minimumItems = state.currentStep === 'Profiles' ? 8 : 0
+  const minimumItems = state.currentStep === 'Profiles' ? MIN_PROFILES : 0
 
   const textStyles = [a.text_md]
 
@@ -528,11 +531,11 @@ function Footer({
         ) : (
           <View style={{width: 70, height: 35}} />
         )}
-        {state.currentStep === 'Profiles' && items.length < 8 ? (
+        {state.currentStep === 'Profiles' && items.length < MIN_PROFILES ? (
           <>
             <Text
               style={[a.font_bold, textStyles, t.atoms.text_contrast_medium]}>
-              <Trans>Add {8 - items.length} more to continue</Trans>
+              <Trans>Add {MIN_PROFILES - items.length} more to continue</Trans>
             </Text>
             <View style={{width: 70}} />
           </>

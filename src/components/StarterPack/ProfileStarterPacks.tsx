@@ -167,7 +167,8 @@ function CreateAnother() {
         color="secondary"
         size="small"
         style={[a.self_center]}
-        onPress={() => navigation.navigate('StarterPackWizard')}>
+        onPress={() => navigation.navigate('StarterPackWizard')}
+        testID="createAnotherStarterpackBtn">
         <ButtonText>
           <Trans>Create another</Trans>
         </ButtonText>
@@ -247,7 +248,8 @@ function Empty() {
           size="small"
           disabled={isGenerating}
           onPress={confirmDialogControl.open}
-          style={{backgroundColor: 'transparent'}}>
+          style={{backgroundColor: 'transparent'}}
+          testID="createStarterpackForMeBtn">
           <ButtonText style={{color: 'white'}}>
             <Trans>Make one for me</Trans>
           </ButtonText>
@@ -265,7 +267,8 @@ function Empty() {
             borderColor: 'white',
             width: 100,
           }}
-          hoverStyle={[{backgroundColor: '#dfdfdf'}]}>
+          hoverStyle={[{backgroundColor: '#dfdfdf'}]}
+          testID="createStarterpackBtn">
           <ButtonText>
             <Trans>Create</Trans>
           </ButtonText>
