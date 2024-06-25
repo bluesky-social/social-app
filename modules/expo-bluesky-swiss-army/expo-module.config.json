@@ -1,0 +1,12 @@
+{
+  "platforms": ["ios", "tvos", "android", "web"],
+  "ios": {
+    "modules": ["ExpoBlueskyDevicePrefsModule", "ExpoBlueskyReferrerModule"]
+  },
+  "android": {
+    "modules": [
+      "expo.modules.blueskyswissarmy.deviceprefs.ExpoBlueskyDevicePrefsModule",
+      "expo.modules.blueskyswissarmy.referrer.ExpoBlueskyReferrerModule"
+    ]
+  }
+}

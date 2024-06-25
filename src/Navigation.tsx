@@ -43,6 +43,8 @@ import HashtagScreen from '#/screens/Hashtag'
 import {ModerationScreen} from '#/screens/Moderation'
 import {ProfileKnownFollowersScreen} from '#/screens/Profile/KnownFollowers'
 import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
+import {StarterPackScreen} from '#/screens/StarterPack/StarterPackScreen'
+import {Wizard} from '#/screens/StarterPack/Wizard'
 import {GetReferrerModule} from '../modules/expo-get-referrer/src/ExpoGetReferrerModule'
 import {init as initAnalytics} from './lib/analytics/analytics'
 import {useWebScrollRestoration} from './lib/hooks/useWebScrollRestoration'
@@ -55,8 +57,8 @@ import {useModalControls} from './state/modals'
 import {useUnreadNotifications} from './state/queries/notifications/unread'
 import {useSession} from './state/session'
 import {
-  setEmailConfirmationRequested,
   shouldRequestEmailConfirmation,
+  snoozeEmailConfirmationPrompt,
 } from './state/shell/reminders'
 import {AccessibilitySettingsScreen} from './view/screens/AccessibilitySettings'
 import {CommunityGuidelinesScreen} from './view/screens/CommunityGuidelines'
@@ -313,7 +315,26 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         getComponent={() => MessagesSettingsScreen}
         options={{title: title(msg`Chat settings`), requireAuth: true}}
       />
-      <Stack.Screen name="Feeds" getComponent={() => FeedsScreen} />
+      <Stack.Screen
+        name="Feeds"
+        getComponent={() => FeedsScreen}
+        options={{title: title(msg`Feeds`)}}
+      />
+      <Stack.Screen
+        name="StarterPack"
+        getComponent={() => StarterPackScreen}
+        options={{title: title(msg`Starter Pack`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="StarterPackWizard"
+        getComponent={() => Wizard}
+        options={{title: title(msg`Create a starter pack`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="StarterPackEdit"
+        getComponent={() => Wizard}
+        options={{title: title(msg`Edit your starter pack`), requireAuth: true}}
+      />
     </>
   )
 }
@@ -368,6 +389,7 @@ function HomeTabNavigator() {
         contentStyle: pal.view,
       }}>
       <HomeTab.Screen name="Home" getComponent={() => HomeScreen} />
+      <HomeTab.Screen name="Start" getComponent={() => HomeScreen} />
       {commonScreens(HomeTab)}
     </HomeTab.Navigator>
   )
@@ -504,6 +526,11 @@ const FlatNavigator = () => {
         getComponent={() => MessagesScreen}
         options={{title: title(msg`Messages`), requireAuth: true}}
       />
+      <Flat.Screen
+        name="Start"
+        getComponent={() => HomeScreen}
+        options={{title: title(msg`Home`)}}
+      />
       {commonScreens(Flat as typeof HomeTab, numUnread)}
     </Flat.Navigator>
   )
@@ -586,7 +613,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
 
     if (currentAccount && shouldRequestEmailConfirmation(currentAccount)) {
       openModal({name: 'verify-email', showReminder: true})
-      setEmailConfirmationRequested()
+      snoozeEmailConfirmationPrompt()
     }
   }
 

@@ -24,12 +24,18 @@ import Animated, {
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {LinearGradient} from 'expo-linear-gradient'
+import {
+  AppBskyFeedDefs,
+  AppBskyFeedGetPostThread,
+  BskyAgent,
+} from '@atproto/api'
 import {RichText} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {observer} from 'mobx-react-lite'
 
+import {until} from '#/lib/async/until'
 import {
   createGIFDescription,
   parseAltFromGIFDescription,
@@ -299,6 +305,17 @@ export const ComposePost = observer(function ComposePost({
           langs: toPostLanguages(langPrefs.postLanguage),
         })
       ).uri
+      try {
+        await whenAppViewReady(agent, postUri, res => {
+          const thread = res.data.thread
+          return AppBskyFeedDefs.isThreadViewPost(thread)
+        })
+      } catch (waitErr: any) {
+        logger.error(waitErr, {
+          message: `Waiting for app view failed`,
+        })
+        // Keep going because the post *was* published.
+      }
     } catch (e: any) {
       logger.error(e, {
         message: `Composer: create post failed`,
@@ -754,6 +771,23 @@ function useKeyboardVerticalOffset() {
 
   // all other iPhones
   return top + 10
+}
+
+async function whenAppViewReady(
+  agent: BskyAgent,
+  uri: string,
+  fn: (res: AppBskyFeedGetPostThread.Response) => boolean,
+) {
+  await until(
+    5, // 5 tries
+    1e3, // 1s delay between tries
+    fn,
+    () =>
+      agent.app.bsky.feed.getPostThread({
+        uri,
+        depth: 0,
+      }),
+  )
 }
 
 const styles = StyleSheet.create({
