@@ -92,7 +92,7 @@ function DialogContent({
       style={[{maxWidth: 500}, a.w_full]}>
       <View style={[a.flex_1, a.gap_md]}>
         <Text style={[a.text_2xl, a.font_bold]}>
-          <Trans>Chose who can reply</Trans>
+          <Trans>Choose who can reply</Trans>
         </Text>
         <Text style={a.mt_xs}>
           <Trans>Either choose "Everybody" or "Nobody"</Trans>
