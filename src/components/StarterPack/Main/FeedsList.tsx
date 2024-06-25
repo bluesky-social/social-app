@@ -45,7 +45,7 @@ export const FeedsList = React.forwardRef<SectionRef, ProfilesListProps>(
             (isWeb || index !== 0) && a.border_t,
             t.atoms.border_contrast_low,
           ]}>
-          <FeedCard.Default type="feed" view={item} />
+          <FeedCard.Default view={item} />
         </View>
       )
     }
