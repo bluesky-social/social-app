@@ -10,6 +10,7 @@ import {isNative} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {HITSLOP_10} from 'lib/constants'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {useSession} from 'state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -28,16 +29,27 @@ export function NewskieDialog({
   const {_} = useLingui()
   const t = useTheme()
   const moderationOpts = useModerationOpts()
+  const {currentAccount} = useSession()
+  const timeAgo = useGetTimeAgo()
   const control = useDialogControl()
+
+  const isMe = profile.did === currentAccount?.did
+  const createdAt = profile.createdAt as string | undefined
+
   const profileName = React.useMemo(() => {
     const name = profile.displayName || profile.handle
+
+    if (isMe) {
+      return _(msg`You`)
+    }
+
     if (!moderationOpts) return name
     const moderation = moderateProfile(profile, moderationOpts)
+
     return sanitizeDisplayName(name, moderation.ui('displayName'))
-  }, [moderationOpts, profile])
+  }, [_, isMe, moderationOpts, profile])
+
   const [now] = React.useState(() => Date.now())
-  const timeAgo = useGetTimeAgo()
-  const createdAt = profile.createdAt as string | undefined
   const daysOld = React.useMemo(() => {
     if (!createdAt) return Infinity
     return differenceInSeconds(now, new Date(createdAt)) / 86400
@@ -87,7 +99,11 @@ export function NewskieDialog({
                 />
               </View>
               <Text style={[a.font_bold, a.text_xl]}>
-                <Trans>Say hello!</Trans>
+                {isMe ? (
+                  <Trans>Welcome, friend!</Trans>
+                ) : (
+                  <Trans>Say hello!</Trans>
+                )}
               </Text>
             </View>
             <Text style={[a.text_md, a.text_center, a.leading_snug]}>
