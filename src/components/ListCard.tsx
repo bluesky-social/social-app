@@ -8,7 +8,13 @@ import {sanitizeHandle} from 'lib/strings/handles'
 import {precacheList} from 'state/queries/feed'
 import {useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
-import {Action, Avatar, Description, Header, Outer} from '#/components/FeedCard'
+import {
+  Avatar,
+  Description,
+  Header,
+  Outer,
+  SaveButton,
+} from '#/components/FeedCard'
 import {Link as InternalLink, LinkProps} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
@@ -18,12 +24,12 @@ import {Text} from '#/components/Typography'
  */
 
 export {
-  Action,
   Avatar,
   AvatarPlaceholder,
   Description,
   Header,
   Outer,
+  SaveButton,
   TitleAndBylinePlaceholder,
 } from '#/components/FeedCard'
 
@@ -48,7 +54,7 @@ export function Default(props: Props) {
             purpose={view.purpose}
           />
           {showPinButton && view.purpose === CURATELIST && (
-            <Action view={view} pin />
+            <SaveButton view={view} pin />
           )}
         </Header>
         <Description description={view.description} />

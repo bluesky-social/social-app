@@ -45,7 +45,7 @@ export function Default(props: Props) {
         <Header>
           <Avatar src={view.avatar} />
           <TitleAndByline title={view.displayName} creator={view.creator} />
-          <Action view={view} pin />
+          <SaveButton view={view} pin />
         </Header>
         <Description description={view.description} />
         <Likes count={view.likeCount || 0} />
@@ -190,7 +190,7 @@ export function Likes({count}: {count: number}) {
   )
 }
 
-export function Action({
+export function SaveButton({
   view,
   pin,
 }: {
@@ -199,10 +199,10 @@ export function Action({
 }) {
   const {hasSession} = useSession()
   if (!hasSession) return null
-  return <ActionInner view={view} pin={pin} />
+  return <SaveButtonInner view={view} pin={pin} />
 }
 
-function ActionInner({
+function SaveButtonInner({
   view,
   pin,
 }: {
