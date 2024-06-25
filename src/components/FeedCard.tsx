@@ -199,12 +199,12 @@ export function TitleAndBylinePlaceholder({creator}: {creator?: boolean}) {
 }
 
 export function Description({description}: {description?: string}) {
-  const [rt] = React.useState(() => {
+  const rt = React.useMemo(() => {
     if (!description) return
     const rt = new RichTextApi({text: description || ''})
     rt.detectFacetsWithoutResolution()
     return rt
-  })
+  }, [description])
   if (!rt) return null
   return <RichText value={rt} style={[a.leading_snug]} disableLinks />
 }
