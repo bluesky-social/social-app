@@ -948,7 +948,7 @@ msgid "Choose your password"
 msgstr "パスワードを入力"
 
 #: src/components/dialogs/ThreadgateEditor.tsx:95
-msgid "Chose who can reply"
+msgid "Choose who can reply"
 msgstr "誰が返信できるかを選択"
 
 #: src/view/screens/Settings/index.tsx:910
