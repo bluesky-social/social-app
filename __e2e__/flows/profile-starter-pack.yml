@@ -4,6 +4,8 @@ appId: xyz.blueskyweb.app
       id: "bottomBarProfileBtn"
 - tapOn:
       id: "profilePager-selector-5"
+- assertVisible:
+    id: "createAnotherStarterpackBtn"
 - tapOn: "some name"
 - tapOn:
       point: "77%,9%"
