@@ -10,7 +10,7 @@ export default function (ctx: AppContext, app: Express) {
         details: [
           {
             appID: 'B3LX46C5HS.xyz.blueskyweb.app',
-            paths: [],
+            paths: ['*'],
           },
         ],
       },
