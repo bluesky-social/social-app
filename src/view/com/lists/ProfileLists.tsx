@@ -18,7 +18,7 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {EmptyState} from 'view/com/util/EmptyState'
 import {atoms as a, useTheme} from '#/alf'
-import * as FeedCard from '#/components/FeedCard'
+import * as ListCard from '#/components/ListCard'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {List, ListRef} from '../util/List'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
@@ -172,7 +172,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
               a.px_lg,
               a.py_lg,
             ]}>
-            <FeedCard.Default type="list" view={item} />
+            <ListCard.Default view={item} />
           </View>
         )
       },
