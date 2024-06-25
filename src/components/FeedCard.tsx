@@ -233,7 +233,11 @@ export function Action({
   purpose?: AppBskyGraphDefs.ListView['purpose']
 }) {
   const {hasSession} = useSession()
-  if (!hasSession || purpose !== 'app.bsky.graph.defs#curatelist') return null
+  if (
+    !hasSession ||
+    (type === 'list' && purpose !== 'app.bsky.graph.defs#curatelist')
+  )
+    return null
   return <ActionInner uri={uri} pin={pin} type={type} />
 }
 
