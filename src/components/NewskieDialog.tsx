@@ -6,10 +6,10 @@ import {useLingui} from '@lingui/react'
 import {differenceInSeconds} from 'date-fns'
 
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
+import {isNative} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {HITSLOP_10} from 'lib/constants'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {isWeb} from 'platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -70,19 +70,27 @@ export function NewskieDialog({
         <Dialog.ScrollableInner
           label={_(msg`New user info dialog`)}
           style={[{width: 'auto', maxWidth: 400, minWidth: 200}]}>
-          <View style={[a.gap_sm]}>
+          <View style={[a.gap_md]}>
             <View style={[a.align_center]}>
-              <Newskie
-                width={64}
-                height={64}
-                fill="#FFC404"
-                style={{marginTop: -10}}
-              />
-              <Text style={[a.font_bold, a.text_xl, {marginTop: -10}]}>
+              <View
+                style={[
+                  {
+                    height: 60,
+                    width: 64,
+                  },
+                ]}>
+                <Newskie
+                  width={64}
+                  height={64}
+                  fill="#FFC404"
+                  style={[a.absolute, a.inset_0]}
+                />
+              </View>
+              <Text style={[a.font_bold, a.text_xl]}>
                 <Trans>Say hello!</Trans>
               </Text>
             </View>
-            <Text style={[a.text_md, a.text_center, a.leading_tight]}>
+            <Text style={[a.text_md, a.text_center, a.leading_snug]}>
               {profile.joinedViaStarterPack ? (
                 <Trans>
                   {profileName} joined Bluesky using a starter pack{' '}
@@ -116,18 +124,23 @@ export function NewskieDialog({
                 </View>
               </StarterPackCard.Link>
             ) : null}
-            <Button
-              label={_(msg`Close`)}
-              variant="solid"
-              color="secondary"
-              size="small"
-              style={[a.mt_sm, isWeb && [a.self_center, {marginLeft: 'auto'}]]}
-              onPress={() => control.close()}>
-              <ButtonText>
-                <Trans>Close</Trans>
-              </ButtonText>
-            </Button>
+
+            {isNative && (
+              <Button
+                label={_(msg`Close`)}
+                variant="solid"
+                color="secondary"
+                size="small"
+                style={[a.mt_sm]}
+                onPress={() => control.close()}>
+                <ButtonText>
+                  <Trans>Close</Trans>
+                </ButtonText>
+              </Button>
+            )}
           </View>
+
+          <Dialog.Close />
         </Dialog.ScrollableInner>
       </Dialog.Outer>
     </View>
