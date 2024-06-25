@@ -1,8 +1,5 @@
 {
-  "platforms": ["ios", "tvos", "android", "web"],
-  "ios": {
-    "modules": ["ExpoGetReferrerModule"]
-  },
+  "platforms": ["android"],
   "android": {
     "modules": ["expo.modules.getreferrer.ExpoGetReferrerModule"]
   }
