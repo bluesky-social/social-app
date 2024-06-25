@@ -10,6 +10,7 @@ export function getGooglePlayReferrerInfoAsync(): Promise<GooglePlayReferrerInfo
 export function getReferrerInfoAsync(): Promise<ReferrerInfo | null> {
   if (
     Platform.OS === 'web' &&
+    // for ssr
     typeof document !== 'undefined' &&
     document != null &&
     document.referrer
