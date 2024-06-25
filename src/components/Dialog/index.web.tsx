@@ -88,7 +88,10 @@ export function Outer({
     if (!isOpen) return
 
     function handler(e: KeyboardEvent) {
-      if (e.key === 'Escape') close()
+      if (e.key === 'Escape') {
+        e.stopPropagation()
+        close()
+      }
     }
 
     document.addEventListener('keydown', handler)

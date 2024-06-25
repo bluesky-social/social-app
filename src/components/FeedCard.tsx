@@ -5,6 +5,7 @@ import {
   AppBskyFeedDefs,
   AppBskyGraphDefs,
   AtUri,
+  RichText as RichTextApi,
 } from '@atproto/api'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -24,7 +25,6 @@ import * as Toast from 'view/com/util/Toast'
 import {useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
-import {useRichText} from '#/components/hooks/useRichText'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {Link as InternalLink, LinkProps} from '#/components/Link'
@@ -199,13 +199,14 @@ export function TitleAndBylinePlaceholder({creator}: {creator?: boolean}) {
 }
 
 export function Description({description}: {description?: string}) {
-  const [rt, isResolving] = useRichText(description || '')
-  if (!description) return null
-  return isResolving ? (
-    <RichText value={description} style={[a.leading_snug]} />
-  ) : (
-    <RichText value={rt} style={[a.leading_snug]} />
-  )
+  const rt = React.useMemo(() => {
+    if (!description) return
+    const rt = new RichTextApi({text: description || ''})
+    rt.detectFacetsWithoutResolution()
+    return rt
+  }, [description])
+  if (!rt) return null
+  return <RichText value={rt} style={[a.leading_snug]} disableLinks />
 }
 
 export function Likes({count}: {count: number}) {
