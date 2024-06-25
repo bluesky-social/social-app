@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-06-25 13:36+0900\n"
+"PO-Revision-Date: 2024-06-25 14:14+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -712,7 +712,7 @@ msgstr "Bluesky は、ホスティング プロバイダーを選択できるオ
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:280
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
-msgstr "Blueskyはあなたのつながってるユーザーからおすすめのアカウントを選びます。"
+msgstr "Blueskyはあなたのつながっているユーザーからおすすめのアカウントを選びます。"
 
 #: src/screens/Moderation/index.tsx:533
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
@@ -2757,7 +2757,7 @@ msgstr "このスターターパックにユーザーを招待！"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:35
 msgid "Invite your friends to follow your favorite feeds and people"
-msgstr "あなたの友人をお気に入りのフィードやユーザーをフォローするように招待する"
+msgstr "お気に入りのフィードやユーザーをフォローするよう、あなたの友人を招待する"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:32
 msgid "Invites, but personal"
@@ -3468,7 +3468,7 @@ msgstr "おすすめのGIFが見つかりません。Tenorに問題があるか�
 
 #: src/screens/StarterPack/Wizard/StepFeeds.tsx:105
 msgid "No feeds found. Try searching for something else."
-msgstr "フィードが見つかりませんでした。他に探してみて。"
+msgstr "フィードが見つかりませんでした。他を探してみて。"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:120
 msgid "No longer following {0}"
@@ -5098,7 +5098,7 @@ msgstr "このスターターパックを共有"
 
 #: src/components/StarterPack/ShareDialog.tsx:112
 msgid "Share this starter pack and help people join your community on Bluesky."
-msgstr "このスターターパックを共有して、他のユーザーがあなたBlueskyでのコミュニティに参加するよう手伝います"
+msgstr "このスターターパックを共有して、他のユーザーがBlueskyでのコミュニティに参加するよう手伝います"
 
 #: src/components/dms/ChatEmptyPill.tsx:34
 msgid "Share your favorite feed!"
