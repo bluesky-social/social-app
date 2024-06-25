@@ -956,16 +956,13 @@ msgid "Choose this color as your avatar"
 msgstr "Choisir cette couleur comme avatar"
 
 #: src/components/dialogs/ThreadgateEditor.tsx:91
+#: src/components/dialogs/ThreadgateEditor.tsx:95
 msgid "Choose who can reply"
 msgstr "Choisissez qui peut répondre"
 
 #: src/screens/Signup/StepInfo/index.tsx:114
 msgid "Choose your password"
 msgstr "Choisissez votre mot de passe"
-
-#: src/components/dialogs/ThreadgateEditor.tsx:95
-msgid "Chose who can reply"
-msgstr "Choisissez qui peut répondre"
 
 #: src/view/screens/Settings/index.tsx:910
 msgid "Clear all legacy storage data"
