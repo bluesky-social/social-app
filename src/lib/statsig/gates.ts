@@ -6,3 +6,4 @@ export type Gate =
   | 'show_avi_follow_button'
   | 'show_follow_back_label_v2'
   | 'starter_packs_enabled'
+  | 'videos'
