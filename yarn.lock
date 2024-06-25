@@ -34,10 +34,10 @@
     jsonpointer "^5.0.0"
     leven "^3.1.0"
 
-"@atproto/api@0.12.22-next.0":
-  version "0.12.22-next.0"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.12.22-next.0.tgz#7996f651468e3fb151663df28a9938d92bd0660a"
-  integrity sha512-LKmOrQvBvIlheLv+ns85bCrP23DbYfk8UQkFikLBEqPKQW10F9ZwsJ6oBUfrWv6pEI4Mn0mrn8cFQkvdZ2i2sg==
+"@atproto/api@^0.12.22":
+  version "0.12.22"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.12.22.tgz#1880a93a0caa4485cd8463bd1e10bf2424b9826c"
+  integrity sha512-TIXSnf3qqyX40Ei/FkK4H24w+7s5rOc63TPwrGakRBOqIgSNBKOggei8I600fJ/AXB7HO6Vp9tBmDVOt2+021A==
   dependencies:
     "@atproto/common-web" "^0.3.0"
     "@atproto/lexicon" "^0.4.0"
