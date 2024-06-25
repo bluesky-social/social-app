@@ -1,5 +1,6 @@
 import React, {
   lazy,
+  Suspense,
   useCallback,
   useEffect,
   useImperativeHandle,
@@ -629,7 +630,12 @@ export const ComposePost = observer(function ComposePost({
               progress={videoProcessingProgress}
             />
           ) : (
-            video && <VideoPreview video={video} clear={clearVideo} />
+            video && (
+              // remove suspense when we get rid of lazy
+              <Suspense fallback={null}>
+                <VideoPreview video={video} clear={clearVideo} />
+              </Suspense>
+            )
           )}
         </Animated.ScrollView>
         <SuggestedLanguage text={richtext.text} />

@@ -19,6 +19,8 @@ export async function compressVideo(
   const blob = await fetch(file).then(res => res.blob())
   const objectUrl = URL.createObjectURL(blob)
 
+  console.log('uncompressed size:', (blob.size / 1024 / 1024).toFixed(2) + 'mb')
+
   const videoEl = document.createElement('video')
   videoEl.setAttribute('playsinline', 'playsinline')
   videoEl.setAttribute('controls', 'controls')
@@ -52,7 +54,6 @@ export async function compressVideo(
   }
   if (outputWidth % 2 === 1) outputWidth--
   if (outputHeight % 2 === 1) outputHeight--
-  console.log({outputWidth, outputHeight})
 
   const canvas = document.createElement('canvas')
   canvas.width = outputWidth
