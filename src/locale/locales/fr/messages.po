@@ -8,7 +8,7 @@ msgstr ""
 "Language: fr\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-06-23 20:10+0100\n"
+"PO-Revision-Date: 2024-06-25 11:00+0100\n"
 "Last-Translator: surfdude29\n"
 "Language-Team: Stanislas Signoud (@signez.fr), surfdude29\n"
 "Plural-Forms: \n"
@@ -75,6 +75,10 @@ msgstr "{0, plural, one {repost} other {reposts}}"
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:255
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
 msgstr "{0, plural, one {Déliker (# like)} other {Déliker (# likes)}}"
+
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:218
+msgid "{0} joined this week"
+msgstr "{0} personnes se sont inscrites cette semaine"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:343
 msgid "{0} people have used this starter pack!"
@@ -192,6 +196,10 @@ msgstr "<0>{0}</0> fait partie de votre kit de démarrage"
 #: src/view/com/modals/SelfLabel.tsx:135
 msgid "<0>Not Applicable.</0> This warning is only available for posts with media attached."
 msgstr "<0>Pas applicable.</0> Cet avertissement est seulement disponible pour les posts qui ont des médias qui leur sont attachés."
+
+#: src/screens/StarterPack/Wizard/index.tsx:472
+msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
+msgstr "<0>Vous</0> et<1> </1><2>{0} </2>faites partie de votre pack de démarrage"
 
 #: src/screens/Profile/Header/Handle.tsx:50
 msgid "⚠Invalid Handle"
@@ -923,9 +931,17 @@ msgstr "Consultez votre boîte de réception, vous avez du recevoir un e-mail co
 msgid "Choose \"Everybody\" or \"Nobody\""
 msgstr "Choisir « Tout le monde » ou « Personne »"
 
+#: src/screens/StarterPack/Wizard/index.tsx:191
+msgid "Choose Feeds"
+msgstr "Choisissez des fils d’actu"
+
 #: src/components/StarterPack/ProfileStarterPacks.tsx:288
 msgid "Choose for me"
 msgstr "Choisir pour moi"
+
+#: src/screens/StarterPack/Wizard/index.tsx:187
+msgid "Choose People"
+msgstr "Choisissez des personnes"
 
 #: src/view/com/auth/server-input/index.tsx:79
 msgid "Choose Service"
@@ -938,6 +954,11 @@ msgstr "Choisissez les algorithmes qui alimentent vos fils d’actu personnalis�
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:107
 msgid "Choose this color as your avatar"
 msgstr "Choisir cette couleur comme avatar"
+
+#: src/components/dialogs/ThreadgateEditor.tsx:91
+#: src/components/dialogs/ThreadgateEditor.tsx:95
+msgid "Choose who can reply"
+msgstr "Choisissez qui peut répondre"
 
 #: src/screens/Signup/StepInfo/index.tsx:114
 msgid "Choose your password"
@@ -1267,6 +1288,10 @@ msgstr "Copier {0}"
 #: src/components/dialogs/Embed.tsx:139
 msgid "Copy code"
 msgstr "Copier ce code"
+
+#: src/components/StarterPack/ShareDialog.tsx:123
+msgid "Copy link"
+msgstr "Copier le lien"
 
 #: src/components/StarterPack/ShareDialog.tsx:143
 msgid "Copy Link"
@@ -1803,6 +1828,10 @@ msgstr "Modifier votre kit de démarrage"
 #: src/screens/Onboarding/index.tsx:31
 msgid "Education"
 msgstr "Éducation"
+
+#: src/components/dialogs/ThreadgateEditor.tsx:98
+msgid "Either choose \"Everybody\" or \"Nobody\""
+msgstr "Choisissez soit « Tout le monde », soit « Personne »"
 
 #: src/screens/Signup/StepInfo/index.tsx:80
 #: src/view/com/modals/ChangeEmail.tsx:136
@@ -3731,6 +3760,10 @@ msgstr "Ouvrir le journal du système"
 msgid "Opens {numItems} options"
 msgstr "Ouvre {numItems} options"
 
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:60
+msgid "Opens a dialog to choose who can reply to this thread"
+msgstr "Ouvre une boîte de dialogue permettant de choisir qui peut répondre à ce fil de discussion"
+
 #: src/view/screens/Settings/index.tsx:510
 msgid "Opens accessibility settings"
 msgstr "Ouvre les paramètres d’accessibilité"
@@ -5075,6 +5108,11 @@ msgstr "Partager le lien"
 msgid "Share link dialog"
 msgstr "Dialogue pour le partage d’un lien"
 
+#: src/components/StarterPack/ShareDialog.tsx:134
+#: src/components/StarterPack/ShareDialog.tsx:145
+msgid "Share QR code"
+msgstr "Partager le code QR"
+
 #: src/screens/StarterPack/StarterPackScreen.tsx:296
 msgid "Share this starter pack"
 msgstr "Partagez ce kit de démarrage"
@@ -5280,10 +5318,6 @@ msgstr "Développement de logiciels"
 #: src/view/com/threadgate/WhoCanReply.tsx:124
 msgid "Some people can reply"
 msgstr "Quelques comptes peuvent répondre"
-
-#: src/screens/StarterPack/Wizard/index.tsx:203
-msgid "Some subtitle"
-msgstr ""
 
 #: src/screens/Messages/Conversation/index.tsx:106
 msgid "Something went wrong"
@@ -5853,6 +5887,10 @@ msgstr "Préférences des fils de discussion"
 msgid "Thread Preferences"
 msgstr "Préférences des fils de discussion"
 
+#: src/components/WhoCanReply.tsx:109
+msgid "Thread settings updated"
+msgstr "Paramètres du fil de discussion mis à jour"
+
 #: src/view/screens/PreferencesThreads.tsx:119
 msgid "Threaded Mode"
 msgstr "Mode arborescent"
@@ -6415,6 +6453,10 @@ msgstr "Nous sommes désolés ! Vous ne pouvez vous abonner qu’à vingt étiq
 msgid "Welcome back!"
 msgstr "Bienvenue !"
 
+#: src/components/NewskieDialog.tsx:103
+msgid "Welcome, friend!"
+msgstr "Bienvenue et enchanté !"
+
 #: src/screens/Onboarding/StepInterests/index.tsx:135
 msgid "What are your interests?"
 msgstr "Quels sont vos centres d’intérêt ?"
@@ -6541,6 +6583,10 @@ msgstr "Hier, {time}"
 #: src/components/StarterPack/StarterPackCard.tsx:68
 msgid "you"
 msgstr "vous"
+
+#: src/components/NewskieDialog.tsx:43
+msgid "You"
+msgstr "Vous"
 
 #: src/screens/SignupQueued.tsx:136
 msgid "You are in line."
