@@ -21,6 +21,7 @@ export function useIntentHandler() {
       Referrer.getReferrerInfoAsync().then(info => {
         if (info && info.hostname !== 'bsky.app') {
           logEvent('deepLink:referrerReceived', {
+            to: url,
             referrer: info?.referrer,
             hostname: info?.hostname,
           })

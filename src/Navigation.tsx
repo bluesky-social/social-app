@@ -760,6 +760,7 @@ function logModuleInitTime() {
     Referrer.getReferrerInfoAsync().then(info => {
       if (info && info.hostname !== 'bsky.app') {
         logEvent('deepLink:referrerReceived', {
+          to: window.location.href,
           referrer: info?.referrer,
           hostname: info?.hostname,
         })

@@ -26,6 +26,7 @@ export type LogEvents = {
   'state:foreground:sampled': {}
   'router:navigate:sampled': {}
   'deepLink:referrerReceived': {
+    to: string
     referrer: string
     hostname: string
   }
