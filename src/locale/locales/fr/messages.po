@@ -78,7 +78,7 @@ msgstr "{0, plural, one {Déliker (# like)} other {Déliker (# likes)}}"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:218
 msgid "{0} joined this week"
-msgstr "{0} ont été inscrites cette semaine"
+msgstr "{0} personnes se sont inscrites cette semaine"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:343
 msgid "{0} people have used this starter pack!"
@@ -5892,7 +5892,7 @@ msgstr "Préférences des fils de discussion"
 
 #: src/components/WhoCanReply.tsx:109
 msgid "Thread settings updated"
-msgstr "Mise à jour des paramètres du fil de discussion"
+msgstr "Paramètres du fil de discussion mis à jour"
 
 #: src/view/screens/PreferencesThreads.tsx:119
 msgid "Threaded Mode"
@@ -6458,7 +6458,7 @@ msgstr "Bienvenue !"
 
 #: src/components/NewskieDialog.tsx:103
 msgid "Welcome, friend!"
-msgstr "Bienvenue, mon ami !"
+msgstr "Bienvenue et enchanté !"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:135
 msgid "What are your interests?"
