@@ -239,22 +239,25 @@ function LandingScreenLoaded({
                       t.atoms.border_contrast_low,
                     ]
                   }>
-                  {starterPack.listItemsSample?.slice(0, 8).map((item, i) => (
-                    <View
-                      key={item.subject.did}
-                      style={[
-                        a.py_lg,
-                        a.px_md,
-                        (!isTabletOrDesktop || i !== 0) && a.border_t,
-                        t.atoms.border_contrast_low,
-                        {pointerEvents: 'none'},
-                      ]}>
-                      <ProfileCard
-                        profile={item.subject}
-                        moderationOpts={moderationOpts}
-                      />
-                    </View>
-                  ))}
+                  {starterPack.listItemsSample
+                    ?.filter(p => !p.subject.associated?.labeler)
+                    .slice(0, 8)
+                    .map((item, i) => (
+                      <View
+                        key={item.subject.did}
+                        style={[
+                          a.py_lg,
+                          a.px_md,
+                          (!isTabletOrDesktop || i !== 0) && a.border_t,
+                          t.atoms.border_contrast_low,
+                          {pointerEvents: 'none'},
+                        ]}>
+                        <ProfileCard
+                          profile={item.subject}
+                          moderationOpts={moderationOpts}
+                        />
+                      </View>
+                    ))}
                 </View>
               </View>
             )}
