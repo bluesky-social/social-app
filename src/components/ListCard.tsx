@@ -27,6 +27,9 @@ export {
   TitleAndBylinePlaceholder,
 } from '#/components/FeedCard'
 
+const CURATELIST = 'app.bsky.graph.defs#curatelist'
+const MODLIST = 'app.bsky.graph.defs#modlist'
+
 type Props = {
   view: AppBskyGraphDefs.ListView
   showPinButton?: boolean
@@ -44,7 +47,9 @@ export function Default(props: Props) {
             creator={view.creator}
             purpose={view.purpose}
           />
-          {showPinButton && <Action uri={view.uri} pin type="list" />}
+          {showPinButton && view.purpose === CURATELIST && (
+            <Action view={view} pin />
+          )}
         </Header>
         <Description description={view.description} />
       </Outer>
@@ -77,11 +82,11 @@ export function Link({
 export function TitleAndByline({
   title,
   creator,
-  purpose,
+  purpose = CURATELIST,
 }: {
   title: string
   creator?: AppBskyActorDefs.ProfileViewBasic
-  purpose: AppBskyGraphDefs.ListView['purpose']
+  purpose?: AppBskyGraphDefs.ListView['purpose']
 }) {
   const t = useTheme()
 
@@ -94,12 +99,12 @@ export function TitleAndByline({
         <Text
           style={[a.leading_snug, t.atoms.text_contrast_medium]}
           numberOfLines={1}>
-          {purpose === 'app.bsky.graph.defs#curatelist' ? (
-            <Trans>List by {sanitizeHandle(creator.handle, '@')}</Trans>
-          ) : (
+          {purpose === MODLIST ? (
             <Trans>
               Moderation list by {sanitizeHandle(creator.handle, '@')}
             </Trans>
+          ) : (
+            <Trans>List by {sanitizeHandle(creator.handle, '@')}</Trans>
           )}
         </Text>
       )}

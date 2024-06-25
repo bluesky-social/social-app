@@ -3,6 +3,7 @@ import {GestureResponderEvent, View} from 'react-native'
 import {
   AppBskyActorDefs,
   AppBskyFeedDefs,
+  AppBskyGraphDefs,
   AtUri,
   RichText as RichTextApi,
 } from '@atproto/api'
@@ -44,7 +45,7 @@ export function Default(props: Props) {
         <Header>
           <Avatar src={view.avatar} />
           <TitleAndByline title={view.displayName} creator={view.creator} />
-          <Action uri={view.uri} pin type="feed" />
+          <Action view={view} pin />
         </Header>
         <Description description={view.description} />
         <Likes count={view.likeCount || 0} />
@@ -190,27 +191,23 @@ export function Likes({count}: {count: number}) {
 }
 
 export function Action({
-  uri,
+  view,
   pin,
-  type,
 }: {
-  uri: string
+  view: AppBskyFeedDefs.GeneratorView | AppBskyGraphDefs.ListView
   pin?: boolean
-  type: 'feed' | 'list'
 }) {
   const {hasSession} = useSession()
   if (!hasSession) return null
-  return <ActionInner uri={uri} pin={pin} type={type} />
+  return <ActionInner view={view} pin={pin} />
 }
 
 function ActionInner({
-  uri,
+  view,
   pin,
-  type,
 }: {
-  uri: string
+  view: AppBskyFeedDefs.GeneratorView | AppBskyGraphDefs.ListView
   pin?: boolean
-  type: 'feed' | 'list'
 }) {
   const {_} = useLingui()
   const {data: preferences} = usePreferencesQuery()
@@ -218,6 +215,10 @@ function ActionInner({
     useAddSavedFeedsMutation()
   const {isPending: isRemovePending, mutateAsync: removeFeed} =
     useRemoveFeedMutation()
+
+  const uri = view.uri
+  const type = view.uri.includes('app.bsky.feed.generator') ? 'feed' : 'list'
+
   const savedFeedConfig = React.useMemo(() => {
     return preferences?.savedFeeds?.find(feed => feed.value === uri)
   }, [preferences?.savedFeeds, uri])
