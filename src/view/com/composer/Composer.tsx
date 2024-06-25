@@ -44,7 +44,7 @@ import {
 } from '#/lib/gif-alt-text'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {LikelyType} from '#/lib/link-meta/link-meta'
-import {logEvent} from '#/lib/statsig/statsig'
+import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {emitPostCreated} from '#/state/events'
 import {useModalControls} from '#/state/modals'
@@ -129,6 +129,7 @@ export const ComposePost = observer(function ComposePost({
 }: Props & {
   cancelRef?: React.RefObject<CancelRef>
 }) {
+  const gate = useGate()
   const {currentAccount} = useSession()
   const agent = useAgent()
   const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
@@ -655,10 +656,12 @@ export const ComposePost = observer(function ComposePost({
           ]}>
           <View style={[a.flex_row, a.align_center, a.gap_xs]}>
             <SelectPhotoBtn gallery={gallery} disabled={!canSelectImages} />
-            <SelectVideoBtn
-              onSelectVideo={onSelectVideo}
-              disabled={!canSelectImages}
-            />
+            {gate('videos') && (
+              <SelectVideoBtn
+                onSelectVideo={onSelectVideo}
+                disabled={!canSelectImages}
+              />
+            )}
             <OpenCameraBtn gallery={gallery} disabled={!canSelectImages} />
             <SelectGifBtn
               onClose={focusTextInput}
