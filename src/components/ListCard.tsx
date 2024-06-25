@@ -8,7 +8,7 @@ import {sanitizeHandle} from 'lib/strings/handles'
 import {precacheList} from 'state/queries/feed'
 import {useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
-import {Avatar, Description, Header, Outer} from '#/components/FeedCard'
+import {Action, Avatar, Description, Header, Outer} from '#/components/FeedCard'
 import {Link as InternalLink, LinkProps} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
@@ -18,24 +18,29 @@ import {Text} from '#/components/Typography'
  */
 
 export {
+  Action,
+  Avatar,
   AvatarPlaceholder,
+  Description,
+  Header,
+  Outer,
   TitleAndBylinePlaceholder,
 } from '#/components/FeedCard'
 
-export {Avatar, Description, Header, Outer}
-
 type Props = {
   view: AppBskyGraphDefs.ListView
+  showPinButton?: boolean
 }
 
 export function Default(props: Props) {
-  const {view} = props
+  const {view, showPinButton} = props
   return (
     <Link label={view.name} {...props}>
       <Outer>
         <Header>
           <Avatar src={view.avatar} />
           <TitleAndByline title={view.name} creator={view.creator} />
+          {showPinButton && <Action uri={view.uri} pin type="list" />}
         </Header>
         <Description description={view.description} />
       </Outer>
