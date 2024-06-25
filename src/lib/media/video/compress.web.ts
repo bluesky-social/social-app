@@ -1,7 +1,5 @@
 import * as Toast from '#/view/com/util/Toast'
 
-const MAX_WIDTH = 1920
-const MAX_HEIGHT = 1920
 const MAX_VIDEO_SIZE = 1024 * 1024 * 100 // 100MB
 
 export type CompressedVideo = {
@@ -9,141 +7,23 @@ export type CompressedVideo = {
   size: number
 }
 
+// doesn't actually compress, but throws if >100MB
 export async function compressVideo(
   file: string,
-  callbacks?: {
+  _callbacks?: {
     onProgress: (progress: number) => void
   },
 ): Promise<CompressedVideo> {
-  const {onProgress} = callbacks || {}
   const blob = await fetch(file).then(res => res.blob())
-  const objectUrl = URL.createObjectURL(blob)
+  const video = URL.createObjectURL(blob)
 
-  console.log('uncompressed size:', (blob.size / 1024 / 1024).toFixed(2) + 'mb')
-
-  const videoEl = document.createElement('video')
-  videoEl.setAttribute('playsinline', 'playsinline')
-  videoEl.setAttribute('controls', 'controls')
-  videoEl.setAttribute('muted', 'muted')
-  videoEl.setAttribute('src', objectUrl)
-  try {
-    await new Promise((resolve, reject) => {
-      videoEl.addEventListener('error', reject, {once: true})
-      videoEl.addEventListener('loadedmetadata', resolve, {once: true})
-    })
-  } catch (e) {
-    console.error(e)
-    Toast.show('Failed to load video, this video format may not be supported')
+  if (blob.size < MAX_VIDEO_SIZE) {
+    Toast.show('Videos cannot be larger than 100MB')
+    throw new Error('Videos cannot be larger than 100MB')
   }
 
-  let {videoWidth, videoHeight} = videoEl
-  let outputWidth = videoWidth
-  let outputHeight = videoHeight
-  if (outputWidth > outputHeight) {
-    if (outputWidth > MAX_WIDTH) {
-      const scale = MAX_WIDTH / outputWidth
-      outputWidth = Math.round(outputWidth * scale)
-      outputHeight = Math.round(outputHeight * scale)
-    }
-  } else {
-    if (outputHeight > MAX_HEIGHT) {
-      const scale = MAX_HEIGHT / outputHeight
-      outputWidth = Math.round(outputWidth * scale)
-      outputHeight = Math.round(outputHeight * scale)
-    }
-  }
-  if (outputWidth % 2 === 1) outputWidth--
-  if (outputHeight % 2 === 1) outputHeight--
-
-  const canvas = document.createElement('canvas')
-  canvas.width = outputWidth
-  canvas.height = outputHeight
-  const ctx = canvas.getContext('2d')
-  if (!ctx) throw new Error('Could not get canvas context')
-  ctx.fillStyle = '#fff'
-
-  try {
-    let wasTruncated = false
-    const videoBlob = await new Promise<Blob>(async resolve => {
-      const chunks: Blob[] = []
-      let options = {
-        mimeType: getSupportedMimeType(),
-        videoBitsPerSecond: 3_000_000, // 3mbps,
-      }
-      const recorder = new MediaRecorder(canvas.captureStream(25), options)
-
-      recorder.onerror = console.log
-      recorder.ondataavailable = e => {
-        let size = chunks.reduce((acc, chunk) => acc + chunk.size, 0)
-        if (size + e.data.size > MAX_VIDEO_SIZE) {
-          wasTruncated = true
-          recorder.stop()
-        } else {
-          chunks.push(e.data)
-        }
-      }
-      recorder.onstop = () => {
-        resolve(new Blob(chunks, {type: recorder.mimeType}))
-      }
-
-      videoEl.play()
-      recorder.start()
-
-      let lastCapture = Date.now()
-      while (
-        recorder.state === 'recording' &&
-        videoEl.currentTime < videoEl.duration
-      ) {
-        await new Promise(r => setTimeout(r, 1)) // NOTE: don't use requestAnimationFrame because it pauses with the tab isnt focused
-        onProgress?.(videoEl.currentTime / videoEl.duration)
-        ctx.fillRect(0, 0, outputWidth, outputHeight)
-        ctx.drawImage(
-          videoEl,
-          0,
-          0,
-          videoWidth,
-          videoHeight,
-          0,
-          0,
-          outputWidth,
-          outputHeight,
-        )
-
-        if (Date.now() - lastCapture > 500) {
-          recorder.requestData()
-          lastCapture = Date.now()
-        }
-      }
-      if (recorder.state === 'recording') {
-        recorder.stop()
-      }
-    })
-
-    if (wasTruncated) {
-      Toast.show('Video was too long and was truncated')
-    }
-
-    return {
-      size: videoBlob.size,
-      uri: URL.createObjectURL(videoBlob),
-    }
-  } finally {
-    URL.revokeObjectURL(objectUrl)
-  }
-}
-
-function getSupportedMimeType() {
-  if (MediaRecorder.isTypeSupported('video/mp4;codecs=h264')) {
-    return 'video/mp4;codecs=h264'
-  } else if (MediaRecorder.isTypeSupported('video/webm;codecs=h264')) {
-    return 'video/webm;codecs=h264'
-  } else if (MediaRecorder.isTypeSupported('video/webm;codecs=av1')) {
-    return 'video/webm;codecs=av1'
-  } else if (MediaRecorder.isTypeSupported('video/webm;codecs=vp9')) {
-    return 'video/webm;codecs=vp9'
-  } else if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8')) {
-    return 'video/webm;codecs=vp8'
-  } else {
-    throw new Error('No supported video codec found')
+  return {
+    size: blob.size,
+    uri: video,
   }
 }
