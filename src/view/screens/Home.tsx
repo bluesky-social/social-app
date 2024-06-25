@@ -40,10 +40,8 @@ export function HomeScreen(props: Props) {
   React.useEffect(() => {
     const params = props.route.params
     if (
-      props.route.name === 'Start' &&
-      params?.name &&
-      params?.rkey &&
       currentAccount &&
+      props.route.name === 'Start' &&
       params?.name &&
       params?.rkey
     ) {
