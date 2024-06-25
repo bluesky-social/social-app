@@ -45,7 +45,7 @@ import {ProfileKnownFollowersScreen} from '#/screens/Profile/KnownFollowers'
 import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
 import {StarterPackScreen} from '#/screens/StarterPack/StarterPackScreen'
 import {Wizard} from '#/screens/StarterPack/Wizard'
-import {GetReferrerModule} from '../modules/expo-get-referrer/src/ExpoGetReferrerModule'
+import {Referrer} from '../modules/expo-bluesky-swiss-army'
 import {init as initAnalytics} from './lib/analytics/analytics'
 import {useWebScrollRestoration} from './lib/hooks/useWebScrollRestoration'
 import {attachRouteToLogEvents, logEvent} from './lib/statsig/statsig'
@@ -757,7 +757,7 @@ function logModuleInitTime() {
   })
 
   if (isWeb) {
-    GetReferrerModule.getReferrerInfoAsync().then(info => {
+    Referrer.getReferrerInfoAsync().then(info => {
       if (info && info.hostname !== 'bsky.app') {
         logEvent('deepLink:referrerReceived', {
           referrer: info?.referrer,

@@ -6,7 +6,7 @@ import {isNative} from 'platform/detection'
 import {useSession} from 'state/session'
 import {useComposerControls} from 'state/shell'
 import {useCloseAllActiveElements} from 'state/util'
-import {GetReferrerModule} from '../../../modules/expo-get-referrer/src/ExpoGetReferrerModule'
+import {Referrer} from '../../../modules/expo-bluesky-swiss-army'
 
 type IntentType = 'compose'
 
@@ -18,7 +18,7 @@ export function useIntentHandler() {
 
   React.useEffect(() => {
     const handleIncomingURL = (url: string) => {
-      GetReferrerModule.getReferrerInfoAsync().then(info => {
+      Referrer.getReferrerInfoAsync().then(info => {
         if (info && info.hostname !== 'bsky.app') {
           logEvent('deepLink:referrerReceived', {
             referrer: info?.referrer,
