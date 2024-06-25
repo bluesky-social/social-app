@@ -50,6 +50,7 @@ export function StepDetails() {
               )}
               value={state.name}
               onChangeText={text => dispatch({type: 'SetName', name: text})}
+              testID="starterPackName"
             />
             <TextField.SuffixText label={_(`${state.name?.length} out of 50`)}>
               <Text style={[t.atoms.text_contrast_medium]}>
@@ -75,6 +76,7 @@ export function StepDetails() {
               }
               multiline
               style={{minHeight: 150}}
+              testID="starterPackDescription"
             />
           </TextField.Root>
         </View>
