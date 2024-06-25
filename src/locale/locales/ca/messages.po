@@ -18,7 +18,7 @@ msgstr ""
 
 #: src/screens/Messages/List/ChatListItem.tsx:120
 msgid "(contains embedded content)"
-msgstr ""
+msgstr "(té contingut incrustat)"
 
 #: src/view/com/modals/VerifyEmail.tsx:150
 msgid "(no email)"
@@ -113,7 +113,7 @@ msgstr ""
 
 #: src/view/com/util/UserAvatar.tsx:419
 msgid "{0}'s avatar"
-msgstr ""
+msgstr "Avatar de {0}"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:68
 msgid "{0}'s favorite feeds and people - join me!"
@@ -505,7 +505,7 @@ msgstr "Tots els canals que has desat, en un sol lloc."
 #: src/view/com/modals/AddAppPasswords.tsx:187
 #: src/view/com/modals/AddAppPasswords.tsx:194
 msgid "Allow access to your direct messages"
-msgstr ""
+msgstr "Permet l'accés als teus missatges directes"
 
 #: src/screens/Messages/Settings.tsx:61
 #: src/screens/Messages/Settings.tsx:64
@@ -515,7 +515,7 @@ msgstr ""
 #: src/screens/Messages/Settings.tsx:62
 #: src/screens/Messages/Settings.tsx:65
 msgid "Allow new messages from"
-msgstr ""
+msgstr "Permet missatges nou de"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:178
 #: src/view/com/modals/ChangePassword.tsx:171
@@ -1039,7 +1039,7 @@ msgstr "Cancel·la la citació de la publicació"
 
 #: src/screens/Deactivated.tsx:155
 msgid "Cancel reactivation and log out"
-msgstr ""
+msgstr "Cancel·la la reactivació i surt"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:87
 #: src/view/shell/desktop/Search.tsx:214
@@ -1118,7 +1118,7 @@ msgstr "Configuració del xat"
 #: src/screens/Messages/Settings.tsx:59
 #: src/view/screens/Settings/index.tsx:647
 msgid "Chat Settings"
-msgstr ""
+msgstr "Configuració del xat"
 
 #: src/components/dms/ConvoMenu.tsx:84
 msgid "Chat unmuted"
@@ -1221,11 +1221,11 @@ msgstr "clica aquí"
 
 #: src/view/com/modals/DeleteAccount.tsx:208
 msgid "Click here for more information on deactivating your account"
-msgstr ""
+msgstr "Clica aquí per a més informació sobre desactivar el teu compte"
 
 #: src/view/com/modals/DeleteAccount.tsx:216
 msgid "Click here for more information."
-msgstr ""
+msgstr "Clica aquí per a més informació."
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:46
 #~ msgid "Click here to add one."
@@ -1325,7 +1325,7 @@ msgstr "Tanca la visualització de la imatge de la capçalera"
 
 #: src/view/com/notifications/FeedItem.tsx:226
 msgid "Collapse list of users"
-msgstr ""
+msgstr "Plega la llista d'usuaris"
 
 #: src/view/com/notifications/FeedItem.tsx:426
 msgid "Collapses list of users for a given notification"
@@ -1744,11 +1744,11 @@ msgstr "Data de naixement"
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:73
 #: src/view/screens/Settings/index.tsx:806
 msgid "Deactivate account"
-msgstr ""
+msgstr "Desactiva el compte"
 
 #: src/view/screens/Settings/index.tsx:818
 msgid "Deactivate my account"
-msgstr ""
+msgstr "Desactiva el meu compte"
 
 #: src/view/screens/Settings/index.tsx:873
 msgid "Debug Moderation"
@@ -2402,7 +2402,7 @@ msgstr "Expandeix el text alternatiu"
 
 #: src/view/com/notifications/FeedItem.tsx:227
 msgid "Expand list of users"
-msgstr ""
+msgstr "Expandeix la llista d'usuaris"
 
 #: src/view/com/composer/ComposerReplyTo.tsx:82
 #: src/view/com/composer/ComposerReplyTo.tsx:85
@@ -2679,7 +2679,7 @@ msgstr "Segueix {0}"
 
 #: src/view/com/posts/AviFollowButton.tsx:71
 msgid "Follow {name}"
-msgstr ""
+msgstr "Segueix a {name}"
 
 #: src/view/com/profile/ProfileMenu.tsx:246
 #: src/view/com/profile/ProfileMenu.tsx:257
@@ -2782,7 +2782,7 @@ msgstr "Seguint {0}"
 
 #: src/view/com/posts/AviFollowButton.tsx:53
 msgid "Following {name}"
-msgstr ""
+msgstr "Seguint a {name}"
 
 #: src/view/screens/Settings/index.tsx:573
 msgid "Following feed preferences"
@@ -3145,7 +3145,7 @@ msgstr "Si vols canviar la contrasenya t'enviarem un codi per a verificar que aq
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:92
 msgid "If you're trying to change your handle or email, do so before you deactivate."
-msgstr ""
+msgstr "Si vols canviar el teu identificador o el correu fes-ho abans de desactivar el compte."
 
 #: src/lib/moderation/useReportOptions.ts:38
 msgid "Illegal and Urgent"
@@ -3622,7 +3622,7 @@ msgstr "Registre"
 #: src/screens/Deactivated.tsx:214
 #: src/screens/Deactivated.tsx:220
 msgid "Log in or sign up"
-msgstr ""
+msgstr "Inicia sessió o registra't"
 
 #: src/screens/SignupQueued.tsx:155
 #: src/screens/SignupQueued.tsx:158
@@ -4380,7 +4380,7 @@ msgstr "Obre"
 
 #: src/view/com/posts/AviFollowButton.tsx:89
 msgid "Open {name} profile shortcut menu"
-msgstr ""
+msgstr "Obre el menú de drecera del perfil {name}"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:277
 msgid "Open avatar creator"
@@ -4463,7 +4463,7 @@ msgstr "Obre la càmera del dispositiu"
 
 #: src/view/screens/Settings/index.tsx:639
 msgid "Opens chat settings"
-msgstr ""
+msgstr "Obre la configuració del xat"
 
 #: src/view/com/composer/Prompt.tsx:27
 msgid "Opens composer"
@@ -4517,7 +4517,7 @@ msgstr "Obre la llista de codis d'invitació"
 
 #: src/view/screens/Settings/index.tsx:808
 msgid "Opens modal for account deactivation confirmation"
-msgstr ""
+msgstr "Obre el modal per a la confirmació de la desactivació del compte"
 
 #: src/view/screens/Settings/index.tsx:830
 msgid "Opens modal for account deletion confirmation. Requires email code"
@@ -4604,7 +4604,7 @@ msgstr "Obre les preferències dels fils de debat"
 #: src/view/com/notifications/FeedItem.tsx:513
 #: src/view/com/util/UserAvatar.tsx:422
 msgid "Opens this profile"
-msgstr ""
+msgstr "Obre aquest perfil"
 
 #: src/view/com/util/forms/DropdownButton.tsx:293
 msgid "Option {0} of {numItems}"
@@ -4621,11 +4621,11 @@ msgstr "O combina aquestes opcions:"
 
 #: src/screens/Deactivated.tsx:211
 msgid "Or, continue with another account."
-msgstr ""
+msgstr "O continua amb un altre compte."
 
 #: src/screens/Deactivated.tsx:194
 msgid "Or, log into one of your other accounts."
-msgstr ""
+msgstr "O inicia sessió en un altre dels teus comptes."
 
 #: src/lib/moderation/useReportOptions.ts:27
 msgid "Other"
@@ -5067,7 +5067,7 @@ msgstr "Proporcions"
 
 #: src/screens/Deactivated.tsx:144
 msgid "Reactivate your account"
-msgstr ""
+msgstr "Torna a activar el teu compte"
 
 #: src/components/dms/ReportDialog.tsx:174
 msgid "Reason:"
@@ -5129,7 +5129,7 @@ msgstr "Elimina el bàner"
 
 #: src/screens/Messages/Conversation/MessageInputEmbed.tsx:218
 msgid "Remove embed"
-msgstr ""
+msgstr "Elimina l'incrustat"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:168
 #: src/view/com/posts/FeedShutdownMsg.tsx:113
@@ -5168,11 +5168,11 @@ msgstr "Elimina la paraula silenciada de la teva llista"
 
 #: src/view/screens/Search/Search.tsx:974
 msgid "Remove profile"
-msgstr ""
+msgstr "Elimina el perfil"
 
 #: src/view/screens/Search/Search.tsx:976
 msgid "Remove profile from search history"
-msgstr ""
+msgstr "Elimina el perfil de l'historial de cerca"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:238
 msgid "Remove quote"
@@ -5868,7 +5868,7 @@ msgstr "Envia el missatge"
 
 #: src/components/dms/dialogs/ShareViaChatDialog.tsx:59
 msgid "Send post to..."
-msgstr ""
+msgstr "Envia el missatge a..."
 
 #: src/components/dms/ReportDialog.tsx:234
 #: src/components/dms/ReportDialog.tsx:237
@@ -5893,7 +5893,7 @@ msgstr "Envia un correu de verificació"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:296
 #: src/view/com/util/forms/PostDropdownBtn.tsx:299
 msgid "Send via direct message"
-msgstr ""
+msgstr "Envia per missatge directe"
 
 #: src/view/com/modals/DeleteAccount.tsx:151
 msgid "Sends email with confirmation code for account deletion"
@@ -6143,7 +6143,7 @@ msgstr "Mostra seguidors semblants a {0}"
 
 #: src/view/com/post-thread/PostThreadShowHiddenReplies.tsx:23
 msgid "Show hidden replies"
-msgstr ""
+msgstr "Mostra les respostes ocultes"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:346
 #: src/view/com/util/forms/PostDropdownBtn.tsx:348
@@ -6163,7 +6163,7 @@ msgstr "Mostra'n més com aquest"
 
 #: src/view/com/post-thread/PostThreadShowHiddenReplies.tsx:23
 msgid "Show muted replies"
-msgstr ""
+msgstr "Mostra les respostes silenciades"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:257
 msgid "Show Posts from My Feeds"
@@ -6371,7 +6371,7 @@ msgstr "Alguna cosa ha fallat"
 #: src/screens/Deactivated.tsx:94
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:59
 msgid "Something went wrong, please try again"
-msgstr ""
+msgstr "Alguna cosa ha fallat, torna-ho a provar"
 
 #: src/components/ReportDialog/index.tsx:59
 #: src/screens/Moderation/index.tsx:114
@@ -6715,7 +6715,7 @@ msgstr "Les condicions del servei han estat traslladades a"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:86
 msgid "There is no time limit for account deactivation, come back any time."
-msgstr ""
+msgstr "No hi ha límit de temps per a la desactivació del compte, torna quan vulguis."
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:115
 #: src/view/screens/ProfileFeed.tsx:542
@@ -7517,7 +7517,7 @@ msgstr "Veure l'avatar de {0}"
 
 #: src/view/com/notifications/FeedItem.tsx:234
 msgid "View {0}'s profile"
-msgstr ""
+msgstr "Veure el perfil de {0}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:430
 msgid "View blocked user's profile"
@@ -7682,7 +7682,7 @@ msgstr ""
 
 #: src/screens/Deactivated.tsx:128
 msgid "Welcome back!"
-msgstr ""
+msgstr "Bentornat!"
 
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:48
 #~ msgid "Welcome to <0>Bluesky</0>"
@@ -7808,7 +7808,7 @@ msgstr "Sí"
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:106
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:108
 msgid "Yes, deactivate"
-msgstr ""
+msgstr "Sí, desactiva'l"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:525
 msgid "Yes, delete this starter pack"
@@ -7816,7 +7816,7 @@ msgstr ""
 
 #: src/screens/Deactivated.tsx:150
 msgid "Yes, reactivate my account"
-msgstr ""
+msgstr "Sí, torna a activar el meu compte"
 
 #: src/components/dms/MessageItem.tsx:188
 msgid "Yesterday, {time}"
@@ -7841,7 +7841,7 @@ msgstr "També pots descobrir nous canals personalitzats per a seguir."
 
 #: src/view/com/modals/DeleteAccount.tsx:202
 msgid "You can also temporarily deactivate your account instead, and reactivate it at any time."
-msgstr ""
+msgstr "També pots desactivar el teu compte temporalment i reactivar-lo en qualsevol moment."
 
 #: src/view/com/auth/create/Step1.tsx:106
 #~ msgid "You can change hosting providers at any time."
@@ -7857,7 +7857,7 @@ msgstr "Pots canviar-ho quan vulguis."
 
 #: src/screens/Messages/Settings.tsx:111
 msgid "You can continue ongoing conversations regardless of which setting you choose."
-msgstr ""
+msgstr "Pots continuar les converses en curs independentment de la configuració que triïs."
 
 #: src/screens/Login/index.tsx:158
 #: src/screens/Login/PasswordUpdatedForm.tsx:33
@@ -7866,7 +7866,7 @@ msgstr "Ara pots iniciar sessió amb la nova contrasenya."
 
 #: src/screens/Deactivated.tsx:136
 msgid "You can reactivate your account to continue logging in. Your profile and posts will be visible to other users."
-msgstr ""
+msgstr "Pots reactivar el teu compte per continuar iniciant la sessió. El teu perfil i les publicacions seran visibles per a altres usuaris."
 
 #: src/view/com/profile/ProfileFollowers.tsx:86
 msgid "You do not have any followers."
@@ -8025,7 +8025,7 @@ msgstr "Has d'escollir almenys un etiquetador per a un informe"
 
 #: src/screens/Deactivated.tsx:131
 msgid "You previously deactivated @{0}."
-msgstr ""
+msgstr "Abans has desactivat @{0}."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:174
 msgid "You will no longer receive notifications for this thread"
@@ -8045,11 +8045,11 @@ msgstr "Tu: {0}"
 
 #: src/screens/Messages/List/ChatListItem.tsx:143
 msgid "You: {defaultEmbeddedContentMessage}"
-msgstr ""
+msgstr "Tu: {defaultEmbeddedContentMessage}"
 
 #: src/screens/Messages/List/ChatListItem.tsx:136
 msgid "You: {short}"
-msgstr ""
+msgstr "Tu: {short}"
 
 #: src/screens/Signup/index.tsx:169
 msgid "You'll follow the suggested users and feeds once you finish creating your account!"
@@ -8084,7 +8084,7 @@ msgstr "Estàs a la cua"
 #: src/screens/Deactivated.tsx:89
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:54
 msgid "You're logged in with an App Password. Please log in with your main password to continue deactivating your account."
-msgstr ""
+msgstr "Has iniciat sessió amb una contrasenya d'aplicació. Inicia sessió amb la teva contrasenya principal per continuar la desactivació del teu compte."
 
 #: src/screens/Onboarding/StepFinished.tsx:228
 msgid "You're ready to go!"
@@ -8189,7 +8189,7 @@ msgstr "El teu perfil"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:75
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
-msgstr ""
+msgstr "El teu perfil, publicacions, fonts i llistes ja no seran visibles per a altres usuaris de Bluesky. Pots reactivar el teu compte en qualsevol moment iniciant sessió."
 
 #: src/view/com/composer/Composer.tsx:365
 msgid "Your reply has been published"

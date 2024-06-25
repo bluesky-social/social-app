@@ -13,6 +13,15 @@ export const EMBED_SERVICE = 'https://embed.bsky.app'
 export const EMBED_SCRIPT = `${EMBED_SERVICE}/static/embed.js`
 export const BSKY_DOWNLOAD_URL = 'https://bsky.app/download'
 
+// HACK
+// Yes, this is exactly what it looks like. It's a hard-coded constant
+// reflecting the number of new users in the last week. We don't have
+// time to add a route to the servers for this so we're just going to hard
+// code and update this number with each release until we can get the
+// server route done.
+// -prf
+export const JOINED_THIS_WEEK = 37115 // as of June24 2024
+
 const BASE_FEEDBACK_FORM_URL = `${HELP_DESK_URL}/requests/new`
 export function FEEDBACK_FORM_URL({
   email,

@@ -26,6 +26,14 @@ const withClipInfoPlist = (config, {targetName}) => {
       CFBundleShortVersionString: config.version,
       CFBundleIconName: 'AppIcon',
       UIViewControllerBasedStatusBarAppearance: 'NO',
+      UISupportedInterfaceOrientations: [
+        'UIInterfaceOrientationPortrait',
+        'UIInterfaceOrientationPortraitUpsideDown',
+      ],
+      'UISupportedInterfaceOrientations~ipad': [
+        'UIInterfaceOrientationPortrait',
+        'UIInterfaceOrientationPortraitUpsideDown',
+      ],
     })
 
     fs.mkdirSync(path.dirname(targetPath), {recursive: true})

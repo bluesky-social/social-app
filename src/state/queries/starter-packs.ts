@@ -4,8 +4,10 @@ import {
   AppBskyGraphDefs,
   AppBskyGraphGetStarterPack,
   AppBskyGraphStarterpack,
+  AppBskyRichtextFacet,
   AtUri,
   BskyAgent,
+  RichText,
 } from '@atproto/api'
 import {StarterPackView} from '@atproto/api/dist/client/types/app/bsky/graph/defs'
 import {
@@ -80,7 +82,6 @@ export async function invalidateStarterPack({
 interface UseCreateStarterPackMutationParams {
   name: string
   description?: string
-  descriptionFacets: []
   profiles: AppBskyActorDefs.ProfileViewBasic[]
   feeds?: AppBskyFeedDefs.GeneratorView[]
 }
@@ -100,16 +101,33 @@ export function useCreateStarterPackMutation({
     Error,
     UseCreateStarterPackMutationParams
   >({
-    mutationFn: async params => {
+    mutationFn: async ({name, description, feeds, profiles}) => {
+      let descriptionFacets: AppBskyRichtextFacet.Main[] | undefined
+      if (description) {
+        const rt = new RichText({text: description})
+        await rt.detectFacets(agent)
+        descriptionFacets = rt.facets
+      }
+
       let listRes
-      listRes = await createStarterPackList({...params, agent})
+      listRes = await createStarterPackList({
+        name,
+        description,
+        profiles,
+        descriptionFacets,
+        agent,
+      })
+
       return await agent.app.bsky.graph.starterpack.create(
         {
           repo: agent.session?.did,
         },
         {
-          ...params,
+          name,
+          description,
+          descriptionFacets,
           list: listRes?.uri,
+          feeds,
           createdAt: new Date().toISOString(),
         },
       )
@@ -148,16 +166,20 @@ export function useEditStarterPackMutation({
       currentListItems: AppBskyGraphDefs.ListItemView[]
     }
   >({
-    mutationFn: async params => {
-      const {
-        name,
-        description,
-        descriptionFacets,
-        feeds,
-        profiles,
-        currentStarterPack,
-        currentListItems,
-      } = params
+    mutationFn: async ({
+      name,
+      description,
+      feeds,
+      profiles,
+      currentStarterPack,
+      currentListItems,
+    }) => {
+      let descriptionFacets: AppBskyRichtextFacet.Main[] | undefined
+      if (description) {
+        const rt = new RichText({text: description})
+        await rt.detectFacets(agent)
+        descriptionFacets = rt.facets
+      }
 
       if (!AppBskyGraphStarterpack.isRecord(currentStarterPack.record)) {
         throw new Error('Invalid starter pack')

@@ -509,6 +509,7 @@ export function useSavedFeeds() {
     placeholderData: previousData => {
       return (
         previousData || {
+          // The likely count before we try to resolve them.
           count: savedItems.length,
           feeds: [],
         }
@@ -556,28 +557,39 @@ export function useSavedFeeds() {
         precacheList(queryClient, list)
       })
 
-      const res: SavedFeedItem[] = savedItems.map(s => {
-        if (s.type === 'timeline') {
-          return {
+      const result: SavedFeedItem[] = []
+      for (let savedItem of savedItems) {
+        if (savedItem.type === 'timeline') {
+          result.push({
             type: 'timeline',
-            config: s,
+            config: savedItem,
             view: undefined,
+          })
+        } else if (savedItem.type === 'feed') {
+          const resolvedFeed = resolvedFeeds.get(savedItem.value)
+          if (resolvedFeed) {
+            result.push({
+              type: 'feed',
+              config: savedItem,
+              view: resolvedFeed,
+            })
+          }
+        } else if (savedItem.type === 'list') {
+          const resolvedList = resolvedLists.get(savedItem.value)
+          if (resolvedList) {
+            result.push({
+              type: 'list',
+              config: savedItem,
+              view: resolvedList,
+            })
           }
         }
-
-        return {
-          type: s.type,
-          config: s,
-          view:
-            s.type === 'feed'
-              ? resolvedFeeds.get(s.value)
-              : resolvedLists.get(s.value),
-        }
-      }) as SavedFeedItem[]
+      }
 
       return {
-        count: savedItems.length,
-        feeds: res,
+        // By this point we know the real count.
+        count: result.length,
+        feeds: result,
       }
     },
   })
