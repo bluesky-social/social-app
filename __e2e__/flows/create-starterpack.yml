@@ -27,3 +27,5 @@ appId: xyz.blueskyweb.app
     point: "50%,21%"
 - tapOn: "Next"
 - tapOn: "Skip"
+- assertVisible: "just a little description!"
+- assertVisible: "Share this starter pack"
