@@ -12,7 +12,6 @@ import {logger} from '#/logger'
 import {SavedFeedItem, useSavedFeeds} from '#/state/queries/feed'
 import {
   useOverwriteSavedFeedsMutation,
-  usePreferencesQuery,
   useUpdateSavedFeedsMutation,
 } from '#/state/queries/preferences'
 import {useSetMinimalShellMode} from '#/state/shell'
@@ -56,7 +55,6 @@ export function SavedFeeds({}: Props) {
   const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
   const {screen} = useAnalytics()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {data: preferences} = usePreferencesQuery()
   const {
     data: savedFeeds,
     isPlaceholderData: isSavedFeedsPlaceholder,
@@ -73,15 +71,16 @@ export function SavedFeeds({}: Props) {
    * Use optimistic data if exists and no error, otherwise fallback to remote
    * data
    */
-  const currentFeeds =
+  const optimisticCurrentFeeds =
     optimisticSavedFeedsResponse && !writeSavedFeedsError
       ? optimisticSavedFeedsResponse
-      : preferences?.savedFeeds || []
-  const pinnedFeeds = currentFeeds.filter(f => f.pinned)
-  const unpinnedFeeds = currentFeeds.filter(f => !f.pinned)
+      : savedFeeds?.feeds?.map(f => f.config) || []
+  const pinnedFeeds = optimisticCurrentFeeds.filter(f => f.pinned)
+  const unpinnedFeeds = optimisticCurrentFeeds.filter(f => !f.pinned)
   const noSavedFeedsOfAnyType = pinnedFeeds.length + unpinnedFeeds.length === 0
   const noFollowingFeed =
-    currentFeeds.every(f => f.type !== 'timeline') && !noSavedFeedsOfAnyType
+    optimisticCurrentFeeds.every(f => f.type !== 'timeline') &&
+    !noSavedFeedsOfAnyType
 
   const isSavedFeedsLoading =
     isSavedFeedsPlaceholder && !savedFeeds?.feeds.length
@@ -147,7 +146,7 @@ export function SavedFeeds({}: Props) {
                     feed={f}
                     overwriteSavedFeeds={overwriteSavedFeeds}
                     resetSaveFeedsMutationState={resetSaveFeedsMutationState}
-                    currentFeeds={currentFeeds}
+                    currentFeeds={optimisticCurrentFeeds}
                   />
                 ))
             ) : (
@@ -207,7 +206,7 @@ export function SavedFeeds({}: Props) {
                     feed={f}
                     overwriteSavedFeeds={overwriteSavedFeeds}
                     resetSaveFeedsMutationState={resetSaveFeedsMutationState}
-                    currentFeeds={currentFeeds}
+                    currentFeeds={optimisticCurrentFeeds}
                   />
                 ))
             ) : (
