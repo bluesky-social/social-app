@@ -933,7 +933,7 @@ msgstr "Choisir « Tout le monde » ou « Personne »"
 
 #: src/screens/StarterPack/Wizard/index.tsx:191
 msgid "Choose Feeds"
-msgstr "Choisissez des fils d'actu"
+msgstr "Choisissez des fils d’actu"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:288
 msgid "Choose for me"
