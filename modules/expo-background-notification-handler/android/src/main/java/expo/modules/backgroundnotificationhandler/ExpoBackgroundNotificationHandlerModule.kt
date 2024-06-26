@@ -29,11 +29,7 @@ class ExpoBackgroundNotificationHandlerModule : Module() {
         if (Preferences(context).hasValue(key)) {
           return@forEach
         }
-
-        Preferences(context)._(key, value)
-
-        when (value) {
-        }
+        Preferences(context)._setAnyValue(key, value)
       }
     }
 
@@ -45,8 +41,22 @@ class ExpoBackgroundNotificationHandlerModule : Module() {
       isForegrounded = false
     }
 
-    AsyncFunction("setBadgeCountAsync") { _: String, _: Int ->
-      // This does nothing on Android
+    AsyncFunction("getPrefsAsync") {
+      val context = appContext.reactContext ?: throw Error("Context is null")
+      val keys = DEFAULTS.keys
+      return@AsyncFunction Preferences(context).getValues(keys)
+    }
+
+    AsyncFunction("resetGenericCountAsync") {
+      // Not implemented
+    }
+
+    AsyncFunction("maybeIncrementMessagesCountAsync") {
+      // Not implemented
+    }
+
+    AsyncFunction("maybeDecrementMessagesCountAsync") {
+      // Not implemented
     }
   }
 }
