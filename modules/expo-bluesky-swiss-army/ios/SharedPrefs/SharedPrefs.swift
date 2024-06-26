@@ -31,6 +31,10 @@ public class SharedPrefs {
     getDefaults(key)?.setValue(value, forKey: key)
   }
   
+  public func _setAnyValue(_ key: String, _ value: Any?) {
+    getDefaults(key)?.setValue(value, forKey: key)
+  }
+  
   public func removeValue(_ key: String) {
     getDefaults(key)?.removeObject(forKey: key)
   }
