@@ -8,6 +8,7 @@ import {useAnalytics} from '#/lib/analytics/analytics'
 import {logEvent} from '#/lib/statsig/statsig'
 import {capitalize} from '#/lib/strings/capitalize'
 import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
 import {useAgent} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {
@@ -23,6 +24,7 @@ import * as Toggle from '#/components/forms/Toggle'
 import {IconCircle} from '#/components/IconCircle'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateCounterClockwise} from '#/components/icons/ArrowRotateCounterClockwise'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {EmojiSad_Stroke2_Corner0_Rounded as EmojiSad} from '#/components/icons/Emoji'
 import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
 import {Loader} from '#/components/Loader'
@@ -247,7 +249,7 @@ export function StepInterests() {
           </View>
         ) : (
           <Button
-            disabled={saving || !data}
+            disabled={saving || !data || interests.length < 3}
             variant="gradient"
             color="gradient_sky"
             size="large"
@@ -261,6 +263,47 @@ export function StepInterests() {
               position="right"
             />
           </Button>
+        )}
+
+        {interests.length < 3 && (
+          <View
+            style={[
+              a.align_center,
+              a.absolute,
+              {
+                top: 0,
+                left: 0,
+                right: 0,
+                margin: 'auto',
+                transform: `translateY(-100%) translateY(-${a.pb_xl.paddingBottom}px)`,
+              },
+              // matches the padding of the OnboardingControls.Portal
+              isWeb
+                ? a.pb_2xl
+                : {
+                    paddingBottom: a.pb_lg.paddingBottom,
+                  },
+            ]}>
+            <View
+              style={[
+                a.flex_row,
+                a.align_center,
+                a.gap_sm,
+                a.py_md,
+                a.px_lg,
+                a.rounded_full,
+                a.border,
+                t.atoms.bg_contrast_25,
+                t.atoms.border_contrast_medium,
+                {
+                  ...t.atoms.shadow_sm,
+                  shadowOpacity: 0.3,
+                },
+              ]}>
+              <CircleInfo />
+              <Text>Choose at least 3</Text>
+            </View>
+          </View>
         )}
       </OnboardingControls.Portal>
     </View>
