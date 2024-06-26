@@ -78,7 +78,7 @@ msgstr "좋아요 취소 ({0, plural, other {#}}개)"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:218
 msgid "{0} joined this week"
-msgstr "이번 주에 {0}명이 가입했습니다"
+msgstr "이번 주에 {0}명이 가입함"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:350
 msgid "{0} people have used this starter pack!"
@@ -170,12 +170,12 @@ msgstr "<0/>의 멤버"
 #: src/screens/StarterPack/Wizard/index.tsx:481
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}, </0><1>{1}, </1>외 {2, plural, other {#}}명이 내 스타터 팩에 포함되어 있습니다"
+msgstr "<0>{0}, </0><1>{1} </1>외 {2, plural, other {#}}명이 스타터 팩에 포함됩니다"
 
 #: src/screens/StarterPack/Wizard/index.tsx:493
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}, </0><1>{1}, </1>외 {2, plural, other {#}}개가 내 스타터 팩에 포함되어 있습니다"
+msgstr "<0>{0}, </0><1>{1} </1>외 {2, plural, other {#}}개가 스타터 팩에 포함됩니다"
 
 #: src/view/shell/Drawer.tsx:101
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
@@ -187,7 +187,7 @@ msgstr "<0>{0}</0> 팔로우 중"
 
 #: src/screens/StarterPack/Wizard/index.tsx:465
 msgid "<0>{0}</0> is included in your starter pack"
-msgstr "<0>{0}</0>은(는) 내 스타터 팩에 포함되어 있습니다"
+msgstr "<0>{0}</0>이(가) 스타터 팩에 포함됩니다"
 
 #: src/view/com/modals/SelfLabel.tsx:135
 msgid "<0>Not Applicable.</0> This warning is only available for posts with media attached."
@@ -195,7 +195,7 @@ msgstr "<0>해당 없음.</0> 이 경고는 미디어가 첨부된 게시물에�
 
 #: src/screens/StarterPack/Wizard/index.tsx:472
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
-msgstr "<0>나</0>와<1> </1><2>{0} </2>은(는) 내 스타터 팩에 포함되어 있습니다"
+msgstr "<0>나</0>와<1> </1><2>{0} </2>님이 스타터 팩에 포함됩니다"
 
 #: src/screens/Profile/Header/Handle.tsx:50
 msgid "⚠Invalid Handle"
@@ -285,7 +285,7 @@ msgstr "추가"
 
 #: src/screens/StarterPack/Wizard/index.tsx:535
 msgid "Add {0} more to continue"
-msgstr "계속하려면 {0}개 더 추가"
+msgstr "계속하려면 {0}개 더 추가하기"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:59
 msgid "Add {displayName} to starter pack"
@@ -1509,7 +1509,7 @@ msgstr "스타터 팩 삭제"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:501
 msgid "Delete starter pack?"
-msgstr "스타터 팩을 삭제하시겠습니까?"
+msgstr "스타터 팩 삭제"
 
 #: src/view/screens/ProfileList.tsx:662
 msgid "Delete this list?"
@@ -2197,7 +2197,7 @@ msgstr "대화 스레드를 미세 조정합니다."
 
 #: src/screens/StarterPack/Wizard/index.tsx:192
 msgid "Finish"
-msgstr "종료"
+msgstr "완료"
 
 #: src/screens/Onboarding/index.tsx:35
 msgid "Fitness"
@@ -2604,7 +2604,7 @@ msgstr "인증 코드가 있습니다"
 
 #: src/view/com/modals/ChangeHandle.tsx:278
 msgid "I have my own domain"
-msgstr "도메인을 가지고 있음"
+msgstr "내 도메인을 가지고 있습니다"
 
 #: src/components/dms/BlockedByListDialog.tsx:56
 #: src/components/dms/ReportConversationPrompt.tsx:22
@@ -2750,7 +2750,7 @@ msgstr "이 스타터 팩을 사용할 사람들을 초대하세요!"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:35
 msgid "Invite your friends to follow your favorite feeds and people"
-msgstr "친구를 초대하여 좋아하는 피드와 사람들을 팔로우할 수 있게 합니다"
+msgstr "친구를 초대하여 좋아하는 피드와 사람들을 팔로우할 수 있게 합니다."
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:32
 msgid "Invites, but personal"
@@ -4400,10 +4400,6 @@ msgstr "답글"
 msgid "Replies disabled"
 msgstr "답글 비활성화됨"
 
-#: src/view/com/threadgate/WhoCanReply.tsx:123
-#~ msgid "Replies on this thread are disabled"
-#~ msgstr "이 스레드에 대한 답글이 비활성화됨"
-
 #: src/components/WhoCanReply.tsx:242
 msgid "Replies to this thread are disabled"
 msgstr "이 스레드에 대한 답글이 비활성화됨"
@@ -5297,10 +5293,6 @@ msgstr "소프트웨어 개발"
 msgid "Some people can reply"
 msgstr "일부 사람들이 답글을 달 수 있음"
 
-#: src/screens/StarterPack/Wizard/index.tsx:203
-#~ msgid "Some subtitle"
-#~ msgstr "적당한 부제목"
-
 #: src/screens/Messages/Conversation/index.tsx:106
 msgid "Something went wrong"
 msgstr "알 수 없는 오류가 발생했습니다"
@@ -5489,7 +5481,7 @@ msgstr "농담해 보세요!"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:63
 msgid "Tell us a little more"
-msgstr ""
+msgstr "좀 더 자세히 알려주세요"
 
 #: src/view/shell/desktop/RightNav.tsx:86
 msgid "Terms"
