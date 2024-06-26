@@ -30,6 +30,11 @@ import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Has
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
+const PROMPT_HEIGHT = isWeb ? 42 : 36
+// matches the padding of the OnboardingControls.Portal
+const PROMPT_OFFSET = isWeb ? a.pb_2xl.paddingBottom : a.pb_lg.paddingBottom
+const MIN_INTERESTS = 3
+
 export function StepInterests() {
   const {_} = useLingui()
   const t = useTheme()
@@ -134,7 +139,7 @@ export function StepInterests() {
   const title = isError ? (
     <Trans>Oh no! Something went wrong.</Trans>
   ) : (
-    <Trans>What are you interested in?</Trans>
+    <Trans>What are your interests?</Trans>
   )
   const description = isError ? (
     <Trans>
@@ -172,8 +177,11 @@ export function StepInterests() {
 
       <TitleText>{title}</TitleText>
       <DescriptionText>{description}</DescriptionText>
+      <DescriptionText style={[a.pt_sm]}>
+        <Trans>Choose 3 or more:</Trans>
+      </DescriptionText>
 
-      <View style={[a.w_full, a.pt_2xl]}>
+      <View style={[a.w_full, a.pt_md]}>
         {isLoading ? (
           <Loader size="xl" />
         ) : isError || !data ? (
@@ -275,33 +283,35 @@ export function StepInterests() {
                 left: 0,
                 right: 0,
                 margin: 'auto',
-                transform: `translateY(-100%) translateY(-${a.pb_xl.paddingBottom}px)`,
-              },
-              // matches the padding of the OnboardingControls.Portal
-              isWeb
-                ? a.pb_2xl
-                : {
-                    paddingBottom: a.pb_lg.paddingBottom,
+                transform: [
+                  {
+                    translateY:
+                      -1 *
+                      (PROMPT_OFFSET + PROMPT_HEIGHT + a.pb_lg.paddingBottom),
                   },
+                ],
+              },
             ]}>
             <View
               style={[
                 a.flex_row,
                 a.align_center,
                 a.gap_sm,
-                a.py_md,
-                a.px_lg,
                 a.rounded_full,
                 a.border,
                 t.atoms.bg_contrast_25,
                 t.atoms.border_contrast_medium,
                 {
+                  height: PROMPT_HEIGHT,
                   ...t.atoms.shadow_sm,
-                  shadowOpacity: 0.3,
+                  shadowOpacity: 0.1,
                 },
+                isWeb ? [a.py_md, a.px_lg] : [a.py_sm, a.px_md],
               ]}>
               <CircleInfo />
-              <Text>Choose at least 3</Text>
+              <Text>
+                Choose at least {MIN_INTERESTS - interests.length} more
+              </Text>
             </View>
           </View>
         )}
