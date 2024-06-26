@@ -83,10 +83,12 @@ export function SavedFeeds({}: Props) {
 
   const isSavedFeedsLoading =
     isSavedFeedsPlaceholder && !savedFeeds?.feeds.length
-  const numPinnedFeedsPlaceholders = savedFeeds ? savedFeeds.counts.pinned : 4
+  const numPinnedFeedsPlaceholders = savedFeeds
+    ? Math.max(savedFeeds.counts.pinned, 3)
+    : 3
   const numUnpinnedFeedsPlaceholders = savedFeeds
-    ? savedFeeds.counts.unpinned
-    : 4
+    ? Math.max(savedFeeds.counts.unpinned, 3)
+    : 3
 
   useFocusEffect(
     React.useCallback(() => {
@@ -104,7 +106,7 @@ export function SavedFeeds({}: Props) {
       ]}>
       <ViewHeader title={_(msg`Edit My Feeds`)} showOnDesktop showBorder />
       <ScrollView style={s.flex1} contentContainerStyle={[styles.noBorder]}>
-        {noSavedFeedsOfAnyType && (
+        {!isSavedFeedsLoading && noSavedFeedsOfAnyType && (
           <View style={[pal.border, {borderBottomWidth: hairlineWidth}]}>
             <NoSavedFeedsOfAnyType />
           </View>
