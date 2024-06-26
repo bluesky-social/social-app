@@ -189,6 +189,10 @@ msgstr "<0>{0}</0> {1, plural, one {abonné·e} other {abonné·e·s}}"
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
 msgstr "<0>{0}</0> {1, plural, one {abonnement} other {abonnements}}"
 
+#: src/screens/StarterPack/Wizard/index.tsx:497
+msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
+msgstr "<0>{0}</0> et<1> </1><2>{1} </2>faites partie de votre pack de démarrage"
+
 #: src/screens/StarterPack/Wizard/index.tsx:478
 msgid "<0>{0}</0> is included in your starter pack"
 msgstr "<0>{0}</0> fait partie de votre kit de démarrage"
