@@ -84,9 +84,8 @@ export function getStarterPackOgCard(
 ) {
   if (typeof didOrStarterPack === 'string') {
     // Used for link embeds so that we always keep the image up to date rather than using the uploaded one.
-    if (didOrStarterPack.startsWith('https://')) {
-      const parsed = parseStarterPackUri(didOrStarterPack)
-      if (!parsed) return null
+    const parsed = parseStarterPackUri(didOrStarterPack)
+    if (parsed) {
       return getStarterPackOgCard(parsed?.name, parsed?.rkey)
     }
 
