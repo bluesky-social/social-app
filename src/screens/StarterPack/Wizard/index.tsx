@@ -454,12 +454,19 @@ function Footer({
             <Trans>Search for feeds that you want to suggest to others.</Trans>
           </Text>
         </View>
-      ) : state.currentStep === 'Profiles' ? (
+      ) : (
         <Text style={[a.text_center, textStyles]}>
-          {items.length === 1 ? (
+          {state.currentStep === 'Profiles' && items.length === 1 ? (
             <Trans>
               It's just you right now! Add more people to your starter pack by
               searching above.
+            </Trans>
+          ) : items.length === 1 ? (
+            <Trans>
+              <Text style={[a.font_bold, textStyles]}>
+                {getName(items[initialNamesIndex])}
+              </Text>{' '}
+              is included in your starter pack
             </Trans>
           ) : items.length === 2 ? (
             <Trans>
@@ -470,7 +477,7 @@ function Footer({
               </Text>
               are included in your starter pack
             </Trans>
-          ) : (
+          ) : state.currentStep === 'Profiles' ? (
             <Trans context="profiles">
               <Text style={[a.font_bold, textStyles]}>
                 {getName(items[initialNamesIndex])},{' '}
@@ -480,29 +487,6 @@ function Footer({
               </Text>
               and{' '}
               <Plural value={items.length - 2} one="# other" other="# others" />{' '}
-              are included in your starter pack
-            </Trans>
-          )}
-        </Text>
-      ) : (
-        <Text style={[a.text_center, textStyles]}>
-          {items.length === 1 ? (
-            <Trans>
-              <Text style={[a.font_bold, textStyles]}>
-                {getName(items[initialNamesIndex])}
-              </Text>{' '}
-              is included in your starter pack
-            </Trans>
-          ) : items.length === 2 ? (
-            <Trans>
-              <Text style={[a.font_bold, textStyles]}>
-                {getName(items[initialNamesIndex])}
-              </Text>{' '}
-              and
-              <Text> </Text>
-              <Text style={[a.font_bold, textStyles]}>
-                {getName(items[initialNamesIndex + 1])}{' '}
-              </Text>
               are included in your starter pack
             </Trans>
           ) : (
