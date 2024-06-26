@@ -1,13 +1,13 @@
 import React from 'react'
 import * as Notifications from 'expo-notifications'
-import {getBadgeCountAsync, setBadgeCountAsync} from 'expo-notifications'
+import {setBadgeCountAsync} from 'expo-notifications'
 import {BskyAgent} from '@atproto/api'
 
 import {logger} from '#/logger'
 import {SessionAccount, useAgent, useSession} from '#/state/session'
 import {logEvent, useGate} from 'lib/statsig/statsig'
 import {devicePlatform, isAndroid, isNative} from 'platform/detection'
-import BackgroundNotificationHandler from '../../../modules/expo-background-notification-handler'
+import {BackgroundNotifications} from '../../../modules/expo-background-notification-handler'
 
 const SERVICE_DID = (serviceUrl?: string) =>
   serviceUrl?.includes('staging')
@@ -144,23 +144,7 @@ export function useRequestNotificationsPermission() {
   }
 }
 
-export async function decrementBadgeCount(
-  type: 'generic' | 'messages',
-  by: number,
-) {
-  if (!isNative) return
-
-  let count = await getBadgeCountAsync()
-  count -= by
-  if (count < 0) {
-    count = 0
-  }
-
-  await BackgroundNotificationHandler.setBadgeCountAsync(type, count)
-  await setBadgeCountAsync(count)
-}
-
-export async function resetBadgeCount(type: 'generic' | 'messages') {
-  await BackgroundNotificationHandler.setBadgeCountAsync(type, 0)
+export async function resetGenericBadgeCount() {
+  await BackgroundNotifications.resetGenericCountAsync()
   await setBadgeCountAsync(0)
 }

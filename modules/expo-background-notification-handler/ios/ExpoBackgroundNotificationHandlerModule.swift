@@ -41,9 +41,9 @@ public class ExpoBackgroundNotificationHandlerModule: Module {
       SharedPrefs.shared.setValue(BadgeType.generic.toKeyName(), 0)
     }
     
-    AsyncFunction("incrementMessagesCountAsync") { (convoId: String) in
+    AsyncFunction("maybeIncrementMessagesCountAsync") { (convoId: String) in
       guard !SharedPrefs.shared.setContains(INCREMENTED_FOR_KEY, convoId) else {
-        return
+        return false
       }
       
       var count = SharedPrefs.shared.getNumber(BadgeType.messages.toKeyName()) ?? 0
@@ -51,11 +51,12 @@ public class ExpoBackgroundNotificationHandlerModule: Module {
       
       SharedPrefs.shared.addToSet(INCREMENTED_FOR_KEY, convoId)
       SharedPrefs.shared.setValue(BadgeType.messages.toKeyName(), count)
+      return true
     }
     
-    AsyncFunction("decrementMessagesCountAsync") { (convoId: String) in
+    AsyncFunction("maybeDecrementMessagesCountAsync") { (convoId: String) in
       guard SharedPrefs.shared.setContains(INCREMENTED_FOR_KEY, convoId) else {
-        return
+        return false
       }
       
       var count = SharedPrefs.shared.getNumber(BadgeType.messages.toKeyName()) ?? 0
@@ -63,6 +64,7 @@ public class ExpoBackgroundNotificationHandlerModule: Module {
       
       SharedPrefs.shared.removeFromSet(INCREMENTED_FOR_KEY, convoId)
       SharedPrefs.shared.setValue(BadgeType.messages.toKeyName(), count)
+      return true
     }
     
     AsyncFunction("getPrefsAsync") {

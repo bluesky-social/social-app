@@ -1,22 +1,20 @@
 import {NotImplementedError} from './NotImplemented'
 import {BackgroundNotificationHandlerPreferences} from './types'
 
-export function resetGenericCountAsync(count: number): Promise<void> {
-  throw new NotImplementedError({count})
+export function resetGenericCountAsync(): Promise<void> {
+  throw new NotImplementedError()
 }
 
-export function incrementMessagesCountAsync(
-  count: number,
+export function maybeIncrementMessagesCountAsync(
   convoId: string,
-): Promise<void> {
-  throw new NotImplementedError({count, convoId})
+): Promise<boolean> {
+  throw new NotImplementedError({convoId})
 }
 
-export function decrementMessagesCountAsync(
-  count: number,
+export function maybeDecrementMessagesCountAsync(
   convoId: string,
-): Promise<void> {
-  throw new NotImplementedError({count, convoId})
+): Promise<boolean> {
+  throw new NotImplementedError({convoId})
 }
 
 export function getPrefsAsync(): Promise<BackgroundNotificationHandlerPreferences | null> {
