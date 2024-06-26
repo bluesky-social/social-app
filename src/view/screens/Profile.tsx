@@ -27,15 +27,12 @@ import {useAgent, useSession} from '#/state/session'
 import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {IS_DEV, IS_TESTFLIGHT} from 'lib/app-info'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {ComposeIcon2} from 'lib/icons'
 import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
-import {useGate} from 'lib/statsig/statsig'
 import {combinedDisplayName} from 'lib/strings/display-names'
 import {isInvalidHandle} from 'lib/strings/handles'
 import {colors, s} from 'lib/styles'
-import {isWeb} from 'platform/detection'
 import {listenSoftReset} from 'state/events'
 import {useActorStarterPacksQuery} from 'state/queries/actor-starter-packs'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
@@ -170,9 +167,6 @@ function ProfileScreenLoaded({
   const [currentPage, setCurrentPage] = React.useState(0)
   const {_} = useLingui()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
-  const gate = useGate()
-  const starterPacksEnabled =
-    IS_DEV || IS_TESTFLIGHT || (!isWeb && gate('starter_packs_enabled'))
 
   const [scrollViewTag, setScrollViewTag] = React.useState<number | null>(null)
 
@@ -205,8 +199,7 @@ function ProfileScreenLoaded({
   const showLikesTab = isMe
   const showFeedsTab = isMe || (profile.associated?.feedgens || 0) > 0
   const showStarterPacksTab =
-    starterPacksEnabled &&
-    (isMe || !!starterPacksQuery.data?.pages?.[0].starterPacks.length)
+    isMe || !!starterPacksQuery.data?.pages?.[0].starterPacks.length
   const showListsTab =
     hasSession && (isMe || (profile.associated?.lists || 0) > 0)
 

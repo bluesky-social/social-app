@@ -482,16 +482,19 @@ export function usePinnedFeedsInfos() {
 export type SavedFeedItem =
   | {
       type: 'feed'
+      key: string
       config: AppBskyActorDefs.SavedFeed
       view: AppBskyFeedDefs.GeneratorView
     }
   | {
       type: 'list'
+      key: string
       config: AppBskyActorDefs.SavedFeed
       view: AppBskyGraphDefs.ListView
     }
   | {
       type: 'timeline'
+      key: string
       config: AppBskyActorDefs.SavedFeed
       view: undefined
     }
@@ -511,6 +514,10 @@ export function useSavedFeeds() {
         previousData || {
           // The likely count before we try to resolve them.
           count: savedItems.length,
+          counts: {
+            pinned: savedItems.filter(f => f.pinned).length,
+            unpinned: savedItems.filter(f => !f.pinned).length,
+          },
           feeds: [],
         }
       )
@@ -557,11 +564,13 @@ export function useSavedFeeds() {
         precacheList(queryClient, list)
       })
 
+      let counter = 0
       const result: SavedFeedItem[] = []
       for (let savedItem of savedItems) {
         if (savedItem.type === 'timeline') {
           result.push({
             type: 'timeline',
+            key: ['timeline', counter++].join('-'),
             config: savedItem,
             view: undefined,
           })
@@ -570,6 +579,7 @@ export function useSavedFeeds() {
           if (resolvedFeed) {
             result.push({
               type: 'feed',
+              key: [resolvedFeed.uri, counter++].join('-'),
               config: savedItem,
               view: resolvedFeed,
             })
@@ -579,6 +589,7 @@ export function useSavedFeeds() {
           if (resolvedList) {
             result.push({
               type: 'list',
+              key: [resolvedList.uri, counter++].join('-'),
               config: savedItem,
               view: resolvedList,
             })
@@ -589,6 +600,10 @@ export function useSavedFeeds() {
       return {
         // By this point we know the real count.
         count: result.length,
+        counts: {
+          pinned: result.filter(f => f.config.pinned).length,
+          unpinned: result.filter(f => !f.config.pinned).length,
+        },
         feeds: result,
       }
     },
