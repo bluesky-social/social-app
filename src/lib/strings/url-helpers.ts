@@ -2,6 +2,7 @@ import {AtUri} from '@atproto/api'
 import psl from 'psl'
 import TLDs from 'tlds'
 
+import {logger} from '#/logger'
 import {BSKY_SERVICE} from 'lib/constants'
 import {isInvalidHandle} from 'lib/strings/handles'
 
@@ -284,4 +285,14 @@ export function splitApexDomain(hostname: string): [string, string] {
 export function createBskyAppAbsoluteUrl(path: string): string {
   const sanitizedPath = path.replace(BSKY_APP_HOST, '').replace(/^\/+/, '')
   return `${BSKY_APP_HOST.replace(/\/$/, '')}/${sanitizedPath}`
+}
+
+export function isShortLink(url: string): boolean {
+  try {
+    const urlp = new URL(url)
+    return urlp.host === 'go.bsky.app'
+  } catch (e) {
+    logger.error('Failed to parse possible short link', {safeMessage: e})
+    return false
+  }
 }
