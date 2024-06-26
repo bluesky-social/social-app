@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh_CN\n"
 "Project-Id-Version: zh-CN for bluesky-social-app\n"
 "Report-Msgid-Bugs-To: Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-06-25 10:05+0800\n"
+"PO-Revision-Date: 2024-06-26 09:52+0800\n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
 "Language-Team: Frudrax Cheng (auroursa), Simon Chan (RitsukiP), U2FsdGVkX1, Mikan Harada (mitian233), IceCodeNew\n"
 "Plural-Forms: \n"
@@ -78,23 +78,23 @@ msgstr "{0, plural, one {取消喜欢 (# 个喜欢)} other {取消喜欢 (# 个�
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:218
 msgid "{0} joined this week"
-msgstr "{0} 在本周加入"
+msgstr "{0}在本周加入"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:350
 msgid "{0} people have used this starter pack!"
-msgstr "{0} 人已使用过此入门包！"
+msgstr "{0}人已使用过此入门包！"
 
 #: src/view/com/util/UserAvatar.tsx:419
 msgid "{0}'s avatar"
-msgstr "{0} 的头像"
+msgstr "{0}的头像"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:68
 msgid "{0}'s favorite feeds and people - join me!"
-msgstr "{0} 最喜欢的资讯源和用户 - 加入我们吧！"
+msgstr "{0}最喜欢的资讯源和用户 - 来加入我们吧！"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:47
 msgid "{0}'s starter pack"
-msgstr "{0} 的入门包"
+msgstr "{0}的入门包"
 
 #: src/components/LabelingServiceCard/index.tsx:71
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
@@ -921,7 +921,7 @@ msgstr "选择资讯源"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:288
 msgid "Choose for me"
-msgstr "为我做选择"
+msgstr "立即创建"
 
 #: src/screens/StarterPack/Wizard/index.tsx:187
 msgid "Choose People"
@@ -2880,7 +2880,7 @@ msgstr "旧存储数据已清除，你需要立即重新启动应用。"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:293
 msgid "Let me choose"
-msgstr "让我来选择"
+msgstr "自定义"
 
 #: src/screens/Login/index.tsx:130
 #: src/screens/Login/index.tsx:145
@@ -3051,7 +3051,7 @@ msgstr "看起来你似乎缺少\"正在关注\"资讯源。<0>点击这里来�
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:252
 msgid "Make one for me"
-msgstr "为我选择一个"
+msgstr "帮我选择"
 
 #: src/view/com/modals/LinkWarning.tsx:79
 msgid "Make sure this is where you intend to go!"
