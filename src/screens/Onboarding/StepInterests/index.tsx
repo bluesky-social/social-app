@@ -132,7 +132,7 @@ export function StepInterests() {
   const title = isError ? (
     <Trans>Oh no! Something went wrong.</Trans>
   ) : (
-    <Trans>What are your interests?</Trans>
+    <Trans>What are you interested in?</Trans>
   )
   const description = isError ? (
     <Trans>
@@ -140,7 +140,11 @@ export function StepInterests() {
       account. If it continues to fail, you can skip this flow.
     </Trans>
   ) : (
-    <Trans>We'll use this to help customize your experience.</Trans>
+    <Trans>
+      We keep this data private and only use it to{' '}
+      <Text style={[a.text_md]}>show you content you like</Text> and{' '}
+      <Text style={[a.text_md]}>help you find friends</Text> ❤️
+    </Trans>
   )
 
   return (
