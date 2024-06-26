@@ -3,15 +3,15 @@ import ExpoBlueskySwissArmy
 
 let APP_GROUP = "group.app.bsky"
 
-let DEFAULTS: [String:Any] = [
-  "playSoundChat" : true,
+let DEFAULTS: [String: Any] = [
+  "playSoundChat": true,
   "playSoundFollow": false,
   "playSoundLike": false,
   "playSoundMention": false,
   "playSoundQuote": false,
   "playSoundReply": false,
   "playSoundRepost": false,
-  "badgeCount": 0,
+  "badgeCount": 0
 ]
 
 let INCREMENTED_FOR_KEY = "incremented-for-convos"
@@ -25,10 +25,10 @@ let INCREMENTED_FOR_KEY = "incremented-for-convos"
  */
 public class ExpoBackgroundNotificationHandlerModule: Module {
   let userDefaults = UserDefaults(suiteName: APP_GROUP)
-  
+
   public func definition() -> ModuleDefinition {
     Name("ExpoBackgroundNotificationHandler")
-    
+
     OnCreate {
       DEFAULTS.forEach { p in
         if !SharedPrefs.shared.hasValue(p.key) {
@@ -36,37 +36,37 @@ public class ExpoBackgroundNotificationHandlerModule: Module {
         }
       }
     }
-    
+
     AsyncFunction("getPrefsAsync") {
       let keys = Array(DEFAULTS.keys)
       return SharedPrefs.shared.getValues(keys)
     }
-    
+
     AsyncFunction("resetGenericCountAsync") {
       SharedPrefs.shared.setValue(BadgeType.generic.toKeyName(), 0)
     }
-    
+
     AsyncFunction("maybeIncrementMessagesCountAsync") { (convoId: String) in
       guard !SharedPrefs.shared.setContains(INCREMENTED_FOR_KEY, convoId) else {
         return false
       }
-      
+
       var count = SharedPrefs.shared.getNumber(BadgeType.messages.toKeyName()) ?? 0
       count += 1
-      
+
       SharedPrefs.shared.addToSet(INCREMENTED_FOR_KEY, convoId)
       SharedPrefs.shared.setValue(BadgeType.messages.toKeyName(), count)
       return true
     }
-    
+
     AsyncFunction("maybeDecrementMessagesCountAsync") { (convoId: String) in
       guard SharedPrefs.shared.setContains(INCREMENTED_FOR_KEY, convoId) else {
         return false
       }
-      
+
       var count = SharedPrefs.shared.getNumber(BadgeType.messages.toKeyName()) ?? 0
       count -= 1
-      
+
       SharedPrefs.shared.removeFromSet(INCREMENTED_FOR_KEY, convoId)
       SharedPrefs.shared.setValue(BadgeType.messages.toKeyName(), count)
       return true
@@ -74,10 +74,10 @@ public class ExpoBackgroundNotificationHandlerModule: Module {
   }
 }
 
-enum BadgeType : String, Enumerable {
+enum BadgeType: String, Enumerable {
   case generic
   case messages
-  
+
   func toKeyName() -> String {
     switch self {
     case .generic:
