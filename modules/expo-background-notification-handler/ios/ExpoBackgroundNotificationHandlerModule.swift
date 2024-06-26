@@ -37,11 +37,11 @@ public class ExpoBackgroundNotificationHandlerModule: Module {
       }
     }
     
-    AsyncFunction("resetGenericCount") {
+    AsyncFunction("resetGenericCountAsync") {
       SharedPrefs.shared.setValue(BadgeType.generic.toKeyName(), 0)
     }
     
-    AsyncFunction("incrementMessagesCount") { (convoId: String) in
+    AsyncFunction("incrementMessagesCountAsync") { (convoId: String) in
       guard !SharedPrefs.shared.setContains(INCREMENTED_FOR_KEY, convoId) else {
         return
       }
@@ -53,7 +53,7 @@ public class ExpoBackgroundNotificationHandlerModule: Module {
       SharedPrefs.shared.setValue(BadgeType.messages.toKeyName(), count)
     }
     
-    AsyncFunction("decrementMessagesCount") { (convoId: String) in
+    AsyncFunction("decrementMessagesCountAsync") { (convoId: String) in
       guard SharedPrefs.shared.setContains(INCREMENTED_FOR_KEY, convoId) else {
         return
       }

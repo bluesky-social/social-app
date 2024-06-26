@@ -1,7 +1,8 @@
 import React from 'react'
 
-import {BackgroundNotificationHandlerPreferences} from './ExpoBackgroundNotificationHandler.types'
-import {BackgroundNotificationHandler} from './ExpoBackgroundNotificationHandlerModule'
+import {SharedPrefs} from '../../expo-bluesky-swiss-army'
+import {BackgroundNotifications} from '../index'
+import {BackgroundNotificationHandlerPreferences} from './types'
 
 interface BackgroundNotificationPreferencesContext {
   preferences: BackgroundNotificationHandlerPreferences
@@ -29,7 +30,7 @@ export function BackgroundNotificationPreferencesProvider({
 
   React.useEffect(() => {
     ;(async () => {
-      const prefs = await BackgroundNotificationHandler.getAllPrefsAsync()
+      const prefs = await BackgroundNotifications.getPrefsAsync()
       setPreferences(prefs)
     })()
   }, [])
@@ -43,20 +44,7 @@ export function BackgroundNotificationPreferencesProvider({
         k: Key,
         v: BackgroundNotificationHandlerPreferences[Key],
       ) => {
-        switch (typeof v) {
-          case 'boolean': {
-            await BackgroundNotificationHandler.setBoolAsync(k, v)
-            break
-          }
-          case 'string': {
-            await BackgroundNotificationHandler.setStringAsync(k, v)
-            break
-          }
-          default: {
-            throw new Error(`Invalid type for value: ${typeof v}`)
-          }
-        }
-
+        SharedPrefs.setValueAsync(k, v)
         setPreferences(prev => ({
           ...prev,
           [k]: v,
