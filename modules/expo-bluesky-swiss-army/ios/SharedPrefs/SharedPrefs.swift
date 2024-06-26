@@ -82,4 +82,8 @@ public class SharedPrefs {
   public func hasValue(_ key: String) -> Bool {
     return getDefaults(key)?.value(forKey: key) != nil
   }
+  
+  public func getValues(_ keys: [String]) -> [String:Any?]? {
+    return getDefaults("keys:\(keys)")?.dictionaryWithValues(forKeys: keys)
+  }
 }

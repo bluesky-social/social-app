@@ -64,6 +64,11 @@ public class ExpoBackgroundNotificationHandlerModule: Module {
       SharedPrefs.shared.removeFromSet(INCREMENTED_FOR_KEY, convoId)
       SharedPrefs.shared.setValue(BadgeType.messages.toKeyName(), count)
     }
+    
+    AsyncFunction("getPrefsAsync") {
+      let keys = Array(DEFAULTS.keys)
+      return SharedPrefs.shared.getValues(keys)
+    }
   }
 }
 

@@ -31,7 +31,9 @@ export function BackgroundNotificationPreferencesProvider({
   React.useEffect(() => {
     ;(async () => {
       const prefs = await BackgroundNotifications.getPrefsAsync()
-      setPreferences(prefs)
+      if (prefs) {
+        setPreferences(prefs)
+      }
     })()
   }, [])
 

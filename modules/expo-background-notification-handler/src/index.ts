@@ -19,6 +19,6 @@ export function decrementMessagesCountAsync(
   throw new NotImplementedError({count, convoId})
 }
 
-export function getPrefsAsync(): Promise<BackgroundNotificationHandlerPreferences> {
+export function getPrefsAsync(): Promise<BackgroundNotificationHandlerPreferences | null> {
   throw new NotImplementedError()
 }
