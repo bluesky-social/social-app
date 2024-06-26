@@ -11,9 +11,10 @@ let DEFAULTS: [String:Any] = [
   "playSoundQuote": false,
   "playSoundReply": false,
   "playSoundRepost": false,
-  "mutedThreads": [:] as! [String:[String]],
   "badgeCount": 0,
 ]
+
+let INCREMENTED_FOR_KEY = "incremented-for-convos"
 
 /*
  * The purpose of this module is to store values that are needed by the notification service
@@ -25,23 +26,43 @@ let DEFAULTS: [String:Any] = [
 public class ExpoBackgroundNotificationHandlerModule: Module {
   let userDefaults = UserDefaults(suiteName: APP_GROUP)
   
-  func test() {
-    SharedPrefs
-  }
-  
   public func definition() -> ModuleDefinition {
     Name("ExpoBackgroundNotificationHandler")
     
     OnCreate {
       DEFAULTS.forEach { p in
-        if userDefaults?.value(forKey: p.key) == nil {
-          userDefaults?.setValue(p.value, forKey: p.key)
+        if !SharedPrefs.shared.hasValue(p.key) {
+          SharedPrefs.shared._setAnyValue(p.key, p.value)
         }
       }
     }
     
-    AsyncFunction("setBadgeCountAsync") { (type: BadgeType, count: Int) in
-      userDefaults?.setValue(count, forKey: type.toKeyName())
+    AsyncFunction("resetGenericCount") {
+      SharedPrefs.shared.setValue(BadgeType.generic.toKeyName(), 0)
+    }
+    
+    AsyncFunction("incrementMessagesCount") { (convoId: String) in
+      guard !SharedPrefs.shared.setContains(INCREMENTED_FOR_KEY, convoId) else {
+        return
+      }
+      
+      var count = SharedPrefs.shared.getNumber(BadgeType.messages.toKeyName()) ?? 0
+      count += 1
+      
+      SharedPrefs.shared.addToSet(INCREMENTED_FOR_KEY, convoId)
+      SharedPrefs.shared.setValue(BadgeType.messages.toKeyName(), count)
+    }
+    
+    AsyncFunction("decrementMessagesCount") { (convoId: String) in
+      guard SharedPrefs.shared.setContains(INCREMENTED_FOR_KEY, convoId) else {
+        return
+      }
+      
+      var count = SharedPrefs.shared.getNumber(BadgeType.messages.toKeyName()) ?? 0
+      count -= 1
+      
+      SharedPrefs.shared.removeFromSet(INCREMENTED_FOR_KEY, convoId)
+      SharedPrefs.shared.setValue(BadgeType.messages.toKeyName(), count)
     }
   }
 }
