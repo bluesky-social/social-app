@@ -127,7 +127,7 @@ export function useCreateStarterPackMutation({
           description,
           descriptionFacets,
           list: listRes?.uri,
-          feeds,
+          feeds: feeds?.map(f => ({uri: f.uri})),
           createdAt: new Date().toISOString(),
         },
       )
