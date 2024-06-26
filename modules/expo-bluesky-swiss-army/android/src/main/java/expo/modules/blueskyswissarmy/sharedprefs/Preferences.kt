@@ -159,4 +159,22 @@ class Preferences(private val context: Context) {
     val set = safeInstance.getStringSet(key, setOf()) ?: setOf()
     return set.contains(value)
   }
+
+  fun hasValue(key: String): Boolean {
+    val safeInstance = getInstance(context)
+    return safeInstance.contains(key)
+  }
+
+  fun getValues(keys: Set<String>): Map<String, Any?> {
+    val safeInstance = getInstance(context)
+    return keys.associateWith { key ->
+      when (val value = safeInstance.all[key]) {
+        is String -> value
+        is Float -> value
+        is Boolean -> value
+        is Set<*> -> value
+        else -> null
+      }
+    }
+  }
 }
