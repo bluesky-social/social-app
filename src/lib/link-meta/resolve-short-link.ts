@@ -9,10 +9,10 @@ export async function resolveShortLink(shortLink: string) {
       method: 'GET',
       signal: controller.signal,
     })
-    if (res.status !== 301) {
-      return res.url
+    if (res.status !== 200) {
+      return shortLink
     }
-    return res.headers.get('Location')
+    return res.url
   } catch (e: unknown) {
     logger.error('Failed to resolve short link', {safeMessage: e})
     return null
