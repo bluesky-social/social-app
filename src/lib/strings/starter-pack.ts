@@ -83,6 +83,13 @@ export function getStarterPackOgCard(
   rkey?: string,
 ) {
   if (typeof didOrStarterPack === 'string') {
+    // Used for link embeds so that we always keep the image up to date rather than using the uploaded one.
+    if (didOrStarterPack.startsWith('https://')) {
+      const parsed = parseStarterPackUri(didOrStarterPack)
+      if (!parsed) return null
+      return getStarterPackOgCard(parsed?.name, parsed?.rkey)
+    }
+
     return `https://ogcard.cdn.bsky.app/start/${didOrStarterPack}/${rkey}`
   } else {
     const rkey = new AtUri(didOrStarterPack.uri).rkey
