@@ -1,6 +1,5 @@
 import React from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
-import {AppBskyActorDefs} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -31,6 +30,7 @@ import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
 import {atoms as a, useTheme} from '#/alf'
 import * as FeedCard from '#/components/FeedCard'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
+import * as ListCard from '#/components/ListCard'
 import hairlineWidth = StyleSheet.hairlineWidth
 
 const HITSLOP_TOP = {
@@ -70,19 +70,23 @@ export function SavedFeeds({}: Props) {
    * Use optimistic data if exists and no error, otherwise fallback to remote
    * data
    */
-  const optimisticCurrentFeeds =
+  const optimisticSavedFeeds: SavedFeedItem[] =
     optimisticSavedFeedsResponse && !writeSavedFeedsError
-      ? optimisticSavedFeedsResponse
-      : savedFeeds?.feeds?.map(f => f.config) || []
-  const pinnedFeeds = optimisticCurrentFeeds.filter(f => f.pinned)
-  const unpinnedFeeds = optimisticCurrentFeeds.filter(f => !f.pinned)
-  const noSavedFeedsOfAnyType = pinnedFeeds.length + unpinnedFeeds.length === 0
-  const noFollowingFeed =
-    optimisticCurrentFeeds.every(f => f.type !== 'timeline') &&
-    !noSavedFeedsOfAnyType
-
+      ? (optimisticSavedFeedsResponse
+          .map(f => {
+            return savedFeeds?.feeds.find(sf => sf.config.id === f.id)
+          })
+          .filter(Boolean) as SavedFeedItem[])
+      : savedFeeds?.feeds?.map(f => f) || []
   const isSavedFeedsLoading =
     isSavedFeedsPlaceholder && !savedFeeds?.feeds.length
+  const noSavedFeedsOfAnyType = optimisticSavedFeeds.length === 0
+  const noFollowingFeed =
+    optimisticSavedFeeds.every(f => f.type !== 'timeline') &&
+    !noSavedFeedsOfAnyType
+  const pinnedFeeds = optimisticSavedFeeds.filter(f => f.config.pinned)
+  const unpinnedFeeds = optimisticSavedFeeds.filter(f => !f.config.pinned)
+
   const numPinnedFeedsPlaceholders = savedFeeds
     ? Math.max(savedFeeds.counts.pinned, 3)
     : 3
@@ -138,18 +142,16 @@ export function SavedFeeds({}: Props) {
             ))
         ) : (
           <>
-            {savedFeeds && savedFeeds.feeds.length ? (
-              savedFeeds.feeds
-                .filter(f => f.config.pinned)
-                .map(f => (
-                  <ListItem
-                    key={f.key}
-                    feed={f}
-                    overwriteSavedFeeds={overwriteSavedFeeds}
-                    resetSaveFeedsMutationState={resetSaveFeedsMutationState}
-                    currentFeeds={optimisticCurrentFeeds}
-                  />
-                ))
+            {pinnedFeeds.length ? (
+              pinnedFeeds.map(f => (
+                <ListItem
+                  key={f.key}
+                  feed={f}
+                  overwriteSavedFeeds={overwriteSavedFeeds}
+                  resetSaveFeedsMutationState={resetSaveFeedsMutationState}
+                  savedFeeds={optimisticSavedFeeds}
+                />
+              ))
             ) : (
               <View
                 style={[
@@ -198,18 +200,16 @@ export function SavedFeeds({}: Props) {
             ))
         ) : (
           <>
-            {savedFeeds && savedFeeds.feeds.length ? (
-              savedFeeds.feeds
-                .filter(f => !f.config.pinned)
-                .map(f => (
-                  <ListItem
-                    key={f.key}
-                    feed={f}
-                    overwriteSavedFeeds={overwriteSavedFeeds}
-                    resetSaveFeedsMutationState={resetSaveFeedsMutationState}
-                    currentFeeds={optimisticCurrentFeeds}
-                  />
-                ))
+            {unpinnedFeeds.length ? (
+              unpinnedFeeds.map(f => (
+                <ListItem
+                  key={f.key}
+                  feed={f}
+                  overwriteSavedFeeds={overwriteSavedFeeds}
+                  resetSaveFeedsMutationState={resetSaveFeedsMutationState}
+                  savedFeeds={optimisticSavedFeeds}
+                />
+              ))
             ) : (
               <View
                 style={[
@@ -249,12 +249,12 @@ export function SavedFeeds({}: Props) {
 
 function ListItem({
   feed,
-  currentFeeds,
+  savedFeeds,
   overwriteSavedFeeds,
   resetSaveFeedsMutationState,
 }: {
   feed: SavedFeedItem
-  currentFeeds: AppBskyActorDefs.SavedFeed[]
+  savedFeeds: SavedFeedItem[]
   overwriteSavedFeeds: ReturnType<
     typeof useOverwriteSavedFeedsMutation
   >['mutateAsync']
@@ -268,6 +268,7 @@ function ListItem({
   const {isPending: isUpdatePending, mutateAsync: updateSavedFeeds} =
     useUpdateSavedFeedsMutation()
   const isPinned = feed.config.pinned
+  const currentFeedConfigs = savedFeeds.map(f => f.config)
 
   const onTogglePinned = React.useCallback(async () => {
     playHaptic()
@@ -290,8 +291,8 @@ function ListItem({
   const onPressUp = React.useCallback(async () => {
     if (!isPinned) return
 
-    const nextFeeds = currentFeeds.slice()
-    const ids = currentFeeds.map(f => f.id)
+    const nextFeeds = currentFeedConfigs.slice()
+    const ids = currentFeedConfigs.map(f => f.id)
     const index = ids.indexOf(feed.config.id)
     const nextIndex = index - 1
 
@@ -311,13 +312,13 @@ function ListItem({
       Toast.show(_(msg`There was an issue contacting the server`))
       logger.error('Failed to set pinned feed order', {message: e})
     }
-  }, [feed, isPinned, overwriteSavedFeeds, currentFeeds, _])
+  }, [feed, isPinned, overwriteSavedFeeds, currentFeedConfigs, _])
 
   const onPressDown = React.useCallback(async () => {
     if (!isPinned) return
 
-    const nextFeeds = currentFeeds.slice()
-    const ids = currentFeeds.map(f => f.id)
+    const nextFeeds = currentFeedConfigs.slice()
+    const ids = currentFeedConfigs.map(f => f.id)
     const index = ids.indexOf(feed.config.id)
     const nextIndex = index + 1
 
@@ -337,7 +338,7 @@ function ListItem({
       Toast.show(_(msg`There was an issue contacting the server`))
       logger.error('Failed to set pinned feed order', {message: e})
     }
-  }, [feed, isPinned, overwriteSavedFeeds, currentFeeds, _])
+  }, [feed, isPinned, overwriteSavedFeeds, currentFeedConfigs, _])
 
   return (
     <View style={[styles.itemContainer, pal.border]}>
@@ -346,41 +347,35 @@ function ListItem({
       ) : (
         <View style={[a.flex_1]}>
           {feed.type === 'feed' ? (
-            <FeedCard.Link view={feed.view} type="feed">
+            <FeedCard.Link view={feed.view}>
               <View style={[a.py_md, a.pl_lg, a.pr_sm, a.flex_1]}>
                 <FeedCard.Outer>
                   <FeedCard.Header>
-                    <FeedCard.Avatar src={feed.view.avatar} />
+                    <FeedCard.Avatar size={36} src={feed.view.avatar} />
                     <FeedCard.TitleAndByline
-                      type="feed"
                       title={feed.view.displayName}
                       creator={feed.view.creator}
                     />
-                    {!isPinned && (
-                      <FeedCard.Action uri={feed.view.uri} type="feed" />
-                    )}
+                    {!isPinned && <FeedCard.SaveButton view={feed.view} />}
                   </FeedCard.Header>
                 </FeedCard.Outer>
               </View>
             </FeedCard.Link>
           ) : (
-            <FeedCard.Link view={feed.view} type="list">
+            <ListCard.Link view={feed.view}>
               <View style={[a.py_md, a.pl_lg, a.pr_sm, a.flex_1]}>
-                <FeedCard.Outer>
-                  <FeedCard.Header>
-                    <FeedCard.Avatar src={feed.view.avatar} />
-                    <FeedCard.TitleAndByline
-                      type="list"
+                <ListCard.Outer>
+                  <ListCard.Header>
+                    <ListCard.Avatar size={36} src={feed.view.avatar} />
+                    <ListCard.TitleAndByline
                       title={feed.view.name}
                       creator={feed.view.creator}
                     />
-                    {!isPinned && (
-                      <FeedCard.Action uri={feed.view.uri} type="list" />
-                    )}
-                  </FeedCard.Header>
-                </FeedCard.Outer>
+                    {!isPinned && <ListCard.SaveButton view={feed.view} />}
+                  </ListCard.Header>
+                </ListCard.Outer>
               </View>
-            </FeedCard.Link>
+            </ListCard.Link>
           )}
         </View>
       )}
