@@ -6,6 +6,7 @@ import {useQuery} from '@tanstack/react-query'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {logEvent} from '#/lib/statsig/statsig'
+import {useGate} from '#/lib/statsig/statsig'
 import {capitalize} from '#/lib/strings/capitalize'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
@@ -40,6 +41,7 @@ export function StepInterests() {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {track} = useAnalytics()
+  const gate = useGate()
 
   const {state, dispatch, interestsDisplayNames} = React.useContext(Context)
   const [saving, setSaving] = React.useState(false)
@@ -136,6 +138,11 @@ export function StepInterests() {
     track('OnboardingV2:StepInterests:Start')
   }, [track])
 
+  const isMinimumInterestsEnabled = gate('onboarding_minimum_interests')
+  const meetsMinimumRequirement = isMinimumInterestsEnabled
+    ? interests.length >= MIN_INTERESTS
+    : true
+
   const title = isError ? (
     <Trans>Oh no! Something went wrong.</Trans>
   ) : (
@@ -177,11 +184,13 @@ export function StepInterests() {
 
       <TitleText>{title}</TitleText>
       <DescriptionText>{description}</DescriptionText>
-      <DescriptionText style={[a.pt_sm]}>
-        <Trans>Choose 3 or more:</Trans>
-      </DescriptionText>
+      {isMinimumInterestsEnabled && (
+        <DescriptionText style={[a.pt_sm]}>
+          <Trans>Choose 3 or more:</Trans>
+        </DescriptionText>
+      )}
 
-      <View style={[a.w_full, a.pt_md]}>
+      <View style={[a.w_full, isMinimumInterestsEnabled ? a.pt_md : a.pt_2xl]}>
         {isLoading ? (
           <Loader size="xl" />
         ) : isError || !data ? (
@@ -257,7 +266,7 @@ export function StepInterests() {
           </View>
         ) : (
           <Button
-            disabled={saving || !data || interests.length < 3}
+            disabled={saving || !data || !meetsMinimumRequirement}
             variant="gradient"
             color="gradient_sky"
             size="large"
@@ -273,7 +282,7 @@ export function StepInterests() {
           </Button>
         )}
 
-        {interests.length < 3 && (
+        {!meetsMinimumRequirement && (
           <View
             style={[
               a.align_center,
