@@ -9,12 +9,11 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {shareUrl} from 'lib/sharing'
 import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
-import {getStarterPackOgCard} from 'lib/strings/starter-pack'
 import {
-  isBskyStarterPackUrl,
-  isBskyStartUrl,
-  toNiceDomain,
-} from 'lib/strings/url-helpers'
+  getStarterPackOgCard,
+  parseStarterPackUri,
+} from 'lib/strings/starter-pack'
+import {toNiceDomain} from 'lib/strings/url-helpers'
 import {isNative} from 'platform/detection'
 import {useExternalEmbedsPrefs} from 'state/preferences'
 import {Link} from 'view/com/util/Link'
@@ -40,9 +39,10 @@ export const ExternalLinkEmbed = ({
   const {isMobile} = useWebMediaQueries()
   const externalEmbedPrefs = useExternalEmbedsPrefs()
 
-  const isStarterPack =
-    isBskyStartUrl(link.uri) || isBskyStarterPackUrl(link.uri)
-  const imageUri = isStarterPack ? getStarterPackOgCard(link.uri) : link.thumb
+  const starterPackParsed = parseStarterPackUri(link.uri)
+  const imageUri = starterPackParsed
+    ? getStarterPackOgCard(starterPackParsed.name, starterPackParsed.rkey)
+    : link.thumb
 
   const embedPlayerParams = React.useMemo(() => {
     const params = parseEmbedPlayerFromUrl(link.uri)
@@ -68,9 +68,9 @@ export const ExternalLinkEmbed = ({
             }}
             source={{uri: imageUri}}
             accessibilityIgnoresInvertColors
-            accessibilityLabel={isStarterPack ? link.title : undefined}
+            accessibilityLabel={starterPackParsed ? link.title : undefined}
             accessibilityHint={
-              isStarterPack ? _(msg`Navigate to starter pack`) : undefined
+              starterPackParsed ? _(msg`Navigate to starter pack`) : undefined
             }
           />
         ) : undefined}
@@ -79,7 +79,7 @@ export const ExternalLinkEmbed = ({
         ) : embedPlayerParams ? (
           <ExternalPlayer link={link} params={embedPlayerParams} />
         ) : undefined}
-        {!isStarterPack ? (
+        {!starterPackParsed ? (
           <View
             style={[
               a.flex_1,

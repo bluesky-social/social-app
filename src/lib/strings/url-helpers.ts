@@ -151,30 +151,6 @@ export function isBskyListUrl(url: string): boolean {
   return false
 }
 
-export function isBskyStartUrl(url: string): boolean {
-  if (isBskyAppUrl(url)) {
-    try {
-      const urlp = new URL(url)
-      return /start\/(?<name>[^/]+)\/(?<rkey>[^/]+)/i.test(urlp.pathname)
-    } catch {
-      console.error('Unexpected error in isBskyListUrl()', url)
-    }
-  }
-  return false
-}
-
-export function isBskyStarterPackUrl(url: string): boolean {
-  if (isBskyAppUrl(url)) {
-    try {
-      const urlp = new URL(url)
-      return /starter-pack\/(?<name>[^/]+)\/(?<rkey>[^/]+)/i.test(urlp.pathname)
-    } catch {
-      console.error('Unexpected error in isBskyListUrl()', url)
-    }
-  }
-  return false
-}
-
 export function isBskyDownloadUrl(url: string): boolean {
   if (isExternalUrl(url)) {
     return false
