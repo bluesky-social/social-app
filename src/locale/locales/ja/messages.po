@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-06-25 14:14+0900\n"
+"PO-Revision-Date: 2024-06-26 23:49+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -379,6 +379,10 @@ msgstr "返信がフィードに表示されるために必要ないいねの数
 #: src/view/com/modals/SelfLabel.tsx:76
 msgid "Adult Content"
 msgstr "成人向けコンテンツ"
+
+#: src/screens/Moderation/index.tsx:356
+msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
+msgstr "成人向けコンテンツは<0>bsky.app</0>のウェブ版からしか有効にできません。"
 
 #: src/components/moderation/LabelPreference.tsx:242
 msgid "Adult content is disabled."
