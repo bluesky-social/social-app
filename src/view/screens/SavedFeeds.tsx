@@ -21,7 +21,6 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {CommonNavigatorParams} from 'lib/routes/types'
 import {colors, s} from 'lib/styles'
-import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {TextLink} from 'view/com/util/Link'
 import {Text} from 'view/com/util/text/Text'
 import * as Toast from 'view/com/util/Toast'
@@ -343,14 +342,45 @@ function ListItem({
       {feed.type === 'timeline' ? (
         <FollowingFeedCard />
       ) : (
-        <FeedSourceCard
-          key={feed.view.uri}
-          feedUri={feed.view.uri}
-          style={[isPinned && {paddingRight: 8}]}
-          showMinimalPlaceholder
-          showSaveBtn={!isPinned}
-          hideTopBorder={true}
-        />
+        <View style={[a.flex_1]}>
+          {feed.type === 'feed' ? (
+            <FeedCard.Link view={feed.view} type="feed">
+              <View style={[a.py_md, a.pl_lg, a.pr_sm, a.flex_1]}>
+                <FeedCard.Outer>
+                  <FeedCard.Header>
+                    <FeedCard.Avatar src={feed.view.avatar} />
+                    <FeedCard.TitleAndByline
+                      type="feed"
+                      title={feed.view.displayName}
+                      creator={feed.view.creator}
+                    />
+                    {!isPinned && (
+                      <FeedCard.Action uri={feed.view.uri} type="feed" />
+                    )}
+                  </FeedCard.Header>
+                </FeedCard.Outer>
+              </View>
+            </FeedCard.Link>
+          ) : (
+            <FeedCard.Link view={feed.view} type="list">
+              <View style={[a.py_md, a.pl_lg, a.pr_sm, a.flex_1]}>
+                <FeedCard.Outer>
+                  <FeedCard.Header>
+                    <FeedCard.Avatar src={feed.view.avatar} />
+                    <FeedCard.TitleAndByline
+                      type="list"
+                      title={feed.view.name}
+                      creator={feed.view.creator}
+                    />
+                    {!isPinned && (
+                      <FeedCard.Action uri={feed.view.uri} type="list" />
+                    )}
+                  </FeedCard.Header>
+                </FeedCard.Outer>
+              </View>
+            </FeedCard.Link>
+          )}
+        </View>
       )}
       {isPinned ? (
         <>
@@ -424,16 +454,7 @@ function ListItem({
 function FollowingFeedCard() {
   const t = useTheme()
   return (
-    <View
-      style={[
-        a.flex_row,
-        a.align_center,
-        a.flex_1,
-        {
-          paddingHorizontal: 18,
-          paddingVertical: 20,
-        },
-      ]}>
+    <View style={[a.flex_row, a.align_center, a.flex_1, a.px_lg, a.py_md]}>
       <View
         style={[
           a.align_center,
