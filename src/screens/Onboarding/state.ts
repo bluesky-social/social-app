@@ -72,6 +72,7 @@ export type ApiResponseMap = {
 export const INTEREST_TO_DISPLAY_NAME_DEFAULTS: {
   [key: string]: string
 } = {
+  // Keep this alphabetized
   animals: t`Animals`,
   art: t`Art`,
   books: t`Books`,
