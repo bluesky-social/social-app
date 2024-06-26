@@ -1,6 +1,6 @@
 import Foundation
 
-class SharedPrefs {
+public class SharedPrefs {
   public static let shared = SharedPrefs()
   
   private let defaults = UserDefaults(suiteName: "group.app.bsky")
@@ -11,7 +11,7 @@ class SharedPrefs {
     }
   }
   
-  func getDefaults(_ info: String = "(no info)") -> UserDefaults? {
+  private func getDefaults(_ info: String = "(no info)") -> UserDefaults? {
     guard let defaults = self.defaults else {
       NSLog("Failed to get defaults for app group: \(info)")
       return nil
@@ -19,35 +19,35 @@ class SharedPrefs {
     return defaults
   }
   
-  func setValue(_ key: String, _ value: String?) {
+  public func setValue(_ key: String, _ value: String?) {
     getDefaults(key)?.setValue(value, forKey: key)
   }
   
-  func setValue(_ key: String, _ value: Double?) {
+  public func setValue(_ key: String, _ value: Double?) {
     getDefaults(key)?.setValue(value, forKey: key)
   }
   
-  func setValue(_ key: String, _ value: Bool?) {
+  public func setValue(_ key: String, _ value: Bool?) {
     getDefaults(key)?.setValue(value, forKey: key)
   }
   
-  func removeValue(_ key: String) {
+  public func removeValue(_ key: String) {
     getDefaults(key)?.removeObject(forKey: key)
   }
   
-  func getString(_ key: String) -> String? {
+  public func getString(_ key: String) -> String? {
     return getDefaults(key)?.string(forKey: key)
   }
   
-  func getNumber(_ key: String) -> Double? {
+  public func getNumber(_ key: String) -> Double? {
     return getDefaults(key)?.double(forKey: key)
   }
   
-  func getBool(_ key: String) -> Bool? {
+  public func getBool(_ key: String) -> Bool? {
     return getDefaults(key)?.bool(forKey: key)
   }
   
-  func addToSet(_ key: String, _ value: String) {
+  public func addToSet(_ key: String, _ value: String) {
     var dict: [String:Bool]?
     if var currDict = getDefaults(key)?.dictionary(forKey: key) as? [String:Bool] {
       currDict[value] = true
@@ -60,7 +60,7 @@ class SharedPrefs {
     getDefaults(key)?.setValue(dict, forKey: key)
   }
   
-  func removeFromSet(_ key: String, _ value: String) {
+  public func removeFromSet(_ key: String, _ value: String) {
     guard var dict = getDefaults(key)?.dictionary(forKey: key) as? [String:Bool] else {
       return
     }
@@ -68,10 +68,14 @@ class SharedPrefs {
     getDefaults(key)?.setValue(dict, forKey: key)
   }
   
-  func setContains(_ key: String, _ value: String) -> Bool {
+  public func setContains(_ key: String, _ value: String) -> Bool {
     guard let dict = getDefaults(key)?.dictionary(forKey: key) as? [String:Bool] else {
       return false
     }
     return dict[value] == true
+  }
+  
+  public func hasValue(_ key: String) -> Bool {
+    return getDefaults(key)?.value(forKey: key) != nil
   }
 }
