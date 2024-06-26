@@ -5,6 +5,7 @@ import EventEmitter from 'eventemitter3'
 
 import {batchedUpdates} from '#/lib/batchedUpdates'
 import {findAllProfilesInQueryData as findAllProfilesInActorSearchQueryData} from '../queries/actor-search'
+import {findAllProfilesInQueryData as findAllProfilesInKnownFollowersQueryData} from '../queries/known-followers'
 import {findAllProfilesInQueryData as findAllProfilesInListMembersQueryData} from '../queries/list-members'
 import {findAllProfilesInQueryData as findAllProfilesInListConvosQueryData} from '../queries/messages/list-converations'
 import {findAllProfilesInQueryData as findAllProfilesInMyBlockedAccountsQueryData} from '../queries/my-blocked-accounts'
@@ -111,4 +112,5 @@ function* findProfilesInCache(
   yield* findAllProfilesInListConvosQueryData(queryClient, did)
   yield* findAllProfilesInFeedsQueryData(queryClient, did)
   yield* findAllProfilesInPostThreadQueryData(queryClient, did)
+  yield* findAllProfilesInKnownFollowersQueryData(queryClient, did)
 }

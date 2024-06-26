@@ -20,6 +20,7 @@ import {
 } from '#/state/shell'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
 import {useOTAUpdates} from 'lib/hooks/useOTAUpdates'
+import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
 import {HomeTabNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {FeedPage} from 'view/com/feeds/FeedPage'
 import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
@@ -29,11 +30,28 @@ import {FollowingEndOfFeed} from 'view/com/posts/FollowingEndOfFeed'
 import {NoFeedsPinned} from '#/screens/Home/NoFeedsPinned'
 import {HomeHeader} from '../com/home/HomeHeader'
 
-type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
+type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home' | 'Start'>
 export function HomeScreen(props: Props) {
   const {data: preferences} = usePreferencesQuery()
+  const {currentAccount} = useSession()
   const {data: pinnedFeedInfos, isLoading: isPinnedFeedsLoading} =
     usePinnedFeedsInfos()
+
+  React.useEffect(() => {
+    const params = props.route.params
+    if (
+      currentAccount &&
+      props.route.name === 'Start' &&
+      params?.name &&
+      params?.rkey
+    ) {
+      props.navigation.navigate('StarterPack', {
+        rkey: params.rkey,
+        name: params.name,
+      })
+    }
+  }, [currentAccount, props.navigation, props.route.name, props.route.params])
+
   if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
     return (
       <HomeScreenReady
@@ -67,9 +85,14 @@ function HomeScreenReady({
   const maybeFoundIndex = allFeeds.indexOf(rawSelectedFeed)
   const selectedIndex = Math.max(0, maybeFoundIndex)
   const selectedFeed = allFeeds[selectedIndex]
+  const requestNotificationsPermission = useRequestNotificationsPermission()
 
   useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName)
   useOTAUpdates()
+
+  React.useEffect(() => {
+    requestNotificationsPermission('Home')
+  }, [requestNotificationsPermission])
 
   const pagerRef = React.useRef<PagerRef>(null)
   const lastPagerReportedIndexRef = React.useRef(selectedIndex)

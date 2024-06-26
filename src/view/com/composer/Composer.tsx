@@ -8,17 +8,14 @@ import React, {
 } from 'react'
 import {
   ActivityIndicator,
+  BackHandler,
   Keyboard,
+  KeyboardAvoidingView,
   LayoutChangeEvent,
   StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native'
-import {
-  KeyboardAvoidingView,
-  KeyboardStickyView,
-  useKeyboardContext,
-} from 'react-native-keyboard-controller'
 import Animated, {
   interpolateColor,
   useAnimatedStyle,
@@ -27,12 +24,18 @@ import Animated, {
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {LinearGradient} from 'expo-linear-gradient'
+import {
+  AppBskyFeedDefs,
+  AppBskyFeedGetPostThread,
+  BskyAgent,
+} from '@atproto/api'
 import {RichText} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {observer} from 'mobx-react-lite'
 
+import {until} from '#/lib/async/until'
 import {
   createGIFDescription,
   parseAltFromGIFDescription,
@@ -42,6 +45,7 @@ import {LikelyType} from '#/lib/link-meta/link-meta'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {emitPostCreated} from '#/state/events'
+import {useModalControls} from '#/state/modals'
 import {useModals} from '#/state/modals'
 import {useRequireAltTextEnabled} from '#/state/preferences'
 import {
@@ -108,9 +112,7 @@ export const ComposePost = observer(function ComposePost({
   text: initText,
   imageUris: initImageUris,
   cancelRef,
-  isModalReady,
 }: Props & {
-  isModalReady: boolean
   cancelRef?: React.RefObject<CancelRef>
 }) {
   const {currentAccount} = useSession()
@@ -128,18 +130,8 @@ export const ComposePost = observer(function ComposePost({
   const textInput = useRef<TextInputRef>(null)
   const discardPromptControl = Prompt.usePromptControl()
   const {closeAllDialogs} = useDialogStateControlContext()
+  const {closeAllModals} = useModalControls()
   const t = useTheme()
-
-  // Disable this in the composer to prevent any extra keyboard height being applied.
-  // See https://github.com/bluesky-social/social-app/pull/4399
-  const {setEnabled} = useKeyboardContext()
-  React.useEffect(() => {
-    if (!isAndroid) return
-    setEnabled(false)
-    return () => {
-      setEnabled(true)
-    }
-  }, [setEnabled])
 
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isProcessing, setIsProcessing] = useState(false)
@@ -180,6 +172,7 @@ export const ComposePost = observer(function ComposePost({
   const insets = useSafeAreaInsets()
   const viewStyles = useMemo(
     () => ({
+      paddingTop: isAndroid ? insets.top : 0,
       paddingBottom:
         isAndroid || (isIOS && !isKeyboardVisible) ? insets.bottom : 0,
     }),
@@ -204,6 +197,26 @@ export const ComposePost = observer(function ComposePost({
   ])
 
   useImperativeHandle(cancelRef, () => ({onPressCancel}))
+
+  // On Android, pressing Back should ask confirmation.
+  useEffect(() => {
+    if (!isAndroid) {
+      return
+    }
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        if (closeAllDialogs() || closeAllModals()) {
+          return true
+        }
+        onPressCancel()
+        return true
+      },
+    )
+    return () => {
+      backHandler.remove()
+    }
+  }, [onPressCancel, closeAllDialogs, closeAllModals])
 
   // listen to escape key on desktop web
   const onEscape = useCallback(
@@ -292,6 +305,17 @@ export const ComposePost = observer(function ComposePost({
           langs: toPostLanguages(langPrefs.postLanguage),
         })
       ).uri
+      try {
+        await whenAppViewReady(agent, postUri, res => {
+          const thread = res.data.thread
+          return AppBskyFeedDefs.isThreadViewPost(thread)
+        })
+      } catch (waitErr: any) {
+        logger.error(waitErr, {
+          message: `Waiting for app view failed`,
+        })
+        // Keep going because the post *was* published.
+      }
     } catch (e: any) {
       logger.error(e, {
         message: `Composer: create post failed`,
@@ -305,7 +329,13 @@ export const ComposePost = observer(function ComposePost({
           localThumb: undefined,
         } as apilib.ExternalEmbedDraft)
       }
-      setError(cleanError(e.message))
+      let err = cleanError(e.message)
+      if (err.includes('not locate record')) {
+        err = _(
+          msg`We're sorry! The post you are replying to has been deleted.`,
+        )
+      }
+      setError(err)
       setIsProcessing(false)
       return
     } finally {
@@ -402,217 +432,178 @@ export const ComposePost = observer(function ComposePost({
     bottomBarAnimatedStyle,
   } = useAnimatedBorders()
 
-  // Backup focus on android, if the keyboard *still* refuses to show
-  useEffect(() => {
-    if (!isAndroid) return
-    if (!isModalReady) return
-
-    function tryFocus() {
-      if (!Keyboard.isVisible()) {
-        textInput.current?.blur()
-        textInput.current?.focus()
-      }
-    }
-
-    tryFocus()
-    // Retry with enough gap to avoid interrupting the previous attempt.
-    // Unfortunately we don't know which attempt will succeed.
-    const retryInterval = setInterval(tryFocus, 500)
-
-    function stopTrying() {
-      clearInterval(retryInterval)
-    }
-
-    // Deactivate this fallback as soon as anything happens.
-    const sub1 = Keyboard.addListener('keyboardDidShow', stopTrying)
-    const sub2 = Keyboard.addListener('keyboardDidHide', stopTrying)
-    return () => {
-      clearInterval(retryInterval)
-      sub1.remove()
-      sub2.remove()
-    }
-  }, [isModalReady])
+  const keyboardVerticalOffset = useKeyboardVerticalOffset()
 
   return (
-    <>
-      <KeyboardAvoidingView
-        testID="composePostView"
-        behavior="padding"
-        style={a.flex_1}
-        keyboardVerticalOffset={replyTo ? 115 : isAndroid ? 180 : 162}>
-        <View
-          style={[a.flex_1, viewStyles]}
-          aria-modal
-          accessibilityViewIsModal>
-          <Animated.View style={topBarAnimatedStyle}>
-            <View style={styles.topbarInner}>
-              <TouchableOpacity
-                testID="composerDiscardButton"
-                onPress={onPressCancel}
-                onAccessibilityEscape={onPressCancel}
-                accessibilityRole="button"
-                accessibilityLabel={_(msg`Cancel`)}
-                accessibilityHint={_(
-                  msg`Closes post composer and discards post draft`,
-                )}
-                hitSlop={HITSLOP_10}>
-                <Text style={[pal.link, s.f18]}>
-                  <Trans>Cancel</Trans>
-                </Text>
-              </TouchableOpacity>
-              <View style={a.flex_1} />
-              {isProcessing ? (
-                <>
-                  <Text style={pal.textLight}>{processingState}</Text>
-                  <View style={styles.postBtn}>
-                    <ActivityIndicator />
-                  </View>
-                </>
-              ) : (
-                <>
-                  <LabelsBtn
-                    labels={labels}
-                    onChange={setLabels}
-                    hasMedia={hasMedia}
-                  />
-                  {canPost ? (
-                    <TouchableOpacity
-                      testID="composerPublishBtn"
-                      onPress={onPressPublish}
-                      accessibilityRole="button"
-                      accessibilityLabel={
-                        replyTo ? _(msg`Publish reply`) : _(msg`Publish post`)
-                      }
-                      accessibilityHint="">
-                      <LinearGradient
-                        colors={[
-                          gradients.blueLight.start,
-                          gradients.blueLight.end,
-                        ]}
-                        start={{x: 0, y: 0}}
-                        end={{x: 1, y: 1}}
-                        style={styles.postBtn}>
-                        <Text style={[s.white, s.f16, s.bold]}>
-                          {replyTo ? (
-                            <Trans context="action">Reply</Trans>
-                          ) : (
-                            <Trans context="action">Post</Trans>
-                          )}
-                        </Text>
-                      </LinearGradient>
-                    </TouchableOpacity>
-                  ) : (
-                    <View style={[styles.postBtn, pal.btn]}>
-                      <Text style={[pal.textLight, s.f16, s.bold]}>
-                        <Trans context="action">Post</Trans>
+    <KeyboardAvoidingView
+      testID="composePostView"
+      behavior={isIOS ? 'padding' : 'height'}
+      keyboardVerticalOffset={keyboardVerticalOffset}
+      style={a.flex_1}>
+      <View style={[a.flex_1, viewStyles]} aria-modal accessibilityViewIsModal>
+        <Animated.View style={topBarAnimatedStyle}>
+          <View style={styles.topbarInner}>
+            <TouchableOpacity
+              testID="composerDiscardButton"
+              onPress={onPressCancel}
+              onAccessibilityEscape={onPressCancel}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Cancel`)}
+              accessibilityHint={_(
+                msg`Closes post composer and discards post draft`,
+              )}
+              hitSlop={HITSLOP_10}>
+              <Text style={[pal.link, s.f18]}>
+                <Trans>Cancel</Trans>
+              </Text>
+            </TouchableOpacity>
+            <View style={a.flex_1} />
+            {isProcessing ? (
+              <>
+                <Text style={pal.textLight}>{processingState}</Text>
+                <View style={styles.postBtn}>
+                  <ActivityIndicator />
+                </View>
+              </>
+            ) : (
+              <>
+                <LabelsBtn
+                  labels={labels}
+                  onChange={setLabels}
+                  hasMedia={hasMedia}
+                />
+                {canPost ? (
+                  <TouchableOpacity
+                    testID="composerPublishBtn"
+                    onPress={onPressPublish}
+                    accessibilityRole="button"
+                    accessibilityLabel={
+                      replyTo ? _(msg`Publish reply`) : _(msg`Publish post`)
+                    }
+                    accessibilityHint="">
+                    <LinearGradient
+                      colors={[
+                        gradients.blueLight.start,
+                        gradients.blueLight.end,
+                      ]}
+                      start={{x: 0, y: 0}}
+                      end={{x: 1, y: 1}}
+                      style={styles.postBtn}>
+                      <Text style={[s.white, s.f16, s.bold]}>
+                        {replyTo ? (
+                          <Trans context="action">Reply</Trans>
+                        ) : (
+                          <Trans context="action">Post</Trans>
+                        )}
                       </Text>
-                    </View>
-                  )}
-                </>
+                    </LinearGradient>
+                  </TouchableOpacity>
+                ) : (
+                  <View style={[styles.postBtn, pal.btn]}>
+                    <Text style={[pal.textLight, s.f16, s.bold]}>
+                      <Trans context="action">Post</Trans>
+                    </Text>
+                  </View>
+                )}
+              </>
+            )}
+          </View>
+
+          {isAltTextRequiredAndMissing && (
+            <View style={[styles.reminderLine, pal.viewLight]}>
+              <View style={styles.errorIcon}>
+                <FontAwesomeIcon
+                  icon="exclamation"
+                  style={{color: colors.red4}}
+                  size={10}
+                />
+              </View>
+              <Text style={[pal.text, a.flex_1]}>
+                <Trans>One or more images is missing alt text.</Trans>
+              </Text>
+            </View>
+          )}
+          {error !== '' && (
+            <View style={styles.errorLine}>
+              <View style={styles.errorIcon}>
+                <FontAwesomeIcon
+                  icon="exclamation"
+                  style={{color: colors.red4}}
+                  size={10}
+                />
+              </View>
+              <Text style={[s.red4, a.flex_1]}>{error}</Text>
+            </View>
+          )}
+        </Animated.View>
+        <Animated.ScrollView
+          onScroll={scrollHandler}
+          style={styles.scrollView}
+          keyboardShouldPersistTaps="always"
+          onContentSizeChange={onScrollViewContentSizeChange}
+          onLayout={onScrollViewLayout}>
+          {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
+
+          <View
+            style={[
+              styles.textInputLayout,
+              isNative && styles.textInputLayoutMobile,
+            ]}>
+            <UserAvatar
+              avatar={currentProfile?.avatar}
+              size={50}
+              type={currentProfile?.associated?.labeler ? 'labeler' : 'user'}
+            />
+            <TextInput
+              ref={textInput}
+              richtext={richtext}
+              placeholder={selectTextInputPlaceholder}
+              autoFocus
+              setRichText={setRichText}
+              onPhotoPasted={onPhotoPasted}
+              onPressPublish={onPressPublish}
+              onNewLink={onNewLink}
+              onError={setError}
+              accessible={true}
+              accessibilityLabel={_(msg`Write post`)}
+              accessibilityHint={_(
+                msg`Compose posts up to ${MAX_GRAPHEME_LENGTH} characters in length`,
+              )}
+            />
+          </View>
+
+          <Gallery gallery={gallery} />
+          {gallery.isEmpty && extLink && (
+            <View style={a.relative}>
+              <ExternalEmbed
+                link={extLink}
+                gif={extGif}
+                onRemove={() => {
+                  setExtLink(undefined)
+                  setExtGif(undefined)
+                }}
+              />
+              <GifAltText
+                link={extLink}
+                gif={extGif}
+                onSubmit={handleChangeGifAltText}
+              />
+            </View>
+          )}
+
+          {quote ? (
+            <View style={[s.mt5, s.mb2, isWeb && s.mb10]}>
+              <View style={{pointerEvents: 'none'}}>
+                <QuoteEmbed quote={quote} />
+              </View>
+              {quote.uri !== initQuote?.uri && (
+                <QuoteX onRemove={() => setQuote(undefined)} />
               )}
             </View>
+          ) : undefined}
+        </Animated.ScrollView>
+        <SuggestedLanguage text={richtext.text} />
 
-            {isAltTextRequiredAndMissing && (
-              <View style={[styles.reminderLine, pal.viewLight]}>
-                <View style={styles.errorIcon}>
-                  <FontAwesomeIcon
-                    icon="exclamation"
-                    style={{color: colors.red4}}
-                    size={10}
-                  />
-                </View>
-                <Text style={[pal.text, a.flex_1]}>
-                  <Trans>One or more images is missing alt text.</Trans>
-                </Text>
-              </View>
-            )}
-            {error !== '' && (
-              <View style={styles.errorLine}>
-                <View style={styles.errorIcon}>
-                  <FontAwesomeIcon
-                    icon="exclamation"
-                    style={{color: colors.red4}}
-                    size={10}
-                  />
-                </View>
-                <Text style={[s.red4, a.flex_1]}>{error}</Text>
-              </View>
-            )}
-          </Animated.View>
-          <Animated.ScrollView
-            onScroll={scrollHandler}
-            style={styles.scrollView}
-            keyboardShouldPersistTaps="always"
-            onContentSizeChange={onScrollViewContentSizeChange}
-            onLayout={onScrollViewLayout}>
-            {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
-
-            <View
-              style={[
-                styles.textInputLayout,
-                isNative && styles.textInputLayoutMobile,
-              ]}>
-              <UserAvatar
-                avatar={currentProfile?.avatar}
-                size={50}
-                type={currentProfile?.associated?.labeler ? 'labeler' : 'user'}
-              />
-              <TextInput
-                ref={textInput}
-                richtext={richtext}
-                placeholder={selectTextInputPlaceholder}
-                // fixes autofocus on android
-                key={
-                  isAndroid ? (isModalReady ? 'ready' : 'animating') : 'static'
-                }
-                autoFocus={isAndroid ? isModalReady : true}
-                setRichText={setRichText}
-                onPhotoPasted={onPhotoPasted}
-                onPressPublish={onPressPublish}
-                onNewLink={onNewLink}
-                onError={setError}
-                accessible={true}
-                accessibilityLabel={_(msg`Write post`)}
-                accessibilityHint={_(
-                  msg`Compose posts up to ${MAX_GRAPHEME_LENGTH} characters in length`,
-                )}
-              />
-            </View>
-
-            <Gallery gallery={gallery} />
-            {gallery.isEmpty && extLink && (
-              <View style={a.relative}>
-                <ExternalEmbed
-                  link={extLink}
-                  gif={extGif}
-                  onRemove={() => {
-                    setExtLink(undefined)
-                    setExtGif(undefined)
-                  }}
-                />
-                <GifAltText
-                  link={extLink}
-                  gif={extGif}
-                  onSubmit={handleChangeGifAltText}
-                />
-              </View>
-            )}
-            {quote ? (
-              <View style={[s.mt5, isWeb && s.mb10]}>
-                <View style={{pointerEvents: 'none'}}>
-                  <QuoteEmbed quote={quote} />
-                </View>
-                {quote.uri !== initQuote?.uri && (
-                  <QuoteX onRemove={() => setQuote(undefined)} />
-                )}
-              </View>
-            ) : undefined}
-          </Animated.ScrollView>
-          <SuggestedLanguage text={richtext.text} />
-        </View>
-      </KeyboardAvoidingView>
-      <KeyboardStickyView
-        offset={{closed: isIOS ? -insets.bottom : 0, opened: 0}}>
         {replyTo ? null : (
           <ThreadgateBtn
             threadgate={threadgate}
@@ -651,7 +642,7 @@ export const ComposePost = observer(function ComposePost({
           <SelectLangBtn />
           <CharProgress count={graphemeLength} />
         </View>
-      </KeyboardStickyView>
+      </View>
       <Prompt.Basic
         control={discardPromptControl}
         title={_(msg`Discard draft?`)}
@@ -660,7 +651,7 @@ export const ComposePost = observer(function ComposePost({
         confirmButtonCta={_(msg`Discard`)}
         confirmButtonColor="negative"
       />
-    </>
+    </KeyboardAvoidingView>
   )
 })
 
@@ -769,6 +760,36 @@ function useAnimatedBorders() {
   }
 }
 
+function useKeyboardVerticalOffset() {
+  const {top} = useSafeAreaInsets()
+
+  // Android etc
+  if (!isIOS) return 0
+
+  // iPhone SE
+  if (top === 20) return 40
+
+  // all other iPhones
+  return top + 10
+}
+
+async function whenAppViewReady(
+  agent: BskyAgent,
+  uri: string,
+  fn: (res: AppBskyFeedGetPostThread.Response) => boolean,
+) {
+  await until(
+    5, // 5 tries
+    1e3, // 1s delay between tries
+    fn,
+    () =>
+      agent.app.bsky.feed.getPostThread({
+        uri,
+        depth: 0,
+      }),
+  )
+}
+
 const styles = StyleSheet.create({
   topbarInner: {
     flexDirection: 'row',
@@ -785,11 +806,12 @@ const styles = StyleSheet.create({
   },
   errorLine: {
     flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: colors.red1,
     borderRadius: 6,
     marginHorizontal: 16,
-    paddingHorizontal: 8,
-    paddingVertical: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
     marginBottom: 8,
   },
   reminderLine: {

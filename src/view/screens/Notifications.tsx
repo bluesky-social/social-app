@@ -30,6 +30,7 @@ import {TextLink} from 'view/com/util/Link'
 import {ListMethods} from 'view/com/util/List'
 import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
 import {CenteredView} from 'view/com/util/Views'
+import {Loader} from '#/components/Loader'
 import {Feed} from '../com/notifications/Feed'
 import {FAB} from '../com/util/fab/FAB'
 import {MainScrollProvider} from '../com/util/MainScrollProvider'
@@ -43,6 +44,7 @@ export function NotificationsScreen({}: Props) {
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
   const [isScrolledDown, setIsScrolledDown] = React.useState(false)
+  const [isLoadingLatest, setIsLoadingLatest] = React.useState(false)
   const scrollElRef = React.useRef<ListMethods>(null)
   const {screen} = useAnalytics()
   const pal = usePalette('default')
@@ -68,9 +70,13 @@ export function NotificationsScreen({}: Props) {
       truncateAndInvalidate(queryClient, NOTIFS_RQKEY())
     } else {
       // check with the server
-      unreadApi.checkUnread({invalidate: true})
+      setIsLoadingLatest(true)
+      unreadApi
+        .checkUnread({invalidate: true})
+        .catch(() => undefined)
+        .then(() => setIsLoadingLatest(false))
     }
-  }, [scrollToTop, queryClient, unreadApi, hasNew])
+  }, [scrollToTop, queryClient, unreadApi, hasNew, setIsLoadingLatest])
 
   const onFocusCheckLatest = useNonReactiveCallback(() => {
     // on focus, check for latest, but only invalidate if the user
@@ -139,21 +145,31 @@ export function NotificationsScreen({}: Props) {
             }
             onPress={emitSoftReset}
           />
+          {isLoadingLatest ? <Loader size="md" /> : <></>}
         </View>
       )
     }
     return <></>
-  }, [isDesktop, pal, hasNew])
+  }, [isDesktop, pal, hasNew, isLoadingLatest])
+
+  const renderHeaderSpinner = React.useCallback(() => {
+    return (
+      <View style={{width: 30, height: 20, alignItems: 'flex-end'}}>
+        {isLoadingLatest ? <Loader width={20} /> : <></>}
+      </View>
+    )
+  }, [isLoadingLatest])
 
   return (
     <CenteredView
       testID="notificationsScreen"
-      style={s.hContentRegion}
+      style={[s.hContentRegion, {paddingTop: 2}]}
       sideBorders={true}>
       <ViewHeader
         title={_(msg`Notifications`)}
         canGoBack={false}
         showBorder={true}
+        renderButton={renderHeaderSpinner}
       />
       <MainScrollProvider>
         <Feed

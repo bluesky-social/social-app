@@ -35,10 +35,16 @@ func run(args []string) {
 			Flags: []cli.Flag{
 				&cli.StringFlag{
 					Name:  "appview-host",
-					Usage: "method, hostname, and port of PDS instance",
+					Usage: "scheme, hostname, and port of PDS instance",
 					Value: "http://localhost:2584",
 					// retain old PDS env var for easy transition
 					EnvVars: []string{"ATP_APPVIEW_HOST", "ATP_PDS_HOST"},
+				},
+				&cli.StringFlag{
+					Name:  "ogcard-host",
+					Usage: "scheme, hostname, and port of ogcard service",
+					Required: false,
+					EnvVars: []string{"OGCARD_HOST"},
 				},
 				&cli.StringFlag{
 					Name:     "http-address",
@@ -46,6 +52,13 @@ func run(args []string) {
 					Required: false,
 					Value:    ":8100",
 					EnvVars:  []string{"HTTP_ADDRESS"},
+				},
+				&cli.StringFlag{
+					Name:     "link-host",
+					Usage:    "scheme, hostname, and port of link service",
+					Required: false,
+					Value:    "",
+					EnvVars:  []string{"LINK_HOST"},
 				},
 				&cli.BoolFlag{
 					Name:     "debug",

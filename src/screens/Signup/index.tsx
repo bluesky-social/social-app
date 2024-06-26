@@ -1,6 +1,11 @@
 import React from 'react'
 import {View} from 'react-native'
-import {LayoutAnimationConfig} from 'react-native-reanimated'
+import Animated, {
+  FadeIn,
+  FadeOut,
+  LayoutAnimationConfig,
+} from 'react-native-reanimated'
+import {AppBskyGraphStarterpack} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -11,6 +16,8 @@ import {createFullHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {useServiceQuery} from '#/state/queries/service'
 import {useAgent} from '#/state/session'
+import {useStarterPackQuery} from 'state/queries/starter-packs'
+import {useActiveStarterPack} from 'state/shell/starter-pack'
 import {LoggedOutLayout} from '#/view/com/util/layouts/LoggedOutLayout'
 import {
   initialState,
@@ -26,6 +33,7 @@ import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
 import {Button, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
+import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
@@ -37,6 +45,11 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
   const submit = useSubmitSignup({state, dispatch})
   const {gtMobile} = useBreakpoints()
   const agent = useAgent()
+
+  const activeStarterPack = useActiveStarterPack()
+  const {data: starterPack} = useStarterPackQuery({
+    uri: activeStarterPack?.uri,
+  })
 
   const {
     data: serviceInfo,
@@ -142,6 +155,31 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
         description={_(msg`We're so excited to have you join us!`)}
         scrollable>
         <View testID="createAccount" style={a.flex_1}>
+          {state.activeStep === SignupStep.INFO &&
+          starterPack &&
+          AppBskyGraphStarterpack.isRecord(starterPack.record) ? (
+            <Animated.View entering={FadeIn} exiting={FadeOut}>
+              <LinearGradientBackground
+                style={[a.mx_lg, a.p_lg, a.gap_sm, a.rounded_sm]}>
+                <Text style={[a.font_bold, a.text_xl, {color: 'white'}]}>
+                  {starterPack.record.name}
+                </Text>
+                <Text style={[{color: 'white'}]}>
+                  {starterPack.feeds?.length ? (
+                    <Trans>
+                      You'll follow the suggested users and feeds once you
+                      finish creating your account!
+                    </Trans>
+                  ) : (
+                    <Trans>
+                      You'll follow the suggested users once you finish creating
+                      your account!
+                    </Trans>
+                  )}
+                </Text>
+              </LinearGradientBackground>
+            </Animated.View>
+          ) : null}
           <View
             style={[
               a.flex_1,
