@@ -445,31 +445,15 @@ function Footer({
         ))}
       </View>
 
-      {items.length === 0 /* Assuming this can only happen for feeds */ ? (
-        <View style={[a.gap_sm]}>
-          <Text style={[a.font_bold, a.text_center, textStyles]}>
-            <Trans>Add some feeds to your starter pack!</Trans>
-          </Text>
+      {
+        state.currentStep === 'Profiles' ? (
           <Text style={[a.text_center, textStyles]}>
-            <Trans>Search for feeds that you want to suggest to others.</Trans>
-          </Text>
-        </View>
-      ) : (
-        <Text style={[a.text_center, textStyles]}>
-          {
-            items.length === 1 && state.currentStep === 'Profiles' ? (
+            {items.length < 2 ? (
               <Trans>
                 It's just you right now! Add more people to your starter pack by
                 searching above.
               </Trans>
-            ) : items.length === 1 && state.currentStep === 'Feeds' ? (
-              <Trans>
-                <Text style={[a.font_bold, textStyles]}>
-                  {getName(items[initialNamesIndex])}
-                </Text>{' '}
-                is included in your starter pack
-              </Trans>
-            ) : items.length === 2 && state.currentStep === 'Profiles' ? (
+            ) : items.length === 2 ? (
               <Trans>
                 <Text style={[a.font_bold, textStyles]}>You</Text> and
                 <Text> </Text>
@@ -478,19 +462,7 @@ function Footer({
                 </Text>
                 are included in your starter pack
               </Trans>
-            ) : items.length === 2 && state.currentStep === 'Feeds' ? (
-              <Trans>
-                <Text style={[a.font_bold, textStyles]}>
-                  {getName(items[initialNamesIndex])}
-                </Text>{' '}
-                and
-                <Text> </Text>
-                <Text style={[a.font_bold, textStyles]}>
-                  {getName(items[initialNamesIndex + 1])}{' '}
-                </Text>
-                are included in your starter pack
-              </Trans>
-            ) : items.length > 2 && state.currentStep === 'Profiles' ? (
+            ) : (
               <Trans context="profiles">
                 <Text style={[a.font_bold, textStyles]}>
                   {getName(items[initialNamesIndex])},{' '}
@@ -506,26 +478,62 @@ function Footer({
                 />{' '}
                 are included in your starter pack
               </Trans>
-            ) : items.length > 2 && state.currentStep === 'Feeds' ? (
-              <Trans context="feeds">
-                <Text style={[a.font_bold, textStyles]}>
-                  {getName(items[initialNamesIndex])},{' '}
-                </Text>
-                <Text style={[a.font_bold, textStyles]}>
-                  {getName(items[initialNamesIndex + 1])},{' '}
-                </Text>
-                and{' '}
-                <Plural
-                  value={items.length - 2}
-                  one="# other"
-                  other="# others"
-                />{' '}
-                are included in your starter pack
-              </Trans>
-            ) : null /* Should not happen */
-          }
-        </Text>
-      )}
+            )}
+          </Text>
+        ) : state.currentStep === 'Feeds' ? (
+          items.length === 0 ? (
+            <View style={[a.gap_sm]}>
+              <Text style={[a.font_bold, a.text_center, textStyles]}>
+                <Trans>Add some feeds to your starter pack!</Trans>
+              </Text>
+              <Text style={[a.text_center, textStyles]}>
+                <Trans>
+                  Search for feeds that you want to suggest to others.
+                </Trans>
+              </Text>
+            </View>
+          ) : (
+            <Text style={[a.text_center, textStyles]}>
+              {items.length === 1 ? (
+                <Trans>
+                  <Text style={[a.font_bold, textStyles]}>
+                    {getName(items[initialNamesIndex])}
+                  </Text>{' '}
+                  is included in your starter pack
+                </Trans>
+              ) : items.length === 2 ? (
+                <Trans>
+                  <Text style={[a.font_bold, textStyles]}>
+                    {getName(items[initialNamesIndex])}
+                  </Text>{' '}
+                  and
+                  <Text> </Text>
+                  <Text style={[a.font_bold, textStyles]}>
+                    {getName(items[initialNamesIndex + 1])}{' '}
+                  </Text>
+                  are included in your starter pack
+                </Trans>
+              ) : (
+                <Trans context="feeds">
+                  <Text style={[a.font_bold, textStyles]}>
+                    {getName(items[initialNamesIndex])},{' '}
+                  </Text>
+                  <Text style={[a.font_bold, textStyles]}>
+                    {getName(items[initialNamesIndex + 1])},{' '}
+                  </Text>
+                  and{' '}
+                  <Plural
+                    value={items.length - 2}
+                    one="# other"
+                    other="# others"
+                  />{' '}
+                  are included in your starter pack
+                </Trans>
+              )}
+            </Text>
+          )
+        ) : null /* Should not happen. */
+      }
 
       <View
         style={[
