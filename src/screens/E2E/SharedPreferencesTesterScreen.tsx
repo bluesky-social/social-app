@@ -48,21 +48,6 @@ export function SharedPreferencesTesterScreen() {
           </Button>
           <Button
             label="btn"
-            testID="setNumberBtn"
-            style={[a.self_center]}
-            variant="solid"
-            color="primary"
-            size="xsmall"
-            onPress={async () => {
-              await SharedPrefs.removeValueAsync('testerNumber')
-              await SharedPrefs.setValueAsync('testerNumber', 123)
-              const res = await SharedPrefs.getNumberAsync('testerNumber')
-              setCurrentTestOutput(`${res}`)
-            }}>
-            <ButtonText>Set Number</ButtonText>
-          </Button>
-          <Button
-            label="btn"
             testID="setBoolBtn"
             style={[a.self_center]}
             variant="solid"
@@ -75,6 +60,21 @@ export function SharedPreferencesTesterScreen() {
               setCurrentTestOutput(`${res}`)
             }}>
             <ButtonText>Set Bool</ButtonText>
+          </Button>
+          <Button
+            label="btn"
+            testID="setNumberBtn"
+            style={[a.self_center]}
+            variant="solid"
+            color="primary"
+            size="xsmall"
+            onPress={async () => {
+              await SharedPrefs.removeValueAsync('testerNumber')
+              await SharedPrefs.setValueAsync('testerNumber', 123)
+              const res = await SharedPrefs.getNumberAsync('testerNumber')
+              setCurrentTestOutput(`${res}`)
+            }}>
+            <ButtonText>Set Number</ButtonText>
           </Button>
           <Button
             label="btn"

@@ -18,11 +18,11 @@ appId: xyz.blueskyweb.app
     id: "removeStringBtn"
 - assertVisible: "null"
 - tapOn:
-    id: "setNumberBtn"
-- assertVisible: "123"
-- tapOn:
     id: "setBoolBtn"
 - assertVisible: "true"
+- tapOn:
+    id: "setNumberBtn"
+- assertVisible: "123"
 - tapOn:
     id: "addToSetBtn"
 - assertVisible: "true"
