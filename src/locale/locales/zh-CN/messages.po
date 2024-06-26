@@ -353,7 +353,7 @@ msgstr "添加默认的资讯源（仅显示你关注的人）"
 msgid "Add the following DNS record to your domain:"
 msgstr "将以下 DNS 记录新增到你的域名:"
 
-#: src/components/FeedCard.tsx:301
+#: src/components/FeedCard.tsx:305
 msgid "Add this feed to your feeds"
 msgstr "添加此资讯源到你的自定义资讯源列表"
 
@@ -580,7 +580,7 @@ msgstr "你确定要离开这个对话吗？此操作仅会在你的私信列表
 msgid "Are you sure you want to remove {0} from your feeds?"
 msgstr "你确定要从你的资讯源中删除 {0} 吗？"
 
-#: src/components/FeedCard.tsx:318
+#: src/components/FeedCard.tsx:322
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "你确定要从自定义资讯源列表中删除此资讯源吗？"
 
@@ -956,6 +956,7 @@ msgid "Choose this color as your avatar"
 msgstr "选择这个颜色作为你的头像"
 
 #: src/components/dialogs/ThreadgateEditor.tsx:91
+#: src/components/dialogs/ThreadgateEditor.tsx:95
 msgid "Choose who can reply"
 msgstr "选择谁可以回复"
 
@@ -964,8 +965,8 @@ msgid "Choose your password"
 msgstr "选择你的密码"
 
 #: src/components/dialogs/ThreadgateEditor.tsx:95
-msgid "Chose who can reply"
-msgstr "选择谁可以回复"
+#~ msgid "Chose who can reply"
+#~ msgstr "选择谁可以回复"
 
 #: src/view/screens/Settings/index.tsx:910
 msgid "Clear all legacy storage data"
@@ -2138,7 +2139,7 @@ msgstr "无法提交申诉，请再试一次。"
 msgid "Failed to toggle thread mute, please try again"
 msgstr "无法隐藏讨论串，请再试一次"
 
-#: src/components/FeedCard.tsx:281
+#: src/components/FeedCard.tsx:285
 msgid "Failed to update feeds"
 msgstr "无法更新资讯源"
 
@@ -2168,7 +2169,7 @@ msgstr "反馈"
 #: src/Navigation.tsx:320
 #: src/view/screens/Feeds.tsx:445
 #: src/view/screens/Feeds.tsx:550
-#: src/view/screens/Profile.tsx:220
+#: src/view/screens/Profile.tsx:213
 #: src/view/screens/Search/Search.tsx:375
 #: src/view/shell/desktop/LeftNav.tsx:373
 #: src/view/shell/Drawer.tsx:493
@@ -2180,7 +2181,7 @@ msgstr "资讯源"
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
 msgstr "创建资讯源仅需你掌握一点编程基础。<0/>以获取详情。"
 
-#: src/components/FeedCard.tsx:278
+#: src/components/FeedCard.tsx:282
 msgid "Feeds updated!"
 msgstr "资讯源已更新！"
 
@@ -2808,7 +2809,7 @@ msgstr "由 {0} 标记。"
 msgid "Labeled by the author."
 msgstr "由作者标记。"
 
-#: src/view/screens/Profile.tsx:214
+#: src/view/screens/Profile.tsx:207
 msgid "Labels"
 msgstr "标记"
 
@@ -2943,7 +2944,7 @@ msgstr "喜欢了你的自定义资讯源"
 msgid "liked your post"
 msgstr "喜欢了你的帖文"
 
-#: src/view/screens/Profile.tsx:219
+#: src/view/screens/Profile.tsx:212
 msgid "Likes"
 msgstr "喜欢"
 
@@ -2989,8 +2990,8 @@ msgid "List unmuted"
 msgstr "解除对列表的隐藏"
 
 #: src/Navigation.tsx:122
+#: src/view/screens/Profile.tsx:208
 #: src/view/screens/Profile.tsx:215
-#: src/view/screens/Profile.tsx:222
 #: src/view/shell/desktop/LeftNav.tsx:379
 #: src/view/shell/Drawer.tsx:509
 #: src/view/shell/Drawer.tsx:510
@@ -3090,7 +3091,7 @@ msgid "Mark as read"
 msgstr "标记为已读"
 
 #: src/view/screens/AccessibilitySettings.tsx:102
-#: src/view/screens/Profile.tsx:218
+#: src/view/screens/Profile.tsx:211
 msgid "Media"
 msgstr "媒体"
 
@@ -3410,7 +3411,7 @@ msgstr "新帖文"
 
 #: src/view/screens/Feeds.tsx:580
 #: src/view/screens/Notifications.tsx:193
-#: src/view/screens/Profile.tsx:485
+#: src/view/screens/Profile.tsx:478
 #: src/view/screens/ProfileFeed.tsx:428
 #: src/view/screens/ProfileList.tsx:201
 #: src/view/screens/ProfileList.tsx:229
@@ -3573,7 +3574,7 @@ msgid "Non-sexual Nudity"
 msgstr "非性暗示裸露"
 
 #: src/Navigation.tsx:117
-#: src/view/screens/Profile.tsx:111
+#: src/view/screens/Profile.tsx:108
 msgid "Not Found"
 msgstr "未找到"
 
@@ -3692,7 +3693,7 @@ msgstr "糟糕，发生了一些错误！"
 #: src/components/StarterPack/ProfileStarterPacks.tsx:302
 #: src/components/StarterPack/ProfileStarterPacks.tsx:311
 #: src/view/screens/AppPasswords.tsx:69
-#: src/view/screens/Profile.tsx:111
+#: src/view/screens/Profile.tsx:108
 msgid "Oops!"
 msgstr "Oops！"
 
@@ -4143,7 +4144,7 @@ msgstr "无法找到帖文"
 msgid "posts"
 msgstr "帖文"
 
-#: src/view/screens/Profile.tsx:216
+#: src/view/screens/Profile.tsx:209
 msgid "Posts"
 msgstr "帖文"
 
@@ -4212,7 +4213,7 @@ msgid "Processing..."
 msgstr "处理中..."
 
 #: src/view/screens/DebugMod.tsx:894
-#: src/view/screens/Profile.tsx:353
+#: src/view/screens/Profile.tsx:346
 msgid "profile"
 msgstr "个人资料"
 
@@ -4300,7 +4301,7 @@ msgid "Reload conversations"
 msgstr "重新加载对话"
 
 #: src/components/dialogs/MutedWords.tsx:286
-#: src/components/FeedCard.tsx:321
+#: src/components/FeedCard.tsx:325
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:95
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:102
 #: src/view/com/feeds/FeedSourceCard.tsx:317
@@ -4349,7 +4350,7 @@ msgstr "删除资讯源？"
 msgid "Remove from my feeds"
 msgstr "从自定义资讯源中删除"
 
-#: src/components/FeedCard.tsx:316
+#: src/components/FeedCard.tsx:320
 #: src/view/com/feeds/FeedSourceCard.tsx:312
 msgid "Remove from my feeds?"
 msgstr "从自定义资讯源中删除？"
@@ -4415,7 +4416,7 @@ msgstr "删除引用的帖文"
 msgid "Replace with Discover"
 msgstr "替换为\"Discover\""
 
-#: src/view/screens/Profile.tsx:217
+#: src/view/screens/Profile.tsx:210
 msgid "Replies"
 msgstr "回复"
 
@@ -5399,7 +5400,7 @@ msgstr "由 {0} 创建的入门包"
 msgid "Starter pack is invalid"
 msgstr "入门包无效"
 
-#: src/view/screens/Profile.tsx:221
+#: src/view/screens/Profile.tsx:214
 msgid "Starter Packs"
 msgstr "入门包"
 
