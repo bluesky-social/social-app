@@ -2,6 +2,7 @@ package expo.modules.backgroundnotificationhandler
 
 import android.content.Context
 import com.google.firebase.messaging.RemoteMessage
+import expo.modules.blueskyswissarmy.sharedprefs.Preferences
 
 enum class NotificationType(val type: String) {
   Like("like"),
@@ -36,7 +37,7 @@ class BackgroundNotificationHandler(
   }
 
   private fun mutateWithChatMessage(remoteMessage: RemoteMessage) {
-    if (NotificationPrefs(context).getBoolean("playSoundChat")) {
+    if (Preferences(context).getBoolean("playSoundChat") == true) {
       // If oreo or higher
       if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
         remoteMessage.data["channelId"] = "chat-messages"

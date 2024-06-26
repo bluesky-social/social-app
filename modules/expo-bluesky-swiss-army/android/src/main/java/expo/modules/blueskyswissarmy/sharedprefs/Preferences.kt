@@ -121,6 +121,19 @@ class Preferences(private val context: Context) {
     return safeInstance.getFloat(key, 0.0f)
   }
 
+  fun _setAnyValue(key: String, value: Any) {
+    val safeInstance = getInstance(context)
+    safeInstance.edit().apply {
+      when (value) {
+        is String -> putString(key, value)
+        is Float -> putFloat(key, value)
+        is Boolean -> putBoolean(key, value)
+        is Set<*> -> putStringSet(key, value.map { it.toString() }.toSet())
+        else -> throw Error("Unsupported type: ${value::class.java}")
+      }
+    }.apply()
+  }
+
   fun getBoolean(key: String): Boolean? {
     val safeInstance = getInstance(context)
     if (!safeInstance.contains(key)) {
@@ -158,5 +171,23 @@ class Preferences(private val context: Context) {
     val safeInstance = getInstance(context)
     val set = safeInstance.getStringSet(key, setOf()) ?: setOf()
     return set.contains(value)
+  }
+
+  fun hasValue(key: String): Boolean {
+    val safeInstance = getInstance(context)
+    return safeInstance.contains(key)
+  }
+
+  fun getValues(keys: Set<String>): Map<String, Any?> {
+    val safeInstance = getInstance(context)
+    return keys.associateWith { key ->
+      when (val value = safeInstance.all[key]) {
+        is String -> value
+        is Float -> value
+        is Boolean -> value
+        is Set<*> -> value
+        else -> null
+      }
+    }
   }
 }

@@ -1,7 +1,19 @@
 package expo.modules.backgroundnotificationhandler
 
+import expo.modules.blueskyswissarmy.sharedprefs.Preferences
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
+
+val DEFAULTS = mapOf<String, Any>(
+  "playSoundChat" to true,
+  "playSoundFollow" to false,
+  "playSoundLike" to false,
+  "playSoundMention" to false,
+  "playSoundQuote" to false,
+  "playSoundReply" to false,
+  "playSoundRepost" to false,
+  "mutedThreads" to mapOf<String, List<String>>()
+)
 
 class ExpoBackgroundNotificationHandlerModule : Module() {
   companion object {
@@ -12,7 +24,17 @@ class ExpoBackgroundNotificationHandlerModule : Module() {
     Name("ExpoBackgroundNotificationHandler")
 
     OnCreate {
-      NotificationPrefs(appContext.reactContext).initialize()
+      val context = appContext.reactContext ?: throw Error("Context is null")
+      DEFAULTS.forEach { (key, value) ->
+        if (Preferences(context).hasValue(key)) {
+          return@forEach
+        }
+
+        Preferences(context)._(key, value)
+
+        when (value) {
+        }
+      }
     }
 
     OnActivityEntersForeground {
@@ -21,50 +43,6 @@ class ExpoBackgroundNotificationHandlerModule : Module() {
 
     OnActivityEntersBackground {
       isForegrounded = false
-    }
-
-    AsyncFunction("getAllPrefsAsync") {
-      return@AsyncFunction NotificationPrefs(appContext.reactContext).getAllPrefs()
-    }
-
-    AsyncFunction("getBoolAsync") { forKey: String ->
-      return@AsyncFunction NotificationPrefs(appContext.reactContext).getBoolean(forKey)
-    }
-
-    AsyncFunction("getStringAsync") { forKey: String ->
-      return@AsyncFunction NotificationPrefs(appContext.reactContext).getString(forKey)
-    }
-
-    AsyncFunction("getStringArrayAsync") { forKey: String ->
-      return@AsyncFunction NotificationPrefs(appContext.reactContext).getStringArray(forKey)
-    }
-
-    AsyncFunction("setBoolAsync") { forKey: String, value: Boolean ->
-      NotificationPrefs(appContext.reactContext).setBoolean(forKey, value)
-    }
-
-    AsyncFunction("setStringAsync") { forKey: String, value: String ->
-      NotificationPrefs(appContext.reactContext).setString(forKey, value)
-    }
-
-    AsyncFunction("setStringArrayAsync") { forKey: String, value: Array<String> ->
-      NotificationPrefs(appContext.reactContext).setStringArray(forKey, value)
-    }
-
-    AsyncFunction("addToStringArrayAsync") { forKey: String, string: String ->
-      NotificationPrefs(appContext.reactContext).addToStringArray(forKey, string)
-    }
-
-    AsyncFunction("removeFromStringArrayAsync") { forKey: String, string: String ->
-      NotificationPrefs(appContext.reactContext).removeFromStringArray(forKey, string)
-    }
-
-    AsyncFunction("addManyToStringArrayAsync") { forKey: String, strings: Array<String> ->
-      NotificationPrefs(appContext.reactContext).addManyToStringArray(forKey, strings)
-    }
-
-    AsyncFunction("removeManyFromStringArrayAsync") { forKey: String, strings: Array<String> ->
-      NotificationPrefs(appContext.reactContext).removeManyFromStringArray(forKey, strings)
     }
 
     AsyncFunction("setBadgeCountAsync") { _: String, _: Int ->
