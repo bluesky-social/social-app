@@ -1,4 +1,5 @@
 import React from 'react'
+import {t} from '@lingui/macro'
 
 import {logger} from '#/logger'
 import {AvatarColor, Emoji} from '#/screens/Onboarding/StepProfile/types'
@@ -71,28 +72,28 @@ export type ApiResponseMap = {
 export const INTEREST_TO_DISPLAY_NAME_DEFAULTS: {
   [key: string]: string
 } = {
-  news: 'News',
-  journalism: 'Journalism',
-  nature: 'Nature',
-  art: 'Art',
-  comics: 'Comics',
-  writers: 'Writers',
-  culture: 'Culture',
-  sports: 'Sports',
-  pets: 'Pets',
-  animals: 'Animals',
-  books: 'Books',
-  education: 'Education',
-  climate: 'Climate',
-  science: 'Science',
-  politics: 'Politics',
-  fitness: 'Fitness',
-  tech: 'Tech',
-  dev: 'Software Dev',
-  comedy: 'Comedy',
-  gaming: 'Video Games',
-  food: 'Food',
-  cooking: 'Cooking',
+  animals: t`Animals`,
+  art: t`Art`,
+  books: t`Books`,
+  comedy: t`Comedy`,
+  comics: t`Comics`,
+  culture: t`Culture`,
+  dev: t`Software Dev`,
+  education: t`Education`,
+  food: t`Food`,
+  gaming: t`Video Games`,
+  journalism: t`Journalism`,
+  movies: t`Movies`,
+  nature: t`Nature`,
+  news: t`News`,
+  pets: t`Pets`,
+  photography: t`Photography`,
+  politics: t`Politics`,
+  science: t`Science`,
+  sports: t`Sports`,
+  tech: t`Tech`,
+  tv: t`TV`,
+  writers: t`Writers`,
 }
 
 export const initialState: OnboardingState = {
