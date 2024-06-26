@@ -2,6 +2,7 @@ import UserNotifications
 import UIKit
 
 let APP_GROUP = "group.app.bsky"
+let INCREMENTED_FOR_KEY = "incremented-for-convos"
 
 enum NotificationType: String {
   case Like = "like"
@@ -37,17 +38,18 @@ class NotificationService: UNNotificationServiceExtension {
     }
 
     switch reason {
-    case NotificationType.Like, NotificationType.Repost, NotificationType.Follow, NotificationType.Reply, NotificationType.Quote:
-      mutateWithBadge(bestAttempt, badgeType: BadgeType.Generic, operation: BadgeOperation.Increment)
+    case .Like, .Repost, .Follow, .Reply, .Quote:
+      mutateWithBadge(bestAttempt, badgeType: .Generic, operation: .Increment)
 
-    case NotificationType.ChatMessage:
+    case .ChatMessage:
       mutateWithChatMessage(bestAttempt)
+      mutateWithBadge(bestAttempt, badgeType: .Messages, operation: .Increment)
 
-    case NotificationType.MarkReadGeneric:
-      mutateWithBadge(bestAttempt, badgeType: BadgeType.Generic, operation: BadgeOperation.Decrement)
+    case .MarkReadGeneric:
+      mutateWithBadge(bestAttempt, badgeType: .Generic, operation: .Decrement)
 
-    case NotificationType.MarkReadMessages:
-      mutateWithBadge(bestAttempt, badgeType: BadgeType.Messages, operation: BadgeOperation.Decrement)
+    case .MarkReadMessages:
+      mutateWithBadge(bestAttempt, badgeType: .Messages, operation: .Decrement)
     }
 
     contentHandler(bestAttempt)
@@ -73,8 +75,8 @@ class NotificationService: UNNotificationServiceExtension {
     var genericCount = prefs?.integer(forKey: BadgeType.Generic.rawValue) ?? 0
     var messagesCount = prefs?.integer(forKey: BadgeType.Messages.rawValue) ?? 0
 
-    if type == BadgeType.Generic {
-      if operation == BadgeOperation.Decrement {
+    if type == .Generic {
+      if operation == .Decrement {
         if let decrementBy = content.userInfo["decrementBy"] as? Int {
           genericCount = getDecrementedBadgeCount(current: genericCount, decrementBy: decrementBy)
         } else {
@@ -84,15 +86,15 @@ class NotificationService: UNNotificationServiceExtension {
         genericCount += 1
       }
       prefs?.setValue(genericCount, forKey: BadgeType.Generic.rawValue)
-    } else if type == BadgeType.Messages {
-      if operation == BadgeOperation.Decrement {
-        if let decrementBy = content.userInfo["decrementBy"] as? Int {
-          messagesCount = getDecrementedBadgeCount(current: messagesCount, decrementBy: decrementBy)
-        } else {
+    } else if type == .Messages {
+      if operation == .Decrement {
+        if let convoId = content.userInfo["convoId"] as? String, shouldDecrementForConvo(content) {
           messagesCount = getDecrementedBadgeCount(current: messagesCount, decrementBy: 1)
+        } else if let decrementBy = content.userInfo["decrementBy"] as? Int {
+          messagesCount = getDecrementedBadgeCount(current: messagesCount, decrementBy: decrementBy)
         }
-      } else {
-        genericCount += 1
+      } else if shouldIncrementForConvo(content) {
+        messagesCount += 1
       }
       prefs?.setValue(messagesCount, forKey: BadgeType.Generic.rawValue)
     }
@@ -112,5 +114,37 @@ class NotificationService: UNNotificationServiceExtension {
 
   func mutateWithDmSound(_ content: UNMutableNotificationContent) {
     content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "dm.aiff"))
+  }
+
+  func shouldIncrementForConvo(_ content: UNMutableNotificationContent) -> Bool {
+    guard let convoId = content.userInfo["convoId"] as? String,
+          var dict = self.prefs?.dictionary(forKey: INCREMENTED_FOR_KEY) as? [String: Bool]
+    else {
+      return false
+    }
+
+    if dict["convoId"] == true {
+      return false
+    }
+
+    dict[convoId] = true
+    self.prefs?.set(dict, forKey: INCREMENTED_FOR_KEY)
+    return true
+  }
+
+  func shouldDecrementForConvo(_ content: UNMutableNotificationContent) -> Bool {
+    guard let convoId = content.userInfo["convoId"] as? String,
+          var dict = self.prefs?.dictionary(forKey: INCREMENTED_FOR_KEY) as? [String: Bool]
+    else {
+      return false
+    }
+
+    if dict["convoId"] != true {
+      return false
+    }
+
+    dict.removeValue(forKey: convoId)
+    self.prefs?.set(dict, forKey: INCREMENTED_FOR_KEY)
+    return true
   }
 }
