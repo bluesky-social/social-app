@@ -447,37 +447,39 @@ function Footer({
       {
         state.currentStep === 'Profiles' ? (
           <Text style={[a.text_center, textStyles]}>
-            {items.length < 2 ? (
-              <Trans>
-                It's just you right now! Add more people to your starter pack by
-                searching above.
-              </Trans>
-            ) : items.length === 2 ? (
-              <Trans>
-                <Text style={[a.font_bold, textStyles]}>You</Text> and
-                <Text> </Text>
-                <Text style={[a.font_bold, textStyles]}>
-                  {getName(items[1] /* [0] is self, skip it */)}{' '}
-                </Text>
-                are included in your starter pack
-              </Trans>
-            ) : (
-              <Trans context="profiles">
-                <Text style={[a.font_bold, textStyles]}>
-                  {getName(items[1] /* [0] is self, skip it */)},{' '}
-                </Text>
-                <Text style={[a.font_bold, textStyles]}>
-                  {getName(items[2])},{' '}
-                </Text>
-                and{' '}
-                <Plural
-                  value={items.length - 2}
-                  one="# other"
-                  other="# others"
-                />{' '}
-                are included in your starter pack
-              </Trans>
-            )}
+            {
+              items.length < 2 ? (
+                <Trans>
+                  It's just you right now! Add more people to your starter pack
+                  by searching above.
+                </Trans>
+              ) : items.length === 2 ? (
+                <Trans>
+                  <Text style={[a.font_bold, textStyles]}>You</Text> and
+                  <Text> </Text>
+                  <Text style={[a.font_bold, textStyles]}>
+                    {getName(items[1] /* [0] is self, skip it */)}{' '}
+                  </Text>
+                  are included in your starter pack
+                </Trans>
+              ) : items.length > 2 ? (
+                <Trans context="profiles">
+                  <Text style={[a.font_bold, textStyles]}>
+                    {getName(items[1] /* [0] is self, skip it */)},{' '}
+                  </Text>
+                  <Text style={[a.font_bold, textStyles]}>
+                    {getName(items[2])},{' '}
+                  </Text>
+                  and{' '}
+                  <Plural
+                    value={items.length - 2}
+                    one="# other"
+                    other="# others"
+                  />{' '}
+                  are included in your starter pack
+                </Trans>
+              ) : null /* Should not happen. */
+            }
           </Text>
         ) : state.currentStep === 'Feeds' ? (
           items.length === 0 ? (
@@ -493,42 +495,44 @@ function Footer({
             </View>
           ) : (
             <Text style={[a.text_center, textStyles]}>
-              {items.length === 1 ? (
-                <Trans>
-                  <Text style={[a.font_bold, textStyles]}>
-                    {getName(items[0])}
-                  </Text>{' '}
-                  is included in your starter pack
-                </Trans>
-              ) : items.length === 2 ? (
-                <Trans>
-                  <Text style={[a.font_bold, textStyles]}>
-                    {getName(items[0])}
-                  </Text>{' '}
-                  and
-                  <Text> </Text>
-                  <Text style={[a.font_bold, textStyles]}>
-                    {getName(items[1])}{' '}
-                  </Text>
-                  are included in your starter pack
-                </Trans>
-              ) : (
-                <Trans context="feeds">
-                  <Text style={[a.font_bold, textStyles]}>
-                    {getName(items[0])},{' '}
-                  </Text>
-                  <Text style={[a.font_bold, textStyles]}>
-                    {getName(items[1])},{' '}
-                  </Text>
-                  and{' '}
-                  <Plural
-                    value={items.length - 2}
-                    one="# other"
-                    other="# others"
-                  />{' '}
-                  are included in your starter pack
-                </Trans>
-              )}
+              {
+                items.length === 1 ? (
+                  <Trans>
+                    <Text style={[a.font_bold, textStyles]}>
+                      {getName(items[0])}
+                    </Text>{' '}
+                    is included in your starter pack
+                  </Trans>
+                ) : items.length === 2 ? (
+                  <Trans>
+                    <Text style={[a.font_bold, textStyles]}>
+                      {getName(items[0])}
+                    </Text>{' '}
+                    and
+                    <Text> </Text>
+                    <Text style={[a.font_bold, textStyles]}>
+                      {getName(items[1])}{' '}
+                    </Text>
+                    are included in your starter pack
+                  </Trans>
+                ) : items.length > 2 ? (
+                  <Trans context="feeds">
+                    <Text style={[a.font_bold, textStyles]}>
+                      {getName(items[0])},{' '}
+                    </Text>
+                    <Text style={[a.font_bold, textStyles]}>
+                      {getName(items[1])},{' '}
+                    </Text>
+                    and{' '}
+                    <Plural
+                      value={items.length - 2}
+                      one="# other"
+                      other="# others"
+                    />{' '}
+                    are included in your starter pack
+                  </Trans>
+                ) : null /* Should not happen. */
+              }
             </Text>
           )
         ) : null /* Should not happen. */
