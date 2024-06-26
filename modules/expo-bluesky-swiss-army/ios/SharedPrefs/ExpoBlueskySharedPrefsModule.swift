@@ -16,67 +16,45 @@ public class ExpoBlueskySharedPrefsModule: Module {
     Name("ExpoBlueskySharedPrefs")
     
     AsyncFunction("setValueAsync") { (key: String, value: JavaScriptValue, promise: Promise) in
-      guard value.isString() || value.isNumber() || value.isBool() || value.isNull() || value.isUndefined() else {
-        promise.reject("UNSUPPORTED_TYPE_ERROR", "Attempted to set an unsupported type")
-        return false
-      }
-      
-      guard let defaults = self.getDefaults() else {
-        promise.reject("PREFS_ERROR", "Was unable to get shared preferences")
-        return false
-      }
-      
-      if value.isNumber() {
-        defaults.set(value.getDouble(), forKey: key)
+      if value.isString() {
+        SharedPrefs.shared.setValue(key, value.getString())
+      } else if value.isNumber() {
+        SharedPrefs.shared.setValue(key, value.getDouble())
+      } else if value.isBool() {
+        SharedPrefs.shared.setValue(key, value.getBool())
+      } else if value.isNull() || value.isUndefined() {
+        SharedPrefs.shared.removeValue(key)
       } else {
-        defaults.set(value.getRaw(), forKey: key)
+        promise.reject("UNSUPPORTED_TYPE_ERROR", "Attempted to set an unsupported type")
       }
-      promise.resolve()
-      return true
     }
     
     AsyncFunction("removeValueAsync") { (key: String) in
-      self.getDefaults(key)?.removeObject(forKey: key)
+      SharedPrefs.shared.removeValue(key)
     }
 
     AsyncFunction("getStringAsync") { (key: String) in
-      return self.getDefaults(key)?.string(forKey: key)
+      return SharedPrefs.shared.getString(key)
     }
     
     AsyncFunction("getBoolAsync") { (key: String) in
-      return self.getDefaults(key)?.bool(forKey: key)
+      return SharedPrefs.shared.getBool(key)
     }
     
     AsyncFunction("getNumberAsync") { (key: String) in
-      return self.getDefaults(key)?.double(forKey: key)
+      return SharedPrefs.shared.getNumber(key)
     }
     
-    AsyncFunction("addToSetAsync") { (key: String, value: String) in      
-      var dict: [String:Bool]?
-      if var currDict = self.getDefaults(key)?.dictionary(forKey: key) as? [String:Bool] {
-        currDict[value] = true
-        dict = currDict
-      } else {
-        dict = [
-          value : true
-        ]
-      }
-      self.getDefaults(key)?.setValue(dict, forKey: key)
+    AsyncFunction("addToSetAsync") { (key: String, value: String) in
+      SharedPrefs.shared.addToSet(key, value)
     }
     
     AsyncFunction("removeFromSetAsync") { (key: String, value: String) in
-      guard var dict = self.getDefaults(key)?.dictionary(forKey: key) as? [String:Bool] else {
-        return
-      }
-      dict.removeValue(forKey: value)
-      self.getDefaults(key)?.setValue(dict, forKey: key)
+      SharedPrefs.shared.removeFromSet(key, value)
     }
     
     AsyncFunction("setContainsAsync") { (key: String, value: String) in
-      guard let dict = self.getDefaults(key)?.dictionary(forKey: key) as? [String:Bool] else {
-        return false
-      }
-      return dict[value] == true
+      return SharedPrefs.shared.setContains(key, value)
     }
   }
 }
