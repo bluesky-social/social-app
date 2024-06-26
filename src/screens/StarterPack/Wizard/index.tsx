@@ -393,7 +393,6 @@ function Footer({
     state.currentStep === 'Profiles'
       ? [profile, ...state.profiles]
       : state.feeds
-  const initialNamesIndex = state.currentStep === 'Profiles' ? 1 : 0
 
   const isEditEnabled =
     (state.currentStep === 'Profiles' && items.length > 1) ||
@@ -458,17 +457,17 @@ function Footer({
                 <Text style={[a.font_bold, textStyles]}>You</Text> and
                 <Text> </Text>
                 <Text style={[a.font_bold, textStyles]}>
-                  {getName(items[initialNamesIndex])}{' '}
+                  {getName(items[1] /* [0] is self, skip it */)}{' '}
                 </Text>
                 are included in your starter pack
               </Trans>
             ) : (
               <Trans context="profiles">
                 <Text style={[a.font_bold, textStyles]}>
-                  {getName(items[initialNamesIndex])},{' '}
+                  {getName(items[1] /* [0] is self, skip it */)},{' '}
                 </Text>
                 <Text style={[a.font_bold, textStyles]}>
-                  {getName(items[initialNamesIndex + 1])},{' '}
+                  {getName(items[2])},{' '}
                 </Text>
                 and{' '}
                 <Plural
@@ -497,29 +496,29 @@ function Footer({
               {items.length === 1 ? (
                 <Trans>
                   <Text style={[a.font_bold, textStyles]}>
-                    {getName(items[initialNamesIndex])}
+                    {getName(items[0])}
                   </Text>{' '}
                   is included in your starter pack
                 </Trans>
               ) : items.length === 2 ? (
                 <Trans>
                   <Text style={[a.font_bold, textStyles]}>
-                    {getName(items[initialNamesIndex])}
+                    {getName(items[0])}
                   </Text>{' '}
                   and
                   <Text> </Text>
                   <Text style={[a.font_bold, textStyles]}>
-                    {getName(items[initialNamesIndex + 1])}{' '}
+                    {getName(items[1])}{' '}
                   </Text>
                   are included in your starter pack
                 </Trans>
               ) : (
                 <Trans context="feeds">
                   <Text style={[a.font_bold, textStyles]}>
-                    {getName(items[initialNamesIndex])},{' '}
+                    {getName(items[0])},{' '}
                   </Text>
                   <Text style={[a.font_bold, textStyles]}>
-                    {getName(items[initialNamesIndex + 1])},{' '}
+                    {getName(items[1])},{' '}
                   </Text>
                   and{' '}
                   <Plural
