@@ -321,7 +321,9 @@ export function StepInterests() {
               ]}>
               <CircleInfo />
               <Text>
-                Choose at least {MIN_INTERESTS - interests.length} more
+                <Trans>
+                  Choose at least {MIN_INTERESTS - interests.length} more
+                </Trans>
               </Text>
             </View>
           </View>
