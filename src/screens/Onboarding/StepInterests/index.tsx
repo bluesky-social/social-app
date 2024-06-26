@@ -315,7 +315,9 @@ export function StepInterests() {
                   ...t.atoms.shadow_sm,
                   shadowOpacity: 0.1,
                 },
-                isWeb ? [a.py_md, a.px_lg] : [a.py_sm, a.px_md],
+                isWeb
+                  ? [a.py_md, a.px_lg, a.pr_xl]
+                  : [a.py_sm, a.px_md, a.pr_lg],
               ]}>
               <CircleInfo />
               <Text>
