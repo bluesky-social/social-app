@@ -1,5 +1,6 @@
 import React from 'react'
-import {t} from '@lingui/macro'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
 import {AvatarColor, Emoji} from '#/screens/Onboarding/StepProfile/types'
@@ -69,32 +70,36 @@ export type ApiResponseMap = {
   }
 }
 
-export const INTEREST_TO_DISPLAY_NAME_DEFAULTS: {
-  [key: string]: string
-} = {
-  // Keep this alphabetized
-  animals: t`Animals`,
-  art: t`Art`,
-  books: t`Books`,
-  comedy: t`Comedy`,
-  comics: t`Comics`,
-  culture: t`Culture`,
-  dev: t`Software Dev`,
-  education: t`Education`,
-  food: t`Food`,
-  gaming: t`Video Games`,
-  journalism: t`Journalism`,
-  movies: t`Movies`,
-  nature: t`Nature`,
-  news: t`News`,
-  pets: t`Pets`,
-  photography: t`Photography`,
-  politics: t`Politics`,
-  science: t`Science`,
-  sports: t`Sports`,
-  tech: t`Tech`,
-  tv: t`TV`,
-  writers: t`Writers`,
+export function useInterestsDisplayNames() {
+  const {_} = useLingui()
+
+  return React.useMemo<Record<string, string>>(() => {
+    return {
+      // Keep this alphabetized
+      animals: _(msg`Animals`),
+      art: _(msg`Art`),
+      books: _(msg`Books`),
+      comedy: _(msg`Comedy`),
+      comics: _(msg`Comics`),
+      culture: _(msg`Culture`),
+      dev: _(msg`Software Dev`),
+      education: _(msg`Education`),
+      food: _(msg`Food`),
+      gaming: _(msg`Video Games`),
+      journalism: _(msg`Journalism`),
+      movies: _(msg`Movies`),
+      nature: _(msg`Nature`),
+      news: _(msg`News`),
+      pets: _(msg`Pets`),
+      photography: _(msg`Photography`),
+      politics: _(msg`Politics`),
+      science: _(msg`Science`),
+      sports: _(msg`Sports`),
+      tech: _(msg`Tech`),
+      tv: _(msg`TV`),
+      writers: _(msg`Writers`),
+    }
+  }, [_])
 }
 
 export const initialState: OnboardingState = {
@@ -122,11 +127,9 @@ export const initialState: OnboardingState = {
 export const Context = React.createContext<{
   state: OnboardingState
   dispatch: React.Dispatch<OnboardingAction>
-  interestsDisplayNames: {[key: string]: string}
 }>({
   state: {...initialState},
   dispatch: () => {},
-  interestsDisplayNames: INTEREST_TO_DISPLAY_NAME_DEFAULTS,
 })
 
 export function reducer(
