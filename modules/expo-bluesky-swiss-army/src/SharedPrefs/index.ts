@@ -12,7 +12,6 @@ export function removeValueAsync(key: string): Promise<void> {
 }
 
 export function getStringAsync(key: string): Promise<string | null> {
-  console.log('call')
   throw new NotImplementedError({key})
 }
 
