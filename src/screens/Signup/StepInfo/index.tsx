@@ -51,6 +51,10 @@ export function StepInfo({
     const email = emailValueRef.current
     const password = passwordValueRef.current
 
+    if (!is13(state.dateOfBirth)) {
+      return
+    }
+
     if (state.serviceDescription?.inviteCodeRequired && !inviteCode) {
       return dispatch({
         type: 'setError',
@@ -87,6 +91,7 @@ export function StepInfo({
     _,
     dispatch,
     state.activeStep,
+    state.dateOfBirth,
     state.serviceDescription?.inviteCodeRequired,
   ])
 
@@ -194,6 +199,7 @@ export function StepInfo({
         ) : undefined}
       </View>
       <BackNextButtons
+        hideNext={!is13(state.dateOfBirth)}
         showRetry={isServerError}
         isLoading={state.isLoading}
         onBackPress={onPressBack}
