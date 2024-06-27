@@ -132,8 +132,7 @@ appId: xyz.blueskyweb.app
     id: "feedItem-by-bob.test"
 - tapOn:
     id: "e2eGotoFeeds"
-- tapOn:
-    id: "saved-feed-Good Ppl"
+- tapOn: "Good Ppl"
 - assertVisible:
     id: "feedItem-by-bob.test"
 - tapOn:
@@ -144,8 +143,7 @@ appId: xyz.blueskyweb.app
     id: "homeScreenFeedTabs-Good Ppl"
 - tapOn:
     id: "e2eGotoLists"
-- tapOn:
-    id: "list-Good Ppl"
+- tapOn: "Good Ppl"
 
 - tapOn: "About"
 - assertVisible:
@@ -171,8 +169,7 @@ appId: xyz.blueskyweb.app
     direction: LEFT
 - tapOn:
     id: "profilePager-selector-5"
-- tapOn:
-    id: "list-Good Ppl"
+- tapOn: "Good Ppl"
 
 - tapOn:
     label: "Adds and removes users on curatelists from the profile"

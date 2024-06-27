@@ -1,16 +1,14 @@
 import React from 'react'
 import {View} from 'react-native'
 import ViewShot from 'react-native-view-shot'
-import * as FS from 'expo-file-system'
 import {requestMediaLibraryPermissionsAsync} from 'expo-image-picker'
+import {createAssetAsync} from 'expo-media-library'
 import * as Sharing from 'expo-sharing'
 import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {nanoid} from 'nanoid/non-secure'
 
 import {logger} from '#/logger'
-import {saveImageToMediaLibrary} from 'lib/media/manip'
 import {logEvent} from 'lib/statsig/statsig'
 import {isNative, isWeb} from 'platform/detection'
 import * as Toast from '#/view/com/util/Toast'
@@ -65,13 +63,9 @@ export function QrCodeDialog({
           return
         }
 
-        const filename = `${FS.documentDirectory}/${nanoid(12)}.png`
-
         // Incase of a FS failure, don't crash the app
         try {
-          await FS.copyAsync({from: uri, to: filename})
-          await saveImageToMediaLibrary({uri: filename})
-          await FS.deleteAsync(filename)
+          await createAssetAsync(`file://${uri}`)
         } catch (e: unknown) {
           Toast.show(_(msg`An error occurred while saving the QR code!`))
           logger.error('Failed to save QR code', {error: e})

@@ -53,6 +53,7 @@ import * as Toast from 'view/com/util/Toast'
 import {CenteredView} from 'view/com/util/Views'
 import {atoms as a, useTheme} from '#/alf'
 import {Button as NewButton, ButtonText} from '#/components/Button'
+import {useRichText} from '#/components/hooks/useRichText'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {
@@ -518,6 +519,7 @@ function AboutSection({
   const {mutateAsync: likeFeed, isPending: isLikePending} = useLikeMutation()
   const {mutateAsync: unlikeFeed, isPending: isUnlikePending} =
     useUnlikeMutation()
+  const [resolvedRT] = useRichText(feedInfo.description.text || '')
 
   const isLiked = !!likeUri
   const likeCount =
@@ -553,7 +555,7 @@ function AboutSection({
           <RichText
             testID="listDescription"
             style={[a.text_md]}
-            value={feedInfo.description}
+            value={resolvedRT ?? feedInfo.description}
           />
         ) : (
           <Text type="lg" style={[{fontStyle: 'italic'}, pal.textLight]}>

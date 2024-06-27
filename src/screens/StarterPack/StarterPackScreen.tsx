@@ -7,6 +7,7 @@ import {
   AppBskyGraphStarterpack,
   AtUri,
   ModerationOpts,
+  RichText as RichTextAPI,
 } from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
@@ -22,14 +23,16 @@ import {
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useDeleteStarterPackMutation} from '#/state/queries/starter-packs'
+import {batchedUpdates} from 'lib/batchedUpdates'
 import {HITSLOP_20} from 'lib/constants'
 import {makeProfileLink, makeStarterPackLink} from 'lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
 import {logEvent} from 'lib/statsig/statsig'
 import {getStarterPackOgCard} from 'lib/strings/starter-pack'
 import {isWeb} from 'platform/detection'
+import {updateProfileShadow} from 'state/cache/profile-shadow'
 import {useModerationOpts} from 'state/preferences/moderation-opts'
-import {RQKEY, useListMembersQuery} from 'state/queries/list-members'
+import {useListMembersQuery} from 'state/queries/list-members'
 import {useResolveDidQuery} from 'state/queries/resolve-uri'
 import {useShortenLink} from 'state/queries/shorten-link'
 import {useStarterPackQuery} from 'state/queries/starter-packs'
@@ -52,7 +55,9 @@ import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
+import {RichText} from '#/components/RichText'
 import {FeedsList} from '#/components/StarterPack/Main/FeedsList'
+import {PostsList} from '#/components/StarterPack/Main/PostsList'
 import {ProfilesList} from '#/components/StarterPack/Main/ProfilesList'
 import {QrCodeDialog} from '#/components/StarterPack/QrCodeDialog'
 import {ShareDialog} from '#/components/StarterPack/ShareDialog'
@@ -130,9 +135,14 @@ function StarterPackScreenInner({
   >
   moderationOpts: ModerationOpts
 }) {
+  const showPeopleTab = Boolean(starterPack.list)
+  const showFeedsTab = Boolean(starterPack.feeds?.length)
+  const showPostsTab = Boolean(starterPack.list)
+
   const tabs = [
-    ...(starterPack.list ? ['People'] : []),
-    ...(starterPack.feeds?.length ? ['Feeds'] : []),
+    ...(showPeopleTab ? ['People'] : []),
+    ...(showFeedsTab ? ['Feeds'] : []),
+    ...(showPostsTab ? ['Posts'] : []),
   ]
 
   const qrCodeDialogControl = useDialogControl()
@@ -141,6 +151,12 @@ function StarterPackScreenInner({
   const shortenLink = useShortenLink()
   const [link, setLink] = React.useState<string>()
   const [imageLoaded, setImageLoaded] = React.useState(false)
+
+  React.useEffect(() => {
+    logEvent('starterPack:opened', {
+      starterPack: starterPack.uri,
+    })
+  }, [starterPack.uri])
 
   const onOpenShareDialog = React.useCallback(() => {
     const rkey = new AtUri(starterPack.uri).rkey
@@ -178,10 +194,9 @@ function StarterPackScreenInner({
               onOpenShareDialog={onOpenShareDialog}
             />
           )}>
-          {starterPack.list != null
+          {showPeopleTab
             ? ({headerHeight, scrollElRef}) => (
                 <ProfilesList
-                  key={0}
                   // Validated above
                   listUri={starterPack!.list!.uri}
                   headerHeight={headerHeight}
@@ -192,15 +207,26 @@ function StarterPackScreenInner({
                 />
               )
             : null}
-          {starterPack.feeds != null
+          {showFeedsTab
             ? ({headerHeight, scrollElRef}) => (
                 <FeedsList
-                  key={1}
                   // @ts-expect-error ?
                   feeds={starterPack?.feeds}
                   headerHeight={headerHeight}
                   // @ts-expect-error
                   scrollElRef={scrollElRef}
+                />
+              )
+            : null}
+          {showPostsTab
+            ? ({headerHeight, scrollElRef}) => (
+                <PostsList
+                  // Validated above
+                  listUri={starterPack!.list!.uri}
+                  headerHeight={headerHeight}
+                  // @ts-expect-error
+                  scrollElRef={scrollElRef}
+                  moderationOpts={moderationOpts}
                 />
               )
             : null}
@@ -257,10 +283,14 @@ function Header({
         .filter(li => !li.subject.viewer?.following)
         .map(li => li.subject.did)
 
-      await bulkWriteFollows(agent, dids)
+      const followUris = await bulkWriteFollows(agent, dids)
 
-      await queryClient.refetchQueries({
-        queryKey: RQKEY(starterPack.list.uri),
+      batchedUpdates(() => {
+        for (let did of dids) {
+          updateProfileShadow(queryClient, did, {
+            followingUri: followUris.get(did),
+          })
+        }
       })
 
       logEvent('starterPack:followAll', {
@@ -279,6 +309,13 @@ function Header({
   if (!AppBskyGraphStarterpack.isRecord(record)) {
     return null
   }
+
+  const richText = record.description
+    ? new RichTextAPI({
+        text: record.description,
+        facets: record.descriptionFacets,
+      })
+    : undefined
 
   return (
     <>
@@ -324,12 +361,10 @@ function Header({
           />
         </View>
       </ProfileSubpageHeader>
-      {record.description || joinedAllTimeCount >= 25 ? (
+      {richText || joinedAllTimeCount >= 25 ? (
         <View style={[a.px_lg, a.pt_md, a.pb_sm, a.gap_md]}>
-          {record.description ? (
-            <Text style={[a.text_md, a.leading_snug]}>
-              {record.description}
-            </Text>
+          {richText ? (
+            <RichText value={richText} style={[a.text_md, a.leading_snug]} />
           ) : null}
           {joinedAllTimeCount >= 25 ? (
             <View style={[a.flex_row, a.align_center, a.gap_sm]}>

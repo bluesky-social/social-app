@@ -58,6 +58,7 @@ export function WizardEditListDialog({
     state.currentStep === 'Profiles' ? (
       <WizardProfileCard
         profile={item}
+        btnType="remove"
         state={state}
         dispatch={dispatch}
         moderationOpts={moderationOpts}
@@ -65,6 +66,7 @@ export function WizardEditListDialog({
     ) : (
       <WizardFeedCard
         generator={item}
+        btnType="remove"
         state={state}
         dispatch={dispatch}
         moderationOpts={moderationOpts}

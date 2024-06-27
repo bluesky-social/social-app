@@ -31,13 +31,22 @@ export function StepProfiles({
   const [query, setQuery] = useState('')
   const {screenReaderEnabled} = useA11y()
 
-  const {data: topPages, fetchNextPage} = useActorSearchPaginated({
+  const {
+    data: topPages,
+    fetchNextPage,
+    isLoading: isLoadingTopPages,
+  } = useActorSearchPaginated({
     query: encodeURIComponent('*'),
   })
-  const topFollowers = topPages?.pages.flatMap(p => p.actors)
+  const topFollowers = topPages?.pages
+    .flatMap(p => p.actors)
+    .filter(p => !p.associated?.labeler)
 
-  const {data: results, isLoading: isLoadingResults} =
+  const {data: resultsUnfiltered, isFetching: isFetchingResults} =
     useActorAutocompleteQuery(query, true, 12)
+  const results = resultsUnfiltered?.filter(p => !p.associated?.labeler)
+
+  const isLoading = isLoadingTopPages || isFetchingResults
 
   const renderItem = ({
     item,
@@ -45,6 +54,7 @@ export function StepProfiles({
     return (
       <WizardProfileCard
         profile={item}
+        btnType="checkbox"
         state={state}
         dispatch={dispatch}
         moderationOpts={moderationOpts}
@@ -79,7 +89,7 @@ export function StepProfiles({
         onEndReachedThreshold={isNative ? 2 : 0.25}
         ListEmptyComponent={
           <View style={[a.flex_1, a.align_center, a.mt_lg, a.px_lg]}>
-            {isLoadingResults ? (
+            {isLoading ? (
               <Loader size="lg" />
             ) : (
               <Text

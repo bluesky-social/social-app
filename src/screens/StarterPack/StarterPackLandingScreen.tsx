@@ -11,8 +11,10 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {JOINED_THIS_WEEK} from '#/lib/constants'
 import {isAndroidWeb} from 'lib/browser'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {logEvent} from 'lib/statsig/statsig'
 import {createStarterPackGooglePlayUri} from 'lib/strings/starter-pack'
 import {isWeb} from 'platform/detection'
 import {useModerationOpts} from 'state/preferences/moderation-opts'
@@ -21,6 +23,7 @@ import {
   useActiveStarterPack,
   useSetActiveStarterPack,
 } from 'state/shell/starter-pack'
+import {formatCount} from '#/view/com/util/numeric/format'
 import {LoggedOutScreenState} from 'view/com/auth/LoggedOut'
 import {CenteredView} from 'view/com/util/Views'
 import {Logo} from 'view/icons/Logo'
@@ -95,7 +98,7 @@ function LandingScreenLoaded({
   setScreenState: (state: LoggedOutScreenState) => void
   moderationOpts: ModerationOpts
 }) {
-  const {record, creator, listItemsSample, feeds, joinedWeekCount} = starterPack
+  const {record, creator, listItemsSample, feeds} = starterPack
   const {_} = useLingui()
   const t = useTheme()
   const activeStarterPack = useActiveStarterPack()
@@ -126,6 +129,9 @@ function LandingScreenLoaded({
     } else {
       onContinue()
     }
+    logEvent('starterPack:ctaPress', {
+      starterPack: starterPack.uri,
+    })
   }
 
   const onJoinWithoutPress = () => {
@@ -200,24 +206,22 @@ function LandingScreenLoaded({
                 <Trans>Join Bluesky</Trans>
               </ButtonText>
             </Button>
-            {joinedWeekCount && joinedWeekCount >= 25 ? (
-              <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-                <FontAwesomeIcon
-                  icon="arrow-trend-up"
-                  size={12}
-                  color={t.atoms.text_contrast_medium.color}
-                />
-                <Text
-                  style={[
-                    a.font_semibold,
-                    a.text_sm,
-                    t.atoms.text_contrast_medium,
-                  ]}
-                  numberOfLines={1}>
-                  123,659 joined this week
-                </Text>
-              </View>
-            ) : null}
+            <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+              <FontAwesomeIcon
+                icon="arrow-trend-up"
+                size={12}
+                color={t.atoms.text_contrast_medium.color}
+              />
+              <Text
+                style={[
+                  a.font_semibold,
+                  a.text_sm,
+                  t.atoms.text_contrast_medium,
+                ]}
+                numberOfLines={1}>
+                <Trans>{formatCount(JOINED_THIS_WEEK)} joined this week</Trans>
+              </Text>
+            </View>
           </View>
           <View style={[a.gap_3xl]}>
             {Boolean(listItemsSample?.length) && (
@@ -231,22 +235,33 @@ function LandingScreenLoaded({
                     </Trans>
                   )}
                 </Text>
-                <View>
-                  {starterPack.listItemsSample?.slice(0, 8).map(item => (
-                    <View
-                      key={item.subject.did}
-                      style={[
-                        a.py_lg,
-                        a.px_md,
-                        a.border_t,
-                        t.atoms.border_contrast_low,
-                      ]}>
-                      <ProfileCard
-                        profile={item.subject}
-                        moderationOpts={moderationOpts}
-                      />
-                    </View>
-                  ))}
+                <View
+                  style={
+                    isTabletOrDesktop && [
+                      a.border,
+                      a.rounded_md,
+                      t.atoms.border_contrast_low,
+                    ]
+                  }>
+                  {starterPack.listItemsSample
+                    ?.filter(p => !p.subject.associated?.labeler)
+                    .slice(0, 8)
+                    .map((item, i) => (
+                      <View
+                        key={item.subject.did}
+                        style={[
+                          a.py_lg,
+                          a.px_md,
+                          (!isTabletOrDesktop || i !== 0) && a.border_t,
+                          t.atoms.border_contrast_low,
+                          {pointerEvents: 'none'},
+                        ]}>
+                        <ProfileCard
+                          profile={item.subject}
+                          moderationOpts={moderationOpts}
+                        />
+                      </View>
+                    ))}
                 </View>
               </View>
             )}
@@ -256,13 +271,21 @@ function LandingScreenLoaded({
                   <Trans>You'll stay updated with these feeds</Trans>
                 </Text>
 
-                <View style={[{pointerEvents: 'none'}]}>
-                  {feeds?.map(feed => (
+                <View
+                  style={[
+                    {pointerEvents: 'none'},
+                    isTabletOrDesktop && [
+                      a.border,
+                      a.rounded_md,
+                      t.atoms.border_contrast_low,
+                    ],
+                  ]}>
+                  {feeds?.map((feed, i) => (
                     <View
                       style={[
                         a.py_lg,
                         a.px_md,
-                        a.border_t,
+                        (!isTabletOrDesktop || i !== 0) && a.border_t,
                         t.atoms.border_contrast_low,
                       ]}
                       key={feed.uri}>

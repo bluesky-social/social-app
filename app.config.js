@@ -45,9 +45,7 @@ module.exports = function (config) {
     'appclips:bsky.app',
     'appclips:go.bsky.app', // Allows App Clip to work when scanning QR codes
     // When testing local services, enter an ngrok (et al) domain here. It must use a standard HTTP/HTTPS port.
-    ...(IS_DEV || IS_TESTFLIGHT
-      ? ['appclips:sptesting.haileyok.com', 'applinks:sptesting.haileyok.com']
-      : []),
+    ...(IS_DEV || IS_TESTFLIGHT ? [] : []),
   ]
 
   const UPDATES_CHANNEL = IS_TESTFLIGHT
