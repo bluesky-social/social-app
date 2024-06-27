@@ -171,7 +171,6 @@ module.exports = function (config) {
       updates: {
         url: 'https://updates.bsky.app/manifest',
         enabled: UPDATES_ENABLED,
-        fallbackToCacheTimeout: 30000,
         codeSigningCertificate: UPDATES_ENABLED
           ? './code-signing/certificate.pem'
           : undefined,

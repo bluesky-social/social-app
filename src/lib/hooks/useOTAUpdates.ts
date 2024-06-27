@@ -1,3 +1,5 @@
+import {clearInterval} from 'node:timers'
+
 import React from 'react'
 import {Alert, AppState, AppStateStatus} from 'react-native'
 import {nativeBuildVersion} from 'expo-application'
@@ -9,12 +11,16 @@ import {
   setExtraParamAsync,
   useUpdates,
 } from 'expo-updates'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
 import {IS_TESTFLIGHT} from 'lib/app-info'
 import {isIOS} from 'platform/detection'
+import {useSession} from 'state/session'
+import {useIsComposerOpen} from 'state/shell/composer'
 
-const MINIMUM_MINIMIZE_TIME = 15 * 60e3
+const MINIMUM_MINIMIZE_TIME = 10 * 60e3
 
 async function setExtraParams() {
   await setExtraParamAsync(
@@ -30,86 +36,59 @@ async function setExtraParams() {
 }
 
 export function useOTAUpdates() {
+  const {_} = useLingui()
+  const {currentAccount} = useSession()
+
   const shouldReceiveUpdates = isEnabled && !__DEV__
 
   const appState = React.useRef<AppStateStatus>('active')
   const lastMinimize = React.useRef(0)
   const ranInitialCheck = React.useRef(false)
-  const timeout = React.useRef<NodeJS.Timeout>()
-  const {isUpdatePending} = useUpdates()
+  const alertedUser = React.useRef(false)
+  const {isUpdatePending, isDownloading, downloadedUpdate} = useUpdates()
+  const isComposerOpen = useIsComposerOpen()
 
-  const setCheckTimeout = React.useCallback(() => {
-    timeout.current = setTimeout(async () => {
-      try {
-        await setExtraParams()
-
-        logger.debug('Checking for update...')
-        const res = await checkForUpdateAsync()
-
-        if (res.isAvailable) {
-          logger.debug('Attempting to fetch update...')
-          await fetchUpdateAsync()
-        } else {
-          logger.debug('No update available.')
-        }
-      } catch (e) {
-        logger.error('OTA Update Error', {error: `${e}`})
-      }
-    }, 10e3)
-  }, [])
-
-  const onIsTestFlight = React.useCallback(async () => {
+  const checkForUpdate = React.useCallback(async () => {
+    if (isDownloading) return
     try {
       await setExtraParams()
 
+      logger.debug('Checking for update...')
       const res = await checkForUpdateAsync()
+
       if (res.isAvailable) {
+        logger.debug('Attempting to fetch update...')
         await fetchUpdateAsync()
-
-        Alert.alert(
-          'Update Available',
-          'A new version of the app is available. Relaunch now?',
-          [
-            {
-              text: 'No',
-              style: 'cancel',
-            },
-            {
-              text: 'Relaunch',
-              style: 'default',
-              onPress: async () => {
-                await reloadAsync()
-              },
-            },
-          ],
-        )
+      } else {
+        logger.debug('No update available.')
       }
-    } catch (e: any) {
-      logger.error('Internal OTA Update Error', {error: `${e}`})
+    } catch (e) {
+      logger.error('OTA Update Error', {error: `${e}`})
     }
-  }, [])
+  }, [isDownloading])
 
+  // Run the initial check. This happens immediately after launch.
   React.useEffect(() => {
-    // We use this setTimeout to allow Statsig to initialize before we check for an update
-    // For Testflight users, we can prompt the user to update immediately whenever there's an available update. This
-    // is suspect however with the Apple App Store guidelines, so we don't want to prompt production users to update
-    // immediately.
-    if (IS_TESTFLIGHT) {
-      onIsTestFlight()
-      return
-    } else if (!shouldReceiveUpdates || ranInitialCheck.current) {
+    if (!shouldReceiveUpdates || ranInitialCheck.current) {
       return
     }
-
-    setCheckTimeout()
+    checkForUpdate()
     ranInitialCheck.current = true
-  }, [onIsTestFlight, setCheckTimeout, shouldReceiveUpdates])
+  }, [checkForUpdate, shouldReceiveUpdates])
 
-  // After the app has been minimized for 15 minutes, we want to either A. install an update if one has become available
-  // or B check for an update again.
   React.useEffect(() => {
-    if (!isEnabled) return
+    if (!shouldReceiveUpdates) return
 
+    // Check for an update every 10 minutes
+    let checkInterval: NodeJS.Timer
+    const setCheckInterval = () => {
+      checkInterval = setInterval(() => {
+        checkForUpdate()
+      }, 10 * 60e3)
+    }
+
+    // Check for an update whenver coming back to the app after being minimized for 10 minutes, or install the update
+    // if one is available
     const subscription = AppState.addEventListener(
       'change',
       async nextAppState => {
@@ -123,10 +102,12 @@ export function useOTAUpdates() {
             if (isUpdatePending) {
               await reloadAsync()
             } else {
-              setCheckTimeout()
+              checkForUpdate()
             }
           }
+          setCheckInterval()
         } else {
+          clearInterval(checkInterval)
           lastMinimize.current = Date.now()
         }
 
@@ -135,8 +116,50 @@ export function useOTAUpdates() {
     )
 
     return () => {
-      clearTimeout(timeout.current)
+      clearInterval(checkInterval)
       subscription.remove()
     }
-  }, [isUpdatePending, setCheckTimeout])
+  }, [checkForUpdate, isUpdatePending, shouldReceiveUpdates])
+
+  React.useEffect(() => {
+    // We only want to alert once per app session. We'll tell them once they finish composing instead.
+    if (!downloadedUpdate || alertedUser.current) return
+
+    // Don't interrupt the user while composing a post
+    if (isComposerOpen) return
+
+    alertedUser.current = true
+
+    // If there wasn't an account loaded when the download completed, don't ever alert the user. This is their first
+    // time using the app, i.e. a new onboard.
+    if (!currentAccount) {
+      return
+    }
+
+    const timeout = setTimeout(() => {
+      Alert.alert(
+        _(msg`An Update is Available!`),
+        _(
+          msg`There's an update waiting to be installed. Would you like to relaunch the app and install it now?`,
+        ),
+        [
+          {
+            text: _(msg`No`),
+            style: 'cancel',
+          },
+          {
+            text: _(msg`Relaunch now`),
+            style: 'default',
+            onPress: async () => {
+              await reloadAsync()
+            },
+          },
+        ],
+      )
+    }, 5e3)
+
+    return () => {
+      clearTimeout(timeout)
+    }
+  }, [_, downloadedUpdate, currentAccount, isComposerOpen])
 }
