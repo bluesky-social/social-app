@@ -152,6 +152,12 @@ function StarterPackScreenInner({
   const [link, setLink] = React.useState<string>()
   const [imageLoaded, setImageLoaded] = React.useState(false)
 
+  React.useEffect(() => {
+    logEvent('starterPack:opened', {
+      starterPack: starterPack.uri,
+    })
+  }, [starterPack.uri])
+
   const onOpenShareDialog = React.useCallback(() => {
     const rkey = new AtUri(starterPack.uri).rkey
     shortenLink(makeStarterPackLink(starterPack.creator.did, rkey)).then(
