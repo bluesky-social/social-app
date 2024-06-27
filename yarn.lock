@@ -19634,10 +19634,9 @@ rn-fetch-blob@^0.12.0:
     base-64 "0.1.0"
     glob "7.0.6"
 
-rn-tourguide@^3.3.0:
+rn-tourguide@bluesky-social/rn-tourguide:
   version "3.3.0"
-  resolved "https://registry.yarnpkg.com/rn-tourguide/-/rn-tourguide-3.3.0.tgz#c85281559b1b00549cfe42eeace8eb9ebc714c7f"
-  integrity sha512-TvDvaIqZ4cpD22wiwzGXzpyZghFeZoIbW5R9uPDbJMLRctS8x//rxVhek154I/WmYlEDefVTEOfuAdYmDl81xg==
+  resolved "https://codeload.github.com/bluesky-social/rn-tourguide/tar.gz/3900a9d53e89b445e34ab165a1460924dfb1c815"
   dependencies:
     flubber "~0.4.2"
     hoist-non-react-statics "~3.0.1"
