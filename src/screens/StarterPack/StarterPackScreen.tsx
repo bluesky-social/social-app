@@ -210,7 +210,7 @@ function StarterPackScreenInner({
                 />
               )
             : null}
-          {showPostsTab != null
+          {showPostsTab
             ? ({headerHeight, scrollElRef}) => (
                 <PostsList
                   // Validated above
