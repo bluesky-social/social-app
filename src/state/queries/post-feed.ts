@@ -49,6 +49,7 @@ type AuthorFilter =
   | 'posts_with_media'
 type FeedUri = string
 type ListUri = string
+type ListFilter = 'as_following' // Applies current Following settings. Currently client-side.
 
 export type FeedDescriptor =
   | 'following'
@@ -56,6 +57,7 @@ export type FeedDescriptor =
   | `feedgen|${FeedUri}`
   | `likes|${ActorDid}`
   | `list|${ListUri}`
+  | `list|${ListUri}|${ListFilter}`
 export interface FeedParams {
   disableTuner?: boolean
   mergeFeedEnabled?: boolean

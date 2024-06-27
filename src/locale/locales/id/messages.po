@@ -93,11 +93,11 @@ msgstr "{0, plural, other {posting ulang}}"
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
 msgstr "{0, plural, other {Batal suka (# menyukai)}}"
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:218
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:222
 msgid "{0} joined this week"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:350
+#: src/screens/StarterPack/StarterPackScreen.tsx:378
 msgid "{0} people have used this starter pack!"
 msgstr ""
 
@@ -471,7 +471,7 @@ msgstr "Konten dewasa dinonaktifkan."
 msgid "Advanced"
 msgstr "Lanjutan"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:273
+#: src/screens/StarterPack/StarterPackScreen.tsx:301
 msgid "All accounts have been followed!"
 msgstr ""
 
@@ -553,7 +553,7 @@ msgstr ""
 #~ msgid "An error occurred while trying to delete the message. Please try again."
 #~ msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:275
+#: src/screens/StarterPack/StarterPackScreen.tsx:303
 msgid "An error occurred while trying to follow all"
 msgstr ""
 
@@ -652,7 +652,7 @@ msgstr "Tampilan"
 msgid "Apply default recommended feeds"
 msgstr "Tambahkan feed yang direkomendasikan secara default"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:504
+#: src/screens/StarterPack/StarterPackScreen.tsx:532
 msgid "Are you sure you want delete this starter pack?"
 msgstr ""
 
@@ -1652,9 +1652,9 @@ msgid "Debug panel"
 msgstr "Panel awakutu"
 
 #: src/components/dms/MessageMenu.tsx:151
-#: src/screens/StarterPack/StarterPackScreen.tsx:456
-#: src/screens/StarterPack/StarterPackScreen.tsx:535
-#: src/screens/StarterPack/StarterPackScreen.tsx:615
+#: src/screens/StarterPack/StarterPackScreen.tsx:484
+#: src/screens/StarterPack/StarterPackScreen.tsx:563
+#: src/screens/StarterPack/StarterPackScreen.tsx:643
 #: src/view/com/util/forms/PostDropdownBtn.tsx:433
 #: src/view/screens/AppPasswords.tsx:285
 #: src/view/screens/ProfileList.tsx:667
@@ -1715,12 +1715,12 @@ msgstr "Hapus Akun Saya…"
 msgid "Delete post"
 msgstr "Hapus postingan"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:450
-#: src/screens/StarterPack/StarterPackScreen.tsx:606
+#: src/screens/StarterPack/StarterPackScreen.tsx:478
+#: src/screens/StarterPack/StarterPackScreen.tsx:634
 msgid "Delete starter pack"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:501
+#: src/screens/StarterPack/StarterPackScreen.tsx:529
 msgid "Delete starter pack?"
 msgstr ""
 
@@ -1887,7 +1887,7 @@ msgstr "Selesai"
 msgid "Done{extraText}"
 msgstr "Selesai{extraText}"
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:314
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:318
 msgid "Download Bluesky"
 msgstr ""
 
@@ -1944,7 +1944,7 @@ msgstr "contoh: Pengguna yang membalas dengan iklan secara berulang."
 msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr "Tiap kode hanya berlaku sekali. Anda akan mendapatkan tambahan kode undangan secara berkala."
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:445
+#: src/screens/StarterPack/StarterPackScreen.tsx:473
 #: src/screens/StarterPack/Wizard/index.tsx:551
 #: src/screens/StarterPack/Wizard/index.tsx:558
 #: src/view/screens/Feeds.tsx:385
@@ -2009,7 +2009,7 @@ msgstr "Edit Profil"
 #~ msgid "Edit Saved Feeds"
 #~ msgstr "Edit Feed Tersimpan"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:437
+#: src/screens/StarterPack/StarterPackScreen.tsx:465
 msgid "Edit starter pack"
 msgstr ""
 
@@ -2315,7 +2315,7 @@ msgstr "Gagal menghapus pesan"
 msgid "Failed to delete post, please try again"
 msgstr "Gagal menghapus postingan, silakan coba lagi"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:569
+#: src/screens/StarterPack/StarterPackScreen.tsx:597
 msgid "Failed to delete starter pack"
 msgstr ""
 
@@ -2524,8 +2524,8 @@ msgstr ""
 msgid "Follow Account"
 msgstr "Ikuti Akun"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:317
-#: src/screens/StarterPack/StarterPackScreen.tsx:324
+#: src/screens/StarterPack/StarterPackScreen.tsx:345
+#: src/screens/StarterPack/StarterPackScreen.tsx:352
 msgid "Follow all"
 msgstr ""
 
@@ -2718,7 +2718,7 @@ msgstr "Kembali"
 #: src/components/Error.tsx:103
 #: src/screens/Profile/ErrorState.tsx:62
 #: src/screens/Profile/ErrorState.tsx:66
-#: src/screens/StarterPack/StarterPackScreen.tsx:628
+#: src/screens/StarterPack/StarterPackScreen.tsx:656
 #: src/view/screens/NotFound.tsx:54
 #: src/view/screens/ProfileFeed.tsx:117
 #: src/view/screens/ProfileList.tsx:975
@@ -3083,8 +3083,8 @@ msgstr ""
 msgid "Jobs"
 msgstr "Karir"
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:196
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:202
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:200
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:206
 msgid "Join Bluesky"
 msgstr ""
 
@@ -3691,6 +3691,10 @@ msgstr "Nama atau Deskripsi Melanggar Standar Komunitas"
 msgid "Nature"
 msgstr "Alam"
 
+#: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:73
+msgid "Navigate to starter pack"
+msgstr ""
+
 #: src/screens/Login/ForgotPasswordForm.tsx:173
 #: src/screens/Login/LoginForm.tsx:312
 #: src/view/com/modals/ChangePassword.tsx:169
@@ -4110,7 +4114,7 @@ msgstr "Buka navigasi"
 msgid "Open post options menu"
 msgstr "Buka menu opsi postingan"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:423
+#: src/screens/StarterPack/StarterPackScreen.tsx:451
 msgid "Open starter pack menu"
 msgstr ""
 
@@ -4920,8 +4924,8 @@ msgstr "Laporkan pesan"
 msgid "Report post"
 msgstr "Laporkan postingan"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:476
-#: src/screens/StarterPack/StarterPackScreen.tsx:479
+#: src/screens/StarterPack/StarterPackScreen.tsx:504
+#: src/screens/StarterPack/StarterPackScreen.tsx:507
 msgid "Report starter pack"
 msgstr ""
 
@@ -4967,7 +4971,7 @@ msgstr "Posting ulang"
 msgid "Repost"
 msgstr "Posting ulang"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:418
+#: src/screens/StarterPack/StarterPackScreen.tsx:446
 #: src/view/com/util/post-ctrls/RepostButton.tsx:86
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:47
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:93
@@ -5084,7 +5088,7 @@ msgstr "Ulangi"
 #~ msgstr ""
 
 #: src/components/Error.tsx:98
-#: src/screens/StarterPack/StarterPackScreen.tsx:622
+#: src/screens/StarterPack/StarterPackScreen.tsx:650
 #: src/view/screens/ProfileList.tsx:971
 msgid "Return to previous page"
 msgstr "Kembali ke halaman sebelumnya"
@@ -5536,8 +5540,8 @@ msgid "Sexually Suggestive"
 msgstr "Bermuatan Seksual"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:174
-#: src/screens/StarterPack/StarterPackScreen.tsx:312
-#: src/screens/StarterPack/StarterPackScreen.tsx:465
+#: src/screens/StarterPack/StarterPackScreen.tsx:340
+#: src/screens/StarterPack/StarterPackScreen.tsx:493
 #: src/view/com/profile/ProfileMenu.tsx:219
 #: src/view/com/profile/ProfileMenu.tsx:228
 #: src/view/com/util/forms/PostDropdownBtn.tsx:307
@@ -5573,7 +5577,7 @@ msgstr "Bagikan feed"
 
 #: src/components/StarterPack/ShareDialog.tsx:123
 #: src/components/StarterPack/ShareDialog.tsx:130
-#: src/screens/StarterPack/StarterPackScreen.tsx:469
+#: src/screens/StarterPack/StarterPackScreen.tsx:497
 msgid "Share link"
 msgstr ""
 
@@ -5591,7 +5595,7 @@ msgstr ""
 msgid "Share QR code"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:305
+#: src/screens/StarterPack/StarterPackScreen.tsx:333
 msgid "Share this starter pack"
 msgstr ""
 
@@ -5809,8 +5813,8 @@ msgstr "Masuk sebagai @{0}"
 msgid "signed up with your starter pack"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:296
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:303
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:300
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:307
 msgid "Signup without a starter pack"
 msgstr ""
 
@@ -5913,7 +5917,7 @@ msgstr ""
 msgid "Starter pack by {0}"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:586
+#: src/screens/StarterPack/StarterPackScreen.tsx:614
 msgid "Starter pack is invalid"
 msgstr ""
 
@@ -6095,8 +6099,8 @@ msgstr "Berisi hal berikut:"
 msgid "That handle is already taken."
 msgstr "Handle telah terpakai."
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:102
-#: src/screens/StarterPack/StarterPackScreen.tsx:103
+#: src/screens/StarterPack/StarterPackScreen.tsx:105
+#: src/screens/StarterPack/StarterPackScreen.tsx:106
 #: src/screens/StarterPack/Wizard/index.tsx:106
 #: src/screens/StarterPack/Wizard/index.tsx:114
 msgid "That starter pack could not be found."
@@ -6119,7 +6123,7 @@ msgstr "Panduan Komunitas telah dipindahkan ke <0/>"
 msgid "The Copyright Policy has been moved to <0/>"
 msgstr "Kebijakan Hak Cipta telah dipindahkan ke <0/>"
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:317
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:321
 msgid "The experience is better in the app. Download Bluesky now and we'll pick back up where you left off."
 msgstr ""
 
@@ -6148,7 +6152,7 @@ msgstr "Postingan mungkin telah dihapus."
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr "Kebijakan Privasi telah dipindahkan ke <0/>"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:596
+#: src/screens/StarterPack/StarterPackScreen.tsx:624
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
 msgstr ""
 
@@ -6343,6 +6347,7 @@ msgstr "Feed ini sedang menerima terlalu banyak trafik dan sementara tidak terse
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
 msgstr "Feed ini kosong! Anda mungkin perlu mengikuti lebih banyak pengguna atau menyesuaikan pengaturan bahasa Anda."
 
+#: src/components/StarterPack/Main/PostsList.tsx:36
 #: src/view/screens/ProfileFeed.tsx:473
 #: src/view/screens/ProfileList.tsx:729
 msgid "This feed is empty."
@@ -6567,7 +6572,7 @@ msgstr "Bunyikan daftar"
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr "Tidak dapat terhubung ke layanan. Mohon periksa koneksi internet Anda."
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:520
+#: src/screens/StarterPack/StarterPackScreen.tsx:548
 msgid "Unable to delete"
 msgstr ""
 
@@ -7192,7 +7197,7 @@ msgstr "Ya"
 msgid "Yes, deactivate"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:532
+#: src/screens/StarterPack/StarterPackScreen.tsx:560
 msgid "Yes, delete this starter pack"
 msgstr ""
 
@@ -7429,15 +7434,15 @@ msgstr ""
 msgid "You'll follow the suggested users once you finish creating your account!"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:229
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:233
 msgid "You'll follow these people and {0} others"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:227
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:231
 msgid "You'll follow these people right away"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:267
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:271
 msgid "You'll stay updated with these feeds"
 msgstr ""
 

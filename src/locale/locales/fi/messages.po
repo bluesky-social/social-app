@@ -88,11 +88,11 @@ msgstr ""
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:218
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:222
 msgid "{0} joined this week"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:350
+#: src/screens/StarterPack/StarterPackScreen.tsx:378
 msgid "{0} people have used this starter pack!"
 msgstr ""
 
@@ -458,7 +458,7 @@ msgstr "Aikuissisältö on estetty"
 msgid "Advanced"
 msgstr "Edistyneemmät"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:273
+#: src/screens/StarterPack/StarterPackScreen.tsx:301
 msgid "All accounts have been followed!"
 msgstr ""
 
@@ -540,7 +540,7 @@ msgstr ""
 #~ msgid "An error occurred while trying to delete the message. Please try again."
 #~ msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:275
+#: src/screens/StarterPack/StarterPackScreen.tsx:303
 msgid "An error occurred while trying to follow all"
 msgstr ""
 
@@ -639,7 +639,7 @@ msgstr "Ulkonäkö"
 msgid "Apply default recommended feeds"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:504
+#: src/screens/StarterPack/StarterPackScreen.tsx:532
 msgid "Are you sure you want delete this starter pack?"
 msgstr ""
 
@@ -1631,9 +1631,9 @@ msgid "Debug panel"
 msgstr "Vianetsintäpaneeli"
 
 #: src/components/dms/MessageMenu.tsx:151
-#: src/screens/StarterPack/StarterPackScreen.tsx:456
-#: src/screens/StarterPack/StarterPackScreen.tsx:535
-#: src/screens/StarterPack/StarterPackScreen.tsx:615
+#: src/screens/StarterPack/StarterPackScreen.tsx:484
+#: src/screens/StarterPack/StarterPackScreen.tsx:563
+#: src/screens/StarterPack/StarterPackScreen.tsx:643
 #: src/view/com/util/forms/PostDropdownBtn.tsx:433
 #: src/view/screens/AppPasswords.tsx:285
 #: src/view/screens/ProfileList.tsx:667
@@ -1694,12 +1694,12 @@ msgstr "Poista käyttäjätilini…"
 msgid "Delete post"
 msgstr "Poista viesti"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:450
-#: src/screens/StarterPack/StarterPackScreen.tsx:606
+#: src/screens/StarterPack/StarterPackScreen.tsx:478
+#: src/screens/StarterPack/StarterPackScreen.tsx:634
 msgid "Delete starter pack"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:501
+#: src/screens/StarterPack/StarterPackScreen.tsx:529
 msgid "Delete starter pack?"
 msgstr ""
 
@@ -1858,7 +1858,7 @@ msgstr "Valmis"
 msgid "Done{extraText}"
 msgstr "Valmis{extraText}"
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:314
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:318
 msgid "Download Bluesky"
 msgstr ""
 
@@ -1915,7 +1915,7 @@ msgstr "esim. Käyttäjät, jotka vastaavat toistuvasti mainoksilla."
 msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr "Jokainen koodi toimii vain kerran. Saat lisää kutsukoodeja säännöllisin väliajoin."
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:445
+#: src/screens/StarterPack/StarterPackScreen.tsx:473
 #: src/screens/StarterPack/Wizard/index.tsx:551
 #: src/screens/StarterPack/Wizard/index.tsx:558
 #: src/view/screens/Feeds.tsx:385
@@ -1980,7 +1980,7 @@ msgstr "Muokkaa profiilia"
 #~ msgid "Edit Saved Feeds"
 #~ msgstr "Muokkaa tallennettuja syötteitä"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:437
+#: src/screens/StarterPack/StarterPackScreen.tsx:465
 msgid "Edit starter pack"
 msgstr ""
 
@@ -2286,7 +2286,7 @@ msgstr ""
 msgid "Failed to delete post, please try again"
 msgstr "Viestin poistaminen epäonnistui, yritä uudelleen"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:569
+#: src/screens/StarterPack/StarterPackScreen.tsx:597
 msgid "Failed to delete starter pack"
 msgstr ""
 
@@ -2487,8 +2487,8 @@ msgstr ""
 msgid "Follow Account"
 msgstr "Seuraa käyttäjää"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:317
-#: src/screens/StarterPack/StarterPackScreen.tsx:324
+#: src/screens/StarterPack/StarterPackScreen.tsx:345
+#: src/screens/StarterPack/StarterPackScreen.tsx:352
 msgid "Follow all"
 msgstr ""
 
@@ -2681,7 +2681,7 @@ msgstr "Palaa takaisin"
 #: src/components/Error.tsx:103
 #: src/screens/Profile/ErrorState.tsx:62
 #: src/screens/Profile/ErrorState.tsx:66
-#: src/screens/StarterPack/StarterPackScreen.tsx:628
+#: src/screens/StarterPack/StarterPackScreen.tsx:656
 #: src/view/screens/NotFound.tsx:54
 #: src/view/screens/ProfileFeed.tsx:117
 #: src/view/screens/ProfileList.tsx:975
@@ -3046,8 +3046,8 @@ msgstr ""
 msgid "Jobs"
 msgstr "Työpaikat"
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:196
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:202
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:200
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:206
 msgid "Join Bluesky"
 msgstr ""
 
@@ -3654,6 +3654,10 @@ msgstr "Nimi tai kuvaus rikkoo yhteisön sääntöjä"
 msgid "Nature"
 msgstr "Luonto"
 
+#: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:73
+msgid "Navigate to starter pack"
+msgstr ""
+
 #: src/screens/Login/ForgotPasswordForm.tsx:173
 #: src/screens/Login/LoginForm.tsx:312
 #: src/view/com/modals/ChangePassword.tsx:169
@@ -4073,7 +4077,7 @@ msgstr "Avaa navigointi"
 msgid "Open post options menu"
 msgstr "Avaa viestin asetusvalikko"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:423
+#: src/screens/StarterPack/StarterPackScreen.tsx:451
 msgid "Open starter pack menu"
 msgstr ""
 
@@ -4877,8 +4881,8 @@ msgstr ""
 msgid "Report post"
 msgstr "Ilmianna viesti"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:476
-#: src/screens/StarterPack/StarterPackScreen.tsx:479
+#: src/screens/StarterPack/StarterPackScreen.tsx:504
+#: src/screens/StarterPack/StarterPackScreen.tsx:507
 msgid "Report starter pack"
 msgstr ""
 
@@ -4924,7 +4928,7 @@ msgstr "Uudelleenjulkaise"
 msgid "Repost"
 msgstr "Uudelleenjulkaise"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:418
+#: src/screens/StarterPack/StarterPackScreen.tsx:446
 #: src/view/com/util/post-ctrls/RepostButton.tsx:86
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:47
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:93
@@ -5037,7 +5041,7 @@ msgstr "Yritä uudelleen"
 #~ msgstr ""
 
 #: src/components/Error.tsx:98
-#: src/screens/StarterPack/StarterPackScreen.tsx:622
+#: src/screens/StarterPack/StarterPackScreen.tsx:650
 #: src/view/screens/ProfileList.tsx:971
 msgid "Return to previous page"
 msgstr "Palaa edelliselle sivulle"
@@ -5485,8 +5489,8 @@ msgid "Sexually Suggestive"
 msgstr "Seksuaalisesti vihjaileva"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:174
-#: src/screens/StarterPack/StarterPackScreen.tsx:312
-#: src/screens/StarterPack/StarterPackScreen.tsx:465
+#: src/screens/StarterPack/StarterPackScreen.tsx:340
+#: src/screens/StarterPack/StarterPackScreen.tsx:493
 #: src/view/com/profile/ProfileMenu.tsx:219
 #: src/view/com/profile/ProfileMenu.tsx:228
 #: src/view/com/util/forms/PostDropdownBtn.tsx:307
@@ -5522,7 +5526,7 @@ msgstr "Jaa syöte"
 
 #: src/components/StarterPack/ShareDialog.tsx:123
 #: src/components/StarterPack/ShareDialog.tsx:130
-#: src/screens/StarterPack/StarterPackScreen.tsx:469
+#: src/screens/StarterPack/StarterPackScreen.tsx:497
 msgid "Share link"
 msgstr ""
 
@@ -5540,7 +5544,7 @@ msgstr ""
 msgid "Share QR code"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:305
+#: src/screens/StarterPack/StarterPackScreen.tsx:333
 msgid "Share this starter pack"
 msgstr ""
 
@@ -5758,8 +5762,8 @@ msgstr "Kirjautunut sisään käyttäjätunnuksella @{0}"
 msgid "signed up with your starter pack"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:296
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:303
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:300
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:307
 msgid "Signup without a starter pack"
 msgstr ""
 
@@ -5862,7 +5866,7 @@ msgstr ""
 msgid "Starter pack by {0}"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:586
+#: src/screens/StarterPack/StarterPackScreen.tsx:614
 msgid "Starter pack is invalid"
 msgstr ""
 
@@ -6044,8 +6048,8 @@ msgstr "Se sisältää seuraavaa:"
 msgid "That handle is already taken."
 msgstr "Tuo käyttätunnus on jo käytössä."
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:102
-#: src/screens/StarterPack/StarterPackScreen.tsx:103
+#: src/screens/StarterPack/StarterPackScreen.tsx:105
+#: src/screens/StarterPack/StarterPackScreen.tsx:106
 #: src/screens/StarterPack/Wizard/index.tsx:106
 #: src/screens/StarterPack/Wizard/index.tsx:114
 msgid "That starter pack could not be found."
@@ -6068,7 +6072,7 @@ msgstr "Yhteisöohjeet on siirretty kohtaan <0/>"
 msgid "The Copyright Policy has been moved to <0/>"
 msgstr "Tekijänoikeuskäytäntö on siirretty kohtaan <0/>"
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:317
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:321
 msgid "The experience is better in the app. Download Bluesky now and we'll pick back up where you left off."
 msgstr ""
 
@@ -6097,7 +6101,7 @@ msgstr "Viesti saattaa olla poistettu."
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr "Tietosuojakäytäntö on siirretty kohtaan <0/>"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:596
+#: src/screens/StarterPack/StarterPackScreen.tsx:624
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
 msgstr ""
 
@@ -6292,6 +6296,7 @@ msgstr "Tämä syöte saa tällä hetkellä paljon liikennettä ja on tilapäise
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
 msgstr "Tämä syöte on tyhjä! Sinun on ehkä seurattava useampia käyttäjiä tai säädettävä kieliasetuksiasi."
 
+#: src/components/StarterPack/Main/PostsList.tsx:36
 #: src/view/screens/ProfileFeed.tsx:473
 #: src/view/screens/ProfileList.tsx:729
 msgid "This feed is empty."
@@ -6516,7 +6521,7 @@ msgstr "Poista listan hiljennys"
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr "Yhteys palveluusi ei onnistu. Tarkista internet-yhteytesi."
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:520
+#: src/screens/StarterPack/StarterPackScreen.tsx:548
 msgid "Unable to delete"
 msgstr ""
 
@@ -7141,7 +7146,7 @@ msgstr "Kyllä"
 msgid "Yes, deactivate"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:532
+#: src/screens/StarterPack/StarterPackScreen.tsx:560
 msgid "Yes, delete this starter pack"
 msgstr ""
 
@@ -7378,15 +7383,15 @@ msgstr ""
 msgid "You'll follow the suggested users once you finish creating your account!"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:229
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:233
 msgid "You'll follow these people and {0} others"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:227
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:231
 msgid "You'll follow these people right away"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:267
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:271
 msgid "You'll stay updated with these feeds"
 msgstr ""
 
