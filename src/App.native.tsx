@@ -58,6 +58,7 @@ import {Splash} from '#/Splash'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import I18nProvider from './locale/i18nProvider'
 import {listenSessionDropped} from './state/events'
+import {ActiveVideoProvider} from './view/com/util/post-embeds/VideoEmbed'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -168,7 +169,9 @@ function App() {
                       <I18nProvider>
                         <PortalProvider>
                           <StarterPackProvider>
-                            <InnerApp />
+                            <ActiveVideoProvider>
+                              <InnerApp />
+                            </ActiveVideoProvider>
                           </StarterPackProvider>
                         </PortalProvider>
                       </I18nProvider>

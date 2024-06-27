@@ -46,6 +46,7 @@ import {Provider as PortalProvider} from '#/components/Portal'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import I18nProvider from './locale/i18nProvider'
 import {listenSessionDropped} from './state/events'
+import {ActiveVideoProvider} from './view/com/util/post-embeds/VideoEmbed'
 
 function InnerApp() {
   const [isReady, setIsReady] = React.useState(false)
@@ -150,7 +151,9 @@ function App() {
                     <I18nProvider>
                       <PortalProvider>
                         <StarterPackProvider>
-                          <InnerApp />
+                          <ActiveVideoProvider>
+                            <InnerApp />
+                          </ActiveVideoProvider>
                         </StarterPackProvider>
                       </PortalProvider>
                     </I18nProvider>
