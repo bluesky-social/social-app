@@ -1,9 +1,10 @@
-import React, {useMemo} from 'react'
+import React, {useRef} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import debounce from 'lodash.debounce'
+import * as EmailValidator from 'email-validator'
 
+import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {is13, is18, useSignupContext} from '#/screens/Signup/state'
@@ -17,6 +18,7 @@ import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/E
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
 import {Loader} from '#/components/Loader'
+import {BackNextButtons} from '../BackNextButtons'
 
 function sanitizeDate(date: Date): Date {
   if (!date || date.toString() === 'Invalid Date') {
@@ -28,27 +30,65 @@ function sanitizeDate(date: Date): Date {
   return date
 }
 
-export function StepInfo() {
+export function StepInfo({
+  onPressBack,
+  isServerError,
+  refetchServer,
+}: {
+  onPressBack: () => void
+  isServerError: boolean
+  refetchServer: () => void
+}) {
   const {_} = useLingui()
   const {state, dispatch} = useSignupContext()
 
-  const setInviteCode = useMemo(
-    () =>
-      debounce(
-        (value: string) => dispatch({type: 'setInviteCode', value}),
-        1e3,
-      ),
-    [dispatch],
-  )
-  const setEmail = useMemo(
-    () => debounce((value: string) => dispatch({type: 'setEmail', value}), 1e3),
-    [dispatch],
-  )
-  const setPassword = useMemo(
-    () =>
-      debounce((value: string) => dispatch({type: 'setPassword', value}), 1e3),
-    [dispatch],
-  )
+  const inviteCodeValueRef = useRef<string>(state.inviteCode)
+  const emailValueRef = useRef<string>(state.email)
+  const passwordValueRef = useRef<string>(state.password)
+
+  const onNextPress = React.useCallback(async () => {
+    const inviteCode = inviteCodeValueRef.current
+    const email = emailValueRef.current
+    const password = passwordValueRef.current
+
+    if (state.serviceDescription?.inviteCodeRequired && !inviteCode) {
+      return dispatch({
+        type: 'setError',
+        value: _(msg`Please enter your invite code.`),
+      })
+    }
+    if (!email) {
+      return dispatch({
+        type: 'setError',
+        value: _(msg`Please enter your email.`),
+      })
+    }
+    if (!EmailValidator.validate(email)) {
+      return dispatch({
+        type: 'setError',
+        value: _(msg`Your email appears to be invalid.`),
+      })
+    }
+    if (!password) {
+      return dispatch({
+        type: 'setError',
+        value: _(msg`Please choose your password.`),
+      })
+    }
+
+    dispatch({type: 'setInviteCode', value: inviteCode})
+    dispatch({type: 'setEmail', value: email})
+    dispatch({type: 'setPassword', value: password})
+    dispatch({type: 'next'})
+    logEvent('signup:nextPressed', {
+      activeStep: state.activeStep,
+    })
+  }, [
+    _,
+    dispatch,
+    state.activeStep,
+    state.serviceDescription?.inviteCodeRequired,
+  ])
 
   return (
     <ScreenTransition>
@@ -79,7 +119,9 @@ export function StepInfo() {
                 <TextField.Root>
                   <TextField.Icon icon={Ticket} />
                   <TextField.Input
-                    onChangeText={value => setInviteCode(value.trim())}
+                    onChangeText={value => {
+                      inviteCodeValueRef.current = value.trim()
+                    }}
                     label={_(msg`Required for this provider`)}
                     defaultValue={state.inviteCode}
                     autoCapitalize="none"
@@ -97,7 +139,9 @@ export function StepInfo() {
                 <TextField.Icon icon={Envelope} />
                 <TextField.Input
                   testID="emailInput"
-                  onChangeText={value => setEmail(value.trim())}
+                  onChangeText={value => {
+                    emailValueRef.current = value.trim()
+                  }}
                   label={_(msg`Enter your email address`)}
                   defaultValue={state.email}
                   autoCapitalize="none"
@@ -114,7 +158,9 @@ export function StepInfo() {
                 <TextField.Icon icon={Lock} />
                 <TextField.Input
                   testID="passwordInput"
-                  onChangeText={setPassword}
+                  onChangeText={value => {
+                    passwordValueRef.current = value
+                  }}
                   label={_(msg`Choose your password`)}
                   defaultValue={state.password}
                   secureTextEntry
@@ -147,6 +193,13 @@ export function StepInfo() {
           </>
         ) : undefined}
       </View>
+      <BackNextButtons
+        showRetry={isServerError}
+        isLoading={state.isLoading}
+        onBackPress={onPressBack}
+        onNextPress={onNextPress}
+        onRetryPress={refetchServer}
+      />
     </ScreenTransition>
   )
 }

@@ -1,28 +1,32 @@
-import React from 'react'
+import React, {useRef} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useFocusEffect} from '@react-navigation/native'
-import debounce from 'lodash.debounce'
 
+import {logEvent} from '#/lib/statsig/statsig'
 import {
   createFullHandle,
   IsValidHandle,
   validateHandle,
 } from '#/lib/strings/handles'
+import {useAgent} from '#/state/session'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
-import {useSignupContext} from '#/screens/Signup/state'
+import {useSignupContext, useSubmitSignup} from '#/screens/Signup/state'
 import {atoms as a, useTheme} from '#/alf'
 import * as TextField from '#/components/forms/TextField'
 import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {TimesLarge_Stroke2_Corner0_Rounded as Times} from '#/components/icons/Times'
 import {Text} from '#/components/Typography'
+import {BackNextButtons} from './BackNextButtons'
 
 export function StepHandle() {
   const {_} = useLingui()
   const t = useTheme()
   const {state, dispatch} = useSignupContext()
+  const submit = useSubmitSignup({state, dispatch})
+  const agent = useAgent()
+  const handleValueRef = useRef<string>(state.handle)
 
   const [validCheck, setValidCheck] = React.useState<IsValidHandle>({
     handleChars: false,
@@ -32,26 +36,71 @@ export function StepHandle() {
     overall: false,
   })
 
-  useFocusEffect(
-    React.useCallback(() => {
-      setValidCheck(validateHandle(state.handle, state.userDomain))
-    }, [state.handle, state.userDomain]),
-  )
+  const onNextPress = React.useCallback(async () => {
+    const handle = handleValueRef.current.trim()
+    if (state.error) {
+      dispatch({type: 'setError', value: ''})
+    }
+    dispatch({
+      type: 'setHandle',
+      value: handle,
+    })
 
-  const onHandleChange = React.useMemo(
-    () =>
-      debounce((value: string) => {
-        if (state.error) {
-          dispatch({type: 'setError', value: ''})
-        }
+    const newValidCheck = validateHandle(handle, state.userDomain)
+    setValidCheck(newValidCheck)
+    if (!newValidCheck.overall) {
+      return
+    }
 
+    try {
+      dispatch({type: 'setIsLoading', value: true})
+
+      const res = await agent.resolveHandle({
+        handle: createFullHandle(handle, state.userDomain),
+      })
+
+      if (res.data.did) {
         dispatch({
-          type: 'setHandle',
-          value,
+          type: 'setError',
+          value: _(msg`That handle is already taken.`),
         })
-      }, 1e3),
-    [dispatch, state.error],
-  )
+        return
+      }
+    } catch (e) {
+      // Don't have to handle
+    } finally {
+      dispatch({type: 'setIsLoading', value: false})
+    }
+
+    // phoneVerificationRequired is actually whether a captcha is required
+    if (!state.serviceDescription?.phoneVerificationRequired) {
+      submit()
+      return
+    }
+
+    dispatch({type: 'next'})
+    logEvent('signup:nextPressed', {
+      activeStep: state.activeStep,
+    })
+  }, [
+    _,
+    dispatch,
+    state.error,
+    state.activeStep,
+    state.serviceDescription?.phoneVerificationRequired,
+    state.userDomain,
+    submit,
+    agent,
+  ])
+
+  const onBackPress = React.useCallback(() => {
+    const handle = handleValueRef.current.trim()
+    dispatch({
+      type: 'setHandle',
+      value: handle,
+    })
+    dispatch({type: 'prev'})
+  }, [dispatch])
 
   return (
     <ScreenTransition>
@@ -61,7 +110,9 @@ export function StepHandle() {
             <TextField.Icon icon={At} />
             <TextField.Input
               testID="handleInput"
-              onChangeText={onHandleChange}
+              onChangeText={value => {
+                handleValueRef.current = value
+              }}
               label={_(msg`Input your user handle`)}
               defaultValue={state.handle}
               autoCapitalize="none"
@@ -124,6 +175,11 @@ export function StepHandle() {
           </View>
         </View>
       </View>
+      <BackNextButtons
+        isLoading={state.isLoading}
+        onBackPress={onBackPress}
+        onNextPress={onNextPress}
+      />
     </ScreenTransition>
   )
 }
