@@ -3349,6 +3349,10 @@ msgstr "Nom ou description qui viole les normes communautaires"
 msgid "Nature"
 msgstr "Nature"
 
+#: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:73
+msgid "Navigate to starter pack"
+msgstr "Navigue vers le kit de démarrage"
+
 #: src/screens/Login/ForgotPasswordForm.tsx:173
 #: src/screens/Login/LoginForm.tsx:312
 #: src/view/com/modals/ChangePassword.tsx:169
