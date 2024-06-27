@@ -191,6 +191,9 @@ export type LogEvents = {
   'starterPack:ctaPress': {
     starterPack: string
   }
+  'starterPack:opened': {
+    starterPack: string
+  }
 
   'test:all:always': {}
   'test:all:sometimes': {}
