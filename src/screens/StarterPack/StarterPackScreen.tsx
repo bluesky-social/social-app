@@ -23,14 +23,16 @@ import {
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useDeleteStarterPackMutation} from '#/state/queries/starter-packs'
+import {batchedUpdates} from 'lib/batchedUpdates'
 import {HITSLOP_20} from 'lib/constants'
 import {makeProfileLink, makeStarterPackLink} from 'lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
 import {logEvent} from 'lib/statsig/statsig'
 import {getStarterPackOgCard} from 'lib/strings/starter-pack'
 import {isWeb} from 'platform/detection'
+import {updateProfileShadow} from 'state/cache/profile-shadow'
 import {useModerationOpts} from 'state/preferences/moderation-opts'
-import {RQKEY, useListMembersQuery} from 'state/queries/list-members'
+import {useListMembersQuery} from 'state/queries/list-members'
 import {useResolveDidQuery} from 'state/queries/resolve-uri'
 import {useShortenLink} from 'state/queries/shorten-link'
 import {useStarterPackQuery} from 'state/queries/starter-packs'
@@ -275,10 +277,14 @@ function Header({
         .filter(li => !li.subject.viewer?.following)
         .map(li => li.subject.did)
 
-      await bulkWriteFollows(agent, dids)
+      const followUris = await bulkWriteFollows(agent, dids)
 
-      await queryClient.refetchQueries({
-        queryKey: RQKEY(starterPack.list.uri),
+      batchedUpdates(() => {
+        for (let did of dids) {
+          updateProfileShadow(queryClient, did, {
+            followingUri: followUris.get(did),
+          })
+        }
       })
 
       logEvent('starterPack:followAll', {
