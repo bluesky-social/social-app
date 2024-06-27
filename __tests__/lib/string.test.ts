@@ -803,26 +803,32 @@ describe('parseEmbedPlayerFromUrl', () => {
 })
 
 describe('createStarterPackLinkFromAndroidReferrer', () => {
-  const validOutput = 'at://haileyok.com/app.bsky.graph.starterpack/rkey'
+  const validOutput = {
+    uri: 'at://haileyok.com/app.bsky.graph.starterpack/rkey',
+    starterPackUserID: '123456-123456',
+  }
 
   it('returns a link when input contains utm_source and utm_content', () => {
     expect(
       createStarterPackLinkFromAndroidReferrer(
-        'utm_source=bluesky&utm_content=starterpack_haileyok.com_rkey',
+        'utm_source=bluesky&utm_content=starterpack_haileyok.com_rkey_123456-123456',
       ),
     ).toEqual(validOutput)
 
     expect(
       createStarterPackLinkFromAndroidReferrer(
-        'utm_source=bluesky&utm_content=starterpack_test-lover-9000.com_rkey',
+        'utm_source=bluesky&utm_content=starterpack_test-lover-9000.com_rkey_123456-123456',
       ),
-    ).toEqual('at://test-lover-9000.com/app.bsky.graph.starterpack/rkey')
+    ).toEqual({
+      uri: 'at://test-lover-9000.com/app.bsky.graph.starterpack/rkey',
+      starterPackUserID: '123456-123456',
+    })
   })
 
   it('returns a link when input contains utm_source and utm_content in different order', () => {
     expect(
       createStarterPackLinkFromAndroidReferrer(
-        'utm_content=starterpack_haileyok.com_rkey&utm_source=bluesky',
+        'utm_content=starterpack_haileyok.com_rkey_123456-123456&utm_source=bluesky',
       ),
     ).toEqual(validOutput)
   })
@@ -830,7 +836,7 @@ describe('createStarterPackLinkFromAndroidReferrer', () => {
   it('returns a link when input contains other parameters as well', () => {
     expect(
       createStarterPackLinkFromAndroidReferrer(
-        'utm_source=bluesky&utm_medium=starterpack&utm_content=starterpack_haileyok.com_rkey',
+        'utm_source=bluesky&utm_medium=starterpack&utm_content=starterpack_haileyok.com_rkey_123456-123456',
       ),
     ).toEqual(validOutput)
   })
@@ -850,6 +856,13 @@ describe('createStarterPackLinkFromAndroidReferrer', () => {
   })
 
   it('returns null when utm_content is malformed', () => {
+    // No referrer
+    expect(
+      createStarterPackLinkFromAndroidReferrer(
+        'utm_source=bluesky&utm_content=starterpack_haileyok.com_rkey',
+      ),
+    ).toEqual(null)
+
     expect(
       createStarterPackLinkFromAndroidReferrer(
         'utm_content=starterpack_haileyok.com',
@@ -957,9 +970,9 @@ describe('createStarterPackGooglePlayUri', () => {
     'https://play.google.com/store/apps/details?id=xyz.blueskyweb.app&referrer=utm_source%3Dbluesky%26utm_medium%3Dstarterpack%26utm_content%3Dstarterpack_'
 
   it('returns valid google play uri when input is valid', () => {
-    expect(createStarterPackGooglePlayUri('name', 'rkey')).toEqual(
-      `${base}name_rkey`,
-    )
+    expect(
+      createStarterPackGooglePlayUri('name', 'rkey', '123456-123456'),
+    ).toEqual(`${base}name_rkey_123456-123456`)
   })
 
   it('returns null when no rkey is supplied', () => {

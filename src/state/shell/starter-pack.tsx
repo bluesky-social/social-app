@@ -25,7 +25,7 @@ export function Provider({children}: {children: React.ReactNode}) {
     if (v) {
       let userID = v.starterPackUserID
       if (!userID) {
-        userID = nanoid(16)
+        userID = nanoid(16).replace('_', '-')
       }
       setState({...v, starterPackUserID: userID})
     } else {
