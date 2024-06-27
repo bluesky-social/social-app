@@ -1,7 +1,8 @@
-import React from 'react'
+import React, {useMemo} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import debounce from 'lodash.debounce'
 
 import {logger} from '#/logger'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
@@ -30,6 +31,24 @@ function sanitizeDate(date: Date): Date {
 export function StepInfo() {
   const {_} = useLingui()
   const {state, dispatch} = useSignupContext()
+
+  const setInviteCode = useMemo(
+    () =>
+      debounce(
+        (value: string) => dispatch({type: 'setInviteCode', value}),
+        1e3,
+      ),
+    [dispatch],
+  )
+  const setEmail = useMemo(
+    () => debounce((value: string) => dispatch({type: 'setEmail', value}), 1e3),
+    [dispatch],
+  )
+  const setPassword = useMemo(
+    () =>
+      debounce((value: string) => dispatch({type: 'setPassword', value}), 1e3),
+    [dispatch],
+  )
 
   return (
     <ScreenTransition>
@@ -60,12 +79,7 @@ export function StepInfo() {
                 <TextField.Root>
                   <TextField.Icon icon={Ticket} />
                   <TextField.Input
-                    onChangeText={value => {
-                      dispatch({
-                        type: 'setInviteCode',
-                        value: value.trim(),
-                      })
-                    }}
+                    onChangeText={value => setInviteCode(value.trim())}
                     label={_(msg`Required for this provider`)}
                     defaultValue={state.inviteCode}
                     autoCapitalize="none"
@@ -83,12 +97,7 @@ export function StepInfo() {
                 <TextField.Icon icon={Envelope} />
                 <TextField.Input
                   testID="emailInput"
-                  onChangeText={value => {
-                    dispatch({
-                      type: 'setEmail',
-                      value: value.trim(),
-                    })
-                  }}
+                  onChangeText={value => setEmail(value.trim())}
                   label={_(msg`Enter your email address`)}
                   defaultValue={state.email}
                   autoCapitalize="none"
@@ -105,12 +114,7 @@ export function StepInfo() {
                 <TextField.Icon icon={Lock} />
                 <TextField.Input
                   testID="passwordInput"
-                  onChangeText={value => {
-                    dispatch({
-                      type: 'setPassword',
-                      value,
-                    })
-                  }}
+                  onChangeText={setPassword}
                   label={_(msg`Choose your password`)}
                   defaultValue={state.password}
                   secureTextEntry

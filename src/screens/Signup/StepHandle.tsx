@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
+import debounce from 'lodash.debounce'
 
 import {
   createFullHandle,
@@ -37,17 +38,18 @@ export function StepHandle() {
     }, [state.handle, state.userDomain]),
   )
 
-  const onHandleChange = React.useCallback(
-    (value: string) => {
-      if (state.error) {
-        dispatch({type: 'setError', value: ''})
-      }
+  const onHandleChange = React.useMemo(
+    () =>
+      debounce((value: string) => {
+        if (state.error) {
+          dispatch({type: 'setError', value: ''})
+        }
 
-      dispatch({
-        type: 'setHandle',
-        value,
-      })
-    },
+        dispatch({
+          type: 'setHandle',
+          value,
+        })
+      }, 1e3),
     [dispatch, state.error],
   )
 
