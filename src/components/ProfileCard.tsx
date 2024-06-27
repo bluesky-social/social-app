@@ -57,7 +57,7 @@ export function Card({
   const moderation = moderateProfile(profile, moderationOpts)
 
   return (
-    <View style={[a.flex_1, a.gap_sm]}>
+    <Outer>
       <Header>
         <Avatar profile={profile} moderationOpts={moderationOpts} />
         <NameAndHandle profile={profile} moderationOpts={moderationOpts} />
@@ -70,8 +70,16 @@ export function Card({
       />
 
       <Description profile={profile} />
-    </View>
+    </Outer>
   )
+}
+
+export function Outer({
+  children,
+}: {
+  children: React.ReactElement | React.ReactElement[]
+}) {
+  return <View style={[a.flex_1, a.gap_sm]}>{children}</View>
 }
 
 export function Header({
