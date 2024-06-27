@@ -8,7 +8,7 @@ export async function resolveShortLink(shortLink: string) {
     const res = await fetch(`${shortLink}`, {
       method: 'GET',
       headers: {
-        contentType: 'application/json',
+        Accept: 'application/json',
       },
       signal: controller.signal,
     })
