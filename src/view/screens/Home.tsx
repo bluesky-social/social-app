@@ -25,8 +25,8 @@ import {HomeTabNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {FeedPage} from 'view/com/feeds/FeedPage'
 import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
-import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
 import {FollowingEndOfFeed} from 'view/com/posts/FollowingEndOfFeed'
+import {EmptyTimeline} from '#/screens/Home/EmptyTimeline'
 import {NoFeedsPinned} from '#/screens/Home/NoFeedsPinned'
 import {HomeHeader} from '../com/home/HomeHeader'
 
@@ -207,7 +207,7 @@ function HomeScreenReady({
   )
 
   const renderFollowingEmptyState = React.useCallback(() => {
-    return <FollowingEmptyState />
+    return <EmptyTimeline />
   }, [])
 
   const renderCustomFeedEmptyState = React.useCallback(() => {

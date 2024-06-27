@@ -8,7 +8,6 @@ import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {FeedSuggestedFollowsCards} from '#/components/FeedSuggestedFollows'
-import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
 import {IconCircle} from '#/components/IconCircle'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as Refresh} from '#/components/icons/ArrowRotateCounterClockwise'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
@@ -16,17 +15,10 @@ import {Text} from '#/components/Typography'
 
 export function EmptyTimeline() {
   const {_} = useLingui()
-  const offset = useHeaderOffset()
 
   return (
     <CenteredView sideBorders style={[a.h_full_vh]}>
-      <View
-        style={[
-          a.px_lg,
-          {
-            paddingTop: offset + a.pt_3xl.paddingTop,
-          },
-        ]}>
+      <View style={[a.px_lg, a.pt_3xl]}>
         <IconCircle icon={FilterTimeline} style={[a.mb_2xl]} />
 
         <Text style={[a.text_xl, a.font_bold, a.mb_sm]}>
