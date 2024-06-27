@@ -99,3 +99,7 @@ export function createStarterPackUri({
 }): string | null {
   return new AtUri(`at://${did}/app.bsky.graph.starterpack/${rkey}`).toString()
 }
+
+export function startUriToStarterPackUri(uri: string) {
+  return uri.replace('/start/', '/starter-pack/')
+}
