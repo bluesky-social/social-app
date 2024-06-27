@@ -5,18 +5,23 @@ type StateContext =
   | {
       uri: string
       isClip?: boolean
-      starterPackUserID?: string
+      starterPackUserID: string
     }
   | undefined
-type SetContext = (v: StateContext) => void
+
+type SetContext = (
+  v: {uri: string; isClip?: boolean; starterPackUserID?: string} | undefined,
+) => void
 
 const stateContext = React.createContext<StateContext>(undefined)
-const setContext = React.createContext<SetContext>((_: StateContext) => {})
+const setContext = React.createContext<SetContext>(_ => {})
 
 export function Provider({children}: {children: React.ReactNode}) {
   const [state, setState] = React.useState<StateContext>()
 
-  const setStateWrapped = (v: StateContext) => {
+  const setStateWrapped = (
+    v: {uri: string; isClip?: boolean; starterPackUserID?: string} | undefined,
+  ) => {
     if (v) {
       let userID = v.starterPackUserID
       if (!userID) {

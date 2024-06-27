@@ -328,12 +328,14 @@ function LandingScreenLoaded({
             cta="Download on Google Play"
             color="primary"
             onPress={() => {
+              if (!activeStarterPack) return
               const rkey = new AtUri(starterPack.uri).rkey
               if (!rkey) return
 
               const googlePlayUri = createStarterPackGooglePlayUri(
                 creator.handle,
                 rkey,
+                activeStarterPack.starterPackUserID,
               )
               if (!googlePlayUri) return
 

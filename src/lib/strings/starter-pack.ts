@@ -67,9 +67,10 @@ export function parseStarterPackUri(uri?: string): {
 export function createStarterPackGooglePlayUri(
   name: string,
   rkey: string,
+  userID: string,
 ): string | null {
   if (!name || !rkey) return null
-  return `https://play.google.com/store/apps/details?id=xyz.blueskyweb.app&referrer=utm_source%3Dbluesky%26utm_medium%3Dstarterpack%26utm_content%3Dstarterpack_${name}_${rkey}`
+  return `https://play.google.com/store/apps/details?id=xyz.blueskyweb.app&referrer=utm_source%3Dbluesky%26utm_medium%3Dstarterpack%26utm_content%3Dstarterpack_${name}_${rkey}_${userID}`
 }
 
 export function httpStarterPackUriToAtUri(httpUri?: string): string | null {
