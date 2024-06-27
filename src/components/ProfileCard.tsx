@@ -79,7 +79,7 @@ export function Outer({
 }: {
   children: React.ReactElement | React.ReactElement[]
 }) {
-  return <View style={[a.flex_1, a.gap_sm]}>{children}</View>
+  return <View style={[a.flex_1, a.gap_xs]}>{children}</View>
 }
 
 export function Header({
@@ -172,12 +172,14 @@ export function Description({
   )
     return null
   return (
-    <RichText
-      value={rt}
-      style={[a.leading_snug]}
-      numberOfLines={3}
-      disableLinks
-    />
+    <View style={[a.pt_xs]}>
+      <RichText
+        value={rt}
+        style={[a.leading_snug]}
+        numberOfLines={3}
+        disableLinks
+      />
+    </View>
   )
 }
 
