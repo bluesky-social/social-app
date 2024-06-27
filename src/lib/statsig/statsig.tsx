@@ -8,6 +8,7 @@ import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
 import {BUNDLE_DATE, BUNDLE_IDENTIFIER, IS_TESTFLIGHT} from 'lib/app-info'
+import {useActiveStarterPack} from 'state/shell/starter-pack'
 import {useSession} from '../../state/session'
 import {timeout} from '../async/timeout'
 import {useNonReactiveCallback} from '../hooks/useNonReactiveCallback'
@@ -15,6 +16,10 @@ import {LogEvents} from './events'
 import {Gate} from './gates'
 
 const SDK_KEY = 'client-SXJakO39w9vIhl3D44u8UupyzFl4oZ2qPIkjwcvuPsV'
+
+// Be sure to set this in the Statsig dashboard before adding here
+type CustomIDKey = 'starterPackUserID'
+type CustomIDs = Record<CustomIDKey, string> | undefined
 
 type StatsigUser = {
   userID: string | undefined
@@ -33,6 +38,7 @@ type StatsigUser = {
     appLanguage: string
     contentLanguages: string[]
   }
+  customIDs: CustomIDs
 }
 
 let refSrc = ''
@@ -210,7 +216,10 @@ export function useDangerousSetGate(): (
   return dangerousSetGate
 }
 
-function toStatsigUser(did: string | undefined): StatsigUser {
+function toStatsigUser(
+  did: string | undefined,
+  customIDs?: CustomIDs,
+): StatsigUser {
   let userID: string | undefined
   if (did) {
     userID = sha256(did)
@@ -230,6 +239,7 @@ function toStatsigUser(did: string | undefined): StatsigUser {
       appLanguage: languagePrefs.appLanguage,
       contentLanguages: languagePrefs.contentLanguages,
     },
+    customIDs,
   }
 }
 
@@ -287,15 +297,31 @@ export function initialize() {
 export function Provider({children}: {children: React.ReactNode}) {
   const {currentAccount, accounts} = useSession()
   const did = currentAccount?.did
-  const currentStatsigUser = React.useMemo(() => toStatsigUser(did), [did])
+  const activeStarterPack = useActiveStarterPack()
+
+  const customIDs = React.useMemo<CustomIDs>(() => {
+    if (activeStarterPack?.starterPackUserID) {
+      return {
+        starterPackUserID: activeStarterPack.starterPackUserID,
+      }
+    }
+  }, [activeStarterPack?.starterPackUserID])
+
+  const currentStatsigUser = React.useMemo(
+    () => toStatsigUser(did, customIDs),
+    [did, customIDs],
+  )
 
   const otherDidsConcatenated = accounts
     .map(account => account.did)
     .filter(accountDid => accountDid !== did)
     .join(' ') // We're only interested in DID changes.
   const otherStatsigUsers = React.useMemo(
-    () => otherDidsConcatenated.split(' ').map(toStatsigUser),
-    [otherDidsConcatenated],
+    () =>
+      otherDidsConcatenated
+        .split(' ')
+        .map(did => toStatsigUser(did, customIDs)),
+    [otherDidsConcatenated, customIDs],
   )
   const statsigOptions = React.useMemo(
     () => createStatsigOptions(otherStatsigUsers),
