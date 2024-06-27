@@ -393,7 +393,6 @@ function Footer({
     state.currentStep === 'Profiles'
       ? [profile, ...state.profiles]
       : state.feeds
-  const initialNamesIndex = state.currentStep === 'Profiles' ? 1 : 0
 
   const isEditEnabled =
     (state.currentStep === 'Profiles' && items.length > 1) ||
@@ -445,65 +444,99 @@ function Footer({
         ))}
       </View>
 
-      {items.length === 0 ? (
-        <View style={[a.gap_sm]}>
-          <Text style={[a.font_bold, a.text_center, textStyles]}>
-            <Trans>Add some feeds to your starter pack!</Trans>
-          </Text>
+      {
+        state.currentStep === 'Profiles' ? (
           <Text style={[a.text_center, textStyles]}>
-            <Trans>Search for feeds that you want to suggest to others.</Trans>
+            {
+              items.length < 2 ? (
+                <Trans>
+                  It's just you right now! Add more people to your starter pack
+                  by searching above.
+                </Trans>
+              ) : items.length === 2 ? (
+                <Trans>
+                  <Text style={[a.font_bold, textStyles]}>You</Text> and
+                  <Text> </Text>
+                  <Text style={[a.font_bold, textStyles]}>
+                    {getName(items[1] /* [0] is self, skip it */)}{' '}
+                  </Text>
+                  are included in your starter pack
+                </Trans>
+              ) : items.length > 2 ? (
+                <Trans context="profiles">
+                  <Text style={[a.font_bold, textStyles]}>
+                    {getName(items[1] /* [0] is self, skip it */)},{' '}
+                  </Text>
+                  <Text style={[a.font_bold, textStyles]}>
+                    {getName(items[2])},{' '}
+                  </Text>
+                  and{' '}
+                  <Plural
+                    value={items.length - 2}
+                    one="# other"
+                    other="# others"
+                  />{' '}
+                  are included in your starter pack
+                </Trans>
+              ) : null /* Should not happen. */
+            }
           </Text>
-        </View>
-      ) : (
-        <Text style={[a.text_center, textStyles]}>
-          {state.currentStep === 'Profiles' && items.length === 1 ? (
-            <Trans>
-              It's just you right now! Add more people to your starter pack by
-              searching above.
-            </Trans>
-          ) : items.length === 1 ? (
-            <Trans>
-              <Text style={[a.font_bold, textStyles]}>
-                {getName(items[initialNamesIndex])}
-              </Text>{' '}
-              is included in your starter pack
-            </Trans>
-          ) : items.length === 2 ? (
-            <Trans>
-              <Text style={[a.font_bold, textStyles]}>You</Text> and
-              <Text> </Text>
-              <Text style={[a.font_bold, textStyles]}>
-                {getName(items[initialNamesIndex])}{' '}
+        ) : state.currentStep === 'Feeds' ? (
+          items.length === 0 ? (
+            <View style={[a.gap_sm]}>
+              <Text style={[a.font_bold, a.text_center, textStyles]}>
+                <Trans>Add some feeds to your starter pack!</Trans>
               </Text>
-              are included in your starter pack
-            </Trans>
-          ) : state.currentStep === 'Profiles' ? (
-            <Trans context="profiles">
-              <Text style={[a.font_bold, textStyles]}>
-                {getName(items[initialNamesIndex])},{' '}
+              <Text style={[a.text_center, textStyles]}>
+                <Trans>
+                  Search for feeds that you want to suggest to others.
+                </Trans>
               </Text>
-              <Text style={[a.font_bold, textStyles]}>
-                {getName(items[initialNamesIndex + 1])},{' '}
-              </Text>
-              and{' '}
-              <Plural value={items.length - 2} one="# other" other="# others" />{' '}
-              are included in your starter pack
-            </Trans>
+            </View>
           ) : (
-            <Trans context="feeds">
-              <Text style={[a.font_bold, textStyles]}>
-                {getName(items[initialNamesIndex])},{' '}
-              </Text>
-              <Text style={[a.font_bold, textStyles]}>
-                {getName(items[initialNamesIndex + 1])},{' '}
-              </Text>
-              and{' '}
-              <Plural value={items.length - 2} one="# other" other="# others" />{' '}
-              are included in your starter pack
-            </Trans>
-          )}
-        </Text>
-      )}
+            <Text style={[a.text_center, textStyles]}>
+              {
+                items.length === 1 ? (
+                  <Trans>
+                    <Text style={[a.font_bold, textStyles]}>
+                      {getName(items[0])}
+                    </Text>{' '}
+                    is included in your starter pack
+                  </Trans>
+                ) : items.length === 2 ? (
+                  <Trans>
+                    <Text style={[a.font_bold, textStyles]}>
+                      {getName(items[0])}
+                    </Text>{' '}
+                    and
+                    <Text> </Text>
+                    <Text style={[a.font_bold, textStyles]}>
+                      {getName(items[1])}{' '}
+                    </Text>
+                    are included in your starter pack
+                  </Trans>
+                ) : items.length > 2 ? (
+                  <Trans context="feeds">
+                    <Text style={[a.font_bold, textStyles]}>
+                      {getName(items[0])},{' '}
+                    </Text>
+                    <Text style={[a.font_bold, textStyles]}>
+                      {getName(items[1])},{' '}
+                    </Text>
+                    and{' '}
+                    <Plural
+                      value={items.length - 2}
+                      one="# other"
+                      other="# others"
+                    />{' '}
+                    are included in your starter pack
+                  </Trans>
+                ) : null /* Should not happen. */
+              }
+            </Text>
+          )
+        ) : null /* Should not happen. */
+      }
 
       <View
         style={[
