@@ -2766,7 +2766,7 @@ msgstr "Invitez les gens à ce kit de démarrage !"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:35
 msgid "Invite your friends to follow your favorite feeds and people"
-msgstr "Invitez vos amis à suivre vos fils d’actu et vos personnes préférées"
+msgstr "Invitez vos ami·e·s à suivre vos fils d’actu et vos personnes préférées"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:32
 msgid "Invites, but personal"
