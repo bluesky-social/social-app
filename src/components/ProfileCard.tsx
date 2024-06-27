@@ -57,21 +57,19 @@ export function Card({
   const moderation = moderateProfile(profile, moderationOpts)
 
   return (
-    <View style={[a.flex_1, a.gap_xs]}>
+    <View style={[a.flex_1, a.gap_sm]}>
       <Header>
         <Avatar profile={profile} moderationOpts={moderationOpts} />
         <NameAndHandle profile={profile} moderationOpts={moderationOpts} />
         <FollowButton profile={profile} logContext={logContext} />
       </Header>
 
-      <View style={[a.mb_xs]}>
-        <ProfileCardPills
-          followedBy={Boolean(profile.viewer?.followedBy)}
-          moderation={moderation}
-        />
-      </View>
+      <ProfileCardPills
+        followedBy={Boolean(profile.viewer?.followedBy)}
+        moderation={moderation}
+      />
 
-      {profile.description && <Description description={profile.description} />}
+      <Description profile={profile} />
     </View>
   )
 }
@@ -144,7 +142,13 @@ export function NameAndHandle({
   )
 }
 
-export function Description({description}: {description?: string}) {
+export function Description({
+  profile: profileUnshadowed,
+}: {
+  profile: AppBskyActorDefs.ProfileViewDetailed
+}) {
+  const profile = useProfileShadow(profileUnshadowed)
+  const {description} = profile
   const rt = React.useMemo(() => {
     if (!description) return
     const rt = new RichTextApi({text: description || ''})
@@ -152,6 +156,13 @@ export function Description({description}: {description?: string}) {
     return rt
   }, [description])
   if (!rt) return null
+  if (
+    profile.viewer &&
+    (profile.viewer.blockedBy ||
+      profile.viewer.blocking ||
+      profile.viewer.blockingByList)
+  )
+    return null
   return (
     <RichText
       value={rt}
@@ -224,6 +235,12 @@ export function FollowButtonInner({
   )
 
   if (!profile.viewer) return null
+  if (
+    profile.viewer.blockedBy ||
+    profile.viewer.blocking ||
+    profile.viewer.blockingByList
+  )
+    return null
 
   return (
     <View>
