@@ -170,12 +170,12 @@ msgstr "<0/> 个成员"
 #: src/screens/StarterPack/Wizard/index.tsx:466
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}、</0><1>{1}、</1>及{2, plural, one {#更多人} other {#更多人}}包含在你的入门包中"
+msgstr "<0>{0}、</0><1>{1}</1>及{2, plural, one {其他#} other {其他#}}人包含在你的入门包中"
 
 #: src/screens/StarterPack/Wizard/index.tsx:519
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}、</0><1>{1}、</1>及{2, plural, one {#更多资讯源} other {#更多资讯源}}包含在你的入门包中"
+msgstr "<0>{0}、</0><1>{1}</1>及{2, plural, one {其他#} other {其他#}}个资讯源包含在你的入门包中"
 
 #: src/view/shell/Drawer.tsx:101
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
@@ -187,11 +187,11 @@ msgstr "<0>{0}</0> {1, plural, one {正在关注} other {正在关注}}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:507
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
-msgstr "<0>{0}</0>以及<1> </1><2>{1}</2>包含在你的入门包中"
+msgstr "<0>{0}</0>以及<1></1><2>{1}</2>包含在你的入门包中"
 
 #: src/screens/StarterPack/Wizard/index.tsx:500
 msgid "<0>{0}</0> is included in your starter pack"
-msgstr "<0>{0}</0> 包含在你的入门包中"
+msgstr "<0>{0}</0>包含在你的入门包中"
 
 #: src/view/com/modals/SelfLabel.tsx:135
 msgid "<0>Not Applicable.</0> This warning is only available for posts with media attached."
@@ -199,7 +199,7 @@ msgstr "<0>不适用。</0> 这个警告仅适用于附加媒体内容的帖文�
 
 #: src/screens/StarterPack/Wizard/index.tsx:457
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
-msgstr "<0>你</0>以及<1> </1><2>{0}</2>包含在你的入门包中"
+msgstr "<0>你</0>以及<1></1><2>{0}</2>包含在你的入门包中"
 
 #: src/screens/Profile/Header/Handle.tsx:50
 msgid "⚠Invalid Handle"
