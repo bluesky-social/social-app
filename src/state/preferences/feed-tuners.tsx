@@ -18,39 +18,8 @@ export function useFeedTuners(feedDesc: FeedDescriptor) {
         FeedTuner.preferredLangOnly(langPrefs.contentLanguages),
       ]
     }
-    if (feedDesc.startsWith('list')) {
+    if (feedDesc.startsWith('list') || feedDesc === 'following') {
       const feedTuners = []
-
-      if (feedDesc.endsWith('|as_following')) {
-        // Same as Following tuners below, copypaste for now.
-        if (preferences?.feedViewPrefs.hideReposts) {
-          feedTuners.push(FeedTuner.removeReposts)
-        } else {
-          feedTuners.push(FeedTuner.dedupReposts)
-        }
-        if (preferences?.feedViewPrefs.hideReplies) {
-          feedTuners.push(FeedTuner.removeReplies)
-        } else {
-          feedTuners.push(
-            FeedTuner.thresholdRepliesOnly({
-              userDid: currentAccount?.did || '',
-              minLikes: preferences?.feedViewPrefs.hideRepliesByLikeCount || 0,
-              followedOnly:
-                !!preferences?.feedViewPrefs.hideRepliesByUnfollowed,
-            }),
-          )
-        }
-        if (preferences?.feedViewPrefs.hideQuotePosts) {
-          feedTuners.push(FeedTuner.removeQuotePosts)
-        }
-      } else {
-        feedTuners.push(FeedTuner.dedupReposts)
-      }
-      return feedTuners
-    }
-    if (feedDesc === 'following') {
-      const feedTuners = []
-
       if (preferences?.feedViewPrefs.hideReposts) {
         feedTuners.push(FeedTuner.removeReposts)
       } else {
@@ -70,7 +39,6 @@ export function useFeedTuners(feedDesc: FeedDescriptor) {
       if (preferences?.feedViewPrefs.hideQuotePosts) {
         feedTuners.push(FeedTuner.removeQuotePosts)
       }
-
       return feedTuners
     }
     return []
