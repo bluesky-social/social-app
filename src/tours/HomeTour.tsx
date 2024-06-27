@@ -1,5 +1,4 @@
 import React from 'react'
-import {useWindowDimensions} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {
@@ -10,16 +9,16 @@ import {
 } from 'rn-tourguide'
 
 import {DISCOVER_FEED_URI} from '#/lib/constants'
+import {isWeb} from '#/platform/detection'
 import {useSetSelectedFeed} from '#/state/shell/selected-feed'
-import {useShellLayout} from '#/state/shell/shell-layout'
 import {TOURS} from '.'
+import {useHeaderPosition} from './positioning'
 
 export function HomeTour() {
   const {_} = useLingui()
   const {tourKey, eventEmitter} = useTourGuideController(TOURS.HOME)
-  const {headerHeight} = useShellLayout()
-  const {width} = useWindowDimensions()
   const setSelectedFeed = useSetSelectedFeed()
+  const headerPosition = useHeaderPosition()
 
   React.useEffect(() => {
     const handleOnStepChange = (step?: IStep) => {
@@ -41,30 +40,33 @@ export function HomeTour() {
         isTourGuide
         tourKey={tourKey}
         zone={1}
-        top={headerHeight.value - 45}
-        left={0}
-        width={width}
-        height={45}
+        top={headerPosition.top}
+        left={headerPosition.left}
+        width={headerPosition.width}
+        height={headerPosition.height}
+        borderRadiusObject={headerPosition.borderRadiusObject}
         text={_(msg`Switch between feeds to control your experience.`)}
       />
       <TourGuideZoneByPosition
         isTourGuide
         tourKey={tourKey}
         zone={2}
-        top={headerHeight.value - 45}
-        left={0}
-        width={width}
-        height={45}
+        top={headerPosition.top}
+        left={headerPosition.left}
+        width={headerPosition.width}
+        height={headerPosition.height}
+        borderRadiusObject={headerPosition.borderRadiusObject}
         text={_(msg`Following shows the latest posts from people you follow.`)}
       />
       <TourGuideZoneByPosition
         isTourGuide
         tourKey={tourKey}
         zone={3}
-        top={headerHeight.value - 45}
-        left={0}
-        width={width}
-        height={45}
+        top={headerPosition.top}
+        left={headerPosition.left}
+        width={headerPosition.width}
+        height={headerPosition.height}
+        borderRadiusObject={headerPosition.borderRadiusObject}
         text={_(msg`Discover learns which posts you like as you browse.`)}
       />
     </>
@@ -81,7 +83,7 @@ export function HomeTourExploreWrapper({
       tourKey={tourKey}
       zone={4}
       tooltipBottomOffset={50}
-      shape="circle"
+      shape={isWeb ? 'rectangle' : 'circle'}
       text={_(
         msg`Find more feeds and accounts to follow in the Explore page.`,
       )}>

@@ -12,6 +12,7 @@ import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
 import {Hashtag_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/Hashtag'
 import {Link} from '#/components/Link'
+import {TourDebugButton} from '#/tours/Debug'
 import {useKawaiiMode} from '../../../state/preferences/kawaii'
 import {HomeHeaderLayoutMobile} from './HomeHeaderLayoutMobile'
 
@@ -73,6 +74,7 @@ function HomeHeaderLayoutDesktopAndTablet({
             <Logo width={kawaii ? 60 : 28} />
           </View>
 
+          <TourDebugButton />
           <Link
             to="/feeds"
             hitSlop={10}

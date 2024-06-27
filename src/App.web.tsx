@@ -7,6 +7,7 @@ import {RootSiblingParent} from 'react-native-root-siblings'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {TourGuideProvider} from 'rn-tourguide'
 
 import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
 import {QueryProvider} from '#/lib/react-query'
@@ -46,6 +47,7 @@ import {Provider as PortalProvider} from '#/components/Portal'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import I18nProvider from './locale/i18nProvider'
 import {listenSessionDropped} from './state/events'
+import {TooltipComponent} from './tours/Tooltip'
 
 function InnerApp() {
   const [isReady, setIsReady] = React.useState(false)
@@ -102,7 +104,16 @@ function InnerApp() {
                               <BackgroundNotificationPreferencesProvider>
                                 <MutedThreadsProvider>
                                   <SafeAreaProvider>
-                                    <Shell />
+                                    <TourGuideProvider
+                                      tooltipComponent={TooltipComponent}
+                                      backdropColor={
+                                        theme === 'light'
+                                          ? 'rgba(0, 0, 0, 0.15)'
+                                          : 'rgba(0, 0, 0, 0.8)'
+                                      }
+                                      preventOutsideInteraction>
+                                      <Shell />
+                                    </TourGuideProvider>
                                   </SafeAreaProvider>
                                 </MutedThreadsProvider>
                               </BackgroundNotificationPreferencesProvider>

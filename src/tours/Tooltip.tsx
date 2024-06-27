@@ -36,8 +36,8 @@ export function TooltipComponent({
         a.flex_col,
         a.gap_lg,
         a.rounded_sm,
-        a.border,
-        t.atoms.border_contrast_high,
+        a.shadow_md,
+        {maxWidth: 300},
       ]}>
       <View style={[]}>
         <Text testID="stepDescription" style={[a.text_lg, a.leading_snug]}>

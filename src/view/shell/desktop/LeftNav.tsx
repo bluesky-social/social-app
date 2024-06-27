@@ -63,6 +63,7 @@ import {
   UserCircle_Filled_Corner0_Rounded as UserCircleFilled,
   UserCircle_Stroke2_Corner0_Rounded as UserCircle,
 } from '#/components/icons/UserCircle'
+import {HomeTourExploreWrapper} from '#/tours/HomeTour'
 import {router} from '../../../routes'
 
 const NAV_ICON_WIDTH = 28
@@ -340,14 +341,19 @@ export function DesktopLeftNav() {
             iconFilled={<HomeFilled width={NAV_ICON_WIDTH} style={pal.text} />}
             label={_(msg`Home`)}
           />
-          <NavItem
-            href="/search"
-            icon={<MagnifyingGlass style={pal.text} width={NAV_ICON_WIDTH} />}
-            iconFilled={
-              <MagnifyingGlassFilled style={pal.text} width={NAV_ICON_WIDTH} />
-            }
-            label={_(msg`Search`)}
-          />
+          <HomeTourExploreWrapper>
+            <NavItem
+              href="/search"
+              icon={<MagnifyingGlass style={pal.text} width={NAV_ICON_WIDTH} />}
+              iconFilled={
+                <MagnifyingGlassFilled
+                  style={pal.text}
+                  width={NAV_ICON_WIDTH}
+                />
+              }
+              label={_(msg`Search`)}
+            />
+          </HomeTourExploreWrapper>
           <NavItem
             href="/notifications"
             count={numUnreadNotifications}

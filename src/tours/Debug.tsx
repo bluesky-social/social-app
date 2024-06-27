@@ -1,7 +1,8 @@
 import React from 'react'
 import {useTourGuideController} from 'rn-tourguide'
 
-import {Button, ButtonText} from '#/components/Button'
+import {Button} from '#/components/Button'
+import {Text} from '#/components/Typography'
 
 export function TourDebugButton() {
   const {start} = useTourGuideController('home')
@@ -11,7 +12,7 @@ export function TourDebugButton() {
         console.log('firing')
         start(1)
       }}>
-      <ButtonText>t</ButtonText>
+      {() => <Text>t</Text>}
     </Button>
   )
 }
