@@ -68,30 +68,36 @@ type StarterPackScreeProps = NativeStackScreenProps<
   CommonNavigatorParams,
   'StarterPack'
 >
+type StarterPackScreenShortProps = NativeStackScreenProps<
+  CommonNavigatorParams,
+  'StarterPackShort'
+>
 
 export function StarterPackScreen({route}: StarterPackScreeProps) {
+  return <StarterPackScreenInner routeParams={route.params} />
+}
+
+export function StarterPackScreenShort({route}: StarterPackScreenShortProps) {
   const {_} = useLingui()
   const {
     data: resolvedStarterPack,
     isLoading,
     isError,
   } = useResolvedStarterPackShortLink({
-    nameOrCode: route.params.name,
+    code: route.params.code,
   })
-  const params = resolvedStarterPack ?? route.params
 
-  if (isLoading || isError) {
+  if (isLoading || isError || !resolvedStarterPack) {
     return (
       <ListMaybePlaceholder
-        isLoading={true}
+        isLoading={isLoading}
         isError={isError}
         errorMessage={_(msg`That starter pack could not be found.`)}
         emptyMessage={_(msg`That starter pack could not be found.`)}
       />
     )
   }
-
-  return <StarterPackScreenInner routeParams={params} />
+  return <StarterPackScreenInner routeParams={resolvedStarterPack} />
 }
 
 export function StarterPackScreenInner({

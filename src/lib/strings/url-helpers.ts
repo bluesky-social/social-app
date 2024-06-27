@@ -5,6 +5,7 @@ import TLDs from 'tlds'
 import {logger} from '#/logger'
 import {BSKY_SERVICE} from 'lib/constants'
 import {isInvalidHandle} from 'lib/strings/handles'
+import {isWeb} from 'platform/detection'
 
 export const BSKY_APP_HOST = 'https://bsky.app'
 const BSKY_TRUSTED_HOSTS = [
@@ -167,7 +168,8 @@ export function convertBskyAppUrlIfNeeded(url: string): string {
     } catch (e) {
       console.error('Unexpected error in convertBskyAppUrlIfNeeded()', e)
     }
-  } else if (isShortLink(url)) {
+  } else if (!isWeb && isShortLink(url)) {
+    // We only want to do this on native, web handles the 301 for us
     return shortLinkToHref(url)
   }
   return url
@@ -300,7 +302,7 @@ export function shortLinkToHref(url: string): string {
     // For now we only support starter packs, but in the future we should add additional paths to this check
     const parts = urlp.pathname.split('/').filter(Boolean)
     if (parts.length === 1) {
-      return `/starter-pack/short-${parts[0]}`
+      return `/starter-pack-short/${parts[0]}`
     }
     return url
   } catch (e) {
