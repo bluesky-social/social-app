@@ -8,7 +8,7 @@ msgstr ""
 "Language: fr\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-06-25 11:00+0100\n"
+"PO-Revision-Date: 2024-06-27 01:00+0100\n"
 "Last-Translator: surfdude29\n"
 "Language-Team: Stanislas Signoud (@signez.fr), surfdude29\n"
 "Plural-Forms: \n"
@@ -166,10 +166,6 @@ msgstr "{value, plural, =0 {Voir toutes les réponses} one {Voir les réponses a
 #: src/components/WhoCanReply.tsx:295
 msgid "<0/> members"
 msgstr "<0/> membres"
-
-#: src/screens/StarterPack/Wizard/index.tsx:485
-#~ msgid "<0>{0} </0>and<1> </1><2>{1} </2>are included in your starter pack"
-#~ msgstr "<0>{0} </0>et<1> </1><2>{1} </2>sont inclus dans votre kit de démarrage"
 
 #: src/screens/StarterPack/Wizard/index.tsx:466
 msgctxt "profiles"
@@ -337,10 +333,6 @@ msgstr "Ajouter un mot masqué pour les paramètres configurés"
 msgid "Add muted words and tags"
 msgstr "Ajouter des mots et des mots-clés masqués"
 
-#: src/screens/StarterPack/Wizard/index.tsx:197
-#~ msgid "Add people to your starter pack that you think others will enjoy following"
-#~ msgstr "Ajoutez à votre kit de démarrage des personnes que vous pensez que d’autres aimeront suivre"
-
 #: src/screens/Home/NoFeedsPinned.tsx:99
 msgid "Add recommended feeds"
 msgstr "Ajouter les fils d’actu recommandés"
@@ -390,7 +382,7 @@ msgstr "Contenu pour adultes"
 
 #: src/screens/Moderation/index.tsx:356
 msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
-msgstr ""
+msgstr "Le contenu pour adultes ne peut être activé que via le Web à <0>bsky.app</0>."
 
 #: src/components/moderation/LabelPreference.tsx:242
 msgid "Adult content is disabled."
@@ -464,10 +456,6 @@ msgstr "Une erreur s’est produite"
 #: src/components/StarterPack/ProfileStarterPacks.tsx:315
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr "Une erreur s’est produite lors de la génération de votre kit de démarrage. Vous voulez réessayer ?"
-
-#: src/components/StarterPack/ShareDialog.tsx:79
-#~ msgid "An error occurred while saving the image."
-#~ msgstr "Une erreur s’est produite lors de l’enregistrement de l’image."
 
 #: src/components/StarterPack/QrCodeDialog.tsx:70
 #: src/components/StarterPack/ShareDialog.tsx:78
@@ -938,10 +926,6 @@ msgstr "Vérifiez votre boîte e-mail pour un code de connexion et saisissez-le 
 msgid "Check your inbox for an email with the confirmation code to enter below:"
 msgstr "Consultez votre boîte de réception, vous avez du recevoir un e-mail contenant un code de confirmation à saisir ci-dessous :"
 
-#: src/view/com/modals/Threadgate.tsx:75
-#~ msgid "Choose \"Everybody\" or \"Nobody\""
-#~ msgstr "Choisir « Tout le monde » ou « Personne »"
-
 #: src/screens/StarterPack/Wizard/index.tsx:191
 msgid "Choose Feeds"
 msgstr "Choisissez des fils d’actu"
@@ -1406,10 +1390,6 @@ msgstr "Créer un mot de passe d’application"
 #: src/view/com/auth/SplashScreen.web.tsx:97
 msgid "Create new account"
 msgstr "Créer un nouveau compte"
-
-#: src/components/StarterPack/ShareDialog.tsx:158
-#~ msgid "Create QR code"
-#~ msgstr "Créer un code QR"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:101
 msgid "Create report for {0}"
@@ -3236,7 +3216,7 @@ msgstr "Réponses les plus likées en premier"
 
 #: src/screens/Onboarding/state.ts:90
 msgid "Movies"
-msgstr ""
+msgstr "Cinéma"
 
 #: src/components/TagMenu/index.tsx:249
 msgid "Mute"
@@ -4003,7 +3983,7 @@ msgstr "Animaux domestiques"
 
 #: src/screens/Onboarding/state.ts:94
 msgid "Photography"
-msgstr ""
+msgstr "Photographie"
 
 #: src/view/com/modals/SelfLabel.tsx:122
 msgid "Pictures meant for adults."
@@ -4448,10 +4428,6 @@ msgstr "Réponses"
 #: src/components/WhoCanReply.tsx:71
 msgid "Replies disabled"
 msgstr "Les réponses sont désactivées"
-
-#: src/view/com/threadgate/WhoCanReply.tsx:123
-#~ msgid "Replies on this thread are disabled"
-#~ msgstr "Les réponses à ce fil de discussion sont désactivées"
 
 #: src/components/WhoCanReply.tsx:242
 msgid "Replies to this thread are disabled"
@@ -5426,11 +5402,11 @@ msgstr "Le kit de démarrage n’est pas valide"
 
 #: src/view/screens/Profile.tsx:214
 msgid "Starter Packs"
-msgstr "Packs de démarrage"
+msgstr "Kits de démarrage"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:238
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
-msgstr ""
+msgstr "Les kits de démarrage vous permettent de partager facilement vos fils d’actu et vos personnes préférées avec vos ami·e·s."
 
 #: src/view/screens/Settings/index.tsx:963
 msgid "Status Page"
@@ -5984,7 +5960,7 @@ msgstr "Réessayer"
 
 #: src/screens/Onboarding/state.ts:99
 msgid "TV"
-msgstr ""
+msgstr "TV"
 
 #: src/view/screens/Settings/index.tsx:745
 msgid "Two-factor authentication"
@@ -6751,7 +6727,7 @@ msgstr "Vous avez atteint la fin"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:235
 msgid "You haven't created a starter pack yet!"
-msgstr ""
+msgstr "Vous n’avez pas encore créé de kit de démarrage !"
 
 #: src/components/dialogs/MutedWords.tsx:249
 msgid "You haven't muted any words or tags yet"
