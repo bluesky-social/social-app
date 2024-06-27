@@ -32,7 +32,7 @@ import {getStarterPackOgCard} from 'lib/strings/starter-pack'
 import {isWeb} from 'platform/detection'
 import {updateProfileShadow} from 'state/cache/profile-shadow'
 import {useModerationOpts} from 'state/preferences/moderation-opts'
-import {RQKEY, useListMembersQuery} from 'state/queries/list-members'
+import {useListMembersQuery} from 'state/queries/list-members'
 import {useResolveDidQuery} from 'state/queries/resolve-uri'
 import {useShortenLink} from 'state/queries/shorten-link'
 import {useStarterPackQuery} from 'state/queries/starter-packs'
@@ -278,10 +278,6 @@ function Header({
         .map(li => li.subject.did)
 
       const followUris = await bulkWriteFollows(agent, dids)
-
-      await queryClient.invalidateQueries({
-        queryKey: RQKEY(starterPack.list.uri),
-      })
 
       batchedUpdates(() => {
         for (let did of dids) {
