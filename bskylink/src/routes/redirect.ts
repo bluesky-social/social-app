@@ -25,10 +25,13 @@ export default function (ctx: AppContext, app: Express) {
         // potentially broken or mistyped link
         res.setHeader('Cache-Control', 'no-store')
         if (acceptsJson) {
-          return res.status(404).json({
-            error: 'NotFound',
-            message: 'Link not found',
-          })
+          return res
+            .status(404)
+            .json({
+              error: 'NotFound',
+              message: 'Link not found',
+            })
+            .end()
         }
         // send the user to the app
         res.setHeader('Location', `https://${ctx.cfg.service.appHostname}`)
@@ -42,7 +45,7 @@ export default function (ctx: AppContext, app: Express) {
       url.pathname = found.path
       res.setHeader('Cache-Control', `max-age=${(7 * DAY) / SECOND}`)
       if (acceptsJson) {
-        return res.json({url: url.href})
+        return res.json({url: url.href}).end()
       }
       res.setHeader('Location', url.href)
       return res.status(301).end()
