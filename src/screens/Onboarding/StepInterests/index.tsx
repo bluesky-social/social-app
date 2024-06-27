@@ -17,7 +17,11 @@ import {
   OnboardingControls,
   TitleText,
 } from '#/screens/Onboarding/Layout'
-import {ApiResponseMap, Context} from '#/screens/Onboarding/state'
+import {
+  ApiResponseMap,
+  Context,
+  useInterestsDisplayNames,
+} from '#/screens/Onboarding/state'
 import {InterestButton} from '#/screens/Onboarding/StepInterests/InterestButton'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -42,8 +46,9 @@ export function StepInterests() {
   const {gtMobile} = useBreakpoints()
   const {track} = useAnalytics()
   const gate = useGate()
+  const interestsDisplayNames = useInterestsDisplayNames()
 
-  const {state, dispatch, interestsDisplayNames} = React.useContext(Context)
+  const {state, dispatch} = React.useContext(Context)
   const [saving, setSaving] = React.useState(false)
   const [interests, setInterests] = React.useState<string[]>(
     state.interestsStepResults.selectedInterests.map(i => i),
