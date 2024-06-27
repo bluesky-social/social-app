@@ -1,32 +1,18 @@
 import React from 'react'
-import {useWindowDimensions, View} from 'react-native'
+import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {FeedSuggestedFollowsCards} from '#/components/FeedSuggestedFollows'
+import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
 import {IconCircle} from '#/components/IconCircle'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as Refresh} from '#/components/icons/ArrowRotateCounterClockwise'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
 import {Text} from '#/components/Typography'
-
-// TODO replace this with new shared hook
-function useHeaderOffset() {
-  const {isDesktop, isTablet} = useWebMediaQueries()
-  const {fontScale} = useWindowDimensions()
-  if (isDesktop || isTablet) {
-    return 0
-  }
-  const navBarHeight = 42
-  const tabBarPad = 10 + 10 + 3 // padding + border
-  const normalLineHeight = 1.2
-  const tabBarText = 16 * normalLineHeight * fontScale
-  return navBarHeight + tabBarPad + tabBarText
-}
 
 export function EmptyTimeline() {
   const {_} = useLingui()
