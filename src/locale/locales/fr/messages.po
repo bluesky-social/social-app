@@ -382,7 +382,7 @@ msgstr "Contenu pour adultes"
 
 #: src/screens/Moderation/index.tsx:356
 msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
-msgstr "Le contenu pour adultes ne peut être activé que via le Web à <0>bsky.app</0>."
+msgstr "Le contenu pour adultes ne peut être activé que via le Web sur <0>bsky.app</0>."
 
 #: src/components/moderation/LabelPreference.tsx:242
 msgid "Adult content is disabled."
