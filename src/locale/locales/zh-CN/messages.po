@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh_CN\n"
 "Project-Id-Version: zh-CN for bluesky-social-app\n"
 "Report-Msgid-Bugs-To: Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-06-26 09:52+0800\n"
+"PO-Revision-Date: 2024-06-27 09:35+0800\n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
 "Language-Team: Frudrax Cheng (auroursa), Simon Chan (RitsukiP), U2FsdGVkX1, Mikan Harada (mitian233), IceCodeNew\n"
 "Plural-Forms: \n"
@@ -78,7 +78,7 @@ msgstr "{0, plural, one {取消喜欢 (# 个喜欢)} other {取消喜欢 (# 个�
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:218
 msgid "{0} joined this week"
-msgstr ""
+msgstr "{0}在本周加入"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:366
 msgid "{0} people have used this starter pack!"
@@ -170,12 +170,12 @@ msgstr "<0/> 个成员"
 #: src/screens/StarterPack/Wizard/index.tsx:466
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr ""
+msgstr "<0>{0}、</0><1>{1}、</1>及{2, plural, one {#更多人} other {#更多人}}包含在你的入门包中"
 
 #: src/screens/StarterPack/Wizard/index.tsx:519
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr ""
+msgstr "<0>{0}、</0><1>{1}、</1>及{2, plural, one {#更多资讯源} other {#更多资讯源}}包含在你的入门包中"
 
 #: src/view/shell/Drawer.tsx:101
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
@@ -187,7 +187,7 @@ msgstr "<0>{0}</0> {1, plural, one {正在关注} other {正在关注}}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:507
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
-msgstr ""
+msgstr "<0>{0}</0>以及<1> </1><2>{1}</2>包含在你的入门包中"
 
 #: src/screens/StarterPack/Wizard/index.tsx:500
 msgid "<0>{0}</0> is included in your starter pack"
@@ -199,7 +199,7 @@ msgstr "<0>不适用。</0> 这个警告仅适用于附加媒体内容的帖文�
 
 #: src/screens/StarterPack/Wizard/index.tsx:457
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
-msgstr ""
+msgstr "<0>你</0>以及<1> </1><2>{0}</2>包含在你的入门包中"
 
 #: src/screens/Profile/Header/Handle.tsx:50
 msgid "⚠Invalid Handle"
@@ -382,7 +382,7 @@ msgstr "成人内容"
 
 #: src/screens/Moderation/index.tsx:356
 msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
-msgstr ""
+msgstr "成人内容显示仅可通过网页端（<0>bsky.app</0>）启用。"
 
 #: src/components/moderation/LabelPreference.tsx:242
 msgid "Adult content is disabled."
@@ -455,7 +455,7 @@ msgstr "发生错误"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:315
 msgid "An error occurred while generating your starter pack. Want to try again?"
-msgstr ""
+msgstr "创建入门包时发生错误，重试？"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:70
 #: src/components/StarterPack/ShareDialog.tsx:78
@@ -928,15 +928,15 @@ msgstr "查看发送至你电子邮箱的确认邮件，并在下方输入收到
 
 #: src/screens/StarterPack/Wizard/index.tsx:191
 msgid "Choose Feeds"
-msgstr ""
+msgstr "选择资讯源"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:290
 msgid "Choose for me"
-msgstr ""
+msgstr "为我做选择"
 
 #: src/screens/StarterPack/Wizard/index.tsx:187
 msgid "Choose People"
-msgstr ""
+msgstr "选择用户"
 
 #: src/view/com/auth/server-input/index.tsx:79
 msgid "Choose Service"
@@ -953,7 +953,7 @@ msgstr "选择这个颜色作为你的头像"
 #: src/components/dialogs/ThreadgateEditor.tsx:91
 #: src/components/dialogs/ThreadgateEditor.tsx:95
 msgid "Choose who can reply"
-msgstr ""
+msgstr "选择谁可以回复"
 
 #: src/screens/Signup/StepInfo/index.tsx:114
 msgid "Choose your password"
@@ -1288,7 +1288,7 @@ msgstr "复制代码"
 
 #: src/components/StarterPack/ShareDialog.tsx:123
 msgid "Copy link"
-msgstr ""
+msgstr "复制链接"
 
 #: src/components/StarterPack/ShareDialog.tsx:130
 msgid "Copy Link"
@@ -1744,7 +1744,7 @@ msgstr "编辑"
 #: src/view/com/lists/ListMembers.tsx:149
 msgctxt "action"
 msgid "Edit"
-msgstr ""
+msgstr "编辑"
 
 #: src/view/com/util/UserAvatar.tsx:325
 #: src/view/com/util/UserBanner.tsx:92
@@ -1824,7 +1824,7 @@ msgstr "教育"
 
 #: src/components/dialogs/ThreadgateEditor.tsx:98
 msgid "Either choose \"Everybody\" or \"Nobody\""
-msgstr ""
+msgstr "选择 \"所有人\"或是\"没有人\""
 
 #: src/screens/Signup/StepInfo/index.tsx:80
 #: src/view/com/modals/ChangeEmail.tsx:136
@@ -3216,7 +3216,7 @@ msgstr "优先显示最多喜欢"
 
 #: src/screens/Onboarding/state.ts:90
 msgid "Movies"
-msgstr ""
+msgstr "电影"
 
 #: src/components/TagMenu/index.tsx:249
 msgid "Mute"
@@ -3351,7 +3351,7 @@ msgstr "自然"
 
 #: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:73
 msgid "Navigate to starter pack"
-msgstr ""
+msgstr "转到入门包"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:173
 #: src/screens/Login/LoginForm.tsx:312
@@ -3765,7 +3765,7 @@ msgstr "开启 {numItems} 个选项"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:60
 msgid "Opens a dialog to choose who can reply to this thread"
-msgstr ""
+msgstr "打开对话框以选择谁可以回复此讨论串"
 
 #: src/view/screens/Settings/index.tsx:510
 msgid "Opens accessibility settings"
@@ -3987,7 +3987,7 @@ msgstr "宠物"
 
 #: src/screens/Onboarding/state.ts:94
 msgid "Photography"
-msgstr ""
+msgstr "摄影"
 
 #: src/view/com/modals/SelfLabel.tsx:122
 msgid "Pictures meant for adults."
@@ -5120,7 +5120,7 @@ msgstr "分享链接对话框"
 #: src/components/StarterPack/ShareDialog.tsx:134
 #: src/components/StarterPack/ShareDialog.tsx:145
 msgid "Share QR code"
-msgstr ""
+msgstr "分享二维码"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:321
 msgid "Share this starter pack"
@@ -5406,11 +5406,11 @@ msgstr "入门包无效"
 
 #: src/view/screens/Profile.tsx:214
 msgid "Starter Packs"
-msgstr ""
+msgstr "入门包"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:238
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
-msgstr ""
+msgstr "入门包能让你更轻松地与朋友分享你最中意的资讯源和关注用户。"
 
 #: src/view/screens/Settings/index.tsx:963
 msgid "Status Page"
@@ -5906,7 +5906,7 @@ msgstr "讨论串首选项"
 
 #: src/components/WhoCanReply.tsx:109
 msgid "Thread settings updated"
-msgstr ""
+msgstr "讨论串首选项已更新"
 
 #: src/view/screens/PreferencesThreads.tsx:119
 msgid "Threaded Mode"
@@ -5965,7 +5965,7 @@ msgstr "重试"
 
 #: src/screens/Onboarding/state.ts:99
 msgid "TV"
-msgstr ""
+msgstr "电视"
 
 #: src/view/screens/Settings/index.tsx:745
 msgid "Two-factor authentication"
@@ -6477,7 +6477,7 @@ msgstr "欢迎回来！"
 
 #: src/components/NewskieDialog.tsx:103
 msgid "Welcome, friend!"
-msgstr ""
+msgstr "欢迎新天友！"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:140
 msgid "What are your interests?"
@@ -6603,11 +6603,11 @@ msgstr "昨天，{time}"
 
 #: src/components/StarterPack/StarterPackCard.tsx:68
 msgid "you"
-msgstr ""
+msgstr "你"
 
 #: src/components/NewskieDialog.tsx:43
 msgid "You"
-msgstr ""
+msgstr "你"
 
 #: src/screens/SignupQueued.tsx:136
 msgid "You are in line."
@@ -6732,7 +6732,7 @@ msgstr "你已经到末尾了"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:235
 msgid "You haven't created a starter pack yet!"
-msgstr ""
+msgstr "你还没有创建任何入门包！"
 
 #: src/components/dialogs/MutedWords.tsx:249
 msgid "You haven't muted any words or tags yet"
