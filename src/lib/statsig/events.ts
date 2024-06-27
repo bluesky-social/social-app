@@ -188,6 +188,9 @@ export type LogEvents = {
     profilesCount: number
     feedsCount: number
   }
+  'starterPack:ctaPress': {
+    starterPack: string
+  }
 
   'test:all:always': {}
   'test:all:sometimes': {}
