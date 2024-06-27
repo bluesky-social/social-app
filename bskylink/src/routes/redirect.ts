@@ -11,6 +11,7 @@ export default function (ctx: AppContext, app: Express) {
     '/:linkId',
     handler(async (req, res) => {
       const linkId = req.params.linkId
+      const wantsJson = req.query.json === 'true'
       assert(
         typeof linkId === 'string',
         'express guarantees id parameter is a string',
@@ -21,6 +22,12 @@ export default function (ctx: AppContext, app: Express) {
         .where('id', '=', linkId)
         .executeTakeFirst()
       if (!found) {
+        if (wantsJson) {
+          return res.status(404).json({
+            error: 'NotFound',
+            message: 'Link not found',
+          })
+        }
         // potentially broken or mistyped link— send user to the app
         res.setHeader('Location', `https://${ctx.cfg.service.appHostname}`)
         res.setHeader('Cache-Control', 'no-store')
@@ -32,6 +39,9 @@ export default function (ctx: AppContext, app: Express) {
         `https://${ctx.cfg.service.appHostname}`,
       )
       url.pathname = found.path
+      if (wantsJson) {
+        return res.json({url: url.href})
+      }
       res.setHeader('Location', url.href)
       res.setHeader('Cache-Control', `max-age=${(7 * DAY) / SECOND}`)
       return res.status(301).end()
