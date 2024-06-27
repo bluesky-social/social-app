@@ -55,6 +55,7 @@ import * as Prompt from '#/components/Prompt'
 import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 import {RichText} from '#/components/RichText'
 import {FeedsList} from '#/components/StarterPack/Main/FeedsList'
+import {PostsList} from '#/components/StarterPack/Main/PostsList'
 import {ProfilesList} from '#/components/StarterPack/Main/ProfilesList'
 import {QrCodeDialog} from '#/components/StarterPack/QrCodeDialog'
 import {ShareDialog} from '#/components/StarterPack/ShareDialog'
@@ -132,9 +133,14 @@ function StarterPackScreenInner({
   >
   moderationOpts: ModerationOpts
 }) {
+  const showPeopleTab = Boolean(starterPack.list)
+  const showFeedsTab = Boolean(starterPack.feeds?.length)
+  const showPostsTab = Boolean(starterPack.list)
+
   const tabs = [
-    ...(starterPack.list ? ['People'] : []),
-    ...(starterPack.feeds?.length ? ['Feeds'] : []),
+    ...(showPeopleTab ? ['People'] : []),
+    ...(showFeedsTab ? ['Feeds'] : []),
+    ...(showPostsTab ? ['Posts'] : []),
   ]
 
   const qrCodeDialogControl = useDialogControl()
@@ -180,10 +186,9 @@ function StarterPackScreenInner({
               onOpenShareDialog={onOpenShareDialog}
             />
           )}>
-          {starterPack.list != null
+          {showPeopleTab
             ? ({headerHeight, scrollElRef}) => (
                 <ProfilesList
-                  key={0}
                   // Validated above
                   listUri={starterPack!.list!.uri}
                   headerHeight={headerHeight}
@@ -194,15 +199,26 @@ function StarterPackScreenInner({
                 />
               )
             : null}
-          {starterPack.feeds != null
+          {showFeedsTab
             ? ({headerHeight, scrollElRef}) => (
                 <FeedsList
-                  key={1}
                   // @ts-expect-error ?
                   feeds={starterPack?.feeds}
                   headerHeight={headerHeight}
                   // @ts-expect-error
                   scrollElRef={scrollElRef}
+                />
+              )
+            : null}
+          {showPostsTab
+            ? ({headerHeight, scrollElRef}) => (
+                <PostsList
+                  // Validated above
+                  listUri={starterPack!.list!.uri}
+                  headerHeight={headerHeight}
+                  // @ts-expect-error
+                  scrollElRef={scrollElRef}
+                  moderationOpts={moderationOpts}
                 />
               )
             : null}
