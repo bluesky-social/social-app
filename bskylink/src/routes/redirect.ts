@@ -11,7 +11,7 @@ export default function (ctx: AppContext, app: Express) {
     '/:linkId',
     handler(async (req, res) => {
       const linkId = req.params.linkId
-      const wantsJson = req.accepts(['html', 'json']) === 'json'
+      const contentType = req.accepts(['html', 'json'])
       assert(
         typeof linkId === 'string',
         'express guarantees id parameter is a string',
@@ -24,7 +24,7 @@ export default function (ctx: AppContext, app: Express) {
       if (!found) {
         // potentially broken or mistyped link
         res.setHeader('Cache-Control', 'no-store')
-        if (wantsJson) {
+        if (contentType === 'json') {
           return res
             .status(404)
             .json({
@@ -44,7 +44,7 @@ export default function (ctx: AppContext, app: Express) {
       )
       url.pathname = found.path
       res.setHeader('Cache-Control', `max-age=${(7 * DAY) / SECOND}`)
-      if (wantsJson) {
+      if (contentType === 'json') {
         return res.json({url: url.href}).end()
       }
       res.setHeader('Location', url.href)
