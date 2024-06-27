@@ -18,7 +18,7 @@ import * as Toast from '#/view/com/util/Toast'
 import {ProfileCardPills} from 'view/com/profile/ProfileCard'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonProps, ButtonText} from '#/components/Button'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {Link as InternalLink, LinkProps} from '#/components/Link'
@@ -162,33 +162,29 @@ export function Description({description}: {description?: string}) {
   )
 }
 
-export function FollowButton({
-  profile,
-  logContext,
-}: {
+export type FollowButtonProps = {
   profile: AppBskyActorDefs.ProfileViewBasic
   logContext: 'ProfileCard' | 'StarterPackProfilesList'
-}) {
+} & Partial<ButtonProps>
+
+export function FollowButton(props: FollowButtonProps) {
   const {currentAccount, hasSession} = useSession()
-  const isMe = profile.did === currentAccount?.did
-  return hasSession && !isMe ? (
-    <FollowButtonInner profile={profile} logContext={logContext} />
-  ) : null
+  const isMe = props.profile.did === currentAccount?.did
+  return hasSession && !isMe ? <FollowButtonInner {...props} /> : null
 }
 
 export function FollowButtonInner({
   profile: profileUnshadowed,
   logContext,
-}: {
-  profile: AppBskyActorDefs.ProfileViewBasic
-  logContext: 'ProfileCard' | 'StarterPackProfilesList'
-}) {
+  ...rest
+}: FollowButtonProps) {
   const {_} = useLingui()
   const profile = useProfileShadow(profileUnshadowed)
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
     profile,
     logContext,
   )
+  const isRound = Boolean(rest.shape && rest.shape === 'round')
 
   const onPressFollow = async (e: GestureResponderEvent) => {
     e.preventDefault()
@@ -237,9 +233,10 @@ export function FollowButtonInner({
           size="small"
           variant="solid"
           color="secondary"
+          {...rest}
           onPress={onPressUnfollow}>
-          <ButtonIcon icon={Check} position="left" />
-          <ButtonText>{unfollowLabel}</ButtonText>
+          <ButtonIcon icon={Check} position={isRound ? undefined : 'left'} />
+          {isRound ? null : <ButtonText>{unfollowLabel}</ButtonText>}
         </Button>
       ) : (
         <Button
@@ -247,9 +244,10 @@ export function FollowButtonInner({
           size="small"
           variant="solid"
           color="primary"
+          {...rest}
           onPress={onPressFollow}>
-          <ButtonIcon icon={Plus} position="left" />
-          <ButtonText>{followLabel}</ButtonText>
+          <ButtonIcon icon={Plus} position={isRound ? undefined : 'left'} />
+          {isRound ? null : <ButtonText>{followLabel}</ButtonText>}
         </Button>
       )}
     </View>
