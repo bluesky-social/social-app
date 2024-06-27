@@ -2,7 +2,7 @@ import {AppBskyGraphDefs, AtUri} from '@atproto/api'
 
 export function createStarterPackLinkFromAndroidReferrer(
   referrerQueryString: string,
-): string | null {
+): {uri: string; starterPackUserID: string} | null {
   try {
     // The referrer string is just some URL parameters, so lets add them to a fake URL
     const url = new URL('http://throwaway.com/?' + referrerQueryString)
@@ -16,9 +16,14 @@ export function createStarterPackLinkFromAndroidReferrer(
     const contentParts = utmContent.split('_')
 
     if (contentParts[0] !== 'starterpack') return null
-    if (contentParts.length !== 3) return null
 
-    return `at://${contentParts[1]}/app.bsky.graph.starterpack/${contentParts[2]}`
+    // Length should be four to include the user ID
+    if (contentParts.length !== 4) return null
+
+    return {
+      uri: `at://${contentParts[1]}/app.bsky.graph.starterpack/${contentParts[2]}`,
+      starterPackUserID: contentParts[3],
+    }
   } catch (e) {
     return null
   }
