@@ -29,6 +29,7 @@ import {countLines} from 'lib/strings/helpers'
 import {s} from 'lib/styles'
 import {precacheProfile} from 'state/queries/profile'
 import {atoms as a} from '#/alf'
+import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichText} from '#/components/RichText'
@@ -38,12 +39,12 @@ import {FeedNameText} from '../util/FeedInfoText'
 import {Link, TextLink, TextLinkOnWebOnly} from '../util/Link'
 import {PostCtrls} from '../util/post-ctrls/PostCtrls'
 import {PostEmbeds} from '../util/post-embeds'
+import {VideoEmbed} from '../util/post-embeds/VideoEmbed'
 import {PostMeta} from '../util/PostMeta'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {AviFollowButton} from './AviFollowButton'
 import hairlineWidth = StyleSheet.hairlineWidth
-import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
 
 interface FeedItemProps {
   record: AppBskyFeedPost.Record
@@ -334,6 +335,7 @@ let FeedItemInner = ({
             postAuthor={post.author}
             onOpenEmbed={onOpenEmbed}
           />
+          <VideoEmbed source="https://videokits-apps.s3-us-west-1.amazonaws.com/riza/usrYteLEMKdz5Lt8RgTCmMa/Video/fiAo7WNGVzDwH7fcyGnLbe2MSWZ1vxMAa.mov/HLS/fiAo7WNGVzDwH7fcyGnLbe2MSWZ1vxMAa.m3u8" />
           <PostCtrls
             post={post}
             record={record}
