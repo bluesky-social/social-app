@@ -5,7 +5,7 @@ export async function resolveShortLink(shortLink: string) {
   const to = setTimeout(() => controller.abort(), 2e3)
 
   try {
-    const res = await fetch(`${shortLink}`, {
+    const res = await fetch(shortLink, {
       method: 'GET',
       headers: {
         Accept: 'application/json',
