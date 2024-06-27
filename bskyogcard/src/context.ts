@@ -1,8 +1,8 @@
-import {readFileSync} from 'node:fs'
+import {readdirSync, readFileSync} from 'node:fs'
+import * as path from 'node:path'
+import {fileURLToPath} from 'node:url'
 
 import {AtpAgent} from '@atproto/api'
-import * as path from 'path'
-import {fileURLToPath} from 'url'
 
 import {Config} from './config.js'
 
@@ -28,12 +28,14 @@ export class AppContext {
 
   static async fromConfig(cfg: Config, overrides?: Partial<AppContextOptions>) {
     const appviewAgent = new AtpAgent({service: cfg.service.appviewUrl})
-    const fonts = [
-      {
-        name: 'Inter',
-        data: readFileSync(path.join(__DIRNAME, 'assets', 'Inter-Bold.ttf')),
-      },
-    ]
+    const fontDirectory = path.join(__DIRNAME, 'assets', 'fonts')
+    const fontFiles = readdirSync(fontDirectory)
+    const fonts = fontFiles.map(file => {
+      return {
+        name: path.basename(file, path.extname(file)),
+        data: readFileSync(path.join(fontDirectory, file)),
+      }
+    })
     return new AppContext({
       cfg,
       appviewAgent,

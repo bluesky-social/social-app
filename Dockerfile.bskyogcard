@@ -10,7 +10,7 @@ RUN yarn install --frozen-lockfile
 COPY ./bskyogcard ./
 
 # build then prune dev deps
-RUN yarn build
+RUN yarn install-fonts && yarn build
 RUN yarn install --production --ignore-scripts --prefer-offline
 
 # Uses assets from build stage to reduce build size
