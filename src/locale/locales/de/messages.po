@@ -88,11 +88,11 @@ msgstr ""
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:218
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:222
 msgid "{0} joined this week"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:350
+#: src/screens/StarterPack/StarterPackScreen.tsx:378
 msgid "{0} people have used this starter pack!"
 msgstr ""
 
@@ -487,7 +487,7 @@ msgstr ""
 msgid "Advanced"
 msgstr "Erweitert"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:273
+#: src/screens/StarterPack/StarterPackScreen.tsx:301
 msgid "All accounts have been followed!"
 msgstr ""
 
@@ -569,7 +569,7 @@ msgstr ""
 #~ msgid "An error occurred while trying to delete the message. Please try again."
 #~ msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:275
+#: src/screens/StarterPack/StarterPackScreen.tsx:303
 msgid "An error occurred while trying to follow all"
 msgstr ""
 
@@ -681,7 +681,7 @@ msgstr "Erscheinungsbild"
 msgid "Apply default recommended feeds"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:504
+#: src/screens/StarterPack/StarterPackScreen.tsx:532
 msgid "Are you sure you want delete this starter pack?"
 msgstr ""
 
@@ -1736,9 +1736,9 @@ msgid "Debug panel"
 msgstr "Debug-Panel"
 
 #: src/components/dms/MessageMenu.tsx:151
-#: src/screens/StarterPack/StarterPackScreen.tsx:456
-#: src/screens/StarterPack/StarterPackScreen.tsx:535
-#: src/screens/StarterPack/StarterPackScreen.tsx:615
+#: src/screens/StarterPack/StarterPackScreen.tsx:484
+#: src/screens/StarterPack/StarterPackScreen.tsx:563
+#: src/screens/StarterPack/StarterPackScreen.tsx:643
 #: src/view/com/util/forms/PostDropdownBtn.tsx:433
 #: src/view/screens/AppPasswords.tsx:285
 #: src/view/screens/ProfileList.tsx:667
@@ -1799,12 +1799,12 @@ msgstr "Mein Konto Löschen…"
 msgid "Delete post"
 msgstr "Beitrag löschen"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:450
-#: src/screens/StarterPack/StarterPackScreen.tsx:606
+#: src/screens/StarterPack/StarterPackScreen.tsx:478
+#: src/screens/StarterPack/StarterPackScreen.tsx:634
 msgid "Delete starter pack"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:501
+#: src/screens/StarterPack/StarterPackScreen.tsx:529
 msgid "Delete starter pack?"
 msgstr ""
 
@@ -1979,7 +1979,7 @@ msgstr "Erledigt{extraText}"
 #~ msgid "Double tap to sign in"
 #~ msgstr "Doppeltippen zum Anmelden"
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:314
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:318
 msgid "Download Bluesky"
 msgstr ""
 
@@ -2040,7 +2040,7 @@ msgstr "z.B. Nutzer, die wiederholt mit Werbung antworten."
 msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr "Jeder Code funktioniert einmal. Du erhältst regelmäßig neue Einladungscodes."
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:445
+#: src/screens/StarterPack/StarterPackScreen.tsx:473
 #: src/screens/StarterPack/Wizard/index.tsx:551
 #: src/screens/StarterPack/Wizard/index.tsx:558
 #: src/view/screens/Feeds.tsx:385
@@ -2105,7 +2105,7 @@ msgstr "Profil bearbeiten"
 #~ msgid "Edit Saved Feeds"
 #~ msgstr "Gespeicherte Feeds bearbeiten"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:437
+#: src/screens/StarterPack/StarterPackScreen.tsx:465
 msgid "Edit starter pack"
 msgstr ""
 
@@ -2415,7 +2415,7 @@ msgstr ""
 msgid "Failed to delete post, please try again"
 msgstr "Beitrag konnte nicht gelöscht werden, bitte versuche es erneut"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:569
+#: src/screens/StarterPack/StarterPackScreen.tsx:597
 msgid "Failed to delete starter pack"
 msgstr ""
 
@@ -2624,8 +2624,8 @@ msgstr ""
 msgid "Follow Account"
 msgstr "Accounts folgen"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:317
-#: src/screens/StarterPack/StarterPackScreen.tsx:324
+#: src/screens/StarterPack/StarterPackScreen.tsx:345
+#: src/screens/StarterPack/StarterPackScreen.tsx:352
 msgid "Follow all"
 msgstr ""
 
@@ -2826,7 +2826,7 @@ msgstr "Gehe zurück"
 #: src/components/Error.tsx:103
 #: src/screens/Profile/ErrorState.tsx:62
 #: src/screens/Profile/ErrorState.tsx:66
-#: src/screens/StarterPack/StarterPackScreen.tsx:628
+#: src/screens/StarterPack/StarterPackScreen.tsx:656
 #: src/view/screens/NotFound.tsx:54
 #: src/view/screens/ProfileFeed.tsx:117
 #: src/view/screens/ProfileList.tsx:975
@@ -3208,8 +3208,8 @@ msgstr ""
 msgid "Jobs"
 msgstr "Jobs"
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:196
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:202
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:200
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:206
 msgid "Join Bluesky"
 msgstr ""
 
@@ -3854,6 +3854,10 @@ msgstr ""
 msgid "Nature"
 msgstr "Natur"
 
+#: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:73
+msgid "Navigate to starter pack"
+msgstr ""
+
 #: src/screens/Login/ForgotPasswordForm.tsx:173
 #: src/screens/Login/LoginForm.tsx:312
 #: src/view/com/modals/ChangePassword.tsx:169
@@ -4294,7 +4298,7 @@ msgstr "Navigation öffnen"
 msgid "Open post options menu"
 msgstr "Beitragsoptionsmenü öffnen"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:423
+#: src/screens/StarterPack/StarterPackScreen.tsx:451
 msgid "Open starter pack menu"
 msgstr ""
 
@@ -5153,8 +5157,8 @@ msgstr ""
 msgid "Report post"
 msgstr "Beitrag melden"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:476
-#: src/screens/StarterPack/StarterPackScreen.tsx:479
+#: src/screens/StarterPack/StarterPackScreen.tsx:504
+#: src/screens/StarterPack/StarterPackScreen.tsx:507
 msgid "Report starter pack"
 msgstr ""
 
@@ -5200,7 +5204,7 @@ msgstr "Repost"
 msgid "Repost"
 msgstr "Erneut veröffentlichen"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:418
+#: src/screens/StarterPack/StarterPackScreen.tsx:446
 #: src/view/com/util/post-ctrls/RepostButton.tsx:86
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:47
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:93
@@ -5325,7 +5329,7 @@ msgstr "Wiederholen"
 #~ msgstr ""
 
 #: src/components/Error.tsx:98
-#: src/screens/StarterPack/StarterPackScreen.tsx:622
+#: src/screens/StarterPack/StarterPackScreen.tsx:650
 #: src/view/screens/ProfileList.tsx:971
 msgid "Return to previous page"
 msgstr "Zurück zur vorherigen Seite"
@@ -5833,8 +5837,8 @@ msgid "Sexually Suggestive"
 msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:174
-#: src/screens/StarterPack/StarterPackScreen.tsx:312
-#: src/screens/StarterPack/StarterPackScreen.tsx:465
+#: src/screens/StarterPack/StarterPackScreen.tsx:340
+#: src/screens/StarterPack/StarterPackScreen.tsx:493
 #: src/view/com/profile/ProfileMenu.tsx:219
 #: src/view/com/profile/ProfileMenu.tsx:228
 #: src/view/com/util/forms/PostDropdownBtn.tsx:307
@@ -5870,7 +5874,7 @@ msgstr "Feed teilen"
 
 #: src/components/StarterPack/ShareDialog.tsx:123
 #: src/components/StarterPack/ShareDialog.tsx:130
-#: src/screens/StarterPack/StarterPackScreen.tsx:469
+#: src/screens/StarterPack/StarterPackScreen.tsx:497
 msgid "Share link"
 msgstr ""
 
@@ -5888,7 +5892,7 @@ msgstr ""
 msgid "Share QR code"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:305
+#: src/screens/StarterPack/StarterPackScreen.tsx:333
 msgid "Share this starter pack"
 msgstr ""
 
@@ -6128,8 +6132,8 @@ msgstr ""
 #~ msgid "Signs {0} out of Bluesky"
 #~ msgstr "Meldet {0} von Bluesky ab"
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:296
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:303
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:300
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:307
 msgid "Signup without a starter pack"
 msgstr ""
 
@@ -6236,7 +6240,7 @@ msgstr ""
 msgid "Starter pack by {0}"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:586
+#: src/screens/StarterPack/StarterPackScreen.tsx:614
 msgid "Starter pack is invalid"
 msgstr ""
 
@@ -6422,8 +6426,8 @@ msgstr ""
 msgid "That handle is already taken."
 msgstr "Dieser Handle ist bereits besetzt."
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:102
-#: src/screens/StarterPack/StarterPackScreen.tsx:103
+#: src/screens/StarterPack/StarterPackScreen.tsx:105
+#: src/screens/StarterPack/StarterPackScreen.tsx:106
 #: src/screens/StarterPack/Wizard/index.tsx:106
 #: src/screens/StarterPack/Wizard/index.tsx:114
 msgid "That starter pack could not be found."
@@ -6446,7 +6450,7 @@ msgstr "Die Community-Richtlinien wurden nach <0/> verschoben"
 msgid "The Copyright Policy has been moved to <0/>"
 msgstr "Die Copyright-Richtlinie wurde nach <0/> verschoben"
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:317
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:321
 msgid "The experience is better in the app. Download Bluesky now and we'll pick back up where you left off."
 msgstr ""
 
@@ -6475,7 +6479,7 @@ msgstr "Möglicherweise wurde der Post gelöscht."
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr "Die Datenschutzerklärung wurde nach <0/> verschoben"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:596
+#: src/screens/StarterPack/StarterPackScreen.tsx:624
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
 msgstr ""
 
@@ -6674,6 +6678,7 @@ msgstr "Dieser Feed wird derzeit stark frequentiert und ist vorübergehend nicht
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
 msgstr "Dieser Feed ist leer! Möglicherweise musst du mehr Benutzern folgen oder deine Spracheinstellungen anpassen."
 
+#: src/components/StarterPack/Main/PostsList.tsx:36
 #: src/view/screens/ProfileFeed.tsx:473
 #: src/view/screens/ProfileList.tsx:729
 msgid "This feed is empty."
@@ -6910,7 +6915,7 @@ msgstr "Stummschaltung von Liste aufheben"
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr "Es ist uns nicht gelungen, deinen Dienst zu kontaktieren. Bitte überprüfe deine Internetverbindung."
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:520
+#: src/screens/StarterPack/StarterPackScreen.tsx:548
 msgid "Unable to delete"
 msgstr ""
 
@@ -7563,7 +7568,7 @@ msgstr "Ja"
 msgid "Yes, deactivate"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:532
+#: src/screens/StarterPack/StarterPackScreen.tsx:560
 msgid "Yes, delete this starter pack"
 msgstr ""
 
@@ -7816,15 +7821,15 @@ msgstr ""
 msgid "You'll follow the suggested users once you finish creating your account!"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:229
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:233
 msgid "You'll follow these people and {0} others"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:227
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:231
 msgid "You'll follow these people right away"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:267
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:271
 msgid "You'll stay updated with these feeds"
 msgstr ""
 

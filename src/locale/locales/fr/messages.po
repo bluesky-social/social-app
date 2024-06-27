@@ -76,11 +76,11 @@ msgstr "{0, plural, one {repost} other {reposts}}"
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
 msgstr "{0, plural, one {Déliker (# like)} other {Déliker (# likes)}}"
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:218
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:222
 msgid "{0} joined this week"
 msgstr "{0} personnes se sont inscrites cette semaine"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:350
+#: src/screens/StarterPack/StarterPackScreen.tsx:378
 msgid "{0} people have used this starter pack!"
 msgstr "{0} personnes ont utilisé ce kit de démarrage !"
 
@@ -401,7 +401,7 @@ msgstr "Le contenu pour adultes est désactivé."
 msgid "Advanced"
 msgstr "Avancé"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:273
+#: src/screens/StarterPack/StarterPackScreen.tsx:301
 msgid "All accounts have been followed!"
 msgstr "Tous les comptes ont été suivis !"
 
@@ -474,7 +474,7 @@ msgstr "Une erreur s’est produite lors de la génération de votre kit de dém
 msgid "An error occurred while saving the QR code!"
 msgstr "Une erreur s’est produite lors de l’enregistrement du code QR !"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:275
+#: src/screens/StarterPack/StarterPackScreen.tsx:303
 msgid "An error occurred while trying to follow all"
 msgstr "Une erreur s’est produite en essayant de suivre tous les comptes"
 
@@ -569,7 +569,7 @@ msgstr "Affichage"
 msgid "Apply default recommended feeds"
 msgstr "Utiliser les fils d’actu recommandés par défaut"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:504
+#: src/screens/StarterPack/StarterPackScreen.tsx:532
 msgid "Are you sure you want delete this starter pack?"
 msgstr "Êtes-vous sûr de vouloir supprimer ce kit de démarrage ?"
 
@@ -1477,9 +1477,9 @@ msgid "Debug panel"
 msgstr "Panneau de débug"
 
 #: src/components/dms/MessageMenu.tsx:151
-#: src/screens/StarterPack/StarterPackScreen.tsx:456
-#: src/screens/StarterPack/StarterPackScreen.tsx:535
-#: src/screens/StarterPack/StarterPackScreen.tsx:615
+#: src/screens/StarterPack/StarterPackScreen.tsx:484
+#: src/screens/StarterPack/StarterPackScreen.tsx:563
+#: src/screens/StarterPack/StarterPackScreen.tsx:643
 #: src/view/com/util/forms/PostDropdownBtn.tsx:433
 #: src/view/screens/AppPasswords.tsx:285
 #: src/view/screens/ProfileList.tsx:667
@@ -1536,12 +1536,12 @@ msgstr "Supprimer mon compte…"
 msgid "Delete post"
 msgstr "Supprimer le post"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:450
-#: src/screens/StarterPack/StarterPackScreen.tsx:606
+#: src/screens/StarterPack/StarterPackScreen.tsx:478
+#: src/screens/StarterPack/StarterPackScreen.tsx:634
 msgid "Delete starter pack"
 msgstr "Supprimer le kit de démarrage"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:501
+#: src/screens/StarterPack/StarterPackScreen.tsx:529
 msgid "Delete starter pack?"
 msgstr "Supprimer le kit de démarrage ?"
 
@@ -1700,7 +1700,7 @@ msgstr "Terminer"
 msgid "Done{extraText}"
 msgstr "Terminé{extraText}"
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:314
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:318
 msgid "Download Bluesky"
 msgstr "Télécharger Bluesky"
 
@@ -1753,7 +1753,7 @@ msgstr "ex. Les comptes qui répondent toujours avec des pubs."
 msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr "Chaque code ne fonctionne qu’une seule fois. Vous recevrez régulièrement d’autres codes d’invitation."
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:445
+#: src/screens/StarterPack/StarterPackScreen.tsx:473
 #: src/screens/StarterPack/Wizard/index.tsx:551
 #: src/screens/StarterPack/Wizard/index.tsx:558
 #: src/view/screens/Feeds.tsx:385
@@ -1813,7 +1813,7 @@ msgstr "Modifier le profil"
 msgid "Edit Profile"
 msgstr "Modifier le profil"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:437
+#: src/screens/StarterPack/StarterPackScreen.tsx:465
 msgid "Edit starter pack"
 msgstr "Modifier le kit de démarrage"
 
@@ -2106,7 +2106,7 @@ msgstr "Échec de la suppression du message"
 msgid "Failed to delete post, please try again"
 msgstr "Échec de la suppression du post, veuillez réessayer"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:569
+#: src/screens/StarterPack/StarterPackScreen.tsx:597
 msgid "Failed to delete starter pack"
 msgstr "Échec de la suppression du kit de démarrage"
 
@@ -2278,8 +2278,8 @@ msgstr "Suivre {name}"
 msgid "Follow Account"
 msgstr "Suivre le compte"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:317
-#: src/screens/StarterPack/StarterPackScreen.tsx:324
+#: src/screens/StarterPack/StarterPackScreen.tsx:345
+#: src/screens/StarterPack/StarterPackScreen.tsx:352
 msgid "Follow all"
 msgstr "Suivre tous"
 
@@ -2456,7 +2456,7 @@ msgstr "Retour"
 #: src/components/Error.tsx:103
 #: src/screens/Profile/ErrorState.tsx:62
 #: src/screens/Profile/ErrorState.tsx:66
-#: src/screens/StarterPack/StarterPackScreen.tsx:628
+#: src/screens/StarterPack/StarterPackScreen.tsx:656
 #: src/view/screens/NotFound.tsx:54
 #: src/view/screens/ProfileFeed.tsx:117
 #: src/view/screens/ProfileList.tsx:975
@@ -2800,8 +2800,8 @@ msgstr "Il n’y a que vous pour l’instant ! Ajoutez d’autres personnes à 
 msgid "Jobs"
 msgstr "Emplois"
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:196
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:202
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:200
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:206
 msgid "Join Bluesky"
 msgstr "Rejoignez Bluesky"
 
@@ -3369,6 +3369,10 @@ msgstr "Nom ou description qui viole les normes communautaires"
 msgid "Nature"
 msgstr "Nature"
 
+#: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:73
+msgid "Navigate to starter pack"
+msgstr ""
+
 #: src/screens/Login/ForgotPasswordForm.tsx:173
 #: src/screens/Login/LoginForm.tsx:312
 #: src/view/com/modals/ChangePassword.tsx:169
@@ -3762,7 +3766,7 @@ msgstr "Navigation ouverte"
 msgid "Open post options menu"
 msgstr "Ouvrir le menu d’options du post"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:423
+#: src/screens/StarterPack/StarterPackScreen.tsx:451
 msgid "Open starter pack menu"
 msgstr "Ouvrir le menu du kit de démarrage"
 
@@ -4516,8 +4520,8 @@ msgstr "Signaler le message"
 msgid "Report post"
 msgstr "Signaler le post"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:476
-#: src/screens/StarterPack/StarterPackScreen.tsx:479
+#: src/screens/StarterPack/StarterPackScreen.tsx:504
+#: src/screens/StarterPack/StarterPackScreen.tsx:507
 msgid "Report starter pack"
 msgstr "Signaler le kit de démarrage"
 
@@ -4563,7 +4567,7 @@ msgstr "Republier"
 msgid "Repost"
 msgstr "Republier"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:418
+#: src/screens/StarterPack/StarterPackScreen.tsx:446
 #: src/view/com/util/post-ctrls/RepostButton.tsx:86
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:47
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:93
@@ -4672,7 +4676,7 @@ msgid "Retry"
 msgstr "Réessayer"
 
 #: src/components/Error.tsx:98
-#: src/screens/StarterPack/StarterPackScreen.tsx:622
+#: src/screens/StarterPack/StarterPackScreen.tsx:650
 #: src/view/screens/ProfileList.tsx:971
 msgid "Return to previous page"
 msgstr "Retourne à la page précédente"
@@ -5087,8 +5091,8 @@ msgid "Sexually Suggestive"
 msgstr "Sexuellement suggestif"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:174
-#: src/screens/StarterPack/StarterPackScreen.tsx:312
-#: src/screens/StarterPack/StarterPackScreen.tsx:465
+#: src/screens/StarterPack/StarterPackScreen.tsx:340
+#: src/screens/StarterPack/StarterPackScreen.tsx:493
 #: src/view/com/profile/ProfileMenu.tsx:219
 #: src/view/com/profile/ProfileMenu.tsx:228
 #: src/view/com/util/forms/PostDropdownBtn.tsx:307
@@ -5124,7 +5128,7 @@ msgstr "Partager le fil d’actu"
 
 #: src/components/StarterPack/ShareDialog.tsx:123
 #: src/components/StarterPack/ShareDialog.tsx:130
-#: src/screens/StarterPack/StarterPackScreen.tsx:469
+#: src/screens/StarterPack/StarterPackScreen.tsx:497
 msgid "Share link"
 msgstr "Partager le lien"
 
@@ -5142,7 +5146,7 @@ msgstr "Dialogue pour le partage d’un lien"
 msgid "Share QR code"
 msgstr "Partager le code QR"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:305
+#: src/screens/StarterPack/StarterPackScreen.tsx:333
 msgid "Share this starter pack"
 msgstr "Partagez ce kit de démarrage"
 
@@ -5324,8 +5328,8 @@ msgstr "Connecté en tant que @{0}"
 msgid "signed up with your starter pack"
 msgstr "s’est inscrit·e avec votre kit de démarrage"
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:296
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:303
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:300
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:307
 msgid "Signup without a starter pack"
 msgstr "S’inscrire sans kit de démarrage"
 
@@ -5420,7 +5424,7 @@ msgstr "Kit de démarrage"
 msgid "Starter pack by {0}"
 msgstr "Kit de démarrage par {0}"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:586
+#: src/screens/StarterPack/StarterPackScreen.tsx:614
 msgid "Starter pack is invalid"
 msgstr "Le kit de démarrage n’est pas valide"
 
@@ -5585,8 +5589,8 @@ msgstr "Qui contient les éléments suivants :"
 msgid "That handle is already taken."
 msgstr "Ce pseudo est déjà occupé."
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:102
-#: src/screens/StarterPack/StarterPackScreen.tsx:103
+#: src/screens/StarterPack/StarterPackScreen.tsx:105
+#: src/screens/StarterPack/StarterPackScreen.tsx:106
 #: src/screens/StarterPack/Wizard/index.tsx:106
 #: src/screens/StarterPack/Wizard/index.tsx:114
 msgid "That starter pack could not be found."
@@ -5605,7 +5609,7 @@ msgstr "Les lignes directrices communautaires ont été déplacées vers <0/>"
 msgid "The Copyright Policy has been moved to <0/>"
 msgstr "Notre politique de droits d’auteur a été déplacée vers <0/>"
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:317
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:321
 msgid "The experience is better in the app. Download Bluesky now and we'll pick back up where you left off."
 msgstr "L’expérience est meilleure dans l’application. Téléchargez Bluesky maintenant et nous reprendrons là où vous en étiez."
 
@@ -5634,7 +5638,7 @@ msgstr "Ce post a peut-être été supprimé."
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr "Notre politique de confidentialité a été déplacée vers <0/>"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:596
+#: src/screens/StarterPack/StarterPackScreen.tsx:624
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
 msgstr "Le kit de démarrage que vous essayez de consulter n’est pas valide. Vous pouvez supprimer ce kit de démarrage à la place."
 
@@ -5803,6 +5807,7 @@ msgstr "Ce fil d’actu reçoit actuellement un trafic important, il est tempora
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
 msgstr "Ce fil d’actu est vide ! Vous devriez peut-être suivre plus de comptes ou ajuster vos paramètres de langue."
 
+#: src/components/StarterPack/Main/PostsList.tsx:36
 #: src/view/screens/ProfileFeed.tsx:473
 #: src/view/screens/ProfileList.tsx:729
 msgid "This feed is empty."
@@ -6015,7 +6020,7 @@ msgstr "Réafficher cette liste"
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr "Impossible de contacter votre service. Veuillez vérifier votre connexion Internet."
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:520
+#: src/screens/StarterPack/StarterPackScreen.tsx:548
 msgid "Unable to delete"
 msgstr "Impossible de supprimer"
 
@@ -6608,7 +6613,7 @@ msgstr "Oui"
 msgid "Yes, deactivate"
 msgstr "Oui, désactiver"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:532
+#: src/screens/StarterPack/StarterPackScreen.tsx:560
 msgid "Yes, delete this starter pack"
 msgstr "Oui, supprimer ce kit de démarrage"
 
@@ -6829,15 +6834,15 @@ msgstr "Vous suivrez les comptes et fils d’actu suggérés une fois que vous a
 msgid "You'll follow the suggested users once you finish creating your account!"
 msgstr "Vous suivrez les comptes suggérés une fois que vous aurez créé votre compte !"
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:229
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:233
 msgid "You'll follow these people and {0} others"
 msgstr "Vous suivrez ces personnes et {0} autres"
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:227
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:231
 msgid "You'll follow these people right away"
 msgstr "Vous suivrez ces personnes immédiatement"
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:267
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:271
 msgid "You'll stay updated with these feeds"
 msgstr "Vous resterez informé grâce à ces fils d’actu"
 

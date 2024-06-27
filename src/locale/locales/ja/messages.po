@@ -76,11 +76,11 @@ msgstr "{0, plural, other {リポスト}}"
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
 msgstr "{0, plural, other {いいねを外す（#個のいいね）}}"
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:218
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:222
 msgid "{0} joined this week"
 msgstr "今週、{0}人が参加しました"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:350
+#: src/screens/StarterPack/StarterPackScreen.tsx:378
 msgid "{0} people have used this starter pack!"
 msgstr "{0}人がこのスターターパックを使用しました！"
 
@@ -393,7 +393,7 @@ msgstr "成人向けコンテンツは無効になっています。"
 msgid "Advanced"
 msgstr "高度な設定"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:273
+#: src/screens/StarterPack/StarterPackScreen.tsx:301
 msgid "All accounts have been followed!"
 msgstr "すべてのアカウントをフォローしました！"
 
@@ -462,7 +462,7 @@ msgstr "スターターパックの生成中にエラーが発生しました。
 msgid "An error occurred while saving the QR code!"
 msgstr "QRコードの保存中にエラーが発生しました！"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:275
+#: src/screens/StarterPack/StarterPackScreen.tsx:303
 msgid "An error occurred while trying to follow all"
 msgstr "すべてフォローしようとしたらエラーが発生しました"
 
@@ -557,7 +557,7 @@ msgstr "背景"
 msgid "Apply default recommended feeds"
 msgstr "デフォルトのおすすめフィードを追加"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:504
+#: src/screens/StarterPack/StarterPackScreen.tsx:532
 msgid "Are you sure you want delete this starter pack?"
 msgstr "このスターターパックを本当に削除したいですか？"
 
@@ -1457,9 +1457,9 @@ msgid "Debug panel"
 msgstr "デバッグパネル"
 
 #: src/components/dms/MessageMenu.tsx:151
-#: src/screens/StarterPack/StarterPackScreen.tsx:456
-#: src/screens/StarterPack/StarterPackScreen.tsx:535
-#: src/screens/StarterPack/StarterPackScreen.tsx:615
+#: src/screens/StarterPack/StarterPackScreen.tsx:484
+#: src/screens/StarterPack/StarterPackScreen.tsx:563
+#: src/screens/StarterPack/StarterPackScreen.tsx:643
 #: src/view/com/util/forms/PostDropdownBtn.tsx:433
 #: src/view/screens/AppPasswords.tsx:285
 #: src/view/screens/ProfileList.tsx:667
@@ -1516,12 +1516,12 @@ msgstr "アカウントを削除…"
 msgid "Delete post"
 msgstr "投稿を削除"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:450
-#: src/screens/StarterPack/StarterPackScreen.tsx:606
+#: src/screens/StarterPack/StarterPackScreen.tsx:478
+#: src/screens/StarterPack/StarterPackScreen.tsx:634
 msgid "Delete starter pack"
 msgstr "スターターパックを削除"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:501
+#: src/screens/StarterPack/StarterPackScreen.tsx:529
 msgid "Delete starter pack?"
 msgstr "スターターパックを削除しますか？"
 
@@ -1680,7 +1680,7 @@ msgstr "完了"
 msgid "Done{extraText}"
 msgstr "完了{extraText}"
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:314
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:318
 msgid "Download Bluesky"
 msgstr "Blueskyをダウンロード"
 
@@ -1733,7 +1733,7 @@ msgstr "例：返信として広告を繰り返し送ってくるユーザー。
 msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr "それぞれのコードは一回限り有効です。定期的に追加の招待コードをお送りします。"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:445
+#: src/screens/StarterPack/StarterPackScreen.tsx:473
 #: src/screens/StarterPack/Wizard/index.tsx:551
 #: src/screens/StarterPack/Wizard/index.tsx:558
 #: src/view/screens/Feeds.tsx:385
@@ -1793,7 +1793,7 @@ msgstr "プロフィールを編集"
 msgid "Edit Profile"
 msgstr "プロフィールを編集"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:437
+#: src/screens/StarterPack/StarterPackScreen.tsx:465
 msgid "Edit starter pack"
 msgstr "スターターパックを編集"
 
@@ -2086,7 +2086,7 @@ msgstr "メッセージの削除に失敗しました"
 msgid "Failed to delete post, please try again"
 msgstr "投稿の削除に失敗しました。もう一度お試しください。"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:569
+#: src/screens/StarterPack/StarterPackScreen.tsx:597
 msgid "Failed to delete starter pack"
 msgstr "スターターパックの削除に失敗しました"
 
@@ -2258,8 +2258,8 @@ msgstr "{name}をフォロー"
 msgid "Follow Account"
 msgstr "アカウントをフォロー"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:317
-#: src/screens/StarterPack/StarterPackScreen.tsx:324
+#: src/screens/StarterPack/StarterPackScreen.tsx:345
+#: src/screens/StarterPack/StarterPackScreen.tsx:352
 msgid "Follow all"
 msgstr "すべてフォロー"
 
@@ -2436,7 +2436,7 @@ msgstr "戻る"
 #: src/components/Error.tsx:103
 #: src/screens/Profile/ErrorState.tsx:62
 #: src/screens/Profile/ErrorState.tsx:66
-#: src/screens/StarterPack/StarterPackScreen.tsx:628
+#: src/screens/StarterPack/StarterPackScreen.tsx:656
 #: src/view/screens/NotFound.tsx:54
 #: src/view/screens/ProfileFeed.tsx:117
 #: src/view/screens/ProfileList.tsx:975
@@ -2780,8 +2780,8 @@ msgstr "今はあなただけ！上で検索してスターターパックによ
 msgid "Jobs"
 msgstr "仕事"
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:196
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:202
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:200
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:206
 msgid "Join Bluesky"
 msgstr "Blueskyに参加"
 
@@ -3349,6 +3349,10 @@ msgstr "名前または説明がコミュニティ基準に違反"
 msgid "Nature"
 msgstr "自然"
 
+#: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:73
+msgid "Navigate to starter pack"
+msgstr ""
+
 #: src/screens/Login/ForgotPasswordForm.tsx:173
 #: src/screens/Login/LoginForm.tsx:312
 #: src/view/com/modals/ChangePassword.tsx:169
@@ -3742,7 +3746,7 @@ msgstr "ナビゲーションを開く"
 msgid "Open post options menu"
 msgstr "投稿のオプションを開く"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:423
+#: src/screens/StarterPack/StarterPackScreen.tsx:451
 msgid "Open starter pack menu"
 msgstr "スターターパックのメニューを開く"
 
@@ -4492,8 +4496,8 @@ msgstr "メッセージを報告"
 msgid "Report post"
 msgstr "投稿を報告"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:476
-#: src/screens/StarterPack/StarterPackScreen.tsx:479
+#: src/screens/StarterPack/StarterPackScreen.tsx:504
+#: src/screens/StarterPack/StarterPackScreen.tsx:507
 msgid "Report starter pack"
 msgstr "スタータパックを報告"
 
@@ -4539,7 +4543,7 @@ msgstr "リポスト"
 msgid "Repost"
 msgstr "リポスト"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:418
+#: src/screens/StarterPack/StarterPackScreen.tsx:446
 #: src/view/com/util/post-ctrls/RepostButton.tsx:86
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:47
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:93
@@ -4648,7 +4652,7 @@ msgid "Retry"
 msgstr "再試行"
 
 #: src/components/Error.tsx:98
-#: src/screens/StarterPack/StarterPackScreen.tsx:622
+#: src/screens/StarterPack/StarterPackScreen.tsx:650
 #: src/view/screens/ProfileList.tsx:971
 msgid "Return to previous page"
 msgstr "前のページに戻る"
@@ -5063,8 +5067,8 @@ msgid "Sexually Suggestive"
 msgstr "性的にきわどい"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:174
-#: src/screens/StarterPack/StarterPackScreen.tsx:312
-#: src/screens/StarterPack/StarterPackScreen.tsx:465
+#: src/screens/StarterPack/StarterPackScreen.tsx:340
+#: src/screens/StarterPack/StarterPackScreen.tsx:493
 #: src/view/com/profile/ProfileMenu.tsx:219
 #: src/view/com/profile/ProfileMenu.tsx:228
 #: src/view/com/util/forms/PostDropdownBtn.tsx:307
@@ -5100,7 +5104,7 @@ msgstr "フィードを共有"
 
 #: src/components/StarterPack/ShareDialog.tsx:123
 #: src/components/StarterPack/ShareDialog.tsx:130
-#: src/screens/StarterPack/StarterPackScreen.tsx:469
+#: src/screens/StarterPack/StarterPackScreen.tsx:497
 msgid "Share link"
 msgstr "リンクを共有"
 
@@ -5118,7 +5122,7 @@ msgstr "リンク共有のダイアログ"
 msgid "Share QR code"
 msgstr "QRコードを共有"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:305
+#: src/screens/StarterPack/StarterPackScreen.tsx:333
 msgid "Share this starter pack"
 msgstr "このスターターパックを共有"
 
@@ -5300,8 +5304,8 @@ msgstr "@{0}でサインイン"
 msgid "signed up with your starter pack"
 msgstr "あなたのスターターパックでサインアップ"
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:296
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:303
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:300
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:307
 msgid "Signup without a starter pack"
 msgstr "スターターパックを使わずにサインアップ"
 
@@ -5396,7 +5400,7 @@ msgstr "スターターパック"
 msgid "Starter pack by {0}"
 msgstr "{0}によるスターターパック"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:586
+#: src/screens/StarterPack/StarterPackScreen.tsx:614
 msgid "Starter pack is invalid"
 msgstr "スターターパックが無効です"
 
@@ -5561,8 +5565,8 @@ msgstr "その内容は以下の通りです："
 msgid "That handle is already taken."
 msgstr "そのハンドルはすでに使用されています。"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:102
-#: src/screens/StarterPack/StarterPackScreen.tsx:103
+#: src/screens/StarterPack/StarterPackScreen.tsx:105
+#: src/screens/StarterPack/StarterPackScreen.tsx:106
 #: src/screens/StarterPack/Wizard/index.tsx:106
 #: src/screens/StarterPack/Wizard/index.tsx:114
 msgid "That starter pack could not be found."
@@ -5581,7 +5585,7 @@ msgstr "コミュニティーガイドラインは<0/>に移動しました"
 msgid "The Copyright Policy has been moved to <0/>"
 msgstr "著作権ポリシーは<0/>に移動しました"
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:317
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:321
 msgid "The experience is better in the app. Download Bluesky now and we'll pick back up where you left off."
 msgstr "アプリのほうがより良い体験をすることができます。今すぐBlueskyをダウンロードして、中断したところから再開しましょう。"
 
@@ -5610,7 +5614,7 @@ msgstr "投稿が削除された可能性があります。"
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr "プライバシーポリシーは<0/>に移動しました"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:596
+#: src/screens/StarterPack/StarterPackScreen.tsx:624
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
 msgstr "見ようとしたスターターパックが無効です。代わりにスターターパックを削除してください。"
 
@@ -5779,6 +5783,7 @@ msgstr "現在このフィードにはアクセスが集中しており、一時
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
 msgstr "このフィードは空です！もっと多くのユーザーをフォローするか、言語の設定を調整する必要があるかもしれません。"
 
+#: src/components/StarterPack/Main/PostsList.tsx:36
 #: src/view/screens/ProfileFeed.tsx:473
 #: src/view/screens/ProfileList.tsx:729
 msgid "This feed is empty."
@@ -5991,7 +5996,7 @@ msgstr "リストでのミュートを解除"
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr "あなたのサービスに接続できません。インターネットの接続を確認してください。"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:520
+#: src/screens/StarterPack/StarterPackScreen.tsx:548
 msgid "Unable to delete"
 msgstr "削除できません"
 
@@ -6584,7 +6589,7 @@ msgstr "はい"
 msgid "Yes, deactivate"
 msgstr "はい、無効化します"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:532
+#: src/screens/StarterPack/StarterPackScreen.tsx:560
 msgid "Yes, delete this starter pack"
 msgstr "はい、このスターターパックを削除します"
 
@@ -6805,15 +6810,15 @@ msgstr "アカウントの作成を完了するとおすすめのユーザーや
 msgid "You'll follow the suggested users once you finish creating your account!"
 msgstr "アカウントの作成を完了するとおすすめのユーザーをフォローします！"
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:229
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:233
 msgid "You'll follow these people and {0} others"
 msgstr "これらのユーザーや他{0}をフォローします"
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:227
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:231
 msgid "You'll follow these people right away"
 msgstr "これらのユーザーをすぐにフォローします"
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:267
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:271
 msgid "You'll stay updated with these feeds"
 msgstr "これらのフィードの更新を受け取ります"
 
