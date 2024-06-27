@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-shadow */
 import React, {useCallback} from 'react'
 import {useWindowDimensions} from 'react-native'
 import Animated, {
@@ -8,15 +7,13 @@ import Animated, {
   useFrameCallback,
   useSharedValue,
 } from 'react-native-reanimated'
-import {useVideoPlayer, VideoView} from 'expo-video'
+import {VideoView} from 'expo-video'
 
 import {atoms as a} from '#/alf'
+import {useVideoPlayer} from './VideoPlayerContext'
 
-export const VideoEmbedInner = ({source}: {source: string}) => {
-  const player = useVideoPlayer(source, player => {
-    player.loop = true
-    player.play()
-  })
+export const VideoEmbedInner = ({}: {source: string}) => {
+  const player = useVideoPlayer()
   const aref = useAnimatedRef<Animated.View>()
   const {height: windowHeight} = useWindowDimensions()
   const hasLeftView = useSharedValue(false)
