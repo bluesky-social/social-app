@@ -80,7 +80,7 @@ msgstr "{0, plural, one {取消喜欢 (# 个喜欢)} other {取消喜欢 (# 个�
 msgid "{0} joined this week"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:350
+#: src/screens/StarterPack/StarterPackScreen.tsx:366
 msgid "{0} people have used this starter pack!"
 msgstr "{0}人已使用过此入门包！"
 
@@ -405,7 +405,7 @@ msgstr "成人内容显示已被禁用。"
 msgid "Advanced"
 msgstr "详细设置"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:273
+#: src/screens/StarterPack/StarterPackScreen.tsx:289
 msgid "All accounts have been followed!"
 msgstr "已关注所有账户！"
 
@@ -478,7 +478,7 @@ msgstr ""
 msgid "An error occurred while saving the QR code!"
 msgstr "保存二维码时发生错误！"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:275
+#: src/screens/StarterPack/StarterPackScreen.tsx:291
 msgid "An error occurred while trying to follow all"
 msgstr "关注所有人时发生错误"
 
@@ -573,7 +573,7 @@ msgstr "外观"
 msgid "Apply default recommended feeds"
 msgstr "使用默认推荐的资讯源"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:504
+#: src/screens/StarterPack/StarterPackScreen.tsx:520
 msgid "Are you sure you want delete this starter pack?"
 msgstr "你确定要删除此入门包吗？"
 
@@ -1481,9 +1481,9 @@ msgid "Debug panel"
 msgstr "调试面板"
 
 #: src/components/dms/MessageMenu.tsx:151
-#: src/screens/StarterPack/StarterPackScreen.tsx:456
-#: src/screens/StarterPack/StarterPackScreen.tsx:535
-#: src/screens/StarterPack/StarterPackScreen.tsx:615
+#: src/screens/StarterPack/StarterPackScreen.tsx:472
+#: src/screens/StarterPack/StarterPackScreen.tsx:551
+#: src/screens/StarterPack/StarterPackScreen.tsx:631
 #: src/view/com/util/forms/PostDropdownBtn.tsx:433
 #: src/view/screens/AppPasswords.tsx:285
 #: src/view/screens/ProfileList.tsx:667
@@ -1540,12 +1540,12 @@ msgstr "删除我的账户…"
 msgid "Delete post"
 msgstr "删除帖文"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:450
-#: src/screens/StarterPack/StarterPackScreen.tsx:606
+#: src/screens/StarterPack/StarterPackScreen.tsx:466
+#: src/screens/StarterPack/StarterPackScreen.tsx:622
 msgid "Delete starter pack"
 msgstr "删除入门包"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:501
+#: src/screens/StarterPack/StarterPackScreen.tsx:517
 msgid "Delete starter pack?"
 msgstr "删除入门包？"
 
@@ -1757,15 +1757,12 @@ msgstr "例如：散布广告内容的用户。"
 msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr "每个邀请码仅可使用一次。你将不定期获得新的邀请码。"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:445
-#: src/screens/StarterPack/Wizard/index.tsx:518
-#: src/screens/StarterPack/Wizard/index.tsx:525
-#: src/view/screens/Feeds.tsx:385
-#: src/view/screens/Feeds.tsx:453
+#: src/view/com/lists/ListMembers.tsx:149
+msgctxt "action"
 msgid "Edit"
-msgstr "编辑"
+msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:445
+#: src/screens/StarterPack/StarterPackScreen.tsx:461
 #: src/screens/StarterPack/Wizard/index.tsx:551
 #: src/screens/StarterPack/Wizard/index.tsx:558
 #: src/view/screens/Feeds.tsx:385
@@ -1820,7 +1817,7 @@ msgstr "编辑个人资料"
 msgid "Edit Profile"
 msgstr "编辑个人资料"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:437
+#: src/screens/StarterPack/StarterPackScreen.tsx:453
 msgid "Edit starter pack"
 msgstr "编辑入门包"
 
@@ -2113,7 +2110,7 @@ msgstr "无法删除私信"
 msgid "Failed to delete post, please try again"
 msgstr "无法删除帖文，请重试"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:569
+#: src/screens/StarterPack/StarterPackScreen.tsx:585
 msgid "Failed to delete starter pack"
 msgstr "无法删除入门包"
 
@@ -2289,8 +2286,8 @@ msgstr "关注 {name}"
 msgid "Follow Account"
 msgstr "关注账户"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:317
-#: src/screens/StarterPack/StarterPackScreen.tsx:324
+#: src/screens/StarterPack/StarterPackScreen.tsx:333
+#: src/screens/StarterPack/StarterPackScreen.tsx:340
 msgid "Follow all"
 msgstr "关注所有人"
 
@@ -2467,7 +2464,7 @@ msgstr "返回"
 #: src/components/Error.tsx:103
 #: src/screens/Profile/ErrorState.tsx:62
 #: src/screens/Profile/ErrorState.tsx:66
-#: src/screens/StarterPack/StarterPackScreen.tsx:628
+#: src/screens/StarterPack/StarterPackScreen.tsx:644
 #: src/view/screens/NotFound.tsx:54
 #: src/view/screens/ProfileFeed.tsx:117
 #: src/view/screens/ProfileList.tsx:975
@@ -3380,6 +3377,10 @@ msgstr "名称或描述违反了社群准则"
 msgid "Nature"
 msgstr "自然"
 
+#: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:73
+msgid "Navigate to starter pack"
+msgstr ""
+
 #: src/screens/Login/ForgotPasswordForm.tsx:173
 #: src/screens/Login/LoginForm.tsx:312
 #: src/view/com/modals/ChangePassword.tsx:169
@@ -3773,7 +3774,7 @@ msgstr "打开导航"
 msgid "Open post options menu"
 msgstr "开启帖文选项菜单"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:423
+#: src/screens/StarterPack/StarterPackScreen.tsx:439
 msgid "Open starter pack menu"
 msgstr "开启入门包菜单"
 
@@ -4527,8 +4528,8 @@ msgstr "举报私信"
 msgid "Report post"
 msgstr "举报帖文"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:476
-#: src/screens/StarterPack/StarterPackScreen.tsx:479
+#: src/screens/StarterPack/StarterPackScreen.tsx:492
+#: src/screens/StarterPack/StarterPackScreen.tsx:495
 msgid "Report starter pack"
 msgstr "举报入门包"
 
@@ -4574,7 +4575,7 @@ msgstr "转发"
 msgid "Repost"
 msgstr "转发"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:418
+#: src/screens/StarterPack/StarterPackScreen.tsx:434
 #: src/view/com/util/post-ctrls/RepostButton.tsx:86
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:47
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:93
@@ -4683,7 +4684,7 @@ msgid "Retry"
 msgstr "重试"
 
 #: src/components/Error.tsx:98
-#: src/screens/StarterPack/StarterPackScreen.tsx:622
+#: src/screens/StarterPack/StarterPackScreen.tsx:638
 #: src/view/screens/ProfileList.tsx:971
 msgid "Return to previous page"
 msgstr "回到上一页"
@@ -5097,14 +5098,9 @@ msgstr "性行为或性暗示裸露。"
 msgid "Sexually Suggestive"
 msgstr "性暗示"
 
-#: src/view/com/lightbox/Lightbox.tsx:144
-msgctxt "action"
-msgid "Share"
-msgstr "分享"
-
 #: src/components/StarterPack/QrCodeDialog.tsx:174
-#: src/screens/StarterPack/StarterPackScreen.tsx:312
-#: src/screens/StarterPack/StarterPackScreen.tsx:465
+#: src/screens/StarterPack/StarterPackScreen.tsx:328
+#: src/screens/StarterPack/StarterPackScreen.tsx:481
 #: src/view/com/profile/ProfileMenu.tsx:219
 #: src/view/com/profile/ProfileMenu.tsx:228
 #: src/view/com/util/forms/PostDropdownBtn.tsx:307
@@ -5140,7 +5136,7 @@ msgstr "分享资讯源"
 
 #: src/components/StarterPack/ShareDialog.tsx:123
 #: src/components/StarterPack/ShareDialog.tsx:130
-#: src/screens/StarterPack/StarterPackScreen.tsx:469
+#: src/screens/StarterPack/StarterPackScreen.tsx:485
 msgid "Share link"
 msgstr "分享链接"
 
@@ -5156,14 +5152,9 @@ msgstr "分享链接对话框"
 #: src/components/StarterPack/ShareDialog.tsx:134
 #: src/components/StarterPack/ShareDialog.tsx:145
 msgid "Share QR code"
-msgstr "分享二维码"
-
-#: src/components/StarterPack/ShareDialog.tsx:134
-#: src/components/StarterPack/ShareDialog.tsx:145
-msgid "Share QR code"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:305
+#: src/screens/StarterPack/StarterPackScreen.tsx:321
 msgid "Share this starter pack"
 msgstr "分享这个入门包"
 
@@ -5445,7 +5436,7 @@ msgstr "入门包"
 msgid "Starter pack by {0}"
 msgstr "由 {0} 创建的入门包"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:586
+#: src/screens/StarterPack/StarterPackScreen.tsx:602
 msgid "Starter pack is invalid"
 msgstr "入门包无效"
 
@@ -5610,8 +5601,8 @@ msgstr "其中包含以下内容："
 msgid "That handle is already taken."
 msgstr "该用户识别符已被占用。"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:102
 #: src/screens/StarterPack/StarterPackScreen.tsx:103
+#: src/screens/StarterPack/StarterPackScreen.tsx:104
 #: src/screens/StarterPack/Wizard/index.tsx:106
 #: src/screens/StarterPack/Wizard/index.tsx:114
 msgid "That starter pack could not be found."
@@ -5659,7 +5650,7 @@ msgstr "这条帖文可能已被删除。"
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr "隐私政策已迁移至 <0/>"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:596
+#: src/screens/StarterPack/StarterPackScreen.tsx:612
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
 msgstr "你尝试查看的入门包无效，你可以删除此入门包。"
 
@@ -5828,6 +5819,7 @@ msgstr "该资讯源当前使用人数较多，服务暂时不可用。请稍后
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
 msgstr "这个资讯源是空的！你或许需要先关注更多的用户，或检查你的语言设置。"
 
+#: src/components/StarterPack/Main/PostsList.tsx:36
 #: src/view/screens/ProfileFeed.tsx:473
 #: src/view/screens/ProfileList.tsx:729
 msgid "This feed is empty."
@@ -6040,7 +6032,7 @@ msgstr "取消隐藏列表"
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr "无法连接到服务，请检查互联网连接。"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:520
+#: src/screens/StarterPack/StarterPackScreen.tsx:536
 msgid "Unable to delete"
 msgstr "无法删除"
 
@@ -6633,7 +6625,7 @@ msgstr "启用"
 msgid "Yes, deactivate"
 msgstr "是的，请停用"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:532
+#: src/screens/StarterPack/StarterPackScreen.tsx:548
 msgid "Yes, delete this starter pack"
 msgstr "是的，删除此入门包"
 
