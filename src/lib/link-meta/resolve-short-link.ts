@@ -1,4 +1,5 @@
 import {logger} from '#/logger'
+import {startUriToStarterPackUri} from 'lib/strings/starter-pack'
 
 export async function resolveShortLink(shortLink: string) {
   const controller = new AbortController()
@@ -12,7 +13,7 @@ export async function resolveShortLink(shortLink: string) {
     if (res.status !== 200) {
       return shortLink
     }
-    return res.url
+    return startUriToStarterPackUri(res.url)
   } catch (e: unknown) {
     logger.error('Failed to resolve short link', {safeMessage: e})
     return null
