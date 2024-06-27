@@ -134,6 +134,7 @@ module.exports = function (config) {
         backgroundColor: DARK_SPLASH_CONFIG_ANDROID.backgroundColor,
       },
       android: {
+        versionCode: 300,
         icon: './assets/icon.png',
         adaptiveIcon: {
           foregroundImage: './assets/icon-android-foreground.png',
