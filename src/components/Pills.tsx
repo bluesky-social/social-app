@@ -25,10 +25,11 @@ export function Row({
   ViewStyleProp) {
   const styles = React.useMemo(() => {
     switch (size) {
-      case 'sm':
-        return [{gap: 3, marginLeft: -3}]
       case 'lg':
         return [{gap: 5}]
+      case 'sm':
+      default:
+        return [{gap: 3, marginLeft: -3}]
     }
   }, [size])
   return (
@@ -59,20 +60,6 @@ export function Label({
 
   const {outer, avi, text} = React.useMemo(() => {
     switch (size) {
-      case 'sm': {
-        return {
-          outer: [
-            !noBg && t.atoms.bg_contrast_25,
-            {
-              gap: 3,
-              paddingHorizontal: 3,
-              paddingVertical: 3,
-            },
-          ],
-          avi: 12,
-          text: [a.text_xs],
-        }
-      }
       case 'lg': {
         return {
           outer: [
@@ -85,6 +72,21 @@ export function Label({
           ],
           avi: 16,
           text: [a.text_sm],
+        }
+      }
+      case 'sm':
+      default: {
+        return {
+          outer: [
+            !noBg && t.atoms.bg_contrast_25,
+            {
+              gap: 3,
+              paddingHorizontal: 3,
+              paddingVertical: 3,
+            },
+          ],
+          avi: 12,
+          text: [a.text_xs],
         }
       }
     }
@@ -145,6 +147,7 @@ export function FollowsYou({size = 'sm'}: CommonProps) {
     switch (size) {
       case 'sm':
       case 'lg':
+      default:
         return [
           {
             paddingHorizontal: 6,
