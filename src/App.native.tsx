@@ -13,6 +13,7 @@ import {
 import * as SplashScreen from 'expo-splash-screen'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {TourGuideProvider} from 'rn-tourguide'
 
 import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
 import {QueryProvider} from '#/lib/react-query'
@@ -58,6 +59,7 @@ import {Splash} from '#/Splash'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import I18nProvider from './locale/i18nProvider'
 import {listenSessionDropped} from './state/events'
+import {TooltipComponent} from './tours/Tooltip'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -117,10 +119,19 @@ function InnerApp() {
                               <UnreadNotifsProvider>
                                 <BackgroundNotificationPreferencesProvider>
                                   <MutedThreadsProvider>
-                                    <GestureHandlerRootView style={s.h100pct}>
-                                      <TestCtrls />
-                                      <Shell />
-                                    </GestureHandlerRootView>
+                                    <TourGuideProvider
+                                      tooltipComponent={TooltipComponent}
+                                      backdropColor={
+                                        theme === 'light'
+                                          ? 'rgba(0, 0, 0, 0.15)'
+                                          : 'rgba(0, 0, 0, 0.8)'
+                                      }
+                                      preventOutsideInteraction>
+                                      <GestureHandlerRootView style={s.h100pct}>
+                                        <TestCtrls />
+                                        <Shell />
+                                      </GestureHandlerRootView>
+                                    </TourGuideProvider>
                                   </MutedThreadsProvider>
                                 </BackgroundNotificationPreferencesProvider>
                               </UnreadNotifsProvider>

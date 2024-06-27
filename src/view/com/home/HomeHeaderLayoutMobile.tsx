@@ -20,6 +20,7 @@ import {Hashtag_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/H
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {Link} from '#/components/Link'
 import {IS_DEV} from '#/env'
+import {TourDebugButton} from '#/tours/Debug'
 
 export function HomeHeaderLayoutMobile({
   children,
@@ -72,9 +73,12 @@ export function HomeHeaderLayoutMobile({
             {width: 100},
           ]}>
           {IS_DEV && (
-            <Link to="/sys/debug">
-              <ColorPalette size="md" />
-            </Link>
+            <>
+              <TourDebugButton />
+              <Link to="/sys/debug">
+                <ColorPalette size="md" />
+              </Link>
+            </>
           )}
           {hasSession && (
             <Link
