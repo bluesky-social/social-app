@@ -33,6 +33,7 @@ import {isWeb} from 'platform/detection'
 import {updateProfileShadow} from 'state/cache/profile-shadow'
 import {useModerationOpts} from 'state/preferences/moderation-opts'
 import {useListMembersQuery} from 'state/queries/list-members'
+import {useResolvedStarterPackShortLink} from 'state/queries/resolve-short-link'
 import {useResolveDidQuery} from 'state/queries/resolve-uri'
 import {useShortenLink} from 'state/queries/shorten-link'
 import {useStarterPackQuery} from 'state/queries/starter-packs'
@@ -70,9 +71,38 @@ type StarterPackScreeProps = NativeStackScreenProps<
 
 export function StarterPackScreen({route}: StarterPackScreeProps) {
   const {_} = useLingui()
+  const {
+    data: resolvedStarterPack,
+    isLoading,
+    isError,
+  } = useResolvedStarterPackShortLink({
+    nameOrCode: route.params.name,
+  })
+  const params = resolvedStarterPack ?? route.params
+
+  if (isLoading || isError) {
+    return (
+      <ListMaybePlaceholder
+        isLoading={true}
+        isError={isError}
+        errorMessage={_(msg`That starter pack could not be found.`)}
+        emptyMessage={_(msg`That starter pack could not be found.`)}
+      />
+    )
+  }
+
+  return <StarterPackScreenInner routeParams={params} />
+}
+
+export function StarterPackScreenInner({
+  routeParams,
+}: {
+  routeParams: StarterPackScreeProps['route']['params']
+}) {
+  const {name, rkey} = routeParams
+  const {_} = useLingui()
   const {currentAccount} = useSession()
 
-  const {name, rkey} = route.params
   const moderationOpts = useModerationOpts()
   const {
     data: did,
@@ -113,16 +143,16 @@ export function StarterPackScreen({route}: StarterPackScreeProps) {
   }
 
   return (
-    <StarterPackScreenInner
+    <StarterPackScreenLoaded
       starterPack={starterPack}
-      routeParams={route.params}
+      routeParams={routeParams}
       listMembersQuery={listMembersQuery}
       moderationOpts={moderationOpts}
     />
   )
 }
 
-function StarterPackScreenInner({
+function StarterPackScreenLoaded({
   starterPack,
   routeParams,
   listMembersQuery,

@@ -167,6 +167,8 @@ export function convertBskyAppUrlIfNeeded(url: string): string {
     } catch (e) {
       console.error('Unexpected error in convertBskyAppUrlIfNeeded()', e)
     }
+  } else if (isShortLink(url)) {
+    return shortLinkToHref(url)
   }
   return url
 }
@@ -288,11 +290,21 @@ export function createBskyAppAbsoluteUrl(path: string): string {
 }
 
 export function isShortLink(url: string): boolean {
+  return url.startsWith('https://go.bsky.app/')
+}
+
+export function shortLinkToHref(url: string): string {
   try {
     const urlp = new URL(url)
-    return urlp.host === 'go.bsky.app'
+
+    // For now we only support starter packs, but in the future we should add additional paths to this check
+    const parts = urlp.pathname.split('/').filter(Boolean)
+    if (parts.length === 1) {
+      return `/starter-pack/short-${parts[0]}`
+    }
+    return url
   } catch (e) {
     logger.error('Failed to parse possible short link', {safeMessage: e})
-    return false
+    return url
   }
 }

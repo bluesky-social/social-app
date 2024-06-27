@@ -20,7 +20,7 @@ export async function resolveShortLink(shortLink: string) {
     return json.url
   } catch (e: unknown) {
     logger.error('Failed to resolve short link', {safeMessage: e})
-    return null
+    return shortLink
   } finally {
     clearTimeout(to)
   }
