@@ -120,6 +120,7 @@ export function StarterPackAuthCheck({
       did: routeParams.name,
       rkey: routeParams.rkey,
     })
+
     if (!uri) return
     setActiveStarterPack({
       uri,
