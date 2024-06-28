@@ -19,7 +19,6 @@ import {createStarterPackGooglePlayUri} from 'lib/strings/starter-pack'
 import {isWeb} from 'platform/detection'
 import {useModerationOpts} from 'state/preferences/moderation-opts'
 import {useStarterPackQuery} from 'state/queries/starter-packs'
-import {useLoggedOutViewControls} from 'state/shell/logged-out'
 import {
   useActiveStarterPack,
   useSetActiveStarterPack,
@@ -110,7 +109,6 @@ function LandingScreenLoaded({
   const activeStarterPack = useActiveStarterPack()
   const setActiveStarterPack = useSetActiveStarterPack()
   const {isTabletOrDesktop} = useWebMediaQueries()
-  const {setShowLoggedOut} = useLoggedOutViewControls()
   const androidDialogControl = useDialogControl()
 
   const [appClipOverlayVisible, setAppClipOverlayVisible] =
@@ -185,10 +183,7 @@ function LandingScreenLoaded({
               },
             ]}
             onPress={() => {
-              // Reset the entire state
               setActiveStarterPack(undefined)
-              setScreenState(LoggedOutScreenState.S_LoginOrCreateAccount)
-              setShowLoggedOut(false)
             }}
             accessibilityLabel={_(msg`Back`)}
             accessibilityHint={_(msg`Go back to previous screen`)}>

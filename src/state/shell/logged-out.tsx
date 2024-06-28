@@ -64,11 +64,19 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     React.useState(activeStarterPack)
   if (activeStarterPack?.uri !== prevActiveStarterPack?.uri) {
     setPrevActiveStarterPack(activeStarterPack)
-    setState(s => ({
-      ...s,
-      showLoggedOut: true,
-      requestedAccountSwitchTo: 'starterpack',
-    }))
+    if (activeStarterPack) {
+      setState(s => ({
+        ...s,
+        showLoggedOut: true,
+        requestedAccountSwitchTo: 'starterpack',
+      }))
+    } else {
+      setState(s => ({
+        ...s,
+        showLoggedOut: false,
+        requestedAccountSwitchTo: undefined,
+      }))
+    }
   }
 
   const controls = React.useMemo<Controls>(
