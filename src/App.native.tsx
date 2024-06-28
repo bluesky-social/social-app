@@ -120,6 +120,7 @@ function InnerApp() {
                                 <BackgroundNotificationPreferencesProvider>
                                   <MutedThreadsProvider>
                                     <TourGuideProvider
+                                      androidStatusBarVisible
                                       tooltipComponent={TooltipComponent}
                                       backdropColor={
                                         theme === 'light'
