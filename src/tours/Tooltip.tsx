@@ -91,6 +91,7 @@ export function TooltipComponent({
       </Text>
       {!isLastStep ? (
         <Button
+          // @ts-ignore the type is correct for Web, which is the only place the ref is used
           ref={btnRef}
           variant="gradient"
           color="gradient_sky"
