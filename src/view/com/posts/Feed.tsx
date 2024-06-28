@@ -15,7 +15,7 @@ import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {FALLBACK_MARKER_POST} from '#/lib/api/feed/home'
-import {KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
+import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
@@ -34,6 +34,7 @@ import {useSession} from '#/state/session'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
 import {useTheme} from 'lib/ThemeContext'
+import {SuggestedFeeds, SuggestedFollows} from '#/components/FeedInterstitials'
 import {List, ListRef} from '../util/List'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
@@ -68,6 +69,54 @@ type FeedItem =
       key: string
       slice: FeedPostSlice
     }
+  | {
+      type: 'interstitialFeeds'
+      key: string
+      params: {}
+      slot: number
+    }
+  | {
+      type: 'interstitialFollows'
+      key: string
+      params: {}
+      slot: number
+    }
+
+const feedInterstitialType = 'interstitialFeeds'
+const followInterstitialType = 'interstitialFollows'
+const interstials: Record<
+  'following' | 'discover',
+  (FeedItem & {type: 'interstitialFeeds' | 'interstitialFollows'})[]
+> = {
+  following: [
+    {
+      type: followInterstitialType,
+      params: {},
+      key: [followInterstitialType, 'default'].join(':'),
+      slot: 20,
+    },
+    {
+      type: feedInterstitialType,
+      params: {},
+      key: [feedInterstitialType, 'default'].join(':'),
+      slot: 40,
+    },
+  ],
+  discover: [
+    {
+      type: feedInterstitialType,
+      params: {},
+      key: [feedInterstitialType, 'default'].join(':'),
+      slot: 20,
+    },
+    {
+      type: followInterstitialType,
+      params: {},
+      key: [followInterstitialType, 'default'].join(':'),
+      slot: 40,
+    },
+  ],
+}
 
 // DISABLED need to check if this is causing random feed refreshes -prf
 // const REFRESH_AFTER = STALE.HOURS.ONE
@@ -123,6 +172,8 @@ let Feed = ({
   const checkForNewRef = React.useRef<(() => void) | null>(null)
   const lastFetchRef = React.useRef<number>(Date.now())
   const [feedType, feedUri] = feed.split('|')
+  const feedIsDiscover = feedUri === DISCOVER_FEED_URI
+  const feedIsFollowing = feedType === 'following'
 
   const opts = React.useMemo(
     () => ({enabled, ignoreFilterFor}),
@@ -263,8 +314,30 @@ let Feed = ({
       })
     }
 
+    const feedType = feedIsFollowing
+      ? 'following'
+      : feedIsDiscover
+      ? 'discover'
+      : undefined
+
+    if (feedType) {
+      for (const interstitial of interstials[feedType]) {
+        if (arr.length > interstitial.slot) {
+          arr.splice(interstitial.slot, 0, interstitial)
+        }
+      }
+    }
+
     return arr
-  }, [isFetched, isError, isEmpty, data, feedUri])
+  }, [
+    isFetched,
+    isError,
+    isEmpty,
+    data,
+    feedUri,
+    feedIsDiscover,
+    feedIsFollowing,
+  ])
 
   // events
   // =
@@ -349,6 +422,10 @@ let Feed = ({
         return <PostFeedLoadingPlaceholder />
       } else if (item.type === 'feedShutdownMsg') {
         return <FeedShutdownMsg feedUri={feedUri} />
+      } else if (item.type === feedInterstitialType) {
+        return <SuggestedFeeds />
+      } else if (item.type === followInterstitialType) {
+        return <SuggestedFollows />
       } else if (item.type === 'slice') {
         if (item.slice.rootUri === FALLBACK_MARKER_POST.post.uri) {
           // HACK
