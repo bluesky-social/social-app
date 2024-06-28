@@ -3,14 +3,13 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {emitSoftReset} from '#/state/events'
 import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {FeedSuggestedFollowsCards} from '#/components/FeedSuggestedFollows'
-import {IconCircle} from '#/components/IconCircle'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as Refresh} from '#/components/icons/ArrowRotateCounterClockwise'
-import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
 import {Text} from '#/components/Typography'
 
 export function EmptyTimeline() {
@@ -19,22 +18,17 @@ export function EmptyTimeline() {
   return (
     <CenteredView sideBorders style={[a.h_full_vh]}>
       <View style={[a.px_lg, a.pt_3xl]}>
-        <IconCircle icon={FilterTimeline} style={[a.mb_2xl]} />
-
-        <Text style={[a.text_xl, a.font_bold, a.mb_sm]}>
-          <Trans>Welcome to your timeline</Trans>
+        <Text style={[a.text_2xl, a.font_bold, a.mb_md]}>
+          <Trans>Your Following feed is empty :(</Trans>
         </Text>
-        <Text style={[a.mb_sm, a.leading_snug]}>
+        <Text style={[a.text_md, a.mb_sm, a.leading_snug]}>
           <Trans>
-            Your timeline is where you can see posts from people you follow.
-            It's always chronologically sorted, so you'll never miss a post.
+            Follow some users to see what's happening. Their content will appear
+            here in chronological order.
           </Trans>
         </Text>
-
-        <Text style={[a.pt_lg, a.font_bold, a.mb_sm, a.leading_snug]}>
-          <Trans>Follow some people to get started!</Trans>
-        </Text>
       </View>
+
       <View style={[a.flex_row, a.align_start]}>
         <FeedSuggestedFollowsCards />
       </View>
@@ -54,12 +48,13 @@ export function EmptyTimeline() {
           </Text>
 
           <Button
-            label={_(msg`Click to view your timeline`)}
-            size="medium"
+            label={_(msg`Click to refresh your following feed`)}
+            size="small"
             variant="solid"
-            color="primary">
+            color="secondary"
+            onPress={() => emitSoftReset()}>
             <ButtonText>
-              <Trans>View your timeline</Trans>
+              <Trans>Refresh your feed</Trans>
             </ButtonText>
             <ButtonIcon icon={Refresh} position="right" />
           </Button>
