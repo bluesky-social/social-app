@@ -28,7 +28,7 @@ import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
 import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
 import {FollowingEndOfFeed} from 'view/com/posts/FollowingEndOfFeed'
 import {NoFeedsPinned} from '#/screens/Home/NoFeedsPinned'
-import {HomeTour} from '#/tours/HomeTour'
+import {TOURS, useTriggerTourIfQueued} from '#/tours'
 import {HomeHeader} from '../com/home/HomeHeader'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home' | 'Start'>
@@ -87,6 +87,7 @@ function HomeScreenReady({
   const selectedIndex = Math.max(0, maybeFoundIndex)
   const selectedFeed = allFeeds[selectedIndex]
   const requestNotificationsPermission = useRequestNotificationsPermission()
+  const triggerTourIfQueued = useTriggerTourIfQueued(TOURS.HOME)
 
   useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName)
   useOTAUpdates()
@@ -114,10 +115,16 @@ function HomeScreenReady({
     React.useCallback(() => {
       setMinimalShellMode(false)
       setDrawerSwipeDisabled(selectedIndex > 0)
+      triggerTourIfQueued()
       return () => {
         setDrawerSwipeDisabled(false)
       }
-    }, [setDrawerSwipeDisabled, selectedIndex, setMinimalShellMode]),
+    }, [
+      setDrawerSwipeDisabled,
+      selectedIndex,
+      setMinimalShellMode,
+      triggerTourIfQueued,
+    ]),
   )
 
   useFocusEffect(
@@ -227,50 +234,47 @@ function HomeScreenReady({
   }, [preferences])
 
   return hasSession ? (
-    <>
-      <Pager
-        key={allFeeds.join(',')}
-        ref={pagerRef}
-        testID="homeScreen"
-        initialPage={selectedIndex}
-        onPageSelecting={onPageSelecting}
-        onPageSelected={onPageSelected}
-        onPageScrollStateChanged={onPageScrollStateChanged}
-        renderTabBar={renderTabBar}>
-        {pinnedFeedInfos.length ? (
-          pinnedFeedInfos.map(feedInfo => {
-            const feed = feedInfo.feedDescriptor
-            if (feed === 'following') {
-              return (
-                <FeedPage
-                  key={feed}
-                  testID="followingFeedPage"
-                  isPageFocused={selectedFeed === feed}
-                  feed={feed}
-                  feedParams={homeFeedParams}
-                  renderEmptyState={renderFollowingEmptyState}
-                  renderEndOfFeed={FollowingEndOfFeed}
-                />
-              )
-            }
-            const savedFeedConfig = feedInfo.savedFeed
+    <Pager
+      key={allFeeds.join(',')}
+      ref={pagerRef}
+      testID="homeScreen"
+      initialPage={selectedIndex}
+      onPageSelecting={onPageSelecting}
+      onPageSelected={onPageSelected}
+      onPageScrollStateChanged={onPageScrollStateChanged}
+      renderTabBar={renderTabBar}>
+      {pinnedFeedInfos.length ? (
+        pinnedFeedInfos.map(feedInfo => {
+          const feed = feedInfo.feedDescriptor
+          if (feed === 'following') {
             return (
               <FeedPage
                 key={feed}
-                testID="customFeedPage"
+                testID="followingFeedPage"
                 isPageFocused={selectedFeed === feed}
                 feed={feed}
-                renderEmptyState={renderCustomFeedEmptyState}
-                savedFeedConfig={savedFeedConfig}
+                feedParams={homeFeedParams}
+                renderEmptyState={renderFollowingEmptyState}
+                renderEndOfFeed={FollowingEndOfFeed}
               />
             )
-          })
-        ) : (
-          <NoFeedsPinned preferences={preferences} />
-        )}
-      </Pager>
-      <HomeTour />
-    </>
+          }
+          const savedFeedConfig = feedInfo.savedFeed
+          return (
+            <FeedPage
+              key={feed}
+              testID="customFeedPage"
+              isPageFocused={selectedFeed === feed}
+              feed={feed}
+              renderEmptyState={renderCustomFeedEmptyState}
+              savedFeedConfig={savedFeedConfig}
+            />
+          )
+        })
+      ) : (
+        <NoFeedsPinned preferences={preferences} />
+      )}
+    </Pager>
   ) : (
     <Pager
       testID="homeScreen"

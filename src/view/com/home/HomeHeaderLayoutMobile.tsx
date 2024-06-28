@@ -20,7 +20,6 @@ import {Hashtag_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/H
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {Link} from '#/components/Link'
 import {IS_DEV} from '#/env'
-import {TourDebugButton} from '#/tours/Debug'
 
 export function HomeHeaderLayoutMobile({
   children,
@@ -74,7 +73,6 @@ export function HomeHeaderLayoutMobile({
           ]}>
           {IS_DEV && (
             <>
-              <TourDebugButton />
               <Link to="/sys/debug">
                 <ColorPalette size="md" />
               </Link>
