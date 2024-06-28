@@ -27,7 +27,11 @@ function sanitizeDate(date: Date): Date {
   return date
 }
 
-export function StepInfo() {
+export function StepInfo({
+  isLoadingStarterPack,
+}: {
+  isLoadingStarterPack: boolean
+}) {
   const {_} = useLingui()
   const {state, dispatch} = useSignupContext()
 
@@ -46,7 +50,7 @@ export function StepInfo() {
             }
           />
         </View>
-        {state.isLoading ? (
+        {state.isLoading || isLoadingStarterPack ? (
           <View style={[a.align_center]}>
             <Loader size="xl" />
           </View>
