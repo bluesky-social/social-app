@@ -41,8 +41,7 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
 interface AppClipMessage {
   action: 'present' | 'store'
-  keyToStoreAs?: string
-  jsonToStore?: string
+  starterPackUserID?: string
 }
 
 function postAppClipMessage(message: AppClipMessage) {
@@ -123,6 +122,7 @@ function LandingScreenLoaded({
       setAppClipOverlayVisible(true)
       postAppClipMessage({
         action: 'present',
+        starterPackUserID: activeStarterPack.starterPackUserID,
       })
     } else if (isAndroidWeb) {
       androidDialogControl.open()
