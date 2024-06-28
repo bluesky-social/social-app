@@ -1,9 +1,10 @@
 import * as React from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {IStep, Labels} from 'rn-tourguide'
 
+import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {Text} from '#/components/Typography'
@@ -34,16 +35,23 @@ export function TooltipComponent({
         a.px_lg,
         a.py_lg,
         a.flex_col,
-        a.gap_lg,
+        a.gap_md,
         a.rounded_sm,
         a.shadow_md,
         {maxWidth: 300},
       ]}>
-      <View style={[]}>
-        <Text testID="stepDescription" style={[a.text_lg, a.leading_snug]}>
-          {currentStep && currentStep.text}
+      <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+        <Logo width={16} style={{position: 'relative', top: 0}} />
+        <Text
+          style={[a.text_sm, a.font_semibold, t.atoms.text_contrast_medium]}>
+          <Trans>Quick tip</Trans>
         </Text>
       </View>
+      <Text
+        testID="stepDescription"
+        style={[a.text_md, a.leading_snug, a.pb_sm]}>
+        {currentStep && currentStep.text}
+      </Text>
       {!isLastStep ? (
         <Button
           variant="gradient"

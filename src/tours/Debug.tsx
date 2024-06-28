@@ -8,9 +8,9 @@ export function TourDebugButton() {
   const {start} = useTourGuideController('home')
   return (
     <Button
+      label="Start tour"
       onPress={() => {
-        console.log('firing')
-        start(1)
+        start()
       }}>
       {() => <Text>t</Text>}
     </Button>
