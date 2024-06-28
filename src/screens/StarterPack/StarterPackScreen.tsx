@@ -320,6 +320,7 @@ function Header({
       })
     }
     const onBeforeRemove = () => {
+      if (hasSession) return
       setActiveStarterPack(undefined)
     }
 
@@ -327,7 +328,6 @@ function Header({
     navigation.addListener('beforeRemove', onBeforeRemove)
 
     return () => {
-      console.log('remove listeners')
       navigation.removeListener('focus', onFocus)
       navigation.removeListener('beforeRemove', onBeforeRemove)
     }
