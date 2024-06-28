@@ -10,7 +10,7 @@ import * as EmailValidator from 'email-validator'
 
 import {DEFAULT_SERVICE} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
-import {createFullHandle, validateHandle} from '#/lib/strings/handles'
+import {createFullHandle} from '#/lib/strings/handles'
 import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
 import {useSessionApi} from '#/state/session'
@@ -28,7 +28,6 @@ export enum SignupStep {
 
 export type SignupState = {
   hasPrev: boolean
-  canNext: boolean
   activeStep: SignupStep
 
   serviceUrl: string
@@ -58,12 +57,10 @@ export type SignupAction =
   | {type: 'setHandle'; value: string}
   | {type: 'setVerificationCode'; value: string}
   | {type: 'setError'; value: string}
-  | {type: 'setCanNext'; value: boolean}
   | {type: 'setIsLoading'; value: boolean}
 
 export const initialState: SignupState = {
   hasPrev: false,
-  canNext: false,
   activeStep: SignupStep.INFO,
 
   serviceUrl: DEFAULT_SERVICE,
@@ -144,10 +141,6 @@ export function reducer(s: SignupState, a: SignupAction): SignupState {
       next.handle = a.value
       break
     }
-    case 'setCanNext': {
-      next.canNext = a.value
-      break
-    }
     case 'setIsLoading': {
       next.isLoading = a.value
       break
@@ -159,23 +152,6 @@ export function reducer(s: SignupState, a: SignupAction): SignupState {
   }
 
   next.hasPrev = next.activeStep !== SignupStep.INFO
-
-  switch (next.activeStep) {
-    case SignupStep.INFO: {
-      const isValidEmail = EmailValidator.validate(next.email)
-      next.canNext =
-        !!(next.email && next.password && next.dateOfBirth) &&
-        (!next.serviceDescription?.inviteCodeRequired || !!next.inviteCode) &&
-        is13(next.dateOfBirth) &&
-        isValidEmail
-      break
-    }
-    case SignupStep.HANDLE: {
-      next.canNext =
-        !!next.handle && validateHandle(next.handle, next.userDomain).overall
-      break
-    }
-  }
 
   logger.debug('signup', next)
 

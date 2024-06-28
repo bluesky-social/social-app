@@ -60,12 +60,13 @@ export const LoginForm = ({
   const {track} = useAnalytics()
   const t = useTheme()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
+  const [isReady, setIsReady] = useState<boolean>(false)
   const [isAuthFactorTokenNeeded, setIsAuthFactorTokenNeeded] =
     useState<boolean>(false)
-  const [identifier, setIdentifier] = useState<string>(initialHandle)
-  const [password, setPassword] = useState<string>('')
-  const [authFactorToken, setAuthFactorToken] = useState<string>('')
-  const passwordInputRef = useRef<TextInput>(null)
+  const identifierValueRef = useRef<string>(initialHandle || '')
+  const passwordValueRef = useRef<string>('')
+  const authFactorTokenValueRef = useRef<string>('')
+  const passwordRef = useRef<TextInput>(null)
   const {_} = useLingui()
   const {login} = useSessionApi()
   const requestNotificationsPermission = useRequestNotificationsPermission()
@@ -83,6 +84,10 @@ export const LoginForm = ({
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setError('')
     setIsProcessing(true)
+
+    const identifier = identifierValueRef.current.toLowerCase().trim()
+    const password = passwordValueRef.current
+    const authFactorToken = authFactorTokenValueRef.current
 
     try {
       // try to guess the handle if the user just gave their own username
@@ -152,7 +157,22 @@ export const LoginForm = ({
     }
   }
 
-  const isReady = !!serviceDescription && !!identifier && !!password
+  const checkIsReady = () => {
+    if (
+      !!serviceDescription &&
+      !!identifierValueRef.current &&
+      !!passwordValueRef.current
+    ) {
+      if (!isReady) {
+        setIsReady(true)
+      }
+    } else {
+      if (isReady) {
+        setIsReady(false)
+      }
+    }
+  }
+
   return (
     <FormContainer testID="loginForm" titleText={<Trans>Sign in</Trans>}>
       <View>
@@ -181,14 +201,15 @@ export const LoginForm = ({
               autoComplete="username"
               returnKeyType="next"
               textContentType="username"
+              defaultValue={initialHandle || ''}
+              onChangeText={v => {
+                identifierValueRef.current = v
+                checkIsReady()
+              }}
               onSubmitEditing={() => {
-                passwordInputRef.current?.focus()
+                passwordRef.current?.focus()
               }}
               blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
-              value={identifier}
-              onChangeText={str =>
-                setIdentifier((str || '').toLowerCase().trim())
-              }
               editable={!isProcessing}
               accessibilityHint={_(
                 msg`Input the username or email address you used at signup`,
@@ -200,7 +221,7 @@ export const LoginForm = ({
             <TextField.Icon icon={Lock} />
             <TextField.Input
               testID="loginPasswordInput"
-              inputRef={passwordInputRef}
+              inputRef={passwordRef}
               label={_(msg`Password`)}
               autoCapitalize="none"
               autoCorrect={false}
@@ -210,16 +231,14 @@ export const LoginForm = ({
               secureTextEntry={true}
               textContentType="password"
               clearButtonMode="while-editing"
-              value={password}
-              onChangeText={setPassword}
+              onChangeText={v => {
+                passwordValueRef.current = v
+                checkIsReady()
+              }}
               onSubmitEditing={onPressNext}
               blurOnSubmit={false} // HACK: https://github.com/facebook/react-native/issues/21911#issuecomment-558343069 Keyboard blur behavior is now handled in onSubmitEditing
               editable={!isProcessing}
-              accessibilityHint={
-                identifier === ''
-                  ? _(msg`Input your password`)
-                  : _(msg`Input the password tied to ${identifier}`)
-              }
+              accessibilityHint={_(msg`Input your password`)}
             />
             <Button
               testID="forgotPasswordButton"
@@ -258,8 +277,9 @@ export const LoginForm = ({
               returnKeyType="done"
               textContentType="username"
               blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
-              value={authFactorToken}
-              onChangeText={setAuthFactorToken}
+              onChangeText={v => {
+                authFactorTokenValueRef.current = v
+              }}
               onSubmitEditing={onPressNext}
               editable={!isProcessing}
               accessibilityHint={_(

@@ -11,6 +11,7 @@ import {useSignupContext, useSubmitSignup} from '#/screens/Signup/state'
 import {CaptchaWebView} from '#/screens/Signup/StepCaptcha/CaptchaWebView'
 import {atoms as a, useTheme} from '#/alf'
 import {FormError} from '#/components/forms/FormError'
+import {BackNextButtons} from '../BackNextButtons'
 
 const CAPTCHA_PATH = '/gate/signup'
 
@@ -58,6 +59,16 @@ export function StepCaptcha() {
     [_, dispatch, state.handle],
   )
 
+  const onBackPress = React.useCallback(() => {
+    logger.error('Signup Flow Error', {
+      errorMessage:
+        'User went back from captcha step. Possibly encountered an error.',
+      registrationHandle: state.handle,
+    })
+
+    dispatch({type: 'prev'})
+  }, [dispatch, state.handle])
+
   return (
     <ScreenTransition>
       <View style={[a.gap_lg]}>
@@ -83,6 +94,11 @@ export function StepCaptcha() {
         </View>
         <FormError error={state.error} />
       </View>
+      <BackNextButtons
+        hideNext
+        isLoading={state.isLoading}
+        onBackPress={onBackPress}
+      />
     </ScreenTransition>
   )
 }
