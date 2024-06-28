@@ -115,9 +115,6 @@ function LandingScreenLoaded({
   const listItemsCount = starterPack.list?.listItemCount ?? 0
 
   const onContinue = () => {
-    setActiveStarterPack({
-      uri: starterPack.uri,
-    })
     setScreenState(LoggedOutScreenState.S_CreateAccount)
   }
 
