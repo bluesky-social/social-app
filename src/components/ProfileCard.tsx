@@ -80,7 +80,7 @@ export function Outer({
 }: {
   children: React.ReactElement | React.ReactElement[]
 }) {
-  return <View style={[a.flex_1, a.gap_xs]}>{children}</View>
+  return <View style={[a.w_full, a.flex_1, a.gap_xs]}>{children}</View>
 }
 
 export function Header({
