@@ -1,20 +1,20 @@
 import React from 'react'
 import {View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
-import {AppBskyActorDefs} from '@atproto/api'
+import {AppBskyFeedDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {NavigationProp} from '#/lib/routes/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useSuggestedFollowsQuery} from '#/state/queries/suggested-follows'
+import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {atoms as a, useBreakpoints, useTheme, ViewStyleProp} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import * as FeedCard from '#/components/FeedCard'
 import {ArrowRight_Stroke2_Corner0_Rounded as Arrow} from '#/components/icons/Arrow'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as Refresh} from '#/components/icons/ArrowRotateCounterClockwise'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 
 function CardOuter({
@@ -48,12 +48,12 @@ export function SuggestedFollowCardSkeleton() {
   const t = useTheme()
   return (
     <CardOuter style={[a.gap_sm, t.atoms.border_contrast_low]}>
-      <ProfileCard.Header>
-        <ProfileCard.AvatarPlaceholder />
-        <ProfileCard.NameAndHandlePlaceholder />
-      </ProfileCard.Header>
+      <FeedCard.Header>
+        <FeedCard.AvatarPlaceholder />
+        <FeedCard.TitleAndBylinePlaceholder />
+      </FeedCard.Header>
 
-      <ProfileCard.DescriptionPlaceholder />
+      <FeedCard.DescriptionPlaceholder />
     </CardOuter>
   )
 }
@@ -82,68 +82,62 @@ export function ErrorState({retry}: {retry: () => void}) {
   )
 }
 
-export function FeedSuggestedFollowsCards() {
+export function SuggestedFeedsCards() {
   const t = useTheme()
   const {_} = useLingui()
   const {
-    isLoading: isSuggestionsLoading,
-    data: suggestions,
+    data,
+    isLoading: isLoadingFeeds,
     error,
     refetch,
-  } = useSuggestedFollowsQuery({limit: 6})
+  } = useGetPopularFeedsQuery({limit: 3})
   const moderationOpts = useModerationOpts()
   const navigation = useNavigation<NavigationProp>()
   const {gtMobile} = useBreakpoints()
-  const isLoading = isSuggestionsLoading || !moderationOpts
-  const maxLength = gtMobile ? 3 : 6
+  const isLoading = isLoadingFeeds || !moderationOpts
 
-  const profiles: AppBskyActorDefs.ProfileViewBasic[] = []
-  if (suggestions) {
-    // Currently the responses contain duplicate items.
-    // Needs to be fixed on backend, but let's dedupe to be safe.
-    let seen = new Set()
-    for (const page of suggestions.pages) {
-      for (const actor of page.actors) {
-        if (!seen.has(actor.did)) {
-          seen.add(actor.did)
-          profiles.push(actor)
-        }
+  const feeds = React.useMemo(() => {
+    const items: AppBskyFeedDefs.GeneratorView[] = []
+
+    if (!data) return items
+
+    for (const page of data.pages) {
+      for (const feed of page.feeds) {
+        items.push(feed)
       }
     }
-  }
+
+    return items
+  }, [data])
 
   const content = isLoading ? (
     Array(3)
       .fill(0)
       .map((_, i) => <SuggestedFollowCardSkeleton key={i} />)
-  ) : error || !profiles.length ? (
+  ) : error || !feeds ? (
     <ErrorState retry={refetch} />
   ) : (
     <>
-      {profiles.slice(0, maxLength).map(profile => (
-        <ProfileCard.Link key={profile.did} did={profile.handle}>
+      {feeds.map(feed => (
+        <FeedCard.Link key={feed.uri} type="feed" view={feed}>
           <CardOuter style={[a.flex_1]}>
-            <ProfileCard.Outer>
-              <ProfileCard.Header>
-                <ProfileCard.Avatar
-                  profile={profile}
-                  moderationOpts={moderationOpts}
+            <FeedCard.Outer>
+              <FeedCard.Header>
+                <FeedCard.Avatar src={feed.avatar} />
+                <FeedCard.TitleAndByline
+                  title={feed.displayName}
+                  creator={feed.creator}
+                  type="feed"
                 />
-                <ProfileCard.NameAndHandle
-                  profile={profile}
-                  moderationOpts={moderationOpts}
-                />
-                <ProfileCard.FollowButton
-                  profile={profile}
-                  logContext="FeedSuggestedFollowsCard"
-                  shape={gtMobile ? undefined : 'round'}
-                  variant="outline"
-                />
-              </ProfileCard.Header>
-              <ProfileCard.Description profile={profile} />
-            </ProfileCard.Outer>
+                <FeedCard.Action pin type="feed" uri={feed.uri} />
+              </FeedCard.Header>
+              <FeedCard.Description
+                description={feed.description}
+                numberOfLines={3}
+              />
+            </FeedCard.Outer>
           </CardOuter>
-        </ProfileCard.Link>
+        </FeedCard.Link>
       ))}
     </>
   )
@@ -177,22 +171,5 @@ export function FeedSuggestedFollowsCards() {
         </Button>
       </View>
     </ScrollView>
-  )
-}
-
-export function FeedSuggestedFollowsInterstitial() {
-  const t = useTheme()
-
-  return (
-    <View
-      style={[a.border_t, t.atoms.border_contrast_low, t.atoms.bg_contrast_25]}>
-      <View style={[a.pt_xl, a.px_lg, a.flex_row, a.gap_md]}>
-        <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
-          Suggested for you
-        </Text>
-      </View>
-
-      <FeedSuggestedFollowsCards />
-    </View>
   )
 }

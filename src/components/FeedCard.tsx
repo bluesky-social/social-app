@@ -30,7 +30,7 @@ import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {Link as InternalLink, LinkProps} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
-import {RichText} from '#/components/RichText'
+import {RichText, RichTextProps} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 
 type Props =
@@ -89,7 +89,8 @@ export function Link({
         } else {
           precacheList(queryClient, view)
         }
-      }}>
+      }}
+      style={[a.flex_col]}>
       {children}
     </InternalLink>
   )
@@ -100,11 +101,7 @@ export function Outer({children}: {children: React.ReactNode}) {
 }
 
 export function Header({children}: {children: React.ReactNode}) {
-  return (
-    <View style={[a.flex_1, a.flex_row, a.align_center, a.gap_md]}>
-      {children}
-    </View>
-  )
+  return <View style={[a.flex_row, a.align_center, a.gap_md]}>{children}</View>
 }
 
 export type AvatarProps = {src: string | undefined; size?: number}
@@ -198,7 +195,10 @@ export function TitleAndBylinePlaceholder({creator}: {creator?: boolean}) {
   )
 }
 
-export function Description({description}: {description?: string}) {
+export function Description({
+  description,
+  ...rest
+}: {description?: string} & Partial<RichTextProps>) {
   const rt = React.useMemo(() => {
     if (!description) return
     const rt = new RichTextApi({text: description || ''})
@@ -206,7 +206,29 @@ export function Description({description}: {description?: string}) {
     return rt
   }, [description])
   if (!rt) return null
-  return <RichText value={rt} style={[a.leading_snug]} disableLinks />
+  return <RichText value={rt} style={[a.leading_snug]} disableLinks {...rest} />
+}
+
+export function DescriptionPlaceholder() {
+  const t = useTheme()
+  return (
+    <View style={[a.gap_xs]}>
+      <View
+        style={[a.rounded_xs, a.w_full, t.atoms.bg_contrast_50, {height: 12}]}
+      />
+      <View
+        style={[a.rounded_xs, a.w_full, t.atoms.bg_contrast_50, {height: 12}]}
+      />
+      <View
+        style={[
+          a.rounded_xs,
+          a.w_full,
+          t.atoms.bg_contrast_50,
+          {height: 12, width: 100},
+        ]}
+      />
+    </View>
+  )
 }
 
 export function Likes({count}: {count: number}) {
