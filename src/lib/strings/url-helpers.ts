@@ -5,7 +5,6 @@ import TLDs from 'tlds'
 import {logger} from '#/logger'
 import {BSKY_SERVICE} from 'lib/constants'
 import {isInvalidHandle} from 'lib/strings/handles'
-import {isWeb} from 'platform/detection'
 
 export const BSKY_APP_HOST = 'https://bsky.app'
 const BSKY_TRUSTED_HOSTS = [
@@ -168,7 +167,7 @@ export function convertBskyAppUrlIfNeeded(url: string): string {
     } catch (e) {
       console.error('Unexpected error in convertBskyAppUrlIfNeeded()', e)
     }
-  } else if (!isWeb && isShortLink(url)) {
+  } else if (isShortLink(url)) {
     // We only want to do this on native, web handles the 301 for us
     return shortLinkToHref(url)
   }

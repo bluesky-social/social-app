@@ -28,7 +28,10 @@ import {HITSLOP_20} from 'lib/constants'
 import {makeProfileLink, makeStarterPackLink} from 'lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
 import {logEvent} from 'lib/statsig/statsig'
-import {getStarterPackOgCard} from 'lib/strings/starter-pack'
+import {
+  createStarterPackUri,
+  getStarterPackOgCard,
+} from 'lib/strings/starter-pack'
 import {isWeb} from 'platform/detection'
 import {updateProfileShadow} from 'state/cache/profile-shadow'
 import {useModerationOpts} from 'state/preferences/moderation-opts'
@@ -38,6 +41,7 @@ import {useResolveDidQuery} from 'state/queries/resolve-uri'
 import {useShortenLink} from 'state/queries/shorten-link'
 import {useStarterPackQuery} from 'state/queries/starter-packs'
 import {useAgent, useSession} from 'state/session'
+import {useSetActiveStarterPack} from 'state/shell/starter-pack'
 import * as Toast from '#/view/com/util/Toast'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
@@ -74,7 +78,7 @@ type StarterPackScreenShortProps = NativeStackScreenProps<
 >
 
 export function StarterPackScreen({route}: StarterPackScreeProps) {
-  return <StarterPackScreenInner routeParams={route.params} />
+  return <StarterPackAuthCheck routeParams={route.params} />
 }
 
 export function StarterPackScreenShort({route}: StarterPackScreenShortProps) {
@@ -97,7 +101,35 @@ export function StarterPackScreenShort({route}: StarterPackScreenShortProps) {
       />
     )
   }
-  return <StarterPackScreenInner routeParams={resolvedStarterPack} />
+  return <StarterPackAuthCheck routeParams={resolvedStarterPack} />
+}
+
+export function StarterPackAuthCheck({
+  routeParams,
+}: {
+  routeParams: StarterPackScreeProps['route']['params']
+}) {
+  const navigation = useNavigation<NavigationProp>()
+  const setActiveStarterPack = useSetActiveStarterPack()
+  const {currentAccount} = useSession()
+
+  React.useEffect(() => {
+    if (currentAccount) return
+
+    const uri = createStarterPackUri({
+      did: routeParams.name,
+      rkey: routeParams.rkey,
+    })
+    if (!uri) return
+    setActiveStarterPack({
+      uri,
+    })
+    navigation.goBack()
+  }, [routeParams, currentAccount, navigation, setActiveStarterPack])
+
+  if (!currentAccount) return null
+
+  return <StarterPackScreenInner routeParams={routeParams} />
 }
 
 export function StarterPackScreenInner({

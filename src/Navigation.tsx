@@ -325,12 +325,12 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       <Stack.Screen
         name="StarterPack"
         getComponent={() => StarterPackScreen}
-        options={{title: title(msg`Starter Pack`), requireAuth: true}}
+        options={{title: title(msg`Starter Pack`)}}
       />
       <Stack.Screen
         name="StarterPackShort"
         getComponent={() => StarterPackScreenShort}
-        options={{title: title(msg`Starter Pack`), requireAuth: true}}
+        options={{title: title(msg`Starter Pack`)}}
       />
       <Stack.Screen
         name="StarterPackWizard"
