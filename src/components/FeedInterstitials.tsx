@@ -274,11 +274,12 @@ export function SuggestedFeeds() {
             {content}
 
             <Button
-              label={_(msg`Browse more accounts on our explore page`)}
+              label={_(msg`Browse more feeds on our explore page`)}
               onPress={() => {
                 navigation.navigate('SearchTab')
-              }}>
-              <CardOuter style={[a.flex_1, {borderWidth: 0}]}>
+              }}
+              style={[a.flex_col]}>
+              <CardOuter style={[a.flex_1]}>
                 <View style={[a.flex_1, a.justify_center]}>
                   <View style={[a.flex_row, a.px_lg]}>
                     <Text style={[a.pr_xl, a.flex_1, a.leading_snug]}>

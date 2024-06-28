@@ -77,7 +77,7 @@ export function Link({
 }
 
 export function Outer({children}: {children: React.ReactNode}) {
-  return <View style={[a.flex_1, a.gap_md]}>{children}</View>
+  return <View style={[a.w_full, a.gap_md]}>{children}</View>
 }
 
 export function Header({children}: {children: React.ReactNode}) {
