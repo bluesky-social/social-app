@@ -128,7 +128,7 @@ export function SuggestedFollows() {
                   />
                   <ProfileCard.FollowButton
                     profile={profile}
-                    logContext="FeedsInterstitial"
+                    logContext="FeedInterstitial"
                     shape={gtMobile ? undefined : 'round'}
                     color="secondary"
                   />

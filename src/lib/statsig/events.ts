@@ -147,7 +147,7 @@ export type LogEvents = {
       | 'ProfileHoverCard'
       | 'AvatarButton'
       | 'StarterPackProfilesList'
-      | 'FeedsInterstitial'
+      | 'FeedInterstitial'
   }
   'profile:unfollow': {
     logContext:
@@ -161,7 +161,7 @@ export type LogEvents = {
       | 'Chat'
       | 'AvatarButton'
       | 'StarterPackProfilesList'
-      | 'FeedsInterstitial'
+      | 'FeedInterstitial'
   }
   'chat:create': {
     logContext: 'ProfileHeader' | 'NewChatDialog' | 'SendViaChatDialog'
