@@ -2,6 +2,7 @@ import React from 'react'
 import {InteractionManager} from 'react-native'
 import {TourGuideProvider, useTourGuideController} from 'rn-tourguide'
 
+import {useGate} from '#/lib/statsig/statsig'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {HomeTour} from './HomeTour'
 import {TooltipComponent} from './Tooltip'
@@ -42,14 +43,18 @@ export function useTriggerTourIfQueued(tour: TOURS) {
   const {start} = useTourGuideController(tour)
   const setQueuedTour = React.useContext(setContext)
   const queuedTour = React.useContext(stateContext)
+  const gate = useGate()
+
   return React.useCallback(() => {
     if (queuedTour === tour) {
       setQueuedTour(null)
       InteractionManager.runAfterInteractions(() => {
-        start()
+        if (gate('new_user_guided_tour')) {
+          start()
+        }
       })
     }
-  }, [tour, queuedTour, setQueuedTour, start])
+  }, [tour, queuedTour, setQueuedTour, start, gate])
 }
 
 export function useSetQueuedTour() {
