@@ -28,10 +28,7 @@ import {HITSLOP_20} from 'lib/constants'
 import {makeProfileLink, makeStarterPackLink} from 'lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
 import {logEvent} from 'lib/statsig/statsig'
-import {
-  createStarterPackUri,
-  getStarterPackOgCard,
-} from 'lib/strings/starter-pack'
+import {getStarterPackOgCard} from 'lib/strings/starter-pack'
 import {isWeb} from 'platform/detection'
 import {updateProfileShadow} from 'state/cache/profile-shadow'
 import {useModerationOpts} from 'state/preferences/moderation-opts'
@@ -41,6 +38,7 @@ import {useResolveDidQuery} from 'state/queries/resolve-uri'
 import {useShortenLink} from 'state/queries/shorten-link'
 import {useStarterPackQuery} from 'state/queries/starter-packs'
 import {useAgent, useSession} from 'state/session'
+import {useLoggedOutViewControls} from 'state/shell/logged-out'
 import {useSetActiveStarterPack} from 'state/shell/starter-pack'
 import * as Toast from '#/view/com/util/Toast'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
@@ -78,7 +76,7 @@ type StarterPackScreenShortProps = NativeStackScreenProps<
 >
 
 export function StarterPackScreen({route}: StarterPackScreeProps) {
-  return <StarterPackAuthCheck routeParams={route.params} />
+  return <StarterPackScreenInner routeParams={route.params} />
 }
 
 export function StarterPackScreenShort({route}: StarterPackScreenShortProps) {
@@ -101,37 +99,7 @@ export function StarterPackScreenShort({route}: StarterPackScreenShortProps) {
       />
     )
   }
-  return <StarterPackAuthCheck routeParams={resolvedStarterPack} />
-}
-
-export function StarterPackAuthCheck({
-  routeParams,
-}: {
-  routeParams: StarterPackScreeProps['route']['params']
-}) {
-  const navigation = useNavigation<NavigationProp>()
-  const setActiveStarterPack = useSetActiveStarterPack()
-  const {currentAccount} = useSession()
-
-  React.useEffect(() => {
-    if (currentAccount) return
-
-    const uri = createStarterPackUri({
-      did: routeParams.name,
-      rkey: routeParams.rkey,
-    })
-
-    if (!uri) return
-    setActiveStarterPack({
-      uri,
-    })
-
-    navigation.goBack()
-  }, [routeParams, currentAccount, navigation, setActiveStarterPack])
-
-  if (!currentAccount) return null
-
-  return <StarterPackScreenInner routeParams={routeParams} />
+  return <StarterPackScreenInner routeParams={resolvedStarterPack} />
 }
 
 export function StarterPackScreenInner({
@@ -330,15 +298,40 @@ function Header({
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const {currentAccount} = useSession()
+  const {currentAccount, hasSession} = useSession()
   const agent = useAgent()
   const queryClient = useQueryClient()
+  const setActiveStarterPack = useSetActiveStarterPack()
+  const {requestSwitchToAccount} = useLoggedOutViewControls()
 
   const [isProcessing, setIsProcessing] = React.useState(false)
 
   const {record, creator} = starterPack
   const isOwn = creator?.did === currentAccount?.did
   const joinedAllTimeCount = starterPack.joinedAllTimeCount ?? 0
+
+  const navigation = useNavigation<NavigationProp>()
+
+  React.useEffect(() => {
+    const onFocus = () => {
+      if (hasSession) return
+      setActiveStarterPack({
+        uri: starterPack.uri,
+      })
+    }
+    const onBeforeRemove = () => {
+      if (hasSession) return
+      setActiveStarterPack(undefined)
+    }
+
+    navigation.addListener('focus', onFocus)
+    navigation.addListener('beforeRemove', onBeforeRemove)
+
+    return () => {
+      navigation.removeListener('focus', onFocus)
+      navigation.removeListener('beforeRemove', onBeforeRemove)
+    }
+  }, [hasSession, navigation, setActiveStarterPack, starterPack.uri])
 
   const onFollowAll = async () => {
     if (!starterPack.list) return
@@ -397,44 +390,63 @@ function Header({
         avatar={undefined}
         creator={creator}
         avatarType="starter-pack">
-        <View style={[a.flex_row, a.gap_sm, a.align_center]}>
-          {isOwn ? (
-            <Button
-              label={_(msg`Share this starter pack`)}
-              hitSlop={HITSLOP_20}
-              variant="solid"
-              color="primary"
-              size="small"
-              onPress={onOpenShareDialog}>
-              <ButtonText>
-                <Trans>Share</Trans>
-              </ButtonText>
-            </Button>
-          ) : (
-            <Button
-              label={_(msg`Follow all`)}
-              variant="solid"
-              color="primary"
-              size="small"
-              disabled={isProcessing}
-              onPress={onFollowAll}>
-              <ButtonText>
-                <Trans>Follow all</Trans>
-                {isProcessing && <Loader size="xs" />}
-              </ButtonText>
-            </Button>
-          )}
-          <OverflowMenu
-            routeParams={routeParams}
-            starterPack={starterPack}
-            onOpenShareDialog={onOpenShareDialog}
-          />
-        </View>
+        {hasSession ? (
+          <View style={[a.flex_row, a.gap_sm, a.align_center]}>
+            {isOwn ? (
+              <Button
+                label={_(msg`Share this starter pack`)}
+                hitSlop={HITSLOP_20}
+                variant="solid"
+                color="primary"
+                size="small"
+                onPress={onOpenShareDialog}>
+                <ButtonText>
+                  <Trans>Share</Trans>
+                </ButtonText>
+              </Button>
+            ) : (
+              <Button
+                label={_(msg`Follow all`)}
+                variant="solid"
+                color="primary"
+                size="small"
+                disabled={isProcessing}
+                onPress={onFollowAll}>
+                <ButtonText>
+                  <Trans>Follow all</Trans>
+                  {isProcessing && <Loader size="xs" />}
+                </ButtonText>
+              </Button>
+            )}
+            <OverflowMenu
+              routeParams={routeParams}
+              starterPack={starterPack}
+              onOpenShareDialog={onOpenShareDialog}
+            />
+          </View>
+        ) : null}
       </ProfileSubpageHeader>
-      {richText || joinedAllTimeCount >= 25 ? (
+      {!hasSession || richText || joinedAllTimeCount >= 25 ? (
         <View style={[a.px_lg, a.pt_md, a.pb_sm, a.gap_md]}>
           {richText ? (
             <RichText value={richText} style={[a.text_md, a.leading_snug]} />
+          ) : null}
+          {!hasSession ? (
+            <Button
+              label={_(msg`Join Bluesky`)}
+              onPress={() => {
+                setActiveStarterPack({
+                  uri: starterPack.uri,
+                })
+                requestSwitchToAccount({requestedAccount: 'new'})
+              }}
+              variant="solid"
+              color="primary"
+              size="medium">
+              <ButtonText style={[a.text_lg]}>
+                <Trans>Join Bluesky</Trans>
+              </ButtonText>
+            </Button>
           ) : null}
           {joinedAllTimeCount >= 25 ? (
             <View style={[a.flex_row, a.align_center, a.gap_sm]}>

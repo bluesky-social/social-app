@@ -50,7 +50,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const activeStarterPack = useActiveStarterPack()
   const {hasSession} = useSession()
   const shouldShowStarterPack = Boolean(activeStarterPack?.uri) && !hasSession
-
   const [state, setState] = React.useState<State>({
     showLoggedOut: shouldShowStarterPack,
     requestedAccountSwitchTo: shouldShowStarterPack
@@ -59,25 +58,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         : 'new'
       : undefined,
   })
-
-  const [prevActiveStarterPack, setPrevActiveStarterPack] =
-    React.useState(activeStarterPack)
-  if (activeStarterPack?.uri !== prevActiveStarterPack?.uri) {
-    setPrevActiveStarterPack(activeStarterPack)
-    if (activeStarterPack) {
-      setState(s => ({
-        ...s,
-        showLoggedOut: true,
-        requestedAccountSwitchTo: 'starterpack',
-      }))
-    } else {
-      setState(s => ({
-        ...s,
-        showLoggedOut: false,
-        requestedAccountSwitchTo: undefined,
-      }))
-    }
-  }
 
   const controls = React.useMemo<Controls>(
     () => ({

@@ -1,10 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import Animated, {
-  FadeIn,
-  FadeOut,
-  LayoutAnimationConfig,
-} from 'react-native-reanimated'
+import {LayoutAnimationConfig} from 'react-native-reanimated'
 import {AppBskyGraphStarterpack} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -47,9 +43,15 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
   const agent = useAgent()
 
   const activeStarterPack = useActiveStarterPack()
-  const {data: starterPack} = useStarterPackQuery({
+  const {
+    data: starterPack,
+    isFetching: isFetchingStarterPack,
+    isError: isErrorStarterPack,
+  } = useStarterPackQuery({
     uri: activeStarterPack?.uri,
   })
+  const showStarterPackCard =
+    activeStarterPack?.uri && !isFetchingStarterPack && starterPack
 
   const {
     data: serviceInfo,
@@ -155,30 +157,27 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
         description={_(msg`We're so excited to have you join us!`)}
         scrollable>
         <View testID="createAccount" style={a.flex_1}>
-          {state.activeStep === SignupStep.INFO &&
-          starterPack &&
+          {showStarterPackCard &&
           AppBskyGraphStarterpack.isRecord(starterPack.record) ? (
-            <Animated.View entering={FadeIn} exiting={FadeOut}>
-              <LinearGradientBackground
-                style={[a.mx_lg, a.p_lg, a.gap_sm, a.rounded_sm]}>
-                <Text style={[a.font_bold, a.text_xl, {color: 'white'}]}>
-                  {starterPack.record.name}
-                </Text>
-                <Text style={[{color: 'white'}]}>
-                  {starterPack.feeds?.length ? (
-                    <Trans>
-                      You'll follow the suggested users and feeds once you
-                      finish creating your account!
-                    </Trans>
-                  ) : (
-                    <Trans>
-                      You'll follow the suggested users once you finish creating
-                      your account!
-                    </Trans>
-                  )}
-                </Text>
-              </LinearGradientBackground>
-            </Animated.View>
+            <LinearGradientBackground
+              style={[a.mx_lg, a.p_lg, a.gap_sm, a.rounded_sm]}>
+              <Text style={[a.font_bold, a.text_xl, {color: 'white'}]}>
+                {starterPack.record.name}
+              </Text>
+              <Text style={[{color: 'white'}]}>
+                {starterPack.feeds?.length ? (
+                  <Trans>
+                    You'll follow the suggested users and feeds once you finish
+                    creating your account!
+                  </Trans>
+                ) : (
+                  <Trans>
+                    You'll follow the suggested users once you finish creating
+                    your account!
+                  </Trans>
+                )}
+              </Text>
+            </LinearGradientBackground>
           ) : null}
           <View
             style={[
@@ -211,7 +210,11 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
             <View style={[a.pb_3xl]}>
               <LayoutAnimationConfig skipEntering skipExiting>
                 {state.activeStep === SignupStep.INFO ? (
-                  <StepInfo />
+                  <StepInfo
+                    isLoadingStarterPack={
+                      isFetchingStarterPack && !isErrorStarterPack
+                    }
+                  />
                 ) : state.activeStep === SignupStep.HANDLE ? (
                   <StepHandle />
                 ) : (
