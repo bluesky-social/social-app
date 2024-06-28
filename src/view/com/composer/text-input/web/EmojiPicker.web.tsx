@@ -1,11 +1,13 @@
 import React from 'react'
-import Picker from '@emoji-mart/react'
 import {
+  GestureResponderEvent,
   StyleSheet,
   TouchableWithoutFeedback,
   useWindowDimensions,
   View,
 } from 'react-native'
+import Picker from '@emoji-mart/react'
+
 import {textInputWebEmitter} from '../TextInput.web'
 
 const HEIGHT_OFFSET = 40
@@ -96,10 +98,17 @@ export function EmojiPicker({state, close}: IProps) {
 
   if (!state.isOpen) return null
 
+  const onPress = (e: GestureResponderEvent) => {
+    // @ts-ignore web only
+    if (e.nativeEvent?.pointerId === -1) return
+
+    close()
+  }
+
   return (
     <TouchableWithoutFeedback
       accessibilityRole="button"
-      onPress={close}
+      onPress={onPress}
       accessibilityViewIsModal>
       <View style={styles.mask}>
         {/* eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors */}
