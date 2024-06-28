@@ -19636,7 +19636,7 @@ rn-fetch-blob@^0.12.0:
 
 rn-tourguide@bluesky-social/rn-tourguide:
   version "3.3.0"
-  resolved "https://codeload.github.com/bluesky-social/rn-tourguide/tar.gz/3900a9d53e89b445e34ab165a1460924dfb1c815"
+  resolved "https://codeload.github.com/bluesky-social/rn-tourguide/tar.gz/a14bb85536b317b94d82801900df4cf57f81aef7"
   dependencies:
     flubber "~0.4.2"
     hoist-non-react-statics "~3.0.1"
