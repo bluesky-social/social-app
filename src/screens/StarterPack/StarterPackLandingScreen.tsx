@@ -60,7 +60,11 @@ export function LandingScreen({
   const moderationOpts = useModerationOpts()
   const activeStarterPack = useActiveStarterPack()
 
-  const {data: starterPack, isError: isErrorStarterPack} = useStarterPackQuery({
+  const {
+    data: starterPack,
+    isError: isErrorStarterPack,
+    isFetching,
+  } = useStarterPackQuery({
     uri: activeStarterPack?.uri,
   })
 
@@ -76,7 +80,7 @@ export function LandingScreen({
     }
   }, [isErrorStarterPack, setScreenState, isValid, starterPack])
 
-  if (!starterPack || !isValid || !moderationOpts) {
+  if (isFetching || !starterPack || !isValid || !moderationOpts) {
     return <ListMaybePlaceholder isLoading={true} />
   }
 
