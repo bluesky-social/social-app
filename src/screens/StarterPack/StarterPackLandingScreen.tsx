@@ -316,7 +316,7 @@ function LandingScreenLoaded({
                         t.atoms.border_contrast_low,
                       ]}
                       key={feed.uri}>
-                      <FeedCard.Default type="feed" view={feed} />
+                      <FeedCard.Default view={feed} />
                     </View>
                   ))}
                 </View>
