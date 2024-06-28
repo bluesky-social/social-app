@@ -1,5 +1,5 @@
-import React from 'react'
-import {View} from 'react-native'
+import React, {useEffect} from 'react'
+import {LayoutAnimation, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -27,9 +27,17 @@ function sanitizeDate(date: Date): Date {
   return date
 }
 
-export function StepInfo() {
+export function StepInfo({
+  isLoadingStarterPack,
+}: {
+  isLoadingStarterPack: boolean
+}) {
   const {_} = useLingui()
   const {state, dispatch} = useSignupContext()
+
+  useEffect(() => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+  }, [state.isLoading, isLoadingStarterPack])
 
   return (
     <ScreenTransition>
@@ -46,7 +54,7 @@ export function StepInfo() {
             }
           />
         </View>
-        {state.isLoading ? (
+        {state.isLoading || isLoadingStarterPack ? (
           <View style={[a.align_center]}>
             <Loader size="xl" />
           </View>
