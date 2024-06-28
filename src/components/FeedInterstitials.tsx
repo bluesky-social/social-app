@@ -16,6 +16,7 @@ import * as FeedCard from '#/components/FeedCard'
 import {ArrowRight_Stroke2_Corner0_Rounded as Arrow} from '#/components/icons/Arrow'
 import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
 import {PersonPlus_Stroke2_Corner0_Rounded as Person} from '#/components/icons/Person'
+import {InlineLinkText} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 
@@ -160,6 +161,20 @@ export function SuggestedFollows() {
       {gtMobile ? (
         <View style={[a.flex_1, a.px_lg, a.pt_md, a.pb_xl, a.gap_md]}>
           {content}
+
+          <View
+            style={[
+              a.flex_row,
+              a.justify_end,
+              a.align_center,
+              a.pt_xs,
+              a.gap_md,
+            ]}>
+            <InlineLinkText to="/search" style={[t.atoms.text_contrast_medium]}>
+              <Trans>Browse more suggestions</Trans>
+            </InlineLinkText>
+            <Arrow size="sm" fill={t.atoms.text_contrast_medium.color} />
+          </View>
         </View>
       ) : (
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -267,6 +282,20 @@ export function SuggestedFeeds() {
       {gtMobile ? (
         <View style={[a.flex_1, a.px_lg, a.pt_md, a.pb_xl, a.gap_md]}>
           {content}
+
+          <View
+            style={[
+              a.flex_row,
+              a.justify_end,
+              a.align_center,
+              a.pt_xs,
+              a.gap_md,
+            ]}>
+            <InlineLinkText to="/search" style={[t.atoms.text_contrast_medium]}>
+              <Trans>Browse more suggestions</Trans>
+            </InlineLinkText>
+            <Arrow size="sm" fill={t.atoms.text_contrast_medium.color} />
+          </View>
         </View>
       ) : (
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
