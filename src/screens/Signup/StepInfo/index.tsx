@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react'
-import {LayoutAnimation, View} from 'react-native'
+import React from 'react'
+import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -34,10 +34,6 @@ export function StepInfo({
 }) {
   const {_} = useLingui()
   const {state, dispatch} = useSignupContext()
-
-  useEffect(() => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-  }, [state.isLoading, isLoadingStarterPack])
 
   return (
     <ScreenTransition>

@@ -1,6 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import {LayoutAnimationConfig} from 'react-native-reanimated'
+import Animated, {FadeIn, LayoutAnimationConfig} from 'react-native-reanimated'
 import {AppBskyGraphStarterpack} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -50,6 +50,8 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
   } = useStarterPackQuery({
     uri: activeStarterPack?.uri,
   })
+
+  const [isFetchedAtMount] = React.useState(starterPack != null)
   const showStarterPackCard =
     activeStarterPack?.uri && !isFetchingStarterPack && starterPack
 
@@ -159,25 +161,27 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
         <View testID="createAccount" style={a.flex_1}>
           {showStarterPackCard &&
           AppBskyGraphStarterpack.isRecord(starterPack.record) ? (
-            <LinearGradientBackground
-              style={[a.mx_lg, a.p_lg, a.gap_sm, a.rounded_sm]}>
-              <Text style={[a.font_bold, a.text_xl, {color: 'white'}]}>
-                {starterPack.record.name}
-              </Text>
-              <Text style={[{color: 'white'}]}>
-                {starterPack.feeds?.length ? (
-                  <Trans>
-                    You'll follow the suggested users and feeds once you finish
-                    creating your account!
-                  </Trans>
-                ) : (
-                  <Trans>
-                    You'll follow the suggested users once you finish creating
-                    your account!
-                  </Trans>
-                )}
-              </Text>
-            </LinearGradientBackground>
+            <Animated.View entering={!isFetchedAtMount ? FadeIn : undefined}>
+              <LinearGradientBackground
+                style={[a.mx_lg, a.p_lg, a.gap_sm, a.rounded_sm]}>
+                <Text style={[a.font_bold, a.text_xl, {color: 'white'}]}>
+                  {starterPack.record.name}
+                </Text>
+                <Text style={[{color: 'white'}]}>
+                  {starterPack.feeds?.length ? (
+                    <Trans>
+                      You'll follow the suggested users and feeds once you
+                      finish creating your account!
+                    </Trans>
+                  ) : (
+                    <Trans>
+                      You'll follow the suggested users once you finish creating
+                      your account!
+                    </Trans>
+                  )}
+                </Text>
+              </LinearGradientBackground>
+            </Animated.View>
           ) : null}
           <View
             style={[
