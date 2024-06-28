@@ -1,97 +1,96 @@
+<!-- TOC start (generated with https://github.com/derlin/bitdowntoc) -->
+
+- [Build instructions](#build-instructions)
+   * [App Build](#app-build)
+      + [Installation on Linux](#installation-on-linux)
+      + [Installation on macOS](#installation-on-macos)
+      + [Start Dev Server](#start-dev-server)
+      + [Start Front Server](#start-front-server)
+   * [Possible errors](#possible-errors)
+      + [NVM not found](#nvm-not-found)
+      + [Docker compose not found](#docker-compose-not-found)
+
+<!-- TOC end -->
+
+<!-- TOC --><a name="build-instructions"></a>
 # Build instructions
 
+<!-- TOC --><a name="app-build"></a>
 ## App Build
 
-- Set up your environment [using the expo instructions](https://docs.expo.dev/guides/local-app-development/).
-  - make sure that the JAVA_HOME points to the zulu-17 directory in your `.zshrc` or `.bashrc` file: `export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home`. DO NOT use another JDK or you will encounter build errors.
-- If you're running macOS, make sure you are running the correct versions of Ruby and Cocoapods:- 
-  - If you are using Apple Silicon and this is the first time you are building for RN 0.74+, you may need to run:
-    - `arch -arm64 brew install llvm`
-    - `sudo gem install ffi`
-  - Check if you've installed Cocoapods through `homebrew`. If you have, remove it:
-    - `brew info cocoapods`
-    - If output says `Installed`:
-    - `brew remove cocoapods`
-  - If you have not installed `rbenv`:
-    - `brew install rbenv`
-    - `rbenv install 2.7.6`
-    - `rbenv global 2.7.6`
-    - Add `eval "$(rbenv init - zsh)"` to your `~/.zshrc`
-  - From inside the project directory:
-    - `bundler install` (this will install Cocoapods)
-- After initial setup:
-  - Copy `google-services.json.example` to `google-services.json` or provide your own `google-services.json`. (A real firebase project is NOT required)
-  - `npx expo prebuild` -> you will also need to run this anytime `app.json` or native `package.json` deps change
-  - `yarn intl:build` -> you will also need to run this anytime `./src/locale/{locale}/messages.po` change
-- Start the dev servers
-  - `git clone git@github.com:bluesky-social/atproto.git`
-  - `cd atproto`
-  - `brew install pnpm`
-  - optional: `brew install jq`
-  - `pnpm i`
-  - `pnpm build`
-  - Start the docker daemon (on MacOS this entails starting the Docker Desktop app)
-  - Launch a Postgres database on port 5432
-  - `cd packages/dev-env && pnpm start`
-- Run the dev app
-  - iOS: `yarn ios`
-    - Xcode must be installed for this to run.
-      - A simulator must be preconfigured in Xcode settings.
-        - if no iOS versions are available, install the iOS runtime at `Xcode > Settings > Platforms`.
-        - if the simulator download keeps failing you can download it from the developer website.
-          - [Apple Developer](https://developer.apple.com/download/all/?q=Simulator%20Runtime)
-          - `xcode-select -s /Applications/Xcode.app`
-          - `xcodebuild -runFirstLaunch`
-          - `xcrun simctl runtime add "~/Downloads/iOS_17.4_Simulator_Runtime.dmg"` (adapt the path to the downloaded file)
-      - In addition, ensure Xcode Command Line Tools are installed using `xcode-select --install`.
-    - Expo will require you to configure Xcode Signing. Follow the linked instructions. Error messages in Xcode related to the signing process can be safely ignored when installing on the iOS Simulator; Expo merely requires the profile to exist in order to install the app on the Simulator.
-      - Make sure you do have a certificate: open Xcode > Settings > Accounts > (sign-in) > Manage Certificates > + > Apple Development > Done.
-      - If you still encounter issues, try `rm -rf ios` before trying to build again (`yarn ios`)
-  - Android: `yarn android`
-    - Install "Android Studio"
-      - Make sure you have the Android SDK installed (Android Studio > Tools > Android SDK).
-        - In "SDK Platforms": "Android x" (where x is Android's current version).
-        - In "SDK Tools": "Android SDK Build-Tools" and "Android Emulator" are required.
-        - Add `export ANDROID_HOME=/Users/<your_username>/Library/Android/sdk` to your `.zshrc` or `.bashrc` (and restart your terminal).
-      - Setup an emulator (Android Studio > Tools > Device Manager).
-  - Web: `yarn web`
-- If you are cloning or forking this repo as an open-source developer, please check the tips below as well
-- Run e2e tests
-  - Start in various console tabs:
-    - `yarn e2e:mock-server`
-    - `yarn e2e:metro`
-  - Run once: `yarn e2e:build`
-  - Each test run: `yarn e2e:run`
-- Tips
-  - Copy the `.env.example` to `.env` and fill in any necessary tokens. (The Sentry token is NOT required; see instructions below if you want to enable Sentry.)
-  - To run on the device, add `--device` to the command (e.g. `yarn android --device`). To build in production mode (slower build, faster app), also add `--variant release`.
-  - If you want to use Expo EAS on your own builds without ejecting from Expo, make sure to change the `owner` and `extra.eas.projectId` properties. If you do not have an Expo account, you may remove these properties.
-  - `npx react-native info` Checks what has been installed.
-  - If the Android simulator frequently hangs or is very sluggish, [bump its memory limit](https://stackoverflow.com/a/40068396)
-  - The Android simulator won't be able to access localhost services unless you run `adb reverse tcp:{PORT} tcp:{PORT}`
-    - For instance, the locally-hosted dev-wallet will need `adb reverse tcp:3001 tcp:3001`
-  - For some reason, the typescript compiler chokes on platform-specific files (e.g. `foo.native.ts`) but only when compiling for Web thus far. Therefore we always have one version of the file that doesn't use a platform specifier, and that should be the Web version. ([More info](https://stackoverflow.com/questions/44001050/platform-specific-import-component-in-react-native-with-typescript).)
+Necessary Programs:
+- Git
+- Nvm
+- Jq
+- Golang
+- Docker
 
-### Adding Sentry
+<!-- TOC --><a name="installation-on-linux"></a>
+### Installation on Linux
 
-Adding Sentry is NOT required. You can keep `SENTRY_AUTH_TOKEN=` in `.env` which will build the app without Sentry.
+For the installation and configuration of Docker, you can execute the following commands:
+The package manager command can vary depending on the Linux distribution you are using. For Debian-based systems, use `apt`. For Arch Linux, use `pacman`. Other distributions may have their own specific package managers, such as `yum` for CentOS or `dnf` for Fedora.
 
-However, if you're a part of the Bluesky team and want to enable Sentry, fill in `SENTRY_AUTH_TOKEN` in your `.env`. It can be created on the Sentry dashboard using [these instructions](https://docs.expo.dev/guides/using-sentry/#sign-up-for-a-sentry-account-and-create-a-project).
-
-If you change `SENTRY_AUTH_TOKEN`, you need to do `yarn prebuild` before running `yarn ios` or `yarn android` again.
-
-## Go-Server Build
-
-### Prerequisites
-
-- [Go](https://go.dev/)
-- [Yarn](https://yarnpkg.com/)
-
-### Steps
-
-To run the build with Go, use staging credentials, your own, or any other account you create.
-
+```bash
+sudo apt install git jq golang docker
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+nvm install 18
+sudo systemctl enable docker
+sudo systemctl start docker
+sudo usermod - aG docker $USER
+reboot
 ```
+
+<!-- TOC --><a name="installation-on-macos"></a>
+### Installation on macOS
+
+```bash
+brew install git jq
+curl -o- https:/raw.githubusercontent.com/nvm-sh/nvm/v0 .39.1/install.sh | bash
+```
+
+To proceed with the installation of Golang, you need to obtain the package from the official website of
+Go ahead and follow the instructions provided. Similarly, this process would apply to the installation
+from Docker.
+
+<!-- TOC --><a name="start-dev-server"></a>
+### Start Dev Server
+
+The deployment process for **atproto** begins by cloning the repository from GitHub and navigating to the project directory. Next, the necessary tools (pnpm and yarn) are installed globally to manage dependencies. Subsequently, the Node.js environment is configured using NVM, the project dependencies are installed, and the source code is compiled. Finally, the development environment is launched, allowing work with atproto to begin in a fully configured and ready environment for development and testing.
+
+> The following commands work on both Linux and MacOS.
+
+```bash
+git clone git@github.com:bluesky-social/atproto.git
+cd at proto
+npm install --global pnpm
+npm install --global yarn
+cd atproto
+make nvm-setup
+make deps
+make build
+make run-dev-env
+```
+
+If everything goes well, the following services should be displayed in the console.
+
+| Puerto       | Servicio           |
+|--------------|--------------------|
+| localhost:2582 | DID Placeholder   |
+| localhost:2583 | Personal Data     |
+| localhost:34593 | Ozone server      |
+| localhost:2584 | Bsky Appview      |
+| localhost:35683 | Feed Generator    |
+| localhost:40975 | Feed Generator    |
+
+---
+
+<!-- TOC --><a name="start-front-server"></a>
+### Start Front Server
+
+The deployment process for the **social-app** involves several steps. Firstly, navigating to the social-app directory, the project dependencies are installed using Yarn, followed by the building of the web application. Moving to the bskyweb directory, the Go module dependencies are updated and tidied. Then, the bskyweb executable is built with specified build tags. Finally, the bskyweb server is initiated with the designated appview host, ensuring the deployment is set up and ready to serve the application.
+
+```bash
 cd social-app
 yarn && yarn build-web
 cd bskyweb/
@@ -100,59 +99,78 @@ go build -v -tags timetzdata -o bskyweb ./cmd/bskyweb
 ./bskyweb serve --appview-host=https://public.api.bsky.app
 ```
 
-On build success, access the application at [http://localhost:8100/](http://localhost:8100/). Subsequent changes require re-running the above steps in order to be reflected.
+On build success, access the application at [http://localhost:8100/](http://localhost:8100/).
 
-## Various notes
+----
 
-### Debugging
+<!-- TOC --><a name="possible-errors"></a>
+## Possible errors
+<!-- TOC --><a name="nvm-not-found"></a>
+### NVM not found
+The issue lies in NVM not being available in the context of the make command because NVM is a shell script and not a globally installed application. This means that NVM needs to be loaded in every new shell instance that starts.
+Below is the error output when running `make nvm-setup`:
 
-- Note that since 0.70, debugging using the old debugger (which shows up using CMD+D) doesn't work anymore. Follow the instructions below to debug the code: https://reactnative.dev/docs/next/hermes#debugging-js-on-hermes-using-google-chromes-devtools
+```bash
+> make nvm - setup
+nvm install 18
+/bin/bash: line 1: nvm : command not found
+make : *** [Makefile:52: nvm-setup] Error 127
+```
 
-### Developer Menu
+To fix this error, it is necessary to edit the Makefile and modify it as seen in the following code snippet.
 
-To open the [Developer Menu](https://docs.expo.dev/debugging/tools/#developer-menu) on an `expo-dev-client` app you can do the following:
+```bash
+> git diff Makefile
+diff --git a/Makefile b/Makefile
+index 2ec47b289..b9715896d 100644
+--- a/Makefile
++++ b/Makefile
+@@ -49,6 +49,7 @@ deps: ## Installs dependent libs using 'pnpm install'
+ 
+.PHONY: nvm-setup
+nvm-setup: ## Use NVM to install and activate node+pnpm
+-       nvm install 18
+-       nvm use 18
++       . $$NVM_DIR/nvm.sh; \
++       nvm install 18; \
++       nvm use 18; \
+        npm install --global pnpm
+```
 
-- Android Device: Shake the device vertically, or if your device is connected via USB, run adb shell input keyevent 82 in your terminal
-- Android Emulator: Either press Cmd ⌘ + m or Ctrl + m or run adb shell input keyevent 82 in your terminal
-- iOS Device: Shake the device, or touch 3 fingers to the screen
-- iOS Simulator: Press Ctrl + Cmd ⌘ + z on a Mac in the emulator to simulate the shake gesture or press Cmd ⌘ + d
+<!-- TOC --><a name="docker-compose-not-found"></a>
+### Docker compose not found
+This error occurs because the project uses version 25.X or higher, which triggers the following error message:
 
-### Running E2E Tests
+```bash
+> pnpm run start
+@atproto/dev-env@0.3.14 start 
+  /home/noroot/app/atproto/packages/dev-env  
+  ../dev-infra/with-test-redis-and-db.sh node dist/bin.js
 
-See [testing.md](./testing.md).
+  unknown flag: --file                                             
+  See 'docker --help'.
+  Usage:  docker [OPTIONS] COMMAND                                 
+...
+ELIFECYCLE Command failed with exit code 125.
+```
 
-### Polyfills
+To resolve this issue, it's necessary to update to the latest version. Alternatively, you can modify the `docker-compose.yaml` file, replacing `docker compose` with `docker-compose`.
+Additionally, you'll need to manually create a PostgreSQL database using the following command:
 
-`./platform/polyfills.*.ts` adds polyfills to the environment. Currently, this includes:
+```bash
+docker run --name bluesky -e POSTGRES_PASSWORD=password -e POSTGRES_USER=pg -e POSTGRES_DB=postgres -d -p 5433:5432 postgres
+# Stop container
+docker stop bluesky
+# Start container
+docker start bluesky
+```
+> If you still want to update Docker, you can use the following commands.
 
-- TextEncoder / TextDecoder
-
-### Sentry sourcemaps
-
-Sourcemaps should automatically be updated when a signed build is created using `eas build` and published using `eas submit` due to the postPublish hook setup in `app.json`. However, if an update is created and published OTA using `eas update`, we need to take the following steps to upload sourcemaps to Sentry:
-
-- Run eas update. This will generate a dist folder in your project root, which contains your JavaScript bundles and source maps. This command will also output the 'Android update ID' and 'iOS update ID' that we'll need in the next step.
-- Copy or rename the bundle names in the `dist/bundles` folder to match `index.android.bundle` (Android) or `main.jsbundle` (iOS).
-- Next, you can use the Sentry CLI to upload your bundles and source maps:
-  - release name should be set to `${bundleIdentifier}@${version}+${buildNumber}` (iOS) or `${androidPackage}@${version}+${versionCode}` (Android), so for example `com.domain.myapp@1.0.0+1`.
-  - `dist` should be set to the Update ID that `eas update` generated.
-- Command for Android:
-  `node_modules/@sentry/cli/bin/sentry-cli releases \
-files <release name> \
-upload-sourcemaps \
---dist <Android Update ID> \
---rewrite \
-dist/bundles/index.android.bundle dist/bundles/android-<hash>.map`
-- Command for iOS:
-  `node_modules/@sentry/cli/bin/sentry-cli releases \
-files <release name> \
-upload-sourcemaps \
---dist <iOS Update ID> \
---rewrite \
-dist/bundles/main.jsbundle dist/bundles/ios-<hash>.map`
-
-### OTA updates
-
-To create OTA updates, run `eas update` along with the `--branch` flag to indicate which branch you want to push the update to, and the `--message` flag to indicate a message for yourself and your team that shows up on https://expo.dev. All the channels (which make up the options for the `--branch` flag) are given in `eas.json`. [See more here](https://docs.expo.dev/eas-update/getting-started/)
-
-The clients which can receive an OTA update are governed by the `runtimeVersion` property in `app.json`. Right now, it is set so that only apps with the same `appVersion` (same as `version` property in `app.json`) can receive the update and install it. However, we can manually set `"runtimeVersion": "1.34.0"` or anything along those lines as well. This is useful if very little native code changes from update to update. If we are manually setting `runtimeVersion`, we should increment the version each time the native code is changed. [See more here](https://docs.expo.dev/eas-update/runtime-versions/)
+```sh
+curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian bullseye stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt update
+sudo apt install docker-ce docker-ce-cli containerd.io
+sudo systemctl start docker
+sudo usermod -aG docker $USER
+```
