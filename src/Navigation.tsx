@@ -43,7 +43,10 @@ import HashtagScreen from '#/screens/Hashtag'
 import {ModerationScreen} from '#/screens/Moderation'
 import {ProfileKnownFollowersScreen} from '#/screens/Profile/KnownFollowers'
 import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
-import {StarterPackScreen} from '#/screens/StarterPack/StarterPackScreen'
+import {
+  StarterPackScreen,
+  StarterPackScreenShort,
+} from '#/screens/StarterPack/StarterPackScreen'
 import {Wizard} from '#/screens/StarterPack/Wizard'
 import {init as initAnalytics} from './lib/analytics/analytics'
 import {useWebScrollRestoration} from './lib/hooks/useWebScrollRestoration'
@@ -322,7 +325,12 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       <Stack.Screen
         name="StarterPack"
         getComponent={() => StarterPackScreen}
-        options={{title: title(msg`Starter Pack`), requireAuth: true}}
+        options={{title: title(msg`Starter Pack`)}}
+      />
+      <Stack.Screen
+        name="StarterPackShort"
+        getComponent={() => StarterPackScreenShort}
+        options={{title: title(msg`Starter Pack`)}}
       />
       <Stack.Screen
         name="StarterPackWizard"

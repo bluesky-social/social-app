@@ -28,15 +28,20 @@ import {HITSLOP_20} from 'lib/constants'
 import {makeProfileLink, makeStarterPackLink} from 'lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
 import {logEvent} from 'lib/statsig/statsig'
-import {getStarterPackOgCard} from 'lib/strings/starter-pack'
+import {
+  createStarterPackUri,
+  getStarterPackOgCard,
+} from 'lib/strings/starter-pack'
 import {isWeb} from 'platform/detection'
 import {updateProfileShadow} from 'state/cache/profile-shadow'
 import {useModerationOpts} from 'state/preferences/moderation-opts'
 import {useListMembersQuery} from 'state/queries/list-members'
+import {useResolvedStarterPackShortLink} from 'state/queries/resolve-short-link'
 import {useResolveDidQuery} from 'state/queries/resolve-uri'
 import {useShortenLink} from 'state/queries/shorten-link'
 import {useStarterPackQuery} from 'state/queries/starter-packs'
 import {useAgent, useSession} from 'state/session'
+import {useSetActiveStarterPack} from 'state/shell/starter-pack'
 import * as Toast from '#/view/com/util/Toast'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
@@ -67,12 +72,77 @@ type StarterPackScreeProps = NativeStackScreenProps<
   CommonNavigatorParams,
   'StarterPack'
 >
+type StarterPackScreenShortProps = NativeStackScreenProps<
+  CommonNavigatorParams,
+  'StarterPackShort'
+>
 
 export function StarterPackScreen({route}: StarterPackScreeProps) {
+  return <StarterPackAuthCheck routeParams={route.params} />
+}
+
+export function StarterPackScreenShort({route}: StarterPackScreenShortProps) {
+  const {_} = useLingui()
+  const {
+    data: resolvedStarterPack,
+    isLoading,
+    isError,
+  } = useResolvedStarterPackShortLink({
+    code: route.params.code,
+  })
+
+  if (isLoading || isError || !resolvedStarterPack) {
+    return (
+      <ListMaybePlaceholder
+        isLoading={isLoading}
+        isError={isError}
+        errorMessage={_(msg`That starter pack could not be found.`)}
+        emptyMessage={_(msg`That starter pack could not be found.`)}
+      />
+    )
+  }
+  return <StarterPackAuthCheck routeParams={resolvedStarterPack} />
+}
+
+export function StarterPackAuthCheck({
+  routeParams,
+}: {
+  routeParams: StarterPackScreeProps['route']['params']
+}) {
+  const navigation = useNavigation<NavigationProp>()
+  const setActiveStarterPack = useSetActiveStarterPack()
+  const {currentAccount} = useSession()
+
+  React.useEffect(() => {
+    if (currentAccount) return
+
+    const uri = createStarterPackUri({
+      did: routeParams.name,
+      rkey: routeParams.rkey,
+    })
+
+    if (!uri) return
+    setActiveStarterPack({
+      uri,
+    })
+
+    navigation.goBack()
+  }, [routeParams, currentAccount, navigation, setActiveStarterPack])
+
+  if (!currentAccount) return null
+
+  return <StarterPackScreenInner routeParams={routeParams} />
+}
+
+export function StarterPackScreenInner({
+  routeParams,
+}: {
+  routeParams: StarterPackScreeProps['route']['params']
+}) {
+  const {name, rkey} = routeParams
   const {_} = useLingui()
   const {currentAccount} = useSession()
 
-  const {name, rkey} = route.params
   const moderationOpts = useModerationOpts()
   const {
     data: did,
@@ -113,16 +183,16 @@ export function StarterPackScreen({route}: StarterPackScreeProps) {
   }
 
   return (
-    <StarterPackScreenInner
+    <StarterPackScreenLoaded
       starterPack={starterPack}
-      routeParams={route.params}
+      routeParams={routeParams}
       listMembersQuery={listMembersQuery}
       moderationOpts={moderationOpts}
     />
   )
 }
 
-function StarterPackScreenInner({
+function StarterPackScreenLoaded({
   starterPack,
   routeParams,
   listMembersQuery,
