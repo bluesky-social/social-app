@@ -4,10 +4,13 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {IStep, Labels} from 'rn-tourguide'
 
+import {isWeb} from '#/platform/detection'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {Text} from '#/components/Typography'
+
+const stopPropagation = (e: any) => e.stopPropagation()
 
 export interface TooltipComponentProps {
   isFirstStep?: boolean
@@ -28,8 +31,42 @@ export function TooltipComponent({
 }: TooltipComponentProps) {
   const t = useTheme()
   const {_} = useLingui()
+  const btnRef = React.useRef<HTMLButtonElement>()
+
+  React.useEffect(() => {
+    if (!isWeb) {
+      return
+    }
+
+    // prevent scrolling
+    document.body.style.overflow = 'hidden'
+
+    // focus the button
+    btnRef.current?.focus()
+
+    // don't let the user tab away focus
+    function handler(e: KeyboardEvent) {
+      if (e.key === 'Tab') {
+        e.preventDefault()
+        e.stopPropagation()
+      }
+    }
+    document.addEventListener('keydown', handler)
+    return () => {
+      document.removeEventListener('keydown', handler)
+      document.body.style.overflow = ''
+    }
+  }, [])
+
   return (
     <View
+      role="dialog"
+      aria-role="dialog"
+      aria-label={_(msg`A help tooltip`)}
+      // @ts-ignore web only
+      onClick={stopPropagation}
+      onStartShouldSetResponder={_ => true}
+      onTouchEnd={stopPropagation}
       style={[
         t.atoms.bg,
         a.px_lg,
@@ -54,6 +91,7 @@ export function TooltipComponent({
       </Text>
       {!isLastStep ? (
         <Button
+          ref={btnRef}
           variant="gradient"
           color="gradient_sky"
           size="medium"
