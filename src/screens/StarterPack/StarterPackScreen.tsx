@@ -125,6 +125,7 @@ export function StarterPackAuthCheck({
     setActiveStarterPack({
       uri,
     })
+
     navigation.goBack()
   }, [routeParams, currentAccount, navigation, setActiveStarterPack])
 

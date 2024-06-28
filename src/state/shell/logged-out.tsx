@@ -60,15 +60,16 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       : undefined,
   })
 
-  React.useEffect(() => {
-    if (activeStarterPack) {
-      setState(s => ({
-        ...s,
-        showLoggedOut: true,
-        requestedAccountSwitchTo: 'starterpack',
-      }))
-    }
-  }, [activeStarterPack])
+  const [prevActiveStarterPack, setPrevActiveStarterPack] =
+    React.useState(activeStarterPack)
+  if (activeStarterPack?.uri !== prevActiveStarterPack?.uri) {
+    setPrevActiveStarterPack(activeStarterPack)
+    setState(s => ({
+      ...s,
+      showLoggedOut: true,
+      requestedAccountSwitchTo: 'starterpack',
+    }))
+  }
 
   const controls = React.useMemo<Controls>(
     () => ({
