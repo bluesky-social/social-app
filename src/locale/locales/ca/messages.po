@@ -458,7 +458,7 @@ msgstr "Afegeix els canals recomanats"
 
 #: src/screens/StarterPack/Wizard/index.tsx:488
 msgid "Add some feeds to your starter pack!"
-msgstr "Afegiu persones que creus que els agradaria seguir als altres al teu starter pack"
+msgstr "Afegiu alguns canals al teu starter pack"
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:41
 msgid "Add the default feed of only people you follow"
