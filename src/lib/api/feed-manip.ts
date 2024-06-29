@@ -84,8 +84,8 @@ export class FeedViewPostsSlice {
   }
 
   insert(item: FeedViewPost) {
-    const selfReplyUri = getSelfReplyUri(item)
-    const i = this.items.findIndex(item2 => item2.post.uri === selfReplyUri)
+    const replyUri = getReplyUri(item)
+    const i = this.items.findIndex(item2 => item2.post.uri === replyUri)
     if (i !== -1) {
       this.items.splice(i + 1, 0, item)
     } else {
@@ -171,10 +171,10 @@ export class FeedTuner {
       for (let i = feed.length - 1; i >= 0; i--) {
         const item = feed[i]
 
-        const selfReplyUri = getSelfReplyUri(item)
-        if (selfReplyUri) {
+        const replyUri = getReplyUri(item)
+        if (replyUri) {
           const index = slices.findIndex(slice =>
-            slice.isNextInThread(selfReplyUri),
+            slice.isNextInThread(replyUri),
           )
 
           if (index !== -1) {
@@ -379,15 +379,13 @@ export class FeedTuner {
   }
 }
 
-function getSelfReplyUri(item: FeedViewPost): string | undefined {
+function getReplyUri(item: FeedViewPost): string | undefined {
   if (item.reply) {
     if (
       AppBskyFeedDefs.isPostView(item.reply.parent) &&
       !AppBskyFeedDefs.isReasonRepost(item.reason) // don't thread reposted self-replies
     ) {
-      return item.reply.parent.author.did === item.post.author.did
-        ? item.reply.parent.uri
-        : undefined
+      return item.reply.parent.uri
     }
   }
   return undefined
