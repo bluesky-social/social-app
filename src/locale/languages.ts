@@ -233,7 +233,7 @@ export const LANGUAGES: Language[] = [
   {code3: 'gre', code2: 'el', name: 'Greek, Modern (1453-)'},
   {code3: 'grn', code2: 'gn', name: 'Guarani'},
   {code3: 'gsw', code2: '', name: 'Swiss German; Alemannic; Alsatian'},
-  {code3: 'gujgu', code2: 'Gujarati', name: 'goudjrati'},
+  {code3: 'guj', code2: 'gu', name: 'Gujarati'},
   {code3: 'gwi', code2: '', name: "Gwich'in"},
   {code3: 'hai', code2: '', name: 'Haida'},
   {code3: 'hat', code2: 'ht', name: 'Haitian; Haitian Creole'},
