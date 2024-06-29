@@ -2224,7 +2224,7 @@ msgstr "Ensenyament"
 
 #: src/components/dialogs/ThreadgateEditor.tsx:98
 msgid "Either choose \"Everybody\" or \"Nobody\""
-msgstr "Tria \"Tothom\" o \"Ningú\"
+msgstr "Tria \"Tothom\" o \"Ningú\""
 
 #: src/screens/Signup/StepInfo/index.tsx:80
 #: src/view/com/modals/ChangeEmail.tsx:136
