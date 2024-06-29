@@ -3338,7 +3338,7 @@ msgstr "Codis d'invitació: 1 disponible"
 
 #: src/components/StarterPack/ShareDialog.tsx:96
 msgid "Invite people to this starter pack!"
-msgstr "Convida a gent a aquest starter pack""
+msgstr "Convida a gent a aquest starter pack!"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:35
 msgid "Invite your friends to follow your favorite feeds and people"
