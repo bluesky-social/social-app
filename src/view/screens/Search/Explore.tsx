@@ -505,7 +505,7 @@ export function Explore() {
                 a.px_lg,
                 a.py_lg,
               ]}>
-              <FeedCard.Default type="feed" view={item.feed} />
+              <FeedCard.Default view={item.feed} />
             </View>
           )
         }
