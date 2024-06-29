@@ -3367,7 +3367,7 @@ msgstr "Uneix-te a Bluesky"
 
 #: src/components/StarterPack/QrCode.tsx:56
 msgid "Join the conversation"
-msgstr "Uneix´-te a la conversa"
+msgstr "Uneix-te a la conversa"
 
 #: src/view/com/modals/Waitlist.tsx:67
 #~ msgid "Join the waitlist"
