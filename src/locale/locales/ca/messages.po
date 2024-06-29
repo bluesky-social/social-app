@@ -6732,7 +6732,7 @@ msgstr "Aquest identificador ja està agafat."
 #: src/screens/StarterPack/Wizard/index.tsx:106
 #: src/screens/StarterPack/Wizard/index.tsx:114
 msgid "That starter pack could not be found."
-msgstr "No s'ha pogut trobar aquest starter pack"
+msgstr "No s'ha pogut trobar aquest starter pack."
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:310
 #: src/view/com/profile/ProfileMenu.tsx:353
