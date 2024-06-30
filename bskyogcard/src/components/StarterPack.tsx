@@ -43,6 +43,7 @@ export function StarterPack(props: {
   } else {
     imagesAcross.push(...imagesExceptCreator.slice(0, 7))
   }
+  const isLongTitle = record ? record.name.length > 30 : false
   return (
     <div
       style={{
@@ -130,7 +131,9 @@ export function StarterPack(props: {
         <div
           style={{
             padding: '75px 30px 0px',
-            fontSize: 65,
+            fontSize: isLongTitle ? 55 : 65,
+            display: 'flex',
+            textAlign: 'center',
           }}>
           {record?.name || 'Starter Pack'}
         </div>

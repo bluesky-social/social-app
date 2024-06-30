@@ -1,5 +1,4 @@
 import {logger} from '#/logger'
-import {startUriToStarterPackUri} from 'lib/strings/starter-pack'
 
 export async function resolveShortLink(shortLink: string) {
   const controller = new AbortController()
@@ -8,15 +7,20 @@ export async function resolveShortLink(shortLink: string) {
   try {
     const res = await fetch(shortLink, {
       method: 'GET',
+      headers: {
+        Accept: 'application/json',
+      },
       signal: controller.signal,
     })
     if (res.status !== 200) {
+      logger.error('Failed to resolve short link', {status: res.status})
       return shortLink
     }
-    return startUriToStarterPackUri(res.url)
+    const json = (await res.json()) as {url: string}
+    return json.url
   } catch (e: unknown) {
     logger.error('Failed to resolve short link', {safeMessage: e})
-    return null
+    return shortLink
   } finally {
     clearTimeout(to)
   }

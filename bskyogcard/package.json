@@ -5,7 +5,9 @@
   "main": "src/index.ts",
   "scripts": {
     "start": "node --loader ts-node/esm ./src/bin.ts",
-    "build": "tsc && cp -r src/assets dist/assets"
+    "dev": "node --watch-path ./src --loader ts-node/esm ./src/bin.ts",
+    "build": "tsc && cp -r src/assets dist/",
+    "install-fonts": "node --loader ts-node/esm scripts/install-fonts.ts"
   },
   "dependencies": {
     "@atproto/api": "0.12.19-next.0",
@@ -15,10 +17,12 @@
     "http-terminator": "^3.2.0",
     "pino": "^9.2.0",
     "react": "^18.3.1",
-    "satori": "^0.10.13"
+    "satori": "^0.10.13",
+    "twemoji": "^14.0.2"
   },
   "devDependencies": {
     "@types/node": "^20.14.3",
+    "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
   }
 }
