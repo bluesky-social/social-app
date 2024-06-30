@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-06-29 16:54+0900\n"
+"PO-Revision-Date: 2024-06-30 12:00+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -2680,7 +2680,7 @@ msgstr "이미지 대체 텍스트"
 
 #: src/components/StarterPack/ShareDialog.tsx:75
 msgid "Image saved to your camera roll!"
-msgstr "이미지를 앨범에 저장했습니다"
+msgstr "이미지를 사진 보관함에 저장했습니다"
 
 #: src/lib/moderation/useReportOptions.ts:49
 msgid "Impersonation or false claims about identity or affiliation"
@@ -3983,11 +3983,11 @@ msgstr "@{0} 님을 팔로우하는 사람들"
 
 #: src/view/com/lightbox/Lightbox.tsx:69
 msgid "Permission to access camera roll is required."
-msgstr "앨범에 접근할 수 있는 권한이 필요합니다."
+msgstr "사진 보관함에 접근할 수 있는 권한이 필요합니다."
 
 #: src/view/com/lightbox/Lightbox.tsx:75
 msgid "Permission to access camera roll was denied. Please enable it in your system settings."
-msgstr "앨범에 접근할 수 있는 권한이 거부되었습니다. 시스템 설정에서 활성화하세요."
+msgstr "사진 보관함에 접근할 수 있는 권한이 거부되었습니다. 시스템 설정에서 활성화하세요."
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:55
 msgid "Person toggle"
@@ -4285,7 +4285,7 @@ msgstr "QR 코드를 다운로드했습니다."
 
 #: src/components/StarterPack/QrCodeDialog.tsx:104
 msgid "QR code saved to your camera roll!"
-msgstr "QR 코드를 앨범에 저장했습니다."
+msgstr "QR 코드를 사진 보관함에 저장했습니다."
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:116
 #: src/view/com/util/post-ctrls/RepostButton.tsx:128
@@ -4736,7 +4736,7 @@ msgstr "저장한 피드"
 
 #: src/view/com/lightbox/Lightbox.tsx:84
 msgid "Saved to your camera roll"
-msgstr "내 앨범에 저장됨"
+msgstr "내 사진 보관함에 저장됨"
 
 #: src/view/screens/ProfileFeed.tsx:201
 #: src/view/screens/ProfileList.tsx:300
@@ -6780,11 +6780,11 @@ msgstr "스타터 팩을 만들려면 최소 7명 이상의 다른 사람을 팔
 
 #: src/components/StarterPack/QrCodeDialog.tsx:60
 msgid "You must grant access to your photo library to save a QR code"
-msgstr "QR 코드를 저장하려면 사진 앨범에 대한 접근 권한을 부여해야 합니다"
+msgstr "QR 코드를 저장하려면 사진 보관함에 대한 접근 권한을 부여해야 합니다"
 
 #: src/components/StarterPack/ShareDialog.tsx:68
 msgid "You must grant access to your photo library to save the image."
-msgstr "이미지를 저장하려면 사진 앨범에 대한 접근 권한을 부여해야 합니다"
+msgstr "이미지를 저장하려면 사진 보관함에 대한 접근 권한을 부여해야 합니다"
 
 #: src/components/ReportDialog/SubmitView.tsx:205
 msgid "You must select at least one labeler for a report"
