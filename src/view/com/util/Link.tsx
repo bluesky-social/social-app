@@ -49,6 +49,7 @@ interface Props extends ComponentProps<typeof TouchableOpacity> {
   anchorNoUnderline?: boolean
   navigationAction?: 'push' | 'replace' | 'navigate'
   onPointerEnter?: () => void
+  onPointerLeave?: () => void
   onBeforePress?: () => void
 }
 
