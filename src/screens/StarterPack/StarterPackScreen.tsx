@@ -346,6 +346,10 @@ function Header({
         .filter(
           li =>
             li.subject.did !== currentAccount?.did &&
+            !li.subject.viewer?.blockedBy &&
+            !li.subject.viewer?.blocking &&
+            !li.subject.viewer?.muted &&
+            !li.subject.viewer?.mutedByList &&
             !li.subject.viewer?.following,
         )
         .map(li => li.subject.did)
