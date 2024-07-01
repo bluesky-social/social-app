@@ -25,6 +25,7 @@ import {logger} from '#/logger'
 import {useDeleteStarterPackMutation} from '#/state/queries/starter-packs'
 import {batchedUpdates} from 'lib/batchedUpdates'
 import {HITSLOP_20} from 'lib/constants'
+import {isBlockedOrBlocking, isMuted} from 'lib/moderation/blocked-and-muted'
 import {makeProfileLink, makeStarterPackLink} from 'lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
 import {logEvent} from 'lib/statsig/statsig'
@@ -346,10 +347,8 @@ function Header({
         .filter(
           li =>
             li.subject.did !== currentAccount?.did &&
-            !li.subject.viewer?.blockedBy &&
-            !li.subject.viewer?.blocking &&
-            !li.subject.viewer?.muted &&
-            !li.subject.viewer?.mutedByList &&
+            !isBlockedOrBlocking(li.subject) &&
+            !isMuted(li.subject) &&
             !li.subject.viewer?.following,
         )
         .map(li => li.subject.did)
