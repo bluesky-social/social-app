@@ -140,7 +140,7 @@ export function SuggestedFollows() {
                     profile={profile}
                     logContext="FeedInterstitial"
                     shape={'round'}
-                    color="secondary"
+                    color="secondary_inverted"
                   />
                 </ProfileCard.Header>
                 <ProfileCard.Description profile={profile} />
