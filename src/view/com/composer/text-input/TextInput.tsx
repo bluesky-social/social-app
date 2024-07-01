@@ -13,13 +13,15 @@ import {
   TextInputSelectionChangeEventData,
   View,
 } from 'react-native'
-import {AppBskyRichtextFacet, RichText} from '@atproto/api'
+import {AppBskyRichtextFacet, RichText, UnicodeString} from '@atproto/api'
 import PasteInput, {
   PastedFile,
   PasteInputRef,
 } from '@mattermost/react-native-paste-input'
+import Graphemer from 'graphemer'
 
-import {POST_IMG_MAX} from 'lib/constants'
+import {colors} from '#/lib/styles'
+import {MAX_GRAPHEME_LENGTH, POST_IMG_MAX} from 'lib/constants'
 import {usePalette} from 'lib/hooks/usePalette'
 import {downloadAndResize} from 'lib/media/manip'
 import {isUriImage} from 'lib/media/util'
@@ -192,10 +194,34 @@ export const TextInput = forwardRef(function TextInputImpl(
     [onChangeText, richtext, setAutocompletePrefix],
   )
 
+  const splitter = useMemo(() => new Graphemer(), [])
   const textDecorated = useMemo(() => {
+    let excess
+    let rt = richtext
+    if (richtext.graphemeLength > MAX_GRAPHEME_LENGTH) {
+      rt = richtext.clone()
+      const split = splitter.splitGraphemes(richtext.text)
+      const validText = split.slice(0, MAX_GRAPHEME_LENGTH).join('')
+      const validUnicode = new UnicodeString(validText)
+      const excessText = split.slice(MAX_GRAPHEME_LENGTH).join('')
+      rt.delete(validUnicode.utf8.byteLength, richtext.length)
+      excess = (
+        <Text
+          key="excess"
+          style={[
+            pal.text,
+            styles.textInputFormatting,
+            theme.colorScheme === 'light'
+              ? styles.textInputExcess
+              : styles.textInputExcessDark,
+          ]}>
+          {excessText}
+        </Text>
+      )
+    }
     let i = 0
 
-    return Array.from(richtext.segments()).map(segment => {
+    const segments = Array.from(rt.segments()).map(segment => {
       return (
         <Text
           key={i++}
@@ -207,7 +233,13 @@ export const TextInput = forwardRef(function TextInputImpl(
         </Text>
       )
     })
-  }, [richtext, pal.link, pal.text])
+
+    if (excess) {
+      segments.push(excess)
+    }
+
+    return segments
+  }, [richtext, pal.link, pal.text, theme.colorScheme, splitter])
 
   return (
     <View style={styles.container}>
@@ -260,5 +292,11 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     // This is broken on ios right now, so don't set it there.
     lineHeight: isIOS ? undefined : 23.4, // 1.3*16
+  },
+  textInputExcess: {
+    backgroundColor: colors.red1,
+  },
+  textInputExcessDark: {
+    backgroundColor: colors.red7,
   },
 })
