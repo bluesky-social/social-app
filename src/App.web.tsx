@@ -12,10 +12,12 @@ import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
 import {QueryProvider} from '#/lib/react-query'
 import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
 import {ThemeProvider} from '#/lib/ThemeContext'
+import I18nProvider from '#/locale/i18nProvider'
 import {logger} from '#/logger'
 import {Provider as A11yProvider} from '#/state/a11y'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
+import {listenSessionDropped} from '#/state/events'
 import {Provider as InvitesStateProvider} from '#/state/invites'
 import {Provider as LightboxStateProvider} from '#/state/lightbox'
 import {MessagesProvider} from '#/state/messages'
@@ -36,6 +38,7 @@ import {Provider as ShellStateProvider} from '#/state/shell'
 import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
 import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
+import {ActiveVideoProvider} from '#/view/com/util/post-embeds/ActiveVideoContext'
 import * as Toast from '#/view/com/util/Toast'
 import {ToastContainer} from '#/view/com/util/Toast.web'
 import {Shell} from '#/view/shell/index'
@@ -44,9 +47,6 @@ import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
-import I18nProvider from './locale/i18nProvider'
-import {listenSessionDropped} from './state/events'
-import {ActiveVideoProvider} from './view/com/util/post-embeds/VideoEmbed'
 
 function InnerApp() {
   const [isReady, setIsReady] = React.useState(false)
@@ -88,35 +88,37 @@ function InnerApp() {
       <Alf theme={theme}>
         <ThemeProvider theme={theme}>
           <RootSiblingParent>
-            <React.Fragment
-              // Resets the entire tree below when it changes:
-              key={currentAccount?.did}>
-              <QueryProvider currentDid={currentAccount?.did}>
-                <StatsigProvider>
-                  <MessagesProvider>
-                    {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                    <LabelDefsProvider>
-                      <ModerationOptsProvider>
-                        <LoggedOutViewProvider>
-                          <SelectedFeedProvider>
-                            <UnreadNotifsProvider>
-                              <BackgroundNotificationPreferencesProvider>
-                                <MutedThreadsProvider>
-                                  <SafeAreaProvider>
-                                    <Shell />
-                                  </SafeAreaProvider>
-                                </MutedThreadsProvider>
-                              </BackgroundNotificationPreferencesProvider>
-                            </UnreadNotifsProvider>
-                          </SelectedFeedProvider>
-                        </LoggedOutViewProvider>
-                      </ModerationOptsProvider>
-                    </LabelDefsProvider>
-                  </MessagesProvider>
-                </StatsigProvider>
-              </QueryProvider>
-            </React.Fragment>
-            <ToastContainer />
+            <ActiveVideoProvider>
+              <React.Fragment
+                // Resets the entire tree below when it changes:
+                key={currentAccount?.did}>
+                <QueryProvider currentDid={currentAccount?.did}>
+                  <StatsigProvider>
+                    <MessagesProvider>
+                      {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                      <LabelDefsProvider>
+                        <ModerationOptsProvider>
+                          <LoggedOutViewProvider>
+                            <SelectedFeedProvider>
+                              <UnreadNotifsProvider>
+                                <BackgroundNotificationPreferencesProvider>
+                                  <MutedThreadsProvider>
+                                    <SafeAreaProvider>
+                                      <Shell />
+                                    </SafeAreaProvider>
+                                  </MutedThreadsProvider>
+                                </BackgroundNotificationPreferencesProvider>
+                              </UnreadNotifsProvider>
+                            </SelectedFeedProvider>
+                          </LoggedOutViewProvider>
+                        </ModerationOptsProvider>
+                      </LabelDefsProvider>
+                    </MessagesProvider>
+                  </StatsigProvider>
+                </QueryProvider>
+              </React.Fragment>
+              <ToastContainer />
+            </ActiveVideoProvider>
           </RootSiblingParent>
         </ThemeProvider>
       </Alf>
@@ -151,9 +153,7 @@ function App() {
                     <I18nProvider>
                       <PortalProvider>
                         <StarterPackProvider>
-                          <ActiveVideoProvider>
-                            <InnerApp />
-                          </ActiveVideoProvider>
+                          <InnerApp />
                         </StarterPackProvider>
                       </PortalProvider>
                     </I18nProvider>
