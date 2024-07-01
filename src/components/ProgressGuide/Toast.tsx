@@ -1,5 +1,5 @@
 import React, {useImperativeHandle} from 'react'
-import {Keyboard, Pressable, View} from 'react-native'
+import {Pressable, useWindowDimensions, View} from 'react-native'
 import Animated, {
   Easing,
   runOnJS,
@@ -11,6 +11,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {isWeb} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {Portal} from '#/components/Portal'
 import {AnimatedCheck, AnimatedCheckRef} from '../anim/AnimatedCheck'
@@ -39,6 +40,7 @@ export const ProgressGuideToast = React.forwardRef<
   const opacity = useSharedValue(0)
   const animatedCheckRef = React.useRef<AnimatedCheckRef | null>(null)
   const timeoutRef = React.useRef<NodeJS.Timeout | undefined>()
+  const winDim = useWindowDimensions()
 
   /**
    * Methods
@@ -97,6 +99,20 @@ export const ProgressGuideToast = React.forwardRef<
     [open, close],
   )
 
+  const containerStyle = React.useMemo(() => {
+    let left = 10
+    let right = 10
+    if (isWeb && winDim.width > 400) {
+      left = right = (winDim.width - 380) / 2
+    }
+    return {
+      position: isWeb ? 'fixed' : 'absolute',
+      top: 0,
+      left,
+      right,
+    }
+  }, [winDim.width])
+
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{translateY: translateY.value}],
     opacity: opacity.value,
@@ -105,45 +121,48 @@ export const ProgressGuideToast = React.forwardRef<
   return (
     isOpen && (
       <Portal>
-        <View
-          // iOS
-          accessibilityViewIsModal
-          // Android
-          importantForAccessibility="yes"
-          style={[a.absolute, a.inset_0]}
-          onTouchMove={() => Keyboard.dismiss()}>
-          <Animated.View
-            style={[a.absolute, {top: 0, left: 10, right: 10}, animatedStyle]}>
-            <Pressable
-              style={[
-                t.atoms.bg,
-                a.flex_row,
-                a.align_center,
-                a.gap_md,
-                a.border,
-                t.atoms.border_contrast_high,
-                a.rounded_md,
-                a.px_lg,
-                a.py_md,
-              ]}
-              onPress={close}
-              accessibilityLabel={_(msg`Tap to dismiss`)}
-              accessibilityHint="">
-              <AnimatedCheck
-                fill={t.palette.primary_500}
-                ref={animatedCheckRef}
-              />
-              <View>
-                <Text style={[a.text_md, a.font_semibold]}>{title}</Text>
-                {subtitle && (
-                  <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-                    {subtitle}
-                  </Text>
-                )}
-              </View>
-            </Pressable>
-          </Animated.View>
-        </View>
+        <Animated.View
+          style={[
+            // @ts-ignore position: fixed is web only
+            containerStyle,
+            animatedStyle,
+          ]}>
+          <Pressable
+            style={[
+              t.atoms.bg,
+              a.flex_row,
+              a.align_center,
+              a.gap_md,
+              a.border,
+              t.atoms.border_contrast_high,
+              a.rounded_md,
+              a.px_lg,
+              a.py_md,
+              a.shadow_sm,
+              {
+                shadowRadius: 8,
+                shadowOpacity: 0.1,
+                shadowOffset: {width: 0, height: 2},
+                elevation: 8,
+              },
+            ]}
+            onPress={close}
+            accessibilityLabel={_(msg`Tap to dismiss`)}
+            accessibilityHint="">
+            <AnimatedCheck
+              fill={t.palette.primary_500}
+              ref={animatedCheckRef}
+            />
+            <View>
+              <Text style={[a.text_md, a.font_semibold]}>{title}</Text>
+              {subtitle && (
+                <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+                  {subtitle}
+                </Text>
+              )}
+            </View>
+          </Pressable>
+        </Animated.View>
       </Portal>
     )
   )
