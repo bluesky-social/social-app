@@ -335,7 +335,7 @@ let FeedItemInner = ({
             postAuthor={post.author}
             onOpenEmbed={onOpenEmbed}
           />
-          <VideoEmbed source="https://videokits-apps.s3-us-west-1.amazonaws.com/riza/usrYteLEMKdz5Lt8RgTCmMa/Video/fiAo7WNGVzDwH7fcyGnLbe2MSWZ1vxMAa.mov/HLS/fiAo7WNGVzDwH7fcyGnLbe2MSWZ1vxMAa.m3u8" />
+          <VideoEmbed source="https://vid.jazco.dev/watch/did:plc:q6gjnaw2blty4crticxkmujt/QmVdiZ6Bw6rTD98NTJzFWdmCTnWgiVcR7qxt127X5Km1JG/playlist.m3u8" />
           <PostCtrls
             post={post}
             record={record}
