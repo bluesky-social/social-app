@@ -13,6 +13,7 @@ import {
 } from '../components/StarterPack.js'
 import {AppContext} from '../context.js'
 import {httpLogger} from '../logger.js'
+import {loadEmojiAsSvg} from '../util.js'
 import {handler, originVerifyMiddleware} from './util.js'
 
 export default function (ctx: AppContext, app: Express) {
@@ -65,6 +66,11 @@ export default function (ctx: AppContext, app: Express) {
           fonts: ctx.fonts,
           height: STARTERPACK_HEIGHT,
           width: STARTERPACK_WIDTH,
+          loadAdditionalAsset: async (code, text) => {
+            if (code === 'emoji') {
+              return await loadEmojiAsSvg(text)
+            }
+          },
         },
       )
       const output = await resvg.renderAsync(svg)
