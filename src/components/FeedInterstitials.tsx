@@ -52,8 +52,11 @@ export function SuggestedFollowPlaceholder() {
     <CardOuter style={[a.gap_sm, t.atoms.border_contrast_low]}>
       <ProfileCard.Header>
         <ProfileCard.AvatarPlaceholder />
-        <ProfileCard.NameAndHandlePlaceholder />
       </ProfileCard.Header>
+
+      <View style={[a.py_xs]}>
+        <ProfileCard.NameAndHandlePlaceholder />
+      </View>
 
       <ProfileCard.DescriptionPlaceholder />
     </CardOuter>
@@ -106,7 +109,13 @@ export function SuggestedFollows() {
   const content = isLoading ? (
     Array(maxLength)
       .fill(0)
-      .map((_, i) => <SuggestedFollowPlaceholder key={i} />)
+      .map((_, i) => (
+        <View
+          key={i}
+          style={[gtMobile && web([a.flex_0, {width: 'calc(50% - 6px)'}])]}>
+          <SuggestedFollowPlaceholder />
+        </View>
+      ))
   ) : error || !profiles.length ? null : (
     <>
       {profiles.slice(0, maxLength).map(profile => (
