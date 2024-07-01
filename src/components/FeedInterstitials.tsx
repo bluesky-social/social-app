@@ -132,17 +132,19 @@ export function SuggestedFollows() {
                     profile={profile}
                     moderationOpts={moderationOpts}
                   />
+                  <View style={[a.flex_1]} />
+                  <ProfileCard.FollowButton
+                    profile={profile}
+                    logContext="FeedInterstitial"
+                    color="secondary_inverted"
+                  />
+                </ProfileCard.Header>
+                <View style={[a.pt_xs]}>
                   <ProfileCard.NameAndHandle
                     profile={profile}
                     moderationOpts={moderationOpts}
                   />
-                  <ProfileCard.FollowButton
-                    profile={profile}
-                    logContext="FeedInterstitial"
-                    shape={'round'}
-                    color="secondary_inverted"
-                  />
-                </ProfileCard.Header>
+                </View>
                 <ProfileCard.Description profile={profile} />
               </ProfileCard.Outer>
             </CardOuter>
