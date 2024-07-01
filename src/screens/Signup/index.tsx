@@ -114,9 +114,10 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
 
     logEvent('signup:nextPressed', {
       activeStep: state.activeStep,
-      phoneVerificationRequired: Boolean(
-        state.serviceDescription?.phoneVerificationRequired,
-      ),
+      phoneVerificationRequired:
+        state.activeStep === SignupStep.HANDLE
+          ? Boolean(state.serviceDescription?.phoneVerificationRequired)
+          : undefined,
     })
 
     // phoneVerificationRequired is actually whether a captcha is required
