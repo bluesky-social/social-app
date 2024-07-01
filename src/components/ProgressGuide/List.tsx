@@ -1,58 +1,61 @@
 import React from 'react'
-import {View} from 'react-native'
+import {StyleProp, View, ViewStyle} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {
+  ProgressGuideAction,
+  ProgressGuideName,
+  useProgressGuide,
+  useProgressGuideControls,
+} from '#/state/shell/progress-guide'
 import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon} from '../Button'
-import {TimesLarge_Stroke2_Corner0_Rounded as Times} from '../icons/Times'
-import {Text} from '../Typography'
+import {Button, ButtonIcon} from '#/components/Button'
+import {TimesLarge_Stroke2_Corner0_Rounded as Times} from '#/components/icons/Times'
+import {Text} from '#/components/Typography'
 import {ProgressGuideTask} from './Task'
 
-export function ProgressGuideList() {
+export function ProgressGuideList({style}: {style: StyleProp<ViewStyle>}) {
   const t = useTheme()
   const {_} = useLingui()
+  const guide = useProgressGuide(ProgressGuideName.Like10Posts)
+  const {captureAction, endProgressGuide} = useProgressGuideControls()
 
-  const [numLikes, setNumLikes] = React.useState<number>(0)
-  const [numFollows, setNumFollows] = React.useState<number>(0)
-
-  // DEBUG
   React.useEffect(() => {
-    const i = setInterval(() => {
-      setNumLikes(v => (v >= 10 ? 0 : v + 1))
-      setNumFollows(v => (v >= 7 ? 0 : v + 1))
-    }, 1000)
-    return () => {
-      clearInterval(i)
-    }
-  }, [setNumLikes])
+    const i = setInterval(() => captureAction(ProgressGuideAction.Like), 2e3)
+    return () => clearInterval(i)
+  }, [captureAction])
 
-  return (
-    <View style={[a.flex_col, a.gap_md]}>
-      <View style={[a.flex_row, a.align_center]}>
-        <Text
-          style={[t.atoms.text_contrast_medium, a.font_semibold, a.text_xs]}>
-          <Trans>GET STARTED</Trans>
-        </Text>
-        <Button
-          variant="ghost"
-          size="tiny"
-          color="secondary"
-          label={_(msg`Dismiss get started`)}>
-          <ButtonIcon icon={Times} />
-        </Button>
+  if (guide?.guide === ProgressGuideName.Like10Posts) {
+    return (
+      <View style={[a.flex_col, a.gap_md, style]}>
+        <View style={[a.flex_row, a.align_center]}>
+          <Text
+            style={[
+              t.atoms.text_contrast_medium,
+              a.font_semibold,
+              a.text_xs,
+              {textTransform: 'uppercase'},
+            ]}>
+            <Trans>Get started</Trans>
+          </Text>
+          <Button
+            variant="ghost"
+            size="tiny"
+            color="secondary"
+            label={_(msg`Dismiss get started`)}
+            onPress={endProgressGuide}>
+            <ButtonIcon icon={Times} />
+          </Button>
+        </View>
+        <ProgressGuideTask
+          current={guide.numLikes}
+          total={10}
+          title={_(msg`Like 10 posts`)}
+          subtitle={_(msg`Teach Discover what you like.`)}
+        />
       </View>
-      <ProgressGuideTask
-        current={numLikes}
-        total={10}
-        title={_(msg`Like 10 posts`)}
-        subtitle={_(msg`Teach Discover what you like.`)}
-      />
-      <ProgressGuideTask
-        current={numFollows}
-        total={7}
-        title={_(msg`Follow 7 people`)}
-      />
-    </View>
-  )
+    )
+  }
+  return null
 }
