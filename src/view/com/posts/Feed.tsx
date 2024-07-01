@@ -16,7 +16,7 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {FALLBACK_MARKER_POST} from '#/lib/api/feed/home'
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
-import {logEvent} from '#/lib/statsig/statsig'
+import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {listenPostCreated} from '#/state/events'
@@ -72,13 +72,17 @@ type FeedItem =
   | {
       type: 'interstitialFeeds'
       key: string
-      params: {}
+      params: {
+        variant: 'default' | string
+      }
       slot: number
     }
   | {
       type: 'interstitialFollows'
       key: string
-      params: {}
+      params: {
+        variant: 'default' | string
+      }
       slot: number
     }
 
@@ -91,28 +95,36 @@ const interstials: Record<
   following: [
     {
       type: followInterstitialType,
-      params: {},
-      key: [followInterstitialType, 'default'].join(':'),
+      params: {
+        variant: 'default',
+      },
+      key: followInterstitialType,
       slot: 20,
     },
     {
       type: feedInterstitialType,
-      params: {},
-      key: [feedInterstitialType, 'default'].join(':'),
+      params: {
+        variant: 'default',
+      },
+      key: feedInterstitialType,
       slot: 40,
     },
   ],
   discover: [
     {
       type: feedInterstitialType,
-      params: {},
-      key: [feedInterstitialType, 'default'].join(':'),
+      params: {
+        variant: 'default',
+      },
+      key: feedInterstitialType,
       slot: 20,
     },
     {
       type: followInterstitialType,
-      params: {},
-      key: [followInterstitialType, 'default'].join(':'),
+      params: {
+        variant: 'default',
+      },
+      key: followInterstitialType,
       slot: 40,
     },
   ],
@@ -174,6 +186,7 @@ let Feed = ({
   const [feedType, feedUri] = feed.split('|')
   const feedIsDiscover = feedUri === DISCOVER_FEED_URI
   const feedIsFollowing = feedType === 'following'
+  const gate = useGate()
 
   const opts = React.useMemo(
     () => ({enabled, ignoreFilterFor}),
@@ -322,8 +335,25 @@ let Feed = ({
 
     if (feedType) {
       for (const interstitial of interstials[feedType]) {
-        if (arr.length > interstitial.slot) {
-          arr.splice(interstitial.slot, 0, interstitial)
+        const feedInterstitialEnabled =
+          interstitial.type === feedInterstitialType &&
+          gate('suggested_feeds_interstitial')
+        const followInterstitialEnabled =
+          interstitial.type === followInterstitialType &&
+          gate('suggested_follows_interstitial')
+
+        if (feedInterstitialEnabled || followInterstitialEnabled) {
+          const variant = 'default' // replace with experiment variant
+          const int = {
+            ...interstitial,
+            params: {variant},
+            // overwrite key with unique value
+            key: [interstitial.type, variant].join(':'),
+          }
+
+          if (arr.length > interstitial.slot) {
+            arr.splice(interstitial.slot, 0, int)
+          }
         }
       }
     }
@@ -337,6 +367,7 @@ let Feed = ({
     feedUri,
     feedIsDiscover,
     feedIsFollowing,
+    gate,
   ])
 
   // events
