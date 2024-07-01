@@ -343,7 +343,11 @@ function Header({
         list: starterPack.list.uri,
       })
       const dids = list.data.items
-        .filter(li => !li.subject.viewer?.following)
+        .filter(
+          li =>
+            li.subject.did !== currentAccount?.did &&
+            !li.subject.viewer?.following,
+        )
         .map(li => li.subject.did)
 
       const followUris = await bulkWriteFollows(agent, dids)
