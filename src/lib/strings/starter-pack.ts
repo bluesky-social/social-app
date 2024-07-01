@@ -2,7 +2,7 @@ import {AppBskyGraphDefs, AtUri} from '@atproto/api'
 
 export function createStarterPackLinkFromAndroidReferrer(
   referrerQueryString: string,
-): string | null {
+): {uri: string; starterPackUserID: string} | null {
   try {
     // The referrer string is just some URL parameters, so lets add them to a fake URL
     const url = new URL('http://throwaway.com/?' + referrerQueryString)
@@ -16,9 +16,14 @@ export function createStarterPackLinkFromAndroidReferrer(
     const contentParts = utmContent.split('_')
 
     if (contentParts[0] !== 'starterpack') return null
-    if (contentParts.length !== 3) return null
 
-    return `at://${contentParts[1]}/app.bsky.graph.starterpack/${contentParts[2]}`
+    // Length should be four to include the user ID
+    if (contentParts.length !== 4) return null
+
+    return {
+      uri: `at://${contentParts[1]}/app.bsky.graph.starterpack/${contentParts[2]}`,
+      starterPackUserID: contentParts[3],
+    }
   } catch (e) {
     return null
   }
@@ -62,9 +67,10 @@ export function parseStarterPackUri(uri?: string): {
 export function createStarterPackGooglePlayUri(
   name: string,
   rkey: string,
+  userID: string,
 ): string | null {
   if (!name || !rkey) return null
-  return `https://play.google.com/store/apps/details?id=xyz.blueskyweb.app&referrer=utm_source%3Dbluesky%26utm_medium%3Dstarterpack%26utm_content%3Dstarterpack_${name}_${rkey}`
+  return `https://play.google.com/store/apps/details?id=xyz.blueskyweb.app&referrer=utm_source%3Dbluesky%26utm_medium%3Dstarterpack%26utm_content%3Dstarterpack_${name}_${rkey}_${userID}`
 }
 
 export function httpStarterPackUriToAtUri(httpUri?: string): string | null {

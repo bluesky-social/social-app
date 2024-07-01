@@ -42,8 +42,7 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
 interface AppClipMessage {
   action: 'present' | 'store'
-  keyToStoreAs?: string
-  jsonToStore?: string
+  userID?: string
 }
 
 function postAppClipMessage(message: AppClipMessage) {
@@ -125,6 +124,7 @@ function LandingScreenLoaded({
       setAppClipOverlayVisible(true)
       postAppClipMessage({
         action: 'present',
+        userID: activeStarterPack.starterPackUserID,
       })
     } else if (isAndroidWeb) {
       androidDialogControl.open()
@@ -355,12 +355,14 @@ function LandingScreenLoaded({
             cta="Download on Google Play"
             color="primary"
             onPress={() => {
+              if (!activeStarterPack) return
               const rkey = new AtUri(starterPack.uri).rkey
               if (!rkey) return
 
               const googlePlayUri = createStarterPackGooglePlayUri(
                 creator.handle,
                 rkey,
+                activeStarterPack.starterPackUserID,
               )
               if (!googlePlayUri) return
 

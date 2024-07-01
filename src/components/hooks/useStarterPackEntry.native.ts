@@ -31,28 +31,38 @@ export function useStarterPackEntry() {
 
     ;(async () => {
       let uri: string | null | undefined
+      let starterPackUserID: string | null | undefined
 
       if (isAndroid) {
         const res = await Referrer.getGooglePlayReferrerInfoAsync()
 
         if (res && res.installReferrer) {
-          uri = createStarterPackLinkFromAndroidReferrer(res.installReferrer)
+          const parsed = createStarterPackLinkFromAndroidReferrer(
+            res.installReferrer,
+          )
+          uri = parsed?.uri
+          starterPackUserID = parsed?.starterPackUserID
         }
       } else {
-        const res = await DevicePrefs.getStringValueAsync(
+        const starterPackUri = await DevicePrefs.getStringValueAsync(
           'starterPackUri',
           true,
         )
 
-        if (res) {
-          uri = httpStarterPackUriToAtUri(res)
+        if (starterPackUri) {
+          starterPackUserID = await DevicePrefs.getStringValueAsync(
+            'starterPackUserID',
+            true,
+          )
+          uri = httpStarterPackUriToAtUri(starterPackUri)
           DevicePrefs.setStringValueAsync('starterPackUri', null, true)
         }
       }
 
-      if (uri) {
+      if (uri && starterPackUserID) {
         setActiveStarterPack({
           uri,
+          starterPackUserID: starterPackUserID,
         })
       }
 

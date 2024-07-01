@@ -43,21 +43,14 @@ class ViewController: UIViewController, WKScriptMessageHandler, WKNavigationDele
       return
     }
 
-    switch payload.action {
-    case .present:
+    if payload.action == .present, payload.userID != nil {
       guard let url = self.starterPackUrl else {
         return
       }
 
       self.presentAppStoreOverlay()
       defaults?.setValue(url.absoluteString, forKey: "starterPackUri")
-
-    case .store:
-      guard let keyToStoreAs = payload.keyToStoreAs, let jsonToStore = payload.jsonToStore else {
-        return
-      }
-
-      self.defaults?.setValue(jsonToStore, forKey: keyToStoreAs)
+      defaults?.setValue(payload.userID, forKey: "starterPackUserID")
     }
   }
 
@@ -128,6 +121,5 @@ struct WebViewActionPayload: Decodable {
   }
 
   let action: Action
-  let keyToStoreAs: String?
-  let jsonToStore: String?
+  let userID: String?
 }
