@@ -91,14 +91,20 @@ export function Header({
   return <View style={[a.flex_row, a.align_center, a.gap_sm]}>{children}</View>
 }
 
-export function Link({did, children}: {did: string} & Omit<LinkProps, 'to'>) {
+export function Link({
+  did,
+  children,
+  style,
+  ...rest
+}: {did: string} & Omit<LinkProps, 'to'>) {
   return (
     <InternalLink
       to={{
         screen: 'Profile',
         params: {name: did},
       }}
-      style={[a.flex_col]}>
+      style={[a.flex_col, style]}
+      {...rest}>
       {children}
     </InternalLink>
   )
