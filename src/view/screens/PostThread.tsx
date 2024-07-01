@@ -4,7 +4,7 @@ import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
-import {clamp} from 'lodash'
+import clamp from 'lodash.clamp'
 
 import {isWeb} from '#/platform/detection'
 import {
