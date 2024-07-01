@@ -144,11 +144,13 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
           registrationHandle: state.handle,
         })
       }
-
       dispatch({type: 'prev'})
     } else {
       onPressBack()
     }
+    logEvent('signup:backPressed', {
+      activeStep: state.activeStep,
+    })
   }, [onPressBack, state.activeStep, state.handle])
 
   return (

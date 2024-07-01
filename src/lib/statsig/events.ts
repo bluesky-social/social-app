@@ -32,6 +32,11 @@ export type LogEvents = {
   'signup:nextPressed': {
     activeStep: number
   }
+  'signup:backPressed': {
+    activeStep: number
+  }
+  'signup:captchaSuccess': {}
+  'signup:captchaFailure': {}
   'onboarding:interests:nextPressed': {
     selectedInterests: string[]
     selectedInterestsLength: number
