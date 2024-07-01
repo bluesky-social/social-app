@@ -241,7 +241,7 @@ type ExploreScreenItems =
   | {
       type: 'profile'
       key: string
-      profile: AppBskyActorDefs.ProfileViewBasic
+      profile: AppBskyActorDefs.ProfileView
     }
   | {
       type: 'feed'
@@ -492,7 +492,12 @@ export function Explore() {
         case 'profile': {
           return (
             <View style={[a.border_b, t.atoms.border_contrast_low]}>
-              <ProfileCardWithFollowBtn profile={item.profile} noBg noBorder />
+              <ProfileCardWithFollowBtn
+                profile={item.profile}
+                noBg
+                noBorder
+                showKnownFollowers
+              />
             </View>
           )
         }
