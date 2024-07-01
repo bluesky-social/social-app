@@ -31,6 +31,7 @@ export type LogEvents = {
   'splash:createAccountPressed': {}
   'signup:nextPressed': {
     activeStep: number
+    phoneVerificationRequired?: boolean
   }
   'signup:backPressed': {
     activeStep: number
