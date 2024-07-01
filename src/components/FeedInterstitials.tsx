@@ -11,7 +11,7 @@ import {logEvent} from '#/lib/statsig/statsig'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {useSuggestedFollowsQuery} from '#/state/queries/suggested-follows'
-import {atoms as a, useBreakpoints, useTheme, ViewStyleProp} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, ViewStyleProp, web} from '#/alf'
 import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
 import {ArrowRight_Stroke2_Corner0_Rounded as Arrow} from '#/components/icons/Arrow'
@@ -86,7 +86,7 @@ export function SuggestedFollows() {
   const navigation = useNavigation<NavigationProp>()
   const {gtMobile} = useBreakpoints()
   const isLoading = isSuggestionsLoading || !moderationOpts
-  const maxLength = gtMobile ? 3 : 6
+  const maxLength = gtMobile ? 4 : 6
 
   const profiles: AppBskyActorDefs.ProfileViewBasic[] = []
   if (data) {
@@ -104,7 +104,7 @@ export function SuggestedFollows() {
   }
 
   const content = isLoading ? (
-    Array(3)
+    Array(maxLength)
       .fill(0)
       .map((_, i) => <SuggestedFollowPlaceholder key={i} />)
   ) : error || !profiles.length ? null : (
@@ -115,7 +115,11 @@ export function SuggestedFollows() {
           did={profile.handle}
           onPress={() => {
             logEvent('feed:interstitial:profileCard:press', {})
-          }}>
+          }}
+          style={[
+            a.flex_1,
+            gtMobile && web([a.flex_0, {width: 'calc(50% - 6px)'}]),
+          ]}>
           {({hovered, pressed}) => (
             <CardOuter
               style={[
@@ -135,7 +139,7 @@ export function SuggestedFollows() {
                   <ProfileCard.FollowButton
                     profile={profile}
                     logContext="FeedInterstitial"
-                    shape={gtMobile ? undefined : 'round'}
+                    shape={'round'}
                     color="secondary"
                   />
                 </ProfileCard.Header>
@@ -166,7 +170,9 @@ export function SuggestedFollows() {
 
       {gtMobile ? (
         <View style={[a.flex_1, a.px_lg, a.pt_md, a.pb_xl, a.gap_md]}>
-          {content}
+          <View style={[a.flex_1, a.flex_row, a.flex_wrap, a.gap_md]}>
+            {content}
+          </View>
 
           <View
             style={[
