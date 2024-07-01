@@ -561,7 +561,7 @@ function Footer({
         ) : (
           <View style={{width: 70, height: 35}} />
         )}
-        {state.currentStep === 'Profiles' && items.length < 8 ? (
+        {state.currentStep === 'Profiles' && items.length < 2 ? (
           <>
             <Text
               style={[a.font_bold, textStyles, t.atoms.text_contrast_medium]}>

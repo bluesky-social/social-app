@@ -30,6 +30,7 @@ import {ListEmbed} from './ListEmbed'
 import {MaybeQuoteEmbed} from './QuoteEmbed'
 import hairlineWidth = StyleSheet.hairlineWidth
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
+import {Embed as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -88,6 +89,10 @@ export function PostEmbeds({
     if (AppBskyGraphDefs.isListView(embed.record)) {
       // TODO moderation
       return <ListEmbed item={embed.record} />
+    }
+
+    if (AppBskyGraphDefs.isStarterPackViewBasic(embed.record)) {
+      return <StarterPackCard starterPack={embed.record} />
     }
 
     // quote post
