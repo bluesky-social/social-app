@@ -1,4 +1,4 @@
-import React, {memo, useEffect, useMemo, useState} from 'react'
+import React, {memo, ReactElement, useEffect, useMemo, useState} from 'react'
 import {
   Animated,
   Pressable,
@@ -18,7 +18,7 @@ import {
   ModerationOpts,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
-import {msg, plural, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -168,7 +168,21 @@ let FeedItem = ({
     )
   }
 
-  let action = ''
+  let formattedCount = authors.length > 1 ? formatCount(authors.length - 1) : ''
+
+  let author = (
+    <TextLink
+      key={authors[0].href}
+      style={[pal.text, s.bold]}
+      href={authors[0].href}
+      text={sanitizeDisplayName(
+        authors[0].profile.displayName || authors[0].profile.handle,
+      )}
+      disableMismatchWarning
+    />
+  )
+
+  let action: ReactElement
   let icon = (
     <HeartIconFilled
       size="xl"
@@ -178,28 +192,103 @@ let FeedItem = ({
       ]}
     />
   )
+
   if (item.type === 'post-like') {
-    action = _(msg`liked your post`)
+    action =
+      authors.length > 1 ? (
+        <Trans>
+          {author} and{' '}
+          <Text style={[pal.text, s.bold]}>
+            <Plural
+              value={authors.length - 1}
+              one={`${formattedCount} other`}
+              other={`${formattedCount} others`}
+            />
+          </Text>{' '}
+          liked your post
+        </Trans>
+      ) : (
+        <Trans>{author} liked your post</Trans>
+      )
   } else if (item.type === 'repost') {
-    action = _(msg`reposted your post`)
+    action =
+      authors.length > 1 ? (
+        <Trans>
+          {author} and{' '}
+          <Text style={[pal.text, s.bold]}>
+            <Plural
+              value={authors.length - 1}
+              one={`${formattedCount} other`}
+              other={`${formattedCount} others`}
+            />
+          </Text>{' '}
+          reposted your post
+        </Trans>
+      ) : (
+        <Trans>{author} reposted your post</Trans>
+      )
     icon = <RepostIcon size="xl" style={{color: t.palette.positive_600}} />
   } else if (item.type === 'follow') {
-    action = _(msg`followed you`)
+    action =
+      authors.length > 1 ? (
+        <Trans>
+          {author} and{' '}
+          <Text style={[pal.text, s.bold]}>
+            <Plural
+              value={authors.length - 1}
+              one={`${formattedCount} other`}
+              other={`${formattedCount} others`}
+            />
+          </Text>{' '}
+          followed you
+        </Trans>
+      ) : (
+        <Trans>{author} followed you</Trans>
+      )
     icon = <PersonPlusIcon size="xl" style={{color: t.palette.primary_500}} />
   } else if (item.type === 'feedgen-like') {
-    action = _(msg`liked your custom feed`)
+    action =
+      authors.length > 1 ? (
+        <Trans>
+          {author} and{' '}
+          <Text style={[pal.text, s.bold]}>
+            <Plural
+              value={authors.length - 1}
+              one={`${formattedCount} other`}
+              other={`${formattedCount} others`}
+            />
+          </Text>{' '}
+          liked your custom feed
+        </Trans>
+      ) : (
+        <Trans>{author} liked your custom feed</Trans>
+      )
   } else if (item.type === 'starterpack-joined') {
+    action =
+      authors.length > 1 ? (
+        <Trans>
+          {author} and{' '}
+          <Text style={[pal.text, s.bold]}>
+            <Plural
+              value={authors.length - 1}
+              one={`${formattedCount} other`}
+              other={`${formattedCount} others`}
+            />
+          </Text>{' '}
+          signed up with your starter pack
+        </Trans>
+      ) : (
+        <Trans>{author} signed up with your starter pack</Trans>
+      )
     icon = (
       <View style={{height: 30, width: 30}}>
         <StarterPack width={30} gradient="sky" />
       </View>
     )
-    action = _(msg`signed up with your starter pack`)
   } else {
     return null
   }
 
-  let formattedCount = authors.length > 1 ? formatCount(authors.length - 1) : ''
   return (
     <Link
       testID={`feedItem-by-${item.notification.author.handle}`}
@@ -263,37 +352,15 @@ let FeedItem = ({
             showDmButton={item.type === 'starterpack-joined'}
           />
           <ExpandedAuthorsList visible={isAuthorsExpanded} authors={authors} />
-          <Text style={styles.meta}>
-            <TextLink
-              key={authors[0].href}
-              style={[pal.text, s.bold]}
-              href={authors[0].href}
-              text={sanitizeDisplayName(
-                authors[0].profile.displayName || authors[0].profile.handle,
-              )}
-              disableMismatchWarning
-            />
-            {authors.length > 1 ? (
-              <>
-                <Text style={[pal.text, s.mr5, s.ml5]}>
-                  {' '}
-                  <Trans>and</Trans>{' '}
-                </Text>
-                <Text style={[pal.text, s.bold]}>
-                  {plural(authors.length - 1, {
-                    one: `${formattedCount} other`,
-                    other: `${formattedCount} others`,
-                  })}
-                </Text>
-              </>
-            ) : undefined}
-            <Text style={[pal.text]}> {action}</Text>
+          <Text style={[styles.meta, pal.text]}>
+            {action}
             <TimeElapsed timestamp={item.notification.indexedAt}>
               {({timeElapsed}) => (
                 <Text
                   style={[pal.textLight, styles.pointer]}
                   title={niceDate(item.notification.indexedAt)}>
-                  {' ' + timeElapsed}
+                  {' '}
+                  &middot; {timeElapsed}
                 </Text>
               )}
             </TimeElapsed>
