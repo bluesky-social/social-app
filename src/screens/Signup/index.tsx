@@ -112,6 +112,12 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
       }
     }
 
+    logEvent('signup:nextPressed', {
+      activeStep: state.activeStep,
+      phoneVerificationRequired:
+        state.serviceDescription?.phoneVerificationRequired,
+    })
+
     // phoneVerificationRequired is actually whether a captcha is required
     if (
       state.activeStep === SignupStep.HANDLE &&
@@ -120,11 +126,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
       submit()
       return
     }
-
     dispatch({type: 'next'})
-    logEvent('signup:nextPressed', {
-      activeStep: state.activeStep,
-    })
   }, [
     _,
     state.activeStep,
@@ -144,11 +146,13 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
           registrationHandle: state.handle,
         })
       }
-
       dispatch({type: 'prev'})
     } else {
       onPressBack()
     }
+    logEvent('signup:backPressed', {
+      activeStep: state.activeStep,
+    })
   }, [onPressBack, state.activeStep, state.handle])
 
   return (
