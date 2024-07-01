@@ -177,7 +177,7 @@ let Feed = ({
   const {track} = useAnalytics()
   const {_} = useLingui()
   const queryClient = useQueryClient()
-  const {currentAccount} = useSession()
+  const {currentAccount, hasSession} = useSession()
   const initialNumToRender = useInitialNumToRender()
   const feedFeedback = useFeedFeedbackContext()
   const [isPTRing, setIsPTRing] = React.useState(false)
@@ -327,32 +327,34 @@ let Feed = ({
       })
     }
 
-    const feedType = feedIsFollowing
-      ? 'following'
-      : feedIsDiscover
-      ? 'discover'
-      : undefined
+    if (hasSession) {
+      const feedType = feedIsFollowing
+        ? 'following'
+        : feedIsDiscover
+        ? 'discover'
+        : undefined
 
-    if (feedType) {
-      for (const interstitial of interstials[feedType]) {
-        const feedInterstitialEnabled =
-          interstitial.type === feedInterstitialType &&
-          gate('suggested_feeds_interstitial')
-        const followInterstitialEnabled =
-          interstitial.type === followInterstitialType &&
-          gate('suggested_follows_interstitial')
+      if (feedType) {
+        for (const interstitial of interstials[feedType]) {
+          const feedInterstitialEnabled =
+            interstitial.type === feedInterstitialType &&
+            gate('suggested_feeds_interstitial')
+          const followInterstitialEnabled =
+            interstitial.type === followInterstitialType &&
+            gate('suggested_follows_interstitial')
 
-        if (feedInterstitialEnabled || followInterstitialEnabled) {
-          const variant = 'default' // replace with experiment variant
-          const int = {
-            ...interstitial,
-            params: {variant},
-            // overwrite key with unique value
-            key: [interstitial.type, variant].join(':'),
-          }
+          if (feedInterstitialEnabled || followInterstitialEnabled) {
+            const variant = 'default' // replace with experiment variant
+            const int = {
+              ...interstitial,
+              params: {variant},
+              // overwrite key with unique value
+              key: [interstitial.type, variant].join(':'),
+            }
 
-          if (arr.length > interstitial.slot) {
-            arr.splice(interstitial.slot, 0, int)
+            if (arr.length > interstitial.slot) {
+              arr.splice(interstitial.slot, 0, int)
+            }
           }
         }
       }
@@ -368,6 +370,7 @@ let Feed = ({
     feedIsDiscover,
     feedIsFollowing,
     gate,
+    hasSession,
   ])
 
   // events
