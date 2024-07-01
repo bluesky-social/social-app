@@ -7,6 +7,7 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {NavigationProp} from '#/lib/routes/types'
+import {logEvent} from '#/lib/statsig/statsig'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {useSuggestedFollowsQuery} from '#/state/queries/suggested-follows'
@@ -109,7 +110,12 @@ export function SuggestedFollows() {
   ) : error || !profiles.length ? null : (
     <>
       {profiles.slice(0, maxLength).map(profile => (
-        <ProfileCard.Link key={profile.did} did={profile.handle}>
+        <ProfileCard.Link
+          key={profile.did}
+          did={profile.handle}
+          onPress={() => {
+            logEvent('feed:interstitial:profileCard:press', {})
+          }}>
           {({hovered, pressed}) => (
             <CardOuter
               style={[
@@ -236,7 +242,12 @@ export function SuggestedFeeds() {
   ) : error || !feeds ? null : (
     <>
       {feeds.slice(0, numFeedsToDisplay).map(feed => (
-        <FeedCard.Link key={feed.uri} view={feed}>
+        <FeedCard.Link
+          key={feed.uri}
+          view={feed}
+          onPress={() => {
+            logEvent('feed:interstitial:feedCard:press', {})
+          }}>
           {({hovered, pressed}) => (
             <CardOuter
               style={[

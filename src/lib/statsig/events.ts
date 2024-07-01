@@ -197,6 +197,9 @@ export type LogEvents = {
     starterPack: string
   }
 
+  'feed:interstitial:profileCard:press': {}
+  'feed:interstitial:feedCard:press': {}
+
   'test:all:always': {}
   'test:all:sometimes': {}
   'test:all:boosted_by_gate1': {reason: 'base' | 'gate1'}
