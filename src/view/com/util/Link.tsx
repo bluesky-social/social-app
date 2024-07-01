@@ -388,7 +388,7 @@ function onPressInner(
   }
 
   if (shouldHandle) {
-    href = convertBskyAppUrlIfNeeded(href)
+    href = convertBskyAppUrlIfNeeded(href, true)
     if (
       newTab ||
       href.startsWith('http') ||
