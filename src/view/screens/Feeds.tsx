@@ -642,6 +642,7 @@ function SavedFeed({
   const t = useTheme()
 
   const commonStyle = [
+    a.w_full,
     a.flex_1,
     a.px_lg,
     a.py_md,
