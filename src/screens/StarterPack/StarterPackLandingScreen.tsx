@@ -31,6 +31,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import * as FeedCard from '#/components/FeedCard'
+import {ChevronLeft_Stroke2_Corner0_Rounded} from '#/components/icons/Chevron'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Default as ProfileCard} from '#/components/ProfileCard'
@@ -58,7 +59,11 @@ export function LandingScreen({
   const moderationOpts = useModerationOpts()
   const activeStarterPack = useActiveStarterPack()
 
-  const {data: starterPack, isError: isErrorStarterPack} = useStarterPackQuery({
+  const {
+    data: starterPack,
+    isError: isErrorStarterPack,
+    isFetching,
+  } = useStarterPackQuery({
     uri: activeStarterPack?.uri,
   })
 
@@ -74,7 +79,7 @@ export function LandingScreen({
     }
   }, [isErrorStarterPack, setScreenState, isValid, starterPack])
 
-  if (!starterPack || !isValid || !moderationOpts) {
+  if (isFetching || !starterPack || !isValid || !moderationOpts) {
     return <ListMaybePlaceholder isLoading={true} />
   }
 
@@ -112,9 +117,6 @@ function LandingScreenLoaded({
   const listItemsCount = starterPack.list?.listItemCount ?? 0
 
   const onContinue = () => {
-    setActiveStarterPack({
-      uri: starterPack.uri,
-    })
     setScreenState(LoggedOutScreenState.S_CreateAccount)
   }
 
@@ -166,6 +168,31 @@ function LandingScreenLoaded({
               paddingTop: 100,
             },
           ]}>
+          <Pressable
+            style={[
+              a.absolute,
+              a.rounded_full,
+              a.align_center,
+              a.justify_center,
+              {
+                top: 10,
+                left: 10,
+                height: 35,
+                width: 35,
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              },
+            ]}
+            onPress={() => {
+              setActiveStarterPack(undefined)
+            }}
+            accessibilityLabel={_(msg`Back`)}
+            accessibilityHint={_(msg`Go back to previous screen`)}>
+            <ChevronLeft_Stroke2_Corner0_Rounded
+              width={20}
+              height={20}
+              fill="white"
+            />
+          </Pressable>
           <View style={[a.flex_row, a.gap_md, a.pb_sm]}>
             <Logo width={76} fill="white" />
           </View>
@@ -289,7 +316,7 @@ function LandingScreenLoaded({
                         t.atoms.border_contrast_low,
                       ]}
                       key={feed.uri}>
-                      <FeedCard.Default type="feed" view={feed} />
+                      <FeedCard.Default view={feed} />
                     </View>
                   ))}
                 </View>
