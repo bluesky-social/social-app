@@ -5981,7 +5981,7 @@ msgstr "重试"
 
 #: src/screens/Onboarding/state.ts:99
 msgid "TV"
-msgstr "电视"
+msgstr "电视节目"
 
 #: src/view/screens/Settings/index.tsx:745
 msgid "Two-factor authentication"
