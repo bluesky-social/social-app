@@ -157,7 +157,7 @@ msgstr "「{profileName}」在 {0} 前加入了 Bluesky"
 
 #: src/components/NewskieDialog.tsx:111
 msgid "{profileName} joined Bluesky using a starter pack {0} ago"
-msgstr "「{profileName}」在{0}前用入門包加入了 Bluesky"
+msgstr "「{profileName}」在 {0} 前使用入門包加入了 Bluesky"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:67
 msgid "{value, plural, =0 {Show all replies} one {Show replies with at least # like} other {Show replies with at least # likes}}"
