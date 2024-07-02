@@ -32,19 +32,23 @@ class ExpoBlueskyReferrerModule : Module() {
       // Some apps explicitly set a referrer, like Chrome. In these cases, we prefer this since
       // it's the actual website that the user came from rather than the app.
       if (intentReferrer is Uri) {
-        return@AsyncFunction mapOf(
+        val res = mapOf(
           "referrer" to intentReferrer.toString(),
           "hostname" to intentReferrer.host,
         )
+        intent = null
+        return@AsyncFunction res
       }
 
       // In all other cases, we'll just record the app that sent the intent.
       if (activityReferrer != null) {
         // referrer could become null here. `.toString()` though can be called on null
-        return@AsyncFunction mapOf(
+        val res = mapOf(
           "referrer" to activityReferrer.toString(),
           "hostname" to (activityReferrer?.host ?: ""),
         )
+        activityReferrer = null
+        return@AsyncFunction res
       }
 
       return@AsyncFunction null

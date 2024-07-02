@@ -1,14 +1,37 @@
-import {requireNativeModule} from 'expo'
-
+import {SharedPrefs} from '../../index'
 import {NotImplementedError} from '../NotImplemented'
 import {GooglePlayReferrerInfo, ReferrerInfo} from './types'
-
-export const NativeModule = requireNativeModule('ExpoBlueskyReferrer')
 
 export function getGooglePlayReferrerInfoAsync(): Promise<GooglePlayReferrerInfo> {
   throw new NotImplementedError()
 }
 
 export function getReferrerInfoAsync(): Promise<ReferrerInfo | null> {
-  return NativeModule.getReferrerInfoAsync()
+  const referrer = SharedPrefs.getString('referrer')
+  if (referrer) {
+    SharedPrefs.removeValue('referrer')
+    try {
+      const url = new URL(referrer)
+      return {
+        referrer,
+        hostname: url.hostname,
+      }
+    } catch (e) {
+      return {
+        referrer,
+        hostname: undefined,
+      }
+    }
+  }
+
+  const referrerApp = SharedPrefs.getString('referrerApp')
+  if (referrerApp) {
+    SharedPrefs.removeValue('referrerApp')
+    return {
+      referrer: referrerApp,
+      hostname: referrerApp,
+    }
+  }
+
+  return null
 }
