@@ -1,7 +1,9 @@
 import React from 'react'
 import {View} from 'react-native'
+import {useNavigation} from '@react-navigation/native'
 
 import {useDialogStateControlContext} from '#/state/dialogs'
+import {NavigationProp} from 'lib/routes/types'
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -18,6 +20,7 @@ export function Dialogs() {
   const [shouldRenderUnmountTest, setShouldRenderUnmountTest] =
     React.useState(false)
   const unmountTestInterval = React.useRef<number>()
+  const navigation = useNavigation<NavigationProp>()
 
   const onUnmountTestStartPressWithClose = () => {
     setShouldRenderUnmountTest(true)
@@ -132,6 +135,16 @@ export function Dialogs() {
         onPress={onUnmountTestEndPress}
         label="two">
         <ButtonText>End Unmount Test</ButtonText>
+      </Button>
+
+      <Button
+        variant="solid"
+        color="primary"
+        size="small"
+        onPress={() => navigation.navigate('SharedPreferencesTester')}
+        label="two"
+        testID="sharedPrefsTestOpenBtn">
+        <ButtonText>Open Shared Prefs Tester</ButtonText>
       </Button>
 
       <Prompt.Outer control={prompt}>

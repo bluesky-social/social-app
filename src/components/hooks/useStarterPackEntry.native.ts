@@ -7,7 +7,7 @@ import {
 import {isAndroid} from 'platform/detection'
 import {useHasCheckedForStarterPack} from 'state/preferences/used-starter-packs'
 import {useSetActiveStarterPack} from 'state/shell/starter-pack'
-import {DevicePrefs, Referrer} from '../../../modules/expo-bluesky-swiss-army'
+import {Referrer, SharedPrefs} from '../../../modules/expo-bluesky-swiss-army'
 
 export function useStarterPackEntry() {
   const [ready, setReady] = React.useState(false)
@@ -39,14 +39,10 @@ export function useStarterPackEntry() {
           uri = createStarterPackLinkFromAndroidReferrer(res.installReferrer)
         }
       } else {
-        const res = await DevicePrefs.getStringValueAsync(
-          'starterPackUri',
-          true,
-        )
-
-        if (res) {
-          uri = httpStarterPackUriToAtUri(res)
-          DevicePrefs.setStringValueAsync('starterPackUri', null, true)
+        const starterPackUri = SharedPrefs.getString('starterPackUri')
+        if (starterPackUri) {
+          uri = httpStarterPackUriToAtUri(starterPackUri)
+          SharedPrefs.setValue('starterPackUri', null)
         }
       }
 
