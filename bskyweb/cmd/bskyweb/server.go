@@ -109,11 +109,11 @@ func serve(cctx *cli.Context) error {
 
 	// SECURITY: Do not modify without due consideration.
 	e.Use(middleware.SecureWithConfig(middleware.SecureConfig{
-		ContentTypeNosniff: "nosniff",
-		XFrameOptions:      "SAMEORIGIN",
-		HSTSMaxAge:         31536000, // 365 days
+		ContentTypeNosniff:    "nosniff",
+		XFrameOptions:         "SAMEORIGIN",
+		ContentSecurityPolicy: "frame-ancestors 'self' http://localhost:19006 https://*.bsky.dev",
+		HSTSMaxAge:            31536000, // 365 days
 		// TODO:
-		// ContentSecurityPolicy
 		// XSSProtection
 	}))
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
