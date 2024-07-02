@@ -6,10 +6,6 @@ import {useLingui} from '@lingui/react'
 
 import {useSession} from '#/state/session'
 import {useSetDrawerOpen} from '#/state/shell/drawer-open'
-import {
-  ProgressGuideAction,
-  useProgressGuideControls,
-} from '#/state/shell/progress-guide'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {HITSLOP_10} from 'lib/constants'
 import {useMinimalShellHeaderTransform} from 'lib/hooks/useMinimalShellTransform'
@@ -38,18 +34,10 @@ export function HomeHeaderLayoutMobile({
   const {headerHeight} = useShellLayout()
   const headerMinimalShellTransform = useMinimalShellHeaderTransform()
   const {hasSession} = useSession()
-  const {captureAction} = useProgressGuideControls()
 
   const onPressAvi = React.useCallback(() => {
     setDrawerOpen(true)
   }, [setDrawerOpen])
-
-  React.useEffect(() => {
-    const i = setInterval(() => captureAction(ProgressGuideAction.Like), 1000)
-    return () => {
-      clearInterval(i)
-    }
-  }, [captureAction])
 
   return (
     <Animated.View
