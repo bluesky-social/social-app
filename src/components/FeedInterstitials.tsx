@@ -172,7 +172,7 @@ export function SuggestedFollows() {
             a.font_bold,
             t.atoms.text_contrast_medium,
           ]}>
-          Suggested for you
+          <Trans>Suggested for you</Trans>
         </Text>
         <Person fill={t.atoms.text_contrast_low.color} />
       </View>
@@ -300,7 +300,7 @@ export function SuggestedFeeds() {
             a.font_bold,
             t.atoms.text_contrast_medium,
           ]}>
-          Some other feeds you might like
+          <Trans>Some other feeds you might like</Trans>
         </Text>
         <Hashtag fill={t.atoms.text_contrast_low.color} />
       </View>
