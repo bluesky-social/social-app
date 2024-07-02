@@ -11,6 +11,7 @@ export interface BackNextButtonsProps {
   hideNext?: boolean
   showRetry?: boolean
   isLoading: boolean
+  isNextDisabled?: boolean
   onBackPress: () => void
   onNextPress?: () => void
   onRetryPress?: () => void
@@ -20,6 +21,7 @@ export function BackNextButtons({
   hideNext,
   showRetry,
   isLoading,
+  isNextDisabled,
   onBackPress,
   onNextPress,
   onRetryPress,
@@ -58,7 +60,7 @@ export function BackNextButtons({
             variant="solid"
             color="primary"
             size="medium"
-            disabled={isLoading}
+            disabled={isLoading || isNextDisabled}
             onPress={onNextPress}>
             <ButtonText>
               <Trans>Next</Trans>

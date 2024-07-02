@@ -117,61 +117,66 @@ export function StepHandle() {
             />
           </TextField.Root>
         </View>
-        <Text style={[a.text_md]}>
-          <Trans>Your full handle will be</Trans>{' '}
-          <Text style={[a.text_md, a.font_bold]}>
-            @{createFullHandle(draftValue, state.userDomain)}
+        {draftValue !== '' && (
+          <Text style={[a.text_md]}>
+            <Trans>Your full handle will be</Trans>{' '}
+            <Text style={[a.text_md, a.font_bold]}>
+              @{createFullHandle(draftValue, state.userDomain)}
+            </Text>
           </Text>
-        </Text>
+        )}
 
-        <View
-          style={[
-            a.w_full,
-            a.rounded_sm,
-            a.border,
-            a.p_md,
-            a.gap_sm,
-            t.atoms.border_contrast_low,
-          ]}>
-          {state.error ? (
-            <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
-              <IsValidIcon valid={false} />
-              <Text style={[a.text_md, a.flex_1]}>{state.error}</Text>
-            </View>
-          ) : undefined}
-          {validCheck.hyphenStartOrEnd ? (
-            <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
-              <IsValidIcon valid={validCheck.handleChars} />
-              <Text style={[a.text_md, a.flex_1]}>
-                <Trans>Only contains letters, numbers, and hyphens</Trans>
-              </Text>
-            </View>
-          ) : (
-            <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
-              <IsValidIcon valid={validCheck.hyphenStartOrEnd} />
-              <Text style={[a.text_md, a.flex_1]}>
-                <Trans>Doesn't begin or end with a hyphen</Trans>
-              </Text>
-            </View>
-          )}
-          <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
-            <IsValidIcon
-              valid={validCheck.frontLength && validCheck.totalLength}
-            />
-            {!validCheck.totalLength ? (
-              <Text style={[a.text_md, a.flex_1]}>
-                <Trans>No longer than 253 characters</Trans>
-              </Text>
+        {draftValue !== '' && (
+          <View
+            style={[
+              a.w_full,
+              a.rounded_sm,
+              a.border,
+              a.p_md,
+              a.gap_sm,
+              t.atoms.border_contrast_low,
+            ]}>
+            {state.error ? (
+              <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
+                <IsValidIcon valid={false} />
+                <Text style={[a.text_md, a.flex_1]}>{state.error}</Text>
+              </View>
+            ) : undefined}
+            {validCheck.hyphenStartOrEnd ? (
+              <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
+                <IsValidIcon valid={validCheck.handleChars} />
+                <Text style={[a.text_md, a.flex_1]}>
+                  <Trans>Only contains letters, numbers, and hyphens</Trans>
+                </Text>
+              </View>
             ) : (
-              <Text style={[a.text_md, a.flex_1]}>
-                <Trans>At least 3 characters</Trans>
-              </Text>
+              <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
+                <IsValidIcon valid={validCheck.hyphenStartOrEnd} />
+                <Text style={[a.text_md, a.flex_1]}>
+                  <Trans>Doesn't begin or end with a hyphen</Trans>
+                </Text>
+              </View>
             )}
+            <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
+              <IsValidIcon
+                valid={validCheck.frontLength && validCheck.totalLength}
+              />
+              {!validCheck.totalLength ? (
+                <Text style={[a.text_md, a.flex_1]}>
+                  <Trans>No longer than 253 characters</Trans>
+                </Text>
+              ) : (
+                <Text style={[a.text_md, a.flex_1]}>
+                  <Trans>At least 3 characters</Trans>
+                </Text>
+              )}
+            </View>
           </View>
-        </View>
+        )}
       </View>
       <BackNextButtons
         isLoading={state.isLoading}
+        isNextDisabled={!validCheck.overall}
         onBackPress={onBackPress}
         onNextPress={onNextPress}
       />
