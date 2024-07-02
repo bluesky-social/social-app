@@ -6,6 +6,7 @@ import {nanoid} from 'nanoid/non-secure'
 
 import {createFullHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
+import {logEvent} from 'lib/statsig/statsig'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {useSignupContext, useSubmitSignup} from '#/screens/Signup/state'
 import {CaptchaWebView} from '#/screens/Signup/StepCaptcha/CaptchaWebView'
@@ -40,6 +41,7 @@ export function StepCaptcha() {
   const onSuccess = React.useCallback(
     (code: string) => {
       setCompleted(true)
+      logEvent('signup:captchaSuccess', {})
       submit(code)
     },
     [submit],
@@ -51,6 +53,7 @@ export function StepCaptcha() {
         type: 'setError',
         value: _(msg`Error receiving captcha response.`),
       })
+      logEvent('signup:captchaFailure', {})
       logger.error('Signup Flow Error', {
         registrationHandle: state.handle,
         error,

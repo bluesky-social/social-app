@@ -12,6 +12,12 @@ export function useFeedTuners(feedDesc: FeedDescriptor) {
   const {currentAccount} = useSession()
 
   return useMemo(() => {
+    if (feedDesc.startsWith('author')) {
+      if (feedDesc.endsWith('|posts_with_replies')) {
+        // TODO: Do this on the server instead.
+        return [FeedTuner.removeReposts]
+      }
+    }
     if (feedDesc.startsWith('feedgen')) {
       return [
         FeedTuner.dedupReposts,

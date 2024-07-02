@@ -34,10 +34,12 @@ export function StepInfo({
   onPressBack,
   isServerError,
   refetchServer,
+  isLoadingStarterPack,
 }: {
   onPressBack: () => void
   isServerError: boolean
   refetchServer: () => void
+  isLoadingStarterPack: boolean
 }) {
   const {_} = useLingui()
   const {state, dispatch} = useSignupContext()
@@ -110,7 +112,7 @@ export function StepInfo({
             }
           />
         </View>
-        {state.isLoading ? (
+        {state.isLoading || isLoadingStarterPack ? (
           <View style={[a.align_center]}>
             <Loader size="xl" />
           </View>

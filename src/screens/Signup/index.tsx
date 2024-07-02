@@ -1,10 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import Animated, {
-  FadeIn,
-  FadeOut,
-  LayoutAnimationConfig,
-} from 'react-native-reanimated'
+import Animated, {FadeIn, LayoutAnimationConfig} from 'react-native-reanimated'
 import {AppBskyGraphStarterpack} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -39,9 +35,17 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
   const {gtMobile} = useBreakpoints()
 
   const activeStarterPack = useActiveStarterPack()
-  const {data: starterPack} = useStarterPackQuery({
+  const {
+    data: starterPack,
+    isFetching: isFetchingStarterPack,
+    isError: isErrorStarterPack,
+  } = useStarterPackQuery({
     uri: activeStarterPack?.uri,
   })
+
+  const [isFetchedAtMount] = React.useState(starterPack != null)
+  const showStarterPackCard =
+    activeStarterPack?.uri && !isFetchingStarterPack && starterPack
 
   const {
     data: serviceInfo,
@@ -85,10 +89,9 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
         description={_(msg`We're so excited to have you join us!`)}
         scrollable>
         <View testID="createAccount" style={a.flex_1}>
-          {state.activeStep === SignupStep.INFO &&
-          starterPack &&
+          {showStarterPackCard &&
           AppBskyGraphStarterpack.isRecord(starterPack.record) ? (
-            <Animated.View entering={FadeIn} exiting={FadeOut}>
+            <Animated.View entering={!isFetchedAtMount ? FadeIn : undefined}>
               <LinearGradientBackground
                 style={[a.mx_lg, a.p_lg, a.gap_sm, a.rounded_sm]}>
                 <Text style={[a.font_bold, a.text_xl, {color: 'white'}]}>
@@ -142,6 +145,9 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
               {state.activeStep === SignupStep.INFO ? (
                 <StepInfo
                   onPressBack={onPressBack}
+                  isLoadingStarterPack={
+                    isFetchingStarterPack && !isErrorStarterPack
+                  }
                   isServerError={isError}
                   refetchServer={refetch}
                 />

@@ -72,16 +72,17 @@ export function StepHandle() {
       dispatch({type: 'setIsLoading', value: false})
     }
 
+    logEvent('signup:nextPressed', {
+      activeStep: state.activeStep,
+      phoneVerificationRequired:
+        state.serviceDescription?.phoneVerificationRequired,
+    })
     // phoneVerificationRequired is actually whether a captcha is required
     if (!state.serviceDescription?.phoneVerificationRequired) {
       submit()
       return
     }
-
     dispatch({type: 'next'})
-    logEvent('signup:nextPressed', {
-      activeStep: state.activeStep,
-    })
   }, [
     _,
     dispatch,
@@ -100,7 +101,10 @@ export function StepHandle() {
       value: handle,
     })
     dispatch({type: 'prev'})
-  }, [dispatch])
+    logEvent('signup:backPressed', {
+      activeStep: state.activeStep,
+    })
+  }, [dispatch, state.activeStep])
 
   return (
     <ScreenTransition>
