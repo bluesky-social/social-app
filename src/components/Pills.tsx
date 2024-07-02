@@ -126,6 +126,7 @@ export function Label({
                 a.font_semibold,
                 a.leading_tight,
                 t.atoms.text_contrast_medium,
+                {paddingRight: 3},
               ]}>
               {desc.name}
             </Text>
