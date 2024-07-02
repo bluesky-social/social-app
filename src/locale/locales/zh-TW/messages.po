@@ -725,7 +725,7 @@ msgstr "Bluesky 是一個開放的網路，您可以自行挑選託管服務供�
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:282
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
-msgstr "Bluesky 將從您的個人社群網路中選擇一組推薦帳號。"
+msgstr "Bluesky 將從您的個人社群網路中選擇一組推薦的帳號。"
 
 #: src/screens/Moderation/index.tsx:557
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
