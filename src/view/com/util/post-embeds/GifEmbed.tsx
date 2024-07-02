@@ -124,15 +124,12 @@ export function GifEmbed({
   )
 
   return (
-    <View
-      style={[a.rounded_sm, a.overflow_hidden, a.mt_sm, {maxWidth: '100%'}]}>
+    <View style={[a.rounded_sm, a.overflow_hidden, a.mt_sm, {width: '100%'}]}>
       <View
         style={[
           a.rounded_sm,
           a.overflow_hidden,
-          {
-            aspectRatio: params.dimensions!.width / params.dimensions!.height,
-          },
+          {aspectRatio: params.dimensions!.width / params.dimensions!.height},
         ]}>
         <PlaybackControls
           onPress={onPress}
