@@ -37,11 +37,6 @@ public class ExpoBackgroundNotificationHandlerModule: Module {
       }
     }
 
-    AsyncFunction("getPrefsAsync") {
-      let keys = Array(DEFAULTS.keys)
-      return SharedPrefs.shared.getValues(keys)
-    }
-
     AsyncFunction("resetGenericCountAsync") {
       SharedPrefs.shared.setValue(BadgeType.generic.toKeyName(), 0)
     }

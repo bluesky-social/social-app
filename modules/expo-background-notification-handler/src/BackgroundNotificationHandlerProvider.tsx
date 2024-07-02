@@ -46,7 +46,7 @@ export function BackgroundNotificationPreferencesProvider({
         k: Key,
         v: BackgroundNotificationHandlerPreferences[Key],
       ) => {
-        SharedPrefs.setValueAsync(k, v)
+        SharedPrefs.setValue(k, v)
         setPreferences(prev => ({
           ...prev,
           [k]: v,
