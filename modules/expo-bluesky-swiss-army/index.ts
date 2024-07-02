@@ -1,4 +1,4 @@
-import * as DevicePrefs from './src/DevicePrefs'
 import * as Referrer from './src/Referrer'
+import * as SharedPrefs from './src/SharedPrefs'
 
-export {DevicePrefs, Referrer}
+export {Referrer, SharedPrefs}
