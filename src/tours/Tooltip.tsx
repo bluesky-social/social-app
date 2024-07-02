@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {FocusScope} from '@tamagui/focus-scope'
 import {IStep, Labels} from 'rn-tourguide'
 
 import {isWeb} from '#/platform/detection'
@@ -43,26 +44,9 @@ export function TooltipComponent({
   const {screenReaderEnabled} = useA11y()
 
   React.useEffect(() => {
-    if (!isWeb) {
-      return
-    }
-
-    // prevent scrolling
+    if (!isWeb) return
     document.body.style.overflow = 'hidden'
-
-    // focus the button
-    btnRef.current?.focus()
-
-    // don't let the user tab away focus
-    function handler(e: KeyboardEvent) {
-      if (e.key === 'Tab') {
-        e.preventDefault()
-        e.stopPropagation()
-      }
-    }
-    document.addEventListener('keydown', handler)
     return () => {
-      document.removeEventListener('keydown', handler)
       document.body.style.overflow = ''
     }
   }, [])
@@ -86,99 +70,106 @@ export function TooltipComponent({
   }
 
   return (
-    <View
-      role="alert"
-      aria-role="alert"
-      aria-label={_(msg`A help tooltip`)}
-      accessibilityLiveRegion="polite"
-      // iOS
-      accessibilityViewIsModal
-      // Android
-      importantForAccessibility="yes"
-      // @ts-ignore web only
-      onClick={stopPropagation}
-      onStartShouldSetResponder={_ => true}
-      onTouchEnd={stopPropagation}
-      style={[
-        t.atoms.bg,
-        a.px_lg,
-        a.py_lg,
-        a.flex_col,
-        a.gap_md,
-        a.rounded_sm,
-        a.shadow_md,
-        {maxWidth: 300},
-      ]}>
-      {screenReaderEnabled && (
-        <Pressable
-          style={[a.absolute, a.inset_0, a.z_10, {height: 10, bottom: 'auto'}]}
-          accessibilityLabel={_(
-            msg`Start of onboarding tour window. Do not move backward. Instead, go forward for more options, or press to skip.`,
-          )}
-          accessibilityHint={undefined}
-          onPress={handleStop}
-        />
-      )}
-
-      <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-        <Logo width={16} style={{position: 'relative', top: 0}} />
-        <Text
-          accessible={false}
-          style={[a.text_sm, a.font_semibold, t.atoms.text_contrast_medium]}>
-          <Trans>Quick tip</Trans>
-        </Text>
-      </View>
-      <RNText
-        ref={textRef}
-        testID="stepDescription"
-        accessibilityLabel={_(
-          msg`Onboarding tour step ${currentStep.name}: ${currentStep.text}`,
-        )}
-        accessibilityHint={undefined}
+    <FocusScope loop enabled trapped>
+      <View
+        role="alert"
+        aria-role="alert"
+        aria-label={_(msg`A help tooltip`)}
+        accessibilityLiveRegion="polite"
+        // iOS
+        accessibilityViewIsModal
+        // Android
+        importantForAccessibility="yes"
+        // @ts-ignore web only
+        onClick={stopPropagation}
+        onStartShouldSetResponder={_ => true}
+        onTouchEnd={stopPropagation}
         style={[
-          a.text_md,
-          t.atoms.text,
-          a.pb_sm,
-          {
-            lineHeight: leading(a.text_md, a.leading_snug),
-          },
+          t.atoms.bg,
+          a.px_lg,
+          a.py_lg,
+          a.flex_col,
+          a.gap_md,
+          a.rounded_sm,
+          a.shadow_md,
+          {maxWidth: 300},
         ]}>
-        {currentStep.text}
-      </RNText>
-      {!isLastStep ? (
-        <Button
-          ref={btnRef}
-          variant="gradient"
-          color="gradient_sky"
-          size="medium"
-          onPress={innerHandleNext}
-          label={labels?.next || _(msg`Go to the next step of the tour`)}>
-          <ButtonText>{labels?.next || _(msg`Next`)}</ButtonText>
-        </Button>
-      ) : (
-        <Button
-          variant="gradient"
-          color="gradient_sky"
-          size="medium"
-          onPress={handleStop}
-          label={
-            labels?.finish ||
-            _(msg`Finish tour and begin using the application`)
-          }>
-          <ButtonText>{labels?.finish || _(msg`Let's go!`)}</ButtonText>
-        </Button>
-      )}
+        {screenReaderEnabled && (
+          <Pressable
+            style={[
+              a.absolute,
+              a.inset_0,
+              a.z_10,
+              {height: 10, bottom: 'auto'},
+            ]}
+            accessibilityLabel={_(
+              msg`Start of onboarding tour window. Do not move backward. Instead, go forward for more options, or press to skip.`,
+            )}
+            accessibilityHint={undefined}
+            onPress={handleStop}
+          />
+        )}
 
-      {screenReaderEnabled && (
-        <Pressable
-          style={[a.absolute, a.inset_0, a.z_10, {height: 10, top: 'auto'}]}
+        <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+          <Logo width={16} style={{position: 'relative', top: 0}} />
+          <Text
+            accessible={false}
+            style={[a.text_sm, a.font_semibold, t.atoms.text_contrast_medium]}>
+            <Trans>Quick tip</Trans>
+          </Text>
+        </View>
+        <RNText
+          ref={textRef}
+          testID="stepDescription"
           accessibilityLabel={_(
-            msg`End of onboarding tour window. Do not move forward. Instead, go backward for more options, or press to skip.`,
+            msg`Onboarding tour step ${currentStep.name}: ${currentStep.text}`,
           )}
           accessibilityHint={undefined}
-          onPress={handleStop}
-        />
-      )}
-    </View>
+          style={[
+            a.text_md,
+            t.atoms.text,
+            a.pb_sm,
+            {
+              lineHeight: leading(a.text_md, a.leading_snug),
+            },
+          ]}>
+          {currentStep.text}
+        </RNText>
+        {!isLastStep ? (
+          <Button
+            ref={btnRef}
+            variant="gradient"
+            color="gradient_sky"
+            size="medium"
+            onPress={innerHandleNext}
+            label={labels?.next || _(msg`Go to the next step of the tour`)}>
+            <ButtonText>{labels?.next || _(msg`Next`)}</ButtonText>
+          </Button>
+        ) : (
+          <Button
+            variant="gradient"
+            color="gradient_sky"
+            size="medium"
+            onPress={handleStop}
+            label={
+              labels?.finish ||
+              _(msg`Finish tour and begin using the application`)
+            }>
+            <ButtonText>{labels?.finish || _(msg`Let's go!`)}</ButtonText>
+          </Button>
+        )}
+
+        {screenReaderEnabled && (
+          <Pressable
+            style={[a.absolute, a.inset_0, a.z_10, {height: 10, top: 'auto'}]}
+            accessibilityLabel={_(
+              msg`End of onboarding tour window. Do not move forward. Instead, go backward for more options, or press to skip.`,
+            )}
+            accessibilityHint={undefined}
+            onPress={handleStop}
+          />
+        )}
+      </View>
+    </FocusScope>
   )
 }
