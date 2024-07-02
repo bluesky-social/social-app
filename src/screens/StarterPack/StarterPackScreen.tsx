@@ -23,6 +23,10 @@ import {
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useDeleteStarterPackMutation} from '#/state/queries/starter-packs'
+import {
+  ProgressGuideAction,
+  useProgressGuideControls,
+} from '#/state/shell/progress-guide'
 import {batchedUpdates} from 'lib/batchedUpdates'
 import {HITSLOP_20} from 'lib/constants'
 import {isBlockedOrBlocking, isMuted} from 'lib/moderation/blocked-and-muted'
@@ -305,6 +309,7 @@ function Header({
   const queryClient = useQueryClient()
   const setActiveStarterPack = useSetActiveStarterPack()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
+  const {captureAction} = useProgressGuideControls()
 
   const [isProcessing, setIsProcessing] = React.useState(false)
 
@@ -369,6 +374,7 @@ function Header({
         starterPack: starterPack.uri,
         count: dids.length,
       })
+      captureAction(ProgressGuideAction.Follow, dids.length)
       Toast.show(_(msg`All accounts have been followed!`))
     } catch (e) {
       Toast.show(_(msg`An error occurred while trying to follow all`))

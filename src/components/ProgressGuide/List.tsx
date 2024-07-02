@@ -4,7 +4,6 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {
-  ProgressGuideAction,
   ProgressGuideName,
   useProgressGuide,
   useProgressGuideControls,
@@ -19,12 +18,7 @@ export function ProgressGuideList({style}: {style: StyleProp<ViewStyle>}) {
   const t = useTheme()
   const {_} = useLingui()
   const guide = useProgressGuide(ProgressGuideName.Like10AndFollow7)
-  const {captureAction, endProgressGuide} = useProgressGuideControls()
-
-  React.useEffect(() => {
-    const i = setInterval(() => captureAction(ProgressGuideAction.Like), 2e3)
-    return () => clearInterval(i)
-  }, [captureAction])
+  const {endProgressGuide} = useProgressGuideControls()
 
   if (guide?.guide === ProgressGuideName.Like10AndFollow7) {
     return (

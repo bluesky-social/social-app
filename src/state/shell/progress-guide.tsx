@@ -34,11 +34,11 @@ const ProgressGuideContext = React.createContext<ProgressGuide>(undefined)
 const ProgressGuideControlContext = React.createContext<{
   startProgressGuide(guide: ProgressGuideName): void
   endProgressGuide(): void
-  captureAction(action: ProgressGuideAction): void
+  captureAction(action: ProgressGuideAction, count?: number): void
 }>({
   startProgressGuide: (_guide: ProgressGuideName) => {},
   endProgressGuide: () => {},
-  captureAction: (_action: ProgressGuideAction) => {},
+  captureAction: (_action: ProgressGuideAction, _count = 1) => {},
 })
 
 export function useProgressGuide(guide: ProgressGuideName) {
@@ -85,7 +85,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         setActiveProgressGuide(undefined)
       },
 
-      captureAction(action: ProgressGuideAction) {
+      captureAction(action: ProgressGuideAction, count = 1) {
         let guide = activeProgressGuide
         if (guide?.isComplete) {
           return
@@ -94,7 +94,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           if (action === ProgressGuideAction.Like) {
             guide = {
               ...guide,
-              numLikes: (guide.numLikes || 0) + 1,
+              numLikes: (guide.numLikes || 0) + count,
             }
             if (guide.numLikes === 1) {
               firstLikeToastRef.current?.open()
@@ -109,7 +109,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           if (action === ProgressGuideAction.Follow) {
             guide = {
               ...guide,
-              numFollows: (guide.numFollows || 0) + 1,
+              numFollows: (guide.numFollows || 0) + count,
             }
           }
           if (guide.numLikes >= 10 && guide.numFollows >= 7) {
