@@ -18,7 +18,7 @@ import {ProgressGuideTask} from './Task'
 export function ProgressGuideList({style}: {style: StyleProp<ViewStyle>}) {
   const t = useTheme()
   const {_} = useLingui()
-  const guide = useProgressGuide(ProgressGuideName.Like10Posts)
+  const guide = useProgressGuide(ProgressGuideName.Like10AndFollow7)
   const {captureAction, endProgressGuide} = useProgressGuideControls()
 
   React.useEffect(() => {
@@ -26,7 +26,7 @@ export function ProgressGuideList({style}: {style: StyleProp<ViewStyle>}) {
     return () => clearInterval(i)
   }, [captureAction])
 
-  if (guide?.guide === ProgressGuideName.Like10Posts) {
+  if (guide?.guide === ProgressGuideName.Like10AndFollow7) {
     return (
       <View style={[a.flex_col, a.gap_md, style]}>
         <View style={[a.flex_row, a.align_center]}>
@@ -43,7 +43,7 @@ export function ProgressGuideList({style}: {style: StyleProp<ViewStyle>}) {
             variant="ghost"
             size="tiny"
             color="secondary"
-            label={_(msg`Dismiss get started`)}
+            label={_(msg`Dismiss getting started guide`)}
             onPress={endProgressGuide}>
             <ButtonIcon icon={Times} />
           </Button>
@@ -53,6 +53,11 @@ export function ProgressGuideList({style}: {style: StyleProp<ViewStyle>}) {
           total={10}
           title={_(msg`Like 10 posts`)}
           subtitle={_(msg`Teach Discover what you like.`)}
+        />
+        <ProgressGuideTask
+          current={guide.numFollows}
+          total={7}
+          title={_(msg`Follow 7 accounts`)}
         />
       </View>
     )
