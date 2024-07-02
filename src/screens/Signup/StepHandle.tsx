@@ -104,6 +104,10 @@ export function StepHandle() {
             <TextField.Input
               testID="handleInput"
               onChangeText={val => {
+                if (state.error) {
+                  dispatch({type: 'setError', value: ''})
+                }
+
                 // These need to always be in sync.
                 handleValueRef.current = val
                 setDraftValue(val)
