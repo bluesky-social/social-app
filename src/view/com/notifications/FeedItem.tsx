@@ -168,6 +168,7 @@ let FeedItem = ({
     )
   }
 
+  let isFollowBack = false
   let action = ''
   let icon = (
     <HeartIconFilled
@@ -184,7 +185,12 @@ let FeedItem = ({
     action = _(msg`reposted your post`)
     icon = <RepostIcon size="xl" style={{color: t.palette.positive_600}} />
   } else if (item.type === 'follow') {
-    action = _(msg`followed you`)
+    if (item.notification.author.viewer?.following) {
+      isFollowBack = true
+      action = _(msg`followed you back`)
+    } else {
+      action = _(msg`followed you`)
+    }
     icon = <PersonPlusIcon size="xl" style={{color: t.palette.primary_500}} />
   } else if (item.type === 'feedgen-like') {
     action = _(msg`liked your custom feed`)
@@ -260,7 +266,7 @@ let FeedItem = ({
             visible={!isAuthorsExpanded}
             authors={authors}
             onToggleAuthorsExpanded={onToggleAuthorsExpanded}
-            showDmButton={item.type === 'starterpack-joined'}
+            showDmButton={item.type === 'starterpack-joined' || isFollowBack}
           />
           <ExpandedAuthorsList visible={isAuthorsExpanded} authors={authors} />
           <Text style={styles.meta}>

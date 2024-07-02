@@ -117,11 +117,18 @@ export function groupNotifications(
     if (GROUPABLE_REASONS.includes(notif.reason)) {
       for (const groupedNotif of groupedNotifs) {
         const ts2 = +new Date(groupedNotif.notification.indexedAt)
+        const nextIsFollowBack =
+          notif.reason === 'follow' && notif.author.viewer?.following
+        const groupedIsFollowBack =
+          groupedNotif.notification.reason === 'follow' &&
+          groupedNotif.notification.author.viewer?.following
         if (
           Math.abs(ts2 - ts) < MS_2DAY &&
           notif.reason === groupedNotif.notification.reason &&
           notif.reasonSubject === groupedNotif.notification.reasonSubject &&
-          notif.author.did !== groupedNotif.notification.author.did
+          notif.author.did !== groupedNotif.notification.author.did &&
+          !nextIsFollowBack &&
+          !groupedIsFollowBack
         ) {
           groupedNotif.additional = groupedNotif.additional || []
           groupedNotif.additional.push(notif)
