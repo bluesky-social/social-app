@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: zh-TW for bluesky-social-app\n"
 "POT-Creation-Date: \n"
 "Report-Msgid-Bugs-To: Kuwa Lee <kuwalee1069@gmail.com>, Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-06-28 18:20+0800\n"
+"PO-Revision-Date: 2024-07-02 11:05+0800\n"
 "Last-Translator: \n"
 "Language-Team: Frudrax Cheng <i@cynosura.one>, Kuwa Lee <kuwalee1069@gmail.com>, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Language: zh_TW\n"
@@ -956,7 +956,7 @@ msgstr "選擇這個顏色作為您的頭像"
 #: src/components/dialogs/ThreadgateEditor.tsx:91
 #: src/components/dialogs/ThreadgateEditor.tsx:95
 msgid "Choose who can reply"
-msgstr "選擇「誰能回覆」"
+msgstr "選擇哪些人可以回覆"
 
 #: src/screens/Signup/StepInfo/index.tsx:118
 msgid "Choose your password"
@@ -1318,7 +1318,7 @@ msgstr "複製貼文文字"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:168
 msgid "Copy QR code"
-msgstr "複製二維碼"
+msgstr "複製 QR Code"
 
 #: src/Navigation.tsx:264
 #: src/view/screens/CopyrightPolicy.tsx:29
@@ -1356,7 +1356,7 @@ msgstr "建立新的 Bluesky 帳號"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:151
 msgid "Create a QR code for a starter pack"
-msgstr "為入門包建立二維碼"
+msgstr "為入門包建立 QR Code"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:165
 #: src/components/StarterPack/ProfileStarterPacks.tsx:259
@@ -1366,7 +1366,7 @@ msgstr "選擇一個入門包"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:246
 msgid "Create a starter pack for me"
-msgstr "為我選擇一個入門包"
+msgstr "為我建立一個入門包"
 
 #: src/screens/Signup/index.tsx:158
 msgid "Create Account"
@@ -1756,7 +1756,7 @@ msgstr "編輯頭像"
 
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:117
 msgid "Edit Feeds"
-msgstr "編輯動態"
+msgstr "編輯動態源"
 
 #: src/view/com/composer/photos/Gallery.tsx:151
 #: src/view/com/modals/EditImage.tsx:208
@@ -2075,7 +2075,7 @@ msgstr "建立應用程式專用密碼失敗。"
 #: src/screens/StarterPack/Wizard/index.tsx:230
 #: src/screens/StarterPack/Wizard/index.tsx:238
 msgid "Failed to create starter pack"
-msgstr "建立入門包失敗"
+msgstr "無法建立入門包"
 
 #: src/view/com/modals/CreateOrEditList.tsx:194
 msgid "Failed to create the list. Check your internet connection and try again."
@@ -2091,7 +2091,7 @@ msgstr "無法刪除貼文，請重試"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:679
 msgid "Failed to delete starter pack"
-msgstr "刪除入門包失敗"
+msgstr "無法刪除入門包"
 
 #: src/view/screens/Search/Explore.tsx:426
 #: src/view/screens/Search/Explore.tsx:454
@@ -2785,7 +2785,7 @@ msgstr "邀請，但僅限個人"
 
 #: src/screens/StarterPack/Wizard/index.tsx:452
 msgid "It's just you right now! Add more people to your starter pack by searching above."
-msgstr "現在只有你一個人！透過上面的搜尋將更多人添加到您的入門包中。"
+msgstr "現在只有你一個人！使用上面的搜尋功能，將更多人加入到您的入門包中。"
 
 #: src/view/com/auth/SplashScreen.web.tsx:157
 msgid "Jobs"
@@ -3583,7 +3583,7 @@ msgstr "還沒有人按喜歡，也許您應該成為第一個！"
 
 #: src/screens/StarterPack/Wizard/StepProfiles.tsx:103
 msgid "Nobody was found. Try searching for someone else."
-msgstr "沒有找到人何人。嘗試其他搜尋。"
+msgstr "沒有找到任何人。嘗試其他搜尋。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:42
 msgid "Non-sexual Nudity"
@@ -3761,7 +3761,7 @@ msgstr "開啟貼文選項選單"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:533
 msgid "Open starter pack menu"
-msgstr "開氣入門包選單"
+msgstr "開啟入門包選單"
 
 #: src/view/screens/Settings/index.tsx:860
 #: src/view/screens/Settings/index.tsx:870
@@ -3778,7 +3778,7 @@ msgstr "開啟 {numItems} 個選項"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:60
 msgid "Opens a dialog to choose who can reply to this thread"
-msgstr "開啟對話窗來選擇誰可在此討論串回覆"
+msgstr "開啟對話窗來選擇哪些人可以回覆此討論串"
 
 #: src/view/screens/Settings/index.tsx:510
 msgid "Opens accessibility settings"
@@ -4277,15 +4277,15 @@ msgstr "發佈回覆"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:125
 msgid "QR code copied to your clipboard!"
-msgstr "二維碼已複製到您的剪貼簿！"
+msgstr "QR Code 已複製到您的剪貼簿！"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:103
 msgid "QR code has been downloaded!"
-msgstr "二維碼已下載！"
+msgstr "QR Code 下載成功！"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:104
 msgid "QR code saved to your camera roll!"
-msgstr "二維碼已儲存至您的圖片庫！"
+msgstr "QR Code 已儲存至您的圖片庫！"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:116
 #: src/view/com/util/post-ctrls/RepostButton.tsx:128
@@ -4723,7 +4723,7 @@ msgstr "儲存圖片裁剪"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:178
 msgid "Save QR code"
-msgstr "儲存二維碼"
+msgstr "儲存 QR Code"
 
 #: src/view/screens/ProfileFeed.tsx:333
 #: src/view/screens/ProfileFeed.tsx:339
@@ -5119,7 +5119,7 @@ msgstr "分享動態源"
 #: src/components/StarterPack/ShareDialog.tsx:130
 #: src/screens/StarterPack/StarterPackScreen.tsx:579
 msgid "Share link"
-msgstr "分像連結"
+msgstr "分享連結"
 
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
@@ -5133,7 +5133,7 @@ msgstr "分享連結對話窗"
 #: src/components/StarterPack/ShareDialog.tsx:134
 #: src/components/StarterPack/ShareDialog.tsx:145
 msgid "Share QR code"
-msgstr "分享二維碼"
+msgstr "分享 QR Code"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:397
 msgid "Share this starter pack"
@@ -5141,7 +5141,7 @@ msgstr "分享這個入門包"
 
 #: src/components/StarterPack/ShareDialog.tsx:99
 msgid "Share this starter pack and help people join your community on Bluesky."
-msgstr "分享這個入門包以幫助別人加入 Bluesky 社群。"
+msgstr "分享這個入門包，以幫助別人加入你在 Bluesky 的社群。"
 
 #: src/components/dms/ChatEmptyPill.tsx:34
 msgid "Share your favorite feed!"
@@ -5603,7 +5603,7 @@ msgstr "版權政策已移動到 <0/>"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:348
 msgid "The experience is better in the app. Download Bluesky now and we'll pick back up where you left off."
-msgstr "應用程式的體驗會更好。現在就下載 Bluesky，我們將從你離開的地方繼續。"
+msgstr "使用應用程式的體驗會更好。現在就下載 Bluesky，我們將從你離開的地方繼續。"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:66
 msgid "The feed has been replaced with Discover."
@@ -5632,7 +5632,7 @@ msgstr "隱私政策已移動到 <0/>"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:706
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
-msgstr "您嘗試查看的入門包是無效的。您應該刪除這個入門包。"
+msgstr "您正在嘗試查看的入門包無效。您可以考慮刪除這個入門包。"
 
 #: src/view/screens/Support.tsx:36
 msgid "The support form has been moved. If you need help, please <0/> or visit {HELP_DESK_URL} to get in touch with us."
@@ -6607,7 +6607,7 @@ msgstr "確定並停用"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:642
 msgid "Yes, delete this starter pack"
-msgstr "是，刪除著個入門包"
+msgstr "是，刪除這個入門包"
 
 #: src/screens/Deactivated.tsx:150
 msgid "Yes, reactivate my account"
@@ -6780,11 +6780,11 @@ msgstr "您必須跟隨至少七個人才能建立入門包。"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:60
 msgid "You must grant access to your photo library to save a QR code"
-msgstr "您必須授予對圖片庫的存取權限才能保存二維碼"
+msgstr "您必須授予對圖片庫的存取權限才能儲存 QR Code"
 
 #: src/components/StarterPack/ShareDialog.tsx:68
 msgid "You must grant access to your photo library to save the image."
-msgstr "您必須授予對圖片庫的存取權限才能保存圖片。"
+msgstr "您必須授予對圖片庫的存取權限才能儲存圖片。"
 
 #: src/components/ReportDialog/SubmitView.tsx:205
 msgid "You must select at least one labeler for a report"
@@ -6820,11 +6820,11 @@ msgstr "您：{short}"
 
 #: src/screens/Signup/index.tsx:172
 msgid "You'll follow the suggested users and feeds once you finish creating your account!"
-msgstr "當您完成帳號創建時您將會跟隨建議的用戶和動態源！"
+msgstr "當您完成帳號創建後，您將會跟隨建議的用戶和動態源！"
 
 #: src/screens/Signup/index.tsx:177
 msgid "You'll follow the suggested users once you finish creating your account!"
-msgstr "當您完成帳號創建時您將會跟隨建議的用戶！"
+msgstr "當您完成帳號創建後，您將會跟隨建議的用戶！"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:260
 msgid "You'll follow these people and {0} others"
