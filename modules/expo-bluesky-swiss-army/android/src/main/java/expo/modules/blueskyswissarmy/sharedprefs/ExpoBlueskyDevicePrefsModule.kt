@@ -32,9 +32,11 @@ class ExpoBlueskySharedPrefsModule : Module() {
           SharedPrefs(context).removeValue(key)
         } else {
           Log.d(NAME, "Unsupported type: ${value.kind()}")
+          promise.reject("UNSUPPORTED_TYPE_ERROR", "Attempted to set an unsupported type", null)
         }
       } catch (e: Error) {
         Log.d(NAME, "Error setting value: $e")
+        promise.reject("SET_VALUE_ERROR", "Error setting value", e)
       }
     }
 
