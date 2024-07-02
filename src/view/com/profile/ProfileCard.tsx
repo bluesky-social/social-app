@@ -3,13 +3,11 @@ import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {
   AppBskyActorDefs,
   moderateProfile,
-  ModerationCause,
   ModerationDecision,
 } from '@atproto/api'
 import {Trans} from '@lingui/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {Shadow} from '#/state/cache/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -26,6 +24,8 @@ import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {FollowButton} from './FollowButton'
 import hairlineWidth = StyleSheet.hairlineWidth
+import {atoms as a} from '#/alf'
+import * as Pills from '#/components/Pills'
 
 export function ProfileCard({
   testID,
@@ -137,58 +137,21 @@ export function ProfileCardPills({
   followedBy: boolean
   moderation: ModerationDecision
 }) {
-  const pal = usePalette('default')
-
   const modui = moderation.ui('profileList')
   if (!followedBy && !modui.inform && !modui.alert) {
     return null
   }
 
   return (
-    <View style={styles.pills}>
-      {followedBy && (
-        <View style={[s.mt5, pal.btn, styles.pill]}>
-          <Text type="xs" style={pal.text}>
-            <Trans>Follows You</Trans>
-          </Text>
-        </View>
-      )}
+    <Pills.Row style={[a.pt_xs]}>
+      {followedBy && <Pills.FollowsYou />}
       {modui.alerts.map(alert => (
-        <ProfileCardPillModerationCause
-          key={getModerationCauseKey(alert)}
-          cause={alert}
-          severity="alert"
-        />
+        <Pills.Label key={getModerationCauseKey(alert)} cause={alert} />
       ))}
       {modui.informs.map(inform => (
-        <ProfileCardPillModerationCause
-          key={getModerationCauseKey(inform)}
-          cause={inform}
-          severity="inform"
-        />
+        <Pills.Label key={getModerationCauseKey(inform)} cause={inform} />
       ))}
-    </View>
-  )
-}
-
-function ProfileCardPillModerationCause({
-  cause,
-  severity,
-}: {
-  cause: ModerationCause
-  severity: 'alert' | 'inform'
-}) {
-  const pal = usePalette('default')
-  const {name} = useModerationCauseDescription(cause)
-  return (
-    <View
-      style={[s.mt5, pal.btn, styles.pill]}
-      key={getModerationCauseKey(cause)}>
-      <Text type="xs" style={pal.text}>
-        {severity === 'alert' ? '⚠ ' : ''}
-        {name}
-      </Text>
-    </View>
+    </Pills.Row>
   )
 }
 
@@ -322,6 +285,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   pills: {
+    alignItems: 'flex-start',
     flexDirection: 'row',
     flexWrap: 'wrap',
     columnGap: 6,
