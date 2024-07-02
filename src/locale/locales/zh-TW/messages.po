@@ -382,7 +382,7 @@ msgstr "成人內容"
 
 #: src/screens/Moderation/index.tsx:356
 msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
-msgstr "成人內容只能透過 <0>bsky.app</0> 網頁啟用。"
+msgstr "成人內容只能透過網頁版 (<0>bsky.app</0>) 啟用。"
 
 #: src/components/moderation/LabelPreference.tsx:242
 msgid "Adult content is disabled."
