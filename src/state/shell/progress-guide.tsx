@@ -6,23 +6,22 @@ import {
   ProgressGuideToast,
   ProgressGuideToastRef,
 } from '#/components/ProgressGuide/Toast'
+import {useSetActiveProgressGuideMutation} from '../queries/preferences'
 
 export enum ProgressGuideAction {
   Like = 'like',
   Follow = 'follow',
 }
 
-export enum ProgressGuideName {
-  Like10AndFollow7 = 'like-10-and-follow-7',
-}
+type ProgressGuideName = 'like-10-and-follow-7'
 
 interface BaseProgressGuide {
-  guide: ProgressGuideName
+  guide: string
   isComplete: boolean
+  [key: string]: any
 }
 
 interface Like10AndFollow7ProgressGuide extends BaseProgressGuide {
-  guide: ProgressGuideName.Like10AndFollow7
   numLikes: number
   numFollows: number
 }
@@ -55,10 +54,11 @@ export function useProgressGuideControls() {
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const {_} = useLingui()
+  const {mutate} = useSetActiveProgressGuideMutation()
 
   const [activeProgressGuide, setActiveProgressGuide] =
     React.useState<ProgressGuide>({
-      guide: ProgressGuideName.Like10AndFollow7,
+      guide: 'like-10-and-follow-7',
       numLikes: 0,
       numFollows: 0,
       isComplete: false,
@@ -71,17 +71,20 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const controls = React.useMemo(() => {
     return {
       startProgressGuide(guide: ProgressGuideName) {
-        if (guide === ProgressGuideName.Like10AndFollow7) {
-          setActiveProgressGuide({
-            guide: ProgressGuideName.Like10AndFollow7,
+        if (guide === 'like-10-and-follow-7') {
+          const guideObj = {
+            guide: 'like-10-and-follow-7',
             numLikes: 0,
             numFollows: 0,
             isComplete: false,
-          })
+          }
+          mutate(guideObj)
+          setActiveProgressGuide(guideObj)
         }
       },
 
       endProgressGuide() {
+        mutate(undefined)
         setActiveProgressGuide(undefined)
       },
 
@@ -90,7 +93,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         if (guide?.isComplete) {
           return
         }
-        if (guide?.guide === ProgressGuideName.Like10AndFollow7) {
+        if (guide?.guide === 'like-10-and-follow-7') {
           if (action === ProgressGuideAction.Like) {
             guide = {
               ...guide,
@@ -120,10 +123,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             }
           }
         }
+        mutate(guide)
         setActiveProgressGuide(guide)
       },
     }
-  }, [activeProgressGuide, setActiveProgressGuide])
+  }, [activeProgressGuide, setActiveProgressGuide, mutate])
 
   return (
     <ProgressGuideContext.Provider value={activeProgressGuide}>

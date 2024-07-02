@@ -4,7 +4,6 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {
-  ProgressGuideName,
   useProgressGuide,
   useProgressGuideControls,
 } from '#/state/shell/progress-guide'
@@ -17,10 +16,10 @@ import {ProgressGuideTask} from './Task'
 export function ProgressGuideList({style}: {style: StyleProp<ViewStyle>}) {
   const t = useTheme()
   const {_} = useLingui()
-  const guide = useProgressGuide(ProgressGuideName.Like10AndFollow7)
+  const guide = useProgressGuide('like-10-and-follow-7')
   const {endProgressGuide} = useProgressGuideControls()
 
-  if (guide?.guide === ProgressGuideName.Like10AndFollow7) {
+  if (guide) {
     return (
       <View style={[a.flex_col, a.gap_md, style]}>
         <View style={[a.flex_row, a.align_center]}>
