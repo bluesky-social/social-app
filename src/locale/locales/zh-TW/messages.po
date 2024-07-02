@@ -289,7 +289,7 @@ msgstr "新增"
 
 #: src/screens/StarterPack/Wizard/index.tsx:568
 msgid "Add {0} more to continue"
-msgstr "再新增至少 {0} 以繼續"
+msgstr "再新增至少 {0} 個以繼續"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:59
 msgid "Add {displayName} to starter pack"
