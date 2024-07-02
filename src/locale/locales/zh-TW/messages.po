@@ -460,7 +460,7 @@ msgstr "建立您的入門包時發生錯誤。是否要重試？"
 #: src/components/StarterPack/QrCodeDialog.tsx:70
 #: src/components/StarterPack/ShareDialog.tsx:78
 msgid "An error occurred while saving the QR code!"
-msgstr "保存二維碼時發生錯誤！"
+msgstr "儲存 QR Code 時發生錯誤！"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:366
 msgid "An error occurred while trying to follow all"
