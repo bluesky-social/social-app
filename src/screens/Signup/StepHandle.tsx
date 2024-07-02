@@ -27,9 +27,6 @@ export function StepHandle() {
 
   const onNextPress = React.useCallback(async () => {
     const handle = handleValueRef.current.trim()
-    if (state.error) {
-      dispatch({type: 'setError', value: ''})
-    }
     dispatch({
       type: 'setHandle',
       value: handle,
@@ -74,7 +71,6 @@ export function StepHandle() {
   }, [
     _,
     dispatch,
-    state.error,
     state.activeStep,
     state.serviceDescription?.phoneVerificationRequired,
     state.userDomain,
