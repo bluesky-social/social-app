@@ -4,11 +4,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {logEvent} from '#/lib/statsig/statsig'
-import {
-  createFullHandle,
-  IsValidHandle,
-  validateHandle,
-} from '#/lib/strings/handles'
+import {createFullHandle, validateHandle} from '#/lib/strings/handles'
 import {useAgent} from '#/state/session'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {useSignupContext, useSubmitSignup} from '#/screens/Signup/state'
@@ -27,14 +23,7 @@ export function StepHandle() {
   const submit = useSubmitSignup({state, dispatch})
   const agent = useAgent()
   const handleValueRef = useRef<string>(state.handle)
-
-  const [validCheck, setValidCheck] = React.useState<IsValidHandle>({
-    handleChars: false,
-    hyphenStartOrEnd: false,
-    frontLength: false,
-    totalLength: true,
-    overall: false,
-  })
+  const [draftValue, setDraftValue] = React.useState(state.handle)
 
   const onNextPress = React.useCallback(async () => {
     const handle = handleValueRef.current.trim()
@@ -47,7 +36,6 @@ export function StepHandle() {
     })
 
     const newValidCheck = validateHandle(handle, state.userDomain)
-    setValidCheck(newValidCheck)
     if (!newValidCheck.overall) {
       return
     }
@@ -106,6 +94,7 @@ export function StepHandle() {
     })
   }, [dispatch, state.activeStep])
 
+  const validCheck = validateHandle(draftValue, state.userDomain)
   return (
     <ScreenTransition>
       <View style={[a.gap_lg]}>
@@ -114,11 +103,13 @@ export function StepHandle() {
             <TextField.Icon icon={At} />
             <TextField.Input
               testID="handleInput"
-              onChangeText={value => {
-                handleValueRef.current = value
+              onChangeText={val => {
+                // These need to always be in sync.
+                handleValueRef.current = val
+                setDraftValue(val)
               }}
               label={_(msg`Input your user handle`)}
-              defaultValue={state.handle}
+              defaultValue={draftValue}
               autoCapitalize="none"
               autoCorrect={false}
               autoFocus
@@ -129,7 +120,7 @@ export function StepHandle() {
         <Text style={[a.text_md]}>
           <Trans>Your full handle will be</Trans>{' '}
           <Text style={[a.text_md, a.font_bold]}>
-            @{createFullHandle(state.handle, state.userDomain)}
+            @{createFullHandle(draftValue, state.userDomain)}
           </Text>
         </Text>
 
