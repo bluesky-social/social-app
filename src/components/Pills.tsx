@@ -29,7 +29,7 @@ export function Row({
         return [{gap: 5}]
       case 'sm':
       default:
-        return [{gap: 3, marginLeft: -3}]
+        return [{gap: 3}]
     }
   }, [size])
   return (
