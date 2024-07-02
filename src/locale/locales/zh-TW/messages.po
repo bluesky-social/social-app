@@ -82,7 +82,7 @@ msgstr "本週加入了 {0} 人"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:460
 msgid "{0} people have used this starter pack!"
-msgstr "{0} 個人已使用入門包！"
+msgstr "{0} 人已使用此入門包！"
 
 #: src/view/com/util/UserAvatar.tsx:419
 msgid "{0}'s avatar"
