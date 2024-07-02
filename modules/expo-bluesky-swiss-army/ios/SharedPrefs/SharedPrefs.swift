@@ -52,20 +52,20 @@ public class SharedPrefs {
   }
 
   public func addToSet(_ key: String, _ value: String) {
-    var dict: [String:Bool]?
-    if var currDict = getDefaults(key)?.dictionary(forKey: key) as? [String:Bool] {
+    var dict: [String: Bool]?
+    if var currDict = getDefaults(key)?.dictionary(forKey: key) as? [String: Bool] {
       currDict[value] = true
       dict = currDict
     } else {
       dict = [
-        value : true
+        value: true
       ]
     }
     getDefaults(key)?.setValue(dict, forKey: key)
   }
 
   public func removeFromSet(_ key: String, _ value: String) {
-    guard var dict = getDefaults(key)?.dictionary(forKey: key) as? [String:Bool] else {
+    guard var dict = getDefaults(key)?.dictionary(forKey: key) as? [String: Bool] else {
       return
     }
     dict.removeValue(forKey: value)
@@ -73,7 +73,7 @@ public class SharedPrefs {
   }
 
   public func setContains(_ key: String, _ value: String) -> Bool {
-    guard let dict = getDefaults(key)?.dictionary(forKey: key) as? [String:Bool] else {
+    guard let dict = getDefaults(key)?.dictionary(forKey: key) as? [String: Bool] else {
       return false
     }
     return dict[value] == true
@@ -83,7 +83,7 @@ public class SharedPrefs {
     return getDefaults(key)?.value(forKey: key) != nil
   }
 
-  public func getValues(_ keys: [String]) -> [String:Any?]? {
+  public func getValues(_ keys: [String]) -> [String: Any?]? {
     return getDefaults("keys:\(keys)")?.dictionaryWithValues(forKeys: keys)
   }
 }

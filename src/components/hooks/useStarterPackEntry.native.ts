@@ -39,11 +39,10 @@ export function useStarterPackEntry() {
           uri = createStarterPackLinkFromAndroidReferrer(res.installReferrer)
         }
       } else {
-        const res = await SharedPrefs.getStringAsync('starterPackUri')
-
-        if (res) {
-          uri = httpStarterPackUriToAtUri(res)
-          SharedPrefs.setValueAsync('starterPackUri', null)
+        const starterPackUri = SharedPrefs.getString('starterPackUri')
+        if (starterPackUri) {
+          uri = httpStarterPackUriToAtUri(starterPackUri)
+          SharedPrefs.setValue('starterPackUri', null)
         }
       }
 

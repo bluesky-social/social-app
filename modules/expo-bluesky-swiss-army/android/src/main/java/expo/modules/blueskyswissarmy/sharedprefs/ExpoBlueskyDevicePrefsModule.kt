@@ -16,22 +16,20 @@ class ExpoBlueskySharedPrefsModule : Module() {
   override fun definition() = ModuleDefinition {
     Name("ExpoBlueskySharedPrefs")
 
-    AsyncFunction("setStringAsync") { key: String, value: String ->
-      return@AsyncFunction Preferences(getContext()).setValue(key, value)
+    Function("setString") { key: String, value: String ->
+      return@Function SharedPrefs(getContext()).setValue(key, value)
     }
 
-    AsyncFunction("setValueAsync") { key: String, value: JavaScriptValue, promise: Promise ->
+    Function("setValue") { key: String, value: JavaScriptValue ->
       val context = getContext()
+      Log.d("ExpoBlueskySharedPrefs", "Setting value for key: $key")
       try {
         if (value.isNumber()) {
-          Preferences(context).setValue(key, value.getFloat())
-          promise.resolve()
+          SharedPrefs(context).setValue(key, value.getFloat())
         } else if (value.isBool()) {
-          Preferences(context).setValue(key, value.getBool())
-          promise.resolve()
+          SharedPrefs(context).setValue(key, value.getBool())
         } else if (value.isNull() || value.isUndefined()) {
-          Preferences(context).removeValue(key)
-          promise.resolve()
+          SharedPrefs(context).removeValue(key)
         } else {
           Log.d(NAME, "Unsupported type: ${value.kind()}")
           promise.reject("UNSUPPORTED_TYPE_ERROR", "Attempted to set an unsupported type", null)
@@ -42,32 +40,32 @@ class ExpoBlueskySharedPrefsModule : Module() {
       }
     }
 
-    AsyncFunction("removeValueAsync") { key: String ->
-      return@AsyncFunction Preferences(getContext()).removeValue(key)
+    Function("removeValue") { key: String ->
+      return@Function SharedPrefs(getContext()).removeValue(key)
     }
 
-    AsyncFunction("getStringAsync") { key: String ->
-      return@AsyncFunction Preferences(getContext()).getString(key)
+    Function("getString") { key: String ->
+      return@Function SharedPrefs(getContext()).getString(key)
     }
 
-    AsyncFunction("getNumberAsync") { key: String ->
-      return@AsyncFunction Preferences(getContext()).getFloat(key)
+    Function("getNumber") { key: String ->
+      return@Function SharedPrefs(getContext()).getFloat(key)
     }
 
-    AsyncFunction("getBoolAsync") { key: String ->
-      return@AsyncFunction Preferences(getContext()).getBoolean(key)
+    Function("getBool") { key: String ->
+      return@Function SharedPrefs(getContext()).getBoolean(key)
     }
 
-    AsyncFunction("addToSetAsync") { key: String, value: String ->
-      return@AsyncFunction Preferences(getContext()).addToSet(key, value)
+    Function("addToSet") { key: String, value: String ->
+      return@Function SharedPrefs(getContext()).addToSet(key, value)
     }
 
-    AsyncFunction("removeFromSetAsync") { key: String, value: String ->
-      return@AsyncFunction Preferences(getContext()).removeFromSet(key, value)
+    Function("removeFromSet") { key: String, value: String ->
+      return@Function SharedPrefs(getContext()).removeFromSet(key, value)
     }
 
-    AsyncFunction("setContainsAsync") { key: String, value: String ->
-      return@AsyncFunction Preferences(getContext()).setContains(key, value)
+    Function("setContains") { key: String, value: String ->
+      return@Function SharedPrefs(getContext()).setContains(key, value)
     }
   }
 }

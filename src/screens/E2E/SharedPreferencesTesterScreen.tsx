@@ -25,10 +25,11 @@ export function SharedPreferencesTesterScreen() {
             color="primary"
             size="xsmall"
             onPress={async () => {
-              await SharedPrefs.removeValueAsync('testerString')
-              await SharedPrefs.setValueAsync('testerString', 'Hello')
-              const res = await SharedPrefs.getStringAsync('testerString')
-              setCurrentTestOutput(`${res}`)
+              SharedPrefs.removeValue('testerString')
+              SharedPrefs.setValue('testerString', 'Hello')
+              const str = SharedPrefs.getString('testerString')
+              console.log(JSON.stringify(str))
+              setCurrentTestOutput(`${str}`)
             }}>
             <ButtonText>Set String</ButtonText>
           </Button>
@@ -40,9 +41,9 @@ export function SharedPreferencesTesterScreen() {
             color="primary"
             size="xsmall"
             onPress={async () => {
-              await SharedPrefs.removeValueAsync('testerString')
-              const res = await SharedPrefs.getStringAsync('testerString')
-              setCurrentTestOutput(`${res}`)
+              SharedPrefs.removeValue('testerString')
+              const str = SharedPrefs.getString('testerString')
+              setCurrentTestOutput(`${str}`)
             }}>
             <ButtonText>Remove String</ButtonText>
           </Button>
@@ -54,10 +55,10 @@ export function SharedPreferencesTesterScreen() {
             color="primary"
             size="xsmall"
             onPress={async () => {
-              await SharedPrefs.removeValueAsync('testerBool')
-              await SharedPrefs.setValueAsync('testerBool', true)
-              const res = await SharedPrefs.getBoolAsync('testerBool')
-              setCurrentTestOutput(`${res}`)
+              SharedPrefs.removeValue('testerBool')
+              SharedPrefs.setValue('testerBool', true)
+              const bool = SharedPrefs.getBool('testerBool')
+              setCurrentTestOutput(`${bool}`)
             }}>
             <ButtonText>Set Bool</ButtonText>
           </Button>
@@ -69,10 +70,10 @@ export function SharedPreferencesTesterScreen() {
             color="primary"
             size="xsmall"
             onPress={async () => {
-              await SharedPrefs.removeValueAsync('testerNumber')
-              await SharedPrefs.setValueAsync('testerNumber', 123)
-              const res = await SharedPrefs.getNumberAsync('testerNumber')
-              setCurrentTestOutput(`${res}`)
+              SharedPrefs.removeValue('testerNumber')
+              SharedPrefs.setValue('testerNumber', 123)
+              const num = SharedPrefs.getNumber('testerNumber')
+              setCurrentTestOutput(`${num}`)
             }}>
             <ButtonText>Set Number</ButtonText>
           </Button>
@@ -84,13 +85,10 @@ export function SharedPreferencesTesterScreen() {
             color="primary"
             size="xsmall"
             onPress={async () => {
-              await SharedPrefs.removeFromSetAsync('testerSet', 'Hello!')
-              await SharedPrefs.addToSetAsync('testerSet', 'Hello!')
-              const res = await SharedPrefs.setContainsAsync(
-                'testerSet',
-                'Hello!',
-              )
-              setCurrentTestOutput(`${res}`)
+              SharedPrefs.removeFromSet('testerSet', 'Hello!')
+              SharedPrefs.addToSet('testerSet', 'Hello!')
+              const contains = SharedPrefs.setContains('testerSet', 'Hello!')
+              setCurrentTestOutput(`${contains}`)
             }}>
             <ButtonText>Add to Set</ButtonText>
           </Button>
@@ -102,12 +100,9 @@ export function SharedPreferencesTesterScreen() {
             color="primary"
             size="xsmall"
             onPress={async () => {
-              await SharedPrefs.removeFromSetAsync('testerSet', 'Hello!')
-              const res = await SharedPrefs.setContainsAsync(
-                'testerSet',
-                'Hello!',
-              )
-              setCurrentTestOutput(`${res}`)
+              SharedPrefs.removeFromSet('testerSet', 'Hello!')
+              const contains = SharedPrefs.setContains('testerSet', 'Hello!')
+              setCurrentTestOutput(`${contains}`)
             }}>
             <ButtonText>Remove from Set</ButtonText>
           </Button>

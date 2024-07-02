@@ -15,45 +15,47 @@ public class ExpoBlueskySharedPrefsModule: Module {
   public func definition() -> ModuleDefinition {
     Name("ExpoBlueskySharedPrefs")
 
-    AsyncFunction("setValueAsync") { (key: String, value: JavaScriptValue, promise: Promise) in
-      if value.isString() {
-        SharedPrefs.shared.setValue(key, value.getString())
-      } else if value.isNumber() {
+    // JavaScripValue causes a crash when trying to check `isString()`. Let's
+    // explicitly define setString instead.
+    Function("setString") { (key: String, value: String?) in
+      SharedPrefs.shared.setValue(key, value)
+    }
+
+    Function("setValue") { (key: String, value: JavaScriptValue) in
+      if value.isNumber() {
         SharedPrefs.shared.setValue(key, value.getDouble())
       } else if value.isBool() {
         SharedPrefs.shared.setValue(key, value.getBool())
       } else if value.isNull() || value.isUndefined() {
         SharedPrefs.shared.removeValue(key)
-      } else {
-        promise.reject("UNSUPPORTED_TYPE_ERROR", "Attempted to set an unsupported type")
       }
     }
 
-    AsyncFunction("removeValueAsync") { (key: String) in
+    Function("removeValue") { (key: String) in
       SharedPrefs.shared.removeValue(key)
     }
 
-    AsyncFunction("getStringAsync") { (key: String) in
+    Function("getString") { (key: String) in
       return SharedPrefs.shared.getString(key)
     }
 
-    AsyncFunction("getBoolAsync") { (key: String) in
+    Function("getBool") { (key: String) in
       return SharedPrefs.shared.getBool(key)
     }
 
-    AsyncFunction("getNumberAsync") { (key: String) in
+    Function("getNumber") { (key: String) in
       return SharedPrefs.shared.getNumber(key)
     }
 
-    AsyncFunction("addToSetAsync") { (key: String, value: String) in
+    Function("addToSet") { (key: String, value: String) in
       SharedPrefs.shared.addToSet(key, value)
     }
 
-    AsyncFunction("removeFromSetAsync") { (key: String, value: String) in
+    Function("removeFromSet") { (key: String, value: String) in
       SharedPrefs.shared.removeFromSet(key, value)
     }
 
-    AsyncFunction("setContainsAsync") { (key: String, value: String) in
+    Function("setContains") { (key: String, value: String) in
       return SharedPrefs.shared.setContains(key, value)
     }
   }

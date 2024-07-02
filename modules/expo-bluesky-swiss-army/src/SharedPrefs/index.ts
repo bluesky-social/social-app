@@ -1,36 +1,36 @@
 import {NotImplementedError} from '../NotImplemented'
 
-export function setValueAsync(
+export function setValue(
   key: string,
   value: string | number | boolean | null | undefined,
-): Promise<void> {
+): void {
   throw new NotImplementedError({key, value})
 }
 
-export function removeValueAsync(key: string): Promise<void> {
+export function removeValue(key: string): void {
   throw new NotImplementedError({key})
 }
 
-export function getStringAsync(key: string): Promise<string | null> {
+export function getString(key: string): string | null {
   throw new NotImplementedError({key})
 }
 
-export function getNumberAsync(key: string): Promise<number | null> {
+export function getNumber(key: string): number | null {
   throw new NotImplementedError({key})
 }
 
-export function getBoolAsync(key: string): Promise<boolean | null> {
+export function getBool(key: string): boolean | null {
   throw new NotImplementedError({key})
 }
 
-export function addToSetAsync(key: string, value: string): Promise<void> {
+export function addToSet(key: string, value: string): void {
   throw new NotImplementedError({key, value})
 }
 
-export function removeFromSetAsync(key: string, value: string): Promise<void> {
+export function removeFromSet(key: string, value: string): void {
   throw new NotImplementedError({key, value})
 }
 
-export function setContainsAsync(key: string, value: string): Promise<boolean> {
+export function setContains(key: string, value: string): boolean {
   throw new NotImplementedError({key, value})
 }
