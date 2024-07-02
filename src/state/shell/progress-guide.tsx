@@ -123,7 +123,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             }
           }
         }
-        mutate(guide)
+        mutate(guide?.isComplete ? undefined : guide)
         setActiveProgressGuide(guide)
       },
     }
