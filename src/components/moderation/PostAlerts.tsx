@@ -20,7 +20,7 @@ export function PostAlerts({
   }
 
   return (
-    <Pills.Row size={size} style={style}>
+    <Pills.Row size={size} style={[size === 'sm' && {marginLeft: -3}, style]}>
       {modui.alerts.map(cause => (
         <Pills.Label
           key={getModerationCauseKey(cause)}
