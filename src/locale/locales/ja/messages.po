@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-06-30 12:18+0900\n"
+"PO-Revision-Date: 2024-07-03 10:37+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -925,6 +925,14 @@ msgstr "確認コードが記載されたメールを確認し、ここに入力
 #: src/view/com/modals/DeleteAccount.tsx:231
 msgid "Check your inbox for an email with the confirmation code to enter below:"
 msgstr "入力したメールアドレスの受信トレイを確認して、以下に入力するための確認コードが記載されたメールが届いていないか確認してください："
+
+#: src/screens/Onboarding/StepInterests/index.tsx:190
+msgid "Choose 3 or more:"
+msgstr "3つ以上選んでください："
+
+#: src/screens/Onboarding/StepInterests/index.tsx:325
+msgid "Choose at least {0} more"
+msgstr "少なくともさらに{0}つ選んでください"
 
 #: src/screens/StarterPack/Wizard/index.tsx:191
 msgid "Choose Feeds"
@@ -2231,6 +2239,7 @@ msgstr "水平方向に反転"
 msgid "Flip vertically"
 msgstr "垂直方向に反転"
 
+#. User is not following this account, click to follow
 #: src/components/ProfileHoverCard/index.web.tsx:446
 #: src/components/ProfileHoverCard/index.web.tsx:457
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:252
@@ -2317,6 +2326,7 @@ msgstr "あなたが知っている@{0}のフォロワー"
 msgid "Followers you know"
 msgstr "あなたが知っているフォロワー"
 
+#. User is following this account, click to unfollow
 #: src/components/ProfileHoverCard/index.web.tsx:445
 #: src/components/ProfileHoverCard/index.web.tsx:456
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:250
@@ -2706,10 +2716,6 @@ msgstr "アカウント削除のためにパスワードを入力"
 #: src/screens/Login/LoginForm.tsx:266
 msgid "Input the code which has been emailed to you"
 msgstr "メールで送られたコードを入力"
-
-#: src/screens/Login/LoginForm.tsx:221
-msgid "Input the password tied to {identifier}"
-msgstr "{identifier}に紐づくパスワードを入力"
 
 #: src/screens/Login/LoginForm.tsx:194
 msgid "Input the username or email address you used at signup"
@@ -3221,6 +3227,10 @@ msgstr "いいねの数が多い順に返信を表示"
 #: src/screens/Onboarding/state.ts:90
 msgid "Movies"
 msgstr "映画"
+
+#: src/screens/Onboarding/state.ts:91
+msgid "Music"
+msgstr "音楽"
 
 #: src/components/TagMenu/index.tsx:249
 msgid "Mute"
@@ -4066,6 +4076,10 @@ msgstr "ミュートにする有効な単語、タグ、フレーズを入力し
 #: src/screens/Signup/state.ts:213
 msgid "Please enter your email."
 msgstr "メールアドレスを入力してください。"
+
+#: src/screens/Signup/StepInfo/index.tsx:63
+msgid "Please enter your invite code."
+msgstr "招待コードを入力してください。"
 
 #: src/view/com/modals/DeleteAccount.tsx:253
 msgid "Please enter your password as well:"
