@@ -25,6 +25,7 @@ import {logger} from '#/logger'
 import {useDeleteStarterPackMutation} from '#/state/queries/starter-packs'
 import {batchedUpdates} from 'lib/batchedUpdates'
 import {HITSLOP_20} from 'lib/constants'
+import {isBlockedOrBlocking, isMuted} from 'lib/moderation/blocked-and-muted'
 import {makeProfileLink, makeStarterPackLink} from 'lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
 import {logEvent} from 'lib/statsig/statsig'
@@ -176,11 +177,12 @@ function StarterPackScreenLoaded({
   const showPeopleTab = Boolean(starterPack.list)
   const showFeedsTab = Boolean(starterPack.feeds?.length)
   const showPostsTab = Boolean(starterPack.list)
+  const {_} = useLingui()
 
   const tabs = [
-    ...(showPeopleTab ? ['People'] : []),
-    ...(showFeedsTab ? ['Feeds'] : []),
-    ...(showPostsTab ? ['Posts'] : []),
+    ...(showPeopleTab ? [_(msg`People`)] : []),
+    ...(showFeedsTab ? [_(msg`Feeds`)] : []),
+    ...(showPostsTab ? [_(msg`Posts`)] : []),
   ]
 
   const qrCodeDialogControl = useDialogControl()
@@ -343,7 +345,13 @@ function Header({
         list: starterPack.list.uri,
       })
       const dids = list.data.items
-        .filter(li => !li.subject.viewer?.following)
+        .filter(
+          li =>
+            li.subject.did !== currentAccount?.did &&
+            !isBlockedOrBlocking(li.subject) &&
+            !isMuted(li.subject) &&
+            !li.subject.viewer?.following,
+        )
         .map(li => li.subject.did)
 
       const followUris = await bulkWriteFollows(agent, dids)

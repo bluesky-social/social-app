@@ -43,6 +43,7 @@ import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as PortalProvider} from '#/components/Portal'
+import {Provider as TourProvider} from '#/tours'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import I18nProvider from './locale/i18nProvider'
 import {listenSessionDropped} from './state/events'
@@ -102,7 +103,9 @@ function InnerApp() {
                               <BackgroundNotificationPreferencesProvider>
                                 <MutedThreadsProvider>
                                   <SafeAreaProvider>
-                                    <Shell />
+                                    <TourProvider>
+                                      <Shell />
+                                    </TourProvider>
                                   </SafeAreaProvider>
                                 </MutedThreadsProvider>
                               </BackgroundNotificationPreferencesProvider>
