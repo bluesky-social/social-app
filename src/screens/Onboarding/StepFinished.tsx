@@ -42,6 +42,7 @@ import {News2_Stroke2_Corner0_Rounded as News} from '#/components/icons/News2'
 import {Trending2_Stroke2_Corner2_Rounded as Trending} from '#/components/icons/Trending2'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {TOURS, useSetQueuedTour} from '#/tours'
 
 export function StepFinished() {
   const {_} = useLingui()
@@ -56,6 +57,7 @@ export function StepFinished() {
   const activeStarterPack = useActiveStarterPack()
   const setActiveStarterPack = useSetActiveStarterPack()
   const setHasCheckedForStarterPack = useSetHasCheckedForStarterPack()
+  const setQueuedTour = useSetQueuedTour()
 
   const finishOnboarding = React.useCallback(async () => {
     setSaving(true)
@@ -182,6 +184,7 @@ export function StepFinished() {
     setSaving(false)
     setActiveStarterPack(undefined)
     setHasCheckedForStarterPack(true)
+    setQueuedTour(TOURS.HOME)
     dispatch({type: 'finish'})
     onboardDispatch({type: 'finish'})
     track('OnboardingV2:StepFinished:End')
@@ -214,6 +217,7 @@ export function StepFinished() {
     requestNotificationsPermission,
     setActiveStarterPack,
     setHasCheckedForStarterPack,
+    setQueuedTour,
   ])
 
   React.useEffect(() => {

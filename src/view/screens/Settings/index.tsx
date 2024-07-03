@@ -252,9 +252,10 @@ export function SettingsScreen({}: Props) {
   }, [clearPreferences])
 
   const onPressResetOnboarding = React.useCallback(async () => {
+    navigation.navigate('Home')
     onboardingDispatch({type: 'start'})
     Toast.show(_(msg`Onboarding reset`))
-  }, [onboardingDispatch, _])
+  }, [navigation, onboardingDispatch, _])
 
   const onPressBuildInfo = React.useCallback(() => {
     setStringAsync(
