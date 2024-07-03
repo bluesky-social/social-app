@@ -203,7 +203,7 @@ export function SuggestedFollows() {
             {content}
 
             <Button
-              label={_(msg`Browse more accounts on our explore page`)}
+              label={_(msg`Browse more accounts on the Explore page`)}
               onPress={() => {
                 navigation.navigate('SearchTab')
               }}>
@@ -211,7 +211,7 @@ export function SuggestedFollows() {
                 <View style={[a.flex_1, a.justify_center]}>
                   <View style={[a.flex_row, a.px_lg]}>
                     <Text style={[a.pr_xl, a.flex_1, a.leading_snug]}>
-                      <Trans>Browse more suggestions on our explore page</Trans>
+                      <Trans>Browse more suggestions on the Explore page</Trans>
                     </Text>
 
                     <Arrow size="xl" />
@@ -329,7 +329,7 @@ export function SuggestedFeeds() {
             {content}
 
             <Button
-              label={_(msg`Browse more feeds on our explore page`)}
+              label={_(msg`Browse more feeds on the Explore page`)}
               onPress={() => {
                 navigation.navigate('SearchTab')
               }}
@@ -338,7 +338,7 @@ export function SuggestedFeeds() {
                 <View style={[a.flex_1, a.justify_center]}>
                   <View style={[a.flex_row, a.px_lg]}>
                     <Text style={[a.pr_xl, a.flex_1, a.leading_snug]}>
-                      <Trans>Browse more suggestions on our explore page</Trans>
+                      <Trans>Browse more suggestions on the Explore page</Trans>
                     </Text>
 
                     <Arrow size="xl" />
