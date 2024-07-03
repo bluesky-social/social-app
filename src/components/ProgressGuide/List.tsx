@@ -22,7 +22,7 @@ export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
   if (guide) {
     return (
       <View style={[a.flex_col, a.gap_md, style]}>
-        <View style={[a.flex_row, a.align_center]}>
+        <View style={[a.flex_row, a.align_center, a.justify_between]}>
           <Text
             style={[
               t.atoms.text_contrast_medium,
@@ -30,27 +30,29 @@ export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
               a.text_sm,
               {textTransform: 'uppercase'},
             ]}>
-            <Trans>Get started</Trans>
+            <Trans>Getting started</Trans>
           </Text>
           <Button
             variant="ghost"
             size="tiny"
             color="secondary"
+            shape="round"
             label={_(msg`Dismiss getting started guide`)}
             onPress={endProgressGuide}>
-            <ButtonIcon icon={Times} />
+            <ButtonIcon icon={Times} size="sm" />
           </Button>
         </View>
         <ProgressGuideTask
           current={guide.numLikes}
           total={10}
           title={_(msg`Like 10 posts`)}
-          subtitle={_(msg`Teach Discover what you like.`)}
+          subtitle={_(msg`Teach our algorithm what you like`)}
         />
         <ProgressGuideTask
           current={guide.numFollows}
           total={7}
           title={_(msg`Follow 7 accounts`)}
+          subtitle={_(msg`Bluesky is better with friends!`)}
         />
       </View>
     )

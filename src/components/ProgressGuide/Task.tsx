@@ -35,7 +35,7 @@ export function ProgressGuideTask({
       )}
 
       <View style={[a.flex_col, a.gap_xs]}>
-        <Text style={[a.text_md, a.font_semibold]}>{title}</Text>
+        <Text style={[a.text_sm, a.font_semibold]}>{title}</Text>
         {subtitle && (
           <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
             {subtitle}
