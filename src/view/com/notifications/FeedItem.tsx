@@ -22,6 +22,7 @@ import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {useGate} from '#/lib/statsig/statsig'
 import {FeedNotification} from '#/state/queries/notifications/feed'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -86,6 +87,7 @@ let FeedItem = ({
   const pal = usePalette('default')
   const {_} = useLingui()
   const t = useTheme()
+  const gate = useGate()
   const [isAuthorsExpanded, setAuthorsExpanded] = useState<boolean>(false)
   const itemHref = useMemo(() => {
     if (item.type === 'post-like' || item.type === 'repost') {
@@ -185,7 +187,10 @@ let FeedItem = ({
     action = _(msg`reposted your post`)
     icon = <RepostIcon size="xl" style={{color: t.palette.positive_600}} />
   } else if (item.type === 'follow') {
-    if (item.notification.author.viewer?.following) {
+    if (
+      item.notification.author.viewer?.following &&
+      gate('ungroup_follow_backs')
+    ) {
       isFollowBack = true
       action = _(msg`followed you back`)
     } else {

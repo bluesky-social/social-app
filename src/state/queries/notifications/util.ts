@@ -30,6 +30,7 @@ export async function fetchPage({
   queryClient,
   moderationOpts,
   fetchAdditionalData,
+  ungroupFollowBacks,
 }: {
   agent: BskyAgent
   cursor: string | undefined
@@ -37,6 +38,7 @@ export async function fetchPage({
   queryClient: QueryClient
   moderationOpts: ModerationOpts | undefined
   fetchAdditionalData: boolean
+  ungroupFollowBacks?: boolean
 }): Promise<{page: FeedPage; indexedAt: string | undefined}> {
   const res = await agent.listNotifications({
     limit,
@@ -51,7 +53,7 @@ export async function fetchPage({
   )
 
   // group notifications which are essentially similar (follows, likes on a post)
-  let notifsGrouped = groupNotifications(notifs)
+  let notifsGrouped = groupNotifications(notifs, {ungroupFollowBacks})
 
   // we fetch subjects of notifications (usually posts) now instead of lazily
   // in the UI to avoid relayouts
@@ -109,6 +111,7 @@ export function shouldFilterNotif(
 
 export function groupNotifications(
   notifs: AppBskyNotificationListNotifications.Notification[],
+  options?: {ungroupFollowBacks?: boolean},
 ): FeedNotification[] {
   const groupedNotifs: FeedNotification[] = []
   for (const notif of notifs) {
@@ -117,18 +120,21 @@ export function groupNotifications(
     if (GROUPABLE_REASONS.includes(notif.reason)) {
       for (const groupedNotif of groupedNotifs) {
         const ts2 = +new Date(groupedNotif.notification.indexedAt)
+
         const nextIsFollowBack =
           notif.reason === 'follow' && notif.author.viewer?.following
-        const groupedIsFollowBack =
+        const prevIsFollowBack =
           groupedNotif.notification.reason === 'follow' &&
           groupedNotif.notification.author.viewer?.following
+        const shouldUngroup =
+          options?.ungroupFollowBacks && (nextIsFollowBack || prevIsFollowBack)
+
         if (
           Math.abs(ts2 - ts) < MS_2DAY &&
           notif.reason === groupedNotif.notification.reason &&
           notif.reasonSubject === groupedNotif.notification.reasonSubject &&
           notif.author.did !== groupedNotif.notification.author.did &&
-          !nextIsFollowBack &&
-          !groupedIsFollowBack
+          !shouldUngroup
         ) {
           groupedNotif.additional = groupedNotif.additional || []
           groupedNotif.additional.push(notif)
