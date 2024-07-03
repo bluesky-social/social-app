@@ -230,8 +230,15 @@ export function SuggestedFeeds() {
   const numFeedsToDisplay = 3
   const t = useTheme()
   const {_} = useLingui()
+  const [initialCursor] = React.useState(() => {
+    const min = 9880
+    const max = 9999
+    const range = max - min
+    return Math.floor(Math.random() * range) + min + ''
+  })
   const {data, isLoading, error} = useGetPopularFeedsQuery({
     limit: numFeedsToDisplay,
+    cursor: initialCursor,
   })
   const navigation = useNavigation<NavigationProp>()
   const {gtMobile} = useBreakpoints()

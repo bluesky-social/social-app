@@ -193,7 +193,7 @@ export const KNOWN_AUTHED_ONLY_FEEDS = [
   'at://did:plc:vpkhqolt662uhesyj6nxm7ys/app.bsky.feed.generator/followpics', // the gram, by why
 ]
 
-type GetPopularFeedsOptions = {limit?: number}
+type GetPopularFeedsOptions = {limit?: number; cursor?: string}
 
 export function createGetPopularFeedsQueryKey(
   options?: GetPopularFeedsOptions,
@@ -240,7 +240,7 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
 
       return res.data
     },
-    initialPageParam: undefined,
+    initialPageParam: options?.cursor,
     getNextPageParam: lastPage => lastPage.cursor,
     select: useCallback(
       (
