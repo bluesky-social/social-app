@@ -28,6 +28,7 @@ import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
 import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
 import {FollowingEndOfFeed} from 'view/com/posts/FollowingEndOfFeed'
 import {NoFeedsPinned} from '#/screens/Home/NoFeedsPinned'
+import {TOURS, useTriggerTourIfQueued} from '#/tours'
 import {HomeHeader} from '../com/home/HomeHeader'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home' | 'Start'>
@@ -86,6 +87,7 @@ function HomeScreenReady({
   const selectedIndex = Math.max(0, maybeFoundIndex)
   const selectedFeed = allFeeds[selectedIndex]
   const requestNotificationsPermission = useRequestNotificationsPermission()
+  const triggerTourIfQueued = useTriggerTourIfQueued(TOURS.HOME)
 
   useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName)
   useOTAUpdates()
@@ -113,10 +115,16 @@ function HomeScreenReady({
     React.useCallback(() => {
       setMinimalShellMode(false)
       setDrawerSwipeDisabled(selectedIndex > 0)
+      triggerTourIfQueued()
       return () => {
         setDrawerSwipeDisabled(false)
       }
-    }, [setDrawerSwipeDisabled, selectedIndex, setMinimalShellMode]),
+    }, [
+      setDrawerSwipeDisabled,
+      selectedIndex,
+      setMinimalShellMode,
+      triggerTourIfQueued,
+    ]),
   )
 
   useFocusEffect(
