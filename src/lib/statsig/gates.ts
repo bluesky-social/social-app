@@ -7,5 +7,6 @@ export type Gate =
   | 'show_avi_follow_button'
   | 'show_follow_back_label_v2'
   | 'new_user_guided_tour'
+  | 'new_user_progress_guide'
   | 'suggested_feeds_interstitial'
   | 'suggested_follows_interstitial'

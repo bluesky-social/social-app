@@ -6,6 +6,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {NavigationProp} from '#/lib/routes/types'
 import {logEvent} from '#/lib/statsig/statsig'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -20,6 +21,7 @@ import {PersonPlus_Stroke2_Corner0_Rounded as Person} from '#/components/icons/P
 import {InlineLinkText} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
+import {ProgressGuideList} from './ProgressGuide/List'
 
 function CardOuter({
   children,
@@ -349,6 +351,28 @@ export function SuggestedFeeds() {
           </View>
         </ScrollView>
       )}
+    </View>
+  )
+}
+
+export function ProgressGuide() {
+  const t = useTheme()
+  const {isDesktop} = useWebMediaQueries()
+
+  if (isDesktop) {
+    return null
+  }
+
+  return (
+    <View
+      style={[
+        a.border_t,
+        t.atoms.border_contrast_low,
+        a.px_lg,
+        a.py_lg,
+        a.pb_lg,
+      ]}>
+      <ProgressGuideList />
     </View>
   )
 }

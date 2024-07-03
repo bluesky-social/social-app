@@ -2,6 +2,7 @@ import React from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useGate} from '#/lib/statsig/statsig'
 import {
   ProgressGuideToast,
   ProgressGuideToastRef,
@@ -55,14 +56,10 @@ export function useProgressGuideControls() {
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const {_} = useLingui()
   const {mutate} = useSetActiveProgressGuideMutation()
+  const gate = useGate()
 
   const [activeProgressGuide, setActiveProgressGuide] =
-    React.useState<ProgressGuide>({
-      guide: 'like-10-and-follow-7',
-      numLikes: 0,
-      numFollows: 0,
-      isComplete: false,
-    })
+    React.useState<ProgressGuide>(undefined)
 
   const firstLikeToastRef = React.useRef<ProgressGuideToastRef | null>(null)
   const fifthLikeToastRef = React.useRef<ProgressGuideToastRef | null>(null)
@@ -71,6 +68,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const controls = React.useMemo(() => {
     return {
       startProgressGuide(guide: ProgressGuideName) {
+        if (!gate('new_user_progress_guide')) {
+          return
+        }
         if (guide === 'like-10-and-follow-7') {
           const guideObj = {
             guide: 'like-10-and-follow-7',
@@ -127,7 +127,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         setActiveProgressGuide(guide)
       },
     }
-  }, [activeProgressGuide, setActiveProgressGuide, mutate])
+  }, [activeProgressGuide, setActiveProgressGuide, mutate, gate])
 
   return (
     <ProgressGuideContext.Provider value={activeProgressGuide}>

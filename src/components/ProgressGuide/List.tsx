@@ -13,7 +13,7 @@ import {TimesLarge_Stroke2_Corner0_Rounded as Times} from '#/components/icons/Ti
 import {Text} from '#/components/Typography'
 import {ProgressGuideTask} from './Task'
 
-export function ProgressGuideList({style}: {style: StyleProp<ViewStyle>}) {
+export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
   const t = useTheme()
   const {_} = useLingui()
   const guide = useProgressGuide('like-10-and-follow-7')
@@ -27,7 +27,7 @@ export function ProgressGuideList({style}: {style: StyleProp<ViewStyle>}) {
             style={[
               t.atoms.text_contrast_medium,
               a.font_semibold,
-              a.text_xs,
+              a.text_sm,
               {textTransform: 'uppercase'},
             ]}>
             <Trans>Get started</Trans>
