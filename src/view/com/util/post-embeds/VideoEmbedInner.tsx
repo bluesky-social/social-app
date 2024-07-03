@@ -71,7 +71,7 @@ export const VideoEmbedInner = ({}: {source: string}) => {
         ref={ref}
         player={player}
         style={a.flex_1}
-        nativeControls={false}
+        nativeControls={true}
       />
       <VideoControls player={player} enterFullscreen={enterFullscreen} />
     </Animated.View>
