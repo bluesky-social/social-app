@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-07-03 10:37+0900\n"
+"PO-Revision-Date: 2024-07-03 22:09+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -208,6 +208,10 @@ msgstr "⚠無効なハンドル"
 #: src/screens/Login/LoginForm.tsx:247
 msgid "2FA Confirmation"
 msgstr "２要素認証の確認"
+
+#: src/tours/Tooltip.tsx:70
+msgid "A help tooltip"
+msgstr "ヘルプ・ツールチップ"
 
 #: src/view/com/util/ViewHeader.tsx:93
 #: src/view/screens/Search/Search.tsx:684
@@ -740,6 +744,24 @@ msgstr "画像のぼかしとフィードからのフィルタリング"
 #: src/screens/Onboarding/state.ts:81
 msgid "Books"
 msgstr "書籍"
+
+#: src/components/FeedInterstitials.tsx:206
+msgid "Browse more accounts on the Explore page"
+msgstr "検索ページでさらにアカウントを見る"
+
+#: src/components/FeedInterstitials.tsx:332
+msgid "Browse more feeds on the Explore page"
+msgstr "検索ページでさらにフィードを見る"
+
+#: src/components/FeedInterstitials.tsx:195
+#: src/components/FeedInterstitials.tsx:321
+msgid "Browse more suggestions"
+msgstr "さらにおすすめを見る"
+
+#: src/components/FeedInterstitials.tsx:214
+#: src/components/FeedInterstitials.tsx:341
+msgid "Browse more suggestions on the Explore page"
+msgstr "検索ページでさらにおすすめを見る"
 
 #: src/screens/Home/NoFeedsPinned.tsx:103
 #: src/screens/Home/NoFeedsPinned.tsx:109
@@ -1610,6 +1632,10 @@ msgstr "下書きを削除しますか？"
 msgid "Discourage apps from showing my account to logged-out users"
 msgstr "アプリがログアウトしたユーザーに自分のアカウントを表示しないようにする"
 
+#: src/tours/HomeTour.tsx:70
+msgid "Discover learns which posts you like as you browse."
+msgstr "Discoverは閲覧中にどの投稿が好みなのかを学習します。"
+
 #: src/view/com/posts/FollowingEmptyState.tsx:70
 #: src/view/com/posts/FollowingEndOfFeed.tsx:71
 msgid "Discover new custom feeds"
@@ -1913,6 +1939,10 @@ msgstr "有効"
 msgid "End of feed"
 msgstr "フィードの終わり"
 
+#: src/tours/Tooltip.tsx:159
+msgid "End of onboarding tour window. Do not move forward. Instead, go backward for more options, or press to skip."
+msgstr "オンボーディングツアー・ウインドウ終了。前へ移動しないでください。代わりに、戻って他のオプションを見るか、スキップしてください。"
+
 #: src/view/com/modals/AddAppPasswords.tsx:160
 msgid "Enter a name for this App Password"
 msgstr "このアプリパスワードの名前を入力"
@@ -2206,6 +2236,10 @@ msgstr "最後に"
 msgid "Find accounts to follow"
 msgstr "フォローするアカウントを探す"
 
+#: src/tours/HomeTour.tsx:88
+msgid "Find more feeds and accounts to follow in the Explore page."
+msgstr "検索ページでフォローすべきフィードやアカウントを見つける。"
+
 #: src/view/screens/Search/Search.tsx:439
 msgid "Find posts and users on Bluesky"
 msgstr "投稿やユーザーをBlueskyで検索"
@@ -2221,6 +2255,10 @@ msgstr "ディスカッションスレッドを微調整します。"
 #: src/screens/StarterPack/Wizard/index.tsx:192
 msgid "Finish"
 msgstr "完了"
+
+#: src/tours/Tooltip.tsx:149
+msgid "Finish tour and begin using the application"
+msgstr "ツアーを終了してアプリを使用開始"
 
 #: src/screens/Onboarding/index.tsx:35
 msgid "Fitness"
@@ -2356,6 +2394,10 @@ msgstr "Followingフィードの設定"
 msgid "Following Feed Preferences"
 msgstr "Followingフィードの設定"
 
+#: src/tours/HomeTour.tsx:59
+msgid "Following shows the latest posts from people you follow."
+msgstr "Followingはフォローしてるユーザーの最新の投稿を表示します。"
+
 #: src/screens/Profile/Header/Handle.tsx:31
 msgid "Follows you"
 msgstr "あなたをフォロー"
@@ -2490,6 +2532,10 @@ msgstr "次へ"
 #: src/components/dms/ConvoMenu.tsx:167
 msgid "Go to profile"
 msgstr "プロフィールへ"
+
+#: src/tours/Tooltip.tsx:138
+msgid "Go to the next step of the tour"
+msgstr "ツアーの次のステップへ移動"
 
 #: src/components/dms/ConvoMenu.tsx:164
 msgid "Go to user's profile"
@@ -3686,6 +3732,10 @@ msgstr "{str}"
 msgid "Onboarding reset"
 msgstr "オンボーディングのリセット"
 
+#: src/tours/Tooltip.tsx:118
+msgid "Onboarding tour step {0}: {1}"
+msgstr "オンボーディングツアー ステップ {0}：{1}"
+
 #: src/view/com/composer/Composer.tsx:522
 msgid "One or more images is missing alt text."
 msgstr "１つもしくは複数の画像にALTテキストがありません。"
@@ -4291,6 +4341,10 @@ msgstr "QRコードをダウンロードしました！"
 #: src/components/StarterPack/QrCodeDialog.tsx:104
 msgid "QR code saved to your camera roll!"
 msgstr "QRコードをカメラロールに保存しました！"
+
+#: src/tours/Tooltip.tsx:111
+msgid "Quick tip"
+msgstr "クイック・チップ"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:116
 #: src/view/com/util/post-ctrls/RepostButton.tsx:128
@@ -5341,6 +5395,10 @@ msgstr "この手順をスキップする"
 msgid "Software Dev"
 msgstr "ソフトウェア開発"
 
+#: src/components/FeedInterstitials.tsx:303
+msgid "Some other feeds you might like"
+msgstr "お好みかもしれない他のフィード"
+
 #: src/components/WhoCanReply.tsx:72
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:47
 msgid "Some people can reply"
@@ -5407,6 +5465,10 @@ msgstr "{displayName}とのチャットを開始"
 #: src/components/dms/MessagesNUX.tsx:161
 msgid "Start chatting"
 msgstr "チャットを開始"
+
+#: src/tours/Tooltip.tsx:99
+msgid "Start of onboarding tour window. Do not move backward. Instead, go forward for more options, or press to skip."
+msgstr "オンボーディングツアー・ウインドウ開始。前へ移動しないでください。代わりに、戻って他のオプションを見るか、スキップしてください。"
 
 #: src/lib/generate-starterpack.ts:68
 #: src/Navigation.tsx:325
@@ -5496,6 +5558,10 @@ msgstr "サポート"
 #: src/components/dialogs/SwitchAccount.tsx:50
 msgid "Switch Account"
 msgstr "アカウントを切り替える"
+
+#: src/tours/HomeTour.tsx:48
+msgid "Switch between feeds to control your experience."
+msgstr "フィードを切り替えて、あなたの体験をコントロールしよう。"
 
 #: src/view/screens/Settings/index.tsx:160
 msgid "Switch to {0}"
