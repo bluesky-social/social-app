@@ -17,7 +17,7 @@ export async function compressVideo(
   const blob = await fetch(file).then(res => res.blob())
   const video = URL.createObjectURL(blob)
 
-  if (blob.size < MAX_VIDEO_SIZE) {
+  if (blob.size > MAX_VIDEO_SIZE) {
     Toast.show('Videos cannot be larger than 100MB')
     throw new Error('Videos cannot be larger than 100MB')
   }
