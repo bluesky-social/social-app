@@ -112,14 +112,6 @@ const interstials: Record<
 > = {
   following: [
     {
-      type: progressGuideInterstitialType,
-      params: {
-        variant: 'default',
-      },
-      key: progressGuideInterstitialType,
-      slot: 0,
-    },
-    {
       type: followInterstitialType,
       params: {
         variant: 'default',
