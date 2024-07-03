@@ -176,11 +176,12 @@ function StarterPackScreenLoaded({
   const showPeopleTab = Boolean(starterPack.list)
   const showFeedsTab = Boolean(starterPack.feeds?.length)
   const showPostsTab = Boolean(starterPack.list)
+  const {_} = useLingui()
 
   const tabs = [
-    ...(showPeopleTab ? ['People'] : []),
-    ...(showFeedsTab ? ['Feeds'] : []),
-    ...(showPostsTab ? ['Posts'] : []),
+    ...(showPeopleTab ? [_(msg`People`)] : []),
+    ...(showFeedsTab ? [_(msg`Feeds`)] : []),
+    ...(showPostsTab ? [_(msg`Posts`)] : []),
   ]
 
   const qrCodeDialogControl = useDialogControl()
