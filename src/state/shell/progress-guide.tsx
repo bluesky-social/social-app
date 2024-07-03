@@ -62,14 +62,18 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const {mutate, variables} = useSetActiveProgressGuideMutation()
   const gate = useGate()
 
-  const activeProgressGuide =
-    variables || preferences?.bskyAppState?.activeProgressGuide
+  const activeProgressGuide = (variables ||
+    preferences?.bskyAppState?.activeProgressGuide) as ProgressGuide
 
   // ensure the unspecced attributes have the correct types
   if (activeProgressGuide?.guide === 'like-10-and-follow-7') {
     activeProgressGuide.numLikes = Number(activeProgressGuide.numLikes) || 0
     activeProgressGuide.numFollows = Number(activeProgressGuide.numFollows) || 0
   }
+
+  const [localGuideState, setLocalGuideState] = React.useState<ProgressGuide>(
+    () => activeProgressGuide,
+  )
 
   const firstLikeToastRef = React.useRef<ProgressGuideToastRef | null>(null)
   const fifthLikeToastRef = React.useRef<ProgressGuideToastRef | null>(null)
@@ -89,11 +93,13 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             isComplete: false,
           }
           mutate(guideObj)
+          setLocalGuideState(guideObj)
         }
       },
 
       endProgressGuide() {
         mutate(undefined)
+        setLocalGuideState(undefined)
       },
 
       captureAction(action: ProgressGuideAction, count = 1) {
@@ -124,37 +130,41 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             }
           }
           if (Number(guide.numLikes) >= 10 && Number(guide.numFollows) >= 7) {
-            tenthLikeToastRef.current?.open()
             guide = {
               ...guide,
               isComplete: true,
             }
           }
         }
+        setLocalGuideState(guide)
         mutate(guide?.isComplete ? undefined : guide)
       },
     }
-  }, [activeProgressGuide, mutate, gate])
+  }, [activeProgressGuide, mutate, gate, setLocalGuideState])
 
   return (
-    <ProgressGuideContext.Provider value={activeProgressGuide as ProgressGuide}>
+    <ProgressGuideContext.Provider value={localGuideState}>
       <ProgressGuideControlContext.Provider value={controls}>
         {children}
-        <ProgressGuideToast
-          ref={firstLikeToastRef}
-          title={_(msg`Your first like!`)}
-          subtitle={_(msg`Like 10 posts to train the Discover feed`)}
-        />
-        <ProgressGuideToast
-          ref={fifthLikeToastRef}
-          title={_(msg`Half way there!`)}
-          subtitle={_(msg`Like 10 posts to train the Discover feed`)}
-        />
-        <ProgressGuideToast
-          ref={tenthLikeToastRef}
-          title={_(msg`Task complete - 10 likes!`)}
-          subtitle={_(msg`The Discover feed now knows what you like`)}
-        />
+        {localGuideState?.guide === 'like-10-and-follow-7' && (
+          <>
+            <ProgressGuideToast
+              ref={firstLikeToastRef}
+              title={_(msg`Your first like!`)}
+              subtitle={_(msg`Like 10 posts to train the Discover feed`)}
+            />
+            <ProgressGuideToast
+              ref={fifthLikeToastRef}
+              title={_(msg`Half way there!`)}
+              subtitle={_(msg`Like 10 posts to train the Discover feed`)}
+            />
+            <ProgressGuideToast
+              ref={tenthLikeToastRef}
+              title={_(msg`Task complete - 10 likes!`)}
+              subtitle={_(msg`The Discover feed now knows what you like`)}
+            />
+          </>
+        )}
       </ProgressGuideControlContext.Provider>
     </ProgressGuideContext.Provider>
   )
