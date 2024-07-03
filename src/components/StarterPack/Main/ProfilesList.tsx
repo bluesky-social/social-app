@@ -9,6 +9,7 @@ import {
 import {InfiniteData, UseInfiniteQueryResult} from '@tanstack/react-query'
 
 import {useBottomBarOffset} from 'lib/hooks/useBottomBarOffset'
+import {isBlockedOrBlocking} from 'lib/moderation/blocked-and-muted'
 import {isNative, isWeb} from 'platform/detection'
 import {useSession} from 'state/session'
 import {List, ListRef} from 'view/com/util/List'
@@ -47,7 +48,7 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
     // The server returns these sorted by descending creation date, so we want to invert
     const profiles = data?.pages
       .flatMap(p => p.items.map(i => i.subject))
-      .filter(p => !p.associated?.labeler)
+      .filter(p => !isBlockedOrBlocking(p) && !p.associated?.labeler)
       .reverse()
     const isOwn = new AtUri(listUri).host === currentAccount?.did
 

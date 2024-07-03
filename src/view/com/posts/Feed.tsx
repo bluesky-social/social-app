@@ -15,8 +15,8 @@ import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {FALLBACK_MARKER_POST} from '#/lib/api/feed/home'
-import {KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
-import {logEvent} from '#/lib/statsig/statsig'
+import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
+import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {listenPostCreated} from '#/state/events'
@@ -25,6 +25,7 @@ import {STALE} from '#/state/queries'
 import {
   FeedDescriptor,
   FeedParams,
+  FeedPostSlice,
   pollLatest,
   RQKEY,
   usePostFeedQuery,
@@ -33,6 +34,7 @@ import {useSession} from '#/state/session'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
 import {useTheme} from 'lib/ThemeContext'
+import {SuggestedFeeds, SuggestedFollows} from '#/components/FeedInterstitials'
 import {List, ListRef} from '../util/List'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
@@ -41,11 +43,92 @@ import {FeedErrorMessage} from './FeedErrorMessage'
 import {FeedShutdownMsg} from './FeedShutdownMsg'
 import {FeedSlice} from './FeedSlice'
 
-const LOADING_ITEM = {_reactKey: '__loading__'}
-const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
-const ERROR_ITEM = {_reactKey: '__error__'}
-const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
-const FEED_SHUTDOWN_MSG_ITEM = {_reactKey: '__feed_shutdown_msg_item__'}
+type FeedItem =
+  | {
+      type: 'loading'
+      key: string
+    }
+  | {
+      type: 'empty'
+      key: string
+    }
+  | {
+      type: 'error'
+      key: string
+    }
+  | {
+      type: 'loadMoreError'
+      key: string
+    }
+  | {
+      type: 'feedShutdownMsg'
+      key: string
+    }
+  | {
+      type: 'slice'
+      key: string
+      slice: FeedPostSlice
+    }
+  | {
+      type: 'interstitialFeeds'
+      key: string
+      params: {
+        variant: 'default' | string
+      }
+      slot: number
+    }
+  | {
+      type: 'interstitialFollows'
+      key: string
+      params: {
+        variant: 'default' | string
+      }
+      slot: number
+    }
+
+const feedInterstitialType = 'interstitialFeeds'
+const followInterstitialType = 'interstitialFollows'
+const interstials: Record<
+  'following' | 'discover',
+  (FeedItem & {type: 'interstitialFeeds' | 'interstitialFollows'})[]
+> = {
+  following: [
+    {
+      type: followInterstitialType,
+      params: {
+        variant: 'default',
+      },
+      key: followInterstitialType,
+      slot: 20,
+    },
+    {
+      type: feedInterstitialType,
+      params: {
+        variant: 'default',
+      },
+      key: feedInterstitialType,
+      slot: 40,
+    },
+  ],
+  discover: [
+    {
+      type: feedInterstitialType,
+      params: {
+        variant: 'default',
+      },
+      key: feedInterstitialType,
+      slot: 20,
+    },
+    {
+      type: followInterstitialType,
+      params: {
+        variant: 'default',
+      },
+      key: followInterstitialType,
+      slot: 40,
+    },
+  ],
+}
 
 // DISABLED need to check if this is causing random feed refreshes -prf
 // const REFRESH_AFTER = STALE.HOURS.ONE
@@ -94,13 +177,16 @@ let Feed = ({
   const {track} = useAnalytics()
   const {_} = useLingui()
   const queryClient = useQueryClient()
-  const {currentAccount} = useSession()
+  const {currentAccount, hasSession} = useSession()
   const initialNumToRender = useInitialNumToRender()
   const feedFeedback = useFeedFeedbackContext()
   const [isPTRing, setIsPTRing] = React.useState(false)
   const checkForNewRef = React.useRef<(() => void) | null>(null)
   const lastFetchRef = React.useRef<number>(Date.now())
   const [feedType, feedUri] = feed.split('|')
+  const feedIsDiscover = feedUri === DISCOVER_FEED_URI
+  const feedIsFollowing = feedType === 'following'
+  const gate = useGate()
 
   const opts = React.useMemo(
     () => ({enabled, ignoreFilterFor}),
@@ -198,29 +284,94 @@ let Feed = ({
     }
   }, [pollInterval])
 
-  const feedItems = React.useMemo(() => {
-    let arr: any[] = []
+  const feedItems: FeedItem[] = React.useMemo(() => {
+    let arr: FeedItem[] = []
     if (KNOWN_SHUTDOWN_FEEDS.includes(feedUri)) {
-      arr = arr.concat([FEED_SHUTDOWN_MSG_ITEM])
+      arr.push({
+        type: 'feedShutdownMsg',
+        key: 'feedShutdownMsg',
+      })
     }
     if (isFetched) {
       if (isError && isEmpty) {
-        arr = arr.concat([ERROR_ITEM])
+        arr.push({
+          type: 'error',
+          key: 'error',
+        })
       } else if (isEmpty) {
-        arr = arr.concat([EMPTY_FEED_ITEM])
+        arr.push({
+          type: 'empty',
+          key: 'empty',
+        })
       } else if (data) {
         for (const page of data?.pages) {
-          arr = arr.concat(page.slices)
+          arr = arr.concat(
+            page.slices.map(s => ({
+              type: 'slice',
+              slice: s,
+              key: s._reactKey,
+            })),
+          )
         }
       }
       if (isError && !isEmpty) {
-        arr = arr.concat([LOAD_MORE_ERROR_ITEM])
+        arr.push({
+          type: 'loadMoreError',
+          key: 'loadMoreError',
+        })
       }
     } else {
-      arr.push(LOADING_ITEM)
+      arr.push({
+        type: 'loading',
+        key: 'loading',
+      })
     }
+
+    if (hasSession) {
+      const feedType = feedIsFollowing
+        ? 'following'
+        : feedIsDiscover
+        ? 'discover'
+        : undefined
+
+      if (feedType) {
+        for (const interstitial of interstials[feedType]) {
+          const feedInterstitialEnabled =
+            interstitial.type === feedInterstitialType &&
+            gate('suggested_feeds_interstitial')
+          const followInterstitialEnabled =
+            interstitial.type === followInterstitialType &&
+            gate('suggested_follows_interstitial')
+
+          if (feedInterstitialEnabled || followInterstitialEnabled) {
+            const variant = 'default' // replace with experiment variant
+            const int = {
+              ...interstitial,
+              params: {variant},
+              // overwrite key with unique value
+              key: [interstitial.type, variant].join(':'),
+            }
+
+            if (arr.length > interstitial.slot) {
+              arr.splice(interstitial.slot, 0, int)
+            }
+          }
+        }
+      }
+    }
+
     return arr
-  }, [isFetched, isError, isEmpty, data, feedUri])
+  }, [
+    isFetched,
+    isError,
+    isEmpty,
+    data,
+    feedUri,
+    feedIsDiscover,
+    feedIsFollowing,
+    gate,
+    hasSession,
+  ])
 
   // events
   // =
@@ -280,10 +431,10 @@ let Feed = ({
   // =
 
   const renderItem = React.useCallback(
-    ({item, index}: ListRenderItemInfo<any>) => {
-      if (item === EMPTY_FEED_ITEM) {
+    ({item, index}: ListRenderItemInfo<FeedItem>) => {
+      if (item.type === 'empty') {
         return renderEmptyState()
-      } else if (item === ERROR_ITEM) {
+      } else if (item.type === 'error') {
         return (
           <FeedErrorMessage
             feedDesc={feed}
@@ -292,7 +443,7 @@ let Feed = ({
             savedFeedConfig={savedFeedConfig}
           />
         )
-      } else if (item === LOAD_MORE_ERROR_ITEM) {
+      } else if (item.type === 'loadMoreError') {
         return (
           <LoadMoreRetryBtn
             label={_(
@@ -301,18 +452,28 @@ let Feed = ({
             onPress={onPressRetryLoadMore}
           />
         )
-      } else if (item === LOADING_ITEM) {
+      } else if (item.type === 'loading') {
         return <PostFeedLoadingPlaceholder />
-      } else if (item === FEED_SHUTDOWN_MSG_ITEM) {
+      } else if (item.type === 'feedShutdownMsg') {
         return <FeedShutdownMsg feedUri={feedUri} />
-      } else if (item.rootUri === FALLBACK_MARKER_POST.post.uri) {
-        // HACK
-        // tell the user we fell back to discover
-        // see home.ts (feed api) for more info
-        // -prf
-        return <DiscoverFallbackHeader />
+      } else if (item.type === feedInterstitialType) {
+        return <SuggestedFeeds />
+      } else if (item.type === followInterstitialType) {
+        return <SuggestedFollows />
+      } else if (item.type === 'slice') {
+        if (item.slice.rootUri === FALLBACK_MARKER_POST.post.uri) {
+          // HACK
+          // tell the user we fell back to discover
+          // see home.ts (feed api) for more info
+          // -prf
+          return <DiscoverFallbackHeader />
+        }
+        return (
+          <FeedSlice slice={item.slice} hideTopBorder={index === 0 && !isWeb} />
+        )
+      } else {
+        return null
       }
-      return <FeedSlice slice={item} hideTopBorder={index === 0 && !isWeb} />
     },
     [
       renderEmptyState,
@@ -354,7 +515,7 @@ let Feed = ({
         testID={testID ? `${testID}-flatlist` : undefined}
         ref={scrollElRef}
         data={feedItems}
-        keyExtractor={item => item._reactKey}
+        keyExtractor={item => item.key}
         renderItem={renderItem}
         ListFooterComponent={FeedFooter}
         ListHeaderComponent={ListHeaderComponent}
