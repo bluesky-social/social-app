@@ -132,7 +132,7 @@ msgstr "시간"
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
 msgstr "분"
 
-#: src/components/ProfileHoverCard/index.web.tsx:503
+#: src/components/ProfileHoverCard/index.web.tsx:504
 #: src/screens/Profile/Header/Metrics.tsx:50
 msgid "{following} following"
 msgstr "{following} 팔로우 중"
@@ -205,7 +205,7 @@ msgstr "<0>나</0>와<1> </1><2>{0} </2>님이 스타터 팩에 포함됩니다"
 msgid "⚠Invalid Handle"
 msgstr "⚠잘못된 핸들"
 
-#: src/screens/Login/LoginForm.tsx:247
+#: src/screens/Login/LoginForm.tsx:266
 msgid "2FA Confirmation"
 msgstr "2단계 인증"
 
@@ -232,7 +232,7 @@ msgstr "접근성 설정"
 msgid "Accessibility Settings"
 msgstr "접근성 설정"
 
-#: src/screens/Login/LoginForm.tsx:170
+#: src/screens/Login/LoginForm.tsx:190
 #: src/view/screens/Settings/index.tsx:345
 #: src/view/screens/Settings/index.tsx:752
 msgid "Account"
@@ -481,7 +481,7 @@ msgstr "어떤 옵션에도 포함되지 않는 문제"
 msgid "An issue occurred, please try again."
 msgstr "문제가 발생했습니다. 다시 시도해 주세요."
 
-#: src/screens/Onboarding/StepInterests/index.tsx:199
+#: src/screens/Onboarding/StepInterests/index.tsx:218
 msgid "an unknown error occurred"
 msgstr "알 수 없는 오류가 발생했습니다"
 
@@ -604,7 +604,7 @@ msgstr "예술"
 msgid "Artistic or non-erotic nudity."
 msgstr "선정적이지 않거나 예술적인 노출."
 
-#: src/screens/Signup/StepHandle.tsx:119
+#: src/screens/Signup/StepHandle.tsx:170
 msgid "At least 3 characters"
 msgstr "3자 이상"
 
@@ -615,14 +615,14 @@ msgstr "3자 이상"
 #: src/screens/Login/ChooseAccountForm.tsx:103
 #: src/screens/Login/ForgotPasswordForm.tsx:129
 #: src/screens/Login/ForgotPasswordForm.tsx:135
-#: src/screens/Login/LoginForm.tsx:278
-#: src/screens/Login/LoginForm.tsx:284
+#: src/screens/Login/LoginForm.tsx:298
+#: src/screens/Login/LoginForm.tsx:304
 #: src/screens/Login/SetNewPasswordForm.tsx:160
 #: src/screens/Login/SetNewPasswordForm.tsx:166
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:133
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:134
 #: src/screens/Profile/Header/Shell.tsx:102
-#: src/screens/Signup/index.tsx:238
+#: src/screens/Signup/BackNextButtons.tsx:40
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:188
 #: src/screens/StarterPack/Wizard/index.tsx:299
 #: src/view/com/util/ViewHeader.tsx:91
@@ -921,13 +921,21 @@ msgstr "대화 언뮤트됨"
 msgid "Check my status"
 msgstr "내 상태 확인"
 
-#: src/screens/Login/LoginForm.tsx:271
+#: src/screens/Login/LoginForm.tsx:291
 msgid "Check your email for a login code and enter it here."
 msgstr "이메일에서 로그인 코드를 확인한 후 여기에 입력하세요."
 
 #: src/view/com/modals/DeleteAccount.tsx:231
 msgid "Check your inbox for an email with the confirmation code to enter below:"
-msgstr "받은 편지함에서 아래에 입력하는 인증 코드가 포함된 이메일이 있는지 확인하세요:"
+msgstr "받은 편지함에서 아래에 입력할 인증 코드가 포함된 이메일이 있는지 확인하세요."
+
+#: src/screens/Onboarding/StepInterests/index.tsx:190
+msgid "Choose 3 or more:"
+msgstr "3개 이상 선택하세요."
+
+#: src/screens/Onboarding/StepInterests/index.tsx:325
+msgid "Choose at least {0} more"
+msgstr "최소 {0}개 이상 선택하세요"
 
 #: src/screens/StarterPack/Wizard/index.tsx:191
 msgid "Choose Feeds"
@@ -958,7 +966,7 @@ msgstr "이 색상을 아바타로 선택"
 msgid "Choose who can reply"
 msgstr "답글을 달 수 있는 사람 선택하기"
 
-#: src/screens/Signup/StepInfo/index.tsx:118
+#: src/screens/Signup/StepInfo/index.tsx:171
 msgid "Choose your password"
 msgstr "비밀번호를 입력하세요"
 
@@ -1118,7 +1126,7 @@ msgstr "커뮤니티 가이드라인"
 msgid "Complete onboarding and start using your account"
 msgstr "온보딩 완료 후 계정 사용 시작"
 
-#: src/screens/Signup/index.tsx:209
+#: src/screens/Signup/index.tsx:139
 msgid "Complete the challenge"
 msgstr "챌린지 완료하기"
 
@@ -1171,7 +1179,7 @@ msgstr "나이를 확인하세요:"
 msgid "Confirm your birthdate"
 msgstr "생년월일 확인"
 
-#: src/screens/Login/LoginForm.tsx:253
+#: src/screens/Login/LoginForm.tsx:272
 #: src/view/com/modals/ChangeEmail.tsx:152
 #: src/view/com/modals/DeleteAccount.tsx:238
 #: src/view/com/modals/DeleteAccount.tsx:244
@@ -1181,11 +1189,11 @@ msgstr "생년월일 확인"
 msgid "Confirmation code"
 msgstr "인증 코드"
 
-#: src/screens/Login/LoginForm.tsx:305
+#: src/screens/Login/LoginForm.tsx:325
 msgid "Connecting..."
 msgstr "연결 중…"
 
-#: src/screens/Signup/index.tsx:283
+#: src/screens/Signup/index.tsx:171
 msgid "Contact support"
 msgstr "지원에 연락하기"
 
@@ -1222,7 +1230,7 @@ msgstr "콘텐츠 경고"
 msgid "Context menu backdrop, click to close the menu."
 msgstr "컨텍스트 메뉴 배경을 클릭하여 메뉴를 닫습니다."
 
-#: src/screens/Onboarding/StepInterests/index.tsx:258
+#: src/screens/Onboarding/StepInterests/index.tsx:277
 #: src/screens/Onboarding/StepProfile/index.tsx:269
 msgid "Continue"
 msgstr "계속"
@@ -1235,9 +1243,9 @@ msgstr "{0}(으)로 계속하기 (현재 로그인)"
 msgid "Continue thread..."
 msgstr "스레드 더 보기..."
 
-#: src/screens/Onboarding/StepInterests/index.tsx:255
+#: src/screens/Onboarding/StepInterests/index.tsx:274
 #: src/screens/Onboarding/StepProfile/index.tsx:266
-#: src/screens/Signup/index.tsx:258
+#: src/screens/Signup/BackNextButtons.tsx:59
 msgid "Continue to next step"
 msgstr "다음 단계로 계속하기"
 
@@ -1368,7 +1376,7 @@ msgstr "스타터 팩 만들기"
 msgid "Create a starter pack for me"
 msgstr "나를 위한 스타터 팩 만들기"
 
-#: src/screens/Signup/index.tsx:158
+#: src/screens/Signup/index.tsx:88
 msgid "Create Account"
 msgstr "계정 만들기"
 
@@ -1438,7 +1446,7 @@ msgstr "어두운 모드"
 msgid "Dark Theme"
 msgstr "어두운 테마"
 
-#: src/screens/Signup/StepInfo/index.tsx:138
+#: src/screens/Signup/StepInfo/index.tsx:191
 msgid "Date of birth"
 msgstr "생년월일"
 
@@ -1638,7 +1646,7 @@ msgstr "DNS 패널"
 msgid "Does not include nudity."
 msgstr "노출을 포함하지 않습니다."
 
-#: src/screens/Signup/StepHandle.tsx:105
+#: src/screens/Signup/StepHandle.tsx:156
 msgid "Doesn't begin or end with a hyphen"
 msgstr "하이픈으로 시작하거나 끝나지 않음"
 
@@ -1829,7 +1837,7 @@ msgstr "교육"
 msgid "Either choose \"Everybody\" or \"Nobody\""
 msgstr "\"모두\" 또는 \"없음\"을 선택합니다."
 
-#: src/screens/Signup/StepInfo/index.tsx:84
+#: src/screens/Signup/StepInfo/index.tsx:143
 #: src/view/com/modals/ChangeEmail.tsx:136
 msgid "Email"
 msgstr "이메일"
@@ -1942,7 +1950,7 @@ msgid "Enter your birth date"
 msgstr "생년월일을 입력하세요"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:105
-#: src/screens/Signup/StepInfo/index.tsx:96
+#: src/screens/Signup/StepInfo/index.tsx:152
 msgid "Enter your email address"
 msgstr "이메일 주소를 입력하세요"
 
@@ -1962,11 +1970,11 @@ msgstr "사용자 이름 및 비밀번호 입력"
 msgid "Error occurred while saving file"
 msgstr "파일을 저장하는 동안 오류가 발생했습니다"
 
-#: src/screens/Signup/StepCaptcha/index.tsx:51
+#: src/screens/Signup/StepCaptcha/index.tsx:54
 msgid "Error receiving captcha response."
 msgstr "캡차 응답을 수신하는 동안 오류가 발생했습니다."
 
-#: src/screens/Onboarding/StepInterests/index.tsx:197
+#: src/screens/Onboarding/StepInterests/index.tsx:216
 #: src/view/screens/Search/Search.tsx:116
 msgid "Error:"
 msgstr "오류:"
@@ -2276,7 +2284,7 @@ msgstr "맞팔로우"
 msgid "Follow more accounts to get connected to your interests and build your network."
 msgstr "더 많은 계정을 팔로우하고 관심 분야를 연결하여 네트워크를 구축하세요."
 
-#: src/view/com/profile/ProfileCard.tsx:227
+#: src/view/com/profile/ProfileCard.tsx:190
 msgid "Followed by {0}"
 msgstr "{0} 님이 팔로우함"
 
@@ -2357,7 +2365,7 @@ msgstr "팔로우 중 피드 설정"
 msgid "Follows you"
 msgstr "나를 팔로우함"
 
-#: src/view/com/profile/ProfileCard.tsx:152
+#: src/components/Pills.tsx:165
 msgid "Follows You"
 msgstr "나를 팔로우함"
 
@@ -2379,11 +2387,11 @@ msgstr "보안상의 이유로 이 비밀번호는 다시 볼 수 없습니다. 
 msgid "Forgot Password"
 msgstr "비밀번호 분실"
 
-#: src/screens/Login/LoginForm.tsx:227
+#: src/screens/Login/LoginForm.tsx:246
 msgid "Forgot password?"
 msgstr "비밀번호를 잊으셨나요?"
 
-#: src/screens/Login/LoginForm.tsx:238
+#: src/screens/Login/LoginForm.tsx:257
 msgid "Forgot?"
 msgstr "분실"
 
@@ -2459,7 +2467,7 @@ msgstr "이전 화면으로 돌아갑니다"
 #: src/components/ReportDialog/SubmitView.tsx:104
 #: src/screens/Onboarding/Layout.tsx:102
 #: src/screens/Onboarding/Layout.tsx:191
-#: src/screens/Signup/index.tsx:232
+#: src/screens/Signup/BackNextButtons.tsx:34
 msgid "Go back to previous step"
 msgstr "이전 단계로 돌아가기"
 
@@ -2516,7 +2524,7 @@ msgstr "해시태그"
 msgid "Hashtag: #{tag}"
 msgstr "해시태그: #{tag}"
 
-#: src/screens/Signup/index.tsx:279
+#: src/screens/Signup/index.tsx:167
 msgid "Having trouble?"
 msgstr "문제가 있나요?"
 
@@ -2609,8 +2617,8 @@ msgid "Host:"
 msgstr "호스트:"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:89
-#: src/screens/Login/LoginForm.tsx:160
-#: src/screens/Signup/StepInfo/index.tsx:44
+#: src/screens/Login/LoginForm.tsx:180
+#: src/screens/Signup/StepInfo/index.tsx:106
 #: src/view/com/modals/ChangeHandle.tsx:275
 msgid "Hosting provider"
 msgstr "호스팅 제공자"
@@ -2710,19 +2718,19 @@ msgstr "새 비밀번호를 입력합니다"
 msgid "Input password for account deletion"
 msgstr "계정을 삭제하기 위해 비밀번호를 입력합니다"
 
-#: src/screens/Login/LoginForm.tsx:266
+#: src/screens/Login/LoginForm.tsx:286
 msgid "Input the code which has been emailed to you"
 msgstr "이메일로 전송된 코드를 입력합니다"
 
 #: src/screens/Login/LoginForm.tsx:221
-msgid "Input the password tied to {identifier}"
-msgstr "{identifier}에 연결된 비밀번호를 입력합니다"
+#~ msgid "Input the password tied to {identifier}"
+#~ msgstr "{identifier}에 연결된 비밀번호를 입력합니다"
 
-#: src/screens/Login/LoginForm.tsx:194
+#: src/screens/Login/LoginForm.tsx:215
 msgid "Input the username or email address you used at signup"
 msgstr "가입 시 사용한 사용자 이름 또는 이메일 주소를 입력합니다"
 
-#: src/screens/Login/LoginForm.tsx:220
+#: src/screens/Login/LoginForm.tsx:241
 msgid "Input your password"
 msgstr "비밀번호를 입력합니다"
 
@@ -2730,7 +2738,7 @@ msgstr "비밀번호를 입력합니다"
 msgid "Input your preferred hosting provider"
 msgstr "선호하는 호스팅 제공자를 입력합니다"
 
-#: src/screens/Signup/StepHandle.tsx:63
+#: src/screens/Signup/StepHandle.tsx:111
 msgid "Input your user handle"
 msgstr "사용자 핸들을 입력합니다"
 
@@ -2738,7 +2746,7 @@ msgstr "사용자 핸들을 입력합니다"
 msgid "Introducing Direct Messages"
 msgstr "다이렉트 메시지 소개"
 
-#: src/screens/Login/LoginForm.tsx:135
+#: src/screens/Login/LoginForm.tsx:140
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
 msgstr "잘못된 2단계 인증 코드입니다."
@@ -2747,7 +2755,7 @@ msgstr "잘못된 2단계 인증 코드입니다."
 msgid "Invalid or unsupported post record"
 msgstr "유효하지 않거나 지원되지 않는 게시물 기록"
 
-#: src/screens/Login/LoginForm.tsx:140
+#: src/screens/Login/LoginForm.tsx:145
 msgid "Invalid username or password"
 msgstr "잘못된 사용자 이름 또는 비밀번호"
 
@@ -2755,11 +2763,11 @@ msgstr "잘못된 사용자 이름 또는 비밀번호"
 msgid "Invite a Friend"
 msgstr "친구 초대하기"
 
-#: src/screens/Signup/StepInfo/index.tsx:62
+#: src/screens/Signup/StepInfo/index.tsx:124
 msgid "Invite code"
 msgstr "초대 코드"
 
-#: src/screens/Signup/state.ts:275
+#: src/screens/Signup/state.ts:251
 msgid "Invite code not accepted. Check that you input it correctly and try again."
 msgstr "초대 코드가 올바르지 않습니다. 코드를 올바르게 입력했는지 확인한 후 다시 시도하세요."
 
@@ -3231,6 +3239,10 @@ msgstr "좋아요 많은 순"
 msgid "Movies"
 msgstr "영화"
 
+#: src/screens/Onboarding/state.ts:91
+msgid "Music"
+msgstr "음악"
+
 #: src/components/TagMenu/index.tsx:249
 msgid "Mute"
 msgstr "뮤트"
@@ -3358,7 +3370,7 @@ msgid "Name or Description Violates Community Standards"
 msgstr "이름 또는 설명이 커뮤니티 기준을 위반함"
 
 #: src/screens/Onboarding/index.tsx:22
-#: src/screens/Onboarding/state.ts:91
+#: src/screens/Onboarding/state.ts:92
 msgid "Nature"
 msgstr "자연"
 
@@ -3367,7 +3379,7 @@ msgid "Navigate to starter pack"
 msgstr "스타터 팩으로 이동합니다"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:173
-#: src/screens/Login/LoginForm.tsx:312
+#: src/screens/Login/LoginForm.tsx:332
 #: src/view/com/modals/ChangePassword.tsx:169
 msgid "Navigates to the next screen"
 msgstr "다음 화면으로 이동합니다"
@@ -3452,17 +3464,17 @@ msgid "Newest replies first"
 msgstr "새로운 순"
 
 #: src/screens/Onboarding/index.tsx:20
-#: src/screens/Onboarding/state.ts:92
+#: src/screens/Onboarding/state.ts:93
 msgid "News"
 msgstr "뉴스"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:143
 #: src/screens/Login/ForgotPasswordForm.tsx:150
-#: src/screens/Login/LoginForm.tsx:311
-#: src/screens/Login/LoginForm.tsx:318
+#: src/screens/Login/LoginForm.tsx:331
+#: src/screens/Login/LoginForm.tsx:338
 #: src/screens/Login/SetNewPasswordForm.tsx:174
 #: src/screens/Login/SetNewPasswordForm.tsx:180
-#: src/screens/Signup/index.tsx:265
+#: src/screens/Signup/BackNextButtons.tsx:66
 #: src/screens/StarterPack/Wizard/index.tsx:184
 #: src/screens/StarterPack/Wizard/index.tsx:188
 #: src/screens/StarterPack/Wizard/index.tsx:359
@@ -3507,7 +3519,7 @@ msgstr "피드를 찾을 수 없습니다. 다른 피드를 검색해 보세요.
 msgid "No longer following {0}"
 msgstr "더 이상 {0} 님을 팔로우하지 않음"
 
-#: src/screens/Signup/StepHandle.tsx:115
+#: src/screens/Signup/StepHandle.tsx:166
 msgid "No longer than 253 characters"
 msgstr "253자를 초과하지 않음"
 
@@ -3657,7 +3669,7 @@ msgstr "끄기"
 msgid "Oh no!"
 msgstr "이런!"
 
-#: src/screens/Onboarding/StepInterests/index.tsx:138
+#: src/screens/Onboarding/StepInterests/index.tsx:152
 msgid "Oh no! Something went wrong."
 msgstr "이런! 뭔가 잘못되었습니다."
 
@@ -3697,7 +3709,7 @@ msgstr ".jpg 및 .png 파일만 지원합니다"
 msgid "Only {0} can reply"
 msgstr "{0}만 답글을 달 수 있음"
 
-#: src/screens/Signup/StepHandle.tsx:98
+#: src/screens/Signup/StepHandle.tsx:149
 msgid "Only contains letters, numbers, and hyphens"
 msgstr "문자, 숫자, 하이픈만 포함"
 
@@ -3862,7 +3874,7 @@ msgstr "사용자 지정 도메인을 사용하기 위한 대화 상자를 엽�
 msgid "Opens moderation settings"
 msgstr "검토 설정을 엽니다"
 
-#: src/screens/Login/LoginForm.tsx:228
+#: src/screens/Login/LoginForm.tsx:247
 msgid "Opens password reset form"
 msgstr "비밀번호 재설정 양식을 엽니다"
 
@@ -3946,8 +3958,8 @@ msgstr "페이지를 찾을 수 없음"
 msgid "Page Not Found"
 msgstr "페이지를 찾을 수 없음"
 
-#: src/screens/Login/LoginForm.tsx:204
-#: src/screens/Signup/StepInfo/index.tsx:106
+#: src/screens/Login/LoginForm.tsx:225
+#: src/screens/Signup/StepInfo/index.tsx:162
 #: src/view/com/modals/DeleteAccount.tsx:257
 #: src/view/com/modals/DeleteAccount.tsx:264
 msgid "Password"
@@ -3994,11 +4006,11 @@ msgid "Person toggle"
 msgstr "사람 켜거나 끄기"
 
 #: src/screens/Onboarding/index.tsx:28
-#: src/screens/Onboarding/state.ts:93
+#: src/screens/Onboarding/state.ts:94
 msgid "Pets"
 msgstr "반려동물"
 
-#: src/screens/Onboarding/state.ts:94
+#: src/screens/Onboarding/state.ts:95
 msgid "Photography"
 msgstr "사진"
 
@@ -4044,15 +4056,16 @@ msgstr "동영상 재생"
 msgid "Plays the GIF"
 msgstr "GIF를 재생합니다"
 
-#: src/screens/Signup/state.ts:234
+#: src/screens/Signup/state.ts:210
 msgid "Please choose your handle."
 msgstr "핸들을 입력하세요."
 
-#: src/screens/Signup/state.ts:227
+#: src/screens/Signup/state.ts:203
+#: src/screens/Signup/StepInfo/index.tsx:81
 msgid "Please choose your password."
 msgstr "비밀번호를 입력하세요."
 
-#: src/screens/Signup/state.ts:248
+#: src/screens/Signup/state.ts:224
 msgid "Please complete the verification captcha."
 msgstr "인증 캡차를 완료해 주세요."
 
@@ -4072,13 +4085,18 @@ msgstr "이 앱 비밀번호에 대해 고유한 이름을 입력하거나 무�
 msgid "Please enter a valid word, tag, or phrase to mute"
 msgstr "뮤트할 단어나 태그 또는 문구를 입력하세요"
 
-#: src/screens/Signup/state.ts:213
+#: src/screens/Signup/state.ts:189
+#: src/screens/Signup/StepInfo/index.tsx:69
 msgid "Please enter your email."
 msgstr "이메일을 입력하세요."
 
+#: src/screens/Signup/StepInfo/index.tsx:63
+msgid "Please enter your invite code."
+msgstr "초대 코드를 입력하세요."
+
 #: src/view/com/modals/DeleteAccount.tsx:253
 msgid "Please enter your password as well:"
-msgstr "비밀번호도 입력해 주세요:"
+msgstr "비밀번호를 입력하세요."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:256
 msgid "Please explain why you think this label was incorrectly applied by {0}"
@@ -4102,7 +4120,7 @@ msgid "Please wait for your link card to finish loading"
 msgstr "링크 카드를 완전히 불러올 때까지 기다려주세요"
 
 #: src/screens/Onboarding/index.tsx:34
-#: src/screens/Onboarding/state.ts:95
+#: src/screens/Onboarding/state.ts:96
 msgid "Politics"
 msgstr "정치"
 
@@ -4193,7 +4211,7 @@ msgstr "호스팅 제공자를 변경하려면 누릅니다"
 #: src/components/Error.tsx:85
 #: src/components/Lists.tsx:93
 #: src/screens/Messages/Conversation/MessageListError.tsx:24
-#: src/screens/Signup/index.tsx:245
+#: src/screens/Signup/BackNextButtons.tsx:46
 msgid "Press to retry"
 msgstr "다시 시도하려면 누르기"
 
@@ -4601,7 +4619,7 @@ msgstr "게시하기 전 대체 텍스트 필수"
 msgid "Require email code to log into your account"
 msgstr "계정에 로그인할 때 이메일 코드 필수"
 
-#: src/screens/Signup/StepInfo/index.tsx:73
+#: src/screens/Signup/StepInfo/index.tsx:132
 msgid "Required for this provider"
 msgstr "이 제공자에서 필수"
 
@@ -4640,7 +4658,7 @@ msgstr "온보딩 상태 초기화"
 msgid "Resets the preferences state"
 msgstr "설정 상태 초기화"
 
-#: src/screens/Login/LoginForm.tsx:292
+#: src/screens/Login/LoginForm.tsx:312
 msgid "Retries login"
 msgstr "로그인을 다시 시도합니다"
 
@@ -4653,12 +4671,12 @@ msgstr "오류가 발생한 마지막 작업을 다시 시도합니다"
 #: src/components/Error.tsx:90
 #: src/components/Lists.tsx:104
 #: src/components/StarterPack/ProfileStarterPacks.tsx:318
-#: src/screens/Login/LoginForm.tsx:291
-#: src/screens/Login/LoginForm.tsx:298
+#: src/screens/Login/LoginForm.tsx:311
+#: src/screens/Login/LoginForm.tsx:318
 #: src/screens/Messages/Conversation/MessageListError.tsx:25
-#: src/screens/Onboarding/StepInterests/index.tsx:231
-#: src/screens/Onboarding/StepInterests/index.tsx:234
-#: src/screens/Signup/index.tsx:252
+#: src/screens/Onboarding/StepInterests/index.tsx:250
+#: src/screens/Onboarding/StepInterests/index.tsx:253
+#: src/screens/Signup/BackNextButtons.tsx:52
 #: src/view/com/util/error/ErrorMessage.tsx:55
 #: src/view/com/util/error/ErrorScreen.tsx:72
 msgid "Retry"
@@ -4763,7 +4781,7 @@ msgid "Say hello!"
 msgstr "인사해 보세요!"
 
 #: src/screens/Onboarding/index.tsx:33
-#: src/screens/Onboarding/state.ts:96
+#: src/screens/Onboarding/state.ts:97
 msgid "Science"
 msgstr "과학"
 
@@ -4918,11 +4936,11 @@ msgstr "구독하는 피드에 포함할 언어를 선택합니다. 선택하지
 msgid "Select your app language for the default text to display in the app."
 msgstr "앱에 표시되는 기본 텍스트 언어를 선택합니다."
 
-#: src/screens/Signup/StepInfo/index.tsx:139
+#: src/screens/Signup/StepInfo/index.tsx:192
 msgid "Select your date of birth"
 msgstr "생년월일을 선택하세요"
 
-#: src/screens/Onboarding/StepInterests/index.tsx:206
+#: src/screens/Onboarding/StepInterests/index.tsx:225
 msgid "Select your interests from the options below"
 msgstr "아래 옵션에서 관심사를 선택하세요"
 
@@ -5245,7 +5263,7 @@ msgstr "피드에 {0} 님의 게시물을 표시합니다"
 #: src/components/dialogs/Signin.tsx:99
 #: src/screens/Login/index.tsx:100
 #: src/screens/Login/index.tsx:119
-#: src/screens/Login/LoginForm.tsx:157
+#: src/screens/Login/LoginForm.tsx:177
 #: src/view/com/auth/SplashScreen.tsx:63
 #: src/view/com/auth/SplashScreen.tsx:72
 #: src/view/com/auth/SplashScreen.web.tsx:112
@@ -5322,12 +5340,12 @@ msgstr "(이)가 내 스타터 팩으로 가입했습니다"
 msgid "Signup without a starter pack"
 msgstr "스타터 팩 없이 가입하기"
 
-#: src/screens/Onboarding/StepInterests/index.tsx:245
+#: src/screens/Onboarding/StepInterests/index.tsx:264
 #: src/screens/StarterPack/Wizard/index.tsx:192
 msgid "Skip"
 msgstr "건너뛰기"
 
-#: src/screens/Onboarding/StepInterests/index.tsx:242
+#: src/screens/Onboarding/StepInterests/index.tsx:261
 msgid "Skip this flow"
 msgstr "이 단계 건너뛰기"
 
@@ -5383,7 +5401,7 @@ msgid "Spam; excessive mentions or replies"
 msgstr "스팸, 과도한 멘션 또는 답글"
 
 #: src/screens/Onboarding/index.tsx:27
-#: src/screens/Onboarding/state.ts:97
+#: src/screens/Onboarding/state.ts:98
 msgid "Sports"
 msgstr "스포츠"
 
@@ -5430,7 +5448,7 @@ msgstr "스타터 팩을 사용하면 좋아하는 피드와 사람들을 친구
 msgid "Status Page"
 msgstr "상태 페이지"
 
-#: src/screens/Signup/index.tsx:195
+#: src/screens/Signup/index.tsx:125
 msgid "Step {0} of {1}"
 msgstr "{1}단계 중 {0}단계"
 
@@ -5526,7 +5544,7 @@ msgid "Tap to view fully"
 msgstr "탭하여 전체 크기로 봅니다"
 
 #: src/screens/Onboarding/index.tsx:36
-#: src/screens/Onboarding/state.ts:98
+#: src/screens/Onboarding/state.ts:99
 msgid "Tech"
 msgstr "기술"
 
@@ -5575,7 +5593,7 @@ msgstr "감사합니다. 신고를 전송했습니다."
 msgid "That contains the following:"
 msgstr "텍스트 파일 내용:"
 
-#: src/screens/Signup/index.tsx:104
+#: src/screens/Signup/StepHandle.tsx:50
 msgid "That handle is already taken."
 msgstr "이 핸들은 이미 사용 중입니다."
 
@@ -5979,7 +5997,7 @@ msgctxt "action"
 msgid "Try again"
 msgstr "다시 시도"
 
-#: src/screens/Onboarding/state.ts:99
+#: src/screens/Onboarding/state.ts:100
 msgid "TV"
 msgstr "TV"
 
@@ -6005,9 +6023,9 @@ msgstr "리스트 언뮤트"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:74
 #: src/screens/Login/index.tsx:78
-#: src/screens/Login/LoginForm.tsx:145
+#: src/screens/Login/LoginForm.tsx:150
 #: src/screens/Login/SetNewPasswordForm.tsx:77
-#: src/screens/Signup/index.tsx:83
+#: src/screens/Signup/index.tsx:75
 #: src/view/com/modals/ChangePassword.tsx:71
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr "서비스에 연결할 수 없습니다. 인터넷 연결을 확인하세요."
@@ -6265,7 +6283,7 @@ msgstr "사용자 리스트 업데이트됨"
 msgid "User Lists"
 msgstr "사용자 리스트"
 
-#: src/screens/Login/LoginForm.tsx:177
+#: src/screens/Login/LoginForm.tsx:197
 msgid "Username or email address"
 msgstr "사용자 이름 또는 이메일 주소"
 
@@ -6442,7 +6460,7 @@ msgstr "생년월일 설정을 불러올 수 없습니다. 다시 시도해 주�
 msgid "We were unable to load your configured labelers at this time."
 msgstr "현재 구성된 라벨러를 불러올 수 없습니다."
 
-#: src/screens/Onboarding/StepInterests/index.tsx:143
+#: src/screens/Onboarding/StepInterests/index.tsx:157
 msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
 msgstr "연결하지 못했습니다. 계정 설정을 계속하려면 다시 시도해 주세요. 계속 실패하면 이 과정을 건너뛸 수 있습니다."
 
@@ -6450,7 +6468,7 @@ msgstr "연결하지 못했습니다. 계정 설정을 계속하려면 다시 �
 msgid "We will let you know when your account is ready."
 msgstr "계정이 준비되면 알려드리겠습니다."
 
-#: src/screens/Onboarding/StepInterests/index.tsx:148
+#: src/screens/Onboarding/StepInterests/index.tsx:162
 msgid "We'll use this to help customize your experience."
 msgstr "이를 통해 사용자 환경을 맞춤 설정할 수 있습니다."
 
@@ -6458,7 +6476,7 @@ msgstr "이를 통해 사용자 환경을 맞춤 설정할 수 있습니다."
 msgid "We're having network issues, try again"
 msgstr "네트워크 문제가 발생했습니다. 다시 시도하세요"
 
-#: src/screens/Signup/index.tsx:159
+#: src/screens/Signup/index.tsx:89
 msgid "We're so excited to have you join us!"
 msgstr "함께하게 되어 정말 기뻐요!"
 
@@ -6495,7 +6513,7 @@ msgstr "다시 돌아오셨군요!"
 msgid "Welcome, friend!"
 msgstr "잘 오셨습니다!"
 
-#: src/screens/Onboarding/StepInterests/index.tsx:140
+#: src/screens/Onboarding/StepInterests/index.tsx:154
 msgid "What are your interests?"
 msgstr "어떤 관심사가 있으신가요?"
 
@@ -6586,7 +6604,7 @@ msgid "Write your reply"
 msgstr "답글 작성하기"
 
 #: src/screens/Onboarding/index.tsx:25
-#: src/screens/Onboarding/state.ts:100
+#: src/screens/Onboarding/state.ts:101
 msgid "Writers"
 msgstr "작가"
 
@@ -6818,11 +6836,11 @@ msgstr "나: {defaultEmbeddedContentMessage}"
 msgid "You: {short}"
 msgstr "나: {short}"
 
-#: src/screens/Signup/index.tsx:172
+#: src/screens/Signup/index.tsx:102
 msgid "You'll follow the suggested users and feeds once you finish creating your account!"
 msgstr "계정 생성을 완료하면 추천 사용자 및 피드를 팔로우하게 됩니다."
 
-#: src/screens/Signup/index.tsx:177
+#: src/screens/Signup/index.tsx:107
 msgid "You'll follow the suggested users once you finish creating your account!"
 msgstr "계정 생성을 완료하면 추천 사용자를 팔로우하게 됩니다."
 
@@ -6862,7 +6880,7 @@ msgstr "이 글에서 단어 또는 태그를 숨기도록 설정했습니다."
 msgid "You've reached the end of your feed! Find some more accounts to follow."
 msgstr "피드 끝에 도달했습니다! 팔로우할 계정을 더 찾아보세요."
 
-#: src/screens/Signup/index.tsx:205
+#: src/screens/Signup/index.tsx:135
 msgid "Your account"
 msgstr "내 계정"
 
@@ -6874,7 +6892,7 @@ msgstr "계정을 삭제했습니다"
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr "모든 공개 데이터 레코드가 포함된 계정 저장소를 \"CAR\" 파일로 다운로드할 수 있습니다. 이 파일에는 이미지와 같은 미디어 임베드나 별도로 가져와야 하는 비공개 데이터는 포함되지 않습니다."
 
-#: src/screens/Signup/StepInfo/index.tsx:127
+#: src/screens/Signup/StepInfo/index.tsx:180
 msgid "Your birth date"
 msgstr "생년월일"
 
@@ -6887,7 +6905,8 @@ msgid "Your choice will be saved, but can be changed later in settings."
 msgstr "선택 사항은 저장되며 나중에 설정에서 변경할 수 있습니다."
 
 #: src/screens/Login/ForgotPasswordForm.tsx:57
-#: src/screens/Signup/state.ts:220
+#: src/screens/Signup/state.ts:196
+#: src/screens/Signup/StepInfo/index.tsx:75
 #: src/view/com/modals/ChangePassword.tsx:55
 msgid "Your email appears to be invalid."
 msgstr "이메일이 잘못된 것 같습니다."
@@ -6904,7 +6923,7 @@ msgstr "이메일이 아직 인증되지 않았습니다. 이는 중요한 보�
 msgid "Your following feed is empty! Follow more users to see what's happening."
 msgstr "팔로우 중 피드가 비어 있습니다. 더 많은 사용자를 팔로우하여 무슨 일이 일어나고 있는지 확인하세요."
 
-#: src/screens/Signup/StepHandle.tsx:73
+#: src/screens/Signup/StepHandle.tsx:122
 msgid "Your full handle will be"
 msgstr "내 전체 핸들:"
 
@@ -6944,6 +6963,6 @@ msgstr "내 답글을 게시했습니다"
 msgid "Your report will be sent to the Bluesky Moderation Service"
 msgstr "신고가 Bluesky Moderation Service로 보내집니다."
 
-#: src/screens/Signup/index.tsx:207
+#: src/screens/Signup/index.tsx:137
 msgid "Your user handle"
 msgstr "내 사용자 핸들"
