@@ -59,7 +59,7 @@ export function useProgressGuideControls() {
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const {_} = useLingui()
   const {data: preferences} = usePreferencesQuery()
-  const {mutate, variables} = useSetActiveProgressGuideMutation()
+  const {mutateAsync, variables} = useSetActiveProgressGuideMutation()
   const gate = useGate()
 
   const activeProgressGuide = (variables ||
@@ -71,9 +71,13 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     activeProgressGuide.numFollows = Number(activeProgressGuide.numFollows) || 0
   }
 
-  const [localGuideState, setLocalGuideState] = React.useState<ProgressGuide>(
-    () => activeProgressGuide,
-  )
+  const [localGuideState, setLocalGuideState] =
+    React.useState<ProgressGuide>(undefined)
+
+  if (activeProgressGuide && !localGuideState) {
+    // hydrate from the server if needed
+    setLocalGuideState(activeProgressGuide)
+  }
 
   const firstLikeToastRef = React.useRef<ProgressGuideToastRef | null>(null)
   const fifthLikeToastRef = React.useRef<ProgressGuideToastRef | null>(null)
@@ -93,19 +97,22 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             numFollows: 0,
             isComplete: false,
           }
-          mutate(guideObj)
           setLocalGuideState(guideObj)
+          mutateAsync(guideObj)
         }
       },
 
       endProgressGuide() {
-        mutate(undefined)
-        setLocalGuideState(undefined)
+        // update the persisted first
+        mutateAsync(undefined).then(() => {
+          // now clear local state, to avoid rehydrating from the server
+          setLocalGuideState(undefined)
+        })
       },
 
       captureAction(action: ProgressGuideAction, count = 1) {
         let guide = activeProgressGuide
-        if (guide?.isComplete) {
+        if (!guide || guide?.isComplete) {
           return
         }
         if (guide?.guide === 'like-10-and-follow-7') {
@@ -137,11 +144,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             }
           }
         }
+
         setLocalGuideState(guide)
-        mutate(guide?.isComplete ? undefined : guide)
+        mutateAsync(guide?.isComplete ? undefined : guide)
       },
     }
-  }, [activeProgressGuide, mutate, gate, setLocalGuideState])
+  }, [activeProgressGuide, mutateAsync, gate, setLocalGuideState])
 
   return (
     <ProgressGuideContext.Provider value={localGuideState}>
