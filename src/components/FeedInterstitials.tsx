@@ -1,16 +1,18 @@
 import React from 'react'
 import {View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
-import {AppBskyActorDefs, AppBskyFeedDefs} from '@atproto/api'
+import {AppBskyFeedDefs, AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {NavigationProp} from '#/lib/routes/types'
 import {logEvent} from '#/lib/statsig/statsig'
+import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
-import {useSuggestedFollowsQuery} from '#/state/queries/suggested-follows'
+import {useProfilesQuery} from '#/state/queries/profile'
+import * as userActionHistory from '#/state/userActionHistory'
 import {atoms as a, useBreakpoints, useTheme, ViewStyleProp, web} from '#/alf'
 import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
@@ -77,34 +79,47 @@ export function SuggestedFeedsCardPlaceholder() {
   )
 }
 
+function useExperimentalSuggestedUsersQuery() {
+  const userActionSnapshot = userActionHistory.useActionHistorySnapshot()
+  const dids = React.useMemo(() => {
+    const {likes, follows, seen} = userActionSnapshot
+    const likeDids = likes
+      .map(l => new AtUri(l))
+      .map(uri => uri.host)
+      .filter(did => !follows.includes(did))
+    const seenDids = seen.map(l => new AtUri(l)).map(uri => uri.host)
+    return [...new Set([...likeDids, ...seenDids])]
+  }, [userActionSnapshot])
+  const {data, isLoading, error} = useProfilesQuery({
+    handles: dids.slice(0, 16),
+  })
+
+  const profiles = data
+    ? data.profiles.filter(profile => {
+        return !profile.viewer?.following
+      })
+    : []
+
+  return {
+    isLoading,
+    error,
+    profiles: profiles.slice(0, 6),
+  }
+}
+
 export function SuggestedFollows() {
   const t = useTheme()
   const {_} = useLingui()
   const {
     isLoading: isSuggestionsLoading,
-    data,
+    profiles,
     error,
-  } = useSuggestedFollowsQuery({limit: 6})
+  } = useExperimentalSuggestedUsersQuery()
   const moderationOpts = useModerationOpts()
   const navigation = useNavigation<NavigationProp>()
   const {gtMobile} = useBreakpoints()
   const isLoading = isSuggestionsLoading || !moderationOpts
   const maxLength = gtMobile ? 4 : 6
-
-  const profiles: AppBskyActorDefs.ProfileViewBasic[] = []
-  if (data) {
-    // Currently the responses contain duplicate items.
-    // Needs to be fixed on backend, but let's dedupe to be safe.
-    let seen = new Set()
-    for (const page of data.pages) {
-      for (const actor of page.actors) {
-        if (!seen.has(actor.did)) {
-          seen.add(actor.did)
-          profiles.push(actor)
-        }
-      }
-    }
-  }
 
   const content = isLoading ? (
     Array(maxLength)
@@ -161,7 +176,12 @@ export function SuggestedFollows() {
     </>
   )
 
-  return error ? null : (
+  if (error || (!isLoading && profiles.length < 4)) {
+    logger.debug(`Not enough profiles to show suggested follows`)
+    return null
+  }
+
+  return (
     <View
       style={[a.border_t, t.atoms.border_contrast_low, t.atoms.bg_contrast_25]}>
       <View style={[a.pt_2xl, a.px_lg, a.flex_row, a.pb_xs]}>

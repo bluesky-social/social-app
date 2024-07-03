@@ -92,33 +92,8 @@ const interstials: Record<
   'following' | 'discover',
   (FeedItem & {type: 'interstitialFeeds' | 'interstitialFollows'})[]
 > = {
-  following: [
-    {
-      type: followInterstitialType,
-      params: {
-        variant: 'default',
-      },
-      key: followInterstitialType,
-      slot: 20,
-    },
-    {
-      type: feedInterstitialType,
-      params: {
-        variant: 'default',
-      },
-      key: feedInterstitialType,
-      slot: 40,
-    },
-  ],
+  following: [],
   discover: [
-    {
-      type: feedInterstitialType,
-      params: {
-        variant: 'default',
-      },
-      key: feedInterstitialType,
-      slot: 20,
-    },
     {
       type: followInterstitialType,
       params: {
