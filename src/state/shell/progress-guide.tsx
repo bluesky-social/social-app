@@ -7,7 +7,10 @@ import {
   ProgressGuideToast,
   ProgressGuideToastRef,
 } from '#/components/ProgressGuide/Toast'
-import {useSetActiveProgressGuideMutation} from '../queries/preferences'
+import {
+  usePreferencesQuery,
+  useSetActiveProgressGuideMutation,
+} from '../queries/preferences'
 
 export enum ProgressGuideAction {
   Like = 'like',
@@ -55,11 +58,12 @@ export function useProgressGuideControls() {
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const {_} = useLingui()
-  const {mutate} = useSetActiveProgressGuideMutation()
+  const {data: preferences} = usePreferencesQuery()
+  const {mutate, variables} = useSetActiveProgressGuideMutation()
   const gate = useGate()
 
-  const [activeProgressGuide, setActiveProgressGuide] =
-    React.useState<ProgressGuide>(undefined)
+  const activeProgressGuide =
+    variables || preferences?.bskyAppState?.activeProgressGuide
 
   const firstLikeToastRef = React.useRef<ProgressGuideToastRef | null>(null)
   const fifthLikeToastRef = React.useRef<ProgressGuideToastRef | null>(null)
@@ -68,7 +72,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const controls = React.useMemo(() => {
     return {
       startProgressGuide(guide: ProgressGuideName) {
-        if (!gate('new_user_progress_guide')) {
+        if (!gate('new_user_progress_guide') && false) {
           return
         }
         if (guide === 'like-10-and-follow-7') {
@@ -79,13 +83,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             isComplete: false,
           }
           mutate(guideObj)
-          setActiveProgressGuide(guideObj)
         }
       },
 
       endProgressGuide() {
         mutate(undefined)
-        setActiveProgressGuide(undefined)
       },
 
       captureAction(action: ProgressGuideAction, count = 1) {
@@ -97,7 +99,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           if (action === ProgressGuideAction.Like) {
             guide = {
               ...guide,
-              numLikes: (guide.numLikes || 0) + count,
+              numLikes: (Number(guide.numLikes) || 0) + count,
             }
             if (guide.numLikes === 1) {
               firstLikeToastRef.current?.open()
@@ -112,10 +114,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           if (action === ProgressGuideAction.Follow) {
             guide = {
               ...guide,
-              numFollows: (guide.numFollows || 0) + count,
+              numFollows: (Number(guide.numFollows) || 0) + count,
             }
           }
-          if (guide.numLikes >= 10 && guide.numFollows >= 7) {
+          if (Number(guide.numLikes) >= 10 && Number(guide.numFollows) >= 7) {
             tenthLikeToastRef.current?.open()
             guide = {
               ...guide,
@@ -124,13 +126,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           }
         }
         mutate(guide?.isComplete ? undefined : guide)
-        setActiveProgressGuide(guide)
       },
     }
-  }, [activeProgressGuide, setActiveProgressGuide, mutate, gate])
+  }, [activeProgressGuide, mutate, gate])
 
   return (
-    <ProgressGuideContext.Provider value={activeProgressGuide}>
+    <ProgressGuideContext.Provider value={activeProgressGuide as ProgressGuide}>
       <ProgressGuideControlContext.Provider value={controls}>
         {children}
         <ProgressGuideToast
