@@ -65,6 +65,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const activeProgressGuide =
     variables || preferences?.bskyAppState?.activeProgressGuide
 
+  // ensure the unspecced attributes have the correct types
+  if (activeProgressGuide?.guide === 'like-10-and-follow-7') {
+    activeProgressGuide.numLikes = Number(activeProgressGuide.numLikes) || 0
+    activeProgressGuide.numFollows = Number(activeProgressGuide.numFollows) || 0
+  }
+
   const firstLikeToastRef = React.useRef<ProgressGuideToastRef | null>(null)
   const fifthLikeToastRef = React.useRef<ProgressGuideToastRef | null>(null)
   const tenthLikeToastRef = React.useRef<ProgressGuideToastRef | null>(null)
