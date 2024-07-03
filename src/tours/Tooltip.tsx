@@ -11,7 +11,7 @@ import {useLingui} from '@lingui/react'
 import {FocusScope} from '@tamagui/focus-scope'
 import {IStep, Labels} from 'rn-tourguide'
 
-import {isWeb} from '#/platform/detection'
+import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
 import {useA11y} from '#/state/a11y'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
@@ -42,14 +42,7 @@ export function TooltipComponent({
   const btnRef = React.useRef<View>(null)
   const textRef = React.useRef<RNText>(null)
   const {screenReaderEnabled} = useA11y()
-
-  React.useEffect(() => {
-    if (!isWeb) return
-    document.body.style.overflow = 'hidden'
-    return () => {
-      document.body.style.overflow = ''
-    }
-  }, [])
+  useWebBodyScrollLock(true)
 
   const focusTextNode = () => {
     const node = textRef.current ? findNodeHandle(textRef.current) : undefined
