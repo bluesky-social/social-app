@@ -1,18 +1,17 @@
 import React from 'react'
-import {Pressable, View} from 'react-native'
+import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {AppBskyGraphStarterpack, AtUri} from '@atproto/api'
 import {StarterPackViewBasic} from '@atproto/api/dist/client/types/app/bsky/graph/defs'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
 
-import {NavigationProp} from 'lib/routes/types'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {getStarterPackOgCard} from 'lib/strings/starter-pack'
 import {useSession} from 'state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {StarterPack} from '#/components/icons/StarterPack'
+import {BaseLink} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
 export function Default({starterPack}: {starterPack?: StarterPackViewBasic}) {
@@ -90,14 +89,13 @@ export function Card({
 
 export function Link({
   starterPack,
-  onPress,
   children,
 }: {
   starterPack: StarterPackViewBasic
   onPress?: () => void
   children: React.ReactNode
 }) {
-  const navigation = useNavigation<NavigationProp>()
+  const {_} = useLingui()
   const {record} = starterPack
   const {rkey, handleOrDid} = React.useMemo(() => {
     const rkey = new AtUri(starterPack.uri).rkey
@@ -110,17 +108,12 @@ export function Link({
   }
 
   return (
-    <Pressable
-      accessibilityRole="button"
-      onPress={() => {
-        onPress?.()
-        navigation.navigate('StarterPack', {
-          name: handleOrDid,
-          rkey,
-        })
-      }}>
+    <BaseLink
+      action="push"
+      to={`/starter-pack/${handleOrDid}/${rkey}`}
+      label={_(msg`Navigate to ${record.name}`)}>
       {children}
-    </Pressable>
+    </BaseLink>
   )
 }
 
