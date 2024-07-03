@@ -192,7 +192,7 @@ export async function getStarterPackAsEmbed(
     )
   }
   const did = await fetchDid(parsed.name)
-  const starterPack = createStarterPackUri({did, rkey: parsed.rkey})!
+  const starterPack = createStarterPackUri({did, rkey: parsed.rkey})
   const res = await agent.app.bsky.graph.getStarterPack({starterPack})
   const record = res.data.starterPack.record
   return {
