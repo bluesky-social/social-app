@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {View} from 'react-native'
 import Hls from 'hls.js'
 
@@ -8,12 +8,17 @@ import {useActiveVideoView} from './ActiveVideoContext'
 export function VideoEmbed({source}: {source: string}) {
   const [hls] = useState(() => new Hls())
   const hasLoaded = useRef(false)
-  const {active, setActive, requestActive, allowUsurp} =
-    useActiveVideoView(source)
   const ref = useRef<HTMLVideoElement>(null)
+  const {active, setActive} = useActiveVideoView({
+    source,
+    measure: useCallback(() => {
+      if (ref.current) {
+        return ref.current.getBoundingClientRect()
+      }
+    }, []),
+  })
   const t = useTheme()
 
-  // Use HLS.js to play HLS video
   useEffect(() => {
     if (ref.current && active && !hasLoaded.current) {
       hasLoaded.current = true
@@ -21,7 +26,6 @@ export function VideoEmbed({source}: {source: string}) {
         ref.current.src = source
       } else if (Hls.isSupported()) {
         hls.loadSource(source)
-        hls.attachMedia(ref.current)
       } else {
         // TODO: fallback
       }
@@ -29,47 +33,15 @@ export function VideoEmbed({source}: {source: string}) {
   }, [source, active, hls])
 
   useEffect(() => {
-    return () => {
-      hls.destroy()
-    }
-  }, [hls])
-
-  useEffect(() => {
     if (ref.current) {
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (ref.current) {
-            if (entry.intersectionRatio > 0.25) {
-              if (active) {
-                if (ref.current.paused) {
-                  ref.current.play()
-                }
-              } else {
-                requestActive(entry.boundingClientRect.y)
-              }
-            } else {
-              if (active) {
-                if (!ref.current.paused) {
-                  ref.current.pause()
-                }
-              }
-            }
-
-            if (entry.intersectionRatio < 0.75) {
-              allowUsurp()
-            }
-          }
-        },
-        {threshold: [0, 0.25, 1]},
-      )
-
-      observer.observe(ref.current)
-
-      return () => {
-        observer.disconnect()
+      if (
+        !ref.current.canPlayType('application/vnd.apple.mpegurl') &&
+        Hls.isSupported()
+      ) {
+        hls.attachMedia(ref.current)
       }
     }
-  }, [active, requestActive, allowUsurp])
+  }, [source, active, hls])
 
   return (
     <View
