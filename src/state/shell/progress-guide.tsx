@@ -78,6 +78,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const firstLikeToastRef = React.useRef<ProgressGuideToastRef | null>(null)
   const fifthLikeToastRef = React.useRef<ProgressGuideToastRef | null>(null)
   const tenthLikeToastRef = React.useRef<ProgressGuideToastRef | null>(null)
+  const guideCompleteToastRef = React.useRef<ProgressGuideToastRef | null>(null)
 
   const controls = React.useMemo(() => {
     return {
@@ -161,6 +162,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             <ProgressGuideToast
               ref={tenthLikeToastRef}
               title={_(msg`Task complete - 10 likes!`)}
+              subtitle={_(msg`The Discover feed now knows what you like`)}
+            />
+            <ProgressGuideToast
+              ref={guideCompleteToastRef}
+              title={_(msg`Algorithm training complete!`)}
               subtitle={_(msg`The Discover feed now knows what you like`)}
             />
           </>

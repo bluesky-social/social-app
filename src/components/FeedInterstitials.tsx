@@ -12,6 +12,7 @@ import {logEvent} from '#/lib/statsig/statsig'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {useSuggestedFollowsQuery} from '#/state/queries/suggested-follows'
+import {useProgressGuide} from '#/state/shell/progress-guide'
 import {atoms as a, useBreakpoints, useTheme, ViewStyleProp, web} from '#/alf'
 import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
@@ -358,12 +359,13 @@ export function SuggestedFeeds() {
 export function ProgressGuide() {
   const t = useTheme()
   const {isDesktop} = useWebMediaQueries()
+  const guide = useProgressGuide('like-10-and-follow-7')
 
   if (isDesktop) {
     return null
   }
 
-  return (
+  return guide ? (
     <View
       style={[
         a.border_t,
@@ -374,5 +376,5 @@ export function ProgressGuide() {
       ]}>
       <ProgressGuideList />
     </View>
-  )
+  ) : null
 }
