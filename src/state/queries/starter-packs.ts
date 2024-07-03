@@ -25,13 +25,22 @@ import {
   parseStarterPackUri,
 } from 'lib/strings/starter-pack'
 import {invalidateActorStarterPacksQuery} from 'state/queries/actor-starter-packs'
+import {STALE} from 'state/queries/index'
 import {invalidateListMembersQuery} from 'state/queries/list-members'
 import {useAgent} from 'state/session'
 
 const RQKEY_ROOT = 'starter-pack'
-const RQKEY = (did?: string, rkey?: string) => {
-  if (did?.startsWith('https://') || did?.startsWith('at://')) {
-    const parsed = parseStarterPackUri(did)
+const RQKEY = ({
+  uri,
+  did,
+  rkey,
+}: {
+  uri?: string
+  did?: string
+  rkey?: string
+}) => {
+  if (uri?.startsWith('https://') || uri?.startsWith('at://')) {
+    const parsed = parseStarterPackUri(uri)
     return [RQKEY_ROOT, parsed?.name, parsed?.rkey]
   } else {
     return [RQKEY_ROOT, did, rkey]
@@ -50,7 +59,7 @@ export function useStarterPackQuery({
   const agent = useAgent()
 
   return useQuery<StarterPackView>({
-    queryKey: RQKEY(did, rkey),
+    queryKey: RQKEY(uri ? {uri} : {did, rkey}),
     queryFn: async () => {
       if (!uri) {
         uri = `at://${did}/app.bsky.graph.starterpack/${rkey}`
@@ -64,6 +73,7 @@ export function useStarterPackQuery({
       return res.data.starterPack
     },
     enabled: Boolean(uri) || Boolean(did && rkey),
+    staleTime: STALE.MINUTES.FIVE,
   })
 }
 
@@ -76,7 +86,7 @@ export async function invalidateStarterPack({
   did: string
   rkey: string
 }) {
-  await queryClient.invalidateQueries({queryKey: RQKEY(did, rkey)})
+  await queryClient.invalidateQueries({queryKey: RQKEY({did, rkey})})
 }
 
 interface UseCreateStarterPackMutationParams {

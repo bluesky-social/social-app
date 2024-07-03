@@ -9,6 +9,7 @@ import {
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {LogEvents} from '#/lib/statsig/statsig'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {sanitizeHandle} from 'lib/strings/handles'
@@ -79,7 +80,7 @@ export function Outer({
 }: {
   children: React.ReactElement | React.ReactElement[]
 }) {
-  return <View style={[a.flex_1, a.gap_xs]}>{children}</View>
+  return <View style={[a.w_full, a.flex_1, a.gap_xs]}>{children}</View>
 }
 
 export function Header({
@@ -87,16 +88,23 @@ export function Header({
 }: {
   children: React.ReactElement | React.ReactElement[]
 }) {
-  return <View style={[a.flex_row, a.gap_sm]}>{children}</View>
+  return <View style={[a.flex_row, a.align_center, a.gap_sm]}>{children}</View>
 }
 
-export function Link({did, children}: {did: string} & Omit<LinkProps, 'to'>) {
+export function Link({
+  did,
+  children,
+  style,
+  ...rest
+}: {did: string} & Omit<LinkProps, 'to'>) {
   return (
     <InternalLink
       to={{
         screen: 'Profile',
         params: {name: did},
-      }}>
+      }}
+      style={[a.flex_col, style]}
+      {...rest}>
       {children}
     </InternalLink>
   )
@@ -117,6 +125,22 @@ export function Avatar({
       avatar={profile.avatar}
       type={profile.associated?.labeler ? 'labeler' : 'user'}
       moderation={moderation.ui('avatar')}
+    />
+  )
+}
+
+export function AvatarPlaceholder() {
+  const t = useTheme()
+  return (
+    <View
+      style={[
+        a.rounded_full,
+        t.atoms.bg_contrast_50,
+        {
+          width: 42,
+          height: 42,
+        },
+      ]}
     />
   )
 }
@@ -146,6 +170,36 @@ export function NameAndHandle({
         numberOfLines={1}>
         {handle}
       </Text>
+    </View>
+  )
+}
+
+export function NameAndHandlePlaceholder() {
+  const t = useTheme()
+
+  return (
+    <View style={[a.flex_1, a.gap_xs]}>
+      <View
+        style={[
+          a.rounded_xs,
+          t.atoms.bg_contrast_50,
+          {
+            width: '60%',
+            height: 14,
+          },
+        ]}
+      />
+
+      <View
+        style={[
+          a.rounded_xs,
+          t.atoms.bg_contrast_50,
+          {
+            width: '40%',
+            height: 10,
+          },
+        ]}
+      />
     </View>
   )
 }
@@ -183,9 +237,32 @@ export function Description({
   )
 }
 
+export function DescriptionPlaceholder() {
+  const t = useTheme()
+  return (
+    <View style={[a.gap_xs]}>
+      <View
+        style={[a.rounded_xs, a.w_full, t.atoms.bg_contrast_50, {height: 12}]}
+      />
+      <View
+        style={[a.rounded_xs, a.w_full, t.atoms.bg_contrast_50, {height: 12}]}
+      />
+      <View
+        style={[
+          a.rounded_xs,
+          a.w_full,
+          t.atoms.bg_contrast_50,
+          {height: 12, width: 100},
+        ]}
+      />
+    </View>
+  )
+}
+
 export type FollowButtonProps = {
   profile: AppBskyActorDefs.ProfileViewBasic
-  logContext: 'ProfileCard' | 'StarterPackProfilesList'
+  logContext: LogEvents['profile:follow']['logContext'] &
+    LogEvents['profile:unfollow']['logContext']
 } & Partial<ButtonProps>
 
 export function FollowButton(props: FollowButtonProps) {
