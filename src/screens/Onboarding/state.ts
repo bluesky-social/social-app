@@ -88,6 +88,7 @@ export function useInterestsDisplayNames() {
       gaming: _(msg`Video Games`),
       journalism: _(msg`Journalism`),
       movies: _(msg`Movies`),
+      music: _(msg`Music`),
       nature: _(msg`Nature`),
       news: _(msg`News`),
       pets: _(msg`Pets`),

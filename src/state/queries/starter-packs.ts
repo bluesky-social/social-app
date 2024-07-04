@@ -347,3 +347,36 @@ async function whenAppViewReady(
     () => agent.app.bsky.graph.getStarterPack({starterPack: uri}),
   )
 }
+
+export async function precacheStarterPack(
+  queryClient: QueryClient,
+  starterPack:
+    | AppBskyGraphDefs.StarterPackViewBasic
+    | AppBskyGraphDefs.StarterPackView,
+) {
+  if (!AppBskyGraphStarterpack.isRecord(starterPack.record)) {
+    return
+  }
+
+  let starterPackView: AppBskyGraphDefs.StarterPackView | undefined
+  if (AppBskyGraphDefs.isStarterPackView(starterPack)) {
+    starterPackView = starterPack
+  } else if (AppBskyGraphDefs.isStarterPackViewBasic(starterPack)) {
+    const listView: AppBskyGraphDefs.ListViewBasic = {
+      uri: starterPack.record.list,
+      // This will be populated once the data from server is fetched
+      cid: '',
+      name: starterPack.record.name,
+      purpose: 'app.bsky.graph.defs#referencelist',
+    }
+    starterPackView = {
+      ...starterPack,
+      $type: 'app.bsky.graph.defs#starterPackView',
+      list: listView,
+    }
+  }
+
+  if (starterPackView) {
+    queryClient.setQueryData(RQKEY({uri: starterPack.uri}), starterPackView)
+  }
+}
