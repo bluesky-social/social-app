@@ -310,7 +310,7 @@ export function usePostFeedQuery(
 
                   if (isDiscover) {
                     userActionHistory.seen(
-                      ...slice.items.map(item => item.post.uri),
+                      slice.items.map(item => item.post.uri),
                     )
                   }
 

@@ -93,7 +93,7 @@ export function usePostLikeMutationQueue(
           uri: postUri,
           cid: postCid,
         })
-        userActionHistory.like(postUri)
+        userActionHistory.like([postUri])
         return likeUri
       } else {
         if (prevLikeUri) {
@@ -101,7 +101,7 @@ export function usePostLikeMutationQueue(
             postUri: postUri,
             likeUri: prevLikeUri,
           })
-          userActionHistory.unlike(postUri)
+          userActionHistory.unlike([postUri])
         }
         return undefined
       }

@@ -234,7 +234,7 @@ export function useProfileFollowMutationQueue(
         const {uri} = await followMutation.mutateAsync({
           did,
         })
-        userActionHistory.follow(did)
+        userActionHistory.follow([did])
         return uri
       } else {
         if (prevFollowingUri) {
@@ -242,7 +242,7 @@ export function useProfileFollowMutationQueue(
             did,
             followUri: prevFollowingUri,
           })
-          userActionHistory.unfollow(did)
+          userActionHistory.unfollow([did])
         }
         return undefined
       }

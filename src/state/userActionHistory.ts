@@ -33,29 +33,29 @@ export function useActionHistorySnapshot() {
   return React.useState(() => getActionHistory())[0]
 }
 
-export function like(...postUris: string[]) {
+export function like(postUris: string[]) {
   userActionHistory.likes = userActionHistory.likes
     .concat(postUris)
     .slice(-LIKE_WINDOW)
 }
-export function unlike(...postUris: string[]) {
+export function unlike(postUris: string[]) {
   userActionHistory.likes = userActionHistory.likes.filter(
     uri => !postUris.includes(uri),
   )
 }
 
-export function follow(...dids: string[]) {
+export function follow(dids: string[]) {
   userActionHistory.follows = userActionHistory.follows
     .concat(dids)
     .slice(-FOLLOW_WINDOW)
 }
-export function unfollow(...dids: string[]) {
+export function unfollow(dids: string[]) {
   userActionHistory.follows = userActionHistory.follows.filter(
     uri => !dids.includes(uri),
   )
 }
 
-export function seen(...postUris: string[]) {
+export function seen(postUris: string[]) {
   userActionHistory.seen = userActionHistory.seen
     .concat(postUris)
     .slice(-SEEN_WINDOW)
