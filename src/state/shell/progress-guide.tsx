@@ -87,7 +87,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const controls = React.useMemo(() => {
     return {
       startProgressGuide(guide: ProgressGuideName) {
-        if (!gate('new_user_progress_guide') && false) {
+        if (!gate('new_user_progress_guide')) {
           return
         }
         if (guide === 'like-10-and-follow-7') {
