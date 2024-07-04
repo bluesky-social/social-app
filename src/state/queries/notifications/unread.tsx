@@ -151,7 +151,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             // only fetch subjects when the page is going to be used
             // in the notifications query, otherwise skip it
             fetchAdditionalData: !!invalidate,
-            ungroupFollowBacks: gate('ungroup_follow_backs'),
+            shouldUngroupFollowBacks: () => gate('ungroup_follow_backs'),
           })
           const unreadCount = countUnread(page)
           const unreadCountStr =

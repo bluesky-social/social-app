@@ -83,7 +83,7 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
             queryClient,
             moderationOpts,
             fetchAdditionalData: true,
-            ungroupFollowBacks: gate('ungroup_follow_backs'),
+            shouldUngroupFollowBacks: () => gate('ungroup_follow_backs'),
           })
         ).page
       }
