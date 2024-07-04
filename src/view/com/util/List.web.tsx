@@ -63,7 +63,53 @@ function ListImpl<ItemT>(
   }: ListProps<ItemT>,
   ref: React.Ref<ListMethods>,
 ) {
-  const [prevDataLength, setPrevDataLength] = React.useState(data?.length)
+  const contextScrollHandlers = useScrollHandlers()
+  const pal = usePalette('default')
+  const {isMobile} = useWebMediaQueries()
+  if (!isMobile) {
+    contentContainerStyle = addStyle(
+      contentContainerStyle,
+      styles.containerScroll,
+    )
+  }
+
+  const isEmpty = !data || data.length === 0
+
+  let headerComponent: JSX.Element | null = null
+  if (ListHeaderComponent != null) {
+    if (isValidElement(ListHeaderComponent)) {
+      headerComponent = ListHeaderComponent
+    } else {
+      // @ts-ignore Nah it's fine.
+      headerComponent = <ListHeaderComponent />
+    }
+  }
+
+  let footerComponent: JSX.Element | null = null
+  if (ListFooterComponent != null) {
+    if (isValidElement(ListFooterComponent)) {
+      footerComponent = ListFooterComponent
+    } else {
+      // @ts-ignore Nah it's fine.
+      footerComponent = <ListFooterComponent />
+    }
+  }
+
+  let emptyComponent: JSX.Element | null = null
+  if (ListEmptyComponent != null) {
+    if (isValidElement(ListEmptyComponent)) {
+      emptyComponent = ListEmptyComponent
+    } else {
+      // @ts-ignore Nah it's fine.
+      emptyComponent = <ListEmptyComponent />
+    }
+  }
+
+  if (headerOffset != null) {
+    style = addStyle(style, {
+      paddingTop: headerOffset,
+    })
+  }
 
   const getScrollableNode = React.useCallback(() => {
     if (containWeb) {
@@ -137,77 +183,6 @@ function ListImpl<ItemT>(
       }
     }
   }, [containWeb])
-
-  // Whenever we get new data, we want to make sure that the onEndReached threshold will be *below* the current scroll
-  // bottom position. If it is not the IntersectionObserver will never fire the onEndReached threshold for us - since
-  // we've already scrolled past the component.
-  const callOnEndReachedIfNeeded = () => {
-    const node = getScrollableNode()
-    if (!node || !onEndReached || !onEndReachedThreshold || !data?.length) {
-      return
-    }
-
-    const scrollViewHeight = node.clientHeight
-    const scrollContainerHeight = node.scrollHeight
-    const scrollPos = node.scrollY
-    const thresholdPx = onEndReachedThreshold * scrollViewHeight
-
-    if (scrollContainerHeight - thresholdPx <= scrollPos) {
-      onEndReached({distanceFromEnd: 0})
-    }
-    setPrevDataLength(data?.length)
-  }
-  if (data?.length !== prevDataLength) {
-    callOnEndReachedIfNeeded()
-  }
-
-  const contextScrollHandlers = useScrollHandlers()
-  const pal = usePalette('default')
-  const {isMobile} = useWebMediaQueries()
-  if (!isMobile) {
-    contentContainerStyle = addStyle(
-      contentContainerStyle,
-      styles.containerScroll,
-    )
-  }
-
-  const isEmpty = !data || data.length === 0
-
-  let headerComponent: JSX.Element | null = null
-  if (ListHeaderComponent != null) {
-    if (isValidElement(ListHeaderComponent)) {
-      headerComponent = ListHeaderComponent
-    } else {
-      // @ts-ignore Nah it's fine.
-      headerComponent = <ListHeaderComponent />
-    }
-  }
-
-  let footerComponent: JSX.Element | null = null
-  if (ListFooterComponent != null) {
-    if (isValidElement(ListFooterComponent)) {
-      footerComponent = ListFooterComponent
-    } else {
-      // @ts-ignore Nah it's fine.
-      footerComponent = <ListFooterComponent />
-    }
-  }
-
-  let emptyComponent: JSX.Element | null = null
-  if (ListEmptyComponent != null) {
-    if (isValidElement(ListEmptyComponent)) {
-      emptyComponent = ListEmptyComponent
-    } else {
-      // @ts-ignore Nah it's fine.
-      emptyComponent = <ListEmptyComponent />
-    }
-  }
-
-  if (headerOffset != null) {
-    style = addStyle(style, {
-      paddingTop: headerOffset,
-    })
-  }
 
   const nativeRef = React.useRef<HTMLDivElement>(null)
   React.useImperativeHandle(

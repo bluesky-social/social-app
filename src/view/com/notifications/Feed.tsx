@@ -25,6 +25,7 @@ import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {CenteredView} from '#/view/com/util/Views'
 import {FeedItem} from './FeedItem'
 import hairlineWidth = StyleSheet.hairlineWidth
+import {isWeb} from '#/platform/detection'
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
@@ -182,7 +183,15 @@ export function Feed({
         refreshing={isPTRing}
         onRefresh={onRefresh}
         onEndReached={onEndReached}
-        onEndReachedThreshold={2}
+        onEndReachedThreshold={
+          /*
+          NOTE:
+          web's intersection observer struggles with the 2x threshold
+          and leads to missed pagination, so we keep it <1
+          -prf
+          */
+          isWeb ? 0.6 : 2
+        }
         onScrolledDownChange={onScrolledDownChange}
         contentContainerStyle={s.contentContainer}
         // @ts-ignore our .web version only -prf
