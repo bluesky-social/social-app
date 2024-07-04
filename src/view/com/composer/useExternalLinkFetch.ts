@@ -10,6 +10,7 @@ import {
   getFeedAsEmbed,
   getListAsEmbed,
   getPostAsQuote,
+  getStarterPackAsEmbed,
 } from 'lib/link-meta/bsky'
 import {getLinkMeta} from 'lib/link-meta/link-meta'
 import {resolveShortLink} from 'lib/link-meta/resolve-short-link'
@@ -18,6 +19,8 @@ import {
   isBskyCustomFeedUrl,
   isBskyListUrl,
   isBskyPostUrl,
+  isBskyStarterPackUrl,
+  isBskyStartUrl,
   isShortLink,
 } from 'lib/strings/url-helpers'
 import {ImageModel} from 'state/models/media/image'
@@ -94,6 +97,23 @@ export function useExternalLinkFetch({
           err => {
             logger.error('Failed to fetch list for embedding', {message: err})
             setExtLink(undefined)
+          },
+        )
+      } else if (
+        isBskyStartUrl(extLink.uri) ||
+        isBskyStarterPackUrl(extLink.uri)
+      ) {
+        getStarterPackAsEmbed(agent, fetchDid, extLink.uri).then(
+          ({embed, meta}) => {
+            if (aborted) {
+              return
+            }
+            setExtLink({
+              uri: extLink.uri,
+              isLoading: false,
+              meta,
+              embed,
+            })
           },
         )
       } else if (isShortLink(extLink.uri)) {

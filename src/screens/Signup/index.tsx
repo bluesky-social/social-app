@@ -7,11 +7,7 @@ import {useLingui} from '@lingui/react'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {FEEDBACK_FORM_URL} from '#/lib/constants'
-import {logEvent} from '#/lib/statsig/statsig'
-import {createFullHandle} from '#/lib/strings/handles'
-import {logger} from '#/logger'
 import {useServiceQuery} from '#/state/queries/service'
-import {useAgent} from '#/state/session'
 import {useStarterPackQuery} from 'state/queries/starter-packs'
 import {useActiveStarterPack} from 'state/shell/starter-pack'
 import {LoggedOutLayout} from '#/view/com/util/layouts/LoggedOutLayout'
@@ -20,14 +16,12 @@ import {
   reducer,
   SignupContext,
   SignupStep,
-  useSubmitSignup,
 } from '#/screens/Signup/state'
 import {StepCaptcha} from '#/screens/Signup/StepCaptcha'
 import {StepHandle} from '#/screens/Signup/StepHandle'
 import {StepInfo} from '#/screens/Signup/StepInfo'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {AppLanguageDropdown} from '#/components/AppLanguageDropdown'
-import {Button, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {InlineLinkText} from '#/components/Link'
@@ -38,9 +32,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
   const t = useTheme()
   const {screen} = useAnalytics()
   const [state, dispatch] = React.useReducer(reducer, initialState)
-  const submit = useSubmitSignup({state, dispatch})
   const {gtMobile} = useBreakpoints()
-  const agent = useAgent()
 
   const activeStarterPack = useActiveStarterPack()
   const {
@@ -88,72 +80,6 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
       dispatch({type: 'setError', value: ''})
     }
   }, [_, serviceInfo, isError])
-
-  const onNextPress = React.useCallback(async () => {
-    if (state.activeStep === SignupStep.HANDLE) {
-      try {
-        dispatch({type: 'setIsLoading', value: true})
-
-        const res = await agent.resolveHandle({
-          handle: createFullHandle(state.handle, state.userDomain),
-        })
-
-        if (res.data.did) {
-          dispatch({
-            type: 'setError',
-            value: _(msg`That handle is already taken.`),
-          })
-          return
-        }
-      } catch (e) {
-        // Don't have to handle
-      } finally {
-        dispatch({type: 'setIsLoading', value: false})
-      }
-    }
-
-    logEvent('signup:nextPressed', {
-      activeStep: state.activeStep,
-      phoneVerificationRequired:
-        state.serviceDescription?.phoneVerificationRequired,
-    })
-
-    // phoneVerificationRequired is actually whether a captcha is required
-    if (
-      state.activeStep === SignupStep.HANDLE &&
-      !state.serviceDescription?.phoneVerificationRequired
-    ) {
-      submit()
-      return
-    }
-    dispatch({type: 'next'})
-  }, [
-    _,
-    state.activeStep,
-    state.handle,
-    state.serviceDescription?.phoneVerificationRequired,
-    state.userDomain,
-    submit,
-    agent,
-  ])
-
-  const onBackPress = React.useCallback(() => {
-    if (state.activeStep !== SignupStep.INFO) {
-      if (state.activeStep === SignupStep.CAPTCHA) {
-        logger.error('Signup Flow Error', {
-          errorMessage:
-            'User went back from captcha step. Possibly encountered an error.',
-          registrationHandle: state.handle,
-        })
-      }
-      dispatch({type: 'prev'})
-    } else {
-      onPressBack()
-    }
-    logEvent('signup:backPressed', {
-      activeStep: state.activeStep,
-    })
-  }, [onPressBack, state.activeStep, state.handle])
 
   return (
     <SignupContext.Provider value={{state, dispatch}}>
@@ -215,64 +141,22 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
               </Text>
             </View>
 
-            <View style={[a.pb_3xl]}>
-              <LayoutAnimationConfig skipEntering skipExiting>
-                {state.activeStep === SignupStep.INFO ? (
-                  <StepInfo
-                    isLoadingStarterPack={
-                      isFetchingStarterPack && !isErrorStarterPack
-                    }
-                  />
-                ) : state.activeStep === SignupStep.HANDLE ? (
-                  <StepHandle />
-                ) : (
-                  <StepCaptcha />
-                )}
-              </LayoutAnimationConfig>
-            </View>
-
-            <View style={[a.flex_row, a.justify_between, a.pb_lg]}>
-              <Button
-                label={_(msg`Go back to previous step`)}
-                variant="solid"
-                color="secondary"
-                size="medium"
-                onPress={onBackPress}>
-                <ButtonText>
-                  <Trans>Back</Trans>
-                </ButtonText>
-              </Button>
-              {state.activeStep !== SignupStep.CAPTCHA && (
-                <>
-                  {isError ? (
-                    <Button
-                      label={_(msg`Press to retry`)}
-                      variant="solid"
-                      color="primary"
-                      size="medium"
-                      disabled={state.isLoading}
-                      onPress={() => refetch()}>
-                      <ButtonText>
-                        <Trans>Retry</Trans>
-                      </ButtonText>
-                    </Button>
-                  ) : (
-                    <Button
-                      testID="nextBtn"
-                      label={_(msg`Continue to next step`)}
-                      variant="solid"
-                      color="primary"
-                      size="medium"
-                      disabled={!state.canNext || state.isLoading}
-                      onPress={onNextPress}>
-                      <ButtonText>
-                        <Trans>Next</Trans>
-                      </ButtonText>
-                    </Button>
-                  )}
-                </>
+            <LayoutAnimationConfig skipEntering skipExiting>
+              {state.activeStep === SignupStep.INFO ? (
+                <StepInfo
+                  onPressBack={onPressBack}
+                  isLoadingStarterPack={
+                    isFetchingStarterPack && !isErrorStarterPack
+                  }
+                  isServerError={isError}
+                  refetchServer={refetch}
+                />
+              ) : state.activeStep === SignupStep.HANDLE ? (
+                <StepHandle />
+              ) : (
+                <StepCaptcha />
               )}
-            </View>
+            </LayoutAnimationConfig>
 
             <Divider />
 
