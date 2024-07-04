@@ -39,11 +39,6 @@ const RQKEY = ({
   did?: string
   rkey?: string
 }) => {
-  console.log({
-    uri,
-    did,
-    rkey,
-  })
   if (uri?.startsWith('https://') || uri?.startsWith('at://')) {
     const parsed = parseStarterPackUri(uri)
     return [RQKEY_ROOT, parsed?.name, parsed?.rkey]
