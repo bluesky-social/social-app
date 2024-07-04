@@ -30,6 +30,7 @@ export async function fetchPage({
   queryClient,
   moderationOpts,
   fetchAdditionalData,
+  shouldUngroupFollowBacks,
 }: {
   agent: BskyAgent
   cursor: string | undefined
@@ -37,6 +38,7 @@ export async function fetchPage({
   queryClient: QueryClient
   moderationOpts: ModerationOpts | undefined
   fetchAdditionalData: boolean
+  shouldUngroupFollowBacks?: () => boolean
 }): Promise<{page: FeedPage; indexedAt: string | undefined}> {
   const res = await agent.listNotifications({
     limit,
@@ -51,7 +53,7 @@ export async function fetchPage({
   )
 
   // group notifications which are essentially similar (follows, likes on a post)
-  let notifsGrouped = groupNotifications(notifs)
+  let notifsGrouped = groupNotifications(notifs, {shouldUngroupFollowBacks})
 
   // we fetch subjects of notifications (usually posts) now instead of lazily
   // in the UI to avoid relayouts
@@ -109,6 +111,7 @@ export function shouldFilterNotif(
 
 export function groupNotifications(
   notifs: AppBskyNotificationListNotifications.Notification[],
+  options?: {shouldUngroupFollowBacks?: () => boolean},
 ): FeedNotification[] {
   const groupedNotifs: FeedNotification[] = []
   for (const notif of notifs) {
@@ -123,10 +126,20 @@ export function groupNotifications(
           notif.reasonSubject === groupedNotif.notification.reasonSubject &&
           notif.author.did !== groupedNotif.notification.author.did
         ) {
-          groupedNotif.additional = groupedNotif.additional || []
-          groupedNotif.additional.push(notif)
-          grouped = true
-          break
+          const nextIsFollowBack =
+            notif.reason === 'follow' && notif.author.viewer?.following
+          const prevIsFollowBack =
+            groupedNotif.notification.reason === 'follow' &&
+            groupedNotif.notification.author.viewer?.following
+          const shouldUngroup =
+            (nextIsFollowBack || prevIsFollowBack) &&
+            options?.shouldUngroupFollowBacks?.()
+          if (!shouldUngroup) {
+            groupedNotif.additional = groupedNotif.additional || []
+            groupedNotif.additional.push(notif)
+            grouped = true
+            break
+          }
         }
       }
     }

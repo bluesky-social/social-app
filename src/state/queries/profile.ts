@@ -26,6 +26,10 @@ import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import * as userActionHistory from '#/state/userActionHistory'
 import {updateProfileShadow} from '../cache/profile-shadow'
 import {useAgent, useSession} from '../session'
+import {
+  ProgressGuideAction,
+  useProgressGuideControls,
+} from '../shell/progress-guide'
 import {RQKEY as RQKEY_LIST_CONVOS} from './messages/list-converations'
 import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
 import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
@@ -277,12 +281,15 @@ function useProfileFollowMutation(
   const {currentAccount} = useSession()
   const agent = useAgent()
   const queryClient = useQueryClient()
+  const {captureAction} = useProgressGuideControls()
+
   return useMutation<{uri: string; cid: string}, Error, {did: string}>({
     mutationFn: async ({did}) => {
       let ownProfile: AppBskyActorDefs.ProfileViewDetailed | undefined
       if (currentAccount) {
         ownProfile = findProfileQueryData(queryClient, currentAccount.did)
       }
+      captureAction(ProgressGuideAction.Follow)
       logEvent('profile:follow', {
         logContext,
         didBecomeMutual: profile.viewer

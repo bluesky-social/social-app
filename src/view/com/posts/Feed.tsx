@@ -34,7 +34,11 @@ import {useSession} from '#/state/session'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
 import {useTheme} from 'lib/ThemeContext'
-import {SuggestedFeeds, SuggestedFollows} from '#/components/FeedInterstitials'
+import {
+  ProgressGuide,
+  SuggestedFeeds,
+  SuggestedFollows,
+} from '#/components/FeedInterstitials'
 import {List, ListRef} from '../util/List'
 import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
@@ -85,24 +89,54 @@ type FeedItem =
       }
       slot: number
     }
+  | {
+      type: 'interstitialProgressGuide'
+      key: string
+      params: {
+        variant: 'default' | string
+      }
+      slot: number
+    }
 
 const feedInterstitialType = 'interstitialFeeds'
 const followInterstitialType = 'interstitialFollows'
+const progressGuideInterstitialType = 'interstitialProgressGuide'
 const interstials: Record<
   'following' | 'discover',
-  (FeedItem & {type: 'interstitialFeeds' | 'interstitialFollows'})[]
+  (FeedItem & {
+    type:
+      | 'interstitialFeeds'
+      | 'interstitialFollows'
+      | 'interstitialProgressGuide'
+  })[]
 > = {
   following: [],
   discover: [
+    {
+      type: progressGuideInterstitialType,
+      params: {
+        variant: 'default',
+      },
+      key: progressGuideInterstitialType,
+      slot: 0,
+    },
     {
       type: followInterstitialType,
       params: {
         variant: 'default',
       },
       key: followInterstitialType,
-      slot: 40,
+      slot: 20,
     },
   ],
+}
+
+export function getFeedPostSlice(feedItem: FeedItem): FeedPostSlice | null {
+  if (feedItem.type === 'slice') {
+    return feedItem.slice
+  } else {
+    return null
+  }
 }
 
 // DISABLED need to check if this is causing random feed refreshes -prf
@@ -311,14 +345,14 @@ let Feed = ({
 
       if (feedType) {
         for (const interstitial of interstials[feedType]) {
-          const feedInterstitialEnabled =
-            interstitial.type === feedInterstitialType &&
-            gate('suggested_feeds_interstitial')
-          const followInterstitialEnabled =
-            interstitial.type === followInterstitialType &&
-            gate('suggested_follows_interstitial')
+          const shouldShow =
+            (interstitial.type === feedInterstitialType &&
+              gate('suggested_feeds_interstitial')) ||
+            (interstitial.type === followInterstitialType &&
+              gate('suggested_follows_interstitial')) ||
+            interstitial.type === progressGuideInterstitialType
 
-          if (feedInterstitialEnabled || followInterstitialEnabled) {
+          if (shouldShow) {
             const variant = 'default' // replace with experiment variant
             const int = {
               ...interstitial,
@@ -435,6 +469,8 @@ let Feed = ({
         return <SuggestedFeeds />
       } else if (item.type === followInterstitialType) {
         return <SuggestedFollows />
+      } else if (item.type === progressGuideInterstitialType) {
+        return <ProgressGuide />
       } else if (item.type === 'slice') {
         if (item.slice.rootUri === FALLBACK_MARKER_POST.post.uri) {
           // HACK

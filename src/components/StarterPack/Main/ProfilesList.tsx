@@ -11,10 +11,12 @@ import {InfiniteData, UseInfiniteQueryResult} from '@tanstack/react-query'
 import {useBottomBarOffset} from 'lib/hooks/useBottomBarOffset'
 import {isBlockedOrBlocking} from 'lib/moderation/blocked-and-muted'
 import {isNative, isWeb} from 'platform/detection'
+import {useListMembersQuery} from 'state/queries/list-members'
 import {useSession} from 'state/session'
 import {List, ListRef} from 'view/com/util/List'
 import {SectionRef} from '#/screens/Profile/Sections/types'
 import {atoms as a, useTheme} from '#/alf'
+import {ListMaybePlaceholder} from '#/components/Lists'
 import {Default as ProfileCard} from '#/components/ProfileCard'
 
 function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic, index: number) {
@@ -33,17 +35,16 @@ interface ProfilesListProps {
 
 export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
   function ProfilesListImpl(
-    {listUri, listMembersQuery, moderationOpts, headerHeight, scrollElRef},
+    {listUri, moderationOpts, headerHeight, scrollElRef},
     ref,
   ) {
     const t = useTheme()
     const [initialHeaderHeight] = React.useState(headerHeight)
     const bottomBarOffset = useBottomBarOffset(20)
     const {currentAccount} = useSession()
+    const {data, refetch, isError} = useListMembersQuery(listUri, 50)
 
     const [isPTRing, setIsPTRing] = React.useState(false)
-
-    const {data, refetch} = listMembersQuery
 
     // The server returns these sorted by descending creation date, so we want to invert
     const profiles = data?.pages
@@ -96,7 +97,19 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
       )
     }
 
-    if (listMembersQuery)
+    if (!data) {
+      return (
+        <View style={{marginTop: headerHeight, marginBottom: bottomBarOffset}}>
+          <ListMaybePlaceholder
+            isLoading={true}
+            isError={isError}
+            onRetry={refetch}
+          />
+        </View>
+      )
+    }
+
+    if (data)
       return (
         <List
           data={getSortedProfiles()}

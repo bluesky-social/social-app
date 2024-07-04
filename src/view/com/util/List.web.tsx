@@ -365,6 +365,7 @@ function ListImpl<ItemT>(
             root={containWeb ? nativeRef : null}
             onVisibleChange={onTailVisibilityChange}
             bottomMargin={(onEndReachedThreshold ?? 0) * 100 + '%'}
+            key={data?.length}
           />
         )}
         {footerComponent}
