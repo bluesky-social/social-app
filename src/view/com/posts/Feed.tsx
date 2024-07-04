@@ -143,7 +143,7 @@ const interstials: Record<
         variant: 'default',
       },
       key: feedInterstitialType,
-      slot: 20,
+      slot: 40,
     },
     {
       type: followInterstitialType,
@@ -151,7 +151,7 @@ const interstials: Record<
         variant: 'default',
       },
       key: followInterstitialType,
-      slot: 40,
+      slot: 20,
     },
   ],
 }
