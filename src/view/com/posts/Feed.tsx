@@ -156,6 +156,14 @@ const interstials: Record<
   ],
 }
 
+export function getFeedPostSlice(feedItem: FeedItem): FeedPostSlice | null {
+  if (feedItem.type === 'slice') {
+    return feedItem.slice
+  } else {
+    return null
+  }
+}
+
 // DISABLED need to check if this is causing random feed refreshes -prf
 // const REFRESH_AFTER = STALE.HOURS.ONE
 const CHECK_LATEST_AFTER = STALE.SECONDS.THIRTY
