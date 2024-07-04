@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 import React from 'react'
 import {View} from 'react-native'
-import * as MediaLibrary from 'expo-media-library'
-import * as Sharing from 'expo-sharing'
 import {useVideoPlayer, VideoView} from 'expo-video'
 
 import {CompressedVideo} from '#/lib/media/video/compress'
@@ -38,6 +36,7 @@ export function VideoPreview({
         />
       </View>
 
+      {/* TODO: style this nicely */}
       <View style={[a.flex_row, a.mt_sm, a.gap_sm]}>
         <Button
           onPress={clear}
@@ -46,31 +45,6 @@ export function VideoPreview({
           color="primary"
           variant="solid">
           <ButtonText>Clear</ButtonText>
-        </Button>
-
-        <Button
-          onPress={() => {
-            Sharing.shareAsync(video.uri)
-          }}
-          label="Share"
-          size="small"
-          color="primary"
-          variant="solid">
-          <ButtonText>Share</ButtonText>
-        </Button>
-
-        <Button
-          onPress={async () => {
-            if (!(await MediaLibrary.getPermissionsAsync()).granted) {
-              await MediaLibrary.requestPermissionsAsync()
-            }
-            await MediaLibrary.createAssetAsync(video.uri)
-          }}
-          label="Save"
-          size="small"
-          color="primary"
-          variant="solid">
-          <ButtonText>Save</ButtonText>
         </Button>
       </View>
     </>

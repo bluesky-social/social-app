@@ -8,6 +8,8 @@ import {
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useVideoLibraryPermission} from '#/lib/hooks/usePermissions'
+import {isNative} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {VideoClip_Stroke2_Corner0_Rounded as VideoClipIcon} from '#/components/icons/VideoClip'
@@ -22,8 +24,13 @@ type Props = {
 export function SelectVideoBtn({onSelectVideo, disabled}: Props) {
   const {_} = useLingui()
   const t = useTheme()
+  const {requestVideoAccessIfNeeded} = useVideoLibraryPermission()
 
   const onPressSelectVideo = useCallback(async () => {
+    if (isNative && !(await requestVideoAccessIfNeeded())) {
+      return
+    }
+
     const response = await launchImageLibraryAsync({
       exif: false,
       mediaTypes: MediaTypeOptions.Videos,
@@ -36,7 +43,7 @@ export function SelectVideoBtn({onSelectVideo, disabled}: Props) {
     if (response.assets && response.assets.length > 0) {
       onSelectVideo(response.assets[0])
     }
-  }, [onSelectVideo])
+  }, [onSelectVideo, requestVideoAccessIfNeeded])
 
   return (
     <>
