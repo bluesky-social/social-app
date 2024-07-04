@@ -26,10 +26,12 @@ export async function compressVideo(
     onProgress,
   )
 
-  await FileSystem.deleteAsync(file)
+  try {
+    await FileSystem.deleteAsync(file)
+  } catch {
+    console.warn('Failed to delete original video')
+  }
   const info = await getVideoMetaData(compressed)
-  console.log('compressed size', (info.size / 1024).toFixed(2) + 'mb')
-  console.log(JSON.stringify(info, null, 2))
 
   return {uri: compressed, size: info.size}
 }

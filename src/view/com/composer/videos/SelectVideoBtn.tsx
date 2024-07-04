@@ -43,8 +43,8 @@ export function SelectVideoBtn({onSelectVideo, disabled}: Props) {
       <Button
         testID="openGifBtn"
         onPress={onPressSelectVideo}
-        label={_(msg`Select GIF`)}
-        accessibilityHint={_(msg`Opens GIF select dialog`)}
+        label={_(msg`Select video`)}
+        accessibilityHint={_(msg`Opens video picker`)}
         style={a.p_sm}
         variant="ghost"
         shape="round"
