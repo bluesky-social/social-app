@@ -34,6 +34,7 @@ import {
 import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
 import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
+import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
 import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
 import * as Toast from '#/view/com/util/Toast'
@@ -104,7 +105,9 @@ function InnerApp() {
                                 <MutedThreadsProvider>
                                   <SafeAreaProvider>
                                     <TourProvider>
-                                      <Shell />
+                                      <ProgressGuideProvider>
+                                        <Shell />
+                                      </ProgressGuideProvider>
                                     </TourProvider>
                                   </SafeAreaProvider>
                                 </MutedThreadsProvider>

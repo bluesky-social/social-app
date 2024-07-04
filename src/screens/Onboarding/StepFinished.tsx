@@ -19,6 +19,7 @@ import {preferencesQueryKey} from '#/state/queries/preferences'
 import {RQKEY as profileRQKey} from '#/state/queries/profile'
 import {useAgent} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
+import {useProgressGuideControls} from '#/state/shell/progress-guide'
 import {uploadBlob} from 'lib/api'
 import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
 import {useSetHasCheckedForStarterPack} from 'state/preferences/used-starter-packs'
@@ -58,6 +59,7 @@ export function StepFinished() {
   const setActiveStarterPack = useSetActiveStarterPack()
   const setHasCheckedForStarterPack = useSetHasCheckedForStarterPack()
   const setQueuedTour = useSetQueuedTour()
+  const {startProgressGuide} = useProgressGuideControls()
 
   const finishOnboarding = React.useCallback(async () => {
     setSaving(true)
@@ -185,6 +187,7 @@ export function StepFinished() {
     setActiveStarterPack(undefined)
     setHasCheckedForStarterPack(true)
     setQueuedTour(TOURS.HOME)
+    startProgressGuide('like-10-and-follow-7')
     dispatch({type: 'finish'})
     onboardDispatch({type: 'finish'})
     track('OnboardingV2:StepFinished:End')
@@ -218,6 +221,7 @@ export function StepFinished() {
     setActiveStarterPack,
     setHasCheckedForStarterPack,
     setQueuedTour,
+    startProgressGuide,
   ])
 
   React.useEffect(() => {
