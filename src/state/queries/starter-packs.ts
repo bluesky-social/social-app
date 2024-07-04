@@ -364,6 +364,7 @@ export async function precacheStarterPack(
   } else if (AppBskyGraphDefs.isStarterPackViewBasic(starterPack)) {
     const listView: AppBskyGraphDefs.ListViewBasic = {
       uri: starterPack.record.list,
+      // This will be populated once the data from server is fetched
       cid: '',
       name: starterPack.record.name,
       purpose: 'app.bsky.graph.defs#referencelist',
