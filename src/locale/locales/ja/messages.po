@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-07-03 22:09+0900\n"
+"PO-Revision-Date: 2024-07-04 11:30+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -397,6 +397,10 @@ msgstr "成人向けコンテンツは無効になっています。"
 msgid "Advanced"
 msgstr "高度な設定"
 
+#: src/state/shell/progress-guide.tsx:177
+msgid "Algorithm training complete!"
+msgstr "アルゴリズムのトレーニング完了！"
+
 #: src/screens/StarterPack/StarterPackScreen.tsx:301
 msgid "All accounts have been followed!"
 msgstr "すべてのアカウントをフォローしました！"
@@ -723,6 +727,10 @@ msgstr "Bluesky"
 #: src/view/com/auth/server-input/index.tsx:154
 msgid "Bluesky is an open network where you can choose your hosting provider. Custom hosting is now available in beta for developers."
 msgstr "Bluesky は、ホスティング プロバイダーを選択できるオープン ネットワークです。 カスタムホスティングは、開発者向けのベータ版で利用できるようになりました。"
+
+#: src/components/ProgressGuide/List.tsx:55
+msgid "Bluesky is better with friends!"
+msgstr "Blueskyは友達と一緒のほうが楽しい！"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:282
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
@@ -1649,6 +1657,10 @@ msgstr "新しいフィードを探す"
 msgid "Discover New Feeds"
 msgstr "新しいフィードを探す"
 
+#: src/components/ProgressGuide/List.tsx:40
+msgid "Dismiss getting started guide"
+msgstr "入門ガイドを消す"
+
 #: src/view/screens/AccessibilitySettings.tsx:95
 msgid "Display larger alt text badges"
 msgstr "大きなALTテキストのバッジを表示"
@@ -1941,7 +1953,7 @@ msgstr "フィードの終わり"
 
 #: src/tours/Tooltip.tsx:159
 msgid "End of onboarding tour window. Do not move forward. Instead, go backward for more options, or press to skip."
-msgstr "オンボーディングツアー・ウインドウ終了。前へ移動しないでください。代わりに、戻って他のオプションを見るか、スキップしてください。"
+msgstr "オンボーディングツアー・ウインドウ終了。先へ進まないでください。代わりに、戻って他のオプションを見るか、スキップしてください。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:160
 msgid "Enter a name for this App Password"
@@ -2300,6 +2312,10 @@ msgstr "{0}をフォロー"
 msgid "Follow {name}"
 msgstr "{name}をフォロー"
 
+#: src/components/ProgressGuide/List.tsx:54
+msgid "Follow 7 accounts"
+msgstr "７アカウントをフォロー"
+
 #: src/view/com/profile/ProfileMenu.tsx:246
 #: src/view/com/profile/ProfileMenu.tsx:257
 msgid "Follow Account"
@@ -2462,6 +2478,10 @@ msgstr "始める"
 msgid "Get Started"
 msgstr "開始"
 
+#: src/components/ProgressGuide/List.tsx:33
+msgid "Getting started"
+msgstr "入門"
+
 #: src/view/com/util/images/ImageHorzList.tsx:35
 msgid "GIF"
 msgstr "GIF"
@@ -2544,6 +2564,10 @@ msgstr "ユーザーのプロフィールへ移動"
 #: src/lib/moderation/useGlobalLabelStrings.ts:46
 msgid "Graphic Media"
 msgstr "生々しいメディア"
+
+#: src/state/shell/progress-guide.tsx:167
+msgid "Half way there!"
+msgstr "半分まで来ました！"
 
 #: src/view/com/modals/ChangeHandle.tsx:260
 msgid "Handle"
@@ -2967,6 +2991,15 @@ msgstr "さあ始めましょう！"
 #: src/view/screens/Settings/index.tsx:452
 msgid "Light"
 msgstr "ライト"
+
+#: src/components/ProgressGuide/List.tsx:48
+msgid "Like 10 posts"
+msgstr "10投稿をいいね"
+
+#: src/state/shell/progress-guide.tsx:163
+#: src/state/shell/progress-guide.tsx:168
+msgid "Like 10 posts to train the Discover feed"
+msgstr "Discoverフィードを訓練するために10投稿をいいねする"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:267
 #: src/view/screens/ProfileFeed.tsx:573
@@ -3408,6 +3441,10 @@ msgstr "名前または説明がコミュニティ基準に違反"
 #: src/screens/Onboarding/state.ts:91
 msgid "Nature"
 msgstr "自然"
+
+#: src/components/StarterPack/StarterPackCard.tsx:118
+msgid "Navigate to {0}"
+msgstr "{0}へ移動します"
 
 #: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:73
 msgid "Navigate to starter pack"
@@ -5468,7 +5505,7 @@ msgstr "チャットを開始"
 
 #: src/tours/Tooltip.tsx:99
 msgid "Start of onboarding tour window. Do not move backward. Instead, go forward for more options, or press to skip."
-msgstr "オンボーディングツアー・ウインドウ開始。前へ移動しないでください。代わりに、戻って他のオプションを見るか、スキップしてください。"
+msgstr "オンボーディングツアー・ウインドウ開始。前へ戻らないでください。代わりに、進んで他のオプションを見るか、スキップしてください。"
 
 #: src/lib/generate-starterpack.ts:68
 #: src/Navigation.tsx:325
@@ -5591,9 +5628,21 @@ msgstr "タグメニュー：{displayTag}"
 msgid "Tall"
 msgstr "トール"
 
+#: src/components/ProgressGuide/Toast.tsx:150
+msgid "Tap to dismiss"
+msgstr "タップして消す"
+
 #: src/view/com/util/images/AutoSizedImage.tsx:70
 msgid "Tap to view fully"
 msgstr "タップして全体を表示"
+
+#: src/state/shell/progress-guide.tsx:172
+msgid "Task complete - 10 likes!"
+msgstr "タスク完了 - 10いいね！"
+
+#: src/components/ProgressGuide/List.tsx:49
+msgid "Teach our algorithm what you like"
+msgstr "アルゴリズムを鍛える"
 
 #: src/screens/Onboarding/index.tsx:36
 #: src/screens/Onboarding/state.ts:98
@@ -5668,6 +5717,11 @@ msgstr "コミュニティーガイドラインは<0/>に移動しました"
 #: src/view/screens/CopyrightPolicy.tsx:33
 msgid "The Copyright Policy has been moved to <0/>"
 msgstr "著作権ポリシーは<0/>に移動しました"
+
+#: src/state/shell/progress-guide.tsx:173
+#: src/state/shell/progress-guide.tsx:178
+msgid "The Discover feed now knows what you like"
+msgstr "Discoverフィードはあなたの好みを学習しました"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:321
 msgid "The experience is better in the app. Download Bluesky now and we'll pick back up where you left off."
@@ -6967,6 +7021,10 @@ msgstr "メールアドレスは更新されましたが、確認されていま
 #: src/view/com/modals/VerifyEmail.tsx:122
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
 msgstr "メールアドレスはまだ確認されていません。これは、当社が推奨する重要なセキュリティステップです。"
+
+#: src/state/shell/progress-guide.tsx:162
+msgid "Your first like!"
+msgstr "最初のいいね！"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:43
 msgid "Your following feed is empty! Follow more users to see what's happening."
