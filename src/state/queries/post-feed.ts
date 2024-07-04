@@ -310,7 +310,16 @@ export function usePostFeedQuery(
 
                   if (isDiscover) {
                     userActionHistory.seen(
-                      slice.items.map(item => item.post.uri),
+                      slice.items.map(item => ({
+                        feedContext: item.feedContext,
+                        likeCount: item.post.likeCount ?? 0,
+                        repostCount: item.post.repostCount ?? 0,
+                        replyCount: item.post.replyCount ?? 0,
+                        isFollowedBy: Boolean(
+                          item.post.author.viewer?.followedBy,
+                        ),
+                        uri: item.post.uri,
+                      })),
                     )
                   }
 

@@ -4,6 +4,15 @@ const LIKE_WINDOW = 100
 const FOLLOW_WINDOW = 100
 const SEEN_WINDOW = 100
 
+type SeenPost = {
+  uri: string
+  likeCount: number
+  repostCount: number
+  replyCount: number
+  isFollowedBy: boolean
+  feedContext: string | undefined
+}
+
 export type UserActionHistory = {
   /**
    * The last 100 post URIs the user has liked
@@ -16,7 +25,7 @@ export type UserActionHistory = {
   /**
    * The last 100 post URIs the user has seen from the Discover feed only
    */
-  seen: string[]
+  seen: SeenPost[]
 }
 
 const userActionHistory: UserActionHistory = {
@@ -55,8 +64,8 @@ export function unfollow(dids: string[]) {
   )
 }
 
-export function seen(postUris: string[]) {
+export function seen(posts: SeenPost[]) {
   userActionHistory.seen = userActionHistory.seen
-    .concat(postUris)
+    .concat(posts)
     .slice(-SEEN_WINDOW)
 }

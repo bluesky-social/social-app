@@ -90,7 +90,7 @@ function useExperimentalSuggestedUsersQuery() {
       .map(l => new AtUri(l))
       .map(uri => uri.host)
       .filter(did => !follows.includes(did))
-    const seenDids = seen.map(l => new AtUri(l)).map(uri => uri.host)
+    const seenDids = seen.map(l => new AtUri(l.uri)).map(uri => uri.host)
     return [...new Set([...likeDids, ...seenDids])]
   }, [userActionSnapshot])
   const {data, isLoading, error} = useProfilesQuery({
