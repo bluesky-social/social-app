@@ -399,7 +399,7 @@ msgstr "Avancé"
 
 #: src/state/shell/progress-guide.tsx:177
 msgid "Algorithm training complete!"
-msgstr "Formation à l’algorithme terminée !"
+msgstr "Entraînement de l’algorithme terminé !"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:301
 msgid "All accounts have been followed!"
@@ -730,7 +730,7 @@ msgstr "Bluesky est un réseau ouvert où vous pouvez choisir votre hébergeur. 
 
 #: src/components/ProgressGuide/List.tsx:55
 msgid "Bluesky is better with friends!"
-msgstr "Bluesky est meilleur avec des ami·e·s !"
+msgstr "Bluesky est meilleur entre ami·e·s !"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:282
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
@@ -2569,7 +2569,7 @@ msgstr "Médias crus"
 
 #: src/state/shell/progress-guide.tsx:167
 msgid "Half way there!"
-msgstr "A mi-chemin !"
+msgstr "On y est presque !"
 
 #: src/view/com/modals/ChangeHandle.tsx:260
 msgid "Handle"
@@ -4387,7 +4387,7 @@ msgstr "Code QR enregistré dans votre photothèque !"
 
 #: src/tours/Tooltip.tsx:111
 msgid "Quick tip"
-msgstr "Conseil rapide"
+msgstr "Petite astuce"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:116
 #: src/view/com/util/post-ctrls/RepostButton.tsx:128
