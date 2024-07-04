@@ -7,12 +7,15 @@ import {atoms as a, useTheme} from '#/alf'
 export function VideoEmbedInner({
   source,
   active,
+  setActive,
 }: {
   source: string
   active: boolean
+  setActive: () => void
 }) {
   const [hls] = useState(() => new Hls())
   const ref = useRef<HTMLVideoElement>(null)
+  const [focused, setFocused] = useState(false)
   const t = useTheme()
 
   useEffect(() => {
@@ -38,6 +41,15 @@ export function VideoEmbedInner({
     }
   }, [source, hls])
 
+  useEffect(() => {
+    if (active) {
+      ref.current?.play()
+    } else {
+      ref.current?.pause()
+      setFocused(false)
+    }
+  }, [active])
+
   return (
     <View
       style={[
@@ -55,8 +67,22 @@ export function VideoEmbedInner({
         playsInline
         preload="none"
         loop
-        muted
-        autoPlay={active}
+        muted={!focused}
+        onClick={evt => {
+          evt.stopPropagation()
+          if (focused) {
+            if (ref.current?.paused) {
+              ref.current.play()
+            } else {
+              ref.current?.pause()
+            }
+          } else {
+            if (!active) {
+              setActive()
+            }
+            setFocused(true)
+          }
+        }}
       />
     </View>
   )

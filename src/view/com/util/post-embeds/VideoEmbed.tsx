@@ -27,7 +27,11 @@ export function VideoEmbed({source}: {source: string}) {
         a.my_xs,
       ]}>
       {active ? (
-        <VideoEmbedInner source={source} active={active} />
+        <VideoEmbedInner
+          source={source}
+          active={active}
+          setActive={setActive}
+        />
       ) : (
         <Button
           style={[a.flex_1, t.atoms.bg_contrast_25]}

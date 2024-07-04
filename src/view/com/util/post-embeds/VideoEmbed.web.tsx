@@ -43,7 +43,11 @@ export function VideoEmbed({source}: {source: string}) {
       ]}>
       <div ref={ref} style={{display: 'flex', flex: 1}}>
         {hasBeenActive ? (
-          <VideoEmbedInner source={source} active={active} />
+          <VideoEmbedInner
+            source={source}
+            active={active}
+            setActive={setActive}
+          />
         ) : (
           <Button
             style={[a.flex_1, t.atoms.bg_contrast_25]}
