@@ -3,7 +3,6 @@ import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {
   AppBskyGraphDefs,
-  AppBskyGraphGetList,
   AppBskyGraphStarterpack,
   AtUri,
   ModerationOpts,
@@ -14,15 +13,15 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
-import {
-  InfiniteData,
-  UseInfiniteQueryResult,
-  useQueryClient,
-} from '@tanstack/react-query'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useDeleteStarterPackMutation} from '#/state/queries/starter-packs'
+import {
+  ProgressGuideAction,
+  useProgressGuideControls,
+} from '#/state/shell/progress-guide'
 import {batchedUpdates} from 'lib/batchedUpdates'
 import {HITSLOP_20} from 'lib/constants'
 import {isBlockedOrBlocking, isMuted} from 'lib/moderation/blocked-and-muted'
@@ -33,7 +32,6 @@ import {getStarterPackOgCard} from 'lib/strings/starter-pack'
 import {isWeb} from 'platform/detection'
 import {updateProfileShadow} from 'state/cache/profile-shadow'
 import {useModerationOpts} from 'state/preferences/moderation-opts'
-import {useListMembersQuery} from 'state/queries/list-members'
 import {useResolvedStarterPackShortLink} from 'state/queries/resolve-short-link'
 import {useResolveDidQuery} from 'state/queries/resolve-uri'
 import {useShortenLink} from 'state/queries/shorten-link'
@@ -123,7 +121,6 @@ export function StarterPackScreenInner({
     isLoading: isLoadingStarterPack,
     isError: isErrorStarterPack,
   } = useStarterPackQuery({did, rkey})
-  const listMembersQuery = useListMembersQuery(starterPack?.list?.uri, 50)
 
   const isValid =
     starterPack &&
@@ -134,12 +131,7 @@ export function StarterPackScreenInner({
   if (!did || !starterPack || !isValid || !moderationOpts) {
     return (
       <ListMaybePlaceholder
-        isLoading={
-          isLoadingDid ||
-          isLoadingStarterPack ||
-          listMembersQuery.isLoading ||
-          !moderationOpts
-        }
+        isLoading={isLoadingDid || isLoadingStarterPack || !moderationOpts}
         isError={isErrorDid || isErrorStarterPack || !isValid}
         errorMessage={_(msg`That starter pack could not be found.`)}
         emptyMessage={_(msg`That starter pack could not be found.`)}
@@ -155,7 +147,6 @@ export function StarterPackScreenInner({
     <StarterPackScreenLoaded
       starterPack={starterPack}
       routeParams={routeParams}
-      listMembersQuery={listMembersQuery}
       moderationOpts={moderationOpts}
     />
   )
@@ -164,14 +155,10 @@ export function StarterPackScreenInner({
 function StarterPackScreenLoaded({
   starterPack,
   routeParams,
-  listMembersQuery,
   moderationOpts,
 }: {
   starterPack: AppBskyGraphDefs.StarterPackView
   routeParams: StarterPackScreeProps['route']['params']
-  listMembersQuery: UseInfiniteQueryResult<
-    InfiniteData<AppBskyGraphGetList.OutputSchema>
-  >
   moderationOpts: ModerationOpts
 }) {
   const showPeopleTab = Boolean(starterPack.list)
@@ -242,7 +229,6 @@ function StarterPackScreenLoaded({
                   headerHeight={headerHeight}
                   // @ts-expect-error
                   scrollElRef={scrollElRef}
-                  listMembersQuery={listMembersQuery}
                   moderationOpts={moderationOpts}
                 />
               )
@@ -305,6 +291,7 @@ function Header({
   const queryClient = useQueryClient()
   const setActiveStarterPack = useSetActiveStarterPack()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
+  const {captureAction} = useProgressGuideControls()
 
   const [isProcessing, setIsProcessing] = React.useState(false)
 
@@ -369,6 +356,7 @@ function Header({
         starterPack: starterPack.uri,
         count: dids.length,
       })
+      captureAction(ProgressGuideAction.Follow, dids.length)
       Toast.show(_(msg`All accounts have been followed!`))
     } catch (e) {
       Toast.show(_(msg`An error occurred while trying to follow all`))

@@ -45,6 +45,7 @@ import {
 import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
 import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
+import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
 import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
 import {TestCtrls} from '#/view/com/testing/TestCtrls'
@@ -119,10 +120,13 @@ function InnerApp() {
                                 <BackgroundNotificationPreferencesProvider>
                                   <MutedThreadsProvider>
                                     <TourProvider>
-                                      <GestureHandlerRootView style={s.h100pct}>
-                                        <TestCtrls />
-                                        <Shell />
-                                      </GestureHandlerRootView>
+                                      <ProgressGuideProvider>
+                                        <GestureHandlerRootView
+                                          style={s.h100pct}>
+                                          <TestCtrls />
+                                          <Shell />
+                                        </GestureHandlerRootView>
+                                      </ProgressGuideProvider>
                                     </TourProvider>
                                   </MutedThreadsProvider>
                                 </BackgroundNotificationPreferencesProvider>
