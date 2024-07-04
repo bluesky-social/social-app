@@ -59,11 +59,13 @@ export function useProgressGuideControls() {
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const {_} = useLingui()
   const {data: preferences} = usePreferencesQuery()
-  const {mutateAsync, variables} = useSetActiveProgressGuideMutation()
+  const {mutateAsync, variables, isPending} =
+    useSetActiveProgressGuideMutation()
   const gate = useGate()
 
-  const activeProgressGuide = (variables ||
-    preferences?.bskyAppState?.activeProgressGuide) as ProgressGuide
+  const activeProgressGuide = (
+    isPending ? variables : preferences?.bskyAppState?.activeProgressGuide
+  ) as ProgressGuide
 
   // ensure the unspecced attributes have the correct types
   if (activeProgressGuide?.guide === 'like-10-and-follow-7') {
@@ -103,11 +105,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       },
 
       endProgressGuide() {
-        // update the persisted first
-        mutateAsync(undefined).then(() => {
-          // now clear local state, to avoid rehydrating from the server
-          setLocalGuideState(undefined)
-        })
+        setLocalGuideState(undefined)
+        mutateAsync(undefined)
       },
 
       captureAction(action: ProgressGuideAction, count = 1) {
