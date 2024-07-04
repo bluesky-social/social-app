@@ -15,6 +15,7 @@ import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {useProfilesQuery} from '#/state/queries/profile'
 import {useProgressGuide} from '#/state/shell/progress-guide'
 import * as userActionHistory from '#/state/userActionHistory'
+import {SeenPost} from '#/state/userActionHistory'
 import {atoms as a, useBreakpoints, useTheme, ViewStyleProp, web} from '#/alf'
 import {Button} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
@@ -82,6 +83,47 @@ export function SuggestedFeedsCardPlaceholder() {
   )
 }
 
+function getRank(seenPost: SeenPost): string {
+  let tier: string
+  if (seenPost.feedContext === 'popfriends') {
+    tier = 'a'
+  } else if (seenPost.feedContext?.startsWith('cluster')) {
+    tier = 'b'
+  } else if (seenPost.feedContext?.startsWith('ntpc')) {
+    tier = 'c'
+  } else if (seenPost.feedContext?.startsWith('t-')) {
+    tier = 'd'
+  } else if (seenPost.feedContext === 'nettop') {
+    tier = 'e'
+  } else {
+    tier = 'f'
+  }
+  let score = Math.round(
+    Math.log(
+      1 + seenPost.likeCount + seenPost.repostCount + seenPost.replyCount,
+    ),
+  )
+  if (seenPost.isFollowedBy || Math.random() > 0.9) {
+    score *= 2
+  }
+  const rank = 100 - score
+  return `${tier}-${rank}`
+}
+
+function sortSeenPosts(postA: SeenPost, postB: SeenPost): 0 | 1 | -1 {
+  const rankA = getRank(postA)
+  const rankB = getRank(postB)
+  // Yes, we're comparing strings here.
+  // The "larger" string means a worse rank.
+  if (rankA > rankB) {
+    return 1
+  } else if (rankA < rankB) {
+    return -1
+  } else {
+    return 0
+  }
+}
+
 function useExperimentalSuggestedUsersQuery() {
   const userActionSnapshot = userActionHistory.useActionHistorySnapshot()
   const dids = React.useMemo(() => {
@@ -90,7 +132,10 @@ function useExperimentalSuggestedUsersQuery() {
       .map(l => new AtUri(l))
       .map(uri => uri.host)
       .filter(did => !follows.includes(did))
-    const seenDids = seen.map(l => new AtUri(l.uri)).map(uri => uri.host)
+    const seenDids = seen
+      .sort(sortSeenPosts)
+      .map(l => new AtUri(l.uri))
+      .map(uri => uri.host)
     return [...new Set([...likeDids, ...seenDids])]
   }, [userActionSnapshot])
   const {data, isLoading, error} = useProfilesQuery({

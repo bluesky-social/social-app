@@ -4,7 +4,7 @@ const LIKE_WINDOW = 100
 const FOLLOW_WINDOW = 100
 const SEEN_WINDOW = 100
 
-type SeenPost = {
+export type SeenPost = {
   uri: string
   likeCount: number
   repostCount: number
