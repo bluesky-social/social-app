@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-07-03 21:07+0900\n"
+"PO-Revision-Date: 2024-07-04 19:35+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -2389,6 +2389,7 @@ msgstr "내가 아는 @{0} 님의 팔로워"
 msgid "Followers you know"
 msgstr "내가 아는 팔로워"
 
+#. User is following this account, click to unfollow
 #: src/components/ProfileCard.tsx:312
 #: src/components/ProfileHoverCard/index.web.tsx:445
 #: src/components/ProfileHoverCard/index.web.tsx:456
