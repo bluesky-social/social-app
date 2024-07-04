@@ -13,7 +13,7 @@ import {atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
 import {useVideoPlayer} from './VideoPlayerContext'
 
-export const VideoEmbedInner = ({}: {source: string}) => {
+export function VideoEmbedInner({}: {source: string; active: boolean}) {
   const player = useVideoPlayer()
   const aref = useAnimatedRef<Animated.View>()
   const {height: windowHeight} = useWindowDimensions()

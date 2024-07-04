@@ -1,47 +1,35 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {View} from 'react-native'
-import Hls from 'hls.js'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonIcon} from '#/components/Button'
+import {Play_Filled_Corner2_Rounded as PlayIcon} from '#/components/icons/Play'
 import {useActiveVideoView} from './ActiveVideoContext'
+import {VideoEmbedInner} from './VideoEmbedInner'
 
 export function VideoEmbed({source}: {source: string}) {
-  const [hls] = useState(() => new Hls())
-  const hasLoaded = useRef(false)
-  const ref = useRef<HTMLVideoElement>(null)
+  const t = useTheme()
+  const ref = useRef<HTMLDivElement>(null)
   const {active, setActive} = useActiveVideoView({
     source,
-    measure: useCallback(() => {
+    measure: () => {
       if (ref.current) {
         return ref.current.getBoundingClientRect()
       }
-    }, []),
+    },
   })
-  const t = useTheme()
+  const [hasBeenActive, setHasBeenActive] = useState(false)
+  const {_} = useLingui()
+
+  const onPress = useCallback(() => setActive(), [setActive])
 
   useEffect(() => {
-    if (ref.current && active && !hasLoaded.current) {
-      hasLoaded.current = true
-      if (ref.current.canPlayType('application/vnd.apple.mpegurl')) {
-        ref.current.src = source
-      } else if (Hls.isSupported()) {
-        hls.loadSource(source)
-      } else {
-        // TODO: fallback
-      }
+    if (active) {
+      setHasBeenActive(true)
     }
-  }, [source, active, hls])
-
-  useEffect(() => {
-    if (ref.current) {
-      if (
-        !ref.current.canPlayType('application/vnd.apple.mpegurl') &&
-        Hls.isSupported()
-      ) {
-        hls.attachMedia(ref.current)
-      }
-    }
-  }, [source, active, hls])
+  }, [active])
 
   return (
     <View
@@ -50,23 +38,24 @@ export function VideoEmbed({source}: {source: string}) {
         a.rounded_sm,
         {aspectRatio: 16 / 9},
         a.overflow_hidden,
-        active ? t.atoms.bg_contrast_25 : t.atoms.bg_contrast_200,
+        t.atoms.bg_contrast_25,
         a.my_xs,
       ]}>
-      <video
-        ref={ref}
-        style={a.flex_1}
-        playsInline
-        preload="none"
-        loop
-        muted
-        autoPlay={active}
-        onClick={() => {
-          if (!active) {
-            setActive()
-          }
-        }}
-      />
+      <div ref={ref} style={{display: 'flex', flex: 1}}>
+        {hasBeenActive ? (
+          <VideoEmbedInner source={source} active={active} />
+        ) : (
+          <Button
+            style={[a.flex_1, t.atoms.bg_contrast_25]}
+            onPress={onPress}
+            label={_(msg`Play video`)}
+            variant="ghost"
+            color="secondary"
+            size="large">
+            <ButtonIcon icon={PlayIcon} />
+          </Button>
+        )}
+      </div>
     </View>
   )
 }
