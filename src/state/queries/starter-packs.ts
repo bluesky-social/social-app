@@ -39,6 +39,11 @@ const RQKEY = ({
   did?: string
   rkey?: string
 }) => {
+  console.log({
+    uri,
+    did,
+    rkey,
+  })
   if (uri?.startsWith('https://') || uri?.startsWith('at://')) {
     const parsed = parseStarterPackUri(uri)
     return [RQKEY_ROOT, parsed?.name, parsed?.rkey]
@@ -346,4 +351,36 @@ async function whenAppViewReady(
     fn,
     () => agent.app.bsky.graph.getStarterPack({starterPack: uri}),
   )
+}
+
+export async function precacheStarterPack(
+  queryClient: QueryClient,
+  starterPack:
+    | AppBskyGraphDefs.StarterPackViewBasic
+    | AppBskyGraphDefs.StarterPackView,
+) {
+  if (!AppBskyGraphStarterpack.isRecord(starterPack.record)) {
+    return
+  }
+
+  let starterPackView: AppBskyGraphDefs.StarterPackView | undefined
+  if (AppBskyGraphDefs.isStarterPackView(starterPack)) {
+    starterPackView = starterPack
+  } else if (AppBskyGraphDefs.isStarterPackViewBasic(starterPack)) {
+    const listView: AppBskyGraphDefs.ListViewBasic = {
+      uri: starterPack.record.list,
+      cid: '',
+      name: starterPack.record.name,
+      purpose: 'app.bsky.graph.defs#referencelist',
+    }
+    starterPackView = {
+      ...starterPack,
+      $type: 'app.bsky.graph.defs#starterPackView',
+      list: listView,
+    }
+  }
+
+  if (starterPackView) {
+    queryClient.setQueryData(RQKEY({uri: starterPack.uri}), starterPackView)
+  }
 }

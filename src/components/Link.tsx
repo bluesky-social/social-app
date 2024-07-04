@@ -340,6 +340,7 @@ export function InlineLinkText({
  */
 export function BaseLink({
   displayText,
+  onPress: onPressOuter,
   style,
   children,
   ...rest
@@ -353,12 +354,18 @@ export function BaseLink({
   label: string
   displayText?: string
 }) {
-  const btnProps = useLink({
+  const {onPress, ...btnProps} = useLink({
     displayText: displayText ?? rest.to,
     ...rest,
   })
   return (
-    <Pressable style={style} {...btnProps}>
+    <Pressable
+      style={style}
+      onPress={e => {
+        onPressOuter?.()
+        onPress(e)
+      }}
+      {...btnProps}>
       {children}
     </Pressable>
   )

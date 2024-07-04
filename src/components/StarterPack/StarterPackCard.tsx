@@ -5,9 +5,12 @@ import {AppBskyGraphStarterpack, AtUri} from '@atproto/api'
 import {StarterPackViewBasic} from '@atproto/api/dist/client/types/app/bsky/graph/defs'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {sanitizeHandle} from 'lib/strings/handles'
 import {getStarterPackOgCard} from 'lib/strings/starter-pack'
+import {precacheResolvedUri} from 'state/queries/resolve-uri'
+import {precacheStarterPack} from 'state/queries/starter-packs'
 import {useSession} from 'state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {StarterPack} from '#/components/icons/StarterPack'
@@ -96,6 +99,7 @@ export function Link({
   children: React.ReactNode
 }) {
   const {_} = useLingui()
+  const queryClient = useQueryClient()
   const {record} = starterPack
   const {rkey, handleOrDid} = React.useMemo(() => {
     const rkey = new AtUri(starterPack.uri).rkey
@@ -111,7 +115,15 @@ export function Link({
     <BaseLink
       action="push"
       to={`/starter-pack/${handleOrDid}/${rkey}`}
-      label={_(msg`Navigate to ${record.name}`)}>
+      label={_(msg`Navigate to ${record.name}`)}
+      onPress={() => {
+        precacheResolvedUri(
+          queryClient,
+          starterPack.creator.handle,
+          starterPack.creator.did,
+        )
+        precacheStarterPack(queryClient, starterPack)
+      }}>
       {children}
     </BaseLink>
   )
