@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-07-04 11:30+0900\n"
+"PO-Revision-Date: 2024-07-04 13:07+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -2365,6 +2365,10 @@ msgstr "自分がフォローしているユーザーのみ"
 #: src/view/com/notifications/FeedItem.tsx:187
 msgid "followed you"
 msgstr "があなたをフォローしました"
+
+#: src/view/com/notifications/FeedItem.tsx:195
+msgid "followed you back"
+msgstr "があなたをフォローバックしました"
 
 #: src/view/com/profile/ProfileFollowers.tsx:104
 #: src/view/screens/ProfileFollowers.tsx:25
