@@ -110,24 +110,7 @@ const interstials: Record<
       | 'interstitialProgressGuide'
   })[]
 > = {
-  following: [
-    {
-      type: followInterstitialType,
-      params: {
-        variant: 'default',
-      },
-      key: followInterstitialType,
-      slot: 20,
-    },
-    {
-      type: feedInterstitialType,
-      params: {
-        variant: 'default',
-      },
-      key: feedInterstitialType,
-      slot: 40,
-    },
-  ],
+  following: [],
   discover: [
     {
       type: progressGuideInterstitialType,
@@ -138,22 +121,22 @@ const interstials: Record<
       slot: 0,
     },
     {
-      type: feedInterstitialType,
-      params: {
-        variant: 'default',
-      },
-      key: feedInterstitialType,
-      slot: 20,
-    },
-    {
       type: followInterstitialType,
       params: {
         variant: 'default',
       },
       key: followInterstitialType,
-      slot: 40,
+      slot: 20,
     },
   ],
+}
+
+export function getFeedPostSlice(feedItem: FeedItem): FeedPostSlice | null {
+  if (feedItem.type === 'slice') {
+    return feedItem.slice
+  } else {
+    return null
+  }
 }
 
 // DISABLED need to check if this is causing random feed refreshes -prf

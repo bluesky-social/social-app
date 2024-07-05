@@ -542,7 +542,7 @@ export function useSharedButtonTextStyles() {
       if (variant === 'solid' || variant === 'gradient') {
         if (!disabled) {
           baseStyles.push({
-            color: t.palette.white,
+            color: t.palette.contrast_100,
           })
         } else {
           baseStyles.push({
