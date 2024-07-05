@@ -23,6 +23,7 @@ import {logEvent, LogEvents, toClout} from '#/lib/statsig/statsig'
 import {Shadow} from '#/state/cache/types'
 import {STALE} from '#/state/queries'
 import {resetProfilePostsQueries} from '#/state/queries/post-feed'
+import * as userActionHistory from '#/state/userActionHistory'
 import {updateProfileShadow} from '../cache/profile-shadow'
 import {useAgent, useSession} from '../session'
 import {
@@ -233,6 +234,7 @@ export function useProfileFollowMutationQueue(
         const {uri} = await followMutation.mutateAsync({
           did,
         })
+        userActionHistory.follow([did])
         return uri
       } else {
         if (prevFollowingUri) {
@@ -240,6 +242,7 @@ export function useProfileFollowMutationQueue(
             did,
             followUri: prevFollowingUri,
           })
+          userActionHistory.unfollow([did])
         }
         return undefined
       }
