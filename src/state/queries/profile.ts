@@ -3,6 +3,7 @@ import {Image as RNImage} from 'react-native-image-crop-picker'
 import {
   AppBskyActorDefs,
   AppBskyActorGetProfile,
+  AppBskyActorGetProfiles,
   AppBskyActorProfile,
   AtUri,
   BskyAgent,
@@ -516,16 +517,30 @@ export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
 ): Generator<AppBskyActorDefs.ProfileViewDetailed, void> {
-  const queryDatas =
+  const profileQueryDatas =
     queryClient.getQueriesData<AppBskyActorDefs.ProfileViewDetailed>({
       queryKey: [RQKEY_ROOT],
     })
-  for (const [_queryKey, queryData] of queryDatas) {
+  for (const [_queryKey, queryData] of profileQueryDatas) {
     if (!queryData) {
       continue
     }
     if (queryData.did === did) {
       yield queryData
+    }
+  }
+  const profilesQueryDatas =
+    queryClient.getQueriesData<AppBskyActorGetProfiles.OutputSchema>({
+      queryKey: [profilesQueryKeyRoot],
+    })
+  for (const [_queryKey, queryData] of profilesQueryDatas) {
+    if (!queryData) {
+      continue
+    }
+    for (let profile of queryData.profiles) {
+      if (profile.did === did) {
+        yield profile
+      }
     }
   }
 }
