@@ -212,6 +212,7 @@ export function SuggestedFollows() {
                   />
                   <ProfileCard.FollowButton
                     profile={profile}
+                    moderationOpts={moderationOpts}
                     logContext="FeedInterstitial"
                     color="secondary_inverted"
                     shape="round"
