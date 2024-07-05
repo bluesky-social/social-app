@@ -1,6 +1,11 @@
 import {RichText} from '@atproto/api'
 
 import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
+import {
+  createStarterPackGooglePlayUri,
+  createStarterPackLinkFromAndroidReferrer,
+  parseStarterPackUri,
+} from 'lib/strings/starter-pack'
 import {cleanError} from '../../src/lib/strings/errors'
 import {createFullHandle, makeValidHandle} from '../../src/lib/strings/handles'
 import {enforceLen} from '../../src/lib/strings/helpers'
@@ -794,5 +799,181 @@ describe('parseEmbedPlayerFromUrl', () => {
 
       expect(res).toEqual(output)
     }
+  })
+})
+
+describe('createStarterPackLinkFromAndroidReferrer', () => {
+  const validOutput = 'at://haileyok.com/app.bsky.graph.starterpack/rkey'
+
+  it('returns a link when input contains utm_source and utm_content', () => {
+    expect(
+      createStarterPackLinkFromAndroidReferrer(
+        'utm_source=bluesky&utm_content=starterpack_haileyok.com_rkey',
+      ),
+    ).toEqual(validOutput)
+
+    expect(
+      createStarterPackLinkFromAndroidReferrer(
+        'utm_source=bluesky&utm_content=starterpack_test-lover-9000.com_rkey',
+      ),
+    ).toEqual('at://test-lover-9000.com/app.bsky.graph.starterpack/rkey')
+  })
+
+  it('returns a link when input contains utm_source and utm_content in different order', () => {
+    expect(
+      createStarterPackLinkFromAndroidReferrer(
+        'utm_content=starterpack_haileyok.com_rkey&utm_source=bluesky',
+      ),
+    ).toEqual(validOutput)
+  })
+
+  it('returns a link when input contains other parameters as well', () => {
+    expect(
+      createStarterPackLinkFromAndroidReferrer(
+        'utm_source=bluesky&utm_medium=starterpack&utm_content=starterpack_haileyok.com_rkey',
+      ),
+    ).toEqual(validOutput)
+  })
+
+  it('returns null when utm_source is not present', () => {
+    expect(
+      createStarterPackLinkFromAndroidReferrer(
+        'utm_content=starterpack_haileyok.com_rkey',
+      ),
+    ).toEqual(null)
+  })
+
+  it('returns null when utm_content is not present', () => {
+    expect(
+      createStarterPackLinkFromAndroidReferrer('utm_source=bluesky'),
+    ).toEqual(null)
+  })
+
+  it('returns null when utm_content is malformed', () => {
+    expect(
+      createStarterPackLinkFromAndroidReferrer(
+        'utm_content=starterpack_haileyok.com',
+      ),
+    ).toEqual(null)
+
+    expect(
+      createStarterPackLinkFromAndroidReferrer('utm_content=starterpack'),
+    ).toEqual(null)
+
+    expect(
+      createStarterPackLinkFromAndroidReferrer(
+        'utm_content=starterpack_haileyok.com_rkey_more',
+      ),
+    ).toEqual(null)
+
+    expect(
+      createStarterPackLinkFromAndroidReferrer(
+        'utm_content=notastarterpack_haileyok.com_rkey',
+      ),
+    ).toEqual(null)
+  })
+})
+
+describe('parseStarterPackHttpUri', () => {
+  const baseUri = 'https://bsky.app/start'
+
+  it('returns a valid at uri when http uri is valid', () => {
+    const validHttpUri = `${baseUri}/haileyok.com/rkey`
+    expect(parseStarterPackUri(validHttpUri)).toEqual({
+      name: 'haileyok.com',
+      rkey: 'rkey',
+    })
+
+    const validHttpUri2 = `${baseUri}/haileyok.com/ilovetesting`
+    expect(parseStarterPackUri(validHttpUri2)).toEqual({
+      name: 'haileyok.com',
+      rkey: 'ilovetesting',
+    })
+
+    const validHttpUri3 = `${baseUri}/testlover9000.com/rkey`
+    expect(parseStarterPackUri(validHttpUri3)).toEqual({
+      name: 'testlover9000.com',
+      rkey: 'rkey',
+    })
+  })
+
+  it('returns null when there is no rkey', () => {
+    const validHttpUri = `${baseUri}/haileyok.com`
+    expect(parseStarterPackUri(validHttpUri)).toEqual(null)
+  })
+
+  it('returns null when there is an extra path', () => {
+    const validHttpUri = `${baseUri}/haileyok.com/rkey/other`
+    expect(parseStarterPackUri(validHttpUri)).toEqual(null)
+  })
+
+  it('returns null when there is no handle or rkey', () => {
+    const validHttpUri = `${baseUri}`
+    expect(parseStarterPackUri(validHttpUri)).toEqual(null)
+  })
+
+  it('returns null when the route is not /start or /starter-pack', () => {
+    const validHttpUri = 'https://bsky.app/start/haileyok.com/rkey'
+    expect(parseStarterPackUri(validHttpUri)).toEqual({
+      name: 'haileyok.com',
+      rkey: 'rkey',
+    })
+
+    const validHttpUri2 = 'https://bsky.app/starter-pack/haileyok.com/rkey'
+    expect(parseStarterPackUri(validHttpUri2)).toEqual({
+      name: 'haileyok.com',
+      rkey: 'rkey',
+    })
+
+    const invalidHttpUri = 'https://bsky.app/profile/haileyok.com/rkey'
+    expect(parseStarterPackUri(invalidHttpUri)).toEqual(null)
+  })
+
+  it('returns the at uri when the input is a valid starterpack at uri', () => {
+    const validAtUri = 'at://did:123/app.bsky.graph.starterpack/rkey'
+    expect(parseStarterPackUri(validAtUri)).toEqual({
+      name: 'did:123',
+      rkey: 'rkey',
+    })
+  })
+
+  it('returns null when the at uri has no rkey', () => {
+    const validAtUri = 'at://did:123/app.bsky.graph.starterpack'
+    expect(parseStarterPackUri(validAtUri)).toEqual(null)
+  })
+
+  it('returns null when the collection is not app.bsky.graph.starterpack', () => {
+    const validAtUri = 'at://did:123/app.bsky.graph.list/rkey'
+    expect(parseStarterPackUri(validAtUri)).toEqual(null)
+  })
+
+  it('returns null when the input is undefined', () => {
+    expect(parseStarterPackUri(undefined)).toEqual(null)
+  })
+})
+
+describe('createStarterPackGooglePlayUri', () => {
+  const base =
+    'https://play.google.com/store/apps/details?id=xyz.blueskyweb.app&referrer=utm_source%3Dbluesky%26utm_medium%3Dstarterpack%26utm_content%3Dstarterpack_'
+
+  it('returns valid google play uri when input is valid', () => {
+    expect(createStarterPackGooglePlayUri('name', 'rkey')).toEqual(
+      `${base}name_rkey`,
+    )
+  })
+
+  it('returns null when no rkey is supplied', () => {
+    // @ts-expect-error test
+    expect(createStarterPackGooglePlayUri('name', undefined)).toEqual(null)
+  })
+
+  it('returns null when no name or rkey are supplied', () => {
+    // @ts-expect-error test
+    expect(createStarterPackGooglePlayUri(undefined, undefined)).toEqual(null)
+  })
+
+  it('returns null when rkey is supplied but no name', () => {
+    // @ts-expect-error test
+    expect(createStarterPackGooglePlayUri(undefined, 'rkey')).toEqual(null)
   })
 })

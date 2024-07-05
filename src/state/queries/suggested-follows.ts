@@ -34,13 +34,14 @@ const suggestedFollowsByActorQueryKey = (did: string) => [
   did,
 ]
 
-type SuggestedFollowsOptions = {limit?: number}
+type SuggestedFollowsOptions = {limit?: number; subsequentPageLimit?: number}
 
 export function useSuggestedFollowsQuery(options?: SuggestedFollowsOptions) {
   const {currentAccount} = useSession()
   const agent = useAgent()
   const moderationOpts = useModerationOpts()
   const {data: preferences} = usePreferencesQuery()
+  const limit = options?.limit || 25
 
   return useInfiniteQuery<
     AppBskyActorGetSuggestions.OutputSchema,
@@ -54,9 +55,13 @@ export function useSuggestedFollowsQuery(options?: SuggestedFollowsOptions) {
     queryKey: suggestedFollowsQueryKey(options),
     queryFn: async ({pageParam}) => {
       const contentLangs = getContentLanguages().join(',')
+      const maybeDifferentLimit =
+        options?.subsequentPageLimit && pageParam
+          ? options.subsequentPageLimit
+          : limit
       const res = await agent.app.bsky.actor.getSuggestions(
         {
-          limit: options?.limit || 25,
+          limit: maybeDifferentLimit,
           cursor: pageParam,
         },
         {

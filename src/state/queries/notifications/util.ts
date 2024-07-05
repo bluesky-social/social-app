@@ -3,6 +3,8 @@ import {
   AppBskyFeedLike,
   AppBskyFeedPost,
   AppBskyFeedRepost,
+  AppBskyGraphDefs,
+  AppBskyGraphStarterpack,
   AppBskyNotificationListNotifications,
   BskyAgent,
   moderateNotification,
@@ -28,6 +30,7 @@ export async function fetchPage({
   queryClient,
   moderationOpts,
   fetchAdditionalData,
+  shouldUngroupFollowBacks,
 }: {
   agent: BskyAgent
   cursor: string | undefined
@@ -35,11 +38,13 @@ export async function fetchPage({
   queryClient: QueryClient
   moderationOpts: ModerationOpts | undefined
   fetchAdditionalData: boolean
+  shouldUngroupFollowBacks?: () => boolean
 }): Promise<{page: FeedPage; indexedAt: string | undefined}> {
   const res = await agent.listNotifications({
     limit,
     cursor,
   })
+
   const indexedAt = res.data.notifications[0]?.indexedAt
 
   // filter out notifs by mod rules
@@ -48,7 +53,7 @@ export async function fetchPage({
   )
 
   // group notifications which are essentially similar (follows, likes on a post)
-  let notifsGrouped = groupNotifications(notifs)
+  let notifsGrouped = groupNotifications(notifs, {shouldUngroupFollowBacks})
 
   // we fetch subjects of notifications (usually posts) now instead of lazily
   // in the UI to avoid relayouts
@@ -56,9 +61,18 @@ export async function fetchPage({
     const subjects = await fetchSubjects(agent, notifsGrouped)
     for (const notif of notifsGrouped) {
       if (notif.subjectUri) {
-        notif.subject = subjects.get(notif.subjectUri)
-        if (notif.subject) {
-          precacheProfile(queryClient, notif.subject.author)
+        if (
+          notif.type === 'starterpack-joined' &&
+          notif.notification.reasonSubject
+        ) {
+          notif.subject = subjects.starterPacks.get(
+            notif.notification.reasonSubject,
+          )
+        } else {
+          notif.subject = subjects.posts.get(notif.subjectUri)
+          if (notif.subject) {
+            precacheProfile(queryClient, notif.subject.author)
+          }
         }
       }
     }
@@ -97,6 +111,7 @@ export function shouldFilterNotif(
 
 export function groupNotifications(
   notifs: AppBskyNotificationListNotifications.Notification[],
+  options?: {shouldUngroupFollowBacks?: () => boolean},
 ): FeedNotification[] {
   const groupedNotifs: FeedNotification[] = []
   for (const notif of notifs) {
@@ -111,21 +126,40 @@ export function groupNotifications(
           notif.reasonSubject === groupedNotif.notification.reasonSubject &&
           notif.author.did !== groupedNotif.notification.author.did
         ) {
-          groupedNotif.additional = groupedNotif.additional || []
-          groupedNotif.additional.push(notif)
-          grouped = true
-          break
+          const nextIsFollowBack =
+            notif.reason === 'follow' && notif.author.viewer?.following
+          const prevIsFollowBack =
+            groupedNotif.notification.reason === 'follow' &&
+            groupedNotif.notification.author.viewer?.following
+          const shouldUngroup =
+            (nextIsFollowBack || prevIsFollowBack) &&
+            options?.shouldUngroupFollowBacks?.()
+          if (!shouldUngroup) {
+            groupedNotif.additional = groupedNotif.additional || []
+            groupedNotif.additional.push(notif)
+            grouped = true
+            break
+          }
         }
       }
     }
     if (!grouped) {
       const type = toKnownType(notif)
-      groupedNotifs.push({
-        _reactKey: `notif-${notif.uri}`,
-        type,
-        notification: notif,
-        subjectUri: getSubjectUri(type, notif),
-      })
+      if (type !== 'starterpack-joined') {
+        groupedNotifs.push({
+          _reactKey: `notif-${notif.uri}`,
+          type,
+          notification: notif,
+          subjectUri: getSubjectUri(type, notif),
+        })
+      } else {
+        groupedNotifs.push({
+          _reactKey: `notif-${notif.uri}`,
+          type: 'starterpack-joined',
+          notification: notif,
+          subjectUri: notif.uri,
+        })
+      }
     }
   }
   return groupedNotifs
@@ -134,29 +168,54 @@ export function groupNotifications(
 async function fetchSubjects(
   agent: BskyAgent,
   groupedNotifs: FeedNotification[],
-): Promise<Map<string, AppBskyFeedDefs.PostView>> {
-  const uris = new Set<string>()
+): Promise<{
+  posts: Map<string, AppBskyFeedDefs.PostView>
+  starterPacks: Map<string, AppBskyGraphDefs.StarterPackViewBasic>
+}> {
+  const postUris = new Set<string>()
+  const packUris = new Set<string>()
   for (const notif of groupedNotifs) {
     if (notif.subjectUri?.includes('app.bsky.feed.post')) {
-      uris.add(notif.subjectUri)
+      postUris.add(notif.subjectUri)
+    } else if (
+      notif.notification.reasonSubject?.includes('app.bsky.graph.starterpack')
+    ) {
+      packUris.add(notif.notification.reasonSubject)
     }
   }
-  const uriChunks = chunk(Array.from(uris), 25)
+  const postUriChunks = chunk(Array.from(postUris), 25)
+  const packUriChunks = chunk(Array.from(packUris), 25)
   const postsChunks = await Promise.all(
-    uriChunks.map(uris =>
+    postUriChunks.map(uris =>
       agent.app.bsky.feed.getPosts({uris}).then(res => res.data.posts),
     ),
   )
-  const map = new Map<string, AppBskyFeedDefs.PostView>()
+  const packsChunks = await Promise.all(
+    packUriChunks.map(uris =>
+      agent.app.bsky.graph
+        .getStarterPacks({uris})
+        .then(res => res.data.starterPacks),
+    ),
+  )
+  const postsMap = new Map<string, AppBskyFeedDefs.PostView>()
+  const packsMap = new Map<string, AppBskyGraphDefs.StarterPackView>()
   for (const post of postsChunks.flat()) {
     if (
       AppBskyFeedPost.isRecord(post.record) &&
       AppBskyFeedPost.validateRecord(post.record).success
     ) {
-      map.set(post.uri, post)
+      postsMap.set(post.uri, post)
     }
   }
-  return map
+  for (const pack of packsChunks.flat()) {
+    if (AppBskyGraphStarterpack.isRecord(pack.record)) {
+      packsMap.set(pack.uri, pack)
+    }
+  }
+  return {
+    posts: postsMap,
+    starterPacks: packsMap,
+  }
 }
 
 function toKnownType(
@@ -173,7 +232,8 @@ function toKnownType(
     notif.reason === 'mention' ||
     notif.reason === 'reply' ||
     notif.reason === 'quote' ||
-    notif.reason === 'follow'
+    notif.reason === 'follow' ||
+    notif.reason === 'starterpack-joined'
   ) {
     return notif.reason as NotificationType
   }

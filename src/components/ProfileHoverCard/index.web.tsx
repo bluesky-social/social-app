@@ -29,10 +29,10 @@ import {
 } from '#/components/KnownFollowers'
 import {InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
+import * as Pills from '#/components/Pills'
 import {Portal} from '#/components/Portal'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
-import {ProfileLabel} from '../moderation/ProfileHeaderAlerts'
 import {ProfileHoverCardProps} from './types'
 
 const floatingMiddlewares = [
@@ -64,7 +64,7 @@ export function ProfileHoverCard(props: ProfileHoverCardProps) {
     return props.children
   } else {
     return (
-      <View onPointerMove={onPointerMove}>
+      <View onPointerMove={onPointerMove} style={[a.flex_shrink]}>
         <ProfileHoverCardInner {...props} />
       </View>
     )
@@ -476,8 +476,9 @@ function Inner({
       {isBlockedUser && (
         <View style={[a.flex_row, a.flex_wrap, a.gap_xs]}>
           {moderation.ui('profileView').alerts.map(cause => (
-            <ProfileLabel
+            <Pills.Label
               key={getModerationCauseKey(cause)}
+              size="lg"
               cause={cause}
               disableDetailsDialog
             />
