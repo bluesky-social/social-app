@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-06-25 14:14+0900\n"
+"PO-Revision-Date: 2024-07-04 13:07+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -209,6 +209,10 @@ msgstr "⚠無効なハンドル"
 msgid "2FA Confirmation"
 msgstr "２要素認証の確認"
 
+#: src/tours/Tooltip.tsx:70
+msgid "A help tooltip"
+msgstr "ヘルプ・ツールチップ"
+
 #: src/view/com/util/ViewHeader.tsx:93
 #: src/view/screens/Search/Search.tsx:684
 msgid "Access navigation links and settings"
@@ -382,7 +386,7 @@ msgstr "成人向けコンテンツ"
 
 #: src/screens/Moderation/index.tsx:356
 msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
-msgstr ""
+msgstr "成人向けコンテンツは<0>bsky.app</0>のウェブ版からしか有効にできません。"
 
 #: src/components/moderation/LabelPreference.tsx:242
 msgid "Adult content is disabled."
@@ -392,6 +396,10 @@ msgstr "成人向けコンテンツは無効になっています。"
 #: src/view/screens/Settings/index.tsx:686
 msgid "Advanced"
 msgstr "高度な設定"
+
+#: src/state/shell/progress-guide.tsx:177
+msgid "Algorithm training complete!"
+msgstr "アルゴリズムのトレーニング完了！"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:301
 msgid "All accounts have been followed!"
@@ -720,6 +728,10 @@ msgstr "Bluesky"
 msgid "Bluesky is an open network where you can choose your hosting provider. Custom hosting is now available in beta for developers."
 msgstr "Bluesky は、ホスティング プロバイダーを選択できるオープン ネットワークです。 カスタムホスティングは、開発者向けのベータ版で利用できるようになりました。"
 
+#: src/components/ProgressGuide/List.tsx:55
+msgid "Bluesky is better with friends!"
+msgstr "Blueskyは友達と一緒のほうが楽しい！"
+
 #: src/components/StarterPack/ProfileStarterPacks.tsx:282
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
 msgstr "Blueskyはあなたのつながっているユーザーからおすすめのアカウントを選びます。"
@@ -740,6 +752,24 @@ msgstr "画像のぼかしとフィードからのフィルタリング"
 #: src/screens/Onboarding/state.ts:81
 msgid "Books"
 msgstr "書籍"
+
+#: src/components/FeedInterstitials.tsx:206
+msgid "Browse more accounts on the Explore page"
+msgstr "検索ページでさらにアカウントを見る"
+
+#: src/components/FeedInterstitials.tsx:332
+msgid "Browse more feeds on the Explore page"
+msgstr "検索ページでさらにフィードを見る"
+
+#: src/components/FeedInterstitials.tsx:195
+#: src/components/FeedInterstitials.tsx:321
+msgid "Browse more suggestions"
+msgstr "さらにおすすめを見る"
+
+#: src/components/FeedInterstitials.tsx:214
+#: src/components/FeedInterstitials.tsx:341
+msgid "Browse more suggestions on the Explore page"
+msgstr "検索ページでさらにおすすめを見る"
 
 #: src/screens/Home/NoFeedsPinned.tsx:103
 #: src/screens/Home/NoFeedsPinned.tsx:109
@@ -925,6 +955,14 @@ msgstr "確認コードが記載されたメールを確認し、ここに入力
 #: src/view/com/modals/DeleteAccount.tsx:231
 msgid "Check your inbox for an email with the confirmation code to enter below:"
 msgstr "入力したメールアドレスの受信トレイを確認して、以下に入力するための確認コードが記載されたメールが届いていないか確認してください："
+
+#: src/screens/Onboarding/StepInterests/index.tsx:190
+msgid "Choose 3 or more:"
+msgstr "3つ以上選んでください："
+
+#: src/screens/Onboarding/StepInterests/index.tsx:325
+msgid "Choose at least {0} more"
+msgstr "少なくともさらに{0}つ選んでください"
 
 #: src/screens/StarterPack/Wizard/index.tsx:191
 msgid "Choose Feeds"
@@ -1602,6 +1640,10 @@ msgstr "下書きを削除しますか？"
 msgid "Discourage apps from showing my account to logged-out users"
 msgstr "アプリがログアウトしたユーザーに自分のアカウントを表示しないようにする"
 
+#: src/tours/HomeTour.tsx:70
+msgid "Discover learns which posts you like as you browse."
+msgstr "Discoverは閲覧中にどの投稿が好みなのかを学習します。"
+
 #: src/view/com/posts/FollowingEmptyState.tsx:70
 #: src/view/com/posts/FollowingEndOfFeed.tsx:71
 msgid "Discover new custom feeds"
@@ -1614,6 +1656,10 @@ msgstr "新しいフィードを探す"
 #: src/view/screens/Feeds.tsx:744
 msgid "Discover New Feeds"
 msgstr "新しいフィードを探す"
+
+#: src/components/ProgressGuide/List.tsx:40
+msgid "Dismiss getting started guide"
+msgstr "入門ガイドを消す"
 
 #: src/view/screens/AccessibilitySettings.tsx:95
 msgid "Display larger alt text badges"
@@ -1904,6 +1950,10 @@ msgstr "有効"
 #: src/screens/Profile/Sections/Feed.tsx:104
 msgid "End of feed"
 msgstr "フィードの終わり"
+
+#: src/tours/Tooltip.tsx:159
+msgid "End of onboarding tour window. Do not move forward. Instead, go backward for more options, or press to skip."
+msgstr "オンボーディングツアー・ウインドウ終了。先へ進まないでください。代わりに、戻って他のオプションを見るか、スキップしてください。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:160
 msgid "Enter a name for this App Password"
@@ -2198,6 +2248,10 @@ msgstr "最後に"
 msgid "Find accounts to follow"
 msgstr "フォローするアカウントを探す"
 
+#: src/tours/HomeTour.tsx:88
+msgid "Find more feeds and accounts to follow in the Explore page."
+msgstr "検索ページでフォローすべきフィードやアカウントを見つける。"
+
 #: src/view/screens/Search/Search.tsx:439
 msgid "Find posts and users on Bluesky"
 msgstr "投稿やユーザーをBlueskyで検索"
@@ -2213,6 +2267,10 @@ msgstr "ディスカッションスレッドを微調整します。"
 #: src/screens/StarterPack/Wizard/index.tsx:192
 msgid "Finish"
 msgstr "完了"
+
+#: src/tours/Tooltip.tsx:149
+msgid "Finish tour and begin using the application"
+msgstr "ツアーを終了してアプリを使用開始"
 
 #: src/screens/Onboarding/index.tsx:35
 msgid "Fitness"
@@ -2231,6 +2289,7 @@ msgstr "水平方向に反転"
 msgid "Flip vertically"
 msgstr "垂直方向に反転"
 
+#. User is not following this account, click to follow
 #: src/components/ProfileHoverCard/index.web.tsx:446
 #: src/components/ProfileHoverCard/index.web.tsx:457
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:252
@@ -2252,6 +2311,10 @@ msgstr "{0}をフォロー"
 #: src/view/com/posts/AviFollowButton.tsx:71
 msgid "Follow {name}"
 msgstr "{name}をフォロー"
+
+#: src/components/ProgressGuide/List.tsx:54
+msgid "Follow 7 accounts"
+msgstr "７アカウントをフォロー"
 
 #: src/view/com/profile/ProfileMenu.tsx:246
 #: src/view/com/profile/ProfileMenu.tsx:257
@@ -2303,6 +2366,10 @@ msgstr "自分がフォローしているユーザーのみ"
 msgid "followed you"
 msgstr "があなたをフォローしました"
 
+#: src/view/com/notifications/FeedItem.tsx:195
+msgid "followed you back"
+msgstr "があなたをフォローバックしました"
+
 #: src/view/com/profile/ProfileFollowers.tsx:104
 #: src/view/screens/ProfileFollowers.tsx:25
 msgid "Followers"
@@ -2317,6 +2384,7 @@ msgstr "あなたが知っている@{0}のフォロワー"
 msgid "Followers you know"
 msgstr "あなたが知っているフォロワー"
 
+#. User is following this account, click to unfollow
 #: src/components/ProfileHoverCard/index.web.tsx:445
 #: src/components/ProfileHoverCard/index.web.tsx:456
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:250
@@ -2345,6 +2413,10 @@ msgstr "Followingフィードの設定"
 #: src/view/screens/Settings/index.tsx:582
 msgid "Following Feed Preferences"
 msgstr "Followingフィードの設定"
+
+#: src/tours/HomeTour.tsx:59
+msgid "Following shows the latest posts from people you follow."
+msgstr "Followingはフォローしてるユーザーの最新の投稿を表示します。"
 
 #: src/screens/Profile/Header/Handle.tsx:31
 msgid "Follows you"
@@ -2410,6 +2482,10 @@ msgstr "始める"
 msgid "Get Started"
 msgstr "開始"
 
+#: src/components/ProgressGuide/List.tsx:33
+msgid "Getting started"
+msgstr "入門"
+
 #: src/view/com/util/images/ImageHorzList.tsx:35
 msgid "GIF"
 msgstr "GIF"
@@ -2442,6 +2518,10 @@ msgstr "戻る"
 #: src/view/screens/ProfileList.tsx:975
 msgid "Go Back"
 msgstr "戻る"
+
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:189
+msgid "Go back to previous screen"
+msgstr "前の画面に戻る"
 
 #: src/components/dms/ReportDialog.tsx:154
 #: src/components/ReportDialog/SelectReportOptionView.tsx:80
@@ -2477,6 +2557,10 @@ msgstr "次へ"
 msgid "Go to profile"
 msgstr "プロフィールへ"
 
+#: src/tours/Tooltip.tsx:138
+msgid "Go to the next step of the tour"
+msgstr "ツアーの次のステップへ移動"
+
 #: src/components/dms/ConvoMenu.tsx:164
 msgid "Go to user's profile"
 msgstr "ユーザーのプロフィールへ移動"
@@ -2484,6 +2568,10 @@ msgstr "ユーザーのプロフィールへ移動"
 #: src/lib/moderation/useGlobalLabelStrings.ts:46
 msgid "Graphic Media"
 msgstr "生々しいメディア"
+
+#: src/state/shell/progress-guide.tsx:167
+msgid "Half way there!"
+msgstr "半分まで来ました！"
 
 #: src/view/com/modals/ChangeHandle.tsx:260
 msgid "Handle"
@@ -2703,10 +2791,6 @@ msgstr "アカウント削除のためにパスワードを入力"
 msgid "Input the code which has been emailed to you"
 msgstr "メールで送られたコードを入力"
 
-#: src/screens/Login/LoginForm.tsx:221
-msgid "Input the password tied to {identifier}"
-msgstr "{identifier}に紐づくパスワードを入力"
-
 #: src/screens/Login/LoginForm.tsx:194
 msgid "Input the username or email address you used at signup"
 msgstr "サインアップ時に使用したユーザー名またはメールアドレスを入力"
@@ -2911,6 +2995,15 @@ msgstr "さあ始めましょう！"
 #: src/view/screens/Settings/index.tsx:452
 msgid "Light"
 msgstr "ライト"
+
+#: src/components/ProgressGuide/List.tsx:48
+msgid "Like 10 posts"
+msgstr "10投稿をいいね"
+
+#: src/state/shell/progress-guide.tsx:163
+#: src/state/shell/progress-guide.tsx:168
+msgid "Like 10 posts to train the Discover feed"
+msgstr "Discoverフィードを訓練するために10投稿をいいねする"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:267
 #: src/view/screens/ProfileFeed.tsx:573
@@ -3216,7 +3309,11 @@ msgstr "いいねの数が多い順に返信を表示"
 
 #: src/screens/Onboarding/state.ts:90
 msgid "Movies"
-msgstr ""
+msgstr "映画"
+
+#: src/screens/Onboarding/state.ts:91
+msgid "Music"
+msgstr "音楽"
 
 #: src/components/TagMenu/index.tsx:249
 msgid "Mute"
@@ -3349,9 +3446,13 @@ msgstr "名前または説明がコミュニティ基準に違反"
 msgid "Nature"
 msgstr "自然"
 
+#: src/components/StarterPack/StarterPackCard.tsx:118
+msgid "Navigate to {0}"
+msgstr "{0}へ移動します"
+
 #: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:73
 msgid "Navigate to starter pack"
-msgstr ""
+msgstr "スターターパックへ移動します"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:173
 #: src/screens/Login/LoginForm.tsx:312
@@ -3672,6 +3773,10 @@ msgstr "{str}"
 msgid "Onboarding reset"
 msgstr "オンボーディングのリセット"
 
+#: src/tours/Tooltip.tsx:118
+msgid "Onboarding tour step {0}: {1}"
+msgstr "オンボーディングツアー ステップ {0}：{1}"
+
 #: src/view/com/composer/Composer.tsx:522
 msgid "One or more images is missing alt text."
 msgstr "１つもしくは複数の画像にALTテキストがありません。"
@@ -3987,7 +4092,7 @@ msgstr "ペット"
 
 #: src/screens/Onboarding/state.ts:94
 msgid "Photography"
-msgstr ""
+msgstr "写真"
 
 #: src/view/com/modals/SelfLabel.tsx:122
 msgid "Pictures meant for adults."
@@ -4062,6 +4167,10 @@ msgstr "ミュートにする有効な単語、タグ、フレーズを入力し
 #: src/screens/Signup/state.ts:213
 msgid "Please enter your email."
 msgstr "メールアドレスを入力してください。"
+
+#: src/screens/Signup/StepInfo/index.tsx:63
+msgid "Please enter your invite code."
+msgstr "招待コードを入力してください。"
 
 #: src/view/com/modals/DeleteAccount.tsx:253
 msgid "Please enter your password as well:"
@@ -4273,6 +4382,10 @@ msgstr "QRコードをダウンロードしました！"
 #: src/components/StarterPack/QrCodeDialog.tsx:104
 msgid "QR code saved to your camera roll!"
 msgstr "QRコードをカメラロールに保存しました！"
+
+#: src/tours/Tooltip.tsx:111
+msgid "Quick tip"
+msgstr "クイック・チップ"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:116
 #: src/view/com/util/post-ctrls/RepostButton.tsx:128
@@ -5323,6 +5436,10 @@ msgstr "この手順をスキップする"
 msgid "Software Dev"
 msgstr "ソフトウェア開発"
 
+#: src/components/FeedInterstitials.tsx:303
+msgid "Some other feeds you might like"
+msgstr "お好みかもしれない他のフィード"
+
 #: src/components/WhoCanReply.tsx:72
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:47
 msgid "Some people can reply"
@@ -5390,6 +5507,10 @@ msgstr "{displayName}とのチャットを開始"
 msgid "Start chatting"
 msgstr "チャットを開始"
 
+#: src/tours/Tooltip.tsx:99
+msgid "Start of onboarding tour window. Do not move backward. Instead, go forward for more options, or press to skip."
+msgstr "オンボーディングツアー・ウインドウ開始。前へ戻らないでください。代わりに、進んで他のオプションを見るか、スキップしてください。"
+
 #: src/lib/generate-starterpack.ts:68
 #: src/Navigation.tsx:325
 #: src/screens/StarterPack/Wizard/index.tsx:183
@@ -5410,7 +5531,7 @@ msgstr "スターターパック"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:238
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
-msgstr ""
+msgstr "スターターパックを使ってお気に入りのフィードやユーザーを友人へ簡単に共有できます。"
 
 #: src/view/screens/Settings/index.tsx:963
 msgid "Status Page"
@@ -5479,6 +5600,10 @@ msgstr "サポート"
 msgid "Switch Account"
 msgstr "アカウントを切り替える"
 
+#: src/tours/HomeTour.tsx:48
+msgid "Switch between feeds to control your experience."
+msgstr "フィードを切り替えて、あなたの体験をコントロールしよう。"
+
 #: src/view/screens/Settings/index.tsx:160
 msgid "Switch to {0}"
 msgstr "{0}に切り替え"
@@ -5507,9 +5632,21 @@ msgstr "タグメニュー：{displayTag}"
 msgid "Tall"
 msgstr "トール"
 
+#: src/components/ProgressGuide/Toast.tsx:150
+msgid "Tap to dismiss"
+msgstr "タップして消す"
+
 #: src/view/com/util/images/AutoSizedImage.tsx:70
 msgid "Tap to view fully"
 msgstr "タップして全体を表示"
+
+#: src/state/shell/progress-guide.tsx:172
+msgid "Task complete - 10 likes!"
+msgstr "タスク完了 - 10いいね！"
+
+#: src/components/ProgressGuide/List.tsx:49
+msgid "Teach our algorithm what you like"
+msgstr "アルゴリズムを鍛える"
 
 #: src/screens/Onboarding/index.tsx:36
 #: src/screens/Onboarding/state.ts:98
@@ -5584,6 +5721,11 @@ msgstr "コミュニティーガイドラインは<0/>に移動しました"
 #: src/view/screens/CopyrightPolicy.tsx:33
 msgid "The Copyright Policy has been moved to <0/>"
 msgstr "著作権ポリシーは<0/>に移動しました"
+
+#: src/state/shell/progress-guide.tsx:173
+#: src/state/shell/progress-guide.tsx:178
+msgid "The Discover feed now knows what you like"
+msgstr "Discoverフィードはあなたの好みを学習しました"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:321
 msgid "The experience is better in the app. Download Bluesky now and we'll pick back up where you left off."
@@ -5965,7 +6107,7 @@ msgstr "再試行"
 
 #: src/screens/Onboarding/state.ts:99
 msgid "TV"
-msgstr ""
+msgstr "テレビ"
 
 #: src/view/screens/Settings/index.tsx:745
 msgid "Two-factor authentication"
@@ -6732,7 +6874,7 @@ msgstr "最後まで到達しました"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:235
 msgid "You haven't created a starter pack yet!"
-msgstr ""
+msgstr "スターターパックをまだ作成していません！"
 
 #: src/components/dialogs/MutedWords.tsx:249
 msgid "You haven't muted any words or tags yet"
@@ -6883,6 +7025,10 @@ msgstr "メールアドレスは更新されましたが、確認されていま
 #: src/view/com/modals/VerifyEmail.tsx:122
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
 msgstr "メールアドレスはまだ確認されていません。これは、当社が推奨する重要なセキュリティステップです。"
+
+#: src/state/shell/progress-guide.tsx:162
+msgid "Your first like!"
+msgstr "最初のいいね！"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:43
 msgid "Your following feed is empty! Follow more users to see what's happening."
