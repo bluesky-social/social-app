@@ -27,6 +27,8 @@ import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import {ProgressGuideList} from './ProgressGuide/List'
 
+const MOBILE_CARD_WIDTH = 300
+
 function CardOuter({
   children,
   style,
@@ -43,7 +45,7 @@ function CardOuter({
         t.atoms.bg,
         t.atoms.border_contrast_low,
         !gtMobile && {
-          width: 300,
+          width: MOBILE_CARD_WIDTH,
         },
         style,
       ]}>
@@ -266,7 +268,11 @@ export function SuggestedFollows() {
           </View>
         </View>
       ) : (
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          snapToInterval={MOBILE_CARD_WIDTH + a.gap_md.gap}
+          decelerationRate="fast">
           <View style={[a.px_lg, a.pt_md, a.pb_xl, a.flex_row, a.gap_md]}>
             {content}
 
@@ -392,7 +398,11 @@ export function SuggestedFeeds() {
           </View>
         </View>
       ) : (
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          snapToInterval={MOBILE_CARD_WIDTH + a.gap_md.gap}
+          decelerationRate="fast">
           <View style={[a.px_lg, a.pt_md, a.pb_xl, a.flex_row, a.gap_md]}>
             {content}
 
