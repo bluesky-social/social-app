@@ -8,7 +8,7 @@ msgstr ""
 "Language: fr\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-06-25 11:00+0100\n"
+"PO-Revision-Date: 2024-07-04 14:15+0100\n"
 "Last-Translator: surfdude29\n"
 "Language-Team: Stanislas Signoud (@signez.fr), surfdude29\n"
 "Plural-Forms: \n"
@@ -167,10 +167,6 @@ msgstr "{value, plural, =0 {Voir toutes les réponses} one {Voir les réponses a
 msgid "<0/> members"
 msgstr "<0/> membres"
 
-#: src/screens/StarterPack/Wizard/index.tsx:485
-#~ msgid "<0>{0} </0>and<1> </1><2>{1} </2>are included in your starter pack"
-#~ msgstr "<0>{0} </0>et<1> </1><2>{1} </2>sont inclus dans votre kit de démarrage"
-
 #: src/screens/StarterPack/Wizard/index.tsx:466
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
@@ -212,6 +208,10 @@ msgstr "⚠Pseudo invalide"
 #: src/screens/Login/LoginForm.tsx:247
 msgid "2FA Confirmation"
 msgstr "Confirmation 2FA"
+
+#: src/tours/Tooltip.tsx:70
+msgid "A help tooltip"
+msgstr "Une infobulle d’aide"
 
 #: src/view/com/util/ViewHeader.tsx:93
 #: src/view/screens/Search/Search.tsx:684
@@ -337,10 +337,6 @@ msgstr "Ajouter un mot masqué pour les paramètres configurés"
 msgid "Add muted words and tags"
 msgstr "Ajouter des mots et des mots-clés masqués"
 
-#: src/screens/StarterPack/Wizard/index.tsx:197
-#~ msgid "Add people to your starter pack that you think others will enjoy following"
-#~ msgstr "Ajoutez à votre kit de démarrage des personnes que vous pensez que d’autres aimeront suivre"
-
 #: src/screens/Home/NoFeedsPinned.tsx:99
 msgid "Add recommended feeds"
 msgstr "Ajouter les fils d’actu recommandés"
@@ -390,7 +386,7 @@ msgstr "Contenu pour adultes"
 
 #: src/screens/Moderation/index.tsx:356
 msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
-msgstr ""
+msgstr "Le contenu pour adultes ne peut être activé que via le Web sur <0>bsky.app</0>."
 
 #: src/components/moderation/LabelPreference.tsx:242
 msgid "Adult content is disabled."
@@ -400,6 +396,10 @@ msgstr "Le contenu pour adultes est désactivé."
 #: src/view/screens/Settings/index.tsx:686
 msgid "Advanced"
 msgstr "Avancé"
+
+#: src/state/shell/progress-guide.tsx:177
+msgid "Algorithm training complete!"
+msgstr "Entraînement de l’algorithme terminé !"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:301
 msgid "All accounts have been followed!"
@@ -464,10 +464,6 @@ msgstr "Une erreur s’est produite"
 #: src/components/StarterPack/ProfileStarterPacks.tsx:315
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr "Une erreur s’est produite lors de la génération de votre kit de démarrage. Vous voulez réessayer ?"
-
-#: src/components/StarterPack/ShareDialog.tsx:79
-#~ msgid "An error occurred while saving the image."
-#~ msgstr "Une erreur s’est produite lors de l’enregistrement de l’image."
 
 #: src/components/StarterPack/QrCodeDialog.tsx:70
 #: src/components/StarterPack/ShareDialog.tsx:78
@@ -732,6 +728,10 @@ msgstr "Bluesky"
 msgid "Bluesky is an open network where you can choose your hosting provider. Custom hosting is now available in beta for developers."
 msgstr "Bluesky est un réseau ouvert où vous pouvez choisir votre hébergeur. L’auto-hébergement est désormais disponible en version bêta pour les développeurs."
 
+#: src/components/ProgressGuide/List.tsx:55
+msgid "Bluesky is better with friends!"
+msgstr "Bluesky est meilleur entre ami·e·s !"
+
 #: src/components/StarterPack/ProfileStarterPacks.tsx:282
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
 msgstr "Bluesky choisira un ensemble de comptes recommandés parmi les personnes de votre réseau."
@@ -752,6 +752,24 @@ msgstr "Flouter les images et les filtrer des fils d’actu"
 #: src/screens/Onboarding/state.ts:81
 msgid "Books"
 msgstr "Livres"
+
+#: src/components/FeedInterstitials.tsx:206
+msgid "Browse more accounts on the Explore page"
+msgstr "Parcourir d’autres comptes sur la page « Explore »"
+
+#: src/components/FeedInterstitials.tsx:332
+msgid "Browse more feeds on the Explore page"
+msgstr "Parcourir d’autres fils d’actu sur la page « Explore »"
+
+#: src/components/FeedInterstitials.tsx:195
+#: src/components/FeedInterstitials.tsx:321
+msgid "Browse more suggestions"
+msgstr "Parcourir d’autres suggestions"
+
+#: src/components/FeedInterstitials.tsx:214
+#: src/components/FeedInterstitials.tsx:341
+msgid "Browse more suggestions on the Explore page"
+msgstr "Parcourir d’autres suggestions sur la page « Explore »"
 
 #: src/screens/Home/NoFeedsPinned.tsx:103
 #: src/screens/Home/NoFeedsPinned.tsx:109
@@ -938,9 +956,13 @@ msgstr "Vérifiez votre boîte e-mail pour un code de connexion et saisissez-le 
 msgid "Check your inbox for an email with the confirmation code to enter below:"
 msgstr "Consultez votre boîte de réception, vous avez du recevoir un e-mail contenant un code de confirmation à saisir ci-dessous :"
 
-#: src/view/com/modals/Threadgate.tsx:75
-#~ msgid "Choose \"Everybody\" or \"Nobody\""
-#~ msgstr "Choisir « Tout le monde » ou « Personne »"
+#: src/screens/Onboarding/StepInterests/index.tsx:190
+msgid "Choose 3 or more:"
+msgstr "Choisissez 3 ou plus :"
+
+#: src/screens/Onboarding/StepInterests/index.tsx:325
+msgid "Choose at least {0} more"
+msgstr "Choisissez au moins {0} de plus"
 
 #: src/screens/StarterPack/Wizard/index.tsx:191
 msgid "Choose Feeds"
@@ -1407,10 +1429,6 @@ msgstr "Créer un mot de passe d’application"
 msgid "Create new account"
 msgstr "Créer un nouveau compte"
 
-#: src/components/StarterPack/ShareDialog.tsx:158
-#~ msgid "Create QR code"
-#~ msgstr "Créer un code QR"
-
 #: src/components/ReportDialog/SelectReportOptionView.tsx:101
 msgid "Create report for {0}"
 msgstr "Créer un rapport pour {0}"
@@ -1622,6 +1640,10 @@ msgstr "Abandonner le brouillon ?"
 msgid "Discourage apps from showing my account to logged-out users"
 msgstr "Empêcher les applis de montrer mon compte aux personnes non connectées"
 
+#: src/tours/HomeTour.tsx:70
+msgid "Discover learns which posts you like as you browse."
+msgstr "« Discover » apprend quels sont les posts que vous aimez au fur et à mesure que vous naviguez."
+
 #: src/view/com/posts/FollowingEmptyState.tsx:70
 #: src/view/com/posts/FollowingEndOfFeed.tsx:71
 msgid "Discover new custom feeds"
@@ -1634,6 +1656,10 @@ msgstr "Découvrir de nouveaux fils d’actu"
 #: src/view/screens/Feeds.tsx:744
 msgid "Discover New Feeds"
 msgstr "Découvrir de nouveaux fils d’actu"
+
+#: src/components/ProgressGuide/List.tsx:40
+msgid "Dismiss getting started guide"
+msgstr "Annuler le guide de démarrage"
 
 #: src/view/screens/AccessibilitySettings.tsx:95
 msgid "Display larger alt text badges"
@@ -1924,6 +1950,10 @@ msgstr "Activé"
 #: src/screens/Profile/Sections/Feed.tsx:104
 msgid "End of feed"
 msgstr "Fin du fil d’actu"
+
+#: src/tours/Tooltip.tsx:159
+msgid "End of onboarding tour window. Do not move forward. Instead, go backward for more options, or press to skip."
+msgstr "Fin de la fenêtre de la visite d’accueil. N’avancez pas. Au lieu de cela, revenez en arrière pour plus d’options, ou appuyez pour passer."
 
 #: src/view/com/modals/AddAppPasswords.tsx:160
 msgid "Enter a name for this App Password"
@@ -2218,6 +2248,10 @@ msgstr "Finalisation"
 msgid "Find accounts to follow"
 msgstr "Trouver des comptes à suivre"
 
+#: src/tours/HomeTour.tsx:88
+msgid "Find more feeds and accounts to follow in the Explore page."
+msgstr "Trouvez d’autres fils d’actu et comptes à suivre dans la page « Explore »."
+
 #: src/view/screens/Search/Search.tsx:439
 msgid "Find posts and users on Bluesky"
 msgstr "Trouver des posts et comptes sur Bluesky"
@@ -2233,6 +2267,10 @@ msgstr "Affine les fils de discussion."
 #: src/screens/StarterPack/Wizard/index.tsx:192
 msgid "Finish"
 msgstr "Terminer"
+
+#: src/tours/Tooltip.tsx:149
+msgid "Finish tour and begin using the application"
+msgstr "Terminer la visite et commencer à utiliser l’application"
 
 #: src/screens/Onboarding/index.tsx:35
 msgid "Fitness"
@@ -2272,6 +2310,10 @@ msgstr "Suivre {0}"
 #: src/view/com/posts/AviFollowButton.tsx:71
 msgid "Follow {name}"
 msgstr "Suivre {name}"
+
+#: src/components/ProgressGuide/List.tsx:54
+msgid "Follow 7 accounts"
+msgstr "Suivre 7 comptes"
 
 #: src/view/com/profile/ProfileMenu.tsx:246
 #: src/view/com/profile/ProfileMenu.tsx:257
@@ -2323,6 +2365,10 @@ msgstr "Comptes suivis uniquement"
 msgid "followed you"
 msgstr "vous suit"
 
+#: src/view/com/notifications/FeedItem.tsx:195
+msgid "followed you back"
+msgstr "vous a suivi"
+
 #: src/view/com/profile/ProfileFollowers.tsx:104
 #: src/view/screens/ProfileFollowers.tsx:25
 msgid "Followers"
@@ -2365,6 +2411,10 @@ msgstr "Préférences du fil d’actu « Following »"
 #: src/view/screens/Settings/index.tsx:582
 msgid "Following Feed Preferences"
 msgstr "Préférences du fil d’actu « Following »"
+
+#: src/tours/HomeTour.tsx:59
+msgid "Following shows the latest posts from people you follow."
+msgstr "« Following » affiche les derniers posts des personnes que vous suivez."
 
 #: src/screens/Profile/Header/Handle.tsx:31
 msgid "Follows you"
@@ -2430,6 +2480,10 @@ msgstr "C’est parti"
 msgid "Get Started"
 msgstr "C’est parti"
 
+#: src/components/ProgressGuide/List.tsx:33
+msgid "Getting started"
+msgstr "Pour commencer"
+
 #: src/view/com/util/images/ImageHorzList.tsx:35
 msgid "GIF"
 msgstr "GIF"
@@ -2462,6 +2516,10 @@ msgstr "Retour"
 #: src/view/screens/ProfileList.tsx:975
 msgid "Go Back"
 msgstr "Retour"
+
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:189
+msgid "Go back to previous screen"
+msgstr "Retour à l’écran précédent"
 
 #: src/components/dms/ReportDialog.tsx:154
 #: src/components/ReportDialog/SelectReportOptionView.tsx:80
@@ -2497,6 +2555,10 @@ msgstr "Aller à la suite"
 msgid "Go to profile"
 msgstr "Voir le profil"
 
+#: src/tours/Tooltip.tsx:138
+msgid "Go to the next step of the tour"
+msgstr "Passer à l’étape suivante de la visite"
+
 #: src/components/dms/ConvoMenu.tsx:164
 msgid "Go to user's profile"
 msgstr "Voir le profil du compte"
@@ -2504,6 +2566,10 @@ msgstr "Voir le profil du compte"
 #: src/lib/moderation/useGlobalLabelStrings.ts:46
 msgid "Graphic Media"
 msgstr "Médias crus"
+
+#: src/state/shell/progress-guide.tsx:167
+msgid "Half way there!"
+msgstr "On y est presque !"
 
 #: src/view/com/modals/ChangeHandle.tsx:260
 msgid "Handle"
@@ -2786,7 +2852,7 @@ msgstr "Invitez les gens à ce kit de démarrage !"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:35
 msgid "Invite your friends to follow your favorite feeds and people"
-msgstr "Invitez vos amis à suivre vos fils d’actu et vos personnes préférées"
+msgstr "Invitez vos ami·e·s à suivre vos fils d’actu et vos personnes préférées"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:32
 msgid "Invites, but personal"
@@ -2931,6 +2997,15 @@ msgstr "Allons-y !"
 #: src/view/screens/Settings/index.tsx:452
 msgid "Light"
 msgstr "Clair"
+
+#: src/components/ProgressGuide/List.tsx:48
+msgid "Like 10 posts"
+msgstr "Liker 10 posts"
+
+#: src/state/shell/progress-guide.tsx:163
+#: src/state/shell/progress-guide.tsx:168
+msgid "Like 10 posts to train the Discover feed"
+msgstr "Liker 10 posts pour former le fil d’actu « Discover »"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:267
 #: src/view/screens/ProfileFeed.tsx:573
@@ -3236,7 +3311,11 @@ msgstr "Réponses les plus likées en premier"
 
 #: src/screens/Onboarding/state.ts:90
 msgid "Movies"
-msgstr ""
+msgstr "Cinéma"
+
+#: src/screens/Onboarding/state.ts:91
+msgid "Music"
+msgstr "Musique"
 
 #: src/components/TagMenu/index.tsx:249
 msgid "Mute"
@@ -3369,9 +3448,13 @@ msgstr "Nom ou description qui viole les normes communautaires"
 msgid "Nature"
 msgstr "Nature"
 
+#: src/components/StarterPack/StarterPackCard.tsx:118
+msgid "Navigate to {0}"
+msgstr "Navigue vers {0}"
+
 #: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:73
 msgid "Navigate to starter pack"
-msgstr ""
+msgstr "Navigue vers le kit de démarrage"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:173
 #: src/screens/Login/LoginForm.tsx:312
@@ -3692,6 +3775,10 @@ msgstr "le {str}"
 msgid "Onboarding reset"
 msgstr "Réinitialiser le didacticiel"
 
+#: src/tours/Tooltip.tsx:118
+msgid "Onboarding tour step {0}: {1}"
+msgstr "Étape de la visite d’accueil {0} : {1}"
+
 #: src/view/com/composer/Composer.tsx:522
 msgid "One or more images is missing alt text."
 msgstr "Une ou plusieurs images n’ont pas de texte alt."
@@ -4007,7 +4094,7 @@ msgstr "Animaux domestiques"
 
 #: src/screens/Onboarding/state.ts:94
 msgid "Photography"
-msgstr ""
+msgstr "Photographie"
 
 #: src/view/com/modals/SelfLabel.tsx:122
 msgid "Pictures meant for adults."
@@ -4082,6 +4169,10 @@ msgstr "Veuillez entrer un mot, un mot-clé ou une phrase valide à masquer"
 #: src/screens/Signup/state.ts:213
 msgid "Please enter your email."
 msgstr "Veuillez entrer votre e-mail."
+
+#: src/screens/Signup/StepInfo/index.tsx:63
+msgid "Please enter your invite code."
+msgstr "Veuillez saisir votre code d’invitation."
 
 #: src/view/com/modals/DeleteAccount.tsx:253
 msgid "Please enter your password as well:"
@@ -4294,6 +4385,10 @@ msgstr "Code QR a été téléchargé !"
 msgid "QR code saved to your camera roll!"
 msgstr "Code QR enregistré dans votre photothèque !"
 
+#: src/tours/Tooltip.tsx:111
+msgid "Quick tip"
+msgstr "Petite astuce"
+
 #: src/view/com/util/post-ctrls/RepostButton.tsx:116
 #: src/view/com/util/post-ctrls/RepostButton.tsx:128
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:79
@@ -4452,10 +4547,6 @@ msgstr "Réponses"
 #: src/components/WhoCanReply.tsx:71
 msgid "Replies disabled"
 msgstr "Les réponses sont désactivées"
-
-#: src/view/com/threadgate/WhoCanReply.tsx:123
-#~ msgid "Replies on this thread are disabled"
-#~ msgstr "Les réponses à ce fil de discussion sont désactivées"
 
 #: src/components/WhoCanReply.tsx:242
 msgid "Replies to this thread are disabled"
@@ -5347,6 +5438,10 @@ msgstr "Passer cette étape"
 msgid "Software Dev"
 msgstr "Développement de logiciels"
 
+#: src/components/FeedInterstitials.tsx:303
+msgid "Some other feeds you might like"
+msgstr "Quelques autres fils d’actu qui pourraient vous intéresser"
+
 #: src/components/WhoCanReply.tsx:72
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:47
 msgid "Some people can reply"
@@ -5414,6 +5509,10 @@ msgstr "Démarrer une discussion avec {displayName}"
 msgid "Start chatting"
 msgstr "Démarrer les discussions"
 
+#: src/tours/Tooltip.tsx:99
+msgid "Start of onboarding tour window. Do not move backward. Instead, go forward for more options, or press to skip."
+msgstr "Début de la fenêtre de la visite d’accueil. Ne revenez pas en arrière. Allez plutôt vers l’avant pour plus d’options, ou appuyez pour passer."
+
 #: src/lib/generate-starterpack.ts:68
 #: src/Navigation.tsx:325
 #: src/screens/StarterPack/Wizard/index.tsx:183
@@ -5430,11 +5529,11 @@ msgstr "Le kit de démarrage n’est pas valide"
 
 #: src/view/screens/Profile.tsx:214
 msgid "Starter Packs"
-msgstr "Packs de démarrage"
+msgstr "Kits de démarrage"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:238
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
-msgstr ""
+msgstr "Les kits de démarrage vous permettent de partager facilement vos fils d’actu et vos personnes préférées avec vos ami·e·s."
 
 #: src/view/screens/Settings/index.tsx:963
 msgid "Status Page"
@@ -5503,6 +5602,10 @@ msgstr "Soutien"
 msgid "Switch Account"
 msgstr "Changer de compte"
 
+#: src/tours/HomeTour.tsx:48
+msgid "Switch between feeds to control your experience."
+msgstr "Basculez d’un fil d’actu à l’autre pour contrôler votre expérience."
+
 #: src/view/screens/Settings/index.tsx:160
 msgid "Switch to {0}"
 msgstr "Basculer sur {0}"
@@ -5531,9 +5634,21 @@ msgstr "Menu de mot-clé : {displayTag}"
 msgid "Tall"
 msgstr "Grand"
 
+#: src/components/ProgressGuide/Toast.tsx:150
+msgid "Tap to dismiss"
+msgstr "Tapper pour annuler"
+
 #: src/view/com/util/images/AutoSizedImage.tsx:70
 msgid "Tap to view fully"
 msgstr "Tapper pour voir en entier"
+
+#: src/state/shell/progress-guide.tsx:172
+msgid "Task complete - 10 likes!"
+msgstr "Tâche accomplie - 10 likes !"
+
+#: src/components/ProgressGuide/List.tsx:49
+msgid "Teach our algorithm what you like"
+msgstr "Apprendre à notre algorithme ce que vous aimez"
 
 #: src/screens/Onboarding/index.tsx:36
 #: src/screens/Onboarding/state.ts:98
@@ -5608,6 +5723,11 @@ msgstr "Les lignes directrices communautaires ont été déplacées vers <0/>"
 #: src/view/screens/CopyrightPolicy.tsx:33
 msgid "The Copyright Policy has been moved to <0/>"
 msgstr "Notre politique de droits d’auteur a été déplacée vers <0/>"
+
+#: src/state/shell/progress-guide.tsx:173
+#: src/state/shell/progress-guide.tsx:178
+msgid "The Discover feed now knows what you like"
+msgstr "Le fil d’actu « Discover » sait désormais ce que vous aimez"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:321
 msgid "The experience is better in the app. Download Bluesky now and we'll pick back up where you left off."
@@ -5989,7 +6109,7 @@ msgstr "Réessayer"
 
 #: src/screens/Onboarding/state.ts:99
 msgid "TV"
-msgstr ""
+msgstr "TV"
 
 #: src/view/screens/Settings/index.tsx:745
 msgid "Two-factor authentication"
@@ -6501,7 +6621,7 @@ msgstr "Bienvenue !"
 
 #: src/components/NewskieDialog.tsx:103
 msgid "Welcome, friend!"
-msgstr "Bienvenue et enchanté !"
+msgstr "Bienvenue et enchanté !"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:140
 msgid "What are your interests?"
@@ -6756,7 +6876,7 @@ msgstr "Vous avez atteint la fin"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:235
 msgid "You haven't created a starter pack yet!"
-msgstr ""
+msgstr "Vous n’avez pas encore créé de kit de démarrage !"
 
 #: src/components/dialogs/MutedWords.tsx:249
 msgid "You haven't muted any words or tags yet"
@@ -6907,6 +7027,10 @@ msgstr "Votre e-mail a été mis à jour, mais n’a pas été vérifié. L’é
 #: src/view/com/modals/VerifyEmail.tsx:122
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
 msgstr "Votre e-mail n’a pas encore été vérifié. Il s’agit d’une mesure de sécurité importante que nous recommandons."
+
+#: src/state/shell/progress-guide.tsx:162
+msgid "Your first like!"
+msgstr "Votre premier « like » !"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:43
 msgid "Your following feed is empty! Follow more users to see what's happening."
