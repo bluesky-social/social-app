@@ -397,7 +397,7 @@ msgstr "成人内容显示已被禁用。"
 msgid "Advanced"
 msgstr "详细设置"
 
-#: src/state/shell/progress-guide.tsx:177
+#: src/state/shell/progress-guide.tsx:176
 msgid "Algorithm training complete!"
 msgstr "算法训练完成！"
 
@@ -480,8 +480,8 @@ msgstr "不在这些选项中的问题"
 
 #: src/components/hooks/useFollowMethods.ts:35
 #: src/components/hooks/useFollowMethods.ts:50
-#: src/components/ProfileCard.tsx:294
-#: src/components/ProfileCard.tsx:306
+#: src/components/ProfileCard.tsx:309
+#: src/components/ProfileCard.tsx:329
 #: src/view/com/profile/FollowButton.tsx:36
 #: src/view/com/profile/FollowButton.tsx:46
 #: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:188
@@ -756,21 +756,21 @@ msgstr "模糊化图片并从资讯源中过滤"
 msgid "Books"
 msgstr "书籍"
 
-#: src/components/FeedInterstitials.tsx:209
+#: src/components/FeedInterstitials.tsx:281
 msgid "Browse more accounts on the Explore page"
 msgstr "在探索页面浏览更多账户"
 
-#: src/components/FeedInterstitials.tsx:335
+#: src/components/FeedInterstitials.tsx:411
 msgid "Browse more feeds on the Explore page"
 msgstr "在探索页面浏览更多资讯源"
 
-#: src/components/FeedInterstitials.tsx:198
-#: src/components/FeedInterstitials.tsx:324
+#: src/components/FeedInterstitials.tsx:266
+#: src/components/FeedInterstitials.tsx:396
 msgid "Browse more suggestions"
 msgstr "浏览更多建议"
 
-#: src/components/FeedInterstitials.tsx:217
-#: src/components/FeedInterstitials.tsx:344
+#: src/components/FeedInterstitials.tsx:289
+#: src/components/FeedInterstitials.tsx:420
 msgid "Browse more suggestions on the Explore page"
 msgstr "在探索页面浏览更多建议"
 
@@ -2294,7 +2294,7 @@ msgid "Flip vertically"
 msgstr "垂直翻转"
 
 #. User is not following this account, click to follow
-#: src/components/ProfileCard.tsx:318
+#: src/components/ProfileCard.tsx:341
 #: src/components/ProfileHoverCard/index.web.tsx:446
 #: src/components/ProfileHoverCard/index.web.tsx:457
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:252
@@ -2390,7 +2390,7 @@ msgid "Followers you know"
 msgstr "由你所认识的关注者"
 
 #. User is following this account, click to unfollow
-#: src/components/ProfileCard.tsx:312
+#: src/components/ProfileCard.tsx:335
 #: src/components/ProfileHoverCard/index.web.tsx:445
 #: src/components/ProfileHoverCard/index.web.tsx:456
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:250
@@ -2402,6 +2402,7 @@ msgstr "由你所认识的关注者"
 msgid "Following"
 msgstr "正在关注"
 
+#: src/components/ProfileCard.tsx:301
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:98
 msgid "Following {0}"
 msgstr "已关注 {0}"
@@ -2575,7 +2576,7 @@ msgstr "前往用户个人资料"
 msgid "Graphic Media"
 msgstr "图形媒体"
 
-#: src/state/shell/progress-guide.tsx:167
+#: src/state/shell/progress-guide.tsx:166
 msgid "Half way there!"
 msgstr "已经完成一半了！"
 
@@ -3009,8 +3010,8 @@ msgstr "亮色"
 msgid "Like 10 posts"
 msgstr "喜欢 10 条帖文"
 
-#: src/state/shell/progress-guide.tsx:163
-#: src/state/shell/progress-guide.tsx:168
+#: src/state/shell/progress-guide.tsx:162
+#: src/state/shell/progress-guide.tsx:167
 msgid "Like 10 posts to train the Discover feed"
 msgstr "喜欢 10 条帖文，以训练 \"Discover\" 算法推送"
 
@@ -3601,6 +3602,7 @@ msgstr "未找到精选 GIF，Tensor 可能存在问题。"
 msgid "No feeds found. Try searching for something else."
 msgstr "未找到资讯源，尝试搜索点别的。"
 
+#: src/components/ProfileCard.tsx:321
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:120
 msgid "No longer following {0}"
 msgstr "不再关注 {0}"
@@ -3617,7 +3619,7 @@ msgstr "目前还没有任何私信"
 msgid "No more conversations to show"
 msgstr "没有更多对话可显示"
 
-#: src/view/com/notifications/Feed.tsx:118
+#: src/view/com/notifications/Feed.tsx:117
 msgid "No notifications yet!"
 msgstr "还没有通知！"
 
@@ -5450,7 +5452,7 @@ msgstr "跳过这段流程"
 msgid "Software Dev"
 msgstr "程序开发"
 
-#: src/components/FeedInterstitials.tsx:306
+#: src/components/FeedInterstitials.tsx:378
 msgid "Some other feeds you might like"
 msgstr "其他你可能喜欢的资讯源"
 
@@ -5596,7 +5598,7 @@ msgstr "订阅这个列表"
 msgid "Suggested accounts"
 msgstr "建议的账号"
 
-#: src/components/FeedInterstitials.tsx:178
+#: src/components/FeedInterstitials.tsx:246
 #: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:65
 msgid "Suggested for you"
 msgstr "为你推荐"
@@ -5656,7 +5658,7 @@ msgstr "点按关闭"
 msgid "Tap to view fully"
 msgstr "点击查看完整内容"
 
-#: src/state/shell/progress-guide.tsx:172
+#: src/state/shell/progress-guide.tsx:171
 msgid "Task complete - 10 likes!"
 msgstr "任务完成：10 个喜欢！"
 
@@ -5740,8 +5742,8 @@ msgstr "社群准则已迁移至 <0/>"
 msgid "The Copyright Policy has been moved to <0/>"
 msgstr "版权许可已迁移至 <0/>"
 
-#: src/state/shell/progress-guide.tsx:173
-#: src/state/shell/progress-guide.tsx:178
+#: src/state/shell/progress-guide.tsx:172
+#: src/state/shell/progress-guide.tsx:177
 msgid "The Discover feed now knows what you like"
 msgstr "现在 \"Discover\" 资讯源已了解你的喜好"
 
@@ -5824,11 +5826,11 @@ msgstr "连接服务器时出现问题"
 msgid "There was an issue contacting your server"
 msgstr "连接服务器时出现问题"
 
-#: src/view/com/notifications/Feed.tsx:126
+#: src/view/com/notifications/Feed.tsx:125
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "刷新通知时出现问题，点击重试。"
 
-#: src/view/com/posts/Feed.tsx:476
+#: src/view/com/posts/Feed.tsx:459
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "刷新帖文时出现问题，点击重试。"
 
@@ -7045,7 +7047,7 @@ msgstr "你的电子邮箱已更新但尚未验证。作为下一步，请验证
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
 msgstr "你的电子邮箱尚未验证。这是一个重要的安全步骤，我们建议你完成验证。"
 
-#: src/state/shell/progress-guide.tsx:162
+#: src/state/shell/progress-guide.tsx:161
 msgid "Your first like!"
 msgstr "你的第一个喜欢！"
 

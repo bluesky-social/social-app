@@ -480,8 +480,8 @@ msgstr "어떤 옵션에도 포함되지 않는 문제"
 
 #: src/components/hooks/useFollowMethods.ts:35
 #: src/components/hooks/useFollowMethods.ts:50
-#: src/components/ProfileCard.tsx:294
-#: src/components/ProfileCard.tsx:306
+#: src/components/ProfileCard.tsx:309
+#: src/components/ProfileCard.tsx:329
 #: src/view/com/profile/FollowButton.tsx:36
 #: src/view/com/profile/FollowButton.tsx:46
 #: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:188
@@ -756,21 +756,21 @@ msgstr "이미지 흐리게 및 피드에서 필터링"
 msgid "Books"
 msgstr "책"
 
-#: src/components/FeedInterstitials.tsx:274
+#: src/components/FeedInterstitials.tsx:281
 msgid "Browse more accounts on the Explore page"
 msgstr "탐색 페이지에서 더 많은 계정 찾아보기"
 
-#: src/components/FeedInterstitials.tsx:400
+#: src/components/FeedInterstitials.tsx:411
 msgid "Browse more feeds on the Explore page"
 msgstr "탐색 페이지에서 더 많은 피드 찾아보기"
 
-#: src/components/FeedInterstitials.tsx:263
-#: src/components/FeedInterstitials.tsx:389
+#: src/components/FeedInterstitials.tsx:266
+#: src/components/FeedInterstitials.tsx:396
 msgid "Browse more suggestions"
 msgstr "더 많은 추천 찾아보기"
 
-#: src/components/FeedInterstitials.tsx:282
-#: src/components/FeedInterstitials.tsx:409
+#: src/components/FeedInterstitials.tsx:289
+#: src/components/FeedInterstitials.tsx:420
 msgid "Browse more suggestions on the Explore page"
 msgstr "탐색 페이지에서 더 많은 추천 찾아보기"
 
@@ -2294,7 +2294,7 @@ msgid "Flip vertically"
 msgstr "세로로 뒤집기"
 
 #. User is not following this account, click to follow
-#: src/components/ProfileCard.tsx:318
+#: src/components/ProfileCard.tsx:341
 #: src/components/ProfileHoverCard/index.web.tsx:446
 #: src/components/ProfileHoverCard/index.web.tsx:457
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:252
@@ -2390,7 +2390,7 @@ msgid "Followers you know"
 msgstr "내가 아는 팔로워"
 
 #. User is following this account, click to unfollow
-#: src/components/ProfileCard.tsx:312
+#: src/components/ProfileCard.tsx:335
 #: src/components/ProfileHoverCard/index.web.tsx:445
 #: src/components/ProfileHoverCard/index.web.tsx:456
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:250
@@ -2402,6 +2402,7 @@ msgstr "내가 아는 팔로워"
 msgid "Following"
 msgstr "팔로우 중"
 
+#: src/components/ProfileCard.tsx:301
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:98
 msgid "Following {0}"
 msgstr "{0} 님을 팔로우했습니다"
@@ -3601,6 +3602,7 @@ msgstr "인기 GIF를 찾을 수 없습니다. Tenor에 문제가 있을 수 있
 msgid "No feeds found. Try searching for something else."
 msgstr "피드를 찾을 수 없습니다. 다른 피드를 검색해 보세요."
 
+#: src/components/ProfileCard.tsx:321
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:120
 msgid "No longer following {0}"
 msgstr "더 이상 {0} 님을 팔로우하지 않음"
@@ -5450,7 +5452,7 @@ msgstr "이 단계 건너뛰기"
 msgid "Software Dev"
 msgstr "소프트웨어 개발"
 
-#: src/components/FeedInterstitials.tsx:371
+#: src/components/FeedInterstitials.tsx:378
 msgid "Some other feeds you might like"
 msgstr "좋아할 만한 다른 피드"
 
@@ -5596,7 +5598,7 @@ msgstr "이 리스트 구독하기"
 msgid "Suggested accounts"
 msgstr "추천 계정"
 
-#: src/components/FeedInterstitials.tsx:243
+#: src/components/FeedInterstitials.tsx:246
 #: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:65
 msgid "Suggested for you"
 msgstr "나를 위한 추천"

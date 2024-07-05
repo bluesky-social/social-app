@@ -26,7 +26,7 @@ msgstr ""
 msgid "(no email)"
 msgstr "(немає ел. адреси)"
 
-#: src/view/com/notifications/FeedItem.tsx:283
+#: src/view/com/notifications/FeedItem.tsx:294
 msgid "{0, plural, one {{formattedCount} other} other {{formattedCount} others}}"
 msgstr ""
 
@@ -64,7 +64,7 @@ msgstr ""
 msgid "{0, plural, one {following} other {following}}"
 msgstr ""
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:259
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:266
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
 msgstr ""
 
@@ -72,7 +72,7 @@ msgstr ""
 msgid "{0, plural, one {like} other {likes}}"
 msgstr ""
 
-#: src/components/FeedCard.tsx:216
+#: src/components/FeedCard.tsx:206
 #: src/view/com/feeds/FeedSourceCard.tsx:301
 msgid "{0, plural, one {Liked by # user} other {Liked by # users}}"
 msgstr ""
@@ -81,7 +81,7 @@ msgstr ""
 msgid "{0, plural, one {post} other {posts}}"
 msgstr ""
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:217
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:224
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
 msgstr ""
 
@@ -89,15 +89,15 @@ msgstr ""
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr ""
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:255
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:262
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:222
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:249
 msgid "{0} joined this week"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:378
+#: src/screens/StarterPack/StarterPackScreen.tsx:456
 msgid "{0} people have used this starter pack!"
 msgstr ""
 
@@ -153,7 +153,7 @@ msgstr ""
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
 msgstr ""
 
-#: src/components/ProfileHoverCard/index.web.tsx:503
+#: src/components/ProfileHoverCard/index.web.tsx:504
 #: src/screens/Profile/Header/Metrics.tsx:50
 msgid "{following} following"
 msgstr "{following} підписок"
@@ -259,8 +259,12 @@ msgstr ""
 msgid "⚠Invalid Handle"
 msgstr "⚠Недопустимий псевдонім"
 
-#: src/screens/Login/LoginForm.tsx:247
+#: src/screens/Login/LoginForm.tsx:266
 msgid "2FA Confirmation"
+msgstr ""
+
+#: src/tours/Tooltip.tsx:70
+msgid "A help tooltip"
 msgstr ""
 
 #: src/view/com/util/ViewHeader.tsx:93
@@ -273,15 +277,15 @@ msgid "Access profile and other navigation links"
 msgstr "Відкрити профіль та іншу навігацію"
 
 #: src/view/com/modals/EditImage.tsx:300
-#: src/view/screens/Settings/index.tsx:518
+#: src/view/screens/Settings/index.tsx:519
 msgid "Accessibility"
 msgstr "Доступність"
 
-#: src/view/screens/Settings/index.tsx:509
+#: src/view/screens/Settings/index.tsx:510
 msgid "Accessibility settings"
 msgstr ""
 
-#: src/Navigation.tsx:298
+#: src/Navigation.tsx:301
 #: src/view/screens/AccessibilitySettings.tsx:69
 msgid "Accessibility Settings"
 msgstr ""
@@ -290,9 +294,9 @@ msgstr ""
 #~ msgid "account"
 #~ msgstr "обліковий запис"
 
-#: src/screens/Login/LoginForm.tsx:170
-#: src/view/screens/Settings/index.tsx:345
-#: src/view/screens/Settings/index.tsx:752
+#: src/screens/Login/LoginForm.tsx:190
+#: src/view/screens/Settings/index.tsx:346
+#: src/view/screens/Settings/index.tsx:753
 msgid "Account"
 msgstr "Обліковий запис"
 
@@ -363,8 +367,8 @@ msgstr "Додати користувача до списку"
 
 #: src/components/dialogs/SwitchAccount.tsx:56
 #: src/screens/Deactivated.tsx:199
-#: src/view/screens/Settings/index.tsx:422
-#: src/view/screens/Settings/index.tsx:431
+#: src/view/screens/Settings/index.tsx:423
+#: src/view/screens/Settings/index.tsx:432
 msgid "Add account"
 msgstr "Додати обліковий запис"
 
@@ -423,7 +427,7 @@ msgstr ""
 msgid "Add the following DNS record to your domain:"
 msgstr "Додайте наступний DNS-запис до вашого домену:"
 
-#: src/components/FeedCard.tsx:305
+#: src/components/FeedCard.tsx:289
 msgid "Add this feed to your feeds"
 msgstr ""
 
@@ -467,15 +471,19 @@ msgid "Adult content is disabled."
 msgstr "Контент для дорослих вимкнено."
 
 #: src/screens/Moderation/index.tsx:399
-#: src/view/screens/Settings/index.tsx:686
+#: src/view/screens/Settings/index.tsx:687
 msgid "Advanced"
 msgstr "Розширені"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:301
+#: src/state/shell/progress-guide.tsx:176
+msgid "Algorithm training complete!"
+msgstr ""
+
+#: src/screens/StarterPack/StarterPackScreen.tsx:360
 msgid "All accounts have been followed!"
 msgstr ""
 
-#: src/view/screens/Feeds.tsx:721
+#: src/view/screens/Feeds.tsx:734
 msgid "All the feeds you've saved, right in one place."
 msgstr "Усі збережені стрічки в одному місці."
 
@@ -505,7 +513,7 @@ msgstr "Вже увійшли як @{0}"
 
 #: src/view/com/composer/GifAltText.tsx:93
 #: src/view/com/composer/photos/Gallery.tsx:144
-#: src/view/com/util/post-embeds/GifEmbed.tsx:177
+#: src/view/com/util/post-embeds/GifEmbed.tsx:174
 msgid "ALT"
 msgstr "ALT"
 
@@ -515,7 +523,7 @@ msgstr "ALT"
 msgid "Alt text"
 msgstr "Альтернативний текст"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:183
+#: src/view/com/util/post-embeds/GifEmbed.tsx:180
 msgid "Alt Text"
 msgstr ""
 
@@ -553,7 +561,7 @@ msgstr ""
 #~ msgid "An error occurred while trying to delete the message. Please try again."
 #~ msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:303
+#: src/screens/StarterPack/StarterPackScreen.tsx:362
 msgid "An error occurred while trying to follow all"
 msgstr ""
 
@@ -563,6 +571,8 @@ msgstr "Проблема не включена до цих варіантів"
 
 #: src/components/hooks/useFollowMethods.ts:35
 #: src/components/hooks/useFollowMethods.ts:50
+#: src/components/ProfileCard.tsx:309
+#: src/components/ProfileCard.tsx:329
 #: src/view/com/profile/FollowButton.tsx:36
 #: src/view/com/profile/FollowButton.tsx:46
 #: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:188
@@ -570,12 +580,12 @@ msgstr "Проблема не включена до цих варіантів"
 msgid "An issue occurred, please try again."
 msgstr "Виникла проблема, будь ласка, спробуйте ще раз."
 
-#: src/screens/Onboarding/StepInterests/index.tsx:199
+#: src/screens/Onboarding/StepInterests/index.tsx:218
 msgid "an unknown error occurred"
 msgstr ""
 
 #: src/components/WhoCanReply.tsx:316
-#: src/view/com/notifications/FeedItem.tsx:280
+#: src/view/com/notifications/FeedItem.tsx:291
 msgid "and"
 msgstr "та"
 
@@ -584,7 +594,7 @@ msgstr "та"
 msgid "Animals"
 msgstr "Тварини"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:149
+#: src/view/com/util/post-embeds/GifEmbed.tsx:146
 msgid "Animated GIF"
 msgstr ""
 
@@ -608,13 +618,13 @@ msgstr "Назва пароля може містити лише латинсь�
 msgid "App Password names must be at least 4 characters long."
 msgstr "Назва пароля застосунку мусить бути хоча б 4 символи в довжину."
 
-#: src/view/screens/Settings/index.tsx:697
+#: src/view/screens/Settings/index.tsx:698
 msgid "App password settings"
 msgstr "Налаштування пароля застосунків"
 
-#: src/Navigation.tsx:266
+#: src/Navigation.tsx:269
 #: src/view/screens/AppPasswords.tsx:192
-#: src/view/screens/Settings/index.tsx:706
+#: src/view/screens/Settings/index.tsx:707
 msgid "App Passwords"
 msgstr "Паролі для застосунків"
 
@@ -643,7 +653,7 @@ msgstr ""
 msgid "Appeal this decision"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:439
+#: src/view/screens/Settings/index.tsx:440
 msgid "Appearance"
 msgstr "Оформлення"
 
@@ -652,7 +662,7 @@ msgstr "Оформлення"
 msgid "Apply default recommended feeds"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:532
+#: src/screens/StarterPack/StarterPackScreen.tsx:610
 msgid "Are you sure you want delete this starter pack?"
 msgstr ""
 
@@ -680,7 +690,7 @@ msgstr ""
 msgid "Are you sure you want to remove {0} from your feeds?"
 msgstr "Ви впевнені, що бажаєте видалити {0} зі стрічки?"
 
-#: src/components/FeedCard.tsx:322
+#: src/components/FeedCard.tsx:306
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr ""
 
@@ -705,7 +715,7 @@ msgstr "Мистецтво"
 msgid "Artistic or non-erotic nudity."
 msgstr "Художня або нееротична оголеність."
 
-#: src/screens/Signup/StepHandle.tsx:119
+#: src/screens/Signup/StepHandle.tsx:170
 msgid "At least 3 characters"
 msgstr "Не менше 3-х символів"
 
@@ -716,14 +726,15 @@ msgstr "Не менше 3-х символів"
 #: src/screens/Login/ChooseAccountForm.tsx:103
 #: src/screens/Login/ForgotPasswordForm.tsx:129
 #: src/screens/Login/ForgotPasswordForm.tsx:135
-#: src/screens/Login/LoginForm.tsx:278
-#: src/screens/Login/LoginForm.tsx:284
+#: src/screens/Login/LoginForm.tsx:298
+#: src/screens/Login/LoginForm.tsx:304
 #: src/screens/Login/SetNewPasswordForm.tsx:160
 #: src/screens/Login/SetNewPasswordForm.tsx:166
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:133
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:134
 #: src/screens/Profile/Header/Shell.tsx:102
-#: src/screens/Signup/index.tsx:231
+#: src/screens/Signup/BackNextButtons.tsx:40
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:188
 #: src/screens/StarterPack/Wizard/index.tsx:299
 #: src/view/com/util/ViewHeader.tsx:91
 msgid "Back"
@@ -733,7 +744,7 @@ msgstr "Назад"
 #~ msgid "Based on your interest in {interestsText}"
 #~ msgstr "Ґрунтуючись на вашому інтересі до {interestsText}"
 
-#: src/view/screens/Settings/index.tsx:496
+#: src/view/screens/Settings/index.tsx:497
 msgid "Basics"
 msgstr "Основні"
 
@@ -741,7 +752,7 @@ msgstr "Основні"
 msgid "Birthday"
 msgstr "Дата народження"
 
-#: src/view/screens/Settings/index.tsx:377
+#: src/view/screens/Settings/index.tsx:378
 msgid "Birthday:"
 msgstr "Дата народження:"
 
@@ -785,7 +796,7 @@ msgstr "Заблоковано"
 msgid "Blocked accounts"
 msgstr "Заблоковані облікові записи"
 
-#: src/Navigation.tsx:142
+#: src/Navigation.tsx:145
 #: src/view/screens/ModerationBlockedAccounts.tsx:109
 msgid "Blocked Accounts"
 msgstr "Заблоковані облікові записи"
@@ -827,6 +838,10 @@ msgstr "Bluesky"
 msgid "Bluesky is an open network where you can choose your hosting provider. Custom hosting is now available in beta for developers."
 msgstr "Bluesky є відкритою мережею, де ви можете обрати свого хостинг-провайдера. Власний хостинг тепер доступний в бета-версії для розробників."
 
+#: src/components/ProgressGuide/List.tsx:55
+msgid "Bluesky is better with friends!"
+msgstr ""
+
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:80
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:82
 #~ msgid "Bluesky is flexible."
@@ -862,6 +877,24 @@ msgstr "Розмити зображення і фільтрувати їх зі 
 #: src/screens/Onboarding/state.ts:81
 msgid "Books"
 msgstr "Книги"
+
+#: src/components/FeedInterstitials.tsx:281
+msgid "Browse more accounts on the Explore page"
+msgstr ""
+
+#: src/components/FeedInterstitials.tsx:411
+msgid "Browse more feeds on the Explore page"
+msgstr ""
+
+#: src/components/FeedInterstitials.tsx:266
+#: src/components/FeedInterstitials.tsx:396
+msgid "Browse more suggestions"
+msgstr ""
+
+#: src/components/FeedInterstitials.tsx:289
+#: src/components/FeedInterstitials.tsx:420
+msgid "Browse more suggestions on the Explore page"
+msgstr ""
 
 #: src/screens/Home/NoFeedsPinned.tsx:103
 #: src/screens/Home/NoFeedsPinned.tsx:109
@@ -981,17 +1014,17 @@ msgstr "Скасовує відкриття посилання"
 msgid "Change"
 msgstr "Змінити"
 
-#: src/view/screens/Settings/index.tsx:371
+#: src/view/screens/Settings/index.tsx:372
 msgctxt "action"
 msgid "Change"
 msgstr "Змінити"
 
-#: src/view/screens/Settings/index.tsx:718
+#: src/view/screens/Settings/index.tsx:719
 msgid "Change handle"
 msgstr "Змінити псевдонім"
 
 #: src/view/com/modals/ChangeHandle.tsx:156
-#: src/view/screens/Settings/index.tsx:729
+#: src/view/screens/Settings/index.tsx:730
 msgid "Change Handle"
 msgstr "Змінити псевдонім"
 
@@ -999,12 +1032,12 @@ msgstr "Змінити псевдонім"
 msgid "Change my email"
 msgstr "Змінити адресу електронної пошти"
 
-#: src/view/screens/Settings/index.tsx:763
+#: src/view/screens/Settings/index.tsx:764
 msgid "Change password"
 msgstr "Змінити пароль"
 
 #: src/view/com/modals/ChangePassword.tsx:142
-#: src/view/screens/Settings/index.tsx:774
+#: src/view/screens/Settings/index.tsx:775
 msgid "Change Password"
 msgstr "Зміна пароля"
 
@@ -1016,9 +1049,9 @@ msgstr "Змінити мову поста на {0}"
 msgid "Change Your Email"
 msgstr "Змінити адресу електронної пошти"
 
-#: src/Navigation.tsx:310
-#: src/view/shell/bottom-bar/BottomBar.tsx:201
-#: src/view/shell/desktop/LeftNav.tsx:301
+#: src/Navigation.tsx:313
+#: src/view/shell/bottom-bar/BottomBar.tsx:204
+#: src/view/shell/desktop/LeftNav.tsx:302
 msgid "Chat"
 msgstr ""
 
@@ -1028,14 +1061,14 @@ msgstr ""
 
 #: src/components/dms/ConvoMenu.tsx:112
 #: src/components/dms/MessageMenu.tsx:81
-#: src/Navigation.tsx:315
+#: src/Navigation.tsx:318
 #: src/screens/Messages/List/index.tsx:88
-#: src/view/screens/Settings/index.tsx:638
+#: src/view/screens/Settings/index.tsx:639
 msgid "Chat settings"
 msgstr ""
 
 #: src/screens/Messages/Settings.tsx:59
-#: src/view/screens/Settings/index.tsx:647
+#: src/view/screens/Settings/index.tsx:648
 msgid "Chat Settings"
 msgstr ""
 
@@ -1060,7 +1093,7 @@ msgstr "Перевірити мій статус"
 #~ msgid "Check out some recommended users. Follow them to see similar users."
 #~ msgstr "Ознайомтеся з деякими рекомендованими користувачами. Слідкуйте за ними, щоб побачити дописи від подібних користувачів."
 
-#: src/screens/Login/LoginForm.tsx:271
+#: src/screens/Login/LoginForm.tsx:291
 msgid "Check your email for a login code and enter it here."
 msgstr ""
 
@@ -1071,6 +1104,14 @@ msgstr "Перевірте свою поштову скриньку на ная�
 #: src/view/com/modals/Threadgate.tsx:75
 #~ msgid "Choose \"Everybody\" or \"Nobody\""
 #~ msgstr "Виберіть \"Усі\" або \"Ніхто\""
+
+#: src/screens/Onboarding/StepInterests/index.tsx:190
+msgid "Choose 3 or more:"
+msgstr ""
+
+#: src/screens/Onboarding/StepInterests/index.tsx:325
+msgid "Choose at least {0} more"
+msgstr ""
 
 #: src/screens/StarterPack/Wizard/index.tsx:191
 msgid "Choose Feeds"
@@ -1088,7 +1129,7 @@ msgstr ""
 msgid "Choose Service"
 msgstr "Оберіть хостинг-провайдера"
 
-#: src/screens/Onboarding/StepFinished.tsx:273
+#: src/screens/Onboarding/StepFinished.tsx:281
 msgid "Choose the algorithms that power your custom feeds."
 msgstr "Оберіть алгоритми, що наповнюватимуть ваші стрічки."
 
@@ -1110,23 +1151,23 @@ msgstr ""
 #~ msgid "Choose your main feeds"
 #~ msgstr "Виберіть ваші основні стрічки"
 
-#: src/screens/Signup/StepInfo/index.tsx:114
+#: src/screens/Signup/StepInfo/index.tsx:171
 msgid "Choose your password"
 msgstr "Вкажіть пароль"
 
-#: src/view/screens/Settings/index.tsx:910
+#: src/view/screens/Settings/index.tsx:911
 msgid "Clear all legacy storage data"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:913
+#: src/view/screens/Settings/index.tsx:914
 msgid "Clear all legacy storage data (restart after this)"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:922
+#: src/view/screens/Settings/index.tsx:923
 msgid "Clear all storage data"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:925
+#: src/view/screens/Settings/index.tsx:926
 msgid "Clear all storage data (restart after this)"
 msgstr ""
 
@@ -1135,11 +1176,11 @@ msgstr ""
 msgid "Clear search query"
 msgstr "Очистити пошуковий запит"
 
-#: src/view/screens/Settings/index.tsx:911
+#: src/view/screens/Settings/index.tsx:912
 msgid "Clears all legacy storage data"
 msgstr "Видаляє всі застарілі дані зі сховища"
 
-#: src/view/screens/Settings/index.tsx:923
+#: src/view/screens/Settings/index.tsx:924
 msgid "Clears all storage data"
 msgstr "Видаляє всі дані зі сховища"
 
@@ -1188,7 +1229,7 @@ msgstr ""
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:129
 #: src/view/com/modals/ChangePassword.tsx:268
 #: src/view/com/modals/ChangePassword.tsx:271
-#: src/view/com/util/post-embeds/GifEmbed.tsx:189
+#: src/view/com/util/post-embeds/GifEmbed.tsx:186
 msgid "Close"
 msgstr "Закрити"
 
@@ -1251,11 +1292,11 @@ msgstr "Закриває редактор постів і видаляє чер�
 msgid "Closes viewer for header image"
 msgstr "Закриває перегляд зображення"
 
-#: src/view/com/notifications/FeedItem.tsx:226
+#: src/view/com/notifications/FeedItem.tsx:237
 msgid "Collapse list of users"
 msgstr ""
 
-#: src/view/com/notifications/FeedItem.tsx:426
+#: src/view/com/notifications/FeedItem.tsx:437
 msgid "Collapses list of users for a given notification"
 msgstr "Згортає список користувачів для даного сповіщення"
 
@@ -1269,16 +1310,16 @@ msgstr "Комедія"
 msgid "Comics"
 msgstr "Комікси"
 
-#: src/Navigation.tsx:256
+#: src/Navigation.tsx:259
 #: src/view/screens/CommunityGuidelines.tsx:32
 msgid "Community Guidelines"
 msgstr "Правила спільноти"
 
-#: src/screens/Onboarding/StepFinished.tsx:286
+#: src/screens/Onboarding/StepFinished.tsx:294
 msgid "Complete onboarding and start using your account"
 msgstr "Завершіть ознайомлення та розпочніть користуватися вашим обліковим записом"
 
-#: src/screens/Signup/index.tsx:206
+#: src/screens/Signup/index.tsx:139
 msgid "Complete the challenge"
 msgstr "Виконайте завдання"
 
@@ -1335,7 +1376,7 @@ msgstr "Підтвердіть ваш вік:"
 msgid "Confirm your birthdate"
 msgstr "Підтвердіть вашу дату народження"
 
-#: src/screens/Login/LoginForm.tsx:253
+#: src/screens/Login/LoginForm.tsx:272
 #: src/view/com/modals/ChangeEmail.tsx:152
 #: src/view/com/modals/DeleteAccount.tsx:238
 #: src/view/com/modals/DeleteAccount.tsx:244
@@ -1345,11 +1386,11 @@ msgstr "Підтвердіть вашу дату народження"
 msgid "Confirmation code"
 msgstr "Код підтвердження"
 
-#: src/screens/Login/LoginForm.tsx:305
+#: src/screens/Login/LoginForm.tsx:325
 msgid "Connecting..."
 msgstr "З’єднання..."
 
-#: src/screens/Signup/index.tsx:276
+#: src/screens/Signup/index.tsx:171
 msgid "Contact support"
 msgstr "Служба підтримки"
 
@@ -1390,7 +1431,7 @@ msgstr "Попередження про вміст"
 msgid "Context menu backdrop, click to close the menu."
 msgstr "Тло контекстного меню натисніть, щоб закрити меню."
 
-#: src/screens/Onboarding/StepInterests/index.tsx:258
+#: src/screens/Onboarding/StepInterests/index.tsx:277
 #: src/screens/Onboarding/StepProfile/index.tsx:269
 msgid "Continue"
 msgstr "Далі"
@@ -1403,9 +1444,9 @@ msgstr "Продовжити як {0} (поточний користувач)"
 msgid "Continue thread..."
 msgstr ""
 
-#: src/screens/Onboarding/StepInterests/index.tsx:255
+#: src/screens/Onboarding/StepInterests/index.tsx:274
 #: src/screens/Onboarding/StepProfile/index.tsx:266
-#: src/screens/Signup/index.tsx:251
+#: src/screens/Signup/BackNextButtons.tsx:59
 msgid "Continue to next step"
 msgstr "Перейти до наступного кроку"
 
@@ -1430,7 +1471,7 @@ msgstr "Кухарство"
 msgid "Copied"
 msgstr "Скопійовано"
 
-#: src/view/screens/Settings/index.tsx:263
+#: src/view/screens/Settings/index.tsx:264
 msgid "Copied build version to clipboard"
 msgstr "Версію збірки скопійовано до буфера обміну"
 
@@ -1439,7 +1480,7 @@ msgstr "Версію збірки скопійовано до буфера об�
 #: src/view/com/modals/ChangeHandle.tsx:320
 #: src/view/com/modals/InviteCodes.tsx:153
 #: src/view/com/util/forms/PostDropdownBtn.tsx:189
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:350
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:357
 msgid "Copied to clipboard"
 msgstr "Скопійовано"
 
@@ -1496,7 +1537,7 @@ msgstr "Копіювати текст повідомлення"
 msgid "Copy QR code"
 msgstr ""
 
-#: src/Navigation.tsx:261
+#: src/Navigation.tsx:264
 #: src/view/screens/CopyrightPolicy.tsx:29
 msgid "Copyright Policy"
 msgstr "Політика захисту авторського права"
@@ -1534,7 +1575,7 @@ msgstr ""
 msgid "Create a new account"
 msgstr "Створити новий обліковий запис"
 
-#: src/view/screens/Settings/index.tsx:423
+#: src/view/screens/Settings/index.tsx:424
 msgid "Create a new Bluesky account"
 msgstr "Створити новий обліковий запис Bluesky"
 
@@ -1544,7 +1585,7 @@ msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:165
 #: src/components/StarterPack/ProfileStarterPacks.tsx:259
-#: src/Navigation.tsx:330
+#: src/Navigation.tsx:338
 msgid "Create a starter pack"
 msgstr ""
 
@@ -1552,7 +1593,7 @@ msgstr ""
 msgid "Create a starter pack for me"
 msgstr ""
 
-#: src/screens/Signup/index.tsx:154
+#: src/screens/Signup/index.tsx:88
 msgid "Create Account"
 msgstr "Створити обліковий запис"
 
@@ -1608,7 +1649,7 @@ msgstr "Користувацький"
 msgid "Custom domain"
 msgstr "Власний домен"
 
-#: src/view/screens/Feeds.tsx:747
+#: src/view/screens/Feeds.tsx:760
 #: src/view/screens/Search/Explore.tsx:390
 msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
 msgstr "Кастомні стрічки, створені спільнотою, подарують вам нові враження та допоможуть знайти контент, який ви любите."
@@ -1617,8 +1658,8 @@ msgstr "Кастомні стрічки, створені спільнотою, 
 msgid "Customize media from external sites."
 msgstr "Налаштування медіа зі сторонніх вебсайтів."
 
-#: src/view/screens/Settings/index.tsx:458
-#: src/view/screens/Settings/index.tsx:484
+#: src/view/screens/Settings/index.tsx:459
+#: src/view/screens/Settings/index.tsx:485
 msgid "Dark"
 msgstr "Темна"
 
@@ -1626,24 +1667,24 @@ msgstr "Темна"
 msgid "Dark mode"
 msgstr "Темний режим"
 
-#: src/view/screens/Settings/index.tsx:471
+#: src/view/screens/Settings/index.tsx:472
 msgid "Dark Theme"
 msgstr "Темна тема"
 
-#: src/screens/Signup/StepInfo/index.tsx:134
+#: src/screens/Signup/StepInfo/index.tsx:191
 msgid "Date of birth"
 msgstr "Дата народження"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:73
-#: src/view/screens/Settings/index.tsx:806
+#: src/view/screens/Settings/index.tsx:807
 msgid "Deactivate account"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:818
+#: src/view/screens/Settings/index.tsx:819
 msgid "Deactivate my account"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:873
+#: src/view/screens/Settings/index.tsx:874
 msgid "Debug Moderation"
 msgstr "Налагодження модерації"
 
@@ -1652,16 +1693,16 @@ msgid "Debug panel"
 msgstr "Панель налагодження"
 
 #: src/components/dms/MessageMenu.tsx:151
-#: src/screens/StarterPack/StarterPackScreen.tsx:484
-#: src/screens/StarterPack/StarterPackScreen.tsx:563
-#: src/screens/StarterPack/StarterPackScreen.tsx:643
+#: src/screens/StarterPack/StarterPackScreen.tsx:562
+#: src/screens/StarterPack/StarterPackScreen.tsx:641
+#: src/screens/StarterPack/StarterPackScreen.tsx:721
 #: src/view/com/util/forms/PostDropdownBtn.tsx:433
 #: src/view/screens/AppPasswords.tsx:285
 #: src/view/screens/ProfileList.tsx:667
 msgid "Delete"
 msgstr "Видалити"
 
-#: src/view/screens/Settings/index.tsx:828
+#: src/view/screens/Settings/index.tsx:829
 msgid "Delete account"
 msgstr "Видалити обліковий запис"
 
@@ -1681,8 +1722,8 @@ msgstr "Видалити пароль для застосунку"
 msgid "Delete app password?"
 msgstr "Видалити пароль для застосунку?"
 
-#: src/view/screens/Settings/index.tsx:890
-#: src/view/screens/Settings/index.tsx:893
+#: src/view/screens/Settings/index.tsx:891
+#: src/view/screens/Settings/index.tsx:894
 msgid "Delete chat declaration record"
 msgstr ""
 
@@ -1706,7 +1747,7 @@ msgstr ""
 msgid "Delete my account"
 msgstr "Видалити мій обліковий запис"
 
-#: src/view/screens/Settings/index.tsx:840
+#: src/view/screens/Settings/index.tsx:841
 msgid "Delete My Account…"
 msgstr "Видалити мій обліковий запис..."
 
@@ -1715,12 +1756,12 @@ msgstr "Видалити мій обліковий запис..."
 msgid "Delete post"
 msgstr "Видалити пост"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:478
-#: src/screens/StarterPack/StarterPackScreen.tsx:634
+#: src/screens/StarterPack/StarterPackScreen.tsx:556
+#: src/screens/StarterPack/StarterPackScreen.tsx:712
 msgid "Delete starter pack"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:529
+#: src/screens/StarterPack/StarterPackScreen.tsx:607
 msgid "Delete starter pack?"
 msgstr ""
 
@@ -1740,7 +1781,7 @@ msgstr "Видалено"
 msgid "Deleted post."
 msgstr "Видалений пост."
 
-#: src/view/screens/Settings/index.tsx:891
+#: src/view/screens/Settings/index.tsx:892
 msgid "Deletes the chat declaration record"
 msgstr ""
 
@@ -1759,7 +1800,7 @@ msgstr ""
 msgid "Did you want to say anything?"
 msgstr "Порожній пост. Ви хотіли щось написати?"
 
-#: src/view/screens/Settings/index.tsx:477
+#: src/view/screens/Settings/index.tsx:478
 msgid "Dim"
 msgstr "Тьмяний"
 
@@ -1809,6 +1850,10 @@ msgstr "Відхилити чернетку?"
 msgid "Discourage apps from showing my account to logged-out users"
 msgstr "Попросити застосунки не показувати мій обліковий запис без входу"
 
+#: src/tours/HomeTour.tsx:70
+msgid "Discover learns which posts you like as you browse."
+msgstr ""
+
 #: src/view/com/posts/FollowingEmptyState.tsx:70
 #: src/view/com/posts/FollowingEndOfFeed.tsx:71
 msgid "Discover new custom feeds"
@@ -1818,9 +1863,13 @@ msgstr "Відкрийте для себе нові стрічки"
 msgid "Discover new feeds"
 msgstr ""
 
-#: src/view/screens/Feeds.tsx:744
+#: src/view/screens/Feeds.tsx:757
 msgid "Discover New Feeds"
 msgstr "Відкрийте для себе нові стрічки"
+
+#: src/components/ProgressGuide/List.tsx:40
+msgid "Dismiss getting started guide"
+msgstr ""
 
 #: src/view/screens/AccessibilitySettings.tsx:95
 msgid "Display larger alt text badges"
@@ -1842,7 +1891,7 @@ msgstr "Панель DNS"
 msgid "Does not include nudity."
 msgstr "Не містить оголеності."
 
-#: src/screens/Signup/StepHandle.tsx:105
+#: src/screens/Signup/StepHandle.tsx:156
 msgid "Doesn't begin or end with a hyphen"
 msgstr "Не починається або закінчується дефісом"
 
@@ -1887,7 +1936,7 @@ msgstr "Готово"
 msgid "Done{extraText}"
 msgstr "Готово{extraText}"
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:318
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:345
 msgid "Download Bluesky"
 msgstr ""
 
@@ -1896,7 +1945,7 @@ msgstr ""
 msgid "Download CAR file"
 msgstr "Завантажити CAR файл"
 
-#: src/view/com/composer/text-input/TextInput.web.tsx:272
+#: src/view/com/composer/text-input/TextInput.web.tsx:271
 msgid "Drop to add images"
 msgstr "Перетягніть і відпустіть, щоб додати зображення"
 
@@ -1944,11 +1993,11 @@ msgstr "напр. Користувачі, що неодноразово відп
 msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr "Кожен код запрошення працює лише один раз. Час від часу ви будете отримувати нові коди."
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:473
+#: src/screens/StarterPack/StarterPackScreen.tsx:551
 #: src/screens/StarterPack/Wizard/index.tsx:551
 #: src/screens/StarterPack/Wizard/index.tsx:558
-#: src/view/screens/Feeds.tsx:385
-#: src/view/screens/Feeds.tsx:453
+#: src/view/screens/Feeds.tsx:386
+#: src/view/screens/Feeds.tsx:454
 msgid "Edit"
 msgstr ""
 
@@ -1979,9 +2028,9 @@ msgstr "Редагувати опис списку"
 msgid "Edit Moderation List"
 msgstr "Редагування списку"
 
-#: src/Navigation.tsx:271
-#: src/view/screens/Feeds.tsx:383
-#: src/view/screens/Feeds.tsx:451
+#: src/Navigation.tsx:274
+#: src/view/screens/Feeds.tsx:384
+#: src/view/screens/Feeds.tsx:452
 #: src/view/screens/SavedFeeds.tsx:93
 msgid "Edit My Feeds"
 msgstr "Редагувати мої стрічки"
@@ -2009,7 +2058,7 @@ msgstr "Редагувати профіль"
 #~ msgid "Edit Saved Feeds"
 #~ msgstr "Редагувати збережені стрічки"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:465
+#: src/screens/StarterPack/StarterPackScreen.tsx:543
 msgid "Edit starter pack"
 msgstr ""
 
@@ -2029,7 +2078,7 @@ msgstr "Редагувати ваш псевдонім для показу"
 msgid "Edit your profile description"
 msgstr "Редагувати опис вашого профілю"
 
-#: src/Navigation.tsx:335
+#: src/Navigation.tsx:343
 msgid "Edit your starter pack"
 msgstr ""
 
@@ -2042,7 +2091,7 @@ msgstr "Освіта"
 msgid "Either choose \"Everybody\" or \"Nobody\""
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:80
+#: src/screens/Signup/StepInfo/index.tsx:143
 #: src/view/com/modals/ChangeEmail.tsx:136
 msgid "Email"
 msgstr "Ел. адреса"
@@ -2068,7 +2117,7 @@ msgstr "Ел. адресу оновлено"
 msgid "Email verified"
 msgstr "Електронну адресу перевірено"
 
-#: src/view/screens/Settings/index.tsx:349
+#: src/view/screens/Settings/index.tsx:350
 msgid "Email:"
 msgstr "Ел. адреса:"
 
@@ -2134,6 +2183,10 @@ msgstr "Кінець стрічки"
 #~ msgid "End of list"
 #~ msgstr ""
 
+#: src/tours/Tooltip.tsx:159
+msgid "End of onboarding tour window. Do not move forward. Instead, go backward for more options, or press to skip."
+msgstr ""
+
 #: src/view/com/modals/AddAppPasswords.tsx:160
 msgid "Enter a name for this App Password"
 msgstr "Введіть ім'я для цього пароля застосунку"
@@ -2168,7 +2221,7 @@ msgid "Enter your birth date"
 msgstr "Введіть вашу дату народження"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:105
-#: src/screens/Signup/StepInfo/index.tsx:92
+#: src/screens/Signup/StepInfo/index.tsx:152
 msgid "Enter your email address"
 msgstr "Введіть адресу електронної пошти"
 
@@ -2188,11 +2241,11 @@ msgstr "Введіть псевдонім та пароль"
 msgid "Error occurred while saving file"
 msgstr ""
 
-#: src/screens/Signup/StepCaptcha/index.tsx:51
+#: src/screens/Signup/StepCaptcha/index.tsx:54
 msgid "Error receiving captcha response."
 msgstr "Помилка отримання відповіді Captcha."
 
-#: src/screens/Onboarding/StepInterests/index.tsx:197
+#: src/screens/Onboarding/StepInterests/index.tsx:216
 #: src/view/screens/Search/Search.tsx:116
 msgid "Error:"
 msgstr "Помилка:"
@@ -2247,7 +2300,7 @@ msgstr "Вихід із пошуку"
 msgid "Expand alt text"
 msgstr "Розгорнути опис"
 
-#: src/view/com/notifications/FeedItem.tsx:227
+#: src/view/com/notifications/FeedItem.tsx:238
 msgid "Expand list of users"
 msgstr ""
 
@@ -2264,12 +2317,12 @@ msgstr "Відверто або потенційно проблемний вмі
 msgid "Explicit sexual images."
 msgstr "Відверті сексуальні зображення."
 
-#: src/view/screens/Settings/index.tsx:786
+#: src/view/screens/Settings/index.tsx:787
 msgid "Export my data"
 msgstr "Експорт моїх даних"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:62
-#: src/view/screens/Settings/index.tsx:797
+#: src/view/screens/Settings/index.tsx:798
 msgid "Export My Data"
 msgstr "Експорт моїх даних"
 
@@ -2283,13 +2336,13 @@ msgstr "Зовнішні медіа"
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
 msgstr "Зовнішні медіа можуть дозволяти вебсайтам збирати інформацію про вас та ваш пристрій. Інформація не надсилається та не запитується, допоки не натиснуто кнопку «Відтворити»."
 
-#: src/Navigation.tsx:290
+#: src/Navigation.tsx:293
 #: src/view/screens/PreferencesExternalEmbeds.tsx:53
-#: src/view/screens/Settings/index.tsx:679
+#: src/view/screens/Settings/index.tsx:680
 msgid "External Media Preferences"
 msgstr "Налаштування зовнішніх медіа"
 
-#: src/view/screens/Settings/index.tsx:670
+#: src/view/screens/Settings/index.tsx:671
 msgid "External media settings"
 msgstr "Налаштування зовнішніх медіа"
 
@@ -2315,7 +2368,7 @@ msgstr ""
 msgid "Failed to delete post, please try again"
 msgstr "Не вдалося видалити пост, спробуйте ще раз"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:597
+#: src/screens/StarterPack/StarterPackScreen.tsx:675
 msgid "Failed to delete starter pack"
 msgstr ""
 
@@ -2372,7 +2425,7 @@ msgstr ""
 msgid "Failed to toggle thread mute, please try again"
 msgstr ""
 
-#: src/components/FeedCard.tsx:285
+#: src/components/FeedCard.tsx:269
 msgid "Failed to update feeds"
 msgstr ""
 
@@ -2381,11 +2434,11 @@ msgstr ""
 msgid "Failed to update settings"
 msgstr ""
 
-#: src/Navigation.tsx:211
+#: src/Navigation.tsx:214
 msgid "Feed"
 msgstr "Стрічка"
 
-#: src/components/FeedCard.tsx:161
+#: src/components/FeedCard.tsx:127
 #: src/view/com/feeds/FeedSourceCard.tsx:251
 msgid "Feed by {0}"
 msgstr "Стрічка від {0}"
@@ -2398,17 +2451,18 @@ msgstr "Стрічка від {0}"
 msgid "Feed toggle"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:66
+#: src/view/shell/desktop/RightNav.tsx:70
 #: src/view/shell/Drawer.tsx:345
 msgid "Feedback"
 msgstr "Зворотний зв'язок"
 
-#: src/Navigation.tsx:320
-#: src/view/screens/Feeds.tsx:445
-#: src/view/screens/Feeds.tsx:550
+#: src/Navigation.tsx:323
+#: src/screens/StarterPack/StarterPackScreen.tsx:171
+#: src/view/screens/Feeds.tsx:446
+#: src/view/screens/Feeds.tsx:551
 #: src/view/screens/Profile.tsx:213
 #: src/view/screens/Search/Search.tsx:375
-#: src/view/shell/desktop/LeftNav.tsx:373
+#: src/view/shell/desktop/LeftNav.tsx:379
 #: src/view/shell/Drawer.tsx:493
 #: src/view/shell/Drawer.tsx:494
 msgid "Feeds"
@@ -2426,7 +2480,7 @@ msgstr "Стрічки – це алгоритми, створені корис�
 #~ msgid "Feeds can be topical as well!"
 #~ msgstr "Стрічки також можуть бути тематичними!"
 
-#: src/components/FeedCard.tsx:282
+#: src/components/FeedCard.tsx:266
 msgid "Feeds updated!"
 msgstr ""
 
@@ -2442,7 +2496,7 @@ msgstr ""
 msgid "Filter from feeds"
 msgstr "Фільтрувати зі стрічок"
 
-#: src/screens/Onboarding/StepFinished.tsx:289
+#: src/screens/Onboarding/StepFinished.tsx:297
 msgid "Finalizing"
 msgstr "Завершення"
 
@@ -2451,6 +2505,10 @@ msgstr "Завершення"
 #: src/view/com/posts/FollowingEndOfFeed.tsx:54
 msgid "Find accounts to follow"
 msgstr "Знайдіть облікові записи для стеження"
+
+#: src/tours/HomeTour.tsx:88
+msgid "Find more feeds and accounts to follow in the Explore page."
+msgstr ""
 
 #: src/view/screens/Search/Search.tsx:439
 msgid "Find posts and users on Bluesky"
@@ -2480,11 +2538,15 @@ msgstr "Налаштуйте відображення обговорень."
 msgid "Finish"
 msgstr ""
 
+#: src/tours/Tooltip.tsx:149
+msgid "Finish tour and begin using the application"
+msgstr ""
+
 #: src/screens/Onboarding/index.tsx:35
 msgid "Fitness"
 msgstr "Фітнес"
 
-#: src/screens/Onboarding/StepFinished.tsx:269
+#: src/screens/Onboarding/StepFinished.tsx:277
 msgid "Flexible"
 msgstr "Гнучкий"
 
@@ -2497,6 +2559,8 @@ msgstr "Віддзеркалити горизонтально"
 msgid "Flip vertically"
 msgstr "Віддзеркалити вертикально"
 
+#. User is not following this account, click to follow
+#: src/components/ProfileCard.tsx:341
 #: src/components/ProfileHoverCard/index.web.tsx:446
 #: src/components/ProfileHoverCard/index.web.tsx:457
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:252
@@ -2519,13 +2583,17 @@ msgstr "Підписатися на {0}"
 msgid "Follow {name}"
 msgstr ""
 
+#: src/components/ProgressGuide/List.tsx:54
+msgid "Follow 7 accounts"
+msgstr ""
+
 #: src/view/com/profile/ProfileMenu.tsx:246
 #: src/view/com/profile/ProfileMenu.tsx:257
 msgid "Follow Account"
 msgstr "Підписатися на обліковий запис"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:345
-#: src/screens/StarterPack/StarterPackScreen.tsx:352
+#: src/screens/StarterPack/StarterPackScreen.tsx:405
+#: src/screens/StarterPack/StarterPackScreen.tsx:412
 msgid "Follow all"
 msgstr ""
 
@@ -2553,7 +2621,7 @@ msgstr ""
 #~ msgid "Followed by"
 #~ msgstr ""
 
-#: src/view/com/profile/ProfileCard.tsx:227
+#: src/view/com/profile/ProfileCard.tsx:190
 msgid "Followed by {0}"
 msgstr "Підписані {0}"
 
@@ -2581,16 +2649,20 @@ msgstr "Ваші підписки"
 msgid "Followed users only"
 msgstr "Тільки ваші підписки"
 
-#: src/view/com/notifications/FeedItem.tsx:187
+#: src/view/com/notifications/FeedItem.tsx:197
 msgid "followed you"
 msgstr "підписка на вас"
+
+#: src/view/com/notifications/FeedItem.tsx:195
+msgid "followed you back"
+msgstr ""
 
 #: src/view/com/profile/ProfileFollowers.tsx:104
 #: src/view/screens/ProfileFollowers.tsx:25
 msgid "Followers"
 msgstr "Підписники"
 
-#: src/Navigation.tsx:179
+#: src/Navigation.tsx:182
 msgid "Followers of @{0} that you know"
 msgstr ""
 
@@ -2599,17 +2671,20 @@ msgstr ""
 msgid "Followers you know"
 msgstr ""
 
+#. User is following this account, click to unfollow
+#: src/components/ProfileCard.tsx:335
 #: src/components/ProfileHoverCard/index.web.tsx:445
 #: src/components/ProfileHoverCard/index.web.tsx:456
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:250
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:149
 #: src/view/com/profile/ProfileFollows.tsx:104
-#: src/view/screens/Feeds.tsx:630
+#: src/view/screens/Feeds.tsx:631
 #: src/view/screens/ProfileFollows.tsx:25
 #: src/view/screens/SavedFeeds.tsx:415
 msgid "Following"
 msgstr "Підписані"
 
+#: src/components/ProfileCard.tsx:301
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:98
 msgid "Following {0}"
 msgstr "Підписання на \"{0}\""
@@ -2618,21 +2693,25 @@ msgstr "Підписання на \"{0}\""
 msgid "Following {name}"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:573
+#: src/view/screens/Settings/index.tsx:574
 msgid "Following feed preferences"
 msgstr "Налаштування стрічки підписок"
 
-#: src/Navigation.tsx:277
+#: src/Navigation.tsx:280
 #: src/view/screens/PreferencesFollowingFeed.tsx:103
-#: src/view/screens/Settings/index.tsx:582
+#: src/view/screens/Settings/index.tsx:583
 msgid "Following Feed Preferences"
 msgstr "Налаштування стрічки підписок"
+
+#: src/tours/HomeTour.tsx:59
+msgid "Following shows the latest posts from people you follow."
+msgstr ""
 
 #: src/screens/Profile/Header/Handle.tsx:31
 msgid "Follows you"
 msgstr "Підписаний(-на) на вас"
 
-#: src/view/com/profile/ProfileCard.tsx:152
+#: src/components/Pills.tsx:165
 msgid "Follows You"
 msgstr "Підписаний(-на) на вас"
 
@@ -2654,11 +2733,11 @@ msgstr "З міркувань безпеки цей пароль відобра�
 msgid "Forgot Password"
 msgstr "Забули пароль"
 
-#: src/screens/Login/LoginForm.tsx:227
+#: src/screens/Login/LoginForm.tsx:246
 msgid "Forgot password?"
 msgstr "Забули пароль?"
 
-#: src/screens/Login/LoginForm.tsx:238
+#: src/screens/Login/LoginForm.tsx:257
 msgid "Forgot?"
 msgstr "Забули пароль?"
 
@@ -2692,6 +2771,10 @@ msgstr ""
 msgid "Get Started"
 msgstr "Почати"
 
+#: src/components/ProgressGuide/List.tsx:33
+msgid "Getting started"
+msgstr ""
+
 #: src/view/com/util/images/ImageHorzList.tsx:35
 msgid "GIF"
 msgstr ""
@@ -2706,31 +2789,35 @@ msgstr "Грубі порушення закону чи умов викорис�
 
 #: src/components/moderation/ScreenHider.tsx:151
 #: src/components/moderation/ScreenHider.tsx:160
-#: src/view/com/auth/LoggedOut.tsx:78
-#: src/view/com/auth/LoggedOut.tsx:79
+#: src/view/com/auth/LoggedOut.tsx:80
+#: src/view/com/auth/LoggedOut.tsx:81
 #: src/view/screens/NotFound.tsx:55
 #: src/view/screens/ProfileFeed.tsx:112
 #: src/view/screens/ProfileList.tsx:970
-#: src/view/shell/desktop/LeftNav.tsx:133
+#: src/view/shell/desktop/LeftNav.tsx:134
 msgid "Go back"
 msgstr "Назад"
 
 #: src/components/Error.tsx:103
 #: src/screens/Profile/ErrorState.tsx:62
 #: src/screens/Profile/ErrorState.tsx:66
-#: src/screens/StarterPack/StarterPackScreen.tsx:656
+#: src/screens/StarterPack/StarterPackScreen.tsx:734
 #: src/view/screens/NotFound.tsx:54
 #: src/view/screens/ProfileFeed.tsx:117
 #: src/view/screens/ProfileList.tsx:975
 msgid "Go Back"
 msgstr "Назад"
 
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:189
+msgid "Go back to previous screen"
+msgstr ""
+
 #: src/components/dms/ReportDialog.tsx:154
 #: src/components/ReportDialog/SelectReportOptionView.tsx:80
 #: src/components/ReportDialog/SubmitView.tsx:104
 #: src/screens/Onboarding/Layout.tsx:102
 #: src/screens/Onboarding/Layout.tsx:191
-#: src/screens/Signup/index.tsx:225
+#: src/screens/Signup/BackNextButtons.tsx:34
 msgid "Go back to previous step"
 msgstr "Повернутися до попереднього кроку"
 
@@ -2764,6 +2851,10 @@ msgstr "Далі"
 msgid "Go to profile"
 msgstr ""
 
+#: src/tours/Tooltip.tsx:138
+msgid "Go to the next step of the tour"
+msgstr ""
+
 #: src/components/dms/ConvoMenu.tsx:164
 msgid "Go to user's profile"
 msgstr ""
@@ -2771,6 +2862,10 @@ msgstr ""
 #: src/lib/moderation/useGlobalLabelStrings.ts:46
 msgid "Graphic Media"
 msgstr "Графічний медіаконтент"
+
+#: src/state/shell/progress-guide.tsx:166
+msgid "Half way there!"
+msgstr ""
 
 #: src/view/com/modals/ChangeHandle.tsx:260
 msgid "Handle"
@@ -2784,19 +2879,19 @@ msgstr ""
 msgid "Harassment, trolling, or intolerance"
 msgstr "Домагання, тролінг або нетерпимість"
 
-#: src/Navigation.tsx:305
+#: src/Navigation.tsx:308
 msgid "Hashtag"
 msgstr "Хештег"
 
-#: src/components/RichText.tsx:216
+#: src/components/RichText.tsx:218
 msgid "Hashtag: #{tag}"
 msgstr "Хештег: #{tag}"
 
-#: src/screens/Signup/index.tsx:272
+#: src/screens/Signup/index.tsx:167
 msgid "Having trouble?"
 msgstr "Виникли проблеми?"
 
-#: src/view/shell/desktop/RightNav.tsx:95
+#: src/view/shell/desktop/RightNav.tsx:99
 #: src/view/shell/Drawer.tsx:355
 msgid "Help"
 msgstr "Довідка"
@@ -2832,7 +2927,7 @@ msgstr "Це ваш пароль для застосунків."
 msgid "Hide"
 msgstr "Приховати"
 
-#: src/view/com/notifications/FeedItem.tsx:433
+#: src/view/com/notifications/FeedItem.tsx:444
 msgctxt "action"
 msgid "Hide"
 msgstr "Сховати"
@@ -2851,7 +2946,7 @@ msgstr "Приховати вміст"
 msgid "Hide this post?"
 msgstr "Сховати цей пост?"
 
-#: src/view/com/notifications/FeedItem.tsx:424
+#: src/view/com/notifications/FeedItem.tsx:435
 msgid "Hide user list"
 msgstr "Сховати список користувачів"
 
@@ -2883,10 +2978,10 @@ msgstr "Здається, у нас виникли проблеми з зава�
 msgid "Hmmmm, we couldn't load that moderation service."
 msgstr "Хм, ми не змогли завантажити цей сервіс модерації."
 
-#: src/Navigation.tsx:511
-#: src/Navigation.tsx:531
-#: src/view/shell/bottom-bar/BottomBar.tsx:159
-#: src/view/shell/desktop/LeftNav.tsx:341
+#: src/Navigation.tsx:519
+#: src/Navigation.tsx:539
+#: src/view/shell/bottom-bar/BottomBar.tsx:160
+#: src/view/shell/desktop/LeftNav.tsx:342
 #: src/view/shell/Drawer.tsx:425
 #: src/view/shell/Drawer.tsx:426
 msgid "Home"
@@ -2897,8 +2992,8 @@ msgid "Host:"
 msgstr "Host:"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:89
-#: src/screens/Login/LoginForm.tsx:160
-#: src/screens/Signup/StepInfo/index.tsx:40
+#: src/screens/Login/LoginForm.tsx:180
+#: src/screens/Signup/StepInfo/index.tsx:106
 #: src/view/com/modals/ChangeHandle.tsx:275
 msgid "Hosting provider"
 msgstr "Хостинг-провайдер"
@@ -2998,19 +3093,19 @@ msgstr "Введіть новий пароль"
 msgid "Input password for account deletion"
 msgstr "Введіть пароль для видалення облікового запису"
 
-#: src/screens/Login/LoginForm.tsx:266
+#: src/screens/Login/LoginForm.tsx:286
 msgid "Input the code which has been emailed to you"
 msgstr ""
 
 #: src/screens/Login/LoginForm.tsx:221
-msgid "Input the password tied to {identifier}"
-msgstr "Введіть пароль, прив'язаний до {identifier}"
+#~ msgid "Input the password tied to {identifier}"
+#~ msgstr "Введіть пароль, прив'язаний до {identifier}"
 
-#: src/screens/Login/LoginForm.tsx:194
+#: src/screens/Login/LoginForm.tsx:215
 msgid "Input the username or email address you used at signup"
 msgstr "Введіть псевдонім або ел. адресу, які ви використовували для реєстрації"
 
-#: src/screens/Login/LoginForm.tsx:220
+#: src/screens/Login/LoginForm.tsx:241
 msgid "Input your password"
 msgstr "Введіть ваш пароль"
 
@@ -3018,7 +3113,7 @@ msgstr "Введіть ваш пароль"
 msgid "Input your preferred hosting provider"
 msgstr "Введіть бажаного хостинг-провайдера"
 
-#: src/screens/Signup/StepHandle.tsx:63
+#: src/screens/Signup/StepHandle.tsx:111
 msgid "Input your user handle"
 msgstr "Введіть ваш псевдонім"
 
@@ -3026,7 +3121,7 @@ msgstr "Введіть ваш псевдонім"
 msgid "Introducing Direct Messages"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:135
+#: src/screens/Login/LoginForm.tsx:140
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
 msgstr ""
@@ -3035,7 +3130,7 @@ msgstr ""
 msgid "Invalid or unsupported post record"
 msgstr "Невірний або непідтримуваний пост"
 
-#: src/screens/Login/LoginForm.tsx:140
+#: src/screens/Login/LoginForm.tsx:145
 msgid "Invalid username or password"
 msgstr "Невірне ім'я користувача або пароль"
 
@@ -3043,11 +3138,11 @@ msgstr "Невірне ім'я користувача або пароль"
 msgid "Invite a Friend"
 msgstr "Запросити друга"
 
-#: src/screens/Signup/StepInfo/index.tsx:58
+#: src/screens/Signup/StepInfo/index.tsx:124
 msgid "Invite code"
 msgstr "Код запрошення"
 
-#: src/screens/Signup/state.ts:275
+#: src/screens/Signup/state.ts:251
 msgid "Invite code not accepted. Check that you input it correctly and try again."
 msgstr "Код запрошення не прийнято. Переконайтеся в його правильності та повторіть спробу."
 
@@ -3083,8 +3178,10 @@ msgstr ""
 msgid "Jobs"
 msgstr "Вакансії"
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:200
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:206
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:227
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:233
+#: src/screens/StarterPack/StarterPackScreen.tsx:432
+#: src/screens/StarterPack/StarterPackScreen.tsx:443
 msgid "Join Bluesky"
 msgstr ""
 
@@ -3133,16 +3230,16 @@ msgstr "Мітки на вашому контенті"
 msgid "Language selection"
 msgstr "Вибір мови"
 
-#: src/view/screens/Settings/index.tsx:530
+#: src/view/screens/Settings/index.tsx:531
 msgid "Language settings"
 msgstr "Налаштування мови"
 
-#: src/Navigation.tsx:152
+#: src/Navigation.tsx:155
 #: src/view/screens/LanguageSettings.tsx:90
 msgid "Language Settings"
 msgstr "Налаштування мов"
 
-#: src/view/screens/Settings/index.tsx:539
+#: src/view/screens/Settings/index.tsx:540
 msgid "Languages"
 msgstr "Мови"
 
@@ -3202,7 +3299,7 @@ msgstr "Ви залишаєте Bluesky"
 msgid "left to go."
 msgstr "ще залишилося."
 
-#: src/view/screens/Settings/index.tsx:308
+#: src/view/screens/Settings/index.tsx:309
 msgid "Legacy storage cleared, you need to restart the app now."
 msgstr "Старе сховище очищено, тепер вам потрібно перезапустити застосунок."
 
@@ -3215,11 +3312,12 @@ msgstr ""
 msgid "Let's get your password reset!"
 msgstr "Давайте відновимо ваш пароль!"
 
-#: src/screens/Onboarding/StepFinished.tsx:289
+#: src/screens/Onboarding/StepFinished.tsx:297
+#: src/tours/Tooltip.tsx:151
 msgid "Let's go!"
 msgstr "Злітаємо!"
 
-#: src/view/screens/Settings/index.tsx:452
+#: src/view/screens/Settings/index.tsx:453
 msgid "Light"
 msgstr "Світла"
 
@@ -3227,14 +3325,23 @@ msgstr "Світла"
 #~ msgid "Like"
 #~ msgstr "Вподобати"
 
+#: src/components/ProgressGuide/List.tsx:48
+msgid "Like 10 posts"
+msgstr ""
+
+#: src/state/shell/progress-guide.tsx:162
+#: src/state/shell/progress-guide.tsx:167
+msgid "Like 10 posts to train the Discover feed"
+msgstr ""
+
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:267
 #: src/view/screens/ProfileFeed.tsx:573
 msgid "Like this feed"
 msgstr "Вподобати цю стрічку"
 
 #: src/components/LikesDialog.tsx:87
-#: src/Navigation.tsx:216
-#: src/Navigation.tsx:221
+#: src/Navigation.tsx:219
+#: src/Navigation.tsx:224
 msgid "Liked by"
 msgstr "Сподобалося"
 
@@ -3258,11 +3365,11 @@ msgstr "Сподобався користувачу"
 #~ msgid "Liked by {likeCount} {0}"
 #~ msgstr "Вподобано {likeCount} {0}"
 
-#: src/view/com/notifications/FeedItem.tsx:190
+#: src/view/com/notifications/FeedItem.tsx:201
 msgid "liked your custom feed"
 msgstr "вподобав(-ла) вашу стрічку"
 
-#: src/view/com/notifications/FeedItem.tsx:182
+#: src/view/com/notifications/FeedItem.tsx:185
 msgid "liked your post"
 msgstr "сподобався ваш пост"
 
@@ -3274,7 +3381,7 @@ msgstr "Вподобання"
 msgid "Likes on this post"
 msgstr "Вподобайки цього поста"
 
-#: src/Navigation.tsx:185
+#: src/Navigation.tsx:188
 msgid "List"
 msgstr "Список"
 
@@ -3286,7 +3393,7 @@ msgstr "Аватар списку"
 msgid "List blocked"
 msgstr "Список заблоковано"
 
-#: src/components/FeedCard.tsx:155
+#: src/components/ListCard.tsx:113
 #: src/view/com/feeds/FeedSourceCard.tsx:253
 msgid "List by {0}"
 msgstr "Список від {0}"
@@ -3311,10 +3418,10 @@ msgstr "Список розблоковано"
 msgid "List unmuted"
 msgstr "Список більше не ігнорується"
 
-#: src/Navigation.tsx:122
+#: src/Navigation.tsx:125
 #: src/view/screens/Profile.tsx:208
 #: src/view/screens/Profile.tsx:215
-#: src/view/shell/desktop/LeftNav.tsx:379
+#: src/view/shell/desktop/LeftNav.tsx:385
 #: src/view/shell/Drawer.tsx:509
 #: src/view/shell/Drawer.tsx:510
 msgid "Lists"
@@ -3351,7 +3458,7 @@ msgstr "Завантажити нові пости"
 msgid "Loading..."
 msgstr "Завантаження..."
 
-#: src/Navigation.tsx:236
+#: src/Navigation.tsx:239
 msgid "Log"
 msgstr "Звіт"
 
@@ -3375,7 +3482,7 @@ msgstr "Видимість для користувачів без обліков
 msgid "Login to account that is not listed"
 msgstr "Увійти до облікового запису, якого немає в списку"
 
-#: src/components/RichText.tsx:217
+#: src/components/RichText.tsx:219
 msgid "Long press to open tag menu for #{tag}"
 msgstr ""
 
@@ -3460,7 +3567,7 @@ msgstr ""
 msgid "Message settings"
 msgstr ""
 
-#: src/Navigation.tsx:526
+#: src/Navigation.tsx:534
 #: src/screens/Messages/List/index.tsx:164
 #: src/screens/Messages/List/index.tsx:246
 #: src/screens/Messages/List/index.tsx:317
@@ -3475,9 +3582,9 @@ msgstr ""
 msgid "Misleading Account"
 msgstr "Оманливий обліковий запис"
 
-#: src/Navigation.tsx:127
+#: src/Navigation.tsx:130
 #: src/screens/Moderation/index.tsx:105
-#: src/view/screens/Settings/index.tsx:561
+#: src/view/screens/Settings/index.tsx:562
 msgid "Moderation"
 msgstr "Модерація"
 
@@ -3485,7 +3592,7 @@ msgstr "Модерація"
 msgid "Moderation details"
 msgstr "Деталі модерації"
 
-#: src/components/FeedCard.tsx:157
+#: src/components/ListCard.tsx:109
 #: src/view/com/lists/ListCard.tsx:95
 #: src/view/com/modals/UserAddRemoveLists.tsx:217
 msgid "Moderation list by {0}"
@@ -3513,16 +3620,16 @@ msgstr "Список модерації оновлено"
 msgid "Moderation lists"
 msgstr "Списки для модерації"
 
-#: src/Navigation.tsx:132
+#: src/Navigation.tsx:135
 #: src/view/screens/ModerationModlists.tsx:58
 msgid "Moderation Lists"
 msgstr "Списки для модерації"
 
-#: src/view/screens/Settings/index.tsx:555
+#: src/view/screens/Settings/index.tsx:556
 msgid "Moderation settings"
 msgstr "Налаштування модерації"
 
-#: src/Navigation.tsx:231
+#: src/Navigation.tsx:234
 msgid "Moderation states"
 msgstr "Статус модерації"
 
@@ -3553,6 +3660,10 @@ msgstr "За кількістю вподобань"
 
 #: src/screens/Onboarding/state.ts:90
 msgid "Movies"
+msgstr ""
+
+#: src/screens/Onboarding/state.ts:91
+msgid "Music"
 msgstr ""
 
 #: src/components/TagMenu/index.tsx:249
@@ -3628,7 +3739,7 @@ msgstr "Ігнорується"
 msgid "Muted accounts"
 msgstr "Ігноровані облікові записи"
 
-#: src/Navigation.tsx:137
+#: src/Navigation.tsx:140
 #: src/view/screens/ModerationMutedAccounts.tsx:109
 msgid "Muted Accounts"
 msgstr "Ігноровані облікові записи"
@@ -3654,19 +3765,19 @@ msgstr "Ігнорування є приватним. Ігноровані ко�
 msgid "My Birthday"
 msgstr "Мій день народження"
 
-#: src/view/screens/Feeds.tsx:718
+#: src/view/screens/Feeds.tsx:731
 msgid "My Feeds"
 msgstr "Мої стрічки"
 
-#: src/view/shell/desktop/LeftNav.tsx:84
+#: src/view/shell/desktop/LeftNav.tsx:85
 msgid "My Profile"
 msgstr "Мій профіль"
 
-#: src/view/screens/Settings/index.tsx:616
+#: src/view/screens/Settings/index.tsx:617
 msgid "My saved feeds"
 msgstr "Мої збережені стрічки"
 
-#: src/view/screens/Settings/index.tsx:622
+#: src/view/screens/Settings/index.tsx:623
 msgid "My Saved Feeds"
 msgstr "Мої збережені стрічки"
 
@@ -3687,16 +3798,20 @@ msgid "Name or Description Violates Community Standards"
 msgstr "Ім'я чи Опис порушують стандарти спільноти"
 
 #: src/screens/Onboarding/index.tsx:22
-#: src/screens/Onboarding/state.ts:91
+#: src/screens/Onboarding/state.ts:92
 msgid "Nature"
 msgstr "Природа"
+
+#: src/components/StarterPack/StarterPackCard.tsx:118
+msgid "Navigate to {0}"
+msgstr ""
 
 #: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:73
 msgid "Navigate to starter pack"
 msgstr ""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:173
-#: src/screens/Login/LoginForm.tsx:312
+#: src/screens/Login/LoginForm.tsx:332
 #: src/view/com/modals/ChangePassword.tsx:169
 msgid "Navigates to the next screen"
 msgstr "Переходить до наступного екрана"
@@ -3714,7 +3829,7 @@ msgstr "Хочете повідомити про порушення авторс
 #~ msgid "Never lose access to your followers and data."
 #~ msgstr "Ніколи не втрачайте доступ до ваших даних та підписників."
 
-#: src/screens/Onboarding/StepFinished.tsx:257
+#: src/screens/Onboarding/StepFinished.tsx:265
 msgid "Never lose access to your followers or data."
 msgstr "Ніколи не втрачайте доступ до ваших підписників та даних."
 
@@ -3758,17 +3873,17 @@ msgctxt "action"
 msgid "New post"
 msgstr "Новий пост"
 
-#: src/view/screens/Feeds.tsx:580
+#: src/view/screens/Feeds.tsx:581
 #: src/view/screens/Notifications.tsx:193
 #: src/view/screens/Profile.tsx:478
 #: src/view/screens/ProfileFeed.tsx:428
 #: src/view/screens/ProfileList.tsx:201
 #: src/view/screens/ProfileList.tsx:229
-#: src/view/shell/desktop/LeftNav.tsx:277
+#: src/view/shell/desktop/LeftNav.tsx:278
 msgid "New post"
 msgstr "Новий пост"
 
-#: src/view/shell/desktop/LeftNav.tsx:283
+#: src/view/shell/desktop/LeftNav.tsx:284
 msgctxt "action"
 msgid "New Post"
 msgstr "Новий пост"
@@ -3786,21 +3901,22 @@ msgid "Newest replies first"
 msgstr "Спочатку найновіші"
 
 #: src/screens/Onboarding/index.tsx:20
-#: src/screens/Onboarding/state.ts:92
+#: src/screens/Onboarding/state.ts:93
 msgid "News"
 msgstr "Новини"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:143
 #: src/screens/Login/ForgotPasswordForm.tsx:150
-#: src/screens/Login/LoginForm.tsx:311
-#: src/screens/Login/LoginForm.tsx:318
+#: src/screens/Login/LoginForm.tsx:331
+#: src/screens/Login/LoginForm.tsx:338
 #: src/screens/Login/SetNewPasswordForm.tsx:174
 #: src/screens/Login/SetNewPasswordForm.tsx:180
-#: src/screens/Signup/index.tsx:258
+#: src/screens/Signup/BackNextButtons.tsx:66
 #: src/screens/StarterPack/Wizard/index.tsx:184
 #: src/screens/StarterPack/Wizard/index.tsx:188
 #: src/screens/StarterPack/Wizard/index.tsx:359
 #: src/screens/StarterPack/Wizard/index.tsx:366
+#: src/tours/Tooltip.tsx:139
 #: src/view/com/modals/ChangePassword.tsx:254
 #: src/view/com/modals/ChangePassword.tsx:256
 msgid "Next"
@@ -3842,11 +3958,12 @@ msgstr ""
 msgid "No feeds found. Try searching for something else."
 msgstr ""
 
+#: src/components/ProfileCard.tsx:321
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:120
 msgid "No longer following {0}"
 msgstr "Ви більше не підписані на {0}"
 
-#: src/screens/Signup/StepHandle.tsx:115
+#: src/screens/Signup/StepHandle.tsx:166
 msgid "No longer than 253 characters"
 msgstr "Не може бути довшим за 253 символи"
 
@@ -3858,7 +3975,7 @@ msgstr ""
 msgid "No more conversations to show"
 msgstr ""
 
-#: src/view/com/notifications/Feed.tsx:118
+#: src/view/com/notifications/Feed.tsx:117
 msgid "No notifications yet!"
 msgstr "Ще ніяких сповіщень!"
 
@@ -3886,7 +4003,7 @@ msgstr ""
 msgid "No results found"
 msgstr "Нічого не знайдено"
 
-#: src/view/screens/Feeds.tsx:511
+#: src/view/screens/Feeds.tsx:512
 msgid "No results found for \"{query}\""
 msgstr "Нічого не знайдено за запитом «{query}»"
 
@@ -3936,7 +4053,7 @@ msgstr "Несексуальна оголеність"
 #~ msgid "Not Applicable."
 #~ msgstr "Не застосовно."
 
-#: src/Navigation.tsx:117
+#: src/Navigation.tsx:120
 #: src/view/screens/Profile.tsx:108
 msgid "Not Found"
 msgstr "Не знайдено"
@@ -3948,7 +4065,7 @@ msgstr "Пізніше"
 
 #: src/view/com/profile/ProfileMenu.tsx:372
 #: src/view/com/util/forms/PostDropdownBtn.tsx:456
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:315
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:322
 msgid "Note about sharing"
 msgstr "Примітка щодо поширення"
 
@@ -3968,11 +4085,11 @@ msgstr ""
 msgid "Notification Sounds"
 msgstr ""
 
-#: src/Navigation.tsx:521
+#: src/Navigation.tsx:529
 #: src/view/screens/Notifications.tsx:132
 #: src/view/screens/Notifications.tsx:169
-#: src/view/shell/bottom-bar/BottomBar.tsx:227
-#: src/view/shell/desktop/LeftNav.tsx:356
+#: src/view/shell/bottom-bar/BottomBar.tsx:230
+#: src/view/shell/desktop/LeftNav.tsx:362
 #: src/view/shell/Drawer.tsx:457
 #: src/view/shell/Drawer.tsx:458
 msgid "Notifications"
@@ -4008,7 +4125,7 @@ msgstr "Вимкнено"
 msgid "Oh no!"
 msgstr "О, ні!"
 
-#: src/screens/Onboarding/StepInterests/index.tsx:138
+#: src/screens/Onboarding/StepInterests/index.tsx:152
 msgid "Oh no! Something went wrong."
 msgstr "Ой! Щось пішло не так."
 
@@ -4032,9 +4149,13 @@ msgstr ""
 msgid "on {str}"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:256
+#: src/view/screens/Settings/index.tsx:257
 msgid "Onboarding reset"
 msgstr "Скинути ознайомлення"
+
+#: src/tours/Tooltip.tsx:118
+msgid "Onboarding tour step {0}: {1}"
+msgstr ""
 
 #: src/view/com/composer/Composer.tsx:522
 msgid "One or more images is missing alt text."
@@ -4052,7 +4173,7 @@ msgstr ""
 #~ msgid "Only {0} can reply."
 #~ msgstr "Тільки {0} можуть відповідати."
 
-#: src/screens/Signup/StepHandle.tsx:98
+#: src/screens/Signup/StepHandle.tsx:149
 msgid "Only contains letters, numbers, and hyphens"
 msgstr "Тільки літери, цифри та дефіс"
 
@@ -4068,7 +4189,7 @@ msgstr "Ой, щось пішло не так!"
 msgid "Oops!"
 msgstr "Ой!"
 
-#: src/screens/Onboarding/StepFinished.tsx:253
+#: src/screens/Onboarding/StepFinished.tsx:261
 msgid "Open"
 msgstr "Відкрити"
 
@@ -4094,7 +4215,7 @@ msgstr "Емоджі"
 msgid "Open feed options menu"
 msgstr "Відкрити меню налаштувань стрічки"
 
-#: src/view/screens/Settings/index.tsx:736
+#: src/view/screens/Settings/index.tsx:737
 msgid "Open links with in-app browser"
 msgstr "Вбудований браузер"
 
@@ -4114,16 +4235,16 @@ msgstr "Відкрити навігацію"
 msgid "Open post options menu"
 msgstr "Відкрити меню налаштувань посту"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:451
+#: src/screens/StarterPack/StarterPackScreen.tsx:529
 msgid "Open starter pack menu"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:860
-#: src/view/screens/Settings/index.tsx:870
+#: src/view/screens/Settings/index.tsx:861
+#: src/view/screens/Settings/index.tsx:871
 msgid "Open storybook page"
 msgstr "Відкрити storybook сторінку"
 
-#: src/view/screens/Settings/index.tsx:848
+#: src/view/screens/Settings/index.tsx:849
 msgid "Open system log"
 msgstr "Відкрити системний журнал"
 
@@ -4135,7 +4256,7 @@ msgstr "Відкриває меню з {numItems} опціями"
 msgid "Opens a dialog to choose who can reply to this thread"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:510
+#: src/view/screens/Settings/index.tsx:511
 msgid "Opens accessibility settings"
 msgstr ""
 
@@ -4151,7 +4272,7 @@ msgstr "Відкриває додаткову інформацію про зап
 msgid "Opens camera on device"
 msgstr "Відкриває камеру на пристрої"
 
-#: src/view/screens/Settings/index.tsx:639
+#: src/view/screens/Settings/index.tsx:640
 msgid "Opens chat settings"
 msgstr ""
 
@@ -4159,7 +4280,7 @@ msgstr ""
 msgid "Opens composer"
 msgstr "Відкрити редактор"
 
-#: src/view/screens/Settings/index.tsx:531
+#: src/view/screens/Settings/index.tsx:532
 msgid "Opens configurable language settings"
 msgstr "Відкриває налаштування мов"
 
@@ -4167,7 +4288,7 @@ msgstr "Відкриває налаштування мов"
 msgid "Opens device photo gallery"
 msgstr "Відкриває фотогалерею пристрою"
 
-#: src/view/screens/Settings/index.tsx:671
+#: src/view/screens/Settings/index.tsx:672
 msgid "Opens external embeds settings"
 msgstr "Відкриває налаштування зовнішніх вбудувань"
 
@@ -4189,27 +4310,27 @@ msgstr ""
 msgid "Opens list of invite codes"
 msgstr "Відкриває список кодів запрошення"
 
-#: src/view/screens/Settings/index.tsx:808
+#: src/view/screens/Settings/index.tsx:809
 msgid "Opens modal for account deactivation confirmation"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:830
+#: src/view/screens/Settings/index.tsx:831
 msgid "Opens modal for account deletion confirmation. Requires email code"
 msgstr "Відкриває модальне вікно для підтвердження видалення облікового запису. Потребує код з електронної пошти"
 
-#: src/view/screens/Settings/index.tsx:765
+#: src/view/screens/Settings/index.tsx:766
 msgid "Opens modal for changing your Bluesky password"
 msgstr "Відкриває модальне вікно для зміни паролю в Bluesky"
 
-#: src/view/screens/Settings/index.tsx:720
+#: src/view/screens/Settings/index.tsx:721
 msgid "Opens modal for choosing a new Bluesky handle"
 msgstr "Відкриває модальне вікно для вибору псевдоніму в Bluesky"
 
-#: src/view/screens/Settings/index.tsx:788
+#: src/view/screens/Settings/index.tsx:789
 msgid "Opens modal for downloading your Bluesky account data (repository)"
 msgstr "Відкриває модальне вікно для завантаження даних з вашого облікового запису Bluesky (репозиторій)"
 
-#: src/view/screens/Settings/index.tsx:1008
+#: src/view/screens/Settings/index.tsx:1009
 msgid "Opens modal for email verification"
 msgstr "Відкриває модальне вікно для перевірки електронної пошти"
 
@@ -4217,11 +4338,11 @@ msgstr "Відкриває модальне вікно для перевірки
 msgid "Opens modal for using custom domain"
 msgstr "Відкриває діалог налаштування власного домену як псевдоніму"
 
-#: src/view/screens/Settings/index.tsx:556
+#: src/view/screens/Settings/index.tsx:557
 msgid "Opens moderation settings"
 msgstr "Відкриває налаштування модерації"
 
-#: src/screens/Login/LoginForm.tsx:228
+#: src/screens/Login/LoginForm.tsx:247
 msgid "Opens password reset form"
 msgstr "Відкриває форму скидання пароля"
 
@@ -4230,15 +4351,15 @@ msgstr "Відкриває форму скидання пароля"
 #~ msgid "Opens screen to edit Saved Feeds"
 #~ msgstr "Відкриває сторінку з усіма збереженими стрічками"
 
-#: src/view/screens/Settings/index.tsx:617
+#: src/view/screens/Settings/index.tsx:618
 msgid "Opens screen with all saved feeds"
 msgstr "Відкриває сторінку з усіма збереженими каналами"
 
-#: src/view/screens/Settings/index.tsx:698
+#: src/view/screens/Settings/index.tsx:699
 msgid "Opens the app password settings"
 msgstr "Відкриває налаштування паролів для застосунків"
 
-#: src/view/screens/Settings/index.tsx:574
+#: src/view/screens/Settings/index.tsx:575
 msgid "Opens the Following feed preferences"
 msgstr "Відкриває налаштування стрічки підписок"
 
@@ -4250,20 +4371,20 @@ msgstr "Відкриває посилання"
 #~ msgid "Opens the message settings page"
 #~ msgstr ""
 
-#: src/view/screens/Settings/index.tsx:861
-#: src/view/screens/Settings/index.tsx:871
+#: src/view/screens/Settings/index.tsx:862
+#: src/view/screens/Settings/index.tsx:872
 msgid "Opens the storybook page"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:849
+#: src/view/screens/Settings/index.tsx:850
 msgid "Opens the system log page"
 msgstr "Відкриває системний журнал"
 
-#: src/view/screens/Settings/index.tsx:595
+#: src/view/screens/Settings/index.tsx:596
 msgid "Opens the threads preferences"
 msgstr "Відкриває налаштування гілок"
 
-#: src/view/com/notifications/FeedItem.tsx:513
+#: src/view/com/notifications/FeedItem.tsx:524
 #: src/view/com/util/UserAvatar.tsx:422
 msgid "Opens this profile"
 msgstr ""
@@ -4314,8 +4435,8 @@ msgstr "Сторінку не знайдено"
 msgid "Page Not Found"
 msgstr "Сторінку не знайдено"
 
-#: src/screens/Login/LoginForm.tsx:204
-#: src/screens/Signup/StepInfo/index.tsx:102
+#: src/screens/Login/LoginForm.tsx:225
+#: src/screens/Signup/StepInfo/index.tsx:162
 #: src/view/com/modals/DeleteAccount.tsx:257
 #: src/view/com/modals/DeleteAccount.tsx:264
 msgid "Password"
@@ -4337,15 +4458,16 @@ msgstr "Пароль змінено!"
 msgid "Pause"
 msgstr ""
 
+#: src/screens/StarterPack/StarterPackScreen.tsx:170
 #: src/view/screens/Search/Search.tsx:369
 msgid "People"
 msgstr "Люди"
 
-#: src/Navigation.tsx:172
+#: src/Navigation.tsx:175
 msgid "People followed by @{0}"
 msgstr "Люди, на яких підписаний(-на) @{0}"
 
-#: src/Navigation.tsx:165
+#: src/Navigation.tsx:168
 msgid "People following @{0}"
 msgstr "Люди, які підписані на @{0}"
 
@@ -4362,11 +4484,11 @@ msgid "Person toggle"
 msgstr ""
 
 #: src/screens/Onboarding/index.tsx:28
-#: src/screens/Onboarding/state.ts:93
+#: src/screens/Onboarding/state.ts:94
 msgid "Pets"
 msgstr "Домашні улюбленці"
 
-#: src/screens/Onboarding/state.ts:94
+#: src/screens/Onboarding/state.ts:95
 msgid "Photography"
 msgstr ""
 
@@ -4417,15 +4539,16 @@ msgstr "Відтворити відео"
 msgid "Plays the GIF"
 msgstr "Відтворює GIF"
 
-#: src/screens/Signup/state.ts:234
+#: src/screens/Signup/state.ts:210
 msgid "Please choose your handle."
 msgstr "Будь ласка, оберіть псевдонім."
 
-#: src/screens/Signup/state.ts:227
+#: src/screens/Signup/state.ts:203
+#: src/screens/Signup/StepInfo/index.tsx:81
 msgid "Please choose your password."
 msgstr "Будь ласка, оберіть ваш пароль."
 
-#: src/screens/Signup/state.ts:248
+#: src/screens/Signup/state.ts:224
 msgid "Please complete the verification captcha."
 msgstr "Будь ласка, завершіть перевірку Captcha."
 
@@ -4445,9 +4568,14 @@ msgstr "Будь ласка, введіть унікальну назву для
 msgid "Please enter a valid word, tag, or phrase to mute"
 msgstr "Будь ласка, введіть допустиме слово, тег або фразу для ігнорування"
 
-#: src/screens/Signup/state.ts:213
+#: src/screens/Signup/state.ts:189
+#: src/screens/Signup/StepInfo/index.tsx:69
 msgid "Please enter your email."
 msgstr "Будь ласка, введіть адресу ел. пошти."
+
+#: src/screens/Signup/StepInfo/index.tsx:63
+msgid "Please enter your invite code."
+msgstr ""
 
 #: src/view/com/modals/DeleteAccount.tsx:253
 msgid "Please enter your password as well:"
@@ -4475,7 +4603,7 @@ msgid "Please wait for your link card to finish loading"
 msgstr "Будь ласка, зачекайте доки завершиться створення попереднього перегляду для посилання"
 
 #: src/screens/Onboarding/index.tsx:34
-#: src/screens/Onboarding/state.ts:95
+#: src/screens/Onboarding/state.ts:96
 msgid "Politics"
 msgstr "Політика"
 
@@ -4498,9 +4626,9 @@ msgstr "Пост"
 msgid "Post by {0}"
 msgstr "Пост від {0}"
 
-#: src/Navigation.tsx:191
-#: src/Navigation.tsx:198
-#: src/Navigation.tsx:205
+#: src/Navigation.tsx:194
+#: src/Navigation.tsx:201
+#: src/Navigation.tsx:208
 msgid "Post by @{0}"
 msgstr "Пост від @{0}"
 
@@ -4539,6 +4667,7 @@ msgstr "Пост не знайдено"
 msgid "posts"
 msgstr "пости"
 
+#: src/screens/StarterPack/StarterPackScreen.tsx:172
 #: src/view/screens/Profile.tsx:209
 msgid "Posts"
 msgstr "Пости"
@@ -4566,7 +4695,7 @@ msgstr "Змінити хостинг-провайдера"
 #: src/components/Error.tsx:85
 #: src/components/Lists.tsx:93
 #: src/screens/Messages/Conversation/MessageListError.tsx:24
-#: src/screens/Signup/index.tsx:238
+#: src/screens/Signup/BackNextButtons.tsx:46
 msgid "Press to retry"
 msgstr "Натисніть, щоб повторити спробу"
 
@@ -4591,15 +4720,15 @@ msgstr "Основна мова"
 msgid "Prioritize Your Follows"
 msgstr "Пріоритезувати ваші підписки"
 
-#: src/view/screens/Settings/index.tsx:654
-#: src/view/shell/desktop/RightNav.tsx:77
+#: src/view/screens/Settings/index.tsx:655
+#: src/view/shell/desktop/RightNav.tsx:81
 msgid "Privacy"
 msgstr "Конфіденційність"
 
-#: src/Navigation.tsx:246
+#: src/Navigation.tsx:249
 #: src/screens/Signup/StepInfo/Policies.tsx:56
 #: src/view/screens/PrivacyPolicy.tsx:29
-#: src/view/screens/Settings/index.tsx:957
+#: src/view/screens/Settings/index.tsx:958
 #: src/view/shell/Drawer.tsx:285
 msgid "Privacy Policy"
 msgstr "Політика конфіденційності"
@@ -4617,8 +4746,8 @@ msgstr "Обробка..."
 msgid "profile"
 msgstr "профіль"
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:272
-#: src/view/shell/desktop/LeftNav.tsx:387
+#: src/view/shell/bottom-bar/BottomBar.tsx:275
+#: src/view/shell/desktop/LeftNav.tsx:393
 #: src/view/shell/Drawer.tsx:78
 #: src/view/shell/Drawer.tsx:542
 #: src/view/shell/Drawer.tsx:543
@@ -4629,11 +4758,11 @@ msgstr "Профіль"
 msgid "Profile updated"
 msgstr "Профіль оновлено"
 
-#: src/view/screens/Settings/index.tsx:1021
+#: src/view/screens/Settings/index.tsx:1022
 msgid "Protect your account by verifying your email."
 msgstr "Захистіть свій обліковий запис, підтвердивши свою електронну адресу."
 
-#: src/screens/Onboarding/StepFinished.tsx:239
+#: src/screens/Onboarding/StepFinished.tsx:247
 msgid "Public"
 msgstr "Публічний"
 
@@ -4663,6 +4792,10 @@ msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:104
 msgid "QR code saved to your camera roll!"
+msgstr ""
+
+#: src/tours/Tooltip.tsx:111
+msgid "Quick tip"
 msgstr ""
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:116
@@ -4723,7 +4856,7 @@ msgid "Reload conversations"
 msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:286
-#: src/components/FeedCard.tsx:325
+#: src/components/FeedCard.tsx:309
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:95
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:102
 #: src/view/com/feeds/FeedSourceCard.tsx:317
@@ -4772,7 +4905,7 @@ msgstr "Видалити стрічку?"
 msgid "Remove from my feeds"
 msgstr "Вилучити з моїх стрічок"
 
-#: src/components/FeedCard.tsx:320
+#: src/components/FeedCard.tsx:304
 #: src/view/com/feeds/FeedSourceCard.tsx:312
 msgid "Remove from my feeds?"
 msgstr "Видалити з моїх стрічок?"
@@ -4924,8 +5057,8 @@ msgstr ""
 msgid "Report post"
 msgstr "Поскаржитись на пост"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:504
-#: src/screens/StarterPack/StarterPackScreen.tsx:507
+#: src/screens/StarterPack/StarterPackScreen.tsx:582
+#: src/screens/StarterPack/StarterPackScreen.tsx:585
 msgid "Report starter pack"
 msgstr ""
 
@@ -4971,7 +5104,7 @@ msgstr "Репост"
 msgid "Repost"
 msgstr "Репостити"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:446
+#: src/screens/StarterPack/StarterPackScreen.tsx:524
 #: src/view/com/util/post-ctrls/RepostButton.tsx:86
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:47
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:93
@@ -4994,7 +5127,7 @@ msgstr "{0} зробив(-ла) репост"
 msgid "Reposted by <0><1/></0>"
 msgstr "Зроблено репост від <0><1/></0>"
 
-#: src/view/com/notifications/FeedItem.tsx:184
+#: src/view/com/notifications/FeedItem.tsx:187
 msgid "reposted your post"
 msgstr "зробив(-ла) репост вашого допису"
 
@@ -5020,7 +5153,7 @@ msgstr "Вимагати опис зображень перед публікац
 msgid "Require email code to log into your account"
 msgstr ""
 
-#: src/screens/Signup/StepInfo/index.tsx:69
+#: src/screens/Signup/StepInfo/index.tsx:132
 msgid "Required for this provider"
 msgstr "Вимагається цим хостинг-провайдером"
 
@@ -5037,8 +5170,8 @@ msgstr "Код підтвердження"
 msgid "Reset Code"
 msgstr "Код скидання"
 
-#: src/view/screens/Settings/index.tsx:900
-#: src/view/screens/Settings/index.tsx:903
+#: src/view/screens/Settings/index.tsx:901
+#: src/view/screens/Settings/index.tsx:904
 msgid "Reset onboarding state"
 msgstr ""
 
@@ -5046,20 +5179,20 @@ msgstr ""
 msgid "Reset password"
 msgstr "Скинути пароль"
 
-#: src/view/screens/Settings/index.tsx:880
-#: src/view/screens/Settings/index.tsx:883
+#: src/view/screens/Settings/index.tsx:881
+#: src/view/screens/Settings/index.tsx:884
 msgid "Reset preferences state"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:901
+#: src/view/screens/Settings/index.tsx:902
 msgid "Resets the onboarding state"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:881
+#: src/view/screens/Settings/index.tsx:882
 msgid "Resets the preferences state"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:292
+#: src/screens/Login/LoginForm.tsx:312
 msgid "Retries login"
 msgstr "Повторити спробу"
 
@@ -5072,12 +5205,12 @@ msgstr "Повторити останню дію, яка спричинила п
 #: src/components/Error.tsx:90
 #: src/components/Lists.tsx:104
 #: src/components/StarterPack/ProfileStarterPacks.tsx:318
-#: src/screens/Login/LoginForm.tsx:291
-#: src/screens/Login/LoginForm.tsx:298
+#: src/screens/Login/LoginForm.tsx:311
+#: src/screens/Login/LoginForm.tsx:318
 #: src/screens/Messages/Conversation/MessageListError.tsx:25
-#: src/screens/Onboarding/StepInterests/index.tsx:231
-#: src/screens/Onboarding/StepInterests/index.tsx:234
-#: src/screens/Signup/index.tsx:245
+#: src/screens/Onboarding/StepInterests/index.tsx:250
+#: src/screens/Onboarding/StepInterests/index.tsx:253
+#: src/screens/Signup/BackNextButtons.tsx:52
 #: src/view/com/util/error/ErrorMessage.tsx:55
 #: src/view/com/util/error/ErrorScreen.tsx:72
 msgid "Retry"
@@ -5088,7 +5221,7 @@ msgstr "Повторити спробу"
 #~ msgstr ""
 
 #: src/components/Error.tsx:98
-#: src/screens/StarterPack/StarterPackScreen.tsx:650
+#: src/screens/StarterPack/StarterPackScreen.tsx:728
 #: src/view/screens/ProfileList.tsx:971
 msgid "Return to previous page"
 msgstr "Повернутися до попередньої сторінки"
@@ -5184,13 +5317,13 @@ msgstr "Зберігає налаштування обрізання зобра�
 
 #: src/components/dms/ChatEmptyPill.tsx:33
 #: src/components/NewskieDialog.tsx:105
-#: src/view/com/notifications/FeedItem.tsx:372
-#: src/view/com/notifications/FeedItem.tsx:397
+#: src/view/com/notifications/FeedItem.tsx:383
+#: src/view/com/notifications/FeedItem.tsx:408
 msgid "Say hello!"
 msgstr ""
 
 #: src/screens/Onboarding/index.tsx:33
-#: src/screens/Onboarding/state.ts:96
+#: src/screens/Onboarding/state.ts:97
 msgid "Science"
 msgstr "Наука"
 
@@ -5199,16 +5332,16 @@ msgid "Scroll to top"
 msgstr "Прогорнути вгору"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:504
-#: src/Navigation.tsx:516
-#: src/view/com/auth/LoggedOut.tsx:119
+#: src/Navigation.tsx:524
+#: src/view/com/auth/LoggedOut.tsx:124
 #: src/view/com/modals/ListAddRemoveUsers.tsx:75
 #: src/view/com/util/forms/SearchInput.tsx:67
 #: src/view/com/util/forms/SearchInput.tsx:79
 #: src/view/screens/Search/Search.tsx:421
 #: src/view/screens/Search/Search.tsx:791
 #: src/view/screens/Search/Search.tsx:813
-#: src/view/shell/bottom-bar/BottomBar.tsx:179
-#: src/view/shell/desktop/LeftNav.tsx:349
+#: src/view/shell/bottom-bar/BottomBar.tsx:182
+#: src/view/shell/desktop/LeftNav.tsx:354
 #: src/view/shell/desktop/Search.tsx:194
 #: src/view/shell/desktop/Search.tsx:203
 #: src/view/shell/Drawer.tsx:394
@@ -5240,8 +5373,8 @@ msgstr ""
 #~ msgid "Search for someone to start a conversation with."
 #~ msgstr ""
 
-#: src/view/com/auth/LoggedOut.tsx:101
-#: src/view/com/auth/LoggedOut.tsx:102
+#: src/view/com/auth/LoggedOut.tsx:106
+#: src/view/com/auth/LoggedOut.tsx:107
 #: src/view/com/modals/ListAddRemoveUsers.tsx:70
 msgid "Search for users"
 msgstr "Пошук користувачів"
@@ -5370,11 +5503,11 @@ msgstr "Оберіть мови постів, які ви хочете бачи�
 msgid "Select your app language for the default text to display in the app."
 msgstr "Оберіть мову застосунку для відображення тексту за замовчуванням."
 
-#: src/screens/Signup/StepInfo/index.tsx:135
+#: src/screens/Signup/StepInfo/index.tsx:192
 msgid "Select your date of birth"
 msgstr "Оберіть дату народження"
 
-#: src/screens/Onboarding/StepInterests/index.tsx:206
+#: src/screens/Onboarding/StepInterests/index.tsx:225
 msgid "Select your interests from the options below"
 msgstr "Виберіть ваші інтереси із нижченаведених варіантів"
 
@@ -5487,23 +5620,23 @@ msgstr "Налаштуйте ваш обліковий запис"
 msgid "Sets Bluesky username"
 msgstr "Встановлює псевдонім Bluesky"
 
-#: src/view/screens/Settings/index.tsx:461
+#: src/view/screens/Settings/index.tsx:462
 msgid "Sets color theme to dark"
 msgstr "Встановлює темну тему"
 
-#: src/view/screens/Settings/index.tsx:454
+#: src/view/screens/Settings/index.tsx:455
 msgid "Sets color theme to light"
 msgstr "Встановлює світлу тему"
 
-#: src/view/screens/Settings/index.tsx:448
+#: src/view/screens/Settings/index.tsx:449
 msgid "Sets color theme to system setting"
 msgstr "Встановлює тему відповідно до системних налаштувань"
 
-#: src/view/screens/Settings/index.tsx:487
+#: src/view/screens/Settings/index.tsx:488
 msgid "Sets dark theme to the dark theme"
 msgstr "Встановлює чорний колір для темної теми"
 
-#: src/view/screens/Settings/index.tsx:480
+#: src/view/screens/Settings/index.tsx:481
 msgid "Sets dark theme to the dim theme"
 msgstr "Встановлює тьмяний колір для темної теми"
 
@@ -5523,9 +5656,9 @@ msgstr "Встановлює співвідношення сторін зобр�
 msgid "Sets image aspect ratio to wide"
 msgstr "Встановлює співвідношення сторін зображення до ширини"
 
-#: src/Navigation.tsx:147
-#: src/view/screens/Settings/index.tsx:332
-#: src/view/shell/desktop/LeftNav.tsx:395
+#: src/Navigation.tsx:150
+#: src/view/screens/Settings/index.tsx:333
+#: src/view/shell/desktop/LeftNav.tsx:401
 #: src/view/shell/Drawer.tsx:559
 #: src/view/shell/Drawer.tsx:560
 msgid "Settings"
@@ -5540,13 +5673,13 @@ msgid "Sexually Suggestive"
 msgstr "З сексуальним підтекстом"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:174
-#: src/screens/StarterPack/StarterPackScreen.tsx:340
-#: src/screens/StarterPack/StarterPackScreen.tsx:493
+#: src/screens/StarterPack/StarterPackScreen.tsx:400
+#: src/screens/StarterPack/StarterPackScreen.tsx:571
 #: src/view/com/profile/ProfileMenu.tsx:219
 #: src/view/com/profile/ProfileMenu.tsx:228
 #: src/view/com/util/forms/PostDropdownBtn.tsx:307
 #: src/view/com/util/forms/PostDropdownBtn.tsx:316
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:304
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:311
 #: src/view/screens/ProfileList.tsx:428
 msgid "Share"
 msgstr "Поширити"
@@ -5566,7 +5699,7 @@ msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:377
 #: src/view/com/util/forms/PostDropdownBtn.tsx:461
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:320
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:327
 msgid "Share anyway"
 msgstr "Все одно поширити"
 
@@ -5577,7 +5710,7 @@ msgstr "Поширити стрічку"
 
 #: src/components/StarterPack/ShareDialog.tsx:123
 #: src/components/StarterPack/ShareDialog.tsx:130
-#: src/screens/StarterPack/StarterPackScreen.tsx:497
+#: src/screens/StarterPack/StarterPackScreen.tsx:575
 msgid "Share link"
 msgstr ""
 
@@ -5595,7 +5728,7 @@ msgstr ""
 msgid "Share QR code"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:333
+#: src/screens/StarterPack/StarterPackScreen.tsx:393
 msgid "Share this starter pack"
 msgstr ""
 
@@ -5614,7 +5747,7 @@ msgstr "Поширює посилання"
 #: src/components/moderation/ContentHider.tsx:116
 #: src/components/moderation/LabelPreference.tsx:136
 #: src/components/moderation/PostHider.tsx:122
-#: src/view/screens/Settings/index.tsx:381
+#: src/view/screens/Settings/index.tsx:382
 msgid "Show"
 msgstr "Показувати"
 
@@ -5622,7 +5755,7 @@ msgstr "Показувати"
 #~ msgid "Show all replies"
 #~ msgstr "Показати всі відповіді"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:169
+#: src/view/com/util/post-embeds/GifEmbed.tsx:166
 msgid "Show alt text"
 msgstr ""
 
@@ -5741,17 +5874,17 @@ msgstr "Показує дописи з {0} у вашій стрічці"
 #: src/components/dialogs/Signin.tsx:99
 #: src/screens/Login/index.tsx:100
 #: src/screens/Login/index.tsx:119
-#: src/screens/Login/LoginForm.tsx:157
+#: src/screens/Login/LoginForm.tsx:177
 #: src/view/com/auth/SplashScreen.tsx:63
 #: src/view/com/auth/SplashScreen.tsx:72
 #: src/view/com/auth/SplashScreen.web.tsx:112
 #: src/view/com/auth/SplashScreen.web.tsx:121
-#: src/view/shell/bottom-bar/BottomBar.tsx:312
-#: src/view/shell/bottom-bar/BottomBar.tsx:313
 #: src/view/shell/bottom-bar/BottomBar.tsx:315
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:204
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:205
+#: src/view/shell/bottom-bar/BottomBar.tsx:316
+#: src/view/shell/bottom-bar/BottomBar.tsx:318
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:207
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:208
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:210
 #: src/view/shell/NavSignupCard.tsx:69
 #: src/view/shell/NavSignupCard.tsx:70
 #: src/view/shell/NavSignupCard.tsx:72
@@ -5779,12 +5912,12 @@ msgstr "Увійдіть у Bluesky або створіть новий облі�
 msgid "Sign out"
 msgstr "Вийти"
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:302
-#: src/view/shell/bottom-bar/BottomBar.tsx:303
 #: src/view/shell/bottom-bar/BottomBar.tsx:305
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:194
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:195
+#: src/view/shell/bottom-bar/BottomBar.tsx:306
+#: src/view/shell/bottom-bar/BottomBar.tsx:308
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:197
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:198
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:200
 #: src/view/shell/NavSignupCard.tsx:60
 #: src/view/shell/NavSignupCard.tsx:61
 #: src/view/shell/NavSignupCard.tsx:63
@@ -5800,7 +5933,7 @@ msgstr "Зареєструйтеся або увійдіть, щоб приєд�
 msgid "Sign-in Required"
 msgstr "Необхідно увійти для перегляду"
 
-#: src/view/screens/Settings/index.tsx:391
+#: src/view/screens/Settings/index.tsx:392
 msgid "Signed in as"
 msgstr "Ви увійшли як"
 
@@ -5809,21 +5942,21 @@ msgstr "Ви увійшли як"
 msgid "Signed in as @{0}"
 msgstr "Ви увійшли як @{0}"
 
-#: src/view/com/notifications/FeedItem.tsx:197
+#: src/view/com/notifications/FeedItem.tsx:208
 msgid "signed up with your starter pack"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:300
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:307
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:327
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:334
 msgid "Signup without a starter pack"
 msgstr ""
 
-#: src/screens/Onboarding/StepInterests/index.tsx:245
+#: src/screens/Onboarding/StepInterests/index.tsx:264
 #: src/screens/StarterPack/Wizard/index.tsx:192
 msgid "Skip"
 msgstr "Пропустити"
 
-#: src/screens/Onboarding/StepInterests/index.tsx:242
+#: src/screens/Onboarding/StepInterests/index.tsx:261
 msgid "Skip this flow"
 msgstr "Пропустити цей процес"
 
@@ -5831,6 +5964,10 @@ msgstr "Пропустити цей процес"
 #: src/screens/Onboarding/state.ts:85
 msgid "Software Dev"
 msgstr "Розробка П/З"
+
+#: src/components/FeedInterstitials.tsx:378
+msgid "Some other feeds you might like"
+msgstr ""
 
 #: src/components/WhoCanReply.tsx:72
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:47
@@ -5856,8 +5993,8 @@ msgstr ""
 msgid "Something went wrong, please try again."
 msgstr "Щось пішло не так. Будь ласка, спробуйте ще раз."
 
-#: src/App.native.tsx:96
-#: src/App.web.tsx:78
+#: src/App.native.tsx:98
+#: src/App.web.tsx:80
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "Даруйте! Ваш сеанс вичерпався. Будь ласка, увійдіть знову."
 
@@ -5887,7 +6024,7 @@ msgid "Spam; excessive mentions or replies"
 msgstr "Спам; надмірні згадки або відповіді"
 
 #: src/screens/Onboarding/index.tsx:27
-#: src/screens/Onboarding/state.ts:97
+#: src/screens/Onboarding/state.ts:98
 msgid "Sports"
 msgstr "Спорт"
 
@@ -5907,17 +6044,22 @@ msgstr ""
 msgid "Start chatting"
 msgstr ""
 
+#: src/tours/Tooltip.tsx:99
+msgid "Start of onboarding tour window. Do not move backward. Instead, go forward for more options, or press to skip."
+msgstr ""
+
 #: src/lib/generate-starterpack.ts:68
-#: src/Navigation.tsx:325
+#: src/Navigation.tsx:328
+#: src/Navigation.tsx:333
 #: src/screens/StarterPack/Wizard/index.tsx:183
 msgid "Starter Pack"
 msgstr ""
 
-#: src/components/StarterPack/StarterPackCard.tsx:65
+#: src/components/StarterPack/StarterPackCard.tsx:70
 msgid "Starter pack by {0}"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:614
+#: src/screens/StarterPack/StarterPackScreen.tsx:692
 msgid "Starter pack is invalid"
 msgstr ""
 
@@ -5933,7 +6075,7 @@ msgstr ""
 #~ msgid "Status page"
 #~ msgstr "Сторінка стану"
 
-#: src/view/screens/Settings/index.tsx:963
+#: src/view/screens/Settings/index.tsx:964
 msgid "Status Page"
 msgstr ""
 
@@ -5941,16 +6083,16 @@ msgstr ""
 #~ msgid "Step"
 #~ msgstr "Крок"
 
-#: src/screens/Signup/index.tsx:192
+#: src/screens/Signup/index.tsx:125
 msgid "Step {0} of {1}"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:304
+#: src/view/screens/Settings/index.tsx:305
 msgid "Storage cleared, you need to restart the app now."
 msgstr "Сховище очищено, тепер вам треба перезапустити застосунок."
 
-#: src/Navigation.tsx:226
-#: src/view/screens/Settings/index.tsx:863
+#: src/Navigation.tsx:229
+#: src/view/screens/Settings/index.tsx:864
 msgid "Storybook"
 msgstr ""
 
@@ -5994,6 +6136,7 @@ msgstr ""
 #~ msgid "Suggested Follows"
 #~ msgstr "Пропоновані підписки"
 
+#: src/components/FeedInterstitials.tsx:246
 #: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:65
 msgid "Suggested for you"
 msgstr "Пропозиції для вас"
@@ -6002,7 +6145,7 @@ msgstr "Пропозиції для вас"
 msgid "Suggestive"
 msgstr "Непристойний"
 
-#: src/Navigation.tsx:241
+#: src/Navigation.tsx:244
 #: src/view/screens/Support.tsx:30
 #: src/view/screens/Support.tsx:33
 msgid "Support"
@@ -6013,6 +6156,10 @@ msgstr "Підтримка"
 msgid "Switch Account"
 msgstr "Перемикнути обліковий запис"
 
+#: src/tours/HomeTour.tsx:48
+msgid "Switch between feeds to control your experience."
+msgstr ""
+
 #: src/view/screens/Settings/index.tsx:160
 msgid "Switch to {0}"
 msgstr "Переключитися на {0}"
@@ -6021,11 +6168,11 @@ msgstr "Переключитися на {0}"
 msgid "Switches the account you are logged in to"
 msgstr "Переключає обліковий запис"
 
-#: src/view/screens/Settings/index.tsx:445
+#: src/view/screens/Settings/index.tsx:446
 msgid "System"
 msgstr "Системне"
 
-#: src/view/screens/Settings/index.tsx:851
+#: src/view/screens/Settings/index.tsx:852
 msgid "System log"
 msgstr "Системний журнал"
 
@@ -6041,12 +6188,24 @@ msgstr "Меню тегів: {displayTag}"
 msgid "Tall"
 msgstr "Високе"
 
+#: src/components/ProgressGuide/Toast.tsx:150
+msgid "Tap to dismiss"
+msgstr ""
+
 #: src/view/com/util/images/AutoSizedImage.tsx:70
 msgid "Tap to view fully"
 msgstr "Торкніться, щоб переглянути повністю"
 
+#: src/state/shell/progress-guide.tsx:171
+msgid "Task complete - 10 likes!"
+msgstr ""
+
+#: src/components/ProgressGuide/List.tsx:49
+msgid "Teach our algorithm what you like"
+msgstr ""
+
 #: src/screens/Onboarding/index.tsx:36
-#: src/screens/Onboarding/state.ts:98
+#: src/screens/Onboarding/state.ts:99
 msgid "Tech"
 msgstr "Технології"
 
@@ -6058,13 +6217,13 @@ msgstr ""
 msgid "Tell us a little more"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:86
+#: src/view/shell/desktop/RightNav.tsx:90
 msgid "Terms"
 msgstr "Умови"
 
-#: src/Navigation.tsx:251
+#: src/Navigation.tsx:254
 #: src/screens/Signup/StepInfo/Policies.tsx:49
-#: src/view/screens/Settings/index.tsx:951
+#: src/view/screens/Settings/index.tsx:952
 #: src/view/screens/TermsOfService.tsx:29
 #: src/view/shell/Drawer.tsx:279
 msgid "Terms of Service"
@@ -6095,12 +6254,14 @@ msgstr "Дякуємо. Вашу скаргу було надіслано."
 msgid "That contains the following:"
 msgstr "Що містить наступне:"
 
-#: src/screens/Signup/index.tsx:100
+#: src/screens/Signup/StepHandle.tsx:50
 msgid "That handle is already taken."
 msgstr "Цей псевдонім вже зайнятий."
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:105
-#: src/screens/StarterPack/StarterPackScreen.tsx:106
+#: src/screens/StarterPack/StarterPackScreen.tsx:96
+#: src/screens/StarterPack/StarterPackScreen.tsx:97
+#: src/screens/StarterPack/StarterPackScreen.tsx:136
+#: src/screens/StarterPack/StarterPackScreen.tsx:137
 #: src/screens/StarterPack/Wizard/index.tsx:106
 #: src/screens/StarterPack/Wizard/index.tsx:114
 msgid "That starter pack could not be found."
@@ -6123,7 +6284,12 @@ msgstr "Правила Спільноти переміщено до <0/>"
 msgid "The Copyright Policy has been moved to <0/>"
 msgstr "Політику захисту авторського права переміщено до <0/>"
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:321
+#: src/state/shell/progress-guide.tsx:172
+#: src/state/shell/progress-guide.tsx:177
+msgid "The Discover feed now knows what you like"
+msgstr ""
+
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:348
 msgid "The experience is better in the app. Download Bluesky now and we'll pick back up where you left off."
 msgstr ""
 
@@ -6152,7 +6318,7 @@ msgstr "Можливо цей пост було видалено."
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr "Політика конфіденційності була переміщена до <0/>"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:624
+#: src/screens/StarterPack/StarterPackScreen.tsx:702
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
 msgstr ""
 
@@ -6210,11 +6376,11 @@ msgstr "При з'єднанні з сервером виникла пробле
 msgid "There was an issue contacting your server"
 msgstr "При з'єднанні з вашим сервером виникла проблема"
 
-#: src/view/com/notifications/Feed.tsx:126
+#: src/view/com/notifications/Feed.tsx:125
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "Виникла проблема з завантаженням сповіщень. Натисніть тут, щоб повторити спробу."
 
-#: src/view/com/posts/Feed.tsx:299
+#: src/view/com/posts/Feed.tsx:459
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "Виникла проблема з завантаженням постів. Натисніть тут, щоб повторити спробу."
 
@@ -6410,7 +6576,7 @@ msgid "This post has been deleted."
 msgstr "Цей пост було видалено."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:458
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:317
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:324
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
 msgstr "Цей пост видно лише користувачам, які увійшли до системи. Воно не буде видимим для людей, які не ввійшли до системи."
 
@@ -6471,12 +6637,12 @@ msgstr "Цей користувач не підписаний ні на кого
 msgid "This will delete {0} from your muted words. You can always add it back later."
 msgstr "Це видалить {0} зі ваших ігнорованих слів. Ви завжди можете додати його назад."
 
-#: src/view/screens/Settings/index.tsx:594
+#: src/view/screens/Settings/index.tsx:595
 msgid "Thread preferences"
 msgstr "Налаштування гілок"
 
 #: src/view/screens/PreferencesThreads.tsx:53
-#: src/view/screens/Settings/index.tsx:604
+#: src/view/screens/Settings/index.tsx:605
 msgid "Thread Preferences"
 msgstr "Налаштування гілок"
 
@@ -6488,7 +6654,7 @@ msgstr ""
 msgid "Threaded Mode"
 msgstr "Режим гілок"
 
-#: src/Navigation.tsx:284
+#: src/Navigation.tsx:287
 msgid "Threads Preferences"
 msgstr "Налаштування обговорень"
 
@@ -6539,11 +6705,11 @@ msgctxt "action"
 msgid "Try again"
 msgstr "Спробувати ще раз"
 
-#: src/screens/Onboarding/state.ts:99
+#: src/screens/Onboarding/state.ts:100
 msgid "TV"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:745
+#: src/view/screens/Settings/index.tsx:746
 msgid "Two-factor authentication"
 msgstr ""
 
@@ -6565,14 +6731,14 @@ msgstr "Перестати ігнорувати"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:74
 #: src/screens/Login/index.tsx:78
-#: src/screens/Login/LoginForm.tsx:145
+#: src/screens/Login/LoginForm.tsx:150
 #: src/screens/Login/SetNewPasswordForm.tsx:77
-#: src/screens/Signup/index.tsx:79
+#: src/screens/Signup/index.tsx:75
 #: src/view/com/modals/ChangePassword.tsx:71
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr "Не вдалося зв'язатися з вашим хостинг-провайдером. Перевірте ваше підключення до Інтернету."
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:548
+#: src/screens/StarterPack/StarterPackScreen.tsx:626
 msgid "Unable to delete"
 msgstr ""
 
@@ -6837,7 +7003,7 @@ msgstr "Список користувачів оновлено"
 msgid "User Lists"
 msgstr "Списки користувачів"
 
-#: src/screens/Login/LoginForm.tsx:177
+#: src/screens/Login/LoginForm.tsx:197
 msgid "Username or email address"
 msgstr "Ім'я користувача або електронна адреса"
 
@@ -6876,15 +7042,15 @@ msgstr "Значення:"
 msgid "Verify DNS Record"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:982
+#: src/view/screens/Settings/index.tsx:983
 msgid "Verify email"
 msgstr "Підтвердити електронну адресу"
 
-#: src/view/screens/Settings/index.tsx:1007
+#: src/view/screens/Settings/index.tsx:1008
 msgid "Verify my email"
 msgstr "Підтвердити мою електронну адресу"
 
-#: src/view/screens/Settings/index.tsx:1016
+#: src/view/screens/Settings/index.tsx:1017
 msgid "Verify My Email"
 msgstr "Підтвердити мою електронну адресу"
 
@@ -6905,7 +7071,7 @@ msgstr "Підтвердьте адресу вашої електронної п
 #~ msgid "Version {0}"
 #~ msgstr "Версія {0}"
 
-#: src/view/screens/Settings/index.tsx:935
+#: src/view/screens/Settings/index.tsx:936
 msgid "Version {appVersion} {bundleInfo}"
 msgstr ""
 
@@ -6918,7 +7084,7 @@ msgstr "Відеоігри"
 msgid "View {0}'s avatar"
 msgstr "Переглянути аватар {0}"
 
-#: src/view/com/notifications/FeedItem.tsx:234
+#: src/view/com/notifications/FeedItem.tsx:245
 msgid "View {0}'s profile"
 msgstr ""
 
@@ -6967,7 +7133,7 @@ msgid "View users who like this feed"
 msgstr "Переглянути користувачів, які вподобали цю стрічку"
 
 #: src/view/com/home/HomeHeaderLayout.web.tsx:79
-#: src/view/com/home/HomeHeaderLayoutMobile.tsx:84
+#: src/view/com/home/HomeHeaderLayoutMobile.tsx:86
 msgid "View your feeds and explore more"
 msgstr ""
 
@@ -7002,7 +7168,7 @@ msgstr ""
 msgid "We estimate {estimatedTime} until your account is ready."
 msgstr "Ми оцінюємо {estimatedTime} до готовності вашого облікового запису."
 
-#: src/screens/Onboarding/StepFinished.tsx:231
+#: src/screens/Onboarding/StepFinished.tsx:239
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
 msgstr "Ми сподіваємося, що ви проведете чудово свій час. Пам'ятайте, Bluesky — це:"
 
@@ -7026,7 +7192,7 @@ msgstr "Не вдалося завантажити ваші налаштуван
 msgid "We were unable to load your configured labelers at this time."
 msgstr "Наразі ми не змогли завантажити список ваших маркувальників."
 
-#: src/screens/Onboarding/StepInterests/index.tsx:143
+#: src/screens/Onboarding/StepInterests/index.tsx:157
 msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
 msgstr "Ми не змогли під'єднатися. Будь ласка, спробуйте ще раз, щоб продовжити налаштування свого облікового запису. Якщо помилка повторюється, то ви можете пропустити цей процес."
 
@@ -7034,7 +7200,7 @@ msgstr "Ми не змогли під'єднатися. Будь ласка, с�
 msgid "We will let you know when your account is ready."
 msgstr "Ми повідомимо вас, коли ваш обліковий запис буде готовий."
 
-#: src/screens/Onboarding/StepInterests/index.tsx:148
+#: src/screens/Onboarding/StepInterests/index.tsx:162
 msgid "We'll use this to help customize your experience."
 msgstr "Ми скористаємося цим, щоб підлаштувати Ваш досвід."
 
@@ -7042,7 +7208,7 @@ msgstr "Ми скористаємося цим, щоб підлаштувати 
 msgid "We're having network issues, try again"
 msgstr ""
 
-#: src/screens/Signup/index.tsx:155
+#: src/screens/Signup/index.tsx:89
 msgid "We're so excited to have you join us!"
 msgstr "Ми дуже раді, що ви приєдналися!"
 
@@ -7087,7 +7253,7 @@ msgstr ""
 msgid "Welcome, friend!"
 msgstr ""
 
-#: src/screens/Onboarding/StepInterests/index.tsx:140
+#: src/screens/Onboarding/StepInterests/index.tsx:154
 msgid "What are your interests?"
 msgstr "Чим ви цікавитесь?"
 
@@ -7178,7 +7344,7 @@ msgid "Write your reply"
 msgstr "Написати відповідь"
 
 #: src/screens/Onboarding/index.tsx:25
-#: src/screens/Onboarding/state.ts:100
+#: src/screens/Onboarding/state.ts:101
 msgid "Writers"
 msgstr "Письменники"
 
@@ -7197,7 +7363,7 @@ msgstr "Так"
 msgid "Yes, deactivate"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:560
+#: src/screens/StarterPack/StarterPackScreen.tsx:638
 msgid "Yes, delete this starter pack"
 msgstr ""
 
@@ -7209,7 +7375,7 @@ msgstr ""
 msgid "Yesterday, {time}"
 msgstr ""
 
-#: src/components/StarterPack/StarterPackCard.tsx:68
+#: src/components/StarterPack/StarterPackCard.tsx:73
 msgid "you"
 msgstr ""
 
@@ -7426,23 +7592,23 @@ msgstr ""
 msgid "You: {short}"
 msgstr ""
 
-#: src/screens/Signup/index.tsx:169
+#: src/screens/Signup/index.tsx:102
 msgid "You'll follow the suggested users and feeds once you finish creating your account!"
 msgstr ""
 
-#: src/screens/Signup/index.tsx:174
+#: src/screens/Signup/index.tsx:107
 msgid "You'll follow the suggested users once you finish creating your account!"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:233
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:260
 msgid "You'll follow these people and {0} others"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:231
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:258
 msgid "You'll follow these people right away"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:271
+#: src/screens/StarterPack/StarterPackLandingScreen.tsx:298
 msgid "You'll stay updated with these feeds"
 msgstr ""
 
@@ -7461,7 +7627,7 @@ msgstr "Ви в черзі"
 msgid "You're logged in with an App Password. Please log in with your main password to continue deactivating your account."
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:228
+#: src/screens/Onboarding/StepFinished.tsx:236
 msgid "You're ready to go!"
 msgstr "Все готово!"
 
@@ -7474,7 +7640,7 @@ msgstr "Ви обрали приховувати слово або тег в ц�
 msgid "You've reached the end of your feed! Find some more accounts to follow."
 msgstr "Ваша домашня стрічка закінчилась! Підпишіться на більше користувачів щоб отримувати більше постів."
 
-#: src/screens/Signup/index.tsx:202
+#: src/screens/Signup/index.tsx:135
 msgid "Your account"
 msgstr "Ваш акаунт"
 
@@ -7486,7 +7652,7 @@ msgstr "Ваш обліковий запис видалено"
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr "Дані з вашого облікового запису, які містять усі загальнодоступні записи, можна завантажити як \"CAR\" файл. Цей файл не містить медіафайлів, таких як зображення, або особисті дані, які необхідно отримати окремо."
 
-#: src/screens/Signup/StepInfo/index.tsx:123
+#: src/screens/Signup/StepInfo/index.tsx:180
 msgid "Your birth date"
 msgstr "Ваша дата народження"
 
@@ -7503,7 +7669,8 @@ msgstr "Ваш вибір буде запам'ятовано, ви у будь-�
 #~ msgstr "Ваша стрічка за замовчуванням \"Following\""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:57
-#: src/screens/Signup/state.ts:220
+#: src/screens/Signup/state.ts:196
+#: src/screens/Signup/StepInfo/index.tsx:75
 #: src/view/com/modals/ChangePassword.tsx:55
 msgid "Your email appears to be invalid."
 msgstr "Не вдалося розпізнати адресу електронної пошти."
@@ -7516,11 +7683,15 @@ msgstr "Вашу адресу електронної пошти було змі�
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
 msgstr "Ваша електронна пошта ще не підтверджена. Це важливий крок для безпеки вашого облікового запису, який ми рекомендуємо вам зробити."
 
+#: src/state/shell/progress-guide.tsx:161
+msgid "Your first like!"
+msgstr ""
+
 #: src/view/com/posts/FollowingEmptyState.tsx:43
 msgid "Your following feed is empty! Follow more users to see what's happening."
 msgstr "Ваша домашня стрічка порожня! Підпишіться на більше користувачів щоб отримувати більше постів."
 
-#: src/screens/Signup/StepHandle.tsx:73
+#: src/screens/Signup/StepHandle.tsx:122
 msgid "Your full handle will be"
 msgstr "Ваш повний псевдонім буде"
 
@@ -7540,7 +7711,7 @@ msgstr "Ваш пароль успішно змінено!"
 msgid "Your post has been published"
 msgstr "Пост опубліковано"
 
-#: src/screens/Onboarding/StepFinished.tsx:243
+#: src/screens/Onboarding/StepFinished.tsx:251
 msgid "Your posts, likes, and blocks are public. Mutes are private."
 msgstr "Ваші повідомлення, вподобання і блоки є публічними. Ігнорування - приватні."
 
@@ -7560,6 +7731,6 @@ msgstr "Відповідь опубліковано"
 msgid "Your report will be sent to the Bluesky Moderation Service"
 msgstr ""
 
-#: src/screens/Signup/index.tsx:204
+#: src/screens/Signup/index.tsx:137
 msgid "Your user handle"
 msgstr "Ваш псевдонім"
