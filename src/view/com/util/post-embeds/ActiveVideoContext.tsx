@@ -8,6 +8,7 @@ import React, {
 } from 'react'
 import {useWindowDimensions} from 'react-native'
 
+import {isNative} from '#/platform/detection'
 import {VideoPlayerProvider} from './VideoPlayerContext'
 
 const ActiveVideoContext = React.createContext<{
@@ -28,6 +29,8 @@ export function ActiveVideoProvider({children}: {children: React.ReactNode}) {
   const measurementCallbacks = useRef<Record<string, () => DOMRect | void>>({})
 
   useEffect(() => {
+    if (isNative) return
+
     const findAndActivateVideo = () => {
       if (Object.keys(measurementCallbacks.current).length === 0) {
         return

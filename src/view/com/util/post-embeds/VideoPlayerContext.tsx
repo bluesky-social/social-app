@@ -22,7 +22,11 @@ export function VideoPlayerProvider({
   // make sure we're playing every time the viewId changes
   // this means the video is different
   useEffect(() => {
-    player.play()
+    if (viewId === null) {
+      player.pause()
+    } else {
+      player.play()
+    }
   }, [viewId, player])
 
   return (
