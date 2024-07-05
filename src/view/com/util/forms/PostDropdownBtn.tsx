@@ -7,7 +7,7 @@ import {
 } from 'react-native'
 import * as Clipboard from 'expo-clipboard'
 import {
-  AppBskyActorDefs,
+  AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
   RichText as RichTextAPI,
@@ -22,12 +22,15 @@ import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {getTranslatorLink} from '#/locale/helpers'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
+import {Shadow} from '#/state/cache/post-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
-import {useMutedThreads, useToggleThreadMute} from '#/state/muted-threads'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useHiddenPosts, useHiddenPostsApi} from '#/state/preferences'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
-import {usePostDeleteMutation} from '#/state/queries/post'
+import {
+  usePostDeleteMutation,
+  useThreadMuteMutationQueue,
+} from '#/state/queries/post'
 import {useSession} from '#/state/session'
 import {getCurrentRoute} from 'lib/routes/helpers'
 import {shareUrl} from 'lib/sharing'
@@ -62,9 +65,7 @@ import * as Toast from '../Toast'
 
 let PostDropdownBtn = ({
   testID,
-  postAuthor,
-  postCid,
-  postUri,
+  post,
   postFeedContext,
   record,
   richText,
@@ -74,9 +75,7 @@ let PostDropdownBtn = ({
   timestamp,
 }: {
   testID: string
-  postAuthor: AppBskyActorDefs.ProfileViewBasic
-  postCid: string
-  postUri: string
+  post: Shadow<AppBskyFeedDefs.PostView>
   postFeedContext: string | undefined
   record: AppBskyFeedPost.Record
   richText: RichTextAPI
@@ -92,8 +91,6 @@ let PostDropdownBtn = ({
   const {_} = useLingui()
   const defaultCtrlColor = theme.palette.default.postCtrl
   const langPrefs = useLanguagePrefs()
-  const mutedThreads = useMutedThreads()
-  const toggleThreadMute = useToggleThreadMute()
   const postDeleteMutation = usePostDeleteMutation()
   const hiddenPosts = useHiddenPosts()
   const {hidePost} = useHiddenPostsApi()
@@ -107,9 +104,15 @@ let PostDropdownBtn = ({
   const loggedOutWarningPromptControl = useDialogControl()
   const embedPostControl = useDialogControl()
   const sendViaChatControl = useDialogControl()
+  const postUri = post.uri
+  const postCid = post.cid
+  const postAuthor = post.author
 
   const rootUri = record.reply?.root?.uri || postUri
-  const isThreadMuted = mutedThreads.includes(rootUri)
+  const [isThreadMuted, muteThread, unmuteThread] = useThreadMuteMutationQueue(
+    post,
+    rootUri,
+  )
   const isPostHidden = hiddenPosts && hiddenPosts.includes(postUri)
   const isAuthor = postAuthor.did === currentAccount?.did
 
@@ -162,18 +165,22 @@ let PostDropdownBtn = ({
 
   const onToggleThreadMute = React.useCallback(() => {
     try {
-      const muted = toggleThreadMute(rootUri)
-      if (muted) {
+      if (isThreadMuted) {
+        unmuteThread()
+        Toast.show(_(msg`You will now receive notifications for this thread`))
+      } else {
+        muteThread()
         Toast.show(
           _(msg`You will no longer receive notifications for this thread`),
         )
-      } else {
-        Toast.show(_(msg`You will now receive notifications for this thread`))
       }
-    } catch (e) {
-      logger.error('Failed to toggle thread mute', {message: e})
+    } catch (e: any) {
+      if (e?.name !== 'AbortError') {
+        logger.error('Failed to toggle thread mute', {message: e})
+        Toast.show(_(msg`Failed to toggle thread mute, please try again`))
+      }
     }
-  }, [rootUri, toggleThreadMute, _])
+  }, [isThreadMuted, unmuteThread, _, muteThread])
 
   const onCopyPostText = React.useCallback(() => {
     const str = richTextToString(richText, true)

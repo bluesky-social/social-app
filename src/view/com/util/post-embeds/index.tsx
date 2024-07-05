@@ -21,6 +21,7 @@ import {
 import {ImagesLightbox, useLightboxControls} from '#/state/lightbox'
 import {usePalette} from 'lib/hooks/usePalette'
 import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
+import {atoms as a} from '#/alf'
 import {ContentHider} from '../../../../components/moderation/ContentHider'
 import {AutoSizedImage} from '../images/AutoSizedImage'
 import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
@@ -28,6 +29,8 @@ import {ExternalLinkEmbed} from './ExternalLinkEmbed'
 import {ListEmbed} from './ListEmbed'
 import {MaybeQuoteEmbed} from './QuoteEmbed'
 import hairlineWidth = StyleSheet.hairlineWidth
+import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
+import {Embed as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -51,6 +54,7 @@ export function PostEmbeds({
 }) {
   const pal = usePalette('default')
   const {openLightbox} = useLightboxControls()
+  const largeAltBadge = useLargeAltBadgeEnabled()
 
   // quote post with media
   // =
@@ -85,6 +89,10 @@ export function PostEmbeds({
     if (AppBskyGraphDefs.isListView(embed.record)) {
       // TODO moderation
       return <ListEmbed item={embed.record} />
+    }
+
+    if (AppBskyGraphDefs.isStarterPackViewBasic(embed.record)) {
+      return <StarterPackCard starterPack={embed.record} />
     }
 
     // quote post
@@ -130,10 +138,12 @@ export function PostEmbeds({
                 dimensionsHint={aspectRatio}
                 onPress={() => _openLightbox(0)}
                 onPressIn={() => onPressIn(0)}
-                style={[styles.singleImage]}>
+                style={a.rounded_sm}>
                 {alt === '' ? null : (
                   <View style={styles.altContainer}>
-                    <Text style={styles.alt} accessible={false}>
+                    <Text
+                      style={[styles.alt, largeAltBadge && a.text_xs]}
+                      accessible={false}>
                       ALT
                     </Text>
                   </View>
@@ -151,9 +161,6 @@ export function PostEmbeds({
               images={embed.images}
               onPress={_openLightbox}
               onPressIn={onPressIn}
-              style={
-                embed.images.length === 1 ? [styles.singleImage] : undefined
-              }
             />
           </View>
         </ContentHider>
@@ -178,9 +185,6 @@ export function PostEmbeds({
 const styles = StyleSheet.create({
   imagesContainer: {
     marginTop: 8,
-  },
-  singleImage: {
-    borderRadius: 8,
   },
   altContainer: {
     backgroundColor: 'rgba(0, 0, 0, 0.75)',

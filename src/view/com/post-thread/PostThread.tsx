@@ -333,7 +333,11 @@ export function PostThread({
         <PostThreadShowHiddenReplies
           type={item === SHOW_HIDDEN_REPLIES ? 'hidden' : 'muted'}
           onPress={() =>
-            setHiddenRepliesState(HiddenRepliesState.ShowAndOverridePostHider)
+            setHiddenRepliesState(
+              item === SHOW_HIDDEN_REPLIES
+                ? HiddenRepliesState.Show
+                : HiddenRepliesState.ShowAndOverridePostHider,
+            )
           }
           hideTopBorder={index === 0}
         />

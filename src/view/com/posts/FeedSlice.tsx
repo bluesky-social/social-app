@@ -34,6 +34,7 @@ let FeedSlice = ({
           isThreadParent={isThreadParentAt(slice.items, 0)}
           isThreadChild={isThreadChildAt(slice.items, 0)}
           hideTopBorder={hideTopBorder}
+          isParentBlocked={slice.items[0].isParentBlocked}
         />
         <FeedItem
           key={slice.items[1]._reactKey}
@@ -46,6 +47,7 @@ let FeedSlice = ({
           moderation={slice.items[1].moderation}
           isThreadParent={isThreadParentAt(slice.items, 1)}
           isThreadChild={isThreadChildAt(slice.items, 1)}
+          isParentBlocked={slice.items[1].isParentBlocked}
         />
         <ViewFullThread slice={slice} />
         <FeedItem
@@ -59,6 +61,7 @@ let FeedSlice = ({
           moderation={slice.items[last].moderation}
           isThreadParent={isThreadParentAt(slice.items, last)}
           isThreadChild={isThreadChildAt(slice.items, last)}
+          isParentBlocked={slice.items[2].isParentBlocked}
           isThreadLastChild
         />
       </>
@@ -82,6 +85,7 @@ let FeedSlice = ({
           isThreadLastChild={
             isThreadChildAt(slice.items, i) && slice.items.length === i + 1
           }
+          isParentBlocked={slice.items[i].isParentBlocked}
           hideTopBorder={hideTopBorder && i === 0}
         />
       ))}
