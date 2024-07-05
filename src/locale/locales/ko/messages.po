@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-07-04 19:35+0900\n"
+"PO-Revision-Date: 2024-07-05 09:53+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -397,7 +397,7 @@ msgstr "성인 콘텐츠가 비활성화되어 있습니다."
 msgid "Advanced"
 msgstr "고급"
 
-#: src/state/shell/progress-guide.tsx:177
+#: src/state/shell/progress-guide.tsx:176
 msgid "Algorithm training complete!"
 msgstr "알고리즘 훈련 완료!"
 
@@ -756,21 +756,21 @@ msgstr "이미지 흐리게 및 피드에서 필터링"
 msgid "Books"
 msgstr "책"
 
-#: src/components/FeedInterstitials.tsx:209
+#: src/components/FeedInterstitials.tsx:274
 msgid "Browse more accounts on the Explore page"
 msgstr "탐색 페이지에서 더 많은 계정 찾아보기"
 
-#: src/components/FeedInterstitials.tsx:335
+#: src/components/FeedInterstitials.tsx:400
 msgid "Browse more feeds on the Explore page"
 msgstr "탐색 페이지에서 더 많은 피드 찾아보기"
 
-#: src/components/FeedInterstitials.tsx:198
-#: src/components/FeedInterstitials.tsx:324
+#: src/components/FeedInterstitials.tsx:263
+#: src/components/FeedInterstitials.tsx:389
 msgid "Browse more suggestions"
 msgstr "더 많은 추천 찾아보기"
 
-#: src/components/FeedInterstitials.tsx:217
-#: src/components/FeedInterstitials.tsx:344
+#: src/components/FeedInterstitials.tsx:282
+#: src/components/FeedInterstitials.tsx:409
 msgid "Browse more suggestions on the Explore page"
 msgstr "탐색 페이지에서 더 많은 추천 찾아보기"
 
@@ -2575,7 +2575,7 @@ msgstr "사용자의 프로필로 가기"
 msgid "Graphic Media"
 msgstr "그래픽 미디어"
 
-#: src/state/shell/progress-guide.tsx:167
+#: src/state/shell/progress-guide.tsx:166
 msgid "Half way there!"
 msgstr "절반은 완료!"
 
@@ -3009,8 +3009,8 @@ msgstr "밝음"
 msgid "Like 10 posts"
 msgstr "10개 게시물에 좋아요 누르기"
 
-#: src/state/shell/progress-guide.tsx:163
-#: src/state/shell/progress-guide.tsx:168
+#: src/state/shell/progress-guide.tsx:162
+#: src/state/shell/progress-guide.tsx:167
 msgid "Like 10 posts to train the Discover feed"
 msgstr "10개 게시물에 좋아요를 눌러 Discover 피드를 훈련시키세요"
 
@@ -3617,7 +3617,7 @@ msgstr "아직 메시지가 없습니다"
 msgid "No more conversations to show"
 msgstr "더 이상 표시할 대화가 없습니다"
 
-#: src/view/com/notifications/Feed.tsx:118
+#: src/view/com/notifications/Feed.tsx:117
 msgid "No notifications yet!"
 msgstr "아직 알림이 없습니다."
 
@@ -5450,7 +5450,7 @@ msgstr "이 단계 건너뛰기"
 msgid "Software Dev"
 msgstr "소프트웨어 개발"
 
-#: src/components/FeedInterstitials.tsx:306
+#: src/components/FeedInterstitials.tsx:371
 msgid "Some other feeds you might like"
 msgstr "좋아할 만한 다른 피드"
 
@@ -5596,7 +5596,7 @@ msgstr "이 리스트 구독하기"
 msgid "Suggested accounts"
 msgstr "추천 계정"
 
-#: src/components/FeedInterstitials.tsx:178
+#: src/components/FeedInterstitials.tsx:243
 #: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:65
 msgid "Suggested for you"
 msgstr "나를 위한 추천"
@@ -5656,7 +5656,7 @@ msgstr "눌러서 닫기"
 msgid "Tap to view fully"
 msgstr "탭하여 전체 크기로 봅니다"
 
-#: src/state/shell/progress-guide.tsx:172
+#: src/state/shell/progress-guide.tsx:171
 msgid "Task complete - 10 likes!"
 msgstr "작업 완료 - 10개 좋아요!"
 
@@ -5740,8 +5740,8 @@ msgstr "커뮤니티 가이드라인을 <0/>(으)로 이동했습니다"
 msgid "The Copyright Policy has been moved to <0/>"
 msgstr "저작권 정책을 <0/>(으)로 이동했습니다"
 
-#: src/state/shell/progress-guide.tsx:173
-#: src/state/shell/progress-guide.tsx:178
+#: src/state/shell/progress-guide.tsx:172
+#: src/state/shell/progress-guide.tsx:177
 msgid "The Discover feed now knows what you like"
 msgstr "이제 Discover 피드는 사용자가 무엇을 좋아하는지 알게 됩니다"
 
@@ -5824,11 +5824,11 @@ msgstr "서버에 연결하는 동안 문제가 발생했습니다"
 msgid "There was an issue contacting your server"
 msgstr "서버에 연결하는 동안 문제가 발생했습니다"
 
-#: src/view/com/notifications/Feed.tsx:126
+#: src/view/com/notifications/Feed.tsx:125
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "알림을 가져오는 동안 문제가 발생했습니다. 이곳을 탭하여 다시 시도하세요."
 
-#: src/view/com/posts/Feed.tsx:476
+#: src/view/com/posts/Feed.tsx:459
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "게시물을 가져오는 동안 문제가 발생했습니다. 이곳을 탭하여 다시 시도하세요."
 
@@ -7045,7 +7045,7 @@ msgstr "이메일이 변경되었지만 인증되지 않았습니다. 다음 단
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
 msgstr "이메일이 아직 인증되지 않았습니다. 이는 중요한 보안 단계이므로 권장하는 사항입니다."
 
-#: src/state/shell/progress-guide.tsx:162
+#: src/state/shell/progress-guide.tsx:161
 msgid "Your first like!"
 msgstr "첫 좋아요!"
 
