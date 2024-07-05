@@ -105,11 +105,11 @@ msgstr "{0, plural, one {Desmarca m'agrada (# like)} other {Desmarca m'agrada (#
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:222
 msgid "{0} joined this week"
-msgstr ""
+msgstr "{0} s'han unit aquesta setmana"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:378
 msgid "{0} people have used this starter pack!"
-msgstr ""
+msgstr "{0} persones han utilitzat aquest starter pack"
 
 #: src/view/screens/ProfileList.tsx:286
 #~ msgid "{0} your feeds"
@@ -121,11 +121,11 @@ msgstr "Avatar de {0}"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:68
 msgid "{0}'s favorite feeds and people - join me!"
-msgstr ""
+msgstr "Els canals i les persones preferits de {0}: uneix-te a mi!"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:47
 msgid "{0}'s starter pack"
-msgstr ""
+msgstr "Starter pack de {0}"
 
 #: src/components/LabelingServiceCard/index.tsx:71
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
@@ -133,27 +133,27 @@ msgstr "{count, plural, one {Li ha agradat a # user} other {Li ha agradat a # us
 
 #: src/lib/hooks/useTimeAgo.ts:69
 msgid "{diff, plural, one {day} other {days}}"
-msgstr ""
+msgstr "{diff, plural, one {dia} other {dies}}"
 
 #: src/lib/hooks/useTimeAgo.ts:64
 msgid "{diff, plural, one {hour} other {hours}}"
-msgstr ""
+msgstr "{diff, plural, one {hora} other {hores}}"
 
 #: src/lib/hooks/useTimeAgo.ts:59
 msgid "{diff, plural, one {minute} other {minutes}}"
-msgstr ""
+msgstr "{diff, plural, one {minut} other {minuts}}"
 
 #: src/lib/hooks/useTimeAgo.ts:75
 msgid "{diff, plural, one {month} other {months}}"
-msgstr ""
+msgstr "{diff, plural, one {mes} other {mesos}}"
 
 #: src/lib/hooks/useTimeAgo.ts:54
 msgid "{diffSeconds, plural, one {second} other {seconds}}"
-msgstr ""
+msgstr "{diffSeconds, plural, one {segon} other {segons}}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:175
 msgid "{displayName}'s Starter Pack"
-msgstr ""
+msgstr "Starter Pack de {displayName}"
 
 #: src/screens/SignupQueued.tsx:207
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
@@ -202,11 +202,11 @@ msgstr "{numUnreadNotifications} no llegides"
 
 #: src/components/NewskieDialog.tsx:116
 msgid "{profileName} joined Bluesky {0} ago"
-msgstr ""
+msgstr "{profileName} s'uní a Bluesky fa {0}"
 
 #: src/components/NewskieDialog.tsx:111
 msgid "{profileName} joined Bluesky using a starter pack {0} ago"
-msgstr ""
+msgstr "{profileName} s'uní a Bluesky amb un starter pack, fa {0}"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:67
 msgid "{value, plural, =0 {Show all replies} one {Show replies with at least # like} other {Show replies with at least # likes}}"
@@ -218,21 +218,21 @@ msgstr "<0/> membres"
 
 #: src/screens/StarterPack/Wizard/index.tsx:485
 #~ msgid "<0>{0} </0>and<1> </1><2>{1} </2>are included in your starter pack"
-#~ msgstr ""
+#~ msgstr "<0>{0} </0>i<1> </1><2>{1} </2>estan inclosos al teu starter pack"
 
 #: src/screens/StarterPack/Wizard/index.tsx:466
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr ""
+msgstr "<0>{0}, </0><1>{1}, </1>i {2, plural, one {# altre} other {# altres}} estan inclosos al teu starter pack"
 
 #: src/screens/StarterPack/Wizard/index.tsx:519
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr ""
+msgstr "<0>{0}, </0><1>{1}, </1>i {2, plural, one {# altre} other {# altres}} estan inclosos al teu starter pack"
 
 #: src/screens/StarterPack/Wizard/index.tsx:497
 #~ msgid "<0>{0}, </0><1>{1}, </1>and {2} {3, plural, one {other} other {others}} are included in your starter pack"
-#~ msgstr ""
+#~ msgstr "<0>{0}, </0><1>{1}, </1>i {2} {3, plural, one {altre} other {altres}} estan inclosos al teu starter pack"
 
 #: src/view/shell/Drawer.tsx:101
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
@@ -244,7 +244,7 @@ msgstr "<0>{0}</0> {1, plural, one {seguint} other {seguint}}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:507
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
-msgstr ""
+msgstr "<0>{0}</0> i<1> </1><2>{1} </2>estan inclosos al teu starter pack"
 
 #: src/view/shell/Drawer.tsx:96
 #~ msgid "<0>{0}</0> following"
@@ -252,7 +252,7 @@ msgstr ""
 
 #: src/screens/StarterPack/Wizard/index.tsx:500
 msgid "<0>{0}</0> is included in your starter pack"
-msgstr ""
+msgstr "<0>{0}</0> està inclòs al teu starter pack"
 
 #: src/components/ProfileHoverCard/index.web.tsx:437
 #~ msgid "<0>{followers} </0><1>{pluralizedFollowers}</1>"
@@ -281,7 +281,7 @@ msgstr "<0>No aplicable.</0> Aquesta advertència només està disponible per pu
 
 #: src/screens/StarterPack/Wizard/index.tsx:457
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
-msgstr ""
+msgstr "<0>Tu</0> i<1> </1><2>{0} </2>esteu inclosos al teu starter pack"
 
 #: src/screens/Profile/Header/Handle.tsx:50
 msgid "⚠Invalid Handle"
@@ -383,11 +383,11 @@ msgstr "Afegeix"
 
 #: src/screens/StarterPack/Wizard/index.tsx:568
 msgid "Add {0} more to continue"
-msgstr ""
+msgstr "Afegeix-ne {0} més per a continuar"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:59
 msgid "Add {displayName} to starter pack"
-msgstr ""
+msgstr "Afegeix {displayName} al teu starter pack"
 
 #: src/view/com/modals/SelfLabel.tsx:57
 msgid "Add a content warning"
@@ -458,7 +458,7 @@ msgstr "Afegeix els canals recomanats"
 
 #: src/screens/StarterPack/Wizard/index.tsx:488
 msgid "Add some feeds to your starter pack!"
-msgstr ""
+msgstr "Afegiu alguns canals al teu starter pack"
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:41
 msgid "Add the default feed of only people you follow"
@@ -470,7 +470,7 @@ msgstr "Afegeix el següent registre DNS al teu domini:"
 
 #: src/components/FeedCard.tsx:305
 msgid "Add this feed to your feeds"
-msgstr ""
+msgstr "Afegeix aquest canal als teus canals"
 
 #: src/view/com/profile/ProfileMenu.tsx:267
 #: src/view/com/profile/ProfileMenu.tsx:270
@@ -509,7 +509,7 @@ msgstr "Contingut per a adults"
 
 #: src/screens/Moderation/index.tsx:356
 msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
-msgstr ""
+msgstr "El contingut per a adults només es pot activar a través del web a <0>bsky.app</0>."
 
 #: src/components/moderation/LabelPreference.tsx:242
 msgid "Adult content is disabled."
@@ -522,7 +522,7 @@ msgstr "Avançat"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:301
 msgid "All accounts have been followed!"
-msgstr ""
+msgstr "S'han seguit tots els comptes!"
 
 #: src/view/screens/Feeds.tsx:721
 msgid "All the feeds you've saved, right in one place."
@@ -587,16 +587,16 @@ msgstr "Hi ha hagut un error"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:315
 msgid "An error occurred while generating your starter pack. Want to try again?"
-msgstr ""
+msgstr "S'ha produït un error en generar el teu starter pack. Vols tornar-ho a provar?"
 
 #: src/components/StarterPack/ShareDialog.tsx:79
 #~ msgid "An error occurred while saving the image."
-#~ msgstr ""
+#~ msgstr "S'ha produït un error en desar la imatge."
 
 #: src/components/StarterPack/QrCodeDialog.tsx:70
 #: src/components/StarterPack/ShareDialog.tsx:78
 msgid "An error occurred while saving the QR code!"
-msgstr ""
+msgstr "S'ha produït un error en desar el codi QR!"
 
 #: src/components/dms/MessageMenu.tsx:134
 #~ msgid "An error occurred while trying to delete the message. Please try again."
@@ -604,7 +604,7 @@ msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:303
 msgid "An error occurred while trying to follow all"
-msgstr ""
+msgstr "S'ha produït un error en intentar seguir-ho tot"
 
 #: src/lib/moderation/useReportOptions.ts:28
 msgid "An issue not included in these options"
@@ -723,7 +723,7 @@ msgstr "Aplica els canals recomanats per defecte"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:532
 msgid "Are you sure you want delete this starter pack?"
-msgstr ""
+msgstr "Segur que vols suprimir aquest starter pack?"
 
 #: src/view/screens/AppPasswords.tsx:282
 msgid "Are you sure you want to delete the app password \"{name}\"?"
@@ -751,7 +751,7 @@ msgstr "Confirmes que vols eliminar {0} dels teus canals?"
 
 #: src/components/FeedCard.tsx:322
 msgid "Are you sure you want to remove this from your feeds?"
-msgstr ""
+msgstr "Segur que vols eliminar-ho dels teus canals?"
 
 #: src/view/com/composer/Composer.tsx:649
 msgid "Are you sure you'd like to discard this draft?"
@@ -930,7 +930,7 @@ msgstr "Bluesky és una xarxa oberta on pots escollir el teu proveïdor d'allotj
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:282
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
-msgstr ""
+msgstr "Bluesky triarà un conjunt de comptes recomanats de les persones de la teva xarxa."
 
 #: src/screens/Moderation/index.tsx:557
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
@@ -1188,15 +1188,15 @@ msgstr "Comprova el teu correu per a rebre el codi de confirmació i entra'l aqu
 
 #: src/screens/StarterPack/Wizard/index.tsx:191
 msgid "Choose Feeds"
-msgstr ""
+msgstr "Tria els canals"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:290
 msgid "Choose for me"
-msgstr ""
+msgstr "Tria per mi"
 
 #: src/screens/StarterPack/Wizard/index.tsx:187
 msgid "Choose People"
-msgstr ""
+msgstr "Tria les persones"
 
 #: src/view/com/auth/server-input/index.tsx:79
 msgid "Choose Service"
@@ -1218,7 +1218,7 @@ msgstr "Tria aquest color com el teu avatar"
 #: src/components/dialogs/ThreadgateEditor.tsx:91
 #: src/components/dialogs/ThreadgateEditor.tsx:95
 msgid "Choose who can reply"
-msgstr ""
+msgstr "Tria qui pot respondre"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:104
 #~ msgid "Choose your main feeds"
@@ -1537,7 +1537,7 @@ msgstr "Continua com a {0} (sessió actual)"
 
 #: src/view/com/post-thread/PostThreadLoadMore.tsx:52
 msgid "Continue thread..."
-msgstr ""
+msgstr "Continua el fil..."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:255
 #: src/screens/Onboarding/StepProfile/index.tsx:266
@@ -1603,11 +1603,11 @@ msgstr "Copia el codi"
 
 #: src/components/StarterPack/ShareDialog.tsx:123
 msgid "Copy link"
-msgstr ""
+msgstr "Copia l'enllaç"
 
 #: src/components/StarterPack/ShareDialog.tsx:130
 msgid "Copy Link"
-msgstr ""
+msgstr "Copia l'enllaç"
 
 #: src/view/screens/ProfileList.tsx:428
 msgid "Copy link to list"
@@ -1634,7 +1634,7 @@ msgstr "Copia el text de la publicació"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:168
 msgid "Copy QR code"
-msgstr ""
+msgstr "Copia el codi QR"
 
 #: src/Navigation.tsx:261
 #: src/view/screens/CopyrightPolicy.tsx:29
@@ -1671,7 +1671,7 @@ msgstr "No s'ha pogut silenciar el xat"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:272
 msgid "Create"
-msgstr ""
+msgstr "Crea"
 
 #: src/view/com/auth/SplashScreen.tsx:57
 #: src/view/com/auth/SplashScreen.web.tsx:106
@@ -1684,17 +1684,17 @@ msgstr "Crea un nou compte de Bluesky"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:151
 msgid "Create a QR code for a starter pack"
-msgstr ""
+msgstr "Crea un codi QR per a un starter pack"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:165
 #: src/components/StarterPack/ProfileStarterPacks.tsx:259
 #: src/Navigation.tsx:330
 msgid "Create a starter pack"
-msgstr ""
+msgstr "Crea un starter pack"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:246
 msgid "Create a starter pack for me"
-msgstr ""
+msgstr "Crea un starter pack per a mi"
 
 #: src/screens/Signup/index.tsx:154
 msgid "Create Account"
@@ -1711,7 +1711,7 @@ msgstr "Enlloc d'això, crea un avatar"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:172
 msgid "Create another"
-msgstr ""
+msgstr "Crea'n un altre"
 
 #: src/view/com/modals/AddAppPasswords.tsx:242
 msgid "Create App Password"
@@ -1724,7 +1724,7 @@ msgstr "Crea un nou compte"
 
 #: src/components/StarterPack/ShareDialog.tsx:158
 #~ msgid "Create QR code"
-#~ msgstr ""
+#~ msgstr "Crea codi QR"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:101
 msgid "Create report for {0}"
@@ -1878,11 +1878,11 @@ msgstr "Elimina la publicació"
 #: src/screens/StarterPack/StarterPackScreen.tsx:478
 #: src/screens/StarterPack/StarterPackScreen.tsx:634
 msgid "Delete starter pack"
-msgstr ""
+msgstr "Elimina l'starter pack"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:529
 msgid "Delete starter pack?"
-msgstr ""
+msgstr "Vols eliminar l'starter pack?"
 
 #: src/view/screens/ProfileList.tsx:662
 msgid "Delete this list?"
@@ -1996,7 +1996,7 @@ msgstr "Descobreix nous canals"
 
 #: src/view/screens/AccessibilitySettings.tsx:95
 msgid "Display larger alt text badges"
-msgstr ""
+msgstr "Mostra insígnies de text alternatiu més grans"
 
 #: src/view/com/modals/EditProfile.tsx:193
 msgid "Display name"
@@ -2069,7 +2069,7 @@ msgstr "Fet{extraText}"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:318
 msgid "Download Bluesky"
-msgstr ""
+msgstr "Descarrega Bluesky"
 
 #: src/view/screens/Settings/index.tsx:755
 #~ msgid "Download Bluesky account data (repository)"
@@ -2134,7 +2134,7 @@ msgstr "Cada codi funciona un cop. Rebràs més codis d'invitació periòdicamen
 #: src/view/screens/Feeds.tsx:385
 #: src/view/screens/Feeds.tsx:453
 msgid "Edit"
-msgstr ""
+msgstr "Edita"
 
 #: src/view/com/lists/ListMembers.tsx:149
 msgctxt "action"
@@ -2148,7 +2148,7 @@ msgstr "Edita l'avatar"
 
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:117
 msgid "Edit Feeds"
-msgstr ""
+msgstr "Edita els canals"
 
 #: src/view/com/composer/photos/Gallery.tsx:151
 #: src/view/com/modals/EditImage.tsx:208
@@ -2176,7 +2176,7 @@ msgstr "Edita el meu perfil"
 
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:115
 msgid "Edit People"
-msgstr ""
+msgstr "Edita les persones"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:181
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:179
@@ -2195,7 +2195,7 @@ msgstr "Edita el perfil"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:465
 msgid "Edit starter pack"
-msgstr ""
+msgstr "Edita l'starter pack"
 
 #: src/view/com/modals/CreateOrEditList.tsx:234
 msgid "Edit User List"
@@ -2203,7 +2203,7 @@ msgstr "Edita la llista d'usuaris"
 
 #: src/components/WhoCanReply.tsx:127
 msgid "Edit who can reply"
-msgstr ""
+msgstr "Edita qui pot respondre"
 
 #: src/view/com/modals/EditProfile.tsx:194
 msgid "Edit your display name"
@@ -2215,7 +2215,7 @@ msgstr "Edita la descripció del teu perfil"
 
 #: src/Navigation.tsx:335
 msgid "Edit your starter pack"
-msgstr ""
+msgstr "Edita el teu starter pack"
 
 #: src/screens/Onboarding/index.tsx:31
 #: src/screens/Onboarding/state.ts:86
@@ -2224,7 +2224,7 @@ msgstr "Ensenyament"
 
 #: src/components/dialogs/ThreadgateEditor.tsx:98
 msgid "Either choose \"Everybody\" or \"Nobody\""
-msgstr ""
+msgstr "Tria \"Tothom\" o \"Ningú\""
 
 #: src/screens/Signup/StepInfo/index.tsx:80
 #: src/view/com/modals/ChangeEmail.tsx:136
@@ -2505,7 +2505,7 @@ msgstr "No s'ha pogut crear la contrasenya d'aplicació."
 #: src/screens/StarterPack/Wizard/index.tsx:230
 #: src/screens/StarterPack/Wizard/index.tsx:238
 msgid "Failed to create starter pack"
-msgstr ""
+msgstr "No s'ha pogut crear l'starter pack"
 
 #: src/view/com/modals/CreateOrEditList.tsx:194
 msgid "Failed to create the list. Check your internet connection and try again."
@@ -2521,12 +2521,12 @@ msgstr "No s'ha pogut esborrar la publicació, torna-ho a provar"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:597
 msgid "Failed to delete starter pack"
-msgstr ""
+msgstr "No s'ha pogut eliminar l'starter pack"
 
 #: src/view/screens/Search/Explore.tsx:426
 #: src/view/screens/Search/Explore.tsx:454
 msgid "Failed to load feeds preferences"
-msgstr ""
+msgstr "No s'han pogut carregar les preferències dels canals"
 
 #: src/components/dialogs/GifSelect.ios.tsx:196
 #: src/components/dialogs/GifSelect.tsx:212
@@ -2549,11 +2549,11 @@ msgstr "No s'han pogut carregar els missatges anteriors"
 #: src/view/screens/Search/Explore.tsx:419
 #: src/view/screens/Search/Explore.tsx:447
 msgid "Failed to load suggested feeds"
-msgstr ""
+msgstr "No s'han pogut carregar els canals suggerits"
 
 #: src/view/screens/Search/Explore.tsx:377
 msgid "Failed to load suggested follows"
-msgstr ""
+msgstr "No s'han pogut carregar els comptes suggerits"
 
 #: src/view/com/lightbox/Lightbox.tsx:86
 msgid "Failed to save image: {0}"
@@ -2574,11 +2574,11 @@ msgstr "No s'ha pogut enviar l'apel·lació, torna-ho a provar."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:180
 msgid "Failed to toggle thread mute, please try again"
-msgstr ""
+msgstr "No s'ha pogut desactivar el silenci del fil; torneu-ho a provar"
 
 #: src/components/FeedCard.tsx:285
 msgid "Failed to update feeds"
-msgstr ""
+msgstr "No s'han pogut actualitzar els canals"
 
 #: src/components/dms/MessagesNUX.tsx:60
 #: src/screens/Messages/Settings.tsx:35
@@ -2604,7 +2604,7 @@ msgstr "Canal per {0}"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:55
 msgid "Feed toggle"
-msgstr ""
+msgstr "Alterna el canal"
 
 #: src/view/shell/desktop/RightNav.tsx:66
 #: src/view/shell/Drawer.tsx:345
@@ -2636,7 +2636,7 @@ msgstr "Els canals són algoritmes personalitzats creats per usuaris que coneixe
 
 #: src/components/FeedCard.tsx:282
 msgid "Feeds updated!"
-msgstr ""
+msgstr "Canals actualitzats!"
 
 #: src/view/com/modals/ChangeHandle.tsx:475
 msgid "File Contents"
@@ -2690,7 +2690,7 @@ msgstr "Ajusta els fils de debat."
 
 #: src/screens/StarterPack/Wizard/index.tsx:192
 msgid "Finish"
-msgstr ""
+msgstr "Finalitza"
 
 #: src/screens/Onboarding/index.tsx:35
 msgid "Fitness"
@@ -2739,7 +2739,7 @@ msgstr "Segueix el compte"
 #: src/screens/StarterPack/StarterPackScreen.tsx:345
 #: src/screens/StarterPack/StarterPackScreen.tsx:352
 msgid "Follow all"
-msgstr ""
+msgstr "Segueix-los a tots"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:187
 #~ msgid "Follow All"
@@ -2751,7 +2751,7 @@ msgstr "Segueix"
 
 #: src/view/screens/Search/Explore.tsx:333
 msgid "Follow more accounts to get connected to your interests and build your network."
-msgstr ""
+msgstr "Segueix més comptes per connectar-te als teus interessos i construir la teva xarxa."
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:182
 #~ msgid "Follow selected accounts and continue to the next step"
@@ -2763,7 +2763,7 @@ msgstr ""
 
 #: src/components/KnownFollowers.tsx:169
 #~ msgid "Followed by"
-#~ msgstr ""
+#~ msgstr "Seguit per"
 
 #: src/view/com/profile/ProfileCard.tsx:227
 msgid "Followed by {0}"
@@ -2771,19 +2771,19 @@ msgstr "Seguit per {0}"
 
 #: src/components/KnownFollowers.tsx:223
 msgid "Followed by <0>{0}</0>"
-msgstr ""
+msgstr "Seguit per <0>{0}</0>"
 
 #: src/components/KnownFollowers.tsx:209
 msgid "Followed by <0>{0}</0> and {1, plural, one {# other} other {# others}}"
-msgstr ""
+msgstr "Seguit per <0>{0}</0> i {1, plural, one {# altre} other {# altres}}"
 
 #: src/components/KnownFollowers.tsx:196
 msgid "Followed by <0>{0}</0> and <1>{1}</1>"
-msgstr ""
+msgstr "Seguit per <0>{0}</0> i <1>{1}</1>"
 
 #: src/components/KnownFollowers.tsx:178
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
-msgstr ""
+msgstr "Seguit per <0>{0}</0>, <1>{1}</1>, i {2, plural, one {# altre} other {# altres}}"
 
 #: src/components/dialogs/ThreadgateEditor.tsx:124
 msgid "Followed users"
@@ -2804,12 +2804,12 @@ msgstr "Seguidors"
 
 #: src/Navigation.tsx:179
 msgid "Followers of @{0} that you know"
-msgstr ""
+msgstr "Seguidors de @{0} que coneixes"
 
 #: src/screens/Profile/KnownFollowers.tsx:108
 #: src/screens/Profile/KnownFollowers.tsx:118
 msgid "Followers you know"
-msgstr ""
+msgstr "Seguidors que coneixes"
 
 #: src/view/com/profile/ProfileHeader.tsx:624
 #~ msgid "following"
@@ -2905,7 +2905,7 @@ msgstr "Galeria"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:279
 msgid "Generate a starter pack"
-msgstr ""
+msgstr "Genera un starter pack"
 
 #: src/components/dms/MessagesNUX.tsx:168
 msgid "Get started"
@@ -2918,7 +2918,7 @@ msgstr "Comença"
 
 #: src/view/com/util/images/ImageHorzList.tsx:35
 msgid "GIF"
-msgstr ""
+msgstr "GIF"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:225
 msgid "Give your profile a face"
@@ -2960,7 +2960,7 @@ msgstr "Ves al pas anterior"
 
 #: src/screens/StarterPack/Wizard/index.tsx:300
 msgid "Go back to the previous step"
-msgstr ""
+msgstr "Ves al pas anterior"
 
 #: src/view/screens/NotFound.tsx:55
 msgid "Go home"
@@ -3217,7 +3217,7 @@ msgstr "Text alternatiu de la imatge"
 
 #: src/components/StarterPack/ShareDialog.tsx:75
 msgid "Image saved to your camera roll!"
-msgstr ""
+msgstr "La imatge s'ha desat a la teva galeria!"
 
 #: src/lib/moderation/useReportOptions.ts:49
 msgid "Impersonation or false claims about identity or affiliation"
@@ -3338,15 +3338,15 @@ msgstr "Codis d'invitació: 1 disponible"
 
 #: src/components/StarterPack/ShareDialog.tsx:96
 msgid "Invite people to this starter pack!"
-msgstr ""
+msgstr "Convida a gent a aquest starter pack!"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:35
 msgid "Invite your friends to follow your favorite feeds and people"
-msgstr ""
+msgstr "Convida els teus amics a seguir els teus canals i persones preferides"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:32
 msgid "Invites, but personal"
-msgstr ""
+msgstr "Convida a Bluesky de manera més personalitzada"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:65
 #~ msgid "It shows posts from the people you follow as they happen."
@@ -3354,7 +3354,7 @@ msgstr ""
 
 #: src/screens/StarterPack/Wizard/index.tsx:452
 msgid "It's just you right now! Add more people to your starter pack by searching above."
-msgstr ""
+msgstr "Ara només ets tu! Afegeix més persones al teu starter pack cercant a dalt."
 
 #: src/view/com/auth/SplashScreen.web.tsx:157
 msgid "Jobs"
@@ -3363,11 +3363,11 @@ msgstr "Feines"
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:200
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:206
 msgid "Join Bluesky"
-msgstr ""
+msgstr "Uneix-te a Bluesky"
 
 #: src/components/StarterPack/QrCode.tsx:56
 msgid "Join the conversation"
-msgstr ""
+msgstr "Uneix-te a la conversa"
 
 #: src/view/com/modals/Waitlist.tsx:67
 #~ msgid "Join the waitlist"
@@ -3506,7 +3506,7 @@ msgstr "L'emmagatzematge heretat s'ha esborrat, cal que reinicieu l'aplicació a
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:295
 msgid "Let me choose"
-msgstr ""
+msgstr "Deixa'm triar"
 
 #: src/screens/Login/index.tsx:130
 #: src/screens/Login/index.tsx:145
@@ -3633,7 +3633,7 @@ msgstr "Llistes que bloquegen aquest usuari:"
 
 #: src/view/screens/Search/Explore.tsx:130
 msgid "Load more"
-msgstr ""
+msgstr "Carrega'n més"
 
 #: src/view/com/post-thread/PostThread.tsx:333
 #: src/view/com/post-thread/PostThread.tsx:341
@@ -3642,11 +3642,11 @@ msgstr ""
 
 #: src/view/screens/Search/Explore.tsx:218
 msgid "Load more suggested feeds"
-msgstr ""
+msgstr "Carrega més canals suggerits"
 
 #: src/view/screens/Search/Explore.tsx:216
 msgid "Load more suggested follows"
-msgstr ""
+msgstr "Carrega més suggerencies d'usuaris per seguir"
 
 #: src/view/screens/Notifications.tsx:184
 msgid "Load new notifications"
@@ -3720,7 +3720,7 @@ msgstr "Sembla que et falta el canal del Seguits. <0>Clica aquí per a afegir-ne
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:254
 msgid "Make one for me"
-msgstr ""
+msgstr "Fes-ne un per mi"
 
 #: src/view/com/modals/LinkWarning.tsx:79
 msgid "Make sure this is where you intend to go!"
@@ -3888,7 +3888,7 @@ msgstr "Respostes amb més m'agrada primer"
 
 #: src/screens/Onboarding/state.ts:90
 msgid "Movies"
-msgstr ""
+msgstr "Pel·lícules"
 
 #: src/view/com/auth/create/Step2.tsx:122
 #~ msgid "Must be at least 3 characters"
@@ -4044,7 +4044,7 @@ msgstr "Natura"
 
 #: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:73
 msgid "Navigate to starter pack"
-msgstr ""
+msgstr "Vés a l'starter pack"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:173
 #: src/screens/Login/LoginForm.tsx:312
@@ -4139,7 +4139,7 @@ msgstr "Nova publicació"
 
 #: src/components/NewskieDialog.tsx:83
 msgid "New user info dialog"
-msgstr ""
+msgstr "Diàleg d'informació d'usuari nou"
 
 #: src/view/com/modals/CreateOrEditList.tsx:236
 msgid "New User List"
@@ -4204,7 +4204,7 @@ msgstr "No s'han trobat GIF destacats. Pot haver-hi un problema amb Tenor."
 
 #: src/screens/StarterPack/Wizard/StepFeeds.tsx:120
 msgid "No feeds found. Try searching for something else."
-msgstr ""
+msgstr "No s'han trobat canals. Intenta cercar una altra cosa."
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:120
 msgid "No longer following {0}"
@@ -4235,7 +4235,7 @@ msgstr "Ningú"
 
 #: src/screens/Profile/Sections/Feed.tsx:59
 msgid "No posts yet."
-msgstr ""
+msgstr "Encara no hi ha publicacions."
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:101
 #: src/view/com/composer/text-input/web/Autocomplete.tsx:195
@@ -4290,7 +4290,7 @@ msgstr "A ningú encara li ha agradat això. Potser hauries de ser el primer!"
 
 #: src/screens/StarterPack/Wizard/StepProfiles.tsx:103
 msgid "Nobody was found. Try searching for someone else."
-msgstr ""
+msgstr "No s'ha trobat ningú. Intenta cercar algú altre."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:42
 msgid "Non-sexual Nudity"
@@ -4344,7 +4344,7 @@ msgstr "Notificacions"
 
 #: src/lib/hooks/useTimeAgo.ts:51
 msgid "now"
-msgstr ""
+msgstr "ara"
 
 #: src/components/dms/MessageItem.tsx:175
 msgid "Now"
@@ -4394,11 +4394,11 @@ msgstr "Respostes més antigues primer"
 
 #: src/components/StarterPack/QrCode.tsx:69
 msgid "on"
-msgstr ""
+msgstr "en"
 
 #: src/lib/hooks/useTimeAgo.ts:81
 msgid "on {str}"
-msgstr ""
+msgstr "en {str}"
 
 #: src/view/screens/Settings/index.tsx:256
 msgid "Onboarding reset"
@@ -4414,7 +4414,7 @@ msgstr "Només s'accepten fitxers .jpg i .png"
 
 #: src/components/WhoCanReply.tsx:244
 msgid "Only {0} can reply"
-msgstr ""
+msgstr "Només {0} pot respondre"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:100
 #~ msgid "Only {0} can reply."
@@ -4492,7 +4492,7 @@ msgstr "Obre el menú de les opcions de publicació"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:451
 msgid "Open starter pack menu"
-msgstr ""
+msgstr "Obre el menú de l'starter pack"
 
 #: src/view/screens/Settings/index.tsx:860
 #: src/view/screens/Settings/index.tsx:870
@@ -4509,7 +4509,7 @@ msgstr "Obre {numItems} opcions"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:60
 msgid "Opens a dialog to choose who can reply to this thread"
-msgstr ""
+msgstr "Obre un diàleg per triar qui pot respondre a aquest fil"
 
 #: src/view/screens/Settings/index.tsx:510
 msgid "Opens accessibility settings"
@@ -4767,7 +4767,7 @@ msgstr "S'ha denegat el permís per a accedir a la càmera. Activa'l a la config
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:55
 msgid "Person toggle"
-msgstr ""
+msgstr "Canvi de persona"
 
 #: src/screens/Onboarding/index.tsx:28
 #: src/screens/Onboarding/state.ts:93
@@ -4780,7 +4780,7 @@ msgstr "Mascotes"
 
 #: src/screens/Onboarding/state.ts:94
 msgid "Photography"
-msgstr ""
+msgstr "Fotografia"
 
 #: src/view/com/modals/SelfLabel.tsx:122
 msgid "Pictures meant for adults."
@@ -5019,7 +5019,7 @@ msgstr "Prem per a tornar-ho a provar"
 
 #: src/components/KnownFollowers.tsx:116
 msgid "Press to view followers of this account that you also follow"
-msgstr ""
+msgstr "Prem per veure els seguidors d'aquest compte que també segueixes"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:150
 msgid "Previous image"
@@ -5097,15 +5097,15 @@ msgstr "Publica la resposta"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:125
 msgid "QR code copied to your clipboard!"
-msgstr ""
+msgstr "Codi QR copiat en memòria!"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:103
 msgid "QR code has been downloaded!"
-msgstr ""
+msgstr "Codi QR descarregat!"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:104
 msgid "QR code saved to your camera roll!"
-msgstr ""
+msgstr "Codi QR desat a la teva galeria"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:116
 #: src/view/com/util/post-ctrls/RepostButton.tsx:128
@@ -5186,7 +5186,7 @@ msgstr "Elimina"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:58
 msgid "Remove {displayName} from starter pack"
-msgstr ""
+msgstr "Elimina a {displayName} de l'starter pack"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:22
 msgid "Remove account"
@@ -5302,11 +5302,11 @@ msgstr "Respostes"
 
 #: src/components/WhoCanReply.tsx:71
 msgid "Replies disabled"
-msgstr ""
+msgstr "Respostes deshabilitades"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:123
 #~ msgid "Replies on this thread are disabled"
-#~ msgstr ""
+#~ msgstr "Les respostes a aquest fil de debat estan deshabilitades"
 
 #: src/components/WhoCanReply.tsx:242
 msgid "Replies to this thread are disabled"
@@ -5336,7 +5336,7 @@ msgstr "Resposta a <0><1/></0>"
 #: src/view/com/posts/FeedItem.tsx:437
 msgctxt "description"
 msgid "Reply to a blocked post"
-msgstr ""
+msgstr "Respon a una publicació bloquejada"
 
 #: src/components/dms/MessageMenu.tsx:132
 #: src/components/dms/MessagesListBlockedFooter.tsx:77
@@ -5389,7 +5389,7 @@ msgstr "Informa de la publicació"
 #: src/screens/StarterPack/StarterPackScreen.tsx:504
 #: src/screens/StarterPack/StarterPackScreen.tsx:507
 msgid "Report starter pack"
-msgstr ""
+msgstr "Informa sobre l'starter pack"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:43
 msgid "Report this content"
@@ -5415,7 +5415,7 @@ msgstr "Informa d'aquesta publicació"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:59
 msgid "Report this starter pack"
-msgstr ""
+msgstr "Informa sobre aquest starter pack"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:47
 msgid "Report this user"
@@ -5624,7 +5624,7 @@ msgstr "Desa el canvi d'identificador"
 #: src/components/StarterPack/ShareDialog.tsx:150
 #: src/components/StarterPack/ShareDialog.tsx:157
 msgid "Save image"
-msgstr ""
+msgstr "Desa la imatge"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:169
 msgid "Save image crop"
@@ -5632,7 +5632,7 @@ msgstr "Desa la imatge retallada"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:178
 msgid "Save QR code"
-msgstr ""
+msgstr "Desa el codi QR"
 
 #: src/view/screens/ProfileFeed.tsx:333
 #: src/view/screens/ProfileFeed.tsx:339
@@ -5728,7 +5728,7 @@ msgstr "Cerca totes les publicacions amb l'etiqueta {displayTag}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:491
 msgid "Search for feeds that you want to suggest to others."
-msgstr ""
+msgstr "Cerca canals que vulgueu suggerir als altres."
 
 #: src/components/dms/NewChat.tsx:226
 #~ msgid "Search for someone to start a conversation with."
@@ -6153,7 +6153,7 @@ msgstr "Comparteix el canal"
 #: src/components/StarterPack/ShareDialog.tsx:130
 #: src/screens/StarterPack/StarterPackScreen.tsx:497
 msgid "Share link"
-msgstr ""
+msgstr "Comparteix l'enllaç"
 
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
@@ -6162,20 +6162,20 @@ msgstr "Comparteix l'enllaç"
 
 #: src/components/StarterPack/ShareDialog.tsx:87
 msgid "Share link dialog"
-msgstr ""
+msgstr "Diàleg de compartició de l'enllaç"
 
 #: src/components/StarterPack/ShareDialog.tsx:134
 #: src/components/StarterPack/ShareDialog.tsx:145
 msgid "Share QR code"
-msgstr ""
+msgstr "Comparteix el codi QR"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:333
 msgid "Share this starter pack"
-msgstr ""
+msgstr "Comparteix aquets starter pack"
 
 #: src/components/StarterPack/ShareDialog.tsx:99
 msgid "Share this starter pack and help people join your community on Bluesky."
-msgstr ""
+msgstr "Comparteix aquets starter pack i ajuda a la gent de la teva comunitat a unir-se a Bluesky."
 
 #: src/components/dms/ChatEmptyPill.tsx:34
 msgid "Share your favorite feed!"
@@ -6403,7 +6403,7 @@ msgstr "S'ha iniciat sessió com a @{0}"
 
 #: src/view/com/notifications/FeedItem.tsx:197
 msgid "signed up with your starter pack"
-msgstr ""
+msgstr "s'ha registrat amb el vostre starter pack"
 
 #: src/view/com/modals/SwitchAccount.tsx:70
 #~ msgid "Signs {0} out of Bluesky"
@@ -6412,7 +6412,7 @@ msgstr ""
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:300
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:307
 msgid "Signup without a starter pack"
-msgstr ""
+msgstr "S'ha registrat sense cap starter pack"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:245
 #: src/screens/StarterPack/Wizard/index.tsx:192
@@ -6439,7 +6439,7 @@ msgstr "Algunes persones poden respondre"
 
 #: src/screens/StarterPack/Wizard/index.tsx:203
 #~ msgid "Some subtitle"
-#~ msgstr ""
+#~ msgstr "Algun subtítol"
 
 #: src/screens/Messages/Conversation/index.tsx:106
 msgid "Something went wrong"
@@ -6527,23 +6527,23 @@ msgstr "Comença a xatejar"
 #: src/Navigation.tsx:325
 #: src/screens/StarterPack/Wizard/index.tsx:183
 msgid "Starter Pack"
-msgstr ""
+msgstr "Starter pack"
 
 #: src/components/StarterPack/StarterPackCard.tsx:65
 msgid "Starter pack by {0}"
-msgstr ""
+msgstr "Starter pack de {0}"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:614
 msgid "Starter pack is invalid"
-msgstr ""
+msgstr "Aquest starter pack és invàlid"
 
 #: src/view/screens/Profile.tsx:214
 msgid "Starter Packs"
-msgstr ""
+msgstr "Starter packs"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:238
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
-msgstr ""
+msgstr "Els starter packs et permeten compartir els teus canals i persones preferides amb els teus amics."
 
 #: src/view/screens/Settings/index.tsx:862
 #~ msgid "Status page"
@@ -6608,7 +6608,7 @@ msgstr "Subscriure's a la llista"
 
 #: src/view/screens/Search/Explore.tsx:331
 msgid "Suggested accounts"
-msgstr ""
+msgstr "Comptes suggerits"
 
 #: src/view/screens/Search/Search.tsx:425
 #~ msgid "Suggested Follows"
@@ -6684,7 +6684,7 @@ msgstr "Explica un acudit!"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:63
 msgid "Tell us a little more"
-msgstr ""
+msgstr "Explica'ns una mica més"
 
 #: src/view/shell/desktop/RightNav.tsx:86
 msgid "Terms"
@@ -6732,7 +6732,7 @@ msgstr "Aquest identificador ja està agafat."
 #: src/screens/StarterPack/Wizard/index.tsx:106
 #: src/screens/StarterPack/Wizard/index.tsx:114
 msgid "That starter pack could not be found."
-msgstr ""
+msgstr "No s'ha pogut trobar aquest starter pack."
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:310
 #: src/view/com/profile/ProfileMenu.tsx:353
@@ -6753,7 +6753,7 @@ msgstr "La política de drets d'autoria ha estat traslladada a <0/>"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:321
 msgid "The experience is better in the app. Download Bluesky now and we'll pick back up where you left off."
-msgstr ""
+msgstr "L'experiència és millor a l'aplicació. Baixa Bluesky ara i tornarem a començar on ho vas deixar."
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:66
 msgid "The feed has been replaced with Discover."
@@ -6782,7 +6782,7 @@ msgstr "La política de privacitat ha estat traslladada a <0/>"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:624
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
-msgstr ""
+msgstr "L'starter pack que estàs provant de veure no és vàlid. En lloc d'això, podeu suprimir-lo."
 
 #: src/view/screens/Support.tsx:36
 msgid "The support form has been moved. If you need help, please <0/> or visit {HELP_DESK_URL} to get in touch with us."
@@ -6966,7 +6966,7 @@ msgstr "Aquest contingut no es pot veure sense un compte de Bluesky."
 
 #: src/screens/Messages/List/ChatListItem.tsx:213
 msgid "This conversation is with a deleted or a deactivated account. Press for options."
-msgstr ""
+msgstr "Aquesta conversa és amb un compte suprimit o desactivat. Prem per obtenir opcions."
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:75
 #~ msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost.</0>"
@@ -6994,7 +6994,7 @@ msgstr "Aquest canal està buit! Necessites seguir més usuaris o modificar la t
 #: src/view/screens/ProfileFeed.tsx:473
 #: src/view/screens/ProfileList.tsx:729
 msgid "This feed is empty."
-msgstr ""
+msgstr "Aquest canal és buit."
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:97
 msgid "This feed is no longer online. We are showing <0>Discover</0> instead."
@@ -7116,7 +7116,7 @@ msgstr "Aquest usuari està inclòs a la llista <0>{0}</0> que has silenciat."
 
 #: src/components/NewskieDialog.tsx:65
 msgid "This user is new here. Press for more info about when they joined."
-msgstr ""
+msgstr "Aquest usuari és nou aquí. Prem per obtenir més informació sobre quan es van unir."
 
 #: src/view/com/profile/ProfileFollows.tsx:87
 msgid "This user isn't following anyone."
@@ -7145,7 +7145,7 @@ msgstr "Preferències dels fils de debat"
 
 #: src/components/WhoCanReply.tsx:109
 msgid "Thread settings updated"
-msgstr ""
+msgstr "Preferències dels fils de debat actualitzades"
 
 #: src/view/screens/PreferencesThreads.tsx:119
 msgid "Threaded Mode"
@@ -7208,7 +7208,7 @@ msgstr "Torna-ho a provar"
 
 #: src/screens/Onboarding/state.ts:99
 msgid "TV"
-msgstr ""
+msgstr "TV"
 
 #: src/view/screens/Settings/index.tsx:745
 msgid "Two-factor authentication"
@@ -7241,7 +7241,7 @@ msgstr "No es pot contactar amb el teu servei. Comprova la teva connexió a inte
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:548
 msgid "Unable to delete"
-msgstr ""
+msgstr "No s'ha pogut eliminar"
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:89
 #: src/components/dms/MessagesListBlockedFooter.tsx:96
@@ -7619,7 +7619,7 @@ msgstr "Veure el perfil de {0}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:430
 msgid "View blocked user's profile"
-msgstr ""
+msgstr "Veure el perfil de l'usuari bloquejat"
 
 #: src/view/screens/Log.tsx:56
 msgid "View debug entry"
@@ -7664,7 +7664,7 @@ msgstr "Veure els usuaris a qui els agrada aquest canal"
 #: src/view/com/home/HomeHeaderLayout.web.tsx:79
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:84
 msgid "View your feeds and explore more"
-msgstr ""
+msgstr "Veure el teus canals i descobreix-ne més"
 
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
@@ -7763,7 +7763,7 @@ msgstr "Ens sap greu, però la teva cerca no s'ha pogut fer. Prova-ho d'aquí un
 
 #: src/view/com/composer/Composer.tsx:335
 msgid "We're sorry! The post you are replying to has been deleted."
-msgstr ""
+msgstr "Ho sentim! La publicació a la qual estàs responent s'ha suprimit."
 
 #: src/components/Lists.tsx:212
 #: src/view/screens/NotFound.tsx:48
@@ -7776,7 +7776,7 @@ msgstr "Ens sap greu! No podem trobar la pàgina que estàs cercant."
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:330
 msgid "We're sorry! You can only subscribe to twenty labelers, and you've reached your limit of twenty."
-msgstr ""
+msgstr "Ho sentim! Només pots subscriure't a vint etiquetadors i has arribat al teu límit de vint."
 
 #: src/screens/Deactivated.tsx:128
 msgid "Welcome back!"
@@ -7788,7 +7788,7 @@ msgstr "Bentornat!"
 
 #: src/components/NewskieDialog.tsx:103
 msgid "Welcome, friend!"
-msgstr ""
+msgstr "Benvingut, col·lega!"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:140
 msgid "What are your interests?"
@@ -7796,7 +7796,7 @@ msgstr "Quins són els teus interessos?"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:42
 msgid "What do you want to call your starter pack?"
-msgstr ""
+msgstr "Com vols anomenar al teu starter pack?"
 
 #: src/view/com/modals/report/Modal.tsx:169
 #~ msgid "What is the issue with this {collectionName}?"
@@ -7830,11 +7830,11 @@ msgstr "Qui hi pot respondre"
 
 #: src/components/WhoCanReply.tsx:211
 msgid "Who can reply dialog"
-msgstr ""
+msgstr "Diàleg de qui pot respondre"
 
 #: src/components/WhoCanReply.tsx:215
 msgid "Who can reply?"
-msgstr ""
+msgstr "Qui pot respondre?"
 
 #: src/screens/Home/NoFeedsPinned.tsx:79
 #: src/screens/Messages/List/index.tsx:185
@@ -7863,7 +7863,7 @@ msgstr "Per què s'hauria de revisar aquesta publicació?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:60
 msgid "Why should this starter pack be reviewed?"
-msgstr ""
+msgstr "Per què s'hauria de revisar aquest starter pack?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:48
 msgid "Why should this user be reviewed?"
@@ -7913,7 +7913,7 @@ msgstr "Sí, desactiva'l"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:560
 msgid "Yes, delete this starter pack"
-msgstr ""
+msgstr "Sí, elimina aquest starter pack"
 
 #: src/screens/Deactivated.tsx:150
 msgid "Yes, reactivate my account"
@@ -7925,11 +7925,11 @@ msgstr "Ahir, {time}"
 
 #: src/components/StarterPack/StarterPackCard.tsx:68
 msgid "you"
-msgstr ""
+msgstr "tu"
 
 #: src/components/NewskieDialog.tsx:43
 msgid "You"
-msgstr ""
+msgstr "Tu"
 
 #: src/screens/SignupQueued.tsx:136
 msgid "You are in line."
@@ -7979,7 +7979,7 @@ msgstr "No tens cap seguidor."
 
 #: src/screens/Profile/KnownFollowers.tsx:99
 msgid "You don't follow any users who follow @{name}."
-msgstr ""
+msgstr "No segueixes cap usuari que segueixi @{name}."
 
 #: src/view/com/modals/InviteCodes.tsx:67
 msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
@@ -8082,7 +8082,7 @@ msgstr "Has arribat al final"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:235
 msgid "You haven't created a starter pack yet!"
-msgstr ""
+msgstr "Encara no has creat cap starter pack!"
 
 #: src/components/dialogs/MutedWords.tsx:249
 msgid "You haven't muted any words or tags yet"
@@ -8098,11 +8098,11 @@ msgstr "Pots apel·lar aquestes etiquetes si creus que s'han col·locat per erro
 
 #: src/screens/StarterPack/Wizard/State.tsx:92
 msgid "You may only add up to 50 feeds"
-msgstr ""
+msgstr "Només pots afegir 50 canals"
 
 #: src/screens/StarterPack/Wizard/State.tsx:77
 msgid "You may only add up to 50 profiles"
-msgstr ""
+msgstr "Només pots afegir 50 perfils"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:79
 msgid "You must be 13 years of age or older to sign up."
@@ -8118,15 +8118,15 @@ msgstr "Has de tenir 13 anys o més per a registrar-te"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:306
 msgid "You must be following at least seven other people to generate a starter pack."
-msgstr ""
+msgstr "Has de seguir almenys set persones més per generar un starter pack."
 
 #: src/components/StarterPack/QrCodeDialog.tsx:60
 msgid "You must grant access to your photo library to save a QR code"
-msgstr ""
+msgstr "Has de concedir accés a la teva galeria per desar un codi QR"
 
 #: src/components/StarterPack/ShareDialog.tsx:68
 msgid "You must grant access to your photo library to save the image."
-msgstr ""
+msgstr "Has de concedir accés a la teva galeria per desar la imatge."
 
 #: src/components/ReportDialog/SubmitView.tsx:205
 msgid "You must select at least one labeler for a report"
@@ -8162,23 +8162,23 @@ msgstr "Tu: {short}"
 
 #: src/screens/Signup/index.tsx:169
 msgid "You'll follow the suggested users and feeds once you finish creating your account!"
-msgstr ""
+msgstr "Seguiràs els usuaris i els canals suggerits un cop hagis acabat de crear el teu compte!"
 
 #: src/screens/Signup/index.tsx:174
 msgid "You'll follow the suggested users once you finish creating your account!"
-msgstr ""
+msgstr "Seguiràs els usuaris suggerits un cop hagis acabat de crear el teu compte!"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:233
 msgid "You'll follow these people and {0} others"
-msgstr ""
+msgstr "Seguiràs aquestes persones i {0} altres"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:231
 msgid "You'll follow these people right away"
-msgstr ""
+msgstr "Seguiràs a aquesta gent de seguida"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:271
 msgid "You'll stay updated with these feeds"
-msgstr ""
+msgstr "Estaràs al dia amb aquests canals"
 
 #: src/screens/Onboarding/StepModeration/index.tsx:60
 #~ msgid "You're in control"
