@@ -17,11 +17,13 @@ import {
 
 import {HomeFeedAPI} from '#/lib/api/feed/home'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
+import {DISCOVER_FEED_URI} from '#/lib/constants'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
 import {useAgent} from '#/state/session'
+import * as userActionHistory from '#/state/userActionHistory'
 import {AuthorFeedAPI} from 'lib/api/feed/author'
 import {CustomFeedAPI} from 'lib/api/feed/custom'
 import {FollowingFeedAPI} from 'lib/api/feed/following'
@@ -131,6 +133,7 @@ export function usePostFeedQuery(
     result: InfiniteData<FeedPage>
   } | null>(null)
   const lastPageCountRef = useRef(0)
+  const isDiscover = feedDesc.includes(DISCOVER_FEED_URI)
 
   // Make sure this doesn't invalidate unless really needed.
   const selectArgs = React.useMemo(
@@ -139,8 +142,15 @@ export function usePostFeedQuery(
       disableTuner: params?.disableTuner,
       moderationOpts,
       ignoreFilterFor: opts?.ignoreFilterFor,
+      isDiscover,
     }),
-    [feedTuners, params?.disableTuner, moderationOpts, opts?.ignoreFilterFor],
+    [
+      feedTuners,
+      params?.disableTuner,
+      moderationOpts,
+      opts?.ignoreFilterFor,
+      isDiscover,
+    ],
   )
 
   const query = useInfiniteQuery<
@@ -219,8 +229,13 @@ export function usePostFeedQuery(
       (data: InfiniteData<FeedPageUnselected, RQPageParam>) => {
         // If the selection depends on some data, that data should
         // be included in the selectArgs object and read here.
-        const {feedTuners, disableTuner, moderationOpts, ignoreFilterFor} =
-          selectArgs
+        const {
+          feedTuners,
+          disableTuner,
+          moderationOpts,
+          ignoreFilterFor,
+          isDiscover,
+        } = selectArgs
 
         const tuner = disableTuner
           ? new NoopFeedTuner()
@@ -291,6 +306,21 @@ export function usePostFeedQuery(
                     ) {
                       return undefined
                     }
+                  }
+
+                  if (isDiscover) {
+                    userActionHistory.seen(
+                      slice.items.map(item => ({
+                        feedContext: item.feedContext,
+                        likeCount: item.post.likeCount ?? 0,
+                        repostCount: item.post.repostCount ?? 0,
+                        replyCount: item.post.replyCount ?? 0,
+                        isFollowedBy: Boolean(
+                          item.post.author.viewer?.followedBy,
+                        ),
+                        uri: item.post.uri,
+                      })),
+                    )
                   }
 
                   return {

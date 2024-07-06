@@ -22,7 +22,7 @@ export function ProgressGuideTask({
   return (
     <View style={[a.flex_row, a.gap_sm, !subtitle && a.align_center]}>
       {current === total ? (
-        <AnimatedCheck playOnMount fill={t.palette.primary_500} width={24} />
+        <AnimatedCheck playOnMount fill={t.palette.primary_500} width={20} />
       ) : (
         <Progress.Circle
           progress={current / total}
