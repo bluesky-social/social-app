@@ -4549,10 +4549,6 @@ msgstr "已從我的動態源中刪除"
 msgid "Removed from your feeds"
 msgstr "從您的動態中刪除"
 
-#: src/view/com/composer/ExternalEmbed.tsx:88
-#~ msgid "Removes default thumbnail from {0}"
-#~ msgstr "從 {0} 中刪除預設縮圖"
-
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:239
 msgid "Removes quoted post"
 msgstr "刪除已轉貼貼文"
