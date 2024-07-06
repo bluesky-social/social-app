@@ -53,13 +53,15 @@ async function renderApp(res, returnValue, formState) {
   // const m = require('../src/App.js');
   const m = await import('../src/App.js')
 
-  const moduleMap = {
-    Text: {
-      id: 'Text',
+  let moduleMap = {}
+  for (let id of Object.keys(await import('../src/client.js'))) {
+    moduleMap[id] = {
+      id,
       name: 'default',
       chunks: ['main'],
-    },
+    }
   }
+
   const App = m.default.default || m.default
   const root = React.createElement(
     React.Fragment,

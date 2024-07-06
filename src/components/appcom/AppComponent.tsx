@@ -1,3 +1,4 @@
+import React, {Suspense} from 'react'
 import {useQuery} from '@tanstack/react-query'
 // @ts-ignore
 import {createFromFetch} from 'react-server-dom-webpack/client'
@@ -23,5 +24,6 @@ export function AppComponent({origin}: {origin: string}) {
   if (!data) {
     return null // TODO
   }
-  return data.root
+
+  return <Suspense fallback={null /* TODO */}>{data.root}</Suspense>
 }

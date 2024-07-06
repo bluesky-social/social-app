@@ -1,9 +1,13 @@
 import * as React from 'react'
 
-import {Text} from './client.js'
+import {Label, Stack} from './client.js'
 
 export default async function App() {
-  return <Text>hello</Text>
+  return (
+    <Stack gap={10}>
+      <Label size={36} lineHeight={1.2} weight="bold" text="Hello, world!" />
+    </Stack>
+  )
 }
 
 // TODO
