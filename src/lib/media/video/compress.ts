@@ -1,5 +1,4 @@
 import {getVideoMetaData, Video} from 'react-native-compressor'
-import * as FileSystem from 'expo-file-system'
 
 export type CompressedVideo = {
   uri: string
@@ -26,12 +25,6 @@ export async function compressVideo(
     onProgress,
   )
 
-  try {
-    await FileSystem.deleteAsync(file)
-  } catch {
-    console.warn('Failed to delete original video')
-  }
   const info = await getVideoMetaData(compressed)
-
   return {uri: compressed, size: info.size}
 }
