@@ -17,9 +17,9 @@ export default async function App() {
       <Label size={36} lineHeight={1.2} weight="bold" text="Hello, world!" />
       <Label
         lineHeight={1.2}
-        text='This is the initial version of a fantastic new feature of the AT Protocol called "application components."'
+        text='This is a weekend exploration of an approach to a feature called "application components."'
       />
-      <Tabs labels={['Layout', 'Display', 'Inputs', 'Forms', 'ATProto']}>
+      <Tabs labels={['Layout', 'Display', 'Inputs', 'Forms', 'Embeds']}>
         <Stack gap={10} pad={{t: 20}}>
           <Box pad={{x: 10}}>
             <Label text="Stack" size={10} weight="bold" />
