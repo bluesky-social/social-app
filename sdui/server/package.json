@@ -15,9 +15,9 @@
     "busboy": "^1.6.0",
     "compression": "^1.7.4",
     "nodemon": "^2.0.19",
-    "react": "^19.0.0-rc-f38c22b244-20240704",
-    "react-dom": "^19.0.0-rc-f38c22b244-20240704",
-    "react-server-dom-webpack": "^19.0.0-rc-f38c22b244-20240704",
+    "react": "19.0.0-rc-f38c22b244-20240704",
+    "react-dom": "19.0.0-rc-f38c22b244-20240704",
+    "react-server-dom-webpack": "19.0.0-rc-f38c22b244-20240704",
     "undici": "^5.20.0"
   },
   "scripts": {

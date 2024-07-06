@@ -37,6 +37,11 @@ const compress = require('compression')
 
 app.use(compress())
 
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*')
+  next()
+})
+
 // Application
 
 const React = require('react')
