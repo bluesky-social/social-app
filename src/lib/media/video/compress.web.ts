@@ -1,4 +1,4 @@
-import * as Toast from '#/view/com/util/Toast'
+import {VideoTooLargeError} from 'lib/media/video/errors'
 
 const MAX_VIDEO_SIZE = 1024 * 1024 * 100 // 100MB
 
@@ -18,8 +18,7 @@ export async function compressVideo(
   const video = URL.createObjectURL(blob)
 
   if (blob.size > MAX_VIDEO_SIZE) {
-    Toast.show('Videos cannot be larger than 100MB')
-    throw new Error('Videos cannot be larger than 100MB')
+    throw new VideoTooLargeError()
   }
 
   return {

@@ -5,6 +5,9 @@ import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 
 import {compressVideo} from '#/lib/media/video/compress'
+import {logger} from '#/logger'
+import {VideoTooLargeError} from 'lib/media/video/errors'
+import * as Toast from 'view/com/util/Toast'
 
 export function useVideoState({setError}: {setError: (error: string) => void}) {
   const {_} = useLingui()
@@ -18,7 +21,13 @@ export function useVideoState({setError}: {setError: (error: string) => void}) {
 
       return compressed
     },
-    onError: () => {
+    onError: (e: any) => {
+      // Don't log these errors in sentry, just let the user know
+      if (e instanceof VideoTooLargeError) {
+        Toast.show(_(msg`Videos cannot be larger than 100MB`))
+        return
+      }
+      logger.error('Failed to compress video', {safeError: e})
       setError(_(msg`Could not compress video`))
     },
     onMutate: () => {
