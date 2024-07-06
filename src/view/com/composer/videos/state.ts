@@ -5,6 +5,7 @@ import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 
 import {compressVideo} from '#/lib/media/video/compress'
+import {logger} from '#/logger'
 
 export function useVideoState({setError}: {setError: (error: string) => void}) {
   const {_} = useLingui()
@@ -18,7 +19,8 @@ export function useVideoState({setError}: {setError: (error: string) => void}) {
 
       return compressed
     },
-    onError: () => {
+    onError: (e: any) => {
+      logger.error('Failed to compress video', {safeError: e})
       setError(_(msg`Could not compress video`))
     },
     onMutate: () => {
