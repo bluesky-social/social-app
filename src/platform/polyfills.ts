@@ -53,3 +53,5 @@ globalThis.atob = (str: string): string => {
   }
   return result
 }
+
+import 'web-streams-polyfill/dist/polyfill'

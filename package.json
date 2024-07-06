@@ -171,6 +171,7 @@
     "react-native-compressor": "^1.8.24",
     "react-native-date-picker": "^4.4.2",
     "react-native-drawer-layout": "^4.0.0-alpha.3",
+    "react-native-fetch-api": "^3.0.0",
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "~2.16.2",
     "react-native-get-random-values": "~1.11.0",
@@ -202,6 +203,7 @@
     "statsig-react-native-expo": "^4.6.1",
     "tippy.js": "^6.3.7",
     "tlds": "^1.234.0",
+    "web-streams-polyfill": "3.1.1",
     "zeego": "^1.6.2",
     "zod": "^3.20.2"
   },
