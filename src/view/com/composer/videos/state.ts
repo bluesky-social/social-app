@@ -22,7 +22,7 @@ export function useVideoState({setError}: {setError: (error: string) => void}) {
       return compressed
     },
     onError: (e: any) => {
-      // Don't log these errors in sentry, just let hte user know
+      // Don't log these errors in sentry, just let the user know
       if (e instanceof VideoTooLargeError) {
         Toast.show(_(msg`Videos cannot be larger than 100MB`))
         return
