@@ -567,10 +567,6 @@ msgstr "Erscheinungsbild"
 msgid "Apply default recommended feeds"
 msgstr "Standardmäßig empfohlene Feeds anwenden"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:610
-msgid "Are you sure you want delete this starter pack?"
-msgstr "Möchtest du dieses Starterpaket wirklich löschen?"
-
 #: src/view/screens/AppPasswords.tsx:282
 msgid "Are you sure you want to delete the app password \"{name}\"?"
 msgstr "Bist du sicher, dass du das App-Passwort „{name}” löschen möchtest?"
@@ -578,6 +574,10 @@ msgstr "Bist du sicher, dass du das App-Passwort „{name}” löschen möchtest
 #: src/components/dms/MessageMenu.tsx:149
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
 msgstr "Möchtest du diese Nachricht wirklich löschen? Die Nachricht wird für dich gelöscht, nicht jedoch für den anderen Teilnehmer."
+
+#: src/screens/StarterPack/StarterPackScreen.tsx:610
+msgid "Are you sure you want to delete this starter pack?"
+msgstr "Möchtest du dieses Starterpaket wirklich löschen?"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:48
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
