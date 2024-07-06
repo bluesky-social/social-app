@@ -1,0 +1,32 @@
+{
+  "name": "sdui",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "devEngines": {
+    "node": "20.x || 21.x"
+  },
+  "dependencies": {
+    "@babel/core": "^7.16.0",
+    "@babel/preset-react": "^7.22.5",
+    "@babel/register": "^7.24.6",
+    "babel-preset-react-app": "^10.0.1",
+    "body-parser": "^1.20.1",
+    "busboy": "^1.6.0",
+    "compression": "^1.7.4",
+    "nodemon": "^2.0.19",
+    "react": "^19.0.0-rc-f38c22b244-20240704",
+    "react-dom": "^19.0.0-rc-f38c22b244-20240704",
+    "react-server-dom-webpack": "^19.0.0-rc-f38c22b244-20240704",
+    "undici": "^5.20.0"
+  },
+  "scripts": {
+    "dev": "NODE_ENV=development BUILD_PATH=dist nodemon --watch src --watch dist -- --enable-source-maps --experimental-loader ./loader/region.js --conditions=react-server --inspect=127.0.0.1:9229 server/region",
+    "start": "NODE_ENV=production node --experimental-loader ./loader/region.js --conditions=react-server server/region"
+  },
+  "babel": {
+    "presets": [
+      "react-app"
+    ]
+  }
+}
