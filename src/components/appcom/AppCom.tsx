@@ -1,18 +1,13 @@
 import React from 'react'
 import {View} from 'react-native'
+import {ErrorBoundary} from 'react-error-boundary'
+import {ZodError} from 'zod'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '../Typography'
-import type {AppComNode} from './types'
 import {AppComponent} from './vocabulary'
 
-export function AppComponentRegion({
-  tree,
-  origin,
-}: {
-  tree: AppComNode
-  origin: string
-}) {
+export function AppComponentRegion({origin}: {origin: string}) {
   const t = useTheme()
   return (
     <View style={[a.border, t.atoms.border_contrast_medium, a.rounded_sm]}>
@@ -36,8 +31,22 @@ export function AppComponentRegion({
         </Text>
       </View>
       <View style={[a.px_md, a.py_lg]}>
-        <AppComponent node={tree} />
+        <ErrorBoundary fallbackRender={fallbackRender}>
+          <AppComponent origin={origin} />
+        </ErrorBoundary>
       </View>
+    </View>
+  )
+}
+
+function fallbackRender({error}: {error: Error}) {
+  const msg =
+    error instanceof ZodError
+      ? `${error.issues[0].path.join('.')}: ${error.issues[0].message}`
+      : error.toString()
+  return (
+    <View>
+      <Text>{msg}</Text>
     </View>
   )
 }
