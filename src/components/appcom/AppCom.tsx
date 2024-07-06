@@ -1,11 +1,13 @@
+import './vocabulary'
+
 import React from 'react'
 import {View} from 'react-native'
 import {ErrorBoundary} from 'react-error-boundary'
 import {ZodError} from 'zod'
 
 import {atoms as a, useTheme} from '#/alf'
-import {Text} from '../Typography'
-import {AppComponent} from './vocabulary'
+import {Text} from '#/components/Typography'
+import {AppComponent} from './AppComponent'
 
 export function AppComponentRegion({origin}: {origin: string}) {
   const t = useTheme()

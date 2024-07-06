@@ -56,6 +56,8 @@ async function renderApp(res, returnValue, formState) {
   const moduleMap = {
     Text: {
       id: 'Text',
+      name: 'default',
+      chunks: ['main'],
     },
   }
   const App = m.default.default || m.default

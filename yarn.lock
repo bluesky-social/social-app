@@ -19211,10 +19211,10 @@ react-scripts@^5.0.1:
   optionalDependencies:
     fsevents "^2.3.2"
 
-react-server-dom-webpack@19.0.0-rc-f38c22b244-20240704:
-  version "19.0.0-rc-f38c22b244-20240704"
-  resolved "https://registry.yarnpkg.com/react-server-dom-webpack/-/react-server-dom-webpack-19.0.0-rc-f38c22b244-20240704.tgz#d016db76ff9537d7fd042fcdd5ade8cea95166ce"
-  integrity sha512-AQ+3BkhxqUkmwXDDvf5uMrsfb5h0SpQv/bfO7dfwrkjwMJreKwan1fMXEPckCtGALoTUtHbuQoJbeudNttk5sQ==
+react-server-dom-webpack@19.0.0-canary-adb717393-20240411:
+  version "19.0.0-canary-adb717393-20240411"
+  resolved "https://registry.yarnpkg.com/react-server-dom-webpack/-/react-server-dom-webpack-19.0.0-canary-adb717393-20240411.tgz#49256e2d83378e2a39be5074f3d4bb7d5bb6a4dc"
+  integrity sha512-qbOEljTas1QIUGQsiwn1TvCeaAjZiiarmHJQjCXMpDI2uliURhbDalzquR4M5/gWw2m79iWKcnumA7azz4UZDg==
   dependencies:
     acorn-loose "^8.3.0"
     neo-async "^2.6.1"

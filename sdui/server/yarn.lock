@@ -2243,25 +2243,25 @@ raw-body@2.5.1:
     iconv-lite "0.4.24"
     unpipe "1.0.0"
 
-react-dom@^19.0.0-rc-f38c22b244-20240704:
-  version "19.0.0-rc-f38c22b244-20240704"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-19.0.0-rc-f38c22b244-20240704.tgz#da4a9835999bc3992bf74cf5a595b01e7e536d6b"
-  integrity sha512-g89q2pf3irdpKFUMgCQgtxgqo3TSV1k1J6Sc8God4FwfxuNmAOOthkijENe5XZe6VeV1tor9DPzpjdTD9EyvNw==
+react-dom@19.0.0-canary-adb717393-20240411:
+  version "19.0.0-canary-adb717393-20240411"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-19.0.0-canary-adb717393-20240411.tgz#b597e0dacd6cd79e89ffa3959e298251fd354138"
+  integrity sha512-zkJnxTJXN5sr7XJ7qq82S6UJJ81PZrZv3Y9Z4iY9Mx9fHAFTORnk7/5oWafrpfW544rLCSMWuxrKVYtXSyOQJA==
   dependencies:
-    scheduler "0.25.0-rc-f38c22b244-20240704"
+    scheduler "0.25.0-canary-adb717393-20240411"
 
-react-server-dom-webpack@^19.0.0-rc-f38c22b244-20240704:
-  version "19.0.0-rc-f38c22b244-20240704"
-  resolved "https://registry.yarnpkg.com/react-server-dom-webpack/-/react-server-dom-webpack-19.0.0-rc-f38c22b244-20240704.tgz#d016db76ff9537d7fd042fcdd5ade8cea95166ce"
-  integrity sha512-AQ+3BkhxqUkmwXDDvf5uMrsfb5h0SpQv/bfO7dfwrkjwMJreKwan1fMXEPckCtGALoTUtHbuQoJbeudNttk5sQ==
+react-server-dom-webpack@19.0.0-canary-adb717393-20240411:
+  version "19.0.0-canary-adb717393-20240411"
+  resolved "https://registry.yarnpkg.com/react-server-dom-webpack/-/react-server-dom-webpack-19.0.0-canary-adb717393-20240411.tgz#49256e2d83378e2a39be5074f3d4bb7d5bb6a4dc"
+  integrity sha512-qbOEljTas1QIUGQsiwn1TvCeaAjZiiarmHJQjCXMpDI2uliURhbDalzquR4M5/gWw2m79iWKcnumA7azz4UZDg==
   dependencies:
     acorn-loose "^8.3.0"
     neo-async "^2.6.1"
 
-react@^19.0.0-rc-f38c22b244-20240704:
-  version "19.0.0-rc-f38c22b244-20240704"
-  resolved "https://registry.yarnpkg.com/react/-/react-19.0.0-rc-f38c22b244-20240704.tgz#f8f213a8a5ea78c8757d603f1d1cdb8024185a45"
-  integrity sha512-OP8O6Oc1rdR9IdIKJRKaL1PYd4eGkn6f88VqiygWyyG4P4RmPPix5pp7MatqSt9TnBOcVT+lBMGoVxRgUFeudQ==
+react@19.0.0-canary-adb717393-20240411:
+  version "19.0.0-canary-adb717393-20240411"
+  resolved "https://registry.yarnpkg.com/react/-/react-19.0.0-canary-adb717393-20240411.tgz#7f9d5332b9edd355e3469f4f9e3b6770e2614b62"
+  integrity sha512-vizYCKbfm3G8X4EOoGPtk5kmnwEz65AaBE5FhPgsU83pApj94zoYExeVr1SAoxK1DrWVGdZh0XKR1iOUxbFOZw==
 
 readdirp@~3.6.0:
   version "3.6.0"
@@ -2409,10 +2409,10 @@ safe-buffer@5.1.2, safe-buffer@~5.1.1:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
 
-scheduler@0.25.0-rc-f38c22b244-20240704:
-  version "0.25.0-rc-f38c22b244-20240704"
-  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.25.0-rc-f38c22b244-20240704.tgz#8eb138f35c5e600ea1db457182eafd003895cf97"
-  integrity sha512-uAELK9fHhvg7kDQhk29+uO8FUMWUpkg9WpzkNXFP+BJy5HEtqnajde3CxuSgh202WH9TqoaiWT1mdA3DvUu6cQ==
+scheduler@0.25.0-canary-adb717393-20240411:
+  version "0.25.0-canary-adb717393-20240411"
+  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.25.0-canary-adb717393-20240411.tgz#326381866e989de9227419d1177d9d3e44d5b48d"
+  integrity sha512-b8a8LYUgcGU22/QkOjvFaNW+OXAmuRp4IoHxM1Ve/aT2F/nO0fHpsIyAuik+g4SvOOnV3khW90mqNDG7nsjh/w==
 
 semver@^5.6.0:
   version "5.7.2"
