@@ -607,7 +607,7 @@ function OverflowMenu({
           <Trans>Delete starter pack?</Trans>
         </Prompt.TitleText>
         <Prompt.DescriptionText>
-          <Trans>Are you sure you want delete this starter pack?</Trans>
+          <Trans>Are you sure you want to delete this starter pack?</Trans>
         </Prompt.DescriptionText>
         {deleteError && (
           <View
