@@ -4,8 +4,8 @@ import {View} from 'react-native'
 import {useVideoPlayer, VideoView} from 'expo-video'
 
 import {CompressedVideo} from '#/lib/media/video/compress'
+import {ExternalEmbedRemoveBtn} from 'view/com/composer/ExternalEmbedRemoveBtn'
 import {atoms as a} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
 
 export function VideoPreview({
   video,
@@ -20,33 +20,20 @@ export function VideoPreview({
   })
 
   return (
-    <>
-      <View
-        style={[
-          a.w_full,
-          a.rounded_sm,
-          {aspectRatio: 16 / 9},
-          a.overflow_hidden,
-        ]}>
-        <VideoView
-          player={player}
-          style={a.flex_1}
-          allowsPictureInPicture={false}
-          nativeControls={false}
-        />
-      </View>
-
-      {/* TODO: style this nicely */}
-      <View style={[a.flex_row, a.mt_sm, a.gap_sm]}>
-        <Button
-          onPress={clear}
-          label="Clear"
-          size="small"
-          color="primary"
-          variant="solid">
-          <ButtonText>Clear</ButtonText>
-        </Button>
-      </View>
-    </>
+    <View
+      style={[
+        a.w_full,
+        a.rounded_sm,
+        {aspectRatio: 16 / 9},
+        a.overflow_hidden,
+      ]}>
+      <VideoView
+        player={player}
+        style={a.flex_1}
+        allowsPictureInPicture={false}
+        nativeControls={false}
+      />
+      <ExternalEmbedRemoveBtn onRemove={clear} />
+    </View>
   )
 }
