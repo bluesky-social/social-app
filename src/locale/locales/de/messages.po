@@ -82,7 +82,7 @@ msgstr "{0} sind diese Woche beigetreten"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:456
 msgid "{0} people have used this starter pack!"
-msgstr "{0} Personen haben dieses Starterpaket bereits verwendet!"
+msgstr "{0} Personen haben dieses Startpaket bereits verwendet!"
 
 #: src/view/com/util/UserAvatar.tsx:419
 msgid "{0}'s avatar"
@@ -157,7 +157,7 @@ msgstr "{profileName} ist vor {0} Bluesky beigetreten"
 
 #: src/components/NewskieDialog.tsx:111
 msgid "{profileName} joined Bluesky using a starter pack {0} ago"
-msgstr "{profileName} hat sich vor {0} mit einem Starterpaket bei Bluesky angemeldet"
+msgstr "{profileName} ist vor {0} Bluesky mit einem Startpaket beigetreten"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:67
 msgid "{value, plural, =0 {Show all replies} one {Show replies with at least # like} other {Show replies with at least # likes}}"
@@ -170,7 +170,7 @@ msgstr "<0/> Mitglieder"
 #: src/screens/StarterPack/Wizard/index.tsx:466
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}, </0><1>{1} </1>und {2, plural, one {# weitere Person} other {# weitere Personen}} sind in deinem Starterpaket enthalten"
+msgstr "<0>{0}, </0><1>{1} </1>und {2, plural, one {# weitere Person} other {# weitere Personen}} sind in deinem Startpaket enthalten"
 
 #: src/screens/StarterPack/Wizard/index.tsx:519
 msgctxt "feeds"
@@ -199,7 +199,7 @@ msgstr "<0>Unzutreffend.</0> Diese Warnung ist nur für Beiträge mit angehängt
 
 #: src/screens/StarterPack/Wizard/index.tsx:457
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
-msgstr "<0>Du</0> und<1> </1><2>{0} </2>seid in eurem Starterpaket enthalten"
+msgstr "<0>Du</0> und<1> </1><2>{0} </2>seid in deinem Startpaket enthalten"
 
 #: src/screens/Profile/Header/Handle.tsx:50
 msgid "⚠Invalid Handle"
@@ -1320,7 +1320,7 @@ msgstr "Kopieren"
 
 #: src/view/com/modals/ChangeHandle.tsx:474
 msgid "Copy {0}"
-msgstr "Kopiere {0}"
+msgstr "{0} kopieren"
 
 #: src/components/dialogs/Embed.tsx:120
 #: src/components/dialogs/Embed.tsx:139
@@ -1394,17 +1394,17 @@ msgstr "Erstelle ein neues Bluesky-Konto"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:151
 msgid "Create a QR code for a starter pack"
-msgstr "Erstelle einen QR-Code für ein Starterpaket"
+msgstr "QR-Code für ein Starterpaket erstellen"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:165
 #: src/components/StarterPack/ProfileStarterPacks.tsx:259
 #: src/Navigation.tsx:338
 msgid "Create a starter pack"
-msgstr "Erstelle ein Starterpaket"
+msgstr "Ein Startpaket erstellen"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:246
 msgid "Create a starter pack for me"
-msgstr "Erstelle ein Starterpaket für mich"
+msgstr "Ein Starterpaket für mich erstellen"
 
 #: src/screens/Signup/index.tsx:88
 msgid "Create Account"
@@ -1868,7 +1868,7 @@ msgstr "Bearbeite deine Profilbeschreibung"
 
 #: src/Navigation.tsx:343
 msgid "Edit your starter pack"
-msgstr "Bearbeite dein Starterpaket"
+msgstr "Dein Starterpaket bearbeiten"
 
 #: src/screens/Onboarding/index.tsx:31
 #: src/screens/Onboarding/state.ts:86
