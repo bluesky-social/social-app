@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  # An ephermerally-stored postgres database for single-use test runs
+  db_test: &db_test
+    image: postgres:14.11-alpine
+    environment:
+      - POSTGRES_USER=pg
+      - POSTGRES_PASSWORD=password
+    ports:
+      - '5433:5432'
+    # Healthcheck ensures db is queryable when `docker-compose up --wait` completes
+    healthcheck:
+      test: 'pg_isready -U pg'
+      interval: 500ms
+      timeout: 10s
+      retries: 20
+  # A persistently-stored postgres database
+  db:
+    <<: *db_test
+    ports:
+      - '5432:5432'
+    healthcheck:
+      disable: true
+    volumes:
+      - link_db:/var/lib/postgresql/data
+volumes:
+  link_db:

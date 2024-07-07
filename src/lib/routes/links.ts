@@ -1,3 +1,5 @@
+import {AppBskyGraphDefs, AtUri} from '@atproto/api'
+
 import {isInvalidHandle} from 'lib/strings/handles'
 
 export function makeProfileLink(
@@ -34,4 +36,19 @@ export function makeSearchLink(props: {query: string; from?: 'me' | string}) {
   return `/search?q=${encodeURIComponent(
     props.query + (props.from ? ` from:${props.from}` : ''),
   )}`
+}
+
+export function makeStarterPackLink(
+  starterPackOrName:
+    | AppBskyGraphDefs.StarterPackViewBasic
+    | AppBskyGraphDefs.StarterPackView
+    | string,
+  rkey?: string,
+) {
+  if (typeof starterPackOrName === 'string') {
+    return `https://bsky.app/start/${starterPackOrName}/${rkey}`
+  } else {
+    const uriRkey = new AtUri(starterPackOrName.uri).rkey
+    return `https://bsky.app/start/${starterPackOrName.creator.handle}/${uriRkey}`
+  }
 }

@@ -8,8 +8,8 @@ import {useQueryClient} from '@tanstack/react-query'
 import EventEmitter from 'eventemitter3'
 
 import BroadcastChannel from '#/lib/broadcast'
+import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
-import {useMutedThreads} from '#/state/muted-threads'
 import {useAgent, useSession} from '#/state/session'
 import {resetBadgeCount} from 'lib/notifications/notifications'
 import {useModerationOpts} from '../../preferences/moderation-opts'
@@ -48,7 +48,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const agent = useAgent()
   const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
-  const threadMutes = useMutedThreads()
+  const gate = useGate()
 
   const [numUnread, setNumUnread] = React.useState('')
 
@@ -147,11 +147,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             limit: 40,
             queryClient,
             moderationOpts,
-            threadMutes,
 
             // only fetch subjects when the page is going to be used
             // in the notifications query, otherwise skip it
             fetchAdditionalData: !!invalidate,
+            shouldUngroupFollowBacks: () => gate('ungroup_follow_backs'),
           })
           const unreadCount = countUnread(page)
           const unreadCountStr =
@@ -192,7 +192,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
       },
     }
-  }, [setNumUnread, queryClient, moderationOpts, threadMutes, agent])
+  }, [setNumUnread, queryClient, moderationOpts, agent, gate])
   checkUnreadRef.current = api.checkUnread
 
   return (

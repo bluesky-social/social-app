@@ -5,7 +5,7 @@ import ViewShot from 'react-native-view-shot'
 import {useAvatar} from '#/screens/Onboarding/StepProfile/index'
 import {atoms as a} from '#/alf'
 
-const SIZE_MULTIPLIER = 1.5
+const SIZE_MULTIPLIER = 5
 
 export interface PlaceholderCanvasRef {
   capture: () => Promise<string>

@@ -16,18 +16,17 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSuggestedFollowsQuery} from '#/state/queries/suggested-follows'
-import {useSession} from '#/state/session'
 import {cleanError} from 'lib/strings/errors'
 import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
 import {List} from '#/view/com/util/List'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {
   FeedFeedLoadingPlaceholder,
   ProfileCardFeedLoadingPlaceholder,
 } from 'view/com/util/LoadingPlaceholder'
 import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
 import {Button} from '#/components/Button'
+import * as FeedCard from '#/components/FeedCard'
 import {ArrowBottom_Stroke2_Corner0_Rounded as ArrowBottom} from '#/components/icons/Arrow'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Props as SVGIconProps} from '#/components/icons/common'
@@ -65,7 +64,7 @@ function SuggestedItemsHeader({
             fill={t.palette.primary_500}
             style={{marginLeft: -2}}
           />
-          <Text style={[a.text_2xl, a.font_bold, t.atoms.text]}>{title}</Text>
+          <Text style={[a.text_2xl, a.font_heavy, t.atoms.text]}>{title}</Text>
         </View>
         <Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
           {description}
@@ -120,6 +119,9 @@ function LoadMore({
       })
       .filter(Boolean) as LoadMoreItems[]
   }, [item.items, moderationOpts])
+
+  if (items.length === 0) return null
+
   const type = items[0].type
 
   return (
@@ -143,20 +145,20 @@ function LoadMore({
                 a.relative,
                 {
                   height: 32,
-                  width: 32 + 15 * 3,
+                  width: 32 + 15 * items.length,
                 },
               ]}>
               <View
                 style={[
                   a.align_center,
                   a.justify_center,
-                  a.border,
                   t.atoms.bg_contrast_25,
                   a.absolute,
                   {
                     width: 30,
                     height: 30,
                     left: 0,
+                    borderWidth: 1,
                     backgroundColor: t.palette.primary_500,
                     borderColor: t.atoms.bg.backgroundColor,
                     borderRadius: type === 'profile' ? 999 : 4,
@@ -170,13 +172,13 @@ function LoadMore({
                   <View
                     key={_item.key}
                     style={[
-                      a.border,
                       t.atoms.bg_contrast_25,
                       a.absolute,
                       {
                         width: 30,
                         height: 30,
                         left: (i + 1) * 15,
+                        borderWidth: 1,
                         borderColor: t.atoms.bg.backgroundColor,
                         borderRadius: _item.type === 'profile' ? 999 : 4,
                         zIndex: 3 - i,
@@ -271,7 +273,6 @@ type ExploreScreenItems =
 export function Explore() {
   const {_} = useLingui()
   const t = useTheme()
-  const {hasSession} = useSession()
   const {data: preferences, error: preferencesError} = usePreferencesQuery()
   const moderationOpts = useModerationOpts()
   const {
@@ -281,7 +282,7 @@ export function Explore() {
     isFetchingNextPage: isFetchingNextProfilesPage,
     error: profilesError,
     fetchNextPage: fetchNextProfilesPage,
-  } = useSuggestedFollowsQuery({limit: 3})
+  } = useSuggestedFollowsQuery({limit: 6, subsequentPageLimit: 10})
   const {
     data: feeds,
     hasNextPage: hasNextFeedsPage,
@@ -289,7 +290,7 @@ export function Explore() {
     isFetchingNextPage: isFetchingNextFeedsPage,
     error: feedsError,
     fetchNextPage: fetchNextFeedsPage,
-  } = useGetPopularFeedsQuery({limit: 3})
+  } = useGetPopularFeedsQuery({limit: 10})
 
   const isLoadingMoreProfiles = isFetchingNextProfilesPage && !isLoadingProfiles
   const onLoadMoreProfiles = React.useCallback(async () => {
@@ -339,11 +340,12 @@ export function Explore() {
       // Currently the responses contain duplicate items.
       // Needs to be fixed on backend, but let's dedupe to be safe.
       let seen = new Set()
+      const profileItems: ExploreScreenItems[] = []
       for (const page of profiles.pages) {
         for (const actor of page.actors) {
           if (!seen.has(actor.did)) {
             seen.add(actor.did)
-            i.push({
+            profileItems.push({
               type: 'profile',
               key: actor.did,
               profile: actor,
@@ -352,13 +354,21 @@ export function Explore() {
         }
       }
 
-      i.push({
-        type: 'loadMore',
-        key: 'loadMoreProfiles',
-        isLoadingMore: isLoadingMoreProfiles,
-        onLoadMore: onLoadMoreProfiles,
-        items: i.filter(item => item.type === 'profile').slice(-3),
-      })
+      if (hasNextProfilesPage) {
+        // splice off 3 as previews if we have a next page
+        const previews = profileItems.splice(-3)
+        // push remainder
+        i.push(...profileItems)
+        i.push({
+          type: 'loadMore',
+          key: 'loadMoreProfiles',
+          isLoadingMore: isLoadingMoreProfiles,
+          onLoadMore: onLoadMoreProfiles,
+          items: previews,
+        })
+      } else {
+        i.push(...profileItems)
+      }
     } else {
       if (profilesError) {
         i.push({
@@ -387,11 +397,12 @@ export function Explore() {
       // Currently the responses contain duplicate items.
       // Needs to be fixed on backend, but let's dedupe to be safe.
       let seen = new Set()
+      const feedItems: ExploreScreenItems[] = []
       for (const page of feeds.pages) {
         for (const feed of page.feeds) {
           if (!seen.has(feed.uri)) {
             seen.add(feed.uri)
-            i.push({
+            feedItems.push({
               type: 'feed',
               key: feed.uri,
               feed,
@@ -400,6 +411,7 @@ export function Explore() {
         }
       }
 
+      // feeds errors can occur during pagination, so feeds is truthy
       if (feedsError) {
         i.push({
           type: 'error',
@@ -414,14 +426,18 @@ export function Explore() {
           message: _(msg`Failed to load feeds preferences`),
           error: cleanError(preferencesError),
         })
-      } else {
+      } else if (hasNextFeedsPage) {
+        const preview = feedItems.splice(-3)
+        i.push(...feedItems)
         i.push({
           type: 'loadMore',
           key: 'loadMoreFeeds',
           isLoadingMore: isLoadingMoreFeeds,
           onLoadMore: onLoadMoreFeeds,
-          items: i.filter(item => item.type === 'feed').slice(-3),
+          items: preview,
         })
+      } else {
+        i.push(...feedItems)
       }
     } else {
       if (feedsError) {
@@ -456,6 +472,8 @@ export function Explore() {
     profilesError,
     feedsError,
     preferencesError,
+    hasNextProfilesPage,
+    hasNextFeedsPage,
   ])
 
   const renderItem = React.useCallback(
@@ -480,15 +498,14 @@ export function Explore() {
         }
         case 'feed': {
           return (
-            <View style={[a.border_b, t.atoms.border_contrast_low]}>
-              <FeedSourceCard
-                feedUri={item.feed.uri}
-                showSaveBtn={hasSession}
-                showDescription
-                showLikes
-                pinOnSave
-                hideTopBorder
-              />
+            <View
+              style={[
+                a.border_b,
+                t.atoms.border_contrast_low,
+                a.px_lg,
+                a.py_lg,
+              ]}>
+              <FeedCard.Default view={item.feed} />
             </View>
           )
         }
@@ -538,7 +555,7 @@ export function Explore() {
         }
       }
     },
-    [t, hasSession, moderationOpts],
+    [t, moderationOpts],
   )
 
   return (

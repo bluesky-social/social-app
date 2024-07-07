@@ -1,4 +1,5 @@
 import React, {
+  Suspense,
   useCallback,
   useEffect,
   useImperativeHandle,
@@ -24,19 +25,25 @@ import Animated, {
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {LinearGradient} from 'expo-linear-gradient'
+import {
+  AppBskyFeedDefs,
+  AppBskyFeedGetPostThread,
+  BskyAgent,
+} from '@atproto/api'
 import {RichText} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {observer} from 'mobx-react-lite'
 
+import {until} from '#/lib/async/until'
 import {
   createGIFDescription,
   parseAltFromGIFDescription,
 } from '#/lib/gif-alt-text'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {LikelyType} from '#/lib/link-meta/link-meta'
-import {logEvent} from '#/lib/statsig/statsig'
+import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {emitPostCreated} from '#/state/events'
 import {useModalControls} from '#/state/modals'
@@ -90,6 +97,10 @@ import {SuggestedLanguage} from './select-language/SuggestedLanguage'
 import {TextInput, TextInputRef} from './text-input/TextInput'
 import {ThreadgateBtn} from './threadgate/ThreadgateBtn'
 import {useExternalLinkFetch} from './useExternalLinkFetch'
+import {SelectVideoBtn} from './videos/SelectVideoBtn'
+import {useVideoState} from './videos/state'
+import {VideoPreview} from './videos/VideoPreview'
+import {VideoTranscodeProgress} from './videos/VideoTranscodeProgress'
 import hairlineWidth = StyleSheet.hairlineWidth
 
 type CancelRef = {
@@ -109,6 +120,7 @@ export const ComposePost = observer(function ComposePost({
 }: Props & {
   cancelRef?: React.RefObject<CancelRef>
 }) {
+  const gate = useGate()
   const {currentAccount} = useSession()
   const agent = useAgent()
   const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
@@ -150,6 +162,14 @@ export const ComposePost = observer(function ComposePost({
   const [quote, setQuote] = useState<ComposerOpts['quote'] | undefined>(
     initQuote,
   )
+  const {
+    video,
+    onSelectVideo,
+    videoPending,
+    videoProcessingData,
+    clearVideo,
+    videoProcessingProgress,
+  } = useVideoState({setError})
   const {extLink, setExtLink} = useExternalLinkFetch({setQuote})
   const [extGif, setExtGif] = useState<Gif>()
   const [labels, setLabels] = useState<string[]>([])
@@ -299,6 +319,17 @@ export const ComposePost = observer(function ComposePost({
           langs: toPostLanguages(langPrefs.postLanguage),
         })
       ).uri
+      try {
+        await whenAppViewReady(agent, postUri, res => {
+          const thread = res.data.thread
+          return AppBskyFeedDefs.isThreadViewPost(thread)
+        })
+      } catch (waitErr: any) {
+        logger.error(waitErr, {
+          message: `Waiting for app view failed`,
+        })
+        // Keep going because the post *was* published.
+      }
     } catch (e: any) {
       logger.error(e, {
         message: `Composer: create post failed`,
@@ -358,8 +389,9 @@ export const ComposePost = observer(function ComposePost({
     ? _(msg`Write your reply`)
     : _(msg`What's up?`)
 
-  const canSelectImages = gallery.size < 4 && !extLink
-  const hasMedia = gallery.size > 0 || Boolean(extLink)
+  const canSelectImages =
+    gallery.size < 4 && !extLink && !video && !videoPending
+  const hasMedia = gallery.size > 0 || Boolean(extLink) || Boolean(video)
 
   const onEmojiButtonPress = useCallback(() => {
     openPicker?.(textInput.current?.getCursorPosition())
@@ -583,7 +615,20 @@ export const ComposePost = observer(function ComposePost({
                 <QuoteX onRemove={() => setQuote(undefined)} />
               )}
             </View>
-          ) : undefined}
+          ) : null}
+          {videoPending && videoProcessingData ? (
+            <VideoTranscodeProgress
+              input={videoProcessingData}
+              progress={videoProcessingProgress}
+            />
+          ) : (
+            video && (
+              // remove suspense when we get rid of lazy
+              <Suspense fallback={null}>
+                <VideoPreview video={video} clear={clearVideo} />
+              </Suspense>
+            )
+          )}
         </Animated.ScrollView>
         <SuggestedLanguage text={richtext.text} />
 
@@ -602,6 +647,12 @@ export const ComposePost = observer(function ComposePost({
           ]}>
           <View style={[a.flex_row, a.align_center, a.gap_xs]}>
             <SelectPhotoBtn gallery={gallery} disabled={!canSelectImages} />
+            {gate('videos') && (
+              <SelectVideoBtn
+                onSelectVideo={onSelectVideo}
+                disabled={!canSelectImages}
+              />
+            )}
             <OpenCameraBtn gallery={gallery} disabled={!canSelectImages} />
             <SelectGifBtn
               onClose={focusTextInput}
@@ -754,6 +805,23 @@ function useKeyboardVerticalOffset() {
 
   // all other iPhones
   return top + 10
+}
+
+async function whenAppViewReady(
+  agent: BskyAgent,
+  uri: string,
+  fn: (res: AppBskyFeedGetPostThread.Response) => boolean,
+) {
+  await until(
+    5, // 5 tries
+    1e3, // 1s delay between tries
+    fn,
+    () =>
+      agent.app.bsky.feed.getPostThread({
+        uri,
+        depth: 0,
+      }),
+  )
 }
 
 const styles = StyleSheet.create({

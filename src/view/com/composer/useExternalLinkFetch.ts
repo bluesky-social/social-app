@@ -10,13 +10,18 @@ import {
   getFeedAsEmbed,
   getListAsEmbed,
   getPostAsQuote,
+  getStarterPackAsEmbed,
 } from 'lib/link-meta/bsky'
 import {getLinkMeta} from 'lib/link-meta/link-meta'
+import {resolveShortLink} from 'lib/link-meta/resolve-short-link'
 import {downloadAndResize} from 'lib/media/manip'
 import {
   isBskyCustomFeedUrl,
   isBskyListUrl,
   isBskyPostUrl,
+  isBskyStarterPackUrl,
+  isBskyStartUrl,
+  isShortLink,
 } from 'lib/strings/url-helpers'
 import {ImageModel} from 'state/models/media/image'
 import {ComposerOpts} from 'state/shell/composer'
@@ -94,6 +99,34 @@ export function useExternalLinkFetch({
             setExtLink(undefined)
           },
         )
+      } else if (
+        isBskyStartUrl(extLink.uri) ||
+        isBskyStarterPackUrl(extLink.uri)
+      ) {
+        getStarterPackAsEmbed(agent, fetchDid, extLink.uri).then(
+          ({embed, meta}) => {
+            if (aborted) {
+              return
+            }
+            setExtLink({
+              uri: extLink.uri,
+              isLoading: false,
+              meta,
+              embed,
+            })
+          },
+        )
+      } else if (isShortLink(extLink.uri)) {
+        if (isShortLink(extLink.uri)) {
+          resolveShortLink(extLink.uri).then(res => {
+            if (res && res !== extLink.uri) {
+              setExtLink({
+                uri: res,
+                isLoading: true,
+              })
+            }
+          })
+        }
       } else {
         getLinkMeta(agent, extLink.uri).then(meta => {
           if (aborted) {

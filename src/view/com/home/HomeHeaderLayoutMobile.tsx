@@ -72,9 +72,11 @@ export function HomeHeaderLayoutMobile({
             {width: 100},
           ]}>
           {IS_DEV && (
-            <Link to="/sys/debug">
-              <ColorPalette size="md" />
-            </Link>
+            <>
+              <Link to="/sys/debug">
+                <ColorPalette size="md" />
+              </Link>
+            </>
           )}
           {hasSession && (
             <Link
@@ -120,6 +122,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 5,
     width: '100%',
+    minHeight: 46,
   },
   title: {
     fontSize: 21,

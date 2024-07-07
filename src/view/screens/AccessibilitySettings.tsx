@@ -4,13 +4,12 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
+import {useAnalytics} from '#/lib/analytics/analytics'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {s} from '#/lib/styles'
 import {isNative} from '#/platform/detection'
-import {useSetMinimalShellMode} from '#/state/shell'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
-import {s} from 'lib/styles'
 import {
   useAutoplayDisabled,
   useHapticsDisabled,
@@ -18,11 +17,16 @@ import {
   useSetAutoplayDisabled,
   useSetHapticsDisabled,
   useSetRequireAltTextEnabled,
-} from 'state/preferences'
-import {ToggleButton} from 'view/com/util/forms/ToggleButton'
-import {SimpleViewHeader} from '../com/util/SimpleViewHeader'
-import {Text} from '../com/util/text/Text'
-import {ScrollView} from '../com/util/Views'
+} from '#/state/preferences'
+import {
+  useLargeAltBadgeEnabled,
+  useSetLargeAltBadgeEnabled,
+} from '#/state/preferences/large-alt-badge'
+import {useSetMinimalShellMode} from '#/state/shell'
+import {ToggleButton} from '#/view/com/util/forms/ToggleButton'
+import {SimpleViewHeader} from '#/view/com/util/SimpleViewHeader'
+import {Text} from '#/view/com/util/text/Text'
+import {ScrollView} from '#/view/com/util/Views'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -41,6 +45,8 @@ export function AccessibilitySettingsScreen({}: Props) {
   const setAutoplayDisabled = useSetAutoplayDisabled()
   const hapticsDisabled = useHapticsDisabled()
   const setHapticsDisabled = useSetHapticsDisabled()
+  const largeAltBadgeEnabled = useLargeAltBadgeEnabled()
+  const setLargeAltBadgeEnabled = useSetLargeAltBadgeEnabled()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -83,6 +89,13 @@ export function AccessibilitySettingsScreen({}: Props) {
             labelType="lg"
             isSelected={requireAltTextEnabled}
             onPress={() => setRequireAltTextEnabled(!requireAltTextEnabled)}
+          />
+          <ToggleButton
+            type="default-light"
+            label={_(msg`Display larger alt text badges`)}
+            labelType="lg"
+            isSelected={!!largeAltBadgeEnabled}
+            onPress={() => setLargeAltBadgeEnabled(!largeAltBadgeEnabled)}
           />
         </View>
         <Text type="xl-bold" style={[pal.text, styles.heading]}>

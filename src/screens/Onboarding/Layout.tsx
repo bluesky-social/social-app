@@ -152,7 +152,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
               {children}
             </View>
 
-            <View style={{height: 200}} />
+            <View style={{height: 400}} />
           </View>
         </View>
       </ScrollView>
