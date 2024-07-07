@@ -62,7 +62,11 @@ export function Card({
       <Header>
         <Avatar profile={profile} moderationOpts={moderationOpts} />
         <NameAndHandle profile={profile} moderationOpts={moderationOpts} />
-        <FollowButton profile={profile} logContext={logContext} />
+        <FollowButton
+          profile={profile}
+          moderationOpts={moderationOpts}
+          logContext={logContext}
+        />
       </Header>
 
       <ProfileCardPills
@@ -261,6 +265,7 @@ export function DescriptionPlaceholder() {
 
 export type FollowButtonProps = {
   profile: AppBskyActorDefs.ProfileViewBasic
+  moderationOpts: ModerationOpts
   logContext: LogEvents['profile:follow']['logContext'] &
     LogEvents['profile:unfollow']['logContext']
 } & Partial<ButtonProps>
@@ -273,11 +278,13 @@ export function FollowButton(props: FollowButtonProps) {
 
 export function FollowButtonInner({
   profile: profileUnshadowed,
+  moderationOpts,
   logContext,
   ...rest
 }: FollowButtonProps) {
   const {_} = useLingui()
   const profile = useProfileShadow(profileUnshadowed)
+  const moderation = moderateProfile(profile, moderationOpts)
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
     profile,
     logContext,
@@ -289,6 +296,14 @@ export function FollowButtonInner({
     e.stopPropagation()
     try {
       await queueFollow()
+      Toast.show(
+        _(
+          msg`Following ${sanitizeDisplayName(
+            profile.displayName || profile.handle,
+            moderation.ui('displayName'),
+          )}`,
+        ),
+      )
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
         Toast.show(_(msg`An issue occurred, please try again.`))
@@ -301,6 +316,14 @@ export function FollowButtonInner({
     e.stopPropagation()
     try {
       await queueUnfollow()
+      Toast.show(
+        _(
+          msg`No longer following ${sanitizeDisplayName(
+            profile.displayName || profile.handle,
+            moderation.ui('displayName'),
+          )}`,
+        ),
+      )
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
         Toast.show(_(msg`An issue occurred, please try again.`))

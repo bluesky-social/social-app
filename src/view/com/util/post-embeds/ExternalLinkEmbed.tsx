@@ -57,7 +57,7 @@ export const ExternalLinkEmbed = ({
   }
 
   return (
-    <View style={[a.flex_col, a.rounded_sm, a.overflow_hidden, a.mt_sm]}>
+    <View style={[a.flex_col, a.rounded_sm, a.overflow_hidden]}>
       <LinkWrapper link={link} onOpen={onOpen} style={style}>
         {imageUri && !embedPlayerParams ? (
           <Image
@@ -79,37 +79,35 @@ export const ExternalLinkEmbed = ({
         ) : embedPlayerParams ? (
           <ExternalPlayer link={link} params={embedPlayerParams} />
         ) : undefined}
-        {!starterPackParsed ? (
-          <View
-            style={[
-              a.flex_1,
-              a.py_sm,
-              {
-                paddingHorizontal: isMobile ? 10 : 14,
-              },
-            ]}>
-            <Text
-              type="sm"
-              numberOfLines={1}
-              style={[pal.textLight, {marginVertical: 2}]}>
-              {toNiceDomain(link.uri)}
-            </Text>
+        <View
+          style={[
+            a.flex_1,
+            a.py_sm,
+            {
+              paddingHorizontal: isMobile ? 10 : 14,
+            },
+          ]}>
+          <Text
+            type="sm"
+            numberOfLines={1}
+            style={[pal.textLight, {marginVertical: 2}]}>
+            {toNiceDomain(link.uri)}
+          </Text>
 
-            {!embedPlayerParams?.isGif && !embedPlayerParams?.dimensions && (
-              <Text type="lg-bold" numberOfLines={3} style={[pal.text]}>
-                {link.title || link.uri}
-              </Text>
-            )}
-            {link.description ? (
-              <Text
-                type="md"
-                numberOfLines={link.thumb ? 2 : 4}
-                style={[pal.text, a.mt_xs]}>
-                {link.description}
-              </Text>
-            ) : undefined}
-          </View>
-        ) : null}
+          {!embedPlayerParams?.isGif && !embedPlayerParams?.dimensions && (
+            <Text type="lg-bold" numberOfLines={3} style={[pal.text]}>
+              {link.title || link.uri}
+            </Text>
+          )}
+          {link.description ? (
+            <Text
+              type="md"
+              numberOfLines={link.thumb ? 2 : 4}
+              style={[pal.text, a.mt_xs]}>
+              {link.description}
+            </Text>
+          ) : undefined}
+        </View>
       </LinkWrapper>
     </View>
   )
