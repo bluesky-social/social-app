@@ -31,7 +31,6 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import * as FeedCard from '#/components/FeedCard'
-import {ChevronLeft_Stroke2_Corner0_Rounded} from '#/components/icons/Chevron'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Default as ProfileCard} from '#/components/ProfileCard'
@@ -168,31 +167,6 @@ function LandingScreenLoaded({
               paddingTop: 100,
             },
           ]}>
-          <Pressable
-            style={[
-              a.absolute,
-              a.rounded_full,
-              a.align_center,
-              a.justify_center,
-              {
-                top: 10,
-                left: 10,
-                height: 35,
-                width: 35,
-                backgroundColor: 'rgba(0, 0, 0, 0.5)',
-              },
-            ]}
-            onPress={() => {
-              setActiveStarterPack(undefined)
-            }}
-            accessibilityLabel={_(msg`Back`)}
-            accessibilityHint={_(msg`Go back to previous screen`)}>
-            <ChevronLeft_Stroke2_Corner0_Rounded
-              width={20}
-              height={20}
-              fill="white"
-            />
-          </Pressable>
           <View style={[a.flex_row, a.gap_md, a.pb_sm]}>
             <Logo width={76} fill="white" />
           </View>
