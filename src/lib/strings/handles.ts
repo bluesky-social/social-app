@@ -1,5 +1,7 @@
 // Regex from the go implementation
 // https://github.com/bluesky-social/indigo/blob/main/atproto/syntax/handle.go#L10
+import {forceLTR} from 'lib/strings/bidi'
+
 const VALIDATE_REGEX =
   /^([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$/
 
@@ -22,7 +24,9 @@ export function isInvalidHandle(handle: string): boolean {
 }
 
 export function sanitizeHandle(handle: string, prefix = ''): string {
-  return isInvalidHandle(handle) ? '⚠Invalid Handle' : `${prefix}${handle}`
+  return isInvalidHandle(handle)
+    ? '⚠Invalid Handle'
+    : forceLTR(`${prefix}${handle}`)
 }
 
 export interface IsValidHandle {
