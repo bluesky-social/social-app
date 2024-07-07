@@ -32,8 +32,6 @@ interface PostMetaOpts {
   style?: StyleProp<ViewStyle>
 }
 
-const LEFT_TO_RIGHT_EMBEDDING = '\u202A'
-const POP_DIRECTIONAL_FORMATTING = '\u202C'
 const NON_BREAKING_SPACE = '\u00A0'
 
 let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
@@ -87,12 +85,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             type="md"
             disableMismatchWarning
             style={[pal.textLight, {flexShrink: 4}]}
-            text={
-              NON_BREAKING_SPACE +
-              LEFT_TO_RIGHT_EMBEDDING +
-              sanitizeHandle(handle, '@') +
-              POP_DIRECTIONAL_FORMATTING
-            }
+            text={NON_BREAKING_SPACE + sanitizeHandle(handle, '@')}
             href={profileLink}
             onBeforePress={onBeforePressAuthor}
             anchorNoUnderline
