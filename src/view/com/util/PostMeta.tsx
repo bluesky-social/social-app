@@ -32,6 +32,8 @@ interface PostMetaOpts {
   style?: StyleProp<ViewStyle>
 }
 
+const NON_BREAKING_SPACE = '\u00A0'
+
 let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
   const pal = usePalette('default')
   const displayName = opts.author.displayName || opts.author.handle
@@ -83,7 +85,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             type="md"
             disableMismatchWarning
             style={[pal.textLight, {flexShrink: 4}]}
-            text={'\xa0' + sanitizeHandle(handle, '@')}
+            text={NON_BREAKING_SPACE + sanitizeHandle(handle, '@')}
             href={profileLink}
             onBeforePress={onBeforePressAuthor}
             anchorNoUnderline
