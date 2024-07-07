@@ -2413,7 +2413,7 @@ msgstr "Ich folge {0}"
 
 #: src/view/com/posts/AviFollowButton.tsx:53
 msgid "Following {name}"
-msgstr "ich folge {name}"
+msgstr "Ich folge {name}"
 
 #: src/view/screens/Settings/index.tsx:574
 msgid "Following feed preferences"
