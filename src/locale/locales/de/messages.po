@@ -175,7 +175,7 @@ msgstr "<0>{0}, </0><1>{1} </1>und {2, plural, one {# weitere Person} other {# w
 #: src/screens/StarterPack/Wizard/index.tsx:519
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}, </0><1>{1} </1>und {2, plural, one {# weiterer Feed} other {# weitere Feeds}} sind in deinem Starterpaket enthalten"
+msgstr "<0>{0}, </0><1>{1} </1>und {2, plural, one {# weiterer Feed} other {# weitere Feeds}} sind in deinem Startpaket enthalten"
 
 #: src/view/shell/Drawer.tsx:101
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
@@ -187,11 +187,11 @@ msgstr "<0>{0}</0> {1, plural, one {Folge ich} other {Folge ich}}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:507
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
-msgstr "<0>{0}</0> und<1> </1><2>{1} </2>sind in deinem Starterpaket enthalten"
+msgstr "<0>{0}</0> und<1> </1><2>{1} </2>sind in deinem Startpaket enthalten"
 
 #: src/screens/StarterPack/Wizard/index.tsx:500
 msgid "<0>{0}</0> is included in your starter pack"
-msgstr "<0>{0}</0> ist in deinem Starterpaket enthalten"
+msgstr "<0>{0}</0> ist in deinem Startpaket enthalten"
 
 #: src/view/com/modals/SelfLabel.tsx:135
 msgid "<0>Not Applicable.</0> This warning is only available for posts with media attached."
@@ -297,7 +297,7 @@ msgstr "Füge {0} weitere hinzu, um fortzufahren"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:59
 msgid "Add {displayName} to starter pack"
-msgstr "Füge {displayName} zum Starterpaket hinzu"
+msgstr "Füge {displayName} zum Startpaket hinzu"
 
 #: src/view/com/modals/SelfLabel.tsx:57
 msgid "Add a content warning"
@@ -343,7 +343,7 @@ msgstr "Empfohlene Feeds hinzufügen"
 
 #: src/screens/StarterPack/Wizard/index.tsx:488
 msgid "Add some feeds to your starter pack!"
-msgstr "Füge deinem Starterpaket einige Feeds hinzu!"
+msgstr "Füge deinem Startpaket einige Feeds hinzu!"
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:41
 msgid "Add the default feed of only people you follow"
@@ -463,7 +463,7 @@ msgstr "Ein Fehler ist aufgetreten"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:315
 msgid "An error occurred while generating your starter pack. Want to try again?"
-msgstr "Beim Generieren deines Starterpakets ist ein Fehler aufgetreten. Möchtest du es erneut versuchen?"
+msgstr "Beim Generieren deines Startpakets ist ein Fehler aufgetreten. Möchtest du es erneut versuchen?"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:70
 #: src/components/StarterPack/ShareDialog.tsx:78
@@ -577,7 +577,7 @@ msgstr "Möchtest du diese Nachricht wirklich löschen? Die Nachricht wird für 
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:610
 msgid "Are you sure you want to delete this starter pack?"
-msgstr "Möchtest du dieses Starterpaket wirklich löschen?"
+msgstr "Möchtest du dieses Startpaket wirklich löschen?"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:48
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
@@ -1394,7 +1394,7 @@ msgstr "Erstelle ein neues Bluesky-Konto"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:151
 msgid "Create a QR code for a starter pack"
-msgstr "QR-Code für ein Starterpaket erstellen"
+msgstr "QR-Code für ein Startpaket erstellen"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:165
 #: src/components/StarterPack/ProfileStarterPacks.tsx:259
@@ -1404,7 +1404,7 @@ msgstr "Ein Startpaket erstellen"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:246
 msgid "Create a starter pack for me"
-msgstr "Ein Starterpaket für mich erstellen"
+msgstr "Ein Startpaket für mich erstellen"
 
 #: src/screens/Signup/index.tsx:88
 msgid "Create Account"
@@ -1560,11 +1560,11 @@ msgstr "Beitrag löschen"
 #: src/screens/StarterPack/StarterPackScreen.tsx:556
 #: src/screens/StarterPack/StarterPackScreen.tsx:712
 msgid "Delete starter pack"
-msgstr "Starterpaket löschen"
+msgstr "Startpaket löschen"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:607
 msgid "Delete starter pack?"
-msgstr "Starterpaket löschen?"
+msgstr "Startpaket löschen?"
 
 #: src/view/screens/ProfileList.tsx:662
 msgid "Delete this list?"
@@ -1848,7 +1848,7 @@ msgstr "Profil bearbeiten"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:543
 msgid "Edit starter pack"
-msgstr "Starterpaket bearbeiten"
+msgstr "Startpaket bearbeiten"
 
 #: src/view/com/modals/CreateOrEditList.tsx:234
 msgid "Edit User List"
@@ -1868,7 +1868,7 @@ msgstr "Bearbeite deine Profilbeschreibung"
 
 #: src/Navigation.tsx:343
 msgid "Edit your starter pack"
-msgstr "Dein Starterpaket bearbeiten"
+msgstr "Dein Startpaket bearbeiten"
 
 #: src/screens/Onboarding/index.tsx:31
 #: src/screens/Onboarding/state.ts:86
@@ -2129,7 +2129,7 @@ msgstr "Das App-Passwort konnte nicht erstellt werden."
 #: src/screens/StarterPack/Wizard/index.tsx:230
 #: src/screens/StarterPack/Wizard/index.tsx:238
 msgid "Failed to create starter pack"
-msgstr "Starterpaket konnte nicht erstellt werden"
+msgstr "Startpaket konnte nicht erstellt werden"
 
 #: src/view/com/modals/CreateOrEditList.tsx:194
 msgid "Failed to create the list. Check your internet connection and try again."
@@ -2145,7 +2145,7 @@ msgstr "Beitrag konnte nicht gelöscht werden, bitte versuche es erneut"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:675
 msgid "Failed to delete starter pack"
-msgstr "Starterpaket konnte nicht gelöscht werden"
+msgstr "Startpaket konnte nicht gelöscht werden"
 
 #: src/view/screens/Search/Explore.tsx:426
 #: src/view/screens/Search/Explore.tsx:454
