@@ -9,6 +9,8 @@ class VisiblityView: ExpoView {
   
   public override func willMove(toWindow newWindow: UIWindow?) {
     let isVisible = newWindow != nil
-    onVisiblityChange(newWindow)
+    onVisiblityChange([
+      "isVisible": isVisible
+    ])
   }
 }
