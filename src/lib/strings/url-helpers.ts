@@ -5,6 +5,7 @@ import TLDs from 'tlds'
 import {logger} from '#/logger'
 import {BSKY_SERVICE} from 'lib/constants'
 import {isInvalidHandle} from 'lib/strings/handles'
+import {startUriToStarterPackUri} from 'lib/strings/starter-pack'
 
 export const BSKY_APP_HOST = 'https://bsky.app'
 const BSKY_TRUSTED_HOSTS = [
@@ -187,6 +188,11 @@ export function convertBskyAppUrlIfNeeded(url: string): string {
   if (isBskyAppUrl(url)) {
     try {
       const urlp = new URL(url)
+
+      if (isBskyStartUrl(url)) {
+        return startUriToStarterPackUri(urlp.pathname)
+      }
+
       return urlp.pathname
     } catch (e) {
       console.error('Unexpected error in convertBskyAppUrlIfNeeded()', e)
