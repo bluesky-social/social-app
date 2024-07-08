@@ -1,5 +1,4 @@
 import React, {
-  Suspense,
   useCallback,
   useEffect,
   useImperativeHandle,
@@ -43,7 +42,7 @@ import {
 } from '#/lib/gif-alt-text'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {LikelyType} from '#/lib/link-meta/link-meta'
-import {logEvent, useGate} from '#/lib/statsig/statsig'
+import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {emitPostCreated} from '#/state/events'
 import {useModalControls} from '#/state/modals'
@@ -97,10 +96,6 @@ import {SuggestedLanguage} from './select-language/SuggestedLanguage'
 import {TextInput, TextInputRef} from './text-input/TextInput'
 import {ThreadgateBtn} from './threadgate/ThreadgateBtn'
 import {useExternalLinkFetch} from './useExternalLinkFetch'
-import {SelectVideoBtn} from './videos/SelectVideoBtn'
-import {useVideoState} from './videos/state'
-import {VideoPreview} from './videos/VideoPreview'
-import {VideoTranscodeProgress} from './videos/VideoTranscodeProgress'
 import hairlineWidth = StyleSheet.hairlineWidth
 
 type CancelRef = {
@@ -120,7 +115,6 @@ export const ComposePost = observer(function ComposePost({
 }: Props & {
   cancelRef?: React.RefObject<CancelRef>
 }) {
-  const gate = useGate()
   const {currentAccount} = useSession()
   const agent = useAgent()
   const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
@@ -162,14 +156,6 @@ export const ComposePost = observer(function ComposePost({
   const [quote, setQuote] = useState<ComposerOpts['quote'] | undefined>(
     initQuote,
   )
-  const {
-    video,
-    onSelectVideo,
-    videoPending,
-    videoProcessingData,
-    clearVideo,
-    videoProcessingProgress,
-  } = useVideoState({setError})
   const {extLink, setExtLink} = useExternalLinkFetch({setQuote})
   const [extGif, setExtGif] = useState<Gif>()
   const [labels, setLabels] = useState<string[]>([])
@@ -389,9 +375,8 @@ export const ComposePost = observer(function ComposePost({
     ? _(msg`Write your reply`)
     : _(msg`What's up?`)
 
-  const canSelectImages =
-    gallery.size < 4 && !extLink && !video && !videoPending
-  const hasMedia = gallery.size > 0 || Boolean(extLink) || Boolean(video)
+  const canSelectImages = gallery.size < 4 && !extLink
+  const hasMedia = gallery.size > 0 || Boolean(extLink)
 
   const onEmojiButtonPress = useCallback(() => {
     openPicker?.(textInput.current?.getCursorPosition())
@@ -615,20 +600,7 @@ export const ComposePost = observer(function ComposePost({
                 <QuoteX onRemove={() => setQuote(undefined)} />
               )}
             </View>
-          ) : null}
-          {videoPending && videoProcessingData ? (
-            <VideoTranscodeProgress
-              input={videoProcessingData}
-              progress={videoProcessingProgress}
-            />
-          ) : (
-            video && (
-              // remove suspense when we get rid of lazy
-              <Suspense fallback={null}>
-                <VideoPreview video={video} clear={clearVideo} />
-              </Suspense>
-            )
-          )}
+          ) : undefined}
         </Animated.ScrollView>
         <SuggestedLanguage text={richtext.text} />
 
@@ -647,12 +619,6 @@ export const ComposePost = observer(function ComposePost({
           ]}>
           <View style={[a.flex_row, a.align_center, a.gap_xs]}>
             <SelectPhotoBtn gallery={gallery} disabled={!canSelectImages} />
-            {gate('videos') && (
-              <SelectVideoBtn
-                onSelectVideo={onSelectVideo}
-                disabled={!canSelectImages}
-              />
-            )}
             <OpenCameraBtn gallery={gallery} disabled={!canSelectImages} />
             <SelectGifBtn
               onClose={focusTextInput}
