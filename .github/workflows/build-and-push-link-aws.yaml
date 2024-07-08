@@ -1,8 +1,6 @@
 name: build-and-push-link-aws
 on:
-  push:
-    branches:
-      - divy/bskylink
+  workflow_dispatch:
 
 env:
   REGISTRY: ${{ secrets.AWS_ECR_REGISTRY_USEAST2_PACKAGES_REGISTRY }}

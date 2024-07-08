@@ -6,10 +6,11 @@ import {useLingui} from '@lingui/react'
 import {differenceInSeconds} from 'date-fns'
 
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
+import {isNative} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {HITSLOP_10} from 'lib/constants'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {isWeb} from 'platform/detection'
+import {useSession} from 'state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -28,16 +29,27 @@ export function NewskieDialog({
   const {_} = useLingui()
   const t = useTheme()
   const moderationOpts = useModerationOpts()
+  const {currentAccount} = useSession()
+  const timeAgo = useGetTimeAgo()
   const control = useDialogControl()
+
+  const isMe = profile.did === currentAccount?.did
+  const createdAt = profile.createdAt as string | undefined
+
   const profileName = React.useMemo(() => {
     const name = profile.displayName || profile.handle
+
+    if (isMe) {
+      return _(msg`You`)
+    }
+
     if (!moderationOpts) return name
     const moderation = moderateProfile(profile, moderationOpts)
+
     return sanitizeDisplayName(name, moderation.ui('displayName'))
-  }, [moderationOpts, profile])
+  }, [_, isMe, moderationOpts, profile])
+
   const [now] = React.useState(() => Date.now())
-  const timeAgo = useGetTimeAgo()
-  const createdAt = profile.createdAt as string | undefined
   const daysOld = React.useMemo(() => {
     if (!createdAt) return Infinity
     return differenceInSeconds(now, new Date(createdAt)) / 86400
@@ -70,19 +82,31 @@ export function NewskieDialog({
         <Dialog.ScrollableInner
           label={_(msg`New user info dialog`)}
           style={[{width: 'auto', maxWidth: 400, minWidth: 200}]}>
-          <View style={[a.gap_sm]}>
+          <View style={[a.gap_md]}>
             <View style={[a.align_center]}>
-              <Newskie
-                width={64}
-                height={64}
-                fill="#FFC404"
-                style={{marginTop: -10}}
-              />
-              <Text style={[a.font_bold, a.text_xl, {marginTop: -10}]}>
-                <Trans>Say hello!</Trans>
+              <View
+                style={[
+                  {
+                    height: 60,
+                    width: 64,
+                  },
+                ]}>
+                <Newskie
+                  width={64}
+                  height={64}
+                  fill="#FFC404"
+                  style={[a.absolute, a.inset_0]}
+                />
+              </View>
+              <Text style={[a.font_bold, a.text_xl]}>
+                {isMe ? (
+                  <Trans>Welcome, friend!</Trans>
+                ) : (
+                  <Trans>Say hello!</Trans>
+                )}
               </Text>
             </View>
-            <Text style={[a.text_md, a.text_center, a.leading_tight]}>
+            <Text style={[a.text_md, a.text_center, a.leading_snug]}>
               {profile.joinedViaStarterPack ? (
                 <Trans>
                   {profileName} joined Bluesky using a starter pack{' '}
@@ -116,18 +140,23 @@ export function NewskieDialog({
                 </View>
               </StarterPackCard.Link>
             ) : null}
-            <Button
-              label={_(msg`Close`)}
-              variant="solid"
-              color="secondary"
-              size="small"
-              style={[a.mt_sm, isWeb && [a.self_center, {marginLeft: 'auto'}]]}
-              onPress={() => control.close()}>
-              <ButtonText>
-                <Trans>Close</Trans>
-              </ButtonText>
-            </Button>
+
+            {isNative && (
+              <Button
+                label={_(msg`Close`)}
+                variant="solid"
+                color="secondary"
+                size="small"
+                style={[a.mt_sm]}
+                onPress={() => control.close()}>
+                <ButtonText>
+                  <Trans>Close</Trans>
+                </ButtonText>
+              </Button>
+            )}
           </View>
+
+          <Dialog.Close />
         </Dialog.ScrollableInner>
       </Dialog.Outer>
     </View>

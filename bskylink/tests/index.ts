@@ -56,6 +56,26 @@ describe('link service', async () => {
     )
   })
 
+  it('returns json object with url when requested', async () => {
+    const link = await getLink('/start/did:example:carol/zzz/')
+    const [status, json] = await getJsonRedirect(link)
+    assert.strictEqual(status, 200)
+    assert(json.url)
+    const url = new URL(json.url)
+    assert.strictEqual(url.pathname, '/start/did:example:carol/zzz')
+  })
+
+  it('returns 404 for unknown link when requesting json', async () => {
+    const [status, json] = await getJsonRedirect(
+      'https://test.bsky.link/unknown',
+    )
+    assert(json.error)
+    assert(json.message)
+    assert.strictEqual(status, 404)
+    assert.strictEqual(json.error, 'NotFound')
+    assert.strictEqual(json.message, 'Link not found')
+  })
+
   async function getRedirect(link: string): Promise<[number, string]> {
     const url = new URL(link)
     const base = new URL(baseUrl)
@@ -68,6 +88,25 @@ describe('link service', async () => {
       'response was not a redirect',
     )
     return [res.status, res.headers.get('location') ?? '']
+  }
+
+  async function getJsonRedirect(
+    link: string,
+  ): Promise<[number, {url?: string; error?: string; message?: string}]> {
+    const url = new URL(link)
+    const base = new URL(baseUrl)
+    url.protocol = base.protocol
+    url.host = base.host
+    const res = await fetch(url, {
+      redirect: 'manual',
+      headers: {accept: 'application/json,text/html'},
+    })
+    assert(
+      res.headers.get('content-type')?.startsWith('application/json'),
+      'content type was not json',
+    )
+    const json = await res.json()
+    return [res.status, json]
   }
 
   async function getLink(path: string): Promise<string> {

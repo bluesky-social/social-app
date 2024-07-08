@@ -342,3 +342,50 @@ export function useRemoveMutedWordMutation() {
     },
   })
 }
+
+export function useQueueNudgesMutation() {
+  const queryClient = useQueryClient()
+  const agent = useAgent()
+
+  return useMutation({
+    mutationFn: async (nudges: string | string[]) => {
+      await agent.bskyAppQueueNudges(nudges)
+      // triggers a refetch
+      await queryClient.invalidateQueries({
+        queryKey: preferencesQueryKey,
+      })
+    },
+  })
+}
+
+export function useDismissNudgesMutation() {
+  const queryClient = useQueryClient()
+  const agent = useAgent()
+
+  return useMutation({
+    mutationFn: async (nudges: string | string[]) => {
+      await agent.bskyAppDismissNudges(nudges)
+      // triggers a refetch
+      await queryClient.invalidateQueries({
+        queryKey: preferencesQueryKey,
+      })
+    },
+  })
+}
+
+export function useSetActiveProgressGuideMutation() {
+  const queryClient = useQueryClient()
+  const agent = useAgent()
+
+  return useMutation({
+    mutationFn: async (
+      guide: AppBskyActorDefs.BskyAppProgressGuide | undefined,
+    ) => {
+      await agent.bskyAppSetActiveProgressGuide(guide)
+      // triggers a refetch
+      await queryClient.invalidateQueries({
+        queryKey: preferencesQueryKey,
+      })
+    },
+  })
+}
