@@ -47,7 +47,7 @@ export function ListContained() {
               )
             }}
             keyExtractor={item => item.id.toString()}
-            containWeb={true}
+            disableFullWindow={true}
             style={{flex: 1}}
             onStartReached={() => {
               console.log('Start Reached')
