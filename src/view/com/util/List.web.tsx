@@ -25,7 +25,7 @@ export type ListProps<ItemT> = Omit<
   desktopFixedHeight?: number | boolean
   containWeb?: boolean
   sideBorders?: boolean
-  disableContentVisibility?: boolean
+  disableContainStyle?: boolean
 }
 export type ListRef = React.MutableRefObject<any | null> // TODO: Better types.
 
@@ -58,7 +58,7 @@ function ListImpl<ItemT>(
     extraData,
     style,
     sideBorders = true,
-    disableContentVisibility,
+    disableContainStyle,
     ...props
   }: ListProps<ItemT>,
   ref: React.Ref<ListMethods>,
@@ -356,7 +356,7 @@ function ListImpl<ItemT>(
                   renderItem={renderItem}
                   extraData={extraData}
                   onItemSeen={onItemSeen}
-                  disableContentVisibility={disableContentVisibility}
+                  disableContainStyle={disableContainStyle}
                 />
               )
             })}
@@ -406,7 +406,7 @@ let Row = function RowImpl<ItemT>({
   renderItem,
   extraData: _unused,
   onItemSeen,
-  disableContentVisibility,
+  disableContainStyle,
 }: {
   item: ItemT
   index: number
@@ -416,7 +416,7 @@ let Row = function RowImpl<ItemT>({
     | ((data: {index: number; item: any; separators: any}) => React.ReactNode)
   extraData: any
   onItemSeen: ((item: any) => void) | undefined
-  disableContentVisibility?: boolean
+  disableContainStyle?: boolean
 }): React.ReactNode {
   const rowRef = React.useRef(null)
   const intersectionTimeout = React.useRef<NodeJS.Timer | undefined>(undefined)
@@ -465,14 +465,10 @@ let Row = function RowImpl<ItemT>({
     return null
   }
 
-  const shouldDisableContentVisibility = disableContentVisibility || isSafari
+  const shouldDisableContainStyle = disableContainStyle || isSafari
   return (
     <View
-      style={
-        shouldDisableContentVisibility
-          ? undefined
-          : styles.contentVisibilityAuto
-      }
+      style={shouldDisableContainStyle ? undefined : styles.contain}
       ref={rowRef}>
       {renderItem({item, index, separators: null as any})}
     </View>
@@ -544,7 +540,7 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
     marginRight: 'auto',
   },
-  contentVisibilityAuto: {
+  contain: {
     // @ts-ignore web only
     contain: 'layout paint',
   },
