@@ -214,6 +214,7 @@ let FeedItem = ({
   let formattedCount = authors.length > 1 ? formatCount(authors.length - 1) : ''
   return (
     <VisibilityView
+      enabled={true}
       onVisibilityChange={e => {
         console.log(e)
       }}>

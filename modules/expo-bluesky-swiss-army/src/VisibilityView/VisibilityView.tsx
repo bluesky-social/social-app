@@ -5,11 +5,13 @@ import {VisibilityViewProps} from './types'
 const NativeView: React.ComponentType<{
   onVisibilityChange: (e: {nativeEvent: {isVisible: boolean}}) => void
   children: React.ReactNode
+  enabled: Boolean
 }> = requireNativeViewManager('ExpoBlueskyVisibilityView')
 
 export function VisibilityView({
   children,
   onVisibilityChange: onVisibilityChangeOuter,
+  enabled,
 }: VisibilityViewProps) {
   const onVisibilityChange = React.useCallback(
     (e: {nativeEvent: {isVisible: boolean}}) => {
@@ -19,6 +21,8 @@ export function VisibilityView({
   )
 
   return (
-    <NativeView onVisibilityChange={onVisibilityChange}>{children}</NativeView>
+    <NativeView onVisibilityChange={onVisibilityChange} enabled={enabled}>
+      {children}
+    </NativeView>
   )
 }
