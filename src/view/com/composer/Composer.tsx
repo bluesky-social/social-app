@@ -70,6 +70,10 @@ import {colors, s} from 'lib/styles'
 import {isAndroid, isIOS, isNative, isWeb} from 'platform/detection'
 import {useDialogStateControlContext} from 'state/dialogs'
 import {GalleryModel} from 'state/models/media/gallery'
+import {
+  useCompressVideoMutation,
+  useVideoUpload,
+} from 'state/queries/video/upload-video'
 import {ComposerOpts} from 'state/shell/composer'
 import {ComposerReplyTo} from 'view/com/composer/ComposerReplyTo'
 import {atoms as a, useTheme} from '#/alf'
@@ -96,7 +100,6 @@ import {TextInput, TextInputRef} from './text-input/TextInput'
 import {ThreadgateBtn} from './threadgate/ThreadgateBtn'
 import {useExternalLinkFetch} from './useExternalLinkFetch'
 import {SelectVideoBtn} from './videos/SelectVideoBtn'
-import {useVideoState} from './videos/state'
 import {VideoPreview} from './videos/VideoPreview'
 import {VideoTranscodeProgress} from './videos/VideoTranscodeProgress'
 
@@ -159,14 +162,14 @@ export const ComposePost = observer(function ComposePost({
   const [quote, setQuote] = useState<ComposerOpts['quote'] | undefined>(
     initQuote,
   )
+
   const {
-    video,
-    onSelectVideo,
-    videoPending,
-    videoProcessingData,
-    clearVideo,
-    videoProcessingProgress,
-  } = useVideoState({setError})
+    selectVideo,
+    resetVideo,
+    state: videoUploadState,
+    dispatch: videoUploadDispatch,
+  } = useVideoUpload()
+
   const {extLink, setExtLink} = useExternalLinkFetch({setQuote})
   const [extGif, setExtGif] = useState<Gif>()
   const [labels, setLabels] = useState<string[]>([])
@@ -387,8 +390,12 @@ export const ComposePost = observer(function ComposePost({
     : _(msg`What's up?`)
 
   const canSelectImages =
-    gallery.size < 4 && !extLink && !video && !videoPending
-  const hasMedia = gallery.size > 0 || Boolean(extLink) || Boolean(video)
+    gallery.size < 4 &&
+    !extLink &&
+    videoUploadState.status === 'idle' &&
+    !videoUploadState.video
+  const hasMedia =
+    gallery.size > 0 || Boolean(extLink) || Boolean(videoUploadState.video)
 
   const onEmojiButtonPress = useCallback(() => {
     openPicker?.(textInput.current?.getCursorPosition())
@@ -612,16 +619,17 @@ export const ComposePost = observer(function ComposePost({
               )}
             </View>
           ) : null}
-          {videoPending && videoProcessingData ? (
+          {videoUploadState.status === 'compressing' &&
+          videoUploadState.asset ? (
             <VideoTranscodeProgress
-              input={videoProcessingData}
-              progress={videoProcessingProgress}
+              asset={videoUploadState.asset}
+              progress={videoUploadState.progress}
             />
           ) : (
-            video && (
+            videoUploadState.video && (
               // remove suspense when we get rid of lazy
               <Suspense fallback={null}>
-                <VideoPreview video={video} clear={clearVideo} />
+                <VideoPreview video={videoUploadState.video} clear={() => {}} />
               </Suspense>
             )
           )}
@@ -645,7 +653,7 @@ export const ComposePost = observer(function ComposePost({
             <SelectPhotoBtn gallery={gallery} disabled={!canSelectImages} />
             {gate('videos') && (
               <SelectVideoBtn
-                onSelectVideo={onSelectVideo}
+                onSelectVideo={selectVideo}
                 disabled={!canSelectImages}
               />
             )}
