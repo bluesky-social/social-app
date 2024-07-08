@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-07-04 13:07+0900\n"
+"PO-Revision-Date: 2024-07-08 10:46+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -567,10 +567,6 @@ msgstr "背景"
 msgid "Apply default recommended feeds"
 msgstr "デフォルトのおすすめフィードを追加"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:610
-msgid "Are you sure you want delete this starter pack?"
-msgstr "このスターターパックを本当に削除したいですか？"
-
 #: src/view/screens/AppPasswords.tsx:282
 msgid "Are you sure you want to delete the app password \"{name}\"?"
 msgstr "アプリパスワード「{name}」を本当に削除しますか？"
@@ -578,6 +574,10 @@ msgstr "アプリパスワード「{name}」を本当に削除しますか？"
 #: src/components/dms/MessageMenu.tsx:149
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
 msgstr "このメッセージを本当に削除しますか？このメッセージはあなたからは削除したように見えますが、他の参加者からは削除されません。"
+
+#: src/screens/StarterPack/StarterPackScreen.tsx:610
+msgid "Are you sure you want to delete this starter pack?"
+msgstr "本当にこのスターターパックを削除したいですか？"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:48
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
@@ -1362,6 +1362,10 @@ msgstr "QRコードをコピー"
 #: src/view/screens/CopyrightPolicy.tsx:29
 msgid "Copyright Policy"
 msgstr "著作権ポリシー"
+
+#: src/view/com/composer/videos/state.ts:31
+msgid "Could not compress video"
+msgstr "ビデオを圧縮できませんでした"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:39
 msgid "Could not leave chat"
@@ -2525,10 +2529,6 @@ msgstr "戻る"
 #: src/view/screens/ProfileList.tsx:975
 msgid "Go Back"
 msgstr "戻る"
-
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:189
-msgid "Go back to previous screen"
-msgstr "前の画面に戻る"
 
 #: src/components/dms/ReportDialog.tsx:154
 #: src/components/ReportDialog/SelectReportOptionView.tsx:80
@@ -4004,6 +4004,10 @@ msgstr "スレッドの設定を開く"
 msgid "Opens this profile"
 msgstr "プロフィールを開く"
 
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:54
+msgid "Opens video picker"
+msgstr "ビデオの選択画面を開く"
+
 #: src/view/com/util/forms/DropdownButton.tsx:293
 msgid "Option {0} of {numItems}"
 msgstr "{numItems}個中{0}目のオプション"
@@ -4541,13 +4545,13 @@ msgstr "マイフィードから削除しました"
 msgid "Removed from your feeds"
 msgstr "あなたのフィードから削除しました"
 
-#: src/view/com/composer/ExternalEmbed.tsx:88
-msgid "Removes default thumbnail from {0}"
-msgstr "{0}からデフォルトのサムネイルを削除"
-
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:239
 msgid "Removes quoted post"
 msgstr "引用を削除する"
+
+#: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:29
+msgid "Removes the image preview"
+msgstr "画像のプレビューを削除する"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:126
 #: src/view/com/posts/FeedShutdownMsg.tsx:130
@@ -5025,6 +5029,10 @@ msgstr "報告先のモデレーションサービスを選んでください"
 #: src/view/com/auth/server-input/index.tsx:82
 msgid "Select the service that hosts your data."
 msgstr "データをホストするサービスを選択します。"
+
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:53
+msgid "Select video"
+msgstr "ビデオを選択"
 
 #: src/view/screens/LanguageSettings.tsx:283
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
@@ -6479,6 +6487,10 @@ msgstr "バージョン {appVersion} {bundleInfo}"
 #: src/screens/Onboarding/state.ts:88
 msgid "Video Games"
 msgstr "ビデオゲーム"
+
+#: src/view/com/composer/videos/state.ts:27
+msgid "Videos cannot be larger than 100MB"
+msgstr "ビデオは100MB以下にしてください"
 
 #: src/screens/Profile/Header/Shell.tsx:113
 msgid "View {0}'s avatar"
