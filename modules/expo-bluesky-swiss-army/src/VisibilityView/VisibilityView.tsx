@@ -3,25 +3,25 @@ import {requireNativeViewManager} from 'expo-modules-core'
 
 import {VisibilityViewProps} from './types'
 const NativeView: React.ComponentType<{
-  onVisibilityChange: (e: {nativeEvent: {isVisible: boolean}}) => void
+  onActiveChange: (e: {nativeEvent: {isActive: boolean}}) => void
   children: React.ReactNode
   enabled: Boolean
 }> = requireNativeViewManager('ExpoBlueskyVisibilityView')
 
 export function VisibilityView({
   children,
-  onVisibilityChange: onVisibilityChangeOuter,
+  onActiveChange: onActiveChangeOuter,
   enabled,
 }: VisibilityViewProps) {
-  const onVisibilityChange = React.useCallback(
-    (e: {nativeEvent: {isVisible: boolean}}) => {
-      onVisibilityChangeOuter(e.nativeEvent.isVisible)
+  const onActiveChange = React.useCallback(
+    (e: {nativeEvent: {isActive: boolean}}) => {
+      onActiveChangeOuter(e.nativeEvent.isActive)
     },
-    [onVisibilityChangeOuter],
+    [onActiveChangeOuter],
   )
 
   return (
-    <NativeView onVisibilityChange={onVisibilityChange} enabled={enabled}>
+    <NativeView onActiveChange={onActiveChange} enabled={enabled}>
       {children}
     </NativeView>
   )

@@ -215,8 +215,8 @@ let FeedItem = ({
   return (
     <VisibilityView
       enabled={true}
-      onVisibilityChange={e => {
-        console.log(e)
+      onActiveChange={isActive => {
+        console.log(isActive)
       }}>
       <Link
         testID={`feedItem-by-${item.notification.author.handle}`}

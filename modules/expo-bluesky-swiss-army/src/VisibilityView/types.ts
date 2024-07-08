@@ -1,6 +1,6 @@
 import React from 'react'
 export interface VisibilityViewProps {
   children: React.ReactNode
-  onVisibilityChange: (isVisible: boolean) => void
+  onActiveChange: (isActive: boolean) => void
   enabled: boolean
 }

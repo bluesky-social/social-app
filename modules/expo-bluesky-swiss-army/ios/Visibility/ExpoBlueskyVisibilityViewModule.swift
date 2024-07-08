@@ -6,7 +6,7 @@ public class ExpoBlueskyVisibilityViewModule: Module {
     
     View(VisibilityView.self) {
       Events([
-        "onVisibilityChange"
+        "onActiveChange"
       ])
       
       Prop("enabled") { (view: VisibilityView, prop: Bool) in
