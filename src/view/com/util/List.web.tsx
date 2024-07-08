@@ -24,7 +24,7 @@ export type ListProps<ItemT> = Omit<
   onItemSeen?: (item: ItemT) => void
   desktopFixedHeight?: number | boolean
   // Web only prop to contain the scroll to the container rather than the window
-  disableFullWindow?: boolean
+  disableFullWindowScroll?: boolean
   sideBorders?: boolean
   // Web only prop to disable a perf optimization (which would otherwise be on).
   disableContainStyle?: boolean
@@ -41,7 +41,7 @@ function ListImpl<ItemT>(
     ListHeaderComponent,
     ListFooterComponent,
     ListEmptyComponent,
-    disableFullWindow,
+    disableFullWindowScroll,
     contentContainerStyle,
     data,
     desktopFixedHeight,
@@ -114,7 +114,7 @@ function ListImpl<ItemT>(
   }
 
   const getScrollableNode = React.useCallback(() => {
-    if (disableFullWindow) {
+    if (disableFullWindowScroll) {
       const element = nativeRef.current as HTMLDivElement | null
       if (!element) return
 
@@ -184,7 +184,7 @@ function ListImpl<ItemT>(
         },
       }
     }
-  }, [disableFullWindow])
+  }, [disableFullWindowScroll])
 
   const nativeRef = React.useRef<HTMLDivElement>(null)
   React.useImperativeHandle(
@@ -269,7 +269,12 @@ function ListImpl<ItemT>(
     return () => {
       element?.removeEventListener('scroll', handleScroll)
     }
-  }, [isInsideVisibleTree, handleScroll, disableFullWindow, getScrollableNode])
+  }, [
+    isInsideVisibleTree,
+    handleScroll,
+    disableFullWindowScroll,
+    getScrollableNode,
+  ])
 
   // --- onScrolledDownChange ---
   const isScrolledDown = useRef(false)
@@ -310,7 +315,7 @@ function ListImpl<ItemT>(
       {...props}
       style={[
         style,
-        disableFullWindow && {
+        disableFullWindowScroll && {
           flex: 1,
           // @ts-expect-error web only
           'overflow-y': 'scroll',
@@ -334,13 +339,13 @@ function ListImpl<ItemT>(
           pal.border,
         ]}>
         <Visibility
-          root={disableFullWindow ? nativeRef : null}
+          root={disableFullWindowScroll ? nativeRef : null}
           onVisibleChange={handleAboveTheFoldVisibleChange}
           style={[styles.aboveTheFoldDetector, {height: headerOffset}]}
         />
         {onStartReached && !isEmpty && (
           <Visibility
-            root={disableFullWindow ? nativeRef : null}
+            root={disableFullWindowScroll ? nativeRef : null}
             onVisibleChange={onHeadVisibilityChange}
             topMargin={(onStartReachedThreshold ?? 0) * 100 + '%'}
           />
@@ -364,7 +369,7 @@ function ListImpl<ItemT>(
             })}
         {onEndReached && !isEmpty && (
           <Visibility
-            root={disableFullWindow ? nativeRef : null}
+            root={disableFullWindowScroll ? nativeRef : null}
             onVisibleChange={onTailVisibilityChange}
             bottomMargin={(onEndReachedThreshold ?? 0) * 100 + '%'}
             key={data?.length}

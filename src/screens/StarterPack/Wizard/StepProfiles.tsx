@@ -80,7 +80,7 @@ export function StepProfiles({
         keyExtractor={keyExtractor}
         renderScrollComponent={props => <KeyboardAwareScrollView {...props} />}
         keyboardShouldPersistTaps="handled"
-        disableFullWindow={true}
+        disableFullWindowScroll={true}
         sideBorders={false}
         style={[a.flex_1]}
         onEndReached={

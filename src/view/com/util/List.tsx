@@ -26,7 +26,7 @@ export type ListProps<ItemT> = Omit<
   onItemSeen?: (item: ItemT) => void
   desktopFixedHeight?: number | boolean
   // Web only prop to contain the scroll to the container rather than the window
-  disableFullWindow?: boolean
+  disableFullWindowScroll?: boolean
   sideBorders?: boolean
   // Web only prop to disable a perf optimization (which would otherwise be on).
   disableContainStyle?: boolean
