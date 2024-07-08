@@ -546,7 +546,7 @@ const styles = StyleSheet.create({
   },
   contentVisibilityAuto: {
     // @ts-ignore web only
-    contentVisibility: 'auto',
+    contain: 'layout paint',
   },
   minHeightViewport: {
     // @ts-ignore web only
