@@ -28,7 +28,7 @@ export type ListProps<ItemT> = Omit<
   desktopFixedHeight?: number | boolean
   sideBorders?: boolean
   // Web only prop to disable a perf optimization (which would otherwise be on).
-  disableContentVisibility?: boolean
+  disableContainStyle?: boolean
 }
 export type ListRef = React.MutableRefObject<FlatList_INTERNAL | null>
 
