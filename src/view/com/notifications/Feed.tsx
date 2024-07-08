@@ -190,6 +190,7 @@ export function Feed({
         initialNumToRender={initialNumToRender}
         windowSize={11}
         sideBorders={false}
+        removeClippedSubviews={true}
       />
     </View>
   )

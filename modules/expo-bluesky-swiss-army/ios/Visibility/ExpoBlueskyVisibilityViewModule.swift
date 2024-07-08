@@ -1,8 +1,8 @@
 import ExpoModulesCore
 
-class ExpoBlueskyVisibilityViewModule: Module {
+public class ExpoBlueskyVisibilityViewModule: Module {
   public func definition() -> ModuleDefinition {
-    Name("ExpoBluskyVisibilityViewModule")
+    Name("ExpoBlueskyVisibilityView")
     
     View(VisibilityView.self) {
       Events([

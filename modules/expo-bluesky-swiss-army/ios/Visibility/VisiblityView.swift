@@ -1,16 +1,24 @@
 import ExpoModulesCore
 
-class VisiblityView: ExpoView {
+class VisibilityView: ExpoView {
   private let onVisibilityChange = EventDispatcher()
   
-  init(appContext: AppContext) {
-    super(appContex: appContext)
+  required init(appContext: AppContext? = nil) {
+    super.init(appContext: appContext)
   }
   
   public override func willMove(toWindow newWindow: UIWindow?) {
-    let isVisible = newWindow != nil
-    onVisiblityChange([
-      "isVisible": isVisible
+    onVisibilityChange([
+      "isVisible": !(newWindow == nil)
     ])
+  }
+  
+  func getPosition() -> CGPoint? {
+    guard let window = self.window else {
+      return nil
+    }
+    
+    let frameInWindow = self.convert(self.bounds, to: window)
+    return frameInWindow.origin
   }
 }
