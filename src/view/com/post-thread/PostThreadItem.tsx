@@ -281,7 +281,7 @@ let PostThreadItemLoaded = ({
                 <Link style={s.flex1} href={authorHref} title={authorTitle}>
                   <Text
                     type="xl-bold"
-                    style={[pal.text]}
+                    style={[pal.text, a.self_start]}
                     numberOfLines={1}
                     lineHeight={1.2}>
                     {sanitizeDisplayName(
