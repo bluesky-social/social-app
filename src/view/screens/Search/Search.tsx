@@ -306,7 +306,7 @@ let SearchScreenFeedsResults = ({
                 a.px_lg,
                 a.py_lg,
               ]}>
-              <FeedCard.Default type="feed" view={item} />
+              <FeedCard.Default view={item} />
             </View>
           )}
           keyExtractor={item => item.uri}

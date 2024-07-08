@@ -3,7 +3,6 @@ import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {
   AppBskyGraphDefs,
-  AppBskyGraphGetList,
   AppBskyGraphStarterpack,
   AtUri,
   ModerationOpts,
@@ -14,17 +13,18 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
-import {
-  InfiniteData,
-  UseInfiniteQueryResult,
-  useQueryClient,
-} from '@tanstack/react-query'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useDeleteStarterPackMutation} from '#/state/queries/starter-packs'
+import {
+  ProgressGuideAction,
+  useProgressGuideControls,
+} from '#/state/shell/progress-guide'
 import {batchedUpdates} from 'lib/batchedUpdates'
 import {HITSLOP_20} from 'lib/constants'
+import {isBlockedOrBlocking, isMuted} from 'lib/moderation/blocked-and-muted'
 import {makeProfileLink, makeStarterPackLink} from 'lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
 import {logEvent} from 'lib/statsig/statsig'
@@ -32,11 +32,13 @@ import {getStarterPackOgCard} from 'lib/strings/starter-pack'
 import {isWeb} from 'platform/detection'
 import {updateProfileShadow} from 'state/cache/profile-shadow'
 import {useModerationOpts} from 'state/preferences/moderation-opts'
-import {useListMembersQuery} from 'state/queries/list-members'
+import {useResolvedStarterPackShortLink} from 'state/queries/resolve-short-link'
 import {useResolveDidQuery} from 'state/queries/resolve-uri'
 import {useShortenLink} from 'state/queries/shorten-link'
 import {useStarterPackQuery} from 'state/queries/starter-packs'
 import {useAgent, useSession} from 'state/session'
+import {useLoggedOutViewControls} from 'state/shell/logged-out'
+import {useSetActiveStarterPack} from 'state/shell/starter-pack'
 import * as Toast from '#/view/com/util/Toast'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
@@ -67,12 +69,47 @@ type StarterPackScreeProps = NativeStackScreenProps<
   CommonNavigatorParams,
   'StarterPack'
 >
+type StarterPackScreenShortProps = NativeStackScreenProps<
+  CommonNavigatorParams,
+  'StarterPackShort'
+>
 
 export function StarterPackScreen({route}: StarterPackScreeProps) {
+  return <StarterPackScreenInner routeParams={route.params} />
+}
+
+export function StarterPackScreenShort({route}: StarterPackScreenShortProps) {
+  const {_} = useLingui()
+  const {
+    data: resolvedStarterPack,
+    isLoading,
+    isError,
+  } = useResolvedStarterPackShortLink({
+    code: route.params.code,
+  })
+
+  if (isLoading || isError || !resolvedStarterPack) {
+    return (
+      <ListMaybePlaceholder
+        isLoading={isLoading}
+        isError={isError}
+        errorMessage={_(msg`That starter pack could not be found.`)}
+        emptyMessage={_(msg`That starter pack could not be found.`)}
+      />
+    )
+  }
+  return <StarterPackScreenInner routeParams={resolvedStarterPack} />
+}
+
+export function StarterPackScreenInner({
+  routeParams,
+}: {
+  routeParams: StarterPackScreeProps['route']['params']
+}) {
+  const {name, rkey} = routeParams
   const {_} = useLingui()
   const {currentAccount} = useSession()
 
-  const {name, rkey} = route.params
   const moderationOpts = useModerationOpts()
   const {
     data: did,
@@ -84,7 +121,6 @@ export function StarterPackScreen({route}: StarterPackScreeProps) {
     isLoading: isLoadingStarterPack,
     isError: isErrorStarterPack,
   } = useStarterPackQuery({did, rkey})
-  const listMembersQuery = useListMembersQuery(starterPack?.list?.uri, 50)
 
   const isValid =
     starterPack &&
@@ -95,12 +131,7 @@ export function StarterPackScreen({route}: StarterPackScreeProps) {
   if (!did || !starterPack || !isValid || !moderationOpts) {
     return (
       <ListMaybePlaceholder
-        isLoading={
-          isLoadingDid ||
-          isLoadingStarterPack ||
-          listMembersQuery.isLoading ||
-          !moderationOpts
-        }
+        isLoading={isLoadingDid || isLoadingStarterPack || !moderationOpts}
         isError={isErrorDid || isErrorStarterPack || !isValid}
         errorMessage={_(msg`That starter pack could not be found.`)}
         emptyMessage={_(msg`That starter pack could not be found.`)}
@@ -113,36 +144,32 @@ export function StarterPackScreen({route}: StarterPackScreeProps) {
   }
 
   return (
-    <StarterPackScreenInner
+    <StarterPackScreenLoaded
       starterPack={starterPack}
-      routeParams={route.params}
-      listMembersQuery={listMembersQuery}
+      routeParams={routeParams}
       moderationOpts={moderationOpts}
     />
   )
 }
 
-function StarterPackScreenInner({
+function StarterPackScreenLoaded({
   starterPack,
   routeParams,
-  listMembersQuery,
   moderationOpts,
 }: {
   starterPack: AppBskyGraphDefs.StarterPackView
   routeParams: StarterPackScreeProps['route']['params']
-  listMembersQuery: UseInfiniteQueryResult<
-    InfiniteData<AppBskyGraphGetList.OutputSchema>
-  >
   moderationOpts: ModerationOpts
 }) {
   const showPeopleTab = Boolean(starterPack.list)
   const showFeedsTab = Boolean(starterPack.feeds?.length)
   const showPostsTab = Boolean(starterPack.list)
+  const {_} = useLingui()
 
   const tabs = [
-    ...(showPeopleTab ? ['People'] : []),
-    ...(showFeedsTab ? ['Feeds'] : []),
-    ...(showPostsTab ? ['Posts'] : []),
+    ...(showPeopleTab ? [_(msg`People`)] : []),
+    ...(showFeedsTab ? [_(msg`Feeds`)] : []),
+    ...(showPostsTab ? [_(msg`Posts`)] : []),
   ]
 
   const qrCodeDialogControl = useDialogControl()
@@ -202,7 +229,6 @@ function StarterPackScreenInner({
                   headerHeight={headerHeight}
                   // @ts-expect-error
                   scrollElRef={scrollElRef}
-                  listMembersQuery={listMembersQuery}
                   moderationOpts={moderationOpts}
                 />
               )
@@ -260,15 +286,41 @@ function Header({
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const {currentAccount} = useSession()
+  const {currentAccount, hasSession} = useSession()
   const agent = useAgent()
   const queryClient = useQueryClient()
+  const setActiveStarterPack = useSetActiveStarterPack()
+  const {requestSwitchToAccount} = useLoggedOutViewControls()
+  const {captureAction} = useProgressGuideControls()
 
   const [isProcessing, setIsProcessing] = React.useState(false)
 
   const {record, creator} = starterPack
   const isOwn = creator?.did === currentAccount?.did
   const joinedAllTimeCount = starterPack.joinedAllTimeCount ?? 0
+
+  const navigation = useNavigation<NavigationProp>()
+
+  React.useEffect(() => {
+    const onFocus = () => {
+      if (hasSession) return
+      setActiveStarterPack({
+        uri: starterPack.uri,
+      })
+    }
+    const onBeforeRemove = () => {
+      if (hasSession) return
+      setActiveStarterPack(undefined)
+    }
+
+    navigation.addListener('focus', onFocus)
+    navigation.addListener('beforeRemove', onBeforeRemove)
+
+    return () => {
+      navigation.removeListener('focus', onFocus)
+      navigation.removeListener('beforeRemove', onBeforeRemove)
+    }
+  }, [hasSession, navigation, setActiveStarterPack, starterPack.uri])
 
   const onFollowAll = async () => {
     if (!starterPack.list) return
@@ -280,7 +332,13 @@ function Header({
         list: starterPack.list.uri,
       })
       const dids = list.data.items
-        .filter(li => !li.subject.viewer?.following)
+        .filter(
+          li =>
+            li.subject.did !== currentAccount?.did &&
+            !isBlockedOrBlocking(li.subject) &&
+            !isMuted(li.subject) &&
+            !li.subject.viewer?.following,
+        )
         .map(li => li.subject.did)
 
       const followUris = await bulkWriteFollows(agent, dids)
@@ -298,6 +356,7 @@ function Header({
         starterPack: starterPack.uri,
         count: dids.length,
       })
+      captureAction(ProgressGuideAction.Follow, dids.length)
       Toast.show(_(msg`All accounts have been followed!`))
     } catch (e) {
       Toast.show(_(msg`An error occurred while trying to follow all`))
@@ -327,44 +386,63 @@ function Header({
         avatar={undefined}
         creator={creator}
         avatarType="starter-pack">
-        <View style={[a.flex_row, a.gap_sm, a.align_center]}>
-          {isOwn ? (
-            <Button
-              label={_(msg`Share this starter pack`)}
-              hitSlop={HITSLOP_20}
-              variant="solid"
-              color="primary"
-              size="small"
-              onPress={onOpenShareDialog}>
-              <ButtonText>
-                <Trans>Share</Trans>
-              </ButtonText>
-            </Button>
-          ) : (
-            <Button
-              label={_(msg`Follow all`)}
-              variant="solid"
-              color="primary"
-              size="small"
-              disabled={isProcessing}
-              onPress={onFollowAll}>
-              <ButtonText>
-                <Trans>Follow all</Trans>
-                {isProcessing && <Loader size="xs" />}
-              </ButtonText>
-            </Button>
-          )}
-          <OverflowMenu
-            routeParams={routeParams}
-            starterPack={starterPack}
-            onOpenShareDialog={onOpenShareDialog}
-          />
-        </View>
+        {hasSession ? (
+          <View style={[a.flex_row, a.gap_sm, a.align_center]}>
+            {isOwn ? (
+              <Button
+                label={_(msg`Share this starter pack`)}
+                hitSlop={HITSLOP_20}
+                variant="solid"
+                color="primary"
+                size="small"
+                onPress={onOpenShareDialog}>
+                <ButtonText>
+                  <Trans>Share</Trans>
+                </ButtonText>
+              </Button>
+            ) : (
+              <Button
+                label={_(msg`Follow all`)}
+                variant="solid"
+                color="primary"
+                size="small"
+                disabled={isProcessing}
+                onPress={onFollowAll}>
+                <ButtonText>
+                  <Trans>Follow all</Trans>
+                  {isProcessing && <Loader size="xs" />}
+                </ButtonText>
+              </Button>
+            )}
+            <OverflowMenu
+              routeParams={routeParams}
+              starterPack={starterPack}
+              onOpenShareDialog={onOpenShareDialog}
+            />
+          </View>
+        ) : null}
       </ProfileSubpageHeader>
-      {richText || joinedAllTimeCount >= 25 ? (
+      {!hasSession || richText || joinedAllTimeCount >= 25 ? (
         <View style={[a.px_lg, a.pt_md, a.pb_sm, a.gap_md]}>
           {richText ? (
             <RichText value={richText} style={[a.text_md, a.leading_snug]} />
+          ) : null}
+          {!hasSession ? (
+            <Button
+              label={_(msg`Join Bluesky`)}
+              onPress={() => {
+                setActiveStarterPack({
+                  uri: starterPack.uri,
+                })
+                requestSwitchToAccount({requestedAccount: 'new'})
+              }}
+              variant="solid"
+              color="primary"
+              size="medium">
+              <ButtonText style={[a.text_lg]}>
+                <Trans>Join Bluesky</Trans>
+              </ButtonText>
+            </Button>
           ) : null}
           {joinedAllTimeCount >= 25 ? (
             <View style={[a.flex_row, a.align_center, a.gap_sm]}>
@@ -529,7 +607,7 @@ function OverflowMenu({
           <Trans>Delete starter pack?</Trans>
         </Prompt.TitleText>
         <Prompt.DescriptionText>
-          <Trans>Are you sure you want delete this starter pack?</Trans>
+          <Trans>Are you sure you want to delete this starter pack?</Trans>
         </Prompt.DescriptionText>
         {deleteError && (
           <View
