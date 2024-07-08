@@ -108,6 +108,12 @@ export function QrCodeInner({link}: {link: string}) {
         },
       }}
       innerEyesOptions={{borderRadius: 3}}
+      logo={{
+        href: require('../../../assets/logo.png'),
+        scale: 1,
+        padding: 2,
+        hidePieces: true,
+      }}
     />
   )
 }
