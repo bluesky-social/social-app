@@ -78,7 +78,13 @@ function WizardListCard({
       />
       <View style={[a.flex_1, a.gap_2xs]}>
         <Text
-          style={[a.flex_1, a.font_bold, a.text_md, a.leading_tight]}
+          style={[
+            a.flex_1,
+            a.font_bold,
+            a.text_md,
+            a.leading_tight,
+            a.self_start,
+          ]}
           numberOfLines={1}>
           {displayName}
         </Text>
