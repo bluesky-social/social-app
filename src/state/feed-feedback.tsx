@@ -35,7 +35,7 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
   const aggregatedStats = React.useRef<AggregatedStats | null>(null)
   const throttledFlushAggregatedStats = React.useMemo(
     () =>
-      throttle(() => flushToStatsig(aggregatedStats.current), 45e3, {
+      throttle(() => flushToStatsig(aggregatedStats.current), 5e3, {
         leading: true, // The outer call is already throttled somewhat.
         trailing: true,
       }),
@@ -43,22 +43,41 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
   )
 
   const sendToFeedNoDelay = React.useCallback(() => {
-    const proxyAgent = agent.withProxy(
-      // @ts-ignore TODO need to update withProxy() to support this key -prf
-      'bsky_fg',
-      // TODO when we start sending to other feeds, we need to grab their DID -prf
-      'did:web:discover.bsky.app',
-    ) as BskyAgent
-
     const interactions = Array.from(queue.current).map(toInteraction)
     queue.current.clear()
 
-    // Send to the feed
-    proxyAgent.app.bsky.feed
-      .sendInteractions({interactions})
-      .catch((e: any) => {
-        logger.warn('Failed to send feed interactions', {error: e})
-      })
+    if (true) {
+      // Send to the feed
+      agent.app.bsky.feed
+        .sendInteractions({ interactions }, {
+          encoding: 'application/json',
+          headers: {
+            'atproto-proxy': 'did:web:discover.bsky.app#bsky_fg'
+          }
+        })
+        .catch((e: any) => {
+          logger.warn('Failed to send feed interactions', { error: e })
+        })
+    } else {
+      const proxyAgent = agent.withProxy(
+        // @ts-ignore TODO need to update withProxy() to support this key -prf
+        'bsky_fg',
+        // TODO when we start sending to other feeds, we need to grab their DID -prf
+        'did:web:discover.bsky.app',
+      ) as BskyAgent
+
+      // Send to the feed
+      proxyAgent.app.bsky.feed
+        .sendInteractions({ interactions }, {
+          encoding: 'application/json',
+          headers: {
+            'atproto-proxy': 'did:web:discover.bsky.app#bsky_fg'
+          }
+        })
+        .catch((e: any) => {
+          logger.warn('Failed to send feed interactions', { error: e })
+        })
+    }
 
     // Send to Statsig
     if (aggregatedStats.current === null) {
@@ -70,7 +89,7 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
 
   const sendToFeed = React.useMemo(
     () =>
-      throttle(sendToFeedNoDelay, 15e3, {
+      throttle(sendToFeedNoDelay, 1e3, {
         leading: false,
         trailing: true,
       }),

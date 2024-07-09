@@ -51,7 +51,10 @@ async function fetchHandler(
 
   const res = await fetch(reqUri, {
     method: reqMethod,
-    headers: reqHeaders,
+    headers: {
+      ...reqHeaders,
+      'x-bsky-entryway': 'short-session'
+    },
     body: reqBody,
     signal: controller.signal,
   })

@@ -71,6 +71,7 @@ let nextMessageIndex = 0
 const MAX_SLICE_LENGTH = 1000
 
 export function addSessionDebugLog(log: Log) {
+  console.log(new Date(), log)
   try {
     if (!Statsig.initializeCalled() || !Statsig.getStableID()) {
       // Drop these logs for now.
