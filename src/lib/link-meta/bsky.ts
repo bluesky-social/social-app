@@ -1,11 +1,16 @@
-import {AppBskyFeedPost, BskyAgent} from '@atproto/api'
+import {AppBskyFeedPost, AppBskyGraphStarterpack, BskyAgent} from '@atproto/api'
+
+import {useFetchDid} from '#/state/queries/handle'
+import {useGetPost} from '#/state/queries/post'
 import * as apilib from 'lib/api/index'
-import {LikelyType, LinkMeta} from './link-meta'
+import {
+  createStarterPackUri,
+  parseStarterPackUri,
+} from 'lib/strings/starter-pack'
+import {ComposerOptsQuote} from 'state/shell/composer'
 // import {match as matchRoute} from 'view/routes'
 import {convertBskyAppUrlIfNeeded, makeRecordUri} from '../strings/url-helpers'
-import {ComposerOptsQuote} from 'state/shell/composer'
-import {useGetPost} from '#/state/queries/post'
-import {useFetchDid} from '#/state/queries/handle'
+import {LikelyType, LinkMeta} from './link-meta'
 
 // TODO
 // import {Home} from 'view/screens/Home'
@@ -170,6 +175,42 @@ export async function getListAsEmbed(
       record: {
         uri: res.data.list.uri,
         cid: res.data.list.cid,
+      },
+    },
+  }
+}
+
+export async function getStarterPackAsEmbed(
+  agent: BskyAgent,
+  fetchDid: ReturnType<typeof useFetchDid>,
+  url: string,
+): Promise<apilib.ExternalEmbedDraft> {
+  const parsed = parseStarterPackUri(url)
+  if (!parsed) {
+    throw new Error(
+      'Unexepectedly called getStarterPackAsEmbed with a non-starterpack url',
+    )
+  }
+  const did = await fetchDid(parsed.name)
+  const starterPack = createStarterPackUri({did, rkey: parsed.rkey})
+  const res = await agent.app.bsky.graph.getStarterPack({starterPack})
+  const record = res.data.starterPack.record
+  return {
+    isLoading: false,
+    uri: starterPack,
+    meta: {
+      url: starterPack,
+      likelyType: LikelyType.AtpData,
+      // Validation here should never fail
+      title: AppBskyGraphStarterpack.isRecord(record)
+        ? record.name
+        : 'Starter Pack',
+    },
+    embed: {
+      $type: 'app.bsky.embed.record',
+      record: {
+        uri: res.data.starterPack.uri,
+        cid: res.data.starterPack.cid,
       },
     },
   }

@@ -34,6 +34,7 @@ import {
 import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
 import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
+import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
 import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
 import * as Toast from '#/view/com/util/Toast'
@@ -43,6 +44,7 @@ import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as PortalProvider} from '#/components/Portal'
+import {Provider as TourProvider} from '#/tours'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import I18nProvider from './locale/i18nProvider'
 import {listenSessionDropped} from './state/events'
@@ -102,7 +104,11 @@ function InnerApp() {
                               <BackgroundNotificationPreferencesProvider>
                                 <MutedThreadsProvider>
                                   <SafeAreaProvider>
-                                    <Shell />
+                                    <TourProvider>
+                                      <ProgressGuideProvider>
+                                        <Shell />
+                                      </ProgressGuideProvider>
+                                    </TourProvider>
                                   </SafeAreaProvider>
                                 </MutedThreadsProvider>
                               </BackgroundNotificationPreferencesProvider>

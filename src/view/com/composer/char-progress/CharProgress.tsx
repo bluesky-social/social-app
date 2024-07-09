@@ -1,13 +1,14 @@
 import React from 'react'
 import {View} from 'react-native'
-import {Text} from '../../util/text/Text'
 // @ts-ignore no type definition -prf
 import ProgressCircle from 'react-native-progress/Circle'
 // @ts-ignore no type definition -prf
 import ProgressPie from 'react-native-progress/Pie'
-import {s} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
+
 import {MAX_GRAPHEME_LENGTH} from 'lib/constants'
+import {usePalette} from 'lib/hooks/usePalette'
+import {s} from 'lib/styles'
+import {Text} from '../../util/text/Text'
 
 const DANGER_LENGTH = MAX_GRAPHEME_LENGTH
 
