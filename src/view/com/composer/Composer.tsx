@@ -72,6 +72,7 @@ import {isAndroid, isIOS, isNative, isWeb} from 'platform/detection'
 import {useDialogStateControlContext} from 'state/dialogs'
 import {GalleryModel} from 'state/models/media/gallery'
 import {ComposerOpts} from 'state/shell/composer'
+import {VideoUploadToolbar} from '#/view/com/composer/Toolbar'
 import {ComposerReplyTo} from 'view/com/composer/ComposerReplyTo'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -641,33 +642,37 @@ export const ComposePost = observer(function ComposePost({
             t.atoms.border_contrast_medium,
             styles.bottomBar,
           ]}>
-          <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-            <SelectPhotoBtn gallery={gallery} disabled={!canSelectImages} />
-            {gate('videos') && (
-              <SelectVideoBtn
-                onSelectVideo={selectVideo}
-                disabled={!canSelectImages}
+          {videoUploadState.asset ? (
+            <VideoUploadToolbar state={videoUploadState} />
+          ) : (
+            <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+              <SelectPhotoBtn gallery={gallery} disabled={!canSelectImages} />
+              {gate('videos') && (
+                <SelectVideoBtn
+                  onSelectVideo={selectVideo}
+                  disabled={!canSelectImages}
+                />
+              )}
+              <OpenCameraBtn gallery={gallery} disabled={!canSelectImages} />
+              <SelectGifBtn
+                onClose={focusTextInput}
+                onSelectGif={onSelectGif}
+                disabled={hasMedia}
               />
-            )}
-            <OpenCameraBtn gallery={gallery} disabled={!canSelectImages} />
-            <SelectGifBtn
-              onClose={focusTextInput}
-              onSelectGif={onSelectGif}
-              disabled={hasMedia}
-            />
-            {!isMobile ? (
-              <Button
-                onPress={onEmojiButtonPress}
-                style={a.p_sm}
-                label={_(msg`Open emoji picker`)}
-                accessibilityHint={_(msg`Open emoji picker`)}
-                variant="ghost"
-                shape="round"
-                color="primary">
-                <EmojiSmile size="lg" />
-              </Button>
-            ) : null}
-          </View>
+              {!isMobile ? (
+                <Button
+                  onPress={onEmojiButtonPress}
+                  style={a.p_sm}
+                  label={_(msg`Open emoji picker`)}
+                  accessibilityHint={_(msg`Open emoji picker`)}
+                  variant="ghost"
+                  shape="round"
+                  color="primary">
+                  <EmojiSmile size="lg" />
+                </Button>
+              ) : null}
+            </View>
+          )}
           <View style={a.flex_1} />
           <SelectLangBtn />
           <CharProgress count={graphemeLength} />

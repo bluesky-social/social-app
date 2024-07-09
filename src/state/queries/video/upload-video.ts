@@ -10,6 +10,7 @@ import {logger} from '#/logger'
 import {CompressedVideo} from 'lib/media/video/compress'
 import {VideoTooLargeError} from 'lib/media/video/errors'
 import {JobState, JobStatus, UploadVideoResponse} from 'lib/media/video/types'
+import {isWeb} from 'platform/detection'
 import {useCompressVideoMutation} from 'state/queries/video/compress-video'
 import {useSession} from 'state/session'
 
@@ -36,7 +37,7 @@ type Action =
   | {type: 'SetVideo'; video: CompressedVideo}
   | {type: 'SetJobStatus'; jobStatus: JobStatus}
 
-interface State {
+export interface State {
   status: Status
   progress: number
   asset?: ImagePickerAsset
@@ -104,6 +105,7 @@ export function useVideoUpload({
       setJobId(response.job_id)
     },
     onError: e => {
+      console.log(e)
       dispatch({
         type: 'SetError',
         error: _(msg`An error occurred while uploading the video.`),
@@ -185,18 +187,39 @@ const useUploadVideoMutation = ({
         name: `hailey-${nanoid(12)}.mp4`,
       })
 
-      const res = await uploadAsync(uri, video.uri, {
-        headers: {
-          'dev-key': UPLOAD_HEADER,
-          'content-type': 'video/mp4',
-        },
-        httpMethod: 'POST',
-        uploadType: FileSystemUploadType.BINARY_CONTENT,
-      })
+      let responseBody
 
-      console.log('[VIDEO]', res.body)
+      if (isWeb) {
+        const bytes = await fetch(video.uri).then(res => res.arrayBuffer())
+        const res = await fetch(uri, {
+          method: 'POST',
+          headers: {
+            'dev-key': UPLOAD_HEADER,
+            'content-type': 'video/mp4',
+          },
+          body: bytes,
+        })
 
-      const responseBody = JSON.parse(res.body) as UploadVideoResponse
+        const json = (await res.json()) as UploadVideoResponse
+
+        console.log('[VIDEO]', json)
+
+        responseBody = json as UploadVideoResponse
+      } else {
+        const res = await uploadAsync(uri, video.uri, {
+          headers: {
+            'dev-key': UPLOAD_HEADER,
+            'content-type': 'video/mp4',
+          },
+          httpMethod: 'POST',
+          uploadType: FileSystemUploadType.BINARY_CONTENT,
+        })
+
+        console.log('[VIDEO]', res.body)
+
+        responseBody = JSON.parse(res.body) as UploadVideoResponse
+      }
+
       onSuccess(responseBody)
       return responseBody
     },
@@ -210,15 +233,12 @@ const useUploadStatusQuery = ({
 }: {
   onStatusChange: (status: JobStatus) => void
 }) => {
-  const {currentAccount} = useSession()
   const [enabled, setEnabled] = React.useState(false)
   const [jobId, setJobId] = React.useState<string>()
 
   const {isLoading, isError} = useQuery({
     queryKey: ['video-upload'],
     queryFn: async () => {
-      console.log('test')
-      console.log(jobId)
       const url = createUrl(`/job/${jobId}/status`)
       const res = await fetch(url)
       const status = (await res.json()) as JobStatus
