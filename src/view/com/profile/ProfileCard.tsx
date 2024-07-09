@@ -97,7 +97,7 @@ export function ProfileCard({
         <View style={styles.layoutContent}>
           <Text
             type="lg"
-            style={[s.bold, pal.text]}
+            style={[s.bold, pal.text, a.self_start]}
             numberOfLines={1}
             lineHeight={1.2}>
             {sanitizeDisplayName(
