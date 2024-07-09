@@ -10,6 +10,7 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -241,7 +242,7 @@ type ExploreScreenItems =
   | {
       type: 'profile'
       key: string
-      profile: AppBskyActorDefs.ProfileViewBasic
+      profile: AppBskyActorDefs.ProfileView
     }
   | {
       type: 'feed'
@@ -291,6 +292,7 @@ export function Explore() {
     error: feedsError,
     fetchNextPage: fetchNextFeedsPage,
   } = useGetPopularFeedsQuery({limit: 10})
+  const gate = useGate()
 
   const isLoadingMoreProfiles = isFetchingNextProfilesPage && !isLoadingProfiles
   const onLoadMoreProfiles = React.useCallback(async () => {
@@ -492,7 +494,14 @@ export function Explore() {
         case 'profile': {
           return (
             <View style={[a.border_b, t.atoms.border_contrast_low]}>
-              <ProfileCardWithFollowBtn profile={item.profile} noBg noBorder />
+              <ProfileCardWithFollowBtn
+                profile={item.profile}
+                noBg
+                noBorder
+                showKnownFollowers={gate(
+                  'explore_page_profile_card_social_proof',
+                )}
+              />
             </View>
           )
         }
@@ -555,7 +564,7 @@ export function Explore() {
         }
       }
     },
-    [t, moderationOpts],
+    [t, moderationOpts, gate],
   )
 
   return (

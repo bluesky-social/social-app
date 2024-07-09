@@ -166,7 +166,9 @@ export function NameAndHandle({
 
   return (
     <View style={[a.flex_1]}>
-      <Text style={[a.text_md, a.font_bold, a.leading_snug]} numberOfLines={1}>
+      <Text
+        style={[a.text_md, a.font_bold, a.leading_snug, a.self_start]}
+        numberOfLines={1}>
         {name}
       </Text>
       <Text

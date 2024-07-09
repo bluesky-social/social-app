@@ -30,6 +30,7 @@ import {precacheProfile} from 'state/queries/profile'
 import {Link} from '#/view/com/util/Link'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Text} from 'view/com/util/text/Text'
+import {atoms as a} from '#/alf'
 
 let SearchLinkCard = ({
   label,
@@ -127,7 +128,7 @@ let SearchProfileCard = ({
         <View style={{flex: 1}}>
           <Text
             type="lg"
-            style={[s.bold, pal.text]}
+            style={[s.bold, pal.text, a.self_start]}
             numberOfLines={1}
             lineHeight={1.2}>
             {sanitizeDisplayName(
