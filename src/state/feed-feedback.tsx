@@ -43,17 +43,16 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
   )
 
   const sendToFeedNoDelay = React.useCallback(() => {
+    const interactions = Array.from(queue.current).map(toInteraction)
+    queue.current.clear()
+
+    // Send to the feed
     const proxyAgent = agent.withProxy(
       // @ts-ignore TODO need to update withProxy() to support this key -prf
       'bsky_fg',
       // TODO when we start sending to other feeds, we need to grab their DID -prf
       'did:web:discover.bsky.app',
     ) as BskyAgent
-
-    const interactions = Array.from(queue.current).map(toInteraction)
-    queue.current.clear()
-
-    // Send to the feed
     proxyAgent.app.bsky.feed
       .sendInteractions({interactions})
       .catch((e: any) => {
