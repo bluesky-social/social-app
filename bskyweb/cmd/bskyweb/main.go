@@ -67,6 +67,13 @@ func run(args []string) {
 					Required: false,
 					EnvVars:  []string{"DEBUG"},
 				},
+				&cli.StringFlag{
+					Name:     "basic-auth-password",
+					Usage:    "optional password to restrict access to web interface",
+					Required: false,
+					Value:    "",
+					EnvVars:  []string{"BASIC_AUTH_PASSWORD"},
+				},
 			},
 		},
 	}
