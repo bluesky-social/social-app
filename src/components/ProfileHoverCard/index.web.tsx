@@ -29,10 +29,10 @@ import {
 } from '#/components/KnownFollowers'
 import {InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
+import * as Pills from '#/components/Pills'
 import {Portal} from '#/components/Portal'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
-import {ProfileLabel} from '../moderation/ProfileHeaderAlerts'
 import {ProfileHoverCardProps} from './types'
 
 const floatingMiddlewares = [
@@ -462,7 +462,8 @@ function Inner({
 
       <Link to={profileURL} label={_(msg`View profile`)} onPress={hide}>
         <View style={[a.pb_sm, a.flex_1]}>
-          <Text style={[a.pt_md, a.pb_xs, a.text_lg, a.font_bold]}>
+          <Text
+            style={[a.pt_md, a.pb_xs, a.text_lg, a.font_bold, a.self_start]}>
             {sanitizeDisplayName(
               profile.displayName || sanitizeHandle(profile.handle),
               moderation.ui('displayName'),
@@ -476,8 +477,9 @@ function Inner({
       {isBlockedUser && (
         <View style={[a.flex_row, a.flex_wrap, a.gap_xs]}>
           {moderation.ui('profileView').alerts.map(cause => (
-            <ProfileLabel
+            <Pills.Label
               key={getModerationCauseKey(cause)}
+              size="lg"
               cause={cause}
               disableDetailsDialog
             />

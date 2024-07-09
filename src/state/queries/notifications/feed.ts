@@ -26,6 +26,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
+import {useGate} from '#/lib/statsig/statsig'
 import {useAgent} from '#/state/session'
 import {useModerationOpts} from '../../preferences/moderation-opts'
 import {STALE} from '..'
@@ -56,6 +57,7 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
   const unreads = useUnreadNotificationsApi()
   const enabled = opts?.enabled !== false
   const lastPageCountRef = useRef(0)
+  const gate = useGate()
 
   const query = useInfiniteQuery<
     FeedPage,
@@ -81,6 +83,7 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
             queryClient,
             moderationOpts,
             fetchAdditionalData: true,
+            shouldUngroupFollowBacks: () => gate('ungroup_follow_backs'),
           })
         ).page
       }

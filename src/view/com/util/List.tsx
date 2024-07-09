@@ -24,11 +24,12 @@ export type ListProps<ItemT> = Omit<
   refreshing?: boolean
   onRefresh?: () => void
   onItemSeen?: (item: ItemT) => void
-  containWeb?: boolean
   desktopFixedHeight?: number | boolean
+  // Web only prop to contain the scroll to the container rather than the window
+  disableFullWindowScroll?: boolean
   sideBorders?: boolean
   // Web only prop to disable a perf optimization (which would otherwise be on).
-  disableContentVisibility?: boolean
+  disableContainStyle?: boolean
 }
 export type ListRef = React.MutableRefObject<FlatList_INTERNAL | null>
 

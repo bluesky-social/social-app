@@ -4,8 +4,10 @@ import {
   AppBskyGraphDefs,
   AppBskyGraphGetStarterPack,
   AppBskyGraphStarterpack,
+  AppBskyRichtextFacet,
   AtUri,
   BskyAgent,
+  RichText,
 } from '@atproto/api'
 import {StarterPackView} from '@atproto/api/dist/client/types/app/bsky/graph/defs'
 import {
@@ -23,13 +25,22 @@ import {
   parseStarterPackUri,
 } from 'lib/strings/starter-pack'
 import {invalidateActorStarterPacksQuery} from 'state/queries/actor-starter-packs'
+import {STALE} from 'state/queries/index'
 import {invalidateListMembersQuery} from 'state/queries/list-members'
 import {useAgent} from 'state/session'
 
 const RQKEY_ROOT = 'starter-pack'
-const RQKEY = (did?: string, rkey?: string) => {
-  if (did?.startsWith('https://') || did?.startsWith('at://')) {
-    const parsed = parseStarterPackUri(did)
+const RQKEY = ({
+  uri,
+  did,
+  rkey,
+}: {
+  uri?: string
+  did?: string
+  rkey?: string
+}) => {
+  if (uri?.startsWith('https://') || uri?.startsWith('at://')) {
+    const parsed = parseStarterPackUri(uri)
     return [RQKEY_ROOT, parsed?.name, parsed?.rkey]
   } else {
     return [RQKEY_ROOT, did, rkey]
@@ -48,7 +59,7 @@ export function useStarterPackQuery({
   const agent = useAgent()
 
   return useQuery<StarterPackView>({
-    queryKey: RQKEY(did, rkey),
+    queryKey: RQKEY(uri ? {uri} : {did, rkey}),
     queryFn: async () => {
       if (!uri) {
         uri = `at://${did}/app.bsky.graph.starterpack/${rkey}`
@@ -62,6 +73,7 @@ export function useStarterPackQuery({
       return res.data.starterPack
     },
     enabled: Boolean(uri) || Boolean(did && rkey),
+    staleTime: STALE.MINUTES.FIVE,
   })
 }
 
@@ -74,13 +86,12 @@ export async function invalidateStarterPack({
   did: string
   rkey: string
 }) {
-  await queryClient.invalidateQueries({queryKey: RQKEY(did, rkey)})
+  await queryClient.invalidateQueries({queryKey: RQKEY({did, rkey})})
 }
 
 interface UseCreateStarterPackMutationParams {
   name: string
   description?: string
-  descriptionFacets: []
   profiles: AppBskyActorDefs.ProfileViewBasic[]
   feeds?: AppBskyFeedDefs.GeneratorView[]
 }
@@ -100,16 +111,33 @@ export function useCreateStarterPackMutation({
     Error,
     UseCreateStarterPackMutationParams
   >({
-    mutationFn: async params => {
+    mutationFn: async ({name, description, feeds, profiles}) => {
+      let descriptionFacets: AppBskyRichtextFacet.Main[] | undefined
+      if (description) {
+        const rt = new RichText({text: description})
+        await rt.detectFacets(agent)
+        descriptionFacets = rt.facets
+      }
+
       let listRes
-      listRes = await createStarterPackList({...params, agent})
+      listRes = await createStarterPackList({
+        name,
+        description,
+        profiles,
+        descriptionFacets,
+        agent,
+      })
+
       return await agent.app.bsky.graph.starterpack.create(
         {
           repo: agent.session?.did,
         },
         {
-          ...params,
+          name,
+          description,
+          descriptionFacets,
           list: listRes?.uri,
+          feeds: feeds?.map(f => ({uri: f.uri})),
           createdAt: new Date().toISOString(),
         },
       )
@@ -148,16 +176,20 @@ export function useEditStarterPackMutation({
       currentListItems: AppBskyGraphDefs.ListItemView[]
     }
   >({
-    mutationFn: async params => {
-      const {
-        name,
-        description,
-        descriptionFacets,
-        feeds,
-        profiles,
-        currentStarterPack,
-        currentListItems,
-      } = params
+    mutationFn: async ({
+      name,
+      description,
+      feeds,
+      profiles,
+      currentStarterPack,
+      currentListItems,
+    }) => {
+      let descriptionFacets: AppBskyRichtextFacet.Main[] | undefined
+      if (description) {
+        const rt = new RichText({text: description})
+        await rt.detectFacets(agent)
+        descriptionFacets = rt.facets
+      }
 
       if (!AppBskyGraphStarterpack.isRecord(currentStarterPack.record)) {
         throw new Error('Invalid starter pack')
@@ -314,4 +346,37 @@ async function whenAppViewReady(
     fn,
     () => agent.app.bsky.graph.getStarterPack({starterPack: uri}),
   )
+}
+
+export async function precacheStarterPack(
+  queryClient: QueryClient,
+  starterPack:
+    | AppBskyGraphDefs.StarterPackViewBasic
+    | AppBskyGraphDefs.StarterPackView,
+) {
+  if (!AppBskyGraphStarterpack.isRecord(starterPack.record)) {
+    return
+  }
+
+  let starterPackView: AppBskyGraphDefs.StarterPackView | undefined
+  if (AppBskyGraphDefs.isStarterPackView(starterPack)) {
+    starterPackView = starterPack
+  } else if (AppBskyGraphDefs.isStarterPackViewBasic(starterPack)) {
+    const listView: AppBskyGraphDefs.ListViewBasic = {
+      uri: starterPack.record.list,
+      // This will be populated once the data from server is fetched
+      cid: '',
+      name: starterPack.record.name,
+      purpose: 'app.bsky.graph.defs#referencelist',
+    }
+    starterPackView = {
+      ...starterPack,
+      $type: 'app.bsky.graph.defs#starterPackView',
+      list: listView,
+    }
+  }
+
+  if (starterPackView) {
+    queryClient.setQueryData(RQKEY({uri: starterPack.uri}), starterPackView)
+  }
 }

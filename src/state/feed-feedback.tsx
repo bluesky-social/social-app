@@ -6,11 +6,8 @@ import throttle from 'lodash.throttle'
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
-import {
-  FeedDescriptor,
-  FeedPostSliceItem,
-  isFeedPostSlice,
-} from '#/state/queries/post-feed'
+import {FeedDescriptor, FeedPostSliceItem} from '#/state/queries/post-feed'
+import {getFeedPostSlice} from '#/view/com/posts/Feed'
 import {useAgent} from './session'
 
 type StateContext = {
@@ -93,11 +90,12 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
   }, [enabled, sendToFeed])
 
   const onItemSeen = React.useCallback(
-    (slice: any) => {
+    (feedItem: any) => {
       if (!enabled) {
         return
       }
-      if (!isFeedPostSlice(slice)) {
+      const slice = getFeedPostSlice(feedItem)
+      if (slice === null) {
         return
       }
       for (const postItem of slice.items) {

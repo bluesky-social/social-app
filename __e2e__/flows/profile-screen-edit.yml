@@ -21,8 +21,7 @@ appId: xyz.blueskyweb.app
     direction: LEFT
 - tapOn:
     id: "profilePager-selector-4"
-- assertVisible: 
-    id: "feed-alice-favs"
+- assertVisible: "alice-favs"
 - swipe:
     from:
         id: "profilePager-selector"

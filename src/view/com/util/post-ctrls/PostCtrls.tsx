@@ -31,6 +31,10 @@ import {
 } from '#/state/queries/post'
 import {useRequireAuth, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
+import {
+  ProgressGuideAction,
+  useProgressGuideControls,
+} from '#/state/shell/progress-guide'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBox} from '#/components/icons/ArrowOutOfBox'
@@ -77,6 +81,7 @@ let PostCtrls = ({
   const requireAuth = useRequireAuth()
   const loggedOutWarningPromptControl = useDialogControl()
   const {sendInteraction} = useFeedFeedbackContext()
+  const {captureAction} = useProgressGuideControls()
   const playHaptic = useHaptics()
   const gate = useGate()
 
@@ -103,6 +108,7 @@ let PostCtrls = ({
           event: 'app.bsky.feed.defs#interactionLike',
           feedContext,
         })
+        captureAction(ProgressGuideAction.Like)
         await queueLike()
       } else {
         await queueUnlike()
@@ -119,6 +125,7 @@ let PostCtrls = ({
     queueLike,
     queueUnlike,
     sendInteraction,
+    captureAction,
     feedContext,
   ])
 
