@@ -16,7 +16,7 @@ import {useSession} from 'state/session'
 const UPLOAD_ENDPOINT = process.env.EXPO_PUBLIC_VIDEO_ROOT_ENDPOINT ?? ''
 const UPLOAD_HEADER = process.env.EXPO_PUBLIC_VIDEO_HEADER ?? ''
 
-type Status = 'idle' | 'compressing' | 'uploading' | 'done'
+type Status = 'idle' | 'compressing' | 'processing' | 'uploading' | 'done'
 
 type Action =
   | {
@@ -71,7 +71,11 @@ function reducer(state: State, action: Action): State {
   return updatedState
 }
 
-export function useVideoUpload({onSuccess}: {onSuccess: () => unknown}) {
+export function useVideoUpload({
+  setStatus,
+}: {
+  setStatus: (status: string) => void
+}) {
   const {_} = useLingui()
   const [state, dispatch] = React.useReducer(reducer, {
     status: 'idle',
@@ -87,15 +91,17 @@ export function useVideoUpload({onSuccess}: {onSuccess: () => unknown}) {
         type: 'SetJobStatus',
         jobStatus: status,
       })
+      setStatus(status.state.toString())
     },
   })
 
   const {mutate: onVideoCompressed} = useUploadVideoMutation({
-    onSuccess: () => {
+    onSuccess: response => {
       dispatch({
         type: 'SetStatus',
-        status: 'done',
+        status: 'processing',
       })
+      setJobId(response.job_id)
     },
     onError: e => {
       dispatch({
@@ -167,7 +173,7 @@ const useUploadVideoMutation = ({
   onSuccess,
   onError,
 }: {
-  onSuccess: () => void
+  onSuccess: (response: UploadVideoResponse) => void
   onError: (e: any) => void
 }) => {
   const {currentAccount} = useSession()
@@ -190,7 +196,9 @@ const useUploadVideoMutation = ({
 
       console.log('[VIDEO]', res.body)
 
-      return JSON.parse(res.body) as UploadVideoResponse
+      const responseBody = JSON.parse(res.body) as UploadVideoResponse
+      onSuccess(responseBody)
+      return responseBody
     },
     onError,
     onSuccess,
@@ -209,13 +217,16 @@ const useUploadStatusQuery = ({
   const {isLoading, isError} = useQuery({
     queryKey: ['video-upload'],
     queryFn: async () => {
-      const url = createUrl(`/status/${jobId}/status`)
+      console.log('test')
+      console.log(jobId)
+      const url = createUrl(`/job/${jobId}/status`)
       const res = await fetch(url)
       const status = (await res.json()) as JobStatus
       if (status.state === JobState.JOB_STATE_COMPLETED) {
         setEnabled(false)
       }
       onStatusChange(status)
+      return status
     },
     enabled,
     refetchInterval: 1500,
