@@ -7,6 +7,7 @@ import {useMutation} from '@tanstack/react-query'
 
 import {useLabelInfo} from '#/lib/moderation/useLabelInfo'
 import {makeProfileLink} from '#/lib/routes/links'
+import {useGate} from '#/lib/statsig/statsig'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {useAgent, useSession} from '#/state/session'
@@ -201,22 +202,42 @@ function AppealForm({
   const [details, setDetails] = React.useState('')
   const isAccountReport = 'did' in subject
   const agent = useAgent()
+  const gate = useGate()
 
   const {mutate, isPending} = useMutation({
     mutationFn: async () => {
       const $type = !isAccountReport
         ? 'com.atproto.repo.strongRef'
         : 'com.atproto.admin.defs#repoRef'
-      await agent
-        .withProxy('atproto_labeler', label.src)
-        .createModerationReport({
-          reasonType: ComAtprotoModerationDefs.REASONAPPEAL,
-          subject: {
-            $type,
-            ...subject,
+      if (gate('session_withproxy_fix')) {
+        await agent.createModerationReport(
+          {
+            reasonType: ComAtprotoModerationDefs.REASONAPPEAL,
+            subject: {
+              $type,
+              ...subject,
+            },
+            reason: details,
           },
-          reason: details,
-        })
+          {
+            encoding: 'application/json',
+            headers: {
+              'atproto-proxy': `${label.src}#atproto_labeler`,
+            },
+          },
+        )
+      } else {
+        await agent
+          .withProxy('atproto_labeler', label.src)
+          .createModerationReport({
+            reasonType: ComAtprotoModerationDefs.REASONAPPEAL,
+            subject: {
+              $type,
+              ...subject,
+            },
+            reason: details,
+          })
+      }
     },
     onError: err => {
       logger.error('Failed to submit label appeal', {message: err})
