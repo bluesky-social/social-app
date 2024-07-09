@@ -76,7 +76,7 @@ export function addSessionErrorLog(did: string, event: AtpSessionEvent) {
     if (!Statsig.initializeCalled() || !Statsig.getStableID()) {
       return
     }
-    const stack = (new Error().stack ?? '').slice(0, 1800)
+    const stack = (new Error().stack ?? '').slice(0, MAX_SLICE_LENGTH)
     Statsig.logEvent('session:error', null, {
       did,
       event,
