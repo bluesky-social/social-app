@@ -20,3 +20,10 @@ export enum JobState {
   JOB_STATE_FAILED,
   JOB_STATE_COMPLETED,
 }
+
+export interface UploadVideoResponse {
+  job_id: string
+  did: string
+  cid: string
+  state: JobState
+}

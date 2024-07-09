@@ -3,13 +3,13 @@ import {FileSystemUploadType, uploadAsync} from 'expo-file-system'
 import {ImagePickerAsset} from 'expo-image-picker'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useMutation} from '@tanstack/react-query'
+import {useMutation, useQuery} from '@tanstack/react-query'
 import {nanoid} from 'nanoid/non-secure'
 
 import {logger} from '#/logger'
 import {CompressedVideo} from 'lib/media/video/compress'
 import {VideoTooLargeError} from 'lib/media/video/errors'
-import {JobState, JobStatus} from 'lib/media/video/types'
+import {JobState, JobStatus, UploadVideoResponse} from 'lib/media/video/types'
 import {useCompressVideoMutation} from 'state/queries/video/compress-video'
 import {useSession} from 'state/session'
 
@@ -34,6 +34,7 @@ type Action =
   | {type: 'Reset'}
   | {type: 'SetAsset'; asset: ImagePickerAsset}
   | {type: 'SetVideo'; video: CompressedVideo}
+  | {type: 'SetJobStatus'; jobStatus: JobStatus}
 
 interface State {
   status: Status
@@ -63,18 +64,30 @@ function reducer(state: State, action: Action): State {
     updatedState = {...state, asset: action.asset}
   } else if (action.type === 'SetVideo') {
     updatedState = {...state, video: action.video}
+  } else if (action.type === 'SetJobStatus') {
+    updatedState = {...state, jobStatus: action.jobStatus}
   }
 
   return updatedState
 }
 
-export function useVideoUpload() {
+export function useVideoUpload({onSuccess}: {onSuccess: () => unknown}) {
   const {_} = useLingui()
-
   const [state, dispatch] = React.useReducer(reducer, {
     status: 'idle',
     progress: 0,
     video: null,
+  })
+
+  const {setJobId} = useUploadStatusQuery({
+    onStatusChange: (status: JobStatus) => {
+      console.log(status)
+      // TODO Update the state here
+      dispatch({
+        type: 'SetJobStatus',
+        jobStatus: status,
+      })
+    },
   })
 
   const {mutate: onVideoCompressed} = useUploadVideoMutation({
@@ -161,12 +174,12 @@ const useUploadVideoMutation = ({
 
   return useMutation({
     mutationFn: async (video: CompressedVideo) => {
-      const url = new URL(`${UPLOAD_ENDPOINT}`)
-      url.pathname = '/upload'
-      url.searchParams.set('did', currentAccount!.did)
-      url.searchParams.set('name', `hailey-${nanoid(12)}.mp4`)
+      const uri = createUrl('/upload', {
+        did: currentAccount!.did,
+        name: `hailey-${nanoid(12)}.mp4`,
+      })
 
-      const res = await uploadAsync(url.href, video.uri, {
+      const res = await uploadAsync(uri, video.uri, {
         headers: {
           'dev-key': UPLOAD_HEADER,
           'content-type': 'video/mp4',
@@ -177,14 +190,54 @@ const useUploadVideoMutation = ({
 
       console.log('[VIDEO]', res.body)
 
-      return JSON.parse(res.body) as {
-        job_id: string
-        did: string
-        cid: string
-        state: JobState
-      }
+      return JSON.parse(res.body) as UploadVideoResponse
     },
     onError,
     onSuccess,
   })
+}
+
+const useUploadStatusQuery = ({
+  onStatusChange,
+}: {
+  onStatusChange: (status: JobStatus) => void
+}) => {
+  const {currentAccount} = useSession()
+  const [enabled, setEnabled] = React.useState(false)
+  const [jobId, setJobId] = React.useState<string>()
+
+  const {isLoading, isError} = useQuery({
+    queryKey: ['video-upload'],
+    queryFn: async () => {
+      const url = createUrl(`/status/${jobId}/status`)
+      const res = await fetch(url)
+      const status = (await res.json()) as JobStatus
+      if (status.state === JobState.JOB_STATE_COMPLETED) {
+        setEnabled(false)
+      }
+      onStatusChange(status)
+    },
+    enabled,
+    refetchInterval: 1500,
+  })
+
+  return {
+    isLoading,
+    isError,
+    setJobId: (_jobId: string) => {
+      setEnabled(true)
+      setJobId(_jobId)
+    },
+  }
+}
+
+const createUrl = (route: string, params?: Record<string, string>) => {
+  const url = new URL(`${UPLOAD_ENDPOINT}`)
+  url.pathname = route
+  if (params) {
+    for (const key in params) {
+      url.searchParams.set(key, params[key])
+    }
+  }
+  return url.href
 }
