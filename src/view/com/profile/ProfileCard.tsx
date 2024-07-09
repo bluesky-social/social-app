@@ -5,7 +5,6 @@ import {
   moderateProfile,
   ModerationDecision,
 } from '@atproto/api'
-import {Trans} from '@lingui/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -29,7 +28,6 @@ import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {FollowButton} from './FollowButton'
 import hairlineWidth = StyleSheet.hairlineWidth
-import {atoms as a} from '#/alf'
 import * as Pills from '#/components/Pills'
 
 export function ProfileCard({
@@ -136,8 +134,9 @@ export function ProfileCard({
             </Text>
           ) : null}
           {knownFollowersVisible ? (
-            <View style={[a.flex_row, a.align_center, a.gap_sm, a.mt_sm]}>
+            <View style={[a.flex_row, a.align_center, a.gap_sm, a.mt_md]}>
               <KnownFollowers
+                minimal
                 profile={profile}
                 moderationOpts={moderationOpts}
               />

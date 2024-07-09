@@ -8,6 +8,7 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
+import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
 import {Link, LinkProps} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
@@ -30,10 +31,12 @@ export function KnownFollowers({
   profile,
   moderationOpts,
   onLinkPress,
+  minimal,
 }: {
   profile: AppBskyActorDefs.ProfileViewDetailed
   moderationOpts: ModerationOpts
   onLinkPress?: LinkProps['onPress']
+  minimal?: boolean
 }) {
   const cache = React.useRef<Map<string, AppBskyActorDefs.KnownFollowers>>(
     new Map(),
@@ -59,6 +62,7 @@ export function KnownFollowers({
         cachedKnownFollowers={cachedKnownFollowers}
         moderationOpts={moderationOpts}
         onLinkPress={onLinkPress}
+        minimal={minimal}
       />
     )
   }
@@ -71,11 +75,13 @@ function KnownFollowersInner({
   moderationOpts,
   cachedKnownFollowers,
   onLinkPress,
+  minimal,
 }: {
   profile: AppBskyActorDefs.ProfileViewDetailed
   moderationOpts: ModerationOpts
   cachedKnownFollowers: AppBskyActorDefs.KnownFollowers
   onLinkPress?: LinkProps['onPress']
+  minimal?: boolean
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -120,45 +126,49 @@ function KnownFollowersInner({
       style={[
         a.flex_1,
         a.flex_row,
-        a.gap_md,
+        minimal ? a.gap_sm : a.gap_md,
         a.align_center,
         {marginLeft: -AVI_BORDER},
       ]}>
       {({hovered, pressed}) => (
         <>
-          <View
-            style={[
-              {
-                height: AVI_SIZE,
-                width: AVI_SIZE + (slice.length - 1) * a.gap_md.gap,
-              },
-              pressed && {
-                opacity: 0.5,
-              },
-            ]}>
-            {slice.map(({profile: prof, moderation}, i) => (
-              <View
-                key={prof.did}
-                style={[
-                  a.absolute,
-                  a.rounded_full,
-                  {
-                    borderWidth: AVI_BORDER,
-                    borderColor: t.atoms.bg.backgroundColor,
-                    width: AVI_SIZE + AVI_BORDER * 2,
-                    height: AVI_SIZE + AVI_BORDER * 2,
-                    left: i * a.gap_md.gap,
-                    zIndex: AVI_BORDER - i,
-                  },
-                ]}>
-                <UserAvatar
-                  size={AVI_SIZE}
-                  avatar={prof.avatar}
-                  moderation={moderation.ui('avatar')}
-                />
-              </View>
-            ))}
-          </View>
+          {minimal ? (
+            <Group size="md" fill={t.atoms.text_contrast_medium.color} />
+          ) : (
+            <View
+              style={[
+                {
+                  height: AVI_SIZE,
+                  width: AVI_SIZE + (slice.length - 1) * a.gap_md.gap,
+                },
+                pressed && {
+                  opacity: 0.5,
+                },
+              ]}>
+              {slice.map(({profile: prof, moderation}, i) => (
+                <View
+                  key={prof.did}
+                  style={[
+                    a.absolute,
+                    a.rounded_full,
+                    {
+                      borderWidth: AVI_BORDER,
+                      borderColor: t.atoms.bg.backgroundColor,
+                      width: AVI_SIZE + AVI_BORDER * 2,
+                      height: AVI_SIZE + AVI_BORDER * 2,
+                      left: i * a.gap_md.gap,
+                      zIndex: AVI_BORDER - i,
+                    },
+                  ]}>
+                  <UserAvatar
+                    size={AVI_SIZE}
+                    avatar={prof.avatar}
+                    moderation={moderation.ui('avatar')}
+                  />
+                </View>
+              ))}
+            </View>
+          )}
 
           <Text
             style={[
