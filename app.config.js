@@ -143,7 +143,9 @@ module.exports = function (config) {
           backgroundImage: './assets/icon-android-background.png',
           backgroundColor: '#1185FE',
         },
-        googleServicesFile: './google-services.json',
+        googleServicesFile: IS_DEV
+          ? './google-services.example.json'
+          : './google-services.json',
         package: IS_DEV ? 'dev.xyz.blueskyweb.app' : 'xyz.blueskyweb.app',
         intentFilters: [
           {
