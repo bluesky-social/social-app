@@ -13,6 +13,8 @@ import {TextLink} from 'view/com/util/Link'
 import {Text} from 'view/com/util/text/Text'
 import {DesktopFeeds} from './Feeds'
 import {DesktopSearch} from './Search'
+import hairlineWidth = StyleSheet.hairlineWidth
+import {ProgressGuideList} from '#/components/ProgressGuide/List'
 
 export function DesktopRightNav({routeName}: {routeName: string}) {
   const pal = usePalette('default')
@@ -38,9 +40,12 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
             <DesktopSearch />
 
             {hasSession && (
-              <View style={[pal.border, styles.desktopFeedsContainer]}>
-                <DesktopFeeds />
-              </View>
+              <>
+                <ProgressGuideList style={[{marginTop: 22, marginBottom: 8}]} />
+                <View style={[pal.border, styles.desktopFeedsContainer]}>
+                  <DesktopFeeds />
+                </View>
+              </>
             )}
           </>
         )}
@@ -130,8 +135,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   desktopFeedsContainer: {
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
+    borderTopWidth: hairlineWidth,
+    borderBottomWidth: hairlineWidth,
     marginTop: 18,
     marginBottom: 18,
   },

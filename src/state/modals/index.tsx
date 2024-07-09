@@ -5,7 +5,6 @@ import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {GalleryModel} from '#/state/models/media/gallery'
 import {ImageModel} from '#/state/models/media/image'
-import {ThreadgateSetting} from '../queries/threadgate'
 
 export interface EditProfileModal {
   name: 'edit-profile'
@@ -60,24 +59,11 @@ export interface DeleteAccountModal {
   name: 'delete-account'
 }
 
-export interface RepostModal {
-  name: 'repost'
-  onRepost: () => void
-  onQuote: () => void
-  isReposted: boolean
-}
-
 export interface SelfLabelModal {
   name: 'self-label'
   labels: string[]
   hasMedia: boolean
   onChange: (labels: string[]) => void
-}
-
-export interface ThreadgateModal {
-  name: 'threadgate'
-  settings: ThreadgateSetting[]
-  onChange: (settings: ThreadgateSetting[]) => void
 }
 
 export interface ChangeHandleModal {
@@ -154,9 +140,7 @@ export type Modal =
   | AltTextImageModal
   | CropImageModal
   | EditImageModal
-  | RepostModal
   | SelfLabelModal
-  | ThreadgateModal
 
   // Bluesky access
   | WaitlistModal
@@ -177,11 +161,11 @@ const ModalContext = React.createContext<{
 const ModalControlContext = React.createContext<{
   openModal: (modal: Modal) => void
   closeModal: () => boolean
-  closeAllModals: () => void
+  closeAllModals: () => boolean
 }>({
   openModal: () => {},
   closeModal: () => false,
-  closeAllModals: () => {},
+  closeAllModals: () => false,
 })
 
 /**
@@ -214,7 +198,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   })
 
   const closeAllModals = useNonReactiveCallback(() => {
+    let wasActive = activeModals.length > 0
     setActiveModals([])
+    return wasActive
   })
 
   unstable__openModal = openModal

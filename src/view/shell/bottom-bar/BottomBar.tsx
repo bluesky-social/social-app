@@ -10,7 +10,7 @@ import {StackActions} from '@react-navigation/native'
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {useHaptics} from '#/lib/haptics'
 import {useDedupe} from '#/lib/hooks/useDedupe'
-import {useMinimalShellMode} from '#/lib/hooks/useMinimalShellMode'
+import {useMinimalShellFooterTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {clamp} from '#/lib/numbers'
@@ -45,6 +45,7 @@ import {
   Message_Stroke2_Corner0_Rounded as Message,
   Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
 } from '#/components/icons/Message'
+import {HomeTourExploreWrapper} from '#/tours/HomeTour'
 import {styles} from './BottomBarStyles'
 
 type TabOptions =
@@ -66,7 +67,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
     useNavigationTabState()
   const numUnreadNotifications = useUnreadNotifications()
   const numUnreadMessages = useUnreadMessageCount()
-  const {footerMinimalShellTransform} = useMinimalShellMode()
+  const footerMinimalShellTransform = useMinimalShellFooterTransform()
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
@@ -162,17 +163,19 @@ export function BottomBar({navigation}: BottomTabBarProps) {
             <Btn
               testID="bottomBarSearchBtn"
               icon={
-                isAtSearch ? (
-                  <MagnifyingGlassFilled
-                    width={iconWidth + 2}
-                    style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
-                  />
-                ) : (
-                  <MagnifyingGlass
-                    width={iconWidth + 2}
-                    style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
-                  />
-                )
+                <HomeTourExploreWrapper>
+                  {isAtSearch ? (
+                    <MagnifyingGlassFilled
+                      width={iconWidth + 2}
+                      style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
+                    />
+                  ) : (
+                    <MagnifyingGlass
+                      width={iconWidth + 2}
+                      style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
+                    />
+                  )}
+                </HomeTourExploreWrapper>
               }
               onPress={onPressSearch}
               accessibilityRole="search"

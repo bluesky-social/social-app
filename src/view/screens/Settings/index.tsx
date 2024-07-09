@@ -60,12 +60,15 @@ import {Text} from 'view/com/util/text/Text'
 import * as Toast from 'view/com/util/Toast'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {ScrollView} from 'view/com/util/Views'
+import {DeactivateAccountDialog} from '#/screens/Settings/components/DeactivateAccountDialog'
 import {useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
 import {navigate, resetToTab} from '#/Navigation'
 import {Email2FAToggle} from './Email2FAToggle'
 import {ExportCarDialog} from './ExportCarDialog'
+import hairlineWidth = StyleSheet.hairlineWidth
+import {atoms as a} from '#/alf'
 
 function SettingsAccountCard({
   account,
@@ -102,10 +105,10 @@ function SettingsAccountCard({
         />
       </View>
       <View style={[s.flex1]}>
-        <Text type="md-bold" style={pal.text}>
+        <Text type="md-bold" style={[pal.text, a.self_start]} numberOfLines={1}>
           {profile?.displayName || account.handle}
         </Text>
-        <Text type="sm" style={pal.textLight}>
+        <Text type="sm" style={pal.textLight} numberOfLines={1}>
           {account.handle}
         </Text>
       </View>
@@ -250,9 +253,10 @@ export function SettingsScreen({}: Props) {
   }, [clearPreferences])
 
   const onPressResetOnboarding = React.useCallback(async () => {
+    navigation.navigate('Home')
     onboardingDispatch({type: 'start'})
     Toast.show(_(msg`Onboarding reset`))
-  }, [onboardingDispatch, _])
+  }, [navigation, onboardingDispatch, _])
 
   const onPressBuildInfo = React.useCallback(() => {
     setStringAsync(
@@ -306,6 +310,11 @@ export function SettingsScreen({}: Props) {
     Toast.show(_(msg`Legacy storage cleared, you need to restart the app now.`))
   }, [_])
 
+  const deactivateAccountControl = useDialogControl()
+  const onPressDeactivateAccount = React.useCallback(() => {
+    deactivateAccountControl.open()
+  }, [deactivateAccountControl])
+
   const {mutate: onPressDeleteChatDeclaration} = useDeleteActorDeclaration()
 
   return (
@@ -317,7 +326,7 @@ export function SettingsScreen({}: Props) {
         showBackButton={isMobile}
         style={[
           pal.border,
-          {borderBottomWidth: 1},
+          {borderBottomWidth: hairlineWidth},
           !isMobile && {borderLeftWidth: 1, borderRightWidth: 1},
         ]}>
         <View style={{flex: 1}}>
@@ -380,7 +389,7 @@ export function SettingsScreen({}: Props) {
             {!currentAccount.emailConfirmed && <EmailConfirmationNotice />}
 
             <View style={[s.flexRow, styles.heading]}>
-              <Text type="xl-bold" style={pal.text}>
+              <Text type="xl-bold" style={pal.text} numberOfLines={1}>
                 <Trans>Signed in as</Trans>
               </Text>
               <View style={s.flex1} />
@@ -790,6 +799,29 @@ export function SettingsScreen({}: Props) {
             <Trans>Export My Data</Trans>
           </Text>
         </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[pal.view, styles.linkCard]}
+          onPress={onPressDeactivateAccount}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Deactivate account`)}
+          accessibilityHint={_(
+            msg`Opens modal for account deactivation confirmation`,
+          )}>
+          <View style={[styles.iconContainer, dangerBg]}>
+            <FontAwesomeIcon
+              icon={'users-slash'}
+              style={dangerText as FontAwesomeIconStyle}
+              size={18}
+            />
+          </View>
+          <Text type="lg" style={dangerText}>
+            <Trans>Deactivate my account</Trans>
+          </Text>
+        </TouchableOpacity>
+        <DeactivateAccountDialog control={deactivateAccountControl} />
+
         <TouchableOpacity
           style={[pal.view, styles.linkCard]}
           onPress={onPressDeleteAccount}

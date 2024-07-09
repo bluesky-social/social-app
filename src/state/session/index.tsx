@@ -14,10 +14,12 @@ import {
   createAgentAndCreateAccount,
   createAgentAndLogin,
   createAgentAndResume,
+  sessionAccountToSession,
 } from './agent'
 import {getInitialState, reducer} from './reducer'
 
-export {isSessionDeactivated} from './util'
+export {isSignupQueued} from './util'
+import {addSessionDebugLog} from './logging'
 export type {SessionAccount} from '#/state/session/types'
 import {SessionApiContext, SessionStateContext} from '#/state/session/types'
 
@@ -39,9 +41,11 @@ const ApiContext = React.createContext<SessionApiContext>({
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const cancelPendingTask = useOneTaskAtATime()
-  const [state, dispatch] = React.useReducer(reducer, null, () =>
-    getInitialState(persisted.get('session').accounts),
-  )
+  const [state, dispatch] = React.useReducer(reducer, null, () => {
+    const initialState = getInitialState(persisted.get('session').accounts)
+    addSessionDebugLog({type: 'reducer:init', state: initialState})
+    return initialState
+  })
 
   const onAgentSessionChange = React.useCallback(
     (agent: BskyAgent, accountDid: string, sessionEvent: AtpSessionEvent) => {
@@ -62,6 +66,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const createAccount = React.useCallback<SessionApiContext['createAccount']>(
     async params => {
+      addSessionDebugLog({type: 'method:start', method: 'createAccount'})
       const signal = cancelPendingTask()
       track('Try Create Account')
       logEvent('account:create:begin', {})
@@ -80,12 +85,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       })
       track('Create Account')
       logEvent('account:create:success', {})
+      addSessionDebugLog({type: 'method:end', method: 'createAccount', account})
     },
     [onAgentSessionChange, cancelPendingTask],
   )
 
   const login = React.useCallback<SessionApiContext['login']>(
     async (params, logContext) => {
+      addSessionDebugLog({type: 'method:start', method: 'login'})
       const signal = cancelPendingTask()
       const {agent, account} = await createAgentAndLogin(
         params,
@@ -102,23 +109,31 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       })
       track('Sign In', {resumedSession: false})
       logEvent('account:loggedIn', {logContext, withPassword: true})
+      addSessionDebugLog({type: 'method:end', method: 'login', account})
     },
     [onAgentSessionChange, cancelPendingTask],
   )
 
   const logout = React.useCallback<SessionApiContext['logout']>(
     logContext => {
+      addSessionDebugLog({type: 'method:start', method: 'logout'})
       cancelPendingTask()
       dispatch({
         type: 'logged-out',
       })
       logEvent('account:loggedOut', {logContext})
+      addSessionDebugLog({type: 'method:end', method: 'logout'})
     },
     [cancelPendingTask],
   )
 
   const resumeSession = React.useCallback<SessionApiContext['resumeSession']>(
     async storedAccount => {
+      addSessionDebugLog({
+        type: 'method:start',
+        method: 'resumeSession',
+        account: storedAccount,
+      })
       const signal = cancelPendingTask()
       const {agent, account} = await createAgentAndResume(
         storedAccount,
@@ -133,17 +148,24 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         newAgent: agent,
         newAccount: account,
       })
+      addSessionDebugLog({type: 'method:end', method: 'resumeSession', account})
     },
     [onAgentSessionChange, cancelPendingTask],
   )
 
   const removeAccount = React.useCallback<SessionApiContext['removeAccount']>(
     account => {
+      addSessionDebugLog({
+        type: 'method:start',
+        method: 'removeAccount',
+        account,
+      })
       cancelPendingTask()
       dispatch({
         type: 'removed-account',
         accountDid: account.did,
       })
+      addSessionDebugLog({type: 'method:end', method: 'removeAccount', account})
     },
     [cancelPendingTask],
   )
@@ -151,18 +173,21 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   React.useEffect(() => {
     if (state.needsPersist) {
       state.needsPersist = false
-      persisted.write('session', {
+      const persistedData = {
         accounts: state.accounts,
         currentAccount: state.accounts.find(
           a => a.did === state.currentAgentState.did,
         ),
-      })
+      }
+      addSessionDebugLog({type: 'persisted:broadcast', data: persistedData})
+      persisted.write('session', persistedData)
     }
   }, [state])
 
   React.useEffect(() => {
     return persisted.onUpdate(() => {
       const synced = persisted.get('session')
+      addSessionDebugLog({type: 'persisted:receive', data: synced})
       dispatch({
         type: 'synced-accounts',
         syncedAccounts: synced.accounts,
@@ -175,8 +200,15 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         if (syncedAccount.did !== state.currentAgentState.did) {
           resumeSession(syncedAccount)
         } else {
-          // @ts-ignore we checked for `refreshJwt` above
-          state.currentAgentState.agent.session = syncedAccount
+          const agent = state.currentAgentState.agent as BskyAgent
+          const prevSession = agent.session
+          agent.session = sessionAccountToSession(syncedAccount)
+          addSessionDebugLog({
+            type: 'agent:patch',
+            agent,
+            prevSession,
+            nextSession: agent.session,
+          })
         }
       }
     })
@@ -214,6 +246,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       // Read the previous value and immediately advance the pointer.
       const prevAgent = currentAgentRef.current
       currentAgentRef.current = agent
+      addSessionDebugLog({type: 'agent:switch', prevAgent, nextAgent: agent})
       // We never reuse agents so let's fully neutralize the previous one.
       // This ensures it won't try to consume any refresh tokens.
       prevAgent.session = undefined

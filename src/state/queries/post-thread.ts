@@ -1,8 +1,10 @@
 import {
+  AppBskyActorDefs,
   AppBskyEmbedRecord,
   AppBskyFeedDefs,
   AppBskyFeedGetPostThread,
   AppBskyFeedPost,
+  AtUri,
   ModerationDecision,
   ModerationOpts,
 } from '@atproto/api'
@@ -11,12 +13,26 @@ import {QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useAgent} from '#/state/session'
-import {findAllPostsInQueryData as findAllPostsInSearchQueryData} from 'state/queries/search-posts'
-import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from './notifications/feed'
-import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from './post-feed'
-import {embedViewRecordToPostView, getEmbeddedPost} from './util'
+import {
+  findAllPostsInQueryData as findAllPostsInSearchQueryData,
+  findAllProfilesInQueryData as findAllProfilesInSearchQueryData,
+} from 'state/queries/search-posts'
+import {
+  findAllPostsInQueryData as findAllPostsInNotifsQueryData,
+  findAllProfilesInQueryData as findAllProfilesInNotifsQueryData,
+} from './notifications/feed'
+import {
+  findAllPostsInQueryData as findAllPostsInFeedQueryData,
+  findAllProfilesInQueryData as findAllProfilesInFeedQueryData,
+} from './post-feed'
+import {
+  didOrHandleUriMatches,
+  embedViewRecordToPostView,
+  getEmbeddedPost,
+} from './util'
 
-const RQKEY_ROOT = 'post-thread'
+const REPLY_TREE_DEPTH = 10
+export const RQKEY_ROOT = 'post-thread'
 export const RQKEY = (uri: string) => [RQKEY_ROOT, uri]
 type ThreadViewNode = AppBskyFeedGetPostThread.OutputSchema['thread']
 
@@ -26,6 +42,8 @@ export interface ThreadCtx {
   hasMore?: boolean
   isParentLoading?: boolean
   isChildLoading?: boolean
+  isSelfThread?: boolean
+  hasMoreSelfThread?: boolean
 }
 
 export type ThreadPost = {
@@ -73,22 +91,23 @@ export function usePostThreadQuery(uri: string | undefined) {
     gcTime: 0,
     queryKey: RQKEY(uri || ''),
     async queryFn() {
-      const res = await agent.getPostThread({uri: uri!})
+      const res = await agent.getPostThread({
+        uri: uri!,
+        depth: REPLY_TREE_DEPTH,
+      })
       if (res.success) {
-        return responseToThreadNodes(res.data.thread)
+        const thread = responseToThreadNodes(res.data.thread)
+        annotateSelfThread(thread)
+        return thread
       }
       return {type: 'unknown', uri: uri!}
     },
     enabled: !!uri,
     placeholderData: () => {
-      if (!uri) {
-        return undefined
-      }
-      {
-        const post = findPostInQueryData(queryClient, uri)
-        if (post) {
-          return post
-        }
+      if (!uri) return
+      const post = findPostInQueryData(queryClient, uri)
+      if (post) {
+        return post
       }
       return undefined
     },
@@ -223,6 +242,8 @@ function responseToThreadNodes(
         isHighlightedPost: depth === 0,
         hasMore:
           direction === 'down' && !node.replies?.length && !!node.replyCount,
+        isSelfThread: false, // populated `annotateSelfThread`
+        hasMoreSelfThread: false, // populated in `annotateSelfThread`
       },
     }
   } else if (AppBskyFeedDefs.isBlockedPost(node)) {
@@ -231,6 +252,53 @@ function responseToThreadNodes(
     return {type: 'not-found', _reactKey: node.uri, uri: node.uri, ctx: {depth}}
   } else {
     return {type: 'unknown', uri: ''}
+  }
+}
+
+function annotateSelfThread(thread: ThreadNode) {
+  if (thread.type !== 'post') {
+    return
+  }
+  const selfThreadNodes: ThreadPost[] = [thread]
+
+  let parent: ThreadNode | undefined = thread.parent
+  while (parent) {
+    if (
+      parent.type !== 'post' ||
+      parent.post.author.did !== thread.post.author.did
+    ) {
+      // not a self-thread
+      return
+    }
+    selfThreadNodes.unshift(parent)
+    parent = parent.parent
+  }
+
+  let node = thread
+  for (let i = 0; i < 10; i++) {
+    const reply = node.replies?.find(
+      r => r.type === 'post' && r.post.author.did === thread.post.author.did,
+    )
+    if (reply?.type !== 'post') {
+      break
+    }
+    selfThreadNodes.push(reply)
+    node = reply
+  }
+
+  if (selfThreadNodes.length > 1) {
+    for (const selfThreadNode of selfThreadNodes) {
+      selfThreadNode.ctx.isSelfThread = true
+    }
+    const last = selfThreadNodes[selfThreadNodes.length - 1]
+    if (
+      last &&
+      last.ctx.depth === REPLY_TREE_DEPTH && // at the edge of the tree depth
+      last.post.replyCount && // has replies
+      !last.replies?.length // replies were not hydrated
+    ) {
+      last.ctx.hasMoreSelfThread = true
+    }
   }
 }
 
@@ -261,6 +329,8 @@ export function* findAllPostsInQueryData(
   queryClient: QueryClient,
   uri: string,
 ): Generator<ThreadNode, void> {
+  const atUri = new AtUri(uri)
+
   const queryDatas = queryClient.getQueriesData<ThreadNode>({
     queryKey: [RQKEY_ROOT],
   })
@@ -269,7 +339,7 @@ export function* findAllPostsInQueryData(
       continue
     }
     for (const item of traverseThread(queryData)) {
-      if (item.uri === uri) {
+      if (item.type === 'post' && didOrHandleUriMatches(atUri, item.post)) {
         const placeholder = threadNodeToPlaceholderThread(item)
         if (placeholder) {
           yield placeholder
@@ -277,7 +347,7 @@ export function* findAllPostsInQueryData(
       }
       const quotedPost =
         item.type === 'post' ? getEmbeddedPost(item.post.embed) : undefined
-      if (quotedPost?.uri === uri) {
+      if (quotedPost && didOrHandleUriMatches(atUri, quotedPost)) {
         yield embedViewRecordToPlaceholderThread(quotedPost)
       }
     }
@@ -290,6 +360,39 @@ export function* findAllPostsInQueryData(
   }
   for (let post of findAllPostsInSearchQueryData(queryClient, uri)) {
     yield postViewToPlaceholderThread(post)
+  }
+}
+
+export function* findAllProfilesInQueryData(
+  queryClient: QueryClient,
+  did: string,
+): Generator<AppBskyActorDefs.ProfileView, void> {
+  const queryDatas = queryClient.getQueriesData<ThreadNode>({
+    queryKey: [RQKEY_ROOT],
+  })
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData) {
+      continue
+    }
+    for (const item of traverseThread(queryData)) {
+      if (item.type === 'post' && item.post.author.did === did) {
+        yield item.post.author
+      }
+      const quotedPost =
+        item.type === 'post' ? getEmbeddedPost(item.post.embed) : undefined
+      if (quotedPost?.author.did === did) {
+        yield quotedPost?.author
+      }
+    }
+  }
+  for (let profile of findAllProfilesInFeedQueryData(queryClient, did)) {
+    yield profile
+  }
+  for (let profile of findAllProfilesInNotifsQueryData(queryClient, did)) {
+    yield profile
+  }
+  for (let profile of findAllProfilesInSearchQueryData(queryClient, did)) {
+    yield profile
   }
 }
 

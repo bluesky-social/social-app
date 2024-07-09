@@ -35,6 +35,7 @@ export type UserAvatarType = 'user' | 'algo' | 'list' | 'labeler'
 
 interface BaseUserAvatarProps {
   type?: UserAvatarType
+  shape?: 'circle' | 'square'
   size: number
   avatar?: string | null
 }
@@ -53,18 +54,23 @@ interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
   profile: AppBskyActorDefs.ProfileViewBasic
   disableHoverCard?: boolean
   onBeforePress?: () => void
+  accessible?: boolean
 }
 
 const BLUR_AMOUNT = isWeb ? 5 : 100
 
 let DefaultAvatar = ({
   type,
+  shape: overrideShape,
   size,
 }: {
   type: UserAvatarType
+  shape?: 'square' | 'circle'
   size: number
 }): React.ReactNode => {
+  const finalShape = overrideShape ?? (type === 'user' ? 'circle' : 'square')
   if (type === 'algo') {
+    // TODO: shape=circle
     // Font Awesome Pro 6.4.0 by @fontawesome -https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc.
     return (
       <Svg
@@ -83,6 +89,7 @@ let DefaultAvatar = ({
     )
   }
   if (type === 'list') {
+    // TODO: shape=circle
     // Font Awesome Pro 6.4.0 by @fontawesome -https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc.
     return (
       <Svg
@@ -116,14 +123,18 @@ let DefaultAvatar = ({
         viewBox="0 0 32 32"
         fill="none"
         stroke="none">
-        <Rect
-          x="0"
-          y="0"
-          width="32"
-          height="32"
-          rx="3"
-          fill={tokens.color.temp_purple}
-        />
+        {finalShape === 'square' ? (
+          <Rect
+            x="0"
+            y="0"
+            width="32"
+            height="32"
+            rx="3"
+            fill={tokens.color.temp_purple}
+          />
+        ) : (
+          <Circle cx="16" cy="16" r="16" fill={tokens.color.temp_purple} />
+        )}
         <Path
           d="M24 9.75L16 7L8 9.75V15.9123C8 20.8848 12 23 16 25.1579C20 23 24 20.8848 24 15.9123V9.75Z"
           stroke="white"
@@ -134,6 +145,7 @@ let DefaultAvatar = ({
       </Svg>
     )
   }
+  // TODO: shape=square
   return (
     <Svg
       testID="userAvatarFallback"
@@ -158,6 +170,7 @@ export {DefaultAvatar}
 
 let UserAvatar = ({
   type = 'user',
+  shape: overrideShape,
   size,
   avatar,
   moderation,
@@ -165,9 +178,10 @@ let UserAvatar = ({
 }: UserAvatarProps): React.ReactNode => {
   const pal = usePalette('default')
   const backgroundColor = pal.colors.backgroundLight
+  const finalShape = overrideShape ?? (type === 'user' ? 'circle' : 'square')
 
   const aviStyle = useMemo(() => {
-    if (type === 'algo' || type === 'list' || type === 'labeler') {
+    if (finalShape === 'square') {
       return {
         width: size,
         height: size,
@@ -181,7 +195,7 @@ let UserAvatar = ({
       borderRadius: Math.floor(size / 2),
       backgroundColor,
     }
-  }, [type, size, backgroundColor])
+  }, [finalShape, size, backgroundColor])
 
   const alert = useMemo(() => {
     if (!moderation?.alert) {
@@ -223,7 +237,7 @@ let UserAvatar = ({
     </View>
   ) : (
     <View style={{width: size, height: size}}>
-      <DefaultAvatar type={type} size={size} />
+      <DefaultAvatar type={type} shape={finalShape} size={size} />
       {alert}
     </View>
   )
@@ -289,8 +303,8 @@ let EditableUserAvatar = ({
       const croppedImage = await openCropper({
         mediaType: 'photo',
         cropperCircleOverlay: true,
-        height: item.height,
-        width: item.width,
+        height: 1000,
+        width: 1000,
         path: item.path,
       })
 
@@ -386,6 +400,7 @@ let PreviewableUserAvatar = ({
   profile,
   disableHoverCard,
   onBeforePress,
+  accessible = true,
   ...rest
 }: PreviewableUserAvatarProps): React.ReactNode => {
   const {_} = useLingui()
@@ -399,7 +414,12 @@ let PreviewableUserAvatar = ({
   return (
     <ProfileHoverCard did={profile.did} disable={disableHoverCard}>
       <Link
-        label={_(msg`See profile`)}
+        label={
+          accessible
+            ? _(msg`${profile.displayName || profile.handle}'s avatar`)
+            : undefined
+        }
+        accessibilityHint={accessible ? _(msg`Opens this profile`) : undefined}
         to={makeProfileLink({
           did: profile.did,
           handle: profile.handle,

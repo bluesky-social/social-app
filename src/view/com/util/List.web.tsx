@@ -5,7 +5,7 @@ import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/rean
 import {batchedUpdates} from '#/lib/batchedUpdates'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useScrollHandlers} from '#/lib/ScrollContext'
-import {isFirefox, isSafari} from 'lib/browser'
+import {isSafari} from 'lib/browser'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {addStyle} from 'lib/styles'
@@ -22,9 +22,12 @@ export type ListProps<ItemT> = Omit<
   refreshing?: boolean
   onRefresh?: () => void
   onItemSeen?: (item: ItemT) => void
-  desktopFixedHeight: any // TODO: Better types.
-  containWeb?: boolean
+  desktopFixedHeight?: number | boolean
+  // Web only prop to contain the scroll to the container rather than the window
+  disableFullWindowScroll?: boolean
   sideBorders?: boolean
+  // Web only prop to disable a perf optimization (which would otherwise be on).
+  disableContainStyle?: boolean
 }
 export type ListRef = React.MutableRefObject<any | null> // TODO: Better types.
 
@@ -37,7 +40,8 @@ function ListImpl<ItemT>(
   {
     ListHeaderComponent,
     ListFooterComponent,
-    containWeb,
+    ListEmptyComponent,
+    disableFullWindowScroll,
     contentContainerStyle,
     data,
     desktopFixedHeight,
@@ -56,6 +60,7 @@ function ListImpl<ItemT>(
     extraData,
     style,
     sideBorders = true,
+    disableContainStyle,
     ...props
   }: ListProps<ItemT>,
   ref: React.Ref<ListMethods>,
@@ -70,23 +75,35 @@ function ListImpl<ItemT>(
     )
   }
 
-  let header: JSX.Element | null = null
+  const isEmpty = !data || data.length === 0
+
+  let headerComponent: JSX.Element | null = null
   if (ListHeaderComponent != null) {
     if (isValidElement(ListHeaderComponent)) {
-      header = ListHeaderComponent
+      headerComponent = ListHeaderComponent
     } else {
       // @ts-ignore Nah it's fine.
-      header = <ListHeaderComponent />
+      headerComponent = <ListHeaderComponent />
     }
   }
 
-  let footer: JSX.Element | null = null
+  let footerComponent: JSX.Element | null = null
   if (ListFooterComponent != null) {
     if (isValidElement(ListFooterComponent)) {
-      footer = ListFooterComponent
+      footerComponent = ListFooterComponent
     } else {
       // @ts-ignore Nah it's fine.
-      footer = <ListFooterComponent />
+      footerComponent = <ListFooterComponent />
+    }
+  }
+
+  let emptyComponent: JSX.Element | null = null
+  if (ListEmptyComponent != null) {
+    if (isValidElement(ListEmptyComponent)) {
+      emptyComponent = ListEmptyComponent
+    } else {
+      // @ts-ignore Nah it's fine.
+      emptyComponent = <ListEmptyComponent />
     }
   }
 
@@ -97,7 +114,7 @@ function ListImpl<ItemT>(
   }
 
   const getScrollableNode = React.useCallback(() => {
-    if (containWeb) {
+    if (disableFullWindowScroll) {
       const element = nativeRef.current as HTMLDivElement | null
       if (!element) return
 
@@ -167,7 +184,7 @@ function ListImpl<ItemT>(
         },
       }
     }
-  }, [containWeb])
+  }, [disableFullWindowScroll])
 
   const nativeRef = React.useRef<HTMLDivElement>(null)
   React.useImperativeHandle(
@@ -252,7 +269,12 @@ function ListImpl<ItemT>(
     return () => {
       element?.removeEventListener('scroll', handleScroll)
     }
-  }, [isInsideVisibleTree, handleScroll, containWeb, getScrollableNode])
+  }, [
+    isInsideVisibleTree,
+    handleScroll,
+    disableFullWindowScroll,
+    getScrollableNode,
+  ])
 
   // --- onScrolledDownChange ---
   const isScrolledDown = useRef(false)
@@ -293,7 +315,7 @@ function ListImpl<ItemT>(
       {...props}
       style={[
         style,
-        containWeb && {
+        disableFullWindowScroll && {
           flex: 1,
           // @ts-expect-error web only
           'overflow-y': 'scroll',
@@ -317,39 +339,43 @@ function ListImpl<ItemT>(
           pal.border,
         ]}>
         <Visibility
-          root={containWeb ? nativeRef : null}
+          root={disableFullWindowScroll ? nativeRef : null}
           onVisibleChange={handleAboveTheFoldVisibleChange}
           style={[styles.aboveTheFoldDetector, {height: headerOffset}]}
         />
-        {onStartReached && (
+        {onStartReached && !isEmpty && (
           <Visibility
-            root={containWeb ? nativeRef : null}
+            root={disableFullWindowScroll ? nativeRef : null}
             onVisibleChange={onHeadVisibilityChange}
             topMargin={(onStartReachedThreshold ?? 0) * 100 + '%'}
           />
         )}
-        {header}
-        {(data as Array<ItemT>).map((item, index) => {
-          const key = keyExtractor!(item, index)
-          return (
-            <Row<ItemT>
-              key={key}
-              item={item}
-              index={index}
-              renderItem={renderItem}
-              extraData={extraData}
-              onItemSeen={onItemSeen}
-            />
-          )
-        })}
-        {onEndReached && (
+        {headerComponent}
+        {isEmpty
+          ? emptyComponent
+          : (data as Array<ItemT>)?.map((item, index) => {
+              const key = keyExtractor!(item, index)
+              return (
+                <Row<ItemT>
+                  key={key}
+                  item={item}
+                  index={index}
+                  renderItem={renderItem}
+                  extraData={extraData}
+                  onItemSeen={onItemSeen}
+                  disableContainStyle={disableContainStyle}
+                />
+              )
+            })}
+        {onEndReached && !isEmpty && (
           <Visibility
-            root={containWeb ? nativeRef : null}
+            root={disableFullWindowScroll ? nativeRef : null}
             onVisibleChange={onTailVisibilityChange}
             bottomMargin={(onEndReachedThreshold ?? 0) * 100 + '%'}
+            key={data?.length}
           />
         )}
-        {footer}
+        {footerComponent}
       </View>
     </View>
   )
@@ -387,6 +413,7 @@ let Row = function RowImpl<ItemT>({
   renderItem,
   extraData: _unused,
   onItemSeen,
+  disableContainStyle,
 }: {
   item: ItemT
   index: number
@@ -396,6 +423,7 @@ let Row = function RowImpl<ItemT>({
     | ((data: {index: number; item: any; separators: any}) => React.ReactNode)
   extraData: any
   onItemSeen: ((item: any) => void) | undefined
+  disableContainStyle?: boolean
 }): React.ReactNode {
   const rowRef = React.useRef(null)
   const intersectionTimeout = React.useRef<NodeJS.Timer | undefined>(undefined)
@@ -444,8 +472,11 @@ let Row = function RowImpl<ItemT>({
     return null
   }
 
+  const shouldDisableContainStyle = disableContainStyle || isSafari
   return (
-    <View style={styles.row} ref={rowRef}>
+    <View
+      style={shouldDisableContainStyle ? undefined : styles.contain}
+      ref={rowRef}>
       {renderItem({item, index, separators: null as any})}
     </View>
   )
@@ -516,9 +547,9 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
     marginRight: 'auto',
   },
-  row: {
+  contain: {
     // @ts-ignore web only
-    contentVisibility: isSafari || isFirefox ? '' : 'auto', // Safari support for this is buggy.
+    contain: 'layout paint',
   },
   minHeightViewport: {
     // @ts-ignore web only

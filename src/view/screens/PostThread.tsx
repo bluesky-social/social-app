@@ -1,41 +1,38 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import Animated from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
-import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
-import {makeRecordUri} from 'lib/strings/url-helpers'
-import {PostThread as PostThreadComponent} from '../com/post-thread/PostThread'
-import {ComposePrompt} from 'view/com/composer/Prompt'
-import {s} from 'lib/styles'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {clamp} from 'lodash'
+
+import {isWeb} from '#/platform/detection'
 import {
   RQKEY as POST_THREAD_RQKEY,
   ThreadNode,
 } from '#/state/queries/post-thread'
-import {clamp} from 'lodash'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
-import {useSetMinimalShellMode} from '#/state/shell'
-import {useResolveUriQuery} from '#/state/queries/resolve-uri'
-import {ErrorMessage} from '../com/util/error/ErrorMessage'
-import {CenteredView} from '../com/util/Views'
-import {useComposerControls} from '#/state/shell/composer'
 import {useSession} from '#/state/session'
-import {isWeb} from '#/platform/detection'
+import {useSetMinimalShellMode} from '#/state/shell'
+import {useComposerControls} from '#/state/shell/composer'
+import {useMinimalShellFabTransform} from 'lib/hooks/useMinimalShellTransform'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
+import {makeRecordUri} from 'lib/strings/url-helpers'
+import {s} from 'lib/styles'
+import {ComposePrompt} from 'view/com/composer/Prompt'
+import {PostThread as PostThreadComponent} from '../com/post-thread/PostThread'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostThread'>
 export function PostThreadScreen({route}: Props) {
   const queryClient = useQueryClient()
   const {hasSession} = useSession()
-  const {fabMinimalShellTransform} = useMinimalShellMode()
+  const fabMinimalShellTransform = useMinimalShellFabTransform()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {openComposer} = useComposerControls()
   const safeAreaInsets = useSafeAreaInsets()
   const {name, rkey} = route.params
   const {isMobile} = useWebMediaQueries()
   const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
-  const {data: resolvedUri, error: uriError} = useResolveUriQuery(uri)
   const [canReply, setCanReply] = React.useState(false)
 
   useFocusEffect(
@@ -45,12 +42,10 @@ export function PostThreadScreen({route}: Props) {
   )
 
   const onPressReply = React.useCallback(() => {
-    if (!resolvedUri) {
+    if (!uri) {
       return
     }
-    const thread = queryClient.getQueryData<ThreadNode>(
-      POST_THREAD_RQKEY(resolvedUri.uri),
-    )
+    const thread = queryClient.getQueryData<ThreadNode>(POST_THREAD_RQKEY(uri))
     if (thread?.type !== 'post') {
       return
     }
@@ -64,25 +59,19 @@ export function PostThreadScreen({route}: Props) {
       },
       onPost: () =>
         queryClient.invalidateQueries({
-          queryKey: POST_THREAD_RQKEY(resolvedUri.uri || ''),
+          queryKey: POST_THREAD_RQKEY(uri),
         }),
     })
-  }, [openComposer, queryClient, resolvedUri])
+  }, [openComposer, queryClient, uri])
 
   return (
     <View style={s.hContentRegion}>
       <View style={s.flex1}>
-        {uriError ? (
-          <CenteredView>
-            <ErrorMessage message={String(uriError)} />
-          </CenteredView>
-        ) : (
-          <PostThreadComponent
-            uri={resolvedUri?.uri}
-            onPressReply={onPressReply}
-            onCanReply={setCanReply}
-          />
-        )}
+        <PostThreadComponent
+          uri={uri}
+          onPressReply={onPressReply}
+          onCanReply={setCanReply}
+        />
       </View>
       {isMobile && canReply && hasSession && (
         <Animated.View

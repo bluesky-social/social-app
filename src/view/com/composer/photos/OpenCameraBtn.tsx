@@ -24,7 +24,7 @@ export function OpenCameraBtn({gallery, disabled}: Props) {
   const {_} = useLingui()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
   const [mediaPermissionRes, requestMediaPermission] =
-    MediaLibrary.usePermissions()
+    MediaLibrary.usePermissions({granularPermissions: ['photo']})
   const t = useTheme()
 
   const onPressTakePicture = useCallback(async () => {

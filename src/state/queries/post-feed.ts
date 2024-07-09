@@ -17,11 +17,13 @@ import {
 
 import {HomeFeedAPI} from '#/lib/api/feed/home'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
+import {DISCOVER_FEED_URI} from '#/lib/constants'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
 import {useAgent} from '#/state/session'
+import * as userActionHistory from '#/state/userActionHistory'
 import {AuthorFeedAPI} from 'lib/api/feed/author'
 import {CustomFeedAPI} from 'lib/api/feed/custom'
 import {FollowingFeedAPI} from 'lib/api/feed/following'
@@ -35,7 +37,11 @@ import {KnownError} from '#/view/com/posts/FeedErrorMessage'
 import {useFeedTuners} from '../preferences/feed-tuners'
 import {useModerationOpts} from '../preferences/moderation-opts'
 import {usePreferencesQuery} from './preferences'
-import {embedViewRecordToPostView, getEmbeddedPost} from './util'
+import {
+  didOrHandleUriMatches,
+  embedViewRecordToPostView,
+  getEmbeddedPost,
+} from './util'
 
 type ActorDid = string
 type AuthorFilter =
@@ -45,6 +51,7 @@ type AuthorFilter =
   | 'posts_with_media'
 type FeedUri = string
 type ListUri = string
+type ListFilter = 'as_following' // Applies current Following settings. Currently client-side.
 
 export type FeedDescriptor =
   | 'following'
@@ -52,6 +59,7 @@ export type FeedDescriptor =
   | `feedgen|${FeedUri}`
   | `likes|${ActorDid}`
   | `list|${ListUri}`
+  | `list|${ListUri}|${ListFilter}`
 export interface FeedParams {
   disableTuner?: boolean
   mergeFeedEnabled?: boolean
@@ -74,6 +82,7 @@ export interface FeedPostSliceItem {
   feedContext: string | undefined
   moderation: ModerationDecision
   parentAuthor?: AppBskyActorDefs.ProfileViewBasic
+  isParentBlocked?: boolean
 }
 
 export interface FeedPostSlice {
@@ -124,6 +133,7 @@ export function usePostFeedQuery(
     result: InfiniteData<FeedPage>
   } | null>(null)
   const lastPageCountRef = useRef(0)
+  const isDiscover = feedDesc.includes(DISCOVER_FEED_URI)
 
   // Make sure this doesn't invalidate unless really needed.
   const selectArgs = React.useMemo(
@@ -132,8 +142,15 @@ export function usePostFeedQuery(
       disableTuner: params?.disableTuner,
       moderationOpts,
       ignoreFilterFor: opts?.ignoreFilterFor,
+      isDiscover,
     }),
-    [feedTuners, params?.disableTuner, moderationOpts, opts?.ignoreFilterFor],
+    [
+      feedTuners,
+      params?.disableTuner,
+      moderationOpts,
+      opts?.ignoreFilterFor,
+      isDiscover,
+    ],
   )
 
   const query = useInfiniteQuery<
@@ -212,8 +229,13 @@ export function usePostFeedQuery(
       (data: InfiniteData<FeedPageUnselected, RQPageParam>) => {
         // If the selection depends on some data, that data should
         // be included in the selectArgs object and read here.
-        const {feedTuners, disableTuner, moderationOpts, ignoreFilterFor} =
-          selectArgs
+        const {
+          feedTuners,
+          disableTuner,
+          moderationOpts,
+          ignoreFilterFor,
+          isDiscover,
+        } = selectArgs
 
         const tuner = disableTuner
           ? new NoopFeedTuner()
@@ -286,6 +308,21 @@ export function usePostFeedQuery(
                     }
                   }
 
+                  if (isDiscover) {
+                    userActionHistory.seen(
+                      slice.items.map(item => ({
+                        feedContext: item.feedContext,
+                        likeCount: item.post.likeCount ?? 0,
+                        repostCount: item.post.repostCount ?? 0,
+                        replyCount: item.post.replyCount ?? 0,
+                        isFollowedBy: Boolean(
+                          item.post.author.viewer?.followedBy,
+                        ),
+                        uri: item.post.uri,
+                      })),
+                    )
+                  }
+
                   return {
                     _reactKey: slice._reactKey,
                     _isFeedPostSlice: true,
@@ -307,6 +344,10 @@ export function usePostFeedQuery(
                           const parentAuthor =
                             item.reply?.parent?.author ??
                             slice.items[i + 1]?.reply?.grandparentAuthor
+                          const replyRef = item.reply
+                          const isParentBlocked = AppBskyFeedDefs.isBlockedPost(
+                            replyRef?.parent,
+                          )
 
                           return {
                             _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
@@ -320,6 +361,7 @@ export function usePostFeedQuery(
                             feedContext: item.feedContext || slice.feedContext,
                             moderation: moderations[i],
                             parentAuthor,
+                            isParentBlocked,
                           }
                         }
                         return undefined
@@ -448,6 +490,8 @@ export function* findAllPostsInQueryData(
   queryClient: QueryClient,
   uri: string,
 ): Generator<AppBskyFeedDefs.PostView, undefined> {
+  const atUri = new AtUri(uri)
+
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<FeedPageUnselected>
   >({
@@ -459,24 +503,77 @@ export function* findAllPostsInQueryData(
     }
     for (const page of queryData?.pages) {
       for (const item of page.feed) {
-        if (item.post.uri === uri) {
+        if (didOrHandleUriMatches(atUri, item.post)) {
           yield item.post
         }
+
         const quotedPost = getEmbeddedPost(item.post.embed)
-        if (quotedPost?.uri === uri) {
+        if (quotedPost && didOrHandleUriMatches(atUri, quotedPost)) {
           yield embedViewRecordToPostView(quotedPost)
+        }
+
+        if (AppBskyFeedDefs.isPostView(item.reply?.parent)) {
+          if (didOrHandleUriMatches(atUri, item.reply.parent)) {
+            yield item.reply.parent
+          }
+
+          const parentQuotedPost = getEmbeddedPost(item.reply.parent.embed)
+          if (
+            parentQuotedPost &&
+            didOrHandleUriMatches(atUri, parentQuotedPost)
+          ) {
+            yield embedViewRecordToPostView(parentQuotedPost)
+          }
+        }
+
+        if (AppBskyFeedDefs.isPostView(item.reply?.root)) {
+          if (didOrHandleUriMatches(atUri, item.reply.root)) {
+            yield item.reply.root
+          }
+
+          const rootQuotedPost = getEmbeddedPost(item.reply.root.embed)
+          if (rootQuotedPost && didOrHandleUriMatches(atUri, rootQuotedPost)) {
+            yield embedViewRecordToPostView(rootQuotedPost)
+          }
+        }
+      }
+    }
+  }
+}
+
+export function* findAllProfilesInQueryData(
+  queryClient: QueryClient,
+  did: string,
+): Generator<AppBskyActorDefs.ProfileView, undefined> {
+  const queryDatas = queryClient.getQueriesData<
+    InfiniteData<FeedPageUnselected>
+  >({
+    queryKey: [RQKEY_ROOT],
+  })
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData?.pages) {
+      continue
+    }
+    for (const page of queryData?.pages) {
+      for (const item of page.feed) {
+        if (item.post.author.did === did) {
+          yield item.post.author
+        }
+        const quotedPost = getEmbeddedPost(item.post.embed)
+        if (quotedPost?.author.did === did) {
+          yield quotedPost.author
         }
         if (
           AppBskyFeedDefs.isPostView(item.reply?.parent) &&
-          item.reply?.parent?.uri === uri
+          item.reply?.parent?.author.did === did
         ) {
-          yield item.reply.parent
+          yield item.reply.parent.author
         }
         if (
           AppBskyFeedDefs.isPostView(item.reply?.root) &&
-          item.reply?.root?.uri === uri
+          item.reply?.root?.author.did === did
         ) {
-          yield item.reply.root
+          yield item.reply.root.author
         }
       }
     }

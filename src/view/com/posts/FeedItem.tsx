@@ -41,6 +41,9 @@ import {PostEmbeds} from '../util/post-embeds'
 import {PostMeta} from '../util/PostMeta'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
+import {AviFollowButton} from './AviFollowButton'
+import hairlineWidth = StyleSheet.hairlineWidth
+import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
 
 interface FeedItemProps {
   record: AppBskyFeedPost.Record
@@ -52,6 +55,8 @@ interface FeedItemProps {
   isThreadLastChild?: boolean
   isThreadParent?: boolean
   feedContext: string | undefined
+  hideTopBorder?: boolean
+  isParentBlocked?: boolean
 }
 
 export function FeedItem({
@@ -65,6 +70,8 @@ export function FeedItem({
   isThreadChild,
   isThreadLastChild,
   isThreadParent,
+  hideTopBorder,
+  isParentBlocked,
 }: FeedItemProps & {post: AppBskyFeedDefs.PostView}): React.ReactNode {
   const postShadowed = usePostShadow(post)
   const richText = useMemo(
@@ -94,6 +101,8 @@ export function FeedItem({
         isThreadChild={isThreadChild}
         isThreadLastChild={isThreadLastChild}
         isThreadParent={isThreadParent}
+        hideTopBorder={hideTopBorder}
+        isParentBlocked={isParentBlocked}
       />
     )
   }
@@ -112,6 +121,8 @@ let FeedItemInner = ({
   isThreadChild,
   isThreadLastChild,
   isThreadParent,
+  hideTopBorder,
+  isParentBlocked,
 }: FeedItemProps & {
   richText: RichTextAPI
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -185,8 +196,8 @@ let FeedItemInner = ({
         isThreadLastChild || (!isThreadChild && !isThreadParent)
           ? 8
           : undefined,
+      borderTopWidth: hideTopBorder || isThreadChild ? 0 : hairlineWidth,
     },
-    isThreadChild ? styles.outerSmallTop : undefined,
   ]
 
   return (
@@ -245,13 +256,10 @@ let FeedItemInner = ({
                 )}`,
               )}
               onBeforePress={onOpenReposter}>
-              <FontAwesomeIcon
-                icon="retweet"
-                style={{
-                  marginRight: 4,
-                  color: pal.colors.textLight,
-                  minWidth: 16,
-                }}
+              <Repost
+                style={{color: pal.colors.textLight, marginRight: 3}}
+                width={14}
+                height={14}
               />
               <Text
                 type="sm-bold"
@@ -284,13 +292,15 @@ let FeedItemInner = ({
 
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
-          <PreviewableUserAvatar
-            size={52}
-            profile={post.author}
-            moderation={moderation.ui('avatar')}
-            type={post.author.associated?.labeler ? 'labeler' : 'user'}
-            onBeforePress={onOpenAuthor}
-          />
+          <AviFollowButton author={post.author} moderation={moderation}>
+            <PreviewableUserAvatar
+              size={52}
+              profile={post.author}
+              moderation={moderation.ui('avatar')}
+              type={post.author.associated?.labeler ? 'labeler' : 'user'}
+              onBeforePress={onOpenAuthor}
+            />
+          </AviFollowButton>
           {isThreadParent && (
             <View
               style={[
@@ -314,7 +324,7 @@ let FeedItemInner = ({
             onOpenAuthor={onOpenAuthor}
           />
           {!isThreadChild && showReplyTo && parentAuthor && (
-            <ReplyToLabel profile={parentAuthor} />
+            <ReplyToLabel blocked={isParentBlocked} profile={parentAuthor} />
           )}
           <LabelsOnMyPost post={post} />
           <PostContent
@@ -368,7 +378,7 @@ let PostContent = ({
       modui={moderation.ui('contentList')}
       ignoreMute
       childContainerStyle={styles.contentHiderChild}>
-      <PostAlerts modui={moderation.ui('contentList')} style={[a.pb_xs]} />
+      <PostAlerts modui={moderation.ui('contentList')} style={[a.py_2xs]} />
       {richText.text ? (
         <View style={styles.postTextContainer}>
           <RichText
@@ -390,7 +400,7 @@ let PostContent = ({
         />
       ) : undefined}
       {postEmbed ? (
-        <View style={[a.pb_sm]}>
+        <View style={[a.pb_xs]}>
           <PostEmbeds
             embed={postEmbed}
             moderation={moderation}
@@ -403,9 +413,14 @@ let PostContent = ({
 }
 PostContent = memo(PostContent)
 
-function ReplyToLabel({profile}: {profile: AppBskyActorDefs.ProfileViewBasic}) {
+function ReplyToLabel({
+  profile,
+  blocked,
+}: {
+  profile: AppBskyActorDefs.ProfileViewBasic
+  blocked?: boolean
+}) {
   const pal = usePalette('default')
-
   return (
     <View style={[s.flexRow, s.mb2, s.alignCenter]}>
       <FontAwesomeIcon
@@ -418,23 +433,27 @@ function ReplyToLabel({profile}: {profile: AppBskyActorDefs.ProfileViewBasic}) {
         style={[pal.textLight, s.mr2]}
         lineHeight={1.2}
         numberOfLines={1}>
-        <Trans context="description">
-          Reply to{' '}
-          <ProfileHoverCard inline did={profile.did}>
-            <TextLinkOnWebOnly
-              type="md"
-              style={pal.textLight}
-              lineHeight={1.2}
-              numberOfLines={1}
-              href={makeProfileLink(profile)}
-              text={
-                profile.displayName
-                  ? sanitizeDisplayName(profile.displayName)
-                  : sanitizeHandle(profile.handle)
-              }
-            />
-          </ProfileHoverCard>
-        </Trans>
+        {blocked ? (
+          <Trans context="description">Reply to a blocked post</Trans>
+        ) : (
+          <Trans context="description">
+            Reply to{' '}
+            <ProfileHoverCard inline did={profile.did}>
+              <TextLinkOnWebOnly
+                type="md"
+                style={pal.textLight}
+                lineHeight={1.2}
+                numberOfLines={1}
+                href={makeProfileLink(profile)}
+                text={
+                  profile.displayName
+                    ? sanitizeDisplayName(profile.displayName)
+                    : sanitizeHandle(profile.handle)
+                }
+              />
+            </ProfileHoverCard>
+          </Trans>
+        )}
       </Text>
     </View>
   )
@@ -442,15 +461,11 @@ function ReplyToLabel({profile}: {profile: AppBskyActorDefs.ProfileViewBasic}) {
 
 const styles = StyleSheet.create({
   outer: {
-    borderTopWidth: 1,
     paddingLeft: 10,
     paddingRight: 15,
     // @ts-ignore web only -prf
     cursor: 'pointer',
     overflow: 'hidden',
-  },
-  outerSmallTop: {
-    borderTopWidth: 0,
   },
   replyLine: {
     width: 2,
@@ -459,9 +474,10 @@ const styles = StyleSheet.create({
   },
   includeReason: {
     flexDirection: 'row',
+    alignItems: 'center',
     marginTop: 2,
     marginBottom: 2,
-    marginLeft: -20,
+    marginLeft: -18,
   },
   layout: {
     flexDirection: 'row',
@@ -470,9 +486,13 @@ const styles = StyleSheet.create({
   },
   layoutAvi: {
     paddingLeft: 8,
+    position: 'relative',
+    zIndex: 999,
   },
   layoutContent: {
+    position: 'relative',
     flex: 1,
+    zIndex: 0,
   },
   alert: {
     marginTop: 6,
@@ -482,7 +502,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
-    paddingBottom: 4,
+    paddingBottom: 2,
   },
   contentHiderChild: {
     marginTop: 6,

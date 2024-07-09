@@ -64,6 +64,8 @@ export const Link = memo(function Link({
   anchorNoUnderline,
   navigationAction,
   onBeforePress,
+  accessibilityActions,
+  onAccessibilityAction,
   ...props
 }: Props) {
   const t = useTheme()
@@ -89,6 +91,11 @@ export const Link = memo(function Link({
     [closeModal, navigation, navigationAction, href, openLink, onBeforePress],
   )
 
+  const accessibilityActionsWithActivate = [
+    ...(accessibilityActions || []),
+    {name: 'activate', label: title},
+  ]
+
   if (noFeedback) {
     return (
       <WebAuxClickWrapper>
@@ -97,6 +104,14 @@ export const Link = memo(function Link({
           onPress={onPress}
           accessible={accessible}
           accessibilityRole="link"
+          accessibilityActions={accessibilityActionsWithActivate}
+          onAccessibilityAction={e => {
+            if (e.nativeEvent.actionName === 'activate') {
+              onPress()
+            } else {
+              onAccessibilityAction?.(e)
+            }
+          }}
           {...props}
           android_ripple={{
             color: t.atoms.bg_contrast_25.backgroundColor,

@@ -1,11 +1,22 @@
-import {AppBskyActorDefs} from '@atproto/api'
-import {QueryClient, useQuery} from '@tanstack/react-query'
+import {AppBskyActorDefs, AppBskyActorSearchActors} from '@atproto/api'
+import {
+  InfiniteData,
+  QueryClient,
+  QueryKey,
+  useInfiniteQuery,
+  useQuery,
+} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
 import {useAgent} from '#/state/session'
 
 const RQKEY_ROOT = 'actor-search'
 export const RQKEY = (query: string) => [RQKEY_ROOT, query]
+
+export const RQKEY_PAGINATED = (query: string) => [
+  `${RQKEY_ROOT}_paginated`,
+  query,
+]
 
 export function useActorSearch({
   query,
@@ -25,6 +36,37 @@ export function useActorSearch({
       return res.data.actors
     },
     enabled: enabled && !!query,
+  })
+}
+
+export function useActorSearchPaginated({
+  query,
+  enabled,
+}: {
+  query: string
+  enabled?: boolean
+}) {
+  const agent = useAgent()
+  return useInfiniteQuery<
+    AppBskyActorSearchActors.OutputSchema,
+    Error,
+    InfiniteData<AppBskyActorSearchActors.OutputSchema>,
+    QueryKey,
+    string | undefined
+  >({
+    staleTime: STALE.MINUTES.FIVE,
+    queryKey: RQKEY_PAGINATED(query),
+    queryFn: async ({pageParam}) => {
+      const res = await agent.searchActors({
+        q: query,
+        limit: 25,
+        cursor: pageParam,
+      })
+      return res.data
+    },
+    enabled: enabled && !!query,
+    initialPageParam: undefined,
+    getNextPageParam: lastPage => lastPage.cursor,
   })
 }
 

@@ -11,7 +11,13 @@ import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {FeedItem} from './FeedItem'
 
-let FeedSlice = ({slice}: {slice: FeedPostSlice}): React.ReactNode => {
+let FeedSlice = ({
+  slice,
+  hideTopBorder,
+}: {
+  slice: FeedPostSlice
+  hideTopBorder?: boolean
+}): React.ReactNode => {
   if (slice.isThread && slice.items.length > 3) {
     const last = slice.items.length - 1
     return (
@@ -27,6 +33,8 @@ let FeedSlice = ({slice}: {slice: FeedPostSlice}): React.ReactNode => {
           moderation={slice.items[0].moderation}
           isThreadParent={isThreadParentAt(slice.items, 0)}
           isThreadChild={isThreadChildAt(slice.items, 0)}
+          hideTopBorder={hideTopBorder}
+          isParentBlocked={slice.items[0].isParentBlocked}
         />
         <FeedItem
           key={slice.items[1]._reactKey}
@@ -39,6 +47,7 @@ let FeedSlice = ({slice}: {slice: FeedPostSlice}): React.ReactNode => {
           moderation={slice.items[1].moderation}
           isThreadParent={isThreadParentAt(slice.items, 1)}
           isThreadChild={isThreadChildAt(slice.items, 1)}
+          isParentBlocked={slice.items[1].isParentBlocked}
         />
         <ViewFullThread slice={slice} />
         <FeedItem
@@ -52,6 +61,7 @@ let FeedSlice = ({slice}: {slice: FeedPostSlice}): React.ReactNode => {
           moderation={slice.items[last].moderation}
           isThreadParent={isThreadParentAt(slice.items, last)}
           isThreadChild={isThreadChildAt(slice.items, last)}
+          isParentBlocked={slice.items[2].isParentBlocked}
           isThreadLastChild
         />
       </>
@@ -75,6 +85,8 @@ let FeedSlice = ({slice}: {slice: FeedPostSlice}): React.ReactNode => {
           isThreadLastChild={
             isThreadChildAt(slice.items, i) && slice.items.length === i + 1
           }
+          isParentBlocked={slice.items[i].isParentBlocked}
+          hideTopBorder={hideTopBorder && i === 0}
         />
       ))}
     </>

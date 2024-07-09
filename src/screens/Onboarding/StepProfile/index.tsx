@@ -102,6 +102,7 @@ export function StepProfile() {
         mediaTypes: MediaTypeOptions.Images,
         quality: 1,
         ...opts,
+        legacy: true,
       })
 
       return (response.assets ?? [])
@@ -180,8 +181,8 @@ export function StepProfile() {
       image = await openCropper({
         mediaType: 'photo',
         cropperCircleOverlay: true,
-        height: image.height,
-        width: image.width,
+        height: 1000,
+        width: 1000,
         path: image.path,
       })
     }

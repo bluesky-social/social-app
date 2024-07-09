@@ -66,5 +66,9 @@ class ExpoBackgroundNotificationHandlerModule : Module() {
     AsyncFunction("removeManyFromStringArrayAsync") { forKey: String, strings: Array<String> ->
       NotificationPrefs(appContext.reactContext).removeManyFromStringArray(forKey, strings)
     }
+
+    AsyncFunction("setBadgeCountAsync") { _: Int ->
+      // This does nothing on Android
+    }
   }
 }

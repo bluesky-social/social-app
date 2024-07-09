@@ -16,6 +16,7 @@ import {
   useInfiniteQuery,
   useQueryClient,
 } from '@tanstack/react-query'
+import throttle from 'lodash.throttle'
 
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {useMessagesEventBus} from '#/state/messages/events'
@@ -26,10 +27,15 @@ import {useAgent, useSession} from '#/state/session'
 export const RQKEY = ['convo-list']
 type RQPageParam = string | undefined
 
-export function useListConvosQuery() {
+export function useListConvosQuery({
+  enabled,
+}: {
+  enabled?: boolean
+} = {}) {
   const agent = useAgent()
 
   return useInfiniteQuery({
+    enabled,
     queryKey: RQKEY,
     queryFn: async ({pageParam}) => {
       const {data} = await agent.api.chat.bsky.convo.listConvos(
@@ -84,6 +90,15 @@ export function ListConvosProviderInner({
   const {currentConvoId} = useCurrentConvoId()
   const {currentAccount} = useSession()
 
+  const debouncedRefetch = useMemo(
+    () =>
+      throttle(refetch, 500, {
+        leading: true,
+        trailing: true,
+      }),
+    [refetch],
+  )
+
   useEffect(() => {
     const unsub = messagesBus.on(
       events => {
@@ -91,7 +106,7 @@ export function ListConvosProviderInner({
 
         events.logs.forEach(log => {
           if (ChatBskyConvoDefs.isLogBeginConvo(log)) {
-            refetch()
+            debouncedRefetch()
           } else if (ChatBskyConvoDefs.isLogLeaveConvo(log)) {
             queryClient.setQueryData(RQKEY, (old: ConvoListQueryData) =>
               optimisticDelete(log.convoId, old),
@@ -165,7 +180,7 @@ export function ListConvosProviderInner({
                   }),
                 }
               } else {
-                refetch()
+                debouncedRefetch()
               }
             })
           }
@@ -178,7 +193,14 @@ export function ListConvosProviderInner({
     )
 
     return () => unsub()
-  }, [messagesBus, currentConvoId, refetch, queryClient, currentAccount?.did])
+  }, [
+    messagesBus,
+    currentConvoId,
+    refetch,
+    queryClient,
+    currentAccount?.did,
+    debouncedRefetch,
+  ])
 
   const ctx = useMemo(() => {
     return data?.pages.flatMap(page => page.convos) ?? []

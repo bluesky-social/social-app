@@ -28,7 +28,6 @@ import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Has
 import {PageText_Stroke2_Corner0_Rounded as PageText} from '#/components/icons/PageText'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
-import {KeyboardPadding} from '#/components/KeyboardPadding'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
@@ -257,7 +256,6 @@ function MutedWordsInner() {
       </View>
 
       <Dialog.Close />
-      <KeyboardPadding maxHeight={100} />
     </Dialog.ScrollableInner>
   )
 }

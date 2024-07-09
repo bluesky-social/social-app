@@ -8,6 +8,8 @@ import {logEvent, LogEvents, toClout} from '#/lib/statsig/statsig'
 import {updatePostShadow} from '#/state/cache/post-shadow'
 import {Shadow} from '#/state/cache/types'
 import {useAgent, useSession} from '#/state/session'
+import * as userActionHistory from '#/state/userActionHistory'
+import {useIsThreadMuted, useSetThreadMute} from '../cache/thread-mutes'
 import {findProfileQueryData} from './profile'
 
 const RQKEY_ROOT = 'post'
@@ -18,7 +20,16 @@ export function usePostQuery(uri: string | undefined) {
   return useQuery<AppBskyFeedDefs.PostView>({
     queryKey: RQKEY(uri || ''),
     async queryFn() {
-      const res = await agent.getPosts({uris: [uri!]})
+      const urip = new AtUri(uri!)
+
+      if (!urip.host.startsWith('did:')) {
+        const res = await agent.resolveHandle({
+          handle: urip.host,
+        })
+        urip.host = res.data.did
+      }
+
+      const res = await agent.getPosts({uris: [urip.toString()]})
       if (res.success && res.data.posts[0]) {
         return res.data.posts[0]
       }
@@ -47,7 +58,7 @@ export function useGetPost() {
           }
 
           const res = await agent.getPosts({
-            uris: [urip.toString()!],
+            uris: [urip.toString()],
           })
 
           if (res.success && res.data.posts[0]) {
@@ -82,6 +93,7 @@ export function usePostLikeMutationQueue(
           uri: postUri,
           cid: postCid,
         })
+        userActionHistory.like([postUri])
         return likeUri
       } else {
         if (prevLikeUri) {
@@ -89,6 +101,7 @@ export function usePostLikeMutationQueue(
             postUri: postUri,
             likeUri: prevLikeUri,
           })
+          userActionHistory.unlike([postUri])
         }
         return undefined
       }
@@ -279,6 +292,75 @@ export function usePostDeleteMutation() {
     onSuccess(data, variables) {
       updatePostShadow(queryClient, variables.uri, {isDeleted: true})
       track('Post:Delete')
+    },
+  })
+}
+
+export function useThreadMuteMutationQueue(
+  post: Shadow<AppBskyFeedDefs.PostView>,
+  rootUri: string,
+) {
+  const threadMuteMutation = useThreadMuteMutation()
+  const threadUnmuteMutation = useThreadUnmuteMutation()
+  const isThreadMuted = useIsThreadMuted(rootUri, post.viewer?.threadMuted)
+  const setThreadMute = useSetThreadMute()
+
+  const queueToggle = useToggleMutationQueue<boolean>({
+    initialState: isThreadMuted,
+    runMutation: async (_prev, shouldMute) => {
+      if (shouldMute) {
+        await threadMuteMutation.mutateAsync({
+          uri: rootUri,
+        })
+        return true
+      } else {
+        await threadUnmuteMutation.mutateAsync({
+          uri: rootUri,
+        })
+        return false
+      }
+    },
+    onSuccess(finalIsMuted) {
+      // finalize
+      setThreadMute(rootUri, finalIsMuted)
+    },
+  })
+
+  const queueMuteThread = useCallback(() => {
+    // optimistically update
+    setThreadMute(rootUri, true)
+    return queueToggle(true)
+  }, [setThreadMute, rootUri, queueToggle])
+
+  const queueUnmuteThread = useCallback(() => {
+    // optimistically update
+    setThreadMute(rootUri, false)
+    return queueToggle(false)
+  }, [rootUri, setThreadMute, queueToggle])
+
+  return [isThreadMuted, queueMuteThread, queueUnmuteThread] as const
+}
+
+function useThreadMuteMutation() {
+  const agent = useAgent()
+  return useMutation<
+    {},
+    Error,
+    {uri: string} // the root post's uri
+  >({
+    mutationFn: ({uri}) => {
+      logEvent('post:mute', {})
+      return agent.api.app.bsky.graph.muteThread({root: uri})
+    },
+  })
+}
+
+function useThreadUnmuteMutation() {
+  const agent = useAgent()
+  return useMutation<{}, Error, {uri: string}>({
+    mutationFn: ({uri}) => {
+      logEvent('post:unmute', {})
+      return agent.api.app.bsky.graph.unmuteThread({root: uri})
     },
   })
 }

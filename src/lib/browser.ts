@@ -5,3 +5,5 @@ export const isSafari = /^((?!chrome|android).)*safari/i.test(
 export const isFirefox = /firefox|fxios/i.test(navigator.userAgent)
 export const isTouchDevice =
   'ontouchstart' in window || navigator.maxTouchPoints > 1
+export const isAndroidWeb =
+  /android/i.test(navigator.userAgent) && isTouchDevice
