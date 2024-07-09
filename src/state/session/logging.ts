@@ -1,4 +1,4 @@
-import {AtpSessionData} from '@atproto/api'
+import {AtpSessionData, AtpSessionEvent} from '@atproto/api'
 import {sha256} from 'js-sha256'
 import {Statsig} from 'statsig-react-native-expo'
 
@@ -69,6 +69,18 @@ export function wrapSessionReducerForLogging(reducer: Reducer): Reducer {
 
 let nextMessageIndex = 0
 const MAX_SLICE_LENGTH = 1000
+
+// Not gated.
+export function addSessionEventLog(did: string, event: AtpSessionEvent) {
+  try {
+    if (!Statsig.initializeCalled() || !Statsig.getStableID()) {
+      return
+    }
+    Statsig.logEvent('session:event', null, {did, event})
+  } catch (e) {
+    console.error(e)
+  }
+}
 
 export function addSessionDebugLog(log: Log) {
   try {
