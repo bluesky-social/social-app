@@ -8,7 +8,7 @@ export interface JobStatus {
   errorMachine?: string
 }
 
-enum JobState {
+export enum JobState {
   JOB_STATE_UNSPECIFIED,
   JOB_STATE_CREATED,
   JOB_STATE_ENCODING,

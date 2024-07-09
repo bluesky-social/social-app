@@ -55,6 +55,7 @@ import {
 import {useProfileQuery} from '#/state/queries/profile'
 import {Gif} from '#/state/queries/tenor'
 import {ThreadgateSetting} from '#/state/queries/threadgate'
+import {useVideoUpload} from '#/state/queries/video/upload-video'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {useAnalytics} from 'lib/analytics/analytics'
@@ -70,10 +71,6 @@ import {colors, s} from 'lib/styles'
 import {isAndroid, isIOS, isNative, isWeb} from 'platform/detection'
 import {useDialogStateControlContext} from 'state/dialogs'
 import {GalleryModel} from 'state/models/media/gallery'
-import {
-  useCompressVideoMutation,
-  useVideoUpload,
-} from 'state/queries/video/upload-video'
 import {ComposerOpts} from 'state/shell/composer'
 import {ComposerReplyTo} from 'view/com/composer/ComposerReplyTo'
 import {atoms as a, useTheme} from '#/alf'
@@ -163,12 +160,7 @@ export const ComposePost = observer(function ComposePost({
     initQuote,
   )
 
-  const {
-    selectVideo,
-    resetVideo,
-    state: videoUploadState,
-    dispatch: videoUploadDispatch,
-  } = useVideoUpload()
+  const {selectVideo, state: videoUploadState} = useVideoUpload()
 
   const {extLink, setExtLink} = useExternalLinkFetch({setQuote})
   const [extGif, setExtGif] = useState<Gif>()
@@ -625,14 +617,12 @@ export const ComposePost = observer(function ComposePost({
               asset={videoUploadState.asset}
               progress={videoUploadState.progress}
             />
-          ) : (
-            videoUploadState.video && (
-              // remove suspense when we get rid of lazy
-              <Suspense fallback={null}>
-                <VideoPreview video={videoUploadState.video} clear={() => {}} />
-              </Suspense>
-            )
-          )}
+          ) : videoUploadState.video ? (
+            // remove suspense when we get rid of lazy
+            <Suspense fallback={null}>
+              <VideoPreview video={videoUploadState.video} clear={() => {}} />
+            </Suspense>
+          ) : null}
         </Animated.ScrollView>
         <SuggestedLanguage text={richtext.text} />
 
