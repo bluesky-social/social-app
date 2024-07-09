@@ -8,11 +8,11 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
-import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
 import {Link, LinkProps} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
 const AVI_SIZE = 30
+const AVI_SIZE_SMALL = 20
 const AVI_BORDER = 1
 
 /**
@@ -116,6 +116,8 @@ function KnownFollowersInner({
    */
   if (slice.length === 0) return null
 
+  const SIZE = minimal ? AVI_SIZE_SMALL : AVI_SIZE
+
   return (
     <Link
       label={_(
@@ -132,43 +134,39 @@ function KnownFollowersInner({
       ]}>
       {({hovered, pressed}) => (
         <>
-          {minimal ? (
-            <Group size="md" fill={t.atoms.text_contrast_medium.color} />
-          ) : (
-            <View
-              style={[
-                {
-                  height: AVI_SIZE,
-                  width: AVI_SIZE + (slice.length - 1) * a.gap_md.gap,
-                },
-                pressed && {
-                  opacity: 0.5,
-                },
-              ]}>
-              {slice.map(({profile: prof, moderation}, i) => (
-                <View
-                  key={prof.did}
-                  style={[
-                    a.absolute,
-                    a.rounded_full,
-                    {
-                      borderWidth: AVI_BORDER,
-                      borderColor: t.atoms.bg.backgroundColor,
-                      width: AVI_SIZE + AVI_BORDER * 2,
-                      height: AVI_SIZE + AVI_BORDER * 2,
-                      left: i * a.gap_md.gap,
-                      zIndex: AVI_BORDER - i,
-                    },
-                  ]}>
-                  <UserAvatar
-                    size={AVI_SIZE}
-                    avatar={prof.avatar}
-                    moderation={moderation.ui('avatar')}
-                  />
-                </View>
-              ))}
-            </View>
-          )}
+          <View
+            style={[
+              {
+                height: SIZE,
+                width: SIZE + (slice.length - 1) * a.gap_md.gap,
+              },
+              pressed && {
+                opacity: 0.5,
+              },
+            ]}>
+            {slice.map(({profile: prof, moderation}, i) => (
+              <View
+                key={prof.did}
+                style={[
+                  a.absolute,
+                  a.rounded_full,
+                  {
+                    borderWidth: AVI_BORDER,
+                    borderColor: t.atoms.bg.backgroundColor,
+                    width: SIZE + AVI_BORDER * 2,
+                    height: SIZE + AVI_BORDER * 2,
+                    left: i * a.gap_md.gap,
+                    zIndex: AVI_BORDER - i,
+                  },
+                ]}>
+                <UserAvatar
+                  size={SIZE}
+                  avatar={prof.avatar}
+                  moderation={moderation.ui('avatar')}
+                />
+              </View>
+            ))}
+          </View>
 
           <Text
             style={[
