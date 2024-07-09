@@ -134,7 +134,13 @@ export function ProfileCard({
             </Text>
           ) : null}
           {knownFollowersVisible ? (
-            <View style={[a.flex_row, a.align_center, a.gap_sm, a.mt_md]}>
+            <View
+              style={[
+                a.flex_row,
+                a.align_center,
+                a.gap_sm,
+                !!profile.description && a.mt_md,
+              ]}>
               <KnownFollowers
                 minimal
                 profile={profile}

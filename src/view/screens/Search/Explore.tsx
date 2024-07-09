@@ -10,6 +10,7 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -291,6 +292,7 @@ export function Explore() {
     error: feedsError,
     fetchNextPage: fetchNextFeedsPage,
   } = useGetPopularFeedsQuery({limit: 10})
+  const gate = useGate()
 
   const isLoadingMoreProfiles = isFetchingNextProfilesPage && !isLoadingProfiles
   const onLoadMoreProfiles = React.useCallback(async () => {
@@ -496,7 +498,9 @@ export function Explore() {
                 profile={item.profile}
                 noBg
                 noBorder
-                showKnownFollowers
+                showKnownFollowers={gate(
+                  'explore_page_profile_card_social_proof',
+                )}
               />
             </View>
           )
@@ -560,7 +564,7 @@ export function Explore() {
         }
       }
     },
-    [t, moderationOpts],
+    [t, moderationOpts, gate],
   )
 
   return (
