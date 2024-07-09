@@ -174,6 +174,9 @@ const useUploadVideoMutation = ({
         httpMethod: 'POST',
         uploadType: FileSystemUploadType.BINARY_CONTENT,
       })
+
+      console.log('[VIDEO]', res.body)
+
       return JSON.parse(res.body) as {
         job_id: string
         did: string
