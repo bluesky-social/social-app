@@ -74,8 +74,10 @@ function reducer(state: State, action: Action): State {
 
 export function useVideoUpload({
   setStatus,
+  onSuccess,
 }: {
   setStatus: (status: string) => void
+  onSuccess: () => void
 }) {
   const {_} = useLingui()
   const [state, dispatch] = React.useReducer(reducer, {
@@ -93,6 +95,13 @@ export function useVideoUpload({
         jobStatus: status,
       })
       setStatus(status.state.toString())
+    },
+    onSuccess: () => {
+      dispatch({
+        type: 'SetStatus',
+        status: 'idle',
+      })
+      onSuccess()
     },
   })
 
@@ -156,6 +165,7 @@ export function useVideoUpload({
       status: 'compressing',
     })
     onSelectVideo(asset)
+    console.log(asset)
   }
 
   const resetVideo = () => {
@@ -230,8 +240,10 @@ const useUploadVideoMutation = ({
 
 const useUploadStatusQuery = ({
   onStatusChange,
+  onSuccess,
 }: {
   onStatusChange: (status: JobStatus) => void
+  onSuccess: () => void
 }) => {
   const [enabled, setEnabled] = React.useState(false)
   const [jobId, setJobId] = React.useState<string>()
@@ -244,6 +256,7 @@ const useUploadStatusQuery = ({
       const status = (await res.json()) as JobStatus
       if (status.state === JobState.JOB_STATE_COMPLETED) {
         setEnabled(false)
+        onSuccess()
       }
       onStatusChange(status)
       return status

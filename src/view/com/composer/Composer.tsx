@@ -163,7 +163,13 @@ export const ComposePost = observer(function ComposePost({
 
   const {selectVideo, state: videoUploadState} = useVideoUpload({
     setStatus: (status: string) => setProcessingState(status),
+    onSuccess: () => {
+      if (publishOnUpload) {
+        onPressPublish(true)
+      }
+    },
   })
+  const [publishOnUpload, setPublishOnUpload] = useState(false)
 
   const {extLink, setExtLink} = useExternalLinkFetch({setQuote})
   const [extGif, setExtGif] = useState<Gif>()
@@ -272,12 +278,21 @@ export const ComposePost = observer(function ComposePost({
     return false
   }, [gallery.needsAltText, extLink, extGif, requireAltTextEnabled])
 
-  const onPressPublish = async () => {
+  const onPressPublish = async (finishedUploading?: boolean) => {
     if (isProcessing || graphemeLength > MAX_GRAPHEME_LENGTH) {
       return
     }
 
     if (isAltTextRequiredAndMissing) {
+      return
+    }
+
+    if (
+      !finishedUploading &&
+      videoUploadState.status !== 'idle' &&
+      videoUploadState.asset
+    ) {
+      setPublishOnUpload(true)
       return
     }
 
@@ -502,7 +517,10 @@ export const ComposePost = observer(function ComposePost({
                     shape="default"
                     size="small"
                     style={[a.rounded_full, a.py_sm]}
-                    onPress={onPressPublish}>
+                    onPress={() => onPressPublish()}
+                    disabled={
+                      videoUploadState.status !== 'idle' && publishOnUpload
+                    }>
                     <ButtonText style={[a.text_md]}>
                       {replyTo ? (
                         <Trans context="action">Reply</Trans>
@@ -574,7 +592,7 @@ export const ComposePost = observer(function ComposePost({
               autoFocus
               setRichText={setRichText}
               onPhotoPasted={onPhotoPasted}
-              onPressPublish={onPressPublish}
+              onPressPublish={() => onPressPublish()}
               onNewLink={onNewLink}
               onError={setError}
               accessible={true}
