@@ -5,6 +5,7 @@ import throttle from 'lodash.throttle'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {logEvent} from '#/lib/statsig/statsig'
+import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {FeedDescriptor, FeedPostSliceItem} from '#/state/queries/post-feed'
 import {getFeedPostSlice} from '#/view/com/posts/Feed'
@@ -24,6 +25,7 @@ const stateContext = React.createContext<StateContext>({
 
 export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
   const agent = useAgent()
+  const gate = useGate()
   const enabled = isDiscoverFeed(feed) && hasSession
   const queue = React.useRef<Set<string>>(new Set())
   const history = React.useRef<
@@ -46,17 +48,21 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
     const interactions = Array.from(queue.current).map(toInteraction)
     queue.current.clear()
 
-    if (true) {
-      // Send to the feed
+    // Send to the feed
+    if (gate('session_withproxy_fix')) {
       agent.app.bsky.feed
-        .sendInteractions({ interactions }, {
-          encoding: 'application/json',
-          headers: {
-            'atproto-proxy': 'did:web:discover.bsky.app#bsky_fg'
-          }
-        })
+        .sendInteractions(
+          {interactions},
+          {
+            encoding: 'application/json',
+            headers: {
+              // TODO when we start sending to other feeds, we need to grab their DID -prf
+              'atproto-proxy': 'did:web:discover.bsky.app#bsky_fg',
+            },
+          },
+        )
         .catch((e: any) => {
-          logger.warn('Failed to send feed interactions', { error: e })
+          logger.warn('Failed to send feed interactions', {error: e})
         })
     } else {
       const proxyAgent = agent.withProxy(
@@ -66,16 +72,10 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
         'did:web:discover.bsky.app',
       ) as BskyAgent
 
-      // Send to the feed
       proxyAgent.app.bsky.feed
-        .sendInteractions({ interactions }, {
-          encoding: 'application/json',
-          headers: {
-            'atproto-proxy': 'did:web:discover.bsky.app#bsky_fg'
-          }
-        })
+        .sendInteractions({interactions})
         .catch((e: any) => {
-          logger.warn('Failed to send feed interactions', { error: e })
+          logger.warn('Failed to send feed interactions', {error: e})
         })
     }
 
@@ -85,7 +85,7 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
     }
     sendOrAggregateInteractionsForStats(aggregatedStats.current, interactions)
     throttledFlushAggregatedStats()
-  }, [agent, throttledFlushAggregatedStats])
+  }, [agent, gate, throttledFlushAggregatedStats])
 
   const sendToFeed = React.useMemo(
     () =>
