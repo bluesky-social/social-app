@@ -71,12 +71,12 @@ let nextMessageIndex = 0
 const MAX_SLICE_LENGTH = 1000
 
 // Not gated.
-export function addSessionEventLog(did: string, event: AtpSessionEvent) {
+export function addSessionErrorLog(did: string, event: AtpSessionEvent) {
   try {
     if (!Statsig.initializeCalled() || !Statsig.getStableID()) {
       return
     }
-    Statsig.logEvent('session:event', null, {did, event})
+    Statsig.logEvent('session:error', null, {did, event})
   } catch (e) {
     console.error(e)
   }
