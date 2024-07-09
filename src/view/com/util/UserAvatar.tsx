@@ -43,6 +43,8 @@ interface BaseUserAvatarProps {
 interface UserAvatarProps extends BaseUserAvatarProps {
   moderation?: ModerationUI
   usePlainRNImage?: boolean
+  actuallySquare?: boolean
+  aspect?: number
 }
 
 interface EditableUserAvatarProps extends BaseUserAvatarProps {
@@ -174,7 +176,9 @@ let UserAvatar = ({
   size,
   avatar,
   moderation,
+  aspect = 1,
   usePlainRNImage = false,
+  actuallySquare = false,
 }: UserAvatarProps): React.ReactNode => {
   const pal = usePalette('default')
   const backgroundColor = pal.colors.backgroundLight
@@ -183,19 +187,19 @@ let UserAvatar = ({
   const aviStyle = useMemo(() => {
     if (finalShape === 'square') {
       return {
-        width: size,
+        width: size * aspect,
         height: size,
-        borderRadius: size > 32 ? 8 : 3,
+        borderRadius: actuallySquare ? 0 : size > 32 ? 8 : 3,
         backgroundColor,
       }
     }
     return {
-      width: size,
+      width: size * aspect,
       height: size,
       borderRadius: Math.floor(size / 2),
       backgroundColor,
     }
-  }, [finalShape, size, backgroundColor])
+  }, [finalShape, size, aspect, actuallySquare, backgroundColor])
 
   const alert = useMemo(() => {
     if (!moderation?.alert) {
@@ -214,7 +218,7 @@ let UserAvatar = ({
 
   return avatar &&
     !((moderation?.blur && isAndroid) /* android crashes with blur */) ? (
-    <View style={{width: size, height: size}}>
+    <View style={{width: size * aspect, height: size}}>
       {usePlainRNImage ? (
         <Image
           accessibilityIgnoresInvertColors
@@ -236,7 +240,7 @@ let UserAvatar = ({
       {alert}
     </View>
   ) : (
-    <View style={{width: size, height: size}}>
+    <View style={{width: size * aspect, height: size}}>
       <DefaultAvatar type={type} shape={finalShape} size={size} />
       {alert}
     </View>
