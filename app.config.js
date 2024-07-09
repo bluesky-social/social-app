@@ -33,14 +33,16 @@ module.exports = function (_config) {
   return {
     expo: {
       version: VERSION,
-      name: IS_DEV ? 'Bluesky Dev' : 'Bluesky',
+      name: 'Bluesky',
       slug: 'bluesky',
       scheme: 'bluesky',
       owner: 'blueskysocial',
       runtimeVersion: {
         policy: 'appVersion',
       },
-      icon: './assets/app-icons/ios_icon_default_next.png',
+      icon: IS_DEV
+        ? './assets/app-icons/ios_icon_default_next.png'
+        : './assets/app-icons/icon_dev.png',
       userInterfaceStyle: 'automatic',
       primaryColor: '#1083fe',
       newArchEnabled: false,
@@ -184,7 +186,7 @@ module.exports = function (_config) {
           backgroundColor: '#006AFF',
         },
         googleServicesFile: IS_DEV
-          ? './google-services.example.json'
+          ? './google-services.json.example'
           : './google-services.json',
         package: IS_DEV ? 'dev.xyz.blueskyweb.app' : 'xyz.blueskyweb.app',
         intentFilters: [
@@ -431,7 +433,9 @@ module.exports = function (_config) {
                   },
                   {
                     targetName: 'BlueskyClip',
-                    bundleIdentifier: 'xyz.blueskyweb.app.AppClip',
+                    bundleIdentifier: IS_DEV
+                      ? 'dev.xyz.blueskyweb.app.AppClip'
+                      : 'xyz.blueskyweb.app.AppClip',
                   },
                 ],
               },
