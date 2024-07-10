@@ -114,7 +114,6 @@ export function useVideoUpload({
       setJobId(response.job_id)
     },
     onError: e => {
-      console.log(e)
       dispatch({
         type: 'SetError',
         error: _(msg`An error occurred while uploading the video.`),
@@ -165,7 +164,6 @@ export function useVideoUpload({
       status: 'compressing',
     })
     onSelectVideo(asset)
-    console.log(asset)
   }
 
   const resetVideo = () => {
@@ -212,6 +210,7 @@ const useUploadVideoMutation = ({
 
         const json = (await res.json()) as UploadVideoResponse
 
+        // @TODO rm
         console.log('[VIDEO]', json)
 
         responseBody = json as UploadVideoResponse
@@ -225,8 +224,8 @@ const useUploadVideoMutation = ({
           uploadType: FileSystemUploadType.BINARY_CONTENT,
         })
 
+        // @TODO rm
         console.log('[VIDEO]', res.body)
-
         responseBody = JSON.parse(res.body) as UploadVideoResponse
       }
 
