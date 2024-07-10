@@ -166,7 +166,7 @@ export function useVideoUpload({
     onSelectVideo(asset)
   }
 
-  const resetVideo = () => {
+  const clearVideo = () => {
     // TODO cancel any running jobs
     dispatch({type: 'Reset'})
   }
@@ -175,7 +175,7 @@ export function useVideoUpload({
     state,
     dispatch,
     selectVideo,
-    resetVideo,
+    clearVideo,
   }
 }
 
