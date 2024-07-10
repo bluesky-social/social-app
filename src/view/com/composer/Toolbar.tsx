@@ -1,7 +1,7 @@
 import React from 'react'
-import {View} from 'react-native'
 // @ts-ignore no type definition -prf
 import ProgressCircle from 'react-native-progress/Circle'
+import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 
 import {State} from 'state/queries/video/upload-video'
 import {atoms as a, useTheme} from '#/alf'
@@ -16,7 +16,10 @@ export function VideoUploadToolbar({state}: {state: State}) {
       : state.jobStatus?.progress ?? 100
 
   return (
-    <View style={[a.gap_sm, a.flex_row, a.align_center]}>
+    <Animated.View
+      style={[a.gap_sm, a.flex_row, a.align_center, {paddingVertical: 5}]}
+      entering={FadeIn}
+      exiting={FadeOut}>
       <ProgressCircle
         size={30}
         borderWidth={1}
@@ -25,6 +28,6 @@ export function VideoUploadToolbar({state}: {state: State}) {
         progress={progress}
       />
       <Text>{state.status}</Text>
-    </View>
+    </Animated.View>
   )
 }

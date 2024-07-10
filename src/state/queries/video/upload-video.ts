@@ -1,5 +1,5 @@
 import React from 'react'
-import {FileSystemUploadType, uploadAsync} from 'expo-file-system'
+import {createUploadTask, FileSystemUploadType} from 'expo-file-system'
 import {ImagePickerAsset} from 'expo-image-picker'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -120,6 +120,9 @@ export function useVideoUpload({
       })
       logger.error('Error uploading video', {safeMessage: e})
     },
+    setProgress: p => {
+      dispatch({type: 'SetProgress', progress: p})
+    },
   })
 
   const {mutate: onSelectVideo} = useCompressVideoMutation({
@@ -182,9 +185,11 @@ export function useVideoUpload({
 const useUploadVideoMutation = ({
   onSuccess,
   onError,
+  setProgress,
 }: {
   onSuccess: (response: UploadVideoResponse) => void
   onError: (e: any) => void
+  setProgress: (progress: number) => void
 }) => {
   const {currentAccount} = useSession()
 
@@ -215,20 +220,31 @@ const useUploadVideoMutation = ({
 
         responseBody = json as UploadVideoResponse
       } else {
-        const res = await uploadAsync(uri, video.uri, {
-          headers: {
-            'dev-key': UPLOAD_HEADER,
-            'content-type': 'video/mp4',
+        const uploadTask = createUploadTask(
+          uri,
+          video.uri,
+          {
+            headers: {
+              'dev-key': UPLOAD_HEADER,
+              'content-type': 'video/mp4',
+            },
+            httpMethod: 'POST',
+            uploadType: FileSystemUploadType.BINARY_CONTENT,
           },
-          httpMethod: 'POST',
-          uploadType: FileSystemUploadType.BINARY_CONTENT,
-        })
+          p => {
+            setProgress((p.totalBytesSent / p.totalBytesExpectedToSend) * 100)
+          },
+        )
+        const res = await uploadTask.uploadAsync()
+
+        if (!res?.body) {
+          throw new Error('No response')
+        }
 
         // @TODO rm
         console.log('[VIDEO]', res.body)
         responseBody = JSON.parse(res.body) as UploadVideoResponse
       }
-
       onSuccess(responseBody)
       return responseBody
     },
