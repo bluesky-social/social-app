@@ -1,3 +1,10 @@
+/**
+ * TEMPORARY: THIS IS A TEMPORARY PLACEHOLDER. THAT MEANS IT IS TEMPORARY. I.E. WILL BE REMOVED. NOT TO USE IN PRODUCTION.
+ * @temporary
+ * PS: This is a temporary placeholder for the video types. It will be removed once the actual types are implemented.
+ * Not joking, this is temporary.
+ */
+
 export interface JobStatus {
   jobId: string
   did: string
