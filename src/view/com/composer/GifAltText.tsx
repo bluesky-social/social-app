@@ -14,7 +14,7 @@ import {
 import {enforceLen} from '#/lib/strings/helpers'
 import {isAndroid} from '#/platform/detection'
 import {Gif} from '#/state/queries/tenor'
-import {atoms as a, native, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
@@ -174,8 +174,13 @@ function AltTextInner({
           <Text style={[a.text_2xl, a.font_bold, a.leading_tight, a.pb_sm]}>
             <Trans>Add alt text</Trans>
           </Text>
-          <View style={[a.w_full, a.align_center, native({maxHeight: 200})]}>
-            <GifEmbed link={link} params={params} hideAlt />
+          <View style={[a.align_center]}>
+            <GifEmbed
+              link={link}
+              params={params}
+              hideAlt
+              style={{maxHeight: 225}}
+            />
           </View>
         </View>
       </View>
