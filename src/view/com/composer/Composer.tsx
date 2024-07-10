@@ -626,28 +626,33 @@ export const ComposePost = observer(function ComposePost({
             </View>
           )}
 
-          {quote ? (
-            <View style={[s.mt5, s.mb2, isWeb && s.mb10]}>
-              <View style={{pointerEvents: 'none'}}>
-                <QuoteEmbed quote={quote} />
+          <View style={[a.mt_md]}>
+            {quote ? (
+              <View style={[s.mt5, s.mb2, isWeb && s.mb10]}>
+                <View style={{pointerEvents: 'none'}}>
+                  <QuoteEmbed quote={quote} />
+                </View>
+                {quote.uri !== initQuote?.uri && (
+                  <QuoteX onRemove={() => setQuote(undefined)} />
+                )}
               </View>
-              {quote.uri !== initQuote?.uri && (
-                <QuoteX onRemove={() => setQuote(undefined)} />
-              )}
-            </View>
-          ) : null}
-          {videoUploadState.status === 'compressing' &&
-          videoUploadState.asset ? (
-            <VideoTranscodeProgress
-              asset={videoUploadState.asset}
-              progress={videoUploadState.progress}
-            />
-          ) : videoUploadState.video ? (
-            // remove suspense when we get rid of lazy
-            <Suspense fallback={null}>
-              <VideoPreview video={videoUploadState.video} clear={clearVideo} />
-            </Suspense>
-          ) : null}
+            ) : null}
+            {videoUploadState.status === 'compressing' &&
+            videoUploadState.asset ? (
+              <VideoTranscodeProgress
+                asset={videoUploadState.asset}
+                progress={videoUploadState.progress}
+              />
+            ) : videoUploadState.video ? (
+              // remove suspense when we get rid of lazy
+              <Suspense fallback={null}>
+                <VideoPreview
+                  video={videoUploadState.video}
+                  clear={clearVideo}
+                />
+              </Suspense>
+            ) : null}
+          </View>
         </Animated.ScrollView>
         <SuggestedLanguage text={richtext.text} />
 
