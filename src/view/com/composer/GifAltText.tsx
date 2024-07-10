@@ -14,7 +14,7 @@ import {
 import {enforceLen} from '#/lib/strings/helpers'
 import {isAndroid} from '#/platform/detection'
 import {Gif} from '#/state/queries/tenor'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, native, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
@@ -179,7 +179,7 @@ function AltTextInner({
               link={link}
               params={params}
               hideAlt
-              style={{maxHeight: 225}}
+              style={[native({maxHeight: 225})]}
             />
           </View>
         </View>
