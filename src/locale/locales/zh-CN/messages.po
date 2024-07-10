@@ -567,10 +567,6 @@ msgstr "外观"
 msgid "Apply default recommended feeds"
 msgstr "使用默认推荐的资讯源"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:610
-#~ msgid "Are you sure you want delete this starter pack?"
-#~ msgstr "你确定要删除此入门包吗？"
-
 #: src/view/screens/AppPasswords.tsx:282
 msgid "Are you sure you want to delete the app password \"{name}\"?"
 msgstr "你确定要删除这条应用专用密码 \"{name}\" 吗？"
@@ -2346,10 +2342,6 @@ msgstr "回关"
 msgid "Follow more accounts to get connected to your interests and build your network."
 msgstr "关注更多账户以了解你的兴趣，并逐步建立你的社交网络。"
 
-#: src/view/com/profile/ProfileCard.tsx:190
-#~ msgid "Followed by {0}"
-#~ msgstr "由 {0} 所关注"
-
 #: src/components/KnownFollowers.tsx:231
 msgid "Followed by <0>{0}</0>"
 msgstr "由 <0>{0}</0> 所关注"
@@ -2532,10 +2524,6 @@ msgstr "返回"
 #: src/view/screens/ProfileList.tsx:975
 msgid "Go Back"
 msgstr "返回"
-
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:189
-#~ msgid "Go back to previous screen"
-#~ msgstr "返回上一页"
 
 #: src/components/dms/ReportDialog.tsx:154
 #: src/components/ReportDialog/SelectReportOptionView.tsx:80
@@ -4551,10 +4539,6 @@ msgstr "已从自定义资讯源中删除"
 #: src/view/screens/ProfileList.tsx:320
 msgid "Removed from your feeds"
 msgstr "从你的自定义资讯源中删除"
-
-#: src/view/com/composer/ExternalEmbed.tsx:88
-#~ msgid "Removes default thumbnail from {0}"
-#~ msgstr "从 {0} 中删除默认缩略图"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:239
 msgid "Removes quoted post"
