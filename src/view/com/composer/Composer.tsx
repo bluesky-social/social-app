@@ -462,7 +462,11 @@ export const ComposePost = observer(function ComposePost({
               color="primary"
               shape="default"
               size="small"
-              style={[a.rounded_full, a.py_sm]}
+              style={[
+                a.rounded_full,
+                a.py_sm,
+                {paddingLeft: 7, paddingRight: 7},
+              ]}
               onPress={onPressCancel}
               accessibilityHint={_(
                 msg`Closes post composer and discards post draft`,
@@ -821,7 +825,7 @@ const styles = StyleSheet.create({
   topbarInner: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 10,
+    paddingHorizontal: 8,
     height: 54,
     gap: 4,
   },
