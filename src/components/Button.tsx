@@ -13,7 +13,7 @@ import {
 } from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient'
 
-import {android, atoms as a, flatten, tokens, useTheme} from '#/alf'
+import {android, atoms as a, flatten, select, tokens, useTheme} from '#/alf'
 import {Props as SVGIconProps} from '#/components/icons/common'
 import {normalizeTextStyles} from '#/components/Typography'
 
@@ -164,7 +164,11 @@ export const Button = React.forwardRef<View, ButtonProps>(
             })
           } else {
             baseStyles.push({
-              backgroundColor: t.palette.primary_300,
+              backgroundColor: select(t.name, {
+                light: t.palette.primary_700,
+                dim: t.palette.primary_300,
+                dark: t.palette.primary_300,
+              }),
             })
           }
         } else if (variant === 'outline') {
@@ -196,14 +200,26 @@ export const Button = React.forwardRef<View, ButtonProps>(
         if (variant === 'solid') {
           if (!disabled) {
             baseStyles.push({
-              backgroundColor: t.palette.contrast_100,
+              backgroundColor: select(t.name, {
+                light: t.palette.contrast_25,
+                dim: t.palette.contrast_100,
+                dark: t.palette.contrast_100,
+              }),
             })
             hoverStyles.push({
-              backgroundColor: t.palette.contrast_200,
+              backgroundColor: select(t.name, {
+                light: t.palette.contrast_50,
+                dim: t.palette.contrast_200,
+                dark: t.palette.contrast_200,
+              }),
             })
           } else {
             baseStyles.push({
-              backgroundColor: t.palette.contrast_25,
+              backgroundColor: select(t.name, {
+                light: t.palette.contrast_100,
+                dim: t.palette.contrast_25,
+                dark: t.palette.contrast_25,
+              }),
             })
           }
         } else if (variant === 'outline') {
@@ -240,7 +256,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
             })
           } else {
             baseStyles.push({
-              backgroundColor: t.palette.contrast_700,
+              backgroundColor: t.palette.contrast_600,
             })
           }
         } else if (variant === 'outline') {
