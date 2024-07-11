@@ -13,9 +13,13 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   LayoutChangeEvent,
+  StyleProp,
   StyleSheet,
   View,
+  ViewStyle,
 } from 'react-native'
+// @ts-expect-error no type definition
+import ProgressCircle from 'react-native-progress/Circle'
 import Animated, {
   FadeIn,
   FadeOut,
@@ -73,6 +77,7 @@ import {colors, s} from 'lib/styles'
 import {isAndroid, isIOS, isNative, isWeb} from 'platform/detection'
 import {useDialogStateControlContext} from 'state/dialogs'
 import {GalleryModel} from 'state/models/media/gallery'
+import {State as VideoUploadState} from 'state/queries/video/video'
 import {ComposerOpts} from 'state/shell/composer'
 import {VideoUploadToolbar} from '#/view/com/composer/Toolbar'
 import {ComposerReplyTo} from 'view/com/composer/ComposerReplyTo'
@@ -672,14 +677,9 @@ export const ComposePost = observer(function ComposePost({
             styles.bottomBar,
           ]}>
           {videoUploadState.status !== 'idle' ? (
-            <Animated.View entering={FadeIn} exiting={FadeOut}>
-              <VideoUploadToolbar state={videoUploadState} />
-            </Animated.View>
+            <VideoUploadToolbar state={videoUploadState} />
           ) : (
-            <Animated.View
-              style={[a.flex_row, a.align_center, a.gap_xs]}
-              entering={FadeIn}
-              exiting={FadeOut}>
+            <ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
               <SelectPhotoBtn gallery={gallery} disabled={!canSelectImages} />
               {gate('videos') && (
                 <SelectVideoBtn
@@ -705,7 +705,7 @@ export const ComposePost = observer(function ComposePost({
                   <EmojiSmile size="lg" />
                 </Button>
               ) : null}
-            </Animated.View>
+            </ToolbarWrapper>
           )}
           <View style={a.flex_1} />
           <SelectLangBtn />
@@ -932,3 +932,44 @@ const styles = StyleSheet.create({
     borderTopWidth: StyleSheet.hairlineWidth,
   },
 })
+
+function ToolbarWrapper({
+  style,
+  children,
+}: {
+  style: StyleProp<ViewStyle>
+  children: React.ReactNode
+}) {
+  if (isWeb) return children
+  return (
+    <Animated.View
+      style={style}
+      entering={FadeIn.duration(400)}
+      exiting={FadeOut.duration(400)}>
+      {children}
+    </Animated.View>
+  )
+}
+
+function VideoUploadToolbar({state}: {state: VideoUploadState}) {
+  const t = useTheme()
+
+  const progress =
+    state.status === 'compressing' || state.status === 'uploading'
+      ? state.progress
+      : state.jobStatus?.progress ?? 100
+
+  return (
+    <ToolbarWrapper
+      style={[a.gap_sm, a.flex_row, a.align_center, {paddingVertical: 5}]}>
+      <ProgressCircle
+        size={30}
+        borderWidth={1}
+        borderColor={t.atoms.border_contrast_low.borderColor}
+        color={t.palette.primary_500}
+        progress={progress}
+      />
+      <Text>{state.status}</Text>
+    </ToolbarWrapper>
+  )
+}
