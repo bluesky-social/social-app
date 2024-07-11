@@ -13,7 +13,6 @@ import {JobState, JobStatus, UploadVideoResponse} from 'lib/media/video/types'
 import {isWeb} from 'platform/detection'
 import {useCompressVideoMutation} from 'state/queries/video/compress-video'
 import {useSession} from 'state/session'
-
 const UPLOAD_ENDPOINT = process.env.EXPO_PUBLIC_VIDEO_ROOT_ENDPOINT ?? ''
 const UPLOAD_HEADER = process.env.EXPO_PUBLIC_VIDEO_HEADER ?? ''
 
@@ -232,7 +231,7 @@ const useUploadVideoMutation = ({
             uploadType: FileSystemUploadType.BINARY_CONTENT,
           },
           p => {
-            setProgress((p.totalBytesSent / p.totalBytesExpectedToSend) * 100)
+            setProgress(p.totalBytesSent / p.totalBytesExpectedToSend)
           },
         )
         const res = await uploadTask.uploadAsync()

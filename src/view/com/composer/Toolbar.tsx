@@ -11,9 +11,12 @@ export function VideoUploadToolbar({state}: {state: State}) {
   const t = useTheme()
 
   const progress =
-    state.status === 'compressing'
+    state.status === 'compressing' || state.status === 'uploading'
       ? state.progress
       : state.jobStatus?.progress ?? 100
+
+  console.log(state.progress)
+  console.log(state.status)
 
   return (
     <Animated.View
