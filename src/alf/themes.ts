@@ -1,7 +1,12 @@
 import {atoms} from '#/alf/atoms'
 import {Palette, Theme} from '#/alf/types'
-import {BLUE_HUE, GREEN_HUE, RED_HUE} from '#/alf/util/colorGeneration'
-import {generateScale} from '#/alf/util/colorGeneration'
+import {
+  BLUE_HUE,
+  defaultScale,
+  dimScale,
+  GREEN_HUE,
+  RED_HUE,
+} from '#/alf/util/colorGeneration'
 
 const themes = createThemes({
   hues: {
@@ -23,14 +28,20 @@ export const darkPalette = themes.darkPalette
  * @deprecated use ALF and access palette from `useTheme()`
  */
 export const dimPalette = themes.dimPalette
-
+/**
+ * @deprecated use ALF and access theme from `useTheme()`
+ */
 export const light = themes.light
+/**
+ * @deprecated use ALF and access theme from `useTheme()`
+ */
 export const dark = themes.dark
+/**
+ * @deprecated use ALF and access theme from `useTheme()`
+ */
 export const dim = themes.dim
 
-const scale = generateScale(6, 100)
-// dim shifted 6% lighter
-const dimScale = generateScale(12, 100)
+export const defaultTheme = themes.light
 
 export function createThemes({
   hues,
@@ -51,24 +62,21 @@ export function createThemes({
   const color = {
     trueBlack: '#000000',
 
-    temp_purple: 'rgb(105 0 255)',
-    temp_purple_dark: 'rgb(83 0 202)',
-
-    gray_0: `hsl(${hues.primary}, 20%, ${scale[14]}%)`,
-    gray_25: `hsl(${hues.primary}, 20%, ${scale[13]}%)`,
-    gray_50: `hsl(${hues.primary}, 20%, ${scale[12]}%)`,
-    gray_100: `hsl(${hues.primary}, 20%, ${scale[11]}%)`,
-    gray_200: `hsl(${hues.primary}, 20%, ${scale[10]}%)`,
-    gray_300: `hsl(${hues.primary}, 20%, ${scale[9]}%)`,
-    gray_400: `hsl(${hues.primary}, 20%, ${scale[8]}%)`,
-    gray_500: `hsl(${hues.primary}, 20%, ${scale[7]}%)`,
-    gray_600: `hsl(${hues.primary}, 24%, ${scale[6]}%)`,
-    gray_700: `hsl(${hues.primary}, 24%, ${scale[5]}%)`,
-    gray_800: `hsl(${hues.primary}, 28%, ${scale[4]}%)`,
-    gray_900: `hsl(${hues.primary}, 28%, ${scale[3]}%)`,
-    gray_950: `hsl(${hues.primary}, 28%, ${scale[2]}%)`,
-    gray_975: `hsl(${hues.primary}, 28%, ${scale[1]}%)`,
-    gray_1000: `hsl(${hues.primary}, 28%, ${scale[0]}%)`,
+    gray_0: `hsl(${hues.primary}, 20%, ${defaultScale[14]}%)`,
+    gray_25: `hsl(${hues.primary}, 20%, ${defaultScale[13]}%)`,
+    gray_50: `hsl(${hues.primary}, 20%, ${defaultScale[12]}%)`,
+    gray_100: `hsl(${hues.primary}, 20%, ${defaultScale[11]}%)`,
+    gray_200: `hsl(${hues.primary}, 20%, ${defaultScale[10]}%)`,
+    gray_300: `hsl(${hues.primary}, 20%, ${defaultScale[9]}%)`,
+    gray_400: `hsl(${hues.primary}, 20%, ${defaultScale[8]}%)`,
+    gray_500: `hsl(${hues.primary}, 20%, ${defaultScale[7]}%)`,
+    gray_600: `hsl(${hues.primary}, 24%, ${defaultScale[6]}%)`,
+    gray_700: `hsl(${hues.primary}, 24%, ${defaultScale[5]}%)`,
+    gray_800: `hsl(${hues.primary}, 28%, ${defaultScale[4]}%)`,
+    gray_900: `hsl(${hues.primary}, 28%, ${defaultScale[3]}%)`,
+    gray_950: `hsl(${hues.primary}, 28%, ${defaultScale[2]}%)`,
+    gray_975: `hsl(${hues.primary}, 28%, ${defaultScale[1]}%)`,
+    gray_1000: `hsl(${hues.primary}, 28%, ${defaultScale[0]}%)`,
 
     primary_25: `hsl(${hues.primary}, 99%, 97%)`,
     primary_50: `hsl(${hues.primary}, 99%, 95%)`,
