@@ -50,12 +50,26 @@ class VisibilityView: ExpoView {
     }
   }
   
-  func getCurrentPosition() -> CGRect? {
+  private func getCurrentPosition() -> CGRect? {
     guard let window = self.window else {
       return nil
     }
     
     return self.convert(self.bounds, to: window)
+  }
+  
+  func getVisiblePixels() -> CGFloat? {
+    guard let bounds = self.getCurrentPosition() else {
+      return nil
+    }
+    return bounds.maxY - bounds.minY
+  }
+  
+  func getMinY() -> CGFloat? {
+    guard let bounds = self.getCurrentPosition() else {
+      return nil
+    }
+    return bounds.minY
   }
   
   func setIsCurrentlyActive(isActive: Bool) {

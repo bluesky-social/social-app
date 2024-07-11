@@ -8,6 +8,7 @@ class VisibilityViewManager {
   private var timer: Timer?
   
   private var currentlyActiveView: VisibilityView?
+  private var screenHeight: CGFloat = UIScreen.main.bounds.height
   
   func addView(_ view: VisibilityView) {
     self.views.add(view)
@@ -46,12 +47,41 @@ class VisibilityViewManager {
     print("interval")
     
     if self.views.count == 0 {
+      print("none!")
       // Do nothing
     } else if self.views.count == 1 {
-      activeView = self.views.allObjects[0]
+      print("only one")
+      let view = self.views.allObjects[0]
+      if let visiblePixels = view.getVisiblePixels(),
+         visiblePixels >= view.bounds.height / 2
+      {
+        activeView = view
+      }
     } else {
+      print("multiple views")
       let views = self.views.allObjects
-      activeView = views[0]
+      var mostVisibleView: VisibilityView?
+      
+      views.forEach { view in
+        // Get the visibile pixels and only consider it as a candidate if the view is completely visible
+        if let visiblePixels = view.getVisiblePixels(),
+           visiblePixels >= view.bounds.height
+        {
+          // If there's a currently visible view let's compare
+          guard let currentlyMostVisibleView = mostVisibleView,
+                let currentlyMostMinY = currentlyMostVisibleView.getMinY() else {
+            mostVisibleView = view
+            return
+          }
+          
+          if let minY = view.getMinY(),
+             minY < currentlyMostMinY {
+            mostVisibleView = view
+          }
+        }
+      }
+      
+      activeView = mostVisibleView
     }
     
     print(activeView?.reactTag)
