@@ -168,7 +168,12 @@ function HeaderReady({
           </View>
           <View style={a.flex_1}>
             <Text
-              style={[a.text_md, a.font_bold, web(a.leading_normal)]}
+              style={[
+                a.text_md,
+                a.font_bold,
+                a.self_start,
+                web(a.leading_normal),
+              ]}
               numberOfLines={1}>
               {displayName}
             </Text>
