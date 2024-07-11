@@ -293,7 +293,11 @@ export const Button = React.forwardRef<View, ButtonProps>(
             })
           } else {
             baseStyles.push({
-              backgroundColor: t.palette.negative_700,
+              backgroundColor: select(t.name, {
+                light: t.palette.negative_700,
+                dim: t.palette.negative_300,
+                dark: t.palette.negative_300,
+              }),
             })
           }
         } else if (variant === 'outline') {
