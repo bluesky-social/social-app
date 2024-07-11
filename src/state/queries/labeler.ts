@@ -122,10 +122,7 @@ export function useLabelerSubscriptionMutation() {
         }
       }
       if (invalidLabelers.length) {
-        for (const did of invalidLabelers) {
-          // remove sequentially, not concurrently, due to prefs issues
-          await agent.removeLabeler(did)
-        }
+        await Promise.all(invalidLabelers.map(did => agent.removeLabeler(did)))
       }
 
       if (subscribe) {
