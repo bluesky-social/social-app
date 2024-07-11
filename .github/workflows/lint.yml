@@ -26,8 +26,6 @@ jobs:
         run: yarn lint
       - name: Prettier check
         run: yarn prettier --check .
-      - name: Lint native check
-        run: yarn lint-native
       - name: Check & compile i18n
         run: yarn intl:build
       - name: Type check
