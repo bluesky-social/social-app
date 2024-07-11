@@ -4,7 +4,8 @@ import * as SystemUI from 'expo-system-ui'
 
 import {isWeb} from 'platform/detection'
 import {useThemePrefs} from 'state/shell'
-import {dark, dim, light, ThemeName} from '#/alf/themes'
+import {dark, dim, light} from '#/alf/themes'
+import {ThemeName} from '#/alf/types'
 
 export function useColorModeTheme(): ThemeName {
   const theme = useThemeName()

@@ -2,6 +2,7 @@ import React from 'react'
 import {Dimensions} from 'react-native'
 
 import * as themes from '#/alf/themes'
+import {Theme, ThemeName} from '#/alf/types'
 
 export {atoms} from '#/alf/atoms'
 export * as tokens from '#/alf/tokens'
@@ -39,8 +40,8 @@ function getActiveBreakpoints({width}: {width: number}) {
  * Context
  */
 export const Context = React.createContext<{
-  themeName: themes.ThemeName
-  theme: themes.Theme
+  themeName: ThemeName
+  theme: Theme
   breakpoints: {
     active: BreakpointName | undefined
     gtPhone: boolean
@@ -61,7 +62,7 @@ export const Context = React.createContext<{
 export function ThemeProvider({
   children,
   theme: themeName,
-}: React.PropsWithChildren<{theme: themes.ThemeName}>) {
+}: React.PropsWithChildren<{theme: ThemeName}>) {
   const theme = themes[themeName]
   const [breakpoints, setBreakpoints] = React.useState(() =>
     getActiveBreakpoints({width: Dimensions.get('window').width}),

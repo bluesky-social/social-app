@@ -1,159 +1,7 @@
 import {atoms} from '#/alf/atoms'
-import * as tokens from '#/alf/tokens'
+import {Palette, Theme} from '#/alf/types'
 import {BLUE_HUE, GREEN_HUE, RED_HUE} from '#/alf/util/colorGeneration'
-
-export type ThemeName = 'light' | 'dim' | 'dark'
-export type Palette = {
-  white: string
-  black: string
-
-  contrast_25: string
-  contrast_50: string
-  contrast_100: string
-  contrast_200: string
-  contrast_300: string
-  contrast_400: string
-  contrast_500: string
-  contrast_600: string
-  contrast_700: string
-  contrast_800: string
-  contrast_900: string
-  contrast_950: string
-  contrast_975: string
-
-  primary_25: string
-  primary_50: string
-  primary_100: string
-  primary_200: string
-  primary_300: string
-  primary_400: string
-  primary_500: string
-  primary_600: string
-  primary_700: string
-  primary_800: string
-  primary_900: string
-  primary_950: string
-  primary_975: string
-
-  positive_25: string
-  positive_50: string
-  positive_100: string
-  positive_200: string
-  positive_300: string
-  positive_400: string
-  positive_500: string
-  positive_600: string
-  positive_700: string
-  positive_800: string
-  positive_900: string
-  positive_950: string
-  positive_975: string
-
-  negative_25: string
-  negative_50: string
-  negative_100: string
-  negative_200: string
-  negative_300: string
-  negative_400: string
-  negative_500: string
-  negative_600: string
-  negative_700: string
-  negative_800: string
-  negative_900: string
-  negative_950: string
-  negative_975: string
-}
-export type ThemedAtoms = {
-  text: {
-    color: string
-  }
-  text_contrast_low: {
-    color: string
-  }
-  text_contrast_medium: {
-    color: string
-  }
-  text_contrast_high: {
-    color: string
-  }
-  text_inverted: {
-    color: string
-  }
-  bg: {
-    backgroundColor: string
-  }
-  bg_contrast_25: {
-    backgroundColor: string
-  }
-  bg_contrast_50: {
-    backgroundColor: string
-  }
-  bg_contrast_100: {
-    backgroundColor: string
-  }
-  bg_contrast_200: {
-    backgroundColor: string
-  }
-  bg_contrast_300: {
-    backgroundColor: string
-  }
-  bg_contrast_400: {
-    backgroundColor: string
-  }
-  bg_contrast_500: {
-    backgroundColor: string
-  }
-  bg_contrast_600: {
-    backgroundColor: string
-  }
-  bg_contrast_700: {
-    backgroundColor: string
-  }
-  bg_contrast_800: {
-    backgroundColor: string
-  }
-  bg_contrast_900: {
-    backgroundColor: string
-  }
-  bg_contrast_950: {
-    backgroundColor: string
-  }
-  bg_contrast_975: {
-    backgroundColor: string
-  }
-  border_contrast_low: {
-    borderColor: string
-  }
-  border_contrast_medium: {
-    borderColor: string
-  }
-  border_contrast_high: {
-    borderColor: string
-  }
-  shadow_sm: {
-    shadowRadius: number
-    shadowOpacity: number
-    elevation: number
-    shadowColor: string
-  }
-  shadow_md: {
-    shadowRadius: number
-    shadowOpacity: number
-    elevation: number
-    shadowColor: string
-  }
-  shadow_lg: {
-    shadowRadius: number
-    shadowOpacity: number
-    elevation: number
-    shadowColor: string
-  }
-}
-export type Theme = {
-  name: ThemeName
-  palette: Palette
-  atoms: ThemedAtoms
-}
+import {generateScale} from '#/alf/util/colorGeneration'
 
 const themes = createThemes({
   hues: {
@@ -162,10 +10,6 @@ const themes = createThemes({
     positive: GREEN_HUE,
   },
 })
-
-export const light = themes.light
-export const dark = themes.dark
-export const dim = themes.dim
 
 /**
  * @deprecated use ALF and access palette from `useTheme()`
@@ -179,6 +23,14 @@ export const darkPalette = themes.darkPalette
  * @deprecated use ALF and access palette from `useTheme()`
  */
 export const dimPalette = themes.dimPalette
+
+export const light = themes.light
+export const dark = themes.dark
+export const dim = themes.dim
+
+const scale = generateScale(6, 100)
+// dim shifted 6% lighter
+const dimScale = generateScale(12, 100)
 
 export function createThemes({
   hues,
@@ -202,21 +54,21 @@ export function createThemes({
     temp_purple: 'rgb(105 0 255)',
     temp_purple_dark: 'rgb(83 0 202)',
 
-    gray_0: `hsl(${hues.primary}, 20%, ${tokens.scale[14]}%)`,
-    gray_25: `hsl(${hues.primary}, 20%, ${tokens.scale[13]}%)`,
-    gray_50: `hsl(${hues.primary}, 20%, ${tokens.scale[12]}%)`,
-    gray_100: `hsl(${hues.primary}, 20%, ${tokens.scale[11]}%)`,
-    gray_200: `hsl(${hues.primary}, 20%, ${tokens.scale[10]}%)`,
-    gray_300: `hsl(${hues.primary}, 20%, ${tokens.scale[9]}%)`,
-    gray_400: `hsl(${hues.primary}, 20%, ${tokens.scale[8]}%)`,
-    gray_500: `hsl(${hues.primary}, 20%, ${tokens.scale[7]}%)`,
-    gray_600: `hsl(${hues.primary}, 24%, ${tokens.scale[6]}%)`,
-    gray_700: `hsl(${hues.primary}, 24%, ${tokens.scale[5]}%)`,
-    gray_800: `hsl(${hues.primary}, 28%, ${tokens.scale[4]}%)`,
-    gray_900: `hsl(${hues.primary}, 28%, ${tokens.scale[3]}%)`,
-    gray_950: `hsl(${hues.primary}, 28%, ${tokens.scale[2]}%)`,
-    gray_975: `hsl(${hues.primary}, 28%, ${tokens.scale[1]}%)`,
-    gray_1000: `hsl(${hues.primary}, 28%, ${tokens.scale[0]}%)`,
+    gray_0: `hsl(${hues.primary}, 20%, ${scale[14]}%)`,
+    gray_25: `hsl(${hues.primary}, 20%, ${scale[13]}%)`,
+    gray_50: `hsl(${hues.primary}, 20%, ${scale[12]}%)`,
+    gray_100: `hsl(${hues.primary}, 20%, ${scale[11]}%)`,
+    gray_200: `hsl(${hues.primary}, 20%, ${scale[10]}%)`,
+    gray_300: `hsl(${hues.primary}, 20%, ${scale[9]}%)`,
+    gray_400: `hsl(${hues.primary}, 20%, ${scale[8]}%)`,
+    gray_500: `hsl(${hues.primary}, 20%, ${scale[7]}%)`,
+    gray_600: `hsl(${hues.primary}, 24%, ${scale[6]}%)`,
+    gray_700: `hsl(${hues.primary}, 24%, ${scale[5]}%)`,
+    gray_800: `hsl(${hues.primary}, 28%, ${scale[4]}%)`,
+    gray_900: `hsl(${hues.primary}, 28%, ${scale[3]}%)`,
+    gray_950: `hsl(${hues.primary}, 28%, ${scale[2]}%)`,
+    gray_975: `hsl(${hues.primary}, 28%, ${scale[1]}%)`,
+    gray_1000: `hsl(${hues.primary}, 28%, ${scale[0]}%)`,
 
     primary_25: `hsl(${hues.primary}, 99%, 97%)`,
     primary_50: `hsl(${hues.primary}, 99%, 95%)`,
@@ -385,63 +237,63 @@ export function createThemes({
 
   const dimPalette: Palette = {
     ...darkPalette,
-    black: `hsl(${hues.primary}, 28%, ${tokens.dimScale[0]}%)`,
+    black: `hsl(${hues.primary}, 28%, ${dimScale[0]}%)`,
 
-    contrast_25: `hsl(${hues.primary}, 28%, ${tokens.dimScale[1]}%)`,
-    contrast_50: `hsl(${hues.primary}, 28%, ${tokens.dimScale[2]}%)`,
-    contrast_100: `hsl(${hues.primary}, 28%, ${tokens.dimScale[3]}%)`,
-    contrast_200: `hsl(${hues.primary}, 28%, ${tokens.dimScale[4]}%)`,
-    contrast_300: `hsl(${hues.primary}, 24%, ${tokens.dimScale[5]}%)`,
-    contrast_400: `hsl(${hues.primary}, 24%, ${tokens.dimScale[6]}%)`,
-    contrast_500: `hsl(${hues.primary}, 20%, ${tokens.dimScale[7]}%)`,
-    contrast_600: `hsl(${hues.primary}, 20%, ${tokens.dimScale[8]}%)`,
-    contrast_700: `hsl(${hues.primary}, 20%, ${tokens.dimScale[9]}%)`,
-    contrast_800: `hsl(${hues.primary}, 20%, ${tokens.dimScale[10]}%)`,
-    contrast_900: `hsl(${hues.primary}, 20%, ${tokens.dimScale[11]}%)`,
-    contrast_950: `hsl(${hues.primary}, 20%, ${tokens.dimScale[12]}%)`,
-    contrast_975: `hsl(${hues.primary}, 20%, ${tokens.dimScale[13]}%)`,
+    contrast_25: `hsl(${hues.primary}, 28%, ${dimScale[1]}%)`,
+    contrast_50: `hsl(${hues.primary}, 28%, ${dimScale[2]}%)`,
+    contrast_100: `hsl(${hues.primary}, 28%, ${dimScale[3]}%)`,
+    contrast_200: `hsl(${hues.primary}, 28%, ${dimScale[4]}%)`,
+    contrast_300: `hsl(${hues.primary}, 24%, ${dimScale[5]}%)`,
+    contrast_400: `hsl(${hues.primary}, 24%, ${dimScale[6]}%)`,
+    contrast_500: `hsl(${hues.primary}, 20%, ${dimScale[7]}%)`,
+    contrast_600: `hsl(${hues.primary}, 20%, ${dimScale[8]}%)`,
+    contrast_700: `hsl(${hues.primary}, 20%, ${dimScale[9]}%)`,
+    contrast_800: `hsl(${hues.primary}, 20%, ${dimScale[10]}%)`,
+    contrast_900: `hsl(${hues.primary}, 20%, ${dimScale[11]}%)`,
+    contrast_950: `hsl(${hues.primary}, 20%, ${dimScale[12]}%)`,
+    contrast_975: `hsl(${hues.primary}, 20%, ${dimScale[13]}%)`,
 
-    primary_25: `hsl(${hues.primary}, 99%, ${tokens.dimScale[1]}%)`,
-    primary_50: `hsl(${hues.primary}, 99%, ${tokens.dimScale[2]}%)`,
-    primary_100: `hsl(${hues.primary}, 99%, ${tokens.dimScale[3]}%)`,
-    primary_200: `hsl(${hues.primary}, 99%, ${tokens.dimScale[4]}%)`,
-    primary_300: `hsl(${hues.primary}, 99%, ${tokens.dimScale[5]}%)`,
-    primary_400: `hsl(${hues.primary}, 99%, ${tokens.dimScale[6]}%)`,
-    primary_500: `hsl(${hues.primary}, 99%, ${tokens.dimScale[7]}%)`,
-    primary_600: `hsl(${hues.primary}, 95%, ${tokens.dimScale[8]}%)`,
-    primary_700: `hsl(${hues.primary}, 90%, ${tokens.dimScale[9]}%)`,
-    primary_800: `hsl(${hues.primary}, 82%, ${tokens.dimScale[10]}%)`,
-    primary_900: `hsl(${hues.primary}, 70%, ${tokens.dimScale[11]}%)`,
-    primary_950: `hsl(${hues.primary}, 60%, ${tokens.dimScale[12]}%)`,
-    primary_975: `hsl(${hues.primary}, 50%, ${tokens.dimScale[13]}%)`,
+    primary_25: `hsl(${hues.primary}, 99%, ${dimScale[1]}%)`,
+    primary_50: `hsl(${hues.primary}, 99%, ${dimScale[2]}%)`,
+    primary_100: `hsl(${hues.primary}, 99%, ${dimScale[3]}%)`,
+    primary_200: `hsl(${hues.primary}, 99%, ${dimScale[4]}%)`,
+    primary_300: `hsl(${hues.primary}, 99%, ${dimScale[5]}%)`,
+    primary_400: `hsl(${hues.primary}, 99%, ${dimScale[6]}%)`,
+    primary_500: `hsl(${hues.primary}, 99%, ${dimScale[7]}%)`,
+    primary_600: `hsl(${hues.primary}, 95%, ${dimScale[8]}%)`,
+    primary_700: `hsl(${hues.primary}, 90%, ${dimScale[9]}%)`,
+    primary_800: `hsl(${hues.primary}, 82%, ${dimScale[10]}%)`,
+    primary_900: `hsl(${hues.primary}, 70%, ${dimScale[11]}%)`,
+    primary_950: `hsl(${hues.primary}, 60%, ${dimScale[12]}%)`,
+    primary_975: `hsl(${hues.primary}, 50%, ${dimScale[13]}%)`,
 
-    positive_25: `hsl(${hues.positive}, 82%, ${tokens.dimScale[13]}%)`,
-    positive_50: `hsl(${hues.positive}, 82%, ${tokens.dimScale[12]}%)`,
-    positive_100: `hsl(${hues.positive}, 82%, ${tokens.dimScale[11]}%)`,
-    positive_200: `hsl(${hues.positive}, 82%, ${tokens.dimScale[10]}%)`,
-    positive_300: `hsl(${hues.positive}, 82%, ${tokens.dimScale[9]}%)`,
-    positive_400: `hsl(${hues.positive}, 82%, ${tokens.dimScale[8]}%)`,
-    positive_500: `hsl(${hues.positive}, 82%, ${tokens.dimScale[7]}%)`,
-    positive_600: `hsl(${hues.positive}, 82%, ${tokens.dimScale[6]}%)`,
-    positive_700: `hsl(${hues.positive}, 82%, ${tokens.dimScale[5]}%)`,
-    positive_800: `hsl(${hues.positive}, 82%, ${tokens.dimScale[4]}%)`,
-    positive_900: `hsl(${hues.positive}, 70%, ${tokens.dimScale[3]}%)`,
-    positive_950: `hsl(${hues.positive}, 60%, ${tokens.dimScale[2]}%)`,
-    positive_975: `hsl(${hues.positive}, 50%, ${tokens.dimScale[1]}%)`,
+    positive_25: `hsl(${hues.positive}, 82%, ${dimScale[13]}%)`,
+    positive_50: `hsl(${hues.positive}, 82%, ${dimScale[12]}%)`,
+    positive_100: `hsl(${hues.positive}, 82%, ${dimScale[11]}%)`,
+    positive_200: `hsl(${hues.positive}, 82%, ${dimScale[10]}%)`,
+    positive_300: `hsl(${hues.positive}, 82%, ${dimScale[9]}%)`,
+    positive_400: `hsl(${hues.positive}, 82%, ${dimScale[8]}%)`,
+    positive_500: `hsl(${hues.positive}, 82%, ${dimScale[7]}%)`,
+    positive_600: `hsl(${hues.positive}, 82%, ${dimScale[6]}%)`,
+    positive_700: `hsl(${hues.positive}, 82%, ${dimScale[5]}%)`,
+    positive_800: `hsl(${hues.positive}, 82%, ${dimScale[4]}%)`,
+    positive_900: `hsl(${hues.positive}, 70%, ${dimScale[3]}%)`,
+    positive_950: `hsl(${hues.positive}, 60%, ${dimScale[2]}%)`,
+    positive_975: `hsl(${hues.positive}, 50%, ${dimScale[1]}%)`,
 
-    negative_25: `hsl(${hues.negative}, 91%, ${tokens.dimScale[1]}%)`,
-    negative_50: `hsl(${hues.negative}, 91%, ${tokens.dimScale[2]}%)`,
-    negative_100: `hsl(${hues.negative}, 91%, ${tokens.dimScale[3]}%)`,
-    negative_200: `hsl(${hues.negative}, 91%, ${tokens.dimScale[4]}%)`,
-    negative_300: `hsl(${hues.negative}, 91%, ${tokens.dimScale[5]}%)`,
-    negative_400: `hsl(${hues.negative}, 91%, ${tokens.dimScale[6]}%)`,
-    negative_500: `hsl(${hues.negative}, 91%, ${tokens.dimScale[7]}%)`,
-    negative_600: `hsl(${hues.negative}, 91%, ${tokens.dimScale[8]}%)`,
-    negative_700: `hsl(${hues.negative}, 91%, ${tokens.dimScale[9]}%)`,
-    negative_800: `hsl(${hues.negative}, 88%, ${tokens.dimScale[10]}%)`,
-    negative_900: `hsl(${hues.negative}, 84%, ${tokens.dimScale[11]}%)`,
-    negative_950: `hsl(${hues.negative}, 80%, ${tokens.dimScale[12]}%)`,
-    negative_975: `hsl(${hues.negative}, 70%, ${tokens.dimScale[13]}%)`,
+    negative_25: `hsl(${hues.negative}, 91%, ${dimScale[1]}%)`,
+    negative_50: `hsl(${hues.negative}, 91%, ${dimScale[2]}%)`,
+    negative_100: `hsl(${hues.negative}, 91%, ${dimScale[3]}%)`,
+    negative_200: `hsl(${hues.negative}, 91%, ${dimScale[4]}%)`,
+    negative_300: `hsl(${hues.negative}, 91%, ${dimScale[5]}%)`,
+    negative_400: `hsl(${hues.negative}, 91%, ${dimScale[6]}%)`,
+    negative_500: `hsl(${hues.negative}, 91%, ${dimScale[7]}%)`,
+    negative_600: `hsl(${hues.negative}, 91%, ${dimScale[8]}%)`,
+    negative_700: `hsl(${hues.negative}, 91%, ${dimScale[9]}%)`,
+    negative_800: `hsl(${hues.negative}, 88%, ${dimScale[10]}%)`,
+    negative_900: `hsl(${hues.negative}, 84%, ${dimScale[11]}%)`,
+    negative_950: `hsl(${hues.negative}, 80%, ${dimScale[12]}%)`,
+    negative_975: `hsl(${hues.negative}, 70%, ${dimScale[13]}%)`,
   } as const
 
   const light: Theme = {
