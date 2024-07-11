@@ -120,8 +120,8 @@ class ShareViewController: UIViewController {
         let filePath = "\(dir.absoluteString)\(ProcessInfo.processInfo.globallyUniqueString).jpeg"
 
         if let newUri = URL(string: filePath),
-           let jpegData = image.jpegData(compressionQuality: 1)
-            try jpegData.write(to: newUri)
+           let jpegData = image.jpegData(compressionQuality: 1) {
+          try jpegData.write(to: newUri)
           return "\(newUri.absoluteString)|\(image.size.width)|\(image.size.height)"
         }
       }
