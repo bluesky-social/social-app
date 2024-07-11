@@ -57,7 +57,7 @@ import {
 import {useProfileQuery} from '#/state/queries/profile'
 import {Gif} from '#/state/queries/tenor'
 import {ThreadgateSetting} from '#/state/queries/threadgate'
-import {useVideoUpload} from '#/state/queries/video/upload-video'
+import {useVideoUpload} from '#/state/queries/video/video'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {useAnalytics} from 'lib/analytics/analytics'
