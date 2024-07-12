@@ -462,7 +462,8 @@ function Inner({
 
       <Link to={profileURL} label={_(msg`View profile`)} onPress={hide}>
         <View style={[a.pb_sm, a.flex_1]}>
-          <Text style={[a.pt_md, a.pb_xs, a.text_lg, a.font_bold]}>
+          <Text
+            style={[a.pt_md, a.pb_xs, a.text_lg, a.font_bold, a.self_start]}>
             {sanitizeDisplayName(
               profile.displayName || sanitizeHandle(profile.handle),
               moderation.ui('displayName'),

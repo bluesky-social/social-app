@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.88.0",
+  "version": "1.89.0",
   "private": true,
   "engines": {
     "node": ">=18"
@@ -29,9 +29,12 @@
     "test-ci": "NODE_ENV=test jest --ci --forceExit --reporters=default --reporters=jest-junit",
     "test-coverage": "NODE_ENV=test jest --coverage",
     "lint": "eslint --cache --ext .js,.jsx,.ts,.tsx src",
+    "lint-native": "swiftlint ./modules && ktlint ./modules",
+    "lint-native:fix": "swiftlint --fix ./modules && ktlint --format ./modules",
     "typecheck": "tsc --project ./tsconfig.check.json",
     "e2e:mock-server": "./jest/dev-infra/with-test-redis-and-db.sh ts-node --project tsconfig.e2e.json __e2e__/mock-server.ts",
     "e2e:metro": "EXPO_PUBLIC_ENV=e2e NODE_ENV=test RN_SRC_EXT=e2e.ts,e2e.tsx expo run:ios",
+    "e2e:metro-android": "EXPO_PUBLIC_ENV=e2e NODE_ENV=test RN_SRC_EXT=e2e.ts,e2e.tsx expo run:android",
     "e2e:run": "maestro test __e2e__",
     "perf:test": "NODE_ENV=test maestro test",
     "perf:test:run": "NODE_ENV=test maestro test __e2e__/perf-test.yml",

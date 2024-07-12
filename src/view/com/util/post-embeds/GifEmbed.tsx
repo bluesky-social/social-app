@@ -1,5 +1,12 @@
 import React from 'react'
-import {Pressable, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native'
 import {AppBskyEmbedExternal} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
@@ -89,10 +96,12 @@ export function GifEmbed({
   params,
   link,
   hideAlt,
+  style = {width: '100%'},
 }: {
   params: EmbedPlayerParams
   link: AppBskyEmbedExternal.ViewExternal
   hideAlt?: boolean
+  style?: StyleProp<ViewStyle>
 }) {
   const {_} = useLingui()
   const autoplayDisabled = useAutoplayDisabled()
@@ -124,7 +133,7 @@ export function GifEmbed({
   )
 
   return (
-    <View style={[a.rounded_sm, a.overflow_hidden, a.mt_sm, {width: '100%'}]}>
+    <View style={[a.rounded_sm, a.overflow_hidden, a.mt_sm, style]}>
       <View
         style={[
           a.rounded_sm,

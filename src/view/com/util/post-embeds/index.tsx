@@ -131,7 +131,7 @@ export function PostEmbeds({
         const {alt, thumb, aspectRatio} = images[0]
         return (
           <ContentHider modui={moderation?.ui('contentMedia')}>
-            <View style={[styles.imagesContainer, style]}>
+            <View style={[styles.container, style]}>
               <AutoSizedImage
                 alt={alt}
                 uri={thumb}
@@ -156,7 +156,7 @@ export function PostEmbeds({
 
       return (
         <ContentHider modui={moderation?.ui('contentMedia')}>
-          <View style={[styles.imagesContainer, style]}>
+          <View style={[styles.container, style]}>
             <ImageLayoutGrid
               images={embed.images}
               onPress={_openLightbox}
@@ -174,7 +174,11 @@ export function PostEmbeds({
     const link = embed.external
     return (
       <ContentHider modui={moderation?.ui('contentMedia')}>
-        <ExternalLinkEmbed link={link} onOpen={onOpen} style={style} />
+        <ExternalLinkEmbed
+          link={link}
+          onOpen={onOpen}
+          style={[styles.container, style]}
+        />
       </ContentHider>
     )
   }
@@ -183,7 +187,7 @@ export function PostEmbeds({
 }
 
 const styles = StyleSheet.create({
-  imagesContainer: {
+  container: {
     marginTop: 8,
   },
   altContainer: {
