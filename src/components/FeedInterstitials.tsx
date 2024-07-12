@@ -13,6 +13,7 @@ import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {useProfilesQuery} from '#/state/queries/profile'
+import {useSession} from '#/state/session'
 import {useProgressGuide} from '#/state/shell/progress-guide'
 import * as userActionHistory from '#/state/userActionHistory'
 import {SeenPost} from '#/state/userActionHistory'
@@ -127,6 +128,7 @@ function sortSeenPosts(postA: SeenPost, postB: SeenPost): 0 | 1 | -1 {
 }
 
 function useExperimentalSuggestedUsersQuery() {
+  const {currentAccount} = useSession()
   const userActionSnapshot = userActionHistory.useActionHistorySnapshot()
   const dids = React.useMemo(() => {
     const {likes, follows, seen} = userActionSnapshot
@@ -138,8 +140,10 @@ function useExperimentalSuggestedUsersQuery() {
       .sort(sortSeenPosts)
       .map(l => new AtUri(l.uri))
       .map(uri => uri.host)
-    return [...new Set([...likeDids, ...seenDids])]
-  }, [userActionSnapshot])
+    return [...new Set([...likeDids, ...seenDids])].filter(
+      did => did !== currentAccount?.did,
+    )
+  }, [userActionSnapshot, currentAccount])
   const {data, isLoading, error} = useProfilesQuery({
     handles: dids.slice(0, 16),
   })
