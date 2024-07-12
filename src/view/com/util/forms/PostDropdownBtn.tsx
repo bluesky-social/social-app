@@ -109,6 +109,8 @@ let PostDropdownBtn = ({
   const reportDialogControl = useReportDialogControl()
   const deletePromptControl = useDialogControl()
   const hidePromptControl = useDialogControl()
+  const hideAfterShowLessPromptControl = useDialogControl()
+  const showLessAfterHidePromptControl = useDialogControl()
   const loggedOutWarningPromptControl = useDialogControl()
   const embedPostControl = useDialogControl()
   const sendViaChatControl = useDialogControl()
@@ -200,6 +202,10 @@ let PostDropdownBtn = ({
   }, [openLink, record?.langs, richText, translatorUrl])
 
   const onHidePost = React.useCallback(() => {
+    showLessAfterHidePromptControl.open()
+  }, [postUri, hidePost])
+
+  const onHidePostAfter = React.useCallback(() => {
     hidePost({uri: postUri})
   }, [postUri, hidePost])
 
@@ -229,8 +235,19 @@ let PostDropdownBtn = ({
       item: postUri,
       feedContext: postFeedContext,
     })
-    Toast.show('Feedback sent!')
+    Toast.show('You will get less of this!')
+    hideAfterShowLessPromptControl.open();
   }, [feedFeedback, postUri, postFeedContext])
+
+  const onPressShowLessAfter = React.useCallback(() => {
+    feedFeedback.sendInteraction({
+      event: 'app.bsky.feed.defs#requestLess',
+      item: postUri,
+      feedContext: postFeedContext,
+    })
+    Toast.show('You will get less of this!')
+    hidePost({uri: postUri})
+  }, [feedFeedback, postUri, postFeedContext, hidePost])
 
   const onSelectChatToShareTo = React.useCallback(
     (conversation: string) => {
@@ -332,7 +349,7 @@ let PostDropdownBtn = ({
             )}
           </Menu.Group>
 
-          {hasSession && feedFeedback.enabled && (
+          {hasSession && (
             <>
               <Menu.Divider />
               <Menu.Group>
@@ -388,7 +405,8 @@ let PostDropdownBtn = ({
                   <Menu.Item
                     testID="postDropdownHideBtn"
                     label={_(msg`Hide post`)}
-                    onPress={hidePromptControl.open}>
+                    onPress={() => {
+                      hidePromptControl.open()}}>
                     <Menu.ItemText>{_(msg`Hide post`)}</Menu.ItemText>
                     <Menu.ItemIcon icon={EyeSlash} position="right" />
                   </Menu.Item>
@@ -445,6 +463,22 @@ let PostDropdownBtn = ({
         confirmButtonCta={_(msg`Hide`)}
       />
 
+      <Prompt.Basic
+        control={hideAfterShowLessPromptControl}
+        title={_(msg`Would you also like to hide this post?`)}
+        description={_(msg`This post will be hidden from feeds.`)}
+        onConfirm={onHidePostAfter}
+        confirmButtonCta={_(msg`Hide`)}
+      />
+
+      <Prompt.Basic
+        control={showLessAfterHidePromptControl}
+        title={_(msg`Would you also like to be shown less of this?`)}
+        description={_(msg`You will get less of this in feeds.`)}
+        onConfirm={onPressShowLessAfter}
+        confirmButtonCta={_(msg`Yes`)}
+      />
+      
       <ReportDialog
         control={reportDialogControl}
         params={{

@@ -669,7 +669,7 @@ msgstr "जन्मदिन"
 msgid "Birthday:"
 msgstr "जन्मदिन:"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:306
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:308
 #: src/view/com/profile/ProfileMenu.tsx:363
 msgid "Block"
 msgstr ""
@@ -1373,7 +1373,7 @@ msgstr ""
 #: src/view/com/modals/AddAppPasswords.tsx:81
 #: src/view/com/modals/ChangeHandle.tsx:320
 #: src/view/com/modals/InviteCodes.tsx:153
-#: src/view/com/util/forms/PostDropdownBtn.tsx:187
+#: src/view/com/util/forms/PostDropdownBtn.tsx:189
 msgid "Copied to clipboard"
 msgstr ""
 
@@ -1402,8 +1402,8 @@ msgstr ""
 msgid "Copy link to list"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:310
-#: src/view/com/util/forms/PostDropdownBtn.tsx:319
+#: src/view/com/util/forms/PostDropdownBtn.tsx:327
+#: src/view/com/util/forms/PostDropdownBtn.tsx:336
 msgid "Copy link to post"
 msgstr ""
 
@@ -1416,8 +1416,8 @@ msgstr ""
 msgid "Copy message text"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:288
-#: src/view/com/util/forms/PostDropdownBtn.tsx:290
+#: src/view/com/util/forms/PostDropdownBtn.tsx:305
+#: src/view/com/util/forms/PostDropdownBtn.tsx:307
 msgid "Copy post text"
 msgstr "पोस्ट टेक्स्ट कॉपी करें"
 
@@ -1556,7 +1556,7 @@ msgid "Debug panel"
 msgstr ""
 
 #: src/components/dms/MessageMenu.tsx:151
-#: src/view/com/util/forms/PostDropdownBtn.tsx:436
+#: src/view/com/util/forms/PostDropdownBtn.tsx:454
 #: src/view/screens/AppPasswords.tsx:285
 #: src/view/screens/ProfileList.tsx:667
 msgid "Delete"
@@ -1615,8 +1615,8 @@ msgstr "मेरा खाता हटाएं"
 msgid "Delete My Account…"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:417
-#: src/view/com/util/forms/PostDropdownBtn.tsx:419
+#: src/view/com/util/forms/PostDropdownBtn.tsx:435
+#: src/view/com/util/forms/PostDropdownBtn.tsx:437
 msgid "Delete post"
 msgstr "पोस्ट को हटाएं"
 
@@ -1624,7 +1624,7 @@ msgstr "पोस्ट को हटाएं"
 msgid "Delete this list?"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:431
+#: src/view/com/util/forms/PostDropdownBtn.tsx:449
 msgid "Delete this post?"
 msgstr "इस पोस्ट को डीलीट करें?"
 
@@ -1734,6 +1734,10 @@ msgstr "नाम"
 msgid "Display Name"
 msgstr "प्रदर्शन का नाम"
 
+#: src/view/com/modals/EditProfile.tsx:234
+msgid "Display social media link"
+msgstr ""
+
 #: src/view/com/modals/ChangeHandle.tsx:391
 msgid "DNS Panel"
 msgstr ""
@@ -1838,8 +1842,12 @@ msgid "e.g. Great Posters"
 msgstr ""
 
 #: src/view/com/modals/EditProfile.tsx:227
-msgid "e.g. https://www.google.com"
+msgid "e.g. https://linktr.ee/yourname"
 msgstr ""
+
+#: src/view/com/modals/EditProfile.tsx:227
+#~ msgid "e.g. https://www.google.com"
+#~ msgstr ""
 
 #: src/view/com/modals/CreateOrEditList.tsx:273
 msgid "e.g. Spammers"
@@ -1918,8 +1926,12 @@ msgid "Edit your profile description"
 msgstr ""
 
 #: src/view/com/modals/EditProfile.tsx:235
-msgid "Edit your website"
+msgid "Edit your social media link"
 msgstr ""
+
+#: src/view/com/modals/EditProfile.tsx:235
+#~ msgid "Edit your website"
+#~ msgstr ""
 
 #: src/screens/Onboarding/index.tsx:31
 msgid "Education"
@@ -1960,8 +1972,8 @@ msgid "Embed HTML code"
 msgstr ""
 
 #: src/components/dialogs/Embed.tsx:97
-#: src/view/com/util/forms/PostDropdownBtn.tsx:327
-#: src/view/com/util/forms/PostDropdownBtn.tsx:329
+#: src/view/com/util/forms/PostDropdownBtn.tsx:344
+#: src/view/com/util/forms/PostDropdownBtn.tsx:346
 msgid "Embed post"
 msgstr ""
 
@@ -2203,7 +2215,7 @@ msgstr ""
 msgid "Failed to delete message"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:154
+#: src/view/com/util/forms/PostDropdownBtn.tsx:156
 msgid "Failed to delete post, please try again"
 msgstr ""
 
@@ -2407,7 +2419,7 @@ msgstr ""
 #~ msgid "Follow some users to get started. We can recommend you more users based on who you find interesting."
 #~ msgstr "आरंभ करने के लिए कुछ उपयोगकर्ताओं का अनुसरण करें. आपको कौन दिलचस्प लगता है, इसके आधार पर हम आपको और अधिक उपयोगकर्ताओं की अनुशंसा कर सकते हैं।"
 
-#: src/view/com/profile/ProfileCard.tsx:227
+#: src/view/com/profile/ProfileCard.tsx:237
 msgid "Followed by {0}"
 msgstr ""
 
@@ -2463,7 +2475,7 @@ msgstr ""
 msgid "Follows you"
 msgstr "यह यूजर आपका फ़ोलो करता है"
 
-#: src/view/com/profile/ProfileCard.tsx:152
+#: src/view/com/profile/ProfileCard.tsx:162
 msgid "Follows You"
 msgstr ""
 
@@ -2657,7 +2669,8 @@ msgstr "यहां आपका ऐप पासवर्ड है."
 #: src/lib/moderation/useLabelBehaviorDescription.ts:20
 #: src/lib/moderation/useLabelBehaviorDescription.ts:25
 #: src/lib/moderation/useLabelBehaviorDescription.ts:30
-#: src/view/com/util/forms/PostDropdownBtn.tsx:445
+#: src/view/com/util/forms/PostDropdownBtn.tsx:463
+#: src/view/com/util/forms/PostDropdownBtn.tsx:471
 msgid "Hide"
 msgstr "इसे छिपाएं"
 
@@ -2666,8 +2679,8 @@ msgctxt "action"
 msgid "Hide"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:390
-#: src/view/com/util/forms/PostDropdownBtn.tsx:392
+#: src/view/com/util/forms/PostDropdownBtn.tsx:407
+#: src/view/com/util/forms/PostDropdownBtn.tsx:410
 msgid "Hide post"
 msgstr ""
 
@@ -2676,7 +2689,7 @@ msgstr ""
 msgid "Hide the content"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:442
+#: src/view/com/util/forms/PostDropdownBtn.tsx:460
 msgid "Hide this post?"
 msgstr ""
 
@@ -2781,7 +2794,7 @@ msgstr ""
 msgid "If you delete this list, you won't be able to recover it."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:433
+#: src/view/com/util/forms/PostDropdownBtn.tsx:451
 msgid "If you remove this post, you won't be able to recover it."
 msgstr ""
 
@@ -3134,6 +3147,10 @@ msgstr ""
 msgid "Likes on this post"
 msgstr ""
 
+#: src/view/com/modals/EditProfile.tsx:222
+msgid "Link to Social Media"
+msgstr ""
+
 #: src/Navigation.tsx:177
 msgid "List"
 msgstr ""
@@ -3476,13 +3493,13 @@ msgstr ""
 msgid "Mute this word in tags only"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:365
-#: src/view/com/util/forms/PostDropdownBtn.tsx:371
+#: src/view/com/util/forms/PostDropdownBtn.tsx:382
+#: src/view/com/util/forms/PostDropdownBtn.tsx:388
 msgid "Mute thread"
 msgstr "थ्रेड म्यूट करें"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:381
-#: src/view/com/util/forms/PostDropdownBtn.tsx:383
+#: src/view/com/util/forms/PostDropdownBtn.tsx:398
+#: src/view/com/util/forms/PostDropdownBtn.tsx:400
 msgid "Mute words & tags"
 msgstr ""
 
@@ -3796,7 +3813,7 @@ msgid "Not right now"
 msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:370
-#: src/view/com/util/forms/PostDropdownBtn.tsx:459
+#: src/view/com/util/forms/PostDropdownBtn.tsx:493
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:308
 msgid "Note about sharing"
 msgstr ""
@@ -3952,7 +3969,7 @@ msgstr ""
 msgid "Open navigation"
 msgstr "ओपन नेविगेशन"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:250
+#: src/view/com/util/forms/PostDropdownBtn.tsx:267
 msgid "Open post options menu"
 msgstr ""
 
@@ -4377,7 +4394,7 @@ msgstr ""
 msgid "Post by @{0}"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:134
+#: src/view/com/util/forms/PostDropdownBtn.tsx:136
 msgid "Post deleted"
 msgstr ""
 
@@ -4759,8 +4776,8 @@ msgstr "रिपोर्ट सूची"
 msgid "Report message"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:407
-#: src/view/com/util/forms/PostDropdownBtn.tsx:409
+#: src/view/com/util/forms/PostDropdownBtn.tsx:425
+#: src/view/com/util/forms/PostDropdownBtn.tsx:427
 msgid "Report post"
 msgstr "रिपोर्ट पोस्ट"
 
@@ -5302,8 +5319,8 @@ msgstr ""
 msgid "Send verification email"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:299
-#: src/view/com/util/forms/PostDropdownBtn.tsx:302
+#: src/view/com/util/forms/PostDropdownBtn.tsx:316
+#: src/view/com/util/forms/PostDropdownBtn.tsx:319
 msgid "Send via direct message"
 msgstr ""
 
@@ -5457,8 +5474,8 @@ msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:217
 #: src/view/com/profile/ProfileMenu.tsx:226
-#: src/view/com/util/forms/PostDropdownBtn.tsx:310
-#: src/view/com/util/forms/PostDropdownBtn.tsx:319
+#: src/view/com/util/forms/PostDropdownBtn.tsx:327
+#: src/view/com/util/forms/PostDropdownBtn.tsx:336
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:297
 #: src/view/screens/ProfileList.tsx:428
 msgid "Share"
@@ -5473,7 +5490,7 @@ msgid "Share a fun fact!"
 msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:375
-#: src/view/com/util/forms/PostDropdownBtn.tsx:464
+#: src/view/com/util/forms/PostDropdownBtn.tsx:498
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:313
 msgid "Share anyway"
 msgstr ""
@@ -5537,8 +5554,8 @@ msgstr ""
 msgid "Show hidden replies"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:349
-#: src/view/com/util/forms/PostDropdownBtn.tsx:351
+#: src/view/com/util/forms/PostDropdownBtn.tsx:366
+#: src/view/com/util/forms/PostDropdownBtn.tsx:368
 msgid "Show less like this"
 msgstr ""
 
@@ -5548,8 +5565,8 @@ msgstr ""
 msgid "Show More"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:341
-#: src/view/com/util/forms/PostDropdownBtn.tsx:343
+#: src/view/com/util/forms/PostDropdownBtn.tsx:358
+#: src/view/com/util/forms/PostDropdownBtn.tsx:360
 msgid "Show more like this"
 msgstr ""
 
@@ -5984,7 +6001,7 @@ msgstr ""
 msgid "That handle is already taken."
 msgstr ""
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:302
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:304
 #: src/view/com/profile/ProfileMenu.tsx:351
 msgid "The account will be able to interact with you after unblocking."
 msgstr "अनब्लॉक करने के बाद अकाउंट आपसे इंटरैक्ट कर सकेगा।"
@@ -6270,12 +6287,13 @@ msgstr ""
 msgid "This post has been deleted."
 msgstr "इस पोस्ट को हटा दिया गया है।।"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:461
+#: src/view/com/util/forms/PostDropdownBtn.tsx:495
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:310
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:443
+#: src/view/com/util/forms/PostDropdownBtn.tsx:461
+#: src/view/com/util/forms/PostDropdownBtn.tsx:469
 msgid "This post will be hidden from feeds."
 msgstr ""
 
@@ -6398,8 +6416,8 @@ msgstr "परिवर्तन"
 #: src/components/dms/MessageMenu.tsx:105
 #: src/view/com/post-thread/PostThreadItem.tsx:696
 #: src/view/com/post-thread/PostThreadItem.tsx:698
-#: src/view/com/util/forms/PostDropdownBtn.tsx:280
-#: src/view/com/util/forms/PostDropdownBtn.tsx:282
+#: src/view/com/util/forms/PostDropdownBtn.tsx:297
+#: src/view/com/util/forms/PostDropdownBtn.tsx:299
 msgid "Translate"
 msgstr "अनुवाद"
 
@@ -6442,7 +6460,7 @@ msgstr "आपकी सेवा से संपर्क करने मे�
 #: src/components/dms/MessagesListBlockedFooter.tsx:104
 #: src/components/dms/MessagesListBlockedFooter.tsx:111
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:186
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:306
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:308
 #: src/view/com/profile/ProfileMenu.tsx:363
 #: src/view/screens/ProfileList.tsx:626
 msgid "Unblock"
@@ -6463,7 +6481,7 @@ msgstr ""
 msgid "Unblock Account"
 msgstr "अनब्लॉक खाता"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:300
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:302
 #: src/view/com/profile/ProfileMenu.tsx:345
 msgid "Unblock Account?"
 msgstr ""
@@ -6534,8 +6552,8 @@ msgstr ""
 #~ msgid "Unmute notifications"
 #~ msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:365
-#: src/view/com/util/forms/PostDropdownBtn.tsx:370
+#: src/view/com/util/forms/PostDropdownBtn.tsx:382
+#: src/view/com/util/forms/PostDropdownBtn.tsx:387
 msgid "Unmute thread"
 msgstr "थ्रेड को अनम्यूट करें"
 
@@ -6959,8 +6977,8 @@ msgstr ""
 
 #: src/view/com/modals/EditProfile.tsx:222
 #: src/view/com/modals/EditProfile.tsx:234
-msgid "Website"
-msgstr ""
+#~ msgid "Website"
+#~ msgstr ""
 
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:48
 #~ msgid "Welcome to <0>Bluesky</0>"
@@ -7030,6 +7048,14 @@ msgstr ""
 msgid "Wide"
 msgstr "चौड़ा"
 
+#: src/view/com/util/forms/PostDropdownBtn.tsx:476
+msgid "Would you also like to be shown less of this?"
+msgstr ""
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:468
+msgid "Would you also like to hide this post?"
+msgstr ""
+
 #: src/screens/Messages/Conversation/MessageInput.tsx:140
 #: src/screens/Messages/Conversation/MessageInput.web.tsx:134
 msgid "Write a message"
@@ -7053,6 +7079,7 @@ msgstr ""
 #~ msgstr ""
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:77
+#: src/view/com/util/forms/PostDropdownBtn.tsx:479
 #: src/view/screens/PreferencesFollowingFeed.tsx:128
 #: src/view/screens/PreferencesFollowingFeed.tsx:200
 #: src/view/screens/PreferencesFollowingFeed.tsx:235
@@ -7235,11 +7262,15 @@ msgstr ""
 msgid "You must select at least one labeler for a report"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:173
+#: src/view/com/util/forms/PostDropdownBtn.tsx:477
+msgid "You will get less of this in feeds."
+msgstr ""
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:175
 msgid "You will no longer receive notifications for this thread"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:176
+#: src/view/com/util/forms/PostDropdownBtn.tsx:178
 msgid "You will now receive notifications for this thread"
 msgstr ""
 

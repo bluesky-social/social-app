@@ -601,7 +601,7 @@ msgstr "Tanggal lahir"
 msgid "Birthday:"
 msgstr "Tanggal lahir:"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:306
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:308
 #: src/view/com/profile/ProfileMenu.tsx:363
 msgid "Block"
 msgstr "Blokir"
@@ -1247,7 +1247,7 @@ msgstr "Menyalin versi build ke papan klip"
 #: src/view/com/modals/AddAppPasswords.tsx:81
 #: src/view/com/modals/ChangeHandle.tsx:320
 #: src/view/com/modals/InviteCodes.tsx:153
-#: src/view/com/util/forms/PostDropdownBtn.tsx:187
+#: src/view/com/util/forms/PostDropdownBtn.tsx:189
 msgid "Copied to clipboard"
 msgstr "Disalin ke papan klip"
 
@@ -1276,8 +1276,8 @@ msgstr "Salin kode"
 msgid "Copy link to list"
 msgstr "Salin tautan daftar"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:310
-#: src/view/com/util/forms/PostDropdownBtn.tsx:319
+#: src/view/com/util/forms/PostDropdownBtn.tsx:327
+#: src/view/com/util/forms/PostDropdownBtn.tsx:336
 msgid "Copy link to post"
 msgstr "Salin tautan postingan"
 
@@ -1286,8 +1286,8 @@ msgstr "Salin tautan postingan"
 msgid "Copy message text"
 msgstr "Salin teks pesan"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:288
-#: src/view/com/util/forms/PostDropdownBtn.tsx:290
+#: src/view/com/util/forms/PostDropdownBtn.tsx:305
+#: src/view/com/util/forms/PostDropdownBtn.tsx:307
 msgid "Copy post text"
 msgstr "Salin teks postingan"
 
@@ -1410,7 +1410,7 @@ msgid "Debug panel"
 msgstr "Panel awakutu"
 
 #: src/components/dms/MessageMenu.tsx:151
-#: src/view/com/util/forms/PostDropdownBtn.tsx:436
+#: src/view/com/util/forms/PostDropdownBtn.tsx:454
 #: src/view/screens/AppPasswords.tsx:285
 #: src/view/screens/ProfileList.tsx:667
 msgid "Delete"
@@ -1465,8 +1465,8 @@ msgstr "Hapus akun saya"
 msgid "Delete My Account…"
 msgstr "Hapus Akun Saya…"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:417
-#: src/view/com/util/forms/PostDropdownBtn.tsx:419
+#: src/view/com/util/forms/PostDropdownBtn.tsx:435
+#: src/view/com/util/forms/PostDropdownBtn.tsx:437
 msgid "Delete post"
 msgstr "Hapus postingan"
 
@@ -1474,7 +1474,7 @@ msgstr "Hapus postingan"
 msgid "Delete this list?"
 msgstr "Hapus daftar ini?"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:431
+#: src/view/com/util/forms/PostDropdownBtn.tsx:449
 msgid "Delete this post?"
 msgstr "Hapus postingan ini?"
 
@@ -1572,6 +1572,10 @@ msgstr "Nama tampilan"
 msgid "Display Name"
 msgstr "Nama Tampilan"
 
+#: src/view/com/modals/EditProfile.tsx:234
+msgid "Display social media link"
+msgstr ""
+
 #: src/view/com/modals/ChangeHandle.tsx:391
 msgid "DNS Panel"
 msgstr "Panel DNS"
@@ -1664,8 +1668,12 @@ msgid "e.g. Great Posters"
 msgstr "contoh: Pemosting Keren"
 
 #: src/view/com/modals/EditProfile.tsx:227
-msgid "e.g. https://www.google.com"
+msgid "e.g. https://linktr.ee/yourname"
 msgstr ""
+
+#: src/view/com/modals/EditProfile.tsx:227
+#~ msgid "e.g. https://www.google.com"
+#~ msgstr ""
 
 #: src/view/com/modals/CreateOrEditList.tsx:273
 msgid "e.g. Spammers"
@@ -1744,8 +1752,12 @@ msgid "Edit your profile description"
 msgstr "Ubah deskripsi profil Anda"
 
 #: src/view/com/modals/EditProfile.tsx:235
-msgid "Edit your website"
+msgid "Edit your social media link"
 msgstr ""
+
+#: src/view/com/modals/EditProfile.tsx:235
+#~ msgid "Edit your website"
+#~ msgstr ""
 
 #: src/screens/Onboarding/index.tsx:31
 msgid "Education"
@@ -1786,8 +1798,8 @@ msgid "Embed HTML code"
 msgstr "Sematkan kode HTML"
 
 #: src/components/dialogs/Embed.tsx:97
-#: src/view/com/util/forms/PostDropdownBtn.tsx:327
-#: src/view/com/util/forms/PostDropdownBtn.tsx:329
+#: src/view/com/util/forms/PostDropdownBtn.tsx:344
+#: src/view/com/util/forms/PostDropdownBtn.tsx:346
 msgid "Embed post"
 msgstr "Sematkan postingan"
 
@@ -2013,7 +2025,7 @@ msgstr "Gagal membuat daftar. Periksa koneksi internet Anda dan coba lagi."
 msgid "Failed to delete message"
 msgstr "Gagal menghapus pesan"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:154
+#: src/view/com/util/forms/PostDropdownBtn.tsx:156
 msgid "Failed to delete post, please try again"
 msgstr "Gagal menghapus postingan, silakan coba lagi"
 
@@ -2201,7 +2213,7 @@ msgstr "Ikuti Balik"
 #~ msgid "Follow some users to get started. We can recommend you more users based on who you find interesting."
 #~ msgstr ""
 
-#: src/view/com/profile/ProfileCard.tsx:227
+#: src/view/com/profile/ProfileCard.tsx:237
 msgid "Followed by {0}"
 msgstr "Diikuti oleh {0}"
 
@@ -2257,7 +2269,7 @@ msgstr "Preferensi Feed Mengikuti"
 msgid "Follows you"
 msgstr "Mengikuti Anda"
 
-#: src/view/com/profile/ProfileCard.tsx:152
+#: src/view/com/profile/ProfileCard.tsx:162
 msgid "Follows You"
 msgstr "Mengikuti Anda"
 
@@ -2439,7 +2451,8 @@ msgstr "Berikut kata sandi aplikasi Anda."
 #: src/lib/moderation/useLabelBehaviorDescription.ts:20
 #: src/lib/moderation/useLabelBehaviorDescription.ts:25
 #: src/lib/moderation/useLabelBehaviorDescription.ts:30
-#: src/view/com/util/forms/PostDropdownBtn.tsx:445
+#: src/view/com/util/forms/PostDropdownBtn.tsx:463
+#: src/view/com/util/forms/PostDropdownBtn.tsx:471
 msgid "Hide"
 msgstr "Sembunyikan"
 
@@ -2448,8 +2461,8 @@ msgctxt "action"
 msgid "Hide"
 msgstr "Sembunyikan"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:390
-#: src/view/com/util/forms/PostDropdownBtn.tsx:392
+#: src/view/com/util/forms/PostDropdownBtn.tsx:407
+#: src/view/com/util/forms/PostDropdownBtn.tsx:410
 msgid "Hide post"
 msgstr "Sembunyikan postingan"
 
@@ -2458,7 +2471,7 @@ msgstr "Sembunyikan postingan"
 msgid "Hide the content"
 msgstr "Sembunyikan konten"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:442
+#: src/view/com/util/forms/PostDropdownBtn.tsx:460
 msgid "Hide this post?"
 msgstr "Sembunyikan postingan ini?"
 
@@ -2552,7 +2565,7 @@ msgstr "Jika Anda belum berusia dewasa menurut hukum negara Anda, orang tua atau
 msgid "If you delete this list, you won't be able to recover it."
 msgstr "Jika Anda menghapus daftar ini, Anda tidak dapat memulihkannya lagi."
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:433
+#: src/view/com/util/forms/PostDropdownBtn.tsx:451
 msgid "If you remove this post, you won't be able to recover it."
 msgstr "Jika Anda menghapus postingan ini, Anda tidak dapat memulihkannya lagi."
 
@@ -2845,6 +2858,10 @@ msgstr "Suka"
 #: src/view/com/post-thread/PostThreadItem.tsx:202
 msgid "Likes on this post"
 msgstr "Suka pada postingan ini"
+
+#: src/view/com/modals/EditProfile.tsx:222
+msgid "Link to Social Media"
+msgstr ""
 
 #: src/Navigation.tsx:177
 msgid "List"
@@ -3155,13 +3172,13 @@ msgstr "Bisukan kata ini di teks postingan dan tagar"
 msgid "Mute this word in tags only"
 msgstr "Bisukan kata ini hanya dalam tagar"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:365
-#: src/view/com/util/forms/PostDropdownBtn.tsx:371
+#: src/view/com/util/forms/PostDropdownBtn.tsx:382
+#: src/view/com/util/forms/PostDropdownBtn.tsx:388
 msgid "Mute thread"
 msgstr "Bisukan utasan"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:381
-#: src/view/com/util/forms/PostDropdownBtn.tsx:383
+#: src/view/com/util/forms/PostDropdownBtn.tsx:398
+#: src/view/com/util/forms/PostDropdownBtn.tsx:400
 msgid "Mute words & tags"
 msgstr "Bisukan kata & tagar"
 
@@ -3462,7 +3479,7 @@ msgid "Not right now"
 msgstr "Jangan sekarang"
 
 #: src/view/com/profile/ProfileMenu.tsx:370
-#: src/view/com/util/forms/PostDropdownBtn.tsx:459
+#: src/view/com/util/forms/PostDropdownBtn.tsx:493
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:308
 msgid "Note about sharing"
 msgstr "Catatan tentang berbagi"
@@ -3606,7 +3623,7 @@ msgstr "Buka pengaturan kata dan tagar yang dibisukan"
 msgid "Open navigation"
 msgstr "Buka navigasi"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:250
+#: src/view/com/util/forms/PostDropdownBtn.tsx:267
 msgid "Open post options menu"
 msgstr "Buka menu opsi postingan"
 
@@ -3970,7 +3987,7 @@ msgstr "Postingan oleh {0}"
 msgid "Post by @{0}"
 msgstr "Postingan oleh @{0}"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:134
+#: src/view/com/util/forms/PostDropdownBtn.tsx:136
 msgid "Post deleted"
 msgstr "Postingan dihapus"
 
@@ -4336,8 +4353,8 @@ msgstr "Laporkan Daftar"
 msgid "Report message"
 msgstr "Laporkan pesan"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:407
-#: src/view/com/util/forms/PostDropdownBtn.tsx:409
+#: src/view/com/util/forms/PostDropdownBtn.tsx:425
+#: src/view/com/util/forms/PostDropdownBtn.tsx:427
 msgid "Report post"
 msgstr "Laporkan postingan"
 
@@ -4822,8 +4839,8 @@ msgstr "Kirim laporan ke {0}"
 msgid "Send verification email"
 msgstr "Kirim email verifikasi"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:299
-#: src/view/com/util/forms/PostDropdownBtn.tsx:302
+#: src/view/com/util/forms/PostDropdownBtn.tsx:316
+#: src/view/com/util/forms/PostDropdownBtn.tsx:319
 msgid "Send via direct message"
 msgstr ""
 
@@ -4930,8 +4947,8 @@ msgstr "Bagikan"
 
 #: src/view/com/profile/ProfileMenu.tsx:217
 #: src/view/com/profile/ProfileMenu.tsx:226
-#: src/view/com/util/forms/PostDropdownBtn.tsx:310
-#: src/view/com/util/forms/PostDropdownBtn.tsx:319
+#: src/view/com/util/forms/PostDropdownBtn.tsx:327
+#: src/view/com/util/forms/PostDropdownBtn.tsx:336
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:297
 #: src/view/screens/ProfileList.tsx:428
 msgid "Share"
@@ -4946,7 +4963,7 @@ msgid "Share a fun fact!"
 msgstr "Bagikan fakta menarik!"
 
 #: src/view/com/profile/ProfileMenu.tsx:375
-#: src/view/com/util/forms/PostDropdownBtn.tsx:464
+#: src/view/com/util/forms/PostDropdownBtn.tsx:498
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:313
 msgid "Share anyway"
 msgstr "Tetap bagikan"
@@ -5006,8 +5023,8 @@ msgstr "Tampilkan pengguna lain yang serupa dengan {0}"
 msgid "Show hidden replies"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:349
-#: src/view/com/util/forms/PostDropdownBtn.tsx:351
+#: src/view/com/util/forms/PostDropdownBtn.tsx:366
+#: src/view/com/util/forms/PostDropdownBtn.tsx:368
 msgid "Show less like this"
 msgstr "Tampilkan lebih sedikit"
 
@@ -5017,8 +5034,8 @@ msgstr "Tampilkan lebih sedikit"
 msgid "Show More"
 msgstr "Tampilkan Lebih Lanjut"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:341
-#: src/view/com/util/forms/PostDropdownBtn.tsx:343
+#: src/view/com/util/forms/PostDropdownBtn.tsx:358
+#: src/view/com/util/forms/PostDropdownBtn.tsx:360
 msgid "Show more like this"
 msgstr "Tampilkan lebih banyak"
 
@@ -5403,7 +5420,7 @@ msgstr "Berisi hal berikut:"
 msgid "That handle is already taken."
 msgstr "Handle telah terpakai."
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:302
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:304
 #: src/view/com/profile/ProfileMenu.tsx:351
 msgid "The account will be able to interact with you after unblocking."
 msgstr "Akun ini dapat berinteraksi kembali dengan Anda setelah pemblokiran dibuka."
@@ -5681,12 +5698,13 @@ msgstr "Nama ini sudah digunakan"
 msgid "This post has been deleted."
 msgstr "Postingan ini telah dihapus."
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:461
+#: src/view/com/util/forms/PostDropdownBtn.tsx:495
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:310
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
 msgstr "Postingan ini hanya dapat dilihat oleh pengguna yang masuk. Ini tidak akan terlihat bagi pengguna yang belum masuk."
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:443
+#: src/view/com/util/forms/PostDropdownBtn.tsx:461
+#: src/view/com/util/forms/PostDropdownBtn.tsx:469
 msgid "This post will be hidden from feeds."
 msgstr "Postingan ini akan disembunyikan dari feed."
 
@@ -5793,8 +5811,8 @@ msgstr "Transformasi"
 #: src/components/dms/MessageMenu.tsx:105
 #: src/view/com/post-thread/PostThreadItem.tsx:696
 #: src/view/com/post-thread/PostThreadItem.tsx:698
-#: src/view/com/util/forms/PostDropdownBtn.tsx:280
-#: src/view/com/util/forms/PostDropdownBtn.tsx:282
+#: src/view/com/util/forms/PostDropdownBtn.tsx:297
+#: src/view/com/util/forms/PostDropdownBtn.tsx:299
 msgid "Translate"
 msgstr "Terjemahkan"
 
@@ -5837,7 +5855,7 @@ msgstr "Tidak dapat terhubung ke layanan. Mohon periksa koneksi internet Anda."
 #: src/components/dms/MessagesListBlockedFooter.tsx:104
 #: src/components/dms/MessagesListBlockedFooter.tsx:111
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:186
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:306
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:308
 #: src/view/com/profile/ProfileMenu.tsx:363
 #: src/view/screens/ProfileList.tsx:626
 msgid "Unblock"
@@ -5858,7 +5876,7 @@ msgstr "Buka blokir akun"
 msgid "Unblock Account"
 msgstr "Buka blokir Akun"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:300
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:302
 #: src/view/com/profile/ProfileMenu.tsx:345
 msgid "Unblock Account?"
 msgstr "Buka Blokir Akun?"
@@ -5921,8 +5939,8 @@ msgstr "Bunyikan percakapan"
 #~ msgid "Unmute notifications"
 #~ msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:365
-#: src/view/com/util/forms/PostDropdownBtn.tsx:370
+#: src/view/com/util/forms/PostDropdownBtn.tsx:382
+#: src/view/com/util/forms/PostDropdownBtn.tsx:387
 msgid "Unmute thread"
 msgstr "Bunyikan utasan"
 
@@ -6314,8 +6332,8 @@ msgstr "Maaf, Anda hanya dapat berlangganan sepuluh pelabel dan Anda telah menca
 
 #: src/view/com/modals/EditProfile.tsx:222
 #: src/view/com/modals/EditProfile.tsx:234
-msgid "Website"
-msgstr ""
+#~ msgid "Website"
+#~ msgstr ""
 
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:48
 #~ msgid "Welcome to <0>Bluesky</0>"
@@ -6381,6 +6399,14 @@ msgstr "Mengapa pengguna ini perlu ditinjau?"
 msgid "Wide"
 msgstr "Lebar"
 
+#: src/view/com/util/forms/PostDropdownBtn.tsx:476
+msgid "Would you also like to be shown less of this?"
+msgstr ""
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:468
+msgid "Would you also like to hide this post?"
+msgstr ""
+
 #: src/screens/Messages/Conversation/MessageInput.tsx:140
 #: src/screens/Messages/Conversation/MessageInput.web.tsx:134
 msgid "Write a message"
@@ -6400,6 +6426,7 @@ msgid "Writers"
 msgstr "Penulis"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:77
+#: src/view/com/util/forms/PostDropdownBtn.tsx:479
 #: src/view/screens/PreferencesFollowingFeed.tsx:128
 #: src/view/screens/PreferencesFollowingFeed.tsx:200
 #: src/view/screens/PreferencesFollowingFeed.tsx:235
@@ -6558,11 +6585,15 @@ msgstr "Anda harus berusia 13 tahun atau lebih untuk mendaftar."
 msgid "You must select at least one labeler for a report"
 msgstr "Anda harus memilih setidaknya satu pelabel untuk sebuah laporan"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:173
+#: src/view/com/util/forms/PostDropdownBtn.tsx:477
+msgid "You will get less of this in feeds."
+msgstr ""
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:175
 msgid "You will no longer receive notifications for this thread"
 msgstr "Anda tidak akan lagi menerima notifikasi untuk utas ini"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:176
+#: src/view/com/util/forms/PostDropdownBtn.tsx:178
 msgid "You will now receive notifications for this thread"
 msgstr "Anda sekarang akan menerima notifikasi untuk utas ini"
 

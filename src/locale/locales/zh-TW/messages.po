@@ -518,7 +518,7 @@ msgstr "生日"
 msgid "Birthday:"
 msgstr "生日："
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:306
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:308
 #: src/view/com/profile/ProfileMenu.tsx:363
 msgid "Block"
 msgstr "封鎖"
@@ -1116,7 +1116,7 @@ msgstr "已複製建構版本號至剪貼簿"
 #: src/view/com/modals/AddAppPasswords.tsx:81
 #: src/view/com/modals/ChangeHandle.tsx:320
 #: src/view/com/modals/InviteCodes.tsx:153
-#: src/view/com/util/forms/PostDropdownBtn.tsx:187
+#: src/view/com/util/forms/PostDropdownBtn.tsx:189
 msgid "Copied to clipboard"
 msgstr "已複製至剪貼簿"
 
@@ -1145,8 +1145,8 @@ msgstr "複製程式碼"
 msgid "Copy link to list"
 msgstr "複製列表連結"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:310
-#: src/view/com/util/forms/PostDropdownBtn.tsx:319
+#: src/view/com/util/forms/PostDropdownBtn.tsx:327
+#: src/view/com/util/forms/PostDropdownBtn.tsx:336
 msgid "Copy link to post"
 msgstr "複製貼文連結"
 
@@ -1155,8 +1155,8 @@ msgstr "複製貼文連結"
 msgid "Copy message text"
 msgstr "複製訊息文字"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:288
-#: src/view/com/util/forms/PostDropdownBtn.tsx:290
+#: src/view/com/util/forms/PostDropdownBtn.tsx:305
+#: src/view/com/util/forms/PostDropdownBtn.tsx:307
 msgid "Copy post text"
 msgstr "複製貼文文字"
 
@@ -1267,7 +1267,7 @@ msgid "Debug panel"
 msgstr "偵錯面板"
 
 #: src/components/dms/MessageMenu.tsx:151
-#: src/view/com/util/forms/PostDropdownBtn.tsx:436
+#: src/view/com/util/forms/PostDropdownBtn.tsx:454
 #: src/view/screens/AppPasswords.tsx:285
 #: src/view/screens/ProfileList.tsx:667
 msgid "Delete"
@@ -1318,8 +1318,8 @@ msgstr "刪除我的帳號"
 msgid "Delete My Account…"
 msgstr "刪除我的帳號…"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:417
-#: src/view/com/util/forms/PostDropdownBtn.tsx:419
+#: src/view/com/util/forms/PostDropdownBtn.tsx:435
+#: src/view/com/util/forms/PostDropdownBtn.tsx:437
 msgid "Delete post"
 msgstr "刪除貼文"
 
@@ -1327,7 +1327,7 @@ msgstr "刪除貼文"
 msgid "Delete this list?"
 msgstr "刪除此列表？"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:431
+#: src/view/com/util/forms/PostDropdownBtn.tsx:449
 msgid "Delete this post?"
 msgstr "刪除這條貼文？"
 
@@ -1416,6 +1416,10 @@ msgstr "顯示名稱"
 #: src/view/com/modals/EditProfile.tsx:186
 msgid "Display Name"
 msgstr "顯示名稱"
+
+#: src/view/com/modals/EditProfile.tsx:234
+msgid "Display social media link"
+msgstr ""
 
 #: src/view/com/modals/ChangeHandle.tsx:391
 msgid "DNS Panel"
@@ -1509,8 +1513,12 @@ msgid "e.g. Great Posters"
 msgstr "例如：優秀的發文者"
 
 #: src/view/com/modals/EditProfile.tsx:227
-msgid "e.g. https://www.google.com"
+msgid "e.g. https://linktr.ee/yourname"
 msgstr ""
+
+#: src/view/com/modals/EditProfile.tsx:227
+#~ msgid "e.g. https://www.google.com"
+#~ msgstr ""
 
 #: src/view/com/modals/CreateOrEditList.tsx:273
 msgid "e.g. Spammers"
@@ -1589,8 +1597,12 @@ msgid "Edit your profile description"
 msgstr "編輯您的帳號描述"
 
 #: src/view/com/modals/EditProfile.tsx:235
-msgid "Edit your website"
+msgid "Edit your social media link"
 msgstr ""
+
+#: src/view/com/modals/EditProfile.tsx:235
+#~ msgid "Edit your website"
+#~ msgstr ""
 
 #: src/screens/Onboarding/index.tsx:31
 msgid "Education"
@@ -1631,8 +1643,8 @@ msgid "Embed HTML code"
 msgstr "嵌入 HTML 程式碼"
 
 #: src/components/dialogs/Embed.tsx:97
-#: src/view/com/util/forms/PostDropdownBtn.tsx:327
-#: src/view/com/util/forms/PostDropdownBtn.tsx:329
+#: src/view/com/util/forms/PostDropdownBtn.tsx:344
+#: src/view/com/util/forms/PostDropdownBtn.tsx:346
 msgid "Embed post"
 msgstr "嵌入貼文"
 
@@ -1854,7 +1866,7 @@ msgstr "無法建立列表。請檢查您的網路連線並重試。"
 msgid "Failed to delete message"
 msgstr "無法刪除訊息"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:154
+#: src/view/com/util/forms/PostDropdownBtn.tsx:156
 msgid "Failed to delete post, please try again"
 msgstr "無法刪除貼文，請重試"
 
@@ -2009,7 +2021,7 @@ msgstr "回追蹤"
 #~ msgid "Follow selected accounts and continue to the next step"
 #~ msgstr "跟隨選擇的用戶並繼續下一步"
 
-#: src/view/com/profile/ProfileCard.tsx:227
+#: src/view/com/profile/ProfileCard.tsx:237
 msgid "Followed by {0}"
 msgstr "由 {0} 跟隨"
 
@@ -2065,7 +2077,7 @@ msgstr "「Following」動態源偏好"
 msgid "Follows you"
 msgstr "跟隨您"
 
-#: src/view/com/profile/ProfileCard.tsx:152
+#: src/view/com/profile/ProfileCard.tsx:162
 msgid "Follows You"
 msgstr "跟隨您"
 
@@ -2242,7 +2254,8 @@ msgstr "這是您的應用程式專用密碼。"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:20
 #: src/lib/moderation/useLabelBehaviorDescription.ts:25
 #: src/lib/moderation/useLabelBehaviorDescription.ts:30
-#: src/view/com/util/forms/PostDropdownBtn.tsx:445
+#: src/view/com/util/forms/PostDropdownBtn.tsx:463
+#: src/view/com/util/forms/PostDropdownBtn.tsx:471
 msgid "Hide"
 msgstr "隱藏"
 
@@ -2251,8 +2264,8 @@ msgctxt "action"
 msgid "Hide"
 msgstr "隱藏"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:390
-#: src/view/com/util/forms/PostDropdownBtn.tsx:392
+#: src/view/com/util/forms/PostDropdownBtn.tsx:407
+#: src/view/com/util/forms/PostDropdownBtn.tsx:410
 msgid "Hide post"
 msgstr "隱藏貼文"
 
@@ -2261,7 +2274,7 @@ msgstr "隱藏貼文"
 msgid "Hide the content"
 msgstr "隱藏內容"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:442
+#: src/view/com/util/forms/PostDropdownBtn.tsx:460
 msgid "Hide this post?"
 msgstr "隱藏這則貼文？"
 
@@ -2355,7 +2368,7 @@ msgstr "如果根據您所在國家的法律，您尚未成年，則您的父母
 msgid "If you delete this list, you won't be able to recover it."
 msgstr "如果刪除這個列表，您將無法恢復它。"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:433
+#: src/view/com/util/forms/PostDropdownBtn.tsx:451
 msgid "If you remove this post, you won't be able to recover it."
 msgstr "如果刪除這則貼文，您將無法恢復它。"
 
@@ -2622,6 +2635,10 @@ msgstr "喜歡"
 #: src/view/com/post-thread/PostThreadItem.tsx:202
 msgid "Likes on this post"
 msgstr "這條貼文的喜歡數"
+
+#: src/view/com/modals/EditProfile.tsx:222
+msgid "Link to Social Media"
+msgstr ""
 
 #: src/Navigation.tsx:177
 msgid "List"
@@ -2919,13 +2936,13 @@ msgstr "在貼文內容和話題標籤中隱藏該文字"
 msgid "Mute this word in tags only"
 msgstr "僅在話題標籤中隱藏該文字"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:365
-#: src/view/com/util/forms/PostDropdownBtn.tsx:371
+#: src/view/com/util/forms/PostDropdownBtn.tsx:382
+#: src/view/com/util/forms/PostDropdownBtn.tsx:388
 msgid "Mute thread"
 msgstr "靜音討論串"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:381
-#: src/view/com/util/forms/PostDropdownBtn.tsx:383
+#: src/view/com/util/forms/PostDropdownBtn.tsx:398
+#: src/view/com/util/forms/PostDropdownBtn.tsx:400
 msgid "Mute words & tags"
 msgstr "靜音文字和標籤"
 
@@ -3208,7 +3225,7 @@ msgid "Not right now"
 msgstr "暫時不需要"
 
 #: src/view/com/profile/ProfileMenu.tsx:370
-#: src/view/com/util/forms/PostDropdownBtn.tsx:459
+#: src/view/com/util/forms/PostDropdownBtn.tsx:493
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:308
 msgid "Note about sharing"
 msgstr "關於分享的注意事項"
@@ -3348,7 +3365,7 @@ msgstr "開啟靜音文字和標籤設定"
 msgid "Open navigation"
 msgstr "開啟導覽"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:250
+#: src/view/com/util/forms/PostDropdownBtn.tsx:267
 msgid "Open post options menu"
 msgstr "開啟貼文選項選單"
 
@@ -3703,7 +3720,7 @@ msgstr "{0} 的貼文"
 msgid "Post by @{0}"
 msgstr "@{0} 的貼文"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:134
+#: src/view/com/util/forms/PostDropdownBtn.tsx:136
 msgid "Post deleted"
 msgstr "貼文已刪除"
 
@@ -4041,8 +4058,8 @@ msgstr "檢舉列表"
 msgid "Report message"
 msgstr "檢舉訊息"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:407
-#: src/view/com/util/forms/PostDropdownBtn.tsx:409
+#: src/view/com/util/forms/PostDropdownBtn.tsx:425
+#: src/view/com/util/forms/PostDropdownBtn.tsx:427
 msgid "Report post"
 msgstr "檢舉貼文"
 
@@ -4507,8 +4524,8 @@ msgstr "將檢舉提交至 {0}"
 msgid "Send verification email"
 msgstr "發送驗證電子郵件"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:299
-#: src/view/com/util/forms/PostDropdownBtn.tsx:302
+#: src/view/com/util/forms/PostDropdownBtn.tsx:316
+#: src/view/com/util/forms/PostDropdownBtn.tsx:319
 msgid "Send via direct message"
 msgstr ""
 
@@ -4615,8 +4632,8 @@ msgstr "分享"
 
 #: src/view/com/profile/ProfileMenu.tsx:217
 #: src/view/com/profile/ProfileMenu.tsx:226
-#: src/view/com/util/forms/PostDropdownBtn.tsx:310
-#: src/view/com/util/forms/PostDropdownBtn.tsx:319
+#: src/view/com/util/forms/PostDropdownBtn.tsx:327
+#: src/view/com/util/forms/PostDropdownBtn.tsx:336
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:297
 #: src/view/screens/ProfileList.tsx:428
 msgid "Share"
@@ -4631,7 +4648,7 @@ msgid "Share a fun fact!"
 msgstr "分享一個趣聞！📰"
 
 #: src/view/com/profile/ProfileMenu.tsx:375
-#: src/view/com/util/forms/PostDropdownBtn.tsx:464
+#: src/view/com/util/forms/PostDropdownBtn.tsx:498
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:313
 msgid "Share anyway"
 msgstr "仍然分享"
@@ -4687,8 +4704,8 @@ msgstr "顯示類似於 {0} 的跟隨者"
 msgid "Show hidden replies"
 msgstr "顯示隱藏回覆"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:349
-#: src/view/com/util/forms/PostDropdownBtn.tsx:351
+#: src/view/com/util/forms/PostDropdownBtn.tsx:366
+#: src/view/com/util/forms/PostDropdownBtn.tsx:368
 msgid "Show less like this"
 msgstr "顯示更少此類內容"
 
@@ -4698,8 +4715,8 @@ msgstr "顯示更少此類內容"
 msgid "Show More"
 msgstr "顯示更多"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:341
-#: src/view/com/util/forms/PostDropdownBtn.tsx:343
+#: src/view/com/util/forms/PostDropdownBtn.tsx:358
+#: src/view/com/util/forms/PostDropdownBtn.tsx:360
 msgid "Show more like this"
 msgstr "顯示更多此類內容"
 
@@ -5068,7 +5085,7 @@ msgstr "其中包含以下內容："
 msgid "That handle is already taken."
 msgstr "這個帳號代碼已被使用。"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:302
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:304
 #: src/view/com/profile/ProfileMenu.tsx:351
 msgid "The account will be able to interact with you after unblocking."
 msgstr "解除封鎖後，該帳號將能夠與您互動。"
@@ -5326,12 +5343,13 @@ msgstr "此名稱已被使用"
 msgid "This post has been deleted."
 msgstr "這則貼文已被刪除。"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:461
+#: src/view/com/util/forms/PostDropdownBtn.tsx:495
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:310
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
 msgstr "只有登入用戶能見到這則貼文，未登入的人將看不到它。"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:443
+#: src/view/com/util/forms/PostDropdownBtn.tsx:461
+#: src/view/com/util/forms/PostDropdownBtn.tsx:469
 msgid "This post will be hidden from feeds."
 msgstr "這則貼文將從動態隱藏。"
 
@@ -5434,8 +5452,8 @@ msgstr "轉換"
 #: src/components/dms/MessageMenu.tsx:105
 #: src/view/com/post-thread/PostThreadItem.tsx:696
 #: src/view/com/post-thread/PostThreadItem.tsx:698
-#: src/view/com/util/forms/PostDropdownBtn.tsx:280
-#: src/view/com/util/forms/PostDropdownBtn.tsx:282
+#: src/view/com/util/forms/PostDropdownBtn.tsx:297
+#: src/view/com/util/forms/PostDropdownBtn.tsx:299
 msgid "Translate"
 msgstr "翻譯"
 
@@ -5478,7 +5496,7 @@ msgstr "無法連線到服務，請檢查您的網路連線。"
 #: src/components/dms/MessagesListBlockedFooter.tsx:104
 #: src/components/dms/MessagesListBlockedFooter.tsx:111
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:186
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:306
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:308
 #: src/view/com/profile/ProfileMenu.tsx:363
 #: src/view/screens/ProfileList.tsx:626
 msgid "Unblock"
@@ -5499,7 +5517,7 @@ msgstr "解除封鎖帳號"
 msgid "Unblock Account"
 msgstr "解除封鎖帳號"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:300
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:302
 #: src/view/com/profile/ProfileMenu.tsx:345
 msgid "Unblock Account?"
 msgstr "解除封鎖？"
@@ -5554,8 +5572,8 @@ msgstr "取消對所有 {displayTag} 貼文的靜音"
 msgid "Unmute conversation"
 msgstr "取消靜音對話"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:365
-#: src/view/com/util/forms/PostDropdownBtn.tsx:370
+#: src/view/com/util/forms/PostDropdownBtn.tsx:382
+#: src/view/com/util/forms/PostDropdownBtn.tsx:387
 msgid "Unmute thread"
 msgstr "取消靜音討論串"
 
@@ -5935,8 +5953,8 @@ msgstr "抱歉！您只能訂閱十個標籤者，您已達到十個的限制。
 
 #: src/view/com/modals/EditProfile.tsx:222
 #: src/view/com/modals/EditProfile.tsx:234
-msgid "Website"
-msgstr ""
+#~ msgid "Website"
+#~ msgstr ""
 
 #: src/screens/Onboarding/StepInterests/index.tsx:135
 msgid "What are your interests?"
@@ -5998,6 +6016,14 @@ msgstr "為什麼應該審查這個用戶？"
 msgid "Wide"
 msgstr "寬"
 
+#: src/view/com/util/forms/PostDropdownBtn.tsx:476
+msgid "Would you also like to be shown less of this?"
+msgstr "你也想減少看到這樣的內容嗎？"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:468
+msgid "Would you also like to hide this post?"
+msgstr "你也想隱藏這條帖子嗎？"
+
 #: src/screens/Messages/Conversation/MessageInput.tsx:140
 #: src/screens/Messages/Conversation/MessageInput.web.tsx:134
 msgid "Write a message"
@@ -6017,6 +6043,7 @@ msgid "Writers"
 msgstr "作家"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:77
+#: src/view/com/util/forms/PostDropdownBtn.tsx:479
 #: src/view/screens/PreferencesFollowingFeed.tsx:128
 #: src/view/screens/PreferencesFollowingFeed.tsx:200
 #: src/view/screens/PreferencesFollowingFeed.tsx:235
@@ -6167,11 +6194,19 @@ msgstr "您必須年滿 13 歲才能註冊。"
 msgid "You must select at least one labeler for a report"
 msgstr "您必須選擇至少一個標記者來提交檢舉"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:173
+#: src/view/com/util/forms/PostDropdownBtn.tsx:477
+msgid "You will get less of this in feeds."
+msgstr "你將在動態中看到更少這樣的內容。"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:238
+#~ msgid "You will get less of this!"
+#~ msgstr "你將減少看到這些內容！"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:175
 msgid "You will no longer receive notifications for this thread"
 msgstr "您將不再收到這條討論串的通知"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:176
+#: src/view/com/util/forms/PostDropdownBtn.tsx:178
 msgid "You will now receive notifications for this thread"
 msgstr "您將收到這條討論串的通知"
 

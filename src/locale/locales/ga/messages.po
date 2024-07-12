@@ -595,7 +595,7 @@ msgstr "Breithlá"
 msgid "Birthday:"
 msgstr "Breithlá:"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:306
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:308
 #: src/view/com/profile/ProfileMenu.tsx:363
 msgid "Block"
 msgstr "Blocáil"
@@ -1237,7 +1237,7 @@ msgstr "Leagan cóipeáilte sa ghearrthaisce"
 #: src/view/com/modals/AddAppPasswords.tsx:81
 #: src/view/com/modals/ChangeHandle.tsx:320
 #: src/view/com/modals/InviteCodes.tsx:153
-#: src/view/com/util/forms/PostDropdownBtn.tsx:187
+#: src/view/com/util/forms/PostDropdownBtn.tsx:189
 msgid "Copied to clipboard"
 msgstr "Cóipeáilte sa ghearrthaisce"
 
@@ -1266,8 +1266,8 @@ msgstr "Cóipeáil an cód"
 msgid "Copy link to list"
 msgstr "Cóipeáil an nasc leis an liosta"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:310
-#: src/view/com/util/forms/PostDropdownBtn.tsx:319
+#: src/view/com/util/forms/PostDropdownBtn.tsx:327
+#: src/view/com/util/forms/PostDropdownBtn.tsx:336
 msgid "Copy link to post"
 msgstr "Cóipeáil an nasc leis an bpostáil"
 
@@ -1276,8 +1276,8 @@ msgstr "Cóipeáil an nasc leis an bpostáil"
 msgid "Copy message text"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:288
-#: src/view/com/util/forms/PostDropdownBtn.tsx:290
+#: src/view/com/util/forms/PostDropdownBtn.tsx:305
+#: src/view/com/util/forms/PostDropdownBtn.tsx:307
 msgid "Copy post text"
 msgstr "Cóipeáil téacs na postála"
 
@@ -1400,7 +1400,7 @@ msgid "Debug panel"
 msgstr "Painéal dífhabhtaithe"
 
 #: src/components/dms/MessageMenu.tsx:151
-#: src/view/com/util/forms/PostDropdownBtn.tsx:436
+#: src/view/com/util/forms/PostDropdownBtn.tsx:454
 #: src/view/screens/AppPasswords.tsx:285
 #: src/view/screens/ProfileList.tsx:667
 msgid "Delete"
@@ -1455,8 +1455,8 @@ msgstr "Scrios mo chuntas"
 msgid "Delete My Account…"
 msgstr "Scrios mo chuntas…"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:417
-#: src/view/com/util/forms/PostDropdownBtn.tsx:419
+#: src/view/com/util/forms/PostDropdownBtn.tsx:435
+#: src/view/com/util/forms/PostDropdownBtn.tsx:437
 msgid "Delete post"
 msgstr "Scrios an phostáil"
 
@@ -1464,7 +1464,7 @@ msgstr "Scrios an phostáil"
 msgid "Delete this list?"
 msgstr "An bhfuil fonn ort an liosta seo a scriosadh?"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:431
+#: src/view/com/util/forms/PostDropdownBtn.tsx:449
 msgid "Delete this post?"
 msgstr "An bhfuil fonn ort an phostáil seo a scriosadh?"
 
@@ -1558,6 +1558,10 @@ msgstr "Ainm taispeána"
 msgid "Display Name"
 msgstr "Ainm Taispeána"
 
+#: src/view/com/modals/EditProfile.tsx:234
+msgid "Display social media link"
+msgstr ""
+
 #: src/view/com/modals/ChangeHandle.tsx:391
 msgid "DNS Panel"
 msgstr "Painéal DNS"
@@ -1650,8 +1654,12 @@ msgid "e.g. Great Posters"
 msgstr "m.sh. Na cuntais is fearr"
 
 #: src/view/com/modals/EditProfile.tsx:227
-msgid "e.g. https://www.google.com"
+msgid "e.g. https://linktr.ee/yourname"
 msgstr ""
+
+#: src/view/com/modals/EditProfile.tsx:227
+#~ msgid "e.g. https://www.google.com"
+#~ msgstr ""
 
 #: src/view/com/modals/CreateOrEditList.tsx:273
 msgid "e.g. Spammers"
@@ -1730,8 +1738,12 @@ msgid "Edit your profile description"
 msgstr "Athraigh an cur síos ort sa phróifíl"
 
 #: src/view/com/modals/EditProfile.tsx:235
-msgid "Edit your website"
+msgid "Edit your social media link"
 msgstr ""
+
+#: src/view/com/modals/EditProfile.tsx:235
+#~ msgid "Edit your website"
+#~ msgstr ""
 
 #: src/screens/Onboarding/index.tsx:31
 msgid "Education"
@@ -1772,8 +1784,8 @@ msgid "Embed HTML code"
 msgstr "Leabaigh an cód HTML"
 
 #: src/components/dialogs/Embed.tsx:97
-#: src/view/com/util/forms/PostDropdownBtn.tsx:327
-#: src/view/com/util/forms/PostDropdownBtn.tsx:329
+#: src/view/com/util/forms/PostDropdownBtn.tsx:344
+#: src/view/com/util/forms/PostDropdownBtn.tsx:346
 msgid "Embed post"
 msgstr "Leabaigh an phostáil"
 
@@ -1999,7 +2011,7 @@ msgstr "Teip ar chruthú an liosta. Seiceáil do nasc leis an idirlíon agus dé
 msgid "Failed to delete message"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:154
+#: src/view/com/util/forms/PostDropdownBtn.tsx:156
 msgid "Failed to delete post, please try again"
 msgstr "Teip ar scriosadh na postála. Déan iarracht eile."
 
@@ -2186,7 +2198,7 @@ msgstr "Lean Ar Ais"
 #~ msgid "Follow some users to get started. We can recommend you more users based on who you find interesting."
 #~ msgstr "Lean cúpla cuntas mar thosú. Tig linn níos mó úsáideoirí a mholadh duit a mbeadh suim agat iontu."
 
-#: src/view/com/profile/ProfileCard.tsx:227
+#: src/view/com/profile/ProfileCard.tsx:237
 msgid "Followed by {0}"
 msgstr "Leanta ag {0}"
 
@@ -2242,7 +2254,7 @@ msgstr "Roghanna don Fhotha Following"
 msgid "Follows you"
 msgstr "Leanann sé/sí thú"
 
-#: src/view/com/profile/ProfileCard.tsx:152
+#: src/view/com/profile/ProfileCard.tsx:162
 msgid "Follows You"
 msgstr "Leanann sé/sí thú"
 
@@ -2423,7 +2435,8 @@ msgstr "Seo é do phasfhocal aipe."
 #: src/lib/moderation/useLabelBehaviorDescription.ts:20
 #: src/lib/moderation/useLabelBehaviorDescription.ts:25
 #: src/lib/moderation/useLabelBehaviorDescription.ts:30
-#: src/view/com/util/forms/PostDropdownBtn.tsx:445
+#: src/view/com/util/forms/PostDropdownBtn.tsx:463
+#: src/view/com/util/forms/PostDropdownBtn.tsx:471
 msgid "Hide"
 msgstr "Cuir i bhfolach"
 
@@ -2432,8 +2445,8 @@ msgctxt "action"
 msgid "Hide"
 msgstr "Cuir i bhfolach"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:390
-#: src/view/com/util/forms/PostDropdownBtn.tsx:392
+#: src/view/com/util/forms/PostDropdownBtn.tsx:407
+#: src/view/com/util/forms/PostDropdownBtn.tsx:410
 msgid "Hide post"
 msgstr "Cuir an phostáil seo i bhfolach"
 
@@ -2442,7 +2455,7 @@ msgstr "Cuir an phostáil seo i bhfolach"
 msgid "Hide the content"
 msgstr "Cuir an t-ábhar seo i bhfolach"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:442
+#: src/view/com/util/forms/PostDropdownBtn.tsx:460
 msgid "Hide this post?"
 msgstr "An bhfuil fonn ort an phostáil seo a chur i bhfolach?"
 
@@ -2536,7 +2549,7 @@ msgstr "Ní duine fásta thú de réir dhlí do thíre, tá ar do thuismitheoir 
 msgid "If you delete this list, you won't be able to recover it."
 msgstr "Má scriosann tú an liosta seo, ní bheidh tú in ann é a fháil ar ais."
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:433
+#: src/view/com/util/forms/PostDropdownBtn.tsx:451
 msgid "If you remove this post, you won't be able to recover it."
 msgstr "Má bhaineann tú an phostáil seo, ní bheidh tú in ann í a fháil ar ais."
 
@@ -2829,6 +2842,10 @@ msgstr "Moltaí"
 #: src/view/com/post-thread/PostThreadItem.tsx:202
 msgid "Likes on this post"
 msgstr "Moltaí don phostáil seo"
+
+#: src/view/com/modals/EditProfile.tsx:222
+msgid "Link to Social Media"
+msgstr ""
 
 #: src/Navigation.tsx:177
 msgid "List"
@@ -3139,13 +3156,13 @@ msgstr "Cuir an focal seo i bhfolach i dtéacs postálacha agus i gclibeanna"
 msgid "Mute this word in tags only"
 msgstr "Ná cuir an focal seo i bhfolach ach i gclibeanna"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:365
-#: src/view/com/util/forms/PostDropdownBtn.tsx:371
+#: src/view/com/util/forms/PostDropdownBtn.tsx:382
+#: src/view/com/util/forms/PostDropdownBtn.tsx:388
 msgid "Mute thread"
 msgstr "Cuir an snáithe seo i bhfolach"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:381
-#: src/view/com/util/forms/PostDropdownBtn.tsx:383
+#: src/view/com/util/forms/PostDropdownBtn.tsx:398
+#: src/view/com/util/forms/PostDropdownBtn.tsx:400
 msgid "Mute words & tags"
 msgstr "Cuir focail ⁊ clibeanna i bhfolach"
 
@@ -3445,7 +3462,7 @@ msgid "Not right now"
 msgstr "Ní anois"
 
 #: src/view/com/profile/ProfileMenu.tsx:370
-#: src/view/com/util/forms/PostDropdownBtn.tsx:459
+#: src/view/com/util/forms/PostDropdownBtn.tsx:493
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:308
 msgid "Note about sharing"
 msgstr "Nóta faoi roinnt"
@@ -3589,7 +3606,7 @@ msgstr "Oscail suíomhanna na gclibeanna agus na bhfocal a cuireadh i bhfolach"
 msgid "Open navigation"
 msgstr "Oscail an nascleanúint"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:250
+#: src/view/com/util/forms/PostDropdownBtn.tsx:267
 msgid "Open post options menu"
 msgstr "Oscail roghchlár na bpostálacha"
 
@@ -3953,7 +3970,7 @@ msgstr "Postáil ó {0}"
 msgid "Post by @{0}"
 msgstr "Postáil ó @{0}"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:134
+#: src/view/com/util/forms/PostDropdownBtn.tsx:136
 msgid "Post deleted"
 msgstr "Scriosadh an phostáil"
 
@@ -4318,8 +4335,8 @@ msgstr "Déan gearán faoi liosta"
 msgid "Report message"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:407
-#: src/view/com/util/forms/PostDropdownBtn.tsx:409
+#: src/view/com/util/forms/PostDropdownBtn.tsx:425
+#: src/view/com/util/forms/PostDropdownBtn.tsx:427
 msgid "Report post"
 msgstr "Déan gearán faoi phostáil"
 
@@ -4804,8 +4821,8 @@ msgstr "Seol an tuairisc chuig {0}"
 msgid "Send verification email"
 msgstr "Seol ríomhphost dearbhaithe"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:299
-#: src/view/com/util/forms/PostDropdownBtn.tsx:302
+#: src/view/com/util/forms/PostDropdownBtn.tsx:316
+#: src/view/com/util/forms/PostDropdownBtn.tsx:319
 msgid "Send via direct message"
 msgstr ""
 
@@ -4912,8 +4929,8 @@ msgstr "Comhroinn"
 
 #: src/view/com/profile/ProfileMenu.tsx:217
 #: src/view/com/profile/ProfileMenu.tsx:226
-#: src/view/com/util/forms/PostDropdownBtn.tsx:310
-#: src/view/com/util/forms/PostDropdownBtn.tsx:319
+#: src/view/com/util/forms/PostDropdownBtn.tsx:327
+#: src/view/com/util/forms/PostDropdownBtn.tsx:336
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:297
 #: src/view/screens/ProfileList.tsx:428
 msgid "Share"
@@ -4928,7 +4945,7 @@ msgid "Share a fun fact!"
 msgstr ""
 
 #: src/view/com/profile/ProfileMenu.tsx:375
-#: src/view/com/util/forms/PostDropdownBtn.tsx:464
+#: src/view/com/util/forms/PostDropdownBtn.tsx:498
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:313
 msgid "Share anyway"
 msgstr "Comhroinn mar sin féin"
@@ -4988,8 +5005,8 @@ msgstr "Taispeáin cuntais cosúil le {0}"
 msgid "Show hidden replies"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:349
-#: src/view/com/util/forms/PostDropdownBtn.tsx:351
+#: src/view/com/util/forms/PostDropdownBtn.tsx:366
+#: src/view/com/util/forms/PostDropdownBtn.tsx:368
 msgid "Show less like this"
 msgstr ""
 
@@ -4999,8 +5016,8 @@ msgstr ""
 msgid "Show More"
 msgstr "Tuilleadh"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:341
-#: src/view/com/util/forms/PostDropdownBtn.tsx:343
+#: src/view/com/util/forms/PostDropdownBtn.tsx:358
+#: src/view/com/util/forms/PostDropdownBtn.tsx:360
 msgid "Show more like this"
 msgstr ""
 
@@ -5385,7 +5402,7 @@ msgstr "Ina bhfuil an méid seo a leanas:"
 msgid "That handle is already taken."
 msgstr "Tá an leasainm sin in úsáid cheana féin."
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:302
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:304
 #: src/view/com/profile/ProfileMenu.tsx:351
 msgid "The account will be able to interact with you after unblocking."
 msgstr "Beidh an cuntas seo in ann caidreamh a dhéanamh leat tar éis duit é a dhíbhlocáil"
@@ -5663,12 +5680,13 @@ msgstr "Tá an t-ainm seo in úsáid cheana féin"
 msgid "This post has been deleted."
 msgstr "Scriosadh an phostáil seo."
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:461
+#: src/view/com/util/forms/PostDropdownBtn.tsx:495
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:310
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
 msgstr "Níl an phostáil seo le feiceáil ach ag úsáideoirí atá logáilte isteach. Ní bheidh daoine nach bhfuil logáilte isteach in ann í a fheiceáil."
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:443
+#: src/view/com/util/forms/PostDropdownBtn.tsx:461
+#: src/view/com/util/forms/PostDropdownBtn.tsx:469
 msgid "This post will be hidden from feeds."
 msgstr "Ní bheidh an phostáil seo le feiceáil ar do chuid fothaí."
 
@@ -5775,8 +5793,8 @@ msgstr "Trasfhoirmithe"
 #: src/components/dms/MessageMenu.tsx:105
 #: src/view/com/post-thread/PostThreadItem.tsx:696
 #: src/view/com/post-thread/PostThreadItem.tsx:698
-#: src/view/com/util/forms/PostDropdownBtn.tsx:280
-#: src/view/com/util/forms/PostDropdownBtn.tsx:282
+#: src/view/com/util/forms/PostDropdownBtn.tsx:297
+#: src/view/com/util/forms/PostDropdownBtn.tsx:299
 msgid "Translate"
 msgstr "Aistrigh"
 
@@ -5819,7 +5837,7 @@ msgstr "Ní féidir teagmháil a dhéanamh le do sheirbhís. Seiceáil do cheang
 #: src/components/dms/MessagesListBlockedFooter.tsx:104
 #: src/components/dms/MessagesListBlockedFooter.tsx:111
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:186
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:306
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:308
 #: src/view/com/profile/ProfileMenu.tsx:363
 #: src/view/screens/ProfileList.tsx:626
 msgid "Unblock"
@@ -5840,7 +5858,7 @@ msgstr ""
 msgid "Unblock Account"
 msgstr "Díbhlocáil an cuntas"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:300
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:302
 #: src/view/com/profile/ProfileMenu.tsx:345
 msgid "Unblock Account?"
 msgstr "An bhfuil fonn ort an cuntas seo a dhíbhlocáil?"
@@ -5903,8 +5921,8 @@ msgstr ""
 #~ msgid "Unmute notifications"
 #~ msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:365
-#: src/view/com/util/forms/PostDropdownBtn.tsx:370
+#: src/view/com/util/forms/PostDropdownBtn.tsx:382
+#: src/view/com/util/forms/PostDropdownBtn.tsx:387
 msgid "Unmute thread"
 msgstr "Ná coinnigh an snáithe seo i bhfolach níos mó"
 
@@ -6296,8 +6314,8 @@ msgstr "Tá brón orainn! Ní féidir síntiúis a ghlacadh ach le deich lipéad
 
 #: src/view/com/modals/EditProfile.tsx:222
 #: src/view/com/modals/EditProfile.tsx:234
-msgid "Website"
-msgstr ""
+#~ msgid "Website"
+#~ msgstr ""
 
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:48
 #~ msgid "Welcome to <0>Bluesky</0>"
@@ -6363,6 +6381,14 @@ msgstr "Cén fáth gur cheart athbhreithniú a dhéanamh ar an úsáideoir seo?"
 msgid "Wide"
 msgstr "Leathan"
 
+#: src/view/com/util/forms/PostDropdownBtn.tsx:476
+msgid "Would you also like to be shown less of this?"
+msgstr "Ar mhaith leat freisin níos lú de seo a thaispeáint?"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:468
+msgid "Would you also like to hide this post?"
+msgstr "Ar mhaith leat an post seo a cheilt freisin?"
+
 #: src/screens/Messages/Conversation/MessageInput.tsx:140
 #: src/screens/Messages/Conversation/MessageInput.web.tsx:134
 msgid "Write a message"
@@ -6382,6 +6408,7 @@ msgid "Writers"
 msgstr "Scríbhneoirí"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:77
+#: src/view/com/util/forms/PostDropdownBtn.tsx:479
 #: src/view/screens/PreferencesFollowingFeed.tsx:128
 #: src/view/screens/PreferencesFollowingFeed.tsx:200
 #: src/view/screens/PreferencesFollowingFeed.tsx:235
@@ -6540,11 +6567,19 @@ msgstr "Caithfidh tú a bheith 13 bliana d’aois nó níos sine le clárú."
 msgid "You must select at least one labeler for a report"
 msgstr "Caithfidh tú ar a laghad lipéadóir amháin a roghnú do thuairisc"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:173
+#: src/view/com/util/forms/PostDropdownBtn.tsx:477
+msgid "You will get less of this in feeds."
+msgstr "Feicfidh tú níos lú de seo sna beathaí."
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:238
+#~ msgid "You will get less of this!"
+#~ msgstr "Gheobhaidh tú níos lú de seo!"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:175
 msgid "You will no longer receive notifications for this thread"
 msgstr "Ní bhfaighidh tú fógraí don snáithe seo a thuilleadh."
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:176
+#: src/view/com/util/forms/PostDropdownBtn.tsx:178
 msgid "You will now receive notifications for this thread"
 msgstr "Gheobhaidh tú fógraí don snáithe seo anois."
 
