@@ -44,7 +44,8 @@ export function setContains(key: string, value: string): boolean {
 
 // iOS returns `null` if a value does not exist, and Android returns `undefined. Normalize these here for JS types
 function nullToUndefined(value: any) {
-  if (value === null) {
+  if (value == null) {
     return undefined
   }
+  return value
 }
