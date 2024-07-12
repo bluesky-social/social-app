@@ -7,6 +7,7 @@ import {
   Pressable,
   StyleProp,
   StyleSheet,
+  Switch,
   TextInput,
   View,
 } from 'react-native'
@@ -59,6 +60,7 @@ import {CenteredView, ScrollView} from '#/view/com/util/Views'
 import {SearchLinkCard, SearchProfileCard} from '#/view/shell/desktop/Search'
 import {ProfileCardFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {atoms as a} from '#/alf'
+import {generateAIQuery} from './AIModels'
 
 function Loader() {
   const pal = usePalette('default')
@@ -498,6 +500,7 @@ export function SearchScreen(
   const [selectedProfiles, setSelectedProfiles] = React.useState<
     AppBskyActorDefs.ProfileViewBasic[]
   >([])
+  const [useAI, setUseAI] = React.useState(false) //Agregado nuevo
 
   useFocusEffect(
     useNonReactiveCallback(() => {
@@ -616,9 +619,13 @@ export function SearchScreen(
     [updateSearchHistory, navigation],
   )
 
-  const onSubmit = React.useCallback(() => {
-    navigateToItem(searchText)
-  }, [navigateToItem, searchText])
+  const onSubmit = React.useCallback(async () => {
+    let finalSearchText = searchText
+    if (useAI) {
+      finalSearchText = (await generateAIQuery(searchText)) || searchText
+    }
+    navigateToItem(finalSearchText)
+  }, [navigateToItem, searchText, useAI])
 
   const onAutocompleteResultPress = React.useCallback(() => {
     if (isWeb) {
@@ -727,6 +734,8 @@ export function SearchScreen(
           onChangeText={onChangeText}
           onSubmit={onSubmit}
           onPressClearQuery={onPressClearQuery}
+          useAI={useAI}
+          setUseAI={setUseAI}
         />
         {showAutocomplete && (
           <View style={[styles.headerCancelBtn]}>
@@ -785,6 +794,8 @@ let SearchInputBox = ({
   onChangeText,
   onSubmit,
   onPressClearQuery,
+  useAI,
+  setUseAI,
 }: {
   textInput: React.RefObject<TextInput>
   searchText: string
@@ -793,6 +804,8 @@ let SearchInputBox = ({
   onChangeText: (text: string) => void
   onSubmit: () => void
   onPressClearQuery: () => void
+  useAI: boolean
+  setUseAI: (value: boolean) => void
 }): React.ReactNode => {
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -871,6 +884,10 @@ let SearchInputBox = ({
           />
         </Pressable>
       )}
+      <View style={styles.switchContainer}>
+        <Switch value={useAI} onValueChange={setUseAI} />
+        <Text style={styles.switchLabel}>Use AI</Text>
+      </View>
     </Pressable>
   )
 }
@@ -1180,5 +1197,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingVertical: 12,
     paddingHorizontal: 10,
+  },
+  switchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  switchLabel: {
+    marginLeft: 10,
   },
 })
