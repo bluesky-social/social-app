@@ -14,52 +14,57 @@ class ExpoBlueskyReferrerModule : Module() {
   private var intent: Intent? = null
   private var activityReferrer: Uri? = null
 
-  override fun definition() = ModuleDefinition {
-    Name("ExpoBlueskyReferrer")
+  override fun definition() =
+    ModuleDefinition {
+      Name("ExpoBlueskyReferrer")
 
-    OnNewIntent {
-      intent = it
-      activityReferrer = appContext.currentActivity?.referrer
-    }
-
-    AsyncFunction("getReferrerInfoAsync") {
-      val intentReferrer = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        intent?.getParcelableExtra(Intent.EXTRA_REFERRER, Uri::class.java)
-      } else {
-        intent?.getParcelableExtra(Intent.EXTRA_REFERRER)
+      OnNewIntent {
+        intent = it
+        activityReferrer = appContext.currentActivity?.referrer
       }
 
-      // Some apps explicitly set a referrer, like Chrome. In these cases, we prefer this since
-      // it's the actual website that the user came from rather than the app.
-      if (intentReferrer is Uri) {
-        val res = mapOf(
-          "referrer" to intentReferrer.toString(),
-          "hostname" to intentReferrer.host,
-        )
-        intent = null
-        return@AsyncFunction res
+      AsyncFunction("getReferrerInfoAsync") {
+        val intentReferrer =
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent?.getParcelableExtra(Intent.EXTRA_REFERRER, Uri::class.java)
+          } else {
+            intent?.getParcelableExtra(Intent.EXTRA_REFERRER)
+          }
+
+        // Some apps explicitly set a referrer, like Chrome. In these cases, we prefer this since
+        // it's the actual website that the user came from rather than the app.
+        if (intentReferrer is Uri) {
+          val res =
+            mapOf(
+              "referrer" to intentReferrer.toString(),
+              "hostname" to intentReferrer.host,
+            )
+          intent = null
+          return@AsyncFunction res
+        }
+
+        // In all other cases, we'll just record the app that sent the intent.
+        if (activityReferrer != null) {
+          // referrer could become null here. `.toString()` though can be called on null
+          val res =
+            mapOf(
+              "referrer" to activityReferrer.toString(),
+              "hostname" to (activityReferrer?.host ?: ""),
+            )
+          activityReferrer = null
+          return@AsyncFunction res
+        }
+
+        return@AsyncFunction null
       }
 
-      // In all other cases, we'll just record the app that sent the intent.
-      if (activityReferrer != null) {
-        // referrer could become null here. `.toString()` though can be called on null
-        val res = mapOf(
-          "referrer" to activityReferrer.toString(),
-          "hostname" to (activityReferrer?.host ?: ""),
-        )
-        activityReferrer = null
-        return@AsyncFunction res
-      }
-
-      return@AsyncFunction null
-    }
-
-    AsyncFunction("getGooglePlayReferrerInfoAsync") { promise: Promise ->
-      val referrerClient = InstallReferrerClient.newBuilder(appContext.reactContext).build()
-      referrerClient.startConnection(object : InstallReferrerStateListener {
-        override fun onInstallReferrerSetupFinished(responseCode: Int) {
-          if (responseCode == InstallReferrerClient.InstallReferrerResponse.OK) {
-            Log.d("ExpoGooglePlayReferrer", "Successfully retrieved referrer info.")
+      AsyncFunction("getGooglePlayReferrerInfoAsync") { promise: Promise ->
+        val referrerClient = InstallReferrerClient.newBuilder(appContext.reactContext).build()
+        referrerClient.startConnection(
+          object : InstallReferrerStateListener {
+            override fun onInstallReferrerSetupFinished(responseCode: Int) {
+              if (responseCode == InstallReferrerClient.InstallReferrerResponse.OK) {
+                Log.d("ExpoGooglePlayReferrer", "Successfully retrieved referrer info.")
 
                 val response = referrerClient.installReferrer
                 Log.d("ExpoGooglePlayReferrer", "Install referrer: ${response.installReferrer}")
