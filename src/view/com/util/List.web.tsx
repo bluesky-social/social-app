@@ -23,9 +23,11 @@ export type ListProps<ItemT> = Omit<
   onRefresh?: () => void
   onItemSeen?: (item: ItemT) => void
   desktopFixedHeight?: number | boolean
-  containWeb?: boolean
+  // Web only prop to contain the scroll to the container rather than the window
+  disableFullWindowScroll?: boolean
   sideBorders?: boolean
-  disableContentVisibility?: boolean
+  // Web only prop to disable a perf optimization (which would otherwise be on).
+  disableContainStyle?: boolean
 }
 export type ListRef = React.MutableRefObject<any | null> // TODO: Better types.
 
@@ -39,7 +41,7 @@ function ListImpl<ItemT>(
     ListHeaderComponent,
     ListFooterComponent,
     ListEmptyComponent,
-    containWeb,
+    disableFullWindowScroll,
     contentContainerStyle,
     data,
     desktopFixedHeight,
@@ -58,7 +60,7 @@ function ListImpl<ItemT>(
     extraData,
     style,
     sideBorders = true,
-    disableContentVisibility,
+    disableContainStyle,
     ...props
   }: ListProps<ItemT>,
   ref: React.Ref<ListMethods>,
@@ -112,7 +114,7 @@ function ListImpl<ItemT>(
   }
 
   const getScrollableNode = React.useCallback(() => {
-    if (containWeb) {
+    if (disableFullWindowScroll) {
       const element = nativeRef.current as HTMLDivElement | null
       if (!element) return
 
@@ -182,7 +184,7 @@ function ListImpl<ItemT>(
         },
       }
     }
-  }, [containWeb])
+  }, [disableFullWindowScroll])
 
   const nativeRef = React.useRef<HTMLDivElement>(null)
   React.useImperativeHandle(
@@ -267,7 +269,12 @@ function ListImpl<ItemT>(
     return () => {
       element?.removeEventListener('scroll', handleScroll)
     }
-  }, [isInsideVisibleTree, handleScroll, containWeb, getScrollableNode])
+  }, [
+    isInsideVisibleTree,
+    handleScroll,
+    disableFullWindowScroll,
+    getScrollableNode,
+  ])
 
   // --- onScrolledDownChange ---
   const isScrolledDown = useRef(false)
@@ -308,7 +315,7 @@ function ListImpl<ItemT>(
       {...props}
       style={[
         style,
-        containWeb && {
+        disableFullWindowScroll && {
           flex: 1,
           // @ts-expect-error web only
           'overflow-y': 'scroll',
@@ -332,13 +339,13 @@ function ListImpl<ItemT>(
           pal.border,
         ]}>
         <Visibility
-          root={containWeb ? nativeRef : null}
+          root={disableFullWindowScroll ? nativeRef : null}
           onVisibleChange={handleAboveTheFoldVisibleChange}
           style={[styles.aboveTheFoldDetector, {height: headerOffset}]}
         />
         {onStartReached && !isEmpty && (
           <Visibility
-            root={containWeb ? nativeRef : null}
+            root={disableFullWindowScroll ? nativeRef : null}
             onVisibleChange={onHeadVisibilityChange}
             topMargin={(onStartReachedThreshold ?? 0) * 100 + '%'}
           />
@@ -356,13 +363,13 @@ function ListImpl<ItemT>(
                   renderItem={renderItem}
                   extraData={extraData}
                   onItemSeen={onItemSeen}
-                  disableContentVisibility={disableContentVisibility}
+                  disableContainStyle={disableContainStyle}
                 />
               )
             })}
         {onEndReached && !isEmpty && (
           <Visibility
-            root={containWeb ? nativeRef : null}
+            root={disableFullWindowScroll ? nativeRef : null}
             onVisibleChange={onTailVisibilityChange}
             bottomMargin={(onEndReachedThreshold ?? 0) * 100 + '%'}
             key={data?.length}
@@ -406,7 +413,7 @@ let Row = function RowImpl<ItemT>({
   renderItem,
   extraData: _unused,
   onItemSeen,
-  disableContentVisibility,
+  disableContainStyle,
 }: {
   item: ItemT
   index: number
@@ -416,7 +423,7 @@ let Row = function RowImpl<ItemT>({
     | ((data: {index: number; item: any; separators: any}) => React.ReactNode)
   extraData: any
   onItemSeen: ((item: any) => void) | undefined
-  disableContentVisibility?: boolean
+  disableContainStyle?: boolean
 }): React.ReactNode {
   const rowRef = React.useRef(null)
   const intersectionTimeout = React.useRef<NodeJS.Timer | undefined>(undefined)
@@ -465,14 +472,10 @@ let Row = function RowImpl<ItemT>({
     return null
   }
 
-  const shouldDisableContentVisibility = disableContentVisibility || isSafari
+  const shouldDisableContainStyle = disableContainStyle || isSafari
   return (
     <View
-      style={
-        shouldDisableContentVisibility
-          ? undefined
-          : styles.contentVisibilityAuto
-      }
+      style={shouldDisableContainStyle ? undefined : styles.contain}
       ref={rowRef}>
       {renderItem({item, index, separators: null as any})}
     </View>
@@ -544,9 +547,9 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
     marginRight: 'auto',
   },
-  contentVisibilityAuto: {
+  contain: {
     // @ts-ignore web only
-    contentVisibility: 'auto',
+    contain: 'layout paint',
   },
   minHeightViewport: {
     // @ts-ignore web only

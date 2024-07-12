@@ -6,6 +6,8 @@ import {useQueryClient} from '@tanstack/react-query'
 import {precacheProfile} from '#/state/queries/profile'
 import {usePalette} from 'lib/hooks/usePalette'
 import {makeProfileLink} from 'lib/routes/links'
+import {forceLTR} from 'lib/strings/bidi'
+import {NON_BREAKING_SPACE} from 'lib/strings/constants'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {niceDate} from 'lib/strings/time'
@@ -68,14 +70,12 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             style={[pal.text]}
             lineHeight={1.2}
             disableMismatchWarning
-            text={
-              <>
-                {sanitizeDisplayName(
-                  displayName,
-                  opts.moderation?.ui('displayName'),
-                )}
-              </>
-            }
+            text={forceLTR(
+              sanitizeDisplayName(
+                displayName,
+                opts.moderation?.ui('displayName'),
+              ),
+            )}
             href={profileLink}
             onBeforePress={onBeforePressAuthor}
           />
@@ -83,7 +83,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             type="md"
             disableMismatchWarning
             style={[pal.textLight, {flexShrink: 4}]}
-            text={'\xa0' + sanitizeHandle(handle, '@')}
+            text={NON_BREAKING_SPACE + sanitizeHandle(handle, '@')}
             href={profileLink}
             onBeforePress={onBeforePressAuthor}
             anchorNoUnderline

@@ -20,7 +20,7 @@ export function ProfileHeaderDisplayName({
     <View pointerEvents="none">
       <Text
         testID="profileHeaderDisplayName"
-        style={[t.atoms.text, a.text_4xl, {fontWeight: '500'}]}>
+        style={[t.atoms.text, a.text_4xl, a.self_start, {fontWeight: '500'}]}>
         {sanitizeDisplayName(
           profile.displayName || sanitizeHandle(profile.handle),
           moderation.ui('displayName'),
