@@ -168,7 +168,12 @@ function HeaderReady({
           </View>
           <View style={a.flex_1}>
             <Text
-              style={[a.text_md, a.font_bold, web(a.leading_normal)]}
+              style={[
+                a.text_md,
+                a.font_bold,
+                a.self_start,
+                web(a.leading_normal),
+              ]}
               numberOfLines={1}>
               {displayName}
             </Text>
@@ -214,7 +219,7 @@ function HeaderReady({
         ]}>
         <PostAlerts
           modui={moderation.ui('contentList')}
-          size="large"
+          size="lg"
           style={[a.pt_xs]}
         />
       </View>

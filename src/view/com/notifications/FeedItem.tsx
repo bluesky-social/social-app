@@ -22,6 +22,7 @@ import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {useGate} from '#/lib/statsig/statsig'
 import {FeedNotification} from '#/state/queries/notifications/feed'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -57,6 +58,7 @@ import {useNavigation} from '@react-navigation/native'
 import {parseTenorGif} from '#/lib/strings/embed-player'
 import {logger} from '#/logger'
 import {NavigationProp} from 'lib/routes/types'
+import {forceLTR} from 'lib/strings/bidi'
 import {DM_SERVICE_HEADERS} from 'state/queries/messages/const'
 import {useAgent} from 'state/session'
 import {Button, ButtonText} from '#/components/Button'
@@ -86,6 +88,7 @@ let FeedItem = ({
   const pal = usePalette('default')
   const {_} = useLingui()
   const t = useTheme()
+  const gate = useGate()
   const [isAuthorsExpanded, setAuthorsExpanded] = useState<boolean>(false)
   const itemHref = useMemo(() => {
     if (item.type === 'post-like' || item.type === 'repost') {
@@ -168,6 +171,7 @@ let FeedItem = ({
     )
   }
 
+  let isFollowBack = false
   let action = ''
   let icon = (
     <HeartIconFilled
@@ -184,7 +188,15 @@ let FeedItem = ({
     action = _(msg`reposted your post`)
     icon = <RepostIcon size="xl" style={{color: t.palette.positive_600}} />
   } else if (item.type === 'follow') {
-    action = _(msg`followed you`)
+    if (
+      item.notification.author.viewer?.following &&
+      gate('ungroup_follow_backs')
+    ) {
+      isFollowBack = true
+      action = _(msg`followed you back`)
+    } else {
+      action = _(msg`followed you`)
+    }
     icon = <PersonPlusIcon size="xl" style={{color: t.palette.primary_500}} />
   } else if (item.type === 'feedgen-like') {
     action = _(msg`liked your custom feed`)
@@ -260,16 +272,18 @@ let FeedItem = ({
             visible={!isAuthorsExpanded}
             authors={authors}
             onToggleAuthorsExpanded={onToggleAuthorsExpanded}
-            showDmButton={item.type === 'starterpack-joined'}
+            showDmButton={item.type === 'starterpack-joined' || isFollowBack}
           />
           <ExpandedAuthorsList visible={isAuthorsExpanded} authors={authors} />
-          <Text style={styles.meta}>
+          <Text style={[styles.meta, a.self_start]}>
             <TextLink
               key={authors[0].href}
               style={[pal.text, s.bold]}
               href={authors[0].href}
-              text={sanitizeDisplayName(
-                authors[0].profile.displayName || authors[0].profile.handle,
+              text={forceLTR(
+                sanitizeDisplayName(
+                  authors[0].profile.displayName || authors[0].profile.handle,
+                ),
               )}
               disableMismatchWarning
             />

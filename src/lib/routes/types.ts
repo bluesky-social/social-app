@@ -45,6 +45,7 @@ export type CommonNavigatorParams = {
   Feeds: undefined
   Start: {name: string; rkey: string}
   StarterPack: {name: string; rkey: string; new?: boolean}
+  StarterPackShort: {code: string}
   StarterPackWizard: undefined
   StarterPackEdit: {
     rkey?: string
@@ -102,6 +103,7 @@ export type AllNavigatorParams = CommonNavigatorParams & {
   Messages: {animation?: 'push' | 'pop'}
   Start: {name: string; rkey: string}
   StarterPack: {name: string; rkey: string; new?: boolean}
+  StarterPackShort: {code: string}
   StarterPackWizard: undefined
   StarterPackEdit: {
     rkey?: string

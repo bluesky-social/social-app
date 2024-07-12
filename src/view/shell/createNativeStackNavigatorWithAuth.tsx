@@ -102,10 +102,11 @@ function NativeStackNavigator({
   const {showLoggedOut} = useLoggedOutView()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const {isMobile, isTabletOrMobile} = useWebMediaQueries()
-  const isNativePWIDisabled = isNative && gate('native_pwi_disabled')
   if (
-    (!PWI_ENABLED || isNativePWIDisabled || activeRouteRequiresAuth) &&
-    !hasSession
+    !hasSession &&
+    (!PWI_ENABLED ||
+      activeRouteRequiresAuth ||
+      (isNative && gate('native_pwi_disabled')))
   ) {
     return <LoggedOut />
   }

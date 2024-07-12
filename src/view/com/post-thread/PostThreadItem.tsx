@@ -281,7 +281,7 @@ let PostThreadItemLoaded = ({
                 <Link style={s.flex1} href={authorHref} title={authorTitle}>
                   <Text
                     type="xl-bold"
-                    style={[pal.text]}
+                    style={[pal.text, a.self_start]}
                     numberOfLines={1}
                     lineHeight={1.2}>
                     {sanitizeDisplayName(
@@ -313,7 +313,7 @@ let PostThreadItemLoaded = ({
               childContainerStyle={styles.contentHiderChild}>
               <PostAlerts
                 modui={moderation.ui('contentView')}
-                size="large"
+                size="lg"
                 includeMute
                 style={[a.pt_2xs, a.pb_sm]}
               />

@@ -232,11 +232,13 @@ function Empty() {
             t.atoms.text_contrast_medium,
             {color: 'white'},
           ]}>
-          You haven't created a starter pack yet!
+          <Trans>You haven't created a starter pack yet!</Trans>
         </Text>
         <Text style={[a.text_md, {color: 'white'}]}>
-          Starter packs let you easily share your favorite feeds and people with
-          your friends.
+          <Trans>
+            Starter packs let you easily share your favorite feeds and people
+            with your friends.
+          </Trans>
         </Text>
       </View>
       <View style={[a.flex_row, a.gap_md, {marginLeft: 'auto'}]}>

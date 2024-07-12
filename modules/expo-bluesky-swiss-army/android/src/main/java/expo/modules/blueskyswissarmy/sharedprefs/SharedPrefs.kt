@@ -4,26 +4,32 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 
-val DEFAULTS = mapOf<String, Any>(
-  "playSoundChat" to true,
-  "playSoundFollow" to false,
-  "playSoundLike" to false,
-  "playSoundMention" to false,
-  "playSoundQuote" to false,
-  "playSoundReply" to false,
-  "playSoundRepost" to false,
-  "badgeCount" to 0,
-)
+val DEFAULTS =
+  mapOf<String, Any>(
+    "playSoundChat" to true,
+    "playSoundFollow" to false,
+    "playSoundLike" to false,
+    "playSoundMention" to false,
+    "playSoundQuote" to false,
+    "playSoundReply" to false,
+    "playSoundRepost" to false,
+    "badgeCount" to 0,
+  )
 
 const val NAME = "SharedPrefs"
 
-class SharedPrefs(private val context: Context) {
+class SharedPrefs(
+  private val context: Context,
+) {
   companion object {
     private var hasInitialized = false
 
     private var instance: SharedPreferences? = null
 
-    fun getInstance(context: Context, info: String? = "(no info)"): SharedPreferences {
+    fun getInstance(
+      context: Context,
+      info: String? = "(no info)",
+    ): SharedPreferences {
       if (instance == null) {
         Log.d(NAME, "No preferences instance found, creating one.")
         instance = context.getSharedPreferences("xyz.blueskyweb.app", Context.MODE_PRIVATE)
@@ -68,44 +74,65 @@ class SharedPrefs(private val context: Context) {
               }
             }
           }
-        }
-        .apply()
+        }.apply()
     }
   }
 
-  fun setValue(key: String, value: String) {
+  fun setValue(
+    key: String,
+    value: String,
+  ) {
     val safeInstance = getInstance(context)
-    safeInstance.edit().apply {
-      putString(key, value)
-    }.apply()
+    safeInstance
+      .edit()
+      .apply {
+        putString(key, value)
+      }.apply()
   }
 
-  fun setValue(key: String, value: Float) {
+  fun setValue(
+    key: String,
+    value: Float,
+  ) {
     val safeInstance = getInstance(context)
-    safeInstance.edit().apply {
-      putFloat(key, value)
-    }.apply()
+    safeInstance
+      .edit()
+      .apply {
+        putFloat(key, value)
+      }.apply()
   }
 
-  fun setValue(key: String, value: Boolean) {
+  fun setValue(
+    key: String,
+    value: Boolean,
+  ) {
     val safeInstance = getInstance(context)
-    safeInstance.edit().apply {
-      putBoolean(key, value)
-    }.apply()
+    safeInstance
+      .edit()
+      .apply {
+        putBoolean(key, value)
+      }.apply()
   }
 
-  fun setValue(key: String, value: Set<String>) {
+  fun setValue(
+    key: String,
+    value: Set<String>,
+  ) {
     val safeInstance = getInstance(context)
-    safeInstance.edit().apply {
-      putStringSet(key, value)
-    }.apply()
+    safeInstance
+      .edit()
+      .apply {
+        putStringSet(key, value)
+      }.apply()
   }
 
   fun removeValue(key: String) {
     val safeInstance = getInstance(context)
-    safeInstance.edit().apply {
-      remove(key)
-    }.apply()
+    safeInstance
+      .edit()
+      .apply {
+        remove(key)
+      }.apply()
   }
 
   fun getString(key: String): String? {
@@ -121,17 +148,23 @@ class SharedPrefs(private val context: Context) {
     return safeInstance.getFloat(key, 0.0f)
   }
 
-  fun _setAnyValue(key: String, value: Any) {
+  @Suppress("ktlint:standard:function-naming")
+  fun _setAnyValue(
+    key: String,
+    value: Any,
+  ) {
     val safeInstance = getInstance(context)
-    safeInstance.edit().apply {
-      when (value) {
-        is String -> putString(key, value)
-        is Float -> putFloat(key, value)
-        is Boolean -> putBoolean(key, value)
-        is Set<*> -> putStringSet(key, value.map { it.toString() }.toSet())
-        else -> throw Error("Unsupported type: ${value::class.java}")
-      }
-    }.apply()
+    safeInstance
+      .edit()
+      .apply {
+        when (value) {
+          is String -> putString(key, value)
+          is Float -> putFloat(key, value)
+          is Boolean -> putBoolean(key, value)
+          is Set<*> -> putStringSet(key, value.map { it.toString() }.toSet())
+          else -> throw Error("Unsupported type: ${value::class.java}")
+        }
+      }.apply()
   }
 
   fun getBoolean(key: String): Boolean? {
@@ -145,29 +178,44 @@ class SharedPrefs(private val context: Context) {
     return res
   }
 
-  fun addToSet(key: String, value: String) {
+  fun addToSet(
+    key: String,
+    value: String,
+  ) {
     val safeInstance = getInstance(context)
     val set = safeInstance.getStringSet(key, setOf()) ?: setOf()
-    val newSet = set.toMutableSet().apply {
-      add(value)
-    }
-    safeInstance.edit().apply {
-      putStringSet(key, newSet)
-    }.apply()
+    val newSet =
+      set.toMutableSet().apply {
+        add(value)
+      }
+    safeInstance
+      .edit()
+      .apply {
+        putStringSet(key, newSet)
+      }.apply()
   }
 
-  fun removeFromSet(key: String, value: String) {
+  fun removeFromSet(
+    key: String,
+    value: String,
+  ) {
     val safeInstance = getInstance(context)
     val set = safeInstance.getStringSet(key, setOf()) ?: setOf()
-    val newSet = set.toMutableSet().apply {
-      remove(value)
-    }
-    safeInstance.edit().apply {
-      putStringSet(key, newSet)
-    }.apply()
+    val newSet =
+      set.toMutableSet().apply {
+        remove(value)
+      }
+    safeInstance
+      .edit()
+      .apply {
+        putStringSet(key, newSet)
+      }.apply()
   }
 
-  fun setContains(key: String, value: String): Boolean {
+  fun setContains(
+    key: String,
+    value: String,
+  ): Boolean {
     val safeInstance = getInstance(context)
     val set = safeInstance.getStringSet(key, setOf()) ?: setOf()
     return set.contains(value)

@@ -196,10 +196,7 @@ function Selectable({
             t.atoms.bg_contrast_50,
             (hovered || focused) && t.atoms.bg_contrast_100,
             isSelected && {
-              backgroundColor:
-                t.name === 'light'
-                  ? t.palette.primary_50
-                  : t.palette.primary_975,
+              backgroundColor: t.palette.primary_100,
             },
             style,
           ]}>

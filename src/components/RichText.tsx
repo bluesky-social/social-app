@@ -17,6 +17,19 @@ import {Text, TextProps} from '#/components/Typography'
 
 const WORD_WRAP = {wordWrap: 1}
 
+export type RichTextProps = TextStyleProp &
+  Pick<TextProps, 'selectable'> & {
+    value: RichTextAPI | string
+    testID?: string
+    numberOfLines?: number
+    disableLinks?: boolean
+    enableTags?: boolean
+    authorHandle?: string
+    onLinkPress?: LinkProps['onPress']
+    interactiveStyle?: TextStyle
+    emojiMultiplier?: number
+  }
+
 export function RichText({
   testID,
   value,
@@ -29,18 +42,7 @@ export function RichText({
   onLinkPress,
   interactiveStyle,
   emojiMultiplier = 1.85,
-}: TextStyleProp &
-  Pick<TextProps, 'selectable'> & {
-    value: RichTextAPI | string
-    testID?: string
-    numberOfLines?: number
-    disableLinks?: boolean
-    enableTags?: boolean
-    authorHandle?: string
-    onLinkPress?: LinkProps['onPress']
-    interactiveStyle?: TextStyle
-    emojiMultiplier?: number
-  }) {
+}: RichTextProps) {
   const richText = React.useMemo(
     () =>
       value instanceof RichTextAPI ? value : new RichTextAPI({text: value}),
