@@ -12,31 +12,16 @@ import {
   useNavigationState,
 } from '@react-navigation/native'
 
-import {useGate} from '#/lib/statsig/statsig'
 import {isInvalidHandle} from '#/lib/strings/handles'
 import {emitSoftReset} from '#/state/events'
 import {useFetchHandle} from '#/state/queries/handle'
+import {useUnreadMessageCount} from '#/state/queries/messages/list-converations'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {
-  BellIcon,
-  BellIconSolid,
-  CogIcon,
-  CogIconSolid,
-  ComposeIcon2,
-  HashtagIcon,
-  HomeIcon,
-  HomeIconSolid,
-  ListIcon,
-  MagnifyingGlassIcon2,
-  MagnifyingGlassIcon2Solid,
-  UserIcon,
-  UserIconSolid,
-} from 'lib/icons'
 import {getCurrentRoute, isStateAtTabRoot, isTab} from 'lib/routes/helpers'
 import {makeProfileLink} from 'lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
@@ -47,9 +32,41 @@ import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {PressableWithHover} from 'view/com/util/PressableWithHover'
 import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
-import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
-import {Envelope_Filled_Stroke2_Corner0_Rounded as EnvelopeFilled} from '#/components/icons/Envelope'
+import {
+  Bell_Filled_Corner0_Rounded as BellFilled,
+  Bell_Stroke2_Corner0_Rounded as Bell,
+} from '#/components/icons/Bell'
+import {
+  BulletList_Filled_Corner0_Rounded as ListFilled,
+  BulletList_Stroke2_Corner0_Rounded as List,
+} from '#/components/icons/BulletList'
+import {EditBig_Stroke2_Corner0_Rounded as EditBig} from '#/components/icons/EditBig'
+import {
+  Hashtag_Filled_Corner0_Rounded as HashtagFilled,
+  Hashtag_Stroke2_Corner0_Rounded as Hashtag,
+} from '#/components/icons/Hashtag'
+import {
+  HomeOpen_Filled_Corner0_Rounded as HomeFilled,
+  HomeOpen_Stoke2_Corner0_Rounded as Home,
+} from '#/components/icons/HomeOpen'
+import {MagnifyingGlass_Filled_Stroke2_Corner0_Rounded as MagnifyingGlassFilled} from '#/components/icons/MagnifyingGlass'
+import {MagnifyingGlass2_Stroke2_Corner0_Rounded as MagnifyingGlass} from '#/components/icons/MagnifyingGlass2'
+import {
+  Message_Stroke2_Corner0_Rounded as Message,
+  Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
+} from '#/components/icons/Message'
+import {
+  SettingsGear2_Filled_Corner0_Rounded as SettingsFilled,
+  SettingsGear2_Stroke2_Corner0_Rounded as Settings,
+} from '#/components/icons/SettingsGear2'
+import {
+  UserCircle_Filled_Corner0_Rounded as UserCircleFilled,
+  UserCircle_Stroke2_Corner0_Rounded as UserCircle,
+} from '#/components/icons/UserCircle'
+import {HomeTourExploreWrapper} from '#/tours/HomeTour'
 import {router} from '../../../routes'
+
+const NAV_ICON_WIDTH = 28
 
 function ProfileCard() {
   const {currentAccount} = useSession()
@@ -84,12 +101,18 @@ function ProfileCard() {
   )
 }
 
+const HIDDEN_BACK_BNT_ROUTES = ['StarterPackWizard', 'StarterPackEdit']
+
 function BackBtn() {
   const {isTablet} = useWebMediaQueries()
   const pal = usePalette('default')
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
-  const shouldShow = useNavigationState(state => !isStateAtTabRoot(state))
+  const shouldShow = useNavigationState(
+    state =>
+      !isStateAtTabRoot(state) &&
+      !HIDDEN_BACK_BNT_ROUTES.includes(getCurrentRoute(state).name),
+  )
 
   const onPressBack = React.useCallback(() => {
     if (navigation.canGoBack()) {
@@ -255,11 +278,7 @@ function ComposeBtn() {
         accessibilityLabel={_(msg`New post`)}
         accessibilityHint="">
         <View style={styles.newPostBtnIconWrapper}>
-          <ComposeIcon2
-            size={19}
-            strokeWidth={2}
-            style={styles.newPostBtnLabel}
-          />
+          <EditBig width={19} style={styles.newPostBtnLabel} />
         </View>
         <Text type="button" style={styles.newPostBtnLabel}>
           <Trans context="action">New Post</Trans>
@@ -269,13 +288,28 @@ function ComposeBtn() {
   )
 }
 
+function ChatNavItem() {
+  const pal = usePalette('default')
+  const {_} = useLingui()
+  const numUnreadMessages = useUnreadMessageCount()
+
+  return (
+    <NavItem
+      href="/messages"
+      count={numUnreadMessages.numUnread}
+      icon={<Message style={pal.text} width={NAV_ICON_WIDTH} />}
+      iconFilled={<MessageFilled style={pal.text} width={NAV_ICON_WIDTH} />}
+      label={_(msg`Chat`)}
+    />
+  )
+}
+
 export function DesktopLeftNav() {
   const {hasSession, currentAccount} = useSession()
   const pal = usePalette('default')
   const {_} = useLingui()
   const {isDesktop, isTablet} = useWebMediaQueries()
-  const numUnread = useUnreadNotifications()
-  const gate = useGate()
+  const numUnreadNotifications = useUnreadNotifications()
 
   if (!hasSession && !isDesktop) {
     return null
@@ -303,132 +337,66 @@ export function DesktopLeftNav() {
 
           <NavItem
             href="/"
-            icon={<HomeIcon size={isDesktop ? 24 : 28} style={pal.text} />}
-            iconFilled={
-              <HomeIconSolid
-                strokeWidth={4}
-                size={isDesktop ? 24 : 28}
-                style={pal.text}
-              />
-            }
+            icon={<Home width={NAV_ICON_WIDTH} style={pal.text} />}
+            iconFilled={<HomeFilled width={NAV_ICON_WIDTH} style={pal.text} />}
             label={_(msg`Home`)}
           />
-          <NavItem
-            href="/search"
-            icon={
-              <MagnifyingGlassIcon2
-                strokeWidth={2}
-                size={isDesktop ? 24 : 26}
-                style={pal.text}
-              />
-            }
-            iconFilled={
-              <MagnifyingGlassIcon2Solid
-                strokeWidth={2}
-                size={isDesktop ? 24 : 26}
-                style={pal.text}
-              />
-            }
-            label={_(msg`Search`)}
-          />
+          <HomeTourExploreWrapper>
+            <NavItem
+              href="/search"
+              icon={<MagnifyingGlass style={pal.text} width={NAV_ICON_WIDTH} />}
+              iconFilled={
+                <MagnifyingGlassFilled
+                  style={pal.text}
+                  width={NAV_ICON_WIDTH}
+                />
+              }
+              label={_(msg`Search`)}
+            />
+          </HomeTourExploreWrapper>
           <NavItem
             href="/notifications"
-            count={numUnread}
-            icon={
-              <BellIcon
-                strokeWidth={2}
-                size={isDesktop ? 24 : 26}
-                style={pal.text}
-              />
-            }
-            iconFilled={
-              <BellIconSolid
-                strokeWidth={1.5}
-                size={isDesktop ? 24 : 26}
-                style={pal.text}
-              />
-            }
+            count={numUnreadNotifications}
+            icon={<Bell width={NAV_ICON_WIDTH} style={pal.text} />}
+            iconFilled={<BellFilled width={NAV_ICON_WIDTH} style={pal.text} />}
             label={_(msg`Notifications`)}
           />
-          {gate('dms') && (
-            <NavItem
-              href="/messages"
-              icon={<Envelope style={pal.text} width={isDesktop ? 26 : 30} />}
-              iconFilled={
-                <EnvelopeFilled style={pal.text} width={isDesktop ? 26 : 30} />
-              }
-              label={_(msg`Messages`)}
-            />
-          )}
+          <ChatNavItem />
           <NavItem
             href="/feeds"
             icon={
-              <HashtagIcon
-                strokeWidth={2.25}
+              <Hashtag
                 style={pal.text as FontAwesomeIconStyle}
-                size={isDesktop ? 24 : 28}
+                width={NAV_ICON_WIDTH}
               />
             }
             iconFilled={
-              <HashtagIcon
-                strokeWidth={4}
+              <HashtagFilled
                 style={pal.text as FontAwesomeIconStyle}
-                size={isDesktop ? 24 : 28}
+                width={NAV_ICON_WIDTH}
               />
             }
             label={_(msg`Feeds`)}
           />
           <NavItem
             href="/lists"
-            icon={
-              <ListIcon
-                style={pal.text}
-                size={isDesktop ? 26 : 30}
-                strokeWidth={2}
-              />
-            }
-            iconFilled={
-              <ListIcon
-                style={pal.text}
-                size={isDesktop ? 26 : 30}
-                strokeWidth={3}
-              />
-            }
+            icon={<List style={pal.text} width={NAV_ICON_WIDTH} />}
+            iconFilled={<ListFilled style={pal.text} width={NAV_ICON_WIDTH} />}
             label={_(msg`Lists`)}
           />
           <NavItem
             href={currentAccount ? makeProfileLink(currentAccount) : '/'}
-            icon={
-              <UserIcon
-                strokeWidth={1.75}
-                size={isDesktop ? 28 : 30}
-                style={pal.text}
-              />
-            }
+            icon={<UserCircle width={NAV_ICON_WIDTH} style={pal.text} />}
             iconFilled={
-              <UserIconSolid
-                strokeWidth={1.75}
-                size={isDesktop ? 28 : 30}
-                style={pal.text}
-              />
+              <UserCircleFilled width={NAV_ICON_WIDTH} style={pal.text} />
             }
             label={_(msg`Profile`)}
           />
           <NavItem
             href="/settings"
-            icon={
-              <CogIcon
-                strokeWidth={1.75}
-                size={isDesktop ? 28 : 32}
-                style={pal.text}
-              />
-            }
+            icon={<Settings width={NAV_ICON_WIDTH} style={pal.text} />}
             iconFilled={
-              <CogIconSolid
-                strokeWidth={1.5}
-                size={isDesktop ? 28 : 32}
-                style={pal.text}
-              />
+              <SettingsFilled width={NAV_ICON_WIDTH} style={pal.text} />
             }
             label={_(msg`Settings`)}
           />
@@ -491,7 +459,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: 28,
-    height: 28,
+    height: 24,
     marginTop: 2,
     zIndex: 1,
   },

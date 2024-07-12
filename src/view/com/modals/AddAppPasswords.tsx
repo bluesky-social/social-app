@@ -8,20 +8,22 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {usePalette} from '#/lib/hooks/usePalette'
+import {s} from '#/lib/styles'
 import {logger} from '#/logger'
+import {isNative} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
 import {
   useAppPasswordCreateMutation,
   useAppPasswordsQuery,
 } from '#/state/queries/app-passwords'
-import {usePalette} from 'lib/hooks/usePalette'
-import {s} from 'lib/styles'
-import {isNative} from 'platform/detection'
-import {Button} from '../util/forms/Button'
-import {Text} from '../util/text/Text'
-import * as Toast from '../util/Toast'
+import {Button} from '#/view/com/util/forms/Button'
+import {Text} from '#/view/com/util/text/Text'
+import * as Toast from '#/view/com/util/Toast'
+import {atoms as a} from '#/alf'
+import * as Toggle from '#/components/forms/Toggle'
 
-export const snapPoints = ['70%']
+export const snapPoints = ['90%']
 
 const shadesOfBlue: string[] = [
   'AliceBlue',
@@ -70,6 +72,7 @@ export function Component({}: {}) {
   )
   const [appPassword, setAppPassword] = useState<string>()
   const [wasCopied, setWasCopied] = useState(false)
+  const [privileged, setPrivileged] = useState(false)
 
   const onCopy = React.useCallback(() => {
     if (appPassword) {
@@ -109,7 +112,7 @@ export function Component({}: {}) {
     }
 
     try {
-      const newPassword = await mutateAppPassword({name})
+      const newPassword = await mutateAppPassword({name, privileged})
       if (newPassword) {
         setAppPassword(newPassword.password)
       } else {
@@ -140,86 +143,98 @@ export function Component({}: {}) {
 
   return (
     <View style={[styles.container, pal.view]} testID="addAppPasswordsModal">
-      <View>
-        {!appPassword ? (
-          <Text type="lg" style={[pal.text]}>
-            <Trans>
-              Please enter a unique name for this App Password or use our
-              randomly generated one.
-            </Trans>
-          </Text>
-        ) : (
-          <Text type="lg" style={[pal.text]}>
-            <Text type="lg-bold" style={[pal.text, s.mr5]}>
-              <Trans>Here is your app password.</Trans>
+      {!appPassword ? (
+        <>
+          <View>
+            <Text type="lg" style={[pal.text]}>
+              <Trans>
+                Please enter a unique name for this App Password or use our
+                randomly generated one.
+              </Trans>
             </Text>
-            <Trans>
-              Use this to sign into the other app along with your handle.
-            </Trans>
-          </Text>
-        )}
-        {!appPassword ? (
-          <View style={[pal.btn, styles.textInputWrapper]}>
-            <TextInput
-              style={[styles.input, pal.text]}
-              onChangeText={_onChangeText}
-              value={name}
-              placeholder={_(msg`Enter a name for this App Password`)}
-              placeholderTextColor={pal.colors.textLight}
-              autoCorrect={false}
-              autoComplete="off"
-              autoCapitalize="none"
-              autoFocus={true}
-              maxLength={32}
-              selectTextOnFocus={true}
-              blurOnSubmit={true}
-              editable={!isPending}
-              returnKeyType="done"
-              onSubmitEditing={createAppPassword}
-              accessible={true}
-              accessibilityLabel={_(msg`Name`)}
-              accessibilityHint={_(msg`Input name for app password`)}
-            />
-          </View>
-        ) : (
-          <TouchableOpacity
-            style={[pal.border, styles.passwordContainer, pal.btn]}
-            onPress={onCopy}
-            accessibilityRole="button"
-            accessibilityLabel={_(msg`Copy`)}
-            accessibilityHint={_(msg`Copies app password`)}>
-            <Text type="2xl-bold" style={[pal.text]}>
-              {appPassword}
-            </Text>
-            {wasCopied ? (
-              <Text style={[pal.textLight]}>
-                <Trans>Copied</Trans>
-              </Text>
-            ) : (
-              <FontAwesomeIcon
-                icon={['far', 'clone']}
-                style={pal.text as FontAwesomeIconStyle}
-                size={18}
+            <View style={[pal.btn, styles.textInputWrapper]}>
+              <TextInput
+                style={[styles.input, pal.text]}
+                onChangeText={_onChangeText}
+                value={name}
+                placeholder={_(msg`Enter a name for this App Password`)}
+                placeholderTextColor={pal.colors.textLight}
+                autoCorrect={false}
+                autoComplete="off"
+                autoCapitalize="none"
+                autoFocus={true}
+                maxLength={32}
+                selectTextOnFocus={true}
+                blurOnSubmit={true}
+                editable={!isPending}
+                returnKeyType="done"
+                onSubmitEditing={createAppPassword}
+                accessible={true}
+                accessibilityLabel={_(msg`Name`)}
+                accessibilityHint={_(msg`Input name for app password`)}
               />
-            )}
-          </TouchableOpacity>
-        )}
-      </View>
-      {appPassword ? (
-        <Text type="lg" style={[pal.textLight, s.mb10]}>
-          <Trans>
-            For security reasons, you won't be able to view this again. If you
-            lose this password, you'll need to generate a new one.
-          </Trans>
-        </Text>
+            </View>
+          </View>
+          <Text type="xs" style={[pal.textLight, s.mb10, s.mt2]}>
+            <Trans>
+              Can only contain letters, numbers, spaces, dashes, and
+              underscores. Must be at least 4 characters long, but no more than
+              32 characters long.
+            </Trans>
+          </Text>
+          <Toggle.Item
+            type="checkbox"
+            label={_(msg`Allow access to your direct messages`)}
+            value={privileged}
+            onChange={val => setPrivileged(val)}
+            name="privileged"
+            style={a.my_md}>
+            <Toggle.Checkbox />
+            <Toggle.LabelText>
+              <Trans>Allow access to your direct messages</Trans>
+            </Toggle.LabelText>
+          </Toggle.Item>
+        </>
       ) : (
-        <Text type="xs" style={[pal.textLight, s.mb10, s.mt2]}>
-          <Trans>
-            Can only contain letters, numbers, spaces, dashes, and underscores.
-            Must be at least 4 characters long, but no more than 32 characters
-            long.
-          </Trans>
-        </Text>
+        <>
+          <View>
+            <Text type="lg" style={[pal.text]}>
+              <Text type="lg-bold" style={[pal.text, s.mr5]}>
+                <Trans>Here is your app password.</Trans>
+              </Text>
+              <Trans>
+                Use this to sign into the other app along with your handle.
+              </Trans>
+            </Text>
+            <TouchableOpacity
+              style={[pal.border, styles.passwordContainer, pal.btn]}
+              onPress={onCopy}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Copy`)}
+              accessibilityHint={_(msg`Copies app password`)}>
+              <Text type="2xl-bold" style={[pal.text]}>
+                {appPassword}
+              </Text>
+              {wasCopied ? (
+                <Text style={[pal.textLight]}>
+                  <Trans>Copied</Trans>
+                </Text>
+              ) : (
+                <FontAwesomeIcon
+                  icon={['far', 'clone']}
+                  style={pal.text as FontAwesomeIconStyle}
+                  size={18}
+                />
+              )}
+            </TouchableOpacity>
+          </View>
+          <Text type="lg" style={[pal.textLight, s.mb10]}>
+            <Trans>
+              For security reasons, you won't be able to view this again. If you
+              lose this password, you'll need to generate a new one.
+            </Trans>
+          </Text>
+        </>
       )}
       <View style={styles.btnContainer}>
         <Button

@@ -21,12 +21,16 @@ import {
 import {ImagesLightbox, useLightboxControls} from '#/state/lightbox'
 import {usePalette} from 'lib/hooks/usePalette'
 import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
+import {atoms as a} from '#/alf'
 import {ContentHider} from '../../../../components/moderation/ContentHider'
 import {AutoSizedImage} from '../images/AutoSizedImage'
 import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
 import {ExternalLinkEmbed} from './ExternalLinkEmbed'
 import {ListEmbed} from './ListEmbed'
 import {MaybeQuoteEmbed} from './QuoteEmbed'
+import hairlineWidth = StyleSheet.hairlineWidth
+import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
+import {Embed as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -38,22 +42,31 @@ type Embed =
 export function PostEmbeds({
   embed,
   moderation,
+  onOpen,
   style,
+  allowNestedQuotes,
 }: {
   embed?: Embed
   moderation?: ModerationDecision
+  onOpen?: () => void
   style?: StyleProp<ViewStyle>
+  allowNestedQuotes?: boolean
 }) {
   const pal = usePalette('default')
   const {openLightbox} = useLightboxControls()
+  const largeAltBadge = useLargeAltBadgeEnabled()
 
   // quote post with media
   // =
   if (AppBskyEmbedRecordWithMedia.isView(embed)) {
     return (
       <View style={style}>
-        <PostEmbeds embed={embed.media} moderation={moderation} />
-        <MaybeQuoteEmbed embed={embed.record} />
+        <PostEmbeds
+          embed={embed.media}
+          moderation={moderation}
+          onOpen={onOpen}
+        />
+        <MaybeQuoteEmbed embed={embed.record} onOpen={onOpen} />
       </View>
     )
   }
@@ -78,9 +91,20 @@ export function PostEmbeds({
       return <ListEmbed item={embed.record} />
     }
 
+    if (AppBskyGraphDefs.isStarterPackViewBasic(embed.record)) {
+      return <StarterPackCard starterPack={embed.record} />
+    }
+
     // quote post
     // =
-    return <MaybeQuoteEmbed embed={embed} style={style} />
+    return (
+      <MaybeQuoteEmbed
+        embed={embed}
+        style={style}
+        onOpen={onOpen}
+        allowNestedQuotes={allowNestedQuotes}
+      />
+    )
   }
 
   // image embed
@@ -107,17 +131,19 @@ export function PostEmbeds({
         const {alt, thumb, aspectRatio} = images[0]
         return (
           <ContentHider modui={moderation?.ui('contentMedia')}>
-            <View style={[styles.imagesContainer, style]}>
+            <View style={[styles.container, style]}>
               <AutoSizedImage
                 alt={alt}
                 uri={thumb}
                 dimensionsHint={aspectRatio}
                 onPress={() => _openLightbox(0)}
                 onPressIn={() => onPressIn(0)}
-                style={[styles.singleImage]}>
+                style={a.rounded_sm}>
                 {alt === '' ? null : (
                   <View style={styles.altContainer}>
-                    <Text style={styles.alt} accessible={false}>
+                    <Text
+                      style={[styles.alt, largeAltBadge && a.text_xs]}
+                      accessible={false}>
                       ALT
                     </Text>
                   </View>
@@ -130,14 +156,11 @@ export function PostEmbeds({
 
       return (
         <ContentHider modui={moderation?.ui('contentMedia')}>
-          <View style={[styles.imagesContainer, style]}>
+          <View style={[styles.container, style]}>
             <ImageLayoutGrid
               images={embed.images}
               onPress={_openLightbox}
               onPressIn={onPressIn}
-              style={
-                embed.images.length === 1 ? [styles.singleImage] : undefined
-              }
             />
           </View>
         </ContentHider>
@@ -151,7 +174,11 @@ export function PostEmbeds({
     const link = embed.external
     return (
       <ContentHider modui={moderation?.ui('contentMedia')}>
-        <ExternalLinkEmbed link={link} style={style} />
+        <ExternalLinkEmbed
+          link={link}
+          onOpen={onOpen}
+          style={[styles.container, style]}
+        />
       </ContentHider>
     )
   }
@@ -160,11 +187,8 @@ export function PostEmbeds({
 }
 
 const styles = StyleSheet.create({
-  imagesContainer: {
+  container: {
     marginTop: 8,
-  },
-  singleImage: {
-    borderRadius: 8,
   },
   altContainer: {
     backgroundColor: 'rgba(0, 0, 0, 0.75)',
@@ -172,16 +196,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
     paddingVertical: 3,
     position: 'absolute',
-    left: 6,
+    right: 6,
     bottom: 6,
   },
   alt: {
     color: 'white',
-    fontSize: 10,
+    fontSize: 7,
     fontWeight: 'bold',
   },
   customFeedOuter: {
-    borderWidth: 1,
+    borderWidth: hairlineWidth,
     borderRadius: 8,
     marginTop: 4,
     paddingHorizontal: 12,

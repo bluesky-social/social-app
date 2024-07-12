@@ -7,7 +7,6 @@ import {useNavigation} from '@react-navigation/native'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {usePalette} from '#/lib/hooks/usePalette'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {logEvent} from '#/lib/statsig/statsig'
 import {s} from '#/lib/styles'
 import {isIOS, isNative} from '#/platform/detection'
@@ -18,17 +17,21 @@ import {
 } from '#/state/shell/logged-out'
 import {useSetMinimalShellMode} from '#/state/shell/minimal-mode'
 import {NavigationProp} from 'lib/routes/types'
+import {useGate} from 'lib/statsig/statsig'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Text} from '#/view/com/util/text/Text'
 import {Login} from '#/screens/Login'
 import {Signup} from '#/screens/Signup'
+import {LandingScreen} from '#/screens/StarterPack/StarterPackLandingScreen'
 import {SplashScreen} from './SplashScreen'
 
 enum ScreenState {
   S_LoginOrCreateAccount,
   S_Login,
   S_CreateAccount,
+  S_StarterPack,
 }
+export {ScreenState as LoggedOutScreenState}
 
 export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   const {hasSession} = useSession()
@@ -37,18 +40,22 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   const setMinimalShellMode = useSetMinimalShellMode()
   const {screen} = useAnalytics()
   const {requestedAccountSwitchTo} = useLoggedOutView()
-  const [screenState, setScreenState] = React.useState<ScreenState>(
-    requestedAccountSwitchTo
-      ? requestedAccountSwitchTo === 'new'
-        ? ScreenState.S_CreateAccount
-        : ScreenState.S_Login
-      : ScreenState.S_LoginOrCreateAccount,
-  )
-  const {isMobile} = useWebMediaQueries()
+  const [screenState, setScreenState] = React.useState<ScreenState>(() => {
+    if (requestedAccountSwitchTo === 'new') {
+      return ScreenState.S_CreateAccount
+    } else if (requestedAccountSwitchTo === 'starterpack') {
+      return ScreenState.S_StarterPack
+    } else if (requestedAccountSwitchTo != null) {
+      return ScreenState.S_Login
+    } else {
+      return ScreenState.S_LoginOrCreateAccount
+    }
+  })
   const {clearRequestedAccount} = useLoggedOutViewControls()
   const navigation = useNavigation<NavigationProp>()
-  const isFirstScreen = screenState === ScreenState.S_LoginOrCreateAccount
+  const gate = useGate()
 
+  const isFirstScreen = screenState === ScreenState.S_LoginOrCreateAccount
   React.useEffect(() => {
     screen('Login')
     setMinimalShellMode(true)
@@ -66,18 +73,9 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   }, [navigation])
 
   return (
-    <View
-      testID="noSessionView"
-      style={[
-        s.hContentRegion,
-        pal.view,
-        {
-          // only needed if dismiss button is present
-          paddingTop: onDismiss && isMobile ? 40 : 0,
-        },
-      ]}>
+    <View testID="noSessionView" style={[s.hContentRegion, pal.view]}>
       <ErrorBoundary>
-        {onDismiss ? (
+        {onDismiss && screenState === ScreenState.S_LoginOrCreateAccount ? (
           <Pressable
             accessibilityHint={_(msg`Go back`)}
             accessibilityLabel={_(msg`Go back`)}
@@ -100,7 +98,10 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
               }}
             />
           </Pressable>
-        ) : isNative && !hasSession && isFirstScreen ? (
+        ) : isNative &&
+          !hasSession &&
+          isFirstScreen &&
+          !gate('native_pwi_disabled') ? (
           <Pressable
             accessibilityHint={_(msg`Search for users`)}
             accessibilityLabel={_(msg`Search for users`)}
@@ -132,7 +133,9 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
           </Pressable>
         ) : null}
 
-        {screenState === ScreenState.S_LoginOrCreateAccount ? (
+        {screenState === ScreenState.S_StarterPack ? (
+          <LandingScreen setScreenState={setScreenState} />
+        ) : screenState === ScreenState.S_LoginOrCreateAccount ? (
           <SplashScreen
             onPressSignin={() => {
               setScreenState(ScreenState.S_Login)

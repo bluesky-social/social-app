@@ -1,5 +1,6 @@
 import React from 'react'
 import {ActivityIndicator, Pressable, StyleSheet, View} from 'react-native'
+import {AppBskyActorDefs} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -9,11 +10,11 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {track} from '#/lib/analytics/analytics'
 import {logger} from '#/logger'
 import {
-  usePinFeedMutation,
+  useOverwriteSavedFeedsMutation,
   usePreferencesQuery,
-  useSetSaveFeedsMutation,
-  useUnpinFeedMutation,
+  useUpdateSavedFeedsMutation,
 } from '#/state/queries/preferences'
+import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useHaptics} from 'lib/haptics'
@@ -27,6 +28,11 @@ import {Text} from 'view/com/util/text/Text'
 import * as Toast from 'view/com/util/Toast'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {CenteredView, ScrollView} from 'view/com/util/Views'
+import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
+import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
+import {atoms as a, useTheme} from '#/alf'
+import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 const HITSLOP_TOP = {
   top: 20,
@@ -50,23 +56,25 @@ export function SavedFeeds({}: Props) {
   const setMinimalShellMode = useSetMinimalShellMode()
   const {data: preferences} = usePreferencesQuery()
   const {
-    mutateAsync: setSavedFeeds,
+    mutateAsync: overwriteSavedFeeds,
     variables: optimisticSavedFeedsResponse,
     reset: resetSaveFeedsMutationState,
-    error: setSavedFeedsError,
-  } = useSetSaveFeedsMutation()
+    error: savedFeedsError,
+  } = useOverwriteSavedFeedsMutation()
 
   /*
    * Use optimistic data if exists and no error, otherwise fallback to remote
    * data
    */
   const currentFeeds =
-    optimisticSavedFeedsResponse && !setSavedFeedsError
+    optimisticSavedFeedsResponse && !savedFeedsError
       ? optimisticSavedFeedsResponse
-      : preferences?.feeds || {saved: [], pinned: []}
-  const unpinned = currentFeeds.saved.filter(f => {
-    return !currentFeeds.pinned?.includes(f)
-  })
+      : preferences?.savedFeeds || []
+  const pinnedFeeds = currentFeeds.filter(f => f.pinned)
+  const unpinnedFeeds = currentFeeds.filter(f => !f.pinned)
+  const noSavedFeedsOfAnyType = pinnedFeeds.length + unpinnedFeeds.length === 0
+  const noFollowingFeed =
+    currentFeeds.every(f => f.type !== 'timeline') && !noSavedFeedsOfAnyType
 
   useFocusEffect(
     React.useCallback(() => {
@@ -84,14 +92,20 @@ export function SavedFeeds({}: Props) {
       ]}>
       <ViewHeader title={_(msg`Edit My Feeds`)} showOnDesktop showBorder />
       <ScrollView style={s.flex1} contentContainerStyle={[styles.noBorder]}>
+        {noSavedFeedsOfAnyType && (
+          <View style={[pal.border, {borderBottomWidth: hairlineWidth}]}>
+            <NoSavedFeedsOfAnyType />
+          </View>
+        )}
+
         <View style={[pal.text, pal.border, styles.title]}>
           <Text type="title" style={pal.text}>
             <Trans>Pinned Feeds</Trans>
           </Text>
         </View>
 
-        {preferences?.feeds ? (
-          !currentFeeds.pinned.length ? (
+        {preferences ? (
+          !pinnedFeeds.length ? (
             <View
               style={[
                 pal.border,
@@ -104,27 +118,35 @@ export function SavedFeeds({}: Props) {
               </Text>
             </View>
           ) : (
-            currentFeeds.pinned.map(uri => (
+            pinnedFeeds.map(f => (
               <ListItem
-                key={uri}
-                feedUri={uri}
+                key={f.id}
+                feed={f}
                 isPinned
-                setSavedFeeds={setSavedFeeds}
+                overwriteSavedFeeds={overwriteSavedFeeds}
                 resetSaveFeedsMutationState={resetSaveFeedsMutationState}
                 currentFeeds={currentFeeds}
+                preferences={preferences}
               />
             ))
           )
         ) : (
           <ActivityIndicator style={{marginTop: 20}} />
         )}
+
+        {noFollowingFeed && (
+          <View style={[pal.border, {borderBottomWidth: hairlineWidth}]}>
+            <NoFollowingFeed />
+          </View>
+        )}
+
         <View style={[pal.text, pal.border, styles.title]}>
           <Text type="title" style={pal.text}>
             <Trans>Saved Feeds</Trans>
           </Text>
         </View>
-        {preferences?.feeds ? (
-          !unpinned.length ? (
+        {preferences ? (
+          !unpinnedFeeds.length ? (
             <View
               style={[
                 pal.border,
@@ -137,14 +159,15 @@ export function SavedFeeds({}: Props) {
               </Text>
             </View>
           ) : (
-            unpinned.map(uri => (
+            unpinnedFeeds.map(f => (
               <ListItem
-                key={uri}
-                feedUri={uri}
+                key={f.id}
+                feed={f}
                 isPinned={false}
-                setSavedFeeds={setSavedFeeds}
+                overwriteSavedFeeds={overwriteSavedFeeds}
                 resetSaveFeedsMutationState={resetSaveFeedsMutationState}
                 currentFeeds={currentFeeds}
+                preferences={preferences}
               />
             ))
           )
@@ -174,27 +197,29 @@ export function SavedFeeds({}: Props) {
 }
 
 function ListItem({
-  feedUri,
+  feed,
   isPinned,
   currentFeeds,
-  setSavedFeeds,
+  overwriteSavedFeeds,
   resetSaveFeedsMutationState,
 }: {
-  feedUri: string // uri
+  feed: AppBskyActorDefs.SavedFeed
   isPinned: boolean
-  currentFeeds: {saved: string[]; pinned: string[]}
-  setSavedFeeds: ReturnType<typeof useSetSaveFeedsMutation>['mutateAsync']
+  currentFeeds: AppBskyActorDefs.SavedFeed[]
+  overwriteSavedFeeds: ReturnType<
+    typeof useOverwriteSavedFeedsMutation
+  >['mutateAsync']
   resetSaveFeedsMutationState: ReturnType<
-    typeof useSetSaveFeedsMutation
+    typeof useOverwriteSavedFeedsMutation
   >['reset']
+  preferences: UsePreferencesQueryResponse
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
   const playHaptic = useHaptics()
-  const {isPending: isPinPending, mutateAsync: pinFeed} = usePinFeedMutation()
-  const {isPending: isUnpinPending, mutateAsync: unpinFeed} =
-    useUnpinFeedMutation()
-  const isPending = isPinPending || isUnpinPending
+  const {isPending: isUpdatePending, mutateAsync: updateSavedFeeds} =
+    useUpdateSavedFeedsMutation()
+  const feedUri = feed.value
 
   const onTogglePinned = React.useCallback(async () => {
     playHaptic()
@@ -202,122 +227,195 @@ function ListItem({
     try {
       resetSaveFeedsMutationState()
 
-      if (isPinned) {
-        await unpinFeed({uri: feedUri})
-      } else {
-        await pinFeed({uri: feedUri})
-      }
+      await updateSavedFeeds([
+        {
+          ...feed,
+          pinned: !feed.pinned,
+        },
+      ])
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting the server`))
       logger.error('Failed to toggle pinned feed', {message: e})
     }
-  }, [
-    playHaptic,
-    resetSaveFeedsMutationState,
-    isPinned,
-    unpinFeed,
-    feedUri,
-    pinFeed,
-    _,
-  ])
+  }, [_, playHaptic, feed, updateSavedFeeds, resetSaveFeedsMutationState])
 
   const onPressUp = React.useCallback(async () => {
     if (!isPinned) return
 
-    // create new array, do not mutate
-    const pinned = [...currentFeeds.pinned]
-    const index = pinned.indexOf(feedUri)
+    const nextFeeds = currentFeeds.slice()
+    const ids = currentFeeds.map(f => f.id)
+    const index = ids.indexOf(feed.id)
+    const nextIndex = index - 1
 
     if (index === -1 || index === 0) return
-    ;[pinned[index], pinned[index - 1]] = [pinned[index - 1], pinned[index]]
+    ;[nextFeeds[index], nextFeeds[nextIndex]] = [
+      nextFeeds[nextIndex],
+      nextFeeds[index],
+    ]
 
     try {
-      await setSavedFeeds({saved: currentFeeds.saved, pinned})
+      await overwriteSavedFeeds(nextFeeds)
       track('CustomFeed:Reorder', {
-        uri: feedUri,
-        index: pinned.indexOf(feedUri),
+        uri: feed.value,
+        index: nextIndex,
       })
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting the server`))
       logger.error('Failed to set pinned feed order', {message: e})
     }
-  }, [feedUri, isPinned, setSavedFeeds, currentFeeds, _])
+  }, [feed, isPinned, overwriteSavedFeeds, currentFeeds, _])
 
   const onPressDown = React.useCallback(async () => {
     if (!isPinned) return
 
-    const pinned = [...currentFeeds.pinned]
-    const index = pinned.indexOf(feedUri)
+    const nextFeeds = currentFeeds.slice()
+    const ids = currentFeeds.map(f => f.id)
+    const index = ids.indexOf(feed.id)
+    const nextIndex = index + 1
 
-    if (index === -1 || index >= pinned.length - 1) return
-    ;[pinned[index], pinned[index + 1]] = [pinned[index + 1], pinned[index]]
+    if (index === -1 || index >= nextFeeds.length - 1) return
+    ;[nextFeeds[index], nextFeeds[nextIndex]] = [
+      nextFeeds[nextIndex],
+      nextFeeds[index],
+    ]
 
     try {
-      await setSavedFeeds({saved: currentFeeds.saved, pinned})
+      await overwriteSavedFeeds(nextFeeds)
       track('CustomFeed:Reorder', {
-        uri: feedUri,
-        index: pinned.indexOf(feedUri),
+        uri: feed.value,
+        index: nextIndex,
       })
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting the server`))
       logger.error('Failed to set pinned feed order', {message: e})
     }
-  }, [feedUri, isPinned, setSavedFeeds, currentFeeds, _])
+  }, [feed, isPinned, overwriteSavedFeeds, currentFeeds, _])
 
   return (
-    <Pressable
-      accessibilityRole="button"
-      style={[styles.itemContainer, pal.border]}>
+    <View style={[styles.itemContainer, pal.border]}>
+      {feed.type === 'timeline' ? (
+        <FollowingFeedCard />
+      ) : (
+        <FeedSourceCard
+          key={feedUri}
+          feedUri={feedUri}
+          style={[isPinned && {paddingRight: 8}]}
+          showMinimalPlaceholder
+          showSaveBtn={!isPinned}
+          hideTopBorder={true}
+        />
+      )}
       {isPinned ? (
-        <View style={styles.webArrowButtonsContainer}>
+        <>
           <Pressable
-            disabled={isPending}
+            disabled={isUpdatePending}
             accessibilityRole="button"
             onPress={onPressUp}
             hitSlop={HITSLOP_TOP}
             style={state => ({
-              opacity: state.hovered || state.focused || isPending ? 0.5 : 1,
+              backgroundColor: pal.viewLight.backgroundColor,
+              paddingHorizontal: 12,
+              paddingVertical: 10,
+              borderRadius: 4,
+              marginRight: 8,
+              opacity:
+                state.hovered || state.pressed || isUpdatePending ? 0.5 : 1,
             })}>
             <FontAwesomeIcon
               icon="arrow-up"
-              size={12}
-              style={[pal.text, styles.webArrowUpButton]}
+              size={14}
+              style={[pal.textLight]}
             />
           </Pressable>
           <Pressable
-            disabled={isPending}
+            disabled={isUpdatePending}
             accessibilityRole="button"
             onPress={onPressDown}
             hitSlop={HITSLOP_BOTTOM}
             style={state => ({
-              opacity: state.hovered || state.focused || isPending ? 0.5 : 1,
+              backgroundColor: pal.viewLight.backgroundColor,
+              paddingHorizontal: 12,
+              paddingVertical: 10,
+              borderRadius: 4,
+              marginRight: 8,
+              opacity:
+                state.hovered || state.pressed || isUpdatePending ? 0.5 : 1,
             })}>
-            <FontAwesomeIcon icon="arrow-down" size={12} style={[pal.text]} />
+            <FontAwesomeIcon
+              icon="arrow-down"
+              size={14}
+              style={[pal.textLight]}
+            />
           </Pressable>
-        </View>
+        </>
       ) : null}
-      <FeedSourceCard
-        key={feedUri}
-        feedUri={feedUri}
-        style={styles.noTopBorder}
-        showSaveBtn
-        showMinimalPlaceholder
-      />
-      <Pressable
-        disabled={isPending}
-        accessibilityRole="button"
-        hitSlop={10}
-        onPress={onTogglePinned}
-        style={state => ({
-          opacity: state.hovered || state.focused || isPending ? 0.5 : 1,
-        })}>
-        <FontAwesomeIcon
-          icon="thumb-tack"
-          size={20}
-          color={isPinned ? colors.blue3 : pal.colors.icon}
+      <View style={{paddingRight: 16}}>
+        <Pressable
+          disabled={isUpdatePending}
+          accessibilityRole="button"
+          hitSlop={10}
+          onPress={onTogglePinned}
+          style={state => ({
+            backgroundColor: pal.viewLight.backgroundColor,
+            paddingHorizontal: 12,
+            paddingVertical: 10,
+            borderRadius: 4,
+            opacity:
+              state.hovered || state.focused || isUpdatePending ? 0.5 : 1,
+          })}>
+          <FontAwesomeIcon
+            icon="thumb-tack"
+            size={14}
+            color={isPinned ? colors.blue3 : pal.colors.icon}
+          />
+        </Pressable>
+      </View>
+    </View>
+  )
+}
+
+function FollowingFeedCard() {
+  const t = useTheme()
+  return (
+    <View
+      style={[
+        a.flex_row,
+        a.align_center,
+        a.flex_1,
+        {
+          paddingHorizontal: 18,
+          paddingVertical: 20,
+        },
+      ]}>
+      <View
+        style={[
+          a.align_center,
+          a.justify_center,
+          a.rounded_sm,
+          {
+            width: 36,
+            height: 36,
+            backgroundColor: t.palette.primary_500,
+            marginRight: 10,
+          },
+        ]}>
+        <FilterTimeline
+          style={[
+            {
+              width: 22,
+              height: 22,
+            },
+          ]}
+          fill={t.palette.white}
         />
-      </Pressable>
-    </Pressable>
+      </View>
+      <View
+        style={{flex: 1, flexDirection: 'row', gap: 8, alignItems: 'center'}}>
+        <Text type="lg-medium" style={[t.atoms.text]} numberOfLines={1}>
+          <Trans>Following</Trans>
+        </Text>
+      </View>
+    </View>
   )
 }
 
@@ -339,24 +437,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingTop: 20,
     paddingBottom: 10,
-    borderBottomWidth: 1,
+    borderBottomWidth: hairlineWidth,
   },
   itemContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderBottomWidth: 1,
-    paddingRight: 16,
-  },
-  webArrowButtonsContainer: {
-    paddingLeft: 16,
-    flexDirection: 'column',
-    justifyContent: 'space-around',
-  },
-  webArrowUpButton: {
-    marginBottom: 10,
-  },
-  noTopBorder: {
-    borderTopWidth: 0,
+    borderBottomWidth: hairlineWidth,
   },
   footerText: {
     paddingHorizontal: 26,

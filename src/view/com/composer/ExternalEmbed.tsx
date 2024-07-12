@@ -1,12 +1,9 @@
 import React from 'react'
-import {StyleProp, TouchableOpacity, View, ViewStyle} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {StyleProp, View, ViewStyle} from 'react-native'
 
 import {ExternalEmbedDraft} from 'lib/api/index'
-import {s} from 'lib/styles'
 import {Gif} from 'state/queries/tenor'
+import {ExternalEmbedRemoveBtn} from 'view/com/composer/ExternalEmbedRemoveBtn'
 import {ExternalLinkEmbed} from 'view/com/util/post-embeds/ExternalLinkEmbed'
 import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
@@ -22,7 +19,6 @@ export const ExternalEmbed = ({
   gif?: Gif
 }) => {
   const t = useTheme()
-  const {_} = useLingui()
 
   const linkInfo = React.useMemo(
     () =>
@@ -46,7 +42,12 @@ export const ExternalEmbed = ({
     : undefined
 
   return (
-    <View style={[a.mb_xl, a.overflow_hidden, t.atoms.border_contrast_medium]}>
+    <View
+      style={[
+        !gif && a.mb_xl,
+        a.overflow_hidden,
+        t.atoms.border_contrast_medium,
+      ]}>
       {link.isLoading ? (
         <Container style={loadingStyle}>
           <Loader size="xl" />
@@ -62,28 +63,10 @@ export const ExternalEmbed = ({
         </Container>
       ) : linkInfo ? (
         <View style={{pointerEvents: !gif ? 'none' : 'auto'}}>
-          <ExternalLinkEmbed link={linkInfo} />
+          <ExternalLinkEmbed link={linkInfo} hideAlt />
         </View>
       ) : null}
-      <TouchableOpacity
-        style={{
-          position: 'absolute',
-          top: 16,
-          right: 10,
-          height: 36,
-          width: 36,
-          backgroundColor: 'rgba(0, 0, 0, 0.75)',
-          borderRadius: 18,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-        onPress={onRemove}
-        accessibilityRole="button"
-        accessibilityLabel={_(msg`Remove image preview`)}
-        accessibilityHint={_(msg`Removes default thumbnail from ${link.uri}`)}
-        onAccessibilityEscape={onRemove}>
-        <FontAwesomeIcon size={18} icon="xmark" style={s.white} />
-      </TouchableOpacity>
+      <ExternalEmbedRemoveBtn onRemove={onRemove} />
     </View>
   )
 }

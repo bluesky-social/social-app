@@ -1,5 +1,5 @@
 import React from 'react'
-import {View} from 'react-native'
+import {Linking, View} from 'react-native'
 import {useSafeAreaFrame} from 'react-native-safe-area-context'
 import {ComAtprotoLabelDefs} from '@atproto/api'
 import {LABELS} from '@atproto/api'
@@ -10,6 +10,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {getLabelingServiceTitle} from '#/lib/moderation'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
 import {logger} from '#/logger'
+import {isIOS} from '#/platform/detection'
 import {
   useMyLabelersQuery,
   usePreferencesQuery,
@@ -202,6 +203,8 @@ export function ModerationScreenInner({
     [setAdultContentPref],
   )
 
+  const disabledOnIOS = isIOS && !adultContentEnabled
+
   return (
     <ScrollView
       contentContainerStyle={[
@@ -324,12 +327,14 @@ export function ModerationScreenInner({
                   a.flex_row,
                   a.align_center,
                   a.justify_between,
+                  disabledOnIOS && {opacity: 0.5},
                 ]}>
                 <Text style={[a.font_semibold, t.atoms.text_contrast_high]}>
                   <Trans>Enable adult content</Trans>
                 </Text>
                 <Toggle.Item
                   label={_(msg`Toggle to enable or disable adult content`)}
+                  disabled={disabledOnIOS}
                   name="adultContent"
                   value={adultContentEnabled}
                   onChange={onToggleAdultContentEnabled}>
@@ -345,6 +350,25 @@ export function ModerationScreenInner({
                   </View>
                 </Toggle.Item>
               </View>
+              {disabledOnIOS && (
+                <View style={[a.pb_lg, a.px_lg]}>
+                  <Text>
+                    <Trans>
+                      Adult content can only be enabled via the Web at{' '}
+                      <InlineLinkText
+                        to=""
+                        onPress={evt => {
+                          evt.preventDefault()
+                          Linking.openURL('https://bsky.app/')
+                          return false
+                        }}>
+                        bsky.app
+                      </InlineLinkText>
+                      .
+                    </Trans>
+                  </Text>
+                </View>
+              )}
               <Divider />
             </>
           )}

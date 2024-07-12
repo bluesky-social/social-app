@@ -1,11 +1,14 @@
-import React, {isValidElement, memo, useRef, startTransition} from 'react'
+import React, {isValidElement, memo, startTransition, useRef} from 'react'
 import {FlatListProps, StyleSheet, View, ViewProps} from 'react-native'
-import {addStyle} from 'lib/styles'
+import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/reanimated2/hook/commonTypes'
+
+import {batchedUpdates} from '#/lib/batchedUpdates'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {useScrollHandlers} from '#/lib/ScrollContext'
+import {isSafari} from 'lib/browser'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {useScrollHandlers} from '#/lib/ScrollContext'
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {batchedUpdates} from '#/lib/batchedUpdates'
+import {addStyle} from 'lib/styles'
 
 export type ListMethods = any // TODO: Better types.
 export type ListProps<ItemT> = Omit<
@@ -18,28 +21,46 @@ export type ListProps<ItemT> = Omit<
   headerOffset?: number
   refreshing?: boolean
   onRefresh?: () => void
-  desktopFixedHeight: any // TODO: Better types.
+  onItemSeen?: (item: ItemT) => void
+  desktopFixedHeight?: number | boolean
+  // Web only prop to contain the scroll to the container rather than the window
+  disableFullWindowScroll?: boolean
+  sideBorders?: boolean
+  // Web only prop to disable a perf optimization (which would otherwise be on).
+  disableContainStyle?: boolean
 }
 export type ListRef = React.MutableRefObject<any | null> // TODO: Better types.
+
+const ON_ITEM_SEEN_WAIT_DURATION = 1.5e3 // when we consider post to  be "seen"
+const ON_ITEM_SEEN_INTERSECTION_OPTS = {
+  rootMargin: '-200px 0px -200px 0px',
+} // post must be 200px visible to be "seen"
 
 function ListImpl<ItemT>(
   {
     ListHeaderComponent,
     ListFooterComponent,
+    ListEmptyComponent,
+    disableFullWindowScroll,
     contentContainerStyle,
     data,
     desktopFixedHeight,
     headerOffset,
     keyExtractor,
     refreshing: _unsupportedRefreshing,
+    onStartReached,
+    onStartReachedThreshold = 0,
     onEndReached,
     onEndReachedThreshold = 0,
     onRefresh: _unsupportedOnRefresh,
     onScrolledDownChange,
     onContentSizeChange,
+    onItemSeen,
     renderItem,
     extraData,
     style,
+    sideBorders = true,
+    disableContainStyle,
     ...props
   }: ListProps<ItemT>,
   ref: React.Ref<ListMethods>,
@@ -54,23 +75,35 @@ function ListImpl<ItemT>(
     )
   }
 
-  let header: JSX.Element | null = null
+  const isEmpty = !data || data.length === 0
+
+  let headerComponent: JSX.Element | null = null
   if (ListHeaderComponent != null) {
     if (isValidElement(ListHeaderComponent)) {
-      header = ListHeaderComponent
+      headerComponent = ListHeaderComponent
     } else {
       // @ts-ignore Nah it's fine.
-      header = <ListHeaderComponent />
+      headerComponent = <ListHeaderComponent />
     }
   }
 
-  let footer: JSX.Element | null = null
+  let footerComponent: JSX.Element | null = null
   if (ListFooterComponent != null) {
     if (isValidElement(ListFooterComponent)) {
-      footer = ListFooterComponent
+      footerComponent = ListFooterComponent
     } else {
       // @ts-ignore Nah it's fine.
-      footer = <ListFooterComponent />
+      footerComponent = <ListFooterComponent />
+    }
+  }
+
+  let emptyComponent: JSX.Element | null = null
+  if (ListEmptyComponent != null) {
+    if (isValidElement(ListEmptyComponent)) {
+      emptyComponent = ListEmptyComponent
+    } else {
+      // @ts-ignore Nah it's fine.
+      emptyComponent = <ListEmptyComponent />
     }
   }
 
@@ -80,14 +113,88 @@ function ListImpl<ItemT>(
     })
   }
 
-  const nativeRef = React.useRef(null)
+  const getScrollableNode = React.useCallback(() => {
+    if (disableFullWindowScroll) {
+      const element = nativeRef.current as HTMLDivElement | null
+      if (!element) return
+
+      return {
+        get scrollWidth() {
+          return element.scrollWidth
+        },
+        get scrollHeight() {
+          return element.scrollHeight
+        },
+        get clientWidth() {
+          return element.clientWidth
+        },
+        get clientHeight() {
+          return element.clientHeight
+        },
+        get scrollY() {
+          return element.scrollTop
+        },
+        get scrollX() {
+          return element.scrollLeft
+        },
+        scrollTo(options?: ScrollToOptions) {
+          element.scrollTo(options)
+        },
+        scrollBy(options: ScrollToOptions) {
+          element.scrollBy(options)
+        },
+        addEventListener(event: string, handler: any) {
+          element.addEventListener(event, handler)
+        },
+        removeEventListener(event: string, handler: any) {
+          element.removeEventListener(event, handler)
+        },
+      }
+    } else {
+      return {
+        get scrollWidth() {
+          return document.documentElement.scrollWidth
+        },
+        get scrollHeight() {
+          return document.documentElement.scrollHeight
+        },
+        get clientWidth() {
+          return window.innerWidth
+        },
+        get clientHeight() {
+          return window.innerHeight
+        },
+        get scrollY() {
+          return window.scrollY
+        },
+        get scrollX() {
+          return window.scrollX
+        },
+        scrollTo(options: ScrollToOptions) {
+          window.scrollTo(options)
+        },
+        scrollBy(options: ScrollToOptions) {
+          window.scrollBy(options)
+        },
+        addEventListener(event: string, handler: any) {
+          window.addEventListener(event, handler)
+        },
+        removeEventListener(event: string, handler: any) {
+          window.removeEventListener(event, handler)
+        },
+      }
+    }
+  }, [disableFullWindowScroll])
+
+  const nativeRef = React.useRef<HTMLDivElement>(null)
   React.useImperativeHandle(
     ref,
     () =>
       ({
         scrollToTop() {
-          window.scrollTo({top: 0})
+          getScrollableNode()?.scrollTo({top: 0})
         },
+
         scrollToOffset({
           animated,
           offset,
@@ -95,46 +202,79 @@ function ListImpl<ItemT>(
           animated: boolean
           offset: number
         }) {
-          window.scrollTo({
+          getScrollableNode()?.scrollTo({
             left: 0,
             top: offset,
             behavior: animated ? 'smooth' : 'instant',
           })
         },
+        scrollToEnd({animated = true}: {animated?: boolean}) {
+          const element = getScrollableNode()
+          element?.scrollTo({
+            left: 0,
+            top: element.scrollHeight,
+            behavior: animated ? 'smooth' : 'instant',
+          })
+        },
       } as any), // TODO: Better types.
-    [],
+    [getScrollableNode],
   )
 
-  // --- onContentSizeChange ---
+  // --- onContentSizeChange, maintainVisibleContentPosition ---
   const containerRef = useRef(null)
   useResizeObserver(containerRef, onContentSizeChange)
 
   // --- onScroll ---
   const [isInsideVisibleTree, setIsInsideVisibleTree] = React.useState(false)
-  const handleWindowScroll = useNonReactiveCallback(() => {
-    if (isInsideVisibleTree) {
-      contextScrollHandlers.onScroll?.(
-        {
-          contentOffset: {
-            x: Math.max(0, window.scrollX),
-            y: Math.max(0, window.scrollY),
-          },
-        } as any, // TODO: Better types.
-        null as any,
-      )
-    }
+  const handleScroll = useNonReactiveCallback(() => {
+    if (!isInsideVisibleTree) return
+
+    const element = getScrollableNode()
+    contextScrollHandlers.onScroll?.(
+      {
+        contentOffset: {
+          x: Math.max(0, element?.scrollX ?? 0),
+          y: Math.max(0, element?.scrollY ?? 0),
+        },
+        layoutMeasurement: {
+          width: element?.clientWidth,
+          height: element?.clientHeight,
+        },
+        contentSize: {
+          width: element?.scrollWidth,
+          height: element?.scrollHeight,
+        },
+      } as Exclude<
+        ReanimatedScrollEvent,
+        | 'velocity'
+        | 'eventName'
+        | 'zoomScale'
+        | 'targetContentOffset'
+        | 'contentInset'
+      >,
+      null as any,
+    )
   })
+
   React.useEffect(() => {
     if (!isInsideVisibleTree) {
       // Prevents hidden tabs from firing scroll events.
       // Only one list is expected to be firing these at a time.
       return
     }
-    window.addEventListener('scroll', handleWindowScroll)
+
+    const element = getScrollableNode()
+
+    element?.addEventListener('scroll', handleScroll)
     return () => {
-      window.removeEventListener('scroll', handleWindowScroll)
+      element?.removeEventListener('scroll', handleScroll)
     }
-  }, [isInsideVisibleTree, handleWindowScroll])
+  }, [
+    isInsideVisibleTree,
+    handleScroll,
+    disableFullWindowScroll,
+    getScrollableNode,
+  ])
 
   // --- onScrolledDownChange ---
   const isScrolledDown = useRef(false)
@@ -148,6 +288,17 @@ function ListImpl<ItemT>(
     }
   }
 
+  // --- onStartReached ---
+  const onHeadVisibilityChange = useNonReactiveCallback(
+    (isHeadVisible: boolean) => {
+      if (isHeadVisible) {
+        onStartReached?.({
+          distanceFromStart: onStartReachedThreshold || 0,
+        })
+      }
+    },
+  )
+
   // --- onEndReached ---
   const onTailVisibilityChange = useNonReactiveCallback(
     (isTailVisible: boolean) => {
@@ -160,7 +311,17 @@ function ListImpl<ItemT>(
   )
 
   return (
-    <View {...props} style={style} ref={nativeRef}>
+    <View
+      {...props}
+      style={[
+        style,
+        disableFullWindowScroll && {
+          flex: 1,
+          // @ts-expect-error web only
+          'overflow-y': 'scroll',
+        },
+      ]}
+      ref={nativeRef as any}>
       <Visibility
         onVisibleChange={setIsInsideVisibleTree}
         style={
@@ -172,32 +333,49 @@ function ListImpl<ItemT>(
       <View
         ref={containerRef}
         style={[
-          !isMobile && styles.sideBorders,
+          !isMobile && sideBorders && styles.sideBorders,
           contentContainerStyle,
           desktopFixedHeight ? styles.minHeightViewport : null,
           pal.border,
         ]}>
         <Visibility
+          root={disableFullWindowScroll ? nativeRef : null}
           onVisibleChange={handleAboveTheFoldVisibleChange}
           style={[styles.aboveTheFoldDetector, {height: headerOffset}]}
         />
-        {header}
-        {(data as Array<ItemT>).map((item, index) => (
-          <Row<ItemT>
-            key={keyExtractor!(item, index)}
-            item={item}
-            index={index}
-            renderItem={renderItem}
-            extraData={extraData}
-          />
-        ))}
-        {onEndReached && (
+        {onStartReached && !isEmpty && (
           <Visibility
-            topMargin={(onEndReachedThreshold ?? 0) * 100 + '%'}
-            onVisibleChange={onTailVisibilityChange}
+            root={disableFullWindowScroll ? nativeRef : null}
+            onVisibleChange={onHeadVisibilityChange}
+            topMargin={(onStartReachedThreshold ?? 0) * 100 + '%'}
           />
         )}
-        {footer}
+        {headerComponent}
+        {isEmpty
+          ? emptyComponent
+          : (data as Array<ItemT>)?.map((item, index) => {
+              const key = keyExtractor!(item, index)
+              return (
+                <Row<ItemT>
+                  key={key}
+                  item={item}
+                  index={index}
+                  renderItem={renderItem}
+                  extraData={extraData}
+                  onItemSeen={onItemSeen}
+                  disableContainStyle={disableContainStyle}
+                />
+              )
+            })}
+        {onEndReached && !isEmpty && (
+          <Visibility
+            root={disableFullWindowScroll ? nativeRef : null}
+            onVisibleChange={onTailVisibilityChange}
+            bottomMargin={(onEndReachedThreshold ?? 0) * 100 + '%'}
+            key={data?.length}
+          />
+        )}
+        {footerComponent}
       </View>
     </View>
   )
@@ -234,6 +412,8 @@ let Row = function RowImpl<ItemT>({
   index,
   renderItem,
   extraData: _unused,
+  onItemSeen,
+  disableContainStyle,
 }: {
   item: ItemT
   index: number
@@ -242,12 +422,61 @@ let Row = function RowImpl<ItemT>({
     | undefined
     | ((data: {index: number; item: any; separators: any}) => React.ReactNode)
   extraData: any
+  onItemSeen: ((item: any) => void) | undefined
+  disableContainStyle?: boolean
 }): React.ReactNode {
+  const rowRef = React.useRef(null)
+  const intersectionTimeout = React.useRef<NodeJS.Timer | undefined>(undefined)
+
+  const handleIntersection = useNonReactiveCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      batchedUpdates(() => {
+        if (!onItemSeen) {
+          return
+        }
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            if (!intersectionTimeout.current) {
+              intersectionTimeout.current = setTimeout(() => {
+                intersectionTimeout.current = undefined
+                onItemSeen!(item)
+              }, ON_ITEM_SEEN_WAIT_DURATION)
+            }
+          } else {
+            if (intersectionTimeout.current) {
+              clearTimeout(intersectionTimeout.current)
+              intersectionTimeout.current = undefined
+            }
+          }
+        })
+      })
+    },
+  )
+
+  React.useEffect(() => {
+    if (!onItemSeen) {
+      return
+    }
+    const observer = new IntersectionObserver(
+      handleIntersection,
+      ON_ITEM_SEEN_INTERSECTION_OPTS,
+    )
+    const row: Element | null = rowRef.current!
+    observer.observe(row)
+    return () => {
+      observer.unobserve(row)
+    }
+  }, [handleIntersection, onItemSeen])
+
   if (!renderItem) {
     return null
   }
+
+  const shouldDisableContainStyle = disableContainStyle || isSafari
   return (
-    <View style={styles.row}>
+    <View
+      style={shouldDisableContainStyle ? undefined : styles.contain}
+      ref={rowRef}>
       {renderItem({item, index, separators: null as any})}
     </View>
   )
@@ -255,11 +484,15 @@ let Row = function RowImpl<ItemT>({
 Row = React.memo(Row)
 
 let Visibility = ({
+  root,
   topMargin = '0px',
+  bottomMargin = '0px',
   onVisibleChange,
   style,
 }: {
+  root?: React.RefObject<HTMLDivElement> | null
   topMargin?: string
+  bottomMargin?: string
   onVisibleChange: (isVisible: boolean) => void
   style?: ViewProps['style']
 }): React.ReactNode => {
@@ -281,14 +514,15 @@ let Visibility = ({
 
   React.useEffect(() => {
     const observer = new IntersectionObserver(handleIntersection, {
-      rootMargin: `${topMargin} 0px 0px 0px`,
+      root: root?.current ?? null,
+      rootMargin: `${topMargin} 0px ${bottomMargin} 0px`,
     })
     const tail: Element | null = tailRef.current!
     observer.observe(tail)
     return () => {
       observer.unobserve(tail)
     }
-  }, [handleIntersection, topMargin])
+  }, [bottomMargin, handleIntersection, topMargin, root])
 
   return (
     <View ref={tailRef} style={addStyle(styles.visibilityDetector, style)} />
@@ -301,7 +535,6 @@ export const List = memo(React.forwardRef(ListImpl)) as <ItemT>(
 ) => React.ReactElement
 
 // https://stackoverflow.com/questions/7944460/detect-safari-browser
-const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 
 const styles = StyleSheet.create({
   sideBorders: {
@@ -314,9 +547,9 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
     marginRight: 'auto',
   },
-  row: {
+  contain: {
     // @ts-ignore web only
-    contentVisibility: isSafari ? '' : 'auto', // Safari support for this is buggy.
+    contain: 'layout paint',
   },
   minHeightViewport: {
     // @ts-ignore web only

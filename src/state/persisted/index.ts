@@ -1,11 +1,11 @@
 import EventEmitter from 'eventemitter3'
-import {logger} from '#/logger'
-import {defaults, Schema} from '#/state/persisted/schema'
-import {migrate} from '#/state/persisted/legacy'
-import * as store from '#/state/persisted/store'
-import BroadcastChannel from '#/lib/broadcast'
 
-export type {Schema, PersistedAccount} from '#/state/persisted/schema'
+import BroadcastChannel from '#/lib/broadcast'
+import {logger} from '#/logger'
+import {migrate} from '#/state/persisted/legacy'
+import {defaults, Schema} from '#/state/persisted/schema'
+import * as store from '#/state/persisted/store'
+export type {PersistedAccount, Schema} from '#/state/persisted/schema'
 export {defaults} from '#/state/persisted/schema'
 
 const broadcast = new BroadcastChannel('BSKY_BROADCAST_CHANNEL')

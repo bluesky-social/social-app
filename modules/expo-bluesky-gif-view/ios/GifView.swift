@@ -16,14 +16,14 @@ public class GifView: ExpoView, AVPlayerViewControllerDelegate {
   )
   private var isPlaying = true
   private var isLoaded = false
-  
+
   // Requests
   private var webpOperation: SDWebImageCombinedOperation?
   private var placeholderOperation: SDWebImageCombinedOperation?
 
   // Props
-  var source: String? = nil
-  var placeholderSource: String? = nil
+  var source: String?
+  var placeholderSource: String?
   var autoplay = true {
     didSet {
       if !autoplay {
@@ -78,8 +78,7 @@ public class GifView: ExpoView, AVPlayerViewControllerDelegate {
     // See:
     // https://github.com/SDWebImage/SDWebImage/blob/master/Docs/HowToUse.md#using-asynchronous-image-caching-independently
     if !SDImageCache.shared.diskImageDataExists(withKey: source),
-       let url = URL(string: placeholderSource)
-    {
+       let url = URL(string: placeholderSource) {
       self.placeholderOperation = imageManager.loadImage(
         with: url,
         options: [.retryFailed],
@@ -132,8 +131,7 @@ public class GifView: ExpoView, AVPlayerViewControllerDelegate {
     if let placeholderSource = self.placeholderSource,
        imageUrl?.absoluteString == placeholderSource,
        self.imageView.image == nil,
-       let image = image
-    {
+       let image = image {
       self.setImage(image)
       return
     }
@@ -142,8 +140,7 @@ public class GifView: ExpoView, AVPlayerViewControllerDelegate {
        imageUrl?.absoluteString == source,
        // UIImage perf suckssss if the image is animated
        let data = data,
-       let animatedImage = SDAnimatedImage(data: data)
-    {
+       let animatedImage = SDAnimatedImage(data: data) {
       self.placeholderOperation?.cancel()
       self.isPlaying = self.autoplay
       self.isLoaded = true

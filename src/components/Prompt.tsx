@@ -1,10 +1,10 @@
 import React from 'react'
-import {View} from 'react-native'
+import {GestureResponderEvent, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonColor, ButtonText} from '#/components/Button'
+import {Button, ButtonColor, ButtonProps, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Text} from '#/components/Typography'
 
@@ -43,7 +43,9 @@ export function Outer({
         <Dialog.ScrollableInner
           accessibilityLabelledBy={titleId}
           accessibilityDescribedBy={descriptionId}
-          style={[gtMobile ? {width: 'auto', maxWidth: 400} : a.w_full]}>
+          style={[
+            gtMobile ? {width: 'auto', maxWidth: 400, minWidth: 200} : a.w_full,
+          ]}>
           {children}
         </Dialog.ScrollableInner>
       </Context.Provider>
@@ -60,12 +62,16 @@ export function TitleText({children}: React.PropsWithChildren<{}>) {
   )
 }
 
-export function DescriptionText({children}: React.PropsWithChildren<{}>) {
+export function DescriptionText({
+  children,
+  selectable,
+}: React.PropsWithChildren<{selectable?: boolean}>) {
   const t = useTheme()
   const {descriptionId} = React.useContext(Context)
   return (
     <Text
       nativeID={descriptionId}
+      selectable={selectable}
       style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high, a.pb_lg]}>
       {children}
     </Text>
@@ -130,7 +136,7 @@ export function Action({
    * Note: The dialog will close automatically when the action is pressed, you
    * should NOT close the dialog as a side effect of this method.
    */
-  onPress: () => void
+  onPress: ButtonProps['onPress']
   color?: ButtonColor
   /**
    * Optional i18n string. If undefined, it will default to "Confirm".
@@ -141,9 +147,12 @@ export function Action({
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const {close} = Dialog.useDialogContext()
-  const handleOnPress = React.useCallback(() => {
-    close(onPress)
-  }, [close, onPress])
+  const handleOnPress = React.useCallback(
+    (e: GestureResponderEvent) => {
+      close(() => onPress?.(e))
+    },
+    [close, onPress],
+  )
 
   return (
     <Button
@@ -166,6 +175,7 @@ export function Basic({
   confirmButtonCta,
   onConfirm,
   confirmButtonColor,
+  showCancel = true,
 }: React.PropsWithChildren<{
   control: Dialog.DialogOuterProps['control']
   title: string
@@ -179,8 +189,9 @@ export function Basic({
    * Note: The dialog will close automatically when the action is pressed, you
    * should NOT close the dialog as a side effect of this method.
    */
-  onConfirm: () => void
+  onConfirm: ButtonProps['onPress']
   confirmButtonColor?: ButtonColor
+  showCancel?: boolean
 }>) {
   return (
     <Outer control={control} testID="confirmModal">
@@ -193,7 +204,7 @@ export function Basic({
           color={confirmButtonColor}
           testID="confirmBtn"
         />
-        <Cancel cta={cancelButtonCta} />
+        {showCancel && <Cancel cta={cancelButtonCta} />}
       </Actions>
     </Outer>
   )

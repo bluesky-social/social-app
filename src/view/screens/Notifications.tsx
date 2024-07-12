@@ -1,37 +1,40 @@
 import React from 'react'
 import {View} from 'react-native'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
-import {
-  NativeStackScreenProps,
-  NotificationsTabNavigatorParams,
-} from 'lib/routes/types'
-import {ViewHeader} from '../com/util/ViewHeader'
-import {Feed} from '../com/notifications/Feed'
-import {TextLink} from 'view/com/util/Link'
-import {ListMethods} from 'view/com/util/List'
-import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
-import {MainScrollProvider} from '../com/util/MainScrollProvider'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {s, colors} from 'lib/styles'
-import {useAnalytics} from 'lib/analytics/analytics'
+
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {logger} from '#/logger'
-import {useSetMinimalShellMode} from '#/state/shell'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {isNative} from '#/platform/detection'
+import {emitSoftReset, listenSoftReset} from '#/state/events'
+import {RQKEY as NOTIFS_RQKEY} from '#/state/queries/notifications/feed'
 import {
   useUnreadNotifications,
   useUnreadNotificationsApi,
 } from '#/state/queries/notifications/unread'
-import {RQKEY as NOTIFS_RQKEY} from '#/state/queries/notifications/feed'
-import {listenSoftReset, emitSoftReset} from '#/state/events'
 import {truncateAndInvalidate} from '#/state/queries/util'
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {isNative} from '#/platform/detection'
-import {FAB} from '../com/util/fab/FAB'
-import {ComposeIcon2} from 'lib/icons'
+import {useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {ComposeIcon2} from 'lib/icons'
+import {
+  NativeStackScreenProps,
+  NotificationsTabNavigatorParams,
+} from 'lib/routes/types'
+import {colors, s} from 'lib/styles'
+import {TextLink} from 'view/com/util/Link'
+import {ListMethods} from 'view/com/util/List'
+import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
+import {CenteredView} from 'view/com/util/Views'
+import {Loader} from '#/components/Loader'
+import {Feed} from '../com/notifications/Feed'
+import {FAB} from '../com/util/fab/FAB'
+import {MainScrollProvider} from '../com/util/MainScrollProvider'
+import {ViewHeader} from '../com/util/ViewHeader'
 
 type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,
@@ -41,6 +44,7 @@ export function NotificationsScreen({}: Props) {
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
   const [isScrolledDown, setIsScrolledDown] = React.useState(false)
+  const [isLoadingLatest, setIsLoadingLatest] = React.useState(false)
   const scrollElRef = React.useRef<ListMethods>(null)
   const {screen} = useAnalytics()
   const pal = usePalette('default')
@@ -66,9 +70,13 @@ export function NotificationsScreen({}: Props) {
       truncateAndInvalidate(queryClient, NOTIFS_RQKEY())
     } else {
       // check with the server
-      unreadApi.checkUnread({invalidate: true})
+      setIsLoadingLatest(true)
+      unreadApi
+        .checkUnread({invalidate: true})
+        .catch(() => undefined)
+        .then(() => setIsLoadingLatest(false))
     }
-  }, [scrollToTop, queryClient, unreadApi, hasNew])
+  }, [scrollToTop, queryClient, unreadApi, hasNew, setIsLoadingLatest])
 
   const onFocusCheckLatest = useNonReactiveCallback(() => {
     // on focus, check for latest, but only invalidate if the user
@@ -137,15 +145,32 @@ export function NotificationsScreen({}: Props) {
             }
             onPress={emitSoftReset}
           />
+          {isLoadingLatest ? <Loader size="md" /> : <></>}
         </View>
       )
     }
     return <></>
-  }, [isDesktop, pal, hasNew])
+  }, [isDesktop, pal, hasNew, isLoadingLatest])
+
+  const renderHeaderSpinner = React.useCallback(() => {
+    return (
+      <View style={{width: 30, height: 20, alignItems: 'flex-end'}}>
+        {isLoadingLatest ? <Loader width={20} /> : <></>}
+      </View>
+    )
+  }, [isLoadingLatest])
 
   return (
-    <View testID="notificationsScreen" style={s.hContentRegion}>
-      <ViewHeader title={_(msg`Notifications`)} canGoBack={false} />
+    <CenteredView
+      testID="notificationsScreen"
+      style={[s.hContentRegion, {paddingTop: 2}]}
+      sideBorders={true}>
+      <ViewHeader
+        title={_(msg`Notifications`)}
+        canGoBack={false}
+        showBorder={true}
+        renderButton={renderHeaderSpinner}
+      />
       <MainScrollProvider>
         <Feed
           onScrolledDownChange={setIsScrolledDown}
@@ -168,6 +193,6 @@ export function NotificationsScreen({}: Props) {
         accessibilityLabel={_(msg`New post`)}
         accessibilityHint=""
       />
-    </View>
+    </CenteredView>
   )
 }

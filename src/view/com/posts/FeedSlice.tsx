@@ -1,16 +1,23 @@
 import React, {memo} from 'react'
 import {StyleSheet, View} from 'react-native'
-import {FeedPostSlice} from '#/state/queries/post-feed'
-import {AtUri} from '@atproto/api'
-import {Link} from '../util/Link'
-import {Text} from '../util/text/Text'
 import Svg, {Circle, Line} from 'react-native-svg'
-import {FeedItem} from './FeedItem'
-import {usePalette} from 'lib/hooks/usePalette'
-import {makeProfileLink} from 'lib/routes/links'
+import {AtUri} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
-let FeedSlice = ({slice}: {slice: FeedPostSlice}): React.ReactNode => {
+import {FeedPostSlice} from '#/state/queries/post-feed'
+import {usePalette} from 'lib/hooks/usePalette'
+import {makeProfileLink} from 'lib/routes/links'
+import {Link} from '../util/Link'
+import {Text} from '../util/text/Text'
+import {FeedItem} from './FeedItem'
+
+let FeedSlice = ({
+  slice,
+  hideTopBorder,
+}: {
+  slice: FeedPostSlice
+  hideTopBorder?: boolean
+}): React.ReactNode => {
   if (slice.isThread && slice.items.length > 3) {
     const last = slice.items.length - 1
     return (
@@ -20,18 +27,27 @@ let FeedSlice = ({slice}: {slice: FeedPostSlice}): React.ReactNode => {
           post={slice.items[0].post}
           record={slice.items[0].record}
           reason={slice.items[0].reason}
+          feedContext={slice.items[0].feedContext}
+          parentAuthor={slice.items[0].parentAuthor}
+          showReplyTo={true}
           moderation={slice.items[0].moderation}
           isThreadParent={isThreadParentAt(slice.items, 0)}
           isThreadChild={isThreadChildAt(slice.items, 0)}
+          hideTopBorder={hideTopBorder}
+          isParentBlocked={slice.items[0].isParentBlocked}
         />
         <FeedItem
           key={slice.items[1]._reactKey}
           post={slice.items[1].post}
           record={slice.items[1].record}
           reason={slice.items[1].reason}
+          feedContext={slice.items[1].feedContext}
+          parentAuthor={slice.items[1].parentAuthor}
+          showReplyTo={false}
           moderation={slice.items[1].moderation}
           isThreadParent={isThreadParentAt(slice.items, 1)}
           isThreadChild={isThreadChildAt(slice.items, 1)}
+          isParentBlocked={slice.items[1].isParentBlocked}
         />
         <ViewFullThread slice={slice} />
         <FeedItem
@@ -39,9 +55,13 @@ let FeedSlice = ({slice}: {slice: FeedPostSlice}): React.ReactNode => {
           post={slice.items[last].post}
           record={slice.items[last].record}
           reason={slice.items[last].reason}
+          feedContext={slice.items[last].feedContext}
+          parentAuthor={slice.items[2].parentAuthor}
+          showReplyTo={false}
           moderation={slice.items[last].moderation}
           isThreadParent={isThreadParentAt(slice.items, last)}
           isThreadChild={isThreadChildAt(slice.items, last)}
+          isParentBlocked={slice.items[2].isParentBlocked}
           isThreadLastChild
         />
       </>
@@ -56,12 +76,17 @@ let FeedSlice = ({slice}: {slice: FeedPostSlice}): React.ReactNode => {
           post={slice.items[i].post}
           record={slice.items[i].record}
           reason={slice.items[i].reason}
+          feedContext={slice.items[i].feedContext}
           moderation={slice.items[i].moderation}
+          parentAuthor={slice.items[i].parentAuthor}
+          showReplyTo={i === 0}
           isThreadParent={isThreadParentAt(slice.items, i)}
           isThreadChild={isThreadChildAt(slice.items, i)}
           isThreadLastChild={
             isThreadChildAt(slice.items, i) && slice.items.length === i + 1
           }
+          isParentBlocked={slice.items[i].isParentBlocked}
+          hideTopBorder={hideTopBorder && i === 0}
         />
       ))}
     </>

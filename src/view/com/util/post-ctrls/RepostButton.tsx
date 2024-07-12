@@ -1,108 +1,148 @@
 import React, {memo, useCallback} from 'react'
-import {StyleProp, StyleSheet, TouchableOpacity, ViewStyle} from 'react-native'
-import {RepostIcon} from 'lib/icons'
-import {s, colors} from 'lib/styles'
-import {useTheme} from 'lib/ThemeContext'
-import {Text} from '../text/Text'
-import {pluralize} from 'lib/strings/helpers'
-import {HITSLOP_10, HITSLOP_20} from 'lib/constants'
-import {useModalControls} from '#/state/modals'
-import {useRequireAuth} from '#/state/session'
-import {msg} from '@lingui/macro'
+import {View} from 'react-native'
+import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+
+import {POST_CTRL_HITSLOP} from '#/lib/constants'
+import {useHaptics} from '#/lib/haptics'
+import {useRequireAuth} from '#/state/session'
+import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
+import * as Dialog from '#/components/Dialog'
+import {CloseQuote_Stroke2_Corner1_Rounded as Quote} from '#/components/icons/Quote'
+import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
+import {Text} from '#/components/Typography'
+import {formatCount} from '../numeric/format'
 
 interface Props {
   isReposted: boolean
   repostCount?: number
-  big?: boolean
   onRepost: () => void
   onQuote: () => void
+  big?: boolean
 }
 
 let RepostButton = ({
   isReposted,
   repostCount,
-  big,
   onRepost,
   onQuote,
+  big,
 }: Props): React.ReactNode => {
-  const theme = useTheme()
+  const t = useTheme()
   const {_} = useLingui()
-  const {openModal} = useModalControls()
   const requireAuth = useRequireAuth()
+  const dialogControl = Dialog.useDialogControl()
+  const playHaptic = useHaptics()
 
-  const defaultControlColor = React.useMemo(
+  const color = React.useMemo(
     () => ({
-      color: theme.palette.default.postCtrl,
+      color: isReposted ? t.palette.positive_600 : t.palette.contrast_500,
     }),
-    [theme],
+    [t, isReposted],
   )
 
-  const onPressToggleRepostWrapper = useCallback(() => {
-    openModal({
-      name: 'repost',
-      onRepost: onRepost,
-      onQuote: onQuote,
-      isReposted,
-    })
-  }, [onRepost, onQuote, isReposted, openModal])
+  const close = useCallback(() => dialogControl.close(), [dialogControl])
 
   return (
-    <TouchableOpacity
-      testID="repostBtn"
-      onPress={() => {
-        requireAuth(() => onPressToggleRepostWrapper())
-      }}
-      style={[styles.btn, !big && styles.btnPad]}
-      accessibilityRole="button"
-      accessibilityLabel={`${
-        isReposted
-          ? _(msg`Undo repost`)
-          : _(msg({message: 'Repost', context: 'action'}))
-      } (${repostCount} ${pluralize(repostCount || 0, 'repost')})`}
-      accessibilityHint=""
-      hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
-      <RepostIcon
-        style={
+    <>
+      <Button
+        testID="repostBtn"
+        onPress={() => {
+          requireAuth(() => dialogControl.open())
+        }}
+        style={[
+          a.flex_row,
+          a.align_center,
+          a.gap_xs,
+          a.bg_transparent,
+          {padding: 5},
+        ]}
+        hoverStyle={t.atoms.bg_contrast_25}
+        label={`${
           isReposted
-            ? (styles.reposted as StyleProp<ViewStyle>)
-            : defaultControlColor
-        }
-        strokeWidth={2.4}
-        size={big ? 24 : 20}
-      />
-      {typeof repostCount !== 'undefined' && repostCount > 0 ? (
-        <Text
-          testID="repostCount"
-          style={
-            isReposted
-              ? [s.bold, s.green3, s.f15, s.ml5]
-              : [defaultControlColor, s.f15, s.ml5]
-          }>
-          {repostCount}
-        </Text>
-      ) : undefined}
-    </TouchableOpacity>
+            ? _(msg`Undo repost`)
+            : _(msg({message: 'Repost', context: 'action'}))
+        } (${plural(repostCount || 0, {one: '# repost', other: '# reposts'})})`}
+        shape="round"
+        variant="ghost"
+        color="secondary"
+        hitSlop={POST_CTRL_HITSLOP}>
+        <Repost style={color} width={big ? 22 : 18} />
+        {typeof repostCount !== 'undefined' && repostCount > 0 ? (
+          <Text
+            testID="repostCount"
+            style={[
+              color,
+              big ? a.text_md : {fontSize: 15},
+              isReposted && a.font_bold,
+            ]}>
+            {formatCount(repostCount)}
+          </Text>
+        ) : undefined}
+      </Button>
+      <Dialog.Outer control={dialogControl}>
+        <Dialog.Handle />
+        <Dialog.Inner label={_(msg`Repost or quote post`)}>
+          <View style={a.gap_xl}>
+            <View style={a.gap_xs}>
+              <Button
+                style={[a.justify_start, a.px_md]}
+                label={
+                  isReposted
+                    ? _(msg`Remove repost`)
+                    : _(msg({message: `Repost`, context: 'action'}))
+                }
+                onPress={() => {
+                  if (!isReposted) playHaptic()
+
+                  dialogControl.close(() => {
+                    onRepost()
+                  })
+                }}
+                size="large"
+                variant="ghost"
+                color="primary">
+                <Repost size="lg" fill={t.palette.primary_500} />
+                <Text style={[a.font_bold, a.text_xl]}>
+                  {isReposted
+                    ? _(msg`Remove repost`)
+                    : _(msg({message: `Repost`, context: 'action'}))}
+                </Text>
+              </Button>
+              <Button
+                testID="quoteBtn"
+                style={[a.justify_start, a.px_md]}
+                label={_(msg`Quote post`)}
+                onPress={() => {
+                  playHaptic()
+                  dialogControl.close(() => {
+                    onQuote()
+                  })
+                }}
+                size="large"
+                variant="ghost"
+                color="primary">
+                <Quote size="lg" fill={t.palette.primary_500} />
+                <Text style={[a.font_bold, a.text_xl]}>
+                  {_(msg`Quote post`)}
+                </Text>
+              </Button>
+            </View>
+            <Button
+              label={_(msg`Cancel quote post`)}
+              onAccessibilityEscape={close}
+              onPress={close}
+              size="medium"
+              variant="solid"
+              color="primary">
+              <ButtonText>{_(msg`Cancel`)}</ButtonText>
+            </Button>
+          </View>
+        </Dialog.Inner>
+      </Dialog.Outer>
+    </>
   )
 }
 RepostButton = memo(RepostButton)
 export {RepostButton}
-
-const styles = StyleSheet.create({
-  btn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  btnPad: {
-    paddingTop: 5,
-    paddingBottom: 5,
-    paddingLeft: 5,
-    paddingRight: 5,
-  },
-  reposted: {
-    color: colors.green3,
-  },
-  repostCount: {
-    color: 'currentColor',
-  },
-})
