@@ -8,6 +8,6 @@ export function getGooglePlayReferrerInfoAsync(): Promise<GooglePlayReferrerInfo
   return NativeModule.getGooglePlayReferrerInfoAsync()
 }
 
-export function getReferrerInfoAsync(): Promise<ReferrerInfo | null> {
-  return NativeModule.getReferrerInfoAsync()
+export function getReferrerInfo(): Promise<ReferrerInfo | null> {
+  return NativeModule.getReferrerInfo()
 }
