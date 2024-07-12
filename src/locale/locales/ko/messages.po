@@ -231,7 +231,7 @@ msgstr "접근성"
 msgid "Accessibility settings"
 msgstr "접근성 설정"
 
-#: src/Navigation.tsx:307
+#: src/Navigation.tsx:308
 #: src/view/screens/AccessibilitySettings.tsx:69
 msgid "Accessibility Settings"
 msgstr "접근성 설정"
@@ -531,7 +531,7 @@ msgstr "앱 비밀번호 이름은 4자 이상이어야 합니다."
 msgid "App password settings"
 msgstr "앱 비밀번호 설정"
 
-#: src/Navigation.tsx:275
+#: src/Navigation.tsx:276
 #: src/view/screens/AppPasswords.tsx:192
 #: src/view/screens/Settings/index.tsx:708
 msgid "App Passwords"
@@ -688,7 +688,7 @@ msgstr "차단됨"
 msgid "Blocked accounts"
 msgstr "차단한 계정"
 
-#: src/Navigation.tsx:146
+#: src/Navigation.tsx:147
 #: src/view/screens/ModerationBlockedAccounts.tsx:109
 msgid "Blocked Accounts"
 msgstr "차단한 계정"
@@ -918,7 +918,7 @@ msgstr "게시물 언어를 {0}(으)로 변경"
 msgid "Change Your Email"
 msgstr "이메일 변경"
 
-#: src/Navigation.tsx:319
+#: src/Navigation.tsx:320
 #: src/view/shell/bottom-bar/BottomBar.tsx:204
 #: src/view/shell/desktop/LeftNav.tsx:302
 msgid "Chat"
@@ -930,7 +930,7 @@ msgstr "대화 뮤트됨"
 
 #: src/components/dms/ConvoMenu.tsx:112
 #: src/components/dms/MessageMenu.tsx:81
-#: src/Navigation.tsx:324
+#: src/Navigation.tsx:325
 #: src/screens/Messages/List/index.tsx:88
 #: src/view/screens/Settings/index.tsx:640
 msgid "Chat settings"
@@ -1146,7 +1146,7 @@ msgstr "코미디"
 msgid "Comics"
 msgstr "만화"
 
-#: src/Navigation.tsx:265
+#: src/Navigation.tsx:266
 #: src/view/screens/CommunityGuidelines.tsx:32
 msgid "Community Guidelines"
 msgstr "커뮤니티 가이드라인"
@@ -1357,7 +1357,7 @@ msgstr "게시물 텍스트 복사"
 msgid "Copy QR code"
 msgstr "QR 코드 복사"
 
-#: src/Navigation.tsx:270
+#: src/Navigation.tsx:271
 #: src/view/screens/CopyrightPolicy.tsx:29
 msgid "Copyright Policy"
 msgstr "저작권 정책"
@@ -1401,7 +1401,7 @@ msgstr "스타터 팩 QR 코드 만들기"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:165
 #: src/components/StarterPack/ProfileStarterPacks.tsx:259
-#: src/Navigation.tsx:344
+#: src/Navigation.tsx:345
 msgid "Create a starter pack"
 msgstr "스타터 팩 만들기"
 
@@ -1820,7 +1820,7 @@ msgstr "리스트 세부 정보 편집"
 msgid "Edit Moderation List"
 msgstr "검토 리스트 편집"
 
-#: src/Navigation.tsx:280
+#: src/Navigation.tsx:281
 #: src/view/screens/Feeds.tsx:384
 #: src/view/screens/Feeds.tsx:452
 #: src/view/screens/SavedFeeds.tsx:93
@@ -1865,7 +1865,7 @@ msgstr "내 표시 이름 편집"
 msgid "Edit your profile description"
 msgstr "내 프로필 설명 편집"
 
-#: src/Navigation.tsx:349
+#: src/Navigation.tsx:350
 msgid "Edit your starter pack"
 msgstr "스타터 팩 편집"
 
@@ -2110,7 +2110,7 @@ msgstr "외부 미디어"
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
 msgstr "외부 미디어는 웹사이트가 나와 내 기기에 대한 정보를 수집하도록 할 수 있습니다. \"재생\" 버튼을 누르기 전까지는 어떠한 정보도 전송되거나 요청되지 않습니다."
 
-#: src/Navigation.tsx:299
+#: src/Navigation.tsx:300
 #: src/view/screens/PreferencesExternalEmbeds.tsx:53
 #: src/view/screens/Settings/index.tsx:681
 msgid "External Media Preferences"
@@ -2195,7 +2195,7 @@ msgstr "피드를 업데이트하지 못했습니다"
 msgid "Failed to update settings"
 msgstr "설정을 업데이트하지 못했습니다"
 
-#: src/Navigation.tsx:215
+#: src/Navigation.tsx:216
 msgid "Feed"
 msgstr "피드"
 
@@ -2213,7 +2213,7 @@ msgstr "피드 켜거나 끄기"
 msgid "Feedback"
 msgstr "피드백"
 
-#: src/Navigation.tsx:329
+#: src/Navigation.tsx:330
 #: src/screens/StarterPack/StarterPackScreen.tsx:171
 #: src/view/screens/Feeds.tsx:446
 #: src/view/screens/Feeds.tsx:551
@@ -2383,7 +2383,7 @@ msgstr "이(가) 나를 맞팔로우했습니다"
 msgid "Followers"
 msgstr "팔로워"
 
-#: src/Navigation.tsx:183
+#: src/Navigation.tsx:184
 msgid "Followers of @{0} that you know"
 msgstr "내가 아는 @{0} 님의 팔로워"
 
@@ -2418,7 +2418,7 @@ msgstr "{name} 님을 팔로우했습니다"
 msgid "Following feed preferences"
 msgstr "팔로우 중 피드 설정"
 
-#: src/Navigation.tsx:286
+#: src/Navigation.tsx:287
 #: src/view/screens/PreferencesFollowingFeed.tsx:103
 #: src/view/screens/Settings/index.tsx:584
 msgid "Following Feed Preferences"
@@ -2470,7 +2470,7 @@ msgstr "잦은 원치 않는 콘텐츠 게시"
 msgid "From @{sanitizedAuthor}"
 msgstr "@{sanitizedAuthor} 님의 태그"
 
-#: src/view/com/posts/FeedItem.tsx:236
+#: src/view/com/posts/FeedItem.tsx:242
 msgctxt "from-feed"
 msgid "From <0/>"
 msgstr "<0/>에서"
@@ -2591,7 +2591,7 @@ msgstr "햅틱"
 msgid "Harassment, trolling, or intolerance"
 msgstr "괴롭힘, 분쟁 유발 또는 차별"
 
-#: src/Navigation.tsx:314
+#: src/Navigation.tsx:315
 msgid "Hashtag"
 msgstr "해시태그"
 
@@ -2678,8 +2678,8 @@ msgstr "이 데이터를 불러오는 데 문제가 있는 것 같습니다. 자
 msgid "Hmmmm, we couldn't load that moderation service."
 msgstr "검토 서비스를 불러올 수 없습니다."
 
-#: src/Navigation.tsx:525
-#: src/Navigation.tsx:545
+#: src/Navigation.tsx:526
+#: src/Navigation.tsx:546
 #: src/view/shell/bottom-bar/BottomBar.tsx:160
 #: src/view/shell/desktop/LeftNav.tsx:342
 #: src/view/shell/Drawer.tsx:425
@@ -2918,7 +2918,7 @@ msgstr "언어 선택"
 msgid "Language settings"
 msgstr "언어 설정"
 
-#: src/Navigation.tsx:156
+#: src/Navigation.tsx:157
 #: src/view/screens/LanguageSettings.tsx:90
 msgid "Language Settings"
 msgstr "언어 설정"
@@ -3020,8 +3020,8 @@ msgid "Like this feed"
 msgstr "이 피드에 좋아요 표시"
 
 #: src/components/LikesDialog.tsx:87
-#: src/Navigation.tsx:220
-#: src/Navigation.tsx:225
+#: src/Navigation.tsx:221
+#: src/Navigation.tsx:226
 msgid "Liked by"
 msgstr "좋아요 표시한 사용자"
 
@@ -3047,7 +3047,7 @@ msgstr "좋아요"
 msgid "Likes on this post"
 msgstr "이 게시물을 좋아요 표시합니다"
 
-#: src/Navigation.tsx:189
+#: src/Navigation.tsx:190
 msgid "List"
 msgstr "리스트"
 
@@ -3084,7 +3084,7 @@ msgstr "리스트 차단 해제됨"
 msgid "List unmuted"
 msgstr "리스트 언뮤트됨"
 
-#: src/Navigation.tsx:126
+#: src/Navigation.tsx:127
 #: src/view/screens/Profile.tsx:208
 #: src/view/screens/Profile.tsx:215
 #: src/view/shell/desktop/LeftNav.tsx:385
@@ -3124,7 +3124,7 @@ msgstr "새 게시물 불러오기"
 msgid "Loading..."
 msgstr "불러오는 중…"
 
-#: src/Navigation.tsx:245
+#: src/Navigation.tsx:246
 msgid "Log"
 msgstr "로그"
 
@@ -3229,7 +3229,7 @@ msgstr "메시지가 너무 깁니다"
 msgid "Message settings"
 msgstr "메시지 설정"
 
-#: src/Navigation.tsx:540
+#: src/Navigation.tsx:541
 #: src/screens/Messages/List/index.tsx:164
 #: src/screens/Messages/List/index.tsx:246
 #: src/screens/Messages/List/index.tsx:317
@@ -3240,7 +3240,7 @@ msgstr "메시지"
 msgid "Misleading Account"
 msgstr "오해의 소지가 있는 계정"
 
-#: src/Navigation.tsx:131
+#: src/Navigation.tsx:132
 #: src/screens/Moderation/index.tsx:105
 #: src/view/screens/Settings/index.tsx:563
 msgid "Moderation"
@@ -3278,7 +3278,7 @@ msgstr "검토 리스트 업데이트됨"
 msgid "Moderation lists"
 msgstr "검토 리스트"
 
-#: src/Navigation.tsx:136
+#: src/Navigation.tsx:137
 #: src/view/screens/ModerationModlists.tsx:58
 msgid "Moderation Lists"
 msgstr "검토 리스트"
@@ -3287,7 +3287,7 @@ msgstr "검토 리스트"
 msgid "Moderation settings"
 msgstr "검토 설정"
 
-#: src/Navigation.tsx:235
+#: src/Navigation.tsx:236
 msgid "Moderation states"
 msgstr "검토 상태"
 
@@ -3392,7 +3392,7 @@ msgstr "뮤트됨"
 msgid "Muted accounts"
 msgstr "뮤트한 계정"
 
-#: src/Navigation.tsx:141
+#: src/Navigation.tsx:142
 #: src/view/screens/ModerationMutedAccounts.tsx:109
 msgid "Muted Accounts"
 msgstr "뮤트한 계정"
@@ -3688,7 +3688,7 @@ msgstr "아무도 찾을 수 없습니다. 다른 사용자를 검색해 보세�
 msgid "Non-sexual Nudity"
 msgstr "선정적이지 않은 노출"
 
-#: src/Navigation.tsx:121
+#: src/Navigation.tsx:122
 #: src/view/screens/Profile.tsx:108
 msgid "Not Found"
 msgstr "찾을 수 없음"
@@ -3720,7 +3720,7 @@ msgstr "알림음"
 msgid "Notification Sounds"
 msgstr "알림음"
 
-#: src/Navigation.tsx:535
+#: src/Navigation.tsx:536
 #: src/view/screens/Notifications.tsx:132
 #: src/view/screens/Notifications.tsx:169
 #: src/view/shell/bottom-bar/BottomBar.tsx:230
@@ -4081,11 +4081,11 @@ msgstr "일시 정지"
 msgid "People"
 msgstr "사람들"
 
-#: src/Navigation.tsx:176
+#: src/Navigation.tsx:177
 msgid "People followed by @{0}"
 msgstr "@{0} 님이 팔로우한 사람들"
 
-#: src/Navigation.tsx:169
+#: src/Navigation.tsx:170
 msgid "People following @{0}"
 msgstr "@{0} 님을 팔로우하는 사람들"
 
@@ -4239,9 +4239,9 @@ msgstr "게시물"
 msgid "Post by {0}"
 msgstr "{0} 님의 게시물"
 
-#: src/Navigation.tsx:195
-#: src/Navigation.tsx:202
-#: src/Navigation.tsx:209
+#: src/Navigation.tsx:196
+#: src/Navigation.tsx:203
+#: src/Navigation.tsx:210
 msgid "Post by @{0}"
 msgstr "@{0} 님의 게시물"
 
@@ -4333,7 +4333,7 @@ msgstr "내 팔로우 먼저 표시"
 msgid "Privacy"
 msgstr "개인정보"
 
-#: src/Navigation.tsx:255
+#: src/Navigation.tsx:256
 #: src/screens/Signup/StepInfo/Policies.tsx:56
 #: src/view/screens/PrivacyPolicy.tsx:29
 #: src/view/screens/Settings/index.tsx:959
@@ -4578,16 +4578,22 @@ msgstr "답글"
 msgid "Reply Filters"
 msgstr "답글 필터"
 
-#: src/view/com/post/Post.tsx:190
-#: src/view/com/posts/FeedItem.tsx:439
+#: src/view/com/post/Post.tsx:197
+#: src/view/com/posts/FeedItem.tsx:458
 msgctxt "description"
 msgid "Reply to <0><1/></0>"
 msgstr "<0><1/></0> 님에게 보내는 답글"
 
-#: src/view/com/posts/FeedItem.tsx:437
+#: src/view/com/posts/FeedItem.tsx:456
 msgctxt "description"
 msgid "Reply to a blocked post"
 msgstr "차단된 게시물에 보내는 답글"
+
+#: src/view/com/post/Post.tsx:195
+#: src/view/com/posts/FeedItem.tsx:454
+msgctxt "description"
+msgid "Reply to you"
+msgstr "나에게 보내는 답글"
 
 #: src/components/dms/MessageMenu.tsx:132
 #: src/components/dms/MessagesListBlockedFooter.tsx:77
@@ -4686,13 +4692,18 @@ msgstr "재게시 또는 게시물 인용"
 msgid "Reposted By"
 msgstr "재게시한 사용자"
 
-#: src/view/com/posts/FeedItem.tsx:254
+#: src/view/com/posts/FeedItem.tsx:263
 msgid "Reposted by {0}"
 msgstr "{0} 님이 재게시함"
 
-#: src/view/com/posts/FeedItem.tsx:269
+#: src/view/com/posts/FeedItem.tsx:282
 msgid "Reposted by <0><1/></0>"
 msgstr "<0><1/></0> 님이 재게시함"
+
+#: src/view/com/posts/FeedItem.tsx:261
+#: src/view/com/posts/FeedItem.tsx:280
+msgid "Reposted by you"
+msgstr "내가 재게시함"
 
 #: src/view/com/notifications/FeedItem.tsx:188
 msgid "reposted your post"
@@ -4891,7 +4902,7 @@ msgid "Scroll to top"
 msgstr "맨 위로 스크롤"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:504
-#: src/Navigation.tsx:530
+#: src/Navigation.tsx:531
 #: src/view/com/auth/LoggedOut.tsx:124
 #: src/view/com/modals/ListAddRemoveUsers.tsx:75
 #: src/view/com/util/forms/SearchInput.tsx:67
@@ -5186,7 +5197,7 @@ msgstr "이미지 비율을 세로로 길게 설정합니다"
 msgid "Sets image aspect ratio to wide"
 msgstr "이미지 비율을 가로로 길게 설정합니다"
 
-#: src/Navigation.tsx:151
+#: src/Navigation.tsx:152
 #: src/view/screens/Settings/index.tsx:334
 #: src/view/shell/desktop/LeftNav.tsx:401
 #: src/view/shell/Drawer.tsx:559
@@ -5270,7 +5281,7 @@ msgstr "이 스타터 팩을 공유하여 사람들이 Bluesky에서 커뮤니�
 msgid "Share your favorite feed!"
 msgstr "좋아하는 피드를 공유해 보세요!"
 
-#: src/Navigation.tsx:240
+#: src/Navigation.tsx:241
 msgid "Shared Preferences Tester"
 msgstr "공유 설정 테스터"
 
@@ -5317,8 +5328,8 @@ msgid "Show less like this"
 msgstr "이런 항목 덜 보기"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:530
-#: src/view/com/post/Post.tsx:227
-#: src/view/com/posts/FeedItem.tsx:396
+#: src/view/com/post/Post.tsx:235
+#: src/view/com/posts/FeedItem.tsx:410
 msgid "Show More"
 msgstr "더 보기"
 
@@ -5539,8 +5550,8 @@ msgid "Start of onboarding tour window. Do not move backward. Instead, go forwar
 msgstr "온보딩 투어 창을 시작합니다. 뒤로 이동하지 마세요. 대신 앞으로 이동하여 더 많은 옵션을 보거나 건너뛰려면 누르세요."
 
 #: src/lib/generate-starterpack.ts:68
-#: src/Navigation.tsx:334
-#: src/Navigation.tsx:339
+#: src/Navigation.tsx:335
+#: src/Navigation.tsx:340
 #: src/screens/StarterPack/Wizard/index.tsx:183
 msgid "Starter Pack"
 msgstr "스타터 팩"
@@ -5573,7 +5584,7 @@ msgstr "{1}단계 중 {0}단계"
 msgid "Storage cleared, you need to restart the app now."
 msgstr "스토리지가 지워졌으며 지금 앱을 다시 시작해야 합니다."
 
-#: src/Navigation.tsx:230
+#: src/Navigation.tsx:231
 #: src/view/screens/Settings/index.tsx:865
 msgid "Storybook"
 msgstr "스토리북"
@@ -5618,7 +5629,7 @@ msgstr "나를 위한 추천"
 msgid "Suggestive"
 msgstr "외설적"
 
-#: src/Navigation.tsx:250
+#: src/Navigation.tsx:251
 #: src/view/screens/Support.tsx:30
 #: src/view/screens/Support.tsx:33
 msgid "Support"
@@ -5694,7 +5705,7 @@ msgstr "좀 더 자세히 알려주세요"
 msgid "Terms"
 msgstr "이용약관"
 
-#: src/Navigation.tsx:260
+#: src/Navigation.tsx:261
 #: src/screens/Signup/StepInfo/Policies.tsx:49
 #: src/view/screens/Settings/index.tsx:953
 #: src/view/screens/TermsOfService.tsx:29
@@ -6085,7 +6096,7 @@ msgstr "스레드 설정 업데이트됨"
 msgid "Threaded Mode"
 msgstr "스레드 모드"
 
-#: src/Navigation.tsx:293
+#: src/Navigation.tsx:294
 msgid "Threads Preferences"
 msgstr "스레드 설정"
 
