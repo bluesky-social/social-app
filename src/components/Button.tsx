@@ -13,7 +13,7 @@ import {
 } from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient'
 
-import {android, atoms as a, flatten, tokens, useTheme} from '#/alf'
+import {android, atoms as a, flatten, select, tokens, useTheme} from '#/alf'
 import {Props as SVGIconProps} from '#/components/icons/common'
 import {normalizeTextStyles} from '#/components/Typography'
 
@@ -152,7 +152,6 @@ export const Button = React.forwardRef<View, ButtonProps>(
     const {baseStyles, hoverStyles} = React.useMemo(() => {
       const baseStyles: ViewStyle[] = []
       const hoverStyles: ViewStyle[] = []
-      const light = t.name === 'light'
 
       if (color === 'primary') {
         if (variant === 'solid') {
@@ -165,7 +164,11 @@ export const Button = React.forwardRef<View, ButtonProps>(
             })
           } else {
             baseStyles.push({
-              backgroundColor: t.palette.primary_700,
+              backgroundColor: select(t.name, {
+                light: t.palette.primary_700,
+                dim: t.palette.primary_300,
+                dark: t.palette.primary_300,
+              }),
             })
           }
         } else if (variant === 'outline') {
@@ -178,24 +181,18 @@ export const Button = React.forwardRef<View, ButtonProps>(
               borderColor: t.palette.primary_500,
             })
             hoverStyles.push(a.border, {
-              backgroundColor: light
-                ? t.palette.primary_50
-                : t.palette.primary_950,
+              backgroundColor: t.palette.primary_50,
             })
           } else {
             baseStyles.push(a.border, {
-              borderColor: light
-                ? t.palette.primary_200
-                : t.palette.primary_900,
+              borderColor: t.palette.primary_200,
             })
           }
         } else if (variant === 'ghost') {
           if (!disabled) {
             baseStyles.push(t.atoms.bg)
             hoverStyles.push({
-              backgroundColor: light
-                ? t.palette.primary_100
-                : t.palette.primary_900,
+              backgroundColor: t.palette.primary_100,
             })
           }
         }
@@ -203,14 +200,26 @@ export const Button = React.forwardRef<View, ButtonProps>(
         if (variant === 'solid') {
           if (!disabled) {
             baseStyles.push({
-              backgroundColor: t.palette.contrast_25,
+              backgroundColor: select(t.name, {
+                light: t.palette.contrast_25,
+                dim: t.palette.contrast_100,
+                dark: t.palette.contrast_100,
+              }),
             })
             hoverStyles.push({
-              backgroundColor: t.palette.contrast_50,
+              backgroundColor: select(t.name, {
+                light: t.palette.contrast_50,
+                dim: t.palette.contrast_200,
+                dark: t.palette.contrast_200,
+              }),
             })
           } else {
             baseStyles.push({
-              backgroundColor: t.palette.contrast_100,
+              backgroundColor: select(t.name, {
+                light: t.palette.contrast_100,
+                dim: t.palette.contrast_25,
+                dark: t.palette.contrast_25,
+              }),
             })
           }
         } else if (variant === 'outline') {
@@ -247,7 +256,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
             })
           } else {
             baseStyles.push({
-              backgroundColor: t.palette.contrast_700,
+              backgroundColor: t.palette.contrast_600,
             })
           }
         } else if (variant === 'outline') {
@@ -284,7 +293,11 @@ export const Button = React.forwardRef<View, ButtonProps>(
             })
           } else {
             baseStyles.push({
-              backgroundColor: t.palette.negative_700,
+              backgroundColor: select(t.name, {
+                light: t.palette.negative_700,
+                dim: t.palette.negative_300,
+                dark: t.palette.negative_300,
+              }),
             })
           }
         } else if (variant === 'outline') {
@@ -297,24 +310,18 @@ export const Button = React.forwardRef<View, ButtonProps>(
               borderColor: t.palette.negative_500,
             })
             hoverStyles.push(a.border, {
-              backgroundColor: light
-                ? t.palette.negative_50
-                : t.palette.negative_975,
+              backgroundColor: t.palette.negative_50,
             })
           } else {
             baseStyles.push(a.border, {
-              borderColor: light
-                ? t.palette.negative_200
-                : t.palette.negative_900,
+              borderColor: t.palette.negative_200,
             })
           }
         } else if (variant === 'ghost') {
           if (!disabled) {
             baseStyles.push(t.atoms.bg)
             hoverStyles.push({
-              backgroundColor: light
-                ? t.palette.negative_100
-                : t.palette.negative_975,
+              backgroundColor: t.palette.negative_100,
             })
           }
         }
@@ -482,7 +489,6 @@ export function useSharedButtonTextStyles() {
   const {color, variant, disabled, size} = useButtonContext()
   return React.useMemo(() => {
     const baseStyles: TextStyle[] = []
-    const light = t.name === 'light'
 
     if (color === 'primary') {
       if (variant === 'solid') {
@@ -494,7 +500,7 @@ export function useSharedButtonTextStyles() {
       } else if (variant === 'outline') {
         if (!disabled) {
           baseStyles.push({
-            color: light ? t.palette.primary_600 : t.palette.primary_500,
+            color: t.palette.primary_600,
           })
         } else {
           baseStyles.push({color: t.palette.primary_600, opacity: 0.5})

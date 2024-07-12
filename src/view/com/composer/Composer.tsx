@@ -14,7 +14,6 @@ import {
   KeyboardAvoidingView,
   LayoutChangeEvent,
   StyleSheet,
-  TouchableOpacity,
   View,
 } from 'react-native'
 import Animated, {
@@ -24,7 +23,6 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {LinearGradient} from 'expo-linear-gradient'
 import {
   AppBskyFeedDefs,
   AppBskyFeedGetPostThread,
@@ -61,21 +59,21 @@ import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {useAnalytics} from 'lib/analytics/analytics'
 import * as apilib from 'lib/api/index'
-import {HITSLOP_10, MAX_GRAPHEME_LENGTH} from 'lib/constants'
+import {MAX_GRAPHEME_LENGTH} from 'lib/constants'
 import {useIsKeyboardVisible} from 'lib/hooks/useIsKeyboardVisible'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError} from 'lib/strings/errors'
 import {insertMentionAt} from 'lib/strings/mention-manip'
 import {shortenLinks} from 'lib/strings/rich-text-manip'
-import {colors, gradients, s} from 'lib/styles'
+import {colors, s} from 'lib/styles'
 import {isAndroid, isIOS, isNative, isWeb} from 'platform/detection'
 import {useDialogStateControlContext} from 'state/dialogs'
 import {GalleryModel} from 'state/models/media/gallery'
 import {ComposerOpts} from 'state/shell/composer'
 import {ComposerReplyTo} from 'view/com/composer/ComposerReplyTo'
 import {atoms as a, useTheme} from '#/alf'
-import {Button} from '#/components/Button'
+import {Button, ButtonText} from '#/components/Button'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
 import * as Prompt from '#/components/Prompt'
 import {QuoteEmbed, QuoteX} from '../util/post-embeds/QuoteEmbed'
@@ -458,20 +456,25 @@ export const ComposePost = observer(function ComposePost({
       <View style={[a.flex_1, viewStyles]} aria-modal accessibilityViewIsModal>
         <Animated.View style={topBarAnimatedStyle}>
           <View style={styles.topbarInner}>
-            <TouchableOpacity
-              testID="composerDiscardButton"
+            <Button
+              label={_(msg`Cancel`)}
+              variant="ghost"
+              color="primary"
+              shape="default"
+              size="small"
+              style={[
+                a.rounded_full,
+                a.py_sm,
+                {paddingLeft: 7, paddingRight: 7},
+              ]}
               onPress={onPressCancel}
-              onAccessibilityEscape={onPressCancel}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Cancel`)}
               accessibilityHint={_(
                 msg`Closes post composer and discards post draft`,
-              )}
-              hitSlop={HITSLOP_10}>
-              <Text style={[pal.link, s.f18]}>
+              )}>
+              <ButtonText style={[a.text_md]}>
                 <Trans>Cancel</Trans>
-              </Text>
-            </TouchableOpacity>
+              </ButtonText>
+            </Button>
             <View style={a.flex_1} />
             {isProcessing ? (
               <>
@@ -488,31 +491,25 @@ export const ComposePost = observer(function ComposePost({
                   hasMedia={hasMedia}
                 />
                 {canPost ? (
-                  <TouchableOpacity
+                  <Button
                     testID="composerPublishBtn"
-                    onPress={onPressPublish}
-                    accessibilityRole="button"
-                    accessibilityLabel={
+                    label={
                       replyTo ? _(msg`Publish reply`) : _(msg`Publish post`)
                     }
-                    accessibilityHint="">
-                    <LinearGradient
-                      colors={[
-                        gradients.blueLight.start,
-                        gradients.blueLight.end,
-                      ]}
-                      start={{x: 0, y: 0}}
-                      end={{x: 1, y: 1}}
-                      style={styles.postBtn}>
-                      <Text style={[s.white, s.f16, s.bold]}>
-                        {replyTo ? (
-                          <Trans context="action">Reply</Trans>
-                        ) : (
-                          <Trans context="action">Post</Trans>
-                        )}
-                      </Text>
-                    </LinearGradient>
-                  </TouchableOpacity>
+                    variant="solid"
+                    color="primary"
+                    shape="default"
+                    size="small"
+                    style={[a.rounded_full, a.py_sm]}
+                    onPress={onPressPublish}>
+                    <ButtonText style={[a.text_md]}>
+                      {replyTo ? (
+                        <Trans context="action">Reply</Trans>
+                      ) : (
+                        <Trans context="action">Post</Trans>
+                      )}
+                    </ButtonText>
+                  </Button>
                 ) : (
                   <View style={[styles.postBtn, pal.btn]}>
                     <Text style={[pal.textLight, s.f16, s.bold]}>
@@ -828,7 +825,7 @@ const styles = StyleSheet.create({
   topbarInner: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
+    paddingHorizontal: 8,
     height: 54,
     gap: 4,
   },

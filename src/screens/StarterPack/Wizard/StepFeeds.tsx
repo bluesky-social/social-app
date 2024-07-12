@@ -101,7 +101,7 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
         onEndReachedThreshold={2}
         renderScrollComponent={props => <KeyboardAwareScrollView {...props} />}
         keyboardShouldPersistTaps="handled"
-        containWeb={true}
+        disableFullWindowScroll={true}
         sideBorders={false}
         style={{flex: 1}}
         ListEmptyComponent={
