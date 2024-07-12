@@ -436,7 +436,7 @@ function ReplyToLabel({
 }) {
   const pal = usePalette('default')
   const {currentAccount} = useSession()
-  const isOwner = profile.did === currentAccount?.did
+  const isMe = profile.did === currentAccount?.did
 
   return (
     <View style={[s.flexRow, s.mb2, s.alignCenter]}>
@@ -450,7 +450,7 @@ function ReplyToLabel({
         style={[pal.textLight, s.mr2]}
         lineHeight={1.2}
         numberOfLines={1}>
-        {isOwner ? (
+        {isMe ? (
           <Trans context="description">Reply to you</Trans>
         ) : blocked ? (
           <Trans context="description">Reply to a blocked post</Trans>

@@ -147,7 +147,7 @@ function PostInner({
   }, [queryClient, post.author])
 
   const {currentAccount} = useSession()
-  const isOwner = replyAuthorDid === currentAccount?.did
+  const isMe = replyAuthorDid === currentAccount?.did
 
   return (
     <Link
@@ -191,7 +191,7 @@ function PostInner({
                 style={[pal.textLight, s.mr2]}
                 lineHeight={1.2}
                 numberOfLines={1}>
-                {isOwner ? (
+                {isMe ? (
                   <Trans context="description">Reply to you</Trans>
                 ) : (
                   <Trans context="description">
