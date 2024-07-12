@@ -1,8 +1,6 @@
 name: build-and-push-ogcard-aws
 on:
-  push:
-    branches:
-      - divy/bskycard
+  workflow_dispatch:
 
 env:
   REGISTRY: ${{ secrets.AWS_ECR_REGISTRY_USEAST2_PACKAGES_REGISTRY }}

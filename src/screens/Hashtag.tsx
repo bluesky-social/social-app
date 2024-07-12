@@ -169,7 +169,7 @@ function HashtagScreenTab({
 
   const queryParam = React.useMemo(() => {
     if (!author) return fullTag
-    return `${fullTag} from:${sanitizeHandle(author)}`
+    return `${fullTag} from:${author}`
   }, [fullTag, author])
 
   const {
