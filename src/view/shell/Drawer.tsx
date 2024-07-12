@@ -333,7 +333,7 @@ let DrawerFooter = ({
         </ButtonText>
       </Button>
       <Button
-        label={_(msg`Send feedback`)}
+        label={_(msg`Get help`)}
         size="small"
         variant="outline"
         color="secondary"
