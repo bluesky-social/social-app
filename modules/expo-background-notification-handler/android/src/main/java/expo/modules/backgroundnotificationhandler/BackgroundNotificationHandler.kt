@@ -4,7 +4,9 @@ import android.content.Context
 import com.google.firebase.messaging.RemoteMessage
 import expo.modules.blueskyswissarmy.sharedprefs.Preferences
 
-enum class NotificationType(val type: String) {
+enum class NotificationType(
+  val type: String,
+) {
   Like("like"),
   Repost("repost"),
   Follow("follow"),
