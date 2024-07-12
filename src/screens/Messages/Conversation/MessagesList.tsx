@@ -386,10 +386,10 @@ export function MessagesList({
           data={convoState.items}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
-          containWeb={true}
+          disableFullWindowScroll={true}
           // Prevents wrong position in Firefox when sending a message
           // as well as scroll getting stuck on Chome when scrolling upwards.
-          disableContentVisibility={true}
+          disableContainStyle={true}
           disableVirtualization={true}
           style={animatedListStyle}
           // The extra two items account for the header and the footer components

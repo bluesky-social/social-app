@@ -357,12 +357,11 @@ function TargetToggle({children}: React.PropsWithChildren<{}>) {
         a.px_sm,
         gtMobile && a.px_md,
         a.rounded_sm,
-        t.atoms.bg_contrast_50,
-        (ctx.hovered || ctx.focused) && t.atoms.bg_contrast_100,
+        t.atoms.bg_contrast_25,
+        (ctx.hovered || ctx.focused) && t.atoms.bg_contrast_50,
         ctx.selected && [
           {
-            backgroundColor:
-              t.name === 'light' ? t.palette.primary_50 : t.palette.primary_975,
+            backgroundColor: t.palette.primary_50,
           },
         ],
         ctx.disabled && {
