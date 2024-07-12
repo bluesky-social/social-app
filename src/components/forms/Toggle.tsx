@@ -281,24 +281,20 @@ export function createSharedToggleStyles({
 
   if (selected) {
     base.push({
-      backgroundColor:
-        t.name === 'light' ? t.palette.primary_25 : t.palette.primary_900,
+      backgroundColor: t.palette.primary_25,
       borderColor: t.palette.primary_500,
     })
 
     if (hovered) {
       baseHover.push({
-        backgroundColor:
-          t.name === 'light' ? t.palette.primary_100 : t.palette.primary_800,
-        borderColor:
-          t.name === 'light' ? t.palette.primary_600 : t.palette.primary_400,
+        backgroundColor: t.palette.primary_100,
+        borderColor: t.palette.primary_600,
       })
     }
   } else {
     if (hovered) {
       baseHover.push({
-        backgroundColor:
-          t.name === 'light' ? t.palette.contrast_50 : t.palette.contrast_100,
+        backgroundColor: t.palette.contrast_50,
         borderColor: t.palette.contrast_500,
       })
     }
@@ -306,16 +302,13 @@ export function createSharedToggleStyles({
 
   if (isInvalid) {
     base.push({
-      backgroundColor:
-        t.name === 'light' ? t.palette.negative_25 : t.palette.negative_975,
-      borderColor:
-        t.name === 'light' ? t.palette.negative_300 : t.palette.negative_800,
+      backgroundColor: t.palette.negative_25,
+      borderColor: t.palette.negative_300,
     })
 
     if (hovered) {
       baseHover.push({
-        backgroundColor:
-          t.name === 'light' ? t.palette.negative_25 : t.palette.negative_900,
+        backgroundColor: t.palette.negative_25,
         borderColor: t.palette.negative_600,
       })
     }
