@@ -13,10 +13,12 @@ export const Policies = ({
   serviceDescription,
   needsGuardian,
   under13,
+  verificatorEmail,
 }: {
   serviceDescription: ComAtprotoServerDescribeServer.OutputSchema
   needsGuardian: boolean
   under13: boolean
+  verificatorEmail : boolean
 }) => {
   const t = useTheme()
   const {_} = useLingui()
@@ -68,6 +70,18 @@ export const Policies = ({
     )
   }
 
+
+  if (!verificatorEmail) {
+    return (
+      <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+        <CircleInfo size="md" fill={t.atoms.text_contrast_low.color} />
+        <Text style={[t.atoms.text_contrast_medium]}>
+          Invalid email domain. Please use a known domain.
+        </Text>
+      </View>
+    )
+  }
+  
   return (
     <View style={[a.gap_sm]}>
       <Text style={[a.leading_snug, t.atoms.text_contrast_medium]}>
@@ -94,4 +108,10 @@ function validWebLink(url?: string): string | undefined {
   return url && (url.startsWith('http://') || url.startsWith('https://'))
     ? url
     : undefined
+}
+
+function isValidEmailDomain(email: string): boolean {
+  const knownDomains = ['gmail.com', 'hotmail.com', 'yahoo.com'];
+  const domain = email.split('@')[1];
+  return knownDomains.includes(domain);
 }

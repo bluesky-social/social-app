@@ -1,24 +1,21 @@
-import React, {useRef} from 'react'
-import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import * as EmailValidator from 'email-validator'
+import React, { useState } from 'react'
+import { View } from 'react-native'
+import { msg, Trans } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
-import {logEvent} from '#/lib/statsig/statsig'
-import {logger} from '#/logger'
-import {ScreenTransition} from '#/screens/Login/ScreenTransition'
-import {is13, is18, useSignupContext} from '#/screens/Signup/state'
-import {Policies} from '#/screens/Signup/StepInfo/Policies'
-import {atoms as a} from '#/alf'
+import { logger } from '#/logger'
+import { ScreenTransition } from '#/screens/Login/ScreenTransition'
+import { is13, is18, useSignupContext } from '#/screens/Signup/state'
+import { Policies } from '#/screens/Signup/StepInfo/Policies'
+import { atoms as a } from '#/alf'
 import * as DateField from '#/components/forms/DateField'
-import {FormError} from '#/components/forms/FormError'
-import {HostingProvider} from '#/components/forms/HostingProvider'
+import { FormError } from '#/components/forms/FormError'
+import { HostingProvider } from '#/components/forms/HostingProvider'
 import * as TextField from '#/components/forms/TextField'
-import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
-import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
-import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
-import {Loader} from '#/components/Loader'
-import {BackNextButtons} from '../BackNextButtons'
+import { Envelope_Stroke2_Corner0_Rounded as Envelope } from '#/components/icons/Envelope'
+import { Lock_Stroke2_Corner0_Rounded as Lock } from '#/components/icons/Lock'
+import { Ticket_Stroke2_Corner0_Rounded as Ticket } from '#/components/icons/Ticket'
+import { Loader } from '#/components/Loader'
 
 function sanitizeDate(date: Date): Date {
   if (!date || date.toString() === 'Invalid Date') {
@@ -30,72 +27,145 @@ function sanitizeDate(date: Date): Date {
   return date
 }
 
-export function StepInfo({
-  onPressBack,
-  isServerError,
-  refetchServer,
-  isLoadingStarterPack,
-}: {
-  onPressBack: () => void
-  isServerError: boolean
-  refetchServer: () => void
-  isLoadingStarterPack: boolean
-}) {
+export function StepInfo() {
   const {_} = useLingui()
   const {state, dispatch} = useSignupContext()
+  
+  const validDomains = [
+    'gmail.com',
+    'hotmail.com',
+    'yahoo.com',
+    'outlook.com',
+    'icloud.com',
+    'aol.com',
+    'mail.com',
+    'zoho.com',
+    'protonmail.com',
+    'yandex.com',
+    'gmx.com',
+    'live.com',
+    'fastmail.com',
+    'inbox.com',
+    'mail.ru',
+    'tutanota.com',
+    'cox.net',
+    'att.net',
+    'verizon.net',
+    'earthlink.net',
+    'rocketmail.com',
+    'optonline.net',
+    'sbcglobal.net',
+    'me.com',
+    'msn.com',
+    'mailinator.com',
+    'runbox.com',
+    'mail2world.com',
+    'rambler.ru',
+    'mail.ru',
+    'yopmail.com',
+    't-online.de',
+    'bluewin.ch',
+    'gmx.de',
+    'libero.it',
+    'web.de',
+    'rediffmail.com',
+    'bol.com.br',
+    'terra.com.br',
+    'yahoo.com.br',
+    'uol.com.br',
+    'ig.com.br',
+    'hotmail.co.uk',
+    'gmail.co.uk',
+    'yahoo.co.uk',
+    'btinternet.com',
+    'virginmedia.com',
+    'ntlworld.com',
+    'orange.fr',
+    'sfr.fr',
+    'free.fr',
+    'wanadoo.fr',
+    'laposte.net',
+    'hotmail.fr',
+    'gmail.fr',
+    'yahoo.fr',
+    'hotmail.es',
+    'gmail.es',
+    'yahoo.es',
+    'terra.es',
+    'libero.it',
+    'hotmail.it',
+    'gmail.it',
+    'yahoo.it',
+    'alice.it',
+    'live.nl',
+    'hotmail.nl',
+    'gmail.nl',
+    'yahoo.nl',
+    'ziggo.nl',
+    'telenet.be',
+    'hotmail.be',
+    'gmail.be',
+    'yahoo.be',
+    'skynet.be',
+    'mail.be',
+    'live.com.au',
+    'hotmail.com.au',
+    'gmail.com.au',
+    'yahoo.com.au',
+    'bigpond.com',
+    'iinet.net.au',
+    'optusnet.com.au',
+    'yahoo.co.in',
+    'hotmail.co.in',
+    'gmail.co.in',
+    'rediffmail.com',
+    'yahoo.co.id',
+    'hotmail.co.id',
+    'gmail.co.id',
+    'yahoo.co.jp',
+    'hotmail.co.jp',
+    'gmail.co.jp',
+    'yahoo.co.kr',
+    'hotmail.co.kr',
+    'gmail.co.kr',
+    'yahoo.co.nz',
+    'hotmail.co.nz',
+    'gmail.co.nz',
+    'yahoo.co.za',
+    'hotmail.co.za',
+    'gmail.co.za',
+    'yahoo.com.mx',
+    'hotmail.com.mx',
+    'gmail.com.mx',
+    'yahoo.com.ph',
+    'hotmail.com.ph',
+    'gmail.com.ph',
+    'yahoo.com.sg',
+    'hotmail.com.sg',
+    'gmail.com.sg',
+    'yahoo.se',
+    'hotmail.se',
+    'gmail.se'
+  ];
 
-  const inviteCodeValueRef = useRef<string>(state.inviteCode)
-  const emailValueRef = useRef<string>(state.email)
-  const passwordValueRef = useRef<string>(state.password)
+  function isValidEmailDomain(email: string): boolean {
+    const domain = email.split('@')[1];
+    return validDomains.includes(domain);
+  }
 
-  const onNextPress = React.useCallback(async () => {
-    const inviteCode = inviteCodeValueRef.current
-    const email = emailValueRef.current
-    const password = passwordValueRef.current
+  const [emailIsValid, setEmailIsValid] = useState(true);
 
-    if (!is13(state.dateOfBirth)) {
-      return
-    }
+  const handleEmailChange = (value: string) => {
+    dispatch({ type: 'setEmail', value: value.trim() });
 
-    if (state.serviceDescription?.inviteCodeRequired && !inviteCode) {
-      return dispatch({
-        type: 'setError',
-        value: _(msg`Please enter your invite code.`),
-      })
+    if (value.includes('@')) {
+      setEmailIsValid(isValidEmailDomain(value));
+    } else {
+      setEmailIsValid(true); // o false, dependiendo de tu lógica de validación
     }
-    if (!email) {
-      return dispatch({
-        type: 'setError',
-        value: _(msg`Please enter your email.`),
-      })
-    }
-    if (!EmailValidator.validate(email)) {
-      return dispatch({
-        type: 'setError',
-        value: _(msg`Your email appears to be invalid.`),
-      })
-    }
-    if (!password) {
-      return dispatch({
-        type: 'setError',
-        value: _(msg`Please choose your password.`),
-      })
-    }
+  };
 
-    dispatch({type: 'setInviteCode', value: inviteCode})
-    dispatch({type: 'setEmail', value: email})
-    dispatch({type: 'setPassword', value: password})
-    dispatch({type: 'next'})
-    logEvent('signup:nextPressed', {
-      activeStep: state.activeStep,
-    })
-  }, [
-    _,
-    dispatch,
-    state.activeStep,
-    state.dateOfBirth,
-    state.serviceDescription?.inviteCodeRequired,
-  ])
+  console.log('Email is valid:', emailIsValid);  // mostrar en console
 
   return (
     <ScreenTransition>
@@ -108,11 +178,11 @@ export function StepInfo({
           <HostingProvider
             serviceUrl={state.serviceUrl}
             onSelectServiceUrl={v =>
-              dispatch({type: 'setServiceUrl', value: v})
+              dispatch({ type: 'setServiceUrl', value: v })
             }
           />
         </View>
-        {state.isLoading || isLoadingStarterPack ? (
+        {state.isLoading ? (
           <View style={[a.align_center]}>
             <Loader size="xl" />
           </View>
@@ -127,7 +197,10 @@ export function StepInfo({
                   <TextField.Icon icon={Ticket} />
                   <TextField.Input
                     onChangeText={value => {
-                      inviteCodeValueRef.current = value.trim()
+                      dispatch({
+                        type: 'setInviteCode',
+                        value: value.trim(),
+                      })
                     }}
                     label={_(msg`Required for this provider`)}
                     defaultValue={state.inviteCode}
@@ -146,9 +219,7 @@ export function StepInfo({
                 <TextField.Icon icon={Envelope} />
                 <TextField.Input
                   testID="emailInput"
-                  onChangeText={value => {
-                    emailValueRef.current = value.trim()
-                  }}
+                  onChangeText={handleEmailChange}
                   label={_(msg`Enter your email address`)}
                   defaultValue={state.email}
                   autoCapitalize="none"
@@ -166,7 +237,10 @@ export function StepInfo({
                 <TextField.Input
                   testID="passwordInput"
                   onChangeText={value => {
-                    passwordValueRef.current = value
+                    dispatch({
+                      type: 'setPassword',
+                      value,
+                    })
                   }}
                   label={_(msg`Choose your password`)}
                   defaultValue={state.password}
@@ -196,18 +270,11 @@ export function StepInfo({
               serviceDescription={state.serviceDescription}
               needsGuardian={!is18(state.dateOfBirth)}
               under13={!is13(state.dateOfBirth)}
+              verificatorEmail={emailIsValid}
             />
           </>
         ) : undefined}
       </View>
-      <BackNextButtons
-        hideNext={!is13(state.dateOfBirth)}
-        showRetry={isServerError}
-        isLoading={state.isLoading}
-        onBackPress={onPressBack}
-        onNextPress={onNextPress}
-        onRetryPress={refetchServer}
-      />
     </ScreenTransition>
   )
 }
