@@ -34,6 +34,7 @@
     "typecheck": "tsc --project ./tsconfig.check.json",
     "e2e:mock-server": "./jest/dev-infra/with-test-redis-and-db.sh ts-node --project tsconfig.e2e.json __e2e__/mock-server.ts",
     "e2e:metro": "EXPO_PUBLIC_ENV=e2e NODE_ENV=test RN_SRC_EXT=e2e.ts,e2e.tsx expo run:ios",
+    "e2e:metro-android": "EXPO_PUBLIC_ENV=e2e NODE_ENV=test RN_SRC_EXT=e2e.ts,e2e.tsx expo run:android",
     "e2e:run": "maestro test __e2e__",
     "perf:test": "NODE_ENV=test maestro test",
     "perf:test:run": "NODE_ENV=test maestro test __e2e__/perf-test.yml",

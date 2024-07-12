@@ -39,6 +39,7 @@ import {ModerationMutedAccounts} from 'view/screens/ModerationMutedAccounts'
 import {PreferencesFollowingFeed} from 'view/screens/PreferencesFollowingFeed'
 import {PreferencesThreads} from 'view/screens/PreferencesThreads'
 import {SavedFeeds} from 'view/screens/SavedFeeds'
+import {SharedPreferencesTesterScreen} from '#/screens/E2E/SharedPreferencesTesterScreen'
 import HashtagScreen from '#/screens/Hashtag'
 import {ModerationScreen} from '#/screens/Moderation'
 import {ProfileKnownFollowersScreen} from '#/screens/Profile/KnownFollowers'
@@ -232,6 +233,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="DebugMod"
         getComponent={() => DebugModScreen}
         options={{title: title(msg`Moderation states`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="SharedPreferencesTester"
+        getComponent={() => SharedPreferencesTesterScreen}
+        options={{title: title(msg`Shared Preferences Tester`)}}
       />
       <Stack.Screen
         name="Log"
