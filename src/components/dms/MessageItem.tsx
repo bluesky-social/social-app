@@ -72,8 +72,7 @@ let MessageItem = ({
     lastInGroupRef.current = isLastInGroup
   }
 
-  const pendingColor =
-    t.name === 'light' ? t.palette.primary_200 : t.palette.primary_800
+  const pendingColor = t.palette.primary_200
 
   const rt = useMemo(() => {
     return new RichTextAPI({text: message.text, facets: message.facets})
@@ -110,12 +109,7 @@ let MessageItem = ({
             }>
             <RichText
               value={rt}
-              style={[
-                a.text_md,
-                isFromSelf && {color: t.palette.white},
-                isPending &&
-                  t.name !== 'light' && {color: t.palette.primary_300},
-              ]}
+              style={[a.text_md, isFromSelf && {color: t.palette.white}]}
               interactiveStyle={a.underline}
               enableTags
               emojiMultiplier={3}
