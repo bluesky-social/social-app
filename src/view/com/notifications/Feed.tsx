@@ -25,6 +25,10 @@ import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {CenteredView} from '#/view/com/util/Views'
 import {FeedItem} from './FeedItem'
 import hairlineWidth = StyleSheet.hairlineWidth
+import {runOnJS} from 'react-native-reanimated'
+
+import {ScrollProvider} from 'lib/ScrollContext'
+import {updateActiveViewAsync} from '../../../../modules/expo-bluesky-swiss-army/src/VisibilityView/VisibilityView'
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
@@ -171,27 +175,33 @@ export function Feed({
           />
         </CenteredView>
       )}
-      <List
-        testID="notifsFeed"
-        ref={scrollElRef}
-        data={items}
-        keyExtractor={item => item._reactKey}
-        renderItem={renderItem}
-        ListHeaderComponent={ListHeaderComponent}
-        ListFooterComponent={FeedFooter}
-        refreshing={isPTRing}
-        onRefresh={onRefresh}
-        onEndReached={onEndReached}
-        onEndReachedThreshold={2}
-        onScrolledDownChange={onScrolledDownChange}
-        contentContainerStyle={s.contentContainer}
-        // @ts-ignore our .web version only -prf
-        desktopFixedHeight
-        initialNumToRender={initialNumToRender}
-        windowSize={11}
-        sideBorders={false}
-        removeClippedSubviews={true}
-      />
+      <ScrollProvider
+        onMomentumEnd={() => {
+          'worklet'
+          runOnJS(updateActiveViewAsync)()
+        }}>
+        <List
+          testID="notifsFeed"
+          ref={scrollElRef}
+          data={items}
+          keyExtractor={item => item._reactKey}
+          renderItem={renderItem}
+          ListHeaderComponent={ListHeaderComponent}
+          ListFooterComponent={FeedFooter}
+          refreshing={isPTRing}
+          onRefresh={onRefresh}
+          onEndReached={onEndReached}
+          onEndReachedThreshold={2}
+          onScrolledDownChange={onScrolledDownChange}
+          contentContainerStyle={s.contentContainer}
+          // @ts-ignore our .web version only -prf
+          desktopFixedHeight
+          initialNumToRender={initialNumToRender}
+          windowSize={11}
+          sideBorders={false}
+          removeClippedSubviews={true}
+        />
+      </ScrollProvider>
     </View>
   )
 }

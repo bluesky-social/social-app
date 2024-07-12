@@ -5,43 +5,18 @@ class VisibilityViewManager {
 
   let views = NSHashTable<VisibilityView>(options: .weakMemory)
 
-  private var timer: Timer?
-
   private var currentlyActiveView: VisibilityView?
   private var screenHeight: CGFloat = UIScreen.main.bounds.height
 
   func addView(_ view: VisibilityView) {
     self.views.add(view)
-
-    if timer == nil {
-      self.startTimer()
-    }
   }
 
   func removeView(_ view: VisibilityView) {
     self.views.remove(view)
-
-    if self.views.count == 0 {
-      self.invalidateTimer()
-    }
   }
 
-  func startTimer() {
-    self.timer = Timer.scheduledTimer(
-      withTimeInterval: 1.0,
-      repeats: true,
-      block: self.onInterval
-    )
-  }
-
-  func invalidateTimer() {
-    if let timer = self.timer {
-      timer.invalidate()
-      self.timer = nil
-    }
-  }
-
-  func onInterval(timer: Timer) {
+  func updateActiveView() {
     var activeView: VisibilityView?
 
     print("interval")
@@ -73,6 +48,7 @@ class VisibilityViewManager {
           }
 
           if let minY = view.getMinY(),
+             minY >= 150, // TODO this should do something nicer, like "closest to middle"
              minY < currentlyMostMinY {
             mostVisibleView = view
           }
@@ -81,8 +57,6 @@ class VisibilityViewManager {
 
       activeView = mostVisibleView
     }
-
-    print(activeView?.reactTag)
 
     if let view = activeView, view != self.currentlyActiveView {
       self.setActiveView(view)

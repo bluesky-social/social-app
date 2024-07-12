@@ -11,7 +11,7 @@ class VisibilityView: ExpoView {
   }
 
   // Events
-  let onActiveChange = EventDispatcher()
+  let onChangeStatus = EventDispatcher()
 
   var isCurrentlyActiveView = false
 
@@ -59,8 +59,8 @@ class VisibilityView: ExpoView {
     }
 
     self.isCurrentlyActiveView = isActive
-    self.onActiveChange([
-      "isVisible": isActive
+    self.onChangeStatus([
+      "isActive": isActive
     ])
   }
 }
