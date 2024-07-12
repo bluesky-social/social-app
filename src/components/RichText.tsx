@@ -1,4 +1,5 @@
 import React from 'react'
+import {TextStyle} from 'react-native'
 import {AppBskyRichtextFacet, RichText as RichTextAPI} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -16,6 +17,19 @@ import {Text, TextProps} from '#/components/Typography'
 
 const WORD_WRAP = {wordWrap: 1}
 
+export type RichTextProps = TextStyleProp &
+  Pick<TextProps, 'selectable'> & {
+    value: RichTextAPI | string
+    testID?: string
+    numberOfLines?: number
+    disableLinks?: boolean
+    enableTags?: boolean
+    authorHandle?: string
+    onLinkPress?: LinkProps['onPress']
+    interactiveStyle?: TextStyle
+    emojiMultiplier?: number
+  }
+
 export function RichText({
   testID,
   value,
@@ -26,37 +40,35 @@ export function RichText({
   enableTags = false,
   authorHandle,
   onLinkPress,
-}: TextStyleProp &
-  Pick<TextProps, 'selectable'> & {
-    value: RichTextAPI | string
-    testID?: string
-    numberOfLines?: number
-    disableLinks?: boolean
-    enableTags?: boolean
-    authorHandle?: string
-    onLinkPress?: LinkProps['onPress']
-  }) {
+  interactiveStyle,
+  emojiMultiplier = 1.85,
+}: RichTextProps) {
   const richText = React.useMemo(
     () =>
       value instanceof RichTextAPI ? value : new RichTextAPI({text: value}),
     [value],
   )
-  const styles = [a.leading_snug, flatten(style)]
+
+  const flattenedStyle = flatten(style)
+  const plainStyles = [a.leading_snug, flattenedStyle]
+  const interactiveStyles = [
+    a.leading_snug,
+    a.pointer_events_auto,
+    flatten(interactiveStyle),
+    flattenedStyle,
+  ]
 
   const {text, facets} = richText
 
   if (!facets?.length) {
-    if (text.length <= 5 && /^\p{Extended_Pictographic}+$/u.test(text)) {
+    if (isOnlyEmoji(text)) {
+      const fontSize =
+        (flattenedStyle.fontSize ?? a.text_sm.fontSize) * emojiMultiplier
       return (
         <Text
           selectable={selectable}
           testID={testID}
-          style={[
-            {
-              fontSize: 26,
-              lineHeight: 30,
-            },
-          ]}
+          style={[plainStyles, {fontSize}]}
           // @ts-ignore web only -prf
           dataSet={WORD_WRAP}>
           {text}
@@ -67,7 +79,7 @@ export function RichText({
       <Text
         selectable={selectable}
         testID={testID}
-        style={styles}
+        style={plainStyles}
         numberOfLines={numberOfLines}
         // @ts-ignore web only -prf
         dataSet={WORD_WRAP}>
@@ -93,7 +105,7 @@ export function RichText({
           <InlineLinkText
             selectable={selectable}
             to={`/profile/${mention.did}`}
-            style={[...styles, {pointerEvents: 'auto'}]}
+            style={interactiveStyles}
             // @ts-ignore TODO
             dataSet={WORD_WRAP}
             onPress={onLinkPress}>
@@ -110,7 +122,7 @@ export function RichText({
             selectable={selectable}
             key={key}
             to={link.uri}
-            style={[...styles, {pointerEvents: 'auto'}]}
+            style={interactiveStyles}
             // @ts-ignore TODO
             dataSet={WORD_WRAP}
             shareOnLongPress
@@ -130,7 +142,7 @@ export function RichText({
           key={key}
           text={segment.text}
           tag={tag.tag}
-          style={styles}
+          style={interactiveStyles}
           selectable={selectable}
           authorHandle={authorHandle}
         />,
@@ -145,7 +157,7 @@ export function RichText({
     <Text
       selectable={selectable}
       testID={testID}
-      style={styles}
+      style={plainStyles}
       numberOfLines={numberOfLines}
       // @ts-ignore web only -prf
       dataSet={WORD_WRAP}>
@@ -219,23 +231,27 @@ function RichTextTag({
           onFocus={onFocus}
           onBlur={onBlur}
           style={[
-            style,
-            {
-              pointerEvents: 'auto',
-              color: t.palette.primary_500,
-            },
             web({
               cursor: 'pointer',
             }),
+            {color: t.palette.primary_500},
             (hovered || focused || pressed) && {
               ...web({outline: 0}),
               textDecorationLine: 'underline',
               textDecorationColor: t.palette.primary_500,
             },
+            style,
           ]}>
           {text}
         </Text>
       </TagMenu>
     </React.Fragment>
+  )
+}
+
+export function isOnlyEmoji(text: string) {
+  return (
+    text.length <= 15 &&
+    /^[\p{Emoji_Presentation}\p{Extended_Pictographic}]+$/u.test(text)
   )
 }

@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 
 import {cleanError} from '#/lib/strings/errors'
 import {isNative} from '#/platform/detection'
-import {useAgent, useSession, useSessionApi} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
@@ -30,8 +30,7 @@ export function DisableEmail2FADialog({
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {currentAccount} = useSession()
-  const {updateCurrentAccount} = useSessionApi()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
 
   const [stage, setStage] = useState<Stages>(Stages.Email)
   const [confirmationCode, setConfirmationCode] = useState<string>('')
@@ -42,7 +41,7 @@ export function DisableEmail2FADialog({
     setError('')
     setIsProcessing(true)
     try {
-      await getAgent().com.atproto.server.requestEmailUpdate()
+      await agent.com.atproto.server.requestEmailUpdate()
       setStage(Stages.ConfirmCode)
     } catch (e) {
       setError(cleanError(String(e)))
@@ -56,12 +55,12 @@ export function DisableEmail2FADialog({
     setIsProcessing(true)
     try {
       if (currentAccount?.email) {
-        await getAgent().com.atproto.server.updateEmail({
+        await agent.com.atproto.server.updateEmail({
           email: currentAccount!.email,
           token: confirmationCode.trim(),
           emailAuthFactor: false,
         })
-        updateCurrentAccount({emailAuthFactor: false})
+        await agent.resumeSession(agent.session!)
         Toast.show(_(msg`Email 2FA disabled`))
       }
       control.close()

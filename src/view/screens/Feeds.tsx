@@ -1,13 +1,6 @@
 import React from 'react'
-import {
-  ActivityIndicator,
-  type FlatList,
-  Pressable,
-  StyleSheet,
-  View,
-} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
+import {ActivityIndicator, type FlatList, StyleSheet, View} from 'react-native'
+import {AppBskyFeedDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
@@ -15,41 +8,42 @@ import debounce from 'lodash.debounce'
 
 import {isNative, isWeb} from '#/platform/detection'
 import {
-  getAvatarTypeFromUri,
-  useFeedSourceInfoQuery,
+  SavedFeedItem,
   useGetPopularFeedsQuery,
+  useSavedFeeds,
   useSearchPopularFeedsMutation,
 } from '#/state/queries/feed'
-import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
-import {HITSLOP_10} from 'lib/constants'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {CogIcon, ComposeIcon2, MagnifyingGlassIcon2} from 'lib/icons'
-import {FeedsTabNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
+import {ComposeIcon2} from 'lib/icons'
+import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {cleanError} from 'lib/strings/errors'
 import {s} from 'lib/styles'
-import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 import {FAB} from 'view/com/util/fab/FAB'
-import {SearchInput, SearchInputRef} from 'view/com/util/forms/SearchInput'
-import {Link} from 'view/com/util/Link'
+import {SearchInput} from 'view/com/util/forms/SearchInput'
+import {TextLink} from 'view/com/util/Link'
 import {List} from 'view/com/util/List'
-import {
-  FeedFeedLoadingPlaceholder,
-  LoadingPlaceholder,
-} from 'view/com/util/LoadingPlaceholder'
+import {FeedFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {Text} from 'view/com/util/text/Text'
-import {UserAvatar} from 'view/com/util/UserAvatar'
 import {ViewHeader} from 'view/com/util/ViewHeader'
+import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
+import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
 import {atoms as a, useTheme} from '#/alf'
 import {IconCircle} from '#/components/IconCircle'
+import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
 import {ListMagnifyingGlass_Stroke2_Corner0_Rounded} from '#/components/icons/ListMagnifyingGlass'
 import {ListSparkle_Stroke2_Corner0_Rounded} from '#/components/icons/ListSparkle'
+import hairlineWidth = StyleSheet.hairlineWidth
+import {Divider} from '#/components/Divider'
+import * as FeedCard from '#/components/FeedCard'
+import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
+import * as ListCard from '#/components/ListCard'
 
-type Props = NativeStackScreenProps<FeedsTabNavigatorParams, 'Feeds'>
+type Props = NativeStackScreenProps<CommonNavigatorParams, 'Feeds'>
 
 type FlatlistSlice =
   | {
@@ -62,9 +56,8 @@ type FlatlistSlice =
       key: string
     }
   | {
-      type: 'savedFeedsLoading'
+      type: 'savedFeedPlaceholder'
       key: string
-      // pendingItems: number,
     }
   | {
       type: 'savedFeedNoResults'
@@ -73,7 +66,7 @@ type FlatlistSlice =
   | {
       type: 'savedFeed'
       key: string
-      feedUri: string
+      savedFeed: SavedFeedItem
     }
   | {
       type: 'savedFeedsLoadMore'
@@ -95,27 +88,16 @@ type FlatlistSlice =
       type: 'popularFeed'
       key: string
       feedUri: string
+      feed: AppBskyFeedDefs.GeneratorView
     }
   | {
       type: 'popularFeedsLoadingMore'
       key: string
     }
-
-// HACK
-// the protocol doesn't yet tell us which feeds are personalized
-// this list is used to filter out feed recommendations from logged out users
-// for the ones we know need it
-// -prf
-const KNOWN_AUTHED_ONLY_FEEDS = [
-  'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/with-friends', // popular with friends, by bsky.app
-  'at://did:plc:tenurhgjptubkk5zf5qhi3og/app.bsky.feed.generator/mutuals', // mutuals, by skyfeed
-  'at://did:plc:tenurhgjptubkk5zf5qhi3og/app.bsky.feed.generator/only-posts', // only posts, by skyfeed
-  'at://did:plc:wzsilnxf24ehtmmc3gssy5bu/app.bsky.feed.generator/mentions', // mentions, by flicknow
-  'at://did:plc:q6gjnaw2blty4crticxkmujt/app.bsky.feed.generator/bangers', // my bangers, by jaz
-  'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/mutuals', // mutuals, by bluesky
-  'at://did:plc:q6gjnaw2blty4crticxkmujt/app.bsky.feed.generator/my-followers', // followers, by jaz
-  'at://did:plc:vpkhqolt662uhesyj6nxm7ys/app.bsky.feed.generator/followpics', // the gram, by why
-]
+  | {
+      type: 'noFollowingFeed'
+      key: string
+    }
 
 export function FeedsScreen(_props: Props) {
   const pal = usePalette('default')
@@ -124,11 +106,11 @@ export function FeedsScreen(_props: Props) {
   const [query, setQuery] = React.useState('')
   const [isPTR, setIsPTR] = React.useState(false)
   const {
-    data: preferences,
-    isLoading: isPreferencesLoading,
-    error: preferencesError,
-    refetch: refetchPreferences,
-  } = usePreferencesQuery()
+    data: savedFeeds,
+    isPlaceholderData: isSavedFeedsPlaceholder,
+    error: savedFeedsError,
+    refetch: refetchSavedFeeds,
+  } = useSavedFeeds()
   const {
     data: popularFeeds,
     isFetching: isPopularFeedsFetching,
@@ -149,7 +131,6 @@ export function FeedsScreen(_props: Props) {
   } = useSearchPopularFeedsMutation()
   const {hasSession} = useSession()
   const listRef = React.useRef<FlatList>(null)
-  const searchInputRef = React.useRef<SearchInputRef>(null)
 
   /**
    * A search query is present. We may not have search results yet.
@@ -185,11 +166,11 @@ export function FeedsScreen(_props: Props) {
   const onPullToRefresh = React.useCallback(async () => {
     setIsPTR(true)
     await Promise.all([
-      refetchPreferences().catch(_e => undefined),
+      refetchSavedFeeds().catch(_e => undefined),
       refetchPopularFeeds().catch(_e => undefined),
     ])
     setIsPTR(false)
-  }, [setIsPTR, refetchPreferences, refetchPopularFeeds])
+  }, [setIsPTR, refetchSavedFeeds, refetchPopularFeeds])
   const onEndReached = React.useCallback(() => {
     if (
       isPopularFeedsFetching ||
@@ -215,6 +196,11 @@ export function FeedsScreen(_props: Props) {
 
   const items = React.useMemo(() => {
     let slices: FlatlistSlice[] = []
+    const hasActualSavedCount =
+      !isSavedFeedsPlaceholder ||
+      (isSavedFeedsPlaceholder && (savedFeeds?.count || 0) > 0)
+    const canShowDiscoverSection =
+      !hasSession || (hasSession && hasActualSavedCount)
 
     if (hasSession) {
       slices.push({
@@ -222,122 +208,150 @@ export function FeedsScreen(_props: Props) {
         type: 'savedFeedsHeader',
       })
 
-      if (preferencesError) {
+      if (savedFeedsError) {
         slices.push({
           key: 'savedFeedsError',
           type: 'error',
-          error: cleanError(preferencesError.toString()),
+          error: cleanError(savedFeedsError.toString()),
         })
       } else {
-        if (isPreferencesLoading || !preferences?.feeds?.saved) {
-          slices.push({
-            key: 'savedFeedsLoading',
-            type: 'savedFeedsLoading',
-            // pendingItems: this.rootStore.preferences.savedFeeds.length || 3,
-          })
+        if (isSavedFeedsPlaceholder && !savedFeeds?.feeds.length) {
+          /*
+           * Initial render in placeholder state is 0 on a cold page load,
+           * because preferences haven't loaded yet.
+           *
+           * In practice, `savedFeeds` is always defined, but we check for TS
+           * and for safety.
+           *
+           * In both cases, we show 4 as the the loading state.
+           */
+          const min = 8
+          const count = savedFeeds
+            ? savedFeeds.count === 0
+              ? min
+              : savedFeeds.count
+            : min
+          Array(count)
+            .fill(0)
+            .forEach((_, i) => {
+              slices.push({
+                key: 'savedFeedPlaceholder' + i,
+                type: 'savedFeedPlaceholder',
+              })
+            })
         } else {
-          if (preferences?.feeds?.saved.length !== 0) {
-            const {saved, pinned} = preferences.feeds
-
-            slices = slices.concat(
-              pinned.map(uri => ({
-                key: `savedFeed:${uri}`,
-                type: 'savedFeed',
-                feedUri: uri,
-              })),
+          if (savedFeeds?.feeds?.length) {
+            const noFollowingFeed = savedFeeds.feeds.every(
+              f => f.type !== 'timeline',
             )
 
             slices = slices.concat(
-              saved
-                .filter(uri => !pinned.includes(uri))
-                .map(uri => ({
-                  key: `savedFeed:${uri}`,
+              savedFeeds.feeds
+                .filter(s => {
+                  return s.config.pinned
+                })
+                .map(s => ({
+                  key: `savedFeed:${s.view?.uri}:${s.config.id}`,
                   type: 'savedFeed',
-                  feedUri: uri,
+                  savedFeed: s,
                 })),
             )
+            slices = slices.concat(
+              savedFeeds.feeds
+                .filter(s => {
+                  return !s.config.pinned
+                })
+                .map(s => ({
+                  key: `savedFeed:${s.view?.uri}:${s.config.id}`,
+                  type: 'savedFeed',
+                  savedFeed: s,
+                })),
+            )
+
+            if (noFollowingFeed) {
+              slices.push({
+                key: 'noFollowingFeed',
+                type: 'noFollowingFeed',
+              })
+            }
+          } else {
+            slices.push({
+              key: 'savedFeedNoResults',
+              type: 'savedFeedNoResults',
+            })
           }
         }
       }
     }
 
-    slices.push({
-      key: 'popularFeedsHeader',
-      type: 'popularFeedsHeader',
-    })
-
-    if (popularFeedsError || searchError) {
+    if (!hasSession || (hasSession && canShowDiscoverSection)) {
       slices.push({
-        key: 'popularFeedsError',
-        type: 'error',
-        error: cleanError(
-          popularFeedsError?.toString() ?? searchError?.toString() ?? '',
-        ),
+        key: 'popularFeedsHeader',
+        type: 'popularFeedsHeader',
       })
-    } else {
-      if (isUserSearching) {
-        if (isSearchPending || !searchResults) {
-          slices.push({
-            key: 'popularFeedsLoading',
-            type: 'popularFeedsLoading',
-          })
-        } else {
-          if (!searchResults || searchResults?.length === 0) {
-            slices.push({
-              key: 'popularFeedsNoResults',
-              type: 'popularFeedsNoResults',
-            })
-          } else {
-            slices = slices.concat(
-              searchResults.map(feed => ({
-                key: `popularFeed:${feed.uri}`,
-                type: 'popularFeed',
-                feedUri: feed.uri,
-              })),
-            )
-          }
-        }
+
+      if (popularFeedsError || searchError) {
+        slices.push({
+          key: 'popularFeedsError',
+          type: 'error',
+          error: cleanError(
+            popularFeedsError?.toString() ?? searchError?.toString() ?? '',
+          ),
+        })
       } else {
-        if (isPopularFeedsFetching && !popularFeeds?.pages) {
-          slices.push({
-            key: 'popularFeedsLoading',
-            type: 'popularFeedsLoading',
-          })
-        } else {
-          if (
-            !popularFeeds?.pages ||
-            popularFeeds?.pages[0]?.feeds?.length === 0
-          ) {
+        if (isUserSearching) {
+          if (isSearchPending || !searchResults) {
             slices.push({
-              key: 'popularFeedsNoResults',
-              type: 'popularFeedsNoResults',
+              key: 'popularFeedsLoading',
+              type: 'popularFeedsLoading',
             })
           } else {
-            for (const page of popularFeeds.pages || []) {
+            if (!searchResults || searchResults?.length === 0) {
+              slices.push({
+                key: 'popularFeedsNoResults',
+                type: 'popularFeedsNoResults',
+              })
+            } else {
               slices = slices.concat(
-                page.feeds
-                  .filter(feed => {
-                    if (
-                      !hasSession &&
-                      KNOWN_AUTHED_ONLY_FEEDS.includes(feed.uri)
-                    ) {
-                      return false
-                    }
-                    return !preferences?.feeds?.saved.includes(feed.uri)
-                  })
-                  .map(feed => ({
+                searchResults.map(feed => ({
+                  key: `popularFeed:${feed.uri}`,
+                  type: 'popularFeed',
+                  feedUri: feed.uri,
+                  feed,
+                })),
+              )
+            }
+          }
+        } else {
+          if (isPopularFeedsFetching && !popularFeeds?.pages) {
+            slices.push({
+              key: 'popularFeedsLoading',
+              type: 'popularFeedsLoading',
+            })
+          } else {
+            if (!popularFeeds?.pages) {
+              slices.push({
+                key: 'popularFeedsNoResults',
+                type: 'popularFeedsNoResults',
+              })
+            } else {
+              for (const page of popularFeeds.pages || []) {
+                slices = slices.concat(
+                  page.feeds.map(feed => ({
                     key: `popularFeed:${feed.uri}`,
                     type: 'popularFeed',
                     feedUri: feed.uri,
+                    feed,
                   })),
-              )
-            }
+                )
+              }
 
-            if (isPopularFeedsFetchingNextPage) {
-              slices.push({
-                key: 'popularFeedsLoadingMore',
-                type: 'popularFeedsLoadingMore',
-              })
+              if (isPopularFeedsFetchingNextPage) {
+                slices.push({
+                  key: 'popularFeedsLoadingMore',
+                  type: 'popularFeedsLoadingMore',
+                })
+              }
             }
           }
         }
@@ -347,9 +361,9 @@ export function FeedsScreen(_props: Props) {
     return slices
   }, [
     hasSession,
-    preferences,
-    isPreferencesLoading,
-    preferencesError,
+    savedFeeds,
+    isSavedFeedsPlaceholder,
+    savedFeedsError,
     popularFeeds,
     isPopularFeedsFetching,
     popularFeedsError,
@@ -363,24 +377,15 @@ export function FeedsScreen(_props: Props) {
   const renderHeaderBtn = React.useCallback(() => {
     return (
       <View style={styles.headerBtnGroup}>
-        <Pressable
-          accessibilityRole="button"
-          hitSlop={HITSLOP_10}
-          onPress={searchInputRef.current?.focus}>
-          <MagnifyingGlassIcon2
-            size={22}
-            strokeWidth={2}
-            style={pal.textLight}
-          />
-        </Pressable>
-        <Link
+        <TextLink
+          testID="editFeedsBtn"
+          type="lg-medium"
           href="/settings/saved-feeds"
-          hitSlop={10}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Edit Saved Feeds`)}
-          accessibilityHint={_(msg`Opens screen to edit Saved Feeds`)}>
-          <CogIcon size={22} strokeWidth={2} style={pal.textLight} />
-        </Link>
+          accessibilityLabel={_(msg`Edit My Feeds`)}
+          accessibilityHint=""
+          text={_(msg`Edit`)}
+          style={[pal.link, a.pr_xs]}
+        />
       </View>
     )
   }, [pal, _])
@@ -418,10 +423,7 @@ export function FeedsScreen(_props: Props) {
     ({item}: {item: FlatlistSlice}) => {
       if (item.type === 'error') {
         return <ErrorMessage message={item.error} />
-      } else if (
-        item.type === 'popularFeedsLoadingMore' ||
-        item.type === 'savedFeedsLoading'
-      ) {
+      } else if (item.type === 'popularFeedsLoadingMore') {
         return (
           <View style={s.p10}>
             <ActivityIndicator size="large" />
@@ -444,49 +446,42 @@ export function FeedsScreen(_props: Props) {
                   <Trans>Feeds</Trans>
                 </Text>
                 <View style={styles.headerBtnGroup}>
-                  <Pressable
-                    accessibilityRole="button"
-                    hitSlop={HITSLOP_10}
-                    onPress={searchInputRef.current?.focus}>
-                    <MagnifyingGlassIcon2
-                      size={22}
-                      strokeWidth={2}
-                      style={pal.icon}
-                    />
-                  </Pressable>
-                  <Link
+                  <TextLink
+                    type="lg"
                     href="/settings/saved-feeds"
                     accessibilityLabel={_(msg`Edit My Feeds`)}
-                    accessibilityHint="">
-                    <CogIcon strokeWidth={1.5} style={pal.icon} size={28} />
-                  </Link>
+                    accessibilityHint=""
+                    text={_(msg`Edit`)}
+                    style={[pal.link]}
+                  />
                 </View>
               </View>
             )}
-            {preferences?.feeds?.saved?.length !== 0 && <FeedsSavedHeader />}
+            <FeedsSavedHeader />
           </>
         )
       } else if (item.type === 'savedFeedNoResults') {
         return (
           <View
-            style={{
-              paddingHorizontal: 16,
-              paddingTop: 10,
-            }}>
-            <Text type="lg" style={pal.textLight}>
-              <Trans>You don't have any saved feeds!</Trans>
-            </Text>
+            style={[
+              pal.border,
+              {
+                borderBottomWidth: 1,
+              },
+            ]}>
+            <NoSavedFeedsOfAnyType />
           </View>
         )
+      } else if (item.type === 'savedFeedPlaceholder') {
+        return <SavedFeedPlaceholder />
       } else if (item.type === 'savedFeed') {
-        return <SavedFeed feedUri={item.feedUri} />
+        return <FeedOrFollowing savedFeed={item.savedFeed} />
       } else if (item.type === 'popularFeedsHeader') {
         return (
           <>
             <FeedsAboutHeader />
-            <View style={{paddingHorizontal: 12, paddingBottom: 12}}>
+            <View style={{paddingHorizontal: 12, paddingBottom: 4}}>
               <SearchInput
-                ref={searchInputRef}
                 query={query}
                 onChangeQuery={onChangeQuery}
                 onPressCancelSearch={onPressCancelSearch}
@@ -500,13 +495,10 @@ export function FeedsScreen(_props: Props) {
         return <FeedFeedLoadingPlaceholder />
       } else if (item.type === 'popularFeed') {
         return (
-          <FeedSourceCard
-            feedUri={item.feedUri}
-            showSaveBtn={hasSession}
-            showDescription
-            showLikes
-            pinOnSave
-          />
+          <View style={[a.px_lg, a.pt_lg, a.gap_lg]}>
+            <FeedCard.Default view={item.feed} />
+            <Divider />
+          </View>
         )
       } else if (item.type === 'popularFeedsNoResults') {
         return (
@@ -521,6 +513,18 @@ export function FeedsScreen(_props: Props) {
             </Text>
           </View>
         )
+      } else if (item.type === 'noFollowingFeed') {
+        return (
+          <View
+            style={[
+              pal.border,
+              {
+                borderBottomWidth: 1,
+              },
+            ]}>
+            <NoFollowingFeed />
+          </View>
+        )
       }
       return null
     },
@@ -529,16 +533,14 @@ export function FeedsScreen(_props: Props) {
       pal.view,
       pal.border,
       pal.text,
-      pal.icon,
       pal.textLight,
+      pal.link,
       _,
-      preferences?.feeds?.saved?.length,
       query,
       onChangeQuery,
       onPressCancelSearch,
       onSubmitQuery,
       onChangeSearchFocus,
-      hasSession,
     ],
   )
 
@@ -547,7 +549,6 @@ export function FeedsScreen(_props: Props) {
       {isMobile && (
         <ViewHeader
           title={_(msg`Feeds`)}
-          canGoBack={false}
           renderButton={renderHeaderBtn}
           showBorder
         />
@@ -585,76 +586,118 @@ export function FeedsScreen(_props: Props) {
   )
 }
 
-function SavedFeed({feedUri}: {feedUri: string}) {
-  const pal = usePalette('default')
-  const {isMobile} = useWebMediaQueries()
-  const {data: info, error} = useFeedSourceInfoQuery({uri: feedUri})
-  const typeAvatar = getAvatarTypeFromUri(feedUri)
-
-  if (!info)
-    return (
-      <SavedFeedLoadingPlaceholder
-        key={`savedFeedLoadingPlaceholder:${feedUri}`}
-      />
-    )
-
-  return (
-    <Link
-      testID={`saved-feed-${info.displayName}`}
-      href={info.route.href}
-      style={[pal.border, styles.savedFeed, isMobile && styles.savedFeedMobile]}
-      hoverStyle={pal.viewLight}
-      accessibilityLabel={info.displayName}
-      accessibilityHint=""
-      asAnchor
-      anchorNoUnderline>
-      {error ? (
-        <View
-          style={{width: 28, flexDirection: 'row', justifyContent: 'center'}}>
-          <FontAwesomeIcon
-            icon="exclamation-circle"
-            color={pal.colors.textLight}
-          />
-        </View>
-      ) : (
-        <UserAvatar type={typeAvatar} size={28} avatar={info.avatar} />
-      )}
-      <View
-        style={{flex: 1, flexDirection: 'row', gap: 8, alignItems: 'center'}}>
-        <Text type="lg-medium" style={pal.text} numberOfLines={1}>
-          {info.displayName}
-        </Text>
-        {error ? (
-          <View style={[styles.offlineSlug, pal.borderDark]}>
-            <Text type="xs" style={pal.textLight}>
-              <Trans>Feed offline</Trans>
-            </Text>
-          </View>
-        ) : null}
-      </View>
-      {isMobile && (
-        <FontAwesomeIcon
-          icon="chevron-right"
-          size={14}
-          style={pal.textLight as FontAwesomeIconStyle}
-        />
-      )}
-    </Link>
+function FeedOrFollowing({savedFeed}: {savedFeed: SavedFeedItem}) {
+  return savedFeed.type === 'timeline' ? (
+    <FollowingFeed />
+  ) : (
+    <SavedFeed savedFeed={savedFeed} />
   )
 }
 
-function SavedFeedLoadingPlaceholder() {
-  const pal = usePalette('default')
-  const {isMobile} = useWebMediaQueries()
+function FollowingFeed() {
+  const t = useTheme()
+  const {_} = useLingui()
   return (
     <View
       style={[
-        pal.border,
-        styles.savedFeed,
-        isMobile && styles.savedFeedMobile,
+        a.flex_1,
+        a.px_lg,
+        a.py_md,
+        a.border_b,
+        t.atoms.border_contrast_low,
       ]}>
-      <LoadingPlaceholder width={28} height={28} style={{borderRadius: 4}} />
-      <LoadingPlaceholder width={140} height={12} />
+      <FeedCard.Header>
+        <View
+          style={[
+            a.align_center,
+            a.justify_center,
+            {
+              width: 28,
+              height: 28,
+              borderRadius: 3,
+              backgroundColor: t.palette.primary_500,
+            },
+          ]}>
+          <FilterTimeline
+            style={[
+              {
+                width: 18,
+                height: 18,
+              },
+            ]}
+            fill={t.palette.white}
+          />
+        </View>
+        <FeedCard.TitleAndByline title={_(msg`Following`)} />
+      </FeedCard.Header>
+    </View>
+  )
+}
+
+function SavedFeed({
+  savedFeed,
+}: {
+  savedFeed: SavedFeedItem & {type: 'feed' | 'list'}
+}) {
+  const t = useTheme()
+
+  const commonStyle = [
+    a.w_full,
+    a.flex_1,
+    a.px_lg,
+    a.py_md,
+    a.border_b,
+    t.atoms.border_contrast_low,
+  ]
+
+  return savedFeed.type === 'feed' ? (
+    <FeedCard.Link
+      testID={`saved-feed-${savedFeed.view.displayName}`}
+      {...savedFeed}>
+      {({hovered, pressed}) => (
+        <View
+          style={[commonStyle, (hovered || pressed) && t.atoms.bg_contrast_25]}>
+          <FeedCard.Header>
+            <FeedCard.Avatar src={savedFeed.view.avatar} size={28} />
+            <FeedCard.TitleAndByline title={savedFeed.view.displayName} />
+
+            <ChevronRight size="sm" fill={t.atoms.text_contrast_low.color} />
+          </FeedCard.Header>
+        </View>
+      )}
+    </FeedCard.Link>
+  ) : (
+    <ListCard.Link testID={`saved-feed-${savedFeed.view.name}`} {...savedFeed}>
+      {({hovered, pressed}) => (
+        <View
+          style={[commonStyle, (hovered || pressed) && t.atoms.bg_contrast_25]}>
+          <ListCard.Header>
+            <ListCard.Avatar src={savedFeed.view.avatar} size={28} />
+            <ListCard.TitleAndByline title={savedFeed.view.name} />
+
+            <ChevronRight size="sm" fill={t.atoms.text_contrast_low.color} />
+          </ListCard.Header>
+        </View>
+      )}
+    </ListCard.Link>
+  )
+}
+
+function SavedFeedPlaceholder() {
+  const t = useTheme()
+  return (
+    <View
+      style={[
+        a.flex_1,
+        a.px_lg,
+        a.py_md,
+        a.border_b,
+        t.atoms.border_contrast_low,
+      ]}>
+      <FeedCard.Header>
+        <FeedCard.AvatarPlaceholder size={28} />
+        <FeedCard.TitleAndBylinePlaceholder />
+      </FeedCard.Header>
     </View>
   )
 }
@@ -740,7 +783,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: 16,
-    paddingHorizontal: 16,
+    paddingHorizontal: 18,
     paddingVertical: 12,
   },
 
@@ -750,13 +793,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 14,
     gap: 12,
-    borderBottomWidth: 1,
+    borderBottomWidth: hairlineWidth,
   },
   savedFeedMobile: {
     paddingVertical: 10,
   },
   offlineSlug: {
-    borderWidth: 1,
+    borderWidth: hairlineWidth,
     borderRadius: 4,
     paddingHorizontal: 4,
     paddingVertical: 2,

@@ -1,5 +1,10 @@
 import {AppBskyActorDefs, AtUri} from '@atproto/api'
-import {useQuery, useQueryClient, UseQueryResult} from '@tanstack/react-query'
+import {
+  QueryClient,
+  useQuery,
+  useQueryClient,
+  UseQueryResult,
+} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
 import {useAgent} from '#/state/session'
@@ -24,7 +29,7 @@ export function useResolveUriQuery(uri: string | undefined): UriUseQueryResult {
 
 export function useResolveDidQuery(didOrHandle: string | undefined) {
   const queryClient = useQueryClient()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
 
   return useQuery<string, Error>({
     staleTime: STALE.HOURS.ONE,
@@ -34,7 +39,7 @@ export function useResolveDidQuery(didOrHandle: string | undefined) {
       // Just return the did if it's already one
       if (didOrHandle.startsWith('did:')) return didOrHandle
 
-      const res = await getAgent().resolveHandle({handle: didOrHandle})
+      const res = await agent.resolveHandle({handle: didOrHandle})
       return res.data.did
     },
     initialData: () => {
@@ -49,4 +54,12 @@ export function useResolveDidQuery(didOrHandle: string | undefined) {
     },
     enabled: !!didOrHandle,
   })
+}
+
+export function precacheResolvedUri(
+  queryClient: QueryClient,
+  handle: string,
+  did: string,
+) {
+  queryClient.setQueryData<string>(RQKEY(handle), did)
 }

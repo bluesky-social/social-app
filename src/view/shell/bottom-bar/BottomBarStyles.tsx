@@ -1,6 +1,7 @@
 import {StyleSheet} from 'react-native'
 
 import {colors} from 'lib/styles'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 export const styles = StyleSheet.create({
   bottomBar: {
@@ -9,7 +10,7 @@ export const styles = StyleSheet.create({
     left: 0,
     right: 0,
     flexDirection: 'row',
-    borderTopWidth: 1,
+    borderTopWidth: hairlineWidth,
     paddingLeft: 5,
     paddingRight: 10,
   },
@@ -48,27 +49,19 @@ export const styles = StyleSheet.create({
     marginLeft: 'auto',
     marginRight: 'auto',
   },
-  ctrlIconSizingWrapper: {
-    height: 27,
-  },
-  homeIcon: {
-    top: 0,
-  },
-  feedsIcon: {
-    top: -2,
-  },
+  ctrlIconSizingWrapper: {},
+  homeIcon: {},
+  feedsIcon: {},
   searchIcon: {
-    top: -2,
+    top: -1,
   },
-  bellIcon: {
-    top: -2.5,
-  },
+  bellIcon: {},
   profileIcon: {
-    top: -4,
+    borderRadius: 100,
+    borderWidth: 1,
+    borderColor: 'transparent',
   },
-  messagesIcon: {
-    top: 2,
-  },
+  messagesIcon: {},
   onProfile: {
     borderWidth: 1,
     borderRadius: 100,

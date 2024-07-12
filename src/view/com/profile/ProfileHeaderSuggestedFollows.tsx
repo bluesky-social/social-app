@@ -9,7 +9,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {useModerationOpts} from '#/state/queries/preferences'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {useSuggestedFollowsByActorQuery} from '#/state/queries/suggested-follows'
 import {useAnalytics} from 'lib/analytics/analytics'

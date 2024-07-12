@@ -3,18 +3,29 @@ import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useFocusEffect} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
 
-import {pluralize} from '#/lib/strings/helpers'
+import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
-import {isSessionDeactivated, useAgent, useSessionApi} from '#/state/session'
-import {useOnboardingDispatch} from '#/state/shell'
+import {
+  type SessionAccount,
+  useAgent,
+  useSession,
+  useSessionApi,
+} from '#/state/session'
+import {useSetMinimalShellMode} from '#/state/shell'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {ScrollView} from '#/view/com/util/Views'
 import {Logo} from '#/view/icons/Logo'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
+import {AccountList} from '#/components/AccountList'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {Divider} from '#/components/Divider'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Loader} from '#/components/Loader'
-import {P, Text} from '#/components/Typography'
+import {Text} from '#/components/Typography'
 
 const COL_WIDTH = 400
 
@@ -22,193 +33,199 @@ export function Deactivated() {
   const {_} = useLingui()
   const t = useTheme()
   const insets = useSafeAreaInsets()
-  const {gtMobile} = useBreakpoints()
-  const onboardingDispatch = useOnboardingDispatch()
+  const {currentAccount, accounts} = useSession()
+  const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
+  const {setShowLoggedOut} = useLoggedOutViewControls()
+  const hasOtherAccounts = accounts.length > 1
+  const setMinimalShellMode = useSetMinimalShellMode()
   const {logout} = useSessionApi()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
+  const [pending, setPending] = React.useState(false)
+  const [error, setError] = React.useState<string | undefined>()
+  const queryClient = useQueryClient()
 
-  const [isProcessing, setProcessing] = React.useState(false)
-  const [estimatedTime, setEstimatedTime] = React.useState<string | undefined>(
-    undefined,
-  )
-  const [placeInQueue, setPlaceInQueue] = React.useState<number | undefined>(
-    undefined,
+  useFocusEffect(
+    React.useCallback(() => {
+      setMinimalShellMode(true)
+    }, [setMinimalShellMode]),
   )
 
-  const checkStatus = React.useCallback(async () => {
-    setProcessing(true)
-    try {
-      const res = await getAgent().com.atproto.temp.checkSignupQueue()
-      if (res.data.activated) {
-        // ready to go, exchange the access token for a usable one and kick off onboarding
-        await getAgent().refreshSession()
-        if (!isSessionDeactivated(getAgent().session?.accessJwt)) {
-          onboardingDispatch({type: 'start'})
-        }
-      } else {
-        // not ready, update UI
-        setEstimatedTime(msToString(res.data.estimatedTimeMs))
-        if (typeof res.data.placeInQueue !== 'undefined') {
-          setPlaceInQueue(Math.max(res.data.placeInQueue, 1))
-        }
+  const onSelectAccount = React.useCallback(
+    (account: SessionAccount) => {
+      if (account.did !== currentAccount?.did) {
+        onPressSwitchAccount(account, 'SwitchAccount')
       }
-    } catch (e: any) {
-      logger.error('Failed to check signup queue', {err: e.toString()})
-    } finally {
-      setProcessing(false)
-    }
-  }, [
-    setProcessing,
-    setEstimatedTime,
-    setPlaceInQueue,
-    onboardingDispatch,
-    getAgent,
-  ])
-
-  React.useEffect(() => {
-    checkStatus()
-    const interval = setInterval(checkStatus, 60e3)
-    return () => clearInterval(interval)
-  }, [checkStatus])
-
-  const checkBtn = (
-    <Button
-      variant="solid"
-      color="primary"
-      size="large"
-      label={_(msg`Check my status`)}
-      onPress={checkStatus}
-      disabled={isProcessing}>
-      <ButtonText>
-        <Trans>Check my status</Trans>
-      </ButtonText>
-      {isProcessing && <ButtonIcon icon={Loader} />}
-    </Button>
+    },
+    [currentAccount, onPressSwitchAccount],
   )
+
+  const onPressAddAccount = React.useCallback(() => {
+    setShowLoggedOut(true)
+  }, [setShowLoggedOut])
+
+  const onPressLogout = React.useCallback(() => {
+    if (isWeb) {
+      // We're switching accounts, which remounts the entire app.
+      // On mobile, this gets us Home, but on the web we also need reset the URL.
+      // We can't change the URL via a navigate() call because the navigator
+      // itself is about to unmount, and it calls pushState() too late.
+      // So we change the URL ourselves. The navigator will pick it up on remount.
+      history.pushState(null, '', '/')
+    }
+    logout('Deactivated')
+  }, [logout])
+
+  const handleActivate = React.useCallback(async () => {
+    try {
+      setPending(true)
+      await agent.com.atproto.server.activateAccount()
+      await queryClient.resetQueries()
+      await agent.resumeSession(agent.session!)
+    } catch (e: any) {
+      switch (e.message) {
+        case 'Bad token scope':
+          setError(
+            _(
+              msg`You're logged in with an App Password. Please log in with your main password to continue deactivating your account.`,
+            ),
+          )
+          break
+        default:
+          setError(_(msg`Something went wrong, please try again`))
+          break
+      }
+
+      logger.error(e, {
+        context: 'Failed to activate account',
+      })
+    } finally {
+      setPending(false)
+    }
+  }, [_, agent, setPending, setError, queryClient])
 
   return (
-    <View
-      aria-modal
-      role="dialog"
-      aria-role="dialog"
-      aria-label={_(msg`You're in line`)}
-      accessibilityLabel={_(msg`You're in line`)}
-      accessibilityHint=""
-      style={[a.absolute, a.inset_0, a.flex_1, t.atoms.bg]}>
+    <View style={[a.h_full_vh, a.flex_1, t.atoms.bg]}>
       <ScrollView
         style={[a.h_full, a.w_full]}
         contentContainerStyle={{borderWidth: 0}}>
         <View
-          style={[a.flex_row, a.justify_center, gtMobile ? a.pt_4xl : a.px_xl]}>
-          <View style={[a.flex_1, {maxWidth: COL_WIDTH}]}>
-            <View
-              style={[a.w_full, a.justify_center, a.align_center, a.my_4xl]}>
-              <Logo width={120} />
-            </View>
-
-            <Text style={[a.text_4xl, a.font_bold, a.pb_sm]}>
-              <Trans>You're in line</Trans>
-            </Text>
-            <P style={[t.atoms.text_contrast_medium]}>
-              <Trans>
-                There's been a rush of new users to Bluesky! We'll activate your
-                account as soon as we can.
-              </Trans>
-            </P>
-
-            <View
-              style={[
-                a.rounded_sm,
-                a.px_2xl,
-                a.py_4xl,
-                a.mt_2xl,
-                t.atoms.bg_contrast_50,
-              ]}>
-              {typeof placeInQueue === 'number' && (
-                <Text
-                  style={[a.text_5xl, a.text_center, a.font_bold, a.mb_2xl]}>
-                  {placeInQueue}
-                </Text>
-              )}
-              <P style={[a.text_center]}>
-                {typeof placeInQueue === 'number' ? (
-                  <Trans>left to go.</Trans>
-                ) : (
-                  <Trans>You are in line.</Trans>
-                )}{' '}
-                {estimatedTime ? (
-                  <Trans>
-                    We estimate {estimatedTime} until your account is ready.
-                  </Trans>
-                ) : (
-                  <Trans>
-                    We will let you know when your account is ready.
-                  </Trans>
-                )}
-              </P>
-            </View>
-
-            {isWeb && gtMobile && (
-              <View style={[a.w_full, a.flex_row, a.justify_between, a.pt_5xl]}>
-                <Button
-                  variant="ghost"
-                  size="large"
-                  label={_(msg`Log out`)}
-                  onPress={() => logout('Deactivated')}>
-                  <ButtonText style={[{color: t.palette.primary_500}]}>
-                    <Trans>Log out</Trans>
-                  </ButtonText>
-                </Button>
-                {checkBtn}
-              </View>
-            )}
-          </View>
-
-          <View style={{height: 200}} />
-        </View>
-      </ScrollView>
-
-      {(!isWeb || !gtMobile) && (
-        <View
           style={[
-            a.align_center,
-            gtMobile ? a.px_5xl : a.px_xl,
+            a.px_2xl,
             {
-              paddingBottom: Math.max(insets.bottom, a.pb_5xl.paddingBottom),
+              paddingTop: isWeb ? 64 : insets.top,
+              paddingBottom: isWeb ? 64 : insets.bottom,
             },
           ]}>
-          <View style={[a.w_full, a.gap_sm, {maxWidth: COL_WIDTH}]}>
-            {checkBtn}
-            <Button
-              variant="ghost"
-              size="large"
-              label={_(msg`Log out`)}
-              onPress={() => logout('Deactivated')}>
-              <ButtonText style={[{color: t.palette.primary_500}]}>
-                <Trans>Log out</Trans>
-              </ButtonText>
-            </Button>
+          <View style={[a.flex_row, a.justify_center]}>
+            <View style={[a.w_full, {maxWidth: COL_WIDTH}]}>
+              <View
+                style={[a.w_full, a.justify_center, a.align_center, a.pb_5xl]}>
+                <Logo width={40} />
+              </View>
+
+              <View style={[a.gap_xs, a.pb_3xl]}>
+                <Text style={[a.text_xl, a.font_bold, a.leading_snug]}>
+                  <Trans>Welcome back!</Trans>
+                </Text>
+                <Text style={[a.text_sm, a.leading_snug]}>
+                  <Trans>
+                    You previously deactivated @{currentAccount?.handle}.
+                  </Trans>
+                </Text>
+                <Text style={[a.text_sm, a.leading_snug, a.pb_md]}>
+                  <Trans>
+                    You can reactivate your account to continue logging in. Your
+                    profile and posts will be visible to other users.
+                  </Trans>
+                </Text>
+
+                <View style={[a.gap_sm]}>
+                  <Button
+                    label={_(msg`Reactivate your account`)}
+                    size="medium"
+                    variant="solid"
+                    color="primary"
+                    onPress={handleActivate}>
+                    <ButtonText>
+                      <Trans>Yes, reactivate my account</Trans>
+                    </ButtonText>
+                    {pending && <ButtonIcon icon={Loader} position="right" />}
+                  </Button>
+                  <Button
+                    label={_(msg`Cancel reactivation and log out`)}
+                    size="medium"
+                    variant="solid"
+                    color="secondary"
+                    onPress={onPressLogout}>
+                    <ButtonText>
+                      <Trans>Cancel</Trans>
+                    </ButtonText>
+                  </Button>
+                </View>
+
+                {error && (
+                  <View
+                    style={[
+                      a.flex_row,
+                      a.gap_sm,
+                      a.mt_md,
+                      a.p_md,
+                      a.rounded_sm,
+                      t.atoms.bg_contrast_25,
+                    ]}>
+                    <CircleInfo size="md" fill={t.palette.negative_400} />
+                    <Text style={[a.flex_1, a.leading_snug]}>{error}</Text>
+                  </View>
+                )}
+              </View>
+
+              <View style={[a.pb_3xl]}>
+                <Divider />
+              </View>
+
+              {hasOtherAccounts ? (
+                <>
+                  <Text
+                    style={[
+                      t.atoms.text_contrast_medium,
+                      a.pb_md,
+                      a.leading_snug,
+                    ]}>
+                    <Trans>Or, log into one of your other accounts.</Trans>
+                  </Text>
+                  <AccountList
+                    onSelectAccount={onSelectAccount}
+                    onSelectOther={onPressAddAccount}
+                    otherLabel={_(msg`Add account`)}
+                    pendingDid={pendingDid}
+                  />
+                </>
+              ) : (
+                <>
+                  <Text
+                    style={[
+                      t.atoms.text_contrast_medium,
+                      a.pb_md,
+                      a.leading_snug,
+                    ]}>
+                    <Trans>Or, continue with another account.</Trans>
+                  </Text>
+                  <Button
+                    label={_(msg`Log in or sign up`)}
+                    size="medium"
+                    variant="solid"
+                    color="secondary"
+                    onPress={() => setShowLoggedOut(true)}>
+                    <ButtonText>
+                      <Trans>Log in or sign up</Trans>
+                    </ButtonText>
+                  </Button>
+                </>
+              )}
+            </View>
           </View>
         </View>
-      )}
+      </ScrollView>
     </View>
   )
-}
-
-function msToString(ms: number | undefined): string | undefined {
-  if (ms && ms > 0) {
-    const estimatedTimeMins = Math.ceil(ms / 60e3)
-    if (estimatedTimeMins > 59) {
-      const estimatedTimeHrs = Math.round(estimatedTimeMins / 60)
-      if (estimatedTimeHrs > 6) {
-        // dont even bother
-        return undefined
-      }
-      // hours
-      return `${estimatedTimeHrs} ${pluralize(estimatedTimeHrs, 'hour')}`
-    }
-    // minutes
-    return `${estimatedTimeMins} ${pluralize(estimatedTimeMins, 'minute')}`
-  }
-  return undefined
 }

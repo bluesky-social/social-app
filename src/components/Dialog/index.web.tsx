@@ -2,8 +2,10 @@ import React, {useImperativeHandle} from 'react'
 import {
   FlatList,
   FlatListProps,
+  StyleProp,
   TouchableWithoutFeedback,
   View,
+  ViewStyle,
 } from 'react-native'
 import Animated, {FadeIn, FadeInDown} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
@@ -86,7 +88,10 @@ export function Outer({
     if (!isOpen) return
 
     function handler(e: KeyboardEvent) {
-      if (e.key === 'Escape') close()
+      if (e.key === 'Escape') {
+        e.stopPropagation()
+        close()
+      }
     }
 
     document.addEventListener('keydown', handler)
@@ -199,18 +204,21 @@ export const ScrollableInner = Inner
 
 export const InnerFlatList = React.forwardRef<
   FlatList,
-  FlatListProps<any> & {label: string}
->(function InnerFlatList({label, style, ...props}, ref) {
+  FlatListProps<any> & {label: string} & {webInnerStyle?: StyleProp<ViewStyle>}
+>(function InnerFlatList({label, style, webInnerStyle, ...props}, ref) {
   const {gtMobile} = useBreakpoints()
   return (
     <Inner
       label={label}
-      // @ts-ignore web only -sfn
-      style={{
-        paddingHorizontal: 0,
-        maxHeight: 'calc(-36px + 100vh)',
-        overflow: 'hidden',
-      }}>
+      style={[
+        // @ts-ignore web only -sfn
+        {
+          paddingHorizontal: 0,
+          maxHeight: 'calc(-36px + 100vh)',
+          overflow: 'hidden',
+        },
+        webInnerStyle,
+      ]}>
       <FlatList
         ref={ref}
         style={[gtMobile ? a.px_2xl : a.px_xl, flatten(style)]}

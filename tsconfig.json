@@ -12,5 +12,6 @@
       "view/*": ["./src/view/*"],
       "crypto": ["./src/platform/crypto.ts"]
     }
-  }
+  },
+  "exclude": ["bskyweb", "bskyembed", "web-build"]
 }

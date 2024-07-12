@@ -1,12 +1,16 @@
 import {RichText} from '@atproto/api'
 
 import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
+import {
+  createStarterPackGooglePlayUri,
+  createStarterPackLinkFromAndroidReferrer,
+  parseStarterPackUri,
+} from 'lib/strings/starter-pack'
 import {cleanError} from '../../src/lib/strings/errors'
 import {createFullHandle, makeValidHandle} from '../../src/lib/strings/handles'
-import {enforceLen, pluralize} from '../../src/lib/strings/helpers'
+import {enforceLen} from '../../src/lib/strings/helpers'
 import {detectLinkables} from '../../src/lib/strings/rich-text-detection'
 import {shortenLinks} from '../../src/lib/strings/rich-text-manip'
-import {ago} from '../../src/lib/strings/time'
 import {
   makeRecordUri,
   toNiceDomain,
@@ -127,35 +131,6 @@ describe('detectLinkables', () => {
   })
 })
 
-describe('pluralize', () => {
-  const inputs: [number, string, string?][] = [
-    [1, 'follower'],
-    [1, 'member'],
-    [100, 'post'],
-    [1000, 'repost'],
-    [10000, 'upvote'],
-    [100000, 'other'],
-    [2, 'man', 'men'],
-  ]
-  const outputs = [
-    'follower',
-    'member',
-    'posts',
-    'reposts',
-    'upvotes',
-    'others',
-    'men',
-  ]
-
-  it('correctly pluralizes a set of words', () => {
-    for (let i = 0; i < inputs.length; i++) {
-      const input = inputs[i]
-      const output = pluralize(...input)
-      expect(output).toEqual(outputs[i])
-    }
-  })
-})
-
 describe('makeRecordUri', () => {
   const inputs: [string, string, string][] = [
     ['alice.test', 'app.bsky.feed.post', '3jk7x4irgv52r'],
@@ -166,36 +141,6 @@ describe('makeRecordUri', () => {
     for (let i = 0; i < inputs.length; i++) {
       const input = inputs[i]
       const result = makeRecordUri(...input)
-      expect(result).toEqual(outputs[i])
-    }
-  })
-})
-
-describe('ago', () => {
-  const inputs = [
-    1671461038,
-    '04 Dec 1995 00:12:00 GMT',
-    new Date(),
-    new Date().setSeconds(new Date().getSeconds() - 10),
-    new Date().setMinutes(new Date().getMinutes() - 10),
-    new Date().setHours(new Date().getHours() - 1),
-    new Date().setDate(new Date().getDate() - 1),
-    new Date().setMonth(new Date().getMonth() - 1),
-  ]
-  const outputs = [
-    new Date(1671461038).toLocaleDateString(),
-    new Date('04 Dec 1995 00:12:00 GMT').toLocaleDateString(),
-    'now',
-    '10s',
-    '10m',
-    '1h',
-    '1d',
-    '1mo',
-  ]
-
-  it('correctly calculates how much time passed, in a string', () => {
-    for (let i = 0; i < inputs.length; i++) {
-      const result = ago(inputs[i])
       expect(result).toEqual(outputs[i])
     }
   })
@@ -466,6 +411,26 @@ describe('parseEmbedPlayerFromUrl', () => {
     'https://media.tenor.com/someID/someName.gif',
     'https://media.tenor.com/someID',
     'https://media.tenor.com',
+
+    'https://www.flickr.com/photos/username/albums/72177720308493661',
+    'https://flickr.com/photos/username/albums/72177720308493661',
+    'https://flickr.com/photos/username/albums/72177720308493661/',
+    'https://flickr.com/photos/username/albums/72177720308493661//',
+    'https://flic.kr/s/aHBqjAES3i',
+
+    'https://flickr.com/foetoes/username/albums/3903',
+    'https://flickr.com/albums/3903',
+    'https://flic.kr/s/OolI',
+    'https://flic.kr/t/aHBqjAES3i',
+
+    'https://www.flickr.com/groups/898944@N23/pool',
+    'https://flickr.com/groups/898944@N23/pool',
+    'https://flickr.com/groups/898944@N23/pool/',
+    'https://flickr.com/groups/898944@N23/pool//',
+    'https://flic.kr/go/8WJtR',
+
+    'https://www.flickr.com/groups/898944@N23/',
+    'https://www.flickr.com/groups',
   ]
 
   const outputs = [
@@ -763,6 +728,66 @@ describe('parseEmbedPlayerFromUrl', () => {
     undefined,
     undefined,
     undefined,
+
+    {
+      type: 'flickr_album',
+      source: 'flickr',
+      playerUri: 'https://embedr.flickr.com/photosets/72177720308493661',
+    },
+    {
+      type: 'flickr_album',
+      source: 'flickr',
+      playerUri: 'https://embedr.flickr.com/photosets/72177720308493661',
+    },
+    {
+      type: 'flickr_album',
+      source: 'flickr',
+      playerUri: 'https://embedr.flickr.com/photosets/72177720308493661',
+    },
+    {
+      type: 'flickr_album',
+      source: 'flickr',
+      playerUri: 'https://embedr.flickr.com/photosets/72177720308493661',
+    },
+    {
+      type: 'flickr_album',
+      source: 'flickr',
+      playerUri: 'https://embedr.flickr.com/photosets/72177720308493661',
+    },
+
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+
+    {
+      type: 'flickr_album',
+      source: 'flickr',
+      playerUri: 'https://embedr.flickr.com/groups/898944@N23',
+    },
+    {
+      type: 'flickr_album',
+      source: 'flickr',
+      playerUri: 'https://embedr.flickr.com/groups/898944@N23',
+    },
+    {
+      type: 'flickr_album',
+      source: 'flickr',
+      playerUri: 'https://embedr.flickr.com/groups/898944@N23',
+    },
+    {
+      type: 'flickr_album',
+      source: 'flickr',
+      playerUri: 'https://embedr.flickr.com/groups/898944@N23',
+    },
+    {
+      type: 'flickr_album',
+      source: 'flickr',
+      playerUri: 'https://embedr.flickr.com/groups/898944@N23',
+    },
+
+    undefined,
+    undefined,
   ]
 
   it('correctly grabs the correct id from uri', () => {
@@ -774,5 +799,181 @@ describe('parseEmbedPlayerFromUrl', () => {
 
       expect(res).toEqual(output)
     }
+  })
+})
+
+describe('createStarterPackLinkFromAndroidReferrer', () => {
+  const validOutput = 'at://haileyok.com/app.bsky.graph.starterpack/rkey'
+
+  it('returns a link when input contains utm_source and utm_content', () => {
+    expect(
+      createStarterPackLinkFromAndroidReferrer(
+        'utm_source=bluesky&utm_content=starterpack_haileyok.com_rkey',
+      ),
+    ).toEqual(validOutput)
+
+    expect(
+      createStarterPackLinkFromAndroidReferrer(
+        'utm_source=bluesky&utm_content=starterpack_test-lover-9000.com_rkey',
+      ),
+    ).toEqual('at://test-lover-9000.com/app.bsky.graph.starterpack/rkey')
+  })
+
+  it('returns a link when input contains utm_source and utm_content in different order', () => {
+    expect(
+      createStarterPackLinkFromAndroidReferrer(
+        'utm_content=starterpack_haileyok.com_rkey&utm_source=bluesky',
+      ),
+    ).toEqual(validOutput)
+  })
+
+  it('returns a link when input contains other parameters as well', () => {
+    expect(
+      createStarterPackLinkFromAndroidReferrer(
+        'utm_source=bluesky&utm_medium=starterpack&utm_content=starterpack_haileyok.com_rkey',
+      ),
+    ).toEqual(validOutput)
+  })
+
+  it('returns null when utm_source is not present', () => {
+    expect(
+      createStarterPackLinkFromAndroidReferrer(
+        'utm_content=starterpack_haileyok.com_rkey',
+      ),
+    ).toEqual(null)
+  })
+
+  it('returns null when utm_content is not present', () => {
+    expect(
+      createStarterPackLinkFromAndroidReferrer('utm_source=bluesky'),
+    ).toEqual(null)
+  })
+
+  it('returns null when utm_content is malformed', () => {
+    expect(
+      createStarterPackLinkFromAndroidReferrer(
+        'utm_content=starterpack_haileyok.com',
+      ),
+    ).toEqual(null)
+
+    expect(
+      createStarterPackLinkFromAndroidReferrer('utm_content=starterpack'),
+    ).toEqual(null)
+
+    expect(
+      createStarterPackLinkFromAndroidReferrer(
+        'utm_content=starterpack_haileyok.com_rkey_more',
+      ),
+    ).toEqual(null)
+
+    expect(
+      createStarterPackLinkFromAndroidReferrer(
+        'utm_content=notastarterpack_haileyok.com_rkey',
+      ),
+    ).toEqual(null)
+  })
+})
+
+describe('parseStarterPackHttpUri', () => {
+  const baseUri = 'https://bsky.app/start'
+
+  it('returns a valid at uri when http uri is valid', () => {
+    const validHttpUri = `${baseUri}/haileyok.com/rkey`
+    expect(parseStarterPackUri(validHttpUri)).toEqual({
+      name: 'haileyok.com',
+      rkey: 'rkey',
+    })
+
+    const validHttpUri2 = `${baseUri}/haileyok.com/ilovetesting`
+    expect(parseStarterPackUri(validHttpUri2)).toEqual({
+      name: 'haileyok.com',
+      rkey: 'ilovetesting',
+    })
+
+    const validHttpUri3 = `${baseUri}/testlover9000.com/rkey`
+    expect(parseStarterPackUri(validHttpUri3)).toEqual({
+      name: 'testlover9000.com',
+      rkey: 'rkey',
+    })
+  })
+
+  it('returns null when there is no rkey', () => {
+    const validHttpUri = `${baseUri}/haileyok.com`
+    expect(parseStarterPackUri(validHttpUri)).toEqual(null)
+  })
+
+  it('returns null when there is an extra path', () => {
+    const validHttpUri = `${baseUri}/haileyok.com/rkey/other`
+    expect(parseStarterPackUri(validHttpUri)).toEqual(null)
+  })
+
+  it('returns null when there is no handle or rkey', () => {
+    const validHttpUri = `${baseUri}`
+    expect(parseStarterPackUri(validHttpUri)).toEqual(null)
+  })
+
+  it('returns null when the route is not /start or /starter-pack', () => {
+    const validHttpUri = 'https://bsky.app/start/haileyok.com/rkey'
+    expect(parseStarterPackUri(validHttpUri)).toEqual({
+      name: 'haileyok.com',
+      rkey: 'rkey',
+    })
+
+    const validHttpUri2 = 'https://bsky.app/starter-pack/haileyok.com/rkey'
+    expect(parseStarterPackUri(validHttpUri2)).toEqual({
+      name: 'haileyok.com',
+      rkey: 'rkey',
+    })
+
+    const invalidHttpUri = 'https://bsky.app/profile/haileyok.com/rkey'
+    expect(parseStarterPackUri(invalidHttpUri)).toEqual(null)
+  })
+
+  it('returns the at uri when the input is a valid starterpack at uri', () => {
+    const validAtUri = 'at://did:123/app.bsky.graph.starterpack/rkey'
+    expect(parseStarterPackUri(validAtUri)).toEqual({
+      name: 'did:123',
+      rkey: 'rkey',
+    })
+  })
+
+  it('returns null when the at uri has no rkey', () => {
+    const validAtUri = 'at://did:123/app.bsky.graph.starterpack'
+    expect(parseStarterPackUri(validAtUri)).toEqual(null)
+  })
+
+  it('returns null when the collection is not app.bsky.graph.starterpack', () => {
+    const validAtUri = 'at://did:123/app.bsky.graph.list/rkey'
+    expect(parseStarterPackUri(validAtUri)).toEqual(null)
+  })
+
+  it('returns null when the input is undefined', () => {
+    expect(parseStarterPackUri(undefined)).toEqual(null)
+  })
+})
+
+describe('createStarterPackGooglePlayUri', () => {
+  const base =
+    'https://play.google.com/store/apps/details?id=xyz.blueskyweb.app&referrer=utm_source%3Dbluesky%26utm_medium%3Dstarterpack%26utm_content%3Dstarterpack_'
+
+  it('returns valid google play uri when input is valid', () => {
+    expect(createStarterPackGooglePlayUri('name', 'rkey')).toEqual(
+      `${base}name_rkey`,
+    )
+  })
+
+  it('returns null when no rkey is supplied', () => {
+    // @ts-expect-error test
+    expect(createStarterPackGooglePlayUri('name', undefined)).toEqual(null)
+  })
+
+  it('returns null when no name or rkey are supplied', () => {
+    // @ts-expect-error test
+    expect(createStarterPackGooglePlayUri(undefined, undefined)).toEqual(null)
+  })
+
+  it('returns null when rkey is supplied but no name', () => {
+    // @ts-expect-error test
+    expect(createStarterPackGooglePlayUri(undefined, 'rkey')).toEqual(null)
   })
 })

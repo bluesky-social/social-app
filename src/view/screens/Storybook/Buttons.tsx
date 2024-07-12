@@ -20,29 +20,31 @@ export function Buttons() {
       <H1>Buttons</H1>
 
       <View style={[a.flex_row, a.flex_wrap, a.gap_md, a.align_start]}>
-        {['primary', 'secondary', 'negative'].map(color => (
-          <View key={color} style={[a.gap_md, a.align_start]}>
-            {['solid', 'outline', 'ghost'].map(variant => (
-              <React.Fragment key={variant}>
-                <Button
-                  variant={variant as ButtonVariant}
-                  color={color as ButtonColor}
-                  size="large"
-                  label="Click here">
-                  <ButtonText>Button</ButtonText>
-                </Button>
-                <Button
-                  disabled
-                  variant={variant as ButtonVariant}
-                  color={color as ButtonColor}
-                  size="large"
-                  label="Click here">
-                  <ButtonText>Button</ButtonText>
-                </Button>
-              </React.Fragment>
-            ))}
-          </View>
-        ))}
+        {['primary', 'secondary', 'secondary_inverted', 'negative'].map(
+          color => (
+            <View key={color} style={[a.gap_md, a.align_start]}>
+              {['solid', 'outline', 'ghost'].map(variant => (
+                <React.Fragment key={variant}>
+                  <Button
+                    variant={variant as ButtonVariant}
+                    color={color as ButtonColor}
+                    size="large"
+                    label="Click here">
+                    <ButtonText>Button</ButtonText>
+                  </Button>
+                  <Button
+                    disabled
+                    variant={variant as ButtonVariant}
+                    color={color as ButtonColor}
+                    size="large"
+                    label="Click here">
+                    <ButtonText>Button</ButtonText>
+                  </Button>
+                </React.Fragment>
+              ))}
+            </View>
+          ),
+        )}
 
         <View style={[a.flex_row, a.gap_md, a.align_start]}>
           <View style={[a.gap_md, a.align_start]}>
@@ -68,6 +70,7 @@ export function Buttons() {
               ),
             )}
           </View>
+          {/*
           <View style={[a.gap_md, a.align_start]}>
             {['gradient_sunset', 'gradient_nordic', 'gradient_bonfire'].map(
               name => (
@@ -91,6 +94,7 @@ export function Buttons() {
               ),
             )}
           </View>
+            */}
         </View>
       </View>
 

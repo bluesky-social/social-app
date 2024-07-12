@@ -1,0 +1,92 @@
+appId: xyz.blueskyweb.app
+---
+- runScript:
+    file: ../setupServer.js
+    env:
+        SERVER_PATH: ?users&follows&posts&feeds
+- runFlow:
+    file: ../setupApp.yml
+- tapOn:
+    id: "e2eSignInAlice"
+
+# Pin alice's feed
+- tapOn:
+    id: "bottomBarProfileBtn"
+- swipe:
+    from:
+        id: "profilePager-selector"
+    direction: LEFT
+- tapOn:
+    id: "profilePager-selector-4"
+- tapOn: "alice-favs"
+- tapOn: "Pin to Home"
+- tapOn:
+    id: "bottomBarHomeBtn"
+- assertNotVisible: "Feeds ✨"
+- assertVisible:
+    id: "homeScreenFeedTabs-selector-0"
+    text: "Following"
+- assertVisible:
+    id: "homeScreenFeedTabs-selector-1"
+    text: "alice-favs"
+
+# Set alice-favs first
+- tapOn:
+    id: "viewHeaderDrawerBtn"
+- tapOn:
+    id: "menuItemButton-Feeds"
+- tapOn: 
+    id: "editFeedsBtn"
+- tapOn:
+    label: "Tap on down arrow"
+    point: "79%,23%"
+- tapOn:
+    id: "viewHeaderDrawerBtn"
+- tapOn:
+    id: "viewHeaderDrawerBtn"
+- assertVisible:
+    id: "homeScreenFeedTabs-selector-0"
+    text: "alice-favs"
+- assertVisible:
+    id: "homeScreenFeedTabs-selector-1"
+    text: "Following"
+
+# Set following first
+- tapOn:
+    id: "viewHeaderDrawerBtn"
+- tapOn:
+    id: "menuItemButton-Feeds"
+- tapOn: 
+    id: "editFeedsBtn"
+- tapOn:
+    label: "Tap on down arrow"
+    point: "79%,23%"
+- tapOn:
+    id: "viewHeaderDrawerBtn"
+- tapOn:
+    id: "viewHeaderDrawerBtn"
+- assertVisible:
+    id: "homeScreenFeedTabs-selector-0"
+    text: "Following"
+- assertVisible:
+    id: "homeScreenFeedTabs-selector-1"
+    text: "alice-favs"
+
+# Remove following
+- tapOn:
+    id: "viewHeaderDrawerBtn"
+- tapOn:
+    id: "menuItemButton-Feeds"
+- tapOn: 
+    id: "editFeedsBtn"
+- tapOn:
+    label: "Tap on unpin"
+    point: "91%,23%"
+- tapOn:
+    id: "viewHeaderDrawerBtn"
+- tapOn:
+    id: "viewHeaderDrawerBtn"
+- assertVisible:
+    id: "homeScreenFeedTabs-selector-0"
+    text: "alice-favs"
+- assertNotVisible: "Following"

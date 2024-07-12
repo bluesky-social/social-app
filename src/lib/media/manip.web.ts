@@ -1,6 +1,7 @@
-import {Dimensions} from './types'
 import {Image as RNImage} from 'react-native-image-crop-picker'
-import {getDataUriSize, blobToDataUri} from './util'
+
+import {Dimensions} from './types'
+import {blobToDataUri, getDataUriSize} from './util'
 
 export async function compressIfNeeded(
   img: RNImage,
@@ -137,4 +138,28 @@ function createResizedImage(
     })
     img.src = dataUri
   })
+}
+
+export async function saveBytesToDisk(
+  filename: string,
+  bytes: Uint8Array,
+  type: string,
+) {
+  const blob = new Blob([bytes], {type})
+  const url = URL.createObjectURL(blob)
+  await downloadUrl(url, filename)
+  // Firefox requires a small delay
+  setTimeout(() => URL.revokeObjectURL(url), 100)
+  return true
+}
+
+async function downloadUrl(href: string, filename: string) {
+  const a = document.createElement('a')
+  a.href = href
+  a.download = filename
+  a.click()
+}
+
+export async function safeDeleteAsync() {
+  // no-op
 }

@@ -20,8 +20,6 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {CommonNavigatorParams} from 'lib/routes/types'
-import {useGate} from 'lib/statsig/statsig'
-import {isWeb} from 'platform/detection'
 import {ProfileCard} from 'view/com/profile/ProfileCard'
 import {CenteredView} from 'view/com/util/Views'
 import {ErrorScreen} from '../com/util/error/ErrorScreen'
@@ -38,7 +36,6 @@ export function ModerationBlockedAccounts({}: Props) {
   const setMinimalShellMode = useSetMinimalShellMode()
   const {isTabletOrDesktop} = useWebMediaQueries()
   const {screen} = useAnalytics()
-  const gate = useGate()
 
   const [isPTRing, setIsPTRing] = React.useState(false)
   const {
@@ -168,9 +165,6 @@ export function ModerationBlockedAccounts({}: Props) {
           )}
           // @ts-ignore our .web version only -prf
           desktopFixedHeight
-          showsVerticalScrollIndicator={
-            isWeb || !gate('hide_vertical_scroll_indicators')
-          }
         />
       )}
     </CenteredView>

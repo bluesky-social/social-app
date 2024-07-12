@@ -1,6 +1,7 @@
 import React, {memo, useMemo, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {
+  AppBskyActorDefs,
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
@@ -16,6 +17,7 @@ import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
+import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useComposerControls} from '#/state/shell/composer'
 import {isReasonFeedSource, ReasonFeedSource} from 'lib/api/feed/types'
 import {MAX_POST_LINES} from 'lib/constants'
@@ -39,25 +41,39 @@ import {PostEmbeds} from '../util/post-embeds'
 import {PostMeta} from '../util/PostMeta'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
-import {UserInfoText} from '../util/UserInfoText'
+import {AviFollowButton} from './AviFollowButton'
+import hairlineWidth = StyleSheet.hairlineWidth
+import {useSession} from '#/state/session'
+import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
+
+interface FeedItemProps {
+  record: AppBskyFeedPost.Record
+  reason: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource | undefined
+  moderation: ModerationDecision
+  parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
+  showReplyTo: boolean
+  isThreadChild?: boolean
+  isThreadLastChild?: boolean
+  isThreadParent?: boolean
+  feedContext: string | undefined
+  hideTopBorder?: boolean
+  isParentBlocked?: boolean
+}
 
 export function FeedItem({
   post,
   record,
   reason,
+  feedContext,
   moderation,
+  parentAuthor,
+  showReplyTo,
   isThreadChild,
   isThreadLastChild,
   isThreadParent,
-}: {
-  post: AppBskyFeedDefs.PostView
-  record: AppBskyFeedPost.Record
-  reason: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource | undefined
-  moderation: ModerationDecision
-  isThreadChild?: boolean
-  isThreadLastChild?: boolean
-  isThreadParent?: boolean
-}) {
+  hideTopBorder,
+  isParentBlocked,
+}: FeedItemProps & {post: AppBskyFeedDefs.PostView}): React.ReactNode {
   const postShadowed = usePostShadow(post)
   const richText = useMemo(
     () =>
@@ -78,11 +94,16 @@ export function FeedItem({
         post={postShadowed}
         record={record}
         reason={reason}
+        feedContext={feedContext}
         richText={richText}
+        parentAuthor={parentAuthor}
+        showReplyTo={showReplyTo}
         moderation={moderation}
         isThreadChild={isThreadChild}
         isThreadLastChild={isThreadLastChild}
         isThreadParent={isThreadParent}
+        hideTopBorder={hideTopBorder}
+        isParentBlocked={isParentBlocked}
       />
     )
   }
@@ -93,20 +114,19 @@ let FeedItemInner = ({
   post,
   record,
   reason,
+  feedContext,
   richText,
   moderation,
+  parentAuthor,
+  showReplyTo,
   isThreadChild,
   isThreadLastChild,
   isThreadParent,
-}: {
-  post: Shadow<AppBskyFeedDefs.PostView>
-  record: AppBskyFeedPost.Record
-  reason: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource | undefined
+  hideTopBorder,
+  isParentBlocked,
+}: FeedItemProps & {
   richText: RichTextAPI
-  moderation: ModerationDecision
-  isThreadChild?: boolean
-  isThreadLastChild?: boolean
-  isThreadParent?: boolean
+  post: Shadow<AppBskyFeedDefs.PostView>
 }): React.ReactNode => {
   const queryClient = useQueryClient()
   const {openComposer} = useComposerControls()
@@ -116,16 +136,14 @@ let FeedItemInner = ({
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey)
   }, [post.uri, post.author])
-
-  const replyAuthorDid = useMemo(() => {
-    if (!record?.reply) {
-      return ''
-    }
-    const urip = new AtUri(record.reply.parent?.uri || record.reply.root.uri)
-    return urip.hostname
-  }, [record?.reply])
+  const {sendInteraction} = useFeedFeedbackContext()
 
   const onPressReply = React.useCallback(() => {
+    sendInteraction({
+      item: post.uri,
+      event: 'app.bsky.feed.defs#interactionReply',
+      feedContext,
+    })
     openComposer({
       replyTo: {
         uri: post.uri,
@@ -136,11 +154,40 @@ let FeedItemInner = ({
         moderation,
       },
     })
-  }, [post, record, openComposer, moderation])
+  }, [post, record, openComposer, moderation, sendInteraction, feedContext])
+
+  const onOpenAuthor = React.useCallback(() => {
+    sendInteraction({
+      item: post.uri,
+      event: 'app.bsky.feed.defs#clickthroughAuthor',
+      feedContext,
+    })
+  }, [sendInteraction, post, feedContext])
+
+  const onOpenReposter = React.useCallback(() => {
+    sendInteraction({
+      item: post.uri,
+      event: 'app.bsky.feed.defs#clickthroughReposter',
+      feedContext,
+    })
+  }, [sendInteraction, post, feedContext])
+
+  const onOpenEmbed = React.useCallback(() => {
+    sendInteraction({
+      item: post.uri,
+      event: 'app.bsky.feed.defs#clickthroughEmbed',
+      feedContext,
+    })
+  }, [sendInteraction, post, feedContext])
 
   const onBeforePress = React.useCallback(() => {
+    sendInteraction({
+      item: post.uri,
+      event: 'app.bsky.feed.defs#clickthroughItem',
+      feedContext,
+    })
     precacheProfile(queryClient, post.author)
-  }, [queryClient, post.author])
+  }, [queryClient, post, sendInteraction, feedContext])
 
   const outerStyles = [
     styles.outer,
@@ -150,9 +197,14 @@ let FeedItemInner = ({
         isThreadLastChild || (!isThreadChild && !isThreadParent)
           ? 8
           : undefined,
+      borderTopWidth: hideTopBorder || isThreadChild ? 0 : hairlineWidth,
     },
-    isThreadChild ? styles.outerSmallTop : undefined,
   ]
+
+  const {currentAccount} = useSession()
+  const isOwner =
+    AppBskyFeedDefs.isReasonRepost(reason) &&
+    reason.by.did === currentAccount?.did
 
   return (
     <Link
@@ -161,7 +213,8 @@ let FeedItemInner = ({
       href={href}
       noFeedback
       accessible={false}
-      onBeforePress={onBeforePress}>
+      onBeforePress={onBeforePress}
+      dataSet={{feedContext}}>
       <View style={{flexDirection: 'row', gap: 10, paddingLeft: 8}}>
         <View style={{width: 52}}>
           {isThreadChild && (
@@ -203,41 +256,48 @@ let FeedItemInner = ({
             <Link
               style={styles.includeReason}
               href={makeProfileLink(reason.by)}
-              title={_(
-                msg`Reposted by ${sanitizeDisplayName(
-                  reason.by.displayName || reason.by.handle,
-                )}`,
-              )}>
-              <FontAwesomeIcon
-                icon="retweet"
-                style={{
-                  marginRight: 4,
-                  color: pal.colors.textLight,
-                  minWidth: 16,
-                }}
+              title={
+                isOwner
+                  ? _(msg`Reposted by you`)
+                  : _(
+                      msg`Reposted by ${sanitizeDisplayName(
+                        reason.by.displayName || reason.by.handle,
+                      )}`,
+                    )
+              }
+              onBeforePress={onOpenReposter}>
+              <Repost
+                style={{color: pal.colors.textLight, marginRight: 3}}
+                width={14}
+                height={14}
               />
               <Text
                 type="sm-bold"
                 style={pal.textLight}
                 lineHeight={1.2}
                 numberOfLines={1}>
-                <Trans>
-                  Reposted by{' '}
-                  <ProfileHoverCard inline did={reason.by.did}>
-                    <TextLinkOnWebOnly
-                      type="sm-bold"
-                      style={pal.textLight}
-                      lineHeight={1.2}
-                      numberOfLines={1}
-                      text={sanitizeDisplayName(
-                        reason.by.displayName ||
-                          sanitizeHandle(reason.by.handle),
-                        moderation.ui('displayName'),
-                      )}
-                      href={makeProfileLink(reason.by)}
-                    />
-                  </ProfileHoverCard>
-                </Trans>
+                {isOwner ? (
+                  <Trans>Reposted by you</Trans>
+                ) : (
+                  <Trans>
+                    Reposted by{' '}
+                    <ProfileHoverCard inline did={reason.by.did}>
+                      <TextLinkOnWebOnly
+                        type="sm-bold"
+                        style={pal.textLight}
+                        lineHeight={1.2}
+                        numberOfLines={1}
+                        text={sanitizeDisplayName(
+                          reason.by.displayName ||
+                            sanitizeHandle(reason.by.handle),
+                          moderation.ui('displayName'),
+                        )}
+                        href={makeProfileLink(reason.by)}
+                        onBeforePress={onOpenReposter}
+                      />
+                    </ProfileHoverCard>
+                  </Trans>
+                )}
               </Text>
             </Link>
           ) : null}
@@ -246,12 +306,15 @@ let FeedItemInner = ({
 
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
-          <PreviewableUserAvatar
-            size={52}
-            profile={post.author}
-            moderation={moderation.ui('avatar')}
-            type={post.author.associated?.labeler ? 'labeler' : 'user'}
-          />
+          <AviFollowButton author={post.author} moderation={moderation}>
+            <PreviewableUserAvatar
+              size={52}
+              profile={post.author}
+              moderation={moderation.ui('avatar')}
+              type={post.author.associated?.labeler ? 'labeler' : 'user'}
+              onBeforePress={onOpenAuthor}
+            />
+          </AviFollowButton>
           {isThreadParent && (
             <View
               style={[
@@ -272,35 +335,10 @@ let FeedItemInner = ({
             authorHasWarning={!!post.author.labels?.length}
             timestamp={post.indexedAt}
             postHref={href}
+            onOpenAuthor={onOpenAuthor}
           />
-          {!isThreadChild && replyAuthorDid !== '' && (
-            <View style={[s.flexRow, s.mb2, s.alignCenter]}>
-              <FontAwesomeIcon
-                icon="reply"
-                size={9}
-                style={[
-                  {color: pal.colors.textLight} as FontAwesomeIconStyle,
-                  s.mr5,
-                ]}
-              />
-              <Text
-                type="md"
-                style={[pal.textLight, s.mr2]}
-                lineHeight={1.2}
-                numberOfLines={1}>
-                <Trans context="description">
-                  Reply to{' '}
-                  <ProfileHoverCard inline did={replyAuthorDid}>
-                    <UserInfoText
-                      type="md"
-                      did={replyAuthorDid}
-                      attr="displayName"
-                      style={[pal.textLight]}
-                    />
-                  </ProfileHoverCard>
-                </Trans>
-              </Text>
-            </View>
+          {!isThreadChild && showReplyTo && parentAuthor && (
+            <ReplyToLabel blocked={isParentBlocked} profile={parentAuthor} />
           )}
           <LabelsOnMyPost post={post} />
           <PostContent
@@ -308,6 +346,7 @@ let FeedItemInner = ({
             richText={richText}
             postEmbed={post.embed}
             postAuthor={post.author}
+            onOpenEmbed={onOpenEmbed}
           />
           <PostCtrls
             post={post}
@@ -315,6 +354,7 @@ let FeedItemInner = ({
             richText={richText}
             onPressReply={onPressReply}
             logContext="FeedItem"
+            feedContext={feedContext}
           />
         </View>
       </View>
@@ -328,11 +368,13 @@ let PostContent = ({
   richText,
   postEmbed,
   postAuthor,
+  onOpenEmbed,
 }: {
   moderation: ModerationDecision
   richText: RichTextAPI
   postEmbed: AppBskyFeedDefs.PostView['embed']
   postAuthor: AppBskyFeedDefs.PostView['author']
+  onOpenEmbed: () => void
 }): React.ReactNode => {
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -350,7 +392,7 @@ let PostContent = ({
       modui={moderation.ui('contentList')}
       ignoreMute
       childContainerStyle={styles.contentHiderChild}>
-      <PostAlerts modui={moderation.ui('contentList')} style={[a.py_xs]} />
+      <PostAlerts modui={moderation.ui('contentList')} style={[a.py_2xs]} />
       {richText.text ? (
         <View style={styles.postTextContainer}>
           <RichText
@@ -372,8 +414,12 @@ let PostContent = ({
         />
       ) : undefined}
       {postEmbed ? (
-        <View style={[a.pb_sm]}>
-          <PostEmbeds embed={postEmbed} moderation={moderation} />
+        <View style={[a.pb_xs]}>
+          <PostEmbeds
+            embed={postEmbed}
+            moderation={moderation}
+            onOpen={onOpenEmbed}
+          />
         </View>
       ) : null}
     </ContentHider>
@@ -381,17 +427,64 @@ let PostContent = ({
 }
 PostContent = memo(PostContent)
 
+function ReplyToLabel({
+  profile,
+  blocked,
+}: {
+  profile: AppBskyActorDefs.ProfileViewBasic
+  blocked?: boolean
+}) {
+  const pal = usePalette('default')
+  const {currentAccount} = useSession()
+  const isMe = profile.did === currentAccount?.did
+
+  return (
+    <View style={[s.flexRow, s.mb2, s.alignCenter]}>
+      <FontAwesomeIcon
+        icon="reply"
+        size={9}
+        style={[{color: pal.colors.textLight} as FontAwesomeIconStyle, s.mr5]}
+      />
+      <Text
+        type="md"
+        style={[pal.textLight, s.mr2]}
+        lineHeight={1.2}
+        numberOfLines={1}>
+        {isMe ? (
+          <Trans context="description">Reply to you</Trans>
+        ) : blocked ? (
+          <Trans context="description">Reply to a blocked post</Trans>
+        ) : (
+          <Trans context="description">
+            Reply to{' '}
+            <ProfileHoverCard inline did={profile.did}>
+              <TextLinkOnWebOnly
+                type="md"
+                style={pal.textLight}
+                lineHeight={1.2}
+                numberOfLines={1}
+                href={makeProfileLink(profile)}
+                text={
+                  profile.displayName
+                    ? sanitizeDisplayName(profile.displayName)
+                    : sanitizeHandle(profile.handle)
+                }
+              />
+            </ProfileHoverCard>
+          </Trans>
+        )}
+      </Text>
+    </View>
+  )
+}
+
 const styles = StyleSheet.create({
   outer: {
-    borderTopWidth: 1,
     paddingLeft: 10,
     paddingRight: 15,
     // @ts-ignore web only -prf
     cursor: 'pointer',
     overflow: 'hidden',
-  },
-  outerSmallTop: {
-    borderTopWidth: 0,
   },
   replyLine: {
     width: 2,
@@ -400,9 +493,10 @@ const styles = StyleSheet.create({
   },
   includeReason: {
     flexDirection: 'row',
+    alignItems: 'center',
     marginTop: 2,
     marginBottom: 2,
-    marginLeft: -20,
+    marginLeft: -18,
   },
   layout: {
     flexDirection: 'row',
@@ -411,9 +505,13 @@ const styles = StyleSheet.create({
   },
   layoutAvi: {
     paddingLeft: 8,
+    position: 'relative',
+    zIndex: 999,
   },
   layoutContent: {
+    position: 'relative',
     flex: 1,
+    zIndex: 0,
   },
   alert: {
     marginTop: 6,
@@ -423,7 +521,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
-    paddingBottom: 4,
+    paddingBottom: 2,
   },
   contentHiderChild: {
     marginTop: 6,

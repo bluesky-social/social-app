@@ -3,14 +3,16 @@ import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
 import {AppBskyActorDefs, ModerationDecision, ModerationUI} from '@atproto/api'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {precacheProfile, usePrefetchProfileQuery} from '#/state/queries/profile'
+import {precacheProfile} from '#/state/queries/profile'
 import {usePalette} from 'lib/hooks/usePalette'
 import {makeProfileLink} from 'lib/routes/links'
+import {forceLTR} from 'lib/strings/bidi'
+import {NON_BREAKING_SPACE} from 'lib/strings/constants'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {niceDate} from 'lib/strings/time'
 import {TypographyVariant} from 'lib/ThemeContext'
-import {isAndroid, isWeb} from 'platform/detection'
+import {isAndroid} from 'platform/detection'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {TextLinkOnWebOnly} from './Link'
 import {Text} from './text/Text'
@@ -28,6 +30,7 @@ interface PostMetaOpts {
   avatarSize?: number
   displayNameType?: TypographyVariant
   displayNameStyle?: StyleProp<TextStyle>
+  onOpenAuthor?: () => void
   style?: StyleProp<ViewStyle>
 }
 
@@ -35,15 +38,14 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
   const pal = usePalette('default')
   const displayName = opts.author.displayName || opts.author.handle
   const handle = opts.author.handle
-  const prefetchProfileQuery = usePrefetchProfileQuery()
-
   const profileLink = makeProfileLink(opts.author)
-  const onPointerEnter = isWeb
-    ? () => prefetchProfileQuery(opts.author.did)
-    : undefined
-
   const queryClient = useQueryClient()
-  const onBeforePress = useCallback(() => {
+  const onOpenAuthor = opts.onOpenAuthor
+  const onBeforePressAuthor = useCallback(() => {
+    precacheProfile(queryClient, opts.author)
+    onOpenAuthor?.()
+  }, [queryClient, opts.author, onOpenAuthor])
+  const onBeforePressPost = useCallback(() => {
     precacheProfile(queryClient, opts.author)
   }, [queryClient, opts.author])
 
@@ -68,26 +70,22 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             style={[pal.text]}
             lineHeight={1.2}
             disableMismatchWarning
-            text={
-              <>
-                {sanitizeDisplayName(
-                  displayName,
-                  opts.moderation?.ui('displayName'),
-                )}
-              </>
-            }
+            text={forceLTR(
+              sanitizeDisplayName(
+                displayName,
+                opts.moderation?.ui('displayName'),
+              ),
+            )}
             href={profileLink}
-            onBeforePress={onBeforePress}
-            onPointerEnter={onPointerEnter}
+            onBeforePress={onBeforePressAuthor}
           />
           <TextLinkOnWebOnly
             type="md"
             disableMismatchWarning
             style={[pal.textLight, {flexShrink: 4}]}
-            text={'\xa0' + sanitizeHandle(handle, '@')}
+            text={NON_BREAKING_SPACE + sanitizeHandle(handle, '@')}
             href={profileLink}
-            onBeforePress={onBeforePress}
-            onPointerEnter={onPointerEnter}
+            onBeforePress={onBeforePressAuthor}
             anchorNoUnderline
           />
         </Text>
@@ -112,7 +110,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             title={niceDate(opts.timestamp)}
             accessibilityHint=""
             href={opts.postHref}
-            onBeforePress={onBeforePress}
+            onBeforePress={onBeforePressPost}
           />
         )}
       </TimeElapsed>
@@ -136,6 +134,6 @@ const styles = StyleSheet.create({
   },
   maxWidth: {
     flex: isAndroid ? 1 : undefined,
-    maxWidth: !isAndroid ? '80%' : undefined,
+    flexShrink: isAndroid ? undefined : 1,
   },
 })

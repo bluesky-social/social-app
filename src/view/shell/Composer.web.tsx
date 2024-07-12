@@ -1,21 +1,20 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import Animated, {FadeIn, FadeInDown, FadeOut} from 'react-native-reanimated'
-import {ComposePost} from '../com/composer/Composer'
-import {useComposerState} from 'state/shell/composer'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+
 import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
+import {useComposerState} from 'state/shell/composer'
 import {
   EmojiPicker,
   EmojiPickerState,
 } from 'view/com/composer/text-input/web/EmojiPicker.web'
+import {useBreakpoints, useTheme} from '#/alf'
+import {ComposePost} from '../com/composer/Composer'
 
 const BOTTOM_BAR_HEIGHT = 61
 
 export function Composer({}: {winHeight: number}) {
-  const pal = usePalette('default')
-  const {isMobile} = useWebMediaQueries()
+  const t = useTheme()
+  const {gtMobile} = useBreakpoints()
   const state = useComposerState()
   const isActive = !!state
   useWebBodyScrollLock(isActive)
@@ -48,20 +47,13 @@ export function Composer({}: {winHeight: number}) {
   }
 
   return (
-    <Animated.View
-      style={styles.mask}
-      aria-modal
-      accessibilityViewIsModal
-      entering={FadeIn.duration(100)}
-      exiting={FadeOut}>
-      <Animated.View
-        entering={FadeInDown.duration(150)}
-        exiting={FadeOut}
+    <View style={styles.mask} aria-modal accessibilityViewIsModal>
+      <View
         style={[
           styles.container,
-          isMobile && styles.containerMobile,
-          pal.view,
-          pal.border,
+          !gtMobile && styles.containerMobile,
+          t.atoms.bg,
+          t.atoms.border_contrast_medium,
         ]}>
         <ComposePost
           replyTo={state.replyTo}
@@ -71,9 +63,9 @@ export function Composer({}: {winHeight: number}) {
           openPicker={onOpenPicker}
           text={state.text}
         />
-      </Animated.View>
+      </View>
       <EmojiPicker state={pickerState} close={onClosePicker} />
-    </Animated.View>
+    </View>
   )
 }
 
@@ -93,12 +85,12 @@ const styles = StyleSheet.create({
     maxWidth: 600,
     width: '100%',
     paddingVertical: 0,
-    paddingHorizontal: 2,
     borderRadius: 8,
     marginBottom: 0,
     borderWidth: 1,
     // @ts-ignore web only
     maxHeight: 'calc(100% - (40px * 2))',
+    overflow: 'hidden',
   },
   containerMobile: {
     borderRadius: 0,

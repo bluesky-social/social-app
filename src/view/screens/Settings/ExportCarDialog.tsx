@@ -3,12 +3,16 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAgent, useSession} from '#/state/session'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {saveBytesToDisk} from '#/lib/media/manip'
+import {logger} from '#/logger'
+import {useAgent} from '#/state/session'
+import * as Toast from '#/view/com/util/Toast'
+import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {InlineLinkText, Link} from '#/components/Link'
-import {P, Text} from '#/components/Typography'
+import {InlineLinkText} from '#/components/Link'
+import {Loader} from '#/components/Loader'
+import {Text} from '#/components/Typography'
 
 export function ExportCarDialog({
   control,
@@ -17,21 +21,34 @@ export function ExportCarDialog({
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const {gtMobile} = useBreakpoints()
-  const {currentAccount} = useSession()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
+  const [loading, setLoading] = React.useState(false)
 
-  const downloadUrl = React.useMemo(() => {
-    const agent = getAgent()
-    if (!currentAccount || !agent.session) {
-      return '' // shouldnt ever happen
+  const download = React.useCallback(async () => {
+    if (!agent.session) {
+      return // shouldnt ever happen
     }
-    // eg: https://bsky.social/xrpc/com.atproto.sync.getRepo?did=did:plc:ewvi7nxzyoun6zhxrhs64oiz
-    const url = new URL(agent.pdsUrl || agent.service)
-    url.pathname = '/xrpc/com.atproto.sync.getRepo'
-    url.searchParams.set('did', agent.session.did)
-    return url.toString()
-  }, [currentAccount, getAgent])
+    try {
+      setLoading(true)
+      const did = agent.session.did
+      const downloadRes = await agent.com.atproto.sync.getRepo({did})
+      const saveRes = await saveBytesToDisk(
+        'repo.car',
+        downloadRes.data,
+        downloadRes.headers['content-type'],
+      )
+
+      if (saveRes) {
+        Toast.show(_(msg`File saved successfully!`))
+      }
+    } catch (e) {
+      logger.error('Error occurred while downloading CAR file', {message: e})
+      Toast.show(_(msg`Error occurred while saving file`))
+    } finally {
+      setLoading(false)
+      control.close()
+    }
+  }, [_, control, agent])
 
   return (
     <Dialog.Outer control={control}>
@@ -40,34 +57,34 @@ export function ExportCarDialog({
       <Dialog.ScrollableInner
         accessibilityDescribedBy="dialog-description"
         accessibilityLabelledBy="dialog-title">
-        <View style={[a.relative, a.gap_md, a.w_full]}>
+        <View style={[a.relative, a.gap_lg, a.w_full]}>
           <Text nativeID="dialog-title" style={[a.text_2xl, a.font_bold]}>
             <Trans>Export My Data</Trans>
           </Text>
-          <P nativeID="dialog-description" style={[a.text_sm]}>
+          <Text nativeID="dialog-description" style={[a.text_sm]}>
             <Trans>
               Your account repository, containing all public data records, can
               be downloaded as a "CAR" file. This file does not include media
               embeds, such as images, or your private data, which must be
               fetched separately.
             </Trans>
-          </P>
+          </Text>
 
-          <Link
+          <Button
             variant="solid"
             color="primary"
             size="large"
             label={_(msg`Download CAR file`)}
-            to={downloadUrl}
-            download="repo.car">
+            disabled={loading}
+            onPress={download}>
             <ButtonText>
               <Trans>Download CAR file</Trans>
             </ButtonText>
-          </Link>
+            {loading && <ButtonIcon icon={Loader} />}
+          </Button>
 
-          <P
+          <Text
             style={[
-              a.py_xs,
               t.atoms.text_contrast_medium,
               a.text_sm,
               a.leading_snug,
@@ -83,23 +100,7 @@ export function ExportCarDialog({
               </InlineLinkText>
               .
             </Trans>
-          </P>
-
-          <View style={gtMobile && [a.flex_row, a.justify_end]}>
-            <Button
-              testID="doneBtn"
-              variant="outline"
-              color="primary"
-              size={gtMobile ? 'small' : 'large'}
-              onPress={() => control.close()}
-              label={_(msg`Done`)}>
-              <ButtonText>
-                <Trans>Done</Trans>
-              </ButtonText>
-            </Button>
-          </View>
-
-          {!gtMobile && <View style={{height: 40}} />}
+          </Text>
         </View>
       </Dialog.ScrollableInner>
     </Dialog.Outer>

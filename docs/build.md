@@ -4,7 +4,10 @@
 
 - Set up your environment [using the expo instructions](https://docs.expo.dev/guides/local-app-development/).
   - make sure that the JAVA_HOME points to the zulu-17 directory in your `.zshrc` or `.bashrc` file: `export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home`. DO NOT use another JDK or you will encounter build errors.
-- If you're running macOS, make sure you are running the correct versions of Ruby and Cocoapods:
+- If you're running macOS, make sure you are running the correct versions of Ruby and Cocoapods:- 
+  - If you are using Apple Silicon and this is the first time you are building for RN 0.74+, you may need to run:
+    - `arch -arm64 brew install llvm`
+    - `sudo gem install ffi`
   - Check if you've installed Cocoapods through `homebrew`. If you have, remove it:
     - `brew info cocoapods`
     - If output says `Installed`:
@@ -16,10 +19,6 @@
     - Add `eval "$(rbenv init - zsh)"` to your `~/.zshrc`
   - From inside the project directory:
     - `bundler install` (this will install Cocoapods)
-- Setup your environment [for e2e testing using detox](https://wix.github.io/Detox/docs/introduction/getting-started):
-  - `yarn global add detox-cli`
-  - `brew tap wix/brew`
-  - `brew install applesimutils`
 - After initial setup:
   - Copy `google-services.json.example` to `google-services.json` or provide your own `google-services.json`. (A real firebase project is NOT required)
   - `npx expo prebuild` -> you will also need to run this anytime `app.json` or native `package.json` deps change
@@ -120,10 +119,7 @@ To open the [Developer Menu](https://docs.expo.dev/debugging/tools/#developer-me
 
 ### Running E2E Tests
 
-- Make sure you've set your environment following the above
-- Make sure Metro and the dev server are running
-- Run `yarn e2e`
-- Find the artifacts in the `artifact` folder
+See [testing.md](./testing.md).
 
 ### Polyfills
 

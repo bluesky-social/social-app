@@ -3,74 +3,12 @@ import {
   AppBskyGraphGetFollows,
   BskyAgent,
 } from '@atproto/api'
+import {TID} from '@atproto/common-web'
 
 import {until} from '#/lib/async/until'
-import {PRIMARY_FEEDS} from './StepAlgoFeeds'
 
-function shuffle(array: any) {
-  let currentIndex = array.length,
-    randomIndex
-
-  // While there remain elements to shuffle.
-  while (currentIndex > 0) {
-    // Pick a remaining element.
-    randomIndex = Math.floor(Math.random() * currentIndex)
-    currentIndex--
-
-    // And swap it with the current element.
-    ;[array[currentIndex], array[randomIndex]] = [
-      array[randomIndex],
-      array[currentIndex],
-    ]
-  }
-
-  return array
-}
-
-export function aggregateInterestItems(
-  interests: string[],
-  map: {[key: string]: string[]},
-  fallbackItems: string[],
-) {
-  const selected = interests.length
-  const all = interests
-    .map(i => {
-      // suggestions from server
-      const rawSuggestions = map[i]
-
-      // safeguard against a missing interest->suggestion mapping
-      if (!rawSuggestions || !rawSuggestions.length) {
-        return []
-      }
-
-      const suggestions = shuffle(rawSuggestions)
-
-      if (selected === 1) {
-        return suggestions // return all
-      } else if (selected === 2) {
-        return suggestions.slice(0, 5) // return 5
-      } else {
-        return suggestions.slice(0, 3) // return 3
-      }
-    })
-    .flat()
-  // dedupe suggestions
-  const results = Array.from(new Set(all))
-
-  // backfill
-  if (results.length < 20) {
-    results.push(...shuffle(fallbackItems))
-  }
-
-  // dedupe and return 20
-  return Array.from(new Set(results)).slice(0, 20)
-}
-
-export async function bulkWriteFollows(
-  getAgent: () => BskyAgent,
-  dids: string[],
-) {
-  const session = getAgent().session
+export async function bulkWriteFollows(agent: BskyAgent, dids: string[]) {
+  const session = agent.session
 
   if (!session) {
     throw new Error(`bulkWriteFollows failed: no session`)
@@ -83,25 +21,32 @@ export async function bulkWriteFollows(
       createdAt: new Date().toISOString(),
     }
   })
+
   const followWrites = followRecords.map(r => ({
     $type: 'com.atproto.repo.applyWrites#create',
     collection: 'app.bsky.graph.follow',
+    rkey: TID.nextStr(),
     value: r,
   }))
 
-  await getAgent().com.atproto.repo.applyWrites({
+  await agent.com.atproto.repo.applyWrites({
     repo: session.did,
     writes: followWrites,
   })
-  await whenFollowsIndexed(
-    getAgent,
-    session.did,
-    res => !!res.data.follows.length,
-  )
+  await whenFollowsIndexed(agent, session.did, res => !!res.data.follows.length)
+
+  const followUris = new Map()
+  for (const r of followWrites) {
+    followUris.set(
+      r.value.subject,
+      `at://${session.did}/app.bsky.graph.follow/${r.rkey}`,
+    )
+  }
+  return followUris
 }
 
 async function whenFollowsIndexed(
-  getAgent: () => BskyAgent,
+  agent: BskyAgent,
   actor: string,
   fn: (res: AppBskyGraphGetFollows.Response) => boolean,
 ) {
@@ -110,25 +55,9 @@ async function whenFollowsIndexed(
     1e3, // 1s delay between tries
     fn,
     () =>
-      getAgent().app.bsky.graph.getFollows({
+      agent.app.bsky.graph.getFollows({
         actor,
         limit: 1,
       }),
   )
-}
-
-/**
- * Kinda hacky, but we want Discover to appear as the first pinned
- * feed after Following
- */
-export function sortPrimaryAlgorithmFeeds(uris: string[]) {
-  return uris.sort((a, b) => {
-    if (a === PRIMARY_FEEDS[0]?.uri) {
-      return -1
-    }
-    if (b === PRIMARY_FEEDS[0]?.uri) {
-      return 1
-    }
-    return a.localeCompare(b)
-  })
 }

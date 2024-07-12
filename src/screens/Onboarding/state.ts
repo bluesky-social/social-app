@@ -1,32 +1,35 @@
 import React from 'react'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
+import {AvatarColor, Emoji} from '#/screens/Onboarding/StepProfile/types'
 
 export type OnboardingState = {
   hasPrev: boolean
   totalSteps: number
-  activeStep:
-    | 'interests'
-    | 'suggestedAccounts'
-    | 'followingFeed'
-    | 'algoFeeds'
-    | 'topicalFeeds'
-    | 'moderation'
-    | 'finished'
+  activeStep: 'profile' | 'interests' | 'finished'
   activeStepIndex: number
 
   interestsStepResults: {
     selectedInterests: string[]
     apiResponse: ApiResponseMap
   }
-  suggestedAccountsStepResults: {
-    accountDids: string[]
-  }
-  algoFeedsStepResults: {
-    feedUris: string[]
-  }
-  topicalFeedsStepResults: {
-    feedUris: string[]
+  profileStepResults: {
+    isCreatedAvatar: boolean
+    image?: {
+      path: string
+      mime: string
+      size: number
+      width: number
+      height: number
+    }
+    imageUri?: string
+    imageMime?: string
+    creatorState?: {
+      emoji: Emoji
+      backgroundColor: AvatarColor
+    }
   }
 }
 
@@ -46,16 +49,15 @@ export type OnboardingAction =
       apiResponse: ApiResponseMap
     }
   | {
-      type: 'setSuggestedAccountsStepResults'
-      accountDids: string[]
-    }
-  | {
-      type: 'setAlgoFeedsStepResults'
-      feedUris: string[]
-    }
-  | {
-      type: 'setTopicalFeedsStepResults'
-      feedUris: string[]
+      type: 'setProfileStepResults'
+      isCreatedAvatar: boolean
+      image?: OnboardingState['profileStepResults']['image']
+      imageUri: string
+      imageMime: string
+      creatorState?: {
+        emoji: Emoji
+        backgroundColor: AvatarColor
+      }
     }
 
 export type ApiResponseMap = {
@@ -68,10 +70,43 @@ export type ApiResponseMap = {
   }
 }
 
+export function useInterestsDisplayNames() {
+  const {_} = useLingui()
+
+  return React.useMemo<Record<string, string>>(() => {
+    return {
+      // Keep this alphabetized
+      animals: _(msg`Animals`),
+      art: _(msg`Art`),
+      books: _(msg`Books`),
+      comedy: _(msg`Comedy`),
+      comics: _(msg`Comics`),
+      culture: _(msg`Culture`),
+      dev: _(msg`Software Dev`),
+      education: _(msg`Education`),
+      food: _(msg`Food`),
+      gaming: _(msg`Video Games`),
+      journalism: _(msg`Journalism`),
+      movies: _(msg`Movies`),
+      music: _(msg`Music`),
+      nature: _(msg`Nature`),
+      news: _(msg`News`),
+      pets: _(msg`Pets`),
+      photography: _(msg`Photography`),
+      politics: _(msg`Politics`),
+      science: _(msg`Science`),
+      sports: _(msg`Sports`),
+      tech: _(msg`Tech`),
+      tv: _(msg`TV`),
+      writers: _(msg`Writers`),
+    }
+  }, [_])
+}
+
 export const initialState: OnboardingState = {
   hasPrev: false,
-  totalSteps: 7,
-  activeStep: 'interests',
+  totalSteps: 3,
+  activeStep: 'profile',
   activeStepIndex: 1,
 
   interestsStepResults: {
@@ -82,52 +117,20 @@ export const initialState: OnboardingState = {
       suggestedFeedUris: {},
     },
   },
-  suggestedAccountsStepResults: {
-    accountDids: [],
+  profileStepResults: {
+    isCreatedAvatar: false,
+    image: undefined,
+    imageUri: '',
+    imageMime: '',
   },
-  algoFeedsStepResults: {
-    feedUris: [],
-  },
-  topicalFeedsStepResults: {
-    feedUris: [],
-  },
-}
-
-export const INTEREST_TO_DISPLAY_NAME_DEFAULTS: {
-  [key: string]: string
-} = {
-  news: 'News',
-  journalism: 'Journalism',
-  nature: 'Nature',
-  art: 'Art',
-  comics: 'Comics',
-  writers: 'Writers',
-  culture: 'Culture',
-  sports: 'Sports',
-  pets: 'Pets',
-  animals: 'Animals',
-  books: 'Books',
-  education: 'Education',
-  climate: 'Climate',
-  science: 'Science',
-  politics: 'Politics',
-  fitness: 'Fitness',
-  tech: 'Tech',
-  dev: 'Software Dev',
-  comedy: 'Comedy',
-  gaming: 'Video Games',
-  food: 'Food',
-  cooking: 'Cooking',
 }
 
 export const Context = React.createContext<{
   state: OnboardingState
   dispatch: React.Dispatch<OnboardingAction>
-  interestsDisplayNames: {[key: string]: string}
 }>({
   state: {...initialState},
   dispatch: () => {},
-  interestsDisplayNames: INTEREST_TO_DISPLAY_NAME_DEFAULTS,
 })
 
 export function reducer(
@@ -138,46 +141,22 @@ export function reducer(
 
   switch (a.type) {
     case 'next': {
-      if (s.activeStep === 'interests') {
-        next.activeStep = 'suggestedAccounts'
+      if (s.activeStep === 'profile') {
+        next.activeStep = 'interests'
         next.activeStepIndex = 2
-      } else if (s.activeStep === 'suggestedAccounts') {
-        next.activeStep = 'followingFeed'
-        next.activeStepIndex = 3
-      } else if (s.activeStep === 'followingFeed') {
-        next.activeStep = 'algoFeeds'
-        next.activeStepIndex = 4
-      } else if (s.activeStep === 'algoFeeds') {
-        next.activeStep = 'topicalFeeds'
-        next.activeStepIndex = 5
-      } else if (s.activeStep === 'topicalFeeds') {
-        next.activeStep = 'moderation'
-        next.activeStepIndex = 6
-      } else if (s.activeStep === 'moderation') {
+      } else if (s.activeStep === 'interests') {
         next.activeStep = 'finished'
-        next.activeStepIndex = 7
+        next.activeStepIndex = 3
       }
       break
     }
     case 'prev': {
-      if (s.activeStep === 'suggestedAccounts') {
-        next.activeStep = 'interests'
+      if (s.activeStep === 'interests') {
+        next.activeStep = 'profile'
         next.activeStepIndex = 1
-      } else if (s.activeStep === 'followingFeed') {
-        next.activeStep = 'suggestedAccounts'
-        next.activeStepIndex = 2
-      } else if (s.activeStep === 'algoFeeds') {
-        next.activeStep = 'followingFeed'
-        next.activeStepIndex = 3
-      } else if (s.activeStep === 'topicalFeeds') {
-        next.activeStep = 'algoFeeds'
-        next.activeStepIndex = 4
-      } else if (s.activeStep === 'moderation') {
-        next.activeStep = 'topicalFeeds'
-        next.activeStepIndex = 5
       } else if (s.activeStep === 'finished') {
-        next.activeStep = 'moderation'
-        next.activeStepIndex = 6
+        next.activeStep = 'interests'
+        next.activeStepIndex = 2
       }
       break
     }
@@ -192,23 +171,13 @@ export function reducer(
       }
       break
     }
-    case 'setSuggestedAccountsStepResults': {
-      next.suggestedAccountsStepResults = {
-        accountDids: next.suggestedAccountsStepResults.accountDids.concat(
-          a.accountDids,
-        ),
-      }
-      break
-    }
-    case 'setAlgoFeedsStepResults': {
-      next.algoFeedsStepResults = {
-        feedUris: a.feedUris,
-      }
-      break
-    }
-    case 'setTopicalFeedsStepResults': {
-      next.topicalFeedsStepResults = {
-        feedUris: next.topicalFeedsStepResults.feedUris.concat(a.feedUris),
+    case 'setProfileStepResults': {
+      next.profileStepResults = {
+        isCreatedAvatar: a.isCreatedAvatar,
+        image: a.image,
+        imageUri: a.imageUri,
+        imageMime: a.imageMime,
+        creatorState: a.creatorState,
       }
       break
     }
@@ -216,7 +185,7 @@ export function reducer(
 
   const state = {
     ...next,
-    hasPrev: next.activeStep !== 'interests',
+    hasPrev: next.activeStep !== 'profile',
   }
 
   logger.debug(`onboarding`, {
@@ -226,9 +195,7 @@ export function reducer(
     interestsStepResults: {
       selectedInterests: state.interestsStepResults.selectedInterests,
     },
-    suggestedAccountsStepResults: state.suggestedAccountsStepResults,
-    algoFeedsStepResults: state.algoFeedsStepResults,
-    topicalFeedsStepResults: state.topicalFeedsStepResults,
+    profileStepResults: state.profileStepResults,
   })
 
   if (s.activeStep !== state.activeStep) {

@@ -1,0 +1,124 @@
+appId: xyz.blueskyweb.app
+---
+- runScript:
+    file: ../setupServer.js
+    env:
+        SERVER_PATH: "?users&posts&feeds"
+- runFlow:
+    file: ../setupApp.yml
+- tapOn:
+    id: "e2eSignInAlice"
+
+
+# Navigate to my profile
+- tapOn:
+    id: "bottomBarProfileBtn"
+
+# Can see feeds
+- swipe:
+    from:
+        id: "profilePager-selector"
+    direction: LEFT
+- tapOn:
+    id: "profilePager-selector-4"
+- assertVisible: "alice-favs"
+- swipe:
+    from:
+        id: "profilePager-selector"
+    direction: RIGHT
+- tapOn:
+    id: "profilePager-selector-0"
+
+# Open and close edit profile modal
+- tapOn:
+    id: "profileHeaderEditProfileButton"
+- assertVisible:
+    id: "editProfileModal"
+- tapOn:
+    id: "editProfileCancelBtn"
+- assertNotVisible:
+    id: "editProfileModal"
+
+# Edit display name and description via the edit profile modal
+- tapOn:
+    id: "profileHeaderEditProfileButton"
+- assertVisible:
+    id: "editProfileModal"
+- tapOn:
+    id: "editProfileDisplayNameInput"
+- eraseText
+- inputText: "Alicia"
+- tapOn:
+    id: "editProfileDescriptionInput"
+- eraseText
+- inputText: "One cool hacker"
+- tapOn: "Description"
+- tapOn:
+    id: "editProfileSaveBtn"
+- assertNotVisible:
+    id: "editProfileModal"
+- assertVisible: "Alicia"
+- assertVisible: "One cool hacker"
+
+# Remove display name and description via the edit profile modal
+- tapOn:
+    id: "profileHeaderEditProfileButton"
+- assertVisible:
+    id: "editProfileModal"
+- tapOn:
+    id: "editProfileDisplayNameInput"
+- eraseText
+- tapOn:
+    id: "editProfileDescriptionInput"
+- eraseText
+- tapOn: "Description"
+- tapOn:
+    id: "editProfileSaveBtn"
+- assertNotVisible:
+    id: "editProfileModal"
+- assertVisible: "alice.test"
+- assertNotVisible: "One cool hacker"
+
+# Set avi and banner via the edit profile modal
+- assertVisible:
+    id: "userBannerFallback"
+- tapOn:
+    id: "profileHeaderEditProfileButton"
+- assertVisible:
+    id: "editProfileModal"
+- tapOn:
+    id: "changeBannerBtn"
+- tapOn: "Upload from Library"
+- waitForAnimationToEnd
+- tapOn: "Choose"
+- waitForAnimationToEnd
+- tapOn:
+    id: "changeAvatarBtn"
+- tapOn: "Upload from Library"
+- waitForAnimationToEnd
+- tapOn: "Choose"
+- waitForAnimationToEnd
+- tapOn:
+    id: "editProfileSaveBtn"
+- assertNotVisible:
+    id: "editProfileModal"
+- assertVisible:
+    id: "userBannerImage"
+
+# # Remove avi and banner via the edit profile modal
+- tapOn:
+    id: "profileHeaderEditProfileButton"
+- assertVisible:
+    id: "editProfileModal"
+- tapOn:
+    id: "changeBannerBtn"
+- tapOn: "Remove Banner"
+- tapOn:
+    id: "changeAvatarBtn"
+- tapOn: "Remove Avatar"
+- tapOn:
+    id: "editProfileSaveBtn"
+- assertNotVisible:
+    id: "editProfileModal"
+- assertVisible:
+    id: "userBannerFallback"

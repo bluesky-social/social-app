@@ -1,11 +1,14 @@
 import React from 'react'
-import {Pressable, View} from 'react-native'
-import {navigate} from '../../../Navigation'
-import {useModalControls} from '#/state/modals'
+import {LogBox, Pressable, View} from 'react-native'
 import {useQueryClient} from '@tanstack/react-query'
+
+import {useModalControls} from '#/state/modals'
 import {useSessionApi} from '#/state/session'
-import {useSetFeedViewPreferencesMutation} from '#/state/queries/preferences'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {useOnboardingDispatch} from '#/state/shell/onboarding'
+import {navigate} from '../../../Navigation'
+
+LogBox.ignoreAllLogs()
 
 /**
  * This utility component is only included in the test simulator
@@ -19,7 +22,7 @@ export function TestCtrls() {
   const queryClient = useQueryClient()
   const {logout, login} = useSessionApi()
   const {openModal} = useModalControls()
-  const {mutate: setFeedViewPref} = useSetFeedViewPreferencesMutation()
+  const onboardingDispatch = useOnboardingDispatch()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const onPressSignInAlice = async () => {
     await login(
@@ -86,8 +89,8 @@ export function TestCtrls() {
         style={BTN}
       />
       <Pressable
-        testID="e2eToggleMergefeed"
-        onPress={() => setFeedViewPref({lab_mergeFeedEnabled: true})}
+        testID="e2eGotoFeeds"
+        onPress={() => navigate('Feeds')}
         accessibilityRole="button"
         style={BTN}
       />
@@ -106,6 +109,23 @@ export function TestCtrls() {
       <Pressable
         testID="e2eOpenLoggedOutView"
         onPress={() => setShowLoggedOut(true)}
+        accessibilityRole="button"
+        style={BTN}
+      />
+      <Pressable
+        testID="e2eStartOnboarding"
+        onPress={() => {
+          onboardingDispatch({type: 'start'})
+        }}
+        accessibilityRole="button"
+        style={BTN}
+      />
+      {/* TODO remove this entire control when experiment is over */}
+      <Pressable
+        testID="e2eStartLongboarding"
+        onPress={() => {
+          onboardingDispatch({type: 'start'})
+        }}
         accessibilityRole="button"
         style={BTN}
       />

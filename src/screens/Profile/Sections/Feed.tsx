@@ -56,7 +56,7 @@ export const ProfileFeedSection = React.forwardRef<
   }))
 
   const renderPostsEmpty = React.useCallback(() => {
-    return <EmptyState icon="feed" message={_(msg`This feed is empty!`)} />
+    return <EmptyState icon="growth" message={_(msg`No posts yet.`)} />
   }, [_])
 
   React.useEffect(() => {
@@ -95,7 +95,11 @@ function ProfileEndOfFeed() {
   const pal = usePalette('default')
 
   return (
-    <View style={[pal.border, {paddingTop: 32, borderTopWidth: 1}]}>
+    <View
+      style={[
+        pal.border,
+        {paddingTop: 32, paddingBottom: 32, borderTopWidth: 1},
+      ]}>
       <Text style={[pal.textLight, pal.border, {textAlign: 'center'}]}>
         <Trans>End of feed</Trans>
       </Text>

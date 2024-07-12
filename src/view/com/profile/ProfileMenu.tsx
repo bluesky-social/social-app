@@ -1,41 +1,43 @@
 import React, {memo} from 'react'
 import {TouchableOpacity} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useQueryClient} from '@tanstack/react-query'
-import * as Toast from 'view/com/util/Toast'
-import {EventStopper} from 'view/com/util/EventStopper'
-import {useSession} from 'state/session'
-import * as Menu from '#/components/Menu'
-import {useTheme} from '#/alf'
-import {usePalette} from 'lib/hooks/usePalette'
+
+import {logger} from '#/logger'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {HITSLOP_10} from 'lib/constants'
+import {makeProfileLink} from 'lib/routes/links'
 import {shareUrl} from 'lib/sharing'
 import {toShareUrl} from 'lib/strings/url-helpers'
-import {makeProfileLink} from 'lib/routes/links'
-import {useAnalytics} from 'lib/analytics/analytics'
+import {Shadow} from 'state/cache/types'
 import {useModalControls} from 'state/modals'
-import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 import {
   RQKEY as profileQueryKey,
   useProfileBlockMutationQueue,
   useProfileFollowMutationQueue,
   useProfileMuteMutationQueue,
 } from 'state/queries/profile'
+import {useSession} from 'state/session'
+import {EventStopper} from 'view/com/util/EventStopper'
+import * as Toast from 'view/com/util/Toast'
+import {atoms as a, useTheme} from '#/alf'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
+import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
 import {ListSparkle_Stroke2_Corner0_Rounded as List} from '#/components/icons/ListSparkle'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
-import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
-import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
-import {PersonCheck_Stroke2_Corner0_Rounded as PersonCheck} from '#/components/icons/PersonCheck'
-import {PersonX_Stroke2_Corner0_Rounded as PersonX} from '#/components/icons/PersonX'
 import {PeopleRemove2_Stroke2_Corner0_Rounded as UserMinus} from '#/components/icons/PeopleRemove2'
+import {
+  PersonCheck_Stroke2_Corner0_Rounded as PersonCheck,
+  PersonX_Stroke2_Corner0_Rounded as PersonX,
+} from '#/components/icons/Person'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
-import {logger} from '#/logger'
-import {Shadow} from 'state/cache/types'
+import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
+import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
+import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 
 let ProfileMenu = ({
   profile,
@@ -46,7 +48,7 @@ let ProfileMenu = ({
   const {currentAccount, hasSession} = useSession()
   const t = useTheme()
   // TODO ALF this
-  const pal = usePalette('default')
+  const alf = useTheme()
   const {track} = useAnalytics()
   const {openModal} = useModalControls()
   const reportDialogControl = useReportDialogControl()
@@ -68,8 +70,11 @@ let ProfileMenu = ({
   const loggedOutWarningPromptControl = Prompt.usePromptControl()
 
   const showLoggedOutWarning = React.useMemo(() => {
-    return !!profile.labels?.find(label => label.val === '!no-unauthenticated')
-  }, [profile.labels])
+    return (
+      profile.did !== currentAccount?.did &&
+      !!profile.labels?.find(label => label.val === '!no-unauthenticated')
+    )
+  }, [currentAccount, profile])
 
   const invalidateProfileQuery = React.useCallback(() => {
     queryClient.invalidateQueries({
@@ -181,22 +186,21 @@ let ProfileMenu = ({
     <EventStopper onKeyDown={false}>
       <Menu.Root>
         <Menu.Trigger label={_(`More options`)}>
-          {({props}) => {
+          {({props, state}) => {
             return (
               <TouchableOpacity
                 {...props}
                 hitSlop={HITSLOP_10}
                 testID="profileHeaderDropdownBtn"
                 style={[
-                  {
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    paddingVertical: 10,
-                    borderRadius: 50,
-                    paddingHorizontal: 16,
-                  },
-                  pal.btn,
+                  a.rounded_full,
+                  a.justify_center,
+                  a.align_center,
+                  {width: 36, height: 36},
+                  alf.atoms.bg_contrast_25,
+                  (state.hovered || state.pressed) && [
+                    alf.atoms.bg_contrast_50,
+                  ],
                 ]}>
                 <FontAwesomeIcon
                   icon="ellipsis"

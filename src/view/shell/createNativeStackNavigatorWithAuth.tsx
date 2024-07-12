@@ -29,9 +29,11 @@ import {
   useLoggedOutView,
   useLoggedOutViewControls,
 } from '#/state/shell/logged-out'
-import {isWeb} from 'platform/detection'
+import {useGate} from 'lib/statsig/statsig'
+import {isNative, isWeb} from 'platform/detection'
 import {Deactivated} from '#/screens/Deactivated'
 import {Onboarding} from '#/screens/Onboarding'
+import {SignupQueued} from '#/screens/SignupQueued'
 import {LoggedOut} from '../com/auth/LoggedOut'
 import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
 import {DesktopLeftNav} from './desktop/LeftNav'
@@ -49,6 +51,7 @@ function NativeStackNavigator({
   screenOptions,
   ...rest
 }: NativeStackNavigatorProps) {
+  const gate = useGate()
   // --- this is copy and pasted from the original native stack navigator ---
   const {state, descriptors, navigation, NavigationContent} =
     useNavigationBuilder<
@@ -99,14 +102,22 @@ function NativeStackNavigator({
   const {showLoggedOut} = useLoggedOutView()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const {isMobile, isTabletOrMobile} = useWebMediaQueries()
-  if ((!PWI_ENABLED || activeRouteRequiresAuth) && !hasSession) {
+  if (
+    !hasSession &&
+    (!PWI_ENABLED ||
+      activeRouteRequiresAuth ||
+      (isNative && gate('native_pwi_disabled')))
+  ) {
     return <LoggedOut />
   }
-  if (hasSession && currentAccount?.deactivated) {
-    return <Deactivated />
+  if (hasSession && currentAccount?.signupQueued) {
+    return <SignupQueued />
   }
   if (showLoggedOut) {
     return <LoggedOut onDismiss={() => setShowLoggedOut(false)} />
+  }
+  if (currentAccount?.status === 'deactivated') {
+    return <Deactivated />
   }
   if (onboardingState.isActive) {
     return <Onboarding />
