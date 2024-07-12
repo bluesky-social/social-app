@@ -12,10 +12,6 @@ export function createSanitizedDisplayName(
   if (profile.displayName != null && profile.displayName !== '') {
     return sanitizeDisplayName(profile.displayName)
   } else {
-    let sanitizedHandle = sanitizeHandle(profile.handle)
-    if (!noAt) {
-      sanitizedHandle = `@${sanitizedHandle}`
-    }
-    return sanitizedHandle
+    return sanitizeHandle(profile.handle, noAt ? '' : '@')
   }
 }

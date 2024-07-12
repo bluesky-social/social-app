@@ -315,7 +315,7 @@ function ChatListItemReady({
 
               <PostAlerts
                 modui={moderation.ui('contentList')}
-                size="large"
+                size="lg"
                 style={[a.pt_xs]}
               />
             </View>

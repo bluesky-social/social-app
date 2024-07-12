@@ -31,7 +31,7 @@ import {
 } from 'lib/routes/types'
 import {RouteParams, State} from 'lib/routes/types'
 import {bskyTitle} from 'lib/strings/headings'
-import {isAndroid, isNative} from 'platform/detection'
+import {isAndroid, isNative, isWeb} from 'platform/detection'
 import {PreferencesExternalEmbeds} from '#/view/screens/PreferencesExternalEmbeds'
 import {AppPasswords} from 'view/screens/AppPasswords'
 import {ModerationBlockedAccounts} from 'view/screens/ModerationBlockedAccounts'
@@ -44,8 +44,12 @@ import HashtagScreen from '#/screens/Hashtag'
 import {ModerationScreen} from '#/screens/Moderation'
 import {ProfileKnownFollowersScreen} from '#/screens/Profile/KnownFollowers'
 import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
-import {StarterPackScreen} from '#/screens/StarterPack/StarterPackScreen'
+import {
+  StarterPackScreen,
+  StarterPackScreenShort,
+} from '#/screens/StarterPack/StarterPackScreen'
 import {Wizard} from '#/screens/StarterPack/Wizard'
+import {Referrer} from '../modules/expo-bluesky-swiss-army'
 import {init as initAnalytics} from './lib/analytics/analytics'
 import {useWebScrollRestoration} from './lib/hooks/useWebScrollRestoration'
 import {attachRouteToLogEvents, logEvent} from './lib/statsig/statsig'
@@ -328,7 +332,12 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       <Stack.Screen
         name="StarterPack"
         getComponent={() => StarterPackScreen}
-        options={{title: title(msg`Starter Pack`), requireAuth: true}}
+        options={{title: title(msg`Starter Pack`)}}
+      />
+      <Stack.Screen
+        name="StarterPackShort"
+        getComponent={() => StarterPackScreenShort}
+        options={{title: title(msg`Starter Pack`)}}
       />
       <Stack.Screen
         name="StarterPackWizard"
@@ -760,6 +769,17 @@ function logModuleInitTime() {
   logEvent('init', {
     initMs,
   })
+
+  if (isWeb) {
+    const referrerInfo = Referrer.getReferrerInfo()
+    if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
+      logEvent('deepLink:referrerReceived', {
+        to: window.location.href,
+        referrer: referrerInfo?.referrer,
+        hostname: referrerInfo?.hostname,
+      })
+    }
+  }
 
   if (__DEV__) {
     // This log is noisy, so keep false committed

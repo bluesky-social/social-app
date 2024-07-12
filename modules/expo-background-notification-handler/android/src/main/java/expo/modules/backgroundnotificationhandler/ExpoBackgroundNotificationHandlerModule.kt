@@ -20,8 +20,9 @@ class ExpoBackgroundNotificationHandlerModule : Module() {
     var isForegrounded = false
   }
 
-  override fun definition() = ModuleDefinition {
-    Name("ExpoBackgroundNotificationHandler")
+  override fun definition() =
+    ModuleDefinition {
+      Name("ExpoBackgroundNotificationHandler")
 
     OnCreate {
       val context = appContext.reactContext ?: throw Error("Context is null")
@@ -33,13 +34,13 @@ class ExpoBackgroundNotificationHandlerModule : Module() {
       }
     }
 
-    OnActivityEntersForeground {
-      isForegrounded = true
-    }
+      OnActivityEntersForeground {
+        isForegrounded = true
+      }
 
-    OnActivityEntersBackground {
-      isForegrounded = false
-    }
+      OnActivityEntersBackground {
+        isForegrounded = false
+      }
 
     AsyncFunction("getPrefsAsync") {
       val context = appContext.reactContext ?: throw Error("Context is null")

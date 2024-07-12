@@ -17,7 +17,7 @@ enum class NotificationType(val type: String) {
 
 class BackgroundNotificationHandler(
   private val context: Context,
-  private val notifInterface: BackgroundNotificationHandlerInterface
+  private val notifInterface: BackgroundNotificationHandlerInterface,
 ) {
   fun handleMessage(remoteMessage: RemoteMessage) {
     if (ExpoBackgroundNotificationHandlerModule.isForegrounded) {

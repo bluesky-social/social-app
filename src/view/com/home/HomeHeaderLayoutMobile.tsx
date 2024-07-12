@@ -72,9 +72,11 @@ export function HomeHeaderLayoutMobile({
             {width: 100},
           ]}>
           {IS_DEV && (
-            <Link to="/sys/debug">
-              <ColorPalette size="md" />
-            </Link>
+            <>
+              <Link to="/sys/debug">
+                <ColorPalette size="md" />
+              </Link>
+            </>
           )}
           {hasSession && (
             <Link
