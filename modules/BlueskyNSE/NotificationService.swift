@@ -13,6 +13,7 @@ enum NotificationType: String {
   case ChatMessage = "chat-message"
   case MarkReadGeneric = "mark-read-generic"
   case MarkReadMessages = "mark-read-messages"
+  case StarterPackJoined = "starterpack-joined"
 }
 
 enum BadgeType: String {
@@ -25,9 +26,11 @@ enum BadgeOperation {
   case Decrement
 }
 
-class NotificationService: UNNotificationServiceExtension {
-  var prefs = UserDefaults(suiteName: APP_GROUP)
+class Defaults {
+  static let shared = UserDefaults(suiteName: APP_GROUP)
+}
 
+class NotificationService: UNNotificationServiceExtension {
   override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
     guard let bestAttempt = createCopy(request.content),
           let reasonString = request.content.userInfo["reason"] as? String,
@@ -38,7 +41,7 @@ class NotificationService: UNNotificationServiceExtension {
     }
 
     switch reason {
-    case .Like, .Repost, .Follow, .Reply, .Quote:
+    case .Like, .Repost, .Follow, .Reply, .Quote, .StarterPackJoined:
       mutateWithBadge(bestAttempt, badgeType: .Generic, operation: .Increment)
 
     case .ChatMessage:
@@ -72,38 +75,31 @@ class NotificationService: UNNotificationServiceExtension {
   }
 
   func mutateWithBadge(_ content: UNMutableNotificationContent, badgeType type: BadgeType, operation: BadgeOperation) {
-    var genericCount = prefs?.integer(forKey: BadgeType.Generic.rawValue) ?? 0
-    var messagesCount = prefs?.integer(forKey: BadgeType.Messages.rawValue) ?? 0
+    var genericCount = Defaults.shared?.integer(forKey: BadgeType.Generic.rawValue) ?? 0
+    var messagesCount = Defaults.shared?.integer(forKey: BadgeType.Messages.rawValue) ?? 0
 
     if type == .Generic {
+      var genericCount = Defaults.shared?.integer(forKey: BadgeType.Generic.rawValue) ?? 0
       if operation == .Decrement {
-        if let decrementBy = content.userInfo["decrementBy"] as? Int {
-          genericCount = getDecrementedBadgeCount(current: genericCount, decrementBy: decrementBy)
-        } else {
-          genericCount = 0
-        }
+        genericCount = 0
       } else {
         genericCount += 1
       }
-      prefs?.setValue(genericCount, forKey: BadgeType.Generic.rawValue)
+      Defaults.shared?.setValue(genericCount, forKey: BadgeType.Generic.rawValue)
     } else if type == .Messages {
-      if operation == .Decrement {
-        if let convoId = content.userInfo["convoId"] as? String, shouldDecrementForConvo(content) {
-          messagesCount = getDecrementedBadgeCount(current: messagesCount, decrementBy: 1)
-        } else if let decrementBy = content.userInfo["decrementBy"] as? Int {
-          messagesCount = getDecrementedBadgeCount(current: messagesCount, decrementBy: decrementBy)
-        }
+      if operation == .Decrement, shouldDecrementForConvo(content) {
+        messagesCount = getDecrementedBadgeCount(current: messagesCount, decrementBy: 1)
       } else if shouldIncrementForConvo(content) {
         messagesCount += 1
       }
-      prefs?.setValue(messagesCount, forKey: BadgeType.Generic.rawValue)
+      Defaults.shared?.setValue(messagesCount, forKey: BadgeType.Generic.rawValue)
     }
 
     content.badge = NSNumber(value: genericCount + messagesCount)
   }
 
   func mutateWithChatMessage(_ content: UNMutableNotificationContent) {
-    if self.prefs?.bool(forKey: "playSoundChat") == true {
+    if Defaults.shared?.bool(forKey: "playSoundChat") == true {
       mutateWithDmSound(content)
     }
   }
@@ -118,7 +114,7 @@ class NotificationService: UNNotificationServiceExtension {
 
   func shouldIncrementForConvo(_ content: UNMutableNotificationContent) -> Bool {
     guard let convoId = content.userInfo["convoId"] as? String,
-          var dict = self.prefs?.dictionary(forKey: INCREMENTED_FOR_KEY) as? [String: Bool]
+          var dict = Defaults.shared?.dictionary(forKey: INCREMENTED_FOR_KEY) as? [String: Bool]
     else {
       return false
     }
@@ -128,13 +124,13 @@ class NotificationService: UNNotificationServiceExtension {
     }
 
     dict[convoId] = true
-    self.prefs?.set(dict, forKey: INCREMENTED_FOR_KEY)
+    Defaults.shared?.set(dict, forKey: INCREMENTED_FOR_KEY)
     return true
   }
 
   func shouldDecrementForConvo(_ content: UNMutableNotificationContent) -> Bool {
     guard let convoId = content.userInfo["convoId"] as? String,
-          var dict = self.prefs?.dictionary(forKey: INCREMENTED_FOR_KEY) as? [String: Bool]
+          var dict = Defaults.shared?.dictionary(forKey: INCREMENTED_FOR_KEY) as? [String: Bool]
     else {
       return false
     }
@@ -144,7 +140,7 @@ class NotificationService: UNNotificationServiceExtension {
     }
 
     dict.removeValue(forKey: convoId)
-    self.prefs?.set(dict, forKey: INCREMENTED_FOR_KEY)
+    Defaults.shared?.set(dict, forKey: INCREMENTED_FOR_KEY)
     return true
   }
 }
