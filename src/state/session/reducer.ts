@@ -143,12 +143,20 @@ let reducer = (state: State, action: Action): State => {
       }
     }
     case 'logged-out': {
+      //Fetch the account ID that the user signed out from
+      const {accountDid} = action
+
+      //Find the account for which the tokens need to be cleared
+      const loggedOutAccount = state.accounts.filter(a => a.did === accountDid)
+
+      //Clear the tokens for the account that the user signed out from
+      loggedOutAccount.accessJwt = undefined
+      loggedOutAccount.refreshJwt = undefined
+
       return {
-        accounts: state.accounts.map(a => ({
-          ...a,
-          // Clear tokens for *every* account (this is a hard logout).
-          refreshJwt: undefined,
-          accessJwt: undefined,
+        //Return all the accounts. The other accounts remain unchanged, so the user will
+        //stay signed in on them.
+        accounts: state.accounts
         })),
         currentAgentState: createPublicAgentState(),
         needsPersist: true,

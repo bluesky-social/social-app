@@ -120,6 +120,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       cancelPendingTask()
       dispatch({
         type: 'logged-out',
+        accountDid: account.did,
       })
       logEvent('account:loggedOut', {logContext})
       addSessionDebugLog({type: 'method:end', method: 'logout'})
