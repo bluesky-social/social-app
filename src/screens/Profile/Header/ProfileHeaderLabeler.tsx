@@ -10,6 +10,7 @@ import {
 import {msg, Plural, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {MAX_LABELERS} from '#/lib/constants'
 import {isAppLabeler} from '#/lib/moderation'
 import {logger} from '#/logger'
@@ -315,6 +316,9 @@ let ProfileHeaderLabeler = ({
 ProfileHeaderLabeler = memo(ProfileHeaderLabeler)
 export {ProfileHeaderLabeler}
 
+/**
+ * Keep this in sync with the value of {@link MAX_LABELERS}
+ */
 function CantSubscribePrompt({
   control,
 }: {
@@ -326,8 +330,8 @@ function CantSubscribePrompt({
       <Prompt.TitleText>Unable to subscribe</Prompt.TitleText>
       <Prompt.DescriptionText>
         <Trans>
-          We're sorry! You can only subscribe to {MAX_LABELERS} labelers, and
-          you've reached your limit of {MAX_LABELERS}.
+          We're sorry! You can only subscribe to twenty labelers, and you've
+          reached your limit of twenty.
         </Trans>
       </Prompt.DescriptionText>
       <Prompt.Actions>
