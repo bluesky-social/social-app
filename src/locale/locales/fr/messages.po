@@ -5051,7 +5051,7 @@ msgstr "Sélectionnez le service qui héberge vos données."
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:53
 msgid "Select video"
-msgstr "Sélectionne une vidéo"
+msgstr "Sélectionner une vidéo"
 
 #: src/view/screens/LanguageSettings.tsx:283
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
