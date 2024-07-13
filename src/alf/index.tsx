@@ -1,7 +1,9 @@
 import React from 'react'
 import {Dimensions} from 'react-native'
 
-import * as themes from '#/alf/themes'
+import {createThemes, defaultTheme} from '#/alf/themes'
+import {Theme, ThemeName} from '#/alf/types'
+import {BLUE_HUE, GREEN_HUE, RED_HUE} from '#/alf/util/colorGeneration'
 
 export {atoms} from '#/alf/atoms'
 export * as tokens from '#/alf/tokens'
@@ -39,8 +41,8 @@ function getActiveBreakpoints({width}: {width: number}) {
  * Context
  */
 export const Context = React.createContext<{
-  themeName: themes.ThemeName
-  theme: themes.Theme
+  themeName: ThemeName
+  theme: Theme
   breakpoints: {
     active: BreakpointName | undefined
     gtPhone: boolean
@@ -49,7 +51,7 @@ export const Context = React.createContext<{
   }
 }>({
   themeName: 'light',
-  theme: themes.light,
+  theme: defaultTheme,
   breakpoints: {
     active: undefined,
     gtPhone: false,
@@ -61,7 +63,16 @@ export const Context = React.createContext<{
 export function ThemeProvider({
   children,
   theme: themeName,
-}: React.PropsWithChildren<{theme: themes.ThemeName}>) {
+}: React.PropsWithChildren<{theme: ThemeName}>) {
+  const themes = React.useMemo(() => {
+    return createThemes({
+      hues: {
+        primary: BLUE_HUE,
+        negative: RED_HUE,
+        positive: GREEN_HUE,
+      },
+    })
+  }, [])
   const theme = themes[themeName]
   const [breakpoints, setBreakpoints] = React.useState(() =>
     getActiveBreakpoints({width: Dimensions.get('window').width}),

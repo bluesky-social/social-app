@@ -12,6 +12,7 @@ import {tryFetchGates} from '#/lib/statsig/statsig'
 import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
 import {snoozeEmailConfirmationPrompt} from '#/state/shell/reminders'
+import {addSessionErrorLog} from './logging'
 import {
   configureModerationForAccount,
   configureModerationForGuest,
@@ -194,6 +195,9 @@ async function prepareAgent(
   const account = agentToSessionAccountOrThrow(agent)
   agent.setPersistSessionHandler(event => {
     onSessionChange(agent, account.did, event)
+    if (event !== 'create' && event !== 'update') {
+      addSessionErrorLog(account.did, event)
+    }
   })
   return {agent, account}
 }
