@@ -156,8 +156,7 @@ let reducer = (state: State, action: Action): State => {
       return {
         //Return all the accounts. The other accounts remain unchanged, so the user will
         //stay signed in on them.
-        accounts: state.accounts
-        })),
+        accounts: state.accounts,
         currentAgentState: createPublicAgentState(),
         needsPersist: true,
       }
