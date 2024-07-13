@@ -58,6 +58,7 @@ import {useNavigation} from '@react-navigation/native'
 import {parseTenorGif} from '#/lib/strings/embed-player'
 import {logger} from '#/logger'
 import {NavigationProp} from 'lib/routes/types'
+import {forceLTR} from 'lib/strings/bidi'
 import {DM_SERVICE_HEADERS} from 'state/queries/messages/const'
 import {useAgent} from 'state/session'
 import {Button, ButtonText} from '#/components/Button'
@@ -274,13 +275,15 @@ let FeedItem = ({
             showDmButton={item.type === 'starterpack-joined' || isFollowBack}
           />
           <ExpandedAuthorsList visible={isAuthorsExpanded} authors={authors} />
-          <Text style={styles.meta}>
+          <Text style={[styles.meta, a.self_start]}>
             <TextLink
               key={authors[0].href}
               style={[pal.text, s.bold]}
               href={authors[0].href}
-              text={sanitizeDisplayName(
-                authors[0].profile.displayName || authors[0].profile.handle,
+              text={forceLTR(
+                sanitizeDisplayName(
+                  authors[0].profile.displayName || authors[0].profile.handle,
+                ),
               )}
               disableMismatchWarning
             />
