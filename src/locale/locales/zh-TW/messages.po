@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: zh-TW for bluesky-social-app\n"
 "POT-Creation-Date: \n"
 "Report-Msgid-Bugs-To: Kuwa Lee <kuwalee1069@gmail.com>, Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-07-12 21:05+0800\n"
+"PO-Revision-Date: 2024-07-13 14:33+0800\n"
 "Last-Translator: \n"
 "Language-Team: Frudrax Cheng <i@cynosura.one>, Kuwa Lee <kuwalee1069@gmail.com>, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Language: zh_TW\n"
@@ -141,13 +141,13 @@ msgstr "{following} 個跟隨中"
 msgid "{handle} can't be messaged"
 msgstr "無法傳送訊息給 {handle}"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:286
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:299
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:285
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:298
 #: src/view/screens/ProfileFeed.tsx:588
 msgid "{likeCount, plural, one {Liked by # user} other {Liked by # users}}"
 msgstr "{likeCount, plural, one {# 個用戶已喜歡} other {# 個用戶已喜歡}}"
 
-#: src/view/shell/Drawer.tsx:462
+#: src/view/shell/Drawer.tsx:452
 msgid "{numUnreadNotifications} unread"
 msgstr "{numUnreadNotifications} 個未讀通知"
 
@@ -177,11 +177,11 @@ msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
 msgstr "<0>{0}、</0><1>{1}</1>和{2, plural, one {其他 # } other {其他 # }}個動態源已在您的入門包中"
 
-#: src/view/shell/Drawer.tsx:101
+#: src/view/shell/Drawer.tsx:100
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
 msgstr "<0>{0}</0> {1, plural, one {個跟隨者} other {個跟隨者}}"
 
-#: src/view/shell/Drawer.tsx:112
+#: src/view/shell/Drawer.tsx:111
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
 msgstr "<0>{0}</0> {1, plural, one {個跟隨中} other {個跟隨中}}"
 
@@ -1835,12 +1835,12 @@ msgstr "編輯我的個人檔案"
 msgid "Edit People"
 msgstr "編輯人物"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:181
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:183
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:179
 msgid "Edit profile"
 msgstr "編輯個人檔案"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:184
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:186
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:182
 msgid "Edit Profile"
 msgstr "編輯個人檔案"
@@ -2209,7 +2209,7 @@ msgid "Feed toggle"
 msgstr "切換動態源"
 
 #: src/view/shell/desktop/RightNav.tsx:70
-#: src/view/shell/Drawer.tsx:345
+#: src/view/shell/Drawer.tsx:332
 msgid "Feedback"
 msgstr "意見回饋"
 
@@ -2220,8 +2220,8 @@ msgstr "意見回饋"
 #: src/view/screens/Profile.tsx:213
 #: src/view/screens/Search/Search.tsx:375
 #: src/view/shell/desktop/LeftNav.tsx:379
-#: src/view/shell/Drawer.tsx:493
-#: src/view/shell/Drawer.tsx:494
+#: src/view/shell/Drawer.tsx:483
+#: src/view/shell/Drawer.tsx:484
 msgid "Feeds"
 msgstr "動態源"
 
@@ -2479,6 +2479,10 @@ msgstr "相簿"
 msgid "Generate a starter pack"
 msgstr "建立入門包"
 
+#: src/view/shell/Drawer.tsx:336
+msgid "Get help"
+msgstr "取得幫助"
+
 #: src/components/dms/MessagesNUX.tsx:168
 msgid "Get started"
 msgstr "開始"
@@ -2600,7 +2604,7 @@ msgid "Having trouble?"
 msgstr "遇到問題？"
 
 #: src/view/shell/desktop/RightNav.tsx:99
-#: src/view/shell/Drawer.tsx:355
+#: src/view/shell/Drawer.tsx:345
 msgid "Help"
 msgstr "幫助"
 
@@ -2678,8 +2682,8 @@ msgstr "抱歉，我們無法載入該內容管理服務。"
 #: src/Navigation.tsx:546
 #: src/view/shell/bottom-bar/BottomBar.tsx:160
 #: src/view/shell/desktop/LeftNav.tsx:342
-#: src/view/shell/Drawer.tsx:425
-#: src/view/shell/Drawer.tsx:426
+#: src/view/shell/Drawer.tsx:415
+#: src/view/shell/Drawer.tsx:416
 msgid "Home"
 msgstr "首頁"
 
@@ -3010,7 +3014,7 @@ msgstr "喜歡 10 個貼文"
 msgid "Like 10 posts to train the Discover feed"
 msgstr "喜歡 10 個貼文以訓練「Discover」動態源"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:267
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:266
 #: src/view/screens/ProfileFeed.tsx:573
 msgid "Like this feed"
 msgstr "對這個動態源按喜歡"
@@ -3084,8 +3088,8 @@ msgstr "已解除靜音的列表"
 #: src/view/screens/Profile.tsx:208
 #: src/view/screens/Profile.tsx:215
 #: src/view/shell/desktop/LeftNav.tsx:385
-#: src/view/shell/Drawer.tsx:509
-#: src/view/shell/Drawer.tsx:510
+#: src/view/shell/Drawer.tsx:499
+#: src/view/shell/Drawer.tsx:500
 msgid "Lists"
 msgstr "列表"
 
@@ -3465,7 +3469,7 @@ msgstr "切換到入門包"
 msgid "Navigates to the next screen"
 msgstr "切換到下一畫面"
 
-#: src/view/shell/Drawer.tsx:79
+#: src/view/shell/Drawer.tsx:78
 msgid "Navigates to your profile"
 msgstr "切換到您的個人檔案"
 
@@ -3721,8 +3725,8 @@ msgstr "通知音效"
 #: src/view/screens/Notifications.tsx:169
 #: src/view/shell/bottom-bar/BottomBar.tsx:230
 #: src/view/shell/desktop/LeftNav.tsx:362
-#: src/view/shell/Drawer.tsx:457
-#: src/view/shell/Drawer.tsx:458
+#: src/view/shell/Drawer.tsx:447
+#: src/view/shell/Drawer.tsx:448
 msgid "Notifications"
 msgstr "通知"
 
@@ -3756,7 +3760,7 @@ msgstr "糟糕！"
 msgid "Oh no! Something went wrong."
 msgstr "糟糕！發生了一些錯誤。"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:336
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:338
 msgid "OK"
 msgstr "好的"
 
@@ -4333,7 +4337,7 @@ msgstr "隱私"
 #: src/screens/Signup/StepInfo/Policies.tsx:56
 #: src/view/screens/PrivacyPolicy.tsx:29
 #: src/view/screens/Settings/index.tsx:959
-#: src/view/shell/Drawer.tsx:285
+#: src/view/shell/Drawer.tsx:284
 msgid "Privacy Policy"
 msgstr "隱私政策"
 
@@ -4352,9 +4356,9 @@ msgstr "個人檔案"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:275
 #: src/view/shell/desktop/LeftNav.tsx:393
-#: src/view/shell/Drawer.tsx:78
-#: src/view/shell/Drawer.tsx:542
-#: src/view/shell/Drawer.tsx:543
+#: src/view/shell/Drawer.tsx:77
+#: src/view/shell/Drawer.tsx:532
+#: src/view/shell/Drawer.tsx:533
 msgid "Profile"
 msgstr "個人檔案"
 
@@ -4910,8 +4914,8 @@ msgstr "滾動到頂部"
 #: src/view/shell/desktop/LeftNav.tsx:354
 #: src/view/shell/desktop/Search.tsx:195
 #: src/view/shell/desktop/Search.tsx:204
-#: src/view/shell/Drawer.tsx:394
-#: src/view/shell/Drawer.tsx:395
+#: src/view/shell/Drawer.tsx:384
+#: src/view/shell/Drawer.tsx:385
 msgid "Search"
 msgstr "搜尋"
 
@@ -5078,8 +5082,7 @@ msgctxt "action"
 msgid "Send Email"
 msgstr "發送電子郵件"
 
-#: src/view/shell/Drawer.tsx:329
-#: src/view/shell/Drawer.tsx:350
+#: src/view/shell/Drawer.tsx:325
 msgid "Send feedback"
 msgstr "提交意見"
 
@@ -5196,8 +5199,8 @@ msgstr "將圖片比例設定為寬"
 #: src/Navigation.tsx:152
 #: src/view/screens/Settings/index.tsx:334
 #: src/view/shell/desktop/LeftNav.tsx:401
-#: src/view/shell/Drawer.tsx:559
-#: src/view/shell/Drawer.tsx:560
+#: src/view/shell/Drawer.tsx:549
+#: src/view/shell/Drawer.tsx:550
 msgid "Settings"
 msgstr "設定"
 
@@ -5600,11 +5603,11 @@ msgstr "訂閱"
 msgid "Subscribe to @{0} to use these labels:"
 msgstr "訂閱 @{0} 以使用這些標記："
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:230
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:229
 msgid "Subscribe to Labeler"
 msgstr "訂閱標記者"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:194
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:196
 msgid "Subscribe to this labeler"
 msgstr "訂閱這個標記者"
 
@@ -5705,7 +5708,7 @@ msgstr "條款"
 #: src/screens/Signup/StepInfo/Policies.tsx:49
 #: src/view/screens/Settings/index.tsx:953
 #: src/view/screens/TermsOfService.tsx:29
-#: src/view/shell/Drawer.tsx:279
+#: src/view/shell/Drawer.tsx:278
 msgid "Terms of Service"
 msgstr "服務條款"
 
@@ -5810,7 +5813,7 @@ msgstr "服務條款已遷移到"
 msgid "There is no time limit for account deactivation, come back any time."
 msgstr "帳號停用沒有時間限制，隨時都可以重新啟用。"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:115
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:117
 #: src/view/screens/ProfileFeed.tsx:544
 msgid "There was an an issue contacting the server, please check your internet connection and try again."
 msgstr "連線至伺服器時出現問題，請檢查您的網路連線並重試。"
@@ -6283,11 +6286,11 @@ msgstr "取消釘選內容管理列表"
 msgid "Unpinned from your feeds"
 msgstr "已從您的動態源取消釘選"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:228
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:227
 msgid "Unsubscribe"
 msgstr "取消訂閱"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:193
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:195
 msgid "Unsubscribe from this labeler"
 msgstr "取消訂閱這個標記者"
 
@@ -6651,7 +6654,7 @@ msgstr "很抱歉！您回覆的貼文已被刪除。"
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr "很抱歉！我們找不到您正在尋找的頁面。"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:330
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:332
 msgid "We're sorry! You can only subscribe to twenty labelers, and you've reached your limit of twenty."
 msgstr "抱歉！您只能訂閱二十個標記者，您已達到二十個的限制。"
 
