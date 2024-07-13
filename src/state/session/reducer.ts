@@ -43,6 +43,7 @@ export type Action =
     }
   | {
       type: 'logged-out'
+      accountDid: string
     }
   | {
       type: 'synced-accounts'
@@ -143,21 +144,20 @@ let reducer = (state: State, action: Action): State => {
       }
     }
     case 'logged-out': {
-      //Fetch the account ID that the user signed out from
       const {accountDid} = action
 
-      //Find the account for which the tokens need to be cleared
-      const loggedOutAccount = state.accounts.filter(a => a.did === accountDid)
-
-      //Clear the tokens for the account that the user signed out from
-      loggedOutAccount.accessJwt = undefined
-      loggedOutAccount.refreshJwt = undefined
-
       return {
-        //Return all the accounts. The other accounts remain unchanged, so the user will
-        //stay signed in on them.
-        accounts: state.accounts
-        })),
+        accounts: state.accounts.map(a => {
+          if (a.did === accountDid) {
+            return {
+              ...a,
+              accessJwt: undefined,
+              refreshJwt: undefined,
+            }
+          } else {
+            return a
+          }
+        }),
         currentAgentState: createPublicAgentState(),
         needsPersist: true,
       }
