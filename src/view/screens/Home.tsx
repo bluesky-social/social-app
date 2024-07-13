@@ -127,15 +127,47 @@ function HomeScreenReady({
     ]),
   )
 
+  const onPageSelecting = React.useCallback(
+    (
+      index: number,
+      reason: LogEvents['home:feedDisplayed:sampled']['reason'],
+    ) => {
+      const feed = allFeeds[index]
+      if (feed === 'following') {
+        logEvent('home:feedDisplayed', {
+          index,
+          feedType: feed.split('|')[0],
+          feedUrl: feed,
+          reason,
+          followingShowRepliesFromPref: preferences.feedViewPrefs.hideReplies
+            ? 'off'
+            : preferences.feedViewPrefs.hideRepliesByUnfollowed
+            ? 'following'
+            : 'all',
+          followingRepliesMinLikePref:
+            preferences.feedViewPrefs.hideRepliesByLikeCount,
+        })
+      } else {
+        logEvent('home:feedDisplayed:sampled', {
+          index,
+          feedType: feed.split('|')[0],
+          feedUrl: feed,
+          reason,
+        })
+      }
+    },
+    [
+      allFeeds,
+      preferences.feedViewPrefs.hideReplies,
+      preferences.feedViewPrefs.hideRepliesByLikeCount,
+      preferences.feedViewPrefs.hideRepliesByUnfollowed,
+    ],
+  )
+
   useFocusEffect(
     useNonReactiveCallback(() => {
       if (selectedFeed) {
-        logEvent('home:feedDisplayed:sampled', {
-          index: selectedIndex,
-          feedType: selectedFeed.split('|')[0],
-          feedUrl: selectedFeed,
-          reason: 'focus',
-        })
+        onPageSelecting(selectedIndex, 'focus')
       }
     }),
   )
@@ -168,22 +200,6 @@ function HomeScreenReady({
       lastPagerReportedIndexRef.current = index
     },
     [setDrawerSwipeDisabled, setSelectedFeed, setMinimalShellMode, allFeeds],
-  )
-
-  const onPageSelecting = React.useCallback(
-    (
-      index: number,
-      reason: LogEvents['home:feedDisplayed:sampled']['reason'],
-    ) => {
-      const feed = allFeeds[index]
-      logEvent('home:feedDisplayed:sampled', {
-        index,
-        feedType: feed.split('|')[0],
-        feedUrl: feed,
-        reason,
-      })
-    },
-    [allFeeds],
   )
 
   const onPressSelected = React.useCallback(() => {
