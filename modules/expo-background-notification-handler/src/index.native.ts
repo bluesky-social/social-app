@@ -1,25 +1,19 @@
 import {requireNativeModule} from 'expo'
 
-import {BackgroundNotificationHandlerPreferences} from './ExpoBackgroundNotificationHandler.types'
-
 const NativeModule = requireNativeModule('ExpoBackgroundNotificationHandler')
 
-export function resetGenericCountAsync(): Promise<void> {
-  NativeModule.resetGenericCountAsync()
+export async function resetGenericCountAsync(): Promise<void> {
+  await NativeModule.resetGenericCountAsync()
 }
 
-export function maybeIncrementMessagesCountAsync(
+export async function maybeIncrementMessagesCountAsync(
   convoId: string,
 ): Promise<boolean> {
-  NativeModule.incrementMessagesCountAsync(convoId)
+  return await NativeModule.maybeIncrementMessagesCountAsync(convoId)
 }
 
-export function maybeDecrementMessagesCountAsync(
+export async function maybeDecrementMessagesCountAsync(
   convoId: string,
 ): Promise<boolean> {
-  NativeModule.decrementMessagesCountAsync(convoId)
-}
-
-export function getPrefsAsync(): Promise<BackgroundNotificationHandlerPreferences> {
-  return NativeModule.getPrefsAsync()
+  return await NativeModule.maybeDecrementMessagesCountAsync(convoId)
 }

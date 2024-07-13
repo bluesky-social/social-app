@@ -1,7 +1,6 @@
 import React from 'react'
 
 import {SharedPrefs} from '../../expo-bluesky-swiss-army'
-import {BackgroundNotifications} from '../index'
 import {BackgroundNotificationHandlerPreferences} from './types'
 
 interface BackgroundNotificationPreferencesContext {
@@ -30,31 +29,25 @@ export function BackgroundNotificationPreferencesProvider({
 
   React.useEffect(() => {
     ;(async () => {
-      const prefs = await BackgroundNotifications.getPrefsAsync()
+      const prefs: BackgroundNotificationHandlerPreferences = {
+        playSoundChat: SharedPrefs.getBool('playSoundChat') ?? true,
+      }
       if (prefs) {
         setPreferences(prefs)
       }
     })()
   }, [])
 
-  const value = React.useMemo(
-    () => ({
-      preferences,
-      setPref: async <
-        Key extends keyof BackgroundNotificationHandlerPreferences,
-      >(
-        k: Key,
-        v: BackgroundNotificationHandlerPreferences[Key],
-      ) => {
-        SharedPrefs.setValue(k, v)
-        setPreferences(prev => ({
-          ...prev,
-          [k]: v,
-        }))
-      },
-    }),
-    [preferences],
-  )
+  const value = {
+    preferences,
+    setPref: <Key extends keyof BackgroundNotificationHandlerPreferences>(
+      k: Key,
+      v: BackgroundNotificationHandlerPreferences[Key],
+    ) => {
+      SharedPrefs.setValue(k, v)
+      setPreferences(prev => ({...prev, [k]: v}))
+    },
+  }
 
   return <Context.Provider value={value}>{children}</Context.Provider>
 }
