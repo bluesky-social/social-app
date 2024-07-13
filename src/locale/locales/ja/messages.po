@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-07-08 10:46+0900\n"
+"PO-Revision-Date: 2024-07-13 11:29+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -2343,10 +2343,6 @@ msgstr "フォローバック"
 msgid "Follow more accounts to get connected to your interests and build your network."
 msgstr "もっとたくさんのアカウントをフォローして、興味あることにつながり、ネットワークを広げましょう。"
 
-#: src/view/com/profile/ProfileCard.tsx:190
-msgid "Followed by {0}"
-msgstr "{0}がフォロー中"
-
 #: src/components/KnownFollowers.tsx:223
 msgid "Followed by <0>{0}</0>"
 msgstr "<0>{0}</0>がフォロー中"
@@ -2483,6 +2479,10 @@ msgstr "ギャラリー"
 #: src/components/StarterPack/ProfileStarterPacks.tsx:279
 msgid "Generate a starter pack"
 msgstr "スターターパックを生成"
+
+#: src/view/shell/Drawer.tsx:336
+msgid "Get help"
+msgstr "ヘルプを表示"
 
 #: src/components/dms/MessagesNUX.tsx:168
 msgid "Get started"
@@ -4590,6 +4590,12 @@ msgctxt "description"
 msgid "Reply to a blocked post"
 msgstr "ブロックした投稿への返信"
 
+#: src/view/com/post/Post.tsx:195
+#: src/view/com/posts/FeedItem.tsx:454
+msgctxt "description"
+msgid "Reply to you"
+msgstr "あなたへの返信"
+
 #: src/components/dms/MessageMenu.tsx:132
 #: src/components/dms/MessagesListBlockedFooter.tsx:77
 #: src/components/dms/MessagesListBlockedFooter.tsx:84
@@ -4694,6 +4700,11 @@ msgstr "{0}にリポストされた"
 #: src/view/com/posts/FeedItem.tsx:269
 msgid "Reposted by <0><1/></0>"
 msgstr "<0><1/></0>がリポスト"
+
+#: src/view/com/posts/FeedItem.tsx:261
+#: src/view/com/posts/FeedItem.tsx:280
+msgid "Reposted by you"
+msgstr "あなたのリポスト"
 
 #: src/view/com/notifications/FeedItem.tsx:187
 msgid "reposted your post"
@@ -5270,6 +5281,10 @@ msgstr "このスターターパックを共有して、他のユーザーがBlu
 #: src/components/dms/ChatEmptyPill.tsx:34
 msgid "Share your favorite feed!"
 msgstr "お気に入りのフィードをシェアして！"
+
+#: src/Navigation.tsx:241
+msgid "Shared Preferences Tester"
+msgstr "Shared Preferencesのテスター"
 
 #: src/view/com/modals/LinkWarning.tsx:92
 msgid "Shares the linked website"
