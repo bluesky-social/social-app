@@ -75,19 +75,6 @@ export type LogEvents = {
   'onboarding:finished:avatarResult': {
     avatarResult: 'default' | 'created' | 'uploaded'
   }
-  'home:feedDisplayed': {
-    feedUrl: string
-    feedType: string
-    index: number
-    followingShowRepliesFromPref: 'all' | 'following' | 'off'
-    followingRepliesMinLikePref: number
-    reason:
-      | 'focus'
-      | 'tabbar-click'
-      | 'pager-swipe'
-      | 'desktop-sidebar-click'
-      | 'starter-pack-initial-feed'
-  }
   'home:feedDisplayed:sampled': {
     feedUrl: string
     feedType: string
@@ -223,6 +210,12 @@ export type LogEvents = {
 
   'feed:interstitial:profileCard:press': {}
   'feed:interstitial:feedCard:press': {}
+
+  'debug:followingPrefs': {
+    followingShowRepliesFromPref: 'all' | 'following' | 'off'
+    followingRepliesMinLikePref: number
+  }
+  'debug:followingDisplayed': {}
 
   'test:all:always': {}
   'test:all:sometimes': {}

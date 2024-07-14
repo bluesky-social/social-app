@@ -9,7 +9,7 @@ import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {logEvent, LogEvents} from '#/lib/statsig/statsig'
 import {emitSoftReset} from '#/state/events'
 import {SavedFeedSourceInfo, usePinnedFeedsInfos} from '#/state/queries/feed'
-import {FeedParams} from '#/state/queries/post-feed'
+import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useSession} from '#/state/session'
@@ -108,6 +108,29 @@ function HomeScreenReady({
     }
   }, [selectedIndex])
 
+  // Temporary, remove when finished debugging
+  const debugHasLoggedFollowingPrefs = React.useRef(false)
+  const debugHasLoggedFollowingDisplayed = React.useRef(false)
+  const debugLogFollowingPrefs = () => {
+    if (debugHasLoggedFollowingPrefs.current) return
+    logEvent('debug:followingPrefs', {
+      followingShowRepliesFromPref: preferences.feedViewPrefs.hideReplies
+        ? 'off'
+        : preferences.feedViewPrefs.hideRepliesByUnfollowed
+        ? 'following'
+        : 'all',
+      followingRepliesMinLikePref:
+        preferences.feedViewPrefs.hideRepliesByLikeCount,
+    })
+    debugHasLoggedFollowingPrefs.current = true
+  }
+  const debugLogFollowingDisplayed = (feed: FeedDescriptor) => {
+    if (debugHasLoggedFollowingDisplayed.current) return
+    if (feed !== 'following') return
+    logEvent('debug:followingDisplayed', {})
+    debugHasLoggedFollowingDisplayed.current = true
+  }
+
   const {hasSession} = useSession()
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
@@ -127,47 +150,17 @@ function HomeScreenReady({
     ]),
   )
 
-  const onPageSelecting = React.useCallback(
-    (
-      index: number,
-      reason: LogEvents['home:feedDisplayed:sampled']['reason'],
-    ) => {
-      const feed = allFeeds[index]
-      if (feed === 'following') {
-        logEvent('home:feedDisplayed', {
-          index,
-          feedType: feed.split('|')[0],
-          feedUrl: feed,
-          reason,
-          followingShowRepliesFromPref: preferences.feedViewPrefs.hideReplies
-            ? 'off'
-            : preferences.feedViewPrefs.hideRepliesByUnfollowed
-            ? 'following'
-            : 'all',
-          followingRepliesMinLikePref:
-            preferences.feedViewPrefs.hideRepliesByLikeCount,
-        })
-      } else {
-        logEvent('home:feedDisplayed:sampled', {
-          index,
-          feedType: feed.split('|')[0],
-          feedUrl: feed,
-          reason,
-        })
-      }
-    },
-    [
-      allFeeds,
-      preferences.feedViewPrefs.hideReplies,
-      preferences.feedViewPrefs.hideRepliesByLikeCount,
-      preferences.feedViewPrefs.hideRepliesByUnfollowed,
-    ],
-  )
-
   useFocusEffect(
     useNonReactiveCallback(() => {
       if (selectedFeed) {
-        onPageSelecting(selectedIndex, 'focus')
+        logEvent('home:feedDisplayed:sampled', {
+          index: selectedIndex,
+          feedType: selectedFeed.split('|')[0],
+          feedUrl: selectedFeed,
+          reason: 'focus',
+        })
+        debugLogFollowingPrefs()
+        debugLogFollowingDisplayed(selectedFeed)
       }
     }),
   )
@@ -200,6 +193,23 @@ function HomeScreenReady({
       lastPagerReportedIndexRef.current = index
     },
     [setDrawerSwipeDisabled, setSelectedFeed, setMinimalShellMode, allFeeds],
+  )
+
+  const onPageSelecting = React.useCallback(
+    (
+      index: number,
+      reason: LogEvents['home:feedDisplayed:sampled']['reason'],
+    ) => {
+      const feed = allFeeds[index]
+      logEvent('home:feedDisplayed:sampled', {
+        index,
+        feedType: feed.split('|')[0],
+        feedUrl: feed,
+        reason,
+      })
+      debugLogFollowingDisplayed(feed)
+    },
+    [allFeeds],
   )
 
   const onPressSelected = React.useCallback(() => {
