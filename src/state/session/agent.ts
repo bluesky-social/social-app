@@ -1,14 +1,5 @@
-<<<<<<< HEAD
 import {AtpSessionData, AtpSessionEvent, BskyAgent} from '@atproto/api'
 import {TID} from '@atproto/common-web'
-=======
-import {
-  AtpSessionData,
-  AtpSessionEvent,
-  BskyAgent,
-  SessionDispatcher,
-} from '@atproto/api'
->>>>>>> 1a535b0b7 (use xrpc dispatcher)
 
 import {networkRetry} from '#/lib/async/retry'
 import {
