@@ -1,11 +1,13 @@
 import React from 'react'
-import Picker from '@emoji-mart/react'
 import {
-  StyleSheet,
+  GestureResponderEvent,
   TouchableWithoutFeedback,
   useWindowDimensions,
   View,
 } from 'react-native'
+import Picker from '@emoji-mart/react'
+
+import {atoms as a} from '#/alf'
 import {textInputWebEmitter} from '../TextInput.web'
 
 const HEIGHT_OFFSET = 40
@@ -96,12 +98,29 @@ export function EmojiPicker({state, close}: IProps) {
 
   if (!state.isOpen) return null
 
+  const onPressBackdrop = (e: GestureResponderEvent) => {
+    // @ts-ignore web only
+    if (e.nativeEvent?.pointerId === -1) return
+    close()
+  }
+
   return (
     <TouchableWithoutFeedback
       accessibilityRole="button"
-      onPress={close}
+      onPress={onPressBackdrop}
       accessibilityViewIsModal>
-      <View style={styles.mask}>
+      <View
+        style={[
+          a.fixed,
+          a.w_full,
+          a.h_full,
+          a.align_center,
+          {
+            top: 0,
+            left: 0,
+            right: 0,
+          },
+        ]}>
         {/* eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors */}
         <TouchableWithoutFeedback onPress={e => e.stopPropagation()}>
           <View style={[{position: 'absolute'}, position]}>
@@ -118,20 +137,3 @@ export function EmojiPicker({state, close}: IProps) {
     </TouchableWithoutFeedback>
   )
 }
-
-const styles = StyleSheet.create({
-  mask: {
-    // @ts-ignore web ony
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    width: '100%',
-    height: '100%',
-    alignItems: 'center',
-  },
-  picker: {
-    marginHorizontal: 'auto',
-    paddingRight: 50,
-  },
-})

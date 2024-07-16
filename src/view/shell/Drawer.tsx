@@ -9,10 +9,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
+import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {StackActions, useNavigation} from '@react-navigation/native'
@@ -37,6 +34,7 @@ import {formatCountShortOnly} from 'view/com/util/numeric/format'
 import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {useTheme as useAlfTheme} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {
   Bell_Filled_Corner0_Rounded as BellFilled,
   Bell_Stroke2_Corner0_Rounded as Bell,
@@ -52,6 +50,7 @@ import {
 } from '#/components/icons/HomeOpen'
 import {MagnifyingGlass_Filled_Stroke2_Corner0_Rounded as MagnifyingGlassFilled} from '#/components/icons/MagnifyingGlass'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as MagnifyingGlass} from '#/components/icons/MagnifyingGlass2'
+import {Message_Stroke2_Corner0_Rounded as Message} from '#/components/icons/Message'
 import {SettingsGear2_Stroke2_Corner0_Rounded as Settings} from '#/components/icons/SettingsGear2'
 import {
   UserCircle_Filled_Corner0_Rounded as UserCircleFilled,
@@ -319,42 +318,33 @@ let DrawerFooter = ({
   onPressFeedback: () => void
   onPressHelp: () => void
 }): React.ReactNode => {
-  const theme = useTheme()
-  const pal = usePalette('default')
   const {_} = useLingui()
   return (
     <View style={styles.footer}>
-      <TouchableOpacity
-        accessibilityRole="link"
-        accessibilityLabel={_(msg`Send feedback`)}
-        accessibilityHint=""
-        onPress={onPressFeedback}
-        style={[
-          styles.footerBtn,
-          styles.footerBtnFeedback,
-          theme.colorScheme === 'light'
-            ? styles.footerBtnFeedbackLight
-            : styles.footerBtnFeedbackDark,
-        ]}>
-        <FontAwesomeIcon
-          style={pal.link as FontAwesomeIconStyle}
-          size={18}
-          icon={['far', 'message']}
-        />
-        <Text type="lg-medium" style={[pal.link, s.pl10]}>
+      <Button
+        label={_(msg`Send feedback`)}
+        size="small"
+        variant="solid"
+        color="secondary"
+        onPress={onPressFeedback}>
+        <ButtonIcon icon={Message} position="left" />
+        <ButtonText>
           <Trans>Feedback</Trans>
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        accessibilityRole="link"
-        accessibilityLabel={_(msg`Send feedback`)}
-        accessibilityHint=""
+        </ButtonText>
+      </Button>
+      <Button
+        label={_(msg`Get help`)}
+        size="small"
+        variant="outline"
+        color="secondary"
         onPress={onPressHelp}
-        style={[styles.footerBtn]}>
-        <Text type="lg-medium" style={[pal.link, s.pl10]}>
+        style={{
+          backgroundColor: 'transparent',
+        }}>
+        <ButtonText>
           <Trans>Help</Trans>
-        </Text>
-      </TouchableOpacity>
+        </ButtonText>
+      </Button>
     </View>
   )
 }
