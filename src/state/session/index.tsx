@@ -115,7 +115,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   const logout = React.useCallback<SessionApiContext['logout']>(
-    logContext => {
+    (account, logContext) => {
       addSessionDebugLog({type: 'method:start', method: 'logout'})
       cancelPendingTask()
       dispatch({
