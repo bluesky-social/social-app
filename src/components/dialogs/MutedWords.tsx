@@ -3,7 +3,12 @@ import {Keyboard, View} from 'react-native'
 import {AppBskyActorDefs, sanitizeMutedWordValue} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import RNPickerSelect, {PickerSelectProps} from 'react-native-picker-select'
 
+import {
+  DropdownItem,
+  NativeDropdown,
+} from '#/view/com/util/forms/NativeDropdown'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {
@@ -28,6 +33,7 @@ import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Has
 import {PageText_Stroke2_Corner0_Rounded as PageText} from '#/components/icons/PageText'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
+import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
@@ -78,6 +84,23 @@ function MutedWordsInner() {
     }
   }, [_, field, options, addMutedWord, setField])
 
+  const onDurationChange = React.useCallback(
+    (value: Parameters<PickerSelectProps['onValueChange']>[0]) => {
+      if (!value) return
+    },
+    [],
+  )
+
+  const selectStyle = [
+                a.border_0,
+                a.rounded_sm,
+                a.py_sm,
+                a.text_md,
+                a.px_md,
+                t.atoms.bg_contrast_25,
+                t.atoms.text_contrast_medium,
+              ]
+
   return (
     <Dialog.ScrollableInner label={_(msg`Manage your muted words and tags`)}>
       <View onTouchStart={Keyboard.dismiss}>
@@ -107,6 +130,62 @@ function MutedWordsInner() {
             }}
             onSubmitEditing={submit}
           />
+
+          <View style={[
+            a.pt_sm,
+          ]}>
+            <RNPickerSelect
+              placeholder={{}}
+              value={`forever`}
+              onValueChange={onDurationChange}
+              items={[
+                {
+                  label: _(msg`24 hours`),
+                  value: `24_hours`,
+                  key: `24_hours`,
+                },
+                {
+                  label: _(msg`7 days`),
+                  value: `7_days`,
+                  key: `7_days`,
+                },
+                {
+                  label: _(msg`30 days`),
+                  value: `30_days`,
+                  key: `30_days`,
+                },
+                {
+                  label: _(msg`Until I unmute the word`),
+                  value: `forever`,
+                  key: `forever`,
+                },
+              ]}
+              //useNativeAndroidPickerStyle={false}
+              style={{
+                inputAndroid: [
+                  selectStyle,
+                ],
+                inputIOS: [
+                  selectStyle,
+                ],
+                inputWeb: [
+                  selectStyle,
+                ],
+                iconContainer: [
+                  {
+                    top: 1,
+                    right: 1,
+                    paddingRight: a.pr_md.paddingRight - 1,
+                    paddingTop: 9,
+                    pointerEvents: 'none',
+                  },
+                  a.rounded_sm,
+                  t.atoms.bg_contrast_25,
+                ]
+              }}
+              //Icon={() => <ChevronDown size='sm' fill={t.atoms.text_contrast_low.color} />}
+            />
+          </View>
 
           <Toggle.Group
             label={_(msg`Toggle between muted word options.`)}
