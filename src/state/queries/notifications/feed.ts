@@ -46,11 +46,14 @@ const PAGE_SIZE = 30
 type RQPageParam = string | undefined
 
 const RQKEY_ROOT = 'notification-feed'
-export function RQKEY() {
-  return [RQKEY_ROOT]
+export function RQKEY(priority?: false) {
+  return [RQKEY_ROOT, priority]
 }
 
-export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
+export function useNotificationFeedQuery(opts?: {
+  enabled?: boolean
+  overridePriorityNotifications?: boolean
+}) {
   const agent = useAgent()
   const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
@@ -58,6 +61,10 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
   const enabled = opts?.enabled !== false
   const lastPageCountRef = useRef(0)
   const gate = useGate()
+
+  // false: force showing all notifications
+  // undefined: let the server decide
+  const priority = opts?.overridePriorityNotifications ? false : undefined
 
   const query = useInfiniteQuery<
     FeedPage,
@@ -67,7 +74,7 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
     RQPageParam
   >({
     staleTime: STALE.INFINITY,
-    queryKey: RQKEY(),
+    queryKey: RQKEY(priority),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       let page
       if (!pageParam) {
@@ -84,6 +91,7 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
             moderationOpts,
             fetchAdditionalData: true,
             shouldUngroupFollowBacks: () => gate('ungroup_follow_backs'),
+            priority,
           })
         ).page
       }
