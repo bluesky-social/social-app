@@ -1,5 +1,6 @@
 import React, {useCallback} from 'react'
 import {Alert, View} from 'react-native'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -31,6 +32,7 @@ export function NotificationsSettingsScreen({}: Props) {
       />
       <View style={[a.p_lg, a.gap_md]}>
         <Text style={[a.text_lg, a.font_bold]}>
+          <FontAwesomeIcon icon="flask" style={t.atoms.text} />{' '}
           <Trans>Priority notifications</Trans>
         </Text>
         <Toggle.Group
@@ -67,9 +69,11 @@ export function NotificationsSettingsScreen({}: Props) {
             a.rounded_md,
             t.atoms.bg_contrast_25,
           ]}>
-          <Text style={[t.atoms.text_contrast_high]}>
+          <Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
             <Trans>
-              You'll only recieve notifications from users you follow
+              Experimental: Filter your notifications. Currently this means
+              you'll only recieve notifications from users you follow — we'll
+              refine this over time.
             </Trans>
           </Text>
         </View>
