@@ -60,7 +60,7 @@ export function PreferencesExternalEmbeds({}: Props) {
       <ScrollView
         // @ts-ignore web only -prf
         dataSet={{'stable-gutters': 1}}
-        contentContainerStyle={[pal.viewLight, {paddingBottom: 200}]}>
+        contentContainerStyle={[pal.viewLight, {paddingBottom: 75}]}>
         <View style={[pal.view]}>
           <View style={styles.infoCard}>
             <Text style={pal.text}>
