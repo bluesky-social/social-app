@@ -1,13 +1,5 @@
 import React, {useCallback} from 'react'
 import {View} from 'react-native'
-import Animated, {
-  Easing,
-  useAnimatedStyle,
-  useSharedValue,
-  withRepeat,
-  withSpring,
-  withTiming,
-} from 'react-native-reanimated'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
@@ -44,6 +36,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/components/icons/SettingsGear2'
 import {Link} from '#/components/Link'
+import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
 type Props = NativeStackScreenProps<
@@ -119,32 +112,6 @@ export function NotificationsScreen({route: {params}}: Props) {
     return listenSoftReset(onPressLoadLatest)
   }, [onPressLoadLatest, isScreenFocused])
 
-  const rotation = useSharedValue(0)
-
-  const animatedStyles = useAnimatedStyle(() => ({
-    transform: [{rotate: rotation.value + 'deg'}],
-    scale: withSpring(isLoadingLatest ? 1.25 : 1, {duration: 250}),
-  }))
-
-  React.useEffect(() => {
-    if (isLoadingLatest) {
-      rotation.value = withRepeat(
-        withTiming(rotation.value + 360, {
-          duration: 1000,
-          easing: Easing.linear,
-        }),
-        -1,
-      )
-      return () => {
-        cancelAnimationFrame(rotation.value)
-        rotation.value = withTiming(rotation.value + 200, {
-          duration: 1000,
-          easing: Easing.out(Easing.exp),
-        })
-      }
-    }
-  }, [rotation, isLoadingLatest])
-
   const renderButton = useCallback(() => {
     return (
       <Link
@@ -155,12 +122,10 @@ export function NotificationsScreen({route: {params}}: Props) {
         color="secondary"
         shape="square"
         style={[a.justify_center]}>
-        <Animated.View style={animatedStyles}>
-          <SettingsIcon size="md" style={[t.atoms.text_contrast_medium]} />
-        </Animated.View>
+        <SettingsIcon size="md" style={t.atoms.text_contrast_medium} />
       </Link>
     )
-  }, [_, t, animatedStyles])
+  }, [_, t])
 
   const ListHeaderComponent = React.useCallback(() => {
     if (isDesktop) {
@@ -180,12 +145,12 @@ export function NotificationsScreen({route: {params}}: Props) {
             label={_(msg`Notifications`)}
             accessibilityHint={_(msg`Refresh notifications`)}
             onPress={emitSoftReset}>
-            {({hovered, pressed, focused}) => (
+            {({hovered, pressed}) => (
               <Text
                 style={[
                   a.text_2xl,
                   a.font_bold,
-                  (hovered || pressed || focused) && a.underline,
+                  (hovered || pressed) && a.underline,
                 ]}>
                 <Trans>Notifications</Trans>
                 {hasNew && (
@@ -204,14 +169,14 @@ export function NotificationsScreen({route: {params}}: Props) {
             )}
           </Button>
           <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-            {/* {isLoadingLatest ? <Loader size="md" /> : <></>} */}
+            {isLoadingLatest ? <Loader size="md" /> : <></>}
             {renderButton()}
           </View>
         </View>
       )
     }
     return <></>
-  }, [isDesktop, t, hasNew, renderButton, _])
+  }, [isDesktop, t, hasNew, renderButton, _, isLoadingLatest])
 
   const renderHeaderSpinner = React.useCallback(() => {
     return (
@@ -223,11 +188,11 @@ export function NotificationsScreen({route: {params}}: Props) {
           a.justify_end,
           a.gap_md,
         ]}>
-        {/* {isLoadingLatest ? <Loader width={20} /> : <></>} */}
+        {isLoadingLatest ? <Loader width={20} /> : <></>}
         {renderButton()}
       </View>
     )
-  }, [renderButton])
+  }, [renderButton, isLoadingLatest])
 
   return (
     <CenteredView
