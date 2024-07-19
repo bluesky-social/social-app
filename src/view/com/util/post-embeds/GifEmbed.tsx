@@ -1,5 +1,12 @@
 import React from 'react'
-import {Pressable, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native'
 import {AppBskyEmbedExternal} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
@@ -8,6 +15,7 @@ import {useLingui} from '@lingui/react'
 import {HITSLOP_20} from '#/lib/constants'
 import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
 import {isWeb} from '#/platform/detection'
+import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {EmbedPlayerParams} from 'lib/strings/embed-player'
 import {useAutoplayDisabled} from 'state/preferences'
 import {atoms as a, useTheme} from '#/alf'
@@ -88,10 +96,12 @@ export function GifEmbed({
   params,
   link,
   hideAlt,
+  style = {width: '100%'},
 }: {
   params: EmbedPlayerParams
   link: AppBskyEmbedExternal.ViewExternal
   hideAlt?: boolean
+  style?: StyleProp<ViewStyle>
 }) {
   const {_} = useLingui()
   const autoplayDisabled = useAutoplayDisabled()
@@ -123,15 +133,12 @@ export function GifEmbed({
   )
 
   return (
-    <View
-      style={[a.rounded_sm, a.overflow_hidden, a.mt_sm, {maxWidth: '100%'}]}>
+    <View style={[a.rounded_sm, a.overflow_hidden, a.mt_sm, style]}>
       <View
         style={[
           a.rounded_sm,
           a.overflow_hidden,
-          {
-            aspectRatio: params.dimensions!.width / params.dimensions!.height,
-          },
+          {aspectRatio: params.dimensions!.width / params.dimensions!.height},
         ]}>
         <PlaybackControls
           onPress={onPress}
@@ -157,6 +164,7 @@ export function GifEmbed({
 
 function AltText({text}: {text: string}) {
   const control = Prompt.usePromptControl()
+  const largeAltBadge = useLargeAltBadgeEnabled()
 
   const {_} = useLingui()
   return (
@@ -169,7 +177,9 @@ function AltText({text}: {text: string}) {
         hitSlop={HITSLOP_20}
         onPress={control.open}
         style={styles.altContainer}>
-        <Text style={styles.alt} accessible={false}>
+        <Text
+          style={[styles.alt, largeAltBadge && a.text_xs]}
+          accessible={false}>
           <Trans>ALT</Trans>
         </Text>
       </TouchableOpacity>
@@ -181,7 +191,7 @@ function AltText({text}: {text: string}) {
         <Prompt.DescriptionText selectable>{text}</Prompt.DescriptionText>
         <Prompt.Actions>
           <Prompt.Action
-            onPress={control.close}
+            onPress={() => control.close()}
             cta={_(msg`Close`)}
             color="secondary"
           />

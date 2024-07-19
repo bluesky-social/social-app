@@ -6,6 +6,7 @@ import {useLingui} from '@lingui/react'
 
 import {getLabelingServiceTitle} from '#/lib/moderation'
 import {ReportOption} from '#/lib/moderation/useReportOptions'
+import {useGate} from '#/lib/statsig/statsig'
 import {useAgent} from '#/state/session'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import * as Toast from '#/view/com/util/Toast'
@@ -15,7 +16,6 @@ import * as Dialog from '#/components/Dialog'
 import * as Toggle from '#/components/forms/Toggle'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
-import {KeyboardPadding} from '#/components/KeyboardPadding'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {ReportDialogProps} from './types'
@@ -37,6 +37,7 @@ export function SubmitView({
   const t = useTheme()
   const {_} = useLingui()
   const agent = useAgent()
+  const gate = useGate()
   const [details, setDetails] = React.useState<string>('')
   const [submitting, setSubmitting] = React.useState<boolean>(false)
   const [selectedServices, setSelectedServices] = React.useState<string[]>([
@@ -61,15 +62,29 @@ export function SubmitView({
       reason: details,
     }
     const results = await Promise.all(
-      selectedServices.map(did =>
-        agent
-          .withProxy('atproto_labeler', did)
-          .createModerationReport(report)
-          .then(
-            _ => true,
-            _ => false,
-          ),
-      ),
+      selectedServices.map(did => {
+        if (gate('session_withproxy_fix')) {
+          return agent
+            .createModerationReport(report, {
+              encoding: 'application/json',
+              headers: {
+                'atproto-proxy': `${did}#atproto_labeler`,
+              },
+            })
+            .then(
+              _ => true,
+              _ => false,
+            )
+        } else {
+          return agent
+            .withProxy('atproto_labeler', did)
+            .createModerationReport(report)
+            .then(
+              _ => true,
+              _ => false,
+            )
+        }
+      }),
     )
 
     setSubmitting(false)
@@ -93,6 +108,7 @@ export function SubmitView({
     onSubmitComplete,
     setError,
     agent,
+    gate,
   ])
 
   return (
@@ -222,7 +238,6 @@ export function SubmitView({
           {submitting && <ButtonIcon icon={Loader} />}
         </Button>
       </View>
-      <KeyboardPadding />
     </View>
   )
 }

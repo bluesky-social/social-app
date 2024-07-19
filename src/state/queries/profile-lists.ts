@@ -26,7 +26,15 @@ export function useProfileListsQuery(did: string, opts?: {enabled?: boolean}) {
         limit: PAGE_SIZE,
         cursor: pageParam,
       })
-      return res.data
+
+      // Starter packs use a reference list, which we do not want to show on profiles. At some point we could probably
+      // just filter this out on the backend instead of in the client.
+      return {
+        ...res.data,
+        lists: res.data.lists.filter(
+          l => l.purpose !== 'app.bsky.graph.defs#referencelist',
+        ),
+      }
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,

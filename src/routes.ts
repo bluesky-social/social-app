@@ -15,6 +15,7 @@ export const router = new Router({
   Profile: ['/profile/:name', '/profile/:name/rss'],
   ProfileFollowers: '/profile/:name/followers',
   ProfileFollows: '/profile/:name/follows',
+  ProfileKnownFollowers: '/profile/:name/known-followers',
   ProfileList: '/profile/:name/lists/:rkey',
   PostThread: '/profile/:name/post/:rkey',
   PostLikedBy: '/profile/:name/post/:rkey/liked-by',
@@ -40,4 +41,9 @@ export const router = new Router({
   Messages: '/messages',
   MessagesSettings: '/messages/settings',
   MessagesConversation: '/messages/:conversation',
+  Start: '/start/:name/:rkey',
+  StarterPackEdit: '/starter-pack/edit/:rkey',
+  StarterPack: '/starter-pack/:name/:rkey',
+  StarterPackShort: '/starter-pack-short/:code',
+  StarterPackWizard: '/starter-pack/create',
 })

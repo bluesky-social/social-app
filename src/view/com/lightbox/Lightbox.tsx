@@ -59,7 +59,9 @@ function LightboxFooter({imageIndex}: {imageIndex: number}) {
   const {_} = useLingui()
   const {activeLightbox} = useLightbox()
   const [isAltExpanded, setAltExpanded] = React.useState(false)
-  const [permissionResponse, requestPermission] = MediaLibrary.usePermissions()
+  const [permissionResponse, requestPermission] = MediaLibrary.usePermissions({
+    granularPermissions: ['photo'],
+  })
 
   const saveImageToAlbumWithToasts = React.useCallback(
     async (uri: string) => {

@@ -20,7 +20,6 @@ import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
-import {KeyboardPadding} from '#/components/KeyboardPadding'
 import {Text} from '#/components/Typography'
 import {GifEmbed} from '../util/post-embeds/GifEmbed'
 import {AltTextReminder} from './photos/Gallery'
@@ -175,13 +174,17 @@ function AltTextInner({
           <Text style={[a.text_2xl, a.font_bold, a.leading_tight, a.pb_sm]}>
             <Trans>Add alt text</Trans>
           </Text>
-          <View style={[a.w_full, a.align_center, native({maxHeight: 200})]}>
-            <GifEmbed link={link} params={params} hideAlt />
+          <View style={[a.align_center]}>
+            <GifEmbed
+              link={link}
+              params={params}
+              hideAlt
+              style={[native({maxHeight: 225})]}
+            />
           </View>
         </View>
       </View>
       <Dialog.Close />
-      <KeyboardPadding />
     </Dialog.ScrollableInner>
   )
 }

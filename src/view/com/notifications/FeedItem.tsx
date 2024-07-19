@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 import {
   AppBskyActorDefs,
+  AppBskyEmbedExternal,
   AppBskyEmbedImages,
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
@@ -21,6 +22,7 @@ import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {useGate} from '#/lib/statsig/statsig'
 import {FeedNotification} from '#/state/queries/notifications/feed'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -51,6 +53,17 @@ import {TimeElapsed} from '../util/TimeElapsed'
 import {PreviewableUserAvatar, UserAvatar} from '../util/UserAvatar'
 
 import hairlineWidth = StyleSheet.hairlineWidth
+import {useNavigation} from '@react-navigation/native'
+
+import {parseTenorGif} from '#/lib/strings/embed-player'
+import {logger} from '#/logger'
+import {NavigationProp} from 'lib/routes/types'
+import {forceLTR} from 'lib/strings/bidi'
+import {DM_SERVICE_HEADERS} from 'state/queries/messages/const'
+import {useAgent} from 'state/session'
+import {Button, ButtonText} from '#/components/Button'
+import {StarterPack} from '#/components/icons/StarterPack'
+import {Notification as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 
 const MAX_AUTHORS = 5
 
@@ -75,6 +88,7 @@ let FeedItem = ({
   const pal = usePalette('default')
   const {_} = useLingui()
   const t = useTheme()
+  const gate = useGate()
   const [isAuthorsExpanded, setAuthorsExpanded] = useState<boolean>(false)
   const itemHref = useMemo(() => {
     if (item.type === 'post-like' || item.type === 'repost') {
@@ -87,7 +101,10 @@ let FeedItem = ({
     } else if (item.type === 'reply') {
       const urip = new AtUri(item.notification.uri)
       return `/profile/${urip.host}/post/${urip.rkey}`
-    } else if (item.type === 'feedgen-like') {
+    } else if (
+      item.type === 'feedgen-like' ||
+      item.type === 'starterpack-joined'
+    ) {
       if (item.subjectUri) {
         const urip = new AtUri(item.subjectUri)
         return `/profile/${urip.host}/feed/${urip.rkey}`
@@ -154,6 +171,7 @@ let FeedItem = ({
     )
   }
 
+  let isFollowBack = false
   let action = ''
   let icon = (
     <HeartIconFilled
@@ -170,10 +188,25 @@ let FeedItem = ({
     action = _(msg`reposted your post`)
     icon = <RepostIcon size="xl" style={{color: t.palette.positive_600}} />
   } else if (item.type === 'follow') {
-    action = _(msg`followed you`)
+    if (
+      item.notification.author.viewer?.following &&
+      gate('ungroup_follow_backs')
+    ) {
+      isFollowBack = true
+      action = _(msg`followed you back`)
+    } else {
+      action = _(msg`followed you`)
+    }
     icon = <PersonPlusIcon size="xl" style={{color: t.palette.primary_500}} />
   } else if (item.type === 'feedgen-like') {
     action = _(msg`liked your custom feed`)
+  } else if (item.type === 'starterpack-joined') {
+    icon = (
+      <View style={{height: 30, width: 30}}>
+        <StarterPack width={30} gradient="sky" />
+      </View>
+    )
+    action = _(msg`signed up with your starter pack`)
   } else {
     return null
   }
@@ -239,15 +272,18 @@ let FeedItem = ({
             visible={!isAuthorsExpanded}
             authors={authors}
             onToggleAuthorsExpanded={onToggleAuthorsExpanded}
+            showDmButton={item.type === 'starterpack-joined' || isFollowBack}
           />
           <ExpandedAuthorsList visible={isAuthorsExpanded} authors={authors} />
-          <Text style={styles.meta}>
+          <Text style={[styles.meta, a.self_start]}>
             <TextLink
               key={authors[0].href}
               style={[pal.text, s.bold]}
               href={authors[0].href}
-              text={sanitizeDisplayName(
-                authors[0].profile.displayName || authors[0].profile.handle,
+              text={forceLTR(
+                sanitizeDisplayName(
+                  authors[0].profile.displayName || authors[0].profile.handle,
+                ),
               )}
               disableMismatchWarning
             />
@@ -287,6 +323,20 @@ let FeedItem = ({
             showLikes
           />
         ) : null}
+        {item.type === 'starterpack-joined' ? (
+          <View>
+            <View
+              style={[
+                a.border,
+                a.p_sm,
+                a.rounded_sm,
+                a.mt_sm,
+                t.atoms.border_contrast_low,
+              ]}>
+              <StarterPackCard starterPack={item.subject} />
+            </View>
+          </View>
+        ) : null}
       </View>
     </Link>
   )
@@ -317,14 +367,63 @@ function ExpandListPressable({
   }
 }
 
+function SayHelloBtn({profile}: {profile: AppBskyActorDefs.ProfileViewBasic}) {
+  const {_} = useLingui()
+  const agent = useAgent()
+  const navigation = useNavigation<NavigationProp>()
+  const [isLoading, setIsLoading] = React.useState(false)
+
+  if (
+    profile.associated?.chat?.allowIncoming === 'none' ||
+    (profile.associated?.chat?.allowIncoming === 'following' &&
+      !profile.viewer?.followedBy)
+  ) {
+    return null
+  }
+
+  return (
+    <Button
+      label={_(msg`Say hello!`)}
+      variant="ghost"
+      color="primary"
+      size="xsmall"
+      style={[a.self_center, {marginLeft: 'auto'}]}
+      disabled={isLoading}
+      onPress={async () => {
+        try {
+          setIsLoading(true)
+          const res = await agent.api.chat.bsky.convo.getConvoForMembers(
+            {
+              members: [profile.did, agent.session!.did!],
+            },
+            {headers: DM_SERVICE_HEADERS},
+          )
+          navigation.navigate('MessagesConversation', {
+            conversation: res.data.convo.id,
+          })
+        } catch (e) {
+          logger.error('Failed to get conversation', {safeMessage: e})
+        } finally {
+          setIsLoading(false)
+        }
+      }}>
+      <ButtonText>
+        <Trans>Say hello!</Trans>
+      </ButtonText>
+    </Button>
+  )
+}
+
 function CondensedAuthorsList({
   visible,
   authors,
   onToggleAuthorsExpanded,
+  showDmButton = true,
 }: {
   visible: boolean
   authors: Author[]
   onToggleAuthorsExpanded: () => void
+  showDmButton?: boolean
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -353,7 +452,7 @@ function CondensedAuthorsList({
   }
   if (authors.length === 1) {
     return (
-      <View style={styles.avis}>
+      <View style={[styles.avis]}>
         <PreviewableUserAvatar
           size={35}
           profile={authors[0].profile}
@@ -361,6 +460,7 @@ function CondensedAuthorsList({
           type={authors[0].profile.associated?.labeler ? 'labeler' : 'user'}
           accessible={false}
         />
+        {showDmButton ? <SayHelloBtn profile={authors[0].profile} /> : null}
       </View>
     )
   }
@@ -465,17 +565,48 @@ function AdditionalPostText({post}: {post?: AppBskyFeedDefs.PostView}) {
   const pal = usePalette('default')
   if (post && AppBskyFeedPost.isRecord(post?.record)) {
     const text = post.record.text
-    const images = AppBskyEmbedImages.isView(post.embed)
-      ? post.embed.images
-      : AppBskyEmbedRecordWithMedia.isView(post.embed) &&
-        AppBskyEmbedImages.isView(post.embed.media)
-      ? post.embed.media.images
-      : undefined
+    let images
+    let isGif = false
+
+    if (AppBskyEmbedImages.isView(post.embed)) {
+      images = post.embed.images
+    } else if (
+      AppBskyEmbedRecordWithMedia.isView(post.embed) &&
+      AppBskyEmbedImages.isView(post.embed.media)
+    ) {
+      images = post.embed.media.images
+    } else if (
+      AppBskyEmbedExternal.isView(post.embed) &&
+      post.embed.external.thumb
+    ) {
+      let url: URL | undefined
+      try {
+        url = new URL(post.embed.external.uri)
+      } catch {}
+      if (url) {
+        const {success} = parseTenorGif(url)
+        if (success) {
+          isGif = true
+          images = [
+            {
+              thumb: post.embed.external.thumb,
+              alt: post.embed.external.title,
+              fullsize: post.embed.external.thumb,
+            },
+          ]
+        }
+      }
+    }
+
     return (
       <>
         {text?.length > 0 && <Text style={pal.textLight}>{text}</Text>}
         {images && images.length > 0 && (
-          <ImageHorzList images={images} style={styles.additionalPostImages} />
+          <ImageHorzList
+            images={images}
+            style={styles.additionalPostImages}
+            gif={isGif}
+          />
         )}
       </>
     )
