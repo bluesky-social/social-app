@@ -79,7 +79,7 @@ function InnerApp() {
     return listenSessionDropped(() => {
       Toast.show(
         _(msg`Sorry! Your session expired. Please log in again.`),
-        'xmark',
+        'info',
       )
     })
   }, [_])
