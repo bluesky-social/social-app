@@ -1,1 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path fill="rgb(10,122,255)" d="M19.002 3a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H12.28l-4.762 2.858A1 1 0 0 1 6.002 21v-2h-1a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3h14Z"/></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 300 300" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <path id="path1" d="M30.44,80.772C30.587,60.901 46.549,44.792 66.421,44.792L234.331,44.792C254.202,44.792 270.459,60.901 270.312,80.772L269.548,183.851C269.401,203.722 253.439,219.832 233.568,219.832L152.947,219.832L95.833,254.109C87.833,258.929 77.638,253.158 77.651,243.819L77.651,219.832L65.658,219.832C45.786,219.832 29.53,203.722 29.677,183.851L30.44,80.772Z" style="fill:rgb(10,122,255);"/>
+</svg>
