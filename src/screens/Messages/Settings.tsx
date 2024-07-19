@@ -107,7 +107,7 @@ export function MessagesSettingsScreen({}: Props) {
             a.rounded_md,
             t.atoms.bg_contrast_25,
           ]}>
-          <Text style={[t.atoms.text_contrast_high]}>
+          <Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
             <Trans>
               You can continue ongoing conversations regardless of which setting
               you choose.

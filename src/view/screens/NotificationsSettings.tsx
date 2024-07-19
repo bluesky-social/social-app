@@ -72,7 +72,7 @@ export function NotificationsSettingsScreen({}: Props) {
           <Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
             <Trans>
               Experimental: Filter your notifications. Currently this means
-              you'll only recieve notifications from users you follow — we'll
+              you'll only receive notifications from users you follow — we'll
               refine this over time.
             </Trans>
           </Text>
