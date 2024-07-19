@@ -82,18 +82,17 @@ export function useNotificationFeedQuery(opts?: {
         page = unreads.getCachedUnreadPage()
       }
       if (!page) {
-        page = (
-          await fetchPage({
-            agent,
-            limit: PAGE_SIZE,
-            cursor: pageParam,
-            queryClient,
-            moderationOpts,
-            fetchAdditionalData: true,
-            shouldUngroupFollowBacks: () => gate('ungroup_follow_backs'),
-            priority,
-          })
-        ).page
+        const {page: fetchedPage} = await fetchPage({
+          agent,
+          limit: PAGE_SIZE,
+          cursor: pageParam,
+          queryClient,
+          moderationOpts,
+          fetchAdditionalData: true,
+          shouldUngroupFollowBacks: () => gate('ungroup_follow_backs'),
+          priority,
+        })
+        page = fetchedPage
       }
 
       // if the first page has an unread, mark all read

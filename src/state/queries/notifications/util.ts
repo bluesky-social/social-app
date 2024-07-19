@@ -40,7 +40,10 @@ export async function fetchPage({
   fetchAdditionalData: boolean
   shouldUngroupFollowBacks?: () => boolean
   priority?: boolean
-}): Promise<{page: FeedPage; indexedAt: string | undefined}> {
+}): Promise<{
+  page: FeedPage
+  indexedAt: string | undefined
+}> {
   const res = await agent.listNotifications({
     limit,
     cursor,
@@ -90,6 +93,7 @@ export async function fetchPage({
       cursor: res.data.cursor,
       seenAt,
       items: notifsGrouped,
+      priority: res.data.priority ?? false,
     },
     indexedAt,
   }

@@ -1,27 +1,55 @@
 import React, {useCallback} from 'react'
-import {Alert, View} from 'react-native'
+import {View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
-import {AllNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
-import {CenteredView} from 'view/com/util/Views'
-import {useTheme} from '#/alf'
-import {atoms as a} from '#/alf'
+import {AllNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
+import {
+  RQKEY as RQKEY_NOTIFS,
+  useNotificationFeedQuery,
+} from '#/state/queries/notifications/feed'
+import {useAgent} from '#/state/session'
+import * as Toast from '#/view/com/util/Toast'
+import {ViewHeader} from '#/view/com/util/ViewHeader'
+import {CenteredView} from '#/view/com/util/Views'
+import {atoms as a, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
-import {ViewHeader} from '../com/util/ViewHeader'
 
 type Props = NativeStackScreenProps<AllNavigatorParams, 'NotificationsSettings'>
 export function NotificationsSettingsScreen({}: Props) {
+  const {data} = useNotificationFeedQuery()
+  const queryClient = useQueryClient()
+  const agent = useAgent()
+  const priority = data?.pages.at(0)?.priority
+
   const {_} = useLingui()
   const t = useTheme()
 
-  const onChangePriority = useCallback((keys: string[]) => {
-    const key = keys[0]
-    if (!key) return
-    Alert.alert('onChangePriority', key)
-  }, [])
+  const onChangePriority = useCallback(
+    async (keys: string[]) => {
+      const enabled = keys[0] === 'enabled'
+      try {
+        toggleCachedPriority(queryClient, enabled)
+        await agent.api.app.bsky.notification.putPreferences({
+          priority: enabled,
+        })
+      } catch (err) {
+        logger.error('Failed to save notification preferences', {message: err})
+        Toast.show(
+          _(msg`Failed to save notification preferences, please try again`),
+          'xmark',
+        )
+      } finally {
+        queryClient.invalidateQueries({queryKey: RQKEY_NOTIFS()})
+      }
+    },
+    [agent, queryClient, _],
+  )
 
   return (
     <CenteredView sideBorders style={a.h_full_vh}>
@@ -33,31 +61,23 @@ export function NotificationsSettingsScreen({}: Props) {
       <View style={[a.p_lg, a.gap_md]}>
         <Text style={[a.text_lg, a.font_bold]}>
           <FontAwesomeIcon icon="flask" style={t.atoms.text} />{' '}
-          <Trans>Priority notifications</Trans>
+          <Trans>Notification filters</Trans>
         </Text>
         <Toggle.Group
           label={_(msg`Priority notifications`)}
-          type="radio"
-          values={['disabled']}
-          onChange={onChangePriority}>
+          type="checkbox"
+          values={priority ? ['enabled'] : []}
+          onChange={onChangePriority}
+          disabled={typeof priority !== 'boolean'}>
           <View>
             <Toggle.Item
               name="enabled"
-              label={_(msg`Enabled`)}
+              label={_(msg`Enable priority notifications`)}
               style={[a.justify_between, a.py_sm]}>
               <Toggle.LabelText>
-                <Trans>Enabled</Trans>
+                <Trans>Enable priority notifications</Trans>
               </Toggle.LabelText>
-              <Toggle.Radio />
-            </Toggle.Item>
-            <Toggle.Item
-              name="disabled"
-              label={_(msg`Disabled`)}
-              style={[a.justify_between, a.py_sm]}>
-              <Toggle.LabelText>
-                <Trans>Disabled</Trans>
-              </Toggle.LabelText>
-              <Toggle.Radio />
+              {isWeb ? <Toggle.Checkbox /> : <Toggle.Switch />}
             </Toggle.Item>
           </View>
         </Toggle.Group>
@@ -80,4 +100,22 @@ export function NotificationsSettingsScreen({}: Props) {
       </View>
     </CenteredView>
   )
+}
+
+function toggleCachedPriority(
+  queryClient: ReturnType<typeof useQueryClient>,
+  enabled: boolean,
+) {
+  queryClient.setQueryData(RQKEY_NOTIFS(), (old: any) => {
+    if (!old) return old
+    return {
+      ...old,
+      pages: old.pages.map((page: any) => {
+        return {
+          ...page,
+          priority: enabled,
+        }
+      }),
+    }
+  })
 }
