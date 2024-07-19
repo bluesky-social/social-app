@@ -25,12 +25,17 @@ jobs:
 
       - name: ⬇️ Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 5
 
       - name: 🔧 Setup Node
         uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
           cache: yarn
+
+      - name: 🪛 Setup jq
+        uses: dcarbone/install-jq-action@v2
 
       - name: 🔨 Setup EAS
         uses: expo/expo-github-action@v8
@@ -57,6 +62,8 @@ jobs:
         run: |
           export json='${{ secrets.GOOGLE_SERVICES_TOKEN }}'
           echo "${{ secrets.ENV_TOKEN }}" > .env
+          echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$(git rev-parse --short HEAD)" >> .env
+          echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")" >> .env
           echo "$json" > google-services.json
 
       - name: 🏗️ EAS Build
@@ -92,13 +99,17 @@ jobs:
           name: build-${{ steps.timestamp.outputs.time }}.apk
           path: build.apk
 
+      - name: 📚 Get version from package.json
+        id: get-build-info
+        run: bash scripts/setGitHubOutput.sh
+
       - name: 🔔 Notify Slack of Production Build
         if: ${{ inputs.profile == 'production' }}
         uses: slackapi/slack-github-action@v1.25.0
         with:
           payload: |
             {
-              "text": "Android build is ready for submission. This is a production build! Download the artifact here: ${{ steps.upload-artifact-production.outputs.artifact-url }}"
+              "text": "Android production build for Google Play Store submission is ready!\n```Artifact: ${{ steps.upload-artifact-production.outputs.artifact-url }}\nVersion Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}```"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
@@ -115,3 +126,41 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+      - name: 🏗️ Build Production APK
+        if: ${{ inputs.profile == 'production' }}
+        run: yarn use-build-number-with-bump eas build -p android --profile production-apk --local --output build.apk --non-interactive
+
+      - name: 🚀 Upload Production APK Artifact
+        id: upload-artifact-production-apk
+        if: ${{ inputs.profile == 'production' }}
+        uses: actions/upload-artifact@v4
+        with:
+          retention-days: 30
+          compression-level: 6
+          name: build-${{ steps.timestamp.outputs.time }}.apk
+          path: build.apk
+
+      - name: 🔔 Notify Slack of Production APK Build
+        if: ${{ inputs.profile == 'production' }}
+        uses: slackapi/slack-github-action@v1.25.0
+        with:
+          payload: |
+            {
+              "text": "Android production build for GitHub/Obtanium is ready!\n```Artifact: ${{ steps.upload-artifact-production-apk.outputs.artifact-url }}\nVersion Number: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}\nBuild Number: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}```"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+      - name: ⬇️ Restore Cache
+        id: get-base-commit
+        uses: actions/cache@v4
+        if: ${{ inputs.profile == 'testflight' }}
+        with:
+          path: most-recent-testflight-commit.txt
+          key: most-recent-testflight-commit
+
+      - name: ✏️ Write commit hash to cache
+        if: ${{ inputs.profile == 'testflight' }}
+        run: echo ${{ github.sha }} > most-recent-testflight-commit.txt

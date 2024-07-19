@@ -26,7 +26,7 @@ jobs:
       group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}-deploy
       cancel-in-progress: true
     outputs:
-      fingerprint-is-different: ${{ steps.fingerprint-debug.outputs.fingerprint-is-different }}
+      changes-detected: ${{ steps.fingerprint.outputs.includes-changes }}
 
     steps:
       - name: Check for EXPO_TOKEN
@@ -49,37 +49,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: ⬇️ Get last successful deployment commit from the cache
-        id: get-base-commit
-        uses: actions/cache@v4
-        with:
-          path: last-successful-commit-hash.txt
-          key: last-successful-deployment-commit-${{ github.ref_name }}
-
-      - name: Add the last successful deployment commit to the output
-        id: last-successful-commit
-        run: echo base-commit=$(cat last-successful-commit-hash.txt) >> "$GITHUB_OUTPUT"
-
       - name: ⬇️ Fetch commits from base branch
         if: ${{ github.ref != 'refs/heads/main' }}
         run: git fetch origin main:main --depth 100
-
-      # This should get the current production release's commit's hash to see if the update is compatible
-      - name: 🕵️ Get the base commit
-        id: base-commit
-        run: |
-          if [ -z "${{ inputs.channel == 'production' }}" ]; then
-            echo base-commit=$(git show-ref -s ${{ inputs.runtimeVersion }}) >> "$GITHUB_OUTPUT"
-          else
-            echo base-commit=${{ steps.last-successful-commit.base-commit }} >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: ✓ Make sure we found a base commit
-        run: |
-          if [ -z "${{ steps.base-commit.outputs.base-commit }}" && ${{ inputs.channel == 'production' }} ]; then
-            echo "Could not find a base commit for this release. Exiting."
-            exit 1
-          fi
 
       - name: 🔧 Setup Node
         uses: actions/setup-node@v4
@@ -87,29 +59,12 @@ jobs:
           node-version-file: .nvmrc
           cache: yarn
 
-      - name: ⚙️ Install Dependencies
-        run: yarn install
-
-      # Run the fingerprint
-      - name: 📷 Check fingerprint
+      - name: 📷 Check fingerprint and install dependencies
         id: fingerprint
-        uses: expo/expo-github-action/fingerprint@main
+        uses: bluesky-social/github-actions/fingerprint-native@main
         with:
-          previous-git-commit: ${{ steps.base-commit.outputs.base-commit }}
-
-      - name: 👀 Debug fingerprint
-        id: fingerprint-debug
-        run: |
-          echo "previousGitCommit=${{ steps.fingerprint.outputs.previous-git-commit }} currentGitCommit=${{ steps.fingerprint.outputs.current-git-commit }}"
-          echo "isPreviousFingerprintEmpty=${{ steps.fingerprint.outputs.previous-fingerprint == '' }}"
-          
-          fingerprintDiff='$(echo "${{ steps.fingerprint.outputs.fingerprint-diff }}")'
-          
-          if [[ $fingerprintDiff =~ "bareRncliAutolinking" || $fingerprintDiff =~ "expoAutolinkingAndroid" || $fingerprintDiff =~ "expoAutolinkingIos" ]]; then
-            echo fingerprint-is-different="true" >> "$GITHUB_OUTPUT"
-          else
-            echo fingerprint-is-different="false" >> "$GITHUB_OUTPUT"
-          fi
+          profile: ${{ inputs.channel || 'testflight' }}
+          previous-commit-tag: ${{ inputs.runtimeVersion }}
 
       - name: Lint check
         run: yarn lint
@@ -125,41 +80,52 @@ jobs:
 
       - name: 🔨 Setup EAS
         uses: expo/expo-github-action@v8
-        if: ${{ steps.fingerprint-debug.outputs.fingerprint-is-different == 'false'}}
+        if: ${{ !steps.fingerprint.outputs.includes-changes }}
         with:
           expo-version: latest
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: ⛏️ Setup Expo
-        if: ${{ steps.fingerprint-debug.outputs.fingerprint-is-different == 'false'}}
+        if: ${{ !steps.fingerprint.outputs.includes-changes }}
         run: yarn global add eas-cli-local-build-plugin
 
       - name: 🪛 Setup jq
-        if: ${{ steps.fingerprint-debug.outputs.fingerprint-is-different == 'false'}}
+        if: ${{ !steps.fingerprint.outputs.includes-changes }}
         uses: dcarbone/install-jq-action@v2
 
       - name: ✏️ Write environment variables
-        if: ${{ steps.fingerprint-debug.outputs.fingerprint-is-different == 'false'}}
+        if: ${{ !steps.fingerprint.outputs.includes-changes }}
         run: |
           export json='${{ secrets.GOOGLE_SERVICES_TOKEN }}'
           echo "${{ secrets.ENV_TOKEN }}" > .env
+          echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$(git rev-parse --short HEAD)" >> .env
+          echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")" >> .env
           echo "$json" > google-services.json
 
       - name: 🏗️ Create Bundle
-        if: ${{ steps.fingerprint-debug.outputs.fingerprint-is-different == 'false'}}
+        if: ${{ !steps.fingerprint.outputs.includes-changes }}
         run: EXPO_PUBLIC_ENV="${{ inputs.channel || 'testflight' }}" yarn export
 
       - name: 📦 Package Bundle and 🚀 Deploy
-        if: ${{ steps.fingerprint-debug.outputs.fingerprint-is-different == 'false'}}
+        if: ${{ !steps.fingerprint.outputs.includes-changes }}
         run: yarn use-build-number bash scripts/bundleUpdate.sh
         env:
           DENIS_API_KEY: ${{ secrets.DENIS_API_KEY }}
           RUNTIME_VERSION: ${{ inputs.runtimeVersion }}
           CHANNEL_NAME: ${{ inputs.channel || 'testflight' }}
 
-      - name: Save successful deployment commit hash
-        run: echo ${{ steps.fingerprint.outputs.current-git-commit }} > last-successful-commit-hash.txt
+      - name: ⬇️ Restore Cache
+        id: get-base-commit
+        uses: actions/cache@v4
+        if: ${{ !steps.fingerprint.outputs.includes-changes }}
+        with:
+          path: most-recent-testflight-commit.txt
+          key: most-recent-testflight-commit
+
+      - name: ✏️ Write commit hash to cache
+        if: ${{ !steps.fingerprint.outputs.includes-changes }}
+        run: echo ${{ github.sha }} > most-recent-testflight-commit.txt
 
   # GitHub actions are horrible so let's just copy paste this in
   buildIfNecessaryIOS:
@@ -167,11 +133,11 @@ jobs:
     runs-on: macos-14
     concurrency:
       group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}-build-ios
-      cancel-in-progress: false
+      cancel-in-progress: true
     needs: [bundleDeploy]
     # Gotta check if its NOT '[]' because any md5 hash in the outputs is detected as a possible secret and won't be
     # available here
-    if: ${{ inputs.channel != 'production' && needs.bundleDeploy.outputs.fingerprint-is-different == 'true' }}
+    if: ${{ inputs.channel != 'production' && needs.bundleDeploy.outputs.changes-detected }}
     steps:
       - name: Check for EXPO_TOKEN
         run: >
@@ -182,6 +148,8 @@ jobs:
 
       - name: ⬇️ Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 5
 
       - name: 🔧 Setup Node
         uses: actions/setup-node@v4
@@ -201,6 +169,10 @@ jobs:
 
       - name: ⚙️ Install dependencies
         run: yarn install
+
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '15.3'
 
       - name: ☕️ Setup Cocoapods
         uses: maxim-lobanov/setup-cocoapods@v1
@@ -222,6 +194,8 @@ jobs:
       - name: ✏️ Write environment variables
         run: |
           echo "${{ secrets.ENV_TOKEN }}" > .env
+          echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$(git rev-parse --short HEAD)" >> .env
+          echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")" >> .env
           echo "${{ secrets.GOOGLE_SERVICES_TOKEN }}" > google-services.json
 
       - name: 🏗️ EAS Build
@@ -229,6 +203,18 @@ jobs:
 
       - name: 🚀 Deploy
         run: eas submit -p ios --non-interactive --path build.ipa
+
+      - name: ⬇️ Restore Cache
+        id: get-base-commit
+        uses: actions/cache@v4
+        if: ${{ inputs.channel == 'testflight' }}
+        with:
+          path: most-recent-testflight-commit.txt
+          key: most-recent-testflight-commit
+
+      - name: ✏️ Write commit hash to cache
+        if: ${{ inputs.channel == 'testflight' }}
+        run: echo ${{ github.sha }} > most-recent-testflight-commit.txt
 
   buildIfNecessaryAndroid:
     name: Build and Submit Android
@@ -239,7 +225,7 @@ jobs:
     needs: [ bundleDeploy ]
     # Gotta check if its NOT '[]' because any md5 hash in the outputs is detected as a possible secret and won't be
     # available here
-    if: ${{ inputs.channel != 'production' && needs.bundleDeploy.outputs.fingerprint-is-different == 'true' }}
+    if: ${{ inputs.channel != 'production' && needs.bundleDeploy.outputs.changes-detected }}
 
     steps:
       - name: Check for EXPO_TOKEN
@@ -251,6 +237,8 @@ jobs:
 
       - name: ⬇️ Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 5
 
       - name: 🔧 Setup Node
         uses: actions/setup-node@v4
@@ -283,6 +271,8 @@ jobs:
         run: |
           export json='${{ secrets.GOOGLE_SERVICES_TOKEN }}'
           echo "${{ secrets.ENV_TOKEN }}" > .env
+          echo "EXPO_PUBLIC_BUNDLE_IDENTIFIER=$(git rev-parse --short HEAD)" >> .env
+          echo "EXPO_PUBLIC_BUNDLE_DATE=$(date -u +"%y%m%d%H")" >> .env
           echo "$json" > google-services.json
 
       - name: 🏗️ EAS Build
@@ -313,3 +303,15 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+      - name: ⬇️ Restore Cache
+        id: get-base-commit
+        uses: actions/cache@v4
+        if: ${{ inputs.channel != 'testflight' && inputs.channel != 'production' }}
+        with:
+          path: most-recent-testflight-commit.txt
+          key: most-recent-testflight-commit
+
+      - name: ✏️ Write commit hash to cache
+        if: ${{ inputs.channel != 'testflight' && inputs.channel != 'production' }}
+        run: echo ${{ github.sha }} > most-recent-testflight-commit.txt

@@ -1,7 +1,9 @@
 import React from 'react'
 import {View} from 'react-native'
+import {useNavigation} from '@react-navigation/native'
 
 import {useDialogStateControlContext} from '#/state/dialogs'
+import {NavigationProp} from 'lib/routes/types'
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -14,6 +16,44 @@ export function Dialogs() {
   const prompt = Prompt.usePromptControl()
   const testDialog = Dialog.useDialogControl()
   const {closeAllDialogs} = useDialogStateControlContext()
+  const unmountTestDialog = Dialog.useDialogControl()
+  const [shouldRenderUnmountTest, setShouldRenderUnmountTest] =
+    React.useState(false)
+  const unmountTestInterval = React.useRef<number>()
+  const navigation = useNavigation<NavigationProp>()
+
+  const onUnmountTestStartPressWithClose = () => {
+    setShouldRenderUnmountTest(true)
+
+    setTimeout(() => {
+      unmountTestDialog.open()
+    }, 1000)
+
+    setTimeout(() => {
+      unmountTestDialog.close()
+    }, 4950)
+
+    setInterval(() => {
+      setShouldRenderUnmountTest(prev => !prev)
+    }, 5000)
+  }
+
+  const onUnmountTestStartPressWithoutClose = () => {
+    setShouldRenderUnmountTest(true)
+
+    setTimeout(() => {
+      unmountTestDialog.open()
+    }, 1000)
+
+    setInterval(() => {
+      setShouldRenderUnmountTest(prev => !prev)
+    }, 5000)
+  }
+
+  const onUnmountTestEndPress = () => {
+    setShouldRenderUnmountTest(false)
+    clearInterval(unmountTestInterval.current)
+  }
 
   return (
     <View style={[a.gap_md]}>
@@ -68,6 +108,43 @@ export function Dialogs() {
         onPress={testDialog.open}
         label="one">
         <ButtonText>Open Tester</ButtonText>
+      </Button>
+
+      <Button
+        variant="solid"
+        color="primary"
+        size="small"
+        onPress={onUnmountTestStartPressWithClose}
+        label="two">
+        <ButtonText>Start Unmount Test With `.close()` call</ButtonText>
+      </Button>
+
+      <Button
+        variant="solid"
+        color="primary"
+        size="small"
+        onPress={onUnmountTestStartPressWithoutClose}
+        label="two">
+        <ButtonText>Start Unmount Test Without `.close()` call</ButtonText>
+      </Button>
+
+      <Button
+        variant="solid"
+        color="primary"
+        size="small"
+        onPress={onUnmountTestEndPress}
+        label="two">
+        <ButtonText>End Unmount Test</ButtonText>
+      </Button>
+
+      <Button
+        variant="solid"
+        color="primary"
+        size="small"
+        onPress={() => navigation.navigate('SharedPreferencesTester')}
+        label="two"
+        testID="sharedPrefsTestOpenBtn">
+        <ButtonText>Open Shared Prefs Tester</ButtonText>
       </Button>
 
       <Prompt.Outer control={prompt}>
@@ -257,6 +334,17 @@ export function Dialogs() {
           </View>
         </Dialog.ScrollableInner>
       </Dialog.Outer>
+
+      {shouldRenderUnmountTest && (
+        <Dialog.Outer control={unmountTestDialog}>
+          <Dialog.Handle />
+
+          <Dialog.Inner label="test">
+            <H3 nativeID="dialog-title">Unmount Test Dialog</H3>
+            <P nativeID="dialog-description">Will unmount in about 5 seconds</P>
+          </Dialog.Inner>
+        </Dialog.Outer>
+      )}
     </View>
   )
 }

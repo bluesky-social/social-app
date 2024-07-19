@@ -1,12 +1,16 @@
 import React from 'react'
 import {
   ActivityIndicator,
+  Image,
+  ImageStyle,
   Platform,
   Pressable,
+  StyleProp,
   StyleSheet,
   TextInput,
   View,
 } from 'react-native'
+import {ScrollView as RNGHScrollView} from 'react-native-gesture-handler'
 import {AppBskyActorDefs, AppBskyFeedDefs, moderateProfile} from '@atproto/api'
 import {
   FontAwesomeIcon,
@@ -18,23 +22,25 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
+import {createHitslop} from '#/lib/constants'
 import {HITSLOP_10} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {MagnifyingGlassIcon} from '#/lib/icons'
+import {makeProfileLink} from '#/lib/routes/links'
 import {NavigationProp} from '#/lib/routes/types'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
-import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
-import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {useActorSearch} from '#/state/queries/actor-search'
-import {useModerationOpts} from '#/state/queries/preferences'
+import {usePopularFeedsSearch} from '#/state/queries/feed'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
-import {useSuggestedFollowsQuery} from '#/state/queries/suggested-follows'
 import {useSession} from '#/state/session'
 import {useSetDrawerOpen} from '#/state/shell'
 import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
+import {useNonReactiveCallback} from 'lib/hooks/useNonReactiveCallback'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {
   NativeStackScreenProps,
@@ -45,16 +51,15 @@ import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
 import {Post} from '#/view/com/post/Post'
 import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
+import {Link} from '#/view/com/util/Link'
 import {List} from '#/view/com/util/List'
 import {Text} from '#/view/com/util/text/Text'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
-import {
-  MATCH_HANDLE,
-  SearchLinkCard,
-  SearchProfileCard,
-} from '#/view/shell/desktop/Search'
-import {ProfileCardFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
-import {atoms as a} from '#/alf'
+import {Explore} from '#/view/screens/Search/Explore'
+import {SearchLinkCard, SearchProfileCard} from '#/view/shell/desktop/Search'
+import {atoms as a, useTheme as useThemeNew} from '#/alf'
+import * as FeedCard from '#/components/FeedCard'
+import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 
 function Loader() {
   const pal = usePalette('default')
@@ -117,69 +122,6 @@ function EmptyState({message, error}: {message: string; error?: string}) {
   )
 }
 
-function useSuggestedFollows(): [
-  AppBskyActorDefs.ProfileViewBasic[],
-  () => void,
-] {
-  const {
-    data: suggestions,
-    hasNextPage,
-    isFetchingNextPage,
-    isError,
-    fetchNextPage,
-  } = useSuggestedFollowsQuery()
-
-  const onEndReached = React.useCallback(async () => {
-    if (isFetchingNextPage || !hasNextPage || isError) return
-    try {
-      await fetchNextPage()
-    } catch (err) {
-      logger.error('Failed to load more suggested follows', {message: err})
-    }
-  }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
-
-  const items: AppBskyActorDefs.ProfileViewBasic[] = []
-  if (suggestions) {
-    // Currently the responses contain duplicate items.
-    // Needs to be fixed on backend, but let's dedupe to be safe.
-    let seen = new Set()
-    for (const page of suggestions.pages) {
-      for (const actor of page.actors) {
-        if (!seen.has(actor.did)) {
-          seen.add(actor.did)
-          items.push(actor)
-        }
-      }
-    }
-  }
-  return [items, onEndReached]
-}
-
-function SearchScreenSuggestedFollows() {
-  const pal = usePalette('default')
-  const [suggestions, onEndReached] = useSuggestedFollows()
-
-  return suggestions.length ? (
-    <List
-      data={suggestions}
-      renderItem={({item}) => <ProfileCardWithFollowBtn profile={item} noBg />}
-      keyExtractor={item => item.did}
-      // @ts-ignore web only -prf
-      desktopFixedHeight
-      contentContainerStyle={{paddingBottom: 200}}
-      keyboardShouldPersistTaps="handled"
-      keyboardDismissMode="on-drag"
-      onEndReached={onEndReached}
-      onEndReachedThreshold={2}
-    />
-  ) : (
-    <CenteredView sideBorders style={[pal.border, s.hContentRegion]}>
-      <ProfileCardFeedLoadingPlaceholder />
-      <ProfileCardFeedLoadingPlaceholder />
-    </CenteredView>
-  )
-}
-
 type SearchResultSlice =
   | {
       type: 'post'
@@ -191,7 +133,7 @@ type SearchResultSlice =
       key: string
     }
 
-function SearchScreenPostResults({
+let SearchScreenPostResults = ({
   query,
   sort,
   active,
@@ -199,7 +141,7 @@ function SearchScreenPostResults({
   query: string
   sort?: 'top' | 'latest'
   active: boolean
-}) {
+}): React.ReactNode => {
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const [isPTR, setIsPTR] = React.useState(false)
@@ -297,18 +239,19 @@ function SearchScreenPostResults({
     </>
   )
 }
+SearchScreenPostResults = React.memo(SearchScreenPostResults)
 
-function SearchScreenUserResults({
+let SearchScreenUserResults = ({
   query,
   active,
 }: {
   query: string
   active: boolean
-}) {
+}): React.ReactNode => {
   const {_} = useLingui()
 
   const {data: results, isFetched} = useActorSearch({
-    query,
+    query: query,
     enabled: active,
   })
 
@@ -333,8 +276,55 @@ function SearchScreenUserResults({
     <Loader />
   )
 }
+SearchScreenUserResults = React.memo(SearchScreenUserResults)
 
-export function SearchScreenInner({query}: {query?: string}) {
+let SearchScreenFeedsResults = ({
+  query,
+  active,
+}: {
+  query: string
+  active: boolean
+}): React.ReactNode => {
+  const t = useThemeNew()
+  const {_} = useLingui()
+
+  const {data: results, isFetched} = usePopularFeedsSearch({
+    query,
+    enabled: active,
+  })
+
+  return isFetched && results ? (
+    <>
+      {results.length ? (
+        <List
+          data={results}
+          renderItem={({item}) => (
+            <View
+              style={[
+                a.border_b,
+                t.atoms.border_contrast_low,
+                a.px_lg,
+                a.py_lg,
+              ]}>
+              <FeedCard.Default view={item} />
+            </View>
+          )}
+          keyExtractor={item => item.uri}
+          // @ts-ignore web only -prf
+          desktopFixedHeight
+          contentContainerStyle={{paddingBottom: 100}}
+        />
+      ) : (
+        <EmptyState message={_(msg`No results found for ${query}`)} />
+      )}
+    </>
+  ) : (
+    <Loader />
+  )
+}
+SearchScreenFeedsResults = React.memo(SearchScreenFeedsResults)
+
+let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
@@ -381,6 +371,12 @@ export function SearchScreenInner({query}: {query?: string}) {
           <SearchScreenUserResults query={query} active={activeTab === 2} />
         ),
       },
+      {
+        title: _(msg`Feeds`),
+        component: (
+          <SearchScreenFeedsResults query={query} active={activeTab === 3} />
+        ),
+      },
     ]
   }, [_, query, activeTab])
 
@@ -400,26 +396,7 @@ export function SearchScreenInner({query}: {query?: string}) {
       ))}
     </Pager>
   ) : hasSession ? (
-    <View>
-      <CenteredView sideBorders style={pal.border}>
-        <Text
-          type="title"
-          style={[
-            pal.text,
-            pal.border,
-            {
-              display: 'flex',
-              paddingVertical: 12,
-              paddingHorizontal: 18,
-              fontWeight: 'bold',
-            },
-          ]}>
-          <Trans>Suggested Follows</Trans>
-        </Text>
-      </CenteredView>
-
-      <SearchScreenSuggestedFollows />
-    </View>
+    <Explore />
   ) : (
     <CenteredView sideBorders style={pal.border}>
       <View
@@ -466,55 +443,39 @@ export function SearchScreenInner({query}: {query?: string}) {
     </CenteredView>
   )
 }
+SearchScreenInner = React.memo(SearchScreenInner)
 
 export function SearchScreen(
   props: NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>,
 ) {
   const navigation = useNavigation<NavigationProp>()
-  const theme = useTheme()
   const textInput = React.useRef<TextInput>(null)
   const {_} = useLingui()
   const pal = usePalette('default')
   const {track} = useAnalytics()
   const setDrawerOpen = useSetDrawerOpen()
-  const moderationOpts = useModerationOpts()
-  const search = useActorAutocompleteFn()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {isTabletOrDesktop, isTabletOrMobile} = useWebMediaQueries()
 
-  const searchDebounceTimeout = React.useRef<NodeJS.Timeout | undefined>(
-    undefined,
-  )
-  const [isFetching, setIsFetching] = React.useState<boolean>(false)
-  const [query, setQuery] = React.useState<string>(props.route?.params?.q || '')
-  const [searchResults, setSearchResults] = React.useState<
+  // Query terms
+  const queryParam = props.route?.params?.q ?? ''
+  const [searchText, setSearchText] = React.useState<string>(queryParam)
+  const {data: autocompleteData, isFetching: isAutocompleteFetching} =
+    useActorAutocompleteQuery(searchText, true)
+
+  const [showAutocomplete, setShowAutocomplete] = React.useState(false)
+  const [searchHistory, setSearchHistory] = React.useState<string[]>([])
+  const [selectedProfiles, setSelectedProfiles] = React.useState<
     AppBskyActorDefs.ProfileViewBasic[]
   >([])
-  const [inputIsFocused, setInputIsFocused] = React.useState(false)
-  const [showAutocompleteResults, setShowAutocompleteResults] =
-    React.useState(false)
-  const [searchHistory, setSearchHistory] = React.useState<string[]>([])
 
-  /**
-   * The Search screen's `q` param
-   */
-  const queryParam = props.route?.params?.q
-
-  /**
-   * If `true`, this means we received new instructions from the router. This
-   * is handled in a effect, and used to update the value of `query` locally
-   * within this screen.
-   */
-  const routeParamsMismatch = queryParam && queryParam !== query
-
-  React.useEffect(() => {
-    if (queryParam && routeParamsMismatch) {
-      // reset immediately and let local state take over
-      navigation.setParams({q: ''})
-      // update query for next search
-      setQuery(queryParam)
-    }
-  }, [queryParam, routeParamsMismatch, navigation])
+  useFocusEffect(
+    useNonReactiveCallback(() => {
+      if (isWeb) {
+        setSearchText(queryParam)
+      }
+    }),
+  )
 
   React.useEffect(() => {
     const loadSearchHistory = async () => {
@@ -522,6 +483,10 @@ export function SearchScreen(
         const history = await AsyncStorage.getItem('searchHistory')
         if (history !== null) {
           setSearchHistory(JSON.parse(history))
+        }
+        const profiles = await AsyncStorage.getItem('selectedProfiles')
+        if (profiles !== null) {
+          setSelectedProfiles(JSON.parse(profiles))
         }
       } catch (e: any) {
         logger.error('Failed to load search history', {message: e})
@@ -536,60 +501,32 @@ export function SearchScreen(
     setDrawerOpen(true)
   }, [track, setDrawerOpen])
 
+  const onPressClearQuery = React.useCallback(() => {
+    scrollToTopWeb()
+    setSearchText('')
+    textInput.current?.focus()
+  }, [])
+
   const onPressCancelSearch = React.useCallback(() => {
     scrollToTopWeb()
     textInput.current?.blur()
-    setQuery('')
-    setShowAutocompleteResults(false)
-    if (searchDebounceTimeout.current)
-      clearTimeout(searchDebounceTimeout.current)
-  }, [textInput])
+    setShowAutocomplete(false)
+    setSearchText(queryParam)
+  }, [queryParam])
 
-  const onPressClearQuery = React.useCallback(() => {
+  const onChangeText = React.useCallback(async (text: string) => {
     scrollToTopWeb()
-    setQuery('')
-    setShowAutocompleteResults(false)
-  }, [setQuery])
-
-  const onChangeText = React.useCallback(
-    async (text: string) => {
-      scrollToTopWeb()
-
-      setQuery(text)
-
-      if (text.length > 0) {
-        setIsFetching(true)
-        setShowAutocompleteResults(true)
-
-        if (searchDebounceTimeout.current) {
-          clearTimeout(searchDebounceTimeout.current)
-        }
-
-        searchDebounceTimeout.current = setTimeout(async () => {
-          const results = await search({query: text, limit: 30})
-
-          if (results) {
-            setSearchResults(results)
-            setIsFetching(false)
-          }
-        }, 300)
-      } else {
-        if (searchDebounceTimeout.current) {
-          clearTimeout(searchDebounceTimeout.current)
-        }
-        setSearchResults([])
-        setIsFetching(false)
-        setShowAutocompleteResults(false)
-      }
-    },
-    [setQuery, search, setSearchResults],
-  )
+    setSearchText(text)
+  }, [])
 
   const updateSearchHistory = React.useCallback(
     async (newQuery: string) => {
       newQuery = newQuery.trim()
-      if (newQuery && !searchHistory.includes(newQuery)) {
-        let newHistory = [newQuery, ...searchHistory]
+      if (newQuery) {
+        let newHistory = [
+          newQuery,
+          ...searchHistory.filter(q => q !== newQuery),
+        ]
 
         if (newHistory.length > 5) {
           newHistory = newHistory.slice(0, 5)
@@ -609,21 +546,85 @@ export function SearchScreen(
     [searchHistory, setSearchHistory],
   )
 
+  const updateSelectedProfiles = React.useCallback(
+    async (profile: AppBskyActorDefs.ProfileViewBasic) => {
+      let newProfiles = [
+        profile,
+        ...selectedProfiles.filter(p => p.did !== profile.did),
+      ]
+
+      if (newProfiles.length > 5) {
+        newProfiles = newProfiles.slice(0, 5)
+      }
+
+      setSelectedProfiles(newProfiles)
+      try {
+        await AsyncStorage.setItem(
+          'selectedProfiles',
+          JSON.stringify(newProfiles),
+        )
+      } catch (e: any) {
+        logger.error('Failed to save selected profiles', {message: e})
+      }
+    },
+    [selectedProfiles, setSelectedProfiles],
+  )
+
+  const navigateToItem = React.useCallback(
+    (item: string) => {
+      scrollToTopWeb()
+      setShowAutocomplete(false)
+      updateSearchHistory(item)
+
+      if (isWeb) {
+        navigation.push('Search', {q: item})
+      } else {
+        textInput.current?.blur()
+        navigation.setParams({q: item})
+      }
+    },
+    [updateSearchHistory, navigation],
+  )
+
   const onSubmit = React.useCallback(() => {
-    scrollToTopWeb()
-    setShowAutocompleteResults(false)
-    updateSearchHistory(query)
-  }, [query, setShowAutocompleteResults, updateSearchHistory])
+    navigateToItem(searchText)
+  }, [navigateToItem, searchText])
+
+  const onAutocompleteResultPress = React.useCallback(() => {
+    if (isWeb) {
+      setShowAutocomplete(false)
+    } else {
+      textInput.current?.blur()
+    }
+  }, [])
+
+  const handleHistoryItemClick = React.useCallback(
+    (item: string) => {
+      setSearchText(item)
+      navigateToItem(item)
+    },
+    [navigateToItem],
+  )
+
+  const handleProfileClick = React.useCallback(
+    (profile: AppBskyActorDefs.ProfileViewBasic) => {
+      // Slight delay to avoid updating during push nav animation.
+      setTimeout(() => {
+        updateSelectedProfiles(profile)
+      }, 400)
+    },
+    [updateSelectedProfiles],
+  )
 
   const onSoftReset = React.useCallback(() => {
-    scrollToTopWeb()
-    onPressCancelSearch()
-  }, [onPressCancelSearch])
-
-  const queryMaybeHandle = React.useMemo(() => {
-    const match = MATCH_HANDLE.exec(query)
-    return match && match[1]
-  }, [query])
+    if (isWeb) {
+      // Empty params resets the URL to be /search rather than /search?q=
+      navigation.replace('Search', {})
+    } else {
+      setSearchText('')
+      navigation.setParams({q: ''})
+    }
+  }, [navigation])
 
   useFocusEffect(
     React.useCallback(() => {
@@ -632,20 +633,35 @@ export function SearchScreen(
     }, [onSoftReset, setMinimalShellMode]),
   )
 
-  const handleHistoryItemClick = (item: React.SetStateAction<string>) => {
-    setQuery(item)
-    onSubmit()
-  }
-
-  const handleRemoveHistoryItem = (itemToRemove: string) => {
-    const updatedHistory = searchHistory.filter(item => item !== itemToRemove)
-    setSearchHistory(updatedHistory)
-    AsyncStorage.setItem('searchHistory', JSON.stringify(updatedHistory)).catch(
-      e => {
+  const handleRemoveHistoryItem = React.useCallback(
+    (itemToRemove: string) => {
+      const updatedHistory = searchHistory.filter(item => item !== itemToRemove)
+      setSearchHistory(updatedHistory)
+      AsyncStorage.setItem(
+        'searchHistory',
+        JSON.stringify(updatedHistory),
+      ).catch(e => {
         logger.error('Failed to update search history', {message: e})
-      },
-    )
-  }
+      })
+    },
+    [searchHistory],
+  )
+
+  const handleRemoveProfile = React.useCallback(
+    (profileToRemove: AppBskyActorDefs.ProfileViewBasic) => {
+      const updatedProfiles = selectedProfiles.filter(
+        profile => profile.did !== profileToRemove.did,
+      )
+      setSelectedProfiles(updatedProfiles)
+      AsyncStorage.setItem(
+        'selectedProfiles',
+        JSON.stringify(updatedProfiles),
+      ).catch(e => {
+        logger.error('Failed to update selected profiles', {message: e})
+      })
+    },
+    [selectedProfiles],
+  )
 
   return (
     <View style={isWeb ? null : {flex: 1}}>
@@ -666,172 +682,348 @@ export function SearchScreen(
             accessibilityRole="button"
             accessibilityLabel={_(msg`Menu`)}
             accessibilityHint={_(msg`Access navigation links and settings`)}>
-            <FontAwesomeIcon
-              icon="bars"
-              size={18}
-              color={pal.colors.textLight}
-            />
+            <Menu size="lg" fill={pal.colors.textLight} />
           </Pressable>
         )}
-
-        <View
-          style={[
-            {backgroundColor: pal.colors.backgroundLight},
-            styles.headerSearchContainer,
-          ]}>
-          <MagnifyingGlassIcon
-            style={[pal.icon, styles.headerSearchIcon]}
-            size={21}
-          />
-          <TextInput
-            testID="searchTextInput"
-            ref={textInput}
-            placeholder={_(msg`Search`)}
-            placeholderTextColor={pal.colors.textLight}
-            selectTextOnFocus
-            returnKeyType="search"
-            value={query}
-            style={[pal.text, styles.headerSearchInput]}
-            keyboardAppearance={theme.colorScheme}
-            onFocus={() => setInputIsFocused(true)}
-            onBlur={() => {
-              // HACK
-              // give 100ms to not stop click handlers in the search history
-              // -prf
-              setTimeout(() => setInputIsFocused(false), 100)
-            }}
-            onChangeText={onChangeText}
-            onSubmitEditing={onSubmit}
-            autoFocus={false}
-            accessibilityRole="search"
-            accessibilityLabel={_(msg`Search`)}
-            accessibilityHint=""
-            autoCorrect={false}
-            autoComplete="off"
-            autoCapitalize="none"
-          />
-          {query ? (
-            <Pressable
-              testID="searchTextInputClearBtn"
-              onPress={onPressClearQuery}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Clear search query`)}
-              accessibilityHint=""
-              hitSlop={HITSLOP_10}>
-              <FontAwesomeIcon
-                icon="xmark"
-                size={16}
-                style={pal.textLight as FontAwesomeIconStyle}
-              />
-            </Pressable>
-          ) : undefined}
-        </View>
-
-        {query || inputIsFocused ? (
-          <View style={styles.headerCancelBtn}>
+        <SearchInputBox
+          textInput={textInput}
+          searchText={searchText}
+          showAutocomplete={showAutocomplete}
+          setShowAutocomplete={setShowAutocomplete}
+          onChangeText={onChangeText}
+          onSubmit={onSubmit}
+          onPressClearQuery={onPressClearQuery}
+        />
+        {showAutocomplete && (
+          <View style={[styles.headerCancelBtn]}>
             <Pressable
               onPress={onPressCancelSearch}
               accessibilityRole="button"
               hitSlop={HITSLOP_10}>
-              <Text style={[pal.text]}>
+              <Text style={pal.text}>
                 <Trans>Cancel</Trans>
               </Text>
             </Pressable>
           </View>
-        ) : undefined}
+        )}
       </CenteredView>
-
-      {showAutocompleteResults ? (
-        <>
-          {isFetching || !moderationOpts ? (
-            <Loader />
-          ) : (
-            <ScrollView
-              style={{height: '100%'}}
-              // @ts-ignore web only -prf
-              dataSet={{stableGutters: '1'}}
-              keyboardShouldPersistTaps="handled"
-              keyboardDismissMode="on-drag">
-              <SearchLinkCard
-                label={_(msg`Search for "${query}"`)}
-                onPress={isNative ? onSubmit : undefined}
-                to={
-                  isNative
-                    ? undefined
-                    : `/search?q=${encodeURIComponent(query)}`
-                }
-                style={{borderBottomWidth: 1}}
-              />
-
-              {queryMaybeHandle ? (
-                <SearchLinkCard
-                  label={_(msg`Go to @${queryMaybeHandle}`)}
-                  to={`/profile/${queryMaybeHandle}`}
-                />
-              ) : null}
-
-              {searchResults.map(item => (
-                <SearchProfileCard
-                  key={item.did}
-                  profile={item}
-                  moderation={moderateProfile(item, moderationOpts)}
-                />
-              ))}
-
-              <View style={{height: 200}} />
-            </ScrollView>
-          )}
-        </>
-      ) : !query && inputIsFocused ? (
-        <CenteredView
-          sideBorders={isTabletOrDesktop}
-          // @ts-ignore web only -prf
-          style={{
-            height: isWeb ? '100vh' : undefined,
-          }}>
-          <View style={styles.searchHistoryContainer}>
-            {searchHistory.length > 0 && (
-              <View style={styles.searchHistoryContent}>
-                <Text style={[pal.text, styles.searchHistoryTitle]}>
-                  <Trans>Recent Searches</Trans>
-                </Text>
-                {searchHistory.map((historyItem, index) => (
-                  <View
-                    key={index}
-                    style={[
-                      a.flex_row,
-                      a.mt_md,
-                      a.justify_center,
-                      a.justify_between,
-                    ]}>
-                    <Pressable
-                      accessibilityRole="button"
-                      onPress={() => handleHistoryItemClick(historyItem)}
-                      style={[a.flex_1, a.py_sm]}>
-                      <Text style={pal.text}>{historyItem}</Text>
-                    </Pressable>
-                    <Pressable
-                      accessibilityRole="button"
-                      onPress={() => handleRemoveHistoryItem(historyItem)}
-                      style={[a.px_md, a.py_xs, a.justify_center]}>
-                      <FontAwesomeIcon
-                        icon="xmark"
-                        size={16}
-                        style={pal.textLight as FontAwesomeIconStyle}
-                      />
-                    </Pressable>
-                  </View>
-                ))}
-              </View>
-            )}
-          </View>
-        </CenteredView>
-      ) : routeParamsMismatch ? (
-        <ActivityIndicator />
-      ) : (
-        <SearchScreenInner query={query} />
-      )}
+      <View
+        style={{
+          display: showAutocomplete ? 'flex' : 'none',
+          flex: 1,
+        }}>
+        {searchText.length > 0 ? (
+          <AutocompleteResults
+            isAutocompleteFetching={isAutocompleteFetching}
+            autocompleteData={autocompleteData}
+            searchText={searchText}
+            onSubmit={onSubmit}
+            onResultPress={onAutocompleteResultPress}
+            onProfileClick={handleProfileClick}
+          />
+        ) : (
+          <SearchHistory
+            searchHistory={searchHistory}
+            selectedProfiles={selectedProfiles}
+            onItemClick={handleHistoryItemClick}
+            onProfileClick={handleProfileClick}
+            onRemoveItemClick={handleRemoveHistoryItem}
+            onRemoveProfileClick={handleRemoveProfile}
+          />
+        )}
+      </View>
+      <View
+        style={{
+          display: showAutocomplete ? 'none' : 'flex',
+          flex: 1,
+        }}>
+        <SearchScreenInner query={queryParam} />
+      </View>
     </View>
+  )
+}
+
+let SearchInputBox = ({
+  textInput,
+  searchText,
+  showAutocomplete,
+  setShowAutocomplete,
+  onChangeText,
+  onSubmit,
+  onPressClearQuery,
+}: {
+  textInput: React.RefObject<TextInput>
+  searchText: string
+  showAutocomplete: boolean
+  setShowAutocomplete: (show: boolean) => void
+  onChangeText: (text: string) => void
+  onSubmit: () => void
+  onPressClearQuery: () => void
+}): React.ReactNode => {
+  const pal = usePalette('default')
+  const {_} = useLingui()
+  const theme = useTheme()
+  return (
+    <Pressable
+      // This only exists only for extra hitslop so don't expose it to the a11y tree.
+      accessible={false}
+      focusable={false}
+      // @ts-ignore web-only
+      tabIndex={-1}
+      style={[
+        {backgroundColor: pal.colors.backgroundLight},
+        styles.headerSearchContainer,
+        // @ts-expect-error web only
+        isWeb && {
+          cursor: 'default',
+        },
+      ]}
+      onPress={() => {
+        textInput.current?.focus()
+      }}>
+      <MagnifyingGlassIcon
+        style={[pal.icon, styles.headerSearchIcon]}
+        size={21}
+      />
+      <TextInput
+        testID="searchTextInput"
+        ref={textInput}
+        placeholder={_(msg`Search`)}
+        placeholderTextColor={pal.colors.textLight}
+        returnKeyType="search"
+        value={searchText}
+        style={[pal.text, styles.headerSearchInput]}
+        keyboardAppearance={theme.colorScheme}
+        selectTextOnFocus={isNative}
+        onFocus={() => {
+          if (isWeb) {
+            // Prevent a jump on iPad by ensuring that
+            // the initial focused render has no result list.
+            requestAnimationFrame(() => {
+              setShowAutocomplete(true)
+            })
+          } else {
+            setShowAutocomplete(true)
+          }
+        }}
+        onChangeText={onChangeText}
+        onSubmitEditing={onSubmit}
+        autoFocus={false}
+        accessibilityRole="search"
+        accessibilityLabel={_(msg`Search`)}
+        accessibilityHint=""
+        autoCorrect={false}
+        autoComplete="off"
+        autoCapitalize="none"
+      />
+      {showAutocomplete && searchText.length > 0 && (
+        <Pressable
+          testID="searchTextInputClearBtn"
+          onPress={onPressClearQuery}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Clear search query`)}
+          accessibilityHint=""
+          hitSlop={HITSLOP_10}>
+          <FontAwesomeIcon
+            icon="xmark"
+            size={16}
+            style={pal.textLight as FontAwesomeIconStyle}
+          />
+        </Pressable>
+      )}
+    </Pressable>
+  )
+}
+SearchInputBox = React.memo(SearchInputBox)
+
+let AutocompleteResults = ({
+  isAutocompleteFetching,
+  autocompleteData,
+  searchText,
+  onSubmit,
+  onResultPress,
+  onProfileClick,
+}: {
+  isAutocompleteFetching: boolean
+  autocompleteData: AppBskyActorDefs.ProfileViewBasic[] | undefined
+  searchText: string
+  onSubmit: () => void
+  onResultPress: () => void
+  onProfileClick: (profile: AppBskyActorDefs.ProfileViewBasic) => void
+}): React.ReactNode => {
+  const moderationOpts = useModerationOpts()
+  const {_} = useLingui()
+  return (
+    <>
+      {(isAutocompleteFetching && !autocompleteData?.length) ||
+      !moderationOpts ? (
+        <Loader />
+      ) : (
+        <ScrollView
+          style={{height: '100%'}}
+          // @ts-ignore web only -prf
+          dataSet={{stableGutters: '1'}}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag">
+          <SearchLinkCard
+            label={_(msg`Search for "${searchText}"`)}
+            onPress={isNative ? onSubmit : undefined}
+            to={
+              isNative
+                ? undefined
+                : `/search?q=${encodeURIComponent(searchText)}`
+            }
+            style={{borderBottomWidth: 1}}
+          />
+          {autocompleteData?.map(item => (
+            <SearchProfileCard
+              key={item.did}
+              profile={item}
+              moderation={moderateProfile(item, moderationOpts)}
+              onPress={() => {
+                onProfileClick(item)
+                onResultPress()
+              }}
+            />
+          ))}
+          <View style={{height: 200}} />
+        </ScrollView>
+      )}
+    </>
+  )
+}
+AutocompleteResults = React.memo(AutocompleteResults)
+
+function truncateText(text: string, maxLength: number) {
+  if (text.length > maxLength) {
+    return text.substring(0, maxLength) + '...'
+  }
+  return text
+}
+
+function SearchHistory({
+  searchHistory,
+  selectedProfiles,
+  onItemClick,
+  onProfileClick,
+  onRemoveItemClick,
+  onRemoveProfileClick,
+}: {
+  searchHistory: string[]
+  selectedProfiles: AppBskyActorDefs.ProfileViewBasic[]
+  onItemClick: (item: string) => void
+  onProfileClick: (profile: AppBskyActorDefs.ProfileViewBasic) => void
+  onRemoveItemClick: (item: string) => void
+  onRemoveProfileClick: (profile: AppBskyActorDefs.ProfileViewBasic) => void
+}) {
+  const {isTabletOrDesktop, isMobile} = useWebMediaQueries()
+  const pal = usePalette('default')
+  const {_} = useLingui()
+
+  return (
+    <CenteredView
+      sideBorders={isTabletOrDesktop}
+      // @ts-ignore web only -prf
+      style={{
+        height: isWeb ? '100vh' : undefined,
+      }}>
+      <View style={styles.searchHistoryContainer}>
+        {(searchHistory.length > 0 || selectedProfiles.length > 0) && (
+          <Text style={[pal.text, styles.searchHistoryTitle]}>
+            <Trans>Recent Searches</Trans>
+          </Text>
+        )}
+        {selectedProfiles.length > 0 && (
+          <View
+            style={[
+              styles.selectedProfilesContainer,
+              isMobile && styles.selectedProfilesContainerMobile,
+            ]}>
+            <RNGHScrollView
+              keyboardShouldPersistTaps="handled"
+              horizontal={true}
+              style={styles.profilesRow}
+              contentContainerStyle={{
+                borderWidth: 0,
+              }}>
+              {selectedProfiles.slice(0, 5).map((profile, index) => (
+                <View
+                  key={index}
+                  style={[
+                    styles.profileItem,
+                    isMobile && styles.profileItemMobile,
+                  ]}>
+                  <Link
+                    href={makeProfileLink(profile)}
+                    title={profile.handle}
+                    asAnchor
+                    anchorNoUnderline
+                    onBeforePress={() => onProfileClick(profile)}
+                    style={styles.profilePressable}>
+                    <Image
+                      source={{uri: profile.avatar}}
+                      style={styles.profileAvatar as StyleProp<ImageStyle>}
+                      accessibilityIgnoresInvertColors
+                    />
+                    <Text style={[pal.text, styles.profileName]}>
+                      {truncateText(profile.displayName || '', 12)}
+                    </Text>
+                  </Link>
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityLabel={_(msg`Remove profile`)}
+                    accessibilityHint={_(
+                      msg`Remove profile from search history`,
+                    )}
+                    onPress={() => onRemoveProfileClick(profile)}
+                    hitSlop={createHitslop(6)}
+                    style={styles.profileRemoveBtn}>
+                    <FontAwesomeIcon
+                      icon="xmark"
+                      size={14}
+                      style={pal.textLight as FontAwesomeIconStyle}
+                    />
+                  </Pressable>
+                </View>
+              ))}
+            </RNGHScrollView>
+          </View>
+        )}
+        {searchHistory.length > 0 && (
+          <View style={styles.searchHistoryContent}>
+            {searchHistory.slice(0, 5).map((historyItem, index) => (
+              <View
+                key={index}
+                style={[
+                  a.flex_row,
+                  a.mt_md,
+                  a.justify_center,
+                  a.justify_between,
+                ]}>
+                <Pressable
+                  accessibilityRole="button"
+                  onPress={() => onItemClick(historyItem)}
+                  hitSlop={HITSLOP_10}
+                  style={[a.flex_1, a.py_sm]}>
+                  <Text style={pal.text}>{historyItem}</Text>
+                </Pressable>
+                <Pressable
+                  accessibilityRole="button"
+                  onPress={() => onRemoveItemClick(historyItem)}
+                  hitSlop={HITSLOP_10}
+                  style={[a.px_md, a.py_xs, a.justify_center]}>
+                  <FontAwesomeIcon
+                    icon="xmark"
+                    size={16}
+                    style={pal.textLight as FontAwesomeIconStyle}
+                  />
+                </Pressable>
+              </View>
+            ))}
+          </View>
+        )}
+      </View>
+    </CenteredView>
   )
 }
 
@@ -841,13 +1033,14 @@ function scrollToTopWeb() {
   }
 }
 
-const HEADER_HEIGHT = 50
+const HEADER_HEIGHT = 46
 
 const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 12,
+    paddingLeft: 13,
     paddingVertical: 4,
     height: HEADER_HEIGHT,
     // @ts-ignore web only
@@ -860,7 +1053,6 @@ const styles = StyleSheet.create({
     height: 30,
     borderRadius: 30,
     marginRight: 6,
-    paddingBottom: 2,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -883,6 +1075,9 @@ const styles = StyleSheet.create({
   },
   headerCancelBtn: {
     paddingLeft: 10,
+    alignSelf: 'center',
+    zIndex: -1,
+    elevation: -1, // For Android
   },
   tabBarContainer: {
     // @ts-ignore web only
@@ -894,11 +1089,57 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 12,
   },
+  selectedProfilesContainer: {
+    marginTop: 10,
+    paddingHorizontal: 12,
+    height: 80,
+  },
+  selectedProfilesContainerMobile: {
+    height: 100,
+  },
+  profilesRow: {
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
+  },
+  profileItem: {
+    alignItems: 'center',
+    marginRight: 15,
+    width: 78,
+  },
+  profileItemMobile: {
+    width: 70,
+  },
+  profilePressable: {
+    alignItems: 'center',
+  },
+  profileAvatar: {
+    width: 60,
+    height: 60,
+    borderRadius: 45,
+  },
+  profileName: {
+    fontSize: 12,
+    textAlign: 'center',
+    marginTop: 5,
+  },
+  profileRemoveBtn: {
+    position: 'absolute',
+    top: 0,
+    right: 5,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    width: 18,
+    height: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   searchHistoryContent: {
-    padding: 10,
+    paddingHorizontal: 10,
     borderRadius: 8,
   },
   searchHistoryTitle: {
     fontWeight: 'bold',
+    paddingVertical: 12,
+    paddingHorizontal: 10,
   },
 })

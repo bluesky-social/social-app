@@ -14,11 +14,13 @@ import {Dimensions} from 'lib/media/types'
 import {getDataUriSize} from 'lib/media/util'
 import {gradients, s} from 'lib/styles'
 import {Text} from 'view/com/util/text/Text'
+import {calculateDimensions} from './cropImageUtil'
 
 enum AspectRatio {
   Square = 'square',
   Wide = 'wide',
   Tall = 'tall',
+  Custom = 'custom',
 }
 
 const DIMS: Record<string, Dimensions> = {
@@ -31,17 +33,24 @@ export const snapPoints = ['0%']
 
 export function Component({
   uri,
+  dimensions,
   onSelect,
 }: {
   uri: string
+  dimensions?: Dimensions
   onSelect: (img?: RNImage) => void
 }) {
   const {closeModal} = useModalControls()
   const pal = usePalette('default')
   const {_} = useLingui()
-  const [as, setAs] = React.useState<AspectRatio>(AspectRatio.Square)
+  const defaultAspectStyle = dimensions
+    ? AspectRatio.Custom
+    : AspectRatio.Square
+  const [as, setAs] = React.useState<AspectRatio>(defaultAspectStyle)
   const [scale, setScale] = React.useState<number>(1)
   const editorRef = React.useRef<ImageEditor>(null)
+  const imageEditorWidth = dimensions ? dimensions.width : DIMS[as].width
+  const imageEditorHeight = dimensions ? dimensions.height : DIMS[as].height
 
   const doSetAs = (v: AspectRatio) => () => setAs(v)
 
@@ -57,8 +66,8 @@ export function Component({
         path: dataUri,
         mime: 'image/jpeg',
         size: getDataUriSize(dataUri),
-        width: DIMS[as].width,
-        height: DIMS[as].height,
+        width: imageEditorWidth,
+        height: imageEditorHeight,
       })
     } else {
       onSelect(undefined)
@@ -73,7 +82,18 @@ export function Component({
     cropperStyle = styles.cropperWide
   } else if (as === AspectRatio.Tall) {
     cropperStyle = styles.cropperTall
+  } else if (as === AspectRatio.Custom) {
+    const cropperDimensions = calculateDimensions(
+      550,
+      imageEditorHeight,
+      imageEditorWidth,
+    )
+    cropperStyle = {
+      width: cropperDimensions.width,
+      height: cropperDimensions.height,
+    }
   }
+
   return (
     <View>
       <View style={[styles.cropper, pal.borderDark, cropperStyle]}>
@@ -81,8 +101,8 @@ export function Component({
           ref={editorRef}
           style={styles.imageEditor}
           image={uri}
-          width={DIMS[as].width}
-          height={DIMS[as].height}
+          width={imageEditorWidth}
+          height={imageEditorHeight}
           scale={scale}
           border={0}
         />
@@ -97,36 +117,40 @@ export function Component({
           maximumValue={3}
           containerStyle={styles.slider}
         />
-        <TouchableOpacity
-          onPress={doSetAs(AspectRatio.Wide)}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Wide`)}
-          accessibilityHint={_(msg`Sets image aspect ratio to wide`)}>
-          <RectWideIcon
-            size={24}
-            style={as === AspectRatio.Wide ? s.blue3 : pal.text}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={doSetAs(AspectRatio.Tall)}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Tall`)}
-          accessibilityHint={_(msg`Sets image aspect ratio to tall`)}>
-          <RectTallIcon
-            size={24}
-            style={as === AspectRatio.Tall ? s.blue3 : pal.text}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={doSetAs(AspectRatio.Square)}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Square`)}
-          accessibilityHint={_(msg`Sets image aspect ratio to square`)}>
-          <SquareIcon
-            size={24}
-            style={as === AspectRatio.Square ? s.blue3 : pal.text}
-          />
-        </TouchableOpacity>
+        {as === AspectRatio.Custom ? null : (
+          <>
+            <TouchableOpacity
+              onPress={doSetAs(AspectRatio.Wide)}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Wide`)}
+              accessibilityHint={_(msg`Sets image aspect ratio to wide`)}>
+              <RectWideIcon
+                size={24}
+                style={as === AspectRatio.Wide ? s.blue3 : pal.text}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={doSetAs(AspectRatio.Tall)}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Tall`)}
+              accessibilityHint={_(msg`Sets image aspect ratio to tall`)}>
+              <RectTallIcon
+                size={24}
+                style={as === AspectRatio.Tall ? s.blue3 : pal.text}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={doSetAs(AspectRatio.Square)}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Square`)}
+              accessibilityHint={_(msg`Sets image aspect ratio to square`)}>
+              <SquareIcon
+                size={24}
+                style={as === AspectRatio.Square ? s.blue3 : pal.text}
+              />
+            </TouchableOpacity>
+          </>
+        )}
       </View>
       <View style={styles.btns}>
         <TouchableOpacity

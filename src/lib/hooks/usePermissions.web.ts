@@ -14,3 +14,11 @@ export function useCameraPermission() {
 
   return {requestCameraAccessIfNeeded}
 }
+
+export function useVideoLibraryPermission() {
+  const requestVideoAccessIfNeeded = async () => {
+    return true
+  }
+
+  return {requestVideoAccessIfNeeded}
+}

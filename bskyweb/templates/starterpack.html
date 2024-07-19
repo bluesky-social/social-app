@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block html_head_extra -%}
+  <meta name="apple-itunes-app" content="app-id=xyz.blueskyweb.app, app-clip-bundle-id=xyz.blueskyweb.app.AppClip, app-clip-display=card">
+  {%- if requestURI %}
+  <meta property="og:url" content="{{ requestURI }}">
+  {% endif -%}
+  {%- if imgThumbUrl %}
+  <meta property="og:image" content="{{ imgThumbUrl }}">
+  <meta property="twitter:image" content="{{ imgThumbUrl }}">
+  {%- else -%}
+  <meta property="og:image" content="https://bsky.app/static/social-card-default-gradient.png" />
+  <meta property="twitter:image" content="https://bsky.app/static/social-card-default-gradient.png"  />
+  {% endif -%}
+  <meta name="twitter:card" content="summary_large_image" />
+  {%- if title %}
+  <meta property="og:title" content="{{ title }}" />
+  <meta name="twitter:title" content="{{ title }}" />
+  {%- else -%}
+  <meta property="og:title" content="Bluesky" />
+  <meta name="twitter:title" content="Bluesky" />
+  {% endif -%}
+  <meta name="description" content="Join the conversation" />
+  <meta name="og:description" content="Join the conversation" />
+  <meta name="twitter:description" content="Join the conversation" />
+{%- endblock %}

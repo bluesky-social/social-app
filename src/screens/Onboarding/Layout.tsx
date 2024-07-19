@@ -23,7 +23,7 @@ import {createPortalGroup} from '#/components/Portal'
 import {leading, P, Text} from '#/components/Typography'
 import {IS_DEV} from '#/env'
 
-const COL_WIDTH = 500
+const COL_WIDTH = 420
 
 export const OnboardingControls = createPortalGroup()
 
@@ -152,7 +152,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
               {children}
             </View>
 
-            <View style={{height: 200}} />
+            <View style={{height: 400}} />
           </View>
         </View>
       </ScrollView>

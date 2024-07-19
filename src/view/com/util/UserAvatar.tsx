@@ -2,11 +2,13 @@ import React, {memo, useMemo} from 'react'
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import Svg, {Circle, Path, Rect} from 'react-native-svg'
-import {ModerationUI} from '@atproto/api'
+import {AppBskyActorDefs, ModerationUI} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
+import {logger} from '#/logger'
 import {usePalette} from 'lib/hooks/usePalette'
 import {
   useCameraPermission,
@@ -15,6 +17,7 @@ import {
 import {makeProfileLink} from 'lib/routes/links'
 import {colors} from 'lib/styles'
 import {isAndroid, isNative, isWeb} from 'platform/detection'
+import {precacheProfile} from 'state/queries/profile'
 import {HighPriorityImage} from 'view/com/util/images/Image'
 import {tokens, useTheme} from '#/alf'
 import {
@@ -32,6 +35,7 @@ export type UserAvatarType = 'user' | 'algo' | 'list' | 'labeler'
 
 interface BaseUserAvatarProps {
   type?: UserAvatarType
+  shape?: 'circle' | 'square'
   size: number
   avatar?: string | null
 }
@@ -47,20 +51,26 @@ interface EditableUserAvatarProps extends BaseUserAvatarProps {
 
 interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
   moderation?: ModerationUI
-  did: string
-  handle: string
+  profile: AppBskyActorDefs.ProfileViewBasic
+  disableHoverCard?: boolean
+  onBeforePress?: () => void
+  accessible?: boolean
 }
 
 const BLUR_AMOUNT = isWeb ? 5 : 100
 
 let DefaultAvatar = ({
   type,
+  shape: overrideShape,
   size,
 }: {
   type: UserAvatarType
+  shape?: 'square' | 'circle'
   size: number
 }): React.ReactNode => {
+  const finalShape = overrideShape ?? (type === 'user' ? 'circle' : 'square')
   if (type === 'algo') {
+    // TODO: shape=circle
     // Font Awesome Pro 6.4.0 by @fontawesome -https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc.
     return (
       <Svg
@@ -79,6 +89,7 @@ let DefaultAvatar = ({
     )
   }
   if (type === 'list') {
+    // TODO: shape=circle
     // Font Awesome Pro 6.4.0 by @fontawesome -https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc.
     return (
       <Svg
@@ -112,14 +123,18 @@ let DefaultAvatar = ({
         viewBox="0 0 32 32"
         fill="none"
         stroke="none">
-        <Rect
-          x="0"
-          y="0"
-          width="32"
-          height="32"
-          rx="3"
-          fill={tokens.color.temp_purple}
-        />
+        {finalShape === 'square' ? (
+          <Rect
+            x="0"
+            y="0"
+            width="32"
+            height="32"
+            rx="3"
+            fill={tokens.color.temp_purple}
+          />
+        ) : (
+          <Circle cx="16" cy="16" r="16" fill={tokens.color.temp_purple} />
+        )}
         <Path
           d="M24 9.75L16 7L8 9.75V15.9123C8 20.8848 12 23 16 25.1579C20 23 24 20.8848 24 15.9123V9.75Z"
           stroke="white"
@@ -130,6 +145,7 @@ let DefaultAvatar = ({
       </Svg>
     )
   }
+  // TODO: shape=square
   return (
     <Svg
       testID="userAvatarFallback"
@@ -154,6 +170,7 @@ export {DefaultAvatar}
 
 let UserAvatar = ({
   type = 'user',
+  shape: overrideShape,
   size,
   avatar,
   moderation,
@@ -161,9 +178,10 @@ let UserAvatar = ({
 }: UserAvatarProps): React.ReactNode => {
   const pal = usePalette('default')
   const backgroundColor = pal.colors.backgroundLight
+  const finalShape = overrideShape ?? (type === 'user' ? 'circle' : 'square')
 
   const aviStyle = useMemo(() => {
-    if (type === 'algo' || type === 'list' || type === 'labeler') {
+    if (finalShape === 'square') {
       return {
         width: size,
         height: size,
@@ -177,7 +195,7 @@ let UserAvatar = ({
       borderRadius: Math.floor(size / 2),
       backgroundColor,
     }
-  }, [type, size, backgroundColor])
+  }, [finalShape, size, backgroundColor])
 
   const alert = useMemo(() => {
     if (!moderation?.alert) {
@@ -219,7 +237,7 @@ let UserAvatar = ({
     </View>
   ) : (
     <View style={{width: size, height: size}}>
-      <DefaultAvatar type={type} size={size} />
+      <DefaultAvatar type={type} shape={finalShape} size={size} />
       {alert}
     </View>
   )
@@ -281,15 +299,21 @@ let EditableUserAvatar = ({
       return
     }
 
-    const croppedImage = await openCropper({
-      mediaType: 'photo',
-      cropperCircleOverlay: true,
-      height: item.height,
-      width: item.width,
-      path: item.path,
-    })
+    try {
+      const croppedImage = await openCropper({
+        mediaType: 'photo',
+        cropperCircleOverlay: true,
+        height: 1000,
+        width: 1000,
+        path: item.path,
+      })
 
-    onSelectNewAvatar(croppedImage)
+      onSelectNewAvatar(croppedImage)
+    } catch (e: any) {
+      if (!String(e).includes('Canceled')) {
+        logger.error('Failed to crop banner', {error: e})
+      }
+    }
   }, [onSelectNewAvatar, requestPhotoAccessIfNeeded])
 
   const onRemoveAvatar = React.useCallback(() => {
@@ -371,19 +395,37 @@ let EditableUserAvatar = ({
 EditableUserAvatar = memo(EditableUserAvatar)
 export {EditableUserAvatar}
 
-let PreviewableUserAvatar = (
-  props: PreviewableUserAvatarProps,
-): React.ReactNode => {
+let PreviewableUserAvatar = ({
+  moderation,
+  profile,
+  disableHoverCard,
+  onBeforePress,
+  accessible = true,
+  ...rest
+}: PreviewableUserAvatarProps): React.ReactNode => {
   const {_} = useLingui()
+  const queryClient = useQueryClient()
+
+  const onPress = React.useCallback(() => {
+    onBeforePress?.()
+    precacheProfile(queryClient, profile)
+  }, [profile, queryClient, onBeforePress])
+
   return (
-    <ProfileHoverCard did={props.did}>
+    <ProfileHoverCard did={profile.did} disable={disableHoverCard}>
       <Link
-        label={_(msg`See profile`)}
+        label={
+          accessible
+            ? _(msg`${profile.displayName || profile.handle}'s avatar`)
+            : undefined
+        }
+        accessibilityHint={accessible ? _(msg`Opens this profile`) : undefined}
         to={makeProfileLink({
-          did: props.did,
-          handle: props.handle,
-        })}>
-        <UserAvatar {...props} />
+          did: profile.did,
+          handle: profile.handle,
+        })}
+        onPress={onPress}>
+        <UserAvatar avatar={profile.avatar} moderation={moderation} {...rest} />
       </Link>
     </ProfileHoverCard>
   )

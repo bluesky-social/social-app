@@ -25,11 +25,11 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {HITSLOP_20} from '#/lib/constants'
 import {s} from '#/lib/styles'
-import {useModerationOpts} from '#/state/queries/preferences'
-import {RQKEY as RQKEY_URI} from '#/state/queries/resolve-uri'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {usePalette} from 'lib/hooks/usePalette'
 import {InfoCircleIcon} from 'lib/icons'
 import {makeProfileLink} from 'lib/routes/links'
+import {precacheProfile} from 'state/queries/profile'
 import {ComposerOptsQuote} from 'state/shell/composer'
 import {atoms as a} from '#/alf'
 import {RichText} from '#/components/RichText'
@@ -39,13 +39,18 @@ import {Link} from '../Link'
 import {PostMeta} from '../PostMeta'
 import {Text} from '../text/Text'
 import {PostEmbeds} from '.'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 export function MaybeQuoteEmbed({
   embed,
+  onOpen,
   style,
+  allowNestedQuotes,
 }: {
   embed: AppBskyEmbedRecord.View
+  onOpen?: () => void
   style?: StyleProp<ViewStyle>
+  allowNestedQuotes?: boolean
 }) {
   const pal = usePalette('default')
   if (
@@ -57,7 +62,9 @@ export function MaybeQuoteEmbed({
       <QuoteEmbedModerated
         viewRecord={embed.record}
         postRecord={embed.record.value}
+        onOpen={onOpen}
         style={style}
+        allowNestedQuotes={allowNestedQuotes}
       />
     )
   } else if (AppBskyEmbedRecord.isViewBlocked(embed.record)) {
@@ -85,11 +92,15 @@ export function MaybeQuoteEmbed({
 function QuoteEmbedModerated({
   viewRecord,
   postRecord,
+  onOpen,
   style,
+  allowNestedQuotes,
 }: {
   viewRecord: AppBskyEmbedRecord.ViewRecord
   postRecord: AppBskyFeedPost.Record
+  onOpen?: () => void
   style?: StyleProp<ViewStyle>
+  allowNestedQuotes?: boolean
 }) {
   const moderationOpts = useModerationOpts()
   const moderation = React.useMemo(() => {
@@ -108,17 +119,29 @@ function QuoteEmbedModerated({
     embeds: viewRecord.embeds,
   }
 
-  return <QuoteEmbed quote={quote} moderation={moderation} style={style} />
+  return (
+    <QuoteEmbed
+      quote={quote}
+      moderation={moderation}
+      onOpen={onOpen}
+      style={style}
+      allowNestedQuotes={allowNestedQuotes}
+    />
+  )
 }
 
 export function QuoteEmbed({
   quote,
   moderation,
+  onOpen,
   style,
+  allowNestedQuotes,
 }: {
   quote: ComposerOptsQuote
   moderation?: ModerationDecision
+  onOpen?: () => void
   style?: StyleProp<ViewStyle>
+  allowNestedQuotes?: boolean
 }) {
   const queryClient = useQueryClient()
   const pal = usePalette('default')
@@ -137,25 +160,32 @@ export function QuoteEmbed({
   const embed = React.useMemo(() => {
     const e = quote.embeds?.[0]
 
-    if (AppBskyEmbedImages.isView(e) || AppBskyEmbedExternal.isView(e)) {
+    if (allowNestedQuotes) {
       return e
-    } else if (
-      AppBskyEmbedRecordWithMedia.isView(e) &&
-      (AppBskyEmbedImages.isView(e.media) ||
-        AppBskyEmbedExternal.isView(e.media))
-    ) {
-      return e.media
+    } else {
+      if (AppBskyEmbedImages.isView(e) || AppBskyEmbedExternal.isView(e)) {
+        return e
+      } else if (
+        AppBskyEmbedRecordWithMedia.isView(e) &&
+        (AppBskyEmbedImages.isView(e.media) ||
+          AppBskyEmbedExternal.isView(e.media))
+      ) {
+        return e.media
+      }
     }
-  }, [quote.embeds])
+  }, [quote.embeds, allowNestedQuotes])
 
   const onBeforePress = React.useCallback(() => {
-    queryClient.setQueryData(RQKEY_URI(quote.author.handle), quote.author.did)
-  }, [queryClient, quote.author.did, quote.author.handle])
+    precacheProfile(queryClient, quote.author)
+    onOpen?.()
+  }, [queryClient, quote.author, onOpen])
 
   return (
-    <ContentHider modui={moderation?.ui('contentList')}>
+    <ContentHider
+      modui={moderation?.ui('contentList')}
+      style={[styles.container, pal.borderDark, style]}
+      childContainerStyle={[a.pt_sm]}>
       <Link
-        style={[styles.container, pal.borderDark, style]}
         hoverStyle={{borderColor: pal.colors.borderLinkHover}}
         href={itemHref}
         title={itemTitle}
@@ -176,7 +206,7 @@ export function QuoteEmbed({
         {richText ? (
           <RichText
             value={richText}
-            style={[a.text_md]}
+            style={a.text_md}
             numberOfLines={20}
             disableLinks
           />
@@ -232,12 +262,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     paddingVertical: 12,
     paddingHorizontal: 12,
-    borderWidth: 1,
-  },
-  quotePost: {
-    flex: 1,
-    paddingLeft: 13,
-    paddingRight: 8,
+    borderWidth: hairlineWidth,
   },
   errorContainer: {
     flexDirection: 'row',
@@ -247,7 +272,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     paddingVertical: 14,
     paddingHorizontal: 14,
-    borderWidth: 1,
+    borderWidth: hairlineWidth,
   },
   alert: {
     marginBottom: 6,

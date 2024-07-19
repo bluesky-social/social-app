@@ -121,20 +121,20 @@ function ModerationDetailsDialogInner({
         <>
           <Divider />
           <Text style={[t.atoms.text, a.text_md, a.leading_snug, a.mt_lg]}>
-            <Trans>
-              This label was applied by{' '}
-              {modcause.source.type === 'user' ? (
-                <Trans>the author</Trans>
-              ) : (
+            {modcause.source.type === 'user' ? (
+              <Trans>This label was applied by the author.</Trans>
+            ) : (
+              <Trans>
+                This label was applied by{' '}
                 <InlineLinkText
                   to={makeProfileLink({did: modcause.label.src, handle: ''})}
                   onPress={() => control.close()}
                   style={a.text_md}>
                   {desc.source}
                 </InlineLinkText>
-              )}
-              .
-            </Trans>
+                .
+              </Trans>
+            )}
           </Text>
         </>
       )}

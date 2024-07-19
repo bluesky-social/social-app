@@ -22,16 +22,16 @@ import {buildStateObject} from 'lib/routes/helpers'
 import {
   AllNavigatorParams,
   BottomTabNavigatorParams,
-  FeedsTabNavigatorParams,
   FlatNavigatorParams,
   HomeTabNavigatorParams,
+  MessagesTabNavigatorParams,
   MyProfileTabNavigatorParams,
   NotificationsTabNavigatorParams,
   SearchTabNavigatorParams,
 } from 'lib/routes/types'
 import {RouteParams, State} from 'lib/routes/types'
 import {bskyTitle} from 'lib/strings/headings'
-import {isAndroid, isNative} from 'platform/detection'
+import {isAndroid, isNative, isWeb} from 'platform/detection'
 import {PreferencesExternalEmbeds} from '#/view/screens/PreferencesExternalEmbeds'
 import {AppPasswords} from 'view/screens/AppPasswords'
 import {ModerationBlockedAccounts} from 'view/screens/ModerationBlockedAccounts'
@@ -39,19 +39,30 @@ import {ModerationMutedAccounts} from 'view/screens/ModerationMutedAccounts'
 import {PreferencesFollowingFeed} from 'view/screens/PreferencesFollowingFeed'
 import {PreferencesThreads} from 'view/screens/PreferencesThreads'
 import {SavedFeeds} from 'view/screens/SavedFeeds'
+import {SharedPreferencesTesterScreen} from '#/screens/E2E/SharedPreferencesTesterScreen'
 import HashtagScreen from '#/screens/Hashtag'
 import {ModerationScreen} from '#/screens/Moderation'
+import {ProfileKnownFollowersScreen} from '#/screens/Profile/KnownFollowers'
 import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
+import {
+  StarterPackScreen,
+  StarterPackScreenShort,
+} from '#/screens/StarterPack/StarterPackScreen'
+import {Wizard} from '#/screens/StarterPack/Wizard'
+import {Referrer} from '../modules/expo-bluesky-swiss-army'
 import {init as initAnalytics} from './lib/analytics/analytics'
 import {useWebScrollRestoration} from './lib/hooks/useWebScrollRestoration'
 import {attachRouteToLogEvents, logEvent} from './lib/statsig/statsig'
 import {router} from './routes'
+import {MessagesConversationScreen} from './screens/Messages/Conversation'
+import {MessagesScreen} from './screens/Messages/List'
+import {MessagesSettingsScreen} from './screens/Messages/Settings'
 import {useModalControls} from './state/modals'
 import {useUnreadNotifications} from './state/queries/notifications/unread'
 import {useSession} from './state/session'
 import {
-  setEmailConfirmationRequested,
   shouldRequestEmailConfirmation,
+  snoozeEmailConfirmationPrompt,
 } from './state/shell/reminders'
 import {AccessibilitySettingsScreen} from './view/screens/AccessibilitySettings'
 import {CommunityGuidelinesScreen} from './view/screens/CommunityGuidelines'
@@ -87,11 +98,12 @@ const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
 const HomeTab = createNativeStackNavigatorWithAuth<HomeTabNavigatorParams>()
 const SearchTab = createNativeStackNavigatorWithAuth<SearchTabNavigatorParams>()
-const FeedsTab = createNativeStackNavigatorWithAuth<FeedsTabNavigatorParams>()
 const NotificationsTab =
   createNativeStackNavigatorWithAuth<NotificationsTabNavigatorParams>()
 const MyProfileTab =
   createNativeStackNavigatorWithAuth<MyProfileTabNavigatorParams>()
+const MessagesTab =
+  createNativeStackNavigatorWithAuth<MessagesTabNavigatorParams>()
 const Flat = createNativeStackNavigatorWithAuth<FlatNavigatorParams>()
 const Tab = createBottomTabNavigator<BottomTabNavigatorParams>()
 
@@ -166,6 +178,13 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         })}
       />
       <Stack.Screen
+        name="ProfileKnownFollowers"
+        getComponent={() => ProfileKnownFollowersScreen}
+        options={({route}) => ({
+          title: title(msg`Followers of @${route.params.name} that you know`),
+        })}
+      />
+      <Stack.Screen
         name="ProfileList"
         getComponent={() => ProfileListScreen}
         options={{title: title(msg`List`), requireAuth: true}}
@@ -215,6 +234,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="DebugMod"
         getComponent={() => DebugModScreen}
         options={{title: title(msg`Moderation states`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="SharedPreferencesTester"
+        getComponent={() => SharedPreferencesTesterScreen}
+        options={{title: title(msg`Shared Preferences Tester`)}}
       />
       <Stack.Screen
         name="Log"
@@ -290,6 +314,41 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         getComponent={() => HashtagScreen}
         options={{title: title(msg`Hashtag`)}}
       />
+      <Stack.Screen
+        name="MessagesConversation"
+        getComponent={() => MessagesConversationScreen}
+        options={{title: title(msg`Chat`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="MessagesSettings"
+        getComponent={() => MessagesSettingsScreen}
+        options={{title: title(msg`Chat settings`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="Feeds"
+        getComponent={() => FeedsScreen}
+        options={{title: title(msg`Feeds`)}}
+      />
+      <Stack.Screen
+        name="StarterPack"
+        getComponent={() => StarterPackScreen}
+        options={{title: title(msg`Starter Pack`)}}
+      />
+      <Stack.Screen
+        name="StarterPackShort"
+        getComponent={() => StarterPackScreenShort}
+        options={{title: title(msg`Starter Pack`)}}
+      />
+      <Stack.Screen
+        name="StarterPackWizard"
+        getComponent={() => Wizard}
+        options={{title: title(msg`Create a starter pack`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="StarterPackEdit"
+        getComponent={() => Wizard}
+        options={{title: title(msg`Edit your starter pack`), requireAuth: true}}
+      />
     </>
   )
 }
@@ -314,7 +373,6 @@ function TabsNavigator() {
       tabBar={tabBar}>
       <Tab.Screen name="HomeTab" getComponent={() => HomeTabNavigator} />
       <Tab.Screen name="SearchTab" getComponent={() => SearchTabNavigator} />
-      <Tab.Screen name="FeedsTab" getComponent={() => FeedsTabNavigator} />
       <Tab.Screen
         name="NotificationsTab"
         getComponent={() => NotificationsTabNavigator}
@@ -322,6 +380,10 @@ function TabsNavigator() {
       <Tab.Screen
         name="MyProfileTab"
         getComponent={() => MyProfileTabNavigator}
+      />
+      <Tab.Screen
+        name="MessagesTab"
+        getComponent={() => MessagesTabNavigator}
       />
     </Tab.Navigator>
   )
@@ -333,14 +395,15 @@ function HomeTabNavigator() {
   return (
     <HomeTab.Navigator
       screenOptions={{
-        animation: isAndroid ? 'none' : undefined,
+        animation: isAndroid ? 'ios' : undefined,
+        animationDuration: 285,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
-        animationDuration: 250,
         contentStyle: pal.view,
       }}>
       <HomeTab.Screen name="Home" getComponent={() => HomeScreen} />
+      <HomeTab.Screen name="Start" getComponent={() => HomeScreen} />
       {commonScreens(HomeTab)}
     </HomeTab.Navigator>
   )
@@ -351,11 +414,11 @@ function SearchTabNavigator() {
   return (
     <SearchTab.Navigator
       screenOptions={{
-        animation: isAndroid ? 'none' : undefined,
+        animation: isAndroid ? 'ios' : undefined,
+        animationDuration: 285,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
-        animationDuration: 250,
         contentStyle: pal.view,
       }}>
       <SearchTab.Screen name="Search" getComponent={() => SearchScreen} />
@@ -364,34 +427,16 @@ function SearchTabNavigator() {
   )
 }
 
-function FeedsTabNavigator() {
-  const pal = usePalette('default')
-  return (
-    <FeedsTab.Navigator
-      screenOptions={{
-        animation: isAndroid ? 'none' : undefined,
-        gestureEnabled: true,
-        fullScreenGestureEnabled: true,
-        headerShown: false,
-        animationDuration: 250,
-        contentStyle: pal.view,
-      }}>
-      <FeedsTab.Screen name="Feeds" getComponent={() => FeedsScreen} />
-      {commonScreens(FeedsTab as typeof HomeTab)}
-    </FeedsTab.Navigator>
-  )
-}
-
 function NotificationsTabNavigator() {
   const pal = usePalette('default')
   return (
     <NotificationsTab.Navigator
       screenOptions={{
-        animation: isAndroid ? 'none' : undefined,
+        animation: isAndroid ? 'ios' : undefined,
+        animationDuration: 285,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
-        animationDuration: 250,
         contentStyle: pal.view,
       }}>
       <NotificationsTab.Screen
@@ -409,11 +454,11 @@ function MyProfileTabNavigator() {
   return (
     <MyProfileTab.Navigator
       screenOptions={{
-        animation: isAndroid ? 'none' : undefined,
+        animation: isAndroid ? 'ios' : undefined,
+        animationDuration: 285,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
-        animationDuration: 250,
         contentStyle: pal.view,
       }}>
       <MyProfileTab.Screen
@@ -426,6 +471,31 @@ function MyProfileTabNavigator() {
       />
       {commonScreens(MyProfileTab as typeof HomeTab)}
     </MyProfileTab.Navigator>
+  )
+}
+
+function MessagesTabNavigator() {
+  const pal = usePalette('default')
+  return (
+    <MessagesTab.Navigator
+      screenOptions={{
+        animation: isAndroid ? 'ios' : undefined,
+        animationDuration: 285,
+        gestureEnabled: true,
+        fullScreenGestureEnabled: true,
+        headerShown: false,
+        contentStyle: pal.view,
+      }}>
+      <MessagesTab.Screen
+        name="Messages"
+        getComponent={() => MessagesScreen}
+        options={({route}) => ({
+          requireAuth: true,
+          animationTypeForReplace: route.params?.animation ?? 'push',
+        })}
+      />
+      {commonScreens(MessagesTab as typeof HomeTab)}
+    </MessagesTab.Navigator>
   )
 }
 
@@ -443,10 +513,11 @@ const FlatNavigator = () => {
     <Flat.Navigator
       screenListeners={screenListeners}
       screenOptions={{
+        animation: isAndroid ? 'ios' : undefined,
+        animationDuration: 285,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
-        animationDuration: 250,
         contentStyle: pal.view,
       }}>
       <Flat.Screen
@@ -460,14 +531,19 @@ const FlatNavigator = () => {
         options={{title: title(msg`Search`)}}
       />
       <Flat.Screen
-        name="Feeds"
-        getComponent={() => FeedsScreen}
-        options={{title: title(msg`Feeds`)}}
-      />
-      <Flat.Screen
         name="Notifications"
         getComponent={() => NotificationsScreen}
         options={{title: title(msg`Notifications`), requireAuth: true}}
+      />
+      <Flat.Screen
+        name="Messages"
+        getComponent={() => MessagesScreen}
+        options={{title: title(msg`Messages`), requireAuth: true}}
+      />
+      <Flat.Screen
+        name="Start"
+        getComponent={() => HomeScreen}
+        options={{title: title(msg`Home`)}}
       />
       {commonScreens(Flat as typeof HomeTab, numUnread)}
     </Flat.Navigator>
@@ -522,6 +598,9 @@ const LINKING = {
       if (name === 'Home') {
         return buildStateObject('HomeTab', 'Home', params)
       }
+      if (name === 'Messages') {
+        return buildStateObject('MessagesTab', 'Messages', params)
+      }
       // if the path is something else, like a post, profile, or even settings, we need to initialize the home tab as pre-existing state otherwise the back button will not work
       return buildStateObject('HomeTab', name, params, [
         {
@@ -548,7 +627,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
 
     if (currentAccount && shouldRequestEmailConfirmation(currentAccount)) {
       openModal({name: 'verify-email', showReminder: true})
-      setEmailConfirmationRequested()
+      snoozeEmailConfirmationPrompt()
     }
   }
 
@@ -558,7 +637,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       linking={LINKING}
       theme={theme}
       onStateChange={() => {
-        logEvent('router:navigate', {
+        logEvent('router:navigate:sampled', {
           from: prevLoggedRouteName.current,
         })
         prevLoggedRouteName.current = getCurrentRouteName()
@@ -567,7 +646,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
         attachRouteToLogEvents(getCurrentRouteName)
         logModuleInitTime()
         onReady()
-        logEvent('router:navigate', {})
+        logEvent('router:navigate:sampled', {})
       }}>
       {children}
     </NavigationContainer>
@@ -690,6 +769,17 @@ function logModuleInitTime() {
   logEvent('init', {
     initMs,
   })
+
+  if (isWeb) {
+    const referrerInfo = Referrer.getReferrerInfo()
+    if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
+      logEvent('deepLink:referrerReceived', {
+        to: window.location.href,
+        referrer: referrerInfo?.referrer,
+        hostname: referrerInfo?.hostname,
+      })
+    }
+  }
 
   if (__DEV__) {
     // This log is noisy, so keep false committed

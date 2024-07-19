@@ -81,14 +81,17 @@ let ProfileHeaderShell = ({
 
       {children}
 
-      <View
-        style={[a.px_lg, a.pb_sm]}
-        pointerEvents={isIOS ? 'auto' : 'box-none'}>
-        <ProfileHeaderAlerts moderation={moderation} />
-        {isMe && (
-          <LabelsOnMe details={{did: profile.did}} labels={profile.labels} />
-        )}
-      </View>
+      {!isPlaceholderProfile && (
+        <View
+          style={[a.px_lg, a.py_xs]}
+          pointerEvents={isIOS ? 'auto' : 'box-none'}>
+          {isMe ? (
+            <LabelsOnMe details={{did: profile.did}} labels={profile.labels} />
+          ) : (
+            <ProfileHeaderAlerts moderation={moderation} />
+          )}
+        </View>
+      )}
 
       {!isDesktop && !hideBackButton && (
         <TouchableWithoutFeedback

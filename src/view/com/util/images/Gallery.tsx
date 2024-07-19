@@ -1,10 +1,13 @@
-import {AppBskyEmbedImages} from '@atproto/api'
 import React, {ComponentProps, FC} from 'react'
-import {StyleSheet, Text, Pressable, View} from 'react-native'
+import {Pressable, StyleSheet, Text, View} from 'react-native'
 import {Image} from 'expo-image'
+import {AppBskyEmbedImages} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {isWeb} from 'platform/detection'
+
+import {isWeb} from '#/platform/detection'
+import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
+import {atoms as a} from '#/alf'
 
 type EventFunction = (index: number) => void
 
@@ -26,20 +29,21 @@ export const GalleryItem: FC<GalleryItemProps> = ({
   onLongPress,
 }) => {
   const {_} = useLingui()
+  const largeAltBadge = useLargeAltBadgeEnabled()
   const image = images[index]
   return (
-    <View style={styles.fullWidth}>
+    <View style={a.flex_1}>
       <Pressable
         onPress={onPress ? () => onPress(index) : undefined}
         onPressIn={onPressIn ? () => onPressIn(index) : undefined}
         onLongPress={onLongPress ? () => onLongPress(index) : undefined}
-        style={styles.fullWidth}
+        style={a.flex_1}
         accessibilityRole="button"
         accessibilityLabel={image.alt || _(msg`Image`)}
         accessibilityHint="">
         <Image
           source={{uri: image.thumb}}
-          style={[styles.image, imageStyle]}
+          style={[a.flex_1, a.rounded_xs, imageStyle]}
           accessible={true}
           accessibilityLabel={image.alt}
           accessibilityHint=""
@@ -48,7 +52,9 @@ export const GalleryItem: FC<GalleryItemProps> = ({
       </Pressable>
       {image.alt === '' ? null : (
         <View style={styles.altContainer}>
-          <Text style={styles.alt} accessible={false}>
+          <Text
+            style={[styles.alt, largeAltBadge && a.text_xs]}
+            accessible={false}>
             ALT
           </Text>
         </View>
@@ -58,13 +64,6 @@ export const GalleryItem: FC<GalleryItemProps> = ({
 }
 
 const styles = StyleSheet.create({
-  fullWidth: {
-    flex: 1,
-  },
-  image: {
-    flex: 1,
-    borderRadius: 4,
-  },
   altContainer: {
     backgroundColor: 'rgba(0, 0, 0, 0.75)',
     borderRadius: 6,
@@ -73,12 +72,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     // Related to margin/gap hack. This keeps the alt label in the same position
     // on all platforms
-    left: isWeb ? 8 : 5,
+    right: isWeb ? 8 : 5,
     bottom: isWeb ? 8 : 5,
   },
   alt: {
     color: 'white',
-    fontSize: 10,
+    fontSize: 7,
     fontWeight: 'bold',
   },
 })

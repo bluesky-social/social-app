@@ -8,16 +8,11 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import * as EmailValidator from 'email-validator'
 
-import {DEFAULT_SERVICE, IS_PROD_SERVICE} from '#/lib/constants'
+import {DEFAULT_SERVICE} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
-import {createFullHandle, validateHandle} from '#/lib/strings/handles'
+import {createFullHandle} from '#/lib/strings/handles'
 import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
-import {
-  DEFAULT_PROD_FEEDS,
-  usePreferencesSetBirthDateMutation,
-  useSetSaveFeedsMutation,
-} from '#/state/queries/preferences'
 import {useSessionApi} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 
@@ -33,7 +28,6 @@ export enum SignupStep {
 
 export type SignupState = {
   hasPrev: boolean
-  canNext: boolean
   activeStep: SignupStep
 
   serviceUrl: string
@@ -63,12 +57,10 @@ export type SignupAction =
   | {type: 'setHandle'; value: string}
   | {type: 'setVerificationCode'; value: string}
   | {type: 'setError'; value: string}
-  | {type: 'setCanNext'; value: boolean}
   | {type: 'setIsLoading'; value: boolean}
 
 export const initialState: SignupState = {
   hasPrev: false,
-  canNext: false,
   activeStep: SignupStep.INFO,
 
   serviceUrl: DEFAULT_SERVICE,
@@ -149,10 +141,6 @@ export function reducer(s: SignupState, a: SignupAction): SignupState {
       next.handle = a.value
       break
     }
-    case 'setCanNext': {
-      next.canNext = a.value
-      break
-    }
     case 'setIsLoading': {
       next.isLoading = a.value
       break
@@ -164,23 +152,6 @@ export function reducer(s: SignupState, a: SignupAction): SignupState {
   }
 
   next.hasPrev = next.activeStep !== SignupStep.INFO
-
-  switch (next.activeStep) {
-    case SignupStep.INFO: {
-      const isValidEmail = EmailValidator.validate(next.email)
-      next.canNext =
-        !!(next.email && next.password && next.dateOfBirth) &&
-        (!next.serviceDescription?.inviteCodeRequired || !!next.inviteCode) &&
-        is13(next.dateOfBirth) &&
-        isValidEmail
-      break
-    }
-    case SignupStep.HANDLE: {
-      next.canNext =
-        !!next.handle && validateHandle(next.handle, next.userDomain).overall
-      break
-    }
-  }
 
   logger.debug('signup', next)
 
@@ -207,8 +178,6 @@ export function useSubmitSignup({
 }) {
   const {_} = useLingui()
   const {createAccount} = useSessionApi()
-  const {mutateAsync: setBirthDate} = usePreferencesSetBirthDateMutation()
-  const {mutate: setSavedFeeds} = useSetSaveFeedsMutation()
   const onboardingDispatch = useOnboardingDispatch()
 
   return useCallback(
@@ -246,6 +215,10 @@ export function useSubmitSignup({
         !verificationCode
       ) {
         dispatch({type: 'setStep', value: SignupStep.CAPTCHA})
+        logger.error('Signup Flow Error', {
+          errorMessage: 'Verification captcha code was not set.',
+          registrationHandle: state.handle,
+        })
         return dispatch({
           type: 'setError',
           value: _(msg`Please complete the verification captcha.`),
@@ -255,21 +228,21 @@ export function useSubmitSignup({
       dispatch({type: 'setIsLoading', value: true})
 
       try {
-        onboardingDispatch({type: 'start'}) // start now to avoid flashing the wrong view
         await createAccount({
           service: state.serviceUrl,
           email: state.email,
           handle: createFullHandle(state.handle, state.userDomain),
           password: state.password,
+          birthDate: state.dateOfBirth,
           inviteCode: state.inviteCode.trim(),
           verificationCode: verificationCode,
         })
-        await setBirthDate({birthDate: state.dateOfBirth})
-        if (IS_PROD_SERVICE(state.serviceUrl)) {
-          setSavedFeeds(DEFAULT_PROD_FEEDS)
-        }
+        /*
+         * Must happen last so that if the user has multiple tabs open and
+         * createAccount fails, one tab is not stuck in onboarding — Eric
+         */
+        onboardingDispatch({type: 'start'})
       } catch (e: any) {
-        onboardingDispatch({type: 'skip'}) // undo starting the onboard
         let errMsg = e.toString()
         if (e instanceof ComAtprotoServerCreateAccount.InvalidInviteCodeError) {
           dispatch({
@@ -282,20 +255,17 @@ export function useSubmitSignup({
           return
         }
 
-        if ([400, 429].includes(e.status)) {
-          logger.warn('Failed to create account', {message: e})
-        } else {
-          logger.error(`Failed to create account (${e.status} status)`, {
-            message: e,
-          })
-        }
-
         const error = cleanError(errMsg)
         const isHandleError = error.toLowerCase().includes('handle')
 
         dispatch({type: 'setIsLoading', value: false})
-        dispatch({type: 'setError', value: cleanError(errMsg)})
+        dispatch({type: 'setError', value: error})
         dispatch({type: 'setStep', value: isHandleError ? 2 : 1})
+
+        logger.error('Signup Flow Error', {
+          errorMessage: error,
+          registrationHandle: state.handle,
+        })
       } finally {
         dispatch({type: 'setIsLoading', value: false})
       }
@@ -313,8 +283,6 @@ export function useSubmitSignup({
       _,
       onboardingDispatch,
       createAccount,
-      setBirthDate,
-      setSavedFeeds,
     ],
   )
 }
