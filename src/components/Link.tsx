@@ -1,5 +1,10 @@
 import React from 'react'
-import {GestureResponderEvent} from 'react-native'
+import {
+  GestureResponderEvent,
+  Pressable,
+  StyleProp,
+  ViewStyle,
+} from 'react-native'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import {StackActions, useLinkProps} from '@react-navigation/native'
 
@@ -12,7 +17,8 @@ import {
   isExternalUrl,
   linkRequiresWarning,
 } from '#/lib/strings/url-helpers'
-import {isNative, isWeb} from '#/platform/detection'
+import {isNative} from '#/platform/detection'
+import {shouldClickOpenNewTab} from '#/platform/urls'
 import {useModalControls} from '#/state/modals'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {useNavigationDeduped} from 'lib/hooks/useNavigationDeduped'
@@ -116,16 +122,7 @@ export function useLink({
         if (isExternal) {
           openLink(href)
         } else {
-          /**
-           * A `GestureResponderEvent`, but cast to `any` to avoid using a bunch
-           * of @ts-ignore below.
-           */
-          const event = e as any
-          const isMiddleClick = isWeb && event.button === 1
-          const isMetaKey =
-            isWeb &&
-            (event.metaKey || event.altKey || event.ctrlKey || event.shiftKey)
-          const shouldOpenInNewTab = isMetaKey || isMiddleClick
+          const shouldOpenInNewTab = shouldClickOpenNewTab(e)
 
           if (isBskyDownloadUrl(href)) {
             shareUrl(BSKY_DOWNLOAD_URL)
@@ -329,5 +326,47 @@ export function InlineLinkText({
       })}>
       {children}
     </Text>
+  )
+}
+
+/**
+ * A Pressable that uses useLink to handle navigation. It is unstyled, so can be used in cases where the Button styles
+ * in Link are not desired.
+ * @param displayText
+ * @param style
+ * @param children
+ * @param rest
+ * @constructor
+ */
+export function BaseLink({
+  displayText,
+  onPress: onPressOuter,
+  style,
+  children,
+  ...rest
+}: {
+  style?: StyleProp<ViewStyle>
+  children: React.ReactNode
+  to: string
+  action: 'push' | 'replace' | 'navigate'
+  onPress?: () => false | void
+  shareOnLongPress?: boolean
+  label: string
+  displayText?: string
+}) {
+  const {onPress, ...btnProps} = useLink({
+    displayText: displayText ?? rest.to,
+    ...rest,
+  })
+  return (
+    <Pressable
+      style={style}
+      onPress={e => {
+        onPressOuter?.()
+        onPress(e)
+      }}
+      {...btnProps}>
+      {children}
+    </Pressable>
   )
 }

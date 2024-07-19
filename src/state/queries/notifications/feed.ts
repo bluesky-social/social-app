@@ -17,7 +17,7 @@
  */
 
 import {useEffect, useRef} from 'react'
-import {AppBskyFeedDefs} from '@atproto/api'
+import {AppBskyActorDefs, AppBskyFeedDefs, AtUri} from '@atproto/api'
 import {
   InfiniteData,
   QueryClient,
@@ -26,11 +26,15 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
-import {useMutedThreads} from '#/state/muted-threads'
+import {useGate} from '#/lib/statsig/statsig'
 import {useAgent} from '#/state/session'
 import {useModerationOpts} from '../../preferences/moderation-opts'
 import {STALE} from '..'
-import {embedViewRecordToPostView, getEmbeddedPost} from '../util'
+import {
+  didOrHandleUriMatches,
+  embedViewRecordToPostView,
+  getEmbeddedPost,
+} from '../util'
 import {FeedPage} from './types'
 import {useUnreadNotificationsApi} from './unread'
 import {fetchPage} from './util'
@@ -47,13 +51,13 @@ export function RQKEY() {
 }
 
 export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
-  const threadMutes = useMutedThreads()
   const unreads = useUnreadNotificationsApi()
   const enabled = opts?.enabled !== false
   const lastPageCountRef = useRef(0)
+  const gate = useGate()
 
   const query = useInfiniteQuery<
     FeedPage,
@@ -73,13 +77,13 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
       if (!page) {
         page = (
           await fetchPage({
-            getAgent,
+            agent,
             limit: PAGE_SIZE,
             cursor: pageParam,
             queryClient,
             moderationOpts,
-            threadMutes,
             fetchAdditionalData: true,
+            shouldUngroupFollowBacks: () => gate('ungroup_follow_backs'),
           })
         ).page
       }
@@ -142,6 +146,37 @@ export function* findAllPostsInQueryData(
   queryClient: QueryClient,
   uri: string,
 ): Generator<AppBskyFeedDefs.PostView, void> {
+  const atUri = new AtUri(uri)
+
+  const queryDatas = queryClient.getQueriesData<InfiniteData<FeedPage>>({
+    queryKey: [RQKEY_ROOT],
+  })
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData?.pages) {
+      continue
+    }
+
+    for (const page of queryData?.pages) {
+      for (const item of page.items) {
+        if (item.type !== 'starterpack-joined') {
+          if (item.subject && didOrHandleUriMatches(atUri, item.subject)) {
+            yield item.subject
+          }
+        }
+
+        const quotedPost = getEmbeddedPost(item.subject?.embed)
+        if (quotedPost && didOrHandleUriMatches(atUri, quotedPost)) {
+          yield embedViewRecordToPostView(quotedPost!)
+        }
+      }
+    }
+  }
+}
+
+export function* findAllProfilesInQueryData(
+  queryClient: QueryClient,
+  did: string,
+): Generator<AppBskyActorDefs.ProfileView, void> {
   const queryDatas = queryClient.getQueriesData<InfiniteData<FeedPage>>({
     queryKey: [RQKEY_ROOT],
   })
@@ -151,12 +186,15 @@ export function* findAllPostsInQueryData(
     }
     for (const page of queryData?.pages) {
       for (const item of page.items) {
-        if (item.subject?.uri === uri) {
-          yield item.subject
+        if (
+          item.type !== 'starterpack-joined' &&
+          item.subject?.author.did === did
+        ) {
+          yield item.subject.author
         }
         const quotedPost = getEmbeddedPost(item.subject?.embed)
-        if (quotedPost?.uri === uri) {
-          yield embedViewRecordToPostView(quotedPost)
+        if (quotedPost?.author.did === did) {
+          yield quotedPost.author
         }
       }
     }

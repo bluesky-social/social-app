@@ -6,35 +6,42 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigationState} from '@react-navigation/native'
 
-import {useMinimalShellMode} from '#/lib/hooks/useMinimalShellMode'
+import {useMinimalShellFooterTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {usePalette} from '#/lib/hooks/usePalette'
-import {
-  BellIcon,
-  BellIconSolid,
-  HashtagIcon,
-  HomeIcon,
-  HomeIconSolid,
-  MagnifyingGlassIcon2,
-  MagnifyingGlassIcon2Solid,
-  UserIcon,
-  UserIconSolid,
-} from '#/lib/icons'
 import {clamp} from '#/lib/numbers'
 import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
 import {CommonNavigatorParams} from '#/lib/routes/types'
-import {useGate} from '#/lib/statsig/statsig'
 import {s} from '#/lib/styles'
 import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
+import {useUnreadMessageCount} from 'state/queries/messages/list-converations'
+import {useUnreadNotifications} from 'state/queries/notifications/unread'
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
 import {Link} from 'view/com/util/Link'
-import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
-import {Envelope_Filled_Stroke2_Corner0_Rounded as EnvelopeFilled} from '#/components/icons/Envelope'
+import {
+  Bell_Filled_Corner0_Rounded as BellFilled,
+  Bell_Stroke2_Corner0_Rounded as Bell,
+} from '#/components/icons/Bell'
+import {
+  HomeOpen_Filled_Corner0_Rounded as HomeFilled,
+  HomeOpen_Stoke2_Corner0_Rounded as Home,
+} from '#/components/icons/HomeOpen'
+import {MagnifyingGlass_Filled_Stroke2_Corner0_Rounded as MagnifyingGlassFilled} from '#/components/icons/MagnifyingGlass'
+import {MagnifyingGlass2_Stroke2_Corner0_Rounded as MagnifyingGlass} from '#/components/icons/MagnifyingGlass2'
+import {
+  Message_Stroke2_Corner0_Rounded as Message,
+  Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
+} from '#/components/icons/Message'
+import {
+  UserCircle_Filled_Corner0_Rounded as UserCircleFilled,
+  UserCircle_Stroke2_Corner0_Rounded as UserCircle,
+} from '#/components/icons/UserCircle'
+import {HomeTourExploreWrapper} from '#/tours/HomeTour'
 import {styles} from './BottomBarStyles'
 
 export function BottomBarWeb() {
@@ -42,10 +49,13 @@ export function BottomBarWeb() {
   const {hasSession, currentAccount} = useSession()
   const pal = usePalette('default')
   const safeAreaInsets = useSafeAreaInsets()
-  const {footerMinimalShellTransform} = useMinimalShellMode()
+  const footerMinimalShellTransform = useMinimalShellFooterTransform()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
-  const gate = useGate()
+  const iconWidth = 26
+
+  const unreadMessageCount = useUnreadMessageCount()
+  const notificationCountStr = useUnreadNotifications()
 
   const showSignIn = React.useCallback(() => {
     closeAllActiveElements()
@@ -72,11 +82,10 @@ export function BottomBarWeb() {
         <>
           <NavItem routeName="Home" href="/">
             {({isActive}) => {
-              const Icon = isActive ? HomeIconSolid : HomeIcon
+              const Icon = isActive ? HomeFilled : Home
               return (
                 <Icon
-                  strokeWidth={4}
-                  size={24}
+                  width={iconWidth + 1}
                   style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
                 />
               )
@@ -84,57 +93,60 @@ export function BottomBarWeb() {
           </NavItem>
           <NavItem routeName="Search" href="/search">
             {({isActive}) => {
-              const Icon = isActive
-                ? MagnifyingGlassIcon2Solid
-                : MagnifyingGlassIcon2
+              const Icon = isActive ? MagnifyingGlassFilled : MagnifyingGlass
               return (
-                <Icon
-                  size={25}
-                  style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
-                  strokeWidth={1.8}
-                />
+                <HomeTourExploreWrapper>
+                  <Icon
+                    width={iconWidth + 2}
+                    style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
+                  />
+                </HomeTourExploreWrapper>
               )
             }}
           </NavItem>
 
           {hasSession && (
             <>
-              <NavItem routeName="Feeds" href="/feeds">
+              <NavItem routeName="Messages" href="/messages">
                 {({isActive}) => {
+                  const Icon = isActive ? MessageFilled : Message
                   return (
-                    <HashtagIcon
-                      size={22}
-                      style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
-                      strokeWidth={isActive ? 4 : 2.5}
-                    />
+                    <>
+                      <Icon
+                        width={iconWidth - 1}
+                        style={[styles.ctrlIcon, pal.text, styles.messagesIcon]}
+                      />
+                      {unreadMessageCount.count > 0 && (
+                        <View style={styles.notificationCount}>
+                          <Text style={styles.notificationCountLabel}>
+                            {unreadMessageCount.numUnread}
+                          </Text>
+                        </View>
+                      )}
+                    </>
                   )
                 }}
               </NavItem>
               <NavItem routeName="Notifications" href="/notifications">
                 {({isActive}) => {
-                  const Icon = isActive ? BellIconSolid : BellIcon
+                  const Icon = isActive ? BellFilled : Bell
                   return (
-                    <Icon
-                      size={24}
-                      strokeWidth={1.9}
-                      style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
-                    />
+                    <>
+                      <Icon
+                        width={iconWidth}
+                        style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
+                      />
+                      {notificationCountStr !== '' && (
+                        <View style={styles.notificationCount}>
+                          <Text style={styles.notificationCountLabel}>
+                            {notificationCountStr}
+                          </Text>
+                        </View>
+                      )}
+                    </>
                   )
                 }}
               </NavItem>
-              {gate('dms') && (
-                <NavItem routeName="Messages" href="/messages">
-                  {({isActive}) => {
-                    const Icon = isActive ? EnvelopeFilled : Envelope
-                    return (
-                      <Icon
-                        size="lg"
-                        style={[styles.ctrlIcon, pal.text, styles.messagesIcon]}
-                      />
-                    )
-                  }}
-                </NavItem>
-              )}
               <NavItem
                 routeName="Profile"
                 href={
@@ -146,11 +158,10 @@ export function BottomBarWeb() {
                     : '/'
                 }>
                 {({isActive}) => {
-                  const Icon = isActive ? UserIconSolid : UserIcon
+                  const Icon = isActive ? UserCircleFilled : UserCircle
                   return (
                     <Icon
-                      size={28}
-                      strokeWidth={1.5}
+                      width={iconWidth}
                       style={[styles.ctrlIcon, pal.text, styles.profileIcon]}
                     />
                   )

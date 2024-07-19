@@ -10,9 +10,8 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
-import {isIOS, isWeb} from '#/platform/detection'
+import {isIOS} from '#/platform/detection'
 import {Shadow} from '#/state/cache/types'
 import {useModalControls} from '#/state/modals'
 import {
@@ -28,8 +27,13 @@ import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {MessageProfileButton} from '#/components/dms/MessageProfileButton'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import {
+  KnownFollowers,
+  shouldShowKnownFollowers,
+} from '#/components/KnownFollowers'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {ProfileHeaderDisplayName} from './DisplayName'
@@ -71,6 +75,10 @@ let ProfileHeaderStandard = ({
   const [_queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
   const unblockPromptControl = Prompt.usePromptControl()
   const requireAuth = useRequireAuth()
+  const isBlockedUser =
+    profile.viewer?.blocking ||
+    profile.viewer?.blockedBy ||
+    profile.viewer?.blockingByList
 
   const onPressEditProfile = React.useCallback(() => {
     track('ProfileHeader:EditProfileButtonClicked')
@@ -80,7 +88,6 @@ let ProfileHeaderStandard = ({
     })
   }, [track, openModal, profile])
 
-  const gate = useGate()
   const onPressFollow = () => {
     requireAuth(async () => {
       try {
@@ -94,9 +101,6 @@ let ProfileHeaderStandard = ({
             )}`,
           ),
         )
-        if (isWeb && gate('autoexpand_suggestions_on_profile_follow_v2')) {
-          setShowSuggestedFollows(true)
-        }
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
           logger.error('Failed to follow', {message: String(e)})
@@ -156,7 +160,14 @@ let ProfileHeaderStandard = ({
         style={[a.px_lg, a.pt_md, a.pb_sm]}
         pointerEvents={isIOS ? 'auto' : 'box-none'}>
         <View
-          style={[a.flex_row, a.justify_end, a.gap_sm, a.pb_sm]}
+          style={[
+            {paddingLeft: 90},
+            a.flex_row,
+            a.justify_end,
+            a.gap_sm,
+            a.pb_sm,
+            a.flex_wrap,
+          ]}
           pointerEvents={isIOS ? 'auto' : 'box-none'}>
           {isMe ? (
             <Button
@@ -166,7 +177,7 @@ let ProfileHeaderStandard = ({
               variant="solid"
               onPress={onPressEditProfile}
               label={_(msg`Edit profile`)}
-              style={a.rounded_full}>
+              style={[a.rounded_full, a.py_sm]}>
               <ButtonText>
                 <Trans>Edit Profile</Trans>
               </ButtonText>
@@ -181,7 +192,7 @@ let ProfileHeaderStandard = ({
                 label={_(msg`Unblock`)}
                 disabled={!hasSession}
                 onPress={() => unblockPromptControl.open()}
-                style={a.rounded_full}>
+                style={[a.rounded_full, a.py_sm]}>
                 <ButtonText>
                   <Trans context="action">Unblock</Trans>
                 </ButtonText>
@@ -190,24 +201,30 @@ let ProfileHeaderStandard = ({
           ) : !profile.viewer?.blockedBy ? (
             <>
               {hasSession && (
-                <Button
-                  testID="suggestedFollowsBtn"
-                  size="small"
-                  color={showSuggestedFollows ? 'primary' : 'secondary'}
-                  variant="solid"
-                  shape="round"
-                  onPress={() => setShowSuggestedFollows(!showSuggestedFollows)}
-                  label={_(msg`Show follows similar to ${profile.handle}`)}>
-                  <FontAwesomeIcon
-                    icon="user-plus"
-                    style={
-                      showSuggestedFollows
-                        ? {color: t.palette.white}
-                        : t.atoms.text
+                <>
+                  <MessageProfileButton profile={profile} />
+                  <Button
+                    testID="suggestedFollowsBtn"
+                    size="small"
+                    color={showSuggestedFollows ? 'primary' : 'secondary'}
+                    variant="solid"
+                    shape="round"
+                    onPress={() =>
+                      setShowSuggestedFollows(!showSuggestedFollows)
                     }
-                    size={14}
-                  />
-                </Button>
+                    label={_(msg`Show follows similar to ${profile.handle}`)}
+                    style={{width: 36, height: 36}}>
+                    <FontAwesomeIcon
+                      icon="user-plus"
+                      style={
+                        showSuggestedFollows
+                          ? {color: t.palette.white}
+                          : t.atoms.text
+                      }
+                      size={14}
+                    />
+                  </Button>
+                </>
               )}
 
               <Button
@@ -223,7 +240,7 @@ let ProfileHeaderStandard = ({
                 onPress={
                   profile.viewer?.following ? onPressUnfollow : onPressFollow
                 }
-                style={[a.rounded_full, a.gap_xs]}>
+                style={[a.rounded_full, a.gap_xs, a.py_sm]}>
                 <ButtonIcon
                   position="left"
                   icon={profile.viewer?.following ? Check : Plus}
@@ -244,7 +261,7 @@ let ProfileHeaderStandard = ({
           <ProfileHeaderDisplayName profile={profile} moderation={moderation} />
           <ProfileHeaderHandle profile={profile} />
         </View>
-        {!isPlaceholderProfile && (
+        {!isPlaceholderProfile && !isBlockedUser && (
           <>
             <ProfileHeaderMetrics profile={profile} />
             {descriptionRT && !moderation.ui('profileView').blur ? (
@@ -259,6 +276,17 @@ let ProfileHeaderStandard = ({
                 />
               </View>
             ) : undefined}
+
+            {!isMe &&
+              !isBlockedUser &&
+              shouldShowKnownFollowers(profile.viewer?.knownFollowers) && (
+                <View style={[a.flex_row, a.align_center, a.gap_sm, a.pt_md]}>
+                  <KnownFollowers
+                    profile={profile}
+                    moderationOpts={moderationOpts}
+                  />
+                </View>
+              )}
           </>
         )}
       </View>

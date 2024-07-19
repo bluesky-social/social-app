@@ -9,10 +9,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
+import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {StackActions, useNavigation} from '@react-navigation/native'
@@ -27,19 +24,6 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from 'lib/constants'
 import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
 import {usePalette} from 'lib/hooks/usePalette'
-import {
-  BellIcon,
-  BellIconSolid,
-  CogIcon,
-  HashtagIcon,
-  HomeIcon,
-  HomeIconSolid,
-  ListIcon,
-  MagnifyingGlassIcon2,
-  MagnifyingGlassIcon2Solid,
-  UserIcon,
-  UserIconSolid,
-} from 'lib/icons'
 import {getTabState, TabState} from 'lib/routes/helpers'
 import {NavigationProp} from 'lib/routes/types'
 import {colors, s} from 'lib/styles'
@@ -50,7 +34,31 @@ import {formatCountShortOnly} from 'view/com/util/numeric/format'
 import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {useTheme as useAlfTheme} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {
+  Bell_Filled_Corner0_Rounded as BellFilled,
+  Bell_Stroke2_Corner0_Rounded as Bell,
+} from '#/components/icons/Bell'
+import {BulletList_Stroke2_Corner0_Rounded as List} from '#/components/icons/BulletList'
+import {
+  Hashtag_Filled_Corner0_Rounded as HashtagFilled,
+  Hashtag_Stroke2_Corner0_Rounded as Hashtag,
+} from '#/components/icons/Hashtag'
+import {
+  HomeOpen_Filled_Corner0_Rounded as HomeFilled,
+  HomeOpen_Stoke2_Corner0_Rounded as Home,
+} from '#/components/icons/HomeOpen'
+import {MagnifyingGlass_Filled_Stroke2_Corner0_Rounded as MagnifyingGlassFilled} from '#/components/icons/MagnifyingGlass'
+import {MagnifyingGlass2_Stroke2_Corner0_Rounded as MagnifyingGlass} from '#/components/icons/MagnifyingGlass2'
+import {Message_Stroke2_Corner0_Rounded as Message} from '#/components/icons/Message'
+import {SettingsGear2_Stroke2_Corner0_Rounded as Settings} from '#/components/icons/SettingsGear2'
+import {
+  UserCircle_Filled_Corner0_Rounded as UserCircleFilled,
+  UserCircle_Stroke2_Corner0_Rounded as UserCircle,
+} from '#/components/icons/UserCircle'
 import {TextLink} from '../com/util/Link'
+
+const iconWidth = 28
 
 let DrawerProfileCard = ({
   account,
@@ -177,10 +185,11 @@ let DrawerContent = ({}: {}): React.ReactNode => {
     onPressTab('MyProfile')
   }, [onPressTab])
 
-  const onPressMyFeeds = React.useCallback(
-    () => onPressTab('Feeds'),
-    [onPressTab],
-  )
+  const onPressMyFeeds = React.useCallback(() => {
+    track('Menu:ItemClicked', {url: 'Feeds'})
+    navigation.navigate('Feeds')
+    setDrawerOpen(false)
+  }, [navigation, setDrawerOpen, track])
 
   const onPressLists = React.useCallback(() => {
     track('Menu:ItemClicked', {url: 'Lists'})
@@ -309,42 +318,33 @@ let DrawerFooter = ({
   onPressFeedback: () => void
   onPressHelp: () => void
 }): React.ReactNode => {
-  const theme = useTheme()
-  const pal = usePalette('default')
   const {_} = useLingui()
   return (
     <View style={styles.footer}>
-      <TouchableOpacity
-        accessibilityRole="link"
-        accessibilityLabel={_(msg`Send feedback`)}
-        accessibilityHint=""
-        onPress={onPressFeedback}
-        style={[
-          styles.footerBtn,
-          styles.footerBtnFeedback,
-          theme.colorScheme === 'light'
-            ? styles.footerBtnFeedbackLight
-            : styles.footerBtnFeedbackDark,
-        ]}>
-        <FontAwesomeIcon
-          style={pal.link as FontAwesomeIconStyle}
-          size={18}
-          icon={['far', 'message']}
-        />
-        <Text type="lg-medium" style={[pal.link, s.pl10]}>
+      <Button
+        label={_(msg`Send feedback`)}
+        size="small"
+        variant="solid"
+        color="secondary"
+        onPress={onPressFeedback}>
+        <ButtonIcon icon={Message} position="left" />
+        <ButtonText>
           <Trans>Feedback</Trans>
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        accessibilityRole="link"
-        accessibilityLabel={_(msg`Send feedback`)}
-        accessibilityHint=""
+        </ButtonText>
+      </Button>
+      <Button
+        label={_(msg`Get help`)}
+        size="small"
+        variant="outline"
+        color="secondary"
         onPress={onPressHelp}
-        style={[styles.footerBtn]}>
-        <Text type="lg-medium" style={[pal.link, s.pl10]}>
+        style={{
+          backgroundColor: 'transparent',
+        }}>
+        <ButtonText>
           <Trans>Help</Trans>
-        </Text>
-      </TouchableOpacity>
+        </ButtonText>
+      </Button>
     </View>
   )
 }
@@ -370,16 +370,14 @@ let SearchMenuItem = ({
     <MenuItem
       icon={
         isActive ? (
-          <MagnifyingGlassIcon2Solid
+          <MagnifyingGlassFilled
             style={pal.text as StyleProp<ViewStyle>}
-            size={24}
-            strokeWidth={1.7}
+            width={iconWidth}
           />
         ) : (
-          <MagnifyingGlassIcon2
+          <MagnifyingGlass
             style={pal.text as StyleProp<ViewStyle>}
-            size={24}
-            strokeWidth={1.7}
+            width={iconWidth}
           />
         )
       }
@@ -406,17 +404,12 @@ let HomeMenuItem = ({
     <MenuItem
       icon={
         isActive ? (
-          <HomeIconSolid
+          <HomeFilled
             style={pal.text as StyleProp<ViewStyle>}
-            size="24"
-            strokeWidth={3.25}
+            width={iconWidth}
           />
         ) : (
-          <HomeIcon
-            style={pal.text as StyleProp<ViewStyle>}
-            size="24"
-            strokeWidth={3.25}
-          />
+          <Home style={pal.text as StyleProp<ViewStyle>} width={iconWidth} />
         )
       }
       label={_(msg`Home`)}
@@ -443,17 +436,12 @@ let NotificationsMenuItem = ({
     <MenuItem
       icon={
         isActive ? (
-          <BellIconSolid
+          <BellFilled
             style={pal.text as StyleProp<ViewStyle>}
-            size="24"
-            strokeWidth={1.7}
+            width={iconWidth}
           />
         ) : (
-          <BellIcon
-            style={pal.text as StyleProp<ViewStyle>}
-            size="24"
-            strokeWidth={1.7}
-          />
+          <Bell style={pal.text as StyleProp<ViewStyle>} width={iconWidth} />
         )
       }
       label={_(msg`Notifications`)}
@@ -484,17 +472,12 @@ let FeedsMenuItem = ({
     <MenuItem
       icon={
         isActive ? (
-          <HashtagIcon
-            strokeWidth={3}
+          <HashtagFilled
+            width={iconWidth}
             style={pal.text as FontAwesomeIconStyle}
-            size={24}
           />
         ) : (
-          <HashtagIcon
-            strokeWidth={2}
-            style={pal.text as FontAwesomeIconStyle}
-            size={24}
-          />
+          <Hashtag width={iconWidth} style={pal.text as FontAwesomeIconStyle} />
         )
       }
       label={_(msg`Feeds`)}
@@ -512,7 +495,7 @@ let ListsMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
   const pal = usePalette('default')
   return (
     <MenuItem
-      icon={<ListIcon strokeWidth={2} style={pal.text} size={26} />}
+      icon={<List style={pal.text} width={iconWidth} />}
       label={_(msg`Lists`)}
       accessibilityLabel={_(msg`Lists`)}
       accessibilityHint=""
@@ -535,16 +518,14 @@ let ProfileMenuItem = ({
     <MenuItem
       icon={
         isActive ? (
-          <UserIconSolid
+          <UserCircleFilled
             style={pal.text as StyleProp<ViewStyle>}
-            size="26"
-            strokeWidth={1.5}
+            width={iconWidth}
           />
         ) : (
-          <UserIcon
+          <UserCircle
             style={pal.text as StyleProp<ViewStyle>}
-            size="26"
-            strokeWidth={1.5}
+            width={iconWidth}
           />
         )
       }
@@ -563,11 +544,7 @@ let SettingsMenuItem = ({onPress}: {onPress: () => void}): React.ReactNode => {
   return (
     <MenuItem
       icon={
-        <CogIcon
-          style={pal.text as StyleProp<ViewStyle>}
-          size="26"
-          strokeWidth={1.75}
-        />
+        <Settings style={pal.text as StyleProp<ViewStyle>} width={iconWidth} />
       }
       label={_(msg`Settings`)}
       accessibilityLabel={_(msg`Settings`)}

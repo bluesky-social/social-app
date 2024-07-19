@@ -23,10 +23,10 @@ import {
 import {FeedDescriptor} from '#/state/queries/post-feed'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {
-  usePinFeedMutation,
+  useAddSavedFeedsMutation,
   usePreferencesQuery,
-  useSetSaveFeedsMutation,
-  useUnpinFeedMutation,
+  useRemoveFeedMutation,
+  useUpdateSavedFeedsMutation,
 } from '#/state/queries/preferences'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {truncateAndInvalidate} from '#/state/queries/util'
@@ -65,6 +65,7 @@ import {useDialogControl} from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
 import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 import {RichText} from '#/components/RichText'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 const SECTION_TITLES_CURATE = ['Posts', 'About']
 const SECTION_TITLES_MOD = ['About']
@@ -248,36 +249,80 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
   const isBlocking = !!list.viewer?.blocked
   const isMuting = !!list.viewer?.muted
   const isOwner = list.creator.did === currentAccount?.did
-  const {isPending: isPinPending, mutateAsync: pinFeed} = usePinFeedMutation()
-  const {isPending: isUnpinPending, mutateAsync: unpinFeed} =
-    useUnpinFeedMutation()
-  const isPending = isPinPending || isUnpinPending
   const {data: preferences} = usePreferencesQuery()
-  const {mutate: setSavedFeeds} = useSetSaveFeedsMutation()
   const {track} = useAnalytics()
   const playHaptic = useHaptics()
+
+  const {mutateAsync: addSavedFeeds, isPending: isAddSavedFeedPending} =
+    useAddSavedFeedsMutation()
+  const {mutateAsync: removeSavedFeed, isPending: isRemovePending} =
+    useRemoveFeedMutation()
+  const {mutateAsync: updateSavedFeeds, isPending: isUpdatingSavedFeeds} =
+    useUpdateSavedFeedsMutation()
+
+  const isPending =
+    isAddSavedFeedPending || isRemovePending || isUpdatingSavedFeeds
 
   const deleteListPromptControl = useDialogControl()
   const subscribeMutePromptControl = useDialogControl()
   const subscribeBlockPromptControl = useDialogControl()
 
-  const isPinned = preferences?.feeds?.pinned?.includes(list.uri)
-  const isSaved = preferences?.feeds?.saved?.includes(list.uri)
+  const savedFeedConfig = preferences?.savedFeeds?.find(
+    f => f.value === list.uri,
+  )
+  const isPinned = Boolean(savedFeedConfig?.pinned)
 
   const onTogglePinned = React.useCallback(async () => {
     playHaptic()
 
     try {
-      if (isPinned) {
-        await unpinFeed({uri: list.uri})
+      if (savedFeedConfig) {
+        const pinned = !savedFeedConfig.pinned
+        await updateSavedFeeds([
+          {
+            ...savedFeedConfig,
+            pinned,
+          },
+        ])
+        Toast.show(
+          pinned
+            ? _(msg`Pinned to your feeds`)
+            : _(msg`Unpinned from your feeds`),
+        )
       } else {
-        await pinFeed({uri: list.uri})
+        await addSavedFeeds([
+          {
+            type: 'list',
+            value: list.uri,
+            pinned: true,
+          },
+        ])
+        Toast.show(_(msg`Saved to your feeds`))
       }
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting the server`))
       logger.error('Failed to toggle pinned feed', {message: e})
     }
-  }, [playHaptic, isPinned, unpinFeed, list.uri, pinFeed, _])
+  }, [
+    playHaptic,
+    addSavedFeeds,
+    updateSavedFeeds,
+    list.uri,
+    _,
+    savedFeedConfig,
+  ])
+
+  const onRemoveFromSavedFeeds = React.useCallback(async () => {
+    playHaptic()
+    if (!savedFeedConfig) return
+    try {
+      await removeSavedFeed(savedFeedConfig)
+      Toast.show(_(msg`Removed from your feeds`))
+    } catch (e) {
+      Toast.show(_(msg`There was an issue contacting the server`))
+      logger.error('Failed to remove pinned list', {message: e})
+    }
+  }, [playHaptic, removeSavedFeed, _, savedFeedConfig])
 
   const onSubscribeMute = useCallback(async () => {
     try {
@@ -345,13 +390,8 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
   const onPressDelete = useCallback(async () => {
     await listDeleteMutation.mutateAsync({uri: list.uri})
 
-    if (isSaved || isPinned) {
-      const {saved, pinned} = preferences!.feeds
-
-      setSavedFeeds({
-        saved: isSaved ? saved.filter(uri => uri !== list.uri) : saved,
-        pinned: isPinned ? pinned.filter(uri => uri !== list.uri) : pinned,
-      })
+    if (savedFeedConfig) {
+      await removeSavedFeed(savedFeedConfig)
     }
 
     Toast.show(_(msg`List deleted`))
@@ -367,10 +407,8 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     navigation,
     track,
     _,
-    preferences,
-    isPinned,
-    isSaved,
-    setSavedFeeds,
+    removeSavedFeed,
+    savedFeedConfig,
   ])
 
   const onPressReport = useCallback(() => {
@@ -398,6 +436,22 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         },
       },
     ]
+
+    if (savedFeedConfig) {
+      items.push({
+        testID: 'listHeaderDropdownRemoveFromFeedsBtn',
+        label: _(msg`Remove from my feeds`),
+        onPress: onRemoveFromSavedFeeds,
+        icon: {
+          ios: {
+            name: 'trash',
+          },
+          android: '',
+          web: ['far', 'trash-can'],
+        },
+      })
+    }
+
     if (isOwner) {
       items.push({label: 'separator'})
       items.push({
@@ -444,7 +498,10 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       items.push({
         testID: 'listHeaderDropdownUnpinBtn',
         label: _(msg`Unpin moderation list`),
-        onPress: isPending ? undefined : () => unpinFeed({uri: list.uri}),
+        onPress:
+          isPending || !savedFeedConfig
+            ? undefined
+            : () => removeSavedFeed(savedFeedConfig),
         icon: {
           ios: {
             name: 'pin',
@@ -499,12 +556,13 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     deleteListPromptControl.open,
     onPressReport,
     isPending,
-    unpinFeed,
-    list.uri,
     isBlocking,
     isMuting,
     onUnsubscribeMute,
     onUnsubscribeBlock,
+    removeSavedFeed,
+    savedFeedConfig,
+    onRemoveFromSavedFeeds,
   ])
 
   const subscribeDropdownItems: DropdownItem[] = useMemo(() => {
@@ -668,7 +726,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     }, [onScrollToTop, isScreenFocused])
 
     const renderPostsEmpty = useCallback(() => {
-      return <EmptyState icon="feed" message={_(msg`This feed is empty!`)} />
+      return <EmptyState icon="hashtag" message={_(msg`This feed is empty.`)} />
     }, [_])
 
     return (
@@ -745,7 +803,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
           <View
             style={[
               {
-                borderTopWidth: 1,
+                borderTopWidth: hairlineWidth,
                 padding: isMobile ? 14 : 20,
                 gap: 12,
               },
@@ -896,7 +954,7 @@ function ErrorScreen({error}: {error: string}) {
           marginTop: 10,
           paddingHorizontal: 18,
           paddingVertical: 14,
-          borderTopWidth: 1,
+          borderTopWidth: hairlineWidth,
         },
       ]}>
       <Text type="title-lg" style={[pal.text, s.mb10]}>

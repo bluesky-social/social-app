@@ -3,19 +3,22 @@ import {View} from 'react-native'
 import {ComAtprotoLabelDefs, ComAtprotoModerationDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useMutation} from '@tanstack/react-query'
 
 import {useLabelInfo} from '#/lib/moderation/useLabelInfo'
 import {makeProfileLink} from '#/lib/routes/links'
+import {useGate} from '#/lib/statsig/statsig'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {useAgent} from '#/state/session'
+import {logger} from '#/logger'
+import {useAgent, useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {Divider} from '../Divider'
-
+import {Loader} from '../Loader'
 export {useDialogControl as useLabelsOnMeDialogControl} from '#/components/Dialog'
 
 type Subject =
@@ -33,13 +36,28 @@ export interface LabelsOnMeDialogProps {
   labels: ComAtprotoLabelDefs.Label[]
 }
 
-export function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
+export function LabelsOnMeDialog(props: LabelsOnMeDialogProps) {
+  return (
+    <Dialog.Outer control={props.control}>
+      <Dialog.Handle />
+
+      <LabelsOnMeDialogInner {...props} />
+    </Dialog.Outer>
+  )
+}
+
+function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
   const {_} = useLingui()
+  const {currentAccount} = useSession()
   const [appealingLabel, setAppealingLabel] = React.useState<
     ComAtprotoLabelDefs.Label | undefined
   >(undefined)
   const {subject, labels} = props
   const isAccount = 'did' in subject
+  const containsSelfLabel = React.useMemo(
+    () => labels.some(l => l.src === currentAccount?.did),
+    [currentAccount?.did, labels],
+  )
 
   return (
     <Dialog.ScrollableInner
@@ -65,9 +83,17 @@ export function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
             )}
           </Text>
           <Text style={[a.text_md, a.leading_snug]}>
-            <Trans>
-              You may appeal these labels if you feel they were placed in error.
-            </Trans>
+            {containsSelfLabel ? (
+              <Trans>
+                You may appeal non-self labels if you feel they were placed in
+                error.
+              </Trans>
+            ) : (
+              <Trans>
+                You may appeal these labels if you feel they were placed in
+                error.
+              </Trans>
+            )}
           </Text>
 
           <View style={[a.py_lg, a.gap_md]}>
@@ -75,35 +101,27 @@ export function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
               <Label
                 key={`${label.val}-${label.src}`}
                 label={label}
+                isSelfLabel={label.src === currentAccount?.did}
                 control={props.control}
-                onPressAppeal={label => setAppealingLabel(label)}
+                onPressAppeal={setAppealingLabel}
               />
             ))}
           </View>
         </>
       )}
-
       <Dialog.Close />
     </Dialog.ScrollableInner>
   )
 }
 
-export function LabelsOnMeDialog(props: LabelsOnMeDialogProps) {
-  return (
-    <Dialog.Outer control={props.control}>
-      <Dialog.Handle />
-
-      <LabelsOnMeDialogInner {...props} />
-    </Dialog.Outer>
-  )
-}
-
 function Label({
   label,
+  isSelfLabel,
   control,
   onPressAppeal,
 }: {
   label: ComAtprotoLabelDefs.Label
+  isSelfLabel: boolean
   control: Dialog.DialogOuterProps['control']
   onPressAppeal: (label: ComAtprotoLabelDefs.Label) => void
 }) {
@@ -125,32 +143,42 @@ function Label({
             {strings.description}
           </Text>
         </View>
-        <View>
-          <Button
-            variant="solid"
-            color="secondary"
-            size="small"
-            label={_(msg`Appeal`)}
-            onPress={() => onPressAppeal(label)}>
-            <ButtonText>
-              <Trans>Appeal</Trans>
-            </ButtonText>
-          </Button>
-        </View>
+        {!isSelfLabel && (
+          <View>
+            <Button
+              variant="solid"
+              color="secondary"
+              size="small"
+              label={_(msg`Appeal`)}
+              onPress={() => onPressAppeal(label)}>
+              <ButtonText>
+                <Trans>Appeal</Trans>
+              </ButtonText>
+            </Button>
+          </View>
+        )}
       </View>
 
       <Divider />
 
       <View style={[a.px_md, a.py_sm, t.atoms.bg_contrast_25]}>
         <Text style={[t.atoms.text_contrast_medium]}>
-          <Trans>Source:</Trans>{' '}
-          <InlineLinkText
-            to={makeProfileLink(
-              labeler ? labeler.creator : {did: label.src, handle: ''},
-            )}
-            onPress={() => control.close()}>
-            {labeler ? sanitizeHandle(labeler.creator.handle, '@') : label.src}
-          </InlineLinkText>
+          {isSelfLabel ? (
+            <Trans>This label was applied by you.</Trans>
+          ) : (
+            <Trans>
+              Source:{' '}
+              <InlineLinkText
+                to={makeProfileLink(
+                  labeler ? labeler.creator : {did: label.src, handle: ''},
+                )}
+                onPress={() => control.close()}>
+                {labeler
+                  ? sanitizeHandle(labeler.creator.handle, '@')
+                  : label.src}
+              </InlineLinkText>
+            </Trans>
+          )}
         </Text>
       </View>
     </View>
@@ -173,28 +201,55 @@ function AppealForm({
   const {gtMobile} = useBreakpoints()
   const [details, setDetails] = React.useState('')
   const isAccountReport = 'did' in subject
-  const {getAgent} = useAgent()
+  const agent = useAgent()
+  const gate = useGate()
 
-  const onSubmit = async () => {
-    try {
+  const {mutate, isPending} = useMutation({
+    mutationFn: async () => {
       const $type = !isAccountReport
         ? 'com.atproto.repo.strongRef'
         : 'com.atproto.admin.defs#repoRef'
-      await getAgent()
-        .withProxy('atproto_labeler', label.src)
-        .createModerationReport({
-          reasonType: ComAtprotoModerationDefs.REASONAPPEAL,
-          subject: {
-            $type,
-            ...subject,
+      if (gate('session_withproxy_fix')) {
+        await agent.createModerationReport(
+          {
+            reasonType: ComAtprotoModerationDefs.REASONAPPEAL,
+            subject: {
+              $type,
+              ...subject,
+            },
+            reason: details,
           },
-          reason: details,
-        })
-      Toast.show(_(msg`Appeal submitted`))
-    } finally {
+          {
+            encoding: 'application/json',
+            headers: {
+              'atproto-proxy': `${label.src}#atproto_labeler`,
+            },
+          },
+        )
+      } else {
+        await agent
+          .withProxy('atproto_labeler', label.src)
+          .createModerationReport({
+            reasonType: ComAtprotoModerationDefs.REASONAPPEAL,
+            subject: {
+              $type,
+              ...subject,
+            },
+            reason: details,
+          })
+      }
+    },
+    onError: err => {
+      logger.error('Failed to submit label appeal', {message: err})
+      Toast.show(_(msg`Failed to submit appeal, please try again.`))
+    },
+    onSuccess: () => {
       control.close()
-    }
-  }
+      Toast.show(_(msg`Appeal submitted`))
+    },
+  })
+
+  const onSubmit = React.useCallback(() => mutate(), [mutate])
 
   return (
     <>
@@ -255,6 +310,7 @@ function AppealForm({
           onPress={onSubmit}
           label={_(msg`Submit`)}>
           <ButtonText>{_(msg`Submit`)}</ButtonText>
+          {isPending && <ButtonIcon icon={Loader} />}
         </Button>
       </View>
     </>

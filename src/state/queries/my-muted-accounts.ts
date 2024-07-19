@@ -13,7 +13,7 @@ export const RQKEY = () => [RQKEY_ROOT]
 type RQPageParam = string | undefined
 
 export function useMyMutedAccountsQuery() {
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   return useInfiniteQuery<
     AppBskyGraphGetMutes.OutputSchema,
     Error,
@@ -23,7 +23,7 @@ export function useMyMutedAccountsQuery() {
   >({
     queryKey: RQKEY(),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await getAgent().app.bsky.graph.getMutes({
+      const res = await agent.app.bsky.graph.getMutes({
         limit: 30,
         cursor: pageParam,
       })

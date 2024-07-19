@@ -39,6 +39,15 @@ module.exports = function (config) {
   const IS_TESTFLIGHT = process.env.EXPO_PUBLIC_ENV === 'testflight'
   const IS_PRODUCTION = process.env.EXPO_PUBLIC_ENV === 'production'
 
+  const ASSOCIATED_DOMAINS = [
+    'applinks:bsky.app',
+    'applinks:staging.bsky.app',
+    'appclips:bsky.app',
+    'appclips:go.bsky.app', // Allows App Clip to work when scanning QR codes
+    // When testing local services, enter an ngrok (et al) domain here. It must use a standard HTTP/HTTPS port.
+    ...(IS_DEV || IS_TESTFLIGHT ? [] : []),
+  ]
+
   const UPDATES_CHANNEL = IS_TESTFLIGHT
     ? 'testflight'
     : IS_PRODUCTION
@@ -83,7 +92,7 @@ module.exports = function (config) {
           NSPhotoLibraryUsageDescription:
             'Used for profile pictures, posts, and other kinds of content',
         },
-        associatedDomains: ['applinks:bsky.app', 'applinks:staging.bsky.app'],
+        associatedDomains: ASSOCIATED_DOMAINS,
         splash: {
           ...SPLASH_CONFIG,
           dark: DARK_SPLASH_CONFIG,
@@ -110,7 +119,7 @@ module.exports = function (config) {
             {
               NSPrivacyAccessedAPIType:
                 'NSPrivacyAccessedAPICategoryUserDefaults',
-              NSPrivacyAccessedAPITypeReasons: ['CA92.1'],
+              NSPrivacyAccessedAPITypeReasons: ['CA92.1', '1C8F.1'],
             },
           ],
         },
@@ -175,7 +184,6 @@ module.exports = function (config) {
         checkAutomatically: 'NEVER',
         channel: UPDATES_CHANNEL,
       },
-      assetBundlePatterns: ['**/*'],
       plugins: [
         'expo-localization',
         Boolean(process.env.SENTRY_AUTH_TOKEN) && 'sentry-expo',
@@ -183,7 +191,7 @@ module.exports = function (config) {
           'expo-build-properties',
           {
             ios: {
-              deploymentTarget: '13.4',
+              deploymentTarget: '14.0',
               newArchEnabled: false,
             },
             android: {
@@ -200,14 +208,20 @@ module.exports = function (config) {
           {
             icon: './assets/icon-android-notification.png',
             color: '#1185fe',
+            sounds: PLATFORM === 'ios' ? ['assets/dm.aiff'] : ['assets/dm.mp3'],
           },
         ],
+        'expo-video',
+        'react-native-compressor',
+        './plugins/starterPackAppClipExtension/withStarterPackAppClip.js',
         './plugins/withAndroidManifestPlugin.js',
         './plugins/withAndroidManifestFCMIconPlugin.js',
         './plugins/withAndroidStylesWindowBackgroundPlugin.js',
         './plugins/withAndroidStylesAccentColorPlugin.js',
         './plugins/withAndroidSplashScreenStatusBarTranslucentPlugin.js',
         './plugins/shareExtension/withShareExtensions.js',
+        './plugins/notificationsExtension/withNotificationsExtension.js',
+        './plugins/withAppDelegateReferrer.js',
       ].filter(Boolean),
       extra: {
         eas: {
@@ -223,6 +237,19 @@ module.exports = function (config) {
                         'group.app.bsky',
                       ],
                     },
+                  },
+                  {
+                    targetName: 'BlueskyNSE',
+                    bundleIdentifier: 'xyz.blueskyweb.app.BlueskyNSE',
+                    entitlements: {
+                      'com.apple.security.application-groups': [
+                        'group.app.bsky',
+                      ],
+                    },
+                  },
+                  {
+                    targetName: 'BlueskyClip',
+                    bundleIdentifier: 'xyz.blueskyweb.app.AppClip',
                   },
                 ],
               },

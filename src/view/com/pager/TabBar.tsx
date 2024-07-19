@@ -1,11 +1,13 @@
-import React, {useRef, useMemo, useEffect, useState, useCallback} from 'react'
-import {StyleSheet, View, ScrollView, LayoutChangeEvent} from 'react-native'
-import {Text} from '../util/text/Text'
-import {PressableWithHover} from '../util/PressableWithHover'
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {LayoutChangeEvent, ScrollView, StyleSheet, View} from 'react-native'
+
+import {isNative} from '#/platform/detection'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {PressableWithHover} from '../util/PressableWithHover'
+import {Text} from '../util/text/Text'
 import {DraggableScrollView} from './DraggableScrollView'
-import {isNative} from '#/platform/detection'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 export interface TabBarProps {
   testID?: string
@@ -139,7 +141,10 @@ export function TabBar({
                 <Text
                   type={isDesktop || isTablet ? 'xl-bold' : 'lg-bold'}
                   testID={testID ? `${testID}-${item}` : undefined}
-                  style={selected ? pal.text : pal.textLight}>
+                  style={[
+                    selected ? pal.text : pal.textLight,
+                    {lineHeight: 20},
+                  ]}>
                   {item}
                 </Text>
               </View>
@@ -175,7 +180,7 @@ const desktopStyles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     right: 0,
-    bottom: -1,
+    top: '100%',
     borderBottomWidth: 1,
   },
 })
@@ -186,7 +191,7 @@ const mobileStyles = StyleSheet.create({
   },
   contentContainer: {
     backgroundColor: 'transparent',
-    paddingHorizontal: 8,
+    paddingHorizontal: 6,
   },
   item: {
     paddingTop: 10,
@@ -202,7 +207,7 @@ const mobileStyles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     right: 0,
-    bottom: -1,
-    borderBottomWidth: 1,
+    top: '100%',
+    borderBottomWidth: hairlineWidth,
   },
 })

@@ -1,25 +1,39 @@
 import React from 'react'
 import {View} from 'react-native'
+import {AppBskyGraphDefs, AppBskyGraphStarterpack} from '@atproto/api'
+import {SavedFeed} from '@atproto/api/dist/client/types/app/bsky/actor/defs'
+import {TID} from '@atproto/common-web'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
-import {BSKY_APP_ACCOUNT_DID} from '#/lib/constants'
+import {
+  BSKY_APP_ACCOUNT_DID,
+  DISCOVER_SAVED_FEED,
+  TIMELINE_SAVED_FEED,
+} from '#/lib/constants'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
-import {useSetSaveFeedsMutation} from '#/state/queries/preferences'
+import {preferencesQueryKey} from '#/state/queries/preferences'
+import {RQKEY as profileRQKey} from '#/state/queries/profile'
 import {useAgent} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
+import {useProgressGuideControls} from '#/state/shell/progress-guide'
+import {uploadBlob} from 'lib/api'
+import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
+import {useSetHasCheckedForStarterPack} from 'state/preferences/used-starter-packs'
+import {
+  useActiveStarterPack,
+  useSetActiveStarterPack,
+} from 'state/shell/starter-pack'
 import {
   DescriptionText,
   OnboardingControls,
   TitleText,
 } from '#/screens/Onboarding/Layout'
 import {Context} from '#/screens/Onboarding/state'
-import {
-  bulkWriteFollows,
-  sortPrimaryAlgorithmFeeds,
-} from '#/screens/Onboarding/util'
+import {bulkWriteFollows} from '#/screens/Onboarding/util'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {IconCircle} from '#/components/IconCircle'
@@ -29,6 +43,7 @@ import {News2_Stroke2_Corner0_Rounded as News} from '#/components/icons/News2'
 import {Trending2_Stroke2_Corner2_Rounded as Trending} from '#/components/icons/Trending2'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {TOURS, useSetQueuedTour} from '#/tours'
 
 export function StepFinished() {
   const {_} = useLingui()
@@ -37,38 +52,117 @@ export function StepFinished() {
   const {state, dispatch} = React.useContext(Context)
   const onboardDispatch = useOnboardingDispatch()
   const [saving, setSaving] = React.useState(false)
-  const {mutateAsync: saveFeeds} = useSetSaveFeedsMutation()
-  const {getAgent} = useAgent()
+  const queryClient = useQueryClient()
+  const agent = useAgent()
+  const requestNotificationsPermission = useRequestNotificationsPermission()
+  const activeStarterPack = useActiveStarterPack()
+  const setActiveStarterPack = useSetActiveStarterPack()
+  const setHasCheckedForStarterPack = useSetHasCheckedForStarterPack()
+  const setQueuedTour = useSetQueuedTour()
+  const {startProgressGuide} = useProgressGuideControls()
 
   const finishOnboarding = React.useCallback(async () => {
     setSaving(true)
 
-    const {
-      interestsStepResults,
-      suggestedAccountsStepResults,
-      algoFeedsStepResults,
-      topicalFeedsStepResults,
-    } = state
-    const {selectedInterests} = interestsStepResults
-    const selectedFeeds = [
-      ...sortPrimaryAlgorithmFeeds(algoFeedsStepResults.feedUris),
-      ...topicalFeedsStepResults.feedUris,
-    ]
+    let starterPack: AppBskyGraphDefs.StarterPackView | undefined
+    let listItems: AppBskyGraphDefs.ListItemView[] | undefined
+
+    if (activeStarterPack?.uri) {
+      try {
+        const spRes = await agent.app.bsky.graph.getStarterPack({
+          starterPack: activeStarterPack.uri,
+        })
+        starterPack = spRes.data.starterPack
+
+        if (starterPack.list) {
+          const listRes = await agent.app.bsky.graph.getList({
+            list: starterPack.list.uri,
+            limit: 50,
+          })
+          listItems = listRes.data.items
+        }
+      } catch (e) {
+        logger.error('Failed to fetch starter pack', {safeMessage: e})
+        // don't tell the user, just get them through onboarding.
+      }
+    }
 
     try {
+      const {interestsStepResults, profileStepResults} = state
+      const {selectedInterests} = interestsStepResults
+
       await Promise.all([
-        bulkWriteFollows(
-          getAgent,
-          suggestedAccountsStepResults.accountDids.concat(BSKY_APP_ACCOUNT_DID),
-        ),
-        // these must be serial
+        bulkWriteFollows(agent, [
+          BSKY_APP_ACCOUNT_DID,
+          ...(listItems?.map(i => i.subject.did) ?? []),
+        ]),
         (async () => {
-          await getAgent().setInterestsPref({tags: selectedInterests})
-          await saveFeeds({
-            saved: selectedFeeds,
-            pinned: selectedFeeds,
+          // Interests need to get saved first, then we can write the feeds to prefs
+          await agent.setInterestsPref({tags: selectedInterests})
+
+          // Default feeds that every user should have pinned when landing in the app
+          const feedsToSave: SavedFeed[] = [
+            {
+              ...DISCOVER_SAVED_FEED,
+              id: TID.nextStr(),
+            },
+            {
+              ...TIMELINE_SAVED_FEED,
+              id: TID.nextStr(),
+            },
+          ]
+
+          // Any starter pack feeds will be pinned _after_ the defaults
+          if (starterPack && starterPack.feeds?.length) {
+            feedsToSave.push(
+              ...starterPack.feeds.map(f => ({
+                type: 'feed',
+                value: f.uri,
+                pinned: true,
+                id: TID.nextStr(),
+              })),
+            )
+          }
+
+          await agent.overwriteSavedFeeds(feedsToSave)
+        })(),
+        (async () => {
+          const {imageUri, imageMime} = profileStepResults
+          if (imageUri && imageMime) {
+            const blobPromise = uploadBlob(agent, imageUri, imageMime)
+            await agent.upsertProfile(async existing => {
+              existing = existing ?? {}
+              const res = await blobPromise
+              if (res.data.blob) {
+                existing.avatar = res.data.blob
+              }
+
+              if (starterPack) {
+                existing.joinedViaStarterPack = {
+                  uri: starterPack.uri,
+                  cid: starterPack.cid,
+                }
+              }
+
+              existing.displayName = ''
+              // HACKFIX
+              // creating a bunch of identical profile objects is breaking the relay
+              // tossing this unspecced field onto it to reduce the size of the problem
+              // -prf
+              existing.createdAt = new Date().toISOString()
+              return existing
+            })
+          }
+
+          logEvent('onboarding:finished:avatarResult', {
+            avatarResult: profileStepResults.isCreatedAvatar
+              ? 'created'
+              : profileStepResults.image
+              ? 'uploaded'
+              : 'default',
           })
         })(),
+        requestNotificationsPermission('AfterOnboarding'),
       ])
     } catch (e: any) {
       logger.info(`onboarding: bulk save failed`)
@@ -76,13 +170,59 @@ export function StepFinished() {
       // don't alert the user, just let them into their account
     }
 
+    // Try to ensure that prefs and profile are up-to-date by the time we render Home.
+    await Promise.all([
+      queryClient.invalidateQueries({
+        queryKey: preferencesQueryKey,
+      }),
+      queryClient.invalidateQueries({
+        queryKey: profileRQKey(agent.session?.did ?? ''),
+      }),
+    ]).catch(e => {
+      logger.error(e)
+      // Keep going.
+    })
+
     setSaving(false)
+    setActiveStarterPack(undefined)
+    setHasCheckedForStarterPack(true)
+    setQueuedTour(TOURS.HOME)
+    startProgressGuide('like-10-and-follow-7')
     dispatch({type: 'finish'})
     onboardDispatch({type: 'finish'})
     track('OnboardingV2:StepFinished:End')
     track('OnboardingV2:Complete')
-    logEvent('onboarding:finished:nextPressed', {})
-  }, [state, dispatch, onboardDispatch, setSaving, saveFeeds, track, getAgent])
+    logEvent('onboarding:finished:nextPressed', {
+      usedStarterPack: Boolean(starterPack),
+      starterPackName: AppBskyGraphStarterpack.isRecord(starterPack?.record)
+        ? starterPack.record.name
+        : undefined,
+      starterPackCreator: starterPack?.creator.did,
+      starterPackUri: starterPack?.uri,
+      profilesFollowed: listItems?.length ?? 0,
+      feedsPinned: starterPack?.feeds?.length ?? 0,
+    })
+    if (starterPack && listItems?.length) {
+      logEvent('starterPack:followAll', {
+        logContext: 'Onboarding',
+        starterPack: starterPack.uri,
+        count: listItems?.length,
+      })
+    }
+  }, [
+    queryClient,
+    agent,
+    dispatch,
+    onboardDispatch,
+    track,
+    activeStarterPack,
+    state,
+    requestNotificationsPermission,
+    setActiveStarterPack,
+    setHasCheckedForStarterPack,
+    setQueuedTour,
+    startProgressGuide,
+  ])
 
   React.useEffect(() => {
     track('OnboardingV2:StepFinished:Start')

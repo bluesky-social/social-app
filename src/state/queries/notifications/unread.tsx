@@ -4,15 +4,14 @@
 
 import React from 'react'
 import {AppState} from 'react-native'
-import * as Notifications from 'expo-notifications'
 import {useQueryClient} from '@tanstack/react-query'
 import EventEmitter from 'eventemitter3'
 
 import BroadcastChannel from '#/lib/broadcast'
+import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
-import {useMutedThreads} from '#/state/muted-threads'
 import {useAgent, useSession} from '#/state/session'
+import {resetBadgeCount} from 'lib/notifications/notifications'
 import {useModerationOpts} from '../../preferences/moderation-opts'
 import {truncateAndInvalidate} from '../util'
 import {RQKEY as RQKEY_NOTIFS} from './feed'
@@ -46,10 +45,10 @@ const apiContext = React.createContext<ApiContext>({
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const {hasSession} = useSession()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
-  const threadMutes = useMutedThreads()
+  const gate = useGate()
 
   const [numUnread, setNumUnread] = React.useState('')
 
@@ -113,16 +112,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     return {
       async markAllRead() {
         // update server
-        await getAgent().updateSeenNotifications(
+        await agent.updateSeenNotifications(
           cacheRef.current.syncedAt.toISOString(),
         )
 
         // update & broadcast
         setNumUnread('')
         broadcast.postMessage({event: ''})
-        if (isNative) {
-          Notifications.setBadgeCountAsync(0)
-        }
+        resetBadgeCount()
       },
 
       async checkUnread({
@@ -130,7 +127,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         isPoll,
       }: {invalidate?: boolean; isPoll?: boolean} = {}) {
         try {
-          if (!getAgent().session) return
+          if (!agent.session) return
           if (AppState.currentState !== 'active') {
             return
           }
@@ -145,16 +142,16 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
           // count
           const {page, indexedAt: lastIndexed} = await fetchPage({
-            getAgent,
+            agent,
             cursor: undefined,
             limit: 40,
             queryClient,
             moderationOpts,
-            threadMutes,
 
             // only fetch subjects when the page is going to be used
             // in the notifications query, otherwise skip it
             fetchAdditionalData: !!invalidate,
+            shouldUngroupFollowBacks: () => gate('ungroup_follow_backs'),
           })
           const unreadCount = countUnread(page)
           const unreadCountStr =
@@ -163,9 +160,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
               : unreadCount === 0
               ? ''
               : String(unreadCount)
-          if (isNative) {
-            Notifications.setBadgeCountAsync(Math.min(unreadCount, 30))
-          }
 
           // track last sync
           const now = new Date()
@@ -198,7 +192,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
       },
     }
-  }, [setNumUnread, queryClient, moderationOpts, threadMutes, getAgent])
+  }, [setNumUnread, queryClient, moderationOpts, agent, gate])
   checkUnreadRef.current = api.checkUnread
 
   return (

@@ -1,0 +1,84 @@
+appId: xyz.blueskyweb.app
+---
+- runScript:
+    file: ../setupServer.js
+    env:
+        SERVER_PATH: "?users&follows&thread"
+- runFlow:
+    file: ../setupApp.yml
+- tapOn:
+    id: "e2eSignInAlice"
+
+
+# Navigate to thread
+- tapOn: "Thread root"
+- assertVisible: "Thread reply"
+
+# Can like the root post
+- tapOn:
+    id: "likeBtn"
+    childOf:
+        id: "postThreadItem-by-bob.test"
+- assertVisible:
+    id: "likeCount-expanded"
+- tapOn:
+    id: "likeBtn"
+    childOf:
+        id: "postThreadItem-by-bob.test"
+- assertNotVisible:
+    id: "likeCount-expanded"
+
+# Can like a reply post
+- tapOn:
+    id: "likeBtn"
+    childOf:
+        id: "postThreadItem-by-carla.test"
+- assertVisible:
+    id: "likeCount"
+    childOf:
+        id: "postThreadItem-by-carla.test"
+- tapOn:
+    id: "likeBtn"
+    childOf:
+        id: "postThreadItem-by-carla.test"
+- assertNotVisible:
+    id: "likeCount"
+    childOf:
+        id: "postThreadItem-by-carla.test"
+
+# Can repost the root post
+- tapOn:
+    id: "repostBtn"
+    childOf:
+        id: "postThreadItem-by-bob.test"
+- tapOn: "Repost"
+- assertVisible:
+    id: "repostCount-expanded"
+- tapOn:
+    id: "repostBtn"
+    childOf:
+        id: "postThreadItem-by-bob.test"
+- tapOn: "Remove repost"
+- assertNotVisible:
+    id: "repostCount-expanded"
+
+
+# Can repost a reply post
+- tapOn:
+    id: "repostBtn"
+    childOf:
+        id: "postThreadItem-by-carla.test"
+- tapOn: "Repost"
+- assertVisible:
+    id: "repostCount"
+    childOf:
+        id: "postThreadItem-by-carla.test"
+- tapOn:
+    id: "repostBtn"
+    childOf:
+        id: "postThreadItem-by-carla.test"
+- tapOn: "Remove repost"
+- assertNotVisible:
+    id: "repostCount"
+    childOf:
+        id: "postThreadItem-by-carla.test"

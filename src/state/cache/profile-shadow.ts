@@ -5,11 +5,15 @@ import EventEmitter from 'eventemitter3'
 
 import {batchedUpdates} from '#/lib/batchedUpdates'
 import {findAllProfilesInQueryData as findAllProfilesInActorSearchQueryData} from '../queries/actor-search'
+import {findAllProfilesInQueryData as findAllProfilesInKnownFollowersQueryData} from '../queries/known-followers'
 import {findAllProfilesInQueryData as findAllProfilesInListMembersQueryData} from '../queries/list-members'
+import {findAllProfilesInQueryData as findAllProfilesInListConvosQueryData} from '../queries/messages/list-converations'
 import {findAllProfilesInQueryData as findAllProfilesInMyBlockedAccountsQueryData} from '../queries/my-blocked-accounts'
 import {findAllProfilesInQueryData as findAllProfilesInMyMutedAccountsQueryData} from '../queries/my-muted-accounts'
+import {findAllProfilesInQueryData as findAllProfilesInFeedsQueryData} from '../queries/post-feed'
 import {findAllProfilesInQueryData as findAllProfilesInPostLikedByQueryData} from '../queries/post-liked-by'
 import {findAllProfilesInQueryData as findAllProfilesInPostRepostedByQueryData} from '../queries/post-reposted-by'
+import {findAllProfilesInQueryData as findAllProfilesInPostThreadQueryData} from '../queries/post-thread'
 import {findAllProfilesInQueryData as findAllProfilesInProfileQueryData} from '../queries/profile'
 import {findAllProfilesInQueryData as findAllProfilesInProfileFollowersQueryData} from '../queries/profile-followers'
 import {findAllProfilesInQueryData as findAllProfilesInProfileFollowsQueryData} from '../queries/profile-follows'
@@ -105,4 +109,8 @@ function* findProfilesInCache(
   yield* findAllProfilesInProfileFollowsQueryData(queryClient, did)
   yield* findAllProfilesInSuggestedFollowsQueryData(queryClient, did)
   yield* findAllProfilesInActorSearchQueryData(queryClient, did)
+  yield* findAllProfilesInListConvosQueryData(queryClient, did)
+  yield* findAllProfilesInFeedsQueryData(queryClient, did)
+  yield* findAllProfilesInPostThreadQueryData(queryClient, did)
+  yield* findAllProfilesInKnownFollowersQueryData(queryClient, did)
 }

@@ -133,9 +133,10 @@ export function LanguageSettingsScreen(_props: Props) {
                   paddingVertical: 8,
                   borderRadius: 24,
                 },
+
                 inputWeb: {
-                  // @ts-ignore web only
                   cursor: 'pointer',
+                  // @ts-ignore web only
                   '-moz-appearance': 'none',
                   '-webkit-appearance': 'none',
                   appearance: 'none',
@@ -226,8 +227,8 @@ export function LanguageSettingsScreen(_props: Props) {
                   borderRadius: 24,
                 },
                 inputWeb: {
-                  // @ts-ignore web only
                   cursor: 'pointer',
+                  // @ts-ignore web only
                   '-moz-appearance': 'none',
                   '-webkit-appearance': 'none',
                   appearance: 'none',

@@ -1,0 +1,205 @@
+appId: xyz.blueskyweb.app
+---
+- runScript:
+    file: ../setupServer.js
+    env:
+        SERVER_PATH: "?users&follows&posts"
+- runFlow:
+    file: ../setupApp.yml
+- tapOn:
+    id: "e2eSignInAlice"
+
+- tapOn:
+    label: "Create a curate list"
+    id: "e2eGotoLists"
+- tapOn:
+    id: "newUserListBtn"
+- assertVisible:
+    id: "createOrEditListModal"
+- tapOn:
+    id: "editNameInput"
+- inputText: "Good Ppl"
+- tapOn:
+    id: "editDescriptionInput"
+- inputText: "They good"
+- tapOn: "Save"
+- tapOn: "Save"
+- assertNotVisible:
+    id: "createOrEditListModal"
+- tapOn: "About"
+- assertVisible: "Good Ppl"
+- assertVisible: "They good"
+
+- tapOn:
+    label: "Edit display name and description via the edit curatelist modal"
+    point: "90%,9%"
+- tapOn: "Edit list details"
+- assertVisible:
+    id: "createOrEditListModal"
+- tapOn:
+    id: "editNameInput"
+- eraseText
+- inputText: "Bad Ppl"
+- hideKeyboard
+- tapOn:
+    id: "editDescriptionInput"
+- eraseText
+- inputText: "They bad"
+- tapOn: "Save"
+- tapOn: "Save"
+- assertNotVisible:
+    id: "createOrEditListModal"
+- assertVisible: Bad Ppl
+- assertVisible: They bad
+
+- tapOn:
+    label: "Remove description via the edit curatelist modal"
+    point: "90%,9%"
+- tapOn: "Edit list details"
+- assertVisible:
+    id: "createOrEditListModal"
+- tapOn:
+    id: "editDescriptionInput"
+- eraseText
+- tapOn: "Save"
+- tapOn: "Save"
+- assertNotVisible:
+    id: "createOrEditListModal"
+- assertNotVisible:
+    id: "listDescription"
+
+- tapOn:
+    label: "Delete the curatelist"
+    point: "90%,9%"
+- tapOn: "Delete List"
+- tapOn:
+    id: "confirmBtn"
+- assertVisible:
+    id: "listsEmpty"
+
+- tapOn:
+    label: "Create a new curatelist"
+    id: "e2eGotoLists"
+- tapOn:
+    id: "newUserListBtn"
+- assertVisible:
+    id: "createOrEditListModal"
+- tapOn:
+    id: "editNameInput"
+- inputText: "Good Ppl"
+- tapOn:
+    id: "editDescriptionInput"
+- inputText: "They good"
+- tapOn: "Save"
+- tapOn: "Save"
+- assertNotVisible:
+    id: "createOrEditListModal"
+- tapOn: "About"
+- assertVisible: "Good Ppl"
+- assertVisible: "They good"
+- tapOn: "About"
+
+- tapOn:
+    label: "Adds users on curatelists from the list"
+    id: "addUserBtn"
+- assertVisible:
+    id: "listAddUserModal"
+- tapOn:
+    id: "searchInput"
+- inputText: "b"
+- pressKey: Enter
+- tapOn:
+    id: "user-bob.test-addBtn"
+- tapOn:
+    id: "doneBtn"
+- assertNotVisible:
+    id: "listAddUserModal"
+- assertVisible:
+    id: "user-bob.test"
+
+- tapOn: "Posts"
+- assertVisible:
+    label: "Shows posts by the users in the list"
+    id: "feedItem-by-bob.test"
+
+- tapOn:
+    label: "Pins the list"
+    id: "pinBtn"
+- tapOn:
+    id: "e2eGotoHome"
+- tapOn: "Good Ppl"
+- assertVisible:
+    id: "feedItem-by-bob.test"
+- tapOn:
+    id: "e2eGotoFeeds"
+- tapOn: "Good Ppl"
+- assertVisible:
+    id: "feedItem-by-bob.test"
+- tapOn:
+    id: "unpinBtn"
+- tapOn:
+    id: "bottomBarHomeBtn"
+- assertNotVisible:
+    id: "homeScreenFeedTabs-Good Ppl"
+- tapOn:
+    id: "e2eGotoLists"
+- tapOn: "Good Ppl"
+
+- tapOn: "About"
+- assertVisible:
+    label: "Removes users on curatelists from the list"
+    id: "user-bob.test"
+- tapOn:
+    point: "90%,43%"
+- assertVisible:
+    id: "userAddRemoveListsModal"
+- tapOn:
+    id: "user-bob.test-addBtn"
+- tapOn:
+    id: "doneBtn"
+- assertNotVisible:
+    id: "userAddRemoveListsModal"
+
+- tapOn:
+    label: "Shows the curatelist on my profile"
+    id: "bottomBarProfileBtn"
+- swipe:
+    from:
+        id: "profilePager-selector"
+    direction: LEFT
+- tapOn:
+    id: "profilePager-selector-5"
+- tapOn: "Good Ppl"
+
+- tapOn:
+    label: "Adds and removes users on curatelists from the profile"
+    id: "bottomBarSearchBtn"
+- tapOn:
+    id: "searchTextInput"
+- inputText: "bob"
+- tapOn:
+    id: "searchAutoCompleteResult-bob.test"
+- assertVisible:
+    id: "profileView"
+- tapOn:
+    id: "profileHeaderDropdownBtn"
+- tapOn: "Add to Lists"
+- assertVisible:
+    id: "userAddRemoveListsModal"
+- tapOn:
+    id: "user-bob.test-addBtn"
+- tapOn:
+    id: "doneBtn"
+- assertNotVisible:
+    id: "userAddRemoveListsModal"
+- tapOn:
+    id: "profileHeaderDropdownBtn"
+- tapOn: "Add to Lists"
+- assertVisible:
+    id: "userAddRemoveListsModal"
+- tapOn:
+    id: "user-bob.test-addBtn"
+- tapOn:
+    id: "doneBtn"
+- assertNotVisible:
+    id: "userAddRemoveListsModal"

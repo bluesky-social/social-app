@@ -1,7 +1,8 @@
-import {Platform} from 'react-native'
+import {Platform, StyleSheet} from 'react-native'
 
 import * as tokens from '#/alf/tokens'
 import {native, web} from '#/alf/util/platform'
+import hairlineWidth = StyleSheet.hairlineWidth
 
 export const atoms = {
   /*
@@ -54,6 +55,13 @@ export const atoms = {
   h_full_vh: web({
     height: '100vh',
   }),
+
+  /*
+   * Theme-independent bg colors
+   */
+  bg_transparent: {
+    backgroundColor: 'transparent',
+  },
 
   /*
    * Border radius
@@ -259,6 +267,9 @@ export const atoms = {
   font_bold: {
     fontWeight: tokens.fontWeight.bold,
   },
+  font_heavy: {
+    fontWeight: tokens.fontWeight.heavy,
+  },
   italic: {
     fontStyle: 'italic',
   },
@@ -270,19 +281,19 @@ export const atoms = {
     borderWidth: 0,
   },
   border: {
-    borderWidth: 1,
+    borderWidth: hairlineWidth,
   },
   border_t: {
-    borderTopWidth: 1,
+    borderTopWidth: hairlineWidth,
   },
   border_b: {
-    borderBottomWidth: 1,
+    borderBottomWidth: hairlineWidth,
   },
   border_l: {
-    borderLeftWidth: 1,
+    borderLeftWidth: hairlineWidth,
   },
   border_r: {
-    borderRightWidth: 1,
+    borderRightWidth: hairlineWidth,
   },
 
   /*
@@ -839,5 +850,32 @@ export const atoms = {
   },
   mr_auto: {
     marginRight: 'auto',
+  },
+  /*
+   * Pointer events & user select
+   */
+  pointer_events_none: {
+    pointerEvents: 'none',
+  },
+  pointer_events_auto: {
+    pointerEvents: 'auto',
+  },
+  user_select_none: {
+    userSelect: 'none',
+  },
+  user_select_text: {
+    userSelect: 'text',
+  },
+  user_select_all: {
+    userSelect: 'all',
+  },
+  /*
+   * Text decoration
+   */
+  underline: {
+    textDecorationLine: 'underline',
+  },
+  strike_through: {
+    textDecorationLine: 'line-through',
   },
 } as const
