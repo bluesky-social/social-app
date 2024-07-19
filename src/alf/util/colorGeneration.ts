@@ -15,3 +15,7 @@ export function generateScale(start: number, end: number) {
     return start + range * stop
   })
 }
+
+export const defaultScale = generateScale(6, 100)
+// dim shifted 6% lighter
+export const dimScale = generateScale(12, 100)

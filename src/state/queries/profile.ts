@@ -3,6 +3,7 @@ import {Image as RNImage} from 'react-native-image-crop-picker'
 import {
   AppBskyActorDefs,
   AppBskyActorGetProfile,
+  AppBskyActorGetProfiles,
   AppBskyActorProfile,
   AtUri,
   BskyAgent,
@@ -23,8 +24,13 @@ import {logEvent, LogEvents, toClout} from '#/lib/statsig/statsig'
 import {Shadow} from '#/state/cache/types'
 import {STALE} from '#/state/queries'
 import {resetProfilePostsQueries} from '#/state/queries/post-feed'
+import * as userActionHistory from '#/state/userActionHistory'
 import {updateProfileShadow} from '../cache/profile-shadow'
 import {useAgent, useSession} from '../session'
+import {
+  ProgressGuideAction,
+  useProgressGuideControls,
+} from '../shell/progress-guide'
 import {RQKEY as RQKEY_LIST_CONVOS} from './messages/list-converations'
 import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
 import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
@@ -94,6 +100,7 @@ export function usePrefetchProfileQuery() {
   const prefetchProfileQuery = useCallback(
     async (did: string) => {
       await queryClient.prefetchQuery({
+        staleTime: STALE.SECONDS.THIRTY,
         queryKey: RQKEY(did),
         queryFn: async () => {
           const res = await agent.getProfile({actor: did || ''})
@@ -228,6 +235,7 @@ export function useProfileFollowMutationQueue(
         const {uri} = await followMutation.mutateAsync({
           did,
         })
+        userActionHistory.follow([did])
         return uri
       } else {
         if (prevFollowingUri) {
@@ -235,6 +243,7 @@ export function useProfileFollowMutationQueue(
             did,
             followUri: prevFollowingUri,
           })
+          userActionHistory.unfollow([did])
         }
         return undefined
       }
@@ -273,12 +282,15 @@ function useProfileFollowMutation(
   const {currentAccount} = useSession()
   const agent = useAgent()
   const queryClient = useQueryClient()
+  const {captureAction} = useProgressGuideControls()
+
   return useMutation<{uri: string; cid: string}, Error, {did: string}>({
     mutationFn: async ({did}) => {
       let ownProfile: AppBskyActorDefs.ProfileViewDetailed | undefined
       if (currentAccount) {
         ownProfile = findProfileQueryData(queryClient, currentAccount.did)
       }
+      captureAction(ProgressGuideAction.Follow)
       logEvent('profile:follow', {
         logContext,
         didBecomeMutual: profile.viewer
@@ -505,16 +517,30 @@ export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
 ): Generator<AppBskyActorDefs.ProfileViewDetailed, void> {
-  const queryDatas =
+  const profileQueryDatas =
     queryClient.getQueriesData<AppBskyActorDefs.ProfileViewDetailed>({
       queryKey: [RQKEY_ROOT],
     })
-  for (const [_queryKey, queryData] of queryDatas) {
+  for (const [_queryKey, queryData] of profileQueryDatas) {
     if (!queryData) {
       continue
     }
     if (queryData.did === did) {
       yield queryData
+    }
+  }
+  const profilesQueryDatas =
+    queryClient.getQueriesData<AppBskyActorGetProfiles.OutputSchema>({
+      queryKey: [profilesQueryKeyRoot],
+    })
+  for (const [_queryKey, queryData] of profilesQueryDatas) {
+    if (!queryData) {
+      continue
+    }
+    for (let profile of queryData.profiles) {
+      if (profile.did === did) {
+        yield profile
+      }
     }
   }
 }

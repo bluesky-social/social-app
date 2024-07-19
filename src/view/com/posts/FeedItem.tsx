@@ -43,6 +43,7 @@ import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {AviFollowButton} from './AviFollowButton'
 import hairlineWidth = StyleSheet.hairlineWidth
+import {useSession} from '#/state/session'
 import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
 
 interface FeedItemProps {
@@ -56,6 +57,7 @@ interface FeedItemProps {
   isThreadParent?: boolean
   feedContext: string | undefined
   hideTopBorder?: boolean
+  isParentBlocked?: boolean
 }
 
 export function FeedItem({
@@ -70,6 +72,7 @@ export function FeedItem({
   isThreadLastChild,
   isThreadParent,
   hideTopBorder,
+  isParentBlocked,
 }: FeedItemProps & {post: AppBskyFeedDefs.PostView}): React.ReactNode {
   const postShadowed = usePostShadow(post)
   const richText = useMemo(
@@ -100,6 +103,7 @@ export function FeedItem({
         isThreadLastChild={isThreadLastChild}
         isThreadParent={isThreadParent}
         hideTopBorder={hideTopBorder}
+        isParentBlocked={isParentBlocked}
       />
     )
   }
@@ -119,6 +123,7 @@ let FeedItemInner = ({
   isThreadLastChild,
   isThreadParent,
   hideTopBorder,
+  isParentBlocked,
 }: FeedItemProps & {
   richText: RichTextAPI
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -196,6 +201,11 @@ let FeedItemInner = ({
     },
   ]
 
+  const {currentAccount} = useSession()
+  const isOwner =
+    AppBskyFeedDefs.isReasonRepost(reason) &&
+    reason.by.did === currentAccount?.did
+
   return (
     <Link
       testID={`feedItem-by-${post.author.handle}`}
@@ -246,11 +256,15 @@ let FeedItemInner = ({
             <Link
               style={styles.includeReason}
               href={makeProfileLink(reason.by)}
-              title={_(
-                msg`Reposted by ${sanitizeDisplayName(
-                  reason.by.displayName || reason.by.handle,
-                )}`,
-              )}
+              title={
+                isOwner
+                  ? _(msg`Reposted by you`)
+                  : _(
+                      msg`Reposted by ${sanitizeDisplayName(
+                        reason.by.displayName || reason.by.handle,
+                      )}`,
+                    )
+              }
               onBeforePress={onOpenReposter}>
               <Repost
                 style={{color: pal.colors.textLight, marginRight: 3}}
@@ -262,24 +276,28 @@ let FeedItemInner = ({
                 style={pal.textLight}
                 lineHeight={1.2}
                 numberOfLines={1}>
-                <Trans>
-                  Reposted by{' '}
-                  <ProfileHoverCard inline did={reason.by.did}>
-                    <TextLinkOnWebOnly
-                      type="sm-bold"
-                      style={pal.textLight}
-                      lineHeight={1.2}
-                      numberOfLines={1}
-                      text={sanitizeDisplayName(
-                        reason.by.displayName ||
-                          sanitizeHandle(reason.by.handle),
-                        moderation.ui('displayName'),
-                      )}
-                      href={makeProfileLink(reason.by)}
-                      onBeforePress={onOpenReposter}
-                    />
-                  </ProfileHoverCard>
-                </Trans>
+                {isOwner ? (
+                  <Trans>Reposted by you</Trans>
+                ) : (
+                  <Trans>
+                    Reposted by{' '}
+                    <ProfileHoverCard inline did={reason.by.did}>
+                      <TextLinkOnWebOnly
+                        type="sm-bold"
+                        style={pal.textLight}
+                        lineHeight={1.2}
+                        numberOfLines={1}
+                        text={sanitizeDisplayName(
+                          reason.by.displayName ||
+                            sanitizeHandle(reason.by.handle),
+                          moderation.ui('displayName'),
+                        )}
+                        href={makeProfileLink(reason.by)}
+                        onBeforePress={onOpenReposter}
+                      />
+                    </ProfileHoverCard>
+                  </Trans>
+                )}
               </Text>
             </Link>
           ) : null}
@@ -320,7 +338,7 @@ let FeedItemInner = ({
             onOpenAuthor={onOpenAuthor}
           />
           {!isThreadChild && showReplyTo && parentAuthor && (
-            <ReplyToLabel profile={parentAuthor} />
+            <ReplyToLabel blocked={isParentBlocked} profile={parentAuthor} />
           )}
           <LabelsOnMyPost post={post} />
           <PostContent
@@ -409,8 +427,16 @@ let PostContent = ({
 }
 PostContent = memo(PostContent)
 
-function ReplyToLabel({profile}: {profile: AppBskyActorDefs.ProfileViewBasic}) {
+function ReplyToLabel({
+  profile,
+  blocked,
+}: {
+  profile: AppBskyActorDefs.ProfileViewBasic
+  blocked?: boolean
+}) {
   const pal = usePalette('default')
+  const {currentAccount} = useSession()
+  const isMe = profile.did === currentAccount?.did
 
   return (
     <View style={[s.flexRow, s.mb2, s.alignCenter]}>
@@ -424,23 +450,29 @@ function ReplyToLabel({profile}: {profile: AppBskyActorDefs.ProfileViewBasic}) {
         style={[pal.textLight, s.mr2]}
         lineHeight={1.2}
         numberOfLines={1}>
-        <Trans context="description">
-          Reply to{' '}
-          <ProfileHoverCard inline did={profile.did}>
-            <TextLinkOnWebOnly
-              type="md"
-              style={pal.textLight}
-              lineHeight={1.2}
-              numberOfLines={1}
-              href={makeProfileLink(profile)}
-              text={
-                profile.displayName
-                  ? sanitizeDisplayName(profile.displayName)
-                  : sanitizeHandle(profile.handle)
-              }
-            />
-          </ProfileHoverCard>
-        </Trans>
+        {isMe ? (
+          <Trans context="description">Reply to you</Trans>
+        ) : blocked ? (
+          <Trans context="description">Reply to a blocked post</Trans>
+        ) : (
+          <Trans context="description">
+            Reply to{' '}
+            <ProfileHoverCard inline did={profile.did}>
+              <TextLinkOnWebOnly
+                type="md"
+                style={pal.textLight}
+                lineHeight={1.2}
+                numberOfLines={1}
+                href={makeProfileLink(profile)}
+                text={
+                  profile.displayName
+                    ? sanitizeDisplayName(profile.displayName)
+                    : sanitizeHandle(profile.handle)
+                }
+              />
+            </ProfileHoverCard>
+          </Trans>
+        )}
       </Text>
     </View>
   )

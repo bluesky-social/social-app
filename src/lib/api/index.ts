@@ -270,7 +270,7 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
   return res
 }
 
-async function createThreadgate(
+export async function createThreadgate(
   agent: BskyAgent,
   postUri: string,
   threadgate: ThreadgateSetting[],
@@ -296,10 +296,17 @@ async function createThreadgate(
   }
 
   const postUrip = new AtUri(postUri)
-  await agent.api.app.bsky.feed.threadgate.create(
-    {repo: agent.session!.did, rkey: postUrip.rkey},
-    {post: postUri, createdAt: new Date().toISOString(), allow},
-  )
+  await agent.api.com.atproto.repo.putRecord({
+    repo: agent.session!.did,
+    collection: 'app.bsky.feed.threadgate',
+    rkey: postUrip.rkey,
+    record: {
+      $type: 'app.bsky.feed.threadgate',
+      post: postUri,
+      allow,
+      createdAt: new Date().toISOString(),
+    },
+  })
 }
 
 // helpers
