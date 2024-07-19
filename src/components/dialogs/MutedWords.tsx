@@ -1,14 +1,10 @@
 import React from 'react'
-import {Keyboard, View} from 'react-native'
+import {View} from 'react-native'
 import {AppBskyActorDefs, sanitizeMutedWordValue} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import RNPickerSelect, {PickerSelectProps} from 'react-native-picker-select'
+import {formatDistance} from 'date-fns'
 
-import {
-  DropdownItem,
-  NativeDropdown,
-} from '#/view/com/util/forms/NativeDropdown'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {
@@ -33,10 +29,11 @@ import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Has
 import {PageText_Stroke2_Corner0_Rounded as PageText} from '#/components/icons/PageText'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
-import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
+
+const ONE_DAY = 24 * 60 * 60 * 1000
 
 export function MutedWordsDialog() {
   const {mutedWordsDialogControl: control} = useGlobalDialogsControlContext()
@@ -59,16 +56,30 @@ function MutedWordsInner() {
   } = usePreferencesQuery()
   const {isPending, mutateAsync: addMutedWord} = useUpsertMutedWordsMutation()
   const [field, setField] = React.useState('')
-  const [options, setOptions] = React.useState(['content'])
+  const [targets, setTargets] = React.useState(['content'])
   const [error, setError] = React.useState('')
+  const [durations, setDurations] = React.useState(['forever'])
+  const [excludeFollowing, setExcludeFollowing] = React.useState(false)
 
   const submit = React.useCallback(async () => {
     const sanitizedValue = sanitizeMutedWordValue(field)
-    const targets = ['tag', options.includes('content') && 'content'].filter(
+    const surfaces = ['tag', targets.includes('content') && 'content'].filter(
       Boolean,
     ) as AppBskyActorDefs.MutedWord['targets']
+    const actorTarget = excludeFollowing ? 'exclude-following' : 'all'
 
-    if (!sanitizedValue || !targets.length) {
+    const rawDuration = durations.at(0)
+    let duration: string | undefined
+
+    if (rawDuration === '24_hours') {
+      duration = new Date(Date.now() + ONE_DAY).toISOString()
+    } else if (rawDuration === '7_days') {
+      duration = new Date(Date.now() + 7 * ONE_DAY).toISOString()
+    } else if (rawDuration === '30_days') {
+      duration = new Date(Date.now() + 30 * ONE_DAY).toISOString()
+    }
+
+    if (!sanitizedValue || !surfaces.length) {
       setField('')
       setError(_(msg`Please enter a valid word, tag, or phrase to mute`))
       return
@@ -76,45 +87,37 @@ function MutedWordsInner() {
 
     try {
       // send raw value and rely on SDK as sanitization source of truth
-      await addMutedWord([{value: field, targets}])
+      await addMutedWord([
+        {
+          value: field,
+          targets: surfaces,
+          actorTarget,
+          expiresAt: duration,
+        },
+      ])
       setField('')
     } catch (e: any) {
       logger.error(`Failed to save muted word`, {message: e.message})
       setError(e.message)
     }
-  }, [_, field, options, addMutedWord, setField])
-
-  const onDurationChange = React.useCallback(
-    (value: Parameters<PickerSelectProps['onValueChange']>[0]) => {
-      if (!value) return
-    },
-    [],
-  )
-
-  const selectStyle = [
-                a.border_0,
-                a.rounded_sm,
-                a.py_sm,
-                a.text_md,
-                a.px_md,
-                t.atoms.bg_contrast_25,
-                t.atoms.text_contrast_medium,
-              ]
+  }, [_, field, targets, addMutedWord, setField, durations, excludeFollowing])
 
   return (
     <Dialog.ScrollableInner label={_(msg`Manage your muted words and tags`)}>
-      <View onTouchStart={Keyboard.dismiss}>
+      <View>
         <Text
           style={[a.text_md, a.font_bold, a.pb_sm, t.atoms.text_contrast_high]}>
           <Trans>Add muted words and tags</Trans>
         </Text>
         <Text style={[a.pb_lg, a.leading_snug, t.atoms.text_contrast_medium]}>
           <Trans>
-            Posts can be muted based on their text, their tags, or both.
+            Posts can be muted based on their text, their tags, or both. We
+            recommend avoiding common words that appear in many posts, since it
+            can result in no posts being shown.
           </Trans>
         </Text>
 
-        <View style={[a.pb_lg]}>
+        <View style={[a.pb_sm]}>
           <Dialog.Input
             autoCorrect={false}
             autoCapitalize="none"
@@ -130,86 +133,130 @@ function MutedWordsInner() {
             }}
             onSubmitEditing={submit}
           />
+        </View>
 
-          <View style={[
-            a.pt_sm,
-          ]}>
-            <RNPickerSelect
-              placeholder={{}}
-              value={`forever`}
-              onValueChange={onDurationChange}
-              items={[
-                {
-                  label: _(msg`24 hours`),
-                  value: `24_hours`,
-                  key: `24_hours`,
-                },
-                {
-                  label: _(msg`7 days`),
-                  value: `7_days`,
-                  key: `7_days`,
-                },
-                {
-                  label: _(msg`30 days`),
-                  value: `30_days`,
-                  key: `30_days`,
-                },
-                {
-                  label: _(msg`Until I unmute the word`),
-                  value: `forever`,
-                  key: `forever`,
-                },
-              ]}
-              //useNativeAndroidPickerStyle={false}
-              style={{
-                inputAndroid: [
-                  selectStyle,
-                ],
-                inputIOS: [
-                  selectStyle,
-                ],
-                inputWeb: [
-                  selectStyle,
-                ],
-                iconContainer: [
-                  {
-                    top: 1,
-                    right: 1,
-                    paddingRight: a.pr_md.paddingRight - 1,
-                    paddingTop: 9,
-                    pointerEvents: 'none',
-                  },
-                  a.rounded_sm,
-                  t.atoms.bg_contrast_25,
-                ]
-              }}
-              //Icon={() => <ChevronDown size='sm' fill={t.atoms.text_contrast_low.color} />}
-            />
-          </View>
-
+        <View style={[a.pb_xl, a.gap_sm]}>
           <Toggle.Group
-            label={_(msg`Toggle between muted word options.`)}
+            label={_(msg`Select how long this mute word should apply for.`)}
             type="radio"
-            values={options}
-            onChange={setOptions}>
+            values={durations}
+            onChange={setDurations}>
+            <Text
+              style={[
+                a.pb_xs,
+                a.text_sm,
+                a.font_bold,
+                t.atoms.text_contrast_medium,
+              ]}>
+              <Trans>Duration:</Trans>
+            </Text>
+
             <View
               style={[
-                a.pt_sm,
-                a.py_sm,
-                a.flex_row,
-                a.align_center,
+                gtMobile && [a.flex_row, a.align_center, a.justify_start],
                 a.gap_sm,
-                a.flex_wrap,
               ]}>
+              <View
+                style={[
+                  a.flex_grow,
+                  a.flex_row,
+                  a.justify_start,
+                  a.align_center,
+                  a.gap_sm,
+                ]}>
+                <Toggle.Item
+                  label={_(msg`Mute this word until you unmute it`)}
+                  name="forever"
+                  style={[a.flex_1]}>
+                  <TargetToggle>
+                    <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                      <Toggle.Radio />
+                      <Toggle.LabelText>
+                        <Trans>Forever</Trans>
+                      </Toggle.LabelText>
+                    </View>
+                  </TargetToggle>
+                </Toggle.Item>
+
+                <Toggle.Item
+                  label={_(msg`Mute this word for 24 hours`)}
+                  name="24_hours"
+                  style={[a.flex_1]}>
+                  <TargetToggle>
+                    <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                      <Toggle.Radio />
+                      <Toggle.LabelText>
+                        <Trans>24 hours</Trans>
+                      </Toggle.LabelText>
+                    </View>
+                  </TargetToggle>
+                </Toggle.Item>
+              </View>
+
+              <View
+                style={[
+                  a.flex_grow,
+                  a.flex_row,
+                  a.justify_start,
+                  a.align_center,
+                  a.gap_sm,
+                ]}>
+                <Toggle.Item
+                  label={_(msg`Mute this word for 7 days`)}
+                  name="7_days"
+                  style={[a.flex_1]}>
+                  <TargetToggle>
+                    <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                      <Toggle.Radio />
+                      <Toggle.LabelText>
+                        <Trans>7 days</Trans>
+                      </Toggle.LabelText>
+                    </View>
+                  </TargetToggle>
+                </Toggle.Item>
+
+                <Toggle.Item
+                  label={_(msg`Mute this word for 30 days`)}
+                  name="30_days"
+                  style={[a.flex_1]}>
+                  <TargetToggle>
+                    <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                      <Toggle.Radio />
+                      <Toggle.LabelText>
+                        <Trans>30 days</Trans>
+                      </Toggle.LabelText>
+                    </View>
+                  </TargetToggle>
+                </Toggle.Item>
+              </View>
+            </View>
+          </Toggle.Group>
+
+          <Toggle.Group
+            label={_(msg`Select what content this mute word should apply to.`)}
+            type="radio"
+            values={targets}
+            onChange={setTargets}>
+            <Text
+              style={[
+                a.pb_xs,
+                a.text_sm,
+                a.font_bold,
+                t.atoms.text_contrast_medium,
+              ]}>
+              <Trans>Mute in:</Trans>
+            </Text>
+
+            <View style={[a.flex_row, a.align_center, a.gap_sm, a.flex_wrap]}>
               <Toggle.Item
                 label={_(msg`Mute this word in post text and tags`)}
                 name="content"
-                style={[a.flex_1, !gtMobile && [a.w_full, a.flex_0]]}>
+                style={[a.flex_1]}>
                 <TargetToggle>
                   <View style={[a.flex_row, a.align_center, a.gap_sm]}>
                     <Toggle.Radio />
                     <Toggle.LabelText>
-                      <Trans>Mute in text & tags</Trans>
+                      <Trans>Text & tags</Trans>
                     </Toggle.LabelText>
                   </View>
                   <PageText size="sm" />
@@ -219,33 +266,62 @@ function MutedWordsInner() {
               <Toggle.Item
                 label={_(msg`Mute this word in tags only`)}
                 name="tag"
-                style={[a.flex_1, !gtMobile && [a.w_full, a.flex_0]]}>
+                style={[a.flex_1]}>
                 <TargetToggle>
                   <View style={[a.flex_row, a.align_center, a.gap_sm]}>
                     <Toggle.Radio />
                     <Toggle.LabelText>
-                      <Trans>Mute in tags only</Trans>
+                      <Trans>Tags only</Trans>
                     </Toggle.LabelText>
                   </View>
                   <Hashtag size="sm" />
                 </TargetToggle>
               </Toggle.Item>
-
-              <Button
-                disabled={isPending || !field}
-                label={_(msg`Add mute word for configured settings`)}
-                size="small"
-                color="primary"
-                variant="solid"
-                style={[!gtMobile && [a.w_full, a.flex_0]]}
-                onPress={submit}>
-                <ButtonText>
-                  <Trans>Add</Trans>
-                </ButtonText>
-                <ButtonIcon icon={isPending ? Loader : Plus} />
-              </Button>
             </View>
           </Toggle.Group>
+
+          <View>
+            <Text
+              style={[
+                a.pb_xs,
+                a.text_sm,
+                a.font_bold,
+                t.atoms.text_contrast_medium,
+              ]}>
+              <Trans>Options:</Trans>
+            </Text>
+            <Toggle.Item
+              label={_(msg`Mute this word in post text and tags`)}
+              name="exclude_following"
+              style={[a.flex_row, a.justify_between]}
+              value={excludeFollowing}
+              onChange={setExcludeFollowing}>
+              <TargetToggle>
+                <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                  <Toggle.Checkbox />
+                  <Toggle.LabelText>
+                    <Trans>Exclude users you follow</Trans>
+                  </Toggle.LabelText>
+                </View>
+              </TargetToggle>
+            </Toggle.Item>
+          </View>
+
+          <View style={[a.pt_xs]}>
+            <Button
+              disabled={isPending || !field}
+              label={_(msg`Add mute word for configured settings`)}
+              size="medium"
+              color="primary"
+              variant="solid"
+              style={[]}
+              onPress={submit}>
+              <ButtonText>
+                <Trans>Add</Trans>
+              </ButtonText>
+              <ButtonIcon icon={isPending ? Loader : Plus} position="right" />
+            </Button>
+          </View>
 
           {error && (
             <View
@@ -270,20 +346,6 @@ function MutedWordsInner() {
               </Text>
             </View>
           )}
-
-          <Text
-            style={[
-              a.pt_xs,
-              a.text_sm,
-              a.italic,
-              a.leading_snug,
-              t.atoms.text_contrast_medium,
-            ]}>
-            <Trans>
-              We recommend avoiding common words that appear in many posts,
-              since it can result in no posts being shown.
-            </Trans>
-          </Text>
         </View>
 
         <Divider />
@@ -347,6 +409,13 @@ function MutedWordRow({
   const {_} = useLingui()
   const {isPending, mutateAsync: removeMutedWord} = useRemoveMutedWordMutation()
   const control = Prompt.usePromptControl()
+  const expiryDate = word.expiresAt ? new Date(word.expiresAt) : undefined
+  const isExpired = expiryDate && expiryDate < new Date()
+  const target = word.targets.find(t => t === 'content') ? (
+    <Trans>text, tags</Trans>
+  ) : (
+    <Trans>tags</Trans>
+  )
 
   const remove = React.useCallback(async () => {
     control.close()
@@ -368,53 +437,77 @@ function MutedWordRow({
 
       <View
         style={[
+          a.flex_row,
+          a.justify_between,
           a.py_md,
           a.px_lg,
-          a.flex_row,
-          a.align_center,
-          a.justify_between,
           a.rounded_md,
           a.gap_md,
           style,
         ]}>
-        <Text
-          style={[
-            a.flex_1,
-            a.leading_snug,
-            a.w_full,
-            a.font_bold,
-            t.atoms.text_contrast_high,
-            web({
-              overflowWrap: 'break-word',
-              wordBreak: 'break-word',
-            }),
-          ]}>
-          {word.value}
-        </Text>
+        <View style={[a.gap_xs]}>
+          <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+            <Text
+              style={[
+                a.flex_1,
+                a.leading_snug,
+                a.font_bold,
+                web({
+                  overflowWrap: 'break-word',
+                  wordBreak: 'break-word',
+                }),
+              ]}>
+              <Text style={[a.flex_1]}>{word.value}</Text>
 
-        <View style={[a.flex_row, a.align_center, a.justify_end, a.gap_sm]}>
-          {word.targets.map(target => (
-            <View
-              key={target}
-              style={[a.py_xs, a.px_sm, a.rounded_sm, t.atoms.bg_contrast_100]}>
-              <Text
-                style={[a.text_xs, a.font_bold, t.atoms.text_contrast_medium]}>
-                {target === 'content' ? _(msg`text`) : _(msg`tag`)}
+              <Text style={[a.font_normal, t.atoms.text_contrast_medium]}>
+                {' '}
+                <Trans>in</Trans>{' '}
+              </Text>
+
+              <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
+                {target}
+              </Text>
+            </Text>
+          </View>
+
+          {(expiryDate || word.actorTarget === 'exclude-following') && (
+            <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+              <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
+                {expiryDate && (
+                  <>
+                    {isExpired ? (
+                      <Trans>Expired</Trans>
+                    ) : (
+                      <Trans>
+                        Expires{' '}
+                        {formatDistance(expiryDate, new Date(), {
+                          addSuffix: true,
+                        })}
+                      </Trans>
+                    )}
+                  </>
+                )}
+                {word.actorTarget === 'exclude-following' && (
+                  <>
+                    {' • '}
+                    <Trans>Excludes users you follow</Trans>
+                  </>
+                )}
               </Text>
             </View>
-          ))}
-
-          <Button
-            label={_(msg`Remove mute word from your list`)}
-            size="tiny"
-            shape="round"
-            variant="ghost"
-            color="secondary"
-            onPress={() => control.open()}
-            style={[a.ml_sm]}>
-            <ButtonIcon icon={isPending ? Loader : X} />
-          </Button>
+          )}
         </View>
+
+        <Button
+          label={_(msg`Remove mute word from your list`)}
+          size="tiny"
+          shape="round"
+          variant="outline"
+          color="secondary"
+          onPress={() => control.open()}
+          style={[a.ml_sm]}>
+          <ButtonIcon icon={isPending ? Loader : X} />
+        </Button>
       </View>
     </>
   )
