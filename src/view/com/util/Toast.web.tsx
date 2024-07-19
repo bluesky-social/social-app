@@ -39,7 +39,7 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({}) => {
         <View style={styles.container}>
           <FontAwesomeIcon
             icon={activeToast.icon}
-            size={16}
+            size={20}
             style={styles.icon as FontAwesomeIconStyle}
           />
           <Text style={styles.text}>{activeToast.text}</Text>
