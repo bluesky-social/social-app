@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: zh-TW for bluesky-social-app\n"
 "POT-Creation-Date: \n"
 "Report-Msgid-Bugs-To: Kuwa Lee <kuwalee1069@gmail.com>, Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-07-13 14:33+0800\n"
+"PO-Revision-Date: 2024-07-20 08:37+0800\n"
 "Last-Translator: \n"
 "Language-Team: Frudrax Cheng <i@cynosura.one>, Kuwa Lee <kuwalee1069@gmail.com>, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Language: zh_TW\n"
@@ -525,7 +525,7 @@ msgstr "應用程式專用密碼只能包含字母、數字、空格、破折號
 
 #: src/view/com/modals/AddAppPasswords.tsx:103
 msgid "App Password names must be at least 4 characters long."
-msgstr "應用程式專用密碼名稱必須至少包含 4 個字元。"
+msgstr "應用程式專用密碼名稱必須至少有 4 個字元。"
 
 #: src/view/screens/Settings/index.tsx:699
 msgid "App password settings"
@@ -808,7 +808,7 @@ msgstr "相機"
 
 #: src/view/com/modals/AddAppPasswords.tsx:179
 msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
-msgstr "只能包含字母、數字、空格、破折號及底線。必須至少包含 4 個字元，但不超過 32 個字元。"
+msgstr "只能包含字母、數字、空格、破折號及底線。長度必須至少有 4 個字元，但不超過 32 個字元。"
 
 #: src/components/Menu/index.tsx:215
 #: src/components/Prompt.tsx:119
@@ -3037,7 +3037,7 @@ msgstr "對您的自訂動態源表示喜歡"
 
 #: src/view/com/notifications/FeedItem.tsx:186
 msgid "liked your post"
-msgstr "喜歡您的貼文"
+msgstr "表示喜歡您的貼文"
 
 #: src/view/screens/Profile.tsx:212
 msgid "Likes"
