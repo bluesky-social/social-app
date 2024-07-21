@@ -62,10 +62,10 @@ module.exports = function (config) {
   return {
     expo: {
       version: VERSION,
-      name: 'Bluesky',
-      slug: 'bluesky',
+      name: 'nottyboi',
+      slug: 'nottyboi',
       scheme: 'bluesky',
-      owner: 'blueskysocial',
+      owner: 'nottyboi',
       runtimeVersion: {
         policy: 'appVersion',
       },
@@ -77,7 +77,7 @@ module.exports = function (config) {
       primaryColor: '#1083fe',
       ios: {
         supportsTablet: false,
-        bundleIdentifier: 'xyz.blueskyweb.app',
+        bundleIdentifier: 'me.nottyboi.nottyboi',
         config: {
           usesNonExemptEncryption: false,
         },
@@ -142,7 +142,7 @@ module.exports = function (config) {
           backgroundColor: '#1185FE',
         },
         googleServicesFile: './google-services.json',
-        package: 'xyz.blueskyweb.app',
+        package: 'me.nottyboi.nottyboi',
         intentFilters: [
           {
             action: 'VIEW',
@@ -255,7 +255,7 @@ module.exports = function (config) {
               },
             },
           },
-          projectId: '55bd077a-d905-4184-9c7f-94789ba0f302',
+          projectId: '7029b9a6-82e6-4171-b0c9-f2bcec6e4e0c',
         },
       },
       hooks: {

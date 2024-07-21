@@ -162,6 +162,7 @@
     "nanoid": "^5.0.5",
     "normalize-url": "^8.0.0",
     "patch-package": "^6.5.1",
+    "pkg.json": "^2.0.8",
     "postinstall-postinstall": "^2.1.0",
     "psl": "^1.9.0",
     "react": "18.2.0",
@@ -278,7 +279,7 @@
   },
   "resolutions": {
     "@types/react": "^18",
-    "**/zeed-dom": "0.10.9",
+    "**/zeed-dom": "0.9.19",
     "**/zod": "3.23.8",
     "**/expo-constants": "16.0.1",
     "**/expo-device": "6.0.2",
