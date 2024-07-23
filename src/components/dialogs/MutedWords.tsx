@@ -304,7 +304,7 @@ function MutedWordsInner() {
               onChange={setExcludeFollowing}>
               <TargetToggle>
                 <View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
-                  <Toggle.Radio />
+                  <Toggle.Checkbox />
                   <Toggle.LabelText style={[a.flex_1, a.leading_tight]}>
                     <Trans>Exclude users you follow</Trans>
                   </Toggle.LabelText>
