@@ -1,5 +1,6 @@
 import React from 'react'
 import {Pressable, StyleSheet, View, ViewStyle} from 'react-native'
+import Animated, {LinearTransition} from 'react-native-reanimated'
 
 import {HITSLOP_10} from 'lib/constants'
 import {
@@ -389,7 +390,8 @@ export function Switch() {
         baseStyles,
         hovered ? baseHoverStyles : {},
       ]}>
-      <View
+      <Animated.View
+        layout={LinearTransition.duration(100)}
         style={[
           a.rounded_full,
           {
