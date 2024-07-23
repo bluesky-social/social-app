@@ -137,7 +137,7 @@ function MutedWordsInner() {
 
         <View style={[a.pb_xl, a.gap_sm]}>
           <Toggle.Group
-            label={_(msg`Select how long this mute word should apply for.`)}
+            label={_(msg`Select how long to mute this word for.`)}
             type="radio"
             values={durations}
             onChange={setDurations}>
