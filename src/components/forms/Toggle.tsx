@@ -1,5 +1,5 @@
 import React from 'react'
-import {Pressable, StyleSheet, View, ViewStyle} from 'react-native'
+import {Pressable, View, ViewStyle} from 'react-native'
 import Animated, {LinearTransition} from 'react-native-reanimated'
 
 import {HITSLOP_10} from 'lib/constants'
@@ -14,8 +14,6 @@ import {
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {CheckThick_Stroke2_Corner0_Rounded as Checkmark} from '#/components/icons/Check'
 import {Text} from '#/components/Typography'
-
-const hairlineWidth = StyleSheet.hairlineWidth
 
 export type ItemState = {
   name: string
@@ -348,10 +346,10 @@ export function Checkbox() {
       style={[
         a.justify_center,
         a.align_center,
-        a.border,
         a.rounded_xs,
         t.atoms.border_contrast_high,
         {
+          borderWidth: 1,
           height: 20,
           width: 20,
         },
@@ -379,14 +377,14 @@ export function Switch() {
     <View
       style={[
         a.relative,
-        a.border,
         a.rounded_full,
         t.atoms.bg,
         t.atoms.border_contrast_high,
         {
-          height: 20 + hairlineWidth * 2,
-          width: 35,
-          padding: 3,
+          borderWidth: 1,
+          height: 20,
+          width: 32,
+          padding: 2,
         },
         baseStyles,
         hovered ? baseHoverStyles : {},
@@ -433,10 +431,10 @@ export function Radio() {
       style={[
         a.justify_center,
         a.align_center,
-        a.border,
         a.rounded_full,
         t.atoms.border_contrast_high,
         {
+          borderWidth: 1,
           height: 20,
           width: 20,
         },
