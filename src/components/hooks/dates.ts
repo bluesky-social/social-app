@@ -27,29 +27,30 @@ import {
   zhTW,
 } from 'date-fns/locale'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {AppLanguage} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
 
 /**
  * {@link AppLanguage}
  */
-const locales: Record<string, Locale> = {
+const locales: Record<AppLanguage, Locale | undefined> = {
+  en: undefined,
   ca,
   de,
   es,
   fi,
   fr,
+  ga: undefined,
   hi,
   id,
   it,
   ja,
   ko,
-  ptBR,
+  ['pt-BR']: ptBR,
   tr,
   uk,
-  zhCN,
-  zhTW,
+  ['zh-CN']: zhCN,
+  ['zh-TW']: zhTW,
 }
 
 /**
@@ -60,7 +61,7 @@ export function useFormatDistance() {
   const {appLanguage} = useLanguagePrefs()
   return React.useCallback<typeof formatDistance>(
     (date, baseDate, options) => {
-      const locale = locales[appLanguage]
+      const locale = locales[appLanguage as AppLanguage]
       return formatDistance(date, baseDate, {...options, locale: locale})
     },
     [appLanguage],
