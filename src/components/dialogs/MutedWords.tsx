@@ -68,15 +68,17 @@ function MutedWordsInner() {
     ) as AppBskyActorDefs.MutedWord['targets']
     const actorTarget = excludeFollowing ? 'exclude-following' : 'all'
 
+    const now = Date.now()
     const rawDuration = durations.at(0)
+    // undefined evaluates to 'forever'
     let duration: string | undefined
 
     if (rawDuration === '24_hours') {
-      duration = new Date(Date.now() + ONE_DAY).toISOString()
+      duration = new Date(now + ONE_DAY).toISOString()
     } else if (rawDuration === '7_days') {
-      duration = new Date(Date.now() + 7 * ONE_DAY).toISOString()
+      duration = new Date(now + 7 * ONE_DAY).toISOString()
     } else if (rawDuration === '30_days') {
-      duration = new Date(Date.now() + 30 * ONE_DAY).toISOString()
+      duration = new Date(now + 30 * ONE_DAY).toISOString()
     }
 
     if (!sanitizedValue || !surfaces.length) {
@@ -297,7 +299,7 @@ function MutedWordsInner() {
               <Trans>Options:</Trans>
             </Text>
             <Toggle.Item
-              label={_(msg`Mute this word in post text and tags`)}
+              label={_(msg`Do not apply this mute word to users you follow`)}
               name="exclude_following"
               style={[a.flex_row, a.justify_between]}
               value={excludeFollowing}
@@ -430,7 +432,7 @@ function MutedWordRow({
         control={control}
         title={_(msg`Are you sure?`)}
         description={_(
-          msg`This will delete ${word.value} from your muted words. You can always add it back later.`,
+          msg`This will delete "${word.value}" from your muted words. You can always add it back later.`,
         )}
         onConfirm={remove}
         confirmButtonCta={_(msg`Remove`)}
