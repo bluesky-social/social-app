@@ -1,5 +1,5 @@
 import React from 'react'
-import {Pressable, View, ViewStyle} from 'react-native'
+import {Pressable, StyleSheet, View, ViewStyle} from 'react-native'
 
 import {HITSLOP_10} from 'lib/constants'
 import {
@@ -13,6 +13,8 @@ import {
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {CheckThick_Stroke2_Corner0_Rounded as Checkmark} from '#/components/icons/Check'
 import {Text} from '#/components/Typography'
+
+const hairlineWidth = StyleSheet.hairlineWidth
 
 export type ItemState = {
   name: string
@@ -380,29 +382,29 @@ export function Switch() {
         t.atoms.bg,
         t.atoms.border_contrast_high,
         {
-          height: 20,
-          width: 30,
+          height: 20 + hairlineWidth * 2,
+          width: 35,
+          padding: 3,
         },
         baseStyles,
         hovered ? baseHoverStyles : {},
       ]}>
       <View
         style={[
-          a.absolute,
           a.rounded_full,
           {
-            height: 12,
-            width: 12,
-            top: 3,
-            left: 3,
-            backgroundColor: t.palette.contrast_400,
+            height: 14,
+            width: 14,
           },
           selected
             ? {
                 backgroundColor: t.palette.primary_500,
-                left: 13,
+                alignSelf: 'flex-start',
               }
-            : {},
+            : {
+                backgroundColor: t.palette.contrast_400,
+                alignSelf: 'flex-end',
+              },
           indicatorStyles,
         ]}
       />
