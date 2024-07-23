@@ -417,11 +417,6 @@ function MutedWordRow({
   const control = Prompt.usePromptControl()
   const expiryDate = word.expiresAt ? new Date(word.expiresAt) : undefined
   const isExpired = expiryDate && expiryDate < new Date()
-  const target = word.targets.find(t => t === 'content') ? (
-    <Trans>text, tags</Trans>
-  ) : (
-    <Trans>tags</Trans>
-  )
   const formatDistance = useFormatDistance()
 
   const remove = React.useCallback(async () => {
@@ -464,16 +459,27 @@ function MutedWordRow({
                   wordBreak: 'break-word',
                 }),
               ]}>
-              <Text style={[a.flex_1]}>{word.value}</Text>
-
-              <Text style={[a.font_normal, t.atoms.text_contrast_medium]}>
-                {' '}
-                <Trans>in</Trans>{' '}
-              </Text>
-
-              <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
-                {target}
-              </Text>
+              {word.targets.find(t => t === 'content') ? (
+                <Trans comment="Pattern: {wordValue} in text, tags">
+                  {word.value}{' '}
+                  <Text style={[a.font_normal, t.atoms.text_contrast_medium]}>
+                    in{' '}
+                    <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
+                      text, tags
+                    </Text>
+                  </Text>
+                </Trans>
+              ) : (
+                <Trans comment="Pattern: {wordValue} in tags">
+                  {word.value}{' '}
+                  <Text style={[a.font_normal, t.atoms.text_contrast_medium]}>
+                    in{' '}
+                    <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
+                      tags
+                    </Text>
+                  </Text>
+                </Trans>
+              )}
             </Text>
           </View>
 
