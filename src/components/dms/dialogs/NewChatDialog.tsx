@@ -32,7 +32,7 @@ export function NewChat({
       logEvent('chat:open', {logContext: 'NewChatDialog'})
     },
     onError: error => {
-      logger.error('Failed to create chat', {message: error})
+      logger.error('Failed to create chat', {safeMessage: error})
       Toast.show(_(msg`An issue occurred starting the chat`), 'xmark')
     },
   })
