@@ -400,11 +400,11 @@ export function Switch() {
           selected
             ? {
                 backgroundColor: t.palette.primary_500,
-                alignSelf: 'flex-start',
+                alignSelf: 'flex-end',
               }
             : {
                 backgroundColor: t.palette.contrast_400,
-                alignSelf: 'flex-end',
+                alignSelf: 'flex-start',
               },
           indicatorStyles,
         ]}
