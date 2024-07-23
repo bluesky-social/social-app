@@ -224,7 +224,10 @@ let UserAvatar = ({
           style={aviStyle}
           resizeMode="cover"
           source={{
-            uri: hackModifyThumbnailPath(avatar, gate('small_avi_thumb')),
+            uri: hackModifyThumbnailPath(
+              avatar,
+              size < 90 && gate('small_avi_thumb'),
+            ),
           }}
           blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
         />
@@ -234,7 +237,10 @@ let UserAvatar = ({
           style={aviStyle}
           contentFit="cover"
           source={{
-            uri: hackModifyThumbnailPath(avatar, gate('small_avi_thumb')),
+            uri: hackModifyThumbnailPath(
+              avatar,
+              size < 90 && gate('small_avi_thumb'),
+            ),
           }}
           blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
         />
@@ -443,8 +449,8 @@ export {PreviewableUserAvatar}
 // We have started serving smaller avis but haven't updated lexicons to give the data properly
 // manually string-replace to use the smaller ones
 // -prf
-function hackModifyThumbnailPath(uri: string, isGateEnabled: boolean): string {
-  return isGateEnabled
+function hackModifyThumbnailPath(uri: string, isEnabled: boolean): string {
+  return isEnabled
     ? uri.replace('/img/avatar/plain/', '/img/avatar_thumbnail/plain/')
     : uri
 }
