@@ -247,6 +247,7 @@ export function LabelText({
     <Text
       style={[
         a.font_bold,
+        a.leading_tight,
         {
           userSelect: 'none',
           color: disabled
@@ -254,7 +255,7 @@ export function LabelText({
             : t.atoms.text_contrast_high.color,
         },
         native({
-          paddingTop: 3,
+          paddingTop: 2,
         }),
         flatten(style),
       ]}>
