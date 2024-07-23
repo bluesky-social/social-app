@@ -1,5 +1,6 @@
 import React from 'react'
 import {Pressable, View, ViewStyle} from 'react-native'
+import Animated, {LinearTransition} from 'react-native-reanimated'
 
 import {HITSLOP_10} from 'lib/constants'
 import {
@@ -244,6 +245,7 @@ export function LabelText({
     <Text
       style={[
         a.font_bold,
+        a.leading_tight,
         {
           userSelect: 'none',
           color: disabled
@@ -251,7 +253,7 @@ export function LabelText({
             : t.atoms.text_contrast_high.color,
         },
         native({
-          paddingTop: 3,
+          paddingTop: 2,
         }),
         flatten(style),
       ]}>
@@ -344,10 +346,10 @@ export function Checkbox() {
       style={[
         a.justify_center,
         a.align_center,
-        a.border,
         a.rounded_xs,
         t.atoms.border_contrast_high,
         {
+          borderWidth: 1,
           height: 20,
           width: 20,
         },
@@ -375,34 +377,35 @@ export function Switch() {
     <View
       style={[
         a.relative,
-        a.border,
         a.rounded_full,
         t.atoms.bg,
         t.atoms.border_contrast_high,
         {
+          borderWidth: 1,
           height: 20,
-          width: 30,
+          width: 32,
+          padding: 2,
         },
         baseStyles,
         hovered ? baseHoverStyles : {},
       ]}>
-      <View
+      <Animated.View
+        layout={LinearTransition.duration(100)}
         style={[
-          a.absolute,
           a.rounded_full,
           {
-            height: 12,
-            width: 12,
-            top: 3,
-            left: 3,
-            backgroundColor: t.palette.contrast_400,
+            height: 14,
+            width: 14,
           },
           selected
             ? {
                 backgroundColor: t.palette.primary_500,
-                left: 13,
+                alignSelf: 'flex-start',
               }
-            : {},
+            : {
+                backgroundColor: t.palette.contrast_400,
+                alignSelf: 'flex-end',
+              },
           indicatorStyles,
         ]}
       />
@@ -428,10 +431,10 @@ export function Radio() {
       style={[
         a.justify_center,
         a.align_center,
-        a.border,
         a.rounded_full,
         t.atoms.border_contrast_high,
         {
+          borderWidth: 1,
           height: 20,
           width: 20,
         },
