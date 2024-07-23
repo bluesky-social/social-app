@@ -11,7 +11,9 @@ import {
   useNavigation,
   useNavigationState,
 } from '@react-navigation/native'
+import {useMediaQuery} from 'react-responsive'
 
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {isInvalidHandle} from '#/lib/strings/handles'
 import {emitSoftReset} from '#/state/events'
 import {useFetchHandle} from '#/state/queries/handle'
@@ -21,7 +23,6 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {getCurrentRoute, isStateAtTabRoot, isTab} from 'lib/routes/helpers'
 import {makeProfileLink} from 'lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
@@ -68,10 +69,21 @@ import {router} from '../../../routes'
 
 const NAV_ICON_WIDTH = 28
 
+/**
+  Slightly different breakpoints to the rest of the app so we can
+  show the full left nav for as long as possible
+  */
+function useLeftNavMediaQueries() {
+  const isDesktop = useMediaQuery({minWidth: 1100})
+  const isTablet = useMediaQuery({minWidth: 800, maxWidth: 1100 - 1})
+
+  return {isDesktop, isTablet}
+}
+
 function ProfileCard() {
   const {currentAccount} = useSession()
   const {isLoading, data: profile} = useProfileQuery({did: currentAccount!.did})
-  const {isDesktop} = useWebMediaQueries()
+  const {isDesktop} = useLeftNavMediaQueries()
   const {_} = useLingui()
   const size = 48
 
@@ -104,7 +116,7 @@ function ProfileCard() {
 const HIDDEN_BACK_BNT_ROUTES = ['StarterPackWizard', 'StarterPackEdit']
 
 function BackBtn() {
-  const {isTablet} = useWebMediaQueries()
+  const {isTablet} = useLeftNavMediaQueries()
   const pal = usePalette('default')
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
@@ -152,7 +164,7 @@ interface NavItemProps {
 function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
   const pal = usePalette('default')
   const {currentAccount} = useSession()
-  const {isDesktop, isTablet} = useWebMediaQueries()
+  const {isDesktop, isTablet} = useLeftNavMediaQueries()
   const [pathName] = React.useMemo(() => router.matchPath(href), [href])
   const currentRouteInfo = useNavigationState(state => {
     if (!state) {
@@ -225,7 +237,6 @@ function ComposeBtn() {
   const {getState} = useNavigation()
   const {openComposer} = useComposerControls()
   const {_} = useLingui()
-  const {isTablet} = useWebMediaQueries()
   const [isFetchingHandle, setIsFetchingHandle] = React.useState(false)
   const fetchHandle = useFetchHandle()
 
@@ -265,9 +276,6 @@ function ComposeBtn() {
   const onPressCompose = async () =>
     openComposer({mention: await getProfileHandle()})
 
-  if (isTablet) {
-    return null
-  }
   return (
     <View style={styles.newPostBtnContainer}>
       <TouchableOpacity
@@ -308,7 +316,8 @@ export function DesktopLeftNav() {
   const {hasSession, currentAccount} = useSession()
   const pal = usePalette('default')
   const {_} = useLingui()
-  const {isDesktop, isTablet} = useWebMediaQueries()
+  const {isDesktop, isTablet} = useLeftNavMediaQueries()
+  const {isDesktop: showComposeBtn} = useWebMediaQueries()
   const numUnreadNotifications = useUnreadNotifications()
 
   if (!hasSession && !isDesktop) {
@@ -401,7 +410,7 @@ export function DesktopLeftNav() {
             label={_(msg`Settings`)}
           />
 
-          <ComposeBtn />
+          {showComposeBtn && <ComposeBtn />}
         </>
       )}
     </View>
