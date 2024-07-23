@@ -3,10 +3,9 @@ import {Pressable, View, ViewStyle} from 'react-native'
 
 import {HITSLOP_10} from 'lib/constants'
 import {
-  android,
   atoms as a,
   flatten,
-  ios,
+  native,
   TextStyleProp,
   useTheme,
   ViewStyleProp,
@@ -245,18 +244,14 @@ export function LabelText({
     <Text
       style={[
         a.font_bold,
-        a.leading_tight,
         {
           userSelect: 'none',
           color: disabled
             ? t.atoms.text_contrast_low.color
             : t.atoms.text_contrast_high.color,
         },
-        ios({
-          paddingTop: 2,
-        }),
-        android({
-          paddingTop: 1,
+        native({
+          paddingTop: 3,
         }),
         flatten(style),
       ]}>
