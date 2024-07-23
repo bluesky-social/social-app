@@ -104,7 +104,7 @@ let ProfileHeaderStandard = ({
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
           logger.error('Failed to follow', {message: String(e)})
-          Toast.show(_(msg`There was an issue! ${e.toString()}`))
+          Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
         }
       }
     })
@@ -126,7 +126,7 @@ let ProfileHeaderStandard = ({
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
           logger.error('Failed to unfollow', {message: String(e)})
-          Toast.show(_(msg`There was an issue! ${e.toString()}`))
+          Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
         }
       }
     })
@@ -140,7 +140,7 @@ let ProfileHeaderStandard = ({
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
         logger.error('Failed to unblock account', {message: e})
-        Toast.show(_(msg`There was an issue! ${e.toString()}`))
+        Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
       }
     }
   }, [_, queueUnblock, track])
