@@ -158,7 +158,7 @@ function MutedWordsInner() {
               ]}>
               <View
                 style={[
-                  a.flex_grow,
+                  a.flex_1,
                   a.flex_row,
                   a.justify_start,
                   a.align_center,
@@ -169,9 +169,10 @@ function MutedWordsInner() {
                   name="forever"
                   style={[a.flex_1]}>
                   <TargetToggle>
-                    <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                    <View
+                      style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
                       <Toggle.Radio />
-                      <Toggle.LabelText>
+                      <Toggle.LabelText style={[a.flex_1, a.leading_tight]}>
                         <Trans>Forever</Trans>
                       </Toggle.LabelText>
                     </View>
@@ -183,9 +184,10 @@ function MutedWordsInner() {
                   name="24_hours"
                   style={[a.flex_1]}>
                   <TargetToggle>
-                    <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                    <View
+                      style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
                       <Toggle.Radio />
-                      <Toggle.LabelText>
+                      <Toggle.LabelText style={[a.flex_1, a.leading_tight]}>
                         <Trans>24 hours</Trans>
                       </Toggle.LabelText>
                     </View>
@@ -195,7 +197,7 @@ function MutedWordsInner() {
 
               <View
                 style={[
-                  a.flex_grow,
+                  a.flex_1,
                   a.flex_row,
                   a.justify_start,
                   a.align_center,
@@ -206,9 +208,10 @@ function MutedWordsInner() {
                   name="7_days"
                   style={[a.flex_1]}>
                   <TargetToggle>
-                    <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                    <View
+                      style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
                       <Toggle.Radio />
-                      <Toggle.LabelText>
+                      <Toggle.LabelText style={[a.flex_1, a.leading_tight]}>
                         <Trans>7 days</Trans>
                       </Toggle.LabelText>
                     </View>
@@ -220,9 +223,10 @@ function MutedWordsInner() {
                   name="30_days"
                   style={[a.flex_1]}>
                   <TargetToggle>
-                    <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                    <View
+                      style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
                       <Toggle.Radio />
-                      <Toggle.LabelText>
+                      <Toggle.LabelText style={[a.flex_1, a.leading_tight]}>
                         <Trans>30 days</Trans>
                       </Toggle.LabelText>
                     </View>
@@ -253,9 +257,10 @@ function MutedWordsInner() {
                 name="content"
                 style={[a.flex_1]}>
                 <TargetToggle>
-                  <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                  <View
+                    style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
                     <Toggle.Radio />
-                    <Toggle.LabelText>
+                    <Toggle.LabelText style={[a.flex_1, a.leading_tight]}>
                       <Trans>Text & tags</Trans>
                     </Toggle.LabelText>
                   </View>
@@ -268,9 +273,10 @@ function MutedWordsInner() {
                 name="tag"
                 style={[a.flex_1]}>
                 <TargetToggle>
-                  <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                  <View
+                    style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
                     <Toggle.Radio />
-                    <Toggle.LabelText>
+                    <Toggle.LabelText style={[a.flex_1, a.leading_tight]}>
                       <Trans>Tags only</Trans>
                     </Toggle.LabelText>
                   </View>
@@ -297,9 +303,9 @@ function MutedWordsInner() {
               value={excludeFollowing}
               onChange={setExcludeFollowing}>
               <TargetToggle>
-                <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-                  <Toggle.Checkbox />
-                  <Toggle.LabelText>
+                <View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
+                  <Toggle.Radio />
+                  <Toggle.LabelText style={[a.flex_1, a.leading_tight]}>
                     <Trans>Exclude users you follow</Trans>
                   </Toggle.LabelText>
                 </View>
@@ -446,7 +452,7 @@ function MutedWordRow({
           a.gap_md,
           style,
         ]}>
-        <View style={[a.gap_xs]}>
+        <View style={[a.flex_1, a.gap_xs]}>
           <View style={[a.flex_row, a.align_center, a.gap_sm]}>
             <Text
               style={[
@@ -472,8 +478,14 @@ function MutedWordRow({
           </View>
 
           {(expiryDate || word.actorTarget === 'exclude-following') && (
-            <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-              <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
+            <View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
+              <Text
+                style={[
+                  a.flex_1,
+                  a.text_xs,
+                  a.leading_snug,
+                  t.atoms.text_contrast_medium,
+                ]}>
                 {expiryDate && (
                   <>
                     {isExpired ? (
