@@ -17,19 +17,21 @@ import {Text} from '#/components/Typography'
 
 type Props = NativeStackScreenProps<AllNavigatorParams, 'NotificationsSettings'>
 export function NotificationsSettingsScreen({}: Props) {
-  const {data, isError, refetch} = useNotificationFeedQuery()
-  const serverPriority = data?.pages.at(0)?.priority
-
   const {_} = useLingui()
   const t = useTheme()
 
+  const {data, isError: isQueryError, refetch} = useNotificationFeedQuery()
+  const serverPriority = data?.pages.at(0)?.priority
+
   const {
     mutate: onChangePriority,
-    isPending,
+    isPending: isMutationPending,
     variables,
   } = useNotificationsSettingsMutation()
 
-  const priority = isPending ? variables[0] === 'enabled' : serverPriority
+  const priority = isMutationPending
+    ? variables[0] === 'enabled'
+    : serverPriority
 
   return (
     <CenteredView style={a.flex_1} sideBorders>
@@ -38,7 +40,7 @@ export function NotificationsSettingsScreen({}: Props) {
         showOnDesktop
         showBorder
       />
-      {isError ? (
+      {isQueryError ? (
         <Error
           title={_(msg`Oops!`)}
           message={_(msg`Something went wrong!`)}
@@ -56,7 +58,7 @@ export function NotificationsSettingsScreen({}: Props) {
             type="checkbox"
             values={priority ? ['enabled'] : []}
             onChange={onChangePriority}
-            disabled={typeof priority !== 'boolean' || isPending}>
+            disabled={typeof priority !== 'boolean' || isMutationPending}>
             <View>
               <Toggle.Item
                 name="enabled"
