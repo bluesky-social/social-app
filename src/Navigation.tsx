@@ -76,6 +76,7 @@ import {LogScreen} from './view/screens/Log'
 import {ModerationModlistsScreen} from './view/screens/ModerationModlists'
 import {NotFoundScreen} from './view/screens/NotFound'
 import {NotificationsScreen} from './view/screens/Notifications'
+import {NotificationsSettingsScreen} from './view/screens/NotificationsSettings'
 import {PostLikedByScreen} from './view/screens/PostLikedBy'
 import {PostRepostedByScreen} from './view/screens/PostRepostedBy'
 import {PostThreadScreen} from './view/screens/PostThread'
@@ -323,6 +324,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="MessagesSettings"
         getComponent={() => MessagesSettingsScreen}
         options={{title: title(msg`Chat settings`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="NotificationsSettings"
+        getComponent={() => NotificationsSettingsScreen}
+        options={{title: title(msg`Notification settings`), requireAuth: true}}
       />
       <Stack.Screen
         name="Feeds"

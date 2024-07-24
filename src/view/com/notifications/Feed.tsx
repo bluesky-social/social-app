@@ -35,11 +35,13 @@ export function Feed({
   onPressTryAgain,
   onScrolledDownChange,
   ListHeaderComponent,
+  overridePriorityNotifications,
 }: {
   scrollElRef?: ListRef
   onPressTryAgain?: () => void
   onScrolledDownChange: (isScrolledDown: boolean) => void
   ListHeaderComponent?: () => JSX.Element
+  overridePriorityNotifications?: boolean
 }) {
   const initialNumToRender = useInitialNumToRender()
 
@@ -59,7 +61,10 @@ export function Feed({
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
-  } = useNotificationFeedQuery({enabled: !!moderationOpts})
+  } = useNotificationFeedQuery({
+    enabled: !!moderationOpts,
+    overridePriorityNotifications,
+  })
   const isEmpty = !isFetching && !data?.pages[0]?.items.length
 
   const items = React.useMemo(() => {
