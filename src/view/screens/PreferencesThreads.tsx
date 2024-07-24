@@ -17,12 +17,13 @@ import {ToggleButton} from '#/view/com/util/forms/ToggleButton'
 import {SimpleViewHeader} from '#/view/com/util/SimpleViewHeader'
 import {Text} from '#/view/com/util/text/Text'
 import {ScrollView} from '#/view/com/util/Views'
+import {atoms as a} from '#/alf'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PreferencesThreads'>
 export function PreferencesThreads({}: Props) {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const {isMobile, isTabletOrMobile} = useWebMediaQueries()
+  const {isTabletOrMobile} = useWebMediaQueries()
   const {data: preferences} = usePreferencesQuery()
   const {mutate: setThreadViewPrefs, variables} =
     useSetThreadViewPreferencesMutation()
@@ -38,28 +39,24 @@ export function PreferencesThreads({}: Props) {
 
   return (
     <View testID="preferencesThreadsScreen" style={s.hContentRegion}>
-      <SimpleViewHeader
-        showBackButton={isTabletOrMobile}
-        style={[
-          pal.border,
-          {borderBottomWidth: 1},
-          !isMobile && {borderLeftWidth: 1, borderRightWidth: 1},
-        ]}>
-        <View style={{flex: 1}}>
-          <Text type="title-lg" style={[pal.text, {fontWeight: 'bold'}]}>
-            <Trans>Thread Preferences</Trans>
-          </Text>
-          <Text style={pal.textLight}>
-            <Trans>Fine-tune the discussion threads.</Trans>
-          </Text>
-        </View>
-      </SimpleViewHeader>
+      <ScrollView
+        // @ts-ignore web only -prf
+        dataSet={{'stable-gutters': 1}}
+        contentContainerStyle={{paddingBottom: 75}}>
+        <SimpleViewHeader
+          showBackButton={isTabletOrMobile}
+          style={[pal.border, {borderBottomWidth: 1}]}>
+          <View style={{flex: 1}}>
+            <Text type="title-lg" style={[pal.text, {fontWeight: 'bold'}]}>
+              <Trans>Thread Preferences</Trans>
+            </Text>
+            <Text style={pal.textLight}>
+              <Trans>Fine-tune the discussion threads.</Trans>
+            </Text>
+          </View>
+        </SimpleViewHeader>
 
-      {preferences ? (
-        <ScrollView
-          // @ts-ignore web only -prf
-          dataSet={{'stable-gutters': 1}}
-          contentContainerStyle={{paddingBottom: 75}}>
+        {preferences ? (
           <View style={styles.cardsContainer}>
             <View style={[pal.viewLight, styles.card]}>
               <Text type="title-sm" style={[pal.text, s.pb5]}>
@@ -133,10 +130,10 @@ export function PreferencesThreads({}: Props) {
               />
             </View>
           </View>
-        </ScrollView>
-      ) : (
-        <ActivityIndicator />
-      )}
+        ) : (
+          <ActivityIndicator style={a.flex_1} />
+        )}
+      </ScrollView>
     </View>
   )
 }

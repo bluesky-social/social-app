@@ -82,7 +82,7 @@ type Props = NativeStackScreenProps<
 export function PreferencesFollowingFeed({}: Props) {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const {isMobile, isTabletOrMobile} = useWebMediaQueries()
+  const {isTabletOrMobile} = useWebMediaQueries()
   const {data: preferences} = usePreferencesQuery()
   const {mutate: setFeedViewPref, variables} =
     useSetFeedViewPreferencesMutation()
@@ -93,27 +93,24 @@ export function PreferencesFollowingFeed({}: Props) {
 
   return (
     <View testID="preferencesHomeFeedScreen" style={s.hContentRegion}>
-      <SimpleViewHeader
-        showBackButton={isTabletOrMobile}
-        style={[
-          pal.border,
-          {borderBottomWidth: 1},
-          !isMobile && {borderLeftWidth: 1, borderRightWidth: 1},
-        ]}>
-        <View style={{flex: 1}}>
-          <Text type="title-lg" style={[pal.text, {fontWeight: 'bold'}]}>
-            <Trans>Following Feed Preferences</Trans>
-          </Text>
-          <Text style={pal.textLight}>
-            <Trans>Fine-tune the content you see on your Following feed.</Trans>
-          </Text>
-        </View>
-      </SimpleViewHeader>
-
       <ScrollView
         // @ts-ignore web only -sfn
         dataSet={{'stable-gutters': 1}}
         contentContainerStyle={{paddingBottom: 75}}>
+        <SimpleViewHeader
+          showBackButton={isTabletOrMobile}
+          style={[pal.border, {borderBottomWidth: 1}]}>
+          <View style={{flex: 1}}>
+            <Text type="title-lg" style={[pal.text, {fontWeight: 'bold'}]}>
+              <Trans>Following Feed Preferences</Trans>
+            </Text>
+            <Text style={pal.textLight}>
+              <Trans>
+                Fine-tune the content you see on your Following feed.
+              </Trans>
+            </Text>
+          </View>
+        </SimpleViewHeader>
         <View style={styles.cardsContainer}>
           <View style={[pal.viewLight, styles.card]}>
             <Text type="title-sm" style={[pal.text, s.pb5]}>
