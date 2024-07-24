@@ -1,10 +1,11 @@
-import React, {useCallback} from 'react'
+import React from 'react'
 import {View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useQueryClient} from '@tanstack/react-query'
+import {useMutation, useQueryClient} from '@tanstack/react-query'
 
+import {until} from '#/lib/async/until'
 import {AllNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
@@ -30,26 +31,38 @@ export function NotificationsSettingsScreen({}: Props) {
   const {_} = useLingui()
   const t = useTheme()
 
-  const onChangePriority = useCallback(
-    async (keys: string[]) => {
+  const {mutate: onChangePriority, isPending} = useMutation({
+    mutationFn: async (keys: string[]) => {
       const enabled = keys[0] === 'enabled'
-      try {
-        toggleCachedPriority(queryClient, enabled)
-        await agent.api.app.bsky.notification.putPreferences({
-          priority: enabled,
-        })
-      } catch (err) {
-        logger.error('Failed to save notification preferences', {message: err})
-        Toast.show(
-          _(msg`Failed to save notification preferences, please try again`),
-          'xmark',
-        )
-      } finally {
-        await refetch()
-      }
+
+      await agent.api.app.bsky.notification.putPreferences({
+        priority: enabled,
+      })
+
+      await until(
+        5, // 5 tries
+        1e3, // 1s delay between tries
+        res => res.data.priority === enabled,
+        () => agent.api.app.bsky.notification.listNotifications({limit: 0}),
+      )
     },
-    [agent, queryClient, _, refetch],
-  )
+    onMutate: keys => {
+      eagerlySetCachedPriority(queryClient, keys[0] === 'enabled')
+    },
+    onError: async err => {
+      await refetch()
+      logger.error('Failed to save notification preferences', {
+        safeMessage: err,
+      })
+      Toast.show(
+        _(msg`Failed to save notification preferences, please try again`),
+        'xmark',
+      )
+    },
+    onSuccess: () => {
+      Toast.show(_(msg`Preference saved`))
+    },
+  })
 
   return (
     <CenteredView sideBorders style={a.h_full_vh}>
@@ -68,7 +81,7 @@ export function NotificationsSettingsScreen({}: Props) {
           type="checkbox"
           values={priority ? ['enabled'] : []}
           onChange={onChangePriority}
-          disabled={typeof priority !== 'boolean'}>
+          disabled={typeof priority !== 'boolean' || isPending}>
           <View>
             <Toggle.Item
               name="enabled"
@@ -102,7 +115,7 @@ export function NotificationsSettingsScreen({}: Props) {
   )
 }
 
-function toggleCachedPriority(
+function eagerlySetCachedPriority(
   queryClient: ReturnType<typeof useQueryClient>,
   enabled: boolean,
 ) {
