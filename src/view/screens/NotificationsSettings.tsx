@@ -115,9 +115,9 @@ export function NotificationsSettingsScreen({}: Props) {
           ]}>
           <Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
             <Trans>
-              Experimental: When this preference is enabled, you'll only
-              receive reply and quote notifications from users you follow.
-              We'll continue to add more controls here over time.
+              Experimental: When this preference is enabled, you'll only receive
+              reply and quote notifications from users you follow. We'll
+              continue to add more controls here over time.
             </Trans>
           </Text>
         </View>
