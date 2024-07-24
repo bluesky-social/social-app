@@ -189,7 +189,7 @@ let ListMaybePlaceholder = ({
     return (
       <Error
         title={errorTitle ?? _(msg`Oops!`)}
-        message={errorMessage ?? _(`Something went wrong!`)}
+        message={errorMessage ?? _(msg`Something went wrong!`)}
         onRetry={onRetry}
         onGoBack={onGoBack}
         sideBorders={sideBorders}
