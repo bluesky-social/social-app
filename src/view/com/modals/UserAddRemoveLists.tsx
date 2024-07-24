@@ -166,7 +166,7 @@ function ListItem({
         onRemove?.(list.uri)
       }
     } catch (e) {
-      Toast.show(cleanError(e))
+      Toast.show(cleanError(e), 'xmark')
     } finally {
       setIsProcessing(false)
     }

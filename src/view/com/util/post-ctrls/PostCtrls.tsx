@@ -354,7 +354,7 @@ let PostCtrls = ({
           onPress={e => {
             e.stopPropagation()
             Clipboard.setStringAsync(feedContext)
-            Toast.show(_(msg`Copied to clipboard`))
+            Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
           }}>
           <Text
             style={{
