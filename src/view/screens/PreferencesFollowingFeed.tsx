@@ -82,7 +82,7 @@ type Props = NativeStackScreenProps<
 export function PreferencesFollowingFeed({}: Props) {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const {isMobile} = useWebMediaQueries()
+  const {isMobile, isTabletOrMobile} = useWebMediaQueries()
   const {data: preferences} = usePreferencesQuery()
   const {mutate: setFeedViewPref, variables} =
     useSetFeedViewPreferencesMutation()
@@ -94,7 +94,7 @@ export function PreferencesFollowingFeed({}: Props) {
   return (
     <View testID="preferencesHomeFeedScreen" style={s.hContentRegion}>
       <SimpleViewHeader
-        showBackButton={isMobile}
+        showBackButton={isTabletOrMobile}
         style={[
           pal.border,
           {borderBottomWidth: 1},

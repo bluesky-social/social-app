@@ -22,7 +22,7 @@ type Props = NativeStackScreenProps<CommonNavigatorParams, 'PreferencesThreads'>
 export function PreferencesThreads({}: Props) {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const {isMobile} = useWebMediaQueries()
+  const {isMobile, isTabletOrMobile} = useWebMediaQueries()
   const {data: preferences} = usePreferencesQuery()
   const {mutate: setThreadViewPrefs, variables} =
     useSetThreadViewPreferencesMutation()
@@ -39,7 +39,7 @@ export function PreferencesThreads({}: Props) {
   return (
     <View testID="preferencesThreadsScreen" style={s.hContentRegion}>
       <SimpleViewHeader
-        showBackButton={isMobile}
+        showBackButton={isTabletOrMobile}
         style={[
           pal.border,
           {borderBottomWidth: 1},

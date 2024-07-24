@@ -30,7 +30,7 @@ export function PreferencesExternalEmbeds({}: Props) {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
   const {screen} = useAnalytics()
-  const {isMobile} = useWebMediaQueries()
+  const {isMobile, isTabletOrMobile} = useWebMediaQueries()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -42,7 +42,7 @@ export function PreferencesExternalEmbeds({}: Props) {
   return (
     <View style={s.hContentRegion} testID="preferencesExternalEmbedsScreen">
       <SimpleViewHeader
-        showBackButton={isMobile}
+        showBackButton={isTabletOrMobile}
         style={[
           pal.border,
           {borderBottomWidth: 1},
