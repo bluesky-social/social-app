@@ -5,6 +5,7 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 import {until} from '#/lib/async/until'
 import {logger} from '#/logger'
 import {RQKEY as RQKEY_NOTIFS} from '#/state/queries/notifications/feed'
+import {invalidateCachedUnreadPage} from '#/state/queries/notifications/unread'
 import {useAgent} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 
@@ -43,6 +44,7 @@ export function useNotificationsSettingsMutation() {
       Toast.show(_(msg`Preference saved`))
     },
     onSettled: () => {
+      invalidateCachedUnreadPage()
       queryClient.invalidateQueries({queryKey: RQKEY_NOTIFS()})
     },
   })
