@@ -36,7 +36,7 @@ export function AccessibilitySettingsScreen({}: Props) {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
   const {screen} = useAnalytics()
-  const {isMobile} = useWebMediaQueries()
+  const {isMobile, isTabletOrMobile} = useWebMediaQueries()
   const {_} = useLingui()
 
   const requireAltTextEnabled = useRequireAltTextEnabled()
@@ -58,7 +58,7 @@ export function AccessibilitySettingsScreen({}: Props) {
   return (
     <View style={s.hContentRegion} testID="accessibilitySettingsScreen">
       <SimpleViewHeader
-        showBackButton={isMobile}
+        showBackButton={isTabletOrMobile}
         style={[
           pal.border,
           {borderBottomWidth: 1},
