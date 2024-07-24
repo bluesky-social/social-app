@@ -8,7 +8,6 @@ import {useMutation, useQueryClient} from '@tanstack/react-query'
 import {until} from '#/lib/async/until'
 import {AllNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {
   RQKEY as RQKEY_NOTIFS,
   useNotificationFeedQuery,
@@ -95,13 +94,7 @@ export function NotificationsSettingsScreen({}: Props) {
               <Toggle.LabelText>
                 <Trans>Enable priority notifications</Trans>
               </Toggle.LabelText>
-              {!data ? (
-                <Loader size="md" />
-              ) : isWeb ? (
-                <Toggle.Checkbox />
-              ) : (
-                <Toggle.Switch />
-              )}
+              {!data ? <Loader size="md" /> : <Toggle.Platform />}
             </Toggle.Item>
           </View>
         </Toggle.Group>
