@@ -1,10 +1,6 @@
 import React from 'react'
 import {ActivityIndicator, type FlatList, StyleSheet, View} from 'react-native'
-import {
-  AppBskyFeedDefs,
-  moderateFeedGenerator,
-  ModerationDecision,
-} from '@atproto/api'
+import {AppBskyFeedDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
@@ -42,7 +38,6 @@ import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/compon
 import {ListMagnifyingGlass_Stroke2_Corner0_Rounded} from '#/components/icons/ListMagnifyingGlass'
 import {ListSparkle_Stroke2_Corner0_Rounded} from '#/components/icons/ListSparkle'
 import hairlineWidth = StyleSheet.hairlineWidth
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {Divider} from '#/components/Divider'
 import * as FeedCard from '#/components/FeedCard'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
@@ -94,7 +89,6 @@ type FlatlistSlice =
       key: string
       feedUri: string
       feed: AppBskyFeedDefs.GeneratorView
-      moderation: ModerationDecision
     }
   | {
       type: 'popularFeedsLoadingMore'
@@ -107,7 +101,6 @@ type FlatlistSlice =
 
 export function FeedsScreen(_props: Props) {
   const pal = usePalette('default')
-  const moderationOpts = useModerationOpts()
   const {openComposer} = useComposerControls()
   const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
   const [query, setQuery] = React.useState('')
@@ -307,7 +300,7 @@ export function FeedsScreen(_props: Props) {
         })
       } else {
         if (isUserSearching) {
-          if (isSearchPending || !searchResults || !moderationOpts) {
+          if (isSearchPending || !searchResults) {
             slices.push({
               key: 'popularFeedsLoading',
               type: 'popularFeedsLoading',
@@ -320,30 +313,17 @@ export function FeedsScreen(_props: Props) {
               })
             } else {
               slices = slices.concat(
-                searchResults
-                  .map(feed => {
-                    const moderation = moderateFeedGenerator(
-                      feed,
-                      moderationOpts,
-                    )
-                    const slice: FlatlistSlice = {
-                      key: `popularFeed:${feed.uri}`,
-                      type: 'popularFeed',
-                      feedUri: feed.uri,
-                      feed,
-                      moderation,
-                    }
-                    return slice
-                  })
-                  .filter(i => !i.moderation.ui('contentList').filter),
+                searchResults.map(feed => ({
+                  key: `popularFeed:${feed.uri}`,
+                  type: 'popularFeed',
+                  feedUri: feed.uri,
+                  feed,
+                })),
               )
             }
           }
         } else {
-          if (
-            (isPopularFeedsFetching && !popularFeeds?.pages) ||
-            !moderationOpts
-          ) {
+          if (isPopularFeedsFetching && !popularFeeds?.pages) {
             slices.push({
               key: 'popularFeedsLoading',
               type: 'popularFeedsLoading',
@@ -357,22 +337,12 @@ export function FeedsScreen(_props: Props) {
             } else {
               for (const page of popularFeeds.pages || []) {
                 slices = slices.concat(
-                  page.feeds
-                    .map(feed => {
-                      const moderation = moderateFeedGenerator(
-                        feed,
-                        moderationOpts,
-                      )
-                      const slice: FlatlistSlice = {
-                        key: `popularFeed:${feed.uri}`,
-                        type: 'popularFeed',
-                        feedUri: feed.uri,
-                        feed,
-                        moderation,
-                      }
-                      return slice
-                    })
-                    .filter(i => !i.moderation.ui('contentList').filter),
+                  page.feeds.map(feed => ({
+                    key: `popularFeed:${feed.uri}`,
+                    type: 'popularFeed',
+                    feedUri: feed.uri,
+                    feed,
+                  })),
                 )
               }
 
@@ -402,7 +372,6 @@ export function FeedsScreen(_props: Props) {
     isSearchPending,
     searchError,
     isUserSearching,
-    moderationOpts,
   ])
 
   const renderHeaderBtn = React.useCallback(() => {
@@ -527,7 +496,7 @@ export function FeedsScreen(_props: Props) {
       } else if (item.type === 'popularFeed') {
         return (
           <View style={[a.px_lg, a.pt_lg, a.gap_lg]}>
-            <FeedCard.Default view={item.feed} moderation={item.moderation} />
+            <FeedCard.Default view={item.feed} />
             <Divider />
           </View>
         )
