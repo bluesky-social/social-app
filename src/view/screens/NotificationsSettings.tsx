@@ -8,7 +8,7 @@ import {AllNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
 import {useNotificationFeedQuery} from '#/state/queries/notifications/feed'
 import {useNotificationsSettingsMutation} from '#/state/queries/notifications/settings'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
-import {ScrollView} from 'view/com/util/Views'
+import {ScrollView} from '#/view/com/util/Views'
 import {atoms as a, useTheme} from '#/alf'
 import {Error} from '#/components/Error'
 import * as Toggle from '#/components/forms/Toggle'
@@ -34,7 +34,7 @@ export function NotificationsSettingsScreen({}: Props) {
     : serverPriority
 
   return (
-    <ScrollView style={a.flex_1} sideBorders stickyHeaderIndices={[0]}>
+    <ScrollView stickyHeaderIndices={[0]}>
       <ViewHeader
         title={_(msg`Notification Settings`)}
         showOnDesktop
