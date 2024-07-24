@@ -8,7 +8,7 @@ msgstr ""
 "Language: fr\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-07-12 14:40+0100\n"
+"PO-Revision-Date: 2024-07-25 00:10+0100\n"
 "Last-Translator: surfdude29\n"
 "Language-Team: Stanislas Signoud (@signez.fr), surfdude29\n"
 "Plural-Forms: \n"
@@ -480,11 +480,11 @@ msgstr "Un problème qui ne fait pas partie de ces options"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:36
 msgid "An issue occurred starting the chat"
-msgstr ""
+msgstr "Un problème est survenu au démarrage de la discussion"
 
 #: src/components/dms/dialogs/ShareViaChatDialog.tsx:49
 msgid "An issue occurred while trying to open the chat"
-msgstr ""
+msgstr "Un problème est survenu lors de l’ouverture de la discussion"
 
 #: src/components/hooks/useFollowMethods.ts:35
 #: src/components/hooks/useFollowMethods.ts:50
@@ -1946,7 +1946,7 @@ msgstr "Activer les lecteurs médias pour"
 #: src/view/screens/NotificationsSettings.tsx:65
 #: src/view/screens/NotificationsSettings.tsx:68
 msgid "Enable priority notifications"
-msgstr ""
+msgstr "Activer les notifications prioritaires"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:145
 msgid "Enable this setting to only see replies between people you follow."
@@ -2094,7 +2094,7 @@ msgstr "Développe ou réduit le post complet auquel vous répondez"
 
 #: src/view/screens/NotificationsSettings.tsx:83
 msgid "Experimental: When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
-msgstr ""
+msgstr "Expérimental : lorsque cette préférence est activée, vous ne recevrez que les notifications de réponse et de citation des comptes que vous suivez. Nous continuerons à ajouter d’autres contrôles au fil du temps."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:47
 msgid "Explicit or potentially disturbing media."
@@ -2188,7 +2188,7 @@ msgstr "Échec de l’enregistrement de l’image : {0}"
 
 #: src/state/queries/notifications/settings.ts:39
 msgid "Failed to save notification preferences, please try again"
-msgstr ""
+msgstr "Échec de l’enregistrement des préférences de notification, veuillez réessayer"
 
 #: src/components/dms/MessageItem.tsx:224
 msgid "Failed to send"
@@ -2359,10 +2359,6 @@ msgstr "Suivre en retour"
 msgid "Follow more accounts to get connected to your interests and build your network."
 msgstr "Suivez plus de comptes pour vous connecter à vos centres d’intérêt et développer votre réseau."
 
-#: src/view/com/profile/ProfileCard.tsx:190
-#~ msgid "Followed by {0}"
-#~ msgstr "Suivi par {0}"
-
 #: src/components/KnownFollowers.tsx:231
 msgid "Followed by <0>{0}</0>"
 msgstr "Suivi par <0>{0}</0>"
@@ -2502,7 +2498,7 @@ msgstr "Générer un kit de démarrage"
 
 #: src/view/shell/Drawer.tsx:336
 msgid "Get help"
-msgstr ""
+msgstr "Obtenir de l’aide"
 
 #: src/components/dms/MessagesNUX.tsx:168
 msgid "Get started"
@@ -2549,10 +2545,6 @@ msgstr "Retour"
 #: src/view/screens/ProfileList.tsx:975
 msgid "Go Back"
 msgstr "Retour"
-
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:189
-#~ msgid "Go back to previous screen"
-#~ msgstr "Retour à l’écran précédent"
 
 #: src/components/dms/ReportDialog.tsx:154
 #: src/components/ReportDialog/SelectReportOptionView.tsx:80
@@ -3739,16 +3731,16 @@ msgstr "Rien ici"
 
 #: src/view/screens/NotificationsSettings.tsx:54
 msgid "Notification filters"
-msgstr ""
+msgstr "Filtres de notification"
 
 #: src/Navigation.tsx:331
 #: src/view/screens/Notifications.tsx:119
 msgid "Notification settings"
-msgstr ""
+msgstr "Paramètres de notification"
 
 #: src/view/screens/NotificationsSettings.tsx:39
 msgid "Notification Settings"
-msgstr ""
+msgstr "Paramètres de notification"
 
 #: src/screens/Messages/Settings.tsx:124
 msgid "Notification sounds"
@@ -4339,7 +4331,7 @@ msgstr "Lien potentiellement trompeur"
 
 #: src/state/queries/notifications/settings.ts:44
 msgid "Preference saved"
-msgstr ""
+msgstr "Préférence enregistrée"
 
 #: src/screens/Messages/Conversation/MessageListError.tsx:19
 msgid "Press to attempt reconnection"
@@ -4374,7 +4366,7 @@ msgstr "Définissez des priorités de vos suivis"
 
 #: src/view/screens/NotificationsSettings.tsx:57
 msgid "Priority notifications"
-msgstr ""
+msgstr "Notifications prioritaires"
 
 #: src/view/screens/Settings/index.tsx:656
 #: src/view/shell/desktop/RightNav.tsx:81
@@ -4487,7 +4479,7 @@ msgstr "Se reconnecter"
 
 #: src/view/screens/Notifications.tsx:146
 msgid "Refresh notifications"
-msgstr ""
+msgstr "Rafraîchir les notifications"
 
 #: src/screens/Messages/List/index.tsx:200
 msgid "Reload conversations"
@@ -4595,10 +4587,6 @@ msgstr "Supprimé de mes fils d’actu"
 #: src/view/screens/ProfileList.tsx:320
 msgid "Removed from your feeds"
 msgstr "Supprimé de vos fils d’actu"
-
-#: src/view/com/composer/ExternalEmbed.tsx:88
-#~ msgid "Removes default thumbnail from {0}"
-#~ msgstr "Supprime la miniature par défaut de {0}"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:239
 msgid "Removes quoted post"
@@ -5556,7 +5544,7 @@ msgstr "Quelque chose n’a pas marché, veuillez réessayer."
 #: src/components/Lists.tsx:192
 #: src/view/screens/NotificationsSettings.tsx:46
 msgid "Something went wrong!"
-msgstr ""
+msgstr "Quelque chose n’a pas marché !"
 
 #: src/App.native.tsx:99
 #: src/App.web.tsx:81
