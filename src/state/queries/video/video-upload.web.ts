@@ -22,20 +22,27 @@ export const useUploadVideoMutation = ({
     mutationFn: async (video: CompressedVideo) => {
       const uri = createVideoEndpointUrl('/upload', {
         did: currentAccount!.did,
-        name: `hailey-${nanoid(12)}.mp4`,
+        name: `${nanoid(12)}.mp4`, // @TODO what are we limiting this to?
       })
 
       const bytes = await fetch(video.uri).then(res => res.arrayBuffer())
 
       const xhr = new XMLHttpRequest()
       const res = (await new Promise((resolve, reject) => {
-        xhr.upload.addEventListener('progress', e => {
+        xhr.upload.onprogress(e => {
           const progress = e.loaded / e.total
           setProgress(progress)
         })
         xhr.onloadend = () => {
           if (xhr.readyState === 4) {
-            resolve(JSON.parse(xhr.responseText))
+            const uploadRes = JSON.parse(
+              xhr.responseText,
+            ) as UploadVideoResponse
+            resolve(uploadRes)
+            onSuccess(uploadRes)
+          } else {
+            reject()
+            onError(new Error('Failed to upload video'))
           }
         }
         xhr.onerror = () => {
@@ -43,16 +50,14 @@ export const useUploadVideoMutation = ({
           onError(new Error('Failed to upload video'))
         }
         xhr.open('POST', uri)
-        xhr.setRequestHeader('Content-Type', 'video/mp4')
+        xhr.setRequestHeader('Content-Type', 'video/mp4') // @TODO how we we set the proper content type?
+        // @TODO remove this header for prod
         xhr.setRequestHeader('dev-key', UPLOAD_HEADER)
         xhr.send(bytes)
       })) as UploadVideoResponse
 
-      // @TODO handle all error states
-
-      // @TODO rm
+      // @TODO rm for prod
       console.log('[VIDEO]', res)
-      onSuccess(res)
       return res
     },
     onError,

@@ -23,7 +23,7 @@ export const useUploadVideoMutation = ({
     mutationFn: async (video: CompressedVideo) => {
       const uri = createVideoEndpointUrl('/upload', {
         did: currentAccount!.did,
-        name: `hailey-${nanoid(12)}.mp4`,
+        name: `${nanoid(12)}.mp4`, // @TODO what are we limiting this to?
       })
 
       const uploadTask = createUploadTask(
@@ -32,7 +32,7 @@ export const useUploadVideoMutation = ({
         {
           headers: {
             'dev-key': UPLOAD_HEADER,
-            'content-type': 'video/mp4',
+            'content-type': 'video/mp4', // @TODO same question here. does the compression step always output mp4?
           },
           httpMethod: 'POST',
           uploadType: FileSystemUploadType.BINARY_CONTENT,
@@ -47,7 +47,7 @@ export const useUploadVideoMutation = ({
         throw new Error('No response')
       }
 
-      // @TODO rm
+      // @TODO rm, useful for debugging/getting video cid
       console.log('[VIDEO]', res.body)
       const responseBody = JSON.parse(res.body) as UploadVideoResponse
       onSuccess(responseBody)

@@ -43,7 +43,6 @@ export interface State {
 
 function reducer(state: State, action: Action): State {
   let updatedState = state
-
   if (action.type === 'SetStatus') {
     updatedState = {...state, status: action.status}
   } else if (action.type === 'SetProgress') {
@@ -63,7 +62,6 @@ function reducer(state: State, action: Action): State {
   } else if (action.type === 'SetJobStatus') {
     updatedState = {...state, jobStatus: action.jobStatus}
   }
-
   return updatedState
 }
 
@@ -83,8 +81,6 @@ export function useVideoUpload({
 
   const {setJobId} = useUploadStatusQuery({
     onStatusChange: (status: JobStatus) => {
-      console.log(status)
-      // TODO Update the state here
       dispatch({
         type: 'SetJobStatus',
         jobStatus: status,
@@ -133,8 +129,8 @@ export function useVideoUpload({
       } else {
         dispatch({
           type: 'SetError',
-          // TODO better error message from server
-          error: _(msg`An error occurred while compressing the video.`),
+          // @TODO better error message from server, left untranslated on purpose
+          error: 'An error occurred while compressing the video.',
         })
         logger.error('Error compressing video', {safeMessage: e})
       }
@@ -165,7 +161,7 @@ export function useVideoUpload({
   }
 
   const clearVideo = () => {
-    // TODO cancel any running jobs
+    // @TODO cancel any running jobs
     dispatch({type: 'Reset'})
   }
 
