@@ -5,6 +5,7 @@ import {
   AppBskyFeedDefs,
   AppBskyGraphDefs,
   AtUri,
+  ModerationDecision,
   RichText as RichTextApi,
 } from '@atproto/api'
 import {msg, plural, Trans} from '@lingui/macro'
@@ -35,6 +36,7 @@ import {Text} from '#/components/Typography'
 
 type Props = {
   view: AppBskyFeedDefs.GeneratorView
+  moderation?: ModerationDecision
 }
 
 export function Default(props: Props) {
