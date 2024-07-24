@@ -14,3 +14,4 @@ export type Gate =
   | 'suggested_follows_interstitial'
   | 'ungroup_follow_backs'
   | 'videos'
+  | 'small_avi_thumb'

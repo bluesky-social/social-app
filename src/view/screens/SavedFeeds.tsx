@@ -234,7 +234,7 @@ function ListItem({
         },
       ])
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`))
+      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
       logger.error('Failed to toggle pinned feed', {message: e})
     }
   }, [_, playHaptic, feed, updateSavedFeeds, resetSaveFeedsMutationState])
@@ -260,7 +260,7 @@ function ListItem({
         index: nextIndex,
       })
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`))
+      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
       logger.error('Failed to set pinned feed order', {message: e})
     }
   }, [feed, isPinned, overwriteSavedFeeds, currentFeeds, _])
@@ -286,7 +286,7 @@ function ListItem({
         index: nextIndex,
       })
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`))
+      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
       logger.error('Failed to set pinned feed order', {message: e})
     }
   }, [feed, isPinned, overwriteSavedFeeds, currentFeeds, _])
