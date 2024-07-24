@@ -2,6 +2,7 @@ import React, {useCallback} from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {logger} from '#/logger'
 import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
 import {logEvent} from 'lib/statsig/statsig'
 import {FAB} from '#/view/com/util/fab/FAB'
@@ -31,7 +32,8 @@ export function NewChat({
       logEvent('chat:open', {logContext: 'NewChatDialog'})
     },
     onError: error => {
-      Toast.show(error.message)
+      logger.error('Failed to create chat', {safeMessage: error})
+      Toast.show(_(msg`An issue occurred starting the chat`), 'xmark')
     },
   })
 
