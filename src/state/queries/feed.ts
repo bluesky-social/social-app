@@ -335,30 +335,6 @@ export function useSearchPopularFeedsMutation() {
   })
 }
 
-export function useSearchPopularFeedsQuery({q}: {q: string}) {
-  const agent = useAgent()
-  const moderationOpts = useModerationOpts()
-  return useQuery({
-    enabled: Boolean(moderationOpts),
-    queryKey: ['searchPopularFeeds', q],
-    queryFn: async () => {
-      const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
-        limit: 15,
-        query: q,
-      })
-
-      return res.data.feeds
-    },
-    placeholderData: keepPreviousData,
-    select(data) {
-      return data.filter(feed => {
-        const decision = moderateFeedGenerator(feed, moderationOpts!)
-        return !decision.ui('contentList').filter
-      })
-    },
-  })
-}
-
 const popularFeedsSearchQueryKeyRoot = 'popularFeedsSearch'
 export const createPopularFeedsSearchQueryKey = (query: string) => [
   popularFeedsSearchQueryKeyRoot,
@@ -381,12 +357,13 @@ export function usePopularFeedsSearch({
     queryKey: createPopularFeedsSearchQueryKey(query),
     queryFn: async () => {
       const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
-        limit: 10,
+        limit: 15,
         query: query,
       })
 
       return res.data.feeds
     },
+    placeholderData: keepPreviousData,
     select(data) {
       return data.filter(feed => {
         const decision = moderateFeedGenerator(feed, moderationOpts!)
