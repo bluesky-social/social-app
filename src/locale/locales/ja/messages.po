@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-07-13 11:29+0900\n"
+"PO-Revision-Date: 2024-07-24 09:47+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -477,6 +477,14 @@ msgstr "すべてフォローしようとしたらエラーが発生しました
 #: src/lib/moderation/useReportOptions.ts:28
 msgid "An issue not included in these options"
 msgstr "ほかの選択肢にはあてはまらない問題"
+
+#: src/components/dms/dialogs/NewChatDialog.tsx:36
+msgid "An issue occurred starting the chat"
+msgstr "チャットの開始時に問題が発生しました"
+
+#: src/components/dms/dialogs/ShareViaChatDialog.tsx:49
+msgid "An issue occurred while trying to open the chat"
+msgstr "チャットを開始しようとした時に問題が発生しました"
 
 #: src/components/hooks/useFollowMethods.ts:35
 #: src/components/hooks/useFollowMethods.ts:50
