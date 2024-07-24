@@ -22,7 +22,7 @@ import {Text} from '#/components/Typography'
 
 type Props = NativeStackScreenProps<AllNavigatorParams, 'NotificationsSettings'>
 export function NotificationsSettingsScreen({}: Props) {
-  const {data} = useNotificationFeedQuery()
+  const {data, refetch} = useNotificationFeedQuery()
   const queryClient = useQueryClient()
   const agent = useAgent()
   const priority = data?.pages.at(0)?.priority
@@ -45,10 +45,10 @@ export function NotificationsSettingsScreen({}: Props) {
           'xmark',
         )
       } finally {
-        queryClient.invalidateQueries({queryKey: RQKEY_NOTIFS()})
+        await refetch()
       }
     },
-    [agent, queryClient, _],
+    [agent, queryClient, _, refetch],
   )
 
   return (
