@@ -36,6 +36,8 @@ export function NotificationsSettingsScreen({}: Props) {
     mutationFn: async (keys: string[]) => {
       const enabled = keys[0] === 'enabled'
 
+      eagerlySetCachedPriority(queryClient, enabled)
+
       await agent.api.app.bsky.notification.putPreferences({
         priority: enabled,
       })
@@ -46,9 +48,6 @@ export function NotificationsSettingsScreen({}: Props) {
         res => res.data.priority === enabled,
         () => agent.api.app.bsky.notification.listNotifications({limit: 1}),
       )
-    },
-    onMutate: keys => {
-      eagerlySetCachedPriority(queryClient, keys[0] === 'enabled')
     },
     onError: async err => {
       await refetch()
