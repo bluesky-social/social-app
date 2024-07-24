@@ -313,12 +313,14 @@ export function FeedsScreen(_props: Props) {
               })
             } else {
               slices = slices.concat(
-                searchResults.map(feed => ({
-                  key: `popularFeed:${feed.uri}`,
-                  type: 'popularFeed',
-                  feedUri: feed.uri,
-                  feed,
-                })),
+                searchResults.map(feed => {
+                  return {
+                    key: `popularFeed:${feed.uri}`,
+                    type: 'popularFeed',
+                    feedUri: feed.uri,
+                    feed,
+                  }
+                }),
               )
             }
           }
@@ -337,12 +339,14 @@ export function FeedsScreen(_props: Props) {
             } else {
               for (const page of popularFeeds.pages || []) {
                 slices = slices.concat(
-                  page.feeds.map(feed => ({
-                    key: `popularFeed:${feed.uri}`,
-                    type: 'popularFeed',
-                    feedUri: feed.uri,
-                    feed,
-                  })),
+                  page.feeds.map(feed => {
+                    return {
+                      key: `popularFeed:${feed.uri}`,
+                      type: 'popularFeed',
+                      feedUri: feed.uri,
+                      feed,
+                    }
+                  }),
                 )
               }
 
