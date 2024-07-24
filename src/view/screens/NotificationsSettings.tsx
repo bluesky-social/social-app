@@ -19,6 +19,7 @@ import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
+import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
 type Props = NativeStackScreenProps<AllNavigatorParams, 'NotificationsSettings'>
@@ -43,7 +44,7 @@ export function NotificationsSettingsScreen({}: Props) {
         5, // 5 tries
         1e3, // 1s delay between tries
         res => res.data.priority === enabled,
-        () => agent.api.app.bsky.notification.listNotifications({limit: 0}),
+        () => agent.api.app.bsky.notification.listNotifications({limit: 1}),
       )
     },
     onMutate: keys => {
@@ -90,7 +91,13 @@ export function NotificationsSettingsScreen({}: Props) {
               <Toggle.LabelText>
                 <Trans>Enable priority notifications</Trans>
               </Toggle.LabelText>
-              {isWeb ? <Toggle.Checkbox /> : <Toggle.Switch />}
+              {!data ? (
+                <Loader size="md" />
+              ) : isWeb ? (
+                <Toggle.Checkbox />
+              ) : (
+                <Toggle.Switch />
+              )}
             </Toggle.Item>
           </View>
         </Toggle.Group>
