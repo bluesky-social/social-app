@@ -43,7 +43,7 @@ export function ExportCarDialog({
       }
     } catch (e) {
       logger.error('Error occurred while downloading CAR file', {message: e})
-      Toast.show(_(msg`Error occurred while saving file`))
+      Toast.show(_(msg`Error occurred while saving file`), 'xmark')
     } finally {
       setLoading(false)
       control.close()
