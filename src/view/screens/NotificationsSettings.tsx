@@ -48,9 +48,14 @@ export function NotificationsSettingsScreen({}: Props) {
         res => res.data.priority === enabled,
         () => agent.api.app.bsky.notification.listNotifications({limit: 1}),
       )
+
+      // in case the query revalidated while we were waiting
+      eagerlySetCachedPriority(queryClient, enabled)
     },
-    onError: async err => {
-      await refetch()
+    onError: (err, keys) => {
+      const prev = keys[0] !== 'enabled'
+      eagerlySetCachedPriority(queryClient, prev)
+      refetch()
       logger.error('Failed to save notification preferences', {
         safeMessage: err,
       })
