@@ -67,7 +67,7 @@ export function NotificationsSettingsScreen({}: Props) {
                 <Toggle.LabelText>
                   <Trans>Enable priority notifications</Trans>
                 </Toggle.LabelText>
-                {!data && !isError ? <Loader size="md" /> : <Toggle.Platform />}
+                {!data ? <Loader size="md" /> : <Toggle.Platform />}
               </Toggle.Item>
             </View>
           </Toggle.Group>
