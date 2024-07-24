@@ -30,10 +30,7 @@ export function useNotificationsSettingsMutation() {
 
       eagerlySetCachedPriority(queryClient, enabled)
     },
-    onError: (err, keys) => {
-      const prev = keys[0] !== 'enabled'
-      eagerlySetCachedPriority(queryClient, prev)
-
+    onError: err => {
       logger.error('Failed to save notification preferences', {
         safeMessage: err,
       })
