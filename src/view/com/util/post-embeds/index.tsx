@@ -15,6 +15,8 @@ import {
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyGraphDefs,
+  moderateFeedGenerator,
+  moderateUserList,
   ModerationDecision,
 } from '@atproto/api'
 
@@ -30,6 +32,7 @@ import {ListEmbed} from './ListEmbed'
 import {MaybeQuoteEmbed} from './QuoteEmbed'
 import hairlineWidth = StyleSheet.hairlineWidth
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {Embed as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 
 type Embed =
@@ -55,6 +58,7 @@ export function PostEmbeds({
   const pal = usePalette('default')
   const {openLightbox} = useLightboxControls()
   const largeAltBadge = useLargeAltBadgeEnabled()
+  const moderationOpts = useModerationOpts()
 
   // quote post with media
   // =
@@ -75,20 +79,30 @@ export function PostEmbeds({
     // custom feed embed (i.e. generator view)
     // =
     if (AppBskyFeedDefs.isGeneratorView(embed.record)) {
-      // TODO moderation
+      const moderation = moderationOpts
+        ? moderateFeedGenerator(embed.record, moderationOpts)
+        : undefined
       return (
-        <FeedSourceCard
-          feedUri={embed.record.uri}
-          style={[pal.view, pal.border, styles.customFeedOuter]}
-          showLikes
-        />
+        <ContentHider modui={moderation?.ui('contentList')}>
+          <FeedSourceCard
+            feedUri={embed.record.uri}
+            style={[pal.view, pal.border, styles.customFeedOuter]}
+            showLikes
+          />
+        </ContentHider>
       )
     }
 
     // list embed
     if (AppBskyGraphDefs.isListView(embed.record)) {
-      // TODO moderation
-      return <ListEmbed item={embed.record} />
+      const moderation = moderationOpts
+        ? moderateUserList(embed.record, moderationOpts)
+        : undefined
+      return (
+        <ContentHider modui={moderation?.ui('contentList')}>
+          <ListEmbed item={embed.record} />
+        </ContentHider>
+      )
     }
 
     if (AppBskyGraphDefs.isStarterPackViewBasic(embed.record)) {
