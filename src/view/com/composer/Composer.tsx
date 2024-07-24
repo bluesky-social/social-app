@@ -61,7 +61,7 @@ import {
 import {useProfileQuery} from '#/state/queries/profile'
 import {Gif} from '#/state/queries/tenor'
 import {ThreadgateSetting} from '#/state/queries/threadgate'
-import {useVideoUpload} from '#/state/queries/video/video'
+import {useUploadVideo} from '#/state/queries/video/video'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {useAnalytics} from 'lib/analytics/analytics'
@@ -79,7 +79,6 @@ import {useDialogStateControlContext} from 'state/dialogs'
 import {GalleryModel} from 'state/models/media/gallery'
 import {State as VideoUploadState} from 'state/queries/video/video'
 import {ComposerOpts} from 'state/shell/composer'
-import {VideoUploadToolbar} from '#/view/com/composer/Toolbar'
 import {ComposerReplyTo} from 'view/com/composer/ComposerReplyTo'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -172,7 +171,7 @@ export const ComposePost = observer(function ComposePost({
     selectVideo,
     clearVideo,
     state: videoUploadState,
-  } = useVideoUpload({
+  } = useUploadVideo({
     setStatus: (status: string) => setProcessingState(status),
     onSuccess: () => {
       if (publishOnUpload) {

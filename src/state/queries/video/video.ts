@@ -65,7 +65,7 @@ function reducer(state: State, action: Action): State {
   return updatedState
 }
 
-export function useVideoUpload({
+export function useUploadVideo({
   setStatus,
   onSuccess,
 }: {
@@ -81,6 +81,8 @@ export function useVideoUpload({
 
   const {setJobId} = useUploadStatusQuery({
     onStatusChange: (status: JobStatus) => {
+      // This might prove unuseful, most of the job status steps happen too quickly to even be displayed to the user
+      // Leaving it for now though
       dispatch({
         type: 'SetJobStatus',
         jobStatus: status,

@@ -29,7 +29,7 @@ export const useUploadVideoMutation = ({
 
       const xhr = new XMLHttpRequest()
       const res = (await new Promise((resolve, reject) => {
-        xhr.upload.onprogress(e => {
+        xhr.upload.addEventListener('progress', e => {
           const progress = e.loaded / e.total
           setProgress(progress)
         })
