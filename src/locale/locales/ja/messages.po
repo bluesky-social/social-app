@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-07-04 13:07+0900\n"
+"PO-Revision-Date: 2024-07-24 09:47+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -478,6 +478,14 @@ msgstr "すべてフォローしようとしたらエラーが発生しました
 msgid "An issue not included in these options"
 msgstr "ほかの選択肢にはあてはまらない問題"
 
+#: src/components/dms/dialogs/NewChatDialog.tsx:36
+msgid "An issue occurred starting the chat"
+msgstr "チャットの開始時に問題が発生しました"
+
+#: src/components/dms/dialogs/ShareViaChatDialog.tsx:49
+msgid "An issue occurred while trying to open the chat"
+msgstr "チャットを開始しようとした時に問題が発生しました"
+
 #: src/components/hooks/useFollowMethods.ts:35
 #: src/components/hooks/useFollowMethods.ts:50
 #: src/components/ProfileCard.tsx:309
@@ -567,10 +575,6 @@ msgstr "背景"
 msgid "Apply default recommended feeds"
 msgstr "デフォルトのおすすめフィードを追加"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:610
-msgid "Are you sure you want delete this starter pack?"
-msgstr "このスターターパックを本当に削除したいですか？"
-
 #: src/view/screens/AppPasswords.tsx:282
 msgid "Are you sure you want to delete the app password \"{name}\"?"
 msgstr "アプリパスワード「{name}」を本当に削除しますか？"
@@ -578,6 +582,10 @@ msgstr "アプリパスワード「{name}」を本当に削除しますか？"
 #: src/components/dms/MessageMenu.tsx:149
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participant."
 msgstr "このメッセージを本当に削除しますか？このメッセージはあなたからは削除したように見えますが、他の参加者からは削除されません。"
+
+#: src/screens/StarterPack/StarterPackScreen.tsx:610
+msgid "Are you sure you want to delete this starter pack?"
+msgstr "本当にこのスターターパックを削除したいですか？"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:48
 msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant."
@@ -1362,6 +1370,10 @@ msgstr "QRコードをコピー"
 #: src/view/screens/CopyrightPolicy.tsx:29
 msgid "Copyright Policy"
 msgstr "著作権ポリシー"
+
+#: src/view/com/composer/videos/state.ts:31
+msgid "Could not compress video"
+msgstr "ビデオを圧縮できませんでした"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:39
 msgid "Could not leave chat"
@@ -2339,10 +2351,6 @@ msgstr "フォローバック"
 msgid "Follow more accounts to get connected to your interests and build your network."
 msgstr "もっとたくさんのアカウントをフォローして、興味あることにつながり、ネットワークを広げましょう。"
 
-#: src/view/com/profile/ProfileCard.tsx:190
-msgid "Followed by {0}"
-msgstr "{0}がフォロー中"
-
 #: src/components/KnownFollowers.tsx:223
 msgid "Followed by <0>{0}</0>"
 msgstr "<0>{0}</0>がフォロー中"
@@ -2480,6 +2488,10 @@ msgstr "ギャラリー"
 msgid "Generate a starter pack"
 msgstr "スターターパックを生成"
 
+#: src/view/shell/Drawer.tsx:336
+msgid "Get help"
+msgstr "ヘルプを表示"
+
 #: src/components/dms/MessagesNUX.tsx:168
 msgid "Get started"
 msgstr "始める"
@@ -2525,10 +2537,6 @@ msgstr "戻る"
 #: src/view/screens/ProfileList.tsx:975
 msgid "Go Back"
 msgstr "戻る"
-
-#: src/screens/StarterPack/StarterPackLandingScreen.tsx:189
-msgid "Go back to previous screen"
-msgstr "前の画面に戻る"
 
 #: src/components/dms/ReportDialog.tsx:154
 #: src/components/ReportDialog/SelectReportOptionView.tsx:80
@@ -4004,6 +4012,10 @@ msgstr "スレッドの設定を開く"
 msgid "Opens this profile"
 msgstr "プロフィールを開く"
 
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:54
+msgid "Opens video picker"
+msgstr "ビデオの選択画面を開く"
+
 #: src/view/com/util/forms/DropdownButton.tsx:293
 msgid "Option {0} of {numItems}"
 msgstr "{numItems}個中{0}目のオプション"
@@ -4541,13 +4553,13 @@ msgstr "マイフィードから削除しました"
 msgid "Removed from your feeds"
 msgstr "あなたのフィードから削除しました"
 
-#: src/view/com/composer/ExternalEmbed.tsx:88
-msgid "Removes default thumbnail from {0}"
-msgstr "{0}からデフォルトのサムネイルを削除"
-
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:239
 msgid "Removes quoted post"
 msgstr "引用を削除する"
+
+#: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:29
+msgid "Removes the image preview"
+msgstr "画像のプレビューを削除する"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:126
 #: src/view/com/posts/FeedShutdownMsg.tsx:130
@@ -4585,6 +4597,12 @@ msgstr "<0><1/></0>に返信"
 msgctxt "description"
 msgid "Reply to a blocked post"
 msgstr "ブロックした投稿への返信"
+
+#: src/view/com/post/Post.tsx:195
+#: src/view/com/posts/FeedItem.tsx:454
+msgctxt "description"
+msgid "Reply to you"
+msgstr "あなたへの返信"
 
 #: src/components/dms/MessageMenu.tsx:132
 #: src/components/dms/MessagesListBlockedFooter.tsx:77
@@ -4690,6 +4708,11 @@ msgstr "{0}にリポストされた"
 #: src/view/com/posts/FeedItem.tsx:269
 msgid "Reposted by <0><1/></0>"
 msgstr "<0><1/></0>がリポスト"
+
+#: src/view/com/posts/FeedItem.tsx:261
+#: src/view/com/posts/FeedItem.tsx:280
+msgid "Reposted by you"
+msgstr "あなたのリポスト"
 
 #: src/view/com/notifications/FeedItem.tsx:187
 msgid "reposted your post"
@@ -5026,6 +5049,10 @@ msgstr "報告先のモデレーションサービスを選んでください"
 msgid "Select the service that hosts your data."
 msgstr "データをホストするサービスを選択します。"
 
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:53
+msgid "Select video"
+msgstr "ビデオを選択"
+
 #: src/view/screens/LanguageSettings.tsx:283
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
 msgstr "登録されたフィードに含める言語を選択します。選択されていない場合は、すべての言語が表示されます。"
@@ -5262,6 +5289,10 @@ msgstr "このスターターパックを共有して、他のユーザーがBlu
 #: src/components/dms/ChatEmptyPill.tsx:34
 msgid "Share your favorite feed!"
 msgstr "お気に入りのフィードをシェアして！"
+
+#: src/Navigation.tsx:241
+msgid "Shared Preferences Tester"
+msgstr "Shared Preferencesのテスター"
 
 #: src/view/com/modals/LinkWarning.tsx:92
 msgid "Shares the linked website"
@@ -6479,6 +6510,10 @@ msgstr "バージョン {appVersion} {bundleInfo}"
 #: src/screens/Onboarding/state.ts:88
 msgid "Video Games"
 msgstr "ビデオゲーム"
+
+#: src/view/com/composer/videos/state.ts:27
+msgid "Videos cannot be larger than 100MB"
+msgstr "ビデオは100MB以下にしてください"
 
 #: src/screens/Profile/Header/Shell.tsx:113
 msgid "View {0}'s avatar"
