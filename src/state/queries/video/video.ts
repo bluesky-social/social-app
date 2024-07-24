@@ -182,7 +182,7 @@ const useUploadStatusQuery = ({
   onStatusChange: (status: JobStatus) => void
   onSuccess: () => void
 }) => {
-  const [enabled, setEnabled] = React.useState(false)
+  const [enabled, setEnabled] = React.useState(true)
   const [jobId, setJobId] = React.useState<string>()
 
   const {isLoading, isError} = useQuery({
@@ -198,7 +198,7 @@ const useUploadStatusQuery = ({
       onStatusChange(status)
       return status
     },
-    enabled,
+    enabled: jobId && enabled,
     refetchInterval: 1500,
   })
 
@@ -206,7 +206,6 @@ const useUploadStatusQuery = ({
     isLoading,
     isError,
     setJobId: (_jobId: string) => {
-      setEnabled(true)
       setJobId(_jobId)
     },
   }
