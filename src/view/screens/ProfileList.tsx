@@ -186,7 +186,7 @@ function ProfileListScreenLoaded({
   if (isCurateList) {
     return (
       <ScreenHider
-        screenDescription={_(msg`list`)}
+        screenDescription={'list'}
         modui={moderation.ui('contentView')}>
         <View style={s.hContentRegion}>
           <PagerWithHeader
@@ -232,31 +232,39 @@ function ProfileListScreenLoaded({
     )
   }
   return (
-    <View style={s.hContentRegion}>
-      <PagerWithHeader
-        items={SECTION_TITLES_MOD}
-        isHeaderReady={true}
-        renderHeader={renderHeader}>
-        {({headerHeight, scrollElRef}) => (
-          <AboutSection
-            list={list}
-            scrollElRef={scrollElRef as ListRef}
-            onPressAddUser={onPressAddUser}
-            headerHeight={headerHeight}
-          />
-        )}
-      </PagerWithHeader>
-      <FAB
-        testID="composeFAB"
-        onPress={() => openComposer({})}
-        icon={
-          <ComposeIcon2 strokeWidth={1.5} size={29} style={{color: 'white'}} />
-        }
-        accessibilityRole="button"
-        accessibilityLabel={_(msg`New post`)}
-        accessibilityHint=""
-      />
-    </View>
+    <ScreenHider
+      screenDescription={_(msg`list`)}
+      modui={moderation.ui('contentView')}>
+      <View style={s.hContentRegion}>
+        <PagerWithHeader
+          items={SECTION_TITLES_MOD}
+          isHeaderReady={true}
+          renderHeader={renderHeader}>
+          {({headerHeight, scrollElRef}) => (
+            <AboutSection
+              list={list}
+              scrollElRef={scrollElRef as ListRef}
+              onPressAddUser={onPressAddUser}
+              headerHeight={headerHeight}
+            />
+          )}
+        </PagerWithHeader>
+        <FAB
+          testID="composeFAB"
+          onPress={() => openComposer({})}
+          icon={
+            <ComposeIcon2
+              strokeWidth={1.5}
+              size={29}
+              style={{color: 'white'}}
+            />
+          }
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`New post`)}
+          accessibilityHint=""
+        />
+      </View>
+    </ScreenHider>
   )
 }
 
