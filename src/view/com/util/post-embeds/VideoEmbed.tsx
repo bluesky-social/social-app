@@ -11,7 +11,7 @@ import {VideoEmbedInner} from './VideoEmbedInner'
 
 export function VideoEmbed({source}: {source: string}) {
   const t = useTheme()
-  const {active, setActive} = useActiveVideoView({source, measure: () => {}})
+  const {active, setActive} = useActiveVideoView({source})
   const {_} = useLingui()
 
   const onPress = useCallback(() => setActive(), [setActive])
@@ -31,6 +31,9 @@ export function VideoEmbed({source}: {source: string}) {
           source={source}
           active={active}
           setActive={setActive}
+          // web only
+          sendPosition={() => {}}
+          onScreen={true}
         />
       ) : (
         <Button
