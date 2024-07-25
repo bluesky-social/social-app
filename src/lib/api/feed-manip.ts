@@ -22,7 +22,6 @@ type FeedSliceItem = {
     | AppBskyFeedDefs.ReasonRepost
     | {$type: string; [k: string]: unknown}
     | undefined
-  feedContext?: string
 }
 
 function toSliceItem(feedViewPost: FeedViewPost): FeedSliceItem {
@@ -33,7 +32,6 @@ function toSliceItem(feedViewPost: FeedViewPost): FeedSliceItem {
       '__source' in feedViewPost
         ? (feedViewPost.__source as ReasonFeedSource)
         : feedViewPost.reason,
-    feedContext: feedViewPost.feedContext,
   }
 }
 
@@ -42,14 +40,16 @@ export class FeedViewPostsSlice {
   _originalFeedViewPost: FeedViewPost
   items: FeedSliceItem[]
   isFlattenedReply = false
+  feedContext: string | undefined
 
   constructor(items: FeedViewPost[]) {
-    this.items = items.map(toSliceItem)
     const item = items[0]
     this._originalFeedViewPost = item
     this._reactKey = `slice-${item.post.uri}-${
       item.reason?.indexedAt || item.post.indexedAt
     }`
+    this.feedContext = item.feedContext
+    this.items = items.map(toSliceItem)
   }
 
   get uri() {
@@ -89,10 +89,6 @@ export class FeedViewPostsSlice {
       AppBskyFeedPost.isRecord(this.rootItem.post.record) &&
       !!this.rootItem.post.record.reply
     )
-  }
-
-  get feedContext() {
-    return this.items.find(item => item.feedContext)?.feedContext
   }
 
   containsUri(uri: string) {

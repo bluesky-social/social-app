@@ -314,7 +314,7 @@ export function usePostFeedQuery(
                   if (isDiscover) {
                     userActionHistory.seen(
                       slice.items.map(item => ({
-                        feedContext: item.feedContext,
+                        feedContext: slice.feedContext,
                         likeCount: item.post.likeCount ?? 0,
                         repostCount: item.post.repostCount ?? 0,
                         replyCount: item.post.replyCount ?? 0,
@@ -366,7 +366,7 @@ export function usePostFeedQuery(
                             post: item.post,
                             record: item.post.record,
                             reason: item.reason,
-                            feedContext: item.feedContext || slice.feedContext,
+                            feedContext: slice.feedContext,
                             moderation: moderations[i],
                             parentAuthor,
                             isParentBlocked,
