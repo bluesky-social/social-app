@@ -17,21 +17,23 @@ export type FeedTunerFn = (
 type FeedSliceItem = {
   post: AppBskyFeedDefs.PostView
   reply?: AppBskyFeedDefs.ReplyRef
-  reason?: AppBskyFeedDefs.ReasonRepost | {$type: string; [k: string]: unknown}
+  reason?:
+    | ReasonFeedSource
+    | AppBskyFeedDefs.ReasonRepost
+    | {$type: string; [k: string]: unknown}
+    | undefined
   feedContext?: string
-  __source?: ReasonFeedSource | undefined
 }
 
 function toSliceItem(feedViewPost: FeedViewPost): FeedSliceItem {
   return {
     post: feedViewPost.post,
     reply: feedViewPost.reply,
-    reason: feedViewPost.reason,
-    feedContext: feedViewPost.feedContext,
-    __source:
+    reason:
       '__source' in feedViewPost
         ? (feedViewPost.__source as ReasonFeedSource)
-        : undefined,
+        : feedViewPost.reason,
+    feedContext: feedViewPost.feedContext,
   }
 }
 
@@ -58,8 +60,9 @@ export class FeedViewPostsSlice {
   }
 
   get ts() {
-    if (this.items[0].reason?.indexedAt) {
-      return this.items[0].reason.indexedAt as string
+    const reason = this.items[0].reason
+    if (AppBskyFeedDefs.isReasonRepost(reason) && reason?.indexedAt) {
+      return reason.indexedAt as string
     }
     return this.items[0].post.indexedAt
   }
@@ -86,10 +89,6 @@ export class FeedViewPostsSlice {
       AppBskyFeedPost.isRecord(this.rootItem.post.record) &&
       !!this.rootItem.post.record.reply
     )
-  }
-
-  get source(): ReasonFeedSource | undefined {
-    return this.items.find(item => !!item.__source)?.__source
   }
 
   get feedContext() {
