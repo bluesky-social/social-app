@@ -209,40 +209,38 @@ function PostInner({
             </View>
           )}
           <LabelsOnMyPost post={post} />
-          {false && (
-            <ContentHider
+          <ContentHider
+            modui={moderation.ui('contentView')}
+            style={styles.contentHider}
+            childContainerStyle={styles.contentHiderChild}>
+            <PostAlerts
               modui={moderation.ui('contentView')}
-              style={styles.contentHider}
-              childContainerStyle={styles.contentHiderChild}>
-              <PostAlerts
-                modui={moderation.ui('contentView')}
-                style={[a.py_xs]}
-              />
-              {richText.text ? (
-                <View style={styles.postTextContainer}>
-                  <RichText
-                    enableTags
-                    testID="postText"
-                    value={richText}
-                    numberOfLines={limitLines ? MAX_POST_LINES : undefined}
-                    style={[a.flex_1, a.text_md]}
-                    authorHandle={post.author.handle}
-                  />
-                </View>
-              ) : undefined}
-              {limitLines ? (
-                <TextLink
-                  text={_(msg`Show More`)}
-                  style={pal.link}
-                  onPress={onPressShowMore}
-                  href="#"
+              style={[a.py_xs]}
+            />
+            {richText.text ? (
+              <View style={styles.postTextContainer}>
+                <RichText
+                  enableTags
+                  testID="postText"
+                  value={richText}
+                  numberOfLines={limitLines ? MAX_POST_LINES : undefined}
+                  style={[a.flex_1, a.text_md]}
+                  authorHandle={post.author.handle}
                 />
-              ) : undefined}
-              {post.embed ? (
-                <PostEmbeds embed={post.embed} moderation={moderation} />
-              ) : null}
-            </ContentHider>
-          )}
+              </View>
+            ) : undefined}
+            {limitLines ? (
+              <TextLink
+                text={_(msg`Show More`)}
+                style={pal.link}
+                onPress={onPressShowMore}
+                href="#"
+              />
+            ) : undefined}
+            {post.embed ? (
+              <PostEmbeds embed={post.embed} moderation={moderation} />
+            ) : null}
+          </ContentHider>
           <PostCtrls
             post={post}
             record={record}
