@@ -30,14 +30,12 @@ export class FeedViewPostsSlice {
   _reactKey: string
   _feedPost: FeedViewPost
   items: FeedSliceItem[]
-  feedContext: string | undefined
 
   constructor(feedPost: FeedViewPost) {
     this._feedPost = feedPost
     this._reactKey = `slice-${feedPost.post.uri}-${
       feedPost.reason?.indexedAt || feedPost.post.indexedAt
     }`
-    this.feedContext = feedPost.feedContext
     this.items = [toSliceItem(feedPost)]
   }
 
@@ -73,6 +71,10 @@ export class FeedViewPostsSlice {
     return '__source' in this._feedPost
       ? (this._feedPost.__source as ReasonFeedSource)
       : this._feedPost.reason
+  }
+
+  get feedContext() {
+    return this._feedPost.feedContext
   }
 
   get isRepost() {
