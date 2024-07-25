@@ -14,11 +14,25 @@ export type FeedTunerFn = (
   slices: FeedViewPostsSlice[],
 ) => FeedViewPostsSlice[]
 
+type FeedSliceItem = {
+  post: AppBskyFeedDefs.PostView
+  reply?: AppBskyFeedDefs.ReplyRef
+  reason?: AppBskyFeedDefs.ReasonRepost | {$type: string; [k: string]: unknown}
+  feedContext?: string
+  [k: string]: unknown
+}
+
+function toSliceItem(feedViewPost: FeedViewPost): FeedSliceItem {
+  return feedViewPost
+}
+
 export class FeedViewPostsSlice {
   _reactKey: string
+  items: FeedSliceItem[]
   isFlattenedReply = false
 
-  constructor(public items: FeedViewPost[]) {
+  constructor(items: FeedViewPost[]) {
+    this.items = items.map(toSliceItem)
     const item = items[0]
     this._reactKey = `slice-${item.post.uri}-${
       item.reason?.indexedAt || item.post.indexedAt
