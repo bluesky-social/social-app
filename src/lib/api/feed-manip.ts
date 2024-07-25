@@ -32,14 +32,13 @@ export class FeedViewPostsSlice {
   items: FeedSliceItem[]
   feedContext: string | undefined
 
-  constructor(items: FeedViewPost[]) {
-    const item = items[0]
-    this._feedPost = item
-    this._reactKey = `slice-${item.post.uri}-${
-      item.reason?.indexedAt || item.post.indexedAt
+  constructor(feedPost: FeedViewPost) {
+    this._feedPost = feedPost
+    this._reactKey = `slice-${feedPost.post.uri}-${
+      feedPost.reason?.indexedAt || feedPost.post.indexedAt
     }`
-    this.feedContext = item.feedContext
-    this.items = items.map(toSliceItem)
+    this.feedContext = feedPost.feedContext
+    this.items = [toSliceItem(feedPost)]
   }
 
   get reason() {
@@ -141,7 +140,7 @@ export class NoopFeedTuner {
     feed: FeedViewPost[],
     _opts?: {dryRun: boolean; maintainOrder: boolean},
   ): FeedViewPostsSlice[] {
-    return feed.map(item => new FeedViewPostsSlice([item]))
+    return feed.map(item => new FeedViewPostsSlice(item))
   }
 }
 
@@ -179,7 +178,7 @@ export class FeedTuner {
     })
 
     if (maintainOrder) {
-      slices = feed.map(item => new FeedViewPostsSlice([item]))
+      slices = feed.map(item => new FeedViewPostsSlice(item))
     } else {
       // arrange the posts into thread slices
       for (let i = feed.length - 1; i >= 0; i--) {
@@ -206,7 +205,7 @@ export class FeedTuner {
           }
         }
 
-        slices.unshift(new FeedViewPostsSlice([item]))
+        slices.unshift(new FeedViewPostsSlice(item))
       }
     }
 
