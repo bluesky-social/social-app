@@ -78,7 +78,10 @@ export interface FeedPostSliceItem {
   uri: string
   post: AppBskyFeedDefs.PostView
   record: AppBskyFeedPost.Record
-  reason?: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource
+  reason?:
+    | AppBskyFeedDefs.ReasonRepost
+    | ReasonFeedSource
+    | {[k: string]: unknown; $type: string}
   feedContext: string | undefined
   moderation: ModerationDecision
   parentAuthor?: AppBskyActorDefs.ProfileViewBasic
@@ -323,7 +326,7 @@ export function usePostFeedQuery(
                     )
                   }
 
-                  return {
+                  const feedPostSlice: FeedPostSlice = {
                     _reactKey: slice._reactKey,
                     _isFeedPostSlice: true,
                     rootUri: slice.rootItem.post.uri,
@@ -341,15 +344,23 @@ export function usePostFeedQuery(
                           AppBskyFeedPost.validateRecord(item.post.record)
                             .success
                         ) {
-                          const parentAuthor =
-                            item.reply?.parent?.author ??
-                            slice.items[i + 1]?.reply?.grandparentAuthor
+                          const parent = item.reply?.parent
+                          let parentAuthor:
+                            | AppBskyActorDefs.ProfileViewBasic
+                            | undefined
+                          if (AppBskyFeedDefs.isPostView(parent)) {
+                            parentAuthor = parent.author
+                          }
+                          if (!parentAuthor) {
+                            parentAuthor =
+                              slice.items[i + 1]?.reply?.grandparentAuthor
+                          }
                           const replyRef = item.reply
                           const isParentBlocked = AppBskyFeedDefs.isBlockedPost(
                             replyRef?.parent,
                           )
 
-                          return {
+                          const feedPostSliceItem: FeedPostSliceItem = {
                             _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
                             uri: item.post.uri,
                             post: item.post,
@@ -363,13 +374,15 @@ export function usePostFeedQuery(
                             parentAuthor,
                             isParentBlocked,
                           }
+                          return feedPostSliceItem
                         }
                         return undefined
                       })
-                      .filter(Boolean) as FeedPostSliceItem[],
+                      .filter(<T>(n?: T): n is T => Boolean(n)),
                   }
+                  return feedPostSlice
                 })
-                .filter(Boolean) as FeedPostSlice[],
+                .filter(<T>(n?: T): n is T => Boolean(n)),
             })),
           ],
         }

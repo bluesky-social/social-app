@@ -11,7 +11,7 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
-import {CenteredView} from '#/view/com/util/Views'
+import {ScrollView} from '#/view/com/util/Views'
 import {atoms as a, useTheme} from '#/alf'
 import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
@@ -55,7 +55,7 @@ export function MessagesSettingsScreen({}: Props) {
   )
 
   return (
-    <CenteredView sideBorders style={a.h_full_vh}>
+    <ScrollView stickyHeaderIndices={[0]}>
       <ViewHeader title={_(msg`Chat Settings`)} showOnDesktop showBorder />
       <View style={[a.p_lg, a.gap_md]}>
         <Text style={[a.text_lg, a.font_bold]}>
@@ -149,6 +149,6 @@ export function MessagesSettingsScreen({}: Props) {
           </>
         )}
       </View>
-    </CenteredView>
+    </ScrollView>
   )
 }

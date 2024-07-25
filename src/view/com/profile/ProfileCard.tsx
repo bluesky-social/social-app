@@ -23,12 +23,11 @@ import {
   KnownFollowers,
   shouldShowKnownFollowers,
 } from '#/components/KnownFollowers'
+import * as Pills from '#/components/Pills'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {FollowButton} from './FollowButton'
-import hairlineWidth = StyleSheet.hairlineWidth
-import * as Pills from '#/components/Pills'
 
 export function ProfileCard({
   testID,
@@ -217,7 +216,7 @@ export function ProfileCardWithFollowBtn({
 
 const styles = StyleSheet.create({
   outer: {
-    borderTopWidth: hairlineWidth,
+    borderTopWidth: StyleSheet.hairlineWidth,
     paddingHorizontal: 6,
     paddingVertical: 4,
   },
