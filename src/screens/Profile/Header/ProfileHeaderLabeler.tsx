@@ -116,6 +116,7 @@ let ProfileHeaderLabeler = ({
         _(
           msg`There was an an issue contacting the server, please check your internet connection and try again.`,
         ),
+        'xmark',
       )
       logger.error(`Failed to toggle labeler like`, {message: e.message})
     }

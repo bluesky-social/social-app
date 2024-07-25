@@ -1,24 +1,24 @@
 import React, {useState} from 'react'
-import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {Slider} from '@miblanchard/react-native-slider'
 import debounce from 'lodash.debounce'
 
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {colors, s} from '#/lib/styles'
+import {isWeb} from '#/platform/detection'
 import {
   usePreferencesQuery,
   useSetFeedViewPreferencesMutation,
 } from '#/state/queries/preferences'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
-import {colors, s} from 'lib/styles'
-import {isWeb} from 'platform/detection'
-import {ToggleButton} from 'view/com/util/forms/ToggleButton'
-import {ViewHeader} from 'view/com/util/ViewHeader'
-import {CenteredView} from 'view/com/util/Views'
-import {Text} from '../com/util/text/Text'
+import {ToggleButton} from '#/view/com/util/forms/ToggleButton'
+import {SimpleViewHeader} from '#/view/com/util/SimpleViewHeader'
+import {Text} from '#/view/com/util/text/Text'
+import {ScrollView} from '#/view/com/util/Views'
 
 function RepliesThresholdInput({
   enabled,
@@ -82,10 +82,10 @@ type Props = NativeStackScreenProps<
   CommonNavigatorParams,
   'PreferencesFollowingFeed'
 >
-export function PreferencesFollowingFeed({navigation}: Props) {
+export function PreferencesFollowingFeed({}: Props) {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const {isTabletOrDesktop} = useWebMediaQueries()
+  const {isTabletOrMobile} = useWebMediaQueries()
   const {data: preferences} = usePreferencesQuery()
   const {mutate: setFeedViewPref, variables} =
     useSetFeedViewPreferencesMutation()
@@ -95,26 +95,25 @@ export function PreferencesFollowingFeed({navigation}: Props) {
   )
 
   return (
-    <CenteredView
-      testID="preferencesHomeFeedScreen"
-      style={[
-        pal.view,
-        pal.border,
-        styles.container,
-        isTabletOrDesktop && styles.desktopContainer,
-      ]}>
-      <ViewHeader title={_(msg`Following Feed Preferences`)} showOnDesktop />
-      <View
-        style={[
-          styles.titleSection,
-          isTabletOrDesktop && {paddingTop: 20, paddingBottom: 20},
-        ]}>
-        <Text type="xl" style={[pal.textLight, styles.description]}>
-          <Trans>Fine-tune the content you see on your Following feed.</Trans>
-        </Text>
-      </View>
-
-      <ScrollView>
+    <View testID="preferencesHomeFeedScreen" style={s.hContentRegion}>
+      <ScrollView
+        // @ts-ignore web only -sfn
+        dataSet={{'stable-gutters': 1}}
+        contentContainerStyle={{paddingBottom: 75}}>
+        <SimpleViewHeader
+          showBackButton={isTabletOrMobile}
+          style={[pal.border, {borderBottomWidth: 1}]}>
+          <View style={{flex: 1}}>
+            <Text type="title-lg" style={[pal.text, {fontWeight: 'bold'}]}>
+              <Trans>Following Feed Preferences</Trans>
+            </Text>
+            <Text style={pal.textLight}>
+              <Trans>
+                Fine-tune the content you see on your Following feed.
+              </Trans>
+            </Text>
+          </View>
+        </SimpleViewHeader>
         <View style={styles.cardsContainer}>
           <View style={[pal.viewLight, styles.card]}>
             <Text type="title-sm" style={[pal.text, s.pb5]}>
@@ -256,7 +255,7 @@ export function PreferencesFollowingFeed({navigation}: Props) {
 
           <View style={[pal.viewLight, styles.card]}>
             <Text type="title-sm" style={[pal.text, s.pb5]}>
-              <FontAwesomeIcon icon="flask" color={pal.colors.text} />
+              <FontAwesomeIcon icon="flask" color={pal.colors.text} />{' '}
               <Trans>Show Posts from My Feeds</Trans>
             </Text>
             <Text style={[pal.text, s.pb10]}>
@@ -291,42 +290,17 @@ export function PreferencesFollowingFeed({navigation}: Props) {
           </View>
         </View>
       </ScrollView>
-
-      <View
-        style={[
-          styles.btnContainer,
-          !isTabletOrDesktop && {borderTopWidth: 1, paddingHorizontal: 20},
-          pal.border,
-        ]}>
-        <TouchableOpacity
-          testID="confirmBtn"
-          onPress={() => {
-            navigation.canGoBack()
-              ? navigation.goBack()
-              : navigation.navigate('Settings')
-          }}
-          style={[styles.btn, isTabletOrDesktop && styles.btnDesktop]}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Confirm`)}
-          accessibilityHint="">
-          <Text style={[s.white, s.bold, s.f18]}>
-            <Trans>Done</Trans>
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </CenteredView>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingBottom: 90,
   },
   desktopContainer: {
     borderLeftWidth: 1,
     borderRightWidth: 1,
-    paddingBottom: 40,
   },
   titleSection: {
     paddingBottom: 30,
@@ -341,6 +315,7 @@ const styles = StyleSheet.create({
   },
   cardsContainer: {
     paddingHorizontal: 20,
+    paddingVertical: 16,
   },
   card: {
     padding: 16,

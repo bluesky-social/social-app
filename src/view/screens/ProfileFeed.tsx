@@ -205,6 +205,7 @@ export function ProfileFeedScreenInner({
         _(
           msg`There was an an issue updating your feeds, please check your internet connection and try again.`,
         ),
+        'xmark',
       )
       logger.error('Failed up update feeds', {message: err})
     }
@@ -231,7 +232,7 @@ export function ProfileFeedScreenInner({
         ])
       }
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`))
+      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
       logger.error('Failed to toggle pinned feed', {message: e})
     }
   }, [
@@ -543,6 +544,7 @@ function AboutSection({
         _(
           msg`There was an an issue contacting the server, please check your internet connection and try again.`,
         ),
+        'xmark',
       )
       logger.error('Failed up toggle like', {message: err})
     }

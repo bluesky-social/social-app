@@ -36,7 +36,7 @@ export function LeaveConvoPrompt({
       }
     },
     onError: () => {
-      Toast.show(_(msg`Could not leave chat`))
+      Toast.show(_(msg`Could not leave chat`), 'xmark')
     },
   })
 

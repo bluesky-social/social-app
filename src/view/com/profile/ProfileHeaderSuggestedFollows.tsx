@@ -185,7 +185,7 @@ function SuggestedFollow({
       await queueFollow()
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
-        Toast.show(_(msg`An issue occurred, please try again.`))
+        Toast.show(_(msg`An issue occurred, please try again.`), 'xmark')
       }
     }
   }, [queueFollow, track, _])
@@ -195,7 +195,7 @@ function SuggestedFollow({
       await queueUnfollow()
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
-        Toast.show(_(msg`An issue occurred, please try again.`))
+        Toast.show(_(msg`An issue occurred, please try again.`), 'xmark')
       }
     }
   }, [queueUnfollow, _])
