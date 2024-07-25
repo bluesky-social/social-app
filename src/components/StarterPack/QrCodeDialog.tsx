@@ -67,7 +67,10 @@ export function QrCodeDialog({
         try {
           await createAssetAsync(`file://${uri}`)
         } catch (e: unknown) {
-          Toast.show(_(msg`An error occurred while saving the QR code!`))
+          Toast.show(
+            _(msg`An error occurred while saving the QR code!`),
+            'xmark',
+          )
           logger.error('Failed to save QR code', {error: e})
           return
         }
