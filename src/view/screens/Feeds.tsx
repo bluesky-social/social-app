@@ -41,7 +41,6 @@ import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/compon
 import {ListMagnifyingGlass_Stroke2_Corner0_Rounded} from '#/components/icons/ListMagnifyingGlass'
 import {ListSparkle_Stroke2_Corner0_Rounded} from '#/components/icons/ListSparkle'
 import * as ListCard from '#/components/ListCard'
-const hairlineWidth = StyleSheet.hairlineWidth
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Feeds'>
 
@@ -793,13 +792,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 14,
     gap: 12,
-    borderBottomWidth: hairlineWidth,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   savedFeedMobile: {
     paddingVertical: 10,
   },
   offlineSlug: {
-    borderWidth: hairlineWidth,
+    borderWidth: StyleSheet.hairlineWidth,
     borderRadius: 4,
     paddingHorizontal: 4,
     paddingVertical: 2,

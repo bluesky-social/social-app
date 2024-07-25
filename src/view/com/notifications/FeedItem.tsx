@@ -61,7 +61,6 @@ import {formatCount} from '../util/numeric/format'
 import {Text} from '../util/text/Text'
 import {TimeElapsed} from '../util/TimeElapsed'
 import {PreviewableUserAvatar, UserAvatar} from '../util/UserAvatar'
-const hairlineWidth = StyleSheet.hairlineWidth
 
 const MAX_AUTHORS = 5
 
@@ -220,7 +219,7 @@ let FeedItem = ({
               backgroundColor: pal.colors.unreadNotifBg,
               borderColor: pal.colors.unreadNotifBorder,
             },
-        {borderTopWidth: hideTopBorder ? 0 : hairlineWidth},
+        {borderTopWidth: hideTopBorder ? 0 : StyleSheet.hairlineWidth},
       ]}
       href={itemHref}
       noFeedback

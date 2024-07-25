@@ -16,7 +16,6 @@ import {useTheme} from '#/alf'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {Text} from './text/Text'
 import {CenteredView} from './Views'
-const hairlineWidth = StyleSheet.hairlineWidth
 
 const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 
@@ -154,7 +153,7 @@ function DesktopWebHeader({
         styles.desktopHeader,
         pal.border,
         {
-          borderBottomWidth: showBorder ? hairlineWidth : 0,
+          borderBottomWidth: showBorder ? StyleSheet.hairlineWidth : 0,
         },
         {display: 'flex', flexDirection: 'column'},
       ]}>
@@ -243,7 +242,7 @@ const styles = StyleSheet.create({
     marginRight: 'auto',
   },
   border: {
-    borderBottomWidth: hairlineWidth,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   titleContainer: {
     marginLeft: 'auto',

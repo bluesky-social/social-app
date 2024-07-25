@@ -14,7 +14,6 @@ import {Text} from 'view/com/util/text/Text'
 import {ProgressGuideList} from '#/components/ProgressGuide/List'
 import {DesktopFeeds} from './Feeds'
 import {DesktopSearch} from './Search'
-const hairlineWidth = StyleSheet.hairlineWidth
 
 export function DesktopRightNav({routeName}: {routeName: string}) {
   const pal = usePalette('default')
@@ -135,8 +134,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   desktopFeedsContainer: {
-    borderTopWidth: hairlineWidth,
-    borderBottomWidth: hairlineWidth,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderBottomWidth: StyleSheet.hairlineWidth,
     marginTop: 18,
     marginBottom: 18,
   },

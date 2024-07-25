@@ -33,7 +33,6 @@ import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
-const hairlineWidth = StyleSheet.hairlineWidth
 
 export function FeedSourceCard({
   feedUri,
@@ -209,7 +208,7 @@ export function FeedSourceCardLoaded({
           styles.container,
           pal.border,
           style,
-          {borderTopWidth: hideTopBorder ? 0 : hairlineWidth},
+          {borderTopWidth: hideTopBorder ? 0 : StyleSheet.hairlineWidth},
         ]}
         onPress={e => {
           const shouldOpenInNewTab = shouldClickOpenNewTab(e)
@@ -330,7 +329,7 @@ const styles = StyleSheet.create({
     gap: 14,
   },
   border: {
-    borderTopWidth: hairlineWidth,
+    borderTopWidth: StyleSheet.hairlineWidth,
   },
   headerContainer: {
     flexDirection: 'row',

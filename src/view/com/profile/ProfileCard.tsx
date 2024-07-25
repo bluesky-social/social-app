@@ -28,7 +28,6 @@ import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {FollowButton} from './FollowButton'
-const hairlineWidth = StyleSheet.hairlineWidth
 
 export function ProfileCard({
   testID,
@@ -217,7 +216,7 @@ export function ProfileCardWithFollowBtn({
 
 const styles = StyleSheet.create({
   outer: {
-    borderTopWidth: hairlineWidth,
+    borderTopWidth: StyleSheet.hairlineWidth,
     paddingHorizontal: 6,
     paddingVertical: 4,
   },
