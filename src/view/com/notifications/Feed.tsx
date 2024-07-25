@@ -5,7 +5,6 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
-import {runOnJS} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -18,14 +17,12 @@ import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useNotificationFeedQuery} from '#/state/queries/notifications/feed'
 import {useUnreadNotificationsApi} from '#/state/queries/notifications/unread'
-import {ScrollProvider} from 'lib/ScrollContext'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List, ListRef} from '#/view/com/util/List'
 import {NotificationFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {CenteredView} from '#/view/com/util/Views'
-import {updateActiveViewAsync} from '../../../../modules/expo-bluesky-swiss-army/src/VisibilityView/VisibilityView'
 import {FeedItem} from './FeedItem'
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
@@ -178,33 +175,28 @@ export function Feed({
           />
         </CenteredView>
       )}
-      <ScrollProvider
-        onMomentumEnd={() => {
-          'worklet'
-          runOnJS(updateActiveViewAsync)()
-        }}>
-        <List
-          testID="notifsFeed"
-          ref={scrollElRef}
-          data={items}
-          keyExtractor={item => item._reactKey}
-          renderItem={renderItem}
-          ListHeaderComponent={ListHeaderComponent}
-          ListFooterComponent={FeedFooter}
-          refreshing={isPTRing}
-          onRefresh={onRefresh}
-          onEndReached={onEndReached}
-          onEndReachedThreshold={2}
-          onScrolledDownChange={onScrolledDownChange}
-          contentContainerStyle={s.contentContainer}
-          // @ts-ignore our .web version only -prf
-          desktopFixedHeight
-          initialNumToRender={initialNumToRender}
-          windowSize={11}
-          sideBorders={false}
-          removeClippedSubviews={true}
-        />
-      </ScrollProvider>
+
+      <List
+        testID="notifsFeed"
+        ref={scrollElRef}
+        data={items}
+        keyExtractor={item => item._reactKey}
+        renderItem={renderItem}
+        ListHeaderComponent={ListHeaderComponent}
+        ListFooterComponent={FeedFooter}
+        refreshing={isPTRing}
+        onRefresh={onRefresh}
+        onEndReached={onEndReached}
+        onEndReachedThreshold={2}
+        onScrolledDownChange={onScrolledDownChange}
+        contentContainerStyle={s.contentContainer}
+        // @ts-ignore our .web version only -prf
+        desktopFixedHeight
+        initialNumToRender={initialNumToRender}
+        windowSize={11}
+        sideBorders={false}
+        removeClippedSubviews={true}
+      />
     </View>
   )
 }

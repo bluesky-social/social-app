@@ -11,6 +11,7 @@ import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIX
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {addStyle} from 'lib/styles'
+import {updateActiveViewAsync} from '../../../../modules/expo-bluesky-swiss-army/src/VisibilityView/VisibilityView'
 import {FlatList_INTERNAL} from './Views'
 
 export type ListMethods = FlatList_INTERNAL
@@ -110,6 +111,19 @@ function ListImpl<ItemT>(
           viewabilityConfig: {
             itemVisiblePercentThreshold: 40,
             minimumViewTime: 1.5e3,
+          },
+        })
+      }
+
+      // @TODO only add this if prop is true
+      if (true) {
+        pairs.push({
+          onViewableItemsChanged: () => {
+            updateActiveViewAsync()
+          },
+          viewabilityConfig: {
+            itemVisiblePercentThreshold: 50,
+            minimumViewTime: 250,
           },
         })
       }

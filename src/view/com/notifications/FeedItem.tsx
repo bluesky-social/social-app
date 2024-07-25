@@ -53,7 +53,6 @@ import {StarterPack} from '#/components/icons/StarterPack'
 import {Link as NewLink} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Notification as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
-import {VisibilityView} from '../../../../modules/expo-bluesky-swiss-army'
 import {FeedSourceCard} from '../feeds/FeedSourceCard'
 import {Post} from '../post/Post'
 import {ImageHorzList} from '../util/images/ImageHorzList'
@@ -209,142 +208,132 @@ let FeedItem = ({
 
   let formattedCount = authors.length > 1 ? formatCount(authors.length - 1) : ''
   return (
-    <VisibilityView
-      enabled={true}
-      onChangeStatus={e => {
-        console.log(e)
-      }}>
-      <Link
-        testID={`feedItem-by-${item.notification.author.handle}`}
-        style={[
-          styles.outer,
-          pal.border,
-          item.notification.isRead
-            ? undefined
-            : {
-                backgroundColor: pal.colors.unreadNotifBg,
-                borderColor: pal.colors.unreadNotifBorder,
+    <Link
+      testID={`feedItem-by-${item.notification.author.handle}`}
+      style={[
+        styles.outer,
+        pal.border,
+        item.notification.isRead
+          ? undefined
+          : {
+              backgroundColor: pal.colors.unreadNotifBg,
+              borderColor: pal.colors.unreadNotifBorder,
+            },
+        {borderTopWidth: hideTopBorder ? 0 : StyleSheet.hairlineWidth},
+      ]}
+      href={itemHref}
+      noFeedback
+      accessible={!isAuthorsExpanded}
+      accessibilityActions={
+        authors.length > 1
+          ? [
+              {
+                name: 'toggleAuthorsExpanded',
+                label: isAuthorsExpanded
+                  ? _(msg`Collapse list of users`)
+                  : _(msg`Expand list of users`),
               },
-          {borderTopWidth: hideTopBorder ? 0 : StyleSheet.hairlineWidth},
-        ]}
-        href={itemHref}
-        noFeedback
-        accessible={!isAuthorsExpanded}
-        accessibilityActions={
-          authors.length > 1
-            ? [
-                {
-                  name: 'toggleAuthorsExpanded',
-                  label: isAuthorsExpanded
-                    ? _(msg`Collapse list of users`)
-                    : _(msg`Expand list of users`),
-                },
-              ]
-            : [
-                {
-                  name: 'viewProfile',
-                  label: _(
-                    msg`View ${
-                      authors[0].profile.displayName ||
-                      authors[0].profile.handle
-                    }'s profile`,
-                  ),
-                },
-              ]
+            ]
+          : [
+              {
+                name: 'viewProfile',
+                label: _(
+                  msg`View ${
+                    authors[0].profile.displayName || authors[0].profile.handle
+                  }'s profile`,
+                ),
+              },
+            ]
+      }
+      onAccessibilityAction={e => {
+        if (e.nativeEvent.actionName === 'activate') {
+          onBeforePress()
         }
-        onAccessibilityAction={e => {
-          if (e.nativeEvent.actionName === 'activate') {
-            onBeforePress()
-          }
-          if (e.nativeEvent.actionName === 'toggleAuthorsExpanded') {
-            onToggleAuthorsExpanded()
-          }
-        }}
-        onBeforePress={onBeforePress}>
-        <View style={[styles.layoutIcon, a.pr_sm]}>
-          {/* TODO: Prevent conditional rendering and move toward composable
+        if (e.nativeEvent.actionName === 'toggleAuthorsExpanded') {
+          onToggleAuthorsExpanded()
+        }
+      }}
+      onBeforePress={onBeforePress}>
+      <View style={[styles.layoutIcon, a.pr_sm]}>
+        {/* TODO: Prevent conditional rendering and move toward composable
         notifications for clearer accessibility labeling */}
-          {icon}
-        </View>
-        <View style={styles.layoutContent}>
-          <ExpandListPressable
-            hasMultipleAuthors={authors.length > 1}
-            onToggleAuthorsExpanded={onToggleAuthorsExpanded}>
-            <CondensedAuthorsList
-              visible={!isAuthorsExpanded}
-              authors={authors}
-              onToggleAuthorsExpanded={onToggleAuthorsExpanded}
-              showDmButton={item.type === 'starterpack-joined'}
+        {icon}
+      </View>
+      <View style={styles.layoutContent}>
+        <ExpandListPressable
+          hasMultipleAuthors={authors.length > 1}
+          onToggleAuthorsExpanded={onToggleAuthorsExpanded}>
+          <CondensedAuthorsList
+            visible={!isAuthorsExpanded}
+            authors={authors}
+            onToggleAuthorsExpanded={onToggleAuthorsExpanded}
+            showDmButton={item.type === 'starterpack-joined'}
+          />
+          <ExpandedAuthorsList visible={isAuthorsExpanded} authors={authors} />
+          <Text style={[styles.meta, a.self_start]}>
+            <TextLink
+              key={authors[0].href}
+              style={[pal.text, s.bold]}
+              href={authors[0].href}
+              text={forceLTR(
+                sanitizeDisplayName(
+                  authors[0].profile.displayName || authors[0].profile.handle,
+                ),
+              )}
+              disableMismatchWarning
             />
-            <ExpandedAuthorsList
-              visible={isAuthorsExpanded}
-              authors={authors}
-            />
-            <Text style={[styles.meta, a.self_start]}>
-              <TextLink
-                key={authors[0].href}
-                style={[pal.text, s.bold]}
-                href={authors[0].href}
-                text={forceLTR(
-                  sanitizeDisplayName(
-                    authors[0].profile.displayName || authors[0].profile.handle,
-                  ),
-                )}
-                disableMismatchWarning
-              />
-              {authors.length > 1 ? (
-                <>
-                  <Text style={[pal.text, s.mr5, s.ml5]}>
-                    {' '}
-                    <Trans>and</Trans>{' '}
-                  </Text>
-                  <Text style={[pal.text, s.bold]}>
-                    {plural(authors.length - 1, {
-                      one: `${formattedCount} other`,
-                      other: `${formattedCount} others`,
-                    })}
-                  </Text>
-                </>
-              ) : undefined}
-              <Text style={[pal.text]}> {action}</Text>
-              <TimeElapsed timestamp={item.notification.indexedAt}>
-                {({timeElapsed}) => (
-                  <Text
-                    style={[pal.textLight, styles.pointer]}
-                    title={niceDate(item.notification.indexedAt)}>
-                    {' ' + timeElapsed}
-                  </Text>
-                )}
-              </TimeElapsed>
-            </Text>
-          </ExpandListPressable>
-          {item.type === 'post-like' || item.type === 'repost' ? (
-            <AdditionalPostText post={item.subject} />
-          ) : null}
-          {item.type === 'feedgen-like' && item.subjectUri ? (
-            <FeedSourceCard
-              feedUri={item.subjectUri}
-              style={[pal.view, pal.border, styles.feedcard]}
-              showLikes
-            />
-          ) : null}
-          {item.type === 'starterpack-joined' ? (
-            <View>
-              <View
-                style={[
-                  a.border,
-                  a.p_sm,
-                  a.rounded_sm,
-                  a.mt_sm,
-                  t.atoms.border_contrast_low,
-                ]}>
-                <StarterPackCard starterPack={item.subject} />
-              </View>
+            {authors.length > 1 ? (
+              <>
+                <Text style={[pal.text, s.mr5, s.ml5]}>
+                  {' '}
+                  <Trans>and</Trans>{' '}
+                </Text>
+                <Text style={[pal.text, s.bold]}>
+                  {plural(authors.length - 1, {
+                    one: `${formattedCount} other`,
+                    other: `${formattedCount} others`,
+                  })}
+                </Text>
+              </>
+            ) : undefined}
+            <Text style={[pal.text]}> {action}</Text>
+            <TimeElapsed timestamp={item.notification.indexedAt}>
+              {({timeElapsed}) => (
+                <Text
+                  style={[pal.textLight, styles.pointer]}
+                  title={niceDate(item.notification.indexedAt)}>
+                  {' ' + timeElapsed}
+                </Text>
+              )}
+            </TimeElapsed>
+          </Text>
+        </ExpandListPressable>
+        {item.type === 'post-like' || item.type === 'repost' ? (
+          <AdditionalPostText post={item.subject} />
+        ) : null}
+        {item.type === 'feedgen-like' && item.subjectUri ? (
+          <FeedSourceCard
+            feedUri={item.subjectUri}
+            style={[pal.view, pal.border, styles.feedcard]}
+            showLikes
+          />
+        ) : null}
+        {item.type === 'starterpack-joined' ? (
+          <View>
+            <View
+              style={[
+                a.border,
+                a.p_sm,
+                a.rounded_sm,
+                a.mt_sm,
+                t.atoms.border_contrast_low,
+              ]}>
+              <StarterPackCard starterPack={item.subject} />
             </View>
-          ) : null}
-        </View>
-      </Link>
-    </VisibilityView>
+          </View>
+        ) : null}
+      </View>
+    </Link>
   )
 }
 FeedItem = memo(FeedItem)
