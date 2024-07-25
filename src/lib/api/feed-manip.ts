@@ -37,12 +37,14 @@ function toSliceItem(feedViewPost: FeedViewPost): FeedSliceItem {
 
 export class FeedViewPostsSlice {
   _reactKey: string
+  _originalFeedViewPost: FeedViewPost
   items: FeedSliceItem[]
   isFlattenedReply = false
 
   constructor(items: FeedViewPost[]) {
     this.items = items.map(toSliceItem)
     const item = items[0]
+    this._originalFeedViewPost = item
     this._reactKey = `slice-${item.post.uri}-${
       item.reason?.indexedAt || item.post.indexedAt
     }`
@@ -75,11 +77,8 @@ export class FeedViewPostsSlice {
     return this.isThread && !this.items[0].reply
   }
 
-  get rootItem() {
-    if (this.isFlattenedReply) {
-      return this.items[1]
-    }
-    return this.items[0]
+  get rootItem(): FeedViewPost {
+    return this._originalFeedViewPost
   }
 
   get isReply() {
