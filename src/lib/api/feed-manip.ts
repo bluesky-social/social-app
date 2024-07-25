@@ -55,14 +55,6 @@ export class FeedViewPostsSlice {
     return this.rootItem.post.uri
   }
 
-  get ts() {
-    const reason = this.items[0].reason
-    if (AppBskyFeedDefs.isReasonRepost(reason) && reason?.indexedAt) {
-      return reason.indexedAt as string
-    }
-    return this.items[0].post.indexedAt
-  }
-
   get isThread() {
     return (
       this.items.length > 1 &&
