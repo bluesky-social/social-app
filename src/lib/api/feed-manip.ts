@@ -75,6 +75,10 @@ export class FeedViewPostsSlice {
     )
   }
 
+  get includesThreadRoot() {
+    return !this.items[0].reply
+  }
+
   containsUri(uri: string) {
     return !!this.items.find(item => item.post.uri === uri)
   }
@@ -315,7 +319,7 @@ export class FeedTuner {
       for (let i = slices.length - 1; i >= 0; i--) {
         const slice = slices[i]
         if (slice.isReply) {
-          if (slice.isThread && !slice.items[0].reply) {
+          if (slice.isThread && slice.includesThreadRoot) {
             continue
           }
           const item = slice.rootItem
