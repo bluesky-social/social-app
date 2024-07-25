@@ -57,14 +57,25 @@ class VisibilityViewManager {
 
       activeView = mostVisibleView
     }
+    
+    if activeView == self.currentlyActiveView {
+      return
+    }
 
-    if let view = activeView, view != self.currentlyActiveView {
+    self.clearActiveView()
+    if let view = activeView {
       self.setActiveView(view)
+    }
+  }
+  
+  func clearActiveView() {
+    if let currentlyActiveView = self.currentlyActiveView {
+      currentlyActiveView.setIsCurrentlyActive(isActive: false)
+      self.currentlyActiveView = nil
     }
   }
 
   func setActiveView(_ view: VisibilityView) {
-    self.currentlyActiveView?.setIsCurrentlyActive(isActive: false)
     view.setIsCurrentlyActive(isActive: true)
     self.currentlyActiveView = view
   }
