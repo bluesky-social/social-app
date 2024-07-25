@@ -93,6 +93,7 @@ function ListImpl<ItemT>(
     }
     return [
       (info: {viewableItems: Array<ViewToken>; changed: Array<ViewToken>}) => {
+        console.log(info.viewableItems[0])
         for (const item of info.changed) {
           if (item.isViewable) {
             onItemSeen(item.item)
@@ -101,7 +102,7 @@ function ListImpl<ItemT>(
       },
       {
         itemVisiblePercentThreshold: 40,
-        minimumViewTime: 1.5e3,
+        minimumViewTime: 0,
       },
     ]
   }, [onItemSeen])
