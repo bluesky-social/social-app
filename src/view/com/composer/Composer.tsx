@@ -99,7 +99,7 @@ import {SelectVideoBtn} from './videos/SelectVideoBtn'
 import {useVideoState} from './videos/state'
 import {VideoPreview} from './videos/VideoPreview'
 import {VideoTranscodeProgress} from './videos/VideoTranscodeProgress'
-import hairlineWidth = StyleSheet.hairlineWidth
+const hairlineWidth = StyleSheet.hairlineWidth
 
 type CancelRef = {
   onPressCancel: () => void

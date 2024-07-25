@@ -29,7 +29,7 @@ import {Button} from '../util/forms/Button'
 import {Text} from '../util/text/Text'
 import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
-import hairlineWidth = StyleSheet.hairlineWidth
+const hairlineWidth = StyleSheet.hairlineWidth
 
 export const snapPoints = ['fullscreen']
 

@@ -14,7 +14,7 @@ import {RichText as RichTextCom} from '#/components/RichText'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
-import hairlineWidth = StyleSheet.hairlineWidth
+const hairlineWidth = StyleSheet.hairlineWidth
 
 export const ListCard = ({
   testID,

@@ -11,10 +11,10 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {s} from 'lib/styles'
 import {TextLink} from 'view/com/util/Link'
 import {Text} from 'view/com/util/text/Text'
+import {ProgressGuideList} from '#/components/ProgressGuide/List'
 import {DesktopFeeds} from './Feeds'
 import {DesktopSearch} from './Search'
-import hairlineWidth = StyleSheet.hairlineWidth
-import {ProgressGuideList} from '#/components/ProgressGuide/List'
+const hairlineWidth = StyleSheet.hairlineWidth
 
 export function DesktopRightNav({routeName}: {routeName: string}) {
   const pal = usePalette('default')

@@ -1,7 +1,7 @@
 import {StyleSheet} from 'react-native'
 
 import {colors} from 'lib/styles'
-import hairlineWidth = StyleSheet.hairlineWidth
+const hairlineWidth = StyleSheet.hairlineWidth
 
 export const styles = StyleSheet.create({
   bottomBar: {

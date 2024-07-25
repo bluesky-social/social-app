@@ -23,12 +23,12 @@ import {
   KnownFollowers,
   shouldShowKnownFollowers,
 } from '#/components/KnownFollowers'
+import * as Pills from '#/components/Pills'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {FollowButton} from './FollowButton'
-import hairlineWidth = StyleSheet.hairlineWidth
-import * as Pills from '#/components/Pills'
+const hairlineWidth = StyleSheet.hairlineWidth
 
 export function ProfileCard({
   testID,

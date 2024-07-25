@@ -46,7 +46,6 @@ import {PostMeta} from '../util/PostMeta'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {AviFollowButton} from './AviFollowButton'
-import hairlineWidth = StyleSheet.hairlineWidth
 
 interface FeedItemProps {
   record: AppBskyFeedPost.Record
@@ -205,7 +204,8 @@ let FeedItemInner = ({
         isThreadLastChild || (!isThreadChild && !isThreadParent)
           ? 8
           : undefined,
-      borderTopWidth: hideTopBorder || isThreadChild ? 0 : hairlineWidth,
+      borderTopWidth:
+        hideTopBorder || isThreadChild ? 0 : StyleSheet.hairlineWidth,
     },
   ]
 

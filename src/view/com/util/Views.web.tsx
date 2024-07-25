@@ -26,7 +26,7 @@ import Animated from 'react-native-reanimated'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {addStyle} from 'lib/styles'
-import hairlineWidth = StyleSheet.hairlineWidth
+const hairlineWidth = StyleSheet.hairlineWidth
 
 interface AddedProps {
   desktopFixedHeight?: boolean | number

@@ -7,7 +7,7 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {PressableWithHover} from '../util/PressableWithHover'
 import {Text} from '../util/text/Text'
 import {DraggableScrollView} from './DraggableScrollView'
-import hairlineWidth = StyleSheet.hairlineWidth
+const hairlineWidth = StyleSheet.hairlineWidth
 
 export interface TabBarProps {
   testID?: string

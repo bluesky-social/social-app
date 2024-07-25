@@ -28,7 +28,7 @@ import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
 import {ExternalLinkEmbed} from './ExternalLinkEmbed'
 import {ListEmbed} from './ListEmbed'
 import {MaybeQuoteEmbed} from './QuoteEmbed'
-import hairlineWidth = StyleSheet.hairlineWidth
+const hairlineWidth = StyleSheet.hairlineWidth
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {Embed as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 

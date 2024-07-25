@@ -13,10 +13,10 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {NavigationProp} from 'lib/routes/types'
 import {useTheme} from '#/alf'
+import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {Text} from './text/Text'
 import {CenteredView} from './Views'
-import hairlineWidth = StyleSheet.hairlineWidth
-import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
+const hairlineWidth = StyleSheet.hairlineWidth
 
 const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 
