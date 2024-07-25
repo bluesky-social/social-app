@@ -6,12 +6,15 @@ import {
   ViewToken,
 } from 'react-native'
 import {runOnJS, useSharedValue} from 'react-native-reanimated'
+import EventEmitter from 'eventemitter3'
 
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {addStyle} from 'lib/styles'
 import {FlatList_INTERNAL} from './Views'
+
+export const VisibilityEmitter = new EventEmitter()
 
 export type ListMethods = FlatList_INTERNAL
 export type ListProps<ItemT> = Omit<
@@ -113,6 +116,17 @@ function ListImpl<ItemT>(
           },
         })
       }
+
+      pairs.push({
+        onViewableItemsChanged: (info: {viewableItems: Array<ViewToken>}) => {
+          VisibilityEmitter.emit('viewableItemsChanged', info.viewableItems)
+        },
+        viewabilityConfig: {
+          itemVisiblePercentThreshold: 40,
+          // Small throttle
+          minimumViewTime: 250,
+        },
+      })
 
       return pairs
     }, [onItemSeen])
