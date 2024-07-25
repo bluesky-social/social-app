@@ -241,7 +241,7 @@ function AppealForm({
     },
     onError: err => {
       logger.error('Failed to submit label appeal', {message: err})
-      Toast.show(_(msg`Failed to submit appeal, please try again.`))
+      Toast.show(_(msg`Failed to submit appeal, please try again.`), 'xmark')
     },
     onSuccess: () => {
       control.close()
