@@ -21,7 +21,7 @@ type FeedSliceItem = {
   isParentBlocked: boolean
 }
 
-function toSliceItem(feedViewPost: FeedViewPost): FeedSliceItem {
+function feedViewPostToSliceItem(feedViewPost: FeedViewPost): FeedSliceItem {
   const parent = feedViewPost.reply?.parent
   const isParentBlocked = AppBskyFeedDefs.isBlockedPost(parent)
   let parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
@@ -38,6 +38,8 @@ function toSliceItem(feedViewPost: FeedViewPost): FeedSliceItem {
 export class FeedViewPostsSlice {
   _reactKey: string
   _feedPost: FeedViewPost
+  rootUri: string
+  hasGap: boolean
   items: FeedSliceItem[]
 
   constructor(feedPost: FeedViewPost) {
@@ -45,7 +47,38 @@ export class FeedViewPostsSlice {
     this._reactKey = `slice-${feedPost.post.uri}-${
       feedPost.reason?.indexedAt || feedPost.post.indexedAt
     }`
-    this.items = [toSliceItem(feedPost)]
+    this.rootUri = (feedPost.reply?.root.uri ?? feedPost.post.uri) as string
+    this.items = [feedViewPostToSliceItem(feedPost)]
+    this.hasGap = false
+
+    if (feedPost.reply && !feedPost.reason) {
+      const {parent, root, grandparentAuthor} = feedPost.reply
+      if (
+        AppBskyFeedDefs.isPostView(parent) &&
+        AppBskyFeedDefs.isPostView(root)
+      ) {
+        if (parent.uri !== root.uri) {
+          this.items.unshift({
+            isParentBlocked: false, // TODO(dan)
+            parentAuthor: grandparentAuthor,
+            post: parent,
+          })
+          if (AppBskyFeedPost.isRecord(parent.record)) {
+            let parentReplyRef = parent.record.reply
+            if (parentReplyRef?.parent.uri !== root.uri) {
+              this.hasGap = true
+            }
+          }
+        }
+        this.items.unshift({
+          isParentBlocked: false,
+          parentAuthor: undefined,
+          post: root,
+        })
+      } else {
+        // TODO(dan): Handle deleted, blocked
+      }
+    }
   }
 
   get uri() {
@@ -148,6 +181,7 @@ export class FeedTuner {
   ): FeedViewPostsSlice[] {
     let slices: FeedViewPostsSlice[] = []
 
+    // TODO(dan): Where should this go?
     // remove posts that are replies, but which don't have the parent
     // hydrated. this means the parent was either deleted or blocked
     feed = feed.filter(item => {
@@ -162,6 +196,7 @@ export class FeedTuner {
     })
 
     slices = feed.map(item => new FeedViewPostsSlice(item))
+    // TODO(dan): Dedupe by root.
 
     // run the custom tuners
     for (const tunerFn of this.tunerFns) {
@@ -173,7 +208,11 @@ export class FeedTuner {
         if (this.seenKeys.has(slice._reactKey)) {
           return false
         }
+        if (this.seenUris.has(slice.rootUri)) {
+          return false
+        }
         for (const item of slice.items) {
+          // TODO(dan): Dedupe by post too.
           this.seenUris.add(item.post.uri)
         }
         this.seenKeys.add(slice._reactKey)

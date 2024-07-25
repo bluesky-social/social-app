@@ -92,6 +92,7 @@ export interface FeedPostSlice {
   _isFeedPostSlice: boolean
   _reactKey: string
   rootUri: string
+  hasGap: boolean
   isThread: boolean
   items: FeedPostSliceItem[]
 }
@@ -329,6 +330,7 @@ export function usePostFeedQuery(
                   const feedPostSlice: FeedPostSlice = {
                     _reactKey: slice._reactKey,
                     _isFeedPostSlice: true,
+                    hasGap: slice.hasGap,
                     rootUri: slice.uri,
                     isThread:
                       slice.items.length > 1 &&

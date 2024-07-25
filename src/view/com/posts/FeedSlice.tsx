@@ -18,7 +18,7 @@ let FeedSlice = ({
   slice: FeedPostSlice
   hideTopBorder?: boolean
 }): React.ReactNode => {
-  if (slice.items.length > 3) {
+  if (slice.hasGap) {
     const beforeLast = slice.items.length - 2
     const last = slice.items.length - 1
     return (
