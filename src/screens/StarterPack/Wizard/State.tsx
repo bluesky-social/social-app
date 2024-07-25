@@ -74,7 +74,10 @@ function reducer(state: State, action: Action): State {
       break
     case 'AddProfile':
       if (state.profiles.length >= 51) {
-        Toast.show(msg`You may only add up to 50 profiles`.message ?? '')
+        Toast.show(
+          msg`You may only add up to 50 profiles`.message ?? '',
+          'info',
+        )
       } else {
         updatedState = {...state, profiles: [...state.profiles, action.profile]}
       }
@@ -89,7 +92,7 @@ function reducer(state: State, action: Action): State {
       break
     case 'AddFeed':
       if (state.feeds.length >= 50) {
-        Toast.show(msg`You may only add up to 50 feeds`.message ?? '')
+        Toast.show(msg`You may only add up to 50 feeds`.message ?? '', 'info')
       } else {
         updatedState = {...state, feeds: [...state.feeds, action.feed]}
       }

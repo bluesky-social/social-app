@@ -125,7 +125,7 @@ export function FeedSourceCardLoaded({
       ])
       Toast.show(_(msg`Added to my feeds`))
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting your server`))
+      Toast.show(_(msg`There was an issue contacting your server`), 'xmark')
       logger.error('Failed to save feed', {message: e})
     }
   }, [_, feed, pinOnSave, addSavedFeeds, isSaved])
@@ -138,7 +138,7 @@ export function FeedSourceCardLoaded({
       // await item.unsave()
       Toast.show(_(msg`Removed from my feeds`))
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting your server`))
+      Toast.show(_(msg`There was an issue contacting your server`), 'xmark')
       logger.error('Failed to unsave feed', {message: e})
     }
   }, [_, removeFeed, savedFeedConfig])

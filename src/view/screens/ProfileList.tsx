@@ -300,7 +300,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         Toast.show(_(msg`Saved to your feeds`))
       }
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`))
+      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
       logger.error('Failed to toggle pinned feed', {message: e})
     }
   }, [
@@ -319,7 +319,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       await removeSavedFeed(savedFeedConfig)
       Toast.show(_(msg`Removed from your feeds`))
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`))
+      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
       logger.error('Failed to remove pinned list', {message: e})
     }
   }, [playHaptic, removeSavedFeed, _, savedFeedConfig])
