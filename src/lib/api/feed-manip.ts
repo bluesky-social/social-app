@@ -1,4 +1,5 @@
 import {
+  AppBskyActorDefs,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
@@ -16,13 +17,21 @@ export type FeedTunerFn = (
 
 type FeedSliceItem = {
   post: AppBskyFeedDefs.PostView
-  reply?: AppBskyFeedDefs.ReplyRef
+  parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
+  isParentBlocked: boolean
 }
 
 function toSliceItem(feedViewPost: FeedViewPost): FeedSliceItem {
+  const parent = feedViewPost.reply?.parent
+  const isParentBlocked = AppBskyFeedDefs.isBlockedPost(parent)
+  let parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
+  if (AppBskyFeedDefs.isPostView(parent)) {
+    parentAuthor = parent.author
+  }
   return {
     post: feedViewPost.post,
-    reply: feedViewPost.reply,
+    parentAuthor,
+    isParentBlocked,
   }
 }
 
@@ -83,7 +92,7 @@ export class FeedViewPostsSlice {
   }
 
   get includesThreadRoot() {
-    return !this.items[0].reply
+    return true // TODO(dan): Ensure this is actually the case.
   }
 
   get likeCount() {
