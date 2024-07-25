@@ -5,6 +5,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
+import {runOnJS} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -17,18 +18,15 @@ import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useNotificationFeedQuery} from '#/state/queries/notifications/feed'
 import {useUnreadNotificationsApi} from '#/state/queries/notifications/unread'
+import {ScrollProvider} from 'lib/ScrollContext'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List, ListRef} from '#/view/com/util/List'
 import {NotificationFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {CenteredView} from '#/view/com/util/Views'
-import {FeedItem} from './FeedItem'
-import hairlineWidth = StyleSheet.hairlineWidth
-import {runOnJS} from 'react-native-reanimated'
-
-import {ScrollProvider} from 'lib/ScrollContext'
 import {updateActiveViewAsync} from '../../../../modules/expo-bluesky-swiss-army/src/VisibilityView/VisibilityView'
+import {FeedItem} from './FeedItem'
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
@@ -141,7 +139,7 @@ export function Feed({
           <View
             style={[
               pal.border,
-              !isTabletOrMobile && {borderTopWidth: hairlineWidth},
+              !isTabletOrMobile && {borderTopWidth: StyleSheet.hairlineWidth},
             ]}>
             <NotificationFeedLoadingPlaceholder />
           </View>

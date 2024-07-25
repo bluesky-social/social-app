@@ -13,6 +13,7 @@ import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
+import {shouldClickOpenNewTab} from '#/platform/urls'
 import {FeedSourceInfo, useFeedSourceInfoQuery} from '#/state/queries/feed'
 import {
   useAddSavedFeedsMutation,
@@ -32,8 +33,6 @@ import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
-import hairlineWidth = StyleSheet.hairlineWidth
-import {shouldClickOpenNewTab} from '#/platform/urls'
 
 export function FeedSourceCard({
   feedUri,
@@ -209,7 +208,7 @@ export function FeedSourceCardLoaded({
           styles.container,
           pal.border,
           style,
-          {borderTopWidth: hideTopBorder ? 0 : hairlineWidth},
+          {borderTopWidth: hideTopBorder ? 0 : StyleSheet.hairlineWidth},
         ]}
         onPress={e => {
           const shouldOpenInNewTab = shouldClickOpenNewTab(e)
@@ -330,7 +329,7 @@ const styles = StyleSheet.create({
     gap: 14,
   },
   border: {
-    borderTopWidth: hairlineWidth,
+    borderTopWidth: StyleSheet.hairlineWidth,
   },
   headerContainer: {
     flexDirection: 'row',

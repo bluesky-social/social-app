@@ -7,7 +7,6 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {PressableWithHover} from '../util/PressableWithHover'
 import {Text} from '../util/text/Text'
 import {DraggableScrollView} from './DraggableScrollView'
-import hairlineWidth = StyleSheet.hairlineWidth
 
 export interface TabBarProps {
   testID?: string
@@ -208,6 +207,6 @@ const mobileStyles = StyleSheet.create({
     left: 0,
     right: 0,
     top: '100%',
-    borderBottomWidth: hairlineWidth,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
 })
