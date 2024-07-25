@@ -352,7 +352,7 @@ let FeedItemInner = ({
             postAuthor={post.author}
             onOpenEmbed={onOpenEmbed}
           />
-          {gate('videos') && (
+          {__DEV__ && gate('videos') && (
             <VideoEmbed source="https://lumi.jazco.dev/watch/did:plc:q6gjnaw2blty4crticxkmujt/Qmc8w93UpTa2adJHg4ZhnDPrBs1EsbzrekzPcqF5SwusuZ/playlist.m3u8" />
           )}
           <PostCtrls
