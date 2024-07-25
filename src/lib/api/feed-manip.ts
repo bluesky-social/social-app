@@ -68,6 +68,14 @@ export class FeedViewPostsSlice {
     return this._originalFeedViewPost
   }
 
+  get isQuotePost() {
+    const embed = this.rootItem.post.embed
+    return (
+      AppBskyEmbedRecord.isView(embed) ||
+      AppBskyEmbedRecordWithMedia.isView(embed)
+    )
+  }
+
   get isReply() {
     return (
       AppBskyFeedPost.isRecord(this.rootItem.post.record) &&
@@ -75,8 +83,17 @@ export class FeedViewPostsSlice {
     )
   }
 
+  get isRepost() {
+    const reason = this.rootItem.reason
+    return AppBskyFeedDefs.isReasonRepost(reason)
+  }
+
   get includesThreadRoot() {
     return !this.items[0].reply
+  }
+
+  get likeCount() {
+    return this.rootItem.post.likeCount ?? 0
   }
 
   containsUri(uri: string) {
@@ -259,8 +276,7 @@ export class FeedTuner {
 
   static removeReposts(tuner: FeedTuner, slices: FeedViewPostsSlice[]) {
     for (let i = slices.length - 1; i >= 0; i--) {
-      const reason = slices[i].rootItem.reason
-      if (AppBskyFeedDefs.isReasonRepost(reason)) {
+      if (slices[i].isRepost) {
         slices.splice(i, 1)
       }
     }
@@ -269,11 +285,7 @@ export class FeedTuner {
 
   static removeQuotePosts(tuner: FeedTuner, slices: FeedViewPostsSlice[]) {
     for (let i = slices.length - 1; i >= 0; i--) {
-      const embed = slices[i].rootItem.post.embed
-      if (
-        AppBskyEmbedRecord.isView(embed) ||
-        AppBskyEmbedRecordWithMedia.isView(embed)
-      ) {
+      if (slices[i].isQuotePost) {
         slices.splice(i, 1)
       }
     }
@@ -322,12 +334,10 @@ export class FeedTuner {
           if (slice.isThread && slice.includesThreadRoot) {
             continue
           }
-          const item = slice.rootItem
-          const isRepost = Boolean(item.reason)
-          if (isRepost) {
+          if (slice.isRepost) {
             continue
           }
-          if ((item.post.likeCount || 0) < minLikes) {
+          if (slice.likeCount < minLikes) {
             slices.splice(i, 1)
           } else if (followedOnly && !slice.isFollowingAllAuthors(userDid)) {
             slices.splice(i, 1)

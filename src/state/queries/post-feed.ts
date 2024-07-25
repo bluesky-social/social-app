@@ -329,7 +329,7 @@ export function usePostFeedQuery(
                   const feedPostSlice: FeedPostSlice = {
                     _reactKey: slice._reactKey,
                     _isFeedPostSlice: true,
-                    rootUri: slice.rootItem.post.uri,
+                    rootUri: slice.uri,
                     isThread:
                       slice.items.length > 1 &&
                       slice.items.every(
