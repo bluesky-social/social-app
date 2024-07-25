@@ -344,9 +344,17 @@ export function usePostFeedQuery(
                           AppBskyFeedPost.validateRecord(item.post.record)
                             .success
                         ) {
-                          const parentAuthor =
-                            item.reply?.parent?.author ??
-                            slice.items[i + 1]?.reply?.grandparentAuthor
+                          const parent = item.reply?.parent
+                          let parentAuthor:
+                            | AppBskyActorDefs.ProfileViewBasic
+                            | undefined
+                          if (AppBskyFeedDefs.isPostView(parent)) {
+                            parentAuthor = parent.author
+                          }
+                          if (!parentAuthor) {
+                            parentAuthor =
+                              slice.items[i + 1]?.reply?.grandparentAuthor
+                          }
                           const replyRef = item.reply
                           const isParentBlocked = AppBskyFeedDefs.isBlockedPost(
                             replyRef?.parent,
