@@ -33,6 +33,6 @@ export function threadgateViewToSettings(
       }
       return setting
     })
-    .filter(<T>(n?: T): n is T => Boolean(n))
+    .filter(n => !!n)
   return settings
 }
