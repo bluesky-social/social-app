@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-07-14 01:48+0900\n"
+"PO-Revision-Date: 2024-07-25 15:12+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -2358,10 +2358,6 @@ msgstr "맞팔로우"
 #: src/view/screens/Search/Explore.tsx:335
 msgid "Follow more accounts to get connected to your interests and build your network."
 msgstr "더 많은 계정을 팔로우하고 관심 분야를 연결하여 네트워크를 구축하세요."
-
-#: src/view/com/profile/ProfileCard.tsx:190
-#~ msgid "Followed by {0}"
-#~ msgstr "{0} 님이 팔로우함"
 
 #: src/components/KnownFollowers.tsx:231
 msgid "Followed by <0>{0}</0>"
