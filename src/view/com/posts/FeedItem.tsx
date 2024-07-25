@@ -16,8 +16,10 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {useGate} from '#/lib/statsig/statsig'
 import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
+import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {isReasonFeedSource, ReasonFeedSource} from 'lib/api/feed/types'
 import {MAX_POST_LINES} from 'lib/constants'
@@ -45,9 +47,6 @@ import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {AviFollowButton} from './AviFollowButton'
 import hairlineWidth = StyleSheet.hairlineWidth
-import {IS_DEV} from '#/lib/app-info'
-import {useGate} from '#/lib/statsig/statsig'
-import {useSession} from '#/state/session'
 
 interface FeedItemProps {
   record: AppBskyFeedPost.Record
@@ -353,7 +352,7 @@ let FeedItemInner = ({
             postAuthor={post.author}
             onOpenEmbed={onOpenEmbed}
           />
-          {IS_DEV && gate('videos') && (
+          {gate('videos') && (
             <VideoEmbed source="https://lumi.jazco.dev/watch/did:plc:q6gjnaw2blty4crticxkmujt/Qmc8w93UpTa2adJHg4ZhnDPrBs1EsbzrekzPcqF5SwusuZ/playlist.m3u8" />
           )}
           <PostCtrls
