@@ -341,9 +341,11 @@ let FeedItemInner = ({
             postHref={href}
             onOpenAuthor={onOpenAuthor}
           />
-          {!isThreadChild && showReplyTo && parentAuthor && (
-            <ReplyToLabel blocked={isParentBlocked} profile={parentAuthor} />
-          )}
+          {!isThreadChild &&
+            showReplyTo &&
+            (parentAuthor || isParentBlocked) && (
+              <ReplyToLabel blocked={isParentBlocked} profile={parentAuthor} />
+            )}
           <LabelsOnMyPost post={post} />
           <PostContent
             moderation={moderation}
@@ -435,12 +437,46 @@ function ReplyToLabel({
   profile,
   blocked,
 }: {
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: AppBskyActorDefs.ProfileViewBasic | undefined
   blocked?: boolean
 }) {
   const pal = usePalette('default')
   const {currentAccount} = useSession()
-  const isMe = profile.did === currentAccount?.did
+
+  let label
+  if (blocked) {
+    label = <Trans context="description">Reply to a blocked post</Trans>
+  } else if (profile != null) {
+    const isMe = profile.did === currentAccount?.did
+    if (isMe) {
+      label = <Trans context="description">Reply to you</Trans>
+    } else {
+      label = (
+        <Trans context="description">
+          Reply to{' '}
+          <ProfileHoverCard inline did={profile.did}>
+            <TextLinkOnWebOnly
+              type="md"
+              style={pal.textLight}
+              lineHeight={1.2}
+              numberOfLines={1}
+              href={makeProfileLink(profile)}
+              text={
+                profile.displayName
+                  ? sanitizeDisplayName(profile.displayName)
+                  : sanitizeHandle(profile.handle)
+              }
+            />
+          </ProfileHoverCard>
+        </Trans>
+      )
+    }
+  }
+
+  if (!label) {
+    // Should not happen.
+    return null
+  }
 
   return (
     <View style={[s.flexRow, s.mb2, s.alignCenter]}>
@@ -454,29 +490,7 @@ function ReplyToLabel({
         style={[pal.textLight, s.mr2]}
         lineHeight={1.2}
         numberOfLines={1}>
-        {isMe ? (
-          <Trans context="description">Reply to you</Trans>
-        ) : blocked ? (
-          <Trans context="description">Reply to a blocked post</Trans>
-        ) : (
-          <Trans context="description">
-            Reply to{' '}
-            <ProfileHoverCard inline did={profile.did}>
-              <TextLinkOnWebOnly
-                type="md"
-                style={pal.textLight}
-                lineHeight={1.2}
-                numberOfLines={1}
-                href={makeProfileLink(profile)}
-                text={
-                  profile.displayName
-                    ? sanitizeDisplayName(profile.displayName)
-                    : sanitizeHandle(profile.handle)
-                }
-              />
-            </ProfileHoverCard>
-          </Trans>
-        )}
+        {label}
       </Text>
     </View>
   )
