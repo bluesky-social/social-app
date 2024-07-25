@@ -41,12 +41,6 @@ export class FeedViewPostsSlice {
     this.items = [toSliceItem(feedPost)]
   }
 
-  get reason() {
-    return '__source' in this._feedPost
-      ? (this._feedPost.__source as ReasonFeedSource)
-      : this._feedPost.reason
-  }
-
   get uri() {
     return this._feedPost.post.uri
   }
@@ -73,6 +67,12 @@ export class FeedViewPostsSlice {
       AppBskyFeedPost.isRecord(this._feedPost.post.record) &&
       !!this._feedPost.post.record.reply
     )
+  }
+
+  get reason() {
+    return '__source' in this._feedPost
+      ? (this._feedPost.__source as ReasonFeedSource)
+      : this._feedPost.reason
   }
 
   get isRepost() {
