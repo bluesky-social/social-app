@@ -314,7 +314,7 @@ export function usePostFeedQuery(
                   if (isDiscover) {
                     userActionHistory.seen(
                       slice.items.map(item => ({
-                        feedContext: item.feedContext,
+                        feedContext: slice.feedContext,
                         likeCount: item.post.likeCount ?? 0,
                         repostCount: item.post.repostCount ?? 0,
                         replyCount: item.post.replyCount ?? 0,
@@ -329,7 +329,7 @@ export function usePostFeedQuery(
                   const feedPostSlice: FeedPostSlice = {
                     _reactKey: slice._reactKey,
                     _isFeedPostSlice: true,
-                    rootUri: slice.rootItem.post.uri,
+                    rootUri: slice.uri,
                     isThread:
                       slice.items.length > 1 &&
                       slice.items.every(
@@ -365,11 +365,8 @@ export function usePostFeedQuery(
                             uri: item.post.uri,
                             post: item.post,
                             record: item.post.record,
-                            reason:
-                              i === 0 && slice.source
-                                ? slice.source
-                                : item.reason,
-                            feedContext: item.feedContext || slice.feedContext,
+                            reason: slice.reason,
+                            feedContext: slice.feedContext,
                             moderation: moderations[i],
                             parentAuthor,
                             isParentBlocked,
