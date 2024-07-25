@@ -37,13 +37,13 @@ function toSliceItem(feedViewPost: FeedViewPost): FeedSliceItem {
 
 export class FeedViewPostsSlice {
   _reactKey: string
-  _originalFeedViewPost: FeedViewPost
+  _feedPost: FeedViewPost
   items: FeedSliceItem[]
   feedContext: string | undefined
 
   constructor(items: FeedViewPost[]) {
     const item = items[0]
-    this._originalFeedViewPost = item
+    this._feedPost = item
     this._reactKey = `slice-${item.post.uri}-${
       item.reason?.indexedAt || item.post.indexedAt
     }`
@@ -52,7 +52,7 @@ export class FeedViewPostsSlice {
   }
 
   get uri() {
-    return this.rootItem.post.uri
+    return this._feedPost.post.uri
   }
 
   get isThread() {
@@ -64,12 +64,8 @@ export class FeedViewPostsSlice {
     )
   }
 
-  get rootItem(): FeedViewPost {
-    return this._originalFeedViewPost
-  }
-
   get isQuotePost() {
-    const embed = this.rootItem.post.embed
+    const embed = this._feedPost.post.embed
     return (
       AppBskyEmbedRecord.isView(embed) ||
       AppBskyEmbedRecordWithMedia.isView(embed)
@@ -78,13 +74,13 @@ export class FeedViewPostsSlice {
 
   get isReply() {
     return (
-      AppBskyFeedPost.isRecord(this.rootItem.post.record) &&
-      !!this.rootItem.post.record.reply
+      AppBskyFeedPost.isRecord(this._feedPost.post.record) &&
+      !!this._feedPost.post.record.reply
     )
   }
 
   get isRepost() {
-    const reason = this.rootItem.reason
+    const reason = this._feedPost.reason
     return AppBskyFeedDefs.isReasonRepost(reason)
   }
 
@@ -93,7 +89,7 @@ export class FeedViewPostsSlice {
   }
 
   get likeCount() {
-    return this.rootItem.post.likeCount ?? 0
+    return this._feedPost.post.likeCount ?? 0
   }
 
   containsUri(uri: string) {
@@ -124,17 +120,18 @@ export class FeedViewPostsSlice {
   }
 
   isFollowingAllAuthors(userDid: string) {
-    const item = this.rootItem
-    if (item.post.author.did === userDid) {
+    const feedPost = this._feedPost
+    if (feedPost.post.author.did === userDid) {
       return true
     }
-    if (AppBskyFeedDefs.isPostView(item.reply?.parent)) {
-      const parent = item.reply?.parent
+    if (AppBskyFeedDefs.isPostView(feedPost.reply?.parent)) {
+      const parent = feedPost.reply?.parent
       if (parent?.author.did === userDid) {
         return true
       }
       return (
-        parent?.author.viewer?.following && item.post.author.viewer?.following
+        parent?.author.viewer?.following &&
+        feedPost.post.author.viewer?.following
       )
     }
     return false
