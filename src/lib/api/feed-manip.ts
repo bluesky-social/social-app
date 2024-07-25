@@ -19,11 +19,20 @@ type FeedSliceItem = {
   reply?: AppBskyFeedDefs.ReplyRef
   reason?: AppBskyFeedDefs.ReasonRepost | {$type: string; [k: string]: unknown}
   feedContext?: string
-  [k: string]: unknown
+  __source?: ReasonFeedSource | undefined
 }
 
 function toSliceItem(feedViewPost: FeedViewPost): FeedSliceItem {
-  return feedViewPost
+  return {
+    post: feedViewPost.post,
+    reply: feedViewPost.reply,
+    reason: feedViewPost.reason,
+    feedContext: feedViewPost.feedContext,
+    __source:
+      '__source' in feedViewPost
+        ? (feedViewPost.__source as ReasonFeedSource)
+        : undefined,
+  }
 }
 
 export class FeedViewPostsSlice {
@@ -81,8 +90,7 @@ export class FeedViewPostsSlice {
   }
 
   get source(): ReasonFeedSource | undefined {
-    return this.items.find(item => '__source' in item && !!item.__source)
-      ?.__source as ReasonFeedSource
+    return this.items.find(item => !!item.__source)?.__source
   }
 
   get feedContext() {
