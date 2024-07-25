@@ -378,11 +378,11 @@ export function usePostFeedQuery(
                         }
                         return undefined
                       })
-                      .filter(<T>(n?: T): n is T => Boolean(n)),
+                      .filter(Boolean),
                   }
                   return feedPostSlice
                 })
-                .filter(<T>(n?: T): n is T => Boolean(n)),
+                .filter(Boolean),
             })),
           ],
         }

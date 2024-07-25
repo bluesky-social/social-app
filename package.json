@@ -222,6 +222,7 @@
     "@react-native/typescript-config": "^0.74.1",
     "@testing-library/jest-native": "^5.4.1",
     "@testing-library/react-native": "^11.5.2",
+    "@total-typescript/ts-reset": "^0.5.1",
     "@tsconfig/react-native": "^2.0.3",
     "@types/he": "^1.1.2",
     "@types/jest": "^29.4.0",
