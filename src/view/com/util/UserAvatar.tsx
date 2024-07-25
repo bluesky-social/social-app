@@ -8,6 +8,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {usePalette} from 'lib/hooks/usePalette'
 import {
@@ -179,6 +180,7 @@ let UserAvatar = ({
   const pal = usePalette('default')
   const backgroundColor = pal.colors.backgroundLight
   const finalShape = overrideShape ?? (type === 'user' ? 'circle' : 'square')
+  const gate = useGate()
 
   const aviStyle = useMemo(() => {
     if (finalShape === 'square') {
@@ -221,7 +223,12 @@ let UserAvatar = ({
           testID="userAvatarImage"
           style={aviStyle}
           resizeMode="cover"
-          source={{uri: avatar}}
+          source={{
+            uri: hackModifyThumbnailPath(
+              avatar,
+              size < 90 && gate('small_avi_thumb'),
+            ),
+          }}
           blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
         />
       ) : (
@@ -229,7 +236,12 @@ let UserAvatar = ({
           testID="userAvatarImage"
           style={aviStyle}
           contentFit="cover"
-          source={{uri: avatar}}
+          source={{
+            uri: hackModifyThumbnailPath(
+              avatar,
+              size < 90 && gate('small_avi_thumb'),
+            ),
+          }}
           blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
         />
       )}
@@ -432,6 +444,16 @@ let PreviewableUserAvatar = ({
 }
 PreviewableUserAvatar = memo(PreviewableUserAvatar)
 export {PreviewableUserAvatar}
+
+// HACK
+// We have started serving smaller avis but haven't updated lexicons to give the data properly
+// manually string-replace to use the smaller ones
+// -prf
+function hackModifyThumbnailPath(uri: string, isEnabled: boolean): string {
+  return isEnabled
+    ? uri.replace('/img/avatar/plain/', '/img/avatar_thumbnail/plain/')
+    : uri
+}
 
 const styles = StyleSheet.create({
   editButtonContainer: {

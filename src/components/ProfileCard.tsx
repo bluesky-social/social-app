@@ -306,9 +306,9 @@ export function FollowButtonInner({
           )}`,
         ),
       )
-    } catch (e: any) {
-      if (e?.name !== 'AbortError') {
-        Toast.show(_(msg`An issue occurred, please try again.`))
+    } catch (err: any) {
+      if (err?.name !== 'AbortError') {
+        Toast.show(_(msg`An issue occurred, please try again.`), 'xmark')
       }
     }
   }
@@ -326,9 +326,9 @@ export function FollowButtonInner({
           )}`,
         ),
       )
-    } catch (e: any) {
-      if (e?.name !== 'AbortError') {
-        Toast.show(_(msg`An issue occurred, please try again.`))
+    } catch (err: any) {
+      if (err?.name !== 'AbortError') {
+        Toast.show(_(msg`An issue occurred, please try again.`), 'xmark')
       }
     }
   }
