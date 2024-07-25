@@ -1,11 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useId,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import React, {useCallback, useId, useMemo, useRef, useState} from 'react'
 import {useWindowDimensions} from 'react-native'
 
 import {isNative} from '#/platform/detection'
@@ -14,82 +7,15 @@ import {VideoPlayerProvider} from './VideoPlayerContext'
 const ActiveVideoContext = React.createContext<{
   activeViewId: string | null
   setActiveView: (viewId: string, src: string) => void
-  registerMeasurementCallback: (
-    viewId: string,
-    callback: () => DOMRectReadOnly | void,
-  ) => {remove: () => void}
+  sendViewPosition: (viewId: string, y: number) => void
 } | null>(null)
 
 export function ActiveVideoProvider({children}: {children: React.ReactNode}) {
   const [activeViewId, setActiveViewId] = useState<string | null>(null)
+  const activeViewLocationRef = useRef(Infinity)
   const [source, setSource] = useState<string | null>(null)
   const [manuallySet, setManuallySet] = useState(false)
   const {height: windowHeight} = useWindowDimensions()
-
-  const measurementCallbacks = useRef<Record<string, () => DOMRect | void>>({})
-
-  useEffect(() => {
-    if (isNative) return
-
-    const findAndActivateVideo = () => {
-      if (Object.keys(measurementCallbacks.current).length === 0) {
-        return
-      }
-
-      const locations = Object.entries(measurementCallbacks.current).map(
-        ([id, callback]) => ({
-          id,
-          rect: callback(),
-        }),
-      )
-
-      const videosInView = locations.filter(
-        ({rect}) => rect && rect.top >= 0 && rect.bottom <= windowHeight,
-      )
-
-      const active = closestToMiddle(windowHeight, videosInView)
-
-      if (active) {
-        // change the active view if it's not already active
-        // if the user has manually set the active view, don't change it
-        // i.e. if the user clicks on a video at the bottom of the screen
-        // it takes precidence over the video that is closest to the middle
-        setActiveViewId(activeView => {
-          if (activeView !== active.id) {
-            if (manuallySet && videosInView.find(({id}) => id === activeView)) {
-              return activeView
-            }
-            setManuallySet(false)
-            return active.id
-          }
-          return activeView
-        })
-      } else {
-        // if no videos are in view, unset the active view
-        // if the active view is partially in view, keep it active
-        setActiveViewId(activeView => {
-          const activeRect = locations.find(({id}) => id === activeView)?.rect
-
-          if (activeRect) {
-            const topCond = activeRect.top + activeRect.height / 2 >= 0
-            const bottomCond =
-              activeRect.bottom - activeRect.height / 2 <= windowHeight
-            if (topCond && bottomCond) {
-              return activeView
-            }
-          }
-
-          return null
-        })
-      }
-    }
-    findAndActivateVideo()
-    const interval = setInterval(findAndActivateVideo, 1000)
-
-    return () => {
-      clearInterval(interval)
-    }
-  }, [manuallySet, windowHeight])
 
   const value = useMemo(
     () => ({
@@ -98,17 +24,48 @@ export function ActiveVideoProvider({children}: {children: React.ReactNode}) {
         setActiveViewId(viewId)
         setSource(src)
         setManuallySet(true)
+        // we don't know the exact position, but it's definitely on screen
+        // so just guess that it's in the middle. Any value is fine
+        // so long as it's not offscreen
+        activeViewLocationRef.current = windowHeight / 2
       },
-      registerMeasurementCallback: (viewId: string, callback: () => void) => {
-        measurementCallbacks.current[viewId] = callback
-        return {
-          remove: () => {
-            delete measurementCallbacks.current[viewId]
-          },
+      sendViewPosition: (viewId: string, y: number) => {
+        if (isNative) return
+
+        // console.log(
+        //   'sendViewPosition',
+        //   viewId,
+        //   y,
+        //   activeViewId,
+        //   activeViewLocationRef.current,
+        // )
+
+        if (viewId === activeViewId) {
+          activeViewLocationRef.current = y
+        } else {
+          if (
+            distanceToIdealPosition(y) <
+            distanceToIdealPosition(activeViewLocationRef.current)
+          ) {
+            // if the old view was manually set, only usurp if the old view is offscreen
+            if (manuallySet && withinViewport(activeViewLocationRef.current))
+              return
+
+            setActiveViewId(viewId)
+            activeViewLocationRef.current = y
+          }
+        }
+
+        function distanceToIdealPosition(yPos: number) {
+          return Math.abs(yPos - windowHeight / 3)
+        }
+
+        function withinViewport(yPos: number) {
+          return yPos > 0 && yPos < windowHeight
         }
       },
     }),
-    [activeViewId],
+    [activeViewId, windowHeight, manuallySet],
   )
 
   return (
@@ -120,25 +77,12 @@ export function ActiveVideoProvider({children}: {children: React.ReactNode}) {
   )
 }
 
-export function useActiveVideoView({
-  source,
-  measure,
-}: {
-  source: string
-  measure: () => void
-}) {
+export function useActiveVideoView({source}: {source: string}) {
   const context = React.useContext(ActiveVideoContext)
   if (!context) {
     throw new Error('useActiveVideo must be used within a ActiveVideoProvider')
   }
   const id = useId()
-
-  useEffect(() => {
-    const sub = context.registerMeasurementCallback(id, measure)
-    return () => {
-      sub.remove()
-    }
-  }, [context, id, measure])
 
   return {
     active: context.activeViewId === id,
@@ -146,33 +90,10 @@ export function useActiveVideoView({
       () => context.setActiveView(id, source),
       [context, id, source],
     ),
+    currentActiveView: context.activeViewId,
+    sendPosition: useCallback(
+      (y: number) => context.sendViewPosition(id, y),
+      [context, id],
+    ),
   }
-}
-
-function closestToMiddle(
-  windowHeight: number,
-  elements: {id: string; rect: DOMRect | void}[],
-) {
-  // actually gonna target 1/3 of the way down the screen
-  // so that the top post probably is the one that gets activated
-  const middle = windowHeight / 3
-  let closest = elements[0]
-
-  for (const element of elements) {
-    if (!element.rect) {
-      continue
-    }
-    if (!closest.rect) {
-      closest = element
-      continue
-    }
-    if (
-      Math.abs(element.rect.top + element.rect.height / 2 - middle) <
-      Math.abs(closest.rect.top + closest.rect.height / 2 - middle)
-    ) {
-      closest = element
-    }
-  }
-
-  return closest
 }

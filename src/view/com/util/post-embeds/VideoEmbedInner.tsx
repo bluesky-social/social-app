@@ -17,6 +17,8 @@ export function VideoEmbedInner({}: {
   source: string
   active: boolean
   setActive: () => void
+  sendPosition: (position: number) => void
+  onScreen: boolean
 }) {
   const player = useVideoPlayer()
   const aref = useAnimatedRef<Animated.View>()

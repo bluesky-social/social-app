@@ -12,45 +12,52 @@ import {VideoEmbedInner} from './VideoEmbedInner'
 export function VideoEmbed({source}: {source: string}) {
   const t = useTheme()
   const ref = useRef<HTMLDivElement>(null)
-  const {active, setActive} = useActiveVideoView({
+  const {active, setActive, sendPosition} = useActiveVideoView({
     source,
-    measure: () => {
-      if (ref.current) {
-        return ref.current.getBoundingClientRect()
-      }
-    },
   })
-  const [hasBeenActive, setHasBeenActive] = useState(false)
+  const [onScreen, setOnScreen] = useState(false)
   const {_} = useLingui()
 
   const onPress = useCallback(() => setActive(), [setActive])
 
   useEffect(() => {
-    if (active) {
-      setHasBeenActive(true)
-    }
-  }, [active])
+    if (!ref.current) return
+    const observer = new IntersectionObserver(
+      entries => {
+        console.log('OUTER')
+        const entry = entries[0]
+        if (!entry) return
+        setOnScreen(entry.isIntersecting)
+        sendPosition(
+          entry.boundingClientRect.y + entry.boundingClientRect.height / 2,
+        )
+      },
+      {threshold: 0.5},
+    )
+    observer.observe(ref.current)
+    return () => observer.disconnect()
+  }, [sendPosition])
 
   return (
     <View
       style={[
         a.w_full,
-        a.rounded_sm,
         {aspectRatio: 16 / 9},
-        a.overflow_hidden,
         t.atoms.bg_contrast_25,
         a.my_xs,
       ]}>
       <div ref={ref} style={{display: 'flex', flex: 1}}>
-        {hasBeenActive ? (
+        {onScreen || active ? (
           <VideoEmbedInner
             source={source}
             active={active}
             setActive={setActive}
+            sendPosition={sendPosition}
+            onScreen={onScreen}
           />
         ) : (
           <Button
-            style={[a.flex_1, t.atoms.bg_contrast_25]}
+            style={[a.flex_1, t.atoms.bg_contrast_25, a.rounded_sm]}
             onPress={onPress}
             label={_(msg`Play video`)}
             variant="ghost"

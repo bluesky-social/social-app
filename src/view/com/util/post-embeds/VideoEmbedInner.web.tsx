@@ -5,13 +5,73 @@ import Hls from 'hls.js'
 import {atoms as a, useTheme} from '#/alf'
 
 export function VideoEmbedInner({
-  source,
   active,
-  setActive,
+  sendPosition,
+  ...props
 }: {
   source: string
   active: boolean
   setActive: () => void
+  sendPosition: (position: number) => void
+  onScreen: boolean
+}) {
+  const ref = useRef<HTMLDivElement>(null)
+
+  // Send position when scrolling. This is done with an IntersectionObserver
+  // observing a div of 100vh height
+  useEffect(() => {
+    if (!ref.current) return
+    const observer = new IntersectionObserver(
+      entries => {
+        const entry = entries[0]
+        if (!entry) return
+        console.log('observing', entry.intersectionRatio)
+        const position =
+          entry.boundingClientRect.y + entry.boundingClientRect.height / 2
+        sendPosition(position)
+      },
+      {threshold: Array.from({length: 101}, (_, i) => i / 100)},
+    )
+    observer.observe(ref.current)
+    return () => observer.disconnect()
+  }, [sendPosition])
+
+  // In case scrolling hasn't started yet, send up the position
+  useEffect(() => {
+    if (ref.current && !active) {
+      const rect = ref.current.getBoundingClientRect()
+      const position = rect.top + rect.height / 2
+      sendPosition(position)
+    }
+  }, [active, sendPosition])
+
+  return (
+    <View style={[a.flex_1, a.flex_row]}>
+      <VideoPlayer active={active} {...props} />
+      <div
+        ref={ref}
+        style={{
+          position: 'absolute',
+          top: 'calc(50% - 50vh)',
+          height: '100vh',
+          width: 10,
+          background: 'green',
+        }}
+      />
+    </View>
+  )
+}
+
+export function VideoPlayer({
+  source,
+  active,
+  setActive,
+  onScreen,
+}: {
+  source: string
+  active: boolean
+  setActive: () => void
+  onScreen: boolean
 }) {
   const [hls] = useState(() => new Hls())
   const ref = useRef<HTMLVideoElement>(null)
@@ -31,24 +91,28 @@ export function VideoEmbedInner({
   }, [source, hls])
 
   useEffect(() => {
-    if (ref.current) {
-      if (
-        !ref.current.canPlayType('application/vnd.apple.mpegurl') &&
-        Hls.isSupported()
-      ) {
-        hls.attachMedia(ref.current)
+    if (
+      ref.current &&
+      !ref.current.canPlayType('application/vnd.apple.mpegurl') &&
+      Hls.isSupported()
+    ) {
+      hls.attachMedia(ref.current)
+
+      return () => {
+        hls.detachMedia()
       }
     }
   }, [source, hls])
 
   useEffect(() => {
-    if (active) {
-      ref.current?.play()
+    if (!ref.current) return
+    if (active && onScreen) {
+      // ref.current?.play()
     } else {
       ref.current?.pause()
       setFocused(false)
     }
-  }, [active])
+  }, [active, onScreen])
 
   return (
     <View
@@ -60,6 +124,15 @@ export function VideoEmbedInner({
         t.atoms.bg_contrast_25,
         a.my_xs,
       ]}>
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background: active ? 'red' : 'blue',
+          opacity: 0.5,
+          pointerEvents: 'none',
+        }}
+      />
       <video
         src={source}
         ref={ref}
