@@ -64,10 +64,6 @@ export class FeedViewPostsSlice {
     )
   }
 
-  get isFullThread() {
-    return this.isThread && !this.items[0].reply
-  }
-
   get rootItem(): FeedViewPost {
     return this._originalFeedViewPost
   }
@@ -318,7 +314,7 @@ export class FeedTuner {
       // remove any replies without at least minLikes likes
       for (let i = slices.length - 1; i >= 0; i--) {
         const slice = slices[i]
-        if (slice.isFullThread || !slice.isReply) {
+        if ((slice.isThread && !slice.items[0].reply) || !slice.isReply) {
           continue
         }
 
