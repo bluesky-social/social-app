@@ -314,19 +314,20 @@ export class FeedTuner {
       // remove any replies without at least minLikes likes
       for (let i = slices.length - 1; i >= 0; i--) {
         const slice = slices[i]
-        if ((slice.isThread && !slice.items[0].reply) || !slice.isReply) {
-          continue
-        }
-
-        const item = slice.rootItem
-        const isRepost = Boolean(item.reason)
-        if (isRepost) {
-          continue
-        }
-        if ((item.post.likeCount || 0) < minLikes) {
-          slices.splice(i, 1)
-        } else if (followedOnly && !slice.isFollowingAllAuthors(userDid)) {
-          slices.splice(i, 1)
+        if (slice.isReply) {
+          if (slice.isThread && !slice.items[0].reply) {
+            continue
+          }
+          const item = slice.rootItem
+          const isRepost = Boolean(item.reason)
+          if (isRepost) {
+            continue
+          }
+          if ((item.post.likeCount || 0) < minLikes) {
+            slices.splice(i, 1)
+          } else if (followedOnly && !slice.isFollowingAllAuthors(userDid)) {
+            slices.splice(i, 1)
+          }
         }
       }
       return slices
