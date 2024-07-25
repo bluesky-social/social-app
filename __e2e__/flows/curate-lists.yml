@@ -132,7 +132,8 @@ appId: xyz.blueskyweb.app
     id: "feedItem-by-bob.test"
 - tapOn:
     id: "e2eGotoFeeds"
-- tapOn: "Good Ppl"
+- tapOn:
+    id: "saved-feed-Good Ppl"
 - assertVisible:
     id: "feedItem-by-bob.test"
 - tapOn:
@@ -168,7 +169,7 @@ appId: xyz.blueskyweb.app
         id: "profilePager-selector"
     direction: LEFT
 - tapOn:
-    id: "profilePager-selector-5"
+    id: "profilePager-selector-6"
 - tapOn: "Good Ppl"
 
 - tapOn:

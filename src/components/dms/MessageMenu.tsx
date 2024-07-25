@@ -54,7 +54,7 @@ export let MessageMenu = ({
     )
 
     Clipboard.setStringAsync(str)
-    Toast.show(_(msg`Copied to clipboard`))
+    Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
   }, [_, message.text, message.facets])
 
   const onPressTranslateMessage = React.useCallback(() => {
