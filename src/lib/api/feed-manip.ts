@@ -94,29 +94,6 @@ export class FeedViewPostsSlice {
     return !!this.items.find(item => item.post.uri === uri)
   }
 
-  isNextInThread(uri: string) {
-    return this.items[this.items.length - 1].post.uri === uri
-  }
-
-  insert(item: FeedViewPost) {
-    const replyUri = getReplyUri(item)
-    const i = this.items.findIndex(item2 => item2.post.uri === replyUri)
-    if (i !== -1) {
-      this.items.splice(i + 1, 0, item)
-    } else {
-      this.items.push(item)
-    }
-  }
-
-  flattenReplyParent() {
-    if (this.items[0].reply) {
-      const reply = this.items[0].reply
-      if (AppBskyFeedDefs.isPostView(reply.parent)) {
-        this.items.splice(0, 0, {post: reply.parent})
-      }
-    }
-  }
-
   isFollowingAllAuthors(userDid: string) {
     const feedPost = this._feedPost
     if (feedPost.post.author.did === userDid) {
@@ -138,10 +115,7 @@ export class FeedViewPostsSlice {
 
 export class NoopFeedTuner {
   reset() {}
-  tune(
-    feed: FeedViewPost[],
-    _opts?: {dryRun: boolean; maintainOrder: boolean},
-  ): FeedViewPostsSlice[] {
+  tune(feed: FeedViewPost[], _opts?: {dryRun: boolean}): FeedViewPostsSlice[] {
     return feed.map(item => new FeedViewPostsSlice(item))
   }
 }
@@ -159,9 +133,8 @@ export class FeedTuner {
 
   tune(
     feed: FeedViewPost[],
-    {dryRun, maintainOrder}: {dryRun: boolean; maintainOrder: boolean} = {
+    {dryRun}: {dryRun: boolean} = {
       dryRun: false,
-      maintainOrder: false,
     },
   ): FeedViewPostsSlice[] {
     let slices: FeedViewPostsSlice[] = []
@@ -179,69 +152,11 @@ export class FeedTuner {
       return true
     })
 
-    if (maintainOrder) {
-      slices = feed.map(item => new FeedViewPostsSlice(item))
-    } else {
-      // arrange the posts into thread slices
-      for (let i = feed.length - 1; i >= 0; i--) {
-        const item = feed[i]
-
-        const replyUri = getReplyUri(item)
-        if (replyUri) {
-          const index = slices.findIndex(slice =>
-            slice.isNextInThread(replyUri),
-          )
-
-          if (index !== -1) {
-            const parent = slices[index]
-
-            parent.insert(item)
-
-            // If our slice isn't currently on the top, reinsert it to the top.
-            if (index !== 0) {
-              slices.splice(index, 1)
-              slices.unshift(parent)
-            }
-
-            continue
-          }
-        }
-
-        slices.unshift(new FeedViewPostsSlice(item))
-      }
-    }
+    slices = feed.map(item => new FeedViewPostsSlice(item))
 
     // run the custom tuners
     for (const tunerFn of this.tunerFns) {
       slices = tunerFn(this, slices.slice())
-    }
-
-    // remove any items already "seen"
-    const soonToBeSeenUris: Set<string> = new Set()
-    for (let i = slices.length - 1; i >= 0; i--) {
-      if (!slices[i].isThread && this.seenUris.has(slices[i].uri)) {
-        slices.splice(i, 1)
-      } else {
-        for (const item of slices[i].items) {
-          soonToBeSeenUris.add(item.post.uri)
-        }
-      }
-    }
-
-    // turn non-threads with reply parents into threads
-    for (const slice of slices) {
-      if (!slice.isThread && !slice.reason && slice.items[0].reply) {
-        const reply = slice.items[0].reply
-        if (
-          AppBskyFeedDefs.isPostView(reply.parent) &&
-          !this.seenUris.has(reply.parent.uri) &&
-          !soonToBeSeenUris.has(reply.parent.uri)
-        ) {
-          const uri = reply.parent.uri
-          slice.flattenReplyParent()
-          soonToBeSeenUris.add(uri)
-        }
-      }
     }
 
     if (!dryRun) {
@@ -386,16 +301,4 @@ export class FeedTuner {
       return candidateSlices
     }
   }
-}
-
-function getReplyUri(item: FeedViewPost): string | undefined {
-  if (item.reply) {
-    if (
-      AppBskyFeedDefs.isPostView(item.reply.parent) &&
-      !AppBskyFeedDefs.isReasonRepost(item.reason) // don't thread reposted self-replies
-    ) {
-      return item.reply.parent.uri
-    }
-  }
-  return undefined
 }

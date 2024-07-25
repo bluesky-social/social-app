@@ -249,7 +249,6 @@ class MergeFeedSource_Following extends MergeFeedSource {
     // run the tuner pre-emptively to ensure better mixing
     const slices = this.tuner.tune(res.data.feed, {
       dryRun: false,
-      maintainOrder: true,
     })
     res.data.feed = slices.map(slice => slice._feedPost)
     return res
