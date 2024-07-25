@@ -45,6 +45,8 @@ import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {AviFollowButton} from './AviFollowButton'
 import hairlineWidth = StyleSheet.hairlineWidth
+import {IS_DEV} from '#/lib/app-info'
+import {useGate} from '#/lib/statsig/statsig'
 import {useSession} from '#/state/session'
 
 interface FeedItemProps {
@@ -133,6 +135,8 @@ let FeedItemInner = ({
   const {openComposer} = useComposerControls()
   const pal = usePalette('default')
   const {_} = useLingui()
+  const gate = useGate()
+
   const href = useMemo(() => {
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey)
@@ -349,7 +353,9 @@ let FeedItemInner = ({
             postAuthor={post.author}
             onOpenEmbed={onOpenEmbed}
           />
-          <VideoEmbed source="https://vid.jazco.dev/watch/did:plc:q6gjnaw2blty4crticxkmujt/QmVdiZ6Bw6rTD98NTJzFWdmCTnWgiVcR7qxt127X5Km1JG/playlist.m3u8" />
+          {IS_DEV && gate('videos') && (
+            <VideoEmbed source="https://lumi.jazco.dev/watch/did:plc:q6gjnaw2blty4crticxkmujt/Qmc8w93UpTa2adJHg4ZhnDPrBs1EsbzrekzPcqF5SwusuZ/playlist.m3u8" />
+          )}
           <PostCtrls
             post={post}
             record={record}
