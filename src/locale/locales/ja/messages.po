@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-07-24 09:47+0900\n"
+"PO-Revision-Date: 2024-07-25 10:14+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -1946,7 +1946,7 @@ msgstr "有効にするメディアプレイヤー"
 #: src/view/screens/NotificationsSettings.tsx:65
 #: src/view/screens/NotificationsSettings.tsx:68
 msgid "Enable priority notifications"
-msgstr ""
+msgstr "優先通知を有効にする"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:145
 msgid "Enable this setting to only see replies between people you follow."
@@ -2094,7 +2094,7 @@ msgstr "返信する投稿全体を展開または折りたたむ"
 
 #: src/view/screens/NotificationsSettings.tsx:83
 msgid "Experimental: When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
-msgstr ""
+msgstr "実験的機能: この設定を有効にすると、フォローしているユーザーからの返信と引用通知のみを受け取るようになります。今後、いろんなコントロールを追加していきます。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:47
 msgid "Explicit or potentially disturbing media."
@@ -2188,7 +2188,7 @@ msgstr "画像の保存に失敗しました：{0}"
 
 #: src/state/queries/notifications/settings.ts:39
 msgid "Failed to save notification preferences, please try again"
-msgstr ""
+msgstr "通知の設定の保存に失敗しました。再度試してください"
 
 #: src/components/dms/MessageItem.tsx:224
 msgid "Failed to send"
@@ -3731,16 +3731,16 @@ msgstr "何もありません"
 
 #: src/view/screens/NotificationsSettings.tsx:54
 msgid "Notification filters"
-msgstr ""
+msgstr "通知フィルター"
 
 #: src/Navigation.tsx:331
 #: src/view/screens/Notifications.tsx:119
 msgid "Notification settings"
-msgstr ""
+msgstr "通知設定"
 
 #: src/view/screens/NotificationsSettings.tsx:39
 msgid "Notification Settings"
-msgstr ""
+msgstr "通知設定"
 
 #: src/screens/Messages/Settings.tsx:124
 msgid "Notification sounds"
@@ -3789,7 +3789,7 @@ msgstr "ちょっと！"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:152
 msgid "Oh no! Something went wrong."
-msgstr "ちょっと！なにかがおかしいです。"
+msgstr "ちょっと！何らかの問題が発生したようです。"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:339
 msgid "OK"
@@ -3837,7 +3837,7 @@ msgstr "英数字とハイフンのみ"
 
 #: src/components/Lists.tsx:88
 msgid "Oops, something went wrong!"
-msgstr "おっと、なにかが間違っているようです！"
+msgstr "おっと、何らかの問題が発生したようです！"
 
 #: src/components/Lists.tsx:191
 #: src/components/StarterPack/ProfileStarterPacks.tsx:304
@@ -4331,7 +4331,7 @@ msgstr "誤解を招く可能性のあるリンク"
 
 #: src/state/queries/notifications/settings.ts:44
 msgid "Preference saved"
-msgstr ""
+msgstr "設定を保存しました"
 
 #: src/screens/Messages/Conversation/MessageListError.tsx:19
 msgid "Press to attempt reconnection"
@@ -4366,7 +4366,7 @@ msgstr "あなたのフォローを優先"
 
 #: src/view/screens/NotificationsSettings.tsx:57
 msgid "Priority notifications"
-msgstr ""
+msgstr "優先通知"
 
 #: src/view/screens/Settings/index.tsx:656
 #: src/view/shell/desktop/RightNav.tsx:81
@@ -4479,7 +4479,7 @@ msgstr "再接続"
 
 #: src/view/screens/Notifications.tsx:146
 msgid "Refresh notifications"
-msgstr ""
+msgstr "通知を更新"
 
 #: src/screens/Messages/List/index.tsx:200
 msgid "Reload conversations"
@@ -5528,23 +5528,23 @@ msgstr "一部の人が返信可能"
 
 #: src/screens/Messages/Conversation/index.tsx:106
 msgid "Something went wrong"
-msgstr "何らかの問題が発生しました"
+msgstr "何らかの問題が発生したようです"
 
 #: src/screens/Deactivated.tsx:94
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:59
 msgid "Something went wrong, please try again"
-msgstr "なにか間違っているようなので、もう一度お試しください"
+msgstr "何らかの問題が発生したようなので、もう一度お試しください"
 
 #: src/components/ReportDialog/index.tsx:59
 #: src/screens/Moderation/index.tsx:115
 #: src/screens/Profile/Sections/Labels.tsx:87
 msgid "Something went wrong, please try again."
-msgstr "なにか間違っているようなので、もう一度お試しください。"
+msgstr "何らかの問題が発生したようなので、もう一度お試しください。"
 
 #: src/components/Lists.tsx:192
 #: src/view/screens/NotificationsSettings.tsx:46
 msgid "Something went wrong!"
-msgstr ""
+msgstr "何らかの問題が発生したようです！"
 
 #: src/App.native.tsx:99
 #: src/App.web.tsx:81
