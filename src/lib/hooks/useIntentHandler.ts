@@ -1,9 +1,12 @@
 import React from 'react'
 import * as Linking from 'expo-linking'
+
+import {logEvent} from 'lib/statsig/statsig'
 import {isNative} from 'platform/detection'
-import {useComposerControls} from 'state/shell'
 import {useSession} from 'state/session'
+import {useComposerControls} from 'state/shell'
 import {useCloseAllActiveElements} from 'state/util'
+import {Referrer} from '../../../modules/expo-bluesky-swiss-army'
 
 type IntentType = 'compose'
 
@@ -15,6 +18,15 @@ export function useIntentHandler() {
 
   React.useEffect(() => {
     const handleIncomingURL = (url: string) => {
+      const referrerInfo = Referrer.getReferrerInfo()
+      if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
+        logEvent('deepLink:referrerReceived', {
+          to: url,
+          referrer: referrerInfo?.referrer,
+          hostname: referrerInfo?.hostname,
+        })
+      }
+
       // We want to be able to support bluesky:// deeplinks. It's unnatural for someone to use a deeplink with three
       // slashes, like bluesky:///intent/follow. However, supporting just two slashes causes us to have to take care
       // of two cases when parsing the url. If we ensure there is a third slash, we can always ensure the first

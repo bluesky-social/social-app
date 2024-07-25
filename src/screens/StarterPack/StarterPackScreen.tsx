@@ -359,7 +359,7 @@ function Header({
       captureAction(ProgressGuideAction.Follow, dids.length)
       Toast.show(_(msg`All accounts have been followed!`))
     } catch (e) {
-      Toast.show(_(msg`An error occurred while trying to follow all`))
+      Toast.show(_(msg`An error occurred while trying to follow all`), 'xmark')
     } finally {
       setIsProcessing(false)
     }
@@ -607,7 +607,7 @@ function OverflowMenu({
           <Trans>Delete starter pack?</Trans>
         </Prompt.TitleText>
         <Prompt.DescriptionText>
-          <Trans>Are you sure you want delete this starter pack?</Trans>
+          <Trans>Are you sure you want to delete this starter pack?</Trans>
         </Prompt.DescriptionText>
         {deleteError && (
           <View
@@ -672,7 +672,7 @@ function InvalidStarterPack({rkey}: {rkey: string}) {
     onError: e => {
       setIsProcessing(false)
       logger.error('Failed to delete invalid starter pack', {safeMessage: e})
-      Toast.show(_(msg`Failed to delete starter pack`))
+      Toast.show(_(msg`Failed to delete starter pack`), 'xmark')
     },
   })
 

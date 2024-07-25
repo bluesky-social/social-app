@@ -115,6 +115,7 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
         _(
           msg`There was an issue. Please check your internet connection and try again.`,
         ),
+        'xmark',
       )
       logger.error('Failed to edit threadgate', {message: err})
     }

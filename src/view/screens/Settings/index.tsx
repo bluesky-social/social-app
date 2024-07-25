@@ -68,6 +68,7 @@ import {navigate, resetToTab} from '#/Navigation'
 import {Email2FAToggle} from './Email2FAToggle'
 import {ExportCarDialog} from './ExportCarDialog'
 import hairlineWidth = StyleSheet.hairlineWidth
+import {atoms as a} from '#/alf'
 
 function SettingsAccountCard({
   account,
@@ -104,7 +105,7 @@ function SettingsAccountCard({
         />
       </View>
       <View style={[s.flex1]}>
-        <Text type="md-bold" style={pal.text} numberOfLines={1}>
+        <Text type="md-bold" style={[pal.text, a.self_start]} numberOfLines={1}>
           {profile?.displayName || account.handle}
         </Text>
         <Text type="sm" style={pal.textLight} numberOfLines={1}>

@@ -149,7 +149,7 @@ let PostDropdownBtn = ({
       },
       e => {
         logger.error('Failed to delete post', {message: e})
-        Toast.show(_(msg`Failed to delete post, please try again`))
+        Toast.show(_(msg`Failed to delete post, please try again`), 'xmark')
       },
     )
   }, [
@@ -177,7 +177,10 @@ let PostDropdownBtn = ({
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
         logger.error('Failed to toggle thread mute', {message: e})
-        Toast.show(_(msg`Failed to toggle thread mute, please try again`))
+        Toast.show(
+          _(msg`Failed to toggle thread mute, please try again`),
+          'xmark',
+        )
       }
     }
   }, [isThreadMuted, unmuteThread, _, muteThread])
@@ -186,7 +189,7 @@ let PostDropdownBtn = ({
     const str = richTextToString(richText, true)
 
     Clipboard.setStringAsync(str)
-    Toast.show(_(msg`Copied to clipboard`))
+    Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
   }, [_, richText])
 
   const onPressTranslate = React.useCallback(() => {

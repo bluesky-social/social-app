@@ -166,7 +166,9 @@ export function NameAndHandle({
 
   return (
     <View style={[a.flex_1]}>
-      <Text style={[a.text_md, a.font_bold, a.leading_snug]} numberOfLines={1}>
+      <Text
+        style={[a.text_md, a.font_bold, a.leading_snug, a.self_start]}
+        numberOfLines={1}>
         {name}
       </Text>
       <Text
@@ -304,9 +306,9 @@ export function FollowButtonInner({
           )}`,
         ),
       )
-    } catch (e: any) {
-      if (e?.name !== 'AbortError') {
-        Toast.show(_(msg`An issue occurred, please try again.`))
+    } catch (err: any) {
+      if (err?.name !== 'AbortError') {
+        Toast.show(_(msg`An issue occurred, please try again.`), 'xmark')
       }
     }
   }
@@ -324,9 +326,9 @@ export function FollowButtonInner({
           )}`,
         ),
       )
-    } catch (e: any) {
-      if (e?.name !== 'AbortError') {
-        Toast.show(_(msg`An issue occurred, please try again.`))
+    } catch (err: any) {
+      if (err?.name !== 'AbortError') {
+        Toast.show(_(msg`An issue occurred, please try again.`), 'xmark')
       }
     }
   }

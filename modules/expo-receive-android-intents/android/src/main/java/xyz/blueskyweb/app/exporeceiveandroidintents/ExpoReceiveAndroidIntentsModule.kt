@@ -13,16 +13,17 @@ import java.io.FileOutputStream
 import java.net.URLEncoder
 
 class ExpoReceiveAndroidIntentsModule : Module() {
-  override fun definition() = ModuleDefinition {
-    Name("ExpoReceiveAndroidIntents")
+  override fun definition() =
+    ModuleDefinition {
+      Name("ExpoReceiveAndroidIntents")
 
-    OnNewIntent {
-      handleIntent(it)
+      OnNewIntent {
+        handleIntent(it)
+      }
     }
-  }
 
   private fun handleIntent(intent: Intent?) {
-    if(appContext.currentActivity == null || intent == null) return
+    if (appContext.currentActivity == null || intent == null) return
 
     if (intent.action == Intent.ACTION_SEND) {
       if (intent.type == "text/plain") {
@@ -40,7 +41,7 @@ class ExpoReceiveAndroidIntentsModule : Module() {
   private fun handleTextIntent(intent: Intent) {
     intent.getStringExtra(Intent.EXTRA_TEXT)?.let {
       val encoded = URLEncoder.encode(it, "UTF-8")
-      "bluesky://intent/compose?text=${encoded}".toUri().let { uri ->
+      "bluesky://intent/compose?text=$encoded".toUri().let { uri ->
         val newIntent = Intent(Intent.ACTION_VIEW, uri)
         appContext.currentActivity?.startActivity(newIntent)
       }
@@ -48,11 +49,12 @@ class ExpoReceiveAndroidIntentsModule : Module() {
   }
 
   private fun handleImageIntent(intent: Intent) {
-    val uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-      intent.getParcelableExtra(Intent.EXTRA_STREAM, Uri::class.java)
-    } else {
-      intent.getParcelableExtra(Intent.EXTRA_STREAM)
-    }
+    val uri =
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        intent.getParcelableExtra(Intent.EXTRA_STREAM, Uri::class.java)
+      } else {
+        intent.getParcelableExtra(Intent.EXTRA_STREAM)
+      }
     if (uri == null) return
 
     handleImageIntents(listOf(uri))
@@ -76,16 +78,16 @@ class ExpoReceiveAndroidIntentsModule : Module() {
     uris.forEachIndexed { index, uri ->
       val info = getImageInfo(uri)
       val params = buildUriData(info)
-      allParams = "${allParams}${params}"
+      allParams = "${allParams}$params"
 
       if (index < uris.count() - 1) {
-        allParams = "${allParams},"
+        allParams = "$allParams,"
       }
     }
 
     val encoded = URLEncoder.encode(allParams, "UTF-8")
 
-    "bluesky://intent/compose?imageUris=${encoded}".toUri().let {
+    "bluesky://intent/compose?imageUris=$encoded".toUri().let {
       val newIntent = Intent(Intent.ACTION_VIEW, it)
       appContext.currentActivity?.startActivity(newIntent)
     }
@@ -104,7 +106,7 @@ class ExpoReceiveAndroidIntentsModule : Module() {
     return mapOf(
       "width" to bitmap.width,
       "height" to bitmap.height,
-      "path" to file.path.toString()
+      "path" to file.path.toString(),
     )
   }
 
@@ -114,6 +116,6 @@ class ExpoReceiveAndroidIntentsModule : Module() {
     val path = info.getValue("path")
     val width = info.getValue("width")
     val height = info.getValue("height")
-    return "file://${path}|${width}|${height}"
+    return "file://$path|$width|$height"
   }
 }

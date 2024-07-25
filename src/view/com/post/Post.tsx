@@ -15,6 +15,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {MAX_POST_LINES} from 'lib/constants'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -145,6 +146,9 @@ function PostInner({
     precacheProfile(queryClient, post.author)
   }, [queryClient, post.author])
 
+  const {currentAccount} = useSession()
+  const isMe = replyAuthorDid === currentAccount?.did
+
   return (
     <Link
       href={itemHref}
@@ -187,17 +191,21 @@ function PostInner({
                 style={[pal.textLight, s.mr2]}
                 lineHeight={1.2}
                 numberOfLines={1}>
-                <Trans context="description">
-                  Reply to{' '}
-                  <ProfileHoverCard inline did={replyAuthorDid}>
-                    <UserInfoText
-                      type="sm"
-                      did={replyAuthorDid}
-                      attr="displayName"
-                      style={[pal.textLight]}
-                    />
-                  </ProfileHoverCard>
-                </Trans>
+                {isMe ? (
+                  <Trans context="description">Reply to you</Trans>
+                ) : (
+                  <Trans context="description">
+                    Reply to{' '}
+                    <ProfileHoverCard inline did={replyAuthorDid}>
+                      <UserInfoText
+                        type="sm"
+                        did={replyAuthorDid}
+                        attr="displayName"
+                        style={[pal.textLight]}
+                      />
+                    </ProfileHoverCard>
+                  </Trans>
+                )}
               </Text>
             </View>
           )}

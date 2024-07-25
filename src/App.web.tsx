@@ -78,7 +78,10 @@ function InnerApp() {
 
   useEffect(() => {
     return listenSessionDropped(() => {
-      Toast.show(_(msg`Sorry! Your session expired. Please log in again.`))
+      Toast.show(
+        _(msg`Sorry! Your session expired. Please log in again.`),
+        'info',
+      )
     })
   }, [_])
 
