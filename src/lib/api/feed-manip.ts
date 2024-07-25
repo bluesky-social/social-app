@@ -39,7 +39,6 @@ export class FeedViewPostsSlice {
   _reactKey: string
   _originalFeedViewPost: FeedViewPost
   items: FeedSliceItem[]
-  isFlattenedReply = false
   feedContext: string | undefined
 
   constructor(items: FeedViewPost[]) {
@@ -53,10 +52,7 @@ export class FeedViewPostsSlice {
   }
 
   get uri() {
-    if (this.isFlattenedReply) {
-      return this.items[1].post.uri
-    }
-    return this.items[0].post.uri
+    return this.rootItem.post.uri
   }
 
   get ts() {
@@ -113,7 +109,6 @@ export class FeedViewPostsSlice {
     if (this.items[0].reply) {
       const reply = this.items[0].reply
       if (AppBskyFeedDefs.isPostView(reply.parent)) {
-        this.isFlattenedReply = true
         this.items.splice(0, 0, {post: reply.parent})
       }
     }
