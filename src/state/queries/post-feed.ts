@@ -323,7 +323,7 @@ export function usePostFeedQuery(
                     )
                   }
 
-                  return {
+                  const feedPostSlice: FeedPostSlice = {
                     _reactKey: slice._reactKey,
                     _isFeedPostSlice: true,
                     rootUri: slice.rootItem.post.uri,
@@ -349,7 +349,7 @@ export function usePostFeedQuery(
                             replyRef?.parent,
                           )
 
-                          return {
+                          const feedPostSliceItem: FeedPostSliceItem = {
                             _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
                             uri: item.post.uri,
                             post: item.post,
@@ -363,13 +363,15 @@ export function usePostFeedQuery(
                             parentAuthor,
                             isParentBlocked,
                           }
+                          return feedPostSliceItem
                         }
                         return undefined
                       })
-                      .filter(Boolean) as FeedPostSliceItem[],
+                      .filter(<T>(n?: T): n is T => Boolean(n)),
                   }
+                  return feedPostSlice
                 })
-                .filter(Boolean) as FeedPostSlice[],
+                .filter(<T>(n?: T): n is T => Boolean(n)),
             })),
           ],
         }
