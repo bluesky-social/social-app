@@ -2,7 +2,6 @@ import {Platform, StyleSheet} from 'react-native'
 
 import * as tokens from '#/alf/tokens'
 import {native, web} from '#/alf/util/platform'
-import hairlineWidth = StyleSheet.hairlineWidth
 
 export const atoms = {
   /*
@@ -284,19 +283,19 @@ export const atoms = {
     borderWidth: 0,
   },
   border: {
-    borderWidth: hairlineWidth,
+    borderWidth: StyleSheet.hairlineWidth,
   },
   border_t: {
-    borderTopWidth: hairlineWidth,
+    borderTopWidth: StyleSheet.hairlineWidth,
   },
   border_b: {
-    borderBottomWidth: hairlineWidth,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   border_l: {
-    borderLeftWidth: hairlineWidth,
+    borderLeftWidth: StyleSheet.hairlineWidth,
   },
   border_r: {
-    borderRightWidth: hairlineWidth,
+    borderRightWidth: StyleSheet.hairlineWidth,
   },
 
   /*

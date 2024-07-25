@@ -37,7 +37,6 @@ import {PostMeta} from '../util/PostMeta'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {UserInfoText} from '../util/UserInfoText'
-import hairlineWidth = StyleSheet.hairlineWidth
 
 export function Post({
   post,
@@ -155,7 +154,7 @@ function PostInner({
       style={[
         styles.outer,
         pal.border,
-        !hideTopBorder && {borderTopWidth: hairlineWidth},
+        !hideTopBorder && {borderTopWidth: StyleSheet.hairlineWidth},
         style,
       ]}
       onBeforePress={onBeforePress}>
