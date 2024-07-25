@@ -1,0 +1,48 @@
+diff --git a/node_modules/@react-native/virtualized-lists/Lists/VirtualizedList.d.ts b/node_modules/@react-native/virtualized-lists/Lists/VirtualizedList.d.ts
+index a4c93f5..7157d5b 100644
+--- a/node_modules/@react-native/virtualized-lists/Lists/VirtualizedList.d.ts
++++ b/node_modules/@react-native/virtualized-lists/Lists/VirtualizedList.d.ts
+@@ -390,4 +390,6 @@ export interface VirtualizedListWithoutRenderItemProps<ItemT>
+     | React.ComponentType<CellRendererProps<ItemT>>
+     | null
+     | undefined;
++
++  outsideHeaderOffset?: number | undefined;
+ }
+diff --git a/node_modules/@react-native/virtualized-lists/Lists/VirtualizedList.js b/node_modules/@react-native/virtualized-lists/Lists/VirtualizedList.js
+index 9f95091..db57032 100644
+--- a/node_modules/@react-native/virtualized-lists/Lists/VirtualizedList.js
++++ b/node_modules/@react-native/virtualized-lists/Lists/VirtualizedList.js
+@@ -1948,9 +1948,18 @@ class VirtualizedList extends StateSafePureComponent<Props, State> {
+       return;
+     }
+     this._viewabilityTuples.forEach(tuple => {
++      // HACK
++      // Becuase our pager with header adds a header _outside_ of the VirtualizedList, the scroll metric offset dosn't
++      // know about it, and the offset provided here is inaccurate. We are able to pass in this value to the VL, and can
++      // adjust hte offset here to account for that header.
++      let adjustedOffset = this._scrollMetrics.offset;
++      if (this.props.outsideHeaderOffset) {
++        adjustedOffset -= this.props.outsideHeaderOffset;
++      }
++
+       tuple.viewabilityHelper.onUpdate(
+         props,
+-        this._scrollMetrics.offset,
++        adjustedOffset,
+         this._scrollMetrics.visibleLength,
+         this._listMetrics,
+         this._createViewToken,
+diff --git a/node_modules/@react-native/virtualized-lists/Lists/VirtualizedListProps.js b/node_modules/@react-native/virtualized-lists/Lists/VirtualizedListProps.js
+index 1a956ea..2190e4f 100644
+--- a/node_modules/@react-native/virtualized-lists/Lists/VirtualizedListProps.js
++++ b/node_modules/@react-native/virtualized-lists/Lists/VirtualizedListProps.js
+@@ -285,6 +285,8 @@ type OptionalProps = {|
+    * The legacy implementation is no longer supported.
+    */
+   legacyImplementation?: empty,
++
++  outsideHeaderOffset?: ?number,
+ |};
+ 
+ export type Props = {|
