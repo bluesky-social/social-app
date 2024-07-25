@@ -171,7 +171,6 @@ let FeedItem = ({
     )
   }
 
-  let isFollowBack = false
   let action = ''
   let icon = (
     <HeartIconFilled
@@ -192,7 +191,6 @@ let FeedItem = ({
       item.notification.author.viewer?.following &&
       gate('ungroup_follow_backs')
     ) {
-      isFollowBack = true
       action = _(msg`followed you back`)
     } else {
       action = _(msg`followed you`)
@@ -272,7 +270,7 @@ let FeedItem = ({
             visible={!isAuthorsExpanded}
             authors={authors}
             onToggleAuthorsExpanded={onToggleAuthorsExpanded}
-            showDmButton={item.type === 'starterpack-joined' || isFollowBack}
+            showDmButton={item.type === 'starterpack-joined'}
           />
           <ExpandedAuthorsList visible={isAuthorsExpanded} authors={authors} />
           <Text style={[styles.meta, a.self_start]}>
