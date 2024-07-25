@@ -162,6 +162,7 @@ let Feed = ({
   ListHeaderComponent,
   extraData,
   savedFeedConfig,
+  outsideHeaderOffset,
 }: {
   feed: FeedDescriptor
   feedParams?: FeedParams
@@ -181,6 +182,7 @@ let Feed = ({
   ListHeaderComponent?: () => JSX.Element
   extraData?: any
   savedFeedConfig?: AppBskyActorDefs.SavedFeed
+  outsideHeaderOffset?: number
 }): React.ReactNode => {
   const theme = useTheme()
   const {track} = useAnalytics()
@@ -549,6 +551,7 @@ let Feed = ({
         initialNumToRender={initialNumToRender}
         windowSize={11}
         onItemSeen={feedFeedback.onItemSeen}
+        outsideHeaderOffset={outsideHeaderOffset}
       />
     </View>
   )
