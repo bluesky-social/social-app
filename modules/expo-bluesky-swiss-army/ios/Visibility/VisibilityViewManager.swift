@@ -17,57 +17,53 @@ class VisibilityViewManager {
   }
 
   func updateActiveView() {
-    var activeView: VisibilityView?
+    DispatchQueue.main.async {
+      var activeView: VisibilityView?
 
-    print("interval")
+      if self.views.count == 1 {
+        let view = self.views.allObjects[0]
+        if view.isViewableEnough() {
+          activeView = view
+        }
+      } else if self.views.count > 1 {
+        let views = self.views.allObjects
+        var mostVisibleView: VisibilityView?
+        var mostVisiblePosition: CGRect?
 
-    if self.views.count == 0 {
-      print("none!")
-      // Do nothing
-    } else if self.views.count == 1 {
-      print("only one")
-      let view = self.views.allObjects[0]
-      if let visiblePixels = view.getVisiblePixels(),
-         visiblePixels >= view.bounds.height / 2 {
-        activeView = view
-      }
-    } else {
-      print("multiple views")
-      let views = self.views.allObjects
-      var mostVisibleView: VisibilityView?
-
-      views.forEach { view in
-        // Get the visibile pixels and only consider it as a candidate if the view is completely visible
-        if let visiblePixels = view.getVisiblePixels(),
-           visiblePixels >= view.bounds.height {
-          // If there's a currently visible view let's compare
-          guard let currentlyMostVisibleView = mostVisibleView,
-                let currentlyMostMinY = currentlyMostVisibleView.getMinY() else {
-            mostVisibleView = view
+        views.forEach { view in
+          if !view.isViewableEnough() {
             return
           }
 
-          if let minY = view.getMinY(),
-             minY >= 150, // TODO this should do something nicer, like "closest to middle"
-             minY < currentlyMostMinY {
+          guard let position = view.getPositionOnScreen() else {
+            return
+          }
+
+          if mostVisibleView == nil {
             mostVisibleView = view
+            mostVisiblePosition = position
+          } else if let mostVisiblePositionUw = mostVisiblePosition,
+                    position.minY < mostVisiblePositionUw.minY,
+                    position.minY >= 150 {
+            mostVisibleView = view
+            mostVisiblePosition = position
           }
         }
+
+        activeView = mostVisibleView
       }
 
-      activeView = mostVisibleView
-    }
-    
-    if activeView == self.currentlyActiveView {
-      return
-    }
+      if activeView == self.currentlyActiveView {
+        return
+      }
 
-    self.clearActiveView()
-    if let view = activeView {
-      self.setActiveView(view)
+      self.clearActiveView()
+      if let view = activeView {
+        self.setActiveView(view)
+      }
     }
   }
-  
+
   func clearActiveView() {
     if let currentlyActiveView = self.currentlyActiveView {
       currentlyActiveView.setIsCurrentlyActive(isActive: false)

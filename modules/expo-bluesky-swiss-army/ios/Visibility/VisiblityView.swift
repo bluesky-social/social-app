@@ -31,28 +31,6 @@ class VisibilityView: ExpoView {
     }
   }
 
-  private func getCurrentPosition() -> CGRect? {
-    guard let window = self.window else {
-      return nil
-    }
-
-    return self.convert(self.bounds, to: window)
-  }
-
-  func getVisiblePixels() -> CGFloat? {
-    guard let bounds = self.getCurrentPosition() else {
-      return nil
-    }
-    return bounds.maxY - bounds.minY
-  }
-
-  func getMinY() -> CGFloat? {
-    guard let bounds = self.getCurrentPosition() else {
-      return nil
-    }
-    return bounds.minY
-  }
-
   func setIsCurrentlyActive(isActive: Bool) {
     if isCurrentlyActiveView == isActive {
       return
@@ -62,5 +40,32 @@ class VisibilityView: ExpoView {
     self.onChangeStatus([
       "isActive": isActive
     ])
+  }
+}
+
+// DANGER
+// These functions need to be called from the main thread. Xcode will warn you if you call one of them
+// off the main thread, so pay attention!
+extension UIView {
+  func getPositionOnScreen() -> CGRect? {
+    if let window = self.window {
+      return self.convert(self.bounds, to: window)
+    }
+    return nil
+  }
+
+  func isViewableEnough() -> Bool {
+    guard let window = self.window else {
+      return false
+    }
+
+    let viewFrameOnScreen = self.convert(self.bounds, to: window)
+    let screenBounds = window.bounds
+    let intersection = viewFrameOnScreen.intersection(screenBounds)
+
+    let viewHeight = viewFrameOnScreen.height
+    let intersectionHeight = intersection.height
+
+    return intersectionHeight >= 0.5 * viewHeight
   }
 }
