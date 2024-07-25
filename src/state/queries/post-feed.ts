@@ -365,7 +365,7 @@ export function usePostFeedQuery(
                             uri: item.post.uri,
                             post: item.post,
                             record: item.post.record,
-                            reason: item.reason,
+                            reason: slice.reason,
                             feedContext: slice.feedContext,
                             moderation: moderations[i],
                             parentAuthor,

@@ -17,21 +17,12 @@ export type FeedTunerFn = (
 type FeedSliceItem = {
   post: AppBskyFeedDefs.PostView
   reply?: AppBskyFeedDefs.ReplyRef
-  reason?:
-    | ReasonFeedSource
-    | AppBskyFeedDefs.ReasonRepost
-    | {$type: string; [k: string]: unknown}
-    | undefined
 }
 
 function toSliceItem(feedViewPost: FeedViewPost): FeedSliceItem {
   return {
     post: feedViewPost.post,
     reply: feedViewPost.reply,
-    reason:
-      '__source' in feedViewPost
-        ? (feedViewPost.__source as ReasonFeedSource)
-        : feedViewPost.reason,
   }
 }
 
@@ -49,6 +40,12 @@ export class FeedViewPostsSlice {
     }`
     this.feedContext = item.feedContext
     this.items = items.map(toSliceItem)
+  }
+
+  get reason() {
+    return '__source' in this._feedPost
+      ? (this._feedPost.__source as ReasonFeedSource)
+      : this._feedPost.reason
   }
 
   get uri() {
@@ -232,7 +229,7 @@ export class FeedTuner {
 
     // turn non-threads with reply parents into threads
     for (const slice of slices) {
-      if (!slice.isThread && !slice.items[0].reason && slice.items[0].reply) {
+      if (!slice.isThread && !slice.reason && slice.items[0].reply) {
         const reply = slice.items[0].reply
         if (
           AppBskyFeedDefs.isPostView(reply.parent) &&
