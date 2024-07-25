@@ -16,8 +16,10 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {useGate} from '#/lib/statsig/statsig'
 import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
+import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {isReasonFeedSource, ReasonFeedSource} from 'lib/api/feed/types'
 import {MAX_POST_LINES} from 'lib/constants'
@@ -29,6 +31,7 @@ import {countLines} from 'lib/strings/helpers'
 import {s} from 'lib/styles'
 import {precacheProfile} from 'state/queries/profile'
 import {atoms as a} from '#/alf'
+import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichText} from '#/components/RichText'
@@ -38,13 +41,12 @@ import {FeedNameText} from '../util/FeedInfoText'
 import {Link, TextLink, TextLinkOnWebOnly} from '../util/Link'
 import {PostCtrls} from '../util/post-ctrls/PostCtrls'
 import {PostEmbeds} from '../util/post-embeds'
+import {VideoEmbed} from '../util/post-embeds/VideoEmbed'
 import {PostMeta} from '../util/PostMeta'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {AviFollowButton} from './AviFollowButton'
 import hairlineWidth = StyleSheet.hairlineWidth
-import {useSession} from '#/state/session'
-import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
 
 interface FeedItemProps {
   record: AppBskyFeedPost.Record
@@ -136,6 +138,8 @@ let FeedItemInner = ({
   const {openComposer} = useComposerControls()
   const pal = usePalette('default')
   const {_} = useLingui()
+  const gate = useGate()
+
   const href = useMemo(() => {
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey)
@@ -354,6 +358,9 @@ let FeedItemInner = ({
             postAuthor={post.author}
             onOpenEmbed={onOpenEmbed}
           />
+          {__DEV__ && gate('videos') && (
+            <VideoEmbed source="https://lumi.jazco.dev/watch/did:plc:q6gjnaw2blty4crticxkmujt/Qmc8w93UpTa2adJHg4ZhnDPrBs1EsbzrekzPcqF5SwusuZ/playlist.m3u8" />
+          )}
           <PostCtrls
             post={post}
             record={record}
