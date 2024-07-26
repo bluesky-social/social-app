@@ -44,7 +44,7 @@ type Props = {
 export function Default(props: Props) {
   const {view, showPinButton} = props
   return (
-    <Link label={view.name} {...props}>
+    <Link {...props}>
       <Outer>
         <Header>
           <Avatar src={view.avatar} />
@@ -67,7 +67,7 @@ export function Link({
   view,
   children,
   ...props
-}: Props & Omit<LinkProps, 'to'>) {
+}: Props & Omit<LinkProps, 'to' | 'label'>) {
   const queryClient = useQueryClient()
 
   const href = React.useMemo(() => {
@@ -79,7 +79,7 @@ export function Link({
   }, [view, queryClient])
 
   return (
-    <InternalLink to={href} {...props}>
+    <InternalLink label={view.name} to={href} {...props}>
       {children}
     </InternalLink>
   )

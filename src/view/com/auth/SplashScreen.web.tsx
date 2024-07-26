@@ -132,6 +132,7 @@ export const SplashScreen = ({
 
 function Footer() {
   const t = useTheme()
+  const {_} = useLingui()
 
   return (
     <View
@@ -147,13 +148,19 @@ function Footer() {
         a.flex_1,
         t.atoms.border_contrast_medium,
       ]}>
-      <InlineLinkText to="https://bsky.social">
+      <InlineLinkText
+        label={_(msg`Learn more about Bluesky`)}
+        to="https://bsky.social">
         <Trans>Business</Trans>
       </InlineLinkText>
-      <InlineLinkText to="https://bsky.social/about/blog">
+      <InlineLinkText
+        label={_(msg`Read the Bluesky blog`)}
+        to="https://bsky.social/about/blog">
         <Trans>Blog</Trans>
       </InlineLinkText>
-      <InlineLinkText to="https://bsky.social/about/join">
+      <InlineLinkText
+        label={_(msg`See jobs at Bluesky`)}
+        to="https://bsky.social/about/join">
         <Trans>Jobs</Trans>
       </InlineLinkText>
 
