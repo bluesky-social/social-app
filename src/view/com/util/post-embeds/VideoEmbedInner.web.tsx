@@ -7,6 +7,7 @@ import {atoms as a, useTheme} from '#/alf'
 export function VideoEmbedInner({
   active,
   sendPosition,
+  isAnyViewActive,
   ...props
 }: {
   source: string
@@ -14,6 +15,7 @@ export function VideoEmbedInner({
   setActive: () => void
   sendPosition: (position: number) => void
   onScreen: boolean
+  isAnyViewActive?: boolean
 }) {
   const ref = useRef<HTMLDivElement>(null)
 
@@ -25,7 +27,6 @@ export function VideoEmbedInner({
       entries => {
         const entry = entries[0]
         if (!entry) return
-        console.log('observing', entry.intersectionRatio)
         const position =
           entry.boundingClientRect.y + entry.boundingClientRect.height / 2
         sendPosition(position)
@@ -38,12 +39,12 @@ export function VideoEmbedInner({
 
   // In case scrolling hasn't started yet, send up the position
   useEffect(() => {
-    if (ref.current && !active) {
+    if (ref.current && !isAnyViewActive) {
       const rect = ref.current.getBoundingClientRect()
-      const position = rect.top + rect.height / 2
+      const position = rect.y + rect.height / 2
       sendPosition(position)
     }
-  }, [active, sendPosition])
+  }, [isAnyViewActive, sendPosition])
 
   return (
     <View style={[a.flex_1, a.flex_row]}>
@@ -53,9 +54,10 @@ export function VideoEmbedInner({
         style={{
           position: 'absolute',
           top: 'calc(50% - 50vh)',
+          left: '50%',
           height: '100vh',
-          width: 10,
-          background: 'green',
+          width: 1,
+          pointerEvents: 'none',
         }}
       />
     </View>
@@ -106,13 +108,11 @@ export function VideoPlayer({
 
   useEffect(() => {
     if (!ref.current) return
-    if (active && onScreen) {
-      // ref.current?.play()
-    } else {
-      ref.current?.pause()
+    if (!onScreen || !active) {
+      ref.current.pause()
       setFocused(false)
     }
-  }, [active, onScreen])
+  }, [onScreen, active])
 
   return (
     <View
@@ -141,6 +141,7 @@ export function VideoPlayer({
         preload="none"
         loop
         muted={!focused}
+        autoPlay={active}
         onClick={evt => {
           evt.stopPropagation()
           if (focused) {

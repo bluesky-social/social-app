@@ -32,14 +32,6 @@ export function ActiveVideoProvider({children}: {children: React.ReactNode}) {
       sendViewPosition: (viewId: string, y: number) => {
         if (isNative) return
 
-        // console.log(
-        //   'sendViewPosition',
-        //   viewId,
-        //   y,
-        //   activeViewId,
-        //   activeViewLocationRef.current,
-        // )
-
         if (viewId === activeViewId) {
           activeViewLocationRef.current = y
         } else {
@@ -57,7 +49,7 @@ export function ActiveVideoProvider({children}: {children: React.ReactNode}) {
         }
 
         function distanceToIdealPosition(yPos: number) {
-          return Math.abs(yPos - windowHeight / 3)
+          return Math.abs(yPos - windowHeight / 2.5)
         }
 
         function withinViewport(yPos: number) {

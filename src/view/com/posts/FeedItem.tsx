@@ -509,7 +509,6 @@ const styles = StyleSheet.create({
     paddingRight: 15,
     // @ts-ignore web only -prf
     cursor: 'pointer',
-    overflow: 'hidden',
   },
   replyLine: {
     width: 2,

@@ -12,9 +12,10 @@ import {VideoEmbedInner} from './VideoEmbedInner'
 export function VideoEmbed({source}: {source: string}) {
   const t = useTheme()
   const ref = useRef<HTMLDivElement>(null)
-  const {active, setActive, sendPosition} = useActiveVideoView({
-    source,
-  })
+  const {active, setActive, sendPosition, currentActiveView} =
+    useActiveVideoView({
+      source,
+    })
   const [onScreen, setOnScreen] = useState(false)
   const {_} = useLingui()
 
@@ -24,7 +25,6 @@ export function VideoEmbed({source}: {source: string}) {
     if (!ref.current) return
     const observer = new IntersectionObserver(
       entries => {
-        console.log('OUTER')
         const entry = entries[0]
         if (!entry) return
         setOnScreen(entry.isIntersecting)
@@ -54,6 +54,7 @@ export function VideoEmbed({source}: {source: string}) {
             setActive={setActive}
             sendPosition={sendPosition}
             onScreen={onScreen}
+            isAnyViewActive={currentActiveView !== null}
           />
         ) : (
           <Button
