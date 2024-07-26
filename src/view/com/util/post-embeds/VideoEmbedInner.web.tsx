@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from 'react'
 import {View} from 'react-native'
 import Hls from 'hls.js'
 
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a} from '#/alf'
 
 export function VideoEmbedInner({
   active,
@@ -78,7 +78,8 @@ export function VideoPlayer({
   const [hls] = useState(() => new Hls())
   const ref = useRef<HTMLVideoElement>(null)
   const [focused, setFocused] = useState(false)
-  const t = useTheme()
+
+  const {play, pause, togglePlayPause} = useVideoUtils(ref)
 
   useEffect(() => {
     if (ref.current) {
@@ -107,12 +108,19 @@ export function VideoPlayer({
   }, [source, hls])
 
   useEffect(() => {
-    if (!ref.current) return
-    if (!onScreen || !active) {
-      ref.current.pause()
-      setFocused(false)
+    if (active) {
+      play()
     }
-  }, [onScreen, active])
+    return () => {
+      pause()
+    }
+  }, [active, play, pause])
+
+  useEffect(() => {
+    if (!onScreen) {
+      pause()
+    }
+  }, [onScreen, pause])
 
   return (
     <View
@@ -121,13 +129,15 @@ export function VideoPlayer({
         a.rounded_sm,
         {aspectRatio: 16 / 9},
         a.overflow_hidden,
-        t.atoms.bg_contrast_25,
-        a.my_xs,
       ]}>
       <div
         style={{
           position: 'absolute',
-          inset: 0,
+          top: 5,
+          right: 5,
+          borderRadius: '50%',
+          width: 20,
+          height: 20,
           background: active ? 'red' : 'blue',
           opacity: 0.5,
           pointerEvents: 'none',
@@ -145,11 +155,7 @@ export function VideoPlayer({
         onClick={evt => {
           evt.stopPropagation()
           if (focused) {
-            if (ref.current?.paused) {
-              ref.current.play()
-            } else {
-              ref.current?.pause()
-            }
+            togglePlayPause()
           } else {
             if (!active) {
               setActive()
@@ -160,4 +166,35 @@ export function VideoPlayer({
       />
     </View>
   )
+}
+
+function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
+  const play = () => {
+    if (!ref.current) return
+
+    // this is how you check if the video is ready to play
+    if (ref.current.readyState >= HTMLMediaElement.HAVE_ENOUGH_DATA) {
+      ref.current.play()
+    } else {
+      ref.current.addEventListener('canplay', () => {
+        ref.current?.play()
+      })
+    }
+  }
+
+  const pause = () => {
+    if (!ref.current) return
+    ref.current.pause()
+  }
+
+  const togglePlayPause = () => {
+    if (!ref.current) return
+    if (ref.current.paused) {
+      play()
+    } else {
+      pause()
+    }
+  }
+
+  return {play, pause, togglePlayPause}
 }

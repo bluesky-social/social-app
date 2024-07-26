@@ -44,6 +44,7 @@ export function VideoEmbed({source}: {source: string}) {
         a.w_full,
         {aspectRatio: 16 / 9},
         t.atoms.bg_contrast_25,
+        a.rounded_sm,
         a.my_xs,
       ]}>
       <div ref={ref} style={{display: 'flex', flex: 1}}>
