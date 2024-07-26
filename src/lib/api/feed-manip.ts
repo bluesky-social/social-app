@@ -14,29 +14,33 @@ export type FeedTunerFn = (
   slices: FeedViewPostsSlice[],
 ) => FeedViewPostsSlice[]
 
+type FeedSliceItem = {
+  post: AppBskyFeedDefs.PostView
+  reply?: AppBskyFeedDefs.ReplyRef
+}
+
+function toSliceItem(feedViewPost: FeedViewPost): FeedSliceItem {
+  return {
+    post: feedViewPost.post,
+    reply: feedViewPost.reply,
+  }
+}
+
 export class FeedViewPostsSlice {
   _reactKey: string
-  isFlattenedReply = false
+  _feedPost: FeedViewPost
+  items: FeedSliceItem[]
 
-  constructor(public items: FeedViewPost[]) {
-    const item = items[0]
-    this._reactKey = `slice-${item.post.uri}-${
-      item.reason?.indexedAt || item.post.indexedAt
+  constructor(feedPost: FeedViewPost) {
+    this._feedPost = feedPost
+    this._reactKey = `slice-${feedPost.post.uri}-${
+      feedPost.reason?.indexedAt || feedPost.post.indexedAt
     }`
+    this.items = [toSliceItem(feedPost)]
   }
 
   get uri() {
-    if (this.isFlattenedReply) {
-      return this.items[1].post.uri
-    }
-    return this.items[0].post.uri
-  }
-
-  get ts() {
-    if (this.items[0].reason?.indexedAt) {
-      return this.items[0].reason.indexedAt as string
-    }
-    return this.items[0].post.indexedAt
+    return this._feedPost.post.uri
   }
 
   get isThread() {
@@ -48,31 +52,42 @@ export class FeedViewPostsSlice {
     )
   }
 
-  get isFullThread() {
-    return this.isThread && !this.items[0].reply
-  }
-
-  get rootItem() {
-    if (this.isFlattenedReply) {
-      return this.items[1]
-    }
-    return this.items[0]
+  get isQuotePost() {
+    const embed = this._feedPost.post.embed
+    return (
+      AppBskyEmbedRecord.isView(embed) ||
+      AppBskyEmbedRecordWithMedia.isView(embed)
+    )
   }
 
   get isReply() {
     return (
-      AppBskyFeedPost.isRecord(this.rootItem.post.record) &&
-      !!this.rootItem.post.record.reply
+      AppBskyFeedPost.isRecord(this._feedPost.post.record) &&
+      !!this._feedPost.post.record.reply
     )
   }
 
-  get source(): ReasonFeedSource | undefined {
-    return this.items.find(item => '__source' in item && !!item.__source)
-      ?.__source as ReasonFeedSource
+  get reason() {
+    return '__source' in this._feedPost
+      ? (this._feedPost.__source as ReasonFeedSource)
+      : this._feedPost.reason
   }
 
   get feedContext() {
-    return this.items.find(item => item.feedContext)?.feedContext
+    return this._feedPost.feedContext
+  }
+
+  get isRepost() {
+    const reason = this._feedPost.reason
+    return AppBskyFeedDefs.isReasonRepost(reason)
+  }
+
+  get includesThreadRoot() {
+    return !this.items[0].reply
+  }
+
+  get likeCount() {
+    return this._feedPost.post.likeCount ?? 0
   }
 
   containsUri(uri: string) {
@@ -97,24 +112,24 @@ export class FeedViewPostsSlice {
     if (this.items[0].reply) {
       const reply = this.items[0].reply
       if (AppBskyFeedDefs.isPostView(reply.parent)) {
-        this.isFlattenedReply = true
         this.items.splice(0, 0, {post: reply.parent})
       }
     }
   }
 
   isFollowingAllAuthors(userDid: string) {
-    const item = this.rootItem
-    if (item.post.author.did === userDid) {
+    const feedPost = this._feedPost
+    if (feedPost.post.author.did === userDid) {
       return true
     }
-    if (AppBskyFeedDefs.isPostView(item.reply?.parent)) {
-      const parent = item.reply?.parent
+    if (AppBskyFeedDefs.isPostView(feedPost.reply?.parent)) {
+      const parent = feedPost.reply?.parent
       if (parent?.author.did === userDid) {
         return true
       }
       return (
-        parent?.author.viewer?.following && item.post.author.viewer?.following
+        parent?.author.viewer?.following &&
+        feedPost.post.author.viewer?.following
       )
     }
     return false
@@ -127,7 +142,7 @@ export class NoopFeedTuner {
     feed: FeedViewPost[],
     _opts?: {dryRun: boolean; maintainOrder: boolean},
   ): FeedViewPostsSlice[] {
-    return feed.map(item => new FeedViewPostsSlice([item]))
+    return feed.map(item => new FeedViewPostsSlice(item))
   }
 }
 
@@ -165,7 +180,7 @@ export class FeedTuner {
     })
 
     if (maintainOrder) {
-      slices = feed.map(item => new FeedViewPostsSlice([item]))
+      slices = feed.map(item => new FeedViewPostsSlice(item))
     } else {
       // arrange the posts into thread slices
       for (let i = feed.length - 1; i >= 0; i--) {
@@ -192,7 +207,7 @@ export class FeedTuner {
           }
         }
 
-        slices.unshift(new FeedViewPostsSlice([item]))
+        slices.unshift(new FeedViewPostsSlice(item))
       }
     }
 
@@ -215,7 +230,7 @@ export class FeedTuner {
 
     // turn non-threads with reply parents into threads
     for (const slice of slices) {
-      if (!slice.isThread && !slice.items[0].reason && slice.items[0].reply) {
+      if (!slice.isThread && !slice.reason && slice.items[0].reply) {
         const reply = slice.items[0].reply
         if (
           AppBskyFeedDefs.isPostView(reply.parent) &&
@@ -256,8 +271,7 @@ export class FeedTuner {
 
   static removeReposts(tuner: FeedTuner, slices: FeedViewPostsSlice[]) {
     for (let i = slices.length - 1; i >= 0; i--) {
-      const reason = slices[i].rootItem.reason
-      if (AppBskyFeedDefs.isReasonRepost(reason)) {
+      if (slices[i].isRepost) {
         slices.splice(i, 1)
       }
     }
@@ -266,11 +280,7 @@ export class FeedTuner {
 
   static removeQuotePosts(tuner: FeedTuner, slices: FeedViewPostsSlice[]) {
     for (let i = slices.length - 1; i >= 0; i--) {
-      const embed = slices[i].rootItem.post.embed
-      if (
-        AppBskyEmbedRecord.isView(embed) ||
-        AppBskyEmbedRecordWithMedia.isView(embed)
-      ) {
+      if (slices[i].isQuotePost) {
         slices.splice(i, 1)
       }
     }
@@ -315,19 +325,18 @@ export class FeedTuner {
       // remove any replies without at least minLikes likes
       for (let i = slices.length - 1; i >= 0; i--) {
         const slice = slices[i]
-        if (slice.isFullThread || !slice.isReply) {
-          continue
-        }
-
-        const item = slice.rootItem
-        const isRepost = Boolean(item.reason)
-        if (isRepost) {
-          continue
-        }
-        if ((item.post.likeCount || 0) < minLikes) {
-          slices.splice(i, 1)
-        } else if (followedOnly && !slice.isFollowingAllAuthors(userDid)) {
-          slices.splice(i, 1)
+        if (slice.isReply) {
+          if (slice.isThread && slice.includesThreadRoot) {
+            continue
+          }
+          if (slice.isRepost) {
+            continue
+          }
+          if (slice.likeCount < minLikes) {
+            slices.splice(i, 1)
+          } else if (followedOnly && !slice.isFollowingAllAuthors(userDid)) {
+            slices.splice(i, 1)
+          }
         }
       }
       return slices

@@ -70,6 +70,9 @@ export type ButtonProps = Pick<
   AccessibilityProps &
   VariantProps & {
     testID?: string
+    /**
+     * For a11y, try to make this descriptive and clear
+     */
     label: string
     style?: StyleProp<ViewStyle>
     hoverStyle?: StyleProp<ViewStyle>
