@@ -43,7 +43,7 @@ class VisibilityView: ExpoView {
   }
 }
 
-// DANGER
+// 🚨 DANGER 🚨
 // These functions need to be called from the main thread. Xcode will warn you if you call one of them
 // off the main thread, so pay attention!
 extension UIView {
