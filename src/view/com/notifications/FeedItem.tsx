@@ -205,9 +205,9 @@ let FeedItem = ({
             msg`${a11yAuthor} and ${plural(authors.length - 1, {
               one: `${formattedCount} other`,
               other: `${formattedCount} others`,
-            })} liked your post · ${niceTimestamp}`,
+            })} liked your post`,
           )
-        : _(msg`${a11yAuthor} liked your post · ${niceTimestamp}`)
+        : _(msg`${a11yAuthor} liked your post`)
     action =
       authors.length > 1 ? (
         <Trans>
@@ -231,9 +231,9 @@ let FeedItem = ({
             msg`${a11yAuthor} and ${plural(authors.length - 1, {
               one: `${formattedCount} other`,
               other: `${formattedCount} others`,
-            })} reposted your post · ${niceTimestamp}`,
+            })} reposted your post`,
           )
-        : _(msg`${a11yAuthor} reposted your post · ${niceTimestamp}`)
+        : _(msg`${a11yAuthor} reposted your post`)
     action =
       authors.length > 1 ? (
         <Trans>
@@ -262,9 +262,9 @@ let FeedItem = ({
               msg`${a11yAuthor} and ${plural(authors.length - 1, {
                 one: `${formattedCount} other`,
                 other: `${formattedCount} others`,
-              })} followed you back · ${niceTimestamp}`,
+              })} followed you back`,
             )
-          : _(msg`${a11yAuthor} followed you back · ${niceTimestamp}`)
+          : _(msg`${a11yAuthor} followed you back`)
       action =
         authors.length > 1 ? (
           <Trans>
@@ -288,9 +288,9 @@ let FeedItem = ({
               msg`${a11yAuthor} and ${plural(authors.length - 1, {
                 one: `${formattedCount} other`,
                 other: `${formattedCount} others`,
-              })} followed you · ${niceTimestamp}`,
+              })} followed you`,
             )
-          : _(msg`${a11yAuthor} followed you · ${niceTimestamp}`)
+          : _(msg`${a11yAuthor} followed you`)
       action =
         authors.length > 1 ? (
           <Trans>
@@ -316,9 +316,9 @@ let FeedItem = ({
             msg`${a11yAuthor} and ${plural(authors.length - 1, {
               one: `${formattedCount} other`,
               other: `${formattedCount} others`,
-            })} liked your custom feed · ${niceTimestamp}`,
+            })} liked your custom feed`,
           )
-        : _(msg`${a11yAuthor} liked your custom feed · ${niceTimestamp}`)
+        : _(msg`${a11yAuthor} liked your custom feed`)
     action =
       authors.length > 1 ? (
         <Trans>
@@ -342,11 +342,9 @@ let FeedItem = ({
             msg`${a11yAuthor} and ${plural(authors.length - 1, {
               one: `${formattedCount} other`,
               other: `${formattedCount} others`,
-            })} signed up with your starter pack · ${niceTimestamp}`,
+            })} signed up with your starter pack`,
           )
-        : _(
-            msg`${a11yAuthor} signed up with your starter pack · ${niceTimestamp}`,
-          )
+        : _(msg`${a11yAuthor} signed up with your starter pack`)
     action =
       authors.length > 1 ? (
         <Trans>
@@ -371,6 +369,7 @@ let FeedItem = ({
   } else {
     return null
   }
+  a11yLabel += ` · ${niceTimestamp}`
 
   return (
     <Link
