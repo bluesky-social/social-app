@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-07-25 10:14+0900\n"
+"PO-Revision-Date: 2024-07-26 10:25+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -500,6 +500,11 @@ msgstr "問題が発生しました。もう一度お試しください。"
 #: src/screens/Onboarding/StepInterests/index.tsx:218
 msgid "an unknown error occurred"
 msgstr "何らかのエラーが発生しました"
+
+#: src/components/moderation/ModerationDetailsDialog.tsx:140
+#: src/components/moderation/ModerationDetailsDialog.tsx:136
+msgid "an unknown labeler"
+msgstr "不明なラベラー"
 
 #: src/components/WhoCanReply.tsx:317
 #: src/view/com/notifications/FeedItem.tsx:294
@@ -2953,6 +2958,10 @@ msgstr "最新"
 msgid "Learn More"
 msgstr "詳細"
 
+#: src/view/com/auth/SplashScreen.web.tsx:152
+msgid "Learn more about Bluesky"
+msgstr "Blueskyについての詳細"
+
 #: src/components/moderation/ContentHider.tsx:66
 #: src/components/moderation/ContentHider.tsx:131
 msgid "Learn more about the moderation applied to this content."
@@ -3299,6 +3308,10 @@ msgstr "モデレーションリスト"
 #: src/view/screens/ModerationModlists.tsx:58
 msgid "Moderation Lists"
 msgstr "モデレーションリスト"
+
+#: src/components/moderation/LabelPreference.tsx:247
+msgid "moderation settings"
+msgstr "モデレーションの設定"
 
 #: src/view/screens/Settings/index.tsx:557
 msgid "Moderation settings"
@@ -4175,6 +4188,10 @@ msgstr "{0}を再生"
 msgid "Play or pause the GIF"
 msgstr "GIFの再生や一時停止"
 
+#: src/view/com/util/post-embeds/VideoEmbed.tsx:35
+msgid "Play video"
+msgstr "動画を再生"
+
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:57
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:58
 msgid "Play Video"
@@ -4464,6 +4481,18 @@ msgstr "比率"
 #: src/screens/Deactivated.tsx:144
 msgid "Reactivate your account"
 msgstr "あなたのアカウントを再有効化"
+
+#: src/view/com/auth/SplashScreen.web.tsx:157
+msgid "Read the Bluesky blog"
+msgstr "Blueskyのブログを読む"
+
+#: src/screens/Signup/StepInfo/Policies.tsx:59
+msgid "Read the Bluesky Privacy Policy"
+msgstr "Blueskyのプライバシーポリシーを読む"
+
+#: src/screens/Signup/StepInfo/Policies.tsx:49
+msgid "Read the Bluesky Terms of Service"
+msgstr "Blueskyの利用規約を読む"
 
 #: src/components/dms/ReportDialog.tsx:174
 msgid "Reason:"
@@ -5024,6 +5053,10 @@ msgstr "<0>{displayTag}</0>の投稿を表示（すべてのユーザー）"
 msgid "See <0>{displayTag}</0> posts by this user"
 msgstr "<0>{displayTag}</0>の投稿を表示（このユーザーのみ）"
 
+#: src/view/com/auth/SplashScreen.web.tsx:162
+msgid "See jobs at Bluesky"
+msgstr "Blueskyの求人を見る"
+
 #: src/view/screens/SavedFeeds.tsx:187
 msgid "See this guide"
 msgstr "ガイドを見る"
@@ -5559,9 +5592,9 @@ msgstr "返信を並び替える"
 msgid "Sort replies to the same post by:"
 msgstr "次の方法で同じ投稿への返信を並び替えます。"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:169
-msgid "Source: <0>{0}</0>"
-msgstr "ソース：<0>{0}</0>"
+#: src/components/moderation/LabelsOnMeDialog.tsx:172
+msgid "Source: <0>{sourceName}</0>"
+msgstr "ソース：<0>{sourceName}</0>"
 
 #: src/lib/moderation/useReportOptions.ts:67
 #: src/lib/moderation/useReportOptions.ts:80
@@ -5804,6 +5837,10 @@ msgstr "そのスターターパックが見つかりませんでした。"
 msgid "The account will be able to interact with you after unblocking."
 msgstr "このアカウントは、ブロック解除後にあなたとやり取りすることができます。"
 
+#: src/screens/Moderation/index.tsx:368
+msgid "The Bluesky web application"
+msgstr "Blueskyウェブアプリ"
+
 #: src/view/screens/CommunityGuidelines.tsx:36
 msgid "The Community Guidelines have been moved to <0/>"
 msgstr "コミュニティーガイドラインは<0/>に移動しました"
@@ -5811,6 +5848,10 @@ msgstr "コミュニティーガイドラインは<0/>に移動しました"
 #: src/view/screens/CopyrightPolicy.tsx:33
 msgid "The Copyright Policy has been moved to <0/>"
 msgstr "著作権ポリシーは<0/>に移動しました"
+
+#: src/view/com/posts/FeedShutdownMsg.tsx:102
+msgid "The Discover feed"
+msgstr "Discoverフィード"
 
 #: src/state/shell/progress-guide.tsx:172
 #: src/state/shell/progress-guide.tsx:177
@@ -5966,9 +6007,9 @@ msgstr "このアカウントを閲覧するためにはサインインが必要
 msgid "This account is blocked by one or more of your moderation lists. To unblock, please visit the lists directly and remove this user."
 msgstr "このアカウントは１つ、あるいは複数のモデレーションリストでブロックされています。ブロックを解除するにはリストの画面に移動してこのユーザーをリストから外してください。"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:260
-msgid "This appeal will be sent to <0>{0}</0>."
-msgstr "この申し立ては<0>{0}</0>に送られます。"
+#: src/components/moderation/LabelsOnMeDialog.tsx:265
+msgid "This appeal will be sent to <0>{sourceName}</0>."
+msgstr "この申し立ては<0>{sourceName}</0>に送られます。"
 
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:104
 msgid "This appeal will be sent to Bluesky's moderation service."
@@ -6562,9 +6603,17 @@ msgstr "{0}のアバターを表示"
 msgid "View {0}'s profile"
 msgstr "{0}のプロフィールを表示"
 
+#: src/components/dms/MessagesListHeader.tsx:160
+msgid "View {displayName}'s profile"
+msgstr "{displayName}のプロフィールを表示"
+
 #: src/components/ProfileHoverCard/index.web.tsx:430
 msgid "View blocked user's profile"
 msgstr "ブロック中のユーザーのプロフィールを表示"
+
+#: src/view/screens/Settings/ExportCarDialog.tsx:97
+msgid "View blogpost for more details"
+msgstr "詳細についてのブログの記事を見る"
 
 #: src/view/screens/Log.tsx:56
 msgid "View debug entry"
@@ -6606,10 +6655,22 @@ msgstr "@{0}によって提供されるラベリングサービスを見る"
 msgid "View users who like this feed"
 msgstr "このフィードにいいねしたユーザーを見る"
 
+#: src/screens/Moderation/index.tsx:274
+msgid "View your blocked accounts"
+msgstr "ブロックしたアカウントを見る"
+
 #: src/view/com/home/HomeHeaderLayout.web.tsx:79
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:86
 msgid "View your feeds and explore more"
 msgstr "フィードを表示し、さらにフィードを探す"
+
+#: src/screens/Moderation/index.tsx:244
+msgid "View your moderation lists"
+msgstr "モデレーションリストを見る"
+
+#: src/screens/Moderation/index.tsx:259
+msgid "View your muted accounts"
+msgstr "ミュートしたアカウントを見る"
 
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
