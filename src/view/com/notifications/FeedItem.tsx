@@ -199,6 +199,7 @@ let FeedItem = ({
         isFollowBack = followedTimestamp > followingTimestamp
       } catch (e) {
         // For some reason the following URI was invalid. Default to it not being a follow back.
+        console.error('Invalid following URI')
       }
     }
 
