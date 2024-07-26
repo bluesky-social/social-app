@@ -1,10 +1,5 @@
 import React, {memo} from 'react'
-import {
-  FlatListProps,
-  RefreshControl,
-  ViewabilityConfigCallbackPairs,
-  ViewToken,
-} from 'react-native'
+import {FlatListProps, RefreshControl, ViewToken} from 'react-native'
 import {runOnJS, useSharedValue} from 'react-native-reanimated'
 
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
@@ -97,43 +92,24 @@ function ListImpl<ItemT>(
     },
   })
 
-  const viewabilityConfigCallbackPairs: ViewabilityConfigCallbackPairs =
-    React.useMemo(() => {
-      const pairs: ViewabilityConfigCallbackPairs = []
-      if (onItemSeen) {
-        pairs.push({
-          onViewableItemsChanged: (info: {
-            viewableItems: Array<ViewToken>
-            changed: Array<ViewToken>
-          }) => {
-            for (const item of info.changed) {
-              if (item.isViewable) {
-                onItemSeen(item.item)
-              }
-            }
-          },
-          viewabilityConfig: {
-            itemVisiblePercentThreshold: 40,
-            minimumViewTime: 1.5e3,
-          },
-        })
-      }
-
-      // @TODO only add this if prop is true
-      // if (true) {
-      //   pairs.push({
-      //     onViewableItemsChanged: () => {
-      //       updateActiveViewAsync()
-      //     },
-      //     viewabilityConfig: {
-      //       itemVisiblePercentThreshold: 20,
-      //       minimumViewTime: 250,
-      //     },
-      //   })
-      // }
-
-      return pairs
-    }, [onItemSeen])
+  const [onViewableItemsChanged, viewabilityConfig] = React.useMemo(() => {
+    if (!onItemSeen) {
+      return [undefined, undefined]
+    }
+    return [
+      (info: {viewableItems: Array<ViewToken>; changed: Array<ViewToken>}) => {
+        for (const item of info.changed) {
+          if (item.isViewable) {
+            onItemSeen(item.item)
+          }
+        }
+      },
+      {
+        itemVisiblePercentThreshold: 40,
+        minimumViewTime: 1.5e3,
+      },
+    ]
+  }, [onItemSeen])
 
   let refreshControl
   if (refreshing !== undefined || onRefresh !== undefined) {
@@ -164,7 +140,8 @@ function ListImpl<ItemT>(
       refreshControl={refreshControl}
       onScroll={scrollHandler}
       scrollEventThrottle={1}
-      viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs}
+      onViewableItemsChanged={onViewableItemsChanged}
+      viewabilityConfig={viewabilityConfig}
       style={style}
       ref={ref}
     />
