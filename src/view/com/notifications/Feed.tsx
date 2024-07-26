@@ -175,7 +175,6 @@ export function Feed({
           />
         </CenteredView>
       )}
-
       <List
         testID="notifsFeed"
         ref={scrollElRef}

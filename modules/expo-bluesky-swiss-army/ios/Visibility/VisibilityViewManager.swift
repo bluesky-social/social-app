@@ -19,6 +19,8 @@ class VisibilityViewManager {
   func updateActiveView() {
     DispatchQueue.main.async {
       var activeView: VisibilityView?
+      
+      print(self.views.count)
 
       if self.views.count == 1 {
         let view = self.views.allObjects[0]
@@ -34,17 +36,19 @@ class VisibilityViewManager {
           if !view.isViewableEnough() {
             return
           }
-
+          
           guard let position = view.getPositionOnScreen() else {
             return
           }
+          
+          print(position.minY)
 
           if mostVisibleView == nil {
             mostVisibleView = view
             mostVisiblePosition = position
           } else if let mostVisiblePositionUw = mostVisiblePosition,
-                    position.minY < mostVisiblePositionUw.minY,
-                    position.minY >= 150 {
+                    position.minY >= 150,
+                    position.minY < mostVisiblePositionUw.minY {
             mostVisibleView = view
             mostVisiblePosition = position
           }

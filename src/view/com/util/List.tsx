@@ -10,6 +10,7 @@ import {runOnJS, useSharedValue} from 'react-native-reanimated'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useScrollHandlers} from '#/lib/ScrollContext'
+import {useDedupe} from 'lib/hooks/useDedupe'
 import {addStyle} from 'lib/styles'
 import {updateActiveViewAsync} from '../../../../modules/expo-bluesky-swiss-army/src/VisibilityView/VisibilityView'
 import {FlatList_INTERNAL} from './Views'
@@ -55,6 +56,7 @@ function ListImpl<ItemT>(
 ) {
   const isScrolledDown = useSharedValue(false)
   const pal = usePalette('default')
+  const dedupe = useDedupe()
 
   function handleScrolledDownChange(didScrollDown: boolean) {
     onScrolledDownChange?.(didScrollDown)
@@ -85,6 +87,8 @@ function ListImpl<ItemT>(
           runOnJS(handleScrolledDownChange)(didScrollDown)
         }
       }
+
+      runOnJS(dedupe)(updateActiveViewAsync)
     },
     // Note: adding onMomentumBegin here makes simulator scroll
     // lag on Android. So either don't add it, or figure out why.
@@ -116,17 +120,17 @@ function ListImpl<ItemT>(
       }
 
       // @TODO only add this if prop is true
-      if (true) {
-        pairs.push({
-          onViewableItemsChanged: () => {
-            updateActiveViewAsync()
-          },
-          viewabilityConfig: {
-            itemVisiblePercentThreshold: 50,
-            minimumViewTime: 250,
-          },
-        })
-      }
+      // if (true) {
+      //   pairs.push({
+      //     onViewableItemsChanged: () => {
+      //       updateActiveViewAsync()
+      //     },
+      //     viewabilityConfig: {
+      //       itemVisiblePercentThreshold: 20,
+      //       minimumViewTime: 250,
+      //     },
+      //   })
+      // }
 
       return pairs
     }, [onItemSeen])
