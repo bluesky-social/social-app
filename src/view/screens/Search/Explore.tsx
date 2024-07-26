@@ -75,17 +75,17 @@ function SuggestedItemsHeader({
   )
 }
 
-type LoadMoreItems =
+type LoadMoreItem =
   | {
       type: 'profile'
       key: string
-      avatar: string
+      avatar: string | undefined
       moderation: ModerationDecision
     }
   | {
       type: 'feed'
       key: string
-      avatar: string
+      avatar: string | undefined
       moderation: undefined
     }
 
@@ -98,27 +98,28 @@ function LoadMore({
 }) {
   const t = useTheme()
   const {_} = useLingui()
-  const items = React.useMemo(() => {
+  const items: LoadMoreItem[] = React.useMemo(() => {
     return item.items
       .map(_item => {
+        let loadMoreItem: LoadMoreItem | undefined
         if (_item.type === 'profile') {
-          return {
+          loadMoreItem = {
             type: 'profile',
             key: _item.profile.did,
             avatar: _item.profile.avatar,
             moderation: moderateProfile(_item.profile, moderationOpts!),
           }
         } else if (_item.type === 'feed') {
-          return {
+          loadMoreItem = {
             type: 'feed',
             key: _item.feed.uri,
             avatar: _item.feed.avatar,
             moderation: undefined,
           }
         }
-        return undefined
+        return loadMoreItem
       })
-      .filter(Boolean) as LoadMoreItems[]
+      .filter(n => !!n)
   }, [item.items, moderationOpts])
 
   if (items.length === 0) return null

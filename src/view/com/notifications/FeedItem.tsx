@@ -20,20 +20,28 @@ import {
 import {AtUri} from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useGate} from '#/lib/statsig/statsig'
+import {parseTenorGif} from '#/lib/strings/embed-player'
+import {logger} from '#/logger'
 import {FeedNotification} from '#/state/queries/notifications/feed'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {usePalette} from 'lib/hooks/usePalette'
 import {makeProfileLink} from 'lib/routes/links'
+import {NavigationProp} from 'lib/routes/types'
+import {forceLTR} from 'lib/strings/bidi'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {niceDate} from 'lib/strings/time'
 import {colors, s} from 'lib/styles'
 import {isWeb} from 'platform/detection'
+import {DM_SERVICE_HEADERS} from 'state/queries/messages/const'
 import {precacheProfile} from 'state/queries/profile'
+import {useAgent} from 'state/session'
 import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
 import {
   ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
   ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
@@ -41,8 +49,10 @@ import {
 import {Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled} from '#/components/icons/Heart2'
 import {PersonPlus_Filled_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
 import {Repost_Stroke2_Corner2_Rounded as RepostIcon} from '#/components/icons/Repost'
+import {StarterPack} from '#/components/icons/StarterPack'
 import {Link as NewLink} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
+import {Notification as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {FeedSourceCard} from '../feeds/FeedSourceCard'
 import {Post} from '../post/Post'
 import {ImageHorzList} from '../util/images/ImageHorzList'
@@ -51,19 +61,6 @@ import {formatCount} from '../util/numeric/format'
 import {Text} from '../util/text/Text'
 import {TimeElapsed} from '../util/TimeElapsed'
 import {PreviewableUserAvatar, UserAvatar} from '../util/UserAvatar'
-
-import hairlineWidth = StyleSheet.hairlineWidth
-import {useNavigation} from '@react-navigation/native'
-
-import {parseTenorGif} from '#/lib/strings/embed-player'
-import {logger} from '#/logger'
-import {NavigationProp} from 'lib/routes/types'
-import {forceLTR} from 'lib/strings/bidi'
-import {DM_SERVICE_HEADERS} from 'state/queries/messages/const'
-import {useAgent} from 'state/session'
-import {Button, ButtonText} from '#/components/Button'
-import {StarterPack} from '#/components/icons/StarterPack'
-import {Notification as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 
 const MAX_AUTHORS = 5
 
@@ -171,19 +168,19 @@ let FeedItem = ({
     )
   }
 
-  let isFollowBack = false
-  let formattedCount = authors.length > 1 ? formatCount(authors.length - 1) : ''
+  const formattedCount =
+    authors.length > 1 ? formatCount(authors.length - 1) : ''
+  const firstAuthorName = sanitizeDisplayName(
+    authors[0].profile.displayName || authors[0].profile.handle,
+  )
+  const niceTimestamp = niceDate(item.notification.indexedAt)
 
   let author = (
     <TextLink
       key={authors[0].href}
       style={[pal.text, s.bold]}
       href={authors[0].href}
-      text={forceLTR(
-        sanitizeDisplayName(
-          authors[0].profile.displayName || authors[0].profile.handle,
-        ),
-      )}
+      text={forceLTR(firstAuthorName)}
       disableMismatchWarning
     />
   )
@@ -239,7 +236,6 @@ let FeedItem = ({
       item.notification.author.viewer?.following &&
       gate('ungroup_follow_backs')
     ) {
-      isFollowBack = true
       action =
         authors.length > 1 ? (
           <Trans>
@@ -318,6 +314,8 @@ let FeedItem = ({
     return null
   }
 
+  const a11yLabel = `${action} ${niceTimestamp}`
+
   return (
     <Link
       testID={`feedItem-by-${item.notification.author.handle}`}
@@ -330,10 +328,12 @@ let FeedItem = ({
               backgroundColor: pal.colors.unreadNotifBg,
               borderColor: pal.colors.unreadNotifBorder,
             },
-        {borderTopWidth: hideTopBorder ? 0 : hairlineWidth},
+        {borderTopWidth: hideTopBorder ? 0 : StyleSheet.hairlineWidth},
       ]}
       href={itemHref}
       noFeedback
+      accessibilityHint=""
+      accessibilityLabel={a11yLabel}
       accessible={!isAuthorsExpanded}
       accessibilityActions={
         authors.length > 1
@@ -378,16 +378,19 @@ let FeedItem = ({
             visible={!isAuthorsExpanded}
             authors={authors}
             onToggleAuthorsExpanded={onToggleAuthorsExpanded}
-            showDmButton={item.type === 'starterpack-joined' || isFollowBack}
+            showDmButton={item.type === 'starterpack-joined'}
           />
           <ExpandedAuthorsList visible={isAuthorsExpanded} authors={authors} />
-          <Text style={[styles.meta, a.self_start, pal.text]}>
+          <Text
+            style={[styles.meta, a.self_start, pal.text]}
+            accessibilityHint=""
+            accessibilityLabel={a11yLabel}>
             {action}
             <TimeElapsed timestamp={item.notification.indexedAt}>
               {({timeElapsed}) => (
                 <Text
                   style={[pal.textLight, styles.pointer]}
-                  title={niceDate(item.notification.indexedAt)}>
+                  title={niceTimestamp}>
                   {' '}
                   &middot; {timeElapsed}
                 </Text>
@@ -540,7 +543,6 @@ function CondensedAuthorsList({
           profile={authors[0].profile}
           moderation={authors[0].moderation.ui('avatar')}
           type={authors[0].profile.associated?.labeler ? 'labeler' : 'user'}
-          accessible={false}
         />
         {showDmButton ? <SayHelloBtn profile={authors[0].profile} /> : null}
       </View>
@@ -558,7 +560,6 @@ function CondensedAuthorsList({
               profile={author.profile}
               moderation={author.moderation.ui('avatar')}
               type={author.profile.associated?.labeler ? 'labeler' : 'user'}
-              accessible={false}
             />
           </View>
         ))}

@@ -251,7 +251,7 @@ class MergeFeedSource_Following extends MergeFeedSource {
       dryRun: false,
       maintainOrder: true,
     })
-    res.data.feed = slices.map(slice => slice.rootItem)
+    res.data.feed = slices.map(slice => slice._feedPost)
     return res
   }
 }
