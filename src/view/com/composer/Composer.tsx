@@ -99,7 +99,6 @@ import {SelectVideoBtn} from './videos/SelectVideoBtn'
 import {useVideoState} from './videos/state'
 import {VideoPreview} from './videos/VideoPreview'
 import {VideoTranscodeProgress} from './videos/VideoTranscodeProgress'
-import hairlineWidth = StyleSheet.hairlineWidth
 
 type CancelRef = {
   onPressCancel: () => void
@@ -763,7 +762,7 @@ function useAnimatedBorders() {
 
   const topBarAnimatedStyle = useAnimatedStyle(() => {
     return {
-      borderBottomWidth: hairlineWidth,
+      borderBottomWidth: StyleSheet.hairlineWidth,
       borderColor: interpolateColor(
         hasScrolledTop.value,
         [0, 1],
@@ -773,7 +772,7 @@ function useAnimatedBorders() {
   })
   const bottomBarAnimatedStyle = useAnimatedStyle(() => {
     return {
-      borderTopWidth: hairlineWidth,
+      borderTopWidth: StyleSheet.hairlineWidth,
       borderColor: interpolateColor(
         hasScrolledBottom.value,
         [0, 1],
@@ -855,7 +854,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   errorIcon: {
-    borderWidth: hairlineWidth,
+    borderWidth: StyleSheet.hairlineWidth,
     borderColor: colors.red4,
     color: colors.red4,
     borderRadius: 30,
@@ -891,6 +890,6 @@ const styles = StyleSheet.create({
     paddingLeft: 7,
     paddingRight: 16,
     alignItems: 'center',
-    borderTopWidth: hairlineWidth,
+    borderTopWidth: StyleSheet.hairlineWidth,
   },
 })

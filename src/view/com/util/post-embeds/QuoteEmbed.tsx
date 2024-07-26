@@ -39,7 +39,6 @@ import {Link} from '../Link'
 import {PostMeta} from '../PostMeta'
 import {Text} from '../text/Text'
 import {PostEmbeds} from '.'
-import hairlineWidth = StyleSheet.hairlineWidth
 
 export function MaybeQuoteEmbed({
   embed,
@@ -262,7 +261,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     paddingVertical: 12,
     paddingHorizontal: 12,
-    borderWidth: hairlineWidth,
+    borderWidth: StyleSheet.hairlineWidth,
   },
   errorContainer: {
     flexDirection: 'row',
@@ -272,7 +271,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     paddingVertical: 14,
     paddingHorizontal: 14,
-    borderWidth: hairlineWidth,
+    borderWidth: StyleSheet.hairlineWidth,
   },
   alert: {
     marginBottom: 6,

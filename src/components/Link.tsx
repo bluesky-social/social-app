@@ -41,11 +41,6 @@ type BaseLinkProps = Pick<
   testID?: string
 
   /**
-   * Label for a11y. Defaults to the href.
-   */
-  label?: string
-
-  /**
    * The React Navigation `StackAction` to perform when the link is pressed.
    */
   action?: 'push' | 'replace' | 'navigate'
@@ -197,7 +192,7 @@ export function useLink({
 }
 
 export type LinkProps = Omit<BaseLinkProps, 'disableMismatchWarning'> &
-  Omit<ButtonProps, 'onPress' | 'disabled' | 'label'>
+  Omit<ButtonProps, 'onPress' | 'disabled'>
 
 /**
  * A interactive element that renders as a `<a>` tag on the web. On mobile it
@@ -224,7 +219,6 @@ export function Link({
 
   return (
     <Button
-      label={href}
       {...rest}
       style={[a.justify_start, flatten(rest.style)]}
       role="link"
@@ -249,7 +243,8 @@ export function Link({
 
 export type InlineLinkProps = React.PropsWithChildren<
   BaseLinkProps & TextStyleProp & Pick<TextProps, 'selectable'>
->
+> &
+  Pick<ButtonProps, 'label'>
 
 export function InlineLinkText({
   children,
@@ -291,7 +286,7 @@ export function InlineLinkText({
     <Text
       selectable={selectable}
       accessibilityHint=""
-      accessibilityLabel={label || href}
+      accessibilityLabel={label}
       {...rest}
       style={[
         {color: t.palette.primary_500},

@@ -45,11 +45,17 @@ export const Policies = ({
     els = (
       <Trans>
         By creating an account you agree to the{' '}
-        <InlineLinkText key="tos" to={tos}>
+        <InlineLinkText
+          label={_(msg`Read the Bluesky Terms of Service`)}
+          key="tos"
+          to={tos}>
           Terms of Service
         </InlineLinkText>{' '}
         and{' '}
-        <InlineLinkText key="pp" to={pp}>
+        <InlineLinkText
+          label={_(msg`Read the Bluesky Privacy Policy`)}
+          key="pp"
+          to={pp}>
           Privacy Policy
         </InlineLinkText>
         .
@@ -59,7 +65,10 @@ export const Policies = ({
     els = (
       <Trans>
         By creating an account you agree to the{' '}
-        <InlineLinkText key="tos" to={tos}>
+        <InlineLinkText
+          label={_(msg`Read the Bluesky Terms of Service`)}
+          key="tos"
+          to={tos}>
           Terms of Service
         </InlineLinkText>
         .
@@ -69,7 +78,10 @@ export const Policies = ({
     els = (
       <Trans>
         By creating an account you agree to the{' '}
-        <InlineLinkText key="pp" to={pp}>
+        <InlineLinkText
+          label={_(msg`Read the Bluesky Privacy Policy`)}
+          key="pp"
+          to={pp}>
           Privacy Policy
         </InlineLinkText>
         .

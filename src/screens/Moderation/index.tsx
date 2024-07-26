@@ -240,7 +240,10 @@ export function ModerationScreenInner({
           )}
         </Button>
         <Divider />
-        <Link testID="moderationlistsBtn" to="/moderation/modlists">
+        <Link
+          label={_(msg`View your moderation lists`)}
+          testID="moderationlistsBtn"
+          to="/moderation/modlists">
           {state => (
             <SubItem
               title={_(msg`Moderation lists`)}
@@ -252,7 +255,10 @@ export function ModerationScreenInner({
           )}
         </Link>
         <Divider />
-        <Link testID="mutedAccountsBtn" to="/moderation/muted-accounts">
+        <Link
+          label={_(msg`View your muted accounts`)}
+          testID="mutedAccountsBtn"
+          to="/moderation/muted-accounts">
           {state => (
             <SubItem
               title={_(msg`Muted accounts`)}
@@ -264,7 +270,10 @@ export function ModerationScreenInner({
           )}
         </Link>
         <Divider />
-        <Link testID="blockedAccountsBtn" to="/moderation/blocked-accounts">
+        <Link
+          label={_(msg`View your blocked accounts`)}
+          testID="blockedAccountsBtn"
+          to="/moderation/blocked-accounts">
           {state => (
             <SubItem
               title={_(msg`Blocked accounts`)}
@@ -356,6 +365,7 @@ export function ModerationScreenInner({
                     <Trans>
                       Adult content can only be enabled via the Web at{' '}
                       <InlineLinkText
+                        label={_(msg`The Bluesky web application`)}
                         to=""
                         onPress={evt => {
                           evt.preventDefault()
@@ -569,7 +579,9 @@ function PwiOptOut() {
           </Trans>
         </Text>
 
-        <InlineLinkText to="https://blueskyweb.zendesk.com/hc/en-us/articles/15835264007693-Data-Privacy">
+        <InlineLinkText
+          label={_(msg`Learn more about what is public on Bluesky.`)}
+          to="https://blueskyweb.zendesk.com/hc/en-us/articles/15835264007693-Data-Privacy">
           <Trans>Learn more about what is public on Bluesky.</Trans>
         </InlineLinkText>
       </View>
