@@ -5598,10 +5598,6 @@ msgstr "回复排序"
 msgid "Sort replies to the same post by:"
 msgstr "对同一帖文的回复进行排序："
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:169
-#~ msgid "Source: <0>{0}</0>"
-#~ msgstr "来源：<0>{0}</0>"
-
 #: src/components/moderation/LabelsOnMeDialog.tsx:172
 msgid "Source: <0>{sourceName}</0>"
 msgstr "来源： <0>{sourceName}</0>"
@@ -6016,10 +6012,6 @@ msgstr "这个账户要求登录后才能查看其个人资料。"
 #: src/components/dms/BlockedByListDialog.tsx:34
 msgid "This account is blocked by one or more of your moderation lists. To unblock, please visit the lists directly and remove this user."
 msgstr "这个账户已被你的一个或多个内容审核列表所屏蔽。要解除屏蔽，请从内容审核列表中删除这个账户。"
-
-#: src/components/moderation/LabelsOnMeDialog.tsx:260
-#~ msgid "This appeal will be sent to <0>{0}</0>."
-#~ msgstr "这条申诉将发送至 <0>{0}</0>。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:265
 msgid "This appeal will be sent to <0>{sourceName}</0>."
