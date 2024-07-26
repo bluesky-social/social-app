@@ -59,7 +59,11 @@ export class FeedViewPostsSlice {
       ) {
         if (parent.uri !== root.uri) {
           this.items.unshift({
-            isParentBlocked: false, // TODO(dan)
+            isParentBlocked: Boolean(
+              grandparentAuthor?.viewer?.blockedBy ||
+                grandparentAuthor?.viewer?.blocking ||
+                grandparentAuthor?.viewer?.blockingByList,
+            ),
             parentAuthor: grandparentAuthor,
             post: parent,
           })
