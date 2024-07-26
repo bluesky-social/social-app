@@ -28,7 +28,6 @@ export function VisibilityView({
     [onChangeStatusOuter],
   )
 
-  // @TODO remove test wrapper
   return (
     <NativeView
       onChangeStatus={onChangeStatus}
