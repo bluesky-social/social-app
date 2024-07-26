@@ -113,6 +113,7 @@ export function VideoPlayer({
     }
     return () => {
       pause()
+      setFocused(false)
     }
   }, [active, play, pause])
 
@@ -176,6 +177,7 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
     if (ref.current.readyState >= HTMLMediaElement.HAVE_ENOUGH_DATA) {
       ref.current.play()
     } else {
+      // TODO: find different solution. can sometimes cause double-playing
       ref.current.addEventListener('canplay', () => {
         ref.current?.play()
       })
