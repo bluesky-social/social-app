@@ -206,7 +206,22 @@ let FeedItem = ({
     return null
   }
 
-  let formattedCount = authors.length > 1 ? formatCount(authors.length - 1) : ''
+  const formattedCount =
+    authors.length > 1 ? formatCount(authors.length - 1) : ''
+  const firstAuthorName = sanitizeDisplayName(
+    authors[0].profile.displayName || authors[0].profile.handle,
+  )
+  const niceTimestamp = niceDate(item.notification.indexedAt)
+  const a11yLabelUsers =
+    authors.length > 1
+      ? _(msg` and `) +
+        plural(authors.length - 1, {
+          one: `${formattedCount} other`,
+          other: `${formattedCount} others`,
+        })
+      : ''
+  const a11yLabel = `${firstAuthorName}${a11yLabelUsers} ${action} ${niceTimestamp}`
+
   return (
     <Link
       testID={`feedItem-by-${item.notification.author.handle}`}
@@ -223,6 +238,8 @@ let FeedItem = ({
       ]}
       href={itemHref}
       noFeedback
+      accessibilityHint=""
+      accessibilityLabel={a11yLabel}
       accessible={!isAuthorsExpanded}
       accessibilityActions={
         authors.length > 1
@@ -270,16 +287,15 @@ let FeedItem = ({
             showDmButton={item.type === 'starterpack-joined'}
           />
           <ExpandedAuthorsList visible={isAuthorsExpanded} authors={authors} />
-          <Text style={[styles.meta, a.self_start]}>
+          <Text
+            style={[styles.meta, a.self_start]}
+            accessibilityHint=""
+            accessibilityLabel={a11yLabel}>
             <TextLink
               key={authors[0].href}
               style={[pal.text, s.bold]}
               href={authors[0].href}
-              text={forceLTR(
-                sanitizeDisplayName(
-                  authors[0].profile.displayName || authors[0].profile.handle,
-                ),
-              )}
+              text={forceLTR(firstAuthorName)}
               disableMismatchWarning
             />
             {authors.length > 1 ? (
@@ -301,7 +317,7 @@ let FeedItem = ({
               {({timeElapsed}) => (
                 <Text
                   style={[pal.textLight, styles.pointer]}
-                  title={niceDate(item.notification.indexedAt)}>
+                  title={niceTimestamp}>
                   {' ' + timeElapsed}
                 </Text>
               )}
@@ -453,7 +469,6 @@ function CondensedAuthorsList({
           profile={authors[0].profile}
           moderation={authors[0].moderation.ui('avatar')}
           type={authors[0].profile.associated?.labeler ? 'labeler' : 'user'}
-          accessible={false}
         />
         {showDmButton ? <SayHelloBtn profile={authors[0].profile} /> : null}
       </View>
@@ -471,7 +486,6 @@ function CondensedAuthorsList({
               profile={author.profile}
               moderation={author.moderation.ui('avatar')}
               type={author.profile.associated?.labeler ? 'labeler' : 'user'}
-              accessible={false}
             />
           </View>
         ))}

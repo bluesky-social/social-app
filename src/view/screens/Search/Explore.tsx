@@ -119,7 +119,7 @@ function LoadMore({
         }
         return loadMoreItem
       })
-      .filter(<T,>(n?: T): n is T => Boolean(n))
+      .filter(n => !!n)
   }, [item.items, moderationOpts])
 
   if (items.length === 0) return null

@@ -99,6 +99,7 @@ export function FeedShutdownMsg({feedUri}: {feedUri: string}) {
         <Trans>
           This feed is no longer online. We are showing{' '}
           <InlineLinkText
+            label={_(msg`The Discover feed`)}
             to="/profile/bsky.app/feed/whats-hot"
             style={[a.text_md]}>
             Discover

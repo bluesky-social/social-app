@@ -270,7 +270,7 @@
     "react-scripts": "^5.0.1",
     "react-test-renderer": "18.2.0",
     "ts-node": "^10.9.1",
-    "typescript": "^5.3.3",
+    "typescript": "^5.5.4",
     "url-loader": "^4.1.1",
     "webpack": "^5.75.0",
     "webpack-bundle-analyzer": "^4.10.1",
