@@ -18,7 +18,7 @@ import {
   ModerationOpts,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg, Plural, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
@@ -175,6 +175,7 @@ let FeedItem = ({
   )
   const niceTimestamp = niceDate(item.notification.indexedAt)
 
+  let a11yAuthor = firstAuthorName
   let author = (
     <TextLink
       key={authors[0].href}
@@ -185,6 +186,7 @@ let FeedItem = ({
     />
   )
 
+  let a11yLabel = ''
   let action: ReactElement
   let icon = (
     <HeartIconFilled
@@ -197,6 +199,15 @@ let FeedItem = ({
   )
 
   if (item.type === 'post-like') {
+    a11yLabel =
+      authors.length > 1
+        ? _(
+            msg`${a11yAuthor} and ${plural(authors.length - 1, {
+              one: `${formattedCount} other`,
+              other: `${formattedCount} others`,
+            })} liked your post · ${niceTimestamp}`,
+          )
+        : _(msg`${a11yAuthor} liked your post · ${niceTimestamp}`)
     action =
       authors.length > 1 ? (
         <Trans>
@@ -214,6 +225,15 @@ let FeedItem = ({
         <Trans>{author} liked your post</Trans>
       )
   } else if (item.type === 'repost') {
+    a11yLabel =
+      authors.length > 1
+        ? _(
+            msg`${a11yAuthor} and ${plural(authors.length - 1, {
+              one: `${formattedCount} other`,
+              other: `${formattedCount} others`,
+            })} reposted your post · ${niceTimestamp}`,
+          )
+        : _(msg`${a11yAuthor} reposted your post · ${niceTimestamp}`)
     action =
       authors.length > 1 ? (
         <Trans>
@@ -236,6 +256,15 @@ let FeedItem = ({
       item.notification.author.viewer?.following &&
       gate('ungroup_follow_backs')
     ) {
+      a11yLabel =
+        authors.length > 1
+          ? _(
+              msg`${a11yAuthor} and ${plural(authors.length - 1, {
+                one: `${formattedCount} other`,
+                other: `${formattedCount} others`,
+              })} followed you back · ${niceTimestamp}`,
+            )
+          : _(msg`${a11yAuthor} followed you back · ${niceTimestamp}`)
       action =
         authors.length > 1 ? (
           <Trans>
@@ -253,6 +282,15 @@ let FeedItem = ({
           <Trans>{author} followed you back</Trans>
         )
     } else {
+      a11yLabel =
+        authors.length > 1
+          ? _(
+              msg`${a11yAuthor} and ${plural(authors.length - 1, {
+                one: `${formattedCount} other`,
+                other: `${formattedCount} others`,
+              })} followed you · ${niceTimestamp}`,
+            )
+          : _(msg`${a11yAuthor} followed you · ${niceTimestamp}`)
       action =
         authors.length > 1 ? (
           <Trans>
@@ -272,6 +310,15 @@ let FeedItem = ({
     }
     icon = <PersonPlusIcon size="xl" style={{color: t.palette.primary_500}} />
   } else if (item.type === 'feedgen-like') {
+    a11yLabel =
+      authors.length > 1
+        ? _(
+            msg`${a11yAuthor} and ${plural(authors.length - 1, {
+              one: `${formattedCount} other`,
+              other: `${formattedCount} others`,
+            })} liked your custom feed · ${niceTimestamp}`,
+          )
+        : _(msg`${a11yAuthor} liked your custom feed · ${niceTimestamp}`)
     action =
       authors.length > 1 ? (
         <Trans>
@@ -289,6 +336,17 @@ let FeedItem = ({
         <Trans>{author} liked your custom feed</Trans>
       )
   } else if (item.type === 'starterpack-joined') {
+    a11yLabel =
+      authors.length > 1
+        ? _(
+            msg`${a11yAuthor} and ${plural(authors.length - 1, {
+              one: `${formattedCount} other`,
+              other: `${formattedCount} others`,
+            })} signed up with your starter pack · ${niceTimestamp}`,
+          )
+        : _(
+            msg`${a11yAuthor} signed up with your starter pack · ${niceTimestamp}`,
+          )
     action =
       authors.length > 1 ? (
         <Trans>
@@ -313,8 +371,6 @@ let FeedItem = ({
   } else {
     return null
   }
-
-  const a11yLabel = `${action} ${niceTimestamp}`
 
   return (
     <Link
