@@ -8,8 +8,12 @@ class ExpoBlueskyVisibilityViewModule : Module() {
     ModuleDefinition {
       Name("ExpoBlueskyVisibilityView")
 
+      AsyncFunction("updateActiveViewAsync") {
+        VisibilityViewManager.updateActiveView()
+      }
+
       View(VisibilityView::class) {
-        Events(arrayOf("onVisibleChange"))
+        Events(arrayOf("onChangeStatus"))
 
         Prop("enabled") { view: VisibilityView, prop: Boolean ->
           view._enabled = prop

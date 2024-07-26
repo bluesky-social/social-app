@@ -1,4 +1,4 @@
-import ExpoModulesCore
+import ModulesCore
 
 class VisibilityView: ExpoView {
   // Props
