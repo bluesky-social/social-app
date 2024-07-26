@@ -93,7 +93,6 @@ export interface FeedPostSlice {
   _reactKey: string
   rootUri: string
   hasGap: boolean
-  isThread: boolean
   items: FeedPostSliceItem[]
 }
 
@@ -332,13 +331,6 @@ export function usePostFeedQuery(
                     _isFeedPostSlice: true,
                     hasGap: slice.hasGap,
                     rootUri: slice.uri,
-                    isThread:
-                      slice.items.length > 1 &&
-                      slice.items.every(
-                        item =>
-                          item.post.author.did ===
-                          slice.items[0].post.author.did,
-                      ),
                     items: slice.items
                       .map((item, i) => {
                         if (
