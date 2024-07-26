@@ -13,11 +13,13 @@ import {
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyFeedPost,
+  AppBskyGraphFollow,
   moderateProfile,
   ModerationDecision,
   ModerationOpts,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
+import {TID} from '@atproto/common-web'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -184,10 +186,21 @@ let FeedItem = ({
     action = _(msg`reposted your post`)
     icon = <RepostIcon size="xl" style={{color: t.palette.positive_600}} />
   } else if (item.type === 'follow') {
+    let isFollowBack = false
     if (
       item.notification.author.viewer?.following &&
-      gate('ungroup_follow_backs')
+      AppBskyGraphFollow.isRecord(item.notification.record)
     ) {
+      const rkey = new AtUri(item.notification.author.viewer.following).rkey
+      const followingTimestamp = TID.fromStr(rkey).timestamp()
+      const followedTimestamp =
+        new Date(item.notification.record.createdAt).getTime() * 1000
+
+      console.log(followedTimestamp, followingTimestamp)
+      isFollowBack = followedTimestamp > followingTimestamp
+    }
+
+    if (isFollowBack && gate('ungroup_follow_backs')) {
       action = _(msg`followed you back`)
     } else {
       action = _(msg`followed you`)
