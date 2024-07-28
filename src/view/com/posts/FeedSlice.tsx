@@ -56,12 +56,12 @@ let FeedSlice = ({
           record={slice.items[last].record}
           reason={slice.items[last].reason}
           feedContext={slice.items[last].feedContext}
-          parentAuthor={slice.items[2].parentAuthor}
+          parentAuthor={slice.items[last].parentAuthor}
           showReplyTo={false}
           moderation={slice.items[last].moderation}
           isThreadParent={isThreadParentAt(slice.items, last)}
           isThreadChild={isThreadChildAt(slice.items, last)}
-          isParentBlocked={slice.items[2].isParentBlocked}
+          isParentBlocked={slice.items[last].isParentBlocked}
           isThreadLastChild
         />
       </>

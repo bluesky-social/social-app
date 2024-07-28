@@ -62,12 +62,12 @@ import {UserAvatar} from 'view/com/util/UserAvatar'
 import {ScrollView} from 'view/com/util/Views'
 import {DeactivateAccountDialog} from '#/screens/Settings/components/DeactivateAccountDialog'
 import {useTheme} from '#/alf'
+import {atoms as a} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
 import {navigate, resetToTab} from '#/Navigation'
 import {Email2FAToggle} from './Email2FAToggle'
 import {ExportCarDialog} from './ExportCarDialog'
-import hairlineWidth = StyleSheet.hairlineWidth
 
 function SettingsAccountCard({
   account,
@@ -104,7 +104,7 @@ function SettingsAccountCard({
         />
       </View>
       <View style={[s.flex1]}>
-        <Text type="md-bold" style={pal.text} numberOfLines={1}>
+        <Text type="md-bold" style={[pal.text, a.self_start]} numberOfLines={1}>
           {profile?.displayName || account.handle}
         </Text>
         <Text type="sm" style={pal.textLight} numberOfLines={1}>
@@ -252,9 +252,10 @@ export function SettingsScreen({}: Props) {
   }, [clearPreferences])
 
   const onPressResetOnboarding = React.useCallback(async () => {
+    navigation.navigate('Home')
     onboardingDispatch({type: 'start'})
     Toast.show(_(msg`Onboarding reset`))
-  }, [onboardingDispatch, _])
+  }, [navigation, onboardingDispatch, _])
 
   const onPressBuildInfo = React.useCallback(() => {
     setStringAsync(
@@ -324,7 +325,7 @@ export function SettingsScreen({}: Props) {
         showBackButton={isMobile}
         style={[
           pal.border,
-          {borderBottomWidth: hairlineWidth},
+          {borderBottomWidth: StyleSheet.hairlineWidth},
           !isMobile && {borderLeftWidth: 1, borderRightWidth: 1},
         ]}>
         <View style={{flex: 1}}>

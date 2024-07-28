@@ -19,6 +19,7 @@ import {preferencesQueryKey} from '#/state/queries/preferences'
 import {RQKEY as profileRQKey} from '#/state/queries/profile'
 import {useAgent} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
+import {useProgressGuideControls} from '#/state/shell/progress-guide'
 import {uploadBlob} from 'lib/api'
 import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
 import {useSetHasCheckedForStarterPack} from 'state/preferences/used-starter-packs'
@@ -42,6 +43,7 @@ import {News2_Stroke2_Corner0_Rounded as News} from '#/components/icons/News2'
 import {Trending2_Stroke2_Corner2_Rounded as Trending} from '#/components/icons/Trending2'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {TOURS, useSetQueuedTour} from '#/tours'
 
 export function StepFinished() {
   const {_} = useLingui()
@@ -56,6 +58,8 @@ export function StepFinished() {
   const activeStarterPack = useActiveStarterPack()
   const setActiveStarterPack = useSetActiveStarterPack()
   const setHasCheckedForStarterPack = useSetHasCheckedForStarterPack()
+  const setQueuedTour = useSetQueuedTour()
+  const {startProgressGuide} = useProgressGuideControls()
 
   const finishOnboarding = React.useCallback(async () => {
     setSaving(true)
@@ -110,8 +114,8 @@ export function StepFinished() {
 
           // Any starter pack feeds will be pinned _after_ the defaults
           if (starterPack && starterPack.feeds?.length) {
-            feedsToSave.concat(
-              starterPack.feeds.map(f => ({
+            feedsToSave.push(
+              ...starterPack.feeds.map(f => ({
                 type: 'feed',
                 value: f.uri,
                 pinned: true,
@@ -182,6 +186,8 @@ export function StepFinished() {
     setSaving(false)
     setActiveStarterPack(undefined)
     setHasCheckedForStarterPack(true)
+    setQueuedTour(TOURS.HOME)
+    startProgressGuide('like-10-and-follow-7')
     dispatch({type: 'finish'})
     onboardDispatch({type: 'finish'})
     track('OnboardingV2:StepFinished:End')
@@ -214,6 +220,8 @@ export function StepFinished() {
     requestNotificationsPermission,
     setActiveStarterPack,
     setHasCheckedForStarterPack,
+    setQueuedTour,
+    startProgressGuide,
   ])
 
   React.useEffect(() => {

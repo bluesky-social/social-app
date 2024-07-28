@@ -17,11 +17,13 @@ import {
 
 import {HomeFeedAPI} from '#/lib/api/feed/home'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
+import {DISCOVER_FEED_URI} from '#/lib/constants'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
 import {useAgent} from '#/state/session'
+import * as userActionHistory from '#/state/userActionHistory'
 import {AuthorFeedAPI} from 'lib/api/feed/author'
 import {CustomFeedAPI} from 'lib/api/feed/custom'
 import {FollowingFeedAPI} from 'lib/api/feed/following'
@@ -49,6 +51,7 @@ type AuthorFilter =
   | 'posts_with_media'
 type FeedUri = string
 type ListUri = string
+type ListFilter = 'as_following' // Applies current Following settings. Currently client-side.
 
 export type FeedDescriptor =
   | 'following'
@@ -56,6 +59,7 @@ export type FeedDescriptor =
   | `feedgen|${FeedUri}`
   | `likes|${ActorDid}`
   | `list|${ListUri}`
+  | `list|${ListUri}|${ListFilter}`
 export interface FeedParams {
   disableTuner?: boolean
   mergeFeedEnabled?: boolean
@@ -74,7 +78,10 @@ export interface FeedPostSliceItem {
   uri: string
   post: AppBskyFeedDefs.PostView
   record: AppBskyFeedPost.Record
-  reason?: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource
+  reason?:
+    | AppBskyFeedDefs.ReasonRepost
+    | ReasonFeedSource
+    | {[k: string]: unknown; $type: string}
   feedContext: string | undefined
   moderation: ModerationDecision
   parentAuthor?: AppBskyActorDefs.ProfileViewBasic
@@ -129,6 +136,7 @@ export function usePostFeedQuery(
     result: InfiniteData<FeedPage>
   } | null>(null)
   const lastPageCountRef = useRef(0)
+  const isDiscover = feedDesc.includes(DISCOVER_FEED_URI)
 
   // Make sure this doesn't invalidate unless really needed.
   const selectArgs = React.useMemo(
@@ -137,8 +145,15 @@ export function usePostFeedQuery(
       disableTuner: params?.disableTuner,
       moderationOpts,
       ignoreFilterFor: opts?.ignoreFilterFor,
+      isDiscover,
     }),
-    [feedTuners, params?.disableTuner, moderationOpts, opts?.ignoreFilterFor],
+    [
+      feedTuners,
+      params?.disableTuner,
+      moderationOpts,
+      opts?.ignoreFilterFor,
+      isDiscover,
+    ],
   )
 
   const query = useInfiniteQuery<
@@ -217,8 +232,13 @@ export function usePostFeedQuery(
       (data: InfiniteData<FeedPageUnselected, RQPageParam>) => {
         // If the selection depends on some data, that data should
         // be included in the selectArgs object and read here.
-        const {feedTuners, disableTuner, moderationOpts, ignoreFilterFor} =
-          selectArgs
+        const {
+          feedTuners,
+          disableTuner,
+          moderationOpts,
+          ignoreFilterFor,
+          isDiscover,
+        } = selectArgs
 
         const tuner = disableTuner
           ? new NoopFeedTuner()
@@ -291,10 +311,25 @@ export function usePostFeedQuery(
                     }
                   }
 
-                  return {
+                  if (isDiscover) {
+                    userActionHistory.seen(
+                      slice.items.map(item => ({
+                        feedContext: slice.feedContext,
+                        likeCount: item.post.likeCount ?? 0,
+                        repostCount: item.post.repostCount ?? 0,
+                        replyCount: item.post.replyCount ?? 0,
+                        isFollowedBy: Boolean(
+                          item.post.author.viewer?.followedBy,
+                        ),
+                        uri: item.post.uri,
+                      })),
+                    )
+                  }
+
+                  const feedPostSlice: FeedPostSlice = {
                     _reactKey: slice._reactKey,
                     _isFeedPostSlice: true,
-                    rootUri: slice.rootItem.post.uri,
+                    rootUri: slice.uri,
                     isThread:
                       slice.items.length > 1 &&
                       slice.items.every(
@@ -309,35 +344,42 @@ export function usePostFeedQuery(
                           AppBskyFeedPost.validateRecord(item.post.record)
                             .success
                         ) {
-                          const parentAuthor =
-                            item.reply?.parent?.author ??
-                            slice.items[i + 1]?.reply?.grandparentAuthor
+                          const parent = item.reply?.parent
+                          let parentAuthor:
+                            | AppBskyActorDefs.ProfileViewBasic
+                            | undefined
+                          if (AppBskyFeedDefs.isPostView(parent)) {
+                            parentAuthor = parent.author
+                          }
+                          if (!parentAuthor) {
+                            parentAuthor =
+                              slice.items[i + 1]?.reply?.grandparentAuthor
+                          }
                           const replyRef = item.reply
                           const isParentBlocked = AppBskyFeedDefs.isBlockedPost(
                             replyRef?.parent,
                           )
 
-                          return {
+                          const feedPostSliceItem: FeedPostSliceItem = {
                             _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
                             uri: item.post.uri,
                             post: item.post,
                             record: item.post.record,
-                            reason:
-                              i === 0 && slice.source
-                                ? slice.source
-                                : item.reason,
-                            feedContext: item.feedContext || slice.feedContext,
+                            reason: slice.reason,
+                            feedContext: slice.feedContext,
                             moderation: moderations[i],
                             parentAuthor,
                             isParentBlocked,
                           }
+                          return feedPostSliceItem
                         }
                         return undefined
                       })
-                      .filter(Boolean) as FeedPostSliceItem[],
+                      .filter(n => !!n),
                   }
+                  return feedPostSlice
                 })
-                .filter(Boolean) as FeedPostSlice[],
+                .filter(n => !!n),
             })),
           ],
         }

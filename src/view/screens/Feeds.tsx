@@ -33,14 +33,14 @@ import {ViewHeader} from 'view/com/util/ViewHeader'
 import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
 import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
 import {atoms as a, useTheme} from '#/alf'
+import {Divider} from '#/components/Divider'
+import * as FeedCard from '#/components/FeedCard'
 import {IconCircle} from '#/components/IconCircle'
+import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
 import {ListMagnifyingGlass_Stroke2_Corner0_Rounded} from '#/components/icons/ListMagnifyingGlass'
 import {ListSparkle_Stroke2_Corner0_Rounded} from '#/components/icons/ListSparkle'
-import hairlineWidth = StyleSheet.hairlineWidth
-import {Divider} from '#/components/Divider'
-import * as FeedCard from '#/components/FeedCard'
-import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
+import * as ListCard from '#/components/ListCard'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Feeds'>
 
@@ -495,7 +495,7 @@ export function FeedsScreen(_props: Props) {
       } else if (item.type === 'popularFeed') {
         return (
           <View style={[a.px_lg, a.pt_lg, a.gap_lg]}>
-            <FeedCard.Default type="feed" view={item.feed} />
+            <FeedCard.Default view={item.feed} />
             <Divider />
           </View>
         )
@@ -627,7 +627,7 @@ function FollowingFeed() {
             fill={t.palette.white}
           />
         </View>
-        <FeedCard.TitleAndByline title={_(msg`Following`)} type="feed" />
+        <FeedCard.TitleAndByline title={_(msg`Following`)} />
       </FeedCard.Header>
     </View>
   )
@@ -639,34 +639,46 @@ function SavedFeed({
   savedFeed: SavedFeedItem & {type: 'feed' | 'list'}
 }) {
   const t = useTheme()
-  const {view: feed} = savedFeed
-  const displayName =
-    savedFeed.type === 'feed' ? savedFeed.view.displayName : savedFeed.view.name
 
-  return (
-    <FeedCard.Link testID={`saved-feed-${feed.displayName}`} {...savedFeed}>
+  const commonStyle = [
+    a.w_full,
+    a.flex_1,
+    a.px_lg,
+    a.py_md,
+    a.border_b,
+    t.atoms.border_contrast_low,
+  ]
+
+  return savedFeed.type === 'feed' ? (
+    <FeedCard.Link
+      testID={`saved-feed-${savedFeed.view.displayName}`}
+      {...savedFeed}>
       {({hovered, pressed}) => (
         <View
-          style={[
-            a.flex_1,
-            a.px_lg,
-            a.py_md,
-            a.border_b,
-            t.atoms.border_contrast_low,
-            (hovered || pressed) && t.atoms.bg_contrast_25,
-          ]}>
+          style={[commonStyle, (hovered || pressed) && t.atoms.bg_contrast_25]}>
           <FeedCard.Header>
-            <FeedCard.Avatar src={feed.avatar} size={28} />
-            <FeedCard.TitleAndByline
-              title={displayName}
-              type={savedFeed.type}
-            />
+            <FeedCard.Avatar src={savedFeed.view.avatar} size={28} />
+            <FeedCard.TitleAndByline title={savedFeed.view.displayName} />
 
             <ChevronRight size="sm" fill={t.atoms.text_contrast_low.color} />
           </FeedCard.Header>
         </View>
       )}
     </FeedCard.Link>
+  ) : (
+    <ListCard.Link testID={`saved-feed-${savedFeed.view.name}`} {...savedFeed}>
+      {({hovered, pressed}) => (
+        <View
+          style={[commonStyle, (hovered || pressed) && t.atoms.bg_contrast_25]}>
+          <ListCard.Header>
+            <ListCard.Avatar src={savedFeed.view.avatar} size={28} />
+            <ListCard.TitleAndByline title={savedFeed.view.name} />
+
+            <ChevronRight size="sm" fill={t.atoms.text_contrast_low.color} />
+          </ListCard.Header>
+        </View>
+      )}
+    </ListCard.Link>
   )
 }
 
@@ -780,13 +792,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 14,
     gap: 12,
-    borderBottomWidth: hairlineWidth,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   savedFeedMobile: {
     paddingVertical: 10,
   },
   offlineSlug: {
-    borderWidth: hairlineWidth,
+    borderWidth: StyleSheet.hairlineWidth,
     borderRadius: 4,
     paddingHorizontal: 4,
     paddingVertical: 2,

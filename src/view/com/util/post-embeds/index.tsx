@@ -19,17 +19,17 @@ import {
 } from '@atproto/api'
 
 import {ImagesLightbox, useLightboxControls} from '#/state/lightbox'
+import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {usePalette} from 'lib/hooks/usePalette'
 import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {atoms as a} from '#/alf'
+import {Embed as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {ContentHider} from '../../../../components/moderation/ContentHider'
 import {AutoSizedImage} from '../images/AutoSizedImage'
 import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
 import {ExternalLinkEmbed} from './ExternalLinkEmbed'
 import {ListEmbed} from './ListEmbed'
 import {MaybeQuoteEmbed} from './QuoteEmbed'
-import hairlineWidth = StyleSheet.hairlineWidth
-import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -90,6 +90,10 @@ export function PostEmbeds({
       return <ListEmbed item={embed.record} />
     }
 
+    if (AppBskyGraphDefs.isStarterPackViewBasic(embed.record)) {
+      return <StarterPackCard starterPack={embed.record} />
+    }
+
     // quote post
     // =
     return (
@@ -126,7 +130,7 @@ export function PostEmbeds({
         const {alt, thumb, aspectRatio} = images[0]
         return (
           <ContentHider modui={moderation?.ui('contentMedia')}>
-            <View style={[styles.imagesContainer, style]}>
+            <View style={[styles.container, style]}>
               <AutoSizedImage
                 alt={alt}
                 uri={thumb}
@@ -151,7 +155,7 @@ export function PostEmbeds({
 
       return (
         <ContentHider modui={moderation?.ui('contentMedia')}>
-          <View style={[styles.imagesContainer, style]}>
+          <View style={[styles.container, style]}>
             <ImageLayoutGrid
               images={embed.images}
               onPress={_openLightbox}
@@ -169,7 +173,11 @@ export function PostEmbeds({
     const link = embed.external
     return (
       <ContentHider modui={moderation?.ui('contentMedia')}>
-        <ExternalLinkEmbed link={link} onOpen={onOpen} style={style} />
+        <ExternalLinkEmbed
+          link={link}
+          onOpen={onOpen}
+          style={[styles.container, style]}
+        />
       </ContentHider>
     )
   }
@@ -178,7 +186,7 @@ export function PostEmbeds({
 }
 
 const styles = StyleSheet.create({
-  imagesContainer: {
+  container: {
     marginTop: 8,
   },
   altContainer: {
@@ -196,7 +204,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   customFeedOuter: {
-    borderWidth: hairlineWidth,
+    borderWidth: StyleSheet.hairlineWidth,
     borderRadius: 8,
     marginTop: 4,
     paddingHorizontal: 12,

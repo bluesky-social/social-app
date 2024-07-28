@@ -140,6 +140,7 @@ function HeaderReady({
     userBlock?: ModerationCause
   }
 }) {
+  const {_} = useLingui()
   const t = useTheme()
   const convoState = useConvo()
   const profile = useProfileShadow(profileUnshadowed)
@@ -156,6 +157,7 @@ function HeaderReady({
     <View style={[a.flex_1]}>
       <View style={[a.w_full, a.flex_row, a.align_center, a.justify_between]}>
         <Link
+          label={_(msg`View ${displayName}'s profile`)}
           style={[a.flex_row, a.align_start, a.gap_md, a.flex_1, a.pr_md]}
           to={makeProfileLink(profile)}>
           <View style={[a.pt_2xs]}>
@@ -168,7 +170,12 @@ function HeaderReady({
           </View>
           <View style={a.flex_1}>
             <Text
-              style={[a.text_md, a.font_bold, web(a.leading_normal)]}
+              style={[
+                a.text_md,
+                a.font_bold,
+                a.self_start,
+                web(a.leading_normal),
+              ]}
               numberOfLines={1}>
               {displayName}
             </Text>
@@ -214,7 +221,7 @@ function HeaderReady({
         ]}>
         <PostAlerts
           modui={moderation.ui('contentList')}
-          size="large"
+          size="lg"
           style={[a.pt_xs]}
         />
       </View>

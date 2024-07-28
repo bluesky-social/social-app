@@ -7,6 +7,7 @@ import {useMutation} from '@tanstack/react-query'
 
 import {useLabelInfo} from '#/lib/moderation/useLabelInfo'
 import {makeProfileLink} from '#/lib/routes/links'
+import {useGate} from '#/lib/statsig/statsig'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {useAgent, useSession} from '#/state/session'
@@ -127,6 +128,9 @@ function Label({
   const t = useTheme()
   const {_} = useLingui()
   const {labeler, strings} = useLabelInfo(label)
+  const sourceName = labeler
+    ? sanitizeHandle(labeler.creator.handle, '@')
+    : label.src
   return (
     <View
       style={[
@@ -168,13 +172,12 @@ function Label({
             <Trans>
               Source:{' '}
               <InlineLinkText
+                label={sourceName}
                 to={makeProfileLink(
                   labeler ? labeler.creator : {did: label.src, handle: ''},
                 )}
                 onPress={() => control.close()}>
-                {labeler
-                  ? sanitizeHandle(labeler.creator.handle, '@')
-                  : label.src}
+                {sourceName}
               </InlineLinkText>
             </Trans>
           )}
@@ -201,26 +204,49 @@ function AppealForm({
   const [details, setDetails] = React.useState('')
   const isAccountReport = 'did' in subject
   const agent = useAgent()
+  const gate = useGate()
+  const sourceName = labeler
+    ? sanitizeHandle(labeler.creator.handle, '@')
+    : label.src
 
   const {mutate, isPending} = useMutation({
     mutationFn: async () => {
       const $type = !isAccountReport
         ? 'com.atproto.repo.strongRef'
         : 'com.atproto.admin.defs#repoRef'
-      await agent
-        .withProxy('atproto_labeler', label.src)
-        .createModerationReport({
-          reasonType: ComAtprotoModerationDefs.REASONAPPEAL,
-          subject: {
-            $type,
-            ...subject,
+      if (gate('session_withproxy_fix')) {
+        await agent.createModerationReport(
+          {
+            reasonType: ComAtprotoModerationDefs.REASONAPPEAL,
+            subject: {
+              $type,
+              ...subject,
+            },
+            reason: details,
           },
-          reason: details,
-        })
+          {
+            encoding: 'application/json',
+            headers: {
+              'atproto-proxy': `${label.src}#atproto_labeler`,
+            },
+          },
+        )
+      } else {
+        await agent
+          .withProxy('atproto_labeler', label.src)
+          .createModerationReport({
+            reasonType: ComAtprotoModerationDefs.REASONAPPEAL,
+            subject: {
+              $type,
+              ...subject,
+            },
+            reason: details,
+          })
+      }
     },
     onError: err => {
       logger.error('Failed to submit label appeal', {message: err})
-      Toast.show(_(msg`Failed to submit appeal, please try again.`))
+      Toast.show(_(msg`Failed to submit appeal, please try again.`), 'xmark')
     },
     onSuccess: () => {
       control.close()
@@ -239,12 +265,13 @@ function AppealForm({
         <Trans>
           This appeal will be sent to{' '}
           <InlineLinkText
+            label={sourceName}
             to={makeProfileLink(
               labeler ? labeler.creator : {did: label.src, handle: ''},
             )}
             onPress={() => control.close()}
             style={[a.text_md, a.leading_snug]}>
-            {labeler ? sanitizeHandle(labeler.creator.handle, '@') : label.src}
+            {sourceName}
           </InlineLinkText>
           .
         </Trans>

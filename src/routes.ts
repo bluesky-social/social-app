@@ -5,6 +5,7 @@ export const router = new Router({
   Search: '/search',
   Feeds: '/feeds',
   Notifications: '/notifications',
+  NotificationsSettings: '/notifications/settings',
   Settings: '/settings',
   LanguageSettings: '/settings/language',
   Lists: '/lists',
@@ -44,5 +45,6 @@ export const router = new Router({
   Start: '/start/:name/:rkey',
   StarterPackEdit: '/starter-pack/edit/:rkey',
   StarterPack: '/starter-pack/:name/:rkey',
+  StarterPackShort: '/starter-pack-short/:code',
   StarterPackWizard: '/starter-pack/create',
 })

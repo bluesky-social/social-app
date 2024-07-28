@@ -9,9 +9,8 @@ import {useGate} from '#/lib/statsig/statsig'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useSession} from '#/state/session'
-import {atoms as a, select, useTheme} from '#/alf'
+import {atoms as a} from '#/alf'
 import {Button} from '#/components/Button'
-import {PlusSmall_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 
 // @TODO Fabric
 
@@ -25,7 +24,6 @@ export function AviFollowButton({
   children: React.ReactNode
 }) {
   const {_} = useLingui()
-  const t = useTheme()
   const profile = useProfileShadow(author)
   // const {follow} = useFollowMethods({
   //   profile: profile,
@@ -84,30 +82,44 @@ export function AviFollowButton({
           hitSlop={createHitslop(3)}
           style={[
             a.rounded_full,
-            select(t.name, {
-              light: t.atoms.bg_contrast_100,
-              dim: t.atoms.bg_contrast_100,
-              dark: t.atoms.bg_contrast_200,
-            }),
             a.absolute,
             {
-              bottom: -1,
-              right: -1,
-              borderWidth: 1,
-              borderColor: t.atoms.bg.backgroundColor,
+              height: 30,
+              width: 30,
+              bottom: -7,
+              right: -7,
             },
           ]}>
+          <></>
           {/*<NativeDropdown items={items}>*/}
-          <Plus
-            size="sm"
-            fill={
-              select(t.name, {
-                light: t.atoms.bg_contrast_600,
-                dim: t.atoms.bg_contrast_500,
-                dark: t.atoms.bg_contrast_600,
-              }).backgroundColor
-            }
-          />
+          {/*  <View*/}
+          {/*    style={[a.h_full, a.w_full, a.justify_center, a.align_center]}>*/}
+          {/*    <View*/}
+          {/*      style={[*/}
+          {/*        a.rounded_full,*/}
+          {/*        a.align_center,*/}
+          {/*        select(t.name, {*/}
+          {/*          light: t.atoms.bg_contrast_100,*/}
+          {/*          dim: t.atoms.bg_contrast_100,*/}
+          {/*          dark: t.atoms.bg_contrast_200,*/}
+          {/*        }),*/}
+          {/*        {*/}
+          {/*          borderWidth: 1,*/}
+          {/*          borderColor: t.atoms.bg.backgroundColor,*/}
+          {/*        },*/}
+          {/*      ]}>*/}
+          {/*      <Plus*/}
+          {/*        size="sm"*/}
+          {/*        fill={*/}
+          {/*          select(t.name, {*/}
+          {/*            light: t.atoms.bg_contrast_600,*/}
+          {/*            dim: t.atoms.bg_contrast_500,*/}
+          {/*            dark: t.atoms.bg_contrast_600,*/}
+          {/*          }).backgroundColor*/}
+          {/*        }*/}
+          {/*      />*/}
+          {/*    </View>*/}
+          {/*  </View>*/}
           {/*</NativeDropdown>*/}
         </Button>
       )}

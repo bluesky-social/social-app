@@ -5,7 +5,7 @@ import {Trans} from '@lingui/macro'
 
 import {Shadow} from '#/state/cache/types'
 import {isInvalidHandle} from 'lib/strings/handles'
-import {isAndroid} from 'platform/detection'
+import {isIOS} from 'platform/detection'
 import {atoms as a, useTheme, web} from '#/alf'
 import {NewskieDialog} from '#/components/NewskieDialog'
 import {Text} from '#/components/Typography'
@@ -23,7 +23,7 @@ export function ProfileHeaderHandle({
   return (
     <View
       style={[a.flex_row, a.gap_xs, a.align_center]}
-      pointerEvents={disableTaps ? 'none' : isAndroid ? 'box-only' : 'auto'}>
+      pointerEvents={disableTaps ? 'none' : isIOS ? 'auto' : 'box-none'}>
       <NewskieDialog profile={profile} disabled={disableTaps} />
       {profile.viewer?.followedBy && !blockHide ? (
         <View style={[t.atoms.bg_contrast_25, a.rounded_xs, a.px_sm, a.py_xs]}>

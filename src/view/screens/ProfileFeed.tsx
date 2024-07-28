@@ -53,6 +53,7 @@ import * as Toast from 'view/com/util/Toast'
 import {CenteredView} from 'view/com/util/Views'
 import {atoms as a, useTheme} from '#/alf'
 import {Button as NewButton, ButtonText} from '#/components/Button'
+import {useRichText} from '#/components/hooks/useRichText'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {
@@ -204,6 +205,7 @@ export function ProfileFeedScreenInner({
         _(
           msg`There was an an issue updating your feeds, please check your internet connection and try again.`,
         ),
+        'xmark',
       )
       logger.error('Failed up update feeds', {message: err})
     }
@@ -230,7 +232,7 @@ export function ProfileFeedScreenInner({
         ])
       }
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`))
+      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
       logger.error('Failed to toggle pinned feed', {message: e})
     }
   }, [
@@ -518,6 +520,7 @@ function AboutSection({
   const {mutateAsync: likeFeed, isPending: isLikePending} = useLikeMutation()
   const {mutateAsync: unlikeFeed, isPending: isUnlikePending} =
     useUnlikeMutation()
+  const [resolvedRT] = useRichText(feedInfo.description.text || '')
 
   const isLiked = !!likeUri
   const likeCount =
@@ -541,6 +544,7 @@ function AboutSection({
         _(
           msg`There was an an issue contacting the server, please check your internet connection and try again.`,
         ),
+        'xmark',
       )
       logger.error('Failed up toggle like', {message: err})
     }
@@ -553,7 +557,7 @@ function AboutSection({
           <RichText
             testID="listDescription"
             style={[a.text_md]}
-            value={feedInfo.description}
+            value={resolvedRT ?? feedInfo.description}
           />
         ) : (
           <Text type="lg" style={[{fontStyle: 'italic'}, pal.textLight]}>

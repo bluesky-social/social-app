@@ -165,9 +165,7 @@ export function ContentHider({
 }
 
 const styles = StyleSheet.create({
-  outer: {
-    overflow: 'hidden',
-  },
+  outer: {},
   cover: {
     flexDirection: 'row',
     alignItems: 'center',

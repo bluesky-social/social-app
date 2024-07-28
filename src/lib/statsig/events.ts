@@ -25,13 +25,24 @@ export type LogEvents = {
   }
   'state:foreground:sampled': {}
   'router:navigate:sampled': {}
+  'deepLink:referrerReceived': {
+    to: string
+    referrer: string
+    hostname: string
+  }
 
   // Screen events
   'splash:signInPressed': {}
   'splash:createAccountPressed': {}
   'signup:nextPressed': {
     activeStep: number
+    phoneVerificationRequired?: boolean
   }
+  'signup:backPressed': {
+    activeStep: number
+  }
+  'signup:captchaSuccess': {}
+  'signup:captchaFailure': {}
   'onboarding:interests:nextPressed': {
     selectedInterests: string[]
     selectedInterestsLength: number
@@ -147,6 +158,7 @@ export type LogEvents = {
       | 'ProfileHoverCard'
       | 'AvatarButton'
       | 'StarterPackProfilesList'
+      | 'FeedInterstitial'
   }
   'profile:unfollow': {
     logContext:
@@ -160,6 +172,7 @@ export type LogEvents = {
       | 'Chat'
       | 'AvatarButton'
       | 'StarterPackProfilesList'
+      | 'FeedInterstitial'
   }
   'chat:create': {
     logContext: 'ProfileHeader' | 'NewChatDialog' | 'SendViaChatDialog'
@@ -188,6 +201,15 @@ export type LogEvents = {
     profilesCount: number
     feedsCount: number
   }
+  'starterPack:ctaPress': {
+    starterPack: string
+  }
+  'starterPack:opened': {
+    starterPack: string
+  }
+
+  'feed:interstitial:profileCard:press': {}
+  'feed:interstitial:feedCard:press': {}
 
   'test:all:always': {}
   'test:all:sometimes': {}
