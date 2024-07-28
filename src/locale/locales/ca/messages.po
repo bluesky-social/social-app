@@ -6864,7 +6864,7 @@ msgstr "Canvia el compte"
 
 #: src/tours/HomeTour.tsx:48
 msgid "Switch between feeds to control your experience."
-msgstr "Canvia entre canals per controlar la teva experiència"
+msgstr "Canvia entre canals per controlar la teva experiència."
 
 #: src/view/screens/Settings/index.tsx:161
 msgid "Switch to {0}"
