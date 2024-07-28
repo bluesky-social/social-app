@@ -163,7 +163,7 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
   }
 
   return (
-    <View testID="signIn" behavior="padding" style={a.flex_1}>
+    <View testID="signIn" style={a.flex_1}>
       <LoggedOutLayout
         leadin=""
         title={title}
