@@ -6900,7 +6900,7 @@ msgstr "Alt"
 
 #: src/components/ProgressGuide/Toast.tsx:150
 msgid "Tap to dismiss"
-msgstr "toca per a ignorar"
+msgstr "Toca per a ignorar"
 
 #: src/view/com/util/images/AutoSizedImage.tsx:70
 msgid "Tap to view fully"
