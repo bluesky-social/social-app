@@ -1,7 +1,7 @@
 {
   "platforms": ["ios", "tvos", "android", "web"],
   "ios": {
-    "modules": ["ExpoBlueskySharedPrefsModule", "ExpoBlueskyReferrerModule"]
+    "modules": ["ExpoBlueskySharedPrefsModule", "ExpoBlueskyReferrerModule", "ExpoHLSDownloadModule"]
   },
   "android": {
     "modules": [
