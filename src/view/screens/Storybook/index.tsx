@@ -7,6 +7,7 @@ import {CenteredView} from '#/view/com/util/Views'
 import {ListContained} from 'view/screens/Storybook/ListContained'
 import {atoms as a, ThemeProvider, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
+import {HLSDownload} from '../../../../modules/expo-bluesky-swiss-army'
 import {Breakpoints} from './Breakpoints'
 import {Buttons} from './Buttons'
 import {Dialogs} from './Dialogs'
@@ -37,6 +38,19 @@ function StorybookInner() {
   return (
     <CenteredView style={[t.atoms.bg]}>
       <View style={[a.p_xl, a.gap_5xl, {paddingBottom: 200}]}>
+        <Button
+          variant="solid"
+          color="primary"
+          size="small"
+          onPress={async () => {
+            const res = await HLSDownload.downloadAsync('', progress => {
+              console.log(`Download progress: ${progress}`)
+            })
+            console.log(`Download UR: ${res}`)
+          }}
+          label="idk">
+          <ButtonText>TEST THE DOWNLOAD PLZ</ButtonText>
+        </Button>
         {!showContainedList ? (
           <>
             <View style={[a.flex_row, a.align_start, a.gap_md]}>

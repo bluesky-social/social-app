@@ -9,7 +9,7 @@ import ExpoModulesCore
 
 class ExpoHLSDownloadModule: Module {
   public func definition() -> ModuleDefinition {
-    Name("ExpoHLSDownloadModule")
+    Name("ExpoHLSDownload")
     
     AsyncFunction("downloadAsync") { (sourceUrl: URL, progressCb: JavaScriptFunction<Void>, promise: Promise) in
       let hlsDownload = HLSDownload(sourceUrl: sourceUrl)
