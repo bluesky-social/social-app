@@ -17,6 +17,7 @@ export function VideoEmbed({source}: {source: string}) {
       source,
     })
   const [onScreen, setOnScreen] = useState(false)
+  const [hasBeenOnScreen, setHasBeenOnScreen] = useState(false)
   const {_} = useLingui()
 
   const onPress = useCallback(() => setActive(), [setActive])
@@ -28,6 +29,9 @@ export function VideoEmbed({source}: {source: string}) {
         const entry = entries[0]
         if (!entry) return
         setOnScreen(entry.isIntersecting)
+        if (entry.isIntersecting) {
+          setHasBeenOnScreen(true)
+        }
         sendPosition(
           entry.boundingClientRect.y + entry.boundingClientRect.height / 2,
         )
@@ -48,7 +52,7 @@ export function VideoEmbed({source}: {source: string}) {
         a.my_xs,
       ]}>
       <div ref={ref} style={{display: 'flex', flex: 1}}>
-        {onScreen || active ? (
+        {hasBeenOnScreen || active ? (
           <VideoEmbedInner
             source={source}
             active={active}
