@@ -143,7 +143,9 @@ export function VideoPlayer({
           pointerEvents: 'none',
         }}
       />
-      <div ref={containerRef} style={{flex: 1}}>
+      <div
+        ref={containerRef}
+        style={{width: '100%', height: '100%', display: 'flex'}}>
         <Controls
           videoRef={ref}
           active={active}
@@ -184,8 +186,16 @@ function Controls({
   onScreen: boolean
   enterFullscreen: () => void
 }) {
-  const {play, pause, playing, muted, togglePlayPause, currentTime, duration} =
-    useVideoUtils(videoRef)
+  const {
+    play,
+    pause,
+    playing,
+    muted,
+    toggleMute,
+    togglePlayPause,
+    currentTime,
+    duration,
+  } = useVideoUtils(videoRef)
   const t = useTheme()
   const {_} = useLingui()
   const {
@@ -233,7 +243,7 @@ function Controls({
           <View
             style={[
               a.w_full,
-              a.px_xs,
+              a.px_sm,
               a.pt_md,
               a.pb_lg,
               a.absolute,
@@ -253,9 +263,7 @@ function Controls({
             <View style={a.flex_1} />
             <Button
               label={_(muted ? msg`Unmute` : msg`Mute`)}
-              onPress={() => {
-                console.log('clicked mute btn')
-              }}
+              onPress={() => toggleMute()}
               variant="ghost"
               shape="round"
               size="medium">
@@ -381,7 +389,7 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
       current.removeEventListener('error', handlePause)
       current.removeEventListener('canplay', handleCanPlay)
     }
-  }, [ref, playing])
+  }, [ref])
 
   // to explain why I'm doing this in an effect - if you call play()
   // before it's loaded, at least on firefox, it'll throw when you then
@@ -400,6 +408,12 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
     }
   }, [playing, ref, canPlay])
 
+  useEffect(() => {
+    if (!ref.current) return
+
+    ref.current.muted = muted
+  }, [muted, ref])
+
   const play = () => {
     setPlaying(true)
   }
@@ -412,5 +426,28 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
     setPlaying(p => !p)
   }
 
-  return {play, pause, togglePlayPause, duration, currentTime, playing, muted}
+  const mute = () => {
+    setMuted(true)
+  }
+
+  const unmute = () => {
+    setMuted(false)
+  }
+
+  const toggleMute = () => {
+    setMuted(m => !m)
+  }
+
+  return {
+    play,
+    pause,
+    togglePlayPause,
+    duration,
+    currentTime,
+    playing,
+    muted,
+    mute,
+    unmute,
+    toggleMute,
+  }
 }
