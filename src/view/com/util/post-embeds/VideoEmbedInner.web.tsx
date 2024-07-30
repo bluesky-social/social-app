@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
@@ -86,6 +86,7 @@ export function VideoPlayer({
   onScreen: boolean
 }) {
   const [hls] = useState(() => new Hls())
+  const containerRef = useRef<HTMLDivElement>(null)
   const ref = useRef<HTMLVideoElement>(null)
   const [focused, setFocused] = useState(false)
 
@@ -115,6 +116,12 @@ export function VideoPlayer({
     }
   }, [source, hls])
 
+  const enterFullscreen = useCallback(() => {
+    if (containerRef.current) {
+      containerRef.current.requestFullscreen()
+    }
+  }, [])
+
   return (
     <View
       style={[
@@ -136,23 +143,26 @@ export function VideoPlayer({
           pointerEvents: 'none',
         }}
       />
-      <Controls
-        videoRef={ref}
-        active={active}
-        setActive={setActive}
-        focused={focused}
-        setFocused={setFocused}
-        onScreen={onScreen}
-      />
-      <video
-        src={source}
-        ref={ref}
-        style={a.flex_1}
-        playsInline
-        preload="none"
-        loop
-        muted={!focused}
-      />
+      <div ref={containerRef} style={{flex: 1}}>
+        <Controls
+          videoRef={ref}
+          active={active}
+          setActive={setActive}
+          focused={focused}
+          setFocused={setFocused}
+          onScreen={onScreen}
+          enterFullscreen={enterFullscreen}
+        />
+        <video
+          src={source}
+          ref={ref}
+          style={a.flex_1}
+          playsInline
+          preload="none"
+          loop
+          muted={!focused}
+        />
+      </div>
     </View>
   )
 }
@@ -164,6 +174,7 @@ function Controls({
   focused,
   setFocused,
   onScreen,
+  enterFullscreen,
 }: {
   videoRef: React.RefObject<HTMLVideoElement>
   active: boolean
@@ -171,6 +182,7 @@ function Controls({
   focused: boolean
   setFocused: (focused: boolean) => void
   onScreen: boolean
+  enterFullscreen: () => void
 }) {
   const {play, pause, playing, muted, togglePlayPause, currentTime, duration} =
     useVideoUtils(videoRef)
@@ -217,49 +229,55 @@ function Controls({
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}>
       {hovered && (
-        <View
-          style={[
-            a.w_full,
-            a.px_xs,
-            a.pt_md,
-            a.pb_lg,
-            a.absolute,
-            a.gap_xs,
-            a.flex_row,
-            {bottom: 0},
-            {backgroundColor: 'rgba(0, 0, 0, 0.5)'},
-          ]}>
-          <Button
-            label={_(playing ? msg`Pause` : msg`Play`)}
-            onPress={() => togglePlayPause()}
-            variant="ghost"
-            shape="round"
-            size="medium">
-            <ButtonIcon icon={playing ? PauseIcon : PlayIcon} />
-          </Button>
-          <Button
-            label={_(muted ? msg`Unmute` : msg`Mute`)}
-            onPress={() => {
-              console.log('clicked mute btn')
-            }}
-            variant="ghost"
-            shape="round"
-            size="medium">
-            <ButtonIcon icon={muted ? MuteIcon : UnmuteIcon} />
-          </Button>
-          <View style={a.flex_1} />
-          {/* TODO: find workaround for iOS Safari */}
-          <Button
-            label={_(muted ? msg`Unmute` : msg`Mute`)}
-            onPress={() => {
-              console.log('clicked fullscreen btn')
-            }}
-            variant="ghost"
-            shape="round"
-            size="medium">
-            <ButtonIcon icon={FullscreenIcon} />
-          </Button>
-        </View>
+        <>
+          <View
+            style={[
+              a.w_full,
+              a.px_xs,
+              a.pt_md,
+              a.pb_lg,
+              a.absolute,
+              a.gap_xs,
+              a.flex_row,
+              {bottom: 0},
+              {backgroundColor: 'rgba(0, 0, 0, 0.5)'},
+            ]}>
+            <Button
+              label={_(playing ? msg`Pause` : msg`Play`)}
+              onPress={() => togglePlayPause()}
+              variant="ghost"
+              shape="round"
+              size="medium">
+              <ButtonIcon icon={playing ? PauseIcon : PlayIcon} />
+            </Button>
+            <View style={a.flex_1} />
+            <Button
+              label={_(muted ? msg`Unmute` : msg`Mute`)}
+              onPress={() => {
+                console.log('clicked mute btn')
+              }}
+              variant="ghost"
+              shape="round"
+              size="medium">
+              <ButtonIcon icon={muted ? MuteIcon : UnmuteIcon} />
+            </Button>
+            {/* TODO: find workaround for iOS Safari */}
+            <Button
+              label={_(muted ? msg`Unmute` : msg`Mute`)}
+              onPress={() => {
+                if (document.fullscreenElement) {
+                  document.exitFullscreen()
+                } else {
+                  enterFullscreen()
+                }
+              }}
+              variant="ghost"
+              shape="round"
+              size="medium">
+              <ButtonIcon icon={FullscreenIcon} />
+            </Button>
+          </View>
+        </>
       )}
       {(hovered || !focused) && (
         <Animated.View
@@ -304,6 +322,13 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
   useEffect(() => {
     if (!ref.current) return
     let current = ref.current
+
+    // Initial values
+    setCurrentTime(current.currentTime || 0)
+    setDuration(current.duration || 0)
+    setCanPlay(current.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA)
+    setMuted(current.muted)
+    setPlaying(!current.paused)
 
     const handleTimeUpdate = () => {
       if (!current) return
@@ -384,11 +409,7 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
   }
 
   const togglePlayPause = () => {
-    if (playing) {
-      play()
-    } else {
-      pause()
-    }
+    setPlaying(p => !p)
   }
 
   return {play, pause, togglePlayPause, duration, currentTime, playing, muted}
