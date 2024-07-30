@@ -1,5 +1,4 @@
 import React from 'react'
-import {number} from 'zod'
 
 interface PostProgressState {
   progress: number
@@ -8,7 +7,7 @@ interface PostProgressState {
 }
 
 const PostProgressContext = React.createContext<PostProgressState>({
-  progress: number,
+  progress: 0,
   status: 'idle',
 })
 

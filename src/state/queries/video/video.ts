@@ -198,7 +198,7 @@ const useUploadStatusQuery = ({
       onStatusChange(status)
       return status
     },
-    enabled: jobId && enabled,
+    enabled: Boolean(jobId && enabled),
     refetchInterval: 1500,
   })
 
