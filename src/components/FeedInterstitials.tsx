@@ -190,7 +190,7 @@ export function SuggestedFollows() {
       {profiles.slice(0, maxLength).map(profile => (
         <ProfileCard.Link
           key={profile.did}
-          did={profile.handle}
+          profile={profile}
           onPress={() => {
             logEvent('feed:interstitial:profileCard:press', {})
           }}
@@ -266,7 +266,10 @@ export function SuggestedFollows() {
               a.pt_xs,
               a.gap_md,
             ]}>
-            <InlineLinkText to="/search" style={[t.atoms.text_contrast_medium]}>
+            <InlineLinkText
+              label={_(msg`Browse more suggestions`)}
+              to="/search"
+              style={[t.atoms.text_contrast_medium]}>
               <Trans>Browse more suggestions</Trans>
             </InlineLinkText>
             <Arrow size="sm" fill={t.atoms.text_contrast_medium.color} />
@@ -396,7 +399,10 @@ export function SuggestedFeeds() {
               a.pt_xs,
               a.gap_md,
             ]}>
-            <InlineLinkText to="/search" style={[t.atoms.text_contrast_medium]}>
+            <InlineLinkText
+              label={_(msg`Browse more suggestions`)}
+              to="/search"
+              style={[t.atoms.text_contrast_medium]}>
               <Trans>Browse more suggestions</Trans>
             </InlineLinkText>
             <Arrow size="sm" fill={t.atoms.text_contrast_medium.color} />

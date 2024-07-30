@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.89.0",
+  "version": "1.90.0",
   "private": true,
   "engines": {
     "node": ">=18"
@@ -52,7 +52,7 @@
     "open-analyzer": "EXPO_PUBLIC_OPEN_ANALYZER=1 yarn build-web"
   },
   "dependencies": {
-    "@atproto/api": "^0.12.23",
+    "@atproto/api": "0.12.25",
     "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@braintree/sanitize-url": "^6.0.2",
     "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
@@ -143,6 +143,7 @@
     "expo-web-browser": "~13.0.3",
     "fast-text-encoding": "^1.0.6",
     "history": "^5.3.0",
+    "hls.js": "^1.5.11",
     "js-sha256": "^0.9.0",
     "jwt-decode": "^4.0.0",
     "lande": "^1.0.10",
@@ -269,7 +270,7 @@
     "react-scripts": "^5.0.1",
     "react-test-renderer": "18.2.0",
     "ts-node": "^10.9.1",
-    "typescript": "^5.3.3",
+    "typescript": "^5.5.4",
     "url-loader": "^4.1.1",
     "webpack": "^5.75.0",
     "webpack-bundle-analyzer": "^4.10.1",
