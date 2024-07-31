@@ -467,7 +467,7 @@ function MutedWordRow({
                   <Text style={[a.font_normal, t.atoms.text_contrast_medium]}>
                     in{' '}
                     <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
-                      text, tags
+                      text & tags
                     </Text>
                   </Text>
                 </Trans>
