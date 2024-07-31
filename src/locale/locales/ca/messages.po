@@ -454,7 +454,7 @@ msgstr "Afegeix les paraules i etiquetes silenciades"
 
 #: src/screens/StarterPack/Wizard/index.tsx:197
 #~ msgid "Add people to your starter pack that you think others will enjoy following"
-#~ msgstr "Afegeix gent que creus que als altres els agradria seguir al teu starter pack"
+#~ msgstr "Afegeix gent que creus que als altres els agradaria seguir al teu starter pack"
 
 #: src/screens/Home/NoFeedsPinned.tsx:99
 msgid "Add recommended feeds"
