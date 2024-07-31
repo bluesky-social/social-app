@@ -203,19 +203,21 @@ function Controls({
     onOut: onMouseLeave,
   } = useInteractionState()
   const isFullscreen = useFullscreen()
-  const {
-    state: hasFocus,
-    onIn: onFocus,
-    onOut: onUnfocus,
-  } = useInteractionState()
+  const {state: hasFocus, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const [interactingViaKeypress, setInteractingViaKeypress] = useState(false)
   const onKeyDown = useCallback(() => {
     setInteractingViaKeypress(true)
   }, [])
-  const onBlur = useCallback(() => {
-    setInteractingViaKeypress(false)
-    onUnfocus()
-  }, [onUnfocus])
+  useEffect(() => {
+    if (interactingViaKeypress) {
+      document.addEventListener('click', () => setInteractingViaKeypress(false))
+      return () => {
+        document.removeEventListener('click', () =>
+          setInteractingViaKeypress(false),
+        )
+      }
+    }
+  }, [interactingViaKeypress])
 
   const autoplayDisabled = useAutoplayDisabled()
 
