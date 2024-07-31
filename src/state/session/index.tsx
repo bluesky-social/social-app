@@ -14,6 +14,7 @@ import {
   createAgentAndCreateAccount,
   createAgentAndLogin,
   createAgentAndResume,
+  sessionAccountToSession,
 } from './agent'
 import {getInitialState, reducer} from './reducer'
 
@@ -192,12 +193,22 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       const syncedAccount = synced.accounts.find(
         a => a.did === synced.currentAccount?.did,
       )
-      if (
-        syncedAccount &&
-        syncedAccount.refreshJwt &&
-        syncedAccount.did !== state.currentAgentState.did
-      ) {
-        resumeSession(syncedAccount)
+
+      if (syncedAccount && syncedAccount.refreshJwt) {
+        if (syncedAccount.did !== state.currentAgentState.did) {
+          resumeSession(syncedAccount)
+        } else {
+          const agent = state.currentAgentState.agent as BskyAgent
+          const prevSession = agent.session
+          const nextSession = sessionAccountToSession(syncedAccount)
+          agent.resumeSession(nextSession)
+          addSessionDebugLog({
+            type: 'agent:patch',
+            agent,
+            prevSession,
+            nextSession,
+          })
+        }
       }
     })
   }, [state, resumeSession])
