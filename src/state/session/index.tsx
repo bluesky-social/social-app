@@ -235,10 +235,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       const prevAgent = currentAgentRef.current
       currentAgentRef.current = agent
       addSessionDebugLog({type: 'agent:switch', prevAgent, nextAgent: agent})
-      // We never reuse agents so let's fully neutralize the previous one.
-      // This ensures it won't try to consume any refresh tokens.
-      // prevAgent.session = undefined
-      // prevAgent.setPersistSessionHandler(undefined)
     }
   }, [agent])
 
