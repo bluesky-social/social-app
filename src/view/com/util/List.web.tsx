@@ -344,7 +344,7 @@ function ListImpl<ItemT>(
           style={[styles.aboveTheFoldDetector, {height: headerOffset}]}
         />
         {onStartReached && !isEmpty && (
-          <Visibility
+          <EdgeVisibility
             root={disableFullWindowScroll ? nativeRef : null}
             onVisibleChange={onHeadVisibilityChange}
             topMargin={(onStartReachedThreshold ?? 0) * 100 + '%'}
@@ -368,7 +368,7 @@ function ListImpl<ItemT>(
               )
             })}
         {onEndReached && !isEmpty && (
-          <Visibility
+          <EdgeVisibility
             root={disableFullWindowScroll ? nativeRef : null}
             onVisibleChange={onTailVisibilityChange}
             bottomMargin={(onEndReachedThreshold ?? 0) * 100 + '%'}
@@ -378,6 +378,27 @@ function ListImpl<ItemT>(
         {footerComponent}
       </View>
     </View>
+  )
+}
+
+function EdgeVisibility({
+  root,
+  topMargin,
+  bottomMargin,
+  onVisibleChange,
+}: {
+  root?: React.RefObject<HTMLDivElement> | null
+  topMargin?: string
+  bottomMargin?: string
+  onVisibleChange: (isVisible: boolean) => void
+}) {
+  return (
+    <Visibility
+      root={root}
+      topMargin={topMargin}
+      bottomMargin={bottomMargin}
+      onVisibleChange={onVisibleChange}
+    />
   )
 }
 
