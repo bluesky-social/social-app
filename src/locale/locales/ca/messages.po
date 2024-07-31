@@ -513,7 +513,7 @@ msgstr "Contingut per a adults"
 
 #: src/screens/Moderation/index.tsx:356
 msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
-msgstr "El contingut per a adults només es pot activar a traves del web a <0>bsky.app</0>."
+msgstr "El contingut per a adults només es pot activar a través del web a <0>bsky.app</0>."
 
 #: src/components/moderation/LabelPreference.tsx:242
 msgid "Adult content is disabled."
@@ -7409,7 +7409,7 @@ msgstr "per a desactivar el mètode 2FA de correu, verifica el teu accés a l'ad
 
 #: src/components/dms/ReportConversationPrompt.tsx:20
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
-msgstr "Per informar d'una conversa, informa d'un dels seus missatges a traves de la pantalla de conversa. Això permet als nostres moderadors entendre el context del teu problema."
+msgstr "Per informar d'una conversa, informa d'un dels seus missatges a través de la pantalla de conversa. Això permet als nostres moderadors entendre el context del teu problema."
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
