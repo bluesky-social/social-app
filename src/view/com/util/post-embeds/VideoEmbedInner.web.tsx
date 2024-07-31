@@ -113,6 +113,15 @@ export function VideoPlayer({
     }
   }, [source, hls])
 
+  // use minimal quality when not active
+  useEffect(() => {
+    if (active) {
+      hls.nextLevel = -1
+    } else {
+      hls.nextLevel = 0
+    }
+  }, [hls, active])
+
   const enterFullscreen = useCallback(() => {
     if (containerRef.current) {
       containerRef.current.requestFullscreen()
