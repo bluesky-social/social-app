@@ -1,16 +1,16 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react'
-import {View} from 'react-native'
+import {Pressable, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import Hls from 'hls.js'
 
 import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon} from '#/components/Button'
+import {Button} from '#/components/Button'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {ArrowsDiagonalOut_Stroke2_Corner2_Rounded as FullscreenIcon} from '#/components/icons/ArrowsDiagonal'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
-import {Pause_Filled_Corner0_Rounded as PauseIcon} from '#/components/icons/Pause'
+import {Pause_Filled_Corner2_Rounded as PauseIcon} from '#/components/icons/Pause'
 import {Play_Filled_Corner2_Rounded as PlayIcon} from '#/components/icons/Play'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
 
@@ -202,6 +202,7 @@ function Controls({
     onIn: onMouseEnter,
     onOut: onMouseLeave,
   } = useInteractionState()
+  const {state: hasFocus, onIn: onFocus, onOut: onBlur} = useInteractionState()
 
   useEffect(() => {
     if (active) {
@@ -219,74 +220,102 @@ function Controls({
     }
   }, [onScreen, pause])
 
+  const onPressPlayPause = useCallback(() => {
+    if (!focused) {
+      if (!active) {
+        setActive()
+      }
+      setFocused(true)
+    } else {
+      togglePlayPause()
+    }
+  }, [togglePlayPause, setActive, setFocused, active, focused])
+
   return (
     <div
       style={{
         position: 'absolute',
         inset: 0,
         overflow: 'hidden',
-      }}
-      onClick={evt => {
-        evt.stopPropagation()
-        if (!focused) {
-          if (!active) {
-            setActive()
-          }
-          setFocused(true)
-        }
+        display: 'flex',
+        flexDirection: 'column',
       }}
       onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}>
-      {hovered && (
-        <>
-          <View
-            style={[
-              a.w_full,
-              a.px_sm,
-              a.pt_md,
-              a.pb_lg,
-              a.absolute,
-              a.gap_xs,
-              a.flex_row,
-              {bottom: 0},
-              {backgroundColor: 'rgba(0, 0, 0, 0.5)'},
-            ]}>
-            <Button
-              label={_(playing ? msg`Pause` : msg`Play`)}
-              onPress={() => togglePlayPause()}
-              variant="ghost"
-              shape="round"
-              size="medium">
-              <ButtonIcon icon={playing ? PauseIcon : PlayIcon} />
-            </Button>
-            <View style={a.flex_1} />
-            <Button
-              label={_(muted ? msg`Unmute` : msg`Mute`)}
-              onPress={() => toggleMute()}
-              variant="ghost"
-              shape="round"
-              size="medium">
-              <ButtonIcon icon={muted ? MuteIcon : UnmuteIcon} />
-            </Button>
-            {/* TODO: find workaround for iOS Safari */}
-            <Button
-              label={_(muted ? msg`Unmute` : msg`Mute`)}
-              onPress={() => {
-                if (document.fullscreenElement) {
-                  document.exitFullscreen()
-                } else {
-                  enterFullscreen()
-                }
-              }}
-              variant="ghost"
-              shape="round"
-              size="medium">
-              <ButtonIcon icon={FullscreenIcon} />
-            </Button>
-          </View>
-        </>
-      )}
-      {(hovered || !focused) && (
+      onMouseLeave={onMouseLeave}
+      onFocus={onFocus}
+      onBlur={onBlur}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityHint={_(
+          focused
+            ? msg`Unmute video`
+            : playing
+            ? msg`Pause video`
+            : msg`Play video`,
+        )}
+        style={[a.flex_1]}
+        onPress={onPressPlayPause}
+      />
+      <View
+        style={[
+          a.flex_shrink_0,
+          a.w_full,
+          a.px_sm,
+          a.pt_sm,
+          a.pb_md,
+          a.gap_sm,
+          a.flex_row,
+          {backgroundColor: 'rgba(0, 0, 0, 0.5)'},
+          hovered || hasFocus ? {opacity: 1} : {opacity: 0},
+        ]}>
+        <Button
+          label={_(playing ? msg`Pause` : msg`Play`)}
+          onPress={onPressPlayPause}
+          variant="ghost"
+          shape="round"
+          size="medium">
+          {playing ? (
+            <PauseIcon fill={t.palette.white} width={20} />
+          ) : (
+            <PlayIcon fill={t.palette.white} width={20} />
+          )}
+        </Button>
+        <View style={a.flex_1} />
+        <Button
+          label={_(muted ? msg`Unmute` : msg`Mute`)}
+          onPress={() => {
+            if (!active) {
+              setActive()
+            }
+            setFocused(true)
+            toggleMute()
+          }}
+          variant="ghost"
+          shape="round"
+          size="medium">
+          {muted ? (
+            <MuteIcon fill={t.palette.white} width={20} />
+          ) : (
+            <UnmuteIcon fill={t.palette.white} width={20} />
+          )}
+        </Button>
+        {/* TODO: find workaround for iOS Safari */}
+        <Button
+          label={_(muted ? msg`Unmute` : msg`Mute`)}
+          onPress={() => {
+            if (document.fullscreenElement) {
+              document.exitFullscreen()
+            } else {
+              enterFullscreen()
+            }
+          }}
+          variant="ghost"
+          shape="round"
+          size="medium">
+          <FullscreenIcon fill={t.palette.white} width={20} />
+        </Button>
+      </View>
+      {(hovered || hasFocus || !focused) && (
         <Animated.View
           entering={FadeIn.duration(200)}
           exiting={FadeOut.duration(200)}
@@ -353,20 +382,16 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
       setPlaying(false)
     }
 
-    const handleMute = () => {
-      setMuted(true)
-    }
-
-    const handleUnmute = () => {
-      setMuted(false)
+    const handleVolumeChange = () => {
+      if (!current) return
+      setMuted(current.muted)
     }
 
     ref.current.addEventListener('timeupdate', handleTimeUpdate)
     ref.current.addEventListener('durationchange', handleDurationChange)
     ref.current.addEventListener('play', handlePlay)
     ref.current.addEventListener('pause', handlePause)
-    ref.current.addEventListener('mute', handleMute)
-    ref.current.addEventListener('unmute', handleUnmute)
+    ref.current.addEventListener('volumechange', handleVolumeChange)
     ref.current.addEventListener('ended', handlePause)
     ref.current.addEventListener('error', handlePause)
 
@@ -375,8 +400,7 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
       current.removeEventListener('durationchange', handleDurationChange)
       current.removeEventListener('play', handlePlay)
       current.removeEventListener('pause', handlePause)
-      current.removeEventListener('mute', handleMute)
-      current.removeEventListener('unmute', handleUnmute)
+      current.removeEventListener('volumechange', handleVolumeChange)
       current.removeEventListener('ended', handlePause)
       current.removeEventListener('error', handlePause)
     }
