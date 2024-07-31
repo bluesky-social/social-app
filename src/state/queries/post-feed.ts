@@ -31,7 +31,7 @@ import {LikesFeedAPI} from 'lib/api/feed/likes'
 import {ListFeedAPI} from 'lib/api/feed/list'
 import {MergeFeedAPI} from 'lib/api/feed/merge'
 import {FeedAPI, ReasonFeedSource} from 'lib/api/feed/types'
-import {FeedTuner, FeedTunerFn, NoopFeedTuner} from 'lib/api/feed-manip'
+import {FeedTuner, FeedTunerFn} from 'lib/api/feed-manip'
 import {BSKY_FEED_OWNER_DIDS} from 'lib/constants'
 import {KnownError} from '#/view/com/posts/FeedErrorMessage'
 import {useFeedTuners} from '../preferences/feed-tuners'
@@ -61,7 +61,6 @@ export type FeedDescriptor =
   | `list|${ListUri}`
   | `list|${ListUri}|${ListFilter}`
 export interface FeedParams {
-  disableTuner?: boolean
   mergeFeedEnabled?: boolean
   mergeFeedSources?: string[]
 }
@@ -105,7 +104,7 @@ export interface FeedPageUnselected {
 
 export interface FeedPage {
   api: FeedAPI
-  tuner: FeedTuner | NoopFeedTuner
+  tuner: FeedTuner
   cursor: string | undefined
   slices: FeedPostSlice[]
   fetchedAt: number
@@ -142,18 +141,11 @@ export function usePostFeedQuery(
   const selectArgs = React.useMemo(
     () => ({
       feedTuners,
-      disableTuner: params?.disableTuner,
       moderationOpts,
       ignoreFilterFor: opts?.ignoreFilterFor,
       isDiscover,
     }),
-    [
-      feedTuners,
-      params?.disableTuner,
-      moderationOpts,
-      opts?.ignoreFilterFor,
-      isDiscover,
-    ],
+    [feedTuners, moderationOpts, opts?.ignoreFilterFor, isDiscover],
   )
 
   const query = useInfiniteQuery<
@@ -232,17 +224,10 @@ export function usePostFeedQuery(
       (data: InfiniteData<FeedPageUnselected, RQPageParam>) => {
         // If the selection depends on some data, that data should
         // be included in the selectArgs object and read here.
-        const {
-          feedTuners,
-          disableTuner,
-          moderationOpts,
-          ignoreFilterFor,
-          isDiscover,
-        } = selectArgs
+        const {feedTuners, moderationOpts, ignoreFilterFor, isDiscover} =
+          selectArgs
 
-        const tuner = disableTuner
-          ? new NoopFeedTuner()
-          : new FeedTuner(feedTuners)
+        const tuner = new FeedTuner(feedTuners)
 
         // Keep track of the last run and whether we can reuse
         // some already selected pages from there.

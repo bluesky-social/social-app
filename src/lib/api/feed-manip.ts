@@ -136,16 +136,6 @@ export class FeedViewPostsSlice {
   }
 }
 
-export class NoopFeedTuner {
-  reset() {}
-  tune(
-    feed: FeedViewPost[],
-    _opts?: {dryRun: boolean; maintainOrder: boolean},
-  ): FeedViewPostsSlice[] {
-    return feed.map(item => new FeedViewPostsSlice(item))
-  }
-}
-
 export class FeedTuner {
   seenKeys: Set<string> = new Set()
   seenUris: Set<string> = new Set()
