@@ -34,10 +34,10 @@
     jsonpointer "^5.0.0"
     leven "^3.1.0"
 
-"@atproto/api@^0.12.23":
-  version "0.12.23"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.12.23.tgz#b3409817d0b981a64f30d16e8257f0fe261338af"
-  integrity sha512-fgQ30u+q9smX5g41eep7fISSkSAhRkX0inc81PZ82QwcHbFkC8ePaha/KP0CoTaPWKi7EsC89Z/8BEBCJo0oBA==
+"@atproto/api@0.12.25":
+  version "0.12.25"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.12.25.tgz#9eeb51484106a5e07f89f124e505674a3574f93b"
+  integrity sha512-IV3vGPnDw9bmyP/JOd8YKbm8fOpRAgJpEUVnIZNVb/Vo8v+WOroOjrJxtzdHOcXTL9IEcTTyXSCc7yE7kwhN2A==
   dependencies:
     "@atproto/common-web" "^0.3.0"
     "@atproto/lexicon" "^0.4.0"
@@ -13345,6 +13345,11 @@ history@^5.3.0:
   dependencies:
     "@babel/runtime" "^7.7.6"
 
+hls.js@^1.5.11:
+  version "1.5.11"
+  resolved "https://registry.yarnpkg.com/hls.js/-/hls.js-1.5.11.tgz#3941347df454983859ae8c75fe19e8818719a826"
+  integrity sha512-q3We1izi2+qkOO+TvZdHv+dx6aFzdtk3xc1/Qesrvto4thLTT/x/1FK85c5h1qZE4MmMBNgKg+MIW8nxQfxwBw==
+
 hmac-drbg@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/hmac-drbg/-/hmac-drbg-1.0.1.tgz#d2745701025a6c775a6c545793ed502fc0c649a1"
@@ -21373,10 +21378,10 @@ typedarray-to-buffer@^3.1.5:
   dependencies:
     is-typedarray "^1.0.0"
 
-typescript@^5.3.3:
-  version "5.3.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.3.3.tgz#b3ce6ba258e72e6305ba66f5c9b452aaee3ffe37"
-  integrity sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==
+typescript@^5.5.4:
+  version "5.5.4"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.5.4.tgz#d9852d6c82bad2d2eda4fd74a5762a8f5909e9ba"
+  integrity sha512-Mtq29sKDAEYP7aljRgtPOpTvOfbwRWlS6dPRzwjdE+C0R4brX/GUyhHSecbHMFLNBLcJIPt9nl9yG5TZ1weH+Q==
 
 ua-parser-js@^0.7.33:
   version "0.7.35"

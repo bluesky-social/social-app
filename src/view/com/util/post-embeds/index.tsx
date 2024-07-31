@@ -21,19 +21,18 @@ import {
 } from '@atproto/api'
 
 import {ImagesLightbox, useLightboxControls} from '#/state/lightbox'
+import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {usePalette} from 'lib/hooks/usePalette'
 import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {atoms as a} from '#/alf'
+import {Embed as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {ContentHider} from '../../../../components/moderation/ContentHider'
 import {AutoSizedImage} from '../images/AutoSizedImage'
 import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
 import {ExternalLinkEmbed} from './ExternalLinkEmbed'
 import {ListEmbed} from './ListEmbed'
 import {MaybeQuoteEmbed} from './QuoteEmbed'
-import hairlineWidth = StyleSheet.hairlineWidth
-import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {Embed as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -231,7 +230,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   customFeedOuter: {
-    borderWidth: hairlineWidth,
+    borderWidth: StyleSheet.hairlineWidth,
     borderRadius: 8,
     marginTop: 4,
     paddingHorizontal: 12,

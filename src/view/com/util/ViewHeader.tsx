@@ -13,10 +13,9 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {NavigationProp} from 'lib/routes/types'
 import {useTheme} from '#/alf'
+import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {Text} from './text/Text'
 import {CenteredView} from './Views'
-import hairlineWidth = StyleSheet.hairlineWidth
-import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 
 const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 
@@ -154,7 +153,7 @@ function DesktopWebHeader({
         styles.desktopHeader,
         pal.border,
         {
-          borderBottomWidth: showBorder ? hairlineWidth : 0,
+          borderBottomWidth: showBorder ? StyleSheet.hairlineWidth : 0,
         },
         {display: 'flex', flexDirection: 'column'},
       ]}>
@@ -243,7 +242,7 @@ const styles = StyleSheet.create({
     marginRight: 'auto',
   },
   border: {
-    borderBottomWidth: hairlineWidth,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   titleContainer: {
     marginLeft: 'auto',
