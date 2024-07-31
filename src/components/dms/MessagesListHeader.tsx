@@ -140,6 +140,7 @@ function HeaderReady({
     userBlock?: ModerationCause
   }
 }) {
+  const {_} = useLingui()
   const t = useTheme()
   const convoState = useConvo()
   const profile = useProfileShadow(profileUnshadowed)
@@ -156,6 +157,7 @@ function HeaderReady({
     <View style={[a.flex_1]}>
       <View style={[a.w_full, a.flex_row, a.align_center, a.justify_between]}>
         <Link
+          label={_(msg`View ${displayName}'s profile`)}
           style={[a.flex_row, a.align_start, a.gap_md, a.flex_1, a.pr_md]}
           to={makeProfileLink(profile)}>
           <View style={[a.pt_2xs]}>

@@ -12,7 +12,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 import {IS_TEST} from '#/env'
 
-const TIMEOUT = 3.7e3
+const TIMEOUT = 2e3
 
 export function show(
   message: string,

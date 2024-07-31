@@ -55,7 +55,6 @@ interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
   profile: AppBskyActorDefs.ProfileViewBasic
   disableHoverCard?: boolean
   onBeforePress?: () => void
-  accessible?: boolean
 }
 
 const BLUR_AMOUNT = isWeb ? 5 : 100
@@ -412,7 +411,6 @@ let PreviewableUserAvatar = ({
   profile,
   disableHoverCard,
   onBeforePress,
-  accessible = true,
   ...rest
 }: PreviewableUserAvatarProps): React.ReactNode => {
   const {_} = useLingui()
@@ -426,12 +424,8 @@ let PreviewableUserAvatar = ({
   return (
     <ProfileHoverCard did={profile.did} disable={disableHoverCard}>
       <Link
-        label={
-          accessible
-            ? _(msg`${profile.displayName || profile.handle}'s avatar`)
-            : undefined
-        }
-        accessibilityHint={accessible ? _(msg`Opens this profile`) : undefined}
+        label={_(msg`${profile.displayName || profile.handle}'s avatar`)}
+        accessibilityHint={_(msg`Opens this profile`)}
         to={makeProfileLink({
           did: profile.did,
           handle: profile.handle,
