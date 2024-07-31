@@ -513,7 +513,7 @@ msgstr "Contingut per a adults"
 
 #: src/screens/Moderation/index.tsx:356
 msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
-msgstr "El contingut per a adults només es pot activar a través del web a <0>bsky.app</0>."
+msgstr "El contingut per a adults només es pot activar a traves del web a <0>bsky.app</0>."
 
 #: src/components/moderation/LabelPreference.tsx:242
 msgid "Adult content is disabled."
@@ -995,7 +995,7 @@ msgstr "Explora més recomanacions"
 #: src/components/FeedInterstitials.tsx:293
 #: src/components/FeedInterstitials.tsx:424
 msgid "Browse more suggestions on the Explore page"
-msgstr "Explora més recomancions a la pàgina Explora"
+msgstr "Explora més recomancaions a la pàgina Explora"
 
 #: src/screens/Home/NoFeedsPinned.tsx:103
 #: src/screens/Home/NoFeedsPinned.tsx:109
@@ -2389,7 +2389,7 @@ msgstr "Fi del canal"
 
 #: src/tours/Tooltip.tsx:159
 msgid "End of onboarding tour window. Do not move forward. Instead, go backward for more options, or press to skip."
-msgstr "Fi de la gira de benvinguda. No avancis. En comptes d'això, vés enrere per obtenir més opcions o prem per saltar."
+msgstr "Fi de la gira de benvinguda. No avancis. En comptes d'això, ves enrere per obtenir més opcions o prem per saltar."
 
 #: src/view/com/modals/AddAppPasswords.tsx:161
 msgid "Enter a name for this App Password"
@@ -2776,7 +2776,7 @@ msgstr "Finalitza"
 
 #: src/tours/Tooltip.tsx:149
 msgid "Finish tour and begin using the application"
-msgstr "Acaba el passeig i comença a utilitzar l'aplicació"
+msgstr "Acaba la visita guiada i comença a utilitzar l'aplicació"
 
 #: src/screens/Onboarding/index.tsx:35
 msgid "Fitness"
@@ -3062,7 +3062,7 @@ msgstr "Ves enrere"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:189
 #~ msgid "Go back to previous screen"
-#~ msgstr "Vés a la pantalla anterior"
+#~ msgstr "ves a la pantalla anterior"
 
 #: src/components/dms/ReportDialog.tsx:154
 #: src/components/ReportDialog/SelectReportOptionView.tsx:80
@@ -3105,7 +3105,7 @@ msgstr "Ves al perfil"
 
 #: src/tours/Tooltip.tsx:138
 msgid "Go to the next step of the tour"
-msgstr "Vés al següent pas del passeig"
+msgstr "ves al següent pas de la visita guiada"
 
 #: src/components/dms/ConvoMenu.tsx:164
 msgid "Go to user's profile"
@@ -4183,11 +4183,11 @@ msgstr "Natura"
 
 #: src/components/StarterPack/StarterPackCard.tsx:118
 msgid "Navigate to {0}"
-msgstr "Vés a {0}"
+msgstr "ves a {0}"
 
 #: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:73
 msgid "Navigate to starter pack"
-msgstr "Vés a l'starter pack"
+msgstr "ves a l'starter pack"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:173
 #: src/screens/Login/LoginForm.tsx:332
@@ -4565,7 +4565,7 @@ msgstr "Restableix la incorporació"
 
 #: src/tours/Tooltip.tsx:118
 msgid "Onboarding tour step {0}: {1}"
-msgstr "Passeig de benvinguda, pas {0}: {1}"
+msgstr "Visita guiada, pas {0}: {1}"
 
 #: src/view/com/composer/Composer.tsx:534
 msgid "One or more images is missing alt text."
@@ -5538,7 +5538,7 @@ msgstr "Respon a una publicació bloquejada"
 #: src/view/com/posts/FeedItem.tsx:454
 msgctxt "description"
 msgid "Reply to you"
-msgstr "Respon-te a tu mateix"
+msgstr "Resposta a tu mateix"
 
 #: src/components/dms/MessageMenu.tsx:132
 #: src/components/dms/MessagesListBlockedFooter.tsx:77
@@ -6744,7 +6744,7 @@ msgstr "Comença a xatejar"
 
 #: src/tours/Tooltip.tsx:99
 msgid "Start of onboarding tour window. Do not move backward. Instead, go forward for more options, or press to skip."
-msgstr "Inici del passeig inicial. No vagis enrere. En comptes d'això, seguiex endavant per obtenir més opcions o prem per saltar-lo."
+msgstr "Inici de la visita guiada inicial. No vagis enrere. En comptes d'això, seguiex endavant per obtenir més opcions o prem per saltar-lo."
 
 #: src/lib/generate-starterpack.ts:68
 #: src/Navigation.tsx:341
@@ -7409,7 +7409,7 @@ msgstr "per a desactivar el mètode 2FA de correu, verifica el teu accés a l'ad
 
 #: src/components/dms/ReportConversationPrompt.tsx:20
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
-msgstr "Per informar d'una conversa, informa d'un dels seus missatges a través de la pantalla de conversa. Això permet als nostres moderadors entendre el context del teu problema."
+msgstr "Per informar d'una conversa, informa d'un dels seus missatges a traves de la pantalla de conversa. Això permet als nostres moderadors entendre el context del teu problema."
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
