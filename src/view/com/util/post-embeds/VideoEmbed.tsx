@@ -34,6 +34,7 @@ export function VideoEmbed({source}: {source: string}) {
           // web only
           sendPosition={() => {}}
           onScreen={true}
+          onGoFarOffScreen={() => {}}
         />
       ) : (
         <Button

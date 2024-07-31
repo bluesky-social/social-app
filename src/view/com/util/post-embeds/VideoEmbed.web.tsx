@@ -42,6 +42,11 @@ export function VideoEmbed({source}: {source: string}) {
     return () => observer.disconnect()
   }, [sendPosition])
 
+  const onGoFarOffScreen = useCallback(() => {
+    setOnScreen(false)
+    setHasBeenOnScreen(false)
+  }, [])
+
   return (
     <View
       style={[
@@ -60,6 +65,7 @@ export function VideoEmbed({source}: {source: string}) {
             sendPosition={sendPosition}
             onScreen={onScreen}
             isAnyViewActive={currentActiveView !== null}
+            onGoFarOffScreen={onGoFarOffScreen}
           />
         ) : (
           <Button

@@ -5,6 +5,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import Hls from 'hls.js'
 
+import {useAutoplayDisabled} from '#/state/preferences'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button} from '#/components/Button'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -22,6 +23,7 @@ export function VideoEmbedInner({
   active,
   sendPosition,
   isAnyViewActive,
+  onGoFarOffScreen,
   ...props
 }: {
   source: string
@@ -29,6 +31,7 @@ export function VideoEmbedInner({
   setActive: () => void
   sendPosition: (position: number) => void
   onScreen: boolean
+  onGoFarOffScreen: () => void
   isAnyViewActive?: boolean
 }) {
   const ref = useRef<HTMLDivElement>(null)
@@ -44,12 +47,16 @@ export function VideoEmbedInner({
         const position =
           entry.boundingClientRect.y + entry.boundingClientRect.height / 2
         sendPosition(position)
+        if (!entry.isIntersecting) {
+          // unmounts the video player
+          onGoFarOffScreen()
+        }
       },
       {threshold: Array.from({length: 101}, (_, i) => i / 100)},
     )
     observer.observe(ref.current)
     return () => observer.disconnect()
-  }, [sendPosition])
+  }, [sendPosition, onGoFarOffScreen])
 
   // In case scrolling hasn't started yet, send up the position
   useEffect(() => {
@@ -196,18 +203,34 @@ function Controls({
     onOut: onMouseLeave,
   } = useInteractionState()
   const isFullscreen = useFullscreen()
-  const {state: hasFocus, onIn: onFocus, onOut: onBlur} = useInteractionState()
+  const {
+    state: hasFocus,
+    onIn: onFocus,
+    onOut: onUnfocus,
+  } = useInteractionState()
+  const [interactingViaKeypress, setInteractingViaKeypress] = useState(false)
+  const onKeyDown = useCallback(() => {
+    setInteractingViaKeypress(true)
+  }, [])
+  const onBlur = useCallback(() => {
+    setInteractingViaKeypress(false)
+    onUnfocus()
+  }, [onUnfocus])
 
+  const autoplayDisabled = useAutoplayDisabled()
+
+  // autoplay
   useEffect(() => {
-    if (active) {
+    if (active && !autoplayDisabled) {
       play()
     }
     return () => {
       pause()
       setFocused(false)
     }
-  }, [active, play, pause, setFocused])
+  }, [active, play, pause, setFocused, autoplayDisabled])
 
+  // pause when offscreen
   useEffect(() => {
     if (!onScreen) {
       pause()
@@ -225,7 +248,8 @@ function Controls({
     }
   }, [togglePlayPause, setActive, setFocused, active, focused])
 
-  const showControls = hovered || hasFocus || !playing
+  const showControls =
+    (focused && !playing) || (interactingViaKeypress ? hasFocus : hovered)
 
   return (
     <div
@@ -236,10 +260,12 @@ function Controls({
         display: 'flex',
         flexDirection: 'column',
       }}
+      onClick={() => setInteractingViaKeypress(false)}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onFocus={onFocus}
-      onBlur={onBlur}>
+      onBlur={onBlur}
+      onKeyDown={onKeyDown}>
       <Pressable
         accessibilityRole="button"
         accessibilityHint={_(
@@ -360,6 +386,8 @@ function formatTime(time: number) {
     return '--'
   }
 
+  time = Math.round(time)
+
   const minutes = Math.floor(time / 60)
   const seconds = String(time % 60).padStart(2, '0')
 
@@ -377,20 +405,24 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
     if (!ref.current) return
     let current = ref.current
 
+    function round(num: number) {
+      return Math.round(num * 100) / 100
+    }
+
     // Initial values
-    setCurrentTime(Math.round(current.currentTime) || 0)
-    setDuration(Math.round(current.duration) || 0)
+    setCurrentTime(round(current.currentTime) || 0)
+    setDuration(round(current.duration) || 0)
     setMuted(current.muted)
     setPlaying(!current.paused)
 
     const handleTimeUpdate = () => {
       if (!current) return
-      setCurrentTime(Math.round(current.currentTime) || 0)
+      setCurrentTime(round(current.currentTime) || 0)
     }
 
     const handleDurationChange = () => {
       if (!current) return
-      setDuration(Math.round(current.duration) || 0)
+      setDuration(round(current.duration) || 0)
     }
 
     const handlePlay = () => {
