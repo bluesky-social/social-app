@@ -59,6 +59,8 @@ export function useOTAUpdates() {
   }, [])
 
   const onIsTestFlight = React.useCallback(async () => {
+    Alert.alert('Ignore Me', 'Testing, please ignore.')
+
     try {
       await setExtraParams()
 
