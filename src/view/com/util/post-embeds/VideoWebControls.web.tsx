@@ -130,7 +130,7 @@ export function Controls({
             ? msg`Pause video`
             : msg`Play video`,
         )}
-        style={[a.flex_1]}
+        style={a.flex_1}
         onPress={onPressPlayPause}
       />
       <View
@@ -154,7 +154,9 @@ export function Controls({
           onPress={onPressPlayPause}
           variant="ghost"
           shape="round"
-          size="medium">
+          size="medium"
+          style={a.p_2xs}
+          hoverStyle={{backgroundColor: 'rgba(255, 255, 255, 0.1)'}}>
           {playing ? (
             <PauseIcon fill={t.palette.white} width={20} />
           ) : (
@@ -176,7 +178,9 @@ export function Controls({
           }}
           variant="ghost"
           shape="round"
-          size="medium">
+          size="medium"
+          style={a.p_2xs}
+          hoverStyle={{backgroundColor: 'rgba(255, 255, 255, 0.1)'}}>
           {muted ? (
             <MuteIcon fill={t.palette.white} width={20} />
           ) : (
@@ -195,7 +199,9 @@ export function Controls({
           }}
           variant="ghost"
           shape="round"
-          size="medium">
+          size="medium"
+          style={a.p_2xs}
+          hoverStyle={{backgroundColor: 'rgba(255, 255, 255, 0.1)'}}>
           {isFullscreen ? (
             <ArrowsInIcon fill={t.palette.white} width={20} />
           ) : (
