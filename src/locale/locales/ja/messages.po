@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-07-26 10:25+0900\n"
+"PO-Revision-Date: 2024-07-31 10:42+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -473,6 +473,10 @@ msgstr "QRコードの保存中にエラーが発生しました！"
 #: src/screens/StarterPack/StarterPackScreen.tsx:362
 msgid "An error occurred while trying to follow all"
 msgstr "すべてフォローしようとしたらエラーが発生しました"
+
+#: src/state/queries/video/video.ts:112
+msgid "An error occurred while uploading the video."
+msgstr "ビデオのアップロード中にエラーが発生しました。"
 
 #: src/lib/moderation/useReportOptions.ts:28
 msgid "An issue not included in these options"
@@ -1372,10 +1376,6 @@ msgstr "QRコードをコピー"
 #: src/view/screens/CopyrightPolicy.tsx:29
 msgid "Copyright Policy"
 msgstr "著作権ポリシー"
-
-#: src/view/com/composer/videos/state.ts:31
-msgid "Could not compress video"
-msgstr "ビデオを圧縮できませんでした"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:39
 msgid "Could not leave chat"
@@ -5887,6 +5887,10 @@ msgstr "投稿が削除された可能性があります。"
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr "プライバシーポリシーは<0/>に移動しました"
 
+#: src/state/queries/video/video.ts:129
+msgid "The selected video is larger than 100MB."
+msgstr "選択したビデオのサイズが100MBを超えています。"
+
 #: src/screens/StarterPack/StarterPackScreen.tsx:702
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
 msgstr "見ようとしたスターターパックが無効です。代わりにスターターパックを削除してください。"
@@ -6590,10 +6594,6 @@ msgstr "バージョン {appVersion} {bundleInfo}"
 #: src/screens/Onboarding/state.ts:88
 msgid "Video Games"
 msgstr "ビデオゲーム"
-
-#: src/view/com/composer/videos/state.ts:27
-msgid "Videos cannot be larger than 100MB"
-msgstr "ビデオは100MB以下にしてください"
 
 #: src/screens/Profile/Header/Shell.tsx:113
 msgid "View {0}'s avatar"
