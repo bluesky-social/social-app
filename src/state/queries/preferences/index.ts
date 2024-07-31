@@ -37,14 +37,14 @@ export function usePreferencesQuery() {
     refetchOnWindowFocus: true,
     queryKey: preferencesQueryKey,
     queryFn: async () => {
-      if (agent.session?.did === undefined) {
+      if (!agent.did) {
         return DEFAULT_LOGGED_OUT_PREFERENCES
       } else {
         const res = await agent.getPreferences()
 
         // save to local storage to ensure there are labels on initial requests
         saveLabelers(
-          agent.session.did,
+          agent.did,
           res.moderationPrefs.labelers.map(l => l.did),
         )
 
