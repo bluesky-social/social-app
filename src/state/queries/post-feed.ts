@@ -134,7 +134,6 @@ export function usePostFeedQuery(
     args: typeof selectArgs
     result: InfiniteData<FeedPage>
   } | null>(null)
-  const lastPageCountRef = useRef(0)
   const isDiscover = feedDesc.includes(DISCOVER_FEED_URI)
 
   // Make sure this doesn't invalidate unless really needed.
@@ -376,31 +375,23 @@ export function usePostFeedQuery(
     ),
   })
 
+  const lastItemsCountRef = useRef(0)
   useEffect(() => {
     const {isFetching, hasNextPage, data} = query
     if (isFetching || !hasNextPage) {
       return
     }
-
-    // avoid double-fires of fetchNextPage()
-    if (
-      lastPageCountRef.current !== 0 &&
-      lastPageCountRef.current === data?.pages?.length
-    ) {
-      return
-    }
-
-    // fetch next page if we haven't gotten a full page of content
     let count = 0
     for (const page of data?.pages || []) {
       for (const slice of page.slices) {
         count += slice.items.length
       }
     }
-    if (count < PAGE_SIZE && (data?.pages.length || 0) < 6) {
-      query.fetchNextPage()
-      lastPageCountRef.current = data?.pages?.length || 0
+    if (count > lastItemsCountRef.current) {
+      lastItemsCountRef.current = count
+      return
     }
+    query.fetchNextPage()
   }, [query])
 
   return query
