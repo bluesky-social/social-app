@@ -115,7 +115,10 @@ export function Controls({
         display: 'flex',
         flexDirection: 'column',
       }}
-      onClick={() => setInteractingViaKeypress(false)}
+      onClick={evt => {
+        evt.stopPropagation()
+        setInteractingViaKeypress(false)
+      }}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onFocus={onFocus}
