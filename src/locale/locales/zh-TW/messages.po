@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: zh-TW for bluesky-social-app\n"
 "POT-Creation-Date: \n"
 "Report-Msgid-Bugs-To: Kuwa Lee <kuwalee1069@gmail.com>, Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-07-26 14:29+0800\n"
+"PO-Revision-Date: 2024-07-31 11:09+0800\n"
 "Last-Translator: \n"
 "Language-Team: Frudrax Cheng <i@cynosura.one>, Kuwa Lee <kuwalee1069@gmail.com>, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Language: zh_TW\n"
@@ -475,6 +475,10 @@ msgstr "儲存 QR Code 時發生錯誤！"
 msgid "An error occurred while trying to follow all"
 msgstr "跟隨所有帳號時發生錯誤"
 
+#: src/state/queries/video/video.ts:112
+msgid "An error occurred while uploading the video."
+msgstr "上傳影片時出現問題。"
+
 #: src/lib/moderation/useReportOptions.ts:28
 msgid "An issue not included in these options"
 msgstr "問題不在上述選項"
@@ -606,7 +610,7 @@ msgstr "您確定要從您的動態中移除 {0} 嗎？"
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "您確定要將此從您的動態源中移除嗎？"
 
-#: src/view/com/composer/Composer.tsx:679
+#: src/view/com/composer/Composer.tsx:717
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "您確定要捨棄此草稿嗎？"
 
@@ -832,8 +836,8 @@ msgstr "只能包含字母、數字、空格、破折號及底線。長度必須
 #: src/components/Prompt.tsx:121
 #: src/components/TagMenu/index.tsx:268
 #: src/screens/Deactivated.tsx:161
-#: src/view/com/composer/Composer.tsx:459
-#: src/view/com/composer/Composer.tsx:474
+#: src/view/com/composer/Composer.tsx:486
+#: src/view/com/composer/Composer.tsx:501
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangeHandle.tsx:148
@@ -1137,7 +1141,7 @@ msgstr "關閉底部導覽列"
 msgid "Closes password update alert"
 msgstr "關閉密碼更新警告"
 
-#: src/view/com/composer/Composer.tsx:471
+#: src/view/com/composer/Composer.tsx:498
 msgid "Closes post composer and discards post draft"
 msgstr "關閉貼文編輯頁並捨棄草稿"
 
@@ -1176,7 +1180,7 @@ msgstr "完成初始設定並開始使用您的帳號"
 msgid "Complete the challenge"
 msgstr "完成驗證"
 
-#: src/view/com/composer/Composer.tsx:581
+#: src/view/com/composer/Composer.tsx:611
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "撰寫貼文的長度最多為 {MAX_GRAPHEME_LENGTH} 個字元"
 
@@ -1379,8 +1383,8 @@ msgid "Copyright Policy"
 msgstr "著作權政策"
 
 #: src/view/com/composer/videos/state.ts:31
-msgid "Could not compress video"
-msgstr "無法壓縮影片"
+#~ msgid "Could not compress video"
+#~ msgstr "無法壓縮影片"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:39
 msgid "Could not leave chat"
@@ -1616,7 +1620,7 @@ msgstr "描述"
 msgid "Descriptive alt text"
 msgstr "生動的替代文字"
 
-#: src/view/com/composer/Composer.tsx:294
+#: src/view/com/composer/Composer.tsx:317
 msgid "Did you want to say anything?"
 msgstr "有什麼想說的嗎？"
 
@@ -1649,11 +1653,11 @@ msgstr "關閉觸覺回饋"
 msgid "Disabled"
 msgstr "停用"
 
-#: src/view/com/composer/Composer.tsx:681
+#: src/view/com/composer/Composer.tsx:719
 msgid "Discard"
 msgstr "捨棄"
 
-#: src/view/com/composer/Composer.tsx:678
+#: src/view/com/composer/Composer.tsx:716
 msgid "Discard draft?"
 msgstr "捨棄草稿？"
 
@@ -3838,7 +3842,7 @@ msgstr "重新開始引導流程"
 msgid "Onboarding tour step {0}: {1}"
 msgstr "入門指南步驟 {0}：{1}"
 
-#: src/view/com/composer/Composer.tsx:533
+#: src/view/com/composer/Composer.tsx:563
 msgid "One or more images is missing alt text."
 msgstr "至少有一張圖片缺失了替代文字。"
 
@@ -3884,8 +3888,8 @@ msgstr "開啟頭像建立工具"
 msgid "Open conversation options"
 msgstr "開啟對話選項"
 
-#: src/view/com/composer/Composer.tsx:662
-#: src/view/com/composer/Composer.tsx:663
+#: src/view/com/composer/Composer.tsx:699
+#: src/view/com/composer/Composer.tsx:700
 msgid "Open emoji picker"
 msgstr "開啟表情符號選擇器"
 
@@ -4266,7 +4270,7 @@ msgstr "請以 @{0} 的身分登入"
 msgid "Please Verify Your Email"
 msgstr "請驗證您的電子郵件地址"
 
-#: src/view/com/composer/Composer.tsx:298
+#: src/view/com/composer/Composer.tsx:321
 msgid "Please wait for your link card to finish loading"
 msgstr "請等待您的連結預覽載入完畢"
 
@@ -4279,8 +4283,8 @@ msgstr "政治"
 msgid "Porn"
 msgstr "色情"
 
-#: src/view/com/composer/Composer.tsx:508
-#: src/view/com/composer/Composer.tsx:515
+#: src/view/com/composer/Composer.tsx:538
+#: src/view/com/composer/Composer.tsx:545
 msgctxt "action"
 msgid "Post"
 msgstr "發佈"
@@ -4445,11 +4449,11 @@ msgstr "公開且可共享的用戶列表，可供批量靜音或封鎖。"
 msgid "Public, shareable lists which can drive feeds."
 msgstr "公開且可共享的列表，可作為動態源使用。"
 
-#: src/view/com/composer/Composer.tsx:496
+#: src/view/com/composer/Composer.tsx:523
 msgid "Publish post"
 msgstr "發佈貼文"
 
-#: src/view/com/composer/Composer.tsx:496
+#: src/view/com/composer/Composer.tsx:523
 msgid "Publish reply"
 msgstr "發佈回覆"
 
@@ -4648,7 +4652,7 @@ msgstr "回覆已被停用"
 msgid "Replies to this thread are disabled"
 msgstr "此討論串的回覆已停用"
 
-#: src/view/com/composer/Composer.tsx:506
+#: src/view/com/composer/Composer.tsx:536
 msgctxt "action"
 msgid "Reply"
 msgstr "回覆"
@@ -5893,6 +5897,10 @@ msgstr "這則貼文可能已被刪除。"
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr "隱私政策已移動到 <0/>"
 
+#: src/state/queries/video/video.ts:129
+msgid "The selected video is larger than 100MB."
+msgstr "選擇的影片檔案大小超過 100MB。"
+
 #: src/screens/StarterPack/StarterPackScreen.tsx:702
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
 msgstr "您正在嘗試查看的入門包無效。您可以考慮刪除這個入門包。"
@@ -6598,8 +6606,8 @@ msgid "Video Games"
 msgstr "電子遊戲"
 
 #: src/view/com/composer/videos/state.ts:27
-msgid "Videos cannot be larger than 100MB"
-msgstr "影片不能超過 100MB"
+#~ msgid "Videos cannot be larger than 100MB"
+#~ msgstr "影片不能超過 100MB"
 
 #: src/screens/Profile/Header/Shell.tsx:113
 msgid "View {0}'s avatar"
@@ -6762,7 +6770,7 @@ msgstr "很抱歉，我們目前無法載入您的靜音文字。請稍後再試
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "很抱歉，無法完成您的搜尋請求。請稍後再試。"
 
-#: src/view/com/composer/Composer.tsx:346
+#: src/view/com/composer/Composer.tsx:369
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "很抱歉！您回覆的貼文已被刪除。"
 
@@ -6793,7 +6801,7 @@ msgstr "您想將您的入門包命名為什麼？"
 
 #: src/view/com/auth/SplashScreen.tsx:40
 #: src/view/com/auth/SplashScreen.web.tsx:86
-#: src/view/com/composer/Composer.tsx:387
+#: src/view/com/composer/Composer.tsx:410
 msgid "What's up?"
 msgstr "發生了什麼新鮮事？"
 
@@ -6864,11 +6872,11 @@ msgstr "寬"
 msgid "Write a message"
 msgstr "撰寫訊息"
 
-#: src/view/com/composer/Composer.tsx:579
+#: src/view/com/composer/Composer.tsx:609
 msgid "Write post"
 msgstr "撰寫貼文"
 
-#: src/view/com/composer/Composer.tsx:386
+#: src/view/com/composer/Composer.tsx:409
 #: src/view/com/composer/Prompt.tsx:38
 msgid "Write your reply"
 msgstr "撰寫您的回覆"
@@ -7213,7 +7221,7 @@ msgstr "您的靜音文字"
 msgid "Your password has been changed successfully!"
 msgstr "您的密碼已成功更改！"
 
-#: src/view/com/composer/Composer.tsx:377
+#: src/view/com/composer/Composer.tsx:400
 msgid "Your post has been published"
 msgstr "您的貼文已發佈"
 
@@ -7229,7 +7237,7 @@ msgstr "您的個人檔案"
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "其他 Bluesky 用戶將無法再看到您的個人檔案、貼文、動態和列表。您可以隨時登入以重新啟用您的帳號。"
 
-#: src/view/com/composer/Composer.tsx:376
+#: src/view/com/composer/Composer.tsx:399
 msgid "Your reply has been published"
 msgstr "您的回覆已發佈"
 
