@@ -5,14 +5,18 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import Hls from 'hls.js'
 
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {Button} from '#/components/Button'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {ArrowsDiagonalOut_Stroke2_Corner2_Rounded as FullscreenIcon} from '#/components/icons/ArrowsDiagonal'
+import {
+  ArrowsDiagonalIn_Stroke2_Corner0_Rounded as ArrowsInIcon,
+  ArrowsDiagonalOut_Stroke2_Corner0_Rounded as ArrowsOutIcon,
+} from '#/components/icons/ArrowsDiagonal'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
-import {Pause_Filled_Corner2_Rounded as PauseIcon} from '#/components/icons/Pause'
-import {Play_Filled_Corner2_Rounded as PlayIcon} from '#/components/icons/Play'
+import {Pause_Filled_Corner0_Rounded as PauseIcon} from '#/components/icons/Pause'
+import {Play_Filled_Corner0_Rounded as PlayIcon} from '#/components/icons/Play'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
+import {Text} from '#/components/Typography'
 
 export function VideoEmbedInner({
   active,
@@ -127,22 +131,11 @@ export function VideoPlayer({
       style={[
         a.w_full,
         a.rounded_sm,
+        // TODO: get from embed metadata
+        // max should be 1 / 1
         {aspectRatio: 16 / 9},
         a.overflow_hidden,
       ]}>
-      <div
-        style={{
-          position: 'absolute',
-          top: 5,
-          right: 5,
-          borderRadius: '50%',
-          width: 20,
-          height: 20,
-          background: active ? 'red' : 'blue',
-          opacity: 0.8,
-          pointerEvents: 'none',
-        }}
-      />
       <div
         ref={containerRef}
         style={{width: '100%', height: '100%', display: 'flex'}}>
@@ -157,7 +150,7 @@ export function VideoPlayer({
         />
         <video
           ref={ref}
-          style={a.flex_1}
+          style={{width: '100%', height: '100%', objectFit: 'contain'}}
           playsInline
           preload="none"
           loop
@@ -202,6 +195,7 @@ function Controls({
     onIn: onMouseEnter,
     onOut: onMouseLeave,
   } = useInteractionState()
+  const isFullscreen = useFullscreen()
   const {state: hasFocus, onIn: onFocus, onOut: onBlur} = useInteractionState()
 
   useEffect(() => {
@@ -230,6 +224,8 @@ function Controls({
       togglePlayPause()
     }
   }, [togglePlayPause, setActive, setFocused, active, focused])
+
+  const showControls = hovered || hasFocus || !playing
 
   return (
     <div
@@ -263,10 +259,14 @@ function Controls({
           a.px_sm,
           a.pt_sm,
           a.pb_md,
-          a.gap_sm,
+          a.gap_md,
           a.flex_row,
-          {backgroundColor: 'rgba(0, 0, 0, 0.5)'},
-          hovered || hasFocus ? {opacity: 1} : {opacity: 0},
+          a.align_center,
+          web({
+            background:
+              'linear-gradient(rgba(0, 0, 0, 0),  rgba(0, 0, 0, 0.4))',
+          }),
+          showControls ? {opacity: 1} : {opacity: 0},
         ]}>
         <Button
           label={_(playing ? msg`Pause` : msg`Play`)}
@@ -281,6 +281,9 @@ function Controls({
           )}
         </Button>
         <View style={a.flex_1} />
+        <Text style={{color: t.palette.white}}>
+          {formatTime(currentTime)} / {formatTime(duration)}
+        </Text>
         <Button
           label={_(muted ? msg`Unmute` : msg`Mute`)}
           onPress={() => {
@@ -312,10 +315,14 @@ function Controls({
           variant="ghost"
           shape="round"
           size="medium">
-          <FullscreenIcon fill={t.palette.white} width={20} />
+          {isFullscreen ? (
+            <ArrowsInIcon fill={t.palette.white} width={20} />
+          ) : (
+            <ArrowsOutIcon fill={t.palette.white} width={20} />
+          )}
         </Button>
       </View>
-      {(hovered || hasFocus || !focused) && (
+      {(showControls || !focused) && (
         <Animated.View
           entering={FadeIn.duration(200)}
           exiting={FadeOut.duration(200)}
@@ -348,30 +355,42 @@ function Controls({
   )
 }
 
+function formatTime(time: number) {
+  if (isNaN(time)) {
+    return '--'
+  }
+
+  const minutes = Math.floor(time / 60)
+  const seconds = String(time % 60).padStart(2, '0')
+
+  return `${minutes}:${seconds}`
+}
+
 function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
   const [playing, setPlaying] = useState(false)
   const [muted, setMuted] = useState(true)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
+  const playWhenReadyRef = useRef(false)
 
   useEffect(() => {
     if (!ref.current) return
     let current = ref.current
 
     // Initial values
-    setCurrentTime(current.currentTime || 0)
-    setDuration(current.duration || 0)
+    setCurrentTime(Math.round(current.currentTime) || 0)
+    setDuration(Math.round(current.duration) || 0)
     setMuted(current.muted)
     setPlaying(!current.paused)
 
     const handleTimeUpdate = () => {
       if (!current) return
-      setCurrentTime(current.currentTime || 0)
+      setCurrentTime(Math.round(current.currentTime) || 0)
     }
 
     const handleDurationChange = () => {
       if (!current) return
-      setDuration(current.duration || 0)
+      setDuration(Math.round(current.duration) || 0)
     }
 
     const handlePlay = () => {
@@ -387,6 +406,14 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
       setMuted(current.muted)
     }
 
+    const handleCanPlay = () => {
+      if (!current) return
+      if (playWhenReadyRef.current) {
+        current.play()
+        playWhenReadyRef.current = false
+      }
+    }
+
     ref.current.addEventListener('timeupdate', handleTimeUpdate)
     ref.current.addEventListener('durationchange', handleDurationChange)
     ref.current.addEventListener('play', handlePlay)
@@ -394,6 +421,7 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
     ref.current.addEventListener('volumechange', handleVolumeChange)
     ref.current.addEventListener('ended', handlePause)
     ref.current.addEventListener('error', handlePause)
+    ref.current.addEventListener('canplay', handleCanPlay)
 
     return () => {
       current.removeEventListener('timeupdate', handleTimeUpdate)
@@ -403,17 +431,22 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
       current.removeEventListener('volumechange', handleVolumeChange)
       current.removeEventListener('ended', handlePause)
       current.removeEventListener('error', handlePause)
+      current.removeEventListener('canplay', handleCanPlay)
     }
   }, [ref])
 
   const play = useCallback(() => {
     if (!ref.current) return
 
-    const promise = ref.current.play()
-    if (promise !== undefined) {
-      promise.catch(error => {
-        console.error('Error playing video:', error)
-      })
+    if (ref.current.readyState < HTMLMediaElement.HAVE_FUTURE_DATA) {
+      playWhenReadyRef.current = true
+    } else {
+      const promise = ref.current.play()
+      if (promise !== undefined) {
+        promise.catch(error => {
+          console.error('Error playing video:', error)
+        })
+      }
     }
   }, [ref])
 
@@ -463,4 +496,24 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
     unmute,
     toggleMute,
   }
+}
+
+function useFullscreen() {
+  const [isFullscreen, setIsFullscreen] = useState(
+    Boolean(document.fullscreenElement),
+  )
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(Boolean(document.fullscreenElement))
+    }
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange)
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange)
+    }
+  }, [])
+
+  return isFullscreen
 }
