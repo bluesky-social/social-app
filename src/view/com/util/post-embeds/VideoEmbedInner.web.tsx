@@ -114,7 +114,7 @@ export function VideoPlayer({
         hls.detachMedia()
       }
     }
-  }, [source, hls])
+  }, [hls])
 
   const enterFullscreen = useCallback(() => {
     if (containerRef.current) {
@@ -156,7 +156,6 @@ export function VideoPlayer({
           enterFullscreen={enterFullscreen}
         />
         <video
-          src={source}
           ref={ref}
           style={a.flex_1}
           playsInline
