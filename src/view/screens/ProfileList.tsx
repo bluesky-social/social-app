@@ -65,7 +65,6 @@ import {useDialogControl} from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
 import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 import {RichText} from '#/components/RichText'
-import hairlineWidth = StyleSheet.hairlineWidth
 
 const SECTION_TITLES_CURATE = ['Posts', 'About']
 const SECTION_TITLES_MOD = ['About']
@@ -300,7 +299,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         Toast.show(_(msg`Saved to your feeds`))
       }
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`))
+      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
       logger.error('Failed to toggle pinned feed', {message: e})
     }
   }, [
@@ -319,7 +318,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       await removeSavedFeed(savedFeedConfig)
       Toast.show(_(msg`Removed from your feeds`))
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`))
+      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
       logger.error('Failed to remove pinned list', {message: e})
     }
   }, [playHaptic, removeSavedFeed, _, savedFeedConfig])
@@ -803,7 +802,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
           <View
             style={[
               {
-                borderTopWidth: hairlineWidth,
+                borderTopWidth: StyleSheet.hairlineWidth,
                 padding: isMobile ? 14 : 20,
                 gap: 12,
               },
@@ -954,7 +953,7 @@ function ErrorScreen({error}: {error: string}) {
           marginTop: 10,
           paddingHorizontal: 18,
           paddingVertical: 14,
-          borderTopWidth: hairlineWidth,
+          borderTopWidth: StyleSheet.hairlineWidth,
         },
       ]}>
       <Text type="title-lg" style={[pal.text, s.mb10]}>

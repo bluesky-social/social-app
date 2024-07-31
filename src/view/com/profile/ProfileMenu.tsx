@@ -108,7 +108,7 @@ let ProfileMenu = ({
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
           logger.error('Failed to unmute account', {message: e})
-          Toast.show(_(msg`There was an issue! ${e.toString()}`))
+          Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
         }
       }
     } else {
@@ -119,7 +119,7 @@ let ProfileMenu = ({
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
           logger.error('Failed to mute account', {message: e})
-          Toast.show(_(msg`There was an issue! ${e.toString()}`))
+          Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
         }
       }
     }
@@ -134,7 +134,7 @@ let ProfileMenu = ({
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
           logger.error('Failed to unblock account', {message: e})
-          Toast.show(_(msg`There was an issue! ${e.toString()}`))
+          Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
         }
       }
     } else {
@@ -145,7 +145,7 @@ let ProfileMenu = ({
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
           logger.error('Failed to block account', {message: e})
-          Toast.show(_(msg`There was an issue! ${e.toString()}`))
+          Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
         }
       }
     }
@@ -159,7 +159,7 @@ let ProfileMenu = ({
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
         logger.error('Failed to follow account', {message: e})
-        Toast.show(_(msg`There was an issue! ${e.toString()}`))
+        Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
       }
     }
   }, [_, queueFollow, track])
@@ -172,7 +172,7 @@ let ProfileMenu = ({
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
         logger.error('Failed to unfollow account', {message: e})
-        Toast.show(_(msg`There was an issue! ${e.toString()}`))
+        Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
       }
     }
   }, [_, queueUnfollow, track])

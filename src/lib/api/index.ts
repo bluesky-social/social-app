@@ -37,6 +37,10 @@ interface PostOpts {
     uri: string
     cid: string
   }
+  video?: {
+    uri: string
+    cid: string
+  }
   extLink?: ExternalEmbedDraft
   images?: ImageModel[]
   labels?: string[]

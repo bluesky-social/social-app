@@ -42,6 +42,7 @@ export function BlockedByListDialog({
               <React.Fragment key={block.source.list.uri}>
                 {i === 0 ? null : ', '}
                 <InlineLinkText
+                  label={block.source.list.name}
                   to={listUriToHref(block.source.list.uri)}
                   style={[a.text_md, a.leading_snug]}>
                   {block.source.list.name}
