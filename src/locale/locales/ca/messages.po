@@ -933,7 +933,7 @@ msgstr "Bluesky és una xarxa oberta on pots escollir el teu proveïdor d'allotj
 
 #: src/components/ProgressGuide/List.tsx:55
 msgid "Bluesky is better with friends!"
-msgstr "Bluesky és millor amb col·leges!"
+msgstr "Bluesky és millor amb col·legues!"
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:80
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:82
