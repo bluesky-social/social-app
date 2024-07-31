@@ -5,6 +5,7 @@ export const router = new Router({
   Search: '/search',
   Feeds: '/feeds',
   Notifications: '/notifications',
+  NotificationsSettings: '/notifications/settings',
   Settings: '/settings',
   LanguageSettings: '/settings/language',
   Lists: '/lists',

@@ -2,6 +2,7 @@ import React, {useCallback} from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {logger} from '#/logger'
 import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
 import {logEvent} from 'lib/statsig/statsig'
 import * as Toast from '#/view/com/util/Toast'
@@ -43,7 +44,11 @@ function SendViaChatDialogInner({
       logEvent('chat:open', {logContext: 'SendViaChatDialog'})
     },
     onError: error => {
-      Toast.show(error.message)
+      logger.error('Failed to share post to chat', {message: error})
+      Toast.show(
+        _(msg`An issue occurred while trying to open the chat`),
+        'xmark',
+      )
     },
   })
 

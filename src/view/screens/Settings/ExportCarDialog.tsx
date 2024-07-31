@@ -43,7 +43,7 @@ export function ExportCarDialog({
       }
     } catch (e) {
       logger.error('Error occurred while downloading CAR file', {message: e})
-      Toast.show(_(msg`Error occurred while saving file`))
+      Toast.show(_(msg`Error occurred while saving file`), 'xmark')
     } finally {
       setLoading(false)
       control.close()
@@ -94,6 +94,7 @@ export function ExportCarDialog({
               This feature is in beta. You can read more about repository
               exports in{' '}
               <InlineLinkText
+                label={_(msg`View blogpost for more details`)}
                 to="https://docs.bsky.app/blog/repo-export"
                 style={[a.text_sm]}>
                 this blogpost

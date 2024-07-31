@@ -30,7 +30,7 @@ export function PreferencesExternalEmbeds({}: Props) {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
   const {screen} = useAnalytics()
-  const {isMobile} = useWebMediaQueries()
+  const {isTabletOrMobile} = useWebMediaQueries()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -41,26 +41,23 @@ export function PreferencesExternalEmbeds({}: Props) {
 
   return (
     <View style={s.hContentRegion} testID="preferencesExternalEmbedsScreen">
-      <SimpleViewHeader
-        showBackButton={isMobile}
-        style={[
-          pal.border,
-          {borderBottomWidth: 1},
-          !isMobile && {borderLeftWidth: 1, borderRightWidth: 1},
-        ]}>
-        <View style={{flex: 1}}>
-          <Text type="title-lg" style={[pal.text, {fontWeight: 'bold'}]}>
-            <Trans>External Media Preferences</Trans>
-          </Text>
-          <Text style={pal.textLight}>
-            <Trans>Customize media from external sites.</Trans>
-          </Text>
-        </View>
-      </SimpleViewHeader>
       <ScrollView
         // @ts-ignore web only -prf
         dataSet={{'stable-gutters': 1}}
-        contentContainerStyle={[pal.viewLight, {paddingBottom: 200}]}>
+        contentContainerStyle={[pal.viewLight, {paddingBottom: 75}]}>
+        <SimpleViewHeader
+          showBackButton={isTabletOrMobile}
+          style={[pal.border, {borderBottomWidth: 1}]}>
+          <View style={{flex: 1}}>
+            <Text type="title-lg" style={[pal.text, {fontWeight: 'bold'}]}>
+              <Trans>External Media Preferences</Trans>
+            </Text>
+            <Text style={pal.textLight}>
+              <Trans>Customize media from external sites.</Trans>
+            </Text>
+          </View>
+        </SimpleViewHeader>
+
         <View style={[pal.view]}>
           <View style={styles.infoCard}>
             <Text style={pal.text}>

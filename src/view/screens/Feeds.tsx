@@ -33,14 +33,13 @@ import {ViewHeader} from 'view/com/util/ViewHeader'
 import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
 import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
 import {atoms as a, useTheme} from '#/alf'
+import {Divider} from '#/components/Divider'
+import * as FeedCard from '#/components/FeedCard'
 import {IconCircle} from '#/components/IconCircle'
+import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
 import {ListMagnifyingGlass_Stroke2_Corner0_Rounded} from '#/components/icons/ListMagnifyingGlass'
 import {ListSparkle_Stroke2_Corner0_Rounded} from '#/components/icons/ListSparkle'
-import hairlineWidth = StyleSheet.hairlineWidth
-import {Divider} from '#/components/Divider'
-import * as FeedCard from '#/components/FeedCard'
-import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import * as ListCard from '#/components/ListCard'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Feeds'>
@@ -793,13 +792,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 14,
     gap: 12,
-    borderBottomWidth: hairlineWidth,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   savedFeedMobile: {
     paddingVertical: 10,
   },
   offlineSlug: {
-    borderWidth: hairlineWidth,
+    borderWidth: StyleSheet.hairlineWidth,
     borderRadius: 4,
     paddingHorizontal: 4,
     paddingVertical: 2,

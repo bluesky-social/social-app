@@ -8,6 +8,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {usePalette} from 'lib/hooks/usePalette'
 import {
@@ -54,7 +55,6 @@ interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
   profile: AppBskyActorDefs.ProfileViewBasic
   disableHoverCard?: boolean
   onBeforePress?: () => void
-  accessible?: boolean
 }
 
 const BLUR_AMOUNT = isWeb ? 5 : 100
@@ -179,6 +179,7 @@ let UserAvatar = ({
   const pal = usePalette('default')
   const backgroundColor = pal.colors.backgroundLight
   const finalShape = overrideShape ?? (type === 'user' ? 'circle' : 'square')
+  const gate = useGate()
 
   const aviStyle = useMemo(() => {
     if (finalShape === 'square') {
@@ -221,7 +222,12 @@ let UserAvatar = ({
           testID="userAvatarImage"
           style={aviStyle}
           resizeMode="cover"
-          source={{uri: avatar}}
+          source={{
+            uri: hackModifyThumbnailPath(
+              avatar,
+              size < 90 && gate('small_avi_thumb'),
+            ),
+          }}
           blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
         />
       ) : (
@@ -229,7 +235,12 @@ let UserAvatar = ({
           testID="userAvatarImage"
           style={aviStyle}
           contentFit="cover"
-          source={{uri: avatar}}
+          source={{
+            uri: hackModifyThumbnailPath(
+              avatar,
+              size < 90 && gate('small_avi_thumb'),
+            ),
+          }}
           blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
         />
       )}
@@ -400,7 +411,6 @@ let PreviewableUserAvatar = ({
   profile,
   disableHoverCard,
   onBeforePress,
-  accessible = true,
   ...rest
 }: PreviewableUserAvatarProps): React.ReactNode => {
   const {_} = useLingui()
@@ -414,12 +424,8 @@ let PreviewableUserAvatar = ({
   return (
     <ProfileHoverCard did={profile.did} disable={disableHoverCard}>
       <Link
-        label={
-          accessible
-            ? _(msg`${profile.displayName || profile.handle}'s avatar`)
-            : undefined
-        }
-        accessibilityHint={accessible ? _(msg`Opens this profile`) : undefined}
+        label={_(msg`${profile.displayName || profile.handle}'s avatar`)}
+        accessibilityHint={_(msg`Opens this profile`)}
         to={makeProfileLink({
           did: profile.did,
           handle: profile.handle,
@@ -432,6 +438,16 @@ let PreviewableUserAvatar = ({
 }
 PreviewableUserAvatar = memo(PreviewableUserAvatar)
 export {PreviewableUserAvatar}
+
+// HACK
+// We have started serving smaller avis but haven't updated lexicons to give the data properly
+// manually string-replace to use the smaller ones
+// -prf
+function hackModifyThumbnailPath(uri: string, isEnabled: boolean): string {
+  return isEnabled
+    ? uri.replace('/img/avatar/plain/', '/img/avatar_thumbnail/plain/')
+    : uri
+}
 
 const styles = StyleSheet.create({
   editButtonContainer: {
