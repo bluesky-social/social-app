@@ -194,13 +194,12 @@ let FeedItem = ({
       try {
         const rkey = new AtUri(item.notification.author.viewer.following).rkey
         const followingTimestamp = TID.fromStr(rkey).timestamp()
-        const followedTimestamp =
-          new Date(item.notification.record.createdAt).getTime() * 1000
-        isFollowBack = followedTimestamp > followingTimestamp
       } catch (e) {
         // For some reason the following URI was invalid. Default to it not being a follow back.
         console.error('Invalid following URI')
       }
+      const followedTimestamp = new Date(item.notification.record.createdAt).getTime() * 1000
+      isFollowBack = followedTimestamp > followingTimestamp
     }
 
     if (isFollowBack && gate('ungroup_follow_backs')) {
