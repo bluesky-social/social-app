@@ -14,7 +14,6 @@ import {
   createAgentAndCreateAccount,
   createAgentAndLogin,
   createAgentAndResume,
-  sessionAccountToSession,
 } from './agent'
 import {getInitialState, reducer} from './reducer'
 
@@ -70,10 +69,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       const signal = cancelPendingTask()
       track('Try Create Account')
       logEvent('account:create:begin', {})
-      const {agent, account} = await createAgentAndCreateAccount(
-        params,
-        onAgentSessionChange,
-      )
+      const {agent, account} = await createAgentAndCreateAccount(params)
 
       if (signal.aborted) {
         return
@@ -87,7 +83,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       logEvent('account:create:success', {})
       addSessionDebugLog({type: 'method:end', method: 'createAccount', account})
     },
-    [onAgentSessionChange, cancelPendingTask],
+    [cancelPendingTask],
   )
 
   const login = React.useCallback<SessionApiContext['login']>(
@@ -196,20 +192,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       const syncedAccount = synced.accounts.find(
         a => a.did === synced.currentAccount?.did,
       )
-      if (syncedAccount && syncedAccount.refreshJwt) {
-        if (syncedAccount.did !== state.currentAgentState.did) {
-          resumeSession(syncedAccount)
-        } else {
-          const agent = state.currentAgentState.agent as BskyAgent
-          const prevSession = agent.session
-          agent.session = sessionAccountToSession(syncedAccount)
-          addSessionDebugLog({
-            type: 'agent:patch',
-            agent,
-            prevSession,
-            nextSession: agent.session,
-          })
-        }
+      if (
+        syncedAccount &&
+        syncedAccount.refreshJwt &&
+        syncedAccount.did !== state.currentAgentState.did
+      ) {
+        resumeSession(syncedAccount)
       }
     })
   }, [state, resumeSession])
@@ -249,8 +237,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       addSessionDebugLog({type: 'agent:switch', prevAgent, nextAgent: agent})
       // We never reuse agents so let's fully neutralize the previous one.
       // This ensures it won't try to consume any refresh tokens.
-      prevAgent.session = undefined
-      prevAgent.setPersistSessionHandler(undefined)
+      // prevAgent.session = undefined
+      // prevAgent.setPersistSessionHandler(undefined)
     }
   }, [agent])
 
