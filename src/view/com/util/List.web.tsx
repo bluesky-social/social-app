@@ -348,6 +348,7 @@ function ListImpl<ItemT>(
             root={disableFullWindowScroll ? nativeRef : null}
             onVisibleChange={onHeadVisibilityChange}
             topMargin={(onStartReachedThreshold ?? 0) * 100 + '%'}
+            containerRef={containerRef}
           />
         )}
         {headerComponent}
@@ -372,7 +373,7 @@ function ListImpl<ItemT>(
             root={disableFullWindowScroll ? nativeRef : null}
             onVisibleChange={onTailVisibilityChange}
             bottomMargin={(onEndReachedThreshold ?? 0) * 100 + '%'}
-            key={data?.length}
+            containerRef={containerRef}
           />
         )}
         {footerComponent}
@@ -385,15 +386,22 @@ function EdgeVisibility({
   root,
   topMargin,
   bottomMargin,
+  containerRef,
   onVisibleChange,
 }: {
   root?: React.RefObject<HTMLDivElement> | null
   topMargin?: string
   bottomMargin?: string
+  containerRef: React.RefObject<Element>
   onVisibleChange: (isVisible: boolean) => void
 }) {
+  const [containerHeight, setContainerHeight] = React.useState(0)
+  useResizeObserver(containerRef, (w, h) => {
+    setContainerHeight(h)
+  })
   return (
     <Visibility
+      key={containerHeight}
       root={root}
       topMargin={topMargin}
       bottomMargin={bottomMargin}
