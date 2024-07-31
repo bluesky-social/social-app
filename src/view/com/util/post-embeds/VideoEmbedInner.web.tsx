@@ -91,18 +91,6 @@ export function VideoPlayer({
   const [focused, setFocused] = useState(false)
 
   useEffect(() => {
-    if (ref.current) {
-      if (ref.current.canPlayType('application/vnd.apple.mpegurl')) {
-        ref.current.src = source
-      } else if (Hls.isSupported()) {
-        hls.loadSource(source)
-      } else {
-        // TODO: fallback
-      }
-    }
-  }, [source, hls])
-
-  useEffect(() => {
     if (
       ref.current &&
       !ref.current.canPlayType('application/vnd.apple.mpegurl') &&
@@ -115,6 +103,18 @@ export function VideoPlayer({
       }
     }
   }, [hls])
+
+  useEffect(() => {
+    if (ref.current) {
+      if (ref.current.canPlayType('application/vnd.apple.mpegurl')) {
+        ref.current.src = source
+      } else if (Hls.isSupported()) {
+        hls.loadSource(source)
+      } else {
+        // TODO: fallback
+      }
+    }
+  }, [source, hls])
 
   const enterFullscreen = useCallback(() => {
     if (containerRef.current) {
@@ -324,7 +324,6 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
   const [muted, setMuted] = useState(true)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
-  const [canPlay, setCanPlay] = useState(false)
 
   useEffect(() => {
     if (!ref.current) return
@@ -333,7 +332,6 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
     // Initial values
     setCurrentTime(current.currentTime || 0)
     setDuration(current.duration || 0)
-    setCanPlay(current.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA)
     setMuted(current.muted)
     setPlaying(!current.paused)
 
@@ -363,10 +361,6 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
       setMuted(false)
     }
 
-    const handleCanPlay = () => {
-      setCanPlay(true)
-    }
-
     ref.current.addEventListener('timeupdate', handleTimeUpdate)
     ref.current.addEventListener('durationchange', handleDurationChange)
     ref.current.addEventListener('play', handlePlay)
@@ -375,7 +369,6 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
     ref.current.addEventListener('unmute', handleUnmute)
     ref.current.addEventListener('ended', handlePause)
     ref.current.addEventListener('error', handlePause)
-    ref.current.addEventListener('canplay', handleCanPlay)
 
     return () => {
       current.removeEventListener('timeupdate', handleTimeUpdate)
@@ -386,56 +379,53 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
       current.removeEventListener('unmute', handleUnmute)
       current.removeEventListener('ended', handlePause)
       current.removeEventListener('error', handlePause)
-      current.removeEventListener('canplay', handleCanPlay)
     }
   }, [ref])
 
-  // to explain why I'm doing this in an effect - if you call play()
-  // before it's loaded, at least on firefox, it'll throw when you then
-  // later go to pause/unload the video. Therefore we should keep
-  // play state outside of the video, and then only call it when
-  // playing === true and canPlay === true
-  useEffect(() => {
+  const play = useCallback(() => {
     if (!ref.current) return
 
-    if (playing) {
-      if (canPlay) {
-        ref.current.play()
-      }
-    } else {
-      ref.current.pause()
+    const promise = ref.current.play()
+    if (promise !== undefined) {
+      promise.catch(error => {
+        console.error('Error playing video:', error)
+      })
     }
-  }, [playing, ref, canPlay])
+  }, [ref])
 
-  useEffect(() => {
+  const pause = useCallback(() => {
     if (!ref.current) return
 
-    ref.current.muted = muted
-  }, [muted, ref])
+    ref.current.pause()
+  }, [ref])
 
-  const play = () => {
-    setPlaying(true)
-  }
+  const togglePlayPause = useCallback(() => {
+    if (!ref.current) return
 
-  const pause = () => {
-    setPlaying(false)
-  }
+    if (ref.current.paused) {
+      play()
+    } else {
+      pause()
+    }
+  }, [ref, play, pause])
 
-  const togglePlayPause = () => {
-    setPlaying(p => !p)
-  }
+  const mute = useCallback(() => {
+    if (!ref.current) return
 
-  const mute = () => {
-    setMuted(true)
-  }
+    ref.current.muted = true
+  }, [ref])
 
-  const unmute = () => {
-    setMuted(false)
-  }
+  const unmute = useCallback(() => {
+    if (!ref.current) return
 
-  const toggleMute = () => {
-    setMuted(m => !m)
-  }
+    ref.current.muted = false
+  }, [ref])
+
+  const toggleMute = useCallback(() => {
+    if (!ref.current) return
+
+    ref.current.muted = !ref.current.muted
+  }, [ref])
 
   return {
     play,
