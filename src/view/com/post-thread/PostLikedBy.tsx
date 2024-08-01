@@ -14,9 +14,7 @@ import {
   ListMaybePlaceholder,
 } from '#/components/Lists'
 import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
-import {ErrorMessage} from '../util/error/ErrorMessage'
 import {List} from '../util/List'
-import {CenteredView} from '../util/Views'
 
 function renderItem({item}: {item: GetLikes.Like}) {
   return <ProfileCardWithFollowBtn key={item.actor.did} profile={item.actor} />
@@ -81,17 +79,6 @@ export function PostLikedBy({uri}: {uri: string}) {
         isLoading={isLoadingUri || isLoadingLikes}
         isError={isError}
       />
-    )
-  }
-
-  if (resolveError || isError) {
-    return (
-      <CenteredView>
-        <ErrorMessage
-          message={cleanError(resolveError || error)}
-          onPressTryAgain={onRefresh}
-        />
-      </CenteredView>
     )
   }
 
