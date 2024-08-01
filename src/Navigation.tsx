@@ -58,6 +58,7 @@ import {router} from './routes'
 import {MessagesConversationScreen} from './screens/Messages/Conversation'
 import {MessagesScreen} from './screens/Messages/List'
 import {MessagesSettingsScreen} from './screens/Messages/Settings'
+import {PostQuotesScreen} from './screens/Post/PostQuotes'
 import {useModalControls} from './state/modals'
 import {useUnreadNotifications} from './state/queries/notifications/unread'
 import {useSession} from './state/session'
@@ -208,6 +209,13 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       <Stack.Screen
         name="PostRepostedBy"
         getComponent={() => PostRepostedByScreen}
+        options={({route}) => ({
+          title: title(msg`Post by @${route.params.name}`),
+        })}
+      />
+      <Stack.Screen
+        name="PostQuotes"
+        getComponent={() => PostQuotesScreen}
         options={({route}) => ({
           title: title(msg`Post by @${route.params.name}`),
         })}
