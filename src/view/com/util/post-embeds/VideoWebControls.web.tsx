@@ -4,7 +4,11 @@ import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAutoplayDisabled} from '#/state/preferences'
+import {
+  useAutoplayDisabled,
+  useSetSubtitlesEnabled,
+  useSubtitlesEnabled,
+} from '#/state/preferences'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button} from '#/components/Button'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -12,6 +16,10 @@ import {
   ArrowsDiagonalIn_Stroke2_Corner0_Rounded as ArrowsInIcon,
   ArrowsDiagonalOut_Stroke2_Corner0_Rounded as ArrowsOutIcon,
 } from '#/components/icons/ArrowsDiagonal'
+import {
+  CC_Filled_Corner0_Rounded as CCActiveIcon,
+  CC_Stroke2_Corner0_Rounded as CCInactiveIcon,
+} from '#/components/icons/CC'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
 import {Pause_Filled_Corner0_Rounded as PauseIcon} from '#/components/icons/Pause'
 import {Play_Filled_Corner0_Rounded as PlayIcon} from '#/components/icons/Play'
@@ -50,6 +58,8 @@ export function Controls({
   } = useVideoUtils(videoRef)
   const t = useTheme()
   const {_} = useLingui()
+  const subtitlesEnabled = useSubtitlesEnabled()
+  const setSubtitlesEnabled = useSetSubtitlesEnabled()
   const {
     state: hovered,
     onIn: onMouseEnter,
@@ -58,9 +68,11 @@ export function Controls({
   const isFullscreen = useFullscreen()
   const {state: hasFocus, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const [interactingViaKeypress, setInteractingViaKeypress] = useState(false)
+
   const onKeyDown = useCallback(() => {
     setInteractingViaKeypress(true)
   }, [])
+
   useEffect(() => {
     if (interactingViaKeypress) {
       document.addEventListener('click', () => setInteractingViaKeypress(false))
@@ -105,6 +117,9 @@ export function Controls({
 
   const showControls =
     (focused && !playing) || (interactingViaKeypress ? hasFocus : hovered)
+
+  // TODO: get from embed
+  const videoHasSubtitles = true
 
   return (
     <div
@@ -154,7 +169,13 @@ export function Controls({
         ]}>
         <Button
           label={_(playing ? msg`Pause` : msg`Play`)}
-          onPress={onPressPlayPause}
+          onPress={() => {
+            if (!active) {
+              setActive()
+            }
+            setFocused(true)
+            togglePlayPause()
+          }}
           variant="ghost"
           shape="round"
           size="medium"
@@ -170,6 +191,30 @@ export function Controls({
         <Text style={{color: t.palette.white}}>
           {formatTime(currentTime)} / {formatTime(duration)}
         </Text>
+        {videoHasSubtitles && (
+          <Button
+            label={_(
+              subtitlesEnabled ? msg`Disable subtitles` : msg`Enable subtitles`,
+            )}
+            onPress={() => {
+              if (!active) {
+                setActive()
+              }
+              setFocused(true)
+              setSubtitlesEnabled(!subtitlesEnabled)
+            }}
+            variant="ghost"
+            shape="round"
+            size="medium"
+            style={a.p_2xs}
+            hoverStyle={{backgroundColor: 'rgba(255, 255, 255, 0.1)'}}>
+            {subtitlesEnabled ? (
+              <CCActiveIcon fill={t.palette.white} width={20} />
+            ) : (
+              <CCInactiveIcon fill={t.palette.white} width={20} />
+            )}
+          </Button>
+        )}
         <Button
           label={_(muted ? msg`Unmute` : msg`Mute`)}
           onPress={() => {
