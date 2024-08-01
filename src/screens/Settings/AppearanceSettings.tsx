@@ -14,7 +14,7 @@ import {s} from '#/lib/styles'
 import {useSetThemePrefs, useThemePrefs} from '#/state/shell'
 import {SimpleViewHeader} from '#/view/com/util/SimpleViewHeader'
 import {ScrollView} from '#/view/com/util/Views'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, native, useTheme} from '#/alf'
 import * as ToggleButton from '#/components/forms/ToggleButton'
 import {Moon_Stroke2_Corner0_Rounded as MoonIcon} from '#/components/icons/Moon'
 import {Phone_Stroke2_Corner0_Rounded as PhoneIcon} from '#/components/icons/Phone'
@@ -100,8 +100,8 @@ export function AppearanceSettingsScreen({}: Props) {
             </ToggleButton.Group>
             {colorMode !== 'light' && (
               <Animated.View
-                entering={FadeInDown}
-                exiting={FadeOutDown}
+                entering={native(FadeInDown)}
+                exiting={native(FadeOutDown)}
                 style={[a.mt_md, a.gap_lg]}>
                 <View style={[a.flex_row, a.align_center, a.gap_md]}>
                   <MoonIcon style={t.atoms.text} />
