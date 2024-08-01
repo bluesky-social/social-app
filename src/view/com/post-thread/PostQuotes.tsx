@@ -86,7 +86,6 @@ export function PostQuotes({uri}: {uri: string}) {
     }) => {
       return (
         <FeedItem
-          key={item.post.uri}
           post={item.post}
           record={item.record}
           moderation={item.moderation}
@@ -123,7 +122,7 @@ export function PostQuotes({uri}: {uri: string}) {
   return (
     <List
       data={quotes}
-      keyExtractor={item => item.did}
+      keyExtractor={item => item.post.uri}
       refreshing={isPTRing}
       onRefresh={onRefresh}
       onEndReached={onEndReached}
