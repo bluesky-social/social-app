@@ -18,6 +18,7 @@ import {
   useSetExternalEmbedPref,
 } from 'state/preferences'
 import {ToggleButton} from 'view/com/util/forms/ToggleButton'
+import {atoms as a} from '#/alf'
 import {SimpleViewHeader} from '../com/util/SimpleViewHeader'
 import {Text} from '../com/util/text/Text'
 import {ScrollView} from '../com/util/Views'
@@ -47,8 +48,8 @@ export function PreferencesExternalEmbeds({}: Props) {
         contentContainerStyle={[pal.viewLight, {paddingBottom: 75}]}>
         <SimpleViewHeader
           showBackButton={isTabletOrMobile}
-          style={[pal.border, {borderBottomWidth: 1}]}>
-          <View style={{flex: 1}}>
+          style={[pal.border, a.border_b]}>
+          <View style={a.flex_1}>
             <Text type="title-lg" style={[pal.text, {fontWeight: 'bold'}]}>
               <Trans>External Media Preferences</Trans>
             </Text>
