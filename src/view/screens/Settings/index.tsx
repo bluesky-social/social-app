@@ -58,7 +58,6 @@ import {DeactivateAccountDialog} from '#/screens/Settings/components/DeactivateA
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
-import {ThemeSelectDialog} from '#/components/dialogs/ThemeSelect'
 import {navigate, resetToTab} from '#/Navigation'
 import {Email2FAToggle} from './Email2FAToggle'
 import {ExportCarDialog} from './ExportCarDialog'
@@ -178,7 +177,6 @@ export function SettingsScreen({}: Props) {
   const closeAllActiveElements = useCloseAllActiveElements()
   const exportCarControl = useDialogControl()
   const birthdayControl = useDialogControl()
-  const themeSelectControl = useDialogControl()
   const {pendingDid, onPressSwitchAccount} = useAccountSwitcher()
   const isSwitchingAccounts = !!pendingDid
 
@@ -289,6 +287,10 @@ export function SettingsScreen({}: Props) {
     navigation.navigate('AccessibilitySettings')
   }, [navigation])
 
+  const onPressAppearanceSettings = React.useCallback(() => {
+    navigation.navigate('AppearanceSettings')
+  }, [navigation])
+
   const onPressBirthday = React.useCallback(() => {
     birthdayControl.open()
   }, [birthdayControl])
@@ -313,7 +315,6 @@ export function SettingsScreen({}: Props) {
     <View style={s.hContentRegion} testID="settingsScreen">
       <ExportCarDialog control={exportCarControl} />
       <BirthDateSettingsDialog control={birthdayControl} />
-      <ThemeSelectDialog control={themeSelectControl} />
 
       <SimpleViewHeader
         showBackButton={isMobile}
@@ -463,7 +464,7 @@ export function SettingsScreen({}: Props) {
             pal.view,
             isSwitchingAccounts && styles.dimmed,
           ]}
-          onPress={isSwitchingAccounts ? undefined : themeSelectControl.open}
+          onPress={isSwitchingAccounts ? undefined : onPressAppearanceSettings}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Appearance settings`)}
           accessibilityHint={_(msg`Opens appearance settings`)}>
