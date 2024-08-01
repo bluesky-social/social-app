@@ -16,8 +16,10 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {useGate} from '#/lib/statsig/statsig'
 import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
+import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {isReasonFeedSource, ReasonFeedSource} from 'lib/api/feed/types'
 import {MAX_POST_LINES} from 'lib/constants'
@@ -29,6 +31,7 @@ import {countLines} from 'lib/strings/helpers'
 import {s} from 'lib/styles'
 import {precacheProfile} from 'state/queries/profile'
 import {atoms as a} from '#/alf'
+import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichText} from '#/components/RichText'
@@ -38,17 +41,19 @@ import {FeedNameText} from '../util/FeedInfoText'
 import {Link, TextLink, TextLinkOnWebOnly} from '../util/Link'
 import {PostCtrls} from '../util/post-ctrls/PostCtrls'
 import {PostEmbeds} from '../util/post-embeds'
+import {VideoEmbed} from '../util/post-embeds/VideoEmbed'
 import {PostMeta} from '../util/PostMeta'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {AviFollowButton} from './AviFollowButton'
-import hairlineWidth = StyleSheet.hairlineWidth
-import {useSession} from '#/state/session'
-import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
 
 interface FeedItemProps {
   record: AppBskyFeedPost.Record
-  reason: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource | undefined
+  reason:
+    | AppBskyFeedDefs.ReasonRepost
+    | ReasonFeedSource
+    | {[k: string]: unknown; $type: string}
+    | undefined
   moderation: ModerationDecision
   parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
   showReplyTo: boolean
@@ -132,6 +137,8 @@ let FeedItemInner = ({
   const {openComposer} = useComposerControls()
   const pal = usePalette('default')
   const {_} = useLingui()
+  const gate = useGate()
+
   const href = useMemo(() => {
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey)
@@ -197,7 +204,8 @@ let FeedItemInner = ({
         isThreadLastChild || (!isThreadChild && !isThreadParent)
           ? 8
           : undefined,
-      borderTopWidth: hideTopBorder || isThreadChild ? 0 : hairlineWidth,
+      borderTopWidth:
+        hideTopBorder || isThreadChild ? 0 : StyleSheet.hairlineWidth,
     },
   ]
 
@@ -337,9 +345,11 @@ let FeedItemInner = ({
             postHref={href}
             onOpenAuthor={onOpenAuthor}
           />
-          {!isThreadChild && showReplyTo && parentAuthor && (
-            <ReplyToLabel blocked={isParentBlocked} profile={parentAuthor} />
-          )}
+          {!isThreadChild &&
+            showReplyTo &&
+            (parentAuthor || isParentBlocked) && (
+              <ReplyToLabel blocked={isParentBlocked} profile={parentAuthor} />
+            )}
           <LabelsOnMyPost post={post} />
           <PostContent
             moderation={moderation}
@@ -348,6 +358,9 @@ let FeedItemInner = ({
             postAuthor={post.author}
             onOpenEmbed={onOpenEmbed}
           />
+          {__DEV__ && gate('videos') && (
+            <VideoEmbed source="https://lumi.jazco.dev/watch/did:plc:q6gjnaw2blty4crticxkmujt/Qmc8w93UpTa2adJHg4ZhnDPrBs1EsbzrekzPcqF5SwusuZ/playlist.m3u8" />
+          )}
           <PostCtrls
             post={post}
             record={record}
@@ -431,12 +444,46 @@ function ReplyToLabel({
   profile,
   blocked,
 }: {
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: AppBskyActorDefs.ProfileViewBasic | undefined
   blocked?: boolean
 }) {
   const pal = usePalette('default')
   const {currentAccount} = useSession()
-  const isMe = profile.did === currentAccount?.did
+
+  let label
+  if (blocked) {
+    label = <Trans context="description">Reply to a blocked post</Trans>
+  } else if (profile != null) {
+    const isMe = profile.did === currentAccount?.did
+    if (isMe) {
+      label = <Trans context="description">Reply to you</Trans>
+    } else {
+      label = (
+        <Trans context="description">
+          Reply to{' '}
+          <ProfileHoverCard inline did={profile.did}>
+            <TextLinkOnWebOnly
+              type="md"
+              style={pal.textLight}
+              lineHeight={1.2}
+              numberOfLines={1}
+              href={makeProfileLink(profile)}
+              text={
+                profile.displayName
+                  ? sanitizeDisplayName(profile.displayName)
+                  : sanitizeHandle(profile.handle)
+              }
+            />
+          </ProfileHoverCard>
+        </Trans>
+      )
+    }
+  }
+
+  if (!label) {
+    // Should not happen.
+    return null
+  }
 
   return (
     <View style={[s.flexRow, s.mb2, s.alignCenter]}>
@@ -450,29 +497,7 @@ function ReplyToLabel({
         style={[pal.textLight, s.mr2]}
         lineHeight={1.2}
         numberOfLines={1}>
-        {isMe ? (
-          <Trans context="description">Reply to you</Trans>
-        ) : blocked ? (
-          <Trans context="description">Reply to a blocked post</Trans>
-        ) : (
-          <Trans context="description">
-            Reply to{' '}
-            <ProfileHoverCard inline did={profile.did}>
-              <TextLinkOnWebOnly
-                type="md"
-                style={pal.textLight}
-                lineHeight={1.2}
-                numberOfLines={1}
-                href={makeProfileLink(profile)}
-                text={
-                  profile.displayName
-                    ? sanitizeDisplayName(profile.displayName)
-                    : sanitizeHandle(profile.handle)
-                }
-              />
-            </ProfileHoverCard>
-          </Trans>
-        )}
+        {label}
       </Text>
     </View>
   )

@@ -31,7 +31,7 @@ import {LikesFeedAPI} from 'lib/api/feed/likes'
 import {ListFeedAPI} from 'lib/api/feed/list'
 import {MergeFeedAPI} from 'lib/api/feed/merge'
 import {FeedAPI, ReasonFeedSource} from 'lib/api/feed/types'
-import {FeedTuner, FeedTunerFn, NoopFeedTuner} from 'lib/api/feed-manip'
+import {FeedTuner, FeedTunerFn} from 'lib/api/feed-manip'
 import {BSKY_FEED_OWNER_DIDS} from 'lib/constants'
 import {KnownError} from '#/view/com/posts/FeedErrorMessage'
 import {useFeedTuners} from '../preferences/feed-tuners'
@@ -61,7 +61,6 @@ export type FeedDescriptor =
   | `list|${ListUri}`
   | `list|${ListUri}|${ListFilter}`
 export interface FeedParams {
-  disableTuner?: boolean
   mergeFeedEnabled?: boolean
   mergeFeedSources?: string[]
 }
@@ -78,7 +77,10 @@ export interface FeedPostSliceItem {
   uri: string
   post: AppBskyFeedDefs.PostView
   record: AppBskyFeedPost.Record
-  reason?: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource
+  reason?:
+    | AppBskyFeedDefs.ReasonRepost
+    | ReasonFeedSource
+    | {[k: string]: unknown; $type: string}
   feedContext: string | undefined
   moderation: ModerationDecision
   parentAuthor?: AppBskyActorDefs.ProfileViewBasic
@@ -102,7 +104,7 @@ export interface FeedPageUnselected {
 
 export interface FeedPage {
   api: FeedAPI
-  tuner: FeedTuner | NoopFeedTuner
+  tuner: FeedTuner
   cursor: string | undefined
   slices: FeedPostSlice[]
   fetchedAt: number
@@ -132,25 +134,17 @@ export function usePostFeedQuery(
     args: typeof selectArgs
     result: InfiniteData<FeedPage>
   } | null>(null)
-  const lastPageCountRef = useRef(0)
   const isDiscover = feedDesc.includes(DISCOVER_FEED_URI)
 
   // Make sure this doesn't invalidate unless really needed.
   const selectArgs = React.useMemo(
     () => ({
       feedTuners,
-      disableTuner: params?.disableTuner,
       moderationOpts,
       ignoreFilterFor: opts?.ignoreFilterFor,
       isDiscover,
     }),
-    [
-      feedTuners,
-      params?.disableTuner,
-      moderationOpts,
-      opts?.ignoreFilterFor,
-      isDiscover,
-    ],
+    [feedTuners, moderationOpts, opts?.ignoreFilterFor, isDiscover],
   )
 
   const query = useInfiniteQuery<
@@ -229,17 +223,10 @@ export function usePostFeedQuery(
       (data: InfiniteData<FeedPageUnselected, RQPageParam>) => {
         // If the selection depends on some data, that data should
         // be included in the selectArgs object and read here.
-        const {
-          feedTuners,
-          disableTuner,
-          moderationOpts,
-          ignoreFilterFor,
-          isDiscover,
-        } = selectArgs
+        const {feedTuners, moderationOpts, ignoreFilterFor, isDiscover} =
+          selectArgs
 
-        const tuner = disableTuner
-          ? new NoopFeedTuner()
-          : new FeedTuner(feedTuners)
+        const tuner = new FeedTuner(feedTuners)
 
         // Keep track of the last run and whether we can reuse
         // some already selected pages from there.
@@ -311,7 +298,7 @@ export function usePostFeedQuery(
                   if (isDiscover) {
                     userActionHistory.seen(
                       slice.items.map(item => ({
-                        feedContext: item.feedContext,
+                        feedContext: slice.feedContext,
                         likeCount: item.post.likeCount ?? 0,
                         repostCount: item.post.repostCount ?? 0,
                         replyCount: item.post.replyCount ?? 0,
@@ -323,10 +310,10 @@ export function usePostFeedQuery(
                     )
                   }
 
-                  return {
+                  const feedPostSlice: FeedPostSlice = {
                     _reactKey: slice._reactKey,
                     _isFeedPostSlice: true,
-                    rootUri: slice.rootItem.post.uri,
+                    rootUri: slice.uri,
                     isThread:
                       slice.items.length > 1 &&
                       slice.items.every(
@@ -341,35 +328,42 @@ export function usePostFeedQuery(
                           AppBskyFeedPost.validateRecord(item.post.record)
                             .success
                         ) {
-                          const parentAuthor =
-                            item.reply?.parent?.author ??
-                            slice.items[i + 1]?.reply?.grandparentAuthor
+                          const parent = item.reply?.parent
+                          let parentAuthor:
+                            | AppBskyActorDefs.ProfileViewBasic
+                            | undefined
+                          if (AppBskyFeedDefs.isPostView(parent)) {
+                            parentAuthor = parent.author
+                          }
+                          if (!parentAuthor) {
+                            parentAuthor =
+                              slice.items[i + 1]?.reply?.grandparentAuthor
+                          }
                           const replyRef = item.reply
                           const isParentBlocked = AppBskyFeedDefs.isBlockedPost(
                             replyRef?.parent,
                           )
 
-                          return {
+                          const feedPostSliceItem: FeedPostSliceItem = {
                             _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
                             uri: item.post.uri,
                             post: item.post,
                             record: item.post.record,
-                            reason:
-                              i === 0 && slice.source
-                                ? slice.source
-                                : item.reason,
-                            feedContext: item.feedContext || slice.feedContext,
+                            reason: slice.reason,
+                            feedContext: slice.feedContext,
                             moderation: moderations[i],
                             parentAuthor,
                             isParentBlocked,
                           }
+                          return feedPostSliceItem
                         }
                         return undefined
                       })
-                      .filter(Boolean) as FeedPostSliceItem[],
+                      .filter(n => !!n),
                   }
+                  return feedPostSlice
                 })
-                .filter(Boolean) as FeedPostSlice[],
+                .filter(n => !!n),
             })),
           ],
         }
@@ -381,30 +375,54 @@ export function usePostFeedQuery(
     ),
   })
 
+  // The server may end up returning an empty page, a page with too few items,
+  // or a page with items that end up getting filtered out. When we fetch pages,
+  // we'll keep track of how many items we actually hope to see. If the server
+  // doesn't return enough items, we're going to continue asking for more items.
+  const lastItemCount = useRef(0)
+  const wantedItemCount = useRef(0)
+  const autoPaginationAttemptCount = useRef(0)
   useEffect(() => {
-    const {isFetching, hasNextPage, data} = query
-    if (isFetching || !hasNextPage) {
-      return
-    }
-
-    // avoid double-fires of fetchNextPage()
-    if (
-      lastPageCountRef.current !== 0 &&
-      lastPageCountRef.current === data?.pages?.length
-    ) {
-      return
-    }
-
-    // fetch next page if we haven't gotten a full page of content
-    let count = 0
+    const {data, isLoading, isRefetching, isFetchingNextPage, hasNextPage} =
+      query
+    // Count the items that we already have.
+    let itemCount = 0
     for (const page of data?.pages || []) {
       for (const slice of page.slices) {
-        count += slice.items.length
+        itemCount += slice.items.length
       }
     }
-    if (count < PAGE_SIZE && (data?.pages.length || 0) < 6) {
-      query.fetchNextPage()
-      lastPageCountRef.current = data?.pages?.length || 0
+
+    // If items got truncated, reset the state we're tracking below.
+    if (itemCount !== lastItemCount.current) {
+      if (itemCount < lastItemCount.current) {
+        wantedItemCount.current = itemCount
+      }
+      lastItemCount.current = itemCount
+    }
+
+    // Now track how many items we really want, and fetch more if needed.
+    if (isLoading || isRefetching) {
+      // During the initial fetch, we want to get an entire page's worth of items.
+      wantedItemCount.current = PAGE_SIZE
+    } else if (isFetchingNextPage) {
+      if (itemCount > wantedItemCount.current) {
+        // We have more items than wantedItemCount, so wantedItemCount must be out of date.
+        // Some other code must have called fetchNextPage(), for example, from onEndReached.
+        // Adjust the wantedItemCount to reflect that we want one more full page of items.
+        wantedItemCount.current = itemCount + PAGE_SIZE
+      }
+    } else if (hasNextPage) {
+      // At this point we're not fetching anymore, so it's time to make a decision.
+      // If we didn't receive enough items from the server, paginate again until we do.
+      if (itemCount < wantedItemCount.current) {
+        autoPaginationAttemptCount.current++
+        if (autoPaginationAttemptCount.current < 50 /* failsafe */) {
+          query.fetchNextPage()
+        }
+      } else {
+        autoPaginationAttemptCount.current = 0
+      }
     }
   }, [query])
 

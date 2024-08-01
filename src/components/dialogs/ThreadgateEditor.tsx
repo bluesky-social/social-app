@@ -74,7 +74,9 @@ function DialogContent({
 
   const onPressAudience = (setting: ThreadgateSetting) => {
     // remove nobody
-    let newSelected = draft.filter(v => v.type !== 'nobody')
+    let newSelected: ThreadgateSetting[] = draft.filter(
+      v => v.type !== 'nobody',
+    )
     // toggle
     const i = newSelected.findIndex(v => isEqual(v, setting))
     if (i === -1) {

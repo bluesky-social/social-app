@@ -1,16 +1,13 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {Slider} from '@miblanchard/react-native-slider'
-import debounce from 'lodash.debounce'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
 import {colors, s} from '#/lib/styles'
-import {isWeb} from '#/platform/detection'
 import {
   usePreferencesQuery,
   useSetFeedViewPreferencesMutation,
@@ -19,61 +16,7 @@ import {ToggleButton} from '#/view/com/util/forms/ToggleButton'
 import {SimpleViewHeader} from '#/view/com/util/SimpleViewHeader'
 import {Text} from '#/view/com/util/text/Text'
 import {ScrollView} from '#/view/com/util/Views'
-
-function RepliesThresholdInput({
-  enabled,
-  initialValue,
-}: {
-  enabled: boolean
-  initialValue: number
-}) {
-  const pal = usePalette('default')
-  const [value, setValue] = useState(initialValue)
-  const {mutate: setFeedViewPref} = useSetFeedViewPreferencesMutation()
-  const preValue = React.useRef(initialValue)
-  const save = React.useMemo(
-    () =>
-      debounce(
-        threshold =>
-          setFeedViewPref({
-            hideRepliesByLikeCount: threshold,
-          }),
-        500,
-      ), // debouce for 500ms
-    [setFeedViewPref],
-  )
-
-  return (
-    <View style={[!enabled && styles.dimmed]}>
-      <Slider
-        value={value}
-        onValueChange={(v: number | number[]) => {
-          let threshold = Array.isArray(v) ? v[0] : v
-          if (threshold > preValue.current) threshold = Math.floor(threshold)
-          else threshold = Math.ceil(threshold)
-
-          preValue.current = threshold
-
-          setValue(threshold)
-          save(threshold)
-        }}
-        minimumValue={0}
-        maximumValue={25}
-        containerStyle={isWeb ? undefined : s.flex1}
-        disabled={!enabled}
-        thumbTintColor={colors.blue3}
-      />
-      <Text type="xs" style={pal.text}>
-        <Plural
-          value={value}
-          _0="Show all replies"
-          one="Show replies with at least # like"
-          other="Show replies with at least # likes"
-        />
-      </Text>
-    </View>
-  )
-}
+import {atoms as a} from '#/alf'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -99,8 +42,8 @@ export function PreferencesFollowingFeed({}: Props) {
         contentContainerStyle={{paddingBottom: 75}}>
         <SimpleViewHeader
           showBackButton={isTabletOrMobile}
-          style={[pal.border, {borderBottomWidth: 1}]}>
-          <View style={{flex: 1}}>
+          style={[pal.border, a.border_b]}>
+          <View style={a.flex_1}>
             <Text type="title-lg" style={[pal.text, {fontWeight: 'bold'}]}>
               <Trans>Following Feed Preferences</Trans>
             </Text>
@@ -136,51 +79,6 @@ export function PreferencesFollowingFeed({}: Props) {
               }
             />
           </View>
-          <View
-            style={[pal.viewLight, styles.card, !showReplies && styles.dimmed]}>
-            <Text type="title-sm" style={[pal.text, s.pb5]}>
-              <Trans>Reply Filters</Trans>
-            </Text>
-            <Text style={[pal.text, s.pb10]}>
-              <Trans>
-                Enable this setting to only see replies between people you
-                follow.
-              </Trans>
-            </Text>
-            <ToggleButton
-              type="default-light"
-              label={_(msg`Followed users only`)}
-              isSelected={Boolean(
-                variables?.hideRepliesByUnfollowed ??
-                  preferences?.feedViewPrefs?.hideRepliesByUnfollowed,
-              )}
-              onPress={
-                showReplies
-                  ? () =>
-                      setFeedViewPref({
-                        hideRepliesByUnfollowed: !(
-                          variables?.hideRepliesByUnfollowed ??
-                          preferences?.feedViewPrefs?.hideRepliesByUnfollowed
-                        ),
-                      })
-                  : undefined
-              }
-              style={[s.mb10]}
-            />
-            <Text style={[pal.text]}>
-              <Trans>
-                Adjust the number of likes a reply must have to be shown in your
-                feed.
-              </Trans>
-            </Text>
-            {preferences && (
-              <RepliesThresholdInput
-                enabled={showReplies}
-                initialValue={preferences.feedViewPrefs.hideRepliesByLikeCount}
-              />
-            )}
-          </View>
-
           <View style={[pal.viewLight, styles.card]}>
             <Text type="title-sm" style={[pal.text, s.pb5]}>
               <Trans>Show Reposts</Trans>
