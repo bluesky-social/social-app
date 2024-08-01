@@ -82,6 +82,11 @@ export function AppearanceSettingsScreen({}: Props) {
               label={_(msg`Dark mode`)}
               values={[colorMode]}
               onChange={onChangeAppearance}>
+              <ToggleButton.Button label={_(msg`System`)} name="system">
+                <ToggleButton.ButtonText>
+                  <Trans>System</Trans>
+                </ToggleButton.ButtonText>
+              </ToggleButton.Button>
               <ToggleButton.Button label={_(msg`Light`)} name="light">
                 <ToggleButton.ButtonText>
                   <Trans>Light</Trans>
@@ -90,11 +95,6 @@ export function AppearanceSettingsScreen({}: Props) {
               <ToggleButton.Button label={_(msg`Dark`)} name="dark">
                 <ToggleButton.ButtonText>
                   <Trans>Dark</Trans>
-                </ToggleButton.ButtonText>
-              </ToggleButton.Button>
-              <ToggleButton.Button label={_(msg`System`)} name="system">
-                <ToggleButton.ButtonText>
-                  <Trans>System</Trans>
                 </ToggleButton.ButtonText>
               </ToggleButton.Button>
             </ToggleButton.Group>
