@@ -126,6 +126,7 @@ export function useNotificationFeedQuery(opts?: {
   // doesn't return enough items, we're going to continue asking for more items.
   const lastItemCount = useRef(0)
   const wantedItemCount = useRef(0)
+  const autoPaginationAttemptCount = useRef(0)
   useEffect(() => {
     const {data, isLoading, isRefetching, isFetchingNextPage, hasNextPage} =
       query
@@ -158,7 +159,12 @@ export function useNotificationFeedQuery(opts?: {
       // At this point we're not fetching anymore, so it's time to make a decision.
       // If we didn't receive enough items from the server, paginate again until we do.
       if (itemCount < wantedItemCount.current) {
-        query.fetchNextPage()
+        autoPaginationAttemptCount.current++
+        if (autoPaginationAttemptCount.current < 50 /* failsafe */) {
+          query.fetchNextPage()
+        }
+      } else {
+        autoPaginationAttemptCount.current = 0
       }
     }
   }, [query])
