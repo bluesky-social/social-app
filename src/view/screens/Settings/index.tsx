@@ -31,12 +31,7 @@ import {useClearPreferencesMutation} from '#/state/queries/preferences'
 import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
 import {useProfileQuery} from '#/state/queries/profile'
 import {SessionAccount, useSession, useSessionApi} from '#/state/session'
-import {
-  useOnboardingDispatch,
-  useSetMinimalShellMode,
-  useSetThemePrefs,
-  useThemePrefs,
-} from '#/state/shell'
+import {useOnboardingDispatch, useSetMinimalShellMode} from '#/state/shell'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useAnalytics} from 'lib/analytics/analytics'
@@ -52,7 +47,6 @@ import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {NavigationProp} from 'lib/routes/types'
 import {colors, s} from 'lib/styles'
 import {AccountDropdownBtn} from 'view/com/util/AccountDropdownBtn'
-import {SelectableBtn} from 'view/com/util/forms/SelectableBtn'
 import {ToggleButton} from 'view/com/util/forms/ToggleButton'
 import {Link, TextLink} from 'view/com/util/Link'
 import {SimpleViewHeader} from 'view/com/util/SimpleViewHeader'
@@ -61,10 +55,10 @@ import * as Toast from 'view/com/util/Toast'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {ScrollView} from 'view/com/util/Views'
 import {DeactivateAccountDialog} from '#/screens/Settings/components/DeactivateAccountDialog'
-import {useTheme} from '#/alf'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
+import {ThemeSelectDialog} from '#/components/dialogs/ThemeSelect'
 import {navigate, resetToTab} from '#/Navigation'
 import {Email2FAToggle} from './Email2FAToggle'
 import {ExportCarDialog} from './ExportCarDialog'
@@ -168,8 +162,6 @@ function SettingsAccountCard({
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export function SettingsScreen({}: Props) {
   const queryClient = useQueryClient()
-  const {colorMode, darkTheme} = useThemePrefs()
-  const {setColorMode, setDarkTheme} = useSetThemePrefs()
   const pal = usePalette('default')
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
@@ -186,6 +178,7 @@ export function SettingsScreen({}: Props) {
   const closeAllActiveElements = useCloseAllActiveElements()
   const exportCarControl = useDialogControl()
   const birthdayControl = useDialogControl()
+  const themeSelectControl = useDialogControl()
   const {pendingDid, onPressSwitchAccount} = useAccountSwitcher()
   const isSwitchingAccounts = !!pendingDid
 
@@ -320,6 +313,7 @@ export function SettingsScreen({}: Props) {
     <View style={s.hContentRegion} testID="settingsScreen">
       <ExportCarDialog control={exportCarControl} />
       <BirthDateSettingsDialog control={birthdayControl} />
+      <ThemeSelectDialog control={themeSelectControl} />
 
       <SimpleViewHeader
         showBackButton={isMobile}
@@ -437,63 +431,6 @@ export function SettingsScreen({}: Props) {
         <View style={styles.spacer20} />
 
         <Text type="xl-bold" style={[pal.text, styles.heading]}>
-          <Trans>Appearance</Trans>
-        </Text>
-        <View>
-          <View style={[styles.linkCard, pal.view, styles.selectableBtns]}>
-            <SelectableBtn
-              selected={colorMode === 'system'}
-              label={_(msg`System`)}
-              left
-              onSelect={() => setColorMode('system')}
-              accessibilityHint={_(msg`Sets color theme to system setting`)}
-            />
-            <SelectableBtn
-              selected={colorMode === 'light'}
-              label={_(msg`Light`)}
-              onSelect={() => setColorMode('light')}
-              accessibilityHint={_(msg`Sets color theme to light`)}
-            />
-            <SelectableBtn
-              selected={colorMode === 'dark'}
-              label={_(msg`Dark`)}
-              right
-              onSelect={() => setColorMode('dark')}
-              accessibilityHint={_(msg`Sets color theme to dark`)}
-            />
-          </View>
-        </View>
-
-        <View style={styles.spacer20} />
-
-        {colorMode !== 'light' && (
-          <>
-            <Text type="xl-bold" style={[pal.text, styles.heading]}>
-              <Trans>Dark Theme</Trans>
-            </Text>
-            <View>
-              <View style={[styles.linkCard, pal.view, styles.selectableBtns]}>
-                <SelectableBtn
-                  selected={!darkTheme || darkTheme === 'dim'}
-                  label={_(msg`Dim`)}
-                  left
-                  onSelect={() => setDarkTheme('dim')}
-                  accessibilityHint={_(msg`Sets dark theme to the dim theme`)}
-                />
-                <SelectableBtn
-                  selected={darkTheme === 'dark'}
-                  label={_(msg`Dark`)}
-                  right
-                  onSelect={() => setDarkTheme('dark')}
-                  accessibilityHint={_(msg`Sets dark theme to the dark theme`)}
-                />
-              </View>
-            </View>
-            <View style={styles.spacer20} />
-          </>
-        )}
-
-        <Text type="xl-bold" style={[pal.text, styles.heading]}>
           <Trans>Basics</Trans>
         </Text>
         <TouchableOpacity
@@ -517,6 +454,27 @@ export function SettingsScreen({}: Props) {
           </View>
           <Text type="lg" style={pal.text}>
             <Trans>Accessibility</Trans>
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          testID="appearanceSettingsBtn"
+          style={[
+            styles.linkCard,
+            pal.view,
+            isSwitchingAccounts && styles.dimmed,
+          ]}
+          onPress={isSwitchingAccounts ? undefined : themeSelectControl.open}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Appearance settings`)}
+          accessibilityHint={_(msg`Opens appearance settings`)}>
+          <View style={[styles.iconContainer, pal.btn]}>
+            <FontAwesomeIcon
+              icon="paint-roller"
+              style={pal.text as FontAwesomeIconStyle}
+            />
+          </View>
+          <Text type="lg" style={pal.text}>
+            <Trans>Appearance</Trans>
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
