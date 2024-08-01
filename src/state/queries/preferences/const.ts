@@ -7,8 +7,8 @@ import {
 export const DEFAULT_HOME_FEED_PREFS: UsePreferencesQueryResponse['feedViewPrefs'] =
   {
     hideReplies: false,
-    hideRepliesByUnfollowed: true,
-    hideRepliesByLikeCount: 0,
+    hideRepliesByUnfollowed: true, // Legacy, ignored
+    hideRepliesByLikeCount: 0, // Legacy, ignored
     hideReposts: false,
     hideQuotePosts: false,
     lab_mergeFeedEnabled: false, // experimental

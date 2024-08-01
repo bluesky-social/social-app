@@ -40,9 +40,8 @@ export function useFeedTuners(feedDesc: FeedDescriptor) {
           feedTuners.push(
             FeedTuner.thresholdRepliesOnly({
               userDid: currentAccount?.did || '',
-              minLikes: preferences?.feedViewPrefs.hideRepliesByLikeCount || 0,
-              followedOnly:
-                !!preferences?.feedViewPrefs.hideRepliesByUnfollowed,
+              minLikes: 0,
+              followedOnly: true,
             }),
           )
         }
@@ -68,8 +67,8 @@ export function useFeedTuners(feedDesc: FeedDescriptor) {
         feedTuners.push(
           FeedTuner.thresholdRepliesOnly({
             userDid: currentAccount?.did || '',
-            minLikes: preferences?.feedViewPrefs.hideRepliesByLikeCount || 0,
-            followedOnly: !!preferences?.feedViewPrefs.hideRepliesByUnfollowed,
+            minLikes: 0,
+            followedOnly: true,
           }),
         )
       }
