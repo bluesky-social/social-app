@@ -91,7 +91,7 @@ export function PostLikedBy({uri}: {uri: string}) {
       onRefresh={onRefresh}
       onEndReached={onEndReached}
       onEndReachedThreshold={4}
-      ListHeaderComponent={<ListHeaderDesktop title={_(msg`Likes`)} />}
+      ListHeaderComponent={<ListHeaderDesktop title={_(msg`Liked By`)} />}
       ListFooterComponent={
         <ListFooter
           isFetchingNextPage={isFetchingNextPage}
