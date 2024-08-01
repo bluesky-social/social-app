@@ -72,25 +72,25 @@ export function Controls({
     }
   }, [interactingViaKeypress])
 
-  const autoplayDisabled = useAutoplayDisabled()
-
-  // autoplay
+  // pause + unfocus when another video is active
   useEffect(() => {
-    if (active && !autoplayDisabled) {
-      play()
-    }
-    return () => {
+    if (!active) {
       pause()
       setFocused(false)
     }
-  }, [active, play, pause, setFocused, autoplayDisabled])
+  }, [active, pause, setFocused])
 
-  // pause when offscreen
+  // autoplay/pause based on visibility
+  const autoplayDisabled = useAutoplayDisabled()
   useEffect(() => {
-    if (!onScreen) {
-      pause()
+    if (active && !autoplayDisabled) {
+      if (onScreen) {
+        play()
+      } else {
+        pause()
+      }
     }
-  }, [onScreen, pause])
+  }, [onScreen, pause, active, play, autoplayDisabled])
 
   const onPressPlayPause = useCallback(() => {
     if (!focused) {
