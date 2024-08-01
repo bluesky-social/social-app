@@ -297,11 +297,14 @@ export function FeedSourceCardLoaded({
 
         {showLikes && feed.type === 'feed' ? (
           <Text type="sm-medium" style={[pal.text, pal.textLight]}>
-            <Plural
-              value={feed.likeCount || 0}
-              one="Liked by # user"
-              other="Liked by # users"
-            />
+            <Trans>
+              Liked by{' '}
+              <Plural
+                value={feed.likeCount || 0}
+                one="# user"
+                other="# users"
+              />
+            </Trans>
           </Text>
         ) : null}
       </Pressable>

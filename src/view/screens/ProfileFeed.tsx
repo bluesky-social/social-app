@@ -587,11 +587,9 @@ function AboutSection({
             label={_(msg`View users who like this feed`)}
             to={makeCustomFeedLink(feedOwnerDid, feedRkey, 'liked-by')}
             style={[t.atoms.text_contrast_medium, a.font_bold]}>
-            <Plural
-              value={likeCount}
-              one="Liked by # user"
-              other="Liked by # users"
-            />
+            <Trans>
+              Liked by <Plural value={likeCount} one="# user" other="# users" />
+            </Trans>
           </InlineLinkText>
         )}
       </View>

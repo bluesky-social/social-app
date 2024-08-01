@@ -58,7 +58,7 @@ export function Description({value, handle}: {value?: string; handle: string}) {
   )
 }
 
-export function LikeCount({count}: {count: number}) {
+export function LikeCount({likeCount}: {likeCount: number}) {
   const t = useTheme()
   return (
     <Text
@@ -68,7 +68,9 @@ export function LikeCount({count}: {count: number}) {
         t.atoms.text_contrast_medium,
         {fontWeight: '500'},
       ]}>
-      <Plural value={count} one="Liked by # user" other="Liked by # users" />
+      <Trans>
+        Liked by <Plural value={likeCount} one="# user" other="# users" />
+      </Trans>
     </Text>
   )
 }
@@ -113,7 +115,7 @@ export function Default({
           value={labeler.creator.description}
           handle={labeler.creator.handle}
         />
-        {labeler.likeCount ? <LikeCount count={labeler.likeCount} /> : null}
+        {labeler.likeCount ? <LikeCount likeCount={labeler.likeCount} /> : null}
       </Content>
     </Outer>
   )
