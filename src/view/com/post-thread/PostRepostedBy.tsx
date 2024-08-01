@@ -70,7 +70,6 @@ export function PostRepostedBy({uri}: {uri: string}) {
       await fetchNextPage()
     } catch (err) {
       logger.error('Failed to load more reposts', {message: err})
-      isFetchingNextPage
     }
   }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
