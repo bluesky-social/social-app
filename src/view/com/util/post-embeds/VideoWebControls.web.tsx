@@ -148,7 +148,7 @@ export function Controls({
           a.align_center,
           web({
             background:
-              'linear-gradient(rgba(0, 0, 0, 0),  rgba(0, 0, 0, 0.4))',
+              'linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7))',
           }),
           showControls ? {opacity: 1} : {opacity: 0},
         ]}>
