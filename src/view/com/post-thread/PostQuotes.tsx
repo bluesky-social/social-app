@@ -49,7 +49,7 @@ export function PostQuotes({uri}: {uri: string}) {
           const moderation = moderatePost(post, moderationOpts)
           return {post, record: post.record, moderation}
         })
-        .filter(x => Boolean(x))
+        .filter(item => item !== null)
     }
   }, [data, moderationOpts])
 
