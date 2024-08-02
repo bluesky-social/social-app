@@ -7,7 +7,9 @@ import {
 } from '@atproto/api'
 
 import {isPostInLanguage} from '../../locale/helpers'
+import {FALLBACK_MARKER_POST} from './feed/home'
 import {ReasonFeedSource} from './feed/types'
+
 type FeedViewPost = AppBskyFeedDefs.FeedViewPost
 
 export type FeedTunerFn = (
@@ -27,15 +29,21 @@ export class FeedViewPostsSlice {
   _feedPost: FeedViewPost
   items: FeedSliceItem[]
   isIncompleteThread: boolean
+  isFallbackMarker: boolean
 
   constructor(feedPost: FeedViewPost) {
     const {post, reply, reason} = feedPost
     this.items = []
     this.isIncompleteThread = false
+    this.isFallbackMarker = false
     this._feedPost = feedPost
     this._reactKey = `slice-${post.uri}-${
       feedPost.reason?.indexedAt || post.indexedAt
     }`
+    if (feedPost.post.uri === FALLBACK_MARKER_POST.post.uri) {
+      this.isFallbackMarker = true
+      return
+    }
     if (
       !AppBskyFeedPost.isRecord(post.record) ||
       !AppBskyFeedPost.validateRecord(post.record).success
@@ -174,7 +182,7 @@ export class FeedTuner {
   ): FeedViewPostsSlice[] {
     let slices: FeedViewPostsSlice[] = feed
       .map(item => new FeedViewPostsSlice(item))
-      .filter(s => s.items.length > 0)
+      .filter(s => s.items.length > 0 || s.isFallbackMarker)
 
     // run the custom tuners
     for (const tunerFn of this.tunerFns) {
@@ -230,7 +238,7 @@ export class FeedTuner {
       const item1 = slices[i]
       for (let j = i + 1; j < slices.length; j++) {
         const item2 = slices[j]
-        if (item2.items.length > 1) {
+        if (item2.items.length !== 1) {
           // Don't remove threads below even if individual posts from them appeared as reposts above.
           continue
         }
