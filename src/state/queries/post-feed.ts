@@ -313,29 +313,20 @@ export function usePostFeedQuery(
                     _reactKey: slice._reactKey,
                     _isFeedPostSlice: true,
                     rootUri: slice.uri,
-                    items: slice.items
-                      .map((item, i) => {
-                        if (
-                          AppBskyFeedPost.isRecord(item.post.record) &&
-                          AppBskyFeedPost.validateRecord(item.post.record)
-                            .success
-                        ) {
-                          const feedPostSliceItem: FeedPostSliceItem = {
-                            _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
-                            uri: item.post.uri,
-                            post: item.post,
-                            record: item.post.record,
-                            reason: slice.reason,
-                            feedContext: slice.feedContext,
-                            moderation: moderations[i],
-                            parentAuthor: item.parentAuthor,
-                            isParentBlocked: item.isParentBlocked,
-                          }
-                          return feedPostSliceItem
-                        }
-                        return undefined
-                      })
-                      .filter(n => !!n),
+                    items: slice.items.map((item, i) => {
+                      const feedPostSliceItem: FeedPostSliceItem = {
+                        _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
+                        uri: item.post.uri,
+                        post: item.post,
+                        record: item.record,
+                        reason: slice.reason,
+                        feedContext: slice.feedContext,
+                        moderation: moderations[i],
+                        parentAuthor: item.parentAuthor,
+                        isParentBlocked: item.isParentBlocked,
+                      }
+                      return feedPostSliceItem
+                    }),
                   }
                   return feedPostSlice
                 })

@@ -17,6 +17,7 @@ export type FeedTunerFn = (
 
 type FeedSliceItem = {
   post: AppBskyFeedDefs.PostView
+  record: AppBskyFeedPost.Record
   parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
   isParentBlocked: boolean
 }
@@ -31,19 +32,30 @@ export class FeedViewPostsSlice {
     this._reactKey = `slice-${feedPost.post.uri}-${
       feedPost.reason?.indexedAt || feedPost.post.indexedAt
     }`
+    this.items = []
+    if (
+      !AppBskyFeedPost.isRecord(feedPost.post.record) ||
+      !AppBskyFeedPost.validateRecord(feedPost.post.record).success
+    ) {
+      return
+    }
+    if (feedPost.post.record.reply && !feedPost.reply) {
+      // Ignore posts that are replies, but which don't have the parent
+      // hydrated. This means the parent was either deleted or blocked.
+      return
+    }
     const parent = feedPost.reply?.parent
     const isParentBlocked = AppBskyFeedDefs.isBlockedPost(parent)
     let parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
     if (AppBskyFeedDefs.isPostView(parent)) {
       parentAuthor = parent.author
     }
-    this.items = [
-      {
-        post: feedPost.post,
-        parentAuthor,
-        isParentBlocked,
-      },
-    ]
+    this.items.push({
+      post: feedPost.post,
+      record: feedPost.post.record,
+      parentAuthor,
+      isParentBlocked,
+    })
   }
 
   get uri() {
@@ -121,22 +133,9 @@ export class FeedTuner {
       dryRun: false,
     },
   ): FeedViewPostsSlice[] {
-    let slices: FeedViewPostsSlice[] = []
-
-    // remove posts that are replies, but which don't have the parent
-    // hydrated. this means the parent was either deleted or blocked
-    feed = feed.filter(item => {
-      if (
-        AppBskyFeedPost.isRecord(item.post.record) &&
-        item.post.record.reply &&
-        !item.reply
-      ) {
-        return false
-      }
-      return true
-    })
-
-    slices = feed.map(item => new FeedViewPostsSlice(item))
+    let slices: FeedViewPostsSlice[] = feed
+      .map(item => new FeedViewPostsSlice(item))
+      .filter(s => s.items.length > 0)
 
     // run the custom tuners
     for (const tunerFn of this.tunerFns) {
