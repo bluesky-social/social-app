@@ -110,13 +110,11 @@ export class FeedViewPostsSlice {
 
 export class FeedTuner {
   seenKeys: Set<string> = new Set()
-  seenUris: Set<string> = new Set()
 
   constructor(public tunerFns: FeedTunerFn[]) {}
 
   reset() {
     this.seenKeys.clear()
-    this.seenUris.clear()
   }
 
   tune(
@@ -147,20 +145,10 @@ export class FeedTuner {
       slices = tunerFn(this, slices.slice())
     }
 
-    // remove any items already "seen"
-    for (let i = slices.length - 1; i >= 0; i--) {
-      if (!slices[i].isThread && this.seenUris.has(slices[i].uri)) {
-        slices.splice(i, 1)
-      }
-    }
-
     if (!dryRun) {
       slices = slices.filter(slice => {
         if (this.seenKeys.has(slice._reactKey)) {
           return false
-        }
-        for (const item of slice.items) {
-          this.seenUris.add(item.post.uri)
         }
         this.seenKeys.add(slice._reactKey)
         return true
