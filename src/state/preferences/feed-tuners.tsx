@@ -20,7 +20,6 @@ export function useFeedTuners(feedDesc: FeedDescriptor) {
     }
     if (feedDesc.startsWith('feedgen')) {
       return [
-        FeedTuner.dedupReposts,
         FeedTuner.dedupThreads,
         FeedTuner.preferredLangOnly(langPrefs.contentLanguages),
       ]
@@ -32,8 +31,6 @@ export function useFeedTuners(feedDesc: FeedDescriptor) {
         // Same as Following tuners below, copypaste for now.
         if (preferences?.feedViewPrefs.hideReposts) {
           feedTuners.push(FeedTuner.removeReposts)
-        } else {
-          feedTuners.push(FeedTuner.dedupReposts)
         }
         if (preferences?.feedViewPrefs.hideReplies) {
           feedTuners.push(FeedTuner.removeReplies)
@@ -47,8 +44,6 @@ export function useFeedTuners(feedDesc: FeedDescriptor) {
         if (preferences?.feedViewPrefs.hideQuotePosts) {
           feedTuners.push(FeedTuner.removeQuotePosts)
         }
-      } else {
-        feedTuners.push(FeedTuner.dedupReposts)
       }
       feedTuners.push(FeedTuner.dedupThreads)
       return feedTuners
@@ -58,8 +53,6 @@ export function useFeedTuners(feedDesc: FeedDescriptor) {
 
       if (preferences?.feedViewPrefs.hideReposts) {
         feedTuners.push(FeedTuner.removeReposts)
-      } else {
-        feedTuners.push(FeedTuner.dedupReposts)
       }
       if (preferences?.feedViewPrefs.hideReplies) {
         feedTuners.push(FeedTuner.removeReplies)

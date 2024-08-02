@@ -282,28 +282,6 @@ export class FeedTuner {
     return slices
   }
 
-  static dedupReposts(
-    tuner: FeedTuner,
-    slices: FeedViewPostsSlice[],
-  ): FeedViewPostsSlice[] {
-    // remove duplicates caused by reposts
-    for (let i = 0; i < slices.length; i++) {
-      const item1 = slices[i]
-      for (let j = i + 1; j < slices.length; j++) {
-        const item2 = slices[j]
-        if (item2.items.length !== 1) {
-          // Don't remove threads below even if individual posts from them appeared as reposts above.
-          continue
-        }
-        if (item1.containsUri(item2.items[0].post.uri)) {
-          slices.splice(j, 1)
-          j--
-        }
-      }
-    }
-    return slices
-  }
-
   static followedRepliesOnly({userDid}: {userDid: string}) {
     return (
       tuner: FeedTuner,
