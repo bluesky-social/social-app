@@ -119,20 +119,19 @@ export class FeedViewPostsSlice {
 
   isFollowingAllAuthors(userDid: string) {
     const feedPost = this._feedPost
-    if (feedPost.post.author.did === userDid) {
-      return true
-    }
-    if (AppBskyFeedDefs.isPostView(feedPost.reply?.parent)) {
-      const parent = feedPost.reply?.parent
-      if (parent?.author.did === userDid) {
-        return true
+    const authors = [feedPost.post.author]
+    if (feedPost.reply) {
+      if (AppBskyFeedDefs.isPostView(feedPost.reply.parent)) {
+        authors.push(feedPost.reply.parent.author)
       }
-      return (
-        parent?.author.viewer?.following &&
-        feedPost.post.author.viewer?.following
-      )
+      if (feedPost.reply.grandparentAuthor) {
+        authors.push(feedPost.reply.grandparentAuthor)
+      }
+      if (AppBskyFeedDefs.isPostView(feedPost.reply.root)) {
+        authors.push(feedPost.reply.root.author)
+      }
     }
-    return false
+    return authors.every(a => a.did === userDid || a.viewer?.following)
   }
 }
 
