@@ -194,8 +194,8 @@ export class FeedTuner {
       const item1 = slices[i]
       for (let j = i + 1; j < slices.length; j++) {
         const item2 = slices[j]
-        if (item2.isThread) {
-          // dont dedup items that are rendering in a thread as this can cause rendering errors
+        if (item2.items.length > 1) {
+          // Don't remove threads below even if individual posts from them appeared as reposts above.
           continue
         }
         if (item1.containsUri(item2.items[0].post.uri)) {
