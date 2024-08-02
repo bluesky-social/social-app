@@ -320,22 +320,6 @@ export function usePostFeedQuery(
                           AppBskyFeedPost.validateRecord(item.post.record)
                             .success
                         ) {
-                          const parent = item.reply?.parent
-                          let parentAuthor:
-                            | AppBskyActorDefs.ProfileViewBasic
-                            | undefined
-                          if (AppBskyFeedDefs.isPostView(parent)) {
-                            parentAuthor = parent.author
-                          }
-                          if (!parentAuthor) {
-                            parentAuthor =
-                              slice.items[i + 1]?.reply?.grandparentAuthor
-                          }
-                          const replyRef = item.reply
-                          const isParentBlocked = AppBskyFeedDefs.isBlockedPost(
-                            replyRef?.parent,
-                          )
-
                           const feedPostSliceItem: FeedPostSliceItem = {
                             _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
                             uri: item.post.uri,
@@ -344,8 +328,8 @@ export function usePostFeedQuery(
                             reason: slice.reason,
                             feedContext: slice.feedContext,
                             moderation: moderations[i],
-                            parentAuthor,
-                            isParentBlocked,
+                            parentAuthor: item.parentAuthor,
+                            isParentBlocked: item.isParentBlocked,
                           }
                           return feedPostSliceItem
                         }
