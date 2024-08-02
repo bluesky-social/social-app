@@ -111,9 +111,9 @@ export function Controls({
   useEffect(() => {
     if (focused) {
       // auto decide quality based on network conditions
-      hls.nextLevel = -1
+      hls.autoLevelCapping = -1
     } else {
-      hls.nextLevel = 0
+      hls.autoLevelCapping = 0
     }
   }, [hls, focused])
 

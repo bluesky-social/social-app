@@ -82,7 +82,7 @@ export function VideoPlayer({
   setActive: () => void
   onScreen: boolean
 }) {
-  const [hls] = useState(() => new Hls())
+  const [hls] = useState(() => new Hls({capLevelToPlayerSize: true}))
   const containerRef = useRef<HTMLDivElement>(null)
   const ref = useRef<HTMLVideoElement>(null)
   const [focused, setFocused] = useState(false)
@@ -94,6 +94,8 @@ export function VideoPlayer({
       Hls.isSupported()
     ) {
       hls.attachMedia(ref.current)
+      // initial value, later on it's managed by Controls
+      hls.autoLevelCapping = 0
 
       return () => {
         hls.detachMedia()
