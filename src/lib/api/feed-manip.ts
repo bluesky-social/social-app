@@ -30,12 +30,14 @@ export class FeedViewPostsSlice {
   items: FeedSliceItem[]
   isIncompleteThread: boolean
   isFallbackMarker: boolean
+  rootUri: null | string
 
   constructor(feedPost: FeedViewPost) {
     const {post, reply, reason} = feedPost
     this.items = []
     this.isIncompleteThread = false
     this.isFallbackMarker = false
+    this.rootUri = null
     this._feedPost = feedPost
     this._reactKey = `slice-${post.uri}-${
       feedPost.reason?.indexedAt || post.indexedAt
@@ -91,6 +93,7 @@ export class FeedViewPostsSlice {
     ) {
       return
     }
+    this.rootUri = root.uri
     if (root.uri === parent.uri) {
       return
     }
@@ -223,6 +226,21 @@ export class FeedTuner {
       }
     }
     return slices
+  }
+
+  static dedupThreads(
+    tuner: FeedTuner,
+    slices: FeedViewPostsSlice[],
+  ): FeedViewPostsSlice[] {
+    const seenThreadUris = new Set()
+    const nextSlices = []
+    for (let slice of slices) {
+      if (!seenThreadUris.has(slice.rootUri)) {
+        seenThreadUris.add(slice.rootUri)
+        nextSlices.push(slice)
+      }
+    }
+    return nextSlices
   }
 
   static dedupReposts(

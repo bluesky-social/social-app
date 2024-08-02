@@ -21,6 +21,7 @@ export function useFeedTuners(feedDesc: FeedDescriptor) {
     if (feedDesc.startsWith('feedgen')) {
       return [
         FeedTuner.dedupReposts,
+        FeedTuner.dedupThreads,
         FeedTuner.preferredLangOnly(langPrefs.contentLanguages),
       ]
     }
@@ -49,6 +50,7 @@ export function useFeedTuners(feedDesc: FeedDescriptor) {
       } else {
         feedTuners.push(FeedTuner.dedupReposts)
       }
+      feedTuners.push(FeedTuner.dedupThreads)
       return feedTuners
     }
     if (feedDesc === 'following') {
@@ -71,6 +73,7 @@ export function useFeedTuners(feedDesc: FeedDescriptor) {
       if (preferences?.feedViewPrefs.hideQuotePosts) {
         feedTuners.push(FeedTuner.removeQuotePosts)
       }
+      feedTuners.push(FeedTuner.dedupThreads)
 
       return feedTuners
     }
