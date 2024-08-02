@@ -146,7 +146,7 @@ export class FeedViewPostsSlice {
     return !!this.items.find(item => item.post.uri === uri)
   }
 
-  isFollowingAllAuthors(userDid: string) {
+  getAllAuthors(): AppBskyActorDefs.ProfileViewBasic[] {
     const feedPost = this._feedPost
     const authors = [feedPost.post.author]
     if (feedPost.reply) {
@@ -160,7 +160,7 @@ export class FeedViewPostsSlice {
         authors.push(feedPost.reply.root.author)
       }
     }
-    return authors.every(a => a.did === userDid || a.viewer?.following)
+    return authors
   }
 }
 
@@ -230,7 +230,14 @@ export class FeedTuner {
 
   static removeReplies(tuner: FeedTuner, slices: FeedViewPostsSlice[]) {
     for (let i = 0; i < slices.length; i++) {
-      if (slices[i].isReply) {
+      const slice = slices[i]
+      if (
+        slice.isReply &&
+        !slice.isRepost &&
+        // This is not perfect but it's close as we can get to
+        // detecting threads without having to peek ahead.
+        !areSameAuthor(slice.getAllAuthors())
+      ) {
         slices.splice(i, 1)
         i--
       }
@@ -307,7 +314,7 @@ export class FeedTuner {
         if (
           slice.isReply &&
           !slice.isRepost &&
-          !slice.isFollowingAllAuthors(userDid)
+          !isFollowingAll(slice.getAllAuthors(), userDid)
         ) {
           slices.splice(i, 1)
           i--
@@ -360,4 +367,17 @@ export class FeedTuner {
       return candidateSlices
     }
   }
+}
+
+function areSameAuthor(authors: AppBskyActorDefs.ProfileViewBasic[]): boolean {
+  const dids = authors.map(a => a.did)
+  const set = new Set(dids)
+  return set.size === 1
+}
+
+function isFollowingAll(
+  authors: AppBskyActorDefs.ProfileViewBasic[],
+  userDid: string,
+): boolean {
+  return authors.every(a => a.did === userDid || a.viewer?.following)
 }
