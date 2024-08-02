@@ -104,16 +104,45 @@ export function Controls({
     }
   }, [onScreen, pause, active, play, autoplayDisabled])
 
-  const onPressPlayPause = useCallback(() => {
+  // clicking on any button should focus the player, if it's not already focused
+  const drawFocus = useCallback(() => {
+    if (!active) {
+      setActive()
+    }
+    setFocused(true)
+  }, [active, setActive, setFocused])
+
+  const onPressEmptySpace = useCallback(() => {
     if (!focused) {
-      if (!active) {
-        setActive()
-      }
-      setFocused(true)
+      drawFocus()
     } else {
       togglePlayPause()
     }
-  }, [togglePlayPause, setActive, setFocused, active, focused])
+  }, [togglePlayPause, drawFocus, focused])
+
+  const onPressPlayPause = useCallback(() => {
+    drawFocus()
+    togglePlayPause()
+  }, [drawFocus, togglePlayPause])
+
+  const onPressSubtitles = useCallback(() => {
+    drawFocus()
+    setSubtitlesEnabled(!subtitlesEnabled)
+  }, [drawFocus, setSubtitlesEnabled, subtitlesEnabled])
+
+  const onPressMute = useCallback(() => {
+    drawFocus()
+    toggleMute()
+  }, [drawFocus, toggleMute])
+
+  const onPressFullscreen = useCallback(() => {
+    drawFocus()
+    if (document.fullscreenElement) {
+      document.exitFullscreen()
+    } else {
+      enterFullscreen()
+    }
+  }, [drawFocus, enterFullscreen])
 
   const showControls =
     (focused && !playing) || (interactingViaKeypress ? hasFocus : hovered)
@@ -149,7 +178,7 @@ export function Controls({
             : msg`Play video`,
         )}
         style={a.flex_1}
-        onPress={onPressPlayPause}
+        onPress={onPressEmptySpace}
       />
       <View
         style={[
@@ -169,18 +198,8 @@ export function Controls({
         ]}>
         <Button
           label={_(playing ? msg`Pause` : msg`Play`)}
-          onPress={() => {
-            if (!active) {
-              setActive()
-            }
-            setFocused(true)
-            togglePlayPause()
-          }}
-          variant="ghost"
-          shape="round"
-          size="medium"
-          style={a.p_2xs}
-          hoverStyle={{backgroundColor: 'rgba(255, 255, 255, 0.1)'}}>
+          onPress={onPressPlayPause}
+          {...btnProps}>
           {playing ? (
             <PauseIcon fill={t.palette.white} width={20} />
           ) : (
@@ -196,18 +215,8 @@ export function Controls({
             label={_(
               subtitlesEnabled ? msg`Disable subtitles` : msg`Enable subtitles`,
             )}
-            onPress={() => {
-              if (!active) {
-                setActive()
-              }
-              setFocused(true)
-              setSubtitlesEnabled(!subtitlesEnabled)
-            }}
-            variant="ghost"
-            shape="round"
-            size="medium"
-            style={a.p_2xs}
-            hoverStyle={{backgroundColor: 'rgba(255, 255, 255, 0.1)'}}>
+            onPress={onPressSubtitles}
+            {...btnProps}>
             {subtitlesEnabled ? (
               <CCActiveIcon fill={t.palette.white} width={20} />
             ) : (
@@ -217,18 +226,8 @@ export function Controls({
         )}
         <Button
           label={_(muted ? msg`Unmute` : msg`Mute`)}
-          onPress={() => {
-            if (!active) {
-              setActive()
-            }
-            setFocused(true)
-            toggleMute()
-          }}
-          variant="ghost"
-          shape="round"
-          size="medium"
-          style={a.p_2xs}
-          hoverStyle={{backgroundColor: 'rgba(255, 255, 255, 0.1)'}}>
+          onPress={onPressMute}
+          {...btnProps}>
           {muted ? (
             <MuteIcon fill={t.palette.white} width={20} />
           ) : (
@@ -238,18 +237,8 @@ export function Controls({
         {/* TODO: find workaround for iOS Safari */}
         <Button
           label={_(muted ? msg`Unmute` : msg`Mute`)}
-          onPress={() => {
-            if (document.fullscreenElement) {
-              document.exitFullscreen()
-            } else {
-              enterFullscreen()
-            }
-          }}
-          variant="ghost"
-          shape="round"
-          size="medium"
-          style={a.p_2xs}
-          hoverStyle={{backgroundColor: 'rgba(255, 255, 255, 0.1)'}}>
+          onPress={onPressFullscreen}
+          {...btnProps}>
           {isFullscreen ? (
             <ArrowsInIcon fill={t.palette.white} width={20} />
           ) : (
@@ -303,6 +292,14 @@ export function Controls({
     </div>
   )
 }
+
+const btnProps = {
+  variant: 'ghost',
+  shape: 'round',
+  size: 'medium',
+  style: a.p_2xs,
+  hoverStyle: {backgroundColor: 'rgba(255, 255, 255, 0.1)'},
+} as const
 
 function formatTime(time: number) {
   if (isNaN(time)) {
