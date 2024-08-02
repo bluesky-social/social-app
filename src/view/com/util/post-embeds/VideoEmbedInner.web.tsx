@@ -141,6 +141,14 @@ export function VideoPlayer({
       <div
         ref={containerRef}
         style={{width: '100%', height: '100%', display: 'flex'}}>
+        <video
+          ref={ref}
+          style={{width: '100%', height: '100%', objectFit: 'contain'}}
+          playsInline
+          preload="none"
+          loop
+          muted={!focused}
+        />
         <Controls
           videoRef={ref}
           active={active}
@@ -149,14 +157,6 @@ export function VideoPlayer({
           setFocused={setFocused}
           onScreen={onScreen}
           enterFullscreen={enterFullscreen}
-        />
-        <video
-          ref={ref}
-          style={{width: '100%', height: '100%', objectFit: 'contain'}}
-          playsInline
-          preload="none"
-          loop
-          muted={!focused}
         />
       </div>
     </View>
