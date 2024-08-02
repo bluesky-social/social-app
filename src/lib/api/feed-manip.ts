@@ -299,16 +299,14 @@ export class FeedTuner {
       tuner: FeedTuner,
       slices: FeedViewPostsSlice[],
     ): FeedViewPostsSlice[] => {
-      // remove any replies without at least minLikes likes
       for (let i = slices.length - 1; i >= 0; i--) {
         const slice = slices[i]
-        if (slice.isReply) {
-          if (slice.isRepost) {
-            continue
-          }
-          if (!slice.isFollowingAllAuthors(userDid)) {
-            slices.splice(i, 1)
-          }
+        if (
+          slice.isReply &&
+          !slice.isRepost &&
+          !slice.isFollowingAllAuthors(userDid)
+        ) {
+          slices.splice(i, 1)
         }
       }
       return slices
