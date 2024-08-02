@@ -3,6 +3,7 @@ import {Pressable, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import type Hls from 'hls.js'
 
 import {
   useAutoplayDisabled,
@@ -29,6 +30,7 @@ import {Text} from '#/components/Typography'
 
 export function Controls({
   videoRef,
+  hls,
   active,
   setActive,
   focused,
@@ -37,6 +39,7 @@ export function Controls({
   enterFullscreen,
 }: {
   videoRef: React.RefObject<HTMLVideoElement>
+  hls: Hls
   active: boolean
   setActive: () => void
   focused: boolean
@@ -103,6 +106,16 @@ export function Controls({
       }
     }
   }, [onScreen, pause, active, play, autoplayDisabled])
+
+  // use minimal quality when not focused
+  useEffect(() => {
+    if (focused) {
+      // auto decide quality based on network conditions
+      hls.nextLevel = -1
+    } else {
+      hls.nextLevel = 0
+    }
+  }, [hls, focused])
 
   // clicking on any button should focus the player, if it's not already focused
   const drawFocus = useCallback(() => {
