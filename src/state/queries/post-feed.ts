@@ -90,7 +90,6 @@ export interface FeedPostSliceItem {
 export interface FeedPostSlice {
   _isFeedPostSlice: boolean
   _reactKey: string
-  rootUri: string
   items: FeedPostSliceItem[]
   isIncompleteThread: boolean
   isFallbackMarker: boolean
@@ -314,7 +313,6 @@ export function usePostFeedQuery(
                   const feedPostSlice: FeedPostSlice = {
                     _reactKey: slice._reactKey,
                     _isFeedPostSlice: true,
-                    rootUri: slice.uri,
                     isIncompleteThread: slice.isIncompleteThread,
                     isFallbackMarker: slice.isFallbackMarker,
                     items: slice.items.map((item, i) => {

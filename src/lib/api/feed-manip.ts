@@ -105,10 +105,6 @@ export class FeedViewPostsSlice {
     }
   }
 
-  get uri() {
-    return this._feedPost.post.uri
-  }
-
   get isQuotePost() {
     const embed = this._feedPost.post.embed
     return (
