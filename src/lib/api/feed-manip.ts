@@ -30,14 +30,18 @@ export class FeedViewPostsSlice {
   items: FeedSliceItem[]
   isIncompleteThread: boolean
   isFallbackMarker: boolean
-  rootUri: null | string
+  rootUri: string
 
   constructor(feedPost: FeedViewPost) {
     const {post, reply, reason} = feedPost
     this.items = []
     this.isIncompleteThread = false
     this.isFallbackMarker = false
-    this.rootUri = null
+    if (AppBskyFeedDefs.isPostView(reply?.root)) {
+      this.rootUri = reply.root.uri
+    } else {
+      this.rootUri = post.uri
+    }
     this._feedPost = feedPost
     this._reactKey = `slice-${post.uri}-${
       feedPost.reason?.indexedAt || post.indexedAt
@@ -93,7 +97,6 @@ export class FeedViewPostsSlice {
     ) {
       return
     }
-    this.rootUri = root.uri
     if (root.uri === parent.uri) {
       return
     }
