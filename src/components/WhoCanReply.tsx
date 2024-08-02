@@ -18,6 +18,7 @@ import {makeListLink, makeProfileLink} from '#/lib/routes/links'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {RQKEY_ROOT as POST_THREAD_RQKEY_ROOT} from '#/state/queries/post-thread'
+import {threadgateRecordQueryKeyRoot} from '#/state/queries/threadgate'
 import {
   ThreadgateSetting,
   threadgateViewToSettings,
@@ -109,6 +110,9 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
       Toast.show(_(msg`Thread settings updated`))
       queryClient.invalidateQueries({
         queryKey: [POST_THREAD_RQKEY_ROOT],
+      })
+      queryClient.invalidateQueries({
+        queryKey: [threadgateRecordQueryKeyRoot],
       })
     } catch (err) {
       Toast.show(

@@ -1,7 +1,7 @@
 import React, {useEffect, useRef} from 'react'
 import {useWindowDimensions, View} from 'react-native'
 import {runOnJS} from 'react-native-reanimated'
-import {AppBskyFeedDefs} from '@atproto/api'
+import {AppBskyFeedDefs, AppBskyFeedThreadgate} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -20,6 +20,7 @@ import {
   usePostThreadQuery,
 } from '#/state/queries/post-thread'
 import {usePreferencesQuery} from '#/state/queries/preferences'
+import {useThreadgateRecordQuery} from '#/state/queries/threadgate'
 import {useSession} from '#/state/session'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
@@ -117,6 +118,11 @@ export function PostThread({
   const rootPost = thread?.type === 'post' ? thread.post : undefined
   const rootPostRecord = thread?.type === 'post' ? thread.record : undefined
 
+  const {data: threadgateRecord} = useThreadgateRecordQuery({
+    postUri: uri,
+    initialData: rootPost?.threadgate?.record as AppBskyFeedThreadgate.Record,
+  })
+
   const moderationOpts = useModerationOpts()
   const isNoPwi = React.useMemo(() => {
     const mod =
@@ -172,6 +178,7 @@ export function PostThread({
       treeView,
       threadModerationCache,
       hiddenRepliesState !== HiddenRepliesState.Hide,
+      threadgateRecord,
     )
   }, [
     thread,
@@ -180,6 +187,7 @@ export function PostThread({
     treeView,
     threadModerationCache,
     hiddenRepliesState,
+    threadgateRecord,
   ])
 
   const error = React.useMemo(() => {
@@ -494,6 +502,7 @@ function createThreadSkeleton(
   treeView: boolean,
   modCache: ThreadModerationCache,
   showHiddenReplies: boolean,
+  threadgateRecord: AppBskyFeedThreadgate.Record | undefined,
 ): ThreadSkeletonParts | null {
   if (!node) return null
 
@@ -507,6 +516,7 @@ function createThreadSkeleton(
         treeView,
         modCache,
         showHiddenReplies,
+        threadgateRecord,
       ),
     ),
   }
@@ -543,6 +553,7 @@ function* flattenThreadReplies(
   treeView: boolean,
   modCache: ThreadModerationCache,
   showHiddenReplies: boolean,
+  threadgateRecord: AppBskyFeedThreadgate.Record | undefined,
 ): Generator<YieldedItem, HiddenReplyType> {
   if (node.type === 'post') {
     // dont show pwi-opted-out posts to logged out users
@@ -576,6 +587,7 @@ function* flattenThreadReplies(
           treeView,
           modCache,
           showHiddenReplies,
+          threadgateRecord,
         )
         if (hiddenReply > hiddenReplies) {
           hiddenReplies = hiddenReply
