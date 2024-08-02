@@ -46,6 +46,12 @@ type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 const client = new BrowserOAuthClient({
   plcDirectoryUrl: 'https://plc.directory',
   handleResolver: 'https://bsky.social',
+  clientMetadata: {
+    client_id: 'http://localhost:19006/',
+    redirect_uris: ['http://localhost:19006/auth/callback'],
+    response_types: ['code'],
+    token_endpoint_auth_method: 'none',
+  },
 })
 
 export function useOAuth(client: BrowserOAuthClient) {
