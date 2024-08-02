@@ -43,15 +43,6 @@ export class FeedViewPostsSlice {
     return this._feedPost.post.uri
   }
 
-  get isThread() {
-    return (
-      this.items.length > 1 &&
-      this.items.every(
-        item => item.post.author.did === this.items[0].post.author.did,
-      )
-    )
-  }
-
   get isQuotePost() {
     const embed = this._feedPost.post.embed
     return (
