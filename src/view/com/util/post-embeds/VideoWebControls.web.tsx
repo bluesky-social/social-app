@@ -30,7 +30,7 @@ import {Text} from '#/components/Typography'
 
 export function Controls({
   videoRef,
-  hls,
+  hlsRef,
   active,
   setActive,
   focused,
@@ -40,7 +40,7 @@ export function Controls({
   hasSubtitleTrack,
 }: {
   videoRef: React.RefObject<HTMLVideoElement>
-  hls: Hls
+  hlsRef: React.RefObject<Hls>
   active: boolean
   setActive: () => void
   focused: boolean
@@ -112,21 +112,23 @@ export function Controls({
 
   // use minimal quality when not focused
   useEffect(() => {
+    if (!hlsRef.current) return
     if (focused) {
       // auto decide quality based on network conditions
-      hls.autoLevelCapping = -1
+      hlsRef.current.autoLevelCapping = -1
     } else {
-      hls.autoLevelCapping = 0
+      hlsRef.current.autoLevelCapping = 0
     }
-  }, [hls, focused])
+  }, [hlsRef, focused])
 
   useEffect(() => {
+    if (!hlsRef.current) return
     if (hasSubtitleTrack && subtitlesEnabled && canPlay) {
-      hls.subtitleTrack = 0
+      hlsRef.current.subtitleTrack = 0
     } else {
-      hls.subtitleTrack = -1
+      hlsRef.current.subtitleTrack = -1
     }
-  }, [hasSubtitleTrack, subtitlesEnabled, hls, canPlay])
+  }, [hasSubtitleTrack, subtitlesEnabled, hlsRef, canPlay])
 
   // clicking on any button should focus the player, if it's not already focused
   const drawFocus = useCallback(() => {

@@ -82,39 +82,38 @@ export function VideoPlayer({
   setActive: () => void
   onScreen: boolean
 }) {
-  const [hls] = useState(() => new Hls({capLevelToPlayerSize: true}))
   const containerRef = useRef<HTMLDivElement>(null)
   const ref = useRef<HTMLVideoElement>(null)
   const [focused, setFocused] = useState(false)
   const [hasSubtitleTrack, setHasSubtitleTrack] = useState(false)
 
-  useEffect(() => {
-    if (ref.current && Hls.isSupported()) {
-      hls.attachMedia(ref.current)
-      // initial value, later on it's managed by Controls
-      hls.autoLevelCapping = 0
-
-      hls.on(Hls.Events.SUBTITLE_TRACKS_UPDATED, (event, data) => {
-        if (data.subtitleTracks.length > 0) {
-          setHasSubtitleTrack(true)
-        }
-      })
-
-      return () => {
-        hls.detachMedia()
-      }
-    }
-  }, [hls])
+  const hlsRef = useRef<Hls | undefined>(undefined)
 
   useEffect(() => {
-    if (ref.current) {
-      if (Hls.isSupported()) {
-        hls.loadSource(source)
-      } else {
-        // TODO: fallback
+    if (!ref.current) return
+    if (!Hls.isSupported()) throw new UnsupportedError()
+
+    const hls = new Hls({capLevelToPlayerSize: true})
+    hlsRef.current = hls
+
+    hls.attachMedia(ref.current)
+    hls.loadSource(source)
+
+    // initial value, later on it's managed by Controls
+    hls.autoLevelCapping = 0
+
+    hls.on(Hls.Events.SUBTITLE_TRACKS_UPDATED, (event, data) => {
+      if (data.subtitleTracks.length > 0) {
+        setHasSubtitleTrack(true)
       }
+    })
+
+    return () => {
+      hlsRef.current = undefined
+      hls.detachMedia()
+      hls.destroy()
     }
-  }, [source, hls])
+  }, [source])
 
   const enterFullscreen = useCallback(() => {
     if (containerRef.current) {
@@ -145,7 +144,7 @@ export function VideoPlayer({
         />
         <Controls
           videoRef={ref}
-          hls={hls}
+          hlsRef={hlsRef}
           active={active}
           setActive={setActive}
           focused={focused}
@@ -157,4 +156,10 @@ export function VideoPlayer({
       </div>
     </View>
   )
+}
+
+export class UnsupportedError extends Error {
+  constructor() {
+    super('HLS is not supported')
+  }
 }
