@@ -343,6 +343,21 @@ export function useRemoveMutedWordMutation() {
   })
 }
 
+export function useRemoveMutedWordsMutation() {
+  const queryClient = useQueryClient()
+  const agent = useAgent()
+
+  return useMutation({
+    mutationFn: async (mutedWords: AppBskyActorDefs.MutedWord[]) => {
+      await agent.removeMutedWords(mutedWords)
+      // triggers a refetch
+      await queryClient.invalidateQueries({
+        queryKey: preferencesQueryKey,
+      })
+    },
+  })
+}
+
 export function useQueueNudgesMutation() {
   const queryClient = useQueryClient()
   const agent = useAgent()
