@@ -82,10 +82,6 @@ export class FeedViewPostsSlice {
     return AppBskyFeedDefs.isReasonRepost(reason)
   }
 
-  get includesThreadRoot() {
-    return !this.items[0].reply
-  }
-
   get likeCount() {
     return this._feedPost.post.likeCount ?? 0
   }
@@ -307,9 +303,6 @@ export class FeedTuner {
       for (let i = slices.length - 1; i >= 0; i--) {
         const slice = slices[i]
         if (slice.isReply) {
-          if (slice.isThread && slice.includesThreadRoot) {
-            continue
-          }
           if (slice.isRepost) {
             continue
           }
