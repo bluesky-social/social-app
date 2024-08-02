@@ -56,7 +56,10 @@ export function VideoEmbed({source}: {source: string}) {
         a.rounded_sm,
         a.my_xs,
       ]}>
-      <div ref={ref} style={{display: 'flex', flex: 1}}>
+      <div
+        ref={ref}
+        style={{display: 'flex', flex: 1}}
+        onClick={evt => evt.stopPropagation()}>
         {hasBeenOnScreen || active ? (
           <VideoEmbedInner
             source={source}
