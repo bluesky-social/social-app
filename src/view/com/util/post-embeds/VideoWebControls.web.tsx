@@ -40,7 +40,7 @@ export function Controls({
   hasSubtitleTrack,
 }: {
   videoRef: React.RefObject<HTMLVideoElement>
-  hlsRef: React.RefObject<Hls>
+  hlsRef: React.RefObject<Hls | undefined>
   active: boolean
   setActive: () => void
   focused: boolean

@@ -3,7 +3,7 @@ import type Hls from 'hls.js'
 
 export function Controls({}: {
   videoRef: React.RefObject<HTMLVideoElement>
-  hlsRef: React.RefObject<Hls>
+  hlsRef: React.RefObject<Hls | undefined>
   active: boolean
   setActive: () => void
   focused: boolean

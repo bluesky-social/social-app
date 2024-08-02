@@ -9,7 +9,6 @@ export function VideoEmbedInner({
   active,
   sendPosition,
   isAnyViewActive,
-  onGoFarOffScreen,
   ...props
 }: {
   source: string
@@ -17,10 +16,10 @@ export function VideoEmbedInner({
   setActive: () => void
   sendPosition: (position: number) => void
   onScreen: boolean
-  onGoFarOffScreen: () => void
   isAnyViewActive?: boolean
 }) {
   const ref = useRef<HTMLDivElement>(null)
+  const [nearScreen, setNearScreen] = useState(false)
 
   // Send position when scrolling. This is done with an IntersectionObserver
   // observing a div of 100vh height
@@ -33,16 +32,13 @@ export function VideoEmbedInner({
         const position =
           entry.boundingClientRect.y + entry.boundingClientRect.height / 2
         sendPosition(position)
-        if (!entry.isIntersecting) {
-          // unmounts the video player
-          onGoFarOffScreen()
-        }
+        setNearScreen(entry.isIntersecting)
       },
       {threshold: Array.from({length: 101}, (_, i) => i / 100)},
     )
     observer.observe(ref.current)
     return () => observer.disconnect()
-  }, [sendPosition, onGoFarOffScreen])
+  }, [sendPosition])
 
   // In case scrolling hasn't started yet, send up the position
   useEffect(() => {
@@ -55,7 +51,7 @@ export function VideoEmbedInner({
 
   return (
     <View style={[a.flex_1, a.flex_row]}>
-      <VideoPlayer active={active} {...props} />
+      {nearScreen && <VideoPlayer active={active} {...props} />}
       <div
         ref={ref}
         style={{
