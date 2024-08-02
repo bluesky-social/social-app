@@ -442,7 +442,6 @@ export async function pollLatest(page: FeedPage | undefined) {
   if (post) {
     const slices = page.tuner.tune([post], {
       dryRun: true,
-      maintainOrder: true,
     })
     if (slices[0]) {
       return true
