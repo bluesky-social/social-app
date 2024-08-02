@@ -166,11 +166,13 @@ export class FeedViewPostsSlice {
 
 export class FeedTuner {
   seenKeys: Set<string> = new Set()
+  seenUris: Set<string> = new Set()
 
   constructor(public tunerFns: FeedTunerFn[]) {}
 
   reset() {
     this.seenKeys.clear()
+    this.seenUris.clear()
   }
 
   tune(
@@ -193,6 +195,31 @@ export class FeedTuner {
         if (this.seenKeys.has(slice._reactKey)) {
           return false
         }
+
+        // Most feeds dedupe by thread, but the author feed doesn't because it aims to make
+        // it possible to find all author's posts. This logic adds post-level dedupe for it.
+        for (let i = 0; i < slice.items.length; i++) {
+          const item = slice.items[i]
+          if (this.seenUris.has(item.post.uri)) {
+            if (i === 0) {
+              // Omit contiguous seen leading items.
+              // For example, [A -> B -> C], [A -> D -> E], [A -> D -> F]
+              // would turn into [A -> B -> C], [D -> E], [F].
+              slice.items.splice(0, 1)
+              i--
+            }
+            if (i === slice.items.length - 1) {
+              // If the last item in the slice was already seen, omit the whole slice.
+              // This means we'd miss its parents, but the user can "show more" to see it.
+              // For example, [A ... E -> F], [A ... D -> E], [A ... C -> D], [A -> B -> C]
+              // would get collapsed into [A ... E -> F], with B/C/D considered seen.
+              return false
+            }
+          } else {
+            this.seenUris.add(item.post.uri)
+          }
+        }
+
         this.seenKeys.add(slice._reactKey)
         return true
       })
