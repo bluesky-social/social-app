@@ -92,6 +92,7 @@ export interface FeedPostSlice {
   _reactKey: string
   rootUri: string
   items: FeedPostSliceItem[]
+  isIncompleteThread: boolean
 }
 
 export interface FeedPageUnselected {
@@ -313,6 +314,7 @@ export function usePostFeedQuery(
                     _reactKey: slice._reactKey,
                     _isFeedPostSlice: true,
                     rootUri: slice.uri,
+                    isIncompleteThread: slice.isIncompleteThread,
                     items: slice.items.map((item, i) => {
                       const feedPostSliceItem: FeedPostSliceItem = {
                         _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,

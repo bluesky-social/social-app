@@ -18,7 +18,7 @@ let FeedSlice = ({
   slice: FeedPostSlice
   hideTopBorder?: boolean
 }): React.ReactNode => {
-  if (slice.items.length > 3) {
+  if (slice.isIncompleteThread && slice.items.length >= 3) {
     const beforeLast = slice.items.length - 2
     const last = slice.items.length - 1
     return (
@@ -37,7 +37,7 @@ let FeedSlice = ({
           hideTopBorder={hideTopBorder}
           isParentBlocked={slice.items[0].isParentBlocked}
         />
-        <ViewFullThread slice={slice} />
+        <ViewFullThread uri={slice.items[0].uri} />
         <FeedItem
           key={slice.items[beforeLast]._reactKey}
           post={slice.items[beforeLast].post}
@@ -96,12 +96,12 @@ let FeedSlice = ({
 FeedSlice = memo(FeedSlice)
 export {FeedSlice}
 
-function ViewFullThread({slice}: {slice: FeedPostSlice}) {
+function ViewFullThread({uri}: {uri: string}) {
   const pal = usePalette('default')
   const itemHref = React.useMemo(() => {
-    const urip = new AtUri(slice.rootUri)
+    const urip = new AtUri(uri)
     return makeProfileLink({did: urip.hostname, handle: ''}, 'post', urip.rkey)
-  }, [slice.rootUri])
+  }, [uri])
 
   return (
     <Link style={[styles.viewFullThread]} href={itemHref} asAnchor noFeedback>

@@ -26,36 +26,75 @@ export class FeedViewPostsSlice {
   _reactKey: string
   _feedPost: FeedViewPost
   items: FeedSliceItem[]
+  isIncompleteThread: boolean
 
   constructor(feedPost: FeedViewPost) {
-    this._feedPost = feedPost
-    this._reactKey = `slice-${feedPost.post.uri}-${
-      feedPost.reason?.indexedAt || feedPost.post.indexedAt
-    }`
+    const {post, reply, reason} = feedPost
     this.items = []
+    this.isIncompleteThread = false
+    this._feedPost = feedPost
+    this._reactKey = `slice-${post.uri}-${
+      feedPost.reason?.indexedAt || post.indexedAt
+    }`
     if (
-      !AppBskyFeedPost.isRecord(feedPost.post.record) ||
-      !AppBskyFeedPost.validateRecord(feedPost.post.record).success
+      !AppBskyFeedPost.isRecord(post.record) ||
+      !AppBskyFeedPost.validateRecord(post.record).success
     ) {
       return
     }
-    if (feedPost.post.record.reply && !feedPost.reply) {
-      // Ignore posts that are replies, but which don't have the parent
-      // hydrated. This means the parent was either deleted or blocked.
-      return
-    }
-    const parent = feedPost.reply?.parent
+    const parent = reply?.parent
     const isParentBlocked = AppBskyFeedDefs.isBlockedPost(parent)
     let parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
     if (AppBskyFeedDefs.isPostView(parent)) {
       parentAuthor = parent.author
     }
     this.items.push({
-      post: feedPost.post,
-      record: feedPost.post.record,
+      post,
+      record: post.record,
       parentAuthor,
       isParentBlocked,
     })
+    if (!reply || reason) {
+      return
+    }
+    if (
+      !AppBskyFeedDefs.isPostView(parent) ||
+      !AppBskyFeedPost.isRecord(parent.record) ||
+      !AppBskyFeedPost.validateRecord(parent.record).success
+    ) {
+      return
+    }
+    const grandparentAuthor = reply.grandparentAuthor
+    this.items.unshift({
+      post: parent,
+      record: parent.record,
+      parentAuthor: grandparentAuthor,
+      isParentBlocked: Boolean(
+        grandparentAuthor?.viewer?.blockedBy ||
+          grandparentAuthor?.viewer?.blocking ||
+          grandparentAuthor?.viewer?.blockingByList,
+      ),
+    })
+    const root = reply.root
+    if (
+      !AppBskyFeedDefs.isPostView(root) ||
+      !AppBskyFeedPost.isRecord(root.record) ||
+      !AppBskyFeedPost.validateRecord(root.record).success
+    ) {
+      return
+    }
+    if (root.uri === parent.uri) {
+      return
+    }
+    this.items.unshift({
+      post: root,
+      record: root.record,
+      isParentBlocked: false,
+      parentAuthor: undefined,
+    })
+    if (parent.record.reply?.parent.uri !== root.uri) {
+      this.isIncompleteThread = true
+    }
   }
 
   get uri() {
