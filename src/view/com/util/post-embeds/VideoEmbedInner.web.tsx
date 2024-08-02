@@ -89,11 +89,7 @@ export function VideoPlayer({
   const [hasSubtitleTrack, setHasSubtitleTrack] = useState(false)
 
   useEffect(() => {
-    if (
-      ref.current &&
-      !ref.current.canPlayType('application/vnd.apple.mpegurl') &&
-      Hls.isSupported()
-    ) {
+    if (ref.current && Hls.isSupported()) {
       hls.attachMedia(ref.current)
       // initial value, later on it's managed by Controls
       hls.autoLevelCapping = 0
@@ -112,9 +108,7 @@ export function VideoPlayer({
 
   useEffect(() => {
     if (ref.current) {
-      if (ref.current.canPlayType('application/vnd.apple.mpegurl')) {
-        ref.current.src = source
-      } else if (Hls.isSupported()) {
+      if (Hls.isSupported()) {
         hls.loadSource(source)
       } else {
         // TODO: fallback
