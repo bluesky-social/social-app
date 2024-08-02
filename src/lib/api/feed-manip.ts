@@ -275,7 +275,7 @@ export class FeedTuner {
     const seenThreadUris = new Set()
     for (let i = 0; i < slices.length; i++) {
       const rootUri = slices[i].rootUri
-      if (seenThreadUris.has(rootUri)) {
+      if (!slices[i].isRepost && seenThreadUris.has(rootUri)) {
         slices.splice(i, 1)
         i--
       } else {
