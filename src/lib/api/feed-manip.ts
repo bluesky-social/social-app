@@ -136,16 +136,6 @@ export class FeedViewPostsSlice {
   }
 }
 
-export class NoopFeedTuner {
-  reset() {}
-  tune(
-    feed: FeedViewPost[],
-    _opts?: {dryRun: boolean; maintainOrder: boolean},
-  ): FeedViewPostsSlice[] {
-    return feed.map(item => new FeedViewPostsSlice(item))
-  }
-}
-
 export class FeedTuner {
   seenKeys: Set<string> = new Set()
   seenUris: Set<string> = new Set()
@@ -309,15 +299,7 @@ export class FeedTuner {
     return slices
   }
 
-  static thresholdRepliesOnly({
-    userDid,
-    minLikes,
-    followedOnly,
-  }: {
-    userDid: string
-    minLikes: number
-    followedOnly: boolean
-  }) {
+  static followedRepliesOnly({userDid}: {userDid: string}) {
     return (
       tuner: FeedTuner,
       slices: FeedViewPostsSlice[],
@@ -332,9 +314,7 @@ export class FeedTuner {
           if (slice.isRepost) {
             continue
           }
-          if (slice.likeCount < minLikes) {
-            slices.splice(i, 1)
-          } else if (followedOnly && !slice.isFollowingAllAuthors(userDid)) {
+          if (!slice.isFollowingAllAuthors(userDid)) {
             slices.splice(i, 1)
           }
         }
