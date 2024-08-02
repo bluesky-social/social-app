@@ -9,6 +9,7 @@ import {makeRecordUri} from '#/lib/strings/url-helpers'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {PostQuotes as PostQuotesComponent} from '#/view/com/post-thread/PostQuotes'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
+import {atoms as a} from '#/alf'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostQuotes'>
 export const PostQuotesScreen = ({route}: Props) => {
@@ -24,7 +25,7 @@ export const PostQuotesScreen = ({route}: Props) => {
   )
 
   return (
-    <View>
+    <View style={a.flex_1}>
       <ViewHeader title={_(msg`Quotes`)} />
       <PostQuotesComponent uri={uri} />
     </View>
