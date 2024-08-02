@@ -174,12 +174,14 @@ export class FeedViewPostsSlice {
 export class FeedTuner {
   seenKeys: Set<string> = new Set()
   seenUris: Set<string> = new Set()
+  seenRootUris: Set<string> = new Set()
 
   constructor(public tunerFns: FeedTunerFn[]) {}
 
   reset() {
     this.seenKeys.clear()
     this.seenUris.clear()
+    this.seenRootUris.clear()
   }
 
   tune(
@@ -286,14 +288,13 @@ export class FeedTuner {
     tuner: FeedTuner,
     slices: FeedViewPostsSlice[],
   ): FeedViewPostsSlice[] {
-    const seenThreadUris = new Set()
     for (let i = 0; i < slices.length; i++) {
       const rootUri = slices[i].rootUri
-      if (!slices[i].isRepost && seenThreadUris.has(rootUri)) {
+      if (!slices[i].isRepost && tuner.seenRootUris.has(rootUri)) {
         slices.splice(i, 1)
         i--
       } else {
-        seenThreadUris.add(rootUri)
+        tuner.seenRootUris.add(rootUri)
       }
     }
     return slices
