@@ -41,10 +41,10 @@ func run(args []string) {
 					EnvVars: []string{"ATP_APPVIEW_HOST", "ATP_PDS_HOST"},
 				},
 				&cli.StringFlag{
-					Name:  "ogcard-host",
-					Usage: "scheme, hostname, and port of ogcard service",
+					Name:     "ogcard-host",
+					Usage:    "scheme, hostname, and port of ogcard service",
 					Required: false,
-					EnvVars: []string{"OGCARD_HOST"},
+					EnvVars:  []string{"OGCARD_HOST"},
 				},
 				&cli.StringFlag{
 					Name:     "http-address",
@@ -66,6 +66,13 @@ func run(args []string) {
 					Value:    false,
 					Required: false,
 					EnvVars:  []string{"DEBUG"},
+				},
+				&cli.StringFlag{
+					Name:     "basic-auth-password",
+					Usage:    "optional password to restrict access to web interface",
+					Required: false,
+					Value:    "",
+					EnvVars:  []string{"BASIC_AUTH_PASSWORD"},
 				},
 			},
 		},
