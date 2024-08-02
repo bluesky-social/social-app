@@ -32,9 +32,7 @@ export function VideoEmbed({source}: {source: string}) {
           active={active}
           setActive={setActive}
           // web only
-          sendPosition={() => {}}
           onScreen={true}
-          onGoFarOffScreen={() => {}}
         />
       ) : (
         <Button

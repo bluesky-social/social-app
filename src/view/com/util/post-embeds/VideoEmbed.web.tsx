@@ -45,8 +45,6 @@ export function VideoEmbed({source}: {source: string}) {
     [key],
   )
 
-  console.log(key)
-
   return (
     <View
       style={[
@@ -61,16 +59,80 @@ export function VideoEmbed({source}: {source: string}) {
         style={{display: 'flex', flex: 1, cursor: 'default'}}
         onClick={evt => evt.stopPropagation()}>
         <ErrorBoundary renderError={renderError} key={key}>
-          <VideoEmbedInner
-            source={source}
-            active={active}
-            setActive={setActive}
+          <ViewportObserver
             sendPosition={sendPosition}
-            onScreen={onScreen}
-            isAnyViewActive={currentActiveView !== null}
-          />
+            isAnyViewActive={currentActiveView !== null}>
+            <VideoEmbedInner
+              source={source}
+              active={active}
+              setActive={setActive}
+              onScreen={onScreen}
+            />
+          </ViewportObserver>
         </ErrorBoundary>
       </div>
+    </View>
+  )
+}
+
+/**
+ * Renders a 100vh tall div and watches it with an IntersectionObserver to
+ * send the position of the div when it's near the screen.
+ */
+function ViewportObserver({
+  children,
+  sendPosition,
+  isAnyViewActive,
+}: {
+  children: React.ReactNode
+  sendPosition: (position: number) => void
+  isAnyViewActive?: boolean
+}) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [nearScreen, setNearScreen] = useState(false)
+
+  // Send position when scrolling. This is done with an IntersectionObserver
+  // observing a div of 100vh height
+  useEffect(() => {
+    if (!ref.current) return
+    const observer = new IntersectionObserver(
+      entries => {
+        const entry = entries[0]
+        if (!entry) return
+        const position =
+          entry.boundingClientRect.y + entry.boundingClientRect.height / 2
+        sendPosition(position)
+        setNearScreen(entry.isIntersecting)
+      },
+      {threshold: Array.from({length: 101}, (_, i) => i / 100)},
+    )
+    observer.observe(ref.current)
+    return () => observer.disconnect()
+  }, [sendPosition])
+
+  // In case scrolling hasn't started yet, send up the position
+  useEffect(() => {
+    if (ref.current && !isAnyViewActive) {
+      const rect = ref.current.getBoundingClientRect()
+      const position = rect.y + rect.height / 2
+      sendPosition(position)
+    }
+  }, [isAnyViewActive, sendPosition])
+
+  return (
+    <View style={[a.flex_1, a.flex_row]}>
+      {nearScreen && children}
+      <div
+        ref={ref}
+        style={{
+          position: 'absolute',
+          top: 'calc(50% - 50vh)',
+          left: '50%',
+          height: '100vh',
+          width: 1,
+          pointerEvents: 'none',
+        }}
+      />
     </View>
   )
 }

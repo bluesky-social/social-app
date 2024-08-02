@@ -6,68 +6,6 @@ import {atoms as a} from '#/alf'
 import {Controls} from './VideoWebControls'
 
 export function VideoEmbedInner({
-  active,
-  sendPosition,
-  isAnyViewActive,
-  ...props
-}: {
-  source: string
-  active: boolean
-  setActive: () => void
-  sendPosition: (position: number) => void
-  onScreen: boolean
-  isAnyViewActive?: boolean
-}) {
-  const ref = useRef<HTMLDivElement>(null)
-  const [nearScreen, setNearScreen] = useState(false)
-
-  // Send position when scrolling. This is done with an IntersectionObserver
-  // observing a div of 100vh height
-  useEffect(() => {
-    if (!ref.current) return
-    const observer = new IntersectionObserver(
-      entries => {
-        const entry = entries[0]
-        if (!entry) return
-        const position =
-          entry.boundingClientRect.y + entry.boundingClientRect.height / 2
-        sendPosition(position)
-        setNearScreen(entry.isIntersecting)
-      },
-      {threshold: Array.from({length: 101}, (_, i) => i / 100)},
-    )
-    observer.observe(ref.current)
-    return () => observer.disconnect()
-  }, [sendPosition])
-
-  // In case scrolling hasn't started yet, send up the position
-  useEffect(() => {
-    if (ref.current && !isAnyViewActive) {
-      const rect = ref.current.getBoundingClientRect()
-      const position = rect.y + rect.height / 2
-      sendPosition(position)
-    }
-  }, [isAnyViewActive, sendPosition])
-
-  return (
-    <View style={[a.flex_1, a.flex_row]}>
-      {nearScreen && <VideoPlayer active={active} {...props} />}
-      <div
-        ref={ref}
-        style={{
-          position: 'absolute',
-          top: 'calc(50% - 50vh)',
-          left: '50%',
-          height: '100vh',
-          width: 1,
-          pointerEvents: 'none',
-        }}
-      />
-    </View>
-  )
-}
-
-export function VideoPlayer({
   source,
   active,
   setActive,
