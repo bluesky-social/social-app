@@ -1,56 +1,101 @@
 import React, {useCallback, useMemo, useState} from 'react'
-import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
   ModerationDecision,
 } from '@atproto/api'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {usePostQuotesQuery} from '#/state/queries/post-quotes'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
+import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
+import {
+  ListFooter,
+  ListHeaderDesktop,
+  ListMaybePlaceholder,
+} from '#/components/Lists'
 import {FeedItem} from '../posts/FeedItem'
-import {ErrorMessage} from '../util/error/ErrorMessage'
 import {List} from '../util/List'
-import {LoadingScreen} from '../util/LoadingScreen'
-import {CenteredView} from '../util/Views'
+
+function renderItem({
+  item,
+  index,
+}: {
+  item: {
+    post: AppBskyFeedDefs.PostView
+    moderation: ModerationDecision
+    record: AppBskyFeedPost.Record
+  }
+  index: number
+}) {
+  return (
+    <FeedItem
+      post={item.post}
+      record={item.record}
+      moderation={item.moderation}
+      hideTopBorder={index === 0 && !isWeb}
+      reason={undefined}
+      parentAuthor={undefined}
+      feedContext={undefined}
+      showReplyTo={false}
+    />
+  )
+}
+
+function keyExtractor(item: {
+  post: AppBskyFeedDefs.PostView
+  moderation: ModerationDecision
+  record: AppBskyFeedPost.Record
+}) {
+  return item.post.uri
+}
 
 export function PostQuotes({uri}: {uri: string}) {
+  const {_} = useLingui()
+  const initialNumToRender = useInitialNumToRender()
+
   const [isPTRing, setIsPTRing] = useState(false)
+
   const {
     data: resolvedUri,
     error: resolveError,
-    isFetching: isFetchingResolvedUri,
+    isLoading: isLoadingUri,
   } = useResolveUriQuery(uri)
   const {
     data,
-    isFetching,
-    isFetched,
+    isLoading: isLoadingQuotes,
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage,
-    isError,
     error,
     refetch,
   } = usePostQuotesQuery(resolvedUri?.uri)
+
   const moderationOpts = useModerationOpts()
+
+  const isError = Boolean(resolveError || error)
 
   const quotes = useMemo(() => {
     if (data?.pages) {
       return data.pages
-        .flatMap(page => page.posts)
-        .map(post => {
-          if (!AppBskyFeedPost.isRecord(post.record) || !moderationOpts) {
-            return null
-          }
-          const moderation = moderatePost(post, moderationOpts)
-          return {post, record: post.record, moderation}
-        })
+        .flatMap(page =>
+          page.posts.map(post => {
+            if (!AppBskyFeedPost.isRecord(post.record) || !moderationOpts) {
+              return null
+            }
+            const moderation = moderatePost(post, moderationOpts)
+            return {post, record: post.record, moderation}
+          }),
+        )
         .filter(item => item !== null)
     }
+    return []
   }, [data, moderationOpts])
 
   const onRefresh = useCallback(async () => {
@@ -64,56 +109,20 @@ export function PostQuotes({uri}: {uri: string}) {
   }, [refetch, setIsPTRing])
 
   const onEndReached = useCallback(async () => {
-    if (isFetching || !hasNextPage || isError) return
+    if (isFetchingNextPage || !hasNextPage || isError) return
     try {
       await fetchNextPage()
     } catch (err) {
       logger.error('Failed to load more quotes', {message: err})
     }
-  }, [isFetching, hasNextPage, isError, fetchNextPage])
+  }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
-  const renderItem = useCallback(
-    ({
-      item,
-      index,
-    }: {
-      item: {
-        post: AppBskyFeedDefs.PostView
-        moderation: ModerationDecision
-        record: AppBskyFeedPost.Record
-      }
-      index: number
-    }) => {
-      return (
-        <FeedItem
-          post={item.post}
-          record={item.record}
-          moderation={item.moderation}
-          hideTopBorder={index === 0}
-          reason={undefined}
-          parentAuthor={undefined}
-          feedContext={undefined}
-          showReplyTo={false}
-        />
-      )
-    },
-    [],
-  )
-
-  if (isFetchingResolvedUri || !isFetched) {
-    return <LoadingScreen />
-  }
-
-  // error
-  // =
-  if (resolveError || isError) {
+  if (quotes.length < 1) {
     return (
-      <CenteredView>
-        <ErrorMessage
-          message={cleanError(resolveError || error)}
-          onPressTryAgain={onRefresh}
-        />
-      </CenteredView>
+      <ListMaybePlaceholder
+        isLoading={isLoadingUri || isLoadingQuotes}
+        isError={isError}
+      />
     )
   }
 
@@ -122,28 +131,24 @@ export function PostQuotes({uri}: {uri: string}) {
   return (
     <List
       data={quotes}
-      keyExtractor={item => item.post.uri}
+      renderItem={renderItem}
+      keyExtractor={keyExtractor}
       refreshing={isPTRing}
       onRefresh={onRefresh}
       onEndReached={onEndReached}
-      renderItem={renderItem}
-      initialNumToRender={15}
-      // FIXME(dan)
-      // eslint-disable-next-line react/no-unstable-nested-components
-      ListFooterComponent={() => (
-        <View style={styles.footer}>
-          {(isFetching || isFetchingNextPage) && <ActivityIndicator />}
-        </View>
-      )}
+      onEndReachedThreshold={4}
+      ListHeaderComponent={<ListHeaderDesktop title={_(msg`Quotes`)} />}
+      ListFooterComponent={
+        <ListFooter
+          isFetchingNextPage={isFetchingNextPage}
+          error={cleanError(error)}
+          onRetry={fetchNextPage}
+        />
+      }
       // @ts-ignore our .web version only -prf
       desktopFixedHeight
+      initialNumToRender={initialNumToRender}
+      windowSize={11}
     />
   )
 }
-
-const styles = StyleSheet.create({
-  footer: {
-    height: 200,
-    paddingTop: 20,
-  },
-})
