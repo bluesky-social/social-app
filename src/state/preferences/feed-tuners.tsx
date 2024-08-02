@@ -25,7 +25,7 @@ export function useFeedTuners(feedDesc: FeedDescriptor) {
       ]
     }
     if (feedDesc.startsWith('list') || feedDesc === 'following') {
-      const feedTuners = []
+      const feedTuners = [FeedTuner.removeOrphans]
 
       if (preferences?.feedViewPrefs.hideReposts) {
         feedTuners.push(FeedTuner.removeReposts)

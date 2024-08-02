@@ -30,6 +30,7 @@ export class FeedViewPostsSlice {
   items: FeedSliceItem[]
   isIncompleteThread: boolean
   isFallbackMarker: boolean
+  isOrphan: boolean
   rootUri: string
 
   constructor(feedPost: FeedViewPost) {
@@ -37,6 +38,7 @@ export class FeedViewPostsSlice {
     this.items = []
     this.isIncompleteThread = false
     this.isFallbackMarker = false
+    this.isOrphan = false
     if (AppBskyFeedDefs.isPostView(reply?.root)) {
       this.rootUri = reply.root.uri
     } else {
@@ -76,6 +78,7 @@ export class FeedViewPostsSlice {
       !AppBskyFeedPost.isRecord(parent.record) ||
       !AppBskyFeedPost.validateRecord(parent.record).success
     ) {
+      this.isOrphan = true
       return
     }
     const grandparentAuthor = reply.grandparentAuthor
@@ -95,6 +98,7 @@ export class FeedViewPostsSlice {
       !AppBskyFeedPost.isRecord(root.record) ||
       !AppBskyFeedPost.validateRecord(root.record).success
     ) {
+      this.isOrphan = true
       return
     }
     if (root.uri === parent.uri) {
@@ -261,6 +265,16 @@ export class FeedTuner {
   static removeQuotePosts(tuner: FeedTuner, slices: FeedViewPostsSlice[]) {
     for (let i = 0; i < slices.length; i++) {
       if (slices[i].isQuotePost) {
+        slices.splice(i, 1)
+        i--
+      }
+    }
+    return slices
+  }
+
+  static removeOrphans(tuner: FeedTuner, slices: FeedViewPostsSlice[]) {
+    for (let i = 0; i < slices.length; i++) {
+      if (slices[i].isOrphan) {
         slices.splice(i, 1)
         i--
       }
