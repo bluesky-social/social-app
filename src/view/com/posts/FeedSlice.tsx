@@ -30,7 +30,7 @@ let FeedSlice = ({
           reason={slice.items[0].reason}
           feedContext={slice.items[0].feedContext}
           parentAuthor={slice.items[0].parentAuthor}
-          showReplyTo={true}
+          showReplyTo={false}
           moderation={slice.items[0].moderation}
           isThreadParent={isThreadParentAt(slice.items, 0)}
           isThreadChild={isThreadChildAt(slice.items, 0)}
@@ -45,7 +45,10 @@ let FeedSlice = ({
           reason={slice.items[beforeLast].reason}
           feedContext={slice.items[beforeLast].feedContext}
           parentAuthor={slice.items[beforeLast].parentAuthor}
-          showReplyTo={false}
+          showReplyTo={
+            slice.items[beforeLast].parentAuthor?.did !==
+            slice.items[beforeLast].post.author.did
+          }
           moderation={slice.items[beforeLast].moderation}
           isThreadParent={isThreadParentAt(slice.items, beforeLast)}
           isThreadChild={isThreadChildAt(slice.items, beforeLast)}
