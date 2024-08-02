@@ -87,7 +87,7 @@ export function VideoPlayer({
 
   useEffect(() => {
     if (!ref.current) return
-    if (!Hls.isSupported()) throw new UnsupportedError()
+    if (!Hls.isSupported()) throw new HLSUnsupportedError()
 
     const hls = new Hls({capLevelToPlayerSize: true})
     hlsRef.current = hls
@@ -154,7 +154,7 @@ export function VideoPlayer({
   )
 }
 
-export class UnsupportedError extends Error {
+export class HLSUnsupportedError extends Error {
   constructor() {
     super('HLS is not supported')
   }
