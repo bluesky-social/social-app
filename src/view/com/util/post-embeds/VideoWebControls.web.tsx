@@ -37,6 +37,7 @@ export function Controls({
   setFocused,
   onScreen,
   enterFullscreen,
+  hasSubtitleTrack,
 }: {
   videoRef: React.RefObject<HTMLVideoElement>
   hls: Hls
@@ -46,6 +47,7 @@ export function Controls({
   setFocused: (focused: boolean) => void
   onScreen: boolean
   enterFullscreen: () => void
+  hasSubtitleTrack: boolean
 }) {
   const {
     play,
@@ -58,6 +60,7 @@ export function Controls({
     duration,
     buffering,
     error,
+    canPlay,
   } = useVideoUtils(videoRef)
   const t = useTheme()
   const {_} = useLingui()
@@ -117,6 +120,14 @@ export function Controls({
     }
   }, [hls, focused])
 
+  useEffect(() => {
+    if (hasSubtitleTrack && subtitlesEnabled && canPlay) {
+      hls.subtitleTrack = 0
+    } else {
+      hls.subtitleTrack = -1
+    }
+  }, [hasSubtitleTrack, subtitlesEnabled, hls, canPlay])
+
   // clicking on any button should focus the player, if it's not already focused
   const drawFocus = useCallback(() => {
     if (!active) {
@@ -159,9 +170,6 @@ export function Controls({
 
   const showControls =
     (focused && !playing) || (interactingViaKeypress ? hasFocus : hovered)
-
-  // TODO: get from embed
-  const videoHasSubtitles = true
 
   return (
     <div
@@ -223,7 +231,7 @@ export function Controls({
         <Text style={{color: t.palette.white}}>
           {formatTime(currentTime)} / {formatTime(duration)}
         </Text>
-        {videoHasSubtitles && (
+        {hasSubtitleTrack && (
           <Button
             label={_(
               subtitlesEnabled ? msg`Disable subtitles` : msg`Enable subtitles`,
@@ -334,6 +342,7 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
   const [duration, setDuration] = useState(0)
   const [buffering, setBuffering] = useState(false)
   const [error, setError] = useState(false)
+  const [canPlay, setCanPlay] = useState(false)
   const playWhenReadyRef = useRef(false)
 
   useEffect(() => {
@@ -379,6 +388,7 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
 
     const handleCanPlay = () => {
       setBuffering(false)
+      setCanPlay(true)
 
       if (!current) return
       if (playWhenReadyRef.current) {
@@ -520,6 +530,7 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
     toggleMute,
     buffering,
     error,
+    canPlay,
   }
 }
 

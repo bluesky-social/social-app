@@ -86,6 +86,7 @@ export function VideoPlayer({
   const containerRef = useRef<HTMLDivElement>(null)
   const ref = useRef<HTMLVideoElement>(null)
   const [focused, setFocused] = useState(false)
+  const [hasSubtitleTrack, setHasSubtitleTrack] = useState(false)
 
   useEffect(() => {
     if (
@@ -96,6 +97,12 @@ export function VideoPlayer({
       hls.attachMedia(ref.current)
       // initial value, later on it's managed by Controls
       hls.autoLevelCapping = 0
+
+      hls.on(Hls.Events.SUBTITLE_TRACKS_UPDATED, (event, data) => {
+        if (data.subtitleTracks.length > 0) {
+          setHasSubtitleTrack(true)
+        }
+      })
 
       return () => {
         hls.detachMedia()
@@ -151,6 +158,7 @@ export function VideoPlayer({
           setFocused={setFocused}
           onScreen={onScreen}
           enterFullscreen={enterFullscreen}
+          hasSubtitleTrack={hasSubtitleTrack}
         />
       </div>
     </View>

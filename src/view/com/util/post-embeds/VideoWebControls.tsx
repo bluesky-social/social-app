@@ -10,6 +10,7 @@ export function Controls({}: {
   setFocused: (focused: boolean) => void
   onScreen: boolean
   enterFullscreen: () => void
+  hasSubtitleTrack: boolean
 }): React.ReactElement {
   throw new Error('Web-only component')
 }
