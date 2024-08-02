@@ -229,27 +229,30 @@ export class FeedTuner {
   }
 
   static removeReplies(tuner: FeedTuner, slices: FeedViewPostsSlice[]) {
-    for (let i = slices.length - 1; i >= 0; i--) {
+    for (let i = 0; i < slices.length; i++) {
       if (slices[i].isReply) {
         slices.splice(i, 1)
+        i--
       }
     }
     return slices
   }
 
   static removeReposts(tuner: FeedTuner, slices: FeedViewPostsSlice[]) {
-    for (let i = slices.length - 1; i >= 0; i--) {
+    for (let i = 0; i < slices.length; i++) {
       if (slices[i].isRepost) {
         slices.splice(i, 1)
+        i--
       }
     }
     return slices
   }
 
   static removeQuotePosts(tuner: FeedTuner, slices: FeedViewPostsSlice[]) {
-    for (let i = slices.length - 1; i >= 0; i--) {
+    for (let i = 0; i < slices.length; i++) {
       if (slices[i].isQuotePost) {
         slices.splice(i, 1)
+        i--
       }
     }
     return slices
@@ -260,14 +263,16 @@ export class FeedTuner {
     slices: FeedViewPostsSlice[],
   ): FeedViewPostsSlice[] {
     const seenThreadUris = new Set()
-    const nextSlices = []
-    for (let slice of slices) {
-      if (!seenThreadUris.has(slice.rootUri)) {
-        seenThreadUris.add(slice.rootUri)
-        nextSlices.push(slice)
+    for (let i = 0; i < slices.length; i++) {
+      const rootUri = slices[i].rootUri
+      if (seenThreadUris.has(rootUri)) {
+        slices.splice(i, 1)
+        i--
+      } else {
+        seenThreadUris.add(rootUri)
       }
     }
-    return nextSlices
+    return slices
   }
 
   static dedupReposts(
@@ -297,7 +302,7 @@ export class FeedTuner {
       tuner: FeedTuner,
       slices: FeedViewPostsSlice[],
     ): FeedViewPostsSlice[] => {
-      for (let i = slices.length - 1; i >= 0; i--) {
+      for (let i = 0; i < slices.length; i++) {
         const slice = slices[i]
         if (
           slice.isReply &&
@@ -305,6 +310,7 @@ export class FeedTuner {
           !slice.isFollowingAllAuthors(userDid)
         ) {
           slices.splice(i, 1)
+          i--
         }
       }
       return slices
@@ -330,7 +336,7 @@ export class FeedTuner {
         return slices
       }
 
-      for (let i = slices.length - 1; i >= 0; i--) {
+      for (let i = 0; i < slices.length; i++) {
         let hasPreferredLang = false
         for (const item of slices[i].items) {
           if (isPostInLanguage(item.post, preferredLangsCode2)) {
