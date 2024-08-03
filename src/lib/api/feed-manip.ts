@@ -184,12 +184,6 @@ export class FeedTuner {
 
   constructor(public tunerFns: FeedTunerFn[]) {}
 
-  reset() {
-    this.seenKeys.clear()
-    this.seenUris.clear()
-    this.seenRootUris.clear()
-  }
-
   tune(
     feed: FeedViewPost[],
     {dryRun}: {dryRun: boolean} = {
