@@ -82,16 +82,21 @@ export class FeedViewPostsSlice {
       return
     }
     const grandparentAuthor = reply.grandparentAuthor
+    const isGrandparentBlocked = Boolean(
+      grandparentAuthor?.viewer?.blockedBy ||
+        grandparentAuthor?.viewer?.blocking ||
+        grandparentAuthor?.viewer?.blockingByList,
+    )
     this.items.unshift({
       post: parent,
       record: parent.record,
       parentAuthor: grandparentAuthor,
-      isParentBlocked: Boolean(
-        grandparentAuthor?.viewer?.blockedBy ||
-          grandparentAuthor?.viewer?.blocking ||
-          grandparentAuthor?.viewer?.blockingByList,
-      ),
+      isParentBlocked: isGrandparentBlocked,
     })
+    if (isGrandparentBlocked) {
+      this.isOrphan = true
+      // Keep going, it might still have a root.
+    }
     const root = reply.root
     if (
       !AppBskyFeedDefs.isPostView(root) ||
