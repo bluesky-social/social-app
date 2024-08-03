@@ -15,23 +15,15 @@ const UPDATE_EVENT = 'BSKY_UPDATE'
 let _state: Schema = defaults
 const _emitter = new EventEmitter()
 
-/**
- * Initializes and returns persisted data state, so that it can be passed to
- * the Provider.
- */
 export async function init() {
-  logger.debug('persisted state: initializing')
-
   broadcast.onmessage = onBroadcastMessage
 
   try {
     const stored = await readFromStorage()
     if (!stored) {
-      logger.debug('persisted state: initializing default storage')
-      await writeToStorage(defaults) // opt: init new store
+      await writeToStorage(defaults)
     }
-    _state = stored || defaults // return new store
-    logger.debug('persisted state: initialized')
+    _state = stored || defaults
   } catch (e) {
     logger.error('persisted state: failed to load root state from storage', {
       message: e,
@@ -54,9 +46,6 @@ export async function write<K extends keyof Schema>(
     await writeToStorage(_state)
     // must happen on next tick, otherwise the tab will read stale storage data
     setTimeout(() => broadcast.postMessage({event: UPDATE_EVENT}), 0)
-    logger.debug(`persisted state: wrote root state to storage`, {
-      updatedKey: key,
-    })
   } catch (e) {
     logger.error(`persisted state: failed writing root state to storage`, {
       message: e,
@@ -70,14 +59,12 @@ export function onUpdate(cb: () => void): () => void {
 }
 
 async function onBroadcastMessage({data}: MessageEvent) {
-  // validate event
   if (typeof data === 'object' && data.event === UPDATE_EVENT) {
     try {
       // read next state, possibly updated by another tab
       const next = await readFromStorage()
 
       if (next) {
-        logger.debug(`persisted state: handling update from broadcast channel`)
         _state = next
         _emitter.emit('update')
       } else {
