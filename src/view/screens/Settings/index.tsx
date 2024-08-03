@@ -20,7 +20,7 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {isNative} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
-import {clear as clearStorage} from '#/state/persisted/store'
+import {clearStorage} from '#/state/persisted'
 import {
   useInAppBrowser,
   useSetInAppBrowser,

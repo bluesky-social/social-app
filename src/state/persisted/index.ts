@@ -1,11 +1,13 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import EventEmitter from 'eventemitter3'
 
 import BroadcastChannel from '#/lib/broadcast'
 import {logger} from '#/logger'
-import {defaults, Schema} from '#/state/persisted/schema'
-import * as store from '#/state/persisted/store'
+import {defaults, Schema, schema} from '#/state/persisted/schema'
 export type {PersistedAccount, Schema} from '#/state/persisted/schema'
 export {defaults} from '#/state/persisted/schema'
+
+const BSKY_STORAGE = 'BSKY_STORAGE'
 
 const broadcast = new BroadcastChannel('BSKY_BROADCAST_CHANNEL')
 const UPDATE_EVENT = 'BSKY_UPDATE'
@@ -23,10 +25,10 @@ export async function init() {
   broadcast.onmessage = onBroadcastMessage
 
   try {
-    const stored = await store.read()
+    const stored = await readFromStorage()
     if (!stored) {
       logger.debug('persisted state: initializing default storage')
-      await store.write(defaults) // opt: init new store
+      await writeToStorage(defaults) // opt: init new store
     }
     _state = stored || defaults // return new store
     logger.debug('persisted state: initialized')
@@ -49,7 +51,7 @@ export async function write<K extends keyof Schema>(
 ): Promise<void> {
   try {
     _state[key] = value
-    await store.write(_state)
+    await writeToStorage(_state)
     // must happen on next tick, otherwise the tab will read stale storage data
     setTimeout(() => broadcast.postMessage({event: UPDATE_EVENT}), 0)
     logger.debug(`persisted state: wrote root state to storage`, {
@@ -72,7 +74,7 @@ async function onBroadcastMessage({data}: MessageEvent) {
   if (typeof data === 'object' && data.event === UPDATE_EVENT) {
     try {
       // read next state, possibly updated by another tab
-      const next = await store.read()
+      const next = await readFromStorage()
 
       if (next) {
         logger.debug(`persisted state: handling update from broadcast channel`)
@@ -91,5 +93,43 @@ async function onBroadcastMessage({data}: MessageEvent) {
         },
       )
     }
+  }
+}
+
+async function writeToStorage(value: Schema) {
+  schema.parse(value)
+  await AsyncStorage.setItem(BSKY_STORAGE, JSON.stringify(value))
+}
+
+async function readFromStorage(): Promise<Schema | undefined> {
+  const rawData = await AsyncStorage.getItem(BSKY_STORAGE)
+  const objData = rawData ? JSON.parse(rawData) : undefined
+
+  // new user
+  if (!objData) return undefined
+
+  // existing user, validate
+  const parsed = schema.safeParse(objData)
+
+  if (parsed.success) {
+    return objData
+  } else {
+    const errors =
+      parsed.error?.errors?.map(e => ({
+        code: e.code,
+        // @ts-ignore exists on some types
+        expected: e?.expected,
+        path: e.path?.join('.'),
+      })) || []
+    logger.error(`persisted store: data failed validation on read`, {errors})
+    return undefined
+  }
+}
+
+export async function clearStorage() {
+  try {
+    await AsyncStorage.removeItem(BSKY_STORAGE)
+  } catch (e: any) {
+    logger.error(`persisted store: failed to clear`, {message: e.toString()})
   }
 }
