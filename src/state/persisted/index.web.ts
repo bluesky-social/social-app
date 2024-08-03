@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import EventEmitter from 'eventemitter3'
 
 import BroadcastChannel from '#/lib/broadcast'
@@ -19,9 +18,9 @@ export async function init() {
   broadcast.onmessage = onBroadcastMessage
 
   try {
-    const stored = await readFromStorage()
+    const stored = readFromStorage()
     if (!stored) {
-      await writeToStorage(defaults)
+      writeToStorage(defaults)
     }
     _state = stored || defaults
   } catch (e) {
@@ -43,7 +42,7 @@ export async function write<K extends keyof Schema>(
 ): Promise<void> {
   try {
     _state[key] = value
-    await writeToStorage(_state)
+    writeToStorage(_state)
     // must happen on next tick, otherwise the tab will read stale storage data
     setTimeout(() => broadcast.postMessage({event: UPDATE_EVENT}), 0)
   } catch (e) {
@@ -62,7 +61,7 @@ async function onBroadcastMessage({data}: MessageEvent) {
   if (typeof data === 'object' && data.event === UPDATE_EVENT) {
     try {
       // read next state, possibly updated by another tab
-      const next = await readFromStorage()
+      const next = readFromStorage()
 
       if (next) {
         _state = next
@@ -83,13 +82,13 @@ async function onBroadcastMessage({data}: MessageEvent) {
   }
 }
 
-async function writeToStorage(value: Schema) {
+function writeToStorage(value: Schema) {
   schema.parse(value)
-  await AsyncStorage.setItem(BSKY_STORAGE, JSON.stringify(value))
+  localStorage.setItem(BSKY_STORAGE, JSON.stringify(value))
 }
 
-async function readFromStorage(): Promise<Schema | undefined> {
-  const rawData = await AsyncStorage.getItem(BSKY_STORAGE)
+function readFromStorage(): Schema | undefined {
+  const rawData = localStorage.getItem(BSKY_STORAGE)
   const objData = rawData ? JSON.parse(rawData) : undefined
 
   // new user
@@ -115,7 +114,7 @@ async function readFromStorage(): Promise<Schema | undefined> {
 
 export async function clearStorage() {
   try {
-    await AsyncStorage.removeItem(BSKY_STORAGE)
+    localStorage.removeItem(BSKY_STORAGE)
   } catch (e: any) {
     logger.error(`persisted store: failed to clear`, {message: e.toString()})
   }
