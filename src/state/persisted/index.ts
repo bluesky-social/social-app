@@ -20,7 +20,6 @@ export async function init() {
     logger.error('persisted state: failed to load root state from storage', {
       message: e,
     })
-    return defaults
   }
 }
 

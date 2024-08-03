@@ -27,8 +27,6 @@ export async function init() {
     logger.error('persisted state: failed to load root state from storage', {
       message: e,
     })
-    // AsyncStorage failure, but we can still continue in memory
-    return defaults
   }
 }
 
