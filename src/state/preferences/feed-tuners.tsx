@@ -19,10 +19,7 @@ export function useFeedTuners(feedDesc: FeedDescriptor) {
       }
     }
     if (feedDesc.startsWith('feedgen')) {
-      return [
-        FeedTuner.dedupThreads,
-        FeedTuner.preferredLangOnly(langPrefs.contentLanguages),
-      ]
+      return [FeedTuner.preferredLangOnly(langPrefs.contentLanguages)]
     }
     if (feedDesc.startsWith('list') || feedDesc === 'following') {
       const feedTuners = [FeedTuner.removeOrphans]
