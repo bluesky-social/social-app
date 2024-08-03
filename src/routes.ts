@@ -32,6 +32,7 @@ export const router = new Router({
   PreferencesThreads: '/settings/threads',
   PreferencesExternalEmbeds: '/settings/external-embeds',
   AccessibilitySettings: '/settings/accessibility',
+  AppearanceSettings: '/settings/appearance',
   SavedFeeds: '/settings/saved-feeds',
   Support: '/support',
   PrivacyPolicy: '/support/privacy',
@@ -47,4 +48,5 @@ export const router = new Router({
   StarterPack: '/starter-pack/:name/:rkey',
   StarterPackShort: '/starter-pack-short/:code',
   StarterPackWizard: '/starter-pack/create',
+  AuthCallback: '/auth/callback',
 })

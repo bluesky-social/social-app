@@ -38,6 +38,7 @@ export type CommonNavigatorParams = {
   PreferencesThreads: undefined
   PreferencesExternalEmbeds: undefined
   AccessibilitySettings: undefined
+  AppearanceSettings: undefined
   Search: {q?: string}
   Hashtag: {tag: string; author?: string}
   MessagesConversation: {conversation: string; embed?: string}
@@ -49,6 +50,7 @@ export type CommonNavigatorParams = {
   StarterPackShort: {code: string}
   StarterPackWizard: undefined
   StarterPackEdit: {rkey?: string}
+  AuthCallback: undefined
 }
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {

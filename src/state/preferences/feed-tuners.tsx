@@ -38,11 +38,8 @@ export function useFeedTuners(feedDesc: FeedDescriptor) {
           feedTuners.push(FeedTuner.removeReplies)
         } else {
           feedTuners.push(
-            FeedTuner.thresholdRepliesOnly({
+            FeedTuner.followedRepliesOnly({
               userDid: currentAccount?.did || '',
-              minLikes: preferences?.feedViewPrefs.hideRepliesByLikeCount || 0,
-              followedOnly:
-                !!preferences?.feedViewPrefs.hideRepliesByUnfollowed,
             }),
           )
         }
@@ -66,10 +63,8 @@ export function useFeedTuners(feedDesc: FeedDescriptor) {
         feedTuners.push(FeedTuner.removeReplies)
       } else {
         feedTuners.push(
-          FeedTuner.thresholdRepliesOnly({
+          FeedTuner.followedRepliesOnly({
             userDid: currentAccount?.did || '',
-            minLikes: preferences?.feedViewPrefs.hideRepliesByLikeCount || 0,
-            followedOnly: !!preferences?.feedViewPrefs.hideRepliesByUnfollowed,
           }),
         )
       }

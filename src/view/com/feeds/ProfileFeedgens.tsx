@@ -129,46 +129,49 @@ export const ProfileFeedgens = React.forwardRef<
   // rendering
   // =
 
-  const renderItem = ({item, index}: ListRenderItemInfo<any>) => {
-    if (item === EMPTY) {
-      return (
-        <EmptyState
-          icon="hashtag"
-          message={_(msg`You have no feeds.`)}
-          testID="listsEmpty"
-        />
-      )
-    } else if (item === ERROR_ITEM) {
-      return (
-        <ErrorMessage message={cleanError(error)} onPressTryAgain={refetch} />
-      )
-    } else if (item === LOAD_MORE_ERROR_ITEM) {
-      return (
-        <LoadMoreRetryBtn
-          label={_(
-            msg`There was an issue fetching your lists. Tap here to try again.`,
-          )}
-          onPress={onPressRetryLoadMore}
-        />
-      )
-    } else if (item === LOADING) {
-      return <FeedLoadingPlaceholder />
-    }
-    if (preferences) {
-      return (
-        <View
-          style={[
-            (index !== 0 || isWeb) && a.border_t,
-            t.atoms.border_contrast_low,
-            a.px_lg,
-            a.py_lg,
-          ]}>
-          <FeedCard.Default view={item} />
-        </View>
-      )
-    }
-    return null
-  }
+  const renderItem = React.useCallback(
+    ({item, index}: ListRenderItemInfo<any>) => {
+      if (item === EMPTY) {
+        return (
+          <EmptyState
+            icon="hashtag"
+            message={_(msg`You have no feeds.`)}
+            testID="listsEmpty"
+          />
+        )
+      } else if (item === ERROR_ITEM) {
+        return (
+          <ErrorMessage message={cleanError(error)} onPressTryAgain={refetch} />
+        )
+      } else if (item === LOAD_MORE_ERROR_ITEM) {
+        return (
+          <LoadMoreRetryBtn
+            label={_(
+              msg`There was an issue fetching your lists. Tap here to try again.`,
+            )}
+            onPress={onPressRetryLoadMore}
+          />
+        )
+      } else if (item === LOADING) {
+        return <FeedLoadingPlaceholder />
+      }
+      if (preferences) {
+        return (
+          <View
+            style={[
+              (index !== 0 || isWeb) && a.border_t,
+              t.atoms.border_contrast_low,
+              a.px_lg,
+              a.py_lg,
+            ]}>
+            <FeedCard.Default view={item} />
+          </View>
+        )
+      }
+      return null
+    },
+    [_, t, error, refetch, onPressRetryLoadMore, preferences],
+  )
 
   React.useEffect(() => {
     if (enabled && scrollElRef.current) {

@@ -34,6 +34,64 @@
     jsonpointer "^5.0.0"
     leven "^3.1.0"
 
+"@atproto-labs/did-resolver@0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@atproto-labs/did-resolver/-/did-resolver-0.1.1.tgz#9bfbae35aed48db1257ad58dad054202f3850595"
+  integrity sha512-y8D8wY2jRTmqN35pjizXoEOq5Ngaz3KgHmXr2C+6Ds1A694vJ2hEJhej2zSow0WeEICEHaDn8LDOeGqJ8Ug5pg==
+  dependencies:
+    "@atproto-labs/fetch" "0.1.0"
+    "@atproto-labs/pipe" "0.1.0"
+    "@atproto-labs/simple-store" "0.1.1"
+    "@atproto-labs/simple-store-memory" "0.1.1"
+    "@atproto/did" "0.1.0"
+    zod "^3.23.8"
+
+"@atproto-labs/fetch@0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@atproto-labs/fetch/-/fetch-0.1.0.tgz#50a46943fd2f321dd748de28c73ba7cbfa493132"
+  integrity sha512-uirja+uA/C4HNk7vayM+AJqsccxQn2wVziUHxbsjJGt/K6Q8ZOKDaEX2+GrcXvpUVcqUKh+94JFjuzH+CAEUlg==
+  dependencies:
+    "@atproto-labs/pipe" "0.1.0"
+  optionalDependencies:
+    zod "^3.23.8"
+
+"@atproto-labs/handle-resolver@0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@atproto-labs/handle-resolver/-/handle-resolver-0.1.1.tgz#835fc8d40a57b3c4af47dd271500387d74140cfe"
+  integrity sha512-Uedvtozck8DcFYHQVaXHrXg5Z28M+VjMarn4TAQjG41kC/Su0Z2MfvpKS7M72vtNxxlx+aMIEQySoFrpFjtHPw==
+  dependencies:
+    "@atproto-labs/simple-store" "0.1.1"
+    "@atproto-labs/simple-store-memory" "0.1.1"
+    "@atproto/did" "0.1.0"
+    zod "^3.23.8"
+
+"@atproto-labs/identity-resolver@0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@atproto-labs/identity-resolver/-/identity-resolver-0.1.1.tgz#2352c7f1359369f3c0b05911558c5c83dd348bc2"
+  integrity sha512-6LYwqS4Lc5J2AcpHsnSa9DXdo3atkmbIiaRteimRTvRqgii5UkaFk3uGypmTN8Vonh6OT+1Y7VjlIqR1meJ2PQ==
+  dependencies:
+    "@atproto-labs/did-resolver" "0.1.1"
+    "@atproto-labs/handle-resolver" "0.1.1"
+    "@atproto/syntax" "0.3.0"
+
+"@atproto-labs/pipe@0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@atproto-labs/pipe/-/pipe-0.1.0.tgz#c8d86923b6d8e900d39efe6fdcdf0d897c434086"
+  integrity sha512-ghOqHFyJlQVFPESzlVHjKroP0tPzbmG5Jms0dNI9yLDEfL8xp4OFPWLX4f6T8mRq69wWs4nIDM3sSsFbFqLa1w==
+
+"@atproto-labs/simple-store-memory@0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@atproto-labs/simple-store-memory/-/simple-store-memory-0.1.1.tgz#54526a1f8ec978822be9fad75106ad8b78500dd3"
+  integrity sha512-PCRqhnZ8NBNBvLku53O56T0lsVOtclfIrQU/rwLCc4+p45/SBPrRYNBi6YFq5rxZbK6Njos9MCmILV/KLQxrWA==
+  dependencies:
+    "@atproto-labs/simple-store" "0.1.1"
+    lru-cache "^10.2.0"
+
+"@atproto-labs/simple-store@0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@atproto-labs/simple-store/-/simple-store-0.1.1.tgz#e743a2722b5d8732166f0a72aca8bd10e9bff106"
+  integrity sha512-WKILW2b3QbAYKh+w5U2x6p5FqqLl0nAeLwGeDY+KjX01K4Dq3vQTR9b/qNp0jZm48CabPQVrqCv0PPU9LgRRRg==
+
 "@atproto/api@0.13.0-rc.0":
   version "0.13.0-rc.0"
   resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.13.0-rc.0.tgz#3fef69965641575a3a6bc65fd918250f5eda350a"
@@ -215,6 +273,13 @@
     multiformats "^9.9.0"
     uint8arrays "3.0.0"
 
+"@atproto/did@0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@atproto/did/-/did-0.1.0.tgz#378fab371d9a44dc392c3a4bb7f8e0c29f37a32e"
+  integrity sha512-c3tPD4f/f8qXXDXDW3Cy0kUGLt1zbSxjzTysoNkabIiMtBqEIBy3wOH4RJ+YBLCRNIA7HTP43PWZZ1VD3SROTw==
+  dependencies:
+    zod "^3.23.8"
+
 "@atproto/identity@^0.4.0":
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/@atproto/identity/-/identity-0.4.0.tgz#f8a4d450a20606d221c4ec05b856c0ce55f0a3a7"
@@ -223,6 +288,30 @@
     "@atproto/common-web" "^0.3.0"
     "@atproto/crypto" "^0.4.0"
     axios "^0.27.2"
+
+"@atproto/jwk-jose@0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@atproto/jwk-jose/-/jwk-jose-0.1.1.tgz#87a2f40d9c729720c90e84535108d83c8ceeb80d"
+  integrity sha512-S0QLW+/5d7tlK4UESWhITx2HBpVN0bMrnPGjCkHg5i/Y6nhKYk6sOjEWNARFfMUhnwBCKPNGEQqDZ0uuCzucxA==
+  dependencies:
+    "@atproto/jwk" "0.1.1"
+    jose "^5.2.0"
+
+"@atproto/jwk-webcrypto@0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@atproto/jwk-webcrypto/-/jwk-webcrypto-0.1.1.tgz#8276c8e883afa8954ff16b6e70bc8f33a36def1a"
+  integrity sha512-p6GMWQC9l/WA9NQ98Tm6G9Ak5EGBe9AoT51cFmPWnito14WuN3WlQzbg7z6nF3ChMfqvkM+jvdKzGqfW10E6yA==
+  dependencies:
+    "@atproto/jwk" "0.1.1"
+    "@atproto/jwk-jose" "0.1.1"
+
+"@atproto/jwk@0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@atproto/jwk/-/jwk-0.1.1.tgz#15bcad4a1778eeb20c82108e0ec55fef45cd07b6"
+  integrity sha512-6h/bj1APUk7QcV9t/oA6+9DB5NZx9SZru9x+/pV5oHFI9Xz4ZuM5+dq1PfsJV54pZyqdnZ6W6M717cxoC7q7og==
+  dependencies:
+    multiformats "^9.9.0"
+    zod "^3.23.8"
 
 "@atproto/lexicon@^0.4.0":
   version "0.4.0"
@@ -244,6 +333,45 @@
     "@atproto/syntax" "^0.3.0"
     iso-datestring-validator "^2.2.2"
     multiformats "^9.9.0"
+    zod "^3.23.8"
+
+"@atproto/oauth-client-browser@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@atproto/oauth-client-browser/-/oauth-client-browser-0.1.1.tgz#5cb699ceef8f5072f8910cf2a2ef891ca264f410"
+  integrity sha512-uHwsich4Gj+vWYs1IVs9U5V1Uu92prpb54eWouDv9vI5DXVlKV24kMEh/jjvq5Ulvha5omC+xxNXKyR0lIpOJw==
+  dependencies:
+    "@atproto-labs/did-resolver" "0.1.1"
+    "@atproto-labs/handle-resolver" "0.1.1"
+    "@atproto-labs/simple-store" "0.1.1"
+    "@atproto/did" "0.1.0"
+    "@atproto/jwk" "0.1.1"
+    "@atproto/jwk-webcrypto" "0.1.1"
+    "@atproto/oauth-client" "0.1.1"
+    "@atproto/oauth-types" "0.1.1"
+
+"@atproto/oauth-client@0.1.1", "@atproto/oauth-client@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@atproto/oauth-client/-/oauth-client-0.1.1.tgz#c28ba0929eb266d3599868c9dd2896f3bed54fcc"
+  integrity sha512-zY4+XGoO7u1IDmf5R6/bC/sCmYv6/5rs1PaEPAe4dmZyU7jBji3JuagTu/gWgvjKpIeqiEoQk6bO/zOArQuUNw==
+  dependencies:
+    "@atproto-labs/did-resolver" "0.1.1"
+    "@atproto-labs/fetch" "0.1.0"
+    "@atproto-labs/handle-resolver" "0.1.1"
+    "@atproto-labs/identity-resolver" "0.1.1"
+    "@atproto-labs/simple-store" "0.1.1"
+    "@atproto-labs/simple-store-memory" "0.1.1"
+    "@atproto/did" "0.1.0"
+    "@atproto/jwk" "0.1.1"
+    "@atproto/oauth-types" "0.1.1"
+    multiformats "^9.9.0"
+    zod "^3.23.8"
+
+"@atproto/oauth-types@0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@atproto/oauth-types/-/oauth-types-0.1.1.tgz#ae32dc262a726dfb00b6dfbdb5ef70fd38f3527b"
+  integrity sha512-EkCLa4+xR0aD8m5wuZRuuc2vRKryPqGxB5uc+mWOwnXe44ZSJBtd9ay/LIgouTzIA22Muml+IGp+U5HyH5aSpw==
+  dependencies:
+    "@atproto/jwk" "0.1.1"
     zod "^3.23.8"
 
 "@atproto/ozone@^0.1.7":
@@ -330,7 +458,7 @@
     uint8arrays "3.0.0"
     zod "^3.21.4"
 
-"@atproto/syntax@^0.3.0":
+"@atproto/syntax@0.3.0", "@atproto/syntax@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@atproto/syntax/-/syntax-0.3.0.tgz#fafa2dbea9add37253005cb663e7373e05e618b3"
   integrity sha512-Weq0ZBxffGHDXHl9U7BQc2BFJi/e23AL+k+i5+D9hUq/bzT4yjGsrCejkjq0xt82xXDjmhhvQSZ0LqxyZ5woxA==
@@ -15369,6 +15497,11 @@ jose@^5.0.1:
   version "5.1.3"
   resolved "https://registry.yarnpkg.com/jose/-/jose-5.1.3.tgz#303959d85c51b5cb14725f930270b72be56abdca"
   integrity sha512-GPExOkcMsCLBTi1YetY2LmkoY559fss0+0KVa6kOfb2YFe84nAM7Nm/XzuZozah4iHgmBGrCOHL5/cy670SBRw==
+
+jose@^5.2.0:
+  version "5.6.3"
+  resolved "https://registry.yarnpkg.com/jose/-/jose-5.6.3.tgz#415688bc84875461c86dfe271ea6029112a23e27"
+  integrity sha512-1Jh//hEEwMhNYPDDLwXHa2ePWgWiFNNUadVmguAAw2IJ6sj9mNxV5tGXJNqlMkJAybF6Lgw1mISDxTePP/187g==
 
 js-base64@^3.7.2:
   version "3.7.5"

@@ -19,6 +19,7 @@ let FeedSlice = ({
   hideTopBorder?: boolean
 }): React.ReactNode => {
   if (slice.isThread && slice.items.length > 3) {
+    const beforeLast = slice.items.length - 2
     const last = slice.items.length - 1
     return (
       <>
@@ -36,20 +37,20 @@ let FeedSlice = ({
           hideTopBorder={hideTopBorder}
           isParentBlocked={slice.items[0].isParentBlocked}
         />
-        <FeedItem
-          key={slice.items[1]._reactKey}
-          post={slice.items[1].post}
-          record={slice.items[1].record}
-          reason={slice.items[1].reason}
-          feedContext={slice.items[1].feedContext}
-          parentAuthor={slice.items[1].parentAuthor}
-          showReplyTo={false}
-          moderation={slice.items[1].moderation}
-          isThreadParent={isThreadParentAt(slice.items, 1)}
-          isThreadChild={isThreadChildAt(slice.items, 1)}
-          isParentBlocked={slice.items[1].isParentBlocked}
-        />
         <ViewFullThread slice={slice} />
+        <FeedItem
+          key={slice.items[beforeLast]._reactKey}
+          post={slice.items[beforeLast].post}
+          record={slice.items[beforeLast].record}
+          reason={slice.items[beforeLast].reason}
+          feedContext={slice.items[beforeLast].feedContext}
+          parentAuthor={slice.items[beforeLast].parentAuthor}
+          showReplyTo={false}
+          moderation={slice.items[beforeLast].moderation}
+          isThreadParent={isThreadParentAt(slice.items, beforeLast)}
+          isThreadChild={isThreadChildAt(slice.items, beforeLast)}
+          isParentBlocked={slice.items[beforeLast].isParentBlocked}
+        />
         <FeedItem
           key={slice.items[last]._reactKey}
           post={slice.items[last].post}

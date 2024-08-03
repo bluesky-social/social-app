@@ -77,6 +77,7 @@ import {faListUl} from '@fortawesome/free-solid-svg-icons/faListUl'
 import {faLock} from '@fortawesome/free-solid-svg-icons/faLock'
 import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass'
 import {faNoteSticky} from '@fortawesome/free-solid-svg-icons/faNoteSticky'
+import {faPaintRoller} from '@fortawesome/free-solid-svg-icons/faPaintRoller'
 import {faPause} from '@fortawesome/free-solid-svg-icons/faPause'
 import {faPen} from '@fortawesome/free-solid-svg-icons/faPen'
 import {faPenNib} from '@fortawesome/free-solid-svg-icons/faPenNib'
@@ -178,6 +179,7 @@ library.add(
   faMagnifyingGlass,
   faMessage,
   faNoteSticky,
+  faPaintRoller,
   faPaste,
   faPause,
   faPen,
