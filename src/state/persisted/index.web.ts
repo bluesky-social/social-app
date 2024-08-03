@@ -3,6 +3,8 @@ import EventEmitter from 'eventemitter3'
 import BroadcastChannel from '#/lib/broadcast'
 import {logger} from '#/logger'
 import {defaults, Schema, schema} from '#/state/persisted/schema'
+import {PersistedApi} from './types'
+
 export type {PersistedAccount, Schema} from '#/state/persisted/schema'
 export {defaults} from '#/state/persisted/schema'
 
@@ -29,10 +31,12 @@ export async function init() {
     })
   }
 }
+init satisfies PersistedApi['init']
 
 export function get<K extends keyof Schema>(key: K): Schema[K] {
   return _state[key]
 }
+get satisfies PersistedApi['get']
 
 export async function write<K extends keyof Schema>(
   key: K,
@@ -49,11 +53,22 @@ export async function write<K extends keyof Schema>(
     })
   }
 }
+write satisfies PersistedApi['write']
 
 export function onUpdate(cb: () => void): () => void {
   _emitter.addListener('update', cb)
   return () => _emitter.removeListener('update', cb)
 }
+onUpdate satisfies PersistedApi['onUpdate']
+
+export async function clearStorage() {
+  try {
+    localStorage.removeItem(BSKY_STORAGE)
+  } catch (e: any) {
+    logger.error(`persisted store: failed to clear`, {message: e.toString()})
+  }
+}
+clearStorage satisfies PersistedApi['clearStorage']
 
 async function onBroadcastMessage({data}: MessageEvent) {
   if (typeof data === 'object' && data.event === UPDATE_EVENT) {
@@ -107,13 +122,5 @@ function readFromStorage(): Schema | undefined {
       })) || []
     logger.error(`persisted store: data failed validation on read`, {errors})
     return undefined
-  }
-}
-
-export async function clearStorage() {
-  try {
-    localStorage.removeItem(BSKY_STORAGE)
-  } catch (e: any) {
-    logger.error(`persisted store: failed to clear`, {message: e.toString()})
   }
 }

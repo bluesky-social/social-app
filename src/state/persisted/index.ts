@@ -2,6 +2,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import {logger} from '#/logger'
 import {defaults, Schema, schema} from '#/state/persisted/schema'
+import {PersistedApi} from './types'
+
 export type {PersistedAccount, Schema} from '#/state/persisted/schema'
 export {defaults} from '#/state/persisted/schema'
 
@@ -22,10 +24,12 @@ export async function init() {
     })
   }
 }
+init satisfies PersistedApi['init']
 
 export function get<K extends keyof Schema>(key: K): Schema[K] {
   return _state[key]
 }
+get satisfies PersistedApi['get']
 
 export async function write<K extends keyof Schema>(
   key: K,
@@ -40,10 +44,21 @@ export async function write<K extends keyof Schema>(
     })
   }
 }
+write satisfies PersistedApi['write']
 
 export function onUpdate(_cb: () => void): () => void {
   return () => {}
 }
+onUpdate satisfies PersistedApi['onUpdate']
+
+export async function clearStorage() {
+  try {
+    await AsyncStorage.removeItem(BSKY_STORAGE)
+  } catch (e: any) {
+    logger.error(`persisted store: failed to clear`, {message: e.toString()})
+  }
+}
+clearStorage satisfies PersistedApi['clearStorage']
 
 async function writeToStorage(value: Schema) {
   schema.parse(value)
@@ -72,13 +87,5 @@ async function readFromStorage(): Promise<Schema | undefined> {
       })) || []
     logger.error(`persisted store: data failed validation on read`, {errors})
     return undefined
-  }
-}
-
-export async function clearStorage() {
-  try {
-    await AsyncStorage.removeItem(BSKY_STORAGE)
-  } catch (e: any) {
-    logger.error(`persisted store: failed to clear`, {message: e.toString()})
   }
 }
