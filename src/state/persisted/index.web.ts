@@ -18,18 +18,11 @@ const _emitter = new EventEmitter()
 
 export async function init() {
   broadcast.onmessage = onBroadcastMessage
-
-  try {
-    const stored = readFromStorage()
-    if (!stored) {
-      writeToStorage(defaults)
-    }
-    _state = stored || defaults
-  } catch (e) {
-    logger.error('persisted state: failed to load root state from storage', {
-      message: e,
-    })
+  const stored = readFromStorage()
+  if (!stored) {
+    writeToStorage(defaults)
   }
+  _state = stored || defaults
 }
 init satisfies PersistedApi['init']
 
@@ -42,15 +35,9 @@ export async function write<K extends keyof Schema>(
   key: K,
   value: Schema[K],
 ): Promise<void> {
-  try {
-    _state[key] = value
-    writeToStorage(_state)
-    broadcast.postMessage({event: UPDATE_EVENT})
-  } catch (e) {
-    logger.error(`persisted state: failed writing root state to storage`, {
-      message: e,
-    })
-  }
+  _state[key] = value
+  writeToStorage(_state)
+  broadcast.postMessage({event: UPDATE_EVENT})
 }
 write satisfies PersistedApi['write']
 
@@ -71,37 +58,40 @@ clearStorage satisfies PersistedApi['clearStorage']
 
 async function onBroadcastMessage({data}: MessageEvent) {
   if (typeof data === 'object' && data.event === UPDATE_EVENT) {
-    try {
-      // read next state, possibly updated by another tab
-      const next = readFromStorage()
-
-      if (next) {
-        _state = next
-        _emitter.emit('update')
-      } else {
-        logger.error(
-          `persisted state: handled update update from broadcast channel, but found no data`,
-        )
-      }
-    } catch (e) {
+    // read next state, possibly updated by another tab
+    const next = readFromStorage()
+    if (next) {
+      _state = next
+      _emitter.emit('update')
+    } else {
       logger.error(
-        `persisted state: failed handling update from broadcast channel`,
-        {
-          message: e,
-        },
+        `persisted state: handled update update from broadcast channel, but found no data`,
       )
     }
   }
 }
 
 function writeToStorage(value: Schema) {
-  schema.parse(value)
-  localStorage.setItem(BSKY_STORAGE, JSON.stringify(value))
+  try {
+    schema.parse(value)
+    localStorage.setItem(BSKY_STORAGE, JSON.stringify(value))
+  } catch (e) {
+    logger.error(`persisted state: failed writing root state to storage`, {
+      message: e,
+    })
+  }
 }
 
 function readFromStorage(): Schema | undefined {
-  const rawData = localStorage.getItem(BSKY_STORAGE)
-  const objData = rawData ? JSON.parse(rawData) : undefined
+  let objData
+  try {
+    const rawData = localStorage.getItem(BSKY_STORAGE)
+    objData = rawData ? JSON.parse(rawData) : undefined
+  } catch (e) {
+    logger.error('persisted state: failed to load root state from storage', {
+      message: e,
+    })
+  }
 
   // new user
   if (!objData) return undefined

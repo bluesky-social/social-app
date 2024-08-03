@@ -12,17 +12,11 @@ const BSKY_STORAGE = 'BSKY_STORAGE'
 let _state: Schema = defaults
 
 export async function init() {
-  try {
-    const stored = await readFromStorage()
-    if (!stored) {
-      await writeToStorage(defaults)
-    }
-    _state = stored || defaults
-  } catch (e) {
-    logger.error('persisted state: failed to load root state from storage', {
-      message: e,
-    })
+  const stored = await readFromStorage()
+  if (!stored) {
+    await writeToStorage(defaults)
   }
+  _state = stored || defaults
 }
 init satisfies PersistedApi['init']
 
@@ -35,14 +29,8 @@ export async function write<K extends keyof Schema>(
   key: K,
   value: Schema[K],
 ): Promise<void> {
-  try {
-    _state[key] = value
-    await writeToStorage(_state)
-  } catch (e) {
-    logger.error(`persisted state: failed writing root state to storage`, {
-      message: e,
-    })
-  }
+  _state[key] = value
+  await writeToStorage(_state)
 }
 write satisfies PersistedApi['write']
 
@@ -61,13 +49,26 @@ export async function clearStorage() {
 clearStorage satisfies PersistedApi['clearStorage']
 
 async function writeToStorage(value: Schema) {
-  schema.parse(value)
-  await AsyncStorage.setItem(BSKY_STORAGE, JSON.stringify(value))
+  try {
+    schema.parse(value)
+    await AsyncStorage.setItem(BSKY_STORAGE, JSON.stringify(value))
+  } catch (e) {
+    logger.error(`persisted state: failed writing root state to storage`, {
+      message: e,
+    })
+  }
 }
 
 async function readFromStorage(): Promise<Schema | undefined> {
-  const rawData = await AsyncStorage.getItem(BSKY_STORAGE)
-  const objData = rawData ? JSON.parse(rawData) : undefined
+  let objData
+  try {
+    const rawData = await AsyncStorage.getItem(BSKY_STORAGE)
+    objData = rawData ? JSON.parse(rawData) : undefined
+  } catch (e) {
+    logger.error('persisted state: failed to load root state from storage', {
+      message: e,
+    })
+  }
 
   // new user
   if (!objData) return undefined
