@@ -15,6 +15,7 @@ type FeedViewPost = AppBskyFeedDefs.FeedViewPost
 export type FeedTunerFn = (
   tuner: FeedTuner,
   slices: FeedViewPostsSlice[],
+  dryRun: boolean,
 ) => FeedViewPostsSlice[]
 
 type FeedSliceItem = {
@@ -201,7 +202,7 @@ export class FeedTuner {
 
     // run the custom tuners
     for (const tunerFn of this.tunerFns) {
-      slices = tunerFn(this, slices.slice())
+      slices = tunerFn(this, slices.slice(), dryRun)
     }
 
     slices = slices.filter(slice => {
@@ -242,7 +243,11 @@ export class FeedTuner {
     return slices
   }
 
-  static removeReplies(tuner: FeedTuner, slices: FeedViewPostsSlice[]) {
+  static removeReplies(
+    tuner: FeedTuner,
+    slices: FeedViewPostsSlice[],
+    _dryRun: boolean,
+  ) {
     for (let i = 0; i < slices.length; i++) {
       const slice = slices[i]
       if (
@@ -259,7 +264,11 @@ export class FeedTuner {
     return slices
   }
 
-  static removeReposts(tuner: FeedTuner, slices: FeedViewPostsSlice[]) {
+  static removeReposts(
+    tuner: FeedTuner,
+    slices: FeedViewPostsSlice[],
+    _dryRun: boolean,
+  ) {
     for (let i = 0; i < slices.length; i++) {
       if (slices[i].isRepost) {
         slices.splice(i, 1)
@@ -269,7 +278,11 @@ export class FeedTuner {
     return slices
   }
 
-  static removeQuotePosts(tuner: FeedTuner, slices: FeedViewPostsSlice[]) {
+  static removeQuotePosts(
+    tuner: FeedTuner,
+    slices: FeedViewPostsSlice[],
+    _dryRun: boolean,
+  ) {
     for (let i = 0; i < slices.length; i++) {
       if (slices[i].isQuotePost) {
         slices.splice(i, 1)
@@ -279,7 +292,11 @@ export class FeedTuner {
     return slices
   }
 
-  static removeOrphans(tuner: FeedTuner, slices: FeedViewPostsSlice[]) {
+  static removeOrphans(
+    tuner: FeedTuner,
+    slices: FeedViewPostsSlice[],
+    _dryRun: boolean,
+  ) {
     for (let i = 0; i < slices.length; i++) {
       if (slices[i].isOrphan) {
         slices.splice(i, 1)
@@ -292,6 +309,7 @@ export class FeedTuner {
   static dedupThreads(
     tuner: FeedTuner,
     slices: FeedViewPostsSlice[],
+    dryRun: boolean,
   ): FeedViewPostsSlice[] {
     for (let i = 0; i < slices.length; i++) {
       const rootUri = slices[i].rootUri
@@ -299,7 +317,9 @@ export class FeedTuner {
         slices.splice(i, 1)
         i--
       } else {
-        tuner.seenRootUris.add(rootUri)
+        if (!dryRun) {
+          tuner.seenRootUris.add(rootUri)
+        }
       }
     }
     return slices
@@ -309,6 +329,7 @@ export class FeedTuner {
     return (
       tuner: FeedTuner,
       slices: FeedViewPostsSlice[],
+      _dryRun: boolean,
     ): FeedViewPostsSlice[] => {
       for (let i = 0; i < slices.length; i++) {
         const slice = slices[i]
@@ -336,6 +357,7 @@ export class FeedTuner {
     return (
       tuner: FeedTuner,
       slices: FeedViewPostsSlice[],
+      _dryRun: boolean,
     ): FeedViewPostsSlice[] => {
       const candidateSlices = slices.slice()
 
