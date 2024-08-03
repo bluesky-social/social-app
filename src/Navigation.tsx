@@ -41,6 +41,7 @@ import {PreferencesThreads} from 'view/screens/PreferencesThreads'
 import {SavedFeeds} from 'view/screens/SavedFeeds'
 import {SharedPreferencesTesterScreen} from '#/screens/E2E/SharedPreferencesTesterScreen'
 import HashtagScreen from '#/screens/Hashtag'
+import {CallbackScreen} from '#/screens/Login/CallbackScreen'
 import {ModerationScreen} from '#/screens/Moderation'
 import {ProfileKnownFollowersScreen} from '#/screens/Profile/KnownFollowers'
 import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
@@ -363,6 +364,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="StarterPackEdit"
         getComponent={() => Wizard}
         options={{title: title(msg`Edit your starter pack`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="AuthCallback"
+        getComponent={() => CallbackScreen}
+        options={{title: title(msg`Callback`)}}
       />
     </>
   )

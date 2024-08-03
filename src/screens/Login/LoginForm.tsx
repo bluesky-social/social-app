@@ -27,7 +27,7 @@ import {logger} from '#/logger'
 import {useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
-import {useGate} from 'lib/statsig/statsig'
+// import {useGate} from 'lib/statsig/statsig'
 import {useSetHasCheckedForStarterPack} from 'state/preferences/used-starter-packs'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -43,13 +43,13 @@ import {FormContainer} from './FormContainer'
 
 type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 
-const client = new BrowserOAuthClient({
+export const client = new BrowserOAuthClient({
   plcDirectoryUrl: 'https://plc.directory',
   handleResolver: 'https://bsky.social',
   clientMetadata: {
-    client_id: 'http://localhost:19006/',
-    redirect_uris: ['http://localhost:19006/auth/callback'],
-    response_types: ['code'],
+    client_id: 'https://.ngrok-free.app/.well-known/client-metadata.json',
+    client_name: 'Bluesky',
+    redirect_uris: ['https://.ngrok-free.app/auth/callback'],
     token_endpoint_auth_method: 'none',
   },
 })
@@ -186,8 +186,8 @@ export const LoginForm = ({
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const setHasCheckedForStarterPack = useSetHasCheckedForStarterPack()
 
-  const gate = useGate()
-  const oauthEnabled = __DEV__ || gate('use_oauth')
+  // const gate = useGate()
+  const oauthEnabled = true
   const oauth = useOAuth(client)
   const [handle, setHandle] = React.useState('')
 
