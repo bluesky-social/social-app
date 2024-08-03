@@ -2,7 +2,6 @@ import EventEmitter from 'eventemitter3'
 
 import BroadcastChannel from '#/lib/broadcast'
 import {logger} from '#/logger'
-import {migrate} from '#/state/persisted/legacy'
 import {defaults, Schema} from '#/state/persisted/schema'
 import * as store from '#/state/persisted/store'
 export type {PersistedAccount, Schema} from '#/state/persisted/schema'
@@ -24,8 +23,7 @@ export async function init() {
   broadcast.onmessage = onBroadcastMessage
 
   try {
-    await migrate() // migrate old store
-    const stored = await store.read() // check for new store
+    const stored = await store.read()
     if (!stored) {
       logger.debug('persisted state: initializing default storage')
       await store.write(defaults) // opt: init new store

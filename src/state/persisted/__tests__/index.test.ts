@@ -1,18 +1,14 @@
-import {jest, expect, test, afterEach} from '@jest/globals'
+import {afterEach, expect, jest, test} from '@jest/globals'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-import {defaults} from '#/state/persisted/schema'
-import {migrate} from '#/state/persisted/legacy'
-import * as store from '#/state/persisted/store'
 import * as persisted from '#/state/persisted'
+import {defaults} from '#/state/persisted/schema'
+import * as store from '#/state/persisted/store'
 
 const write = jest.mocked(store.write)
 const read = jest.mocked(store.read)
 
 jest.mock('#/logger')
-jest.mock('#/state/persisted/legacy', () => ({
-  migrate: jest.fn(),
-}))
 jest.mock('#/state/persisted/store', () => ({
   write: jest.fn(),
   read: jest.fn(),
@@ -27,7 +23,6 @@ afterEach(() => {
 test('init: fresh install, no migration', async () => {
   await persisted.init()
 
-  expect(migrate).toHaveBeenCalledTimes(1)
   expect(read).toHaveBeenCalledTimes(1)
   expect(write).toHaveBeenCalledWith(defaults)
 
@@ -40,7 +35,6 @@ test('init: fresh install, migration ran', async () => {
 
   await persisted.init()
 
-  expect(migrate).toHaveBeenCalledTimes(1)
   expect(read).toHaveBeenCalledTimes(1)
   expect(write).not.toHaveBeenCalled()
 
