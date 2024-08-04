@@ -61,7 +61,8 @@ export async function write<K extends keyof Schema>(
     [key]: value,
   }
   writeToStorage(_state)
-  broadcast.postMessage({event: UPDATE_EVENT})
+  broadcast.postMessage({event: {type: UPDATE_EVENT, key}})
+  broadcast.postMessage({event: UPDATE_EVENT}) // Backcompat while upgrading
 }
 write satisfies PersistedApi['write']
 
@@ -70,8 +71,12 @@ export function onUpdate<K extends keyof Schema>(
   cb: (v: Schema[K]) => void,
 ): () => void {
   const listener = () => cb(get(key))
-  _emitter.addListener('update', listener)
-  return () => _emitter.removeListener('update', listener)
+  _emitter.addListener('update', listener) // Backcompat while upgrading
+  _emitter.addListener('update:' + key, listener)
+  return () => {
+    _emitter.removeListener('update', listener) // Backcompat while upgrading
+    _emitter.removeListener('update:' + key, listener)
+  }
 }
 onUpdate satisfies PersistedApi['onUpdate']
 
@@ -85,12 +90,23 @@ export async function clearStorage() {
 clearStorage satisfies PersistedApi['clearStorage']
 
 async function onBroadcastMessage({data}: MessageEvent) {
-  if (typeof data === 'object' && data.event === UPDATE_EVENT) {
+  if (
+    typeof data === 'object' &&
+    (data.event === UPDATE_EVENT || // Backcompat while upgrading
+      data.event?.type === UPDATE_EVENT)
+  ) {
     // read next state, possibly updated by another tab
     const next = readFromStorage()
+    if (next === _state) {
+      return
+    }
     if (next) {
       _state = next
-      _emitter.emit('update')
+      if (typeof data.event.key === 'string') {
+        _emitter.emit('update:' + data.event.key)
+      } else {
+        _emitter.emit('update') // Backcompat while upgrading
+      }
     } else {
       logger.error(
         `persisted state: handled update update from broadcast channel, but found no data`,
