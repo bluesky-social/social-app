@@ -39,6 +39,14 @@ export async function write<K extends keyof Schema>(
   key: K,
   value: Schema[K],
 ): Promise<void> {
+  const next = readFromStorage()
+  if (next) {
+    // The storage could have been updated by a different tab before this tab is notified.
+    // Make sure this write is applied on top of the latest data in the storage as long as it's valid.
+    _state = next
+    // Don't fire the update listeners yet to avoid a loop.
+    // If there was a change, we'll receive the broadcast event soon enough which will do that.
+  }
   _state = {
     ..._state,
     [key]: value,
