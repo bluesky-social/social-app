@@ -89,6 +89,8 @@ function writeToStorage(value: Schema) {
   }
 }
 
+let lastRawData: string | undefined
+let lastResult: Schema | undefined
 function readFromStorage(): Schema | undefined {
   let rawData: string | null = null
   try {
@@ -97,6 +99,13 @@ function readFromStorage(): Schema | undefined {
     // Expected on the web in private mode.
   }
   if (rawData) {
-    return tryParse(rawData)
+    if (rawData === lastRawData) {
+      return lastResult
+    } else {
+      const result = tryParse(rawData)
+      lastRawData = rawData
+      lastResult = result
+      return result
+    }
   }
 }
