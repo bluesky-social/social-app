@@ -85,16 +85,13 @@ function writeToStorage(value: Schema) {
 }
 
 function readFromStorage(): Schema | undefined {
-  let objData
+  let rawData: string | null = null
   try {
-    const rawData = localStorage.getItem(BSKY_STORAGE)
-    objData = rawData ? JSON.parse(rawData) : undefined
+    rawData = localStorage.getItem(BSKY_STORAGE)
   } catch (e) {
-    logger.error('persisted state: failed to load root state from storage', {
-      message: e,
-    })
+    // Ignore.
   }
-  if (objData) {
-    return tryParse(objData)
+  if (rawData) {
+    return tryParse(rawData)
   }
 }

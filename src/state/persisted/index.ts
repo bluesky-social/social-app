@@ -62,16 +62,13 @@ async function writeToStorage(value: Schema) {
 }
 
 async function readFromStorage(): Promise<Schema | undefined> {
-  let objData
+  let rawData: string | null = null
   try {
-    const rawData = await AsyncStorage.getItem(BSKY_STORAGE)
-    objData = rawData ? JSON.parse(rawData) : undefined
+    rawData = await AsyncStorage.getItem(BSKY_STORAGE)
   } catch (e) {
-    logger.error('persisted state: failed to load root state from storage', {
-      message: e,
-    })
+    // Ignore.
   }
-  if (objData) {
-    return tryParse(objData)
+  if (rawData) {
+    return tryParse(rawData)
   }
 }

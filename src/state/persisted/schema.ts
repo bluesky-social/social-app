@@ -135,7 +135,18 @@ export const defaults: Schema = {
   hasCheckedForStarterPack: false,
 }
 
-export function tryParse(objData: any): Schema | undefined {
+export function tryParse(rawData: string): Schema | undefined {
+  let objData
+  try {
+    objData = JSON.parse(rawData)
+  } catch (e) {
+    logger.error('persisted state: failed to parse root state from storage', {
+      message: e,
+    })
+  }
+  if (!objData) {
+    return undefined
+  }
   const parsed = schema.safeParse(objData)
   if (parsed.success) {
     return objData
