@@ -1,7 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import {logger} from '#/logger'
-import {defaults, Schema, schema, tryParse} from '#/state/persisted/schema'
+import {
+  defaults,
+  Schema,
+  tryParse,
+  tryStringify,
+} from '#/state/persisted/schema'
 import {PersistedApi} from './types'
 
 export type {PersistedAccount, Schema} from '#/state/persisted/schema'
@@ -51,13 +56,15 @@ export async function clearStorage() {
 clearStorage satisfies PersistedApi['clearStorage']
 
 async function writeToStorage(value: Schema) {
-  try {
-    schema.parse(value)
-    await AsyncStorage.setItem(BSKY_STORAGE, JSON.stringify(value))
-  } catch (e) {
-    logger.error(`persisted state: failed writing root state to storage`, {
-      message: e,
-    })
+  const rawData = tryStringify(value)
+  if (rawData) {
+    try {
+      await AsyncStorage.setItem(BSKY_STORAGE, rawData)
+    } catch (e) {
+      logger.error(`persisted state: failed writing root state to storage`, {
+        message: e,
+      })
+    }
   }
 }
 
@@ -66,7 +73,9 @@ async function readFromStorage(): Promise<Schema | undefined> {
   try {
     rawData = await AsyncStorage.getItem(BSKY_STORAGE)
   } catch (e) {
-    // Ignore.
+    logger.error(`persisted state: failed reading root state from storage`, {
+      message: e,
+    })
   }
   if (rawData) {
     return tryParse(rawData)

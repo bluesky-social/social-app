@@ -2,7 +2,12 @@ import EventEmitter from 'eventemitter3'
 
 import BroadcastChannel from '#/lib/broadcast'
 import {logger} from '#/logger'
-import {defaults, Schema, schema, tryParse} from '#/state/persisted/schema'
+import {
+  defaults,
+  Schema,
+  tryParse,
+  tryStringify,
+} from '#/state/persisted/schema'
 import {PersistedApi} from './types'
 
 export type {PersistedAccount, Schema} from '#/state/persisted/schema'
@@ -53,7 +58,7 @@ export async function clearStorage() {
   try {
     localStorage.removeItem(BSKY_STORAGE)
   } catch (e: any) {
-    logger.error(`persisted store: failed to clear`, {message: e.toString()})
+    // Expected on the web in private mode.
   }
 }
 clearStorage satisfies PersistedApi['clearStorage']
@@ -74,13 +79,13 @@ async function onBroadcastMessage({data}: MessageEvent) {
 }
 
 function writeToStorage(value: Schema) {
-  try {
-    schema.parse(value)
-    localStorage.setItem(BSKY_STORAGE, JSON.stringify(value))
-  } catch (e) {
-    logger.error(`persisted state: failed writing root state to storage`, {
-      message: e,
-    })
+  const rawData = tryStringify(value)
+  if (rawData) {
+    try {
+      localStorage.setItem(BSKY_STORAGE, rawData)
+    } catch (e) {
+      // Expected on the web in private mode.
+    }
   }
 }
 
@@ -89,7 +94,7 @@ function readFromStorage(): Schema | undefined {
   try {
     rawData = localStorage.getItem(BSKY_STORAGE)
   } catch (e) {
-    // Ignore.
+    // Expected on the web in private mode.
   }
   if (rawData) {
     return tryParse(rawData)

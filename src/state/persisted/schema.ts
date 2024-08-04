@@ -44,7 +44,7 @@ const currentAccountSchema = accountSchema.extend({
 })
 export type PersistedCurrentAccount = z.infer<typeof currentAccountSchema>
 
-export const schema = z.object({
+const schema = z.object({
   colorMode: z.enum(['system', 'light', 'dark']),
   darkTheme: z.enum(['dim', 'dark']).optional(),
   session: z.object({
@@ -159,6 +159,18 @@ export function tryParse(rawData: string): Schema | undefined {
         path: e.path?.join('.'),
       })) || []
     logger.error(`persisted store: data failed validation on read`, {errors})
+    return undefined
+  }
+}
+
+export function tryStringify(value: Schema): string | undefined {
+  try {
+    schema.parse(value)
+    return JSON.stringify(value)
+  } catch (e) {
+    logger.error(`persisted state: failed stringifying root state`, {
+      message: e,
+    })
     return undefined
   }
 }
