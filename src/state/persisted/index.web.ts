@@ -47,6 +47,15 @@ export async function write<K extends keyof Schema>(
     // Don't fire the update listeners yet to avoid a loop.
     // If there was a change, we'll receive the broadcast event soon enough which will do that.
   }
+  try {
+    if (JSON.stringify({v: _state[key]}) === JSON.stringify({v: value})) {
+      // Fast path for updates that are guaranteed to be noops.
+      // This is good mostly because it avoids useless broadcasts to other tabs.
+      return
+    }
+  } catch (e) {
+    // Ignore and go through the normal path.
+  }
   _state = {
     ..._state,
     [key]: value,
