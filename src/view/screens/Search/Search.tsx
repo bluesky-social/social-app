@@ -30,7 +30,7 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {NavigationProp} from '#/lib/routes/types'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
 import {logger} from '#/logger'
-import {isNative, isWeb} from '#/platform/detection'
+import {isIOS, isNative, isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
@@ -794,6 +794,7 @@ let SearchInputBox = ({
         value={searchText}
         style={[pal.text, styles.headerSearchInput]}
         keyboardAppearance={theme.colorScheme}
+        keyboardType={isIOS ? 'ascii-capable' : undefined}
         selectTextOnFocus={isNative}
         onFocus={() => {
           if (isWeb) {
