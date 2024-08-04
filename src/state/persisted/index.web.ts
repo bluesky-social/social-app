@@ -65,9 +65,13 @@ export async function write<K extends keyof Schema>(
 }
 write satisfies PersistedApi['write']
 
-export function onUpdate(cb: () => void): () => void {
-  _emitter.addListener('update', cb)
-  return () => _emitter.removeListener('update', cb)
+export function onUpdate<K extends keyof Schema>(
+  key: K,
+  cb: (v: Schema[K]) => void,
+): () => void {
+  const listener = () => cb(get(key))
+  _emitter.addListener('update', listener)
+  return () => _emitter.removeListener('update', listener)
 }
 onUpdate satisfies PersistedApi['onUpdate']
 
