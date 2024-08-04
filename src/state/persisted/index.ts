@@ -13,10 +13,9 @@ let _state: Schema = defaults
 
 export async function init() {
   const stored = await readFromStorage()
-  if (!stored) {
-    await writeToStorage(defaults)
+  if (stored) {
+    _state = stored
   }
-  _state = stored || defaults
 }
 init satisfies PersistedApi['init']
 
@@ -29,7 +28,10 @@ export async function write<K extends keyof Schema>(
   key: K,
   value: Schema[K],
 ): Promise<void> {
-  _state[key] = value
+  _state = {
+    ..._state,
+    [key]: value,
+  }
   await writeToStorage(_state)
 }
 write satisfies PersistedApi['write']

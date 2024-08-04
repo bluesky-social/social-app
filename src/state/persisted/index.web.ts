@@ -19,10 +19,9 @@ const _emitter = new EventEmitter()
 export async function init() {
   broadcast.onmessage = onBroadcastMessage
   const stored = readFromStorage()
-  if (!stored) {
-    writeToStorage(defaults)
+  if (stored) {
+    _state = stored
   }
-  _state = stored || defaults
 }
 init satisfies PersistedApi['init']
 
@@ -35,7 +34,10 @@ export async function write<K extends keyof Schema>(
   key: K,
   value: Schema[K],
 ): Promise<void> {
-  _state[key] = value
+  _state = {
+    ..._state,
+    [key]: value,
+  }
   writeToStorage(_state)
   broadcast.postMessage({event: UPDATE_EVENT})
 }
