@@ -2,7 +2,7 @@ import EventEmitter from 'eventemitter3'
 
 import BroadcastChannel from '#/lib/broadcast'
 import {logger} from '#/logger'
-import {defaults, Schema, schema} from '#/state/persisted/schema'
+import {defaults, Schema, schema, tryParse} from '#/state/persisted/schema'
 import {PersistedApi} from './types'
 
 export type {PersistedAccount, Schema} from '#/state/persisted/schema'
@@ -94,24 +94,7 @@ function readFromStorage(): Schema | undefined {
       message: e,
     })
   }
-
-  // new user
-  if (!objData) return undefined
-
-  // existing user, validate
-  const parsed = schema.safeParse(objData)
-
-  if (parsed.success) {
-    return objData
-  } else {
-    const errors =
-      parsed.error?.errors?.map(e => ({
-        code: e.code,
-        // @ts-ignore exists on some types
-        expected: e?.expected,
-        path: e.path?.join('.'),
-      })) || []
-    logger.error(`persisted store: data failed validation on read`, {errors})
-    return undefined
+  if (objData) {
+    return tryParse(objData)
   }
 }

@@ -1,5 +1,6 @@
 import {z} from 'zod'
 
+import {logger} from '#/logger'
 import {deviceLocales} from '#/platform/detection'
 import {PlatformInfo} from '../../../modules/expo-bluesky-swiss-army'
 
@@ -132,4 +133,21 @@ export const defaults: Schema = {
   disableAutoplay: PlatformInfo.getIsReducedMotionEnabled(),
   kawaii: false,
   hasCheckedForStarterPack: false,
+}
+
+export function tryParse(objData: any): Schema | undefined {
+  const parsed = schema.safeParse(objData)
+  if (parsed.success) {
+    return objData
+  } else {
+    const errors =
+      parsed.error?.errors?.map(e => ({
+        code: e.code,
+        // @ts-ignore exists on some types
+        expected: e?.expected,
+        path: e.path?.join('.'),
+      })) || []
+    logger.error(`persisted store: data failed validation on read`, {errors})
+    return undefined
+  }
 }
