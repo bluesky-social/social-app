@@ -1,18 +1,6 @@
-import {
-  AppBskyFeedDefs,
-  AppBskyFeedThreadgate,
-  AtUri,
-  BskyAgent,
-} from '@atproto/api'
-import {useQuery} from '@tanstack/react-query'
+import {AppBskyFeedDefs, AppBskyFeedThreadgate} from '@atproto/api'
 
-import {useAgent} from '#/state/session'
-
-export type ThreadgateAllowUISetting =
-  | {type: 'nobody'}
-  | {type: 'mention'}
-  | {type: 'following'}
-  | {type: 'list'; list: unknown}
+import {ThreadgateAllowUISetting} from '#/state/queries/threadgate/types'
 
 /**
  * Converts a full {@link AppBskyFeedThreadgate.Record} to a list of
@@ -80,66 +68,26 @@ export function threadgateAllowUISettingToAllowType(
   return allow
 }
 
-export const threadgateRecordQueryKeyRoot = 'threadgate-record'
-export const createThreadgateRecordQueryKey = (uri: string) => [
-  threadgateRecordQueryKeyRoot,
-  uri,
-]
-
-export function useThreadgateRecordQuery({
-  postUri,
-  initialData,
-}: {
-  postUri?: string
-  initialData?: AppBskyFeedThreadgate.Record
-} = {}) {
-  const agent = useAgent()
-
-  return useQuery({
-    enabled: !!postUri,
-    queryKey: createThreadgateRecordQueryKey(postUri || ''),
-    placeholderData: initialData,
-    async queryFn() {
-      const urip = new AtUri(postUri!)
-
-      if (!urip.host.startsWith('did:')) {
-        const res = await agent.resolveHandle({
-          handle: urip.host,
-        })
-        urip.host = res.data.did
-      }
-
-      const {value} = await agent.api.app.bsky.feed.threadgate.get({
-        repo: urip.host,
-        rkey: urip.rkey,
-      })
-
-      return value
-    },
-  })
-}
-
-export function createThreadgate({
-  agent,
-  postUri,
-  threadgate,
-}: {
-  agent: BskyAgent
-  postUri: string
-  threadgate: Partial<AppBskyFeedThreadgate.Record>
-}) {
-  const urip = new AtUri(postUri)
-  const record = {
-    ...threadgate,
-    post: postUri,
-    createdAt: new Date().toISOString(),
-  }
-
-  return agent.api.app.bsky.feed.threadgate.create(
-    {
-      repo: urip.host,
-      rkey: urip.rkey,
-    },
-    record,
+/**
+ * Merges two {@link AppBskyFeedThreadgate.Record} objects, combining their
+ * `allow` and `hiddenReplies` arrays and de-deduplicating them.
+ */
+export function mergeThreadgateRecords(
+  prev: AppBskyFeedThreadgate.Record,
+  next: Partial<AppBskyFeedThreadgate.Record>,
+): AppBskyFeedThreadgate.Record {
+  const allow = [...(prev.allow || []), ...(next.allow || [])].filter(
+    (v, i, a) => a.findIndex(t => t.$type === v.$type) === i,
   )
+  const hiddenReplies = Array.from(
+    new Set([...(prev.hiddenReplies || []), ...(next.hiddenReplies || [])]),
+  )
+
+  return {
+    $type: 'app.bsky.feed.threadgate',
+    post: prev.post,
+    allow,
+    createdAt: new Date().toISOString(),
+    hiddenReplies,
+  }
 }
