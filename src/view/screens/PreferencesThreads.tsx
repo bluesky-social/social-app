@@ -45,8 +45,8 @@ export function PreferencesThreads({}: Props) {
         contentContainerStyle={{paddingBottom: 75}}>
         <SimpleViewHeader
           showBackButton={isTabletOrMobile}
-          style={[pal.border, {borderBottomWidth: 1}]}>
-          <View style={{flex: 1}}>
+          style={[pal.border, a.border_b]}>
+          <View style={a.flex_1}>
             <Text type="title-lg" style={[pal.text, {fontWeight: 'bold'}]}>
               <Trans>Thread Preferences</Trans>
             </Text>

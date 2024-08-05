@@ -14,7 +14,7 @@ import {useModerationCauseDescription} from '#/lib/moderation/useModerationCause
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {NavigationProp} from 'lib/routes/types'
 import {CenteredView} from '#/view/com/util/Views'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {
   ModerationDetailsDialog,
@@ -105,6 +105,7 @@ export function ScreenHider({
           a.mb_md,
           a.px_lg,
           a.text_center,
+          a.leading_snug,
           t.atoms.text_contrast_medium,
         ]}>
         {isNoPwi ? (
@@ -113,8 +114,15 @@ export function ScreenHider({
           </Trans>
         ) : (
           <>
-            <Trans>This {screenDescription} has been flagged:</Trans>
-            <Text style={[a.text_lg, a.font_semibold, t.atoms.text, a.ml_xs]}>
+            <Trans>This {screenDescription} has been flagged:</Trans>{' '}
+            <Text
+              style={[
+                a.text_lg,
+                a.font_semibold,
+                a.leading_snug,
+                t.atoms.text,
+                a.ml_xs,
+              ]}>
               {desc.name}.{' '}
             </Text>
             <TouchableWithoutFeedback
@@ -127,16 +135,17 @@ export function ScreenHider({
               <Text
                 style={[
                   a.text_lg,
+                  a.leading_snug,
                   {
                     color: t.palette.primary_500,
-                    // @ts-ignore web only -prf
-                    cursor: 'pointer',
                   },
+                  web({
+                    cursor: 'pointer',
+                  }),
                 ]}>
                 <Trans>Learn More</Trans>
               </Text>
             </TouchableWithoutFeedback>
-
             <ModerationDetailsDialog control={control} modcause={blur} />
           </>
         )}{' '}
