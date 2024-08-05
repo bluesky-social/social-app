@@ -203,8 +203,11 @@ export class FeedTuner {
       if (this.seenKeys.has(slice._reactKey)) {
         return false
       }
-      // Most feeds dedupe by thread, but the author feed doesn't because it aims to make
-      // it possible to find all author's posts. This logic adds post-level dedupe for it.
+      // Some feeds, like Following, dedupe by thread, so you only see the most recent reply.
+      // However, we don't want per-thread dedupe for author feeds (where we need to show every post)
+      // or for feedgens (where we want to let the feed serve multiple replies if it chooses to).
+      // To avoid showing the same context (root and/or parent) more than once, we do last resort
+      // per-post deduplication. It hides already seen posts as long as this doesn't break the thread.
       for (let i = 0; i < slice.items.length; i++) {
         const item = slice.items[i]
         if (this.seenUris.has(item.post.uri)) {
@@ -217,7 +220,7 @@ export class FeedTuner {
           }
           if (i === slice.items.length - 1) {
             // If the last item in the slice was already seen, omit the whole slice.
-            // This means we'd miss its parents, but the user can "show more" to see it.
+            // This means we'd miss its parents, but the user can "show more" to see them.
             // For example, [A ... E -> F], [A ... D -> E], [A ... C -> D], [A -> B -> C]
             // would get collapsed into [A ... E -> F], with B/C/D considered seen.
             return false
