@@ -1,7 +1,11 @@
 import React, {useEffect, useRef} from 'react'
 import {useWindowDimensions, View} from 'react-native'
 import {runOnJS} from 'react-native-reanimated'
-import {AppBskyFeedDefs, AppBskyFeedThreadgate} from '@atproto/api'
+import {
+  AppBskyFeedDefs,
+  AppBskyFeedPost,
+  AppBskyFeedThreadgate,
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -117,9 +121,13 @@ export function PostThread({
   )
   const rootPost = thread?.type === 'post' ? thread.post : undefined
   const rootPostRecord = thread?.type === 'post' ? thread.record : undefined
+  const replyRef =
+    rootPost && AppBskyFeedPost.isRecord(rootPost.record)
+      ? rootPost.record.reply
+      : undefined
 
   const {data: threadgateRecord} = useThreadgateRecordQuery({
-    postUri: rootPost?.record?.reply?.root?.uri,
+    postUri: replyRef ? replyRef.root.uri : rootPost?.uri,
     initialData: rootPost?.threadgate?.record as AppBskyFeedThreadgate.Record,
   })
 
