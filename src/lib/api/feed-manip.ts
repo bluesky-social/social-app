@@ -1,4 +1,5 @@
 import {
+  AppBskyActorDefs,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
@@ -6,50 +7,118 @@ import {
 } from '@atproto/api'
 
 import {isPostInLanguage} from '../../locale/helpers'
+import {FALLBACK_MARKER_POST} from './feed/home'
 import {ReasonFeedSource} from './feed/types'
+
 type FeedViewPost = AppBskyFeedDefs.FeedViewPost
 
 export type FeedTunerFn = (
   tuner: FeedTuner,
   slices: FeedViewPostsSlice[],
+  dryRun: boolean,
 ) => FeedViewPostsSlice[]
 
 type FeedSliceItem = {
   post: AppBskyFeedDefs.PostView
-  reply?: AppBskyFeedDefs.ReplyRef
-}
-
-function toSliceItem(feedViewPost: FeedViewPost): FeedSliceItem {
-  return {
-    post: feedViewPost.post,
-    reply: feedViewPost.reply,
-  }
+  record: AppBskyFeedPost.Record
+  parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
+  isParentBlocked: boolean
 }
 
 export class FeedViewPostsSlice {
   _reactKey: string
   _feedPost: FeedViewPost
   items: FeedSliceItem[]
+  isIncompleteThread: boolean
+  isFallbackMarker: boolean
+  isOrphan: boolean
+  rootUri: string
 
   constructor(feedPost: FeedViewPost) {
+    const {post, reply, reason} = feedPost
+    this.items = []
+    this.isIncompleteThread = false
+    this.isFallbackMarker = false
+    this.isOrphan = false
+    if (AppBskyFeedDefs.isPostView(reply?.root)) {
+      this.rootUri = reply.root.uri
+    } else {
+      this.rootUri = post.uri
+    }
     this._feedPost = feedPost
-    this._reactKey = `slice-${feedPost.post.uri}-${
-      feedPost.reason?.indexedAt || feedPost.post.indexedAt
+    this._reactKey = `slice-${post.uri}-${
+      feedPost.reason?.indexedAt || post.indexedAt
     }`
-    this.items = [toSliceItem(feedPost)]
-  }
-
-  get uri() {
-    return this._feedPost.post.uri
-  }
-
-  get isThread() {
-    return (
-      this.items.length > 1 &&
-      this.items.every(
-        item => item.post.author.did === this.items[0].post.author.did,
-      )
+    if (feedPost.post.uri === FALLBACK_MARKER_POST.post.uri) {
+      this.isFallbackMarker = true
+      return
+    }
+    if (
+      !AppBskyFeedPost.isRecord(post.record) ||
+      !AppBskyFeedPost.validateRecord(post.record).success
+    ) {
+      return
+    }
+    const parent = reply?.parent
+    const isParentBlocked = AppBskyFeedDefs.isBlockedPost(parent)
+    let parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
+    if (AppBskyFeedDefs.isPostView(parent)) {
+      parentAuthor = parent.author
+    }
+    this.items.push({
+      post,
+      record: post.record,
+      parentAuthor,
+      isParentBlocked,
+    })
+    if (!reply || reason) {
+      return
+    }
+    if (
+      !AppBskyFeedDefs.isPostView(parent) ||
+      !AppBskyFeedPost.isRecord(parent.record) ||
+      !AppBskyFeedPost.validateRecord(parent.record).success
+    ) {
+      this.isOrphan = true
+      return
+    }
+    const grandparentAuthor = reply.grandparentAuthor
+    const isGrandparentBlocked = Boolean(
+      grandparentAuthor?.viewer?.blockedBy ||
+        grandparentAuthor?.viewer?.blocking ||
+        grandparentAuthor?.viewer?.blockingByList,
     )
+    this.items.unshift({
+      post: parent,
+      record: parent.record,
+      parentAuthor: grandparentAuthor,
+      isParentBlocked: isGrandparentBlocked,
+    })
+    if (isGrandparentBlocked) {
+      this.isOrphan = true
+      // Keep going, it might still have a root.
+    }
+    const root = reply.root
+    if (
+      !AppBskyFeedDefs.isPostView(root) ||
+      !AppBskyFeedPost.isRecord(root.record) ||
+      !AppBskyFeedPost.validateRecord(root.record).success
+    ) {
+      this.isOrphan = true
+      return
+    }
+    if (root.uri === parent.uri) {
+      return
+    }
+    this.items.unshift({
+      post: root,
+      record: root.record,
+      isParentBlocked: false,
+      parentAuthor: undefined,
+    })
+    if (parent.record.reply?.parent.uri !== root.uri) {
+      this.isIncompleteThread = true
+    }
   }
 
   get isQuotePost() {
@@ -90,30 +159,7 @@ export class FeedViewPostsSlice {
     return !!this.items.find(item => item.post.uri === uri)
   }
 
-  isNextInThread(uri: string) {
-    return this.items[this.items.length - 1].post.uri === uri
-  }
-
-  insert(item: FeedViewPost) {
-    const selfReplyUri = getSelfReplyUri(item)
-    const i = this.items.findIndex(item2 => item2.post.uri === selfReplyUri)
-    if (i !== -1) {
-      this.items.splice(i + 1, 0, item)
-    } else {
-      this.items.push(item)
-    }
-  }
-
-  flattenReplyParent() {
-    if (this.items[0].reply) {
-      const reply = this.items[0].reply
-      if (AppBskyFeedDefs.isPostView(reply.parent)) {
-        this.items.splice(0, 0, {post: reply.parent})
-      }
-    }
-  }
-
-  isFollowingAllAuthors(userDid: string) {
+  getAllAuthors(): AppBskyActorDefs.ProfileViewBasic[] {
     const feedPost = this._feedPost
     const authors = [feedPost.post.author]
     if (feedPost.reply) {
@@ -127,167 +173,149 @@ export class FeedViewPostsSlice {
         authors.push(feedPost.reply.root.author)
       }
     }
-    return authors.every(a => a.did === userDid || a.viewer?.following)
+    return authors
   }
 }
 
 export class FeedTuner {
   seenKeys: Set<string> = new Set()
   seenUris: Set<string> = new Set()
+  seenRootUris: Set<string> = new Set()
 
   constructor(public tunerFns: FeedTunerFn[]) {}
 
-  reset() {
-    this.seenKeys.clear()
-    this.seenUris.clear()
-  }
-
   tune(
     feed: FeedViewPost[],
-    {dryRun, maintainOrder}: {dryRun: boolean; maintainOrder: boolean} = {
+    {dryRun}: {dryRun: boolean} = {
       dryRun: false,
-      maintainOrder: false,
     },
   ): FeedViewPostsSlice[] {
-    let slices: FeedViewPostsSlice[] = []
+    let slices: FeedViewPostsSlice[] = feed
+      .map(item => new FeedViewPostsSlice(item))
+      .filter(s => s.items.length > 0 || s.isFallbackMarker)
 
-    // remove posts that are replies, but which don't have the parent
-    // hydrated. this means the parent was either deleted or blocked
-    feed = feed.filter(item => {
-      if (
-        AppBskyFeedPost.isRecord(item.post.record) &&
-        item.post.record.reply &&
-        !item.reply
-      ) {
+    // run the custom tuners
+    for (const tunerFn of this.tunerFns) {
+      slices = tunerFn(this, slices.slice(), dryRun)
+    }
+
+    slices = slices.filter(slice => {
+      if (this.seenKeys.has(slice._reactKey)) {
         return false
+      }
+      // Some feeds, like Following, dedupe by thread, so you only see the most recent reply.
+      // However, we don't want per-thread dedupe for author feeds (where we need to show every post)
+      // or for feedgens (where we want to let the feed serve multiple replies if it chooses to).
+      // To avoid showing the same context (root and/or parent) more than once, we do last resort
+      // per-post deduplication. It hides already seen posts as long as this doesn't break the thread.
+      for (let i = 0; i < slice.items.length; i++) {
+        const item = slice.items[i]
+        if (this.seenUris.has(item.post.uri)) {
+          if (i === 0) {
+            // Omit contiguous seen leading items.
+            // For example, [A -> B -> C], [A -> D -> E], [A -> D -> F]
+            // would turn into [A -> B -> C], [D -> E], [F].
+            slice.items.splice(0, 1)
+            i--
+          }
+          if (i === slice.items.length - 1) {
+            // If the last item in the slice was already seen, omit the whole slice.
+            // This means we'd miss its parents, but the user can "show more" to see them.
+            // For example, [A ... E -> F], [A ... D -> E], [A ... C -> D], [A -> B -> C]
+            // would get collapsed into [A ... E -> F], with B/C/D considered seen.
+            return false
+          }
+        } else {
+          if (!dryRun) {
+            this.seenUris.add(item.post.uri)
+          }
+        }
+      }
+      if (!dryRun) {
+        this.seenKeys.add(slice._reactKey)
       }
       return true
     })
 
-    if (maintainOrder) {
-      slices = feed.map(item => new FeedViewPostsSlice(item))
-    } else {
-      // arrange the posts into thread slices
-      for (let i = feed.length - 1; i >= 0; i--) {
-        const item = feed[i]
-
-        const selfReplyUri = getSelfReplyUri(item)
-        if (selfReplyUri) {
-          const index = slices.findIndex(slice =>
-            slice.isNextInThread(selfReplyUri),
-          )
-
-          if (index !== -1) {
-            const parent = slices[index]
-
-            parent.insert(item)
-
-            // If our slice isn't currently on the top, reinsert it to the top.
-            if (index !== 0) {
-              slices.splice(index, 1)
-              slices.unshift(parent)
-            }
-
-            continue
-          }
-        }
-
-        slices.unshift(new FeedViewPostsSlice(item))
-      }
-    }
-
-    // run the custom tuners
-    for (const tunerFn of this.tunerFns) {
-      slices = tunerFn(this, slices.slice())
-    }
-
-    // remove any items already "seen"
-    const soonToBeSeenUris: Set<string> = new Set()
-    for (let i = slices.length - 1; i >= 0; i--) {
-      if (!slices[i].isThread && this.seenUris.has(slices[i].uri)) {
-        slices.splice(i, 1)
-      } else {
-        for (const item of slices[i].items) {
-          soonToBeSeenUris.add(item.post.uri)
-        }
-      }
-    }
-
-    // turn non-threads with reply parents into threads
-    for (const slice of slices) {
-      if (!slice.isThread && !slice.reason && slice.items[0].reply) {
-        const reply = slice.items[0].reply
-        if (
-          AppBskyFeedDefs.isPostView(reply.parent) &&
-          !this.seenUris.has(reply.parent.uri) &&
-          !soonToBeSeenUris.has(reply.parent.uri)
-        ) {
-          const uri = reply.parent.uri
-          slice.flattenReplyParent()
-          soonToBeSeenUris.add(uri)
-        }
-      }
-    }
-
-    if (!dryRun) {
-      slices = slices.filter(slice => {
-        if (this.seenKeys.has(slice._reactKey)) {
-          return false
-        }
-        for (const item of slice.items) {
-          this.seenUris.add(item.post.uri)
-        }
-        this.seenKeys.add(slice._reactKey)
-        return true
-      })
-    }
-
     return slices
   }
 
-  static removeReplies(tuner: FeedTuner, slices: FeedViewPostsSlice[]) {
-    for (let i = slices.length - 1; i >= 0; i--) {
-      if (slices[i].isReply) {
-        slices.splice(i, 1)
-      }
-    }
-    return slices
-  }
-
-  static removeReposts(tuner: FeedTuner, slices: FeedViewPostsSlice[]) {
-    for (let i = slices.length - 1; i >= 0; i--) {
-      if (slices[i].isRepost) {
-        slices.splice(i, 1)
-      }
-    }
-    return slices
-  }
-
-  static removeQuotePosts(tuner: FeedTuner, slices: FeedViewPostsSlice[]) {
-    for (let i = slices.length - 1; i >= 0; i--) {
-      if (slices[i].isQuotePost) {
-        slices.splice(i, 1)
-      }
-    }
-    return slices
-  }
-
-  static dedupReposts(
+  static removeReplies(
     tuner: FeedTuner,
     slices: FeedViewPostsSlice[],
-  ): FeedViewPostsSlice[] {
-    // remove duplicates caused by reposts
+    _dryRun: boolean,
+  ) {
     for (let i = 0; i < slices.length; i++) {
-      const item1 = slices[i]
-      for (let j = i + 1; j < slices.length; j++) {
-        const item2 = slices[j]
-        if (item2.isThread) {
-          // dont dedup items that are rendering in a thread as this can cause rendering errors
-          continue
-        }
-        if (item1.containsUri(item2.items[0].post.uri)) {
-          slices.splice(j, 1)
-          j--
+      const slice = slices[i]
+      if (
+        slice.isReply &&
+        !slice.isRepost &&
+        // This is not perfect but it's close as we can get to
+        // detecting threads without having to peek ahead.
+        !areSameAuthor(slice.getAllAuthors())
+      ) {
+        slices.splice(i, 1)
+        i--
+      }
+    }
+    return slices
+  }
+
+  static removeReposts(
+    tuner: FeedTuner,
+    slices: FeedViewPostsSlice[],
+    _dryRun: boolean,
+  ) {
+    for (let i = 0; i < slices.length; i++) {
+      if (slices[i].isRepost) {
+        slices.splice(i, 1)
+        i--
+      }
+    }
+    return slices
+  }
+
+  static removeQuotePosts(
+    tuner: FeedTuner,
+    slices: FeedViewPostsSlice[],
+    _dryRun: boolean,
+  ) {
+    for (let i = 0; i < slices.length; i++) {
+      if (slices[i].isQuotePost) {
+        slices.splice(i, 1)
+        i--
+      }
+    }
+    return slices
+  }
+
+  static removeOrphans(
+    tuner: FeedTuner,
+    slices: FeedViewPostsSlice[],
+    _dryRun: boolean,
+  ) {
+    for (let i = 0; i < slices.length; i++) {
+      if (slices[i].isOrphan) {
+        slices.splice(i, 1)
+        i--
+      }
+    }
+    return slices
+  }
+
+  static dedupThreads(
+    tuner: FeedTuner,
+    slices: FeedViewPostsSlice[],
+    dryRun: boolean,
+  ): FeedViewPostsSlice[] {
+    for (let i = 0; i < slices.length; i++) {
+      const rootUri = slices[i].rootUri
+      if (!slices[i].isRepost && tuner.seenRootUris.has(rootUri)) {
+        slices.splice(i, 1)
+        i--
+      } else {
+        if (!dryRun) {
+          tuner.seenRootUris.add(rootUri)
         }
       }
     }
@@ -298,15 +326,17 @@ export class FeedTuner {
     return (
       tuner: FeedTuner,
       slices: FeedViewPostsSlice[],
+      _dryRun: boolean,
     ): FeedViewPostsSlice[] => {
-      for (let i = slices.length - 1; i >= 0; i--) {
+      for (let i = 0; i < slices.length; i++) {
         const slice = slices[i]
         if (
           slice.isReply &&
           !slice.isRepost &&
-          !slice.isFollowingAllAuthors(userDid)
+          !isFollowingAll(slice.getAllAuthors(), userDid)
         ) {
           slices.splice(i, 1)
+          i--
         }
       }
       return slices
@@ -324,6 +354,7 @@ export class FeedTuner {
     return (
       tuner: FeedTuner,
       slices: FeedViewPostsSlice[],
+      _dryRun: boolean,
     ): FeedViewPostsSlice[] => {
       const candidateSlices = slices.slice()
 
@@ -332,7 +363,7 @@ export class FeedTuner {
         return slices
       }
 
-      for (let i = slices.length - 1; i >= 0; i--) {
+      for (let i = 0; i < slices.length; i++) {
         let hasPreferredLang = false
         for (const item of slices[i].items) {
           if (isPostInLanguage(item.post, preferredLangsCode2)) {
@@ -358,16 +389,15 @@ export class FeedTuner {
   }
 }
 
-function getSelfReplyUri(item: FeedViewPost): string | undefined {
-  if (item.reply) {
-    if (
-      AppBskyFeedDefs.isPostView(item.reply.parent) &&
-      !AppBskyFeedDefs.isReasonRepost(item.reason) // don't thread reposted self-replies
-    ) {
-      return item.reply.parent.author.did === item.post.author.did
-        ? item.reply.parent.uri
-        : undefined
-    }
-  }
-  return undefined
+function areSameAuthor(authors: AppBskyActorDefs.ProfileViewBasic[]): boolean {
+  const dids = authors.map(a => a.did)
+  const set = new Set(dids)
+  return set.size === 1
+}
+
+function isFollowingAll(
+  authors: AppBskyActorDefs.ProfileViewBasic[],
+  userDid: string,
+): boolean {
+  return authors.every(a => a.did === userDid || a.viewer?.following)
 }

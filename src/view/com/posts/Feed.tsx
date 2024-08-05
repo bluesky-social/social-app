@@ -14,7 +14,6 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {FALLBACK_MARKER_POST} from '#/lib/api/feed/home'
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
@@ -472,7 +471,7 @@ let Feed = ({
       } else if (item.type === progressGuideInterstitialType) {
         return <ProgressGuide />
       } else if (item.type === 'slice') {
-        if (item.slice.rootUri === FALLBACK_MARKER_POST.post.uri) {
+        if (item.slice.isFallbackMarker) {
           // HACK
           // tell the user we fell back to discover
           // see home.ts (feed api) for more info
