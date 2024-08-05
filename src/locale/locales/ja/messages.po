@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-08-04 22:10+0900\n"
+"PO-Revision-Date: 2024-08-02 14:22+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -3115,10 +3115,6 @@ msgstr "いいね"
 #: src/view/com/post-thread/PostThreadItem.tsx:197
 msgid "Likes on this post"
 msgstr "この投稿をいいねする"
-
-#: src/view/screens/ProfileList.tsx:235
-msgid "list"
-msgstr "リスト"
 
 #: src/Navigation.tsx:191
 msgid "List"
