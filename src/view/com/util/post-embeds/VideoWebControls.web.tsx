@@ -1,4 +1,10 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react'
+import React, {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from 'react'
 import {Pressable, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {msg, Trans} from '@lingui/macro'
@@ -36,7 +42,7 @@ export function Controls({
   focused,
   setFocused,
   onScreen,
-  enterFullscreen,
+  fullscreenRef,
   hasSubtitleTrack,
 }: {
   videoRef: React.RefObject<HTMLVideoElement>
@@ -46,7 +52,7 @@ export function Controls({
   focused: boolean
   setFocused: (focused: boolean) => void
   onScreen: boolean
-  enterFullscreen: () => void
+  fullscreenRef: React.RefObject<HTMLDivElement>
   hasSubtitleTrack: boolean
 }) {
   const {
@@ -71,7 +77,7 @@ export function Controls({
     onIn: onMouseEnter,
     onOut: onMouseLeave,
   } = useInteractionState()
-  const isFullscreen = useFullscreen()
+  const [isFullscreen, toggleFullscreen] = useFullscreen(fullscreenRef)
   const {state: hasFocus, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const [interactingViaKeypress, setInteractingViaKeypress] = useState(false)
 
@@ -163,12 +169,8 @@ export function Controls({
 
   const onPressFullscreen = useCallback(() => {
     drawFocus()
-    if (document.fullscreenElement) {
-      document.exitFullscreen()
-    } else {
-      enterFullscreen()
-    }
-  }, [drawFocus, enterFullscreen])
+    toggleFullscreen()
+  }, [drawFocus, toggleFullscreen])
 
   const showControls =
     (focused && !playing) || (interactingViaKeypress ? hasFocus : hovered)
@@ -536,22 +538,24 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
   }
 }
 
-function useFullscreen() {
-  const [isFullscreen, setIsFullscreen] = useState(
+function fullscreenSubscribe(onChange: () => void) {
+  document.addEventListener('fullscreenchange', onChange)
+  return () => document.removeEventListener('fullscreenchange', onChange)
+}
+
+function useFullscreen(ref: React.RefObject<HTMLElement>) {
+  const isFullscreen = useSyncExternalStore(fullscreenSubscribe, () =>
     Boolean(document.fullscreenElement),
   )
 
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      setIsFullscreen(Boolean(document.fullscreenElement))
+  const toggleFullscreen = useCallback(() => {
+    if (isFullscreen) {
+      document.exitFullscreen()
+    } else {
+      if (!ref.current) return
+      ref.current.requestFullscreen()
     }
+  }, [isFullscreen, ref])
 
-    document.addEventListener('fullscreenchange', handleFullscreenChange)
-
-    return () => {
-      document.removeEventListener('fullscreenchange', handleFullscreenChange)
-    }
-  }, [])
-
-  return isFullscreen
+  return [isFullscreen, toggleFullscreen] as const
 }

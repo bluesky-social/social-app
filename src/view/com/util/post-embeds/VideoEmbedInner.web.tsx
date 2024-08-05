@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import {View} from 'react-native'
 import Hls from 'hls.js'
 
@@ -49,12 +49,6 @@ export function VideoEmbedInner({
     }
   }, [source])
 
-  const enterFullscreen = useCallback(() => {
-    if (containerRef.current) {
-      containerRef.current.requestFullscreen()
-    }
-  }, [])
-
   return (
     <View
       style={[
@@ -84,7 +78,7 @@ export function VideoEmbedInner({
           focused={focused}
           setFocused={setFocused}
           onScreen={onScreen}
-          enterFullscreen={enterFullscreen}
+          fullscreenRef={containerRef}
           hasSubtitleTrack={hasSubtitleTrack}
         />
       </div>
