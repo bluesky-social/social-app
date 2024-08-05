@@ -1,4 +1,9 @@
-import {AppBskyFeedDefs, AppBskyFeedThreadgate, AtUri} from '@atproto/api'
+import {
+  AppBskyFeedDefs,
+  AppBskyFeedThreadgate,
+  AtUri,
+  BskyAgent,
+} from '@atproto/api'
 import {useQuery} from '@tanstack/react-query'
 
 import {useAgent} from '#/state/session'
@@ -77,4 +82,29 @@ export function useThreadgateRecordQuery({
       return value
     },
   })
+}
+
+export function createThreadgate({
+  agent,
+  postUri,
+  threadgate,
+}: {
+  agent: BskyAgent
+  postUri: string
+  threadgate: Partial<AppBskyFeedThreadgate.Record>
+}) {
+  const urip = new AtUri(postUri)
+  const record = {
+    ...threadgate,
+    post: postUri,
+    createdAt: new Date().toISOString(),
+  }
+
+  return agent.api.app.bsky.feed.threadgate.create(
+    {
+      repo: urip.host,
+      rkey: urip.rkey,
+    },
+    record,
+  )
 }

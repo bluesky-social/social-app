@@ -119,7 +119,7 @@ export function PostThread({
   const rootPostRecord = thread?.type === 'post' ? thread.record : undefined
 
   const {data: threadgateRecord} = useThreadgateRecordQuery({
-    postUri: uri,
+    postUri: rootPost?.record?.reply?.root?.uri,
     initialData: rootPost?.threadgate?.record as AppBskyFeedThreadgate.Record,
   })
 
@@ -571,6 +571,10 @@ function* flattenThreadReplies(
           }
           return HiddenReplyType.Hidden
         }
+      }
+
+      if (threadgateRecord?.hiddenReplies?.includes(node.post.uri)) {
+        return HiddenReplyType.Hidden
       }
     }
 

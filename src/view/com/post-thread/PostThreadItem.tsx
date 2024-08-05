@@ -392,6 +392,7 @@ let PostThreadItemLoaded = ({
                 richText={richText}
                 onPressReply={onPressReply}
                 logContext="PostThreadItem"
+                rootPostUri={rootUri}
               />
             </View>
           </View>
@@ -543,6 +544,7 @@ let PostThreadItemLoaded = ({
                 richText={richText}
                 onPressReply={onPressReply}
                 logContext="PostThreadItem"
+                rootPostUri={rootUri}
               />
             </View>
           </View>

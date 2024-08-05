@@ -31,7 +31,8 @@ import {
   usePostDeleteMutation,
   useThreadMuteMutationQueue,
 } from '#/state/queries/post'
-import {useSession} from '#/state/session'
+import {createThreadgate} from '#/state/queries/threadgate'
+import {useAgent, useSession} from '#/state/session'
 import {getCurrentRoute} from 'lib/routes/helpers'
 import {shareUrl} from 'lib/sharing'
 import {toShareUrl} from 'lib/strings/url-helpers'
@@ -73,6 +74,7 @@ let PostDropdownBtn = ({
   hitSlop,
   size,
   timestamp,
+  rootPostUri,
 }: {
   testID: string
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -83,8 +85,10 @@ let PostDropdownBtn = ({
   hitSlop?: PressableProps['hitSlop']
   size?: 'lg' | 'md' | 'sm'
   timestamp: string
+  rootPostUri?: string
 }): React.ReactNode => {
   const {hasSession, currentAccount} = useSession()
+  const agent = useAgent()
   const theme = useTheme()
   const alf = useAlf()
   const {gtMobile} = useBreakpoints()
@@ -390,6 +394,24 @@ let PostDropdownBtn = ({
                     label={_(msg`Hide post`)}
                     onPress={hidePromptControl.open}>
                     <Menu.ItemText>{_(msg`Hide post`)}</Menu.ItemText>
+                    <Menu.ItemIcon icon={EyeSlash} position="right" />
+                  </Menu.Item>
+                )}
+
+                {!isAuthor && !isPostHidden && rootPostUri && (
+                  <Menu.Item
+                    testID="postDropdownHideBtn"
+                    label={_(msg`Hide reply`)}
+                    onPress={() => {
+                      createThreadgate({
+                        agent,
+                        postUri: rootPostUri,
+                        threadgate: {
+                          hiddenReplies: [postUri],
+                        },
+                      })
+                    }}>
+                    <Menu.ItemText>{_(msg`Hide reply`)}</Menu.ItemText>
                     <Menu.ItemIcon icon={EyeSlash} position="right" />
                   </Menu.Item>
                 )}

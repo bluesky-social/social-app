@@ -59,6 +59,7 @@ let PostCtrls = ({
   style,
   onPressReply,
   logContext,
+  rootPostUri,
 }: {
   big?: boolean
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -68,6 +69,7 @@ let PostCtrls = ({
   style?: StyleProp<ViewStyle>
   onPressReply: () => void
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
+  rootPostUri?: string
 }): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
@@ -338,6 +340,7 @@ let PostCtrls = ({
           style={{padding: 5}}
           hitSlop={POST_CTRL_HITSLOP}
           timestamp={post.indexedAt}
+          rootPostUri={rootPostUri}
         />
       </View>
       {gate('debug_show_feedcontext') && feedContext && (
