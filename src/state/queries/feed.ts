@@ -5,7 +5,6 @@ import {
   AppBskyGraphDefs,
   AppBskyUnspeccedGetPopularFeedGenerators,
   AtUri,
-  moderateFeedGenerator,
   RichText,
 } from '@atproto/api'
 import {
@@ -27,7 +26,6 @@ import {RQKEY as listQueryKey} from '#/state/queries/list'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAgent, useSession} from '#/state/session'
 import {router} from '#/routes'
-import {useModerationOpts} from '../preferences/moderation-opts'
 import {FeedDescriptor} from './post-feed'
 import {precacheResolvedUri} from './resolve-uri'
 
@@ -209,16 +207,14 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
   const limit = options?.limit || 10
   const {data: preferences} = usePreferencesQuery()
   const queryClient = useQueryClient()
-  const moderationOpts = useModerationOpts()
 
   // Make sure this doesn't invalidate unless really needed.
   const selectArgs = useMemo(
     () => ({
       hasSession,
       savedFeeds: preferences?.savedFeeds || [],
-      moderationOpts,
     }),
-    [hasSession, preferences?.savedFeeds, moderationOpts],
+    [hasSession, preferences?.savedFeeds],
   )
   const lastPageCountRef = useRef(0)
 
@@ -229,7 +225,6 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
     QueryKey,
     string | undefined
   >({
-    enabled: Boolean(moderationOpts),
     queryKey: createGetPopularFeedsQueryKey(options),
     queryFn: async ({pageParam}) => {
       const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
@@ -251,11 +246,7 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
       (
         data: InfiniteData<AppBskyUnspeccedGetPopularFeedGenerators.OutputSchema>,
       ) => {
-        const {
-          savedFeeds,
-          hasSession: hasSessionInner,
-          moderationOpts,
-        } = selectArgs
+        const {savedFeeds, hasSession: hasSessionInner} = selectArgs
         return {
           ...data,
           pages: data.pages.map(page => {
@@ -273,8 +264,7 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
                     return f.value === feed.uri
                   }),
                 )
-                const decision = moderateFeedGenerator(feed, moderationOpts!)
-                return !alreadySaved && !decision.ui('contentList').filter
+                return !alreadySaved
               }),
             }
           }),
@@ -314,8 +304,6 @@ export function useGetPopularFeedsQuery(options?: GetPopularFeedsOptions) {
 
 export function useSearchPopularFeedsMutation() {
   const agent = useAgent()
-  const moderationOpts = useModerationOpts()
-
   return useMutation({
     mutationFn: async (query: string) => {
       const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
@@ -323,15 +311,24 @@ export function useSearchPopularFeedsMutation() {
         query: query,
       })
 
-      if (moderationOpts) {
-        return res.data.feeds.filter(feed => {
-          const decision = moderateFeedGenerator(feed, moderationOpts)
-          return !decision.ui('contentList').filter
-        })
-      }
+      return res.data.feeds
+    },
+  })
+}
+
+export function useSearchPopularFeedsQuery({q}: {q: string}) {
+  const agent = useAgent()
+  return useQuery({
+    queryKey: ['searchPopularFeeds', q],
+    queryFn: async () => {
+      const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
+        limit: 15,
+        query: q,
+      })
 
       return res.data.feeds
     },
+    placeholderData: keepPreviousData,
   })
 }
 
@@ -349,26 +346,16 @@ export function usePopularFeedsSearch({
   enabled?: boolean
 }) {
   const agent = useAgent()
-  const moderationOpts = useModerationOpts()
-  const enabledInner = enabled ?? Boolean(moderationOpts)
-
   return useQuery({
-    enabled: enabledInner,
+    enabled,
     queryKey: createPopularFeedsSearchQueryKey(query),
     queryFn: async () => {
       const res = await agent.app.bsky.unspecced.getPopularFeedGenerators({
-        limit: 15,
+        limit: 10,
         query: query,
       })
 
       return res.data.feeds
-    },
-    placeholderData: keepPreviousData,
-    select(data) {
-      return data.filter(feed => {
-        const decision = moderateFeedGenerator(feed, moderationOpts!)
-        return !decision.ui('contentList').filter
-      })
     },
   })
 }

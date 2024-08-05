@@ -15,14 +15,11 @@ import {
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyGraphDefs,
-  moderateFeedGenerator,
-  moderateUserList,
   ModerationDecision,
 } from '@atproto/api'
 
 import {ImagesLightbox, useLightboxControls} from '#/state/lightbox'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {usePalette} from 'lib/hooks/usePalette'
 import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {atoms as a} from '#/alf'
@@ -54,6 +51,7 @@ export function PostEmbeds({
   style?: StyleProp<ViewStyle>
   allowNestedQuotes?: boolean
 }) {
+  const pal = usePalette('default')
   const {openLightbox} = useLightboxControls()
   const largeAltBadge = useLargeAltBadgeEnabled()
 
@@ -74,13 +72,22 @@ export function PostEmbeds({
 
   if (AppBskyEmbedRecord.isView(embed)) {
     // custom feed embed (i.e. generator view)
+    // =
     if (AppBskyFeedDefs.isGeneratorView(embed.record)) {
-      return <MaybeFeedCard view={embed.record} />
+      // TODO moderation
+      return (
+        <FeedSourceCard
+          feedUri={embed.record.uri}
+          style={[pal.view, pal.border, styles.customFeedOuter]}
+          showLikes
+        />
+      )
     }
 
     // list embed
     if (AppBskyGraphDefs.isListView(embed.record)) {
-      return <MaybeListCard view={embed.record} />
+      // TODO moderation
+      return <ListEmbed item={embed.record} />
     }
 
     if (AppBskyGraphDefs.isStarterPackViewBasic(embed.record)) {
@@ -176,39 +183,6 @@ export function PostEmbeds({
   }
 
   return <View />
-}
-
-function MaybeFeedCard({view}: {view: AppBskyFeedDefs.GeneratorView}) {
-  const pal = usePalette('default')
-  const moderationOpts = useModerationOpts()
-  const moderation = React.useMemo(() => {
-    return moderationOpts
-      ? moderateFeedGenerator(view, moderationOpts)
-      : undefined
-  }, [view, moderationOpts])
-
-  return (
-    <ContentHider modui={moderation?.ui('contentList')}>
-      <FeedSourceCard
-        feedUri={view.uri}
-        style={[pal.view, pal.border, styles.customFeedOuter]}
-        showLikes
-      />
-    </ContentHider>
-  )
-}
-
-function MaybeListCard({view}: {view: AppBskyGraphDefs.ListView}) {
-  const moderationOpts = useModerationOpts()
-  const moderation = React.useMemo(() => {
-    return moderationOpts ? moderateUserList(view, moderationOpts) : undefined
-  }, [view, moderationOpts])
-
-  return (
-    <ContentHider modui={moderation?.ui('contentList')}>
-      <ListEmbed item={view} />
-    </ContentHider>
-  )
 }
 
 const styles = StyleSheet.create({
