@@ -31,8 +31,8 @@ import {
   usePostDeleteMutation,
   useThreadMuteMutationQueue,
 } from '#/state/queries/post'
-import {createThreadgate} from '#/state/queries/threadgate'
-import {useAgent, useSession} from '#/state/session'
+import {useCreateThreadgateMutation} from '#/state/queries/threadgate'
+import {useSession} from '#/state/session'
 import {getCurrentRoute} from 'lib/routes/helpers'
 import {shareUrl} from 'lib/sharing'
 import {toShareUrl} from 'lib/strings/url-helpers'
@@ -88,7 +88,6 @@ let PostDropdownBtn = ({
   rootPostUri?: string
 }): React.ReactNode => {
   const {hasSession, currentAccount} = useSession()
-  const agent = useAgent()
   const theme = useTheme()
   const alf = useAlf()
   const {gtMobile} = useBreakpoints()
@@ -108,6 +107,8 @@ let PostDropdownBtn = ({
   const loggedOutWarningPromptControl = useDialogControl()
   const embedPostControl = useDialogControl()
   const sendViaChatControl = useDialogControl()
+  const {mutateAsync: createThreadgate} = useCreateThreadgateMutation()
+
   const postUri = post.uri
   const postCid = post.cid
   const postAuthor = post.author
@@ -404,7 +405,6 @@ let PostDropdownBtn = ({
                     label={_(msg`Hide reply`)}
                     onPress={() => {
                       createThreadgate({
-                        agent,
                         postUri: rootPostUri,
                         threadgate: {
                           hiddenReplies: [postUri],

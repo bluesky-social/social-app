@@ -1,6 +1,8 @@
 import {AppBskyFeedThreadgate, AtUri, BskyAgent} from '@atproto/api'
-import {useQuery} from '@tanstack/react-query'
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
+import {networkRetry} from '#/lib/async/retry'
+import {mergeThreadgateRecords} from '#/state/queries/threadgate/util'
 import {useAgent} from '#/state/session'
 
 export * from '#/state/queries/threadgate/types'
@@ -45,7 +47,7 @@ export function useThreadgateRecordQuery({
   })
 }
 
-export function createThreadgate({
+export async function createThreadgate({
   agent,
   postUri,
   threadgate,
@@ -54,18 +56,72 @@ export function createThreadgate({
   postUri: string
   threadgate: Partial<AppBskyFeedThreadgate.Record>
 }) {
-  const urip = new AtUri(postUri)
-  const record = {
-    ...threadgate,
-    post: postUri,
-    createdAt: new Date().toISOString(),
-  }
+  const postUrip = new AtUri(postUri)
 
-  return agent.api.app.bsky.feed.threadgate.create(
-    {
-      repo: urip.host,
-      rkey: urip.rkey,
-    },
-    record,
+  const {data} = await networkRetry(2, () =>
+    agent.api.com.atproto.repo.getRecord({
+      repo: agent.session!.did,
+      collection: 'app.bsky.feed.threadgate',
+      rkey: postUrip.rkey,
+    }),
   )
+
+  if (data.value && AppBskyFeedThreadgate.isRecord(data.value)) {
+    // has existing, merge
+    const prev = data.value
+    const merged = mergeThreadgateRecords(prev, threadgate)
+
+    await networkRetry(2, () =>
+      agent.api.com.atproto.repo.putRecord({
+        repo: agent.session!.did,
+        collection: 'app.bsky.feed.threadgate',
+        rkey: postUrip.rkey,
+        record: merged,
+      }),
+    )
+  } else {
+    // no existing, create new
+    const record: AppBskyFeedThreadgate.Record = {
+      $type: 'app.bsky.feed.threadgate',
+      post: postUri,
+      allow: threadgate.allow || [],
+      hiddenReplies: threadgate.hiddenReplies || [],
+      createdAt: new Date().toISOString(),
+    }
+
+    await networkRetry(2, () =>
+      agent.api.com.atproto.repo.putRecord({
+        repo: agent.session!.did,
+        collection: 'app.bsky.feed.threadgate',
+        rkey: postUrip.rkey,
+        record,
+      }),
+    )
+  }
+}
+
+export function useCreateThreadgateMutation() {
+  const agent = useAgent()
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({
+      postUri,
+      threadgate,
+    }: {
+      postUri: string
+      threadgate: Partial<AppBskyFeedThreadgate.Record>
+    }) => {
+      return createThreadgate({
+        agent,
+        postUri,
+        threadgate,
+      })
+    },
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: [threadgateRecordQueryKeyRoot],
+      })
+    },
+  })
 }
