@@ -3,8 +3,8 @@ import ExpoModulesCore
 public class ExpoPlatformInfoModule: Module {
   public func definition() -> ModuleDefinition {
     Name("ExpoPlatformInfo")
-    
-    Function("getIsReducedMotion") {
+
+    Function("getIsReducedMotionEnabled") {
       return UIAccessibility.isReduceMotionEnabled
     }
   }
