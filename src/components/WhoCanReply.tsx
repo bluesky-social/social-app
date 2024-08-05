@@ -20,8 +20,8 @@ import {isNative} from '#/platform/detection'
 import {RQKEY_ROOT as POST_THREAD_RQKEY_ROOT} from '#/state/queries/post-thread'
 import {threadgateRecordQueryKeyRoot} from '#/state/queries/threadgate'
 import {
-  ThreadgateSetting,
-  threadgateViewToSettings,
+  ThreadgateAllowUISetting,
+  threadgateViewToAllowUISetting,
 } from '#/state/queries/threadgate'
 import {useAgent} from '#/state/session'
 import * as Toast from 'view/com/util/Toast'
@@ -52,7 +52,7 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
   const queryClient = useQueryClient()
 
   const settings = React.useMemo(
-    () => threadgateViewToSettings(post.threadgate),
+    () => threadgateViewToAllowUISetting(post.threadgate),
     [post],
   )
   const isRootPost = !('reply' in post.record)
@@ -83,7 +83,7 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
     }
   }
 
-  const onEditConfirm = async (newSettings: ThreadgateSetting[]) => {
+  const onEditConfirm = async (newSettings: ThreadgateAllowUISetting[]) => {
     if (JSON.stringify(settings) === JSON.stringify(newSettings)) {
       return
     }
@@ -100,7 +100,7 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
       await whenAppViewReady(agent, post.uri, res => {
         const thread = res.data.thread
         if (AppBskyFeedDefs.isThreadViewPost(thread)) {
-          const fetchedSettings = threadgateViewToSettings(
+          const fetchedSettings = threadgateViewToAllowUISetting(
             thread.post.threadgate,
           )
           return JSON.stringify(fetchedSettings) === JSON.stringify(newSettings)
@@ -178,7 +178,7 @@ function Icon({
 }: {
   color: string
   width?: number
-  settings: ThreadgateSetting[]
+  settings: ThreadgateAllowUISetting[]
 }) {
   const isEverybody = settings.length === 0
   const isNobody = !!settings.find(gate => gate.type === 'nobody')
@@ -193,7 +193,7 @@ function WhoCanReplyDialog({
 }: {
   control: Dialog.DialogControlProps
   post: AppBskyFeedDefs.PostView
-  settings: ThreadgateSetting[]
+  settings: ThreadgateAllowUISetting[]
 }) {
   return (
     <Dialog.Outer control={control}>
@@ -208,7 +208,7 @@ function WhoCanReplyDialogInner({
   settings,
 }: {
   post: AppBskyFeedDefs.PostView
-  settings: ThreadgateSetting[]
+  settings: ThreadgateAllowUISetting[]
 }) {
   const {_} = useLingui()
   return (
@@ -230,7 +230,7 @@ function Rules({
   settings,
 }: {
   post: AppBskyFeedDefs.PostView
-  settings: ThreadgateSetting[]
+  settings: ThreadgateAllowUISetting[]
 }) {
   const t = useTheme()
   return (
@@ -271,7 +271,7 @@ function Rule({
   post,
   lists,
 }: {
-  rule: ThreadgateSetting
+  rule: ThreadgateAllowUISetting
   post: AppBskyFeedDefs.PostView
   lists: AppBskyGraphDefs.ListViewBasic[] | undefined
 }) {

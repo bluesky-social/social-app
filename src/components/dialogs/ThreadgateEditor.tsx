@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 import isEqual from 'lodash.isequal'
 
 import {useMyListsQuery} from '#/state/queries/my-lists'
-import {ThreadgateSetting} from '#/state/queries/threadgate'
+import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -14,9 +14,9 @@ import {Text} from '#/components/Typography'
 
 interface ThreadgateEditorDialogProps {
   control: Dialog.DialogControlProps
-  threadgate: ThreadgateSetting[]
-  onChange?: (v: ThreadgateSetting[]) => void
-  onConfirm?: (v: ThreadgateSetting[]) => void
+  threadgate: ThreadgateAllowUISetting[]
+  onChange?: (v: ThreadgateAllowUISetting[]) => void
+  onConfirm?: (v: ThreadgateAllowUISetting[]) => void
 }
 
 export function ThreadgateEditorDialog({
@@ -42,9 +42,9 @@ function DialogContent({
   onChange,
   onConfirm,
 }: {
-  seedThreadgate: ThreadgateSetting[]
-  onChange?: (v: ThreadgateSetting[]) => void
-  onConfirm?: (v: ThreadgateSetting[]) => void
+  seedThreadgate: ThreadgateAllowUISetting[]
+  onChange?: (v: ThreadgateAllowUISetting[]) => void
+  onConfirm?: (v: ThreadgateAllowUISetting[]) => void
 }) {
   const {_} = useLingui()
   const control = Dialog.useDialogContext()
@@ -59,7 +59,7 @@ function DialogContent({
     setDraft(seedThreadgate) // Reset draft.
   }
 
-  function updateThreadgate(nextThreadgate: ThreadgateSetting[]) {
+  function updateThreadgate(nextThreadgate: ThreadgateAllowUISetting[]) {
     setDraft(nextThreadgate)
     onChange?.(nextThreadgate)
   }
@@ -72,9 +72,9 @@ function DialogContent({
     updateThreadgate([{type: 'nobody'}])
   }
 
-  const onPressAudience = (setting: ThreadgateSetting) => {
+  const onPressAudience = (setting: ThreadgateAllowUISetting) => {
     // remove nobody
-    let newSelected: ThreadgateSetting[] = draft.filter(
+    let newSelected: ThreadgateAllowUISetting[] = draft.filter(
       v => v.type !== 'nobody',
     )
     // toggle

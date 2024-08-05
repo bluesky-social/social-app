@@ -8,15 +8,19 @@ import {useQuery} from '@tanstack/react-query'
 
 import {useAgent} from '#/state/session'
 
-export type ThreadgateSetting =
+export type ThreadgateAllowUISetting =
   | {type: 'nobody'}
   | {type: 'mention'}
   | {type: 'following'}
   | {type: 'list'; list: unknown}
 
-export function threadgateViewToSettings(
+/**
+ * Converts a full {@link AppBskyFeedThreadgate.Record} to a list of
+ * {@link ThreadgateAllowUISetting}, for use by app UI.
+ */
+export function threadgateViewToAllowUISetting(
   threadgate: AppBskyFeedDefs.ThreadgateView | undefined,
-): ThreadgateSetting[] {
+): ThreadgateAllowUISetting[] {
   const record =
     threadgate &&
     AppBskyFeedThreadgate.isRecord(threadgate.record) &&
@@ -29,9 +33,9 @@ export function threadgateViewToSettings(
   if (!record.allow?.length) {
     return [{type: 'nobody'}]
   }
-  const settings: ThreadgateSetting[] = record.allow
+  const settings: ThreadgateAllowUISetting[] = record.allow
     .map(allow => {
-      let setting: ThreadgateSetting | undefined
+      let setting: ThreadgateAllowUISetting | undefined
       if (allow.$type === 'app.bsky.feed.threadgate#mentionRule') {
         setting = {type: 'mention'}
       } else if (allow.$type === 'app.bsky.feed.threadgate#followingRule') {

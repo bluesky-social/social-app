@@ -12,7 +12,7 @@ import {
 import {AtUri} from '@atproto/api'
 
 import {logger} from '#/logger'
-import {ThreadgateSetting} from '#/state/queries/threadgate'
+import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
 import {isNetworkError} from 'lib/strings/errors'
 import {shortenLinks, stripInvalidMentions} from 'lib/strings/rich-text-manip'
 import {isNative, isWeb} from 'platform/detection'
@@ -61,7 +61,7 @@ interface PostOpts {
   extLink?: ExternalEmbedDraft
   images?: ImageModel[]
   labels?: string[]
-  threadgate?: ThreadgateSetting[]
+  threadgate?: ThreadgateAllowUISetting[]
   onStateChange?: (state: string) => void
   langs?: string[]
 }
@@ -277,7 +277,7 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
 export async function createThreadgate(
   agent: BskyAgent,
   postUri: string,
-  threadgate: ThreadgateSetting[],
+  threadgate: ThreadgateAllowUISetting[],
 ) {
   let allow: (
     | AppBskyFeedThreadgate.MentionRule
