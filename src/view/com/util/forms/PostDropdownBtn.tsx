@@ -7,6 +7,7 @@ import {
 } from 'react-native'
 import * as Clipboard from 'expo-clipboard'
 import {
+  AppBskyEmbedRecord,
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
@@ -88,6 +89,7 @@ let PostDropdownBtn = ({
   timestamp: string
   rootPostUri?: string
 }): React.ReactNode => {
+  console.log(record)
   const {hasSession, currentAccount} = useSession()
   const theme = useTheme()
   const alf = useAlf()
@@ -114,6 +116,20 @@ let PostDropdownBtn = ({
   const postUri = post.uri
   const postCid = post.cid
   const postAuthor = post.author
+  const quoteEmbed = React.useMemo(() => {
+    if (!currentAccount) return
+    const quoteEmbed =
+      record.embed && AppBskyEmbedRecord.isMain(record.embed)
+        ? record.embed
+        : undefined
+    if (!quoteEmbed) return
+    const urip = new AtUri(quoteEmbed.record.uri)
+    if (urip.collection !== 'app.bsky.feed.post') return
+    return {
+      uri: quoteEmbed.record.uri,
+      isOwnedByViewer: urip.host === currentAccount.did,
+    }
+  }, [record, currentAccount])
 
   const rootUri = record.reply?.root?.uri || postUri
   const [isThreadMuted, muteThread, unmuteThread] = useThreadMuteMutationQueue(
@@ -430,6 +446,16 @@ let PostDropdownBtn = ({
                         ? _(msg`Show reply for everyone`)
                         : _(msg`Hide reply for everyone`)}
                     </Menu.ItemText>
+                    <Menu.ItemIcon icon={EyeSlash} position="right" />
+                  </Menu.Item>
+                )}
+
+                {quoteEmbed && quoteEmbed.isOwnedByViewer && (
+                  <Menu.Item
+                    testID="postDropdownHideBtn"
+                    label={_(msg`Detach quote`)}
+                    onPress={onToggleReplyVisibility}>
+                    <Menu.ItemText>{_(msg`Detach quote`)}</Menu.ItemText>
                     <Menu.ItemIcon icon={EyeSlash} position="right" />
                   </Menu.Item>
                 )}
