@@ -1,6 +1,16 @@
 import React from 'react'
 
+// import {NavigationProp} from '#/lib/routes/types'
+// import {isInvalidHandle} from '#/lib/strings/handles'
+// import {enforceLen} from '#/lib/strings/helpers'
+// import {
+//   usePreferencesQuery,
+//   useRemoveMutedWordsMutation,
+//   useUpsertMutedWordsMutation,
+// } from '#/state/queries/preferences'
 import {EventStopper} from '#/view/com/util/EventStopper'
+// import {NativeDropdown} from '#/view/com/util/forms/NativeDropdown'
+// import {web} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 
 // @TODO Fabric
@@ -32,8 +42,8 @@ export function TagMenu({}: React.PropsWithChildren<{
   // const {data: preferences} = usePreferencesQuery()
   // const {mutateAsync: upsertMutedWord, variables: optimisticUpsert} =
   //   useUpsertMutedWordsMutation()
-  // const {mutateAsync: removeMutedWord, variables: optimisticRemove} =
-  //   useRemoveMutedWordMutation()
+  // const {mutateAsync: removeMutedWords, variables: optimisticRemove} =
+  //   useRemoveMutedWordsMutation()
   // const isMuted = Boolean(
   //   (preferences?.moderationPrefs.mutedWords?.find(
   //     m => m.value === tag && m.targets.includes('tag'),
@@ -41,10 +51,21 @@ export function TagMenu({}: React.PropsWithChildren<{
   //     optimisticUpsert?.find(
   //       m => m.value === tag && m.targets.includes('tag'),
   //     )) &&
-  //     !(optimisticRemove?.value === tag),
+  //     !optimisticRemove?.find(m => m?.value === tag),
   // )
   // const truncatedTag = '#' + enforceLen(tag, 15, true, 'middle')
-
+  //
+  // /*
+  //  * Mute word records that exactly match the tag in question.
+  //  */
+  // const removeableMuteWords = React.useMemo(() => {
+  //   return (
+  //     preferences?.moderationPrefs.mutedWords?.filter(word => {
+  //       return word.value === tag
+  //     }) || []
+  //   )
+  // }, [tag, preferences?.moderationPrefs?.mutedWords])
+  //
   // const dropdownItems = React.useMemo(() => {
   //   return [
   //     {
@@ -90,9 +111,11 @@ export function TagMenu({}: React.PropsWithChildren<{
   //         : _(msg`Mute ${truncatedTag}`),
   //       onPress() {
   //         if (isMuted) {
-  //           removeMutedWord({value: tag, targets: ['tag']})
+  //           removeMutedWords(removeableMuteWords)
   //         } else {
-  //           upsertMutedWord([{value: tag, targets: ['tag']}])
+  //           upsertMutedWord([
+  //             {value: tag, targets: ['tag'], actorTarget: 'all'},
+  //           ])
   //         }
   //       },
   //       testID: 'tagMenuMute',
@@ -114,7 +137,8 @@ export function TagMenu({}: React.PropsWithChildren<{
   //   tag,
   //   truncatedTag,
   //   upsertMutedWord,
-  //   removeMutedWord,
+  //   removeMutedWords,
+  //   removeableMuteWords,
   // ])
 
   return (
