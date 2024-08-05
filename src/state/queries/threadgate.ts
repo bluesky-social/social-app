@@ -49,6 +49,37 @@ export function threadgateViewToAllowUISetting(
   return settings
 }
 
+/**
+ * Converts a list of {@link ThreadgateAllowUISetting} to the `allow` prop on
+ * {@link AppBskyFeedThreadgate.Record},
+ */
+export function threadgateAllowUISettingToAllowType(
+  threadgate: ThreadgateAllowUISetting[],
+) {
+  let allow: (
+    | AppBskyFeedThreadgate.MentionRule
+    | AppBskyFeedThreadgate.FollowingRule
+    | AppBskyFeedThreadgate.ListRule
+  )[] = []
+
+  if (!threadgate.find(v => v.type === 'nobody')) {
+    for (const rule of threadgate) {
+      if (rule.type === 'mention') {
+        allow.push({$type: 'app.bsky.feed.threadgate#mentionRule'})
+      } else if (rule.type === 'following') {
+        allow.push({$type: 'app.bsky.feed.threadgate#followingRule'})
+      } else if (rule.type === 'list') {
+        allow.push({
+          $type: 'app.bsky.feed.threadgate#listRule',
+          list: rule.list,
+        })
+      }
+    }
+  }
+
+  return allow
+}
+
 export const threadgateRecordQueryKeyRoot = 'threadgate-record'
 export const createThreadgateRecordQueryKey = (uri: string) => [
   threadgateRecordQueryKeyRoot,
