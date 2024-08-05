@@ -31,7 +31,7 @@ import {
   usePostDeleteMutation,
   useThreadMuteMutationQueue,
 } from '#/state/queries/post'
-import {useCreateThreadgateMutation} from '#/state/queries/threadgate'
+import {useToggleReplyVisibilityMutation} from '#/state/queries/threadgate'
 import {useSession} from '#/state/session'
 import {getCurrentRoute} from 'lib/routes/helpers'
 import {shareUrl} from 'lib/sharing'
@@ -107,7 +107,8 @@ let PostDropdownBtn = ({
   const loggedOutWarningPromptControl = useDialogControl()
   const embedPostControl = useDialogControl()
   const sendViaChatControl = useDialogControl()
-  const {mutateAsync: createThreadgate} = useCreateThreadgateMutation()
+  const {mutateAsync: toggleReplyVisibility} =
+    useToggleReplyVisibilityMutation()
 
   const postUri = post.uri
   const postCid = post.cid
@@ -402,16 +403,17 @@ let PostDropdownBtn = ({
                 {!isAuthor && !isPostHidden && rootPostUri && (
                   <Menu.Item
                     testID="postDropdownHideBtn"
-                    label={_(msg`Hide reply`)}
+                    label={_(msg`Hide reply for everyone`)}
                     onPress={() => {
-                      createThreadgate({
+                      toggleReplyVisibility({
                         postUri: rootPostUri,
-                        threadgate: {
-                          hiddenReplies: [postUri],
-                        },
+                        replyUri: postUri,
+                        action: 'hide',
                       })
                     }}>
-                    <Menu.ItemText>{_(msg`Hide reply`)}</Menu.ItemText>
+                    <Menu.ItemText>
+                      {_(msg`Hide reply for everyone`)}
+                    </Menu.ItemText>
                     <Menu.ItemIcon icon={EyeSlash} position="right" />
                   </Menu.Item>
                 )}

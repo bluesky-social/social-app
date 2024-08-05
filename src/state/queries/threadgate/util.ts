@@ -83,11 +83,25 @@ export function mergeThreadgateRecords(
     new Set([...(prev.hiddenReplies || []), ...(next.hiddenReplies || [])]),
   )
 
-  return {
-    $type: 'app.bsky.feed.threadgate',
+  return createThreadgateRecord({
     post: prev.post,
     allow,
-    createdAt: new Date().toISOString(),
     hiddenReplies,
+  })
+}
+
+export function createThreadgateRecord(
+  threadgate: Partial<AppBskyFeedThreadgate.Record>,
+): AppBskyFeedThreadgate.Record {
+  if (!threadgate.post) {
+    throw new Error('Cannot create a threadgate record without a post URI')
+  }
+
+  return {
+    $type: 'app.bsky.feed.threadgate',
+    post: threadgate.post,
+    createdAt: new Date().toISOString(),
+    allow: threadgate.allow || [],
+    hiddenReplies: threadgate.hiddenReplies || [],
   }
 }
