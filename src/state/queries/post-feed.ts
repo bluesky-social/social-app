@@ -77,10 +77,6 @@ export interface FeedPostSliceItem {
   uri: string
   post: AppBskyFeedDefs.PostView
   record: AppBskyFeedPost.Record
-  reason?:
-    | AppBskyFeedDefs.ReasonRepost
-    | ReasonFeedSource
-    | {[k: string]: unknown; $type: string}
   feedContext: string | undefined
   moderation: ModerationDecision
   parentAuthor?: AppBskyActorDefs.ProfileViewBasic
@@ -93,6 +89,10 @@ export interface FeedPostSlice {
   items: FeedPostSliceItem[]
   isIncompleteThread: boolean
   isFallbackMarker: boolean
+  reason?:
+    | AppBskyFeedDefs.ReasonRepost
+    | ReasonFeedSource
+    | {[k: string]: unknown; $type: string}
 }
 
 export interface FeedPageUnselected {
@@ -315,13 +315,13 @@ export function usePostFeedQuery(
                     _isFeedPostSlice: true,
                     isIncompleteThread: slice.isIncompleteThread,
                     isFallbackMarker: slice.isFallbackMarker,
+                    reason: slice.reason,
                     items: slice.items.map((item, i) => {
                       const feedPostSliceItem: FeedPostSliceItem = {
                         _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
                         uri: item.post.uri,
                         post: item.post,
                         record: item.record,
-                        reason: slice.reason,
                         feedContext: slice.feedContext,
                         moderation: moderations[i],
                         parentAuthor: item.parentAuthor,
