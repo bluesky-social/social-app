@@ -28,7 +28,7 @@ let FeedSlice = ({
           post={slice.items[0].post}
           record={slice.items[0].record}
           reason={slice.reason}
-          feedContext={slice.items[0].feedContext}
+          feedContext={slice.feedContext}
           parentAuthor={slice.items[0].parentAuthor}
           showReplyTo={false}
           moderation={slice.items[0].moderation}
@@ -43,7 +43,7 @@ let FeedSlice = ({
           post={slice.items[beforeLast].post}
           record={slice.items[beforeLast].record}
           reason={undefined}
-          feedContext={slice.items[beforeLast].feedContext}
+          feedContext={slice.feedContext}
           parentAuthor={slice.items[beforeLast].parentAuthor}
           showReplyTo={
             slice.items[beforeLast].parentAuthor?.did !==
@@ -59,7 +59,7 @@ let FeedSlice = ({
           post={slice.items[last].post}
           record={slice.items[last].record}
           reason={undefined}
-          feedContext={slice.items[last].feedContext}
+          feedContext={slice.feedContext}
           parentAuthor={slice.items[last].parentAuthor}
           showReplyTo={false}
           moderation={slice.items[last].moderation}
@@ -80,7 +80,7 @@ let FeedSlice = ({
           post={slice.items[i].post}
           record={slice.items[i].record}
           reason={i === 0 ? slice.reason : undefined}
-          feedContext={slice.items[i].feedContext}
+          feedContext={slice.feedContext}
           moderation={slice.items[i].moderation}
           parentAuthor={slice.items[i].parentAuthor}
           showReplyTo={i === 0}

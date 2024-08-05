@@ -77,7 +77,6 @@ export interface FeedPostSliceItem {
   uri: string
   post: AppBskyFeedDefs.PostView
   record: AppBskyFeedPost.Record
-  feedContext: string | undefined
   moderation: ModerationDecision
   parentAuthor?: AppBskyActorDefs.ProfileViewBasic
   isParentBlocked?: boolean
@@ -89,6 +88,7 @@ export interface FeedPostSlice {
   items: FeedPostSliceItem[]
   isIncompleteThread: boolean
   isFallbackMarker: boolean
+  feedContext: string | undefined
   reason?:
     | AppBskyFeedDefs.ReasonRepost
     | ReasonFeedSource
@@ -315,6 +315,7 @@ export function usePostFeedQuery(
                     _isFeedPostSlice: true,
                     isIncompleteThread: slice.isIncompleteThread,
                     isFallbackMarker: slice.isFallbackMarker,
+                    feedContext: slice.feedContext,
                     reason: slice.reason,
                     items: slice.items.map((item, i) => {
                       const feedPostSliceItem: FeedPostSliceItem = {
@@ -322,7 +323,6 @@ export function usePostFeedQuery(
                         uri: item.post.uri,
                         post: item.post,
                         record: item.record,
-                        feedContext: slice.feedContext,
                         moderation: moderations[i],
                         parentAuthor: item.parentAuthor,
                         isParentBlocked: item.isParentBlocked,
