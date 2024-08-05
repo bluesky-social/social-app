@@ -1,5 +1,6 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import EventEmitter from 'eventemitter3'
 
+import BroadcastChannel from '#/lib/broadcast'
 import {logger} from '#/logger'
 import {defaults, Schema, schema} from '#/state/persisted/schema'
 import {PersistedApi} from './types'
@@ -9,13 +10,19 @@ export {defaults} from '#/state/persisted/schema'
 
 const BSKY_STORAGE = 'BSKY_STORAGE'
 
+const broadcast = new BroadcastChannel('BSKY_BROADCAST_CHANNEL')
+const UPDATE_EVENT = 'BSKY_UPDATE'
+
 let _state: Schema = defaults
+const _emitter = new EventEmitter()
 
 export async function init() {
+  broadcast.onmessage = onBroadcastMessage
+
   try {
-    const stored = await readFromStorage()
+    const stored = readFromStorage()
     if (!stored) {
-      await writeToStorage(defaults)
+      writeToStorage(defaults)
     }
     _state = stored || defaults
   } catch (e) {
@@ -37,7 +44,9 @@ export async function write<K extends keyof Schema>(
 ): Promise<void> {
   try {
     _state[key] = value
-    await writeToStorage(_state)
+    writeToStorage(_state)
+    // must happen on next tick, otherwise the tab will read stale storage data
+    setTimeout(() => broadcast.postMessage({event: UPDATE_EVENT}), 0)
   } catch (e) {
     logger.error(`persisted state: failed writing root state to storage`, {
       message: e,
@@ -46,27 +55,53 @@ export async function write<K extends keyof Schema>(
 }
 write satisfies PersistedApi['write']
 
-export function onUpdate(_cb: () => void): () => void {
-  return () => {}
+export function onUpdate(cb: () => void): () => void {
+  _emitter.addListener('update', cb)
+  return () => _emitter.removeListener('update', cb)
 }
 onUpdate satisfies PersistedApi['onUpdate']
 
 export async function clearStorage() {
   try {
-    await AsyncStorage.removeItem(BSKY_STORAGE)
+    localStorage.removeItem(BSKY_STORAGE)
   } catch (e: any) {
     logger.error(`persisted store: failed to clear`, {message: e.toString()})
   }
 }
 clearStorage satisfies PersistedApi['clearStorage']
 
-async function writeToStorage(value: Schema) {
-  schema.parse(value)
-  await AsyncStorage.setItem(BSKY_STORAGE, JSON.stringify(value))
+async function onBroadcastMessage({data}: MessageEvent) {
+  if (typeof data === 'object' && data.event === UPDATE_EVENT) {
+    try {
+      // read next state, possibly updated by another tab
+      const next = readFromStorage()
+
+      if (next) {
+        _state = next
+        _emitter.emit('update')
+      } else {
+        logger.error(
+          `persisted state: handled update update from broadcast channel, but found no data`,
+        )
+      }
+    } catch (e) {
+      logger.error(
+        `persisted state: failed handling update from broadcast channel`,
+        {
+          message: e,
+        },
+      )
+    }
+  }
 }
 
-async function readFromStorage(): Promise<Schema | undefined> {
-  const rawData = await AsyncStorage.getItem(BSKY_STORAGE)
+function writeToStorage(value: Schema) {
+  schema.parse(value)
+  localStorage.setItem(BSKY_STORAGE, JSON.stringify(value))
+}
+
+function readFromStorage(): Schema | undefined {
+  const rawData = localStorage.getItem(BSKY_STORAGE)
   const objData = rawData ? JSON.parse(rawData) : undefined
 
   // new user
