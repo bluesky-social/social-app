@@ -170,10 +170,6 @@ msgstr "{profileName} 在 {0} 前加入了 Bluesky"
 msgid "{profileName} joined Bluesky using a starter pack {0} ago"
 msgstr "{profileName} 在 {0} 前使用入门包加入了 Bluesky"
 
-#: src/view/screens/PreferencesFollowingFeed.tsx:67
-#~ msgid "{value, plural, =0 {Show all replies} one {Show replies with at least # like} other {Show replies with at least # likes}}"
-#~ msgstr "{value, plural, =0 {显示所有回复} one {显示至少含有 # 个喜欢数的回复} other {显示至少含有 # 个喜欢数的回复}}"
-
 #: src/components/WhoCanReply.tsx:296
 msgid "<0/> members"
 msgstr "<0/> 个成员"
@@ -397,10 +393,6 @@ msgstr "已添加至列表"
 #: src/view/com/feeds/FeedSourceCard.tsx:125
 msgid "Added to my feeds"
 msgstr "已添加至自定义资讯源"
-
-#: src/view/screens/PreferencesFollowingFeed.tsx:171
-#~ msgid "Adjust the number of likes a reply must have to be shown in your feed."
-#~ msgstr "调整会在你的资讯源中显示的回复至少需要含有多少喜欢数。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:34
 #: src/view/com/modals/SelfLabel.tsx:76
@@ -1413,10 +1405,6 @@ msgstr "复制二维码"
 msgid "Copyright Policy"
 msgstr "版权许可"
 
-#: src/view/com/composer/videos/state.ts:31
-#~ msgid "Could not compress video"
-#~ msgstr "无法压缩视频"
-
 #: src/components/dms/LeaveConvoPrompt.tsx:39
 msgid "Could not leave chat"
 msgstr "无法离开对话"
@@ -1533,10 +1521,6 @@ msgstr "深色模式"
 #: src/screens/Settings/AppearanceSettings.tsx:114
 msgid "Dark theme"
 msgstr "深色模式"
-
-#: src/view/screens/Settings/index.tsx:472
-#~ msgid "Dark Theme"
-#~ msgstr "深色模式"
 
 #: src/screens/Signup/StepInfo/index.tsx:191
 msgid "Date of birth"
@@ -2010,10 +1994,6 @@ msgstr "启用媒体播放器"
 msgid "Enable priority notifications"
 msgstr "启用优先通知"
 
-#: src/view/screens/PreferencesFollowingFeed.tsx:145
-#~ msgid "Enable this setting to only see replies between people you follow."
-#~ msgstr "启用这个设置项将仅显示你已关注用户的回复。"
-
 #: src/components/dialogs/EmbedConsent.tsx:94
 msgid "Enable this source only"
 msgstr "仅启用这个来源"
@@ -2456,10 +2436,6 @@ msgstr "由 <0>{0}</0>、<1>{1}</1> 以及 {2, plural, one {其他#人} other {�
 #: src/components/dialogs/ThreadgateEditor.tsx:126
 msgid "Followed users"
 msgstr "已关注的用户"
-
-#: src/view/screens/PreferencesFollowingFeed.tsx:152
-#~ msgid "Followed users only"
-#~ msgstr "仅限已关注的用户"
 
 #: src/view/com/notifications/FeedItem.tsx:213
 msgid "followed you"
@@ -3468,14 +3444,6 @@ msgstr "隐藏所有 {displayTag} 的帖文"
 msgid "Mute conversation"
 msgstr "隐藏对话"
 
-#: src/components/dialogs/MutedWords.tsx:148
-#~ msgid "Mute in tags only"
-#~ msgstr "仅隐藏标签"
-
-#: src/components/dialogs/MutedWords.tsx:133
-#~ msgid "Mute in text & tags"
-#~ msgstr "隐藏词汇和标签"
-
 #: src/components/dialogs/MutedWords.tsx:253
 msgid "Mute in:"
 msgstr "隐藏："
@@ -4450,10 +4418,6 @@ msgstr "帖文"
 msgid "Posts"
 msgstr "帖文"
 
-#: src/components/dialogs/MutedWords.tsx:89
-#~ msgid "Posts can be muted based on their text, their tags, or both."
-#~ msgstr "帖文可以根据其文本、标签或两者来隐藏。"
-
 #: src/components/dialogs/MutedWords.tsx:115
 msgid "Posts can be muted based on their text, their tags, or both. We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
 msgstr "可以根据文本、标签或结合两者来屏蔽特定帖文。我们建议避免添加常用词，因为这可能会导致你的主页不显示任何帖文。"
@@ -4766,10 +4730,6 @@ msgstr "该讨论串的回复已被禁用"
 msgctxt "action"
 msgid "Reply"
 msgstr "回复"
-
-#: src/view/screens/PreferencesFollowingFeed.tsx:142
-#~ msgid "Reply Filters"
-#~ msgstr "回复过滤器"
 
 #: src/view/com/post/Post.tsx:196
 #: src/view/com/posts/FeedItem.tsx:462
@@ -5366,26 +5326,6 @@ msgstr "设置你的账户"
 msgid "Sets Bluesky username"
 msgstr "设置 Bluesky 用户名"
 
-#: src/view/screens/Settings/index.tsx:462
-#~ msgid "Sets color theme to dark"
-#~ msgstr "设置主题为深色模式"
-
-#: src/view/screens/Settings/index.tsx:455
-#~ msgid "Sets color theme to light"
-#~ msgstr "设置主题为亮色模式"
-
-#: src/view/screens/Settings/index.tsx:449
-#~ msgid "Sets color theme to system setting"
-#~ msgstr "设置主题跟随系统设置"
-
-#: src/view/screens/Settings/index.tsx:488
-#~ msgid "Sets dark theme to the dark theme"
-#~ msgstr "设置深色模式至深黑"
-
-#: src/view/screens/Settings/index.tsx:481
-#~ msgid "Sets dark theme to the dim theme"
-#~ msgstr "设置深色模式至暗淡"
-
 #: src/screens/Login/ForgotPasswordForm.tsx:113
 msgid "Sets email for password reset"
 msgstr "设置用于重置密码的电子邮箱"
@@ -5871,10 +5811,6 @@ msgstr "系统"
 msgid "System log"
 msgstr "系统日志"
 
-#: src/components/dialogs/MutedWords.tsx:323
-#~ msgid "tag"
-#~ msgstr "标签"
-
 #: src/components/TagMenu/index.tsx:89
 msgid "Tag menu: {displayTag}"
 msgstr "标签菜单：{displayTag}"
@@ -5934,10 +5870,6 @@ msgstr "服务条款"
 #: src/lib/moderation/useReportOptions.ts:110
 msgid "Terms used violate community standards"
 msgstr "用词违反了社群准则"
-
-#: src/components/dialogs/MutedWords.tsx:323
-#~ msgid "text"
-#~ msgstr "文本"
 
 #: src/components/dialogs/MutedWords.tsx:266
 msgid "Text & tags"
@@ -6310,10 +6242,6 @@ msgstr "这个账户目前没有关注任何人。"
 msgid "This will delete \"{0}\" from your muted words. You can always add it back later."
 msgstr "这将从你的隐藏词汇中删除 \"{0}\"。你随时可以重新添加。"
 
-#: src/components/dialogs/MutedWords.tsx:283
-#~ msgid "This will delete {0} from your muted words. You can always add it back later."
-#~ msgstr "这将从你的隐藏词汇中删除 {0}。你随时可以重新添加。"
-
 #: src/view/screens/Settings/index.tsx:554
 msgid "Thread preferences"
 msgstr "讨论串首选项"
@@ -6346,10 +6274,6 @@ msgstr "要举报对话，请在会话中选择一条私信并举报。这有助
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
 msgstr "你想将举报提交给谁？"
-
-#: src/components/dialogs/MutedWords.tsx:112
-#~ msgid "Toggle between muted word options."
-#~ msgstr "在隐藏词汇选项之间切换。"
 
 #: src/view/com/util/forms/DropdownButton.tsx:255
 msgid "Toggle dropdown"
@@ -6737,10 +6661,6 @@ msgstr "版本 {appVersion} {bundleInfo}"
 msgid "Video Games"
 msgstr "电子游戏"
 
-#: src/view/com/composer/videos/state.ts:27
-#~ msgid "Videos cannot be larger than 100MB"
-#~ msgstr "视频不能大于 100MB"
-
 #: src/screens/Profile/Header/Shell.tsx:113
 msgid "View {0}'s avatar"
 msgstr "查看{0}的头像"
@@ -6857,10 +6777,6 @@ msgstr "我们希望你在此度过愉快的时光。请记住，Bluesky 是："
 #: src/view/com/posts/DiscoverFallbackHeader.tsx:29
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
 msgstr "我们已经看完了你关注的帖文。这是来自 <0/> 的最新消息。"
-
-#: src/components/dialogs/MutedWords.tsx:203
-#~ msgid "We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
-#~ msgstr "不建议你添加会出现在许多帖文中的常见词汇，这可能导致你的时间线上没有帖文可显示。"
 
 #: src/components/dialogs/BirthDateSettings.tsx:52
 msgid "We were unable to load your birth date preferences. Please try again."
