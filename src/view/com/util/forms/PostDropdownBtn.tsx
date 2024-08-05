@@ -32,6 +32,7 @@ import {
   useThreadMuteMutationQueue,
 } from '#/state/queries/post'
 import {useToggleReplyVisibilityMutation} from '#/state/queries/threadgate'
+import {useThreadgateRecordQuery} from '#/state/queries/threadgate'
 import {useSession} from '#/state/session'
 import {getCurrentRoute} from 'lib/routes/helpers'
 import {shareUrl} from 'lib/sharing'
@@ -121,6 +122,11 @@ let PostDropdownBtn = ({
   )
   const isPostHidden = hiddenPosts && hiddenPosts.includes(postUri)
   const isAuthor = postAuthor.did === currentAccount?.did
+
+  const {data: threadgate} = useThreadgateRecordQuery({
+    postUri: rootUri,
+  })
+  const isReplyHiddenByThreadgate = threadgate?.hiddenReplies?.includes(postUri)
 
   const href = React.useMemo(() => {
     const urip = new AtUri(postUri)
@@ -247,6 +253,16 @@ let PostDropdownBtn = ({
     },
     [navigation, postUri],
   )
+
+  const onToggleReplyVisibility = React.useCallback(() => {
+    if (!rootPostUri) return
+
+    toggleReplyVisibility({
+      postUri: rootPostUri,
+      replyUri: postUri,
+      action: isReplyHiddenByThreadgate ? 'show' : 'hide',
+    })
+  }, [isReplyHiddenByThreadgate, rootPostUri, postUri, toggleReplyVisibility])
 
   const canEmbed = isWeb && gtMobile && !hideInPWI
 
@@ -403,16 +419,16 @@ let PostDropdownBtn = ({
                 {!isAuthor && !isPostHidden && rootPostUri && (
                   <Menu.Item
                     testID="postDropdownHideBtn"
-                    label={_(msg`Hide reply for everyone`)}
-                    onPress={() => {
-                      toggleReplyVisibility({
-                        postUri: rootPostUri,
-                        replyUri: postUri,
-                        action: 'hide',
-                      })
-                    }}>
+                    label={
+                      isReplyHiddenByThreadgate
+                        ? _(msg`Show reply for everyone`)
+                        : _(msg`Hide reply for everyone`)
+                    }
+                    onPress={onToggleReplyVisibility}>
                     <Menu.ItemText>
-                      {_(msg`Hide reply for everyone`)}
+                      {isReplyHiddenByThreadgate
+                        ? _(msg`Show reply for everyone`)
+                        : _(msg`Hide reply for everyone`)}
                     </Menu.ItemText>
                     <Menu.ItemIcon icon={EyeSlash} position="right" />
                   </Menu.Item>

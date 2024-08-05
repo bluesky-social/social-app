@@ -2,6 +2,7 @@ import {AppBskyFeedThreadgate, AtUri, BskyAgent} from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {networkRetry} from '#/lib/async/retry'
+import {STALE} from '#/state/queries'
 import {ThreadgateAllowUISetting} from '#/state/queries/threadgate/types'
 import {
   createThreadgateRecord,
@@ -32,6 +33,7 @@ export function useThreadgateRecordQuery({
     enabled: !!postUri,
     queryKey: createThreadgateRecordQueryKey(postUri || ''),
     placeholderData: initialData,
+    staleTime: STALE.MINUTES.ONE,
     async queryFn() {
       return getThreadgateRecord({
         agent,

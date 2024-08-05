@@ -122,12 +122,13 @@ export function PostThread({
   const rootPost = thread?.type === 'post' ? thread.post : undefined
   const rootPostRecord = thread?.type === 'post' ? thread.record : undefined
   const replyRef =
-    rootPost && AppBskyFeedPost.isRecord(rootPost.record)
-      ? rootPost.record.reply
+    rootPostRecord && AppBskyFeedPost.isRecord(rootPostRecord)
+      ? rootPostRecord.reply
       : undefined
+  const rootPostUri = replyRef ? replyRef.root.uri : rootPost?.uri
 
   const {data: threadgateRecord} = useThreadgateRecordQuery({
-    postUri: replyRef ? replyRef.root.uri : rootPost?.uri,
+    postUri: rootPostUri,
     initialData: rootPost?.threadgate?.record as AppBskyFeedThreadgate.Record,
   })
 
