@@ -11,6 +11,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import type Hls from 'hls.js'
 
+import {isIPhoneWeb} from '#/platform/detection'
 import {
   useAutoplayDisabled,
   useSetSubtitlesEnabled,
@@ -259,17 +260,18 @@ export function Controls({
             <UnmuteIcon fill={t.palette.white} width={20} />
           )}
         </Button>
-        {/* TODO: find workaround for iOS Safari */}
-        <Button
-          label={_(muted ? msg`Unmute` : msg`Mute`)}
-          onPress={onPressFullscreen}
-          {...btnProps}>
-          {isFullscreen ? (
-            <ArrowsInIcon fill={t.palette.white} width={20} />
-          ) : (
-            <ArrowsOutIcon fill={t.palette.white} width={20} />
-          )}
-        </Button>
+        {!isIPhoneWeb && (
+          <Button
+            label={_(muted ? msg`Unmute` : msg`Mute`)}
+            onPress={onPressFullscreen}
+            {...btnProps}>
+            {isFullscreen ? (
+              <ArrowsInIcon fill={t.palette.white} width={20} />
+            ) : (
+              <ArrowsOutIcon fill={t.palette.white} width={20} />
+            )}
+          </Button>
+        )}
       </View>
       {(showControls || !focused) && (
         <Animated.View
