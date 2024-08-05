@@ -1,6 +1,7 @@
 import {z} from 'zod'
 
-import {deviceLocales, prefersReducedMotion} from '#/platform/detection'
+import {deviceLocales} from '#/platform/detection'
+import {PlatformInfo} from '../../../modules/expo-bluesky-swiss-army'
 
 const externalEmbedOptions = ['show', 'hide'] as const
 
@@ -128,7 +129,7 @@ export const defaults: Schema = {
   lastSelectedHomeFeed: undefined,
   pdsAddressHistory: [],
   disableHaptics: false,
-  disableAutoplay: prefersReducedMotion,
+  disableAutoplay: PlatformInfo.getIsReducedMotionEnabled(),
   kawaii: false,
   hasCheckedForStarterPack: false,
 }
