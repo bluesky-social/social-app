@@ -2,9 +2,11 @@ import {AppBskyFeedThreadgate, AtUri, BskyAgent} from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {networkRetry} from '#/lib/async/retry'
+import {ThreadgateAllowUISetting} from '#/state/queries/threadgate/types'
 import {
   createThreadgateRecord,
   mergeThreadgateRecords,
+  threadgateAllowUISettingToAllowRecordValue,
 } from '#/state/queries/threadgate/util'
 import {useAgent} from '#/state/session'
 
@@ -31,21 +33,10 @@ export function useThreadgateRecordQuery({
     queryKey: createThreadgateRecordQueryKey(postUri || ''),
     placeholderData: initialData,
     async queryFn() {
-      const urip = new AtUri(postUri!)
-
-      if (!urip.host.startsWith('did:')) {
-        const res = await agent.resolveHandle({
-          handle: urip.host,
-        })
-        urip.host = res.data.did
-      }
-
-      const {value} = await agent.api.app.bsky.feed.threadgate.get({
-        repo: urip.host,
-        rkey: urip.rkey,
+      return getThreadgateRecord({
+        agent,
+        postUri: postUri!,
       })
-
-      return value
     },
   })
 }
@@ -57,19 +48,28 @@ export async function getThreadgateRecord({
   agent: BskyAgent
   postUri: string
 }): Promise<AppBskyFeedThreadgate.Record | undefined> {
-  const postUrip = new AtUri(postUri)
+  const urip = new AtUri(postUri)
+
+  if (!urip.host.startsWith('did:')) {
+    const res = await agent.resolveHandle({
+      handle: urip.host,
+    })
+    urip.host = res.data.did
+  }
 
   try {
     const {data} = await networkRetry(2, () =>
       agent.api.com.atproto.repo.getRecord({
-        repo: agent.session!.did,
+        repo: urip.host,
         collection: 'app.bsky.feed.threadgate',
-        rkey: postUrip.rkey,
+        rkey: urip.rkey,
       }),
     )
 
     if (data.value && AppBskyFeedThreadgate.isRecord(data.value)) {
       return data.value
+    } else {
+      return undefined
     }
   } catch (e: any) {
     if (e.message.includes(`Could not locate record:`)) {
@@ -80,60 +80,7 @@ export async function getThreadgateRecord({
   }
 }
 
-export async function createThreadgate({
-  agent,
-  postUri,
-  threadgate,
-}: {
-  agent: BskyAgent
-  postUri: string
-  threadgate: Partial<AppBskyFeedThreadgate.Record>
-}) {
-  const postUrip = new AtUri(postUri)
-
-  const {data} = await networkRetry(2, () =>
-    agent.api.com.atproto.repo.getRecord({
-      repo: agent.session!.did,
-      collection: 'app.bsky.feed.threadgate',
-      rkey: postUrip.rkey,
-    }),
-  )
-
-  if (data.value && AppBskyFeedThreadgate.isRecord(data.value)) {
-    // has existing, merge
-    const prev = data.value
-    const merged = mergeThreadgateRecords(prev, threadgate)
-
-    await networkRetry(2, () =>
-      agent.api.com.atproto.repo.putRecord({
-        repo: agent.session!.did,
-        collection: 'app.bsky.feed.threadgate',
-        rkey: postUrip.rkey,
-        record: merged,
-      }),
-    )
-  } else {
-    // no existing, create new
-    const record: AppBskyFeedThreadgate.Record = {
-      $type: 'app.bsky.feed.threadgate',
-      post: postUri,
-      allow: threadgate.allow || [],
-      hiddenReplies: threadgate.hiddenReplies || [],
-      createdAt: new Date().toISOString(),
-    }
-
-    await networkRetry(2, () =>
-      agent.api.com.atproto.repo.putRecord({
-        repo: agent.session!.did,
-        collection: 'app.bsky.feed.threadgate',
-        rkey: postUrip.rkey,
-        record,
-      }),
-    )
-  }
-}
-
-export async function overwriteThreadgateRecord({
+export async function writeThreadgateRecord({
   agent,
   postUri,
   threadgate,
@@ -143,13 +90,11 @@ export async function overwriteThreadgateRecord({
   threadgate: AppBskyFeedThreadgate.Record
 }) {
   const postUrip = new AtUri(postUri)
-  const record: AppBskyFeedThreadgate.Record = {
-    $type: 'app.bsky.feed.threadgate',
+  const record = createThreadgateRecord({
     post: postUri,
-    allow: threadgate.allow || [],
+    allow: threadgate.allow, // can/should be undefined!
     hiddenReplies: threadgate.hiddenReplies || [],
-    createdAt: new Date().toISOString(),
-  }
+  })
 
   await networkRetry(2, () =>
     agent.api.com.atproto.repo.putRecord({
@@ -161,29 +106,57 @@ export async function overwriteThreadgateRecord({
   )
 }
 
-export function useCreateThreadgateMutation() {
-  const agent = useAgent()
-  const queryClient = useQueryClient()
+export async function upsertThreadgate(
+  {
+    agent,
+    postUri,
+  }: {
+    agent: BskyAgent
+    postUri: string
+  },
+  callback: (
+    threadgate: AppBskyFeedThreadgate.Record | undefined,
+  ) => Promise<AppBskyFeedThreadgate.Record | undefined>,
+) {
+  const prev = await getThreadgateRecord({
+    agent,
+    postUri,
+  })
+  const next = await callback(prev)
+  if (!next) return
+  await writeThreadgateRecord({
+    agent,
+    postUri,
+    threadgate: next,
+  })
+}
 
-  return useMutation({
-    mutationFn: async ({
-      postUri,
-      threadgate,
-    }: {
-      postUri: string
-      threadgate: Partial<AppBskyFeedThreadgate.Record>
-    }) => {
-      return createThreadgate({
-        agent,
-        postUri,
-        threadgate,
+/**
+ * Update the allow list for a threadgate record.
+ *
+ * Note: to allow everyone to reply, pass `allow: []`.
+ */
+export async function updateThreadgateAllow({
+  agent,
+  postUri,
+  allow,
+}: {
+  agent: BskyAgent
+  postUri: string
+  allow: ThreadgateAllowUISetting[]
+}) {
+  return upsertThreadgate({agent, postUri}, async prev => {
+    if (prev) {
+      return {
+        ...prev,
+        allow: threadgateAllowUISettingToAllowRecordValue(allow),
+      }
+    } else {
+      return createThreadgateRecord({
+        post: postUri,
+        allow: threadgateAllowUISettingToAllowRecordValue(allow),
       })
-    },
-    onSuccess() {
-      queryClient.invalidateQueries({
-        queryKey: [threadgateRecordQueryKeyRoot],
-      })
-    },
+    }
   })
 }
 
@@ -201,44 +174,28 @@ export function useToggleReplyVisibilityMutation() {
       replyUri: string
       action: 'hide' | 'show'
     }) => {
-      const prev = await getThreadgateRecord({
-        agent,
-        postUri,
-      })
-
-      if (prev) {
-        let threadgate = prev
-
-        if (action === 'hide') {
-          threadgate = mergeThreadgateRecords(prev, {
-            hiddenReplies: [replyUri],
-          })
-        } else if (action === 'show') {
-          threadgate = {
-            ...prev,
-            hiddenReplies:
-              prev.hiddenReplies?.filter(uri => uri !== replyUri) || [],
+      await upsertThreadgate({agent, postUri}, async prev => {
+        if (prev) {
+          if (action === 'hide') {
+            return mergeThreadgateRecords(prev, {
+              hiddenReplies: [replyUri],
+            })
+          } else if (action === 'show') {
+            return {
+              ...prev,
+              hiddenReplies:
+                prev.hiddenReplies?.filter(uri => uri !== replyUri) || [],
+            }
+          }
+        } else {
+          if (action === 'hide') {
+            return createThreadgateRecord({
+              post: postUri,
+              hiddenReplies: [replyUri],
+            })
           }
         }
-
-        await overwriteThreadgateRecord({
-          agent,
-          postUri,
-          threadgate,
-        })
-      } else {
-        if (action === 'hide') {
-          const threadgate = createThreadgateRecord({
-            post: postUri,
-            hiddenReplies: [replyUri],
-          })
-          await overwriteThreadgateRecord({
-            agent,
-            postUri,
-            threadgate,
-          })
-        }
-      }
+      })
     },
     onSuccess() {
       queryClient.invalidateQueries({

@@ -12,9 +12,10 @@ import {AtUri} from '@atproto/api'
 
 import {logger} from '#/logger'
 import {
-  createThreadgate as upsertThreadgate,
+  createThreadgateRecord,
   ThreadgateAllowUISetting,
-  threadgateAllowUISettingToAllowType,
+  threadgateAllowUISettingToAllowRecordValue,
+  writeThreadgateRecord,
 } from '#/state/queries/threadgate'
 import {isNetworkError} from 'lib/strings/errors'
 import {shortenLinks, stripInvalidMentions} from 'lib/strings/rich-text-manip'
@@ -265,7 +266,14 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
   try {
     // TODO: this needs to be batch-created with the post!
     if (opts.threadgate?.length) {
-      await createThreadgate(agent, res.uri, opts.threadgate)
+      await writeThreadgateRecord({
+        agent,
+        postUri: res.uri,
+        threadgate: createThreadgateRecord({
+          post: res.uri,
+          allow: threadgateAllowUISettingToAllowRecordValue(opts.threadgate),
+        }),
+      })
     }
   } catch (e: any) {
     console.error(`Failed to create threadgate: ${e.toString()}`)
@@ -275,15 +283,6 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
   }
 
   return res
-}
-
-export async function createThreadgate(
-  agent: BskyAgent,
-  postUri: string,
-  threadgate: ThreadgateAllowUISetting[],
-) {
-  const allow = threadgateAllowUISettingToAllowType(threadgate)
-  return upsertThreadgate({agent, postUri, threadgate: {allow}})
 }
 
 // helpers

@@ -15,12 +15,21 @@ export function threadgateViewToAllowUISetting(
     AppBskyFeedThreadgate.validateRecord(threadgate.record).success
       ? threadgate.record
       : null
-  if (!record) {
+  /*
+   * If record doesn't exist (default), or if `record.allow === undefined`, it means
+   * anyone can reply.
+   *
+   * If `record.allow === []` it means no one can reply, and we translate to UI code
+   * here. This was a historical choice, and we have no lexicon representation
+   * for 'replies disabled' other than an empty array.
+   */
+  if (!record || record.allow === undefined) {
     return []
   }
-  if (!record.allow?.length) {
+  if (record.allow.length === 0) {
     return [{type: 'nobody'}]
   }
+
   const settings: ThreadgateAllowUISetting[] = record.allow
     .map(allow => {
       let setting: ThreadgateAllowUISetting | undefined
@@ -38,12 +47,18 @@ export function threadgateViewToAllowUISetting(
 }
 
 /**
- * Converts a list of {@link ThreadgateAllowUISetting} to the `allow` prop on
- * {@link AppBskyFeedThreadgate.Record},
+ * Converts an array of {@link ThreadgateAllowUISetting} to the `allow` prop on
+ * {@link AppBskyFeedThreadgate.Record}.
+ *
+ * If the array passed is empty, we infer that to mean anyone can reply, and
+ * return undefined. An undefined value in the record is interpretted as anyone
+ * can reply, whereas an empty array means no on can reply.
  */
-export function threadgateAllowUISettingToAllowType(
+export function threadgateAllowUISettingToAllowRecordValue(
   threadgate: ThreadgateAllowUISetting[],
-) {
+): AppBskyFeedThreadgate.Record['allow'] {
+  if (threadgate.length === 0) return undefined
+
   let allow: (
     | AppBskyFeedThreadgate.MentionRule
     | AppBskyFeedThreadgate.FollowingRule
@@ -90,6 +105,14 @@ export function mergeThreadgateRecords(
   })
 }
 
+/**
+ * Create a new {@link AppBskyFeedThreadgate.Record} object with the given
+ * properties.
+ *
+ * Note: setting `allow` to `undefined` resets and allows everyone to reply. An
+ * empty array means that no one can reply. This is a bit of a hack bc of how
+ * these were designed, but should be fine as long as we're careful.
+ */
 export function createThreadgateRecord(
   threadgate: Partial<AppBskyFeedThreadgate.Record>,
 ): AppBskyFeedThreadgate.Record {
@@ -101,7 +124,7 @@ export function createThreadgateRecord(
     $type: 'app.bsky.feed.threadgate',
     post: threadgate.post,
     createdAt: new Date().toISOString(),
-    allow: threadgate.allow || [],
+    allow: threadgate.allow, // can be undefined!
     hiddenReplies: threadgate.hiddenReplies || [],
   }
 }
