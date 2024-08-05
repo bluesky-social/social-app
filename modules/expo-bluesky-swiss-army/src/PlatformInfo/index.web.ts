@@ -1,4 +1,4 @@
-export function getIsReducedMotionEnabled() {
+export function getIsReducedMotionEnabled(): boolean {
   if (typeof window === 'undefined') {
     return false
   }
