@@ -2,7 +2,6 @@ import React, {
   ComponentProps,
   forwardRef,
   useCallback,
-  useMemo,
   useRef,
   useState,
 } from 'react'
@@ -31,7 +30,7 @@ import {
   LinkFacetMatch,
   suggestLinkCardUri,
 } from 'view/com/composer/text-input/text-input-util'
-import {Text} from 'view/com/util/text/Text'
+// import {Text} from 'view/com/util/text/Text'
 import {Autocomplete} from './mobile/Autocomplete'
 
 export interface TextInputRef {
@@ -180,22 +179,22 @@ export const TextInput = forwardRef(function TextInputImpl(
     [onChangeText, richtext, setAutocompletePrefix],
   )
 
-  const textDecorated = useMemo(() => {
-    let i = 0
-
-    return Array.from(richtext.segments()).map(segment => {
-      return (
-        <Text
-          key={i++}
-          style={[
-            segment.facet ? pal.link : pal.text,
-            styles.textInputFormatting,
-          ]}>
-          {segment.text}
-        </Text>
-      )
-    })
-  }, [richtext, pal.link, pal.text])
+  // const textDecorated = useMemo(() => {
+  //   let i = 0
+  //
+  //   return Array.from(richtext.segments()).map(segment => {
+  //     return (
+  //       <Text
+  //         key={i++}
+  //         style={[
+  //           segment.facet ? pal.link : pal.text,
+  //           // styles.textInputFormatting,
+  //         ]}>
+  //         {segment.text}
+  //       </Text>
+  //     )
+  //   })
+  // }, [richtext, pal.link, pal.text])
 
   return (
     <View style={styles.container}>
@@ -220,7 +219,7 @@ export const TextInput = forwardRef(function TextInputImpl(
           {textAlignVertical: 'top'},
         ]}
         {...props}>
-        {textDecorated}
+        {/*{textDecorated}*/}
       </PasteInput>
       <Autocomplete
         prefix={autocompletePrefix}

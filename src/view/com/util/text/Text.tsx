@@ -38,7 +38,7 @@ export function Text({
       <UITextView
         style={[s.black, typography, lineHeightStyle, style]}
         selectable={selectable}
-        uiTextView
+        // uiTextView
         {...props}>
         {children}
       </UITextView>
