@@ -82,6 +82,10 @@ export class FeedViewPostsSlice {
     return AppBskyFeedDefs.isReasonRepost(reason)
   }
 
+  get includesThreadRoot() {
+    return !this.items[0].reply
+  }
+
   get likeCount() {
     return this._feedPost.post.likeCount ?? 0
   }
@@ -115,19 +119,20 @@ export class FeedViewPostsSlice {
 
   isFollowingAllAuthors(userDid: string) {
     const feedPost = this._feedPost
-    const authors = [feedPost.post.author]
-    if (feedPost.reply) {
-      if (AppBskyFeedDefs.isPostView(feedPost.reply.parent)) {
-        authors.push(feedPost.reply.parent.author)
-      }
-      if (feedPost.reply.grandparentAuthor) {
-        authors.push(feedPost.reply.grandparentAuthor)
-      }
-      if (AppBskyFeedDefs.isPostView(feedPost.reply.root)) {
-        authors.push(feedPost.reply.root.author)
-      }
+    if (feedPost.post.author.did === userDid) {
+      return true
     }
-    return authors.every(a => a.did === userDid || a.viewer?.following)
+    if (AppBskyFeedDefs.isPostView(feedPost.reply?.parent)) {
+      const parent = feedPost.reply?.parent
+      if (parent?.author.did === userDid) {
+        return true
+      }
+      return (
+        parent?.author.viewer?.following &&
+        feedPost.post.author.viewer?.following
+      )
+    }
+    return false
   }
 }
 
@@ -299,14 +304,19 @@ export class FeedTuner {
       tuner: FeedTuner,
       slices: FeedViewPostsSlice[],
     ): FeedViewPostsSlice[] => {
+      // remove any replies without at least minLikes likes
       for (let i = slices.length - 1; i >= 0; i--) {
         const slice = slices[i]
-        if (
-          slice.isReply &&
-          !slice.isRepost &&
-          !slice.isFollowingAllAuthors(userDid)
-        ) {
-          slices.splice(i, 1)
+        if (slice.isReply) {
+          if (slice.isThread && slice.includesThreadRoot) {
+            continue
+          }
+          if (slice.isRepost) {
+            continue
+          }
+          if (!slice.isFollowingAllAuthors(userDid)) {
+            slices.splice(i, 1)
+          }
         }
       }
       return slices
