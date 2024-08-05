@@ -65,7 +65,7 @@ function DialogContent({
   }
 
   const onPressEverybody = () => {
-    updateThreadgate([])
+    updateThreadgate([{type: 'everybody'}])
   }
 
   const onPressNobody = () => {
@@ -102,7 +102,7 @@ function DialogContent({
         <View style={[a.flex_row, a.gap_sm]}>
           <Selectable
             label={_(msg`Everybody`)}
-            isSelected={draft.length === 0}
+            isSelected={!!draft.find(v => v.type === 'everybody')}
             onPress={onPressEverybody}
             style={{flex: 1}}
           />

@@ -50,14 +50,16 @@ export function threadgateViewToAllowUISetting(
  * Converts an array of {@link ThreadgateAllowUISetting} to the `allow` prop on
  * {@link AppBskyFeedThreadgate.Record}.
  *
- * If the array passed is empty, we infer that to mean anyone can reply, and
- * return undefined. An undefined value in the record is interpretted as anyone
- * can reply, whereas an empty array means no on can reply.
+ * If the `allow` property on the record is undefined, we infer that to mean
+ * that everyone can reply. If it's an empty array, we infer that to mean that
+ * no one can reply.
  */
 export function threadgateAllowUISettingToAllowRecordValue(
   threadgate: ThreadgateAllowUISetting[],
 ): AppBskyFeedThreadgate.Record['allow'] {
-  if (threadgate.length === 0) return undefined
+  if (threadgate.find(v => v.type === 'everybody')) {
+    return undefined
+  }
 
   let allow: (
     | AppBskyFeedThreadgate.MentionRule
@@ -108,10 +110,6 @@ export function mergeThreadgateRecords(
 /**
  * Create a new {@link AppBskyFeedThreadgate.Record} object with the given
  * properties.
- *
- * Note: setting `allow` to `undefined` resets and allows everyone to reply. An
- * empty array means that no one can reply. This is a bit of a hack bc of how
- * these were designed, but should be fine as long as we're careful.
  */
 export function createThreadgateRecord(
   threadgate: Partial<AppBskyFeedThreadgate.Record>,

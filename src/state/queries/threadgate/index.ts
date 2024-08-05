@@ -133,8 +133,6 @@ export async function upsertThreadgate(
 
 /**
  * Update the allow list for a threadgate record.
- *
- * Note: to allow everyone to reply, pass `allow: []`.
  */
 export async function updateThreadgateAllow({
   agent,
