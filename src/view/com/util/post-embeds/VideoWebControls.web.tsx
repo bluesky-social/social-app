@@ -493,6 +493,7 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
     if (!ref.current) return
 
     ref.current.pause()
+    playWhenReadyRef.current = false
   }, [ref])
 
   const togglePlayPause = useCallback(() => {
