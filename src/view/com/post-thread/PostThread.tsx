@@ -581,7 +581,10 @@ function* flattenThreadReplies(
         }
       }
 
-      if (threadgateRecord?.hiddenReplies?.includes(node.post.uri)) {
+      if (
+        !showHiddenReplies &&
+        threadgateRecord?.hiddenReplies?.includes(node.post.uri)
+      ) {
         return HiddenReplyType.Hidden
       }
     }
