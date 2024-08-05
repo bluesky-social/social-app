@@ -2,7 +2,6 @@ import React, {
   ComponentProps,
   forwardRef,
   useCallback,
-  useMemo,
   useRef,
   useState,
 } from 'react'
@@ -31,7 +30,7 @@ import {
   LinkFacetMatch,
   suggestLinkCardUri,
 } from 'view/com/composer/text-input/text-input-util'
-import {Text} from 'view/com/util/text/Text'
+// import {Text} from 'view/com/util/text/Text'
 import {Autocomplete} from './mobile/Autocomplete'
 
 export interface TextInputRef {
@@ -85,71 +84,59 @@ export const TextInput = forwardRef(function TextInputImpl(
   const pastSuggestedUris = useRef(new Set<string>())
   const prevDetectedUris = useRef(new Map<string, LinkFacetMatch>())
   const onChangeText = useCallback(
-    (newText: string) => {
-      /*
-       * This is a hack to bump the rendering of our styled
-       * `textDecorated` to _after_ whatever processing is happening
-       * within the `PasteInput` library. Without this, the elements in
-       * `textDecorated` are not correctly painted to screen.
-       *
-       * NB: we tried a `0` timeout as well, but only positive values worked.
-       *
-       * @see https://github.com/bluesky-social/social-app/issues/929
-       */
-      setTimeout(async () => {
-        const mayBePaste = newText.length > prevLength.current + 1
+    async (newText: string) => {
+      const mayBePaste = newText.length > prevLength.current + 1
 
-        const newRt = new RichText({text: newText})
-        newRt.detectFacetsWithoutResolution()
-        setRichText(newRt)
+      const newRt = new RichText({text: newText})
+      newRt.detectFacetsWithoutResolution()
+      setRichText(newRt)
 
-        const prefix = getMentionAt(
-          newText,
-          textInputSelection.current?.start || 0,
-        )
-        if (prefix) {
-          setAutocompletePrefix(prefix.value)
-        } else if (autocompletePrefix) {
-          setAutocompletePrefix('')
-        }
+      const prefix = getMentionAt(
+        newText,
+        textInputSelection.current?.start || 0,
+      )
+      if (prefix) {
+        setAutocompletePrefix(prefix.value)
+      } else if (autocompletePrefix) {
+        setAutocompletePrefix('')
+      }
 
-        const nextDetectedUris = new Map<string, LinkFacetMatch>()
-        if (newRt.facets) {
-          for (const facet of newRt.facets) {
-            for (const feature of facet.features) {
-              if (AppBskyRichtextFacet.isLink(feature)) {
-                if (isUriImage(feature.uri)) {
-                  const res = await downloadAndResize({
-                    uri: feature.uri,
-                    width: POST_IMG_MAX.width,
-                    height: POST_IMG_MAX.height,
-                    mode: 'contain',
-                    maxSize: POST_IMG_MAX.size,
-                    timeout: 15e3,
-                  })
+      const nextDetectedUris = new Map<string, LinkFacetMatch>()
+      if (newRt.facets) {
+        for (const facet of newRt.facets) {
+          for (const feature of facet.features) {
+            if (AppBskyRichtextFacet.isLink(feature)) {
+              if (isUriImage(feature.uri)) {
+                const res = await downloadAndResize({
+                  uri: feature.uri,
+                  width: POST_IMG_MAX.width,
+                  height: POST_IMG_MAX.height,
+                  mode: 'contain',
+                  maxSize: POST_IMG_MAX.size,
+                  timeout: 15e3,
+                })
 
-                  if (res !== undefined) {
-                    onPhotoPasted(res.path)
-                  }
-                } else {
-                  nextDetectedUris.set(feature.uri, {facet, rt: newRt})
+                if (res !== undefined) {
+                  onPhotoPasted(res.path)
                 }
+              } else {
+                nextDetectedUris.set(feature.uri, {facet, rt: newRt})
               }
             }
           }
         }
-        const suggestedUri = suggestLinkCardUri(
-          mayBePaste,
-          nextDetectedUris,
-          prevDetectedUris.current,
-          pastSuggestedUris.current,
-        )
-        prevDetectedUris.current = nextDetectedUris
-        if (suggestedUri) {
-          onNewLink(suggestedUri)
-        }
-        prevLength.current = newText.length
-      }, 1)
+      }
+      const suggestedUri = suggestLinkCardUri(
+        mayBePaste,
+        nextDetectedUris,
+        prevDetectedUris.current,
+        pastSuggestedUris.current,
+      )
+      prevDetectedUris.current = nextDetectedUris
+      if (suggestedUri) {
+        onNewLink(suggestedUri)
+      }
+      prevLength.current = newText.length
     },
     [setRichText, autocompletePrefix, onPhotoPasted, onNewLink],
   )
@@ -192,22 +179,22 @@ export const TextInput = forwardRef(function TextInputImpl(
     [onChangeText, richtext, setAutocompletePrefix],
   )
 
-  const textDecorated = useMemo(() => {
-    let i = 0
-
-    return Array.from(richtext.segments()).map(segment => {
-      return (
-        <Text
-          key={i++}
-          style={[
-            segment.facet ? pal.link : pal.text,
-            styles.textInputFormatting,
-          ]}>
-          {segment.text}
-        </Text>
-      )
-    })
-  }, [richtext, pal.link, pal.text])
+  // const textDecorated = useMemo(() => {
+  //   let i = 0
+  //
+  //   return Array.from(richtext.segments()).map(segment => {
+  //     return (
+  //       <Text
+  //         key={i++}
+  //         style={[
+  //           segment.facet ? pal.link : pal.text,
+  //           // styles.textInputFormatting,
+  //         ]}>
+  //         {segment.text}
+  //       </Text>
+  //     )
+  //   })
+  // }, [richtext, pal.link, pal.text])
 
   return (
     <View style={styles.container}>
@@ -232,7 +219,7 @@ export const TextInput = forwardRef(function TextInputImpl(
           {textAlignVertical: 'top'},
         ]}
         {...props}>
-        {textDecorated}
+        {/*{textDecorated}*/}
       </PasteInput>
       <Autocomplete
         prefix={autocompletePrefix}

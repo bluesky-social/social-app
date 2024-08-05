@@ -192,14 +192,14 @@ module.exports = function (config) {
           {
             ios: {
               deploymentTarget: '14.0',
-              newArchEnabled: false,
+              newArchEnabled: true,
             },
             android: {
               compileSdkVersion: 34,
               targetSdkVersion: 34,
               buildToolsVersion: '34.0.0',
               kotlinVersion: '1.8.0',
-              newArchEnabled: false,
+              newArchEnabled: true,
             },
           },
         ],

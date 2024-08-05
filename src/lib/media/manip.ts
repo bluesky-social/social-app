@@ -6,17 +6,20 @@ import {
   copyAsync,
   deleteAsync,
   EncodingType,
+  FileInfo,
+  getInfoAsync,
   makeDirectoryAsync,
   StorageAccessFramework,
   writeAsStringAsync,
 } from 'expo-file-system'
+import {manipulateAsync, SaveFormat} from 'expo-image-manipulator'
 import * as MediaLibrary from 'expo-media-library'
 import * as Sharing from 'expo-sharing'
-import ImageResizer from '@bam.tech/react-native-image-resizer'
 import {Buffer} from 'buffer'
 import RNFetchBlob from 'rn-fetch-blob'
 
 import {logger} from '#/logger'
+import {POST_IMG_MAX} from 'lib/constants'
 import {isAndroid, isIOS} from 'platform/detection'
 import {Dimensions} from './types'
 
@@ -165,29 +168,56 @@ interface DoResizeOpts {
 }
 
 async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
+  // This is a bit of a hack, but it lets us get the original size of the image. The old image manipulation library
+  // allowed us to supply a max height/width and it would handle the resizing. With expo-image-manipulator, we have
+  // to supply the exact size and width that we want to resize to instead. We will calculate that ourselves based on
+  // the height/width results of this first manipulation
+  const imageRes = await manipulateAsync(localUri, [], {
+    format: SaveFormat.JPEG,
+  })
+
+  const newDimensions = getResizedDimensions({
+    width: imageRes.width,
+    height: imageRes.height,
+  })
+
+  console.log(localUri)
+
   for (let i = 0; i < 9; i++) {
-    const quality = 100 - i * 10
-    const resizeRes = await ImageResizer.createResizedImage(
+    const quality = 0.9 - 0.1 * i
+    const resizeRes = await manipulateAsync(
       localUri,
-      opts.width,
-      opts.height,
-      'JPEG',
-      quality,
-      undefined,
-      undefined,
-      undefined,
-      {mode: opts.mode},
+      [{resize: {height: newDimensions.height, width: newDimensions.width}}],
+      {
+        format: SaveFormat.JPEG,
+        compress: quality,
+      },
     )
-    if (resizeRes.size < opts.maxSize) {
+
+    const info: FileInfo = await getInfoAsync(resizeRes.uri, {
+      size: true,
+    })
+
+    // I'm not sure this can happen, but if we don't check `.exists`, then the `.size` type is undefined.
+    if (!info.exists) {
+      throw new Error(
+        'The image manipulation library failed to create a new image.',
+      )
+    }
+
+    // We want to clean up every resize _except_ the final result. We'll clean that one up later when we're finished
+    // with it
+    if (info.size < opts.maxSize) {
+      await deleteAsync(imageRes.uri)
       return {
-        path: normalizePath(resizeRes.path),
+        path: normalizePath(resizeRes.uri),
         mime: 'image/jpeg',
-        size: resizeRes.size,
+        size: info.size,
         width: resizeRes.width,
         height: resizeRes.height,
       }
     } else {
-      safeDeleteAsync(resizeRes.path)
+      safeDeleteAsync(resizeRes.uri)
     }
   }
   throw new Error(
@@ -315,5 +345,27 @@ async function withTempFile<T>(
     return await cb(tmpFileUrl)
   } finally {
     safeDeleteAsync(tmpDirUri)
+  }
+}
+
+export function getResizedDimensions(originalDims: {
+  width: number
+  height: number
+}) {
+  if (
+    originalDims.width <= POST_IMG_MAX.width &&
+    originalDims.height <= POST_IMG_MAX.height
+  ) {
+    return originalDims
+  }
+
+  const ratio = Math.min(
+    POST_IMG_MAX.width / originalDims.width,
+    POST_IMG_MAX.height / originalDims.height,
+  )
+
+  return {
+    width: Math.round(originalDims.width * ratio),
+    height: Math.round(originalDims.height * ratio),
   }
 }

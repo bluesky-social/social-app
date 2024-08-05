@@ -1,5 +1,5 @@
 import React from 'react'
-import {KeyboardAvoidingView} from 'react-native'
+import {View} from 'react-native'
 import {LayoutAnimationConfig} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -163,7 +163,7 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
   }
 
   return (
-    <KeyboardAvoidingView testID="signIn" behavior="padding" style={a.flex_1}>
+    <View testID="signIn" style={a.flex_1}>
       <LoggedOutLayout
         leadin=""
         title={title}
@@ -173,6 +173,6 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
           <ScreenTransition key={currentForm}>{content}</ScreenTransition>
         </LayoutAnimationConfig>
       </LoggedOutLayout>
-    </KeyboardAvoidingView>
+    </View>
   )
 }

@@ -57,7 +57,14 @@ export function Text({style, selectable, ...rest}: TextProps) {
   const t = useTheme()
   const s = normalizeTextStyles([atoms.text_sm, t.atoms.text, flatten(style)])
 
-  return <UITextView selectable={selectable} uiTextView style={s} {...rest} />
+  return (
+    <UITextView
+      selectable={selectable}
+      // uiTextView
+      style={s}
+      {...rest}
+    />
+  )
 }
 
 export function createHeadingElement({level}: {level: number}) {

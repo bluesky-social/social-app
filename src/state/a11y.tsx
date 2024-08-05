@@ -1,8 +1,8 @@
 import React from 'react'
 import {AccessibilityInfo} from 'react-native'
-import {isReducedMotion} from 'react-native-reanimated'
 
 import {isWeb} from '#/platform/detection'
+import {PlatformInfo} from '../../modules/expo-bluesky-swiss-army'
 
 const Context = React.createContext({
   reduceMotionEnabled: false,
@@ -15,7 +15,7 @@ export function useA11y() {
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [reduceMotionEnabled, setReduceMotionEnabled] = React.useState(() =>
-    isReducedMotion(),
+    PlatformInfo.getIsReducedMotionEnabled(),
   )
   const [screenReaderEnabled, setScreenReaderEnabled] = React.useState(false)
 
