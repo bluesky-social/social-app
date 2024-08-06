@@ -16,7 +16,7 @@ export async function updateActiveViewAsync() {
   await NativeModule.updateActiveViewAsync()
 }
 
-export function VisibilityView({
+export default function VisibilityView({
   children,
   onChangeStatus: onChangeStatusOuter,
   enabled,

@@ -7,7 +7,7 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {useDedupe} from 'lib/hooks/useDedupe'
 import {addStyle} from 'lib/styles'
-import {updateActiveViewAsync} from '../../../../modules/expo-bluesky-swiss-army/src/VisibilityView/VisibilityView'
+import {updateActiveViewAsync} from '../../../../modules/expo-bluesky-swiss-army/src/VisibilityView/index.native'
 import {FlatList_INTERNAL} from './Views'
 
 export type ListMethods = FlatList_INTERNAL

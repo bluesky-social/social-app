@@ -1,7 +1,8 @@
 import {VisibilityViewProps} from './types'
-export function VisibilityView({
+
+export default function VisibilityView({
   children,
-  onVisibilityChange: _onVisibilityChange,
+  onChangeStatus: _onVisibilityChange,
 }: VisibilityViewProps) {
   return children
 }
