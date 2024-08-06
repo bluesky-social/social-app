@@ -13,11 +13,11 @@ import {
   AppBskyEmbedImages,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
-  AppBskyEmbedVideo,
   AppBskyFeedDefs,
   AppBskyGraphDefs,
   ModerationDecision,
 } from '@atproto/api'
+import {AppBskyEmbedVideo} from '@atproto/api-prerelease'
 
 import {ImagesLightbox, useLightboxControls} from '#/state/lightbox'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'

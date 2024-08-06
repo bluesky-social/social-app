@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {View} from 'react-native'
-import {AppBskyEmbedVideo} from '@atproto/api'
+import {AppBskyEmbedVideo} from '@atproto/api-prerelease'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
