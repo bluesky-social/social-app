@@ -70,7 +70,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       const signal = cancelPendingTask()
       track('Try Create Account')
       logEvent('account:create:begin', {})
-      const {agent, account} = await createAgentAndCreateAccount(params)
+      const {agent, account} = await createAgentAndCreateAccount(
+        params,
+        onAgentSessionChange,
+      )
 
       if (signal.aborted) {
         return
@@ -84,7 +87,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       logEvent('account:create:success', {})
       addSessionDebugLog({type: 'method:end', method: 'createAccount', account})
     },
-    [cancelPendingTask],
+    [onAgentSessionChange, cancelPendingTask],
   )
 
   const login = React.useCallback<SessionApiContext['login']>(
@@ -193,20 +196,18 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       const syncedAccount = synced.accounts.find(
         a => a.did === synced.currentAccount?.did,
       )
-
       if (syncedAccount && syncedAccount.refreshJwt) {
         if (syncedAccount.did !== state.currentAgentState.did) {
           resumeSession(syncedAccount)
         } else {
           const agent = state.currentAgentState.agent as BskyAgent
           const prevSession = agent.session
-          const nextSession = sessionAccountToSession(syncedAccount)
-          agent.resumeSession(nextSession)
+          agent.session = sessionAccountToSession(syncedAccount)
           addSessionDebugLog({
             type: 'agent:patch',
             agent,
             prevSession,
-            nextSession,
+            nextSession: agent.session,
           })
         }
       }
@@ -246,6 +247,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       const prevAgent = currentAgentRef.current
       currentAgentRef.current = agent
       addSessionDebugLog({type: 'agent:switch', prevAgent, nextAgent: agent})
+      // We never reuse agents so let's fully neutralize the previous one.
+      // This ensures it won't try to consume any refresh tokens.
+      prevAgent.session = undefined
+      prevAgent.setPersistSessionHandler(undefined)
     }
   }, [agent])
 
