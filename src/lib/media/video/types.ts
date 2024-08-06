@@ -6,13 +6,16 @@
  */
 
 export interface JobStatus {
-  jobId: string
+  job_id: string
   did: string
   cid: string
+  encoded_cid: string
+  encoded_mime_type: string
+  encoded_size_bytes: number
   state: JobState
   progress?: number
-  errorHuman?: string
-  errorMachine?: string
+  error_human?: string
+  error_machine?: string
 }
 
 export enum JobState {

@@ -172,7 +172,7 @@ export const ComposePost = observer(function ComposePost({
     clearVideo,
     state: videoUploadState,
   } = useUploadVideo({
-    setStatus: (status: string) => setProcessingState(status),
+    setStatus: setProcessingState,
     onSuccess: () => {
       if (publishOnUpload) {
         onPressPublish(true)
@@ -337,6 +337,7 @@ export const ComposePost = observer(function ComposePost({
           threadgate,
           onStateChange: setProcessingState,
           langs: toPostLanguages(langPrefs.postLanguage),
+          video: videoUploadState.blobRef,
         })
       ).uri
       try {
