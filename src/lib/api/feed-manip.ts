@@ -429,8 +429,8 @@ function shouldDisplayReplyInFollowing(
     return false
   }
   if (
-    parentAuthor?.did === author.did &&
-    rootAuthor?.did === author.did &&
+    (!parentAuthor || parentAuthor.did === author.did) &&
+    (!rootAuthor || rootAuthor.did === author.did) &&
     (!grandparentAuthor || grandparentAuthor.did === author.did)
   ) {
     // Always show self-threads.
