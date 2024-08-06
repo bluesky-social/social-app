@@ -8,6 +8,7 @@ import {
 import * as Clipboard from 'expo-clipboard'
 import {
   AppBskyEmbedRecord,
+  AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
@@ -32,6 +33,7 @@ import {
   usePostDeleteMutation,
   useThreadMuteMutationQueue,
 } from '#/state/queries/post'
+import {useToggleQuoteDetachmentMutation} from '#/state/queries/postgate'
 import {useToggleReplyVisibilityMutation} from '#/state/queries/threadgate'
 import {useThreadgateRecordQuery} from '#/state/queries/threadgate'
 import {useSession} from '#/state/session'
@@ -89,7 +91,6 @@ let PostDropdownBtn = ({
   timestamp: string
   rootPostUri?: string
 }): React.ReactNode => {
-  console.log(record)
   const {hasSession, currentAccount} = useSession()
   const theme = useTheme()
   const alf = useAlf()
@@ -118,18 +119,38 @@ let PostDropdownBtn = ({
   const postAuthor = post.author
   const quoteEmbed = React.useMemo(() => {
     if (!currentAccount) return
-    const quoteEmbed =
-      record.embed && AppBskyEmbedRecord.isMain(record.embed)
-        ? record.embed
-        : undefined
-    if (!quoteEmbed) return
-    const urip = new AtUri(quoteEmbed.record.uri)
-    if (urip.collection !== 'app.bsky.feed.post') return
-    return {
-      uri: quoteEmbed.record.uri,
-      isOwnedByViewer: urip.host === currentAccount.did,
+    if (!post.embed) return
+
+    if (AppBskyEmbedRecord.isView(post.embed)) {
+      const isPost = AppBskyEmbedRecord.isViewRecord(post.embed.record)
+      const isDetachedPost = AppBskyEmbedRecord.isViewRemoved(post.embed.record)
+
+      if (isPost || isDetachedPost) {
+        const urip = new AtUri(post.embed.record.uri)
+
+        return {
+          uri: urip.toString(),
+          isOwnedByViewer: urip.host === currentAccount.did,
+          isDetached: isDetachedPost,
+        }
+      }
+    } else if (AppBskyEmbedRecordWithMedia.isView(post.embed)) {
+      const isPost = AppBskyEmbedRecord.isViewRecord(post.embed.record.record)
+      const isDetachedPost = AppBskyEmbedRecord.isViewRemoved(
+        post.embed.record.record,
+      )
+
+      if (isPost || isDetachedPost) {
+        const urip = new AtUri(post.embed.record.record.uri)
+
+        return {
+          uri: urip.toString(),
+          isOwnedByViewer: urip.host === currentAccount.did,
+          isDetached: isDetachedPost,
+        }
+      }
     }
-  }, [record, currentAccount])
+  }, [post, currentAccount])
 
   const rootUri = record.reply?.root?.uri || postUri
   const [isThreadMuted, muteThread, unmuteThread] = useThreadMuteMutationQueue(
@@ -143,6 +164,9 @@ let PostDropdownBtn = ({
     postUri: rootUri,
   })
   const isReplyHiddenByThreadgate = threadgate?.hiddenReplies?.includes(postUri)
+
+  const {mutateAsync: toggleQuoteDetachment} =
+    useToggleQuoteDetachmentMutation()
 
   const href = React.useMemo(() => {
     const urip = new AtUri(postUri)
@@ -273,12 +297,24 @@ let PostDropdownBtn = ({
   const onToggleReplyVisibility = React.useCallback(() => {
     if (!rootPostUri) return
 
+    // TODO handle failure
     toggleReplyVisibility({
       postUri: rootPostUri,
       replyUri: postUri,
       action: isReplyHiddenByThreadgate ? 'show' : 'hide',
     })
   }, [isReplyHiddenByThreadgate, rootPostUri, postUri, toggleReplyVisibility])
+
+  const onToggleQuotePostAttachment = React.useCallback(() => {
+    if (!quoteEmbed) return
+
+    // TODO handle failure
+    toggleQuoteDetachment({
+      postUri,
+      quotedUri: quoteEmbed.uri,
+      action: quoteEmbed.isDetached ? 'reattach' : 'detach',
+    })
+  }, [quoteEmbed, postUri, toggleQuoteDetachment])
 
   const canEmbed = isWeb && gtMobile && !hideInPWI
 
@@ -454,7 +490,7 @@ let PostDropdownBtn = ({
                   <Menu.Item
                     testID="postDropdownHideBtn"
                     label={_(msg`Detach quote`)}
-                    onPress={onToggleReplyVisibility}>
+                    onPress={onToggleQuotePostAttachment}>
                     <Menu.ItemText>{_(msg`Detach quote`)}</Menu.ItemText>
                     <Menu.ItemIcon icon={EyeSlash} position="right" />
                   </Menu.Item>

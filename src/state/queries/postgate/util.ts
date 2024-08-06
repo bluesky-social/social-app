@@ -1,4 +1,9 @@
-import {AppBskyFeedPostgate} from '@atproto/api'
+import {
+  AppBskyEmbedRecord,
+  AppBskyEmbedRecordWithMedia,
+  AppBskyFeedDefs,
+  AppBskyFeedPostgate,
+} from '@atproto/api'
 import {ViewRemoved} from '@atproto/api/dist/client/types/app/bsky/embed/record'
 
 export const POSTGATE_COLLECTION = 'app.bsky.feed.postgate'
@@ -40,5 +45,62 @@ export function createEmbedViewRemovedRecord({uri}: {uri: string}) {
   return {
     $type: 'app.bsky.embed.record#view',
     record,
+  }
+}
+
+export function createEmbed({
+  post,
+  embeddedPost,
+  detached,
+}: {
+  post: AppBskyFeedDefs.PostView
+  embeddedPost: AppBskyFeedDefs.PostView
+  detached: boolean
+}) {
+  if (AppBskyEmbedRecord.isView(post.embed)) {
+    if (detached) return createEmbedViewRemovedRecord({uri: post.uri})
+    return createEmbedRecordView({post: embeddedPost})
+  } else if (AppBskyEmbedRecordWithMedia.isView(post.embed)) {
+    if (detached)
+      return {
+        ...post.embed,
+        record: createEmbedViewRemovedRecord({uri: post.uri}),
+      }
+    return createEmbedRecordWithmediaView({post, embeddedPost})
+  }
+}
+
+export function createEmbedRecordView({
+  post,
+}: {
+  post: AppBskyFeedDefs.PostView
+}): AppBskyEmbedRecord.View {
+  return {
+    $type: 'app.bsky.embed.record#view',
+    record: {
+      $type: 'app.bsky.embed.record#viewRecord',
+      ...post,
+      value: post.record,
+    },
+  }
+}
+
+export function createEmbedRecordWithmediaView({
+  post,
+  embeddedPost,
+}: {
+  post: AppBskyFeedDefs.PostView
+  embeddedPost: AppBskyFeedDefs.PostView
+}): AppBskyEmbedRecordWithMedia.View | undefined {
+  if (!AppBskyEmbedRecordWithMedia.isView(post.embed)) return
+  return {
+    ...(post.embed || {}),
+    record: {
+      record: {
+        $type: 'app.bsky.embed.record#viewRecord',
+        ...embeddedPost,
+        value: embeddedPost.record,
+      },
+    },
   }
 }

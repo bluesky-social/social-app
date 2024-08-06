@@ -1,8 +1,11 @@
 import {AppBskyFeedPostgate, AtUri, BskyAgent} from '@atproto/api'
-import {useMutation} from '@tanstack/react-query'
+import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {networkRetry} from '#/lib/async/retry'
+import {updatePostShadow} from '#/state/cache/post-shadow'
+import {useGetPosts} from '#/state/queries/post'
 import {
+  createEmbed,
   createPostgateRecord,
   mergePostgateRecords,
   POSTGATE_COLLECTION,
@@ -26,6 +29,7 @@ export async function getPostgateRecord({
   }
 
   try {
+    // TODO don't retry on 404
     const {data} = await networkRetry(2, () =>
       agent.api.com.atproto.repo.getRecord({
         repo: urip.host,
@@ -100,6 +104,8 @@ export async function upsertPostgate(
 
 export function useToggleQuoteDetachmentMutation() {
   const agent = useAgent()
+  const queryClient = useQueryClient()
+  const getPosts = useGetPosts()
 
   return useMutation({
     mutationFn: async ({
@@ -132,6 +138,17 @@ export function useToggleQuoteDetachmentMutation() {
             })
           }
         }
+      })
+    },
+    async onSuccess(_data, {postUri, quotedUri, action}) {
+      const [post, quotedPost] = await getPosts({uris: [postUri, quotedUri]})
+
+      updatePostShadow(queryClient, postUri, {
+        embed: createEmbed({
+          post,
+          embeddedPost: quotedPost,
+          detached: action === 'detach',
+        }),
       })
     },
   })

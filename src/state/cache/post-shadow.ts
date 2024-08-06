@@ -1,5 +1,9 @@
 import {useEffect, useMemo, useState} from 'react'
-import {AppBskyFeedDefs} from '@atproto/api'
+import {
+  AppBskyEmbedRecord,
+  AppBskyEmbedRecordWithMedia,
+  AppBskyFeedDefs,
+} from '@atproto/api'
 import {QueryClient} from '@tanstack/react-query'
 import EventEmitter from 'eventemitter3'
 
@@ -15,6 +19,7 @@ export interface PostShadow {
   likeUri: string | undefined
   repostUri: string | undefined
   isDeleted: boolean
+  embed: AppBskyEmbedRecord.View | AppBskyEmbedRecordWithMedia.View | undefined
 }
 
 export const POST_TOMBSTONE = Symbol('PostTombstone')
@@ -84,6 +89,10 @@ function mergeShadow(
       repostCount++
     }
     repostCount = Math.max(0, repostCount)
+  }
+
+  if (shadow.embed !== undefined && post.embed) {
+    post.embed = shadow.embed
   }
 
   return castAsShadow({
