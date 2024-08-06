@@ -9,12 +9,15 @@ import Animated, {
 } from 'react-native-reanimated'
 import {VideoPlayer, VideoView} from 'expo-video'
 import {AppBskyEmbedVideo} from '@atproto/api'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
 import {useVideoPlayer} from '../VideoPlayerContext'
 
 export function VideoEmbedInnerNative({embed}: {embed: AppBskyEmbedVideo.View}) {
+  const {_} = useLingui()
   const player = useVideoPlayer()
   const aref = useAnimatedRef<Animated.View>()
   const {height: windowHeight} = useWindowDimensions()
@@ -83,6 +86,10 @@ export function VideoEmbedInnerNative({embed}: {embed: AppBskyEmbedVideo.View}) 
         contentFit="contain"
         nativeControls={true}
         accessibilityIgnoresInvertColors
+        accessibilityLabel={
+          embed.alt ? _(msg`Video: ${embed.alt}`) : _(msg`Video`)
+        }
+        accessibilityHint=""
       />
       <VideoControls player={player} enterFullscreen={enterFullscreen} />
     </Animated.View>
