@@ -136,6 +136,7 @@ export function sortThread(
   node: ThreadNode,
   opts: UsePreferencesQueryResponse['threadViewPrefs'],
   modCache: ThreadModerationCache,
+  currentDid: string | undefined,
 ): ThreadNode {
   if (node.type !== 'post') {
     return node
@@ -157,6 +158,16 @@ export function sortThread(
         return -1 // op's own reply
       } else if (bIsByOp) {
         return 1 // op's own reply
+      }
+
+      const aIsBySelf = a.post.author.did === currentDid
+      const bIsBySelf = b.post.author.did === currentDid
+      if (aIsBySelf && bIsBySelf) {
+        return a.post.indexedAt.localeCompare(b.post.indexedAt) // oldest
+      } else if (aIsBySelf) {
+        return -1 // current account's reply
+      } else if (bIsBySelf) {
+        return 1 // current account's reply
       }
 
       const aBlur = Boolean(modCache.get(a)?.ui('contentList').blur)
@@ -195,7 +206,7 @@ export function sortThread(
       }
       return b.post.indexedAt.localeCompare(a.post.indexedAt)
     })
-    node.replies.forEach(reply => sortThread(reply, opts, modCache))
+    node.replies.forEach(reply => sortThread(reply, opts, modCache, currentDid))
   }
   return node
 }
