@@ -49,7 +49,7 @@ export async function getThreadgateRecord({
 }: {
   agent: BskyAgent
   postUri: string
-}): Promise<AppBskyFeedThreadgate.Record | undefined> {
+}): Promise<AppBskyFeedThreadgate.Record | null> {
   const urip = new AtUri(postUri)
 
   if (!urip.host.startsWith('did:')) {
@@ -71,11 +71,11 @@ export async function getThreadgateRecord({
     if (data.value && AppBskyFeedThreadgate.isRecord(data.value)) {
       return data.value
     } else {
-      return undefined
+      return null
     }
   } catch (e: any) {
     if (e.message.includes(`Could not locate record:`)) {
-      return undefined
+      return null
     } else {
       throw new Error(`Failed to get threadgate record`, {cause: e})
     }
@@ -117,7 +117,7 @@ export async function upsertThreadgate(
     postUri: string
   },
   callback: (
-    threadgate: AppBskyFeedThreadgate.Record | undefined,
+    threadgate: AppBskyFeedThreadgate.Record | null,
   ) => Promise<AppBskyFeedThreadgate.Record | undefined>,
 ) {
   const prev = await getThreadgateRecord({

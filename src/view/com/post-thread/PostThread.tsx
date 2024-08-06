@@ -187,7 +187,7 @@ export function PostThread({
       treeView,
       threadModerationCache,
       hiddenRepliesState !== HiddenRepliesState.Hide,
-      threadgateRecord,
+      threadgateRecord || undefined,
     )
   }, [
     thread,
