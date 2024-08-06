@@ -428,32 +428,34 @@ function shouldDisplayReplyInFollowing(
     // Only show replies from self or people you follow.
     return false
   }
-  if (!parentAuthor || !grandparentAuthor || !rootAuthor) {
-    // Don't surface orphaned reply subthreads.
-    return false
-  }
   if (
-    parentAuthor.did === author.did &&
-    grandparentAuthor.did === author.did &&
-    rootAuthor.did === author.did
+    (!parentAuthor || parentAuthor.did === author.did) &&
+    (!rootAuthor || rootAuthor.did === author.did) &&
+    (!grandparentAuthor || grandparentAuthor.did === author.did)
   ) {
     // Always show self-threads.
     return true
   }
   // From this point on we need at least one more reason to show it.
   if (
+    parentAuthor &&
     parentAuthor.did !== author.did &&
     isSelfOrFollowing(parentAuthor, userDid)
   ) {
     return true
   }
   if (
+    grandparentAuthor &&
     grandparentAuthor.did !== author.did &&
     isSelfOrFollowing(grandparentAuthor, userDid)
   ) {
     return true
   }
-  if (rootAuthor.did !== author.did && isSelfOrFollowing(rootAuthor, userDid)) {
+  if (
+    rootAuthor &&
+    rootAuthor.did !== author.did &&
+    isSelfOrFollowing(rootAuthor, userDid)
+  ) {
     return true
   }
   return false
