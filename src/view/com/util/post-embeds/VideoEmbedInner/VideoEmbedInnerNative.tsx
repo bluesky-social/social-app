@@ -26,6 +26,7 @@ export function VideoEmbedInnerNative({
 }: {
   embed: AppBskyEmbedVideo.View
 }) {
+  const {_} = useLingui()
   const {player} = useActiveVideoNative()
   const ref = useRef<VideoView>(null)
   const isScreenFocused = useIsFocused()
@@ -81,6 +82,10 @@ export function VideoEmbedInnerNative({
           player.muted = true
           if (!player.playing) player.play()
         }}
+        accessibilityLabel={
+          embed.alt ? _(msg`Video: ${embed.alt}`) : _(msg`Video`)
+        }
+        accessibilityHint=""
       />
       <VideoControls player={player} enterFullscreen={enterFullscreen} />
     </View>
