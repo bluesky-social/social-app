@@ -2,12 +2,9 @@ package expo.modules.blueskyswissarmy.visibilityview
 
 import android.content.Context
 import android.graphics.Rect
-import android.util.Log
 import expo.modules.kotlin.AppContext
 import expo.modules.kotlin.viewevent.EventDispatcher
 import expo.modules.kotlin.views.ExpoView
-
-const val TAG = "VisibilityView"
 
 class VisibilityView(
   context: Context,
@@ -20,13 +17,11 @@ class VisibilityView(
   private var isCurrentlyActive = false
 
   override fun onAttachedToWindow() {
-    Log.d(TAG, "onAttachedToWindow")
     super.onAttachedToWindow()
     VisibilityViewManager.addView(this)
   }
 
   override fun onDetachedFromWindow() {
-    Log.d(TAG, "onDetachedFromWindow")
     super.onDetachedFromWindow()
     VisibilityViewManager.removeView(this)
   }
@@ -45,7 +40,6 @@ class VisibilityView(
   }
 
   fun getPositionOnScreen(): Rect? {
-    Log.d(TAG, "getPositionOnScreen")
     if (!this.isShown) {
       return null
     }
@@ -61,12 +55,7 @@ class VisibilityView(
   }
 
   fun isViewableEnough(): Boolean {
-    // If the view is at least 50% visible, we consider it viewable.
-    Log.d(TAG, "isViewableEnough")
-    Log.d(TAG, "width: ${this.width}")
-    Log.d(TAG, "height: ${this.height}")
     val positionOnScreen = this.getPositionOnScreen() ?: return false
-    Log.d(TAG, "positionOnScreen: $positionOnScreen")
     val visibleArea = positionOnScreen.width() * positionOnScreen.height()
     val totalArea = this.width * this.height
     return visibleArea >= 0.5 * totalArea

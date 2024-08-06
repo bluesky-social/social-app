@@ -1,7 +1,6 @@
 package expo.modules.blueskyswissarmy.visibilityview
 
 import android.graphics.Rect
-import android.util.Log
 
 class VisibilityViewManager {
   companion object {
@@ -9,9 +8,7 @@ class VisibilityViewManager {
     private var currentlyActiveView: VisibilityView? = null
 
     fun addView(view: VisibilityView) {
-      Log.d("VisibilityView", "view id: ${view.id}")
       this.views[view.id] = view
-      Log.d("VisibilityView", "count: ${this.views.count()}")
     }
 
     fun removeView(view: VisibilityView) {
