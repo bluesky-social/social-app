@@ -41,7 +41,10 @@ export async function write<K extends keyof Schema>(
 }
 write satisfies PersistedApi['write']
 
-export function onUpdate(_cb: () => void): () => void {
+export function onUpdate<K extends keyof Schema>(
+  _key: K,
+  _cb: (v: Schema[K]) => void,
+): () => void {
   return () => {}
 }
 onUpdate satisfies PersistedApi['onUpdate']
