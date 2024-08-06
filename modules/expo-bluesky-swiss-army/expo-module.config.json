@@ -12,7 +12,7 @@
     "modules": [
       "expo.modules.blueskyswissarmy.sharedprefs.ExpoBlueskySharedPrefsModule",
       "expo.modules.blueskyswissarmy.referrer.ExpoBlueskyReferrerModule",
-      "expo.modules.blueskyswissarmy.visibilityview.ExpoBlueskyVisibilityView",
+      "expo.modules.blueskyswissarmy.visibilityview.ExpoBlueskyVisibilityViewModule",
       "expo.modules.blueskyswissarmy.platforminfo.ExpoPlatformInfoModule"
     ]
   }
