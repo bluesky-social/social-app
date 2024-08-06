@@ -13,7 +13,7 @@ class VisibilityView(
   context: Context,
   appContext: AppContext,
 ) : ExpoView(context, appContext) {
-  var _enabled: Boolean = false
+  var isViewEnabled: Boolean = false
 
   private val onChangeStatus by EventDispatcher()
 
@@ -28,7 +28,6 @@ class VisibilityView(
   override fun onDetachedFromWindow() {
     Log.d(TAG, "onDetachedFromWindow")
     super.onDetachedFromWindow()
-    onChangeStatus(mapOf("visible" to false))
     VisibilityViewManager.removeView(this)
   }
 
@@ -38,9 +37,11 @@ class VisibilityView(
     }
 
     this.isCurrentlyActive = isActive
-    this.onChangeStatus(mapOf(
-      "isActive" to isActive,
-    ))
+    this.onChangeStatus(
+      mapOf(
+        "isActive" to isActive,
+      ),
+    )
   }
 
   fun getPositionOnScreen(): Rect? {
@@ -62,7 +63,10 @@ class VisibilityView(
   fun isViewableEnough(): Boolean {
     // If the view is at least 50% visible, we consider it viewable.
     Log.d(TAG, "isViewableEnough")
+    Log.d(TAG, "width: ${this.width}")
+    Log.d(TAG, "height: ${this.height}")
     val positionOnScreen = this.getPositionOnScreen() ?: return false
+    Log.d(TAG, "positionOnScreen: $positionOnScreen")
     val visibleArea = positionOnScreen.width() * positionOnScreen.height()
     val totalArea = this.width * this.height
     return visibleArea >= 0.5 * totalArea

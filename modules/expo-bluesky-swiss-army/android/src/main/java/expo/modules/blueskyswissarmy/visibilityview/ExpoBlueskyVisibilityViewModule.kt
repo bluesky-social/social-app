@@ -16,7 +16,7 @@ class ExpoBlueskyVisibilityViewModule : Module() {
         Events(arrayOf("onChangeStatus"))
 
         Prop("enabled") { view: VisibilityView, prop: Boolean ->
-          view._enabled = prop
+          view.isViewEnabled = prop
         }
       }
     }

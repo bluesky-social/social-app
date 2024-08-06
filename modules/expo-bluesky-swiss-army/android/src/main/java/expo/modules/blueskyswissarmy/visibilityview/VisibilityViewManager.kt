@@ -1,15 +1,17 @@
 package expo.modules.blueskyswissarmy.visibilityview
 
 import android.graphics.Rect
-import java.util.WeakHashMap
+import android.util.Log
 
 class VisibilityViewManager {
   companion object {
-    private val views = WeakHashMap<Int, VisibilityView>()
+    private val views = HashMap<Int, VisibilityView>()
     private var currentlyActiveView: VisibilityView? = null
 
     fun addView(view: VisibilityView) {
+      Log.d("VisibilityView", "view id: ${view.id}")
       this.views[view.id] = view
+      Log.d("VisibilityView", "count: ${this.views.count()}")
     }
 
     fun removeView(view: VisibilityView) {
@@ -18,13 +20,14 @@ class VisibilityViewManager {
 
     fun updateActiveView() {
       var activeView: VisibilityView? = null
+      val count = this.views.count()
 
-      if (this.views.count() == 1) {
+      if (count == 1) {
         val view = this.views.values.first()
         if (view.isViewableEnough()) {
           activeView = view
         }
-      } else if (this.views.count() > 1) {
+      } else if (count > 1) {
         val views = this.views.values
         var mostVisibleView: VisibilityView? = null
         var mostVisiblePosition: Rect? = null
