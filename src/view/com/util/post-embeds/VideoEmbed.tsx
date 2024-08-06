@@ -1,7 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {AppBskyEmbedVideo} from '@atproto/api'
+import {AppBskyEmbedVideo} from '@atproto/api-prerelease'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

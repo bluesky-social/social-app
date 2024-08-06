@@ -8,7 +8,7 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated'
 import {VideoPlayer, VideoView} from 'expo-video'
-import {AppBskyEmbedVideo} from '@atproto/api'
+import {AppBskyEmbedVideo} from '@atproto/api-prerelease'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
