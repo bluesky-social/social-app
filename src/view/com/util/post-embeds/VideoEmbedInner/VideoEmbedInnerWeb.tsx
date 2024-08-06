@@ -1,31 +1,27 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React, {useEffect, useId, useRef, useState} from 'react'
 import {View} from 'react-native'
+import {AppBskyEmbedVideo} from '@atproto/api'
 import Hls from 'hls.js'
 
 import {atoms as a} from '#/alf'
 import {Controls} from './VideoWebControls'
 
 export function VideoEmbedInnerWeb({
-  source,
+  embed,
   active,
   setActive,
   onScreen,
 }: {
-  source: string
-  active?: boolean
-  setActive?: () => void
-  onScreen?: boolean
+  embed: AppBskyEmbedVideo.View
+  active: boolean
+  setActive: () => void
+  onScreen: boolean
 }) {
-  if (active == null || setActive == null || onScreen == null) {
-    throw new Error(
-      'active, setActive, and onScreen are required VideoEmbedInner props on web.',
-    )
-  }
-
   const containerRef = useRef<HTMLDivElement>(null)
   const ref = useRef<HTMLVideoElement>(null)
   const [focused, setFocused] = useState(false)
   const [hasSubtitleTrack, setHasSubtitleTrack] = useState(false)
+  const figId = useId()
 
   const hlsRef = useRef<Hls | undefined>(undefined)
 
@@ -37,7 +33,7 @@ export function VideoEmbedInnerWeb({
     hlsRef.current = hls
 
     hls.attachMedia(ref.current)
-    hls.loadSource(source)
+    hls.loadSource(embed.playlist)
 
     // initial value, later on it's managed by Controls
     hls.autoLevelCapping = 0
@@ -53,29 +49,26 @@ export function VideoEmbedInnerWeb({
       hls.detachMedia()
       hls.destroy()
     }
-  }, [source])
+  }, [embed.playlist])
 
   return (
-    <View
-      style={[
-        a.w_full,
-        a.rounded_sm,
-        // TODO: get from embed metadata
-        // max should be 1 / 1
-        {aspectRatio: 16 / 9},
-        a.overflow_hidden,
-      ]}>
+    <View style={[a.w_full, a.rounded_sm, a.overflow_hidden]}>
       <div
         ref={containerRef}
         style={{width: '100%', height: '100%', display: 'flex'}}>
-        <video
-          ref={ref}
-          style={{width: '100%', height: '100%', objectFit: 'contain'}}
-          playsInline
-          preload="none"
-          loop
-          muted={!focused}
-        />
+        <figure>
+          <video
+            ref={ref}
+            poster={embed.thumbnail}
+            style={{width: '100%', height: '100%', objectFit: 'contain'}}
+            playsInline
+            preload="none"
+            loop
+            muted={!focused}
+            aria-labelledby={embed.alt ? figId : undefined}
+          />
+          {embed.alt && <figcaption id={figId}>{embed.alt}</figcaption>}
+        </figure>
         <Controls
           videoRef={ref}
           hlsRef={hlsRef}
