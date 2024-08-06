@@ -153,6 +153,7 @@ let PostDropdownBtn = ({
   }, [post, currentAccount])
 
   const rootUri = record.reply?.root?.uri || postUri
+  const isReply = Boolean(record.reply)
   const [isThreadMuted, muteThread, unmuteThread] = useThreadMuteMutationQueue(
     post,
     rootUri,
@@ -468,7 +469,7 @@ let PostDropdownBtn = ({
                   </Menu.Item>
                 )}
 
-                {!isAuthor && !isPostHidden && rootPostUri && (
+                {!isAuthor && !isPostHidden && rootPostUri && isReply && (
                   <Menu.Item
                     testID="postDropdownHideBtn"
                     label={
@@ -489,10 +490,21 @@ let PostDropdownBtn = ({
                 {quoteEmbed && quoteEmbed.isOwnedByViewer && (
                   <Menu.Item
                     testID="postDropdownHideBtn"
-                    label={_(msg`Detach quote`)}
+                    label={
+                      quoteEmbed.isDetached
+                        ? _(msg`Re-attach quote`)
+                        : _(msg`Detach quote`)
+                    }
                     onPress={onToggleQuotePostAttachment}>
-                    <Menu.ItemText>{_(msg`Detach quote`)}</Menu.ItemText>
-                    <Menu.ItemIcon icon={EyeSlash} position="right" />
+                    <Menu.ItemText>
+                      {quoteEmbed.isDetached
+                        ? _(msg`Re-attach quote`)
+                        : _(msg`Detach quote`)}
+                    </Menu.ItemText>
+                    <Menu.ItemIcon
+                      icon={quoteEmbed.isDetached ? EyeSlash : EyeSlash}
+                      position="right"
+                    />
                   </Menu.Item>
                 )}
               </Menu.Group>

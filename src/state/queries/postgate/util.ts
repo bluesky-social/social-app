@@ -58,13 +58,13 @@ export function createEmbed({
   detached: boolean
 }) {
   if (AppBskyEmbedRecord.isView(post.embed)) {
-    if (detached) return createEmbedViewRemovedRecord({uri: post.uri})
+    if (detached) return createEmbedViewRemovedRecord({uri: embeddedPost.uri})
     return createEmbedRecordView({post: embeddedPost})
   } else if (AppBskyEmbedRecordWithMedia.isView(post.embed)) {
     if (detached)
       return {
         ...post.embed,
-        record: createEmbedViewRemovedRecord({uri: post.uri}),
+        record: createEmbedViewRemovedRecord({uri: embeddedPost.uri}),
       }
     return createEmbedRecordWithmediaView({post, embeddedPost})
   }

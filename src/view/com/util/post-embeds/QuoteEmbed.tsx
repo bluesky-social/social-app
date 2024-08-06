@@ -84,6 +84,15 @@ export function MaybeQuoteEmbed({
         </Text>
       </View>
     )
+  } else if (AppBskyEmbedRecord.isViewRemoved(embed.record)) {
+    return (
+      <View style={[styles.errorContainer, pal.borderDark]}>
+        <InfoCircleIcon size={18} style={pal.text} />
+        <Text type="lg" style={pal.text}>
+          <Trans>Removed by author</Trans>
+        </Text>
+      </View>
+    )
   }
   return null
 }
