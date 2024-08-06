@@ -19,20 +19,15 @@ export function useFeedTuners(feedDesc: FeedDescriptor) {
       }
     }
     if (feedDesc.startsWith('feedgen')) {
-      return [
-        FeedTuner.dedupReposts,
-        FeedTuner.preferredLangOnly(langPrefs.contentLanguages),
-      ]
+      return [FeedTuner.preferredLangOnly(langPrefs.contentLanguages)]
     }
     if (feedDesc.startsWith('list')) {
-      const feedTuners = []
-
+      let feedTuners = []
       if (feedDesc.endsWith('|as_following')) {
         // Same as Following tuners below, copypaste for now.
+        feedTuners.push(FeedTuner.removeOrphans)
         if (preferences?.feedViewPrefs.hideReposts) {
           feedTuners.push(FeedTuner.removeReposts)
-        } else {
-          feedTuners.push(FeedTuner.dedupReposts)
         }
         if (preferences?.feedViewPrefs.hideReplies) {
           feedTuners.push(FeedTuner.removeReplies)
@@ -46,18 +41,15 @@ export function useFeedTuners(feedDesc: FeedDescriptor) {
         if (preferences?.feedViewPrefs.hideQuotePosts) {
           feedTuners.push(FeedTuner.removeQuotePosts)
         }
-      } else {
-        feedTuners.push(FeedTuner.dedupReposts)
+        feedTuners.push(FeedTuner.dedupThreads)
       }
       return feedTuners
     }
     if (feedDesc === 'following') {
-      const feedTuners = []
+      const feedTuners = [FeedTuner.removeOrphans]
 
       if (preferences?.feedViewPrefs.hideReposts) {
         feedTuners.push(FeedTuner.removeReposts)
-      } else {
-        feedTuners.push(FeedTuner.dedupReposts)
       }
       if (preferences?.feedViewPrefs.hideReplies) {
         feedTuners.push(FeedTuner.removeReplies)
@@ -71,6 +63,7 @@ export function useFeedTuners(feedDesc: FeedDescriptor) {
       if (preferences?.feedViewPrefs.hideQuotePosts) {
         feedTuners.push(FeedTuner.removeQuotePosts)
       }
+      feedTuners.push(FeedTuner.dedupThreads)
 
       return feedTuners
     }
