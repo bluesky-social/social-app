@@ -1,5 +1,6 @@
 import React from 'react'
 import {ImagePickerAsset} from 'expo-image-picker'
+import {BlobRef} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQuery} from '@tanstack/react-query'
@@ -31,6 +32,7 @@ type Action =
   | {type: 'SetAsset'; asset: ImagePickerAsset}
   | {type: 'SetVideo'; video: CompressedVideo}
   | {type: 'SetJobStatus'; jobStatus: JobStatus}
+  | {type: 'SetBlobRef'; blobRef: BlobRef}
 
 export interface State {
   status: Status
@@ -38,6 +40,7 @@ export interface State {
   asset?: ImagePickerAsset
   video: CompressedVideo | null
   jobStatus?: JobStatus
+  blobRef?: BlobRef
   error?: string
 }
 
@@ -54,6 +57,7 @@ function reducer(state: State, action: Action): State {
       status: 'idle',
       progress: 0,
       video: null,
+      blobRef: undefined,
     }
   } else if (action.type === 'SetAsset') {
     updatedState = {...state, asset: action.asset}
@@ -61,6 +65,8 @@ function reducer(state: State, action: Action): State {
     updatedState = {...state, video: action.video}
   } else if (action.type === 'SetJobStatus') {
     updatedState = {...state, jobStatus: action.jobStatus}
+  } else if (action.type === 'SetBlobRef') {
+    updatedState = {...state, blobRef: action.blobRef}
   }
   return updatedState
 }
@@ -89,7 +95,11 @@ export function useUploadVideo({
       })
       setStatus(status.state.toString())
     },
-    onSuccess: () => {
+    onSuccess: blobRef => {
+      dispatch({
+        type: 'SetBlobRef',
+        blobRef,
+      })
       dispatch({
         type: 'SetStatus',
         status: 'idle',
@@ -180,7 +190,7 @@ const useUploadStatusQuery = ({
   onSuccess,
 }: {
   onStatusChange: (status: JobStatus) => void
-  onSuccess: () => void
+  onSuccess: (blobRef: BlobRef) => void
 }) => {
   const [enabled, setEnabled] = React.useState(true)
   const [jobId, setJobId] = React.useState<string>()
@@ -192,8 +202,13 @@ const useUploadStatusQuery = ({
       const res = await fetch(url)
       const status = (await res.json()) as JobStatus
       if (status.state === JobState.JOB_STATE_COMPLETED) {
+        const blobRef = new BlobRef(
+          status.encoded_cid,
+          status.encoded_mime_type,
+          status.encoded_size_bytes,
+        )
         setEnabled(false)
-        onSuccess()
+        onSuccess(blobRef)
       }
       onStatusChange(status)
       return status
