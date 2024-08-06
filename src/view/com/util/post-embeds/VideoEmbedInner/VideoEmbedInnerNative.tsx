@@ -2,12 +2,14 @@ import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import Animated, {FadeInDown} from 'react-native-reanimated'
 import {VideoPlayer, VideoView} from 'expo-video'
+import {AppBskyEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useIsFocused} from '@react-navigation/native'
 
 import {HITSLOP_30} from '#/lib/constants'
 import {useAppState} from '#/lib/hooks/useAppState'
+import {clamp} from '#/lib/numbers'
 import {logger} from '#/logger'
 import {useActiveVideoNative} from 'view/com/util/post-embeds/ActiveVideoNativeContext'
 import {atoms as a, useTheme} from '#/alf'
@@ -19,7 +21,11 @@ import {
 } from '../../../../../../modules/expo-bluesky-swiss-army'
 import {TimeIndicator} from './TimeIndicator'
 
-export function VideoEmbedInnerNative() {
+export function VideoEmbedInnerNative({
+  embed,
+}: {
+  embed: AppBskyEmbedVideo.View
+}) {
   const {player} = useActiveVideoNative()
   const ref = useRef<VideoView>(null)
   const isScreenFocused = useIsFocused()
@@ -47,13 +53,23 @@ export function VideoEmbedInnerNative() {
     ref.current?.enterFullscreen()
   }, [])
 
+  let aspectRatio = 16 / 9
+
+  if (embed.aspectRatio) {
+    const {width, height} = embed.aspectRatio
+    aspectRatio = width / height
+    aspectRatio = clamp(aspectRatio, 1 / 1, 3 / 1)
+  }
+
   return (
-    <View style={[a.flex_1, a.relative]}>
+    <View style={[a.flex_1, a.relative, {aspectRatio}]}>
       <VideoView
         ref={ref}
         player={player}
         style={[a.flex_1, a.rounded_sm]}
+        contentFit="contain"
         nativeControls={true}
+        accessibilityIgnoresInvertColors
         onEnterFullscreen={() => {
           PlatformInfo.setAudioCategory(AudioCategory.Playback)
           PlatformInfo.setAudioActive(true)
@@ -66,12 +82,12 @@ export function VideoEmbedInnerNative() {
           if (!player.playing) player.play()
         }}
       />
-      <Controls player={player} enterFullscreen={enterFullscreen} />
+      <VideoControls player={player} enterFullscreen={enterFullscreen} />
     </View>
   )
 }
 
-function Controls({
+function VideoControls({
   player,
   enterFullscreen,
 }: {

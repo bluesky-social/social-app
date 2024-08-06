@@ -1,19 +1,22 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {View} from 'react-native'
+import {AppBskyEmbedVideo} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
+import {useGate} from '#/lib/statsig/statsig'
 import {
   HLSUnsupportedError,
   VideoEmbedInnerWeb,
-} from 'view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerWeb'
+} from '#/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerWeb'
 import {atoms as a, useTheme} from '#/alf'
 import {ErrorBoundary} from '../ErrorBoundary'
 import {useActiveVideoWeb} from './ActiveVideoWebContext'
 import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 
-export function VideoEmbed({source}: {source: string}) {
+export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
   const t = useTheme()
   const ref = useRef<HTMLDivElement>(null)
+  const gate = useGate()
   const {active, setActive, sendPosition, currentActiveView} =
     useActiveVideoWeb()
   const [onScreen, setOnScreen] = useState(false)
@@ -43,6 +46,10 @@ export function VideoEmbed({source}: {source: string}) {
     [key],
   )
 
+  if (!gate('videos')) {
+    return null
+  }
+
   return (
     <View
       style={[
@@ -61,7 +68,7 @@ export function VideoEmbed({source}: {source: string}) {
             sendPosition={sendPosition}
             isAnyViewActive={currentActiveView !== null}>
             <VideoEmbedInnerWeb
-              source={source}
+              embed={embed}
               active={active}
               setActive={setActive}
               onScreen={onScreen}
