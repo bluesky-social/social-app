@@ -53,6 +53,7 @@
   },
   "dependencies": {
     "@atproto/api": "0.13.3",
+    "@atproto/api-prerelease": "npm:@atproto/api@0.12.26-next.0",
     "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@braintree/sanitize-url": "^6.0.2",
     "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
