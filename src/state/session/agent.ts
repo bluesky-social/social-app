@@ -43,7 +43,7 @@ export async function createAgentAndResume(
   if (isSessionExpired(storedAccount)) {
     await networkRetry(1, () => agent.resumeSession(prevSession))
   } else {
-    agent.session = prevSession
+    agent.sessionManager.session = prevSession
     if (!storedAccount.signupQueued) {
       // Intentionally not awaited to unblock the UI:
       networkRetry(3, () => agent.resumeSession(prevSession)).catch(

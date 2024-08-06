@@ -202,7 +202,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         } else {
           const agent = state.currentAgentState.agent as BskyAgent
           const prevSession = agent.session
-          agent.session = sessionAccountToSession(syncedAccount)
+          agent.sessionManager.session = sessionAccountToSession(syncedAccount)
           addSessionDebugLog({
             type: 'agent:patch',
             agent,
@@ -249,7 +249,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       addSessionDebugLog({type: 'agent:switch', prevAgent, nextAgent: agent})
       // We never reuse agents so let's fully neutralize the previous one.
       // This ensures it won't try to consume any refresh tokens.
-      prevAgent.session = undefined
+      prevAgent.sessionManager.session = undefined
       prevAgent.setPersistSessionHandler(undefined)
     }
   }, [agent])
