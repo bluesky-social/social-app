@@ -1,4 +1,4 @@
-import ModulesCore
+import ExpoModulesCore
 
 class VisibilityView: ExpoView {
   // Props
@@ -20,6 +20,8 @@ class VisibilityView: ExpoView {
   }
 
   public override func willMove(toWindow newWindow: UIWindow?) {
+    super.willMove(toWindow: newWindow)
+    
     if !self.enabled {
       return
     }
