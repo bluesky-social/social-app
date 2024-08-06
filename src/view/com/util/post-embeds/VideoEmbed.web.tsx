@@ -1,8 +1,10 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {View} from 'react-native'
+import {AppBskyEmbedVideo} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useGate} from '#/lib/statsig/statsig'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {Text} from '#/components/Typography'
@@ -11,12 +13,13 @@ import {useActiveVideoView} from './ActiveVideoContext'
 import {VideoEmbedInner} from './VideoEmbedInner'
 import {HLSUnsupportedError} from './VideoEmbedInner.web'
 
-export function VideoEmbed({source}: {source: string}) {
+export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
   const t = useTheme()
   const ref = useRef<HTMLDivElement>(null)
+  const gate = useGate()
   const {active, setActive, sendPosition, currentActiveView} =
     useActiveVideoView({
-      source,
+      source: embed.playlist,
     })
   const [onScreen, setOnScreen] = useState(false)
 
@@ -45,6 +48,10 @@ export function VideoEmbed({source}: {source: string}) {
     [key],
   )
 
+  if (!gate('videos')) {
+    return null
+  }
+
   return (
     <View
       style={[
@@ -63,7 +70,7 @@ export function VideoEmbed({source}: {source: string}) {
             sendPosition={sendPosition}
             isAnyViewActive={currentActiveView !== null}>
             <VideoEmbedInner
-              source={source}
+              embed={embed}
               active={active}
               setActive={setActive}
               onScreen={onScreen}

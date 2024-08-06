@@ -8,13 +8,16 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated'
 import {VideoPlayer, VideoView} from 'expo-video'
+import {AppBskyEmbedVideo} from '@atproto/api'
 
 import {atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
 import {useVideoPlayer} from './VideoPlayerContext'
 
-export function VideoEmbedInner({}: {
-  source: string
+export function VideoEmbedInner({
+  embed,
+}: {
+  embed: AppBskyEmbedVideo.View
   active: boolean
   setActive: () => void
   onScreen: boolean
@@ -67,16 +70,26 @@ export function VideoEmbedInner({}: {
     }
   })
 
+  let aspectRatio = 16 / 9
+
+  if (embed.aspectRatio) {
+    const {width, height} = embed.aspectRatio
+    aspectRatio = width / height
+    aspectRatio = clamp(aspectRatio, 1 / 1, 3 / 1)
+  }
+
   return (
     <Animated.View
-      style={[a.flex_1, a.relative]}
+      style={[a.flex_1, a.relative, {aspectRatio}]}
       ref={aref}
       collapsable={false}>
       <VideoView
         ref={ref}
         player={player}
         style={a.flex_1}
+        contentFit="contain"
         nativeControls={true}
+        accessibilityIgnoresInvertColors
       />
       <VideoControls player={player} enterFullscreen={enterFullscreen} />
     </Animated.View>
@@ -106,6 +119,10 @@ function VideoControls({
 
   const minutes = Math.floor(currentTime / 60)
   const seconds = String(currentTime % 60).padStart(2, '0')
+
+  if (isNaN(minutes)) {
+    return null
+  }
 
   return (
     <View style={[a.absolute, a.inset_0]}>
@@ -141,3 +158,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 })
+
+function clamp(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max)
+}
