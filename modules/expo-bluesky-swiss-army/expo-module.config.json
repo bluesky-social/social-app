@@ -4,7 +4,7 @@
     "modules": [
       "ExpoBlueskySharedPrefsModule",
       "ExpoBlueskyReferrerModule",
-      "ExpoBlueskyVisibilityView",
+      "ExpoBlueskyVisibilityViewModule",
       "ExpoPlatformInfoModule"
     ]
   },
