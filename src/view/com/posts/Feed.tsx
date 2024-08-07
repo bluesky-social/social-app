@@ -161,7 +161,6 @@ let Feed = ({
   ListHeaderComponent,
   extraData,
   savedFeedConfig,
-  outsideHeaderOffset,
 }: {
   feed: FeedDescriptor
   feedParams?: FeedParams
@@ -550,7 +549,6 @@ let Feed = ({
         initialNumToRender={initialNumToRender}
         windowSize={11}
         onItemSeen={feedFeedback.onItemSeen}
-        outsideHeaderOffset={outsideHeaderOffset}
       />
     </View>
   )
