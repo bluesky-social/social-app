@@ -6,13 +6,20 @@ class VisibilityViewManager {
   private let views = NSHashTable<VisibilityView>(options: .weakMemory)
   private var currentlyActiveView: VisibilityView?
   private var screenHeight: CGFloat = UIScreen.main.bounds.height
+  private var prevCount = 0
 
   func addView(_ view: VisibilityView) {
     self.views.add(view)
+
+    if self.prevCount == 0 {
+      self.updateActiveView()
+    }
+    self.prevCount = self.views.count
   }
 
   func removeView(_ view: VisibilityView) {
     self.views.remove(view)
+    self.prevCount = self.views.count
   }
 
   func updateActiveView() {
