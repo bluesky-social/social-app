@@ -8,9 +8,9 @@ import {useVideoPlayer} from './VideoPlayerContext'
 
 export function VideoEmbedInner({}: {
   source: string
-  active: boolean
-  setActive: () => void
-  onScreen: boolean
+  active?: boolean
+  setActive?: () => void
+  onScreen?: boolean
 }) {
   const player = useVideoPlayer()
   const ref = useRef<VideoView>(null)

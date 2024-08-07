@@ -33,13 +33,7 @@ export function VideoEmbed({source}: {source: string}) {
           }
         }}>
         {active ? (
-          <VideoEmbedInner
-            source={source}
-            // web only
-            active={active}
-            setActive={setActive}
-            onScreen={true}
-          />
+          <VideoEmbedInner source={source} />
         ) : (
           <Button
             style={[a.flex_1, t.atoms.bg_contrast_25]}
