@@ -1,7 +1,6 @@
 import ExpoModulesCore
 
 class VisibilityView: ExpoView {
-  // Props
   var enabled = false {
     didSet {
       if enabled {
@@ -10,10 +9,8 @@ class VisibilityView: ExpoView {
     }
   }
 
-  // Events
-  let onChangeStatus = EventDispatcher()
-
-  var isCurrentlyActiveView = false
+  private let onChangeStatus = EventDispatcher()
+  private var isCurrentlyActiveView = false
 
   required init(appContext: AppContext? = nil) {
     super.init(appContext: appContext)
@@ -37,7 +34,6 @@ class VisibilityView: ExpoView {
     if isCurrentlyActiveView == isActive {
       return
     }
-
     self.isCurrentlyActiveView = isActive
     self.onChangeStatus([
       "isActive": isActive

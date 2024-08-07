@@ -3,8 +3,7 @@ import Foundation
 class VisibilityViewManager {
   static let shared = VisibilityViewManager()
 
-  let views = NSHashTable<VisibilityView>(options: .weakMemory)
-
+  private let views = NSHashTable<VisibilityView>(options: .weakMemory)
   private var currentlyActiveView: VisibilityView?
   private var screenHeight: CGFloat = UIScreen.main.bounds.height
 
@@ -66,14 +65,14 @@ class VisibilityViewManager {
     }
   }
 
-  func clearActiveView() {
+  private func clearActiveView() {
     if let currentlyActiveView = self.currentlyActiveView {
       currentlyActiveView.setIsCurrentlyActive(isActive: false)
       self.currentlyActiveView = nil
     }
   }
 
-  func setActiveView(_ view: VisibilityView) {
+  private func setActiveView(_ view: VisibilityView) {
     view.setIsCurrentlyActive(isActive: true)
     self.currentlyActiveView = view
   }
