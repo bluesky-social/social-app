@@ -29,8 +29,6 @@ export function VideoEmbed({source}: {source: string}) {
       {active ? (
         <VideoEmbedInner
           source={source}
-          active={active}
-          setActive={setActive}
           // web only
           onScreen={true}
         />

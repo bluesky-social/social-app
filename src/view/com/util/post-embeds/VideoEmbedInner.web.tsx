@@ -3,19 +3,17 @@ import {View} from 'react-native'
 import Hls from 'hls.js'
 
 import {atoms as a} from '#/alf'
+import {useActiveVideoView} from './ActiveVideoContext'
 import {Controls} from './VideoWebControls'
 
 export function VideoEmbedInner({
   source,
-  active,
-  setActive,
   onScreen,
 }: {
   source: string
-  active: boolean
-  setActive: () => void
   onScreen: boolean
 }) {
+  const {active, setActive} = useActiveVideoView({source})
   const containerRef = useRef<HTMLDivElement>(null)
   const ref = useRef<HTMLVideoElement>(null)
   const [focused, setFocused] = useState(false)
