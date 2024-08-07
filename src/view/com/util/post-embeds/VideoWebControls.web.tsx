@@ -350,30 +350,30 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
   const [error, setError] = useState(false)
   const [canPlay, setCanPlay] = useState(false)
   const playWhenReadyRef = useRef(false)
-  const bufferingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     if (!ref.current) return
-    let current = ref.current
+
+    let bufferingTimeout: ReturnType<typeof setTimeout> | undefined
 
     function round(num: number) {
       return Math.round(num * 100) / 100
     }
 
     // Initial values
-    setCurrentTime(round(current.currentTime) || 0)
-    setDuration(round(current.duration) || 0)
-    setMuted(current.muted)
-    setPlaying(!current.paused)
+    setCurrentTime(round(ref.current.currentTime) || 0)
+    setDuration(round(ref.current.duration) || 0)
+    setMuted(ref.current.muted)
+    setPlaying(!ref.current.paused)
 
     const handleTimeUpdate = () => {
-      if (!current) return
-      setCurrentTime(round(current.currentTime) || 0)
+      if (!ref.current) return
+      setCurrentTime(round(ref.current.currentTime) || 0)
     }
 
     const handleDurationChange = () => {
-      if (!current) return
-      setDuration(round(current.duration) || 0)
+      if (!ref.current) return
+      setDuration(round(ref.current.duration) || 0)
     }
 
     const handlePlay = () => {
@@ -385,8 +385,8 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
     }
 
     const handleVolumeChange = () => {
-      if (!current) return
-      setMuted(current.muted)
+      if (!ref.current) return
+      setMuted(ref.current.muted)
     }
 
     const handleError = () => {
@@ -397,9 +397,9 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
       setBuffering(false)
       setCanPlay(true)
 
-      if (!current) return
+      if (!ref.current) return
       if (playWhenReadyRef.current) {
-        current.play()
+        ref.current.play()
         playWhenReadyRef.current = false
       }
     }
@@ -409,14 +409,14 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
     }
 
     const handleWaiting = () => {
-      if (bufferingTimeoutRef.current) clearTimeout(bufferingTimeoutRef.current)
-      bufferingTimeoutRef.current = setTimeout(() => {
+      if (bufferingTimeout) clearTimeout(bufferingTimeout)
+      bufferingTimeout = setTimeout(() => {
         setBuffering(true)
       }, 200) // Delay to avoid frequent buffering state changes
     }
 
     const handlePlaying = () => {
-      if (bufferingTimeoutRef.current) clearTimeout(bufferingTimeoutRef.current)
+      if (bufferingTimeout) clearTimeout(bufferingTimeout)
       setBuffering(false)
       setError(false)
     }
@@ -430,8 +430,8 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
     }
 
     const handleStalled = () => {
-      if (bufferingTimeoutRef.current) clearTimeout(bufferingTimeoutRef.current)
-      bufferingTimeoutRef.current = setTimeout(() => {
+      if (bufferingTimeout) clearTimeout(bufferingTimeout)
+      bufferingTimeout = setTimeout(() => {
         setBuffering(true)
       }, 200) // Delay to avoid frequent buffering state changes
     }
@@ -442,38 +442,54 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
       setError(false)
     }
 
-    current.addEventListener('timeupdate', handleTimeUpdate)
-    current.addEventListener('durationchange', handleDurationChange)
-    current.addEventListener('play', handlePlay)
-    current.addEventListener('pause', handlePause)
-    current.addEventListener('volumechange', handleVolumeChange)
-    current.addEventListener('error', handleError)
-    current.addEventListener('canplay', handleCanPlay)
-    current.addEventListener('canplaythrough', handleCanPlayThrough)
-    current.addEventListener('waiting', handleWaiting)
-    current.addEventListener('playing', handlePlaying)
-    current.addEventListener('seeking', handleSeeking)
-    current.addEventListener('seeked', handleSeeked)
-    current.addEventListener('stalled', handleStalled)
-    current.addEventListener('ended', handleEnded)
+    const abortController = new AbortController()
+
+    ref.current.addEventListener('timeupdate', handleTimeUpdate, {
+      signal: abortController.signal,
+    })
+    ref.current.addEventListener('durationchange', handleDurationChange, {
+      signal: abortController.signal,
+    })
+    ref.current.addEventListener('play', handlePlay, {
+      signal: abortController.signal,
+    })
+    ref.current.addEventListener('pause', handlePause, {
+      signal: abortController.signal,
+    })
+    ref.current.addEventListener('volumechange', handleVolumeChange, {
+      signal: abortController.signal,
+    })
+    ref.current.addEventListener('error', handleError, {
+      signal: abortController.signal,
+    })
+    ref.current.addEventListener('canplay', handleCanPlay, {
+      signal: abortController.signal,
+    })
+    ref.current.addEventListener('canplaythrough', handleCanPlayThrough, {
+      signal: abortController.signal,
+    })
+    ref.current.addEventListener('waiting', handleWaiting, {
+      signal: abortController.signal,
+    })
+    ref.current.addEventListener('playing', handlePlaying, {
+      signal: abortController.signal,
+    })
+    ref.current.addEventListener('seeking', handleSeeking, {
+      signal: abortController.signal,
+    })
+    ref.current.addEventListener('seeked', handleSeeked, {
+      signal: abortController.signal,
+    })
+    ref.current.addEventListener('stalled', handleStalled, {
+      signal: abortController.signal,
+    })
+    ref.current.addEventListener('ended', handleEnded, {
+      signal: abortController.signal,
+    })
 
     return () => {
-      current.removeEventListener('timeupdate', handleTimeUpdate)
-      current.removeEventListener('durationchange', handleDurationChange)
-      current.removeEventListener('play', handlePlay)
-      current.removeEventListener('pause', handlePause)
-      current.removeEventListener('volumechange', handleVolumeChange)
-      current.removeEventListener('error', handleError)
-      current.removeEventListener('canplay', handleCanPlay)
-      current.removeEventListener('canplaythrough', handleCanPlayThrough)
-      current.removeEventListener('waiting', handleWaiting)
-      current.removeEventListener('playing', handlePlaying)
-      current.removeEventListener('seeking', handleSeeking)
-      current.removeEventListener('seeked', handleSeeked)
-      current.removeEventListener('stalled', handleStalled)
-      current.removeEventListener('ended', handleEnded)
-
-      if (bufferingTimeoutRef.current) clearTimeout(bufferingTimeoutRef.current)
+      abortController.abort()
+      clearTimeout(bufferingTimeout)
     }
   }, [ref])
 
