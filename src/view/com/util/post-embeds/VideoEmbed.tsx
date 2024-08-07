@@ -3,12 +3,12 @@ import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {VideoEmbedInnerNative} from 'view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {Play_Filled_Corner2_Rounded as PlayIcon} from '#/components/icons/Play'
 import {VisibilityView} from '../../../../../modules/expo-bluesky-swiss-army'
 import {useActiveVideoView} from './ActiveVideoContext'
-import {VideoEmbedInner} from './VideoEmbedInner'
 
 export function VideoEmbed({source}: {source: string}) {
   const t = useTheme()
@@ -33,7 +33,7 @@ export function VideoEmbed({source}: {source: string}) {
           }
         }}>
         {active ? (
-          <VideoEmbedInner source={source} />
+          <VideoEmbedInnerNative />
         ) : (
           <Button
             style={[a.flex_1, t.atoms.bg_contrast_25]}

@@ -11,12 +11,12 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import type Hls from 'hls.js'
 
-import {isIPhoneWeb} from '#/platform/detection'
+import {isIPhoneWeb} from 'platform/detection'
 import {
   useAutoplayDisabled,
   useSetSubtitlesEnabled,
   useSubtitlesEnabled,
-} from '#/state/preferences'
+} from 'state/preferences'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button} from '#/components/Button'
 import {useInteractionState} from '#/components/hooks/useInteractionState'

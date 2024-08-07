@@ -3,13 +3,15 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {
+  HLSUnsupportedError,
+  VideoEmbedInnerWeb,
+} from 'view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerWeb'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {Text} from '#/components/Typography'
 import {ErrorBoundary} from '../ErrorBoundary'
 import {useActiveVideoView} from './ActiveVideoContext'
-import {VideoEmbedInner} from './VideoEmbedInner'
-import {HLSUnsupportedError} from './VideoEmbedInner.web'
 
 export function VideoEmbed({source}: {source: string}) {
   const t = useTheme()
@@ -60,7 +62,7 @@ export function VideoEmbed({source}: {source: string}) {
           <ViewportObserver
             sendPosition={sendPosition}
             isAnyViewActive={currentActiveView !== null}>
-            <VideoEmbedInner
+            <VideoEmbedInnerWeb
               source={source}
               active={active}
               setActive={setActive}

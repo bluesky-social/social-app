@@ -2,16 +2,11 @@ import React, {useEffect, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {VideoPlayer, VideoView} from 'expo-video'
 
+import {useVideoPlayer} from 'view/com/util/post-embeds/VideoPlayerContext'
 import {android, atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
-import {useVideoPlayer} from './VideoPlayerContext'
 
-export function VideoEmbedInner({}: {
-  source: string
-  active?: boolean
-  setActive?: () => void
-  onScreen?: boolean
-}) {
+export function VideoEmbedInnerNative() {
   const player = useVideoPlayer()
   const ref = useRef<VideoView>(null)
 
@@ -23,7 +18,7 @@ export function VideoEmbedInner({}: {
         style={a.flex_1}
         nativeControls={true}
       />
-      <VideoControls
+      <Controls
         player={player}
         enterFullscreen={() => ref.current?.enterFullscreen()}
       />
@@ -31,7 +26,7 @@ export function VideoEmbedInner({}: {
   )
 }
 
-function VideoControls({
+function Controls({
   player,
   enterFullscreen,
 }: {

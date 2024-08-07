@@ -5,7 +5,7 @@ import Hls from 'hls.js'
 import {atoms as a} from '#/alf'
 import {Controls} from './VideoWebControls'
 
-export function VideoEmbedInner({
+export function VideoEmbedInnerWeb({
   source,
   active,
   setActive,
