@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React from 'react'
 import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -12,10 +12,8 @@ import {VideoEmbedInner} from './VideoEmbedInner'
 
 export function VideoEmbed({source}: {source: string}) {
   const t = useTheme()
-  const {active, setActive} = useActiveVideoView()
+  const {active, setActive} = useActiveVideoView({source})
   const {_} = useLingui()
-
-  const onPress = useCallback(() => setActive(source), [setActive, source])
 
   return (
     <View
@@ -31,15 +29,21 @@ export function VideoEmbed({source}: {source: string}) {
         enabled={true}
         onChangeStatus={isActive => {
           if (isActive) {
-            setActive(source)
+            setActive()
           }
         }}>
         {active ? (
-          <VideoEmbedInner source={source} />
+          <VideoEmbedInner
+            source={source}
+            // web only
+            active={active}
+            setActive={setActive}
+            onScreen={true}
+          />
         ) : (
           <Button
             style={[a.flex_1, t.atoms.bg_contrast_25]}
-            onPress={onPress}
+            onPress={setActive}
             label={_(msg`Play video`)}
             variant="ghost"
             color="secondary"
