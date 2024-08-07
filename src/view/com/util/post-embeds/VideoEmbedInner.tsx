@@ -1,12 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react'
-import {Pressable, StyleSheet, useWindowDimensions, View} from 'react-native'
-import Animated, {
-  measure,
-  runOnJS,
-  useAnimatedRef,
-  useFrameCallback,
-  useSharedValue,
-} from 'react-native-reanimated'
+import {Pressable, StyleSheet, View} from 'react-native'
 import {VideoPlayer, VideoView} from 'expo-video'
 
 import {android, atoms as a} from '#/alf'
@@ -20,20 +13,7 @@ export function VideoEmbedInner({}: {
   onScreen: boolean
 }) {
   const player = useVideoPlayer()
-  const aref = useAnimatedRef<Animated.View>()
-  const {height: windowHeight} = useWindowDimensions()
-  const hasLeftView = useSharedValue(false)
   const ref = useRef<VideoView>(null)
-
-  const onEnterView = useCallback(() => {
-    if (player.status === 'readyToPlay') {
-      player.play()
-    }
-  }, [player])
-
-  const onLeaveView = useCallback(() => {
-    player.pause()
-  }, [player])
 
   const enterFullscreen = useCallback(() => {
     if (ref.current) {
@@ -41,37 +21,8 @@ export function VideoEmbedInner({}: {
     }
   }, [])
 
-  useFrameCallback(() => {
-    const measurement = measure(aref)
-
-    if (measurement) {
-      if (hasLeftView.value) {
-        // Check if the video is in view
-        if (
-          measurement.pageY >= 0 &&
-          measurement.pageY + measurement.height <= windowHeight
-        ) {
-          runOnJS(onEnterView)()
-          hasLeftView.value = false
-        }
-      } else {
-        // Check if the video is out of view
-        if (
-          measurement.pageY + measurement.height < 0 ||
-          measurement.pageY > windowHeight
-        ) {
-          runOnJS(onLeaveView)()
-          hasLeftView.value = true
-        }
-      }
-    }
-  })
-
   return (
-    <Animated.View
-      style={[a.flex_1, a.relative]}
-      ref={aref}
-      collapsable={false}>
+    <View style={[a.flex_1, a.relative]} collapsable={false}>
       <VideoView
         ref={ref}
         player={player}
@@ -79,7 +30,7 @@ export function VideoEmbedInner({}: {
         nativeControls={true}
       />
       <VideoControls player={player} enterFullscreen={enterFullscreen} />
-    </Animated.View>
+    </View>
   )
 }
 
@@ -90,8 +41,14 @@ function VideoControls({
   player: VideoPlayer
   enterFullscreen: () => void
 }) {
-  const [duration, setDuration] = useState(Math.floor(player.duration))
-  const [currentTime, setCurrentTime] = useState(Math.floor(player.currentTime))
+  const [duration, setDuration] = useState(() => Math.floor(player.duration))
+  const [currentTime, setCurrentTime] = useState(() =>
+    Math.floor(player.currentTime),
+  )
+
+  const timeRemaining = duration - currentTime
+  const minutes = Math.floor(timeRemaining / 60)
+  const seconds = String(timeRemaining % 60).padStart(2, '0')
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -107,14 +64,9 @@ function VideoControls({
     }
   }, [player])
 
-  const timeRemaining = duration - currentTime
-
   if (isNaN(timeRemaining)) {
     return null
   }
-
-  const minutes = Math.floor(timeRemaining / 60)
-  const seconds = String(timeRemaining % 60).padStart(2, '0')
 
   return (
     <View style={[a.absolute, a.inset_0]}>
