@@ -28,8 +28,6 @@ export type ListProps<ItemT> = Omit<
   // Web only prop to contain the scroll to the container rather than the window
   disableFullWindowScroll?: boolean
   sideBorders?: boolean
-  // Web only prop to disable a perf optimization (which would otherwise be on).
-  disableContainStyle?: boolean
 }
 export type ListRef = React.MutableRefObject<FlatList_INTERNAL | null>
 

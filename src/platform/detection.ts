@@ -14,6 +14,7 @@ export const isMobileWeb =
   isWeb &&
   // @ts-ignore we know window exists -prf
   global.window.matchMedia(isMobileWebMediaQuery)?.matches
+export const isIPhoneWeb = isWeb && /iPhone/.test(navigator.userAgent)
 
 export const deviceLocales = dedupArray(
   getLocales?.()
