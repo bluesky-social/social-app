@@ -88,21 +88,28 @@ export function threadgateAllowUISettingToAllowRecordValue(
 /**
  * Merges two {@link AppBskyFeedThreadgate.Record} objects, combining their
  * `allow` and `hiddenReplies` arrays and de-deduplicating them.
+ *
+ * Note: `allow` can be undefined here, be sure you don't accidentally set it
+ * to an empty array. See other comments in this file.
  */
 export function mergeThreadgateRecords(
   prev: AppBskyFeedThreadgate.Record,
   next: Partial<AppBskyFeedThreadgate.Record>,
 ): AppBskyFeedThreadgate.Record {
-  const allow = [...(prev.allow || []), ...(next.allow || [])].filter(
-    (v, i, a) => a.findIndex(t => t.$type === v.$type) === i,
-  )
+  // can be undefined if everyone can reply!
+  const allow: AppBskyFeedThreadgate.Record['allow'] | undefined =
+    prev.allow || next.allow
+      ? [...(prev.allow || []), ...(next.allow || [])].filter(
+          (v, i, a) => a.findIndex(t => t.$type === v.$type) === i,
+        )
+      : undefined
   const hiddenReplies = Array.from(
     new Set([...(prev.hiddenReplies || []), ...(next.hiddenReplies || [])]),
   )
 
   return createThreadgateRecord({
     post: prev.post,
-    allow,
+    allow, // can be undefined!
     hiddenReplies,
   })
 }
