@@ -5,7 +5,9 @@ import {runOnJS, useSharedValue} from 'react-native-reanimated'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useScrollHandlers} from '#/lib/ScrollContext'
+import {useDedupe} from 'lib/hooks/useDedupe'
 import {addStyle} from 'lib/styles'
+import {updateActiveViewAsync} from '../../../../modules/expo-bluesky-swiss-army/src/VisibilityView'
 import {FlatList_INTERNAL} from './Views'
 
 export type ListMethods = FlatList_INTERNAL
@@ -47,6 +49,7 @@ function ListImpl<ItemT>(
 ) {
   const isScrolledDown = useSharedValue(false)
   const pal = usePalette('default')
+  const dedupe = useDedupe()
 
   function handleScrolledDownChange(didScrollDown: boolean) {
     onScrolledDownChange?.(didScrollDown)
@@ -77,6 +80,8 @@ function ListImpl<ItemT>(
           runOnJS(handleScrolledDownChange)(didScrollDown)
         }
       }
+
+      runOnJS(dedupe)(updateActiveViewAsync)
     },
     // Note: adding onMomentumBegin here makes simulator scroll
     // lag on Android. So either don't add it, or figure out why.

@@ -5,17 +5,23 @@ import Hls from 'hls.js'
 import {atoms as a} from '#/alf'
 import {Controls} from './VideoWebControls'
 
-export function VideoEmbedInner({
+export function VideoEmbedInnerWeb({
   source,
   active,
   setActive,
   onScreen,
 }: {
   source: string
-  active: boolean
-  setActive: () => void
-  onScreen: boolean
+  active?: boolean
+  setActive?: () => void
+  onScreen?: boolean
 }) {
+  if (active == null || setActive == null || onScreen == null) {
+    throw new Error(
+      'active, setActive, and onScreen are required VideoEmbedInner props on web.',
+    )
+  }
+
   const containerRef = useRef<HTMLDivElement>(null)
   const ref = useRef<HTMLVideoElement>(null)
   const [focused, setFocused] = useState(false)
