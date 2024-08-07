@@ -345,11 +345,9 @@ let FeedItemInner = ({
             postHref={href}
             onOpenAuthor={onOpenAuthor}
           />
-          {!isThreadChild &&
-            showReplyTo &&
-            (parentAuthor || isParentBlocked) && (
-              <ReplyToLabel blocked={isParentBlocked} profile={parentAuthor} />
-            )}
+          {showReplyTo && (parentAuthor || isParentBlocked) && (
+            <ReplyToLabel blocked={isParentBlocked} profile={parentAuthor} />
+          )}
           <LabelsOnMyPost post={post} />
           <PostContent
             moderation={moderation}

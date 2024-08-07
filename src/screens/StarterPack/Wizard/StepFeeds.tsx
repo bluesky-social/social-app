@@ -8,8 +8,8 @@ import {useA11y} from '#/state/a11y'
 import {DISCOVER_FEED_URI} from 'lib/constants'
 import {
   useGetPopularFeedsQuery,
+  usePopularFeedsSearch,
   useSavedFeeds,
-  useSearchPopularFeedsQuery,
 } from 'state/queries/feed'
 import {SearchInput} from 'view/com/util/forms/SearchInput'
 import {List} from 'view/com/util/List'
@@ -59,7 +59,7 @@ export function StepFeeds({moderationOpts}: {moderationOpts: ModerationOpts}) {
       : undefined
 
   const {data: searchedFeeds, isFetching: isFetchingSearchedFeeds} =
-    useSearchPopularFeedsQuery({q: throttledQuery})
+    usePopularFeedsSearch({query: throttledQuery})
 
   const isLoading =
     !isFetchedSavedFeeds || isLoadingPopularFeeds || isFetchingSearchedFeeds

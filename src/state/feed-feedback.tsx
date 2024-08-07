@@ -123,7 +123,7 @@ export function useFeedFeedback(feed: FeedDescriptor, hasSession: boolean) {
             toString({
               item: postItem.uri,
               event: 'app.bsky.feed.defs#interactionSeen',
-              feedContext: postItem.feedContext,
+              feedContext: slice.feedContext,
             }),
           )
           sendToFeed()
