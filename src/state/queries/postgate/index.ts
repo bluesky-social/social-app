@@ -6,7 +6,7 @@ import {
 } from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
-import {networkRetry} from '#/lib/async/retry'
+import {networkRetry, retry} from '#/lib/async/retry'
 import {logger} from '#/logger'
 import {updatePostShadow} from '#/state/cache/post-shadow'
 import {useGetPosts} from '#/state/queries/post'
@@ -36,12 +36,20 @@ export async function getPostgateRecord({
 
   try {
     // TODO don't retry on 404
-    const {data} = await networkRetry(2, () =>
-      agent.api.com.atproto.repo.getRecord({
-        repo: urip.host,
-        collection: POSTGATE_COLLECTION,
-        rkey: urip.rkey,
-      }),
+    const {data} = await retry(
+      2,
+      e => {
+        if (e.message.includes(`Could not locate record:`)) {
+          return false
+        }
+        return true
+      },
+      () =>
+        agent.api.com.atproto.repo.getRecord({
+          repo: urip.host,
+          collection: POSTGATE_COLLECTION,
+          rkey: urip.rkey,
+        }),
     )
 
     if (data.value && AppBskyFeedPostgate.isRecord(data.value)) {

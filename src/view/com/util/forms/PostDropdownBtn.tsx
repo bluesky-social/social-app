@@ -54,6 +54,7 @@ import {
   EmojiSad_Stroke2_Corner0_Rounded as EmojiSad,
   EmojiSmile_Stroke2_Corner0_Rounded as EmojiSmile,
 } from '#/components/icons/Emoji'
+import {Eye_Stroke2_Corner0_Rounded as Eye} from '#/components/icons/Eye'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
 import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
@@ -61,6 +62,7 @@ import {PaperPlane_Stroke2_Corner0_Rounded as Send} from '#/components/icons/Pap
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
+import {Loader} from '#/components/Loader'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
@@ -138,7 +140,7 @@ let PostDropdownBtn = ({
   })
   const isReplyHiddenByThreadgate = threadgate?.hiddenReplies?.includes(postUri)
 
-  const {mutateAsync: toggleQuoteDetachment} =
+  const {mutateAsync: toggleQuoteDetachment, isPending} =
     useToggleQuoteDetachmentMutation()
 
   const href = React.useMemo(() => {
@@ -440,7 +442,14 @@ let PostDropdownBtn = ({
                     <Menu.ItemIcon icon={EyeSlash} position="right" />
                   </Menu.Item>
                 )}
+              </Menu.Group>
+            </>
+          )}
 
+          {hasSession && (
+            <>
+              <Menu.Divider />
+              <Menu.Group>
                 {!isAuthor && !isPostHidden && rootPostUri && isReply && (
                   <Menu.Item
                     testID="postDropdownHideBtn"
@@ -455,12 +464,16 @@ let PostDropdownBtn = ({
                         ? _(msg`Show reply for everyone`)
                         : _(msg`Hide reply for everyone`)}
                     </Menu.ItemText>
-                    <Menu.ItemIcon icon={EyeSlash} position="right" />
+                    <Menu.ItemIcon
+                      icon={isReplyHiddenByThreadgate ? Eye : EyeSlash}
+                      position="right"
+                    />
                   </Menu.Item>
                 )}
 
                 {quoteEmbed && quoteEmbed.isOwnedByViewer && (
                   <Menu.Item
+                    disabled={isPending}
                     testID="postDropdownHideBtn"
                     label={
                       quoteEmbed.isDetached
@@ -474,7 +487,13 @@ let PostDropdownBtn = ({
                         : _(msg`Detach quote`)}
                     </Menu.ItemText>
                     <Menu.ItemIcon
-                      icon={quoteEmbed.isDetached ? EyeSlash : EyeSlash}
+                      icon={
+                        isPending
+                          ? Loader
+                          : quoteEmbed.isDetached
+                          ? Eye
+                          : EyeSlash
+                      }
                       position="right"
                     />
                   </Menu.Item>

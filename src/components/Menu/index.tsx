@@ -138,7 +138,7 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
         t.atoms.border_contrast_low,
         {minHeight: 44, paddingVertical: 10},
         style,
-        (focused || pressed) && [t.atoms.bg_contrast_50],
+        (focused || pressed) && !rest.disabled && [t.atoms.bg_contrast_50],
       ]}>
       {children}
     </Pressable>
