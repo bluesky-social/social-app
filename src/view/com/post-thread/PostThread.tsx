@@ -182,7 +182,12 @@ export function PostThread({
     if (!threadViewPrefs || !thread) return null
 
     return createThreadSkeleton(
-      sortThread(thread, threadViewPrefs, threadModerationCache),
+      sortThread(
+        thread,
+        threadViewPrefs,
+        threadModerationCache,
+        threadgateRecord ?? undefined,
+      ),
       hasSession,
       treeView,
       threadModerationCache,
