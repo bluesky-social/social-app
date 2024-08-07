@@ -35,8 +35,9 @@ class VisibilityViewManager {
           }
 
           val position = view.getPositionOnScreen() ?: return@forEach
+          val topY = position.centerY() - (position.height() / 2)
 
-          if (position.centerY() >= 150) {
+          if (topY >= 150) {
             if (mostVisiblePosition == null) {
               mostVisiblePosition = position
             }
