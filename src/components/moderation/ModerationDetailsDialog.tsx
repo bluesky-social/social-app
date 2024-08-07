@@ -12,13 +12,14 @@ import {atoms as a, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
 import {InlineLinkText} from '#/components/Link'
+import {AppModerationCause} from '#/components/Pills'
 import {Text} from '#/components/Typography'
 
 export {useDialogControl as useModerationDetailsDialogControl} from '#/components/Dialog'
 
 export interface ModerationDetailsDialogProps {
   control: Dialog.DialogOuterProps['control']
-  modcause: ModerationCause
+  modcause: ModerationCause | AppModerationCause
 }
 
 export function ModerationDetailsDialog(props: ModerationDetailsDialogProps) {
@@ -105,6 +106,9 @@ function ModerationDetailsDialogInner({
   } else if (modcause.type === 'hidden') {
     name = _(msg`Post Hidden by You`)
     description = _(msg`You have hidden this post.`)
+  } else if (modcause.type === 'reply-hidden') {
+    name = _(msg`Post Hidden by Thread Author`)
+    description = _(msg`The author of this thread has hidden this post.`)
   } else if (modcause.type === 'label') {
     name = desc.name
     description = desc.description

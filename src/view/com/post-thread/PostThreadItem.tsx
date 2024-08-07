@@ -15,6 +15,7 @@ import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {ThreadPost} from '#/state/queries/post-thread'
+import {useThreadgateRecordQuery} from '#/state/queries/threadgate'
 import {useComposerControls} from '#/state/shell/composer'
 import {MAX_POST_LINES} from 'lib/constants'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -29,6 +30,7 @@ import {isWeb} from 'platform/detection'
 import {useSession} from 'state/session'
 import {PostThreadFollowBtn} from 'view/com/post-thread/PostThreadFollowBtn'
 import {atoms as a} from '#/alf'
+import {AppModerationCause} from '#/components/Pills'
 import {RichText} from '#/components/RichText'
 import {ContentHider} from '../../../components/moderation/ContentHider'
 import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
@@ -199,6 +201,21 @@ let PostThreadItemLoaded = ({
     return makeProfileLink(post.author, 'post', urip.rkey, 'reposted-by')
   }, [post.uri, post.author])
   const repostsTitle = _(msg`Reposts of this post`)
+  const {data: threadgateRecord} = useThreadgateRecordQuery({
+    postUri: rootUri,
+  })
+  const isPostHiddenByThreadgate = threadgateRecord?.hiddenReplies?.includes(
+    post.uri,
+  )
+  const additionalPostAlerts: AppModerationCause[] = isPostHiddenByThreadgate
+    ? [
+        {
+          type: 'reply-hidden',
+          source: {type: 'user'},
+          priority: 6,
+        },
+      ]
+    : []
 
   const translatorUrl = getTranslatorLink(
     record?.text || '',
@@ -315,6 +332,7 @@ let PostThreadItemLoaded = ({
                 size="lg"
                 includeMute
                 style={[a.pt_2xs, a.pb_sm]}
+                additionalCauses={additionalPostAlerts}
               />
               {richText?.text ? (
                 <View
@@ -513,6 +531,7 @@ let PostThreadItemLoaded = ({
               <PostAlerts
                 modui={moderation.ui('contentList')}
                 style={[a.pt_2xs, a.pb_2xs]}
+                additionalCauses={additionalPostAlerts}
               />
               {richText?.text ? (
                 <View style={styles.postTextContainer}>
