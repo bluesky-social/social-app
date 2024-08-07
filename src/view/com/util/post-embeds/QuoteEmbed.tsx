@@ -26,6 +26,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {HITSLOP_20} from '#/lib/constants'
 import {s} from '#/lib/styles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useSession} from '#/state/session'
 import {usePalette} from 'lib/hooks/usePalette'
 import {InfoCircleIcon} from 'lib/icons'
 import {makeProfileLink} from 'lib/routes/links'
@@ -52,6 +53,7 @@ export function MaybeQuoteEmbed({
   allowNestedQuotes?: boolean
 }) {
   const pal = usePalette('default')
+  const {currentAccount} = useSession()
   if (
     AppBskyEmbedRecord.isViewRecord(embed.record) &&
     AppBskyFeedPost.isRecord(embed.record.value) &&
@@ -85,11 +87,18 @@ export function MaybeQuoteEmbed({
       </View>
     )
   } else if (AppBskyEmbedRecord.isViewRemoved(embed.record)) {
+    const isViewerOwner = currentAccount?.did
+      ? embed.record.uri.includes(currentAccount.did)
+      : false
     return (
       <View style={[styles.errorContainer, pal.borderDark]}>
         <InfoCircleIcon size={18} style={pal.text} />
         <Text type="lg" style={pal.text}>
-          <Trans>Removed by author</Trans>
+          {isViewerOwner ? (
+            <Trans>Removed by you</Trans>
+          ) : (
+            <Trans>Removed by author</Trans>
+          )}
         </Text>
       </View>
     )
