@@ -14,7 +14,8 @@ import {HLSUnsupportedError} from './VideoEmbedInner.web'
 export function VideoEmbed({source}: {source: string}) {
   const t = useTheme()
   const ref = useRef<HTMLDivElement>(null)
-  const {sendPosition, currentActiveView} = useActiveVideoView({source})
+  const {active, setActive, sendPosition, currentActiveView} =
+    useActiveVideoView({source})
   const [onScreen, setOnScreen] = useState(false)
 
   useEffect(() => {
@@ -59,7 +60,12 @@ export function VideoEmbed({source}: {source: string}) {
           <ViewportObserver
             sendPosition={sendPosition}
             isAnyViewActive={currentActiveView !== null}>
-            <VideoEmbedInner source={source} onScreen={onScreen} />
+            <VideoEmbedInner
+              source={source}
+              active={active}
+              setActive={setActive}
+              onScreen={onScreen}
+            />
           </ViewportObserver>
         </ErrorBoundary>
       </div>

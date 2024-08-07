@@ -30,6 +30,8 @@ export function VideoEmbed({source}: {source: string}) {
         <VideoEmbedInner
           source={source}
           // web only
+          active={active}
+          setActive={setActive}
           onScreen={true}
         />
       ) : (

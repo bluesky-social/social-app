@@ -58,8 +58,9 @@ export function ActiveVideoProvider({children}: {children: React.ReactNode}) {
           if (
             manuallySetRef.current &&
             withinViewport(activeViewLocationRef.current)
-          )
+          ) {
             return
+          }
 
           setActiveViewId(viewId)
           activeViewLocationRef.current = y
