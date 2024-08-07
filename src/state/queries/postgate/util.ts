@@ -49,25 +49,56 @@ export function createEmbedViewRemovedRecord({uri}: {uri: string}) {
   }
 }
 
-export function createEmbed({
+export function createMaybeDetachedQuoteEmbed({
   post,
-  embeddedPost,
+  quote,
+  quoteUri,
   detached,
-}: {
-  post: AppBskyFeedDefs.PostView
-  embeddedPost: AppBskyFeedDefs.PostView
-  detached: boolean
-}) {
+}:
+  | {
+      post: AppBskyFeedDefs.PostView
+      quote: AppBskyFeedDefs.PostView
+      quoteUri: undefined
+      detached: false
+    }
+  | {
+      post: AppBskyFeedDefs.PostView
+      quote: undefined
+      quoteUri: string
+      detached: true
+    }): AppBskyEmbedRecord.View | AppBskyEmbedRecordWithMedia.View | undefined {
   if (AppBskyEmbedRecord.isView(post.embed)) {
-    if (detached) return createEmbedViewRemovedRecord({uri: embeddedPost.uri})
-    return createEmbedRecordView({post: embeddedPost})
+    if (detached) {
+      return createEmbedViewRemovedRecord({uri: quoteUri})
+    } else {
+      return createEmbedRecordView({post: quote})
+    }
   } else if (AppBskyEmbedRecordWithMedia.isView(post.embed)) {
-    if (detached)
+    if (detached) {
       return {
         ...post.embed,
-        record: createEmbedViewRemovedRecord({uri: embeddedPost.uri}),
+        record: createEmbedViewRemovedRecord({uri: quoteUri}),
       }
-    return createEmbedRecordWithmediaView({post, embeddedPost})
+    } else {
+      return createEmbedRecordWithMediaView({post, quote})
+    }
+  }
+}
+
+export function createEmbedViewRecordFromPost(
+  post: AppBskyFeedDefs.PostView,
+): AppBskyEmbedRecord.ViewRecord {
+  return {
+    $type: 'app.bsky.embed.record#viewRecord',
+    uri: post.uri,
+    cid: post.cid,
+    author: post.author,
+    value: post.record,
+    labels: post.labels,
+    replyCount: post.replyCount,
+    repostCount: post.repostCount,
+    likeCount: post.likeCount,
+    indexedAt: post.indexedAt,
   }
 }
 
@@ -78,30 +109,22 @@ export function createEmbedRecordView({
 }): AppBskyEmbedRecord.View {
   return {
     $type: 'app.bsky.embed.record#view',
-    record: {
-      $type: 'app.bsky.embed.record#viewRecord',
-      ...post,
-      value: post.record,
-    },
+    record: createEmbedViewRecordFromPost(post),
   }
 }
 
-export function createEmbedRecordWithmediaView({
+export function createEmbedRecordWithMediaView({
   post,
-  embeddedPost,
+  quote,
 }: {
   post: AppBskyFeedDefs.PostView
-  embeddedPost: AppBskyFeedDefs.PostView
+  quote: AppBskyFeedDefs.PostView
 }): AppBskyEmbedRecordWithMedia.View | undefined {
   if (!AppBskyEmbedRecordWithMedia.isView(post.embed)) return
   return {
     ...(post.embed || {}),
     record: {
-      record: {
-        $type: 'app.bsky.embed.record#viewRecord',
-        ...embeddedPost,
-        value: embeddedPost.record,
-      },
+      record: createEmbedViewRecordFromPost(quote),
     },
   }
 }

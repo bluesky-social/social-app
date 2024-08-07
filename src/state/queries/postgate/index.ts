@@ -1,11 +1,16 @@
-import {AppBskyFeedPostgate, AtUri, BskyAgent} from '@atproto/api'
+import {
+  AppBskyFeedDefs,
+  AppBskyFeedPostgate,
+  AtUri,
+  BskyAgent,
+} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {networkRetry} from '#/lib/async/retry'
 import {updatePostShadow} from '#/state/cache/post-shadow'
 import {useGetPosts} from '#/state/queries/post'
 import {
-  createEmbed,
+  createMaybeDetachedQuoteEmbed,
   createPostgateRecord,
   mergePostgateRecords,
   POSTGATE_COLLECTION,
@@ -109,47 +114,58 @@ export function useToggleQuoteDetachmentMutation() {
 
   return useMutation({
     mutationFn: async ({
-      postUri,
-      quotedUri,
+      post,
+      quoteUri,
       action,
     }: {
-      postUri: string
-      quotedUri: string
+      post: AppBskyFeedDefs.PostView
+      quoteUri: string
       action: 'detach' | 'reattach'
     }) => {
-      await upsertPostgate({agent, postUri: quotedUri}, async prev => {
+      await upsertPostgate({agent, postUri: quoteUri}, async prev => {
         if (prev) {
           if (action === 'detach') {
             return mergePostgateRecords(prev, {
-              detachedQuotes: [postUri],
+              detachedQuotes: [post.uri],
             })
           } else if (action === 'reattach') {
             return {
               ...prev,
               detachedQuotes:
-                prev.detachedQuotes?.filter(uri => uri !== postUri) || [],
+                prev.detachedQuotes?.filter(uri => uri !== post.uri) || [],
             }
           }
         } else {
           if (action === 'detach') {
             return createPostgateRecord({
-              post: quotedUri,
-              detachedQuotes: [postUri],
+              post: quoteUri,
+              detachedQuotes: [post.uri],
             })
           }
         }
       })
     },
-    async onSuccess(_data, {postUri, quotedUri, action}) {
-      const [post, quotedPost] = await getPosts({uris: [postUri, quotedUri]})
-
-      updatePostShadow(queryClient, postUri, {
-        embed: createEmbed({
-          post,
-          embeddedPost: quotedPost,
-          detached: action === 'detach',
-        }),
-      })
+    async onSuccess(_data, {post, quoteUri, action}) {
+      if (action === 'detach') {
+        updatePostShadow(queryClient, post.uri, {
+          embed: createMaybeDetachedQuoteEmbed({
+            post,
+            quote: undefined,
+            quoteUri,
+            detached: true,
+          }),
+        })
+      } else if (action === 'reattach') {
+        const [quote] = await getPosts({uris: [quoteUri]})
+        updatePostShadow(queryClient, post.uri, {
+          embed: createMaybeDetachedQuoteEmbed({
+            post,
+            quote,
+            quoteUri: undefined,
+            detached: false,
+          }),
+        })
+      }
     },
   })
 }

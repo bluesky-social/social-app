@@ -283,11 +283,11 @@ let PostDropdownBtn = ({
 
     // TODO handle failure
     toggleQuoteDetachment({
-      postUri,
-      quotedUri: quoteEmbed.uri,
+      post,
+      quoteUri: quoteEmbed.uri,
       action: quoteEmbed.isDetached ? 'reattach' : 'detach',
     })
-  }, [quoteEmbed, postUri, toggleQuoteDetachment])
+  }, [quoteEmbed, post, toggleQuoteDetachment])
 
   const canEmbed = isWeb && gtMobile && !hideInPWI
 
