@@ -7,8 +7,6 @@ import {
 } from 'react-native'
 import * as Clipboard from 'expo-clipboard'
 import {
-  AppBskyEmbedRecord,
-  AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
@@ -34,6 +32,7 @@ import {
   useThreadMuteMutationQueue,
 } from '#/state/queries/post'
 import {useToggleQuoteDetachmentMutation} from '#/state/queries/postgate'
+import {getMaybeDetachedQuoteEmbed} from '#/state/queries/postgate/util'
 import {useToggleReplyVisibilityMutation} from '#/state/queries/threadgate'
 import {useThreadgateRecordQuery} from '#/state/queries/threadgate'
 import {useSession} from '#/state/session'
@@ -118,38 +117,11 @@ let PostDropdownBtn = ({
   const postCid = post.cid
   const postAuthor = post.author
   const quoteEmbed = React.useMemo(() => {
-    if (!currentAccount) return
-    if (!post.embed) return
-
-    if (AppBskyEmbedRecord.isView(post.embed)) {
-      const isPost = AppBskyEmbedRecord.isViewRecord(post.embed.record)
-      const isDetachedPost = AppBskyEmbedRecord.isViewRemoved(post.embed.record)
-
-      if (isPost || isDetachedPost) {
-        const urip = new AtUri(post.embed.record.uri)
-
-        return {
-          uri: urip.toString(),
-          isOwnedByViewer: urip.host === currentAccount.did,
-          isDetached: isDetachedPost,
-        }
-      }
-    } else if (AppBskyEmbedRecordWithMedia.isView(post.embed)) {
-      const isPost = AppBskyEmbedRecord.isViewRecord(post.embed.record.record)
-      const isDetachedPost = AppBskyEmbedRecord.isViewRemoved(
-        post.embed.record.record,
-      )
-
-      if (isPost || isDetachedPost) {
-        const urip = new AtUri(post.embed.record.record.uri)
-
-        return {
-          uri: urip.toString(),
-          isOwnedByViewer: urip.host === currentAccount.did,
-          isDetached: isDetachedPost,
-        }
-      }
-    }
+    if (!currentAccount || !post.embed) return
+    return getMaybeDetachedQuoteEmbed({
+      viewerDid: currentAccount?.did,
+      post,
+    })
   }, [post, currentAccount])
 
   const rootUri = record.reply?.root?.uri || postUri

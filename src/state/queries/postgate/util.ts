@@ -3,6 +3,7 @@ import {
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyFeedPostgate,
+  AtUri,
 } from '@atproto/api'
 import {ViewRemoved} from '@atproto/api/dist/client/types/app/bsky/embed/record'
 
@@ -102,5 +103,59 @@ export function createEmbedRecordWithmediaView({
         value: embeddedPost.record,
       },
     },
+  }
+}
+
+export function getMaybeDetachedQuoteEmbed({
+  viewerDid,
+  post,
+}: {
+  viewerDid: string
+  post: AppBskyFeedDefs.PostView
+}) {
+  if (AppBskyEmbedRecord.isView(post.embed)) {
+    // detached
+    if (AppBskyEmbedRecord.isViewRemoved(post.embed.record)) {
+      const urip = new AtUri(post.embed.record.uri)
+      return {
+        embed: post.embed,
+        uri: urip.toString(),
+        isOwnedByViewer: urip.host === viewerDid,
+        isDetached: true,
+      }
+    }
+
+    // post
+    if (AppBskyEmbedRecord.isViewRecord(post.embed.record)) {
+      const urip = new AtUri(post.embed.record.uri)
+      return {
+        embed: post.embed,
+        uri: urip.toString(),
+        isOwnedByViewer: urip.host === viewerDid,
+        isDetached: false,
+      }
+    }
+  } else if (AppBskyEmbedRecordWithMedia.isView(post.embed)) {
+    // detached
+    if (AppBskyEmbedRecord.isViewRemoved(post.embed.record.record)) {
+      const urip = new AtUri(post.embed.record.record.uri)
+      return {
+        embed: post.embed,
+        uri: urip.toString(),
+        isOwnedByViewer: urip.host === viewerDid,
+        isDetached: true,
+      }
+    }
+
+    // post
+    if (AppBskyEmbedRecord.isViewRecord(post.embed.record.record)) {
+      const urip = new AtUri(post.embed.record.record.uri)
+      return {
+        embed: post.embed,
+        uri: urip.toString(),
+        isOwnedByViewer: urip.host === viewerDid,
+        isDetached: false,
+      }
+    }
   }
 }
