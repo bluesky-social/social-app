@@ -91,8 +91,15 @@ function mergeShadow(
     repostCount = Math.max(0, repostCount)
   }
 
-  if (shadow.embed !== undefined && post.embed) {
-    post.embed = shadow.embed
+  if ('embed' in shadow) {
+    if (
+      (AppBskyEmbedRecord.isView(post.embed) &&
+        AppBskyEmbedRecord.isView(shadow.embed)) ||
+      (AppBskyEmbedRecordWithMedia.isView(post.embed) &&
+        AppBskyEmbedRecordWithMedia.isView(shadow.embed))
+    ) {
+      post.embed = shadow.embed
+    }
   }
 
   return castAsShadow({
