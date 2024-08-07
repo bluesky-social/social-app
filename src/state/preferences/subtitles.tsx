@@ -24,8 +24,8 @@ export function Provider({children}: {children: React.ReactNode}) {
   )
 
   React.useEffect(() => {
-    return persisted.onUpdate(() => {
-      setState(Boolean(persisted.get('subtitlesEnabled')))
+    return persisted.onUpdate('subtitlesEnabled', nextSubtitlesEnabled => {
+      setState(Boolean(nextSubtitlesEnabled))
     })
   }, [setStateWrapped])
 
