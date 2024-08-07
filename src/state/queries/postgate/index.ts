@@ -7,6 +7,7 @@ import {
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {networkRetry} from '#/lib/async/retry'
+import {logger} from '#/logger'
 import {updatePostShadow} from '#/state/cache/post-shadow'
 import {useGetPosts} from '#/state/queries/post'
 import {
@@ -156,15 +157,22 @@ export function useToggleQuoteDetachmentMutation() {
           }),
         })
       } else if (action === 'reattach') {
-        const [quote] = await getPosts({uris: [quoteUri]})
-        updatePostShadow(queryClient, post.uri, {
-          embed: createMaybeDetachedQuoteEmbed({
-            post,
-            quote,
-            quoteUri: undefined,
-            detached: false,
-          }),
-        })
+        try {
+          const [quote] = await getPosts({uris: [quoteUri]})
+          updatePostShadow(queryClient, post.uri, {
+            embed: createMaybeDetachedQuoteEmbed({
+              post,
+              quote,
+              quoteUri: undefined,
+              detached: false,
+            }),
+          })
+        } catch (e: any) {
+          // ok if this fails, it's just optimistic UI
+          logger.error(`Postgate: failed to get quote post for re-attachment`, {
+            safeMessage: e.message,
+          })
+        }
       }
     },
   })
