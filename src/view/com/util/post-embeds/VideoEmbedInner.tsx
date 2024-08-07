@@ -9,7 +9,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import {VideoPlayer, VideoView} from 'expo-video'
 
-import {atoms as a} from '#/alf'
+import {android, atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
 import {useVideoPlayer} from './VideoPlayerContext'
 
@@ -85,11 +85,14 @@ function VideoControls({
   player: VideoPlayer
   enterFullscreen: () => void
 }) {
+  const [duration, setDuration] = useState(Math.floor(player.duration))
   const [currentTime, setCurrentTime] = useState(Math.floor(player.currentTime))
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentTime(Math.floor(player.duration - player.currentTime))
+      // duration gets reset to 0 on loop
+      if (player.duration) setDuration(Math.floor(player.duration))
+      setCurrentTime(Math.floor(player.currentTime))
       // how often should we update the time?
       // 1000 gets out of sync with the video time
     }, 250)
@@ -99,13 +102,19 @@ function VideoControls({
     }
   }, [player])
 
-  const minutes = Math.floor(currentTime / 60)
-  const seconds = String(currentTime % 60).padStart(2, '0')
+  const timeRemaining = duration - currentTime
+
+  if (isNaN(timeRemaining)) {
+    return null
+  }
+
+  const minutes = Math.floor(timeRemaining / 60)
+  const seconds = String(timeRemaining % 60).padStart(2, '0')
 
   return (
     <View style={[a.absolute, a.inset_0]}>
       <View style={styles.timeContainer} pointerEvents="none">
-        <Text style={styles.timeElapsed}>
+        <Text style={[styles.timeElapsed, android({lineHeight: 1.25})]}>
           {minutes}:{seconds}
         </Text>
       </View>
