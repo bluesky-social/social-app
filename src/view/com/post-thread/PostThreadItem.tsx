@@ -411,6 +411,7 @@ let PostThreadItemLoaded = ({
                 onPressReply={onPressReply}
                 logContext="PostThreadItem"
                 rootPostUri={rootUri}
+                threadgateRecord={threadgateRecord ?? undefined}
               />
             </View>
           </View>
@@ -564,6 +565,7 @@ let PostThreadItemLoaded = ({
                 onPressReply={onPressReply}
                 logContext="PostThreadItem"
                 rootPostUri={rootUri}
+                threadgateRecord={threadgateRecord ?? undefined}
               />
             </View>
           </View>

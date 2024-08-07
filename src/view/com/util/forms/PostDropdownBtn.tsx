@@ -9,6 +9,7 @@ import * as Clipboard from 'expo-clipboard'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
+  AppBskyFeedThreadgate,
   AtUri,
   RichText as RichTextAPI,
 } from '@atproto/api'
@@ -34,7 +35,6 @@ import {
 import {useToggleQuoteDetachmentMutation} from '#/state/queries/postgate'
 import {getMaybeDetachedQuoteEmbed} from '#/state/queries/postgate/util'
 import {useToggleReplyVisibilityMutation} from '#/state/queries/threadgate'
-import {useThreadgateRecordQuery} from '#/state/queries/threadgate'
 import {useSession} from '#/state/session'
 import {getCurrentRoute} from 'lib/routes/helpers'
 import {shareUrl} from 'lib/sharing'
@@ -80,6 +80,7 @@ let PostDropdownBtn = ({
   size,
   timestamp,
   rootPostUri,
+  threadgateRecord,
 }: {
   testID: string
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -91,6 +92,7 @@ let PostDropdownBtn = ({
   size?: 'lg' | 'md' | 'sm'
   timestamp: string
   rootPostUri?: string
+  threadgateRecord?: AppBskyFeedThreadgate.Record
 }): React.ReactNode => {
   const {hasSession, currentAccount} = useSession()
   const theme = useTheme()
@@ -134,11 +136,8 @@ let PostDropdownBtn = ({
   )
   const isPostHidden = hiddenPosts && hiddenPosts.includes(postUri)
   const isAuthor = postAuthor.did === currentAccount?.did
-
-  const {data: threadgate} = useThreadgateRecordQuery({
-    postUri: rootUri,
-  })
-  const isReplyHiddenByThreadgate = threadgate?.hiddenReplies?.includes(postUri)
+  const isReplyHiddenByThreadgate =
+    threadgateRecord?.hiddenReplies?.includes(postUri)
 
   const {mutateAsync: toggleQuoteDetachment, isPending} =
     useToggleQuoteDetachmentMutation()
@@ -270,6 +269,7 @@ let PostDropdownBtn = ({
   )
 
   const onToggleReplyVisibility = React.useCallback(async () => {
+    // TODO no threadgate?
     if (!rootPostUri) return
 
     const action = isReplyHiddenByThreadgate ? 'show' : 'hide'

@@ -10,6 +10,7 @@ import * as Clipboard from 'expo-clipboard'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
+  AppBskyFeedThreadgate,
   AtUri,
   RichText as RichTextAPI,
 } from '@atproto/api'
@@ -60,6 +61,7 @@ let PostCtrls = ({
   onPressReply,
   logContext,
   rootPostUri,
+  threadgateRecord,
 }: {
   big?: boolean
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -70,6 +72,7 @@ let PostCtrls = ({
   onPressReply: () => void
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
   rootPostUri?: string
+  threadgateRecord?: AppBskyFeedThreadgate.Record
 }): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
@@ -341,6 +344,7 @@ let PostCtrls = ({
           hitSlop={POST_CTRL_HITSLOP}
           timestamp={post.indexedAt}
           rootPostUri={rootPostUri}
+          threadgateRecord={threadgateRecord}
         />
       </View>
       {gate('debug_show_feedcontext') && feedContext && (
