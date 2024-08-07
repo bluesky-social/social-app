@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react'
-import {Pressable, StyleSheet, View} from 'react-native'
+import {Pressable, View} from 'react-native'
 import {VideoPlayer, VideoView} from 'expo-video'
 
 import {android, atoms as a} from '#/alf'
@@ -70,8 +70,25 @@ function VideoControls({
 
   return (
     <View style={[a.absolute, a.inset_0]}>
-      <View style={styles.timeContainer} pointerEvents="none">
-        <Text style={[styles.timeElapsed, android({lineHeight: 1.25})]}>
+      <View
+        style={[
+          {
+            backgroundColor: 'rgba(0, 0, 0, 0.75',
+            borderRadius: 6,
+            paddingHorizontal: 6,
+            paddingVertical: 3,
+            position: 'absolute',
+            left: 5,
+            bottom: 5,
+          },
+        ]}
+        pointerEvents="none">
+        <Text
+          style={[
+            {color: 'white', fontSize: 12},
+            a.font_bold,
+            android({lineHeight: 1.25}),
+          ]}>
           {minutes}:{seconds}
         </Text>
       </View>
@@ -85,20 +102,3 @@ function VideoControls({
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  timeContainer: {
-    backgroundColor: 'rgba(0, 0, 0, 0.75)',
-    borderRadius: 6,
-    paddingHorizontal: 6,
-    paddingVertical: 3,
-    position: 'absolute',
-    left: 5,
-    bottom: 5,
-  },
-  timeElapsed: {
-    color: 'white',
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-})
