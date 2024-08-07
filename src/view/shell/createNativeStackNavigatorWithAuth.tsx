@@ -33,7 +33,6 @@ import {useGate} from 'lib/statsig/statsig'
 import {isNative, isWeb} from 'platform/detection'
 import {Deactivated} from '#/screens/Deactivated'
 import {Onboarding} from '#/screens/Onboarding'
-import {SignupQueued} from '#/screens/SignupQueued'
 import {LoggedOut} from '../com/auth/LoggedOut'
 import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
 import {DesktopLeftNav} from './desktop/LeftNav'
@@ -109,9 +108,6 @@ function NativeStackNavigator({
       (isNative && gate('native_pwi_disabled')))
   ) {
     return <LoggedOut />
-  }
-  if (hasSession && currentAccount?.signupQueued) {
-    return <SignupQueued />
   }
   if (showLoggedOut) {
     return <LoggedOut onDismiss={() => setShowLoggedOut(false)} />

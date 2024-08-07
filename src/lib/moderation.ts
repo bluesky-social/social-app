@@ -1,11 +1,12 @@
 import {
-  ModerationCause,
-  ModerationUI,
-  InterpretedLabelValueDefinition,
-  LABELS,
   AppBskyLabelerDefs,
   BskyAgent,
+  Did,
+  InterpretedLabelValueDefinition,
+  LABELS,
+  ModerationCause,
   ModerationOpts,
+  ModerationUI,
 } from '@atproto/api'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -60,10 +61,9 @@ export function isAppLabeler(
     | AppBskyLabelerDefs.LabelerView
     | AppBskyLabelerDefs.LabelerViewDetailed,
 ): boolean {
-  if (typeof labeler === 'string') {
-    return BskyAgent.appLabelers.includes(labeler)
-  }
-  return BskyAgent.appLabelers.includes(labeler.creator.did)
+  const did = typeof labeler === 'string' ? labeler : labeler.creator.did
+  // assertion here that `did` starts with `did:`
+  return did.startsWith('did:') && BskyAgent.appLabelers.includes(did as Did)
 }
 
 export function isLabelerSubscribed(

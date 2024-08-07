@@ -1,14 +1,11 @@
 import 'react-native-gesture-handler' // must be first
-import {LogBox} from 'react-native'
-
 import '#/platform/polyfills'
-import {IS_TEST} from '#/env'
+
+import {LogBox} from 'react-native'
 import {registerRootComponent} from 'expo'
-import {doPolyfill} from '#/lib/api/api-polyfill'
 
 import App from '#/App'
-
-doPolyfill()
+import {IS_TEST} from '#/env'
 
 if (IS_TEST) {
   LogBox.ignoreAllLogs() // suppress all logs in tests
