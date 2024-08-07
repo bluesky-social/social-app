@@ -35,10 +35,14 @@ export async function getPostgateRecord({
   }
 
   try {
-    // TODO don't retry on 404
     const {data} = await retry(
       2,
       e => {
+        /*
+         * If the record doesn't exist, we want to return null instead of
+         * throwing an error. NB: This will also catch reference errors, such as
+         * a typo in the URI.
+         */
         if (e.message.includes(`Could not locate record:`)) {
           return false
         }
@@ -58,6 +62,11 @@ export async function getPostgateRecord({
       return undefined
     }
   } catch (e: any) {
+    /*
+     * If the record doesn't exist, we want to return null instead of
+     * throwing an error. NB: This will also catch reference errors, such as
+     * a typo in the URI.
+     */
     if (e.message.includes(`Could not locate record:`)) {
       return undefined
     } else {

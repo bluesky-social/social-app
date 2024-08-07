@@ -1,7 +1,7 @@
 import {AppBskyFeedThreadgate, AtUri, BskyAgent} from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
-import {networkRetry} from '#/lib/async/retry'
+import {networkRetry, retry} from '#/lib/async/retry'
 import {STALE} from '#/state/queries'
 import {ThreadgateAllowUISetting} from '#/state/queries/threadgate/types'
 import {
@@ -60,12 +60,25 @@ export async function getThreadgateRecord({
   }
 
   try {
-    const {data} = await networkRetry(2, () =>
-      agent.api.com.atproto.repo.getRecord({
-        repo: urip.host,
-        collection: 'app.bsky.feed.threadgate',
-        rkey: urip.rkey,
-      }),
+    const {data} = await retry(
+      2,
+      e => {
+        /*
+         * If the record doesn't exist, we want to return null instead of
+         * throwing an error. NB: This will also catch reference errors, such as
+         * a typo in the URI.
+         */
+        if (e.message.includes(`Could not locate record:`)) {
+          return false
+        }
+        return true
+      },
+      () =>
+        agent.api.com.atproto.repo.getRecord({
+          repo: urip.host,
+          collection: 'app.bsky.feed.threadgate',
+          rkey: urip.rkey,
+        }),
     )
 
     if (data.value && AppBskyFeedThreadgate.isRecord(data.value)) {
@@ -74,6 +87,11 @@ export async function getThreadgateRecord({
       return null
     }
   } catch (e: any) {
+    /*
+     * If the record doesn't exist, we want to return null instead of
+     * throwing an error. NB: This will also catch reference errors, such as
+     * a typo in the URI.
+     */
     if (e.message.includes(`Could not locate record:`)) {
       return null
     } else {
