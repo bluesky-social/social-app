@@ -269,29 +269,61 @@ let PostDropdownBtn = ({
     [navigation, postUri],
   )
 
-  const onToggleReplyVisibility = React.useCallback(() => {
+  const onToggleReplyVisibility = React.useCallback(async () => {
     if (!rootPostUri) return
 
-    // TODO handle failure
-    toggleReplyVisibility({
-      postUri: rootPostUri,
-      replyUri: postUri,
-      action: isReplyHiddenByThreadgate ? 'show' : 'hide',
-    })
-  }, [isReplyHiddenByThreadgate, rootPostUri, postUri, toggleReplyVisibility])
+    const action = isReplyHiddenByThreadgate ? 'show' : 'hide'
+    const isHide = action === 'hide'
 
-  const onToggleQuotePostAttachment = React.useCallback(() => {
+    try {
+      await toggleReplyVisibility({
+        postUri: rootPostUri,
+        replyUri: postUri,
+        action,
+      })
+      Toast.show(
+        isHide
+          ? _(msg`Reply was successfully hidden`)
+          : _(msg`Reply visibility updated`),
+      )
+    } catch (e: any) {
+      Toast.show(_(msg`Updating reply visibility failed`))
+      logger.error(`Failed to ${action} reply`, {safeMessage: e.message})
+    }
+  }, [
+    _,
+    isReplyHiddenByThreadgate,
+    rootPostUri,
+    postUri,
+    toggleReplyVisibility,
+  ])
+
+  const onToggleQuotePostAttachment = React.useCallback(async () => {
     if (!quoteEmbed) return
 
-    // TODO handle failure
-    toggleQuoteDetachment({
-      post,
-      quoteUri: quoteEmbed.uri,
-      action: quoteEmbed.isDetached ? 'reattach' : 'detach',
-    })
-  }, [quoteEmbed, post, toggleQuoteDetachment])
+    const action = quoteEmbed.isDetached ? 'reattach' : 'detach'
+    const isDetach = action === 'detach'
+
+    try {
+      await toggleQuoteDetachment({
+        post,
+        quoteUri: quoteEmbed.uri,
+        action: quoteEmbed.isDetached ? 'reattach' : 'detach',
+      })
+      Toast.show(
+        isDetach
+          ? _(msg`Quote post was successfully detached`)
+          : _(msg`Quote post was re-attached`),
+      )
+    } catch (e: any) {
+      Toast.show(_(msg`Updating quote attachment failed`))
+      logger.error(`Failed to ${action} quote`, {safeMessage: e.message})
+    }
+  }, [_, quoteEmbed, post, toggleQuoteDetachment])
 
   const canEmbed = isWeb && gtMobile && !hideInPWI
+  const canHideReply = !isAuthor && !isPostHidden && rootPostUri && isReply
+  const canDetachQuote = quoteEmbed && quoteEmbed.isOwnedByViewer
 
   return (
     <EventStopper onKeyDown={false}>
@@ -446,11 +478,11 @@ let PostDropdownBtn = ({
             </>
           )}
 
-          {hasSession && (
+          {hasSession && (canHideReply || canDetachQuote) && (
             <>
               <Menu.Divider />
               <Menu.Group>
-                {!isAuthor && !isPostHidden && rootPostUri && isReply && (
+                {canHideReply && (
                   <Menu.Item
                     testID="postDropdownHideBtn"
                     label={
@@ -471,7 +503,7 @@ let PostDropdownBtn = ({
                   </Menu.Item>
                 )}
 
-                {quoteEmbed && quoteEmbed.isOwnedByViewer && (
+                {canDetachQuote && (
                   <Menu.Item
                     disabled={isPending}
                     testID="postDropdownHideBtn"
