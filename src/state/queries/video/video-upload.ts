@@ -36,7 +36,6 @@ export const useUploadVideoMutation = ({
       const {data: serviceAuth} =
         await agent.api.com.atproto.server.getServiceAuth({
           aud: `did:web:${agent.pdsUrl.hostname}`,
-          // @ts-expect-error
           lxm: 'com.atproto.repo.uploadBlob',
         })
 
@@ -47,7 +46,7 @@ export const useUploadVideoMutation = ({
           headers: {
             'dev-key': UPLOAD_HEADER,
             'content-type': 'video/mp4', // @TODO same question here. does the compression step always output mp4?
-            Authorization: serviceAuth.token,
+            Authorization: `Bearer ${serviceAuth.token}`,
           },
           httpMethod: 'POST',
           uploadType: FileSystemUploadType.BINARY_CONTENT,

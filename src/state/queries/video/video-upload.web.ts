@@ -35,7 +35,6 @@ export const useUploadVideoMutation = ({
       const {data: serviceAuth} =
         await agent.api.com.atproto.server.getServiceAuth({
           aud: `did:web:${agent.pdsUrl.hostname}`,
-          // @ts-expect-error
           lxm: 'com.atproto.repo.uploadBlob',
         })
 
@@ -67,7 +66,7 @@ export const useUploadVideoMutation = ({
         xhr.setRequestHeader('Content-Type', 'video/mp4') // @TODO how we we set the proper content type?
         // @TODO remove this header for prod
         xhr.setRequestHeader('dev-key', UPLOAD_HEADER)
-        xhr.setRequestHeader('Authorization', serviceAuth.token)
+        xhr.setRequestHeader('Authorization', `Bearer ${serviceAuth.token}`)
         xhr.send(bytes)
       })) as UploadVideoResponse
 
