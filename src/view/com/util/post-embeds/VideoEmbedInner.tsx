@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {VideoPlayer, VideoView} from 'expo-video'
 
@@ -15,12 +15,6 @@ export function VideoEmbedInner({}: {
   const player = useVideoPlayer()
   const ref = useRef<VideoView>(null)
 
-  const enterFullscreen = useCallback(() => {
-    if (ref.current) {
-      ref.current.enterFullscreen()
-    }
-  }, [])
-
   return (
     <View style={[a.flex_1, a.relative]} collapsable={false}>
       <VideoView
@@ -29,7 +23,10 @@ export function VideoEmbedInner({}: {
         style={a.flex_1}
         nativeControls={true}
       />
-      <VideoControls player={player} enterFullscreen={enterFullscreen} />
+      <VideoControls
+        player={player}
+        enterFullscreen={() => ref.current?.enterFullscreen()}
+      />
     </View>
   )
 }
