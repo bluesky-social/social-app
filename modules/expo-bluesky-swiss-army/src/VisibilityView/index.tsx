@@ -5,9 +5,6 @@ export async function updateActiveViewAsync() {
   throw new NotImplementedError()
 }
 
-export default function VisibilityView({
-  children,
-  onChangeStatus: _onVisibilityChange,
-}: VisibilityViewProps) {
+export default function VisibilityView({children}: VisibilityViewProps) {
   return children
 }
