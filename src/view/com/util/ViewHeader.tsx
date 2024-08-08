@@ -151,6 +151,7 @@ function DesktopWebHeader({
       style={[
         styles.header,
         styles.desktopHeader,
+        pal.view,
         pal.border,
         {
           borderBottomWidth: showBorder ? StyleSheet.hairlineWidth : 0,

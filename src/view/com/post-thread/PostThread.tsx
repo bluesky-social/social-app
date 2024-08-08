@@ -89,7 +89,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
   const {hasSession, currentAccount} = useSession()
   const {_} = useLingui()
   const t = useTheme()
-  const {isMobile, isTabletOrMobile} = useWebMediaQueries()
+  const {isMobile} = useWebMediaQueries()
   const initialNumToRender = useInitialNumToRender()
   const {height: windowHeight} = useWindowDimensions()
   const [hiddenRepliesState, setHiddenRepliesState] = React.useState(
@@ -259,6 +259,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
   // This is only used on the web to keep the post in view when its parents load.
   // On native, we rely on `maintainVisibleContentPosition` instead.
   const didAdjustScrollWeb = useRef<boolean>(false)
+  const headerRef = React.useRef<View | null>(null)
   const onContentSizeChangeWeb = React.useCallback(() => {
     // only run once
     if (didAdjustScrollWeb.current) {
@@ -266,17 +267,17 @@ export function PostThread({uri}: {uri: string | undefined}) {
     }
     // wait for loading to finish
     if (thread?.type === 'post' && !!thread.parent) {
-      function onMeasure(pageY: number) {
+      // Measure synchronously to avoid a layout jump.
+      const postNode = highlightedPostRef.current
+      const headerNode = headerRef.current
+      if (postNode && headerNode) {
+        let pageY = (postNode as any as Element).getBoundingClientRect().top
+        pageY -= (headerNode as any as Element).getBoundingClientRect().height
+        pageY = Math.max(0, pageY)
         ref.current?.scrollToOffset({
           animated: false,
           offset: pageY,
         })
-      }
-      // Measure synchronously to avoid a layout jump.
-      const domNode = highlightedPostRef.current
-      if (domNode) {
-        const pageY = (domNode as any as Element).getBoundingClientRect().top
-        onMeasure(pageY)
       }
       didAdjustScrollWeb.current = true
     }
@@ -349,8 +350,6 @@ export function PostThread({uri}: {uri: string | undefined}) {
     skeleton?.highlightedPost?.type === 'post' &&
     (skeleton.highlightedPost.ctx.isParentLoading ||
       Boolean(skeleton?.parents && skeleton.parents.length > 0))
-  const showHeader =
-    isNative || (isTabletOrMobile && (!hasParents || !isFetching))
 
   const renderItem = ({item, index}: {item: RowItem; index: number}) => {
     if (item === REPLY_PROMPT && hasSession) {
@@ -464,12 +463,13 @@ export function PostThread({uri}: {uri: string | undefined}) {
 
   return (
     <CenteredView style={[a.flex_1]} sideBorders={true}>
-      {showHeader && (
+      <View ref={headerRef} style={styles.header}>
         <ViewHeader
           title={_(msg({message: `Post`, context: 'description'}))}
           showBorder
+          showOnDesktop
         />
-      )}
+      </View>
 
       <ScrollProvider onMomentumEnd={onMomentumEnd}>
         <List
@@ -678,6 +678,12 @@ function hasBranchingReplies(node?: ThreadNode) {
 }
 
 const styles = StyleSheet.create({
+  header: {
+    // @ts-ignore web-only
+    position: isNative ? '' : 'sticky',
+    top: 0,
+    zIndex: 1,
+  },
   prompt: {
     // @ts-ignore web-only
     position: isWeb ? 'fixed' : 'absolute',
