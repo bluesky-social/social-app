@@ -23,11 +23,8 @@ export default class HLSDownloadView extends React.PureComponent<HLSDownloadView
     return NativeModule.isAvailable()
   }
 
-  async downloadAsync(
-    sourceUrl: string,
-    progressCb: (progress: number) => void,
-  ): Promise<string | null> {
-    return await this.nativeRef.current.downloadAsync(sourceUrl, progressCb)
+  async startDownloadAsync(sourceUrl: string): Promise<void> {
+    return await this.nativeRef.current.startDownloadAsync(sourceUrl)
   }
 
   async cancelAsync(sourceUrl: string): Promise<void> {

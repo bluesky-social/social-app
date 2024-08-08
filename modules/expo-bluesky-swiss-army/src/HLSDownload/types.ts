@@ -1,8 +1,10 @@
+import {NativeSyntheticEvent} from 'react-native'
+
 export interface HLSDownloadViewProps {
   downloaderUrl: string
-  onSuccess: (uri: string) => void
+  onSuccess: (e: NativeSyntheticEvent<{uri: string}>) => void
 
   onStart?: () => void
-  onError?: (message: string) => void
-  onProgress?: (progress: number) => void
+  onError?: (e: NativeSyntheticEvent<{message: string}>) => void
+  onProgress?: (e: NativeSyntheticEvent<{progress: number}>) => void
 }

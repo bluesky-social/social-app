@@ -12,11 +12,8 @@ export default class HLSDownloadView extends React.PureComponent<HLSDownloadView
     return false
   }
 
-  async downloadAsync(
-    sourceUrl: string,
-    progressCb: (progress: number) => void,
-  ): Promise<string | null> {
-    throw new NotImplementedError({sourceUrl, progressCb})
+  async startDownloadAsync(sourceUrl: string): Promise<void> {
+    throw new NotImplementedError({sourceUrl})
   }
 
   async cancelAsync(sourceUrl: string): Promise<void> {

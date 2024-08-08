@@ -11,8 +11,6 @@ public class ExpoHLSDownloadModule: Module {
   public func definition() -> ModuleDefinition {
     Name("ExpoHLSDownload")
 
-    // Test
-
     View(HLSDownloadView.self) {
       Events([
         "onStart",
@@ -25,7 +23,7 @@ public class ExpoHLSDownloadModule: Module {
         view.downloaderUrl = downloaderUrl
       }
 
-      AsyncFunction("downloadAsync") { (view: HLSDownloadView, sourceUrl: URL) in
+      AsyncFunction("startDownloadAsync") { (view: HLSDownloadView, sourceUrl: URL) in
         view.startDownload(sourceUrl: sourceUrl)
       }
 

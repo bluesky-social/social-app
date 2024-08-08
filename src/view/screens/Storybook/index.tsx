@@ -42,21 +42,18 @@ function StorybookInner() {
         <HLSDownloadView
           ref={hlsDownloadRef}
           downloaderUrl="http://localhost:19006/video-download"
-          onSuccess={uri => console.log(uri)}
+          onSuccess={e => console.log('success:', e.nativeEvent.uri)}
           onStart={() => console.log('Download is starting')}
-          onError={error => console.error(error)}
-          onProgress={progress => console.log(progress)}
+          onError={e => console.log(e.nativeEvent.message)}
+          onProgress={e => console.log(e.nativeEvent.progress)}
         />
         <Button
           variant="solid"
           color="primary"
           size="small"
           onPress={async () => {
-            hlsDownloadRef.current?.downloadAsync(
+            hlsDownloadRef.current?.startDownloadAsync(
               'https://lumi.jazco.dev/watch/did:plc:q6gjnaw2blty4crticxkmujt/Qmc8w93UpTa2adJHg4ZhnDPrBs1EsbzrekzPcqF5SwusuZ/playlist.m3u8',
-              progress => {
-                console.log('progress', progress)
-              },
             )
           }}
           label="idk">
