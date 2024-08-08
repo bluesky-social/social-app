@@ -25,7 +25,6 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {useGate} from '#/lib/statsig/statsig'
 import {parseTenorGif} from '#/lib/strings/embed-player'
 import {logger} from '#/logger'
 import {FeedNotification} from '#/state/queries/notifications/feed'
@@ -87,7 +86,6 @@ let FeedItem = ({
   const pal = usePalette('default')
   const {_} = useLingui()
   const t = useTheme()
-  const gate = useGate()
   const [isAuthorsExpanded, setAuthorsExpanded] = useState<boolean>(false)
   const itemHref = useMemo(() => {
     if (item.type === 'post-like' || item.type === 'repost') {
@@ -207,7 +205,7 @@ let FeedItem = ({
       }
     }
 
-    if (isFollowBack && gate('ungroup_follow_backs')) {
+    if (isFollowBack) {
       action = _(msg`followed you back`)
     } else {
       action = _(msg`followed you`)
