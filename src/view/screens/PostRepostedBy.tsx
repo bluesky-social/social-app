@@ -1,13 +1,14 @@
 import React from 'react'
 import {View} from 'react-native'
-import {useFocusEffect} from '@react-navigation/native'
-import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
-import {ViewHeader} from '../com/util/ViewHeader'
-import {PostRepostedBy as PostRepostedByComponent} from '../com/post-thread/PostRepostedBy'
-import {makeRecordUri} from 'lib/strings/url-helpers'
-import {useSetMinimalShellMode} from '#/state/shell'
-import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useFocusEffect} from '@react-navigation/native'
+
+import {useSetMinimalShellMode} from '#/state/shell'
+import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
+import {makeRecordUri} from 'lib/strings/url-helpers'
+import {PostRepostedBy as PostRepostedByComponent} from '../com/post-thread/PostRepostedBy'
+import {ViewHeader} from '../com/util/ViewHeader'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostRepostedBy'>
 export const PostRepostedByScreen = ({route}: Props) => {
@@ -23,7 +24,7 @@ export const PostRepostedByScreen = ({route}: Props) => {
   )
 
   return (
-    <View>
+    <View style={{flex: 1}}>
       <ViewHeader title={_(msg`Reposted By`)} />
       <PostRepostedByComponent uri={uri} />
     </View>

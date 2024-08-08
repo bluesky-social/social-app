@@ -44,6 +44,7 @@ import HashtagScreen from '#/screens/Hashtag'
 import {ModerationScreen} from '#/screens/Moderation'
 import {ProfileKnownFollowersScreen} from '#/screens/Profile/KnownFollowers'
 import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
+import {AppearanceSettingsScreen} from '#/screens/Settings/AppearanceSettings'
 import {
   StarterPackScreen,
   StarterPackScreenShort,
@@ -307,6 +308,14 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         getComponent={() => AccessibilitySettingsScreen}
         options={{
           title: title(msg`Accessibility Settings`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
+        name="AppearanceSettings"
+        getComponent={() => AppearanceSettingsScreen}
+        options={{
+          title: title(msg`Appearance Settings`),
           requireAuth: true,
         }}
       />

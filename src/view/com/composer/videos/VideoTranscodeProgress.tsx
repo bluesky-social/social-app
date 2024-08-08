@@ -9,15 +9,15 @@ import {Text} from '#/components/Typography'
 import {VideoTranscodeBackdrop} from './VideoTranscodeBackdrop'
 
 export function VideoTranscodeProgress({
-  input,
+  asset,
   progress,
 }: {
-  input: ImagePickerAsset
+  asset: ImagePickerAsset
   progress: number
 }) {
   const t = useTheme()
 
-  const aspectRatio = input.width / input.height
+  const aspectRatio = asset.width / asset.height
 
   return (
     <View
@@ -29,7 +29,7 @@ export function VideoTranscodeProgress({
         a.overflow_hidden,
         {aspectRatio: isNaN(aspectRatio) ? 16 / 9 : aspectRatio},
       ]}>
-      <VideoTranscodeBackdrop uri={input.uri} />
+      <VideoTranscodeBackdrop uri={asset.uri} />
       <View
         style={[
           a.flex_1,

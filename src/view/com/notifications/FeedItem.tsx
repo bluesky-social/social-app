@@ -13,11 +13,13 @@ import {
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyFeedPost,
+  AppBskyGraphFollow,
   moderateProfile,
   ModerationDecision,
   ModerationOpts,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
+import {TID} from '@atproto/common-web'
 import {msg, Plural, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -252,10 +254,28 @@ let FeedItem = ({
       )
     icon = <RepostIcon size="xl" style={{color: t.palette.positive_600}} />
   } else if (item.type === 'follow') {
+    let isFollowBack = false
+
     if (
       item.notification.author.viewer?.following &&
-      gate('ungroup_follow_backs')
+      AppBskyGraphFollow.isRecord(item.notification.record)
     ) {
+      let followingTimestamp
+      try {
+        const rkey = new AtUri(item.notification.author.viewer.following).rkey
+        followingTimestamp = TID.fromStr(rkey).timestamp()
+      } catch (e) {
+        // For some reason the following URI was invalid. Default to it not being a follow back.
+        console.error('Invalid following URI')
+      }
+      if (followingTimestamp) {
+        const followedTimestamp =
+          new Date(item.notification.record.createdAt).getTime() * 1000
+        isFollowBack = followedTimestamp > followingTimestamp
+      }
+    }
+
+    if (isFollowBack && gate('ungroup_follow_backs')) {
       a11yLabel =
         authors.length > 1
           ? _(
