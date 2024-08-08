@@ -255,6 +255,7 @@ let FeedItem = ({
               borderColor: pal.colors.unreadNotifBorder,
             },
         {borderTopWidth: hideTopBorder ? 0 : StyleSheet.hairlineWidth},
+        a.overflow_hidden,
       ]}
       href={itemHref}
       noFeedback
@@ -547,7 +548,7 @@ function ExpandedAuthorsList({
   }, [heightInterp, visible])
 
   return (
-    <Animated.View style={[heightStyle, styles.overflowHidden]}>
+    <Animated.View style={[a.overflow_hidden, heightStyle]}>
       {visible &&
         authors.map(author => (
           <NewLink
@@ -643,9 +644,6 @@ function AdditionalPostText({post}: {post?: AppBskyFeedDefs.PostView}) {
 }
 
 const styles = StyleSheet.create({
-  overflowHidden: {
-    overflow: 'hidden',
-  },
   pointer: isWeb
     ? {
         // @ts-ignore web only
