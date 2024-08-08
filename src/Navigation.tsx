@@ -31,7 +31,7 @@ import {
 } from 'lib/routes/types'
 import {RouteParams, State} from 'lib/routes/types'
 import {bskyTitle} from 'lib/strings/headings'
-import {isAndroid, isNative} from 'platform/detection'
+import {isAndroid, isNative, isWeb} from 'platform/detection'
 import {PreferencesExternalEmbeds} from '#/view/screens/PreferencesExternalEmbeds'
 import {AppPasswords} from 'view/screens/AppPasswords'
 import {ModerationBlockedAccounts} from 'view/screens/ModerationBlockedAccounts'
@@ -39,15 +39,18 @@ import {ModerationMutedAccounts} from 'view/screens/ModerationMutedAccounts'
 import {PreferencesFollowingFeed} from 'view/screens/PreferencesFollowingFeed'
 import {PreferencesThreads} from 'view/screens/PreferencesThreads'
 import {SavedFeeds} from 'view/screens/SavedFeeds'
+import {SharedPreferencesTesterScreen} from '#/screens/E2E/SharedPreferencesTesterScreen'
 import HashtagScreen from '#/screens/Hashtag'
 import {ModerationScreen} from '#/screens/Moderation'
 import {ProfileKnownFollowersScreen} from '#/screens/Profile/KnownFollowers'
 import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
+import {AppearanceSettingsScreen} from '#/screens/Settings/AppearanceSettings'
 import {
   StarterPackScreen,
   StarterPackScreenShort,
 } from '#/screens/StarterPack/StarterPackScreen'
 import {Wizard} from '#/screens/StarterPack/Wizard'
+import {Referrer} from '../modules/expo-bluesky-swiss-army'
 import {init as initAnalytics} from './lib/analytics/analytics'
 import {useWebScrollRestoration} from './lib/hooks/useWebScrollRestoration'
 import {attachRouteToLogEvents, logEvent} from './lib/statsig/statsig'
@@ -74,6 +77,7 @@ import {LogScreen} from './view/screens/Log'
 import {ModerationModlistsScreen} from './view/screens/ModerationModlists'
 import {NotFoundScreen} from './view/screens/NotFound'
 import {NotificationsScreen} from './view/screens/Notifications'
+import {NotificationsSettingsScreen} from './view/screens/NotificationsSettings'
 import {PostLikedByScreen} from './view/screens/PostLikedBy'
 import {PostRepostedByScreen} from './view/screens/PostRepostedBy'
 import {PostThreadScreen} from './view/screens/PostThread'
@@ -234,6 +238,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         options={{title: title(msg`Moderation states`), requireAuth: true}}
       />
       <Stack.Screen
+        name="SharedPreferencesTester"
+        getComponent={() => SharedPreferencesTesterScreen}
+        options={{title: title(msg`Shared Preferences Tester`)}}
+      />
+      <Stack.Screen
         name="Log"
         getComponent={() => LogScreen}
         options={{title: title(msg`Log`), requireAuth: true}}
@@ -303,6 +312,14 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         }}
       />
       <Stack.Screen
+        name="AppearanceSettings"
+        getComponent={() => AppearanceSettingsScreen}
+        options={{
+          title: title(msg`Appearance Settings`),
+          requireAuth: true,
+        }}
+      />
+      <Stack.Screen
         name="Hashtag"
         getComponent={() => HashtagScreen}
         options={{title: title(msg`Hashtag`)}}
@@ -316,6 +333,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="MessagesSettings"
         getComponent={() => MessagesSettingsScreen}
         options={{title: title(msg`Chat settings`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="NotificationsSettings"
+        getComponent={() => NotificationsSettingsScreen}
+        options={{title: title(msg`Notification settings`), requireAuth: true}}
       />
       <Stack.Screen
         name="Feeds"
@@ -762,6 +784,17 @@ function logModuleInitTime() {
   logEvent('init', {
     initMs,
   })
+
+  if (isWeb) {
+    const referrerInfo = Referrer.getReferrerInfo()
+    if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
+      logEvent('deepLink:referrerReceived', {
+        to: window.location.href,
+        referrer: referrerInfo?.referrer,
+        hostname: referrerInfo?.hostname,
+      })
+    }
+  }
 
   if (__DEV__) {
     // This log is noisy, so keep false committed

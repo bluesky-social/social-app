@@ -101,16 +101,13 @@ export function useSharedInputStyles() {
     ]
     const error: ViewStyle[] = [
       {
-        backgroundColor:
-          t.name === 'light' ? t.palette.negative_25 : t.palette.negative_900,
-        borderColor:
-          t.name === 'light' ? t.palette.negative_300 : t.palette.negative_800,
+        backgroundColor: t.palette.negative_25,
+        borderColor: t.palette.negative_300,
       },
     ]
     const errorHover: ViewStyle[] = [
       {
-        backgroundColor:
-          t.name === 'light' ? t.palette.negative_25 : t.palette.negative_900,
+        backgroundColor: t.palette.negative_25,
         borderColor: t.palette.negative_500,
       },
     ]

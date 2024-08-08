@@ -12,6 +12,7 @@ import {Link, LinkProps} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
 const AVI_SIZE = 30
+const AVI_SIZE_SMALL = 20
 const AVI_BORDER = 1
 
 /**
@@ -30,10 +31,12 @@ export function KnownFollowers({
   profile,
   moderationOpts,
   onLinkPress,
+  minimal,
 }: {
   profile: AppBskyActorDefs.ProfileViewDetailed
   moderationOpts: ModerationOpts
   onLinkPress?: LinkProps['onPress']
+  minimal?: boolean
 }) {
   const cache = React.useRef<Map<string, AppBskyActorDefs.KnownFollowers>>(
     new Map(),
@@ -59,6 +62,7 @@ export function KnownFollowers({
         cachedKnownFollowers={cachedKnownFollowers}
         moderationOpts={moderationOpts}
         onLinkPress={onLinkPress}
+        minimal={minimal}
       />
     )
   }
@@ -71,11 +75,13 @@ function KnownFollowersInner({
   moderationOpts,
   cachedKnownFollowers,
   onLinkPress,
+  minimal,
 }: {
   profile: AppBskyActorDefs.ProfileViewDetailed
   moderationOpts: ModerationOpts
   cachedKnownFollowers: AppBskyActorDefs.KnownFollowers
   onLinkPress?: LinkProps['onPress']
+  minimal?: boolean
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -110,6 +116,8 @@ function KnownFollowersInner({
    */
   if (slice.length === 0) return null
 
+  const SIZE = minimal ? AVI_SIZE_SMALL : AVI_SIZE
+
   return (
     <Link
       label={_(
@@ -120,7 +128,7 @@ function KnownFollowersInner({
       style={[
         a.flex_1,
         a.flex_row,
-        a.gap_md,
+        minimal ? a.gap_sm : a.gap_md,
         a.align_center,
         {marginLeft: -AVI_BORDER},
       ]}>
@@ -129,8 +137,8 @@ function KnownFollowersInner({
           <View
             style={[
               {
-                height: AVI_SIZE,
-                width: AVI_SIZE + (slice.length - 1) * a.gap_md.gap,
+                height: SIZE,
+                width: SIZE + (slice.length - 1) * a.gap_md.gap,
               },
               pressed && {
                 opacity: 0.5,
@@ -145,14 +153,14 @@ function KnownFollowersInner({
                   {
                     borderWidth: AVI_BORDER,
                     borderColor: t.atoms.bg.backgroundColor,
-                    width: AVI_SIZE + AVI_BORDER * 2,
-                    height: AVI_SIZE + AVI_BORDER * 2,
+                    width: SIZE + AVI_BORDER * 2,
+                    height: SIZE + AVI_BORDER * 2,
                     left: i * a.gap_md.gap,
                     zIndex: AVI_BORDER - i,
                   },
                 ]}>
                 <UserAvatar
-                  size={AVI_SIZE}
+                  size={SIZE}
                   avatar={prof.avatar}
                   moderation={moderation.ui('avatar')}
                 />

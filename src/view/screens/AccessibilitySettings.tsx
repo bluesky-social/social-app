@@ -27,6 +27,7 @@ import {ToggleButton} from '#/view/com/util/forms/ToggleButton'
 import {SimpleViewHeader} from '#/view/com/util/SimpleViewHeader'
 import {Text} from '#/view/com/util/text/Text'
 import {ScrollView} from '#/view/com/util/Views'
+import {atoms as a} from '#/alf'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -36,7 +37,7 @@ export function AccessibilitySettingsScreen({}: Props) {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
   const {screen} = useAnalytics()
-  const {isMobile} = useWebMediaQueries()
+  const {isMobile, isTabletOrMobile} = useWebMediaQueries()
   const {_} = useLingui()
 
   const requireAltTextEnabled = useRequireAltTextEnabled()
@@ -58,13 +59,16 @@ export function AccessibilitySettingsScreen({}: Props) {
   return (
     <View style={s.hContentRegion} testID="accessibilitySettingsScreen">
       <SimpleViewHeader
-        showBackButton={isMobile}
+        showBackButton={isTabletOrMobile}
         style={[
           pal.border,
-          {borderBottomWidth: 1},
-          !isMobile && {borderLeftWidth: 1, borderRightWidth: 1},
+          a.border_b,
+          !isMobile && {
+            borderLeftWidth: StyleSheet.hairlineWidth,
+            borderRightWidth: StyleSheet.hairlineWidth,
+          },
         ]}>
-        <View style={{flex: 1}}>
+        <View style={a.flex_1}>
           <Text type="title-lg" style={[pal.text, {fontWeight: 'bold'}]}>
             <Trans>Accessibility Settings</Trans>
           </Text>

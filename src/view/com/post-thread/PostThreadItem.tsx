@@ -44,7 +44,6 @@ import {PostEmbeds} from '../util/post-embeds'
 import {PostMeta} from '../util/PostMeta'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
-import hairlineWidth = StyleSheet.hairlineWidth
 
 export function PostThreadItem({
   post,
@@ -604,7 +603,7 @@ function PostOuterWrapper({
           {
             flexDirection: 'row',
             paddingHorizontal: isMobile ? 10 : 6,
-            borderTopWidth: depth === 1 ? hairlineWidth : 0,
+            borderTopWidth: depth === 1 ? StyleSheet.hairlineWidth : 0,
           },
         ]}>
         {Array.from(Array(depth - 1)).map((_, n: number) => (
@@ -699,7 +698,7 @@ function getThreadAuthor(
 
 const styles = StyleSheet.create({
   outer: {
-    borderTopWidth: hairlineWidth,
+    borderTopWidth: StyleSheet.hairlineWidth,
     paddingLeft: 8,
   },
   outerHighlighted: {
@@ -709,7 +708,7 @@ const styles = StyleSheet.create({
     paddingRight: 8,
   },
   outerHighlightedRoot: {
-    borderTopWidth: hairlineWidth,
+    borderTopWidth: StyleSheet.hairlineWidth,
     paddingTop: 16,
   },
   noTopBorder: {
@@ -761,8 +760,8 @@ const styles = StyleSheet.create({
   expandedInfo: {
     flexDirection: 'row',
     padding: 10,
-    borderTopWidth: hairlineWidth,
-    borderBottomWidth: hairlineWidth,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderBottomWidth: StyleSheet.hairlineWidth,
     marginTop: 5,
     marginBottom: 10,
   },

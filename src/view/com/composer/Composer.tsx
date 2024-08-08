@@ -13,18 +13,22 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   LayoutChangeEvent,
+  StyleProp,
   StyleSheet,
-  TouchableOpacity,
   View,
+  ViewStyle,
 } from 'react-native'
+// @ts-expect-error no type definition
+import ProgressCircle from 'react-native-progress/Circle'
 import Animated, {
+  FadeIn,
+  FadeOut,
   interpolateColor,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {LinearGradient} from 'expo-linear-gradient'
 import {
   AppBskyFeedDefs,
   AppBskyFeedGetPostThread,
@@ -57,25 +61,27 @@ import {
 import {useProfileQuery} from '#/state/queries/profile'
 import {Gif} from '#/state/queries/tenor'
 import {ThreadgateSetting} from '#/state/queries/threadgate'
+import {useUploadVideo} from '#/state/queries/video/video'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
 import {useAnalytics} from 'lib/analytics/analytics'
 import * as apilib from 'lib/api/index'
-import {HITSLOP_10, MAX_GRAPHEME_LENGTH} from 'lib/constants'
+import {MAX_GRAPHEME_LENGTH} from 'lib/constants'
 import {useIsKeyboardVisible} from 'lib/hooks/useIsKeyboardVisible'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError} from 'lib/strings/errors'
 import {insertMentionAt} from 'lib/strings/mention-manip'
 import {shortenLinks} from 'lib/strings/rich-text-manip'
-import {colors, gradients, s} from 'lib/styles'
+import {colors, s} from 'lib/styles'
 import {isAndroid, isIOS, isNative, isWeb} from 'platform/detection'
 import {useDialogStateControlContext} from 'state/dialogs'
 import {GalleryModel} from 'state/models/media/gallery'
+import {State as VideoUploadState} from 'state/queries/video/video'
 import {ComposerOpts} from 'state/shell/composer'
 import {ComposerReplyTo} from 'view/com/composer/ComposerReplyTo'
 import {atoms as a, useTheme} from '#/alf'
-import {Button} from '#/components/Button'
+import {Button, ButtonText} from '#/components/Button'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
 import * as Prompt from '#/components/Prompt'
 import {QuoteEmbed, QuoteX} from '../util/post-embeds/QuoteEmbed'
@@ -98,10 +104,8 @@ import {TextInput, TextInputRef} from './text-input/TextInput'
 import {ThreadgateBtn} from './threadgate/ThreadgateBtn'
 import {useExternalLinkFetch} from './useExternalLinkFetch'
 import {SelectVideoBtn} from './videos/SelectVideoBtn'
-import {useVideoState} from './videos/state'
 import {VideoPreview} from './videos/VideoPreview'
 import {VideoTranscodeProgress} from './videos/VideoTranscodeProgress'
-import hairlineWidth = StyleSheet.hairlineWidth
 
 type CancelRef = {
   onPressCancel: () => void
@@ -162,14 +166,21 @@ export const ComposePost = observer(function ComposePost({
   const [quote, setQuote] = useState<ComposerOpts['quote'] | undefined>(
     initQuote,
   )
+
   const {
-    video,
-    onSelectVideo,
-    videoPending,
-    videoProcessingData,
+    selectVideo,
     clearVideo,
-    videoProcessingProgress,
-  } = useVideoState({setError})
+    state: videoUploadState,
+  } = useUploadVideo({
+    setStatus: (status: string) => setProcessingState(status),
+    onSuccess: () => {
+      if (publishOnUpload) {
+        onPressPublish(true)
+      }
+    },
+  })
+  const [publishOnUpload, setPublishOnUpload] = useState(false)
+
   const {extLink, setExtLink} = useExternalLinkFetch({setQuote})
   const [extGif, setExtGif] = useState<Gif>()
   const [labels, setLabels] = useState<string[]>([])
@@ -277,12 +288,21 @@ export const ComposePost = observer(function ComposePost({
     return false
   }, [gallery.needsAltText, extLink, extGif, requireAltTextEnabled])
 
-  const onPressPublish = async () => {
+  const onPressPublish = async (finishedUploading?: boolean) => {
     if (isProcessing || graphemeLength > MAX_GRAPHEME_LENGTH) {
       return
     }
 
     if (isAltTextRequiredAndMissing) {
+      return
+    }
+
+    if (
+      !finishedUploading &&
+      videoUploadState.status !== 'idle' &&
+      videoUploadState.asset
+    ) {
+      setPublishOnUpload(true)
       return
     }
 
@@ -390,8 +410,12 @@ export const ComposePost = observer(function ComposePost({
     : _(msg`What's up?`)
 
   const canSelectImages =
-    gallery.size < 4 && !extLink && !video && !videoPending
-  const hasMedia = gallery.size > 0 || Boolean(extLink) || Boolean(video)
+    gallery.size < 4 &&
+    !extLink &&
+    videoUploadState.status === 'idle' &&
+    !videoUploadState.video
+  const hasMedia =
+    gallery.size > 0 || Boolean(extLink) || Boolean(videoUploadState.video)
 
   const onEmojiButtonPress = useCallback(() => {
     openPicker?.(textInput.current?.getCursorPosition())
@@ -458,20 +482,25 @@ export const ComposePost = observer(function ComposePost({
       <View style={[a.flex_1, viewStyles]} aria-modal accessibilityViewIsModal>
         <Animated.View style={topBarAnimatedStyle}>
           <View style={styles.topbarInner}>
-            <TouchableOpacity
-              testID="composerDiscardButton"
+            <Button
+              label={_(msg`Cancel`)}
+              variant="ghost"
+              color="primary"
+              shape="default"
+              size="small"
+              style={[
+                a.rounded_full,
+                a.py_sm,
+                {paddingLeft: 7, paddingRight: 7},
+              ]}
               onPress={onPressCancel}
-              onAccessibilityEscape={onPressCancel}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Cancel`)}
               accessibilityHint={_(
                 msg`Closes post composer and discards post draft`,
-              )}
-              hitSlop={HITSLOP_10}>
-              <Text style={[pal.link, s.f18]}>
+              )}>
+              <ButtonText style={[a.text_md]}>
                 <Trans>Cancel</Trans>
-              </Text>
-            </TouchableOpacity>
+              </ButtonText>
+            </Button>
             <View style={a.flex_1} />
             {isProcessing ? (
               <>
@@ -488,31 +517,28 @@ export const ComposePost = observer(function ComposePost({
                   hasMedia={hasMedia}
                 />
                 {canPost ? (
-                  <TouchableOpacity
+                  <Button
                     testID="composerPublishBtn"
-                    onPress={onPressPublish}
-                    accessibilityRole="button"
-                    accessibilityLabel={
+                    label={
                       replyTo ? _(msg`Publish reply`) : _(msg`Publish post`)
                     }
-                    accessibilityHint="">
-                    <LinearGradient
-                      colors={[
-                        gradients.blueLight.start,
-                        gradients.blueLight.end,
-                      ]}
-                      start={{x: 0, y: 0}}
-                      end={{x: 1, y: 1}}
-                      style={styles.postBtn}>
-                      <Text style={[s.white, s.f16, s.bold]}>
-                        {replyTo ? (
-                          <Trans context="action">Reply</Trans>
-                        ) : (
-                          <Trans context="action">Post</Trans>
-                        )}
-                      </Text>
-                    </LinearGradient>
-                  </TouchableOpacity>
+                    variant="solid"
+                    color="primary"
+                    shape="default"
+                    size="small"
+                    style={[a.rounded_full, a.py_sm]}
+                    onPress={() => onPressPublish()}
+                    disabled={
+                      videoUploadState.status !== 'idle' && publishOnUpload
+                    }>
+                    <ButtonText style={[a.text_md]}>
+                      {replyTo ? (
+                        <Trans context="action">Reply</Trans>
+                      ) : (
+                        <Trans context="action">Post</Trans>
+                      )}
+                    </ButtonText>
+                  </Button>
                 ) : (
                   <View style={[styles.postBtn, pal.btn]}>
                     <Text style={[pal.textLight, s.f16, s.bold]}>
@@ -576,7 +602,7 @@ export const ComposePost = observer(function ComposePost({
               autoFocus
               setRichText={setRichText}
               onPhotoPasted={onPhotoPasted}
-              onPressPublish={onPressPublish}
+              onPressPublish={() => onPressPublish()}
               onNewLink={onNewLink}
               onError={setError}
               accessible={true}
@@ -606,29 +632,33 @@ export const ComposePost = observer(function ComposePost({
             </View>
           )}
 
-          {quote ? (
-            <View style={[s.mt5, s.mb2, isWeb && s.mb10]}>
-              <View style={{pointerEvents: 'none'}}>
-                <QuoteEmbed quote={quote} />
+          <View style={[a.mt_md]}>
+            {quote ? (
+              <View style={[s.mt5, s.mb2, isWeb && s.mb10]}>
+                <View style={{pointerEvents: 'none'}}>
+                  <QuoteEmbed quote={quote} />
+                </View>
+                {quote.uri !== initQuote?.uri && (
+                  <QuoteX onRemove={() => setQuote(undefined)} />
+                )}
               </View>
-              {quote.uri !== initQuote?.uri && (
-                <QuoteX onRemove={() => setQuote(undefined)} />
-              )}
-            </View>
-          ) : null}
-          {videoPending && videoProcessingData ? (
-            <VideoTranscodeProgress
-              input={videoProcessingData}
-              progress={videoProcessingProgress}
-            />
-          ) : (
-            video && (
+            ) : null}
+            {videoUploadState.status === 'compressing' &&
+            videoUploadState.asset ? (
+              <VideoTranscodeProgress
+                asset={videoUploadState.asset}
+                progress={videoUploadState.progress}
+              />
+            ) : videoUploadState.video ? (
               // remove suspense when we get rid of lazy
               <Suspense fallback={null}>
-                <VideoPreview video={video} clear={clearVideo} />
+                <VideoPreview
+                  video={videoUploadState.video}
+                  clear={clearVideo}
+                />
               </Suspense>
-            )
-          )}
+            ) : null}
+          </View>
         </Animated.ScrollView>
         <SuggestedLanguage text={richtext.text} />
 
@@ -645,33 +675,37 @@ export const ComposePost = observer(function ComposePost({
             t.atoms.border_contrast_medium,
             styles.bottomBar,
           ]}>
-          <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-            <SelectPhotoBtn gallery={gallery} disabled={!canSelectImages} />
-            {gate('videos') && (
-              <SelectVideoBtn
-                onSelectVideo={onSelectVideo}
-                disabled={!canSelectImages}
+          {videoUploadState.status !== 'idle' ? (
+            <VideoUploadToolbar state={videoUploadState} />
+          ) : (
+            <ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
+              <SelectPhotoBtn gallery={gallery} disabled={!canSelectImages} />
+              {gate('videos') && (
+                <SelectVideoBtn
+                  onSelectVideo={selectVideo}
+                  disabled={!canSelectImages}
+                />
+              )}
+              <OpenCameraBtn gallery={gallery} disabled={!canSelectImages} />
+              <SelectGifBtn
+                onClose={focusTextInput}
+                onSelectGif={onSelectGif}
+                disabled={hasMedia}
               />
-            )}
-            <OpenCameraBtn gallery={gallery} disabled={!canSelectImages} />
-            <SelectGifBtn
-              onClose={focusTextInput}
-              onSelectGif={onSelectGif}
-              disabled={hasMedia}
-            />
-            {!isMobile ? (
-              <Button
-                onPress={onEmojiButtonPress}
-                style={a.p_sm}
-                label={_(msg`Open emoji picker`)}
-                accessibilityHint={_(msg`Open emoji picker`)}
-                variant="ghost"
-                shape="round"
-                color="primary">
-                <EmojiSmile size="lg" />
-              </Button>
-            ) : null}
-          </View>
+              {!isMobile ? (
+                <Button
+                  onPress={onEmojiButtonPress}
+                  style={a.p_sm}
+                  label={_(msg`Open emoji picker`)}
+                  accessibilityHint={_(msg`Open emoji picker`)}
+                  variant="ghost"
+                  shape="round"
+                  color="primary">
+                  <EmojiSmile size="lg" />
+                </Button>
+              ) : null}
+            </ToolbarWrapper>
+          )}
           <View style={a.flex_1} />
           <SelectLangBtn />
           <CharProgress count={graphemeLength} />
@@ -766,7 +800,7 @@ function useAnimatedBorders() {
 
   const topBarAnimatedStyle = useAnimatedStyle(() => {
     return {
-      borderBottomWidth: hairlineWidth,
+      borderBottomWidth: StyleSheet.hairlineWidth,
       borderColor: interpolateColor(
         hasScrolledTop.value,
         [0, 1],
@@ -776,7 +810,7 @@ function useAnimatedBorders() {
   })
   const bottomBarAnimatedStyle = useAnimatedStyle(() => {
     return {
-      borderTopWidth: hairlineWidth,
+      borderTopWidth: StyleSheet.hairlineWidth,
       borderColor: interpolateColor(
         hasScrolledBottom.value,
         [0, 1],
@@ -828,7 +862,7 @@ const styles = StyleSheet.create({
   topbarInner: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
+    paddingHorizontal: 8,
     height: 54,
     gap: 4,
   },
@@ -858,7 +892,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   errorIcon: {
-    borderWidth: hairlineWidth,
+    borderWidth: StyleSheet.hairlineWidth,
     borderColor: colors.red4,
     color: colors.red4,
     borderRadius: 30,
@@ -894,6 +928,47 @@ const styles = StyleSheet.create({
     paddingLeft: 7,
     paddingRight: 16,
     alignItems: 'center',
-    borderTopWidth: hairlineWidth,
+    borderTopWidth: StyleSheet.hairlineWidth,
   },
 })
+
+function ToolbarWrapper({
+  style,
+  children,
+}: {
+  style: StyleProp<ViewStyle>
+  children: React.ReactNode
+}) {
+  if (isWeb) return children
+  return (
+    <Animated.View
+      style={style}
+      entering={FadeIn.duration(400)}
+      exiting={FadeOut.duration(400)}>
+      {children}
+    </Animated.View>
+  )
+}
+
+function VideoUploadToolbar({state}: {state: VideoUploadState}) {
+  const t = useTheme()
+
+  const progress =
+    state.status === 'compressing' || state.status === 'uploading'
+      ? state.progress
+      : state.jobStatus?.progress ?? 100
+
+  return (
+    <ToolbarWrapper
+      style={[a.gap_sm, a.flex_row, a.align_center, {paddingVertical: 5}]}>
+      <ProgressCircle
+        size={30}
+        borderWidth={1}
+        borderColor={t.atoms.border_contrast_low.borderColor}
+        color={t.palette.primary_500}
+        progress={progress}
+      />
+      <Text>{state.status}</Text>
+    </ToolbarWrapper>
+  )
+}

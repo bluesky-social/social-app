@@ -46,18 +46,24 @@ const PAGE_SIZE = 30
 type RQPageParam = string | undefined
 
 const RQKEY_ROOT = 'notification-feed'
-export function RQKEY() {
-  return [RQKEY_ROOT]
+export function RQKEY(priority?: false) {
+  return [RQKEY_ROOT, priority]
 }
 
-export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
+export function useNotificationFeedQuery(opts?: {
+  enabled?: boolean
+  overridePriorityNotifications?: boolean
+}) {
   const agent = useAgent()
   const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
   const unreads = useUnreadNotificationsApi()
   const enabled = opts?.enabled !== false
-  const lastPageCountRef = useRef(0)
   const gate = useGate()
+
+  // false: force showing all notifications
+  // undefined: let the server decide
+  const priority = opts?.overridePriorityNotifications ? false : undefined
 
   const query = useInfiniteQuery<
     FeedPage,
@@ -67,7 +73,7 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
     RQPageParam
   >({
     staleTime: STALE.INFINITY,
-    queryKey: RQKEY(),
+    queryKey: RQKEY(priority),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       let page
       if (!pageParam) {
@@ -75,17 +81,17 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
         page = unreads.getCachedUnreadPage()
       }
       if (!page) {
-        page = (
-          await fetchPage({
-            agent,
-            limit: PAGE_SIZE,
-            cursor: pageParam,
-            queryClient,
-            moderationOpts,
-            fetchAdditionalData: true,
-            shouldUngroupFollowBacks: () => gate('ungroup_follow_backs'),
-          })
-        ).page
+        const {page: fetchedPage} = await fetchPage({
+          agent,
+          limit: PAGE_SIZE,
+          cursor: pageParam,
+          queryClient,
+          moderationOpts,
+          fetchAdditionalData: true,
+          shouldUngroupFollowBacks: () => gate('ungroup_follow_backs'),
+          priority,
+        })
+        page = fetchedPage
       }
 
       // if the first page has an unread, mark all read
@@ -114,28 +120,52 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
     },
   })
 
+  // The server may end up returning an empty page, a page with too few items,
+  // or a page with items that end up getting filtered out. When we fetch pages,
+  // we'll keep track of how many items we actually hope to see. If the server
+  // doesn't return enough items, we're going to continue asking for more items.
+  const lastItemCount = useRef(0)
+  const wantedItemCount = useRef(0)
+  const autoPaginationAttemptCount = useRef(0)
   useEffect(() => {
-    const {isFetching, hasNextPage, data} = query
-    if (isFetching || !hasNextPage) {
-      return
-    }
-
-    // avoid double-fires of fetchNextPage()
-    if (
-      lastPageCountRef.current !== 0 &&
-      lastPageCountRef.current === data?.pages?.length
-    ) {
-      return
-    }
-
-    // fetch next page if we haven't gotten a full page of content
-    let count = 0
+    const {data, isLoading, isRefetching, isFetchingNextPage, hasNextPage} =
+      query
+    // Count the items that we already have.
+    let itemCount = 0
     for (const page of data?.pages || []) {
-      count += page.items.length
+      itemCount += page.items.length
     }
-    if (count < PAGE_SIZE && (data?.pages.length || 0) < 6) {
-      query.fetchNextPage()
-      lastPageCountRef.current = data?.pages?.length || 0
+
+    // If items got truncated, reset the state we're tracking below.
+    if (itemCount !== lastItemCount.current) {
+      if (itemCount < lastItemCount.current) {
+        wantedItemCount.current = itemCount
+      }
+      lastItemCount.current = itemCount
+    }
+
+    // Now track how many items we really want, and fetch more if needed.
+    if (isLoading || isRefetching) {
+      // During the initial fetch, we want to get an entire page's worth of items.
+      wantedItemCount.current = PAGE_SIZE
+    } else if (isFetchingNextPage) {
+      if (itemCount > wantedItemCount.current) {
+        // We have more items than wantedItemCount, so wantedItemCount must be out of date.
+        // Some other code must have called fetchNextPage(), for example, from onEndReached.
+        // Adjust the wantedItemCount to reflect that we want one more full page of items.
+        wantedItemCount.current = itemCount + PAGE_SIZE
+      }
+    } else if (hasNextPage) {
+      // At this point we're not fetching anymore, so it's time to make a decision.
+      // If we didn't receive enough items from the server, paginate again until we do.
+      if (itemCount < wantedItemCount.current) {
+        autoPaginationAttemptCount.current++
+        if (autoPaginationAttemptCount.current < 50 /* failsafe */) {
+          query.fetchNextPage()
+        }
+      } else {
+        autoPaginationAttemptCount.current = 0
+      }
     }
   }, [query])
 

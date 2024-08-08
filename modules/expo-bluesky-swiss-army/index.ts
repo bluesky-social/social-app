@@ -1,4 +1,6 @@
-import * as DevicePrefs from './src/DevicePrefs'
+import * as PlatformInfo from './src/PlatformInfo'
 import * as Referrer from './src/Referrer'
+import * as SharedPrefs from './src/SharedPrefs'
+import VisibilityView from './src/VisibilityView'
 
-export {DevicePrefs, Referrer}
+export {PlatformInfo, Referrer, SharedPrefs, VisibilityView}

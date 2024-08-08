@@ -54,7 +54,10 @@ function ModerationDetailsDialogInner({
       description = (
         <Trans>
           This user is included in the{' '}
-          <InlineLinkText to={listUriToHref(list.uri)} style={[a.text_sm]}>
+          <InlineLinkText
+            label={list.name}
+            to={listUriToHref(list.uri)}
+            style={[a.text_sm]}>
             {list.name}
           </InlineLinkText>{' '}
           list which you have blocked.
@@ -83,7 +86,10 @@ function ModerationDetailsDialogInner({
       description = (
         <Trans>
           This user is included in the{' '}
-          <InlineLinkText to={listUriToHref(list.uri)} style={[a.text_sm]}>
+          <InlineLinkText
+            label={list.name}
+            to={listUriToHref(list.uri)}
+            style={[a.text_sm]}>
             {list.name}
           </InlineLinkText>{' '}
           list which you have muted.
@@ -127,10 +133,11 @@ function ModerationDetailsDialogInner({
               <Trans>
                 This label was applied by{' '}
                 <InlineLinkText
+                  label={desc.source || _(msg`an unknown labeler`)}
                   to={makeProfileLink({did: modcause.label.src, handle: ''})}
                   onPress={() => control.close()}
                   style={a.text_md}>
-                  {desc.source}
+                  {desc.source || _(msg`an unknown labeler`)}
                 </InlineLinkText>
                 .
               </Trans>

@@ -17,7 +17,6 @@ import {
   Heart2_Stroke2_Corner0_Rounded as HeartIconOutline,
 } from '#/components/icons/Heart2'
 import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
-import hairlineWidth = StyleSheet.hairlineWidth
 
 export function LoadingPlaceholder({
   width,
@@ -236,7 +235,7 @@ export function FeedLoadingPlaceholder({
         {
           paddingHorizontal: 12,
           paddingVertical: 18,
-          borderTopWidth: showTopBorder ? hairlineWidth : 0,
+          borderTopWidth: showTopBorder ? StyleSheet.hairlineWidth : 0,
         },
         pal.border,
         style,
