@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-08-08 17:18+0900\n"
+"PO-Revision-Date: 2024-08-08 21:14+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -395,6 +395,7 @@ msgid "Added to my feeds"
 msgstr "내 피드에 추가됨"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:34
+#: src/lib/moderation/useModerationCauseDescription.ts:129
 #: src/view/com/modals/SelfLabel.tsx:76
 msgid "Adult Content"
 msgstr "성인 콘텐츠"
@@ -433,6 +434,10 @@ msgstr "다이렉트 메시지 접근 허용"
 #: src/screens/Messages/Settings.tsx:65
 msgid "Allow new messages from"
 msgstr "새 메시지를 허용할 대상"
+
+#: src/view/screens/AppPasswords.tsx:271
+msgid "Allows access to direct messages"
+msgstr "다이렉트 메시지 접근 허용"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:178
 #: src/view/com/modals/ChangePassword.tsx:171
