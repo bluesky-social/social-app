@@ -5,7 +5,7 @@ import {parse} from 'hls-parser'
 import {MasterPlaylist, MediaPlaylist, Variant} from 'hls-parser/types'
 
 interface PostMessageData {
-  action: 'progress' | 'complete' | 'error'
+  action: 'progress' | 'error'
   messageStr?: string
   messageFloat?: number
 }
@@ -21,6 +21,12 @@ function postMessage(data: PostMessageData) {
   }
 }
 
+function createSegementUrl(originalUrl: string, newFile: string) {
+  const parts = originalUrl.split('/')
+  parts[parts.length - 1] = newFile
+  return parts.join('/')
+}
+
 export function VideoDownloadScreen() {
   const ffmpegRef = React.useRef(new FFmpeg())
 
@@ -29,10 +35,6 @@ export function VideoDownloadScreen() {
   const load = React.useCallback(async () => {
     const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm'
     const ffmpeg = ffmpegRef.current
-
-    ffmpeg.on('log', ({message}: {message: string}) => {
-      console.log(message)
-    })
 
     await ffmpeg.load({
       coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
@@ -51,7 +53,10 @@ export function VideoDownloadScreen() {
 
     // If URL given is not a master playlist, we probably cannot handle this.
     if (!masterPlaylist.isMasterPlaylist) {
-      postMessage({action: 'error', messageStr: 'Not a master playlist'})
+      postMessage({
+        action: 'error',
+        messageStr: 'A master playlist was not found in the provided playlist.',
+      })
       // @TODO handle
       return
     }
@@ -67,7 +72,10 @@ export function VideoDownloadScreen() {
     // Should only happen if there was no variants at all given to us. Mostly for types.
     if (!bestVariant) {
       // @TODO handle
-      postMessage({action: 'error', messageStr: 'No variants found'})
+      postMessage({
+        action: 'error',
+        messageStr: 'No variants were found in the provided master playlist.',
+      })
       return
     }
 
@@ -82,7 +90,10 @@ export function VideoDownloadScreen() {
 
     // This one shouldn't be a master playlist - again just for types really
     if (playlist.isMasterPlaylist) {
-      postMessage({action: 'error', messageStr: 'Is a master playlist'})
+      postMessage({
+        action: 'error',
+        messageStr: 'An unknown error has occurred.',
+      })
       // @TODO handle
       return
     }
@@ -95,33 +106,33 @@ export function VideoDownloadScreen() {
     })
 
     // Download each segment
-    let error = false
+    let error: string | null = null
     await Promise.all(
       playlist.segments.map(async segment => {
+        const uri = createSegementUrl(bestVariantUrl, segment.uri)
+        const filename = segment.uri.split('?')[0]
+
+        const res = await fetch(uri)
+        if (!res.ok) {
+          error = 'Failed to download playlist segment.'
+        }
+
+        const blob = await res.blob()
         try {
-          const uri = createUrl(bestVariantUrl, segment.uri)
-          const filename = segment.uri.split('?')[0]
-          const res = await fetch(uri)
-
-          if (!res.ok) {
-            error = true
-          }
-
-          const blob = await res.blob()
           await ffmpeg.writeFile(filename, await fetchFile(blob))
-        } catch (e: any) {
-          postMessage({
-            action: 'error',
-            messageStr: `Something happened: ${e.toString()}`,
-          })
-          console.log(e)
+        } catch (e: unknown) {
+          error = 'Failed to write file.'
         }
       }),
     )
 
     // Do something if there was an error
     if (error) {
-      // @TODO
+      postMessage({
+        action: 'error',
+        messageStr: error,
+      })
+      return
     }
 
     // Put the segments together
@@ -134,22 +145,17 @@ export function VideoDownloadScreen() {
     ])
 
     const fileData = await ffmpeg.readFile('output.mp4')
-    // @ts-expect-error lol idk TODO
+    // @ts-expect-error Don't feel like figuring this out. Checks out with the documentation.🙃
     const blob = new Blob([fileData.buffer], {type: 'video/mp4'})
-    const dataUrl = await new Promise((resolve, reject) => {
+
+    const dataUrl = await new Promise<string | null>(resolve => {
       const reader = new FileReader()
-      reader.onloadend = () => resolve(reader.result)
-      reader.onerror = reject
+      reader.onloadend = () => resolve(reader.result as string)
+      reader.onerror = () => resolve(null)
       reader.readAsDataURL(blob)
     })
     return dataUrl
   }, [])
-
-  const createUrl = (originalUrl: string, newFile: string) => {
-    const parts = originalUrl.split('/')
-    parts[parts.length - 1] = newFile
-    return parts.join('/')
-  }
 
   React.useEffect(() => {
     const url = new URL(window.location.href)
@@ -158,26 +164,32 @@ export function VideoDownloadScreen() {
     if (!videoUrl) {
       postMessage({action: 'error', messageStr: 'No video URL provided'})
     } else {
+      setDataUrl(null)
       ;(async () => {
         await load()
         const mp4Res = await createMp4(videoUrl)
+
+        if (!mp4Res) {
+          postMessage({
+            action: 'error',
+            messageStr: 'An error occurred while creating the MP4.',
+          })
+          return
+        }
+
         setDataUrl(mp4Res)
       })()
     }
   }, [createMp4, load])
 
-  React.useEffect(() => {
-    if (!dataUrl) return
-  }, [dataUrl])
-
   if (!dataUrl) return null
+
   return (
     <div>
       <a
         href={dataUrl}
         ref={el => {
           el?.click()
-          postMessage({action: 'error', messageStr: 'downloaded'})
         }}
         download="video.mp4"
       />
