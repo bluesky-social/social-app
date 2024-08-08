@@ -11,7 +11,13 @@ public class ExpoHLSDownloadModule: Module {
   public func definition() -> ModuleDefinition {
     Name("ExpoHLSDownload")
     
+    Function("isAvailable") {
+      return UIDevice.current.systemVersion == "14.5"
+    }
+    
     View(HLSDownloadView.self) {
+      Events(["onStart", "onError", "onProgress"])
+      
       Prop("downloaderUrl") { (view: HLSDownloadView, downloaderUrl: URL) in
         view.downloaderUrl = downloaderUrl
       }

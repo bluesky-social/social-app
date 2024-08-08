@@ -11,14 +11,20 @@ interface PostMessageData {
 }
 
 function postMessage(data: PostMessageData) {
-  const _postMessage =
-    // @ts-expect-error safari webview only
-    window.webkit.messageHandlers.onMessage.postMessage ?? window.postMessage
-  _postMessage(JSON.stringify(data))
+  try {
+    // const _postMessage =
+    //   @ts-expect-error safari webview only
+    // window.webkit.messageHandlers.onMessage.postMessage ?? window.postMessage
+    window.webkit.messageHandlers.onMessage.postMessage(JSON.stringify(data))
+  } catch (e) {
+    console.error(e)
+  }
 }
 
 export function VideoDownloadScreen() {
   const ffmpegRef = React.useRef(new FFmpeg())
+
+  const [dataUrl, setDataUrl] = React.useState<string | null>(null)
 
   const load = React.useCallback(async () => {
     const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm'
@@ -45,6 +51,7 @@ export function VideoDownloadScreen() {
 
     // If URL given is not a master playlist, we probably cannot handle this.
     if (!masterPlaylist.isMasterPlaylist) {
+      postMessage({action: 'error', messageStr: 'Not a master playlist'})
       // @TODO handle
       return
     }
@@ -60,6 +67,7 @@ export function VideoDownloadScreen() {
     // Should only happen if there was no variants at all given to us. Mostly for types.
     if (!bestVariant) {
       // @TODO handle
+      postMessage({action: 'error', messageStr: 'No variants found'})
       return
     }
 
@@ -74,6 +82,7 @@ export function VideoDownloadScreen() {
 
     // This one shouldn't be a master playlist - again just for types really
     if (playlist.isMasterPlaylist) {
+      postMessage({action: 'error', messageStr: 'Is a master playlist'})
       // @TODO handle
       return
     }
@@ -100,7 +109,11 @@ export function VideoDownloadScreen() {
 
           const blob = await res.blob()
           await ffmpeg.writeFile(filename, await fetchFile(blob))
-        } catch (e) {
+        } catch (e: any) {
+          postMessage({
+            action: 'error',
+            messageStr: `Something happened: ${e.toString()}`,
+          })
           console.log(e)
         }
       }),
@@ -121,12 +134,15 @@ export function VideoDownloadScreen() {
     ])
 
     const fileData = await ffmpeg.readFile('output.mp4')
-    const blobUrl = URL.createObjectURL(
-      // @ts-expect-error idk TODO
-      new Blob([fileData.buffer], {type: 'video/mp4'}),
-    )
-    return blobUrl
-    // Send the blob url through post message
+    // @ts-expect-error lol idk TODO
+    const blob = new Blob([fileData.buffer], {type: 'video/mp4'})
+    const dataUrl = await new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onloadend = () => resolve(reader.result)
+      reader.onerror = reject
+      reader.readAsDataURL(blob)
+    })
+    return dataUrl
   }, [])
 
   const createUrl = (originalUrl: string, newFile: string) => {
@@ -145,10 +161,26 @@ export function VideoDownloadScreen() {
       ;(async () => {
         await load()
         const mp4Res = await createMp4(videoUrl)
-        postMessage({action: 'complete', messageStr: mp4Res})
+        setDataUrl(mp4Res)
       })()
     }
   }, [createMp4, load])
 
-  return <div />
+  React.useEffect(() => {
+    if (!dataUrl) return
+  }, [dataUrl])
+
+  if (!dataUrl) return null
+  return (
+    <div>
+      <a
+        href={dataUrl}
+        ref={el => {
+          el?.click()
+          postMessage({action: 'error', messageStr: 'downloaded'})
+        }}
+        download="video.mp4"
+      />
+    </div>
+  )
 }

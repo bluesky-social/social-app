@@ -8,6 +8,10 @@ export default class HLSDownloadView extends React.PureComponent<HLSDownloadView
     super(props)
   }
 
+  isAvailable(): boolean {
+    return false
+  }
+
   async downloadAsync(
     sourceUrl: string,
     progressCb: (progress: number) => void,

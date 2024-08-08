@@ -49,7 +49,7 @@ function StorybookInner() {
           size="small"
           onPress={async () => {
             hlsDownloadRef.current?.downloadAsync(
-              'https://lumi.jazco.dev/watch/did:plc:q6gjnaw2blty4crticxkmujt/Qmc8w93UpTa2adJHg4ZhnDPrBs1EsbzrekzPcqF5SwusuZ/720p/video.m3u8?session_id=cqklmu0e4ijc72saonb0',
+              'https://lumi.jazco.dev/watch/did:plc:q6gjnaw2blty4crticxkmujt/Qmc8w93UpTa2adJHg4ZhnDPrBs1EsbzrekzPcqF5SwusuZ/playlist.m3u8',
               progress => {
                 console.log('progress', progress)
               },

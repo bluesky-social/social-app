@@ -1,9 +1,10 @@
 import React from 'react'
 import {StyleProp, ViewStyle} from 'react-native'
-import {requireNativeViewManager} from 'expo-modules-core'
+import {requireNativeModule, requireNativeViewManager} from 'expo-modules-core'
 
 import {HLSDownloadViewProps} from './types'
 
+const NativeModule = requireNativeModule('ExpoHLSDownload')
 const NativeView: React.ComponentType<
   HLSDownloadViewProps & {
     ref: React.RefObject<any>
@@ -16,6 +17,10 @@ export default class HLSDownloadView extends React.PureComponent<HLSDownloadView
 
   constructor(props: HLSDownloadViewProps) {
     super(props)
+  }
+
+  static isAvailable(): boolean {
+    return NativeModule.isAvailable()
   }
 
   async downloadAsync(
@@ -33,7 +38,7 @@ export default class HLSDownloadView extends React.PureComponent<HLSDownloadView
     return (
       <NativeView
         ref={this.nativeRef}
-        style={{height: 100, width: 100}}
+        style={{height: 400, width: 300}}
         {...this.props}
       />
     )
