@@ -212,8 +212,9 @@ let Feed = ({
     isFetchingNextPage,
     fetchNextPage,
   } = usePostFeedQuery(feed, feedParams, opts)
-  if (data?.pages[0]) {
-    lastFetchRef.current = data?.pages[0].fetchedAt
+  const lastFetchedAt = data?.pages[0].fetchedAt
+  if (lastFetchedAt) {
+    lastFetchRef.current = lastFetchedAt
   }
   const isEmpty = React.useMemo(
     () => !isFetching && !data?.pages?.some(page => page.slices.length),
@@ -358,7 +359,7 @@ let Feed = ({
               ...interstitial,
               params: {variant},
               // overwrite key with unique value
-              key: [interstitial.type, variant].join(':'),
+              key: [interstitial.type, variant, lastFetchedAt].join(':'),
             }
 
             if (arr.length > interstitial.slot) {
@@ -374,6 +375,7 @@ let Feed = ({
     isFetched,
     isError,
     isEmpty,
+    lastFetchedAt,
     data,
     feedUri,
     feedIsDiscover,
