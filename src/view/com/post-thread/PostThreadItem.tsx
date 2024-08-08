@@ -742,6 +742,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     paddingBottom: 4,
     paddingRight: 10,
+    overflow: 'hidden',
   },
   postTextLargeContainer: {
     paddingHorizontal: 0,
