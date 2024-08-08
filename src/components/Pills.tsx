@@ -45,12 +45,7 @@ export type LabelProps = {
   noBg?: boolean
 } & CommonProps
 
-export function Label({
-  cause,
-  size = 'sm',
-  disableDetailsDialog,
-  noBg,
-}: LabelProps) {
+export function Label({cause, size = 'sm', disableDetailsDialog}: LabelProps) {
   const t = useTheme()
   const control = useModerationDetailsDialogControl()
   const desc = useModerationCauseDescription(cause)
@@ -62,35 +57,21 @@ export function Label({
     switch (size) {
       case 'lg': {
         return {
-          outer: [
-            t.atoms.bg_contrast_25,
-            {
-              gap: 5,
-              paddingHorizontal: 5,
-              paddingVertical: 5,
-            },
-          ],
+          outer: [{minWidth: 80}],
           avi: 16,
-          text: [a.text_sm],
+          text: [a.text_xs],
         }
       }
       case 'sm':
       default: {
         return {
-          outer: [
-            !noBg && t.atoms.bg_contrast_25,
-            {
-              gap: 3,
-              paddingHorizontal: 3,
-              paddingVertical: 3,
-            },
-          ],
+          outer: [{minWidth: 80}],
           avi: 12,
-          text: [a.text_xs],
+          text: [a.text_2xs],
         }
       }
     }
-  }, [t, size, noBg])
+  }, [size])
 
   return (
     <>
@@ -106,10 +87,15 @@ export function Label({
           <View
             style={[
               a.flex_row,
-              a.align_center,
-              a.rounded_full,
+              {
+                backgroundColor: '#fff',
+                gap: 1,
+                paddingHorizontal: 1,
+                paddingVertical: 1,
+                borderWidth: 1,
+                borderColor: '#666',
+              },
               outer,
-              (hovered || pressed) && t.atoms.bg_contrast_50,
             ]}>
             {isBlueskyLabel || !isLabeler ? (
               <desc.icon
@@ -117,16 +103,29 @@ export function Label({
                 fill={t.atoms.text_contrast_medium.color}
               />
             ) : (
-              <UserAvatar avatar={desc.sourceAvi} size={avi} />
+              <UserAvatar
+                avatar={desc.sourceAvi}
+                shape="square"
+                actuallySquare={true}
+                aspect={1.6}
+                size={avi}
+              />
             )}
 
             <Text
               style={[
                 text,
+                {
+                  backgroundColor: '#898e79',
+                  color: '#fff',
+                  textTransform: 'uppercase',
+                  letterSpacing: 1,
+                },
                 a.font_semibold,
                 a.leading_tight,
-                t.atoms.text_contrast_medium,
-                {paddingRight: 3},
+                a.flex_grow,
+                {paddingLeft: 3, paddingRight: 3},
+                (hovered || pressed) && {backgroundColor: '#5a5e4f'},
               ]}>
               {desc.name}
             </Text>
