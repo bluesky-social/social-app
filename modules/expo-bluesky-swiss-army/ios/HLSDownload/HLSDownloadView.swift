@@ -53,6 +53,8 @@ class HLSDownloadView: ExpoView, WKScriptMessageHandler, WKNavigationDelegate, W
     guard let url = self.createUrl(videoUrl: sourceUrl) else {
       return
     }
+    
+    self.onStart()
     self.webView.load(URLRequest(url: url))
   }
 
@@ -65,22 +67,19 @@ class HLSDownloadView: ExpoView, WKScriptMessageHandler, WKNavigationDelegate, W
       return
     }
 
-    print(payload)
-
     switch payload.action {
     case .progress:
       guard let progress = payload.messageFloat else {
         return
       }
-      onProgress([
+      self.onProgress([
         "progress": progress
       ])
       case .error:
       guard let messageStr = payload.messageStr else {
         return
       }
-      onError([
-        "type": "WebViewError",
+      self.onError([
         "message": messageStr
       ])
     }

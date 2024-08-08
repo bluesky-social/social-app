@@ -3,6 +3,6 @@ export interface HLSDownloadViewProps {
   onSuccess: (uri: string) => void
 
   onStart?: () => void
-  onError?: (error: string) => void
+  onError?: (message: string) => void
   onProgress?: (progress: number) => void
 }
