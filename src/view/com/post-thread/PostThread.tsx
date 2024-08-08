@@ -24,6 +24,7 @@ import {
 } from '#/state/queries/post-thread'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
+import {useComposerControls} from '#/state/shell'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
 import {useMinimalShellFabTransform} from 'lib/hooks/useMinimalShellTransform'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
@@ -84,13 +85,7 @@ const keyExtractor = (item: RowItem) => {
   return item._reactKey
 }
 
-export function PostThread({
-  uri,
-  onPressReply,
-}: {
-  uri: string | undefined
-  onPressReply: () => unknown
-}) {
+export function PostThread({uri}: {uri: string | undefined}) {
   const {hasSession, currentAccount} = useSession()
   const {_} = useLingui()
   const t = useTheme()
@@ -306,6 +301,23 @@ export function PostThread({
     if (isFetching || posts.length < maxReplies) return
     setMaxReplies(prev => prev + 50)
   }, [isFetching, maxReplies, posts.length])
+
+  const {openComposer} = useComposerControls()
+  const onPressReply = React.useCallback(() => {
+    if (thread?.type !== 'post') {
+      return
+    }
+    openComposer({
+      replyTo: {
+        uri: thread.post.uri,
+        cid: thread.post.cid,
+        text: thread.record.text,
+        author: thread.post.author,
+        embed: thread.post.embed,
+      },
+      onPost: () => refetch(),
+    })
+  }, [openComposer, thread, refetch])
 
   const canReply = !error && rootPost && !rootPost.viewer?.replyDisabled
   const hasParents =
