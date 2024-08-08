@@ -339,17 +339,6 @@ export const ComposePost = observer(function ComposePost({
           langs: toPostLanguages(langPrefs.postLanguage),
         })
       ).uri
-      try {
-        await whenAppViewReady(agent, postUri, res => {
-          const thread = res.data.thread
-          return AppBskyFeedDefs.isThreadViewPost(thread)
-        })
-      } catch (waitErr: any) {
-        logger.error(waitErr, {
-          message: `Waiting for app view failed`,
-        })
-        // Keep going because the post *was* published.
-      }
     } catch (e: any) {
       logger.error(e, {
         message: `Composer: create post failed`,
@@ -388,17 +377,30 @@ export const ComposePost = observer(function ComposePost({
       })
       if (replyTo && replyTo.uri) track('Post:Reply')
     }
-    if (postUri && !replyTo) {
-      emitPostCreated()
-    }
     setLangPrefs.savePostLanguageToHistory()
-    onPost?.()
     onClose()
     Toast.show(
       replyTo
         ? _(msg`Your reply has been published`)
         : _(msg`Your post has been published`),
     )
+    try {
+      if (postUri) {
+        await whenAppViewReady(agent, postUri, res => {
+          const thread = res.data.thread
+          return AppBskyFeedDefs.isThreadViewPost(thread)
+        })
+      }
+    } catch (waitErr: any) {
+      logger.error(waitErr, {
+        message: `Waiting for app view failed`,
+      })
+    } finally {
+      if (postUri && !replyTo) {
+        emitPostCreated()
+      }
+      onPost?.()
+    }
   }
 
   const canPost = useMemo(
