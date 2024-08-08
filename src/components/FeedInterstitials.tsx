@@ -92,14 +92,16 @@ function getRank(seenPost: SeenPost): string {
     tier = 'a'
   } else if (seenPost.feedContext?.startsWith('cluster')) {
     tier = 'b'
-  } else if (seenPost.feedContext?.startsWith('ntpc')) {
+  } else if (seenPost.feedContext === 'popcluster') {
     tier = 'c'
-  } else if (seenPost.feedContext?.startsWith('t-')) {
+  } else if (seenPost.feedContext?.startsWith('ntpc')) {
     tier = 'd'
-  } else if (seenPost.feedContext === 'nettop') {
+  } else if (seenPost.feedContext?.startsWith('t-')) {
     tier = 'e'
-  } else {
+  } else if (seenPost.feedContext === 'nettop') {
     tier = 'f'
+  } else {
+    tier = 'g'
   }
   let score = Math.round(
     Math.log(
@@ -190,7 +192,7 @@ export function SuggestedFollows() {
       {profiles.slice(0, maxLength).map(profile => (
         <ProfileCard.Link
           key={profile.did}
-          did={profile.handle}
+          profile={profile}
           onPress={() => {
             logEvent('feed:interstitial:profileCard:press', {})
           }}
@@ -266,7 +268,10 @@ export function SuggestedFollows() {
               a.pt_xs,
               a.gap_md,
             ]}>
-            <InlineLinkText to="/search" style={[t.atoms.text_contrast_medium]}>
+            <InlineLinkText
+              label={_(msg`Browse more suggestions`)}
+              to="/search"
+              style={[t.atoms.text_contrast_medium]}>
               <Trans>Browse more suggestions</Trans>
             </InlineLinkText>
             <Arrow size="sm" fill={t.atoms.text_contrast_medium.color} />
@@ -396,7 +401,10 @@ export function SuggestedFeeds() {
               a.pt_xs,
               a.gap_md,
             ]}>
-            <InlineLinkText to="/search" style={[t.atoms.text_contrast_medium]}>
+            <InlineLinkText
+              label={_(msg`Browse more suggestions`)}
+              to="/search"
+              style={[t.atoms.text_contrast_medium]}>
               <Trans>Browse more suggestions</Trans>
             </InlineLinkText>
             <Arrow size="sm" fill={t.atoms.text_contrast_medium.color} />

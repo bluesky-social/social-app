@@ -215,6 +215,12 @@ export type LogEvents = {
 
   'profile:header:suggestedFollowsCard:press': {}
 
+  'debug:followingPrefs': {
+    followingShowRepliesFromPref: 'all' | 'following' | 'off'
+    followingRepliesMinLikePref: number
+  }
+  'debug:followingDisplayed': {}
+
   'test:all:always': {}
   'test:all:sometimes': {}
   'test:all:boosted_by_gate1': {reason: 'base' | 'gate1'}

@@ -14,7 +14,6 @@ import {RichText as RichTextCom} from '#/components/RichText'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
-import hairlineWidth = StyleSheet.hairlineWidth
 
 export const ListCard = ({
   testID,
@@ -134,7 +133,7 @@ export const ListCard = ({
 
 const styles = StyleSheet.create({
   outer: {
-    borderTopWidth: hairlineWidth,
+    borderTopWidth: StyleSheet.hairlineWidth,
     paddingHorizontal: 6,
   },
   outerNoBorder: {
