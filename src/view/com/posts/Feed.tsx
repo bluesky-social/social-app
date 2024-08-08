@@ -349,8 +349,7 @@ let Feed = ({
           const shouldShow =
             (interstitial.type === feedInterstitialType &&
               gate('suggested_feeds_interstitial')) ||
-            (interstitial.type === followInterstitialType &&
-              gate('suggested_follows_interstitial')) ||
+            interstitial.type === followInterstitialType ||
             interstitial.type === progressGuideInterstitialType
 
           if (shouldShow) {

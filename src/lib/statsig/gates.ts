@@ -11,8 +11,6 @@ export type Gate =
   | 'show_avi_follow_button'
   | 'show_follow_back_label_v2'
   | 'suggested_feeds_interstitial'
-  | 'suggested_follows_interstitial'
   | 'ungroup_follow_backs'
   | 'video_debug'
   | 'videos'
-  | 'small_avi_thumb'
