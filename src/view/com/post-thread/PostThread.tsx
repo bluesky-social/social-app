@@ -302,6 +302,10 @@ export function PostThread({uri}: {uri: string | undefined}) {
     setMaxReplies(prev => prev + 50)
   }, [isFetching, maxReplies, posts.length])
 
+  const onPostReply = React.useCallback(() => {
+    refetch()
+  }, [refetch])
+
   const {openComposer} = useComposerControls()
   const onPressReply = React.useCallback(() => {
     if (thread?.type !== 'post') {
@@ -315,9 +319,9 @@ export function PostThread({uri}: {uri: string | undefined}) {
         author: thread.post.author,
         embed: thread.post.embed,
       },
-      onPost: () => refetch(),
+      onPost: onPostReply,
     })
-  }, [openComposer, thread, refetch])
+  }, [openComposer, thread, onPostReply])
 
   const canReply = !error && rootPost && !rootPost.viewer?.replyDisabled
   const hasParents =
@@ -415,7 +419,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
                 HiddenRepliesState.ShowAndOverridePostHider &&
               item.ctx.depth > 0
             }
-            onPostReply={refetch}
+            onPostReply={onPostReply}
             hideTopBorder={index === 0 && !item.ctx.isParentLoading}
           />
         </View>
