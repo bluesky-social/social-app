@@ -4,15 +4,17 @@ import Animated from 'react-native-reanimated'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {HeaderBackButton} from '@react-navigation/elements'
 import {useNavigation} from '@react-navigation/native'
 
+import {isWeb} from '#/platform/detection'
 import {useSetDrawerOpen} from '#/state/shell'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useMinimalShellHeaderTransform} from 'lib/hooks/useMinimalShellTransform'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {NavigationProp} from 'lib/routes/types'
-import {useTheme} from '#/alf'
+import {ios, useTheme} from '#/alf'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {Text} from './text/Text'
 import {CenteredView} from './Views'
@@ -81,26 +83,39 @@ export function ViewHeader({
         <View style={{flex: 1}}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             {showBackButton ? (
-              <TouchableOpacity
-                testID="viewHeaderDrawerBtn"
-                onPress={canGoBack ? onPressBack : onPressMenu}
-                hitSlop={BACK_HITSLOP}
-                style={canGoBack ? styles.backBtn : styles.backBtnWide}
-                accessibilityRole="button"
-                accessibilityLabel={canGoBack ? _(msg`Back`) : _(msg`Menu`)}
-                accessibilityHint={
-                  canGoBack ? '' : _(msg`Access navigation links and settings`)
-                }>
-                {canGoBack ? (
-                  <FontAwesomeIcon
-                    size={18}
-                    icon="angle-left"
-                    style={[styles.backIcon, pal.text]}
+              isWeb || !canGoBack ? (
+                <TouchableOpacity
+                  testID="viewHeaderDrawerBtn"
+                  onPress={canGoBack ? onPressBack : onPressMenu}
+                  hitSlop={BACK_HITSLOP}
+                  style={canGoBack ? styles.backBtn : styles.backBtnWide}
+                  accessibilityRole="button"
+                  accessibilityLabel={canGoBack ? _(msg`Back`) : _(msg`Menu`)}
+                  accessibilityHint={
+                    canGoBack
+                      ? ''
+                      : _(msg`Access navigation links and settings`)
+                  }>
+                  {canGoBack ? (
+                    <FontAwesomeIcon
+                      size={18}
+                      icon="angle-left"
+                      style={[styles.backIcon, pal.text]}
+                    />
+                  ) : !isTablet ? (
+                    <Menu size="lg" style={[{marginTop: 3}, pal.textLight]} />
+                  ) : null}
+                </TouchableOpacity>
+              ) : (
+                <View style={styles.nativeBackBtn}>
+                  <HeaderBackButton
+                    onPress={onPressBack}
+                    labelVisible={false}
+                    tintColor={t.atoms.text.color}
+                    style={ios({transform: [{scale: 0.8}]})}
                   />
-                ) : !isTablet ? (
-                  <Menu size="lg" style={[{marginTop: 3}, pal.textLight]} />
-                ) : null}
-              </TouchableOpacity>
+                </View>
+              )
             ) : null}
             <View style={styles.titleContainer} pointerEvents="none">
               <Text type="title" style={[pal.text, styles.title]}>
@@ -270,5 +285,11 @@ const styles = StyleSheet.create({
   },
   backIcon: {
     marginTop: 6,
+  },
+  nativeBackBtn: {
+    width: 30,
+    height: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 })
