@@ -1,9 +1,12 @@
 import React, {useEffect, useRef} from 'react'
-import {useWindowDimensions, View} from 'react-native'
+import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import {runOnJS} from 'react-native-reanimated'
+import Animated from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyFeedDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {clamp} from 'lodash'
 
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {ScrollProvider} from '#/lib/ScrollContext'
@@ -22,6 +25,7 @@ import {
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
+import {useMinimalShellFabTransform} from 'lib/hooks/useMinimalShellTransform'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
@@ -82,11 +86,9 @@ const keyExtractor = (item: RowItem) => {
 
 export function PostThread({
   uri,
-  onCanReply,
   onPressReply,
 }: {
   uri: string | undefined
-  onCanReply: (canReply: boolean) => void
   onPressReply: () => unknown
 }) {
   const {hasSession, currentAccount} = useSession()
@@ -98,6 +100,7 @@ export function PostThread({
   const [hiddenRepliesState, setHiddenRepliesState] = React.useState(
     HiddenRepliesState.Hide,
   )
+  const [canReply, setCanReply] = React.useState(false)
 
   const {data: preferences} = usePreferencesQuery()
   const {
@@ -212,11 +215,11 @@ export function PostThread({
 
   useEffect(() => {
     if (error) {
-      onCanReply(false)
+      setCanReply(false)
     } else if (rootPost) {
-      onCanReply(!rootPost.viewer?.replyDisabled)
+      setCanReply(!rootPost.viewer?.replyDisabled)
     }
-  }, [rootPost, onCanReply, error])
+  }, [rootPost, error])
 
   // construct content
   const posts = React.useMemo(() => {
@@ -473,7 +476,27 @@ export function PostThread({
           sideBorders={false}
         />
       </ScrollProvider>
+      {isMobile && canReply && hasSession && (
+        <MobileComposePrompt onPressReply={onPressReply} />
+      )}
     </CenteredView>
+  )
+}
+
+function MobileComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
+  const safeAreaInsets = useSafeAreaInsets()
+  const fabMinimalShellTransform = useMinimalShellFabTransform()
+  return (
+    <Animated.View
+      style={[
+        styles.prompt,
+        fabMinimalShellTransform,
+        {
+          bottom: clamp(safeAreaInsets.bottom, 15, 30),
+        },
+      ]}>
+      <ComposePrompt onPressCompose={onPressReply} />
+    </Animated.View>
   )
 }
 
@@ -622,3 +645,12 @@ function hasBranchingReplies(node?: ThreadNode) {
   }
   return true
 }
+
+const styles = StyleSheet.create({
+  prompt: {
+    // @ts-ignore web-only
+    position: isWeb ? 'fixed' : 'absolute',
+    left: 0,
+    right: 0,
+  },
+})
