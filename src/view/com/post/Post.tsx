@@ -290,7 +290,7 @@ const styles = StyleSheet.create({
     borderLeftColor: colors.gray2,
   },
   contentHider: {
-    marginBottom: 2,
+    paddingBottom: 2,
   },
   contentHiderChild: {
     marginTop: 6,
