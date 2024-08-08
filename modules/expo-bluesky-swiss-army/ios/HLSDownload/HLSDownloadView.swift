@@ -53,7 +53,7 @@ class HLSDownloadView: ExpoView, WKScriptMessageHandler, WKNavigationDelegate, W
     guard let url = self.createUrl(videoUrl: sourceUrl) else {
       return
     }
-    
+
     self.onStart()
     self.webView.load(URLRequest(url: url))
   }
@@ -125,7 +125,7 @@ class HLSDownloadView: ExpoView, WKScriptMessageHandler, WKNavigationDelegate, W
       return
     }
     self.onSuccess([
-      "uri": url
+      "uri": url.absoluteString
     ])
   }
 
