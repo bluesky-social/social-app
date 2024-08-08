@@ -12,11 +12,16 @@ import {AppBskyEmbedVideo} from '@atproto/api-prerelease'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {clamp} from '#/lib/numbers'
 import {atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
 import {useVideoPlayer} from '../VideoPlayerContext'
 
-export function VideoEmbedInnerNative({embed}: {embed: AppBskyEmbedVideo.View}) {
+export function VideoEmbedInnerNative({
+  embed,
+}: {
+  embed: AppBskyEmbedVideo.View
+}) {
   const {_} = useLingui()
   const player = useVideoPlayer()
   const aref = useAnimatedRef<Animated.View>()
@@ -158,7 +163,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 })
-
-function clamp(value: number, min: number, max: number) {
-  return Math.min(Math.max(value, min), max)
-}

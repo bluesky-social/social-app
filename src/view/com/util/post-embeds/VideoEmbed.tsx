@@ -5,6 +5,7 @@ import {AppBskyEmbedVideo} from '@atproto/api-prerelease'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {clamp} from '#/lib/numbers'
 import {useGate} from '#/lib/statsig/statsig'
 import {VideoEmbedInnerNative} from '#/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative'
 import {atoms as a, useTheme} from '#/alf'
@@ -52,29 +53,25 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
           <VideoEmbedInnerNative embed={embed} />
         ) : (
           <>
-          <Image
-            source={{uri: embed.thumbnail}}
-            alt={embed.alt}
-            style={a.flex_1}
-            contentFit="contain"
-            accessibilityIgnoresInvertColors
-          />
-          <Button
-            style={[a.absolute, a.inset_0]}
-            onPress={setActive}
-            label={_(msg`Play video`)}
-            variant="ghost"
-            color="secondary"
-            size="large">
-            <PlayIcon width={48} fill={t.palette.white} />
-          </Button>
-        </>
+            <Image
+              source={{uri: embed.thumbnail}}
+              alt={embed.alt}
+              style={a.flex_1}
+              contentFit="contain"
+              accessibilityIgnoresInvertColors
+            />
+            <Button
+              style={[a.absolute, a.inset_0]}
+              onPress={setActive}
+              label={_(msg`Play video`)}
+              variant="ghost"
+              color="secondary"
+              size="large">
+              <PlayIcon width={48} fill={t.palette.white} />
+            </Button>
+          </>
         )}
       </VisibilityView>
     </View>
   )
-}
-
-function clamp(value: number, min: number, max: number) {
-  return Math.min(Math.max(value, min), max)
 }
