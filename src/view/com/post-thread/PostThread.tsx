@@ -34,9 +34,9 @@ import {CenteredView} from 'view/com/util/Views'
 import {atoms as a, useTheme} from '#/alf'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {Text} from '#/components/Typography'
-import {ComposePrompt} from '../composer/Prompt'
 import {List, ListMethods} from '../util/List'
 import {ViewHeader} from '../util/ViewHeader'
+import {PostThreadComposePrompt} from './PostThreadComposePrompt'
 import {PostThreadItem} from './PostThreadItem'
 import {PostThreadLoadMore} from './PostThreadLoadMore'
 import {PostThreadShowHiddenReplies} from './PostThreadShowHiddenReplies'
@@ -319,7 +319,9 @@ export function PostThread({
     if (item === REPLY_PROMPT && hasSession) {
       return (
         <View>
-          {!isMobile && <ComposePrompt onPressCompose={onPressReply} />}
+          {!isMobile && (
+            <PostThreadComposePrompt onPressCompose={onPressReply} />
+          )}
         </View>
       )
     } else if (item === SHOW_HIDDEN_REPLIES || item === SHOW_MUTED_REPLIES) {
@@ -487,7 +489,7 @@ function MobileComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
           bottom: clamp(safeAreaInsets.bottom, 15, 30),
         },
       ]}>
-      <ComposePrompt onPressCompose={onPressReply} />
+      <PostThreadComposePrompt onPressCompose={onPressReply} />
     </Animated.View>
   )
 }
