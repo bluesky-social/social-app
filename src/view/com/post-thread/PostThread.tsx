@@ -160,12 +160,22 @@ export function PostThread({uri}: {uri: string | undefined}) {
     return cache
   }, [thread, moderationOpts])
 
+  const [justPostedUris, setJustPostedUris] = React.useState(
+    () => new Set<string>(),
+  )
+
   const skeleton = React.useMemo(() => {
     const threadViewPrefs = preferences?.threadViewPrefs
     if (!threadViewPrefs || !thread) return null
 
     return createThreadSkeleton(
-      sortThread(thread, threadViewPrefs, threadModerationCache, currentDid),
+      sortThread(
+        thread,
+        threadViewPrefs,
+        threadModerationCache,
+        currentDid,
+        justPostedUris,
+      ),
       !!currentDid,
       treeView,
       threadModerationCache,
@@ -178,6 +188,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
     treeView,
     threadModerationCache,
     hiddenRepliesState,
+    justPostedUris,
   ])
 
   const error = React.useMemo(() => {
@@ -302,9 +313,19 @@ export function PostThread({uri}: {uri: string | undefined}) {
     setMaxReplies(prev => prev + 50)
   }, [isFetching, maxReplies, posts.length])
 
-  const onPostReply = React.useCallback(() => {
-    refetch()
-  }, [refetch])
+  const onPostReply = React.useCallback(
+    (postUri: string | undefined) => {
+      refetch()
+      if (postUri) {
+        setJustPostedUris(set => {
+          const nextSet = new Set(set)
+          nextSet.add(postUri)
+          return nextSet
+        })
+      }
+    },
+    [refetch],
+  )
 
   const {openComposer} = useComposerControls()
   const onPressReply = React.useCallback(() => {

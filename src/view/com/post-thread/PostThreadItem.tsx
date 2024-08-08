@@ -75,7 +75,7 @@ export function PostThreadItem({
   showParentReplyLine?: boolean
   hasPrecedingItem: boolean
   overrideBlur: boolean
-  onPostReply: () => void
+  onPostReply: (postUri: string | undefined) => void
   hideTopBorder?: boolean
 }) {
   const postShadowed = usePostShadow(post)
@@ -169,7 +169,7 @@ let PostThreadItemLoaded = ({
   showParentReplyLine?: boolean
   hasPrecedingItem: boolean
   overrideBlur: boolean
-  onPostReply: () => void
+  onPostReply: (postUri: string | undefined) => void
   hideTopBorder?: boolean
 }): React.ReactNode => {
   const pal = usePalette('default')
