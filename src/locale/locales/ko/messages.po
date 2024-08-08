@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-08-07 09:00+0900\n"
+"PO-Revision-Date: 2024-08-08 09:50+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -476,9 +476,17 @@ msgstr "이전 주소인 {0}(으)로 이메일을 보냈습니다. 이 이메일
 msgid "An error occured"
 msgstr "오류 발생"
 
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.web.tsx:314
+msgid "An error occurred"
+msgstr "오류 발생"
+
 #: src/components/StarterPack/ProfileStarterPacks.tsx:315
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr "스타터 팩을 만드는 동안 오류가 발생했습니다. 다시 시도하시겠습니까?"
+
+#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:173
+msgid "An error occurred while loading the video. Please try again later."
+msgstr "동영상을 불러오는 동안 오류가 발생했습니다. 나중에 다시 시도하세요."
 
 #: src/components/StarterPack/QrCodeDialog.tsx:71
 #: src/components/StarterPack/ShareDialog.tsx:79
@@ -1668,6 +1676,10 @@ msgstr "이메일 2단계 인증 끄기"
 msgid "Disable haptic feedback"
 msgstr "햅틱 피드백 끄기"
 
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.web.tsx:242
+msgid "Disable subtitles"
+msgstr "자막 사용 안 함"
+
 #: src/lib/moderation/useLabelBehaviorDescription.ts:32
 #: src/lib/moderation/useLabelBehaviorDescription.ts:42
 #: src/lib/moderation/useLabelBehaviorDescription.ts:68
@@ -1994,6 +2006,10 @@ msgstr "미디어 플레이어를 사용할 외부 사이트"
 msgid "Enable priority notifications"
 msgstr "우선순위 알림 사용"
 
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.web.tsx:242
+msgid "Enable subtitles"
+msgstr "자막 사용"
+
 #: src/components/dialogs/EmbedConsent.tsx:94
 msgid "Enable this source only"
 msgstr "이 소스에서만 사용"
@@ -2004,7 +2020,7 @@ msgstr "이 소스에서만 사용"
 msgid "Enabled"
 msgstr "사용"
 
-#: src/screens/Profile/Sections/Feed.tsx:104
+#: src/screens/Profile/Sections/Feed.tsx:105
 msgid "End of feed"
 msgstr "피드 끝"
 
@@ -3199,7 +3215,7 @@ msgstr "추천 팔로우 더 불러오기"
 msgid "Load new notifications"
 msgstr "새 알림 불러오기"
 
-#: src/screens/Profile/Sections/Feed.tsx:86
+#: src/screens/Profile/Sections/Feed.tsx:87
 #: src/view/com/feeds/FeedPage.tsx:136
 #: src/view/screens/ProfileFeed.tsx:495
 #: src/view/screens/ProfileList.tsx:783
@@ -3419,6 +3435,8 @@ msgid "Music"
 msgstr "음악"
 
 #: src/components/TagMenu/index.tsx:263
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.web.tsx:254
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.web.tsx:265
 msgid "Mute"
 msgstr "뮤트"
 
@@ -4202,8 +4220,13 @@ msgid "Password updated!"
 msgstr "비밀번호 변경됨"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:44
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.web.tsx:226
 msgid "Pause"
 msgstr "일시 정지"
+
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.web.tsx:203
+msgid "Pause video"
+msgstr "동영상 일시 정지"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:170
 #: src/view/screens/Search/Search.tsx:369
@@ -4261,6 +4284,7 @@ msgid "Pinned to your feeds"
 msgstr "내 피드에 고정됨"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:44
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.web.tsx:226
 msgid "Play"
 msgstr "재생"
 
@@ -4272,7 +4296,8 @@ msgstr "{0} 재생"
 msgid "Play or pause the GIF"
 msgstr "GIP를 재생하거나 일시 정지합니다"
 
-#: src/view/com/util/post-embeds/VideoEmbed.tsx:35
+#: src/view/com/util/post-embeds/VideoEmbed.tsx:41
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.web.tsx:204
 msgid "Play video"
 msgstr "동영상 재생"
 
@@ -4945,6 +4970,8 @@ msgstr "오류가 발생한 마지막 작업을 다시 시도합니다"
 #: src/screens/Signup/BackNextButtons.tsx:52
 #: src/view/com/util/error/ErrorMessage.tsx:55
 #: src/view/com/util/error/ErrorScreen.tsx:72
+#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:184
+#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:186
 msgid "Retry"
 msgstr "다시 시도"
 
@@ -6015,7 +6042,7 @@ msgstr "서버에 연결하는 동안 문제가 발생했습니다"
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "알림을 가져오는 동안 문제가 발생했습니다. 이곳을 탭하여 다시 시도하세요."
 
-#: src/view/com/posts/Feed.tsx:458
+#: src/view/com/posts/Feed.tsx:459
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "게시물을 가져오는 동안 문제가 발생했습니다. 이곳을 탭하여 다시 시도하세요."
 
@@ -6403,6 +6430,8 @@ msgid "Unlike this feed"
 msgstr "이 피드 좋아요 취소"
 
 #: src/components/TagMenu/index.tsx:263
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.web.tsx:254
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.web.tsx:265
 #: src/view/screens/ProfileList.tsx:667
 msgid "Unmute"
 msgstr "언뮤트"
@@ -6428,6 +6457,10 @@ msgstr "알림 언뮤트"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:370
 msgid "Unmute thread"
 msgstr "스레드 언뮤트"
+
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.web.tsx:201
+msgid "Unmute video"
+msgstr "동영상 음소거 해제"
 
 #: src/view/screens/ProfileFeed.tsx:292
 #: src/view/screens/ProfileList.tsx:651
@@ -7221,6 +7254,10 @@ msgstr "모든 공개 데이터 레코드가 포함된 계정 저장소를 \"CAR
 #: src/screens/Signup/StepInfo/index.tsx:180
 msgid "Your birth date"
 msgstr "생년월일"
+
+#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:168
+msgid "Your browser does not support the video format. Please try a different browser."
+msgstr "브라우저가 이 동영상 형식을 지원하지 않습니다. 다른 브라우저를 사용하세요."
 
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:25
 msgid "Your chats have been disabled"
