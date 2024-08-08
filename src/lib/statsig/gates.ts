@@ -3,7 +3,6 @@ export type Gate =
   | 'debug_show_feedcontext'
   | 'native_pwi_disabled'
   | 'new_user_guided_tour'
-  | 'new_user_progress_guide'
   | 'onboarding_minimum_interests'
   | 'session_withproxy_fix'
   | 'show_avi_follow_button'
