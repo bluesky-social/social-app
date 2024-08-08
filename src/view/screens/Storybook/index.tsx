@@ -7,6 +7,7 @@ import {CenteredView} from '#/view/com/util/Views'
 import {ListContained} from 'view/screens/Storybook/ListContained'
 import {atoms as a, ThemeProvider, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
+import {HLSDownloadView} from '../../../../modules/expo-bluesky-swiss-army'
 import {Breakpoints} from './Breakpoints'
 import {Buttons} from './Buttons'
 import {Dialogs} from './Dialogs'
@@ -33,10 +34,30 @@ function StorybookInner() {
   const t = useTheme()
   const {setColorMode, setDarkTheme} = useSetThemePrefs()
   const [showContainedList, setShowContainedList] = React.useState(false)
+  const hlsDownloadRef = React.useRef<HLSDownloadView>(null)
 
   return (
     <CenteredView style={[t.atoms.bg]}>
       <View style={[a.p_xl, a.gap_5xl, {paddingBottom: 200}]}>
+        <HLSDownloadView
+          ref={hlsDownloadRef}
+          downloaderUrl="http://localhost:19006/video-download"
+        />
+        <Button
+          variant="solid"
+          color="primary"
+          size="small"
+          onPress={async () => {
+            hlsDownloadRef.current?.downloadAsync(
+              'https://lumi.jazco.dev/watch/did:plc:q6gjnaw2blty4crticxkmujt/Qmc8w93UpTa2adJHg4ZhnDPrBs1EsbzrekzPcqF5SwusuZ/720p/video.m3u8?session_id=cqklmu0e4ijc72saonb0',
+              progress => {
+                console.log('progress', progress)
+              },
+            )
+          }}
+          label="idk">
+          <ButtonText>TEST THE DOWNLOAD PLZ</ButtonText>
+        </Button>
         {!showContainedList ? (
           <>
             <View style={[a.flex_row, a.align_start, a.gap_md]}>

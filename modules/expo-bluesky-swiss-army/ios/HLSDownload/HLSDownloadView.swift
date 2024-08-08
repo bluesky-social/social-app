@@ -10,7 +10,7 @@ import WebKit
 
 class HLSDownloadView: ExpoView, WKScriptMessageHandler, WKNavigationDelegate {
   var webView: WKWebView!
-  var downloaderUrl: URL
+  var downloaderUrl: URL?
   
   public required init(appContext: AppContext? = nil) {
     super.init(appContext: appContext)
@@ -40,6 +40,8 @@ class HLSDownloadView: ExpoView, WKScriptMessageHandler, WKNavigationDelegate {
     fatalError("init(coder:) has not been implemented")
   }
   
+  // MARK - view functions
+  
   func download(sourceUrl: URL, progress: @escaping(Float) -> Void) {
     guard let url = self.createUrl(videoUrl: sourceUrl) else {
       return
@@ -48,15 +50,8 @@ class HLSDownloadView: ExpoView, WKScriptMessageHandler, WKNavigationDelegate {
     self.webView.load(URLRequest(url: url))
   }
   
-  func progress() {
-  }
-  
   func cancel() {
     // Cancel the download
-  }
-  
-  private func createUrl(videoUrl: URL) -> URL? {
-    return URL(string: "\(self.downloaderUrl)?videoUrl=\(videoUrl.absoluteString)")
   }
   
   // webview message handling
@@ -79,6 +74,51 @@ class HLSDownloadView: ExpoView, WKScriptMessageHandler, WKNavigationDelegate {
     case .error:
       break
     }
+  }
+  
+  // MARK - post message handlers
+  
+  private func getDataFromBlobUrl(_ url: URL, completion: @escaping (Data?) -> Void) {
+    let task = URLSession.shared.dataTask(with: url) { data, response, error in
+      guard let data = data, error == nil else {
+        print("no data or error")
+        print(error)
+        completion(nil)
+        return
+      }
+      completion(data)
+    }
+    
+    task.resume()
+  }
+  
+  private func saveFromBlobUrlString(_ urlString: String) {
+    guard let url = URL(string: urlString) else {
+      print("bad url")
+      return
+    }
+    
+    getDataFromBlobUrl(url) { data in
+      guard let data = data else {
+        print("no data")
+        return
+      }
+      
+      print("success!")
+    }
+  }
+  
+  private func progress() {
+    // Event handler here
+  }
+  
+  private func createUrl(videoUrl: URL) -> URL? {
+    guard let downloaderUrl = self.downloaderUrl else {
+      // TODO
+      fatalError()
+    }
+    
+    return URL(string: "\(downloaderUrl.absoluteString)?videoUrl=\(videoUrl.absoluteString)")
   }
 }
 

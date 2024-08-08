@@ -23,7 +23,7 @@ public class ExpoHLSDownloadModule: Module {
       }
       
       AsyncFunction("cancelAsync") { (view: HLSDownloadView) in
-        view.cancel()
+//        view.cancel()
       }
     }
   }

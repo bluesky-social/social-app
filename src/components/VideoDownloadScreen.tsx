@@ -4,17 +4,27 @@ import {fetchFile, toBlobURL} from '@ffmpeg/util'
 import {parse} from 'hls-parser'
 import {MasterPlaylist, MediaPlaylist, Variant} from 'hls-parser/types'
 
-export function VideoDownloadScreen() {
-  const [isError, setIsError] = React.useState<boolean>(false)
-  const [mp4, setMp4] = React.useState()
+interface PostMessageData {
+  action: 'progress' | 'complete' | 'error'
+  messageStr?: string
+  messageFloat?: number
+}
 
+function postMessage(data: PostMessageData) {
+  const _postMessage =
+    // @ts-expect-error safari webview only
+    window.webkit.messageHandlers.onMessage.postMessage ?? window.postMessage
+  _postMessage(JSON.stringify(data))
+}
+
+export function VideoDownloadScreen() {
   const ffmpegRef = React.useRef(new FFmpeg())
 
   const load = React.useCallback(async () => {
     const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm'
     const ffmpeg = ffmpegRef.current
 
-    ffmpeg.on('log', ({message}) => {
+    ffmpeg.on('log', ({message}: {message: string}) => {
       console.log(message)
     })
 
@@ -33,11 +43,13 @@ export function VideoDownloadScreen() {
     const masterPlaylistText = await masterPlaylistRes.text()
     const masterPlaylist = parse(masterPlaylistText) as MasterPlaylist
 
+    // If URL given is not a master playlist, we probably cannot handle this.
     if (!masterPlaylist.isMasterPlaylist) {
       // @TODO handle
       return
     }
 
+    // Figure out what the best quality is. These should generally be in order, but we'll check them all just in case
     let bestVariant: Variant | undefined
     for (const variant of masterPlaylist.variants) {
       if (!bestVariant || variant.bandwidth > bestVariant.bandwidth) {
@@ -45,6 +57,7 @@ export function VideoDownloadScreen() {
       }
     }
 
+    // Should only happen if there was no variants at all given to us. Mostly for types.
     if (!bestVariant) {
       // @TODO handle
       return
@@ -59,7 +72,7 @@ export function VideoDownloadScreen() {
     const hlsPlainText = await hlsFileRes.text()
     const playlist = parse(hlsPlainText) as MediaPlaylist
 
-    // Shouldn't be a master playlist
+    // This one shouldn't be a master playlist - again just for types really
     if (playlist.isMasterPlaylist) {
       // @TODO handle
       return
@@ -67,7 +80,7 @@ export function VideoDownloadScreen() {
 
     const ffmpeg = ffmpegRef.current
 
-    // Get the correctly ordered file names
+    // Get the correctly ordered file names. We need to remove the tracking info from the end of the file name
     const segments = playlist.segments.map(segment => {
       return segment.uri.split('?')[0]
     })
@@ -86,7 +99,7 @@ export function VideoDownloadScreen() {
           }
 
           const blob = await res.blob()
-          ffmpeg.writeFile(filename, await fetchFile(blob))
+          await ffmpeg.writeFile(filename, await fetchFile(blob))
         } catch (e) {
           console.log(e)
         }
@@ -95,6 +108,7 @@ export function VideoDownloadScreen() {
 
     // Do something if there was an error
     if (error) {
+      // @TODO
     }
 
     // Put the segments together
@@ -106,12 +120,13 @@ export function VideoDownloadScreen() {
       'output.mp4',
     ])
 
-    // Create a url for the player
     const fileData = await ffmpeg.readFile('output.mp4')
     const blobUrl = URL.createObjectURL(
+      // @ts-expect-error idk TODO
       new Blob([fileData.buffer], {type: 'video/mp4'}),
     )
-    setMp4(blobUrl)
+    return blobUrl
+    // Send the blob url through post message
   }, [])
 
   const createUrl = (originalUrl: string, newFile: string) => {
@@ -125,19 +140,15 @@ export function VideoDownloadScreen() {
     const videoUrl = url.searchParams.get('videoUrl')
 
     if (!videoUrl) {
-      setIsError(true)
+      postMessage({action: 'error', messageStr: 'No video URL provided'})
     } else {
       ;(async () => {
         await load()
         const mp4Res = await createMp4(videoUrl)
+        postMessage({action: 'complete', messageStr: mp4Res})
       })()
     }
-  }, [load])
+  }, [createMp4, load])
 
-  return (
-    <div>
-      {isError ? <p>Error!</p> : null}
-      <video src={mp4} controls />
-    </div>
-  )
+  return <div />
 }
