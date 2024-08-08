@@ -193,7 +193,14 @@ async function prepareAgent(
 
   // Now the agent is ready.
   const account = agentToSessionAccountOrThrow(agent)
+  let lastSession = agent.session
   agent.setPersistSessionHandler(event => {
+    if (agent.session) {
+      lastSession = agent.session
+    } else if (event === 'network-error') {
+      // Put it back, we'll try again later.
+      agent.session = lastSession
+    }
     onSessionChange(agent, account.did, event)
     if (event !== 'create' && event !== 'update') {
       addSessionErrorLog(account.did, event)
