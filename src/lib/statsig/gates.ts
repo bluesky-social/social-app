@@ -13,5 +13,6 @@ export type Gate =
   | 'suggested_feeds_interstitial'
   | 'suggested_follows_interstitial'
   | 'ungroup_follow_backs'
+  | 'video_debug'
   | 'videos'
   | 'small_avi_thumb'

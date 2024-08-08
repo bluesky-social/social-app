@@ -89,7 +89,7 @@ export function PostThread({
   onCanReply: (canReply: boolean) => void
   onPressReply: () => unknown
 }) {
-  const {hasSession} = useSession()
+  const {hasSession, currentAccount} = useSession()
   const {_} = useLingui()
   const t = useTheme()
   const {isMobile, isTabletOrMobile} = useWebMediaQueries()
@@ -154,6 +154,7 @@ export function PostThread({
   // On the web this is not necessary because we can synchronously adjust the scroll in onContentSizeChange instead.
   const [deferParents, setDeferParents] = React.useState(isNative)
 
+  const currentDid = currentAccount?.did
   const threadModerationCache = React.useMemo(() => {
     const cache: ThreadModerationCache = new WeakMap()
     if (thread && moderationOpts) {
@@ -167,8 +168,8 @@ export function PostThread({
     if (!threadViewPrefs || !thread) return null
 
     return createThreadSkeleton(
-      sortThread(thread, threadViewPrefs, threadModerationCache),
-      hasSession,
+      sortThread(thread, threadViewPrefs, threadModerationCache, currentDid),
+      !!currentDid,
       treeView,
       threadModerationCache,
       hiddenRepliesState !== HiddenRepliesState.Hide,
@@ -176,7 +177,7 @@ export function PostThread({
   }, [
     thread,
     preferences?.threadViewPrefs,
-    hasSession,
+    currentDid,
     treeView,
     threadModerationCache,
     hiddenRepliesState,

@@ -1,6 +1,7 @@
 import React from 'react'
-import * as persisted from '#/state/persisted'
+
 import {track} from '#/lib/analytics/analytics'
+import * as persisted from '#/state/persisted'
 
 export const OnboardingScreenSteps = {
   Welcome: 'Welcome',
@@ -81,13 +82,13 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   React.useEffect(() => {
-    return persisted.onUpdate(() => {
-      const next = persisted.get('onboarding').step
+    return persisted.onUpdate('onboarding', nextOnboarding => {
+      const next = nextOnboarding.step
       // TODO we've introduced a footgun
       if (state.step !== next) {
         dispatch({
           type: 'set',
-          step: persisted.get('onboarding').step as OnboardingStep,
+          step: nextOnboarding.step as OnboardingStep,
         })
       }
     })

@@ -185,8 +185,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   }, [state])
 
   React.useEffect(() => {
-    return persisted.onUpdate(() => {
-      const synced = persisted.get('session')
+    return persisted.onUpdate('session', nextSession => {
+      const synced = nextSession
       addSessionDebugLog({type: 'persisted:receive', data: synced})
       dispatch({
         type: 'synced-accounts',
