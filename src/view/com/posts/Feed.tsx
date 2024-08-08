@@ -180,6 +180,7 @@ let Feed = ({
   ListHeaderComponent?: () => JSX.Element
   extraData?: any
   savedFeedConfig?: AppBskyActorDefs.SavedFeed
+  outsideHeaderOffset?: number
 }): React.ReactNode => {
   const theme = useTheme()
   const {track} = useAnalytics()
