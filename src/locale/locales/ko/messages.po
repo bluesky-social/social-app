@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-08-08 09:50+0900\n"
+"PO-Revision-Date: 2024-08-08 17:18+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -805,23 +805,23 @@ msgstr "이미지 흐리게 및 피드에서 필터링"
 msgid "Books"
 msgstr "책"
 
-#: src/components/FeedInterstitials.tsx:288
+#: src/components/FeedInterstitials.tsx:290
 msgid "Browse more accounts on the Explore page"
 msgstr "탐색 페이지에서 더 많은 계정 찾아보기"
 
-#: src/components/FeedInterstitials.tsx:421
+#: src/components/FeedInterstitials.tsx:423
 msgid "Browse more feeds on the Explore page"
 msgstr "탐색 페이지에서 더 많은 피드 찾아보기"
 
-#: src/components/FeedInterstitials.tsx:270
-#: src/components/FeedInterstitials.tsx:273
-#: src/components/FeedInterstitials.tsx:403
-#: src/components/FeedInterstitials.tsx:406
+#: src/components/FeedInterstitials.tsx:272
+#: src/components/FeedInterstitials.tsx:275
+#: src/components/FeedInterstitials.tsx:405
+#: src/components/FeedInterstitials.tsx:408
 msgid "Browse more suggestions"
 msgstr "더 많은 추천 찾아보기"
 
-#: src/components/FeedInterstitials.tsx:296
-#: src/components/FeedInterstitials.tsx:430
+#: src/components/FeedInterstitials.tsx:298
+#: src/components/FeedInterstitials.tsx:432
 msgid "Browse more suggestions on the Explore page"
 msgstr "탐색 페이지에서 더 많은 추천 찾아보기"
 
@@ -5646,7 +5646,7 @@ msgstr "이 단계 건너뛰기"
 msgid "Software Dev"
 msgstr "소프트웨어 개발"
 
-#: src/components/FeedInterstitials.tsx:385
+#: src/components/FeedInterstitials.tsx:387
 msgid "Some other feeds you might like"
 msgstr "좋아할 만한 다른 피드"
 
@@ -5797,7 +5797,7 @@ msgstr "이 리스트 구독하기"
 msgid "Suggested accounts"
 msgstr "추천 계정"
 
-#: src/components/FeedInterstitials.tsx:250
+#: src/components/FeedInterstitials.tsx:252
 #: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:65
 msgid "Suggested for you"
 msgstr "나를 위한 추천"
@@ -6042,7 +6042,7 @@ msgstr "서버에 연결하는 동안 문제가 발생했습니다"
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "알림을 가져오는 동안 문제가 발생했습니다. 이곳을 탭하여 다시 시도하세요."
 
-#: src/view/com/posts/Feed.tsx:459
+#: src/view/com/posts/Feed.tsx:461
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "게시물을 가져오는 동안 문제가 발생했습니다. 이곳을 탭하여 다시 시도하세요."
 
