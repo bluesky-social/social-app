@@ -11,7 +11,7 @@ const NativeView: React.ComponentType<
   }
 > = requireNativeViewManager('ExpoHLSDownload')
 
-export class HLSDownloadView extends React.PureComponent<HLSDownloadViewProps> {
+export default class HLSDownloadView extends React.PureComponent<HLSDownloadViewProps> {
   private nativeRef: React.RefObject<any> = React.createRef()
 
   constructor(props: HLSDownloadViewProps) {
