@@ -40,7 +40,7 @@ export function ContentHider({
 
   if (!blur || (ignoreMute && isJustAMute(modui))) {
     return (
-      <View testID={testID} style={[a.overflow_hidden, style]}>
+      <View testID={testID} style={style}>
         {children}
       </View>
     )
