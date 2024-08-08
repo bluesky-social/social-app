@@ -110,26 +110,27 @@ function HomeScreenReady({
 
   // Temporary, remove when finished debugging
   const debugHasLoggedFollowingPrefs = React.useRef(false)
-  const debugHasLoggedFollowingDisplayed = React.useRef(false)
-  const debugLogFollowingPrefs = () => {
-    if (debugHasLoggedFollowingPrefs.current) return
-    logEvent('debug:followingPrefs', {
-      followingShowRepliesFromPref: preferences.feedViewPrefs.hideReplies
-        ? 'off'
-        : preferences.feedViewPrefs.hideRepliesByUnfollowed
-        ? 'following'
-        : 'all',
-      followingRepliesMinLikePref:
-        preferences.feedViewPrefs.hideRepliesByLikeCount,
-    })
-    debugHasLoggedFollowingPrefs.current = true
-  }
-  const debugLogFollowingDisplayed = (feed: FeedDescriptor) => {
-    if (debugHasLoggedFollowingDisplayed.current) return
-    if (feed !== 'following') return
-    logEvent('debug:followingDisplayed', {})
-    debugHasLoggedFollowingDisplayed.current = true
-  }
+  const debugLogFollowingPrefs = React.useCallback(
+    (feed: FeedDescriptor) => {
+      if (debugHasLoggedFollowingPrefs.current) return
+      if (feed !== 'following') return
+      logEvent('debug:followingPrefs', {
+        followingShowRepliesFromPref: preferences.feedViewPrefs.hideReplies
+          ? 'off'
+          : preferences.feedViewPrefs.hideRepliesByUnfollowed
+          ? 'following'
+          : 'all',
+        followingRepliesMinLikePref:
+          preferences.feedViewPrefs.hideRepliesByLikeCount,
+      })
+      debugHasLoggedFollowingPrefs.current = true
+    },
+    [
+      preferences.feedViewPrefs.hideReplies,
+      preferences.feedViewPrefs.hideRepliesByLikeCount,
+      preferences.feedViewPrefs.hideRepliesByUnfollowed,
+    ],
+  )
 
   const {hasSession} = useSession()
   const setMinimalShellMode = useSetMinimalShellMode()
@@ -159,8 +160,7 @@ function HomeScreenReady({
           feedUrl: selectedFeed,
           reason: 'focus',
         })
-        debugLogFollowingPrefs()
-        debugLogFollowingDisplayed(selectedFeed)
+        debugLogFollowingPrefs(selectedFeed)
       }
     }),
   )
@@ -207,9 +207,9 @@ function HomeScreenReady({
         feedUrl: feed,
         reason,
       })
-      debugLogFollowingDisplayed(feed)
+      debugLogFollowingPrefs(feed)
     },
-    [allFeeds],
+    [allFeeds, debugLogFollowingPrefs],
   )
 
   const onPressSelected = React.useCallback(() => {
