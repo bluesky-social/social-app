@@ -17,7 +17,6 @@ import {
 } from '#/state/shell/logged-out'
 import {useSetMinimalShellMode} from '#/state/shell/minimal-mode'
 import {NavigationProp} from 'lib/routes/types'
-import {useGate} from 'lib/statsig/statsig'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Text} from '#/view/com/util/text/Text'
 import {Login} from '#/screens/Login'
@@ -53,7 +52,6 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   })
   const {clearRequestedAccount} = useLoggedOutViewControls()
   const navigation = useNavigation<NavigationProp>()
-  const gate = useGate()
 
   const isFirstScreen = screenState === ScreenState.S_LoginOrCreateAccount
   React.useEffect(() => {
@@ -98,10 +96,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
               }}
             />
           </Pressable>
-        ) : isNative &&
-          !hasSession &&
-          isFirstScreen &&
-          !gate('native_pwi_disabled') ? (
+        ) : isNative && !hasSession && isFirstScreen ? (
           <Pressable
             accessibilityHint={_(msg`Search for users`)}
             accessibilityLabel={_(msg`Search for users`)}
