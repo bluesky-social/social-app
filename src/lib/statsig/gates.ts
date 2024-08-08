@@ -1,5 +1,6 @@
 export type Gate =
   // Keep this alphabetic please.
+  | 'auto_show_prof_sugg_follows'
   | 'debug_show_feedcontext'
   | 'explore_page_profile_card_social_proof'
   | 'native_pwi_disabled'

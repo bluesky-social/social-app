@@ -10,6 +10,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
 import {Shadow} from '#/state/cache/types'
@@ -79,6 +80,7 @@ let ProfileHeaderStandard = ({
     profile.viewer?.blocking ||
     profile.viewer?.blockedBy ||
     profile.viewer?.blockingByList
+  const gate = useGate()
 
   const onPressEditProfile = React.useCallback(() => {
     track('ProfileHeader:EditProfileButtonClicked')
@@ -101,6 +103,9 @@ let ProfileHeaderStandard = ({
             )}`,
           ),
         )
+        if (gate('auto_show_prof_sugg_follows')) {
+          setShowSuggestedFollows(!showSuggestedFollows)
+        }
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
           logger.error('Failed to follow', {message: String(e)})
