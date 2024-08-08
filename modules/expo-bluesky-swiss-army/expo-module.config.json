@@ -5,6 +5,7 @@
       "ExpoBlueskySharedPrefsModule",
       "ExpoBlueskyReferrerModule",
       "ExpoBlueskyVisibilityViewModule",
+      "ExpoHLSDownloadModule",
       "ExpoPlatformInfoModule"
     ]
   },
