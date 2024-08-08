@@ -8,9 +8,11 @@
 import ExpoModulesCore
 import WebKit
 
-class HLSDownloadView: ExpoView, WKScriptMessageHandler, WKNavigationDelegate {
+class HLSDownloadView: ExpoView, WKScriptMessageHandler, WKNavigationDelegate, WKDownloadDelegate {
   var webView: WKWebView!
   var downloaderUrl: URL?
+  
+  private var outputUrl: URL?
   
   public required init(appContext: AppContext? = nil) {
     super.init(appContext: appContext)
@@ -63,6 +65,8 @@ class HLSDownloadView: ExpoView, WKScriptMessageHandler, WKNavigationDelegate {
       return
     }
     
+    print(payload)
+    
     switch payload.action {
     case .progress:
       guard let progress = payload.messageFloat else {
@@ -76,36 +80,44 @@ class HLSDownloadView: ExpoView, WKScriptMessageHandler, WKNavigationDelegate {
     }
   }
   
-  // MARK - post message handlers
-  
-  private func getDataFromBlobUrl(_ url: URL, completion: @escaping (Data?) -> Void) {
-    let task = URLSession.shared.dataTask(with: url) { data, response, error in
-      guard let data = data, error == nil else {
-        print("no data or error")
-        print(error)
-        completion(nil)
-        return
-      }
-      completion(data)
+  func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction) async -> WKNavigationActionPolicy {
+    guard #available(iOS 14.5, *) else {
+      return .cancel
     }
     
-    task.resume()
+    if navigationAction.shouldPerformDownload {
+      return .download
+    } else {
+      return .allow
+    }
   }
   
-  private func saveFromBlobUrlString(_ urlString: String) {
-    guard let url = URL(string: urlString) else {
-      print("bad url")
-      return
-    }
+  // MARK - wkdownloaddelegate
+  
+  @available(iOS 14.5, *)
+  func webView(_ webView: WKWebView, navigationAction: WKNavigationAction, didBecome download: WKDownload) {
+    download.delegate = self
+  }
+  
+  @available(iOS 14.5, *)
+  func webView(_ webView: WKWebView, navigationResponse: WKNavigationResponse, didBecome download: WKDownload) {
+    print("here 2")
+    download.delegate = self
+  }
+  
+  @available(iOS 14.5, *)
+  func download(_ download: WKDownload, decideDestinationUsing response: URLResponse, suggestedFilename: String, completionHandler: @escaping (URL?) -> Void) {
+    let directory = NSTemporaryDirectory()
+    let fileName = NSUUID().uuidString
+    let url = NSURL.fileURL(withPathComponents: [directory, fileName])
     
-    getDataFromBlobUrl(url) { data in
-      guard let data = data else {
-        print("no data")
-        return
-      }
-      
-      print("success!")
-    }
+    self.outputUrl = url
+    completionHandler(url)
+  }
+  
+  @available(iOS 14.5, *)
+  func downloadDidFinish(_ download: WKDownload) {
+    print(self.outputUrl?.absoluteString)
   }
   
   private func progress() {
