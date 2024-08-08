@@ -207,31 +207,3 @@ index 88b3fdf..2488ebc 100644
 
          const { layout, entering, exiting, sharedTransitionTag } = this.props;
          if (
-diff --git a/node_modules/react-native-reanimated/lib/module/reanimated2/index.js b/node_modules/react-native-reanimated/lib/module/reanimated2/index.js
-index ac9be5d..86d4605 100644
---- a/node_modules/react-native-reanimated/lib/module/reanimated2/index.js
-+++ b/node_modules/react-native-reanimated/lib/module/reanimated2/index.js
-@@ -47,4 +47,5 @@ export { LayoutAnimationConfig } from './component/LayoutAnimationConfig';
- export { PerformanceMonitor } from './component/PerformanceMonitor';
- export { startMapper, stopMapper } from './mappers';
- export { startScreenTransition, finishScreenTransition, ScreenTransition } from './screenTransition';
-+export { isReducedMotion } from './PlatformChecker';
- //# sourceMappingURL=index.js.map
-diff --git a/node_modules/react-native-reanimated/lib/typescript/reanimated2/index.d.ts b/node_modules/react-native-reanimated/lib/typescript/reanimated2/index.d.ts
-index f01dc57..161ef22 100644
---- a/node_modules/react-native-reanimated/lib/typescript/reanimated2/index.d.ts
-+++ b/node_modules/react-native-reanimated/lib/typescript/reanimated2/index.d.ts
-@@ -36,3 +36,4 @@ export type { FlatListPropsWithLayout } from './component/FlatList';
- export { startMapper, stopMapper } from './mappers';
- export { startScreenTransition, finishScreenTransition, ScreenTransition, } from './screenTransition';
- export type { AnimatedScreenTransition, GoBackGesture, ScreenTransitionConfig, } from './screenTransition';
-+export { isReducedMotion } from './PlatformChecker';
-diff --git a/node_modules/react-native-reanimated/src/reanimated2/index.ts b/node_modules/react-native-reanimated/src/reanimated2/index.ts
-index 5885fa1..a3c693f 100644
---- a/node_modules/react-native-reanimated/src/reanimated2/index.ts
-+++ b/node_modules/react-native-reanimated/src/reanimated2/index.ts
-@@ -284,3 +284,4 @@ export type {
-   GoBackGesture,
-   ScreenTransitionConfig,
- } from './screenTransition';
-+export { isReducedMotion } from './PlatformChecker';

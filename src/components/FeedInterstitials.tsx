@@ -92,14 +92,16 @@ function getRank(seenPost: SeenPost): string {
     tier = 'a'
   } else if (seenPost.feedContext?.startsWith('cluster')) {
     tier = 'b'
-  } else if (seenPost.feedContext?.startsWith('ntpc')) {
+  } else if (seenPost.feedContext === 'popcluster') {
     tier = 'c'
-  } else if (seenPost.feedContext?.startsWith('t-')) {
+  } else if (seenPost.feedContext?.startsWith('ntpc')) {
     tier = 'd'
-  } else if (seenPost.feedContext === 'nettop') {
+  } else if (seenPost.feedContext?.startsWith('t-')) {
     tier = 'e'
-  } else {
+  } else if (seenPost.feedContext === 'nettop') {
     tier = 'f'
+  } else {
+    tier = 'g'
   }
   let score = Math.round(
     Math.log(

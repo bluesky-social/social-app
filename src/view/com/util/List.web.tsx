@@ -4,11 +4,10 @@ import {ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/rean
 
 import {batchedUpdates} from '#/lib/batchedUpdates'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useScrollHandlers} from '#/lib/ScrollContext'
-import {isSafari} from 'lib/browser'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {addStyle} from 'lib/styles'
+import {addStyle} from '#/lib/styles'
 
 export type ListMethods = any // TODO: Better types.
 export type ListProps<ItemT> = Omit<
@@ -26,8 +25,6 @@ export type ListProps<ItemT> = Omit<
   // Web only prop to contain the scroll to the container rather than the window
   disableFullWindowScroll?: boolean
   sideBorders?: boolean
-  // Web only prop to disable a perf optimization (which would otherwise be on).
-  disableContainStyle?: boolean
 }
 export type ListRef = React.MutableRefObject<any | null> // TODO: Better types.
 
@@ -60,7 +57,6 @@ function ListImpl<ItemT>(
     extraData,
     style,
     sideBorders = true,
-    disableContainStyle,
     ...props
   }: ListProps<ItemT>,
   ref: React.Ref<ListMethods>,
@@ -344,10 +340,11 @@ function ListImpl<ItemT>(
           style={[styles.aboveTheFoldDetector, {height: headerOffset}]}
         />
         {onStartReached && !isEmpty && (
-          <Visibility
+          <EdgeVisibility
             root={disableFullWindowScroll ? nativeRef : null}
             onVisibleChange={onHeadVisibilityChange}
             topMargin={(onStartReachedThreshold ?? 0) * 100 + '%'}
+            containerRef={containerRef}
           />
         )}
         {headerComponent}
@@ -363,21 +360,48 @@ function ListImpl<ItemT>(
                   renderItem={renderItem}
                   extraData={extraData}
                   onItemSeen={onItemSeen}
-                  disableContainStyle={disableContainStyle}
                 />
               )
             })}
         {onEndReached && !isEmpty && (
-          <Visibility
+          <EdgeVisibility
             root={disableFullWindowScroll ? nativeRef : null}
             onVisibleChange={onTailVisibilityChange}
             bottomMargin={(onEndReachedThreshold ?? 0) * 100 + '%'}
-            key={data?.length}
+            containerRef={containerRef}
           />
         )}
         {footerComponent}
       </View>
     </View>
+  )
+}
+
+function EdgeVisibility({
+  root,
+  topMargin,
+  bottomMargin,
+  containerRef,
+  onVisibleChange,
+}: {
+  root?: React.RefObject<HTMLDivElement> | null
+  topMargin?: string
+  bottomMargin?: string
+  containerRef: React.RefObject<Element>
+  onVisibleChange: (isVisible: boolean) => void
+}) {
+  const [containerHeight, setContainerHeight] = React.useState(0)
+  useResizeObserver(containerRef, (w, h) => {
+    setContainerHeight(h)
+  })
+  return (
+    <Visibility
+      key={containerHeight}
+      root={root}
+      topMargin={topMargin}
+      bottomMargin={bottomMargin}
+      onVisibleChange={onVisibleChange}
+    />
   )
 }
 
@@ -413,7 +437,6 @@ let Row = function RowImpl<ItemT>({
   renderItem,
   extraData: _unused,
   onItemSeen,
-  disableContainStyle,
 }: {
   item: ItemT
   index: number
@@ -423,7 +446,6 @@ let Row = function RowImpl<ItemT>({
     | ((data: {index: number; item: any; separators: any}) => React.ReactNode)
   extraData: any
   onItemSeen: ((item: any) => void) | undefined
-  disableContainStyle?: boolean
 }): React.ReactNode {
   const rowRef = React.useRef(null)
   const intersectionTimeout = React.useRef<NodeJS.Timer | undefined>(undefined)
@@ -472,11 +494,8 @@ let Row = function RowImpl<ItemT>({
     return null
   }
 
-  const shouldDisableContainStyle = disableContainStyle || isSafari
   return (
-    <View
-      style={shouldDisableContainStyle ? undefined : styles.contain}
-      ref={rowRef}>
+    <View ref={rowRef}>
       {renderItem({item, index, separators: null as any})}
     </View>
   )
@@ -546,10 +565,6 @@ const styles = StyleSheet.create({
     maxWidth: 600,
     marginLeft: 'auto',
     marginRight: 'auto',
-  },
-  contain: {
-    // @ts-ignore web only
-    contain: 'layout paint',
   },
   minHeightViewport: {
     // @ts-ignore web only
