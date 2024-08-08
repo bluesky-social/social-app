@@ -1,6 +1,6 @@
 //
 //  ExpoHLSDownloadModule.swift
-//  ExpoBlueskySwissArmy
+//  DoubleConversion
 //
 //  Created by Hailey on 7/29/24.
 //
@@ -11,13 +11,7 @@ public class ExpoHLSDownloadModule: Module {
   public func definition() -> ModuleDefinition {
     Name("ExpoHLSDownload")
     
-    Function("isAvailable") {
-      return UIDevice.current.systemVersion == "14.5"
-    }
-    
     View(HLSDownloadView.self) {
-      Events(["onStart", "onError", "onProgress"])
-      
       Prop("downloaderUrl") { (view: HLSDownloadView, downloaderUrl: URL) in
         view.downloaderUrl = downloaderUrl
       }
@@ -29,6 +23,7 @@ public class ExpoHLSDownloadModule: Module {
       }
       
       AsyncFunction("cancelAsync") { (view: HLSDownloadView) in
+        view.cancel()
       }
     }
   }
