@@ -6,7 +6,6 @@ export type Gate =
   | 'new_user_guided_tour'
   | 'new_user_progress_guide'
   | 'onboarding_minimum_interests'
-  | 'request_notifications_permission_after_onboarding_v2'
   | 'session_withproxy_fix'
   | 'show_avi_follow_button'
   | 'show_follow_back_label_v2'
