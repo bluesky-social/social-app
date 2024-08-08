@@ -72,15 +72,15 @@
   resolved "https://registry.yarnpkg.com/@atproto-labs/simple-store/-/simple-store-0.1.1.tgz#e743a2722b5d8732166f0a72aca8bd10e9bff106"
   integrity sha512-WKILW2b3QbAYKh+w5U2x6p5FqqLl0nAeLwGeDY+KjX01K4Dq3vQTR9b/qNp0jZm48CabPQVrqCv0PPU9LgRRRg==
 
-"@atproto/api-prerelease@npm:@atproto/api@0.12.26-next.0":
-  version "0.12.26-next.0"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.12.26-next.0.tgz#56d6da3cff447d2e7cdfa5eb05cd08f6c409ea10"
-  integrity sha512-gFMM5+v81tOhB6EG6KOAf584hE8DZxLRoRMO0wtr/xrKn30Mib9ZAEKxFFCT4AAvC8QfvU8SwvSJoJuVUy6qOA==
+"@atproto/api-prerelease@npm:@atproto/api@0.13.2-next.0":
+  version "0.13.2-next.0"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.13.2-next.0.tgz#b185e982e0943af7ad1fa3ac6a28548f42ba739b"
+  integrity sha512-4RRnBXlS9Hy7vn55wURMGn+Yu3tQEDpBmkrPKvOsXW5v6IOlS+LvVMCodyMNop2/kdk+KRV3xdhj0EC9brR8rg==
   dependencies:
     "@atproto/common-web" "^0.3.0"
-    "@atproto/lexicon" "^0.4.0"
+    "@atproto/lexicon" "^0.4.1"
     "@atproto/syntax" "^0.3.0"
-    "@atproto/xrpc" "^0.5.0"
+    "@atproto/xrpc" "^0.6.0"
     await-lock "^2.2.2"
     multiformats "^9.9.0"
     tlds "^1.234.0"
@@ -293,7 +293,7 @@
     multiformats "^9.9.0"
     zod "^3.23.8"
 
-"@atproto/lexicon@^0.4.0", "@atproto/lexicon@^0.4.1":
+"@atproto/lexicon@^0.4.1":
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/@atproto/lexicon/-/lexicon-0.4.1.tgz#19155210570a2fafbcc7d4f655d9b813948e72a0"
   integrity sha512-bzyr+/VHXLQWbumViX5L7h1NKQObfs8Z+XZJl43OUK8nYFUI4e/sW1IZKRNfw7Wvi5YVNK+J+yP3DWIBZhkCYA==
@@ -447,14 +447,6 @@
     uint8arrays "3.0.0"
     ws "^8.12.0"
     zod "^3.23.8"
-
-"@atproto/xrpc@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@atproto/xrpc/-/xrpc-0.5.0.tgz#dacbfd8f7b13f0ab5bd56f8fdd4b460e132a6032"
-  integrity sha512-swu+wyOLvYW4l3n+VAuJbHcPcES+tin2Lsrp8Bw5aIXIICiuFn1YMFlwK9JwVUzTH21Py1s1nHEjr4CJeElJog==
-  dependencies:
-    "@atproto/lexicon" "^0.4.0"
-    zod "^3.21.4"
 
 "@atproto/xrpc@^0.6.0":
   version "0.6.0"
