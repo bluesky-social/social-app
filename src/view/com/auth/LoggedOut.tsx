@@ -1,24 +1,20 @@
 import React from 'react'
 import {Pressable, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {logEvent} from '#/lib/statsig/statsig'
 import {s} from '#/lib/styles'
-import {isIOS, isNative} from '#/platform/detection'
-import {useSession} from '#/state/session'
+import {isIOS} from '#/platform/detection'
 import {
   useLoggedOutView,
   useLoggedOutViewControls,
 } from '#/state/shell/logged-out'
 import {useSetMinimalShellMode} from '#/state/shell/minimal-mode'
-import {NavigationProp} from 'lib/routes/types'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
-import {Text} from '#/view/com/util/text/Text'
 import {Login} from '#/screens/Login'
 import {Signup} from '#/screens/Signup'
 import {LandingScreen} from '#/screens/StarterPack/StarterPackLandingScreen'
@@ -33,7 +29,6 @@ enum ScreenState {
 export {ScreenState as LoggedOutScreenState}
 
 export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
-  const {hasSession} = useSession()
   const {_} = useLingui()
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
@@ -51,9 +46,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
     }
   })
   const {clearRequestedAccount} = useLoggedOutViewControls()
-  const navigation = useNavigation<NavigationProp>()
 
-  const isFirstScreen = screenState === ScreenState.S_LoginOrCreateAccount
   React.useEffect(() => {
     screen('Login')
     setMinimalShellMode(true)
@@ -65,10 +58,6 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
     }
     clearRequestedAccount()
   }, [clearRequestedAccount, onDismiss])
-
-  const onPressSearch = React.useCallback(() => {
-    navigation.navigate(`SearchTab`)
-  }, [navigation])
 
   return (
     <View testID="noSessionView" style={[s.hContentRegion, pal.view]}>
@@ -93,36 +82,6 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
               size={12}
               style={{
                 color: String(pal.textInverted.color),
-              }}
-            />
-          </Pressable>
-        ) : isNative && !hasSession && isFirstScreen ? (
-          <Pressable
-            accessibilityHint={_(msg`Search for users`)}
-            accessibilityLabel={_(msg`Search for users`)}
-            accessibilityRole="button"
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: 4,
-              position: 'absolute',
-              top: 20,
-              right: 20,
-              paddingHorizontal: 16,
-              paddingVertical: 8,
-              zIndex: 100,
-              backgroundColor: pal.btn.backgroundColor,
-              borderRadius: 100,
-            }}
-            onPress={onPressSearch}>
-            <Text type="lg-bold" style={[pal.text]}>
-              <Trans>Search</Trans>{' '}
-            </Text>
-            <FontAwesomeIcon
-              icon="search"
-              size={16}
-              style={{
-                color: String(pal.text.color),
               }}
             />
           </Pressable>
