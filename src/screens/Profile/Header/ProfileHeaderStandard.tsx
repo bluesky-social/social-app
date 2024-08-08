@@ -104,7 +104,7 @@ let ProfileHeaderStandard = ({
           ),
         )
         if (gate('auto_show_prof_sugg_follows')) {
-          setShowSuggestedFollows(!showSuggestedFollows)
+          setShowSuggestedFollows(true)
         }
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
