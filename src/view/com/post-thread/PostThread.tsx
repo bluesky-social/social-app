@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react'
+import React, {useRef} from 'react'
 import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import {runOnJS} from 'react-native-reanimated'
 import Animated from 'react-native-reanimated'
@@ -100,7 +100,6 @@ export function PostThread({
   const [hiddenRepliesState, setHiddenRepliesState] = React.useState(
     HiddenRepliesState.Hide,
   )
-  const [canReply, setCanReply] = React.useState(false)
 
   const {data: preferences} = usePreferencesQuery()
   const {
@@ -213,14 +212,6 @@ export function PostThread({
     return null
   }, [thread, skeleton?.highlightedPost, isThreadError, _, threadError])
 
-  useEffect(() => {
-    if (error) {
-      setCanReply(false)
-    } else if (rootPost) {
-      setCanReply(!rootPost.viewer?.replyDisabled)
-    }
-  }, [rootPost, error])
-
   // construct content
   const posts = React.useMemo(() => {
     if (!skeleton) return []
@@ -316,6 +307,7 @@ export function PostThread({
     setMaxReplies(prev => prev + 50)
   }, [isFetching, maxReplies, posts.length])
 
+  const canReply = !error && rootPost && !rootPost.viewer?.replyDisabled
   const hasParents =
     skeleton?.highlightedPost?.type === 'post' &&
     (skeleton.highlightedPost.ctx.isParentLoading ||
