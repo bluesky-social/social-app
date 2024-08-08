@@ -1,7 +1,6 @@
 export type Gate =
   // Keep this alphabetic please.
   | 'debug_show_feedcontext'
-  | 'explore_page_profile_card_social_proof'
   | 'native_pwi_disabled'
   | 'new_user_guided_tour'
   | 'new_user_progress_guide'
