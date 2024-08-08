@@ -10,7 +10,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {HeaderBackButton} from '@react-navigation/elements'
 import {useNavigation} from '@react-navigation/native'
 
-import {isWeb} from '#/platform/detection'
+import {isAndroid, isWeb} from '#/platform/detection'
 import {useSetDrawerOpen} from '#/state/shell'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -131,6 +131,7 @@ const styles = StyleSheet.create({
   nativeBackBtn: {
     width: 30,
     height: 30,
+    marginRight: isAndroid ? 12 : 2,
     alignItems: 'center',
     justifyContent: 'center',
   },
