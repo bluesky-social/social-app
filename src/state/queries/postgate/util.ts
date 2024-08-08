@@ -21,6 +21,7 @@ export function createPostgateRecord(
     createdAt: new Date().toISOString(),
     post: postgate.post,
     detachedQuotes: postgate.detachedQuotes || [],
+    quotepostRules: postgate.quotepostRules || [],
   }
 }
 
@@ -31,9 +32,16 @@ export function mergePostgateRecords(
   const detachedQuotes = Array.from(
     new Set([...(prev.detachedQuotes || []), ...(next.detachedQuotes || [])]),
   )
+  const quotepostRules = [
+    ...(prev.quotepostRules || []),
+    ...(next.quotepostRules || []),
+  ].filter(
+    (rule, i, all) => all.findIndex(_rule => _rule.$type === rule.$type) === i,
+  )
   return createPostgateRecord({
     post: prev.post,
     detachedQuotes,
+    quotepostRules,
   })
 }
 

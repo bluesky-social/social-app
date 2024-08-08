@@ -4,7 +4,7 @@ import {
   AtUri,
   BskyAgent,
 } from '@atproto/api'
-import {useMutation, useQueryClient} from '@tanstack/react-query'
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {networkRetry, retry} from '#/lib/async/retry'
 import {logger} from '#/logger'
@@ -85,17 +85,13 @@ export async function writePostgateRecord({
   postgate: AppBskyFeedPostgate.Record
 }) {
   const postUrip = new AtUri(postUri)
-  const record = createPostgateRecord({
-    post: postUri,
-    detachedQuotes: postgate.detachedQuotes,
-  })
 
   await networkRetry(2, () =>
     agent.api.com.atproto.repo.putRecord({
       repo: agent.session!.did,
       collection: POSTGATE_COLLECTION,
       rkey: postUrip.rkey,
-      record,
+      record: postgate,
     }),
   )
 }
@@ -122,6 +118,20 @@ export async function upsertPostgate(
     agent,
     postUri,
     postgate: next,
+  })
+}
+
+export const createPostgateQueryKey = (postUri: string) => [
+  'postgate-record',
+  postUri,
+]
+export function usePostgateQuery({postUri}: {postUri: string}) {
+  const agent = useAgent()
+  return useQuery({
+    queryKey: createPostgateQueryKey(postUri),
+    queryFn() {
+      return getPostgateRecord({agent, postUri})
+    },
   })
 }
 
@@ -191,6 +201,43 @@ export function useToggleQuoteDetachmentMutation() {
           })
         }
       }
+    },
+  })
+}
+
+export function useToggleQuotepostEnabledMutation() {
+  const agent = useAgent()
+
+  return useMutation({
+    mutationFn: async ({
+      postUri,
+      action,
+    }: {
+      postUri: string
+      action: 'enable' | 'disable'
+    }) => {
+      await upsertPostgate({agent, postUri: postUri}, async prev => {
+        console.log({action})
+        if (prev) {
+          if (action === 'disable') {
+            return mergePostgateRecords(prev, {
+              quotepostRules: [{$type: 'app.bsky.feed.postgate#disableRule'}],
+            })
+          } else if (action === 'enable') {
+            return {
+              ...prev,
+              quotepostRules: [],
+            }
+          }
+        } else {
+          if (action === 'disable') {
+            return createPostgateRecord({
+              post: postUri,
+              quotepostRules: [{$type: 'app.bsky.feed.postgate#disableRule'}],
+            })
+          }
+        }
+      })
     },
   })
 }
