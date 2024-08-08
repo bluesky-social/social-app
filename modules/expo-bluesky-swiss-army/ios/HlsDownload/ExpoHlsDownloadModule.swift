@@ -1,6 +1,6 @@
 //
 //  ExpoHLSDownloadModule.swift
-//  DoubleConversion
+//  ExpoBlueskySwissArmy
 //
 //  Created by Hailey on 7/29/24.
 //
@@ -12,6 +12,10 @@ public class ExpoHLSDownloadModule: Module {
     Name("ExpoHLSDownload")
     
     View(HLSDownloadView.self) {
+      Prop("downloaderUrl") { (view: HLSDownloadView, downloaderUrl: URL) in
+        view.downloaderUrl = downloaderUrl
+      }
+      
       AsyncFunction("downloadAsync") { (view: HLSDownloadView, sourceUrl: URL, progressCb: JavaScriptFunction<Void>) in
         view.download(sourceUrl: sourceUrl) { progress in
           try? progressCb.call(progress)

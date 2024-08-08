@@ -5,15 +5,12 @@
 //  Created by Hailey on 7/29/24.
 //
 
-import Foundation
 import ExpoModulesCore
-import AVKit
 import WebKit
-
-let ROOT_URL = "https://wasm-test.haileyok.com/"
 
 class HLSDownloadView: ExpoView, WKScriptMessageHandler, WKNavigationDelegate {
   var webView: WKWebView!
+  var downloaderUrl: URL
   
   public required init(appContext: AppContext? = nil) {
     super.init(appContext: appContext)
@@ -58,8 +55,8 @@ class HLSDownloadView: ExpoView, WKScriptMessageHandler, WKNavigationDelegate {
     // Cancel the download
   }
   
-  func createUrl(videoUrl: URL) -> URL? {
-    return URL(string: "\(ROOT_URL)?videoUrl=\(videoUrl.absoluteString)")
+  private func createUrl(videoUrl: URL) -> URL? {
+    return URL(string: "\(self.downloaderUrl)?videoUrl=\(videoUrl.absoluteString)")
   }
   
   // webview message handling

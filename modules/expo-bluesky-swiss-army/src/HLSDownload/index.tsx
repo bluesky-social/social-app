@@ -1,7 +1,10 @@
 import React from 'react'
 
-export default class HLSDownloadView extends React.PureComponent {
-  constructor(props: {}) {
+import {NotImplementedError} from '../NotImplemented'
+import {HLSDownloadViewProps} from './types'
+
+export default class HLSDownloadView extends React.PureComponent<HLSDownloadViewProps> {
+  constructor(props: HLSDownloadViewProps) {
     super(props)
   }
 
@@ -9,11 +12,11 @@ export default class HLSDownloadView extends React.PureComponent {
     sourceUrl: string,
     progressCb: (progress: number) => void,
   ): Promise<string | null> {
-    throw new Error(`Method not implemented. ${sourceUrl} ${progressCb}`)
+    throw new NotImplementedError({sourceUrl, progressCb})
   }
 
   async cancelAsync(sourceUrl: string): Promise<void> {
-    throw new Error(`Method not implemented. ${sourceUrl}`)
+    throw new NotImplementedError({sourceUrl})
   }
 
   render() {
