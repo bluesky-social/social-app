@@ -99,7 +99,7 @@ export function ProfileHeaderSuggestedFollows({
             },
           ]}>
           <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
-            <Trans>Suggested for you</Trans>
+            <Trans>Similar accounts</Trans>
           </Text>
 
           <Button
@@ -144,7 +144,7 @@ export function ProfileHeaderSuggestedFollows({
                 .map(profile => (
                   <ProfileCard.Link
                     key={profile.did}
-                    did={profile.handle}
+                    profile={profile}
                     onPress={() => {
                       logEvent('profile:header:suggestedFollowsCard:press', {})
                     }}
