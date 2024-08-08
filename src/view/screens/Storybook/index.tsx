@@ -42,6 +42,10 @@ function StorybookInner() {
         <HLSDownloadView
           ref={hlsDownloadRef}
           downloaderUrl="http://localhost:19006/video-download"
+          onSuccess={uri => console.log(uri)}
+          onStart={() => console.log('Download is starting')}
+          onError={error => console.error(error)}
+          onProgress={progress => console.log(progress)}
         />
         <Button
           variant="solid"

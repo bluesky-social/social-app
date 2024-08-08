@@ -10,22 +10,26 @@ import ExpoModulesCore
 public class ExpoHLSDownloadModule: Module {
   public func definition() -> ModuleDefinition {
     Name("ExpoHLSDownload")
-    
+
     // Test
-    
+
     View(HLSDownloadView.self) {
+      Events([
+        "onStart",
+        "onError",
+        "onProgress",
+        "onSuccess"
+      ])
+
       Prop("downloaderUrl") { (view: HLSDownloadView, downloaderUrl: URL) in
         view.downloaderUrl = downloaderUrl
       }
-      
-      AsyncFunction("downloadAsync") { (view: HLSDownloadView, sourceUrl: URL, progressCb: JavaScriptFunction<Void>) in
-        view.download(sourceUrl: sourceUrl) { progress in
-          try? progressCb.call(progress)
-        }
+
+      AsyncFunction("downloadAsync") { (view: HLSDownloadView, sourceUrl: URL) in
+        view.startDownload(sourceUrl: sourceUrl)
       }
-      
-      AsyncFunction("cancelAsync") { (view: HLSDownloadView) in
-        view.cancel()
+
+      AsyncFunction("cancelAsync") { (_: HLSDownloadView) in
       }
     }
   }
