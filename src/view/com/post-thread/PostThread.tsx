@@ -24,6 +24,7 @@ import {
 } from '#/state/queries/post-thread'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
+import {useComposerControls} from '#/state/shell'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
 import {useMinimalShellFabTransform} from 'lib/hooks/useMinimalShellTransform'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
@@ -34,9 +35,9 @@ import {CenteredView} from 'view/com/util/Views'
 import {atoms as a, useTheme} from '#/alf'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {Text} from '#/components/Typography'
-import {ComposePrompt} from '../composer/Prompt'
 import {List, ListMethods} from '../util/List'
 import {ViewHeader} from '../util/ViewHeader'
+import {PostThreadComposePrompt} from './PostThreadComposePrompt'
 import {PostThreadItem} from './PostThreadItem'
 import {PostThreadLoadMore} from './PostThreadLoadMore'
 import {PostThreadShowHiddenReplies} from './PostThreadShowHiddenReplies'
@@ -84,13 +85,7 @@ const keyExtractor = (item: RowItem) => {
   return item._reactKey
 }
 
-export function PostThread({
-  uri,
-  onPressReply,
-}: {
-  uri: string | undefined
-  onPressReply: () => unknown
-}) {
+export function PostThread({uri}: {uri: string | undefined}) {
   const {hasSession, currentAccount} = useSession()
   const {_} = useLingui()
   const t = useTheme()
@@ -307,6 +302,23 @@ export function PostThread({
     setMaxReplies(prev => prev + 50)
   }, [isFetching, maxReplies, posts.length])
 
+  const {openComposer} = useComposerControls()
+  const onPressReply = React.useCallback(() => {
+    if (thread?.type !== 'post') {
+      return
+    }
+    openComposer({
+      replyTo: {
+        uri: thread.post.uri,
+        cid: thread.post.cid,
+        text: thread.record.text,
+        author: thread.post.author,
+        embed: thread.post.embed,
+      },
+      onPost: () => refetch(),
+    })
+  }, [openComposer, thread, refetch])
+
   const canReply = !error && rootPost && !rootPost.viewer?.replyDisabled
   const hasParents =
     skeleton?.highlightedPost?.type === 'post' &&
@@ -319,7 +331,9 @@ export function PostThread({
     if (item === REPLY_PROMPT && hasSession) {
       return (
         <View>
-          {!isMobile && <ComposePrompt onPressCompose={onPressReply} />}
+          {!isMobile && (
+            <PostThreadComposePrompt onPressCompose={onPressReply} />
+          )}
         </View>
       )
     } else if (item === SHOW_HIDDEN_REPLIES || item === SHOW_MUTED_REPLIES) {
@@ -487,7 +501,7 @@ function MobileComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
           bottom: clamp(safeAreaInsets.bottom, 15, 30),
         },
       ]}>
-      <ComposePrompt onPressCompose={onPressReply} />
+      <PostThreadComposePrompt onPressCompose={onPressReply} />
     </Animated.View>
   )
 }
