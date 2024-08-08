@@ -159,6 +159,7 @@ export type LogEvents = {
       | 'AvatarButton'
       | 'StarterPackProfilesList'
       | 'FeedInterstitial'
+      | 'ProfileHeaderSuggestedFollows'
   }
   'profile:unfollow': {
     logContext:
@@ -173,6 +174,7 @@ export type LogEvents = {
       | 'AvatarButton'
       | 'StarterPackProfilesList'
       | 'FeedInterstitial'
+      | 'ProfileHeaderSuggestedFollows'
   }
   'chat:create': {
     logContext: 'ProfileHeader' | 'NewChatDialog' | 'SendViaChatDialog'
@@ -210,6 +212,14 @@ export type LogEvents = {
 
   'feed:interstitial:profileCard:press': {}
   'feed:interstitial:feedCard:press': {}
+
+  'profile:header:suggestedFollowsCard:press': {}
+
+  'debug:followingPrefs': {
+    followingShowRepliesFromPref: 'all' | 'following' | 'off'
+    followingRepliesMinLikePref: number
+  }
+  'debug:followingDisplayed': {}
 
   'test:all:always': {}
   'test:all:sometimes': {}

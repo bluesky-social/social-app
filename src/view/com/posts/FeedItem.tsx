@@ -345,11 +345,9 @@ let FeedItemInner = ({
             postHref={href}
             onOpenAuthor={onOpenAuthor}
           />
-          {!isThreadChild &&
-            showReplyTo &&
-            (parentAuthor || isParentBlocked) && (
-              <ReplyToLabel blocked={isParentBlocked} profile={parentAuthor} />
-            )}
+          {showReplyTo && (parentAuthor || isParentBlocked) && (
+            <ReplyToLabel blocked={isParentBlocked} profile={parentAuthor} />
+          )}
           <LabelsOnMyPost post={post} />
           <PostContent
             moderation={moderation}
@@ -358,7 +356,7 @@ let FeedItemInner = ({
             postAuthor={post.author}
             onOpenEmbed={onOpenEmbed}
           />
-          {__DEV__ && gate('videos') && (
+          {gate('video_debug') && (
             <VideoEmbed source="https://lumi.jazco.dev/watch/did:plc:q6gjnaw2blty4crticxkmujt/Qmc8w93UpTa2adJHg4ZhnDPrBs1EsbzrekzPcqF5SwusuZ/playlist.m3u8" />
           )}
           <PostCtrls
@@ -509,7 +507,6 @@ const styles = StyleSheet.create({
     paddingRight: 15,
     // @ts-ignore web only -prf
     cursor: 'pointer',
-    overflow: 'hidden',
   },
   replyLine: {
     width: 2,
@@ -547,6 +544,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexWrap: 'wrap',
     paddingBottom: 2,
+    overflow: 'hidden',
   },
   contentHiderChild: {
     marginTop: 6,

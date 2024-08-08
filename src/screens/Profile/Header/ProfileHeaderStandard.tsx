@@ -157,7 +157,7 @@ let ProfileHeaderStandard = ({
       hideBackButton={hideBackButton}
       isPlaceholderProfile={isPlaceholderProfile}>
       <View
-        style={[a.px_lg, a.pt_md, a.pb_sm]}
+        style={[a.px_lg, a.pt_md, a.pb_sm, a.overflow_hidden]}
         pointerEvents={isIOS ? 'auto' : 'box-none'}>
         <View
           style={[

@@ -19,9 +19,12 @@ export function Provider({children}: {children: React.ReactNode}) {
   }
 
   React.useEffect(() => {
-    return persisted.onUpdate(() => {
-      setState(persisted.get('hasCheckedForStarterPack'))
-    })
+    return persisted.onUpdate(
+      'hasCheckedForStarterPack',
+      nextHasCheckedForStarterPack => {
+        setState(nextHasCheckedForStarterPack)
+      },
+    )
   }, [])
 
   return (

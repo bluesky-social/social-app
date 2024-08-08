@@ -392,7 +392,7 @@ export const ComposePost = observer(function ComposePost({
       emitPostCreated()
     }
     setLangPrefs.savePostLanguageToHistory()
-    onPost?.()
+    onPost?.(postUri)
     onClose()
     Toast.show(
       replyTo

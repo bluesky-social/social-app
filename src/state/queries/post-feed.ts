@@ -77,11 +77,6 @@ export interface FeedPostSliceItem {
   uri: string
   post: AppBskyFeedDefs.PostView
   record: AppBskyFeedPost.Record
-  reason?:
-    | AppBskyFeedDefs.ReasonRepost
-    | ReasonFeedSource
-    | {[k: string]: unknown; $type: string}
-  feedContext: string | undefined
   moderation: ModerationDecision
   parentAuthor?: AppBskyActorDefs.ProfileViewBasic
   isParentBlocked?: boolean
@@ -90,9 +85,14 @@ export interface FeedPostSliceItem {
 export interface FeedPostSlice {
   _isFeedPostSlice: boolean
   _reactKey: string
-  rootUri: string
-  isThread: boolean
   items: FeedPostSliceItem[]
+  isIncompleteThread: boolean
+  isFallbackMarker: boolean
+  feedContext: string | undefined
+  reason?:
+    | AppBskyFeedDefs.ReasonRepost
+    | ReasonFeedSource
+    | {[k: string]: unknown; $type: string}
 }
 
 export interface FeedPageUnselected {
@@ -313,53 +313,22 @@ export function usePostFeedQuery(
                   const feedPostSlice: FeedPostSlice = {
                     _reactKey: slice._reactKey,
                     _isFeedPostSlice: true,
-                    rootUri: slice.uri,
-                    isThread:
-                      slice.items.length > 1 &&
-                      slice.items.every(
-                        item =>
-                          item.post.author.did ===
-                          slice.items[0].post.author.did,
-                      ),
-                    items: slice.items
-                      .map((item, i) => {
-                        if (
-                          AppBskyFeedPost.isRecord(item.post.record) &&
-                          AppBskyFeedPost.validateRecord(item.post.record)
-                            .success
-                        ) {
-                          const parent = item.reply?.parent
-                          let parentAuthor:
-                            | AppBskyActorDefs.ProfileViewBasic
-                            | undefined
-                          if (AppBskyFeedDefs.isPostView(parent)) {
-                            parentAuthor = parent.author
-                          }
-                          if (!parentAuthor) {
-                            parentAuthor =
-                              slice.items[i + 1]?.reply?.grandparentAuthor
-                          }
-                          const replyRef = item.reply
-                          const isParentBlocked = AppBskyFeedDefs.isBlockedPost(
-                            replyRef?.parent,
-                          )
-
-                          const feedPostSliceItem: FeedPostSliceItem = {
-                            _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
-                            uri: item.post.uri,
-                            post: item.post,
-                            record: item.post.record,
-                            reason: slice.reason,
-                            feedContext: slice.feedContext,
-                            moderation: moderations[i],
-                            parentAuthor,
-                            isParentBlocked,
-                          }
-                          return feedPostSliceItem
-                        }
-                        return undefined
-                      })
-                      .filter(n => !!n),
+                    isIncompleteThread: slice.isIncompleteThread,
+                    isFallbackMarker: slice.isFallbackMarker,
+                    feedContext: slice.feedContext,
+                    reason: slice.reason,
+                    items: slice.items.map((item, i) => {
+                      const feedPostSliceItem: FeedPostSliceItem = {
+                        _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
+                        uri: item.post.uri,
+                        post: item.post,
+                        record: item.record,
+                        moderation: moderations[i],
+                        parentAuthor: item.parentAuthor,
+                        isParentBlocked: item.isParentBlocked,
+                      }
+                      return feedPostSliceItem
+                    }),
                   }
                   return feedPostSlice
                 })
@@ -442,7 +411,6 @@ export async function pollLatest(page: FeedPage | undefined) {
   if (post) {
     const slices = page.tuner.tune([post], {
       dryRun: true,
-      maintainOrder: true,
     })
     if (slices[0]) {
       return true
