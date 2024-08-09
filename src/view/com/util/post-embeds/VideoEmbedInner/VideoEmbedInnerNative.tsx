@@ -7,6 +7,7 @@ import {useLingui} from '@lingui/react'
 import {useIsFocused} from '@react-navigation/native'
 
 import {HITSLOP_30} from '#/lib/constants'
+import {useAppState} from '#/lib/hooks/useAppState'
 import {useVideoPlayer} from '#/view/com/util/post-embeds/VideoPlayerContext'
 import {android, atoms as a, useTheme} from '#/alf'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
@@ -18,6 +19,18 @@ export function VideoEmbedInnerNative() {
   const player = useVideoPlayer()
   const ref = useRef<VideoView>(null)
   const isScreenFocused = useIsFocused()
+  const isAppFocused = useAppState()
+  const [prevFocused, setPrevFocused] = useState(isAppFocused)
+
+  // resume video when coming back from background
+  useEffect(() => {
+    if (isAppFocused !== prevFocused) {
+      setPrevFocused(isAppFocused)
+      if (isAppFocused === 'active') {
+        player.play()
+      }
+    }
+  }, [isAppFocused, prevFocused, player])
 
   // pause the video when the screen is not focused
   useEffect(() => {
