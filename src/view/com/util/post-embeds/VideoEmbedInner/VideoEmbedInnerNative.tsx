@@ -40,15 +40,16 @@ export function VideoEmbedInnerNative() {
         nativeControls={true}
         onEnterFullscreen={() => {
           PlatformInfo.setAudioMixWithOthers(false)
+          player.muted = false
         }}
         onExitFullscreen={() => {
           PlatformInfo.setAudioMixWithOthers(true)
+          player.muted = true
         }}
       />
       <Controls
         player={player}
         enterFullscreen={() => {
-          player.muted = false
           ref.current?.enterFullscreen()
         }}
       />
