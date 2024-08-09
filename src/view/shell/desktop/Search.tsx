@@ -186,10 +186,12 @@ export function DesktopSearch() {
       <View
         style={[{backgroundColor: pal.colors.backgroundLight}, styles.search]}>
         <View style={[styles.inputContainer]}>
-          <MagnifyingGlassIcon2
-            size={18}
-            style={[pal.textLight, styles.iconWrapper]}
-          />
+          <View style={styles.searchIconWrapper}>
+            <MagnifyingGlassIcon2
+              size={18}
+              style={[pal.textLight, styles.iconWrapper]}
+            />
+          </View>
           <TextInput
             testID="searchTextInput"
             placeholder={_(msg`Search`)}
@@ -266,7 +268,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 2,
     width: 300,
-    borderRadius: 20,
+    borderRadius: 30,
   },
   inputContainer: {
     flexDirection: 'row',
@@ -279,10 +281,13 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    fontSize: 18,
+    fontSize: 17,
     width: '100%',
     paddingTop: 7,
-    paddingBottom: 7,
+    paddingBottom: 9,
+  },
+  searchIconWrapper: {
+    marginTop: 2,
   },
   cancelBtn: {
     paddingRight: 4,
