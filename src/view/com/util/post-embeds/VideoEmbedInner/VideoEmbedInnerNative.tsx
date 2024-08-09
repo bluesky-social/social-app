@@ -21,7 +21,10 @@ export function VideoEmbedInnerNative() {
       />
       <Controls
         player={player}
-        enterFullscreen={() => ref.current?.enterFullscreen()}
+        enterFullscreen={() => {
+          player.muted = false
+          ref.current?.enterFullscreen()
+        }}
       />
     </View>
   )
