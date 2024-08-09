@@ -21,7 +21,7 @@ jobs:
         with:
           go-version: '1.22'
       - name: Dummy Static Files
-        run: touch bskyweb/static/js/blah.js && touch bskyweb/static/media/blah.txt
+        run: touch bskyweb/static/js/blah.js && touch bskyweb/static/css/blah.txt && touch bskyweb/static/media/blah.txt
       - name: Check
         run: cd bskyweb/ && make check
       - name: Build (binary)
@@ -38,6 +38,6 @@ jobs:
         with:
           go-version: '1.22'
       - name: Dummy Static Files
-        run: touch bskyweb/static/js/blah.js && touch bskyweb/static/media/blah.txt
+        run: touch bskyweb/static/js/blah.js && touch bskyweb/static/css/blah.txt && touch bskyweb/static/media/blah.txt
       - name: Lint
         run: cd bskyweb/ &&  make lint
