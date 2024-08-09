@@ -1,6 +1,5 @@
 import React from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -8,14 +7,13 @@ import {useNavigation} from '@react-navigation/native'
 import {emitSoftReset} from '#/state/events'
 import {ImagesLightbox, useLightboxControls} from '#/state/lightbox'
 import {useSetDrawerOpen} from '#/state/shell'
-import {BACK_HITSLOP} from 'lib/constants'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {makeProfileLink} from 'lib/routes/links'
 import {NavigationProp} from 'lib/routes/types'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {isNative} from 'platform/detection'
-import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
+import {BackButton} from '#/components/BackButton'
 import {StarterPack} from '#/components/icons/StarterPack'
 import {TextLink} from '../util/Link'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
@@ -89,24 +87,11 @@ export function ProfileSubpageHeader({
             },
             pal.border,
           ]}>
-          <Pressable
-            testID="headerDrawerBtn"
-            onPress={canGoBack ? onPressBack : onPressMenu}
-            hitSlop={BACK_HITSLOP}
-            style={canGoBack ? styles.backBtn : styles.backBtnWide}
-            accessibilityRole="button"
-            accessibilityLabel={canGoBack ? 'Back' : 'Menu'}
-            accessibilityHint="">
-            {canGoBack ? (
-              <FontAwesomeIcon
-                size={18}
-                icon="angle-left"
-                style={[styles.backIcon, pal.text]}
-              />
-            ) : (
-              <Menu size="lg" style={[{marginTop: 4}, pal.textLight]} />
-            )}
-          </Pressable>
+          <BackButton
+            canGoBack={canGoBack}
+            onPressBack={onPressBack}
+            onPressMenu={onPressMenu}
+          />
           <View style={{flex: 1}} />
           {children}
         </View>
@@ -186,18 +171,3 @@ export function ProfileSubpageHeader({
     </CenteredView>
   )
 }
-
-const styles = StyleSheet.create({
-  backBtn: {
-    width: 20,
-    height: 30,
-  },
-  backBtnWide: {
-    width: 20,
-    height: 30,
-    marginRight: 4,
-  },
-  backIcon: {
-    marginTop: 6,
-  },
-})
