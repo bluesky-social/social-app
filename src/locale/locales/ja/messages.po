@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-08-08 11:46+0900\n"
+"PO-Revision-Date: 2024-08-09 14:58+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -432,6 +432,10 @@ msgstr "ダイレクトメッセージへのアクセスを許可"
 #: src/screens/Messages/Settings.tsx:65
 msgid "Allow new messages from"
 msgstr "新しいメッセージを誰から受け取れるか："
+
+#: src/view/screens/AppPasswords.tsx:271
+msgid "Allows access to direct messages"
+msgstr "ダイレクトメッセージへのアクセスを許可"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:178
 #: src/view/com/modals/ChangePassword.tsx:171
@@ -1697,6 +1701,10 @@ msgstr "新しいフィードを探す"
 msgid "Discover New Feeds"
 msgstr "新しいフィードを探す"
 
+#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:108
+msgid "Dismiss"
+msgstr "消す"
+
 #: src/components/ProgressGuide/List.tsx:40
 msgid "Dismiss getting started guide"
 msgstr "入門ガイドを消す"
@@ -2275,7 +2283,7 @@ msgstr "{0}によるフィード"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:55
 msgid "Feed toggle"
-msgstr "フィードの切替"
+msgstr "フィードの切り替え"
 
 #: src/view/shell/desktop/RightNav.tsx:70
 #: src/view/shell/Drawer.tsx:332
@@ -4219,7 +4227,7 @@ msgstr "カメラへのアクセスが拒否されました。システムの設
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:55
 msgid "Person toggle"
-msgstr "ユーザーを切替"
+msgstr "ユーザーを切り替え"
 
 #: src/screens/Onboarding/index.tsx:28
 #: src/screens/Onboarding/state.ts:94
@@ -5595,6 +5603,10 @@ msgstr "あなたのスターターパックでサインアップ"
 msgid "Signup without a starter pack"
 msgstr "スターターパックを使わずにサインアップ"
 
+#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:102
+msgid "Similar accounts"
+msgstr "類似のアカウント"
+
 #: src/screens/Onboarding/StepInterests/index.tsx:264
 #: src/screens/StarterPack/Wizard/index.tsx:192
 msgid "Skip"
@@ -5815,6 +5827,14 @@ msgstr "トール"
 #: src/components/ProgressGuide/Toast.tsx:150
 msgid "Tap to dismiss"
 msgstr "タップして消す"
+
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:127
+msgid "Tap to enter full screen"
+msgstr "タップしてフルスクリーンに"
+
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:144
+msgid "Tap to toggle sound"
+msgstr "タップして音の切り替え"
 
 #: src/view/com/util/images/AutoSizedImage.tsx:70
 msgid "Tap to view fully"
@@ -6266,7 +6286,7 @@ msgstr "この報告を誰に送りたいですか？"
 
 #: src/view/com/util/forms/DropdownButton.tsx:255
 msgid "Toggle dropdown"
-msgstr "ドロップダウンをトグル"
+msgstr "ドロップダウンを切り替え"
 
 #: src/screens/Moderation/index.tsx:336
 msgid "Toggle to enable or disable adult content"
@@ -6374,10 +6394,6 @@ msgctxt "action"
 msgid "Unfollow"
 msgstr "フォローを解除"
 
-#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:247
-msgid "Unfollow"
-msgstr "フォローを解除"
-
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:237
 msgid "Unfollow {0}"
 msgstr "{0}のフォローを解除"
@@ -6421,6 +6437,10 @@ msgstr "スレッドのミュートを解除"
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.web.tsx:201
 msgid "Unmute video"
 msgstr "ビデオのミュートを解除"
+
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:143
+msgid "Unmuted"
+msgstr "ミュート解除中"
 
 #: src/view/screens/ProfileFeed.tsx:292
 #: src/view/screens/ProfileList.tsx:617
@@ -6648,6 +6668,10 @@ msgstr "メールアドレスを確認"
 #: src/view/screens/Settings/index.tsx:937
 msgid "Version {appVersion} {bundleInfo}"
 msgstr "バージョン {appVersion} {bundleInfo}"
+
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:126
+msgid "Video"
+msgstr "ビデオ"
 
 #: src/screens/Onboarding/index.tsx:39
 #: src/screens/Onboarding/state.ts:88
