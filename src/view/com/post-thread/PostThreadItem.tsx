@@ -215,15 +215,17 @@ let PostThreadItemLoaded = ({
   const isPostHiddenByThreadgate = threadgateRecord?.hiddenReplies?.includes(
     post.uri,
   )
-  const additionalPostAlerts: AppModerationCause[] = isPostHiddenByThreadgate
-    ? [
-        {
-          type: 'reply-hidden',
-          source: {type: 'user'},
-          priority: 6,
-        },
-      ]
-    : []
+  // TODO memoize
+  const additionalPostAlerts: AppModerationCause[] =
+    threadgateRecord && isPostHiddenByThreadgate
+      ? [
+          {
+            type: 'reply-hidden',
+            source: {type: 'user', did: new AtUri(threadgateRecord.post).host},
+            priority: 6,
+          },
+        ]
+      : []
 
   const translatorUrl = getTranslatorLink(
     record?.text || '',

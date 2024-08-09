@@ -8,6 +8,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useLabelDefinitions} from '#/state/preferences'
+import {useSession} from '#/state/session'
 import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/components/icons/CircleBanSign'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Props as SVGIconProps} from '#/components/icons/common'
@@ -30,6 +31,7 @@ export interface ModerationCauseDescription {
 export function useModerationCauseDescription(
   cause: ModerationCause | AppModerationCause | undefined,
 ): ModerationCauseDescription {
+  const {currentAccount} = useSession()
   const {_, i18n} = useLingui()
   const {labelDefs, labelers} = useLabelDefinitions()
   const globalLabelStrings = useGlobalLabelStrings()
@@ -113,10 +115,15 @@ export function useModerationCauseDescription(
       }
     }
     if (cause.type === 'reply-hidden') {
+      const isYou = currentAccount?.did === cause.source.did
       return {
         icon: EyeSlash,
-        name: _(msg`Post Hidden by Thread Author`),
-        description: _(msg`The author of this thread has hidden this post.`),
+        name: isYou
+          ? _(msg`Post hidden by you`)
+          : _(msg`Post hidden by thread author`),
+        description: isYou
+          ? _(msg`You hid this post.`)
+          : _(msg`The author of this thread has hidden this post.`),
       }
     }
     if (cause.type === 'label') {
@@ -158,5 +165,13 @@ export function useModerationCauseDescription(
       name: '',
       description: ``,
     }
-  }, [labelDefs, labelers, globalLabelStrings, cause, _, i18n.locale])
+  }, [
+    labelDefs,
+    labelers,
+    globalLabelStrings,
+    cause,
+    _,
+    i18n.locale,
+    currentAccount?.did,
+  ])
 }

@@ -17,7 +17,7 @@ export type AppModerationCause =
   | ModerationCause
   | {
       type: 'reply-hidden'
-      source: {type: 'user'}
+      source: {type: 'user'; did: string}
       priority: 6
       downgraded?: boolean
     }
