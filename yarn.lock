@@ -12215,6 +12215,11 @@ expo-navigation-bar@~3.0.4:
     "@react-native/normalize-colors" "~0.74.83"
     debug "^4.3.2"
 
+expo-network@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/expo-network/-/expo-network-6.0.1.tgz#0e1f8e2476d8094ae7eada651a58219eda2ec4e8"
+  integrity sha512-WXXvkt1H75ojHVa263Jq+qjIyMzCfaoRzHKzOBMuSyDDcma9WpvKJpR1YpEQZH/zDhSfkKvh7Q3wRGOJr1J+dQ==
+
 expo-notifications@~0.28.7:
   version "0.28.7"
   resolved "https://registry.yarnpkg.com/expo-notifications/-/expo-notifications-0.28.7.tgz#14826c10d126b1dd16d1604add2a4766aecf7591"

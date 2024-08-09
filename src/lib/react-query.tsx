@@ -2,7 +2,7 @@ import React, {useRef, useState} from 'react'
 import {AppState, AppStateStatus} from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {createAsyncStoragePersister} from '@tanstack/query-async-storage-persister'
-import {focusManager, QueryClient} from '@tanstack/react-query'
+import {focusManager, onlineManager, QueryClient} from '@tanstack/react-query'
 import {
   PersistQueryClientProvider,
   PersistQueryClientProviderProps,
@@ -13,6 +13,47 @@ import {isNative} from '#/platform/detection'
 // any query keys in this array will be persisted to AsyncStorage
 export const labelersDetailedInfoQueryKeyRoot = 'labelers-detailed-info'
 const STORED_CACHE_QUERY_KEY_ROOTS = [labelersDetailedInfoQueryKeyRoot]
+
+async function checkIsOnline(): Promise<boolean> {
+  try {
+    const controller = new AbortController()
+    setTimeout(() => {
+      controller.abort()
+    }, 15e3)
+    const res = await fetch(
+      'https://plc.directory/did:plc:z72i7hdynmk6r22z27h6tvur',
+      {
+        cache: 'no-store',
+        signal: controller.signal,
+      },
+    )
+    const json = await res.json()
+    if (json.id) {
+      return true
+    } else {
+      return false
+    }
+  } catch (e) {
+    return false
+  }
+}
+
+let checkPromise: Promise<void> | undefined
+function checkIsOnlineIfNeeded() {
+  if (checkPromise) {
+    return
+  }
+  checkPromise = checkIsOnline().then(isOnline => {
+    checkPromise = undefined
+    onlineManager.setOnline(isOnline)
+  })
+}
+
+setInterval(() => {
+  if (AppState.currentState === 'active') {
+    checkIsOnlineIfNeeded()
+  }
+}, 5000)
 
 focusManager.setEventListener(onFocus => {
   if (isNative) {
