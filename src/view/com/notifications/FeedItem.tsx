@@ -25,7 +25,6 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {useGate} from '#/lib/statsig/statsig'
 import {parseTenorGif} from '#/lib/strings/embed-player'
 import {logger} from '#/logger'
 import {FeedNotification} from '#/state/queries/notifications/feed'
@@ -87,7 +86,6 @@ let FeedItem = ({
   const pal = usePalette('default')
   const {_} = useLingui()
   const t = useTheme()
-  const gate = useGate()
   const [isAuthorsExpanded, setAuthorsExpanded] = useState<boolean>(false)
   const itemHref = useMemo(() => {
     if (item.type === 'post-like' || item.type === 'repost') {
@@ -207,7 +205,7 @@ let FeedItem = ({
       }
     }
 
-    if (isFollowBack && gate('ungroup_follow_backs')) {
+    if (isFollowBack) {
       action = _(msg`followed you back`)
     } else {
       action = _(msg`followed you`)
@@ -255,6 +253,7 @@ let FeedItem = ({
               borderColor: pal.colors.unreadNotifBorder,
             },
         {borderTopWidth: hideTopBorder ? 0 : StyleSheet.hairlineWidth},
+        a.overflow_hidden,
       ]}
       href={itemHref}
       noFeedback
@@ -547,7 +546,7 @@ function ExpandedAuthorsList({
   }, [heightInterp, visible])
 
   return (
-    <Animated.View style={[heightStyle, styles.overflowHidden]}>
+    <Animated.View style={[a.overflow_hidden, heightStyle]}>
       {visible &&
         authors.map(author => (
           <NewLink
@@ -643,9 +642,6 @@ function AdditionalPostText({post}: {post?: AppBskyFeedDefs.PostView}) {
 }
 
 const styles = StyleSheet.create({
-  overflowHidden: {
-    overflow: 'hidden',
-  },
   pointer: isWeb
     ? {
         // @ts-ignore web only

@@ -92,14 +92,16 @@ function getRank(seenPost: SeenPost): string {
     tier = 'a'
   } else if (seenPost.feedContext?.startsWith('cluster')) {
     tier = 'b'
-  } else if (seenPost.feedContext?.startsWith('ntpc')) {
+  } else if (seenPost.feedContext === 'popcluster') {
     tier = 'c'
-  } else if (seenPost.feedContext?.startsWith('t-')) {
+  } else if (seenPost.feedContext?.startsWith('ntpc')) {
     tier = 'd'
-  } else if (seenPost.feedContext === 'nettop') {
+  } else if (seenPost.feedContext?.startsWith('t-')) {
     tier = 'e'
-  } else {
+  } else if (seenPost.feedContext === 'nettop') {
     tier = 'f'
+  } else {
+    tier = 'g'
   }
   let score = Math.round(
     Math.log(
@@ -131,16 +133,26 @@ function useExperimentalSuggestedUsersQuery() {
   const {currentAccount} = useSession()
   const userActionSnapshot = userActionHistory.useActionHistorySnapshot()
   const dids = React.useMemo(() => {
-    const {likes, follows, seen} = userActionSnapshot
+    const {likes, follows, followSuggestions, seen} = userActionSnapshot
     const likeDids = likes
       .map(l => new AtUri(l))
       .map(uri => uri.host)
       .filter(did => !follows.includes(did))
+    let suggestedDids: string[] = []
+    if (followSuggestions.length > 0) {
+      suggestedDids = [
+        // It's ok if these will pick the same item (weighed by its frequency)
+        followSuggestions[Math.floor(Math.random() * followSuggestions.length)],
+        followSuggestions[Math.floor(Math.random() * followSuggestions.length)],
+        followSuggestions[Math.floor(Math.random() * followSuggestions.length)],
+        followSuggestions[Math.floor(Math.random() * followSuggestions.length)],
+      ]
+    }
     const seenDids = seen
       .sort(sortSeenPosts)
       .map(l => new AtUri(l.uri))
       .map(uri => uri.host)
-    return [...new Set([...likeDids, ...seenDids])].filter(
+    return [...new Set([...suggestedDids, ...likeDids, ...seenDids])].filter(
       did => did !== currentAccount?.did,
     )
   }, [userActionSnapshot, currentAccount])

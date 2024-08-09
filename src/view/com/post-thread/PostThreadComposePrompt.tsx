@@ -10,7 +10,11 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
 
-export function ComposePrompt({onPressCompose}: {onPressCompose: () => void}) {
+export function PostThreadComposePrompt({
+  onPressCompose,
+}: {
+  onPressCompose: () => void
+}) {
   const {currentAccount} = useSession()
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
   const pal = usePalette('default')
