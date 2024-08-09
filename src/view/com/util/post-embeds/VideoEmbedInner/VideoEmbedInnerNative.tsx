@@ -44,6 +44,10 @@ export function VideoEmbedInnerNative() {
     }
   }, [isScreenFocused, player])
 
+  const enterFullscreen = useCallback(() => {
+    ref.current?.enterFullscreen()
+  }, [])
+
   return (
     <View style={[a.flex_1, a.relative]}>
       <VideoView
@@ -61,12 +65,7 @@ export function VideoEmbedInnerNative() {
           if (!player.playing) player.play()
         }}
       />
-      <Controls
-        player={player}
-        enterFullscreen={() => {
-          ref.current?.enterFullscreen()
-        }}
-      />
+      <Controls player={player} enterFullscreen={enterFullscreen} />
     </View>
   )
 }
@@ -110,6 +109,25 @@ function Controls({
     }
   }, [player])
 
+  const onPressFullscreen = useCallback(() => {
+    switch (player.status) {
+      case 'idle':
+      case 'loading':
+      case 'readyToPlay': {
+        if (!player.playing) player.play()
+        enterFullscreen()
+        break
+      }
+      case 'error': {
+        // not exactly sure what to do here
+        // maybe replay the video?
+        player.replay()
+        player.play()
+        break
+      }
+    }
+  }, [player, enterFullscreen])
+
   const toggleSound = useCallback(() => {
     const newValue = !player.muted
     // We want to set this to the _inverse_ of the new value, because we actually want for the audio to be mixed when
@@ -147,7 +165,7 @@ function Controls({
         </Animated.View>
       )}
       <Pressable
-        onPress={enterFullscreen}
+        onPress={onPressFullscreen}
         style={a.flex_1}
         accessibilityLabel={_(msg`Video`)}
         accessibilityHint={_(msg`Tap to enter full screen`)}
