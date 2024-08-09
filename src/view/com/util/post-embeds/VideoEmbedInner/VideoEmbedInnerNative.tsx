@@ -1,18 +1,37 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import Animated, {FadeIn} from 'react-native-reanimated'
 import {VideoPlayer, VideoView} from 'expo-video'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useIsFocused} from '@react-navigation/native'
 
-import {useVideoPlayer} from 'view/com/util/post-embeds/VideoPlayerContext'
-import {android, atoms as a} from '#/alf'
+import {HITSLOP_30} from '#/lib/constants'
+import {useVideoPlayer} from '#/view/com/util/post-embeds/VideoPlayerContext'
+import {android, atoms as a, useTheme} from '#/alf'
+import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
+import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
 import {Text} from '#/components/Typography'
 
 export function VideoEmbedInnerNative() {
   const player = useVideoPlayer()
   const ref = useRef<VideoView>(null)
+  const isScreenFocused = useIsFocused()
+
+  // pause the video when the screen is not focused
+  useEffect(() => {
+    if (!isScreenFocused) {
+      let wasPlaying = player.playing
+      player.pause()
+
+      return () => {
+        if (wasPlaying) player.play()
+      }
+    }
+  }, [isScreenFocused, player])
 
   return (
-    <View style={[a.flex_1, a.relative]} collapsable={false}>
+    <View style={[a.flex_1, a.relative]}>
       <VideoView
         ref={ref}
         player={player}
@@ -37,6 +56,9 @@ function Controls({
   player: VideoPlayer
   enterFullscreen: () => void
 }) {
+  const {_} = useLingui()
+  const t = useTheme()
+  const [isMuted, setIsMuted] = useState(player.muted)
   const [duration, setDuration] = useState(() => Math.floor(player.duration))
   const [currentTime, setCurrentTime] = useState(() =>
     Math.floor(player.currentTime),
@@ -55,9 +77,19 @@ function Controls({
       // 1000 gets out of sync with the video time
     }, 250)
 
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    const sub = player.addListener('volumeChange', ({isMuted}) => {
+      setIsMuted(isMuted)
+    })
+
     return () => {
       clearInterval(interval)
+      sub.remove()
     }
+  }, [player])
+
+  const toggleSound = useCallback(() => {
+    player.muted = !player.muted
   }, [player])
 
   return (
@@ -74,12 +106,13 @@ function Controls({
               position: 'absolute',
               left: 5,
               bottom: 5,
+              minHeight: 20,
+              justifyContent: 'center',
             },
-          ]}
-          pointerEvents="none">
+          ]}>
           <Text
             style={[
-              {color: 'white', fontSize: 12},
+              {color: t.palette.white, fontSize: 12},
               a.font_bold,
               android({lineHeight: 1.25}),
             ]}>
@@ -90,10 +123,35 @@ function Controls({
       <Pressable
         onPress={enterFullscreen}
         style={a.flex_1}
-        accessibilityLabel="Video"
-        accessibilityHint="Tap to enter full screen"
+        accessibilityLabel={_(msg`Video`)}
+        accessibilityHint={_(msg`Tap to enter full screen`)}
         accessibilityRole="button"
       />
+      <Pressable
+        onPress={toggleSound}
+        style={{
+          backgroundColor: 'rgba(0, 0, 0, 0.75)',
+          borderRadius: 6,
+          paddingHorizontal: 6,
+          paddingVertical: 3,
+          position: 'absolute',
+          bottom: 5,
+          right: 5,
+          minHeight: 20,
+          justifyContent: 'center',
+        }}
+        accessibilityLabel={isMuted ? _(msg`Muted`) : _(msg`Unmuted`)}
+        accessibilityHint={_(msg`Tap to toggle sound`)}
+        accessibilityRole="button"
+        hitSlop={HITSLOP_30}>
+        <Animated.View entering={FadeIn.duration(100)}>
+          {isMuted ? (
+            <MuteIcon width={14} fill={t.palette.white} />
+          ) : (
+            <UnmuteIcon width={14} fill={t.palette.white} />
+          )}
+        </Animated.View>
+      </Pressable>
     </View>
   )
 }

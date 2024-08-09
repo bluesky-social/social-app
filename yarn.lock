@@ -12302,10 +12302,10 @@ expo-updates@~0.25.14:
     ignore "^5.3.1"
     resolve-from "^5.0.0"
 
-expo-video@^1.1.10:
-  version "1.1.10"
-  resolved "https://registry.yarnpkg.com/expo-video/-/expo-video-1.1.10.tgz#b47c0d40c21f401236639424bd25d70c09316b7b"
-  integrity sha512-k9ecpgtwAK8Ut8enm8Jv398XkB/uVOyLLqk80M/d8pH9EN5CVrBQ7iEzWlR3quvVUFM7Uf5wRukJ4hk3mZ8NCg==
+expo-video@^1.2.4:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/expo-video/-/expo-video-1.2.4.tgz#787342aded4295a1b6864f59227d178b93e1bb53"
+  integrity sha512-pBK9mt7vYAbuPQjCSQxHQ7xrNjbmRheJep7JIStEg57O183/JRfP2blKuXniiSt1HBdZYPdoQnGRa3jGMXB9pg==
 
 expo-web-browser@~13.0.3:
   version "13.0.3"
