@@ -13,20 +13,29 @@ public class ExpoPlatformInfoModule: Module {
       try? AVAudioSession.sharedInstance().setCategory(audioCategory)
     }
 
-    Function("setAudioMixWithOthers") { (mixWithOthers: Bool) in
-      var options: AVAudioSession.CategoryOptions
+    Function("setAudioActive") { (active: Bool) in
+      var categoryOptions: AVAudioSession.CategoryOptions
       let currentCategory = AVAudioSession.sharedInstance().category
-      if mixWithOthers {
-        options = [.mixWithOthers]
+
+      if active {
+        categoryOptions = [.mixWithOthers]
+        try? AVAudioSession.sharedInstance().setActive(true)
       } else {
-        options = [.duckOthers]
+        categoryOptions = [.duckOthers]
+        try? AVAudioSession
+          .sharedInstance()
+          .setActive(
+            false,
+            options: [.notifyOthersOnDeactivation]
+          )
       }
+
       try? AVAudioSession
         .sharedInstance()
         .setCategory(
           currentCategory,
           mode: .default,
-          options: options
+          options: categoryOptions
         )
     }
   }

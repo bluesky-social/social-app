@@ -6,11 +6,12 @@ export function getIsReducedMotionEnabled(): boolean {
 }
 
 /**
- * Set whether the app's audio should mix with other apps' audio.
+ * Set whether the app's audio should mix with other apps' audio. Will also resume background music playback when `false`
+ * if it was previously playing.
  * @param mixWithOthers
  */
-export function setAudioMixWithOthers(mixWithOthers: boolean): void {
-  throw new NotImplementedError({mixWithOthers})
+export function setAudioActive(active: boolean): void {
+  throw new NotImplementedError({active})
 }
 
 /**

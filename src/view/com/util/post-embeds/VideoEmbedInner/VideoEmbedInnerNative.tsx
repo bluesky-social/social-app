@@ -60,12 +60,12 @@ export function VideoEmbedInnerNative() {
         nativeControls={true}
         onEnterFullscreen={() => {
           PlatformInfo.setAudioCategory(AudioCategory.Playback)
-          PlatformInfo.setAudioMixWithOthers(false)
+          PlatformInfo.setAudioActive(false)
           player.muted = false
         }}
         onExitFullscreen={() => {
           PlatformInfo.setAudioCategory(AudioCategory.Ambient)
-          PlatformInfo.setAudioMixWithOthers(true)
+          PlatformInfo.setAudioActive(true)
           player.muted = true
           if (!player.playing) player.play()
         }}
@@ -139,7 +139,7 @@ function Controls({
     const category = muted ? AudioCategory.Ambient : AudioCategory.Playback
 
     PlatformInfo.setAudioCategory(category)
-    PlatformInfo.setAudioMixWithOthers(mix)
+    PlatformInfo.setAudioActive(mix)
     player.muted = muted
   }, [player])
 

@@ -8,8 +8,8 @@ export function getIsReducedMotionEnabled(): boolean {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches
 }
 
-export function setAudioMixWithOthers(mixWithOthers: boolean): void {
-  throw new NotImplementedError({mixWithOthers})
+export function setAudioActive(active: boolean): void {
+  throw new NotImplementedError({active})
 }
 
 export function setAudioCategory(audioCategory: AudioCategory): void {
