@@ -655,12 +655,20 @@ function ExpandedPostDetails({
   }, [openLink, translatorUrl])
 
   return (
-    <View style={[a.flex_row, a.align_center, a.flex_wrap, s.mt2, s.mb10]}>
+    <View
+      style={[
+        a.flex_row,
+        a.align_center,
+        a.flex_wrap,
+        a.gap_sm,
+        s.mt2,
+        s.mb10,
+      ]}>
       <Text style={[a.text_sm, pal.textLight]}>{niceDate(post.indexedAt)}</Text>
       <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
       {needsTranslation && (
         <>
-          <Text style={[a.text_sm, pal.textLight]}> &middot; </Text>
+          <Text style={[a.text_sm, pal.textLight]}>&middot;</Text>
 
           <Text
             style={[a.text_sm, pal.link]}
