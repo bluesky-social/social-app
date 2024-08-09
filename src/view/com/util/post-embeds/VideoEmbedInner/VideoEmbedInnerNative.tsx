@@ -2,14 +2,28 @@ import React, {useEffect, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import Animated, {FadeIn} from 'react-native-reanimated'
 import {VideoPlayer, VideoView} from 'expo-video'
+import {useIsFocused} from '@react-navigation/native'
 
-import {useVideoPlayer} from 'view/com/util/post-embeds/VideoPlayerContext'
+import {useVideoPlayer} from '#/view/com/util/post-embeds/VideoPlayerContext'
 import {android, atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
 
 export function VideoEmbedInnerNative() {
   const player = useVideoPlayer()
   const ref = useRef<VideoView>(null)
+  const isScreenFocused = useIsFocused()
+
+  // pause the video when the screen is not focused
+  useEffect(() => {
+    if (!isScreenFocused) {
+      let wasPlaying = player.playing
+      player.pause()
+
+      return () => {
+        if (wasPlaying) player.play()
+      }
+    }
+  }, [isScreenFocused, player])
 
   return (
     <View style={[a.flex_1, a.relative]} collapsable={false}>
