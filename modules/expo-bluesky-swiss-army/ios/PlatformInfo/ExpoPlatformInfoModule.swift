@@ -7,7 +7,7 @@ public class ExpoPlatformInfoModule: Module {
     Function("getIsReducedMotionEnabled") {
       return UIAccessibility.isReduceMotionEnabled
     }
-    
+
     Function("setAudioMixWithOthers") { (mixWithOthers: Bool) in
       var options: AVAudioSession.CategoryOptions
       if mixWithOthers {
@@ -15,7 +15,7 @@ public class ExpoPlatformInfoModule: Module {
       } else {
         options = []
       }
-      try? AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback, mode: .default, options:  options)
+      try? AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback, mode: .default, options: options)
     }
   }
 }
