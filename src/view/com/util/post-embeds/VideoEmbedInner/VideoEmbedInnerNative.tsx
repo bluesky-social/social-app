@@ -7,6 +7,7 @@ import {useLingui} from '@lingui/react'
 import {useIsFocused} from '@react-navigation/native'
 
 import {HITSLOP_30} from '#/lib/constants'
+import {useAppState} from '#/lib/hooks/useAppState'
 import {useVideoPlayer} from '#/view/com/util/post-embeds/VideoPlayerContext'
 import {android, atoms as a, useTheme} from '#/alf'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
@@ -21,6 +22,18 @@ export function VideoEmbedInnerNative() {
   const player = useVideoPlayer()
   const ref = useRef<VideoView>(null)
   const isScreenFocused = useIsFocused()
+  const isAppFocused = useAppState()
+  const prevFocusedRef = useRef(isAppFocused)
+
+  // resume video when coming back from background
+  useEffect(() => {
+    if (isAppFocused !== prevFocusedRef.current) {
+      prevFocusedRef.current = isAppFocused
+      if (isAppFocused === 'active') {
+        player.play()
+      }
+    }
+  }, [isAppFocused, player])
 
   // pause the video when the screen is not focused
   useEffect(() => {
@@ -33,6 +46,10 @@ export function VideoEmbedInnerNative() {
       }
     }
   }, [isScreenFocused, player])
+
+  const enterFullscreen = useCallback(() => {
+    ref.current?.enterFullscreen()
+  }, [])
 
   return (
     <View style={[a.flex_1, a.relative]}>
@@ -50,14 +67,10 @@ export function VideoEmbedInnerNative() {
           PlatformInfo.setAudioCategory(AudioCategory.Ambient)
           PlatformInfo.setAudioMixWithOthers(true)
           player.muted = true
+          if (!player.playing) player.play()
         }}
       />
-      <Controls
-        player={player}
-        enterFullscreen={() => {
-          ref.current?.enterFullscreen()
-        }}
-      />
+      <Controls player={player} enterFullscreen={enterFullscreen} />
     </View>
   )
 }
@@ -101,6 +114,22 @@ function Controls({
       sub.remove()
     }
   }, [player])
+
+  const onPressFullscreen = useCallback(() => {
+    switch (player.status) {
+      case 'idle':
+      case 'loading':
+      case 'readyToPlay': {
+        if (!player.playing) player.play()
+        enterFullscreen()
+        break
+      }
+      case 'error': {
+        player.replay()
+        break
+      }
+    }
+  }, [player, enterFullscreen])
 
   const toggleMuted = useCallback(() => {
     const muted = !player.muted
@@ -150,7 +179,7 @@ function Controls({
         </Animated.View>
       )}
       <Pressable
-        onPress={enterFullscreen}
+        onPress={onPressFullscreen}
         style={a.flex_1}
         accessibilityLabel={_(msg`Video`)}
         accessibilityHint={_(msg`Tap to enter full screen`)}
