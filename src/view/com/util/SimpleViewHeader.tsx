@@ -1,24 +1,15 @@
 import React from 'react'
-import {
-  StyleProp,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 
-import {isWeb} from '#/platform/detection'
+import {isAndroid, isWeb} from '#/platform/detection'
 import {useSetDrawerOpen} from '#/state/shell'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {NavigationProp} from 'lib/routes/types'
-import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
+import {BackButton} from '#/components/BackButton'
 import {CenteredView} from './Views'
-
-const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 
 export function SimpleViewHeader({
   showBackButton = true,
@@ -33,6 +24,7 @@ export function SimpleViewHeader({
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
   const {isMobile} = useWebMediaQueries()
+
   const canGoBack = navigation.canGoBack()
 
   const onPressBack = React.useCallback(() => {
@@ -58,26 +50,14 @@ export function SimpleViewHeader({
         pal.view,
         style,
       ]}>
-      {showBackButton ? (
-        <TouchableOpacity
-          testID="viewHeaderDrawerBtn"
-          onPress={canGoBack ? onPressBack : onPressMenu}
-          hitSlop={BACK_HITSLOP}
-          style={canGoBack ? styles.backBtn : styles.backBtnWide}
-          accessibilityRole="button"
-          accessibilityLabel={canGoBack ? 'Back' : 'Menu'}
-          accessibilityHint="">
-          {canGoBack ? (
-            <FontAwesomeIcon
-              size={18}
-              icon="angle-left"
-              style={[styles.backIcon, pal.text]}
-            />
-          ) : (
-            <Menu size="lg" style={[{marginTop: 4}, pal.textLight]} />
-          )}
-        </TouchableOpacity>
-      ) : null}
+      {showBackButton && (
+        <BackButton
+          canGoBack={canGoBack}
+          onPressBack={onPressBack}
+          onPressMenu={onPressMenu}
+          style={{native: {marginRight: isAndroid ? 12 : 2}}}
+        />
+      )}
       {children}
     </Container>
   )

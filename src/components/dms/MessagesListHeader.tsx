@@ -1,20 +1,18 @@
 import React, {useCallback} from 'react'
-import {TouchableOpacity, View} from 'react-native'
+import {View} from 'react-native'
 import {
   AppBskyActorDefs,
   ModerationCause,
   ModerationDecision,
 } from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {BACK_HITSLOP} from 'lib/constants'
 import {makeProfileLink} from 'lib/routes/links'
 import {NavigationProp} from 'lib/routes/types'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {isWeb} from 'platform/detection'
+import {isAndroid, isWeb} from 'platform/detection'
 import {useProfileShadow} from 'state/cache/profile-shadow'
 import {isConvoActive, useConvo} from 'state/messages/convo'
 import {PreviewableUserAvatar} from 'view/com/util/UserAvatar'
@@ -24,6 +22,7 @@ import {Bell2Off_Filled_Corner0_Rounded as BellStroke} from '#/components/icons/
 import {Link} from '#/components/Link'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {Text} from '#/components/Typography'
+import {BackButton} from '../BackButton'
 
 const PFP_SIZE = isWeb ? 40 : 34
 
@@ -40,7 +39,7 @@ export let MessagesListHeader = ({
   }
 }): React.ReactNode => {
   const t = useTheme()
-  const {_} = useLingui()
+
   const {gtTablet} = useBreakpoints()
   const navigation = useNavigation<NavigationProp>()
 
@@ -66,23 +65,13 @@ export let MessagesListHeader = ({
         a.py_sm,
       ]}>
       {!gtTablet && (
-        <TouchableOpacity
-          testID="conversationHeaderBackBtn"
-          onPress={onPressBack}
-          hitSlop={BACK_HITSLOP}
-          style={{width: 30, height: 30, marginTop: isWeb ? 6 : 4}}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Back`)}
-          accessibilityHint="">
-          <FontAwesomeIcon
-            size={18}
-            icon="angle-left"
-            style={{
-              marginTop: 6,
-            }}
-            color={t.atoms.text.color}
-          />
-        </TouchableOpacity>
+        <BackButton
+          onPressBack={onPressBack}
+          style={{
+            web: {marginTop: 6},
+            native: {marginTop: 4, marginRight: isAndroid ? 8 : 0},
+          }}
+        />
       )}
 
       {profile && moderation && blockInfo ? (
@@ -99,6 +88,7 @@ export let MessagesListHeader = ({
                 {width: PFP_SIZE, height: PFP_SIZE},
                 a.rounded_full,
                 t.atoms.bg_contrast_25,
+                a.mt_2xs,
               ]}
             />
             <View style={a.gap_xs}>

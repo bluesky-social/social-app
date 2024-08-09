@@ -1,9 +1,6 @@
 import React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import Animated from 'react-native-reanimated'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
 import {useSetDrawerOpen} from '#/state/shell'
@@ -13,11 +10,9 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {NavigationProp} from 'lib/routes/types'
 import {useTheme} from '#/alf'
-import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
+import {BackButton, RightSpacer} from '#/components/BackButton'
 import {Text} from './text/Text'
 import {CenteredView} from './Views'
-
-const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 
 export function ViewHeader({
   title,
@@ -39,11 +34,11 @@ export function ViewHeader({
   renderButton?: () => JSX.Element
 }) {
   const pal = usePalette('default')
-  const {_} = useLingui()
+
   const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
-  const {isDesktop, isTablet} = useWebMediaQueries()
+  const {isDesktop} = useWebMediaQueries()
   const t = useTheme()
 
   const onPressBack = React.useCallback(() => {
@@ -80,28 +75,13 @@ export function ViewHeader({
       <Container hideOnScroll={hideOnScroll || false} showBorder={showBorder}>
         <View style={{flex: 1}}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            {showBackButton ? (
-              <TouchableOpacity
-                testID="viewHeaderDrawerBtn"
-                onPress={canGoBack ? onPressBack : onPressMenu}
-                hitSlop={BACK_HITSLOP}
-                style={canGoBack ? styles.backBtn : styles.backBtnWide}
-                accessibilityRole="button"
-                accessibilityLabel={canGoBack ? _(msg`Back`) : _(msg`Menu`)}
-                accessibilityHint={
-                  canGoBack ? '' : _(msg`Access navigation links and settings`)
-                }>
-                {canGoBack ? (
-                  <FontAwesomeIcon
-                    size={18}
-                    icon="angle-left"
-                    style={[styles.backIcon, pal.text]}
-                  />
-                ) : !isTablet ? (
-                  <Menu size="lg" style={[{marginTop: 3}, pal.textLight]} />
-                ) : null}
-              </TouchableOpacity>
-            ) : null}
+            {showBackButton && (
+              <BackButton
+                onPressBack={onPressBack}
+                canGoBack={canGoBack}
+                onPressMenu={onPressMenu}
+              />
+            )}
             <View style={styles.titleContainer} pointerEvents="none">
               <Text type="title" style={[pal.text, styles.title]}>
                 {title}
@@ -110,7 +90,7 @@ export function ViewHeader({
             {renderButton ? (
               renderButton()
             ) : showBackButton ? (
-              <View style={canGoBack ? styles.backBtn : styles.backBtnWide} />
+              <RightSpacer wide={!canGoBack} />
             ) : null}
           </View>
           {subtitle ? (
@@ -257,18 +237,5 @@ const styles = StyleSheet.create({
   },
   subtitleDesktop: {
     fontSize: 15,
-  },
-  backBtn: {
-    width: 30,
-    height: 30,
-  },
-  backBtnWide: {
-    width: 30,
-    height: 30,
-    paddingLeft: 4,
-    marginRight: 4,
-  },
-  backIcon: {
-    marginTop: 6,
   },
 })
