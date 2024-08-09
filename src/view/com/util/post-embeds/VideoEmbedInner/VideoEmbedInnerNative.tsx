@@ -58,6 +58,7 @@ export function VideoEmbedInnerNative() {
         onExitFullscreen={() => {
           PlatformInfo.setAudioMixWithOthers(true)
           player.muted = true
+          if (!player.playing) player.play()
         }}
       />
       <Controls
