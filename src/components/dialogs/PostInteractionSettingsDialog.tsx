@@ -164,7 +164,9 @@ export function PostInteractionSettingsDialogInner({
               ]}>
               <CircleInfo fill={t.atoms.text_contrast_low.color} />
               <Text style={[a.leading_snug, t.atoms.text_contrast_medium]}>
-                <Trans>Reply settings are inherited from the root post</Trans>
+                <Trans>
+                  Reply settings are chosen by the author of the thread
+                </Trans>
               </Text>
             </View>
           )}
