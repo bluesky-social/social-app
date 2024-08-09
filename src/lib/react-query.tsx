@@ -20,15 +20,12 @@ async function checkIsOnline(): Promise<boolean> {
     setTimeout(() => {
       controller.abort()
     }, 15e3)
-    const res = await fetch(
-      'https://plc.directory/did:plc:z72i7hdynmk6r22z27h6tvur',
-      {
-        cache: 'no-store',
-        signal: controller.signal,
-      },
-    )
+    const res = await fetch('https://public.api.bsky.app/xrpc/_health', {
+      cache: 'no-store',
+      signal: controller.signal,
+    })
     const json = await res.json()
-    if (json.id) {
+    if (json.version) {
       return true
     } else {
       return false
