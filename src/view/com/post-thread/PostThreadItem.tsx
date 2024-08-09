@@ -199,6 +199,11 @@ let PostThreadItemLoaded = ({
     return makeProfileLink(post.author, 'post', urip.rkey, 'reposted-by')
   }, [post.uri, post.author])
   const repostsTitle = _(msg`Reposts of this post`)
+  const quotesHref = React.useMemo(() => {
+    const urip = new AtUri(post.uri)
+    return makeProfileLink(post.author, 'post', urip.rkey, 'quotes')
+  }, [post.uri, post.author])
+  const quotesTitle = _(msg`Quotes of this post`)
 
   const translatorUrl = getTranslatorLink(
     record?.text || '',
@@ -343,7 +348,9 @@ let PostThreadItemLoaded = ({
               translatorUrl={translatorUrl}
               needsTranslation={needsTranslation}
             />
-            {post.repostCount !== 0 || post.likeCount !== 0 ? (
+            {post.repostCount !== 0 ||
+            post.likeCount !== 0 ||
+            post.quoteCount !== 0 ? (
               // Show this section unless we're *sure* it has no engagement.
               <View style={[styles.expandedInfo, pal.border]}>
                 {post.repostCount != null && post.repostCount !== 0 ? (
@@ -379,6 +386,26 @@ let PostThreadItemLoaded = ({
                         {formatCount(post.likeCount)}
                       </Text>{' '}
                       <Plural value={post.likeCount} one="like" other="likes" />
+                    </Text>
+                  </Link>
+                ) : null}
+                {post.quoteCount != null && post.quoteCount !== 0 ? (
+                  <Link
+                    style={styles.expandedInfoItem}
+                    href={quotesHref}
+                    title={quotesTitle}>
+                    <Text
+                      testID="quoteCount-expanded"
+                      type="lg"
+                      style={pal.textLight}>
+                      <Text type="xl-bold" style={pal.text}>
+                        {formatCount(post.quoteCount)}
+                      </Text>{' '}
+                      <Plural
+                        value={post.quoteCount}
+                        one="quote"
+                        other="quotes"
+                      />
                     </Text>
                   </Link>
                 ) : null}

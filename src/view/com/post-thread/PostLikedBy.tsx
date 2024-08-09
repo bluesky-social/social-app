@@ -8,13 +8,13 @@ import {logger} from '#/logger'
 import {useLikedByQuery} from '#/state/queries/post-liked-by'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
+import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
+import {List} from '#/view/com/util/List'
 import {
   ListFooter,
   ListHeaderDesktop,
   ListMaybePlaceholder,
 } from '#/components/Lists'
-import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
-import {List} from '../util/List'
 
 function renderItem({item}: {item: GetLikes.Like}) {
   return <ProfileCardWithFollowBtn key={item.actor.did} profile={item.actor} />

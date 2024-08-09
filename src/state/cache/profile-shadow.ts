@@ -12,6 +12,7 @@ import {findAllProfilesInQueryData as findAllProfilesInMyBlockedAccountsQueryDat
 import {findAllProfilesInQueryData as findAllProfilesInMyMutedAccountsQueryData} from '../queries/my-muted-accounts'
 import {findAllProfilesInQueryData as findAllProfilesInFeedsQueryData} from '../queries/post-feed'
 import {findAllProfilesInQueryData as findAllProfilesInPostLikedByQueryData} from '../queries/post-liked-by'
+import {findAllProfilesInQueryData as findAllProfilesInPostQuotesQueryData} from '../queries/post-quotes'
 import {findAllProfilesInQueryData as findAllProfilesInPostRepostedByQueryData} from '../queries/post-reposted-by'
 import {findAllProfilesInQueryData as findAllProfilesInPostThreadQueryData} from '../queries/post-thread'
 import {findAllProfilesInQueryData as findAllProfilesInProfileQueryData} from '../queries/profile'
@@ -104,6 +105,7 @@ function* findProfilesInCache(
   yield* findAllProfilesInMyMutedAccountsQueryData(queryClient, did)
   yield* findAllProfilesInPostLikedByQueryData(queryClient, did)
   yield* findAllProfilesInPostRepostedByQueryData(queryClient, did)
+  yield* findAllProfilesInPostQuotesQueryData(queryClient, did)
   yield* findAllProfilesInProfileQueryData(queryClient, did)
   yield* findAllProfilesInProfileFollowersQueryData(queryClient, did)
   yield* findAllProfilesInProfileFollowsQueryData(queryClient, did)
