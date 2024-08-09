@@ -61,6 +61,7 @@ import {Provider as PortalProvider} from '#/components/Portal'
 import {Splash} from '#/Splash'
 import {Provider as TourProvider} from '#/tours'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
+import {PlatformInfo} from '../modules/expo-bluesky-swiss-army'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -157,6 +158,7 @@ function App() {
   const [isReady, setReady] = useState(false)
 
   React.useEffect(() => {
+    PlatformInfo.setAudioMixWithOthers(true)
     initPersistedState().then(() => setReady(true))
   }, [])
 

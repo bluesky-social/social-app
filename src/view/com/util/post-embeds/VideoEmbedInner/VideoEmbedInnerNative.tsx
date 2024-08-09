@@ -12,6 +12,7 @@ import {android, atoms as a, useTheme} from '#/alf'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
 import {Text} from '#/components/Typography'
+import {PlatformInfo} from '../../../../../../modules/expo-bluesky-swiss-army'
 
 export function VideoEmbedInnerNative() {
   const player = useVideoPlayer()
@@ -37,6 +38,12 @@ export function VideoEmbedInnerNative() {
         player={player}
         style={a.flex_1}
         nativeControls={true}
+        onEnterFullscreen={() => {
+          PlatformInfo.setAudioMixWithOthers(false)
+        }}
+        onExitFullscreen={() => {
+          PlatformInfo.setAudioMixWithOthers(true)
+        }}
       />
       <Controls
         player={player}
@@ -89,7 +96,11 @@ function Controls({
   }, [player])
 
   const toggleSound = useCallback(() => {
-    player.muted = !player.muted
+    const newValue = !player.muted
+    // We want to set this to the _inverse_ of the new value, because we actually want for the audio to be mixed when
+    // the video is muted, and vice versa.
+    PlatformInfo.setAudioMixWithOthers(!newValue)
+    player.muted = newValue
   }, [player])
 
   return (
