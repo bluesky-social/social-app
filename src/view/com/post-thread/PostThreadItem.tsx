@@ -660,7 +660,7 @@ function ExpandedPostDetails({
         a.flex_row,
         a.align_center,
         a.flex_wrap,
-        a.gap_sm,
+        a.gap_xs,
         s.mt2,
         s.mb10,
       ]}>
