@@ -35,7 +35,7 @@ export async function createAgentAndResume(
 ) {
   const agent = new BskyAgent({service: storedAccount.service})
   if (storedAccount.pdsUrl) {
-    agent.pdsUrl = agent.api.xrpc.uri = new URL(storedAccount.pdsUrl)
+    agent.sessionManager.pdsUrl = new URL(storedAccount.pdsUrl)
   }
   const gates = tryFetchGates(storedAccount.did, 'prefer-low-latency')
   const moderation = configureModerationForAccount(agent, storedAccount)

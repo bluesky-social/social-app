@@ -156,7 +156,7 @@ class Mocker {
   }
 
   async createUser(name: string) {
-    const agent = new BskyAgent({service: this.agent.service})
+    const agent = new BskyAgent({service: this.service})
 
     const inviteRes = await agent.api.com.atproto.server.createInviteCode(
       {useCount: 1},
@@ -332,7 +332,7 @@ class Mocker {
   }
 
   async createInvite(forAccount: string) {
-    const agent = new BskyAgent({service: this.agent.service})
+    const agent = new BskyAgent({service: this.service})
     await agent.api.com.atproto.server.createInviteCode(
       {useCount: 1, forAccount},
       {

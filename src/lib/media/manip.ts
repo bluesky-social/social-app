@@ -218,13 +218,7 @@ export async function safeDeleteAsync(path: string) {
   // Normalize is necessary for Android, otherwise it doesn't delete.
   const normalizedPath = normalizePath(path)
   try {
-    await Promise.allSettled([
-      deleteAsync(normalizedPath, {idempotent: true}),
-      // HACK: Try this one too. Might exist due to api-polyfill hack.
-      deleteAsync(normalizedPath.replace(/\.jpe?g$/, '.bin'), {
-        idempotent: true,
-      }),
-    ])
+    await deleteAsync(normalizedPath, {idempotent: true})
   } catch (e) {
     console.error('Failed to delete file', e)
   }
