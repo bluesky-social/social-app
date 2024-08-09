@@ -1,7 +1,7 @@
 import React from 'react'
 
-import {BackgroundNotificationHandlerPreferences} from './ExpoBackgroundNotificationHandler.types'
-import {BackgroundNotificationHandler} from './ExpoBackgroundNotificationHandlerModule'
+import {SharedPrefs} from '../../expo-bluesky-swiss-army'
+import {BackgroundNotificationHandlerPreferences} from './types'
 
 interface BackgroundNotificationPreferencesContext {
   preferences: BackgroundNotificationHandlerPreferences
@@ -29,42 +29,25 @@ export function BackgroundNotificationPreferencesProvider({
 
   React.useEffect(() => {
     ;(async () => {
-      const prefs = await BackgroundNotificationHandler.getAllPrefsAsync()
-      setPreferences(prefs)
+      const prefs: BackgroundNotificationHandlerPreferences = {
+        playSoundChat: SharedPrefs.getBool('playSoundChat') ?? true,
+      }
+      if (prefs) {
+        setPreferences(prefs)
+      }
     })()
   }, [])
 
-  const value = React.useMemo(
-    () => ({
-      preferences,
-      setPref: async <
-        Key extends keyof BackgroundNotificationHandlerPreferences,
-      >(
-        k: Key,
-        v: BackgroundNotificationHandlerPreferences[Key],
-      ) => {
-        switch (typeof v) {
-          case 'boolean': {
-            await BackgroundNotificationHandler.setBoolAsync(k, v)
-            break
-          }
-          case 'string': {
-            await BackgroundNotificationHandler.setStringAsync(k, v)
-            break
-          }
-          default: {
-            throw new Error(`Invalid type for value: ${typeof v}`)
-          }
-        }
-
-        setPreferences(prev => ({
-          ...prev,
-          [k]: v,
-        }))
-      },
-    }),
-    [preferences],
-  )
+  const value = {
+    preferences,
+    setPref: <Key extends keyof BackgroundNotificationHandlerPreferences>(
+      k: Key,
+      v: BackgroundNotificationHandlerPreferences[Key],
+    ) => {
+      SharedPrefs.setValue(k, v)
+      setPreferences(prev => ({...prev, [k]: v}))
+    },
+  }
 
   return <Context.Provider value={value}>{children}</Context.Provider>
 }
