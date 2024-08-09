@@ -37,6 +37,12 @@ export function VideoEmbedInnerNative() {
         player={player}
         style={a.flex_1}
         nativeControls={true}
+        onEnterFullscreen={() => {
+          console.log('Full screen')
+        }}
+        onExitFullscreen={() => {
+          console.log('Exit full screen')
+        }}
       />
       <Controls
         player={player}
