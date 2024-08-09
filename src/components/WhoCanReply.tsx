@@ -65,14 +65,11 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
   }
 
   const isEverybody = settings.length === 0
-  const isNobody = !!settings.find(gate => gate.type === 'nobody')
   const description = isEverybody
-    ? _(msg`Everybody can reply`)
-    : isNobody
-    ? _(msg`Replies disabled`)
-    : _(msg`Some people can reply`)
+    ? _(msg`Anyone can interact`)
+    : _(msg`Interaction limited`)
 
-  const onPressEdit = () => {
+  const onPress = () => {
     if (isNative && Keyboard.isVisible()) {
       Keyboard.dismiss()
     }
@@ -129,7 +126,7 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
         label={
           isThreadAuthor ? _(msg`Edit who can reply`) : _(msg`Who can reply`)
         }
-        onPress={isThreadAuthor ? onPressEdit : infoDialogControl.open}
+        onPress={onPress}
         hitSlop={HITSLOP_10}>
         {({hovered}) => (
           <View style={[a.flex_row, a.align_center, a.gap_xs, style]}>
@@ -147,22 +144,25 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
               ]}>
               {description}
             </Text>
+
             {isThreadAuthor && (
               <PencilLine width={12} fill={t.palette.primary_500} />
             )}
           </View>
         )}
       </Button>
-      <WhoCanReplyDialog
-        control={infoDialogControl}
-        post={post}
-        settings={settings}
-      />
-      {isThreadAuthor && (
+
+      {isThreadAuthor ? (
         <ThreadgateEditorDialog
           control={editDialogControl}
-          threadgate={settings}
-          onConfirm={onEditConfirm}
+          threadgateUISettings={settings}
+          onConfirmThreadgateUISettings={onEditConfirm}
+        />
+      ) : (
+        <WhoCanReplyDialog
+          control={infoDialogControl}
+          post={post}
+          settings={settings}
         />
       )}
     </>

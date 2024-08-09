@@ -12,56 +12,53 @@ import * as Dialog from '#/components/Dialog'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {Text} from '#/components/Typography'
 
-interface ThreadgateEditorDialogProps {
-  control: Dialog.DialogControlProps
-  threadgate: ThreadgateAllowUISetting[]
-  onChange?: (v: ThreadgateAllowUISetting[]) => void
-  onConfirm?: (v: ThreadgateAllowUISetting[]) => void
+type Props = {
+  threadgateUISettings: ThreadgateAllowUISetting[]
+  onChangeThreadgateUISettings?: (v: ThreadgateAllowUISetting[]) => void
+  onConfirmThreadgateUISettings?: (v: ThreadgateAllowUISetting[]) => void
 }
 
 export function ThreadgateEditorDialog({
   control,
-  threadgate,
-  onChange,
-  onConfirm,
-}: ThreadgateEditorDialogProps) {
+  onChangeThreadgateUISettings,
+  onConfirmThreadgateUISettings,
+  threadgateUISettings,
+}: Props & {
+  control: Dialog.DialogControlProps
+}) {
   return (
     <Dialog.Outer control={control}>
       <Dialog.Handle />
       <DialogContent
-        seedThreadgate={threadgate}
-        onChange={onChange}
-        onConfirm={onConfirm}
+        onChangeThreadgateUISettings={onChangeThreadgateUISettings}
+        onConfirmThreadgateUISettings={onConfirmThreadgateUISettings}
+        threadgateUISettings={threadgateUISettings}
       />
     </Dialog.Outer>
   )
 }
 
 function DialogContent({
-  seedThreadgate,
-  onChange,
-  onConfirm,
-}: {
-  seedThreadgate: ThreadgateAllowUISetting[]
-  onChange?: (v: ThreadgateAllowUISetting[]) => void
-  onConfirm?: (v: ThreadgateAllowUISetting[]) => void
-}) {
+  onChangeThreadgateUISettings,
+  onConfirmThreadgateUISettings,
+  threadgateUISettings,
+}: Props) {
   const {_} = useLingui()
   const control = Dialog.useDialogContext()
   const {data: lists} = useMyListsQuery('curate')
-  const [draft, setDraft] = React.useState(seedThreadgate)
+  const [draft, setDraft] = React.useState(threadgateUISettings)
 
-  const [prevSeedThreadgate, setPrevSeedThreadgate] =
-    React.useState(seedThreadgate)
-  if (seedThreadgate !== prevSeedThreadgate) {
+  const [prevThreadgateUISettings, setPrevThreadgateUISettings] =
+    React.useState(threadgateUISettings)
+  if (threadgateUISettings !== prevThreadgateUISettings) {
     // New data flowed from above (e.g. due to update coming through).
-    setPrevSeedThreadgate(seedThreadgate)
-    setDraft(seedThreadgate) // Reset draft.
+    setPrevThreadgateUISettings(threadgateUISettings)
+    setDraft(threadgateUISettings) // Reset draft.
   }
 
   function updateThreadgate(nextThreadgate: ThreadgateAllowUISetting[]) {
     setDraft(nextThreadgate)
-    onChange?.(nextThreadgate)
+    onChangeThreadgateUISettings?.(nextThreadgate)
   }
 
   const onPressEverybody = () => {
@@ -87,7 +84,7 @@ function DialogContent({
     updateThreadgate(newSelected)
   }
 
-  const doneLabel = onConfirm ? _(msg`Save`) : _(msg`Done`)
+  const doneLabel = onConfirmThreadgateUISettings ? _(msg`Save`) : _(msg`Done`)
   return (
     <Dialog.ScrollableInner
       label={_(msg`Choose who can reply`)}
@@ -148,7 +145,7 @@ function DialogContent({
         label={doneLabel}
         onPress={() => {
           control.close()
-          onConfirm?.(draft)
+          onConfirmThreadgateUISettings?.(draft)
         }}
         onAccessibilityEscape={control.close}
         color="primary"

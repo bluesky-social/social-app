@@ -217,7 +217,6 @@ export function useToggleQuotepostEnabledMutation() {
       action: 'enable' | 'disable'
     }) => {
       await upsertPostgate({agent, postUri: postUri}, async prev => {
-        console.log({action})
         if (prev) {
           if (action === 'disable') {
             return mergePostgateRecords(prev, {

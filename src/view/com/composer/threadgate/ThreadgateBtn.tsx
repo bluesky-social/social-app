@@ -67,8 +67,8 @@ export function ThreadgateBtn({
       </Animated.View>
       <ThreadgateEditorDialog
         control={control}
-        threadgate={threadgate}
-        onChange={onChange}
+        threadgateUISettings={threadgate}
+        onChangeThreadgateUISettings={onChange}
       />
     </>
   )
