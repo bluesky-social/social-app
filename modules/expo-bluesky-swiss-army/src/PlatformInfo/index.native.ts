@@ -9,9 +9,9 @@ export function getIsReducedMotionEnabled(): boolean {
   return NativeModule.getIsReducedMotionEnabled()
 }
 
-export function setAudioMixWithOthers(mixWithOthers: boolean): void {
+export function setAudioActive(active: boolean): void {
   if (Platform.OS !== 'ios') return
-  NativeModule.setAudioMixWithOthers(mixWithOthers)
+  NativeModule.setAudioActive(active)
 }
 
 export function setAudioCategory(audioCategory: AudioCategory): void {
