@@ -20,6 +20,7 @@ interface Props {
   onRepost: () => void
   onQuote: () => void
   big?: boolean
+  quotepostDisabled: boolean
 }
 
 let RepostButton = ({
@@ -28,6 +29,7 @@ let RepostButton = ({
   onRepost,
   onQuote,
   big,
+  quotepostDisabled,
 }: Props): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
@@ -110,24 +112,26 @@ let RepostButton = ({
                     : _(msg({message: `Repost`, context: 'action'}))}
                 </Text>
               </Button>
-              <Button
-                testID="quoteBtn"
-                style={[a.justify_start, a.px_md]}
-                label={_(msg`Quote post`)}
-                onPress={() => {
-                  playHaptic()
-                  dialogControl.close(() => {
-                    onQuote()
-                  })
-                }}
-                size="large"
-                variant="ghost"
-                color="primary">
-                <Quote size="lg" fill={t.palette.primary_500} />
-                <Text style={[a.font_bold, a.text_xl]}>
-                  {_(msg`Quote post`)}
-                </Text>
-              </Button>
+              {quotepostDisabled ? null : (
+                <Button
+                  testID="quoteBtn"
+                  style={[a.justify_start, a.px_md]}
+                  label={_(msg`Quote post`)}
+                  onPress={() => {
+                    playHaptic()
+                    dialogControl.close(() => {
+                      onQuote()
+                    })
+                  }}
+                  size="large"
+                  variant="ghost"
+                  color="primary">
+                  <Quote size="lg" fill={t.palette.primary_500} />
+                  <Text style={[a.font_bold, a.text_xl]}>
+                    {_(msg`Quote post`)}
+                  </Text>
+                </Button>
+              )}
             </View>
             <Button
               label={_(msg`Cancel quote post`)}

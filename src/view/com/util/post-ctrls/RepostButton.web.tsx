@@ -20,6 +20,7 @@ interface Props {
   onRepost: () => void
   onQuote: () => void
   big?: boolean
+  quotepostDisabled: boolean
 }
 
 export const RepostButton = ({
@@ -28,6 +29,7 @@ export const RepostButton = ({
   onRepost,
   onQuote,
   big,
+  quotepostDisabled,
 }: Props) => {
   const t = useTheme()
   const {_} = useLingui()
@@ -75,13 +77,15 @@ export const RepostButton = ({
             </Menu.ItemText>
             <Menu.ItemIcon icon={Repost} position="right" />
           </Menu.Item>
-          <Menu.Item
-            label={_(msg`Quote post`)}
-            testID="repostDropdownQuoteBtn"
-            onPress={onQuote}>
-            <Menu.ItemText>{_(msg`Quote post`)}</Menu.ItemText>
-            <Menu.ItemIcon icon={Quote} position="right" />
-          </Menu.Item>
+          {quotepostDisabled ? null : (
+            <Menu.Item
+              label={_(msg`Quote post`)}
+              testID="repostDropdownQuoteBtn"
+              onPress={onQuote}>
+              <Menu.ItemText>{_(msg`Quote post`)}</Menu.ItemText>
+              <Menu.ItemIcon icon={Quote} position="right" />
+            </Menu.Item>
+          )}
         </Menu.Outer>
       </Menu.Root>
     </EventStopper>
