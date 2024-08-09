@@ -30,7 +30,7 @@ import {precacheProfile} from 'state/queries/profile'
 import {Link} from '#/view/com/util/Link'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Text} from 'view/com/util/text/Text'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a} from '#/alf'
 
 let SearchLinkCard = ({
   label,
@@ -149,7 +149,6 @@ export {SearchProfileCard}
 
 export function DesktopSearch() {
   const {_} = useLingui()
-  const t = useTheme()
   const pal = usePalette('default')
   const navigation = useNavigation<NavigationProp>()
   const [isActive, setIsActive] = React.useState<boolean>(false)
@@ -184,7 +183,8 @@ export function DesktopSearch() {
 
   return (
     <View style={[styles.container, pal.view]}>
-      <View style={[t.atoms.bg_contrast_25, styles.search]}>
+      <View
+        style={[{backgroundColor: pal.colors.backgroundLight}, styles.search]}>
         <View style={[styles.inputContainer]}>
           <MagnifyingGlassIcon2
             size={18}

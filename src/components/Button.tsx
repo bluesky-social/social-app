@@ -202,10 +202,28 @@ export const Button = React.forwardRef<View, ButtonProps>(
       } else if (color === 'secondary') {
         if (variant === 'solid') {
           if (!disabled) {
-            baseStyles.push(t.atoms.bg_contrast_25)
-            hoverStyles.push(t.atoms.bg_contrast_50)
+            baseStyles.push({
+              backgroundColor: select(t.name, {
+                light: t.palette.contrast_25,
+                dim: t.palette.contrast_100,
+                dark: t.palette.contrast_100,
+              }),
+            })
+            hoverStyles.push({
+              backgroundColor: select(t.name, {
+                light: t.palette.contrast_50,
+                dim: t.palette.contrast_200,
+                dark: t.palette.contrast_200,
+              }),
+            })
           } else {
-            baseStyles.push(t.atoms.bg_contrast_100)
+            baseStyles.push({
+              backgroundColor: select(t.name, {
+                light: t.palette.contrast_100,
+                dim: t.palette.contrast_25,
+                dark: t.palette.contrast_25,
+              }),
+            })
           }
         } else if (variant === 'outline') {
           baseStyles.push(a.border, t.atoms.bg, {

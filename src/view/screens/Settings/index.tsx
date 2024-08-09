@@ -162,7 +162,6 @@ export function SettingsScreen({}: Props) {
   const queryClient = useQueryClient()
   const pal = usePalette('default')
   const {_} = useLingui()
-  const t = useTheme()
   const setMinimalShellMode = useSetMinimalShellMode()
   const inAppBrowserPref = useInAppBrowser()
   const setUseInAppBrowser = useSetInAppBrowser()
@@ -413,7 +412,7 @@ export function SettingsScreen({}: Props) {
             accessibilityRole="button"
             accessibilityLabel={_(msg`Add account`)}
             accessibilityHint={_(msg`Create a new Bluesky account`)}>
-            <View style={[styles.iconContainer, t.atoms.bg_contrast_25]}>
+            <View style={[styles.iconContainer, pal.btn]}>
               <FontAwesomeIcon
                 icon="plus"
                 style={pal.text as FontAwesomeIconStyle}
@@ -443,7 +442,7 @@ export function SettingsScreen({}: Props) {
           accessibilityRole="button"
           accessibilityLabel={_(msg`Accessibility settings`)}
           accessibilityHint={_(msg`Opens accessibility settings`)}>
-          <View style={[styles.iconContainer, t.atoms.bg_contrast_25]}>
+          <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="universal-access"
               style={pal.text as FontAwesomeIconStyle}
@@ -464,7 +463,7 @@ export function SettingsScreen({}: Props) {
           accessibilityRole="button"
           accessibilityLabel={_(msg`Appearance settings`)}
           accessibilityHint={_(msg`Opens appearance settings`)}>
-          <View style={[styles.iconContainer, t.atoms.bg_contrast_25]}>
+          <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="paint-roller"
               style={pal.text as FontAwesomeIconStyle}
@@ -485,7 +484,7 @@ export function SettingsScreen({}: Props) {
           accessibilityRole="button"
           accessibilityLabel={_(msg`Language settings`)}
           accessibilityHint={_(msg`Opens configurable language settings`)}>
-          <View style={[styles.iconContainer, t.atoms.bg_contrast_25]}>
+          <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="language"
               style={pal.text as FontAwesomeIconStyle}
@@ -510,7 +509,7 @@ export function SettingsScreen({}: Props) {
           accessibilityRole="button"
           accessibilityLabel={_(msg`Moderation settings`)}
           accessibilityHint={_(msg`Opens moderation settings`)}>
-          <View style={[styles.iconContainer, t.atoms.bg_contrast_25]}>
+          <View style={[styles.iconContainer, pal.btn]}>
             <HandIcon style={pal.text} size={18} strokeWidth={6} />
           </View>
           <Text type="lg" style={pal.text}>
@@ -528,7 +527,7 @@ export function SettingsScreen({}: Props) {
           accessibilityRole="button"
           accessibilityLabel={_(msg`Following feed preferences`)}
           accessibilityHint={_(msg`Opens the Following feed preferences`)}>
-          <View style={[styles.iconContainer, t.atoms.bg_contrast_25]}>
+          <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="sliders"
               style={pal.text as FontAwesomeIconStyle}
@@ -549,7 +548,7 @@ export function SettingsScreen({}: Props) {
           accessibilityRole="button"
           accessibilityLabel={_(msg`Thread preferences`)}
           accessibilityHint={_(msg`Opens the threads preferences`)}>
-          <View style={[styles.iconContainer, t.atoms.bg_contrast_25]}>
+          <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon={['far', 'comments']}
               style={pal.text as FontAwesomeIconStyle}
@@ -571,7 +570,7 @@ export function SettingsScreen({}: Props) {
           accessibilityRole="button"
           accessibilityLabel={_(msg`My saved feeds`)}
           accessibilityHint={_(msg`Opens screen with all saved feeds`)}>
-          <View style={[styles.iconContainer, t.atoms.bg_contrast_25]}>
+          <View style={[styles.iconContainer, pal.btn]}>
             <HashtagIcon style={pal.text} size={18} strokeWidth={3} />
           </View>
           <Text type="lg" style={pal.text}>
@@ -593,7 +592,7 @@ export function SettingsScreen({}: Props) {
           accessibilityRole="button"
           accessibilityLabel={_(msg`Chat settings`)}
           accessibilityHint={_(msg`Opens chat settings`)}>
-          <View style={[styles.iconContainer, t.atoms.bg_contrast_25]}>
+          <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon={['far', 'comment-dots']}
               style={pal.text as FontAwesomeIconStyle}
@@ -625,7 +624,7 @@ export function SettingsScreen({}: Props) {
           accessibilityRole="button"
           accessibilityLabel={_(msg`External media settings`)}
           accessibilityHint={_(msg`Opens external embeds settings`)}>
-          <View style={[styles.iconContainer, t.atoms.bg_contrast_25]}>
+          <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon={['far', 'circle-play']}
               style={pal.text as FontAwesomeIconStyle}
@@ -652,7 +651,7 @@ export function SettingsScreen({}: Props) {
           accessibilityRole="button"
           accessibilityLabel={_(msg`App password settings`)}
           accessibilityHint={_(msg`Opens the app password settings`)}>
-          <View style={[styles.iconContainer, t.atoms.bg_contrast_25]}>
+          <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="lock"
               style={pal.text as FontAwesomeIconStyle}
@@ -675,7 +674,7 @@ export function SettingsScreen({}: Props) {
           accessibilityHint={_(
             msg`Opens modal for choosing a new Bluesky handle`,
           )}>
-          <View style={[styles.iconContainer, t.atoms.bg_contrast_25]}>
+          <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="at"
               style={pal.text as FontAwesomeIconStyle}
@@ -720,7 +719,7 @@ export function SettingsScreen({}: Props) {
           accessibilityHint={_(
             msg`Opens modal for changing your Bluesky password`,
           )}>
-          <View style={[styles.iconContainer, t.atoms.bg_contrast_25]}>
+          <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="lock"
               style={pal.text as FontAwesomeIconStyle}
@@ -743,7 +742,7 @@ export function SettingsScreen({}: Props) {
           accessibilityHint={_(
             msg`Opens modal for downloading your Bluesky account data (repository)`,
           )}>
-          <View style={[styles.iconContainer, t.atoms.bg_contrast_25]}>
+          <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="download"
               style={pal.text as FontAwesomeIconStyle}
