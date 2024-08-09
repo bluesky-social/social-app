@@ -23,17 +23,17 @@ export function VideoEmbedInnerNative() {
   const ref = useRef<VideoView>(null)
   const isScreenFocused = useIsFocused()
   const isAppFocused = useAppState()
-  const [prevFocused, setPrevFocused] = useState(isAppFocused)
+  const prevFocusedRef = useRef(isAppFocused)
 
   // resume video when coming back from background
   useEffect(() => {
-    if (isAppFocused !== prevFocused) {
-      setPrevFocused(isAppFocused)
+    if (isAppFocused !== prevFocusedRef.current) {
+      prevFocusedRef.current = isAppFocused
       if (isAppFocused === 'active') {
         player.play()
       }
     }
-  }, [isAppFocused, prevFocused, player])
+  }, [isAppFocused, player])
 
   // pause the video when the screen is not focused
   useEffect(() => {
@@ -124,8 +124,6 @@ function Controls({
         break
       }
       case 'error': {
-        // not exactly sure what to do here
-        // maybe replay the video?
         player.replay()
         break
       }
