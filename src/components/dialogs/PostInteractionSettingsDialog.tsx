@@ -30,7 +30,7 @@ type Props = {
   onChangeThreadgateAllowUISettings: (v: ThreadgateAllowUISetting[]) => void
 }
 
-export function ThreadgateEditorDialog({
+export function PostInteractionSettingsDialog({
   control,
   ...rest
 }: Props & {

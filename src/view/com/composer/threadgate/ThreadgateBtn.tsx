@@ -12,7 +12,7 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {ThreadgateEditorDialog} from '#/components/dialogs/ThreadgateEditor'
+import {PostInteractionSettingsDialog} from '#/components/dialogs/PostInteractionSettingsDialog'
 import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/components/icons/CircleBanSign'
 import {Earth_Stroke2_Corner0_Rounded as Earth} from '#/components/icons/Globe'
 import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
@@ -90,7 +90,7 @@ export function ThreadgateBtn({
           <ButtonText>{label}</ButtonText>
         </Button>
       </Animated.View>
-      <ThreadgateEditorDialog
+      <PostInteractionSettingsDialog
         control={control}
         isSaving={false}
         onSave={() => {

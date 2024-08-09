@@ -37,7 +37,7 @@ import {Earth_Stroke2_Corner0_Rounded as Earth} from '#/components/icons/Globe'
 import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
 import {Text} from '#/components/Typography'
 import {TextLink} from '../view/com/util/Link'
-import {ThreadgateEditorDialog} from './dialogs/ThreadgateEditor'
+import {PostInteractionSettingsDialog} from './dialogs/PostInteractionSettingsDialog'
 import {PencilLine_Stroke2_Corner0_Rounded as PencilLine} from './icons/Pencil'
 
 interface WhoCanReplyProps {
@@ -217,7 +217,7 @@ export function WhoCanReply({
       </Button>
 
       {isThreadAuthor ? (
-        <ThreadgateEditorDialog
+        <PostInteractionSettingsDialog
           onSave={onSave}
           isSaving={isSaving}
           postgate={postgate}
