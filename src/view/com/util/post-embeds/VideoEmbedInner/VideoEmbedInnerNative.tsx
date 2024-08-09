@@ -13,7 +13,10 @@ import {android, atoms as a, useTheme} from '#/alf'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
 import {Text} from '#/components/Typography'
-import {PlatformInfo} from '../../../../../../modules/expo-bluesky-swiss-army'
+import {
+  AudioCategory,
+  PlatformInfo,
+} from '../../../../../../modules/expo-bluesky-swiss-army'
 
 export function VideoEmbedInnerNative() {
   const player = useVideoPlayer()
@@ -56,10 +59,12 @@ export function VideoEmbedInnerNative() {
         style={a.flex_1}
         nativeControls={true}
         onEnterFullscreen={() => {
+          PlatformInfo.setAudioCategory(AudioCategory.Playback)
           PlatformInfo.setAudioMixWithOthers(false)
           player.muted = false
         }}
         onExitFullscreen={() => {
+          PlatformInfo.setAudioCategory(AudioCategory.Ambient)
           PlatformInfo.setAudioMixWithOthers(true)
           player.muted = true
           if (!player.playing) player.play()
@@ -122,18 +127,21 @@ function Controls({
         // not exactly sure what to do here
         // maybe replay the video?
         player.replay()
-        player.play()
         break
       }
     }
   }, [player, enterFullscreen])
 
-  const toggleSound = useCallback(() => {
-    const newValue = !player.muted
+  const toggleMuted = useCallback(() => {
+    const muted = !player.muted
     // We want to set this to the _inverse_ of the new value, because we actually want for the audio to be mixed when
     // the video is muted, and vice versa.
-    PlatformInfo.setAudioMixWithOthers(!newValue)
-    player.muted = newValue
+    const mix = !muted
+    const category = muted ? AudioCategory.Ambient : AudioCategory.Playback
+
+    PlatformInfo.setAudioCategory(category)
+    PlatformInfo.setAudioMixWithOthers(mix)
+    player.muted = muted
   }, [player])
 
   return (
@@ -172,7 +180,7 @@ function Controls({
         accessibilityRole="button"
       />
       <Pressable
-        onPress={toggleSound}
+        onPress={toggleMuted}
         style={{
           backgroundColor: 'rgba(0, 0, 0, 0.75)',
           borderRadius: 6,

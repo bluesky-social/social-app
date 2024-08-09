@@ -1,4 +1,5 @@
 import {NotImplementedError} from '../NotImplemented'
+import {AudioCategory} from './types'
 
 export function getIsReducedMotionEnabled(): boolean {
   if (typeof window === 'undefined') {
@@ -9,4 +10,8 @@ export function getIsReducedMotionEnabled(): boolean {
 
 export function setAudioMixWithOthers(mixWithOthers: boolean): void {
   throw new NotImplementedError({mixWithOthers})
+}
+
+export function setAudioCategory(audioCategory: AudioCategory): void {
+  throw new NotImplementedError({audioCategory})
 }
