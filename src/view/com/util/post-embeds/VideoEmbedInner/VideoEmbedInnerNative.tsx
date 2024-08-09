@@ -1,5 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
+import Animated, {FadeIn} from 'react-native-reanimated'
 import {VideoPlayer, VideoView} from 'expo-video'
 
 import {useVideoPlayer} from 'view/com/util/post-embeds/VideoPlayerContext'
@@ -20,7 +21,10 @@ export function VideoEmbedInnerNative() {
       />
       <Controls
         player={player}
-        enterFullscreen={() => ref.current?.enterFullscreen()}
+        enterFullscreen={() => {
+          player.muted = false
+          ref.current?.enterFullscreen()
+        }}
       />
     </View>
   )
@@ -56,34 +60,33 @@ function Controls({
     }
   }, [player])
 
-  if (isNaN(timeRemaining)) {
-    return null
-  }
-
   return (
     <View style={[a.absolute, a.inset_0]}>
-      <View
-        style={[
-          {
-            backgroundColor: 'rgba(0, 0, 0, 0.75',
-            borderRadius: 6,
-            paddingHorizontal: 6,
-            paddingVertical: 3,
-            position: 'absolute',
-            left: 5,
-            bottom: 5,
-          },
-        ]}
-        pointerEvents="none">
-        <Text
+      {!isNaN(timeRemaining) && (
+        <Animated.View
+          entering={FadeIn.duration(100)}
           style={[
-            {color: 'white', fontSize: 12},
-            a.font_bold,
-            android({lineHeight: 1.25}),
-          ]}>
-          {minutes}:{seconds}
-        </Text>
-      </View>
+            {
+              backgroundColor: 'rgba(0, 0, 0, 0.75)',
+              borderRadius: 6,
+              paddingHorizontal: 6,
+              paddingVertical: 3,
+              position: 'absolute',
+              left: 5,
+              bottom: 5,
+            },
+          ]}
+          pointerEvents="none">
+          <Text
+            style={[
+              {color: 'white', fontSize: 12},
+              a.font_bold,
+              android({lineHeight: 1.25}),
+            ]}>
+            {minutes}:{seconds}
+          </Text>
+        </Animated.View>
+      )}
       <Pressable
         onPress={enterFullscreen}
         style={a.flex_1}
