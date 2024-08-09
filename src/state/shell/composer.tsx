@@ -1,10 +1,11 @@
 import React from 'react'
 import {
+  AppBskyActorDefs,
   AppBskyEmbedRecord,
   AppBskyRichtextFacet,
   ModerationDecision,
-  AppBskyActorDefs,
 } from '@atproto/api'
+
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 
 export interface ComposerOptsPostRef {
@@ -31,7 +32,7 @@ export interface ComposerOptsQuote {
 }
 export interface ComposerOpts {
   replyTo?: ComposerOptsPostRef
-  onPost?: () => void
+  onPost?: (postUri: string | undefined) => void
   quote?: ComposerOptsQuote
   mention?: string // handle of user to mention
   openPicker?: (pos: DOMRect | undefined) => void

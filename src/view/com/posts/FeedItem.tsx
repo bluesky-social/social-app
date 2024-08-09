@@ -544,6 +544,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexWrap: 'wrap',
     paddingBottom: 2,
+    overflow: 'hidden',
   },
   contentHiderChild: {
     marginTop: 6,
