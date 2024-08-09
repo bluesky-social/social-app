@@ -114,6 +114,12 @@ export function useSuggestedFollowsByActorQuery({did}: {did: string}) {
       })
       return res.data
     },
+    select: data => {
+      data.suggestions = data.suggestions.filter(p => {
+        return !p.viewer?.following
+      })
+      return data
+    },
   })
 }
 
