@@ -42,10 +42,12 @@ export function VideoEmbedInnerNative() {
         style={a.flex_1}
         nativeControls={true}
         onEnterFullscreen={() => {
+          PlatformInfo.setAudioCategory(AudioCategory.Playback)
           PlatformInfo.setAudioMixWithOthers(false)
           player.muted = false
         }}
         onExitFullscreen={() => {
+          PlatformInfo.setAudioCategory(AudioCategory.Ambient)
           PlatformInfo.setAudioMixWithOthers(true)
           player.muted = true
         }}

@@ -6,9 +6,10 @@
  * @platform ios
  */
 export enum AudioCategory {
-  Ambient = 'ambient',
-  Playback = 'playback',
-  _PlaybackAndRecord = 'playbackAndRecord',
-  _MultiRoute = 'multiRoute',
-  _SoloAmbient = 'soloAmbient',
+  Ambient = 'AVAudioSessionCategoryAmbient',
+  Playback = 'AVAudioSessionCategoryPlayback',
+  _SoloAmbient = 'AVAudioSessionCategorySoloAmbient',
+  _Record = 'AVAudioSessionCategoryRecord',
+  _PlayAndRecord = 'AVAudioSessionCategoryPlayAndRecord',
+  _MultiRoute = 'AVAudioSessionCategoryMultiRoute',
 }
