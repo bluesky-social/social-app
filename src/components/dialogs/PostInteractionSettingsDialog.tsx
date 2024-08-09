@@ -86,7 +86,10 @@ function DialogContent({
     [postgate, onChangePostgate],
   )
 
-  const doneLabel = _(msg`Save`)
+  const noOneCanReply = !!threadgateAllowUISettings.find(
+    v => v.type === 'nobody',
+  )
+
   return (
     <Dialog.ScrollableInner
       label={_(msg`Edit post interaction settings`)}
@@ -162,9 +165,7 @@ function DialogContent({
               />
               <Selectable
                 label={_(msg`Nobody`)}
-                isSelected={
-                  !!threadgateAllowUISettings.find(v => v.type === 'nobody')
-                }
+                isSelected={noOneCanReply}
                 onPress={() =>
                   onChangeThreadgateAllowUISettings([{type: 'nobody'}])
                 }
@@ -172,56 +173,64 @@ function DialogContent({
               />
             </View>
 
-            <Text style={[a.pt_sm, t.atoms.text_contrast_medium]}>
-              <Trans>Or combine these options:</Trans>
-            </Text>
+            {!noOneCanReply && (
+              <>
+                <Text style={[a.pt_sm, t.atoms.text_contrast_medium]}>
+                  <Trans>Or combine these options:</Trans>
+                </Text>
 
-            <View style={[a.gap_sm]}>
-              <Selectable
-                label={_(msg`Mentioned users`)}
-                isSelected={
-                  !!threadgateAllowUISettings.find(v => v.type === 'mention')
-                }
-                onPress={() => onPressAudience({type: 'mention'})}
-              />
-              <Selectable
-                label={_(msg`Followed users`)}
-                isSelected={
-                  !!threadgateAllowUISettings.find(v => v.type === 'following')
-                }
-                onPress={() => onPressAudience({type: 'following'})}
-              />
-              {lists && lists.length > 0
-                ? lists.map(list => (
-                    <Selectable
-                      key={list.uri}
-                      label={_(msg`Users in "${list.name}"`)}
-                      isSelected={
-                        !!threadgateAllowUISettings.find(
-                          v => v.type === 'list' && v.list === list.uri,
-                        )
-                      }
-                      onPress={() =>
-                        onPressAudience({type: 'list', list: list.uri})
-                      }
-                    />
-                  ))
-                : // No loading states to avoid jumps for the common case (no lists)
-                  null}
-            </View>
+                <View style={[a.gap_sm]}>
+                  <Selectable
+                    label={_(msg`Mentioned users`)}
+                    isSelected={
+                      !!threadgateAllowUISettings.find(
+                        v => v.type === 'mention',
+                      )
+                    }
+                    onPress={() => onPressAudience({type: 'mention'})}
+                  />
+                  <Selectable
+                    label={_(msg`Followed users`)}
+                    isSelected={
+                      !!threadgateAllowUISettings.find(
+                        v => v.type === 'following',
+                      )
+                    }
+                    onPress={() => onPressAudience({type: 'following'})}
+                  />
+                  {lists && lists.length > 0
+                    ? lists.map(list => (
+                        <Selectable
+                          key={list.uri}
+                          label={_(msg`Users in "${list.name}"`)}
+                          isSelected={
+                            !!threadgateAllowUISettings.find(
+                              v => v.type === 'list' && v.list === list.uri,
+                            )
+                          }
+                          onPress={() =>
+                            onPressAudience({type: 'list', list: list.uri})
+                          }
+                        />
+                      ))
+                    : // No loading states to avoid jumps for the common case (no lists)
+                      null}
+                </View>
+              </>
+            )}
           </View>
         </View>
       </View>
 
       <Button
-        label={doneLabel}
+        label={_(msg`Save`)}
         onPress={onSave}
         onAccessibilityEscape={control.close}
         color="primary"
         size="medium"
         variant="solid"
         style={a.mt_xl}>
-        <ButtonText>{doneLabel}</ButtonText>
+        <ButtonText>{_(msg`Save`)}</ButtonText>
         {isSaving && <ButtonIcon icon={Loader} position="right" />}
       </Button>
 
