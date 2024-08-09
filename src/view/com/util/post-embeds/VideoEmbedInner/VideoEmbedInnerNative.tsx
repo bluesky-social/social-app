@@ -26,7 +26,7 @@ export function VideoEmbedInnerNative() {
   }, [isScreenFocused, player])
 
   return (
-    <View style={[a.flex_1, a.relative]} collapsable={false}>
+    <View style={[a.flex_1, a.relative]}>
       <VideoView
         ref={ref}
         player={player}
