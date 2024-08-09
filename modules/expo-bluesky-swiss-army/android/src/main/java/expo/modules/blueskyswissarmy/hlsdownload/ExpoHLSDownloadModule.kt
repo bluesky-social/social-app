@@ -1,10 +1,8 @@
-package expo.modules.blueskyswissarmy.platforminfo
+package expo.modules.blueskyswissarmy.hlsdownload
 
-import android.provider.Settings
-import expo.modules.blueskyswissarmy.hlsdownload.HLSDownloadView
+import android.net.Uri
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
-import java.net.URI
 
 class ExpoHLSDownloadModule : Module() {
   override fun definition() =
@@ -21,12 +19,16 @@ class ExpoHLSDownloadModule : Module() {
         )
         )
 
-        Prop("downloaderUrl") { view: HLSDownloadView, downloaderUrl: URI ->
-
+        Prop("downloaderUrl") { view: HLSDownloadView, downloaderUrl: Uri ->
+          view.downloaderUrl = downloaderUrl
         }
 
-        AsyncFunction("startDownloadAsync") {
-          
+        AsyncFunction("startDownloadAsync") { view: HLSDownloadView, sourceUrl: Uri ->
+          view.startDownload(sourceUrl)
+        }
+
+        AsyncFunction("cancelDownloadAsync") {
+
         }
       }
     }

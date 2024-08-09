@@ -2,7 +2,7 @@ import React from 'react'
 import {ScrollView, View} from 'react-native'
 
 import {useSetThemePrefs} from '#/state/shell'
-import {isWeb} from 'platform/detection'
+import {isIOS, isWeb} from 'platform/detection'
 import {CenteredView} from '#/view/com/util/Views'
 import {ListContained} from 'view/screens/Storybook/ListContained'
 import {atoms as a, ThemeProvider, useTheme} from '#/alf'
@@ -41,7 +41,11 @@ function StorybookInner() {
       <View style={[a.p_xl, a.gap_5xl, {paddingBottom: 200}]}>
         <HLSDownloadView
           ref={hlsDownloadRef}
-          downloaderUrl="http://localhost:19006/video-download"
+          downloaderUrl={
+            isIOS
+              ? 'http://localhost:19006/video-download'
+              : 'http://10.0.2.2:19006/video-download'
+          }
           onSuccess={e => console.log('success:', e.nativeEvent.uri)}
           onStart={() => console.log('Download is starting')}
           onError={e => console.log(e.nativeEvent.message)}

@@ -148,12 +148,13 @@ export function VideoDownloadScreen() {
     // @ts-expect-error Don't feel like figuring this out. Checks out with the documentation.🙃
     const blob = new Blob([fileData.buffer], {type: 'video/mp4'})
 
-    const dataUrl = await new Promise<string | null>(resolve => {
-      const reader = new FileReader()
-      reader.onloadend = () => resolve(reader.result as string)
-      reader.onerror = () => resolve(null)
-      reader.readAsDataURL(blob)
-    })
+    // const dataUrl = await new Promise<string | null>(resolve => {
+    //   const reader = new FileReader()
+    //   reader.onloadend = () => resolve(reader.result as string)
+    //   reader.onerror = () => resolve(null)
+    //   reader.readAsDataURL(blob)
+    // })
+    const dataUrl = URL.createObjectURL(blob)
     return dataUrl
   }, [])
 

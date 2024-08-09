@@ -50,7 +50,8 @@ class HLSDownloadView: ExpoView, WKScriptMessageHandler, WKNavigationDelegate, W
   // MARK: - view functions
 
   func startDownload(sourceUrl: URL) {
-    guard let url = self.createUrl(videoUrl: sourceUrl) else {
+    guard let downloaderUrl = self.downloaderUrl,
+          let url = URL(string: "\(downloaderUrl.absoluteString)?videoUrl=\(sourceUrl.absoluteString)") else {
       return
     }
 
@@ -64,6 +65,9 @@ class HLSDownloadView: ExpoView, WKScriptMessageHandler, WKNavigationDelegate, W
     guard let response = message.body as? String,
           let data = response.data(using: .utf8),
           let payload = try? JSONDecoder().decode(WebViewActionPayload.self, from: data) else {
+      onError([
+        "message": "Failed to decode JSON post message."
+      ])
       return
     }
 
@@ -127,14 +131,7 @@ class HLSDownloadView: ExpoView, WKScriptMessageHandler, WKNavigationDelegate, W
     self.onSuccess([
       "uri": url.absoluteString
     ])
-  }
-
-  private func createUrl(videoUrl: URL) -> URL? {
-    guard let downloaderUrl = self.downloaderUrl else {
-      // TODO
-      fatalError()
-    }
-    return URL(string: "\(downloaderUrl.absoluteString)?videoUrl=\(videoUrl.absoluteString)")
+    self.outputUrl = nil
   }
 }
 
