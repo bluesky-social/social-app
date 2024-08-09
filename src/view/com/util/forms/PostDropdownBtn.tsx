@@ -149,8 +149,7 @@ let PostDropdownBtn = ({
   )
   const isPostHidden = hiddenPosts && hiddenPosts.includes(postUri)
   const isAuthor = postAuthor.did === currentAccount?.did
-  const isRootPostAuthor =
-    rootPostUri && new AtUri(rootPostUri).host === currentAccount?.did
+  const isRootPostAuthor = new AtUri(rootUri).host === currentAccount?.did
   const isReplyHiddenByThreadgate =
     threadgateRecord?.hiddenReplies?.includes(postUri)
 
@@ -648,6 +647,7 @@ let PostDropdownBtn = ({
         control={postInteractionSettingsDialogControl}
         postUri={post.uri}
         threadgateRecord={threadgateRecord}
+        replySettingsDisabled={!isRootPostAuthor}
       />
     </EventStopper>
   )
@@ -657,6 +657,7 @@ export function PostInteractionSettingsDialogControlled(props: {
   control: Dialog.DialogControlProps
   postUri: string
   threadgateRecord?: AppBskyFeedThreadgate.Record
+  replySettingsDisabled: boolean
 }) {
   return (
     <Dialog.Outer control={props.control}>
@@ -670,6 +671,7 @@ function PostInteractionSettingsDialogControlledInner(props: {
   control: Dialog.DialogControlProps
   postUri: string
   threadgateRecord?: AppBskyFeedThreadgate.Record
+  replySettingsDisabled: boolean
 }) {
   const {_} = useLingui()
   const threadgateAllowUISettings = React.useMemo(() => {
@@ -733,7 +735,7 @@ function PostInteractionSettingsDialogControlledInner(props: {
         <Loader size="xl" />
       ) : (
         <PostInteractionSettingsDialogInner
-          replySettingsDisabled
+          replySettingsDisabled={props.replySettingsDisabled}
           isSaving={isSaving}
           onSave={onSave}
           postgate={
