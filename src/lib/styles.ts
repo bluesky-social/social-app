@@ -1,6 +1,7 @@
 import {Dimensions, StyleProp, StyleSheet, TextStyle} from 'react-native'
-import {Theme, TypographyVariant} from './ThemeContext'
+
 import {isWeb} from 'platform/detection'
+import {Theme, TypographyVariant} from './ThemeContext'
 
 // 1 is lightest, 2 is light, 3 is mid, 4 is dark, 5 is darkest
 export const colors = {
@@ -64,7 +65,7 @@ export const gradients = {
 
 export const s = StyleSheet.create({
   // helpers
-  footerSpacer: {height: 100},
+  footerSpacer: {height: 50},
   contentContainer: {paddingBottom: 200},
   contentContainerExtra: {paddingBottom: 300},
   border0: {borderWidth: 0},
