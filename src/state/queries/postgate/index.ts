@@ -135,6 +135,31 @@ export function usePostgateQuery({postUri}: {postUri: string}) {
   })
 }
 
+export function useWritePostgateMutation() {
+  const agent = useAgent()
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async ({
+      postUri,
+      postgate,
+    }: {
+      postUri: string
+      postgate: AppBskyFeedPostgate.Record
+    }) => {
+      return writePostgateRecord({
+        agent,
+        postUri,
+        postgate,
+      })
+    },
+    onSuccess(_, {postUri}) {
+      queryClient.invalidateQueries({
+        queryKey: [createPostgateQueryKey(postUri)],
+      })
+    },
+  })
+}
+
 export function useToggleQuoteDetachmentMutation() {
   const agent = useAgent()
   const queryClient = useQueryClient()

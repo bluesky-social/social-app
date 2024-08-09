@@ -1,10 +1,12 @@
 import React from 'react'
 import {Keyboard, StyleProp, ViewStyle} from 'react-native'
 import Animated, {AnimatedStyle} from 'react-native-reanimated'
+import {AppBskyFeedPostgate} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {isNative} from '#/platform/detection'
+import {embeddingRules} from '#/state/queries/postgate/util'
 import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {atoms as a, useTheme} from '#/alf'
@@ -16,12 +18,18 @@ import {Earth_Stroke2_Corner0_Rounded as Earth} from '#/components/icons/Globe'
 import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
 
 export function ThreadgateBtn({
-  threadgate,
-  onChange,
+  postgate,
+  onChangePostgate,
+  threadgateAllowUISettings,
+  onChangeThreadgateAllowUISettings,
   style,
 }: {
-  threadgate: ThreadgateAllowUISetting[]
-  onChange: (v: ThreadgateAllowUISetting[]) => void
+  postgate: AppBskyFeedPostgate.Record
+  onChangePostgate: (v: AppBskyFeedPostgate.Record) => void
+
+  threadgateAllowUISettings: ThreadgateAllowUISetting[]
+  onChangeThreadgateAllowUISettings: (v: ThreadgateAllowUISetting[]) => void
+
   style?: StyleProp<AnimatedStyle<ViewStyle>>
 }) {
   const {track} = useAnalytics()
@@ -38,13 +46,24 @@ export function ThreadgateBtn({
     control.open()
   }
 
-  const isEverybody = threadgate.length === 0
-  const isNobody = !!threadgate.find(gate => gate.type === 'nobody')
-  const label = isEverybody
-    ? _(msg`Everybody can reply`)
-    : isNobody
-    ? _(msg`Nobody can reply`)
-    : _(msg`Some people can reply`)
+  const anyoneCanReply =
+    threadgateAllowUISettings.length === 1 &&
+    threadgateAllowUISettings[0].type === 'everybody'
+  const noOneCanReply =
+    threadgateAllowUISettings.length === 1 &&
+    threadgateAllowUISettings[0].type === 'nobody'
+  const anyoneCanQuote =
+    !postgate.quotepostRules || postgate.quotepostRules.length === 0
+  const noOneCanQuote =
+    postgate.quotepostRules?.length === 1 &&
+    postgate.quotepostRules[0]?.$type === embeddingRules.disableRule.$type
+  const anyoneCanInteract = anyoneCanReply && anyoneCanQuote
+  const noOneCanInteract = noOneCanReply && noOneCanQuote
+  const label = anyoneCanInteract
+    ? _(msg`Anybody can interact`)
+    : noOneCanInteract
+    ? _(msg`Nobody can interact`)
+    : _(msg`Interaction limited`)
 
   return (
     <>
@@ -60,15 +79,27 @@ export function ThreadgateBtn({
             msg`Opens a dialog to choose who can reply to this thread`,
           )}>
           <ButtonIcon
-            icon={isEverybody ? Earth : isNobody ? CircleBanSign : Group}
+            icon={
+              anyoneCanInteract
+                ? Earth
+                : noOneCanInteract
+                ? CircleBanSign
+                : Group
+            }
           />
           <ButtonText>{label}</ButtonText>
         </Button>
       </Animated.View>
       <ThreadgateEditorDialog
         control={control}
-        threadgateUISettings={threadgate}
-        onChangeThreadgateUISettings={onChange}
+        isSaving={false}
+        onSave={() => {
+          control.close()
+        }}
+        postgate={postgate}
+        onChangePostgate={onChangePostgate}
+        threadgateAllowUISettings={threadgateAllowUISettings}
+        onChangeThreadgateAllowUISettings={onChangeThreadgateAllowUISettings}
       />
     </>
   )

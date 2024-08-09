@@ -10,12 +10,10 @@ import {ViewRemoved} from '@atproto/api/dist/client/types/app/bsky/embed/record'
 export const POSTGATE_COLLECTION = 'app.bsky.feed.postgate'
 
 export function createPostgateRecord(
-  postgate: Partial<AppBskyFeedPostgate.Record>,
+  postgate: Partial<AppBskyFeedPostgate.Record> & {
+    post: AppBskyFeedPostgate.Record['post']
+  },
 ): AppBskyFeedPostgate.Record {
-  if (!postgate.post) {
-    throw new Error(`Cannot create a postgate record without a post URI`)
-  }
-
   return {
     $type: POSTGATE_COLLECTION,
     createdAt: new Date().toISOString(),
@@ -189,4 +187,8 @@ export function getMaybeDetachedQuoteEmbed({
       }
     }
   }
+}
+
+export const embeddingRules = {
+  disableRule: {$type: 'app.bsky.feed.postgate#disableRule'},
 }

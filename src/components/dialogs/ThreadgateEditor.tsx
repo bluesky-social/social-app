@@ -1,79 +1,68 @@
 import React from 'react'
 import {StyleProp, View, ViewStyle} from 'react-native'
+import {AppBskyFeedPostgate} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import isEqual from 'lodash.isequal'
 
 import {useMyListsQuery} from '#/state/queries/my-lists'
+import {
+  createPostgateRecord,
+  embeddingRules,
+} from '#/state/queries/postgate/util'
 import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
 import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {Divider} from '#/components/Divider'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
+import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
 type Props = {
-  threadgateUISettings: ThreadgateAllowUISetting[]
-  onChangeThreadgateUISettings?: (v: ThreadgateAllowUISetting[]) => void
-  onConfirmThreadgateUISettings?: (v: ThreadgateAllowUISetting[]) => void
+  onSave: () => void
+  isSaving: boolean
+
+  postgate: AppBskyFeedPostgate.Record
+  onChangePostgate: (v: AppBskyFeedPostgate.Record) => void
+
+  threadgateAllowUISettings: ThreadgateAllowUISetting[]
+  onChangeThreadgateAllowUISettings: (v: ThreadgateAllowUISetting[]) => void
 }
 
 export function ThreadgateEditorDialog({
   control,
-  onChangeThreadgateUISettings,
-  onConfirmThreadgateUISettings,
-  threadgateUISettings,
+  ...rest
 }: Props & {
   control: Dialog.DialogControlProps
 }) {
   return (
     <Dialog.Outer control={control}>
       <Dialog.Handle />
-      <DialogContent
-        onChangeThreadgateUISettings={onChangeThreadgateUISettings}
-        onConfirmThreadgateUISettings={onConfirmThreadgateUISettings}
-        threadgateUISettings={threadgateUISettings}
-      />
+      <DialogContent {...rest} />
     </Dialog.Outer>
   )
 }
 
 function DialogContent({
-  onChangeThreadgateUISettings,
-  onConfirmThreadgateUISettings,
-  threadgateUISettings,
+  onSave,
+  isSaving,
+  postgate,
+  onChangePostgate,
+  threadgateAllowUISettings,
+  onChangeThreadgateAllowUISettings,
 }: Props) {
+  const t = useTheme()
   const {_} = useLingui()
   const control = Dialog.useDialogContext()
   const {data: lists} = useMyListsQuery('curate')
-  const [draft, setDraft] = React.useState(threadgateUISettings)
-
-  const [prevThreadgateUISettings, setPrevThreadgateUISettings] =
-    React.useState(threadgateUISettings)
-  if (threadgateUISettings !== prevThreadgateUISettings) {
-    // New data flowed from above (e.g. due to update coming through).
-    setPrevThreadgateUISettings(threadgateUISettings)
-    setDraft(threadgateUISettings) // Reset draft.
-  }
-
-  function updateThreadgate(nextThreadgate: ThreadgateAllowUISetting[]) {
-    setDraft(nextThreadgate)
-    onChangeThreadgateUISettings?.(nextThreadgate)
-  }
-
-  const onPressEverybody = () => {
-    updateThreadgate([{type: 'everybody'}])
-  }
-
-  const onPressNobody = () => {
-    updateThreadgate([{type: 'nobody'}])
-  }
 
   const onPressAudience = (setting: ThreadgateAllowUISetting) => {
-    // remove nobody
-    let newSelected: ThreadgateAllowUISetting[] = draft.filter(
-      v => v.type !== 'nobody',
-    )
+    // remove boolean values
+    let newSelected: ThreadgateAllowUISetting[] =
+      threadgateAllowUISettings.filter(
+        v => v.type !== 'nobody' && v.type !== 'everybody',
+      )
     // toggle
     const i = newSelected.findIndex(v => isEqual(v, setting))
     if (i === -1) {
@@ -81,79 +70,161 @@ function DialogContent({
     } else {
       newSelected.splice(i, 1)
     }
-    updateThreadgate(newSelected)
+
+    onChangeThreadgateAllowUISettings(newSelected)
   }
 
-  const doneLabel = onConfirmThreadgateUISettings ? _(msg`Save`) : _(msg`Done`)
+  const onChangeEmbeddingRules = React.useCallback(
+    (rules: AppBskyFeedPostgate.Record['quotepostRules']) => {
+      onChangePostgate(
+        createPostgateRecord({
+          ...postgate,
+          quotepostRules: rules,
+        }),
+      )
+    },
+    [postgate, onChangePostgate],
+  )
+
+  const doneLabel = _(msg`Save`)
   return (
     <Dialog.ScrollableInner
-      label={_(msg`Choose who can reply`)}
+      label={_(msg`Edit post interaction settings`)}
       style={[{maxWidth: 500}, a.w_full]}>
       <View style={[a.flex_1, a.gap_md]}>
         <Text style={[a.text_2xl, a.font_bold]}>
-          <Trans>Choose who can reply</Trans>
+          <Trans>Post interaction settings</Trans>
         </Text>
-        <Text style={a.mt_xs}>
-          <Trans>Either choose "Everybody" or "Nobody"</Trans>
-        </Text>
-        <View style={[a.flex_row, a.gap_sm]}>
-          <Selectable
-            label={_(msg`Everybody`)}
-            isSelected={!!draft.find(v => v.type === 'everybody')}
-            onPress={onPressEverybody}
-            style={{flex: 1}}
-          />
-          <Selectable
-            label={_(msg`Nobody`)}
-            isSelected={!!draft.find(v => v.type === 'nobody')}
-            onPress={onPressNobody}
-            style={{flex: 1}}
-          />
-        </View>
-        <Text style={a.mt_md}>
-          <Trans>Or combine these options:</Trans>
-        </Text>
-        <View style={[a.gap_sm]}>
-          <Selectable
-            label={_(msg`Mentioned users`)}
-            isSelected={!!draft.find(v => v.type === 'mention')}
-            onPress={() => onPressAudience({type: 'mention'})}
-          />
-          <Selectable
-            label={_(msg`Followed users`)}
-            isSelected={!!draft.find(v => v.type === 'following')}
-            onPress={() => onPressAudience({type: 'following'})}
-          />
-          {lists && lists.length > 0
-            ? lists.map(list => (
-                <Selectable
-                  key={list.uri}
-                  label={_(msg`Users in "${list.name}"`)}
-                  isSelected={
-                    !!draft.find(v => v.type === 'list' && v.list === list.uri)
-                  }
-                  onPress={() =>
-                    onPressAudience({type: 'list', list: list.uri})
-                  }
-                />
-              ))
-            : // No loading states to avoid jumps for the common case (no lists)
-              null}
+
+        <View style={[a.gap_lg]}>
+          <Text style={[a.text_md]}>
+            <Trans>Customize who can engage with this post.</Trans>
+          </Text>
+
+          <Divider />
+
+          <View style={[a.gap_sm]}>
+            <Text style={[a.font_bold, a.text_lg]}>
+              <Trans>Quote settings</Trans>
+            </Text>
+
+            <Text style={[a.pt_sm, t.atoms.text_contrast_medium]}>
+              <Trans>Allow quote posts from:</Trans>
+            </Text>
+
+            <View style={[a.flex_row, a.gap_sm]}>
+              <Selectable
+                label={_(msg`Everybody`)}
+                isSelected={
+                  !postgate.quotepostRules ||
+                  postgate.quotepostRules?.length === 0
+                }
+                onPress={() => onChangeEmbeddingRules([])}
+                style={{flex: 1}}
+              />
+              <Selectable
+                label={_(msg`Nobody`)}
+                isSelected={Boolean(
+                  postgate.quotepostRules &&
+                    postgate.quotepostRules.find(
+                      v => v.$type === embeddingRules.disableRule.$type,
+                    ),
+                )}
+                onPress={() =>
+                  onChangeEmbeddingRules([embeddingRules.disableRule])
+                }
+                style={{flex: 1}}
+              />
+            </View>
+          </View>
+
+          <Divider />
+
+          <View style={[a.gap_sm]}>
+            <Text style={[a.font_bold, a.text_lg]}>
+              <Trans>Reply settings</Trans>
+            </Text>
+
+            <Text style={[a.pt_sm, t.atoms.text_contrast_medium]}>
+              <Trans>Allow replies from:</Trans>
+            </Text>
+
+            <View style={[a.flex_row, a.gap_sm]}>
+              <Selectable
+                label={_(msg`Everybody`)}
+                isSelected={
+                  !!threadgateAllowUISettings.find(v => v.type === 'everybody')
+                }
+                onPress={() =>
+                  onChangeThreadgateAllowUISettings([{type: 'everybody'}])
+                }
+                style={{flex: 1}}
+              />
+              <Selectable
+                label={_(msg`Nobody`)}
+                isSelected={
+                  !!threadgateAllowUISettings.find(v => v.type === 'nobody')
+                }
+                onPress={() =>
+                  onChangeThreadgateAllowUISettings([{type: 'nobody'}])
+                }
+                style={{flex: 1}}
+              />
+            </View>
+
+            <Text style={[a.pt_sm, t.atoms.text_contrast_medium]}>
+              <Trans>Or combine these options:</Trans>
+            </Text>
+
+            <View style={[a.gap_sm]}>
+              <Selectable
+                label={_(msg`Mentioned users`)}
+                isSelected={
+                  !!threadgateAllowUISettings.find(v => v.type === 'mention')
+                }
+                onPress={() => onPressAudience({type: 'mention'})}
+              />
+              <Selectable
+                label={_(msg`Followed users`)}
+                isSelected={
+                  !!threadgateAllowUISettings.find(v => v.type === 'following')
+                }
+                onPress={() => onPressAudience({type: 'following'})}
+              />
+              {lists && lists.length > 0
+                ? lists.map(list => (
+                    <Selectable
+                      key={list.uri}
+                      label={_(msg`Users in "${list.name}"`)}
+                      isSelected={
+                        !!threadgateAllowUISettings.find(
+                          v => v.type === 'list' && v.list === list.uri,
+                        )
+                      }
+                      onPress={() =>
+                        onPressAudience({type: 'list', list: list.uri})
+                      }
+                    />
+                  ))
+                : // No loading states to avoid jumps for the common case (no lists)
+                  null}
+            </View>
+          </View>
         </View>
       </View>
+
       <Button
         label={doneLabel}
-        onPress={() => {
-          control.close()
-          onConfirmThreadgateUISettings?.(draft)
-        }}
+        onPress={onSave}
         onAccessibilityEscape={control.close}
         color="primary"
         size="medium"
         variant="solid"
         style={a.mt_xl}>
         <ButtonText>{doneLabel}</ButtonText>
+        {isSaving && <ButtonIcon icon={Loader} position="right" />}
       </Button>
+
       <Dialog.Close />
     </Dialog.ScrollableInner>
   )

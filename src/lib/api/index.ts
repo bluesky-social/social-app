@@ -3,6 +3,7 @@ import {
   AppBskyEmbedImages,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
+  AppBskyFeedPostgate,
   BskyAgent,
   ComAtprotoLabelDefs,
   ComAtprotoRepoUploadBlob,
@@ -11,6 +12,7 @@ import {
 import {AtUri} from '@atproto/api'
 
 import {logger} from '#/logger'
+import {writePostgateRecord} from '#/state/queries/postgate'
 import {
   createThreadgateRecord,
   ThreadgateAllowUISetting,
@@ -65,7 +67,8 @@ interface PostOpts {
   extLink?: ExternalEmbedDraft
   images?: ImageModel[]
   labels?: string[]
-  threadgate?: ThreadgateAllowUISetting[]
+  threadgate: ThreadgateAllowUISetting[]
+  postgate: AppBskyFeedPostgate.Record
   onStateChange?: (state: string) => void
   langs?: string[]
 }
@@ -253,7 +256,9 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
       labels,
     })
   } catch (e: any) {
-    console.error(`Failed to create post: ${e.toString()}`)
+    logger.error(`Failed to create post`, {
+      safeMessage: e.message,
+    })
     if (isNetworkError(e)) {
       throw new Error(
         'Post failed to upload. Please check your Internet connection and try again.',
@@ -265,20 +270,41 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
 
   try {
     // TODO: this needs to be batch-created with the post!
-    if (opts.threadgate?.length) {
-      await writeThreadgateRecord({
-        agent,
-        postUri: res.uri,
-        threadgate: createThreadgateRecord({
-          post: res.uri,
-          allow: threadgateAllowUISettingToAllowRecordValue(opts.threadgate),
-        }),
-      })
-    }
+    await writeThreadgateRecord({
+      agent,
+      postUri: res.uri,
+      threadgate: createThreadgateRecord({
+        post: res.uri,
+        allow: threadgateAllowUISettingToAllowRecordValue(opts.threadgate),
+      }),
+    })
   } catch (e: any) {
-    console.error(`Failed to create threadgate: ${e.toString()}`)
+    logger.error(`Failed to create threadgate`, {
+      context: 'composer',
+      safeMessage: e.message,
+    })
     throw new Error(
-      'Post reply-controls failed to be set. Your post was created but anyone can reply to it.',
+      'Failed to save post interaction settings. Your post was created but users may be able to interact with it.',
+    )
+  }
+
+  try {
+    // TODO: this needs to be batch-created with the post!
+    await writePostgateRecord({
+      agent,
+      postUri: res.uri,
+      postgate: {
+        ...opts.postgate,
+        post: res.uri,
+      },
+    })
+  } catch (e: any) {
+    logger.error(`Failed to create postgate`, {
+      context: 'composer',
+      safeMessage: e.message,
+    })
+    throw new Error(
+      'Failed to save post interaction settings. Your post was created but users may be able to interact with it.',
     )
   }
 

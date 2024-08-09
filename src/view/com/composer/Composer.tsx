@@ -58,9 +58,11 @@ import {
   useLanguagePrefs,
   useLanguagePrefsApi,
 } from '#/state/preferences/languages'
+import {createPostgateRecord} from '#/state/queries/postgate/util'
 import {useProfileQuery} from '#/state/queries/profile'
 import {Gif} from '#/state/queries/tenor'
 import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
+import {threadgateViewToAllowUISetting} from '#/state/queries/threadgate/util'
 import {useUploadVideo} from '#/state/queries/video/video'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
@@ -184,7 +186,11 @@ export const ComposePost = observer(function ComposePost({
   const {extLink, setExtLink} = useExternalLinkFetch({setQuote})
   const [extGif, setExtGif] = useState<Gif>()
   const [labels, setLabels] = useState<string[]>([])
-  const [threadgate, setThreadgate] = useState<ThreadgateAllowUISetting[]>([])
+  const [threadgateAllowUISettings, onChangeThreadgateAllowUISettings] =
+    useState<ThreadgateAllowUISetting[]>(
+      threadgateViewToAllowUISetting(undefined),
+    )
+  const [postgate, setPostgate] = useState(createPostgateRecord({post: ''}))
 
   const gallery = useMemo(
     () => new GalleryModel(initImageUris),
@@ -334,7 +340,8 @@ export const ComposePost = observer(function ComposePost({
           quote,
           extLink,
           labels,
-          threadgate,
+          threadgate: threadgateAllowUISettings,
+          postgate,
           onStateChange: setProcessingState,
           langs: toPostLanguages(langPrefs.postLanguage),
         })
@@ -664,8 +671,12 @@ export const ComposePost = observer(function ComposePost({
 
         {replyTo ? null : (
           <ThreadgateBtn
-            threadgate={threadgate}
-            onChange={setThreadgate}
+            postgate={postgate}
+            onChangePostgate={setPostgate}
+            threadgateAllowUISettings={threadgateAllowUISettings}
+            onChangeThreadgateAllowUISettings={
+              onChangeThreadgateAllowUISettings
+            }
             style={bottomBarAnimatedStyle}
           />
         )}

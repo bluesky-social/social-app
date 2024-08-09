@@ -3,6 +3,7 @@ import {StyleSheet, View} from 'react-native'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
+  AppBskyFeedPostgate,
   AtUri,
   ModerationDecision,
   RichText as RichTextAPI,
@@ -15,6 +16,8 @@ import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {ThreadPost} from '#/state/queries/post-thread'
+import {usePostgateQuery} from '#/state/queries/postgate'
+import {createPostgateRecord} from '#/state/queries/postgate/util'
 import {useThreadgateRecordQuery} from '#/state/queries/threadgate'
 import {useComposerControls} from '#/state/shell/composer'
 import {MAX_POST_LINES} from 'lib/constants'
@@ -80,6 +83,7 @@ export function PostThreadItem({
   onPostReply: (postUri: string | undefined) => void
   hideTopBorder?: boolean
 }) {
+  const {data: postgate, isLoading} = usePostgateQuery({postUri: post.uri})
   const postShadowed = usePostShadow(post)
   const richText = useMemo(
     () =>
@@ -92,7 +96,7 @@ export function PostThreadItem({
   if (postShadowed === POST_TOMBSTONE) {
     return <PostThreadItemDeleted hideTopBorder={hideTopBorder} />
   }
-  if (richText && moderation) {
+  if (richText && moderation && !isLoading) {
     return (
       <PostThreadItemLoaded
         // Safeguard from clobbering per-post state below:
@@ -113,6 +117,7 @@ export function PostThreadItem({
         overrideBlur={overrideBlur}
         onPostReply={onPostReply}
         hideTopBorder={hideTopBorder}
+        postgate={postgate}
       />
     )
   }
@@ -156,6 +161,7 @@ let PostThreadItemLoaded = ({
   overrideBlur,
   onPostReply,
   hideTopBorder,
+  postgate,
 }: {
   post: Shadow<AppBskyFeedDefs.PostView>
   record: AppBskyFeedPost.Record
@@ -173,6 +179,7 @@ let PostThreadItemLoaded = ({
   overrideBlur: boolean
   onPostReply: (postUri: string | undefined) => void
   hideTopBorder?: boolean
+  postgate: AppBskyFeedPostgate.Record | undefined
 }): React.ReactNode => {
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -360,6 +367,7 @@ let PostThreadItemLoaded = ({
               isThreadAuthor={isThreadAuthor}
               translatorUrl={translatorUrl}
               needsTranslation={needsTranslation}
+              postgate={postgate}
             />
             {post.repostCount !== 0 || post.likeCount !== 0 ? (
               // Show this section unless we're *sure* it has no engagement.
@@ -663,15 +671,18 @@ function ExpandedPostDetails({
   isThreadAuthor,
   needsTranslation,
   translatorUrl,
+  postgate,
 }: {
   post: AppBskyFeedDefs.PostView
   isThreadAuthor: boolean
   needsTranslation: boolean
   translatorUrl: string
+  postgate: AppBskyFeedPostgate.Record | undefined
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
   const openLink = useOpenLink()
+  const isRootPost = !('reply' in post.record)
 
   const onTranslatePress = React.useCallback(() => {
     openLink(translatorUrl)
@@ -688,7 +699,19 @@ function ExpandedPostDetails({
         s.mb10,
       ]}>
       <Text style={[a.text_sm, pal.textLight]}>{niceDate(post.indexedAt)}</Text>
-      <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
+      {isRootPost && (
+        <WhoCanReply
+          post={post}
+          postgate={
+            // TODO maybe define at query
+            postgate ||
+            createPostgateRecord({
+              post: post.uri,
+            })
+          }
+          isThreadAuthor={isThreadAuthor}
+        />
+      )}
       {needsTranslation && (
         <>
           <Text style={[a.text_sm, pal.textLight]}>&middot;</Text>

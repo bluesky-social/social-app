@@ -24,7 +24,7 @@ export function threadgateViewToAllowUISetting(
    * for 'replies disabled' other than an empty array.
    */
   if (!record || record.allow === undefined) {
-    return []
+    return [{type: 'everybody'}]
   }
   if (record.allow.length === 0) {
     return [{type: 'nobody'}]
