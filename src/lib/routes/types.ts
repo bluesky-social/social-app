@@ -50,6 +50,7 @@ export type CommonNavigatorParams = {
   StarterPackShort: {code: string}
   StarterPackWizard: undefined
   StarterPackEdit: {rkey?: string}
+  VideoDownload: undefined
 }
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {
