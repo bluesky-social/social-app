@@ -683,7 +683,6 @@ function ExpandedPostDetails({
   const pal = usePalette('default')
   const {_} = useLingui()
   const openLink = useOpenLink()
-  const isRootPost = !('reply' in post.record)
 
   const onTranslatePress = React.useCallback(() => {
     openLink(translatorUrl)
@@ -700,19 +699,17 @@ function ExpandedPostDetails({
         s.mb10,
       ]}>
       <Text style={[a.text_sm, pal.textLight]}>{niceDate(post.indexedAt)}</Text>
-      {isRootPost && (
-        <WhoCanReply
-          post={post}
-          postgate={
-            // TODO maybe define at query
-            postgate ||
-            createPostgateRecord({
-              post: post.uri,
-            })
-          }
-          isThreadAuthor={isThreadAuthor}
-        />
-      )}
+      <WhoCanReply
+        post={post}
+        postgate={
+          // TODO maybe define at query
+          postgate ||
+          createPostgateRecord({
+            post: post.uri,
+          })
+        }
+        isThreadAuthor={isThreadAuthor}
+      />
       {needsTranslation && (
         <>
           <Text style={[a.text_sm, pal.textLight]}>&middot;</Text>

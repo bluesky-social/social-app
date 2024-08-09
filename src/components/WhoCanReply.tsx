@@ -35,8 +35,8 @@ import {useDialogControl} from '#/components/Dialog'
 import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/components/icons/CircleBanSign'
 import {Earth_Stroke2_Corner0_Rounded as Earth} from '#/components/icons/Globe'
 import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
+import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {TextLink} from '../view/com/util/Link'
 import {PostInteractionSettingsDialog} from './dialogs/PostInteractionSettingsDialog'
 import {PencilLine_Stroke2_Corner0_Rounded as PencilLine} from './icons/Pencil'
 
@@ -231,6 +231,7 @@ export function WhoCanReply({
           control={infoDialogControl}
           post={post}
           settings={settings}
+          postgate={postgate}
         />
       )}
     </>
@@ -256,79 +257,90 @@ function WhoCanReplyDialog({
   control,
   post,
   settings,
+  postgate,
 }: {
   control: Dialog.DialogControlProps
   post: AppBskyFeedDefs.PostView
   settings: ThreadgateAllowUISetting[]
-}) {
-  return (
-    <Dialog.Outer control={control}>
-      <Dialog.Handle />
-      <WhoCanReplyDialogInner post={post} settings={settings} />
-    </Dialog.Outer>
-  )
-}
-
-function WhoCanReplyDialogInner({
-  post,
-  settings,
-}: {
-  post: AppBskyFeedDefs.PostView
-  settings: ThreadgateAllowUISetting[]
+  postgate: AppBskyFeedPostgate.Record
 }) {
   const {_} = useLingui()
   return (
-    <Dialog.ScrollableInner
-      label={_(msg`Who can reply dialog`)}
-      style={[{width: 'auto', maxWidth: 400, minWidth: 200}]}>
-      <View style={[a.gap_sm]}>
-        <Text style={[a.font_bold, a.text_xl]}>
-          <Trans>Who can reply?</Trans>
-        </Text>
-        <Rules post={post} settings={settings} />
-      </View>
-    </Dialog.ScrollableInner>
+    <Dialog.Outer control={control}>
+      <Dialog.Handle />
+      <Dialog.ScrollableInner
+        label={_(msg`Who can reply dialog`)}
+        style={[{width: 'auto', maxWidth: 400, minWidth: 200}]}>
+        <View style={[a.gap_sm]}>
+          <Text style={[a.font_bold, a.text_xl, a.pb_sm]}>
+            <Trans>Who can interact with this post?</Trans>
+          </Text>
+          <Rules post={post} settings={settings} postgate={postgate} />
+        </View>
+      </Dialog.ScrollableInner>
+    </Dialog.Outer>
   )
 }
 
 function Rules({
   post,
   settings,
+  postgate,
 }: {
   post: AppBskyFeedDefs.PostView
   settings: ThreadgateAllowUISetting[]
+  postgate: AppBskyFeedPostgate.Record
 }) {
   const t = useTheme()
+  const noOneCanQuote =
+    postgate.quotepostRules?.length === 1 &&
+    postgate.quotepostRules[0]?.$type === embeddingRules.disableRule.$type
+
   return (
-    <Text
-      style={[
-        a.text_md,
-        a.leading_tight,
-        a.flex_wrap,
-        t.atoms.text_contrast_medium,
-      ]}>
-      {!settings.length ? (
-        <Trans>Everybody can reply</Trans>
-      ) : settings[0].type === 'nobody' ? (
-        <Trans>Replies to this thread are disabled</Trans>
-      ) : (
-        <Trans>
-          Only{' '}
-          {settings.map((rule, i) => (
-            <>
-              <Rule
-                key={`rule-${i}`}
-                rule={rule}
-                post={post}
-                lists={post.threadgate!.lists}
-              />
-              <Separator key={`sep-${i}`} i={i} length={settings.length} />
-            </>
-          ))}{' '}
-          can reply
-        </Trans>
-      )}
-    </Text>
+    <>
+      <Text
+        style={[
+          a.text_sm,
+          a.leading_snug,
+          a.flex_wrap,
+          t.atoms.text_contrast_medium,
+        ]}>
+        {settings[0].type === 'everybody' ? (
+          <Trans>Everybody can reply to this post.</Trans>
+        ) : settings[0].type === 'nobody' ? (
+          <Trans>Replies to this post are disabled</Trans>
+        ) : (
+          <Trans>
+            Only{' '}
+            {settings.map((rule, i) => (
+              <>
+                <Rule
+                  key={`rule-${i}`}
+                  rule={rule}
+                  post={post}
+                  lists={post.threadgate!.lists}
+                />
+                <Separator key={`sep-${i}`} i={i} length={settings.length} />
+              </>
+            ))}{' '}
+            can reply.
+          </Trans>
+        )}{' '}
+      </Text>
+      <Text
+        style={[
+          a.text_sm,
+          a.leading_snug,
+          a.flex_wrap,
+          t.atoms.text_contrast_medium,
+        ]}>
+        {noOneCanQuote ? (
+          <Trans>No one but the author can quote this post.</Trans>
+        ) : (
+          <Trans>Anyone can quote this post.</Trans>
+        )}
+      </Text>
+    </>
   )
 }
 
@@ -341,7 +353,6 @@ function Rule({
   post: AppBskyFeedDefs.PostView
   lists: AppBskyGraphDefs.ListViewBasic[] | undefined
 }) {
-  const t = useTheme()
   if (rule.type === 'mention') {
     return <Trans>mentioned users</Trans>
   }
@@ -349,12 +360,12 @@ function Rule({
     return (
       <Trans>
         users followed by{' '}
-        <TextLink
-          type="sm"
-          href={makeProfileLink(post.author)}
-          text={`@${post.author.handle}`}
-          style={{color: t.palette.primary_500}}
-        />
+        <InlineLinkText
+          label={`@${post.author.handle}`}
+          to={makeProfileLink(post.author)}
+          style={[a.text_sm, a.leading_snug]}>
+          @{post.author.handle}
+        </InlineLinkText>
       </Trans>
     )
   }
@@ -364,12 +375,12 @@ function Rule({
       const listUrip = new AtUri(list.uri)
       return (
         <Trans>
-          <TextLink
-            type="sm"
-            href={makeListLink(listUrip.hostname, listUrip.rkey)}
-            text={list.name}
-            style={{color: t.palette.primary_500}}
-          />{' '}
+          <InlineLinkText
+            label={list.name}
+            to={makeListLink(listUrip.hostname, listUrip.rkey)}
+            style={[a.text_sm, a.leading_snug]}>
+            {list.name}
+          </InlineLinkText>{' '}
           members
         </Trans>
       )
