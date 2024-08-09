@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import Animated, {FadeIn} from 'react-native-reanimated'
+import Animated, {FadeInDown, FadeOutDown} from 'react-native-reanimated'
 import {VideoPlayer, VideoView} from 'expo-video'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -39,7 +39,7 @@ export function VideoEmbedInnerNative() {
       <VideoView
         ref={ref}
         player={player}
-        style={a.flex_1}
+        style={[a.flex_1, a.rounded_sm]}
         nativeControls={true}
         onEnterFullscreen={() => {
           PlatformInfo.setAudioCategory(AudioCategory.Playback)
@@ -86,6 +86,7 @@ function Controls({
       // duration gets reset to 0 on loop
       if (player.duration) setDuration(Math.floor(player.duration))
       setCurrentTime(Math.floor(player.currentTime))
+
       // how often should we update the time?
       // 1000 gets out of sync with the video time
     }, 250)
@@ -113,11 +114,18 @@ function Controls({
     player.muted = muted
   }, [player])
 
+  // show countdown when:
+  // 1. timeRemaining is a number - was seeing NaNs
+  // 2. duration is greater than 0 - means metadata has loaded
+  // 3. we're less than 5 second into the video
+  const showTime = !isNaN(timeRemaining) && duration > 0 && currentTime <= 5
+
   return (
     <View style={[a.absolute, a.inset_0]}>
-      {!isNaN(timeRemaining) && (
+      {showTime && (
         <Animated.View
-          entering={FadeIn.duration(100)}
+          entering={FadeInDown.duration(300)}
+          exiting={FadeOutDown.duration(500)}
           style={[
             {
               backgroundColor: 'rgba(0, 0, 0, 0.75)',
@@ -148,31 +156,35 @@ function Controls({
         accessibilityHint={_(msg`Tap to enter full screen`)}
         accessibilityRole="button"
       />
-      <Pressable
-        onPress={toggleMuted}
-        style={{
-          backgroundColor: 'rgba(0, 0, 0, 0.75)',
-          borderRadius: 6,
-          paddingHorizontal: 6,
-          paddingVertical: 3,
-          position: 'absolute',
-          bottom: 5,
-          right: 5,
-          minHeight: 20,
-          justifyContent: 'center',
-        }}
-        accessibilityLabel={isMuted ? _(msg`Muted`) : _(msg`Unmuted`)}
-        accessibilityHint={_(msg`Tap to toggle sound`)}
-        accessibilityRole="button"
-        hitSlop={HITSLOP_30}>
-        <Animated.View entering={FadeIn.duration(100)}>
-          {isMuted ? (
-            <MuteIcon width={14} fill={t.palette.white} />
-          ) : (
-            <UnmuteIcon width={14} fill={t.palette.white} />
-          )}
+      {duration > 0 && (
+        <Animated.View
+          entering={FadeInDown.duration(300)}
+          style={{
+            backgroundColor: 'rgba(0, 0, 0, 0.75)',
+            borderRadius: 6,
+            paddingHorizontal: 6,
+            paddingVertical: 3,
+            position: 'absolute',
+            bottom: 5,
+            right: 5,
+            minHeight: 20,
+            justifyContent: 'center',
+          }}>
+          <Pressable
+            onPress={toggleMuted}
+            style={a.flex_1}
+            accessibilityLabel={isMuted ? _(msg`Muted`) : _(msg`Unmuted`)}
+            accessibilityHint={_(msg`Tap to toggle sound`)}
+            accessibilityRole="button"
+            hitSlop={HITSLOP_30}>
+            {isMuted ? (
+              <MuteIcon width={14} fill={t.palette.white} />
+            ) : (
+              <UnmuteIcon width={14} fill={t.palette.white} />
+            )}
+          </Pressable>
         </Animated.View>
-      </Pressable>
+      )}
     </View>
   )
 }
