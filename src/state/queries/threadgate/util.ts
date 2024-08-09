@@ -2,35 +2,41 @@ import {AppBskyFeedDefs, AppBskyFeedThreadgate} from '@atproto/api'
 
 import {ThreadgateAllowUISetting} from '#/state/queries/threadgate/types'
 
+export function threadgateViewToAllowUISetting(
+  threadgateView: AppBskyFeedDefs.ThreadgateView | undefined,
+): ThreadgateAllowUISetting[] {
+  const threadgate =
+    threadgateView &&
+    AppBskyFeedThreadgate.isRecord(threadgateView.record) &&
+    AppBskyFeedThreadgate.validateRecord(threadgateView.record).success
+      ? threadgateView.record
+      : undefined
+  return threadgateRecordToAllowUISetting(threadgate)
+}
+
 /**
  * Converts a full {@link AppBskyFeedThreadgate.Record} to a list of
  * {@link ThreadgateAllowUISetting}, for use by app UI.
  */
-export function threadgateViewToAllowUISetting(
-  threadgate: AppBskyFeedDefs.ThreadgateView | undefined,
+export function threadgateRecordToAllowUISetting(
+  threadgate: AppBskyFeedThreadgate.Record | undefined,
 ): ThreadgateAllowUISetting[] {
-  const record =
-    threadgate &&
-    AppBskyFeedThreadgate.isRecord(threadgate.record) &&
-    AppBskyFeedThreadgate.validateRecord(threadgate.record).success
-      ? threadgate.record
-      : null
   /*
-   * If record doesn't exist (default), or if `record.allow === undefined`, it means
+   * If `threadgate` doesn't exist (default), or if `threadgate.allow === undefined`, it means
    * anyone can reply.
    *
-   * If `record.allow === []` it means no one can reply, and we translate to UI code
+   * If `threadgate.allow === []` it means no one can reply, and we translate to UI code
    * here. This was a historical choice, and we have no lexicon representation
    * for 'replies disabled' other than an empty array.
    */
-  if (!record || record.allow === undefined) {
+  if (!threadgate || threadgate.allow === undefined) {
     return [{type: 'everybody'}]
   }
-  if (record.allow.length === 0) {
+  if (threadgate.allow.length === 0) {
     return [{type: 'nobody'}]
   }
 
-  const settings: ThreadgateAllowUISetting[] = record.allow
+  const settings: ThreadgateAllowUISetting[] = threadgate.allow
     .map(allow => {
       let setting: ThreadgateAllowUISetting | undefined
       if (allow.$type === 'app.bsky.feed.threadgate#mentionRule') {

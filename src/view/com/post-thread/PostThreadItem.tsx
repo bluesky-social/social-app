@@ -83,6 +83,7 @@ export function PostThreadItem({
   onPostReply: (postUri: string | undefined) => void
   hideTopBorder?: boolean
 }) {
+  // TODO should load this for every post, ugh
   const {data: postgate, isLoading} = usePostgateQuery({postUri: post.uri})
   const postShadowed = usePostShadow(post)
   const richText = useMemo(

@@ -9,6 +9,7 @@ import * as Clipboard from 'expo-clipboard'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
+  AppBskyFeedPostgate,
   AppBskyFeedThreadgate,
   AtUri,
   RichText as RichTextAPI,
@@ -32,9 +33,17 @@ import {
   usePostDeleteMutation,
   useThreadMuteMutationQueue,
 } from '#/state/queries/post'
-import {useToggleQuoteDetachmentMutation} from '#/state/queries/postgate'
-import {getMaybeDetachedQuoteEmbed} from '#/state/queries/postgate/util'
+import {
+  usePostgateQuery,
+  useToggleQuoteDetachmentMutation,
+  useWritePostgateMutation,
+} from '#/state/queries/postgate'
+import {
+  createPostgateRecord,
+  getMaybeDetachedQuoteEmbed,
+} from '#/state/queries/postgate/util'
 import {useToggleReplyVisibilityMutation} from '#/state/queries/threadgate'
+import {threadgateRecordToAllowUISetting} from '#/state/queries/threadgate/util'
 import {useSession} from '#/state/session'
 import {getCurrentRoute} from 'lib/routes/helpers'
 import {shareUrl} from 'lib/sharing'
@@ -42,8 +51,10 @@ import {toShareUrl} from 'lib/strings/url-helpers'
 import {useTheme} from 'lib/ThemeContext'
 import {atoms as a, useBreakpoints, useTheme as useAlf} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
+import * as Dialog from '#/components/Dialog'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {EmbedDialog} from '#/components/dialogs/Embed'
+import {PostInteractionSettingsDialogInner} from '#/components/dialogs/PostInteractionSettingsDialog'
 import {SendViaChatDialog} from '#/components/dms/dialogs/ShareViaChatDialog'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {BubbleQuestion_Stroke2_Corner0_Rounded as Translate} from '#/components/icons/Bubble'
@@ -59,6 +70,7 @@ import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/E
 import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
 import {PaperPlane_Stroke2_Corner0_Rounded as Send} from '#/components/icons/PaperPlane'
+import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '#/components/icons/SettingsGear2'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
@@ -114,6 +126,7 @@ let PostDropdownBtn = ({
   const loggedOutWarningPromptControl = useDialogControl()
   const embedPostControl = useDialogControl()
   const sendViaChatControl = useDialogControl()
+  const postInteractionSettingsDialogControl = useDialogControl()
   const {mutateAsync: toggleReplyVisibility} =
     useToggleReplyVisibilityMutation()
 
@@ -136,6 +149,8 @@ let PostDropdownBtn = ({
   )
   const isPostHidden = hiddenPosts && hiddenPosts.includes(postUri)
   const isAuthor = postAuthor.did === currentAccount?.did
+  const isRootPostAuthor =
+    rootPostUri && new AtUri(rootPostUri).host === currentAccount?.did
   const isReplyHiddenByThreadgate =
     threadgateRecord?.hiddenReplies?.includes(postUri)
 
@@ -322,7 +337,8 @@ let PostDropdownBtn = ({
   }, [_, quoteEmbed, post, toggleQuoteDetachment])
 
   const canEmbed = isWeb && gtMobile && !hideInPWI
-  const canHideReply = !isAuthor && !isPostHidden && rootPostUri && isReply
+  const canHideReply =
+    !isAuthor && isRootPostAuthor && !isPostHidden && rootPostUri && isReply
   const canDetachQuote = quoteEmbed && quoteEmbed.isOwnedByViewer
 
   return (
@@ -549,13 +565,24 @@ let PostDropdownBtn = ({
                 )}
 
                 {isAuthor && (
-                  <Menu.Item
-                    testID="postDropdownDeleteBtn"
-                    label={_(msg`Delete post`)}
-                    onPress={deletePromptControl.open}>
-                    <Menu.ItemText>{_(msg`Delete post`)}</Menu.ItemText>
-                    <Menu.ItemIcon icon={Trash} position="right" />
-                  </Menu.Item>
+                  <>
+                    <Menu.Item
+                      testID="postDropdownEditPostInteractions"
+                      label={_(msg`Edit interaction settings`)}
+                      onPress={postInteractionSettingsDialogControl.open}>
+                      <Menu.ItemText>
+                        {_(msg`Edit interaction settings`)}
+                      </Menu.ItemText>
+                      <Menu.ItemIcon icon={Gear} position="right" />
+                    </Menu.Item>
+                    <Menu.Item
+                      testID="postDropdownDeleteBtn"
+                      label={_(msg`Delete post`)}
+                      onPress={deletePromptControl.open}>
+                      <Menu.ItemText>{_(msg`Delete post`)}</Menu.ItemText>
+                      <Menu.ItemIcon icon={Trash} position="right" />
+                    </Menu.Item>
+                  </>
                 )}
               </Menu.Group>
             </>
@@ -616,7 +643,110 @@ let PostDropdownBtn = ({
         control={sendViaChatControl}
         onSelectChat={onSelectChatToShareTo}
       />
+
+      <PostInteractionSettingsDialogControlled
+        control={postInteractionSettingsDialogControl}
+        postUri={post.uri}
+        threadgateRecord={threadgateRecord}
+      />
     </EventStopper>
+  )
+}
+
+export function PostInteractionSettingsDialogControlled(props: {
+  control: Dialog.DialogControlProps
+  postUri: string
+  threadgateRecord?: AppBskyFeedThreadgate.Record
+}) {
+  return (
+    <Dialog.Outer control={props.control}>
+      <Dialog.Handle />
+      <PostInteractionSettingsDialogControlledInner {...props} />
+    </Dialog.Outer>
+  )
+}
+
+function PostInteractionSettingsDialogControlledInner(props: {
+  control: Dialog.DialogControlProps
+  postUri: string
+  threadgateRecord?: AppBskyFeedThreadgate.Record
+}) {
+  const {_} = useLingui()
+  const threadgateAllowUISettings = React.useMemo(() => {
+    return threadgateRecordToAllowUISetting(props.threadgateRecord)
+  }, [props.threadgateRecord])
+  const [isSaving, setIsSaving] = React.useState(false)
+  const {mutateAsync: writePostgateRecord} = useWritePostgateMutation()
+  const {data: postgate, isLoading} = usePostgateQuery({postUri: props.postUri})
+  const [editedPostgate, setEditedPostgate] =
+    React.useState<AppBskyFeedPostgate.Record>()
+
+  const onChangePostgate = React.useCallback(
+    (next: AppBskyFeedPostgate.Record) => {
+      setEditedPostgate(next)
+    },
+    [setEditedPostgate],
+  )
+
+  const onSave = React.useCallback(async () => {
+    if (!editedPostgate) {
+      props.control.close()
+      return
+    }
+
+    setIsSaving(true)
+
+    try {
+      await writePostgateRecord({
+        postUri: props.postUri,
+        postgate: editedPostgate,
+      })
+      props.control.close()
+    } catch (e: any) {
+      logger.error(`Failed to save post interaction settings`, {
+        context: 'PostInteractionSettingsDialogControlledInner',
+        safeMessage: e.message,
+      })
+      Toast.show(
+        _(
+          msg`There was an issue. Please check your internet connection and try again.`,
+        ),
+        'xmark',
+      )
+    } finally {
+      setIsSaving(false)
+    }
+  }, [
+    _,
+    props.postUri,
+    props.control,
+    editedPostgate,
+    setIsSaving,
+    writePostgateRecord,
+  ])
+
+  return (
+    <Dialog.ScrollableInner
+      label={_(msg`Edit post interaction settings`)}
+      style={[{maxWidth: 500}, a.w_full]}>
+      {isLoading ? (
+        <Loader size="xl" />
+      ) : (
+        <PostInteractionSettingsDialogInner
+          replySettingsDisabled
+          isSaving={isSaving}
+          onSave={onSave}
+          postgate={
+            editedPostgate ||
+            postgate ||
+            createPostgateRecord({post: props.postUri})
+          }
+          onChangePostgate={onChangePostgate}
+          threadgateAllowUISettings={threadgateAllowUISettings}
+          onChangeThreadgateAllowUISettings={() => {}}
+        />
+      )}
+    </Dialog.ScrollableInner>
   )
 }
 

@@ -16,10 +16,11 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
-type Props = {
+export type Props = {
   onSave: () => void
   isSaving: boolean
 
@@ -28,6 +29,8 @@ type Props = {
 
   threadgateAllowUISettings: ThreadgateAllowUISetting[]
   onChangeThreadgateAllowUISettings: (v: ThreadgateAllowUISetting[]) => void
+
+  replySettingsDisabled?: boolean
 }
 
 export function PostInteractionSettingsDialog({
@@ -36,21 +39,28 @@ export function PostInteractionSettingsDialog({
 }: Props & {
   control: Dialog.DialogControlProps
 }) {
+  const {_} = useLingui()
   return (
     <Dialog.Outer control={control}>
       <Dialog.Handle />
-      <DialogContent {...rest} />
+      <Dialog.ScrollableInner
+        label={_(msg`Edit post interaction settings`)}
+        style={[{maxWidth: 500}, a.w_full]}>
+        <PostInteractionSettingsDialogInner {...rest} />
+        <Dialog.Close />
+      </Dialog.ScrollableInner>
     </Dialog.Outer>
   )
 }
 
-function DialogContent({
+export function PostInteractionSettingsDialogInner({
   onSave,
   isSaving,
   postgate,
   onChangePostgate,
   threadgateAllowUISettings,
   onChangeThreadgateAllowUISettings,
+  replySettingsDisabled,
 }: Props) {
   const t = useTheme()
   const {_} = useLingui()
@@ -91,9 +101,7 @@ function DialogContent({
   )
 
   return (
-    <Dialog.ScrollableInner
-      label={_(msg`Edit post interaction settings`)}
-      style={[{maxWidth: 500}, a.w_full]}>
+    <View>
       <View style={[a.flex_1, a.gap_md]}>
         <Text style={[a.text_2xl, a.font_bold]}>
           <Trans>Post interaction settings</Trans>
@@ -143,7 +151,31 @@ function DialogContent({
 
           <Divider />
 
-          <View style={[a.gap_sm]}>
+          {replySettingsDisabled && (
+            <View
+              style={[
+                a.px_md,
+                a.py_sm,
+                a.rounded_sm,
+                a.flex_row,
+                a.align_center,
+                a.gap_sm,
+                t.atoms.bg_contrast_25,
+              ]}>
+              <CircleInfo fill={t.atoms.text_contrast_low.color} />
+              <Text style={[a.leading_snug, t.atoms.text_contrast_medium]}>
+                <Trans>Reply settings are inherited from the root post</Trans>
+              </Text>
+            </View>
+          )}
+
+          <View
+            style={[
+              a.gap_sm,
+              {
+                opacity: replySettingsDisabled ? 0.3 : 1,
+              },
+            ]}>
             <Text style={[a.font_bold, a.text_lg]}>
               <Trans>Reply settings</Trans>
             </Text>
@@ -162,6 +194,7 @@ function DialogContent({
                   onChangeThreadgateAllowUISettings([{type: 'everybody'}])
                 }
                 style={{flex: 1}}
+                disabled={replySettingsDisabled}
               />
               <Selectable
                 label={_(msg`Nobody`)}
@@ -170,6 +203,7 @@ function DialogContent({
                   onChangeThreadgateAllowUISettings([{type: 'nobody'}])
                 }
                 style={{flex: 1}}
+                disabled={replySettingsDisabled}
               />
             </View>
 
@@ -188,6 +222,7 @@ function DialogContent({
                       )
                     }
                     onPress={() => onPressAudience({type: 'mention'})}
+                    disabled={replySettingsDisabled}
                   />
                   <Selectable
                     label={_(msg`Followed users`)}
@@ -197,6 +232,7 @@ function DialogContent({
                       )
                     }
                     onPress={() => onPressAudience({type: 'following'})}
+                    disabled={replySettingsDisabled}
                   />
                   {lists && lists.length > 0
                     ? lists.map(list => (
@@ -211,6 +247,7 @@ function DialogContent({
                           onPress={() =>
                             onPressAudience({type: 'list', list: list.uri})
                           }
+                          disabled={replySettingsDisabled}
                         />
                       ))
                     : // No loading states to avoid jumps for the common case (no lists)
@@ -233,9 +270,7 @@ function DialogContent({
         <ButtonText>{_(msg`Save`)}</ButtonText>
         {isSaving && <ButtonIcon icon={Loader} position="right" />}
       </Button>
-
-      <Dialog.Close />
-    </Dialog.ScrollableInner>
+    </View>
   )
 }
 
@@ -244,15 +279,18 @@ function Selectable({
   isSelected,
   onPress,
   style,
+  disabled,
 }: {
   label: string
   isSelected: boolean
   onPress: () => void
   style?: StyleProp<ViewStyle>
+  disabled?: boolean
 }) {
   const t = useTheme()
   return (
     <Button
+      disabled={disabled}
       onPress={onPress}
       label={label}
       accessibilityHint="Select this option"
