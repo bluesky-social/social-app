@@ -65,7 +65,7 @@ function Controls({
       <View
         style={[
           {
-            backgroundColor: 'rgba(0, 0, 0, 0.75',
+            backgroundColor: 'rgba(0, 0, 0, 0.75)',
             borderRadius: 6,
             paddingHorizontal: 6,
             paddingVertical: 3,
