@@ -91,9 +91,12 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
         </Text>
       </ProfileHoverCard>
       {!isAndroid && (
-        <Text type="md" style={pal.textLight} accessible={false}>
-          {' '}
-          &middot;{' '}
+        <Text
+          type="md"
+          style={pal.textLight}
+          lineHeight={1.2}
+          accessible={false}>
+          &middot;
         </Text>
       )}
       <TimeElapsed timestamp={opts.timestamp}>
@@ -101,6 +104,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
           <TextLinkOnWebOnly
             type="md"
             style={pal.textLight}
+            lineHeight={1.2}
             text={timeElapsed}
             accessibilityLabel={niceDate(opts.timestamp)}
             title={niceDate(opts.timestamp)}
@@ -121,6 +125,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-end',
     paddingBottom: 2,
+    gap: 4,
     zIndex: 1,
     flex: 1,
   },
