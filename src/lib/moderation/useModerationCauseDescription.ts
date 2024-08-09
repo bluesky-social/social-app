@@ -13,6 +13,7 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/ico
 import {Props as SVGIconProps} from '#/components/icons/common'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
 import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
+import {AppModerationCause} from '#/components/Pills'
 import {useGlobalLabelStrings} from './useGlobalLabelStrings'
 import {getDefinition, getLabelStrings} from './useLabelInfo'
 
@@ -27,7 +28,7 @@ export interface ModerationCauseDescription {
 }
 
 export function useModerationCauseDescription(
-  cause: ModerationCause | undefined,
+  cause: ModerationCause | AppModerationCause | undefined,
 ): ModerationCauseDescription {
   const {_, i18n} = useLingui()
   const {labelDefs, labelers} = useLabelDefinitions()
@@ -109,6 +110,13 @@ export function useModerationCauseDescription(
         icon: EyeSlash,
         name: _(msg`Post Hidden by You`),
         description: _(msg`You have hidden this post`),
+      }
+    }
+    if (cause.type === 'reply-hidden') {
+      return {
+        icon: EyeSlash,
+        name: _(msg`Post Hidden by Thread Author`),
+        description: _(msg`The author of this thread has hidden this post.`),
       }
     }
     if (cause.type === 'label') {

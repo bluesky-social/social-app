@@ -11,16 +11,17 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {createThreadgate} from '#/lib/api'
 import {until} from '#/lib/async/until'
 import {HITSLOP_10} from '#/lib/constants'
 import {makeListLink, makeProfileLink} from '#/lib/routes/links'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {RQKEY_ROOT as POST_THREAD_RQKEY_ROOT} from '#/state/queries/post-thread'
+import {updateThreadgateAllow} from '#/state/queries/threadgate'
+import {threadgateRecordQueryKeyRoot} from '#/state/queries/threadgate'
 import {
-  ThreadgateSetting,
-  threadgateViewToSettings,
+  ThreadgateAllowUISetting,
+  threadgateViewToAllowUISetting,
 } from '#/state/queries/threadgate'
 import {useAgent} from '#/state/session'
 import * as Toast from 'view/com/util/Toast'
@@ -51,7 +52,7 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
   const queryClient = useQueryClient()
 
   const settings = React.useMemo(
-    () => threadgateViewToSettings(post.threadgate),
+    () => threadgateViewToAllowUISetting(post.threadgate),
     [post],
   )
   const isRootPost = !('reply' in post.record)
@@ -82,24 +83,22 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
     }
   }
 
-  const onEditConfirm = async (newSettings: ThreadgateSetting[]) => {
+  const onEditConfirm = async (newSettings: ThreadgateAllowUISetting[]) => {
     if (JSON.stringify(settings) === JSON.stringify(newSettings)) {
       return
     }
     try {
-      if (newSettings.length) {
-        await createThreadgate(agent, post.uri, newSettings)
-      } else {
-        await agent.api.com.atproto.repo.deleteRecord({
-          repo: agent.session!.did,
-          collection: 'app.bsky.feed.threadgate',
-          rkey: new AtUri(post.uri).rkey,
-        })
-      }
+      await updateThreadgateAllow({
+        agent,
+        postUri: post.uri,
+        allow: newSettings,
+      })
+
+      // TODO
       await whenAppViewReady(agent, post.uri, res => {
         const thread = res.data.thread
         if (AppBskyFeedDefs.isThreadViewPost(thread)) {
-          const fetchedSettings = threadgateViewToSettings(
+          const fetchedSettings = threadgateViewToAllowUISetting(
             thread.post.threadgate,
           )
           return JSON.stringify(fetchedSettings) === JSON.stringify(newSettings)
@@ -109,6 +108,9 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
       Toast.show(_(msg`Thread settings updated`))
       queryClient.invalidateQueries({
         queryKey: [POST_THREAD_RQKEY_ROOT],
+      })
+      queryClient.invalidateQueries({
+        queryKey: [threadgateRecordQueryKeyRoot],
       })
     } catch (err) {
       Toast.show(
@@ -174,7 +176,7 @@ function Icon({
 }: {
   color: string
   width?: number
-  settings: ThreadgateSetting[]
+  settings: ThreadgateAllowUISetting[]
 }) {
   const isEverybody = settings.length === 0
   const isNobody = !!settings.find(gate => gate.type === 'nobody')
@@ -189,7 +191,7 @@ function WhoCanReplyDialog({
 }: {
   control: Dialog.DialogControlProps
   post: AppBskyFeedDefs.PostView
-  settings: ThreadgateSetting[]
+  settings: ThreadgateAllowUISetting[]
 }) {
   return (
     <Dialog.Outer control={control}>
@@ -204,7 +206,7 @@ function WhoCanReplyDialogInner({
   settings,
 }: {
   post: AppBskyFeedDefs.PostView
-  settings: ThreadgateSetting[]
+  settings: ThreadgateAllowUISetting[]
 }) {
   const {_} = useLingui()
   return (
@@ -226,7 +228,7 @@ function Rules({
   settings,
 }: {
   post: AppBskyFeedDefs.PostView
-  settings: ThreadgateSetting[]
+  settings: ThreadgateAllowUISetting[]
 }) {
   const t = useTheme()
   return (
@@ -267,7 +269,7 @@ function Rule({
   post,
   lists,
 }: {
-  rule: ThreadgateSetting
+  rule: ThreadgateAllowUISetting
   post: AppBskyFeedDefs.PostView
   lists: AppBskyGraphDefs.ListViewBasic[] | undefined
 }) {

@@ -4,6 +4,7 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedGetPostThread,
   AppBskyFeedPost,
+  AppBskyFeedThreadgate,
   AtUri,
   ModerationDecision,
   ModerationOpts,
@@ -138,6 +139,7 @@ export function sortThread(
   modCache: ThreadModerationCache,
   currentDid: string | undefined,
   justPostedUris: Set<string>,
+  threadgateRecord?: AppBskyFeedThreadgate.Record,
 ): ThreadNode {
   if (node.type !== 'post') {
     return node
@@ -148,6 +150,19 @@ export function sortThread(
         return 1
       }
       if (b.type !== 'post') {
+        return -1
+      }
+
+      /*
+       * Hiding takes precendence over OP check below bc thread root author
+       * can't hide their own posts, therefore this only applies to other
+       * authors.
+       */
+      const aHidden = threadgateRecord?.hiddenReplies?.includes(a.uri)
+      const bHidden = threadgateRecord?.hiddenReplies?.includes(b.uri)
+      if (aHidden && !bHidden) {
+        return 1
+      } else if (bHidden && !aHidden) {
         return -1
       }
 
@@ -222,7 +237,14 @@ export function sortThread(
       return b.post.indexedAt.localeCompare(a.post.indexedAt)
     })
     node.replies.forEach(reply =>
-      sortThread(reply, opts, modCache, currentDid, justPostedUris),
+      sortThread(
+        reply,
+        opts,
+        modCache,
+        currentDid,
+        justPostedUris,
+        threadgateRecord,
+      ),
     )
   }
   return node

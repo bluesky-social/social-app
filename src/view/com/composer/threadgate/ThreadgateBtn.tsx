@@ -5,7 +5,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {isNative} from '#/platform/detection'
-import {ThreadgateSetting} from '#/state/queries/threadgate'
+import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -20,8 +20,8 @@ export function ThreadgateBtn({
   onChange,
   style,
 }: {
-  threadgate: ThreadgateSetting[]
-  onChange: (v: ThreadgateSetting[]) => void
+  threadgate: ThreadgateAllowUISetting[]
+  onChange: (v: ThreadgateAllowUISetting[]) => void
   style?: StyleProp<AnimatedStyle<ViewStyle>>
 }) {
   const {track} = useAnalytics()

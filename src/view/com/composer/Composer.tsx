@@ -60,7 +60,7 @@ import {
 } from '#/state/preferences/languages'
 import {useProfileQuery} from '#/state/queries/profile'
 import {Gif} from '#/state/queries/tenor'
-import {ThreadgateSetting} from '#/state/queries/threadgate'
+import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
 import {useUploadVideo} from '#/state/queries/video/video'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
@@ -184,7 +184,7 @@ export const ComposePost = observer(function ComposePost({
   const {extLink, setExtLink} = useExternalLinkFetch({setQuote})
   const [extGif, setExtGif] = useState<Gif>()
   const [labels, setLabels] = useState<string[]>([])
-  const [threadgate, setThreadgate] = useState<ThreadgateSetting[]>([])
+  const [threadgate, setThreadgate] = useState<ThreadgateAllowUISetting[]>([])
 
   const gallery = useMemo(
     () => new GalleryModel(initImageUris),

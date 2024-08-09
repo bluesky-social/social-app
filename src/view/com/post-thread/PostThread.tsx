@@ -3,7 +3,11 @@ import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import {runOnJS} from 'react-native-reanimated'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {AppBskyFeedDefs} from '@atproto/api'
+import {
+  AppBskyFeedDefs,
+  AppBskyFeedPost,
+  AppBskyFeedThreadgate,
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -23,6 +27,7 @@ import {
   usePostThreadQuery,
 } from '#/state/queries/post-thread'
 import {usePreferencesQuery} from '#/state/queries/preferences'
+import {useThreadgateRecordQuery} from '#/state/queries/threadgate'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
@@ -113,6 +118,16 @@ export function PostThread({uri}: {uri: string | undefined}) {
   )
   const rootPost = thread?.type === 'post' ? thread.post : undefined
   const rootPostRecord = thread?.type === 'post' ? thread.record : undefined
+  const replyRef =
+    rootPostRecord && AppBskyFeedPost.isRecord(rootPostRecord)
+      ? rootPostRecord.reply
+      : undefined
+  const rootPostUri = replyRef ? replyRef.root.uri : rootPost?.uri
+
+  const {data: threadgateRecord} = useThreadgateRecordQuery({
+    postUri: rootPostUri,
+    initialData: rootPost?.threadgate?.record as AppBskyFeedThreadgate.Record,
+  })
 
   const moderationOpts = useModerationOpts()
   const isNoPwi = React.useMemo(() => {
@@ -175,11 +190,13 @@ export function PostThread({uri}: {uri: string | undefined}) {
         threadModerationCache,
         currentDid,
         justPostedUris,
+        threadgateRecord ?? undefined,
       ),
       !!currentDid,
       treeView,
       threadModerationCache,
       hiddenRepliesState !== HiddenRepliesState.Hide,
+      threadgateRecord ?? undefined,
     )
   }, [
     thread,
@@ -189,6 +206,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
     threadModerationCache,
     hiddenRepliesState,
     justPostedUris,
+    threadgateRecord,
   ])
 
   const error = React.useMemo(() => {
@@ -549,6 +567,7 @@ function createThreadSkeleton(
   treeView: boolean,
   modCache: ThreadModerationCache,
   showHiddenReplies: boolean,
+  threadgateRecord?: AppBskyFeedThreadgate.Record,
 ): ThreadSkeletonParts | null {
   if (!node) return null
 
@@ -562,6 +581,7 @@ function createThreadSkeleton(
         treeView,
         modCache,
         showHiddenReplies,
+        threadgateRecord,
       ),
     ),
   }
@@ -598,6 +618,7 @@ function* flattenThreadReplies(
   treeView: boolean,
   modCache: ThreadModerationCache,
   showHiddenReplies: boolean,
+  threadgateRecord?: AppBskyFeedThreadgate.Record,
 ): Generator<YieldedItem, HiddenReplyType> {
   if (node.type === 'post') {
     // dont show pwi-opted-out posts to logged out users
@@ -616,6 +637,13 @@ function* flattenThreadReplies(
           return HiddenReplyType.Hidden
         }
       }
+
+      if (
+        !showHiddenReplies &&
+        threadgateRecord?.hiddenReplies?.includes(node.post.uri)
+      ) {
+        return HiddenReplyType.Hidden
+      }
     }
 
     if (!node.ctx.isHighlightedPost) {
@@ -631,6 +659,7 @@ function* flattenThreadReplies(
           treeView,
           modCache,
           showHiddenReplies,
+          threadgateRecord,
         )
         if (hiddenReply > hiddenReplies) {
           hiddenReplies = hiddenReply

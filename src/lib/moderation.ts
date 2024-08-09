@@ -1,17 +1,20 @@
 import {
-  ModerationCause,
-  ModerationUI,
-  InterpretedLabelValueDefinition,
-  LABELS,
   AppBskyLabelerDefs,
   BskyAgent,
+  InterpretedLabelValueDefinition,
+  LABELS,
+  ModerationCause,
   ModerationOpts,
+  ModerationUI,
 } from '@atproto/api'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {AppModerationCause} from '#/components/Pills'
 
-export function getModerationCauseKey(cause: ModerationCause): string {
+export function getModerationCauseKey(
+  cause: ModerationCause | AppModerationCause,
+): string {
   const source =
     cause.source.type === 'labeler'
       ? cause.source.did

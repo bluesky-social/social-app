@@ -3,7 +3,6 @@ import {
   AppBskyEmbedImages,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
-  AppBskyFeedThreadgate,
   BskyAgent,
   ComAtprotoLabelDefs,
   ComAtprotoRepoUploadBlob,
@@ -12,7 +11,12 @@ import {
 import {AtUri} from '@atproto/api'
 
 import {logger} from '#/logger'
-import {ThreadgateSetting} from '#/state/queries/threadgate'
+import {
+  createThreadgateRecord,
+  ThreadgateAllowUISetting,
+  threadgateAllowUISettingToAllowRecordValue,
+  writeThreadgateRecord,
+} from '#/state/queries/threadgate'
 import {isNetworkError} from 'lib/strings/errors'
 import {shortenLinks, stripInvalidMentions} from 'lib/strings/rich-text-manip'
 import {isNative, isWeb} from 'platform/detection'
@@ -61,7 +65,7 @@ interface PostOpts {
   extLink?: ExternalEmbedDraft
   images?: ImageModel[]
   labels?: string[]
-  threadgate?: ThreadgateSetting[]
+  threadgate?: ThreadgateAllowUISetting[]
   onStateChange?: (state: string) => void
   langs?: string[]
 }
@@ -262,7 +266,14 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
   try {
     // TODO: this needs to be batch-created with the post!
     if (opts.threadgate?.length) {
-      await createThreadgate(agent, res.uri, opts.threadgate)
+      await writeThreadgateRecord({
+        agent,
+        postUri: res.uri,
+        threadgate: createThreadgateRecord({
+          post: res.uri,
+          allow: threadgateAllowUISettingToAllowRecordValue(opts.threadgate),
+        }),
+      })
     }
   } catch (e: any) {
     console.error(`Failed to create threadgate: ${e.toString()}`)
@@ -272,45 +283,6 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
   }
 
   return res
-}
-
-export async function createThreadgate(
-  agent: BskyAgent,
-  postUri: string,
-  threadgate: ThreadgateSetting[],
-) {
-  let allow: (
-    | AppBskyFeedThreadgate.MentionRule
-    | AppBskyFeedThreadgate.FollowingRule
-    | AppBskyFeedThreadgate.ListRule
-  )[] = []
-  if (!threadgate.find(v => v.type === 'nobody')) {
-    for (const rule of threadgate) {
-      if (rule.type === 'mention') {
-        allow.push({$type: 'app.bsky.feed.threadgate#mentionRule'})
-      } else if (rule.type === 'following') {
-        allow.push({$type: 'app.bsky.feed.threadgate#followingRule'})
-      } else if (rule.type === 'list') {
-        allow.push({
-          $type: 'app.bsky.feed.threadgate#listRule',
-          list: rule.list,
-        })
-      }
-    }
-  }
-
-  const postUrip = new AtUri(postUri)
-  await agent.api.com.atproto.repo.putRecord({
-    repo: agent.session!.did,
-    collection: 'app.bsky.feed.threadgate',
-    rkey: postUrip.rkey,
-    record: {
-      $type: 'app.bsky.feed.threadgate',
-      post: postUri,
-      allow,
-      createdAt: new Date().toISOString(),
-    },
-  })
 }
 
 // helpers

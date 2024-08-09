@@ -239,12 +239,13 @@ export function Item({children, label, onPress, ...rest}: ItemProps) {
           a.rounded_xs,
           {minHeight: 32, paddingHorizontal: 10},
           web({outline: 0}),
-          (hovered || focused) && [
-            web({outline: '0 !important'}),
-            t.name === 'light'
-              ? t.atoms.bg_contrast_25
-              : t.atoms.bg_contrast_50,
-          ],
+          (hovered || focused) &&
+            !rest.disabled && [
+              web({outline: '0 !important'}),
+              t.name === 'light'
+                ? t.atoms.bg_contrast_25
+                : t.atoms.bg_contrast_50,
+            ],
         ])}
         {...web({
           onMouseEnter,
@@ -268,9 +269,7 @@ export function ItemText({children, style}: ItemTextProps) {
 export function ItemIcon({icon: Comp, position = 'left'}: ItemIconProps) {
   const t = useTheme()
   return (
-    <Comp
-      size="md"
-      fill={t.atoms.text_contrast_medium.color}
+    <View
       style={[
         position === 'left' && {
           marginLeft: -2,
@@ -279,8 +278,9 @@ export function ItemIcon({icon: Comp, position = 'left'}: ItemIconProps) {
           marginRight: -2,
           marginLeft: 12,
         },
-      ]}
-    />
+      ]}>
+      <Comp size="md" fill={t.atoms.text_contrast_medium.color} />
+    </View>
   )
 }
 

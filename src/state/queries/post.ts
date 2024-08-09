@@ -73,6 +73,30 @@ export function useGetPost() {
   )
 }
 
+export function useGetPosts() {
+  const queryClient = useQueryClient()
+  const agent = useAgent()
+  return useCallback(
+    async ({uris}: {uris: string[]}) => {
+      return queryClient.fetchQuery({
+        queryKey: RQKEY(uris.join(',') || ''),
+        async queryFn() {
+          const res = await agent.getPosts({
+            uris,
+          })
+
+          if (res.success) {
+            return res.data.posts
+          } else {
+            throw new Error('useGetPosts failed')
+          }
+        },
+      })
+    },
+    [queryClient, agent],
+  )
+}
+
 export function usePostLikeMutationQueue(
   post: Shadow<AppBskyFeedDefs.PostView>,
   logContext: LogEvents['post:like']['logContext'] &
