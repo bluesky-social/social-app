@@ -193,7 +193,6 @@ const styles = StyleSheet.create({
   tabBarContainer: {
     // @ts-ignore web-only
     position: 'sticky',
-    // overflow: 'hidden',
     top: 0,
     zIndex: 1,
   },
