@@ -783,7 +783,7 @@ let SearchInputBox = ({
       }}>
       <MagnifyingGlassIcon
         style={[pal.icon, styles.headerSearchIcon]}
-        size={21}
+        size={20}
       />
       <TextInput
         testID="searchTextInput"

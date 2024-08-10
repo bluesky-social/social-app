@@ -12,7 +12,11 @@ import {
   moderateProfile,
   ModerationDecision,
 } from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
+import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {StackActions, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
@@ -24,7 +28,7 @@ import {s} from '#/lib/styles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {usePalette} from 'lib/hooks/usePalette'
-import {MagnifyingGlassIcon2} from 'lib/icons'
+import {MagnifyingGlassIcon} from 'lib/icons'
 import {NavigationProp} from 'lib/routes/types'
 import {precacheProfile} from 'state/queries/profile'
 import {Link} from '#/view/com/util/Link'
@@ -185,43 +189,38 @@ export function DesktopSearch() {
     <View style={[styles.container, pal.view]}>
       <View
         style={[{backgroundColor: pal.colors.backgroundLight}, styles.search]}>
-        <View style={[styles.inputContainer]}>
-          <MagnifyingGlassIcon2
-            size={18}
-            style={[pal.textLight, styles.iconWrapper]}
-          />
-          <TextInput
-            testID="searchTextInput"
-            placeholder={_(msg`Search`)}
-            placeholderTextColor={pal.colors.textLight}
-            selectTextOnFocus
-            returnKeyType="search"
-            value={query}
-            style={[pal.textLight, styles.input]}
-            onChangeText={onChangeText}
-            onSubmitEditing={onSubmit}
-            accessibilityRole="search"
-            accessibilityLabel={_(msg`Search`)}
-            accessibilityHint=""
-            autoCorrect={false}
-            autoComplete="off"
-            autoCapitalize="none"
-          />
-          {query ? (
-            <View style={styles.cancelBtn}>
-              <TouchableOpacity
-                onPress={onPressCancelSearch}
-                accessibilityRole="button"
-                accessibilityLabel={_(msg`Cancel search`)}
-                accessibilityHint={_(msg`Exits inputting search query`)}
-                onAccessibilityEscape={onPressCancelSearch}>
-                <Text type="lg" style={[pal.link]}>
-                  <Trans>Cancel</Trans>
-                </Text>
-              </TouchableOpacity>
-            </View>
-          ) : undefined}
-        </View>
+        <MagnifyingGlassIcon size={20} style={[pal.icon, styles.iconWrapper]} />
+        <TextInput
+          testID="searchTextInput"
+          placeholder={_(msg`Search`)}
+          placeholderTextColor={pal.colors.textLight}
+          selectTextOnFocus
+          returnKeyType="search"
+          value={query}
+          style={[pal.textLight, styles.input]}
+          onChangeText={onChangeText}
+          onSubmitEditing={onSubmit}
+          accessibilityRole="search"
+          accessibilityLabel={_(msg`Search`)}
+          accessibilityHint=""
+          autoCorrect={false}
+          autoComplete="off"
+          autoCapitalize="none"
+        />
+        {query ? (
+          <TouchableOpacity
+            onPress={onPressCancelSearch}
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`Cancel search`)}
+            accessibilityHint={_(msg`Exits inputting search query`)}
+            onAccessibilityEscape={onPressCancelSearch}>
+            <FontAwesomeIcon
+              icon="xmark"
+              size={16}
+              style={pal.textLight as FontAwesomeIconStyle}
+            />
+          </TouchableOpacity>
+        ) : undefined}
       </View>
 
       {query !== '' && isActive && moderationOpts && (
@@ -263,31 +262,20 @@ const styles = StyleSheet.create({
     width: 300,
   },
   search: {
-    paddingHorizontal: 16,
-    paddingVertical: 2,
-    width: 300,
-    borderRadius: 20,
-  },
-  inputContainer: {
+    flex: 1,
     flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 30,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
   },
   iconWrapper: {
-    position: 'relative',
-    top: 2,
-    paddingVertical: 7,
-    marginRight: 8,
+    marginRight: 6,
+    alignSelf: 'center',
   },
   input: {
     flex: 1,
-    fontSize: 18,
-    width: '100%',
-    paddingTop: 7,
-    paddingBottom: 7,
-  },
-  cancelBtn: {
-    paddingRight: 4,
-    paddingLeft: 10,
-    paddingVertical: 7,
+    fontSize: 17,
   },
   resultsContainer: {
     marginTop: 10,
