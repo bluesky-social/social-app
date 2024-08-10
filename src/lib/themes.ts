@@ -297,7 +297,7 @@ export const darkTheme: Theme = {
       background: darkPalette.black,
       backgroundLight: darkPalette.contrast_25,
       text: darkPalette.white,
-      textLight: darkPalette.contrast_700,
+      textLight: darkPalette.contrast_600,
       textInverted: darkPalette.black,
       link: darkPalette.primary_500,
       border: darkPalette.contrast_100,

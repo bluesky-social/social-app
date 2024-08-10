@@ -400,7 +400,7 @@ export function createThemes({
         color: darkPalette.contrast_400,
       },
       text_contrast_medium: {
-        color: darkPalette.contrast_700,
+        color: darkPalette.contrast_600,
       },
       text_contrast_high: {
         color: darkPalette.contrast_900,
