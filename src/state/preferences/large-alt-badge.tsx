@@ -26,9 +26,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   React.useEffect(() => {
-    return persisted.onUpdate(() => {
-      setState(persisted.get('largeAltBadgeEnabled'))
-    })
+    return persisted.onUpdate(
+      'largeAltBadgeEnabled',
+      nextLargeAltBadgeEnabled => {
+        setState(nextLargeAltBadgeEnabled)
+      },
+    )
   }, [setStateWrapped])
 
   return (

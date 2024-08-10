@@ -79,6 +79,7 @@ export const ProfileFeedSection = React.forwardRef<
         headerOffset={headerHeight}
         renderEndOfFeed={ProfileEndOfFeed}
         ignoreFilterFor={ignoreFilterFor}
+        outsideHeaderOffset={headerHeight}
       />
       {(isScrolledDown || hasNew) && (
         <LoadLatestBtn

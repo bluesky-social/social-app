@@ -14,7 +14,6 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {FALLBACK_MARKER_POST} from '#/lib/api/feed/home'
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {logEvent, useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
@@ -181,6 +180,7 @@ let Feed = ({
   ListHeaderComponent?: () => JSX.Element
   extraData?: any
   savedFeedConfig?: AppBskyActorDefs.SavedFeed
+  outsideHeaderOffset?: number
 }): React.ReactNode => {
   const theme = useTheme()
   const {track} = useAnalytics()
@@ -212,8 +212,9 @@ let Feed = ({
     isFetchingNextPage,
     fetchNextPage,
   } = usePostFeedQuery(feed, feedParams, opts)
-  if (data?.pages[0]) {
-    lastFetchRef.current = data?.pages[0].fetchedAt
+  const lastFetchedAt = data?.pages[0].fetchedAt
+  if (lastFetchedAt) {
+    lastFetchRef.current = lastFetchedAt
   }
   const isEmpty = React.useMemo(
     () => !isFetching && !data?.pages?.some(page => page.slices.length),
@@ -348,8 +349,7 @@ let Feed = ({
           const shouldShow =
             (interstitial.type === feedInterstitialType &&
               gate('suggested_feeds_interstitial')) ||
-            (interstitial.type === followInterstitialType &&
-              gate('suggested_follows_interstitial')) ||
+            interstitial.type === followInterstitialType ||
             interstitial.type === progressGuideInterstitialType
 
           if (shouldShow) {
@@ -358,7 +358,7 @@ let Feed = ({
               ...interstitial,
               params: {variant},
               // overwrite key with unique value
-              key: [interstitial.type, variant].join(':'),
+              key: [interstitial.type, variant, lastFetchedAt].join(':'),
             }
 
             if (arr.length > interstitial.slot) {
@@ -374,6 +374,7 @@ let Feed = ({
     isFetched,
     isError,
     isEmpty,
+    lastFetchedAt,
     data,
     feedUri,
     feedIsDiscover,
@@ -472,7 +473,7 @@ let Feed = ({
       } else if (item.type === progressGuideInterstitialType) {
         return <ProgressGuide />
       } else if (item.type === 'slice') {
-        if (item.slice.rootUri === FALLBACK_MARKER_POST.post.uri) {
+        if (item.slice.isFallbackMarker) {
           // HACK
           // tell the user we fell back to discover
           // see home.ts (feed api) for more info
