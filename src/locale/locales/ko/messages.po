@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-08-08 21:14+0900\n"
+"PO-Revision-Date: 2024-08-10 15:35+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -21,8 +21,8 @@ msgstr "(임베드 콘텐츠 포함)"
 msgid "(no email)"
 msgstr "(이메일 없음)"
 
-#: src/view/com/notifications/FeedItem.tsx:238
-#: src/view/com/notifications/FeedItem.tsx:328
+#: src/view/com/notifications/FeedItem.tsx:236
+#: src/view/com/notifications/FeedItem.tsx:327
 msgid "{0, plural, one {{formattedCount} other} other {{formattedCount} others}}"
 msgstr "외 {0, plural, other {{formattedCount}}}명"
 
@@ -95,7 +95,7 @@ msgstr "이번 주에 {0}명이 가입함"
 msgid "{0} people have used this starter pack!"
 msgstr "{0}명이 이 스타터 팩을 사용했습니다!"
 
-#: src/view/com/util/UserAvatar.tsx:427
+#: src/view/com/util/UserAvatar.tsx:419
 msgid "{0}'s avatar"
 msgstr "{0} 님의 아바타"
 
@@ -413,7 +413,7 @@ msgstr "성인 콘텐츠가 비활성화되어 있습니다."
 msgid "Advanced"
 msgstr "고급"
 
-#: src/state/shell/progress-guide.tsx:176
+#: src/state/shell/progress-guide.tsx:171
 msgid "Algorithm training complete!"
 msgstr "알고리즘 훈련 완료!"
 
@@ -489,7 +489,8 @@ msgstr "오류 발생"
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr "스타터 팩을 만드는 동안 오류가 발생했습니다. 다시 시도하시겠습니까?"
 
-#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:173
+#: src/view/com/util/post-embeds/VideoEmbed.tsx:69
+#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:150
 msgid "An error occurred while loading the video. Please try again later."
 msgstr "동영상을 불러오는 동안 오류가 발생했습니다. 나중에 다시 시도하세요."
 
@@ -524,8 +525,6 @@ msgstr "채팅을 여는 동안 문제가 발생했습니다"
 #: src/components/ProfileCard.tsx:339
 #: src/view/com/profile/FollowButton.tsx:36
 #: src/view/com/profile/FollowButton.tsx:46
-#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:188
-#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:198
 msgid "An issue occurred, please try again."
 msgstr "문제가 발생했습니다. 다시 시도해 주세요."
 
@@ -539,8 +538,8 @@ msgid "an unknown labeler"
 msgstr "알 수 없는 라벨러"
 
 #: src/components/WhoCanReply.tsx:317
-#: src/view/com/notifications/FeedItem.tsx:237
-#: src/view/com/notifications/FeedItem.tsx:325
+#: src/view/com/notifications/FeedItem.tsx:235
+#: src/view/com/notifications/FeedItem.tsx:324
 msgid "and"
 msgstr "및"
 
@@ -756,7 +755,7 @@ msgstr "차단한 계정은 내 스레드에 답글을 달거나 나를 멘션�
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "차단한 계정은 내 스레드에 답글을 달거나 나를 멘션하거나 기타 다른 방식으로 나와 상호작용할 수 없습니다. 차단한 계정의 콘텐츠를 볼 수 없으며 해당 계정도 내 콘텐츠를 볼 수 없게 됩니다."
 
-#: src/view/com/post-thread/PostThread.tsx:368
+#: src/view/com/post-thread/PostThread.tsx:402
 msgid "Blocked post."
 msgstr "차단된 게시물."
 
@@ -810,23 +809,23 @@ msgstr "이미지 흐리게 및 피드에서 필터링"
 msgid "Books"
 msgstr "책"
 
-#: src/components/FeedInterstitials.tsx:290
+#: src/components/FeedInterstitials.tsx:300
 msgid "Browse more accounts on the Explore page"
 msgstr "탐색 페이지에서 더 많은 계정 찾아보기"
 
-#: src/components/FeedInterstitials.tsx:423
+#: src/components/FeedInterstitials.tsx:433
 msgid "Browse more feeds on the Explore page"
 msgstr "탐색 페이지에서 더 많은 피드 찾아보기"
 
-#: src/components/FeedInterstitials.tsx:272
-#: src/components/FeedInterstitials.tsx:275
-#: src/components/FeedInterstitials.tsx:405
-#: src/components/FeedInterstitials.tsx:408
+#: src/components/FeedInterstitials.tsx:282
+#: src/components/FeedInterstitials.tsx:285
+#: src/components/FeedInterstitials.tsx:415
+#: src/components/FeedInterstitials.tsx:418
 msgid "Browse more suggestions"
 msgstr "더 많은 추천 찾아보기"
 
-#: src/components/FeedInterstitials.tsx:298
-#: src/components/FeedInterstitials.tsx:432
+#: src/components/FeedInterstitials.tsx:308
+#: src/components/FeedInterstitials.tsx:442
 msgid "Browse more suggestions on the Explore page"
 msgstr "탐색 페이지에서 더 많은 추천 찾아보기"
 
@@ -1185,11 +1184,11 @@ msgstr "게시물 작성 상자를 닫고 게시물 초안을 삭제합니다"
 msgid "Closes viewer for header image"
 msgstr "헤더 이미지 뷰어를 닫습니다"
 
-#: src/view/com/notifications/FeedItem.tsx:270
+#: src/view/com/notifications/FeedItem.tsx:269
 msgid "Collapse list of users"
 msgstr "사용자 목록 접기"
 
-#: src/view/com/notifications/FeedItem.tsx:471
+#: src/view/com/notifications/FeedItem.tsx:470
 msgid "Collapses list of users for a given notification"
 msgstr "이 알림에 대한 사용자 목록을 축소합니다"
 
@@ -1220,7 +1219,7 @@ msgstr "챌린지 완료하기"
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "최대 {MAX_GRAPHEME_LENGTH}자 길이까지 글을 작성할 수 있습니다"
 
-#: src/view/com/composer/Prompt.tsx:25
+#: src/view/com/post-thread/PostThreadComposePrompt.tsx:29
 msgid "Compose reply"
 msgstr "답글 작성하기"
 
@@ -1510,7 +1509,7 @@ msgid "Custom domain"
 msgstr "사용자 지정 도메인"
 
 #: src/view/screens/Feeds.tsx:759
-#: src/view/screens/Search/Explore.tsx:393
+#: src/view/screens/Search/Explore.tsx:391
 msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
 msgstr "커뮤니티에서 구축한 맞춤 피드는 새로운 경험을 제공하고 좋아하는 콘텐츠를 찾을 수 있도록 도와줍니다."
 
@@ -1637,7 +1636,7 @@ msgstr "이 게시물을 삭제하시겠습니까?"
 msgid "Deleted"
 msgstr "삭제됨"
 
-#: src/view/com/post-thread/PostThread.tsx:354
+#: src/view/com/post-thread/PostThread.tsx:388
 msgid "Deleted post."
 msgstr "삭제된 게시물."
 
@@ -1716,13 +1715,17 @@ msgstr "Discover 피드는 탐색하며 내가 어떤 게시물을 좋아하는�
 msgid "Discover new custom feeds"
 msgstr "새로운 맞춤 피드 찾아보기"
 
-#: src/view/screens/Search/Explore.tsx:391
+#: src/view/screens/Search/Explore.tsx:389
 msgid "Discover new feeds"
 msgstr "새 피드 발견하기"
 
 #: src/view/screens/Feeds.tsx:756
 msgid "Discover New Feeds"
 msgstr "새 피드 발견하기"
+
+#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:108
+msgid "Dismiss"
+msgstr "닫기"
 
 #: src/components/ProgressGuide/List.tsx:40
 msgid "Dismiss getting started guide"
@@ -1865,7 +1868,7 @@ msgctxt "action"
 msgid "Edit"
 msgstr "편집"
 
-#: src/view/com/util/UserAvatar.tsx:336
+#: src/view/com/util/UserAvatar.tsx:328
 #: src/view/com/util/UserBanner.tsx:92
 msgid "Edit avatar"
 msgstr "아바타 편집"
@@ -2154,7 +2157,7 @@ msgstr "검색어 입력을 종료합니다"
 msgid "Expand alt text"
 msgstr "대체 텍스트 확장"
 
-#: src/view/com/notifications/FeedItem.tsx:271
+#: src/view/com/notifications/FeedItem.tsx:270
 msgid "Expand list of users"
 msgstr "사용자 목록 펼치기"
 
@@ -2238,8 +2241,8 @@ msgstr "게시물을 삭제하지 못했습니다. 다시 시도해 주세요"
 msgid "Failed to delete starter pack"
 msgstr "스타터 팩을 삭제하지 못했습니다"
 
-#: src/view/screens/Search/Explore.tsx:429
-#: src/view/screens/Search/Explore.tsx:457
+#: src/view/screens/Search/Explore.tsx:427
+#: src/view/screens/Search/Explore.tsx:455
 msgid "Failed to load feeds preferences"
 msgstr "피드 환경설정을 불러오지 못했습니다"
 
@@ -2252,12 +2255,12 @@ msgstr "GIF를 불러오지 못했습니다"
 msgid "Failed to load past messages"
 msgstr "지난 메시지를 불러오지 못했습니다"
 
-#: src/view/screens/Search/Explore.tsx:422
-#: src/view/screens/Search/Explore.tsx:450
+#: src/view/screens/Search/Explore.tsx:420
+#: src/view/screens/Search/Explore.tsx:448
 msgid "Failed to load suggested feeds"
 msgstr "추천 피드를 불러오지 못했습니다"
 
-#: src/view/screens/Search/Explore.tsx:380
+#: src/view/screens/Search/Explore.tsx:378
 msgid "Failed to load suggested follows"
 msgstr "추천 팔로우를 불러오지 못했습니다"
 
@@ -2302,7 +2305,7 @@ msgstr "{0} 님의 피드"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:55
 msgid "Feed toggle"
-msgstr "피드 켜거나 끄기"
+msgstr "피드 켜기/끄기"
 
 #: src/view/shell/desktop/RightNav.tsx:69
 #: src/view/shell/Drawer.tsx:332
@@ -2398,7 +2401,6 @@ msgstr "세로로 뒤집기"
 #: src/components/ProfileHoverCard/index.web.tsx:457
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:252
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:146
-#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:247
 msgid "Follow"
 msgstr "팔로우"
 
@@ -2412,7 +2414,7 @@ msgstr "팔로우"
 msgid "Follow {0}"
 msgstr "{0} 님을 팔로우"
 
-#: src/view/com/posts/AviFollowButton.tsx:71
+#: src/view/com/posts/AviFollowButton.tsx:69
 msgid "Follow {name}"
 msgstr "{name} 님을 팔로우"
 
@@ -2434,7 +2436,7 @@ msgstr "모두 팔로우"
 msgid "Follow Back"
 msgstr "맞팔로우"
 
-#: src/view/screens/Search/Explore.tsx:336
+#: src/view/screens/Search/Explore.tsx:334
 msgid "Follow more accounts to get connected to your interests and build your network."
 msgstr "더 많은 계정을 팔로우하고 관심 분야를 연결하여 네트워크를 구축하세요."
 
@@ -2458,11 +2460,11 @@ msgstr "<0>{0}</0> 님, <1>{1}</1> 님 외 {2, plural, other {#}}명이 팔로�
 msgid "Followed users"
 msgstr "팔로우한 사용자"
 
-#: src/view/com/notifications/FeedItem.tsx:213
+#: src/view/com/notifications/FeedItem.tsx:211
 msgid "followed you"
 msgstr "이(가) 나를 팔로우했습니다"
 
-#: src/view/com/notifications/FeedItem.tsx:211
+#: src/view/com/notifications/FeedItem.tsx:209
 msgid "followed you back"
 msgstr "이(가) 나를 맞팔로우했습니다"
 
@@ -2498,7 +2500,7 @@ msgstr "팔로우 중"
 msgid "Following {0}"
 msgstr "{0} 님을 팔로우했습니다"
 
-#: src/view/com/posts/AviFollowButton.tsx:53
+#: src/view/com/posts/AviFollowButton.tsx:51
 msgid "Following {name}"
 msgstr "{name} 님을 팔로우했습니다"
 
@@ -2562,7 +2564,7 @@ msgstr "잦은 원치 않는 콘텐츠 게시"
 msgid "From @{sanitizedAuthor}"
 msgstr "@{sanitizedAuthor} 님의 태그"
 
-#: src/view/com/posts/FeedItem.tsx:250
+#: src/view/com/posts/FeedItem.tsx:249
 msgctxt "from-feed"
 msgid "From <0/>"
 msgstr "<0/>에서"
@@ -2606,8 +2608,8 @@ msgstr "명백한 법률 또는 서비스 이용약관 위반 행위"
 
 #: src/components/moderation/ScreenHider.tsx:160
 #: src/components/moderation/ScreenHider.tsx:169
-#: src/view/com/auth/LoggedOut.tsx:80
-#: src/view/com/auth/LoggedOut.tsx:81
+#: src/view/com/auth/LoggedOut.tsx:67
+#: src/view/com/auth/LoggedOut.tsx:68
 #: src/view/screens/NotFound.tsx:55
 #: src/view/screens/ProfileFeed.tsx:112
 #: src/view/screens/ProfileList.tsx:1004
@@ -2671,7 +2673,7 @@ msgstr "사용자의 프로필로 가기"
 msgid "Graphic Media"
 msgstr "그래픽 미디어"
 
-#: src/state/shell/progress-guide.tsx:166
+#: src/state/shell/progress-guide.tsx:161
 msgid "Half way there!"
 msgstr "절반은 완료!"
 
@@ -2723,7 +2725,7 @@ msgstr "앱 비밀번호입니다."
 msgid "Hide"
 msgstr "숨기기"
 
-#: src/view/com/notifications/FeedItem.tsx:478
+#: src/view/com/notifications/FeedItem.tsx:477
 msgctxt "action"
 msgid "Hide"
 msgstr "숨기기"
@@ -2742,7 +2744,7 @@ msgstr "콘텐츠 숨기기"
 msgid "Hide this post?"
 msgstr "이 게시물을 숨기시겠습니까?"
 
-#: src/view/com/notifications/FeedItem.tsx:469
+#: src/view/com/notifications/FeedItem.tsx:468
 msgid "Hide user list"
 msgstr "사용자 리스트 숨기기"
 
@@ -3111,8 +3113,8 @@ msgstr "밝음"
 msgid "Like 10 posts"
 msgstr "10개 게시물에 좋아요 누르기"
 
+#: src/state/shell/progress-guide.tsx:157
 #: src/state/shell/progress-guide.tsx:162
-#: src/state/shell/progress-guide.tsx:167
 msgid "Like 10 posts to train the Discover feed"
 msgstr "10개 게시물에 좋아요를 눌러 Discover 피드를 훈련시키세요"
 
@@ -3134,11 +3136,11 @@ msgstr "좋아요 표시한 사용자"
 msgid "Liked By"
 msgstr "좋아요 표시한 사용자"
 
-#: src/view/com/notifications/FeedItem.tsx:217
+#: src/view/com/notifications/FeedItem.tsx:215
 msgid "liked your custom feed"
 msgstr "이(가) 내 맞춤 피드를 좋아합니다"
 
-#: src/view/com/notifications/FeedItem.tsx:184
+#: src/view/com/notifications/FeedItem.tsx:182
 msgid "liked your post"
 msgstr "이(가) 내 게시물을 좋아합니다"
 
@@ -3204,15 +3206,15 @@ msgstr "리스트"
 msgid "Lists blocking this user:"
 msgstr "이 사용자를 차단한 리스트:"
 
-#: src/view/screens/Search/Explore.tsx:132
+#: src/view/screens/Search/Explore.tsx:131
 msgid "Load more"
 msgstr "더 불러오기"
 
-#: src/view/screens/Search/Explore.tsx:220
+#: src/view/screens/Search/Explore.tsx:219
 msgid "Load more suggested feeds"
 msgstr "추천 피드 더 불러오기"
 
-#: src/view/screens/Search/Explore.tsx:218
+#: src/view/screens/Search/Explore.tsx:217
 msgid "Load more suggested follows"
 msgstr "추천 팔로우 더 불러오기"
 
@@ -3514,6 +3516,7 @@ msgid "Mute words & tags"
 msgstr "단어 및 태그 뮤트"
 
 #: src/view/com/lists/ListCard.tsx:103
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:205
 msgid "Muted"
 msgstr "뮤트됨"
 
@@ -3964,7 +3967,7 @@ msgstr "이런!"
 msgid "Open"
 msgstr "공개성"
 
-#: src/view/com/posts/AviFollowButton.tsx:89
+#: src/view/com/posts/AviFollowButton.tsx:87
 msgid "Open {name} profile shortcut menu"
 msgstr "{name} 님의 프로필 단축 메뉴 열기"
 
@@ -4047,7 +4050,7 @@ msgstr "기기에서 카메라를 엽니다"
 msgid "Opens chat settings"
 msgstr "대화 설정을 엽니다"
 
-#: src/view/com/composer/Prompt.tsx:26
+#: src/view/com/post-thread/PostThreadComposePrompt.tsx:30
 msgid "Opens composer"
 msgstr "답글 작성 상자를 엽니다"
 
@@ -4146,8 +4149,8 @@ msgstr "시스템 로그 페이지를 엽니다"
 msgid "Opens the threads preferences"
 msgstr "스레드 설정을 엽니다"
 
-#: src/view/com/notifications/FeedItem.tsx:556
-#: src/view/com/util/UserAvatar.tsx:428
+#: src/view/com/notifications/FeedItem.tsx:555
+#: src/view/com/util/UserAvatar.tsx:420
 msgid "Opens this profile"
 msgstr "이 프로필을 엽니다"
 
@@ -4256,7 +4259,7 @@ msgstr "사진 보관함에 접근할 수 있는 권한이 거부되었습니다
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:55
 msgid "Person toggle"
-msgstr "사람 켜거나 끄기"
+msgstr "사람 켜기/끄기"
 
 #: src/screens/Onboarding/index.tsx:28
 #: src/screens/Onboarding/state.ts:94
@@ -4301,7 +4304,7 @@ msgstr "{0} 재생"
 msgid "Play or pause the GIF"
 msgstr "GIP를 재생하거나 일시 정지합니다"
 
-#: src/view/com/util/post-embeds/VideoEmbed.tsx:41
+#: src/view/com/util/post-embeds/VideoEmbed.tsx:52
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.web.tsx:204
 msgid "Play video"
 msgstr "동영상 재생"
@@ -4393,7 +4396,7 @@ msgctxt "action"
 msgid "Post"
 msgstr "게시하기"
 
-#: src/view/com/post-thread/PostThread.tsx:435
+#: src/view/com/post-thread/PostThread.tsx:469
 msgctxt "description"
 msgid "Post"
 msgstr "게시물"
@@ -4412,7 +4415,7 @@ msgstr "@{0} 님의 게시물"
 msgid "Post deleted"
 msgstr "게시물 삭제됨"
 
-#: src/view/com/post-thread/PostThread.tsx:194
+#: src/view/com/post-thread/PostThread.tsx:202
 msgid "Post hidden"
 msgstr "게시물 숨김"
 
@@ -4434,8 +4437,8 @@ msgstr "게시물 언어"
 msgid "Post Languages"
 msgstr "게시물 언어"
 
-#: src/view/com/post-thread/PostThread.tsx:189
-#: src/view/com/post-thread/PostThread.tsx:201
+#: src/view/com/post-thread/PostThread.tsx:197
+#: src/view/com/post-thread/PostThread.tsx:209
 msgid "Post not found"
 msgstr "게시물을 찾을 수 없음"
 
@@ -4648,7 +4651,7 @@ msgstr "스타터 팩에서 {displayName} 제거"
 msgid "Remove account"
 msgstr "계정 제거"
 
-#: src/view/com/util/UserAvatar.tsx:395
+#: src/view/com/util/UserAvatar.tsx:387
 msgid "Remove Avatar"
 msgstr "아바타 제거"
 
@@ -4762,18 +4765,18 @@ msgid "Reply"
 msgstr "답글"
 
 #: src/view/com/post/Post.tsx:196
-#: src/view/com/posts/FeedItem.tsx:460
+#: src/view/com/posts/FeedItem.tsx:457
 msgctxt "description"
 msgid "Reply to <0><1/></0>"
 msgstr "<0><1/></0> 님에게 보내는 답글"
 
-#: src/view/com/posts/FeedItem.tsx:453
+#: src/view/com/posts/FeedItem.tsx:450
 msgctxt "description"
 msgid "Reply to a blocked post"
 msgstr "차단된 게시물에 보내는 답글"
 
 #: src/view/com/post/Post.tsx:194
-#: src/view/com/posts/FeedItem.tsx:457
+#: src/view/com/posts/FeedItem.tsx:454
 msgctxt "description"
 msgid "Reply to you"
 msgstr "나에게 보내는 답글"
@@ -4876,20 +4879,20 @@ msgstr "재게시 또는 게시물 인용"
 msgid "Reposted By"
 msgstr "재게시한 사용자"
 
-#: src/view/com/posts/FeedItem.tsx:271
+#: src/view/com/posts/FeedItem.tsx:270
 msgid "Reposted by {0}"
 msgstr "{0} 님이 재게시함"
 
-#: src/view/com/posts/FeedItem.tsx:290
+#: src/view/com/posts/FeedItem.tsx:289
 msgid "Reposted by <0><1/></0>"
 msgstr "<0><1/></0> 님이 재게시함"
 
-#: src/view/com/posts/FeedItem.tsx:269
-#: src/view/com/posts/FeedItem.tsx:288
+#: src/view/com/posts/FeedItem.tsx:268
+#: src/view/com/posts/FeedItem.tsx:287
 msgid "Reposted by you"
 msgstr "내가 재게시함"
 
-#: src/view/com/notifications/FeedItem.tsx:186
+#: src/view/com/notifications/FeedItem.tsx:184
 msgid "reposted your post"
 msgstr "이(가) 내 게시물을 재게시했습니다"
 
@@ -4975,8 +4978,8 @@ msgstr "오류가 발생한 마지막 작업을 다시 시도합니다"
 #: src/screens/Signup/BackNextButtons.tsx:52
 #: src/view/com/util/error/ErrorMessage.tsx:55
 #: src/view/com/util/error/ErrorScreen.tsx:72
-#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:184
-#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:186
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoFallback.tsx:55
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoFallback.tsx:57
 msgid "Retry"
 msgstr "다시 시도"
 
@@ -5073,8 +5076,8 @@ msgstr "이미지 자르기 설정을 저장합니다"
 
 #: src/components/dms/ChatEmptyPill.tsx:33
 #: src/components/NewskieDialog.tsx:105
-#: src/view/com/notifications/FeedItem.tsx:417
-#: src/view/com/notifications/FeedItem.tsx:442
+#: src/view/com/notifications/FeedItem.tsx:416
+#: src/view/com/notifications/FeedItem.tsx:441
 msgid "Say hello!"
 msgstr "인사해 보세요!"
 
@@ -5089,7 +5092,6 @@ msgstr "맨 위로 스크롤"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:504
 #: src/Navigation.tsx:546
-#: src/view/com/auth/LoggedOut.tsx:124
 #: src/view/com/modals/ListAddRemoveUsers.tsx:76
 #: src/view/com/util/forms/SearchInput.tsx:67
 #: src/view/com/util/forms/SearchInput.tsx:79
@@ -5125,8 +5127,6 @@ msgstr "{displayTag} 태그를 사용한 모든 게시물 검색"
 msgid "Search for feeds that you want to suggest to others."
 msgstr "다른 사람에게 추천할 피드를 검색하세요."
 
-#: src/view/com/auth/LoggedOut.tsx:106
-#: src/view/com/auth/LoggedOut.tsx:107
 #: src/view/com/modals/ListAddRemoveUsers.tsx:71
 msgid "Search for users"
 msgstr "사용자 검색하기"
@@ -5506,7 +5506,7 @@ msgstr "이런 항목 덜 보기"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:529
 #: src/view/com/post/Post.tsx:234
-#: src/view/com/posts/FeedItem.tsx:421
+#: src/view/com/posts/FeedItem.tsx:418
 msgid "Show More"
 msgstr "더 보기"
 
@@ -5628,7 +5628,7 @@ msgstr "로그인한 계정"
 msgid "Signed in as @{0}"
 msgstr "@{0}(으)로 로그인했습니다"
 
-#: src/view/com/notifications/FeedItem.tsx:224
+#: src/view/com/notifications/FeedItem.tsx:222
 msgid "signed up with your starter pack"
 msgstr "(이)가 내 스타터 팩으로 가입했습니다"
 
@@ -5636,6 +5636,10 @@ msgstr "(이)가 내 스타터 팩으로 가입했습니다"
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:308
 msgid "Signup without a starter pack"
 msgstr "스타터 팩 없이 가입하기"
+
+#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:102
+msgid "Similar accounts"
+msgstr "비슷한 계정"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:264
 #: src/screens/StarterPack/Wizard/index.tsx:192
@@ -5651,7 +5655,7 @@ msgstr "이 단계 건너뛰기"
 msgid "Software Dev"
 msgstr "소프트웨어 개발"
 
-#: src/components/FeedInterstitials.tsx:387
+#: src/components/FeedInterstitials.tsx:397
 msgid "Some other feeds you might like"
 msgstr "좋아할 만한 다른 피드"
 
@@ -5680,7 +5684,7 @@ msgstr "알 수 없는 오류가 발생했습니다. 다시 시도해 주세요.
 msgid "Something went wrong!"
 msgstr "문제가 발생했습니다!"
 
-#: src/App.native.tsx:100
+#: src/App.native.tsx:101
 #: src/App.web.tsx:82
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "죄송합니다. 세션이 만료되었습니다. 다시 로그인해 주세요."
@@ -5798,12 +5802,11 @@ msgstr "이 라벨러 구독하기"
 msgid "Subscribe to this list"
 msgstr "이 리스트 구독하기"
 
-#: src/view/screens/Search/Explore.tsx:334
+#: src/view/screens/Search/Explore.tsx:332
 msgid "Suggested accounts"
 msgstr "추천 계정"
 
-#: src/components/FeedInterstitials.tsx:252
-#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:65
+#: src/components/FeedInterstitials.tsx:262
 msgid "Suggested for you"
 msgstr "나를 위한 추천"
 
@@ -5859,11 +5862,19 @@ msgstr "세로"
 msgid "Tap to dismiss"
 msgstr "눌러서 닫기"
 
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:185
+msgid "Tap to enter full screen"
+msgstr "탭하여 전체화면으로 보기"
+
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:206
+msgid "Tap to toggle sound"
+msgstr "탭하여 소리 켜기/끄기"
+
 #: src/view/com/util/images/AutoSizedImage.tsx:70
 msgid "Tap to view fully"
 msgstr "탭하여 전체 크기로 봅니다"
 
-#: src/state/shell/progress-guide.tsx:171
+#: src/state/shell/progress-guide.tsx:166
 msgid "Task complete - 10 likes!"
 msgstr "작업 완료 - 10개 좋아요!"
 
@@ -5955,8 +5966,8 @@ msgstr "저작권 정책을 <0/>(으)로 이동했습니다"
 msgid "The Discover feed"
 msgstr "Discover 피드"
 
+#: src/state/shell/progress-guide.tsx:167
 #: src/state/shell/progress-guide.tsx:172
-#: src/state/shell/progress-guide.tsx:177
 msgid "The Discover feed now knows what you like"
 msgstr "이제 Discover 피드는 사용자가 무엇을 좋아하는지 알게 됩니다"
 
@@ -5980,8 +5991,8 @@ msgstr "내 콘텐츠에 다음 라벨이 적용되었습니다."
 msgid "The following steps will help customize your Bluesky experience."
 msgstr "다음 단계는 Bluesky 환경을 맞춤 설정하는 데 도움이 됩니다."
 
-#: src/view/com/post-thread/PostThread.tsx:190
-#: src/view/com/post-thread/PostThread.tsx:202
+#: src/view/com/post-thread/PostThread.tsx:198
+#: src/view/com/post-thread/PostThread.tsx:210
 msgid "The post may have been deleted."
 msgstr "게시물이 삭제되었을 수 있습니다."
 
@@ -6047,7 +6058,7 @@ msgstr "서버에 연결하는 동안 문제가 발생했습니다"
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "알림을 가져오는 동안 문제가 발생했습니다. 이곳을 탭하여 다시 시도하세요."
 
-#: src/view/com/posts/Feed.tsx:461
+#: src/view/com/posts/Feed.tsx:460
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "게시물을 가져오는 동안 문제가 발생했습니다. 이곳을 탭하여 다시 시도하세요."
 
@@ -6418,8 +6429,8 @@ msgid "Unfollow"
 msgstr "언팔로우"
 
 #: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:247
-msgid "Unfollow"
-msgstr "언팔로우"
+#~ msgid "Unfollow"
+#~ msgstr "언팔로우"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:237
 msgid "Unfollow {0}"
@@ -6466,6 +6477,10 @@ msgstr "스레드 언뮤트"
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.web.tsx:201
 msgid "Unmute video"
 msgstr "동영상 음소거 해제"
+
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:205
+msgid "Unmuted"
+msgstr "음소거 해제됨"
 
 #: src/view/screens/ProfileFeed.tsx:292
 #: src/view/screens/ProfileList.tsx:651
@@ -6517,20 +6532,20 @@ msgstr "대신 사진 업로드하기"
 msgid "Upload a text file to:"
 msgstr "텍스트 파일 업로드 경로:"
 
-#: src/view/com/util/UserAvatar.tsx:363
-#: src/view/com/util/UserAvatar.tsx:366
+#: src/view/com/util/UserAvatar.tsx:355
+#: src/view/com/util/UserAvatar.tsx:358
 #: src/view/com/util/UserBanner.tsx:123
 #: src/view/com/util/UserBanner.tsx:126
 msgid "Upload from Camera"
 msgstr "카메라에서 업로드"
 
-#: src/view/com/util/UserAvatar.tsx:380
+#: src/view/com/util/UserAvatar.tsx:372
 #: src/view/com/util/UserBanner.tsx:140
 msgid "Upload from Files"
 msgstr "파일에서 업로드"
 
-#: src/view/com/util/UserAvatar.tsx:374
-#: src/view/com/util/UserAvatar.tsx:378
+#: src/view/com/util/UserAvatar.tsx:366
+#: src/view/com/util/UserAvatar.tsx:370
 #: src/view/com/util/UserBanner.tsx:134
 #: src/view/com/util/UserBanner.tsx:138
 msgid "Upload from Library"
@@ -6694,6 +6709,10 @@ msgstr "이메일 인증하기"
 msgid "Version {appVersion} {bundleInfo}"
 msgstr "버전 {appVersion} {bundleInfo}"
 
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:184
+msgid "Video"
+msgstr "동영상"
+
 #: src/screens/Onboarding/index.tsx:39
 #: src/screens/Onboarding/state.ts:88
 msgid "Video Games"
@@ -6704,7 +6723,7 @@ msgid "View {0}'s avatar"
 msgstr "{0} 님의 아바타를 봅니다"
 
 #: src/components/ProfileCard.tsx:110
-#: src/view/com/notifications/FeedItem.tsx:278
+#: src/view/com/notifications/FeedItem.tsx:277
 msgid "View {0}'s profile"
 msgstr "{0} 님의 프로필 보기"
 
@@ -6743,7 +6762,7 @@ msgstr "이 라벨에 대한 정보 보기"
 #: src/components/ProfileHoverCard/index.web.tsx:418
 #: src/components/ProfileHoverCard/index.web.tsx:436
 #: src/components/ProfileHoverCard/index.web.tsx:463
-#: src/view/com/posts/AviFollowButton.tsx:58
+#: src/view/com/posts/AviFollowButton.tsx:56
 #: src/view/com/posts/FeedErrorMessage.tsx:175
 msgid "View profile"
 msgstr "프로필 보기"
@@ -6963,7 +6982,7 @@ msgid "Write post"
 msgstr "게시물 작성"
 
 #: src/view/com/composer/Composer.tsx:409
-#: src/view/com/composer/Prompt.tsx:38
+#: src/view/com/post-thread/PostThreadComposePrompt.tsx:42
 msgid "Write your reply"
 msgstr "답글 작성하기"
 
@@ -7061,7 +7080,7 @@ msgstr "고정한 피드가 없습니다."
 msgid "You don't have any saved feeds."
 msgstr "저장한 피드가 없습니다."
 
-#: src/view/com/post-thread/PostThread.tsx:196
+#: src/view/com/post-thread/PostThread.tsx:204
 msgid "You have blocked the author or you have been blocked by the author."
 msgstr "작성자를 차단했거나 작성자가 나를 차단했습니다."
 
@@ -7260,7 +7279,7 @@ msgstr "모든 공개 데이터 레코드가 포함된 계정 저장소를 \"CAR
 msgid "Your birth date"
 msgstr "생년월일"
 
-#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:168
+#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:145
 msgid "Your browser does not support the video format. Please try a different browser."
 msgstr "브라우저가 이 동영상 형식을 지원하지 않습니다. 다른 브라우저를 사용하세요."
 
@@ -7287,7 +7306,7 @@ msgstr "이메일이 변경되었지만 인증되지 않았습니다. 다음 단
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
 msgstr "이메일이 아직 인증되지 않았습니다. 이는 중요한 보안 단계이므로 권장하는 사항입니다."
 
-#: src/state/shell/progress-guide.tsx:161
+#: src/state/shell/progress-guide.tsx:156
 msgid "Your first like!"
 msgstr "첫 좋아요!"
 
