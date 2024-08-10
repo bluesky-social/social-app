@@ -1,17 +1,15 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 
 import {
   HLSUnsupportedError,
   VideoEmbedInnerWeb,
 } from 'view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerWeb'
 import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
-import {Text} from '#/components/Typography'
 import {ErrorBoundary} from '../ErrorBoundary'
 import {useActiveVideoView} from './ActiveVideoContext'
+import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 
 export function VideoEmbed({source}: {source: string}) {
   const t = useTheme()
@@ -138,32 +136,11 @@ function ViewportObserver({
 }
 
 function VideoError({error, retry}: {error: unknown; retry: () => void}) {
-  const t = useTheme()
-  const {_} = useLingui()
-
   const isHLS = error instanceof HLSUnsupportedError
 
   return (
-    <View
-      style={[
-        a.flex_1,
-        t.atoms.bg_contrast_25,
-        a.justify_center,
-        a.align_center,
-        a.px_lg,
-        a.border,
-        t.atoms.border_contrast_low,
-        a.rounded_sm,
-        a.gap_lg,
-      ]}>
-      <Text
-        style={[
-          a.text_center,
-          t.atoms.text_contrast_high,
-          a.text_md,
-          a.leading_snug,
-          {maxWidth: 300},
-        ]}>
+    <VideoFallback.Container>
+      <VideoFallback.Text>
         {isHLS ? (
           <Trans>
             Your browser does not support the video format. Please try a
@@ -174,19 +151,8 @@ function VideoError({error, retry}: {error: unknown; retry: () => void}) {
             An error occurred while loading the video. Please try again later.
           </Trans>
         )}
-      </Text>
-      {!isHLS && (
-        <Button
-          onPress={retry}
-          size="small"
-          color="secondary_inverted"
-          variant="solid"
-          label={_(msg`Retry`)}>
-          <ButtonText>
-            <Trans>Retry</Trans>
-          </ButtonText>
-        </Button>
-      )}
-    </View>
+      </VideoFallback.Text>
+      {!isHLS && <VideoFallback.RetryButton onPress={retry} />}
+    </VideoFallback.Container>
   )
 }
