@@ -100,7 +100,7 @@ let DrawerProfileCard = ({
       <View
         style={[
           styles.profileCardFollowers,
-          a.gap_sm,
+          a.gap_xs,
           a.flex_row,
           a.align_center,
           a.flex_wrap,
