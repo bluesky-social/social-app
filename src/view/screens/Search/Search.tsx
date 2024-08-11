@@ -783,7 +783,7 @@ let SearchInputBox = ({
       }}>
       <MagnifyingGlassIcon
         style={[pal.icon, styles.headerSearchIcon]}
-        size={21}
+        size={20}
       />
       <TextInput
         testID="searchTextInput"
@@ -1071,6 +1071,7 @@ const styles = StyleSheet.create({
   headerSearchInput: {
     flex: 1,
     fontSize: 17,
+    minWidth: 0,
   },
   headerCancelBtn: {
     paddingLeft: 10,

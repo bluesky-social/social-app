@@ -80,7 +80,7 @@ export function AccessibilitySettingsScreen({}: Props) {
         style={s.flex1}
         contentContainerStyle={[
           s.flex1,
-          {paddingBottom: 200},
+          {paddingBottom: 100},
           isMobile && pal.viewLight,
         ]}>
         <Text type="xl-bold" style={[pal.text, styles.heading]}>
