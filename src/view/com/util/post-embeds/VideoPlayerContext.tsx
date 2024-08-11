@@ -14,6 +14,7 @@ export function VideoPlayerProvider({
   // eslint-disable-next-line @typescript-eslint/no-shadow
   const player = useExpoVideoPlayer(source, player => {
     player.loop = true
+    player.muted = true
     player.play()
   })
 
