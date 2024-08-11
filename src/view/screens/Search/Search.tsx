@@ -961,7 +961,7 @@ function SearchHistory({
                     <Text
                       style={[pal.text, styles.profileName]}
                       numberOfLines={1}
-                      ellipsizeMode="head">
+                      ellipsizeMode="tail">
                       {profile.displayName || profile.handle}
                     </Text>
                   </Link>
