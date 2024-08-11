@@ -167,7 +167,7 @@ const desktopStyles = StyleSheet.create({
   },
   item: {
     paddingTop: 14,
-    paddingHorizontal: 16,
+    paddingHorizontal: 14,
     justifyContent: 'center',
   },
   itemInner: {
