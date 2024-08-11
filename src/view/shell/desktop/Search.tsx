@@ -2,7 +2,6 @@ import React from 'react'
 import {
   ActivityIndicator,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
   View,
   ViewStyle,
@@ -12,10 +11,6 @@ import {
   moderateProfile,
   ModerationDecision,
 } from '@atproto/api'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {StackActions, useNavigation} from '@react-navigation/native'
@@ -28,11 +23,11 @@ import {s} from '#/lib/styles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {usePalette} from 'lib/hooks/usePalette'
-import {MagnifyingGlassIcon} from 'lib/icons'
 import {NavigationProp} from 'lib/routes/types'
 import {precacheProfile} from 'state/queries/profile'
 import {Link} from '#/view/com/util/Link'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {SearchInput} from 'view/com/util/forms/SearchInput'
 import {Text} from 'view/com/util/text/Text'
 import {atoms as a} from '#/alf'
 
@@ -187,42 +182,12 @@ export function DesktopSearch() {
 
   return (
     <View style={[styles.container, pal.view]}>
-      <View
-        style={[{backgroundColor: pal.colors.backgroundLight}, styles.search]}>
-        <MagnifyingGlassIcon size={20} style={[pal.icon, styles.iconWrapper]} />
-        <TextInput
-          testID="searchTextInput"
-          placeholder={_(msg`Search`)}
-          placeholderTextColor={pal.colors.textLight}
-          selectTextOnFocus
-          returnKeyType="search"
-          value={query}
-          style={[pal.textLight, styles.input]}
-          onChangeText={onChangeText}
-          onSubmitEditing={onSubmit}
-          accessibilityRole="search"
-          accessibilityLabel={_(msg`Search`)}
-          accessibilityHint=""
-          autoCorrect={false}
-          autoComplete="off"
-          autoCapitalize="none"
-        />
-        {query ? (
-          <TouchableOpacity
-            onPress={onPressCancelSearch}
-            accessibilityRole="button"
-            accessibilityLabel={_(msg`Cancel search`)}
-            accessibilityHint={_(msg`Exits inputting search query`)}
-            onAccessibilityEscape={onPressCancelSearch}>
-            <FontAwesomeIcon
-              icon="xmark"
-              size={16}
-              style={pal.textLight as FontAwesomeIconStyle}
-            />
-          </TouchableOpacity>
-        ) : undefined}
-      </View>
-
+      <SearchInput
+        query={query}
+        onChangeQuery={onChangeText}
+        onPressCancelSearch={onPressCancelSearch}
+        onSubmitQuery={onSubmit}
+      />
       {query !== '' && isActive && moderationOpts && (
         <View style={[pal.view, pal.borderDark, styles.resultsContainer]}>
           {isFetching && !autocompleteData?.length ? (
@@ -261,31 +226,11 @@ const styles = StyleSheet.create({
     position: 'relative',
     width: 300,
   },
-  search: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 30,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-  },
-  iconWrapper: {
-    marginRight: 6,
-    alignSelf: 'center',
-  },
-  input: {
-    flex: 1,
-    fontSize: 17,
-  },
   resultsContainer: {
     marginTop: 10,
     flexDirection: 'column',
     width: 300,
     borderWidth: 1,
     borderRadius: 6,
-  },
-  noResults: {
-    textAlign: 'center',
-    paddingVertical: 10,
   },
 })
