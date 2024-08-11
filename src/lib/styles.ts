@@ -65,8 +65,8 @@ export const gradients = {
 
 export const s = StyleSheet.create({
   // helpers
-  footerSpacer: {height: 50},
-  contentContainer: {paddingBottom: 100},
+  footerSpacer: {height: 100},
+  contentContainer: {paddingBottom: 200},
   contentContainerExtra: {paddingBottom: 300},
   border0: {borderWidth: 0},
   border1: {borderWidth: 1},
