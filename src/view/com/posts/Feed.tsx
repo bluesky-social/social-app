@@ -480,9 +480,7 @@ let Feed = ({
           // -prf
           return <DiscoverFallbackHeader />
         }
-        return (
-          <FeedSlice slice={item.slice} hideTopBorder={index === 0 && !isWeb} />
-        )
+        return <FeedSlice slice={item.slice} hideTopBorder={index === 0} />
       } else {
         return null
       }
