@@ -20,7 +20,7 @@ interface Props {
   onRepost: () => void
   onQuote: () => void
   big?: boolean
-  quotepostDisabled: boolean
+  embeddingDisabled: boolean
 }
 
 let RepostButton = ({
@@ -29,7 +29,7 @@ let RepostButton = ({
   onRepost,
   onQuote,
   big,
-  quotepostDisabled,
+  embeddingDisabled,
 }: Props): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
@@ -112,7 +112,7 @@ let RepostButton = ({
                     : _(msg({message: `Repost`, context: 'action'}))}
                 </Text>
               </Button>
-              {quotepostDisabled ? null : (
+              {embeddingDisabled ? null : (
                 <Button
                   testID="quoteBtn"
                   style={[a.justify_start, a.px_md]}

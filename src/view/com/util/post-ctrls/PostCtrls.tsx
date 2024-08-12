@@ -255,7 +255,7 @@ let PostCtrls = ({
           onRepost={onRepost}
           onQuote={onQuote}
           big={big}
-          quotepostDisabled={Boolean(post.viewer?.quotepostDisabled)}
+          embeddingDisabled={Boolean(post.viewer?.embeddingDisabled)}
         />
       </View>
       <View style={big ? a.align_center : [a.flex_1, a.align_start]}>
