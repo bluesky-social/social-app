@@ -1,5 +1,4 @@
 import {Platform} from 'react-native'
-import {isReducedMotion} from 'react-native-reanimated'
 import {getLocales} from 'expo-localization'
 
 import {fixLegacyLanguageCode} from '#/locale/helpers'
@@ -15,11 +14,10 @@ export const isMobileWeb =
   isWeb &&
   // @ts-ignore we know window exists -prf
   global.window.matchMedia(isMobileWebMediaQuery)?.matches
+export const isIPhoneWeb = isWeb && /iPhone/.test(navigator.userAgent)
 
 export const deviceLocales = dedupArray(
   getLocales?.()
     .map?.(locale => fixLegacyLanguageCode(locale.languageCode))
     .filter(code => typeof code === 'string'),
 ) as string[]
-
-export const prefersReducedMotion = isReducedMotion()

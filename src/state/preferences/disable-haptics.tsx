@@ -24,8 +24,8 @@ export function Provider({children}: {children: React.ReactNode}) {
   )
 
   React.useEffect(() => {
-    return persisted.onUpdate(() => {
-      setState(Boolean(persisted.get('disableHaptics')))
+    return persisted.onUpdate('disableHaptics', nextDisableHaptics => {
+      setState(Boolean(nextDisableHaptics))
     })
   }, [setStateWrapped])
 

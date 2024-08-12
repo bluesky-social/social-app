@@ -20,8 +20,7 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {isNative} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
-import {clearLegacyStorage} from '#/state/persisted/legacy'
-import {clear as clearStorage} from '#/state/persisted/store'
+import {clearStorage} from '#/state/persisted'
 import {
   useInAppBrowser,
   useSetInAppBrowser,
@@ -299,10 +298,6 @@ export function SettingsScreen({}: Props) {
     await clearStorage()
     Toast.show(_(msg`Storage cleared, you need to restart the app now.`))
   }, [_])
-  const clearAllLegacyStorage = React.useCallback(async () => {
-    await clearLegacyStorage()
-    Toast.show(_(msg`Legacy storage cleared, you need to restart the app now.`))
-  }, [_])
 
   const deactivateAccountControl = useDialogControl()
   const onPressDeactivateAccount = React.useCallback(() => {
@@ -330,7 +325,7 @@ export function SettingsScreen({}: Props) {
         </View>
       </SimpleViewHeader>
       <ScrollView
-        style={[s.hContentRegion, isMobile && pal.viewLight]}
+        style={[isMobile && pal.viewLight]}
         scrollIndicatorInsets={{right: 1}}
         // @ts-ignore web only -prf
         dataSet={{'stable-gutters': 1}}>
@@ -861,18 +856,6 @@ export function SettingsScreen({}: Props) {
               accessibilityHint={_(msg`Resets the onboarding state`)}>
               <Text type="lg" style={pal.text}>
                 <Trans>Reset onboarding state</Trans>
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[pal.view, styles.linkCardNoIcon]}
-              onPress={clearAllLegacyStorage}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Clear all legacy storage data`)}
-              accessibilityHint={_(msg`Clears all legacy storage data`)}>
-              <Text type="lg" style={pal.text}>
-                <Trans>
-                  Clear all legacy storage data (restart after this)
-                </Trans>
               </Text>
             </TouchableOpacity>
             <TouchableOpacity

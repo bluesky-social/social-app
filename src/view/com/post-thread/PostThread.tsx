@@ -1,11 +1,14 @@
-import React, {useEffect, useRef} from 'react'
-import {useWindowDimensions, View} from 'react-native'
+import React, {useRef} from 'react'
+import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import {runOnJS} from 'react-native-reanimated'
+import Animated from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyFeedDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
+import {clamp} from '#/lib/numbers'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {isAndroid, isNative, isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -21,7 +24,9 @@ import {
 } from '#/state/queries/post-thread'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
+import {useComposerControls} from '#/state/shell'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
+import {useMinimalShellFabTransform} from 'lib/hooks/useMinimalShellTransform'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
@@ -30,9 +35,9 @@ import {CenteredView} from 'view/com/util/Views'
 import {atoms as a, useTheme} from '#/alf'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {Text} from '#/components/Typography'
-import {ComposePrompt} from '../composer/Prompt'
 import {List, ListMethods} from '../util/List'
 import {ViewHeader} from '../util/ViewHeader'
+import {PostThreadComposePrompt} from './PostThreadComposePrompt'
 import {PostThreadItem} from './PostThreadItem'
 import {PostThreadLoadMore} from './PostThreadLoadMore'
 import {PostThreadShowHiddenReplies} from './PostThreadShowHiddenReplies'
@@ -80,16 +85,8 @@ const keyExtractor = (item: RowItem) => {
   return item._reactKey
 }
 
-export function PostThread({
-  uri,
-  onCanReply,
-  onPressReply,
-}: {
-  uri: string | undefined
-  onCanReply: (canReply: boolean) => void
-  onPressReply: () => unknown
-}) {
-  const {hasSession} = useSession()
+export function PostThread({uri}: {uri: string | undefined}) {
+  const {hasSession, currentAccount} = useSession()
   const {_} = useLingui()
   const t = useTheme()
   const {isMobile, isTabletOrMobile} = useWebMediaQueries()
@@ -154,6 +151,7 @@ export function PostThread({
   // On the web this is not necessary because we can synchronously adjust the scroll in onContentSizeChange instead.
   const [deferParents, setDeferParents] = React.useState(isNative)
 
+  const currentDid = currentAccount?.did
   const threadModerationCache = React.useMemo(() => {
     const cache: ThreadModerationCache = new WeakMap()
     if (thread && moderationOpts) {
@@ -162,13 +160,23 @@ export function PostThread({
     return cache
   }, [thread, moderationOpts])
 
+  const [justPostedUris, setJustPostedUris] = React.useState(
+    () => new Set<string>(),
+  )
+
   const skeleton = React.useMemo(() => {
     const threadViewPrefs = preferences?.threadViewPrefs
     if (!threadViewPrefs || !thread) return null
 
     return createThreadSkeleton(
-      sortThread(thread, threadViewPrefs, threadModerationCache),
-      hasSession,
+      sortThread(
+        thread,
+        threadViewPrefs,
+        threadModerationCache,
+        currentDid,
+        justPostedUris,
+      ),
+      !!currentDid,
       treeView,
       threadModerationCache,
       hiddenRepliesState !== HiddenRepliesState.Hide,
@@ -176,10 +184,11 @@ export function PostThread({
   }, [
     thread,
     preferences?.threadViewPrefs,
-    hasSession,
+    currentDid,
     treeView,
     threadModerationCache,
     hiddenRepliesState,
+    justPostedUris,
   ])
 
   const error = React.useMemo(() => {
@@ -208,14 +217,6 @@ export function PostThread({
 
     return null
   }, [thread, skeleton?.highlightedPost, isThreadError, _, threadError])
-
-  useEffect(() => {
-    if (error) {
-      onCanReply(false)
-    } else if (rootPost) {
-      onCanReply(!rootPost.viewer?.replyDisabled)
-    }
-  }, [rootPost, onCanReply, error])
 
   // construct content
   const posts = React.useMemo(() => {
@@ -312,6 +313,38 @@ export function PostThread({
     setMaxReplies(prev => prev + 50)
   }, [isFetching, maxReplies, posts.length])
 
+  const onPostReply = React.useCallback(
+    (postUri: string | undefined) => {
+      refetch()
+      if (postUri) {
+        setJustPostedUris(set => {
+          const nextSet = new Set(set)
+          nextSet.add(postUri)
+          return nextSet
+        })
+      }
+    },
+    [refetch],
+  )
+
+  const {openComposer} = useComposerControls()
+  const onPressReply = React.useCallback(() => {
+    if (thread?.type !== 'post') {
+      return
+    }
+    openComposer({
+      replyTo: {
+        uri: thread.post.uri,
+        cid: thread.post.cid,
+        text: thread.record.text,
+        author: thread.post.author,
+        embed: thread.post.embed,
+      },
+      onPost: onPostReply,
+    })
+  }, [openComposer, thread, onPostReply])
+
+  const canReply = !error && rootPost && !rootPost.viewer?.replyDisabled
   const hasParents =
     skeleton?.highlightedPost?.type === 'post' &&
     (skeleton.highlightedPost.ctx.isParentLoading ||
@@ -323,7 +356,9 @@ export function PostThread({
     if (item === REPLY_PROMPT && hasSession) {
       return (
         <View>
-          {!isMobile && <ComposePrompt onPressCompose={onPressReply} />}
+          {!isMobile && (
+            <PostThreadComposePrompt onPressCompose={onPressReply} />
+          )}
         </View>
       )
     } else if (item === SHOW_HIDDEN_REPLIES || item === SHOW_MUTED_REPLIES) {
@@ -405,7 +440,7 @@ export function PostThread({
                 HiddenRepliesState.ShowAndOverridePostHider &&
               item.ctx.depth > 0
             }
-            onPostReply={refetch}
+            onPostReply={onPostReply}
             hideTopBorder={index === 0 && !item.ctx.isParentLoading}
           />
         </View>
@@ -472,7 +507,27 @@ export function PostThread({
           sideBorders={false}
         />
       </ScrollProvider>
+      {isMobile && canReply && hasSession && (
+        <MobileComposePrompt onPressReply={onPressReply} />
+      )}
     </CenteredView>
+  )
+}
+
+function MobileComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
+  const safeAreaInsets = useSafeAreaInsets()
+  const fabMinimalShellTransform = useMinimalShellFabTransform()
+  return (
+    <Animated.View
+      style={[
+        styles.prompt,
+        fabMinimalShellTransform,
+        {
+          bottom: clamp(safeAreaInsets.bottom, 15, 30),
+        },
+      ]}>
+      <PostThreadComposePrompt onPressCompose={onPressReply} />
+    </Animated.View>
   )
 }
 
@@ -621,3 +676,12 @@ function hasBranchingReplies(node?: ThreadNode) {
   }
   return true
 }
+
+const styles = StyleSheet.create({
+  prompt: {
+    // @ts-ignore web-only
+    position: isWeb ? 'fixed' : 'absolute',
+    left: 0,
+    right: 0,
+  },
+})
