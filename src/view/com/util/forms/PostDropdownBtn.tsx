@@ -1,5 +1,6 @@
 import React, {memo} from 'react'
 import {
+  Platform,
   Pressable,
   type PressableProps,
   type StyleProp,
@@ -44,7 +45,10 @@ import {atoms as a, useBreakpoints, useTheme as useAlf} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {EmbedDialog} from '#/components/dialogs/Embed'
-import {PostInteractionSettingsDialog} from '#/components/dialogs/PostInteractionSettingsDialog'
+import {
+  PostInteractionSettingsDialog,
+  usePrefetchPostInteractionSettings,
+} from '#/components/dialogs/PostInteractionSettingsDialog'
 import {SendViaChatDialog} from '#/components/dms/dialogs/ShareViaChatDialog'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {BubbleQuestion_Stroke2_Corner0_Rounded as Translate} from '#/components/icons/Bubble'
@@ -143,6 +147,11 @@ let PostDropdownBtn = ({
 
   const {mutateAsync: toggleQuoteDetachment, isPending} =
     useToggleQuoteDetachmentMutation()
+
+  const prefetchPostInteractionSettings = usePrefetchPostInteractionSettings({
+    postUri: post.uri,
+    rootPostUri: rootUri,
+  })
 
   const href = React.useMemo(() => {
     const urip = new AtUri(postUri)
@@ -556,7 +565,17 @@ let PostDropdownBtn = ({
                     <Menu.Item
                       testID="postDropdownEditPostInteractions"
                       label={_(msg`Edit interaction settings`)}
-                      onPress={postInteractionSettingsDialogControl.open}>
+                      onPress={postInteractionSettingsDialogControl.open}
+                      {...(isAuthor
+                        ? Platform.select({
+                            web: {
+                              onHoverIn: prefetchPostInteractionSettings,
+                            },
+                            native: {
+                              onPressIn: prefetchPostInteractionSettings,
+                            },
+                          })
+                        : {})}>
                       <Menu.ItemText>
                         {_(msg`Edit interaction settings`)}
                       </Menu.ItemText>

@@ -1,5 +1,5 @@
 import React from 'react'
-import {Keyboard, StyleProp, View, ViewStyle} from 'react-native'
+import {Keyboard, Platform, StyleProp, View, ViewStyle} from 'react-native'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
@@ -20,12 +20,15 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useDialogControl} from '#/components/Dialog'
+import {
+  PostInteractionSettingsDialog,
+  usePrefetchPostInteractionSettings,
+} from '#/components/dialogs/PostInteractionSettingsDialog'
 import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/components/icons/CircleBanSign'
 import {Earth_Stroke2_Corner0_Rounded as Earth} from '#/components/icons/Globe'
 import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {PostInteractionSettingsDialog} from './dialogs/PostInteractionSettingsDialog'
 import {PencilLine_Stroke2_Corner0_Rounded as PencilLine} from './icons/Pencil'
 
 interface WhoCanReplyProps {
@@ -51,6 +54,11 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
   const settings = React.useMemo(() => {
     return threadgateViewToAllowUISetting(post.threadgate)
   }, [post.threadgate])
+
+  const prefetchPostInteractionSettings = usePrefetchPostInteractionSettings({
+    postUri: post.uri,
+    rootPostUri: rootUri,
+  })
 
   const anyoneCanReply =
     settings.length === 1 && settings[0].type === 'everybody'
@@ -79,6 +87,16 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
           isThreadAuthor ? _(msg`Edit who can reply`) : _(msg`Who can reply`)
         }
         onPress={onPressOpen}
+        {...(isThreadAuthor
+          ? Platform.select({
+              web: {
+                onHoverIn: prefetchPostInteractionSettings,
+              },
+              native: {
+                onPressIn: prefetchPostInteractionSettings,
+              },
+            })
+          : {})}
         hitSlop={HITSLOP_10}>
         {({hovered}) => (
           <View style={[a.flex_row, a.align_center, a.gap_xs, style]}>

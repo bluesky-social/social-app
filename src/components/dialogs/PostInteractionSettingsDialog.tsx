@@ -8,11 +8,15 @@ import {
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 import isEqual from 'lodash.isequal'
 
 import {logger} from '#/logger'
+import {STALE} from '#/state/queries'
 import {useMyListsQuery} from '#/state/queries/my-lists'
 import {
+  createPostgateQueryKey,
+  getPostgateRecord,
   usePostgateQuery,
   useWritePostgateMutation,
 } from '#/state/queries/postgate'
@@ -21,18 +25,19 @@ import {
   embeddingRules,
 } from '#/state/queries/postgate/util'
 import {
+  createThreadgateViewQueryKey,
+  getThreadgateView,
   ThreadgateAllowUISetting,
   threadgateViewToAllowUISetting,
   useSetThreadgateAllowMutation,
   useThreadgateViewQuery,
 } from '#/state/queries/threadgate'
-import {useSession} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/toast'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
-import {useDelayedLoading} from '#/components/hooks/useDelayedLoading'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Loader} from '#/components/Loader'
@@ -116,14 +121,13 @@ export function PostInteractionSettingsDialogControlledInner(
 
   const {mutateAsync: writePostgateRecord} = useWritePostgateMutation()
   const {mutateAsync: setThreadgateAllow} = useSetThreadgateAllowMutation()
-  const naturalLoading = useDelayedLoading(500) // TODO
 
   const [editedPostgate, setEditedPostgate] =
     React.useState<AppBskyFeedPostgate.Record>()
   const [editedAllowUISettings, setEditedAllowUISettings] =
     React.useState<ThreadgateAllowUISetting[]>()
 
-  const isLoading = isLoadingThreadgate || isLoadingPostgate || naturalLoading
+  const isLoading = isLoadingThreadgate || isLoadingPostgate
   const threadgateView = threadgateViewLoaded || props.initialThreadgateView
   const isThreadgateOwnedByViewer = React.useMemo(() => {
     if (AppBskyFeedThreadgate.isRecord(threadgateView?.record)) {
@@ -503,4 +507,36 @@ function Selectable({
       )}
     </Button>
   )
+}
+
+export function usePrefetchPostInteractionSettings({
+  postUri,
+  rootPostUri,
+}: {
+  postUri: string
+  rootPostUri: string
+}) {
+  const queryClient = useQueryClient()
+  const agent = useAgent()
+
+  return React.useCallback(async () => {
+    try {
+      await Promise.all([
+        queryClient.prefetchQuery({
+          queryKey: createPostgateQueryKey(postUri),
+          queryFn: () => getPostgateRecord({agent, postUri}),
+          staleTime: STALE.SECONDS.THIRTY,
+        }),
+        queryClient.prefetchQuery({
+          queryKey: createThreadgateViewQueryKey(rootPostUri),
+          queryFn: () => getThreadgateView({agent, postUri: rootPostUri}),
+          staleTime: STALE.SECONDS.THIRTY,
+        }),
+      ])
+    } catch (e: any) {
+      logger.error(`Failed to prefetch post interaction settings`, {
+        safeMessage: e.message,
+      })
+    }
+  }, [queryClient, agent, postUri, rootPostUri])
 }

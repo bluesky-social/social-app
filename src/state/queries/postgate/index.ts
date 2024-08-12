@@ -9,6 +9,7 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import {networkRetry, retry} from '#/lib/async/retry'
 import {logger} from '#/logger'
 import {updatePostShadow} from '#/state/cache/post-shadow'
+import {STALE} from '#/state/queries'
 import {useGetPosts} from '#/state/queries/post'
 import {
   createMaybeDetachedQuoteEmbed,
@@ -128,6 +129,7 @@ export const createPostgateQueryKey = (postUri: string) => [
 export function usePostgateQuery({postUri}: {postUri: string}) {
   const agent = useAgent()
   return useQuery({
+    staleTime: STALE.SECONDS.THIRTY,
     queryKey: createPostgateQueryKey(postUri),
     async queryFn() {
       return (await getPostgateRecord({agent, postUri})) ?? null
@@ -154,7 +156,7 @@ export function useWritePostgateMutation() {
     },
     onSuccess(_, {postUri}) {
       queryClient.invalidateQueries({
-        queryKey: [createPostgateQueryKey(postUri)],
+        queryKey: createPostgateQueryKey(postUri),
       })
     },
   })

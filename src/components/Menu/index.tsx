@@ -125,8 +125,14 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
       }}
       onFocus={onFocus}
       onBlur={onBlur}
-      onPressIn={onPressIn}
-      onPressOut={onPressOut}
+      onPressIn={e => {
+        onPressIn()
+        rest.onPressIn?.(e)
+      }}
+      onPressOut={e => {
+        onPressOut()
+        rest.onPressOut?.(e)
+      }}
       style={[
         a.flex_row,
         a.align_center,

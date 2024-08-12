@@ -72,19 +72,31 @@ export function useThreadgateViewQuery({
     placeholderData: initialData,
     staleTime: STALE.MINUTES.ONE,
     async queryFn() {
-      const {data} = await agent.app.bsky.feed.getPostThread({
-        uri: postUri!,
-        depth: 0,
+      return getThreadgateView({
+        agent,
+        postUri: postUri!,
       })
-      console.log(data.thread)
-
-      if (AppBskyFeedDefs.isThreadViewPost(data.thread)) {
-        return data.thread.post.threadgate ?? null
-      }
-
-      return null
     },
   })
+}
+
+export async function getThreadgateView({
+  agent,
+  postUri,
+}: {
+  agent: BskyAgent
+  postUri: string
+}) {
+  const {data} = await agent.app.bsky.feed.getPostThread({
+    uri: postUri!,
+    depth: 0,
+  })
+
+  if (AppBskyFeedDefs.isThreadViewPost(data.thread)) {
+    return data.thread.post.threadgate ?? null
+  }
+
+  return null
 }
 
 export async function getThreadgateRecord({
