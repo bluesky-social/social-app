@@ -1,4 +1,9 @@
-import {AtpSessionData, AtpSessionEvent, BskyAgent} from '@atproto/api'
+import {
+  AtpPersistSessionHandler,
+  AtpSessionData,
+  AtpSessionEvent,
+  BskyAgent,
+} from '@atproto/api'
 import {TID} from '@atproto/common-web'
 
 import {networkRetry} from '#/lib/async/retry'
@@ -20,6 +25,8 @@ import {
 import {SessionAccount} from './types'
 import {isSessionExpired, isSignupQueued} from './util'
 
+type SetPersistSessionHandler = (cb: AtpPersistSessionHandler) => void
+
 export function createPublicAgent() {
   configureModerationForGuest() // Side effect but only relevant for tests
   return new BskyAgent({service: PUBLIC_BSKY_SERVICE})
@@ -32,10 +39,11 @@ export async function createAgentAndResume(
     did: string,
     event: AtpSessionEvent,
   ) => void,
+  setPersistSessionHandler: SetPersistSessionHandler,
 ) {
   const agent = new BskyAgent({service: storedAccount.service})
   if (storedAccount.pdsUrl) {
-    agent.pdsUrl = agent.api.xrpc.uri = new URL(storedAccount.pdsUrl)
+    agent.sessionManager.pdsUrl = new URL(storedAccount.pdsUrl)
   }
   const gates = tryFetchGates(storedAccount.did, 'prefer-low-latency')
   const moderation = configureModerationForAccount(agent, storedAccount)
@@ -43,9 +51,8 @@ export async function createAgentAndResume(
   if (isSessionExpired(storedAccount)) {
     await networkRetry(1, () => agent.resumeSession(prevSession))
   } else {
-    agent.session = prevSession
+    agent.sessionManager.session = prevSession
     if (!storedAccount.signupQueued) {
-      // Intentionally not awaited to unblock the UI:
       networkRetry(3, () => agent.resumeSession(prevSession)).catch(
         (e: any) => {
           logger.error(`networkRetry failed to resume session`, {
@@ -60,7 +67,13 @@ export async function createAgentAndResume(
     }
   }
 
-  return prepareAgent(agent, gates, moderation, onSessionChange)
+  return prepareAgent(
+    agent,
+    gates,
+    moderation,
+    onSessionChange,
+    setPersistSessionHandler,
+  )
 }
 
 export async function createAgentAndLogin(
@@ -80,6 +93,7 @@ export async function createAgentAndLogin(
     did: string,
     event: AtpSessionEvent,
   ) => void,
+  setPersistSessionHandler: SetPersistSessionHandler,
 ) {
   const agent = new BskyAgent({service})
   await agent.login({identifier, password, authFactorToken})
@@ -87,7 +101,13 @@ export async function createAgentAndLogin(
   const account = agentToSessionAccountOrThrow(agent)
   const gates = tryFetchGates(account.did, 'prefer-fresh-gates')
   const moderation = configureModerationForAccount(agent, account)
-  return prepareAgent(agent, moderation, gates, onSessionChange)
+  return prepareAgent(
+    agent,
+    moderation,
+    gates,
+    onSessionChange,
+    setPersistSessionHandler,
+  )
 }
 
 export async function createAgentAndCreateAccount(
@@ -115,6 +135,7 @@ export async function createAgentAndCreateAccount(
     did: string,
     event: AtpSessionEvent,
   ) => void,
+  setPersistSessionHandler: SetPersistSessionHandler,
 ) {
   const agent = new BskyAgent({service})
   await agent.createAccount({
@@ -174,7 +195,13 @@ export async function createAgentAndCreateAccount(
     logger.error(e, {context: `session: failed snoozeEmailConfirmationPrompt`})
   }
 
-  return prepareAgent(agent, gates, moderation, onSessionChange)
+  return prepareAgent(
+    agent,
+    gates,
+    moderation,
+    onSessionChange,
+    setPersistSessionHandler,
+  )
 }
 
 async function prepareAgent(
@@ -187,13 +214,14 @@ async function prepareAgent(
     did: string,
     event: AtpSessionEvent,
   ) => void,
+  setPersistSessionHandler: (cb: AtpPersistSessionHandler) => void,
 ) {
   // There's nothing else left to do, so block on them here.
   await Promise.all([gates, moderation])
 
   // Now the agent is ready.
   const account = agentToSessionAccountOrThrow(agent)
-  agent.setPersistSessionHandler(event => {
+  setPersistSessionHandler(event => {
     onSessionChange(agent, account.did, event)
     if (event !== 'create' && event !== 'update') {
       addSessionErrorLog(account.did, event)
