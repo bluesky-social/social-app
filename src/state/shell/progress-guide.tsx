@@ -2,7 +2,6 @@ import React from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useGate} from '#/lib/statsig/statsig'
 import {
   ProgressGuideToast,
   ProgressGuideToastRef,
@@ -61,7 +60,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const {data: preferences} = usePreferencesQuery()
   const {mutateAsync, variables, isPending} =
     useSetActiveProgressGuideMutation()
-  const gate = useGate()
 
   const activeProgressGuide = (
     isPending ? variables : preferences?.bskyAppState?.activeProgressGuide
@@ -89,9 +87,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const controls = React.useMemo(() => {
     return {
       startProgressGuide(guide: ProgressGuideName) {
-        if (!gate('new_user_progress_guide')) {
-          return
-        }
         if (guide === 'like-10-and-follow-7') {
           const guideObj = {
             guide: 'like-10-and-follow-7',
@@ -148,7 +143,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         mutateAsync(guide?.isComplete ? undefined : guide)
       },
     }
-  }, [activeProgressGuide, mutateAsync, gate, setLocalGuideState])
+  }, [activeProgressGuide, mutateAsync, setLocalGuideState])
 
   return (
     <ProgressGuideContext.Provider value={localGuideState}>

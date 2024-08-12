@@ -36,7 +36,7 @@ function StorybookInner() {
 
   return (
     <CenteredView style={[t.atoms.bg]}>
-      <View style={[a.p_xl, a.gap_5xl, {paddingBottom: 200}]}>
+      <View style={[a.p_xl, a.gap_5xl, {paddingBottom: 100}]}>
         {!showContainedList ? (
           <>
             <View style={[a.flex_row, a.align_start, a.gap_md]}>

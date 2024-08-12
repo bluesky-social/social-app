@@ -25,6 +25,13 @@ type FeedSliceItem = {
   isParentBlocked: boolean
 }
 
+type AuthorContext = {
+  author: AppBskyActorDefs.ProfileViewBasic
+  parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
+  grandparentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
+  rootAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
+}
+
 export class FeedViewPostsSlice {
   _reactKey: string
   _feedPost: FeedViewPost
@@ -159,21 +166,29 @@ export class FeedViewPostsSlice {
     return !!this.items.find(item => item.post.uri === uri)
   }
 
-  getAllAuthors(): AppBskyActorDefs.ProfileViewBasic[] {
+  getAuthors(): AuthorContext {
     const feedPost = this._feedPost
-    const authors = [feedPost.post.author]
+    let author: AppBskyActorDefs.ProfileViewBasic = feedPost.post.author
+    let parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
+    let grandparentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
+    let rootAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
     if (feedPost.reply) {
       if (AppBskyFeedDefs.isPostView(feedPost.reply.parent)) {
-        authors.push(feedPost.reply.parent.author)
+        parentAuthor = feedPost.reply.parent.author
       }
       if (feedPost.reply.grandparentAuthor) {
-        authors.push(feedPost.reply.grandparentAuthor)
+        grandparentAuthor = feedPost.reply.grandparentAuthor
       }
       if (AppBskyFeedDefs.isPostView(feedPost.reply.root)) {
-        authors.push(feedPost.reply.root.author)
+        rootAuthor = feedPost.reply.root.author
       }
     }
-    return authors
+    return {
+      author,
+      parentAuthor,
+      grandparentAuthor,
+      rootAuthor,
+    }
   }
 }
 
@@ -252,7 +267,7 @@ export class FeedTuner {
         !slice.isRepost &&
         // This is not perfect but it's close as we can get to
         // detecting threads without having to peek ahead.
-        !areSameAuthor(slice.getAllAuthors())
+        !areSameAuthor(slice.getAuthors())
       ) {
         slices.splice(i, 1)
         i--
@@ -333,7 +348,7 @@ export class FeedTuner {
         if (
           slice.isReply &&
           !slice.isRepost &&
-          !isFollowingAll(slice.getAllAuthors(), userDid)
+          !shouldDisplayReplyInFollowing(slice.getAuthors(), userDid)
         ) {
           slices.splice(i, 1)
           i--
@@ -389,15 +404,66 @@ export class FeedTuner {
   }
 }
 
-function areSameAuthor(authors: AppBskyActorDefs.ProfileViewBasic[]): boolean {
-  const dids = authors.map(a => a.did)
-  const set = new Set(dids)
-  return set.size === 1
+function areSameAuthor(authors: AuthorContext): boolean {
+  const {author, parentAuthor, grandparentAuthor, rootAuthor} = authors
+  const authorDid = author.did
+  if (parentAuthor && parentAuthor.did !== authorDid) {
+    return false
+  }
+  if (grandparentAuthor && grandparentAuthor.did !== authorDid) {
+    return false
+  }
+  if (rootAuthor && rootAuthor.did !== authorDid) {
+    return false
+  }
+  return true
 }
 
-function isFollowingAll(
-  authors: AppBskyActorDefs.ProfileViewBasic[],
+function shouldDisplayReplyInFollowing(
+  authors: AuthorContext,
   userDid: string,
 ): boolean {
-  return authors.every(a => a.did === userDid || a.viewer?.following)
+  const {author, parentAuthor, grandparentAuthor, rootAuthor} = authors
+  if (!isSelfOrFollowing(author, userDid)) {
+    // Only show replies from self or people you follow.
+    return false
+  }
+  if (
+    (!parentAuthor || parentAuthor.did === author.did) &&
+    (!rootAuthor || rootAuthor.did === author.did) &&
+    (!grandparentAuthor || grandparentAuthor.did === author.did)
+  ) {
+    // Always show self-threads.
+    return true
+  }
+  // From this point on we need at least one more reason to show it.
+  if (
+    parentAuthor &&
+    parentAuthor.did !== author.did &&
+    isSelfOrFollowing(parentAuthor, userDid)
+  ) {
+    return true
+  }
+  if (
+    grandparentAuthor &&
+    grandparentAuthor.did !== author.did &&
+    isSelfOrFollowing(grandparentAuthor, userDid)
+  ) {
+    return true
+  }
+  if (
+    rootAuthor &&
+    rootAuthor.did !== author.did &&
+    isSelfOrFollowing(rootAuthor, userDid)
+  ) {
+    return true
+  }
+  return false
+}
+
+function isSelfOrFollowing(
+  profile: AppBskyActorDefs.ProfileViewBasic,
+  userDid: string,
+) {
+  return Boolean(profile.did === userDid || profile.viewer?.following)
 }

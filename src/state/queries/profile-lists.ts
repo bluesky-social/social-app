@@ -40,18 +40,10 @@ export function useProfileListsQuery(did: string, opts?: {enabled?: boolean}) {
         pages: data.pages.map(page => {
           return {
             ...page,
-            lists: page.lists
-              /*
-               * Starter packs use a reference list, which we do not want to
-               * show on profiles. At some point we could probably just filter
-               * this out on the backend instead of in the client.
-               */
-              .filter(l => l.purpose !== 'app.bsky.graph.defs#referencelist')
-              // filter by labels
-              .filter(list => {
-                const decision = moderateUserList(list, moderationOpts!)
-                return !decision.ui('contentList').filter
-              }),
+            lists: page.lists.filter(list => {
+              const decision = moderateUserList(list, moderationOpts!)
+              return !decision.ui('contentList').filter
+            }),
           }
         }),
       }

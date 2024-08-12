@@ -91,6 +91,7 @@ const schema = z.object({
   disableAutoplay: z.boolean().optional(),
   kawaii: z.boolean().optional(),
   hasCheckedForStarterPack: z.boolean().optional(),
+  subtitlesEnabled: z.boolean().optional(),
   /** @deprecated */
   mutedThreads: z.array(z.string()),
 })
@@ -133,6 +134,7 @@ export const defaults: Schema = {
   disableAutoplay: PlatformInfo.getIsReducedMotionEnabled(),
   kawaii: false,
   hasCheckedForStarterPack: false,
+  subtitlesEnabled: true,
 }
 
 export function tryParse(rawData: string): Schema | undefined {

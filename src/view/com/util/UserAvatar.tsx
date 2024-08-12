@@ -8,7 +8,6 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {usePalette} from 'lib/hooks/usePalette'
 import {
@@ -179,7 +178,6 @@ let UserAvatar = ({
   const pal = usePalette('default')
   const backgroundColor = pal.colors.backgroundLight
   const finalShape = overrideShape ?? (type === 'user' ? 'circle' : 'square')
-  const gate = useGate()
 
   const aviStyle = useMemo(() => {
     if (finalShape === 'square') {
@@ -223,10 +221,7 @@ let UserAvatar = ({
           style={aviStyle}
           resizeMode="cover"
           source={{
-            uri: hackModifyThumbnailPath(
-              avatar,
-              size < 90 && gate('small_avi_thumb'),
-            ),
+            uri: hackModifyThumbnailPath(avatar, size < 90),
           }}
           blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
         />
@@ -236,10 +231,7 @@ let UserAvatar = ({
           style={aviStyle}
           contentFit="cover"
           source={{
-            uri: hackModifyThumbnailPath(
-              avatar,
-              size < 90 && gate('small_avi_thumb'),
-            ),
+            uri: hackModifyThumbnailPath(avatar, size < 90),
           }}
           blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
         />
