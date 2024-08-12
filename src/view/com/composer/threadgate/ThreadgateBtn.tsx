@@ -6,14 +6,12 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {isNative} from '#/platform/detection'
-import {embeddingRules} from '#/state/queries/postgate/util'
 import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {PostInteractionSettingsDialog} from '#/components/dialogs/PostInteractionSettingsDialog'
-import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/components/icons/CircleBanSign'
 import {Earth_Stroke2_Corner0_Rounded as Earth} from '#/components/icons/Globe'
 import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
 
@@ -49,20 +47,11 @@ export function ThreadgateBtn({
   const anyoneCanReply =
     threadgateAllowUISettings.length === 1 &&
     threadgateAllowUISettings[0].type === 'everybody'
-  const noOneCanReply =
-    threadgateAllowUISettings.length === 1 &&
-    threadgateAllowUISettings[0].type === 'nobody'
   const anyoneCanQuote =
     !postgate.embeddingRules || postgate.embeddingRules.length === 0
-  const noOneCanQuote =
-    postgate.embeddingRules?.length === 1 &&
-    postgate.embeddingRules[0]?.$type === embeddingRules.disableRule.$type
   const anyoneCanInteract = anyoneCanReply && anyoneCanQuote
-  const noOneCanInteract = noOneCanReply && noOneCanQuote
   const label = anyoneCanInteract
     ? _(msg`Anybody can interact`)
-    : noOneCanInteract
-    ? _(msg`Nobody can interact`)
     : _(msg`Interaction limited`)
 
   return (
@@ -78,15 +67,7 @@ export function ThreadgateBtn({
           accessibilityHint={_(
             msg`Opens a dialog to choose who can reply to this thread`,
           )}>
-          <ButtonIcon
-            icon={
-              anyoneCanInteract
-                ? Earth
-                : noOneCanInteract
-                ? CircleBanSign
-                : Group
-            }
-          />
+          <ButtonIcon icon={anyoneCanInteract ? Earth : Group} />
           <ButtonText>{label}</ButtonText>
         </Button>
       </Animated.View>
