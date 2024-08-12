@@ -179,20 +179,21 @@ export function useToggleQuoteDetachmentMutation() {
         if (prev) {
           if (action === 'detach') {
             return mergePostgateRecords(prev, {
-              detachedQuotes: [post.uri],
+              detachedEmbeddingUris: [post.uri],
             })
           } else if (action === 'reattach') {
             return {
               ...prev,
-              detachedQuotes:
-                prev.detachedQuotes?.filter(uri => uri !== post.uri) || [],
+              detachedEmbeddingUris:
+                prev.detachedEmbeddingUris?.filter(uri => uri !== post.uri) ||
+                [],
             }
           }
         } else {
           if (action === 'detach') {
             return createPostgateRecord({
               post: quoteUri,
-              detachedQuotes: [post.uri],
+              detachedEmbeddingUris: [post.uri],
             })
           }
         }
@@ -245,19 +246,19 @@ export function useToggleQuotepostEnabledMutation() {
         if (prev) {
           if (action === 'disable') {
             return mergePostgateRecords(prev, {
-              quotepostRules: [{$type: 'app.bsky.feed.postgate#disableRule'}],
+              embeddingRules: [{$type: 'app.bsky.feed.postgate#disableRule'}],
             })
           } else if (action === 'enable') {
             return {
               ...prev,
-              quotepostRules: [],
+              embeddingRules: [],
             }
           }
         } else {
           if (action === 'disable') {
             return createPostgateRecord({
               post: postUri,
-              quotepostRules: [{$type: 'app.bsky.feed.postgate#disableRule'}],
+              embeddingRules: [{$type: 'app.bsky.feed.postgate#disableRule'}],
             })
           }
         }

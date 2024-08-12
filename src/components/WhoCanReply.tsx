@@ -72,10 +72,10 @@ export function WhoCanReply({
     settings.length === 1 && settings[0].type === 'everybody'
   const noOneCanReply = settings.length === 1 && settings[0].type === 'nobody'
   const anyoneCanQuote =
-    !postgate.quotepostRules || postgate.quotepostRules.length === 0
+    !postgate.embeddingRules || postgate.embeddingRules.length === 0
   const noOneCanQuote =
-    postgate.quotepostRules?.length === 1 &&
-    postgate.quotepostRules[0]?.$type === embeddingRules.disableRule.$type
+    postgate.embeddingRules?.length === 1 &&
+    postgate.embeddingRules[0]?.$type === embeddingRules.disableRule.$type
   const anyoneCanInteract = anyoneCanReply && anyoneCanQuote
   const noOneCanInteract = noOneCanReply && noOneCanQuote
   const description = anyoneCanInteract
@@ -293,8 +293,8 @@ function Rules({
 }) {
   const t = useTheme()
   const noOneCanQuote =
-    postgate.quotepostRules?.length === 1 &&
-    postgate.quotepostRules[0]?.$type === embeddingRules.disableRule.$type
+    postgate.embeddingRules?.length === 1 &&
+    postgate.embeddingRules[0]?.$type === embeddingRules.disableRule.$type
 
   return (
     <>

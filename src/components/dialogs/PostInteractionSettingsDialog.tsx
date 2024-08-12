@@ -85,11 +85,11 @@ export function PostInteractionSettingsDialogInner({
   }
 
   const onChangeEmbeddingRules = React.useCallback(
-    (rules: AppBskyFeedPostgate.Record['quotepostRules']) => {
+    (rules: AppBskyFeedPostgate.Record['embeddingRules']) => {
       onChangePostgate(
         createPostgateRecord({
           ...postgate,
-          quotepostRules: rules,
+          embeddingRules: rules,
         }),
       )
     },
@@ -127,8 +127,8 @@ export function PostInteractionSettingsDialogInner({
               <Selectable
                 label={_(msg`Everybody`)}
                 isSelected={
-                  !postgate.quotepostRules ||
-                  postgate.quotepostRules?.length === 0
+                  !postgate.embeddingRules ||
+                  postgate.embeddingRules?.length === 0
                 }
                 onPress={() => onChangeEmbeddingRules([])}
                 style={{flex: 1}}
@@ -136,8 +136,8 @@ export function PostInteractionSettingsDialogInner({
               <Selectable
                 label={_(msg`Nobody`)}
                 isSelected={Boolean(
-                  postgate.quotepostRules &&
-                    postgate.quotepostRules.find(
+                  postgate.embeddingRules &&
+                    postgate.embeddingRules.find(
                       v => v.$type === embeddingRules.disableRule.$type,
                     ),
                 )}

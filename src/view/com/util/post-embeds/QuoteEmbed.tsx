@@ -86,7 +86,7 @@ export function MaybeQuoteEmbed({
         </Text>
       </View>
     )
-  } else if (AppBskyEmbedRecord.isViewRemoved(embed.record)) {
+  } else if (AppBskyEmbedRecord.isViewDetached(embed.record)) {
     const isViewerOwner = currentAccount?.did
       ? embed.record.uri.includes(currentAccount.did)
       : false
