@@ -159,7 +159,7 @@ function App() {
 
   React.useEffect(() => {
     PlatformInfo.setAudioCategory(AudioCategory.Ambient)
-    PlatformInfo.setAudioActive(true)
+    PlatformInfo.setAudioActive(false)
     initPersistedState().then(() => setReady(true))
   }, [])
 

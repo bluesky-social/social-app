@@ -60,12 +60,12 @@ export function VideoEmbedInnerNative() {
         nativeControls={true}
         onEnterFullscreen={() => {
           PlatformInfo.setAudioCategory(AudioCategory.Playback)
-          PlatformInfo.setAudioActive(false)
+          PlatformInfo.setAudioActive(true)
           player.muted = false
         }}
         onExitFullscreen={() => {
           PlatformInfo.setAudioCategory(AudioCategory.Ambient)
-          PlatformInfo.setAudioActive(true)
+          PlatformInfo.setAudioActive(false)
           player.muted = true
           if (!player.playing) player.play()
         }}
