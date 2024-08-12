@@ -11,7 +11,7 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {PostInteractionSettingsDialog} from '#/components/dialogs/PostInteractionSettingsDialog'
+import {PostInteractionSettingsControlledDialog} from '#/components/dialogs/PostInteractionSettingsDialog'
 import {Earth_Stroke2_Corner0_Rounded as Earth} from '#/components/icons/Globe'
 import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
 
@@ -71,9 +71,8 @@ export function ThreadgateBtn({
           <ButtonText>{label}</ButtonText>
         </Button>
       </Animated.View>
-      <PostInteractionSettingsDialog
+      <PostInteractionSettingsControlledDialog
         control={control}
-        isSaving={false}
         onSave={() => {
           control.close()
         }}

@@ -76,6 +76,7 @@ export function useThreadgateViewQuery({
         uri: postUri!,
         depth: 0,
       })
+      console.log(data.thread)
 
       if (AppBskyFeedDefs.isThreadViewPost(data.thread)) {
         return data.thread.post.threadgate ?? null

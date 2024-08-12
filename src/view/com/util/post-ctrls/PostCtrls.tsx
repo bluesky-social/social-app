@@ -60,7 +60,6 @@ let PostCtrls = ({
   style,
   onPressReply,
   logContext,
-  rootPostUri,
   threadgateRecord,
 }: {
   big?: boolean
@@ -71,7 +70,6 @@ let PostCtrls = ({
   style?: StyleProp<ViewStyle>
   onPressReply: () => void
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
-  rootPostUri?: string
   threadgateRecord?: AppBskyFeedThreadgate.Record
 }): React.ReactNode => {
   const t = useTheme()
@@ -344,7 +342,6 @@ let PostCtrls = ({
           style={{padding: 5}}
           hitSlop={POST_CTRL_HITSLOP}
           timestamp={post.indexedAt}
-          rootPostUri={rootPostUri}
           threadgateRecord={threadgateRecord}
         />
       </View>

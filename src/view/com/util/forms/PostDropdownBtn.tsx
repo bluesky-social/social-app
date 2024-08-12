@@ -9,7 +9,6 @@ import * as Clipboard from 'expo-clipboard'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
-  AppBskyFeedPostgate,
   AppBskyFeedThreadgate,
   AtUri,
   RichText as RichTextAPI,
@@ -33,17 +32,9 @@ import {
   usePostDeleteMutation,
   useThreadMuteMutationQueue,
 } from '#/state/queries/post'
-import {
-  usePostgateQuery,
-  useToggleQuoteDetachmentMutation,
-  useWritePostgateMutation,
-} from '#/state/queries/postgate'
-import {
-  createPostgateRecord,
-  getMaybeDetachedQuoteEmbed,
-} from '#/state/queries/postgate/util'
+import {useToggleQuoteDetachmentMutation} from '#/state/queries/postgate'
+import {getMaybeDetachedQuoteEmbed} from '#/state/queries/postgate/util'
 import {useToggleReplyVisibilityMutation} from '#/state/queries/threadgate'
-import {threadgateRecordToAllowUISetting} from '#/state/queries/threadgate/util'
 import {useSession} from '#/state/session'
 import {getCurrentRoute} from 'lib/routes/helpers'
 import {shareUrl} from 'lib/sharing'
@@ -51,10 +42,9 @@ import {toShareUrl} from 'lib/strings/url-helpers'
 import {useTheme} from 'lib/ThemeContext'
 import {atoms as a, useBreakpoints, useTheme as useAlf} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
-import * as Dialog from '#/components/Dialog'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {EmbedDialog} from '#/components/dialogs/Embed'
-import {PostInteractionSettingsDialogInner} from '#/components/dialogs/PostInteractionSettingsDialog'
+import {PostInteractionSettingsDialog} from '#/components/dialogs/PostInteractionSettingsDialog'
 import {SendViaChatDialog} from '#/components/dms/dialogs/ShareViaChatDialog'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {BubbleQuestion_Stroke2_Corner0_Rounded as Translate} from '#/components/icons/Bubble'
@@ -91,7 +81,6 @@ let PostDropdownBtn = ({
   hitSlop,
   size,
   timestamp,
-  rootPostUri,
   threadgateRecord,
 }: {
   testID: string
@@ -103,7 +92,6 @@ let PostDropdownBtn = ({
   hitSlop?: PressableProps['hitSlop']
   size?: 'lg' | 'md' | 'sm'
   timestamp: string
-  rootPostUri?: string
   threadgateRecord?: AppBskyFeedThreadgate.Record
 }): React.ReactNode => {
   const {hasSession, currentAccount} = useSession()
@@ -282,36 +270,6 @@ let PostDropdownBtn = ({
     [navigation, postUri],
   )
 
-  const onToggleReplyVisibility = React.useCallback(async () => {
-    // TODO no threadgate?
-    if (!rootPostUri) return
-
-    const action = isReplyHiddenByThreadgate ? 'show' : 'hide'
-    const isHide = action === 'hide'
-
-    try {
-      await toggleReplyVisibility({
-        postUri: rootPostUri,
-        replyUri: postUri,
-        action,
-      })
-      Toast.show(
-        isHide
-          ? _(msg`Reply was successfully hidden`)
-          : _(msg`Reply visibility updated`),
-      )
-    } catch (e: any) {
-      Toast.show(_(msg`Updating reply visibility failed`))
-      logger.error(`Failed to ${action} reply`, {safeMessage: e.message})
-    }
-  }, [
-    _,
-    isReplyHiddenByThreadgate,
-    rootPostUri,
-    postUri,
-    toggleReplyVisibility,
-  ])
-
   const onToggleQuotePostAttachment = React.useCallback(async () => {
     if (!quoteEmbed) return
 
@@ -336,9 +294,39 @@ let PostDropdownBtn = ({
   }, [_, quoteEmbed, post, toggleQuoteDetachment])
 
   const canEmbed = isWeb && gtMobile && !hideInPWI
-  const canHideReply =
-    !isAuthor && isRootPostAuthor && !isPostHidden && rootPostUri && isReply
+  const canHideReply = !isAuthor && isRootPostAuthor && !isPostHidden && isReply
   const canDetachQuote = quoteEmbed && quoteEmbed.isOwnedByViewer
+
+  const onToggleReplyVisibility = React.useCallback(async () => {
+    // TODO no threadgate?
+    if (!canHideReply) return
+
+    const action = isReplyHiddenByThreadgate ? 'show' : 'hide'
+    const isHide = action === 'hide'
+
+    try {
+      await toggleReplyVisibility({
+        postUri: rootUri,
+        replyUri: postUri,
+        action,
+      })
+      Toast.show(
+        isHide
+          ? _(msg`Reply was successfully hidden`)
+          : _(msg`Reply visibility updated`),
+      )
+    } catch (e: any) {
+      Toast.show(_(msg`Updating reply visibility failed`))
+      logger.error(`Failed to ${action} reply`, {safeMessage: e.message})
+    }
+  }, [
+    _,
+    isReplyHiddenByThreadgate,
+    rootUri,
+    postUri,
+    canHideReply,
+    toggleReplyVisibility,
+  ])
 
   return (
     <EventStopper onKeyDown={false}>
@@ -643,112 +631,13 @@ let PostDropdownBtn = ({
         onSelectChat={onSelectChatToShareTo}
       />
 
-      <PostInteractionSettingsDialogControlled
+      <PostInteractionSettingsDialog
         control={postInteractionSettingsDialogControl}
         postUri={post.uri}
-        threadgateRecord={threadgateRecord}
-        replySettingsDisabled={!isRootPostAuthor}
+        rootPostUri={rootUri}
+        initialThreadgateView={post.threadgate}
       />
     </EventStopper>
-  )
-}
-
-export function PostInteractionSettingsDialogControlled(props: {
-  control: Dialog.DialogControlProps
-  postUri: string
-  threadgateRecord?: AppBskyFeedThreadgate.Record
-  replySettingsDisabled: boolean
-}) {
-  return (
-    <Dialog.Outer control={props.control}>
-      <Dialog.Handle />
-      <PostInteractionSettingsDialogControlledInner {...props} />
-    </Dialog.Outer>
-  )
-}
-
-function PostInteractionSettingsDialogControlledInner(props: {
-  control: Dialog.DialogControlProps
-  postUri: string
-  threadgateRecord?: AppBskyFeedThreadgate.Record
-  replySettingsDisabled: boolean
-}) {
-  const {_} = useLingui()
-  const threadgateAllowUISettings = React.useMemo(() => {
-    return threadgateRecordToAllowUISetting(props.threadgateRecord)
-  }, [props.threadgateRecord])
-  const [isSaving, setIsSaving] = React.useState(false)
-  const {mutateAsync: writePostgateRecord} = useWritePostgateMutation()
-  const {data: postgate, isLoading} = usePostgateQuery({postUri: props.postUri})
-  const [editedPostgate, setEditedPostgate] =
-    React.useState<AppBskyFeedPostgate.Record>()
-
-  const onChangePostgate = React.useCallback(
-    (next: AppBskyFeedPostgate.Record) => {
-      setEditedPostgate(next)
-    },
-    [setEditedPostgate],
-  )
-
-  const onSave = React.useCallback(async () => {
-    if (!editedPostgate) {
-      props.control.close()
-      return
-    }
-
-    setIsSaving(true)
-
-    try {
-      await writePostgateRecord({
-        postUri: props.postUri,
-        postgate: editedPostgate,
-      })
-      props.control.close()
-    } catch (e: any) {
-      logger.error(`Failed to save post interaction settings`, {
-        context: 'PostInteractionSettingsDialogControlledInner',
-        safeMessage: e.message,
-      })
-      Toast.show(
-        _(
-          msg`There was an issue. Please check your internet connection and try again.`,
-        ),
-        'xmark',
-      )
-    } finally {
-      setIsSaving(false)
-    }
-  }, [
-    _,
-    props.postUri,
-    props.control,
-    editedPostgate,
-    setIsSaving,
-    writePostgateRecord,
-  ])
-
-  return (
-    <Dialog.ScrollableInner
-      label={_(msg`Edit post interaction settings`)}
-      style={[{maxWidth: 500}, a.w_full]}>
-      {isLoading ? (
-        <Loader size="xl" />
-      ) : (
-        <PostInteractionSettingsDialogInner
-          replySettingsDisabled={props.replySettingsDisabled}
-          isSaving={isSaving}
-          onSave={onSave}
-          postgate={
-            editedPostgate ||
-            postgate ||
-            createPostgateRecord({post: props.postUri})
-          }
-          onChangePostgate={onChangePostgate}
-          threadgateAllowUISettings={threadgateAllowUISettings}
-          onChangeThreadgateAllowUISettings={() => {}}
-        />
-      )}
-    </Dialog.ScrollableInner>
   )
 }
 

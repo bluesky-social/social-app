@@ -1,28 +1,46 @@
 import React from 'react'
 import {StyleProp, View, ViewStyle} from 'react-native'
-import {AppBskyFeedPostgate} from '@atproto/api'
+import {
+  AppBskyFeedDefs,
+  AppBskyFeedPostgate,
+  AppBskyFeedThreadgate,
+  AtUri,
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import isEqual from 'lodash.isequal'
 
+import {logger} from '#/logger'
 import {useMyListsQuery} from '#/state/queries/my-lists'
+import {
+  usePostgateQuery,
+  useWritePostgateMutation,
+} from '#/state/queries/postgate'
 import {
   createPostgateRecord,
   embeddingRules,
 } from '#/state/queries/postgate/util'
-import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
+import {
+  ThreadgateAllowUISetting,
+  threadgateViewToAllowUISetting,
+  useSetThreadgateAllowMutation,
+  useThreadgateViewQuery,
+} from '#/state/queries/threadgate'
+import {useSession} from '#/state/session'
+import * as Toast from '#/view/com/util/toast'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
+import {useDelayedLoading} from '#/components/hooks/useDelayedLoading'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
-export type Props = {
+export type PostInteractionSettingsFormProps = {
   onSave: () => void
-  isSaving: boolean
+  isSaving?: boolean
 
   postgate: AppBskyFeedPostgate.Record
   onChangePostgate: (v: AppBskyFeedPostgate.Record) => void
@@ -33,10 +51,10 @@ export type Props = {
   replySettingsDisabled?: boolean
 }
 
-export function PostInteractionSettingsDialog({
+export function PostInteractionSettingsControlledDialog({
   control,
   ...rest
-}: Props & {
+}: PostInteractionSettingsFormProps & {
   control: Dialog.DialogControlProps
 }) {
   const {_} = useLingui()
@@ -46,14 +64,168 @@ export function PostInteractionSettingsDialog({
       <Dialog.ScrollableInner
         label={_(msg`Edit post interaction settings`)}
         style={[{maxWidth: 500}, a.w_full]}>
-        <PostInteractionSettingsDialogInner {...rest} />
+        <PostInteractionSettingsForm {...rest} />
         <Dialog.Close />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
   )
 }
 
-export function PostInteractionSettingsDialogInner({
+export type PostInteractionSettingsDialogProps = {
+  control: Dialog.DialogControlProps
+  /**
+   * URI of the post to edit the interaction settings for. Could be a root post
+   * or could be a reply.
+   */
+  postUri: string
+  /**
+   * The URI of the root post in the thread. Used to determine if the viewer
+   * owns the threadgate record and can therefore edit it.
+   */
+  rootPostUri: string
+  /**
+   * Optional initial {@link AppBskyFeedDefs.ThreadgateView} to use if we
+   * happen to have one before opening the settings dialog.
+   */
+  initialThreadgateView?: AppBskyFeedDefs.ThreadgateView
+}
+
+export function PostInteractionSettingsDialog(
+  props: PostInteractionSettingsDialogProps,
+) {
+  return (
+    <Dialog.Outer control={props.control}>
+      <Dialog.Handle />
+      <PostInteractionSettingsDialogControlledInner {...props} />
+    </Dialog.Outer>
+  )
+}
+
+export function PostInteractionSettingsDialogControlledInner(
+  props: PostInteractionSettingsDialogProps,
+) {
+  const {_} = useLingui()
+  const {currentAccount} = useSession()
+  const [isSaving, setIsSaving] = React.useState(false)
+
+  const {data: threadgateViewLoaded, isLoading: isLoadingThreadgate} =
+    useThreadgateViewQuery({postUri: props.rootPostUri})
+  const {data: postgate, isLoading: isLoadingPostgate} = usePostgateQuery({
+    postUri: props.postUri,
+  })
+
+  const {mutateAsync: writePostgateRecord} = useWritePostgateMutation()
+  const {mutateAsync: setThreadgateAllow} = useSetThreadgateAllowMutation()
+  const naturalLoading = useDelayedLoading(500) // TODO
+
+  const [editedPostgate, setEditedPostgate] =
+    React.useState<AppBskyFeedPostgate.Record>()
+  const [editedAllowUISettings, setEditedAllowUISettings] =
+    React.useState<ThreadgateAllowUISetting[]>()
+
+  const isLoading = isLoadingThreadgate || isLoadingPostgate || naturalLoading
+  const threadgateView = threadgateViewLoaded || props.initialThreadgateView
+  const isThreadgateOwnedByViewer = React.useMemo(() => {
+    if (AppBskyFeedThreadgate.isRecord(threadgateView?.record)) {
+      return (
+        currentAccount?.did === new AtUri(threadgateView?.record?.post).host
+      )
+    }
+    return false
+  }, [threadgateView, currentAccount?.did])
+
+  const postgateValue = React.useMemo(() => {
+    return (
+      editedPostgate || postgate || createPostgateRecord({post: props.postUri})
+    )
+  }, [postgate, editedPostgate, props.postUri])
+  const allowUIValue = React.useMemo(() => {
+    return (
+      editedAllowUISettings || threadgateViewToAllowUISetting(threadgateView)
+    )
+  }, [threadgateView, editedAllowUISettings])
+
+  const onSave = React.useCallback(async () => {
+    if (!editedPostgate && !editedAllowUISettings) {
+      props.control.close()
+      return
+    }
+
+    setIsSaving(true)
+
+    try {
+      const requests = []
+
+      if (editedPostgate) {
+        requests.push(
+          writePostgateRecord({
+            postUri: props.postUri,
+            postgate: editedPostgate,
+          }),
+        )
+      }
+
+      if (editedAllowUISettings && isThreadgateOwnedByViewer) {
+        requests.push(
+          setThreadgateAllow({
+            postUri: props.rootPostUri,
+            allow: editedAllowUISettings,
+          }),
+        )
+      }
+
+      await Promise.all(requests)
+
+      props.control.close()
+    } catch (e: any) {
+      logger.error(`Failed to save post interaction settings`, {
+        context: 'PostInteractionSettingsDialogControlledInner',
+        safeMessage: e.message,
+      })
+      Toast.show(
+        _(
+          msg`There was an issue. Please check your internet connection and try again.`,
+        ),
+        'xmark',
+      )
+    } finally {
+      setIsSaving(false)
+    }
+  }, [
+    _,
+    props.postUri,
+    props.rootPostUri,
+    props.control,
+    editedPostgate,
+    editedAllowUISettings,
+    setIsSaving,
+    writePostgateRecord,
+    setThreadgateAllow,
+    isThreadgateOwnedByViewer,
+  ])
+
+  return (
+    <Dialog.ScrollableInner
+      label={_(msg`Edit post interaction settings`)}
+      style={[{maxWidth: 500}, a.w_full]}>
+      {isLoading ? (
+        <Loader size="xl" />
+      ) : (
+        <PostInteractionSettingsForm
+          replySettingsDisabled={!isThreadgateOwnedByViewer}
+          isSaving={isSaving}
+          onSave={onSave}
+          postgate={postgateValue}
+          onChangePostgate={setEditedPostgate}
+          threadgateAllowUISettings={allowUIValue}
+          onChangeThreadgateAllowUISettings={setEditedAllowUISettings}
+        />
+      )}
+    </Dialog.ScrollableInner>
+  )
+}
+
+export function PostInteractionSettingsForm({
   onSave,
   isSaving,
   postgate,
@@ -61,7 +233,7 @@ export function PostInteractionSettingsDialogInner({
   threadgateAllowUISettings,
   onChangeThreadgateAllowUISettings,
   replySettingsDisabled,
-}: Props) {
+}: PostInteractionSettingsFormProps) {
   const t = useTheme()
   const {_} = useLingui()
   const control = Dialog.useDialogContext()

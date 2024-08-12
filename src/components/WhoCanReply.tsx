@@ -2,32 +2,20 @@ import React from 'react'
 import {Keyboard, StyleProp, View, ViewStyle} from 'react-native'
 import {
   AppBskyFeedDefs,
-  AppBskyFeedGetPostThread,
-  AppBskyFeedPostgate,
+  AppBskyFeedPost,
   AppBskyGraphDefs,
   AtUri,
-  BskyAgent,
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useQueryClient} from '@tanstack/react-query'
 
-import {until} from '#/lib/async/until'
 import {HITSLOP_10} from '#/lib/constants'
 import {makeListLink, makeProfileLink} from '#/lib/routes/links'
-import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
-import {RQKEY_ROOT as POST_THREAD_RQKEY_ROOT} from '#/state/queries/post-thread'
-import {useWritePostgateMutation} from '#/state/queries/postgate'
-import {embeddingRules} from '#/state/queries/postgate/util'
 import {
   ThreadgateAllowUISetting,
-  threadgateRecordQueryKeyRoot,
   threadgateViewToAllowUISetting,
-  updateThreadgateAllow,
 } from '#/state/queries/threadgate'
-import {useAgent} from '#/state/session'
-import * as Toast from 'view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -44,29 +32,25 @@ interface WhoCanReplyProps {
   post: AppBskyFeedDefs.PostView
   isThreadAuthor: boolean
   style?: StyleProp<ViewStyle>
-  postgate: AppBskyFeedPostgate.Record
 }
 
-export function WhoCanReply({
-  post,
-  isThreadAuthor,
-  style,
-  postgate: initialPostgate,
-}: WhoCanReplyProps) {
+export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
   const {_} = useLingui()
   const t = useTheme()
   const infoDialogControl = useDialogControl()
   const editDialogControl = useDialogControl()
-  const agent = useAgent()
-  const queryClient = useQueryClient()
-  const [isSaving, setIsSaving] = React.useState(false)
-  const {mutateAsync: writePostgateRecord} = useWritePostgateMutation()
 
-  const [postgate, setPostgate] = React.useState(initialPostgate)
-  // TODO test if we get weird data back
-  const [settings, setSettings] = React.useState(
-    threadgateViewToAllowUISetting(post.threadgate),
-  )
+  /*
+   * `WhoCanReply` is only used for root posts atm, in case this changes
+   * unexpectedly, we should check to make sure it's for sure the root URI.
+   */
+  const rootUri =
+    AppBskyFeedPost.isRecord(post.record) && post.record.reply?.root
+      ? post.record.reply.root.uri
+      : post.uri
+  const settings = React.useMemo(() => {
+    return threadgateViewToAllowUISetting(post.threadgate)
+  }, [post.threadgate])
 
   const anyoneCanReply =
     settings.length === 1 && settings[0].type === 'everybody'
@@ -87,95 +71,6 @@ export function WhoCanReply({
       infoDialogControl.open()
     }
   }
-
-  const onChangePostgate = React.useCallback(
-    (next: AppBskyFeedPostgate.Record) => {
-      setPostgate(next)
-    },
-    [setPostgate],
-  )
-
-  const onChangeThreadgateAllowUISettings = React.useCallback(
-    (next: ThreadgateAllowUISetting[]) => {
-      setSettings(next)
-    },
-    [setSettings],
-  )
-
-  const saveThreadgateAllowSettings = React.useCallback(async () => {
-    try {
-      await updateThreadgateAllow({
-        agent,
-        postUri: post.uri,
-        allow: settings,
-      })
-
-      await whenAppViewReady(agent, post.uri, res => {
-        const thread = res.data.thread
-        if (AppBskyFeedDefs.isThreadViewPost(thread)) {
-          const fetchedSettings = threadgateViewToAllowUISetting(
-            thread.post.threadgate,
-          )
-          return JSON.stringify(fetchedSettings) === JSON.stringify(settings)
-        }
-        return false
-      })
-
-      queryClient.invalidateQueries({
-        queryKey: [POST_THREAD_RQKEY_ROOT],
-      })
-      queryClient.invalidateQueries({
-        queryKey: [threadgateRecordQueryKeyRoot],
-      })
-    } catch (e: any) {
-      logger.error('Failed to edit threadgate', {safeMessage: e.message})
-      Toast.show(
-        _(
-          msg`There was an issue. Please check your internet connection and try again.`,
-        ),
-        'xmark',
-      )
-    }
-  }, [_, agent, post, settings, queryClient])
-
-  const savePostgateRecord = React.useCallback(async () => {
-    try {
-      await writePostgateRecord({postUri: post.uri, postgate})
-    } catch (e: any) {
-      logger.error('Failed to save postgate', {safeMessage: e.message})
-      Toast.show(
-        _(
-          msg`There was an issue. Please check your internet connection and try again.`,
-        ),
-        'xmark',
-      )
-    }
-  }, [_, post, postgate, writePostgateRecord])
-
-  const onSave = React.useCallback(async () => {
-    setIsSaving(true)
-
-    try {
-      await Promise.all([saveThreadgateAllowSettings(), savePostgateRecord()])
-      editDialogControl.close()
-      Toast.show(_(msg`Thread settings updated`))
-    } catch (e: any) {
-      Toast.show(
-        _(
-          msg`There was an issue. Please check your internet connection and try again.`,
-        ),
-        'xmark',
-      )
-    } finally {
-      setIsSaving(false)
-    }
-  }, [
-    _,
-    editDialogControl,
-    saveThreadgateAllowSettings,
-    savePostgateRecord,
-    setIsSaving,
-  ])
 
   return (
     <>
@@ -211,20 +106,17 @@ export function WhoCanReply({
 
       {isThreadAuthor ? (
         <PostInteractionSettingsDialog
-          onSave={onSave}
-          isSaving={isSaving}
-          postgate={postgate}
-          onChangePostgate={onChangePostgate}
-          threadgateAllowUISettings={settings}
-          onChangeThreadgateAllowUISettings={onChangeThreadgateAllowUISettings}
+          postUri={post.uri}
+          rootPostUri={rootUri}
           control={editDialogControl}
+          initialThreadgateView={post.threadgate}
         />
       ) : (
         <WhoCanReplyDialog
           control={infoDialogControl}
           post={post}
           settings={settings}
-          postgate={postgate}
+          embeddingDisabled={Boolean(post.viewer?.embeddingDisabled)}
         />
       )}
     </>
@@ -250,12 +142,12 @@ function WhoCanReplyDialog({
   control,
   post,
   settings,
-  postgate,
+  embeddingDisabled,
 }: {
   control: Dialog.DialogControlProps
   post: AppBskyFeedDefs.PostView
   settings: ThreadgateAllowUISetting[]
-  postgate: AppBskyFeedPostgate.Record
+  embeddingDisabled: boolean
 }) {
   const {_} = useLingui()
   return (
@@ -268,7 +160,11 @@ function WhoCanReplyDialog({
           <Text style={[a.font_bold, a.text_xl, a.pb_sm]}>
             <Trans>Who can interact with this post?</Trans>
           </Text>
-          <Rules post={post} settings={settings} postgate={postgate} />
+          <Rules
+            post={post}
+            settings={settings}
+            embeddingDisabled={embeddingDisabled}
+          />
         </View>
       </Dialog.ScrollableInner>
     </Dialog.Outer>
@@ -278,16 +174,13 @@ function WhoCanReplyDialog({
 function Rules({
   post,
   settings,
-  postgate,
+  embeddingDisabled,
 }: {
   post: AppBskyFeedDefs.PostView
   settings: ThreadgateAllowUISetting[]
-  postgate: AppBskyFeedPostgate.Record
+  embeddingDisabled: boolean
 }) {
   const t = useTheme()
-  const noOneCanQuote =
-    postgate.embeddingRules?.length === 1 &&
-    postgate.embeddingRules[0]?.$type === embeddingRules.disableRule.$type
 
   return (
     <>
@@ -320,7 +213,7 @@ function Rules({
           </Trans>
         )}{' '}
       </Text>
-      {noOneCanQuote && (
+      {embeddingDisabled && (
         <Text
           style={[
             a.text_sm,
@@ -391,21 +284,4 @@ function Separator({i, length}: {i: number; length: number}) {
     )
   }
   return <>, </>
-}
-
-async function whenAppViewReady(
-  agent: BskyAgent,
-  uri: string,
-  fn: (res: AppBskyFeedGetPostThread.Response) => boolean,
-) {
-  await until(
-    5, // 5 tries
-    1e3, // 1s delay between tries
-    fn,
-    () =>
-      agent.app.bsky.feed.getPostThread({
-        uri,
-        depth: 0,
-      }),
-  )
 }

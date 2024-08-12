@@ -443,6 +443,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
           <PostThreadItem
             post={item.post}
             record={item.record}
+            threadgateRecord={threadgateRecord ?? undefined}
             moderation={threadModerationCache.get(item)}
             treeView={treeView}
             depth={item.ctx.depth}
