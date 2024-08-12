@@ -71,18 +71,11 @@ export function WhoCanReply({
   const anyoneCanReply =
     settings.length === 1 && settings[0].type === 'everybody'
   const noOneCanReply = settings.length === 1 && settings[0].type === 'nobody'
-  const anyoneCanQuote =
-    !postgate.embeddingRules || postgate.embeddingRules.length === 0
-  const noOneCanQuote =
-    postgate.embeddingRules?.length === 1 &&
-    postgate.embeddingRules[0]?.$type === embeddingRules.disableRule.$type
-  const anyoneCanInteract = anyoneCanReply && anyoneCanQuote
-  const noOneCanInteract = noOneCanReply && noOneCanQuote
-  const description = anyoneCanInteract
-    ? _(msg`Anybody can interact`)
-    : noOneCanInteract
-    ? _(msg`Nobody can interact`)
-    : _(msg`Interaction limited`)
+  const description = anyoneCanReply
+    ? _(msg`Everybody can reply`)
+    : noOneCanReply
+    ? _(msg`Replies disabled`)
+    : _(msg`Some people can reply`)
 
   const onPressOpen = () => {
     if (isNative && Keyboard.isVisible()) {
