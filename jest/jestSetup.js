@@ -116,4 +116,7 @@ jest.mock('expo-modules-core', () => ({
       }
     }
   }),
+  requireNativeViewManager: jest.fn().mockImplementation(moduleName => {
+    return () => null
+  }),
 }))

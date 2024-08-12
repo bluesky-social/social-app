@@ -222,6 +222,7 @@ export function useProfileFollowMutationQueue(
   logContext: LogEvents['profile:follow']['logContext'] &
     LogEvents['profile:unfollow']['logContext'],
 ) {
+  const agent = useAgent()
   const queryClient = useQueryClient()
   const did = profile.did
   const initialFollowingUri = profile.viewer?.following
@@ -253,6 +254,20 @@ export function useProfileFollowMutationQueue(
       updateProfileShadow(queryClient, did, {
         followingUri: finalFollowingUri,
       })
+
+      if (finalFollowingUri) {
+        agent.app.bsky.graph
+          .getSuggestedFollowsByActor({
+            actor: did,
+          })
+          .then(res => {
+            const dids = res.data.suggestions
+              .filter(a => !a.viewer?.following)
+              .map(a => a.did)
+              .slice(0, 8)
+            userActionHistory.followSuggestion(dids)
+          })
+      }
     },
   })
 
