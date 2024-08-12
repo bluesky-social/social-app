@@ -320,19 +320,17 @@ function Rules({
           </Trans>
         )}{' '}
       </Text>
-      <Text
-        style={[
-          a.text_sm,
-          a.leading_snug,
-          a.flex_wrap,
-          t.atoms.text_contrast_medium,
-        ]}>
-        {noOneCanQuote ? (
+      {noOneCanQuote && (
+        <Text
+          style={[
+            a.text_sm,
+            a.leading_snug,
+            a.flex_wrap,
+            t.atoms.text_contrast_medium,
+          ]}>
           <Trans>No one but the author can quote this post.</Trans>
-        ) : (
-          <Trans>Anyone can quote this post.</Trans>
-        )}
-      </Text>
+        </Text>
+      )}
     </>
   )
 }
