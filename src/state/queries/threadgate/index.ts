@@ -1,13 +1,22 @@
-import {AppBskyFeedThreadgate, AtUri, BskyAgent} from '@atproto/api'
+import {
+  AppBskyFeedDefs,
+  AppBskyFeedGetPostThread,
+  AppBskyFeedThreadgate,
+  AtUri,
+  BskyAgent,
+} from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {networkRetry, retry} from '#/lib/async/retry'
+import {until} from '#/lib/async/until'
 import {STALE} from '#/state/queries'
+import {RQKEY_ROOT as postThreadQueryKeyRoot} from '#/state/queries/post-thread'
 import {ThreadgateAllowUISetting} from '#/state/queries/threadgate/types'
 import {
   createThreadgateRecord,
   mergeThreadgateRecords,
   threadgateAllowUISettingToAllowRecordValue,
+  threadgateViewToAllowUISetting,
 } from '#/state/queries/threadgate/util'
 import {useAgent} from '#/state/session'
 
@@ -39,6 +48,40 @@ export function useThreadgateRecordQuery({
         agent,
         postUri: postUri!,
       })
+    },
+  })
+}
+
+export const threadgateViewQueryKeyRoot = 'threadgate-view'
+export const createThreadgateViewQueryKey = (uri: string) => [
+  threadgateViewQueryKeyRoot,
+  uri,
+]
+export function useThreadgateViewQuery({
+  postUri,
+  initialData,
+}: {
+  postUri?: string
+  initialData?: AppBskyFeedDefs.ThreadgateView
+} = {}) {
+  const agent = useAgent()
+
+  return useQuery({
+    enabled: !!postUri,
+    queryKey: createThreadgateViewQueryKey(postUri || ''),
+    placeholderData: initialData,
+    staleTime: STALE.MINUTES.ONE,
+    async queryFn() {
+      const {data} = await agent.app.bsky.feed.getPostThread({
+        uri: postUri!,
+        depth: 0,
+      })
+
+      if (AppBskyFeedDefs.isThreadViewPost(data.thread)) {
+        return data.thread.post.threadgate ?? null
+      }
+
+      return null
     },
   })
 }
@@ -175,6 +218,67 @@ export async function updateThreadgateAllow({
         allow: threadgateAllowUISettingToAllowRecordValue(allow),
       })
     }
+  })
+}
+
+export function useSetThreadgateAllowMutation() {
+  const agent = useAgent()
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({
+      postUri,
+      allow,
+    }: {
+      postUri: string
+      allow: ThreadgateAllowUISetting[]
+    }) => {
+      return upsertThreadgate({agent, postUri}, async prev => {
+        if (prev) {
+          return {
+            ...prev,
+            allow: threadgateAllowUISettingToAllowRecordValue(allow),
+          }
+        } else {
+          return createThreadgateRecord({
+            post: postUri,
+            allow: threadgateAllowUISettingToAllowRecordValue(allow),
+          })
+        }
+      })
+    },
+    async onSuccess(_, {postUri, allow}) {
+      await until(
+        5, // 5 tries
+        1e3, // 1s delay between tries
+        (res: AppBskyFeedGetPostThread.Response) => {
+          const thread = res.data.thread
+          if (AppBskyFeedDefs.isThreadViewPost(thread)) {
+            const fetchedSettings = threadgateViewToAllowUISetting(
+              thread.post.threadgate,
+            )
+            return JSON.stringify(fetchedSettings) === JSON.stringify(allow)
+          }
+          return false
+        },
+        () => {
+          return agent.app.bsky.feed.getPostThread({
+            uri: postUri,
+            depth: 0,
+          })
+        },
+      )
+
+      queryClient.invalidateQueries({
+        queryKey: [postThreadQueryKeyRoot],
+      })
+      queryClient.invalidateQueries({
+        queryKey: [threadgateRecordQueryKeyRoot],
+      })
+      queryClient.invalidateQueries({
+        queryKey: [threadgateViewQueryKeyRoot],
+      })
+    },
   })
 }
 
