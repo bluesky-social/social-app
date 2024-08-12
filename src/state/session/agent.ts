@@ -53,8 +53,7 @@ export async function createAgentAndResume(
   } else {
     agent.sessionManager.session = prevSession
     if (!storedAccount.signupQueued) {
-      // @TODO SESSION - We were not awaiting this before. Why? And why is it now broken if we do not await?
-      await networkRetry(3, () => agent.resumeSession(prevSession)).catch(
+      networkRetry(3, () => agent.resumeSession(prevSession)).catch(
         (e: any) => {
           logger.error(`networkRetry failed to resume session`, {
             status: e?.status || 'unknown',
