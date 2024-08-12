@@ -129,8 +129,8 @@ export function usePostgateQuery({postUri}: {postUri: string}) {
   const agent = useAgent()
   return useQuery({
     queryKey: createPostgateQueryKey(postUri),
-    queryFn() {
-      return getPostgateRecord({agent, postUri})
+    async queryFn() {
+      return (await getPostgateRecord({agent, postUri})) ?? null
     },
   })
 }
