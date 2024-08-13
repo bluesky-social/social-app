@@ -11,6 +11,7 @@ import {IS_DEV} from '#/env'
 import {emitSessionDropped} from '../events'
 import {
   agentToSessionAccount,
+  BskyAppAgent,
   createAgentAndCreateAccount,
   createAgentAndLogin,
   createAgentAndResume,
@@ -202,7 +203,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         } else {
           const agent = state.currentAgentState.agent as BskyAgent
           const prevSession = agent.session
-          agent.session = sessionAccountToSession(syncedAccount)
+          agent.sessionManager.session = sessionAccountToSession(syncedAccount)
           addSessionDebugLog({
             type: 'agent:patch',
             agent,
@@ -239,7 +240,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   // @ts-ignore
   if (IS_DEV && isWeb) window.agent = state.currentAgentState.agent
 
-  const agent = state.currentAgentState.agent as BskyAgent
+  const agent = state.currentAgentState.agent as BskyAppAgent
   const currentAgentRef = React.useRef(agent)
   React.useEffect(() => {
     if (currentAgentRef.current !== agent) {
@@ -249,8 +250,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       addSessionDebugLog({type: 'agent:switch', prevAgent, nextAgent: agent})
       // We never reuse agents so let's fully neutralize the previous one.
       // This ensures it won't try to consume any refresh tokens.
-      prevAgent.session = undefined
-      prevAgent.setPersistSessionHandler(undefined)
+      prevAgent.dispose()
     }
   }, [agent])
 

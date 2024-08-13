@@ -10,33 +10,27 @@ public class ExpoPlatformInfoModule: Module {
 
     Function("setAudioCategory") { (audioCategoryString: String) in
       let audioCategory = AVAudioSession.Category(rawValue: audioCategoryString)
-      try? AVAudioSession.sharedInstance().setCategory(audioCategory)
+
+      DispatchQueue.global(qos: .background).async {
+        try? AVAudioSession.sharedInstance().setCategory(audioCategory)
+      }
     }
 
     Function("setAudioActive") { (active: Bool) in
-      var categoryOptions: AVAudioSession.CategoryOptions
-      let currentCategory = AVAudioSession.sharedInstance().category
-
       if active {
-        categoryOptions = [.mixWithOthers]
-        try? AVAudioSession.sharedInstance().setActive(true)
+        DispatchQueue.global(qos: .background).async {
+          try? AVAudioSession.sharedInstance().setActive(true)
+        }
       } else {
-        categoryOptions = [.duckOthers]
-        try? AVAudioSession
-          .sharedInstance()
-          .setActive(
-            false,
-            options: [.notifyOthersOnDeactivation]
-          )
+        DispatchQueue.global(qos: .background).async {
+          try? AVAudioSession
+            .sharedInstance()
+            .setActive(
+              false,
+              options: [.notifyOthersOnDeactivation]
+            )
+        }
       }
-
-      try? AVAudioSession
-        .sharedInstance()
-        .setCategory(
-          currentCategory,
-          mode: .default,
-          options: categoryOptions
-        )
     }
   }
 }
