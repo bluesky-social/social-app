@@ -1,4 +1,7 @@
+import React from 'react'
 import {
+  AppBskyEmbedRecord,
+  AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyFeedPostgate,
   AtUri,
@@ -166,6 +169,7 @@ export function useToggleQuoteDetachmentMutation() {
   const agent = useAgent()
   const queryClient = useQueryClient()
   const getPosts = useGetPosts()
+  const prevEmbed = React.useRef<AppBskyFeedDefs.PostView['embed']>()
 
   return useMutation({
     mutationFn: async ({
@@ -177,6 +181,20 @@ export function useToggleQuoteDetachmentMutation() {
       quoteUri: string
       action: 'detach' | 'reattach'
     }) => {
+      // cache here since post shadow mutates original object
+      prevEmbed.current = post.embed
+
+      if (action === 'detach') {
+        updatePostShadow(queryClient, post.uri, {
+          embed: createMaybeDetachedQuoteEmbed({
+            post,
+            quote: undefined,
+            quoteUri,
+            detached: true,
+          }),
+        })
+      }
+
       await upsertPostgate({agent, postUri: quoteUri}, async prev => {
         if (prev) {
           if (action === 'detach') {
@@ -202,16 +220,7 @@ export function useToggleQuoteDetachmentMutation() {
       })
     },
     async onSuccess(_data, {post, quoteUri, action}) {
-      if (action === 'detach') {
-        updatePostShadow(queryClient, post.uri, {
-          embed: createMaybeDetachedQuoteEmbed({
-            post,
-            quote: undefined,
-            quoteUri,
-            detached: true,
-          }),
-        })
-      } else if (action === 'reattach') {
+      if (action === 'reattach') {
         try {
           const [quote] = await getPosts({uris: [quoteUri]})
           updatePostShadow(queryClient, post.uri, {
@@ -229,6 +238,22 @@ export function useToggleQuoteDetachmentMutation() {
           })
         }
       }
+    },
+    onError(_, {post, action}) {
+      if (action === 'detach' && prevEmbed.current) {
+        // detach failed, add the embed back
+        if (
+          AppBskyEmbedRecord.isView(prevEmbed.current) ||
+          AppBskyEmbedRecordWithMedia.isView(prevEmbed.current)
+        ) {
+          updatePostShadow(queryClient, post.uri, {
+            embed: prevEmbed.current,
+          })
+        }
+      }
+    },
+    onSettled() {
+      prevEmbed.current = undefined
     },
   })
 }
