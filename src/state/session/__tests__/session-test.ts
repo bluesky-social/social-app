@@ -1184,7 +1184,7 @@ describe('session', () => {
     expect(state.currentAgentState.did).toBe('bob-did')
   })
 
-  it('does soft logout on network error', () => {
+  it('ignores network errors', () => {
     let state = getInitialState([])
 
     const agent1 = new BskyAgent({service: 'https://alice.com'})
@@ -1217,11 +1217,9 @@ describe('session', () => {
       },
     ])
     expect(state.accounts.length).toBe(1)
-    // Network error should reset current user but not reset the tokens.
-    // TODO: We might want to remove or change this behavior?
     expect(state.accounts[0].accessJwt).toBe('alice-access-jwt-1')
     expect(state.accounts[0].refreshJwt).toBe('alice-refresh-jwt-1')
-    expect(state.currentAgentState.did).toBe(undefined)
+    expect(state.currentAgentState.did).toBe('alice-did')
     expect(printState(state)).toMatchInlineSnapshot(`
       {
         "accounts": [
@@ -1242,9 +1240,9 @@ describe('session', () => {
         ],
         "currentAgentState": {
           "agent": {
-            "service": "https://public.api.bsky.app/",
+            "service": "https://alice.com/",
           },
-          "did": undefined,
+          "did": "alice-did",
         },
         "needsPersist": true,
       }

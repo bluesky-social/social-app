@@ -12,6 +12,7 @@ import {tryFetchGates} from '#/lib/statsig/statsig'
 import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
 import {snoozeEmailConfirmationPrompt} from '#/state/shell/reminders'
+import {emitNetworkConfirmed, emitNetworkLost} from '../events'
 import {addSessionErrorLog} from './logging'
 import {
   configureModerationForAccount,
@@ -227,6 +228,7 @@ export function sessionAccountToSession(
 }
 
 // Not exported. Use factories above to create it.
+let realFetch = globalThis.fetch
 class BskyAppAgent extends BskyAgent {
   persistSessionHandler: ((event: AtpSessionEvent) => void) | undefined =
     undefined
@@ -234,6 +236,23 @@ class BskyAppAgent extends BskyAgent {
   constructor({service}: {service: string}) {
     super({
       service,
+      async fetch(...args) {
+        let success = false
+        try {
+          const result = await realFetch(...args)
+          success = true
+          return result
+        } catch (e) {
+          success = false
+          throw e
+        } finally {
+          if (success) {
+            emitNetworkConfirmed()
+          } else {
+            emitNetworkLost()
+          }
+        }
+      },
       persistSession: (event: AtpSessionEvent) => {
         if (this.persistSessionHandler) {
           this.persistSessionHandler(event)
@@ -257,7 +276,15 @@ class BskyAppAgent extends BskyAgent {
 
     // Now the agent is ready.
     const account = agentToSessionAccountOrThrow(this)
+    let lastSession = this.sessionManager.session
     this.persistSessionHandler = event => {
+      if (this.sessionManager.session) {
+        lastSession = this.sessionManager.session
+      } else if (event === 'network-error') {
+        // Put it back, we'll try again later.
+        this.sessionManager.session = lastSession
+      }
+
       onSessionChange(this, account.did, event)
       if (event !== 'create' && event !== 'update') {
         addSessionErrorLog(account.did, event)
