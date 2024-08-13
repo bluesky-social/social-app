@@ -1,5 +1,4 @@
 import {AtpSessionEvent, BskyAgent} from '@atproto/api'
-import {AtpAgentOptions} from '@atproto/api/dist/atp-agent'
 
 /**
  * This is a temporary class that wraps `BskyAgent` and allows us to update the session persist handler when needed,
@@ -10,9 +9,9 @@ export class BskyAgentWrapper extends BskyAgent {
   persistSessionHandler: ((event: AtpSessionEvent) => void) | undefined =
     undefined
 
-  constructor(options: AtpAgentOptions) {
+  constructor({service}: {service: string}) {
     super({
-      ...options,
+      service,
       persistSession: (event: AtpSessionEvent) => {
         if (this.persistSessionHandler) {
           this.persistSessionHandler(event)
