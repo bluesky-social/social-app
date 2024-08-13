@@ -1,11 +1,6 @@
 import {AtpSessionEvent, BskyAgent} from '@atproto/api'
 
-/**
- * This is a temporary class that wraps `BskyAgent` and allows us to update the session persist handler when needed,
- * since the deprecated `BskyAgent` after the API upgrades for OAuth no longer support setting the handler in the
- * `SessionManager` itself.
- */
-export class BskyAgentWrapper extends BskyAgent {
+export class BskyAppAgent extends BskyAgent {
   persistSessionHandler: ((event: AtpSessionEvent) => void) | undefined =
     undefined
 

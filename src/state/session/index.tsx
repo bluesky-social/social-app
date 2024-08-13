@@ -22,7 +22,7 @@ export {isSignupQueued} from './util'
 import {addSessionDebugLog} from './logging'
 export type {SessionAccount} from '#/state/session/types'
 import {SessionApiContext, SessionStateContext} from '#/state/session/types'
-import {BskyAgentWrapper} from 'state/session/agent-wrapper'
+import {BskyAppAgent} from 'state/session/agent-wrapper'
 
 const StateContext = React.createContext<SessionStateContext>({
   accounts: [],
@@ -240,7 +240,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   // @ts-ignore
   if (IS_DEV && isWeb) window.agent = state.currentAgentState.agent
 
-  const agent = state.currentAgentState.agent as BskyAgentWrapper
+  const agent = state.currentAgentState.agent as BskyAppAgent
   const currentAgentRef = React.useRef(agent)
   React.useEffect(() => {
     if (currentAgentRef.current !== agent) {

@@ -12,7 +12,7 @@ import {tryFetchGates} from '#/lib/statsig/statsig'
 import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
 import {snoozeEmailConfirmationPrompt} from '#/state/shell/reminders'
-import {BskyAgentWrapper} from 'state/session/agent-wrapper'
+import {BskyAppAgent} from 'state/session/agent-wrapper'
 import {addSessionErrorLog} from './logging'
 import {
   configureModerationForAccount,
@@ -23,7 +23,7 @@ import {isSessionExpired, isSignupQueued} from './util'
 
 export function createPublicAgent() {
   configureModerationForGuest() // Side effect but only relevant for tests
-  return new BskyAgentWrapper({service: PUBLIC_BSKY_SERVICE})
+  return new BskyAppAgent({service: PUBLIC_BSKY_SERVICE})
 }
 
 export async function createAgentAndResume(
@@ -34,7 +34,7 @@ export async function createAgentAndResume(
     event: AtpSessionEvent,
   ) => void,
 ) {
-  const agent = new BskyAgentWrapper({service: storedAccount.service})
+  const agent = new BskyAppAgent({service: storedAccount.service})
   if (storedAccount.pdsUrl) {
     agent.sessionManager.pdsUrl = new URL(storedAccount.pdsUrl)
   }
@@ -81,7 +81,7 @@ export async function createAgentAndLogin(
     event: AtpSessionEvent,
   ) => void,
 ) {
-  const agent = new BskyAgentWrapper({service})
+  const agent = new BskyAppAgent({service})
   await agent.login({identifier, password, authFactorToken})
 
   const account = agentToSessionAccountOrThrow(agent)
@@ -116,7 +116,7 @@ export async function createAgentAndCreateAccount(
     event: AtpSessionEvent,
   ) => void,
 ) {
-  const agent = new BskyAgentWrapper({service})
+  const agent = new BskyAppAgent({service})
   await agent.createAccount({
     email,
     password,
@@ -178,7 +178,7 @@ export async function createAgentAndCreateAccount(
 }
 
 async function prepareAgent(
-  agent: BskyAgentWrapper,
+  agent: BskyAppAgent,
   // Not awaited in the calling code so we can delay blocking on them.
   gates: Promise<void>,
   moderation: Promise<void>,
