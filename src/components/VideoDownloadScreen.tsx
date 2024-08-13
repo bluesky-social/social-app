@@ -16,8 +16,10 @@ function postMessage(data: PostMessageData) {
     if (window?.webkit) {
       // @ts-expect-error safari webview only
       window.webkit.messageHandlers.onMessage.postMessage(JSON.stringify(data))
-    } else {
-      window.postMessage(JSON.stringify(data))
+      // @ts-expect-error android webview only
+    } else if (AndroidInterface) {
+      // @ts-expect-error android webview only
+      AndroidInterface.onMessage(JSON.stringify(data))
     }
   } catch (e) {
     logger.error('Failed to post message', {safeMessage: e})

@@ -6,10 +6,13 @@ import android.net.Uri
 import android.util.Base64
 import android.util.Log
 import android.webkit.DownloadListener
+import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import expo.modules.kotlin.AppContext
 import expo.modules.kotlin.viewevent.EventDispatcher
+import expo.modules.kotlin.viewevent.ViewEventCallback
 import expo.modules.kotlin.views.ExpoView
+import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
 import java.net.URI
@@ -20,7 +23,7 @@ class HLSDownloadView(
   appContext: AppContext,
 ) : ExpoView(context, appContext),
   DownloadListener {
-  val webView = WebView(context)
+  private val webView = WebView(context)
 
   var downloaderUrl: Uri? = null
 
@@ -41,6 +44,7 @@ class HLSDownloadView(
     webSettings.domStorageEnabled = true
 
     webView.setDownloadListener(this)
+    webView.addJavascriptInterface(WebAppInterface(this.onProgress, this.onError), "AndroidInterface")
   }
 
   override fun onDetachedFromWindow() {
@@ -86,5 +90,36 @@ class HLSDownloadView(
 
     val uri = Uri.fromFile(file)
     this.onSuccess(mapOf("uri" to uri.toString()))
+  }
+}
+
+public class WebAppInterface(
+  val onProgress: ViewEventCallback<Map<String, Any>>,
+  val onError: ViewEventCallback<Map<String, Any>>,
+) {
+  @JavascriptInterface
+  public fun onMessage(message: String) {
+    // parse message json
+    val jsonObject = JSONObject(message)
+    val action = jsonObject.getString("action")
+
+    when (action) {
+      "error" -> {
+        val messageStr = jsonObject.get("messageStr")
+        if (messageStr !is String) {
+          this.onError(mapOf("error" to "Error message must be a string."))
+          return
+        }
+        this.onError(mapOf("error" to messageStr))
+      }
+      "progress" -> {
+        val messageFloat = jsonObject.get("messageFloat")
+        if (messageFloat !is Number) {
+          this.onError(mapOf("error" to "Progress must be a float."))
+          return
+        }
+        this.onProgress(mapOf("progress" to messageFloat))
+      }
+    }
   }
 }
