@@ -1,5 +1,4 @@
 import {AtpSessionData, AtpSessionEvent, BskyAgent} from '@atproto/api'
-import {AtpAgentOptions} from '@atproto/api/dist/atp-agent'
 import {TID} from '@atproto/common-web'
 
 import {networkRetry} from '#/lib/async/retry'
@@ -13,6 +12,7 @@ import {tryFetchGates} from '#/lib/statsig/statsig'
 import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
 import {snoozeEmailConfirmationPrompt} from '#/state/shell/reminders'
+import {BskyAgentWrapper} from 'state/session/agent-wrapper'
 import {addSessionErrorLog} from './logging'
 import {
   configureModerationForAccount,
@@ -21,34 +21,9 @@ import {
 import {SessionAccount} from './types'
 import {isSessionExpired, isSignupQueued} from './util'
 
-export class BskyAgentWrapper extends BskyAgent {
-  persistSessionHandler: ((event: AtpSessionEvent) => void) | undefined =
-    undefined
-
-  constructor(options: AtpAgentOptions) {
-    super({
-      ...options,
-      persistSession: (event: AtpSessionEvent) => {
-        if (this.persistSessionHandler) {
-          this.persistSessionHandler(event)
-        }
-      },
-    })
-  }
-
-  setPersistSessionHandler(handler?: (event: AtpSessionEvent) => void) {
-    this.persistSessionHandler = handler
-  }
-
-  dispose() {
-    this.sessionManager.session = undefined
-    this.persistSessionHandler = undefined
-  }
-}
-
 export function createPublicAgent() {
   configureModerationForGuest() // Side effect but only relevant for tests
-  return new BskyAgent({service: PUBLIC_BSKY_SERVICE})
+  return new BskyAgentWrapper({service: PUBLIC_BSKY_SERVICE})
 }
 
 export async function createAgentAndResume(
