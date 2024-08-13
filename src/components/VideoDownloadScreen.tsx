@@ -2,8 +2,6 @@ import React from 'react'
 import {parse} from 'hls-parser'
 import {MasterPlaylist, MediaPlaylist, Variant} from 'hls-parser/types'
 
-import {logger} from '#/logger'
-
 interface PostMessageData {
   action: 'progress' | 'error'
   messageStr?: string
@@ -11,18 +9,14 @@ interface PostMessageData {
 }
 
 function postMessage(data: PostMessageData) {
-  try {
+  // @ts-expect-error safari webview only
+  if (window?.webkit) {
     // @ts-expect-error safari webview only
-    if (window?.webkit) {
-      // @ts-expect-error safari webview only
-      window.webkit.messageHandlers.onMessage.postMessage(JSON.stringify(data))
-      // @ts-expect-error android webview only
-    } else if (AndroidInterface) {
-      // @ts-expect-error android webview only
-      AndroidInterface.onMessage(JSON.stringify(data))
-    }
-  } catch (e) {
-    logger.error('Failed to post message', {safeMessage: e})
+    window.webkit.messageHandlers.onMessage.postMessage(JSON.stringify(data))
+    // @ts-expect-error android webview only
+  } else if (AndroidInterface) {
+    // @ts-expect-error android webview only
+    AndroidInterface.onMessage(JSON.stringify(data))
   }
 }
 
@@ -72,7 +66,6 @@ export function VideoDownloadScreen() {
         action: 'error',
         messageStr: 'A master playlist was not found in the provided playlist.',
       })
-      // @TODO handle
       return
     }
 
@@ -86,7 +79,6 @@ export function VideoDownloadScreen() {
 
     // Should only happen if there was no variants at all given to us. Mostly for types.
     if (!bestVariant) {
-      // @TODO handle
       postMessage({
         action: 'error',
         messageStr: 'No variants were found in the provided master playlist.',
@@ -109,7 +101,6 @@ export function VideoDownloadScreen() {
         action: 'error',
         messageStr: 'An unknown error has occurred.',
       })
-      // @TODO handle
       return
     }
 
