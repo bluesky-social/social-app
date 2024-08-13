@@ -1,10 +1,8 @@
 import React from 'react'
-import {FFmpeg} from '@ffmpeg/ffmpeg'
-import {fetchFile, toBlobURL} from '@ffmpeg/util'
 import {parse} from 'hls-parser'
 import {MasterPlaylist, MediaPlaylist, Variant} from 'hls-parser/types'
 
-import {isSafari} from 'lib/browser'
+import {logger} from '#/logger'
 
 interface PostMessageData {
   action: 'progress' | 'error'
@@ -14,14 +12,15 @@ interface PostMessageData {
 
 function postMessage(data: PostMessageData) {
   try {
-    if (isSafari) {
+    // @ts-expect-error safari webview only
+    if (window?.webkit) {
       // @ts-expect-error safari webview only
       window.webkit.messageHandlers.onMessage.postMessage(JSON.stringify(data))
     } else {
-      window.parent.postMessage(data, '*')
+      window.postMessage(JSON.stringify(data))
     }
   } catch (e) {
-    console.error(e)
+    logger.error('Failed to post message', {safeMessage: e})
   }
 }
 
@@ -32,17 +31,27 @@ function createSegementUrl(originalUrl: string, newFile: string) {
 }
 
 export function VideoDownloadScreen() {
-  const ffmpegRef = React.useRef(new FFmpeg())
+  const ffmpegRef = React.useRef<any>(null)
+  const fetchFileRef = React.useRef<any>(null)
 
-  const [dataUrl, setDataUrl] = React.useState<string | null>(null)
+  const [dataUrl, setDataUrl] = React.useState<any>(null)
 
   const load = React.useCallback(async () => {
+    const ffmpegLib = await import('@ffmpeg/ffmpeg')
+    const ffmpeg = new ffmpegLib.FFmpeg()
+    ffmpegRef.current = ffmpeg
+
+    const ffmpegUtilLib = await import('@ffmpeg/util')
+    fetchFileRef.current = ffmpegUtilLib.fetchFile
+
     const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm'
-    const ffmpeg = ffmpegRef.current
 
     await ffmpeg.load({
-      coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
-      wasmURL: await toBlobURL(
+      coreURL: await ffmpegUtilLib.toBlobURL(
+        `${baseURL}/ffmpeg-core.js`,
+        'text/javascript',
+      ),
+      wasmURL: await ffmpegUtilLib.toBlobURL(
         `${baseURL}/ffmpeg-core.wasm`,
         'application/wasm',
       ),
@@ -111,6 +120,7 @@ export function VideoDownloadScreen() {
 
     // Download each segment
     let error: string | null = null
+    let completed = 0
     await Promise.all(
       playlist.segments.map(async segment => {
         const uri = createSegementUrl(bestVariantUrl, segment.uri)
@@ -123,9 +133,16 @@ export function VideoDownloadScreen() {
 
         const blob = await res.blob()
         try {
-          await ffmpeg.writeFile(filename, await fetchFile(blob))
+          await ffmpeg.writeFile(filename, await fetchFileRef.current(blob))
         } catch (e: unknown) {
           error = 'Failed to write file.'
+        } finally {
+          completed++
+          const progress = completed / playlist.segments.length
+          postMessage({
+            action: 'progress',
+            messageFloat: progress,
+          })
         }
       }),
     )
@@ -149,7 +166,6 @@ export function VideoDownloadScreen() {
     ])
 
     const fileData = await ffmpeg.readFile('output.mp4')
-    // @ts-expect-error Don't feel like figuring this out. Checks out with the documentation.🙃
     const blob = new Blob([fileData.buffer], {type: 'video/mp4'})
     const dataUrl = await new Promise<string | null>(resolve => {
       const reader = new FileReader()
@@ -160,6 +176,24 @@ export function VideoDownloadScreen() {
     return dataUrl
   }, [])
 
+  const download = React.useCallback(
+    async (videoUrl: string) => {
+      await load()
+      const mp4Res = await createMp4(videoUrl)
+
+      if (!mp4Res) {
+        postMessage({
+          action: 'error',
+          messageStr: 'An error occurred while creating the MP4.',
+        })
+        return
+      }
+
+      setDataUrl(mp4Res)
+    },
+    [createMp4, load],
+  )
+
   React.useEffect(() => {
     const url = new URL(window.location.href)
     const videoUrl = url.searchParams.get('videoUrl')
@@ -168,22 +202,9 @@ export function VideoDownloadScreen() {
       postMessage({action: 'error', messageStr: 'No video URL provided'})
     } else {
       setDataUrl(null)
-      ;(async () => {
-        await load()
-        const mp4Res = await createMp4(videoUrl)
-
-        if (!mp4Res) {
-          postMessage({
-            action: 'error',
-            messageStr: 'An error occurred while creating the MP4.',
-          })
-          return
-        }
-
-        setDataUrl(mp4Res)
-      })()
+      download(videoUrl)
     }
-  }, [createMp4, load])
+  }, [download])
 
   if (!dataUrl) return null
 
