@@ -11,7 +11,6 @@ import {IS_DEV} from '#/env'
 import {emitSessionDropped} from '../events'
 import {
   agentToSessionAccount,
-  BskyAgentWrapper,
   createAgentAndCreateAccount,
   createAgentAndLogin,
   createAgentAndResume,
@@ -23,6 +22,7 @@ export {isSignupQueued} from './util'
 import {addSessionDebugLog} from './logging'
 export type {SessionAccount} from '#/state/session/types'
 import {SessionApiContext, SessionStateContext} from '#/state/session/types'
+import {BskyAgentWrapper} from 'state/session/agent-wrapper'
 
 const StateContext = React.createContext<SessionStateContext>({
   accounts: [],
