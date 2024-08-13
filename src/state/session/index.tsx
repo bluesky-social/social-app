@@ -1,9 +1,5 @@
 import React from 'react'
-import {
-  AtpPersistSessionHandler,
-  AtpSessionEvent,
-  BskyAgent,
-} from '@atproto/api'
+import {AtpSessionEvent, BskyAgent} from '@atproto/api'
 
 import {track} from '#/lib/analytics/analytics'
 import {logEvent} from '#/lib/statsig/statsig'
@@ -51,15 +47,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     return initialState
   })
 
-  const persistSessionHandler = React.useRef<
-    AtpPersistSessionHandler | undefined
-  >(undefined)
-  const setPersistSessionHandler = (
-    newHandler: AtpPersistSessionHandler | undefined,
-  ) => {
-    persistSessionHandler.current = newHandler
-  }
-
   const onAgentSessionChange = React.useCallback(
     (agent: BskyAgent, accountDid: string, sessionEvent: AtpSessionEvent) => {
       const refreshedAccount = agentToSessionAccount(agent) // Mutable, so snapshot it right away.
@@ -86,7 +73,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       const {agent, account} = await createAgentAndCreateAccount(
         params,
         onAgentSessionChange,
-        setPersistSessionHandler,
       )
 
       if (signal.aborted) {
@@ -111,7 +97,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       const {agent, account} = await createAgentAndLogin(
         params,
         onAgentSessionChange,
-        setPersistSessionHandler,
       )
 
       if (signal.aborted) {
@@ -153,7 +138,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       const {agent, account} = await createAgentAndResume(
         storedAccount,
         onAgentSessionChange,
-        setPersistSessionHandler,
       )
 
       if (signal.aborted) {
@@ -266,7 +250,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       // We never reuse agents so let's fully neutralize the previous one.
       // This ensures it won't try to consume any refresh tokens.
       prevAgent.sessionManager.session = undefined
-      setPersistSessionHandler(undefined)
     }
   }, [agent])
 

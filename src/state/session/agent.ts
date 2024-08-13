@@ -25,8 +25,6 @@ import {
 import {SessionAccount} from './types'
 import {isSessionExpired, isSignupQueued} from './util'
 
-type SetPersistSessionHandler = (cb: AtpPersistSessionHandler) => void
-
 export function createPublicAgent() {
   configureModerationForGuest() // Side effect but only relevant for tests
   return new BskyAgent({service: PUBLIC_BSKY_SERVICE})
@@ -39,9 +37,14 @@ export async function createAgentAndResume(
     did: string,
     event: AtpSessionEvent,
   ) => void,
-  setPersistSessionHandler: SetPersistSessionHandler,
 ) {
-  const agent = new BskyAgent({service: storedAccount.service})
+  let currentPersistHandler: AtpPersistSessionHandler | undefined
+  const agent = new BskyAgent({
+    service: storedAccount.service,
+    persistSession(event, session) {
+      currentPersistHandler?.(event, session)
+    },
+  })
   if (storedAccount.pdsUrl) {
     agent.sessionManager.pdsUrl = new URL(storedAccount.pdsUrl)
   }
@@ -68,13 +71,16 @@ export async function createAgentAndResume(
     }
   }
 
-  return prepareAgent(
-    agent,
-    gates,
-    moderation,
-    onSessionChange,
-    setPersistSessionHandler,
-  )
+  const account = agentToSessionAccountOrThrow(agent)
+  currentPersistHandler = event => {
+    onSessionChange(agent, account.did, event)
+    if (event !== 'create' && event !== 'update') {
+      addSessionErrorLog(account.did, event)
+    }
+  }
+
+  await Promise.all([gates, moderation])
+  return {account, agent}
 }
 
 export async function createAgentAndLogin(
@@ -94,21 +100,28 @@ export async function createAgentAndLogin(
     did: string,
     event: AtpSessionEvent,
   ) => void,
-  setPersistSessionHandler: SetPersistSessionHandler,
 ) {
-  const agent = new BskyAgent({service})
+  let currentPersistHandler: AtpPersistSessionHandler | undefined
+  const agent = new BskyAgent({
+    service,
+    persistSession(event, session) {
+      currentPersistHandler?.(event, session)
+    },
+  })
   await agent.login({identifier, password, authFactorToken})
 
   const account = agentToSessionAccountOrThrow(agent)
+  currentPersistHandler = event => {
+    onSessionChange(agent, account.did, event)
+    if (event !== 'create' && event !== 'update') {
+      addSessionErrorLog(account.did, event)
+    }
+  }
+
   const gates = tryFetchGates(account.did, 'prefer-fresh-gates')
   const moderation = configureModerationForAccount(agent, account)
-  return prepareAgent(
-    agent,
-    moderation,
-    gates,
-    onSessionChange,
-    setPersistSessionHandler,
-  )
+  await Promise.all([gates, moderation])
+  return {account, agent}
 }
 
 export async function createAgentAndCreateAccount(
@@ -136,9 +149,14 @@ export async function createAgentAndCreateAccount(
     did: string,
     event: AtpSessionEvent,
   ) => void,
-  setPersistSessionHandler: SetPersistSessionHandler,
 ) {
-  const agent = new BskyAgent({service})
+  let currentPersistHandler: AtpPersistSessionHandler | undefined
+  const agent = new BskyAgent({
+    service,
+    persistSession(event, session) {
+      currentPersistHandler?.(event, session)
+    },
+  })
   await agent.createAccount({
     email,
     password,
@@ -147,7 +165,15 @@ export async function createAgentAndCreateAccount(
     verificationPhone,
     verificationCode,
   })
+
   const account = agentToSessionAccountOrThrow(agent)
+  currentPersistHandler = event => {
+    onSessionChange(agent, account.did, event)
+    if (event !== 'create' && event !== 'update') {
+      addSessionErrorLog(account.did, event)
+    }
+  }
+
   const gates = tryFetchGates(account.did, 'prefer-fresh-gates')
   const moderation = configureModerationForAccount(agent, account)
 
@@ -196,39 +222,8 @@ export async function createAgentAndCreateAccount(
     logger.error(e, {context: `session: failed snoozeEmailConfirmationPrompt`})
   }
 
-  return prepareAgent(
-    agent,
-    gates,
-    moderation,
-    onSessionChange,
-    setPersistSessionHandler,
-  )
-}
-
-async function prepareAgent(
-  agent: BskyAgent,
-  // Not awaited in the calling code so we can delay blocking on them.
-  gates: Promise<void>,
-  moderation: Promise<void>,
-  onSessionChange: (
-    agent: BskyAgent,
-    did: string,
-    event: AtpSessionEvent,
-  ) => void,
-  setPersistSessionHandler: (cb: AtpPersistSessionHandler) => void,
-) {
-  // There's nothing else left to do, so block on them here.
   await Promise.all([gates, moderation])
-
-  // Now the agent is ready.
-  const account = agentToSessionAccountOrThrow(agent)
-  setPersistSessionHandler(event => {
-    onSessionChange(agent, account.did, event)
-    if (event !== 'create' && event !== 'update') {
-      addSessionErrorLog(account.did, event)
-    }
-  })
-  return {agent, account}
+  return {account, agent}
 }
 
 export function agentToSessionAccountOrThrow(agent: BskyAgent): SessionAccount {
