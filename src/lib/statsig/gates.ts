@@ -3,7 +3,6 @@ export type Gate =
   | 'debug_show_feedcontext'
   | 'new_user_guided_tour'
   | 'onboarding_minimum_interests'
-  | 'session_withproxy_fix'
   | 'show_follow_back_label_v2'
   | 'suggested_feeds_interstitial'
   | 'video_debug'
