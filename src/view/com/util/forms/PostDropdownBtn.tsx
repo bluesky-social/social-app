@@ -119,6 +119,7 @@ let PostDropdownBtn = ({
   const embedPostControl = useDialogControl()
   const sendViaChatControl = useDialogControl()
   const postInteractionSettingsDialogControl = useDialogControl()
+  const quotePostDetachConfirmControl = useDialogControl()
   const {mutateAsync: toggleReplyVisibility} =
     useToggleReplyVisibilityMutation()
 
@@ -526,7 +527,11 @@ let PostDropdownBtn = ({
                           ? _(msg`Re-attach quote`)
                           : _(msg`Detach quote`)
                       }
-                      onPress={onToggleQuotePostAttachment}>
+                      onPress={
+                        quoteEmbed.isDetached
+                          ? onToggleQuotePostAttachment
+                          : () => quotePostDetachConfirmControl.open()
+                      }>
                       <Menu.ItemText>
                         {quoteEmbed.isDetached
                           ? _(msg`Re-attach quote`)
@@ -657,6 +662,16 @@ let PostDropdownBtn = ({
         postUri={post.uri}
         rootPostUri={rootUri}
         initialThreadgateView={post.threadgate}
+      />
+
+      <Prompt.Basic
+        control={quotePostDetachConfirmControl}
+        title={_(msg`Detach quote post?`)}
+        description={_(
+          msg`This will remove your post from this quote post for all users, and replace it with a placeholder.`,
+        )}
+        onConfirm={onToggleQuotePostAttachment}
+        confirmButtonCta={_(msg`Yes, detach`)}
       />
     </EventStopper>
   )
