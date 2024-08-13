@@ -2,6 +2,8 @@ import React, {useContext} from 'react'
 import type {VideoPlayer} from 'expo-video'
 import {useVideoPlayer as useExpoVideoPlayer} from 'expo-video'
 
+import {logger} from '#/logger'
+
 const VideoPlayerContext = React.createContext<VideoPlayer | null>(null)
 
 export function VideoPlayerProvider({
@@ -13,9 +15,13 @@ export function VideoPlayerProvider({
 }) {
   // eslint-disable-next-line @typescript-eslint/no-shadow
   const player = useExpoVideoPlayer(source, player => {
-    player.loop = true
-    player.muted = true
-    player.play()
+    try {
+      player.loop = true
+      player.muted = true
+      player.play()
+    } catch (err) {
+      logger.error('Failed to init video player', {safeMessage: err})
+    }
   })
 
   return (
