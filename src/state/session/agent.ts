@@ -12,7 +12,7 @@ import {tryFetchGates} from '#/lib/statsig/statsig'
 import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
 import {snoozeEmailConfirmationPrompt} from '#/state/shell/reminders'
-import {BskyAppAgent} from 'state/session/agent-wrapper'
+import {BskyAppAgent} from 'state/session/app-agent'
 import {addSessionErrorLog} from './logging'
 import {
   configureModerationForAccount,

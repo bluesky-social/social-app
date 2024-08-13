@@ -22,7 +22,7 @@ export {isSignupQueued} from './util'
 import {addSessionDebugLog} from './logging'
 export type {SessionAccount} from '#/state/session/types'
 import {SessionApiContext, SessionStateContext} from '#/state/session/types'
-import {BskyAppAgent} from 'state/session/agent-wrapper'
+import {BskyAppAgent} from 'state/session/app-agent'
 
 const StateContext = React.createContext<SessionStateContext>({
   accounts: [],
