@@ -27,10 +27,6 @@ export default class HLSDownloadView extends React.PureComponent<HLSDownloadView
     return await this.nativeRef.current.startDownloadAsync(sourceUrl)
   }
 
-  async cancelAsync(sourceUrl: string): Promise<void> {
-    return await this.nativeRef.current.cancelAsync(sourceUrl)
-  }
-
   render() {
     return (
       <NativeView

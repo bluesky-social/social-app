@@ -26,9 +26,6 @@ class ExpoHLSDownloadModule : Module() {
         AsyncFunction("startDownloadAsync") { view: HLSDownloadView, sourceUrl: Uri ->
           view.startDownload(sourceUrl)
         }
-
-        AsyncFunction("cancelDownloadAsync") {
-        }
       }
     }
 }

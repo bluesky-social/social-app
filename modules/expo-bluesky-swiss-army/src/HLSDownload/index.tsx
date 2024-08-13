@@ -16,10 +16,6 @@ export default class HLSDownloadView extends React.PureComponent<HLSDownloadView
     throw new NotImplementedError({sourceUrl})
   }
 
-  async cancelAsync(sourceUrl: string): Promise<void> {
-    throw new NotImplementedError({sourceUrl})
-  }
-
   render() {
     return null
   }
