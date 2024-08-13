@@ -12,11 +12,11 @@ class ExpoHLSDownloadModule : Module() {
       View(HLSDownloadView::class) {
         Events(
           arrayOf(
-          "onStart",
-          "onError",
-          "onProgress",
-          "onSuccess"
-        )
+            "onStart",
+            "onError",
+            "onProgress",
+            "onSuccess",
+          ),
         )
 
         Prop("downloaderUrl") { view: HLSDownloadView, downloaderUrl: Uri ->
@@ -28,7 +28,6 @@ class ExpoHLSDownloadModule : Module() {
         }
 
         AsyncFunction("cancelDownloadAsync") {
-
         }
       }
     }
