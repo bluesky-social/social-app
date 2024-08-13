@@ -15,7 +15,7 @@ export class BskyAppAgent extends BskyAgent {
     })
   }
 
-  setPersistSessionHandler(handler?: (event: AtpSessionEvent) => void) {
+  setPersistSessionHandler(handler: (event: AtpSessionEvent) => void) {
     this.persistSessionHandler = handler
   }
 
