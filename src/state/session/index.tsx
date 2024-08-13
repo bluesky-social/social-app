@@ -1,9 +1,5 @@
 import React from 'react'
-import {
-  AtpPersistSessionHandler,
-  AtpSessionEvent,
-  BskyAgent,
-} from '@atproto/api'
+import {AtpSessionEvent, BskyAgent} from '@atproto/api'
 
 import {track} from '#/lib/analytics/analytics'
 import {logEvent} from '#/lib/statsig/statsig'
@@ -15,6 +11,7 @@ import {IS_DEV} from '#/env'
 import {emitSessionDropped} from '../events'
 import {
   agentToSessionAccount,
+  BskyAppAgent,
   createAgentAndCreateAccount,
   createAgentAndLogin,
   createAgentAndResume,
@@ -51,15 +48,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     return initialState
   })
 
-  const persistSessionHandler = React.useRef<
-    AtpPersistSessionHandler | undefined
-  >(undefined)
-  const setPersistSessionHandler = (
-    newHandler: AtpPersistSessionHandler | undefined,
-  ) => {
-    persistSessionHandler.current = newHandler
-  }
-
   const onAgentSessionChange = React.useCallback(
     (agent: BskyAgent, accountDid: string, sessionEvent: AtpSessionEvent) => {
       const refreshedAccount = agentToSessionAccount(agent) // Mutable, so snapshot it right away.
@@ -86,7 +74,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       const {agent, account} = await createAgentAndCreateAccount(
         params,
         onAgentSessionChange,
-        setPersistSessionHandler,
       )
 
       if (signal.aborted) {
@@ -111,7 +98,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       const {agent, account} = await createAgentAndLogin(
         params,
         onAgentSessionChange,
-        setPersistSessionHandler,
       )
 
       if (signal.aborted) {
@@ -153,7 +139,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       const {agent, account} = await createAgentAndResume(
         storedAccount,
         onAgentSessionChange,
-        setPersistSessionHandler,
       )
 
       if (signal.aborted) {
@@ -255,7 +240,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   // @ts-ignore
   if (IS_DEV && isWeb) window.agent = state.currentAgentState.agent
 
-  const agent = state.currentAgentState.agent as BskyAgent
+  const agent = state.currentAgentState.agent as BskyAppAgent
   const currentAgentRef = React.useRef(agent)
   React.useEffect(() => {
     if (currentAgentRef.current !== agent) {
@@ -265,8 +250,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       addSessionDebugLog({type: 'agent:switch', prevAgent, nextAgent: agent})
       // We never reuse agents so let's fully neutralize the previous one.
       // This ensures it won't try to consume any refresh tokens.
-      prevAgent.sessionManager.session = undefined
-      setPersistSessionHandler(undefined)
+      prevAgent.dispose()
     }
   }, [agent])
 

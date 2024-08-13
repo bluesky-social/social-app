@@ -23,29 +23,14 @@ export function VideoEmbedInnerNative() {
   const ref = useRef<VideoView>(null)
   const isScreenFocused = useIsFocused()
   const isAppFocused = useAppState()
-  const prevFocusedRef = useRef(isAppFocused)
 
-  // resume video when coming back from background
   useEffect(() => {
-    if (isAppFocused !== prevFocusedRef.current) {
-      prevFocusedRef.current = isAppFocused
-      if (isAppFocused === 'active') {
-        player.play()
-      }
-    }
-  }, [isAppFocused, player])
-
-  // pause the video when the screen is not focused
-  useEffect(() => {
-    if (!isScreenFocused) {
-      let wasPlaying = player.playing
+    if (isAppFocused === 'active' && isScreenFocused && !player.playing) {
+      player.play()
+    } else if (player.playing) {
       player.pause()
-
-      return () => {
-        if (wasPlaying) player.play()
-      }
     }
-  }, [isScreenFocused, player])
+  }, [isAppFocused, player, isScreenFocused])
 
   const enterFullscreen = useCallback(() => {
     ref.current?.enterFullscreen()
@@ -60,12 +45,12 @@ export function VideoEmbedInnerNative() {
         nativeControls={true}
         onEnterFullscreen={() => {
           PlatformInfo.setAudioCategory(AudioCategory.Playback)
-          PlatformInfo.setAudioActive(false)
+          PlatformInfo.setAudioActive(true)
           player.muted = false
         }}
         onExitFullscreen={() => {
           PlatformInfo.setAudioCategory(AudioCategory.Ambient)
-          PlatformInfo.setAudioActive(true)
+          PlatformInfo.setAudioActive(false)
           player.muted = true
           if (!player.playing) player.play()
         }}
