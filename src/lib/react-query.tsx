@@ -77,7 +77,7 @@ setInterval(() => {
       checkIsOnlineIfNeeded()
     }
   }
-}, 5000)
+}, 2000)
 
 focusManager.setEventListener(onFocus => {
   if (isNative) {
