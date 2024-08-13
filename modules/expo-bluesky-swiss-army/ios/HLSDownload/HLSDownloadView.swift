@@ -52,6 +52,9 @@ class HLSDownloadView: ExpoView, WKScriptMessageHandler, WKNavigationDelegate, W
   func startDownload(sourceUrl: URL) {
     guard let downloaderUrl = self.downloaderUrl,
           let url = URL(string: "\(downloaderUrl.absoluteString)?videoUrl=\(sourceUrl.absoluteString)") else {
+      self.onError([
+        "message": "Downloader URL is not set."
+      ])
       return
     }
 
@@ -65,7 +68,7 @@ class HLSDownloadView: ExpoView, WKScriptMessageHandler, WKNavigationDelegate, W
     guard let response = message.body as? String,
           let data = response.data(using: .utf8),
           let payload = try? JSONDecoder().decode(WebViewActionPayload.self, from: data) else {
-      onError([
+      self.onError([
         "message": "Failed to decode JSON post message."
       ])
       return
@@ -74,6 +77,9 @@ class HLSDownloadView: ExpoView, WKScriptMessageHandler, WKNavigationDelegate, W
     switch payload.action {
     case .progress:
       guard let progress = payload.messageFloat else {
+        self.onError([
+          "message": "Failed to decode JSON post message."
+        ])
         return
       }
       self.onProgress([
@@ -81,6 +87,9 @@ class HLSDownloadView: ExpoView, WKScriptMessageHandler, WKNavigationDelegate, W
       ])
       case .error:
       guard let messageStr = payload.messageStr else {
+        self.onError([
+          "message": "Failed to decode JSON post message."
+        ])
         return
       }
       self.onError([

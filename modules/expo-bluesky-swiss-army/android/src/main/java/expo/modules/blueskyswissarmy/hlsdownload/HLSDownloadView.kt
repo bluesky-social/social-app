@@ -50,9 +50,17 @@ class HLSDownloadView(
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()
     this.webView.stopLoading()
+    this.webView.clearHistory()
+    this.webView.removeAllViews()
+    this.webView.destroy()
   }
 
   fun startDownload(sourceUrl: Uri) {
+    if (this.downloaderUrl == null) {
+      this.onError(mapOf(ERROR_KEY to "Downloader URL is not set."))
+      return
+    }
+
     val url = URI("${this.downloaderUrl}?videoUrl=$sourceUrl")
     this.webView.loadUrl(url.toString())
     this.onStart(mapOf())
@@ -66,7 +74,7 @@ class HLSDownloadView(
     contentLength: Long,
   ) {
     if (url == null) {
-      this.onError(mapOf("error" to "Failed to retrieve download URL from webview."))
+      this.onError(mapOf(ERROR_KEY to "Failed to retrieve download URL from webview."))
       return
     }
 
@@ -82,7 +90,7 @@ class HLSDownloadView(
       fos.write(bytes)
     } catch (e: Exception) {
       Log.e("FileDownload", "Error downloading file", e)
-      this.onError(mapOf("error" to e.message.toString()))
+      this.onError(mapOf(ERROR_KEY to e.message.toString()))
       return
     } finally {
       fos.close()
@@ -90,6 +98,10 @@ class HLSDownloadView(
 
     val uri = Uri.fromFile(file)
     this.onSuccess(mapOf("uri" to uri.toString()))
+  }
+
+  companion object {
+    const val ERROR_KEY = "message"
   }
 }
 
@@ -107,19 +119,24 @@ public class WebAppInterface(
       "error" -> {
         val messageStr = jsonObject.get("messageStr")
         if (messageStr !is String) {
-          this.onError(mapOf("error" to "Error message must be a string."))
+          this.onError(mapOf(ERROR_KEY to "Failed to decode JSON post message."))
           return
         }
-        this.onError(mapOf("error" to messageStr))
+        this.onError(mapOf(ERROR_KEY to messageStr))
       }
       "progress" -> {
         val messageFloat = jsonObject.get("messageFloat")
         if (messageFloat !is Number) {
-          this.onError(mapOf("error" to "Progress must be a float."))
+          this.onError(mapOf(ERROR_KEY to "Failed to decode JSON post message."))
           return
         }
-        this.onProgress(mapOf("progress" to messageFloat))
+        this.onProgress(mapOf(PROGRESS_KEY to messageFloat))
       }
     }
+  }
+
+  companion object {
+    const val PROGRESS_KEY = "progress"
+    const val ERROR_KEY = "message"
   }
 }
