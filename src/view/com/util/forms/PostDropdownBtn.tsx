@@ -302,13 +302,15 @@ let PostDropdownBtn = ({
     }
   }, [_, quoteEmbed, post, toggleQuoteDetachment])
 
+  const canHidePostForMe = !isAuthor && !isPostHidden
   const canEmbed = isWeb && gtMobile && !hideInPWI
-  const canHideReply = !isAuthor && isRootPostAuthor && !isPostHidden && isReply
+  const canHideReplyForEveryone =
+    !isAuthor && isRootPostAuthor && !isPostHidden && isReply
   const canDetachQuote = quoteEmbed && quoteEmbed.isOwnedByViewer
 
   const onToggleReplyVisibility = React.useCallback(async () => {
     // TODO no threadgate?
-    if (!canHideReply) return
+    if (!canHideReplyForEveryone) return
 
     const action = isReplyHiddenByThreadgate ? 'show' : 'hide'
     const isHide = action === 'hide'
@@ -333,7 +335,7 @@ let PostDropdownBtn = ({
     isReplyHiddenByThreadgate,
     rootUri,
     postUri,
-    canHideReply,
+    canHideReplyForEveryone,
     toggleReplyVisibility,
   ])
 
@@ -476,75 +478,75 @@ let PostDropdownBtn = ({
                   <Menu.ItemText>{_(msg`Mute words & tags`)}</Menu.ItemText>
                   <Menu.ItemIcon icon={Filter} position="right" />
                 </Menu.Item>
-
-                {!isAuthor && !isPostHidden && (
-                  <Menu.Item
-                    testID="postDropdownHideBtn"
-                    label={_(msg`Hide post`)}
-                    onPress={hidePromptControl.open}>
-                    <Menu.ItemText>{_(msg`Hide post`)}</Menu.ItemText>
-                    <Menu.ItemIcon icon={EyeSlash} position="right" />
-                  </Menu.Item>
-                )}
               </Menu.Group>
             </>
           )}
 
-          {hasSession && (canHideReply || canDetachQuote) && (
-            <>
-              <Menu.Divider />
-              <Menu.Group>
-                {canHideReply && (
-                  <Menu.Item
-                    testID="postDropdownHideBtn"
-                    label={
-                      isReplyHiddenByThreadgate
-                        ? _(msg`Show reply for everyone`)
-                        : _(msg`Hide reply for everyone`)
-                    }
-                    onPress={onToggleReplyVisibility}>
-                    <Menu.ItemText>
-                      {isReplyHiddenByThreadgate
-                        ? _(msg`Show reply for everyone`)
-                        : _(msg`Hide reply for everyone`)}
-                    </Menu.ItemText>
-                    <Menu.ItemIcon
-                      icon={isReplyHiddenByThreadgate ? Eye : EyeSlash}
-                      position="right"
-                    />
-                  </Menu.Item>
-                )}
-
-                {canDetachQuote && (
-                  <Menu.Item
-                    disabled={isPending}
-                    testID="postDropdownHideBtn"
-                    label={
-                      quoteEmbed.isDetached
-                        ? _(msg`Re-attach quote`)
-                        : _(msg`Detach quote`)
-                    }
-                    onPress={onToggleQuotePostAttachment}>
-                    <Menu.ItemText>
-                      {quoteEmbed.isDetached
-                        ? _(msg`Re-attach quote`)
-                        : _(msg`Detach quote`)}
-                    </Menu.ItemText>
-                    <Menu.ItemIcon
-                      icon={
-                        isPending
-                          ? Loader
-                          : quoteEmbed.isDetached
-                          ? Eye
-                          : EyeSlash
+          {hasSession &&
+            (canHideReplyForEveryone || canDetachQuote || canHidePostForMe) && (
+              <>
+                <Menu.Divider />
+                <Menu.Group>
+                  {canHidePostForMe && (
+                    <Menu.Item
+                      testID="postDropdownHideBtn"
+                      label={_(msg`Hide post for me`)}
+                      onPress={hidePromptControl.open}>
+                      <Menu.ItemText>{_(msg`Hide post for me`)}</Menu.ItemText>
+                      <Menu.ItemIcon icon={EyeSlash} position="right" />
+                    </Menu.Item>
+                  )}
+                  {canHideReplyForEveryone && (
+                    <Menu.Item
+                      testID="postDropdownHideBtn"
+                      label={
+                        isReplyHiddenByThreadgate
+                          ? _(msg`Show reply for everyone`)
+                          : _(msg`Hide reply for everyone`)
                       }
-                      position="right"
-                    />
-                  </Menu.Item>
-                )}
-              </Menu.Group>
-            </>
-          )}
+                      onPress={onToggleReplyVisibility}>
+                      <Menu.ItemText>
+                        {isReplyHiddenByThreadgate
+                          ? _(msg`Show reply for everyone`)
+                          : _(msg`Hide reply for everyone`)}
+                      </Menu.ItemText>
+                      <Menu.ItemIcon
+                        icon={isReplyHiddenByThreadgate ? Eye : EyeSlash}
+                        position="right"
+                      />
+                    </Menu.Item>
+                  )}
+
+                  {canDetachQuote && (
+                    <Menu.Item
+                      disabled={isPending}
+                      testID="postDropdownHideBtn"
+                      label={
+                        quoteEmbed.isDetached
+                          ? _(msg`Re-attach quote`)
+                          : _(msg`Detach quote`)
+                      }
+                      onPress={onToggleQuotePostAttachment}>
+                      <Menu.ItemText>
+                        {quoteEmbed.isDetached
+                          ? _(msg`Re-attach quote`)
+                          : _(msg`Detach quote`)}
+                      </Menu.ItemText>
+                      <Menu.ItemIcon
+                        icon={
+                          isPending
+                            ? Loader
+                            : quoteEmbed.isDetached
+                            ? Eye
+                            : EyeSlash
+                        }
+                        position="right"
+                      />
+                    </Menu.Item>
+                  )}
+                </Menu.Group>
+              </>
+            )}
 
           {hasSession && (
             <>
