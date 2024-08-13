@@ -8,6 +8,7 @@ import {useIsFocused} from '@react-navigation/native'
 
 import {HITSLOP_30} from '#/lib/constants'
 import {useAppState} from '#/lib/hooks/useAppState'
+import {logger} from '#/logger'
 import {useVideoPlayer} from '#/view/com/util/post-embeds/VideoPlayerContext'
 import {android, atoms as a, useTheme} from '#/alf'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
@@ -25,10 +26,17 @@ export function VideoEmbedInnerNative() {
   const isAppFocused = useAppState()
 
   useEffect(() => {
-    if (isAppFocused === 'active' && isScreenFocused && !player.playing) {
-      player.play()
-    } else if (player.playing) {
-      player.pause()
+    try {
+      if (isAppFocused === 'active' && isScreenFocused && !player.playing) {
+        player.play()
+      } else if (player.playing) {
+        player.pause()
+      }
+    } catch (err) {
+      logger.error(
+        'Failed to play/pause while backgrounding/switching screens',
+        {safeMessage: err},
+      )
     }
   }, [isAppFocused, player, isScreenFocused])
 
