@@ -4,6 +4,8 @@ import {fetchFile, toBlobURL} from '@ffmpeg/util'
 import {parse} from 'hls-parser'
 import {MasterPlaylist, MediaPlaylist, Variant} from 'hls-parser/types'
 
+import {isSafari} from 'lib/browser'
+
 interface PostMessageData {
   action: 'progress' | 'error'
   messageStr?: string
@@ -12,10 +14,12 @@ interface PostMessageData {
 
 function postMessage(data: PostMessageData) {
   try {
-    // const _postMessage =
-    //   @ts-expect-error safari webview only
-    // window.webkit.messageHandlers.onMessage.postMessage ?? window.postMessage
-    window.webkit.messageHandlers.onMessage.postMessage(JSON.stringify(data))
+    if (isSafari) {
+      // @ts-expect-error safari webview only
+      window.webkit.messageHandlers.onMessage.postMessage(JSON.stringify(data))
+    } else {
+      window.parent.postMessage(data, '*')
+    }
   } catch (e) {
     console.error(e)
   }

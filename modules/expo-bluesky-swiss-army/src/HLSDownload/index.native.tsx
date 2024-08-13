@@ -35,7 +35,7 @@ export default class HLSDownloadView extends React.PureComponent<HLSDownloadView
     return (
       <NativeView
         ref={this.nativeRef}
-        style={{height: 400, width: 300}}
+        style={{height: 0, width: 0}}
         {...this.props}
       />
     )

@@ -57,8 +57,6 @@ function StorybookInner() {
             const permsRes = await requestVideoAccessIfNeeded()
             if (!permsRes) return
 
-            console.log(uri)
-
             await saveToLibraryAsync(uri)
             try {
               deleteAsync(uri)
