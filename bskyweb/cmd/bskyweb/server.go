@@ -256,7 +256,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/profile/:handleOrDID/post/:rkey/liked-by", server.WebGeneric)
 	e.GET("/profile/:handleOrDID/post/:rkey/reposted-by", server.WebGeneric)
 
-    // video download
+	// video download
 	e.GET("/video-download", server.WebGeneric)
 
 	// starter packs
