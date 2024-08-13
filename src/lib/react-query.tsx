@@ -9,6 +9,7 @@ import {
 } from '@tanstack/react-query-persist-client'
 
 import {isNative} from '#/platform/detection'
+import {listenNetworkConfirmed, listenNetworkLost} from '#/state/events'
 
 // any query keys in this array will be persisted to AsyncStorage
 export const labelersDetailedInfoQueryKeyRoot = 'labelers-detailed-info'
@@ -35,6 +36,14 @@ async function checkIsOnline(): Promise<boolean> {
   }
 }
 
+listenNetworkLost(() => {
+  onlineManager.setOnline(false)
+})
+
+listenNetworkConfirmed(() => {
+  onlineManager.setOnline(true)
+})
+
 let checkPromise: Promise<void> | undefined
 function checkIsOnlineIfNeeded() {
   if (checkPromise) {
@@ -47,7 +56,7 @@ function checkIsOnlineIfNeeded() {
 }
 
 setInterval(() => {
-  if (AppState.currentState === 'active') {
+  if (AppState.currentState === 'active' && !onlineManager.isOnline()) {
     checkIsOnlineIfNeeded()
   }
 }, 5000)
