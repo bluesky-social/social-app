@@ -1,10 +1,3 @@
-//
-//  ExpoHLSDownloadModule.swift
-//  DoubleConversion
-//
-//  Created by Hailey on 7/29/24.
-//
-
 import ExpoModulesCore
 
 public class ExpoHLSDownloadModule: Module {

@@ -1,10 +1,3 @@
-//
-//  HLSDownload.swift
-//  ExpoBlueskySwissArmy
-//
-//  Created by Hailey on 7/29/24.
-//
-
 import ExpoModulesCore
 import WebKit
 
