@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-08-10 15:35+0900\n"
+"PO-Revision-Date: 2024-08-13 17:03+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -158,7 +158,7 @@ msgstr "{handle} 님에게 메시지를 보낼 수 없습니다"
 msgid "{likeCount, plural, one {Liked by # user} other {Liked by # users}}"
 msgstr "{likeCount, plural, other {#}}명의 사용자가 좋아함"
 
-#: src/view/shell/Drawer.tsx:452
+#: src/view/shell/Drawer.tsx:466
 msgid "{numUnreadNotifications} unread"
 msgstr "{numUnreadNotifications}개 읽지 않음"
 
@@ -184,11 +184,11 @@ msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
 msgstr "<0>{0}, </0><1>{1} </1>외 {2, plural, other {#}}개가 스타터 팩에 포함됩니다"
 
-#: src/view/shell/Drawer.tsx:100
+#: src/view/shell/Drawer.tsx:109
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
 msgstr "<0>{0}</0> 팔로워"
 
-#: src/view/shell/Drawer.tsx:111
+#: src/view/shell/Drawer.tsx:124
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
 msgstr "<0>{0}</0> 팔로우 중"
 
@@ -477,8 +477,8 @@ msgstr "{0}(으)로 이메일을 보냈습니다. 이 이메일에는 아래에 
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
 msgstr "이전 주소인 {0}(으)로 이메일을 보냈습니다. 이 이메일에는 아래에 입력하는 인증 코드가 포함되어 있습니다."
 
-#: src/components/dialogs/GifSelect.tsx:252
-msgid "An error occured"
+#: src/components/dialogs/GifSelect.tsx:254
+msgid "An error has occurred"
 msgstr "오류 발생"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.web.tsx:314
@@ -582,16 +582,16 @@ msgstr "앱 비밀번호 설정"
 msgid "App Passwords"
 msgstr "앱 비밀번호"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:155
-#: src/components/moderation/LabelsOnMeDialog.tsx:158
+#: src/components/moderation/LabelsOnMeDialog.tsx:154
+#: src/components/moderation/LabelsOnMeDialog.tsx:157
 msgid "Appeal"
 msgstr "이의신청"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:262
+#: src/components/moderation/LabelsOnMeDialog.tsx:247
 msgid "Appeal \"{0}\" label"
 msgstr "\"{0}\" 라벨 이의신청"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:253
+#: src/components/moderation/LabelsOnMeDialog.tsx:238
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:91
 msgid "Appeal submitted"
 msgstr "이의신청 제출함"
@@ -671,8 +671,8 @@ msgid "At least 3 characters"
 msgstr "3자 이상"
 
 #: src/components/dms/MessagesListHeader.tsx:75
-#: src/components/moderation/LabelsOnMeDialog.tsx:308
-#: src/components/moderation/LabelsOnMeDialog.tsx:309
+#: src/components/moderation/LabelsOnMeDialog.tsx:293
+#: src/components/moderation/LabelsOnMeDialog.tsx:294
 #: src/screens/Login/ChooseAccountForm.tsx:98
 #: src/screens/Login/ChooseAccountForm.tsx:103
 #: src/screens/Login/ForgotPasswordForm.tsx:129
@@ -890,7 +890,6 @@ msgstr "글자, 숫자, 공백, 대시, 밑줄만 포함할 수 있습니다. �
 #: src/view/com/modals/VerifyEmail.tsx:261
 #: src/view/com/util/post-ctrls/RepostButton.tsx:139
 #: src/view/screens/Search/Search.tsx:704
-#: src/view/shell/desktop/Search.tsx:219
 msgid "Cancel"
 msgstr "취소"
 
@@ -927,7 +926,6 @@ msgid "Cancel reactivation and log out"
 msgstr "재활성화 취소 및 로그아웃"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
-#: src/view/shell/desktop/Search.tsx:215
 msgid "Cancel search"
 msgstr "검색 취소"
 
@@ -1113,7 +1111,7 @@ msgid "Clip 🐴 clop 🐴"
 msgstr "다그닥 🐴 다그닥 🐴"
 
 #: src/components/dialogs/GifSelect.ios.tsx:250
-#: src/components/dialogs/GifSelect.tsx:268
+#: src/components/dialogs/GifSelect.tsx:270
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:261
 #: src/components/NewskieDialog.tsx:146
 #: src/components/NewskieDialog.tsx:153
@@ -1139,7 +1137,7 @@ msgid "Close bottom drawer"
 msgstr "하단 서랍 닫기"
 
 #: src/components/dialogs/GifSelect.ios.tsx:244
-#: src/components/dialogs/GifSelect.tsx:262
+#: src/components/dialogs/GifSelect.tsx:264
 msgid "Close dialog"
 msgstr "대화 상자 닫기"
 
@@ -1223,6 +1221,10 @@ msgstr "최대 {MAX_GRAPHEME_LENGTH}자 길이까지 글을 작성할 수 있습
 msgid "Compose reply"
 msgstr "답글 작성하기"
 
+#: src/view/com/composer/videos/VideoTranscodeProgress.tsx:51
+msgid "Compressing..."
+msgstr "압축 중..."
+
 #: src/components/moderation/LabelPreference.tsx:81
 msgid "Configure content filtering setting for category: {name}"
 msgstr "{name} 카테고리에 대한 콘텐츠 필터링 설정을 구성합니다."
@@ -1290,7 +1292,7 @@ msgid "Content filters"
 msgstr "콘텐츠 필터"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:74
-#: src/view/screens/LanguageSettings.tsx:280
+#: src/view/screens/LanguageSettings.tsx:282
 msgid "Content Languages"
 msgstr "콘텐츠 언어"
 
@@ -2149,7 +2151,6 @@ msgid "Exits image view"
 msgstr "이미지 보기를 종료합니다"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:89
-#: src/view/shell/desktop/Search.tsx:216
 msgid "Exits inputting search query"
 msgstr "검색어 입력을 종료합니다"
 
@@ -2276,7 +2277,7 @@ msgstr "알림 설정을 저장하지 못했습니다. 다시 시도해 주세�
 msgid "Failed to send"
 msgstr "전송 실패"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:249
+#: src/components/moderation/LabelsOnMeDialog.tsx:234
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:87
 msgid "Failed to submit appeal, please try again."
 msgstr "이의신청을 제출하지 못했습니다. 다시 시도해 주세요."
@@ -2307,8 +2308,8 @@ msgstr "{0} 님의 피드"
 msgid "Feed toggle"
 msgstr "피드 켜기/끄기"
 
-#: src/view/shell/desktop/RightNav.tsx:69
-#: src/view/shell/Drawer.tsx:332
+#: src/view/shell/desktop/RightNav.tsx:70
+#: src/view/shell/Drawer.tsx:346
 msgid "Feedback"
 msgstr "피드백"
 
@@ -2319,8 +2320,8 @@ msgstr "피드백"
 #: src/view/screens/Profile.tsx:213
 #: src/view/screens/Search/Search.tsx:375
 #: src/view/shell/desktop/LeftNav.tsx:379
-#: src/view/shell/Drawer.tsx:483
-#: src/view/shell/Drawer.tsx:484
+#: src/view/shell/Drawer.tsx:497
+#: src/view/shell/Drawer.tsx:498
 msgid "Feeds"
 msgstr "피드"
 
@@ -2577,7 +2578,7 @@ msgstr "갤러리"
 msgid "Generate a starter pack"
 msgstr "스타터 팩 만들기"
 
-#: src/view/shell/Drawer.tsx:336
+#: src/view/shell/Drawer.tsx:350
 msgid "Get help"
 msgstr "도움말"
 
@@ -2629,7 +2630,7 @@ msgstr "뒤로"
 
 #: src/components/dms/ReportDialog.tsx:154
 #: src/components/ReportDialog/SelectReportOptionView.tsx:80
-#: src/components/ReportDialog/SubmitView.tsx:121
+#: src/components/ReportDialog/SubmitView.tsx:108
 #: src/screens/Onboarding/Layout.tsx:102
 #: src/screens/Onboarding/Layout.tsx:191
 #: src/screens/Signup/BackNextButtons.tsx:34
@@ -2701,8 +2702,8 @@ msgstr "해시태그: #{tag}"
 msgid "Having trouble?"
 msgstr "문제가 있나요?"
 
-#: src/view/shell/desktop/RightNav.tsx:98
-#: src/view/shell/Drawer.tsx:345
+#: src/view/shell/desktop/RightNav.tsx:99
+#: src/view/shell/Drawer.tsx:359
 msgid "Help"
 msgstr "도움말"
 
@@ -2780,8 +2781,8 @@ msgstr "검토 서비스를 불러올 수 없습니다."
 #: src/Navigation.tsx:561
 #: src/view/shell/bottom-bar/BottomBar.tsx:160
 #: src/view/shell/desktop/LeftNav.tsx:342
-#: src/view/shell/Drawer.tsx:415
-#: src/view/shell/Drawer.tsx:416
+#: src/view/shell/Drawer.tsx:429
+#: src/view/shell/Drawer.tsx:430
 msgid "Home"
 msgstr "홈"
 
@@ -3000,11 +3001,11 @@ msgstr "라벨"
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
 msgstr "라벨은 사용자 및 콘텐츠에 대한 주석입니다. 네트워크를 숨기고, 경고하고, 분류하는 데 사용할 수 있습니다."
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:80
+#: src/components/moderation/LabelsOnMeDialog.tsx:79
 msgid "Labels on your account"
 msgstr "내 계정의 라벨"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:82
+#: src/components/moderation/LabelsOnMeDialog.tsx:81
 msgid "Labels on your content"
 msgstr "내 콘텐츠의 라벨"
 
@@ -3197,8 +3198,8 @@ msgstr "리스트 언뮤트됨"
 #: src/view/screens/Profile.tsx:208
 #: src/view/screens/Profile.tsx:215
 #: src/view/shell/desktop/LeftNav.tsx:385
-#: src/view/shell/Drawer.tsx:499
-#: src/view/shell/Drawer.tsx:500
+#: src/view/shell/Drawer.tsx:513
+#: src/view/shell/Drawer.tsx:514
 msgid "Lists"
 msgstr "리스트"
 
@@ -3516,7 +3517,7 @@ msgid "Mute words & tags"
 msgstr "단어 및 태그 뮤트"
 
 #: src/view/com/lists/ListCard.tsx:103
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:205
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:190
 msgid "Muted"
 msgstr "뮤트됨"
 
@@ -3601,7 +3602,7 @@ msgstr "스타터 팩으로 이동합니다"
 msgid "Navigates to the next screen"
 msgstr "다음 화면으로 이동합니다"
 
-#: src/view/shell/Drawer.tsx:78
+#: src/view/shell/Drawer.tsx:79
 msgid "Navigates to your profile"
 msgstr "내 프로필로 이동합니다"
 
@@ -3871,8 +3872,8 @@ msgstr "알림음"
 #: src/view/screens/Notifications.tsx:203
 #: src/view/shell/bottom-bar/BottomBar.tsx:230
 #: src/view/shell/desktop/LeftNav.tsx:362
-#: src/view/shell/Drawer.tsx:447
-#: src/view/shell/Drawer.tsx:448
+#: src/view/shell/Drawer.tsx:461
+#: src/view/shell/Drawer.tsx:462
 msgid "Notifications"
 msgstr "알림"
 
@@ -3897,7 +3898,7 @@ msgid "Off"
 msgstr "끄기"
 
 #: src/components/dialogs/GifSelect.ios.tsx:237
-#: src/components/dialogs/GifSelect.tsx:255
+#: src/components/dialogs/GifSelect.tsx:257
 #: src/view/com/util/ErrorBoundary.tsx:55
 msgid "Oh no!"
 msgstr "이런!"
@@ -4163,7 +4164,7 @@ msgid "Option {0} of {numItems}"
 msgstr "{numItems}개 중 {0}번째 옵션"
 
 #: src/components/dms/ReportDialog.tsx:183
-#: src/components/ReportDialog/SubmitView.tsx:179
+#: src/components/ReportDialog/SubmitView.tsx:166
 msgid "Optionally provide additional information below:"
 msgstr "선택 사항으로 아래에 추가 정보를 입력하세요."
 
@@ -4360,7 +4361,7 @@ msgstr "초대 코드를 입력하세요."
 msgid "Please enter your password as well:"
 msgstr "비밀번호를 입력하세요."
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:283
+#: src/components/moderation/LabelsOnMeDialog.tsx:268
 msgid "Please explain why you think this label was incorrectly applied by {0}"
 msgstr "{0} 님이 이 라벨을 잘못 적용했다고 생각하는 이유를 설명해 주세요"
 
@@ -4490,7 +4491,7 @@ msgstr "내가 팔로우하는 이 계정의 팔로워를 보려면 누르세요
 msgid "Previous image"
 msgstr "이전 이미지"
 
-#: src/view/screens/LanguageSettings.tsx:189
+#: src/view/screens/LanguageSettings.tsx:190
 msgid "Primary Language"
 msgstr "주 언어"
 
@@ -4503,7 +4504,7 @@ msgid "Priority notifications"
 msgstr "우선순위 알림"
 
 #: src/view/screens/Settings/index.tsx:609
-#: src/view/shell/desktop/RightNav.tsx:80
+#: src/view/shell/desktop/RightNav.tsx:81
 msgid "Privacy"
 msgstr "개인정보"
 
@@ -4511,7 +4512,7 @@ msgstr "개인정보"
 #: src/screens/Signup/StepInfo/Policies.tsx:62
 #: src/view/screens/PrivacyPolicy.tsx:29
 #: src/view/screens/Settings/index.tsx:900
-#: src/view/shell/Drawer.tsx:284
+#: src/view/shell/Drawer.tsx:298
 msgid "Privacy Policy"
 msgstr "개인정보 처리방침"
 
@@ -4530,9 +4531,9 @@ msgstr "프로필"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:275
 #: src/view/shell/desktop/LeftNav.tsx:393
-#: src/view/shell/Drawer.tsx:77
-#: src/view/shell/Drawer.tsx:532
-#: src/view/shell/Drawer.tsx:533
+#: src/view/shell/Drawer.tsx:78
+#: src/view/shell/Drawer.tsx:546
+#: src/view/shell/Drawer.tsx:547
 msgid "Profile"
 msgstr "프로필"
 
@@ -4615,7 +4616,7 @@ msgstr "Bluesky 서비스 이용약관 읽기"
 msgid "Reason:"
 msgstr "이유:"
 
-#: src/view/screens/Search/Search.tsx:933
+#: src/view/screens/Search/Search.tsx:926
 msgid "Recent Searches"
 msgstr "최근 검색"
 
@@ -4698,11 +4699,11 @@ msgstr "이미지 미리보기 제거"
 msgid "Remove mute word from your list"
 msgstr "목록에서 뮤트한 단어 제거"
 
-#: src/view/screens/Search/Search.tsx:974
+#: src/view/screens/Search/Search.tsx:969
 msgid "Remove profile"
 msgstr "프로필 제거"
 
-#: src/view/screens/Search/Search.tsx:976
+#: src/view/screens/Search/Search.tsx:971
 msgid "Remove profile from search history"
 msgstr "검색 기록에서 프로필을 제거합니다"
 
@@ -5100,14 +5101,12 @@ msgstr "맨 위로 스크롤"
 #: src/view/screens/Search/Search.tsx:813
 #: src/view/shell/bottom-bar/BottomBar.tsx:182
 #: src/view/shell/desktop/LeftNav.tsx:354
-#: src/view/shell/desktop/Search.tsx:195
-#: src/view/shell/desktop/Search.tsx:204
-#: src/view/shell/Drawer.tsx:384
-#: src/view/shell/Drawer.tsx:385
+#: src/view/shell/Drawer.tsx:398
+#: src/view/shell/Drawer.tsx:399
 msgid "Search"
 msgstr "검색"
 
-#: src/view/shell/desktop/Search.tsx:236
+#: src/view/shell/desktop/Search.tsx:200
 msgid "Search for \"{query}\""
 msgstr "\"{query}\"에 대한 검색 결과"
 
@@ -5210,7 +5209,7 @@ msgstr "GIF \"{0}\" 선택"
 msgid "Select how long to mute this word for."
 msgstr "이 단어를 음소거할 기간 선택하기"
 
-#: src/view/screens/LanguageSettings.tsx:301
+#: src/view/screens/LanguageSettings.tsx:303
 msgid "Select languages"
 msgstr "언어 선택"
 
@@ -5226,7 +5225,7 @@ msgstr "{numItems}개 중 {i}번째 옵션을 선택합니다"
 msgid "Select the {emojiName} emoji as your avatar"
 msgstr "{emojiName} 이모티콘을 아바타로 선택하기"
 
-#: src/components/ReportDialog/SubmitView.tsx:152
+#: src/components/ReportDialog/SubmitView.tsx:139
 msgid "Select the moderation service(s) to report to"
 msgstr "신고할 검토 서비스를 선택하세요."
 
@@ -5242,7 +5241,7 @@ msgstr "동영상 선택"
 msgid "Select what content this mute word should apply to."
 msgstr "이 뮤트 단어를 적용할 콘텐츠 선택하기"
 
-#: src/view/screens/LanguageSettings.tsx:283
+#: src/view/screens/LanguageSettings.tsx:285
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
 msgstr "구독하는 피드에 포함할 언어를 선택합니다. 선택하지 않으면 모든 언어가 표시됩니다."
 
@@ -5258,7 +5257,7 @@ msgstr "생년월일을 선택하세요"
 msgid "Select your interests from the options below"
 msgstr "아래 옵션에서 관심사를 선택하세요"
 
-#: src/view/screens/LanguageSettings.tsx:192
+#: src/view/screens/LanguageSettings.tsx:193
 msgid "Select your preferred language for translations in your feed."
 msgstr "피드에서 번역을 위해 선호하는 언어를 선택합니다."
 
@@ -5280,7 +5279,7 @@ msgctxt "action"
 msgid "Send Email"
 msgstr "이메일 보내기"
 
-#: src/view/shell/Drawer.tsx:325
+#: src/view/shell/Drawer.tsx:339
 msgid "Send feedback"
 msgstr "피드백 보내기"
 
@@ -5295,8 +5294,8 @@ msgstr "게시물을 다음으로 보내기"
 
 #: src/components/dms/ReportDialog.tsx:234
 #: src/components/dms/ReportDialog.tsx:237
-#: src/components/ReportDialog/SubmitView.tsx:232
-#: src/components/ReportDialog/SubmitView.tsx:236
+#: src/components/ReportDialog/SubmitView.tsx:219
+#: src/components/ReportDialog/SubmitView.tsx:223
 msgid "Send report"
 msgstr "신고 보내기"
 
@@ -5377,8 +5376,8 @@ msgstr "이미지 비율을 가로로 길게 설정합니다"
 #: src/Navigation.tsx:154
 #: src/view/screens/Settings/index.tsx:323
 #: src/view/shell/desktop/LeftNav.tsx:401
-#: src/view/shell/Drawer.tsx:549
-#: src/view/shell/Drawer.tsx:550
+#: src/view/shell/Drawer.tsx:563
+#: src/view/shell/Drawer.tsx:564
 msgid "Settings"
 msgstr "설정"
 
@@ -5697,7 +5696,7 @@ msgstr "답글 정렬"
 msgid "Sort replies to the same post by:"
 msgstr "동일한 게시물에 대한 답글을 정렬하는 기준입니다."
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:172
+#: src/components/moderation/LabelsOnMeDialog.tsx:171
 msgid "Source: <0>{sourceName}</0>"
 msgstr "출처: <0>{sourceName}</0>"
 
@@ -5775,8 +5774,8 @@ msgstr "스토리지가 지워졌으며 지금 앱을 다시 시작해야 합니
 msgid "Storybook"
 msgstr "스토리북"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:317
-#: src/components/moderation/LabelsOnMeDialog.tsx:318
+#: src/components/moderation/LabelsOnMeDialog.tsx:302
+#: src/components/moderation/LabelsOnMeDialog.tsx:303
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:142
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:143
 msgid "Submit"
@@ -5862,11 +5861,11 @@ msgstr "세로"
 msgid "Tap to dismiss"
 msgstr "눌러서 닫기"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:185
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:170
 msgid "Tap to enter full screen"
 msgstr "탭하여 전체화면으로 보기"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:206
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:191
 msgid "Tap to toggle sound"
 msgstr "탭하여 소리 켜기/끄기"
 
@@ -5895,7 +5894,7 @@ msgstr "농담해 보세요!"
 msgid "Tell us a little more"
 msgstr "좀 더 자세히 알려주세요"
 
-#: src/view/shell/desktop/RightNav.tsx:89
+#: src/view/shell/desktop/RightNav.tsx:90
 msgid "Terms"
 msgstr "이용약관"
 
@@ -5903,7 +5902,7 @@ msgstr "이용약관"
 #: src/screens/Signup/StepInfo/Policies.tsx:52
 #: src/view/screens/Settings/index.tsx:894
 #: src/view/screens/TermsOfService.tsx:29
-#: src/view/shell/Drawer.tsx:278
+#: src/view/shell/Drawer.tsx:292
 msgid "Terms of Service"
 msgstr "서비스 이용약관"
 
@@ -5918,13 +5917,13 @@ msgstr "커뮤니티 기준을 위반하는 용어 사용"
 msgid "Text & tags"
 msgstr "텍스트 및 태그"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:281
+#: src/components/moderation/LabelsOnMeDialog.tsx:266
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:108
 msgid "Text input field"
 msgstr "텍스트 입력 필드"
 
 #: src/components/dms/ReportDialog.tsx:134
-#: src/components/ReportDialog/SubmitView.tsx:93
+#: src/components/ReportDialog/SubmitView.tsx:81
 msgid "Thank you. Your report has been sent."
 msgstr "감사합니다. 신고를 전송했습니다."
 
@@ -5979,11 +5978,11 @@ msgstr "앱에서 더 나은 환경을 경험하세요. 지금 Bluesky를 다운
 msgid "The feed has been replaced with Discover."
 msgstr "피드를 Discover로 교체했습니다."
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:66
+#: src/components/moderation/LabelsOnMeDialog.tsx:65
 msgid "The following labels were applied to your account."
 msgstr "내 계정에 다음 라벨이 적용되었습니다."
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:67
+#: src/components/moderation/LabelsOnMeDialog.tsx:66
 msgid "The following labels were applied to your content."
 msgstr "내 콘텐츠에 다음 라벨이 적용되었습니다."
 
@@ -6072,7 +6071,7 @@ msgid "There was an issue fetching your lists. Tap here to try again."
 msgstr "리스트를 가져오는 동안 문제가 발생했습니다. 이곳을 탭하여 다시 시도하세요."
 
 #: src/components/dms/ReportDialog.tsx:222
-#: src/components/ReportDialog/SubmitView.tsx:98
+#: src/components/ReportDialog/SubmitView.tsx:86
 msgid "There was an issue sending your report. Please check your internet connection."
 msgstr "신고를 전송하는 동안 문제가 발생했습니다. 인터넷 연결을 확인해 주세요."
 
@@ -6103,7 +6102,7 @@ msgid "There was an issue. Please check your internet connection and try again."
 msgstr "문제가 발생했습니다. 인터넷 연결을 확인한 후 다시 시도하세요."
 
 #: src/components/dialogs/GifSelect.ios.tsx:239
-#: src/components/dialogs/GifSelect.tsx:257
+#: src/components/dialogs/GifSelect.tsx:259
 #: src/view/com/util/ErrorBoundary.tsx:57
 msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
 msgstr "애플리케이션에 예기치 않은 문제가 발생했습니다. 이런 일이 발생하면 저희에게 알려주세요!"
@@ -6124,7 +6123,7 @@ msgstr "이 계정의 프로필을 보려면 로그인해야 합니다."
 msgid "This account is blocked by one or more of your moderation lists. To unblock, please visit the lists directly and remove this user."
 msgstr "이 계정은 하나 이상의 검토 리스트에 의해 차단되었습니다. 차단을 해제하려면 해당 리스트로 직접 이동하여 이 사용자를 제거하세요."
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:265
+#: src/components/moderation/LabelsOnMeDialog.tsx:250
 msgid "This appeal will be sent to <0>{sourceName}</0>."
 msgstr "이 이의신청은 <0>{sourceName}</0>에게 보내집니다."
 
@@ -6199,7 +6198,7 @@ msgstr "이 라벨은 {0}이(가) 적용했습니다."
 msgid "This label was applied by the author."
 msgstr "이 라벨은 작성자가 적용했습니다."
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:170
+#: src/components/moderation/LabelsOnMeDialog.tsx:169
 msgid "This label was applied by you."
 msgstr "이 라벨은 내가 적용했습니다."
 
@@ -6478,7 +6477,7 @@ msgstr "스레드 언뮤트"
 msgid "Unmute video"
 msgstr "동영상 음소거 해제"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:205
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:190
 msgid "Unmuted"
 msgstr "음소거 해제됨"
 
@@ -6709,7 +6708,7 @@ msgstr "이메일 인증하기"
 msgid "Version {appVersion} {bundleInfo}"
 msgstr "버전 {appVersion} {bundleInfo}"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:184
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:169
 msgid "Video"
 msgstr "동영상"
 
@@ -7155,11 +7154,11 @@ msgstr "아직 스타터 팩을 만들지 않았습니다."
 msgid "You haven't muted any words or tags yet"
 msgstr "아직 어떤 단어나 태그도 뮤트하지 않았습니다"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:87
+#: src/components/moderation/LabelsOnMeDialog.tsx:86
 msgid "You may appeal non-self labels if you feel they were placed in error."
 msgstr "비셀프 라벨이 잘못 지정되었다고 생각되면 이의신청할 수 있습니다."
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:92
+#: src/components/moderation/LabelsOnMeDialog.tsx:91
 msgid "You may appeal these labels if you feel they were placed in error."
 msgstr "이 라벨이 잘못 지정되었다고 생각되면 이의신청할 수 있습니다."
 
@@ -7187,7 +7186,7 @@ msgstr "QR 코드를 저장하려면 사진 보관함에 대한 접근 권한을
 msgid "You must grant access to your photo library to save the image."
 msgstr "이미지를 저장하려면 사진 보관함에 대한 접근 권한을 부여해야 합니다"
 
-#: src/components/ReportDialog/SubmitView.tsx:222
+#: src/components/ReportDialog/SubmitView.tsx:209
 msgid "You must select at least one labeler for a report"
 msgstr "신고하려면 하나 이상의 라벨을 선택해야 합니다."
 
