@@ -107,6 +107,11 @@ export async function extractBskyMeta(
   return meta
 }
 
+export class EmbeddingDisabledError extends Error {
+  constructor() {
+    super('Embedding is disabled for this record')
+  }
+}
 export async function getPostAsQuote(
   getPost: ReturnType<typeof useGetPost>,
   url: string,
@@ -115,6 +120,9 @@ export async function getPostAsQuote(
   const [_0, user, _1, rkey] = url.split('/').filter(Boolean)
   const uri = makeRecordUri(user, 'app.bsky.feed.post', rkey)
   const post = await getPost({uri: uri})
+  if (post.viewer?.embeddingDisabled) {
+    throw new EmbeddingDisabledError()
+  }
   return {
     uri: post.uri,
     cid: post.cid,
