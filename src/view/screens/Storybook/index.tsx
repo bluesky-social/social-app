@@ -1,9 +1,13 @@
 import React from 'react'
 import {ScrollView, View} from 'react-native'
+import {deleteAsync} from 'expo-file-system'
+import {saveToLibraryAsync} from 'expo-media-library'
 
 import {useSetThemePrefs} from '#/state/shell'
+import {useVideoLibraryPermission} from 'lib/hooks/usePermissions'
 import {isIOS, isWeb} from 'platform/detection'
 import {CenteredView} from '#/view/com/util/Views'
+import * as Toast from 'view/com/util/Toast'
 import {ListContained} from 'view/screens/Storybook/ListContained'
 import {atoms as a, ThemeProvider, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -36,6 +40,8 @@ function StorybookInner() {
   const [showContainedList, setShowContainedList] = React.useState(false)
   const hlsDownloadRef = React.useRef<HLSDownloadView>(null)
 
+  const {requestVideoAccessIfNeeded} = useVideoLibraryPermission()
+
   return (
     <CenteredView style={[t.atoms.bg]}>
       <View style={[a.p_xl, a.gap_5xl, {paddingBottom: 100}]}>
@@ -46,7 +52,21 @@ function StorybookInner() {
               ? 'http://localhost:19006/video-download'
               : 'http://10.0.2.2:19006/video-download'
           }
-          onSuccess={e => console.log('success:', e.nativeEvent.uri)}
+          onSuccess={async e => {
+            const uri = e.nativeEvent.uri
+            const permsRes = await requestVideoAccessIfNeeded()
+            if (!permsRes) return
+
+            console.log(uri)
+
+            await saveToLibraryAsync(uri)
+            try {
+              deleteAsync(uri)
+            } catch (e) {
+              console.error('Failed to delete file', e)
+            }
+            Toast.show('Video saved to library')
+          }}
           onStart={() => console.log('Download is starting')}
           onError={e => console.log(e.nativeEvent.message)}
           onProgress={e => console.log(e.nativeEvent.progress)}
