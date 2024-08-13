@@ -22,6 +22,22 @@ export function listenSessionDropped(fn: () => void): UnlistenFn {
   return () => emitter.off('session-dropped', fn)
 }
 
+export function emitNetworkConfirmed() {
+  emitter.emit('network-confirmed')
+}
+export function listenNetworkConfirmed(fn: () => void): UnlistenFn {
+  emitter.on('network-confirmed', fn)
+  return () => emitter.off('network-confirmed', fn)
+}
+
+export function emitNetworkLost() {
+  emitter.emit('network-lost')
+}
+export function listenNetworkLost(fn: () => void): UnlistenFn {
+  emitter.on('network-lost', fn)
+  return () => emitter.off('network-lost', fn)
+}
+
 export function emitPostCreated() {
   emitter.emit('post-created')
 }
