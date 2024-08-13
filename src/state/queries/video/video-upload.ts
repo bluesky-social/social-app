@@ -1,9 +1,9 @@
 import {createUploadTask, FileSystemUploadType} from 'expo-file-system'
+import {AppBskyVideoDefs} from '@atproto/api-prerelease'
 import {useMutation} from '@tanstack/react-query'
 import {nanoid} from 'nanoid/non-secure'
 
 import {CompressedVideo} from '#/lib/media/video/compress'
-import {UploadVideoResponse} from '#/lib/media/video/types'
 import {createVideoEndpointUrl} from '#/state/queries/video/util'
 import {useAgent, useSession} from '#/state/session'
 
@@ -14,7 +14,7 @@ export const useUploadVideoMutation = ({
   onError,
   setProgress,
 }: {
-  onSuccess: (response: UploadVideoResponse) => void
+  onSuccess: (response: AppBskyVideoDefs.JobStatus) => void
   onError: (e: any) => void
   setProgress: (progress: number) => void
 }) => {
@@ -23,7 +23,7 @@ export const useUploadVideoMutation = ({
 
   return useMutation({
     mutationFn: async (video: CompressedVideo) => {
-      const uri = createVideoEndpointUrl('/upload', {
+      const uri = createVideoEndpointUrl('/xrpc/app.bsky.video.uploadVideo', {
         did: currentAccount!.did,
         name: `${nanoid(12)}.mp4`, // @TODO what are we limiting this to?
       })
@@ -33,11 +33,12 @@ export const useUploadVideoMutation = ({
         throw new Error('Agent does not have a PDS URL')
       }
 
-      const {data: serviceAuth} =
-        await agent.api.com.atproto.server.getServiceAuth({
+      const {data: serviceAuth} = await agent.com.atproto.server.getServiceAuth(
+        {
           aud: `did:web:${agent.pdsUrl.hostname}`,
           lxm: 'com.atproto.repo.uploadBlob',
-        })
+        },
+      )
 
       const uploadTask = createUploadTask(
         uri,
@@ -45,7 +46,7 @@ export const useUploadVideoMutation = ({
         {
           headers: {
             'dev-key': UPLOAD_HEADER,
-            'content-type': 'video/mp4', // @TODO same question here. does the compression step always output mp4?
+            'content-type': 'video/mp4',
             Authorization: `Bearer ${serviceAuth.token}`,
           },
           httpMethod: 'POST',
@@ -61,8 +62,7 @@ export const useUploadVideoMutation = ({
 
       // @TODO rm, useful for debugging/getting video cid
       console.log('[VIDEO]', res.body)
-      const responseBody = JSON.parse(res.body) as UploadVideoResponse
-      onSuccess(responseBody)
+      const responseBody = JSON.parse(res.body) as AppBskyVideoDefs.JobStatus
       return responseBody
     },
     onError,

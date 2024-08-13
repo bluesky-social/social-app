@@ -337,19 +337,22 @@ export const ComposePost = observer(function ComposePost({
     let postUri
     try {
       postUri = (
-        await apilib.post(agent, {
-          rawText: richtext.text,
-          replyTo: replyTo?.uri,
-          images: gallery.images,
-          quote,
-          extLink,
-          labels,
-          threadgate: threadgateAllowUISettings,
-          postgate,
-          onStateChange: setProcessingState,
-          langs: toPostLanguages(langPrefs.postLanguage),
-          video: videoUploadState.blobRef,
-        })
+        await apilib.post(
+          // @ts-expect-error @TODO: remove this ignore once lexicons are merged
+          agent,
+          {
+            rawText: richtext.text,
+            replyTo: replyTo?.uri,
+            images: gallery.images,
+            quote,
+            extLink,
+            labels,
+            threadgate: threadgateAllowUISettings,
+            onStateChange: setProcessingState,
+            langs: toPostLanguages(langPrefs.postLanguage),
+            video: videoUploadState.blobRef,
+          },
+        )
       ).uri
       try {
         await whenAppViewReady(agent, postUri, res => {

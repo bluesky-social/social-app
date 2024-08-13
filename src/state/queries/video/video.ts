@@ -1,6 +1,7 @@
 import React from 'react'
 import {ImagePickerAsset} from 'expo-image-picker'
 import {BlobRef} from '@atproto/api'
+import {AppBskyVideoDefs} from '@atproto/api-prerelease'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQuery} from '@tanstack/react-query'
@@ -8,30 +9,20 @@ import {useQuery} from '@tanstack/react-query'
 import {logger} from '#/logger'
 import {CompressedVideo} from 'lib/media/video/compress'
 import {VideoTooLargeError} from 'lib/media/video/errors'
-import {JobState, JobStatus} from 'lib/media/video/types'
 import {useCompressVideoMutation} from 'state/queries/video/compress-video'
-import {createVideoEndpointUrl} from 'state/queries/video/util'
+import {useVideoAgent} from 'state/queries/video/util'
 import {useUploadVideoMutation} from 'state/queries/video/video-upload'
 
 type Status = 'idle' | 'compressing' | 'processing' | 'uploading' | 'done'
 
 type Action =
-  | {
-      type: 'SetStatus'
-      status: Status
-    }
-  | {
-      type: 'SetProgress'
-      progress: number
-    }
-  | {
-      type: 'SetError'
-      error: string | undefined
-    }
+  | {type: 'SetStatus'; status: Status}
+  | {type: 'SetProgress'; progress: number}
+  | {type: 'SetError'; error: string | undefined}
   | {type: 'Reset'}
   | {type: 'SetAsset'; asset: ImagePickerAsset}
   | {type: 'SetVideo'; video: CompressedVideo}
-  | {type: 'SetJobStatus'; jobStatus: JobStatus}
+  | {type: 'SetJobStatus'; jobStatus: AppBskyVideoDefs.JobStatus}
   | {type: 'SetBlobRef'; blobRef: BlobRef}
 
 export interface State {
@@ -39,7 +30,7 @@ export interface State {
   progress: number
   asset?: ImagePickerAsset
   video: CompressedVideo | null
-  jobStatus?: JobStatus
+  jobStatus?: AppBskyVideoDefs.JobStatus
   blobRef?: BlobRef
   error?: string
 }
@@ -86,7 +77,7 @@ export function useUploadVideo({
   })
 
   const {setJobId} = useUploadStatusQuery({
-    onStatusChange: (status: JobStatus) => {
+    onStatusChange: (status: AppBskyVideoDefs.JobStatus) => {
       // This might prove unuseful, most of the job status steps happen too quickly to even be displayed to the user
       // Leaving it for now though
       dispatch({
@@ -114,7 +105,7 @@ export function useUploadVideo({
         type: 'SetStatus',
         status: 'processing',
       })
-      setJobId(response.job_id)
+      setJobId(response.jobId)
     },
     onError: e => {
       dispatch({
@@ -189,26 +180,27 @@ const useUploadStatusQuery = ({
   onStatusChange,
   onSuccess,
 }: {
-  onStatusChange: (status: JobStatus) => void
+  onStatusChange: (status: AppBskyVideoDefs.JobStatus) => void
   onSuccess: (blobRef: BlobRef) => void
 }) => {
+  const videoAgent = useVideoAgent()
   const [enabled, setEnabled] = React.useState(true)
   const [jobId, setJobId] = React.useState<string>()
 
   const {isLoading, isError} = useQuery({
-    queryKey: ['video-upload'],
+    queryKey: ['video-upload', jobId],
     queryFn: async () => {
-      const url = createVideoEndpointUrl(`/job/${jobId}/status`)
-      const res = await fetch(url)
-      const status = (await res.json()) as JobStatus
-      if (status.state === JobState.JOB_STATE_COMPLETED) {
-        const blobRef = new BlobRef(
-          status.encoded_cid,
-          status.encoded_mime_type,
-          status.encoded_size_bytes,
-        )
+      if (!jobId) return // this won't happen, can ignore
+
+      const {data} = await videoAgent.app.bsky.video.getJobStatus({jobId})
+      const status = data.jobStatus
+      if (status.state === 'JOB_STATE_COMPLETED') {
         setEnabled(false)
-        onSuccess(blobRef)
+        if (!status.blob)
+          throw new Error('Job completed, but did not return a blob')
+        onSuccess(status.blob)
+      } else if (status.state === 'JOB_STATE_FAILED') {
+        throw new Error('Job failed to process')
       }
       onStatusChange(status)
       return status
