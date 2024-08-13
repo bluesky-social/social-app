@@ -12,7 +12,6 @@ import {tryFetchGates} from '#/lib/statsig/statsig'
 import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
 import {snoozeEmailConfirmationPrompt} from '#/state/shell/reminders'
-import {BskyAppAgent} from 'state/session/app-agent'
 import {addSessionErrorLog} from './logging'
 import {
   configureModerationForAccount,
@@ -251,3 +250,31 @@ export function sessionAccountToSession(
     status: account.status,
   }
 }
+
+// Not exported. Use factories above to create it.
+class BskyAppAgent extends BskyAgent {
+  persistSessionHandler: ((event: AtpSessionEvent) => void) | undefined =
+    undefined
+
+  constructor({service}: {service: string}) {
+    super({
+      service,
+      persistSession: (event: AtpSessionEvent) => {
+        if (this.persistSessionHandler) {
+          this.persistSessionHandler(event)
+        }
+      },
+    })
+  }
+
+  setPersistSessionHandler(handler: (event: AtpSessionEvent) => void) {
+    this.persistSessionHandler = handler
+  }
+
+  dispose() {
+    this.sessionManager.session = undefined
+    this.persistSessionHandler = undefined
+  }
+}
+
+export type {BskyAppAgent}
