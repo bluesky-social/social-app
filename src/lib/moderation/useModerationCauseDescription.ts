@@ -119,8 +119,8 @@ export function useModerationCauseDescription(
       return {
         icon: EyeSlash,
         name: isYou
-          ? _(msg`Post hidden by you`)
-          : _(msg`Post hidden by thread author`),
+          ? _(msg`Post Hidden by You`)
+          : _(msg`Post Hidden by Thread Author`),
         description: isYou
           ? _(msg`You hid this post.`)
           : _(msg`The author of this thread has hidden this post.`),

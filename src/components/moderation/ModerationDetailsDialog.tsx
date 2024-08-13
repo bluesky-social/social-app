@@ -8,6 +8,7 @@ import {useModerationCauseDescription} from '#/lib/moderation/useModerationCause
 import {makeProfileLink} from '#/lib/routes/links'
 import {listUriToHref} from '#/lib/strings/url-helpers'
 import {isNative} from '#/platform/detection'
+import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
@@ -40,6 +41,7 @@ function ModerationDetailsDialogInner({
   const t = useTheme()
   const {_} = useLingui()
   const desc = useModerationCauseDescription(modcause)
+  const {currentAccount} = useSession()
 
   let name
   let description
@@ -107,8 +109,13 @@ function ModerationDetailsDialogInner({
     name = _(msg`Post Hidden by You`)
     description = _(msg`You have hidden this post.`)
   } else if (modcause.type === 'reply-hidden') {
-    name = _(msg`Post Hidden by Thread Author`)
-    description = _(msg`The author of this thread has hidden this post.`)
+    const isYou = currentAccount?.did === modcause.source.did
+    name = isYou
+      ? _(msg`Post Hidden by You`)
+      : _(msg`Post Hidden by Thread Author`)
+    description = isYou
+      ? _(msg`You hid this post.`)
+      : _(msg`The author of this thread has hidden this post.`)
   } else if (modcause.type === 'label') {
     name = desc.name
     description = desc.description
@@ -123,12 +130,12 @@ function ModerationDetailsDialogInner({
       <Text style={[t.atoms.text, a.text_2xl, a.font_bold, a.mb_sm]}>
         {name}
       </Text>
-      <Text style={[t.atoms.text, a.text_md, a.mb_lg, a.leading_snug]}>
+      <Text style={[t.atoms.text, a.text_md, a.leading_snug]}>
         {description}
       </Text>
 
       {modcause.type === 'label' && (
-        <>
+        <View style={[a.pt_lg]}>
           <Divider />
           <Text style={[t.atoms.text, a.text_md, a.leading_snug, a.mt_lg]}>
             {modcause.source.type === 'user' ? (
@@ -147,7 +154,7 @@ function ModerationDetailsDialogInner({
               </Trans>
             )}
           </Text>
-        </>
+        </View>
       )}
 
       {isNative && <View style={{height: 40}} />}
