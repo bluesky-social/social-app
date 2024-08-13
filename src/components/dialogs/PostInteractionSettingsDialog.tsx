@@ -38,6 +38,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
+import * as Toggle from '#/components/forms/Toggle'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Loader} from '#/components/Loader'
@@ -242,6 +243,14 @@ export function PostInteractionSettingsForm({
   const {_} = useLingui()
   const control = Dialog.useDialogContext()
   const {data: lists} = useMyListsQuery('curate')
+  const [quotesEnabled, setQuotesEnabled] = React.useState(
+    !(
+      postgate.embeddingRules &&
+      postgate.embeddingRules.find(
+        v => v.$type === embeddingRules.disableRule.$type,
+      )
+    ),
+  )
 
   const onPressAudience = (setting: ThreadgateAllowUISetting) => {
     // remove boolean values
@@ -260,16 +269,17 @@ export function PostInteractionSettingsForm({
     onChangeThreadgateAllowUISettings(newSelected)
   }
 
-  const onChangeEmbeddingRules = React.useCallback(
-    (rules: AppBskyFeedPostgate.Record['embeddingRules']) => {
+  const onChangeQuotesEnabled = React.useCallback(
+    (enabled: boolean) => {
+      setQuotesEnabled(enabled)
       onChangePostgate(
         createPostgateRecord({
           ...postgate,
-          embeddingRules: rules,
+          embeddingRules: enabled ? [] : [embeddingRules.disableRule],
         }),
       )
     },
-    [postgate, onChangePostgate],
+    [setQuotesEnabled, postgate, onChangePostgate],
   )
 
   const noOneCanReply = !!threadgateAllowUISettings.find(
@@ -285,7 +295,7 @@ export function PostInteractionSettingsForm({
 
         <View style={[a.gap_lg]}>
           <Text style={[a.text_md]}>
-            <Trans>Customize who can engage with this post.</Trans>
+            <Trans>Customize who can interact with this post.</Trans>
           </Text>
 
           <Divider />
@@ -295,34 +305,26 @@ export function PostInteractionSettingsForm({
               <Trans>Quote settings</Trans>
             </Text>
 
-            <Text style={[a.pt_sm, t.atoms.text_contrast_medium]}>
-              <Trans>Allow quote posts from:</Trans>
-            </Text>
-
-            <View style={[a.flex_row, a.gap_sm]}>
-              <Selectable
-                label={_(msg`Everybody`)}
-                isSelected={
-                  !postgate.embeddingRules ||
-                  postgate.embeddingRules?.length === 0
-                }
-                onPress={() => onChangeEmbeddingRules([])}
-                style={{flex: 1}}
-              />
-              <Selectable
-                label={_(msg`Nobody`)}
-                isSelected={Boolean(
-                  postgate.embeddingRules &&
-                    postgate.embeddingRules.find(
-                      v => v.$type === embeddingRules.disableRule.$type,
-                    ),
+            <Toggle.Item
+              name="quoteposts"
+              type="checkbox"
+              label={
+                quotesEnabled
+                  ? _(msg`Click to disable quote posts of this post.`)
+                  : _(msg`Click to enable quote posts of this post.`)
+              }
+              value={quotesEnabled}
+              onChange={onChangeQuotesEnabled}
+              style={[, a.justify_between, a.pt_xs]}>
+              <Text style={[t.atoms.text_contrast_medium]}>
+                {quotesEnabled ? (
+                  <Trans>Quote posts enabled</Trans>
+                ) : (
+                  <Trans>Quote posts disabled</Trans>
                 )}
-                onPress={() =>
-                  onChangeEmbeddingRules([embeddingRules.disableRule])
-                }
-                style={{flex: 1}}
-              />
-            </View>
+              </Text>
+              <Toggle.Switch />
+            </Toggle.Item>
           </View>
 
           <Divider />
