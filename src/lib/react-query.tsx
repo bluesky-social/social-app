@@ -36,11 +36,17 @@ async function checkIsOnline(): Promise<boolean> {
   }
 }
 
+let receivedNetworkLost = false
+let receivedNetworkConfirmed = false
+let isNetworkStateUnclear = false
+
 listenNetworkLost(() => {
+  receivedNetworkLost = true
   onlineManager.setOnline(false)
 })
 
 listenNetworkConfirmed(() => {
+  receivedNetworkConfirmed = true
   onlineManager.setOnline(true)
 })
 
@@ -49,15 +55,27 @@ function checkIsOnlineIfNeeded() {
   if (checkPromise) {
     return
   }
-  checkPromise = checkIsOnline().then(isOnline => {
+  receivedNetworkLost = false
+  receivedNetworkConfirmed = false
+  checkPromise = checkIsOnline().then(nextIsOnline => {
     checkPromise = undefined
-    onlineManager.setOnline(isOnline)
+    if (nextIsOnline && receivedNetworkLost) {
+      isNetworkStateUnclear = true
+    }
+    if (!nextIsOnline && receivedNetworkConfirmed) {
+      isNetworkStateUnclear = true
+    }
+    if (!isNetworkStateUnclear) {
+      onlineManager.setOnline(nextIsOnline)
+    }
   })
 }
 
 setInterval(() => {
-  if (AppState.currentState === 'active' && !onlineManager.isOnline()) {
-    checkIsOnlineIfNeeded()
+  if (AppState.currentState === 'active') {
+    if (!onlineManager.isOnline() || isNetworkStateUnclear) {
+      checkIsOnlineIfNeeded()
+    }
   }
 }, 5000)
 
