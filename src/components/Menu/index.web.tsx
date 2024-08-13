@@ -9,7 +9,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import {atoms as a, flatten, useTheme, web} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {Context} from '#/components/Menu/context'
+import {Context, ItemContext} from '#/components/Menu/context'
 import {
   ContextType,
   GroupProps,
@@ -251,7 +251,9 @@ export function Item({children, label, onPress, ...rest}: ItemProps) {
           onMouseEnter,
           onMouseLeave,
         })}>
-        {children}
+        <ItemContext.Provider value={{disabled: Boolean(rest.disabled)}}>
+          {children}
+        </ItemContext.Provider>
       </Pressable>
     </DropdownMenu.Item>
   )
@@ -259,8 +261,16 @@ export function Item({children, label, onPress, ...rest}: ItemProps) {
 
 export function ItemText({children, style}: ItemTextProps) {
   const t = useTheme()
+  const {disabled} = React.useContext(ItemContext)
   return (
-    <Text style={[a.flex_1, a.font_bold, t.atoms.text_contrast_high, style]}>
+    <Text
+      style={[
+        a.flex_1,
+        a.font_bold,
+        t.atoms.text_contrast_high,
+        style,
+        disabled && t.atoms.text_contrast_low,
+      ]}>
       {children}
     </Text>
   )
@@ -268,6 +278,7 @@ export function ItemText({children, style}: ItemTextProps) {
 
 export function ItemIcon({icon: Comp, position = 'left'}: ItemIconProps) {
   const t = useTheme()
+  const {disabled} = React.useContext(ItemContext)
   return (
     <View
       style={[
@@ -279,7 +290,14 @@ export function ItemIcon({icon: Comp, position = 'left'}: ItemIconProps) {
           marginLeft: 12,
         },
       ]}>
-      <Comp size="md" fill={t.atoms.text_contrast_medium.color} />
+      <Comp
+        size="md"
+        fill={
+          disabled
+            ? t.atoms.text_contrast_low.color
+            : t.atoms.text_contrast_medium.color
+        }
+      />
     </View>
   )
 }

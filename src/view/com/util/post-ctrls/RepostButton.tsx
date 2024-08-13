@@ -112,26 +112,31 @@ let RepostButton = ({
                     : _(msg({message: `Repost`, context: 'action'}))}
                 </Text>
               </Button>
-              {embeddingDisabled ? null : (
-                <Button
-                  testID="quoteBtn"
-                  style={[a.justify_start, a.px_md]}
-                  label={_(msg`Quote post`)}
-                  onPress={() => {
-                    playHaptic()
-                    dialogControl.close(() => {
-                      onQuote()
-                    })
-                  }}
-                  size="large"
-                  variant="ghost"
-                  color="primary">
-                  <Quote size="lg" fill={t.palette.primary_500} />
-                  <Text style={[a.font_bold, a.text_xl]}>
-                    {_(msg`Quote post`)}
-                  </Text>
-                </Button>
-              )}
+              <Button
+                disabled={embeddingDisabled}
+                testID="quoteBtn"
+                style={[a.justify_start, a.px_md]}
+                label={
+                  embeddingDisabled
+                    ? _(msg`Quote posts disabled`)
+                    : _(msg`Quote post`)
+                }
+                onPress={() => {
+                  playHaptic()
+                  dialogControl.close(() => {
+                    onQuote()
+                  })
+                }}
+                size="large"
+                variant="ghost"
+                color="primary">
+                <Quote size="lg" fill={t.palette.primary_500} />
+                <Text style={[a.font_bold, a.text_xl]}>
+                  {embeddingDisabled
+                    ? _(msg`Quote posts disabled`)
+                    : _(msg`Quote post`)}
+                </Text>
+              </Button>
             </View>
             <Button
               label={_(msg`Cancel quote post`)}

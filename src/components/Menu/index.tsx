@@ -9,7 +9,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {Context} from '#/components/Menu/context'
+import {Context, ItemContext} from '#/components/Menu/context'
 import {
   ContextType,
   GroupProps,
@@ -146,13 +146,16 @@ export function Item({children, label, style, onPress, ...rest}: ItemProps) {
         style,
         (focused || pressed) && !rest.disabled && [t.atoms.bg_contrast_50],
       ]}>
-      {children}
+      <ItemContext.Provider value={{disabled: Boolean(rest.disabled)}}>
+        {children}
+      </ItemContext.Provider>
     </Pressable>
   )
 }
 
 export function ItemText({children, style}: ItemTextProps) {
   const t = useTheme()
+  const {disabled} = React.useContext(ItemContext)
   return (
     <Text
       numberOfLines={1}
@@ -161,9 +164,10 @@ export function ItemText({children, style}: ItemTextProps) {
         a.flex_1,
         a.text_md,
         a.font_bold,
-        t.atoms.text_contrast_medium,
+        t.atoms.text_contrast_high,
         {paddingTop: 3},
         style,
+        disabled && t.atoms.text_contrast_low,
       ]}>
       {children}
     </Text>
@@ -172,7 +176,17 @@ export function ItemText({children, style}: ItemTextProps) {
 
 export function ItemIcon({icon: Comp}: ItemIconProps) {
   const t = useTheme()
-  return <Comp size="lg" fill={t.atoms.text_contrast_medium.color} />
+  const {disabled} = React.useContext(ItemContext)
+  return (
+    <Comp
+      size="lg"
+      fill={
+        disabled
+          ? t.atoms.text_contrast_low.color
+          : t.atoms.text_contrast_medium.color
+      }
+    />
+  )
 }
 
 export function Group({children, style}: GroupProps) {

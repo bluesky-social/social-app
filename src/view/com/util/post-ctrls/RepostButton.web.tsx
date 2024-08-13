@@ -77,15 +77,22 @@ export const RepostButton = ({
             </Menu.ItemText>
             <Menu.ItemIcon icon={Repost} position="right" />
           </Menu.Item>
-          {embeddingDisabled ? null : (
-            <Menu.Item
-              label={_(msg`Quote post`)}
-              testID="repostDropdownQuoteBtn"
-              onPress={onQuote}>
-              <Menu.ItemText>{_(msg`Quote post`)}</Menu.ItemText>
-              <Menu.ItemIcon icon={Quote} position="right" />
-            </Menu.Item>
-          )}
+          <Menu.Item
+            disabled={embeddingDisabled}
+            label={
+              embeddingDisabled
+                ? _(msg`Quote posts disabled`)
+                : _(msg`Quote post`)
+            }
+            testID="repostDropdownQuoteBtn"
+            onPress={onQuote}>
+            <Menu.ItemText>
+              {embeddingDisabled
+                ? _(msg`Quote posts disabled`)
+                : _(msg`Quote post`)}
+            </Menu.ItemText>
+            <Menu.ItemIcon icon={Quote} position="right" />
+          </Menu.Item>
         </Menu.Outer>
       </Menu.Root>
     </EventStopper>
