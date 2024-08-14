@@ -51,3 +51,8 @@ jobs:
       - name: Run tests
         run: |
           NODE_ENV=test EXPO_PUBLIC_ENV=test yarn test --forceExit
+      - name: Upload results to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          
