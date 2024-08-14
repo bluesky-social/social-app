@@ -76,7 +76,7 @@ describe('session', () => {
 
     state = run(state, [
       {
-        type: 'logged-out',
+        type: 'logged-out-every-account',
       },
     ])
     // Should keep the account but clear out the tokens.
@@ -372,7 +372,7 @@ describe('session', () => {
     state = run(state, [
       {
         // Log everyone out.
-        type: 'logged-out',
+        type: 'logged-out-every-account',
       },
     ])
     expect(state.accounts.length).toBe(3)
@@ -466,7 +466,7 @@ describe('session', () => {
 
     state = run(state, [
       {
-        type: 'logged-out',
+        type: 'logged-out-every-account',
       },
     ])
     expect(state.accounts.length).toBe(1)

@@ -77,7 +77,7 @@ function SettingsAccountCard({
   const {_} = useLingui()
   const t = useTheme()
   const {currentAccount} = useSession()
-  const {logout} = useSessionApi()
+  const {logoutEveryAccount} = useSessionApi()
   const {data: profile} = useProfileQuery({did: account.did})
   const isCurrentAccount = account.did === currentAccount?.did
 
@@ -109,11 +109,11 @@ function SettingsAccountCard({
           testID="signOutBtn"
           onPress={() => {
             if (isNative) {
-              logout('Settings')
+              logoutEveryAccount('Settings')
               resetToTab('HomeTab')
             } else {
               navigate('Home').then(() => {
-                logout('Settings')
+                logoutEveryAccount('Settings')
               })
             }
           }}

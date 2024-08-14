@@ -42,7 +42,7 @@ export type Action =
       accountDid: string
     }
   | {
-      type: 'logged-out'
+      type: 'logged-out-every-account'
     }
   | {
       type: 'synced-accounts'
@@ -138,7 +138,7 @@ let reducer = (state: State, action: Action): State => {
         needsPersist: true,
       }
     }
-    case 'logged-out': {
+    case 'logged-out-every-account': {
       return {
         accounts: state.accounts.map(a => ({
           ...a,
