@@ -137,16 +137,6 @@ export function Embed({
 
       // Case 3.4: Labeler
       if (AppBskyLabelerDefs.isLabelerView(record)) {
-        // return (
-        //   <GenericWithImageEmbed
-        //     image={record.creator.avatar}
-        //     title={record.creator.displayName || record.creator.handle}
-        //     href={`/profile/${record.creator.did}`}
-        //     subtitle="Labeler"
-        //     description={`Liked by ${record.likeCount ?? 0} users`}
-        //   />
-        // )
-
         // Embed type does not exist in the app, so show nothing
         return null
       }
