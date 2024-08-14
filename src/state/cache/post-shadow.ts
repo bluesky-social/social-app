@@ -91,6 +91,7 @@ function mergeShadow(
     repostCount = Math.max(0, repostCount)
   }
 
+  let embed: typeof post.embed
   if ('embed' in shadow) {
     if (
       (AppBskyEmbedRecord.isView(post.embed) &&
@@ -98,12 +99,13 @@ function mergeShadow(
       (AppBskyEmbedRecordWithMedia.isView(post.embed) &&
         AppBskyEmbedRecordWithMedia.isView(shadow.embed))
     ) {
-      post.embed = shadow.embed
+      embed = shadow.embed
     }
   }
 
   return castAsShadow({
     ...post,
+    embed,
     likeCount: likeCount,
     repostCount: repostCount,
     viewer: {
