@@ -78,8 +78,8 @@ function StorybookInner() {
               'https://lumi.jazco.dev/watch/did:plc:q6gjnaw2blty4crticxkmujt/Qmc8w93UpTa2adJHg4ZhnDPrBs1EsbzrekzPcqF5SwusuZ/playlist.m3u8',
             )
           }}
-          label="idk">
-          <ButtonText>TEST THE DOWNLOAD PLZ</ButtonText>
+          label="Video download test">
+          <ButtonText>Video download test</ButtonText>
         </Button>
         {!showContainedList ? (
           <>
