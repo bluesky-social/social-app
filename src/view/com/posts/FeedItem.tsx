@@ -416,10 +416,12 @@ let PostContent = ({
   const [limitLines, setLimitLines] = useState(
     () => countLines(richText.text) >= MAX_POST_LINES,
   )
-  const {uris: hiddenReplyUris} = useThreadgateHiddenReplyUris()
+  const {uris: hiddenReplyUris, recentlyUnhiddenUris} =
+    useThreadgateHiddenReplyUris()
   const additionalPostAlerts: AppModerationCause[] = React.useMemo(() => {
     const isPostHiddenByHiddenReplyCache = hiddenReplyUris.includes(post.uri)
     const isPostHiddenByThreadgate =
+      !recentlyUnhiddenUris.includes(post.uri) &&
       !!threadgateRecord?.hiddenReplies?.includes(post.uri)
     const isHidden = isPostHiddenByHiddenReplyCache || isPostHiddenByThreadgate
     const alertSource =
@@ -437,7 +439,13 @@ let PostContent = ({
           },
         ]
       : []
-  }, [post, hiddenReplyUris, threadgateRecord, currentAccount?.did])
+  }, [
+    post,
+    hiddenReplyUris,
+    recentlyUnhiddenUris,
+    threadgateRecord,
+    currentAccount?.did,
+  ])
 
   const onPressShowMore = React.useCallback(() => {
     setLimitLines(false)

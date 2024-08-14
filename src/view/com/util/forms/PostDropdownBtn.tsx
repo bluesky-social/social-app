@@ -123,7 +123,8 @@ let PostDropdownBtn = ({
   const quotePostDetachConfirmControl = useDialogControl()
   const {mutateAsync: toggleReplyVisibility} =
     useToggleReplyVisibilityMutation()
-  const {uris: hiddenReplies} = useThreadgateHiddenReplyUris()
+  const {uris: hiddenReplies, recentlyUnhiddenUris} =
+    useThreadgateHiddenReplyUris()
 
   const postUri = post.uri
   const postCid = post.cid
@@ -147,7 +148,8 @@ let PostDropdownBtn = ({
   const isRootPostAuthor = new AtUri(rootUri).host === currentAccount?.did
   const isReplyHiddenByThreadgate =
     hiddenReplies.includes(postUri) ||
-    threadgateRecord?.hiddenReplies?.includes(postUri)
+    (!recentlyUnhiddenUris.includes(postUri) &&
+      threadgateRecord?.hiddenReplies?.includes(postUri))
 
   const {mutateAsync: toggleQuoteDetachment, isPending} =
     useToggleQuoteDetachmentMutation()

@@ -2,6 +2,7 @@ import React from 'react'
 
 type StateContext = {
   uris: string[]
+  recentlyUnhiddenUris: string[]
 }
 type ApiContext = {
   addHiddenReplyUri: (uri: string) => void
@@ -10,6 +11,7 @@ type ApiContext = {
 
 const StateContext = React.createContext<StateContext>({
   uris: [],
+  recentlyUnhiddenUris: [],
 })
 
 const ApiContext = React.createContext<ApiContext>({
@@ -19,21 +21,27 @@ const ApiContext = React.createContext<ApiContext>({
 
 export function Provider({children}: {children: React.ReactNode}) {
   const [uris, setHiddenReplyUris] = React.useState<string[]>([])
+  const [recentlyUnhiddenUris, setRecentlyUnhiddenUris] = React.useState<
+    string[]
+  >([])
 
   const stateCtx = React.useMemo(
     () => ({
       uris,
+      recentlyUnhiddenUris,
     }),
-    [uris],
+    [uris, recentlyUnhiddenUris],
   )
 
   const apiCtx = React.useMemo(
     () => ({
       addHiddenReplyUri(uri: string) {
         setHiddenReplyUris(prev => Array.from(new Set([...prev, uri])))
+        setRecentlyUnhiddenUris(prev => prev.filter(u => u !== uri))
       },
       removeHiddenReplyUri(uri: string) {
         setHiddenReplyUris(prev => prev.filter(u => u !== uri))
+        setRecentlyUnhiddenUris(prev => Array.from(new Set([...prev, uri])))
       },
     }),
     [setHiddenReplyUris],
