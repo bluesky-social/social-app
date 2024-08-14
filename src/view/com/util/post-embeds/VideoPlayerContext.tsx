@@ -3,6 +3,10 @@ import type {VideoPlayer} from 'expo-video'
 import {useVideoPlayer as useExpoVideoPlayer} from 'expo-video'
 
 import {logger} from '#/logger'
+import {
+  AudioCategory,
+  PlatformInfo,
+} from '../../../../../modules/expo-bluesky-swiss-army'
 
 const VideoPlayerContext = React.createContext<VideoPlayer | null>(null)
 
@@ -16,6 +20,9 @@ export function VideoPlayerProvider({
   // eslint-disable-next-line @typescript-eslint/no-shadow
   const player = useExpoVideoPlayer(source, player => {
     try {
+      PlatformInfo.setAudioCategory(AudioCategory.Ambient)
+      PlatformInfo.setAudioActive(false)
+
       player.loop = true
       player.muted = true
       player.play()
