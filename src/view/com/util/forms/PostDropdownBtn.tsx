@@ -146,8 +146,8 @@ let PostDropdownBtn = ({
   const isAuthor = postAuthor.did === currentAccount?.did
   const isRootPostAuthor = new AtUri(rootUri).host === currentAccount?.did
   const isReplyHiddenByThreadgate =
-    threadgateRecord?.hiddenReplies?.includes(postUri) ||
-    hiddenReplies.includes(postUri)
+    hiddenReplies.includes(postUri) ||
+    threadgateRecord?.hiddenReplies?.includes(postUri)
 
   const {mutateAsync: toggleQuoteDetachment, isPending} =
     useToggleQuoteDetachmentMutation()

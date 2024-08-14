@@ -4,6 +4,7 @@ import {
   AppBskyActorDefs,
   AppBskyFeedDefs,
   AppBskyFeedPost,
+  AppBskyFeedThreadgate,
   AtUri,
   ModerationDecision,
   RichText as RichTextAPI,
@@ -78,7 +79,11 @@ export function FeedItem({
   isThreadParent,
   hideTopBorder,
   isParentBlocked,
-}: FeedItemProps & {post: AppBskyFeedDefs.PostView}): React.ReactNode {
+  rootPost,
+}: FeedItemProps & {
+  post: AppBskyFeedDefs.PostView
+  rootPost?: AppBskyFeedDefs.PostView
+}): React.ReactNode {
   const postShadowed = usePostShadow(post)
   const richText = useMemo(
     () =>
@@ -109,6 +114,7 @@ export function FeedItem({
         isThreadParent={isThreadParent}
         hideTopBorder={hideTopBorder}
         isParentBlocked={isParentBlocked}
+        rootPost={rootPost}
       />
     )
   }
@@ -129,9 +135,11 @@ let FeedItemInner = ({
   isThreadParent,
   hideTopBorder,
   isParentBlocked,
+  rootPost,
 }: FeedItemProps & {
   richText: RichTextAPI
   post: Shadow<AppBskyFeedDefs.PostView>
+  rootPost?: AppBskyFeedDefs.PostView
 }): React.ReactNode => {
   const queryClient = useQueryClient()
   const {openComposer} = useComposerControls()
@@ -366,6 +374,11 @@ let FeedItemInner = ({
             onPressReply={onPressReply}
             logContext="FeedItem"
             feedContext={feedContext}
+            threadgateRecord={
+              AppBskyFeedThreadgate.isRecord(rootPost?.threadgate?.record)
+                ? rootPost.threadgate.record
+                : undefined
+            }
           />
         </View>
       </View>
