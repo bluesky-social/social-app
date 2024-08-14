@@ -22,6 +22,7 @@ import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
+import {useThreadgateHiddenReplyUris} from '#/state/threadgate-hidden-replies'
 import {isReasonFeedSource, ReasonFeedSource} from 'lib/api/feed/types'
 import {MAX_POST_LINES} from 'lib/constants'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -34,6 +35,7 @@ import {precacheProfile} from 'state/queries/profile'
 import {atoms as a} from '#/alf'
 import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
 import {ContentHider} from '#/components/moderation/ContentHider'
+import {AppModerationCause} from '#/components/Pills'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichText} from '#/components/RichText'
 import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
@@ -222,6 +224,12 @@ let FeedItemInner = ({
     AppBskyFeedDefs.isReasonRepost(reason) &&
     reason.by.did === currentAccount?.did
 
+  const threadgateRecord = AppBskyFeedThreadgate.isRecord(
+    rootPost?.threadgate?.record,
+  )
+    ? rootPost.threadgate.record
+    : undefined
+
   return (
     <Link
       testID={`feedItem-by-${post.author.handle}`}
@@ -363,6 +371,8 @@ let FeedItemInner = ({
             postEmbed={post.embed}
             postAuthor={post.author}
             onOpenEmbed={onOpenEmbed}
+            post={post}
+            threadgateRecord={threadgateRecord}
           />
           {gate('video_debug') && (
             <VideoEmbed source="https://lumi.jazco.dev/watch/did:plc:q6gjnaw2blty4crticxkmujt/Qmc8w93UpTa2adJHg4ZhnDPrBs1EsbzrekzPcqF5SwusuZ/playlist.m3u8" />
@@ -374,11 +384,7 @@ let FeedItemInner = ({
             onPressReply={onPressReply}
             logContext="FeedItem"
             feedContext={feedContext}
-            threadgateRecord={
-              AppBskyFeedThreadgate.isRecord(rootPost?.threadgate?.record)
-                ? rootPost.threadgate.record
-                : undefined
-            }
+            threadgateRecord={threadgateRecord}
           />
         </View>
       </View>
@@ -388,23 +394,50 @@ let FeedItemInner = ({
 FeedItemInner = memo(FeedItemInner)
 
 let PostContent = ({
+  post,
   moderation,
   richText,
   postEmbed,
   postAuthor,
   onOpenEmbed,
+  threadgateRecord,
 }: {
   moderation: ModerationDecision
   richText: RichTextAPI
   postEmbed: AppBskyFeedDefs.PostView['embed']
   postAuthor: AppBskyFeedDefs.PostView['author']
   onOpenEmbed: () => void
+  post: AppBskyFeedDefs.PostView
+  threadgateRecord?: AppBskyFeedThreadgate.Record
 }): React.ReactNode => {
   const pal = usePalette('default')
   const {_} = useLingui()
+  const {currentAccount} = useSession()
   const [limitLines, setLimitLines] = useState(
     () => countLines(richText.text) >= MAX_POST_LINES,
   )
+  const {uris: hiddenReplyUris} = useThreadgateHiddenReplyUris()
+  const additionalPostAlerts: AppModerationCause[] = React.useMemo(() => {
+    const isPostHiddenByHiddenReplyCache = hiddenReplyUris.includes(post.uri)
+    const isPostHiddenByThreadgate =
+      !!threadgateRecord?.hiddenReplies?.includes(post.uri)
+    const isHidden = isPostHiddenByHiddenReplyCache || isPostHiddenByThreadgate
+    const alertSource =
+      threadgateRecord && isPostHiddenByThreadgate
+        ? new AtUri(threadgateRecord.post).host
+        : isPostHiddenByHiddenReplyCache
+        ? currentAccount?.did
+        : undefined
+    return isHidden && alertSource
+      ? [
+          {
+            type: 'reply-hidden',
+            source: {type: 'user', did: alertSource},
+            priority: 6,
+          },
+        ]
+      : []
+  }, [post, hiddenReplyUris, threadgateRecord, currentAccount?.did])
 
   const onPressShowMore = React.useCallback(() => {
     setLimitLines(false)
@@ -416,7 +449,11 @@ let PostContent = ({
       modui={moderation.ui('contentList')}
       ignoreMute
       childContainerStyle={styles.contentHiderChild}>
-      <PostAlerts modui={moderation.ui('contentList')} style={[a.py_2xs]} />
+      <PostAlerts
+        modui={moderation.ui('contentList')}
+        style={[a.py_2xs]}
+        additionalCauses={additionalPostAlerts}
+      />
       {richText.text ? (
         <View style={styles.postTextContainer}>
           <RichText

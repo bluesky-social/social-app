@@ -207,12 +207,11 @@ let PostThreadItemLoaded = ({
     return makeProfileLink(post.author, 'post', urip.rkey, 'reposted-by')
   }, [post.uri, post.author])
   const repostsTitle = _(msg`Reposts of this post`)
-  const isPostHiddenByThreadgate = threadgateRecord?.hiddenReplies?.includes(
-    post.uri,
-  )
-  // TODO memoize
-  const additionalPostAlerts: AppModerationCause[] =
-    threadgateRecord && isPostHiddenByThreadgate
+  const additionalPostAlerts: AppModerationCause[] = React.useMemo(() => {
+    const isPostHiddenByThreadgate = threadgateRecord?.hiddenReplies?.includes(
+      post.uri,
+    )
+    return threadgateRecord && isPostHiddenByThreadgate
       ? [
           {
             type: 'reply-hidden',
@@ -221,6 +220,7 @@ let PostThreadItemLoaded = ({
           },
         ]
       : []
+  }, [post, threadgateRecord])
 
   const translatorUrl = getTranslatorLink(
     record?.text || '',
