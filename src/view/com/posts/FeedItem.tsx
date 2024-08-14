@@ -84,7 +84,7 @@ export function FeedItem({
   rootPost,
 }: FeedItemProps & {
   post: AppBskyFeedDefs.PostView
-  rootPost?: AppBskyFeedDefs.PostView
+  rootPost: AppBskyFeedDefs.PostView
 }): React.ReactNode {
   const postShadowed = usePostShadow(post)
   const richText = useMemo(
@@ -141,7 +141,7 @@ let FeedItemInner = ({
 }: FeedItemProps & {
   richText: RichTextAPI
   post: Shadow<AppBskyFeedDefs.PostView>
-  rootPost?: AppBskyFeedDefs.PostView
+  rootPost: AppBskyFeedDefs.PostView
 }): React.ReactNode => {
   const queryClient = useQueryClient()
   const {openComposer} = useComposerControls()
@@ -225,7 +225,7 @@ let FeedItemInner = ({
     reason.by.did === currentAccount?.did
 
   const threadgateRecord = AppBskyFeedThreadgate.isRecord(
-    rootPost?.threadgate?.record,
+    rootPost.threadgate?.record,
   )
     ? rootPost.threadgate.record
     : undefined
