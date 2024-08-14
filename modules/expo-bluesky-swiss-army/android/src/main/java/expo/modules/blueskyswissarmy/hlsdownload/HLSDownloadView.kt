@@ -111,7 +111,6 @@ public class WebAppInterface(
 ) {
   @JavascriptInterface
   public fun onMessage(message: String) {
-    // parse message json
     val jsonObject = JSONObject(message)
     val action = jsonObject.getString("action")
 
