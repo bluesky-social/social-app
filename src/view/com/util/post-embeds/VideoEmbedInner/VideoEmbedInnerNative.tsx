@@ -28,6 +28,9 @@ export function VideoEmbedInnerNative() {
   useEffect(() => {
     try {
       if (isAppFocused === 'active' && isScreenFocused && !player.playing) {
+        PlatformInfo.setAudioCategory(AudioCategory.Ambient)
+        PlatformInfo.setAudioActive(false)
+        player.muted = true
         player.play()
       } else if (player.playing) {
         player.pause()
