@@ -145,7 +145,10 @@ export function usePostFeedQuery(
       moderationOpts,
       ignoreFilterFor: opts?.ignoreFilterFor,
       isDiscover,
-      hiddenReplyUris,
+      /*
+       * If we're viewing an author feed, hidden replies are visible
+       */
+      hiddenReplyUris: feedDesc.startsWith('author|') ? [] : hiddenReplyUris,
     }),
     [
       feedTuners,
@@ -153,6 +156,7 @@ export function usePostFeedQuery(
       opts?.ignoreFilterFor,
       isDiscover,
       hiddenReplyUris,
+      feedDesc,
     ],
   )
 
