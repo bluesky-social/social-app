@@ -374,7 +374,7 @@ function StarterPackEmbed({
   }
 
   const starterPackHref = getStarterPackHref(content)
-  const imageUri = getStarterPackOgCard(content)
+  const imageUri = getStarterPackImage(content)
 
   return (
     <Link
@@ -390,7 +390,7 @@ function StarterPackEmbed({
             </p>
             <p className="text-sm text-textLight line-clamp-2 leading-[18px]">
               Starter pack by{' '}
-              {content.creator.displayName || content.creator.handle}
+              {content.creator.displayName || `@${content.creator.handle}`}
             </p>
           </div>
         </div>
@@ -408,11 +408,9 @@ function StarterPackEmbed({
 }
 
 // from #/lib/strings/starter-pack.ts
-function getStarterPackOgCard(
-  didOrStarterPack: AppBskyGraphDefs.StarterPackView,
-) {
-  const rkey = new AtUri(didOrStarterPack.uri).rkey
-  return `https://ogcard.cdn.bsky.app/start/${didOrStarterPack.creator.did}/${rkey}`
+function getStarterPackImage(starterPack: AppBskyGraphDefs.StarterPackView) {
+  const rkey = new AtUri(starterPack.uri).rkey
+  return `https://ogcard.cdn.bsky.app/start/${starterPack.creator.did}/${rkey}`
 }
 
 function getStarterPackHref(
