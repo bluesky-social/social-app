@@ -48,7 +48,6 @@ export function MutedWordsDialog() {
 function MutedWordsInner() {
   const t = useTheme()
   const {_} = useLingui()
-  const {gtMobile} = useBreakpoints()
   const {
     isLoading: isPreferencesLoading,
     data: preferences,
@@ -58,8 +57,8 @@ function MutedWordsInner() {
   const [field, setField] = React.useState('')
   const [targets, setTargets] = React.useState(['content'])
   const [error, setError] = React.useState('')
-  const [durations, setDurations] = React.useState(['forever'])
-  const [excludeFollowing, setExcludeFollowing] = React.useState(false)
+  const [durations] = React.useState(['forever'])
+  const [excludeFollowing] = React.useState(false)
 
   const submit = React.useCallback(async () => {
     const sanitizedValue = sanitizeMutedWordValue(field)
@@ -113,13 +112,11 @@ function MutedWordsInner() {
         </Text>
         <Text style={[a.pb_lg, a.leading_snug, t.atoms.text_contrast_medium]}>
           <Trans>
-            Posts can be muted based on their text, their tags, or both. We
-            recommend avoiding common words that appear in many posts, since it
-            can result in no posts being shown.
+            Posts can be muted based on their text, their tags, or both.
           </Trans>
         </Text>
 
-        <View style={[a.pb_sm]}>
+        <View style={[a.pb_lg]}>
           <Dialog.Input
             autoCorrect={false}
             autoCapitalize="none"
@@ -138,106 +135,6 @@ function MutedWordsInner() {
         </View>
 
         <View style={[a.pb_xl, a.gap_sm]}>
-          <Toggle.Group
-            label={_(msg`Select how long to mute this word for.`)}
-            type="radio"
-            values={durations}
-            onChange={setDurations}>
-            <Text
-              style={[
-                a.pb_xs,
-                a.text_sm,
-                a.font_bold,
-                t.atoms.text_contrast_medium,
-              ]}>
-              <Trans>Duration:</Trans>
-            </Text>
-
-            <View
-              style={[
-                gtMobile && [a.flex_row, a.align_center, a.justify_start],
-                a.gap_sm,
-              ]}>
-              <View
-                style={[
-                  a.flex_1,
-                  a.flex_row,
-                  a.justify_start,
-                  a.align_center,
-                  a.gap_sm,
-                ]}>
-                <Toggle.Item
-                  label={_(msg`Mute this word until you unmute it`)}
-                  name="forever"
-                  style={[a.flex_1]}>
-                  <TargetToggle>
-                    <View
-                      style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
-                      <Toggle.Radio />
-                      <Toggle.LabelText style={[a.flex_1, a.leading_tight]}>
-                        <Trans>Forever</Trans>
-                      </Toggle.LabelText>
-                    </View>
-                  </TargetToggle>
-                </Toggle.Item>
-
-                <Toggle.Item
-                  label={_(msg`Mute this word for 24 hours`)}
-                  name="24_hours"
-                  style={[a.flex_1]}>
-                  <TargetToggle>
-                    <View
-                      style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
-                      <Toggle.Radio />
-                      <Toggle.LabelText style={[a.flex_1, a.leading_tight]}>
-                        <Trans>24 hours</Trans>
-                      </Toggle.LabelText>
-                    </View>
-                  </TargetToggle>
-                </Toggle.Item>
-              </View>
-
-              <View
-                style={[
-                  a.flex_1,
-                  a.flex_row,
-                  a.justify_start,
-                  a.align_center,
-                  a.gap_sm,
-                ]}>
-                <Toggle.Item
-                  label={_(msg`Mute this word for 7 days`)}
-                  name="7_days"
-                  style={[a.flex_1]}>
-                  <TargetToggle>
-                    <View
-                      style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
-                      <Toggle.Radio />
-                      <Toggle.LabelText style={[a.flex_1, a.leading_tight]}>
-                        <Trans>7 days</Trans>
-                      </Toggle.LabelText>
-                    </View>
-                  </TargetToggle>
-                </Toggle.Item>
-
-                <Toggle.Item
-                  label={_(msg`Mute this word for 30 days`)}
-                  name="30_days"
-                  style={[a.flex_1]}>
-                  <TargetToggle>
-                    <View
-                      style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
-                      <Toggle.Radio />
-                      <Toggle.LabelText style={[a.flex_1, a.leading_tight]}>
-                        <Trans>30 days</Trans>
-                      </Toggle.LabelText>
-                    </View>
-                  </TargetToggle>
-                </Toggle.Item>
-              </View>
-            </View>
-          </Toggle.Group>
-
           <Toggle.Group
             label={_(msg`Select what content this mute word should apply to.`)}
             type="radio"
@@ -287,33 +184,6 @@ function MutedWordsInner() {
               </Toggle.Item>
             </View>
           </Toggle.Group>
-
-          <View>
-            <Text
-              style={[
-                a.pb_xs,
-                a.text_sm,
-                a.font_bold,
-                t.atoms.text_contrast_medium,
-              ]}>
-              <Trans>Options:</Trans>
-            </Text>
-            <Toggle.Item
-              label={_(msg`Do not apply this mute word to users you follow`)}
-              name="exclude_following"
-              style={[a.flex_row, a.justify_between]}
-              value={excludeFollowing}
-              onChange={setExcludeFollowing}>
-              <TargetToggle>
-                <View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
-                  <Toggle.Checkbox />
-                  <Toggle.LabelText style={[a.flex_1, a.leading_tight]}>
-                    <Trans>Exclude users you follow</Trans>
-                  </Toggle.LabelText>
-                </View>
-              </TargetToggle>
-            </Toggle.Item>
-          </View>
 
           <View style={[a.pt_xs]}>
             <Button
