@@ -123,21 +123,23 @@ function InnerApp() {
                           <ModerationOptsProvider>
                             <LoggedOutViewProvider>
                               <SelectedFeedProvider>
-                                <UnreadNotifsProvider>
-                                  <BackgroundNotificationPreferencesProvider>
-                                    <MutedThreadsProvider>
-                                      <TourProvider>
-                                        <ProgressGuideProvider>
-                                          <GestureHandlerRootView
-                                            style={s.h100pct}>
-                                            <TestCtrls />
-                                            <Shell />
-                                          </GestureHandlerRootView>
-                                        </ProgressGuideProvider>
-                                      </TourProvider>
-                                    </MutedThreadsProvider>
-                                  </BackgroundNotificationPreferencesProvider>
-                                </UnreadNotifsProvider>
+                                <HiddenRepliesProvider>
+                                  <UnreadNotifsProvider>
+                                    <BackgroundNotificationPreferencesProvider>
+                                      <MutedThreadsProvider>
+                                        <TourProvider>
+                                          <ProgressGuideProvider>
+                                            <GestureHandlerRootView
+                                              style={s.h100pct}>
+                                              <TestCtrls />
+                                              <Shell />
+                                            </GestureHandlerRootView>
+                                          </ProgressGuideProvider>
+                                        </TourProvider>
+                                      </MutedThreadsProvider>
+                                    </BackgroundNotificationPreferencesProvider>
+                                  </UnreadNotifsProvider>
+                                </HiddenRepliesProvider>
                               </SelectedFeedProvider>
                             </LoggedOutViewProvider>
                           </ModerationOptsProvider>
@@ -185,9 +187,7 @@ function App() {
                       <I18nProvider>
                         <PortalProvider>
                           <StarterPackProvider>
-                            <HiddenRepliesProvider>
-                              <InnerApp />
-                            </HiddenRepliesProvider>
+                            <InnerApp />
                           </StarterPackProvider>
                         </PortalProvider>
                       </I18nProvider>

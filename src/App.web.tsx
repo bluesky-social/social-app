@@ -106,19 +106,21 @@ function InnerApp() {
                         <ModerationOptsProvider>
                           <LoggedOutViewProvider>
                             <SelectedFeedProvider>
-                              <UnreadNotifsProvider>
-                                <BackgroundNotificationPreferencesProvider>
-                                  <MutedThreadsProvider>
-                                    <SafeAreaProvider>
-                                      <TourProvider>
-                                        <ProgressGuideProvider>
-                                          <Shell />
-                                        </ProgressGuideProvider>
-                                      </TourProvider>
-                                    </SafeAreaProvider>
-                                  </MutedThreadsProvider>
-                                </BackgroundNotificationPreferencesProvider>
-                              </UnreadNotifsProvider>
+                              <HiddenRepliesProvider>
+                                <UnreadNotifsProvider>
+                                  <BackgroundNotificationPreferencesProvider>
+                                    <MutedThreadsProvider>
+                                      <SafeAreaProvider>
+                                        <TourProvider>
+                                          <ProgressGuideProvider>
+                                            <Shell />
+                                          </ProgressGuideProvider>
+                                        </TourProvider>
+                                      </SafeAreaProvider>
+                                    </MutedThreadsProvider>
+                                  </BackgroundNotificationPreferencesProvider>
+                                </UnreadNotifsProvider>
+                              </HiddenRepliesProvider>
                             </SelectedFeedProvider>
                           </LoggedOutViewProvider>
                         </ModerationOptsProvider>
@@ -163,9 +165,7 @@ function App() {
                     <I18nProvider>
                       <PortalProvider>
                         <StarterPackProvider>
-                          <HiddenRepliesProvider>
-                            <InnerApp />
-                          </HiddenRepliesProvider>
+                          <InnerApp />
                         </StarterPackProvider>
                       </PortalProvider>
                     </I18nProvider>
