@@ -23,7 +23,7 @@ export function SignupQueued() {
   const insets = useSafeAreaInsets()
   const {gtMobile} = useBreakpoints()
   const onboardingDispatch = useOnboardingDispatch()
-  const {logout} = useSessionApi()
+  const {logoutCurrentAccount} = useSessionApi()
   const agent = useAgent()
 
   const [isProcessing, setProcessing] = React.useState(false)
@@ -153,7 +153,7 @@ export function SignupQueued() {
                   variant="ghost"
                   size="large"
                   label={_(msg`Log out`)}
-                  onPress={() => logout('SignupQueued')}>
+                  onPress={() => logoutCurrentAccount('SignupQueued')}>
                   <ButtonText style={[{color: t.palette.primary_500}]}>
                     <Trans>Log out</Trans>
                   </ButtonText>
@@ -182,7 +182,7 @@ export function SignupQueued() {
               variant="ghost"
               size="large"
               label={_(msg`Log out`)}
-              onPress={() => logout('SignupQueued')}>
+              onPress={() => logoutCurrentAccount('SignupQueued')}>
               <ButtonText style={[{color: t.palette.primary_500}]}>
                 <Trans>Log out</Trans>
               </ButtonText>
