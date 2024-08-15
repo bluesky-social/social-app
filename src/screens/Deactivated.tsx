@@ -38,7 +38,7 @@ export function Deactivated() {
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const hasOtherAccounts = accounts.length > 1
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {logoutEveryAccount} = useSessionApi()
+  const {logoutCurrentAccount} = useSessionApi()
   const agent = useAgent()
   const [pending, setPending] = React.useState(false)
   const [error, setError] = React.useState<string | undefined>()
@@ -72,8 +72,8 @@ export function Deactivated() {
       // So we change the URL ourselves. The navigator will pick it up on remount.
       history.pushState(null, '', '/')
     }
-    logoutEveryAccount('Deactivated')
-  }, [logoutEveryAccount])
+    logoutCurrentAccount('Deactivated')
+  }, [logoutCurrentAccount])
 
   const handleActivate = React.useCallback(async () => {
     try {
