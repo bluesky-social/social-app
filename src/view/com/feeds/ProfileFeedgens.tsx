@@ -1,29 +1,27 @@
 import React from 'react'
 import {
   findNodeHandle,
+  ListRenderItemInfo,
   StyleProp,
-  StyleSheet,
   View,
   ViewStyle,
 } from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {cleanError} from '#/lib/strings/errors'
-import {useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
-import {hydrateFeedGenerator} from '#/state/queries/feed'
+import {isNative, isWeb} from '#/platform/detection'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {RQKEY, useProfileFeedgensQuery} from '#/state/queries/profile-feedgens'
-import {usePalette} from 'lib/hooks/usePalette'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {EmptyState} from 'view/com/util/EmptyState'
+import {atoms as a, useTheme} from '#/alf'
+import * as FeedCard from '#/components/FeedCard'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {List, ListRef} from '../util/List'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
-import {Text} from '../util/text/Text'
-import {FeedSourceCardLoaded} from './FeedSourceCard'
 
 const LOADING = {_reactKey: '__loading__'}
 const EMPTY = {_reactKey: '__empty__'}
@@ -51,9 +49,8 @@ export const ProfileFeedgens = React.forwardRef<
   {did, scrollElRef, headerOffset, enabled, style, testID, setScrollViewTag},
   ref,
 ) {
-  const pal = usePalette('default')
   const {_} = useLingui()
-  const theme = useTheme()
+  const t = useTheme()
   const [isPTRing, setIsPTRing] = React.useState(false)
   const opts = React.useMemo(() => ({enabled}), [enabled])
   const {
@@ -80,10 +77,9 @@ export const ProfileFeedgens = React.forwardRef<
       items = items.concat([EMPTY])
     } else if (data?.pages) {
       for (const page of data?.pages) {
-        items = items.concat(page.feeds.map(feed => hydrateFeedGenerator(feed)))
+        items = items.concat(page.feeds)
       }
-    }
-    if (isError && !isEmpty) {
+    } else if (isError && !isEmpty) {
       items = items.concat([LOAD_MORE_ERROR_ITEM])
     }
     return items
@@ -133,17 +129,15 @@ export const ProfileFeedgens = React.forwardRef<
   // rendering
   // =
 
-  const renderItemInner = React.useCallback(
-    ({item}: {item: any}) => {
+  const renderItem = React.useCallback(
+    ({item, index}: ListRenderItemInfo<any>) => {
       if (item === EMPTY) {
         return (
-          <View
+          <EmptyState
+            icon="hashtag"
+            message={_(msg`You have no feeds.`)}
             testID="listsEmpty"
-            style={[{padding: 18, borderTopWidth: 1}, pal.border]}>
-            <Text style={pal.textLight}>
-              <Trans>You have no feeds.</Trans>
-            </Text>
-          </View>
+          />
         )
       } else if (item === ERROR_ITEM) {
         return (
@@ -163,18 +157,20 @@ export const ProfileFeedgens = React.forwardRef<
       }
       if (preferences) {
         return (
-          <FeedSourceCardLoaded
-            feedUri={item.uri}
-            feed={item}
-            preferences={preferences}
-            style={styles.item}
-            showLikes
-          />
+          <View
+            style={[
+              (index !== 0 || isWeb) && a.border_t,
+              t.atoms.border_contrast_low,
+              a.px_lg,
+              a.py_lg,
+            ]}>
+            <FeedCard.Default view={item} />
+          </View>
         )
       }
       return null
     },
-    [error, refetch, onPressRetryLoadMore, pal, preferences, _],
+    [_, t, error, refetch, onPressRetryLoadMore, preferences],
   )
 
   React.useEffect(() => {
@@ -191,12 +187,12 @@ export const ProfileFeedgens = React.forwardRef<
         ref={scrollElRef}
         data={items}
         keyExtractor={(item: any) => item._reactKey || item.uri}
-        renderItem={renderItemInner}
+        renderItem={renderItem}
         refreshing={isPTRing}
         onRefresh={onRefresh}
         headerOffset={headerOffset}
         contentContainerStyle={isNative && {paddingBottom: headerOffset + 100}}
-        indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
+        indicatorStyle={t.name === 'light' ? 'black' : 'white'}
         removeClippedSubviews={true}
         // @ts-ignore our .web version only -prf
         desktopFixedHeight
@@ -204,10 +200,4 @@ export const ProfileFeedgens = React.forwardRef<
       />
     </View>
   )
-})
-
-const styles = StyleSheet.create({
-  item: {
-    paddingHorizontal: 18,
-  },
 })

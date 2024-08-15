@@ -1,6 +1,12 @@
 import React, {useCallback, useMemo} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
-import {AppBskyGraphDefs, AtUri, RichText as RichTextAPI} from '@atproto/api'
+import {
+  AppBskyGraphDefs,
+  AtUri,
+  moderateUserList,
+  ModerationOpts,
+  RichText as RichTextAPI,
+} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -14,6 +20,7 @@ import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {useModalControls} from '#/state/modals'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {
   useListBlockMutation,
   useListDeleteMutation,
@@ -62,6 +69,7 @@ import * as Toast from 'view/com/util/Toast'
 import {CenteredView} from 'view/com/util/Views'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
+import {ScreenHider} from '#/components/moderation/ScreenHider'
 import * as Prompt from '#/components/Prompt'
 import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 import {RichText} from '#/components/RichText'
@@ -81,6 +89,7 @@ export function ProfileListScreen(props: Props) {
     AtUri.make(handleOrDid, 'app.bsky.graph.list', rkey).toString(),
   )
   const {data: list, error: listError} = useListQuery(resolvedUri?.uri)
+  const moderationOpts = useModerationOpts()
 
   if (resolveError) {
     return (
@@ -101,8 +110,13 @@ export function ProfileListScreen(props: Props) {
     )
   }
 
-  return resolvedUri && list ? (
-    <ProfileListScreenLoaded {...props} uri={resolvedUri.uri} list={list} />
+  return resolvedUri && list && moderationOpts ? (
+    <ProfileListScreenLoaded
+      {...props}
+      uri={resolvedUri.uri}
+      list={list}
+      moderationOpts={moderationOpts}
+    />
   ) : (
     <LoadingScreen />
   )
@@ -112,7 +126,12 @@ function ProfileListScreenLoaded({
   route,
   uri,
   list,
-}: Props & {uri: string; list: AppBskyGraphDefs.ListView}) {
+  moderationOpts,
+}: Props & {
+  uri: string
+  list: AppBskyGraphDefs.ListView
+  moderationOpts: ModerationOpts
+}) {
   const {_} = useLingui()
   const queryClient = useQueryClient()
   const {openComposer} = useComposerControls()
@@ -123,6 +142,10 @@ function ProfileListScreenLoaded({
   const {openModal} = useModalControls()
   const isCurateList = list.purpose === 'app.bsky.graph.defs#curatelist'
   const isScreenFocused = useIsFocused()
+
+  const moderation = React.useMemo(() => {
+    return moderateUserList(list, moderationOpts)
+  }, [list, moderationOpts])
 
   useSetTitle(list.name)
 
@@ -161,26 +184,65 @@ function ProfileListScreenLoaded({
 
   if (isCurateList) {
     return (
+      <ScreenHider
+        screenDescription={'list'}
+        modui={moderation.ui('contentView')}>
+        <View style={s.hContentRegion}>
+          <PagerWithHeader
+            items={SECTION_TITLES_CURATE}
+            isHeaderReady={true}
+            renderHeader={renderHeader}
+            onCurrentPageSelected={onCurrentPageSelected}>
+            {({headerHeight, scrollElRef, isFocused}) => (
+              <FeedSection
+                ref={feedSectionRef}
+                feed={`list|${uri}`}
+                scrollElRef={scrollElRef as ListRef}
+                headerHeight={headerHeight}
+                isFocused={isScreenFocused && isFocused}
+              />
+            )}
+            {({headerHeight, scrollElRef}) => (
+              <AboutSection
+                ref={aboutSectionRef}
+                scrollElRef={scrollElRef as ListRef}
+                list={list}
+                onPressAddUser={onPressAddUser}
+                headerHeight={headerHeight}
+              />
+            )}
+          </PagerWithHeader>
+          <FAB
+            testID="composeFAB"
+            onPress={() => openComposer({})}
+            icon={
+              <ComposeIcon2
+                strokeWidth={1.5}
+                size={29}
+                style={{color: 'white'}}
+              />
+            }
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`New post`)}
+            accessibilityHint=""
+          />
+        </View>
+      </ScreenHider>
+    )
+  }
+  return (
+    <ScreenHider
+      screenDescription={_(msg`list`)}
+      modui={moderation.ui('contentView')}>
       <View style={s.hContentRegion}>
         <PagerWithHeader
-          items={SECTION_TITLES_CURATE}
+          items={SECTION_TITLES_MOD}
           isHeaderReady={true}
-          renderHeader={renderHeader}
-          onCurrentPageSelected={onCurrentPageSelected}>
-          {({headerHeight, scrollElRef, isFocused}) => (
-            <FeedSection
-              ref={feedSectionRef}
-              feed={`list|${uri}`}
-              scrollElRef={scrollElRef as ListRef}
-              headerHeight={headerHeight}
-              isFocused={isScreenFocused && isFocused}
-            />
-          )}
+          renderHeader={renderHeader}>
           {({headerHeight, scrollElRef}) => (
             <AboutSection
-              ref={aboutSectionRef}
-              scrollElRef={scrollElRef as ListRef}
               list={list}
+              scrollElRef={scrollElRef as ListRef}
               onPressAddUser={onPressAddUser}
               headerHeight={headerHeight}
             />
@@ -201,34 +263,7 @@ function ProfileListScreenLoaded({
           accessibilityHint=""
         />
       </View>
-    )
-  }
-  return (
-    <View style={s.hContentRegion}>
-      <PagerWithHeader
-        items={SECTION_TITLES_MOD}
-        isHeaderReady={true}
-        renderHeader={renderHeader}>
-        {({headerHeight, scrollElRef}) => (
-          <AboutSection
-            list={list}
-            scrollElRef={scrollElRef as ListRef}
-            onPressAddUser={onPressAddUser}
-            headerHeight={headerHeight}
-          />
-        )}
-      </PagerWithHeader>
-      <FAB
-        testID="composeFAB"
-        onPress={() => openComposer({})}
-        icon={
-          <ComposeIcon2 strokeWidth={1.5} size={29} style={{color: 'white'}} />
-        }
-        accessibilityRole="button"
-        accessibilityLabel={_(msg`New post`)}
-        accessibilityHint=""
-      />
-    </View>
+    </ScreenHider>
   )
 }
 
@@ -299,7 +334,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         Toast.show(_(msg`Saved to your feeds`))
       }
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`))
+      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
       logger.error('Failed to toggle pinned feed', {message: e})
     }
   }, [
@@ -318,7 +353,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       await removeSavedFeed(savedFeedConfig)
       Toast.show(_(msg`Removed from your feeds`))
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`))
+      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
       logger.error('Failed to remove pinned list', {message: e})
     }
   }, [playHaptic, removeSavedFeed, _, savedFeedConfig])
@@ -725,7 +760,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     }, [onScrollToTop, isScreenFocused])
 
     const renderPostsEmpty = useCallback(() => {
-      return <EmptyState icon="feed" message={_(msg`This feed is empty!`)} />
+      return <EmptyState icon="hashtag" message={_(msg`This feed is empty.`)} />
     }, [_])
 
     return (
@@ -802,7 +837,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
           <View
             style={[
               {
-                borderTopWidth: 1,
+                borderTopWidth: StyleSheet.hairlineWidth,
                 padding: isMobile ? 14 : 20,
                 gap: 12,
               },
@@ -953,7 +988,7 @@ function ErrorScreen({error}: {error: string}) {
           marginTop: 10,
           paddingHorizontal: 18,
           paddingVertical: 14,
-          borderTopWidth: 1,
+          borderTopWidth: StyleSheet.hairlineWidth,
         },
       ]}>
       <Text type="title-lg" style={[pal.text, s.mb10]}>

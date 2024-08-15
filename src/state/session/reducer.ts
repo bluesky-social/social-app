@@ -1,6 +1,7 @@
 import {AtpSessionEvent} from '@atproto/api'
 
 import {createPublicAgent} from './agent'
+import {wrapSessionReducerForLogging} from './logging'
 import {SessionAccount} from './types'
 
 // A hack so that the reducer can't read anything from the agent.
@@ -64,21 +65,22 @@ export function getInitialState(persistedAccounts: SessionAccount[]): State {
   }
 }
 
-export function reducer(state: State, action: Action): State {
+let reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case 'received-agent-event': {
       const {agent, accountDid, refreshedAccount, sessionEvent} = action
-      if (agent !== state.currentAgentState.agent) {
-        // Only consider events from the active agent.
+      if (
+        refreshedAccount === undefined &&
+        agent !== state.currentAgentState.agent
+      ) {
+        // If the session got cleared out (e.g. due to expiry or network error) but
+        // this account isn't the active one, don't clear it out at this time.
+        // This way, if the problem is transient, it'll work on next resume.
         return state
       }
       if (sessionEvent === 'network-error') {
-        // Don't change stored accounts but kick to the choose account screen.
-        return {
-          accounts: state.accounts,
-          currentAgentState: createPublicAgentState(),
-          needsPersist: true,
-        }
+        // Assume it's transient.
+        return state
       }
       const existingAccount = state.accounts.find(a => a.did === accountDid)
       if (
@@ -161,3 +163,5 @@ export function reducer(state: State, action: Action): State {
     }
   }
 }
+reducer = wrapSessionReducerForLogging(reducer)
+export {reducer}

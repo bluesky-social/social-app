@@ -1,17 +1,22 @@
-import React, {useEffect, useRef} from 'react'
+import React, {useRef} from 'react'
 import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import {runOnJS} from 'react-native-reanimated'
+import Animated from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyFeedDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
+import {clamp} from '#/lib/numbers'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {isAndroid, isNative, isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {
+  fillThreadModerationCache,
   sortThread,
   ThreadBlocked,
+  ThreadModerationCache,
   ThreadNode,
   ThreadNotFound,
   ThreadPost,
@@ -19,18 +24,23 @@ import {
 } from '#/state/queries/post-thread'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
+import {useComposerControls} from '#/state/shell'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
-import {usePalette} from 'lib/hooks/usePalette'
+import {useMinimalShellFabTransform} from 'lib/hooks/useMinimalShellTransform'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {cleanError} from 'lib/strings/errors'
+import {CenteredView} from 'view/com/util/Views'
+import {atoms as a, useTheme} from '#/alf'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
-import {ComposePrompt} from '../composer/Prompt'
+import {Text} from '#/components/Typography'
 import {List, ListMethods} from '../util/List'
-import {Text} from '../util/text/Text'
 import {ViewHeader} from '../util/ViewHeader'
+import {PostThreadComposePrompt} from './PostThreadComposePrompt'
 import {PostThreadItem} from './PostThreadItem'
+import {PostThreadLoadMore} from './PostThreadLoadMore'
+import {PostThreadShowHiddenReplies} from './PostThreadShowHiddenReplies'
 
 // FlatList maintainVisibleContentPosition breaks if too many items
 // are prepended. This seems to be an optimal number based on *shrug*.
@@ -42,15 +52,26 @@ const MAINTAIN_VISIBLE_CONTENT_POSITION = {
   minIndexForVisible: 0,
 }
 
-const TOP_COMPONENT = {_reactKey: '__top_component__'}
 const REPLY_PROMPT = {_reactKey: '__reply__'}
 const LOAD_MORE = {_reactKey: '__load_more__'}
+const SHOW_HIDDEN_REPLIES = {_reactKey: '__show_hidden_replies__'}
+const SHOW_MUTED_REPLIES = {_reactKey: '__show_muted_replies__'}
 
-type YieldedItem = ThreadPost | ThreadBlocked | ThreadNotFound
+enum HiddenRepliesState {
+  Hide,
+  Show,
+  ShowAndOverridePostHider,
+}
+
+type YieldedItem =
+  | ThreadPost
+  | ThreadBlocked
+  | ThreadNotFound
+  | typeof SHOW_HIDDEN_REPLIES
+  | typeof SHOW_MUTED_REPLIES
 type RowItem =
   | YieldedItem
   // TODO: TS doesn't actually enforce it's one of these, it only enforces matching shape.
-  | typeof TOP_COMPONENT
   | typeof REPLY_PROMPT
   | typeof LOAD_MORE
 
@@ -64,21 +85,16 @@ const keyExtractor = (item: RowItem) => {
   return item._reactKey
 }
 
-export function PostThread({
-  uri,
-  onCanReply,
-  onPressReply,
-}: {
-  uri: string | undefined
-  onCanReply: (canReply: boolean) => void
-  onPressReply: () => unknown
-}) {
-  const {hasSession} = useSession()
+export function PostThread({uri}: {uri: string | undefined}) {
+  const {hasSession, currentAccount} = useSession()
   const {_} = useLingui()
-  const pal = usePalette('default')
+  const t = useTheme()
   const {isMobile, isTabletOrMobile} = useWebMediaQueries()
   const initialNumToRender = useInitialNumToRender()
   const {height: windowHeight} = useWindowDimensions()
+  const [hiddenRepliesState, setHiddenRepliesState] = React.useState(
+    HiddenRepliesState.Hide,
+  )
 
   const {data: preferences} = usePreferencesQuery()
   const {
@@ -135,16 +151,45 @@ export function PostThread({
   // On the web this is not necessary because we can synchronously adjust the scroll in onContentSizeChange instead.
   const [deferParents, setDeferParents] = React.useState(isNative)
 
+  const currentDid = currentAccount?.did
+  const threadModerationCache = React.useMemo(() => {
+    const cache: ThreadModerationCache = new WeakMap()
+    if (thread && moderationOpts) {
+      fillThreadModerationCache(cache, thread, moderationOpts)
+    }
+    return cache
+  }, [thread, moderationOpts])
+
+  const [justPostedUris, setJustPostedUris] = React.useState(
+    () => new Set<string>(),
+  )
+
   const skeleton = React.useMemo(() => {
     const threadViewPrefs = preferences?.threadViewPrefs
     if (!threadViewPrefs || !thread) return null
 
     return createThreadSkeleton(
-      sortThread(thread, threadViewPrefs),
-      hasSession,
+      sortThread(
+        thread,
+        threadViewPrefs,
+        threadModerationCache,
+        currentDid,
+        justPostedUris,
+      ),
+      !!currentDid,
       treeView,
+      threadModerationCache,
+      hiddenRepliesState !== HiddenRepliesState.Hide,
     )
-  }, [thread, preferences?.threadViewPrefs, hasSession, treeView])
+  }, [
+    thread,
+    preferences?.threadViewPrefs,
+    currentDid,
+    treeView,
+    threadModerationCache,
+    hiddenRepliesState,
+    justPostedUris,
+  ])
 
   const error = React.useMemo(() => {
     if (AppBskyFeedDefs.isNotFoundPost(thread)) {
@@ -173,14 +218,6 @@ export function PostThread({
     return null
   }, [thread, skeleton?.highlightedPost, isThreadError, _, threadError])
 
-  useEffect(() => {
-    if (error) {
-      onCanReply(false)
-    } else if (rootPost) {
-      onCanReply(!rootPost.viewer?.replyDisabled)
-    }
-  }, [rootPost, onCanReply, error])
-
   // construct content
   const posts = React.useMemo(() => {
     if (!skeleton) return []
@@ -188,32 +225,21 @@ export function PostThread({
     const {parents, highlightedPost, replies} = skeleton
     let arr: RowItem[] = []
     if (highlightedPost.type === 'post') {
-      const isRoot =
-        !highlightedPost.parent && !highlightedPost.ctx.isParentLoading
-      if (isRoot) {
-        // No parents to load.
-        arr.push(TOP_COMPONENT)
-      } else {
-        if (highlightedPost.ctx.isParentLoading || deferParents) {
-          // We're loading parents of the highlighted post.
-          // In this case, we don't render anything above the post.
-          // If you add something here, you'll need to update both
-          // maintainVisibleContentPosition and onContentSizeChange
-          // to "hold onto" the correct row instead of the first one.
-        } else {
-          // Everything is loaded
-          let startIndex = Math.max(0, parents.length - maxParents)
-          if (startIndex === 0) {
-            arr.push(TOP_COMPONENT)
-          } else {
-            // When progressively revealing parents, rendering a placeholder
-            // here will cause scrolling jumps. Don't add it unless you test it.
-            // QT'ing this thread is a great way to test all the scrolling hacks:
-            // https://bsky.app/profile/www.mozzius.dev/post/3kjqhblh6qk2o
-          }
-          for (let i = startIndex; i < parents.length; i++) {
-            arr.push(parents[i])
-          }
+      // We want to wait for parents to load before rendering.
+      // If you add something here, you'll need to update both
+      // maintainVisibleContentPosition and onContentSizeChange
+      // to "hold onto" the correct row instead of the first one.
+
+      if (!highlightedPost.ctx.isParentLoading && !deferParents) {
+        // When progressively revealing parents, rendering a placeholder
+        // here will cause scrolling jumps. Don't add it unless you test it.
+        // QT'ing this thread is a great way to test all the scrolling hacks:
+        // https://bsky.app/profile/www.mozzius.dev/post/3kjqhblh6qk2o
+
+        // Everything is loaded
+        let startIndex = Math.max(0, parents.length - maxParents)
+        for (let i = startIndex; i < parents.length; i++) {
+          arr.push(parents[i])
         }
       }
       arr.push(highlightedPost)
@@ -287,89 +313,141 @@ export function PostThread({
     setMaxReplies(prev => prev + 50)
   }, [isFetching, maxReplies, posts.length])
 
-  const renderItem = React.useCallback(
-    ({item, index}: {item: RowItem; index: number}) => {
-      if (item === TOP_COMPONENT) {
-        return isTabletOrMobile ? (
-          <ViewHeader
-            title={_(msg({message: `Post`, context: 'description'}))}
-          />
-        ) : null
-      } else if (item === REPLY_PROMPT && hasSession) {
-        return (
-          <View>
-            {!isMobile && <ComposePrompt onPressCompose={onPressReply} />}
-          </View>
-        )
-      } else if (isThreadNotFound(item)) {
-        return (
-          <View style={[pal.border, pal.viewLight, styles.itemContainer]}>
-            <Text type="lg-bold" style={pal.textLight}>
-              <Trans>Deleted post.</Trans>
-            </Text>
-          </View>
-        )
-      } else if (isThreadBlocked(item)) {
-        return (
-          <View style={[pal.border, pal.viewLight, styles.itemContainer]}>
-            <Text type="lg-bold" style={pal.textLight}>
-              <Trans>Blocked post.</Trans>
-            </Text>
-          </View>
-        )
-      } else if (isThreadPost(item)) {
-        const prev = isThreadPost(posts[index - 1])
-          ? (posts[index - 1] as ThreadPost)
-          : undefined
-        const next = isThreadPost(posts[index - 1])
-          ? (posts[index - 1] as ThreadPost)
-          : undefined
-        const hasUnrevealedParents =
-          index === 0 &&
-          skeleton?.parents &&
-          maxParents < skeleton.parents.length
-        return (
-          <View
-            ref={item.ctx.isHighlightedPost ? highlightedPostRef : undefined}
-            onLayout={deferParents ? () => setDeferParents(false) : undefined}>
-            <PostThreadItem
-              post={item.post}
-              record={item.record}
-              treeView={treeView}
-              depth={item.ctx.depth}
-              prevPost={prev}
-              nextPost={next}
-              isHighlightedPost={item.ctx.isHighlightedPost}
-              hasMore={item.ctx.hasMore}
-              showChildReplyLine={item.ctx.showChildReplyLine}
-              showParentReplyLine={item.ctx.showParentReplyLine}
-              hasPrecedingItem={
-                !!prev?.ctx.showChildReplyLine || !!hasUnrevealedParents
-              }
-              onPostReply={refetch}
-            />
-          </View>
-        )
+  const onPostReply = React.useCallback(
+    (postUri: string | undefined) => {
+      refetch()
+      if (postUri) {
+        setJustPostedUris(set => {
+          const nextSet = new Set(set)
+          nextSet.add(postUri)
+          return nextSet
+        })
       }
-      return null
     },
-    [
-      hasSession,
-      isTabletOrMobile,
-      _,
-      isMobile,
-      onPressReply,
-      pal.border,
-      pal.viewLight,
-      pal.textLight,
-      posts,
-      skeleton?.parents,
-      maxParents,
-      deferParents,
-      treeView,
-      refetch,
-    ],
+    [refetch],
   )
+
+  const {openComposer} = useComposerControls()
+  const onPressReply = React.useCallback(() => {
+    if (thread?.type !== 'post') {
+      return
+    }
+    openComposer({
+      replyTo: {
+        uri: thread.post.uri,
+        cid: thread.post.cid,
+        text: thread.record.text,
+        author: thread.post.author,
+        embed: thread.post.embed,
+      },
+      onPost: onPostReply,
+    })
+  }, [openComposer, thread, onPostReply])
+
+  const canReply = !error && rootPost && !rootPost.viewer?.replyDisabled
+  const hasParents =
+    skeleton?.highlightedPost?.type === 'post' &&
+    (skeleton.highlightedPost.ctx.isParentLoading ||
+      Boolean(skeleton?.parents && skeleton.parents.length > 0))
+  const showHeader =
+    isNative || (isTabletOrMobile && (!hasParents || !isFetching))
+
+  const renderItem = ({item, index}: {item: RowItem; index: number}) => {
+    if (item === REPLY_PROMPT && hasSession) {
+      return (
+        <View>
+          {!isMobile && (
+            <PostThreadComposePrompt onPressCompose={onPressReply} />
+          )}
+        </View>
+      )
+    } else if (item === SHOW_HIDDEN_REPLIES || item === SHOW_MUTED_REPLIES) {
+      return (
+        <PostThreadShowHiddenReplies
+          type={item === SHOW_HIDDEN_REPLIES ? 'hidden' : 'muted'}
+          onPress={() =>
+            setHiddenRepliesState(
+              item === SHOW_HIDDEN_REPLIES
+                ? HiddenRepliesState.Show
+                : HiddenRepliesState.ShowAndOverridePostHider,
+            )
+          }
+          hideTopBorder={index === 0}
+        />
+      )
+    } else if (isThreadNotFound(item)) {
+      return (
+        <View
+          style={[
+            a.p_lg,
+            index !== 0 && a.border_t,
+            t.atoms.border_contrast_low,
+            t.atoms.bg_contrast_25,
+          ]}>
+          <Text style={[a.font_bold, a.text_md, t.atoms.text_contrast_medium]}>
+            <Trans>Deleted post.</Trans>
+          </Text>
+        </View>
+      )
+    } else if (isThreadBlocked(item)) {
+      return (
+        <View
+          style={[
+            a.p_lg,
+            index !== 0 && a.border_t,
+            t.atoms.border_contrast_low,
+            t.atoms.bg_contrast_25,
+          ]}>
+          <Text style={[a.font_bold, a.text_md, t.atoms.text_contrast_medium]}>
+            <Trans>Blocked post.</Trans>
+          </Text>
+        </View>
+      )
+    } else if (isThreadPost(item)) {
+      if (!treeView && item.ctx.hasMoreSelfThread) {
+        return <PostThreadLoadMore post={item.post} />
+      }
+      const prev = isThreadPost(posts[index - 1])
+        ? (posts[index - 1] as ThreadPost)
+        : undefined
+      const next = isThreadPost(posts[index + 1])
+        ? (posts[index + 1] as ThreadPost)
+        : undefined
+      const showChildReplyLine = (next?.ctx.depth || 0) > item.ctx.depth
+      const showParentReplyLine =
+        (item.ctx.depth < 0 && !!item.parent) || item.ctx.depth > 1
+      const hasUnrevealedParents =
+        index === 0 && skeleton?.parents && maxParents < skeleton.parents.length
+      return (
+        <View
+          ref={item.ctx.isHighlightedPost ? highlightedPostRef : undefined}
+          onLayout={deferParents ? () => setDeferParents(false) : undefined}>
+          <PostThreadItem
+            post={item.post}
+            record={item.record}
+            moderation={threadModerationCache.get(item)}
+            treeView={treeView}
+            depth={item.ctx.depth}
+            prevPost={prev}
+            nextPost={next}
+            isHighlightedPost={item.ctx.isHighlightedPost}
+            hasMore={item.ctx.hasMore}
+            showChildReplyLine={showChildReplyLine}
+            showParentReplyLine={showParentReplyLine}
+            hasPrecedingItem={showParentReplyLine || !!hasUnrevealedParents}
+            overrideBlur={
+              hiddenRepliesState ===
+                HiddenRepliesState.ShowAndOverridePostHider &&
+              item.ctx.depth > 0
+            }
+            onPostReply={onPostReply}
+            hideTopBorder={index === 0 && !item.ctx.isParentLoading}
+          />
+        </View>
+      )
+    }
+    return null
+  }
 
   if (!thread || !preferences || error) {
     return (
@@ -385,39 +463,71 @@ export function PostThread({
   }
 
   return (
-    <ScrollProvider onMomentumEnd={onMomentumEnd}>
-      <List
-        ref={ref}
-        data={posts}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        onContentSizeChange={isNative ? undefined : onContentSizeChangeWeb}
-        onStartReached={onStartReached}
-        onEndReached={onEndReached}
-        onEndReachedThreshold={2}
-        onScrollToTop={onScrollToTop}
-        maintainVisibleContentPosition={
-          isNative ? MAINTAIN_VISIBLE_CONTENT_POSITION : undefined
-        }
-        // @ts-ignore our .web version only -prf
-        desktopFixedHeight
-        removeClippedSubviews={isAndroid ? false : undefined}
-        ListFooterComponent={
-          <ListFooter
-            // Using `isFetching` over `isFetchingNextPage` is done on purpose here so we get the loader on
-            // initial render
-            isFetchingNextPage={isFetching}
-            error={cleanError(threadError)}
-            onRetry={refetch}
-            // 300 is based on the minimum height of a post. This is enough extra height for the `maintainVisPos` to
-            // work without causing weird jumps on web or glitches on native
-            height={windowHeight - 200}
-          />
-        }
-        initialNumToRender={initialNumToRender}
-        windowSize={11}
-      />
-    </ScrollProvider>
+    <CenteredView style={[a.flex_1]} sideBorders={true}>
+      {showHeader && (
+        <ViewHeader
+          title={_(msg({message: `Post`, context: 'description'}))}
+          showBorder
+        />
+      )}
+
+      <ScrollProvider onMomentumEnd={onMomentumEnd}>
+        <List
+          ref={ref}
+          data={posts}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          onContentSizeChange={isNative ? undefined : onContentSizeChangeWeb}
+          onStartReached={onStartReached}
+          onEndReached={onEndReached}
+          onEndReachedThreshold={2}
+          onScrollToTop={onScrollToTop}
+          maintainVisibleContentPosition={
+            isNative && hasParents
+              ? MAINTAIN_VISIBLE_CONTENT_POSITION
+              : undefined
+          }
+          // @ts-ignore our .web version only -prf
+          desktopFixedHeight
+          removeClippedSubviews={isAndroid ? false : undefined}
+          ListFooterComponent={
+            <ListFooter
+              // Using `isFetching` over `isFetchingNextPage` is done on purpose here so we get the loader on
+              // initial render
+              isFetchingNextPage={isFetching}
+              error={cleanError(threadError)}
+              onRetry={refetch}
+              // 300 is based on the minimum height of a post. This is enough extra height for the `maintainVisPos` to
+              // work without causing weird jumps on web or glitches on native
+              height={windowHeight - 200}
+            />
+          }
+          initialNumToRender={initialNumToRender}
+          windowSize={11}
+          sideBorders={false}
+        />
+      </ScrollProvider>
+      {isMobile && canReply && hasSession && (
+        <MobileComposePrompt onPressReply={onPressReply} />
+      )}
+    </CenteredView>
+  )
+}
+
+function MobileComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
+  const safeAreaInsets = useSafeAreaInsets()
+  const fabMinimalShellTransform = useMinimalShellFabTransform()
+  return (
+    <Animated.View
+      style={[
+        styles.prompt,
+        fabMinimalShellTransform,
+        {
+          bottom: clamp(safeAreaInsets.bottom, 15, 30),
+        },
+      ]}>
+      <PostThreadComposePrompt onPressCompose={onPressReply} />
+    </Animated.View>
   )
 }
 
@@ -437,13 +547,23 @@ function createThreadSkeleton(
   node: ThreadNode,
   hasSession: boolean,
   treeView: boolean,
+  modCache: ThreadModerationCache,
+  showHiddenReplies: boolean,
 ): ThreadSkeletonParts | null {
   if (!node) return null
 
   return {
     parents: Array.from(flattenThreadParents(node, hasSession)),
     highlightedPost: node,
-    replies: Array.from(flattenThreadReplies(node, hasSession, treeView)),
+    replies: Array.from(
+      flattenThreadReplies(
+        node,
+        hasSession,
+        treeView,
+        modCache,
+        showHiddenReplies,
+      ),
+    ),
   }
 }
 
@@ -465,23 +585,67 @@ function* flattenThreadParents(
   }
 }
 
+// The enum is ordered to make them easy to merge
+enum HiddenReplyType {
+  None = 0,
+  Muted = 1,
+  Hidden = 2,
+}
+
 function* flattenThreadReplies(
   node: ThreadNode,
   hasSession: boolean,
   treeView: boolean,
-): Generator<YieldedItem, void> {
+  modCache: ThreadModerationCache,
+  showHiddenReplies: boolean,
+): Generator<YieldedItem, HiddenReplyType> {
   if (node.type === 'post') {
+    // dont show pwi-opted-out posts to logged out users
     if (!hasSession && hasPwiOptOut(node)) {
-      return
+      return HiddenReplyType.None
     }
+
+    // handle blurred items
+    if (node.ctx.depth > 0) {
+      const modui = modCache.get(node)?.ui('contentList')
+      if (modui?.blur || modui?.filter) {
+        if (!showHiddenReplies || node.ctx.depth > 1) {
+          if ((modui.blurs[0] || modui.filters[0]).type === 'muted') {
+            return HiddenReplyType.Muted
+          }
+          return HiddenReplyType.Hidden
+        }
+      }
+    }
+
     if (!node.ctx.isHighlightedPost) {
       yield node
     }
+
     if (node.replies?.length) {
+      let hiddenReplies = HiddenReplyType.None
       for (const reply of node.replies) {
-        yield* flattenThreadReplies(reply, hasSession, treeView)
+        let hiddenReply = yield* flattenThreadReplies(
+          reply,
+          hasSession,
+          treeView,
+          modCache,
+          showHiddenReplies,
+        )
+        if (hiddenReply > hiddenReplies) {
+          hiddenReplies = hiddenReply
+        }
         if (!treeView && !node.ctx.isHighlightedPost) {
           break
+        }
+      }
+
+      // show control to enable hidden replies
+      if (node.ctx.depth === 0) {
+        if (hiddenReplies === HiddenReplyType.Muted) {
+          yield SHOW_MUTED_REPLIES
+        } else if (hiddenReplies === HiddenReplyType.Hidden) {
+          yield SHOW_HIDDEN_REPLIES
         }
       }
     }
@@ -490,6 +654,7 @@ function* flattenThreadReplies(
   } else if (node.type === 'blocked') {
     yield node
   }
+  return HiddenReplyType.None
 }
 
 function hasPwiOptOut(node: ThreadPost) {
@@ -513,9 +678,10 @@ function hasBranchingReplies(node?: ThreadNode) {
 }
 
 const styles = StyleSheet.create({
-  itemContainer: {
-    borderTopWidth: 1,
-    paddingHorizontal: 18,
-    paddingVertical: 18,
+  prompt: {
+    // @ts-ignore web-only
+    position: isWeb ? 'fixed' : 'absolute',
+    left: 0,
+    right: 0,
   },
 })

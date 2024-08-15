@@ -56,7 +56,7 @@ export const ProfileFeedSection = React.forwardRef<
   }))
 
   const renderPostsEmpty = React.useCallback(() => {
-    return <EmptyState icon="feed" message={_(msg`This feed is empty!`)} />
+    return <EmptyState icon="growth" message={_(msg`No posts yet.`)} />
   }, [_])
 
   React.useEffect(() => {
@@ -79,6 +79,7 @@ export const ProfileFeedSection = React.forwardRef<
         headerOffset={headerHeight}
         renderEndOfFeed={ProfileEndOfFeed}
         ignoreFilterFor={ignoreFilterFor}
+        outsideHeaderOffset={headerHeight}
       />
       {(isScrolledDown || hasNew) && (
         <LoadLatestBtn

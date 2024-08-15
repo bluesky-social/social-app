@@ -13,16 +13,22 @@ import {Text} from '#/components/Typography'
 
 export function ListFooter({
   isFetchingNextPage,
+  hasNextPage,
   error,
   onRetry,
   height,
   style,
+  showEndMessage = false,
+  endMessageText,
 }: {
   isFetchingNextPage?: boolean
+  hasNextPage?: boolean
   error?: string
   onRetry?: () => Promise<unknown>
   height?: number
   style?: StyleProp<ViewStyle>
+  showEndMessage?: boolean
+  endMessageText?: string
 }) {
   const t = useTheme()
 
@@ -39,9 +45,13 @@ export function ListFooter({
       ]}>
       {isFetchingNextPage ? (
         <Loader size="xl" />
-      ) : (
+      ) : error ? (
         <ListFooterMaybeError error={error} onRetry={onRetry} />
-      )}
+      ) : !hasNextPage && showEndMessage ? (
+        <Text style={[a.text_sm, t.atoms.text_contrast_low]}>
+          {endMessageText ?? <Trans>You have reached the end</Trans>}
+        </Text>
+      ) : null}
     </View>
   )
 }
@@ -112,8 +122,16 @@ export function ListHeaderDesktop({
   if (!gtTablet) return null
 
   return (
-    <View style={[a.w_full, a.py_lg, a.px_xl, a.gap_xs]}>
-      <Text style={[a.text_3xl, a.font_bold]}>{title}</Text>
+    <View
+      style={[
+        a.w_full,
+        a.py_sm,
+        a.px_xl,
+        a.gap_xs,
+        a.justify_center,
+        {minHeight: 50},
+      ]}>
+      <Text style={[a.text_2xl, a.font_bold]}>{title}</Text>
       {subtitle ? (
         <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
           {subtitle}
@@ -179,7 +197,7 @@ let ListMaybePlaceholder = ({
     return (
       <Error
         title={errorTitle ?? _(msg`Oops!`)}
-        message={errorMessage ?? _(`Something went wrong!`)}
+        message={errorMessage ?? _(msg`Something went wrong!`)}
         onRetry={onRetry}
         onGoBack={onGoBack}
         sideBorders={sideBorders}

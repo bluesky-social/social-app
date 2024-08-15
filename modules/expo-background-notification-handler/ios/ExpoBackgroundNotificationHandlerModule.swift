@@ -2,15 +2,16 @@ import ExpoModulesCore
 
 let APP_GROUP = "group.app.bsky"
 
-let DEFAULTS: [String:Any] = [
-  "playSoundChat" : true,
+let DEFAULTS: [String: Any] = [
+  "playSoundChat": true,
   "playSoundFollow": false,
   "playSoundLike": false,
   "playSoundMention": false,
   "playSoundQuote": false,
   "playSoundReply": false,
   "playSoundRepost": false,
-  "mutedThreads": [:] as! [String:[String]]
+  "mutedThreads": [:] as! [String: [String]],
+  "badgeCount": 0
 ]
 
 /*
@@ -22,10 +23,10 @@ let DEFAULTS: [String:Any] = [
  */
 public class ExpoBackgroundNotificationHandlerModule: Module {
   let userDefaults = UserDefaults(suiteName: APP_GROUP)
-  
+
   public func definition() -> ModuleDefinition {
     Name("ExpoBackgroundNotificationHandler")
-    
+
     OnCreate {
       DEFAULTS.forEach { p in
         if userDefaults?.value(forKey: p.key) == nil {
@@ -33,57 +34,56 @@ public class ExpoBackgroundNotificationHandlerModule: Module {
         }
       }
     }
-    
-    AsyncFunction("getAllPrefsAsync") { () -> [String:Any]? in
+
+    AsyncFunction("getAllPrefsAsync") { () -> [String: Any]? in
       var keys: [String] = []
       DEFAULTS.forEach { p in
         keys.append(p.key)
       }
       return userDefaults?.dictionaryWithValues(forKeys: keys)
     }
-    
+
     AsyncFunction("getBoolAsync") { (forKey: String) -> Bool in
       if let pref = userDefaults?.bool(forKey: forKey) {
         return pref
       }
       return false
     }
-    
+
     AsyncFunction("getStringAsync") { (forKey: String) -> String? in
       if let pref = userDefaults?.string(forKey: forKey) {
         return pref
       }
       return nil
     }
-    
+
     AsyncFunction("getStringArrayAsync") { (forKey: String) -> [String]? in
       if let pref = userDefaults?.stringArray(forKey: forKey) {
         return pref
       }
       return nil
     }
-    
-    AsyncFunction("setBoolAsync") { (forKey: String, value: Bool) -> Void in
+
+    AsyncFunction("setBoolAsync") { (forKey: String, value: Bool) in
       userDefaults?.setValue(value, forKey: forKey)
     }
-    
-    AsyncFunction("setStringAsync") { (forKey: String, value: String) -> Void in
+
+    AsyncFunction("setStringAsync") { (forKey: String, value: String) in
       userDefaults?.setValue(value, forKey: forKey)
     }
-    
-    AsyncFunction("setStringArrayAsync") { (forKey: String, value: [String]) -> Void in
+
+    AsyncFunction("setStringArrayAsync") { (forKey: String, value: [String]) in
       userDefaults?.setValue(value, forKey: forKey)
     }
-    
+
     AsyncFunction("addToStringArrayAsync") { (forKey: String, string: String) in
       if var curr = userDefaults?.stringArray(forKey: forKey),
-         !curr.contains(string)
-      {
+         !curr.contains(string) {
         curr.append(string)
         userDefaults?.setValue(curr, forKey: forKey)
       }
     }
-    
+
     AsyncFunction("removeFromStringArrayAsync") { (forKey: String, string: String) in
       if var curr = userDefaults?.stringArray(forKey: forKey) {
         curr.removeAll { s in
@@ -92,7 +92,7 @@ public class ExpoBackgroundNotificationHandlerModule: Module {
         userDefaults?.setValue(curr, forKey: forKey)
       }
     }
-    
+
     AsyncFunction("addManyToStringArrayAsync") { (forKey: String, strings: [String]) in
       if var curr = userDefaults?.stringArray(forKey: forKey) {
         strings.forEach { s in
@@ -103,7 +103,7 @@ public class ExpoBackgroundNotificationHandlerModule: Module {
         userDefaults?.setValue(curr, forKey: forKey)
       }
     }
-    
+
     AsyncFunction("removeManyFromStringArrayAsync") { (forKey: String, strings: [String]) in
       if var curr = userDefaults?.stringArray(forKey: forKey) {
         strings.forEach { s in
@@ -111,6 +111,10 @@ public class ExpoBackgroundNotificationHandlerModule: Module {
         }
         userDefaults?.setValue(curr, forKey: forKey)
       }
+    }
+
+    AsyncFunction("setBadgeCountAsync") { (count: Int) in
+      userDefaults?.setValue(count, forKey: "badgeCount")
     }
   }
 }

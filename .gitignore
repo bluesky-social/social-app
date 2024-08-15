@@ -116,5 +116,8 @@ src/locale/locales/**/*.js
 *.aab
 *.ipa
 
+# ogcard assets
+bskyogcard/src/assets/fonts/noto-*
+
 # license file
 bskyweb/static/ACKNOWLEDGEMENTS.txt

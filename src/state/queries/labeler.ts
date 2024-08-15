@@ -2,9 +2,13 @@ import {AppBskyLabelerDefs} from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import {z} from 'zod'
 
+import {MAX_LABELERS} from '#/lib/constants'
 import {labelersDetailedInfoQueryKeyRoot} from '#/lib/react-query'
 import {STALE} from '#/state/queries'
-import {preferencesQueryKey} from '#/state/queries/preferences'
+import {
+  preferencesQueryKey,
+  usePreferencesQuery,
+} from '#/state/queries/preferences'
 import {useAgent} from '#/state/session'
 
 const labelerInfoQueryKeyRoot = 'labeler-info'
@@ -31,12 +35,12 @@ export function useLabelerInfoQuery({
   did?: string
   enabled?: boolean
 }) {
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   return useQuery({
     enabled: !!did && enabled !== false,
     queryKey: labelerInfoQueryKey(did as string),
     queryFn: async () => {
-      const res = await getAgent().app.bsky.labeler.getServices({
+      const res = await agent.app.bsky.labeler.getServices({
         dids: [did as string],
         detailed: true,
       })
@@ -46,26 +50,26 @@ export function useLabelerInfoQuery({
 }
 
 export function useLabelersInfoQuery({dids}: {dids: string[]}) {
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   return useQuery({
     enabled: !!dids.length,
     queryKey: labelersInfoQueryKey(dids),
     queryFn: async () => {
-      const res = await getAgent().app.bsky.labeler.getServices({dids})
+      const res = await agent.app.bsky.labeler.getServices({dids})
       return res.data.views as AppBskyLabelerDefs.LabelerView[]
     },
   })
 }
 
 export function useLabelersDetailedInfoQuery({dids}: {dids: string[]}) {
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   return useQuery({
     enabled: !!dids.length,
     queryKey: labelersDetailedInfoQueryKey(dids),
     gcTime: 1000 * 60 * 60 * 6, // 6 hours
     staleTime: STALE.MINUTES.ONE,
     queryFn: async () => {
-      const res = await getAgent().app.bsky.labeler.getServices({
+      const res = await agent.app.bsky.labeler.getServices({
         dids,
         detailed: true,
       })
@@ -76,7 +80,8 @@ export function useLabelersDetailedInfoQuery({dids}: {dids: string[]}) {
 
 export function useLabelerSubscriptionMutation() {
   const queryClient = useQueryClient()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
+  const preferences = usePreferencesQuery()
 
   return useMutation({
     async mutationFn({did, subscribe}: {did: string; subscribe: boolean}) {
@@ -86,14 +91,52 @@ export function useLabelerSubscriptionMutation() {
         subscribe: z.boolean(),
       }).parse({did, subscribe})
 
+      /**
+       * If a user has invalid/takendown/deactivated labelers, we need to
+       * remove them. We don't have a great way to do this atm on the server,
+       * so we do it here.
+       *
+       * We also need to push validation into this method, since we need to
+       * check {@link MAX_LABELERS} _after_ we've removed invalid or takendown
+       * labelers.
+       */
+      const labelerDids = (
+        preferences.data?.moderationPrefs?.labelers ?? []
+      ).map(l => l.did)
+      const invalidLabelers: string[] = []
+      if (labelerDids.length) {
+        const profiles = await agent.getProfiles({actors: labelerDids})
+        if (profiles.data) {
+          for (const did of labelerDids) {
+            const exists = profiles.data.profiles.find(p => p.did === did)
+            if (exists) {
+              // profile came back but it's not a valid labeler
+              if (exists.associated && !exists.associated.labeler) {
+                invalidLabelers.push(did)
+              }
+            } else {
+              // no response came back, might be deactivated or takendown
+              invalidLabelers.push(did)
+            }
+          }
+        }
+      }
+      if (invalidLabelers.length) {
+        await Promise.all(invalidLabelers.map(did => agent.removeLabeler(did)))
+      }
+
       if (subscribe) {
-        await getAgent().addLabeler(did)
+        const labelerCount = labelerDids.length - invalidLabelers.length
+        if (labelerCount >= MAX_LABELERS) {
+          throw new Error('MAX_LABELERS')
+        }
+        await agent.addLabeler(did)
       } else {
-        await getAgent().removeLabeler(did)
+        await agent.removeLabeler(did)
       }
     },
-    onSuccess() {
-      queryClient.invalidateQueries({
+    async onSuccess() {
+      await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
       })
     },

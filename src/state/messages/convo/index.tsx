@@ -1,18 +1,22 @@
 import React, {useContext, useState, useSyncExternalStore} from 'react'
-import {AppState} from 'react-native'
-import {useFocusEffect, useIsFocused} from '@react-navigation/native'
+import {useFocusEffect} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
 
+import {useAppState} from '#/lib/hooks/useAppState'
 import {Convo} from '#/state/messages/convo/agent'
 import {
   ConvoParams,
   ConvoState,
   ConvoStateBackgrounded,
+  ConvoStateDisabled,
   ConvoStateReady,
   ConvoStateSuspended,
 } from '#/state/messages/convo/types'
 import {isConvoActive} from '#/state/messages/convo/util'
 import {useMessagesEventBus} from '#/state/messages/events'
 import {useMarkAsReadMutation} from '#/state/queries/messages/conversation'
+import {RQKEY as ListConvosQueryKey} from '#/state/queries/messages/list-converations'
+import {RQKEY as createProfileQueryKey} from '#/state/queries/profile'
 import {useAgent} from '#/state/session'
 
 export * from '#/state/messages/convo/util'
@@ -37,6 +41,7 @@ export function useConvoActive() {
     | ConvoStateReady
     | ConvoStateBackgrounded
     | ConvoStateSuspended
+    | ConvoStateDisabled
   if (!ctx) {
     throw new Error('useConvo must be used within a ConvoProvider')
   }
@@ -52,51 +57,52 @@ export function ConvoProvider({
   children,
   convoId,
 }: Pick<ConvoParams, 'convoId'> & {children: React.ReactNode}) {
-  const isScreenFocused = useIsFocused()
-  const {getAgent} = useAgent()
+  const queryClient = useQueryClient()
+  const agent = useAgent()
   const events = useMessagesEventBus()
   const [convo] = useState(
     () =>
       new Convo({
         convoId,
-        agent: getAgent(),
+        agent,
         events,
       }),
   )
   const service = useSyncExternalStore(convo.subscribe, convo.getSnapshot)
   const {mutate: markAsRead} = useMarkAsReadMutation()
 
+  const appState = useAppState()
+  const isActive = appState === 'active'
   useFocusEffect(
     React.useCallback(() => {
-      convo.resume()
-      markAsRead({convoId})
-
-      return () => {
-        convo.background()
+      if (isActive) {
+        convo.resume()
         markAsRead({convoId})
+
+        return () => {
+          convo.background()
+          markAsRead({convoId})
+        }
       }
-    }, [convo, convoId, markAsRead]),
+    }, [isActive, convo, convoId, markAsRead]),
   )
 
   React.useEffect(() => {
-    const handleAppStateChange = (nextAppState: string) => {
-      if (isScreenFocused) {
-        if (nextAppState === 'active') {
-          convo.resume()
-        } else {
-          convo.background()
+    return convo.on(event => {
+      switch (event.type) {
+        case 'invalidate-block-state': {
+          for (const did of event.accountDids) {
+            queryClient.invalidateQueries({
+              queryKey: createProfileQueryKey(did),
+            })
+          }
+          queryClient.invalidateQueries({
+            queryKey: ListConvosQueryKey,
+          })
         }
-
-        markAsRead({convoId})
       }
-    }
-
-    const sub = AppState.addEventListener('change', handleAppStateChange)
-
-    return () => {
-      sub.remove()
-    }
-  }, [convoId, convo, isScreenFocused, markAsRead])
+    })
+  }, [convo, queryClient])
 
   return <ChatContext.Provider value={service}>{children}</ChatContext.Provider>
 }

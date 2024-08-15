@@ -15,6 +15,7 @@ export type CommonNavigatorParams = {
   Profile: {name: string; hideBackButton?: boolean}
   ProfileFollowers: {name: string}
   ProfileFollows: {name: string}
+  ProfileKnownFollowers: {name: string}
   ProfileList: {name: string; rkey: string}
   PostThread: {name: string; rkey: string}
   PostLikedBy: {name: string; rkey: string}
@@ -24,6 +25,7 @@ export type CommonNavigatorParams = {
   ProfileLabelerLikedBy: {name: string}
   Debug: undefined
   DebugMod: undefined
+  SharedPreferencesTester: undefined
   Log: undefined
   Support: undefined
   PrivacyPolicy: undefined
@@ -36,16 +38,24 @@ export type CommonNavigatorParams = {
   PreferencesThreads: undefined
   PreferencesExternalEmbeds: undefined
   AccessibilitySettings: undefined
+  AppearanceSettings: undefined
   Search: {q?: string}
   Hashtag: {tag: string; author?: string}
-  MessagesConversation: {conversation: string}
+  MessagesConversation: {conversation: string; embed?: string}
   MessagesSettings: undefined
+  NotificationsSettings: undefined
+  Feeds: undefined
+  Start: {name: string; rkey: string}
+  StarterPack: {name: string; rkey: string; new?: boolean}
+  StarterPackShort: {code: string}
+  StarterPackWizard: undefined
+  StarterPackEdit: {rkey?: string}
+  VideoDownload: undefined
 }
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {
   HomeTab: undefined
   SearchTab: undefined
-  FeedsTab: undefined
   NotificationsTab: undefined
   MyProfileTab: undefined
   MessagesTab: undefined
@@ -59,12 +69,8 @@ export type SearchTabNavigatorParams = CommonNavigatorParams & {
   Search: {q?: string}
 }
 
-export type FeedsTabNavigatorParams = CommonNavigatorParams & {
-  Feeds: undefined
-}
-
 export type NotificationsTabNavigatorParams = CommonNavigatorParams & {
-  Notifications: undefined
+  Notifications: {show?: 'all'}
 }
 
 export type MyProfileTabNavigatorParams = CommonNavigatorParams & {
@@ -72,16 +78,16 @@ export type MyProfileTabNavigatorParams = CommonNavigatorParams & {
 }
 
 export type MessagesTabNavigatorParams = CommonNavigatorParams & {
-  Messages: {pushToConversation?: string}
+  Messages: {pushToConversation?: string; animation?: 'push' | 'pop'}
 }
 
 export type FlatNavigatorParams = CommonNavigatorParams & {
   Home: undefined
   Search: {q?: string}
   Feeds: undefined
-  Notifications: undefined
+  Notifications: {show?: 'all'}
   Hashtag: {tag: string; author?: string}
-  Messages: {pushToConversation?: string}
+  Messages: {pushToConversation?: string; animation?: 'push' | 'pop'}
 }
 
 export type AllNavigatorParams = CommonNavigatorParams & {
@@ -89,14 +95,18 @@ export type AllNavigatorParams = CommonNavigatorParams & {
   Home: undefined
   SearchTab: undefined
   Search: {q?: string}
-  FeedsTab: undefined
   Feeds: undefined
   NotificationsTab: undefined
-  Notifications: undefined
+  Notifications: {show?: 'all'}
   MyProfileTab: undefined
   Hashtag: {tag: string; author?: string}
   MessagesTab: undefined
-  Messages: undefined
+  Messages: {animation?: 'push' | 'pop'}
+  Start: {name: string; rkey: string}
+  StarterPack: {name: string; rkey: string; new?: boolean}
+  StarterPackShort: {code: string}
+  StarterPackWizard: undefined
+  StarterPackEdit: {rkey?: string}
 }
 
 // NOTE

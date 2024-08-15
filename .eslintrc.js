@@ -13,6 +13,7 @@ module.exports = {
     'lingui',
     'simple-import-sort',
     'bsky-internal',
+    'eslint-plugin-react-compiler',
   ],
   rules: {
     // Temporary until https://github.com/facebook/react-native/pull/43756 gets into a release.
@@ -30,6 +31,7 @@ module.exports = {
         },
       },
     ],
+    'bsky-internal/use-exact-imports': 'error',
     'bsky-internal/use-typed-gates': 'error',
     'simple-import-sort/imports': [
       'warn',
@@ -67,6 +69,8 @@ module.exports = {
       },
     ],
     'simple-import-sort/exports': 'warn',
+    // TODO: Reenable when we figure out why it gets stuck on CI.
+    // 'react-compiler/react-compiler': 'error',
   },
   ignorePatterns: [
     '**/__mocks__/*.ts',

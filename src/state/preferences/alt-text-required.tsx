@@ -1,4 +1,5 @@
 import React from 'react'
+
 import * as persisted from '#/state/persisted'
 
 type StateContext = persisted.Schema['requireAltTextEnabled']
@@ -25,9 +26,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   React.useEffect(() => {
-    return persisted.onUpdate(() => {
-      setState(persisted.get('requireAltTextEnabled'))
-    })
+    return persisted.onUpdate(
+      'requireAltTextEnabled',
+      nextRequireAltTextEnabled => {
+        setState(nextRequireAltTextEnabled)
+      },
+    )
   }, [setStateWrapped])
 
   return (

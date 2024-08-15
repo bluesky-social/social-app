@@ -101,16 +101,13 @@ export function useSharedInputStyles() {
     ]
     const error: ViewStyle[] = [
       {
-        backgroundColor:
-          t.name === 'light' ? t.palette.negative_25 : t.palette.negative_900,
-        borderColor:
-          t.name === 'light' ? t.palette.negative_300 : t.palette.negative_800,
+        backgroundColor: t.palette.negative_25,
+        borderColor: t.palette.negative_300,
       },
     ]
     const errorHover: ViewStyle[] = [
       {
-        backgroundColor:
-          t.name === 'light' ? t.palette.negative_25 : t.palette.negative_900,
+        backgroundColor: t.palette.negative_25,
         borderColor: t.palette.negative_500,
       },
     ]
@@ -140,6 +137,7 @@ export function createInput(Component: typeof TextInput) {
     onChangeText,
     isInvalid,
     inputRef,
+    style,
     ...rest
   }: InputProps) {
     const t = useTheme()
@@ -195,10 +193,19 @@ export function createInput(Component: typeof TextInput) {
               lineHeight: a.text_md.fontSize * 1.1875,
               textAlignVertical: rest.multiline ? 'top' : undefined,
               minHeight: rest.multiline ? 80 : undefined,
+              minWidth: 0,
             },
+            // fix for autofill styles covering border
+            web({
+              paddingTop: 12,
+              paddingBottom: 12,
+              marginTop: 2,
+              marginBottom: 2,
+            }),
             android({
               paddingBottom: 16,
             }),
+            style,
           ]}
         />
 

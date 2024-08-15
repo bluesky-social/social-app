@@ -27,7 +27,8 @@ describe('session', () => {
     `)
 
     const agent = new BskyAgent({service: 'https://alice.com'})
-    agent.session = {
+    agent.sessionManager.session = {
+      active: true,
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-1',
@@ -50,7 +51,7 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": "alice-access-jwt-1",
-            "deactivated": false,
+            "active": true,
             "did": "alice-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -59,6 +60,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "alice-refresh-jwt-1",
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -87,7 +90,7 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": undefined,
-            "deactivated": false,
+            "active": true,
             "did": "alice-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -96,6 +99,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": undefined,
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -113,7 +118,8 @@ describe('session', () => {
     let state = getInitialState([])
 
     const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    agent1.sessionManager.session = {
+      active: true,
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-1',
@@ -136,7 +142,7 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": "alice-access-jwt-1",
-            "deactivated": false,
+            "active": true,
             "did": "alice-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -145,6 +151,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "alice-refresh-jwt-1",
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -158,7 +166,8 @@ describe('session', () => {
     `)
 
     const agent2 = new BskyAgent({service: 'https://bob.com'})
-    agent2.session = {
+    agent2.sessionManager.session = {
+      active: true,
       did: 'bob-did',
       handle: 'bob.test',
       accessJwt: 'bob-access-jwt-1',
@@ -183,7 +192,7 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": "bob-access-jwt-1",
-            "deactivated": false,
+            "active": true,
             "did": "bob-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -192,10 +201,12 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "bob-refresh-jwt-1",
             "service": "https://bob.com/",
+            "signupQueued": false,
+            "status": undefined,
           },
           {
             "accessJwt": "alice-access-jwt-1",
-            "deactivated": false,
+            "active": true,
             "did": "alice-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -204,6 +215,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "alice-refresh-jwt-1",
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -217,7 +230,8 @@ describe('session', () => {
     `)
 
     const agent3 = new BskyAgent({service: 'https://alice.com'})
-    agent3.session = {
+    agent3.sessionManager.session = {
+      active: true,
       did: 'alice-did',
       handle: 'alice-updated.test',
       accessJwt: 'alice-access-jwt-2',
@@ -242,7 +256,7 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": "alice-access-jwt-2",
-            "deactivated": false,
+            "active": true,
             "did": "alice-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -251,10 +265,12 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "alice-refresh-jwt-2",
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": undefined,
           },
           {
             "accessJwt": "bob-access-jwt-1",
-            "deactivated": false,
+            "active": true,
             "did": "bob-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -263,6 +279,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "bob-refresh-jwt-1",
             "service": "https://bob.com/",
+            "signupQueued": false,
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -276,7 +294,8 @@ describe('session', () => {
     `)
 
     const agent4 = new BskyAgent({service: 'https://jay.com'})
-    agent4.session = {
+    agent4.sessionManager.session = {
+      active: true,
       did: 'jay-did',
       handle: 'jay.test',
       accessJwt: 'jay-access-jwt-1',
@@ -299,7 +318,7 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": "jay-access-jwt-1",
-            "deactivated": false,
+            "active": true,
             "did": "jay-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -308,10 +327,12 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "jay-refresh-jwt-1",
             "service": "https://jay.com/",
+            "signupQueued": false,
+            "status": undefined,
           },
           {
             "accessJwt": "alice-access-jwt-2",
-            "deactivated": false,
+            "active": true,
             "did": "alice-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -320,10 +341,12 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "alice-refresh-jwt-2",
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": undefined,
           },
           {
             "accessJwt": "bob-access-jwt-1",
-            "deactivated": false,
+            "active": true,
             "did": "bob-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -332,6 +355,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "bob-refresh-jwt-1",
             "service": "https://bob.com/",
+            "signupQueued": false,
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -364,7 +389,7 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": undefined,
-            "deactivated": false,
+            "active": true,
             "did": "jay-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -373,10 +398,12 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": undefined,
             "service": "https://jay.com/",
+            "signupQueued": false,
+            "status": undefined,
           },
           {
             "accessJwt": undefined,
-            "deactivated": false,
+            "active": true,
             "did": "alice-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -385,10 +412,12 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": undefined,
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": undefined,
           },
           {
             "accessJwt": undefined,
-            "deactivated": false,
+            "active": true,
             "did": "bob-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -397,6 +426,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": undefined,
             "service": "https://bob.com/",
+            "signupQueued": false,
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -414,7 +445,8 @@ describe('session', () => {
     let state = getInitialState([])
 
     const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    agent1.sessionManager.session = {
+      active: true,
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-1',
@@ -446,7 +478,7 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": undefined,
-            "deactivated": false,
+            "active": true,
             "did": "alice-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -455,6 +487,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": undefined,
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -468,7 +502,8 @@ describe('session', () => {
     `)
 
     const agent2 = new BskyAgent({service: 'https://alice.com'})
-    agent2.session = {
+    agent2.sessionManager.session = {
+      active: true,
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-2',
@@ -490,7 +525,7 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": "alice-access-jwt-2",
-            "deactivated": false,
+            "active": true,
             "did": "alice-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -499,6 +534,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "alice-refresh-jwt-2",
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -516,7 +553,8 @@ describe('session', () => {
     let state = getInitialState([])
 
     const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    agent1.sessionManager.session = {
+      active: true,
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-1',
@@ -560,14 +598,16 @@ describe('session', () => {
     let state = getInitialState([])
 
     const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    agent1.sessionManager.session = {
+      active: true,
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-1',
       refreshJwt: 'alice-refresh-jwt-1',
     }
     const agent2 = new BskyAgent({service: 'https://bob.com'})
-    agent2.session = {
+    agent2.sessionManager.session = {
+      active: true,
       did: 'bob-did',
       handle: 'bob.test',
       accessJwt: 'bob-access-jwt-1',
@@ -601,7 +641,7 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": "bob-access-jwt-1",
-            "deactivated": false,
+            "active": true,
             "did": "bob-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -610,6 +650,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "bob-refresh-jwt-1",
             "service": "https://bob.com/",
+            "signupQueued": false,
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -636,7 +678,8 @@ describe('session', () => {
     let state = getInitialState([])
 
     const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    agent1.sessionManager.session = {
+      active: true,
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-1',
@@ -652,7 +695,8 @@ describe('session', () => {
     expect(state.accounts.length).toBe(1)
     expect(state.currentAgentState.did).toBe('alice-did')
 
-    agent1.session = {
+    agent1.sessionManager.session = {
+      active: true,
       did: 'alice-did',
       handle: 'alice-updated.test',
       accessJwt: 'alice-access-jwt-2',
@@ -681,7 +725,7 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": "alice-access-jwt-2",
-            "deactivated": false,
+            "active": true,
             "did": "alice-did",
             "email": "alice@foo.bar",
             "emailAuthFactor": false,
@@ -690,6 +734,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "alice-refresh-jwt-2",
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -702,7 +748,8 @@ describe('session', () => {
       }
     `)
 
-    agent1.session = {
+    agent1.sessionManager.session = {
+      active: true,
       did: 'alice-did',
       handle: 'alice-updated.test',
       accessJwt: 'alice-access-jwt-3',
@@ -731,7 +778,7 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": "alice-access-jwt-3",
-            "deactivated": false,
+            "active": true,
             "did": "alice-did",
             "email": "alice@foo.baz",
             "emailAuthFactor": true,
@@ -740,6 +787,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "alice-refresh-jwt-3",
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -752,7 +801,8 @@ describe('session', () => {
       }
     `)
 
-    agent1.session = {
+    agent1.sessionManager.session = {
+      active: true,
       did: 'alice-did',
       handle: 'alice-updated.test',
       accessJwt: 'alice-access-jwt-4',
@@ -781,7 +831,7 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": "alice-access-jwt-4",
-            "deactivated": false,
+            "active": true,
             "did": "alice-did",
             "email": "alice@foo.baz",
             "emailAuthFactor": false,
@@ -790,6 +840,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "alice-refresh-jwt-4",
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -807,7 +859,8 @@ describe('session', () => {
     let state = getInitialState([])
 
     const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    agent1.sessionManager.session = {
+      active: true,
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-1',
@@ -823,7 +876,8 @@ describe('session', () => {
     expect(state.accounts.length).toBe(1)
     expect(state.currentAgentState.did).toBe('alice-did')
 
-    agent1.session = {
+    agent1.sessionManager.session = {
+      active: true,
       did: 'alice-did',
       handle: 'alice-updated.test',
       accessJwt: 'alice-access-jwt-2',
@@ -853,7 +907,8 @@ describe('session', () => {
     ])
     expect(lastState === state).toBe(true)
 
-    agent1.session = {
+    agent1.sessionManager.session = {
+      active: true,
       did: 'alice-did',
       handle: 'alice-updated.test',
       accessJwt: 'alice-access-jwt-3',
@@ -872,11 +927,12 @@ describe('session', () => {
     expect(state.accounts[0].accessJwt).toBe('alice-access-jwt-3')
   })
 
-  it('ignores updates from a stale agent', () => {
+  it('accepts updates from a stale agent', () => {
     let state = getInitialState([])
 
     const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    agent1.sessionManager.session = {
+      active: true,
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-1',
@@ -884,7 +940,8 @@ describe('session', () => {
     }
 
     const agent2 = new BskyAgent({service: 'https://bob.com'})
-    agent2.session = {
+    agent2.sessionManager.session = {
+      active: true,
       did: 'bob-did',
       handle: 'bob.test',
       accessJwt: 'bob-access-jwt-1',
@@ -908,7 +965,8 @@ describe('session', () => {
     expect(state.accounts.length).toBe(2)
     expect(state.currentAgentState.did).toBe('bob-did')
 
-    agent1.session = {
+    agent1.sessionManager.session = {
+      active: true,
       did: 'alice-did',
       handle: 'alice-updated.test',
       accessJwt: 'alice-access-jwt-2',
@@ -928,16 +986,16 @@ describe('session', () => {
     ])
     expect(state.accounts.length).toBe(2)
     expect(state.accounts[1].did).toBe('alice-did')
-    // Should retain the old values because Alice is not active.
-    expect(state.accounts[1].handle).toBe('alice.test')
-    expect(state.accounts[1].accessJwt).toBe('alice-access-jwt-1')
-    expect(state.accounts[1].refreshJwt).toBe('alice-refresh-jwt-1')
+    // Should update Alice's tokens because otherwise they'll be stale.
+    expect(state.accounts[1].handle).toBe('alice-updated.test')
+    expect(state.accounts[1].accessJwt).toBe('alice-access-jwt-2')
+    expect(state.accounts[1].refreshJwt).toBe('alice-refresh-jwt-2')
     expect(printState(state)).toMatchInlineSnapshot(`
       {
         "accounts": [
           {
             "accessJwt": "bob-access-jwt-1",
-            "deactivated": false,
+            "active": true,
             "did": "bob-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -946,18 +1004,22 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "bob-refresh-jwt-1",
             "service": "https://bob.com/",
+            "signupQueued": false,
+            "status": undefined,
           },
           {
-            "accessJwt": "alice-access-jwt-1",
-            "deactivated": false,
+            "accessJwt": "alice-access-jwt-2",
+            "active": true,
             "did": "alice-did",
-            "email": undefined,
+            "email": "alice@foo.bar",
             "emailAuthFactor": false,
             "emailConfirmed": false,
-            "handle": "alice.test",
+            "handle": "alice-updated.test",
             "pdsUrl": undefined,
-            "refreshJwt": "alice-refresh-jwt-1",
+            "refreshJwt": "alice-refresh-jwt-2",
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -970,7 +1032,8 @@ describe('session', () => {
       }
     `)
 
-    agent2.session = {
+    agent2.sessionManager.session = {
+      active: true,
       did: 'bob-did',
       handle: 'bob-updated.test',
       accessJwt: 'bob-access-jwt-2',
@@ -988,7 +1051,7 @@ describe('session', () => {
     ])
     expect(state.accounts.length).toBe(2)
     expect(state.accounts[0].did).toBe('bob-did')
-    // Should update the values because Bob is active.
+    // Should update Bob's tokens because otherwise they'll be stale.
     expect(state.accounts[0].handle).toBe('bob-updated.test')
     expect(state.accounts[0].accessJwt).toBe('bob-access-jwt-2')
     expect(state.accounts[0].refreshJwt).toBe('bob-refresh-jwt-2')
@@ -997,7 +1060,7 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": "bob-access-jwt-2",
-            "deactivated": false,
+            "active": true,
             "did": "bob-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -1006,18 +1069,22 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "bob-refresh-jwt-2",
             "service": "https://bob.com/",
+            "signupQueued": false,
+            "status": undefined,
           },
           {
-            "accessJwt": "alice-access-jwt-1",
-            "deactivated": false,
+            "accessJwt": "alice-access-jwt-2",
+            "active": true,
             "did": "alice-did",
-            "email": undefined,
+            "email": "alice@foo.bar",
             "emailAuthFactor": false,
             "emailConfirmed": false,
-            "handle": "alice.test",
+            "handle": "alice-updated.test",
             "pdsUrl": undefined,
-            "refreshJwt": "alice-refresh-jwt-1",
+            "refreshJwt": "alice-refresh-jwt-2",
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -1030,9 +1097,9 @@ describe('session', () => {
       }
     `)
 
-    // Ignore other events for inactive agent too.
+    // Ignore other events for inactive agent.
     const lastState = state
-    agent1.session = undefined
+    agent1.sessionManager.session = undefined
     state = run(state, [
       {
         type: 'received-agent-event',
@@ -1059,7 +1126,8 @@ describe('session', () => {
     let state = getInitialState([])
 
     const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    agent1.sessionManager.session = {
+      active: true,
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-1',
@@ -1067,7 +1135,8 @@ describe('session', () => {
     }
 
     const agent2 = new BskyAgent({service: 'https://bob.com'})
-    agent2.session = {
+    agent2.sessionManager.session = {
+      active: true,
       did: 'bob-did',
       handle: 'bob.test',
       accessJwt: 'bob-access-jwt-1',
@@ -1093,7 +1162,8 @@ describe('session', () => {
     expect(state.accounts.length).toBe(1)
     expect(state.currentAgentState.did).toBe('bob-did')
 
-    agent1.session = {
+    agent1.sessionManager.session = {
+      active: true,
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-2',
@@ -1114,11 +1184,12 @@ describe('session', () => {
     expect(state.currentAgentState.did).toBe('bob-did')
   })
 
-  it('does soft logout on network error', () => {
+  it('ignores network errors', () => {
     let state = getInitialState([])
 
     const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    agent1.sessionManager.session = {
+      active: true,
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-1',
@@ -1135,7 +1206,7 @@ describe('session', () => {
     expect(state.accounts.length).toBe(1)
     expect(state.currentAgentState.did).toBe('alice-did')
 
-    agent1.session = undefined
+    agent1.sessionManager.session = undefined
     state = run(state, [
       {
         type: 'received-agent-event',
@@ -1146,17 +1217,15 @@ describe('session', () => {
       },
     ])
     expect(state.accounts.length).toBe(1)
-    // Network error should reset current user but not reset the tokens.
-    // TODO: We might want to remove or change this behavior?
     expect(state.accounts[0].accessJwt).toBe('alice-access-jwt-1')
     expect(state.accounts[0].refreshJwt).toBe('alice-refresh-jwt-1')
-    expect(state.currentAgentState.did).toBe(undefined)
+    expect(state.currentAgentState.did).toBe('alice-did')
     expect(printState(state)).toMatchInlineSnapshot(`
       {
         "accounts": [
           {
             "accessJwt": "alice-access-jwt-1",
-            "deactivated": false,
+            "active": true,
             "did": "alice-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -1165,13 +1234,15 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "alice-refresh-jwt-1",
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": undefined,
           },
         ],
         "currentAgentState": {
           "agent": {
-            "service": "https://public.api.bsky.app/",
+            "service": "https://alice.com/",
           },
-          "did": undefined,
+          "did": "alice-did",
         },
         "needsPersist": true,
       }
@@ -1182,7 +1253,8 @@ describe('session', () => {
     let state = getInitialState([])
 
     const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    agent1.sessionManager.session = {
+      active: true,
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-1',
@@ -1199,7 +1271,7 @@ describe('session', () => {
     expect(state.accounts[0].accessJwt).toBe('alice-access-jwt-1')
     expect(state.currentAgentState.did).toBe('alice-did')
 
-    agent1.session = undefined
+    agent1.sessionManager.session = undefined
     state = run(state, [
       {
         type: 'received-agent-event',
@@ -1218,7 +1290,7 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": undefined,
-            "deactivated": false,
+            "active": true,
             "did": "alice-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -1227,6 +1299,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": undefined,
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -1244,7 +1318,8 @@ describe('session', () => {
     let state = getInitialState([])
 
     const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    agent1.sessionManager.session = {
+      active: true,
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-1',
@@ -1261,7 +1336,7 @@ describe('session', () => {
     expect(state.accounts[0].accessJwt).toBe('alice-access-jwt-1')
     expect(state.currentAgentState.did).toBe('alice-did')
 
-    agent1.session = undefined
+    agent1.sessionManager.session = undefined
     state = run(state, [
       {
         type: 'received-agent-event',
@@ -1280,7 +1355,7 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": undefined,
-            "deactivated": false,
+            "active": true,
             "did": "alice-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -1289,6 +1364,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": undefined,
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -1306,14 +1383,16 @@ describe('session', () => {
     let state = getInitialState([])
 
     const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    agent1.sessionManager.session = {
+      active: true,
       did: 'alice-did',
       handle: 'alice.test',
       accessJwt: 'alice-access-jwt-1',
       refreshJwt: 'alice-refresh-jwt-1',
     }
     const agent2 = new BskyAgent({service: 'https://bob.com'})
-    agent2.session = {
+    agent2.sessionManager.session = {
+      active: true,
       did: 'bob-did',
       handle: 'bob.test',
       accessJwt: 'bob-access-jwt-1',
@@ -1335,14 +1414,16 @@ describe('session', () => {
     expect(state.currentAgentState.did).toBe('bob-did')
 
     const anotherTabAgent1 = new BskyAgent({service: 'https://jay.com'})
-    anotherTabAgent1.session = {
+    anotherTabAgent1.sessionManager.session = {
+      active: true,
       did: 'jay-did',
       handle: 'jay.test',
       accessJwt: 'jay-access-jwt-1',
       refreshJwt: 'jay-refresh-jwt-1',
     }
     const anotherTabAgent2 = new BskyAgent({service: 'https://alice.com'})
-    anotherTabAgent2.session = {
+    anotherTabAgent2.sessionManager.session = {
+      active: true,
       did: 'bob-did',
       handle: 'bob.test',
       accessJwt: 'bob-access-jwt-2',
@@ -1371,7 +1452,7 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": "jay-access-jwt-1",
-            "deactivated": false,
+            "active": true,
             "did": "jay-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -1380,10 +1461,12 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "jay-refresh-jwt-1",
             "service": "https://jay.com/",
+            "signupQueued": false,
+            "status": undefined,
           },
           {
             "accessJwt": "bob-access-jwt-2",
-            "deactivated": false,
+            "active": true,
             "did": "bob-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -1392,6 +1475,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "bob-refresh-jwt-2",
             "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": undefined,
           },
         ],
         "currentAgentState": {
@@ -1405,7 +1490,8 @@ describe('session', () => {
     `)
 
     const anotherTabAgent3 = new BskyAgent({service: 'https://clarence.com'})
-    anotherTabAgent3.session = {
+    anotherTabAgent3.sessionManager.session = {
+      active: true,
       did: 'clarence-did',
       handle: 'clarence.test',
       accessJwt: 'clarence-access-jwt-2',
@@ -1429,7 +1515,7 @@ describe('session', () => {
         "accounts": [
           {
             "accessJwt": "clarence-access-jwt-2",
-            "deactivated": false,
+            "active": true,
             "did": "clarence-did",
             "email": undefined,
             "emailAuthFactor": false,
@@ -1438,6 +1524,8 @@ describe('session', () => {
             "pdsUrl": undefined,
             "refreshJwt": "clarence-refresh-jwt-2",
             "service": "https://clarence.com/",
+            "signupQueued": false,
+            "status": undefined,
           },
         ],
         "currentAgentState": {

@@ -6,10 +6,10 @@ import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {logEvent, LogEvents, useGate} from '#/lib/statsig/statsig'
+import {logEvent, LogEvents} from '#/lib/statsig/statsig'
 import {emitSoftReset} from '#/state/events'
 import {SavedFeedSourceInfo, usePinnedFeedsInfos} from '#/state/queries/feed'
-import {FeedParams} from '#/state/queries/post-feed'
+import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useSession} from '#/state/session'
@@ -28,13 +28,31 @@ import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
 import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
 import {FollowingEndOfFeed} from 'view/com/posts/FollowingEndOfFeed'
 import {NoFeedsPinned} from '#/screens/Home/NoFeedsPinned'
+import {TOURS, useTriggerTourIfQueued} from '#/tours'
 import {HomeHeader} from '../com/home/HomeHeader'
 
-type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
+type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home' | 'Start'>
 export function HomeScreen(props: Props) {
   const {data: preferences} = usePreferencesQuery()
+  const {currentAccount} = useSession()
   const {data: pinnedFeedInfos, isLoading: isPinnedFeedsLoading} =
     usePinnedFeedsInfos()
+
+  React.useEffect(() => {
+    const params = props.route.params
+    if (
+      currentAccount &&
+      props.route.name === 'Start' &&
+      params?.name &&
+      params?.rkey
+    ) {
+      props.navigation.navigate('StarterPack', {
+        rkey: params.rkey,
+        name: params.name,
+      })
+    }
+  }, [currentAccount, props.navigation, props.route.name, props.route.params])
+
   if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
     return (
       <HomeScreenReady
@@ -59,9 +77,6 @@ function HomeScreenReady({
   preferences: UsePreferencesQueryResponse
   pinnedFeedInfos: SavedFeedSourceInfo[]
 }) {
-  const gate = useGate()
-  const requestNotificationsPermission = useRequestNotificationsPermission()
-
   const allFeeds = React.useMemo(
     () => pinnedFeedInfos.map(f => f.feedDescriptor),
     [pinnedFeedInfos],
@@ -71,12 +86,14 @@ function HomeScreenReady({
   const maybeFoundIndex = allFeeds.indexOf(rawSelectedFeed)
   const selectedIndex = Math.max(0, maybeFoundIndex)
   const selectedFeed = allFeeds[selectedIndex]
+  const requestNotificationsPermission = useRequestNotificationsPermission()
+  const triggerTourIfQueued = useTriggerTourIfQueued(TOURS.HOME)
 
   useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName)
   useOTAUpdates()
 
   React.useEffect(() => {
-    requestNotificationsPermission('AfterOnboarding')
+    requestNotificationsPermission('Home')
   }, [requestNotificationsPermission])
 
   const pagerRef = React.useRef<PagerRef>(null)
@@ -91,6 +108,30 @@ function HomeScreenReady({
     }
   }, [selectedIndex])
 
+  // Temporary, remove when finished debugging
+  const debugHasLoggedFollowingPrefs = React.useRef(false)
+  const debugLogFollowingPrefs = React.useCallback(
+    (feed: FeedDescriptor) => {
+      if (debugHasLoggedFollowingPrefs.current) return
+      if (feed !== 'following') return
+      logEvent('debug:followingPrefs', {
+        followingShowRepliesFromPref: preferences.feedViewPrefs.hideReplies
+          ? 'off'
+          : preferences.feedViewPrefs.hideRepliesByUnfollowed
+          ? 'following'
+          : 'all',
+        followingRepliesMinLikePref:
+          preferences.feedViewPrefs.hideRepliesByLikeCount,
+      })
+      debugHasLoggedFollowingPrefs.current = true
+    },
+    [
+      preferences.feedViewPrefs.hideReplies,
+      preferences.feedViewPrefs.hideRepliesByLikeCount,
+      preferences.feedViewPrefs.hideRepliesByUnfollowed,
+    ],
+  )
+
   const {hasSession} = useSession()
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
@@ -98,21 +139,28 @@ function HomeScreenReady({
     React.useCallback(() => {
       setMinimalShellMode(false)
       setDrawerSwipeDisabled(selectedIndex > 0)
+      triggerTourIfQueued()
       return () => {
         setDrawerSwipeDisabled(false)
       }
-    }, [setDrawerSwipeDisabled, selectedIndex, setMinimalShellMode]),
+    }, [
+      setDrawerSwipeDisabled,
+      selectedIndex,
+      setMinimalShellMode,
+      triggerTourIfQueued,
+    ]),
   )
 
   useFocusEffect(
     useNonReactiveCallback(() => {
       if (selectedFeed) {
-        logEvent('home:feedDisplayed', {
+        logEvent('home:feedDisplayed:sampled', {
           index: selectedIndex,
           feedType: selectedFeed.split('|')[0],
           feedUrl: selectedFeed,
           reason: 'focus',
         })
+        debugLogFollowingPrefs(selectedFeed)
       }
     }),
   )
@@ -123,11 +171,9 @@ function HomeScreenReady({
     React.useCallback(() => {
       const listener = AppState.addEventListener('change', nextAppState => {
         if (nextAppState === 'active') {
-          if (
-            isMobile &&
-            mode.value === 1 &&
-            gate('disable_min_shell_on_foregrounding_v3')
-          ) {
+          if (isMobile && mode.value === 1) {
+            // Reveal the bottom bar so you don't miss notifications or messages.
+            // TODO: Experiment with only doing it when unread > 0.
             setMinimalShellMode(false)
           }
         }
@@ -135,7 +181,7 @@ function HomeScreenReady({
       return () => {
         listener.remove()
       }
-    }, [setMinimalShellMode, mode, isMobile, gate]),
+    }, [setMinimalShellMode, mode, isMobile]),
   )
 
   const onPageSelected = React.useCallback(
@@ -150,16 +196,20 @@ function HomeScreenReady({
   )
 
   const onPageSelecting = React.useCallback(
-    (index: number, reason: LogEvents['home:feedDisplayed']['reason']) => {
+    (
+      index: number,
+      reason: LogEvents['home:feedDisplayed:sampled']['reason'],
+    ) => {
       const feed = allFeeds[index]
-      logEvent('home:feedDisplayed', {
+      logEvent('home:feedDisplayed:sampled', {
         index,
         feedType: feed.split('|')[0],
         feedUrl: feed,
         reason,
       })
+      debugLogFollowingPrefs(feed)
     },
-    [allFeeds],
+    [allFeeds, debugLogFollowingPrefs],
   )
 
   const onPressSelected = React.useCallback(() => {

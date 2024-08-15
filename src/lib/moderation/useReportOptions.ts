@@ -13,9 +13,10 @@ interface ReportOptions {
   account: ReportOption[]
   post: ReportOption[]
   list: ReportOption[]
+  starterpack: ReportOption[]
   feedgen: ReportOption[]
   other: ReportOption[]
-  message: ReportOption[]
+  convoMessage: ReportOption[]
 }
 
 export function useReportOptions(): ReportOptions {
@@ -73,7 +74,7 @@ export function useReportOptions(): ReportOptions {
         },
         ...common,
       ],
-      message: [
+      convoMessage: [
         {
           reason: ComAtprotoModerationDefs.REASONSPAM,
           title: _(msg`Spam`),
@@ -87,6 +88,14 @@ export function useReportOptions(): ReportOptions {
         ...common,
       ],
       list: [
+        {
+          reason: ComAtprotoModerationDefs.REASONVIOLATION,
+          title: _(msg`Name or Description Violates Community Standards`),
+          description: _(msg`Terms used violate community standards`),
+        },
+        ...common,
+      ],
+      starterpack: [
         {
           reason: ComAtprotoModerationDefs.REASONVIOLATION,
           title: _(msg`Name or Description Violates Community Standards`),

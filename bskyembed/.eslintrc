@@ -10,11 +10,12 @@
   ],
   "rules": {
     "simple-import-sort/imports": "warn",
-    "simple-import-sort/exports": "warn"
+    "simple-import-sort/exports": "warn",
+    'no-else-return': 'off'
   },
   "parserOptions": {
     "sourceType": "module",
     "ecmaVersion": "latest",
-    "project": "./tsconfig.json"
+    "project": "./bskyembed/tsconfig.json"
   }
 }

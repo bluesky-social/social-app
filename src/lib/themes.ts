@@ -1,8 +1,8 @@
 import {Platform} from 'react-native'
-import type {Theme} from './ThemeContext'
-import {colors} from './styles'
 
-import {darkPalette, lightPalette, dimPalette} from '#/alf/themes'
+import {darkPalette, dimPalette, lightPalette} from '#/alf/themes'
+import {colors} from './styles'
+import type {Theme} from './ThemeContext'
 
 export const defaultTheme: Theme = {
   colorScheme: 'light',
@@ -295,9 +295,9 @@ export const darkTheme: Theme = {
     ...defaultTheme.palette,
     default: {
       background: darkPalette.black,
-      backgroundLight: darkPalette.contrast_50,
+      backgroundLight: darkPalette.contrast_25,
       text: darkPalette.white,
-      textLight: darkPalette.contrast_700,
+      textLight: darkPalette.contrast_600,
       textInverted: darkPalette.black,
       link: darkPalette.primary_500,
       border: darkPalette.contrast_100,
@@ -308,8 +308,8 @@ export const darkTheme: Theme = {
       textVeryLight: darkPalette.contrast_400,
       replyLine: darkPalette.contrast_200,
       replyLineDot: darkPalette.contrast_200,
-      unreadNotifBg: darkPalette.primary_975,
-      unreadNotifBorder: darkPalette.primary_900,
+      unreadNotifBg: darkPalette.primary_25,
+      unreadNotifBorder: darkPalette.primary_100,
       postCtrl: darkPalette.contrast_500,
       brandText: darkPalette.primary_500,
       emptyStateIcon: darkPalette.contrast_300,
@@ -344,7 +344,7 @@ export const dimTheme: Theme = {
     default: {
       ...darkTheme.palette.default,
       background: dimPalette.black,
-      backgroundLight: dimPalette.contrast_50,
+      backgroundLight: dimPalette.contrast_25,
       text: dimPalette.white,
       textLight: dimPalette.contrast_700,
       textInverted: dimPalette.black,
@@ -357,8 +357,8 @@ export const dimTheme: Theme = {
       textVeryLight: dimPalette.contrast_400,
       replyLine: dimPalette.contrast_200,
       replyLineDot: dimPalette.contrast_200,
-      unreadNotifBg: dimPalette.primary_975,
-      unreadNotifBorder: dimPalette.primary_900,
+      unreadNotifBg: dimPalette.primary_25,
+      unreadNotifBorder: dimPalette.primary_100,
       postCtrl: dimPalette.contrast_500,
       brandText: dimPalette.primary_500,
       emptyStateIcon: dimPalette.contrast_300,

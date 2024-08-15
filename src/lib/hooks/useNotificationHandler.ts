@@ -26,6 +26,7 @@ type NotificationReason =
   | 'reply'
   | 'quote'
   | 'chat-message'
+  | 'starterpack-joined'
 
 type NotificationPayload =
   | {
@@ -41,13 +42,14 @@ type NotificationPayload =
     }
 
 const DEFAULT_HANDLER_OPTIONS = {
-  shouldShowAlert: true,
+  shouldShowAlert: false,
   shouldPlaySound: false,
   shouldSetBadge: true,
 }
 
-// This needs to stay outside the hook to persist between account switches
+// These need to stay outside the hook to persist between account switches
 let storedPayload: NotificationPayload | undefined
+let prevDate = 0
 
 export function useNotificationsHandler() {
   const queryClient = useQueryClient()
@@ -58,12 +60,13 @@ export function useNotificationsHandler() {
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
 
-  // Safety to prevent double handling of the same notification
-  const prevDate = React.useRef(0)
-
+  // On Android, we cannot control which sound is used for a notification on Android
+  // 28 or higher. Instead, we have to configure a notification channel ahead of time
+  // which has the sounds we want in the configuration for that channel. These two
+  // channels allow for the mute/unmute functionality we want for the background
+  // handler.
   React.useEffect(() => {
     if (!isAndroid) return
-
     Notifications.setNotificationChannelAsync('chat-messages', {
       name: 'Chat',
       importance: Notifications.AndroidImportance.MAX,
@@ -101,9 +104,27 @@ export function useNotificationsHandler() {
         } else {
           navigation.dispatch(state => {
             if (state.routes[0].name === 'Messages') {
-              return CommonActions.navigate('MessagesConversation', {
-                conversation: payload.convoId,
-              })
+              if (
+                state.routes[state.routes.length - 1].name ===
+                'MessagesConversation'
+              ) {
+                return CommonActions.reset({
+                  ...state,
+                  routes: [
+                    ...state.routes.slice(0, state.routes.length - 1),
+                    {
+                      name: 'MessagesConversation',
+                      params: {
+                        conversation: payload.convoId,
+                      },
+                    },
+                  ],
+                })
+              } else {
+                return CommonActions.navigate('MessagesConversation', {
+                  conversation: payload.convoId,
+                })
+              }
             } else {
               return CommonActions.navigate('MessagesTab', {
                 screen: 'Messages',
@@ -122,6 +143,7 @@ export function useNotificationsHandler() {
           case 'mention':
           case 'quote':
           case 'reply':
+          case 'starterpack-joined':
             resetToTab('NotificationsTab')
             break
           // TODO implement these after we have an idea of how to handle each individual case
@@ -184,10 +206,10 @@ export function useNotificationsHandler() {
 
     const responseReceivedListener =
       Notifications.addNotificationResponseReceivedListener(e => {
-        if (e.notification.date === prevDate.current) {
+        if (e.notification.date === prevDate) {
           return
         }
-        prevDate.current = e.notification.date
+        prevDate = e.notification.date
 
         logger.debug(
           'Notifications: response received',

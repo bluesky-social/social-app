@@ -3,19 +3,21 @@ import {View} from 'react-native'
 import {ComAtprotoLabelDefs, ComAtprotoModerationDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useMutation} from '@tanstack/react-query'
 
 import {useLabelInfo} from '#/lib/moderation/useLabelInfo'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {logger} from '#/logger'
 import {useAgent, useSession} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {Divider} from '../Divider'
-
+import {Loader} from '../Loader'
 export {useDialogControl as useLabelsOnMeDialogControl} from '#/components/Dialog'
 
 type Subject =
@@ -100,13 +102,12 @@ function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
                 label={label}
                 isSelfLabel={label.src === currentAccount?.did}
                 control={props.control}
-                onPressAppeal={label => setAppealingLabel(label)}
+                onPressAppeal={setAppealingLabel}
               />
             ))}
           </View>
         </>
       )}
-
       <Dialog.Close />
     </Dialog.ScrollableInner>
   )
@@ -126,6 +127,9 @@ function Label({
   const t = useTheme()
   const {_} = useLingui()
   const {labeler, strings} = useLabelInfo(label)
+  const sourceName = labeler
+    ? sanitizeHandle(labeler.creator.handle, '@')
+    : label.src
   return (
     <View
       style={[
@@ -167,13 +171,12 @@ function Label({
             <Trans>
               Source:{' '}
               <InlineLinkText
+                label={sourceName}
                 to={makeProfileLink(
                   labeler ? labeler.creator : {did: label.src, handle: ''},
                 )}
                 onPress={() => control.close()}>
-                {labeler
-                  ? sanitizeHandle(labeler.creator.handle, '@')
-                  : label.src}
+                {sourceName}
               </InlineLinkText>
             </Trans>
           )}
@@ -199,28 +202,44 @@ function AppealForm({
   const {gtMobile} = useBreakpoints()
   const [details, setDetails] = React.useState('')
   const isAccountReport = 'did' in subject
-  const {getAgent} = useAgent()
+  const agent = useAgent()
+  const sourceName = labeler
+    ? sanitizeHandle(labeler.creator.handle, '@')
+    : label.src
 
-  const onSubmit = async () => {
-    try {
+  const {mutate, isPending} = useMutation({
+    mutationFn: async () => {
       const $type = !isAccountReport
         ? 'com.atproto.repo.strongRef'
         : 'com.atproto.admin.defs#repoRef'
-      await getAgent()
-        .withProxy('atproto_labeler', label.src)
-        .createModerationReport({
+      await agent.createModerationReport(
+        {
           reasonType: ComAtprotoModerationDefs.REASONAPPEAL,
           subject: {
             $type,
             ...subject,
           },
           reason: details,
-        })
-      Toast.show(_(msg`Appeal submitted`))
-    } finally {
+        },
+        {
+          encoding: 'application/json',
+          headers: {
+            'atproto-proxy': `${label.src}#atproto_labeler`,
+          },
+        },
+      )
+    },
+    onError: err => {
+      logger.error('Failed to submit label appeal', {message: err})
+      Toast.show(_(msg`Failed to submit appeal, please try again.`), 'xmark')
+    },
+    onSuccess: () => {
       control.close()
-    }
-  }
+      Toast.show(_(msg`Appeal submitted`))
+    },
+  })
+
+  const onSubmit = React.useCallback(() => mutate(), [mutate])
 
   return (
     <>
@@ -231,12 +250,13 @@ function AppealForm({
         <Trans>
           This appeal will be sent to{' '}
           <InlineLinkText
+            label={sourceName}
             to={makeProfileLink(
               labeler ? labeler.creator : {did: label.src, handle: ''},
             )}
             onPress={() => control.close()}
             style={[a.text_md, a.leading_snug]}>
-            {labeler ? sanitizeHandle(labeler.creator.handle, '@') : label.src}
+            {sourceName}
           </InlineLinkText>
           .
         </Trans>
@@ -281,6 +301,7 @@ function AppealForm({
           onPress={onSubmit}
           label={_(msg`Submit`)}>
           <ButtonText>{_(msg`Submit`)}</ButtonText>
+          {isPending && <ButtonIcon icon={Loader} />}
         </Button>
       </View>
     </>

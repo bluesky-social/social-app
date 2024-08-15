@@ -20,13 +20,10 @@ export enum ConvoStatus {
   Error = 'error',
   Backgrounded = 'backgrounded',
   Suspended = 'suspended',
+  Disabled = 'disabled',
 }
 
 export enum ConvoItemError {
-  /**
-   * Generic error
-   */
-  Network = 'network',
   /**
    * Error connecting to event firehose
    */
@@ -54,6 +51,7 @@ export enum ConvoDispatchEvent {
   Background = 'background',
   Suspend = 'suspend',
   Error = 'error',
+  Disable = 'disable',
 }
 
 export type ConvoDispatch =
@@ -76,6 +74,9 @@ export type ConvoDispatch =
       event: ConvoDispatchEvent.Error
       payload: ConvoError
     }
+  | {
+      event: ConvoDispatchEvent.Disable
+    }
 
 export type ConvoItem =
   | {
@@ -95,6 +96,7 @@ export type ConvoItem =
         | ChatBskyConvoDefs.MessageView
         | ChatBskyConvoDefs.DeletedMessageView
         | null
+      failed: boolean
       /**
        * Retry sending the message. If present, the message is in a failed state.
        */
@@ -110,16 +112,19 @@ export type ConvoItem =
         | null
     }
   | {
-      type: 'error-recoverable'
+      type: 'error'
       key: string
       code: ConvoItemError
-      retry: () => void
+      /**
+       * If present, error is recoverable.
+       */
+      retry?: () => void
     }
 
 type DeleteMessage = (messageId: string) => Promise<void>
 type SendMessage = (
   message: ChatBskyConvoSendMessage.InputSchema['message'],
-) => Promise<void>
+) => void
 type FetchMessageHistory = () => Promise<void>
 
 export type ConvoStateUninitialized = {
@@ -186,13 +191,25 @@ export type ConvoStateError = {
   status: ConvoStatus.Error
   items: []
   convo: undefined
-  error: any
+  error: ConvoError
   sender: undefined
   recipients: undefined
   isFetchingHistory: false
   deleteMessage: undefined
   sendMessage: undefined
   fetchMessageHistory: undefined
+}
+export type ConvoStateDisabled = {
+  status: ConvoStatus.Disabled
+  items: ConvoItem[]
+  convo: ChatBskyConvoDefs.ConvoView
+  error: undefined
+  sender: AppBskyActorDefs.ProfileViewBasic
+  recipients: AppBskyActorDefs.ProfileViewBasic[]
+  isFetchingHistory: boolean
+  deleteMessage: DeleteMessage
+  sendMessage: SendMessage
+  fetchMessageHistory: FetchMessageHistory
 }
 export type ConvoState =
   | ConvoStateUninitialized
@@ -201,3 +218,9 @@ export type ConvoState =
   | ConvoStateBackgrounded
   | ConvoStateSuspended
   | ConvoStateError
+  | ConvoStateDisabled
+
+export type ConvoEvent = {
+  type: 'invalidate-block-state'
+  accountDids: string[]
+}

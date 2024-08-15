@@ -1,6 +1,10 @@
-import '@formatjs/intl-locale/polyfill'
-import '@formatjs/intl-pluralrules/polyfill'
+// Don't remove -force from these because detection is VERY slow on low-end Android.
+// https://github.com/formatjs/formatjs/issues/4463#issuecomment-2176070577
+import '@formatjs/intl-locale/polyfill-force'
+import '@formatjs/intl-pluralrules/polyfill-force'
+import '@formatjs/intl-numberformat/polyfill-force'
 import '@formatjs/intl-pluralrules/locale-data/en'
+import '@formatjs/intl-numberformat/locale-data/en'
 
 import {useEffect} from 'react'
 import {i18n} from '@lingui/core'

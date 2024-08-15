@@ -4,10 +4,8 @@ import {
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedThreadgate,
-  AppBskyRichtextFacet,
   BskyAgent,
   ComAtprotoLabelDefs,
-  ComAtprotoRepoUploadBlob,
   RichText,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
@@ -15,11 +13,14 @@ import {AtUri} from '@atproto/api'
 import {logger} from '#/logger'
 import {ThreadgateSetting} from '#/state/queries/threadgate'
 import {isNetworkError} from 'lib/strings/errors'
-import {shortenLinks} from 'lib/strings/rich-text-manip'
-import {isNative, isWeb} from 'platform/detection'
+import {shortenLinks, stripInvalidMentions} from 'lib/strings/rich-text-manip'
+import {isNative} from 'platform/detection'
 import {ImageModel} from 'state/models/media/image'
 import {LinkMeta} from '../link-meta/link-meta'
 import {safeDeleteAsync} from '../media/manip'
+import {uploadBlob} from './upload-blob'
+
+export {uploadBlob}
 
 export interface ExternalEmbedDraft {
   uri: string
@@ -29,29 +30,14 @@ export interface ExternalEmbedDraft {
   localThumb?: ImageModel
 }
 
-export async function uploadBlob(
-  agent: BskyAgent,
-  blob: string,
-  encoding: string,
-): Promise<ComAtprotoRepoUploadBlob.Response> {
-  if (isWeb) {
-    // `blob` should be a data uri
-    return agent.uploadBlob(convertDataURIToUint8Array(blob), {
-      encoding,
-    })
-  } else {
-    // `blob` should be a path to a file in the local FS
-    return agent.uploadBlob(
-      blob, // this will be special-cased by the fetch monkeypatch in /src/state/lib/api.ts
-      {encoding},
-    )
-  }
-}
-
 interface PostOpts {
   rawText: string
   replyTo?: string
   quote?: {
+    uri: string
+    cid: string
+  }
+  video?: {
     uri: string
     cid: string
   }
@@ -81,17 +67,7 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
   opts.onStateChange?.('Processing...')
   await rt.detectFacets(agent)
   rt = shortenLinks(rt)
-
-  // filter out any mention facets that didn't map to a user
-  rt.facets = rt.facets?.filter(facet => {
-    const mention = facet.features.find(feature =>
-      AppBskyRichtextFacet.isMention(feature),
-    )
-    if (mention && !mention.did) {
-      return false
-    }
-    return true
-  })
+  rt = stripInvalidMentions(rt)
 
   // add quote embed if present
   if (opts.quote) {
@@ -281,7 +257,7 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
   return res
 }
 
-async function createThreadgate(
+export async function createThreadgate(
   agent: BskyAgent,
   postUri: string,
   threadgate: ThreadgateSetting[],
@@ -307,20 +283,15 @@ async function createThreadgate(
   }
 
   const postUrip = new AtUri(postUri)
-  await agent.api.app.bsky.feed.threadgate.create(
-    {repo: agent.session!.did, rkey: postUrip.rkey},
-    {post: postUri, createdAt: new Date().toISOString(), allow},
-  )
-}
-
-// helpers
-// =
-
-function convertDataURIToUint8Array(uri: string): Uint8Array {
-  var raw = window.atob(uri.substring(uri.indexOf(';base64,') + 8))
-  var binary = new Uint8Array(new ArrayBuffer(raw.length))
-  for (let i = 0; i < raw.length; i++) {
-    binary[i] = raw.charCodeAt(i)
-  }
-  return binary
+  await agent.api.com.atproto.repo.putRecord({
+    repo: agent.accountDid,
+    collection: 'app.bsky.feed.threadgate',
+    rkey: postUrip.rkey,
+    record: {
+      $type: 'app.bsky.feed.threadgate',
+      post: postUri,
+      allow,
+      createdAt: new Date().toISOString(),
+    },
+  })
 }

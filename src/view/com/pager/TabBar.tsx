@@ -179,8 +179,8 @@ const desktopStyles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     right: 0,
-    bottom: -1,
-    borderBottomWidth: 1,
+    top: '100%',
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
 })
 
@@ -190,7 +190,7 @@ const mobileStyles = StyleSheet.create({
   },
   contentContainer: {
     backgroundColor: 'transparent',
-    paddingHorizontal: 8,
+    paddingHorizontal: 6,
   },
   item: {
     paddingTop: 10,
@@ -206,7 +206,7 @@ const mobileStyles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     right: 0,
-    bottom: -1,
-    borderBottomWidth: 1,
+    top: '100%',
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
 })

@@ -10,13 +10,18 @@ import {
   getFeedAsEmbed,
   getListAsEmbed,
   getPostAsQuote,
+  getStarterPackAsEmbed,
 } from 'lib/link-meta/bsky'
 import {getLinkMeta} from 'lib/link-meta/link-meta'
+import {resolveShortLink} from 'lib/link-meta/resolve-short-link'
 import {downloadAndResize} from 'lib/media/manip'
 import {
   isBskyCustomFeedUrl,
   isBskyListUrl,
   isBskyPostUrl,
+  isBskyStarterPackUrl,
+  isBskyStartUrl,
+  isShortLink,
 } from 'lib/strings/url-helpers'
 import {ImageModel} from 'state/models/media/image'
 import {ComposerOpts} from 'state/shell/composer'
@@ -31,7 +36,7 @@ export function useExternalLinkFetch({
   )
   const getPost = useGetPost()
   const fetchDid = useFetchDid()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
 
   useEffect(() => {
     let aborted = false
@@ -59,7 +64,7 @@ export function useExternalLinkFetch({
           },
         )
       } else if (isBskyCustomFeedUrl(extLink.uri)) {
-        getFeedAsEmbed(getAgent(), fetchDid, extLink.uri).then(
+        getFeedAsEmbed(agent, fetchDid, extLink.uri).then(
           ({embed, meta}) => {
             if (aborted) {
               return
@@ -77,7 +82,7 @@ export function useExternalLinkFetch({
           },
         )
       } else if (isBskyListUrl(extLink.uri)) {
-        getListAsEmbed(getAgent(), fetchDid, extLink.uri).then(
+        getListAsEmbed(agent, fetchDid, extLink.uri).then(
           ({embed, meta}) => {
             if (aborted) {
               return
@@ -94,8 +99,36 @@ export function useExternalLinkFetch({
             setExtLink(undefined)
           },
         )
+      } else if (
+        isBskyStartUrl(extLink.uri) ||
+        isBskyStarterPackUrl(extLink.uri)
+      ) {
+        getStarterPackAsEmbed(agent, fetchDid, extLink.uri).then(
+          ({embed, meta}) => {
+            if (aborted) {
+              return
+            }
+            setExtLink({
+              uri: extLink.uri,
+              isLoading: false,
+              meta,
+              embed,
+            })
+          },
+        )
+      } else if (isShortLink(extLink.uri)) {
+        if (isShortLink(extLink.uri)) {
+          resolveShortLink(extLink.uri).then(res => {
+            if (res && res !== extLink.uri) {
+              setExtLink({
+                uri: res,
+                isLoading: true,
+              })
+            }
+          })
+        }
       } else {
-        getLinkMeta(getAgent(), extLink.uri).then(meta => {
+        getLinkMeta(agent, extLink.uri).then(meta => {
           if (aborted) {
             return
           }
@@ -137,7 +170,7 @@ export function useExternalLinkFetch({
       })
     }
     return cleanup
-  }, [extLink, setQuote, getPost, fetchDid, getAgent])
+  }, [extLink, setQuote, getPost, fetchDid, agent])
 
   return {extLink, setExtLink}
 }

@@ -1,10 +1,11 @@
-import React, {useEffect, useRef} from 'react'
+import React, {Fragment, useEffect, useRef} from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import BottomSheet from '@discord/bottom-sheet/src'
 
 import {useModalControls, useModals} from '#/state/modals'
 import {usePalette} from 'lib/hooks/usePalette'
+import {FullWindowOverlay} from '#/components/FullWindowOverlay'
 import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
 import * as AddAppPassword from './AddAppPasswords'
 import * as AltImageModal from './AltImage'
@@ -21,9 +22,7 @@ import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguages
 import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
 import * as LinkWarningModal from './LinkWarning'
 import * as ListAddUserModal from './ListAddRemoveUsers'
-import * as RepostModal from './Repost'
 import * as SelfLabelModal from './SelfLabel'
-import * as ThreadgateModal from './Threadgate'
 import * as UserAddRemoveListsModal from './UserAddRemoveLists'
 import * as VerifyEmailModal from './VerifyEmail'
 
@@ -73,15 +72,9 @@ export function ModalsContainer() {
   } else if (activeModal?.name === 'delete-account') {
     snapPoints = DeleteAccountModal.snapPoints
     element = <DeleteAccountModal.Component />
-  } else if (activeModal?.name === 'repost') {
-    snapPoints = RepostModal.snapPoints
-    element = <RepostModal.Component {...activeModal} />
   } else if (activeModal?.name === 'self-label') {
     snapPoints = SelfLabelModal.snapPoints
     element = <SelfLabelModal.Component {...activeModal} />
-  } else if (activeModal?.name === 'threadgate') {
-    snapPoints = ThreadgateModal.snapPoints
-    element = <ThreadgateModal.Component {...activeModal} />
   } else if (activeModal?.name === 'alt-text-image') {
     snapPoints = AltImageModal.snapPoints
     element = <AltImageModal.Component {...activeModal} />
@@ -130,23 +123,27 @@ export function ModalsContainer() {
     )
   }
 
+  const Container = activeModal ? FullWindowOverlay : Fragment
+
   return (
-    <BottomSheet
-      ref={bottomSheetRef}
-      snapPoints={snapPoints}
-      handleHeight={HANDLE_HEIGHT}
-      index={isModalActive ? 0 : -1}
-      enablePanDownToClose
-      android_keyboardInputMode="adjustResize"
-      keyboardBlurBehavior="restore"
-      backdropComponent={
-        isModalActive ? createCustomBackdrop(onClose) : undefined
-      }
-      handleIndicatorStyle={{backgroundColor: pal.text.color}}
-      handleStyle={[styles.handle, pal.view]}
-      onChange={onBottomSheetChange}>
-      {element}
-    </BottomSheet>
+    <Container>
+      <BottomSheet
+        ref={bottomSheetRef}
+        snapPoints={snapPoints}
+        handleHeight={HANDLE_HEIGHT}
+        index={isModalActive ? 0 : -1}
+        enablePanDownToClose
+        android_keyboardInputMode="adjustResize"
+        keyboardBlurBehavior="restore"
+        backdropComponent={
+          isModalActive ? createCustomBackdrop(onClose) : undefined
+        }
+        handleIndicatorStyle={{backgroundColor: pal.text.color}}
+        handleStyle={[styles.handle, pal.view]}
+        onChange={onBottomSheetChange}>
+        {element}
+      </BottomSheet>
+    </Container>
   )
 }
 
