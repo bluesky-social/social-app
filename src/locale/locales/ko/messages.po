@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-08-13 17:03+0900\n"
+"PO-Revision-Date: 2024-08-15 14:39+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -481,7 +481,7 @@ msgstr "이전 주소인 {0}(으)로 이메일을 보냈습니다. 이 이메일
 msgid "An error has occurred"
 msgstr "오류 발생"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.web.tsx:314
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:314
 msgid "An error occurred"
 msgstr "오류 발생"
 
@@ -1682,7 +1682,7 @@ msgstr "이메일 2단계 인증 끄기"
 msgid "Disable haptic feedback"
 msgstr "햅틱 피드백 끄기"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.web.tsx:242
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:242
 msgid "Disable subtitles"
 msgstr "자막 사용 안 함"
 
@@ -2016,7 +2016,7 @@ msgstr "미디어 플레이어를 사용할 외부 사이트"
 msgid "Enable priority notifications"
 msgstr "우선순위 알림 사용"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.web.tsx:242
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:242
 msgid "Enable subtitles"
 msgstr "자막 사용"
 
@@ -3443,8 +3443,8 @@ msgid "Music"
 msgstr "음악"
 
 #: src/components/TagMenu/index.tsx:263
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.web.tsx:254
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.web.tsx:265
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:254
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:265
 msgid "Mute"
 msgstr "뮤트"
 
@@ -3517,7 +3517,7 @@ msgid "Mute words & tags"
 msgstr "단어 및 태그 뮤트"
 
 #: src/view/com/lists/ListCard.tsx:103
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:190
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:201
 msgid "Muted"
 msgstr "뮤트됨"
 
@@ -3588,7 +3588,7 @@ msgstr "이름 또는 설명이 커뮤니티 기준을 위반함"
 msgid "Nature"
 msgstr "자연"
 
-#: src/components/StarterPack/StarterPackCard.tsx:118
+#: src/components/StarterPack/StarterPackCard.tsx:121
 msgid "Navigate to {0}"
 msgstr "{0}(으)로 이동"
 
@@ -4229,11 +4229,11 @@ msgid "Password updated!"
 msgstr "비밀번호 변경됨"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:44
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.web.tsx:226
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:226
 msgid "Pause"
 msgstr "일시 정지"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.web.tsx:203
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:203
 msgid "Pause video"
 msgstr "동영상 일시 정지"
 
@@ -4293,7 +4293,7 @@ msgid "Pinned to your feeds"
 msgstr "내 피드에 고정됨"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:44
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.web.tsx:226
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:226
 msgid "Play"
 msgstr "재생"
 
@@ -4306,7 +4306,7 @@ msgid "Play or pause the GIF"
 msgstr "GIP를 재생하거나 일시 정지합니다"
 
 #: src/view/com/util/post-embeds/VideoEmbed.tsx:52
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.web.tsx:204
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:204
 msgid "Play video"
 msgstr "동영상 재생"
 
@@ -5741,7 +5741,7 @@ msgstr "온보딩 투어 창을 시작합니다. 뒤로 이동하지 마세요. 
 msgid "Starter Pack"
 msgstr "스타터 팩"
 
-#: src/components/StarterPack/StarterPackCard.tsx:70
+#: src/components/StarterPack/StarterPackCard.tsx:73
 msgid "Starter pack by {0}"
 msgstr "{0} 님의 스타터 팩"
 
@@ -5861,11 +5861,11 @@ msgstr "세로"
 msgid "Tap to dismiss"
 msgstr "눌러서 닫기"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:170
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:181
 msgid "Tap to enter full screen"
 msgstr "탭하여 전체화면으로 보기"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:191
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:202
 msgid "Tap to toggle sound"
 msgstr "탭하여 소리 켜기/끄기"
 
@@ -6445,8 +6445,8 @@ msgid "Unlike this feed"
 msgstr "이 피드 좋아요 취소"
 
 #: src/components/TagMenu/index.tsx:263
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.web.tsx:254
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.web.tsx:265
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:254
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:265
 #: src/view/screens/ProfileList.tsx:667
 msgid "Unmute"
 msgstr "언뮤트"
@@ -6473,11 +6473,11 @@ msgstr "알림 언뮤트"
 msgid "Unmute thread"
 msgstr "스레드 언뮤트"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.web.tsx:201
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:201
 msgid "Unmute video"
 msgstr "동영상 음소거 해제"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:190
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:201
 msgid "Unmuted"
 msgstr "음소거 해제됨"
 
@@ -6708,7 +6708,7 @@ msgstr "이메일 인증하기"
 msgid "Version {appVersion} {bundleInfo}"
 msgstr "버전 {appVersion} {bundleInfo}"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:169
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:180
 msgid "Video"
 msgstr "동영상"
 
@@ -7017,7 +7017,7 @@ msgstr "내 계정 재활성화"
 msgid "Yesterday, {time}"
 msgstr "어제 {time}"
 
-#: src/components/StarterPack/StarterPackCard.tsx:73
+#: src/components/StarterPack/StarterPackCard.tsx:76
 msgid "you"
 msgstr "나"
 
