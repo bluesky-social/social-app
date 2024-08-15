@@ -59,7 +59,6 @@
     "@emoji-mart/react": "^1.1.1",
     "@expo/html-elements": "^0.4.2",
     "@expo/webpack-config": "^19.0.0",
-    "@ffmpeg/core": "^0.12.6",
     "@ffmpeg/ffmpeg": "^0.12.10",
     "@ffmpeg/util": "^0.12.1",
     "@floating-ui/dom": "^1.6.3",
