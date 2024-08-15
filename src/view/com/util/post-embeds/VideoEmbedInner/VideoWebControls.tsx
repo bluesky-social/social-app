@@ -173,6 +173,32 @@ export function Controls({
     toggleFullscreen()
   }, [drawFocus, toggleFullscreen])
 
+  const onSeek = useCallback(
+    (time: number) => {
+      if (!videoRef.current) return
+      if (videoRef.current.fastSeek) {
+        videoRef.current.fastSeek(time)
+      } else {
+        videoRef.current.currentTime = time
+      }
+    },
+    [videoRef],
+  )
+
+  const [playStateBeforeSeek, setPlayStateBeforeSeek] = useState(false)
+
+  const onSeekStart = useCallback(() => {
+    drawFocus()
+    setPlayStateBeforeSeek(playing)
+    pause()
+  }, [playing, pause, drawFocus])
+
+  const onSeekEnd = useCallback(() => {
+    if (playStateBeforeSeek) {
+      play()
+    }
+  }, [playStateBeforeSeek, play])
+
   const showControls =
     (focused && !playing) || (interactingViaKeypress ? hasFocus : hovered)
 
@@ -210,98 +236,87 @@ export function Controls({
         style={[
           a.flex_shrink_0,
           a.w_full,
-          a.px_sm,
-          a.pt_sm,
-          a.pb_md,
-          a.gap_md,
-          a.flex_row,
-          a.align_center,
+          a.px_xs,
           web({
             background:
               'linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7))',
           }),
-          showControls ? {opacity: 1} : {opacity: 0},
+          {
+            opacity: showControls ? 1 : 0,
+            transition: 'opacity 0.2s ease-in-out',
+          },
         ]}>
-        <Button
-          label={_(playing ? msg`Pause` : msg`Play`)}
-          onPress={onPressPlayPause}
-          {...btnProps}>
-          {playing ? (
-            <PauseIcon fill={t.palette.white} width={20} />
-          ) : (
-            <PlayIcon fill={t.palette.white} width={20} />
-          )}
-        </Button>
-        <View style={a.flex_1} />
-        <Text style={{color: t.palette.white}}>
-          {formatTime(currentTime)} / {formatTime(duration)}
-        </Text>
-        {hasSubtitleTrack && (
+        <Scrubber
+          duration={duration}
+          currentTime={currentTime}
+          onSeek={onSeek}
+          onSeekStart={onSeekStart}
+          onSeekEnd={onSeekEnd}
+        />
+        <View
+          style={[
+            a.flex_1,
+            a.px_xs,
+            a.pt_sm,
+            a.pb_md,
+            a.gap_md,
+            a.flex_row,
+            a.align_center,
+          ]}>
           <Button
-            label={_(
-              subtitlesEnabled ? msg`Disable subtitles` : msg`Enable subtitles`,
-            )}
-            onPress={onPressSubtitles}
+            label={_(playing ? msg`Pause` : msg`Play`)}
+            onPress={onPressPlayPause}
             {...btnProps}>
-            {subtitlesEnabled ? (
-              <CCActiveIcon fill={t.palette.white} width={20} />
+            {playing ? (
+              <PauseIcon fill={t.palette.white} width={20} />
             ) : (
-              <CCInactiveIcon fill={t.palette.white} width={20} />
+              <PlayIcon fill={t.palette.white} width={20} />
             )}
           </Button>
-        )}
-        <Button
-          label={_(muted ? msg`Unmute` : msg`Mute`)}
-          onPress={onPressMute}
-          {...btnProps}>
-          {muted ? (
-            <MuteIcon fill={t.palette.white} width={20} />
-          ) : (
-            <UnmuteIcon fill={t.palette.white} width={20} />
+          <View style={a.flex_1} />
+          <Text style={{color: t.palette.white}}>
+            {formatTime(currentTime)} / {formatTime(duration)}
+          </Text>
+          {hasSubtitleTrack && (
+            <Button
+              label={_(
+                subtitlesEnabled
+                  ? msg`Disable subtitles`
+                  : msg`Enable subtitles`,
+              )}
+              onPress={onPressSubtitles}
+              {...btnProps}>
+              {subtitlesEnabled ? (
+                <CCActiveIcon fill={t.palette.white} width={20} />
+              ) : (
+                <CCInactiveIcon fill={t.palette.white} width={20} />
+              )}
+            </Button>
           )}
-        </Button>
-        {!isIPhoneWeb && (
           <Button
             label={_(muted ? msg`Unmute` : msg`Mute`)}
-            onPress={onPressFullscreen}
+            onPress={onPressMute}
             {...btnProps}>
-            {isFullscreen ? (
-              <ArrowsInIcon fill={t.palette.white} width={20} />
+            {muted ? (
+              <MuteIcon fill={t.palette.white} width={20} />
             ) : (
-              <ArrowsOutIcon fill={t.palette.white} width={20} />
+              <UnmuteIcon fill={t.palette.white} width={20} />
             )}
           </Button>
-        )}
-      </View>
-      {(showControls || !focused) && (
-        <Animated.View
-          entering={FadeIn.duration(200)}
-          exiting={FadeOut.duration(200)}
-          style={[
-            a.absolute,
-            {
-              height: 5,
-              bottom: 0,
-              left: 0,
-              right: 0,
-              backgroundColor: 'rgba(255,255,255,0.4)',
-            },
-          ]}>
-          {duration > 0 && (
-            <View
-              style={[
-                a.h_full,
-                a.mr_auto,
-                {
-                  backgroundColor: t.palette.white,
-                  width: `${(currentTime / duration) * 100}%`,
-                  opacity: 0.8,
-                },
-              ]}
-            />
+          {!isIPhoneWeb && (
+            <Button
+              label={_(muted ? msg`Unmute` : msg`Mute`)}
+              onPress={onPressFullscreen}
+              {...btnProps}>
+              {isFullscreen ? (
+                <ArrowsInIcon fill={t.palette.white} width={20} />
+              ) : (
+                <ArrowsOutIcon fill={t.palette.white} width={20} />
+              )}
+            </Button>
           )}
-        </Animated.View>
-      )}
+        </View>
+      </View>
       {(buffering || error) && (
         <Animated.View
           pointerEvents="none"
@@ -317,6 +332,164 @@ export function Controls({
         </Animated.View>
       )}
     </div>
+  )
+}
+
+function Scrubber({
+  duration,
+  currentTime,
+  onSeek,
+  onSeekEnd,
+  onSeekStart,
+}: {
+  duration: number
+  currentTime: number
+  onSeek: (time: number) => void
+  onSeekEnd: () => void
+  onSeekStart: () => void
+}) {
+  const {_} = useLingui()
+  const t = useTheme()
+  const {
+    state: scrubbing,
+    onIn: startScrubbing,
+    onOut: stopScrubbing,
+  } = useInteractionState()
+  const {
+    state: hovered,
+    onIn: onMouseEnter,
+    onOut: onMouseLeave,
+  } = useInteractionState()
+  const [seekPosition, setSeekPosition] = useState(0)
+  const isSeekingRef = useRef(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function seek(evt: MouseEvent | TouchEvent) {
+      if (!ref.current) return
+      const {left, width} = ref.current.getBoundingClientRect()
+      const x = 'touches' in evt ? evt.touches[0].clientX : evt.clientX
+      const percent = Math.min(1, Math.max(0, (x - left) / width)) * duration
+      onSeek(percent)
+      setSeekPosition(percent)
+    }
+
+    // Handle mousedown and touchstart on the specific element
+    const handleMouseDown = (evt: MouseEvent | TouchEvent) => {
+      if (!ref.current) return
+      const target = evt.target as Node | null
+      if (ref.current.contains(target)) {
+        evt.preventDefault()
+        isSeekingRef.current = true
+        seek(evt)
+        onSeekStart()
+        startScrubbing()
+      }
+    }
+
+    // Handle mouseup and touchend anywhere on the document
+    const handleMouseUp = () => {
+      if (isSeekingRef) {
+        isSeekingRef.current = false
+        onSeekEnd()
+        stopScrubbing()
+      }
+    }
+
+    // Log the horizontal mouse position on mousemove and touchmove
+    const handleMouseMove = (evt: MouseEvent | TouchEvent) => {
+      if (isSeekingRef.current) {
+        evt.preventDefault()
+        seek(evt)
+      }
+    }
+
+    const abortController = new AbortController()
+    const {signal} = abortController
+
+    document.addEventListener('mousedown', handleMouseDown, {signal})
+    document.addEventListener('mouseup', handleMouseUp, {signal})
+    document.addEventListener('mousemove', handleMouseMove, {signal})
+    document.addEventListener('touchstart', handleMouseDown, {signal})
+    document.addEventListener('touchend', handleMouseUp, {signal})
+    document.addEventListener('touchmove', handleMouseMove, {signal})
+
+    return () => {
+      abortController.abort()
+    }
+  }, [onSeekEnd, onSeekStart, startScrubbing, stopScrubbing, onSeek, duration])
+
+  const progress = scrubbing ? seekPosition : currentTime
+  const progressPercent = (progress / duration) * 100
+
+  return (
+    <View
+      testID="scrubber"
+      style={[{height: 10, width: '100%'}, a.flex_shrink_0, a.px_xs]}
+      // @ts-expect-error web only -sfn
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}>
+      <div
+        ref={ref}
+        style={{
+          flex: 1,
+          display: 'flex',
+          alignItems: 'center',
+          position: 'relative',
+          cursor: 'pointer',
+        }}>
+        <View
+          style={[
+            a.w_full,
+            a.rounded_full,
+            a.overflow_hidden,
+            {backgroundColor: 'rgba(255, 255, 255, 0.4)'},
+            {height: hovered ? 6 : 3},
+          ]}>
+          {currentTime && duration && (
+            <View
+              style={[
+                a.h_full,
+                {backgroundColor: t.palette.white},
+                {width: `${progressPercent}%`},
+              ]}
+            />
+          )}
+        </View>
+        <div
+          aria-label="Seek slider"
+          role="slider"
+          aria-valuemax={duration}
+          aria-valuemin={0}
+          aria-valuenow={currentTime}
+          aria-valuetext={_(
+            msg`${formatTime(currentTime)} of ${formatTime(duration)}`,
+          )}
+          tabIndex={0}
+          style={{
+            position: 'absolute',
+            height: 16,
+            width: 16,
+            left: `calc(${progressPercent}% - 8px)`,
+            borderRadius: 8,
+          }}>
+          <View
+            pointerEvents="none"
+            style={[
+              a.w_full,
+              a.h_full,
+              a.rounded_full,
+              {backgroundColor: t.palette.white},
+              {
+                transform: [
+                  {scale: hovered || scrubbing ? (scrubbing ? 1 : 0.6) : 0},
+                ],
+              },
+            ]}
+          />
+        </div>
+      </div>
+    </View>
   )
 }
 
