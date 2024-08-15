@@ -60,8 +60,8 @@ function StorybookInner() {
             await saveToLibraryAsync(uri)
             try {
               deleteAsync(uri)
-            } catch (e) {
-              console.error('Failed to delete file', e)
+            } catch (err) {
+              console.error('Failed to delete file', err)
             }
             Toast.show('Video saved to library')
           }}
