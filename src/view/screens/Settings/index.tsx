@@ -374,7 +374,7 @@ export function SettingsScreen({}: Props) {
 
         <View pointerEvents={pendingDid ? 'none' : 'auto'}>
           {accounts.length > 1 && (
-            <View style={[s.flexRow, styles.heading]}>
+            <View style={[s.flexRow, styles.heading, a.mt_sm]}>
               <Text type="xl-bold" style={pal.text} numberOfLines={1}>
                 <Trans>Other accounts</Trans>
               </Text>
