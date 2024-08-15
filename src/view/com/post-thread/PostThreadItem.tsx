@@ -211,6 +211,10 @@ let PostThreadItemLoaded = ({
     const isPostHiddenByThreadgate = threadgateRecord?.hiddenReplies?.includes(
       post.uri,
     )
+    const isControlledByViewer =
+      threadgateRecord &&
+      new AtUri(threadgateRecord.post).host === currentAccount?.did
+    if (!isControlledByViewer) return []
     return threadgateRecord && isPostHiddenByThreadgate
       ? [
           {
@@ -220,7 +224,7 @@ let PostThreadItemLoaded = ({
           },
         ]
       : []
-  }, [post, threadgateRecord])
+  }, [post, threadgateRecord, currentAccount?.did])
 
   const translatorUrl = getTranslatorLink(
     record?.text || '',

@@ -421,6 +421,11 @@ let PostContent = ({
       !recentlyUnhiddenUris.includes(post.uri) &&
       !!threadgateRecord?.hiddenReplies?.includes(post.uri)
     const isHidden = isPostHiddenByHiddenReplyCache || isPostHiddenByThreadgate
+    const isControlledByViewer =
+      isPostHiddenByHiddenReplyCache ||
+      (threadgateRecord &&
+        new AtUri(threadgateRecord.post).host === currentAccount?.did)
+    if (!isControlledByViewer) return []
     const alertSource =
       threadgateRecord && isPostHiddenByThreadgate
         ? new AtUri(threadgateRecord.post).host
