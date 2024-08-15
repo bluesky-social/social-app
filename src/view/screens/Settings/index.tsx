@@ -373,6 +373,15 @@ export function SettingsScreen({}: Props) {
         ) : null}
 
         <View pointerEvents={pendingDid ? 'none' : 'auto'}>
+          {accounts.length > 1 && (
+            <View style={[s.flexRow, styles.heading]}>
+              <Text type="xl-bold" style={pal.text} numberOfLines={1}>
+                <Trans>Other accounts</Trans>
+              </Text>
+              <View style={s.flex1} />
+            </View>
+          )}
+
           {accounts
             .filter(a => a.did !== currentAccount?.did)
             .map(account => (
