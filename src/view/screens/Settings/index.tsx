@@ -173,6 +173,7 @@ export function SettingsScreen({}: Props) {
   const {accounts, currentAccount} = useSession()
   const {mutate: clearPreferences} = useClearPreferencesMutation()
   const {setShowLoggedOut} = useLoggedOutViewControls()
+  const {logoutEveryAccount} = useSessionApi()
   const closeAllActiveElements = useCloseAllActiveElements()
   const exportCarControl = useDialogControl()
   const birthdayControl = useDialogControl()
@@ -236,6 +237,10 @@ export function SettingsScreen({}: Props) {
   const onPressDeleteAccount = React.useCallback(() => {
     openModal({name: 'delete-account'})
   }, [openModal])
+
+  const onPressLogoutEveryAccount = React.useCallback(() => {
+    logoutEveryAccount('Settings')
+  }, [logoutEveryAccount])
 
   const onPressResetPreferences = React.useCallback(async () => {
     clearPreferences()
@@ -422,6 +427,27 @@ export function SettingsScreen({}: Props) {
               <Trans>Add account</Trans>
             </Text>
           </TouchableOpacity>
+
+          {accounts.length > 1 && (
+            <TouchableOpacity
+              style={[styles.linkCard, pal.view]}
+              onPress={
+                isSwitchingAccounts ? undefined : onPressLogoutEveryAccount
+              }
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Sign out of all accounts`)}
+              accessibilityHint={undefined}>
+              <View style={[styles.iconContainer, pal.btn]}>
+                <FontAwesomeIcon
+                  icon="arrow-right-from-bracket"
+                  style={pal.text as FontAwesomeIconStyle}
+                />
+              </View>
+              <Text type="lg" style={pal.text}>
+                <Trans>Sign out of all accounts</Trans>
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
 
         <View style={styles.spacer20} />
