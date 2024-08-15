@@ -57,7 +57,6 @@ import {DeactivateAccountDialog} from '#/screens/Settings/components/DeactivateA
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
-import {navigate, resetToTab} from '#/Navigation'
 import {Email2FAToggle} from './Email2FAToggle'
 import {ExportCarDialog} from './ExportCarDialog'
 
@@ -77,7 +76,6 @@ function SettingsAccountCard({
   const {_} = useLingui()
   const t = useTheme()
   const {currentAccount} = useSession()
-  const {logoutCurrentAccount} = useSessionApi()
   const {data: profile} = useProfileQuery({did: account.did})
   const isCurrentAccount = account.did === currentAccount?.did
 
@@ -103,31 +101,7 @@ function SettingsAccountCard({
           {account.handle}
         </Text>
       </View>
-
-      {isCurrentAccount ? (
-        <TouchableOpacity
-          testID="signOutBtn"
-          onPress={() => {
-            if (isNative) {
-              logoutCurrentAccount('Settings')
-              resetToTab('HomeTab')
-            } else {
-              navigate('Home').then(() => {
-                logoutCurrentAccount('Settings')
-              })
-            }
-          }}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Sign out`)}
-          accessibilityHint={`Signs ${profile?.displayName} out of Bluesky`}
-          activeOpacity={0.8}>
-          <Text type="lg" style={pal.link}>
-            <Trans>Sign out</Trans>
-          </Text>
-        </TouchableOpacity>
-      ) : (
-        <AccountDropdownBtn account={account} />
-      )}
+      <AccountDropdownBtn account={account} />
     </View>
   )
 
@@ -428,26 +402,28 @@ export function SettingsScreen({}: Props) {
             </Text>
           </TouchableOpacity>
 
-          {accounts.length > 1 && (
-            <TouchableOpacity
-              style={[styles.linkCard, pal.view]}
-              onPress={
-                isSwitchingAccounts ? undefined : onPressLogoutEveryAccount
-              }
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Sign out of all accounts`)}
-              accessibilityHint={undefined}>
-              <View style={[styles.iconContainer, pal.btn]}>
-                <FontAwesomeIcon
-                  icon="arrow-right-from-bracket"
-                  style={pal.text as FontAwesomeIconStyle}
-                />
-              </View>
-              <Text type="lg" style={pal.text}>
+          <TouchableOpacity
+            style={[styles.linkCard, pal.view]}
+            onPress={
+              isSwitchingAccounts ? undefined : onPressLogoutEveryAccount
+            }
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`Sign out of all accounts`)}
+            accessibilityHint={undefined}>
+            <View style={[styles.iconContainer, pal.btn]}>
+              <FontAwesomeIcon
+                icon="arrow-right-from-bracket"
+                style={pal.text as FontAwesomeIconStyle}
+              />
+            </View>
+            <Text type="lg" style={pal.text}>
+              {accounts.length > 1 ? (
                 <Trans>Sign out of all accounts</Trans>
-              </Text>
-            </TouchableOpacity>
-          )}
+              ) : (
+                <Trans>Sign out</Trans>
+              )}
+            </Text>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.spacer20} />
