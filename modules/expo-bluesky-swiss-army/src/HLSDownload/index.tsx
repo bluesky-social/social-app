@@ -8,7 +8,7 @@ export default class HLSDownloadView extends React.PureComponent<HLSDownloadView
     super(props)
   }
 
-  isAvailable(): boolean {
+  static isAvailable(): boolean {
     return false
   }
 

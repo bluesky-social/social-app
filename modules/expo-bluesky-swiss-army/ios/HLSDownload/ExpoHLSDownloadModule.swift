@@ -4,6 +4,13 @@ public class ExpoHLSDownloadModule: Module {
   public func definition() -> ModuleDefinition {
     Name("ExpoHLSDownload")
 
+    Function("isAvailable") {
+      if #available(iOS 14.5, *) {
+        return true
+      }
+      return false
+    }
+
     View(HLSDownloadView.self) {
       Events([
         "onStart",

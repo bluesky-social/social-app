@@ -9,6 +9,10 @@ class ExpoHLSDownloadModule : Module() {
     ModuleDefinition {
       Name("ExpoHLSDownload")
 
+      Function("isAvailable") {
+        return@Function true
+      }
+
       View(HLSDownloadView::class) {
         Events(
           arrayOf(
