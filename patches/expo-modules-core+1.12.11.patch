@@ -25,7 +25,7 @@ index 109d3fe..c421931 100644
  const nativeUuidv5 = globalThis?.expo?.uuidv5;
  function uuidv4() {
 diff --git a/node_modules/expo-modules-core/ios/Core/SharedObjects/SharedObjectRegistry.swift b/node_modules/expo-modules-core/ios/Core/SharedObjects/SharedObjectRegistry.swift
-index ee2268a..87b9cd0 100644
+index ee2268a..4851b67 100644
 --- a/node_modules/expo-modules-core/ios/Core/SharedObjects/SharedObjectRegistry.swift
 +++ b/node_modules/expo-modules-core/ios/Core/SharedObjects/SharedObjectRegistry.swift
 @@ -173,7 +173,7 @@ public final class SharedObjectRegistry {
@@ -33,7 +33,7 @@ index ee2268a..87b9cd0 100644
  
    internal func clear() {
 -    Self.lockQueue.async {
-+    Self.lockQueue.sync {
++    DispatchQueue.main.sync {
        self.pairs.removeAll()
      }
    }
