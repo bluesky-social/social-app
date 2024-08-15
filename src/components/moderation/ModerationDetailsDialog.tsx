@@ -111,11 +111,11 @@ function ModerationDetailsDialogInner({
   } else if (modcause.type === 'reply-hidden') {
     const isYou = currentAccount?.did === modcause.source.did
     name = isYou
-      ? _(msg`Post Hidden by You`)
-      : _(msg`Post Hidden by Thread Author`)
+      ? _(msg`Reply Hidden by You`)
+      : _(msg`Reply Hidden by Thread Author`)
     description = isYou
-      ? _(msg`You hid this post.`)
-      : _(msg`The author of this thread has hidden this post.`)
+      ? _(msg`You hid this reply.`)
+      : _(msg`The author of this thread has hidden this reply.`)
   } else if (modcause.type === 'label') {
     name = desc.name
     description = desc.description

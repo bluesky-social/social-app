@@ -37,6 +37,7 @@ import {useToggleQuoteDetachmentMutation} from '#/state/queries/postgate'
 import {getMaybeDetachedQuoteEmbed} from '#/state/queries/postgate/util'
 import {useToggleReplyVisibilityMutation} from '#/state/queries/threadgate'
 import {useSession} from '#/state/session'
+import {useThreadgateHiddenReplyUris} from '#/state/threadgate-hidden-replies'
 import {getCurrentRoute} from 'lib/routes/helpers'
 import {shareUrl} from 'lib/sharing'
 import {toShareUrl} from 'lib/strings/url-helpers'
@@ -122,6 +123,8 @@ let PostDropdownBtn = ({
   const quotePostDetachConfirmControl = useDialogControl()
   const {mutateAsync: toggleReplyVisibility} =
     useToggleReplyVisibilityMutation()
+  const {uris: hiddenReplies, recentlyUnhiddenUris} =
+    useThreadgateHiddenReplyUris()
 
   const postUri = post.uri
   const postCid = post.cid
@@ -144,7 +147,9 @@ let PostDropdownBtn = ({
   const isAuthor = postAuthor.did === currentAccount?.did
   const isRootPostAuthor = new AtUri(rootUri).host === currentAccount?.did
   const isReplyHiddenByThreadgate =
-    threadgateRecord?.hiddenReplies?.includes(postUri)
+    hiddenReplies.includes(postUri) ||
+    (!recentlyUnhiddenUris.includes(postUri) &&
+      threadgateRecord?.hiddenReplies?.includes(postUri))
 
   const {mutateAsync: toggleQuoteDetachment, isPending} =
     useToggleQuoteDetachmentMutation()

@@ -19,6 +19,7 @@ import {
   threadgateViewToAllowUISetting,
 } from '#/state/queries/threadgate/util'
 import {useAgent} from '#/state/session'
+import {useThreadgateHiddenReplyUrisAPI} from '#/state/threadgate-hidden-replies'
 
 export * from '#/state/queries/threadgate/types'
 export * from '#/state/queries/threadgate/util'
@@ -298,6 +299,7 @@ export function useSetThreadgateAllowMutation() {
 export function useToggleReplyVisibilityMutation() {
   const agent = useAgent()
   const queryClient = useQueryClient()
+  const hiddenReplies = useThreadgateHiddenReplyUrisAPI()
 
   return useMutation({
     mutationFn: async ({
@@ -309,6 +311,12 @@ export function useToggleReplyVisibilityMutation() {
       replyUri: string
       action: 'hide' | 'show'
     }) => {
+      if (action === 'hide') {
+        hiddenReplies.addHiddenReplyUri(replyUri)
+      } else if (action === 'show') {
+        hiddenReplies.removeHiddenReplyUri(replyUri)
+      }
+
       await upsertThreadgate({agent, postUri}, async prev => {
         if (prev) {
           if (action === 'hide') {
@@ -336,6 +344,13 @@ export function useToggleReplyVisibilityMutation() {
       queryClient.invalidateQueries({
         queryKey: [threadgateRecordQueryKeyRoot],
       })
+    },
+    onError(_, {replyUri, action}) {
+      if (action === 'hide') {
+        hiddenReplies.removeHiddenReplyUri(replyUri)
+      } else if (action === 'show') {
+        hiddenReplies.addHiddenReplyUri(replyUri)
+      }
     },
   })
 }
