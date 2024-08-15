@@ -6,7 +6,6 @@ import {
   AppBskyFeedPostgate,
   BskyAgent,
   ComAtprotoLabelDefs,
-  ComAtprotoRepoUploadBlob,
   RichText,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
@@ -21,10 +20,13 @@ import {
 } from '#/state/queries/threadgate'
 import {isNetworkError} from 'lib/strings/errors'
 import {shortenLinks, stripInvalidMentions} from 'lib/strings/rich-text-manip'
-import {isNative, isWeb} from 'platform/detection'
+import {isNative} from 'platform/detection'
 import {ImageModel} from 'state/models/media/image'
 import {LinkMeta} from '../link-meta/link-meta'
 import {safeDeleteAsync} from '../media/manip'
+import {uploadBlob} from './upload-blob'
+
+export {uploadBlob}
 
 export interface ExternalEmbedDraft {
   uri: string
@@ -32,25 +34,6 @@ export interface ExternalEmbedDraft {
   meta?: LinkMeta
   embed?: AppBskyEmbedRecord.Main
   localThumb?: ImageModel
-}
-
-export async function uploadBlob(
-  agent: BskyAgent,
-  blob: string,
-  encoding: string,
-): Promise<ComAtprotoRepoUploadBlob.Response> {
-  if (isWeb) {
-    // `blob` should be a data uri
-    return agent.uploadBlob(convertDataURIToUint8Array(blob), {
-      encoding,
-    })
-  } else {
-    // `blob` should be a path to a file in the local FS
-    return agent.uploadBlob(
-      blob, // this will be special-cased by the fetch monkeypatch in /src/state/lib/api.ts
-      {encoding},
-    )
-  }
 }
 
 interface PostOpts {
@@ -309,16 +292,4 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
   }
 
   return res
-}
-
-// helpers
-// =
-
-function convertDataURIToUint8Array(uri: string): Uint8Array {
-  var raw = window.atob(uri.substring(uri.indexOf(';base64,') + 8))
-  var binary = new Uint8Array(new ArrayBuffer(raw.length))
-  for (let i = 0; i < raw.length; i++) {
-    binary[i] = raw.charCodeAt(i)
-  }
-  return binary
 }

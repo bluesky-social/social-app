@@ -325,7 +325,7 @@ export function SettingsScreen({}: Props) {
         </View>
       </SimpleViewHeader>
       <ScrollView
-        style={[s.hContentRegion, isMobile && pal.viewLight]}
+        style={[isMobile && pal.viewLight]}
         scrollIndicatorInsets={{right: 1}}
         // @ts-ignore web only -prf
         dataSet={{'stable-gutters': 1}}>

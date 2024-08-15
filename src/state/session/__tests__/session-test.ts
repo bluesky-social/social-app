@@ -27,7 +27,7 @@ describe('session', () => {
     `)
 
     const agent = new BskyAgent({service: 'https://alice.com'})
-    agent.session = {
+    agent.sessionManager.session = {
       active: true,
       did: 'alice-did',
       handle: 'alice.test',
@@ -118,7 +118,7 @@ describe('session', () => {
     let state = getInitialState([])
 
     const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    agent1.sessionManager.session = {
       active: true,
       did: 'alice-did',
       handle: 'alice.test',
@@ -166,7 +166,7 @@ describe('session', () => {
     `)
 
     const agent2 = new BskyAgent({service: 'https://bob.com'})
-    agent2.session = {
+    agent2.sessionManager.session = {
       active: true,
       did: 'bob-did',
       handle: 'bob.test',
@@ -230,7 +230,7 @@ describe('session', () => {
     `)
 
     const agent3 = new BskyAgent({service: 'https://alice.com'})
-    agent3.session = {
+    agent3.sessionManager.session = {
       active: true,
       did: 'alice-did',
       handle: 'alice-updated.test',
@@ -294,7 +294,7 @@ describe('session', () => {
     `)
 
     const agent4 = new BskyAgent({service: 'https://jay.com'})
-    agent4.session = {
+    agent4.sessionManager.session = {
       active: true,
       did: 'jay-did',
       handle: 'jay.test',
@@ -445,7 +445,7 @@ describe('session', () => {
     let state = getInitialState([])
 
     const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    agent1.sessionManager.session = {
       active: true,
       did: 'alice-did',
       handle: 'alice.test',
@@ -502,7 +502,7 @@ describe('session', () => {
     `)
 
     const agent2 = new BskyAgent({service: 'https://alice.com'})
-    agent2.session = {
+    agent2.sessionManager.session = {
       active: true,
       did: 'alice-did',
       handle: 'alice.test',
@@ -553,7 +553,7 @@ describe('session', () => {
     let state = getInitialState([])
 
     const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    agent1.sessionManager.session = {
       active: true,
       did: 'alice-did',
       handle: 'alice.test',
@@ -598,7 +598,7 @@ describe('session', () => {
     let state = getInitialState([])
 
     const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    agent1.sessionManager.session = {
       active: true,
       did: 'alice-did',
       handle: 'alice.test',
@@ -606,7 +606,7 @@ describe('session', () => {
       refreshJwt: 'alice-refresh-jwt-1',
     }
     const agent2 = new BskyAgent({service: 'https://bob.com'})
-    agent2.session = {
+    agent2.sessionManager.session = {
       active: true,
       did: 'bob-did',
       handle: 'bob.test',
@@ -678,7 +678,7 @@ describe('session', () => {
     let state = getInitialState([])
 
     const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    agent1.sessionManager.session = {
       active: true,
       did: 'alice-did',
       handle: 'alice.test',
@@ -695,7 +695,7 @@ describe('session', () => {
     expect(state.accounts.length).toBe(1)
     expect(state.currentAgentState.did).toBe('alice-did')
 
-    agent1.session = {
+    agent1.sessionManager.session = {
       active: true,
       did: 'alice-did',
       handle: 'alice-updated.test',
@@ -748,7 +748,7 @@ describe('session', () => {
       }
     `)
 
-    agent1.session = {
+    agent1.sessionManager.session = {
       active: true,
       did: 'alice-did',
       handle: 'alice-updated.test',
@@ -801,7 +801,7 @@ describe('session', () => {
       }
     `)
 
-    agent1.session = {
+    agent1.sessionManager.session = {
       active: true,
       did: 'alice-did',
       handle: 'alice-updated.test',
@@ -859,7 +859,7 @@ describe('session', () => {
     let state = getInitialState([])
 
     const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    agent1.sessionManager.session = {
       active: true,
       did: 'alice-did',
       handle: 'alice.test',
@@ -876,7 +876,7 @@ describe('session', () => {
     expect(state.accounts.length).toBe(1)
     expect(state.currentAgentState.did).toBe('alice-did')
 
-    agent1.session = {
+    agent1.sessionManager.session = {
       active: true,
       did: 'alice-did',
       handle: 'alice-updated.test',
@@ -907,7 +907,7 @@ describe('session', () => {
     ])
     expect(lastState === state).toBe(true)
 
-    agent1.session = {
+    agent1.sessionManager.session = {
       active: true,
       did: 'alice-did',
       handle: 'alice-updated.test',
@@ -931,7 +931,7 @@ describe('session', () => {
     let state = getInitialState([])
 
     const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    agent1.sessionManager.session = {
       active: true,
       did: 'alice-did',
       handle: 'alice.test',
@@ -940,7 +940,7 @@ describe('session', () => {
     }
 
     const agent2 = new BskyAgent({service: 'https://bob.com'})
-    agent2.session = {
+    agent2.sessionManager.session = {
       active: true,
       did: 'bob-did',
       handle: 'bob.test',
@@ -965,7 +965,7 @@ describe('session', () => {
     expect(state.accounts.length).toBe(2)
     expect(state.currentAgentState.did).toBe('bob-did')
 
-    agent1.session = {
+    agent1.sessionManager.session = {
       active: true,
       did: 'alice-did',
       handle: 'alice-updated.test',
@@ -1032,7 +1032,7 @@ describe('session', () => {
       }
     `)
 
-    agent2.session = {
+    agent2.sessionManager.session = {
       active: true,
       did: 'bob-did',
       handle: 'bob-updated.test',
@@ -1099,7 +1099,7 @@ describe('session', () => {
 
     // Ignore other events for inactive agent.
     const lastState = state
-    agent1.session = undefined
+    agent1.sessionManager.session = undefined
     state = run(state, [
       {
         type: 'received-agent-event',
@@ -1126,7 +1126,7 @@ describe('session', () => {
     let state = getInitialState([])
 
     const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    agent1.sessionManager.session = {
       active: true,
       did: 'alice-did',
       handle: 'alice.test',
@@ -1135,7 +1135,7 @@ describe('session', () => {
     }
 
     const agent2 = new BskyAgent({service: 'https://bob.com'})
-    agent2.session = {
+    agent2.sessionManager.session = {
       active: true,
       did: 'bob-did',
       handle: 'bob.test',
@@ -1162,7 +1162,7 @@ describe('session', () => {
     expect(state.accounts.length).toBe(1)
     expect(state.currentAgentState.did).toBe('bob-did')
 
-    agent1.session = {
+    agent1.sessionManager.session = {
       active: true,
       did: 'alice-did',
       handle: 'alice.test',
@@ -1184,11 +1184,11 @@ describe('session', () => {
     expect(state.currentAgentState.did).toBe('bob-did')
   })
 
-  it('does soft logout on network error', () => {
+  it('ignores network errors', () => {
     let state = getInitialState([])
 
     const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    agent1.sessionManager.session = {
       active: true,
       did: 'alice-did',
       handle: 'alice.test',
@@ -1206,7 +1206,7 @@ describe('session', () => {
     expect(state.accounts.length).toBe(1)
     expect(state.currentAgentState.did).toBe('alice-did')
 
-    agent1.session = undefined
+    agent1.sessionManager.session = undefined
     state = run(state, [
       {
         type: 'received-agent-event',
@@ -1217,11 +1217,9 @@ describe('session', () => {
       },
     ])
     expect(state.accounts.length).toBe(1)
-    // Network error should reset current user but not reset the tokens.
-    // TODO: We might want to remove or change this behavior?
     expect(state.accounts[0].accessJwt).toBe('alice-access-jwt-1')
     expect(state.accounts[0].refreshJwt).toBe('alice-refresh-jwt-1')
-    expect(state.currentAgentState.did).toBe(undefined)
+    expect(state.currentAgentState.did).toBe('alice-did')
     expect(printState(state)).toMatchInlineSnapshot(`
       {
         "accounts": [
@@ -1242,9 +1240,9 @@ describe('session', () => {
         ],
         "currentAgentState": {
           "agent": {
-            "service": "https://public.api.bsky.app/",
+            "service": "https://alice.com/",
           },
-          "did": undefined,
+          "did": "alice-did",
         },
         "needsPersist": true,
       }
@@ -1255,7 +1253,7 @@ describe('session', () => {
     let state = getInitialState([])
 
     const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    agent1.sessionManager.session = {
       active: true,
       did: 'alice-did',
       handle: 'alice.test',
@@ -1273,7 +1271,7 @@ describe('session', () => {
     expect(state.accounts[0].accessJwt).toBe('alice-access-jwt-1')
     expect(state.currentAgentState.did).toBe('alice-did')
 
-    agent1.session = undefined
+    agent1.sessionManager.session = undefined
     state = run(state, [
       {
         type: 'received-agent-event',
@@ -1320,7 +1318,7 @@ describe('session', () => {
     let state = getInitialState([])
 
     const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    agent1.sessionManager.session = {
       active: true,
       did: 'alice-did',
       handle: 'alice.test',
@@ -1338,7 +1336,7 @@ describe('session', () => {
     expect(state.accounts[0].accessJwt).toBe('alice-access-jwt-1')
     expect(state.currentAgentState.did).toBe('alice-did')
 
-    agent1.session = undefined
+    agent1.sessionManager.session = undefined
     state = run(state, [
       {
         type: 'received-agent-event',
@@ -1385,7 +1383,7 @@ describe('session', () => {
     let state = getInitialState([])
 
     const agent1 = new BskyAgent({service: 'https://alice.com'})
-    agent1.session = {
+    agent1.sessionManager.session = {
       active: true,
       did: 'alice-did',
       handle: 'alice.test',
@@ -1393,7 +1391,7 @@ describe('session', () => {
       refreshJwt: 'alice-refresh-jwt-1',
     }
     const agent2 = new BskyAgent({service: 'https://bob.com'})
-    agent2.session = {
+    agent2.sessionManager.session = {
       active: true,
       did: 'bob-did',
       handle: 'bob.test',
@@ -1416,7 +1414,7 @@ describe('session', () => {
     expect(state.currentAgentState.did).toBe('bob-did')
 
     const anotherTabAgent1 = new BskyAgent({service: 'https://jay.com'})
-    anotherTabAgent1.session = {
+    anotherTabAgent1.sessionManager.session = {
       active: true,
       did: 'jay-did',
       handle: 'jay.test',
@@ -1424,7 +1422,7 @@ describe('session', () => {
       refreshJwt: 'jay-refresh-jwt-1',
     }
     const anotherTabAgent2 = new BskyAgent({service: 'https://alice.com'})
-    anotherTabAgent2.session = {
+    anotherTabAgent2.sessionManager.session = {
       active: true,
       did: 'bob-did',
       handle: 'bob.test',
@@ -1492,7 +1490,7 @@ describe('session', () => {
     `)
 
     const anotherTabAgent3 = new BskyAgent({service: 'https://clarence.com'})
-    anotherTabAgent3.session = {
+    anotherTabAgent3.sessionManager.session = {
       active: true,
       did: 'clarence-did',
       handle: 'clarence.test',

@@ -1,4 +1,4 @@
-import React, {memo, useMemo, useState} from 'react'
+import React, {memo, useId, useMemo, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {
   AppBskyActorDefs,
@@ -147,7 +147,6 @@ let FeedItemInner = ({
   const {openComposer} = useComposerControls()
   const pal = usePalette('default')
   const {_} = useLingui()
-  const gate = useGate()
 
   const href = useMemo(() => {
     const urip = new AtUri(post.uri)
@@ -374,9 +373,7 @@ let FeedItemInner = ({
             post={post}
             threadgateRecord={threadgateRecord}
           />
-          {gate('video_debug') && (
-            <VideoEmbed source="https://lumi.jazco.dev/watch/did:plc:q6gjnaw2blty4crticxkmujt/Qmc8w93UpTa2adJHg4ZhnDPrBs1EsbzrekzPcqF5SwusuZ/playlist.m3u8" />
-          )}
+          <VideoDebug />
           <PostCtrls
             post={post}
             record={record}
@@ -556,6 +553,19 @@ function ReplyToLabel({
         {label}
       </Text>
     </View>
+  )
+}
+
+function VideoDebug() {
+  const gate = useGate()
+  const id = useId()
+
+  if (!gate('video_debug')) return null
+
+  return (
+    <VideoEmbed
+      source={`https://lumi.jazco.dev/watch/did:plc:q6gjnaw2blty4crticxkmujt/Qmc8w93UpTa2adJHg4ZhnDPrBs1EsbzrekzPcqF5SwusuZ/playlist.m3u8?ignore_me_just_testing_frontend_stuff=${id}`}
+    />
   )
 }
 
