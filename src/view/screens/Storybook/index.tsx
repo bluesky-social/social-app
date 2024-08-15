@@ -75,7 +75,7 @@ function StorybookInner() {
           size="small"
           onPress={async () => {
             hlsDownloadRef.current?.startDownloadAsync(
-              'https://lumi.jazco.dev/watch/did:plc:q6gjnaw2blty4crticxkmujt/Qmc8w93UpTa2adJHg4ZhnDPrBs1EsbzrekzPcqF5SwusuZ/playlist.m3u8',
+              'https://lumi.jazco.dev/watch/did:plc:q6gjnaw2blty4crticxkmujt/Qmc8w93UpTa2adJHg4ZhnDPrBs1EsbzrekzPcqF5SwusuZ/playlist.m3u8?download=true',
             )
           }}
           label="Video download test">
