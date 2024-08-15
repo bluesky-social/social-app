@@ -12,6 +12,13 @@ import {ReasonFeedSource} from './feed/types'
 
 type FeedViewPost = AppBskyFeedDefs.FeedViewPost
 
+type ReplyRefMap = Map<
+  string,
+  | AppBskyFeedDefs.PostView
+  | AppBskyFeedDefs.BlockedPost
+  | AppBskyFeedDefs.NotFoundPost
+>
+
 export type FeedTunerFn = (
   tuner: FeedTuner,
   slices: FeedViewPostsSlice[],
@@ -41,7 +48,7 @@ export class FeedViewPostsSlice {
   isOrphan: boolean
   rootUri: string
 
-  constructor(feedPost: FeedViewPost) {
+  constructor(feedPost: FeedViewPost, replyRefMap: ReplyRefMap) {
     const {post, reply, reason} = feedPost
     this.items = []
     this.isIncompleteThread = false
@@ -89,11 +96,12 @@ export class FeedViewPostsSlice {
       this.isOrphan = true
       return
     }
+    const grandparent = parent?.record?.reply?.parent?.uri
+      ? replyRefMap.get(parent.record.reply.parent.uri)
+      : undefined
     const grandparentAuthor = reply.grandparentAuthor
     const isGrandparentBlocked = Boolean(
-      grandparentAuthor?.viewer?.blockedBy ||
-        grandparentAuthor?.viewer?.blocking ||
-        grandparentAuthor?.viewer?.blockingByList,
+      grandparent && AppBskyFeedDefs.isBlockedPost(grandparent),
     )
     this.items.unshift({
       post: parent,
@@ -103,7 +111,7 @@ export class FeedViewPostsSlice {
     })
     if (isGrandparentBlocked) {
       this.isOrphan = true
-      // Keep going, it might still have a root.
+      return
     }
     const root = reply.root
     if (
@@ -205,8 +213,22 @@ export class FeedTuner {
       dryRun: false,
     },
   ): FeedViewPostsSlice[] {
+    const replyRefMap: ReplyRefMap = new Map()
+    for (const item of feed) {
+      for (const ancestor of [item.reply?.parent, item.reply?.root]) {
+        // trust server for blocked and not found reply parent/root refs
+        if (
+          AppBskyFeedDefs.isPostView(ancestor) ||
+          AppBskyFeedDefs.isBlockedPost(ancestor) ||
+          AppBskyFeedDefs.isNotFoundPost(ancestor)
+        ) {
+          replyRefMap.set(ancestor.uri, ancestor)
+        }
+      }
+    }
+
     let slices: FeedViewPostsSlice[] = feed
-      .map(item => new FeedViewPostsSlice(item))
+      .map(item => new FeedViewPostsSlice(item, replyRefMap))
       .filter(s => s.items.length > 0 || s.isFallbackMarker)
 
     // run the custom tuners
