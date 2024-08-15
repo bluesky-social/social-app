@@ -1,12 +1,17 @@
 import React from 'react'
 import {ScrollView, View} from 'react-native'
+import {deleteAsync} from 'expo-file-system'
+import {saveToLibraryAsync} from 'expo-media-library'
 
 import {useSetThemePrefs} from '#/state/shell'
-import {isWeb} from 'platform/detection'
+import {useVideoLibraryPermission} from 'lib/hooks/usePermissions'
+import {isIOS, isWeb} from 'platform/detection'
 import {CenteredView} from '#/view/com/util/Views'
+import * as Toast from 'view/com/util/Toast'
 import {ListContained} from 'view/screens/Storybook/ListContained'
 import {atoms as a, ThemeProvider, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
+import {HLSDownloadView} from '../../../../modules/expo-bluesky-swiss-army'
 import {Breakpoints} from './Breakpoints'
 import {Buttons} from './Buttons'
 import {Dialogs} from './Dialogs'
@@ -33,10 +38,49 @@ function StorybookInner() {
   const t = useTheme()
   const {setColorMode, setDarkTheme} = useSetThemePrefs()
   const [showContainedList, setShowContainedList] = React.useState(false)
+  const hlsDownloadRef = React.useRef<HLSDownloadView>(null)
+
+  const {requestVideoAccessIfNeeded} = useVideoLibraryPermission()
 
   return (
     <CenteredView style={[t.atoms.bg]}>
       <View style={[a.p_xl, a.gap_5xl, {paddingBottom: 100}]}>
+        <HLSDownloadView
+          ref={hlsDownloadRef}
+          downloaderUrl={
+            isIOS
+              ? 'http://localhost:19006/video-download'
+              : 'http://10.0.2.2:19006/video-download'
+          }
+          onSuccess={async e => {
+            const uri = e.nativeEvent.uri
+            const permsRes = await requestVideoAccessIfNeeded()
+            if (!permsRes) return
+
+            await saveToLibraryAsync(uri)
+            try {
+              deleteAsync(uri)
+            } catch (err) {
+              console.error('Failed to delete file', err)
+            }
+            Toast.show('Video saved to library')
+          }}
+          onStart={() => console.log('Download is starting')}
+          onError={e => console.log(e.nativeEvent.message)}
+          onProgress={e => console.log(e.nativeEvent.progress)}
+        />
+        <Button
+          variant="solid"
+          color="primary"
+          size="small"
+          onPress={async () => {
+            hlsDownloadRef.current?.startDownloadAsync(
+              'https://lumi.jazco.dev/watch/did:plc:q6gjnaw2blty4crticxkmujt/Qmc8w93UpTa2adJHg4ZhnDPrBs1EsbzrekzPcqF5SwusuZ/playlist.m3u8?download=true',
+            )
+          }}
+          label="Video download test">
+          <ButtonText>Video download test</ButtonText>
+        </Button>
         {!showContainedList ? (
           <>
             <View style={[a.flex_row, a.align_start, a.gap_md]}>
