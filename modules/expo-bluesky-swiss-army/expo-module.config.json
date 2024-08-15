@@ -5,7 +5,6 @@
       "ExpoBlueskySharedPrefsModule",
       "ExpoBlueskyReferrerModule",
       "ExpoBlueskyVisibilityViewModule",
-      "ExpoHLSDownloadModule",
       "ExpoPlatformInfoModule"
     ]
   },
@@ -14,8 +13,7 @@
       "expo.modules.blueskyswissarmy.sharedprefs.ExpoBlueskySharedPrefsModule",
       "expo.modules.blueskyswissarmy.referrer.ExpoBlueskyReferrerModule",
       "expo.modules.blueskyswissarmy.visibilityview.ExpoBlueskyVisibilityViewModule",
-      "expo.modules.blueskyswissarmy.platforminfo.ExpoPlatformInfoModule",
-      "expo.modules.blueskyswissarmy.hlsdownload.ExpoHLSDownloadModule"
+      "expo.modules.blueskyswissarmy.platforminfo.ExpoPlatformInfoModule"
     ]
   }
 }

@@ -7,4 +7,3 @@
 # be ok.
 User-Agent: *
 Allow: /
-Disallow: /video-download

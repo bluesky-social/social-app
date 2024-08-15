@@ -48,5 +48,4 @@ export const router = new Router({
   StarterPack: '/starter-pack/:name/:rkey',
   StarterPackShort: '/starter-pack-short/:code',
   StarterPackWizard: '/starter-pack/create',
-  VideoDownload: '/video-download',
 })
