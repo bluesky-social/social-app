@@ -481,10 +481,6 @@ msgstr "一封电子邮件已发送至先前填写的邮箱 {0}。请查阅邮�
 msgid "An error has occurred"
 msgstr "发生错误"
 
-#: src/components/dialogs/GifSelect.tsx:252
-#~ msgid "An error occured"
-#~ msgstr "发生错误"
-
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:314
 msgid "An error occurred"
 msgstr "发生错误"
@@ -1057,14 +1053,6 @@ msgstr "选择谁可以回复"
 msgid "Choose your password"
 msgstr "选择你的密码"
 
-#: src/view/screens/Settings/index.tsx:870
-#~ msgid "Clear all legacy storage data"
-#~ msgstr "清除所有旧存储数据"
-
-#: src/view/screens/Settings/index.tsx:873
-#~ msgid "Clear all legacy storage data (restart after this)"
-#~ msgstr "清除所有旧存储数据（并重启）"
-
 #: src/view/screens/Settings/index.tsx:865
 msgid "Clear all storage data"
 msgstr "清除所有数据"
@@ -1077,10 +1065,6 @@ msgstr "清除所有数据（并重启）"
 #: src/view/screens/Search/Search.tsx:824
 msgid "Clear search query"
 msgstr "清除搜索历史记录"
-
-#: src/view/screens/Settings/index.tsx:871
-#~ msgid "Clears all legacy storage data"
-#~ msgstr "清除所有旧版存储数据"
 
 #: src/view/screens/Settings/index.tsx:866
 msgid "Clears all storage data"
@@ -3090,10 +3074,6 @@ msgstr "离开 Bluesky"
 #: src/screens/SignupQueued.tsx:134
 msgid "left to go."
 msgstr "个人排在你前面。"
-
-#: src/view/screens/Settings/index.tsx:304
-#~ msgid "Legacy storage cleared, you need to restart the app now."
-#~ msgstr "旧存储数据已清除，你需要立即重新启动应用。"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:295
 msgid "Let me choose"
@@ -6430,10 +6410,6 @@ msgstr "取消转发"
 msgctxt "action"
 msgid "Unfollow"
 msgstr "取消关注"
-
-#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:247
-#~ msgid "Unfollow"
-#~ msgstr "取消关注"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:237
 msgid "Unfollow {0}"
