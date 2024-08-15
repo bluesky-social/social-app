@@ -50,4 +50,9 @@ jobs:
         run: yarn intl:build
       - name: Run tests
         run: |
-          NODE_ENV=test EXPO_PUBLIC_ENV=test yarn test --forceExit
+          NODE_ENV=test EXPO_PUBLIC_ENV=test yarn test-coverage --forceExit
+      - name: Upload results to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          

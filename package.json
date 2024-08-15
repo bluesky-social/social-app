@@ -212,6 +212,7 @@
     "@babel/core": "^7.23.2",
     "@babel/preset-env": "^7.20.0",
     "@babel/runtime": "^7.20.0",
+    "@codecov/webpack-plugin": "^0.0.1-beta.10",
     "@did-plc/server": "^0.0.1",
     "@expo/config-plugins": "8.0.4",
     "@expo/prebuild-config": "6.7.0",

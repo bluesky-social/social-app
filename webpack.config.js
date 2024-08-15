@@ -2,9 +2,11 @@ const createExpoWebpackConfigAsync = require('@expo/webpack-config')
 const {withAlias} = require('@expo/webpack-config/addons')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer')
+const {codecovWebpackPlugin} = require('@codecov/webpack-plugin')
 
 const GENERATE_STATS = process.env.EXPO_PUBLIC_GENERATE_STATS === '1'
 const OPEN_ANALYZER = process.env.EXPO_PUBLIC_OPEN_ANALYZER === '1'
+const CODECOV_ANALYZER = process.env.EXPO_PUBLIC_CODECOV_ANALYZER === '1'
 
 const reactNativeWebWebviewConfiguration = {
   test: /postMock.html$/,
@@ -38,6 +40,17 @@ module.exports = async function (env, argv) {
         statsFilename: '../stats.json',
         analyzerMode: OPEN_ANALYZER ? 'server' : 'json',
         defaultSizes: 'parsed',
+      }),
+    )
+  }
+
+  if (CODECOV_ANALYZER) {
+    config.plugins.push(
+      codecovWebpackPlugin({
+        enableBundleAnalysis:
+          process.env.EXPO_PUBLIC_CODECOV_TOKEN !== undefined,
+        bundleName: 'social-app',
+        uploadToken: process.env.EXPO_PUBLIC_CODECOV_TOKEN,
       }),
     )
   }
