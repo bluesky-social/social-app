@@ -79,12 +79,8 @@ let reducer = (state: State, action: Action): State => {
         return state
       }
       if (sessionEvent === 'network-error') {
-        // Don't change stored accounts but kick to the choose account screen.
-        return {
-          accounts: state.accounts,
-          currentAgentState: createPublicAgentState(),
-          needsPersist: true,
-        }
+        // Assume it's transient.
+        return state
       }
       const existingAccount = state.accounts.find(a => a.did === accountDid)
       if (
