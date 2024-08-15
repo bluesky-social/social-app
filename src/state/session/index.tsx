@@ -35,6 +35,7 @@ const AgentContext = React.createContext<BskyAgent | null>(null)
 const ApiContext = React.createContext<SessionApiContext>({
   createAccount: async () => {},
   login: async () => {},
+  logoutCurrentAccount: async () => {},
   logoutEveryAccount: async () => {},
   resumeSession: async () => {},
   removeAccount: () => {},
@@ -113,6 +114,21 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       addSessionDebugLog({type: 'method:end', method: 'login', account})
     },
     [onAgentSessionChange, cancelPendingTask],
+  )
+
+  const logoutCurrentAccount = React.useCallback<
+    SessionApiContext['logoutEveryAccount']
+  >(
+    logContext => {
+      addSessionDebugLog({type: 'method:start', method: 'logout'})
+      cancelPendingTask()
+      dispatch({
+        type: 'logged-out-current-account',
+      })
+      logEvent('account:loggedOut', {logContext, scope: 'current'})
+      addSessionDebugLog({type: 'method:end', method: 'logout'})
+    },
+    [cancelPendingTask],
   )
 
   const logoutEveryAccount = React.useCallback<
@@ -232,11 +248,19 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     () => ({
       createAccount,
       login,
+      logoutCurrentAccount,
       logoutEveryAccount,
       resumeSession,
       removeAccount,
     }),
-    [createAccount, login, logoutEveryAccount, resumeSession, removeAccount],
+    [
+      createAccount,
+      login,
+      logoutCurrentAccount,
+      logoutEveryAccount,
+      resumeSession,
+      removeAccount,
+    ],
   )
 
   // @ts-ignore

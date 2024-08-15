@@ -29,6 +29,9 @@ export type SessionApiContext = {
     },
     logContext: LogEvents['account:loggedIn']['logContext'],
   ) => Promise<void>
+  logoutCurrentAccount: (
+    logContext: LogEvents['account:loggedOut']['logContext'],
+  ) => void
   logoutEveryAccount: (
     logContext: LogEvents['account:loggedOut']['logContext'],
   ) => void

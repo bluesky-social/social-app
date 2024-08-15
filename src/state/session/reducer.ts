@@ -42,6 +42,9 @@ export type Action =
       accountDid: string
     }
   | {
+      type: 'logged-out-current-account'
+    }
+  | {
       type: 'logged-out-every-account'
     }
   | {
@@ -135,6 +138,22 @@ let reducer = (state: State, action: Action): State => {
           state.currentAgentState.did === accountDid
             ? createPublicAgentState() // Log out if removing the current one.
             : state.currentAgentState,
+        needsPersist: true,
+      }
+    }
+    case 'logged-out-current-account': {
+      const {currentAgentState} = state
+      return {
+        accounts: state.accounts.map(a =>
+          a.did === currentAgentState.did
+            ? {
+                ...a,
+                refreshJwt: undefined,
+                accessJwt: undefined,
+              }
+            : a,
+        ),
+        currentAgentState: createPublicAgentState(),
         needsPersist: true,
       }
     }
