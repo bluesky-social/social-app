@@ -6,12 +6,15 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AppBskyGraphDefs,
+  AppBskyGraphStarterpack,
   AppBskyLabelerDefs,
+  AtUri,
 } from '@atproto/api'
 import {ComponentChildren, h} from 'preact'
 import {useMemo} from 'preact/hooks'
 
 import infoIcon from '../../assets/circleInfo_stroke2_corner0_rounded.svg'
+import starterPackIcon from '../../assets/starterPack.svg'
 import {CONTENT_LABELS, labelsToInfo} from '../labels'
 import {getRkey} from '../utils'
 import {Link} from './link'
@@ -105,7 +108,7 @@ export function Embed({
       // Case 3.2: List
       if (AppBskyGraphDefs.isListView(record)) {
         return (
-          <GenericWithImage
+          <GenericWithImageEmbed
             image={record.avatar}
             title={record.name}
             href={`/profile/${record.creator.did}/lists/${getRkey(record)}`}
@@ -122,7 +125,7 @@ export function Embed({
       // Case 3.3: Feed
       if (AppBskyFeedDefs.isGeneratorView(record)) {
         return (
-          <GenericWithImage
+          <GenericWithImageEmbed
             image={record.avatar}
             title={record.displayName}
             href={`/profile/${record.creator.did}/feed/${getRkey(record)}`}
@@ -134,28 +137,27 @@ export function Embed({
 
       // Case 3.4: Labeler
       if (AppBskyLabelerDefs.isLabelerView(record)) {
-        return (
-          <GenericWithImage
-            image={record.creator.avatar}
-            title={record.creator.displayName || record.creator.handle}
-            href={`/profile/${record.creator.did}`}
-            subtitle="Labeler"
-            description={`Liked by ${record.likeCount ?? 0} users`}
-          />
-        )
+        // Embed type does not exist in the app, so show nothing
+        return null
       }
 
-      // Case 3.5: Post not found
+      // Case 3.5: Starter pack
+      if (AppBskyGraphDefs.isStarterPackViewBasic(record)) {
+        return <StarterPackEmbed content={record} />
+      }
+
+      // Case 3.6: Post not found
       if (AppBskyEmbedRecord.isViewNotFound(record)) {
         return <Info>Quoted post not found, it may have been deleted.</Info>
       }
 
-      // Case 3.6: Post blocked
+      // Case 3.7: Post blocked
       if (AppBskyEmbedRecord.isViewBlocked(record)) {
         return <Info>The quoted post is blocked.</Info>
       }
 
-      throw new Error('Unknown embed type')
+      // Unknown embed type
+      return null
     }
 
     // Case 4: Record with media
@@ -182,7 +184,8 @@ export function Embed({
       )
     }
 
-    throw new Error('Unsupported embed type')
+    // Unknown embed type
+    return null
   } catch (err) {
     return (
       <Info>{err instanceof Error ? err.message : 'An error occurred'}</Info>
@@ -314,7 +317,7 @@ function ExternalEmbed({
   )
 }
 
-function GenericWithImage({
+function GenericWithImageEmbed({
   title,
   subtitle,
   href,
@@ -349,4 +352,61 @@ function GenericWithImage({
       {description && <p className="text-textLight text-sm">{description}</p>}
     </Link>
   )
+}
+
+function StarterPackEmbed({
+  content,
+}: {
+  content: AppBskyGraphDefs.StarterPackViewBasic
+}) {
+  if (!AppBskyGraphStarterpack.isRecord(content.record)) {
+    return null
+  }
+
+  const starterPackHref = getStarterPackHref(content)
+  const imageUri = getStarterPackImage(content)
+
+  return (
+    <Link
+      href={starterPackHref}
+      className="w-full rounded-lg overflow-hidden border flex flex-col items-stretch">
+      <img src={imageUri} className="aspect-[1.91/1] object-cover" />
+      <div className="py-3 px-4">
+        <div className="flex space-x-2 items-center">
+          <img src={starterPackIcon} className="w-10 h-10" />
+          <div>
+            <p className="font-semibold leading-[21px]">
+              {content.record.name}
+            </p>
+            <p className="text-sm text-textLight line-clamp-2 leading-[18px]">
+              Starter pack by{' '}
+              {content.creator.displayName || `@${content.creator.handle}`}
+            </p>
+          </div>
+        </div>
+        {content.record.description && (
+          <p className="text-sm mt-1">{content.record.description}</p>
+        )}
+        {!!content.joinedAllTimeCount && content.joinedAllTimeCount > 50 && (
+          <p className="text-sm font-semibold text-textLight mt-1">
+            {content.joinedAllTimeCount} users have joined!
+          </p>
+        )}
+      </div>
+    </Link>
+  )
+}
+
+// from #/lib/strings/starter-pack.ts
+function getStarterPackImage(starterPack: AppBskyGraphDefs.StarterPackView) {
+  const rkey = new AtUri(starterPack.uri).rkey
+  return `https://ogcard.cdn.bsky.app/start/${starterPack.creator.did}/${rkey}`
+}
+
+function getStarterPackHref(
+  starterPack: AppBskyGraphDefs.StarterPackViewBasic,
+) {
+  const rkey = new AtUri(starterPack.uri).rkey
+  const handleOrDid = starterPack.creator.handle || starterPack.creator.did
+  return `/starter-pack/${handleOrDid}/${rkey}`
 }

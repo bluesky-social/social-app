@@ -8,6 +8,7 @@ import {useIsFocused} from '@react-navigation/native'
 
 import {HITSLOP_30} from '#/lib/constants'
 import {useAppState} from '#/lib/hooks/useAppState'
+import {logger} from '#/logger'
 import {useVideoPlayer} from '#/view/com/util/post-embeds/VideoPlayerContext'
 import {android, atoms as a, useTheme} from '#/alf'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
@@ -23,29 +24,24 @@ export function VideoEmbedInnerNative() {
   const ref = useRef<VideoView>(null)
   const isScreenFocused = useIsFocused()
   const isAppFocused = useAppState()
-  const prevFocusedRef = useRef(isAppFocused)
 
-  // resume video when coming back from background
   useEffect(() => {
-    if (isAppFocused !== prevFocusedRef.current) {
-      prevFocusedRef.current = isAppFocused
-      if (isAppFocused === 'active') {
+    try {
+      if (isAppFocused === 'active' && isScreenFocused && !player.playing) {
+        PlatformInfo.setAudioCategory(AudioCategory.Ambient)
+        PlatformInfo.setAudioActive(false)
+        player.muted = true
         player.play()
+      } else if (player.playing) {
+        player.pause()
       }
+    } catch (err) {
+      logger.error(
+        'Failed to play/pause while backgrounding/switching screens',
+        {safeMessage: err},
+      )
     }
-  }, [isAppFocused, player])
-
-  // pause the video when the screen is not focused
-  useEffect(() => {
-    if (!isScreenFocused) {
-      let wasPlaying = player.playing
-      player.pause()
-
-      return () => {
-        if (wasPlaying) player.play()
-      }
-    }
-  }, [isScreenFocused, player])
+  }, [isAppFocused, player, isScreenFocused])
 
   const enterFullscreen = useCallback(() => {
     ref.current?.enterFullscreen()
@@ -60,12 +56,12 @@ export function VideoEmbedInnerNative() {
         nativeControls={true}
         onEnterFullscreen={() => {
           PlatformInfo.setAudioCategory(AudioCategory.Playback)
-          PlatformInfo.setAudioActive(false)
+          PlatformInfo.setAudioActive(true)
           player.muted = false
         }}
         onExitFullscreen={() => {
           PlatformInfo.setAudioCategory(AudioCategory.Ambient)
-          PlatformInfo.setAudioActive(true)
+          PlatformInfo.setAudioActive(false)
           player.muted = true
           if (!player.playing) player.play()
         }}
