@@ -11,6 +11,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import type Hls from 'hls.js'
 
+import {clamp} from '#/lib/numbers'
 import {isIPhoneWeb} from 'platform/detection'
 import {
   useAutoplayDisabled,
@@ -199,6 +200,24 @@ export function Controls({
     }
   }, [play])
 
+  const seekLeft = useCallback(() => {
+    if (!videoRef.current) return
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    const currentTime = videoRef.current.currentTime
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    const duration = videoRef.current.duration || 0
+    onSeek(clamp(currentTime - 5, 0, duration))
+  }, [onSeek, videoRef])
+
+  const seekRight = useCallback(() => {
+    if (!videoRef.current) return
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    const currentTime = videoRef.current.currentTime
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    const duration = videoRef.current.duration || 0
+    onSeek(clamp(currentTime + 5, 0, duration))
+  }, [onSeek, videoRef])
+
   const showControls =
     (focused && !playing) || (interactingViaKeypress ? hasFocus : hovered)
 
@@ -250,6 +269,10 @@ export function Controls({
           onSeek={onSeek}
           onSeekStart={onSeekStart}
           onSeekEnd={onSeekEnd}
+          seekLeft={seekLeft}
+          seekRight={seekRight}
+          togglePlayPause={togglePlayPause}
+          drawFocus={drawFocus}
         />
         <View
           style={[
@@ -359,12 +382,20 @@ function Scrubber({
   onSeek,
   onSeekEnd,
   onSeekStart,
+  seekLeft,
+  seekRight,
+  togglePlayPause,
+  drawFocus,
 }: {
   duration: number
   currentTime: number
   onSeek: (time: number) => void
   onSeekEnd: () => void
   onSeekStart: () => void
+  seekLeft: () => void
+  seekRight: () => void
+  togglePlayPause: () => void
+  drawFocus: () => void
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -378,6 +409,7 @@ function Scrubber({
     onIn: onMouseEnter,
     onOut: onMouseLeave,
   } = useInteractionState()
+  const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const [seekPosition, setSeekPosition] = useState(0)
   const isSeekingRef = useRef(false)
   const ref = useRef<HTMLDivElement>(null)
@@ -387,7 +419,7 @@ function Scrubber({
       if (!ref.current) return
       const {left, width} = ref.current.getBoundingClientRect()
       const x = 'touches' in evt ? evt.touches[0].clientX : evt.clientX
-      const percent = Math.min(1, Math.max(0, (x - left) / width)) * duration
+      const percent = clamp((x - left) / width, 0, 1) * duration
       onSeek(percent)
       setSeekPosition(percent)
     }
@@ -438,6 +470,36 @@ function Scrubber({
     }
   }, [onSeekEnd, onSeekStart, startScrubbing, stopScrubbing, onSeek, duration])
 
+  useEffect(() => {
+    if (focused) {
+      function handleKeyDown(evt: KeyboardEvent) {
+        // space: play/pause
+        // arrow left: seek backward
+        // arrow right: seek forward
+
+        if (evt.key === ' ') {
+          evt.preventDefault()
+          drawFocus()
+          togglePlayPause()
+        } else if (evt.key === 'ArrowLeft') {
+          evt.preventDefault()
+          drawFocus()
+          seekLeft()
+        } else if (evt.key === 'ArrowRight') {
+          evt.preventDefault()
+          drawFocus()
+          seekRight()
+        }
+      }
+
+      const abortController = new AbortController()
+      const {signal} = abortController
+      addEventListener('keydown', handleKeyDown, {signal})
+
+      return () => abortController.abort()
+    }
+  }, [focused, seekLeft, seekRight, togglePlayPause, drawFocus])
+
   const progress = scrubbing ? seekPosition : currentTime
   const progressPercent = (progress / duration) * 100
 
@@ -485,6 +547,8 @@ function Scrubber({
             msg`${formatTime(currentTime)} of ${formatTime(duration)}`,
           )}
           tabIndex={0}
+          onFocus={onFocus}
+          onBlur={onBlur}
           style={{
             position: 'absolute',
             height: 16,
@@ -501,7 +565,14 @@ function Scrubber({
               {backgroundColor: t.palette.white},
               {
                 transform: [
-                  {scale: hovered || scrubbing ? (scrubbing ? 1 : 0.6) : 0},
+                  {
+                    scale:
+                      hovered || scrubbing || focused
+                        ? scrubbing
+                          ? 1
+                          : 0.6
+                        : 0,
+                  },
                 ],
               },
             ]}
