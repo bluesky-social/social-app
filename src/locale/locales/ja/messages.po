@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-08-12 19:53+0900\n"
+"PO-Revision-Date: 2024-08-16 10:26+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -4164,6 +4164,10 @@ msgstr "その他"
 msgid "Other account"
 msgstr "その他のアカウント"
 
+#: src/view/screens/Settings/index.tsx:379
+msgid "Other accounts"
+msgstr "その他のアカウント"
+
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:92
 msgid "Other..."
 msgstr "その他…"
@@ -4655,6 +4659,10 @@ msgstr "マイフィードから削除"
 #: src/view/com/feeds/FeedSourceCard.tsx:312
 msgid "Remove from my feeds?"
 msgstr "マイフィードから削除しますか？"
+
+#: src/view/com/util/AccountDropdownBtn.tsx:53
+msgid "Remove from quick access?"
+msgstr "クイックアクセスから削除しますか？"
 
 #: src/view/com/composer/photos/Gallery.tsx:174
 msgid "Remove image"
@@ -5568,6 +5576,11 @@ msgstr "Blueskyにサインイン または 新規アカウントの登録"
 msgid "Sign out"
 msgstr "サインアウト"
 
+#: src/view/screens/Settings/index.tsx:420
+#: src/view/screens/Settings/index.tsx:430
+msgid "Sign out of all accounts"
+msgstr "すべてのアカウントからサインアウト"
+
 #: src/view/shell/bottom-bar/BottomBar.tsx:305
 #: src/view/shell/bottom-bar/BottomBar.tsx:306
 #: src/view/shell/bottom-bar/BottomBar.tsx:308
@@ -6254,6 +6267,10 @@ msgstr "このユーザーは誰もフォローしていません。"
 #: src/components/dialogs/MutedWords.tsx:435
 msgid "This will delete \"{0}\" from your muted words. You can always add it back later."
 msgstr "ミュートしたワードから「{0}」が削除されます。あとでいつでも戻すことができます。"
+
+#: src/view/com/util/AccountDropdownBtn.tsx:55
+msgid "This will remove @{0} from the quick access list."
+msgstr "クイックアクセスのリストから@{0}を削除します。"
 
 #: src/view/screens/Settings/index.tsx:596
 msgid "Thread preferences"
