@@ -14,6 +14,7 @@ export type LogEvents = {
   }
   'account:loggedOut': {
     logContext: 'SwitchAccount' | 'Settings' | 'SignupQueued' | 'Deactivated'
+    scope: 'current' | 'every'
   }
   'notifications:openApp': {}
   'notifications:request': {
