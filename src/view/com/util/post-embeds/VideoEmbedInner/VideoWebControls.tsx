@@ -680,14 +680,6 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
       setError(false)
     }
 
-    const handleSeeking = () => {
-      setBuffering(true)
-    }
-
-    const handleSeeked = () => {
-      setBuffering(false)
-    }
-
     const handleStalled = () => {
       if (bufferingTimeout) clearTimeout(bufferingTimeout)
       bufferingTimeout = setTimeout(() => {
@@ -731,12 +723,6 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
       signal: abortController.signal,
     })
     ref.current.addEventListener('playing', handlePlaying, {
-      signal: abortController.signal,
-    })
-    ref.current.addEventListener('seeking', handleSeeking, {
-      signal: abortController.signal,
-    })
-    ref.current.addEventListener('seeked', handleSeeked, {
       signal: abortController.signal,
     })
     ref.current.addEventListener('stalled', handleStalled, {
