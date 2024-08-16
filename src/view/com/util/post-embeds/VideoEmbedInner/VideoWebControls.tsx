@@ -463,7 +463,7 @@ function Scrubber({
             a.rounded_full,
             a.overflow_hidden,
             {backgroundColor: 'rgba(255, 255, 255, 0.4)'},
-            {height: hovered ? 6 : 3},
+            {height: hovered || scrubbing ? 6 : 3},
           ]}>
           {currentTime && duration && (
             <View
