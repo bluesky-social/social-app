@@ -92,7 +92,14 @@ export class FeedViewPostsSlice {
       this.isOrphan = true
       return
     }
-    const grandparent = reply?.grandparent
+    const root = reply.root
+    const rootIsView =
+      AppBskyFeedDefs.isPostView(root) || AppBskyFeedDefs.isBlockedPost(root)
+    // if parent is also the root, we have data!
+    const grandparent =
+      rootIsView && parent?.record?.reply?.parent?.uri === root?.uri
+        ? reply?.root
+        : undefined
     const grandparentAuthor = reply.grandparentAuthor
     const isGrandparentBlocked = Boolean(
       grandparent && AppBskyFeedDefs.isBlockedPost(grandparent),
@@ -112,7 +119,6 @@ export class FeedViewPostsSlice {
       // Keep going, it might still have a root, and we need this for thread
       // de-deduping
     }
-    const root = reply.root
     if (
       !AppBskyFeedDefs.isPostView(root) ||
       !AppBskyFeedPost.isRecord(root.record) ||
