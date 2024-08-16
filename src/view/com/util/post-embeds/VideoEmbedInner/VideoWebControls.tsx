@@ -12,12 +12,12 @@ import {useLingui} from '@lingui/react'
 import type Hls from 'hls.js'
 
 import {clamp} from '#/lib/numbers'
-import {isIPhoneWeb} from 'platform/detection'
+import {isIPhoneWeb} from '#/platform/detection'
 import {
   useAutoplayDisabled,
   useSetSubtitlesEnabled,
   useSubtitlesEnabled,
-} from 'state/preferences'
+} from '#/state/preferences'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button} from '#/components/Button'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -457,7 +457,6 @@ function Scrubber({
       const target = evt.target
       if (isSeekingRef.current && target instanceof Element) {
         evt.preventDefault()
-        evt.stopPropagation()
         target.releasePointerCapture(evt.pointerId)
         isSeekingRef.current = false
         onSeekEnd()
@@ -517,7 +516,7 @@ function Scrubber({
           display: 'flex',
           alignItems: 'center',
           position: 'relative',
-          cursor: 'pointer',
+          cursor: scrubbing ? 'grabbing' : 'grab',
         }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
@@ -542,7 +541,7 @@ function Scrubber({
         </View>
         <div
           ref={circleRef}
-          aria-label="Seek slider"
+          aria-label={_(msg`Seek slider`)}
           role="slider"
           aria-valuemax={duration}
           aria-valuemin={0}
@@ -559,9 +558,9 @@ function Scrubber({
             width: 16,
             left: `calc(${progressPercent}% - 8px)`,
             borderRadius: 8,
+            pointerEvents: 'none',
           }}>
           <View
-            pointerEvents="none"
             style={[
               a.w_full,
               a.h_full,
