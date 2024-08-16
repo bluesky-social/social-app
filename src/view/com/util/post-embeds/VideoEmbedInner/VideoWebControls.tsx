@@ -6,6 +6,7 @@ import React, {
   useSyncExternalStore,
 } from 'react'
 import {Pressable, View} from 'react-native'
+import {SvgProps} from 'react-native-svg'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import type Hls from 'hls.js'
@@ -222,7 +223,7 @@ export function Controls({
       <Pressable
         accessibilityRole="button"
         accessibilityHint={_(
-          focused
+          !focused
             ? msg`Unmute video`
             : playing
             ? msg`Pause video`
@@ -240,10 +241,8 @@ export function Controls({
             background:
               'linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7))',
           }),
-          {
-            opacity: showControls ? 1 : 0,
-            transition: 'opacity 0.2s ease-in-out',
-          },
+          {opacity: showControls ? 1 : 0},
+          {transition: 'opacity 0.2s ease-in-out'},
         ]}>
         <Scrubber
           duration={duration}
@@ -262,57 +261,45 @@ export function Controls({
             a.flex_row,
             a.align_center,
           ]}>
-          <Button
-            label={_(playing ? msg`Pause` : msg`Play`)}
+          <ControlButton
+            active={playing}
+            activeLabel={_(msg`Pause`)}
+            inactiveLabel={_(msg`Play`)}
+            activeIcon={PauseIcon}
+            inactiveIcon={PlayIcon}
             onPress={onPressPlayPause}
-            {...btnProps}>
-            {playing ? (
-              <PauseIcon fill={t.palette.white} width={20} />
-            ) : (
-              <PlayIcon fill={t.palette.white} width={20} />
-            )}
-          </Button>
+          />
           <View style={a.flex_1} />
           <Text style={{color: t.palette.white}}>
             {formatTime(currentTime)} / {formatTime(duration)}
           </Text>
           {hasSubtitleTrack && (
-            <Button
-              label={_(
-                subtitlesEnabled
-                  ? msg`Disable subtitles`
-                  : msg`Enable subtitles`,
-              )}
+            <ControlButton
+              active={subtitlesEnabled}
+              activeLabel={_(msg`Disable subtitles`)}
+              inactiveLabel={_(msg`Enable subtitles`)}
+              activeIcon={CCActiveIcon}
+              inactiveIcon={CCInactiveIcon}
               onPress={onPressSubtitles}
-              {...btnProps}>
-              {subtitlesEnabled ? (
-                <CCActiveIcon fill={t.palette.white} width={20} />
-              ) : (
-                <CCInactiveIcon fill={t.palette.white} width={20} />
-              )}
-            </Button>
+            />
           )}
-          <Button
-            label={_(muted ? msg`Unmute` : msg`Mute`)}
+          <ControlButton
+            active={muted}
+            activeLabel={_(msg`Unmute`)}
+            inactiveLabel={_(msg`Mute`)}
+            activeIcon={MuteIcon}
+            inactiveIcon={UnmuteIcon}
             onPress={onPressMute}
-            {...btnProps}>
-            {muted ? (
-              <MuteIcon fill={t.palette.white} width={20} />
-            ) : (
-              <UnmuteIcon fill={t.palette.white} width={20} />
-            )}
-          </Button>
+          />
           {!isIPhoneWeb && (
-            <Button
-              label={_(muted ? msg`Unmute` : msg`Mute`)}
+            <ControlButton
+              active={isFullscreen}
+              activeLabel={_(msg`Exit fullscreen`)}
+              inactiveLabel={_(msg`Fullscreen`)}
+              activeIcon={ArrowsInIcon}
+              inactiveIcon={ArrowsOutIcon}
               onPress={onPressFullscreen}
-              {...btnProps}>
-              {isFullscreen ? (
-                <ArrowsInIcon fill={t.palette.white} width={20} />
-              ) : (
-                <ArrowsOutIcon fill={t.palette.white} width={20} />
-              )}
-            </Button>
+            />
           )}
         </View>
       </View>
@@ -329,6 +316,40 @@ export function Controls({
         </View>
       )}
     </div>
+  )
+}
+
+function ControlButton({
+  active,
+  activeLabel,
+  inactiveLabel,
+  activeIcon: ActiveIcon,
+  inactiveIcon: InactiveIcon,
+  onPress,
+}: {
+  active: boolean
+  activeLabel: string
+  inactiveLabel: string
+  activeIcon: React.ComponentType<Pick<SvgProps, 'fill' | 'width'>>
+  inactiveIcon: React.ComponentType<Pick<SvgProps, 'fill' | 'width'>>
+  onPress: () => void
+}) {
+  const t = useTheme()
+  return (
+    <Button
+      label={active ? activeLabel : inactiveLabel}
+      onPress={onPress}
+      variant="ghost"
+      shape="round"
+      size="medium"
+      style={a.p_2xs}
+      hoverStyle={{backgroundColor: 'rgba(255, 255, 255, 0.1)'}}>
+      {active ? (
+        <ActiveIcon fill={t.palette.white} width={20} />
+      ) : (
+        <InactiveIcon fill={t.palette.white} width={20} />
+      )}
+    </Button>
   )
 }
 
@@ -490,14 +511,6 @@ function Scrubber({
     </View>
   )
 }
-
-const btnProps = {
-  variant: 'ghost',
-  shape: 'round',
-  size: 'medium',
-  style: a.p_2xs,
-  hoverStyle: {backgroundColor: 'rgba(255, 255, 255, 0.1)'},
-} as const
 
 function formatTime(time: number) {
   if (isNaN(time)) {
