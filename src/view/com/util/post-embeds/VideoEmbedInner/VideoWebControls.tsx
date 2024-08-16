@@ -388,8 +388,9 @@ function Scrubber({
     }
 
     // Handle mouseup and touchend anywhere on the document
-    const handleMouseUp = () => {
-      if (isSeekingRef) {
+    const handleMouseUp = (evt: MouseEvent | TouchEvent) => {
+      if (isSeekingRef.current) {
+        evt.preventDefault()
         isSeekingRef.current = false
         onSeekEnd()
         stopScrubbing()
