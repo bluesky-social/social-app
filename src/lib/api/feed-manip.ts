@@ -23,6 +23,7 @@ type FeedSliceItem = {
   record: AppBskyFeedPost.Record
   parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
   isParentBlocked: boolean
+  isParentNotFound: boolean
 }
 
 type AuthorContext = {
@@ -68,6 +69,7 @@ export class FeedViewPostsSlice {
     }
     const parent = reply?.parent
     const isParentBlocked = AppBskyFeedDefs.isBlockedPost(parent)
+    const isParentNotFound = AppBskyFeedDefs.isNotFoundPost(parent)
     let parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
     if (AppBskyFeedDefs.isPostView(parent)) {
       parentAuthor = parent.author
@@ -77,6 +79,7 @@ export class FeedViewPostsSlice {
       record: post.record,
       parentAuthor,
       isParentBlocked,
+      isParentNotFound,
     })
     if (!reply || reason) {
       return
@@ -94,11 +97,15 @@ export class FeedViewPostsSlice {
     const isGrandparentBlocked = Boolean(
       grandparent && AppBskyFeedDefs.isBlockedPost(grandparent),
     )
+    const isGrandparentNotFound = Boolean(
+      grandparent && AppBskyFeedDefs.isNotFoundPost(grandparent),
+    )
     this.items.unshift({
       post: parent,
       record: parent.record,
       parentAuthor: grandparentAuthor,
       isParentBlocked: isGrandparentBlocked,
+      isParentNotFound: isGrandparentNotFound,
     })
     if (isGrandparentBlocked) {
       this.isOrphan = true
@@ -121,6 +128,7 @@ export class FeedViewPostsSlice {
       post: root,
       record: root.record,
       isParentBlocked: false,
+      isParentNotFound: false,
       parentAuthor: undefined,
     })
     if (parent.record.reply?.parent.uri !== root.uri) {
