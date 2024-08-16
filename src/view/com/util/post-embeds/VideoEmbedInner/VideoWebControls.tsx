@@ -412,12 +412,13 @@ function Scrubber({
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const [seekPosition, setSeekPosition] = useState(0)
   const isSeekingRef = useRef(false)
-  const ref = useRef<HTMLDivElement>(null)
+  const barRef = useRef<HTMLDivElement>(null)
+  const circleRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     function seek(evt: MouseEvent | TouchEvent) {
-      if (!ref.current) return
-      const {left, width} = ref.current.getBoundingClientRect()
+      if (!barRef.current) return
+      const {left, width} = barRef.current.getBoundingClientRect()
       const x = 'touches' in evt ? evt.touches[0].clientX : evt.clientX
       const percent = clamp((x - left) / width, 0, 1) * duration
       onSeek(percent)
@@ -426,9 +427,9 @@ function Scrubber({
 
     // Handle mousedown and touchstart on the specific element
     const handleMouseDown = (evt: MouseEvent | TouchEvent) => {
-      if (!ref.current) return
+      if (!barRef.current) return
       const target = evt.target as Node | null
-      if (ref.current.contains(target)) {
+      if (barRef.current.contains(target)) {
         evt.preventDefault()
         isSeekingRef.current = true
         seek(evt)
@@ -471,30 +472,33 @@ function Scrubber({
   }, [onSeekEnd, onSeekStart, startScrubbing, stopScrubbing, onSeek, duration])
 
   useEffect(() => {
+    if (!circleRef.current) return
     if (focused) {
-      function handleKeyDown(evt: KeyboardEvent) {
-        // space: play/pause
-        // arrow left: seek backward
-        // arrow right: seek forward
-
-        if (evt.key === ' ') {
-          evt.preventDefault()
-          drawFocus()
-          togglePlayPause()
-        } else if (evt.key === 'ArrowLeft') {
-          evt.preventDefault()
-          drawFocus()
-          seekLeft()
-        } else if (evt.key === 'ArrowRight') {
-          evt.preventDefault()
-          drawFocus()
-          seekRight()
-        }
-      }
-
       const abortController = new AbortController()
       const {signal} = abortController
-      addEventListener('keydown', handleKeyDown, {signal})
+      circleRef.current.addEventListener(
+        'keydown',
+        evt => {
+          // space: play/pause
+          // arrow left: seek backward
+          // arrow right: seek forward
+
+          if (evt.key === ' ') {
+            evt.preventDefault()
+            drawFocus()
+            togglePlayPause()
+          } else if (evt.key === 'ArrowLeft') {
+            evt.preventDefault()
+            drawFocus()
+            seekLeft()
+          } else if (evt.key === 'ArrowRight') {
+            evt.preventDefault()
+            drawFocus()
+            seekRight()
+          }
+        },
+        {signal},
+      )
 
       return () => abortController.abort()
     }
@@ -511,7 +515,7 @@ function Scrubber({
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}>
       <div
-        ref={ref}
+        ref={barRef}
         style={{
           flex: 1,
           display: 'flex',
@@ -538,6 +542,7 @@ function Scrubber({
           )}
         </View>
         <div
+          ref={circleRef}
           aria-label="Seek slider"
           role="slider"
           aria-valuemax={duration}
