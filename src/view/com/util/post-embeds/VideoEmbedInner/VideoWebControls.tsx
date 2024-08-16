@@ -6,7 +6,6 @@ import React, {
   useSyncExternalStore,
 } from 'react'
 import {Pressable, View} from 'react-native'
-import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import type Hls from 'hls.js'
@@ -185,19 +184,19 @@ export function Controls({
     [videoRef],
   )
 
-  const [playStateBeforeSeek, setPlayStateBeforeSeek] = useState(false)
+  const playStateBeforeSeekRef = useRef(false)
 
   const onSeekStart = useCallback(() => {
     drawFocus()
-    setPlayStateBeforeSeek(playing)
+    playStateBeforeSeekRef.current = playing
     pause()
   }, [playing, pause, drawFocus])
 
   const onSeekEnd = useCallback(() => {
-    if (playStateBeforeSeek) {
+    if (playStateBeforeSeekRef.current) {
       play()
     }
-  }, [playStateBeforeSeek, play])
+  }, [play])
 
   const showControls =
     (focused && !playing) || (interactingViaKeypress ? hasFocus : hovered)
@@ -318,10 +317,8 @@ export function Controls({
         </View>
       </View>
       {(buffering || error) && (
-        <Animated.View
+        <View
           pointerEvents="none"
-          entering={FadeIn.delay(1000).duration(200)}
-          exiting={FadeOut.duration(200)}
           style={[a.absolute, a.inset_0, a.justify_center, a.align_center]}>
           {buffering && <Loader fill={t.palette.white} size="lg" />}
           {error && (
@@ -329,7 +326,7 @@ export function Controls({
               <Trans>An error occurred</Trans>
             </Text>
           )}
-        </Animated.View>
+        </View>
       )}
     </div>
   )
