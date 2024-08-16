@@ -415,61 +415,57 @@ function Scrubber({
   const barRef = useRef<HTMLDivElement>(null)
   const circleRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    function seek(evt: MouseEvent | TouchEvent) {
+  const seek = useCallback(
+    (evt: React.PointerEvent<HTMLDivElement>) => {
       if (!barRef.current) return
       const {left, width} = barRef.current.getBoundingClientRect()
-      const x = 'touches' in evt ? evt.touches[0].clientX : evt.clientX
+      const x = evt.clientX
       const percent = clamp((x - left) / width, 0, 1) * duration
       onSeek(percent)
       setSeekPosition(percent)
-    }
+    },
+    [duration, onSeek],
+  )
 
-    // Handle mousedown and touchstart on the specific element
-    const handleMouseDown = (evt: MouseEvent | TouchEvent) => {
-      if (!barRef.current) return
-      const target = evt.target as Node | null
-      if (barRef.current.contains(target)) {
+  const onPointerDown = useCallback(
+    (evt: React.PointerEvent<HTMLDivElement>) => {
+      const target = evt.target
+      if (target instanceof Element) {
         evt.preventDefault()
+        target.setPointerCapture(evt.pointerId)
         isSeekingRef.current = true
         seek(evt)
-        onSeekStart()
         startScrubbing()
+        onSeekStart()
       }
-    }
+    },
+    [seek, onSeekStart, startScrubbing],
+  )
 
-    // Handle mouseup and touchend anywhere on the document
-    const handleMouseUp = (evt: MouseEvent | TouchEvent) => {
+  const onPointerMove = useCallback(
+    (evt: React.PointerEvent<HTMLDivElement>) => {
       if (isSeekingRef.current) {
         evt.preventDefault()
+        seek(evt)
+      }
+    },
+    [seek],
+  )
+
+  const onPointerUp = useCallback(
+    (evt: React.PointerEvent<HTMLDivElement>) => {
+      const target = evt.target
+      if (isSeekingRef.current && target instanceof Element) {
+        evt.preventDefault()
+        evt.stopPropagation()
+        target.releasePointerCapture(evt.pointerId)
         isSeekingRef.current = false
         onSeekEnd()
         stopScrubbing()
       }
-    }
-
-    // Log the horizontal mouse position on mousemove and touchmove
-    const handleMouseMove = (evt: MouseEvent | TouchEvent) => {
-      if (isSeekingRef.current) {
-        evt.preventDefault()
-        seek(evt)
-      }
-    }
-
-    const abortController = new AbortController()
-    const {signal} = abortController
-
-    document.addEventListener('mousedown', handleMouseDown, {signal})
-    document.addEventListener('mouseup', handleMouseUp, {signal})
-    document.addEventListener('mousemove', handleMouseMove, {signal})
-    document.addEventListener('touchstart', handleMouseDown, {signal})
-    document.addEventListener('touchend', handleMouseUp, {signal})
-    document.addEventListener('touchmove', handleMouseMove, {signal})
-
-    return () => {
-      abortController.abort()
-    }
-  }, [onSeekEnd, onSeekStart, startScrubbing, stopScrubbing, onSeek, duration])
+    },
+    [onSeekEnd, stopScrubbing],
+  )
 
   useEffect(() => {
     if (!circleRef.current) return
@@ -522,7 +518,10 @@ function Scrubber({
           alignItems: 'center',
           position: 'relative',
           cursor: 'pointer',
-        }}>
+        }}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}>
         <View
           style={[
             a.w_full,
