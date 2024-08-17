@@ -7,6 +7,7 @@ import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {logEvent, LogEvents} from '#/lib/statsig/statsig'
+import {useGate} from '#/lib/statsig/statsig'
 import {emitSoftReset} from '#/state/events'
 import {SavedFeedSourceInfo, usePinnedFeedsInfos} from '#/state/queries/feed'
 import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
@@ -88,6 +89,7 @@ function HomeScreenReady({
   const selectedFeed = allFeeds[selectedIndex]
   const requestNotificationsPermission = useRequestNotificationsPermission()
   const triggerTourIfQueued = useTriggerTourIfQueued(TOURS.HOME)
+  const gate = useGate()
 
   useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName)
   useOTAUpdates()
@@ -169,6 +171,10 @@ function HomeScreenReady({
   const {isMobile} = useWebMediaQueries()
   useFocusEffect(
     React.useCallback(() => {
+      if (gate('fixed_bottom_bar')) {
+        // Unnecessary because it's always there.
+        return
+      }
       const listener = AppState.addEventListener('change', nextAppState => {
         if (nextAppState === 'active') {
           if (isMobile && mode.value === 1) {
@@ -181,7 +187,7 @@ function HomeScreenReady({
       return () => {
         listener.remove()
       }
-    }, [setMinimalShellMode, mode, isMobile]),
+    }, [setMinimalShellMode, mode, isMobile, gate]),
   )
 
   const onPageSelected = React.useCallback(

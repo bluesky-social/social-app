@@ -42,7 +42,10 @@ export type Action =
       accountDid: string
     }
   | {
-      type: 'logged-out'
+      type: 'logged-out-current-account'
+    }
+  | {
+      type: 'logged-out-every-account'
     }
   | {
       type: 'synced-accounts'
@@ -138,7 +141,23 @@ let reducer = (state: State, action: Action): State => {
         needsPersist: true,
       }
     }
-    case 'logged-out': {
+    case 'logged-out-current-account': {
+      const {currentAgentState} = state
+      return {
+        accounts: state.accounts.map(a =>
+          a.did === currentAgentState.did
+            ? {
+                ...a,
+                refreshJwt: undefined,
+                accessJwt: undefined,
+              }
+            : a,
+        ),
+        currentAgentState: createPublicAgentState(),
+        needsPersist: true,
+      }
+    }
+    case 'logged-out-every-account': {
       return {
         accounts: state.accounts.map(a => ({
           ...a,

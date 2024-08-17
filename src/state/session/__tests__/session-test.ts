@@ -76,7 +76,7 @@ describe('session', () => {
 
     state = run(state, [
       {
-        type: 'logged-out',
+        type: 'logged-out-every-account',
       },
     ])
     // Should keep the account but clear out the tokens.
@@ -372,7 +372,7 @@ describe('session', () => {
     state = run(state, [
       {
         // Log everyone out.
-        type: 'logged-out',
+        type: 'logged-out-every-account',
       },
     ])
     expect(state.accounts.length).toBe(3)
@@ -466,7 +466,7 @@ describe('session', () => {
 
     state = run(state, [
       {
-        type: 'logged-out',
+        type: 'logged-out-every-account',
       },
     ])
     expect(state.accounts.length).toBe(1)
@@ -672,6 +672,103 @@ describe('session', () => {
     ])
     expect(state.accounts.length).toBe(0)
     expect(state.currentAgentState.did).toBe(undefined)
+  })
+
+  it('can log out of the current account', () => {
+    let state = getInitialState([])
+
+    const agent1 = new BskyAgent({service: 'https://alice.com'})
+    agent1.sessionManager.session = {
+      active: true,
+      did: 'alice-did',
+      handle: 'alice.test',
+      accessJwt: 'alice-access-jwt-1',
+      refreshJwt: 'alice-refresh-jwt-1',
+    }
+    state = run(state, [
+      {
+        type: 'switched-to-account',
+        newAgent: agent1,
+        newAccount: agentToSessionAccountOrThrow(agent1),
+      },
+    ])
+    expect(state.accounts.length).toBe(1)
+    expect(state.accounts[0].accessJwt).toBe('alice-access-jwt-1')
+    expect(state.accounts[0].refreshJwt).toBe('alice-refresh-jwt-1')
+    expect(state.currentAgentState.did).toBe('alice-did')
+
+    const agent2 = new BskyAgent({service: 'https://bob.com'})
+    agent2.sessionManager.session = {
+      active: true,
+      did: 'bob-did',
+      handle: 'bob.test',
+      accessJwt: 'bob-access-jwt-1',
+      refreshJwt: 'bob-refresh-jwt-1',
+    }
+    state = run(state, [
+      {
+        type: 'switched-to-account',
+        newAgent: agent2,
+        newAccount: agentToSessionAccountOrThrow(agent2),
+      },
+    ])
+    expect(state.accounts.length).toBe(2)
+    expect(state.accounts[0].accessJwt).toBe('bob-access-jwt-1')
+    expect(state.accounts[0].refreshJwt).toBe('bob-refresh-jwt-1')
+    expect(state.currentAgentState.did).toBe('bob-did')
+
+    state = run(state, [
+      {
+        type: 'logged-out-current-account',
+      },
+    ])
+    expect(state.accounts.length).toBe(2)
+    expect(state.accounts[0].accessJwt).toBe(undefined)
+    expect(state.accounts[0].refreshJwt).toBe(undefined)
+    expect(state.accounts[1].accessJwt).toBe('alice-access-jwt-1')
+    expect(state.accounts[1].refreshJwt).toBe('alice-refresh-jwt-1')
+    expect(state.currentAgentState.did).toBe(undefined)
+    expect(printState(state)).toMatchInlineSnapshot(`
+      {
+        "accounts": [
+          {
+            "accessJwt": undefined,
+            "active": true,
+            "did": "bob-did",
+            "email": undefined,
+            "emailAuthFactor": false,
+            "emailConfirmed": false,
+            "handle": "bob.test",
+            "pdsUrl": undefined,
+            "refreshJwt": undefined,
+            "service": "https://bob.com/",
+            "signupQueued": false,
+            "status": undefined,
+          },
+          {
+            "accessJwt": "alice-access-jwt-1",
+            "active": true,
+            "did": "alice-did",
+            "email": undefined,
+            "emailAuthFactor": false,
+            "emailConfirmed": false,
+            "handle": "alice.test",
+            "pdsUrl": undefined,
+            "refreshJwt": "alice-refresh-jwt-1",
+            "service": "https://alice.com/",
+            "signupQueued": false,
+            "status": undefined,
+          },
+        ],
+        "currentAgentState": {
+          "agent": {
+            "service": "https://public.api.bsky.app/",
+          },
+          "did": undefined,
+        },
+        "needsPersist": true,
+      }
+    `)
   })
 
   it('updates stored account with refreshed tokens', () => {
