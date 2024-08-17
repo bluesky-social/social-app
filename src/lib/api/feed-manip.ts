@@ -94,11 +94,18 @@ export class FeedViewPostsSlice {
     }
     const root = reply.root
     const rootIsView =
-      AppBskyFeedDefs.isPostView(root) || AppBskyFeedDefs.isBlockedPost(root)
-    // if parent is also the root, we have data!
+      AppBskyFeedDefs.isPostView(root) ||
+      AppBskyFeedDefs.isBlockedPost(root) ||
+      AppBskyFeedDefs.isNotFoundPost(root)
+    /*
+     * If the parent is also the root, we just so happen to have the data we
+     * need to compute if the parent's parent (grandparent) is blocked. This
+     * doesn't always happen, of course, but we can take advantage of it when
+     * it does.
+     */
     const grandparent =
-      rootIsView && parent?.record?.reply?.parent?.uri === root?.uri
-        ? reply?.root
+      rootIsView && parent.record.reply?.parent.uri === root.uri
+        ? root
         : undefined
     const grandparentAuthor = reply.grandparentAuthor
     const isGrandparentBlocked = Boolean(
