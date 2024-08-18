@@ -7,6 +7,7 @@ import {
 import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import {msg} from '@lingui/macro'
 
+import {STARTER_PACK_MAX_SIZE} from 'lib/constants'
 import {useSession} from 'state/session'
 import * as Toast from '#/view/com/util/Toast'
 
@@ -73,7 +74,7 @@ function reducer(state: State, action: Action): State {
       updatedState = {...state, description: action.description}
       break
     case 'AddProfile':
-      if (state.profiles.length >= 51) {
+      if (state.profiles.length > STARTER_PACK_MAX_SIZE) {
         Toast.show(
           msg`You may only add up to 50 profiles`.message ?? '',
           'info',

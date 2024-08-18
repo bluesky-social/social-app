@@ -23,6 +23,7 @@ import {useProgressGuideControls} from '#/state/shell/progress-guide'
 import {uploadBlob} from 'lib/api'
 import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
 import {useSetHasCheckedForStarterPack} from 'state/preferences/used-starter-packs'
+import {getAllListMembers} from 'state/queries/list-members'
 import {
   useActiveStarterPack,
   useSetActiveStarterPack,
@@ -75,11 +76,7 @@ export function StepFinished() {
         starterPack = spRes.data.starterPack
 
         if (starterPack.list) {
-          const listRes = await agent.app.bsky.graph.getList({
-            list: starterPack.list.uri,
-            limit: 50,
-          })
-          listItems = listRes.data.items
+          listItems = await getAllListMembers(agent, starterPack.list.uri)
         }
       } catch (e) {
         logger.error('Failed to fetch starter pack', {safeMessage: e})

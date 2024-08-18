@@ -32,6 +32,7 @@ import {getStarterPackOgCard} from 'lib/strings/starter-pack'
 import {isWeb} from 'platform/detection'
 import {updateProfileShadow} from 'state/cache/profile-shadow'
 import {useModerationOpts} from 'state/preferences/moderation-opts'
+import {getAllListMembers} from 'state/queries/list-members'
 import {useResolvedStarterPackShortLink} from 'state/queries/resolve-short-link'
 import {useResolveDidQuery} from 'state/queries/resolve-uri'
 import {useShortenLink} from 'state/queries/shorten-link'
@@ -328,10 +329,8 @@ function Header({
     setIsProcessing(true)
 
     try {
-      const list = await agent.app.bsky.graph.getList({
-        list: starterPack.list.uri,
-      })
-      const dids = list.data.items
+      const listItems = await getAllListMembers(agent, starterPack.list.uri)
+      const dids = listItems
         .filter(
           li =>
             li.subject.did !== currentAccount?.did &&

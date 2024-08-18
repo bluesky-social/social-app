@@ -9,6 +9,7 @@ import {
 import {InfiniteData, UseInfiniteQueryResult} from '@tanstack/react-query'
 
 import {useBottomBarOffset} from 'lib/hooks/useBottomBarOffset'
+import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
 import {isBlockedOrBlocking} from 'lib/moderation/blocked-and-muted'
 import {isNative, isWeb} from 'platform/detection'
 import {useListMembersQuery} from 'state/queries/list-members'
@@ -16,7 +17,7 @@ import {useSession} from 'state/session'
 import {List, ListRef} from 'view/com/util/List'
 import {SectionRef} from '#/screens/Profile/Sections/types'
 import {atoms as a, useTheme} from '#/alf'
-import {ListMaybePlaceholder} from '#/components/Lists'
+import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {Default as ProfileCard} from '#/components/ProfileCard'
 
 function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic, index: number) {
@@ -39,10 +40,11 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
     ref,
   ) {
     const t = useTheme()
-    const [initialHeaderHeight] = React.useState(headerHeight)
-    const bottomBarOffset = useBottomBarOffset(20)
+    const bottomBarOffset = useBottomBarOffset(200)
+    const initialNumToRender = useInitialNumToRender()
     const {currentAccount} = useSession()
-    const {data, refetch, isError} = useListMembersQuery(listUri, 50)
+    const {data, refetch, isError, fetchNextPage, isFetchingNextPage} =
+      useListMembersQuery(listUri, 50)
 
     const [isPTRing, setIsPTRing] = React.useState(false)
 
@@ -118,16 +120,23 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
           ref={scrollElRef}
           headerOffset={headerHeight}
           ListFooterComponent={
-            <View style={[{height: initialHeaderHeight + bottomBarOffset}]} />
+            <ListFooter
+              isFetchingNextPage={isFetchingNextPage}
+              onRetry={fetchNextPage}
+              style={{paddingBottom: bottomBarOffset, borderTopWidth: 0}}
+            />
           }
           showsVerticalScrollIndicator={false}
           desktopFixedHeight
+          initialNumToRender={initialNumToRender}
           refreshing={isPTRing}
           onRefresh={async () => {
             setIsPTRing(true)
             await refetch()
             setIsPTRing(false)
           }}
+          onEndReachedThreshold={2}
+          onEndReached={() => fetchNextPage()}
         />
       )
   },
