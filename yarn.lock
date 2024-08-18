@@ -19157,10 +19157,10 @@ react-native-qrcode-styled@^0.3.2:
     qrcode "^1.5.1"
     react-fast-compare "^3.2.2"
 
-react-native-reanimated@^3.16.0-nightly-20240811-b85f9664d:
-  version "3.16.0-nightly-20240811-b85f9664d"
-  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-3.16.0-nightly-20240811-b85f9664d.tgz#74480fd4106663d96e91355d9aaec7d72fd68a7a"
-  integrity sha512-LXVJYeXOAzntb/OOfuclUZRbBMuxM2zskXhyuuGMmIGx9OrL4/OJlGCYe1TeIvwSVx4/tWknKMgq23l0PPC5sQ==
+react-native-reanimated@^3.16.0@nightly:
+  version "3.16.0-nightly-20240817-b2f4e1dcf"
+  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-3.16.0-nightly-20240817-b2f4e1dcf.tgz#35d6eb73f0a7aedf648e949aec763a1a7ab0745a"
+  integrity sha512-WjBmJkamLd5xZm+R0GG2aZYO2PluSDYfgd+G5FDmgiCnFrTQgfGZ6C8Qc4nzcaXU06cRmGUrc8J9uA81N9grGg==
   dependencies:
     "@babel/plugin-transform-arrow-functions" "^7.0.0-0"
     "@babel/plugin-transform-class-properties" "^7.0.0-0"
@@ -19201,10 +19201,10 @@ react-native-svg@^15.4.0:
     css-tree "^1.1.3"
     warn-once "0.1.1"
 
-react-native-uitextview@1.3.0-alpha.1:
-  version "1.3.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/react-native-uitextview/-/react-native-uitextview-1.3.0-alpha.1.tgz#d2288f10020767f92e3bd6986899b5c09fdf9b13"
-  integrity sha512-5twzZELS+9bSFriMiLpOnhoeZO9Ak3pwGyUTPx/enAoyNaXlILug3kGmfXpZKvAOiWgQoF4hcEk3vDHTNbl01A==
+react-native-uitextview@1.3.0-alpha.9:
+  version "1.3.0-alpha.9"
+  resolved "https://registry.yarnpkg.com/react-native-uitextview/-/react-native-uitextview-1.3.0-alpha.9.tgz#068f8f14c1af0d6596ca166d9df3c40048153cf2"
+  integrity sha512-/DaYEe0lUh8kGSoEbomtj04qJKTYy33kakd1L855HL9LFb9BYH6EQ+IlhPAqg8tXq4iTfhPgaeTKy7pkAbAYwg==
 
 react-native-url-polyfill@^1.3.0:
   version "1.3.0"

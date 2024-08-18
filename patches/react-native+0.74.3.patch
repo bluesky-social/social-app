@@ -1,5 +1,5 @@
 diff --git a/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm b/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm
-index b0d71dc..9974932 100644
+index b0d71dc..41b9a0e 100644
 --- a/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm
 +++ b/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm
 @@ -377,10 +377,6 @@ - (void)textInputDidBeginEditing
@@ -24,6 +24,20 @@ index b0d71dc..9974932 100644
  }
 
  - (void)reactBlur
+diff --git a/node_modules/react-native/React/Fabric/Mounting/RCTMountingManager.mm b/node_modules/react-native/React/Fabric/Mounting/RCTMountingManager.mm
+index 0e2323f..c7c5b53 100644
+--- a/node_modules/react-native/React/Fabric/Mounting/RCTMountingManager.mm
++++ b/node_modules/react-native/React/Fabric/Mounting/RCTMountingManager.mm
+@@ -82,8 +82,8 @@ static void RCTPerformMountInstructions(
+
+         RCTAssert(newChildShadowView.props, @"`newChildShadowView.props` must not be null.");
+
+-        [newChildComponentView updateProps:newChildShadowView.props oldProps:nullptr];
+         [newChildComponentView updateEventEmitter:newChildShadowView.eventEmitter];
++        [newChildComponentView updateProps:newChildShadowView.props oldProps:nullptr];
+         [newChildComponentView updateState:newChildShadowView.state oldState:nullptr];
+         [newChildComponentView updateLayoutMetrics:newChildShadowView.layoutMetrics
+                                   oldLayoutMetrics:EmptyLayoutMetrics];
 diff --git a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h
 index e9b330f..1ecdf0a 100644
 --- a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.h
@@ -36,7 +50,7 @@ index e9b330f..1ecdf0a 100644
 +
  @end
 diff --git a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m
-index b09e653..4c32b31 100644
+index b09e653..f93cb46 100644
 --- a/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m
 +++ b/node_modules/react-native/React/Views/RefreshControl/RCTRefreshControl.m
 @@ -198,9 +198,53 @@ - (void)refreshControlValueChanged
