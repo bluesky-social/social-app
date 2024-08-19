@@ -28,7 +28,7 @@ import {
   useThreadgateViewQuery,
 } from '#/state/queries/threadgate'
 import {useAgent, useSession} from '#/state/session'
-import * as Toast from '#/view/com/util/toast'
+import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
