@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react'
+import React, {useCallback, useState} from 'react'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
@@ -15,12 +15,12 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {usePostQuotesQuery} from '#/state/queries/post-quotes'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
+import {Post} from 'view/com/post/Post'
 import {
   ListFooter,
   ListHeaderDesktop,
   ListMaybePlaceholder,
 } from '#/components/Lists'
-import {FeedItem} from '../posts/FeedItem'
 import {List} from '../util/List'
 
 function renderItem({
@@ -34,18 +34,7 @@ function renderItem({
   }
   index: number
 }) {
-  return (
-    <FeedItem
-      post={item.post}
-      record={item.record}
-      moderation={item.moderation}
-      hideTopBorder={index === 0 && !isWeb}
-      reason={undefined}
-      parentAuthor={undefined}
-      feedContext={undefined}
-      showReplyTo={false}
-    />
-  )
+  return <Post post={item.post} hideTopBorder={index === 0 && !isWeb} />
 }
 
 function keyExtractor(item: {
@@ -81,22 +70,18 @@ export function PostQuotes({uri}: {uri: string}) {
 
   const isError = Boolean(resolveError || error)
 
-  const quotes = useMemo(() => {
-    if (data?.pages) {
-      return data.pages
-        .flatMap(page =>
-          page.posts.map(post => {
-            if (!AppBskyFeedPost.isRecord(post.record) || !moderationOpts) {
-              return null
-            }
-            const moderation = moderatePost(post, moderationOpts)
-            return {post, record: post.record, moderation}
-          }),
-        )
-        .filter(item => item !== null)
-    }
-    return []
-  }, [data, moderationOpts])
+  const quotes =
+    data?.pages
+      .flatMap(page =>
+        page.posts.map(post => {
+          if (!AppBskyFeedPost.isRecord(post.record) || !moderationOpts) {
+            return null
+          }
+          const moderation = moderatePost(post, moderationOpts)
+          return {post, record: post.record, moderation}
+        }),
+      )
+      .filter(item => item !== null) ?? []
 
   const onRefresh = useCallback(async () => {
     setIsPTRing(true)

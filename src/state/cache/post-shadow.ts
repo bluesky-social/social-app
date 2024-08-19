@@ -6,6 +6,7 @@ import EventEmitter from 'eventemitter3'
 import {batchedUpdates} from '#/lib/batchedUpdates'
 import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from '../queries/notifications/feed'
 import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from '../queries/post-feed'
+import {findAllPostsInQueryData as findAllPostsInQuoteQueryData} from '../queries/post-quotes'
 import {findAllPostsInQueryData as findAllPostsInThreadQueryData} from '../queries/post-thread'
 import {findAllPostsInQueryData as findAllPostsInSearchQueryData} from '../queries/search-posts'
 import {castAsShadow, Shadow} from './types'
@@ -128,6 +129,9 @@ function* findPostsInCache(
     }
   }
   for (let post of findAllPostsInSearchQueryData(queryClient, uri)) {
+    yield post
+  }
+  for (let post of findAllPostsInQuoteQueryData(queryClient, uri)) {
     yield post
   }
 }
