@@ -103,7 +103,11 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
 
     if (!data) {
       return (
-        <View style={{marginTop: headerHeight, marginBottom: bottomBarOffset}}>
+        <View
+          style={[
+            a.h_full_vh,
+            {marginTop: headerHeight, marginBottom: bottomBarOffset},
+          ]}>
           <ListMaybePlaceholder
             isLoading={true}
             isError={isError}
