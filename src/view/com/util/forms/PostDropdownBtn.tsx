@@ -496,9 +496,17 @@ let PostDropdownBtn = ({
                   {canHidePostForMe && (
                     <Menu.Item
                       testID="postDropdownHideBtn"
-                      label={_(msg`Hide post for me`)}
+                      label={
+                        isReply
+                          ? _(msg`Hide reply for me`)
+                          : _(msg`Hide post for me`)
+                      }
                       onPress={hidePromptControl.open}>
-                      <Menu.ItemText>{_(msg`Hide post for me`)}</Menu.ItemText>
+                      <Menu.ItemText>
+                        {isReply
+                          ? _(msg`Hide reply for me`)
+                          : _(msg`Hide post for me`)}
+                      </Menu.ItemText>
                       <Menu.ItemIcon icon={EyeSlash} position="right" />
                     </Menu.Item>
                   )}
@@ -621,8 +629,10 @@ let PostDropdownBtn = ({
 
       <Prompt.Basic
         control={hidePromptControl}
-        title={_(msg`Hide this post?`)}
-        description={_(msg`This post will be hidden from feeds.`)}
+        title={isReply ? _(msg`Hide this reply?`) : _(msg`Hide this post?`)}
+        description={_(
+          msg`This post will be hidden from feeds and threads. This cannot be undone.`,
+        )}
         onConfirm={onHidePost}
         confirmButtonCta={_(msg`Hide`)}
       />
