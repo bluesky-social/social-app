@@ -1,11 +1,6 @@
 import React from 'react'
 import {StyleProp, View, ViewStyle} from 'react-native'
-import {
-  AppBskyFeedDefs,
-  AppBskyFeedPostgate,
-  AppBskyFeedThreadgate,
-  AtUri,
-} from '@atproto/api'
+import {AppBskyFeedDefs, AppBskyFeedPostgate, AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -131,13 +126,8 @@ export function PostInteractionSettingsDialogControlledInner(
   const isLoading = isLoadingThreadgate || isLoadingPostgate
   const threadgateView = threadgateViewLoaded || props.initialThreadgateView
   const isThreadgateOwnedByViewer = React.useMemo(() => {
-    if (AppBskyFeedThreadgate.isRecord(threadgateView?.record)) {
-      return (
-        currentAccount?.did === new AtUri(threadgateView?.record?.post).host
-      )
-    }
-    return false
-  }, [threadgateView, currentAccount?.did])
+    return currentAccount?.did === new AtUri(props.rootPostUri).host
+  }, [props.rootPostUri, currentAccount?.did])
 
   const postgateValue = React.useMemo(() => {
     return (
