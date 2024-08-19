@@ -1,9 +1,15 @@
 import React from 'react'
-import {Platform, Pressable, StyleSheet, View, ViewStyle} from 'react-native'
+import {
+  NativeSyntheticEvent,
+  Platform,
+  Pressable,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import * as DropdownMenu from 'zeego/dropdown-menu'
-import {MenuItemCommonProps} from 'zeego/lib/typescript/menu'
+import {MenuAction, MenuView, NativeActionEvent} from '@react-native-menu/menu'
 
 import {HITSLOP_10} from 'lib/constants'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -175,6 +181,33 @@ export function NativeDropdown({
   const dropDownBackgroundColor =
     theme.colorScheme === 'dark' ? pal.btn : pal.viewLight
 
+  const actions = React.useMemo(() => {
+    const _actions: MenuAction[] = []
+    let subGroup: MenuAction[] = []
+    for (const item of items) {
+      if (item.label === 'separator') {
+        if (subGroup) {
+          _actions.push({
+            title: 'Subgroup',
+            subactions: subGroup,
+            displayInline: true,
+          })
+        }
+        subGroup = []
+      } else {
+        subGroup.push({
+          title: item.label,
+        })
+      }
+    }
+    return _actions
+  }, [items])
+
+  const onPressAction = (e: NativeActionEvent) => {
+    const item = items.find(item => item.label === e.nativeEvent.event)
+    item?.onPress?.()
+  }
+
   return (
     <>
       {isIOS && isOpen && (
@@ -182,71 +215,72 @@ export function NativeDropdown({
           <Backdrop />
         </Portal>
       )}
-      <DropdownMenuRoot onOpenWillChange={setIsOpen}>
-        <DropdownMenuTrigger
-          action="press"
-          testID={testID}
-          accessibilityLabel={accessibilityLabel}
-          accessibilityHint={accessibilityHint}>
-          {children}
-        </DropdownMenuTrigger>
-        <DropdownMenuContent
-          style={[styles.content, dropDownBackgroundColor]}
-          loop>
-          {items.map((item, index) => {
-            if (item.label === 'separator') {
-              return (
-                <DropdownMenuSeparator
-                  key={getKey(item.label, index, item.testID)}
-                />
-              )
-            }
-            if (index > 1 && items[index - 1].label === 'separator') {
-              return (
-                <DropdownMenu.Group
-                  key={getKey(item.label, index, item.testID)}>
-                  <DropdownMenuItem
-                    key={getKey(item.label, index, item.testID)}
-                    onSelect={item.onPress}>
-                    <DropdownMenuItemTitle>{item.label}</DropdownMenuItemTitle>
-                    {item.icon && (
-                      <DropdownMenuItemIcon
-                        ios={item.icon.ios}
-                        // androidIconName={item.icon.android} TODO: Add custom android icon support, because these ones are based on https://developer.android.com/reference/android/R.drawable.html and they are ugly
-                      >
-                        <FontAwesomeIcon
-                          icon={item.icon.web}
-                          size={20}
-                          style={[pal.text]}
-                        />
-                      </DropdownMenuItemIcon>
-                    )}
-                  </DropdownMenuItem>
-                </DropdownMenu.Group>
-              )
-            }
-            return (
-              <DropdownMenuItem
-                key={getKey(item.label, index, item.testID)}
-                onSelect={item.onPress}>
-                <DropdownMenuItemTitle>{item.label}</DropdownMenuItemTitle>
-                {item.icon && (
-                  <DropdownMenuItemIcon
-                    ios={item.icon.ios}
-                    // androidIconName={item.icon.android}
-                  >
-                    <FontAwesomeIcon
-                      icon={item.icon.web}
-                      size={20}
-                      style={[pal.text]}
-                    />
-                  </DropdownMenuItemIcon>
-                )}
-              </DropdownMenuItem>
-            )
-          })}
-        </DropdownMenuContent>
-      </DropdownMenuRoot>
+      <MenuView actions={actions} onPressAction={onPressAction} />
+      {/*<DropdownMenuRoot onOpenWillChange={setIsOpen}>*/}
+      {/*  <DropdownMenuTrigger*/}
+      {/*    action="press"*/}
+      {/*    testID={testID}*/}
+      {/*    accessibilityLabel={accessibilityLabel}*/}
+      {/*    accessibilityHint={accessibilityHint}>*/}
+      {/*    {children}*/}
+      {/*  </DropdownMenuTrigger>*/}
+      {/*  <DropdownMenuContent*/}
+      {/*    style={[styles.content, dropDownBackgroundColor]}*/}
+      {/*    loop>*/}
+      {/*    {items.map((item, index) => {*/}
+      {/*      if (item.label === 'separator') {*/}
+      {/*        return (*/}
+      {/*          <DropdownMenuSeparator*/}
+      {/*            key={getKey(item.label, index, item.testID)}*/}
+      {/*          />*/}
+      {/*        )*/}
+      {/*      }*/}
+      {/*      if (index > 1 && items[index - 1].label === 'separator') {*/}
+      {/*        return (*/}
+      {/*          <DropdownMenu.Group*/}
+      {/*            key={getKey(item.label, index, item.testID)}>*/}
+      {/*            <DropdownMenuItem*/}
+      {/*              key={getKey(item.label, index, item.testID)}*/}
+      {/*              onSelect={item.onPress}>*/}
+      {/*              <DropdownMenuItemTitle>{item.label}</DropdownMenuItemTitle>*/}
+      {/*              {item.icon && (*/}
+      {/*                <DropdownMenuItemIcon*/}
+      {/*                  ios={item.icon.ios}*/}
+      {/*                  // androidIconName={item.icon.android} TODO: Add custom android icon support, because these ones are based on https://developer.android.com/reference/android/R.drawable.html and they are ugly*/}
+      {/*                >*/}
+      {/*                  <FontAwesomeIcon*/}
+      {/*                    icon={item.icon.web}*/}
+      {/*                    size={20}*/}
+      {/*                    style={[pal.text]}*/}
+      {/*                  />*/}
+      {/*                </DropdownMenuItemIcon>*/}
+      {/*              )}*/}
+      {/*            </DropdownMenuItem>*/}
+      {/*          </DropdownMenu.Group>*/}
+      {/*        )*/}
+      {/*      }*/}
+      {/*      return (*/}
+      {/*        <DropdownMenuItem*/}
+      {/*          key={getKey(item.label, index, item.testID)}*/}
+      {/*          onSelect={item.onPress}>*/}
+      {/*          <DropdownMenuItemTitle>{item.label}</DropdownMenuItemTitle>*/}
+      {/*          {item.icon && (*/}
+      {/*            <DropdownMenuItemIcon*/}
+      {/*              ios={item.icon.ios}*/}
+      {/*              // androidIconName={item.icon.android}*/}
+      {/*            >*/}
+      {/*              <FontAwesomeIcon*/}
+      {/*                icon={item.icon.web}*/}
+      {/*                size={20}*/}
+      {/*                style={[pal.text]}*/}
+      {/*              />*/}
+      {/*            </DropdownMenuItemIcon>*/}
+      {/*          )}*/}
+      {/*        </DropdownMenuItem>*/}
+      {/*      )*/}
+      {/*    })}*/}
+      {/*  </DropdownMenuContent>*/}
+      {/*</DropdownMenuRoot>*/}
     </>
   )
 }

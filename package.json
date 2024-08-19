@@ -74,6 +74,7 @@
     "@radix-ui/react-dropdown-menu": "^2.0.6",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-native-masked-view/masked-view": "0.3.1",
+    "@react-native-menu/menu": "^1.1.2",
     "@react-native-picker/picker": "2.7.7",
     "@react-navigation/bottom-tabs": "^6.6.1",
     "@react-navigation/drawer": "^6.7.2",
