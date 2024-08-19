@@ -32,6 +32,7 @@ import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {
   useAddSavedFeedsMutation,
   usePreferencesQuery,
+  UsePreferencesQueryResponse,
   useRemoveFeedMutation,
   useUpdateSavedFeedsMutation,
 } from '#/state/queries/preferences'
@@ -67,6 +68,7 @@ import {LoadingScreen} from 'view/com/util/LoadingScreen'
 import {Text} from 'view/com/util/text/Text'
 import * as Toast from 'view/com/util/Toast'
 import {CenteredView} from 'view/com/util/Views'
+import {ListHiddenScreen} from '#/screens/List/ListHiddenScreen'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {ScreenHider} from '#/components/moderation/ScreenHider'
@@ -88,6 +90,7 @@ export function ProfileListScreen(props: Props) {
   const {data: resolvedUri, error: resolveError} = useResolveUriQuery(
     AtUri.make(handleOrDid, 'app.bsky.graph.list', rkey).toString(),
   )
+  const {data: preferences} = usePreferencesQuery()
   const {data: list, error: listError} = useListQuery(resolvedUri?.uri)
   const moderationOpts = useModerationOpts()
 
@@ -110,12 +113,13 @@ export function ProfileListScreen(props: Props) {
     )
   }
 
-  return resolvedUri && list && moderationOpts ? (
+  return resolvedUri && list && moderationOpts && preferences ? (
     <ProfileListScreenLoaded
       {...props}
       uri={resolvedUri.uri}
       list={list}
       moderationOpts={moderationOpts}
+      preferences={preferences}
     />
   ) : (
     <LoadingScreen />
@@ -127,10 +131,12 @@ function ProfileListScreenLoaded({
   uri,
   list,
   moderationOpts,
+  preferences,
 }: Props & {
   uri: string
   list: AppBskyGraphDefs.ListView
   moderationOpts: ModerationOpts
+  preferences: UsePreferencesQueryResponse
 }) {
   const {_} = useLingui()
   const queryClient = useQueryClient()
@@ -142,6 +148,7 @@ function ProfileListScreenLoaded({
   const {openModal} = useModalControls()
   const isCurateList = list.purpose === 'app.bsky.graph.defs#curatelist'
   const isScreenFocused = useIsFocused()
+  const isHidden = list.labels?.findIndex(l => l.val === '!hide') !== -1
 
   const moderation = React.useMemo(() => {
     return moderateUserList(list, moderationOpts)
@@ -179,8 +186,12 @@ function ProfileListScreenLoaded({
   )
 
   const renderHeader = useCallback(() => {
-    return <Header rkey={rkey} list={list} />
-  }, [rkey, list])
+    return <Header rkey={rkey} list={list} preferences={preferences} />
+  }, [rkey, list, preferences])
+
+  if (isHidden) {
+    return <ListHiddenScreen list={list} preferences={preferences} />
+  }
 
   if (isCurateList) {
     return (
@@ -267,7 +278,15 @@ function ProfileListScreenLoaded({
   )
 }
 
-function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
+function Header({
+  rkey,
+  list,
+  preferences,
+}: {
+  rkey: string
+  list: AppBskyGraphDefs.ListView
+  preferences: UsePreferencesQueryResponse
+}) {
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
   const {_} = useLingui()
@@ -283,7 +302,6 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
   const isBlocking = !!list.viewer?.blocked
   const isMuting = !!list.viewer?.muted
   const isOwner = list.creator.did === currentAccount?.did
-  const {data: preferences} = usePreferencesQuery()
   const {track} = useAnalytics()
   const playHaptic = useHaptics()
 
@@ -644,7 +662,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
           cid: list.cid,
         }}
       />
-      {isCurateList || isPinned ? (
+      {isCurateList ? (
         <Button
           testID={isPinned ? 'unpinBtn' : 'pinBtn'}
           type={isPinned ? 'default' : 'inverted'}
