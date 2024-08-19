@@ -201,7 +201,6 @@ export function useEditStarterPackMutation({
           i.subject.did !== agent.session?.did &&
           !profiles.find(p => p.did === i.subject.did && p.did),
       )
-
       if (removedItems.length !== 0) {
         const chunks = chunk(removedItems, 50)
         for (const chunk of chunks) {
@@ -219,7 +218,6 @@ export function useEditStarterPackMutation({
       const addedProfiles = profiles.filter(
         p => !currentListItems.find(i => i.subject.did === p.did),
       )
-
       if (addedProfiles.length > 0) {
         const chunks = chunk(addedProfiles, 50)
         for (const chunk of chunks) {
