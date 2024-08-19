@@ -1,9 +1,4 @@
-import {
-  AppBskyActorDefs,
-  AppBskyFeedGetPostThread,
-  AppBskyFeedGetQuotes,
-  BskyAgent,
-} from '@atproto/api'
+import {AppBskyActorDefs, AppBskyFeedGetQuotes} from '@atproto/api'
 import {
   InfiniteData,
   QueryClient,
@@ -12,7 +7,6 @@ import {
 } from '@tanstack/react-query'
 
 import {useAgent} from '#/state/session'
-import {until} from 'lib/async/until'
 import {getEmbeddedPost} from './util'
 
 const PAGE_SIZE = 30
@@ -71,21 +65,4 @@ export function* findAllProfilesInQueryData(
       }
     }
   }
-}
-
-export async function whenAppViewReady(
-  agent: BskyAgent,
-  uri: string,
-  fn: (res: AppBskyFeedGetPostThread.Response) => boolean,
-) {
-  await until(
-    3, // 5 tries
-    1e3, // 1s delay between tries
-    fn,
-    () =>
-      agent.app.bsky.feed.getPostThread({
-        uri,
-        depth: 0,
-      }),
-  )
 }

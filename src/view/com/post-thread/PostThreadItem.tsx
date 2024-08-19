@@ -14,7 +14,6 @@ import {useLingui} from '@lingui/react'
 import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
-import {whenAppViewReady as whenAppViewReadyQuote} from '#/state/queries/post-quotes'
 import {ThreadPost} from '#/state/queries/post-thread'
 import {useComposerControls} from '#/state/shell/composer'
 import {MAX_POST_LINES} from 'lib/constants'
@@ -27,7 +26,7 @@ import {countLines} from 'lib/strings/helpers'
 import {niceDate} from 'lib/strings/time'
 import {s} from 'lib/styles'
 import {isWeb} from 'platform/detection'
-import {useAgent, useSession} from 'state/session'
+import {useSession} from 'state/session'
 import {PostThreadFollowBtn} from 'view/com/post-thread/PostThreadFollowBtn'
 import {atoms as a} from '#/alf'
 import {RichText} from '#/components/RichText'
@@ -175,7 +174,6 @@ let PostThreadItemLoaded = ({
 }): React.ReactNode => {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const agent = useAgent()
   const langPrefs = useLanguagePrefs()
   const {openComposer} = useComposerControls()
   const [limitLines, setLimitLines] = React.useState(
@@ -233,21 +231,6 @@ let PostThreadItemLoaded = ({
       onPost: onPostReply,
     })
   }, [openComposer, post, record, onPostReply, moderation])
-
-  const onPostQuote = React.useCallback(() => {
-    // We need to wait until the quote count is updated before we can show the new total. We'll wait for the appview
-    // here. Worst case scenario - someone deletes a quote right as you make yours - this will fail after 3 retries
-    whenAppViewReadyQuote(agent, post.uri, res => {
-      const thread = res.data.thread
-      if (AppBskyFeedDefs.isThreadViewPost(thread)) {
-        if (thread.post.quoteCount !== post.quoteCount) {
-          onPostReply(undefined)
-          return true
-        }
-      }
-      return false
-    })
-  }, [agent, post.uri, post.quoteCount, onPostReply])
 
   const onPressShowMore = React.useCallback(() => {
     setLimitLines(false)
@@ -435,7 +418,6 @@ let PostThreadItemLoaded = ({
                 record={record}
                 richText={richText}
                 onPressReply={onPressReply}
-                onPostQuote={onPostQuote}
                 logContext="PostThreadItem"
               />
             </View>
@@ -587,7 +569,6 @@ let PostThreadItemLoaded = ({
                 record={record}
                 richText={richText}
                 onPressReply={onPressReply}
-                onPostQuote={onPostQuote}
                 logContext="PostThreadItem"
               />
             </View>
