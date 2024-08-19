@@ -12,7 +12,7 @@ import {useBottomBarOffset} from 'lib/hooks/useBottomBarOffset'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
 import {isBlockedOrBlocking} from 'lib/moderation/blocked-and-muted'
 import {isNative, isWeb} from 'platform/detection'
-import {useListMembersQuery} from 'state/queries/list-members'
+import {useAllListMembersQuery} from 'state/queries/list-members'
 import {useSession} from 'state/session'
 import {List, ListRef} from 'view/com/util/List'
 import {SectionRef} from '#/screens/Profile/Sections/types'
@@ -43,15 +43,17 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
     const bottomBarOffset = useBottomBarOffset(200)
     const initialNumToRender = useInitialNumToRender()
     const {currentAccount} = useSession()
-    const {data, refetch, isError, fetchNextPage, isFetchingNextPage} =
-      useListMembersQuery(listUri, 50)
+    const {data, refetch, isError} = useAllListMembersQuery(listUri)
 
     const [isPTRing, setIsPTRing] = React.useState(false)
 
     // The server returns these sorted by descending creation date, so we want to invert
-    const profiles = data?.pages
-      .flatMap(p => p.items.map(i => i.subject))
-      .filter(p => !isBlockedOrBlocking(p) && !p.associated?.labeler)
+
+    const profiles = data
+      ?.filter(
+        p => !isBlockedOrBlocking(p.subject) && !p.subject.associated?.labeler,
+      )
+      .map(p => p.subject)
       .reverse()
     const isOwn = new AtUri(listUri).host === currentAccount?.did
 
@@ -121,8 +123,6 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
           headerOffset={headerHeight}
           ListFooterComponent={
             <ListFooter
-              isFetchingNextPage={isFetchingNextPage}
-              onRetry={fetchNextPage}
               style={{paddingBottom: bottomBarOffset, borderTopWidth: 0}}
             />
           }
@@ -135,8 +135,6 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
             await refetch()
             setIsPTRing(false)
           }}
-          onEndReached={() => fetchNextPage()}
-          onEndReachedThreshold={2}
         />
       )
   },
