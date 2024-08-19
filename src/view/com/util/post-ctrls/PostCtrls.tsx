@@ -58,6 +58,7 @@ let PostCtrls = ({
   feedContext,
   style,
   onPressReply,
+  onPostReply,
   logContext,
 }: {
   big?: boolean
@@ -67,6 +68,7 @@ let PostCtrls = ({
   feedContext?: string | undefined
   style?: StyleProp<ViewStyle>
   onPressReply: () => void
+  onPostReply?: (postUri: string | undefined) => void
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
 }): React.ReactNode => {
   const t = useTheme()
@@ -169,16 +171,20 @@ let PostCtrls = ({
         author: post.author,
         indexedAt: post.indexedAt,
       },
+      quoteCount: post.quoteCount,
+      onPost: onPostReply,
     })
   }, [
-    openComposer,
+    sendInteraction,
     post.uri,
     post.cid,
     post.author,
     post.indexedAt,
-    record.text,
-    sendInteraction,
+    post.quoteCount,
     feedContext,
+    openComposer,
+    record.text,
+    onPostReply,
   ])
 
   const onShare = useCallback(() => {

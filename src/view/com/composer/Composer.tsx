@@ -394,6 +394,7 @@ export const ComposePost = observer(function ComposePost({
     }
     setLangPrefs.savePostLanguageToHistory()
     if (quote) {
+      // We want to wait for the quote count to update before we call `onPost`, which will refetch data
       whenAppViewReady(agent, quote.uri, res => {
         const thread = res.data.thread
         if (

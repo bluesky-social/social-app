@@ -418,6 +418,7 @@ let PostThreadItemLoaded = ({
                 record={record}
                 richText={richText}
                 onPressReply={onPressReply}
+                onPostReply={onPostReply}
                 logContext="PostThreadItem"
               />
             </View>
@@ -569,6 +570,7 @@ let PostThreadItemLoaded = ({
                 record={record}
                 richText={richText}
                 onPressReply={onPressReply}
+                onPostReply={onPostReply}
                 logContext="PostThreadItem"
               />
             </View>
