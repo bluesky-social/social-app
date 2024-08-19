@@ -130,8 +130,20 @@ let RepostButton = ({
                 size="large"
                 variant="ghost"
                 color="primary">
-                <Quote size="lg" fill={t.palette.primary_500} />
-                <Text style={[a.font_bold, a.text_xl]}>
+                <Quote
+                  size="lg"
+                  fill={
+                    embeddingDisabled
+                      ? t.atoms.text_contrast_low.color
+                      : t.palette.primary_500
+                  }
+                />
+                <Text
+                  style={[
+                    a.font_bold,
+                    a.text_xl,
+                    embeddingDisabled && t.atoms.text_contrast_low,
+                  ]}>
                   {embeddingDisabled
                     ? _(msg`Quote posts disabled`)
                     : _(msg`Quote post`)}
