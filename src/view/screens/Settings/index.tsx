@@ -20,8 +20,7 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {isNative} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
-import {clearLegacyStorage} from '#/state/persisted/legacy'
-import {clear as clearStorage} from '#/state/persisted/store'
+import {clearStorage} from '#/state/persisted'
 import {
   useInAppBrowser,
   useSetInAppBrowser,
@@ -58,7 +57,6 @@ import {DeactivateAccountDialog} from '#/screens/Settings/components/DeactivateA
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
-import {navigate, resetToTab} from '#/Navigation'
 import {Email2FAToggle} from './Email2FAToggle'
 import {ExportCarDialog} from './ExportCarDialog'
 
@@ -78,7 +76,6 @@ function SettingsAccountCard({
   const {_} = useLingui()
   const t = useTheme()
   const {currentAccount} = useSession()
-  const {logout} = useSessionApi()
   const {data: profile} = useProfileQuery({did: account.did})
   const isCurrentAccount = account.did === currentAccount?.did
 
@@ -104,31 +101,7 @@ function SettingsAccountCard({
           {account.handle}
         </Text>
       </View>
-
-      {isCurrentAccount ? (
-        <TouchableOpacity
-          testID="signOutBtn"
-          onPress={() => {
-            if (isNative) {
-              logout('Settings')
-              resetToTab('HomeTab')
-            } else {
-              navigate('Home').then(() => {
-                logout('Settings')
-              })
-            }
-          }}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Sign out`)}
-          accessibilityHint={`Signs ${profile?.displayName} out of Bluesky`}
-          activeOpacity={0.8}>
-          <Text type="lg" style={pal.link}>
-            <Trans>Sign out</Trans>
-          </Text>
-        </TouchableOpacity>
-      ) : (
-        <AccountDropdownBtn account={account} />
-      )}
+      <AccountDropdownBtn account={account} />
     </View>
   )
 
@@ -174,6 +147,7 @@ export function SettingsScreen({}: Props) {
   const {accounts, currentAccount} = useSession()
   const {mutate: clearPreferences} = useClearPreferencesMutation()
   const {setShowLoggedOut} = useLoggedOutViewControls()
+  const {logoutEveryAccount} = useSessionApi()
   const closeAllActiveElements = useCloseAllActiveElements()
   const exportCarControl = useDialogControl()
   const birthdayControl = useDialogControl()
@@ -238,6 +212,10 @@ export function SettingsScreen({}: Props) {
     openModal({name: 'delete-account'})
   }, [openModal])
 
+  const onPressLogoutEveryAccount = React.useCallback(() => {
+    logoutEveryAccount('Settings')
+  }, [logoutEveryAccount])
+
   const onPressResetPreferences = React.useCallback(async () => {
     clearPreferences()
   }, [clearPreferences])
@@ -299,10 +277,6 @@ export function SettingsScreen({}: Props) {
     await clearStorage()
     Toast.show(_(msg`Storage cleared, you need to restart the app now.`))
   }, [_])
-  const clearAllLegacyStorage = React.useCallback(async () => {
-    await clearLegacyStorage()
-    Toast.show(_(msg`Legacy storage cleared, you need to restart the app now.`))
-  }, [_])
 
   const deactivateAccountControl = useDialogControl()
   const onPressDeactivateAccount = React.useCallback(() => {
@@ -330,7 +304,7 @@ export function SettingsScreen({}: Props) {
         </View>
       </SimpleViewHeader>
       <ScrollView
-        style={[s.hContentRegion, isMobile && pal.viewLight]}
+        style={[isMobile && pal.viewLight]}
         scrollIndicatorInsets={{right: 1}}
         // @ts-ignore web only -prf
         dataSet={{'stable-gutters': 1}}>
@@ -399,6 +373,15 @@ export function SettingsScreen({}: Props) {
         ) : null}
 
         <View pointerEvents={pendingDid ? 'none' : 'auto'}>
+          {accounts.length > 1 && (
+            <View style={[s.flexRow, styles.heading, a.mt_sm]}>
+              <Text type="xl-bold" style={pal.text} numberOfLines={1}>
+                <Trans>Other accounts</Trans>
+              </Text>
+              <View style={s.flex1} />
+            </View>
+          )}
+
           {accounts
             .filter(a => a.did !== currentAccount?.did)
             .map(account => (
@@ -425,6 +408,29 @@ export function SettingsScreen({}: Props) {
             </View>
             <Text type="lg" style={pal.text}>
               <Trans>Add account</Trans>
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.linkCard, pal.view]}
+            onPress={
+              isSwitchingAccounts ? undefined : onPressLogoutEveryAccount
+            }
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`Sign out of all accounts`)}
+            accessibilityHint={undefined}>
+            <View style={[styles.iconContainer, pal.btn]}>
+              <FontAwesomeIcon
+                icon="arrow-right-from-bracket"
+                style={pal.text as FontAwesomeIconStyle}
+              />
+            </View>
+            <Text type="lg" style={pal.text}>
+              {accounts.length > 1 ? (
+                <Trans>Sign out of all accounts</Trans>
+              ) : (
+                <Trans>Sign out</Trans>
+              )}
             </Text>
           </TouchableOpacity>
         </View>
@@ -861,18 +867,6 @@ export function SettingsScreen({}: Props) {
               accessibilityHint={_(msg`Resets the onboarding state`)}>
               <Text type="lg" style={pal.text}>
                 <Trans>Reset onboarding state</Trans>
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[pal.view, styles.linkCardNoIcon]}
-              onPress={clearAllLegacyStorage}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Clear all legacy storage data`)}
-              accessibilityHint={_(msg`Clears all legacy storage data`)}>
-              <Text type="lg" style={pal.text}>
-                <Trans>
-                  Clear all legacy storage data (restart after this)
-                </Trans>
               </Text>
             </TouchableOpacity>
             <TouchableOpacity

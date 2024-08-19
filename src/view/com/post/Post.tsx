@@ -12,17 +12,17 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {MAX_POST_LINES} from '#/lib/constants'
+import {usePalette} from '#/lib/hooks/usePalette'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
+import {makeProfileLink} from '#/lib/routes/links'
+import {countLines} from '#/lib/strings/helpers'
+import {colors, s} from '#/lib/styles'
 import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {precacheProfile} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
-import {MAX_POST_LINES} from 'lib/constants'
-import {usePalette} from 'lib/hooks/usePalette'
-import {makeProfileLink} from 'lib/routes/links'
-import {countLines} from 'lib/strings/helpers'
-import {colors, s} from 'lib/styles'
-import {precacheProfile} from 'state/queries/profile'
 import {AviFollowButton} from '#/view/com/posts/AviFollowButton'
 import {atoms as a} from '#/alf'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
@@ -280,6 +280,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
+    overflow: 'hidden',
   },
   replyLine: {
     position: 'absolute',

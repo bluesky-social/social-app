@@ -1,29 +1,35 @@
-import React, {useContext, useEffect} from 'react'
+import React, {useContext} from 'react'
 import type {VideoPlayer} from 'expo-video'
 import {useVideoPlayer as useExpoVideoPlayer} from 'expo-video'
+
+import {logger} from '#/logger'
+import {
+  AudioCategory,
+  PlatformInfo,
+} from '../../../../../modules/expo-bluesky-swiss-army'
 
 const VideoPlayerContext = React.createContext<VideoPlayer | null>(null)
 
 export function VideoPlayerProvider({
-  viewId,
   source,
   children,
 }: {
-  viewId: string | null
   source: string
   children: React.ReactNode
 }) {
   // eslint-disable-next-line @typescript-eslint/no-shadow
   const player = useExpoVideoPlayer(source, player => {
-    player.loop = true
-    player.play()
-  })
+    try {
+      PlatformInfo.setAudioCategory(AudioCategory.Ambient)
+      PlatformInfo.setAudioActive(false)
 
-  // make sure we're playing every time the viewId changes
-  // this means the video is different
-  useEffect(() => {
-    player.play()
-  }, [viewId, player])
+      player.loop = true
+      player.muted = true
+      player.play()
+    } catch (err) {
+      logger.error('Failed to init video player', {safeMessage: err})
+    }
+  })
 
   return (
     <VideoPlayerContext.Provider value={player}>

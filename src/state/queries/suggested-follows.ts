@@ -106,6 +106,7 @@ export function useSuggestedFollowsQuery(options?: SuggestedFollowsOptions) {
 export function useSuggestedFollowsByActorQuery({did}: {did: string}) {
   const agent = useAgent()
   return useQuery<AppBskyGraphGetSuggestedFollowsByActor.OutputSchema, Error>({
+    gcTime: 0,
     queryKey: suggestedFollowsByActorQueryKey(did),
     queryFn: async () => {
       const res = await agent.app.bsky.graph.getSuggestedFollowsByActor({
