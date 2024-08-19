@@ -20,7 +20,7 @@ const BTN = {height: 1, width: 1, backgroundColor: 'red'}
 
 export function TestCtrls() {
   const queryClient = useQueryClient()
-  const {logout, login} = useSessionApi()
+  const {logoutEveryAccount, login} = useSessionApi()
   const {openModal} = useModalControls()
   const onboardingDispatch = useOnboardingDispatch()
   const {setShowLoggedOut} = useLoggedOutViewControls()
@@ -60,7 +60,7 @@ export function TestCtrls() {
       />
       <Pressable
         testID="e2eSignOut"
-        onPress={() => logout('Settings')}
+        onPress={() => logoutEveryAccount('Settings')}
         accessibilityRole="button"
         style={BTN}
       />
