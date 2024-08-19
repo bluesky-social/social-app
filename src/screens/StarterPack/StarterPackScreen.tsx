@@ -328,40 +328,52 @@ function Header({
 
     setIsProcessing(true)
 
+    let listItems: AppBskyGraphDefs.ListItemView[] = []
     try {
-      const listItems = await getAllListMembers(agent, starterPack.list.uri)
-      const dids = listItems
-        .filter(
-          li =>
-            li.subject.did !== currentAccount?.did &&
-            !isBlockedOrBlocking(li.subject) &&
-            !isMuted(li.subject) &&
-            !li.subject.viewer?.following,
-        )
-        .map(li => li.subject.did)
-
-      const followUris = await bulkWriteFollows(agent, dids)
-
-      batchedUpdates(() => {
-        for (let did of dids) {
-          updateProfileShadow(queryClient, did, {
-            followingUri: followUris.get(did),
-          })
-        }
-      })
-
-      logEvent('starterPack:followAll', {
-        logContext: 'StarterPackProfilesList',
-        starterPack: starterPack.uri,
-        count: dids.length,
-      })
-      captureAction(ProgressGuideAction.Follow, dids.length)
-      Toast.show(_(msg`All accounts have been followed!`))
+      listItems = await getAllListMembers(agent, starterPack.list.uri)
     } catch (e) {
-      Toast.show(_(msg`An error occurred while trying to follow all`), 'xmark')
-    } finally {
       setIsProcessing(false)
+      Toast.show(_(msg`An error occurred while trying to follow all`), 'xmark')
+      logger.error('Failed to get list members for starter pack', {
+        safeMessage: e,
+      })
+      return
     }
+
+    const dids = listItems
+      .filter(
+        li =>
+          li.subject.did !== currentAccount?.did &&
+          !isBlockedOrBlocking(li.subject) &&
+          !isMuted(li.subject) &&
+          !li.subject.viewer?.following,
+      )
+      .map(li => li.subject.did)
+
+    let followUris: Map<string, string>
+    try {
+      followUris = await bulkWriteFollows(agent, dids)
+    } catch (e) {
+      setIsProcessing(false)
+      Toast.show(_(msg`An error occurred while trying to follow all`), 'xmark')
+      logger.error('Failed to follow all accounts', {safeMessage: e})
+    }
+
+    setIsProcessing(false)
+    batchedUpdates(() => {
+      for (let did of dids) {
+        updateProfileShadow(queryClient, did, {
+          followingUri: followUris.get(did),
+        })
+      }
+    })
+    Toast.show(_(msg`All accounts have been followed!`))
+    captureAction(ProgressGuideAction.Follow, dids.length)
+    logEvent('starterPack:followAll', {
+      logContext: 'StarterPackProfilesList',
+      starterPack: starterPack.uri,
+      count: dids.length,
+    })
   }
 
   if (!AppBskyGraphStarterpack.isRecord(record)) {

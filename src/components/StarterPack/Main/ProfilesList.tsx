@@ -135,8 +135,8 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
             await refetch()
             setIsPTRing(false)
           }}
-          onEndReachedThreshold={2}
           onEndReached={() => fetchNextPage()}
+          onEndReachedThreshold={2}
         />
       )
   },

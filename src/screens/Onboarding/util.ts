@@ -31,7 +31,6 @@ export async function bulkWriteFollows(agent: BskyAgent, dids: string[]) {
   }))
 
   const chunks = chunk(followWrites, 50)
-
   for (const chunk of chunks) {
     await agent.com.atproto.repo.applyWrites({
       repo: session.did,

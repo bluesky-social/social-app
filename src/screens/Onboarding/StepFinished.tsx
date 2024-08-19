@@ -74,12 +74,18 @@ export function StepFinished() {
           starterPack: activeStarterPack.uri,
         })
         starterPack = spRes.data.starterPack
-
-        if (starterPack.list) {
+      } catch (e) {
+        logger.error('Failed to fetch starter pack', {safeMessage: e})
+        // don't tell the user, just get them through onboarding.
+      }
+      try {
+        if (starterPack?.list) {
           listItems = await getAllListMembers(agent, starterPack.list.uri)
         }
       } catch (e) {
-        logger.error('Failed to fetch starter pack', {safeMessage: e})
+        logger.error('Failed to fetch starter pack list items', {
+          safeMessage: e,
+        })
         // don't tell the user, just get them through onboarding.
       }
     }
