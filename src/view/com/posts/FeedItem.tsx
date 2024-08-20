@@ -523,7 +523,7 @@ function ReplyToLabel({
   if (blocked) {
     label = <Trans context="description">Reply to a blocked post</Trans>
   } else if (notFound) {
-    label = <Trans context="description">Reply to an unknown post</Trans>
+    label = <Trans context="description">Reply to a post</Trans>
   } else if (profile != null) {
     const isMe = profile.did === currentAccount?.did
     if (isMe) {
