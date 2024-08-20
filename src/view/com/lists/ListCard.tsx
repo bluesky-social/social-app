@@ -33,6 +33,11 @@ export const ListCard = ({
   const pal = usePalette('default')
   const {currentAccount} = useSession()
 
+  const isOwner = currentAccount?.did === list.creator.did
+  const isListHidden = list.labels?.findIndex(l => l.val === '!hide') !== -1
+  const isModList = list.purpose === 'app.bsky.graph.defs#modlist'
+  const creatorHandle = sanitizeHandle(list.creator.handle, '@')
+
   const rkey = React.useMemo(() => {
     try {
       const urip = new AtUri(list.uri)
@@ -79,22 +84,17 @@ export const ListCard = ({
             {sanitizeDisplayName(list.name)}
           </Text>
           <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-            {list.purpose === 'app.bsky.graph.defs#curatelist' &&
-              (list.creator.did === currentAccount?.did ? (
-                <Trans>User list by you</Trans>
-              ) : (
-                <Trans>
-                  User list by {sanitizeHandle(list.creator.handle, '@')}
-                </Trans>
-              ))}
-            {list.purpose === 'app.bsky.graph.defs#modlist' &&
-              (list.creator.did === currentAccount?.did ? (
+            {isOwner ? (
+              isModList ? (
                 <Trans>Moderation list by you</Trans>
               ) : (
-                <Trans>
-                  Moderation list by {sanitizeHandle(list.creator.handle, '@')}
-                </Trans>
-              ))}
+                <Trans>User list by you</Trans>
+              )
+            ) : isModList ? (
+              <Trans>Moderation list by {creatorHandle}</Trans>
+            ) : (
+              <Trans>User list by {creatorHandle}</Trans>
+            )}
           </Text>
           <View style={s.flexRow}>
             {list.viewer?.muted ? (
