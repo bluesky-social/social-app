@@ -5,6 +5,7 @@ import {
   AppBskyGraphDefs,
   AtUri,
   moderateUserList,
+  ModerationUI,
 } from '@atproto/api'
 import {Trans} from '@lingui/macro'
 import {useQueryClient} from '@tanstack/react-query'
@@ -12,9 +13,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {useModerationOpts} from 'state/preferences/moderation-opts'
 import {precacheList} from 'state/queries/feed'
-import {useSession} from 'state/session'
-import {useTheme} from '#/alf'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {
   Avatar,
   Description,
@@ -23,6 +22,7 @@ import {
   SaveButton,
 } from '#/components/FeedCard'
 import {Link as InternalLink, LinkProps} from '#/components/Link'
+import * as Hider from '#/components/moderation/Hider'
 import {Text} from '#/components/Typography'
 
 /*
@@ -50,17 +50,10 @@ type Props = {
 
 export function Default(props: Props) {
   const {view, showPinButton} = props
-  const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
-
   const moderation = moderationOpts
     ? moderateUserList(view, moderationOpts)
     : undefined
-  const modUi = moderation?.ui('contentView')
-  const isBlurred = Boolean(modUi?.blurs[0])
-
-  const isOwner = currentAccount?.did === view.creator.did
-  const isTitleHidden = !isOwner && isBlurred
 
   return (
     <Link {...props}>
@@ -71,7 +64,7 @@ export function Default(props: Props) {
             title={view.name}
             creator={view.creator}
             purpose={view.purpose}
-            isHidden={isTitleHidden}
+            modUi={moderation?.ui('contentView')}
           />
           {showPinButton && view.purpose === CURATELIST && (
             <SaveButton view={view} pin />
@@ -109,30 +102,33 @@ export function TitleAndByline({
   title,
   creator,
   purpose = CURATELIST,
-  isHidden,
+  modUi,
 }: {
   title: string
   creator?: AppBskyActorDefs.ProfileViewBasic
   purpose?: AppBskyGraphDefs.ListView['purpose']
-  isHidden?: boolean
+  modUi?: ModerationUI
 }) {
   const t = useTheme()
 
   return (
     <View style={[a.flex_1]}>
-      {isHidden ? (
-        <Text
-          style={[a.text_md, a.font_bold, a.leading_snug, a.italic]}
-          numberOfLines={1}>
-          <Trans>Hidden list</Trans>
-        </Text>
-      ) : (
-        <Text
-          style={[a.text_md, a.font_bold, a.leading_snug]}
-          numberOfLines={1}>
-          {title}
-        </Text>
-      )}
+      <Hider.Outer modui={modUi}>
+        <Hider.Mask>
+          <Text
+            style={[a.text_md, a.font_bold, a.leading_snug, a.italic]}
+            numberOfLines={1}>
+            <Trans>Hidden list</Trans>
+          </Text>
+        </Hider.Mask>
+        <Hider.Content>
+          <Text
+            style={[a.text_md, a.font_bold, a.leading_snug]}
+            numberOfLines={1}>
+            {title}
+          </Text>
+        </Hider.Content>
+      </Hider.Outer>
 
       {creator && (
         <Text

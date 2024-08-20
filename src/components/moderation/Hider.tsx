@@ -16,8 +16,8 @@ type Context = {
   info: ModerationCauseDescription
   showInfoDialog: () => void
   meta: {
-    isNoPwi: boolean
-    noOverride: boolean
+    isNoPwi?: boolean
+    noOverride?: boolean
   }
 }
 
@@ -29,22 +29,22 @@ export function Outer({
   modui,
   children,
 }: React.PropsWithChildren<{
-  modui: ModerationUI
+  modui?: ModerationUI
 }>) {
   const control = useModerationDetailsDialogControl()
-  const blur = modui.blurs[0]
+  const blur = modui?.blurs[0]
   const [isContentVisible, setIsContentVisible] = React.useState(!blur)
   const info = useModerationCauseDescription(blur)
 
   const meta = {
     isNoPwi: Boolean(
-      modui.blurs.find(
+      modui?.blurs.find(
         cause =>
           cause.type === 'label' &&
           cause.labelDef.identifier === '!no-unauthenticated',
       ),
     ),
-    noOverride: modui.noOverride,
+    noOverride: modui?.noOverride,
   }
 
   const showInfoDialog = () => {
