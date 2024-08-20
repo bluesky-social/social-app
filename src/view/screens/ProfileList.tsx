@@ -142,6 +142,7 @@ function ProfileListScreenLoaded({
   const queryClient = useQueryClient()
   const {openComposer} = useComposerControls()
   const setMinimalShellMode = useSetMinimalShellMode()
+  const {currentAccount} = useSession()
   const {rkey} = route.params
   const feedSectionRef = React.useRef<SectionRef>(null)
   const aboutSectionRef = React.useRef<SectionRef>(null)
@@ -149,6 +150,7 @@ function ProfileListScreenLoaded({
   const isCurateList = list.purpose === AppBskyGraphDefs.CURATELIST
   const isScreenFocused = useIsFocused()
   const isHidden = list.labels?.findIndex(l => l.val === '!hide') !== -1
+  const isOwner = currentAccount?.did === list.creator.did
 
   const moderation = React.useMemo(() => {
     return moderateUserList(list, moderationOpts)
@@ -191,7 +193,7 @@ function ProfileListScreenLoaded({
 
   if (isCurateList) {
     return (
-      <Hider.Outer modui={moderation.ui('contentView')}>
+      <Hider.Outer modui={moderation.ui('contentView')} allowOverride={isOwner}>
         <Hider.Mask>
           <ListHiddenScreen list={list} preferences={preferences} />
         </Hider.Mask>
@@ -241,7 +243,7 @@ function ProfileListScreenLoaded({
     )
   }
   return (
-    <Hider.Outer modui={moderation.ui('contentView')}>
+    <Hider.Outer modui={moderation.ui('contentView')} allowOverride={isOwner}>
       <Hider.Mask>
         <ListHiddenScreen list={list} preferences={preferences} />
       </Hider.Mask>
