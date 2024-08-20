@@ -146,7 +146,7 @@ function ProfileListScreenLoaded({
   const feedSectionRef = React.useRef<SectionRef>(null)
   const aboutSectionRef = React.useRef<SectionRef>(null)
   const {openModal} = useModalControls()
-  const isCurateList = list.purpose === 'app.bsky.graph.defs#curatelist'
+  const isCurateList = list.purpose === AppBskyGraphDefs.CURATELIST
   const isScreenFocused = useIsFocused()
   const isHidden = list.labels?.findIndex(l => l.val === '!hide') !== -1
 

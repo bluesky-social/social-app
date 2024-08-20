@@ -35,7 +35,7 @@ export function ListHiddenScreen({
   const isOwner = currentAccount?.did === list.creator.did
   const goBack = useGoBack()
 
-  const isModList = list.purpose === 'app.bsky.graph.defs#modlist'
+  const isModList = list.purpose === AppBskyGraphDefs.MODLIST
 
   const [isProcessing, setIsProcessing] = React.useState(false)
   const listBlockMutation = useListBlockMutation()
