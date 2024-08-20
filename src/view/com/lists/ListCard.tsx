@@ -1,6 +1,6 @@
 import React from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
-import {AppBskyGraphDefs, AtUri, RichText} from '@atproto/api'
+import {AppBskyGraphDefs, AtUri, ModerationOpts, RichText} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -15,6 +15,8 @@ import {RichText as RichTextCom} from '#/components/RichText'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
+import * as Hider from '#/components/moderation/Hider'
+import {useModerationOpts} from 'state/preferences/moderation-opts'
 
 export const ListCard = ({
   testID,
@@ -23,6 +25,7 @@ export const ListCard = ({
   noBorder,
   renderButton,
   style,
+  moderationOpts,
 }: {
   testID?: string
   list: AppBskyGraphDefs.ListView
@@ -30,6 +33,7 @@ export const ListCard = ({
   noBorder?: boolean
   renderButton?: () => JSX.Element
   style?: StyleProp<ViewStyle>
+  moderationOpts: ModerationOpts
 }) => {
   const {_} = useLingui()
   const pal = usePalette('default')
@@ -41,6 +45,8 @@ export const ListCard = ({
 
   const isModList = list.purpose === 'app.bsky.graph.defs#modlist'
   const creatorHandle = sanitizeHandle(list.creator.handle, '@')
+
+  const moderation = moderationOpts.
 
   const rkey = React.useMemo(() => {
     try {
@@ -62,6 +68,9 @@ export const ListCard = ({
   }, [list])
 
   return (
+    <Hider.Outer modui={moderation.modUi('content')}>
+
+    </Hider.Outer>
     <Link
       testID={testID}
       style={[

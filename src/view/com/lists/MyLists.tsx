@@ -18,6 +18,7 @@ import {MyListsFilter, useMyListsQuery} from '#/state/queries/my-lists'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
+import {useModerationOpts} from 'state/preferences/moderation-opts'
 import {EmptyState} from 'view/com/util/EmptyState'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {List} from '../util/List'
@@ -43,6 +44,7 @@ export function MyLists({
   const pal = usePalette('default')
   const {track} = useAnalytics()
   const {_} = useLingui()
+  const moderationOpts = useModerationOpts()
   const [isPTRing, setIsPTRing] = React.useState(false)
   const {data, isFetching, isFetched, isError, error, refetch} =
     useMyListsQuery(filter)
@@ -53,7 +55,7 @@ export function MyLists({
     if (isError && isEmpty) {
       items = items.concat([ERROR_ITEM])
     }
-    if (!isFetched && isFetching) {
+    if ((!isFetched && isFetching) || !moderationOpts) {
       items = items.concat([LOADING])
     } else if (isEmpty) {
       items = items.concat([EMPTY])
@@ -61,7 +63,7 @@ export function MyLists({
       items = items.concat(data)
     }
     return items
-  }, [isError, isEmpty, isFetched, isFetching, data])
+  }, [isError, isEmpty, isFetched, isFetching, moderationOpts, data])
 
   // events
   // =
@@ -114,10 +116,13 @@ export function MyLists({
           list={item}
           testID={`list-${item.name}`}
           style={styles.item}
+          // If this component is being rendered, it means that `moderationOpts` is not undefined. Not going to refactor
+          // this for now since it might not be around forever. -h
+          moderationOpts={moderationOpts!}
         />
       )
     },
-    [error, onRefresh, renderItem, _],
+    [error, onRefresh, renderItem, moderationOpts, _],
   )
 
   if (inline) {
