@@ -213,6 +213,7 @@ function MaybeListCard({view}: {view: AppBskyGraphDefs.ListView}) {
           t.atoms.border_contrast_medium,
           a.p_md,
           a.rounded_sm,
+          a.mt_sm,
         ]}>
         <ListCard.Default view={view} />
       </View>
