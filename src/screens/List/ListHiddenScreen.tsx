@@ -16,8 +16,9 @@ import {useSession} from 'state/session'
 import * as Toast from 'view/com/util/Toast'
 import {CenteredView} from 'view/com/util/Views'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
+import {Loader} from '#/components/Loader'
 import {useHider} from '#/components/moderation/Hider'
 import {Text} from '#/components/Typography'
 
@@ -152,6 +153,7 @@ export function ListHiddenScreen({
               <ButtonText>
                 <Trans>Removed from saved feeds</Trans>
               </ButtonText>
+              {isProcessing ? <ButtonIcon icon={Loader} /> : null}
             </Button>
           ) : null}
           {isOwner ? (
@@ -182,6 +184,7 @@ export function ListHiddenScreen({
               disabled={isProcessing}>
               <ButtonText>
                 <Trans>Unsubscribe from list</Trans>
+                {isProcessing ? <ButtonIcon icon={Loader} /> : null}
               </ButtonText>
             </Button>
           ) : null}
