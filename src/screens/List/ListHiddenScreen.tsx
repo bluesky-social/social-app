@@ -3,8 +3,10 @@ import {View} from 'react-native'
 import {AppBskyGraphDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
+import {RQKEY_ROOT as listQueryRoot} from '#/state/queries/list'
 import {useGoBack} from 'lib/hooks/useGoBack'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {useListBlockMutation, useListMuteMutation} from 'state/queries/list'
@@ -35,6 +37,7 @@ export function ListHiddenScreen({
   const {gtMobile} = useBreakpoints()
   const isOwner = currentAccount?.did === list.creator.did
   const goBack = useGoBack()
+  const queryClient = useQueryClient()
 
   const isModList = list.purpose === AppBskyGraphDefs.MODLIST
 
@@ -77,6 +80,9 @@ export function ListHiddenScreen({
         return
       }
     }
+    queryClient.invalidateQueries({
+      queryKey: [listQueryRoot],
+    })
     Toast.show(_(msg`Unsubscribed from list`))
     setIsProcessing(false)
   }
