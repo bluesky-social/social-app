@@ -21,17 +21,7 @@ type Context = {
   }
 }
 
-const Context = React.createContext<Context>({
-  isContentVisible: false,
-  setIsContentVisible: () => {},
-  // @ts-ignore
-  info: {},
-  showInfoDialog: () => {},
-  meta: {
-    isNoPwi: false,
-    noOverride: false,
-  },
-})
+const Context = React.createContext<Context>({} as Context)
 
 export const useScreenHider = () => React.useContext(Context)
 
