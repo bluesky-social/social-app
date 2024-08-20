@@ -192,7 +192,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
         justPostedUris,
         threadgateRecord ?? undefined,
       ),
-      !!currentDid,
+      currentDid,
       treeView,
       threadModerationCache,
       hiddenRepliesState !== HiddenRepliesState.Hide,
@@ -564,7 +564,7 @@ function isThreadBlocked(v: unknown): v is ThreadBlocked {
 
 function createThreadSkeleton(
   node: ThreadNode,
-  hasSession: boolean,
+  currentDid: string | undefined,
   treeView: boolean,
   modCache: ThreadModerationCache,
   showHiddenReplies: boolean,
@@ -573,12 +573,12 @@ function createThreadSkeleton(
   if (!node) return null
 
   return {
-    parents: Array.from(flattenThreadParents(node, hasSession)),
+    parents: Array.from(flattenThreadParents(node, !!currentDid)),
     highlightedPost: node,
     replies: Array.from(
       flattenThreadReplies(
         node,
-        hasSession,
+        currentDid,
         treeView,
         modCache,
         showHiddenReplies,
@@ -615,7 +615,7 @@ enum HiddenReplyType {
 
 function* flattenThreadReplies(
   node: ThreadNode,
-  hasSession: boolean,
+  currentDid: string | undefined,
   treeView: boolean,
   modCache: ThreadModerationCache,
   showHiddenReplies: boolean,
@@ -623,7 +623,7 @@ function* flattenThreadReplies(
 ): Generator<YieldedItem, HiddenReplyType> {
   if (node.type === 'post') {
     // dont show pwi-opted-out posts to logged out users
-    if (!hasSession && hasPwiOptOut(node)) {
+    if (!currentDid && hasPwiOptOut(node)) {
       return HiddenReplyType.None
     }
 
@@ -639,11 +639,14 @@ function* flattenThreadReplies(
         }
       }
 
-      if (
-        !showHiddenReplies &&
-        threadgateRecord?.hiddenReplies?.includes(node.post.uri)
-      ) {
-        return HiddenReplyType.Hidden
+      if (threadgateRecord && !showHiddenReplies) {
+        const hiddenByThreadgate = !!threadgateRecord?.hiddenReplies?.includes(
+          node.post.uri,
+        )
+        const authorIsViewer = node.post.author.did === currentDid
+        if (hiddenByThreadgate && !authorIsViewer) {
+          return HiddenReplyType.Hidden
+        }
       }
     }
 
@@ -656,7 +659,7 @@ function* flattenThreadReplies(
       for (const reply of node.replies) {
         let hiddenReply = yield* flattenThreadReplies(
           reply,
-          hasSession,
+          currentDid,
           treeView,
           modCache,
           showHiddenReplies,
