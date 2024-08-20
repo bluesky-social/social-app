@@ -1,7 +1,8 @@
 import React from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {AppBskyGraphDefs, AtUri, RichText} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {useSession} from '#/state/session'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -30,11 +31,14 @@ export const ListCard = ({
   renderButton?: () => JSX.Element
   style?: StyleProp<ViewStyle>
 }) => {
+  const {_} = useLingui()
   const pal = usePalette('default')
   const {currentAccount} = useSession()
 
   const isOwner = currentAccount?.did === list.creator.did
   const isListHidden = list.labels?.findIndex(l => l.val === '!hide') !== -1
+  const hideTitle = !isOwner && isListHidden
+
   const isModList = list.purpose === 'app.bsky.graph.defs#modlist'
   const creatorHandle = sanitizeHandle(list.creator.handle, '@')
 
@@ -68,7 +72,7 @@ export const ListCard = ({
         style,
       ]}
       href={makeProfileLink(list.creator, 'lists', rkey)}
-      title={list.name}
+      title={hideTitle ? _(msg`Hidden list`) : list.name}
       asAnchor
       anchorNoUnderline>
       <View style={styles.layout}>
@@ -78,10 +82,10 @@ export const ListCard = ({
         <View style={styles.layoutContent}>
           <Text
             type="lg"
-            style={[s.bold, pal.text]}
+            style={[s.bold, pal.text, hideTitle && {fontStyle: 'italic'}]}
             numberOfLines={1}
             lineHeight={1.2}>
-            {sanitizeDisplayName(list.name)}
+            {hideTitle ? _(msg`Hidden list`) : sanitizeDisplayName(list.name)}
           </Text>
           <Text type="md" style={[pal.textLight]} numberOfLines={1}>
             {isOwner ? (
@@ -98,19 +102,14 @@ export const ListCard = ({
           </Text>
           <View style={s.flexRow}>
             {list.viewer?.muted ? (
-              <View style={[s.mt5, pal.btn, styles.pill]}>
-                <Text type="xs" style={pal.text}>
-                  <Trans>Muted</Trans>
-                </Text>
-              </View>
+              <PillText>
+                <Trans>Muted</Trans>
+              </PillText>
             ) : null}
-
             {list.viewer?.blocked ? (
-              <View style={[s.mt5, pal.btn, styles.pill]}>
-                <Text type="xs" style={pal.text}>
-                  <Trans>Blocked</Trans>
-                </Text>
-              </View>
+              <PillText>
+                <Trans>Blocked</Trans>
+              </PillText>
             ) : null}
           </View>
         </View>
@@ -128,6 +127,15 @@ export const ListCard = ({
         </View>
       ) : undefined}
     </Link>
+  )
+}
+
+function PillText({children}: {children: React.ReactNode}) {
+  const pal = usePalette('default')
+  return (
+    <Text type="xs" style={[s.mt5, pal.btn, styles.pill, pal.text]}>
+      {children}
+    </Text>
   )
 }
 
