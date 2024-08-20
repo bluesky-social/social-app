@@ -193,71 +193,29 @@ function ProfileListScreenLoaded({
     return (
       <Hider.Outer modui={moderation.ui('contentView')}>
         <Hider.Mask>
-          {() => <ListHiddenScreen list={list} preferences={preferences} />}
+          <ListHiddenScreen list={list} preferences={preferences} />
         </Hider.Mask>
         <Hider.Content>
-          {() => (
-            <View style={s.hContentRegion}>
-              <PagerWithHeader
-                items={SECTION_TITLES_CURATE}
-                isHeaderReady={true}
-                renderHeader={renderHeader}
-                onCurrentPageSelected={onCurrentPageSelected}>
-                {({headerHeight, scrollElRef, isFocused}) => (
-                  <FeedSection
-                    ref={feedSectionRef}
-                    feed={`list|${uri}`}
-                    scrollElRef={scrollElRef as ListRef}
-                    headerHeight={headerHeight}
-                    isFocused={isScreenFocused && isFocused}
-                  />
-                )}
-                {({headerHeight, scrollElRef}) => (
-                  <AboutSection
-                    ref={aboutSectionRef}
-                    scrollElRef={scrollElRef as ListRef}
-                    list={list}
-                    onPressAddUser={onPressAddUser}
-                    headerHeight={headerHeight}
-                  />
-                )}
-              </PagerWithHeader>
-              <FAB
-                testID="composeFAB"
-                onPress={() => openComposer({})}
-                icon={
-                  <ComposeIcon2
-                    strokeWidth={1.5}
-                    size={29}
-                    style={{color: 'white'}}
-                  />
-                }
-                accessibilityRole="button"
-                accessibilityLabel={_(msg`New post`)}
-                accessibilityHint=""
-              />
-            </View>
-          )}
-        </Hider.Content>
-      </Hider.Outer>
-    )
-  }
-  return (
-    <Hider.Outer modui={moderation.ui('contentView')}>
-      <Hider.Mask>
-        {() => <ListHiddenScreen list={list} preferences={preferences} />}
-      </Hider.Mask>
-      <Hider.Content>
-        {() => (
           <View style={s.hContentRegion}>
             <PagerWithHeader
-              items={SECTION_TITLES_MOD}
+              items={SECTION_TITLES_CURATE}
               isHeaderReady={true}
-              renderHeader={renderHeader}>
+              renderHeader={renderHeader}
+              onCurrentPageSelected={onCurrentPageSelected}>
+              {({headerHeight, scrollElRef, isFocused}) => (
+                <FeedSection
+                  ref={feedSectionRef}
+                  feed={`list|${uri}`}
+                  scrollElRef={scrollElRef as ListRef}
+                  headerHeight={headerHeight}
+                  isFocused={isScreenFocused && isFocused}
+                />
+              )}
               {({headerHeight, scrollElRef}) => (
                 <AboutSection
-                  list={list}
+                  ref={aboutSectionRef}
                   scrollElRef={scrollElRef as ListRef}
+                  list={list}
                   onPressAddUser={onPressAddUser}
                   headerHeight={headerHeight}
                 />
@@ -278,7 +236,45 @@ function ProfileListScreenLoaded({
               accessibilityHint=""
             />
           </View>
-        )}
+        </Hider.Content>
+      </Hider.Outer>
+    )
+  }
+  return (
+    <Hider.Outer modui={moderation.ui('contentView')}>
+      <Hider.Mask>
+        <ListHiddenScreen list={list} preferences={preferences} />
+      </Hider.Mask>
+      <Hider.Content>
+        <View style={s.hContentRegion}>
+          <PagerWithHeader
+            items={SECTION_TITLES_MOD}
+            isHeaderReady={true}
+            renderHeader={renderHeader}>
+            {({headerHeight, scrollElRef}) => (
+              <AboutSection
+                list={list}
+                scrollElRef={scrollElRef as ListRef}
+                onPressAddUser={onPressAddUser}
+                headerHeight={headerHeight}
+              />
+            )}
+          </PagerWithHeader>
+          <FAB
+            testID="composeFAB"
+            onPress={() => openComposer({})}
+            icon={
+              <ComposeIcon2
+                strokeWidth={1.5}
+                size={29}
+                style={{color: 'white'}}
+              />
+            }
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`New post`)}
+            accessibilityHint=""
+          />
+        </View>
       </Hider.Content>
     </Hider.Outer>
   )

@@ -33,6 +33,8 @@ const Context = React.createContext<Context>({
   },
 })
 
+export const useScreenHider = () => React.useContext(Context)
+
 export function Outer({
   modui,
   children,
@@ -44,40 +46,33 @@ export function Outer({
   const [isContentVisible, setIsContentVisible] = React.useState(!blur)
   const info = useModerationCauseDescription(blur)
 
-  const meta = React.useMemo(
-    () => ({
-      isNoPwi: !!modui.blurs.find(
+  const meta = {
+    isNoPwi: Boolean(
+      modui.blurs.find(
         cause =>
           cause.type === 'label' &&
           cause.labelDef.identifier === '!no-unauthenticated',
       ),
-      noOverride: modui.noOverride,
-    }),
-    [modui],
-  )
+    ),
+    noOverride: modui.noOverride,
+  }
 
-  const showInfoDialog = React.useCallback(() => {
+  const showInfoDialog = () => {
     control.open()
-  }, [control])
+  }
 
-  const onSetContentVisible = React.useCallback(
-    (show: boolean) => {
-      if (meta.noOverride) return
-      setIsContentVisible(show)
-    },
-    [setIsContentVisible, meta],
-  )
+  const onSetContentVisible = (show: boolean) => {
+    if (meta.noOverride) return
+    setIsContentVisible(show)
+  }
 
-  const ctx = React.useMemo(
-    () => ({
-      isContentVisible,
-      setIsContentVisible: onSetContentVisible,
-      showInfoDialog,
-      info,
-      meta,
-    }),
-    [isContentVisible, onSetContentVisible, info, meta, showInfoDialog],
-  )
+  const ctx = {
+    isContentVisible,
+    setIsContentVisible: onSetContentVisible,
+    showInfoDialog,
+    info,
+    meta,
+  }
 
   return (
     <Context.Provider value={ctx}>
@@ -87,22 +82,12 @@ export function Outer({
   )
 }
 
-export function Content({
-  children,
-}: {
-  children: (context: Context) => React.ReactNode
-}) {
-  const ctx = React.useContext(Context)
-  const child = React.useMemo(() => children(ctx), [ctx, children])
-  return ctx.isContentVisible ? child : null
+export function Content({children}: {children: React.ReactNode}) {
+  const ctx = useScreenHider()
+  return ctx.isContentVisible ? children : null
 }
 
-export function Mask({
-  children,
-}: {
-  children: (context: Context) => React.ReactNode
-}) {
-  const ctx = React.useContext(Context)
-  const child = React.useMemo(() => children(ctx), [ctx, children])
-  return !ctx.isContentVisible ? child : null
+export function Mask({children}: {children: React.ReactNode}) {
+  const ctx = useScreenHider()
+  return ctx.isContentVisible ? null : children
 }
