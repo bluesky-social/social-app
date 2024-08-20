@@ -20,7 +20,7 @@ import * as Toast from 'view/com/util/Toast'
 import {CenteredView} from 'view/com/util/Views'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
-import {EyeSlash_Stroke2_Corner0_Rounded} from '#/components/icons/EyeSlash'
+import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
 import {Text} from '#/components/Typography'
 
 export function ListHiddenScreen({
@@ -128,7 +128,7 @@ export function ListHiddenScreen({
       ]}
       sideBorders={true}>
       <View style={[a.w_full, a.align_center, a.gap_lg]}>
-        <EyeSlash_Stroke2_Corner0_Rounded
+        <EyeSlash
           style={{color: t.atoms.text_contrast_medium.color}}
           height={42}
           width={42}
@@ -141,7 +141,7 @@ export function ListHiddenScreen({
             style={[
               a.text_md,
               a.text_center,
-              a.p_md,
+              a.px_md,
               t.atoms.text_contrast_high,
               {lineHeight: 1.4},
             ]}>
