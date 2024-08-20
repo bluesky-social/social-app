@@ -331,7 +331,12 @@ export function PostInteractionSettingsForm({
                 t.atoms.bg_contrast_25,
               ]}>
               <CircleInfo fill={t.atoms.text_contrast_low.color} />
-              <Text style={[a.leading_snug, t.atoms.text_contrast_medium]}>
+              <Text
+                style={[
+                  a.flex_1,
+                  a.leading_snug,
+                  t.atoms.text_contrast_medium,
+                ]}>
                 <Trans>
                   Reply settings are chosen by the author of the thread
                 </Trans>
