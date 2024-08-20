@@ -154,7 +154,7 @@ function ProfileListScreenLoaded({
     return moderateUserList(list, moderationOpts)
   }, [list, moderationOpts])
 
-  useSetTitle(list.name)
+  useSetTitle(isHidden ? _(msg`List Hidden`) : list.name)
 
   useFocusEffect(
     useCallback(() => {

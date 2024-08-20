@@ -141,9 +141,9 @@ export function ListHiddenScreen({
             style={[
               a.text_md,
               a.text_center,
+              a.p_md,
               t.atoms.text_contrast_high,
               {lineHeight: 1.4},
-              gtMobile ? {width: 450} : [a.w_full, a.px_lg],
             ]}>
             {isOwner ? (
               <Trans>
