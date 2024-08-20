@@ -117,7 +117,10 @@ export function TitleAndByline({
     <View style={[a.flex_1]}>
       <Hider.Outer
         modui={modUi}
-        override={creator && currentAccount?.did === creator.did}>
+        isContentVisibleInitialState={
+          creator && currentAccount?.did === creator.did
+        }
+        allowOverride={creator && currentAccount?.did === creator.did}>
         <Hider.Mask>
           <Text
             style={[a.text_md, a.font_bold, a.leading_snug, a.italic]}
