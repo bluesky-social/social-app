@@ -589,7 +589,7 @@ export const ComposePost = observer(function ComposePost({
                   },
                 ]}>
                 <CircleInfo fill={t.palette.negative_400} />
-                <NewText style={[a.leading_snug, {paddingTop: 1}]}>
+                <NewText style={[a.flex_1, a.leading_snug, {paddingTop: 1}]}>
                   {error}
                 </NewText>
                 <Button
