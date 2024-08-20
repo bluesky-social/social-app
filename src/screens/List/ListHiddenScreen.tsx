@@ -166,8 +166,7 @@ export function ListHiddenScreen({
                 <Trans>Show anyway</Trans>
               </ButtonText>
             </Button>
-          ) : null}
-          {list.viewer?.muted || list.viewer?.blocked ? (
+          ) : list.viewer?.muted || list.viewer?.blocked ? (
             <Button
               variant="solid"
               color="secondary"
