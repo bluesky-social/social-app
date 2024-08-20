@@ -63,6 +63,7 @@ interface FeedItemProps {
   feedContext: string | undefined
   hideTopBorder?: boolean
   isParentBlocked?: boolean
+  isParentNotFound?: boolean
 }
 
 export function FeedItem({
@@ -78,6 +79,7 @@ export function FeedItem({
   isThreadParent,
   hideTopBorder,
   isParentBlocked,
+  isParentNotFound,
 }: FeedItemProps & {post: AppBskyFeedDefs.PostView}): React.ReactNode {
   const postShadowed = usePostShadow(post)
   const richText = useMemo(
@@ -109,6 +111,7 @@ export function FeedItem({
         isThreadParent={isThreadParent}
         hideTopBorder={hideTopBorder}
         isParentBlocked={isParentBlocked}
+        isParentNotFound={isParentNotFound}
       />
     )
   }
@@ -129,6 +132,7 @@ let FeedItemInner = ({
   isThreadParent,
   hideTopBorder,
   isParentBlocked,
+  isParentNotFound,
 }: FeedItemProps & {
   richText: RichTextAPI
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -344,9 +348,14 @@ let FeedItemInner = ({
             postHref={href}
             onOpenAuthor={onOpenAuthor}
           />
-          {showReplyTo && (parentAuthor || isParentBlocked) && (
-            <ReplyToLabel blocked={isParentBlocked} profile={parentAuthor} />
-          )}
+          {showReplyTo &&
+            (parentAuthor || isParentBlocked || isParentNotFound) && (
+              <ReplyToLabel
+                blocked={isParentBlocked}
+                notFound={isParentNotFound}
+                profile={parentAuthor}
+              />
+            )}
           <LabelsOnMyPost post={post} />
           <PostContent
             moderation={moderation}
@@ -438,9 +447,11 @@ PostContent = memo(PostContent)
 function ReplyToLabel({
   profile,
   blocked,
+  notFound,
 }: {
   profile: AppBskyActorDefs.ProfileViewBasic | undefined
   blocked?: boolean
+  notFound?: boolean
 }) {
   const pal = usePalette('default')
   const {currentAccount} = useSession()
@@ -448,6 +459,8 @@ function ReplyToLabel({
   let label
   if (blocked) {
     label = <Trans context="description">Reply to a blocked post</Trans>
+  } else if (notFound) {
+    label = <Trans context="description">Reply to an unknown post</Trans>
   } else if (profile != null) {
     const isMe = profile.did === currentAccount?.did
     if (isMe) {
