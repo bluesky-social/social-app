@@ -23,7 +23,6 @@ import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
 import {useAgent} from '#/state/session'
-import {useThreadgateHiddenReplyUris} from '#/state/threadgate-hidden-replies'
 import * as userActionHistory from '#/state/userActionHistory'
 import {AuthorFeedAPI} from 'lib/api/feed/author'
 import {CustomFeedAPI} from 'lib/api/feed/custom'
@@ -137,7 +136,6 @@ export function usePostFeedQuery(
     result: InfiniteData<FeedPage>
   } | null>(null)
   const isDiscover = feedDesc.includes(DISCOVER_FEED_URI)
-  const {uris: hiddenReplyUris} = useThreadgateHiddenReplyUris()
 
   // Make sure this doesn't invalidate unless really needed.
   const selectArgs = React.useMemo(
@@ -146,19 +144,8 @@ export function usePostFeedQuery(
       moderationOpts,
       ignoreFilterFor: opts?.ignoreFilterFor,
       isDiscover,
-      /*
-       * If we're viewing an author feed, hidden replies are visible
-       */
-      hiddenReplyUris: feedDesc.startsWith('author|') ? [] : hiddenReplyUris,
     }),
-    [
-      feedTuners,
-      moderationOpts,
-      opts?.ignoreFilterFor,
-      isDiscover,
-      hiddenReplyUris,
-      feedDesc,
-    ],
+    [feedTuners, moderationOpts, opts?.ignoreFilterFor, isDiscover],
   )
 
   const query = useInfiniteQuery<
@@ -237,13 +224,8 @@ export function usePostFeedQuery(
       (data: InfiniteData<FeedPageUnselected, RQPageParam>) => {
         // If the selection depends on some data, that data should
         // be included in the selectArgs object and read here.
-        const {
-          feedTuners,
-          moderationOpts,
-          ignoreFilterFor,
-          isDiscover,
-          hiddenReplyUris,
-        } = selectArgs
+        const {feedTuners, moderationOpts, ignoreFilterFor, isDiscover} =
+          selectArgs
 
         const tuner = new FeedTuner(feedTuners)
 
@@ -336,23 +318,19 @@ export function usePostFeedQuery(
                     isFallbackMarker: slice.isFallbackMarker,
                     feedContext: slice.feedContext,
                     reason: slice.reason,
-                    items: slice.items
-                      .filter(item => {
-                        return !hiddenReplyUris.includes(item.post.uri)
-                      })
-                      .map((item, i) => {
-                        const feedPostSliceItem: FeedPostSliceItem = {
-                          _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
-                          uri: item.post.uri,
-                          post: item.post,
-                          record: item.record,
-                          moderation: moderations[i],
-                          parentAuthor: item.parentAuthor,
-                          isParentBlocked: item.isParentBlocked,
-                          isParentNotFound: item.isParentNotFound,
-                        }
-                        return feedPostSliceItem
-                      }),
+                    items: slice.items.map((item, i) => {
+                      const feedPostSliceItem: FeedPostSliceItem = {
+                        _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
+                        uri: item.post.uri,
+                        post: item.post,
+                        record: item.record,
+                        moderation: moderations[i],
+                        parentAuthor: item.parentAuthor,
+                        isParentBlocked: item.isParentBlocked,
+                        isParentNotFound: item.isParentNotFound,
+                      }
+                      return feedPostSliceItem
+                    }),
                   }
                   return feedPostSlice
                 })
