@@ -153,19 +153,6 @@ export function sortThread(
         return -1
       }
 
-      /*
-       * Hiding takes precendence over OP check below bc thread root author
-       * can't hide their own posts, therefore this only applies to other
-       * authors.
-       */
-      const aHidden = threadgateRecord?.hiddenReplies?.includes(a.uri)
-      const bHidden = threadgateRecord?.hiddenReplies?.includes(b.uri)
-      if (aHidden && !bHidden) {
-        return 1
-      } else if (bHidden && !aHidden) {
-        return -1
-      }
-
       if (node.ctx.isHighlightedPost || opts.lab_treeViewEnabled) {
         const aIsJustPosted =
           a.post.author.did === currentDid && justPostedUris.has(a.post.uri)
@@ -198,6 +185,14 @@ export function sortThread(
         return -1 // current account's reply
       } else if (bIsBySelf) {
         return 1 // current account's reply
+      }
+
+      const aHidden = threadgateRecord?.hiddenReplies?.includes(a.uri)
+      const bHidden = threadgateRecord?.hiddenReplies?.includes(b.uri)
+      if (aHidden && !aIsBySelf && !bHidden) {
+        return 1
+      } else if (bHidden && !bIsBySelf && !aHidden) {
+        return -1
       }
 
       const aBlur = Boolean(modCache.get(a)?.ui('contentList').blur)
