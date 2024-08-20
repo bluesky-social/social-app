@@ -27,13 +27,17 @@ export const useHider = () => React.useContext(Context)
 
 export function Outer({
   modui,
+  override,
   children,
 }: React.PropsWithChildren<{
+  override?: boolean
   modui: ModerationUI | undefined
 }>) {
   const control = useModerationDetailsDialogControl()
   const blur = modui?.blurs[0]
-  const [isContentVisible, setIsContentVisible] = React.useState(!blur)
+  const [isContentVisible, setIsContentVisible] = React.useState(
+    override || !blur,
+  )
   const info = useModerationCauseDescription(blur)
 
   const meta = {

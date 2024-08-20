@@ -13,6 +13,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {useModerationOpts} from 'state/preferences/moderation-opts'
 import {precacheList} from 'state/queries/feed'
+import {useSession} from 'state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {
   Avatar,
@@ -110,10 +111,13 @@ export function TitleAndByline({
   modUi?: ModerationUI
 }) {
   const t = useTheme()
+  const {currentAccount} = useSession()
 
   return (
     <View style={[a.flex_1]}>
-      <Hider.Outer modui={modUi}>
+      <Hider.Outer
+        modui={modUi}
+        override={creator && currentAccount?.did === creator.did}>
         <Hider.Mask>
           <Text
             style={[a.text_md, a.font_bold, a.leading_snug, a.italic]}
