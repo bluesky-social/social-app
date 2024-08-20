@@ -217,15 +217,10 @@ function Rules({
           <Trans>
             Only{' '}
             {settings.map((rule, i) => (
-              <>
-                <Rule
-                  key={`rule-${i}`}
-                  rule={rule}
-                  post={post}
-                  lists={post.threadgate!.lists}
-                />
-                <Separator key={`sep-${i}`} i={i} length={settings.length} />
-              </>
+              <React.Fragment key={`rule-${i}`}>
+                <Rule rule={rule} post={post} lists={post.threadgate!.lists} />
+                <Separator i={i} length={settings.length} />
+              </React.Fragment>
             ))}{' '}
             can reply.
           </Trans>
