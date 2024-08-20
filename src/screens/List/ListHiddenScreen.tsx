@@ -153,7 +153,9 @@ export function ListHiddenScreen({
               <ButtonText>
                 <Trans>Removed from saved feeds</Trans>
               </ButtonText>
-              {isProcessing ? <ButtonIcon icon={Loader} /> : null}
+              {isProcessing ? (
+                <ButtonIcon icon={Loader} position="right" />
+              ) : null}
             </Button>
           ) : null}
           {isOwner ? (
@@ -184,8 +186,10 @@ export function ListHiddenScreen({
               disabled={isProcessing}>
               <ButtonText>
                 <Trans>Unsubscribe from list</Trans>
-                {isProcessing ? <ButtonIcon icon={Loader} /> : null}
               </ButtonText>
+              {isProcessing ? (
+                <ButtonIcon icon={Loader} position="right" />
+              ) : null}
             </Button>
           ) : null}
         </View>
