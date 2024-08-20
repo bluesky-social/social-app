@@ -6,6 +6,7 @@ import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
 import {useGoBack} from 'lib/hooks/useGoBack'
+import {isWeb} from 'platform/detection'
 import {
   useListBlockMutation,
   useListDeleteMutation,
@@ -21,6 +22,7 @@ import {CenteredView} from 'view/com/util/Views'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
+import {useScreenHider} from '#/components/moderation/Hider'
 import {Text} from '#/components/Typography'
 
 export function ListHiddenScreen({
@@ -35,6 +37,7 @@ export function ListHiddenScreen({
   const {currentAccount} = useSession()
   const {gtMobile} = useBreakpoints()
   const isOwner = currentAccount?.did === list.creator.did
+  const {showInfoDialog} = useScreenHider()
   const goBack = useGoBack()
 
   const isModList = list.purpose === 'app.bsky.graph.defs#modlist'
@@ -127,13 +130,13 @@ export function ListHiddenScreen({
         {paddingTop: 175, paddingBottom: 110},
       ]}
       sideBorders={true}>
-      <View style={[a.w_full, a.align_center, a.gap_lg]}>
+      <View style={[a.w_full, a.align_center, a.gap_xl]}>
         <EyeSlash
           style={{color: t.atoms.text_contrast_medium.color}}
           height={42}
           width={42}
         />
-        <View style={[a.gap_sm, a.align_center]}>
+        <View style={[a.gap_md, a.align_center]}>
           <Text style={[a.font_bold, a.text_3xl]}>
             <Trans>List hidden</Trans>
           </Text>
@@ -144,6 +147,7 @@ export function ListHiddenScreen({
               a.px_md,
               t.atoms.text_contrast_high,
               {lineHeight: 1.4},
+              isWeb && {maxWidth: 450},
             ]}>
             {isOwner ? (
               <Trans>
@@ -153,7 +157,17 @@ export function ListHiddenScreen({
               </Trans>
             ) : (
               <Trans>The list you are trying to view has been hidden.</Trans>
-            )}
+            )}{' '}
+            <Text
+              style={[a.text_md, {color: t.palette.primary_500}]}
+              onPress={showInfoDialog}>
+              {isWeb ? (
+                <Trans>Click here to learn more</Trans>
+              ) : (
+                <Trans>Tap here to learn more</Trans>
+              )}
+            </Text>
+            .
           </Text>
         </View>
       </View>
