@@ -121,6 +121,7 @@ let PostDropdownBtn = ({
   const sendViaChatControl = useDialogControl()
   const postInteractionSettingsDialogControl = useDialogControl()
   const quotePostDetachConfirmControl = useDialogControl()
+  const hideReplyConfirmControl = useDialogControl()
   const {mutateAsync: toggleReplyVisibility} =
     useToggleReplyVisibilityMutation()
   const {uris: hiddenReplies, recentlyUnhiddenUris} =
@@ -518,7 +519,11 @@ let PostDropdownBtn = ({
                           ? _(msg`Show reply for everyone`)
                           : _(msg`Hide reply for everyone`)
                       }
-                      onPress={onToggleReplyVisibility}>
+                      onPress={
+                        isReplyHiddenByThreadgate
+                          ? onToggleReplyVisibility
+                          : () => hideReplyConfirmControl.open()
+                      }>
                       <Menu.ItemText>
                         {isReplyHiddenByThreadgate
                           ? _(msg`Show reply for everyone`)
@@ -687,6 +692,16 @@ let PostDropdownBtn = ({
         )}
         onConfirm={onToggleQuotePostAttachment}
         confirmButtonCta={_(msg`Yes, detach`)}
+      />
+
+      <Prompt.Basic
+        control={hideReplyConfirmControl}
+        title={_(msg`Hide this reply?`)}
+        description={_(
+          msg`This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others.`,
+        )}
+        onConfirm={onToggleReplyVisibility}
+        confirmButtonCta={_(msg`Yes, hide`)}
       />
     </EventStopper>
   )
