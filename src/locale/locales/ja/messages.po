@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-08-16 10:26+0900\n"
+"PO-Revision-Date: 2024-08-20 10:59+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -4752,6 +4752,11 @@ msgstr "<0><1/></0>に返信"
 msgctxt "description"
 msgid "Reply to a blocked post"
 msgstr "ブロックした投稿への返信"
+
+#: src/view/com/posts/FeedItem.tsx:463
+msgctxt "description"
+msgid "Reply to an unknown post"
+msgstr "不明な投稿への返信"
 
 #: src/view/com/post/Post.tsx:195
 #: src/view/com/posts/FeedItem.tsx:454
