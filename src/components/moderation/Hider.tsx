@@ -29,7 +29,7 @@ export function Outer({
   modui,
   children,
 }: React.PropsWithChildren<{
-  modui?: ModerationUI
+  modui: ModerationUI | undefined
 }>) {
   const control = useModerationDetailsDialogControl()
   const blur = modui?.blurs[0]
