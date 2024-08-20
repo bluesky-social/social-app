@@ -23,7 +23,7 @@ type Context = {
 
 const Context = React.createContext<Context>({} as Context)
 
-export const useScreenHider = () => React.useContext(Context)
+export const useHider = () => React.useContext(Context)
 
 export function Outer({
   modui,
@@ -73,11 +73,11 @@ export function Outer({
 }
 
 export function Content({children}: {children: React.ReactNode}) {
-  const ctx = useScreenHider()
+  const ctx = useHider()
   return ctx.isContentVisible ? children : null
 }
 
 export function Mask({children}: {children: React.ReactNode}) {
-  const ctx = useScreenHider()
+  const ctx = useHider()
   return ctx.isContentVisible ? null : children
 }

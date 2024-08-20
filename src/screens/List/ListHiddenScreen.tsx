@@ -6,11 +6,8 @@ import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
 import {useGoBack} from 'lib/hooks/useGoBack'
-import {
-  useListBlockMutation,
-  useListDeleteMutation,
-  useListMuteMutation,
-} from 'state/queries/list'
+import {sanitizeHandle} from 'lib/strings/handles'
+import {useListBlockMutation, useListMuteMutation} from 'state/queries/list'
 import {
   UsePreferencesQueryResponse,
   useRemoveFeedMutation,
@@ -21,6 +18,7 @@ import {CenteredView} from 'view/com/util/Views'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
+import {useHider} from '#/components/moderation/Hider'
 import {Text} from '#/components/Typography'
 
 export function ListHiddenScreen({
@@ -42,8 +40,9 @@ export function ListHiddenScreen({
   const [isProcessing, setIsProcessing] = React.useState(false)
   const listBlockMutation = useListBlockMutation()
   const listMuteMutation = useListMuteMutation()
-  const listDeleteMutation = useListDeleteMutation()
   const {mutateAsync: removeSavedFeed} = useRemoveFeedMutation()
+
+  const {setIsContentVisible} = useHider()
 
   const savedFeedConfig = preferences.savedFeeds.find(f => f.value === list.uri)
 
@@ -79,24 +78,6 @@ export function ListHiddenScreen({
     }
     Toast.show(_(msg`Unsubscribed from list`))
     setIsProcessing(false)
-  }
-
-  const onDeleteList = async () => {
-    setIsProcessing(true)
-    try {
-      await listDeleteMutation.mutateAsync({uri: list.uri})
-      Toast.show(_(msg`List deleted`))
-    } catch (e) {
-      logger.error('Failed to delete list from saved feeds', {message: e})
-      Toast.show(
-        _(
-          msg`There was an issue. Please check your internet connection and try again.`,
-        ),
-      )
-    } finally {
-      setIsProcessing(false)
-      goBack()
-    }
   }
 
   const onRemoveList = async () => {
@@ -135,7 +116,7 @@ export function ListHiddenScreen({
         />
         <View style={[a.gap_sm, a.align_center]}>
           <Text style={[a.font_bold, a.text_3xl]}>
-            <Trans>List hidden</Trans>
+            <Trans>List has been hidden</Trans>
           </Text>
           <Text
             style={[
@@ -145,15 +126,16 @@ export function ListHiddenScreen({
               t.atoms.text_contrast_high,
               {lineHeight: 1.4},
             ]}>
-            {isOwner ? (
-              <Trans>
-                The list you are trying to view (
-                <Text style={[a.font_bold, a.text_md]}>{list.name}</Text>) has
-                been hidden.
-              </Trans>
-            ) : (
-              <Trans>The list you are trying to view has been hidden.</Trans>
-            )}
+            <Trans>
+              This list - created by{' '}
+              <Text style={[a.text_md, !isOwner && a.font_bold]}>
+                {isOwner
+                  ? _(msg`you`)
+                  : sanitizeHandle(list.creator.handle, '@')}
+              </Text>{' '}
+              - contains possible violations of Bluesky's community guidelines
+              in its name or description.
+            </Trans>
           </Text>
         </View>
       </View>
@@ -177,11 +159,11 @@ export function ListHiddenScreen({
               variant="solid"
               color="secondary"
               size="medium"
-              label={_(msg`Delete List`)}
-              onPress={onDeleteList}
+              label={_(msg`Show list anyway`)}
+              onPress={() => setIsContentVisible(true)}
               disabled={isProcessing}>
               <ButtonText>
-                <Trans>Delete list</Trans>
+                <Trans>Show anyway</Trans>
               </ButtonText>
             </Button>
           ) : null}
