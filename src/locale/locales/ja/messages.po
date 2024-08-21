@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-08-21 10:14+0900\n"
+"PO-Revision-Date: 2024-08-21 10:26+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -2697,6 +2697,10 @@ msgstr "画像をアップロードするかアバターを作ってあなたが
 msgid "Here is your app password."
 msgstr "アプリパスワードをお知らせします。"
 
+#: src/components/ListCard.tsx:128
+msgid "Hidden list"
+msgstr "非表示のリスト"
+
 #: src/components/moderation/ContentHider.tsx:116
 #: src/components/moderation/LabelPreference.tsx:134
 #: src/components/moderation/PostHider.tsx:122
@@ -3128,10 +3132,6 @@ msgstr "いいね"
 msgid "Likes on this post"
 msgstr "この投稿をいいねする"
 
-#: src/view/screens/ProfileList.tsx:235
-msgid "list"
-msgstr "リスト"
-
 #: src/Navigation.tsx:191
 msgid "List"
 msgstr "リスト"
@@ -3152,6 +3152,14 @@ msgstr "{0}によるリスト"
 #: src/view/screens/ProfileList.tsx:397
 msgid "List deleted"
 msgstr "リストを削除しました"
+
+#: src/screens/List/ListHiddenScreen.tsx:126
+msgid "List has been hidden"
+msgstr "リストは非表示です"
+
+#: src/view/screens/ProfileList.tsx:159
+msgid "List Hidden"
+msgstr "非表示のリスト"
 
 #: src/view/screens/ProfileList.tsx:330
 msgid "List muted"
@@ -4664,6 +4672,10 @@ msgstr "マイフィードから削除しますか？"
 msgid "Remove from quick access?"
 msgstr "クイックアクセスから削除しますか？"
 
+#: src/screens/List/ListHiddenScreen.tsx:156
+msgid "Remove from saved feeds"
+msgstr "保存フィードから削除"
+
 #: src/view/com/composer/photos/Gallery.tsx:174
 msgid "Remove image"
 msgstr "イメージを削除"
@@ -4705,6 +4717,11 @@ msgstr "リストから削除されました"
 #: src/view/com/feeds/FeedSourceCard.tsx:139
 msgid "Removed from my feeds"
 msgstr "マイフィードから削除しました"
+
+#: src/screens/List/ListHiddenScreen.tsx:94
+#: src/screens/List/ListHiddenScreen.tsx:160
+msgid "Removed from saved feeds"
+msgstr "保存フィードから削除しました"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:44
 #: src/view/screens/ProfileFeed.tsx:192
@@ -5487,6 +5504,10 @@ msgstr "非表示の返信を表示"
 msgid "Show less like this"
 msgstr "このような投稿の表示を減らす"
 
+#: src/screens/List/ListHiddenScreen.tsx:172
+msgid "Show list anyway"
+msgstr "とにかくリストを表示"
+
 #: src/view/com/post-thread/PostThreadItem.tsx:530
 #: src/view/com/post/Post.tsx:235
 #: src/view/com/posts/FeedItem.tsx:410
@@ -6199,6 +6220,10 @@ msgstr "このラベラーはどのようなラベルを発行しているか宣
 msgid "This link is taking you to the following website:"
 msgstr "このリンクは次のウェブサイトへリンクしています："
 
+#: src/screens/List/ListHiddenScreen.tsx:136
+msgid "This list - created by <0>{0}</0> - contains possible violations of Bluesky's community guidelines in its name or description."
+msgstr "このリスト — <0>{0}</0>が作成 — は名前か説明がBlueskyのコミュニティガイドラインに違反している可能性があります。"
+
 #: src/view/screens/ProfileList.tsx:907
 msgid "This list is empty!"
 msgstr "このリストは空です！"
@@ -6489,9 +6514,18 @@ msgstr "フィードからピン留めを解除"
 msgid "Unsubscribe"
 msgstr "登録を解除"
 
+#: src/screens/List/ListHiddenScreen.tsx:184
+#: src/screens/List/ListHiddenScreen.tsx:194
+msgid "Unsubscribe from list"
+msgstr "リストの登録を解除"
+
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:196
 msgid "Unsubscribe from this labeler"
 msgstr "このラベラーの登録を解除"
+
+#: src/screens/List/ListHiddenScreen.tsx:86
+msgid "Unsubscribed from list"
+msgstr "リストの登録を解除しました"
 
 #: src/lib/moderation/useReportOptions.ts:72
 #: src/lib/moderation/useReportOptions.ts:85
