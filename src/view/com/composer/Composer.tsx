@@ -116,6 +116,7 @@ export const ComposePost = observer(function ComposePost({
   replyTo,
   onPost,
   quote: initQuote,
+  quoteCount,
   mention: initMention,
   openPicker,
   text: initText,
@@ -392,7 +393,22 @@ export const ComposePost = observer(function ComposePost({
       emitPostCreated()
     }
     setLangPrefs.savePostLanguageToHistory()
-    onPost?.(postUri)
+    if (quote) {
+      // We want to wait for the quote count to update before we call `onPost`, which will refetch data
+      whenAppViewReady(agent, quote.uri, res => {
+        const thread = res.data.thread
+        if (
+          AppBskyFeedDefs.isThreadViewPost(thread) &&
+          thread.post.quoteCount !== quoteCount
+        ) {
+          onPost?.(postUri)
+          return true
+        }
+        return false
+      })
+    } else {
+      onPost?.(postUri)
+    }
     onClose()
     Toast.show(
       replyTo
