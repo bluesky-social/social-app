@@ -251,44 +251,51 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
     }
   }
 
-  try {
-    // TODO: this needs to be batch-created with the post!
-    await writeThreadgateRecord({
-      agent,
-      postUri: res.uri,
-      threadgate: createThreadgateRecord({
-        post: res.uri,
-        allow: threadgateAllowUISettingToAllowRecordValue(opts.threadgate),
-      }),
-    })
-  } catch (e: any) {
-    logger.error(`Failed to create threadgate`, {
-      context: 'composer',
-      safeMessage: e.message,
-    })
-    throw new Error(
-      'Failed to save post interaction settings. Your post was created but users may be able to interact with it.',
-    )
+  if (opts.threadgate.some(tg => tg.type !== 'everybody')) {
+    try {
+      // TODO: this needs to be batch-created with the post!
+      await writeThreadgateRecord({
+        agent,
+        postUri: res.uri,
+        threadgate: createThreadgateRecord({
+          post: res.uri,
+          allow: threadgateAllowUISettingToAllowRecordValue(opts.threadgate),
+        }),
+      })
+    } catch (e: any) {
+      logger.error(`Failed to create threadgate`, {
+        context: 'composer',
+        safeMessage: e.message,
+      })
+      throw new Error(
+        'Failed to save post interaction settings. Your post was created but users may be able to interact with it.',
+      )
+    }
   }
 
-  try {
-    // TODO: this needs to be batch-created with the post!
-    await writePostgateRecord({
-      agent,
-      postUri: res.uri,
-      postgate: {
-        ...opts.postgate,
-        post: res.uri,
-      },
-    })
-  } catch (e: any) {
-    logger.error(`Failed to create postgate`, {
-      context: 'composer',
-      safeMessage: e.message,
-    })
-    throw new Error(
-      'Failed to save post interaction settings. Your post was created but users may be able to interact with it.',
-    )
+  if (
+    opts.postgate.embeddingRules?.length ||
+    opts.postgate.detachedEmbeddingUris?.length
+  ) {
+    try {
+      // TODO: this needs to be batch-created with the post!
+      await writePostgateRecord({
+        agent,
+        postUri: res.uri,
+        postgate: {
+          ...opts.postgate,
+          post: res.uri,
+        },
+      })
+    } catch (e: any) {
+      logger.error(`Failed to create postgate`, {
+        context: 'composer',
+        safeMessage: e.message,
+      })
+      throw new Error(
+        'Failed to save post interaction settings. Your post was created but users may be able to interact with it.',
+      )
+    }
   }
 
   return res
