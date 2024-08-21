@@ -1,30 +1,51 @@
-import React, {useCallback, useMemo, useState} from 'react'
-import {AppBskyActorDefs as ActorDefs} from '@atproto/api'
+import React, {useCallback, useState} from 'react'
+import {
+  AppBskyFeedDefs,
+  AppBskyFeedPost,
+  ModerationDecision,
+} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {usePostRepostedByQuery} from '#/state/queries/post-reposted-by'
+import {isWeb} from '#/platform/detection'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {usePostQuotesQuery} from '#/state/queries/post-quotes'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
-import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
-import {List} from '#/view/com/util/List'
+import {Post} from 'view/com/post/Post'
 import {
   ListFooter,
   ListHeaderDesktop,
   ListMaybePlaceholder,
 } from '#/components/Lists'
+import {List} from '../util/List'
 
-function renderItem({item}: {item: ActorDefs.ProfileViewBasic}) {
-  return <ProfileCardWithFollowBtn key={item.did} profile={item} />
+function renderItem({
+  item,
+  index,
+}: {
+  item: {
+    post: AppBskyFeedDefs.PostView
+    moderation: ModerationDecision
+    record: AppBskyFeedPost.Record
+  }
+  index: number
+}) {
+  return <Post post={item.post} hideTopBorder={index === 0 && !isWeb} />
 }
 
-function keyExtractor(item: ActorDefs.ProfileViewBasic) {
-  return item.did
+function keyExtractor(item: {
+  post: AppBskyFeedDefs.PostView
+  moderation: ModerationDecision
+  record: AppBskyFeedPost.Record
+}) {
+  return item.post.uri
 }
 
-export function PostRepostedBy({uri}: {uri: string}) {
+export function PostQuotes({uri}: {uri: string}) {
   const {_} = useLingui()
   const initialNumToRender = useInitialNumToRender()
 
@@ -37,29 +58,37 @@ export function PostRepostedBy({uri}: {uri: string}) {
   } = useResolveUriQuery(uri)
   const {
     data,
-    isLoading: isLoadingRepostedBy,
+    isLoading: isLoadingQuotes,
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage,
     error,
     refetch,
-  } = usePostRepostedByQuery(resolvedUri?.uri)
+  } = usePostQuotesQuery(resolvedUri?.uri)
+
+  const moderationOpts = useModerationOpts()
 
   const isError = Boolean(resolveError || error)
 
-  const repostedBy = useMemo(() => {
-    if (data?.pages) {
-      return data.pages.flatMap(page => page.repostedBy)
-    }
-    return []
-  }, [data])
+  const quotes =
+    data?.pages
+      .flatMap(page =>
+        page.posts.map(post => {
+          if (!AppBskyFeedPost.isRecord(post.record) || !moderationOpts) {
+            return null
+          }
+          const moderation = moderatePost(post, moderationOpts)
+          return {post, record: post.record, moderation}
+        }),
+      )
+      .filter(item => item !== null) ?? []
 
   const onRefresh = useCallback(async () => {
     setIsPTRing(true)
     try {
       await refetch()
     } catch (err) {
-      logger.error('Failed to refresh reposts', {message: err})
+      logger.error('Failed to refresh quotes', {message: err})
     }
     setIsPTRing(false)
   }, [refetch, setIsPTRing])
@@ -69,14 +98,14 @@ export function PostRepostedBy({uri}: {uri: string}) {
     try {
       await fetchNextPage()
     } catch (err) {
-      logger.error('Failed to load more reposts', {message: err})
+      logger.error('Failed to load more quotes', {message: err})
     }
   }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
-  if (repostedBy.length < 1) {
+  if (isLoadingUri || isLoadingQuotes || isError) {
     return (
       <ListMaybePlaceholder
-        isLoading={isLoadingUri || isLoadingRepostedBy}
+        isLoading={isLoadingUri || isLoadingQuotes}
         isError={isError}
       />
     )
@@ -86,19 +115,21 @@ export function PostRepostedBy({uri}: {uri: string}) {
   // =
   return (
     <List
-      data={repostedBy}
+      data={quotes}
       renderItem={renderItem}
       keyExtractor={keyExtractor}
       refreshing={isPTRing}
       onRefresh={onRefresh}
       onEndReached={onEndReached}
       onEndReachedThreshold={4}
-      ListHeaderComponent={<ListHeaderDesktop title={_(msg`Reposted By`)} />}
+      ListHeaderComponent={<ListHeaderDesktop title={_(msg`Quotes`)} />}
       ListFooterComponent={
         <ListFooter
           isFetchingNextPage={isFetchingNextPage}
           error={cleanError(error)}
           onRetry={fetchNextPage}
+          showEndMessage
+          endMessageText={_(msg`That's all, folks!`)}
         />
       }
       // @ts-ignore our .web version only -prf
