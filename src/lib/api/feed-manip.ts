@@ -23,6 +23,7 @@ type FeedSliceItem = {
   record: AppBskyFeedPost.Record
   parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
   isParentBlocked: boolean
+  isParentNotFound: boolean
 }
 
 type AuthorContext = {
@@ -68,6 +69,7 @@ export class FeedViewPostsSlice {
     }
     const parent = reply?.parent
     const isParentBlocked = AppBskyFeedDefs.isBlockedPost(parent)
+    const isParentNotFound = AppBskyFeedDefs.isNotFoundPost(parent)
     let parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
     if (AppBskyFeedDefs.isPostView(parent)) {
       parentAuthor = parent.author
@@ -77,6 +79,7 @@ export class FeedViewPostsSlice {
       record: post.record,
       parentAuthor,
       isParentBlocked,
+      isParentNotFound,
     })
     if (!reply || reason) {
       return
@@ -89,23 +92,40 @@ export class FeedViewPostsSlice {
       this.isOrphan = true
       return
     }
+    const root = reply.root
+    const rootIsView =
+      AppBskyFeedDefs.isPostView(root) ||
+      AppBskyFeedDefs.isBlockedPost(root) ||
+      AppBskyFeedDefs.isNotFoundPost(root)
+    /*
+     * If the parent is also the root, we just so happen to have the data we
+     * need to compute if the parent's parent (grandparent) is blocked. This
+     * doesn't always happen, of course, but we can take advantage of it when
+     * it does.
+     */
+    const grandparent =
+      rootIsView && parent.record.reply?.parent.uri === root.uri
+        ? root
+        : undefined
     const grandparentAuthor = reply.grandparentAuthor
     const isGrandparentBlocked = Boolean(
-      grandparentAuthor?.viewer?.blockedBy ||
-        grandparentAuthor?.viewer?.blocking ||
-        grandparentAuthor?.viewer?.blockingByList,
+      grandparent && AppBskyFeedDefs.isBlockedPost(grandparent),
+    )
+    const isGrandparentNotFound = Boolean(
+      grandparent && AppBskyFeedDefs.isNotFoundPost(grandparent),
     )
     this.items.unshift({
       post: parent,
       record: parent.record,
       parentAuthor: grandparentAuthor,
       isParentBlocked: isGrandparentBlocked,
+      isParentNotFound: isGrandparentNotFound,
     })
     if (isGrandparentBlocked) {
       this.isOrphan = true
-      // Keep going, it might still have a root.
+      // Keep going, it might still have a root, and we need this for thread
+      // de-deduping
     }
-    const root = reply.root
     if (
       !AppBskyFeedDefs.isPostView(root) ||
       !AppBskyFeedPost.isRecord(root.record) ||
@@ -121,6 +141,7 @@ export class FeedViewPostsSlice {
       post: root,
       record: root.record,
       isParentBlocked: false,
+      isParentNotFound: false,
       parentAuthor: undefined,
     })
     if (parent.record.reply?.parent.uri !== root.uri) {
