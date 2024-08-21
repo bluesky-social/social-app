@@ -102,7 +102,7 @@ export function PostQuotes({uri}: {uri: string}) {
     }
   }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
-  if (quotes.length < 1) {
+  if (isLoadingUri || isLoadingQuotes || isError) {
     return (
       <ListMaybePlaceholder
         isLoading={isLoadingUri || isLoadingQuotes}
@@ -128,6 +128,8 @@ export function PostQuotes({uri}: {uri: string}) {
           isFetchingNextPage={isFetchingNextPage}
           error={cleanError(error)}
           onRetry={fetchNextPage}
+          showEndMessage
+          endMessageText={_(msg`That's all, folks!`)}
         />
       }
       // @ts-ignore our .web version only -prf
