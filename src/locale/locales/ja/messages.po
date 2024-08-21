@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-08-20 10:59+0900\n"
+"PO-Revision-Date: 2024-08-21 10:14+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -1188,7 +1188,7 @@ msgstr "漫画"
 #: src/Navigation.tsx:267
 #: src/view/screens/CommunityGuidelines.tsx:32
 msgid "Community Guidelines"
-msgstr "コミュニティーガイドライン"
+msgstr "コミュニティガイドライン"
 
 #: src/screens/Onboarding/StepFinished.tsx:294
 msgid "Complete onboarding and start using your account"
@@ -1497,7 +1497,7 @@ msgstr "カスタムドメイン"
 #: src/view/screens/Feeds.tsx:760
 #: src/view/screens/Search/Explore.tsx:392
 msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
-msgstr "コミュニティーによって作成されたカスタムフィードは、あなたに新しい体験をもたらし、あなたが好きなコンテンツを見つけるのに役立ちます。"
+msgstr "コミュニティによって作成されたカスタムフィードは、あなたに新しい体験をもたらし、あなたが好きなコンテンツを見つけるのに役立ちます。"
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:56
 msgid "Customize media from external sites."
@@ -5480,7 +5480,7 @@ msgstr "{0}に似たおすすめのフォロー候補を表示"
 
 #: src/view/com/post-thread/PostThreadShowHiddenReplies.tsx:23
 msgid "Show hidden replies"
-msgstr "隠れている返信を表示"
+msgstr "非表示の返信を表示"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:349
 #: src/view/com/util/forms/PostDropdownBtn.tsx:351
@@ -5944,7 +5944,7 @@ msgstr "Blueskyウェブアプリ"
 
 #: src/view/screens/CommunityGuidelines.tsx:36
 msgid "The Community Guidelines have been moved to <0/>"
-msgstr "コミュニティーガイドラインは<0/>に移動しました"
+msgstr "コミュニティガイドラインは<0/>に移動しました"
 
 #: src/view/screens/CopyrightPolicy.tsx:33
 msgid "The Copyright Policy has been moved to <0/>"
