@@ -4678,7 +4678,7 @@ msgstr "從我的動態源中刪除？"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:53
 msgid "Remove from quick access?"
-msgstr "從快速存取中移除？"
+msgstr "從快速存取中刪除？"
 
 #: src/view/com/composer/photos/Gallery.tsx:174
 msgid "Remove image"
