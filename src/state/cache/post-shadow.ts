@@ -105,7 +105,7 @@ function mergeShadow(
 
   return castAsShadow({
     ...post,
-    embed,
+    embed: embed || post.embed,
     likeCount: likeCount,
     repostCount: repostCount,
     viewer: {
