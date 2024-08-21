@@ -4442,7 +4442,7 @@ msgstr "貼文"
 
 #: src/components/dialogs/MutedWords.tsx:115
 msgid "Posts can be muted based on their text, their tags, or both. We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
-msgstr "可以根據文字、標籤或結合兩者來靜音特定貼文。我們建議避免添加常用文字，因為這可能會導致你的動態不顯示任何貼文。"
+msgstr "可以根據文字、標籤或結合兩者來靜音貼文。我們建議避免新增常見的文字，否則可能導致動態不顯示任何貼文。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:68
 msgid "Posts hidden"
