@@ -179,17 +179,12 @@ export function PostThread({uri}: {uri: string | undefined}) {
     () => new Set<string>(),
   )
 
-  const threadgateRecordHiddenReplies = React.useMemo(() => {
-    const set = new Set<string>()
-    for (const hiddenReplyUri of threadgateRecord?.hiddenReplies || []) {
-      set.add(hiddenReplyUri)
-    }
-    return set
-  }, [threadgateRecord])
-
   const skeleton = React.useMemo(() => {
     const threadViewPrefs = preferences?.threadViewPrefs
     if (!threadViewPrefs || !thread) return null
+    const threadgateRecordHiddenReplies = new Set<string>(
+      threadgateRecord?.hiddenReplies || [],
+    )
 
     return createThreadSkeleton(
       sortThread(
@@ -214,7 +209,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
     threadModerationCache,
     hiddenRepliesState,
     justPostedUris,
-    threadgateRecordHiddenReplies,
+    threadgateRecord,
   ])
 
   const error = React.useMemo(() => {
