@@ -1739,7 +1739,7 @@ msgstr "DNS 控制台"
 
 #: src/components/dialogs/MutedWords.tsx:302
 msgid "Do not apply this mute word to users you follow"
-msgstr "不對已跟隨的用戶使用此靜音詞彙"
+msgstr "不要對已跟隨的用戶使用此靜音詞彙"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:39
 msgid "Does not include nudity."
