@@ -4,7 +4,6 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedGetPostThread,
   AppBskyFeedPost,
-  AppBskyFeedThreadgate,
   AtUri,
   ModerationDecision,
   ModerationOpts,
@@ -139,7 +138,7 @@ export function sortThread(
   modCache: ThreadModerationCache,
   currentDid: string | undefined,
   justPostedUris: Set<string>,
-  threadgateRecord?: AppBskyFeedThreadgate.Record,
+  threadgateRecordHiddenReplies: Set<string>,
 ): ThreadNode {
   if (node.type !== 'post') {
     return node
@@ -187,8 +186,8 @@ export function sortThread(
         return 1 // current account's reply
       }
 
-      const aHidden = threadgateRecord?.hiddenReplies?.includes(a.uri)
-      const bHidden = threadgateRecord?.hiddenReplies?.includes(b.uri)
+      const aHidden = threadgateRecordHiddenReplies.has(a.uri)
+      const bHidden = threadgateRecordHiddenReplies.has(b.uri)
       if (aHidden && !aIsBySelf && !bHidden) {
         return 1
       } else if (bHidden && !bIsBySelf && !aHidden) {
@@ -238,7 +237,7 @@ export function sortThread(
         modCache,
         currentDid,
         justPostedUris,
-        threadgateRecord,
+        threadgateRecordHiddenReplies,
       ),
     )
   }

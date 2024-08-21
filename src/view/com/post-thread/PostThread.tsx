@@ -179,6 +179,14 @@ export function PostThread({uri}: {uri: string | undefined}) {
     () => new Set<string>(),
   )
 
+  const threadgateRecordHiddenReplies = React.useMemo(() => {
+    const set = new Set<string>()
+    for (const hiddenReplyUri of threadgateRecord?.hiddenReplies || []) {
+      set.add(hiddenReplyUri)
+    }
+    return set
+  }, [threadgateRecord])
+
   const skeleton = React.useMemo(() => {
     const threadViewPrefs = preferences?.threadViewPrefs
     if (!threadViewPrefs || !thread) return null
@@ -190,13 +198,13 @@ export function PostThread({uri}: {uri: string | undefined}) {
         threadModerationCache,
         currentDid,
         justPostedUris,
-        threadgateRecord ?? undefined,
+        threadgateRecordHiddenReplies,
       ),
       currentDid,
       treeView,
       threadModerationCache,
       hiddenRepliesState !== HiddenRepliesState.Hide,
-      threadgateRecord ?? undefined,
+      threadgateRecordHiddenReplies,
     )
   }, [
     thread,
@@ -206,7 +214,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
     threadModerationCache,
     hiddenRepliesState,
     justPostedUris,
-    threadgateRecord,
+    threadgateRecordHiddenReplies,
   ])
 
   const error = React.useMemo(() => {
@@ -568,7 +576,7 @@ function createThreadSkeleton(
   treeView: boolean,
   modCache: ThreadModerationCache,
   showHiddenReplies: boolean,
-  threadgateRecord?: AppBskyFeedThreadgate.Record,
+  threadgateRecordHiddenReplies: Set<string>,
 ): ThreadSkeletonParts | null {
   if (!node) return null
 
@@ -582,7 +590,7 @@ function createThreadSkeleton(
         treeView,
         modCache,
         showHiddenReplies,
-        threadgateRecord,
+        threadgateRecordHiddenReplies,
       ),
     ),
   }
@@ -619,7 +627,7 @@ function* flattenThreadReplies(
   treeView: boolean,
   modCache: ThreadModerationCache,
   showHiddenReplies: boolean,
-  threadgateRecord?: AppBskyFeedThreadgate.Record,
+  threadgateRecordHiddenReplies: Set<string>,
 ): Generator<YieldedItem, HiddenReplyType> {
   if (node.type === 'post') {
     // dont show pwi-opted-out posts to logged out users
@@ -639,8 +647,8 @@ function* flattenThreadReplies(
         }
       }
 
-      if (threadgateRecord && !showHiddenReplies) {
-        const hiddenByThreadgate = !!threadgateRecord?.hiddenReplies?.includes(
+      if (!showHiddenReplies) {
+        const hiddenByThreadgate = threadgateRecordHiddenReplies.has(
           node.post.uri,
         )
         const authorIsViewer = node.post.author.did === currentDid
@@ -663,7 +671,7 @@ function* flattenThreadReplies(
           treeView,
           modCache,
           showHiddenReplies,
-          threadgateRecord,
+          threadgateRecordHiddenReplies,
         )
         if (hiddenReply > hiddenReplies) {
           hiddenReplies = hiddenReply
