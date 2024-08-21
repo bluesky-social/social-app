@@ -115,13 +115,13 @@ export function useModerationCauseDescription(
       }
     }
     if (cause.type === 'reply-hidden') {
-      const isYou = currentAccount?.did === cause.source.did
+      const isMe = currentAccount?.did === cause.source.did
       return {
         icon: EyeSlash,
-        name: isYou
+        name: isMe
           ? _(msg`Reply Hidden by You`)
           : _(msg`Reply Hidden by Thread Author`),
-        description: isYou
+        description: isMe
           ? _(msg`You hid this reply.`)
           : _(msg`The author of this thread has hidden this reply.`),
       }
