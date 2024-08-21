@@ -1,8 +1,8 @@
 import React from 'react'
 
 type StateContext = {
-  uris: string[]
-  recentlyUnhiddenUris: string[]
+  uris: Set<string>
+  recentlyUnhiddenUris: Set<string>
 }
 type ApiContext = {
   addHiddenReplyUri: (uri: string) => void
@@ -10,8 +10,8 @@ type ApiContext = {
 }
 
 const StateContext = React.createContext<StateContext>({
-  uris: [],
-  recentlyUnhiddenUris: [],
+  uris: new Set(),
+  recentlyUnhiddenUris: new Set(),
 })
 
 const ApiContext = React.createContext<ApiContext>({
@@ -20,10 +20,10 @@ const ApiContext = React.createContext<ApiContext>({
 })
 
 export function Provider({children}: {children: React.ReactNode}) {
-  const [uris, setHiddenReplyUris] = React.useState<string[]>([])
+  const [uris, setHiddenReplyUris] = React.useState<Set<string>>(new Set())
   const [recentlyUnhiddenUris, setRecentlyUnhiddenUris] = React.useState<
-    string[]
-  >([])
+    Set<string>
+  >(new Set())
 
   const stateCtx = React.useMemo(
     () => ({
@@ -36,12 +36,18 @@ export function Provider({children}: {children: React.ReactNode}) {
   const apiCtx = React.useMemo(
     () => ({
       addHiddenReplyUri(uri: string) {
-        setHiddenReplyUris(prev => Array.from(new Set([...prev, uri])))
-        setRecentlyUnhiddenUris(prev => prev.filter(u => u !== uri))
+        setHiddenReplyUris(prev => new Set(prev.add(uri)))
+        setRecentlyUnhiddenUris(prev => {
+          prev.delete(uri)
+          return new Set(prev)
+        })
       },
       removeHiddenReplyUri(uri: string) {
-        setHiddenReplyUris(prev => prev.filter(u => u !== uri))
-        setRecentlyUnhiddenUris(prev => Array.from(new Set([...prev, uri])))
+        setHiddenReplyUris(prev => {
+          prev.delete(uri)
+          return new Set(prev)
+        })
+        setRecentlyUnhiddenUris(prev => new Set(prev.add(uri)))
       },
     }),
     [setHiddenReplyUris],

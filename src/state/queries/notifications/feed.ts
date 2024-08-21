@@ -133,7 +133,7 @@ export function useNotificationFeedQuery(opts?: {
                 const isHiddenReply =
                   item.type === 'reply' &&
                   item.subjectUri &&
-                  hiddenReplyUris.includes(item.subjectUri)
+                  hiddenReplyUris.has(item.subjectUri)
                 return !isHiddenReply
               }),
             }

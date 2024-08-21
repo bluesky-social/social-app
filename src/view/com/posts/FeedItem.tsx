@@ -425,9 +425,9 @@ let PostContent = ({
   const {uris: hiddenReplyUris, recentlyUnhiddenUris} =
     useThreadgateHiddenReplyUris()
   const additionalPostAlerts: AppModerationCause[] = React.useMemo(() => {
-    const isPostHiddenByHiddenReplyCache = hiddenReplyUris.includes(post.uri)
+    const isPostHiddenByHiddenReplyCache = hiddenReplyUris.has(post.uri)
     const isPostHiddenByThreadgate =
-      !recentlyUnhiddenUris.includes(post.uri) &&
+      !recentlyUnhiddenUris.has(post.uri) &&
       !!threadgateRecord?.hiddenReplies?.includes(post.uri)
     const isHidden = isPostHiddenByHiddenReplyCache || isPostHiddenByThreadgate
     const isControlledByViewer =
