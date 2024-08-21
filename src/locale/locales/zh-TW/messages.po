@@ -5160,7 +5160,7 @@ msgstr "查看該用戶包含 <0>{displayTag}</0> 的貼文"
 
 #: src/view/com/auth/SplashScreen.web.tsx:162
 msgid "See jobs at Bluesky"
-msgstr "查看 BlueSky 的職缺"
+msgstr "查看 Bluesky 的職缺"
 
 #: src/view/screens/SavedFeeds.tsx:188
 msgid "See this guide"
