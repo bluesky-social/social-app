@@ -3,6 +3,7 @@ import {View} from 'react-native'
 // @ts-expect-error no type definition
 import ProgressPie from 'react-native-progress/Pie'
 import {ImagePickerAsset} from 'expo-image-picker'
+import {Trans} from '@lingui/macro'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
@@ -46,7 +47,9 @@ export function VideoTranscodeProgress({
           color={t.atoms.text.color}
           progress={progress}
         />
-        <Text>Compressing...</Text>
+        <Text>
+          <Trans>Compressing...</Trans>
+        </Text>
       </View>
     </View>
   )

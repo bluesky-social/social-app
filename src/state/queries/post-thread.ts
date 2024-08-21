@@ -137,6 +137,7 @@ export function sortThread(
   opts: UsePreferencesQueryResponse['threadViewPrefs'],
   modCache: ThreadModerationCache,
   currentDid: string | undefined,
+  justPostedUris: Set<string>,
 ): ThreadNode {
   if (node.type !== 'post') {
     return node
@@ -148,6 +149,20 @@ export function sortThread(
       }
       if (b.type !== 'post') {
         return -1
+      }
+
+      if (node.ctx.isHighlightedPost || opts.lab_treeViewEnabled) {
+        const aIsJustPosted =
+          a.post.author.did === currentDid && justPostedUris.has(a.post.uri)
+        const bIsJustPosted =
+          b.post.author.did === currentDid && justPostedUris.has(b.post.uri)
+        if (aIsJustPosted && bIsJustPosted) {
+          return a.post.indexedAt.localeCompare(b.post.indexedAt) // oldest
+        } else if (aIsJustPosted) {
+          return -1 // reply while onscreen
+        } else if (bIsJustPosted) {
+          return 1 // reply while onscreen
+        }
       }
 
       const aIsByOp = a.post.author.did === node.post?.author.did
@@ -206,7 +221,9 @@ export function sortThread(
       }
       return b.post.indexedAt.localeCompare(a.post.indexedAt)
     })
-    node.replies.forEach(reply => sortThread(reply, opts, modCache, currentDid))
+    node.replies.forEach(reply =>
+      sortThread(reply, opts, modCache, currentDid, justPostedUris),
+    )
   }
   return node
 }

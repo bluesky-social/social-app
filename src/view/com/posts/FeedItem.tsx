@@ -1,4 +1,4 @@
-import React, {memo, useMemo, useState} from 'react'
+import React, {memo, useId, useMemo, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {
   AppBskyActorDefs,
@@ -63,6 +63,7 @@ interface FeedItemProps {
   feedContext: string | undefined
   hideTopBorder?: boolean
   isParentBlocked?: boolean
+  isParentNotFound?: boolean
 }
 
 export function FeedItem({
@@ -78,6 +79,7 @@ export function FeedItem({
   isThreadParent,
   hideTopBorder,
   isParentBlocked,
+  isParentNotFound,
 }: FeedItemProps & {post: AppBskyFeedDefs.PostView}): React.ReactNode {
   const postShadowed = usePostShadow(post)
   const richText = useMemo(
@@ -109,6 +111,7 @@ export function FeedItem({
         isThreadParent={isThreadParent}
         hideTopBorder={hideTopBorder}
         isParentBlocked={isParentBlocked}
+        isParentNotFound={isParentNotFound}
       />
     )
   }
@@ -129,6 +132,7 @@ let FeedItemInner = ({
   isThreadParent,
   hideTopBorder,
   isParentBlocked,
+  isParentNotFound,
 }: FeedItemProps & {
   richText: RichTextAPI
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -137,7 +141,6 @@ let FeedItemInner = ({
   const {openComposer} = useComposerControls()
   const pal = usePalette('default')
   const {_} = useLingui()
-  const gate = useGate()
 
   const href = useMemo(() => {
     const urip = new AtUri(post.uri)
@@ -345,9 +348,14 @@ let FeedItemInner = ({
             postHref={href}
             onOpenAuthor={onOpenAuthor}
           />
-          {showReplyTo && (parentAuthor || isParentBlocked) && (
-            <ReplyToLabel blocked={isParentBlocked} profile={parentAuthor} />
-          )}
+          {showReplyTo &&
+            (parentAuthor || isParentBlocked || isParentNotFound) && (
+              <ReplyToLabel
+                blocked={isParentBlocked}
+                notFound={isParentNotFound}
+                profile={parentAuthor}
+              />
+            )}
           <LabelsOnMyPost post={post} />
           <PostContent
             moderation={moderation}
@@ -356,9 +364,7 @@ let FeedItemInner = ({
             postAuthor={post.author}
             onOpenEmbed={onOpenEmbed}
           />
-          {gate('video_debug') && (
-            <VideoEmbed source="https://lumi.jazco.dev/watch/did:plc:q6gjnaw2blty4crticxkmujt/Qmc8w93UpTa2adJHg4ZhnDPrBs1EsbzrekzPcqF5SwusuZ/playlist.m3u8" />
-          )}
+          <VideoDebug />
           <PostCtrls
             post={post}
             record={record}
@@ -441,9 +447,11 @@ PostContent = memo(PostContent)
 function ReplyToLabel({
   profile,
   blocked,
+  notFound,
 }: {
   profile: AppBskyActorDefs.ProfileViewBasic | undefined
   blocked?: boolean
+  notFound?: boolean
 }) {
   const pal = usePalette('default')
   const {currentAccount} = useSession()
@@ -451,6 +459,8 @@ function ReplyToLabel({
   let label
   if (blocked) {
     label = <Trans context="description">Reply to a blocked post</Trans>
+  } else if (notFound) {
+    label = <Trans context="description">Reply to an unknown post</Trans>
   } else if (profile != null) {
     const isMe = profile.did === currentAccount?.did
     if (isMe) {
@@ -501,6 +511,19 @@ function ReplyToLabel({
   )
 }
 
+function VideoDebug() {
+  const gate = useGate()
+  const id = useId()
+
+  if (!gate('video_debug')) return null
+
+  return (
+    <VideoEmbed
+      source={`https://lumi.jazco.dev/watch/did:plc:q6gjnaw2blty4crticxkmujt/Qmc8w93UpTa2adJHg4ZhnDPrBs1EsbzrekzPcqF5SwusuZ/playlist.m3u8?ignore_me_just_testing_frontend_stuff=${id}`}
+    />
+  )
+}
+
 const styles = StyleSheet.create({
   outer: {
     paddingLeft: 10,
@@ -544,6 +567,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexWrap: 'wrap',
     paddingBottom: 2,
+    overflow: 'hidden',
   },
   contentHiderChild: {
     marginTop: 6,
