@@ -468,7 +468,6 @@ function Selectable({
       disabled={disabled}
       onPress={onPress}
       label={label}
-      accessibilityHint="Select this option"
       accessibilityRole="checkbox"
       aria-checked={isSelected}
       accessibilityState={{

@@ -172,7 +172,7 @@ function WhoCanReplyDialog({
     <Dialog.Outer control={control}>
       <Dialog.Handle />
       <Dialog.ScrollableInner
-        label={_(msg`Who can reply dialog`)}
+        label={_(msg`Dialog: adjust who can interact with this post`)}
         style={[{width: 'auto', maxWidth: 400, minWidth: 200}]}>
         <View style={[a.gap_sm]}>
           <Text style={[a.font_bold, a.text_xl, a.pb_sm]}>
@@ -212,7 +212,7 @@ function Rules({
         {settings[0].type === 'everybody' ? (
           <Trans>Everybody can reply to this post.</Trans>
         ) : settings[0].type === 'nobody' ? (
-          <Trans>Replies to this post are disabled</Trans>
+          <Trans>Replies to this post are disabled.</Trans>
         ) : (
           <Trans>
             Only{' '}
