@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-08-21 10:26+0900\n"
+"PO-Revision-Date: 2024-08-22 08:26+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -63,6 +63,10 @@ msgstr "{0, plural, other {#人のユーザーがいいね}}"
 #: src/screens/Profile/Header/Metrics.tsx:59
 msgid "{0, plural, one {post} other {posts}}"
 msgstr "{0, plural, other {投稿}}"
+
+#: src/view/com/post-thread/PostThreadItem.tsx:404
+msgid "{0, plural, one {quote} other {quotes}}"
+msgstr "{0, plural, other {引用}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:224
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
@@ -4569,6 +4573,15 @@ msgstr "クイック・チップ"
 msgid "Quote post"
 msgstr "引用"
 
+#: src/screens/Post/PostQuotes.tsx:29
+#: src/view/com/post-thread/PostQuotes.tsx:125
+msgid "Quotes"
+msgstr "引用"
+
+#: src/view/com/post-thread/PostThreadItem.tsx:206
+msgid "Quotes of this post"
+msgstr "この投稿の引用"
+
 #: src/view/screens/PreferencesThreads.tsx:80
 msgid "Random (aka \"Poster's Roulette\")"
 msgstr "ランダムな順番で表示（別名「投稿者のルーレット」）"
@@ -5953,6 +5966,10 @@ msgstr "そのハンドルはすでに使用されています。"
 #: src/screens/StarterPack/Wizard/index.tsx:114
 msgid "That starter pack could not be found."
 msgstr "そのスターターパックが見つかりませんでした。"
+
+#: src/view/com/post-thread/PostQuotes.tsx:132
+msgid "That's all, folks!"
+msgstr "以上です、皆さん！"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:310
 #: src/view/com/profile/ProfileMenu.tsx:353
