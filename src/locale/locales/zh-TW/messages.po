@@ -492,7 +492,7 @@ msgstr "建立您的入門包時發生錯誤。是否要重試？"
 #: src/view/com/util/post-embeds/VideoEmbed.tsx:69
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:150
 msgid "An error occurred while loading the video. Please try again later."
-msgstr "載入影片時發生錯誤。請稍後重試。"
+msgstr "載入影片時發生錯誤。請稍後再試。"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:71
 #: src/components/StarterPack/ShareDialog.tsx:79
