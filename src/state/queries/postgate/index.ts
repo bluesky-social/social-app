@@ -74,7 +74,7 @@ export async function getPostgateRecord({
     if (e.message.includes(`Could not locate record:`)) {
       return undefined
     } else {
-      throw new Error(`Failed to get postgate record`, {cause: e})
+      throw e
     }
   }
 }

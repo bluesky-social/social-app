@@ -152,7 +152,7 @@ export async function getThreadgateRecord({
     if (e.message.includes(`Could not locate record:`)) {
       return null
     } else {
-      throw new Error(`Failed to get threadgate record`, {cause: e})
+      throw e
     }
   }
 }
