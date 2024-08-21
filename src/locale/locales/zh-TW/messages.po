@@ -2259,7 +2259,7 @@ msgstr "無法儲存圖片：{0}"
 
 #: src/state/queries/notifications/settings.ts:39
 msgid "Failed to save notification preferences, please try again"
-msgstr "無法儲存通知偏好設定，請重試"
+msgstr "無法儲存通知偏好設定，請再試一次"
 
 #: src/components/dms/MessageItem.tsx:224
 msgid "Failed to send"
