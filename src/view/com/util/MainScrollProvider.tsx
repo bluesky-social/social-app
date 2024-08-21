@@ -9,6 +9,7 @@ import {
 import EventEmitter from 'eventemitter3'
 
 import {ScrollProvider} from '#/lib/ScrollContext'
+import {useGate} from '#/lib/statsig/statsig'
 import {useMinimalShellMode} from '#/state/shell'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {isNative, isWeb} from 'platform/detection'
@@ -26,6 +27,8 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
   const startDragOffset = useSharedValue<number | null>(null)
   const startMode = useSharedValue<number | null>(null)
   const didJustRestoreScroll = useSharedValue<boolean>(false)
+  const gate = useGate()
+  const isFixedBottomBar = gate('fixed_bottom_bar')
 
   const setMode = React.useCallback(
     (v: boolean) => {
@@ -34,12 +37,14 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
       headerMode.value = withSpring(v ? 1 : 0, {
         overshootClamping: true,
       })
-      cancelAnimation(footerMode)
-      footerMode.value = withSpring(v ? 1 : 0, {
-        overshootClamping: true,
-      })
+      if (!isFixedBottomBar) {
+        cancelAnimation(footerMode)
+        footerMode.value = withSpring(v ? 1 : 0, {
+          overshootClamping: true,
+        })
+      }
     },
-    [headerMode, footerMode],
+    [headerMode, footerMode, isFixedBottomBar],
   )
 
   useEffect(() => {
@@ -142,8 +147,10 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
           // Cancel any any existing animation
           cancelAnimation(headerMode)
           headerMode.value = newValue
-          cancelAnimation(footerMode)
-          footerMode.value = newValue
+          if (!isFixedBottomBar) {
+            cancelAnimation(footerMode)
+            footerMode.value = newValue
+          }
         }
       } else {
         if (didJustRestoreScroll.value) {
@@ -171,6 +178,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
       startDragOffset,
       startMode,
       didJustRestoreScroll,
+      isFixedBottomBar,
     ],
   )
 
