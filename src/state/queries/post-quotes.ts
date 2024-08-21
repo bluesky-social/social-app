@@ -1,5 +1,6 @@
 import {
   AppBskyActorDefs,
+  AppBskyEmbedRecord,
   AppBskyFeedDefs,
   AppBskyFeedGetQuotes,
   AtUri,
@@ -45,6 +46,24 @@ export function usePostQuotesQuery(resolvedUri: string | undefined) {
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
     enabled: !!resolvedUri,
+    select: data => {
+      return {
+        ...data,
+        pages: data.pages.map(page => {
+          return {
+            ...page,
+            posts: page.posts.filter(post => {
+              if (post.embed && AppBskyEmbedRecord.isView(post.embed)) {
+                if (AppBskyEmbedRecord.isViewDetached(post.embed.record)) {
+                  return false
+                }
+              }
+              return true
+            }),
+          }
+        }),
+      }
+    },
   })
 }
 
