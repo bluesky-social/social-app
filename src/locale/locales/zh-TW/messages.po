@@ -3488,7 +3488,7 @@ msgstr "僅在話題標籤中隱藏該文字"
 
 #: src/components/dialogs/MutedWords.tsx:170
 msgid "Mute this word until you unmute it"
-msgstr "將這個文字靜音直到您解除它"
+msgstr "將這個文字靜音，直到您取消靜音為止"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:365
 #: src/view/com/util/forms/PostDropdownBtn.tsx:371
