@@ -4,11 +4,12 @@ import {
   cancelAnimation,
   interpolate,
   useSharedValue,
+  withSpring,
 } from 'react-native-reanimated'
 import EventEmitter from 'eventemitter3'
 
 import {ScrollProvider} from '#/lib/ScrollContext'
-import {useMinimalShellMode, useSetMinimalShellMode} from '#/state/shell'
+import {useMinimalShellMode} from '#/state/shell'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {isNative, isWeb} from 'platform/detection'
 
@@ -22,10 +23,24 @@ function clamp(num: number, min: number, max: number) {
 export function MainScrollProvider({children}: {children: React.ReactNode}) {
   const {headerHeight} = useShellLayout()
   const {headerMode, footerMode} = useMinimalShellMode()
-  const setMode = useSetMinimalShellMode()
   const startDragOffset = useSharedValue<number | null>(null)
   const startMode = useSharedValue<number | null>(null)
   const didJustRestoreScroll = useSharedValue<boolean>(false)
+
+  const setMode = React.useCallback(
+    (v: boolean) => {
+      'worklet'
+      cancelAnimation(headerMode)
+      headerMode.value = withSpring(v ? 1 : 0, {
+        overshootClamping: true,
+      })
+      cancelAnimation(footerMode)
+      footerMode.value = withSpring(v ? 1 : 0, {
+        overshootClamping: true,
+      })
+    },
+    [headerMode, footerMode],
+  )
 
   useEffect(() => {
     if (isWeb) {
