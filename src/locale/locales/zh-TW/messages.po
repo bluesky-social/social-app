@@ -5948,7 +5948,7 @@ msgstr "解除封鎖後，該帳號將能夠與您互動。"
 
 #: src/screens/Moderation/index.tsx:368
 msgid "The Bluesky web application"
-msgstr "BlueSky 網頁應用程式"
+msgstr "Bluesky 網頁應用程式"
 
 #: src/view/screens/CommunityGuidelines.tsx:36
 msgid "The Community Guidelines have been moved to <0/>"
