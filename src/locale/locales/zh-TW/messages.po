@@ -5200,7 +5200,7 @@ msgstr "選擇 GIF「{0}」"
 
 #: src/components/dialogs/MutedWords.tsx:142
 msgid "Select how long to mute this word for."
-msgstr "選取此文字的靜音時間。"
+msgstr "選擇靜音此文字的時間長度。"
 
 #: src/view/screens/LanguageSettings.tsx:303
 msgid "Select languages"
