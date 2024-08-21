@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {AppBskyEmbedVideo} from '@atproto/api-prerelease'
 import {Trans} from '@lingui/macro'
 
+import {clamp} from '#/lib/numbers'
 import {useGate} from '#/lib/statsig/statsig'
 import {
   HLSUnsupportedError,
@@ -50,12 +51,20 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
     return null
   }
 
+  let aspectRatio = 16 / 9
+
+  if (embed.aspectRatio) {
+    const {width, height} = embed.aspectRatio
+    aspectRatio = width / height
+    aspectRatio = clamp(aspectRatio, 1 / 1, 3 / 1)
+  }
+
   return (
     <View
       style={[
         a.w_full,
-        {aspectRatio: 16 / 9},
-        t.atoms.bg_contrast_25,
+        {aspectRatio},
+        {backgroundColor: t.palette.black},
         a.rounded_sm,
         a.my_xs,
       ]}>
