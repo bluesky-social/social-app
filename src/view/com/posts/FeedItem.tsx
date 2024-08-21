@@ -573,6 +573,8 @@ function VideoDebug() {
     <VideoEmbed
       embed={{
         playlist: `https://lumi.jazco.dev/watch/did:plc:q6gjnaw2blty4crticxkmujt/Qmc8w93UpTa2adJHg4ZhnDPrBs1EsbzrekzPcqF5SwusuZ/playlist.m3u8?ignore_me_just_testing_frontend_stuff=${id}`,
+        cid: 'Qmc8w93UpTa2adJHg4ZhnDPrBs1EsbzrekzPcqF5SwusuZ',
+        aspectRatio: {height: 9, width: 16},
       }}
     />
   )
