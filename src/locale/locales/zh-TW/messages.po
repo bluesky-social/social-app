@@ -505,7 +505,7 @@ msgstr "跟隨所有帳號時發生錯誤"
 
 #: src/state/queries/video/video.ts:112
 msgid "An error occurred while uploading the video."
-msgstr "上傳影片時出現問題。"
+msgstr "上傳影片時發生錯誤。"
 
 #: src/lib/moderation/useReportOptions.ts:28
 msgid "An issue not included in these options"
