@@ -4,12 +4,14 @@ import {runOnJS} from 'react-native-reanimated'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {AppBskyFeedDefs, AppBskyFeedThreadgate} from '@atproto/api'
+import {AppBskyEmbedVideo} from '@atproto/api-prerelease'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {clamp} from '#/lib/numbers'
 import {ScrollProvider} from '#/lib/ScrollContext'
+import {useGate} from '#/lib/statsig/statsig'
 import {isAndroid, isNative, isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {
@@ -90,6 +92,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
   const {hasSession, currentAccount} = useSession()
   const {_} = useLingui()
   const t = useTheme()
+  const gate = useGate()
   const {isMobile, isTabletOrMobile} = useWebMediaQueries()
   const initialNumToRender = useInitialNumToRender()
   const {height: windowHeight} = useWindowDimensions()
@@ -428,12 +431,36 @@ export function PostThread({uri}: {uri: string | undefined}) {
         (item.ctx.depth < 0 && !!item.parent) || item.ctx.depth > 1
       const hasUnrevealedParents =
         index === 0 && skeleton?.parents && maxParents < skeleton.parents.length
+      let postWithVideo = item.post
+      if (
+        gate('videos') &&
+        process.env.EXPO_PUBLIC_VIDEO_ROOT_ENDPOINT &&
+        AppBskyEmbedVideo.isMain(item.record.embed)
+      ) {
+        console.log(
+          `${process.env.EXPO_PUBLIC_VIDEO_ROOT_ENDPOINT}watch/${
+            item.post.author.did
+          }/${item.record.embed.video.ref.toString()}/playlist.m3u8`,
+        )
+        postWithVideo = {
+          ...item.post,
+          embed: {
+            $type: 'app.bsky.embed.video#view',
+            aspectRatio: item.record.embed.aspectRatio,
+            alt: item.record.embed.alt,
+            cid: 'abc',
+            playlist: `${process.env.EXPO_PUBLIC_VIDEO_ROOT_ENDPOINT}watch/${
+              item.post.author.did
+            }/${item.record.embed.video.ref.toString()}/playlist.m3u8`,
+          } satisfies AppBskyEmbedVideo.View,
+        }
+      }
       return (
         <View
           ref={item.ctx.isHighlightedPost ? highlightedPostRef : undefined}
           onLayout={deferParents ? () => setDeferParents(false) : undefined}>
           <PostThreadItem
-            post={item.post}
+            post={postWithVideo}
             record={item.record}
             threadgateRecord={threadgateRecord ?? undefined}
             moderation={threadModerationCache.get(item)}

@@ -56,7 +56,7 @@ export function VideoEmbedInnerWeb({
       <div
         ref={containerRef}
         style={{width: '100%', height: '100%', display: 'flex'}}>
-        <figure>
+        <figure style={{margin: 0, width: '100%', height: '100%'}}>
           <video
             ref={ref}
             poster={embed.thumbnail}
@@ -67,7 +67,11 @@ export function VideoEmbedInnerWeb({
             muted={!focused}
             aria-labelledby={embed.alt ? figId : undefined}
           />
-          {embed.alt && <figcaption id={figId}>{embed.alt}</figcaption>}
+          {embed.alt && (
+            <figcaption id={figId} style={{height: 0, overflow: 'hidden'}}>
+              {embed.alt}
+            </figcaption>
+          )}
         </figure>
         <Controls
           videoRef={ref}
