@@ -6283,7 +6283,7 @@ msgstr "這將從您的靜音文字中刪除 \"{0}\"，您隨時可以新增回�
 
 #: src/view/com/util/AccountDropdownBtn.tsx:55
 msgid "This will remove @{0} from the quick access list."
-msgstr "這將會從快速存取清單中移除 @{0}。"
+msgstr "這將從快速存取清單中刪除 @{0}。"
 
 #: src/view/screens/Settings/index.tsx:560
 msgid "Thread preferences"
