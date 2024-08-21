@@ -82,7 +82,6 @@ export function PostThreadItem({
   hideTopBorder?: boolean
   threadgateRecord?: AppBskyFeedThreadgate.Record
 }) {
-  // TODO should load this for every post, ugh
   const postShadowed = usePostShadow(post)
   const richText = useMemo(
     () =>
