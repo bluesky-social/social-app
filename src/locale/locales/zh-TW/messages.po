@@ -4594,7 +4594,7 @@ msgstr "閱讀 Bluesky 部落格"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:59
 msgid "Read the Bluesky Privacy Policy"
-msgstr "閱讀 BlueSky 隱私權政策"
+msgstr "閱讀 Bluesky 隱私權政策"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:49
 msgid "Read the Bluesky Terms of Service"
