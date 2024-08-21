@@ -5232,7 +5232,7 @@ msgstr "選擇影片"
 
 #: src/components/dialogs/MutedWords.tsx:242
 msgid "Select what content this mute word should apply to."
-msgstr "選取此靜音文字應用於哪些內容。"
+msgstr "選擇此靜音文字應套用於哪些內容。"
 
 #: src/view/screens/LanguageSettings.tsx:285
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
