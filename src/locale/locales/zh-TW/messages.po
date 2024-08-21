@@ -7277,7 +7277,7 @@ msgstr "您的生日"
 
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:145
 msgid "Your browser does not support the video format. Please try a different browser."
-msgstr "您的瀏覽器不支援該影片格式。請嘗試其他瀏覽器。"
+msgstr "您的瀏覽器不支援該影片格式。請嘗試使用其他瀏覽器。"
 
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:25
 msgid "Your chats have been disabled"
