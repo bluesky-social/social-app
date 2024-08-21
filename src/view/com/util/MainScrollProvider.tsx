@@ -21,7 +21,7 @@ function clamp(num: number, min: number, max: number) {
 
 export function MainScrollProvider({children}: {children: React.ReactNode}) {
   const {headerHeight} = useShellLayout()
-  const mode = useMinimalShellMode()
+  const {headerMode, footerMode} = useMinimalShellMode()
   const setMode = useSetMinimalShellMode()
   const startDragOffset = useSharedValue<number | null>(null)
   const startMode = useSharedValue<number | null>(null)
@@ -55,11 +55,11 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
           setMode(true)
         } else {
           // Snap to whichever state is the closest.
-          setMode(Math.round(mode.value) === 1)
+          setMode(Math.round(headerMode.value) === 1)
         }
       }
     },
-    [startDragOffset, startMode, setMode, mode, headerHeight],
+    [startDragOffset, startMode, setMode, headerMode, headerHeight],
   )
 
   const onBeginDrag = useCallback(
@@ -67,10 +67,10 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
       'worklet'
       if (isNative) {
         startDragOffset.value = e.contentOffset.y
-        startMode.value = mode.value
+        startMode.value = headerMode.value
       }
     },
-    [mode, startDragOffset, startMode],
+    [headerMode, startDragOffset, startMode],
   )
 
   const onEndDrag = useCallback(
@@ -102,7 +102,10 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
       'worklet'
       if (isNative) {
         if (startDragOffset.value === null || startMode.value === null) {
-          if (mode.value !== 0 && e.contentOffset.y < headerHeight.value) {
+          if (
+            headerMode.value !== 0 &&
+            e.contentOffset.y < headerHeight.value
+          ) {
             // If we're close enough to the top, always show the shell.
             // Even if we're not dragging.
             setMode(false)
@@ -119,11 +122,13 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
           [-1, 1],
         )
         const newValue = clamp(startMode.value + dProgress, 0, 1)
-        if (newValue !== mode.value) {
+        if (newValue !== headerMode.value) {
           // Manually adjust the value. This won't be (and shouldn't be) animated.
           // Cancel any any existing animation
-          cancelAnimation(mode)
-          mode.value = newValue
+          cancelAnimation(headerMode)
+          headerMode.value = newValue
+          cancelAnimation(footerMode)
+          footerMode.value = newValue
         }
       } else {
         if (didJustRestoreScroll.value) {
@@ -145,7 +150,8 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
     },
     [
       headerHeight,
-      mode,
+      headerMode,
+      footerMode,
       setMode,
       startDragOffset,
       startMode,
