@@ -4590,7 +4590,7 @@ msgstr "重新啟用您的帳號"
 
 #: src/view/com/auth/SplashScreen.web.tsx:157
 msgid "Read the Bluesky blog"
-msgstr "閱讀 BlueSky 部落格"
+msgstr "閱讀 Bluesky 部落格"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:59
 msgid "Read the Bluesky Privacy Policy"
