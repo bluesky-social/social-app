@@ -3025,7 +3025,7 @@ msgstr "瞭解詳情"
 
 #: src/view/com/auth/SplashScreen.web.tsx:152
 msgid "Learn more about Bluesky"
-msgstr "了解有關 BlueSky 的更多資訊"
+msgstr "了解有關 Bluesky 的更多資訊"
 
 #: src/components/moderation/ContentHider.tsx:66
 #: src/components/moderation/ContentHider.tsx:131
