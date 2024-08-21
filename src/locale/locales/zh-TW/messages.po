@@ -2157,7 +2157,7 @@ msgstr "展開或摺疊您正在回覆的完整貼文"
 
 #: src/view/screens/NotificationsSettings.tsx:83
 msgid "Experimental: When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
-msgstr "實驗性選項：啟用此偏好設定後，您將僅收到您追蹤用戶的回覆和引用通知。隨著時間的推移，我們將繼續在此處添加更多控制選項。"
+msgstr "實驗性選項：啟用此偏好設定後，您將僅收到來自您已跟隨用戶的回覆和引用通知。我們將陸續在此新增更多控制選項。"
 
 #: src/components/dialogs/MutedWords.tsx:500
 msgid "Expired"
