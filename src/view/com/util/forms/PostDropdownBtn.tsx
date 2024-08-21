@@ -133,7 +133,7 @@ let PostDropdownBtn = ({
   const quoteEmbed = React.useMemo(() => {
     if (!currentAccount || !post.embed) return
     return getMaybeDetachedQuoteEmbed({
-      viewerDid: currentAccount?.did,
+      viewerDid: currentAccount.did,
       post,
     })
   }, [post, currentAccount])
