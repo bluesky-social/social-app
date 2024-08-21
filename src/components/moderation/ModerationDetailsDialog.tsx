@@ -18,7 +18,7 @@ export {useDialogControl as useModerationDetailsDialogControl} from '#/component
 
 export interface ModerationDetailsDialogProps {
   control: Dialog.DialogOuterProps['control']
-  modcause: ModerationCause
+  modcause?: ModerationCause
 }
 
 export function ModerationDetailsDialog(props: ModerationDetailsDialogProps) {
@@ -123,7 +123,7 @@ function ModerationDetailsDialogInner({
         {description}
       </Text>
 
-      {modcause.type === 'label' && (
+      {modcause?.type === 'label' && (
         <>
           <Divider />
           <Text style={[t.atoms.text, a.text_md, a.leading_snug, a.mt_lg]}>
