@@ -2,7 +2,6 @@ import {interpolate, useAnimatedStyle} from 'react-native-reanimated'
 
 import {useMinimalShellMode} from '#/state/shell/minimal-mode'
 import {useShellLayout} from '#/state/shell/shell-layout'
-import {useGate} from '../statsig/statsig'
 
 // Keep these separated so that we only pay for useAnimatedStyle that gets used.
 
@@ -32,13 +31,8 @@ export function useMinimalShellHeaderTransform() {
 export function useMinimalShellFooterTransform() {
   const {footerMode} = useMinimalShellMode()
   const {footerHeight} = useShellLayout()
-  const gate = useGate()
-  const isFixedBottomBar = gate('fixed_bottom_bar')
 
   const footerTransform = useAnimatedStyle(() => {
-    if (isFixedBottomBar) {
-      return {}
-    }
     return {
       pointerEvents: footerMode.value === 0 ? 'auto' : 'none',
       opacity: Math.pow(1 - footerMode.value, 2),
@@ -59,19 +53,8 @@ export function useMinimalShellFooterTransform() {
 
 export function useMinimalShellFabTransform() {
   const {footerMode} = useMinimalShellMode()
-  const gate = useGate()
-  const isFixedBottomBar = gate('fixed_bottom_bar')
 
   const fabTransform = useAnimatedStyle(() => {
-    if (isFixedBottomBar) {
-      return {
-        transform: [
-          {
-            translateY: -44,
-          },
-        ],
-      }
-    }
     return {
       transform: [
         {
