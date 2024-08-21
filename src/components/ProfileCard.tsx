@@ -220,8 +220,10 @@ export function NameAndHandlePlaceholder() {
 
 export function Description({
   profile: profileUnshadowed,
+  numberOfLines = 3,
 }: {
   profile: AppBskyActorDefs.ProfileViewDetailed
+  numberOfLines?: number
 }) {
   const profile = useProfileShadow(profileUnshadowed)
   const {description} = profile
@@ -244,7 +246,7 @@ export function Description({
       <RichText
         value={rt}
         style={[a.leading_snug]}
-        numberOfLines={3}
+        numberOfLines={numberOfLines}
         disableLinks
       />
     </View>

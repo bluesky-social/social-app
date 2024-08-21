@@ -1,22 +1,18 @@
 import React from 'react'
-import {ScrollView, View} from 'react-native'
+import {View} from 'react-native'
+import {AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {logEvent} from '#/lib/statsig/statsig'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSuggestedFollowsByActorQuery} from '#/state/queries/suggested-follows'
-import {isWeb} from 'platform/detection'
 import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
-import {Button, ButtonIcon} from '#/components/Button'
-import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
+import {Button, ButtonText} from '#/components/Button'
+import * as Dialog from '#/components/Dialog'
+import {KnownFollowers} from '#/components/KnownFollowers'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
-
-const OUTER_PADDING = a.p_md.padding
-const INNER_PADDING = a.p_lg.padding
-const TOTAL_HEIGHT = 232
-const MOBILE_CARD_WIDTH = 300
 
 function CardOuter({
   children,
@@ -30,10 +26,9 @@ function CardOuter({
         a.p_lg,
         a.rounded_md,
         a.border,
-        t.atoms.bg,
-        t.atoms.border_contrast_low,
+        t.atoms.bg_contrast_25,
         {
-          width: MOBILE_CARD_WIDTH,
+          borderColor: t.atoms.bg_contrast_25.backgroundColor,
         },
         style,
       ]}>
@@ -56,106 +51,116 @@ export function SuggestedFollowPlaceholder() {
   )
 }
 
-export function ProfileHeaderSuggestedFollows({
-  actorDid,
-  requestDismiss,
-}: {
-  actorDid: string
-  requestDismiss: () => void
-}) {
+export type ProfileSuggestedFollowsProps = {
+  control: Dialog.DialogOuterProps['control']
+  profile: AppBskyActorDefs.ProfileViewDetailed
+}
+
+export function SimilarAccountsDialog({
+  control,
+  profile,
+}: ProfileSuggestedFollowsProps) {
   const t = useTheme()
   const {_} = useLingui()
+  const [show, setShow] = React.useState(false)
+  return (
+    <Dialog.Outer control={control}>
+      <Dialog.Handle />
+      <Dialog.ScrollableInner
+        label={_(msg`Accounts similar to @${profile.handle}`)}>
+        {show ? (
+          <SimilarAccounts profile={profile} />
+        ) : (
+          <>
+            <Text style={[t.atoms.text, a.text_2xl, a.font_bold, a.mb_sm]}>
+              <Trans>Similar accounts</Trans>
+            </Text>
+            <Text
+              style={[
+                t.atoms.text_contrast_medium,
+                a.text_md,
+                a.mb_xl,
+                a.leading_snug,
+              ]}>
+              <Trans>These are accounts similar to @{profile.handle}</Trans>
+            </Text>
+
+            <Button
+              label={_(msg`View accounts similar to @${profile.handle}`)}
+              size="medium"
+              variant="solid"
+              color="primary"
+              onPress={() => {
+                setShow(true)
+              }}>
+              <ButtonText>
+                <Trans>See similar accounts?</Trans>
+              </ButtonText>
+            </Button>
+          </>
+        )}
+        <Dialog.Close />
+      </Dialog.ScrollableInner>
+    </Dialog.Outer>
+  )
+}
+
+export function SimilarAccounts({
+  profile,
+}: {
+  profile: AppBskyActorDefs.ProfileViewDetailed
+}) {
+  const t = useTheme()
   const {isLoading: isSuggestionsLoading, data} =
     useSuggestedFollowsByActorQuery({
-      did: actorDid,
+      did: profile.did,
     })
   const moderationOpts = useModerationOpts()
   const isLoading = isSuggestionsLoading || !moderationOpts
 
   return (
-    <View
-      style={{paddingVertical: OUTER_PADDING, height: TOTAL_HEIGHT}}
-      pointerEvents="box-none">
-      <View
-        pointerEvents="box-none"
+    <View>
+      <Text style={[t.atoms.text, a.text_2xl, a.font_bold, a.mb_sm]}>
+        <Trans>Similar accounts</Trans>
+      </Text>
+      <Text
         style={[
-          t.atoms.bg_contrast_25,
-          {
-            height: '100%',
-            paddingTop: INNER_PADDING / 2,
-          },
+          t.atoms.text_contrast_medium,
+          a.text_md,
+          a.mb_xl,
+          a.leading_snug,
         ]}>
-        <View
-          pointerEvents="box-none"
-          style={[
-            a.flex_row,
-            a.justify_between,
-            a.align_center,
-            a.pt_xs,
-            {
-              paddingBottom: INNER_PADDING / 2,
-              paddingLeft: INNER_PADDING,
-              paddingRight: INNER_PADDING / 2,
-            },
-          ]}>
-          <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
-            <Trans>Similar accounts</Trans>
-          </Text>
+        <Trans>These are accounts similar to @{profile.handle}</Trans>
+      </Text>
 
-          <Button
-            onPress={requestDismiss}
-            hitSlop={10}
-            label={_(msg`Dismiss`)}
-            size="xsmall"
-            variant="ghost"
-            color="secondary"
-            shape="round">
-            <ButtonIcon icon={X} size="sm" />
-          </Button>
-        </View>
-
-        <ScrollView
-          horizontal={true}
-          showsHorizontalScrollIndicator={isWeb}
-          persistentScrollbar={true}
-          scrollIndicatorInsets={{bottom: 0}}
-          snapToInterval={MOBILE_CARD_WIDTH + a.gap_sm.gap}
-          decelerationRate="fast">
-          <View
-            style={[
-              a.flex_row,
-              a.gap_sm,
-              {
-                paddingHorizontal: INNER_PADDING,
-                paddingBottom: INNER_PADDING,
-              },
-            ]}>
-            {isLoading ? (
-              <>
-                <SuggestedFollowPlaceholder />
-                <SuggestedFollowPlaceholder />
-                <SuggestedFollowPlaceholder />
-                <SuggestedFollowPlaceholder />
-                <SuggestedFollowPlaceholder />
-              </>
-            ) : data ? (
-              data.suggestions
-                .filter(s => (s.associated?.labeler ? false : true))
-                .map(profile => (
-                  <ProfileCard.Link
-                    key={profile.did}
-                    profile={profile}
-                    onPress={() => {
-                      logEvent('profile:header:suggestedFollowsCard:press', {})
-                    }}
-                    style={[a.flex_1]}>
-                    {({hovered, pressed}) => (
-                      <CardOuter
-                        style={[
-                          a.flex_1,
-                          (hovered || pressed) && t.atoms.border_contrast_high,
-                        ]}>
-                        <ProfileCard.Outer>
+      <View style={[a.gap_md]}>
+        {isLoading ? (
+          <>
+            <SuggestedFollowPlaceholder />
+            <SuggestedFollowPlaceholder />
+            <SuggestedFollowPlaceholder />
+            <SuggestedFollowPlaceholder />
+            <SuggestedFollowPlaceholder />
+          </>
+        ) : data ? (
+          data.suggestions
+            .filter(s => (s.associated?.labeler ? false : true))
+            .map(profile => (
+              <ProfileCard.Link
+                key={profile.did}
+                profile={profile}
+                onPress={() => {
+                  logEvent('profile:header:suggestedFollowsCard:press', {})
+                }}
+                style={[]}>
+                {({hovered, pressed}) => (
+                  <CardOuter
+                    style={[
+                      (hovered || pressed) && t.atoms.border_contrast_medium,
+                    ]}>
+                    <ProfileCard.Outer>
+                      <View style={[a.gap_md]}>
+                        <View style={[a.gap_xs]}>
                           <ProfileCard.Header>
                             <ProfileCard.Avatar
                               profile={profile}
@@ -173,17 +178,26 @@ export function ProfileHeaderSuggestedFollows({
                               shape="round"
                             />
                           </ProfileCard.Header>
-                          <ProfileCard.Description profile={profile} />
-                        </ProfileCard.Outer>
-                      </CardOuter>
-                    )}
-                  </ProfileCard.Link>
-                ))
-            ) : (
-              <View />
-            )}
-          </View>
-        </ScrollView>
+                          <ProfileCard.Description
+                            profile={profile}
+                            numberOfLines={2}
+                          />
+                        </View>
+
+                        <KnownFollowers
+                          minimal
+                          profile={profile}
+                          moderationOpts={moderationOpts}
+                        />
+                      </View>
+                    </ProfileCard.Outer>
+                  </CardOuter>
+                )}
+              </ProfileCard.Link>
+            ))
+        ) : (
+          <View />
+        )}
       </View>
     </View>
   )

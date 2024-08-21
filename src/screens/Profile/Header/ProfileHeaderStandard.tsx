@@ -6,7 +6,6 @@ import {
   ModerationOpts,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -23,11 +22,12 @@ import {useRequireAuth, useSession} from '#/state/session'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {useProfileShadow} from 'state/cache/profile-shadow'
-import {ProfileHeaderSuggestedFollows} from '#/view/com/profile/ProfileHeaderSuggestedFollows'
+import {SimilarAccountsDialog} from '#/view/com/profile/ProfileHeaderSuggestedFollows'
 import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
 import {MessageProfileButton} from '#/components/dms/MessageProfileButton'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
@@ -59,7 +59,6 @@ let ProfileHeaderStandard = ({
 }: Props): React.ReactNode => {
   const profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> =
     useProfileShadow(profileUnshadowed)
-  const t = useTheme()
   const {currentAccount, hasSession} = useSession()
   const {_} = useLingui()
   const {openModal} = useModalControls()
@@ -68,13 +67,13 @@ let ProfileHeaderStandard = ({
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
   )
-  const [showSuggestedFollows, setShowSuggestedFollows] = React.useState(false)
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
     profile,
     'ProfileHeader',
   )
   const [_queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
   const unblockPromptControl = Prompt.usePromptControl()
+  const similarAccountsControl = useDialogControl()
   const requireAuth = useRequireAuth()
   const isBlockedUser =
     profile.viewer?.blocking ||
@@ -104,7 +103,7 @@ let ProfileHeaderStandard = ({
           ),
         )
         if (gate('auto_show_prof_sugg_follows')) {
-          setShowSuggestedFollows(true)
+          similarAccountsControl.open()
         }
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
@@ -205,32 +204,7 @@ let ProfileHeaderStandard = ({
             )
           ) : !profile.viewer?.blockedBy ? (
             <>
-              {hasSession && (
-                <>
-                  <MessageProfileButton profile={profile} />
-                  <Button
-                    testID="suggestedFollowsBtn"
-                    size="small"
-                    color={showSuggestedFollows ? 'primary' : 'secondary'}
-                    variant="solid"
-                    shape="round"
-                    onPress={() =>
-                      setShowSuggestedFollows(!showSuggestedFollows)
-                    }
-                    label={_(msg`Show follows similar to ${profile.handle}`)}
-                    style={{width: 36, height: 36}}>
-                    <FontAwesomeIcon
-                      icon="user-plus"
-                      style={
-                        showSuggestedFollows
-                          ? {color: t.palette.white}
-                          : t.atoms.text
-                      }
-                      size={14}
-                    />
-                  </Button>
-                </>
-              )}
+              {hasSession && <MessageProfileButton profile={profile} />}
 
               <Button
                 testID={profile.viewer?.following ? 'unfollowBtn' : 'followBtn'}
@@ -295,19 +269,6 @@ let ProfileHeaderStandard = ({
           </>
         )}
       </View>
-      {showSuggestedFollows && (
-        <ProfileHeaderSuggestedFollows
-          actorDid={profile.did}
-          requestDismiss={() => {
-            if (showSuggestedFollows) {
-              setShowSuggestedFollows(false)
-            } else {
-              track('ProfileHeader:SuggestedFollowsOpened')
-              setShowSuggestedFollows(true)
-            }
-          }}
-        />
-      )}
       <Prompt.Basic
         control={unblockPromptControl}
         title={_(msg`Unblock Account?`)}
@@ -319,6 +280,10 @@ let ProfileHeaderStandard = ({
           profile.viewer?.blocking ? _(msg`Unblock`) : _(msg`Block`)
         }
         confirmButtonColor="negative"
+      />
+      <SimilarAccountsDialog
+        control={similarAccountsControl}
+        profile={profile}
       />
     </ProfileHeaderShell>
   )
