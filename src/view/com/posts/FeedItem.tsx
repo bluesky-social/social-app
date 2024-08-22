@@ -431,9 +431,11 @@ let PostContent = ({
   })
   const additionalPostAlerts: AppModerationCause[] = React.useMemo(() => {
     const isPostHiddenByThreadgate = threadgateHiddenReplies.has(post.uri)
+    const rootPostUri = AppBskyFeedPost.isRecord(post.record)
+      ? post.record?.reply?.root?.uri || post.uri
+      : undefined
     const isControlledByViewer =
-      threadgateRecord &&
-      new AtUri(threadgateRecord.post).host === currentAccount?.did
+      rootPostUri && new AtUri(rootPostUri).host === currentAccount?.did
     if (!isControlledByViewer) return []
     return isPostHiddenByThreadgate
       ? [
@@ -444,7 +446,7 @@ let PostContent = ({
           },
         ]
       : []
-  }, [post, currentAccount?.did, threadgateRecord, threadgateHiddenReplies])
+  }, [post, currentAccount?.did, threadgateHiddenReplies])
 
   const onPressShowMore = React.useCallback(() => {
     setLimitLines(false)
