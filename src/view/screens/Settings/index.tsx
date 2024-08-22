@@ -18,6 +18,7 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {sanitizeHandle} from '#/lib/strings/handles'
 import {isNative} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
 import {clearStorage} from '#/state/persisted'
@@ -111,7 +112,7 @@ function SettingsAccountCard({
         <NewText
           style={[t.atoms.text_contrast_medium, a.leading_tight]}
           numberOfLines={1}>
-          @{account.handle}
+          {sanitizeHandle(account.handle, '@')}
         </NewText>
       </View>
       <AccountDropdownBtn account={account} />
