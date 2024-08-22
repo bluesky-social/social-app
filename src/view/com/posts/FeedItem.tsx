@@ -22,7 +22,7 @@ import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
-import {useThreadgateHiddenReplyUris} from '#/state/threadgate-hidden-replies'
+import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {isReasonFeedSource, ReasonFeedSource} from 'lib/api/feed/types'
 import {MAX_POST_LINES} from 'lib/constants'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -380,7 +380,7 @@ let FeedItemInner = ({
             postAuthor={post.author}
             onOpenEmbed={onOpenEmbed}
             post={post}
-            threadgateRecord={threadgateRecord}
+            rootPost={rootPost}
           />
           <VideoDebug />
           <PostCtrls
@@ -406,6 +406,7 @@ let PostContent = ({
   postEmbed,
   postAuthor,
   onOpenEmbed,
+  rootPost,
   threadgateRecord,
 }: {
   moderation: ModerationDecision
@@ -414,6 +415,7 @@ let PostContent = ({
   postAuthor: AppBskyFeedDefs.PostView['author']
   onOpenEmbed: () => void
   post: AppBskyFeedDefs.PostView
+  rootPost: AppBskyFeedDefs.PostView
   threadgateRecord?: AppBskyFeedThreadgate.Record
 }): React.ReactNode => {
   const pal = usePalette('default')
@@ -422,41 +424,24 @@ let PostContent = ({
   const [limitLines, setLimitLines] = useState(
     () => countLines(richText.text) >= MAX_POST_LINES,
   )
-  const {uris: hiddenReplyUris, recentlyUnhiddenUris} =
-    useThreadgateHiddenReplyUris()
+  const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
+    threadgateRecord,
+  })
   const additionalPostAlerts: AppModerationCause[] = React.useMemo(() => {
-    const isPostHiddenByHiddenReplyCache = hiddenReplyUris.has(post.uri)
-    const isPostHiddenByThreadgate =
-      !recentlyUnhiddenUris.has(post.uri) &&
-      !!threadgateRecord?.hiddenReplies?.includes(post.uri)
-    const isHidden = isPostHiddenByHiddenReplyCache || isPostHiddenByThreadgate
+    const isPostHiddenByThreadgate = threadgateHiddenReplies.has(post.uri)
     const isControlledByViewer =
-      isPostHiddenByHiddenReplyCache ||
-      (threadgateRecord &&
-        new AtUri(threadgateRecord.post).host === currentAccount?.did)
+      new AtUri(rootPost.uri).host === currentAccount?.did
     if (!isControlledByViewer) return []
-    const alertSource =
-      threadgateRecord && isPostHiddenByThreadgate
-        ? new AtUri(threadgateRecord.post).host
-        : isPostHiddenByHiddenReplyCache
-        ? currentAccount?.did
-        : undefined
-    return isHidden && alertSource
+    return isPostHiddenByThreadgate
       ? [
           {
             type: 'reply-hidden',
-            source: {type: 'user', did: alertSource},
+            source: {type: 'user', did: currentAccount?.did},
             priority: 6,
           },
         ]
       : []
-  }, [
-    post,
-    hiddenReplyUris,
-    recentlyUnhiddenUris,
-    threadgateRecord,
-    currentAccount?.did,
-  ])
+  }, [post, currentAccount?.did, rootPost.uri, threadgateHiddenReplies])
 
   const onPressShowMore = React.useCallback(() => {
     setLimitLines(false)

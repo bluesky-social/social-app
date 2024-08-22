@@ -17,6 +17,7 @@ import {useLanguagePrefs} from '#/state/preferences'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {ThreadPost} from '#/state/queries/post-thread'
 import {useComposerControls} from '#/state/shell/composer'
+import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {MAX_POST_LINES} from 'lib/constants'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -206,24 +207,23 @@ let PostThreadItemLoaded = ({
     return makeProfileLink(post.author, 'post', urip.rkey, 'reposted-by')
   }, [post.uri, post.author])
   const repostsTitle = _(msg`Reposts of this post`)
+  const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
+    threadgateRecord,
+  })
   const additionalPostAlerts: AppModerationCause[] = React.useMemo(() => {
-    const isPostHiddenByThreadgate = threadgateRecord?.hiddenReplies?.includes(
-      post.uri,
-    )
-    const isControlledByViewer =
-      threadgateRecord &&
-      new AtUri(threadgateRecord.post).host === currentAccount?.did
+    const isPostHiddenByThreadgate = threadgateHiddenReplies.has(post.uri)
+    const isControlledByViewer = new AtUri(rootUri).host === currentAccount?.did
     if (!isControlledByViewer) return []
-    return threadgateRecord && isPostHiddenByThreadgate
+    return isPostHiddenByThreadgate
       ? [
           {
             type: 'reply-hidden',
-            source: {type: 'user', did: new AtUri(threadgateRecord.post).host},
+            source: {type: 'user', did: new AtUri(rootUri).host},
             priority: 6,
           },
         ]
       : []
-  }, [post, threadgateRecord, currentAccount?.did])
+  }, [post, currentAccount?.did, threadgateHiddenReplies, rootUri])
   const quotesHref = React.useMemo(() => {
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey, 'quotes')
