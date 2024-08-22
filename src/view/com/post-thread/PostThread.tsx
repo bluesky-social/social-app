@@ -129,17 +129,18 @@ export function PostThread({uri}: {uri: string | undefined}) {
     currentAccount &&
     rootPostUri &&
     currentAccount?.did === new AtUri(rootPostUri).host
+  const initialThreadgateRecord = rootPost?.threadgate?.record as
+    | AppBskyFeedThreadgate.Record
+    | undefined
   const {data: threadgateRecord} = useThreadgateRecordQuery({
     /**
      * If the user is the OP and the root post has a threadgate, we should load
      * the threadgate record. Otherwise, fallback to initialData, which is taken
      * from the response from `getPostThread`.
      */
-    enabled: Boolean(isOP && rootPostUri),
+    enabled: Boolean(isOP && rootPostUri && initialThreadgateRecord),
     postUri: rootPostUri,
-    initialData: rootPost?.threadgate?.record as
-      | AppBskyFeedThreadgate.Record
-      | undefined,
+    initialData: initialThreadgateRecord,
   })
 
   const moderationOpts = useModerationOpts()
