@@ -138,6 +138,7 @@ export function sortThread(
   modCache: ThreadModerationCache,
   currentDid: string | undefined,
   justPostedUris: Set<string>,
+  threadgateRecordHiddenReplies: Set<string>,
 ): ThreadNode {
   if (node.type !== 'post') {
     return node
@@ -185,6 +186,14 @@ export function sortThread(
         return 1 // current account's reply
       }
 
+      const aHidden = threadgateRecordHiddenReplies.has(a.uri)
+      const bHidden = threadgateRecordHiddenReplies.has(b.uri)
+      if (aHidden && !aIsBySelf && !bHidden) {
+        return 1
+      } else if (bHidden && !bIsBySelf && !aHidden) {
+        return -1
+      }
+
       const aBlur = Boolean(modCache.get(a)?.ui('contentList').blur)
       const bBlur = Boolean(modCache.get(b)?.ui('contentList').blur)
       if (aBlur !== bBlur) {
@@ -222,7 +231,14 @@ export function sortThread(
       return b.post.indexedAt.localeCompare(a.post.indexedAt)
     })
     node.replies.forEach(reply =>
-      sortThread(reply, opts, modCache, currentDid, justPostedUris),
+      sortThread(
+        reply,
+        opts,
+        modCache,
+        currentDid,
+        justPostedUris,
+        threadgateRecordHiddenReplies,
+      ),
     )
   }
   return node

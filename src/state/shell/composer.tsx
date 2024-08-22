@@ -34,6 +34,7 @@ export interface ComposerOpts {
   replyTo?: ComposerOptsPostRef
   onPost?: (postUri: string | undefined) => void
   quote?: ComposerOptsQuote
+  quoteCount?: number
   mention?: string // handle of user to mention
   openPicker?: (pos: DOMRect | undefined) => void
   text?: string

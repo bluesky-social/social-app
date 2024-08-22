@@ -16,6 +16,7 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query'
+import chunk from 'lodash.chunk'
 
 import {until} from 'lib/async/until'
 import {createStarterPackList} from 'lib/generate-starterpack'
@@ -200,36 +201,40 @@ export function useEditStarterPackMutation({
           i.subject.did !== agent.session?.did &&
           !profiles.find(p => p.did === i.subject.did && p.did),
       )
-
       if (removedItems.length !== 0) {
-        await agent.com.atproto.repo.applyWrites({
-          repo: agent.session!.did,
-          writes: removedItems.map(i => ({
-            $type: 'com.atproto.repo.applyWrites#delete',
-            collection: 'app.bsky.graph.listitem',
-            rkey: new AtUri(i.uri).rkey,
-          })),
-        })
+        const chunks = chunk(removedItems, 50)
+        for (const chunk of chunks) {
+          await agent.com.atproto.repo.applyWrites({
+            repo: agent.session!.did,
+            writes: chunk.map(i => ({
+              $type: 'com.atproto.repo.applyWrites#delete',
+              collection: 'app.bsky.graph.listitem',
+              rkey: new AtUri(i.uri).rkey,
+            })),
+          })
+        }
       }
 
       const addedProfiles = profiles.filter(
         p => !currentListItems.find(i => i.subject.did === p.did),
       )
-
       if (addedProfiles.length > 0) {
-        await agent.com.atproto.repo.applyWrites({
-          repo: agent.session!.did,
-          writes: addedProfiles.map(p => ({
-            $type: 'com.atproto.repo.applyWrites#create',
-            collection: 'app.bsky.graph.listitem',
-            value: {
-              $type: 'app.bsky.graph.listitem',
-              subject: p.did,
-              list: currentStarterPack.list?.uri,
-              createdAt: new Date().toISOString(),
-            },
-          })),
-        })
+        const chunks = chunk(addedProfiles, 50)
+        for (const chunk of chunks) {
+          await agent.com.atproto.repo.applyWrites({
+            repo: agent.session!.did,
+            writes: chunk.map(p => ({
+              $type: 'com.atproto.repo.applyWrites#create',
+              collection: 'app.bsky.graph.listitem',
+              value: {
+                $type: 'app.bsky.graph.listitem',
+                subject: p.did,
+                list: currentStarterPack.list?.uri,
+                createdAt: new Date().toISOString(),
+              },
+            })),
+          })
+        }
       }
 
       const rkey = parseStarterPackUri(currentStarterPack.uri)!.rkey

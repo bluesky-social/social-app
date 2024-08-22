@@ -4,6 +4,7 @@ import {
   AppBskyActorDefs,
   AppBskyFeedDefs,
   AppBskyFeedPost,
+  AppBskyFeedThreadgate,
   AtUri,
   ModerationDecision,
   RichText as RichTextAPI,
@@ -21,6 +22,7 @@ import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
+import {useThreadgateHiddenReplyUris} from '#/state/threadgate-hidden-replies'
 import {isReasonFeedSource, ReasonFeedSource} from 'lib/api/feed/types'
 import {MAX_POST_LINES} from 'lib/constants'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -33,6 +35,7 @@ import {precacheProfile} from 'state/queries/profile'
 import {atoms as a} from '#/alf'
 import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
 import {ContentHider} from '#/components/moderation/ContentHider'
+import {AppModerationCause} from '#/components/Pills'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichText} from '#/components/RichText'
 import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
@@ -80,7 +83,11 @@ export function FeedItem({
   hideTopBorder,
   isParentBlocked,
   isParentNotFound,
-}: FeedItemProps & {post: AppBskyFeedDefs.PostView}): React.ReactNode {
+  rootPost,
+}: FeedItemProps & {
+  post: AppBskyFeedDefs.PostView
+  rootPost: AppBskyFeedDefs.PostView
+}): React.ReactNode {
   const postShadowed = usePostShadow(post)
   const richText = useMemo(
     () =>
@@ -112,6 +119,7 @@ export function FeedItem({
         hideTopBorder={hideTopBorder}
         isParentBlocked={isParentBlocked}
         isParentNotFound={isParentNotFound}
+        rootPost={rootPost}
       />
     )
   }
@@ -133,9 +141,11 @@ let FeedItemInner = ({
   hideTopBorder,
   isParentBlocked,
   isParentNotFound,
+  rootPost,
 }: FeedItemProps & {
   richText: RichTextAPI
   post: Shadow<AppBskyFeedDefs.PostView>
+  rootPost: AppBskyFeedDefs.PostView
 }): React.ReactNode => {
   const queryClient = useQueryClient()
   const {openComposer} = useComposerControls()
@@ -216,6 +226,12 @@ let FeedItemInner = ({
   const isOwner =
     AppBskyFeedDefs.isReasonRepost(reason) &&
     reason.by.did === currentAccount?.did
+
+  const threadgateRecord = AppBskyFeedThreadgate.isRecord(
+    rootPost.threadgate?.record,
+  )
+    ? rootPost.threadgate.record
+    : undefined
 
   return (
     <Link
@@ -363,6 +379,8 @@ let FeedItemInner = ({
             postEmbed={post.embed}
             postAuthor={post.author}
             onOpenEmbed={onOpenEmbed}
+            post={post}
+            threadgateRecord={threadgateRecord}
           />
           <VideoDebug />
           <PostCtrls
@@ -372,6 +390,7 @@ let FeedItemInner = ({
             onPressReply={onPressReply}
             logContext="FeedItem"
             feedContext={feedContext}
+            threadgateRecord={threadgateRecord}
           />
         </View>
       </View>
@@ -381,23 +400,63 @@ let FeedItemInner = ({
 FeedItemInner = memo(FeedItemInner)
 
 let PostContent = ({
+  post,
   moderation,
   richText,
   postEmbed,
   postAuthor,
   onOpenEmbed,
+  threadgateRecord,
 }: {
   moderation: ModerationDecision
   richText: RichTextAPI
   postEmbed: AppBskyFeedDefs.PostView['embed']
   postAuthor: AppBskyFeedDefs.PostView['author']
   onOpenEmbed: () => void
+  post: AppBskyFeedDefs.PostView
+  threadgateRecord?: AppBskyFeedThreadgate.Record
 }): React.ReactNode => {
   const pal = usePalette('default')
   const {_} = useLingui()
+  const {currentAccount} = useSession()
   const [limitLines, setLimitLines] = useState(
     () => countLines(richText.text) >= MAX_POST_LINES,
   )
+  const {uris: hiddenReplyUris, recentlyUnhiddenUris} =
+    useThreadgateHiddenReplyUris()
+  const additionalPostAlerts: AppModerationCause[] = React.useMemo(() => {
+    const isPostHiddenByHiddenReplyCache = hiddenReplyUris.has(post.uri)
+    const isPostHiddenByThreadgate =
+      !recentlyUnhiddenUris.has(post.uri) &&
+      !!threadgateRecord?.hiddenReplies?.includes(post.uri)
+    const isHidden = isPostHiddenByHiddenReplyCache || isPostHiddenByThreadgate
+    const isControlledByViewer =
+      isPostHiddenByHiddenReplyCache ||
+      (threadgateRecord &&
+        new AtUri(threadgateRecord.post).host === currentAccount?.did)
+    if (!isControlledByViewer) return []
+    const alertSource =
+      threadgateRecord && isPostHiddenByThreadgate
+        ? new AtUri(threadgateRecord.post).host
+        : isPostHiddenByHiddenReplyCache
+        ? currentAccount?.did
+        : undefined
+    return isHidden && alertSource
+      ? [
+          {
+            type: 'reply-hidden',
+            source: {type: 'user', did: alertSource},
+            priority: 6,
+          },
+        ]
+      : []
+  }, [
+    post,
+    hiddenReplyUris,
+    recentlyUnhiddenUris,
+    threadgateRecord,
+    currentAccount?.did,
+  ])
 
   const onPressShowMore = React.useCallback(() => {
     setLimitLines(false)
@@ -409,7 +468,11 @@ let PostContent = ({
       modui={moderation.ui('contentList')}
       ignoreMute
       childContainerStyle={styles.contentHiderChild}>
-      <PostAlerts modui={moderation.ui('contentList')} style={[a.py_2xs]} />
+      <PostAlerts
+        modui={moderation.ui('contentList')}
+        style={[a.py_2xs]}
+        additionalCauses={additionalPostAlerts}
+      />
       {richText.text ? (
         <View style={styles.postTextContainer}>
           <RichText
@@ -460,7 +523,7 @@ function ReplyToLabel({
   if (blocked) {
     label = <Trans context="description">Reply to a blocked post</Trans>
   } else if (notFound) {
-    label = <Trans context="description">Reply to an unknown post</Trans>
+    label = <Trans context="description">Reply to a post</Trans>
   } else if (profile != null) {
     const isMe = profile.did === currentAccount?.did
     if (isMe) {
