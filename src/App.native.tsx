@@ -50,6 +50,7 @@ import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
 import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
 import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
+import {Provider as HiddenRepliesProvider} from '#/state/threadgate-hidden-replies'
 import {TestCtrls} from '#/view/com/testing/TestCtrls'
 import {ActiveVideoProvider} from '#/view/com/util/post-embeds/ActiveVideoContext'
 import * as Toast from '#/view/com/util/Toast'
@@ -61,6 +62,7 @@ import {Provider as PortalProvider} from '#/components/Portal'
 import {Splash} from '#/Splash'
 import {Provider as TourProvider} from '#/tours'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
+import {AudioCategory, PlatformInfo} from '../modules/expo-bluesky-swiss-army'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -121,21 +123,23 @@ function InnerApp() {
                           <ModerationOptsProvider>
                             <LoggedOutViewProvider>
                               <SelectedFeedProvider>
-                                <UnreadNotifsProvider>
-                                  <BackgroundNotificationPreferencesProvider>
-                                    <MutedThreadsProvider>
-                                      <TourProvider>
-                                        <ProgressGuideProvider>
-                                          <GestureHandlerRootView
-                                            style={s.h100pct}>
-                                            <TestCtrls />
-                                            <Shell />
-                                          </GestureHandlerRootView>
-                                        </ProgressGuideProvider>
-                                      </TourProvider>
-                                    </MutedThreadsProvider>
-                                  </BackgroundNotificationPreferencesProvider>
-                                </UnreadNotifsProvider>
+                                <HiddenRepliesProvider>
+                                  <UnreadNotifsProvider>
+                                    <BackgroundNotificationPreferencesProvider>
+                                      <MutedThreadsProvider>
+                                        <TourProvider>
+                                          <ProgressGuideProvider>
+                                            <GestureHandlerRootView
+                                              style={s.h100pct}>
+                                              <TestCtrls />
+                                              <Shell />
+                                            </GestureHandlerRootView>
+                                          </ProgressGuideProvider>
+                                        </TourProvider>
+                                      </MutedThreadsProvider>
+                                    </BackgroundNotificationPreferencesProvider>
+                                  </UnreadNotifsProvider>
+                                </HiddenRepliesProvider>
                               </SelectedFeedProvider>
                             </LoggedOutViewProvider>
                           </ModerationOptsProvider>
@@ -157,6 +161,8 @@ function App() {
   const [isReady, setReady] = useState(false)
 
   React.useEffect(() => {
+    PlatformInfo.setAudioCategory(AudioCategory.Ambient)
+    PlatformInfo.setAudioActive(false)
     initPersistedState().then(() => setReady(true))
   }, [])
 

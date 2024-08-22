@@ -14,6 +14,7 @@ export type LogEvents = {
   }
   'account:loggedOut': {
     logContext: 'SwitchAccount' | 'Settings' | 'SignupQueued' | 'Deactivated'
+    scope: 'current' | 'every'
   }
   'notifications:openApp': {}
   'notifications:request': {
@@ -159,6 +160,7 @@ export type LogEvents = {
       | 'AvatarButton'
       | 'StarterPackProfilesList'
       | 'FeedInterstitial'
+      | 'ProfileHeaderSuggestedFollows'
   }
   'profile:unfollow': {
     logContext:
@@ -173,6 +175,7 @@ export type LogEvents = {
       | 'AvatarButton'
       | 'StarterPackProfilesList'
       | 'FeedInterstitial'
+      | 'ProfileHeaderSuggestedFollows'
   }
   'chat:create': {
     logContext: 'ProfileHeader' | 'NewChatDialog' | 'SendViaChatDialog'
@@ -210,6 +213,8 @@ export type LogEvents = {
 
   'feed:interstitial:profileCard:press': {}
   'feed:interstitial:feedCard:press': {}
+
+  'profile:header:suggestedFollowsCard:press': {}
 
   'debug:followingPrefs': {
     followingShowRepliesFromPref: 'all' | 'following' | 'off'

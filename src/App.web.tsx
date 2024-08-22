@@ -39,6 +39,7 @@ import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
 import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
 import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
+import {Provider as HiddenRepliesProvider} from '#/state/threadgate-hidden-replies'
 import {ActiveVideoProvider} from '#/view/com/util/post-embeds/ActiveVideoContext'
 import * as Toast from '#/view/com/util/Toast'
 import {ToastContainer} from '#/view/com/util/Toast.web'
@@ -105,19 +106,21 @@ function InnerApp() {
                         <ModerationOptsProvider>
                           <LoggedOutViewProvider>
                             <SelectedFeedProvider>
-                              <UnreadNotifsProvider>
-                                <BackgroundNotificationPreferencesProvider>
-                                  <MutedThreadsProvider>
-                                    <SafeAreaProvider>
-                                      <TourProvider>
-                                        <ProgressGuideProvider>
-                                          <Shell />
-                                        </ProgressGuideProvider>
-                                      </TourProvider>
-                                    </SafeAreaProvider>
-                                  </MutedThreadsProvider>
-                                </BackgroundNotificationPreferencesProvider>
-                              </UnreadNotifsProvider>
+                              <HiddenRepliesProvider>
+                                <UnreadNotifsProvider>
+                                  <BackgroundNotificationPreferencesProvider>
+                                    <MutedThreadsProvider>
+                                      <SafeAreaProvider>
+                                        <TourProvider>
+                                          <ProgressGuideProvider>
+                                            <Shell />
+                                          </ProgressGuideProvider>
+                                        </TourProvider>
+                                      </SafeAreaProvider>
+                                    </MutedThreadsProvider>
+                                  </BackgroundNotificationPreferencesProvider>
+                                </UnreadNotifsProvider>
+                              </HiddenRepliesProvider>
                             </SelectedFeedProvider>
                           </LoggedOutViewProvider>
                         </ModerationOptsProvider>

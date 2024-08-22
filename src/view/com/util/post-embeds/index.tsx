@@ -25,13 +25,13 @@ import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {usePalette} from 'lib/hooks/usePalette'
 import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
+import * as ListCard from '#/components/ListCard'
 import {Embed as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {ContentHider} from '../../../../components/moderation/ContentHider'
 import {AutoSizedImage} from '../images/AutoSizedImage'
 import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
 import {ExternalLinkEmbed} from './ExternalLinkEmbed'
-import {ListEmbed} from './ListEmbed'
 import {MaybeQuoteEmbed} from './QuoteEmbed'
 
 type Embed =
@@ -203,10 +203,20 @@ function MaybeListCard({view}: {view: AppBskyGraphDefs.ListView}) {
   const moderation = React.useMemo(() => {
     return moderationOpts ? moderateUserList(view, moderationOpts) : undefined
   }, [view, moderationOpts])
+  const t = useTheme()
 
   return (
     <ContentHider modui={moderation?.ui('contentList')}>
-      <ListEmbed item={view} />
+      <View
+        style={[
+          a.border,
+          t.atoms.border_contrast_medium,
+          a.p_md,
+          a.rounded_sm,
+          a.mt_sm,
+        ]}>
+        <ListCard.Default view={view} />
+      </View>
     </ContentHider>
   )
 }

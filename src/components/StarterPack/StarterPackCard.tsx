@@ -1,8 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {AppBskyGraphStarterpack, AtUri} from '@atproto/api'
-import {StarterPackViewBasic} from '@atproto/api/dist/client/types/app/bsky/graph/defs'
+import {AppBskyGraphDefs, AppBskyGraphStarterpack, AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -17,7 +16,11 @@ import {StarterPack} from '#/components/icons/StarterPack'
 import {BaseLink} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
-export function Default({starterPack}: {starterPack?: StarterPackViewBasic}) {
+export function Default({
+  starterPack,
+}: {
+  starterPack?: AppBskyGraphDefs.StarterPackViewBasic
+}) {
   if (!starterPack) return null
   return (
     <Link starterPack={starterPack}>
@@ -29,7 +32,7 @@ export function Default({starterPack}: {starterPack?: StarterPackViewBasic}) {
 export function Notification({
   starterPack,
 }: {
-  starterPack?: StarterPackViewBasic
+  starterPack?: AppBskyGraphDefs.StarterPackViewBasic
 }) {
   if (!starterPack) return null
   return (
@@ -44,7 +47,7 @@ export function Card({
   noIcon,
   noDescription,
 }: {
-  starterPack: StarterPackViewBasic
+  starterPack: AppBskyGraphDefs.StarterPackViewBasic
   noIcon?: boolean
   noDescription?: boolean
 }) {
@@ -94,7 +97,7 @@ export function Link({
   starterPack,
   children,
 }: {
-  starterPack: StarterPackViewBasic
+  starterPack: AppBskyGraphDefs.StarterPackViewBasic
   onPress?: () => void
   children: React.ReactNode
 }) {
@@ -129,7 +132,11 @@ export function Link({
   )
 }
 
-export function Embed({starterPack}: {starterPack: StarterPackViewBasic}) {
+export function Embed({
+  starterPack,
+}: {
+  starterPack: AppBskyGraphDefs.StarterPackViewBasic
+}) {
   const t = useTheme()
   const imageUri = getStarterPackOgCard(starterPack)
 

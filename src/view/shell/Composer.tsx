@@ -55,6 +55,7 @@ export const Composer = observer(function ComposerImpl({
         replyTo={state.replyTo}
         onPost={state.onPost}
         quote={state.quote}
+        quoteCount={state.quoteCount}
         mention={state.mention}
         text={state.text}
         imageUris={state.imageUris}

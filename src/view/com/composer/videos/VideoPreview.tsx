@@ -16,8 +16,8 @@ export function VideoPreview({
 }) {
   const player = useVideoPlayer(video.uri, player => {
     player.loop = true
+    player.muted = true
     player.play()
-    player.volume = 0
   })
 
   return (

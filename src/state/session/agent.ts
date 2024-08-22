@@ -12,6 +12,7 @@ import {tryFetchGates} from '#/lib/statsig/statsig'
 import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
 import {snoozeEmailConfirmationPrompt} from '#/state/shell/reminders'
+import {emitNetworkConfirmed, emitNetworkLost} from '../events'
 import {addSessionErrorLog} from './logging'
 import {
   configureModerationForAccount,
@@ -22,7 +23,7 @@ import {isSessionExpired, isSignupQueued} from './util'
 
 export function createPublicAgent() {
   configureModerationForGuest() // Side effect but only relevant for tests
-  return new BskyAgent({service: PUBLIC_BSKY_SERVICE})
+  return new BskyAppAgent({service: PUBLIC_BSKY_SERVICE})
 }
 
 export async function createAgentAndResume(
@@ -33,9 +34,9 @@ export async function createAgentAndResume(
     event: AtpSessionEvent,
   ) => void,
 ) {
-  const agent = new BskyAgent({service: storedAccount.service})
+  const agent = new BskyAppAgent({service: storedAccount.service})
   if (storedAccount.pdsUrl) {
-    agent.pdsUrl = agent.api.xrpc.uri = new URL(storedAccount.pdsUrl)
+    agent.sessionManager.pdsUrl = new URL(storedAccount.pdsUrl)
   }
   const gates = tryFetchGates(storedAccount.did, 'prefer-low-latency')
   const moderation = configureModerationForAccount(agent, storedAccount)
@@ -43,9 +44,8 @@ export async function createAgentAndResume(
   if (isSessionExpired(storedAccount)) {
     await networkRetry(1, () => agent.resumeSession(prevSession))
   } else {
-    agent.session = prevSession
+    agent.sessionManager.session = prevSession
     if (!storedAccount.signupQueued) {
-      // Intentionally not awaited to unblock the UI:
       networkRetry(3, () => agent.resumeSession(prevSession)).catch(
         (e: any) => {
           logger.error(`networkRetry failed to resume session`, {
@@ -60,7 +60,7 @@ export async function createAgentAndResume(
     }
   }
 
-  return prepareAgent(agent, gates, moderation, onSessionChange)
+  return agent.prepare(gates, moderation, onSessionChange)
 }
 
 export async function createAgentAndLogin(
@@ -81,13 +81,13 @@ export async function createAgentAndLogin(
     event: AtpSessionEvent,
   ) => void,
 ) {
-  const agent = new BskyAgent({service})
+  const agent = new BskyAppAgent({service})
   await agent.login({identifier, password, authFactorToken})
 
   const account = agentToSessionAccountOrThrow(agent)
   const gates = tryFetchGates(account.did, 'prefer-fresh-gates')
   const moderation = configureModerationForAccount(agent, account)
-  return prepareAgent(agent, moderation, gates, onSessionChange)
+  return agent.prepare(gates, moderation, onSessionChange)
 }
 
 export async function createAgentAndCreateAccount(
@@ -116,7 +116,7 @@ export async function createAgentAndCreateAccount(
     event: AtpSessionEvent,
   ) => void,
 ) {
-  const agent = new BskyAgent({service})
+  const agent = new BskyAppAgent({service})
   await agent.createAccount({
     email,
     password,
@@ -174,32 +174,7 @@ export async function createAgentAndCreateAccount(
     logger.error(e, {context: `session: failed snoozeEmailConfirmationPrompt`})
   }
 
-  return prepareAgent(agent, gates, moderation, onSessionChange)
-}
-
-async function prepareAgent(
-  agent: BskyAgent,
-  // Not awaited in the calling code so we can delay blocking on them.
-  gates: Promise<void>,
-  moderation: Promise<void>,
-  onSessionChange: (
-    agent: BskyAgent,
-    did: string,
-    event: AtpSessionEvent,
-  ) => void,
-) {
-  // There's nothing else left to do, so block on them here.
-  await Promise.all([gates, moderation])
-
-  // Now the agent is ready.
-  const account = agentToSessionAccountOrThrow(agent)
-  agent.setPersistSessionHandler(event => {
-    onSessionChange(agent, account.did, event)
-    if (event !== 'create' && event !== 'update') {
-      addSessionErrorLog(account.did, event)
-    }
-  })
-  return {agent, account}
+  return agent.prepare(gates, moderation, onSessionChange)
 }
 
 export function agentToSessionAccountOrThrow(agent: BskyAgent): SessionAccount {
@@ -251,3 +226,77 @@ export function sessionAccountToSession(
     status: account.status,
   }
 }
+
+// Not exported. Use factories above to create it.
+let realFetch = globalThis.fetch
+class BskyAppAgent extends BskyAgent {
+  persistSessionHandler: ((event: AtpSessionEvent) => void) | undefined =
+    undefined
+
+  constructor({service}: {service: string}) {
+    super({
+      service,
+      async fetch(...args) {
+        let success = false
+        try {
+          const result = await realFetch(...args)
+          success = true
+          return result
+        } catch (e) {
+          success = false
+          throw e
+        } finally {
+          if (success) {
+            emitNetworkConfirmed()
+          } else {
+            emitNetworkLost()
+          }
+        }
+      },
+      persistSession: (event: AtpSessionEvent) => {
+        if (this.persistSessionHandler) {
+          this.persistSessionHandler(event)
+        }
+      },
+    })
+  }
+
+  async prepare(
+    // Not awaited in the calling code so we can delay blocking on them.
+    gates: Promise<void>,
+    moderation: Promise<void>,
+    onSessionChange: (
+      agent: BskyAgent,
+      did: string,
+      event: AtpSessionEvent,
+    ) => void,
+  ) {
+    // There's nothing else left to do, so block on them here.
+    await Promise.all([gates, moderation])
+
+    // Now the agent is ready.
+    const account = agentToSessionAccountOrThrow(this)
+    let lastSession = this.sessionManager.session
+    this.persistSessionHandler = event => {
+      if (this.sessionManager.session) {
+        lastSession = this.sessionManager.session
+      } else if (event === 'network-error') {
+        // Put it back, we'll try again later.
+        this.sessionManager.session = lastSession
+      }
+
+      onSessionChange(this, account.did, event)
+      if (event !== 'create' && event !== 'update') {
+        addSessionErrorLog(account.did, event)
+      }
+    }
+    return {account, agent: this}
+  }
+
+  dispose() {
+    this.sessionManager.session = undefined
+    this.persistSessionHandler = undefined
+  }
+}
+
+export type {BskyAppAgent}

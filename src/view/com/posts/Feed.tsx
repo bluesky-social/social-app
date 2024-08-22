@@ -349,8 +349,7 @@ let Feed = ({
           const shouldShow =
             (interstitial.type === feedInterstitialType &&
               gate('suggested_feeds_interstitial')) ||
-            (interstitial.type === followInterstitialType &&
-              gate('suggested_follows_interstitial')) ||
+            interstitial.type === followInterstitialType ||
             interstitial.type === progressGuideInterstitialType
 
           if (shouldShow) {
@@ -481,9 +480,7 @@ let Feed = ({
           // -prf
           return <DiscoverFallbackHeader />
         }
-        return (
-          <FeedSlice slice={item.slice} hideTopBorder={index === 0 && !isWeb} />
-        )
+        return <FeedSlice slice={item.slice} hideTopBorder={index === 0} />
       } else {
         return null
       }
