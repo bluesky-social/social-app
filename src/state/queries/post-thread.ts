@@ -400,10 +400,10 @@ export function* findAllPostsInQueryData(
   for (let post of findAllPostsInFeedQueryData(queryClient, uri)) {
     yield postViewToPlaceholderThread(post)
   }
-  for (let post of findAllPostsInQuoteQueryData(queryClient, uri)) {
+  for (let post of findAllPostsInNotifsQueryData(queryClient, uri)) {
     yield postViewToPlaceholderThread(post)
   }
-  for (let post of findAllPostsInNotifsQueryData(queryClient, uri)) {
+  for (let post of findAllPostsInQuoteQueryData(queryClient, uri)) {
     yield postViewToPlaceholderThread(post)
   }
   for (let post of findAllPostsInSearchQueryData(queryClient, uri)) {
