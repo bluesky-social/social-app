@@ -31,7 +31,7 @@ export function AccountDropdownBtn({account}: {account: SessionAccount}) {
                 size="xsmall"
                 shape="round"
                 color="secondary"
-                variant="solid">
+                variant="ghost">
                 <ButtonIcon icon={Ellipsis} size="sm" />
               </Button>
             )
