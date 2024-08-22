@@ -75,8 +75,8 @@ export async function getAllListMembers(agent: BskyAgent, uri: string) {
     listItems.push(...res.data.items)
     hasMore = Boolean(res.data.cursor)
     cursor = res.data.cursor
+    i++
   }
-  i++
   return listItems
 }
 
