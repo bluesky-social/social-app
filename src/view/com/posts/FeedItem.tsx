@@ -381,6 +381,7 @@ let FeedItemInner = ({
             onOpenEmbed={onOpenEmbed}
             post={post}
             rootPost={rootPost}
+            threadgateRecord={threadgateRecord}
           />
           <VideoDebug />
           <PostCtrls
