@@ -227,6 +227,10 @@ let FeedItemInner = ({
     AppBskyFeedDefs.isReasonRepost(reason) &&
     reason.by.did === currentAccount?.did
 
+  /**
+   * If `post[0]` in this slice is the actual root post (not an orphan thread),
+   * then we may have a threadgate record to reference
+   */
   const threadgateRecord = AppBskyFeedThreadgate.isRecord(
     rootPost.threadgate?.record,
   )
@@ -380,7 +384,6 @@ let FeedItemInner = ({
             postAuthor={post.author}
             onOpenEmbed={onOpenEmbed}
             post={post}
-            rootPost={rootPost}
             threadgateRecord={threadgateRecord}
           />
           <VideoDebug />
@@ -407,7 +410,6 @@ let PostContent = ({
   postEmbed,
   postAuthor,
   onOpenEmbed,
-  rootPost,
   threadgateRecord,
 }: {
   moderation: ModerationDecision
@@ -416,7 +418,6 @@ let PostContent = ({
   postAuthor: AppBskyFeedDefs.PostView['author']
   onOpenEmbed: () => void
   post: AppBskyFeedDefs.PostView
-  rootPost: AppBskyFeedDefs.PostView
   threadgateRecord?: AppBskyFeedThreadgate.Record
 }): React.ReactNode => {
   const pal = usePalette('default')
@@ -431,7 +432,8 @@ let PostContent = ({
   const additionalPostAlerts: AppModerationCause[] = React.useMemo(() => {
     const isPostHiddenByThreadgate = threadgateHiddenReplies.has(post.uri)
     const isControlledByViewer =
-      new AtUri(rootPost.uri).host === currentAccount?.did
+      threadgateRecord &&
+      new AtUri(threadgateRecord.post).host === currentAccount?.did
     if (!isControlledByViewer) return []
     return isPostHiddenByThreadgate
       ? [
@@ -442,7 +444,7 @@ let PostContent = ({
           },
         ]
       : []
-  }, [post, currentAccount?.did, rootPost.uri, threadgateHiddenReplies])
+  }, [post, currentAccount?.did, threadgateRecord, threadgateHiddenReplies])
 
   const onPressShowMore = React.useCallback(() => {
     setLimitLines(false)
