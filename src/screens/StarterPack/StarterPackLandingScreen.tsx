@@ -31,10 +31,12 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import * as FeedCard from '#/components/FeedCard'
+import {useRichText} from '#/components/hooks/useRichText'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Default as ProfileCard} from '#/components/ProfileCard'
 import * as Prompt from '#/components/Prompt'
+import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
@@ -109,6 +111,9 @@ function LandingScreenLoaded({
   const setActiveStarterPack = useSetActiveStarterPack()
   const {isTabletOrDesktop} = useWebMediaQueries()
   const androidDialogControl = useDialogControl()
+  const [descriptionRt] = useRichText(
+    AppBskyGraphStarterpack.isRecord(record) ? record?.description || '' : '',
+  )
 
   const [appClipOverlayVisible, setAppClipOverlayVisible] =
     React.useState(false)
@@ -192,9 +197,7 @@ function LandingScreenLoaded({
         </LinearGradientBackground>
         <View style={[a.gap_2xl, a.mx_lg, a.my_2xl]}>
           {record.description ? (
-            <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-              {record.description}
-            </Text>
+            <RichText value={descriptionRt} style={[a.text_md]} />
           ) : null}
           <View style={[a.gap_sm]}>
             <Button
