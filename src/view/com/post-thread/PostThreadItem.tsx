@@ -399,22 +399,6 @@ let PostThreadItemLoaded = ({
                     </Text>
                   </Link>
                 ) : null}
-                {post.likeCount != null && post.likeCount !== 0 ? (
-                  <Link
-                    style={styles.expandedInfoItem}
-                    href={likesHref}
-                    title={likesTitle}>
-                    <Text
-                      testID="likeCount-expanded"
-                      type="lg"
-                      style={pal.textLight}>
-                      <Text type="xl-bold" style={pal.text}>
-                        {formatCount(post.likeCount)}
-                      </Text>{' '}
-                      <Plural value={post.likeCount} one="like" other="likes" />
-                    </Text>
-                  </Link>
-                ) : null}
                 {post.quoteCount != null && post.quoteCount !== 0 ? (
                   <Link
                     style={styles.expandedInfoItem}
@@ -432,6 +416,22 @@ let PostThreadItemLoaded = ({
                         one="quote"
                         other="quotes"
                       />
+                    </Text>
+                  </Link>
+                ) : null}
+                {post.likeCount != null && post.likeCount !== 0 ? (
+                  <Link
+                    style={styles.expandedInfoItem}
+                    href={likesHref}
+                    title={likesTitle}>
+                    <Text
+                      testID="likeCount-expanded"
+                      type="lg"
+                      style={pal.textLight}>
+                      <Text type="xl-bold" style={pal.text}>
+                        {formatCount(post.likeCount)}
+                      </Text>{' '}
+                      <Plural value={post.likeCount} one="like" other="likes" />
                     </Text>
                   </Link>
                 ) : null}

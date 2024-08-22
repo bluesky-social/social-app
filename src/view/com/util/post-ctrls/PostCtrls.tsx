@@ -255,7 +255,7 @@ let PostCtrls = ({
       <View style={big ? a.align_center : [a.flex_1, a.align_start]}>
         <RepostButton
           isReposted={!!post.viewer?.repost}
-          repostCount={post.repostCount}
+          repostCount={(post.repostCount ?? 0) + (post.quoteCount ?? 0)}
           onRepost={onRepost}
           onQuote={onQuote}
           big={big}

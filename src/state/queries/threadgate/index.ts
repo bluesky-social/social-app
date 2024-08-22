@@ -9,10 +9,12 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {networkRetry, retry} from '#/lib/async/retry'
 import {until} from '#/lib/async/until'
+import {updatePostShadow} from '#/state/cache/post-shadow'
 import {STALE} from '#/state/queries'
 import {RQKEY_ROOT as postThreadQueryKeyRoot} from '#/state/queries/post-thread'
 import {ThreadgateAllowUISetting} from '#/state/queries/threadgate/types'
 import {
+  createTempThreadgateView,
   createThreadgateRecord,
   mergeThreadgateRecords,
   threadgateAllowUISettingToAllowRecordValue,
@@ -342,17 +344,26 @@ export function useToggleReplyVisibilityMutation() {
         }
       })
     },
-    onSuccess() {
+    onSuccess(_, {postUri, replyUri}) {
+      updatePostShadow(queryClient, postUri, {
+        threadgateView: createTempThreadgateView({
+          postUri,
+          hiddenReplies: [replyUri],
+        }),
+      })
       queryClient.invalidateQueries({
         queryKey: [threadgateRecordQueryKeyRoot],
       })
     },
-    onError(_, {replyUri, action}) {
+    onError(_, {postUri, replyUri, action}) {
       if (action === 'hide') {
         hiddenReplies.removeHiddenReplyUri(replyUri)
       } else if (action === 'show') {
         hiddenReplies.addHiddenReplyUri(replyUri)
       }
+      updatePostShadow(queryClient, postUri, {
+        threadgateView: undefined,
+      })
     },
   })
 }
