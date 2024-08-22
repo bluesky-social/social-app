@@ -134,11 +134,9 @@ export function PostThread({uri}: {uri: string | undefined}) {
     | undefined
   const {data: threadgateRecord} = useThreadgateRecordQuery({
     /**
-     * If the user is the OP and the root post has a threadgate, we should load
-     * the threadgate record. Otherwise, fallback to initialData, which is taken
-     * from the response from `getPostThread`.
+     * If the user is the OP and we have a root post, fetch the threadgate.
      */
-    enabled: Boolean(isOP && rootPostUri && initialThreadgateRecord),
+    enabled: Boolean(isOP && rootPostUri),
     postUri: rootPostUri,
     initialData: initialThreadgateRecord,
   })
