@@ -10,7 +10,6 @@ import {useLingui} from '@lingui/react'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {usePostQuotesQuery} from '#/state/queries/post-quotes'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
@@ -25,16 +24,14 @@ import {List} from '../util/List'
 
 function renderItem({
   item,
-  index,
 }: {
   item: {
     post: AppBskyFeedDefs.PostView
     moderation: ModerationDecision
     record: AppBskyFeedPost.Record
   }
-  index: number
 }) {
-  return <Post post={item.post} hideTopBorder={index === 0 && !isWeb} />
+  return <Post post={item.post} />
 }
 
 function keyExtractor(item: {
