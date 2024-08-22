@@ -3812,7 +3812,7 @@ msgstr "还没有通知！"
 #: src/screens/Messages/Settings.tsx:93
 #: src/screens/Messages/Settings.tsx:96
 msgid "No one"
-msgstr "没有人"
+msgstr "仅自己"
 
 #: src/components/WhoCanReply.tsx:237
 msgid "No one but the author can quote this post."
@@ -3858,7 +3858,7 @@ msgstr "不，谢谢"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:375
 msgid "Nobody"
-msgstr "没有人"
+msgstr "仅自己"
 
 #: src/components/LikedByList.tsx:79
 #: src/components/LikesDialog.tsx:99
