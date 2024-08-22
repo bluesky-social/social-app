@@ -63,7 +63,9 @@ export async function getAllListMembers(agent: BskyAgent, uri: string) {
   let hasMore = true
   let cursor: string | undefined
   const listItems: AppBskyGraphDefs.ListItemView[] = []
-  while (hasMore) {
+  // We want to cap this at 6 pages, just for anything weird happening with the api
+  let i = 0
+  while (hasMore && i < 6) {
     const res = await agent.app.bsky.graph.getList({
       list: uri,
       limit: 50,
@@ -73,6 +75,7 @@ export async function getAllListMembers(agent: BskyAgent, uri: string) {
     hasMore = Boolean(res.data.cursor)
     cursor = res.data.cursor
   }
+  i++
   return listItems
 }
 
