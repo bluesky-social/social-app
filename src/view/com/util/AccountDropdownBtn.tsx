@@ -41,7 +41,6 @@ export function AccountDropdownBtn({account}: {account: SessionAccount}) {
         <Menu.Outer style={{minWidth: 170}}>
           <Menu.Group>
             <Menu.Item
-              testID="profileHeaderDropdownShareBtn"
               label={_(msg`Remove account`)}
               onPress={() => {
                 removePromptControl.open()
