@@ -3,11 +3,7 @@ import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import {runOnJS} from 'react-native-reanimated'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {
-  AppBskyFeedDefs,
-  AppBskyFeedPost,
-  AppBskyFeedThreadgate,
-} from '@atproto/api'
+import {AppBskyFeedDefs, AppBskyFeedThreadgate} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -27,7 +23,6 @@ import {
   usePostThreadQuery,
 } from '#/state/queries/post-thread'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useThreadgateRecordQuery} from '#/state/queries/threadgate'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
@@ -108,7 +103,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
     isError: isThreadError,
     error: threadError,
     refetch,
-    data: thread,
+    data: {thread, threadgate} = {},
   } = usePostThreadQuery(uri)
 
   const treeView = React.useMemo(
@@ -119,19 +114,11 @@ export function PostThread({uri}: {uri: string | undefined}) {
   )
   const rootPost = thread?.type === 'post' ? thread.post : undefined
   const rootPostRecord = thread?.type === 'post' ? thread.record : undefined
-  const replyRef =
-    rootPostRecord && AppBskyFeedPost.isRecord(rootPostRecord)
-      ? rootPostRecord.reply
-      : undefined
-  const rootPostUri = replyRef ? replyRef.root.uri : rootPost?.uri
-  const {data: threadgateRecord} = useThreadgateRecordQuery({
-    postUri: rootPostUri,
-    initialData: rootPost?.threadgate?.record as
-      | AppBskyFeedThreadgate.Record
-      | undefined,
-  })
+  const threadgateRecord = threadgate?.record as
+    | AppBskyFeedThreadgate.Record
+    | undefined
   const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
-    threadgateRecord: threadgateRecord ?? undefined,
+    threadgateRecord,
   })
 
   const moderationOpts = useModerationOpts()
