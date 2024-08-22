@@ -26,6 +26,11 @@ export enum SignupStep {
   CAPTCHA,
 }
 
+type SubmitTask = {
+  code: string | undefined
+  mutableProcessed: boolean // OK to mutate assuming it's never read in render.
+}
+
 export type SignupState = {
   hasPrev: boolean
   activeStep: SignupStep
@@ -42,7 +47,7 @@ export type SignupState = {
   error: string
   isLoading: boolean
 
-  pendingSubmit: null | {code: string | undefined; mutableProcessed: boolean}
+  pendingSubmit: null | SubmitTask
 }
 
 export type SignupAction =
@@ -60,7 +65,7 @@ export type SignupAction =
   | {type: 'setVerificationCode'; value: string}
   | {type: 'setError'; value: string}
   | {type: 'setIsLoading'; value: boolean}
-  | {type: 'submit'; code: string | undefined}
+  | {type: 'submit'; task: SubmitTask}
 
 export const initialState: SignupState = {
   hasPrev: false,
@@ -155,7 +160,7 @@ export function reducer(s: SignupState, a: SignupAction): SignupState {
       break
     }
     case 'submit': {
-      next.pendingSubmit = {code: a.code, mutableProcessed: false}
+      next.pendingSubmit = a.task
       break
     }
   }
