@@ -1,9 +1,15 @@
-import {AppBskyActorDefs, AppBskyGraphGetList} from '@atproto/api'
+import {
+  AppBskyActorDefs,
+  AppBskyGraphDefs,
+  AppBskyGraphGetList,
+  BskyAgent,
+} from '@atproto/api'
 import {
   InfiniteData,
   QueryClient,
   QueryKey,
   useInfiniteQuery,
+  useQuery,
 } from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
@@ -14,6 +20,7 @@ type RQPageParam = string | undefined
 
 const RQKEY_ROOT = 'list-members'
 export const RQKEY = (uri: string) => [RQKEY_ROOT, uri]
+export const RQKEY_ALL = (uri: string) => [RQKEY_ROOT, uri, 'all']
 
 export function useListMembersQuery(uri?: string, limit: number = PAGE_SIZE) {
   const agent = useAgent()
@@ -38,6 +45,38 @@ export function useListMembersQuery(uri?: string, limit: number = PAGE_SIZE) {
     getNextPageParam: lastPage => lastPage.cursor,
     enabled: Boolean(uri),
   })
+}
+
+export function useAllListMembersQuery(uri?: string) {
+  const agent = useAgent()
+  return useQuery({
+    staleTime: STALE.MINUTES.ONE,
+    queryKey: RQKEY_ALL(uri ?? ''),
+    queryFn: async () => {
+      return getAllListMembers(agent, uri!)
+    },
+    enabled: Boolean(uri),
+  })
+}
+
+export async function getAllListMembers(agent: BskyAgent, uri: string) {
+  let hasMore = true
+  let cursor: string | undefined
+  const listItems: AppBskyGraphDefs.ListItemView[] = []
+  // We want to cap this at 6 pages, just for anything weird happening with the api
+  let i = 0
+  while (hasMore && i < 6) {
+    const res = await agent.app.bsky.graph.getList({
+      list: uri,
+      limit: 50,
+      cursor,
+    })
+    listItems.push(...res.data.items)
+    hasMore = Boolean(res.data.cursor)
+    cursor = res.data.cursor
+  }
+  i++
+  return listItems
 }
 
 export async function invalidateListMembersQuery({
