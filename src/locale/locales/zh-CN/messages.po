@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh_CN\n"
 "Project-Id-Version: zh-CN for bluesky-social-app\n"
 "Report-Msgid-Bugs-To: Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-08-16 10:59+0800\n"
+"PO-Revision-Date: 2024-08-22 17:24+0800\n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
 "Language-Team: Frudrax Cheng (auroursa), Simon Chan (RitsukiP), U2FsdGVkX1, Mikan Harada (mitian233), IceCodeNew\n"
 "Plural-Forms: \n"
@@ -67,7 +67,7 @@ msgstr "{0, plural, one {帖文} other {帖文}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:414
 msgid "{0, plural, one {quote} other {quotes}}"
-msgstr ""
+msgstr "{0, plural, one {引用} other {引用}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:233
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
@@ -174,10 +174,6 @@ msgstr "{profileName} 在 {0} 前加入了 Bluesky"
 msgid "{profileName} joined Bluesky using a starter pack {0} ago"
 msgstr "{profileName} 在 {0} 前使用入门包加入了 Bluesky"
 
-#: src/components/WhoCanReply.tsx:296
-#~ msgid "<0/> members"
-#~ msgstr "<0/> 个成员"
-
 #: src/screens/StarterPack/Wizard/index.tsx:466
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
@@ -206,7 +202,7 @@ msgstr "<0>{0}</0> 包含在你的入门包中"
 
 #: src/components/WhoCanReply.tsx:274
 msgid "<0>{0}</0> members"
-msgstr ""
+msgstr "<0>{0} 个成员"
 
 #: src/view/com/modals/SelfLabel.tsx:135
 msgid "<0>Not Applicable.</0> This warning is only available for posts with media attached."
@@ -445,7 +441,7 @@ msgstr "允许以下来源发起新对话"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:359
 msgid "Allow replies from:"
-msgstr ""
+msgstr "允许回复："
 
 #: src/view/screens/AppPasswords.tsx:271
 msgid "Allows access to direct messages"
@@ -571,7 +567,7 @@ msgstr "反社会行为"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:54
 msgid "Anybody can interact"
-msgstr ""
+msgstr "任何人都可以参与互动"
 
 #: src/view/screens/LanguageSettings.tsx:96
 msgid "App Language"
@@ -1060,11 +1056,6 @@ msgstr "选择支持你的自定义资讯源的算法。"
 msgid "Choose this color as your avatar"
 msgstr "选择这个颜色作为你的头像"
 
-#: src/components/dialogs/ThreadgateEditor.tsx:93
-#: src/components/dialogs/ThreadgateEditor.tsx:97
-#~ msgid "Choose who can reply"
-#~ msgstr "选择谁可以回复"
-
 #: src/screens/Signup/StepInfo/index.tsx:171
 msgid "Choose your password"
 msgstr "选择你的密码"
@@ -1104,11 +1095,11 @@ msgstr "点击这里打开 {tag} 的标签菜单"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:303
 msgid "Click to disable quote posts of this post."
-msgstr ""
+msgstr "点击关闭该帖文的引用功能。"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:304
 msgid "Click to enable quote posts of this post."
-msgstr ""
+msgstr "点击打开该帖文的引用功能。"
 
 #: src/components/dms/MessageItem.tsx:231
 msgid "Click to retry failed message"
@@ -1533,7 +1524,7 @@ msgstr "自定义外部站点的媒体。"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:288
 msgid "Customize who can interact with this post."
-msgstr ""
+msgstr "自定义谁可以参与这条帖文的互动。"
 
 #: src/screens/Settings/AppearanceSettings.tsx:95
 #: src/screens/Settings/AppearanceSettings.tsx:97
@@ -1676,15 +1667,15 @@ msgstr "描述替代文本"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:546
 #: src/view/com/util/forms/PostDropdownBtn.tsx:556
 msgid "Detach quote"
-msgstr ""
+msgstr "分离引用帖文"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:689
 msgid "Detach quote post?"
-msgstr ""
+msgstr "分离引用帖文？"
 
 #: src/components/WhoCanReply.tsx:175
 msgid "Dialog: adjust who can interact with this post"
-msgstr ""
+msgstr "对话框：调整谁可以参与这条帖文的互动"
 
 #: src/view/com/composer/Composer.tsx:327
 msgid "Did you want to say anything?"
@@ -1760,7 +1751,7 @@ msgstr "关闭"
 
 #: src/view/com/composer/Composer.tsx:612
 msgid "Dismiss error"
-msgstr ""
+msgstr "清除错误"
 
 #: src/components/ProgressGuide/List.tsx:40
 msgid "Dismiss getting started guide"
@@ -1919,7 +1910,7 @@ msgstr "编辑图片"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:592
 #: src/view/com/util/forms/PostDropdownBtn.tsx:605
 msgid "Edit interaction settings"
-msgstr ""
+msgstr "调整互动选项"
 
 #: src/view/screens/ProfileList.tsx:515
 msgid "Edit list details"
@@ -1947,7 +1938,7 @@ msgstr "编辑用户"
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:66
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:204
 msgid "Edit post interaction settings"
-msgstr ""
+msgstr "调整帖文互动选项"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:184
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:179
@@ -1987,10 +1978,6 @@ msgstr "编辑你的入门包"
 #: src/screens/Onboarding/state.ts:86
 msgid "Education"
 msgstr "教育"
-
-#: src/components/dialogs/ThreadgateEditor.tsx:100
-#~ msgid "Either choose \"Everybody\" or \"Nobody\""
-#~ msgstr "选择 \"所有人\"或是\"没有人\""
 
 #: src/screens/Signup/StepInfo/index.tsx:143
 #: src/view/com/modals/ChangeEmail.tsx:136
@@ -2153,7 +2140,7 @@ msgstr "所有人都可以回复"
 
 #: src/components/WhoCanReply.tsx:213
 msgid "Everybody can reply to this post."
-msgstr ""
+msgstr "所有人都可以回复这条帖文。"
 
 #: src/components/dms/MessagesNUX.tsx:131
 #: src/components/dms/MessagesNUX.tsx:134
@@ -2762,7 +2749,7 @@ msgstr "这里是你的应用专用密码。"
 
 #: src/components/ListCard.tsx:128
 msgid "Hidden list"
-msgstr ""
+msgstr "隐藏列表"
 
 #: src/components/moderation/ContentHider.tsx:116
 #: src/components/moderation/LabelPreference.tsx:134
@@ -2780,25 +2767,20 @@ msgctxt "action"
 msgid "Hide"
 msgstr "隐藏"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:390
-#: src/view/com/util/forms/PostDropdownBtn.tsx:392
-#~ msgid "Hide post"
-#~ msgstr "隐藏帖文"
-
 #: src/view/com/util/forms/PostDropdownBtn.tsx:503
 #: src/view/com/util/forms/PostDropdownBtn.tsx:509
 msgid "Hide post for me"
-msgstr ""
+msgstr "为我隐藏这条帖文"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:520
 #: src/view/com/util/forms/PostDropdownBtn.tsx:530
 msgid "Hide reply for everyone"
-msgstr ""
+msgstr "隐藏所有人的回复"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:502
 #: src/view/com/util/forms/PostDropdownBtn.tsx:508
 msgid "Hide reply for me"
-msgstr ""
+msgstr "为我隐藏回复"
 
 #: src/components/moderation/ContentHider.tsx:68
 #: src/components/moderation/PostHider.tsx:79
@@ -2812,7 +2794,7 @@ msgstr "隐藏这条帖文？"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:637
 #: src/view/com/util/forms/PostDropdownBtn.tsx:699
 msgid "Hide this reply?"
-msgstr ""
+msgstr "隐藏这条回复？"
 
 #: src/view/com/notifications/FeedItem.tsx:468
 msgid "Hide user list"
@@ -2983,7 +2965,7 @@ msgstr "输入你的用户识别符"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:55
 msgid "Interaction limited"
-msgstr ""
+msgstr "互动受限"
 
 #: src/components/dms/MessagesNUX.tsx:82
 msgid "Introducing Direct Messages"
@@ -3222,10 +3204,6 @@ msgstr "喜欢"
 msgid "Likes on this post"
 msgstr "这条帖文的喜欢数"
 
-#: src/view/screens/ProfileList.tsx:235
-#~ msgid "list"
-#~ msgstr "列表"
-
 #: src/Navigation.tsx:193
 msgid "List"
 msgstr "列表"
@@ -3249,11 +3227,11 @@ msgstr "列表已删除"
 
 #: src/screens/List/ListHiddenScreen.tsx:126
 msgid "List has been hidden"
-msgstr ""
+msgstr "列表已隐藏"
 
 #: src/view/screens/ProfileList.tsx:159
 msgid "List Hidden"
-msgstr ""
+msgstr "隐藏列表"
 
 #: src/view/screens/ProfileList.tsx:386
 msgid "List muted"
@@ -3838,7 +3816,7 @@ msgstr "没有人"
 
 #: src/components/WhoCanReply.tsx:237
 msgid "No one but the author can quote this post."
-msgstr ""
+msgstr "仅限作者可引用这条帖文。"
 
 #: src/screens/Profile/Sections/Feed.tsx:59
 msgid "No posts yet."
@@ -3881,10 +3859,6 @@ msgstr "不，谢谢"
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:375
 msgid "Nobody"
 msgstr "没有人"
-
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:46
-#~ msgid "Nobody can reply"
-#~ msgstr "没有人可以回复"
 
 #: src/components/LikedByList.tsx:79
 #: src/components/LikesDialog.tsx:99
@@ -4021,13 +3995,9 @@ msgstr "至少有一张图片缺失了替代文本。"
 msgid "Only .jpg and .png files are supported"
 msgstr "目前只支持上传 .jpg 或 .png 格式的图片文件"
 
-#: src/components/WhoCanReply.tsx:245
-#~ msgid "Only {0} can reply"
-#~ msgstr "只有 {0} 可以回复"
-
 #: src/components/WhoCanReply.tsx:217
 msgid "Only {0} can reply."
-msgstr ""
+msgstr "仅限 {0} 可以回复。"
 
 #: src/screens/Signup/StepHandle.tsx:149
 msgid "Only contains letters, numbers, and hyphens"
@@ -4519,7 +4489,7 @@ msgstr "帖文已由你隐藏"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:283
 msgid "Post interaction settings"
-msgstr ""
+msgstr "帖文互动选项"
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:88
 msgid "Post language"
@@ -4681,11 +4651,11 @@ msgstr "引用帖文"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:304
 msgid "Quote post was re-attached"
-msgstr ""
+msgstr "引用帖文已重新关联"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:303
 msgid "Quote post was successfully detached"
-msgstr ""
+msgstr "引用帖文已成功分离"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:313
 #: src/view/com/util/post-ctrls/RepostButton.tsx:121
@@ -4693,24 +4663,24 @@ msgstr ""
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:84
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:91
 msgid "Quote posts disabled"
-msgstr ""
+msgstr "引用已关闭"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:311
 msgid "Quote posts enabled"
-msgstr ""
+msgstr "引用已打开"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:295
 msgid "Quote settings"
-msgstr ""
+msgstr "引用选项"
 
 #: src/screens/Post/PostQuotes.tsx:29
 #: src/view/com/post-thread/PostQuotes.tsx:122
 msgid "Quotes"
-msgstr ""
+msgstr "引用"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:231
 msgid "Quotes of this post"
-msgstr ""
+msgstr "引用这条帖文"
 
 #: src/view/screens/PreferencesThreads.tsx:80
 msgid "Random (aka \"Poster's Roulette\")"
@@ -4723,7 +4693,7 @@ msgstr "比率"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:545
 #: src/view/com/util/forms/PostDropdownBtn.tsx:555
 msgid "Re-attach quote"
-msgstr ""
+msgstr "重新关联引用帖文"
 
 #: src/screens/Deactivated.tsx:144
 msgid "Reactivate your account"
@@ -4823,7 +4793,7 @@ msgstr "从快速访问中删除？"
 
 #: src/screens/List/ListHiddenScreen.tsx:156
 msgid "Remove from saved feeds"
-msgstr ""
+msgstr "从已保存的资讯源中删除"
 
 #: src/view/com/composer/photos/Gallery.tsx:174
 msgid "Remove image"
@@ -4860,11 +4830,11 @@ msgstr "从保存的资讯源列表中删除这个资讯源"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:100
 msgid "Removed by author"
-msgstr ""
+msgstr "已被作者删除"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:98
 msgid "Removed by you"
-msgstr ""
+msgstr "已被你删除"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:200
 #: src/view/com/modals/UserAddRemoveLists.tsx:164
@@ -4878,7 +4848,7 @@ msgstr "已从自定义资讯源中删除"
 #: src/screens/List/ListHiddenScreen.tsx:94
 #: src/screens/List/ListHiddenScreen.tsx:160
 msgid "Removed from saved feeds"
-msgstr ""
+msgstr "已从保存的资讯源中删除"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:44
 #: src/view/screens/ProfileFeed.tsx:192
@@ -4909,11 +4879,7 @@ msgstr "回复已被禁用"
 
 #: src/components/WhoCanReply.tsx:215
 msgid "Replies to this post are disabled."
-msgstr ""
-
-#: src/components/WhoCanReply.tsx:243
-#~ msgid "Replies to this thread are disabled"
-#~ msgstr "该讨论串的回复已被禁用"
+msgstr "这条帖文的回复已被关闭。"
 
 #: src/view/com/composer/Composer.tsx:562
 msgctxt "action"
@@ -4923,20 +4889,20 @@ msgstr "回复"
 #: src/components/moderation/ModerationDetailsDialog.tsx:115
 #: src/lib/moderation/useModerationCauseDescription.ts:123
 msgid "Reply Hidden by Thread Author"
-msgstr ""
+msgstr "回复已被该讨论串的作者隐藏"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:114
 #: src/lib/moderation/useModerationCauseDescription.ts:122
 msgid "Reply Hidden by You"
-msgstr ""
+msgstr "回复被你隐藏"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:355
 msgid "Reply settings"
-msgstr ""
+msgstr "回复选项"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:340
 msgid "Reply settings are chosen by the author of the thread"
-msgstr ""
+msgstr "由讨论串的作者设置的回复选项"
 
 #: src/view/com/post/Post.tsx:196
 #: src/view/com/posts/FeedItem.tsx:533
@@ -4952,7 +4918,7 @@ msgstr "回复被屏蔽的帖文"
 #: src/view/com/posts/FeedItem.tsx:526
 msgctxt "description"
 msgid "Reply to a post"
-msgstr ""
+msgstr "回复这条帖文"
 
 #: src/view/com/post/Post.tsx:194
 #: src/view/com/posts/FeedItem.tsx:530
@@ -4962,11 +4928,11 @@ msgstr "对你回复"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:334
 msgid "Reply visibility updated"
-msgstr ""
+msgstr "回复可见性已更新"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:333
 msgid "Reply was successfully hidden"
-msgstr ""
+msgstr "回复已成功隐藏"
 
 #: src/components/dms/MessageMenu.tsx:132
 #: src/components/dms/MessagesListBlockedFooter.tsx:77
@@ -5694,7 +5660,7 @@ msgstr "更少显示类似这样的"
 
 #: src/screens/List/ListHiddenScreen.tsx:172
 msgid "Show list anyway"
-msgstr ""
+msgstr "仍然显示列表"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:585
 #: src/view/com/post/Post.tsx:234
@@ -5730,7 +5696,7 @@ msgstr "将你关注的用户的回复置于其他回复之前。"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:519
 #: src/view/com/util/forms/PostDropdownBtn.tsx:529
 msgid "Show reply for everyone"
-msgstr ""
+msgstr "公开显示回复"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:84
 msgid "Show Reposts"
@@ -6147,7 +6113,7 @@ msgstr "找不到此入门包。"
 
 #: src/view/com/post-thread/PostQuotes.tsx:129
 msgid "That's all, folks!"
-msgstr ""
+msgstr "大功告成！"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:310
 #: src/view/com/profile/ProfileMenu.tsx:353
@@ -6157,7 +6123,7 @@ msgstr "解除屏蔽后，该账户将能够与你互动。"
 #: src/components/moderation/ModerationDetailsDialog.tsx:118
 #: src/lib/moderation/useModerationCauseDescription.ts:126
 msgid "The author of this thread has hidden this reply."
-msgstr ""
+msgstr "这条讨论串的作者已隐藏这条回复。"
 
 #: src/screens/Moderation/index.tsx:368
 msgid "The Bluesky web application"
@@ -6425,7 +6391,7 @@ msgstr "这条链接将带你到以下网站："
 
 #: src/screens/List/ListHiddenScreen.tsx:136
 msgid "This list - created by <0>{0}</0> - contains possible violations of Bluesky's community guidelines in its name or description."
-msgstr ""
+msgstr "这个列表由 <0>{0}</0> 创建，其名称或描述可能违反了 Bluesky 社区准则。"
 
 #: src/view/screens/ProfileList.tsx:963
 msgid "This list is empty!"
@@ -6450,15 +6416,11 @@ msgstr "这条帖文只对已登录用户可见，未登录的用户将无法看
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:639
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
-msgstr ""
-
-#: src/view/com/util/forms/PostDropdownBtn.tsx:443
-#~ msgid "This post will be hidden from feeds."
-#~ msgstr "这条帖文将从资讯源中隐藏。"
+msgstr "这条帖文将从资讯源和讨论串中隐藏。注意此操作无法撤消。"
 
 #: src/view/com/composer/useExternalLinkFetch.ts:67
 msgid "This post's author has disabled quote posts."
-msgstr ""
+msgstr "这条帖文的作者已关闭引用帖文。"
 
 #: src/view/com/profile/ProfileMenu.tsx:374
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't logged in."
@@ -6466,7 +6428,7 @@ msgstr "此个人资料只对已登录用户可见，未登录的用户将无法
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:701
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
-msgstr ""
+msgstr "这条回复将被归档到你帖文底部的隐藏显示部分，并且将隐藏后续回复的通知 - 无论是对你自己还是对其他人。"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:37
 msgid "This service has not provided terms of service or a privacy policy."
@@ -6519,7 +6481,7 @@ msgstr "这将从你的快速访问列表中删除 @{0}。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:691
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
-msgstr ""
+msgstr "这会从所有用户的引用中删除你的帖文，并将其替换为占位符。"
 
 #: src/view/screens/Settings/index.tsx:560
 msgid "Thread preferences"
@@ -6529,10 +6491,6 @@ msgstr "讨论串首选项"
 #: src/view/screens/Settings/index.tsx:570
 msgid "Thread Preferences"
 msgstr "讨论串首选项"
-
-#: src/components/WhoCanReply.tsx:109
-#~ msgid "Thread settings updated"
-#~ msgstr "讨论串首选项已更新"
 
 #: src/view/screens/PreferencesThreads.tsx:113
 msgid "Threaded Mode"
@@ -6738,7 +6696,7 @@ msgstr "取消订阅"
 #: src/screens/List/ListHiddenScreen.tsx:184
 #: src/screens/List/ListHiddenScreen.tsx:194
 msgid "Unsubscribe from list"
-msgstr ""
+msgstr "从列表取消订阅"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:196
 msgid "Unsubscribe from this labeler"
@@ -6746,7 +6704,7 @@ msgstr "取消订阅这个标记者"
 
 #: src/screens/List/ListHiddenScreen.tsx:86
 msgid "Unsubscribed from list"
-msgstr ""
+msgstr "已从列表中取消订阅"
 
 #: src/lib/moderation/useReportOptions.ts:72
 #: src/lib/moderation/useReportOptions.ts:85
@@ -6763,11 +6721,11 @@ msgstr "更新至 {handle}"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:307
 msgid "Updating quote attachment failed"
-msgstr ""
+msgstr "更新引用关联失败"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:337
 msgid "Updating reply visibility failed"
-msgstr ""
+msgstr "更新回复可见性失败"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:186
 msgid "Updating..."
@@ -6900,13 +6858,9 @@ msgstr "用户名或电子邮箱"
 msgid "Users"
 msgstr "用户"
 
-#: src/components/WhoCanReply.tsx:280
-#~ msgid "users followed by <0/>"
-#~ msgstr "关注 <0/> 的用户"
-
 #: src/components/WhoCanReply.tsx:258
 msgid "users followed by <0>@{0}</0>"
-msgstr ""
+msgstr "关注 <0>@{0}</0> 的用户"
 
 #: src/components/dms/MessagesNUX.tsx:140
 #: src/components/dms/MessagesNUX.tsx:143
@@ -7171,7 +7125,7 @@ msgstr "你想在算法资讯源中看到哪些语言？"
 
 #: src/components/WhoCanReply.tsx:179
 msgid "Who can interact with this post?"
-msgstr ""
+msgstr "谁可以参与这条帖文的互动？"
 
 #: src/components/dms/MessagesNUX.tsx:110
 #: src/components/dms/MessagesNUX.tsx:124
@@ -7181,14 +7135,6 @@ msgstr "谁可以给你发送私信？"
 #: src/components/WhoCanReply.tsx:87
 msgid "Who can reply"
 msgstr "谁可以回复"
-
-#: src/components/WhoCanReply.tsx:212
-#~ msgid "Who can reply dialog"
-#~ msgstr "谁可以回复对话框"
-
-#: src/components/WhoCanReply.tsx:216
-#~ msgid "Who can reply?"
-#~ msgstr "谁可以回复？"
 
 #: src/screens/Home/NoFeedsPinned.tsx:79
 #: src/screens/Messages/List/index.tsx:185
@@ -7267,11 +7213,11 @@ msgstr "是的，删除此入门包"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:694
 msgid "Yes, detach"
-msgstr ""
+msgstr "是的，分离"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:704
 msgid "Yes, hide"
-msgstr ""
+msgstr "是的，隐藏"
 
 #: src/screens/Deactivated.tsx:150
 msgid "Yes, reactivate my account"
@@ -7422,7 +7368,7 @@ msgstr "你还没有隐藏任何词或标签"
 #: src/components/moderation/ModerationDetailsDialog.tsx:117
 #: src/lib/moderation/useModerationCauseDescription.ts:125
 msgid "You hid this reply."
-msgstr ""
+msgstr "你隐藏了这条回复。"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:86
 msgid "You may appeal non-self labels if you feel they were placed in error."
@@ -7434,19 +7380,11 @@ msgstr "如果你认为标签的标记信息有误，你可以提出申诉。"
 
 #: src/screens/StarterPack/Wizard/State.tsx:79
 msgid "You may only add up to {STARTER_PACK_MAX_SIZE} profiles"
-msgstr ""
+msgstr "你最多只能添加 {STARTER_PACK_MAX_SIZE} 个配置"
 
 #: src/screens/StarterPack/Wizard/State.tsx:97
 msgid "You may only add up to 3 feeds"
-msgstr ""
-
-#: src/screens/StarterPack/Wizard/State.tsx:95
-#~ msgid "You may only add up to 50 feeds"
-#~ msgstr "你最多只能添加 50 个资讯源"
-
-#: src/screens/StarterPack/Wizard/State.tsx:78
-#~ msgid "You may only add up to 50 profiles"
-#~ msgstr "你最多只能添加 50 个用户"
+msgstr "你最多只能添加 3 个资讯源"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:85
 msgid "You must be 13 years of age or older to sign up."
