@@ -131,8 +131,16 @@ export function PostThread({uri}: {uri: string | undefined}) {
     currentAccount &&
     rootPostUri &&
     currentAccount?.did === new AtUri(rootPostUri).host
+  /**
+   * If the user is the OP and the root post has a threadgate, we should load
+   * the threadgate record. Otherwise, fallback to initialData, which is taken
+   * from the response from `getPostThread`.
+   */
+  const shouldLoadFreshThreadgate = Boolean(
+    isOP && rootPostUri && initialThreadgateRecord,
+  )
   const {data: threadgateRecord} = useThreadgateRecordQuery({
-    enabled: Boolean(isOP && rootPostUri && initialThreadgateRecord),
+    enabled: shouldLoadFreshThreadgate,
     postUri: rootPostUri,
     initialData: initialThreadgateRecord,
   })
