@@ -139,23 +139,3 @@ export function createThreadgateRecord(
     hiddenReplies: threadgate.hiddenReplies || [],
   }
 }
-
-export function createTempThreadgateView({
-  postUri,
-  hiddenReplies,
-}: Pick<AppBskyFeedThreadgate.Record, 'hiddenReplies'> & {
-  postUri: string
-}): AppBskyFeedDefs.ThreadgateView {
-  const record: AppBskyFeedThreadgate.Record = {
-    $type: 'app.bsky.feed.threadgate',
-    post: postUri,
-    allow: undefined,
-    hiddenReplies,
-    createdAt: new Date().toISOString(),
-  }
-  return {
-    $type: 'app.bsky.feed.defs#threadgateView',
-    uri: postUri,
-    record,
-  }
-}
