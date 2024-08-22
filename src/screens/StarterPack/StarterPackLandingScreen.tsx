@@ -84,9 +84,15 @@ export function LandingScreen({
     return <ListMaybePlaceholder isLoading={true} />
   }
 
+  // Just for types, this cannot be hit
+  if (!AppBskyGraphStarterpack.isRecord(starterPack.record)) {
+    return null
+  }
+
   return (
     <LandingScreenLoaded
       starterPack={starterPack}
+      starterPackRecord={starterPack.record}
       setScreenState={setScreenState}
       moderationOpts={moderationOpts}
     />
@@ -95,25 +101,25 @@ export function LandingScreen({
 
 function LandingScreenLoaded({
   starterPack,
+  starterPackRecord: record,
   setScreenState,
   // TODO apply this to profile card
 
   moderationOpts,
 }: {
   starterPack: AppBskyGraphDefs.StarterPackView
+  starterPackRecord: AppBskyGraphStarterpack.Record
   setScreenState: (state: LoggedOutScreenState) => void
   moderationOpts: ModerationOpts
 }) {
-  const {record, creator, listItemsSample, feeds} = starterPack
+  const {creator, listItemsSample, feeds} = starterPack
   const {_} = useLingui()
   const t = useTheme()
   const activeStarterPack = useActiveStarterPack()
   const setActiveStarterPack = useSetActiveStarterPack()
   const {isTabletOrDesktop} = useWebMediaQueries()
   const androidDialogControl = useDialogControl()
-  const [descriptionRt] = useRichText(
-    AppBskyGraphStarterpack.isRecord(record) ? record?.description || '' : '',
-  )
+  const [descriptionRt] = useRichText(record.description || '')
 
   const [appClipOverlayVisible, setAppClipOverlayVisible] =
     React.useState(false)
@@ -150,10 +156,6 @@ function LandingScreenLoaded({
       setActiveStarterPack(undefined)
       setScreenState(LoggedOutScreenState.S_CreateAccount)
     }
-  }
-
-  if (!AppBskyGraphStarterpack.isRecord(record)) {
-    return null
   }
 
   return (
