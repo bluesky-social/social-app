@@ -24,7 +24,7 @@ export function StepHandle() {
   const agent = useAgent()
   const handleValueRef = useRef<string>(state.handle)
   const [draftValue, setDraftValue] = React.useState(state.handle)
-  const isLoading = useThrottledValue(state.isLoading)
+  const isLoading = useThrottledValue(state.isLoading, 500)
 
   const onNextPress = React.useCallback(async () => {
     const handle = handleValueRef.current.trim()
