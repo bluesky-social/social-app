@@ -436,8 +436,7 @@ let PostContent = ({
       : undefined
     const isControlledByViewer =
       rootPostUri && new AtUri(rootPostUri).host === currentAccount?.did
-    if (!isControlledByViewer) return []
-    return isPostHiddenByThreadgate
+    return isControlledByViewer && isPostHiddenByThreadgate
       ? [
           {
             type: 'reply-hidden',

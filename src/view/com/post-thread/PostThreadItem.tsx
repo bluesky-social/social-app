@@ -213,12 +213,11 @@ let PostThreadItemLoaded = ({
   const additionalPostAlerts: AppModerationCause[] = React.useMemo(() => {
     const isPostHiddenByThreadgate = threadgateHiddenReplies.has(post.uri)
     const isControlledByViewer = new AtUri(rootUri).host === currentAccount?.did
-    if (!isControlledByViewer) return []
-    return isPostHiddenByThreadgate
+    return isControlledByViewer && isPostHiddenByThreadgate
       ? [
           {
             type: 'reply-hidden',
-            source: {type: 'user', did: new AtUri(rootUri).host},
+            source: {type: 'user', did: currentAccount?.did},
             priority: 6,
           },
         ]
