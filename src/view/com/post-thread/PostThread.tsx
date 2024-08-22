@@ -7,6 +7,7 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AppBskyFeedThreadgate,
+  AtUri,
 } from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -124,9 +125,16 @@ export function PostThread({uri}: {uri: string | undefined}) {
       : undefined
   const rootPostUri = replyRef ? replyRef.root.uri : rootPost?.uri
 
+  const initialThreadgateRecord = rootPost?.threadgate
+    ?.record as AppBskyFeedThreadgate.Record
+  const isOP =
+    currentAccount &&
+    rootPostUri &&
+    currentAccount?.did === new AtUri(rootPostUri).host
   const {data: threadgateRecord} = useThreadgateRecordQuery({
+    enabled: Boolean(isOP && rootPostUri && initialThreadgateRecord),
     postUri: rootPostUri,
-    initialData: rootPost?.threadgate?.record as AppBskyFeedThreadgate.Record,
+    initialData: initialThreadgateRecord,
   })
 
   const moderationOpts = useModerationOpts()

@@ -31,16 +31,18 @@ export const createThreadgateRecordQueryKey = (uri: string) => [
 ]
 
 export function useThreadgateRecordQuery({
+  enabled,
   postUri,
   initialData,
 }: {
+  enabled?: boolean
   postUri?: string
   initialData?: AppBskyFeedThreadgate.Record
 } = {}) {
   const agent = useAgent()
 
   return useQuery({
-    enabled: !!postUri,
+    enabled: enabled ?? !!postUri,
     queryKey: createThreadgateRecordQueryKey(postUri || ''),
     placeholderData: initialData,
     staleTime: STALE.MINUTES.ONE,
