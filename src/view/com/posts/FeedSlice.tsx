@@ -18,7 +18,6 @@ let FeedSlice = ({
   slice: FeedPostSlice
   hideTopBorder?: boolean
 }): React.ReactNode => {
-  console.log(slice)
   if (slice.isIncompleteThread && slice.items.length >= 3) {
     const beforeLast = slice.items.length - 2
     const last = slice.items.length - 1
