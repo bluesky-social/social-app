@@ -18,15 +18,14 @@ export function useIntentHandler() {
 
   React.useEffect(() => {
     const handleIncomingURL = (url: string) => {
-      Referrer.getReferrerInfoAsync().then(info => {
-        if (info && info.hostname !== 'bsky.app') {
-          logEvent('deepLink:referrerReceived', {
-            to: url,
-            referrer: info?.referrer,
-            hostname: info?.hostname,
-          })
-        }
-      })
+      const referrerInfo = Referrer.getReferrerInfo()
+      if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
+        logEvent('deepLink:referrerReceived', {
+          to: url,
+          referrer: referrerInfo?.referrer,
+          hostname: referrerInfo?.hostname,
+        })
+      }
 
       // We want to be able to support bluesky:// deeplinks. It's unnatural for someone to use a deeplink with three
       // slashes, like bluesky:///intent/follow. However, supporting just two slashes causes us to have to take care

@@ -1,33 +1,29 @@
 import React from 'react'
-import {
-  ActivityIndicator,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Text} from '../com/util/text/Text'
-import {s, colors} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {ToggleButton} from 'view/com/util/forms/ToggleButton'
-import {RadioGroup} from 'view/com/util/forms/RadioGroup'
-import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
-import {ViewHeader} from 'view/com/util/ViewHeader'
-import {CenteredView} from 'view/com/util/Views'
-import {Trans, msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {colors, s} from '#/lib/styles'
 import {
   usePreferencesQuery,
   useSetThreadViewPreferencesMutation,
 } from '#/state/queries/preferences'
+import {RadioGroup} from '#/view/com/util/forms/RadioGroup'
+import {ToggleButton} from '#/view/com/util/forms/ToggleButton'
+import {SimpleViewHeader} from '#/view/com/util/SimpleViewHeader'
+import {Text} from '#/view/com/util/text/Text'
+import {ScrollView} from '#/view/com/util/Views'
+import {atoms as a} from '#/alf'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PreferencesThreads'>
-export function PreferencesThreads({navigation}: Props) {
+export function PreferencesThreads({}: Props) {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const {isTabletOrDesktop} = useWebMediaQueries()
+  const {isTabletOrMobile} = useWebMediaQueries()
   const {data: preferences} = usePreferencesQuery()
   const {mutate: setThreadViewPrefs, variables} =
     useSetThreadViewPreferencesMutation()
@@ -42,27 +38,25 @@ export function PreferencesThreads({navigation}: Props) {
   )
 
   return (
-    <CenteredView
-      testID="preferencesThreadsScreen"
-      style={[
-        pal.view,
-        pal.border,
-        styles.container,
-        isTabletOrDesktop && styles.desktopContainer,
-      ]}>
-      <ViewHeader title={_(msg`Thread Preferences`)} showOnDesktop />
-      <View
-        style={[
-          styles.titleSection,
-          isTabletOrDesktop && {paddingTop: 20, paddingBottom: 20},
-        ]}>
-        <Text type="xl" style={[pal.textLight, styles.description]}>
-          <Trans>Fine-tune the discussion threads.</Trans>
-        </Text>
-      </View>
+    <View testID="preferencesThreadsScreen" style={s.hContentRegion}>
+      <ScrollView
+        // @ts-ignore web only -prf
+        dataSet={{'stable-gutters': 1}}
+        contentContainerStyle={{paddingBottom: 75}}>
+        <SimpleViewHeader
+          showBackButton={isTabletOrMobile}
+          style={[pal.border, a.border_b]}>
+          <View style={a.flex_1}>
+            <Text type="title-lg" style={[pal.text, {fontWeight: 'bold'}]}>
+              <Trans>Thread Preferences</Trans>
+            </Text>
+            <Text style={pal.textLight}>
+              <Trans>Fine-tune the discussion threads.</Trans>
+            </Text>
+          </View>
+        </SimpleViewHeader>
 
-      {preferences ? (
-        <ScrollView>
+        {preferences ? (
           <View style={styles.cardsContainer}>
             <View style={[pal.viewLight, styles.card]}>
               <Text type="title-sm" style={[pal.text, s.pb5]}>
@@ -136,46 +130,21 @@ export function PreferencesThreads({navigation}: Props) {
               />
             </View>
           </View>
-        </ScrollView>
-      ) : (
-        <ActivityIndicator />
-      )}
-
-      <View
-        style={[
-          styles.btnContainer,
-          !isTabletOrDesktop && {borderTopWidth: 1, paddingHorizontal: 20},
-          pal.border,
-        ]}>
-        <TouchableOpacity
-          testID="confirmBtn"
-          onPress={() => {
-            navigation.canGoBack()
-              ? navigation.goBack()
-              : navigation.navigate('Settings')
-          }}
-          style={[styles.btn, isTabletOrDesktop && styles.btnDesktop]}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Confirm`)}
-          accessibilityHint="">
-          <Text style={[s.white, s.bold, s.f18]}>
-            <Trans context="action">Done</Trans>
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </CenteredView>
+        ) : (
+          <ActivityIndicator style={a.flex_1} />
+        )}
+      </ScrollView>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingBottom: 90,
   },
   desktopContainer: {
     borderLeftWidth: 1,
     borderRightWidth: 1,
-    paddingBottom: 40,
   },
   titleSection: {
     paddingBottom: 30,
@@ -190,6 +159,7 @@ const styles = StyleSheet.create({
   },
   cardsContainer: {
     paddingHorizontal: 20,
+    paddingVertical: 16,
   },
   card: {
     padding: 16,

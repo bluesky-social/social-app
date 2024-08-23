@@ -122,8 +122,16 @@ export function ListHeaderDesktop({
   if (!gtTablet) return null
 
   return (
-    <View style={[a.w_full, a.py_lg, a.px_xl, a.gap_xs]}>
-      <Text style={[a.text_3xl, a.font_bold]}>{title}</Text>
+    <View
+      style={[
+        a.w_full,
+        a.py_sm,
+        a.px_xl,
+        a.gap_xs,
+        a.justify_center,
+        {minHeight: 50},
+      ]}>
+      <Text style={[a.text_2xl, a.font_bold]}>{title}</Text>
       {subtitle ? (
         <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
           {subtitle}
@@ -189,7 +197,7 @@ let ListMaybePlaceholder = ({
     return (
       <Error
         title={errorTitle ?? _(msg`Oops!`)}
-        message={errorMessage ?? _(`Something went wrong!`)}
+        message={errorMessage ?? _(msg`Something went wrong!`)}
         onRetry={onRetry}
         onGoBack={onGoBack}
         sideBorders={sideBorders}

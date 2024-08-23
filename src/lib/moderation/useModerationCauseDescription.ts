@@ -8,11 +8,13 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useLabelDefinitions} from '#/state/preferences'
+import {useSession} from '#/state/session'
 import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/components/icons/CircleBanSign'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Props as SVGIconProps} from '#/components/icons/common'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
 import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
+import {AppModerationCause} from '#/components/Pills'
 import {useGlobalLabelStrings} from './useGlobalLabelStrings'
 import {getDefinition, getLabelStrings} from './useLabelInfo'
 
@@ -27,8 +29,9 @@ export interface ModerationCauseDescription {
 }
 
 export function useModerationCauseDescription(
-  cause: ModerationCause | undefined,
+  cause: ModerationCause | AppModerationCause | undefined,
 ): ModerationCauseDescription {
+  const {currentAccount} = useSession()
   const {_, i18n} = useLingui()
   const {labelDefs, labelers} = useLabelDefinitions()
   const globalLabelStrings = useGlobalLabelStrings()
@@ -111,6 +114,18 @@ export function useModerationCauseDescription(
         description: _(msg`You have hidden this post`),
       }
     }
+    if (cause.type === 'reply-hidden') {
+      const isMe = currentAccount?.did === cause.source.did
+      return {
+        icon: EyeSlash,
+        name: isMe
+          ? _(msg`Reply Hidden by You`)
+          : _(msg`Reply Hidden by Thread Author`),
+        description: isMe
+          ? _(msg`You hid this reply.`)
+          : _(msg`The author of this thread has hidden this reply.`),
+      }
+    }
     if (cause.type === 'label') {
       const def = cause.labelDef || getDefinition(labelDefs, cause.label)
       const strings = getLabelStrings(i18n.locale, globalLabelStrings, def)
@@ -126,7 +141,7 @@ export function useModerationCauseDescription(
         }
       }
       if (def.identifier === 'porn' || def.identifier === 'sexual') {
-        strings.name = 'Adult Content'
+        strings.name = _(msg`Adult Content`)
       }
 
       return {
@@ -150,5 +165,13 @@ export function useModerationCauseDescription(
       name: '',
       description: ``,
     }
-  }, [labelDefs, labelers, globalLabelStrings, cause, _, i18n.locale])
+  }, [
+    labelDefs,
+    labelers,
+    globalLabelStrings,
+    cause,
+    _,
+    i18n.locale,
+    currentAccount?.did,
+  ])
 }

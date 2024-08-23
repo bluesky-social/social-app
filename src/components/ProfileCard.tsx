@@ -36,7 +36,7 @@ export function Default({
   logContext?: 'ProfileCard' | 'StarterPackProfilesList'
 }) {
   return (
-    <Link did={profile.did}>
+    <Link profile={profile}>
       <Card
         profile={profile}
         moderationOpts={moderationOpts}
@@ -96,16 +96,24 @@ export function Header({
 }
 
 export function Link({
-  did,
+  profile,
   children,
   style,
   ...rest
-}: {did: string} & Omit<LinkProps, 'to'>) {
+}: {
+  profile: AppBskyActorDefs.ProfileViewDetailed
+} & Omit<LinkProps, 'to' | 'label'>) {
+  const {_} = useLingui()
   return (
     <InternalLink
+      label={_(
+        msg`View ${
+          profile.displayName || sanitizeHandle(profile.handle)
+        }'s profile`,
+      )}
       to={{
         screen: 'Profile',
-        params: {name: did},
+        params: {name: profile.did},
       }}
       style={[a.flex_col, style]}
       {...rest}>
@@ -306,9 +314,9 @@ export function FollowButtonInner({
           )}`,
         ),
       )
-    } catch (e: any) {
-      if (e?.name !== 'AbortError') {
-        Toast.show(_(msg`An issue occurred, please try again.`))
+    } catch (err: any) {
+      if (err?.name !== 'AbortError') {
+        Toast.show(_(msg`An issue occurred, please try again.`), 'xmark')
       }
     }
   }
@@ -326,9 +334,9 @@ export function FollowButtonInner({
           )}`,
         ),
       )
-    } catch (e: any) {
-      if (e?.name !== 'AbortError') {
-        Toast.show(_(msg`An issue occurred, please try again.`))
+    } catch (err: any) {
+      if (err?.name !== 'AbortError') {
+        Toast.show(_(msg`An issue occurred, please try again.`), 'xmark')
       }
     }
   }
