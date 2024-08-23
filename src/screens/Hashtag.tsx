@@ -138,11 +138,15 @@ export default function HashtagScreen({
           <CenteredView
             sideBorders={true}
             // @ts-ignore web only
-            style={{
-              position: isWeb ? 'sticky' : '',
-              top: 0,
-              zIndex: 1,
-            }}>
+            style={
+              isWeb
+                ? {
+                    position: isWeb ? 'sticky' : '',
+                    top: 0,
+                    zIndex: 1,
+                  }
+                : undefined
+            }>
             <TabBar items={sections.map(section => section.title)} {...props} />
           </CenteredView>
         )}
