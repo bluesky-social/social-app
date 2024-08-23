@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-08-22 08:26+0900\n"
+"PO-Revision-Date: 2024-08-23 13:21+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -173,10 +173,6 @@ msgstr "{profileName}はBlueskyに{0}前に参加しました"
 msgid "{profileName} joined Bluesky using a starter pack {0} ago"
 msgstr "{profileName}はスターターパックを使って{0}前に参加しました"
 
-#: src/components/WhoCanReply.tsx:296
-msgid "<0/> members"
-msgstr "<0/>のメンバー"
-
 #: src/screens/StarterPack/Wizard/index.tsx:466
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
@@ -202,6 +198,10 @@ msgstr "<0>{0}</0>と<2>{1}</2>はあなたのスターターパックに含ま�
 #: src/screens/StarterPack/Wizard/index.tsx:500
 msgid "<0>{0}</0> is included in your starter pack"
 msgstr "<0>{0}</0>はあなたのスターターパックに含まれています"
+
+#: src/components/WhoCanReply.tsx:274
+msgid "<0>{0}</0> members"
+msgstr "<0>{0}</0>のメンバー"
 
 #: src/view/com/modals/SelfLabel.tsx:135
 msgid "<0>Not Applicable.</0> This warning is only available for posts with media attached."
@@ -437,6 +437,10 @@ msgstr "ダイレクトメッセージへのアクセスを許可"
 msgid "Allow new messages from"
 msgstr "新しいメッセージを誰から受け取れるか："
 
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:359
+msgid "Allow replies from:"
+msgstr "誰が返信できるか："
+
 #: src/view/screens/AppPasswords.tsx:271
 msgid "Allows access to direct messages"
 msgstr "ダイレクトメッセージへのアクセスを許可"
@@ -557,6 +561,10 @@ msgstr "アニメーションGIF"
 #: src/lib/moderation/useReportOptions.ts:33
 msgid "Anti-Social Behavior"
 msgstr "反社会的な行動"
+
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:54
+msgid "Anybody can interact"
+msgstr "誰でも反応可能"
 
 #: src/view/screens/LanguageSettings.tsx:96
 msgid "App Language"
@@ -1045,11 +1053,6 @@ msgstr "カスタムフィードのアルゴリズムを選択できます。"
 msgid "Choose this color as your avatar"
 msgstr "この色をアバターとして選択"
 
-#: src/components/dialogs/ThreadgateEditor.tsx:91
-#: src/components/dialogs/ThreadgateEditor.tsx:95
-msgid "Choose who can reply"
-msgstr "誰が返信できるかを選択"
-
 #: src/screens/Signup/StepInfo/index.tsx:171
 msgid "Choose your password"
 msgstr "パスワードを入力"
@@ -1086,6 +1089,14 @@ msgstr "詳しい情報についてはここをクリック。"
 #: src/components/TagMenu/index.web.tsx:138
 msgid "Click here to open tag menu for {tag}"
 msgstr "{tag}のタグメニューをクリックして表示"
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:303
+msgid "Click to disable quote posts of this post."
+msgstr "クリックしてこの投稿の引用投稿を無効に。"
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:304
+msgid "Click to enable quote posts of this post."
+msgstr "クリックしてこの投稿の引用投稿を有効に。"
 
 #: src/components/dms/MessageItem.tsx:231
 msgid "Click to retry failed message"
@@ -1507,6 +1518,10 @@ msgstr "コミュニティによって作成されたカスタムフィードは
 msgid "Customize media from external sites."
 msgstr "外部サイトのメディアをカスタマイズします。"
 
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:288
+msgid "Customize who can interact with this post."
+msgstr "この投稿に誰が反応できるかカスタマイズする。"
+
 #: src/view/screens/Settings/index.tsx:460
 #: src/view/screens/Settings/index.tsx:486
 msgid "Dark"
@@ -1642,6 +1657,19 @@ msgstr "説明"
 msgid "Descriptive alt text"
 msgstr "説明的なALTテキスト"
 
+#: src/view/com/util/forms/PostDropdownBtn.tsx:546
+#: src/view/com/util/forms/PostDropdownBtn.tsx:556
+msgid "Detach quote"
+msgstr "引用を切り離す"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:689
+msgid "Detach quote post?"
+msgstr "引用投稿を切り離しますか？"
+
+#: src/components/WhoCanReply.tsx:175
+msgid "Dialog: adjust who can interact with this post"
+msgstr "ダイアログ：この投稿に誰が反応できるか調整"
+
 #: src/view/com/composer/Composer.tsx:295
 msgid "Did you want to say anything?"
 msgstr "なにか言いたいことはあった？"
@@ -1712,6 +1740,10 @@ msgstr "新しいフィードを探す"
 #: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:108
 msgid "Dismiss"
 msgstr "消す"
+
+#: src/view/com/composer/Composer.tsx:612
+msgid "Dismiss error"
+msgstr "エラーを消す"
 
 #: src/components/ProgressGuide/List.tsx:40
 msgid "Dismiss getting started guide"
@@ -1868,6 +1900,11 @@ msgstr "フィードを編集"
 msgid "Edit image"
 msgstr "画像を編集"
 
+#: src/view/com/util/forms/PostDropdownBtn.tsx:592
+#: src/view/com/util/forms/PostDropdownBtn.tsx:605
+msgid "Edit interaction settings"
+msgstr "反応関連の設定を編集"
+
 #: src/view/screens/ProfileList.tsx:459
 msgid "Edit list details"
 msgstr "リストの詳細を編集"
@@ -1890,6 +1927,11 @@ msgstr "マイプロフィールを編集"
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:115
 msgid "Edit People"
 msgstr "ユーザーを編集"
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:66
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:204
+msgid "Edit post interaction settings"
+msgstr "投稿への反応の設定を編集"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:184
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:179
@@ -1929,10 +1971,6 @@ msgstr "スターターパックを編集"
 #: src/screens/Onboarding/state.ts:86
 msgid "Education"
 msgstr "教育"
-
-#: src/components/dialogs/ThreadgateEditor.tsx:98
-msgid "Either choose \"Everybody\" or \"Nobody\""
-msgstr "「全員」か「返信不可」を選択"
 
 #: src/screens/Signup/StepInfo/index.tsx:143
 #: src/view/com/modals/ChangeEmail.tsx:136
@@ -2094,6 +2132,10 @@ msgstr "全員"
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:44
 msgid "Everybody can reply"
 msgstr "誰でも返信可能"
+
+#: src/components/WhoCanReply.tsx:213
+msgid "Everybody can reply to this post."
+msgstr "この投稿に全員が返信できる。"
 
 #: src/components/dms/MessagesNUX.tsx:131
 #: src/components/dms/MessagesNUX.tsx:134
@@ -2721,10 +2763,20 @@ msgctxt "action"
 msgid "Hide"
 msgstr "非表示"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:390
-#: src/view/com/util/forms/PostDropdownBtn.tsx:392
-msgid "Hide post"
-msgstr "投稿を非表示"
+#: src/view/com/util/forms/PostDropdownBtn.tsx:503
+#: src/view/com/util/forms/PostDropdownBtn.tsx:509
+msgid "Hide post for me"
+msgstr "投稿を自分には非表示"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:520
+#: src/view/com/util/forms/PostDropdownBtn.tsx:530
+msgid "Hide reply for everyone"
+msgstr "返信を全員に非表示"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:502
+#: src/view/com/util/forms/PostDropdownBtn.tsx:508
+msgid "Hide reply for me"
+msgstr "返信を自分には非表示"
 
 #: src/components/moderation/ContentHider.tsx:68
 #: src/components/moderation/PostHider.tsx:79
@@ -2734,6 +2786,11 @@ msgstr "コンテンツを非表示"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:442
 msgid "Hide this post?"
 msgstr "この投稿を非表示にしますか？"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:637
+#: src/view/com/util/forms/PostDropdownBtn.tsx:699
+msgid "Hide this reply?"
+msgstr "この返信を非表示にしますか？"
 
 #: src/view/com/notifications/FeedItem.tsx:438
 msgid "Hide user list"
@@ -2901,6 +2958,10 @@ msgstr "ご希望のホスティングプロバイダーを入力"
 #: src/screens/Signup/StepHandle.tsx:111
 msgid "Input your user handle"
 msgstr "あなたのユーザーハンドルを入力"
+
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:55
+msgid "Interaction limited"
+msgstr "反応が制限されています"
 
 #: src/components/dms/MessagesNUX.tsx:82
 msgid "Introducing Direct Messages"
@@ -3746,6 +3807,10 @@ msgstr "お知らせはありません！"
 msgid "No one"
 msgstr "誰からも受け取らない"
 
+#: src/components/WhoCanReply.tsx:237
+msgid "No one but the author can quote this post."
+msgstr "投稿主だけがこの投稿を引用できます。"
+
 #: src/screens/Profile/Sections/Feed.tsx:59
 msgid "No posts yet."
 msgstr "まだ投稿がありません。"
@@ -3787,10 +3852,6 @@ msgstr "結構です"
 #: src/components/dialogs/ThreadgateEditor.tsx:108
 msgid "Nobody"
 msgstr "返信不可"
-
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:46
-msgid "Nobody can reply"
-msgstr "誰も返信できない"
 
 #: src/components/LikedByList.tsx:79
 #: src/components/LikesDialog.tsx:99
@@ -3927,9 +3988,9 @@ msgstr "１つもしくは複数の画像にALTテキストがありません。
 msgid "Only .jpg and .png files are supported"
 msgstr ".jpgと.pngファイルのみに対応しています"
 
-#: src/components/WhoCanReply.tsx:245
-msgid "Only {0} can reply"
-msgstr "{0}のみ返信可能"
+#: src/components/WhoCanReply.tsx:217
+msgid "Only {0} can reply."
+msgstr "{0}のみ返信可能。"
 
 #: src/screens/Signup/StepHandle.tsx:149
 msgid "Only contains letters, numbers, and hyphens"
@@ -4415,6 +4476,10 @@ msgstr "ミュートしたワードによって投稿が表示されません"
 msgid "Post Hidden by You"
 msgstr "あなたが非表示にした投稿"
 
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:283
+msgid "Post interaction settings"
+msgstr "投稿への反応の設定"
+
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:88
 msgid "Post language"
 msgstr "投稿の言語"
@@ -4573,6 +4638,30 @@ msgstr "クイック・チップ"
 msgid "Quote post"
 msgstr "引用"
 
+#: src/view/com/util/forms/PostDropdownBtn.tsx:304
+msgid "Quote post was re-attached"
+msgstr "引用投稿が再び関連付けられました"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:303
+msgid "Quote post was successfully detached"
+msgstr "引用投稿を切り離すことができました"
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:313
+#: src/view/com/util/post-ctrls/RepostButton.tsx:121
+#: src/view/com/util/post-ctrls/RepostButton.tsx:148
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:84
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:91
+msgid "Quote posts disabled"
+msgstr "引用投稿は無効です"
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:311
+msgid "Quote posts enabled"
+msgstr "引用投稿は有効です"
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:295
+msgid "Quote settings"
+msgstr "引用の設定"
+
 #: src/screens/Post/PostQuotes.tsx:29
 #: src/view/com/post-thread/PostQuotes.tsx:125
 msgid "Quotes"
@@ -4589,6 +4678,11 @@ msgstr "ランダムな順番で表示（別名「投稿者のルーレット」
 #: src/view/com/modals/EditImage.tsx:237
 msgid "Ratios"
 msgstr "比率"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:545
+#: src/view/com/util/forms/PostDropdownBtn.tsx:555
+msgid "Re-attach quote"
+msgstr "引用を再度関連付ける"
 
 #: src/screens/Deactivated.tsx:144
 msgid "Reactivate your account"
@@ -4722,6 +4816,14 @@ msgstr "リポストを削除"
 msgid "Remove this feed from your saved feeds"
 msgstr "保存したフィードからこのフィードを削除"
 
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:100
+msgid "Removed by author"
+msgstr "投稿者が削除しました"
+
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:98
+msgid "Removed by you"
+msgstr "あなたが削除しました"
+
 #: src/view/com/modals/ListAddRemoveUsers.tsx:200
 #: src/view/com/modals/UserAddRemoveLists.tsx:165
 msgid "Removed from list"
@@ -4763,14 +4865,32 @@ msgstr "返信"
 msgid "Replies disabled"
 msgstr "返信できません"
 
-#: src/components/WhoCanReply.tsx:243
-msgid "Replies to this thread are disabled"
-msgstr "このスレッドへの返信はできません"
+#: src/components/WhoCanReply.tsx:215
+msgid "Replies to this post are disabled."
+msgstr "この投稿への返信は無効化されています。"
 
 #: src/view/com/composer/Composer.tsx:507
 msgctxt "action"
 msgid "Reply"
 msgstr "返信"
+
+#: src/components/moderation/ModerationDetailsDialog.tsx:115
+#: src/lib/moderation/useModerationCauseDescription.ts:123
+msgid "Reply Hidden by Thread Author"
+msgstr "返信はスレッドの投稿者によって非表示に"
+
+#: src/components/moderation/ModerationDetailsDialog.tsx:114
+#: src/lib/moderation/useModerationCauseDescription.ts:122
+msgid "Reply Hidden by You"
+msgstr "返信はあなたによって非表示に"
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:355
+msgid "Reply settings"
+msgstr "返信の設定"
+
+#: src/components/dialogs/PostInteractionSettingsDialog.tsx:340
+msgid "Reply settings are chosen by the author of the thread"
+msgstr "返信の設定はスレッドの投稿者によって選択されています"
 
 #: src/view/com/post/Post.tsx:197
 #: src/view/com/posts/FeedItem.tsx:458
@@ -4783,16 +4903,24 @@ msgctxt "description"
 msgid "Reply to a blocked post"
 msgstr "ブロックした投稿への返信"
 
-#: src/view/com/posts/FeedItem.tsx:463
+#: src/view/com/posts/FeedItem.tsx:526
 msgctxt "description"
-msgid "Reply to an unknown post"
-msgstr "不明な投稿への返信"
+msgid "Reply to a post"
+msgstr "投稿への返信"
 
 #: src/view/com/post/Post.tsx:195
 #: src/view/com/posts/FeedItem.tsx:454
 msgctxt "description"
 msgid "Reply to you"
 msgstr "あなたへの返信"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:334
+msgid "Reply visibility updated"
+msgstr "表示・非表示の設定を更新しました"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:333
+msgid "Reply was successfully hidden"
+msgstr "返信を非表示にすることができました"
 
 #: src/components/dms/MessageMenu.tsx:132
 #: src/components/dms/MessagesListBlockedFooter.tsx:77
@@ -5552,6 +5680,11 @@ msgstr "返信を表示"
 msgid "Show replies by people you follow before all other replies."
 msgstr "自分がフォローしているユーザーからの返信を、他のすべての返信の前に表示します。"
 
+#: src/view/com/util/forms/PostDropdownBtn.tsx:519
+#: src/view/com/util/forms/PostDropdownBtn.tsx:529
+msgid "Show reply for everyone"
+msgstr "返信を全員に見せる"
+
 #: src/view/screens/PreferencesFollowingFeed.tsx:186
 msgid "Show Reposts"
 msgstr "リポストを表示"
@@ -5976,6 +6109,11 @@ msgstr "以上です、皆さん！"
 msgid "The account will be able to interact with you after unblocking."
 msgstr "このアカウントは、ブロック解除後にあなたとやり取りすることができます。"
 
+#: src/components/moderation/ModerationDetailsDialog.tsx:118
+#: src/lib/moderation/useModerationCauseDescription.ts:126
+msgid "The author of this thread has hidden this reply."
+msgstr "このスレッドの投稿者がこの返信を非表示にしました"
+
 #: src/screens/Moderation/index.tsx:368
 msgid "The Bluesky web application"
 msgstr "Blueskyウェブアプリ"
@@ -6262,13 +6400,21 @@ msgstr "この投稿は削除されました。"
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
 msgstr "この投稿はログインしているユーザーにのみ表示されます。ログインしていない方には見えません。"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:443
-msgid "This post will be hidden from feeds."
-msgstr "この投稿はフィードから非表示になります。"
+#: src/view/com/util/forms/PostDropdownBtn.tsx:639
+msgid "This post will be hidden from feeds and threads. This cannot be undone."
+msgstr "この投稿はフィードとスレッドから非表示になります。元に戻すことはできません。"
+
+#: src/view/com/composer/useExternalLinkFetch.ts:67
+msgid "This post's author has disabled quote posts."
+msgstr "この投稿の投稿者は引用投稿を無効にしています。"
 
 #: src/view/com/profile/ProfileMenu.tsx:374
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't logged in."
 msgstr "このプロフィールはログインしているユーザーにのみ表示されます。ログインしていない方には見えません。"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:701
+msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
+msgstr "この返信はスレッドの一番下にある非表示のセクションに移動され、その後のあなたや他のユーザー宛の返信の通知をミュートします。"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:37
 msgid "This service has not provided terms of service or a privacy policy."
@@ -6319,6 +6465,10 @@ msgstr "ミュートしたワードから「{0}」が削除されます。あと
 msgid "This will remove @{0} from the quick access list."
 msgstr "クイックアクセスのリストから@{0}を削除します。"
 
+#: src/view/com/util/forms/PostDropdownBtn.tsx:691
+msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
+msgstr "これによってあなたの投稿が全員に見える引用投稿からは削除され、プレースホルダーに置き換えられます。"
+
 #: src/view/screens/Settings/index.tsx:596
 msgid "Thread preferences"
 msgstr "スレッドの設定"
@@ -6327,10 +6477,6 @@ msgstr "スレッドの設定"
 #: src/view/screens/Settings/index.tsx:606
 msgid "Thread Preferences"
 msgstr "スレッドの設定"
-
-#: src/components/WhoCanReply.tsx:109
-msgid "Thread settings updated"
-msgstr "スレッドの設定を更新しました"
 
 #: src/view/screens/PreferencesThreads.tsx:113
 msgid "Threaded Mode"
@@ -6557,6 +6703,14 @@ msgstr "リストの{displayName}を更新"
 msgid "Update to {handle}"
 msgstr "{handle}に更新"
 
+#: src/view/com/util/forms/PostDropdownBtn.tsx:307
+msgid "Updating quote attachment failed"
+msgstr "引用の切り離しに失敗しました"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:337
+msgid "Updating reply visibility failed"
+msgstr "返信の表示・非表示に変更に失敗しました"
+
 #: src/screens/Login/SetNewPasswordForm.tsx:186
 msgid "Updating..."
 msgstr "更新中…"
@@ -6690,9 +6844,9 @@ msgstr "ユーザー名またはメールアドレス"
 msgid "Users"
 msgstr "ユーザー"
 
-#: src/components/WhoCanReply.tsx:280
-msgid "users followed by <0/>"
-msgstr "<0/>にフォローされているユーザー"
+#: src/components/WhoCanReply.tsx:258
+msgid "users followed by <0>@{0}</0>"
+msgstr "<0>@{0}</0>にフォローされているユーザー"
 
 #: src/components/dms/MessagesNUX.tsx:140
 #: src/components/dms/MessagesNUX.tsx:143
@@ -6954,6 +7108,10 @@ msgstr "この投稿ではどの言語が使われていますか？"
 msgid "Which languages would you like to see in your algorithmic feeds?"
 msgstr "アルゴリズムによるフィードにはどの言語を使用しますか？"
 
+#: src/components/WhoCanReply.tsx:179
+msgid "Who can interact with this post?"
+msgstr "誰がこの投稿に反応できますか？"
+
 #: src/components/dms/MessagesNUX.tsx:110
 #: src/components/dms/MessagesNUX.tsx:124
 msgid "Who can message you?"
@@ -6962,14 +7120,6 @@ msgstr "誰があなたへメッセージを送れるか？"
 #: src/components/WhoCanReply.tsx:128
 msgid "Who can reply"
 msgstr "返信できるユーザー"
-
-#: src/components/WhoCanReply.tsx:212
-msgid "Who can reply dialog"
-msgstr "誰が返信できるのかについてのダイアログ"
-
-#: src/components/WhoCanReply.tsx:216
-msgid "Who can reply?"
-msgstr "誰が返信できますか？"
 
 #: src/screens/Home/NoFeedsPinned.tsx:79
 #: src/screens/Messages/List/index.tsx:185
@@ -7045,6 +7195,14 @@ msgstr "はい、無効化します"
 #: src/screens/StarterPack/StarterPackScreen.tsx:638
 msgid "Yes, delete this starter pack"
 msgstr "はい、このスターターパックを削除します"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:694
+msgid "Yes, detach"
+msgstr "はい、切り離します"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:704
+msgid "Yes, hide"
+msgstr "はい、非表示にします"
 
 #: src/screens/Deactivated.tsx:150
 msgid "Yes, reactivate my account"
@@ -7191,6 +7349,11 @@ msgstr "スターターパックをまだ作成していません！"
 msgid "You haven't muted any words or tags yet"
 msgstr "まだワードやタグをミュートしていません"
 
+#: src/components/moderation/ModerationDetailsDialog.tsx:117
+#: src/lib/moderation/useModerationCauseDescription.ts:125
+msgid "You hid this reply."
+msgstr "あなたがこの返信を非表示にしました。"
+
 #: src/components/moderation/LabelsOnMeDialog.tsx:87
 msgid "You may appeal non-self labels if you feel they were placed in error."
 msgstr "間違って適用されたと思うのであれば、自己申告ではないラベルならば異議申し立てができます。"
@@ -7199,13 +7362,13 @@ msgstr "間違って適用されたと思うのであれば、自己申告では
 msgid "You may appeal these labels if you feel they were placed in error."
 msgstr "これらのラベルが誤って適用されたと思った場合は、異議申し立てを行うことができます。"
 
-#: src/screens/StarterPack/Wizard/State.tsx:95
-msgid "You may only add up to 50 feeds"
-msgstr "50フィードまで追加できます"
+#: src/screens/StarterPack/Wizard/State.tsx:79
+msgid "You may only add up to {STARTER_PACK_MAX_SIZE} profiles"
+msgstr "{STARTER_PACK_MAX_SIZE}ユーザーまで追加できます"
 
-#: src/screens/StarterPack/Wizard/State.tsx:78
-msgid "You may only add up to 50 profiles"
-msgstr "50ユーザーまで追加できます"
+#: src/screens/StarterPack/Wizard/State.tsx:97
+msgid "You may only add up to 3 feeds"
+msgstr "3フィードまで追加できます"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:79
 msgid "You must be 13 years of age or older to sign up."
