@@ -3,7 +3,12 @@ import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import {runOnJS} from 'react-native-reanimated'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {AppBskyFeedDefs} from '@atproto/api'
+import {
+  AppBskyFeedDefs,
+  AppBskyFeedPost,
+  AppBskyFeedThreadgate,
+  AtUri,
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -23,6 +28,7 @@ import {
   usePostThreadQuery,
 } from '#/state/queries/post-thread'
 import {usePreferencesQuery} from '#/state/queries/preferences'
+import {useThreadgateRecordQuery} from '#/state/queries/threadgate'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
@@ -113,6 +119,27 @@ export function PostThread({uri}: {uri: string | undefined}) {
   )
   const rootPost = thread?.type === 'post' ? thread.post : undefined
   const rootPostRecord = thread?.type === 'post' ? thread.record : undefined
+  const replyRef =
+    rootPostRecord && AppBskyFeedPost.isRecord(rootPostRecord)
+      ? rootPostRecord.reply
+      : undefined
+  const rootPostUri = replyRef ? replyRef.root.uri : rootPost?.uri
+
+  const isOP =
+    currentAccount &&
+    rootPostUri &&
+    currentAccount?.did === new AtUri(rootPostUri).host
+  const initialThreadgateRecord = rootPost?.threadgate?.record as
+    | AppBskyFeedThreadgate.Record
+    | undefined
+  const {data: threadgateRecord} = useThreadgateRecordQuery({
+    /**
+     * If the user is the OP and we have a root post, fetch the threadgate.
+     */
+    enabled: Boolean(isOP && rootPostUri),
+    postUri: rootPostUri,
+    initialData: initialThreadgateRecord,
+  })
 
   const moderationOpts = useModerationOpts()
   const isNoPwi = React.useMemo(() => {
@@ -167,6 +194,9 @@ export function PostThread({uri}: {uri: string | undefined}) {
   const skeleton = React.useMemo(() => {
     const threadViewPrefs = preferences?.threadViewPrefs
     if (!threadViewPrefs || !thread) return null
+    const threadgateRecordHiddenReplies = new Set<string>(
+      threadgateRecord?.hiddenReplies || [],
+    )
 
     return createThreadSkeleton(
       sortThread(
@@ -175,11 +205,13 @@ export function PostThread({uri}: {uri: string | undefined}) {
         threadModerationCache,
         currentDid,
         justPostedUris,
+        threadgateRecordHiddenReplies,
       ),
-      !!currentDid,
+      currentDid,
       treeView,
       threadModerationCache,
       hiddenRepliesState !== HiddenRepliesState.Hide,
+      threadgateRecordHiddenReplies,
     )
   }, [
     thread,
@@ -189,6 +221,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
     threadModerationCache,
     hiddenRepliesState,
     justPostedUris,
+    threadgateRecord,
   ])
 
   const error = React.useMemo(() => {
@@ -425,6 +458,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
           <PostThreadItem
             post={item.post}
             record={item.record}
+            threadgateRecord={threadgateRecord ?? undefined}
             moderation={threadModerationCache.get(item)}
             treeView={treeView}
             depth={item.ctx.depth}
@@ -545,23 +579,25 @@ function isThreadBlocked(v: unknown): v is ThreadBlocked {
 
 function createThreadSkeleton(
   node: ThreadNode,
-  hasSession: boolean,
+  currentDid: string | undefined,
   treeView: boolean,
   modCache: ThreadModerationCache,
   showHiddenReplies: boolean,
+  threadgateRecordHiddenReplies: Set<string>,
 ): ThreadSkeletonParts | null {
   if (!node) return null
 
   return {
-    parents: Array.from(flattenThreadParents(node, hasSession)),
+    parents: Array.from(flattenThreadParents(node, !!currentDid)),
     highlightedPost: node,
     replies: Array.from(
       flattenThreadReplies(
         node,
-        hasSession,
+        currentDid,
         treeView,
         modCache,
         showHiddenReplies,
+        threadgateRecordHiddenReplies,
       ),
     ),
   }
@@ -594,14 +630,15 @@ enum HiddenReplyType {
 
 function* flattenThreadReplies(
   node: ThreadNode,
-  hasSession: boolean,
+  currentDid: string | undefined,
   treeView: boolean,
   modCache: ThreadModerationCache,
   showHiddenReplies: boolean,
+  threadgateRecordHiddenReplies: Set<string>,
 ): Generator<YieldedItem, HiddenReplyType> {
   if (node.type === 'post') {
     // dont show pwi-opted-out posts to logged out users
-    if (!hasSession && hasPwiOptOut(node)) {
+    if (!currentDid && hasPwiOptOut(node)) {
       return HiddenReplyType.None
     }
 
@@ -616,6 +653,16 @@ function* flattenThreadReplies(
           return HiddenReplyType.Hidden
         }
       }
+
+      if (!showHiddenReplies) {
+        const hiddenByThreadgate = threadgateRecordHiddenReplies.has(
+          node.post.uri,
+        )
+        const authorIsViewer = node.post.author.did === currentDid
+        if (hiddenByThreadgate && !authorIsViewer) {
+          return HiddenReplyType.Hidden
+        }
+      }
     }
 
     if (!node.ctx.isHighlightedPost) {
@@ -627,10 +674,11 @@ function* flattenThreadReplies(
       for (const reply of node.replies) {
         let hiddenReply = yield* flattenThreadReplies(
           reply,
-          hasSession,
+          currentDid,
           treeView,
           modCache,
           showHiddenReplies,
+          threadgateRecordHiddenReplies,
         )
         if (hiddenReply > hiddenReplies) {
           hiddenReplies = hiddenReply

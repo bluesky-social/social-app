@@ -13,6 +13,7 @@ import {QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useAgent} from '#/state/session'
+import {findAllPostsInQueryData as findAllPostsInQuoteQueryData} from 'state/queries/post-quotes'
 import {
   findAllPostsInQueryData as findAllPostsInSearchQueryData,
   findAllProfilesInQueryData as findAllProfilesInSearchQueryData,
@@ -138,6 +139,7 @@ export function sortThread(
   modCache: ThreadModerationCache,
   currentDid: string | undefined,
   justPostedUris: Set<string>,
+  threadgateRecordHiddenReplies: Set<string>,
 ): ThreadNode {
   if (node.type !== 'post') {
     return node
@@ -185,6 +187,14 @@ export function sortThread(
         return 1 // current account's reply
       }
 
+      const aHidden = threadgateRecordHiddenReplies.has(a.uri)
+      const bHidden = threadgateRecordHiddenReplies.has(b.uri)
+      if (aHidden && !aIsBySelf && !bHidden) {
+        return 1
+      } else if (bHidden && !bIsBySelf && !aHidden) {
+        return -1
+      }
+
       const aBlur = Boolean(modCache.get(a)?.ui('contentList').blur)
       const bBlur = Boolean(modCache.get(b)?.ui('contentList').blur)
       if (aBlur !== bBlur) {
@@ -222,7 +232,14 @@ export function sortThread(
       return b.post.indexedAt.localeCompare(a.post.indexedAt)
     })
     node.replies.forEach(reply =>
-      sortThread(reply, opts, modCache, currentDid, justPostedUris),
+      sortThread(
+        reply,
+        opts,
+        modCache,
+        currentDid,
+        justPostedUris,
+        threadgateRecordHiddenReplies,
+      ),
     )
   }
   return node
@@ -384,6 +401,9 @@ export function* findAllPostsInQueryData(
     yield postViewToPlaceholderThread(post)
   }
   for (let post of findAllPostsInNotifsQueryData(queryClient, uri)) {
+    yield postViewToPlaceholderThread(post)
+  }
+  for (let post of findAllPostsInQuoteQueryData(queryClient, uri)) {
     yield postViewToPlaceholderThread(post)
   }
   for (let post of findAllPostsInSearchQueryData(queryClient, uri)) {

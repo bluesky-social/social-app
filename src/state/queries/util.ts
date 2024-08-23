@@ -74,6 +74,7 @@ export function embedViewRecordToPostView(
     labels: v.labels,
     embed: v.embeds?.[0],
     likeCount: v.likeCount,
+    quoteCount: v.quoteCount,
     replyCount: v.replyCount,
     repostCount: v.repostCount,
   }

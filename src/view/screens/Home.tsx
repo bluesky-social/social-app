@@ -167,7 +167,7 @@ function HomeScreenReady({
     }),
   )
 
-  const mode = useMinimalShellMode()
+  const {footerMode} = useMinimalShellMode()
   const {isMobile} = useWebMediaQueries()
   useFocusEffect(
     React.useCallback(() => {
@@ -177,7 +177,7 @@ function HomeScreenReady({
       }
       const listener = AppState.addEventListener('change', nextAppState => {
         if (nextAppState === 'active') {
-          if (isMobile && mode.value === 1) {
+          if (isMobile && footerMode.value === 1) {
             // Reveal the bottom bar so you don't miss notifications or messages.
             // TODO: Experiment with only doing it when unread > 0.
             setMinimalShellMode(false)
@@ -187,7 +187,7 @@ function HomeScreenReady({
       return () => {
         listener.remove()
       }
-    }, [setMinimalShellMode, mode, isMobile, gate]),
+    }, [setMinimalShellMode, footerMode, isMobile, gate]),
   )
 
   const onPageSelected = React.useCallback(
