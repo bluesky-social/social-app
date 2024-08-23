@@ -6482,7 +6482,7 @@ msgstr "这将从你的快速访问列表中删除 @{0}。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:691
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
-msgstr "这会从所有用户的引用中删除你的帖文，并将其替换为占位符。"
+msgstr "这将删除所有对你这条帖文的引用，并将其替换为占位符。"
 
 #: src/view/screens/Settings/index.tsx:571
 msgid "Thread preferences"
