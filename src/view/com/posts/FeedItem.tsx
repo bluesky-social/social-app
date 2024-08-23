@@ -20,6 +20,7 @@ import {useQueryClient} from '@tanstack/react-query'
 import {isReasonFeedSource, ReasonFeedSource} from '#/lib/api/feed/types'
 import {MAX_POST_LINES} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
+import {TEMP_addVideoEmbed} from '#/lib/media/video/TEMP-add-video-embed'
 import {makeProfileLink} from '#/lib/routes/links'
 import {useGate} from '#/lib/statsig/statsig'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -88,7 +89,10 @@ export function FeedItem({
   post: AppBskyFeedDefs.PostView
   rootPost: AppBskyFeedDefs.PostView
 }): React.ReactNode {
-  const postShadowed = usePostShadow(post)
+  const gate = useGate()
+  const postShadowed = usePostShadow(
+    TEMP_addVideoEmbed(post, record, gate('videos')),
+  )
   const richText = useMemo(
     () =>
       new RichTextAPI({
