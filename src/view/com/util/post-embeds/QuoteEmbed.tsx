@@ -13,7 +13,6 @@ import {
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyFeedPost,
-  moderatePost,
   ModerationDecision,
   RichText as RichTextAPI,
 } from '@atproto/api'
@@ -24,6 +23,7 @@ import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {HITSLOP_20} from '#/lib/constants'
+import {moderatePost_wrapped} from '#/lib/moderatePost_wrapped'
 import {s} from '#/lib/styles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
@@ -122,7 +122,7 @@ function QuoteEmbedModerated({
   const moderationOpts = useModerationOpts()
   const moderation = React.useMemo(() => {
     return moderationOpts
-      ? moderatePost(viewRecordToPostView(viewRecord), moderationOpts)
+      ? moderatePost_wrapped(viewRecordToPostView(viewRecord), moderationOpts)
       : undefined
   }, [viewRecord, moderationOpts])
 
