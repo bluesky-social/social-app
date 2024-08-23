@@ -40,7 +40,7 @@ type Props = {
 export function Default(props: Props) {
   const {view} = props
   return (
-    <Link label={view.displayName} {...props}>
+    <Link {...props}>
       <Outer>
         <Header>
           <Avatar src={view.avatar} />
@@ -58,7 +58,7 @@ export function Link({
   view,
   children,
   ...props
-}: Props & Omit<LinkProps, 'to'>) {
+}: Props & Omit<LinkProps, 'to' | 'label'>) {
   const queryClient = useQueryClient()
 
   const href = React.useMemo(() => {
@@ -70,7 +70,11 @@ export function Link({
   }, [view, queryClient])
 
   return (
-    <InternalLink to={href} style={[a.flex_col]} {...props}>
+    <InternalLink
+      label={view.displayName}
+      to={href}
+      style={[a.flex_col]}
+      {...props}>
       {children}
     </InternalLink>
   )
@@ -264,9 +268,9 @@ function SaveButtonInner({
           ])
         }
         Toast.show(_(msg`Feeds updated!`))
-      } catch (e: any) {
-        logger.error(e, {context: `FeedCard: failed to update feeds`, pin})
-        Toast.show(_(msg`Failed to update feeds`))
+      } catch (err: any) {
+        logger.error(err, {context: `FeedCard: failed to update feeds`, pin})
+        Toast.show(_(msg`Failed to update feeds`), 'xmark')
       }
     },
     [_, pin, saveFeeds, removeFeed, uri, savedFeedConfig, type],

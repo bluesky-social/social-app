@@ -16,6 +16,7 @@ import {
   reducer,
   SignupContext,
   SignupStep,
+  useSubmitSignup,
 } from '#/screens/Signup/state'
 import {StepCaptcha} from '#/screens/Signup/StepCaptcha'
 import {StepHandle} from '#/screens/Signup/StepHandle'
@@ -33,6 +34,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
   const {screen} = useAnalytics()
   const [state, dispatch] = React.useReducer(reducer, initialState)
   const {gtMobile} = useBreakpoints()
+  const submit = useSubmitSignup()
 
   const activeStarterPack = useActiveStarterPack()
   const {
@@ -80,6 +82,15 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
       dispatch({type: 'setError', value: ''})
     }
   }, [_, serviceInfo, isError])
+
+  React.useEffect(() => {
+    if (state.pendingSubmit) {
+      if (!state.pendingSubmit.mutableProcessed) {
+        state.pendingSubmit.mutableProcessed = true
+        submit(state, dispatch)
+      }
+    }
+  }, [state, dispatch, submit])
 
   return (
     <SignupContext.Provider value={{state, dispatch}}>
@@ -166,6 +177,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
               <Text style={[t.atoms.text, !gtMobile && a.text_md]}>
                 <Trans>Having trouble?</Trans>{' '}
                 <InlineLinkText
+                  label={_(msg`Contact support`)}
                   to={FEEDBACK_FORM_URL({email: state.email})}
                   style={[!gtMobile && a.text_md]}>
                   <Trans>Contact support</Trans>

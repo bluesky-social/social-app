@@ -8,7 +8,7 @@ import {createFullHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {logEvent} from 'lib/statsig/statsig'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
-import {useSignupContext, useSubmitSignup} from '#/screens/Signup/state'
+import {useSignupContext} from '#/screens/Signup/state'
 import {CaptchaWebView} from '#/screens/Signup/StepCaptcha/CaptchaWebView'
 import {atoms as a, useTheme} from '#/alf'
 import {FormError} from '#/components/forms/FormError'
@@ -20,7 +20,6 @@ export function StepCaptcha() {
   const {_} = useLingui()
   const theme = useTheme()
   const {state, dispatch} = useSignupContext()
-  const submit = useSubmitSignup({state, dispatch})
 
   const [completed, setCompleted] = React.useState(false)
 
@@ -42,9 +41,13 @@ export function StepCaptcha() {
     (code: string) => {
       setCompleted(true)
       logEvent('signup:captchaSuccess', {})
-      submit(code)
+      const submitTask = {code, mutableProcessed: false}
+      dispatch({
+        type: 'submit',
+        task: submitTask,
+      })
     },
-    [submit],
+    [dispatch],
   )
 
   const onError = React.useCallback(

@@ -12,6 +12,7 @@ export const HELP_DESK_URL = `https://blueskyweb.zendesk.com/hc/${HELP_DESK_LANG
 export const EMBED_SERVICE = 'https://embed.bsky.app'
 export const EMBED_SCRIPT = `${EMBED_SERVICE}/static/embed.js`
 export const BSKY_DOWNLOAD_URL = 'https://bsky.app/download'
+export const STARTER_PACK_MAX_SIZE = 150
 
 // HACK
 // Yes, this is exactly what it looks like. It's a hard-coded constant
@@ -20,7 +21,7 @@ export const BSKY_DOWNLOAD_URL = 'https://bsky.app/download'
 // code and update this number with each release until we can get the
 // server route done.
 // -prf
-export const JOINED_THIS_WEEK = 21797 // as of Jul5 2024
+export const JOINED_THIS_WEEK = 50676 // as of Aug 17, 2024
 
 const BASE_FEEDBACK_FORM_URL = `${HELP_DESK_URL}/requests/new`
 export function FEEDBACK_FORM_URL({
@@ -133,3 +134,5 @@ export const GIF_SEARCH = (params: string) =>
   `${GIF_SERVICE}/tenor/v2/search?${params}`
 export const GIF_FEATURED = (params: string) =>
   `${GIF_SERVICE}/tenor/v2/featured?${params}`
+
+export const MAX_LABELERS = 20

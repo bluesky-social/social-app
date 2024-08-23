@@ -106,6 +106,7 @@ function Inner() {
           title={_(msg`Something went wrong`)}
           message={_(msg`We couldn't load this conversation`)}
           onRetry={() => convoState.error.retry()}
+          sideBorders={false}
         />
       </CenteredView>
     )

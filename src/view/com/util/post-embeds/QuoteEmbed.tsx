@@ -13,7 +13,6 @@ import {
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyFeedPost,
-  moderatePost,
   ModerationDecision,
   RichText as RichTextAPI,
 } from '@atproto/api'
@@ -24,8 +23,10 @@ import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {HITSLOP_20} from '#/lib/constants'
+import {moderatePost_wrapped} from '#/lib/moderatePost_wrapped'
 import {s} from '#/lib/styles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useSession} from '#/state/session'
 import {usePalette} from 'lib/hooks/usePalette'
 import {InfoCircleIcon} from 'lib/icons'
 import {makeProfileLink} from 'lib/routes/links'
@@ -39,7 +40,6 @@ import {Link} from '../Link'
 import {PostMeta} from '../PostMeta'
 import {Text} from '../text/Text'
 import {PostEmbeds} from '.'
-import hairlineWidth = StyleSheet.hairlineWidth
 
 export function MaybeQuoteEmbed({
   embed,
@@ -53,6 +53,7 @@ export function MaybeQuoteEmbed({
   allowNestedQuotes?: boolean
 }) {
   const pal = usePalette('default')
+  const {currentAccount} = useSession()
   if (
     AppBskyEmbedRecord.isViewRecord(embed.record) &&
     AppBskyFeedPost.isRecord(embed.record.value) &&
@@ -85,6 +86,22 @@ export function MaybeQuoteEmbed({
         </Text>
       </View>
     )
+  } else if (AppBskyEmbedRecord.isViewDetached(embed.record)) {
+    const isViewerOwner = currentAccount?.did
+      ? embed.record.uri.includes(currentAccount.did)
+      : false
+    return (
+      <View style={[styles.errorContainer, pal.borderDark]}>
+        <InfoCircleIcon size={18} style={pal.text} />
+        <Text type="lg" style={pal.text}>
+          {isViewerOwner ? (
+            <Trans>Removed by you</Trans>
+          ) : (
+            <Trans>Removed by author</Trans>
+          )}
+        </Text>
+      </View>
+    )
   }
   return null
 }
@@ -105,7 +122,7 @@ function QuoteEmbedModerated({
   const moderationOpts = useModerationOpts()
   const moderation = React.useMemo(() => {
     return moderationOpts
-      ? moderatePost(viewRecordToPostView(viewRecord), moderationOpts)
+      ? moderatePost_wrapped(viewRecordToPostView(viewRecord), moderationOpts)
       : undefined
   }, [viewRecord, moderationOpts])
 
@@ -262,7 +279,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     paddingVertical: 12,
     paddingHorizontal: 12,
-    borderWidth: hairlineWidth,
+    borderWidth: StyleSheet.hairlineWidth,
   },
   errorContainer: {
     flexDirection: 'row',
@@ -272,7 +289,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     paddingVertical: 14,
     paddingHorizontal: 14,
-    borderWidth: hairlineWidth,
+    borderWidth: StyleSheet.hairlineWidth,
   },
   alert: {
     marginBottom: 6,

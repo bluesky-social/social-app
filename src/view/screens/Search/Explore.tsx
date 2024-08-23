@@ -10,7 +10,6 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -75,17 +74,17 @@ function SuggestedItemsHeader({
   )
 }
 
-type LoadMoreItems =
+type LoadMoreItem =
   | {
       type: 'profile'
       key: string
-      avatar: string
+      avatar: string | undefined
       moderation: ModerationDecision
     }
   | {
       type: 'feed'
       key: string
-      avatar: string
+      avatar: string | undefined
       moderation: undefined
     }
 
@@ -98,27 +97,28 @@ function LoadMore({
 }) {
   const t = useTheme()
   const {_} = useLingui()
-  const items = React.useMemo(() => {
+  const items: LoadMoreItem[] = React.useMemo(() => {
     return item.items
       .map(_item => {
+        let loadMoreItem: LoadMoreItem | undefined
         if (_item.type === 'profile') {
-          return {
+          loadMoreItem = {
             type: 'profile',
             key: _item.profile.did,
             avatar: _item.profile.avatar,
             moderation: moderateProfile(_item.profile, moderationOpts!),
           }
         } else if (_item.type === 'feed') {
-          return {
+          loadMoreItem = {
             type: 'feed',
             key: _item.feed.uri,
             avatar: _item.feed.avatar,
             moderation: undefined,
           }
         }
-        return undefined
+        return loadMoreItem
       })
-      .filter(Boolean) as LoadMoreItems[]
+      .filter(n => !!n)
   }, [item.items, moderationOpts])
 
   if (items.length === 0) return null
@@ -292,7 +292,6 @@ export function Explore() {
     error: feedsError,
     fetchNextPage: fetchNextFeedsPage,
   } = useGetPopularFeedsQuery({limit: 10})
-  const gate = useGate()
 
   const isLoadingMoreProfiles = isFetchingNextProfilesPage && !isLoadingProfiles
   const onLoadMoreProfiles = React.useCallback(async () => {
@@ -498,9 +497,7 @@ export function Explore() {
                 profile={item.profile}
                 noBg
                 noBorder
-                showKnownFollowers={gate(
-                  'explore_page_profile_card_social_proof',
-                )}
+                showKnownFollowers
               />
             </View>
           )
@@ -564,7 +561,7 @@ export function Explore() {
         }
       }
     },
-    [t, moderationOpts, gate],
+    [t, moderationOpts],
   )
 
   return (
@@ -574,7 +571,7 @@ export function Explore() {
       keyExtractor={item => item.key}
       // @ts-ignore web only -prf
       desktopFixedHeight
-      contentContainerStyle={{paddingBottom: 200}}
+      contentContainerStyle={{paddingBottom: 100}}
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode="on-drag"
     />

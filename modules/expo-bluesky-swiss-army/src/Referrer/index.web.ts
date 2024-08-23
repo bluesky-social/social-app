@@ -7,7 +7,7 @@ export function getGooglePlayReferrerInfoAsync(): Promise<GooglePlayReferrerInfo
   throw new NotImplementedError()
 }
 
-export async function getReferrerInfoAsync(): Promise<ReferrerInfo | null> {
+export function getReferrerInfo(): ReferrerInfo | null {
   if (
     Platform.OS === 'web' &&
     // for ssr

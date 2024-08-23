@@ -3,7 +3,7 @@ import React from 'react'
 export const useDedupe = () => {
   const canDo = React.useRef(true)
 
-  return React.useRef((cb: () => unknown) => {
+  return React.useCallback((cb: () => unknown) => {
     if (canDo.current) {
       canDo.current = false
       setTimeout(() => {
@@ -13,5 +13,5 @@ export const useDedupe = () => {
       return true
     }
     return false
-  }).current
+  }, [])
 }

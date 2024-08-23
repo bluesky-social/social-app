@@ -66,6 +66,7 @@ function ShareDialogInner({
     if (!res) {
       Toast.show(
         _(msg`You must grant access to your photo library to save the image.`),
+        'xmark',
       )
       return
     }
@@ -75,7 +76,7 @@ function ShareDialogInner({
       Toast.show(_(msg`Image saved to your camera roll!`))
       control.close()
     } catch (e: unknown) {
-      Toast.show(_(msg`An error occurred while saving the QR code!`))
+      Toast.show(_(msg`An error occurred while saving the QR code!`), 'xmark')
       logger.error('Failed to save QR code', {error: e})
       return
     }

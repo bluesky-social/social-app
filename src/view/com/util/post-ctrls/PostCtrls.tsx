@@ -10,6 +10,7 @@ import * as Clipboard from 'expo-clipboard'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
+  AppBskyFeedThreadgate,
   AtUri,
   RichText as RichTextAPI,
 } from '@atproto/api'
@@ -58,7 +59,9 @@ let PostCtrls = ({
   feedContext,
   style,
   onPressReply,
+  onPostReply,
   logContext,
+  threadgateRecord,
 }: {
   big?: boolean
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -67,7 +70,9 @@ let PostCtrls = ({
   feedContext?: string | undefined
   style?: StyleProp<ViewStyle>
   onPressReply: () => void
+  onPostReply?: (postUri: string | undefined) => void
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
+  threadgateRecord?: AppBskyFeedThreadgate.Record
 }): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
@@ -169,16 +174,20 @@ let PostCtrls = ({
         author: post.author,
         indexedAt: post.indexedAt,
       },
+      quoteCount: post.quoteCount,
+      onPost: onPostReply,
     })
   }, [
-    openComposer,
+    sendInteraction,
     post.uri,
     post.cid,
     post.author,
     post.indexedAt,
-    record.text,
-    sendInteraction,
+    post.quoteCount,
     feedContext,
+    openComposer,
+    record.text,
+    onPostReply,
   ])
 
   const onShare = useCallback(() => {
@@ -246,10 +255,11 @@ let PostCtrls = ({
       <View style={big ? a.align_center : [a.flex_1, a.align_start]}>
         <RepostButton
           isReposted={!!post.viewer?.repost}
-          repostCount={post.repostCount}
+          repostCount={(post.repostCount ?? 0) + (post.quoteCount ?? 0)}
           onRepost={onRepost}
           onQuote={onQuote}
           big={big}
+          embeddingDisabled={Boolean(post.viewer?.embeddingDisabled)}
         />
       </View>
       <View style={big ? a.align_center : [a.flex_1, a.align_start]}>
@@ -338,6 +348,7 @@ let PostCtrls = ({
           style={{padding: 5}}
           hitSlop={POST_CTRL_HITSLOP}
           timestamp={post.indexedAt}
+          threadgateRecord={threadgateRecord}
         />
       </View>
       {gate('debug_show_feedcontext') && feedContext && (
@@ -354,7 +365,7 @@ let PostCtrls = ({
           onPress={e => {
             e.stopPropagation()
             Clipboard.setStringAsync(feedContext)
-            Toast.show(_(msg`Copied to clipboard`))
+            Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
           }}>
           <Text
             style={{

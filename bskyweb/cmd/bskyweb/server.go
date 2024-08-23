@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"crypto/subtle"
 	"errors"
 	"fmt"
 	"io/fs"
@@ -48,6 +49,7 @@ func serve(cctx *cli.Context) error {
 	appviewHost := cctx.String("appview-host")
 	ogcardHost := cctx.String("ogcard-host")
 	linkHost := cctx.String("link-host")
+	basicAuthPassword := cctx.String("basic-auth-password")
 
 	// Echo
 	e := echo.New()
@@ -140,6 +142,18 @@ func serve(cctx *cli.Context) error {
 		},
 	}))
 
+	// optional password gating of entire web interface
+	if basicAuthPassword != "" {
+		e.Use(middleware.BasicAuth(func(username, password string, c echo.Context) (bool, error) {
+			// Be careful to use constant time comparison to prevent timing attacks
+			if subtle.ConstantTimeCompare([]byte(username), []byte("admin")) == 1 &&
+				subtle.ConstantTimeCompare([]byte(password), []byte(basicAuthPassword)) == 1 {
+				return true, nil
+			}
+			return false, nil
+		}))
+	}
+
 	// redirect trailing slash to non-trailing slash.
 	// all of our current endpoints have no trailing slash.
 	e.Use(middleware.RemoveTrailingSlashWithConfig(middleware.TrailingSlashConfig{
@@ -197,6 +211,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/search", server.WebGeneric)
 	e.GET("/feeds", server.WebGeneric)
 	e.GET("/notifications", server.WebGeneric)
+	e.GET("/notifications/settings", server.WebGeneric)
 	e.GET("/lists", server.WebGeneric)
 	e.GET("/moderation", server.WebGeneric)
 	e.GET("/moderation/modlists", server.WebGeneric)
@@ -210,6 +225,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/settings/threads", server.WebGeneric)
 	e.GET("/settings/external-embeds", server.WebGeneric)
 	e.GET("/settings/accessibility", server.WebGeneric)
+	e.GET("/settings/appearance", server.WebGeneric)
 	e.GET("/sys/debug", server.WebGeneric)
 	e.GET("/sys/debug-mod", server.WebGeneric)
 	e.GET("/sys/log", server.WebGeneric)
@@ -239,6 +255,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/profile/:handleOrDID/post/:rkey", server.WebPost)
 	e.GET("/profile/:handleOrDID/post/:rkey/liked-by", server.WebGeneric)
 	e.GET("/profile/:handleOrDID/post/:rkey/reposted-by", server.WebGeneric)
+	e.GET("/profile/:handleOrDID/post/:rkey/quotes", server.WebGeneric)
 
 	// starter packs
 	e.GET("/starter-pack/:handleOrDID/:rkey", server.WebStarterPack)
