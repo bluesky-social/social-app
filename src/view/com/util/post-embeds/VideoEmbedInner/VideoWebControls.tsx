@@ -438,15 +438,6 @@ function Scrubber({
         seek(evt)
         startScrubbing()
         onSeekStart()
-
-        // HACK: there's divergent browser behaviour about what to do when
-        // a pointerUp event is fired outside the element that captured the
-        // pointer. Firefox clicks on the element the mouse is over, so we have
-        // to make everything unclickable while seeking. Remember to remove
-        // this class when you're done! -sfn
-        if (isFirefox) {
-          document.body.classList.add('force-no-clicks')
-        }
       }
     },
     [seek, onSeekStart, startScrubbing],
@@ -480,15 +471,19 @@ function Scrubber({
     [onSeekEnd, stopScrubbing],
   )
 
-  // backup effect in case component unmounts before pointer up event
-  useEffect(
-    () => () => {
-      if (isFirefox) {
+  useEffect(() => {
+    // HACK: there's divergent browser behaviour about what to do when
+    // a pointerUp event is fired outside the element that captured the
+    // pointer. Firefox clicks on the element the mouse is over, so we have
+    // to make everything unclickable while seeking -sfn
+    if (isFirefox && scrubbing) {
+      document.body.classList.add('force-no-clicks')
+
+      return () => {
         document.body.classList.remove('force-no-clicks')
       }
-    },
-    [],
-  )
+    }
+  }, [scrubbing])
 
   useEffect(() => {
     if (!circleRef.current) return
