@@ -1751,7 +1751,7 @@ msgstr "关闭"
 
 #: src/view/com/composer/Composer.tsx:612
 msgid "Dismiss error"
-msgstr "清除错误"
+msgstr "关闭错误"
 
 #: src/components/ProgressGuide/List.tsx:40
 msgid "Dismiss getting started guide"
