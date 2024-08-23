@@ -18,6 +18,7 @@ import {useLingui} from '@lingui/react'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {sanitizeHandle} from '#/lib/strings/handles'
 import {isNative} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
 import {clearStorage} from '#/state/persisted'
@@ -55,8 +56,11 @@ import {UserAvatar} from 'view/com/util/UserAvatar'
 import {ScrollView} from 'view/com/util/Views'
 import {DeactivateAccountDialog} from '#/screens/Settings/components/DeactivateAccountDialog'
 import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonContext} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
+import {Link as NewLink} from '#/components/Link'
+import {Text as NewText} from '#/components/Typography'
 import {Email2FAToggle} from './Email2FAToggle'
 import {ExportCarDialog} from './ExportCarDialog'
 
@@ -72,62 +76,69 @@ function SettingsAccountCard({
     logContext: 'Settings',
   ) => void
 }) {
-  const pal = usePalette('default')
   const {_} = useLingui()
   const t = useTheme()
   const {currentAccount} = useSession()
   const {data: profile} = useProfileQuery({did: account.did})
   const isCurrentAccount = account.did === currentAccount?.did
 
-  const contents = (
+  const contents = (ctx: ButtonContext) => (
     <View
       style={[
-        pal.view,
-        styles.linkCard,
-        account.did === pendingDid && t.atoms.bg_contrast_25,
+        a.w_full,
+        a.flex_row,
+        a.align_center,
+        a.gap_md,
+        a.py_md,
+        t.atoms.bg,
+        {
+          paddingHorizontal: 18,
+          marginBottom: 1,
+        },
+        account.did === pendingDid && [t.atoms.bg_contrast_25],
+        ctx.pressed && [t.atoms.bg_contrast_25],
       ]}>
-      <View style={styles.avi}>
-        <UserAvatar
-          size={40}
-          avatar={profile?.avatar}
-          type={profile?.associated?.labeler ? 'labeler' : 'user'}
-        />
-      </View>
-      <View style={[s.flex1]}>
-        <Text type="md-bold" style={[pal.text, a.self_start]} numberOfLines={1}>
+      <UserAvatar
+        size={40}
+        avatar={profile?.avatar}
+        type={profile?.associated?.labeler ? 'labeler' : 'user'}
+      />
+      <View style={[a.flex_1]}>
+        <NewText
+          style={[a.text_md, a.font_bold, a.leading_tight]}
+          numberOfLines={1}>
           {profile?.displayName || account.handle}
-        </Text>
-        <Text type="sm" style={pal.textLight} numberOfLines={1}>
-          {account.handle}
-        </Text>
+        </NewText>
+        <NewText
+          style={[t.atoms.text_contrast_medium, a.leading_tight]}
+          numberOfLines={1}>
+          {sanitizeHandle(account.handle, '@')}
+        </NewText>
       </View>
       <AccountDropdownBtn account={account} />
     </View>
   )
 
   return isCurrentAccount ? (
-    <Link
-      href={makeProfileLink({
+    <NewLink
+      to={makeProfileLink({
         did: currentAccount?.did,
         handle: currentAccount?.handle,
       })}
-      title={_(msg`Your profile`)}
-      noFeedback>
+      label={_(msg`Your profile`)}
+      style={[a.w_full]}>
       {contents}
-    </Link>
+    </NewLink>
   ) : (
-    <TouchableOpacity
+    <Button
       testID={`switchToAccountBtn-${account.handle}`}
-      key={account.did}
       onPress={
         pendingDid ? undefined : () => onPressSwitchAccount(account, 'Settings')
       }
-      accessibilityRole="button"
-      accessibilityLabel={_(msg`Switch to ${account.handle}`)}
-      accessibilityHint={_(msg`Switches the account you are logged in to`)}
-      activeOpacity={0.8}>
+      label={_(msg`Switch to ${account.handle}`)}
+      style={[a.w_full]}>
       {contents}
-    </TouchableOpacity>
+    </Button>
   )
 }
 

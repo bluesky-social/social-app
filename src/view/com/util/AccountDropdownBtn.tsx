@@ -1,53 +1,59 @@
 import React from 'react'
-import {Pressable} from 'react-native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {SessionAccount, useSessionApi} from '#/state/session'
-import {usePalette} from 'lib/hooks/usePalette'
-import {s} from 'lib/styles'
+import {HITSLOP_10} from 'lib/constants'
+import {Button, ButtonIcon} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
+import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
+import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
+import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '../../com/util/Toast'
-import {DropdownItem, NativeDropdown} from './forms/NativeDropdown'
 
 export function AccountDropdownBtn({account}: {account: SessionAccount}) {
-  const pal = usePalette('default')
+  const {_} = useLingui()
   const {removeAccount} = useSessionApi()
   const removePromptControl = useDialogControl()
-  const {_} = useLingui()
 
-  const items: DropdownItem[] = [
-    {
-      label: _(msg`Remove account`),
-      onPress: removePromptControl.open,
-      icon: {
-        ios: {
-          name: 'trash',
-        },
-        android: 'ic_delete',
-        web: ['far', 'trash-can'],
-      },
-    },
-  ]
   return (
     <>
-      <Pressable accessibilityRole="button" style={s.pl10}>
-        <NativeDropdown
-          testID="accountSettingsDropdownBtn"
-          items={items}
-          accessibilityLabel={_(msg`Account options`)}
-          accessibilityHint="">
-          <FontAwesomeIcon
-            icon="ellipsis-h"
-            style={pal.textLight as FontAwesomeIconStyle}
-          />
-        </NativeDropdown>
-      </Pressable>
+      <Menu.Root>
+        <Menu.Trigger label={_(`Account options`)}>
+          {({props}) => {
+            return (
+              <Button
+                {...props}
+                testID="accountSettingsDropdownBtn"
+                label={_(`Account options`)}
+                hitSlop={HITSLOP_10}
+                size="xsmall"
+                shape="round"
+                color="secondary"
+                variant="ghost">
+                <ButtonIcon icon={Ellipsis} size="sm" />
+              </Button>
+            )
+          }}
+        </Menu.Trigger>
+
+        <Menu.Outer style={{minWidth: 170}}>
+          <Menu.Group>
+            <Menu.Item
+              label={_(msg`Remove account`)}
+              onPress={() => {
+                removePromptControl.open()
+              }}>
+              <Menu.ItemText>
+                <Trans>Remove account</Trans>
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={Trash} />
+            </Menu.Item>
+          </Menu.Group>
+        </Menu.Outer>
+      </Menu.Root>
+
       <Prompt.Basic
         control={removePromptControl}
         title={_(msg`Remove from quick access?`)}

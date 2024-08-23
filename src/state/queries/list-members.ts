@@ -19,8 +19,9 @@ const PAGE_SIZE = 30
 type RQPageParam = string | undefined
 
 const RQKEY_ROOT = 'list-members'
+const RQKEY_ROOT_ALL = 'list-members-all'
 export const RQKEY = (uri: string) => [RQKEY_ROOT, uri]
-export const RQKEY_ALL = (uri: string) => [RQKEY_ROOT, uri, 'all']
+export const RQKEY_ALL = (uri: string) => [RQKEY_ROOT_ALL, uri]
 
 export function useListMembersQuery(uri?: string, limit: number = PAGE_SIZE) {
   const agent = useAgent()
@@ -74,8 +75,8 @@ export async function getAllListMembers(agent: BskyAgent, uri: string) {
     listItems.push(...res.data.items)
     hasMore = Boolean(res.data.cursor)
     cursor = res.data.cursor
+    i++
   }
-  i++
   return listItems
 }
 
@@ -115,6 +116,22 @@ export function* findAllProfilesInQueryData(
             yield item.subject
           }
         }
+      }
+    }
+  }
+
+  const allQueryData = queryClient.getQueriesData<
+    AppBskyGraphDefs.ListItemView[]
+  >({
+    queryKey: [RQKEY_ROOT_ALL],
+  })
+  for (const [_queryKey, queryData] of allQueryData) {
+    if (!queryData) {
+      continue
+    }
+    for (const item of queryData) {
+      if (item.subject.did === did) {
+        yield item.subject
       }
     }
   }
