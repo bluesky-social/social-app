@@ -10,6 +10,7 @@ import * as Clipboard from 'expo-clipboard'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
+  AppBskyFeedThreadgate,
   AtUri,
   RichText as RichTextAPI,
 } from '@atproto/api'
@@ -60,6 +61,7 @@ let PostCtrls = ({
   onPressReply,
   onPostReply,
   logContext,
+  threadgateRecord,
 }: {
   big?: boolean
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -70,6 +72,7 @@ let PostCtrls = ({
   onPressReply: () => void
   onPostReply?: (postUri: string | undefined) => void
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
+  threadgateRecord?: AppBskyFeedThreadgate.Record
 }): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
@@ -252,10 +255,11 @@ let PostCtrls = ({
       <View style={big ? a.align_center : [a.flex_1, a.align_start]}>
         <RepostButton
           isReposted={!!post.viewer?.repost}
-          repostCount={post.repostCount}
+          repostCount={(post.repostCount ?? 0) + (post.quoteCount ?? 0)}
           onRepost={onRepost}
           onQuote={onQuote}
           big={big}
+          embeddingDisabled={Boolean(post.viewer?.embeddingDisabled)}
         />
       </View>
       <View style={big ? a.align_center : [a.flex_1, a.align_start]}>
@@ -344,6 +348,7 @@ let PostCtrls = ({
           style={{padding: 5}}
           hitSlop={POST_CTRL_HITSLOP}
           timestamp={post.indexedAt}
+          threadgateRecord={threadgateRecord}
         />
       </View>
       {gate('debug_show_feedcontext') && feedContext && (

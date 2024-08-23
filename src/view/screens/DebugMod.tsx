@@ -807,6 +807,7 @@ function MockPostFeedItem({
       showReplyTo={false}
       reason={undefined}
       feedContext={''}
+      rootPost={post}
     />
   )
 }

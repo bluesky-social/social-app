@@ -3,6 +3,7 @@ import {StyleSheet, View} from 'react-native'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
+  AppBskyFeedThreadgate,
   AtUri,
   ModerationDecision,
   RichText as RichTextAPI,
@@ -29,6 +30,7 @@ import {isWeb} from 'platform/detection'
 import {useSession} from 'state/session'
 import {PostThreadFollowBtn} from 'view/com/post-thread/PostThreadFollowBtn'
 import {atoms as a} from '#/alf'
+import {AppModerationCause} from '#/components/Pills'
 import {RichText} from '#/components/RichText'
 import {ContentHider} from '../../../components/moderation/ContentHider'
 import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
@@ -61,6 +63,7 @@ export function PostThreadItem({
   overrideBlur,
   onPostReply,
   hideTopBorder,
+  threadgateRecord,
 }: {
   post: AppBskyFeedDefs.PostView
   record: AppBskyFeedPost.Record
@@ -77,6 +80,7 @@ export function PostThreadItem({
   overrideBlur: boolean
   onPostReply: (postUri: string | undefined) => void
   hideTopBorder?: boolean
+  threadgateRecord?: AppBskyFeedThreadgate.Record
 }) {
   const postShadowed = usePostShadow(post)
   const richText = useMemo(
@@ -111,6 +115,7 @@ export function PostThreadItem({
         overrideBlur={overrideBlur}
         onPostReply={onPostReply}
         hideTopBorder={hideTopBorder}
+        threadgateRecord={threadgateRecord}
       />
     )
   }
@@ -154,6 +159,7 @@ let PostThreadItemLoaded = ({
   overrideBlur,
   onPostReply,
   hideTopBorder,
+  threadgateRecord,
 }: {
   post: Shadow<AppBskyFeedDefs.PostView>
   record: AppBskyFeedPost.Record
@@ -171,6 +177,7 @@ let PostThreadItemLoaded = ({
   overrideBlur: boolean
   onPostReply: (postUri: string | undefined) => void
   hideTopBorder?: boolean
+  threadgateRecord?: AppBskyFeedThreadgate.Record
 }): React.ReactNode => {
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -199,6 +206,24 @@ let PostThreadItemLoaded = ({
     return makeProfileLink(post.author, 'post', urip.rkey, 'reposted-by')
   }, [post.uri, post.author])
   const repostsTitle = _(msg`Reposts of this post`)
+  const additionalPostAlerts: AppModerationCause[] = React.useMemo(() => {
+    const isPostHiddenByThreadgate = threadgateRecord?.hiddenReplies?.includes(
+      post.uri,
+    )
+    const isControlledByViewer =
+      threadgateRecord &&
+      new AtUri(threadgateRecord.post).host === currentAccount?.did
+    if (!isControlledByViewer) return []
+    return threadgateRecord && isPostHiddenByThreadgate
+      ? [
+          {
+            type: 'reply-hidden',
+            source: {type: 'user', did: new AtUri(threadgateRecord.post).host},
+            priority: 6,
+          },
+        ]
+      : []
+  }, [post, threadgateRecord, currentAccount?.did])
   const quotesHref = React.useMemo(() => {
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey, 'quotes')
@@ -320,6 +345,7 @@ let PostThreadItemLoaded = ({
                 size="lg"
                 includeMute
                 style={[a.pt_2xs, a.pb_sm]}
+                additionalCauses={additionalPostAlerts}
               />
               {richText?.text ? (
                 <View
@@ -373,22 +399,6 @@ let PostThreadItemLoaded = ({
                     </Text>
                   </Link>
                 ) : null}
-                {post.likeCount != null && post.likeCount !== 0 ? (
-                  <Link
-                    style={styles.expandedInfoItem}
-                    href={likesHref}
-                    title={likesTitle}>
-                    <Text
-                      testID="likeCount-expanded"
-                      type="lg"
-                      style={pal.textLight}>
-                      <Text type="xl-bold" style={pal.text}>
-                        {formatCount(post.likeCount)}
-                      </Text>{' '}
-                      <Plural value={post.likeCount} one="like" other="likes" />
-                    </Text>
-                  </Link>
-                ) : null}
                 {post.quoteCount != null && post.quoteCount !== 0 ? (
                   <Link
                     style={styles.expandedInfoItem}
@@ -409,6 +419,22 @@ let PostThreadItemLoaded = ({
                     </Text>
                   </Link>
                 ) : null}
+                {post.likeCount != null && post.likeCount !== 0 ? (
+                  <Link
+                    style={styles.expandedInfoItem}
+                    href={likesHref}
+                    title={likesTitle}>
+                    <Text
+                      testID="likeCount-expanded"
+                      type="lg"
+                      style={pal.textLight}>
+                      <Text type="xl-bold" style={pal.text}>
+                        {formatCount(post.likeCount)}
+                      </Text>{' '}
+                      <Plural value={post.likeCount} one="like" other="likes" />
+                    </Text>
+                  </Link>
+                ) : null}
               </View>
             ) : null}
             <View style={[s.pl10, s.pr10]}>
@@ -420,6 +446,7 @@ let PostThreadItemLoaded = ({
                 onPressReply={onPressReply}
                 onPostReply={onPostReply}
                 logContext="PostThreadItem"
+                threadgateRecord={threadgateRecord}
               />
             </View>
           </View>
@@ -540,6 +567,7 @@ let PostThreadItemLoaded = ({
               <PostAlerts
                 modui={moderation.ui('contentList')}
                 style={[a.pt_2xs, a.pb_2xs]}
+                additionalCauses={additionalPostAlerts}
               />
               {richText?.text ? (
                 <View style={styles.postTextContainer}>
@@ -571,6 +599,7 @@ let PostThreadItemLoaded = ({
                 richText={richText}
                 onPressReply={onPressReply}
                 logContext="PostThreadItem"
+                threadgateRecord={threadgateRecord}
               />
             </View>
           </View>
@@ -677,6 +706,7 @@ function ExpandedPostDetails({
   const pal = usePalette('default')
   const {_} = useLingui()
   const openLink = useOpenLink()
+  const isRootPost = !('reply' in post.record)
 
   const onTranslatePress = React.useCallback(() => {
     openLink(translatorUrl)
@@ -693,7 +723,9 @@ function ExpandedPostDetails({
         s.mb10,
       ]}>
       <Text style={[a.text_sm, pal.textLight]}>{niceDate(post.indexedAt)}</Text>
-      <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
+      {isRootPost && (
+        <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
+      )}
       {needsTranslation && (
         <>
           <Text style={[a.text_sm, pal.textLight]}>&middot;</Text>

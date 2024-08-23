@@ -1,5 +1,9 @@
 import {useEffect, useMemo, useState} from 'react'
-import {AppBskyFeedDefs} from '@atproto/api'
+import {
+  AppBskyEmbedRecord,
+  AppBskyEmbedRecordWithMedia,
+  AppBskyFeedDefs,
+} from '@atproto/api'
 import {QueryClient} from '@tanstack/react-query'
 import EventEmitter from 'eventemitter3'
 
@@ -16,6 +20,8 @@ export interface PostShadow {
   likeUri: string | undefined
   repostUri: string | undefined
   isDeleted: boolean
+  embed: AppBskyEmbedRecord.View | AppBskyEmbedRecordWithMedia.View | undefined
+  threadgateView: AppBskyFeedDefs.ThreadgateView | undefined
 }
 
 export const POST_TOMBSTONE = Symbol('PostTombstone')
@@ -87,8 +93,31 @@ function mergeShadow(
     repostCount = Math.max(0, repostCount)
   }
 
+  let embed: typeof post.embed
+  if ('embed' in shadow) {
+    if (
+      (AppBskyEmbedRecord.isView(post.embed) &&
+        AppBskyEmbedRecord.isView(shadow.embed)) ||
+      (AppBskyEmbedRecordWithMedia.isView(post.embed) &&
+        AppBskyEmbedRecordWithMedia.isView(shadow.embed))
+    ) {
+      embed = shadow.embed
+    }
+  }
+
+  let threadgateView: typeof post.threadgate
+  if ('threadgateView' in shadow && !post.threadgate) {
+    if (
+      AppBskyFeedDefs.isThreadgateView(shadow.threadgateView) ||
+      shadow.threadgateView === undefined
+    ) {
+      threadgateView = shadow.threadgateView
+    }
+  }
+
   return castAsShadow({
     ...post,
+    embed: embed || post.embed,
     likeCount: likeCount,
     repostCount: repostCount,
     viewer: {
@@ -96,6 +125,8 @@ function mergeShadow(
       like: 'likeUri' in shadow ? shadow.likeUri : post.viewer?.like,
       repost: 'repostUri' in shadow ? shadow.repostUri : post.viewer?.repost,
     },
+    // always prefer real post data
+    threadgate: post.threadgate || threadgateView,
   })
 }
 

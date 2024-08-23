@@ -58,9 +58,11 @@ import {
   useLanguagePrefs,
   useLanguagePrefsApi,
 } from '#/state/preferences/languages'
+import {createPostgateRecord} from '#/state/queries/postgate/util'
 import {useProfileQuery} from '#/state/queries/profile'
 import {Gif} from '#/state/queries/tenor'
-import {ThreadgateSetting} from '#/state/queries/threadgate'
+import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
+import {threadgateViewToAllowUISetting} from '#/state/queries/threadgate/util'
 import {useUploadVideo} from '#/state/queries/video/video'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
@@ -81,9 +83,12 @@ import {State as VideoUploadState} from 'state/queries/video/video'
 import {ComposerOpts} from 'state/shell/composer'
 import {ComposerReplyTo} from 'view/com/composer/ComposerReplyTo'
 import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
+import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import * as Prompt from '#/components/Prompt'
+import {Text as NewText} from '#/components/Typography'
 import {QuoteEmbed, QuoteX} from '../util/post-embeds/QuoteEmbed'
 import {Text} from '../util/text/Text'
 import * as Toast from '../util/Toast'
@@ -182,10 +187,14 @@ export const ComposePost = observer(function ComposePost({
   })
   const [publishOnUpload, setPublishOnUpload] = useState(false)
 
-  const {extLink, setExtLink} = useExternalLinkFetch({setQuote})
+  const {extLink, setExtLink} = useExternalLinkFetch({setQuote, setError})
   const [extGif, setExtGif] = useState<Gif>()
   const [labels, setLabels] = useState<string[]>([])
-  const [threadgate, setThreadgate] = useState<ThreadgateSetting[]>([])
+  const [threadgateAllowUISettings, onChangeThreadgateAllowUISettings] =
+    useState<ThreadgateAllowUISetting[]>(
+      threadgateViewToAllowUISetting(undefined),
+    )
+  const [postgate, setPostgate] = useState(createPostgateRecord({post: ''}))
 
   const gallery = useMemo(
     () => new GalleryModel(initImageUris),
@@ -335,7 +344,8 @@ export const ComposePost = observer(function ComposePost({
           quote,
           extLink,
           labels,
-          threadgate,
+          threadgate: threadgateAllowUISettings,
+          postgate,
           onStateChange: setProcessingState,
           langs: toPostLanguages(langPrefs.postLanguage),
         })
@@ -581,15 +591,40 @@ export const ComposePost = observer(function ComposePost({
             </View>
           )}
           {error !== '' && (
-            <View style={styles.errorLine}>
-              <View style={styles.errorIcon}>
-                <FontAwesomeIcon
-                  icon="exclamation"
-                  style={{color: colors.red4}}
-                  size={10}
-                />
+            <View style={[a.px_lg, a.pb_sm]}>
+              <View
+                style={[
+                  a.px_md,
+                  a.py_sm,
+                  a.rounded_sm,
+                  a.flex_row,
+                  a.gap_sm,
+                  t.atoms.bg_contrast_25,
+                  {
+                    paddingRight: 48,
+                  },
+                ]}>
+                <CircleInfo fill={t.palette.negative_400} />
+                <NewText style={[a.flex_1, a.leading_snug, {paddingTop: 1}]}>
+                  {error}
+                </NewText>
+                <Button
+                  label={_(msg`Dismiss error`)}
+                  size="tiny"
+                  color="secondary"
+                  variant="ghost"
+                  shape="round"
+                  style={[
+                    a.absolute,
+                    {
+                      top: a.py_sm.paddingTop,
+                      right: a.px_md.paddingRight,
+                    },
+                  ]}
+                  onPress={() => setError('')}>
+                  <ButtonIcon icon={X} />
+                </Button>
               </View>
-              <Text style={[s.red4, a.flex_1]}>{error}</Text>
             </View>
           )}
         </Animated.View>
@@ -680,8 +715,12 @@ export const ComposePost = observer(function ComposePost({
 
         {replyTo ? null : (
           <ThreadgateBtn
-            threadgate={threadgate}
-            onChange={setThreadgate}
+            postgate={postgate}
+            onChangePostgate={setPostgate}
+            threadgateAllowUISettings={threadgateAllowUISettings}
+            onChangeThreadgateAllowUISettings={
+              onChangeThreadgateAllowUISettings
+            }
             style={bottomBarAnimatedStyle}
           />
         )}
