@@ -297,7 +297,7 @@ msgstr "Confirmació 2FA"
 
 #: src/tours/Tooltip.tsx:70
 msgid "A help tooltip"
-msgstr ""
+msgstr "Una informació d'ajuda"
 
 #: src/lib/hooks/useOTAUpdate.ts:16
 #~ msgid "A new version of the app is available. Please update to continue using the app."
@@ -454,7 +454,7 @@ msgstr "Afegeix les paraules i etiquetes silenciades"
 
 #: src/screens/StarterPack/Wizard/index.tsx:197
 #~ msgid "Add people to your starter pack that you think others will enjoy following"
-#~ msgstr ""
+#~ msgstr "Afegeix gent que creus que als altres els agradaria seguir al teu starter pack"
 
 #: src/screens/Home/NoFeedsPinned.tsx:99
 msgid "Add recommended feeds"
@@ -526,7 +526,7 @@ msgstr "Avançat"
 
 #: src/state/shell/progress-guide.tsx:176
 msgid "Algorithm training complete!"
-msgstr ""
+msgstr "Entrenament de l'algorisme completat"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:360
 msgid "All accounts have been followed!"
@@ -620,11 +620,11 @@ msgstr "Un problema que no està inclòs en aquestes opcions"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:36
 msgid "An issue occurred starting the chat"
-msgstr ""
+msgstr "Hi ha hagut un problema en inciar el xat"
 
 #: src/components/dms/dialogs/ShareViaChatDialog.tsx:49
 msgid "An issue occurred while trying to open the chat"
-msgstr ""
+msgstr "Hi ha hagut un problema en provar d'obrir el xat"
 
 #: src/components/hooks/useFollowMethods.ts:35
 #: src/components/hooks/useFollowMethods.ts:50
@@ -757,7 +757,7 @@ msgstr "Estàs segur que vols esborrar aquest missatge? El missatge s'esborrarà
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:610
 msgid "Are you sure you want to delete this starter pack?"
-msgstr ""
+msgstr "Estàs segur que vols eliminar aquest starter pack?"
 
 #: src/components/dms/ConvoMenu.tsx:189
 #~ msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for other participants."
@@ -933,7 +933,7 @@ msgstr "Bluesky és una xarxa oberta on pots escollir el teu proveïdor d'allotj
 
 #: src/components/ProgressGuide/List.tsx:55
 msgid "Bluesky is better with friends!"
-msgstr ""
+msgstr "Bluesky és millor amb col·legues!"
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:80
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:82
@@ -981,21 +981,21 @@ msgstr "Llibres"
 
 #: src/components/FeedInterstitials.tsx:285
 msgid "Browse more accounts on the Explore page"
-msgstr ""
+msgstr "Explora més comptes a la pàgina Explora"
 
 #: src/components/FeedInterstitials.tsx:415
 msgid "Browse more feeds on the Explore page"
-msgstr ""
+msgstr "Explora més canals a la pàgina Explora"
 
 #: src/components/FeedInterstitials.tsx:270
 #: src/components/FeedInterstitials.tsx:400
 msgid "Browse more suggestions"
-msgstr ""
+msgstr "Explora més recomanacions"
 
 #: src/components/FeedInterstitials.tsx:293
 #: src/components/FeedInterstitials.tsx:424
 msgid "Browse more suggestions on the Explore page"
-msgstr ""
+msgstr "Explora més recomancaions a la pàgina Explora"
 
 #: src/screens/Home/NoFeedsPinned.tsx:103
 #: src/screens/Home/NoFeedsPinned.tsx:109
@@ -1228,7 +1228,7 @@ msgstr "Comprova el teu correu per a rebre el codi de confirmació i entra'l aqu
 
 #: src/screens/Onboarding/StepInterests/index.tsx:190
 msgid "Choose 3 or more:"
-msgstr ""
+msgstr "Tria'n 3 o més:"
 
 #: src/view/screens/Settings/index.tsx:697
 #~ msgid "Choose a new Bluesky username or create"
@@ -1236,7 +1236,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepInterests/index.tsx:325
 msgid "Choose at least {0} more"
-msgstr ""
+msgstr "Tria'n almenys {0} més"
 
 #: src/screens/StarterPack/Wizard/index.tsx:191
 msgid "Choose Feeds"
@@ -1693,7 +1693,7 @@ msgstr "Política de drets d'autor"
 
 #: src/view/com/composer/videos/state.ts:31
 msgid "Could not compress video"
-msgstr ""
+msgstr "No s'ha pogut comprimir el vídeo"
 
 #: src/components/dms/LeaveConvoPrompt.tsx:39
 msgid "Could not leave chat"
@@ -2037,7 +2037,7 @@ msgstr "Evita que les aplicacions mostrin el meu compte als usuaris no connectat
 
 #: src/tours/HomeTour.tsx:70
 msgid "Discover learns which posts you like as you browse."
-msgstr ""
+msgstr "Discover apren quines publicacions t'agraden mentre navegues."
 
 #: src/view/com/posts/FollowingEmptyState.tsx:70
 #: src/view/com/posts/FollowingEndOfFeed.tsx:71
@@ -2054,7 +2054,7 @@ msgstr "Descobreix nous canals"
 
 #: src/components/ProgressGuide/List.tsx:40
 msgid "Dismiss getting started guide"
-msgstr ""
+msgstr "Ignora la guia d'inici"
 
 #: src/view/screens/AccessibilitySettings.tsx:95
 msgid "Display larger alt text badges"
@@ -2363,7 +2363,7 @@ msgstr "Habilita reproductors de contingut per"
 #: src/view/screens/NotificationsSettings.tsx:65
 #: src/view/screens/NotificationsSettings.tsx:68
 msgid "Enable priority notifications"
-msgstr ""
+msgstr "Activa les notificacions prioritàries"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:145
 msgid "Enable this setting to only see replies between people you follow."
@@ -2389,7 +2389,7 @@ msgstr "Fi del canal"
 
 #: src/tours/Tooltip.tsx:159
 msgid "End of onboarding tour window. Do not move forward. Instead, go backward for more options, or press to skip."
-msgstr ""
+msgstr "Fi de la gira de benvinguda. No avancis. En comptes d'això, ves enrere per obtenir més opcions o prem per saltar."
 
 #: src/view/com/modals/AddAppPasswords.tsx:161
 msgid "Enter a name for this App Password"
@@ -2531,7 +2531,7 @@ msgstr "Expandeix o replega la publicació completa a la qual estàs responent"
 
 #: src/view/screens/NotificationsSettings.tsx:83
 msgid "Experimental: When this preference is enabled, you'll only receive reply and quote notifications from users you follow. We'll continue to add more controls here over time."
-msgstr ""
+msgstr "Experimental: quan aquesta preferència està activada, només rebràs notificacions de respostes i citacions dels usuaris que segueixes. Continuarem afegint més controls aquí amb el temps."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:47
 msgid "Explicit or potentially disturbing media."
@@ -2634,7 +2634,7 @@ msgstr "Error en desar la imatge: {0}"
 
 #: src/state/queries/notifications/settings.ts:39
 msgid "Failed to save notification preferences, please try again"
-msgstr ""
+msgstr "Error en desar les preferències de les notificacions, torna-ho a provar"
 
 #: src/components/dms/MessageItem.tsx:224
 msgid "Failed to send"
@@ -2740,7 +2740,7 @@ msgstr "Troba comptes per a seguir"
 
 #: src/tours/HomeTour.tsx:88
 msgid "Find more feeds and accounts to follow in the Explore page."
-msgstr ""
+msgstr "Troba més canals i comptes per seguir a la pàgina Explora."
 
 #: src/view/screens/Search/Search.tsx:439
 msgid "Find posts and users on Bluesky"
@@ -2776,7 +2776,7 @@ msgstr "Finalitza"
 
 #: src/tours/Tooltip.tsx:149
 msgid "Finish tour and begin using the application"
-msgstr ""
+msgstr "Acaba la visita guiada i comença a utilitzar l'aplicació"
 
 #: src/screens/Onboarding/index.tsx:35
 msgid "Fitness"
@@ -2821,7 +2821,7 @@ msgstr "Segueix a {name}"
 
 #: src/components/ProgressGuide/List.tsx:54
 msgid "Follow 7 accounts"
-msgstr ""
+msgstr "Segueix 7 comptes"
 
 #: src/view/com/profile/ProfileMenu.tsx:246
 #: src/view/com/profile/ProfileMenu.tsx:257
@@ -2891,7 +2891,7 @@ msgstr "et segueix"
 
 #: src/view/com/notifications/FeedItem.tsx:196
 msgid "followed you back"
-msgstr ""
+msgstr "també et segueix"
 
 #: src/view/com/profile/ProfileFollowers.tsx:104
 #: src/view/screens/ProfileFollowers.tsx:25
@@ -2945,7 +2945,7 @@ msgstr "Preferències del canal Seguint"
 
 #: src/tours/HomeTour.tsx:59
 msgid "Following shows the latest posts from people you follow."
-msgstr ""
+msgstr "Seguint mostra les últimes publicacions de la gent que segueixes."
 
 #: src/screens/Profile/Header/Handle.tsx:31
 msgid "Follows you"
@@ -3012,7 +3012,7 @@ msgstr "Genera un starter pack"
 
 #: src/view/shell/Drawer.tsx:336
 msgid "Get help"
-msgstr ""
+msgstr "Aconsegueix ajuda"
 
 #: src/components/dms/MessagesNUX.tsx:168
 msgid "Get started"
@@ -3025,7 +3025,7 @@ msgstr "Comença"
 
 #: src/components/ProgressGuide/List.tsx:33
 msgid "Getting started"
-msgstr ""
+msgstr "Començant"
 
 #: src/view/com/util/images/ImageHorzList.tsx:35
 msgid "GIF"
@@ -3062,7 +3062,7 @@ msgstr "Ves enrere"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:189
 #~ msgid "Go back to previous screen"
-#~ msgstr ""
+#~ msgstr "ves a la pantalla anterior"
 
 #: src/components/dms/ReportDialog.tsx:154
 #: src/components/ReportDialog/SelectReportOptionView.tsx:80
@@ -3105,7 +3105,7 @@ msgstr "Ves al perfil"
 
 #: src/tours/Tooltip.tsx:138
 msgid "Go to the next step of the tour"
-msgstr ""
+msgstr "ves al següent pas de la visita guiada"
 
 #: src/components/dms/ConvoMenu.tsx:164
 msgid "Go to user's profile"
@@ -3117,7 +3117,7 @@ msgstr "Mitjans gràfics"
 
 #: src/state/shell/progress-guide.tsx:166
 msgid "Half way there!"
-msgstr ""
+msgstr "Ja ets a mig camí!"
 
 #: src/view/com/modals/ChangeHandle.tsx:260
 msgid "Handle"
@@ -3658,12 +3658,12 @@ msgstr "Clar"
 
 #: src/components/ProgressGuide/List.tsx:48
 msgid "Like 10 posts"
-msgstr ""
+msgstr "Fes m'agrada a 10 publicacions"
 
 #: src/state/shell/progress-guide.tsx:162
 #: src/state/shell/progress-guide.tsx:167
 msgid "Like 10 posts to train the Discover feed"
-msgstr ""
+msgstr "Fes m'agrada a 10 publicacions per a entrenar el canal Discover"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:267
 #: src/view/screens/ProfileFeed.tsx:575
@@ -4027,7 +4027,7 @@ msgstr "Pel·lícules"
 
 #: src/screens/Onboarding/state.ts:91
 msgid "Music"
-msgstr ""
+msgstr "Música"
 
 #: src/view/com/auth/create/Step2.tsx:122
 #~ msgid "Must be at least 3 characters"
@@ -4183,11 +4183,11 @@ msgstr "Natura"
 
 #: src/components/StarterPack/StarterPackCard.tsx:118
 msgid "Navigate to {0}"
-msgstr ""
+msgstr "ves a {0}"
 
 #: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:73
 msgid "Navigate to starter pack"
-msgstr "Vés a l'starter pack"
+msgstr "ves a l'starter pack"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:173
 #: src/screens/Login/LoginForm.tsx:332
@@ -4471,16 +4471,16 @@ msgstr "Aquí no hi ha res"
 
 #: src/view/screens/NotificationsSettings.tsx:54
 msgid "Notification filters"
-msgstr ""
+msgstr "Filtres de les notificacions"
 
 #: src/Navigation.tsx:331
 #: src/view/screens/Notifications.tsx:119
 msgid "Notification settings"
-msgstr ""
+msgstr "Configuració de les notificacions"
 
 #: src/view/screens/NotificationsSettings.tsx:39
 msgid "Notification Settings"
-msgstr ""
+msgstr "Configuració de les notificacions"
 
 #: src/screens/Messages/Settings.tsx:124
 msgid "Notification sounds"
@@ -4565,7 +4565,7 @@ msgstr "Restableix la incorporació"
 
 #: src/tours/Tooltip.tsx:118
 msgid "Onboarding tour step {0}: {1}"
-msgstr ""
+msgstr "Visita guiada, pas {0}: {1}"
 
 #: src/view/com/composer/Composer.tsx:534
 msgid "One or more images is missing alt text."
@@ -4838,7 +4838,7 @@ msgstr "Obre aquest perfil"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:54
 msgid "Opens video picker"
-msgstr ""
+msgstr "Obre el selector de vídeos"
 
 #: src/view/com/util/forms/DropdownButton.tsx:293
 msgid "Option {0} of {numItems}"
@@ -5046,7 +5046,7 @@ msgstr "Introdueix el teu correu."
 
 #: src/screens/Signup/StepInfo/index.tsx:63
 msgid "Please enter your invite code."
-msgstr ""
+msgstr "Entra el teu codi d'invitació."
 
 #: src/view/com/modals/DeleteAccount.tsx:253
 msgid "Please enter your password as well:"
@@ -5175,7 +5175,7 @@ msgstr "Enllaç potencialment enganyós"
 
 #: src/state/queries/notifications/settings.ts:44
 msgid "Preference saved"
-msgstr ""
+msgstr "Preferència desada"
 
 #: src/screens/Messages/Conversation/MessageListError.tsx:19
 msgid "Press to attempt reconnection"
@@ -5215,7 +5215,7 @@ msgstr "Prioritza els usuaris que segueixes"
 
 #: src/view/screens/NotificationsSettings.tsx:57
 msgid "Priority notifications"
-msgstr ""
+msgstr "Notificacions prioritàries"
 
 #: src/view/screens/Settings/index.tsx:656
 #: src/view/shell/desktop/RightNav.tsx:81
@@ -5293,7 +5293,7 @@ msgstr "Codi QR desat a la teva galeria"
 
 #: src/tours/Tooltip.tsx:111
 msgid "Quick tip"
-msgstr ""
+msgstr "Consell ràpid"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:116
 #: src/view/com/util/post-ctrls/RepostButton.tsx:128
@@ -5354,7 +5354,7 @@ msgstr "Torna a connectar"
 
 #: src/view/screens/Notifications.tsx:146
 msgid "Refresh notifications"
-msgstr ""
+msgstr "Refresca les notificacions"
 
 #: src/screens/Messages/List/index.tsx:200
 msgid "Reload conversations"
@@ -5485,7 +5485,7 @@ msgstr "Elimina la publicació amb la citació"
 
 #: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:29
 msgid "Removes the image preview"
-msgstr ""
+msgstr "Elimina la previsualització de la imatge"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:128
 #: src/view/com/posts/FeedShutdownMsg.tsx:132
@@ -5538,7 +5538,7 @@ msgstr "Respon a una publicació bloquejada"
 #: src/view/com/posts/FeedItem.tsx:454
 msgctxt "description"
 msgid "Reply to you"
-msgstr ""
+msgstr "Resposta a tu mateix"
 
 #: src/components/dms/MessageMenu.tsx:132
 #: src/components/dms/MessagesListBlockedFooter.tsx:77
@@ -5669,7 +5669,7 @@ msgstr "Republicat per <0><1/></0>"
 #: src/view/com/posts/FeedItem.tsx:261
 #: src/view/com/posts/FeedItem.tsx:280
 msgid "Reposted by you"
-msgstr ""
+msgstr "Republicat per tu"
 
 #: src/view/com/notifications/FeedItem.tsx:188
 msgid "reposted your post"
@@ -6078,7 +6078,7 @@ msgstr "Selecciona el servei que allotja les teves dades."
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:53
 msgid "Select video"
-msgstr ""
+msgstr "Selecciona el vídeo"
 
 #: src/screens/Onboarding/StepModeration/index.tsx:63
 #~ msgid "Select what you want to see (or not see), and we’ll handle the rest."
@@ -6393,7 +6393,7 @@ msgstr "Comparteix el teu canal preferit!"
 
 #: src/Navigation.tsx:242
 msgid "Shared Preferences Tester"
-msgstr ""
+msgstr "Comprovador de preferències compartides"
 
 #: src/view/com/modals/LinkWarning.tsx:92
 msgid "Shares the linked website"
@@ -6648,7 +6648,7 @@ msgstr "Desenvolupament de programari"
 
 #: src/components/FeedInterstitials.tsx:382
 msgid "Some other feeds you might like"
-msgstr ""
+msgstr "Alguns altres canals que potser t'agradaran"
 
 #: src/components/WhoCanReply.tsx:72
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:47
@@ -6744,7 +6744,7 @@ msgstr "Comença a xatejar"
 
 #: src/tours/Tooltip.tsx:99
 msgid "Start of onboarding tour window. Do not move backward. Instead, go forward for more options, or press to skip."
-msgstr ""
+msgstr "Inici de la visita guiada inicial. No vagis enrere. En comptes d'això, seguiex endavant per obtenir més opcions o prem per saltar-lo."
 
 #: src/lib/generate-starterpack.ts:68
 #: src/Navigation.tsx:341
@@ -6864,7 +6864,7 @@ msgstr "Canvia el compte"
 
 #: src/tours/HomeTour.tsx:48
 msgid "Switch between feeds to control your experience."
-msgstr ""
+msgstr "Canvia entre canals per controlar la teva experiència."
 
 #: src/view/screens/Settings/index.tsx:161
 msgid "Switch to {0}"
@@ -6900,7 +6900,7 @@ msgstr "Alt"
 
 #: src/components/ProgressGuide/Toast.tsx:150
 msgid "Tap to dismiss"
-msgstr ""
+msgstr "Toca per a ignorar"
 
 #: src/view/com/util/images/AutoSizedImage.tsx:70
 msgid "Tap to view fully"
@@ -6908,11 +6908,11 @@ msgstr "Toca per a veure-ho completament"
 
 #: src/state/shell/progress-guide.tsx:171
 msgid "Task complete - 10 likes!"
-msgstr ""
+msgstr "Tasca completa - 10 m'agrades!"
 
 #: src/components/ProgressGuide/List.tsx:49
 msgid "Teach our algorithm what you like"
-msgstr ""
+msgstr "Ensenya el que t'agrada al nostre algorisme"
 
 #: src/screens/Onboarding/index.tsx:36
 #: src/screens/Onboarding/state.ts:99
@@ -6997,7 +6997,7 @@ msgstr "La política de drets d'autoria ha estat traslladada a <0/>"
 #: src/state/shell/progress-guide.tsx:172
 #: src/state/shell/progress-guide.tsx:177
 msgid "The Discover feed now knows what you like"
-msgstr ""
+msgstr "El canal Discover ara sap el que t'agrada"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:322
 msgid "The experience is better in the app. Download Bluesky now and we'll pick back up where you left off."
@@ -7859,7 +7859,7 @@ msgstr "Videojocs"
 
 #: src/view/com/composer/videos/state.ts:27
 msgid "Videos cannot be larger than 100MB"
-msgstr ""
+msgstr "Els vídeos no poder ser de més de 100MB"
 
 #: src/screens/Profile/Header/Shell.tsx:113
 msgid "View {0}'s avatar"
@@ -8509,7 +8509,7 @@ msgstr "El teu correu encara no s'ha verificat. Et recomanem fer-ho per segureta
 
 #: src/state/shell/progress-guide.tsx:161
 msgid "Your first like!"
-msgstr ""
+msgstr "El teu primer m'agrada!"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:43
 msgid "Your following feed is empty! Follow more users to see what's happening."
