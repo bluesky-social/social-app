@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-imports */
 import React from 'react'
 import {View} from 'react-native'
 import {
