@@ -202,7 +202,7 @@ msgstr "<0>{0}</0> 包含在你的入门包中"
 
 #: src/components/WhoCanReply.tsx:274
 msgid "<0>{0}</0> members"
-msgstr "<0>{0} 个成员"
+msgstr "<0>{0}</0> 个成员"
 
 #: src/view/com/modals/SelfLabel.tsx:135
 msgid "<0>Not Applicable.</0> This warning is only available for posts with media attached."
