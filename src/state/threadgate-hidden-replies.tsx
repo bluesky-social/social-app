@@ -1,4 +1,5 @@
 import React from 'react'
+import {AppBskyFeedThreadgate} from '@atproto/api'
 
 type StateContext = {
   uris: Set<string>
@@ -66,4 +67,19 @@ export function useThreadgateHiddenReplyUris() {
 
 export function useThreadgateHiddenReplyUrisAPI() {
   return React.useContext(ApiContext)
+}
+
+export function useMergedThreadgateHiddenReplies({
+  threadgateRecord,
+}: {
+  threadgateRecord?: AppBskyFeedThreadgate.Record
+}) {
+  const {uris, recentlyUnhiddenUris} = useThreadgateHiddenReplyUris()
+  return React.useMemo(() => {
+    const set = new Set([...(threadgateRecord?.hiddenReplies || []), ...uris])
+    for (const uri of recentlyUnhiddenUris) {
+      set.delete(uri)
+    }
+    return set
+  }, [uris, recentlyUnhiddenUris, threadgateRecord])
 }

@@ -88,7 +88,10 @@ export type ThreadModerationCache = WeakMap<ThreadNode, ModerationDecision>
 export function usePostThreadQuery(uri: string | undefined) {
   const queryClient = useQueryClient()
   const agent = useAgent()
-  return useQuery<ThreadNode, Error>({
+  return useQuery<
+    {thread: ThreadNode; threadgate?: AppBskyFeedDefs.ThreadgateView},
+    Error
+  >({
     gcTime: 0,
     queryKey: RQKEY(uri || ''),
     async queryFn() {
@@ -99,16 +102,21 @@ export function usePostThreadQuery(uri: string | undefined) {
       if (res.success) {
         const thread = responseToThreadNodes(res.data.thread)
         annotateSelfThread(thread)
-        return thread
+        return {
+          thread,
+          threadgate: res.data.threadgate as
+            | AppBskyFeedDefs.ThreadgateView
+            | undefined,
+        }
       }
-      return {type: 'unknown', uri: uri!}
+      return {thread: {type: 'unknown', uri: uri!}}
     },
     enabled: !!uri,
     placeholderData: () => {
       if (!uri) return
       const post = findPostInQueryData(queryClient, uri)
       if (post) {
-        return post
+        return {thread: post}
       }
       return undefined
     },

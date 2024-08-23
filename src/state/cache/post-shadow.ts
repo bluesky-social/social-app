@@ -21,7 +21,6 @@ export interface PostShadow {
   repostUri: string | undefined
   isDeleted: boolean
   embed: AppBskyEmbedRecord.View | AppBskyEmbedRecordWithMedia.View | undefined
-  threadgateView: AppBskyFeedDefs.ThreadgateView | undefined
 }
 
 export const POST_TOMBSTONE = Symbol('PostTombstone')
@@ -105,16 +104,6 @@ function mergeShadow(
     }
   }
 
-  let threadgateView: typeof post.threadgate
-  if ('threadgateView' in shadow && !post.threadgate) {
-    if (
-      AppBskyFeedDefs.isThreadgateView(shadow.threadgateView) ||
-      shadow.threadgateView === undefined
-    ) {
-      threadgateView = shadow.threadgateView
-    }
-  }
-
   return castAsShadow({
     ...post,
     embed: embed || post.embed,
@@ -125,8 +114,6 @@ function mergeShadow(
       like: 'likeUri' in shadow ? shadow.likeUri : post.viewer?.like,
       repost: 'repostUri' in shadow ? shadow.repostUri : post.viewer?.repost,
     },
-    // always prefer real post data
-    threadgate: post.threadgate || threadgateView,
   })
 }
 
