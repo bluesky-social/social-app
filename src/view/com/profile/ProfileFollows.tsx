@@ -8,17 +8,26 @@ import {logger} from '#/logger'
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
+import {isWeb} from 'platform/detection'
 import {useSession} from 'state/session'
-import {
-  ListFooter,
-  ListHeaderDesktop,
-  ListMaybePlaceholder,
-} from '#/components/Lists'
+import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {List} from '../util/List'
 import {ProfileCardWithFollowBtn} from './ProfileCard'
 
-function renderItem({item}: {item: ActorDefs.ProfileViewBasic}) {
-  return <ProfileCardWithFollowBtn key={item.did} profile={item} />
+function renderItem({
+  item,
+  index,
+}: {
+  item: ActorDefs.ProfileViewBasic
+  index: number
+}) {
+  return (
+    <ProfileCardWithFollowBtn
+      key={item.did}
+      profile={item}
+      noBorder={index === 0 && !isWeb}
+    />
+  )
 }
 
 function keyExtractor(item: ActorDefs.ProfileViewBasic) {
@@ -88,6 +97,7 @@ export function ProfileFollows({name}: {name: string}) {
         }
         errorMessage={cleanError(resolveError || error)}
         onRetry={isError ? refetch : undefined}
+        sideBorders={false}
       />
     )
   }
@@ -101,7 +111,6 @@ export function ProfileFollows({name}: {name: string}) {
       onRefresh={onRefresh}
       onEndReached={onEndReached}
       onEndReachedThreshold={4}
-      ListHeaderComponent={<ListHeaderDesktop title={_(msg`Following`)} />}
       ListFooterComponent={
         <ListFooter
           isFetchingNextPage={isFetchingNextPage}
@@ -113,6 +122,7 @@ export function ProfileFollows({name}: {name: string}) {
       desktopFixedHeight
       initialNumToRender={initialNumToRender}
       windowSize={11}
+      sideBorders={false}
     />
   )
 }
