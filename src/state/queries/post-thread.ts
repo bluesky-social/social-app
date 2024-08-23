@@ -102,7 +102,12 @@ export function usePostThreadQuery(uri: string | undefined) {
       if (res.success) {
         const thread = responseToThreadNodes(res.data.thread)
         annotateSelfThread(thread)
-        return {thread, threadgate: res.data.threadgate}
+        return {
+          thread,
+          threadgate: res.data.threadgate as
+            | AppBskyFeedDefs.ThreadgateView
+            | undefined,
+        }
       }
       return {thread: {type: 'unknown', uri: uri!}}
     },
