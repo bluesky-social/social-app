@@ -14,6 +14,7 @@ import {InlineLinkText, LinkProps} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {TagMenu, useTagMenuControl} from '#/components/TagMenu'
 import {Text, TextProps} from '#/components/Typography'
+import {Twemoji} from './Twemoji'
 
 const WORD_WRAP = {wordWrap: 1}
 
@@ -71,7 +72,7 @@ export function RichText({
           style={[plainStyles, {fontSize}]}
           // @ts-ignore web only -prf
           dataSet={WORD_WRAP}>
-          {text}
+          <Twemoji>{text}</Twemoji>
         </Text>
       )
     }
@@ -83,7 +84,7 @@ export function RichText({
         numberOfLines={numberOfLines}
         // @ts-ignore web only -prf
         dataSet={WORD_WRAP}>
-        {text}
+        <Twemoji>{text}</Twemoji>
       </Text>
     )
   }
@@ -109,7 +110,7 @@ export function RichText({
             // @ts-ignore TODO
             dataSet={WORD_WRAP}
             onPress={onLinkPress}>
-            {segment.text}
+            <Twemoji>{segment.text}</Twemoji>
           </InlineLinkText>
         </ProfileHoverCard>,
       )
@@ -127,7 +128,7 @@ export function RichText({
             dataSet={WORD_WRAP}
             shareOnLongPress
             onPress={onLinkPress}>
-            {toShortUrl(segment.text)}
+            <Twemoji>{toShortUrl(segment.text)}</Twemoji>
           </InlineLinkText>,
         )
       }
@@ -148,7 +149,7 @@ export function RichText({
         />,
       )
     } else {
-      els.push(segment.text)
+      els.push(<Twemoji key={key}>{segment.text}</Twemoji>)
     }
     key++
   }
@@ -242,7 +243,7 @@ function RichTextTag({
             },
             style,
           ]}>
-          {text}
+          <Twemoji>{text}</Twemoji>
         </Text>
       </TagMenu>
     </React.Fragment>
