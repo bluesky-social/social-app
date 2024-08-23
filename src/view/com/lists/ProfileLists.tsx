@@ -75,12 +75,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
         items = items.concat([EMPTY])
       } else if (data?.pages) {
         for (const page of data?.pages) {
-          items = items.concat(
-            page.lists.map(l => ({
-              ...l,
-              _reactKey: l.uri,
-            })),
-          )
+          items = items.concat(page.lists)
         }
       }
       if (isError && !isEmpty) {
@@ -192,7 +187,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
           testID={testID ? `${testID}-flatlist` : undefined}
           ref={scrollElRef}
           data={items}
-          keyExtractor={(item: any) => item._reactKey}
+          keyExtractor={(item: any) => item._reactKey || item.uri}
           renderItem={renderItemInner}
           refreshing={isPTRing}
           onRefresh={onRefresh}

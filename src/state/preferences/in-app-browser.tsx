@@ -34,8 +34,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   React.useEffect(() => {
-    return persisted.onUpdate(() => {
-      setState(persisted.get('useInAppBrowser'))
+    return persisted.onUpdate('useInAppBrowser', nextUseInAppBrowser => {
+      setState(nextUseInAppBrowser)
     })
   }, [setStateWrapped])
 

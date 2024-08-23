@@ -32,7 +32,6 @@ import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
 import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
 import {atoms as a, useTheme} from '#/alf'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
-import hairlineWidth = StyleSheet.hairlineWidth
 
 const HITSLOP_TOP = {
   top: 20,
@@ -93,7 +92,8 @@ export function SavedFeeds({}: Props) {
       <ViewHeader title={_(msg`Edit My Feeds`)} showOnDesktop showBorder />
       <ScrollView style={s.flex1} contentContainerStyle={[styles.noBorder]}>
         {noSavedFeedsOfAnyType && (
-          <View style={[pal.border, {borderBottomWidth: hairlineWidth}]}>
+          <View
+            style={[pal.border, {borderBottomWidth: StyleSheet.hairlineWidth}]}>
             <NoSavedFeedsOfAnyType />
           </View>
         )}
@@ -135,7 +135,8 @@ export function SavedFeeds({}: Props) {
         )}
 
         {noFollowingFeed && (
-          <View style={[pal.border, {borderBottomWidth: hairlineWidth}]}>
+          <View
+            style={[pal.border, {borderBottomWidth: StyleSheet.hairlineWidth}]}>
             <NoFollowingFeed />
           </View>
         )}
@@ -234,7 +235,7 @@ function ListItem({
         },
       ])
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`))
+      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
       logger.error('Failed to toggle pinned feed', {message: e})
     }
   }, [_, playHaptic, feed, updateSavedFeeds, resetSaveFeedsMutationState])
@@ -260,7 +261,7 @@ function ListItem({
         index: nextIndex,
       })
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`))
+      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
       logger.error('Failed to set pinned feed order', {message: e})
     }
   }, [feed, isPinned, overwriteSavedFeeds, currentFeeds, _])
@@ -286,7 +287,7 @@ function ListItem({
         index: nextIndex,
       })
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`))
+      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
       logger.error('Failed to set pinned feed order', {message: e})
     }
   }, [feed, isPinned, overwriteSavedFeeds, currentFeeds, _])
@@ -437,12 +438,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingTop: 20,
     paddingBottom: 10,
-    borderBottomWidth: hairlineWidth,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   itemContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderBottomWidth: hairlineWidth,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   footerText: {
     paddingHorizontal: 26,

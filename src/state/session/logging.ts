@@ -56,7 +56,7 @@ type Log =
       type: 'agent:patch'
       agent: object
       prevSession: AtpSessionData | undefined
-      nextSession: AtpSessionData
+      nextSession: AtpSessionData | undefined
     }
 
 export function wrapSessionReducerForLogging(reducer: Reducer): Reducer {

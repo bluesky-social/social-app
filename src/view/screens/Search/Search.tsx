@@ -783,7 +783,7 @@ let SearchInputBox = ({
       }}>
       <MagnifyingGlassIcon
         style={[pal.icon, styles.headerSearchIcon]}
-        size={21}
+        size={20}
       />
       <TextInput
         testID="searchTextInput"
@@ -894,13 +894,6 @@ let AutocompleteResults = ({
 }
 AutocompleteResults = React.memo(AutocompleteResults)
 
-function truncateText(text: string, maxLength: number) {
-  if (text.length > maxLength) {
-    return text.substring(0, maxLength) + '...'
-  }
-  return text
-}
-
 function SearchHistory({
   searchHistory,
   selectedProfiles,
@@ -965,8 +958,10 @@ function SearchHistory({
                       style={styles.profileAvatar as StyleProp<ImageStyle>}
                       accessibilityIgnoresInvertColors
                     />
-                    <Text style={[pal.text, styles.profileName]}>
-                      {truncateText(profile.displayName || '', 12)}
+                    <Text
+                      style={[pal.text, styles.profileName]}
+                      numberOfLines={1}>
+                      {profile.displayName || profile.handle}
                     </Text>
                   </Link>
                   <Pressable
@@ -1071,6 +1066,7 @@ const styles = StyleSheet.create({
   headerSearchInput: {
     flex: 1,
     fontSize: 17,
+    minWidth: 0,
   },
   headerCancelBtn: {
     paddingLeft: 10,
@@ -1117,6 +1113,7 @@ const styles = StyleSheet.create({
     borderRadius: 45,
   },
   profileName: {
+    width: 78,
     fontSize: 12,
     textAlign: 'center',
     marginTop: 5,
