@@ -4876,7 +4876,7 @@ msgstr "回覆已被停用"
 
 #: src/components/WhoCanReply.tsx:215
 msgid "Replies to this post are disabled."
-msgstr "這則貼文的回覆已停用"
+msgstr "這則貼文的回覆已停用。"
 
 #: src/view/com/composer/Composer.tsx:562
 msgctxt "action"
@@ -6116,7 +6116,7 @@ msgstr "解除封鎖後，該帳號將能夠與您互動。"
 #: src/components/moderation/ModerationDetailsDialog.tsx:118
 #: src/lib/moderation/useModerationCauseDescription.ts:126
 msgid "The author of this thread has hidden this reply."
-msgstr "此討論串的發布者已隱藏這個回覆"
+msgstr "此討論串的發布者已隱藏這個回覆。"
 
 #: src/screens/Moderation/index.tsx:368
 msgid "The Bluesky web application"
@@ -6413,7 +6413,7 @@ msgstr "這則貼文將從討論串及動態源中被隱藏，這個操作無法
 
 #: src/view/com/composer/useExternalLinkFetch.ts:67
 msgid "This post's author has disabled quote posts."
-msgstr "這則貼文的發布者已停用引用"
+msgstr "這則貼文的發布者已停用引用。"
 
 #: src/view/com/profile/ProfileMenu.tsx:374
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't logged in."
