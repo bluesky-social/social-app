@@ -52,11 +52,9 @@ export function VideoEmbedInnerWeb({
   }, [embed.playlist])
 
   return (
-    <View style={[a.w_full, a.rounded_sm, a.overflow_hidden]}>
-      <div
-        ref={containerRef}
-        style={{width: '100%', height: '100%', display: 'flex'}}>
-        <figure style={{margin: 0, width: '100%', height: '100%'}}>
+    <View style={[a.flex_1, a.rounded_sm, a.overflow_hidden]}>
+      <div ref={containerRef} style={{height: '100%', width: '100%'}}>
+        <figure style={{margin: 0, position: 'absolute', inset: 0}}>
           <video
             ref={ref}
             poster={embed.thumbnail}
@@ -68,7 +66,19 @@ export function VideoEmbedInnerWeb({
             aria-labelledby={embed.alt ? figId : undefined}
           />
           {embed.alt && (
-            <figcaption id={figId} style={{height: 0, overflow: 'hidden'}}>
+            <figcaption
+              id={figId}
+              style={{
+                position: 'absolute',
+                width: 1,
+                height: 1,
+                padding: 0,
+                margin: -1,
+                overflow: 'hidden',
+                clip: 'rect(0, 0, 0, 0)',
+                whiteSpace: 'nowrap',
+                borderWidth: 0,
+              }}>
               {embed.alt}
             </figcaption>
           )}

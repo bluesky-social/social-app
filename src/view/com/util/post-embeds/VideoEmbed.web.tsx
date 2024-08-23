@@ -55,8 +55,8 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
 
   if (embed.aspectRatio) {
     const {width, height} = embed.aspectRatio
-    aspectRatio = width / height
-    aspectRatio = clamp(aspectRatio, 1 / 1, 3 / 1)
+    // min: 3/1, max: square
+    aspectRatio = clamp(width / height, 1 / 1, 3 / 1)
   }
 
   return (
@@ -65,6 +65,7 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
         a.w_full,
         {aspectRatio},
         {backgroundColor: t.palette.black},
+        a.relative,
         a.rounded_sm,
         a.my_xs,
       ]}>
