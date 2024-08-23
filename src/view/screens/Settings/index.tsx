@@ -96,7 +96,7 @@ function SettingsAccountCard({
           marginBottom: 1,
         },
         account.did === pendingDid && [t.atoms.bg_contrast_25],
-        (ctx.hovered || ctx.pressed) && [t.atoms.bg_contrast_25],
+        ctx.pressed && [t.atoms.bg_contrast_25],
       ]}>
       <UserAvatar
         size={40}
