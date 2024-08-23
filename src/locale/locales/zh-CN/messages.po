@@ -7381,7 +7381,7 @@ msgstr "如果你认为标签的标记信息有误，你可以提出申诉。"
 
 #: src/screens/StarterPack/Wizard/State.tsx:79
 msgid "You may only add up to {STARTER_PACK_MAX_SIZE} profiles"
-msgstr "你最多只能添加 {STARTER_PACK_MAX_SIZE} 个配置"
+msgstr "你最多只能添加 {STARTER_PACK_MAX_SIZE} 个个人资料"
 
 #: src/screens/StarterPack/Wizard/State.tsx:97
 msgid "You may only add up to 3 feeds"
