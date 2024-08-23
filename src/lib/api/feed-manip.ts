@@ -41,6 +41,8 @@ export class FeedViewPostsSlice {
   isFallbackMarker: boolean
   isOrphan: boolean
   rootUri: string
+  participantDids: Set<string> = new Set()
+  additionalParticipantProfiles: AppBskyActorDefs.ProfileViewBasic[] = []
 
   constructor(feedPost: FeedViewPost) {
     const {post, reply, reason} = feedPost
@@ -211,12 +213,19 @@ export class FeedViewPostsSlice {
       rootAuthor,
     }
   }
+
+  getAuthorDids(): string[] {
+    return Object.values(this.getAuthors())
+      .map(p => (p ? p.did : undefined))
+      .filter(Boolean) as string[]
+  }
 }
 
 export class FeedTuner {
   seenKeys: Set<string> = new Set()
   seenUris: Set<string> = new Set()
-  seenRootUris: Set<string> = new Set()
+  seenRootUris: Map<string, {participantDids: Set<string>}> = new Map()
+  profileMap: Map<string, AppBskyActorDefs.ProfileViewBasic> = new Map()
 
   constructor(public tunerFns: FeedTunerFn[]) {}
 
@@ -345,13 +354,36 @@ export class FeedTuner {
     dryRun: boolean,
   ): FeedViewPostsSlice[] {
     for (let i = 0; i < slices.length; i++) {
-      const rootUri = slices[i].rootUri
-      if (!slices[i].isRepost && tuner.seenRootUris.has(rootUri)) {
+      const slice = slices[i]
+      const rootUri = slice.rootUri
+      const authorsDids = slice.getAuthorDids()
+      if (!slice.isRepost && tuner.seenRootUris.has(rootUri)) {
+        const seen = tuner.seenRootUris.get(rootUri)!
+        for (const did of authorsDids) {
+          seen.participantDids.add(did)
+        }
         slices.splice(i, 1)
         i--
       } else {
         if (!dryRun) {
-          tuner.seenRootUris.add(rootUri)
+          const participantDids = new Set(authorsDids)
+          slice.participantDids = participantDids
+          tuner.seenRootUris.set(rootUri, {participantDids})
+        }
+      }
+      for (const profile of Object.values(slice.getAuthors())) {
+        if (profile) {
+          tuner.profileMap.set(profile.did, profile)
+        }
+      }
+    }
+    for (const slice of slices) {
+      const visibleAuthors = new Set(slice.getAuthorDids())
+      for (const userDid of slice.participantDids) {
+        if (visibleAuthors.has(userDid)) continue
+        const profile = tuner.profileMap.get(userDid)
+        if (profile) {
+          slice.additionalParticipantProfiles.push(profile)
         }
       }
     }

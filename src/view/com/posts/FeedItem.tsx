@@ -84,9 +84,11 @@ export function FeedItem({
   isParentBlocked,
   isParentNotFound,
   rootPost,
+  additionalParticipantProfiles,
 }: FeedItemProps & {
   post: AppBskyFeedDefs.PostView
   rootPost: AppBskyFeedDefs.PostView
+  additionalParticipantProfiles?: AppBskyActorDefs.ProfileViewBasic[]
 }): React.ReactNode {
   const postShadowed = usePostShadow(post)
   const richText = useMemo(
@@ -120,6 +122,7 @@ export function FeedItem({
         isParentBlocked={isParentBlocked}
         isParentNotFound={isParentNotFound}
         rootPost={rootPost}
+        additionalParticipantProfiles={additionalParticipantProfiles}
       />
     )
   }
@@ -142,10 +145,12 @@ let FeedItemInner = ({
   isParentBlocked,
   isParentNotFound,
   rootPost,
+  additionalParticipantProfiles,
 }: FeedItemProps & {
   richText: RichTextAPI
   post: Shadow<AppBskyFeedDefs.PostView>
   rootPost: AppBskyFeedDefs.PostView
+  additionalParticipantProfiles?: AppBskyActorDefs.ProfileViewBasic[]
 }): React.ReactNode => {
   const queryClient = useQueryClient()
   const {openComposer} = useComposerControls()
@@ -392,6 +397,16 @@ let FeedItemInner = ({
             feedContext={feedContext}
             threadgateRecord={threadgateRecord}
           />
+
+          {additionalParticipantProfiles?.length && (
+            <View>
+              <Text>
+                {additionalParticipantProfiles
+                  .map(p => p.displayName)
+                  .join(', ')}
+              </Text>
+            </View>
+          )}
         </View>
       </View>
     </Link>

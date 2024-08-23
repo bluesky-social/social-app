@@ -94,6 +94,7 @@ export interface FeedPostSlice {
     | AppBskyFeedDefs.ReasonRepost
     | ReasonFeedSource
     | {[k: string]: unknown; $type: string}
+  additionalParticipantProfiles?: AppBskyActorDefs.ProfileViewBasic[]
 }
 
 export interface FeedPageUnselected {
@@ -318,6 +319,8 @@ export function usePostFeedQuery(
                     isFallbackMarker: slice.isFallbackMarker,
                     feedContext: slice.feedContext,
                     reason: slice.reason,
+                    additionalParticipantProfiles:
+                      slice.additionalParticipantProfiles,
                     items: slice.items.map((item, i) => {
                       const feedPostSliceItem: FeedPostSliceItem = {
                         _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,

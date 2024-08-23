@@ -38,6 +38,7 @@ let FeedSlice = ({
           isParentBlocked={slice.items[0].isParentBlocked}
           isParentNotFound={slice.items[0].isParentNotFound}
           rootPost={slice.items[0].post}
+          additionalParticipantProfiles={slice.additionalParticipantProfiles}
         />
         <ViewFullThread uri={slice.items[0].uri} />
         <FeedItem
@@ -99,6 +100,9 @@ let FeedSlice = ({
           isParentNotFound={slice.items[i].isParentNotFound}
           hideTopBorder={hideTopBorder && i === 0}
           rootPost={slice.items[0].post}
+          additionalParticipantProfiles={
+            i === 0 ? slice.additionalParticipantProfiles : undefined
+          }
         />
       ))}
     </>
