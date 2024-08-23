@@ -174,10 +174,6 @@ msgstr "「{profileName}」在 {0} 前加入了 Bluesky"
 msgid "{profileName} joined Bluesky using a starter pack {0} ago"
 msgstr "「{profileName}」在 {0} 前使用入門包加入了 Bluesky"
 
-#: src/components/WhoCanReply.tsx:296
-#~ msgid "<0/> members"
-#~ msgstr "<0/> 個成員"
-
 #: src/screens/StarterPack/Wizard/index.tsx:466
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
@@ -289,10 +285,6 @@ msgstr "已靜音帳號"
 #: src/components/moderation/ModerationDetailsDialog.tsx:88
 msgid "Account Muted by List"
 msgstr "帳號已被列表靜音"
-
-#: src/view/com/util/AccountDropdownBtn.tsx:43
-#~ msgid "Account options"
-#~ msgstr "帳號選項"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:65
 msgid "Account removed from quick access"
@@ -1059,11 +1051,6 @@ msgstr "選擇提供您自定義動態的演算法。"
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:107
 msgid "Choose this color as your avatar"
 msgstr "選擇這個顏色作為您的頭像"
-
-#: src/components/dialogs/ThreadgateEditor.tsx:93
-#: src/components/dialogs/ThreadgateEditor.tsx:97
-#~ msgid "Choose who can reply"
-#~ msgstr "選擇哪些人可以回覆"
 
 #: src/screens/Signup/StepInfo/index.tsx:171
 msgid "Choose your password"
@@ -1988,10 +1975,6 @@ msgstr "編輯您的入門包"
 msgid "Education"
 msgstr "教育"
 
-#: src/components/dialogs/ThreadgateEditor.tsx:100
-#~ msgid "Either choose \"Everybody\" or \"Nobody\""
-#~ msgstr "選擇「所有人」或「沒有人」"
-
 #: src/screens/Signup/StepInfo/index.tsx:143
 #: src/view/com/modals/ChangeEmail.tsx:136
 msgid "Email"
@@ -2780,11 +2763,6 @@ msgctxt "action"
 msgid "Hide"
 msgstr "隱藏"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:390
-#: src/view/com/util/forms/PostDropdownBtn.tsx:392
-#~ msgid "Hide post"
-#~ msgstr "隱藏貼文"
-
 #: src/view/com/util/forms/PostDropdownBtn.tsx:503
 #: src/view/com/util/forms/PostDropdownBtn.tsx:509
 msgid "Hide post for me"
@@ -3221,10 +3199,6 @@ msgstr "喜歡"
 #: src/view/com/post-thread/PostThreadItem.tsx:203
 msgid "Likes on this post"
 msgstr "這條貼文的喜歡數"
-
-#: src/view/screens/ProfileList.tsx:235
-#~ msgid "list"
-#~ msgstr "列表"
 
 #: src/Navigation.tsx:193
 msgid "List"
@@ -3882,10 +3856,6 @@ msgstr "不，謝謝"
 msgid "Nobody"
 msgstr "沒有人"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:46
-#~ msgid "Nobody can reply"
-#~ msgstr "沒有人可以回覆"
-
 #: src/components/LikedByList.tsx:79
 #: src/components/LikesDialog.tsx:99
 msgid "Nobody has liked this yet. Maybe you should be the first!"
@@ -4020,10 +3990,6 @@ msgstr "至少有一張圖片缺失了替代文字。"
 #: src/screens/Onboarding/StepProfile/index.tsx:117
 msgid "Only .jpg and .png files are supported"
 msgstr "僅支援 .jpg 或 .png 格式的圖片"
-
-#: src/components/WhoCanReply.tsx:245
-#~ msgid "Only {0} can reply"
-#~ msgstr "只有{0}可以回覆"
 
 #: src/components/WhoCanReply.tsx:217
 msgid "Only {0} can reply."
@@ -4911,10 +4877,6 @@ msgstr "回覆已被停用"
 #: src/components/WhoCanReply.tsx:215
 msgid "Replies to this post are disabled."
 msgstr "這則貼文的回覆已停用"
-
-#: src/components/WhoCanReply.tsx:243
-#~ msgid "Replies to this thread are disabled"
-#~ msgstr "此討論串的回覆已停用"
 
 #: src/view/com/composer/Composer.tsx:562
 msgctxt "action"
@@ -6034,10 +5996,6 @@ msgstr "在動態源之間切換以掌控您的體驗。"
 msgid "Switch to {0}"
 msgstr "切換到 {0}"
 
-#: src/view/screens/Settings/index.tsx:127
-#~ msgid "Switches the account you are logged in to"
-#~ msgstr "切換您登入的帳號"
-
 #: src/screens/Settings/AppearanceSettings.tsx:85
 #: src/screens/Settings/AppearanceSettings.tsx:87
 msgid "System"
@@ -6453,10 +6411,6 @@ msgstr "只有登入用戶能見到這則貼文，未登入的人將看不到它
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "這則貼文將從討論串及動態源中被隱藏，這個操作無法撤銷。"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:443
-#~ msgid "This post will be hidden from feeds."
-#~ msgstr "這則貼文將從動態隱藏。"
-
 #: src/view/com/composer/useExternalLinkFetch.ts:67
 msgid "This post's author has disabled quote posts."
 msgstr "這則貼文的發布者已停用引用"
@@ -6530,10 +6484,6 @@ msgstr "討論串偏好"
 #: src/view/screens/Settings/index.tsx:581
 msgid "Thread Preferences"
 msgstr "討論串偏好"
-
-#: src/components/WhoCanReply.tsx:109
-#~ msgid "Thread settings updated"
-#~ msgstr "討論串設定已更新"
 
 #: src/view/screens/PreferencesThreads.tsx:113
 msgid "Threaded Mode"
@@ -6901,10 +6851,6 @@ msgstr "帳號代碼或電子郵件地址"
 msgid "Users"
 msgstr "用戶"
 
-#: src/components/WhoCanReply.tsx:280
-#~ msgid "users followed by <0/>"
-#~ msgstr "被 <0/> 跟隨的用戶"
-
 #: src/components/WhoCanReply.tsx:258
 msgid "users followed by <0>@{0}</0>"
 msgstr "被 <0>@{0}</0> 跟隨的用戶"
@@ -7183,14 +7129,6 @@ msgstr "誰可以傳送訊息給您？"
 msgid "Who can reply"
 msgstr "誰可以回覆"
 
-#: src/components/WhoCanReply.tsx:212
-#~ msgid "Who can reply dialog"
-#~ msgstr "「誰可以回覆」對話窗"
-
-#: src/components/WhoCanReply.tsx:216
-#~ msgid "Who can reply?"
-#~ msgstr "誰可以回覆？"
-
 #: src/screens/Home/NoFeedsPinned.tsx:79
 #: src/screens/Messages/List/index.tsx:185
 msgid "Whoops!"
@@ -7440,14 +7378,6 @@ msgstr "您最多只能新增 {STARTER_PACK_MAX_SIZE} 個個人檔案"
 #: src/screens/StarterPack/Wizard/State.tsx:97
 msgid "You may only add up to 3 feeds"
 msgstr "您最多只能新增 3 個動態源"
-
-#: src/screens/StarterPack/Wizard/State.tsx:95
-#~ msgid "You may only add up to 50 feeds"
-#~ msgstr "您最多只能新增 50 個動態源"
-
-#: src/screens/StarterPack/Wizard/State.tsx:78
-#~ msgid "You may only add up to 50 profiles"
-#~ msgstr "您最多只能新增 50 個個人檔案"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:85
 msgid "You must be 13 years of age or older to sign up."
