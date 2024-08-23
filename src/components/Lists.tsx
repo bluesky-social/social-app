@@ -3,6 +3,7 @@ import {StyleProp, View, ViewStyle} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError} from 'lib/strings/errors'
 import {CenteredView} from 'view/com/util/Views'
 import {atoms as a, flatten, useBreakpoints, useTheme} from '#/alf'
@@ -116,10 +117,10 @@ export function ListHeaderDesktop({
   title: string
   subtitle?: string
 }) {
-  const {gtTablet} = useBreakpoints()
+  const {isDesktop} = useWebMediaQueries()
   const t = useTheme()
 
-  if (!gtTablet) return null
+  if (!isDesktop) return null
 
   return (
     <View

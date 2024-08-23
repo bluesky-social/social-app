@@ -1,5 +1,4 @@
 import React from 'react'
-import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
@@ -7,9 +6,12 @@ import {useFocusEffect} from '@react-navigation/native'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
 import {makeRecordUri} from '#/lib/strings/url-helpers'
 import {useSetMinimalShellMode} from '#/state/shell'
+import {isWeb} from 'platform/detection'
 import {PostRepostedBy as PostRepostedByComponent} from '#/view/com/post-thread/PostRepostedBy'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
+import {CenteredView} from 'view/com/util/Views'
 import {atoms as a} from '#/alf'
+import {ListHeaderDesktop} from '#/components/Lists'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostRepostedBy'>
 export const PostRepostedByScreen = ({route}: Props) => {
@@ -25,9 +27,10 @@ export const PostRepostedByScreen = ({route}: Props) => {
   )
 
   return (
-    <View style={a.flex_1}>
-      <ViewHeader title={_(msg`Reposted By`)} />
+    <CenteredView style={a.h_full_vh} sideBorders={true}>
+      <ListHeaderDesktop title={_(msg`Reposted By`)} />
+      <ViewHeader title={_(msg`Reposted By`)} showBorder={!isWeb} />
       <PostRepostedByComponent uri={uri} />
-    </View>
+    </CenteredView>
   )
 }
