@@ -1,0 +1,14 @@
+{
+    "short_name": "Bluesky",
+    "name": "bluesky",
+    "icons": [
+        {
+            "src": "/pwa/assets/pwa-icon.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        }
+    ],
+    "start_url": "/",
+    "display": "standalone"
+  }
+  

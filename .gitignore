@@ -67,6 +67,10 @@ artifacts
 # Web bundle outputs
 /dist/
 
+# Web (PWA)
+/web/pwa/scripts/workbox/*
+
+
 # Expo
 .expo/
 dist/
