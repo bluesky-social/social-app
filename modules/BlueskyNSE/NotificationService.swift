@@ -87,15 +87,13 @@ class NotificationService: UNNotificationServiceExtension {
   func mutateWithDmSound(_ content: UNMutableNotificationContent) {
     content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "dm.aiff"))
   }
-
-  // MARK: util
 }
 
 // NSEUtil's purpose is to create a shared instance of `UserDefaults` across
 // `NotificationService` instances. It also includes a queue so that we can process
 // updates to `UserDefaults` in parallel.
 
-class NSEUtil {
+private class NSEUtil {
   static let shared = NSEUtil()
 
   var prefs = UserDefaults(suiteName: APP_GROUP)
