@@ -87,6 +87,9 @@ class NotificationService: UNNotificationServiceExtension {
   func mutateWithDmSound(_ content: UNMutableNotificationContent) {
     content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "dm.aiff"))
   }
+  
+  func mutateWithAvatar(_ content: UNMutableNotificationContent) {
+  }
 }
 
 // NSEUtil's purpose is to create a shared instance of `UserDefaults` across
@@ -102,4 +105,24 @@ private class NSEUtil {
   static func createCopy(_ content: UNNotificationContent) -> UNMutableNotificationContent? {
     return content.mutableCopy() as? UNMutableNotificationContent
   }
-}
+  
+  static func saveImage(_ image: UIImage?) -> String? {
+    guard let image = image else {
+      return nil
+    }
+    
+    let dir = FileManager.default.temporaryDirectory
+    let filePath = "\(dir.absoluteString)\(ProcessInfo.processInfo.globallyUniqueString).png"
+    
+    guard let newUri = URL(string: filePath),
+          let pngData = image.pngData() else {
+      return nil
+    }
+    
+    do {
+      try pngData.write(to: newUri)
+      return filePath
+    } catch {
+      return nil
+    }
+  }}
