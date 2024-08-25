@@ -490,6 +490,7 @@ function MyProfileTabNavigator() {
         getComponent={() => ProfileScreen}
         initialParams={{
           name: 'me',
+          hideBackButton: true,
         }}
       />
       {commonScreens(MyProfileTab as typeof HomeTab)}
