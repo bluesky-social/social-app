@@ -12,7 +12,7 @@
     "prebuild": "expo prebuild --clean",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "web": "expo start --web --https",
+    "web": "expo start --web",
     "use-build-number": "./scripts/useBuildNumberEnv.sh",
     "use-build-number-with-bump": "./scripts/useBuildNumberEnvWithBump.sh",
     "build-web": "expo export:web && workbox-cli generateSW web/workbox-config.js && node ./scripts/post-web-build.js && cp -v ./web-build/static/js/*.* ./bskyweb/static/js/ && cp -v ./web-build/static/media/*.png ./bskyweb/static/media/",
