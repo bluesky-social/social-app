@@ -257,6 +257,11 @@
         from { opacity: 1; }
         to { opacity: 0; }
       }
+
+      .force-no-clicks > *,
+      .force-no-clicks * {
+        pointer-events: none !important;
+      }
     </style>
   </head>
 
