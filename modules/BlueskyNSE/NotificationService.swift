@@ -102,8 +102,9 @@ class NotificationService: UNNotificationServiceExtension {
     // follow relationship. All we need to check is the preference.
     guard NSEUtil.shared.prefs?.bool(forKey: "showAvatarDms") == true,
           #available (iOSApplicationExtension 15.0, *),
-          let avatarUrlString = content.userInfo["avatar"] as? String,
-          let displayName = content.userInfo["displayName"] as? String,
+          let avatarUrlString = content.userInfo["senderAvatarUrl"] as? String,
+          // TODO - uncomment once added to chat service
+          // let displayName = content.userInfo["senderDisplayName"] as? String,
           let avatarUrl = URL(string: avatarUrlString),
           let subject = self.getSubject(),
           let contentHandler = self.contentHandler else {
@@ -117,6 +118,9 @@ class NotificationService: UNNotificationServiceExtension {
         return
       }
 
+      // TODO - hack, just getting the display name from the title. We'll add this
+      // to the chat service and remove the hack later
+      let displayName = content.title.components(separatedBy: " to ")[0]
       let handle = INPersonHandle(value: subject,
                                   type: .unknown)
       let image = INImage(url: imageUrl)
