@@ -3,6 +3,7 @@ import UIKit
 
 let APP_GROUP = "group.app.bsky"
 typealias ContentHandler = (UNNotificationContent) -> Void
+typealias ImageDownloadTaskCompletion = (UIImage?) -> Void
 
 // This extension allows us to do some processing of the received notification
 // data before displaying the notification to the user. In our use case, there
@@ -31,26 +32,26 @@ class NotificationService: UNNotificationServiceExtension {
 
   override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
     self.contentHandler = contentHandler
-
-    guard let bestAttempt = NSEUtil.createCopy(request.content),
-          let reason = request.content.userInfo["reason"] as? String
-    else {
+    
+    guard let bestAttempt = NSEUtil.createCopy(request.content) else {
       contentHandler(request.content)
       return
     }
-
+    
     self.bestAttempt = bestAttempt
-    if reason == "chat-message" {
+    
+    if isReasonDm() {
+      
+    }
+    
+    if isReasonDm() {
       mutateWithChatMessage(bestAttempt)
+      // contentHandler will be called within mutateWithAvatar's completion block
+      mutateWithAvatar(bestAttempt)
     } else {
       mutateWithBadge(bestAttempt)
+      contentHandler(bestAttempt)
     }
-
-    // Any image downloading (or other network tasks) should be handled at the end
-    // of this block. Otherwise, if there is a timeout and serviceExtensionTimeWillExpire
-    // gets called, we might not have all the needed mutations completed in time.
-
-    contentHandler(bestAttempt)
   }
 
   override func serviceExtensionTimeWillExpire() {
@@ -58,6 +59,12 @@ class NotificationService: UNNotificationServiceExtension {
           let bestAttempt = self.bestAttempt else {
       return
     }
+    
+    if isReasonDm(),
+       let subject = self.getSubject() {
+      NSEUtil.shared.cancelImageDownload(userId: subject)
+    }
+    
     contentHandler(bestAttempt)
   }
 
@@ -89,6 +96,37 @@ class NotificationService: UNNotificationServiceExtension {
   }
   
   func mutateWithAvatar(_ content: UNMutableNotificationContent) {
+    // Here, the server will only give us an avatar uri if there is a
+    // follow relationship. All we need to check is the preference.
+    guard let avatarUrlString = content.userInfo["avatar"] as? String,
+          NSEUtil.shared.prefs?.bool(forKey: "showAvatarDms") == true,
+          let avatarUrl = URL(string: avatarUrlString),
+          let subject = self.getSubject() else {
+      return
+    }
+    
+    NSEUtil.shared.downloadImageIfNecessary(avatarUrl, userId: subject) { imageUrl in
+      guard let contentHandler = self.contentHandler else {
+        return
+      }
+      self.contentHandler?(content)
+    }
+  }
+  
+  // MARK: Util
+  
+  func isReasonDm() -> Bool {
+    guard let reason = self.bestAttempt?.userInfo["reason"] as? String else {
+      return false
+    }
+    return reason == "chat-message"
+  }
+  
+  func getSubject() -> String? {
+    guard let subject = self.bestAttempt?.userInfo["subject"] as? String else {
+      return nil
+    }
+    return subject
   }
 }
 
@@ -98,31 +136,105 @@ class NotificationService: UNNotificationServiceExtension {
 
 private class NSEUtil {
   static let shared = NSEUtil()
-
+  
   var prefs = UserDefaults(suiteName: APP_GROUP)
   var prefsQueue = DispatchQueue(label: "NSEPrefsQueue")
-
+  
+  // Store each image download task that
+  private let imageDownloadTasks = NSMapTable<NSString, ImageDownloadTask>(
+    keyOptions: NSPointerFunctions.Options.weakMemory,
+    valueOptions: NSPointerFunctions.Options.weakMemory
+  )
+  
+  // Creates a mutable copy of the provided content
   static func createCopy(_ content: UNNotificationContent) -> UNMutableNotificationContent? {
     return content.mutableCopy() as? UNMutableNotificationContent
   }
   
-  static func saveImage(_ image: UIImage?) -> String? {
-    guard let image = image else {
-      return nil
-    }
-    
+  private func createFileURL(userId: String) -> URL? {
     let dir = FileManager.default.temporaryDirectory
-    let filePath = "\(dir.absoluteString)\(ProcessInfo.processInfo.globallyUniqueString).png"
-    
-    guard let newUri = URL(string: filePath),
-          let pngData = image.pngData() else {
-      return nil
+    return URL(string: "\(dir.absoluteString)\(userId).png")
+  }
+  
+  private func imageExists(_ url: URL) -> Bool {
+    return FileManager.default.fileExists(atPath: url.absoluteString)
+  }
+  
+  func downloadImageIfNecessary(_ imageUrl: URL, userId: String, completion: @escaping (URL?) -> Void) {
+    guard let outUrl = self.createFileURL(userId: userId) else {
+      completion(nil)
+      return
     }
     
-    do {
-      try pngData.write(to: newUri)
-      return filePath
-    } catch {
-      return nil
+    if (self.imageExists(outUrl)) {
+      completion(outUrl)
+      return
     }
-  }}
+    
+    let task = ImageDownloadTask(imageUrl: imageUrl) { image in
+      guard let image = image,
+            let pngData = image.pngData() else {
+        completion(nil)
+        return
+      }
+      do {
+        try pngData.write(to: outUrl)
+        completion(outUrl)
+      } catch {
+        completion(nil)
+      }
+    }
+    Self.shared.imageDownloadTasks.setObject(task, forKey: NSString(string: userId))
+  }
+  
+  func cancelImageDownload(userId: String) {
+    guard let imageDownloadTask = self.imageDownloadTasks.object(forKey: NSString(string: userId)) else {
+      return
+    }
+    imageDownloadTask.cancel()
+  }
+}
+
+// A small class that stores multiple completion blocks for a task and will ensure each is called even
+// if the task itself is cancelled.
+
+class ImageDownloadTask {
+  private var completionBlocks = [ImageDownloadTaskCompletion]()
+  private var task: URLSessionDataTask?
+  
+  init(imageUrl: URL, completion: @escaping ImageDownloadTaskCompletion) {
+    self.completionBlocks.append(completion)
+    self.createTask(imageUrl)
+  }
+  
+  private func createTask(_ imageUrl: URL) {
+    let task = URLSession.shared.dataTask(with: imageUrl) { data, _, _ in
+      guard let data = data,
+            let image = UIImage(data: data) else {
+        self.callEachCompletionBlock(nil)
+        return
+      }
+      self.callEachCompletionBlock(image)
+    }
+    task.resume()
+  }
+  
+  private func callEachCompletionBlock(_ image: UIImage?) {
+    completionBlocks.forEach { completion in
+      completion(image)
+    }
+  }
+  
+  func addCompletionBlock(_ completion: @escaping ImageDownloadTaskCompletion) {
+    self.completionBlocks.append(completion)
+  }
+  
+  func cancel() {
+    self.task?.cancel()
+    self.callEachCompletionBlock(nil)
+  }
+}
+
+enum DownloadError: Error {
+  case unknownError(String)
+}
