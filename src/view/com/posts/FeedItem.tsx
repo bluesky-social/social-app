@@ -262,7 +262,7 @@ let FeedItemInner = ({
           )}
         </View>
 
-        <View style={{paddingTop: 12, flexShrink: 1}}>
+        <View style={{paddingTop: 10, flexShrink: 1}}>
           {isReasonFeedSource(reason) ? (
             <Link href={reason.href}>
               <Text
@@ -523,7 +523,7 @@ function ReplyToLabel({
           Reply to{' '}
           <ProfileHoverCard inline did={profile.did}>
             <TextLinkOnWebOnly
-              type="md"
+              type="sm"
               style={pal.textLight}
               lineHeight={1.2}
               numberOfLines={1}

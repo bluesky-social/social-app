@@ -80,7 +80,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             onBeforePress={onBeforePressAuthor}
           />
           <TextLinkOnWebOnly
-            type="md"
+            type="sm"
             disableMismatchWarning
             style={[pal.textLight, {flexShrink: 4}]}
             text={NON_BREAKING_SPACE + sanitizeHandle(handle, '@')}
@@ -91,14 +91,14 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
         </Text>
       </ProfileHoverCard>
       {!isAndroid && (
-        <Text type="md" style={pal.textLight} accessible={false}>
+        <Text type="sm" style={pal.textLight} accessible={false}>
           &middot;
         </Text>
       )}
       <TimeElapsed timestamp={opts.timestamp}>
         {({timeElapsed}) => (
           <TextLinkOnWebOnly
-            type="md"
+            type="sm"
             style={pal.textLight}
             text={timeElapsed}
             accessibilityLabel={niceDate(opts.timestamp)}

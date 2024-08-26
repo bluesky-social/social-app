@@ -17,12 +17,12 @@ export const space = {
 } as const
 
 export const fontSize = {
-  _2xs: 10,
-  xs: 12,
-  sm: 14,
-  md: 16,
-  lg: 18,
-  xl: 20,
+  _2xs: 9,
+  xs: 11,
+  sm: 13,
+  md: 15,
+  lg: 17,
+  xl: 19,
   _2xl: 22,
   _3xl: 26,
   _4xl: 32,
