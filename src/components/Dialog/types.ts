@@ -4,7 +4,7 @@ import type {
   GestureResponderEvent,
   ScrollViewProps,
 } from 'react-native'
-import {BottomSheetProps} from '@discord/bottom-sheet/src'
+import {BottomSheetProps} from '@gorhom/bottom-sheet/src'
 
 import {ViewStyleProp} from '#/alf'
 

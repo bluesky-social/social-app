@@ -3,7 +3,7 @@ import type {ListRenderItemInfo} from 'react-native'
 import {View} from 'react-native'
 import {AppBskyActorDefs, ModerationOpts} from '@atproto/api'
 import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
-import {BottomSheetFlatListMethods} from '@discord/bottom-sheet'
+import {BottomSheetFlatListMethods} from '@gorhom/bottom-sheet'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

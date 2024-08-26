@@ -19,8 +19,8 @@ import BottomSheet, {
   BottomSheetView,
   useBottomSheet,
   WINDOW_HEIGHT,
-} from '@discord/bottom-sheet/src'
-import {BottomSheetFlatListProps} from '@discord/bottom-sheet/src/components/bottomSheetScrollable/types'
+} from '@gorhom/bottom-sheet/src'
+import {BottomSheetFlatListProps} from '@gorhom/bottom-sheet/src/components/bottomSheetScrollable/types'
 
 import {logger} from '#/logger'
 import {useDialogStateControlContext} from '#/state/dialogs'

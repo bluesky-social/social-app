@@ -6,7 +6,7 @@ import React, {
   useState,
 } from 'react'
 import {TextInput, View} from 'react-native'
-import {BottomSheetFlatListMethods} from '@discord/bottom-sheet'
+import {BottomSheetFlatListMethods} from '@gorhom/bottom-sheet'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

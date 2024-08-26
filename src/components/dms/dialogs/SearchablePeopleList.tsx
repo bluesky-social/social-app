@@ -8,7 +8,7 @@ import React, {
 import type {TextInput as TextInputType} from 'react-native'
 import {View} from 'react-native'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
-import {BottomSheetFlatListMethods} from '@discord/bottom-sheet'
+import {BottomSheetFlatListMethods} from '@gorhom/bottom-sheet'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 

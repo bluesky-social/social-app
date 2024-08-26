@@ -8,7 +8,7 @@ import {useMyLabelersQuery} from '#/state/queries/preferences'
 export {useDialogControl as useReportDialogControl} from '#/components/Dialog'
 
 import {AppBskyLabelerDefs} from '@atproto/api'
-import {BottomSheetScrollViewMethods} from '@discord/bottom-sheet/src'
+import {BottomSheetScrollViewMethods} from '@gorhom/bottom-sheet/src'
 
 import {atoms as a} from '#/alf'
 import * as Dialog from '#/components/Dialog'

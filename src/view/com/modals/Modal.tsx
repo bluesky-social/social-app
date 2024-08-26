@@ -1,7 +1,7 @@
 import React, {Fragment, useEffect, useRef} from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import BottomSheet from '@discord/bottom-sheet/src'
+import BottomSheet from '@gorhom/bottom-sheet/src'
 
 import {useModalControls, useModals} from '#/state/modals'
 import {usePalette} from 'lib/hooks/usePalette'
