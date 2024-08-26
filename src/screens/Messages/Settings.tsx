@@ -146,6 +146,36 @@ export function MessagesSettingsScreen({}: Props) {
                 </Toggle.Item>
               </View>
             </Toggle.Group>
+            <Text style={[a.text_lg, a.font_bold]}>
+              <Trans>Notification Sounds</Trans>
+            </Text>
+            <Divider style={a.my_md} />
+            <Toggle.Group
+              label={_(msg`Show avatars`)}
+              type="radio"
+              values={[preferences.showAvatarChat ? 'enabled' : 'disabled']}
+              onChange={onSelectSoundSetting}>
+              <View>
+                <Toggle.Item
+                  name="show"
+                  label={_(msg`Show`)}
+                  style={[a.justify_between, a.py_sm]}>
+                  <Toggle.LabelText>
+                    <Trans>Show</Trans>
+                  </Toggle.LabelText>
+                  <Toggle.Radio />
+                </Toggle.Item>
+                <Toggle.Item
+                  name="hide"
+                  label={_(msg`Hide`)}
+                  style={[a.justify_between, a.py_sm]}>
+                  <Toggle.LabelText>
+                    <Trans>Hide</Trans>
+                  </Toggle.LabelText>
+                  <Toggle.Radio />
+                </Toggle.Item>
+              </View>
+            </Toggle.Group>
           </>
         )}
       </View>

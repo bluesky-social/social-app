@@ -38,4 +38,5 @@ export type ExpoBackgroundNotificationHandlerModule = {
 // Don't add them until the native logic also handles the notifications for those preference types.
 export type BackgroundNotificationHandlerPreferences = {
   playSoundChat: boolean
+  showAvatarChat: boolean
 }
