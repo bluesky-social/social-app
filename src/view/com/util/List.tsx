@@ -7,6 +7,7 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {useDedupe} from 'lib/hooks/useDedupe'
 import {addStyle} from 'lib/styles'
+import {isAndroid, isIOS} from 'platform/detection'
 import {updateActiveViewAsync} from '../../../../modules/expo-bluesky-swiss-army/src/VisibilityView'
 import {FlatList_INTERNAL} from './Views'
 
@@ -49,7 +50,7 @@ function ListImpl<ItemT>(
 ) {
   const isScrolledDown = useSharedValue(false)
   const pal = usePalette('default')
-  const dedupe = useDedupe()
+  const dedupe = useDedupe(400)
 
   function handleScrolledDownChange(didScrollDown: boolean) {
     onScrolledDownChange?.(didScrollDown)
@@ -57,6 +58,19 @@ function ListImpl<ItemT>(
 
   // Intentionally destructured outside the main thread closure.
   // See https://github.com/bluesky-social/social-app/pull/4108.
+  //
+  // We are also using this to determine when we should autoplay videos.
+  // On Android, there are some performance concerns if we call `updateActiveViewAsync` too often while scrolling.
+  // This isn't really a problem with how `updateActiveViewAsync` works, but rather that it will cause too many
+  // ExoPlayer instances to be created and destroyed, which is pretty expensive and can cause some jank in the feed.
+  // When comparing to Twitter, it seems they are much more conservative with when videos will begin playback than
+  // they are on iOS, likely for the same reason.
+  //
+  // Because we're going to be calling this far less on Android, we will also be extra careful to make sure some video
+  // starts playing when we reach the end of a scroll by calling `updateActiveViewAsync` at the end of a scroll (whether
+  // the user ending the drag or the momentum ending). These extra calls will _not_ be excessively expensive, since it
+  // is guaranteed to only happen once (React Native will only call either `onEndDrag` or `onMomentumEnd`, not both) and
+  // any scroll performance jank will not be noticeable, since the scroll has already completed.
   const {
     onBeginDrag: onBeginDragFromContext,
     onEndDrag: onEndDragFromContext,
@@ -69,6 +83,9 @@ function ListImpl<ItemT>(
     },
     onEndDrag(e, ctx) {
       onEndDragFromContext?.(e, ctx)
+      if (isAndroid) {
+        runOnJS(updateActiveViewAsync)
+      }
     },
     onScroll(e, ctx) {
       onScrollFromContext?.(e, ctx)
@@ -81,12 +98,18 @@ function ListImpl<ItemT>(
         }
       }
 
-      runOnJS(dedupe)(updateActiveViewAsync)
+      const yVelocity = e.velocity?.y
+      if (isIOS || (yVelocity && yVelocity < 0.1)) {
+        runOnJS(dedupe)(updateActiveViewAsync)
+      }
     },
     // Note: adding onMomentumBegin here makes simulator scroll
     // lag on Android. So either don't add it, or figure out why.
     onMomentumEnd(e, ctx) {
       onMomentumEndFromContext?.(e, ctx)
+      if (isAndroid) {
+        runOnJS(updateActiveViewAsync)
+      }
     },
   })
 

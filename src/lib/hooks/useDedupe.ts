@@ -1,17 +1,17 @@
 import React from 'react'
 
-export const useDedupe = () => {
+export const useDedupe = (timeout = 250) => {
   const canDo = React.useRef(true)
 
-  return React.useCallback((cb: () => unknown) => {
+  return (cb: () => unknown) => {
     if (canDo.current) {
       canDo.current = false
       setTimeout(() => {
         canDo.current = true
-      }, 250)
+      }, timeout)
       cb()
       return true
     }
     return false
-  }, [])
+  }
 }
