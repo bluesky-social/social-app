@@ -1,0 +1,26 @@
+diff --git a/node_modules/react-native-screens/common/cpp/react/renderer/components/rnscreens/RNSModalScreenShadowNode.h b/node_modules/react-native-screens/common/cpp/react/renderer/components/rnscreens/RNSModalScreenShadowNode.h
+index af1a193..9bf7cec 100644
+--- a/node_modules/react-native-screens/common/cpp/react/renderer/components/rnscreens/RNSModalScreenShadowNode.h
++++ b/node_modules/react-native-screens/common/cpp/react/renderer/components/rnscreens/RNSModalScreenShadowNode.h
+@@ -20,7 +20,7 @@ class JSI_EXPORT RNSModalScreenShadowNode final
+  public:
+   using ConcreteViewShadowNode::ConcreteViewShadowNode;
+ 
+-  Point getContentOriginOffset(bool includeTransform) const override;
++  Point getContentOriginOffset(bool includeTransform) const;
+   static ShadowNodeTraits BaseTraits() {
+     auto traits = ConcreteViewShadowNode::BaseTraits();
+     traits.set(ShadowNodeTraits::Trait::RootNodeKind);
+diff --git a/node_modules/react-native-screens/common/cpp/react/renderer/components/rnscreens/RNSScreenShadowNode.h b/node_modules/react-native-screens/common/cpp/react/renderer/components/rnscreens/RNSScreenShadowNode.h
+index a6c5dc0..45f0a1f 100644
+--- a/node_modules/react-native-screens/common/cpp/react/renderer/components/rnscreens/RNSScreenShadowNode.h
++++ b/node_modules/react-native-screens/common/cpp/react/renderer/components/rnscreens/RNSScreenShadowNode.h
+@@ -26,7 +26,7 @@ class JSI_EXPORT RNSScreenShadowNode final : public ConcreteViewShadowNode<
+ 
+ #pragma mark - ShadowNode overrides
+ 
+-  Point getContentOriginOffset(bool includeTransform) const override;
++  Point getContentOriginOffset(bool includeTransform) const;
+ 
+   void layout(LayoutContext layoutContext) override;
+ 
