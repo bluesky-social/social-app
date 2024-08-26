@@ -400,11 +400,7 @@ function Scrubber({
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const {
-    state: scrubbing,
-    onIn: startScrubbing,
-    onOut: stopScrubbing,
-  } = useInteractionState()
+  const [scrubberActive, setScrubberActive] = useState(false)
   const {
     state: hovered,
     onIn: onMouseEnter,
@@ -436,11 +432,11 @@ function Scrubber({
         target.setPointerCapture(evt.pointerId)
         isSeekingRef.current = true
         seek(evt)
-        startScrubbing()
+        setScrubberActive(true)
         onSeekStart()
       }
     },
-    [seek, onSeekStart, startScrubbing],
+    [seek, onSeekStart],
   )
 
   const onPointerMove = useCallback(
@@ -461,14 +457,10 @@ function Scrubber({
         target.releasePointerCapture(evt.pointerId)
         isSeekingRef.current = false
         onSeekEnd()
-        stopScrubbing()
-
-        if (isFirefox) {
-          document.body.classList.remove('force-no-clicks')
-        }
+        setScrubberActive(false)
       }
     },
-    [onSeekEnd, stopScrubbing],
+    [onSeekEnd],
   )
 
   useEffect(() => {
@@ -476,14 +468,14 @@ function Scrubber({
     // a pointerUp event is fired outside the element that captured the
     // pointer. Firefox clicks on the element the mouse is over, so we have
     // to make everything unclickable while seeking -sfn
-    if (isFirefox && scrubbing) {
+    if (isFirefox && scrubberActive) {
       document.body.classList.add('force-no-clicks')
 
       return () => {
         document.body.classList.remove('force-no-clicks')
       }
     }
-  }, [scrubbing])
+  }, [scrubberActive, onSeekEnd])
 
   useEffect(() => {
     if (!circleRef.current) return
@@ -518,7 +510,7 @@ function Scrubber({
     }
   }, [focused, seekLeft, seekRight, togglePlayPause, drawFocus])
 
-  const progress = scrubbing ? seekPosition : currentTime
+  const progress = scrubberActive ? seekPosition : currentTime
   const progressPercent = (progress / duration) * 100
 
   return (
@@ -535,7 +527,7 @@ function Scrubber({
           display: 'flex',
           alignItems: 'center',
           position: 'relative',
-          cursor: scrubbing ? 'grabbing' : 'grab',
+          cursor: scrubberActive ? 'grabbing' : 'grab',
         }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
@@ -546,7 +538,7 @@ function Scrubber({
             a.rounded_full,
             a.overflow_hidden,
             {backgroundColor: 'rgba(255, 255, 255, 0.4)'},
-            {height: hovered || scrubbing ? 6 : 3},
+            {height: hovered || scrubberActive ? 6 : 3},
           ]}>
           {currentTime && duration && (
             <View
@@ -589,8 +581,8 @@ function Scrubber({
                 transform: [
                   {
                     scale:
-                      hovered || scrubbing || focused
-                        ? scrubbing
+                      hovered || scrubberActive || focused
+                        ? scrubberActive
                           ? 1
                           : 0.6
                         : 0,
