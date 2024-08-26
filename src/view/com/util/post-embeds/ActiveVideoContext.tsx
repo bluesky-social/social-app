@@ -1,4 +1,11 @@
-import React, {useId, useRef, useState} from 'react'
+import React, {
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {useWindowDimensions} from 'react-native'
 
 import {isNative} from '#/platform/detection'
@@ -19,56 +26,67 @@ export function ActiveVideoProvider({children}: {children: React.ReactNode}) {
   // minimising re-renders by using refs
   const manuallySetRef = useRef(false)
   const activeViewIdRef = useRef(activeViewId)
+  useEffect(() => {
+    activeViewIdRef.current = activeViewId
+  }, [activeViewId])
 
-  const setActiveView = (viewId: string, src: string) => {
-    setActiveViewId(viewId)
-    activeViewIdRef.current = viewId
-    setSource(src)
-    manuallySetRef.current = true
-    // we don't know the exact position, but it's definitely on screen
-    // so just guess that it's in the middle. Any value is fine
-    // so long as it's not offscreen
-    activeViewLocationRef.current = windowHeight / 2
-  }
+  const setActiveView = useCallback(
+    (viewId: string, src: string) => {
+      setActiveViewId(viewId)
+      setSource(src)
+      manuallySetRef.current = true
+      // we don't know the exact position, but it's definitely on screen
+      // so just guess that it's in the middle. Any value is fine
+      // so long as it's not offscreen
+      activeViewLocationRef.current = windowHeight / 2
+    },
+    [windowHeight],
+  )
 
-  const sendViewPosition = (viewId: string, y: number) => {
-    if (isNative) return
+  const sendViewPosition = useCallback(
+    (viewId: string, y: number) => {
+      if (isNative) return
 
-    if (viewId === activeViewIdRef.current) {
-      activeViewLocationRef.current = y
-    } else {
-      if (
-        distanceToIdealPosition(y) <
-        distanceToIdealPosition(activeViewLocationRef.current)
-      ) {
-        // if the old view was manually set, only usurp if the old view is offscreen
-        if (
-          manuallySetRef.current &&
-          withinViewport(activeViewLocationRef.current)
-        ) {
-          return
-        }
-
-        setActiveViewId(viewId)
+      if (viewId === activeViewIdRef.current) {
         activeViewLocationRef.current = y
-        manuallySetRef.current = false
+      } else {
+        if (
+          distanceToIdealPosition(y) <
+          distanceToIdealPosition(activeViewLocationRef.current)
+        ) {
+          // if the old view was manually set, only usurp if the old view is offscreen
+          if (
+            manuallySetRef.current &&
+            withinViewport(activeViewLocationRef.current)
+          ) {
+            return
+          }
+
+          setActiveViewId(viewId)
+          activeViewLocationRef.current = y
+          manuallySetRef.current = false
+        }
       }
-    }
 
-    function distanceToIdealPosition(yPos: number) {
-      return Math.abs(yPos - windowHeight / 2.5)
-    }
+      function distanceToIdealPosition(yPos: number) {
+        return Math.abs(yPos - windowHeight / 2.5)
+      }
 
-    function withinViewport(yPos: number) {
-      return yPos > 0 && yPos < windowHeight
-    }
-  }
+      function withinViewport(yPos: number) {
+        return yPos > 0 && yPos < windowHeight
+      }
+    },
+    [windowHeight],
+  )
 
-  const value = {
-    activeViewId,
-    setActiveView,
-    sendViewPosition,
-  }
+  const value = useMemo(
+    () => ({
+      activeViewId,
+      setActiveView,
+      sendViewPosition,
+    }),
+    [activeViewId, setActiveView, sendViewPosition],
+  )
 
   return (
     <ActiveVideoContext.Provider value={value}>
@@ -84,13 +102,18 @@ export function useActiveVideoView({source}: {source: string}) {
   if (!context) {
     throw new Error('useActiveVideo must be used within a ActiveVideoProvider')
   }
-  const {activeViewId, setActiveView} = context
   const id = useId()
 
   return {
-    active: activeViewId === id,
-    setActive: () => setActiveView(id, source),
+    active: context.activeViewId === id,
+    setActive: useCallback(
+      () => context.setActiveView(id, source),
+      [context, id, source],
+    ),
     currentActiveView: context.activeViewId,
-    sendPosition: (y: number) => context.sendViewPosition(id, y),
+    sendPosition: useCallback(
+      (y: number) => context.sendViewPosition(id, y),
+      [context, id],
+    ),
   }
 }
