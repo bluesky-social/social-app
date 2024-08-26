@@ -159,7 +159,7 @@ export function MessagesSettingsScreen({}: Props) {
             <Toggle.Group
               label={_(msg`Show avatars`)}
               type="radio"
-              values={[preferences.showAvatarChat ? 'enabled' : 'disabled']}
+              values={[preferences.showAvatarChat ? 'show' : 'hide']}
               onChange={onSelectAvatarSetting}>
               <View>
                 <Toggle.Item
