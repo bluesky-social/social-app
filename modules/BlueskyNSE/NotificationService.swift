@@ -154,7 +154,7 @@ class NotificationService: UNNotificationServiceExtension {
   }
 
   func getSubject() -> String? {
-    guard let subject = self.bestAttempt?.userInfo["subject"] as? String else {
+    guard let subject = self.bestAttempt?.userInfo["convoId"] as? String else {
       return nil
     }
     return subject
