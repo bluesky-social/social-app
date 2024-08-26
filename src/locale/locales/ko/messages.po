@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-08-23 11:39+0900\n"
+"PO-Revision-Date: 2024-08-26 14:08+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -288,7 +288,7 @@ msgstr "리스트로 계정 뮤트됨"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:43
 msgid "Account options"
-msgstr ""
+msgstr "계정 옵션"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:59
 msgid "Account removed from quick access"
@@ -4585,7 +4585,7 @@ msgstr "다른 사용자와 비공개로 대화하세요."
 msgid "Processing..."
 msgstr "처리 중…"
 
-#: src/view/screens/DebugMod.tsx:895
+#: src/view/screens/DebugMod.tsx:896
 #: src/view/screens/Profile.tsx:346
 msgid "profile"
 msgstr "프로필"
@@ -6001,7 +6001,7 @@ msgstr "{0}(으)로 전환"
 
 #: src/view/screens/Settings/index.tsx:127
 msgid "Switches the account you are logged in to"
-msgstr ""
+msgstr "로그인 중인 계정을 전환합니다"
 
 #: src/screens/Settings/AppearanceSettings.tsx:85
 #: src/screens/Settings/AppearanceSettings.tsx:87
