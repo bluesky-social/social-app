@@ -4,6 +4,7 @@ let APP_GROUP = "group.app.bsky"
 
 let DEFAULTS: [String: Any] = [
   "playSoundChat": true,
+  "showAvatarChat": false,
   "playSoundFollow": false,
   "playSoundLike": false,
   "playSoundMention": false,
