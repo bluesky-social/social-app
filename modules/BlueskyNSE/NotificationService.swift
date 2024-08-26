@@ -100,7 +100,7 @@ class NotificationService: UNNotificationServiceExtension {
   func mutateWithAvatar(_ content: UNMutableNotificationContent, completion: @escaping () -> Void) {
     // Here, the server will only give us an avatar uri if there is a
     // follow relationship. All we need to check is the preference.
-    guard NSEUtil.shared.prefs?.bool(forKey: "showAvatarDms") == true,
+    guard NSEUtil.shared.prefs?.bool(forKey: "showAvatarChat") == true,
           #available (iOSApplicationExtension 15.0, *),
           let avatarUrlString = content.userInfo["senderAvatarUrl"] as? String,
           // TODO - uncomment once added to chat service
@@ -187,7 +187,7 @@ private class NSEUtil {
 
   private func createFileURL(userId: String) -> URL? {
     let dir = FileManager.default.temporaryDirectory
-    return URL(string: "\(dir.absoluteString)\(userId).png")
+    return URL(string: "\(dir.absoluteString)\(userId).jpeg")
   }
 
   private func imageExists(_ url: URL) -> Bool {
@@ -207,12 +207,12 @@ private class NSEUtil {
 
     let task = ImageDownloadTask(imageUrl: imageUrl) { image in
       guard let image = image,
-            let pngData = image.pngData() else {
+            let jpegData = image.jpegData(compressionQuality: 1) else {
         completion(nil)
         return
       }
       do {
-        try pngData.write(to: outUrl)
+        try jpegData.write(to: outUrl)
         completion(outUrl)
       } catch {
         completion(nil)
