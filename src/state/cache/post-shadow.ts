@@ -1,11 +1,16 @@
 import {useEffect, useMemo, useState} from 'react'
-import {AppBskyFeedDefs} from '@atproto/api'
+import {
+  AppBskyEmbedRecord,
+  AppBskyEmbedRecordWithMedia,
+  AppBskyFeedDefs,
+} from '@atproto/api'
 import {QueryClient} from '@tanstack/react-query'
 import EventEmitter from 'eventemitter3'
 
 import {batchedUpdates} from '#/lib/batchedUpdates'
 import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from '../queries/notifications/feed'
 import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from '../queries/post-feed'
+import {findAllPostsInQueryData as findAllPostsInQuoteQueryData} from '../queries/post-quotes'
 import {findAllPostsInQueryData as findAllPostsInThreadQueryData} from '../queries/post-thread'
 import {findAllPostsInQueryData as findAllPostsInSearchQueryData} from '../queries/search-posts'
 import {castAsShadow, Shadow} from './types'
@@ -15,6 +20,7 @@ export interface PostShadow {
   likeUri: string | undefined
   repostUri: string | undefined
   isDeleted: boolean
+  embed: AppBskyEmbedRecord.View | AppBskyEmbedRecordWithMedia.View | undefined
 }
 
 export const POST_TOMBSTONE = Symbol('PostTombstone')
@@ -86,8 +92,21 @@ function mergeShadow(
     repostCount = Math.max(0, repostCount)
   }
 
+  let embed: typeof post.embed
+  if ('embed' in shadow) {
+    if (
+      (AppBskyEmbedRecord.isView(post.embed) &&
+        AppBskyEmbedRecord.isView(shadow.embed)) ||
+      (AppBskyEmbedRecordWithMedia.isView(post.embed) &&
+        AppBskyEmbedRecordWithMedia.isView(shadow.embed))
+    ) {
+      embed = shadow.embed
+    }
+  }
+
   return castAsShadow({
     ...post,
+    embed: embed || post.embed,
     likeCount: likeCount,
     repostCount: repostCount,
     viewer: {
@@ -128,6 +147,9 @@ function* findPostsInCache(
     }
   }
   for (let post of findAllPostsInSearchQueryData(queryClient, uri)) {
+    yield post
+  }
+  for (let post of findAllPostsInQuoteQueryData(queryClient, uri)) {
     yield post
   }
 }

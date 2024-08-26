@@ -20,6 +20,7 @@ export type CommonNavigatorParams = {
   PostThread: {name: string; rkey: string}
   PostLikedBy: {name: string; rkey: string}
   PostRepostedBy: {name: string; rkey: string}
+  PostQuotes: {name: string; rkey: string}
   ProfileFeed: {name: string; rkey: string}
   ProfileFeedLikedBy: {name: string; rkey: string}
   ProfileLabelerLikedBy: {name: string}
@@ -38,6 +39,7 @@ export type CommonNavigatorParams = {
   PreferencesThreads: undefined
   PreferencesExternalEmbeds: undefined
   AccessibilitySettings: undefined
+  AppearanceSettings: undefined
   Search: {q?: string}
   Hashtag: {tag: string; author?: string}
   MessagesConversation: {conversation: string; embed?: string}

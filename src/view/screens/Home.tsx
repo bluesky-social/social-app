@@ -7,9 +7,10 @@ import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {logEvent, LogEvents} from '#/lib/statsig/statsig'
+import {useGate} from '#/lib/statsig/statsig'
 import {emitSoftReset} from '#/state/events'
 import {SavedFeedSourceInfo, usePinnedFeedsInfos} from '#/state/queries/feed'
-import {FeedParams} from '#/state/queries/post-feed'
+import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useSession} from '#/state/session'
@@ -88,6 +89,7 @@ function HomeScreenReady({
   const selectedFeed = allFeeds[selectedIndex]
   const requestNotificationsPermission = useRequestNotificationsPermission()
   const triggerTourIfQueued = useTriggerTourIfQueued(TOURS.HOME)
+  const gate = useGate()
 
   useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName)
   useOTAUpdates()
@@ -107,6 +109,30 @@ function HomeScreenReady({
       pagerRef.current?.setPage(selectedIndex, 'desktop-sidebar-click')
     }
   }, [selectedIndex])
+
+  // Temporary, remove when finished debugging
+  const debugHasLoggedFollowingPrefs = React.useRef(false)
+  const debugLogFollowingPrefs = React.useCallback(
+    (feed: FeedDescriptor) => {
+      if (debugHasLoggedFollowingPrefs.current) return
+      if (feed !== 'following') return
+      logEvent('debug:followingPrefs', {
+        followingShowRepliesFromPref: preferences.feedViewPrefs.hideReplies
+          ? 'off'
+          : preferences.feedViewPrefs.hideRepliesByUnfollowed
+          ? 'following'
+          : 'all',
+        followingRepliesMinLikePref:
+          preferences.feedViewPrefs.hideRepliesByLikeCount,
+      })
+      debugHasLoggedFollowingPrefs.current = true
+    },
+    [
+      preferences.feedViewPrefs.hideReplies,
+      preferences.feedViewPrefs.hideRepliesByLikeCount,
+      preferences.feedViewPrefs.hideRepliesByUnfollowed,
+    ],
+  )
 
   const {hasSession} = useSession()
   const setMinimalShellMode = useSetMinimalShellMode()
@@ -136,17 +162,22 @@ function HomeScreenReady({
           feedUrl: selectedFeed,
           reason: 'focus',
         })
+        debugLogFollowingPrefs(selectedFeed)
       }
     }),
   )
 
-  const mode = useMinimalShellMode()
+  const {footerMode} = useMinimalShellMode()
   const {isMobile} = useWebMediaQueries()
   useFocusEffect(
     React.useCallback(() => {
+      if (gate('fixed_bottom_bar')) {
+        // Unnecessary because it's always there.
+        return
+      }
       const listener = AppState.addEventListener('change', nextAppState => {
         if (nextAppState === 'active') {
-          if (isMobile && mode.value === 1) {
+          if (isMobile && footerMode.value === 1) {
             // Reveal the bottom bar so you don't miss notifications or messages.
             // TODO: Experiment with only doing it when unread > 0.
             setMinimalShellMode(false)
@@ -156,7 +187,7 @@ function HomeScreenReady({
       return () => {
         listener.remove()
       }
-    }, [setMinimalShellMode, mode, isMobile]),
+    }, [setMinimalShellMode, footerMode, isMobile, gate]),
   )
 
   const onPageSelected = React.useCallback(
@@ -182,8 +213,9 @@ function HomeScreenReady({
         feedUrl: feed,
         reason,
       })
+      debugLogFollowingPrefs(feed)
     },
-    [allFeeds],
+    [allFeeds, debugLogFollowingPrefs],
   )
 
   const onPressSelected = React.useCallback(() => {
