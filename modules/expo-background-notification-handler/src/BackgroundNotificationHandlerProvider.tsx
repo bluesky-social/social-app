@@ -25,6 +25,7 @@ export function BackgroundNotificationPreferencesProvider({
   const [preferences, setPreferences] =
     React.useState<BackgroundNotificationHandlerPreferences>({
       playSoundChat: true,
+      showAvatarChat: false, // @TODO probably want this to default to true
     })
 
   React.useEffect(() => {

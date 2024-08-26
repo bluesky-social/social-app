@@ -54,6 +54,12 @@ export function MessagesSettingsScreen({}: Props) {
     [setPref],
   )
 
+  const onSelectAvatarSetting = (keys: string[]) => {
+    const key = keys[0]
+    if (!key) return
+    setPref('showAvatarChat', key === 'show')
+  }
+
   return (
     <ScrollView stickyHeaderIndices={[0]}>
       <ViewHeader title={_(msg`Chat Settings`)} showOnDesktop showBorder />
@@ -141,6 +147,36 @@ export function MessagesSettingsScreen({}: Props) {
                   style={[a.justify_between, a.py_sm]}>
                   <Toggle.LabelText>
                     <Trans>Disabled</Trans>
+                  </Toggle.LabelText>
+                  <Toggle.Radio />
+                </Toggle.Item>
+              </View>
+            </Toggle.Group>
+            <Text style={[a.text_lg, a.font_bold]}>
+              <Trans>Show avatars in notifications</Trans>
+            </Text>
+            <Divider style={a.my_md} />
+            <Toggle.Group
+              label={_(msg`Show avatars`)}
+              type="radio"
+              values={[preferences.showAvatarChat ? 'show' : 'hide']}
+              onChange={onSelectAvatarSetting}>
+              <View>
+                <Toggle.Item
+                  name="show"
+                  label={_(msg`Show`)}
+                  style={[a.justify_between, a.py_sm]}>
+                  <Toggle.LabelText>
+                    <Trans>Show</Trans>
+                  </Toggle.LabelText>
+                  <Toggle.Radio />
+                </Toggle.Item>
+                <Toggle.Item
+                  name="hide"
+                  label={_(msg`Hide`)}
+                  style={[a.justify_between, a.py_sm]}>
+                  <Toggle.LabelText>
+                    <Trans>Hide</Trans>
                   </Toggle.LabelText>
                   <Toggle.Radio />
                 </Toggle.Item>
