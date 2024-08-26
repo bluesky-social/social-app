@@ -348,6 +348,7 @@ export const ComposePost = observer(function ComposePost({
             extLink,
             labels,
             threadgate: threadgateAllowUISettings,
+            postgate,
             onStateChange: setProcessingState,
             langs: toPostLanguages(langPrefs.postLanguage),
             video: videoUploadState.blobRef,
