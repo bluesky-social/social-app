@@ -3,6 +3,7 @@ import {StyleSheet, View} from 'react-native'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
+  AppBskyFeedThreadgate,
   AtUri,
   ModerationDecision,
   RichText as RichTextAPI,
@@ -16,6 +17,7 @@ import {useLanguagePrefs} from '#/state/preferences'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {ThreadPost} from '#/state/queries/post-thread'
 import {useComposerControls} from '#/state/shell/composer'
+import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {MAX_POST_LINES} from 'lib/constants'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -29,6 +31,7 @@ import {isWeb} from 'platform/detection'
 import {useSession} from 'state/session'
 import {PostThreadFollowBtn} from 'view/com/post-thread/PostThreadFollowBtn'
 import {atoms as a} from '#/alf'
+import {AppModerationCause} from '#/components/Pills'
 import {RichText} from '#/components/RichText'
 import {ContentHider} from '../../../components/moderation/ContentHider'
 import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
@@ -61,6 +64,7 @@ export function PostThreadItem({
   overrideBlur,
   onPostReply,
   hideTopBorder,
+  threadgateRecord,
 }: {
   post: AppBskyFeedDefs.PostView
   record: AppBskyFeedPost.Record
@@ -77,6 +81,7 @@ export function PostThreadItem({
   overrideBlur: boolean
   onPostReply: (postUri: string | undefined) => void
   hideTopBorder?: boolean
+  threadgateRecord?: AppBskyFeedThreadgate.Record
 }) {
   const postShadowed = usePostShadow(post)
   const richText = useMemo(
@@ -111,6 +116,7 @@ export function PostThreadItem({
         overrideBlur={overrideBlur}
         onPostReply={onPostReply}
         hideTopBorder={hideTopBorder}
+        threadgateRecord={threadgateRecord}
       />
     )
   }
@@ -154,6 +160,7 @@ let PostThreadItemLoaded = ({
   overrideBlur,
   onPostReply,
   hideTopBorder,
+  threadgateRecord,
 }: {
   post: Shadow<AppBskyFeedDefs.PostView>
   record: AppBskyFeedPost.Record
@@ -171,6 +178,7 @@ let PostThreadItemLoaded = ({
   overrideBlur: boolean
   onPostReply: (postUri: string | undefined) => void
   hideTopBorder?: boolean
+  threadgateRecord?: AppBskyFeedThreadgate.Record
 }): React.ReactNode => {
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -199,6 +207,27 @@ let PostThreadItemLoaded = ({
     return makeProfileLink(post.author, 'post', urip.rkey, 'reposted-by')
   }, [post.uri, post.author])
   const repostsTitle = _(msg`Reposts of this post`)
+  const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
+    threadgateRecord,
+  })
+  const additionalPostAlerts: AppModerationCause[] = React.useMemo(() => {
+    const isPostHiddenByThreadgate = threadgateHiddenReplies.has(post.uri)
+    const isControlledByViewer = new AtUri(rootUri).host === currentAccount?.did
+    return isControlledByViewer && isPostHiddenByThreadgate
+      ? [
+          {
+            type: 'reply-hidden',
+            source: {type: 'user', did: currentAccount?.did},
+            priority: 6,
+          },
+        ]
+      : []
+  }, [post, currentAccount?.did, threadgateHiddenReplies, rootUri])
+  const quotesHref = React.useMemo(() => {
+    const urip = new AtUri(post.uri)
+    return makeProfileLink(post.author, 'post', urip.rkey, 'quotes')
+  }, [post.uri, post.author])
+  const quotesTitle = _(msg`Quotes of this post`)
 
   const translatorUrl = getTranslatorLink(
     record?.text || '',
@@ -315,6 +344,7 @@ let PostThreadItemLoaded = ({
                 size="lg"
                 includeMute
                 style={[a.pt_2xs, a.pb_sm]}
+                additionalCauses={additionalPostAlerts}
               />
               {richText?.text ? (
                 <View
@@ -343,7 +373,9 @@ let PostThreadItemLoaded = ({
               translatorUrl={translatorUrl}
               needsTranslation={needsTranslation}
             />
-            {post.repostCount !== 0 || post.likeCount !== 0 ? (
+            {post.repostCount !== 0 ||
+            post.likeCount !== 0 ||
+            post.quoteCount !== 0 ? (
               // Show this section unless we're *sure* it has no engagement.
               <View style={[styles.expandedInfo, pal.border]}>
                 {post.repostCount != null && post.repostCount !== 0 ? (
@@ -362,6 +394,26 @@ let PostThreadItemLoaded = ({
                         value={post.repostCount}
                         one="repost"
                         other="reposts"
+                      />
+                    </Text>
+                  </Link>
+                ) : null}
+                {post.quoteCount != null && post.quoteCount !== 0 ? (
+                  <Link
+                    style={styles.expandedInfoItem}
+                    href={quotesHref}
+                    title={quotesTitle}>
+                    <Text
+                      testID="quoteCount-expanded"
+                      type="lg"
+                      style={pal.textLight}>
+                      <Text type="xl-bold" style={pal.text}>
+                        {formatCount(post.quoteCount)}
+                      </Text>{' '}
+                      <Plural
+                        value={post.quoteCount}
+                        one="quote"
+                        other="quotes"
                       />
                     </Text>
                   </Link>
@@ -391,7 +443,9 @@ let PostThreadItemLoaded = ({
                 record={record}
                 richText={richText}
                 onPressReply={onPressReply}
+                onPostReply={onPostReply}
                 logContext="PostThreadItem"
+                threadgateRecord={threadgateRecord}
               />
             </View>
           </View>
@@ -512,6 +566,7 @@ let PostThreadItemLoaded = ({
               <PostAlerts
                 modui={moderation.ui('contentList')}
                 style={[a.pt_2xs, a.pb_2xs]}
+                additionalCauses={additionalPostAlerts}
               />
               {richText?.text ? (
                 <View style={styles.postTextContainer}>
@@ -543,6 +598,7 @@ let PostThreadItemLoaded = ({
                 richText={richText}
                 onPressReply={onPressReply}
                 logContext="PostThreadItem"
+                threadgateRecord={threadgateRecord}
               />
             </View>
           </View>
@@ -649,6 +705,7 @@ function ExpandedPostDetails({
   const pal = usePalette('default')
   const {_} = useLingui()
   const openLink = useOpenLink()
+  const isRootPost = !('reply' in post.record)
 
   const onTranslatePress = React.useCallback(() => {
     openLink(translatorUrl)
@@ -660,12 +717,14 @@ function ExpandedPostDetails({
         a.flex_row,
         a.align_center,
         a.flex_wrap,
-        a.gap_sm,
+        a.gap_xs,
         s.mt2,
         s.mb10,
       ]}>
       <Text style={[a.text_sm, pal.textLight]}>{niceDate(post.indexedAt)}</Text>
-      <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
+      {isRootPost && (
+        <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
+      )}
       {needsTranslation && (
         <>
           <Text style={[a.text_sm, pal.textLight]}>&middot;</Text>

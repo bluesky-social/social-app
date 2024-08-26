@@ -571,7 +571,7 @@ export function Explore() {
       keyExtractor={item => item.key}
       // @ts-ignore web only -prf
       desktopFixedHeight
-      contentContainerStyle={{paddingBottom: 200}}
+      contentContainerStyle={{paddingBottom: 100}}
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode="on-drag"
     />
