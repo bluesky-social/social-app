@@ -454,7 +454,8 @@ export function usePinnedFeedsInfos() {
           }),
       )
 
-      await Promise.allSettled([feedsPromise, ...listsPromises])
+      await feedsPromise // Fail the whole query if it fails.
+      await Promise.allSettled(listsPromises) // Ignore individual failing ones.
 
       // order the feeds/lists in the order they were pinned
       const result: SavedFeedSourceInfo[] = []

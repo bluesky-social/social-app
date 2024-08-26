@@ -1,7 +1,6 @@
 import {
   AppBskyLabelerDefs,
   BskyAgent,
-  Did,
   InterpretedLabelValueDefinition,
   LABELS,
   ModerationCause,
@@ -11,8 +10,11 @@ import {
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {AppModerationCause} from '#/components/Pills'
 
-export function getModerationCauseKey(cause: ModerationCause): string {
+export function getModerationCauseKey(
+  cause: ModerationCause | AppModerationCause,
+): string {
   const source =
     cause.source.type === 'labeler'
       ? cause.source.did
@@ -63,7 +65,7 @@ export function isAppLabeler(
 ): boolean {
   const did = typeof labeler === 'string' ? labeler : labeler.creator.did
   // assertion here that `did` starts with `did:`
-  return did.startsWith('did:') && BskyAgent.appLabelers.includes(did as Did)
+  return did
 }
 
 export function isLabelerSubscribed(

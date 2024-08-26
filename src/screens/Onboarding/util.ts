@@ -4,6 +4,7 @@ import {
   BskyAgent,
 } from '@atproto/api'
 import {TID} from '@atproto/common-web'
+import chunk from 'lodash.chunk'
 
 import {until} from '#/lib/async/until'
 
@@ -29,10 +30,13 @@ export async function bulkWriteFollows(agent: BskyAgent, dids: string[]) {
     value: r,
   }))
 
-  await agent.com.atproto.repo.applyWrites({
-    repo: session.did,
-    writes: followWrites,
-  })
+  const chunks = chunk(followWrites, 50)
+  for (const chunk of chunks) {
+    await agent.com.atproto.repo.applyWrites({
+      repo: session.did,
+      writes: chunk,
+    })
+  }
   await whenFollowsIndexed(agent, session.did, res => !!res.data.follows.length)
 
   const followUris = new Map()

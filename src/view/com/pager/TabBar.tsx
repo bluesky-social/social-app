@@ -180,7 +180,7 @@ const desktopStyles = StyleSheet.create({
     left: 0,
     right: 0,
     top: '100%',
-    borderBottomWidth: 1,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
 })
 
