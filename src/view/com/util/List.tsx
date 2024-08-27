@@ -31,6 +31,7 @@ export type ListProps<ItemT> = Omit<
   // Web only prop to contain the scroll to the container rather than the window
   disableFullWindowScroll?: boolean
   sideBorders?: boolean
+  mayIncludeVideo?: boolean
 }
 export type ListRef = React.MutableRefObject<FlatList_INTERNAL | null>
 
@@ -44,6 +45,7 @@ function ListImpl<ItemT>(
     onItemSeen,
     headerOffset,
     style,
+    mayIncludeVideo,
     ...props
   }: ListProps<ItemT>,
   ref: React.Ref<ListMethods>,
@@ -83,8 +85,8 @@ function ListImpl<ItemT>(
     },
     onEndDrag(e, ctx) {
       onEndDragFromContext?.(e, ctx)
-      if (isAndroid) {
-        runOnJS(updateActiveViewAsync)
+      if (mayIncludeVideo && isAndroid) {
+        runOnJS(updateActiveViewAsync)()
       }
     },
     onScroll(e, ctx) {
@@ -99,16 +101,18 @@ function ListImpl<ItemT>(
       }
 
       const yVelocity = e.velocity?.y
-      if (isIOS || (yVelocity && yVelocity < 0.1)) {
-        runOnJS(dedupe)(updateActiveViewAsync)
+      if (mayIncludeVideo) {
+        if (isIOS || (yVelocity && yVelocity < 0.1)) {
+          runOnJS(dedupe)(updateActiveViewAsync)
+        }
       }
     },
     // Note: adding onMomentumBegin here makes simulator scroll
     // lag on Android. So either don't add it, or figure out why.
     onMomentumEnd(e, ctx) {
       onMomentumEndFromContext?.(e, ctx)
-      if (isAndroid) {
-        runOnJS(updateActiveViewAsync)
+      if (mayIncludeVideo && isAndroid) {
+        runOnJS(updateActiveViewAsync)()
       }
     },
   })

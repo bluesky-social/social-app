@@ -548,6 +548,7 @@ let Feed = ({
         initialNumToRender={initialNumToRender}
         windowSize={11}
         onItemSeen={feedFeedback.onItemSeen}
+        mayIncludeVideo={true}
       />
     </View>
   )

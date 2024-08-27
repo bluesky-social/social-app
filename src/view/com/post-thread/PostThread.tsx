@@ -516,6 +516,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
           initialNumToRender={initialNumToRender}
           windowSize={11}
           sideBorders={false}
+          mayIncludeVideo={true}
         />
       </ScrollProvider>
       {isMobile && canReply && hasSession && (

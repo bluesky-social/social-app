@@ -228,6 +228,7 @@ let SearchScreenPostResults = ({
               // @ts-ignore web only -prf
               desktopFixedHeight
               contentContainerStyle={{paddingBottom: 100}}
+              mayIncludeVideo={true}
             />
           ) : (
             <EmptyState message={_(msg`No results found for ${query}`)} />
