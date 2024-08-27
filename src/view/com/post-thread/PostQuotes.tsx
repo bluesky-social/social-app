@@ -133,6 +133,7 @@ export function PostQuotes({uri}: {uri: string}) {
       desktopFixedHeight
       initialNumToRender={initialNumToRender}
       windowSize={11}
+      mayIncludeVideo={true}
     />
   )
 }
