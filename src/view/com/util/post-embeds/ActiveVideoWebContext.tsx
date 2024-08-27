@@ -13,7 +13,7 @@ import {isNative, isWeb} from '#/platform/detection'
 const Context = React.createContext<{
   activeViewId: string | null
   setActiveView: (viewId: string) => void
-  sendPosition: (viewId: string, y: number) => void
+  sendViewPosition: (viewId: string, y: number) => void
 } | null>(null)
 
 export function Provider({children}: {children: React.ReactNode}) {
@@ -44,7 +44,7 @@ export function Provider({children}: {children: React.ReactNode}) {
     [windowHeight],
   )
 
-  const sendPosition = useCallback(
+  const sendViewPosition = useCallback(
     (viewId: string, y: number) => {
       if (isNative) return
 
@@ -84,9 +84,9 @@ export function Provider({children}: {children: React.ReactNode}) {
     () => ({
       activeViewId,
       setActiveView,
-      sendPosition,
+      sendViewPosition,
     }),
-    [activeViewId, setActiveView, sendPosition],
+    [activeViewId, setActiveView, sendViewPosition],
   )
 
   return <Context.Provider value={value}>{children}</Context.Provider>
@@ -99,7 +99,7 @@ export function useActiveVideoWeb() {
       'useActiveVideoWeb must be used within a ActiveVideoWebProvider',
     )
   }
-  const {activeViewId, setActiveView, sendPosition} = context
+  const {activeViewId, setActiveView, sendViewPosition} = context
   const id = useId()
 
   return {
@@ -108,6 +108,6 @@ export function useActiveVideoWeb() {
       setActiveView(id)
     },
     currentActiveView: activeViewId,
-    sendPosition: (y: number) => sendPosition(id, y),
+    sendPosition: (y: number) => sendViewPosition(id, y),
   }
 }
