@@ -92,7 +92,7 @@ export function Provider({children}: {children: React.ReactNode}) {
   return <Context.Provider value={value}>{children}</Context.Provider>
 }
 
-export function useActiveVideoWebView() {
+export function useActiveVideoWeb() {
   const context = React.useContext(Context)
   if (!context) {
     throw new Error('useActiveVideo must be used within a ActiveVideoProvider')
@@ -102,8 +102,10 @@ export function useActiveVideoWebView() {
 
   return {
     active: activeViewId === id,
-    setActive: setActiveView,
+    setActive: () => {
+      setActiveView(id)
+    },
     currentActiveView: activeViewId,
-    sendPosition,
+    sendPosition: (y: number) => sendPosition(id, y),
   }
 }

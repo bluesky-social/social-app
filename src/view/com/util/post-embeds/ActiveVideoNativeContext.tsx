@@ -6,7 +6,7 @@ import {isNative} from '#/platform/detection'
 const Context = React.createContext<{
   activeSource: string | null
   setActiveSource: (src: string) => void
-  player: VideoPlayer | null
+  player: VideoPlayer
 } | null>(null)
 
 export function Provider({children}: {children: React.ReactNode}) {
@@ -29,19 +29,12 @@ export function Provider({children}: {children: React.ReactNode}) {
   )
 }
 
-export function useActiveVideoNativeView({source}: {source: string}) {
+export function useActiveVideoNative() {
   const context = React.useContext(Context)
   if (!context) {
     throw new Error(
       'useActiveVideoView must be used within a ActiveVideoProvider',
     )
   }
-  const {activeSource, setActiveSource} = context
-
-  return {
-    active: source == activeSource,
-    setActive: (source: string) => {
-      setActiveSource(source)
-    },
-  }
+  return context
 }

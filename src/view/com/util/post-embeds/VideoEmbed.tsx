@@ -9,12 +9,13 @@ import {Button, ButtonIcon} from '#/components/Button'
 import {Play_Filled_Corner2_Rounded as PlayIcon} from '#/components/icons/Play'
 import {VisibilityView} from '../../../../../modules/expo-bluesky-swiss-army'
 import {ErrorBoundary} from '../ErrorBoundary'
-import {useActiveVideoView} from './ActiveVideoContext'
+import {useActiveVideoNative} from './ActiveVideoNativeContext'
 import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 
 export function VideoEmbed({source}: {source: string}) {
   const t = useTheme()
-  const {active, setActive} = useActiveVideoView({source})
+  const {activeSource, setActiveSource} = useActiveVideoNative()
+  const isActive = source === activeSource
   const {_} = useLingui()
 
   const [key, setKey] = useState(0)
@@ -40,15 +41,17 @@ export function VideoEmbed({source}: {source: string}) {
           enabled={true}
           onChangeStatus={isActive => {
             if (isActive) {
-              setActive()
+              setActiveSource(source)
             }
           }}>
-          {active ? (
+          {isActive ? (
             <VideoEmbedInnerNative />
           ) : (
             <Button
               style={[a.flex_1, t.atoms.bg_contrast_25]}
-              onPress={setActive}
+              onPress={() => {
+                setActiveSource(source)
+              }}
               label={_(msg`Play video`)}
               variant="ghost"
               color="secondary"
