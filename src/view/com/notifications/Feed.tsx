@@ -195,6 +195,7 @@ export function Feed({
         windowSize={11}
         sideBorders={false}
         removeClippedSubviews={true}
+        mayIncludeVideo={true}
       />
     </View>
   )
