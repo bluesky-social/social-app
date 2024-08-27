@@ -7,10 +7,10 @@ import {useMutation} from '@tanstack/react-query'
 
 import {MAX_ALT_TEXT} from '#/lib/constants'
 import {useEnforceMaxGraphemeCount} from '#/lib/strings/helpers'
-import {isNative, isWeb} from '#/platform/detection'
+import {isWeb} from '#/platform/detection'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useAgent} from '#/state/session'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
@@ -172,10 +172,10 @@ function SubtitleDialogInner({
           </Trans>
         </Text>
 
-        {isNative && (
+        <View style={web([a.flex_row, a.justify_end])}>
           <Button
             label={_(msg`Done`)}
-            size="medium"
+            size={isWeb ? 'small' : 'medium'}
             color="primary"
             variant="solid"
             onPress={() => control.close()}
@@ -184,7 +184,7 @@ function SubtitleDialogInner({
               <Trans>Done</Trans>
             </ButtonText>
           </Button>
-        )}
+        </View>
       </View>
       <Dialog.Close />
     </Dialog.ScrollableInner>
