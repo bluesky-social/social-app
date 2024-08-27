@@ -81,8 +81,8 @@ function Controls({
   const {_} = useLingui()
   const t = useTheme()
   const [isMuted, setIsMuted] = useState(player.muted)
-  const [duration, setDuration] = useState(() => Math.floor(player.duration))
-  const [currentTime, setCurrentTime] = useState(() =>
+  const [duration, _setDuration] = useState(() => Math.floor(player.duration))
+  const [currentTime, _setCurrentTime] = useState(() =>
     Math.floor(player.currentTime),
   )
 
@@ -91,22 +91,21 @@ function Controls({
   const seconds = String(timeRemaining % 60).padStart(2, '0')
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      // duration gets reset to 0 on loop
-      if (player.duration) setDuration(Math.floor(player.duration))
-      setCurrentTime(Math.floor(player.currentTime))
-
-      // how often should we update the time?
-      // 1000 gets out of sync with the video time
-    }, 250)
-
-    // eslint-disable-next-line @typescript-eslint/no-shadow
-    const sub = player.addListener('volumeChange', ({isMuted}) => {
-      setIsMuted(isMuted)
-    })
-
+    // const interval = setInterval(() => {
+    //   // duration gets reset to 0 on loop
+    //   if (player.duration) setDuration(Math.floor(player.duration))
+    //   setCurrentTime(Math.floor(player.currentTime))
+    //
+    //   // how often should we update the time?
+    //   // 1000 gets out of sync with the video time
+    // }, 250)
+    const sub = player.addListener(
+      'volumeChange',
+      ({isMuted: updatedMuteState}) => {
+        setIsMuted(updatedMuteState)
+      },
+    )
     return () => {
-      clearInterval(interval)
       sub.remove()
     }
   }, [player])
@@ -181,35 +180,33 @@ function Controls({
         accessibilityHint={_(msg`Tap to enter full screen`)}
         accessibilityRole="button"
       />
-      {duration > 0 && (
-        <Animated.View
-          entering={FadeInDown.duration(300)}
-          style={{
-            backgroundColor: 'rgba(0, 0, 0, 0.75)',
-            borderRadius: 6,
-            paddingHorizontal: 6,
-            paddingVertical: 3,
-            position: 'absolute',
-            bottom: 5,
-            right: 5,
-            minHeight: 20,
-            justifyContent: 'center',
-          }}>
-          <Pressable
-            onPress={toggleMuted}
-            style={a.flex_1}
-            accessibilityLabel={isMuted ? _(msg`Muted`) : _(msg`Unmuted`)}
-            accessibilityHint={_(msg`Tap to toggle sound`)}
-            accessibilityRole="button"
-            hitSlop={HITSLOP_30}>
-            {isMuted ? (
-              <MuteIcon width={14} fill={t.palette.white} />
-            ) : (
-              <UnmuteIcon width={14} fill={t.palette.white} />
-            )}
-          </Pressable>
-        </Animated.View>
-      )}
+      <Animated.View
+        entering={FadeInDown.duration(300)}
+        style={{
+          backgroundColor: 'rgba(0, 0, 0, 0.75)',
+          borderRadius: 6,
+          paddingHorizontal: 6,
+          paddingVertical: 3,
+          position: 'absolute',
+          bottom: 5,
+          right: 5,
+          minHeight: 20,
+          justifyContent: 'center',
+        }}>
+        <Pressable
+          onPress={toggleMuted}
+          style={a.flex_1}
+          accessibilityLabel={isMuted ? _(msg`Muted`) : _(msg`Unmuted`)}
+          accessibilityHint={_(msg`Tap to toggle sound`)}
+          accessibilityRole="button"
+          hitSlop={HITSLOP_30}>
+          {isMuted ? (
+            <MuteIcon width={14} fill={t.palette.white} />
+          ) : (
+            <UnmuteIcon width={14} fill={t.palette.white} />
+          )}
+        </Pressable>
+      </Animated.View>
     </View>
   )
 }

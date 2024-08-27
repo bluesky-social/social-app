@@ -100,11 +100,8 @@ function ListImpl<ItemT>(
         }
       }
 
-      const yVelocity = e.velocity?.y
-      if (mayIncludeVideo) {
-        if (isIOS || (yVelocity && yVelocity < 0.1)) {
-          runOnJS(dedupe)(updateActiveViewAsync)
-        }
+      if (mayIncludeVideo && isIOS) {
+        runOnJS(dedupe)(updateActiveViewAsync)
       }
     },
     // Note: adding onMomentumBegin here makes simulator scroll
