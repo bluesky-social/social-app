@@ -14,8 +14,7 @@ import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
-import * as Toggle from '#/components/forms/Toggle'
-import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/components/icons/SettingsGear2'
+import {CC_Stroke2_Corner0_Rounded as CCIcon} from '#/components/icons/CC'
 import {Text} from '#/components/Typography'
 import {SubtitleFilePicker} from './SubtitleFilePicker'
 
@@ -46,18 +45,14 @@ export function SubtitleDialogBtn({
   return (
     <View style={[a.flex_row, a.mt_xs]}>
       <Button
-        label={_(msg`Open video options dialog`)}
+        label={_(msg`Open video captions dialog`)}
         size="xsmall"
         color="secondary"
         variant="ghost"
         onPress={control.open}>
-        <ButtonIcon icon={SettingsIcon} />
+        <ButtonIcon icon={CCIcon} />
         <ButtonText>
-          {isWeb ? (
-            <Trans>Captions & video settings</Trans>
-          ) : (
-            <Trans>Alt text & video settings</Trans>
-          )}
+          {isWeb ? <Trans>Captions & alt text</Trans> : <Trans>Alt text</Trans>}
         </ButtonText>
       </Button>
       <Dialog.Outer control={control}>
@@ -141,36 +136,6 @@ function SubtitleDialogInner({
             </View>
           </>
         )}
-
-        <View
-          style={[
-            a.border_t,
-            a.w_full,
-            t.atoms.border_contrast_medium,
-            a.my_md,
-          ]}
-        />
-        <Text style={[a.text_xl, a.font_bold, a.leading_tight]}>
-          <Trans>Allow downloads</Trans>
-        </Text>
-        <Toggle.Item
-          type="checkbox"
-          label={_(msg`Permit in-app downloads`)}
-          value={true}
-          onChange={val => val}
-          name="permitDownloads"
-          style={[a.my_xs, a.justify_between]}>
-          <Toggle.LabelText>
-            <Trans>Permit in-app downloads</Trans>
-          </Toggle.LabelText>
-          <Toggle.Platform />
-        </Toggle.Item>
-        <Text style={[a.leading_tight, t.atoms.text_contrast_medium]}>
-          <Trans>
-            Note: this disables the download option within the app, but it is
-            still possible for others to access the raw video file.
-          </Trans>
-        </Text>
 
         <View style={web([a.flex_row, a.justify_end])}>
           <Button
