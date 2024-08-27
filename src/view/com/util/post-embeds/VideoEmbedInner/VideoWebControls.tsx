@@ -36,6 +36,7 @@ import {Play_Filled_Corner0_Rounded as PlayIcon} from '#/components/icons/Play'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {TimeIndicator} from './TimeIndicator'
 
 export function Controls({
   videoRef,
@@ -252,6 +253,9 @@ export function Controls({
         style={a.flex_1}
         onPress={onPressEmptySpace}
       />
+      {active && !showControls && !focused && (
+        <TimeIndicator time={Math.floor(duration - currentTime)} />
+      )}
       <View
         style={[
           a.flex_shrink_0,

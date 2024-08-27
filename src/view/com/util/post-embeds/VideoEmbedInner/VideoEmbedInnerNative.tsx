@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import Animated, {FadeInDown, FadeOutDown} from 'react-native-reanimated'
+import Animated, {FadeInDown} from 'react-native-reanimated'
 import {VideoPlayer, VideoView} from 'expo-video'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -10,14 +10,14 @@ import {HITSLOP_30} from '#/lib/constants'
 import {useAppState} from '#/lib/hooks/useAppState'
 import {logger} from '#/logger'
 import {useVideoPlayer} from '#/view/com/util/post-embeds/VideoPlayerContext'
-import {android, atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
-import {Text} from '#/components/Typography'
 import {
   AudioCategory,
   PlatformInfo,
 } from '../../../../../../modules/expo-bluesky-swiss-army'
+import {TimeIndicator} from './TimeIndicator'
 
 export function VideoEmbedInnerNative() {
   const player = useVideoPlayer()
@@ -86,10 +86,6 @@ function Controls({
     Math.floor(player.currentTime),
   )
 
-  const timeRemaining = duration - currentTime
-  const minutes = Math.floor(timeRemaining / 60)
-  const seconds = String(timeRemaining % 60).padStart(2, '0')
-
   useEffect(() => {
     const interval = setInterval(() => {
       // duration gets reset to 0 on loop
@@ -143,37 +139,12 @@ function Controls({
   // 1. timeRemaining is a number - was seeing NaNs
   // 2. duration is greater than 0 - means metadata has loaded
   // 3. we're less than 5 second into the video
+  const timeRemaining = duration - currentTime
   const showTime = !isNaN(timeRemaining) && duration > 0 && currentTime <= 5
 
   return (
     <View style={[a.absolute, a.inset_0]}>
-      {showTime && (
-        <Animated.View
-          entering={FadeInDown.duration(300)}
-          exiting={FadeOutDown.duration(500)}
-          style={[
-            {
-              backgroundColor: 'rgba(0, 0, 0, 0.75)',
-              borderRadius: 6,
-              paddingHorizontal: 6,
-              paddingVertical: 3,
-              position: 'absolute',
-              left: 5,
-              bottom: 5,
-              minHeight: 20,
-              justifyContent: 'center',
-            },
-          ]}>
-          <Text
-            style={[
-              {color: t.palette.white, fontSize: 12},
-              a.font_bold,
-              android({lineHeight: 1.25}),
-            ]}>
-            {minutes}:{seconds}
-          </Text>
-        </Animated.View>
-      )}
+      {showTime && <TimeIndicator time={timeRemaining} />}
       <Pressable
         onPress={onPressFullscreen}
         style={a.flex_1}
@@ -185,7 +156,7 @@ function Controls({
         <Animated.View
           entering={FadeInDown.duration(300)}
           style={{
-            backgroundColor: 'rgba(0, 0, 0, 0.75)',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
             borderRadius: 6,
             paddingHorizontal: 6,
             paddingVertical: 3,
