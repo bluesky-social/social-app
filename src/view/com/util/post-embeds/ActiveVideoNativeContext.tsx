@@ -33,7 +33,7 @@ export function useActiveVideoNative() {
   const context = React.useContext(Context)
   if (!context) {
     throw new Error(
-      'useActiveVideoView must be used within a ActiveVideoProvider',
+      'useActiveVideoNative must be used within a ActiveVideoNativeProvider',
     )
   }
   return context

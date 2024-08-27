@@ -95,7 +95,9 @@ export function Provider({children}: {children: React.ReactNode}) {
 export function useActiveVideoWeb() {
   const context = React.useContext(Context)
   if (!context) {
-    throw new Error('useActiveVideo must be used within a ActiveVideoProvider')
+    throw new Error(
+      'useActiveVideoWeb must be used within a ActiveVideoWebProvider',
+    )
   }
   const {activeViewId, setActiveView, sendPosition} = context
   const id = useId()
