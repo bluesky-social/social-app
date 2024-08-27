@@ -99,6 +99,7 @@ export function useActiveVideoWeb() {
       'useActiveVideoWeb must be used within a ActiveVideoWebProvider',
     )
   }
+
   const {activeViewId, setActiveView, sendViewPosition} = context
   const id = useId()
 
