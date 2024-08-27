@@ -5,7 +5,7 @@ import {useVideoPlayer, VideoView} from 'expo-video'
 
 import {CompressedVideo} from '#/lib/media/video/compress'
 import {ExternalEmbedRemoveBtn} from 'view/com/composer/ExternalEmbedRemoveBtn'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 
 export function VideoPreview({
   video,
@@ -14,6 +14,7 @@ export function VideoPreview({
   video: CompressedVideo
   clear: () => void
 }) {
+  const t = useTheme()
   const player = useVideoPlayer(video.uri, player => {
     player.loop = true
     player.muted = true
@@ -27,6 +28,8 @@ export function VideoPreview({
         a.rounded_sm,
         {aspectRatio: 16 / 9},
         a.overflow_hidden,
+        a.border,
+        t.atoms.border_contrast_low,
       ]}>
       <VideoView
         player={player}

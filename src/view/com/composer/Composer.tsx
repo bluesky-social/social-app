@@ -31,6 +31,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {
   AppBskyFeedDefs,
   AppBskyFeedGetPostThread,
+  BlobRef,
   BskyAgent,
 } from '@atproto/api'
 import {RichText} from '@atproto/api'
@@ -108,6 +109,7 @@ import {TextInput, TextInputRef} from './text-input/TextInput'
 import {ThreadgateBtn} from './threadgate/ThreadgateBtn'
 import {useExternalLinkFetch} from './useExternalLinkFetch'
 import {SelectVideoBtn} from './videos/SelectVideoBtn'
+import {SubtitleDialogBtn} from './videos/SubtitleDialog'
 import {VideoPreview} from './videos/VideoPreview'
 import {VideoTranscodeProgress} from './videos/VideoTranscodeProgress'
 
@@ -171,6 +173,25 @@ export const ComposePost = observer(function ComposePost({
   const [quote, setQuote] = useState<ComposerOpts['quote'] | undefined>(
     initQuote,
   )
+
+  const [videoAltText, setVideoAltText] = useState('')
+  const [subtitles, setSubtitles] = useState<Map<string, BlobRef>>(
+    () => new Map(),
+  )
+  const addSubtitle = useCallback((lang: string, blob: BlobRef) => {
+    setSubtitles(prev => {
+      const next = new Map(prev)
+      next.set(lang, blob)
+      return next
+    })
+  }, [])
+  const removeSubtitle = useCallback((lang: string) => {
+    setSubtitles(prev => {
+      const next = new Map(prev)
+      next.delete(lang)
+      return next
+    })
+  }, [])
 
   const {
     selectVideo,
@@ -704,6 +725,15 @@ export const ComposePost = observer(function ComposePost({
             ) : videoUploadState.video ? (
               <VideoPreview video={videoUploadState.video} clear={clearVideo} />
             ) : null}
+            {videoUploadState.status !== 'idle' && (
+              <SubtitleDialogBtn
+                alt={videoAltText}
+                subtitles={subtitles}
+                setAlt={setVideoAltText}
+                addSubtitle={addSubtitle}
+                removeSubtitle={removeSubtitle}
+              />
+            )}
           </View>
         </Animated.ScrollView>
         <SuggestedLanguage text={richtext.text} />
