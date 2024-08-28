@@ -41,16 +41,6 @@ module.exports = async function (env, argv) {
 
   debugger
 
-  if (CODECOV_ANALYZER) {
-    config.plugins.push(
-      codecovWebpackPlugin({
-        enableBundleAnalysis:
-          process.env.EXPO_PUBLIC_CODECOV_TOKEN !== undefined,
-        bundleName: 'social-app',
-        uploadToken: process.env.EXPO_PUBLIC_CODECOV_TOKEN,
-      }),
-    )
-  }
 
   if (GENERATE_STATS || OPEN_ANALYZER) {
     config.plugins.push(
@@ -60,6 +50,17 @@ module.exports = async function (env, argv) {
         statsFilename: '../stats.json',
         analyzerMode: OPEN_ANALYZER ? 'server' : 'json',
         defaultSizes: 'parsed',
+      }),
+    )
+  }
+
+  if (CODECOV_ANALYZER) {
+    config.plugins.push(
+      codecovWebpackPlugin({
+        enableBundleAnalysis:
+          process.env.EXPO_PUBLIC_CODECOV_TOKEN !== undefined,
+        bundleName: 'social-app',
+        uploadToken: process.env.EXPO_PUBLIC_CODECOV_TOKEN,
       }),
     )
   }
