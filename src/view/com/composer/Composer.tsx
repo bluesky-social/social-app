@@ -174,7 +174,7 @@ export const ComposePost = observer(function ComposePost({
   )
 
   const [videoAltText, setVideoAltText] = useState('')
-  const [subtitles, setSubtitles] = useState<{lang: string; file: File}[]>([])
+  const [captions, setCaptions] = useState<{lang: string; file: File}[]>([])
 
   const {
     selectVideo,
@@ -351,7 +351,13 @@ export const ComposePost = observer(function ComposePost({
           postgate,
           onStateChange: setProcessingState,
           langs: toPostLanguages(langPrefs.postLanguage),
-          video: videoUploadState.blobRef,
+          video: videoUploadState.blobRef
+            ? {
+                blobRef: videoUploadState.blobRef,
+                altText: videoAltText,
+                captions: captions,
+              }
+            : undefined,
         })
       ).uri
       try {
@@ -710,10 +716,10 @@ export const ComposePost = observer(function ComposePost({
             ) : null}
             {(videoUploadState.asset || videoUploadState.video) && (
               <SubtitleDialogBtn
-                alt={videoAltText}
-                setAlt={setVideoAltText}
-                subtitles={subtitles}
-                setSubtitles={setSubtitles}
+                altText={videoAltText}
+                setAltText={setVideoAltText}
+                captions={captions}
+                setCaptions={setCaptions}
               />
             )}
           </View>

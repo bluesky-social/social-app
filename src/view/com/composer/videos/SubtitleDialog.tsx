@@ -21,10 +21,10 @@ import {Text} from '#/components/Typography'
 import {SubtitleFilePicker} from './SubtitleFilePicker'
 
 interface Props {
-  alt: string
-  subtitles: {lang: string; file: File}[]
-  setAlt: (alt: string) => void
-  setSubtitles: React.Dispatch<
+  altText: string
+  captions: {lang: string; file: File}[]
+  setAltText: (altText: string) => void
+  setCaptions: React.Dispatch<
     React.SetStateAction<{lang: string; file: File}[]>
   >
 }
@@ -54,7 +54,12 @@ export function SubtitleDialogBtn(props: Props) {
   )
 }
 
-function SubtitleDialogInner({alt, setAlt, subtitles, setSubtitles}: Props) {
+function SubtitleDialogInner({
+  altText,
+  setAltText,
+  captions,
+  setCaptions,
+}: Props) {
   const control = Dialog.useDialogContext()
   const {_} = useLingui()
   const t = useTheme()
@@ -63,7 +68,7 @@ function SubtitleDialogInner({alt, setAlt, subtitles, setSubtitles}: Props) {
 
   const handleSelectFile = useCallback(
     (file: File) => {
-      setSubtitles(subs => [
+      setCaptions(subs => [
         ...subs,
         {
           lang: subs.some(s => s.lang === primaryLanguage)
@@ -73,10 +78,10 @@ function SubtitleDialogInner({alt, setAlt, subtitles, setSubtitles}: Props) {
         },
       ])
     },
-    [setSubtitles, primaryLanguage],
+    [setCaptions, primaryLanguage],
   )
 
-  const subtitleMissingLanguage = subtitles.some(sub => sub.lang === '')
+  const subtitleMissingLanguage = captions.some(sub => sub.lang === '')
 
   console.log({subtitleMissingLanguage})
 
@@ -90,8 +95,8 @@ function SubtitleDialogInner({alt, setAlt, subtitles, setSubtitles}: Props) {
           <Dialog.Input
             label={_(msg`Alt text`)}
             placeholder={_(msg`Add alt text (optional)`)}
-            value={alt}
-            onChangeText={evt => setAlt(enforceLen(evt, MAX_ALT_TEXT))}
+            value={altText}
+            onChangeText={evt => setAltText(enforceLen(evt, MAX_ALT_TEXT))}
             maxLength={MAX_ALT_TEXT * 10}
             multiline
             numberOfLines={3}
@@ -119,19 +124,19 @@ function SubtitleDialogInner({alt, setAlt, subtitles, setSubtitles}: Props) {
             </Text>
             <SubtitleFilePicker
               onSelectFile={handleSelectFile}
-              disabled={subtitleMissingLanguage || subtitles.length >= 4}
+              disabled={subtitleMissingLanguage || captions.length >= 4}
             />
             <View>
-              {subtitles.map((subtitle, i) => (
+              {captions.map((subtitle, i) => (
                 <SubtitleFileRow
                   key={subtitle.lang}
                   language={subtitle.lang}
                   file={subtitle.file}
-                  setSubtitles={setSubtitles}
+                  setCaptions={setCaptions}
                   otherLanguages={LANGUAGES.filter(
                     lang =>
                       langCode(lang) === subtitle.lang ||
-                      !subtitles.some(s => s.lang === langCode(lang)),
+                      !captions.some(s => s.lang === langCode(lang)),
                   )}
                   style={[i % 2 === 0 && t.atoms.bg_contrast_25]}
                 />
@@ -171,13 +176,13 @@ function SubtitleFileRow({
   language,
   file,
   otherLanguages,
-  setSubtitles,
+  setCaptions,
   style,
 }: {
   language: string
   file: File
   otherLanguages: {code2: string; code3: string; name: string}[]
-  setSubtitles: React.Dispatch<
+  setCaptions: React.Dispatch<
     React.SetStateAction<{lang: string; file: File}[]>
   >
   style: StyleProp<ViewStyle>
@@ -188,12 +193,12 @@ function SubtitleFileRow({
   const handleValueChange = useCallback(
     (lang: string) => {
       if (lang) {
-        setSubtitles(subs =>
+        setCaptions(subs =>
           subs.map(s => (s.lang === language ? {lang, file: s.file} : s)),
         )
       }
     },
-    [setSubtitles, language],
+    [setCaptions, language],
   )
 
   return (
@@ -246,7 +251,7 @@ function SubtitleFileRow({
         variant="outline"
         color="secondary"
         onPress={() =>
-          setSubtitles(subs => subs.filter(s => s.lang !== language))
+          setCaptions(subs => subs.filter(s => s.lang !== language))
         }
         style={[a.ml_sm]}>
         <ButtonIcon icon={X} />

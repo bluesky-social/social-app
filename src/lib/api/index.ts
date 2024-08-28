@@ -45,7 +45,11 @@ interface PostOpts {
     uri: string
     cid: string
   }
-  video?: BlobRef
+  video?: {
+    blobRef: BlobRef
+    altText: string
+    captions: {lang: string; file: File}[]
+  }
   extLink?: ExternalEmbedDraft
   images?: ImageModel[]
   labels?: string[]
@@ -128,19 +132,31 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
 
   // add video embed if present
   if (opts.video) {
+    const captions = await Promise.all(
+      opts.video.captions.map(async caption => {
+        const {data} = await agent.uploadBlob(caption.file, {
+          encoding: 'text/vtt',
+        })
+        return {lang: caption.lang, file: data.blob}
+      }),
+    )
     if (opts.quote) {
       embed = {
         $type: 'app.bsky.embed.recordWithMedia',
         record: embed,
         media: {
           $type: 'app.bsky.embed.video',
-          video: opts.video,
+          video: opts.video.blobRef,
+          alt: opts.video.altText || undefined,
+          captions: captions.length === 0 ? undefined : captions,
         } as AppBskyEmbedVideo.Main,
       } as AppBskyEmbedRecordWithMedia.Main
     } else {
       embed = {
         $type: 'app.bsky.embed.video',
-        video: opts.video,
+        video: opts.video.blobRef,
+        alt: opts.video.altText || undefined,
+        captions: captions.length === 0 ? undefined : captions,
       } as AppBskyEmbedVideo.Main
     }
   }
