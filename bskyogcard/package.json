@@ -4,13 +4,13 @@
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
-    "start": "node --loader ts-node/esm ./src/bin.ts",
-    "dev": "node --watch-path ./src --loader ts-node/esm ./src/bin.ts",
+    "start": " NODE_ENV=production node --loader ts-node/esm ./src/bin.ts",
+    "dev": "LOG_ENABLED=true NODE_ENV=development node --watch-path ./src --loader ts-node/esm ./src/bin.ts | pino-pretty",
     "build": "tsc && cp -r src/assets dist/",
     "install-fonts": "node --loader ts-node/esm scripts/install-fonts.ts"
   },
   "dependencies": {
-    "@atproto/api": "0.12.19-next.0",
+    "@atproto/api": "^0.13.4",
     "@atproto/common": "^0.4.0",
     "@resvg/resvg-js": "^2.6.2",
     "express": "^4.19.2",
@@ -18,10 +18,12 @@
     "pino": "^9.2.0",
     "react": "^18.3.1",
     "satori": "^0.10.13",
-    "twemoji": "^14.0.2"
+    "twemoji": "^14.0.2",
+    "whatwg-mimetype": "^4.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.14.3",
+    "pino-pretty": "^11.2.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
   }

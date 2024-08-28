@@ -31,9 +31,12 @@ export class AppContext {
     const fontDirectory = path.join(__DIRNAME, 'assets', 'fonts')
     const fontFiles = readdirSync(fontDirectory)
     const fonts = fontFiles.map(file => {
+      const basename = path.basename(file, path.extname(file))
+      const [weight, name] = basename.split('-')
       return {
-        name: path.basename(file, path.extname(file)),
+        name,
         data: readFileSync(path.join(fontDirectory, file)),
+        weight: parseInt(weight),
       }
     })
     return new AppContext({
