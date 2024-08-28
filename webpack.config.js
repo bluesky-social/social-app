@@ -32,15 +32,13 @@ module.exports = async function (env, argv) {
     config.plugins.push(new ReactRefreshWebpackPlugin())
   }
 
-  config.mode = 'development'
   config.optimization = {
     ...config.optimization,
     minimize: false,
-    usedExports: false,
+    usedExports: true,
   }
 
   debugger
-
 
   if (GENERATE_STATS || OPEN_ANALYZER) {
     config.plugins.push(
