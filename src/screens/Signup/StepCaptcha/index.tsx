@@ -41,10 +41,9 @@ export function StepCaptcha() {
     (code: string) => {
       setCompleted(true)
       logEvent('signup:captchaSuccess', {})
-      const submitTask = {code, mutableProcessed: false}
       dispatch({
         type: 'submit',
-        task: submitTask,
+        task: {verificationCode: code, mutableProcessed: false},
       })
     },
     [dispatch],
