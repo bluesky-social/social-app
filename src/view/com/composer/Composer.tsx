@@ -725,7 +725,7 @@ export const ComposePost = observer(function ComposePost({
             ) : videoUploadState.video ? (
               <VideoPreview video={videoUploadState.video} clear={clearVideo} />
             ) : null}
-            {videoUploadState.status !== 'idle' && (
+            {(videoUploadState.asset || videoUploadState.video) && (
               <SubtitleDialogBtn
                 alt={videoAltText}
                 subtitles={subtitles}
