@@ -9,7 +9,7 @@ import {useIsFocused} from '@react-navigation/native'
 import {HITSLOP_30} from '#/lib/constants'
 import {useAppState} from '#/lib/hooks/useAppState'
 import {logger} from '#/logger'
-import {useVideoPlayer} from '#/view/com/util/post-embeds/VideoPlayerContext'
+import {useActiveVideoNative} from 'view/com/util/post-embeds/ActiveVideoNativeContext'
 import {atoms as a, useTheme} from '#/alf'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
@@ -20,7 +20,7 @@ import {
 import {TimeIndicator} from './TimeIndicator'
 
 export function VideoEmbedInnerNative() {
-  const player = useVideoPlayer()
+  const {player} = useActiveVideoNative()
   const ref = useRef<VideoView>(null)
   const isScreenFocused = useIsFocused()
   const isAppFocused = useAppState()

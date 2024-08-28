@@ -8,19 +8,21 @@ import React, {
 } from 'react'
 import {useWindowDimensions} from 'react-native'
 
-import {isNative} from '#/platform/detection'
-import {VideoPlayerProvider} from './VideoPlayerContext'
+import {isNative, isWeb} from '#/platform/detection'
 
-const ActiveVideoContext = React.createContext<{
+const Context = React.createContext<{
   activeViewId: string | null
-  setActiveView: (viewId: string, src: string) => void
+  setActiveView: (viewId: string) => void
   sendViewPosition: (viewId: string, y: number) => void
 } | null>(null)
 
-export function ActiveVideoProvider({children}: {children: React.ReactNode}) {
+export function Provider({children}: {children: React.ReactNode}) {
+  if (!isWeb) {
+    throw new Error('ActiveVideoWebContext may onl be used on web.')
+  }
+
   const [activeViewId, setActiveViewId] = useState<string | null>(null)
   const activeViewLocationRef = useRef(Infinity)
-  const [source, setSource] = useState<string | null>(null)
   const {height: windowHeight} = useWindowDimensions()
 
   // minimising re-renders by using refs
@@ -31,9 +33,8 @@ export function ActiveVideoProvider({children}: {children: React.ReactNode}) {
   }, [activeViewId])
 
   const setActiveView = useCallback(
-    (viewId: string, src: string) => {
+    (viewId: string) => {
       setActiveViewId(viewId)
-      setSource(src)
       manuallySetRef.current = true
       // we don't know the exact position, but it's definitely on screen
       // so just guess that it's in the middle. Any value is fine
@@ -88,32 +89,26 @@ export function ActiveVideoProvider({children}: {children: React.ReactNode}) {
     [activeViewId, setActiveView, sendViewPosition],
   )
 
-  return (
-    <ActiveVideoContext.Provider value={value}>
-      <VideoPlayerProvider source={source ?? ''}>
-        {children}
-      </VideoPlayerProvider>
-    </ActiveVideoContext.Provider>
-  )
+  return <Context.Provider value={value}>{children}</Context.Provider>
 }
 
-export function useActiveVideoView({source}: {source: string}) {
-  const context = React.useContext(ActiveVideoContext)
+export function useActiveVideoWeb() {
+  const context = React.useContext(Context)
   if (!context) {
-    throw new Error('useActiveVideo must be used within a ActiveVideoProvider')
+    throw new Error(
+      'useActiveVideoWeb must be used within a ActiveVideoWebProvider',
+    )
   }
+
+  const {activeViewId, setActiveView, sendViewPosition} = context
   const id = useId()
 
   return {
-    active: context.activeViewId === id,
-    setActive: useCallback(
-      () => context.setActiveView(id, source),
-      [context, id, source],
-    ),
-    currentActiveView: context.activeViewId,
-    sendPosition: useCallback(
-      (y: number) => context.sendViewPosition(id, y),
-      [context, id],
-    ),
+    active: activeViewId === id,
+    setActive: () => {
+      setActiveView(id)
+    },
+    currentActiveView: activeViewId,
+    sendPosition: (y: number) => sendViewPosition(id, y),
   }
 }

@@ -8,14 +8,14 @@ import {
 } from 'view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerWeb'
 import {atoms as a, useTheme} from '#/alf'
 import {ErrorBoundary} from '../ErrorBoundary'
-import {useActiveVideoView} from './ActiveVideoContext'
+import {useActiveVideoWeb} from './ActiveVideoWebContext'
 import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 
 export function VideoEmbed({source}: {source: string}) {
   const t = useTheme()
   const ref = useRef<HTMLDivElement>(null)
   const {active, setActive, sendPosition, currentActiveView} =
-    useActiveVideoView({source})
+    useActiveVideoWeb()
   const [onScreen, setOnScreen] = useState(false)
 
   useEffect(() => {
