@@ -27,7 +27,7 @@ export enum SignupStep {
 }
 
 type SubmitTask = {
-  code: string | undefined
+  verificationCode: string | undefined
   mutableProcessed: boolean // OK to mutate assuming it's never read in render.
 }
 
@@ -62,7 +62,6 @@ export type SignupAction =
   | {type: 'setDateOfBirth'; value: Date}
   | {type: 'setInviteCode'; value: string}
   | {type: 'setHandle'; value: string}
-  | {type: 'setVerificationCode'; value: string}
   | {type: 'setError'; value: string}
   | {type: 'setIsLoading'; value: boolean}
   | {type: 'submit'; task: SubmitTask}
@@ -189,11 +188,7 @@ export function useSubmitSignup() {
   const onboardingDispatch = useOnboardingDispatch()
 
   return useCallback(
-    async (
-      state: SignupState,
-      dispatch: (action: SignupAction) => void,
-      verificationCode?: string,
-    ) => {
+    async (state: SignupState, dispatch: (action: SignupAction) => void) => {
       if (!state.email) {
         dispatch({type: 'setStep', value: SignupStep.INFO})
         return dispatch({
@@ -224,7 +219,7 @@ export function useSubmitSignup() {
       }
       if (
         state.serviceDescription?.phoneVerificationRequired &&
-        !verificationCode
+        !state.pendingSubmit?.verificationCode
       ) {
         dispatch({type: 'setStep', value: SignupStep.CAPTCHA})
         logger.error('Signup Flow Error', {
@@ -247,7 +242,7 @@ export function useSubmitSignup() {
           password: state.password,
           birthDate: state.dateOfBirth,
           inviteCode: state.inviteCode.trim(),
-          verificationCode: verificationCode,
+          verificationCode: state.pendingSubmit?.verificationCode,
         })
         /*
          * Must happen last so that if the user has multiple tabs open and
