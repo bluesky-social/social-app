@@ -96,7 +96,7 @@ export function MessagesScreen({navigation, route}: Props) {
     )
   }, [_, t])
 
-  const initialNumToRender = useInitialNumToRender(80)
+  const initialNumToRender = useInitialNumToRender({minItemHeight: 80})
   const [isPTRing, setIsPTRing] = useState(false)
 
   const {
