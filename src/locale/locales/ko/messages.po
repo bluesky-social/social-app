@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-08-26 14:08+0900\n"
+"PO-Revision-Date: 2024-08-28 20:04+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -94,6 +94,10 @@ msgstr "<0><1>텍스트 및 태그</1>에서</0> {0}"
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:228
 msgid "{0} joined this week"
 msgstr "이번 주에 {0}명이 가입함"
+
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:578
+msgid "{0} of {1}"
+msgstr "{0}/{1}"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:467
 msgid "{0} people have used this starter pack!"
@@ -489,7 +493,7 @@ msgstr "이전 주소인 {0}(으)로 이메일을 보냈습니다. 이 이메일
 msgid "An error has occurred"
 msgstr "오류 발생"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:314
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:341
 msgid "An error occurred"
 msgstr "오류 발생"
 
@@ -1702,7 +1706,7 @@ msgstr "이메일 2단계 인증 끄기"
 msgid "Disable haptic feedback"
 msgstr "햅틱 피드백 끄기"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:242
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:307
 msgid "Disable subtitles"
 msgstr "자막 사용 안 함"
 
@@ -2045,7 +2049,7 @@ msgstr "미디어 플레이어를 사용할 외부 사이트"
 msgid "Enable priority notifications"
 msgstr "우선순위 알림 사용"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:242
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:308
 msgid "Enable subtitles"
 msgstr "자막 사용"
 
@@ -2164,6 +2168,10 @@ msgstr "내가 팔로우하는 사용자 제외하기"
 #: src/components/dialogs/MutedWords.tsx:514
 msgid "Excludes users you follow"
 msgstr "내가 팔로우하는 사용자 제외"
+
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:325
+msgid "Exit fullscreen"
+msgstr "전체화면 나가기"
 
 #: src/view/com/modals/DeleteAccount.tsx:293
 msgid "Exits account deletion process"
@@ -2600,6 +2608,10 @@ msgstr "@{sanitizedAuthor} 님의 태그"
 msgctxt "from-feed"
 msgid "From <0/>"
 msgstr "<0/>에서"
+
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:326
+msgid "Fullscreen"
+msgstr "전체화면"
 
 #: src/view/com/composer/photos/SelectPhotoBtn.tsx:39
 msgid "Gallery"
@@ -3496,8 +3508,7 @@ msgid "Music"
 msgstr "음악"
 
 #: src/components/TagMenu/index.tsx:263
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:254
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:265
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:317
 msgid "Mute"
 msgstr "뮤트"
 
@@ -3569,7 +3580,7 @@ msgstr "스레드 뮤트"
 msgid "Mute words & tags"
 msgstr "단어 및 태그 뮤트"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:201
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:172
 msgid "Muted"
 msgstr "뮤트됨"
 
@@ -3977,7 +3988,7 @@ msgstr "on"
 
 #: src/lib/hooks/useTimeAgo.ts:81
 msgid "on {str}"
-msgstr ""
+msgstr "{str}"
 
 #: src/view/screens/Settings/index.tsx:226
 msgid "Onboarding reset"
@@ -4285,11 +4296,11 @@ msgid "Password updated!"
 msgstr "비밀번호 변경됨"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:44
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:226
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:294
 msgid "Pause"
 msgstr "일시 정지"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:203
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:250
 msgid "Pause video"
 msgstr "동영상 일시 정지"
 
@@ -4349,7 +4360,7 @@ msgid "Pinned to your feeds"
 msgstr "내 피드에 고정됨"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:44
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:226
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:295
 msgid "Play"
 msgstr "재생"
 
@@ -4362,7 +4373,7 @@ msgid "Play or pause the GIF"
 msgstr "GIP를 재생하거나 일시 정지합니다"
 
 #: src/view/com/util/post-embeds/VideoEmbed.tsx:52
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:204
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:251
 msgid "Play video"
 msgstr "동영상 재생"
 
@@ -5327,6 +5338,10 @@ msgstr "Bluesky에 지원하기"
 msgid "See this guide"
 msgstr "이 가이드"
 
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:572
+msgid "Seek slider"
+msgstr "슬라이더 탐색"
+
 #: src/view/com/util/Selector.tsx:106
 msgid "Select {item}"
 msgstr "{item} 선택"
@@ -6028,11 +6043,11 @@ msgstr "세로"
 msgid "Tap to dismiss"
 msgstr "눌러서 닫기"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:181
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:152
 msgid "Tap to enter full screen"
 msgstr "탭하여 전체화면으로 보기"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:202
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:173
 msgid "Tap to toggle sound"
 msgstr "탭하여 소리 켜기/끄기"
 
@@ -6636,8 +6651,7 @@ msgid "Unlike this feed"
 msgstr "이 피드 좋아요 취소"
 
 #: src/components/TagMenu/index.tsx:263
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:254
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:265
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:316
 #: src/view/screens/ProfileList.tsx:689
 msgid "Unmute"
 msgstr "언뮤트"
@@ -6664,11 +6678,11 @@ msgstr "알림 언뮤트"
 msgid "Unmute thread"
 msgstr "스레드 언뮤트"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:201
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:248
 msgid "Unmute video"
 msgstr "동영상 음소거 해제"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:201
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:172
 msgid "Unmuted"
 msgstr "음소거 해제됨"
 
@@ -6914,7 +6928,7 @@ msgstr "이메일 인증하기"
 msgid "Version {appVersion} {bundleInfo}"
 msgstr "버전 {appVersion} {bundleInfo}"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:180
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
 msgid "Video"
 msgstr "동영상"
 
