@@ -1,11 +1,14 @@
-import React from 'react'
-import {Dimensions} from 'react-native'
+import {useWindowDimensions} from 'react-native'
+import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs'
 
 const MIN_POST_HEIGHT = 100
 
-export function useInitialNumToRender(minItemHeight: number = MIN_POST_HEIGHT) {
-  return React.useMemo(() => {
-    const screenHeight = Dimensions.get('window').height
-    return Math.ceil(screenHeight / minItemHeight) + 1
-  }, [minItemHeight])
+export function useInitialNumToRender({
+  minItemHeight = MIN_POST_HEIGHT,
+  screenHeightOffset = 0,
+}: {minItemHeight?: number; screenHeightOffset?: number} = {}) {
+  const {height: screenHeight} = useWindowDimensions()
+  const bottomBarHeight = useBottomTabBarHeight()
+  const finalHeight = screenHeight - screenHeightOffset - bottomBarHeight
+  return Math.floor(finalHeight / minItemHeight) + 1
 }

@@ -161,6 +161,7 @@ let Feed = ({
   ListHeaderComponent,
   extraData,
   savedFeedConfig,
+  initialNumToRender: initialNumToRenderOverride,
 }: {
   feed: FeedDescriptor
   feedParams?: FeedParams
@@ -180,7 +181,7 @@ let Feed = ({
   ListHeaderComponent?: () => JSX.Element
   extraData?: any
   savedFeedConfig?: AppBskyActorDefs.SavedFeed
-  outsideHeaderOffset?: number
+  initialNumToRender?: number
 }): React.ReactNode => {
   const theme = useTheme()
   const {track} = useAnalytics()
@@ -545,7 +546,7 @@ let Feed = ({
         desktopFixedHeight={
           desktopFixedHeightOffset ? desktopFixedHeightOffset : true
         }
-        initialNumToRender={initialNumToRender}
+        initialNumToRender={initialNumToRenderOverride ?? initialNumToRender}
         windowSize={11}
         onItemSeen={feedFeedback.onItemSeen}
       />
