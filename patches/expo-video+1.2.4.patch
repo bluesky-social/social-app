@@ -64,8 +64,21 @@ index a951d80..3932535 100644
      isInFullscreen = false
    }
  
+diff --git a/node_modules/expo-video/build/VideoPlayer.types.d.ts b/node_modules/expo-video/build/VideoPlayer.types.d.ts
+index a09fcfe..65fe29a 100644
+--- a/node_modules/expo-video/build/VideoPlayer.types.d.ts
++++ b/node_modules/expo-video/build/VideoPlayer.types.d.ts
+@@ -128,6 +128,8 @@ export type VideoPlayerEvents = {
+      * Handler for an event emitted when the current media source of the player changes.
+      */
+     sourceChange(newSource: VideoSource, previousSource: VideoSource): void;
++
++    timeRemainingChange(timeRemaining: number): void;
+ };
+ /**
+  * Describes the current status of the player.
 diff --git a/node_modules/expo-video/build/VideoView.types.d.ts b/node_modules/expo-video/build/VideoView.types.d.ts
-index cb9ca6d..60e9f4e 100644
+index cb9ca6d..ed8bb7e 100644
 --- a/node_modules/expo-video/build/VideoView.types.d.ts
 +++ b/node_modules/expo-video/build/VideoView.types.d.ts
 @@ -89,5 +89,8 @@ export interface VideoViewProps extends ViewProps {
@@ -77,6 +90,7 @@ index cb9ca6d..60e9f4e 100644
 +    onExitFullscreen?: () => void;
  }
  //# sourceMappingURL=VideoView.types.d.ts.map
+\ No newline at end of file
 diff --git a/node_modules/expo-video/ios/VideoModule.swift b/node_modules/expo-video/ios/VideoModule.swift
 index c537a12..e4a918f 100644
 --- a/node_modules/expo-video/ios/VideoModule.swift
@@ -92,6 +106,98 @@ index c537a12..e4a918f 100644
        )
  
        Prop("player") { (view, player: VideoPlayer?) in
+diff --git a/node_modules/expo-video/ios/VideoPlayer.swift b/node_modules/expo-video/ios/VideoPlayer.swift
+index 3315b88..f482390 100644
+--- a/node_modules/expo-video/ios/VideoPlayer.swift
++++ b/node_modules/expo-video/ios/VideoPlayer.swift
+@@ -185,6 +185,10 @@ internal final class VideoPlayer: SharedRef<AVPlayer>, Hashable, VideoPlayerObse
+     safeEmit(event: "sourceChange", arguments: newVideoPlayerItem?.videoSource, oldVideoPlayerItem?.videoSource)
+   }
+   
++  func onPlayerTimeRemainingChanged(player: AVPlayer, timeRemaining: Double) {
++    safeEmit(event: "timeRemainingChange", arguments: timeRemaining)
++  }
++
+   func safeEmit<each A: AnyArgument>(event: String, arguments: repeat each A) {
+     if self.appContext != nil {
+       self.emit(event: event, arguments: repeat each arguments)
+diff --git a/node_modules/expo-video/ios/VideoPlayerObserver.swift b/node_modules/expo-video/ios/VideoPlayerObserver.swift
+index d289e26..d0fdd30 100644
+--- a/node_modules/expo-video/ios/VideoPlayerObserver.swift
++++ b/node_modules/expo-video/ios/VideoPlayerObserver.swift
+@@ -21,6 +21,7 @@ protocol VideoPlayerObserverDelegate: AnyObject {
+   func onItemChanged(player: AVPlayer, oldVideoPlayerItem: VideoPlayerItem?, newVideoPlayerItem: VideoPlayerItem?)
+   func onIsMutedChanged(player: AVPlayer, oldIsMuted: Bool?, newIsMuted: Bool)
+   func onPlayerItemStatusChanged(player: AVPlayer, oldStatus: AVPlayerItem.Status?, newStatus: AVPlayerItem.Status)
++  func onPlayerTimeRemainingChanged(player: AVPlayer, timeRemaining: Double)
+ }
+ 
+ // Default implementations for the delegate
+@@ -33,6 +34,7 @@ extension VideoPlayerObserverDelegate {
+   func onItemChanged(player: AVPlayer, oldVideoPlayerItem: VideoPlayerItem?, newVideoPlayerItem: VideoPlayerItem?) {}
+   func onIsMutedChanged(player: AVPlayer, oldIsMuted: Bool?, newIsMuted: Bool) {}
+   func onPlayerItemStatusChanged(player: AVPlayer, oldStatus: AVPlayerItem.Status?, newStatus: AVPlayerItem.Status) {}
++  func onPlayerTimeRemainingChanged(player: AVPlayer, timeRemaining: Double) {}
+ }
+ 
+ // Wrapper used to store WeakReferences to the observer delegate
+@@ -91,6 +93,7 @@ class VideoPlayerObserver {
+   private var playerVolumeObserver: NSKeyValueObservation?
+   private var playerCurrentItemObserver: NSKeyValueObservation?
+   private var playerIsMutedObserver: NSKeyValueObservation?
++  private var playerPeriodicTimeObserver: Any?
+ 
+   // Current player item observers
+   private var playbackBufferEmptyObserver: NSKeyValueObservation?
+@@ -152,6 +155,9 @@ class VideoPlayerObserver {
+     playerVolumeObserver?.invalidate()
+     playerIsMutedObserver?.invalidate()
+     playerCurrentItemObserver?.invalidate()
++    if let playerPeriodicTimeObserver = self.playerPeriodicTimeObserver {
++      player?.removeTimeObserver(playerPeriodicTimeObserver)
++    }
+   }
+ 
+   private func initializeCurrentPlayerItemObservers(player: AVPlayer, playerItem: AVPlayerItem) {
+@@ -270,6 +276,7 @@ class VideoPlayerObserver {
+ 
+     if isPlaying != (player.timeControlStatus == .playing) {
+       isPlaying = player.timeControlStatus == .playing
++      addOrRemovePeriodicTimeObserver()
+     }
+   }
+ 
+@@ -310,4 +317,30 @@ class VideoPlayerObserver {
+       }
+     }
+   }
++  
++  private func onPlayerTimeRemainingChanged(_ player: AVPlayer, _ timeRemaining: Double) {
++    delegates.forEach { delegate in
++      delegate.value?.onPlayerTimeRemainingChanged(player: player, timeRemaining: timeRemaining)
++    }
++  }
++  
++  private func addOrRemovePeriodicTimeObserver() {
++    guard let player = self.player else {
++      return
++    }
++    
++    if isPlaying {
++      // Add the time update listener
++      playerPeriodicTimeObserver = player.addPeriodicTimeObserver(forInterval: CMTimeMakeWithSeconds(1.0, preferredTimescale: Int32(NSEC_PER_SEC)), queue: nil) { event in
++        guard let duration = player.currentItem?.duration else {
++          return
++        }
++        
++        let timeRemaining = (duration.seconds - event.seconds).rounded()
++        self.onPlayerTimeRemainingChanged(player, timeRemaining)
++      }
++    } else if let playerPeriodicTimeObserver = self.playerPeriodicTimeObserver {
++      player.removeTimeObserver(playerPeriodicTimeObserver)
++    }
++  }
+ }
 diff --git a/node_modules/expo-video/ios/VideoView.swift b/node_modules/expo-video/ios/VideoView.swift
 index f4579e4..10c5908 100644
 --- a/node_modules/expo-video/ios/VideoView.swift
@@ -121,6 +227,19 @@ index f4579e4..10c5908 100644
          self.isFullscreen = false
        }
      }
+diff --git a/node_modules/expo-video/src/VideoPlayer.types.ts b/node_modules/expo-video/src/VideoPlayer.types.ts
+index aaf4b63..f438196 100644
+--- a/node_modules/expo-video/src/VideoPlayer.types.ts
++++ b/node_modules/expo-video/src/VideoPlayer.types.ts
+@@ -151,6 +151,8 @@ export type VideoPlayerEvents = {
+    * Handler for an event emitted when the current media source of the player changes.
+    */
+   sourceChange(newSource: VideoSource, previousSource: VideoSource): void;
++
++  timeRemainingChange(timeRemaining: number): void;
+ };
+ 
+ /**
 diff --git a/node_modules/expo-video/src/VideoView.types.ts b/node_modules/expo-video/src/VideoView.types.ts
 index 29fe5db..e1fbf59 100644
 --- a/node_modules/expo-video/src/VideoView.types.ts
