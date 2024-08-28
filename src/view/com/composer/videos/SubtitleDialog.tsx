@@ -100,7 +100,6 @@ function SubtitleDialogInner({
             maxLength={MAX_ALT_TEXT * 10}
             multiline
             numberOfLines={3}
-            autoFocus
             onKeyPress={({nativeEvent}) => {
               if (nativeEvent.key === 'Escape') {
                 control.close()
@@ -146,11 +145,9 @@ function SubtitleDialogInner({
         )}
 
         {subtitleMissingLanguage && (
-          <View style={[a.flex_row, a.flex_1]}>
-            <Text style={a.text_sm}>
-              Ensure you have selected a language for each subtitle file.
-            </Text>
-          </View>
+          <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+            Ensure you have selected a language for each subtitle file.
+          </Text>
         )}
 
         <View style={web([a.flex_row, a.justify_end])}>
