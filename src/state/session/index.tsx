@@ -72,10 +72,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       const signal = cancelPendingTask()
       track('Try Create Account')
       logEvent('account:create:begin', {})
-      const {agent, account} = await createAgentAndCreateAccount(
-        params,
-        onAgentSessionChange,
-      )
+      const {agent, account} = await createAgentAndCreateAccount(params)
 
       if (signal.aborted) {
         return
@@ -89,7 +86,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       logEvent('account:create:success', {})
       addSessionDebugLog({type: 'method:end', method: 'createAccount', account})
     },
-    [onAgentSessionChange, cancelPendingTask],
+    [cancelPendingTask],
   )
 
   const login = React.useCallback<SessionApiContext['login']>(
@@ -215,6 +212,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       const syncedAccount = synced.accounts.find(
         a => a.did === synced.currentAccount?.did,
       )
+
       if (syncedAccount && syncedAccount.refreshJwt) {
         if (syncedAccount.did !== state.currentAgentState.did) {
           resumeSession(syncedAccount)

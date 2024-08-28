@@ -32,7 +32,7 @@
     "lint-native": "swiftlint ./modules && ktlint ./modules",
     "lint-native:fix": "swiftlint --fix ./modules && ktlint --format ./modules",
     "typecheck": "tsc --project ./tsconfig.check.json",
-    "e2e:mock-server": "NODE_ENV=development ./jest/dev-infra/with-test-redis-and-db.sh ts-node --project tsconfig.e2e.json __e2e__/mock-server.ts",
+    "e2e:mock-server": "./jest/dev-infra/with-test-redis-and-db.sh ts-node --project tsconfig.e2e.json __e2e__/mock-server.ts",
     "e2e:metro": "EXPO_PUBLIC_ENV=e2e NODE_ENV=test RN_SRC_EXT=e2e.ts,e2e.tsx expo run:ios",
     "e2e:metro-android": "EXPO_PUBLIC_ENV=e2e NODE_ENV=test RN_SRC_EXT=e2e.ts,e2e.tsx expo run:android",
     "e2e:run": "maestro test __e2e__",
@@ -53,6 +53,8 @@
   },
   "dependencies": {
     "@atproto/api": "0.13.3",
+    "@atproto/oauth-client": "^0.1.7",
+    "@atproto/oauth-client-browser": "^0.1.7",
     "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@braintree/sanitize-url": "^6.0.2",
     "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
@@ -139,7 +141,7 @@
     "expo-system-ui": "~3.0.4",
     "expo-task-manager": "~11.8.1",
     "expo-updates": "~0.25.14",
-    "expo-video": "^1.2.4",
+    "expo-video": "^1.1.10",
     "expo-web-browser": "~13.0.3",
     "fast-text-encoding": "^1.0.6",
     "history": "^5.3.0",
@@ -208,7 +210,7 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
-    "@atproto/dev-env": "^0.3.39",
+    "@atproto/dev-env": "^0.3.5",
     "@babel/core": "^7.23.2",
     "@babel/preset-env": "^7.20.0",
     "@babel/runtime": "^7.20.0",

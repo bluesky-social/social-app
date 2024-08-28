@@ -237,6 +237,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/intent/compose", server.WebGeneric)
 	e.GET("/messages", server.WebGeneric)
 	e.GET("/messages/:conversation", server.WebGeneric)
+	e.GET("/auth/callback", server.WebGeneric)
 
 	// profile endpoints; only first populates info
 	e.GET("/profile/:handleOrDID", server.WebProfile)

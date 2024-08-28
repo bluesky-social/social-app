@@ -34,7 +34,18 @@ export async function createAgentAndResume(
     event: AtpSessionEvent,
   ) => void,
 ) {
-  const agent = new BskyAppAgent({service: storedAccount.service})
+  const agent = new BskyAppAgent({
+    service: storedAccount.service,
+    persistSession: event => {
+      const {session} = agent
+      if (!session?.did) return // @TODO SESSION - ?
+
+      onSessionChange(agent, session.did, event)
+      if (event !== 'create' && event !== 'update') {
+        addSessionErrorLog(session.did, event)
+      }
+    },
+  })
   if (storedAccount.pdsUrl) {
     agent.sessionManager.pdsUrl = new URL(storedAccount.pdsUrl)
   }
@@ -60,7 +71,7 @@ export async function createAgentAndResume(
     }
   }
 
-  return agent.prepare(gates, moderation, onSessionChange)
+  return agent.prepare(gates, moderation)
 }
 
 export async function createAgentAndLogin(
@@ -81,7 +92,18 @@ export async function createAgentAndLogin(
     event: AtpSessionEvent,
   ) => void,
 ) {
-  const agent = new BskyAppAgent({service})
+  const agent = new BskyAppAgent({
+    service,
+    persistSession: event => {
+      const {session} = agent
+      if (!session?.did) return // @TODO SESSION - ?
+
+      onSessionChange(agent, session.did, event)
+      if (event !== 'create' && event !== 'update') {
+        addSessionErrorLog(session.did, event)
+      }
+    },
+  })
   await agent.login({identifier, password, authFactorToken})
 
   const account = agentToSessionAccountOrThrow(agent)
@@ -90,32 +112,25 @@ export async function createAgentAndLogin(
   return agent.prepare(gates, moderation, onSessionChange)
 }
 
-export async function createAgentAndCreateAccount(
-  {
-    service,
-    email,
-    password,
-    handle,
-    birthDate,
-    inviteCode,
-    verificationPhone,
-    verificationCode,
-  }: {
-    service: string
-    email: string
-    password: string
-    handle: string
-    birthDate: Date
-    inviteCode?: string
-    verificationPhone?: string
-    verificationCode?: string
-  },
-  onSessionChange: (
-    agent: BskyAgent,
-    did: string,
-    event: AtpSessionEvent,
-  ) => void,
-) {
+export async function createAgentAndCreateAccount({
+  service,
+  email,
+  password,
+  handle,
+  birthDate,
+  inviteCode,
+  verificationPhone,
+  verificationCode,
+}: {
+  service: string
+  email: string
+  password: string
+  handle: string
+  birthDate: Date
+  inviteCode?: string
+  verificationPhone?: string
+  verificationCode?: string
+}) {
   const agent = new BskyAppAgent({service})
   await agent.createAccount({
     email,

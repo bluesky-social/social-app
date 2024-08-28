@@ -300,3 +300,42 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
 
   return res
 }
+
+export async function createThreadgate(
+  agent: BskyAgent,
+  postUri: string,
+  threadgate: ThreadgateSetting[],
+) {
+  let allow: (
+    | AppBskyFeedThreadgate.MentionRule
+    | AppBskyFeedThreadgate.FollowingRule
+    | AppBskyFeedThreadgate.ListRule
+  )[] = []
+  if (!threadgate.find(v => v.type === 'nobody')) {
+    for (const rule of threadgate) {
+      if (rule.type === 'mention') {
+        allow.push({$type: 'app.bsky.feed.threadgate#mentionRule'})
+      } else if (rule.type === 'following') {
+        allow.push({$type: 'app.bsky.feed.threadgate#followingRule'})
+      } else if (rule.type === 'list') {
+        allow.push({
+          $type: 'app.bsky.feed.threadgate#listRule',
+          list: rule.list,
+        })
+      }
+    }
+  }
+
+  const postUrip = new AtUri(postUri)
+  await agent.api.com.atproto.repo.putRecord({
+    repo: agent.accountDid,
+    collection: 'app.bsky.feed.threadgate',
+    rkey: postUrip.rkey,
+    record: {
+      $type: 'app.bsky.feed.threadgate',
+      post: postUri,
+      allow,
+      createdAt: new Date().toISOString(),
+    },
+  })
+}

@@ -82,6 +82,7 @@ import HashtagScreen from '#/screens/Hashtag'
 import {MessagesConversationScreen} from '#/screens/Messages/Conversation'
 import {MessagesScreen} from '#/screens/Messages/List'
 import {MessagesSettingsScreen} from '#/screens/Messages/Settings'
+import {CallbackScreen} from '#/screens/Login/CallbackScreen'
 import {ModerationScreen} from '#/screens/Moderation'
 import {PostLikedByScreen} from '#/screens/Post/PostLikedBy'
 import {PostQuotesScreen} from '#/screens/Post/PostQuotes'
@@ -371,6 +372,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="StarterPackEdit"
         getComponent={() => Wizard}
         options={{title: title(msg`Edit your starter pack`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="AuthCallback"
+        getComponent={() => CallbackScreen}
+        options={{title: title(msg`Callback`)}}
       />
     </>
   )

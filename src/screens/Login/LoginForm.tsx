@@ -10,6 +10,12 @@ import {
   ComAtprotoServerCreateSession,
   ComAtprotoServerDescribeServer,
 } from '@atproto/api'
+import {
+  AuthorizeOptions,
+  BrowserOAuthClient,
+  LoginContinuedInParentWindowError,
+  OAuthAgent,
+} from '@atproto/oauth-client-browser'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -21,6 +27,7 @@ import {logger} from '#/logger'
 import {useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
+// import {useGate} from 'lib/statsig/statsig'
 import {useSetHasCheckedForStarterPack} from 'state/preferences/used-starter-packs'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -35,6 +42,112 @@ import {Text} from '#/components/Typography'
 import {FormContainer} from './FormContainer'
 
 type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
+
+export const client = new BrowserOAuthClient({
+  plcDirectoryUrl: 'https://plc.directory',
+  handleResolver: 'https://bsky.social',
+  clientMetadata: {
+    client_id: 'https://.ngrok-free.app/.well-known/client-metadata.json',
+    client_name: 'Bluesky',
+    redirect_uris: ['https://.ngrok-free.app/auth/callback'],
+    token_endpoint_auth_method: 'none',
+  },
+})
+
+export function useOAuth(client: BrowserOAuthClient) {
+  const [agent, setAgent] = useState<null | OAuthAgent>(null)
+  const [loading, setLoading] = useState(true)
+
+  const clientRef = useRef<typeof client>()
+  React.useEffect(() => {
+    // In strict mode, we don't want to reinitialize the client if it's the same
+    if (clientRef.current === client) return
+    clientRef.current = client
+
+    setLoading(true)
+    setAgent(null)
+
+    client
+      .init()
+      .then(async r => {
+        if (clientRef.current !== client) return
+
+        setAgent(r?.agent || null)
+      })
+      .catch(err => {
+        console.error('Failed to init:', err)
+
+        if (clientRef.current !== client) return
+        if (err instanceof LoginContinuedInParentWindowError) return
+
+        setAgent(null)
+      })
+      .finally(() => {
+        if (clientRef.current !== client) return
+
+        setLoading(false)
+      })
+  }, [client])
+
+  React.useEffect(() => {
+    if (!agent) return
+
+    const clear = ({detail}: {detail: {sub: string}}) => {
+      if (detail.sub === agent.sub) {
+        setAgent(null)
+      }
+    }
+
+    client.addEventListener('deleted', clear)
+
+    return () => {
+      client.removeEventListener('deleted', clear)
+    }
+  }, [client, agent])
+
+  const signOut = React.useCallback(async () => {
+    if (!agent) return
+
+    setAgent(null)
+    setLoading(true)
+
+    try {
+      await agent.signOut()
+    } catch (err) {
+      console.error('Failed to clear credentials', err)
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }, [agent])
+
+  const signIn = React.useCallback(
+    async (input: string, options?: AuthorizeOptions) => {
+      // if (agent) return
+
+      setLoading(true)
+
+      try {
+        const agent = await client.signIn(input, options)
+        setAgent(agent)
+      } catch (err) {
+        console.error('Failed to login', err)
+        throw err
+      } finally {
+        setLoading(false)
+      }
+    },
+    [client],
+  )
+
+  return {
+    agent,
+    loading,
+    signedIn: agent != null,
+    signIn,
+    signOut,
+  }
+}
 
 export const LoginForm = ({
   error,
@@ -73,10 +186,19 @@ export const LoginForm = ({
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const setHasCheckedForStarterPack = useSetHasCheckedForStarterPack()
 
+  // const gate = useGate()
+  const oauthEnabled = true
+  const oauth = useOAuth(client)
+  const [handle, setHandle] = React.useState('')
+
   const onPressSelectService = React.useCallback(() => {
     Keyboard.dismiss()
     track('Signin:PressedSelectService')
   }, [track])
+
+  const onPressNextOauth = async () => {
+    await oauth.signIn(handle)
+  }
 
   const onPressNext = async () => {
     if (isProcessing) return
@@ -175,91 +297,127 @@ export const LoginForm = ({
 
   return (
     <FormContainer testID="loginForm" titleText={<Trans>Sign in</Trans>}>
-      <View>
-        <TextField.LabelText>
-          <Trans>Hosting provider</Trans>
-        </TextField.LabelText>
-        <HostingProvider
-          serviceUrl={serviceUrl}
-          onSelectServiceUrl={setServiceUrl}
-          onOpenDialog={onPressSelectService}
-        />
-      </View>
-      <View>
-        <TextField.LabelText>
-          <Trans>Account</Trans>
-        </TextField.LabelText>
-        <View style={[a.gap_sm]}>
-          <TextField.Root>
-            <TextField.Icon icon={At} />
-            <TextField.Input
-              testID="loginUsernameInput"
-              label={_(msg`Username or email address`)}
-              autoCapitalize="none"
-              autoFocus
-              autoCorrect={false}
-              autoComplete="username"
-              returnKeyType="next"
-              textContentType="username"
-              defaultValue={initialHandle || ''}
-              onChangeText={v => {
-                identifierValueRef.current = v
-                checkIsReady()
-              }}
-              onSubmitEditing={() => {
-                passwordRef.current?.focus()
-              }}
-              blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
-              editable={!isProcessing}
-              accessibilityHint={_(
-                msg`Input the username or email address you used at signup`,
-              )}
+      {oauthEnabled ? (
+        <>
+          <TextField.LabelText>
+            <Trans>Handle</Trans>
+          </TextField.LabelText>
+          <View style={[a.gap_sm]}>
+            <TextField.Root>
+              <TextField.Icon icon={At} />
+              <TextField.Input
+                testID="loginUsernameInput"
+                label={_(msg`alice.test`)}
+                autoCapitalize="none"
+                autoFocus
+                autoCorrect={false}
+                autoComplete="username"
+                returnKeyType="next"
+                textContentType="username"
+                defaultValue={initialHandle || ''}
+                onChangeText={v => {
+                  setHandle(v)
+                  checkIsReady()
+                }}
+                onSubmitEditing={() => {
+                  // @TODO submit
+                }}
+                blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
+                editable={!isProcessing}
+                accessibilityHint={_(msg`Input the handle for your account`)}
+              />
+            </TextField.Root>
+          </View>
+        </>
+      ) : (
+        <>
+          <View>
+            <TextField.LabelText>
+              <Trans>Hosting provider</Trans>
+            </TextField.LabelText>
+            <HostingProvider
+              serviceUrl={serviceUrl}
+              onSelectServiceUrl={setServiceUrl}
+              onOpenDialog={onPressSelectService}
             />
-          </TextField.Root>
+          </View>
+          <View>
+            <TextField.LabelText>
+              <Trans>Account</Trans>
+            </TextField.LabelText>
+            <View style={[a.gap_sm]}>
+              <TextField.Root>
+                <TextField.Icon icon={At} />
+                <TextField.Input
+                  testID="loginUsernameInput"
+                  label={_(msg`Username or email address`)}
+                  autoCapitalize="none"
+                  autoFocus
+                  autoCorrect={false}
+                  autoComplete="username"
+                  returnKeyType="next"
+                  textContentType="username"
+                  defaultValue={initialHandle || ''}
+                  onChangeText={v => {
+                    identifierValueRef.current = v
+                    checkIsReady()
+                  }}
+                  onSubmitEditing={() => {
+                    passwordRef.current?.focus()
+                  }}
+                  blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
+                  editable={!isProcessing}
+                  accessibilityHint={_(
+                    msg`Input the username or email address you used at signup`,
+                  )}
+                />
+              </TextField.Root>
 
-          <TextField.Root>
-            <TextField.Icon icon={Lock} />
-            <TextField.Input
-              testID="loginPasswordInput"
-              inputRef={passwordRef}
-              label={_(msg`Password`)}
-              autoCapitalize="none"
-              autoCorrect={false}
-              autoComplete="password"
-              returnKeyType="done"
-              enablesReturnKeyAutomatically={true}
-              secureTextEntry={true}
-              textContentType="password"
-              clearButtonMode="while-editing"
-              onChangeText={v => {
-                passwordValueRef.current = v
-                checkIsReady()
-              }}
-              onSubmitEditing={onPressNext}
-              blurOnSubmit={false} // HACK: https://github.com/facebook/react-native/issues/21911#issuecomment-558343069 Keyboard blur behavior is now handled in onSubmitEditing
-              editable={!isProcessing}
-              accessibilityHint={_(msg`Input your password`)}
-            />
-            <Button
-              testID="forgotPasswordButton"
-              onPress={onPressForgotPassword}
-              label={_(msg`Forgot password?`)}
-              accessibilityHint={_(msg`Opens password reset form`)}
-              variant="solid"
-              color="secondary"
-              style={[
-                a.rounded_sm,
-                // t.atoms.bg_contrast_100,
-                {marginLeft: 'auto', left: 6, padding: 6},
-                a.z_10,
-              ]}>
-              <ButtonText>
-                <Trans>Forgot?</Trans>
-              </ButtonText>
-            </Button>
-          </TextField.Root>
-        </View>
-      </View>
+              <TextField.Root>
+                <TextField.Icon icon={Lock} />
+                <TextField.Input
+                  testID="loginPasswordInput"
+                  inputRef={passwordRef}
+                  label={_(msg`Password`)}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  autoComplete="password"
+                  returnKeyType="done"
+                  enablesReturnKeyAutomatically={true}
+                  secureTextEntry={true}
+                  textContentType="password"
+                  clearButtonMode="while-editing"
+                  onChangeText={v => {
+                    passwordValueRef.current = v
+                    checkIsReady()
+                  }}
+                  onSubmitEditing={onPressNext}
+                  blurOnSubmit={false} // HACK: https://github.com/facebook/react-native/issues/21911#issuecomment-558343069 Keyboard blur behavior is now handled in onSubmitEditing
+                  editable={!isProcessing}
+                  accessibilityHint={_(msg`Input your password`)}
+                />
+                <Button
+                  testID="forgotPasswordButton"
+                  onPress={onPressForgotPassword}
+                  label={_(msg`Forgot password?`)}
+                  accessibilityHint={_(msg`Opens password reset form`)}
+                  variant="solid"
+                  color="secondary"
+                  style={[
+                    a.rounded_sm,
+                    // t.atoms.bg_contrast_100,
+                    {marginLeft: 'auto', left: 6, padding: 6},
+                    a.z_10,
+                  ]}>
+                  <ButtonText>
+                    <Trans>Forgot?</Trans>
+                  </ButtonText>
+                </Button>
+              </TextField.Root>
+            </View>
+          </View>
+        </>
+      )}
       {isAuthFactorTokenNeeded && (
         <View>
           <TextField.LabelText>
@@ -325,7 +483,7 @@ export const LoginForm = ({
               <Trans>Connecting...</Trans>
             </Text>
           </>
-        ) : isReady ? (
+        ) : isReady || oauthEnabled ? (
           <Button
             testID="loginNextButton"
             label={_(msg`Next`)}
@@ -333,7 +491,7 @@ export const LoginForm = ({
             variant="solid"
             color="primary"
             size="medium"
-            onPress={onPressNext}>
+            onPress={oauthEnabled ? onPressNextOauth : onPressNext}>
             <ButtonText>
               <Trans>Next</Trans>
             </ButtonText>

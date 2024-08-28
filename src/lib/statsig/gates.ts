@@ -7,4 +7,5 @@ export type Gate =
   | 'show_follow_back_label_v2'
   | 'suggested_feeds_interstitial'
   | 'video_debug'
+  | 'use_oauth'
   | 'videos'

@@ -51,6 +51,7 @@ export type CommonNavigatorParams = {
   StarterPackShort: {code: string}
   StarterPackWizard: undefined
   StarterPackEdit: {rkey?: string}
+  AuthCallback: undefined
 }
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {

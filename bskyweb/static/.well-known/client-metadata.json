@@ -1,0 +1,15 @@
+{
+  "client_id": "https://.ngrok-free.app/.well-known/client-metadata.json",
+  "client_name": "Bluesky",
+  "client_uri": "https://.ngrok-free.app",
+  "logo_uri": "https://bsky.app/logo.png",
+  "tos_uri": "https://bsky.social/about/support/tos",
+  "policy_uri": "https://bsky.social/about/support/privacy-policy",
+  "redirect_uris": ["https://.ngrok-free.app/auth/callback"],
+  "scope": "profile email offline_access",
+  "grant_types": ["authorization_code", "refresh_token"],
+  "response_types": ["code"],
+  "token_endpoint_auth_method": "none",
+  "application_type": "web",
+  "dpop_bound_access_tokens": true
+}
