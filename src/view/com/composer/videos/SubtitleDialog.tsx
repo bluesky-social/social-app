@@ -1,46 +1,37 @@
-import React, {useCallback, useState} from 'react'
-import {View} from 'react-native'
-import {BlobRef} from '@atproto/api'
+import React, {useCallback} from 'react'
+import {StyleProp, View, ViewStyle} from 'react-native'
+import RNPickerSelect from 'react-native-picker-select'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useMutation} from '@tanstack/react-query'
 
 import {MAX_ALT_TEXT} from '#/lib/constants'
 import {useEnforceMaxGraphemeCount} from '#/lib/strings/helpers'
+import {LANGUAGES} from '#/locale/languages'
 import {isWeb} from '#/platform/detection'
 import {useLanguagePrefs} from '#/state/preferences'
-import {useAgent} from '#/state/session'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {CC_Stroke2_Corner0_Rounded as CCIcon} from '#/components/icons/CC'
+import {PageText_Stroke2_Corner0_Rounded as PageTextIcon} from '#/components/icons/PageText'
+import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
+import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import {Text} from '#/components/Typography'
 import {SubtitleFilePicker} from './SubtitleFilePicker'
 
-export function SubtitleDialogBtn({
-  addSubtitle,
-  ...props
-}: {
+interface Props {
   alt: string
-  subtitles: Map<string, BlobRef>
+  subtitles: {lang: string; file: File}[]
   setAlt: (alt: string) => void
-  addSubtitle: (lang: string, vttBlob: BlobRef) => void
-  removeSubtitle: (lang: string) => void
-}) {
-  const control = Dialog.useDialogControl()
-  const agent = useAgent()
-  const {_} = useLingui()
+  setSubtitles: React.Dispatch<
+    React.SetStateAction<{lang: string; file: File}[]>
+  >
+}
 
-  const {mutate: uploadVTT, status} = useMutation({
-    mutationFn: async ({lang, file}: {lang: string; file: File}) => {
-      const {data} = await agent.uploadBlob(file)
-      return {lang, blob: data.blob}
-    },
-    onSuccess: ({lang, blob}) => {
-      addSubtitle(lang, blob)
-    },
-  })
+export function SubtitleDialogBtn(props: Props) {
+  const control = Dialog.useDialogControl()
+  const {_} = useLingui()
 
   return (
     <View style={[a.flex_row, a.mt_xs]}>
@@ -57,41 +48,37 @@ export function SubtitleDialogBtn({
       </Button>
       <Dialog.Outer control={control}>
         <Dialog.Handle />
-        <SubtitleDialogInner
-          {...props}
-          uploadVTT={uploadVTT}
-          uploadStatus={status}
-        />
+        <SubtitleDialogInner {...props} />
       </Dialog.Outer>
     </View>
   )
 }
 
-function SubtitleDialogInner({
-  alt,
-  setAlt,
-  uploadVTT,
-  uploadStatus,
-}: {
-  alt: string
-  subtitles: Map<string, BlobRef>
-  setAlt: (alt: string) => void
-  uploadVTT: (args: {lang: string; file: File}) => void
-  uploadStatus: 'idle' | 'pending' | 'success' | 'error'
-}) {
+function SubtitleDialogInner({alt, setAlt, subtitles, setSubtitles}: Props) {
   const control = Dialog.useDialogContext()
   const {_} = useLingui()
   const t = useTheme()
   const enforceLen = useEnforceMaxGraphemeCount()
-  const appLanguage = useLanguagePrefs()
-  const [lang, _setLang] = useState(appLanguage.primaryLanguage)
+  const {primaryLanguage} = useLanguagePrefs()
 
   const handleSelectFile = useCallback(
     (file: File) => {
-      uploadVTT({lang, file})
+      setSubtitles(subs => [
+        ...subs,
+        {
+          lang: subs.some(s => s.lang === primaryLanguage)
+            ? ''
+            : primaryLanguage,
+          file,
+        },
+      ])
     },
-    [lang, uploadVTT],
+    [setSubtitles, primaryLanguage],
   )
+
+  const subtitleMissingLanguage = subtitles.some(sub => sub.lang === '')
+
+  console.log({subtitleMissingLanguage})
 
   return (
     <Dialog.ScrollableInner label={_(msg`Video settings`)}>
@@ -104,9 +91,7 @@ function SubtitleDialogInner({
             label={_(msg`Alt text`)}
             placeholder={_(msg`Add alt text (optional)`)}
             value={alt}
-            onChange={evt =>
-              setAlt(enforceLen(evt.nativeEvent.text, MAX_ALT_TEXT))
-            }
+            onChangeText={evt => setAlt(enforceLen(evt, MAX_ALT_TEXT))}
             maxLength={MAX_ALT_TEXT * 10}
             multiline
             numberOfLines={3}
@@ -132,13 +117,35 @@ function SubtitleDialogInner({
             <Text style={[a.text_xl, a.font_bold, a.leading_tight]}>
               <Trans>Captions (.vtt)</Trans>
             </Text>
-            <View style={[a.flex_row, a.gap_md]}>
-              <SubtitleFilePicker
-                onSelectFile={handleSelectFile}
-                pending={uploadStatus === 'pending'}
-              />
+            <SubtitleFilePicker
+              onSelectFile={handleSelectFile}
+              disabled={subtitleMissingLanguage || subtitles.length >= 4}
+            />
+            <View>
+              {subtitles.map((subtitle, i) => (
+                <SubtitleFileRow
+                  key={subtitle.lang}
+                  language={subtitle.lang}
+                  file={subtitle.file}
+                  setSubtitles={setSubtitles}
+                  otherLanguages={LANGUAGES.filter(
+                    lang =>
+                      langCode(lang) === subtitle.lang ||
+                      !subtitles.some(s => s.lang === langCode(lang)),
+                  )}
+                  style={[i % 2 === 0 && t.atoms.bg_contrast_25]}
+                />
+              ))}
             </View>
           </>
+        )}
+
+        {subtitleMissingLanguage && (
+          <View style={[a.flex_row, a.flex_1]}>
+            <Text style={a.text_sm}>
+              Ensure you have selected a language for each subtitle file.
+            </Text>
+          </View>
         )}
 
         <View style={web([a.flex_row, a.justify_end])}>
@@ -158,4 +165,96 @@ function SubtitleDialogInner({
       <Dialog.Close />
     </Dialog.ScrollableInner>
   )
+}
+
+function SubtitleFileRow({
+  language,
+  file,
+  otherLanguages,
+  setSubtitles,
+  style,
+}: {
+  language: string
+  file: File
+  otherLanguages: {code2: string; code3: string; name: string}[]
+  setSubtitles: React.Dispatch<
+    React.SetStateAction<{lang: string; file: File}[]>
+  >
+  style: StyleProp<ViewStyle>
+}) {
+  const {_} = useLingui()
+  const t = useTheme()
+
+  const handleValueChange = useCallback(
+    (lang: string) => {
+      if (lang) {
+        setSubtitles(subs =>
+          subs.map(s => (s.lang === language ? {lang, file: s.file} : s)),
+        )
+      }
+    },
+    [setSubtitles, language],
+  )
+
+  return (
+    <View
+      style={[
+        a.flex_row,
+        a.justify_between,
+        a.py_md,
+        a.px_lg,
+        a.rounded_md,
+        a.gap_md,
+        style,
+      ]}>
+      <View style={[a.flex_1, a.gap_xs, a.justify_center]}>
+        <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+          {language === '' ? (
+            <WarningIcon
+              style={a.flex_shrink_0}
+              fill={t.palette.negative_500}
+              size="sm"
+            />
+          ) : (
+            <PageTextIcon style={[t.atoms.text, a.flex_shrink_0]} size="sm" />
+          )}
+          <Text
+            style={[a.flex_1, a.leading_snug, a.font_bold, a.mb_2xs]}
+            numberOfLines={1}>
+            {file.name}
+          </Text>
+          <RNPickerSelect
+            placeholder={{
+              label: _(msg`Select language...`),
+              value: '',
+            }}
+            value={language}
+            onValueChange={handleValueChange}
+            items={otherLanguages.map(lang => ({
+              label: `${lang.name} (${langCode(lang)})`,
+              value: langCode(lang),
+            }))}
+            style={{viewContainer: {maxWidth: 200, flex: 1}}}
+          />
+        </View>
+      </View>
+
+      <Button
+        label={_(msg`Remove subtitle file`)}
+        size="tiny"
+        shape="round"
+        variant="outline"
+        color="secondary"
+        onPress={() =>
+          setSubtitles(subs => subs.filter(s => s.lang !== language))
+        }
+        style={[a.ml_sm]}>
+        <ButtonIcon icon={X} />
+      </Button>
+    </View>
+  )
+}
+
+function langCode(lang: {code2: string; code3: string}) {
+  return lang.code2 || lang.code3
 }

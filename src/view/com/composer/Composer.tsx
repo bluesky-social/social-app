@@ -31,7 +31,6 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {
   AppBskyFeedDefs,
   AppBskyFeedGetPostThread,
-  BlobRef,
   BskyAgent,
 } from '@atproto/api'
 import {RichText} from '@atproto/api'
@@ -175,23 +174,7 @@ export const ComposePost = observer(function ComposePost({
   )
 
   const [videoAltText, setVideoAltText] = useState('')
-  const [subtitles, setSubtitles] = useState<Map<string, BlobRef>>(
-    () => new Map(),
-  )
-  const addSubtitle = useCallback((lang: string, blob: BlobRef) => {
-    setSubtitles(prev => {
-      const next = new Map(prev)
-      next.set(lang, blob)
-      return next
-    })
-  }, [])
-  const removeSubtitle = useCallback((lang: string) => {
-    setSubtitles(prev => {
-      const next = new Map(prev)
-      next.delete(lang)
-      return next
-    })
-  }, [])
+  const [subtitles, setSubtitles] = useState<{lang: string; file: File}[]>([])
 
   const {
     selectVideo,
@@ -728,10 +711,9 @@ export const ComposePost = observer(function ComposePost({
             {(videoUploadState.asset || videoUploadState.video) && (
               <SubtitleDialogBtn
                 alt={videoAltText}
-                subtitles={subtitles}
                 setAlt={setVideoAltText}
-                addSubtitle={addSubtitle}
-                removeSubtitle={removeSubtitle}
+                subtitles={subtitles}
+                setSubtitles={setSubtitles}
               />
             )}
           </View>
