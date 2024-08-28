@@ -65,7 +65,7 @@ export function StepHandle() {
     })
     // phoneVerificationRequired is actually whether a captcha is required
     if (!state.serviceDescription?.phoneVerificationRequired) {
-      const submitTask = {code: undefined, mutableProcessed: false}
+      const submitTask = {verificationCode: undefined, mutableProcessed: false}
       dispatch({type: 'submit', task: submitTask})
       return
     }

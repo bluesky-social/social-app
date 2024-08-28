@@ -218,7 +218,7 @@ export function useSubmitSignup() {
         })
       }
       if (
-        state.serviceDescription?.phoneVerificationRequired &&
+        // state.serviceDescription?.phoneVerificationRequired &&
         !state.pendingSubmit?.verificationCode
       ) {
         dispatch({type: 'setStep', value: SignupStep.CAPTCHA})
