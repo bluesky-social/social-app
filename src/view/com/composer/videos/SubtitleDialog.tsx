@@ -68,6 +68,7 @@ export function SubtitleDialogBtn({
 }
 
 function SubtitleDialogInner({
+  alt,
   setAlt,
   uploadVTT,
   uploadStatus,
@@ -102,7 +103,10 @@ function SubtitleDialogInner({
           <Dialog.Input
             label={_(msg`Alt text`)}
             placeholder={_(msg`Add alt text (optional)`)}
-            onChangeText={text => setAlt(enforceLen(text, MAX_ALT_TEXT))}
+            value={alt}
+            onChange={evt =>
+              setAlt(enforceLen(evt.nativeEvent.text, MAX_ALT_TEXT))
+            }
             maxLength={MAX_ALT_TEXT * 10}
             multiline
             numberOfLines={3}
