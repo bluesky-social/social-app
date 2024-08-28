@@ -65,7 +65,6 @@ export function useGenerateStarterPackMutation({
 }) {
   const {_} = useLingui()
   const agent = useAgent()
-  const starterPackString = _(msg`Starter Pack`)
 
   return useMutation<{uri: string; cid: string}, Error, void>({
     mutationFn: async () => {
@@ -106,7 +105,7 @@ export function useGenerateStarterPackMutation({
         25,
         true,
       )
-      const starterPackName = `${displayName}'s ${starterPackString}`
+      const starterPackName = _(msg`${displayName}'s Starter Pack`)
 
       const list = await createStarterPackList({
         name: starterPackName,
