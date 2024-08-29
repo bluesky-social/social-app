@@ -23,7 +23,6 @@ export async function compressVideo(
       getCancellationId: id => {
         if (signal) {
           signal.addEventListener('abort', () => {
-            console.log('cancelling video', id)
             Video.cancelCompression(id)
           })
         }
