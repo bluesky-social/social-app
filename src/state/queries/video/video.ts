@@ -3,7 +3,7 @@ import {ImagePickerAsset} from 'expo-image-picker'
 import {AppBskyVideoDefs, BlobRef} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useQuery} from '@tanstack/react-query'
+import {QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {CompressedVideo} from 'lib/media/video/compress'
@@ -32,33 +32,41 @@ export interface State {
   jobStatus?: AppBskyVideoDefs.JobStatus
   blobRef?: BlobRef
   error?: string
+  abortController: AbortController
 }
 
-function reducer(state: State, action: Action): State {
-  let updatedState = state
-  if (action.type === 'SetStatus') {
-    updatedState = {...state, status: action.status}
-  } else if (action.type === 'SetProgress') {
-    updatedState = {...state, progress: action.progress}
-  } else if (action.type === 'SetError') {
-    updatedState = {...state, error: action.error}
-  } else if (action.type === 'Reset') {
-    updatedState = {
-      status: 'idle',
-      progress: 0,
-      video: null,
-      blobRef: undefined,
+function reducer(queryClient: QueryClient) {
+  return (state: State, action: Action): State => {
+    let updatedState = state
+    if (action.type === 'SetStatus') {
+      updatedState = {...state, status: action.status}
+    } else if (action.type === 'SetProgress') {
+      updatedState = {...state, progress: action.progress}
+    } else if (action.type === 'SetError') {
+      updatedState = {...state, error: action.error}
+    } else if (action.type === 'Reset') {
+      state.abortController.abort()
+      queryClient.cancelQueries({
+        queryKey: ['video'],
+      })
+      updatedState = {
+        status: 'idle',
+        progress: 0,
+        video: null,
+        blobRef: undefined,
+        abortController: new AbortController(),
+      }
+    } else if (action.type === 'SetAsset') {
+      updatedState = {...state, asset: action.asset}
+    } else if (action.type === 'SetVideo') {
+      updatedState = {...state, video: action.video}
+    } else if (action.type === 'SetJobStatus') {
+      updatedState = {...state, jobStatus: action.jobStatus}
+    } else if (action.type === 'SetBlobRef') {
+      updatedState = {...state, blobRef: action.blobRef}
     }
-  } else if (action.type === 'SetAsset') {
-    updatedState = {...state, asset: action.asset}
-  } else if (action.type === 'SetVideo') {
-    updatedState = {...state, video: action.video}
-  } else if (action.type === 'SetJobStatus') {
-    updatedState = {...state, jobStatus: action.jobStatus}
-  } else if (action.type === 'SetBlobRef') {
-    updatedState = {...state, blobRef: action.blobRef}
+    return updatedState
   }
-  return updatedState
 }
 
 export function useUploadVideo({
@@ -69,10 +77,12 @@ export function useUploadVideo({
   onSuccess: () => void
 }) {
   const {_} = useLingui()
-  const [state, dispatch] = React.useReducer(reducer, {
+  const queryClient = useQueryClient()
+  const [state, dispatch] = React.useReducer(reducer(queryClient), {
     status: 'idle',
     progress: 0,
     video: null,
+    abortController: new AbortController(),
   })
 
   const {setJobId} = useUploadStatusQuery({
@@ -116,6 +126,7 @@ export function useUploadVideo({
     setProgress: p => {
       dispatch({type: 'SetProgress', progress: p})
     },
+    signal: state.abortController.signal,
   })
 
   const {mutate: onSelectVideo} = useCompressVideoMutation({
@@ -148,6 +159,7 @@ export function useUploadVideo({
       })
       onVideoCompressed(video)
     },
+    signal: state.abortController.signal,
   })
 
   const selectVideo = (asset: ImagePickerAsset) => {
@@ -163,7 +175,6 @@ export function useUploadVideo({
   }
 
   const clearVideo = () => {
-    // @TODO cancel any running jobs
     dispatch({type: 'Reset'})
   }
 
@@ -187,7 +198,7 @@ const useUploadStatusQuery = ({
   const [jobId, setJobId] = React.useState<string>()
 
   const {isLoading, isError} = useQuery({
-    queryKey: ['video-upload', jobId],
+    queryKey: ['video', 'upload status', jobId],
     queryFn: async () => {
       if (!jobId) return // this won't happen, can ignore
 

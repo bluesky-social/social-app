@@ -1,5 +1,4 @@
 import React, {
-  Suspense,
   useCallback,
   useEffect,
   useImperativeHandle,
@@ -700,15 +699,10 @@ export const ComposePost = observer(function ComposePost({
               <VideoTranscodeProgress
                 asset={videoUploadState.asset}
                 progress={videoUploadState.progress}
+                clear={clearVideo}
               />
             ) : videoUploadState.video ? (
-              // remove suspense when we get rid of lazy
-              <Suspense fallback={null}>
-                <VideoPreview
-                  video={videoUploadState.video}
-                  clear={clearVideo}
-                />
-              </Suspense>
+              <VideoPreview video={videoUploadState.video} clear={clearVideo} />
             ) : null}
           </View>
         </Animated.ScrollView>

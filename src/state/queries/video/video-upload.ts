@@ -3,6 +3,7 @@ import {AppBskyVideoDefs} from '@atproto/api'
 import {useMutation} from '@tanstack/react-query'
 import {nanoid} from 'nanoid/non-secure'
 
+import {cancelable} from '#/lib/async/cancelable'
 import {CompressedVideo} from '#/lib/media/video/compress'
 import {createVideoEndpointUrl} from '#/state/queries/video/util'
 import {useAgent, useSession} from '#/state/session'
@@ -11,16 +12,19 @@ export const useUploadVideoMutation = ({
   onSuccess,
   onError,
   setProgress,
+  signal,
 }: {
   onSuccess: (response: AppBskyVideoDefs.JobStatus) => void
   onError: (e: any) => void
   setProgress: (progress: number) => void
+  signal: AbortSignal
 }) => {
   const {currentAccount} = useSession()
   const agent = useAgent()
 
   return useMutation({
-    mutationFn: async (video: CompressedVideo) => {
+    mutationKey: ['video', 'upload'],
+    mutationFn: cancelable(async (video: CompressedVideo) => {
       const uri = createVideoEndpointUrl('/xrpc/app.bsky.video.uploadVideo', {
         did: currentAccount!.did,
         name: `${nanoid(12)}.mp4`, // @TODO what are we limiting this to?
@@ -59,7 +63,7 @@ export const useUploadVideoMutation = ({
 
       const responseBody = JSON.parse(res.body) as AppBskyVideoDefs.JobStatus
       return responseBody
-    },
+    }, signal),
     onError,
     onSuccess,
   })
