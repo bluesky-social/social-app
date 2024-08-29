@@ -39,6 +39,7 @@ export const useUploadVideoMutation = ({
         {
           aud: `did:web:${agent.pdsUrl.hostname}`,
           lxm: 'com.atproto.repo.uploadBlob',
+          exp: Date.now() + 1000 * 60 * 30, // 30 minutes
         },
       )
 
