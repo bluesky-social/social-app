@@ -30,8 +30,6 @@ export const useUploadVideoMutation = ({
         name: `${nanoid(12)}.mp4`, // @TODO: make sure it's always mp4'
       })
 
-      console.log(currentAccount)
-
       if (!currentAccount?.service) {
         throw new Error('User is not logged in')
       }
