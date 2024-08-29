@@ -7,6 +7,7 @@ import {cancelable} from '#/lib/async/cancelable'
 import {CompressedVideo} from '#/lib/media/video/compress'
 import {createVideoEndpointUrl} from '#/state/queries/video/util'
 import {useAgent, useSession} from '#/state/session'
+import {getServiceAuthAudFromUrl} from 'lib/strings/url-helpers'
 
 export const useUploadVideoMutation = ({
   onSuccess,
@@ -30,14 +31,18 @@ export const useUploadVideoMutation = ({
         name: `${nanoid(12)}.mp4`, // @TODO what are we limiting this to?
       })
 
-      // a logged-in agent should have this set, but we'll check just in case
-      if (!agent.pdsUrl) {
+      if (!currentAccount?.pdsUrl) {
+        throw new Error('User is not logged in')
+      }
+
+      const serviceAuthAud = getServiceAuthAudFromUrl(currentAccount.pdsUrl)
+      if (!serviceAuthAud) {
         throw new Error('Agent does not have a PDS URL')
       }
 
       const {data: serviceAuth} = await agent.com.atproto.server.getServiceAuth(
         {
-          aud: `did:web:${agent.pdsUrl.hostname}`,
+          aud: serviceAuthAud,
           lxm: 'com.atproto.repo.uploadBlob',
         },
       )
