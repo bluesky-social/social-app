@@ -1,5 +1,5 @@
 import {useMemo} from 'react'
-import {AtpAgent} from '@atproto/api-prerelease'
+import {AtpAgent} from '@atproto/api'
 
 const UPLOAD_ENDPOINT = process.env.EXPO_PUBLIC_VIDEO_ROOT_ENDPOINT ?? ''
 

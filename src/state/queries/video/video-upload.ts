@@ -1,5 +1,5 @@
 import {createUploadTask, FileSystemUploadType} from 'expo-file-system'
-import {AppBskyVideoDefs} from '@atproto/api-prerelease'
+import {AppBskyVideoDefs} from '@atproto/api'
 import {useMutation} from '@tanstack/react-query'
 import {nanoid} from 'nanoid/non-secure'
 

@@ -1,7 +1,6 @@
 import React from 'react'
 import {ImagePickerAsset} from 'expo-image-picker'
-import {BlobRef} from '@atproto/api'
-import {AppBskyVideoDefs} from '@atproto/api-prerelease'
+import {AppBskyVideoDefs, BlobRef} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQuery} from '@tanstack/react-query'

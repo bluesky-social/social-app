@@ -1,16 +1,16 @@
-import {AppBskyFeedPostgate} from '@atproto/api'
 import {
   AppBskyEmbedExternal,
   AppBskyEmbedImages,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
   AppBskyEmbedVideo,
+  AppBskyFeedPostgate,
   AtUri,
   BlobRef,
   BskyAgent,
   ComAtprotoLabelDefs,
   RichText,
-} from '@atproto/api-prerelease'
+} from '@atproto/api'
 
 import {logger} from '#/logger'
 import {writePostgateRecord} from '#/state/queries/postgate'
@@ -69,9 +69,8 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
   opts.onStateChange?.('Processing...')
 
   await rt.detectFacets(agent)
-  // @ts-expect-error REMOVE ME AFTER API PACKAGE UPDATE
+
   rt = shortenLinks(rt)
-  // @ts-expect-error REMOVE ME AFTER API PACKAGE UPDATE
   rt = stripInvalidMentions(rt)
 
   // add quote embed if present
