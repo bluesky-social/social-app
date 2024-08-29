@@ -15,7 +15,7 @@ export function Text({
         a.flex,
         a.flex_wrap,
         {
-          columnGap: a.gap_xs.gap,
+          columnGap: '1px',
         },
         a.font_normal,
         a.leading_tight,

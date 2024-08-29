@@ -15,7 +15,7 @@ export function RichText({
   cx?: Record<string, any>[]
 }) {
   const {text, facets} = value
-  const baseStyles = [a.leading_snug, ...cx]
+  const baseStyles = [a.leading_snug, {whiteSpace: 'pre-wrap'}, ...cx]
   const linkStyles = [
     {
       color: t.palette.primary_500,
@@ -49,7 +49,7 @@ export function RichText({
     } else if (link && AppBskyRichtextFacet.validateLink(link).success) {
       const url = toShortUrl(text)
       if (disableLinks) {
-        els.push(<span key={key}>{url}</span>)
+        els.push(url)
       } else {
         els.push(
           <span key={key} style={s(linkStyles)}>
@@ -64,11 +64,14 @@ export function RichText({
     ) {
       els.push(
         <span key={key} style={s(linkStyles)}>
-          {segment.text}
+          {text}
         </span>,
       )
     } else {
-      els.push(<span key={key}>{segment.text}</span>)
+      els.push(text)
+    }
+    if (/\n/.test(text)) {
+      els.push(<span key={key} style={{width: '100%'}} />)
     }
     key++
   }
