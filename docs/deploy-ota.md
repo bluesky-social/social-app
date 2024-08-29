@@ -14,15 +14,20 @@ diff results in incompatible native changes, a new client build will automatical
 
 ### Prerequisites
 
-- Remove any internal client from your device and download the client from the App Store/Google Play. This will help for 
-testing as well as retrieving the build number.
-- You should have signed in to EAS locally through npx eas login. You will need to modify the build number in a 
-subsequent step.
-- Identify the build number of the production app you want to deploy an update for. iOS and Android build numbers are 
-divergent, so you will need to find both
+- Find the latest production build number for both iOS and Android in Slack. These are listed in #client-builds
+  - Production builds always send the Version Number and Build Number in the Slack message. Search for the latest
+  production version number, and you should find the correct information.
+  
+    ![slack-build-info](./img/slack-build-info.png)
+
+- It may also be useful to check the current production clients for these values. This will also help for testing. Note
+that you will need to _fully_ remove the existing internal client build from your device, otherwise the given values in
+the app may differ from the actual production values.
 
   ![app-build-number](./img/app-build-number.png)
 
+- You should have signed in to EAS locally through npx eas login. You will need to modify the build number in a
+subsequent step.
 - Ensure that the commit the initial client was cut from is properly tagged in git. The tag should be in the format of 1.X.0
   - Note: If the commit is not properly tagged, then the OTA deployment will simply fail since the GitHub Action will 
   not be able to find a commit to fingerprint and diff against.
@@ -38,14 +43,17 @@ to create your branch from, this should be properly set.
 
 ### Deployment
 
-- Update the build number through EAS
+- Update the build number through EAS to match the build numbers of the
+    production iOS/Android apps
     - Note: This isn’t strictly necessary, but having a step that takes you off of GitHub and into the terminal provides 
     a little “friction” to avoid fat fingering a release. Since there are legitimate reasons to just “click and deploy”
     for internal builds, I felt it useful to make sure it doesn’t accidentally become a prod deployment.
-    - Set the build number to the appropriate build number found in the prerequisite steps. Again, this should be the 
+    - Set the build numbers to the values found in the prerequisite steps. Again, this should be the 
     build number for the current production release you want to deploy for.
     - `npx eas build:version:set -p ios`
     - `npx eas build:version:set -p android`
+    - These steps should spit out what the current build number is, save those values
+        for later too
 - Run the deployment
   - Navigate to https://github.com/bluesky-social/social-app/actions/workflows/bundle-deploy-eas-update.yml
   - Select the “Run Workflow” dropdown
@@ -79,3 +87,9 @@ In about five minutes, the new deployment should be available for download. To t
 - Launch the app once and wait approximately 15 seconds
 - Relaunch the app
 - Check the Settings page and scroll to the bottom. The commit hash should now be the latest commit on your deployed branch.
+
+### Post Deployment
+
+- Reset both platforms build numbers to what they were before the OTA
+    deployment. These values should have been logged by the EAS CLI when you
+    reset them to the production values prior to OTA.

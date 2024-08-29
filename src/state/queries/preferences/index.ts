@@ -37,14 +37,14 @@ export function usePreferencesQuery() {
     refetchOnWindowFocus: true,
     queryKey: preferencesQueryKey,
     queryFn: async () => {
-      if (agent.session?.did === undefined) {
+      if (!agent.did) {
         return DEFAULT_LOGGED_OUT_PREFERENCES
       } else {
         const res = await agent.getPreferences()
 
         // save to local storage to ensure there are labels on initial requests
         saveLabelers(
-          agent.session.did,
+          agent.did,
           res.moderationPrefs.labelers.map(l => l.did),
         )
 
@@ -335,6 +335,68 @@ export function useRemoveMutedWordMutation() {
   return useMutation({
     mutationFn: async (mutedWord: AppBskyActorDefs.MutedWord) => {
       await agent.removeMutedWord(mutedWord)
+      // triggers a refetch
+      await queryClient.invalidateQueries({
+        queryKey: preferencesQueryKey,
+      })
+    },
+  })
+}
+
+export function useRemoveMutedWordsMutation() {
+  const queryClient = useQueryClient()
+  const agent = useAgent()
+
+  return useMutation({
+    mutationFn: async (mutedWords: AppBskyActorDefs.MutedWord[]) => {
+      await agent.removeMutedWords(mutedWords)
+      // triggers a refetch
+      await queryClient.invalidateQueries({
+        queryKey: preferencesQueryKey,
+      })
+    },
+  })
+}
+
+export function useQueueNudgesMutation() {
+  const queryClient = useQueryClient()
+  const agent = useAgent()
+
+  return useMutation({
+    mutationFn: async (nudges: string | string[]) => {
+      await agent.bskyAppQueueNudges(nudges)
+      // triggers a refetch
+      await queryClient.invalidateQueries({
+        queryKey: preferencesQueryKey,
+      })
+    },
+  })
+}
+
+export function useDismissNudgesMutation() {
+  const queryClient = useQueryClient()
+  const agent = useAgent()
+
+  return useMutation({
+    mutationFn: async (nudges: string | string[]) => {
+      await agent.bskyAppDismissNudges(nudges)
+      // triggers a refetch
+      await queryClient.invalidateQueries({
+        queryKey: preferencesQueryKey,
+      })
+    },
+  })
+}
+
+export function useSetActiveProgressGuideMutation() {
+  const queryClient = useQueryClient()
+  const agent = useAgent()
+
+  return useMutation({
+    mutationFn: async (
+      guide: AppBskyActorDefs.BskyAppProgressGuide | undefined,
+    ) => {
+      await agent.bskyAppSetActiveProgressGuide(guide)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,

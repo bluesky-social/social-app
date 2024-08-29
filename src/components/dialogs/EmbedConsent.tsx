@@ -113,6 +113,7 @@ export function EmbedConsentDialog({
             </ButtonText>
           </Button>
         </View>
+        <Dialog.Close />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
   )

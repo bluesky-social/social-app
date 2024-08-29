@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React, {useCallback, useRef} from 'react'
 import {Keyboard} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -7,7 +7,6 @@ import {logEvent} from '#/lib/statsig/statsig'
 import {Gif} from '#/state/queries/tenor'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
-import {useDialogControl} from '#/components/Dialog'
 import {GifSelectDialog} from '#/components/dialogs/GifSelect'
 import {GifSquare_Stroke2_Corner0_Rounded as GifIcon} from '#/components/icons/Gif'
 
@@ -19,14 +18,14 @@ type Props = {
 
 export function SelectGifBtn({onClose, onSelectGif, disabled}: Props) {
   const {_} = useLingui()
-  const control = useDialogControl()
+  const ref = useRef<{open: () => void}>(null)
   const t = useTheme()
 
   const onPressSelectGif = useCallback(async () => {
     logEvent('composer:gif:open', {})
     Keyboard.dismiss()
-    control.open()
-  }, [control])
+    ref.current?.open()
+  }, [])
 
   return (
     <>
@@ -44,7 +43,7 @@ export function SelectGifBtn({onClose, onSelectGif, disabled}: Props) {
       </Button>
 
       <GifSelectDialog
-        control={control}
+        controlRef={ref}
         onClose={onClose}
         onSelectGif={onSelectGif}
       />

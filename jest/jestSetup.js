@@ -95,3 +95,16 @@ jest.mock('expo-application', () => ({
   nativeApplicationVersion: '1.0.0',
   nativeBuildVersion: '1',
 }))
+
+jest.mock('expo-modules-core', () => ({
+  requireNativeModule: jest.fn().mockImplementation(moduleName => {
+    if (moduleName === 'ExpoPlatformInfo') {
+      return {
+        getIsReducedMotionEnabled: () => false,
+      }
+    }
+  }),
+  requireNativeViewManager: jest.fn().mockImplementation(moduleName => {
+    return () => null
+  }),
+}))

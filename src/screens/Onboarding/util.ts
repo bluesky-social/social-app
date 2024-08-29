@@ -3,6 +3,8 @@ import {
   AppBskyGraphGetFollows,
   BskyAgent,
 } from '@atproto/api'
+import {TID} from '@atproto/common-web'
+import chunk from 'lodash.chunk'
 
 import {until} from '#/lib/async/until'
 
@@ -20,17 +22,31 @@ export async function bulkWriteFollows(agent: BskyAgent, dids: string[]) {
       createdAt: new Date().toISOString(),
     }
   })
+
   const followWrites = followRecords.map(r => ({
     $type: 'com.atproto.repo.applyWrites#create',
     collection: 'app.bsky.graph.follow',
+    rkey: TID.nextStr(),
     value: r,
   }))
 
-  await agent.com.atproto.repo.applyWrites({
-    repo: session.did,
-    writes: followWrites,
-  })
+  const chunks = chunk(followWrites, 50)
+  for (const chunk of chunks) {
+    await agent.com.atproto.repo.applyWrites({
+      repo: session.did,
+      writes: chunk,
+    })
+  }
   await whenFollowsIndexed(agent, session.did, res => !!res.data.follows.length)
+
+  const followUris = new Map()
+  for (const r of followWrites) {
+    followUris.set(
+      r.value.subject,
+      `at://${session.did}/app.bsky.graph.follow/${r.rkey}`,
+    )
+  }
+  return followUris
 }
 
 async function whenFollowsIndexed(

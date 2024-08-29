@@ -16,11 +16,18 @@ import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {useSharedInputStyles} from '#/components/forms/TextField'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
+import {useExtractEmbedFromFacets} from './MessageInputEmbed'
 
 export function MessageInput({
   onSendMessage,
+  hasEmbed,
+  setEmbed,
+  children,
 }: {
   onSendMessage: (message: string) => void
+  hasEmbed: boolean
+  setEmbed: (embedUrl: string | undefined) => void
+  children?: React.ReactNode
 }) {
   const {isTabletOrDesktop} = useWebMediaQueries()
   const {_} = useLingui()
@@ -35,17 +42,18 @@ export function MessageInput({
   const [textAreaHeight, setTextAreaHeight] = React.useState(38)
 
   const onSubmit = React.useCallback(() => {
-    if (message.trim() === '') {
+    if (!hasEmbed && message.trim() === '') {
       return
     }
     if (new Graphemer().countGraphemes(message) > MAX_DM_GRAPHEME_LENGTH) {
-      Toast.show(_(msg`Message is too long`))
+      Toast.show(_(msg`Message is too long`), 'xmark')
       return
     }
     clearDraft()
-    onSendMessage(message.trimEnd())
+    onSendMessage(message)
     setMessage('')
-  }, [message, onSendMessage, _, clearDraft])
+    setEmbed(undefined)
+  }, [message, onSendMessage, _, clearDraft, hasEmbed, setEmbed])
 
   const onKeyDown = React.useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -87,9 +95,11 @@ export function MessageInput({
   )
 
   useSaveMessageDraft(message)
+  useExtractEmbedFromFacets(message, setEmbed)
 
   return (
     <View style={a.p_sm}>
+      {children}
       <View
         style={[
           a.flex_row,

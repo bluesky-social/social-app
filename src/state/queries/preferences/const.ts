@@ -7,8 +7,8 @@ import {
 export const DEFAULT_HOME_FEED_PREFS: UsePreferencesQueryResponse['feedViewPrefs'] =
   {
     hideReplies: false,
-    hideRepliesByUnfollowed: true,
-    hideRepliesByLikeCount: 0,
+    hideRepliesByUnfollowed: true, // Legacy, ignored
+    hideRepliesByLikeCount: 0, // Legacy, ignored
     hideReposts: false,
     hideQuotePosts: false,
     lab_mergeFeedEnabled: false, // experimental
@@ -34,4 +34,8 @@ export const DEFAULT_LOGGED_OUT_PREFERENCES: UsePreferencesQueryResponse = {
   userAge: 13, // TODO(pwi)
   interests: {tags: []},
   savedFeeds: [],
+  bskyAppState: {
+    queuedNudges: [],
+    activeProgressGuide: undefined,
+  },
 }

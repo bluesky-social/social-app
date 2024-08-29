@@ -57,7 +57,7 @@ function DialogInner({
   const [initialized, setInitialzed] = React.useState(false)
   const {mutate: updateDeclaration} = useUpdateActorDeclaration({
     onError: () => {
-      Toast.show(_(msg`Failed to update settings`))
+      Toast.show(_(msg`Failed to update settings`), 'xmark')
     },
   })
 

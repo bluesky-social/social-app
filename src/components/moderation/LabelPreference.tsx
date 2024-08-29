@@ -174,7 +174,7 @@ export function LabelerLabelPreference({
   disabled?: boolean
   labelerDid?: string
 }) {
-  const {i18n} = useLingui()
+  const {_, i18n} = useLingui()
   const t = useTheme()
   const {gtPhone} = useBreakpoints()
 
@@ -243,7 +243,10 @@ export function LabelerLabelPreference({
               ) : isGlobalLabel ? (
                 <Trans>
                   Configured in{' '}
-                  <InlineLinkText to="/moderation" style={a.text_sm}>
+                  <InlineLinkText
+                    label={_(msg`moderation settings`)}
+                    to="/moderation"
+                    style={a.text_sm}>
                     moderation settings
                   </InlineLinkText>
                   .

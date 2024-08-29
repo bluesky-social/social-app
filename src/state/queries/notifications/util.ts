@@ -1,9 +1,10 @@
 import {
-  AppBskyEmbedRecord,
   AppBskyFeedDefs,
   AppBskyFeedLike,
   AppBskyFeedPost,
   AppBskyFeedRepost,
+  AppBskyGraphDefs,
+  AppBskyGraphStarterpack,
   AppBskyNotificationListNotifications,
   BskyAgent,
   moderateNotification,
@@ -28,7 +29,6 @@ export async function fetchPage({
   limit,
   queryClient,
   moderationOpts,
-  threadMutes,
   fetchAdditionalData,
 }: {
   agent: BskyAgent
@@ -36,13 +36,18 @@ export async function fetchPage({
   limit: number
   queryClient: QueryClient
   moderationOpts: ModerationOpts | undefined
-  threadMutes: string[]
   fetchAdditionalData: boolean
-}): Promise<{page: FeedPage; indexedAt: string | undefined}> {
+  priority?: boolean
+}): Promise<{
+  page: FeedPage
+  indexedAt: string | undefined
+}> {
   const res = await agent.listNotifications({
     limit,
     cursor,
+    // priority,
   })
+
   const indexedAt = res.data.notifications[0]?.indexedAt
 
   // filter out notifs by mod rules
@@ -59,18 +64,22 @@ export async function fetchPage({
     const subjects = await fetchSubjects(agent, notifsGrouped)
     for (const notif of notifsGrouped) {
       if (notif.subjectUri) {
-        notif.subject = subjects.get(notif.subjectUri)
-        if (notif.subject) {
-          precacheProfile(queryClient, notif.subject.author)
+        if (
+          notif.type === 'starterpack-joined' &&
+          notif.notification.reasonSubject
+        ) {
+          notif.subject = subjects.starterPacks.get(
+            notif.notification.reasonSubject,
+          )
+        } else {
+          notif.subject = subjects.posts.get(notif.subjectUri)
+          if (notif.subject) {
+            precacheProfile(queryClient, notif.subject.author)
+          }
         }
       }
     }
   }
-
-  // apply thread muting
-  notifsGrouped = notifsGrouped.filter(
-    notif => !isThreadMuted(notif, threadMutes),
-  )
 
   let seenAt = res.data.seenAt ? new Date(res.data.seenAt) : new Date()
   if (Number.isNaN(seenAt.getTime())) {
@@ -82,6 +91,7 @@ export async function fetchPage({
       cursor: res.data.cursor,
       seenAt,
       items: notifsGrouped,
+      priority: res.data.priority ?? false,
     },
     indexedAt,
   }
@@ -119,21 +129,38 @@ export function groupNotifications(
           notif.reasonSubject === groupedNotif.notification.reasonSubject &&
           notif.author.did !== groupedNotif.notification.author.did
         ) {
-          groupedNotif.additional = groupedNotif.additional || []
-          groupedNotif.additional.push(notif)
-          grouped = true
-          break
+          const nextIsFollowBack =
+            notif.reason === 'follow' && notif.author.viewer?.following
+          const prevIsFollowBack =
+            groupedNotif.notification.reason === 'follow' &&
+            groupedNotif.notification.author.viewer?.following
+          const shouldUngroup = nextIsFollowBack || prevIsFollowBack
+          if (!shouldUngroup) {
+            groupedNotif.additional = groupedNotif.additional || []
+            groupedNotif.additional.push(notif)
+            grouped = true
+            break
+          }
         }
       }
     }
     if (!grouped) {
       const type = toKnownType(notif)
-      groupedNotifs.push({
-        _reactKey: `notif-${notif.uri}`,
-        type,
-        notification: notif,
-        subjectUri: getSubjectUri(type, notif),
-      })
+      if (type !== 'starterpack-joined') {
+        groupedNotifs.push({
+          _reactKey: `notif-${notif.uri}`,
+          type,
+          notification: notif,
+          subjectUri: getSubjectUri(type, notif),
+        })
+      } else {
+        groupedNotifs.push({
+          _reactKey: `notif-${notif.uri}`,
+          type: 'starterpack-joined',
+          notification: notif,
+          subjectUri: notif.uri,
+        })
+      }
     }
   }
   return groupedNotifs
@@ -142,29 +169,54 @@ export function groupNotifications(
 async function fetchSubjects(
   agent: BskyAgent,
   groupedNotifs: FeedNotification[],
-): Promise<Map<string, AppBskyFeedDefs.PostView>> {
-  const uris = new Set<string>()
+): Promise<{
+  posts: Map<string, AppBskyFeedDefs.PostView>
+  starterPacks: Map<string, AppBskyGraphDefs.StarterPackViewBasic>
+}> {
+  const postUris = new Set<string>()
+  const packUris = new Set<string>()
   for (const notif of groupedNotifs) {
-    if (notif.subjectUri && !notif.subjectUri.includes('feed.generator')) {
-      uris.add(notif.subjectUri)
+    if (notif.subjectUri?.includes('app.bsky.feed.post')) {
+      postUris.add(notif.subjectUri)
+    } else if (
+      notif.notification.reasonSubject?.includes('app.bsky.graph.starterpack')
+    ) {
+      packUris.add(notif.notification.reasonSubject)
     }
   }
-  const uriChunks = chunk(Array.from(uris), 25)
+  const postUriChunks = chunk(Array.from(postUris), 25)
+  const packUriChunks = chunk(Array.from(packUris), 25)
   const postsChunks = await Promise.all(
-    uriChunks.map(uris =>
+    postUriChunks.map(uris =>
       agent.app.bsky.feed.getPosts({uris}).then(res => res.data.posts),
     ),
   )
-  const map = new Map<string, AppBskyFeedDefs.PostView>()
+  const packsChunks = await Promise.all(
+    packUriChunks.map(uris =>
+      agent.app.bsky.graph
+        .getStarterPacks({uris})
+        .then(res => res.data.starterPacks),
+    ),
+  )
+  const postsMap = new Map<string, AppBskyFeedDefs.PostView>()
+  const packsMap = new Map<string, AppBskyGraphDefs.StarterPackView>()
   for (const post of postsChunks.flat()) {
     if (
       AppBskyFeedPost.isRecord(post.record) &&
       AppBskyFeedPost.validateRecord(post.record).success
     ) {
-      map.set(post.uri, post)
+      postsMap.set(post.uri, post)
     }
   }
-  return map
+  for (const pack of packsChunks.flat()) {
+    if (AppBskyGraphStarterpack.isRecord(pack.record)) {
+      packsMap.set(pack.uri, pack)
+    }
+  }
+  return {
+    posts: postsMap,
+    starterPacks: packsMap,
+  }
 }
 
 function toKnownType(
@@ -181,7 +233,8 @@ function toKnownType(
     notif.reason === 'mention' ||
     notif.reason === 'reply' ||
     notif.reason === 'quote' ||
-    notif.reason === 'follow'
+    notif.reason === 'follow' ||
+    notif.reason === 'starterpack-joined'
   ) {
     return notif.reason as NotificationType
   }
@@ -206,46 +259,4 @@ function getSubjectUri(
   } else if (type === 'feedgen-like') {
     return notif.reasonSubject
   }
-}
-
-export function isThreadMuted(notif: FeedNotification, threadMutes: string[]) {
-  // If there's a subject we want to use that. This will always work on the notifications tab
-  if (notif.subject) {
-    const record = notif.subject.record as AppBskyFeedPost.Record
-    // Check for a quote record
-    if (
-      (record.reply && threadMutes.includes(record.reply.root.uri)) ||
-      (notif.subject.uri && threadMutes.includes(notif.subject.uri))
-    ) {
-      return true
-    } else if (
-      AppBskyEmbedRecord.isMain(record.embed) &&
-      threadMutes.includes(record.embed.record.uri)
-    ) {
-      return true
-    }
-  } else {
-    // Otherwise we just do the best that we can
-    const record = notif.notification.record
-    if (AppBskyFeedPost.isRecord(record)) {
-      if (record.reply && threadMutes.includes(record.reply.root.uri)) {
-        // We can always filter replies
-        return true
-      } else if (
-        AppBskyEmbedRecord.isMain(record.embed) &&
-        threadMutes.includes(record.embed.record.uri)
-      ) {
-        // We can also filter quotes if the quoted post is the root
-        return true
-      }
-    } else if (
-      AppBskyFeedRepost.isRecord(record) &&
-      threadMutes.includes(record.subject.uri)
-    ) {
-      // Finally we can filter reposts, again if the post is the root
-      return true
-    }
-  }
-
-  return false
 }

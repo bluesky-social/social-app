@@ -115,3 +115,6 @@ src/locale/locales/**/*.js
 *.apk
 *.aab
 *.ipa
+
+# ogcard assets
+bskyogcard/src/assets/fonts/noto-*

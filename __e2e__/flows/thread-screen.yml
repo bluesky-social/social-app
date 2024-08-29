@@ -58,7 +58,7 @@ appId: xyz.blueskyweb.app
     id: "repostBtn"
     childOf:
         id: "postThreadItem-by-bob.test"
-- tapOn: "Undo repost"
+- tapOn: "Remove repost"
 - assertNotVisible:
     id: "repostCount-expanded"
 
@@ -77,7 +77,7 @@ appId: xyz.blueskyweb.app
     id: "repostBtn"
     childOf:
         id: "postThreadItem-by-carla.test"
-- tapOn: "Undo repost"
+- tapOn: "Remove repost"
 - assertNotVisible:
     id: "repostCount"
     childOf:

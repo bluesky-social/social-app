@@ -100,12 +100,18 @@ function ProfileCard() {
   )
 }
 
+const HIDDEN_BACK_BNT_ROUTES = ['StarterPackWizard', 'StarterPackEdit']
+
 function BackBtn() {
   const {isTablet} = useWebMediaQueries()
   const pal = usePalette('default')
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
-  const shouldShow = useNavigationState(state => !isStateAtTabRoot(state))
+  const shouldShow = useNavigationState(
+    state =>
+      !isStateAtTabRoot(state) &&
+      !HIDDEN_BACK_BNT_ROUTES.includes(getCurrentRoute(state).name),
+  )
 
   const onPressBack = React.useCallback(() => {
     if (navigation.canGoBack()) {

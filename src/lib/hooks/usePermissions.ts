@@ -20,7 +20,9 @@ const openPermissionAlert = (perm: string) => {
 }
 
 export function usePhotoLibraryPermission() {
-  const [res, requestPermission] = MediaLibrary.usePermissions()
+  const [res, requestPermission] = MediaLibrary.usePermissions({
+    granularPermissions: ['photo'],
+  })
   const requestPhotoAccessIfNeeded = async () => {
     // On the, we use <input type="file"> to produce a filepicker
     // This does not need any permission granting.
@@ -44,6 +46,35 @@ export function usePhotoLibraryPermission() {
     }
   }
   return {requestPhotoAccessIfNeeded}
+}
+
+export function useVideoLibraryPermission() {
+  const [res, requestPermission] = MediaLibrary.usePermissions({
+    granularPermissions: ['video'],
+  })
+  const requestVideoAccessIfNeeded = async () => {
+    // On the, we use <input type="file"> to produce a filepicker
+    // This does not need any permission granting.
+    if (isWeb) {
+      return true
+    }
+
+    if (res?.granted) {
+      return true
+    } else if (!res || res.status === 'undetermined' || res?.canAskAgain) {
+      const {canAskAgain, granted, status} = await requestPermission()
+
+      if (!canAskAgain && status === 'undetermined') {
+        openPermissionAlert('video library')
+      }
+
+      return granted
+    } else {
+      openPermissionAlert('video library')
+      return false
+    }
+  }
+  return {requestVideoAccessIfNeeded}
 }
 
 export function useCameraPermission() {

@@ -1,6 +1,6 @@
 import '../index.css'
 
-import {AppBskyFeedDefs, BskyAgent} from '@atproto/api'
+import {AppBskyFeedDefs, AtpAgent} from '@atproto/api'
 import {h, render} from 'preact'
 
 import logo from '../../assets/logo.svg'
@@ -12,7 +12,7 @@ import {getRkey} from '../utils'
 const root = document.getElementById('app')
 if (!root) throw new Error('No root element')
 
-const agent = new BskyAgent({
+const agent = new AtpAgent({
   service: 'https://public.api.bsky.app',
 })
 

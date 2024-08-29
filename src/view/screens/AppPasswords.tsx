@@ -263,7 +263,7 @@ function AppPassword({
               size={14}
             />
             <Text type="md" style={pal.textLight}>
-              Allows access to direct messages
+              <Trans>Allows access to direct messages</Trans>
             </Text>
           </View>
         )}

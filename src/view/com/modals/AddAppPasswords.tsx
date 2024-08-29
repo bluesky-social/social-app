@@ -22,7 +22,6 @@ import {Text} from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
-import {KeyboardPadding} from '#/components/KeyboardPadding'
 
 export const snapPoints = ['90%']
 
@@ -78,7 +77,7 @@ export function Component({}: {}) {
   const onCopy = React.useCallback(() => {
     if (appPassword) {
       setStringAsync(appPassword)
-      Toast.show(_(msg`Copied to clipboard`))
+      Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
       setWasCopied(true)
     }
   }, [appPassword, _])
@@ -94,7 +93,7 @@ export function Component({}: {}) {
         _(
           msg`Please enter a name for your app password. All spaces is not allowed.`,
         ),
-        'times',
+        'xmark',
       )
       return
     }
@@ -102,13 +101,13 @@ export function Component({}: {}) {
     if (name.length < 4) {
       Toast.show(
         _(msg`App Password names must be at least 4 characters long.`),
-        'times',
+        'xmark',
       )
       return
     }
 
     if (passwords?.find(p => p.name === name)) {
-      Toast.show(_(msg`This name is already in use`), 'times')
+      Toast.show(_(msg`This name is already in use`), 'xmark')
       return
     }
 
@@ -117,11 +116,11 @@ export function Component({}: {}) {
       if (newPassword) {
         setAppPassword(newPassword.password)
       } else {
-        Toast.show(_(msg`Failed to create app password.`), 'times')
+        Toast.show(_(msg`Failed to create app password.`), 'xmark')
         // TODO: better error handling (?)
       }
     } catch (e) {
-      Toast.show(_(msg`Failed to create app password.`), 'times')
+      Toast.show(_(msg`Failed to create app password.`), 'xmark')
       logger.error('Failed to create app password', {message: e})
     }
   }
@@ -138,6 +137,7 @@ export function Component({}: {}) {
         _(
           msg`App Password names can only contain letters, numbers, spaces, dashes, and underscores.`,
         ),
+        'xmark',
       )
     }
   }
@@ -246,7 +246,6 @@ export function Component({}: {}) {
           onPress={!appPassword ? createAppPassword : onDone}
         />
       </View>
-      <KeyboardPadding />
     </View>
   )
 }

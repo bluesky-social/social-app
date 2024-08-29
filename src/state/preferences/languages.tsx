@@ -43,8 +43,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   React.useEffect(() => {
-    return persisted.onUpdate(() => {
-      setState(persisted.get('languagePrefs'))
+    return persisted.onUpdate('languagePrefs', nextLanguagePrefs => {
+      setState(nextLanguagePrefs)
     })
   }, [setStateWrapped])
 

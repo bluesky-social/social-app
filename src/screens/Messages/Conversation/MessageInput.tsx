@@ -27,13 +27,20 @@ import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {useSharedInputStyles} from '#/components/forms/TextField'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
+import {useExtractEmbedFromFacets} from './MessageInputEmbed'
 
 const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
 
 export function MessageInput({
   onSendMessage,
+  hasEmbed,
+  setEmbed,
+  children,
 }: {
   onSendMessage: (message: string) => void
+  hasEmbed: boolean
+  setEmbed: (embedUrl: string | undefined) => void
+  children?: React.ReactNode
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -53,26 +60,37 @@ export function MessageInput({
   const inputRef = useAnimatedRef<TextInput>()
 
   useSaveMessageDraft(message)
+  useExtractEmbedFromFacets(message, setEmbed)
 
   const onSubmit = React.useCallback(() => {
-    if (message.trim() === '') {
+    if (!hasEmbed && message.trim() === '') {
       return
     }
     if (new Graphemer().countGraphemes(message) > MAX_DM_GRAPHEME_LENGTH) {
-      Toast.show(_(msg`Message is too long`))
+      Toast.show(_(msg`Message is too long`), 'xmark')
       return
     }
     clearDraft()
-    onSendMessage(message.trimEnd())
+    onSendMessage(message)
     playHaptic()
     setMessage('')
+    setEmbed(undefined)
 
     // Pressing the send button causes the text input to lose focus, so we need to
     // re-focus it after sending
     setTimeout(() => {
       inputRef.current?.focus()
     }, 100)
-  }, [message, clearDraft, onSendMessage, playHaptic, _, inputRef])
+  }, [
+    hasEmbed,
+    message,
+    clearDraft,
+    onSendMessage,
+    playHaptic,
+    setEmbed,
+    _,
+    inputRef,
+  ])
 
   useFocusedInputHandler(
     {
@@ -101,6 +119,7 @@ export function MessageInput({
 
   return (
     <View style={[a.px_md, a.pb_sm, a.pt_xs]}>
+      {children}
       <View
         style={[
           a.w_full,

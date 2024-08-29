@@ -23,11 +23,12 @@ appId: xyz.blueskyweb.app
     direction: LEFT
 - tapOn:
     id: "profilePager-selector-4"
-- tapOn:
-    id: "feed-alice-favs"
+- tapOn: "alice-favs"
 - tapOn: "Pin to Home"
 - tapOn:
     id: "bottomBarHomeBtn"
+- tapOn:
+    id: "viewHeaderDrawerBtn"
 - assertNotVisible: "Feeds ✨"
 
 - tapOn:
@@ -50,7 +51,7 @@ appId: xyz.blueskyweb.app
     text: "1"
 - tapOn:
     id: "repostBtn"
-- tapOn: "Undo repost"
+- tapOn: "Remove repost"
 - assertNotVisible:
     id: "repostCount"
 

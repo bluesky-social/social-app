@@ -144,8 +144,7 @@ appId: xyz.blueskyweb.app
     id: "homeScreenFeedTabs-Good Ppl"
 - tapOn:
     id: "e2eGotoLists"
-- tapOn:
-    id: "list-Good Ppl"
+- tapOn: "Good Ppl"
 
 - tapOn: "About"
 - assertVisible:
@@ -170,9 +169,8 @@ appId: xyz.blueskyweb.app
         id: "profilePager-selector"
     direction: LEFT
 - tapOn:
-    id: "profilePager-selector-5"
-- tapOn:
-    id: "list-Good Ppl"
+    id: "profilePager-selector-6"
+- tapOn: "Good Ppl"
 
 - tapOn:
     label: "Adds and removes users on curatelists from the profile"

@@ -45,9 +45,13 @@ export function useActorAutocompleteQuery(
     },
     select: React.useCallback(
       (data: AppBskyActorDefs.ProfileViewBasic[]) => {
-        return computeSuggestions(data, moderationOpts || DEFAULT_MOD_OPTS)
+        return computeSuggestions({
+          q: prefix,
+          searched: data,
+          moderationOpts: moderationOpts || DEFAULT_MOD_OPTS,
+        })
       },
-      [moderationOpts],
+      [prefix, moderationOpts],
     ),
     placeholderData: maintainData ? keepPreviousData : undefined,
   })
@@ -81,19 +85,25 @@ export function useActorAutocompleteFn() {
         }
       }
 
-      return computeSuggestions(
-        res?.data.actors,
-        moderationOpts || DEFAULT_MOD_OPTS,
-      )
+      return computeSuggestions({
+        q: query,
+        searched: res?.data.actors,
+        moderationOpts: moderationOpts || DEFAULT_MOD_OPTS,
+      })
     },
     [queryClient, moderationOpts, agent],
   )
 }
 
-function computeSuggestions(
-  searched: AppBskyActorDefs.ProfileViewBasic[] = [],
-  moderationOpts: ModerationOpts,
-) {
+function computeSuggestions({
+  q,
+  searched = [],
+  moderationOpts,
+}: {
+  q?: string
+  searched?: AppBskyActorDefs.ProfileViewBasic[]
+  moderationOpts: ModerationOpts
+}) {
   let items: AppBskyActorDefs.ProfileViewBasic[] = []
   for (const item of searched) {
     if (!items.find(item2 => item2.handle === item.handle)) {
@@ -102,6 +112,7 @@ function computeSuggestions(
   }
   return items.filter(profile => {
     const modui = moderateProfile(profile, moderationOpts).ui('profileList')
-    return !modui.filter || isJustAMute(modui)
+    const isExactMatch = q && profile.handle.toLowerCase() === q
+    return isExactMatch || !modui.filter || isJustAMute(modui)
   })
 }

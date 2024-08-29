@@ -1,11 +1,19 @@
 import React from 'react'
-import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {
+  Linking,
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native'
 import {AtUri} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
+import {shouldClickOpenNewTab} from '#/platform/urls'
 import {FeedSourceInfo, useFeedSourceInfoQuery} from '#/state/queries/feed'
 import {
   useAddSavedFeedsMutation,
@@ -34,6 +42,7 @@ export function FeedSourceCard({
   showLikes = false,
   pinOnSave = false,
   showMinimalPlaceholder,
+  hideTopBorder,
 }: {
   feedUri: string
   style?: StyleProp<ViewStyle>
@@ -42,6 +51,7 @@ export function FeedSourceCard({
   showLikes?: boolean
   pinOnSave?: boolean
   showMinimalPlaceholder?: boolean
+  hideTopBorder?: boolean
 }) {
   const {data: preferences} = usePreferencesQuery()
   const {data: feed} = useFeedSourceInfoQuery({uri: feedUri})
@@ -57,6 +67,7 @@ export function FeedSourceCard({
       showLikes={showLikes}
       pinOnSave={pinOnSave}
       showMinimalPlaceholder={showMinimalPlaceholder}
+      hideTopBorder={hideTopBorder}
     />
   )
 }
@@ -71,6 +82,7 @@ export function FeedSourceCardLoaded({
   showLikes = false,
   pinOnSave = false,
   showMinimalPlaceholder,
+  hideTopBorder,
 }: {
   feedUri: string
   feed?: FeedSourceInfo
@@ -81,6 +93,7 @@ export function FeedSourceCardLoaded({
   showLikes?: boolean
   pinOnSave?: boolean
   showMinimalPlaceholder?: boolean
+  hideTopBorder?: boolean
 }) {
   const t = useTheme()
   const pal = usePalette('default')
@@ -111,7 +124,7 @@ export function FeedSourceCardLoaded({
       ])
       Toast.show(_(msg`Added to my feeds`))
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting your server`))
+      Toast.show(_(msg`There was an issue contacting your server`), 'xmark')
       logger.error('Failed to save feed', {message: e})
     }
   }, [_, feed, pinOnSave, addSavedFeeds, isSaved])
@@ -124,7 +137,7 @@ export function FeedSourceCardLoaded({
       // await item.unsave()
       Toast.show(_(msg`Removed from my feeds`))
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting your server`))
+      Toast.show(_(msg`There was an issue contacting your server`), 'xmark')
       logger.error('Failed to unsave feed', {message: e})
     }
   }, [_, removeFeed, savedFeedConfig])
@@ -149,7 +162,7 @@ export function FeedSourceCardLoaded({
         style={[
           pal.border,
           {
-            borderTopWidth: showMinimalPlaceholder ? 0 : 1,
+            borderTopWidth: showMinimalPlaceholder || hideTopBorder ? 0 : 1,
             flexDirection: 'row',
             alignItems: 'center',
             flex: 1,
@@ -191,18 +204,36 @@ export function FeedSourceCardLoaded({
       <Pressable
         testID={`feed-${feed.displayName}`}
         accessibilityRole="button"
-        style={[styles.container, pal.border, style]}
-        onPress={() => {
+        style={[
+          styles.container,
+          pal.border,
+          style,
+          {borderTopWidth: hideTopBorder ? 0 : StyleSheet.hairlineWidth},
+        ]}
+        onPress={e => {
+          const shouldOpenInNewTab = shouldClickOpenNewTab(e)
           if (feed.type === 'feed') {
-            navigation.push('ProfileFeed', {
-              name: feed.creatorDid,
-              rkey: new AtUri(feed.uri).rkey,
-            })
+            if (shouldOpenInNewTab) {
+              Linking.openURL(
+                `/profile/${feed.creatorDid}/feed/${new AtUri(feed.uri).rkey}`,
+              )
+            } else {
+              navigation.push('ProfileFeed', {
+                name: feed.creatorDid,
+                rkey: new AtUri(feed.uri).rkey,
+              })
+            }
           } else if (feed.type === 'list') {
-            navigation.push('ProfileList', {
-              name: feed.creatorDid,
-              rkey: new AtUri(feed.uri).rkey,
-            })
+            if (shouldOpenInNewTab) {
+              Linking.openURL(
+                `/profile/${feed.creatorDid}/lists/${new AtUri(feed.uri).rkey}`,
+              )
+            } else {
+              navigation.push('ProfileList', {
+                name: feed.creatorDid,
+                rkey: new AtUri(feed.uri).rkey,
+              })
+            }
           }
         }}
         key={feed.uri}>
@@ -295,8 +326,10 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     flexDirection: 'column',
     flex: 1,
-    borderTopWidth: 1,
     gap: 14,
+  },
+  border: {
+    borderTopWidth: StyleSheet.hairlineWidth,
   },
   headerContainer: {
     flexDirection: 'row',

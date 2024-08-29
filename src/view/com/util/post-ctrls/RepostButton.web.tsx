@@ -1,130 +1,149 @@
 import React from 'react'
-import {StyleProp, StyleSheet, View, ViewStyle, Pressable} from 'react-native'
-import {RepostIcon} from 'lib/icons'
-import {colors} from 'lib/styles'
-import {useTheme} from 'lib/ThemeContext'
-import {Text} from '../text/Text'
-
-import {
-  NativeDropdown,
-  DropdownItem as NativeDropdownItem,
-} from '../forms/NativeDropdown'
-import {EventStopper} from '../EventStopper'
-import {useLingui} from '@lingui/react'
+import {Pressable, View} from 'react-native'
 import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
 import {useRequireAuth} from '#/state/session'
 import {useSession} from '#/state/session'
+import {atoms as a, useTheme} from '#/alf'
+import {Button} from '#/components/Button'
+import {CloseQuote_Stroke2_Corner1_Rounded as Quote} from '#/components/icons/Quote'
+import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
+import * as Menu from '#/components/Menu'
+import {Text} from '#/components/Typography'
+import {EventStopper} from '../EventStopper'
+import {formatCount} from '../numeric/format'
 
 interface Props {
   isReposted: boolean
   repostCount?: number
-  big?: boolean
   onRepost: () => void
   onQuote: () => void
-  style?: StyleProp<ViewStyle>
+  big?: boolean
+  embeddingDisabled: boolean
 }
 
 export const RepostButton = ({
   isReposted,
   repostCount,
-  big,
   onRepost,
   onQuote,
+  big,
+  embeddingDisabled,
 }: Props) => {
-  const theme = useTheme()
+  const t = useTheme()
   const {_} = useLingui()
   const {hasSession} = useSession()
   const requireAuth = useRequireAuth()
 
-  const defaultControlColor = React.useMemo(
+  const color = React.useMemo(
     () => ({
-      color: theme.palette.default.postCtrl,
+      color: isReposted ? t.palette.positive_600 : t.palette.contrast_500,
     }),
-    [theme],
+    [t, isReposted],
   )
 
-  const dropdownItems: NativeDropdownItem[] = [
-    {
-      label: isReposted ? _(msg`Undo repost`) : _(msg`Repost`),
-      testID: 'repostDropdownRepostBtn',
-      icon: {
-        ios: {name: 'repeat'},
-        android: '',
-        web: 'retweet',
-      },
-      onPress: onRepost,
-    },
-    {
-      label: _(msg`Quote post`),
-      testID: 'repostDropdownQuoteBtn',
-      icon: {
-        ios: {name: 'quote.bubble'},
-        android: '',
-        web: 'quote-left',
-      },
-      onPress: onQuote,
-    },
-  ]
+  return hasSession ? (
+    <EventStopper onKeyDown={false}>
+      <Menu.Root>
+        <Menu.Trigger label={_(msg`Repost or quote post`)}>
+          {({props, state}) => {
+            return (
+              <Pressable
+                {...props}
+                style={[
+                  a.rounded_full,
+                  (state.hovered || state.pressed) && {
+                    backgroundColor: t.palette.contrast_25,
+                  },
+                ]}>
+                <RepostInner
+                  isReposted={isReposted}
+                  color={color}
+                  repostCount={repostCount}
+                  big={big}
+                />
+              </Pressable>
+            )
+          }}
+        </Menu.Trigger>
+        <Menu.Outer style={{minWidth: 170}}>
+          <Menu.Item
+            label={isReposted ? _(msg`Undo repost`) : _(msg`Repost`)}
+            testID="repostDropdownRepostBtn"
+            onPress={onRepost}>
+            <Menu.ItemText>
+              {isReposted ? _(msg`Undo repost`) : _(msg`Repost`)}
+            </Menu.ItemText>
+            <Menu.ItemIcon icon={Repost} position="right" />
+          </Menu.Item>
+          <Menu.Item
+            disabled={embeddingDisabled}
+            label={
+              embeddingDisabled
+                ? _(msg`Quote posts disabled`)
+                : _(msg`Quote post`)
+            }
+            testID="repostDropdownQuoteBtn"
+            onPress={onQuote}>
+            <Menu.ItemText>
+              {embeddingDisabled
+                ? _(msg`Quote posts disabled`)
+                : _(msg`Quote post`)}
+            </Menu.ItemText>
+            <Menu.ItemIcon icon={Quote} position="right" />
+          </Menu.Item>
+        </Menu.Outer>
+      </Menu.Root>
+    </EventStopper>
+  ) : (
+    <Button
+      onPress={() => {
+        requireAuth(() => {})
+      }}
+      label={_(msg`Repost or quote post`)}
+      style={{padding: 0}}
+      hoverStyle={t.atoms.bg_contrast_25}
+      shape="round"
+      variant="ghost"
+      color="secondary">
+      <RepostInner
+        isReposted={isReposted}
+        color={color}
+        repostCount={repostCount}
+        big={big}
+      />
+    </Button>
+  )
+}
 
-  const inner = (
-    <View
-      style={[
-        styles.btn,
-        !big && styles.btnPad,
-        (isReposted
-          ? styles.reposted
-          : defaultControlColor) as StyleProp<ViewStyle>,
-      ]}>
-      <RepostIcon strokeWidth={2.2} size={big ? 24 : 20} />
+const RepostInner = ({
+  isReposted,
+  color,
+  repostCount,
+  big,
+}: {
+  isReposted: boolean
+  color: {color: string}
+  repostCount?: number
+  big?: boolean
+}) => {
+  const {i18n} = useLingui()
+  return (
+    <View style={[a.flex_row, a.align_center, a.gap_xs, {padding: 5}]}>
+      <Repost style={color} width={big ? 22 : 18} />
       {typeof repostCount !== 'undefined' && repostCount > 0 ? (
         <Text
           testID="repostCount"
-          type={isReposted ? 'md-bold' : 'md'}
-          style={styles.repostCount}>
-          {repostCount}
+          style={[
+            color,
+            big ? a.text_md : {fontSize: 15},
+            isReposted && [a.font_bold],
+            a.user_select_none,
+          ]}>
+          {formatCount(i18n, repostCount)}
         </Text>
       ) : undefined}
     </View>
   )
-
-  return hasSession ? (
-    <EventStopper>
-      <NativeDropdown
-        items={dropdownItems}
-        accessibilityLabel={_(msg`Repost or quote post`)}
-        accessibilityHint="">
-        {inner}
-      </NativeDropdown>
-    </EventStopper>
-  ) : (
-    <Pressable
-      accessibilityRole="button"
-      onPress={() => {
-        requireAuth(() => {})
-      }}
-      accessibilityLabel={_(msg`Repost or quote post`)}
-      accessibilityHint="">
-      {inner}
-    </Pressable>
-  )
 }
-
-const styles = StyleSheet.create({
-  btn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  btnPad: {
-    paddingTop: 5,
-    paddingBottom: 5,
-    paddingLeft: 5,
-    paddingRight: 5,
-  },
-  reposted: {
-    color: colors.green3,
-  },
-  repostCount: {
-    color: 'currentColor',
-  },
-})

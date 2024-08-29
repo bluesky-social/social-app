@@ -1,27 +1,28 @@
 import React, {useCallback, useMemo} from 'react'
-import {StyleSheet, Keyboard} from 'react-native'
+import {Keyboard, StyleSheet} from 'react-native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {Text} from 'view/com/util/text/Text'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {useModalControls} from '#/state/modals'
+import {
+  hasPostLanguage,
+  toPostLanguages,
+  useLanguagePrefs,
+  useLanguagePrefsApi,
+} from '#/state/preferences/languages'
+import {usePalette} from 'lib/hooks/usePalette'
+import {isNative} from 'platform/detection'
 import {
   DropdownButton,
   DropdownItem,
   DropdownItemButton,
 } from 'view/com/util/forms/DropdownButton'
-import {usePalette} from 'lib/hooks/usePalette'
-import {isNative} from 'platform/detection'
+import {Text} from 'view/com/util/text/Text'
 import {codeToLanguageName} from '../../../../locale/helpers'
-import {useModalControls} from '#/state/modals'
-import {
-  useLanguagePrefs,
-  useLanguagePrefsApi,
-  toPostLanguages,
-  hasPostLanguage,
-} from '#/state/preferences/languages'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 
 export function SelectLangBtn() {
   const pal = usePalette('default')

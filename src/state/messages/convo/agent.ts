@@ -753,7 +753,7 @@ export class Convo {
 
   sendMessage(message: ChatBskyConvoSendMessage.InputSchema['message']) {
     // Ignore empty messages for now since they have no other purpose atm
-    if (!message.text.trim()) return
+    if (!message.text.trim() && !message.embed) return
 
     logger.debug('Convo: send message', {}, logger.DebugContext.convo)
 
@@ -1018,6 +1018,7 @@ export class Convo {
         key: m.id,
         message: {
           ...m.message,
+          embed: undefined,
           $type: 'chat.bsky.convo.defs#messageView',
           id: nanoid(),
           rev: '__fake__',

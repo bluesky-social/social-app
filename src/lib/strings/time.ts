@@ -106,3 +106,14 @@ export function getAge(birthDate: Date): number {
   }
   return age
 }
+
+/**
+ * Compares two dates by year, month, and day only
+ */
+export function simpleAreDatesEqual(a: Date, b: Date): boolean {
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  )
+}

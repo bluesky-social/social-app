@@ -30,6 +30,10 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {MessageProfileButton} from '#/components/dms/MessageProfileButton'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import {
+  KnownFollowers,
+  shouldShowKnownFollowers,
+} from '#/components/KnownFollowers'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {ProfileHeaderDisplayName} from './DisplayName'
@@ -71,6 +75,10 @@ let ProfileHeaderStandard = ({
   const [_queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
   const unblockPromptControl = Prompt.usePromptControl()
   const requireAuth = useRequireAuth()
+  const isBlockedUser =
+    profile.viewer?.blocking ||
+    profile.viewer?.blockedBy ||
+    profile.viewer?.blockingByList
 
   const onPressEditProfile = React.useCallback(() => {
     track('ProfileHeader:EditProfileButtonClicked')
@@ -96,7 +104,7 @@ let ProfileHeaderStandard = ({
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
           logger.error('Failed to follow', {message: String(e)})
-          Toast.show(_(msg`There was an issue! ${e.toString()}`))
+          Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
         }
       }
     })
@@ -118,7 +126,7 @@ let ProfileHeaderStandard = ({
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
           logger.error('Failed to unfollow', {message: String(e)})
-          Toast.show(_(msg`There was an issue! ${e.toString()}`))
+          Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
         }
       }
     })
@@ -132,7 +140,7 @@ let ProfileHeaderStandard = ({
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
         logger.error('Failed to unblock account', {message: e})
-        Toast.show(_(msg`There was an issue! ${e.toString()}`))
+        Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
       }
     }
   }, [_, queueUnblock, track])
@@ -149,7 +157,7 @@ let ProfileHeaderStandard = ({
       hideBackButton={hideBackButton}
       isPlaceholderProfile={isPlaceholderProfile}>
       <View
-        style={[a.px_lg, a.pt_md, a.pb_sm]}
+        style={[a.px_lg, a.pt_md, a.pb_sm, a.overflow_hidden]}
         pointerEvents={isIOS ? 'auto' : 'box-none'}>
         <View
           style={[
@@ -253,7 +261,7 @@ let ProfileHeaderStandard = ({
           <ProfileHeaderDisplayName profile={profile} moderation={moderation} />
           <ProfileHeaderHandle profile={profile} />
         </View>
-        {!isPlaceholderProfile && (
+        {!isPlaceholderProfile && !isBlockedUser && (
           <>
             <ProfileHeaderMetrics profile={profile} />
             {descriptionRT && !moderation.ui('profileView').blur ? (
@@ -268,6 +276,17 @@ let ProfileHeaderStandard = ({
                 />
               </View>
             ) : undefined}
+
+            {!isMe &&
+              !isBlockedUser &&
+              shouldShowKnownFollowers(profile.viewer?.knownFollowers) && (
+                <View style={[a.flex_row, a.align_center, a.gap_sm, a.pt_md]}>
+                  <KnownFollowers
+                    profile={profile}
+                    moderationOpts={moderationOpts}
+                  />
+                </View>
+              )}
           </>
         )}
       </View>

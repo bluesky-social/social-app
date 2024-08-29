@@ -1,6 +1,8 @@
 import React from 'react'
 import {Pressable, View, ViewStyle} from 'react-native'
+import Animated, {LinearTransition} from 'react-native-reanimated'
 
+import {isNative} from '#/platform/detection'
 import {HITSLOP_10} from 'lib/constants'
 import {
   atoms as a,
@@ -244,6 +246,7 @@ export function LabelText({
     <Text
       style={[
         a.font_bold,
+        a.leading_tight,
         {
           userSelect: 'none',
           color: disabled
@@ -251,7 +254,7 @@ export function LabelText({
             : t.atoms.text_contrast_high.color,
         },
         native({
-          paddingTop: 3,
+          paddingTop: 2,
         }),
         flatten(style),
       ]}>
@@ -281,24 +284,20 @@ export function createSharedToggleStyles({
 
   if (selected) {
     base.push({
-      backgroundColor:
-        t.name === 'light' ? t.palette.primary_25 : t.palette.primary_900,
+      backgroundColor: t.palette.primary_25,
       borderColor: t.palette.primary_500,
     })
 
     if (hovered) {
       baseHover.push({
-        backgroundColor:
-          t.name === 'light' ? t.palette.primary_100 : t.palette.primary_800,
-        borderColor:
-          t.name === 'light' ? t.palette.primary_600 : t.palette.primary_400,
+        backgroundColor: t.palette.primary_100,
+        borderColor: t.palette.primary_600,
       })
     }
   } else {
     if (hovered) {
       baseHover.push({
-        backgroundColor:
-          t.name === 'light' ? t.palette.contrast_50 : t.palette.contrast_100,
+        backgroundColor: t.palette.contrast_50,
         borderColor: t.palette.contrast_500,
       })
     }
@@ -306,16 +305,13 @@ export function createSharedToggleStyles({
 
   if (isInvalid) {
     base.push({
-      backgroundColor:
-        t.name === 'light' ? t.palette.negative_25 : t.palette.negative_975,
-      borderColor:
-        t.name === 'light' ? t.palette.negative_300 : t.palette.negative_800,
+      backgroundColor: t.palette.negative_25,
+      borderColor: t.palette.negative_300,
     })
 
     if (hovered) {
       baseHover.push({
-        backgroundColor:
-          t.name === 'light' ? t.palette.negative_25 : t.palette.negative_900,
+        backgroundColor: t.palette.negative_25,
         borderColor: t.palette.negative_600,
       })
     }
@@ -351,10 +347,10 @@ export function Checkbox() {
       style={[
         a.justify_center,
         a.align_center,
-        a.border,
         a.rounded_xs,
         t.atoms.border_contrast_high,
         {
+          borderWidth: 1,
           height: 20,
           width: 20,
         },
@@ -382,34 +378,35 @@ export function Switch() {
     <View
       style={[
         a.relative,
-        a.border,
         a.rounded_full,
         t.atoms.bg,
         t.atoms.border_contrast_high,
         {
+          borderWidth: 1,
           height: 20,
-          width: 30,
+          width: 32,
+          padding: 2,
         },
         baseStyles,
         hovered ? baseHoverStyles : {},
       ]}>
-      <View
+      <Animated.View
+        layout={LinearTransition.duration(100)}
         style={[
-          a.absolute,
           a.rounded_full,
           {
-            height: 12,
-            width: 12,
-            top: 3,
-            left: 3,
-            backgroundColor: t.palette.contrast_400,
+            height: 14,
+            width: 14,
           },
           selected
             ? {
                 backgroundColor: t.palette.primary_500,
-                left: 13,
+                alignSelf: 'flex-end',
               }
-            : {},
+            : {
+                backgroundColor: t.palette.contrast_400,
+                alignSelf: 'flex-start',
+              },
           indicatorStyles,
         ]}
       />
@@ -435,10 +432,10 @@ export function Radio() {
       style={[
         a.justify_center,
         a.align_center,
-        a.border,
         a.rounded_full,
         t.atoms.border_contrast_high,
         {
+          borderWidth: 1,
           height: 20,
           width: 20,
         },
@@ -463,3 +460,5 @@ export function Radio() {
     </View>
   )
 }
+
+export const Platform = isNative ? Switch : Checkbox

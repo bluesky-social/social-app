@@ -1,38 +1,57 @@
 import React, {useCallback, useMemo, useState} from 'react'
-import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {AppBskyFeedGetLikes as GetLikes} from '@atproto/api'
-import {CenteredView} from '../util/Views'
-import {List} from '../util/List'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
-import {logger} from '#/logger'
-import {LoadingScreen} from '../util/LoadingScreen'
-import {useResolveUriQuery} from '#/state/queries/resolve-uri'
-import {useLikedByQuery} from '#/state/queries/post-liked-by'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
 import {cleanError} from '#/lib/strings/errors'
+import {logger} from '#/logger'
+import {useLikedByQuery} from '#/state/queries/post-liked-by'
+import {useResolveUriQuery} from '#/state/queries/resolve-uri'
+import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
+import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
+import {List} from '#/view/com/util/List'
+import {
+  ListFooter,
+  ListHeaderDesktop,
+  ListMaybePlaceholder,
+} from '#/components/Lists'
+
+function renderItem({item}: {item: GetLikes.Like}) {
+  return <ProfileCardWithFollowBtn key={item.actor.did} profile={item.actor} />
+}
+
+function keyExtractor(item: GetLikes.Like) {
+  return item.actor.did
+}
 
 export function PostLikedBy({uri}: {uri: string}) {
+  const {_} = useLingui()
+  const initialNumToRender = useInitialNumToRender()
+
   const [isPTRing, setIsPTRing] = useState(false)
+
   const {
     data: resolvedUri,
     error: resolveError,
-    isFetching: isFetchingResolvedUri,
+    isLoading: isLoadingUri,
   } = useResolveUriQuery(uri)
   const {
     data,
-    isFetching,
-    isFetched,
+    isLoading: isLoadingLikes,
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage,
-    isError,
     error,
     refetch,
   } = useLikedByQuery(resolvedUri?.uri)
+
+  const isError = Boolean(resolveError || error)
+
   const likes = useMemo(() => {
     if (data?.pages) {
       return data.pages.flatMap(page => page.likes)
     }
+    return []
   }, [data])
 
   const onRefresh = useCallback(async () => {
@@ -46,64 +65,44 @@ export function PostLikedBy({uri}: {uri: string}) {
   }, [refetch, setIsPTRing])
 
   const onEndReached = useCallback(async () => {
-    if (isFetching || !hasNextPage || isError) return
+    if (isFetchingNextPage || !hasNextPage || isError) return
     try {
       await fetchNextPage()
     } catch (err) {
       logger.error('Failed to load more likes', {message: err})
     }
-  }, [isFetching, hasNextPage, isError, fetchNextPage])
+  }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
-  const renderItem = useCallback(({item}: {item: GetLikes.Like}) => {
+  if (likes.length < 1) {
     return (
-      <ProfileCardWithFollowBtn key={item.actor.did} profile={item.actor} />
-    )
-  }, [])
-
-  if (isFetchingResolvedUri || !isFetched) {
-    return <LoadingScreen />
-  }
-
-  // error
-  // =
-  if (resolveError || isError) {
-    return (
-      <CenteredView>
-        <ErrorMessage
-          message={cleanError(resolveError || error)}
-          onPressTryAgain={onRefresh}
-        />
-      </CenteredView>
+      <ListMaybePlaceholder
+        isLoading={isLoadingUri || isLoadingLikes}
+        isError={isError}
+      />
     )
   }
 
-  // loaded
-  // =
   return (
     <List
       data={likes}
-      keyExtractor={item => item.actor.did}
+      renderItem={renderItem}
+      keyExtractor={keyExtractor}
       refreshing={isPTRing}
       onRefresh={onRefresh}
       onEndReached={onEndReached}
-      renderItem={renderItem}
-      initialNumToRender={15}
-      // FIXME(dan)
-      // eslint-disable-next-line react/no-unstable-nested-components
-      ListFooterComponent={() => (
-        <View style={styles.footer}>
-          {(isFetching || isFetchingNextPage) && <ActivityIndicator />}
-        </View>
-      )}
+      onEndReachedThreshold={4}
+      ListHeaderComponent={<ListHeaderDesktop title={_(msg`Liked By`)} />}
+      ListFooterComponent={
+        <ListFooter
+          isFetchingNextPage={isFetchingNextPage}
+          error={cleanError(error)}
+          onRetry={fetchNextPage}
+        />
+      }
       // @ts-ignore our .web version only -prf
       desktopFixedHeight
+      initialNumToRender={initialNumToRender}
+      windowSize={11}
     />
   )
 }
-
-const styles = StyleSheet.create({
-  footer: {
-    height: 200,
-    paddingTop: 20,
-  },
-})

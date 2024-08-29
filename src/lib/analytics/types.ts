@@ -32,6 +32,8 @@ export type TrackPropertiesMap = {
   'Post:ThreadMute': {} // CAN BE SERVER
   'Post:ThreadUnmute': {} // CAN BE SERVER
   'Post:Reply': {} // CAN BE SERVER
+  'Post:EditThreadgateOpened': {}
+  'Post:ThreadgateEdited': {}
   // PROFILE events
   'Profile:Follow': {
     username: string

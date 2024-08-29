@@ -1,4 +1,8 @@
 export type Gate =
   // Keep this alphabetic please.
-  | 'request_notifications_permission_after_onboarding'
-  | 'show_follow_back_label_v2'
+  | 'debug_show_feedcontext'
+  | 'fixed_bottom_bar'
+  | 'onboarding_minimum_interests'
+  | 'suggested_feeds_interstitial'
+  | 'video_debug'
+  | 'videos'

@@ -8,6 +8,7 @@ import {isNative} from '#/platform/detection'
 import {FeedDescriptor} from '#/state/queries/post-feed'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
+import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Text} from '#/view/com/util/text/Text'
 import {Feed} from 'view/com/posts/Feed'
@@ -42,6 +43,10 @@ export const ProfileFeedSection = React.forwardRef<
   const queryClient = useQueryClient()
   const [hasNew, setHasNew] = React.useState(false)
   const [isScrolledDown, setIsScrolledDown] = React.useState(false)
+  const shouldUseAdjustedNumToRender = feed.endsWith('posts_and_author_threads')
+  const adjustedInitialNumToRender = useInitialNumToRender({
+    screenHeightOffset: headerHeight,
+  })
 
   const onScrollToTop = React.useCallback(() => {
     scrollElRef.current?.scrollToOffset({
@@ -56,7 +61,7 @@ export const ProfileFeedSection = React.forwardRef<
   }))
 
   const renderPostsEmpty = React.useCallback(() => {
-    return <EmptyState icon="feed" message={_(msg`This feed is empty!`)} />
+    return <EmptyState icon="growth" message={_(msg`No posts yet.`)} />
   }, [_])
 
   React.useEffect(() => {
@@ -79,6 +84,9 @@ export const ProfileFeedSection = React.forwardRef<
         headerOffset={headerHeight}
         renderEndOfFeed={ProfileEndOfFeed}
         ignoreFilterFor={ignoreFilterFor}
+        initialNumToRender={
+          shouldUseAdjustedNumToRender ? adjustedInitialNumToRender : undefined
+        }
       />
       {(isScrolledDown || hasNew) && (
         <LoadLatestBtn

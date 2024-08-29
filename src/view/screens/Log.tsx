@@ -5,11 +5,12 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
+import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {getEntries} from '#/logger/logDump'
+import {useTickEveryMinute} from '#/state/shell'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {usePalette} from 'lib/hooks/usePalette'
 import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
-import {ago} from 'lib/strings/time'
 import {s} from 'lib/styles'
 import {Text} from '../com/util/text/Text'
 import {ViewHeader} from '../com/util/ViewHeader'
@@ -20,9 +21,11 @@ export function LogScreen({}: NativeStackScreenProps<
   'Log'
 >) {
   const pal = usePalette('default')
-  const {_, i18n} = useLingui()
+  const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
   const [expanded, setExpanded] = React.useState<string[]>([])
+  const timeAgo = useGetTimeAgo()
+  const tick = useTickEveryMinute()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -71,7 +74,7 @@ export function LogScreen({}: NativeStackScreenProps<
                     />
                   ) : undefined}
                   <Text type="sm" style={[styles.ts, pal.textLight]}>
-                    {ago(i18n, entry.timestamp)}
+                    {timeAgo(entry.timestamp, tick)}
                   </Text>
                 </TouchableOpacity>
                 {expanded.includes(entry.id) ? (

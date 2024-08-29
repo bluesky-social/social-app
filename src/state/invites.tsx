@@ -1,4 +1,5 @@
 import React from 'react'
+
 import * as persisted from '#/state/persisted'
 
 type StateContext = persisted.Schema['invites']
@@ -35,8 +36,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   React.useEffect(() => {
-    return persisted.onUpdate(() => {
-      setState(persisted.get('invites'))
+    return persisted.onUpdate('invites', nextInvites => {
+      setState(nextInvites)
     })
   }, [setState])
 

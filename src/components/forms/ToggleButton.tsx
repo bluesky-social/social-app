@@ -23,10 +23,10 @@ export function Group({children, multiple, ...props}: GroupProps) {
         style={[
           a.w_full,
           a.flex_row,
-          a.border,
           a.rounded_sm,
           a.overflow_hidden,
           t.atoms.border_contrast_low,
+          {borderWidth: 1},
         ]}>
         {children}
       </View>

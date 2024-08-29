@@ -150,16 +150,26 @@ export const TextInput = React.forwardRef(function TextInputImpl(
         attributes: {
           class: modeClass,
         },
-        handlePaste: (_, event) => {
-          const items = event.clipboardData?.items
+        handlePaste: (view, event) => {
+          const clipboardData = event.clipboardData
+          let preventDefault = false
 
-          if (items === undefined) {
-            return
+          if (clipboardData) {
+            if (clipboardData.types.includes('text/html')) {
+              // Rich-text formatting is pasted, try retrieving plain text
+              const text = clipboardData.getData('text/plain')
+              // `pasteText` will invoke this handler again, but `clipboardData` will be null.
+              view.pasteText(text)
+              preventDefault = true
+            }
+            getImageFromUri(clipboardData.items, (uri: string) => {
+              textInputWebEmitter.emit('photo-pasted', uri)
+            })
+            if (preventDefault) {
+              // Return `true` to prevent ProseMirror's default paste behavior.
+              return true
+            }
           }
-
-          getImageFromUri(items, (uri: string) => {
-            textInputWebEmitter.emit('photo-pasted', uri)
-          })
         },
         handleKeyDown: (_, event) => {
           if ((event.metaKey || event.ctrlKey) && event.code === 'Enter') {

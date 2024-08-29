@@ -1,6 +1,5 @@
 package expo.modules.blueskygifview
 
-
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.Animatable
@@ -15,7 +14,10 @@ import expo.modules.kotlin.exception.Exceptions
 import expo.modules.kotlin.viewevent.EventDispatcher
 import expo.modules.kotlin.views.ExpoView
 
-class GifView(context: Context, appContext: AppContext) : ExpoView(context, appContext) {
+class GifView(
+  context: Context,
+  appContext: AppContext,
+) : ExpoView(context, appContext) {
   // Events
   private val onPlayerStateChange by EventDispatcher()
 
@@ -44,8 +46,7 @@ class GifView(context: Context, appContext: AppContext) : ExpoView(context, appC
       }
     }
 
-
-  //<editor-fold desc="Lifecycle">
+  // <editor-fold desc="Lifecycle">
 
   init {
     this.setBackgroundColor(Color.TRANSPARENT)
@@ -70,80 +71,82 @@ class GifView(context: Context, appContext: AppContext) : ExpoView(context, appC
     super.onDetachedFromWindow()
   }
 
-  //</editor-fold>
+  // </editor-fold>
 
-  //<editor-fold desc="Loading">
+  // <editor-fold desc="Loading">
 
   private fun load() {
     if (placeholderSource == null || source == null) {
       return
     }
 
-    this.webpRequest = glide.load(source)
-      .diskCacheStrategy(DiskCacheStrategy.DATA)
-      .skipMemoryCache(false)
-      .listener(object: RequestListener<Drawable> {
-        override fun onResourceReady(
-          resource: Drawable?,
-          model: Any?,
-          target: Target<Drawable>?,
-          dataSource: com.bumptech.glide.load.DataSource?,
-          isFirstResource: Boolean
-        ): Boolean {
-          if (placeholderRequest != null) {
-            glide.clear(placeholderRequest)
-          }
-          return false
-        }
+    this.webpRequest =
+      glide
+        .load(source)
+        .diskCacheStrategy(DiskCacheStrategy.DATA)
+        .skipMemoryCache(false)
+        .listener(
+          object : RequestListener<Drawable> {
+            override fun onResourceReady(
+              resource: Drawable?,
+              model: Any?,
+              target: Target<Drawable>?,
+              dataSource: com.bumptech.glide.load.DataSource?,
+              isFirstResource: Boolean,
+            ): Boolean {
+              if (placeholderRequest != null) {
+                glide.clear(placeholderRequest)
+              }
+              return false
+            }
 
-        override fun onLoadFailed(
-          e: GlideException?,
-          model: Any?,
-          target: Target<Drawable>?,
-          isFirstResource: Boolean
-        ): Boolean {
-          return true
-        }
-      })
-      .into(this.imageView)
+            override fun onLoadFailed(
+              e: GlideException?,
+              model: Any?,
+              target: Target<Drawable>?,
+              isFirstResource: Boolean,
+            ): Boolean = true
+          },
+        ).into(this.imageView)
 
     if (this.imageView.drawable == null || this.imageView.drawable !is Animatable) {
-      this.placeholderRequest = glide.load(placeholderSource)
-        .diskCacheStrategy(DiskCacheStrategy.DATA)
-        // Let's not bloat the memory cache with placeholders
-        .skipMemoryCache(true)
-        .listener(object: RequestListener<Drawable> {
-          override fun onResourceReady(
-            resource: Drawable?,
-            model: Any?,
-            target: Target<Drawable>?,
-            dataSource: com.bumptech.glide.load.DataSource?,
-            isFirstResource: Boolean
-          ): Boolean {
-            // Incase this request finishes after the webp, let's just not set
-            // the drawable. This shouldn't happen because the request should get cancelled
-            if (imageView.drawable == null) {
-              imageView.setImageDrawable(resource)
-            }
-            return true
-          }
+      this.placeholderRequest =
+        glide
+          .load(placeholderSource)
+          .diskCacheStrategy(DiskCacheStrategy.DATA)
+          // Let's not bloat the memory cache with placeholders
+          .skipMemoryCache(true)
+          .listener(
+            object : RequestListener<Drawable> {
+              override fun onResourceReady(
+                resource: Drawable?,
+                model: Any?,
+                target: Target<Drawable>?,
+                dataSource: com.bumptech.glide.load.DataSource?,
+                isFirstResource: Boolean,
+              ): Boolean {
+                // Incase this request finishes after the webp, let's just not set
+                // the drawable. This shouldn't happen because the request should get cancelled
+                if (imageView.drawable == null) {
+                  imageView.setImageDrawable(resource)
+                }
+                return true
+              }
 
-          override fun onLoadFailed(
-            e: GlideException?,
-            model: Any?,
-            target: Target<Drawable>?,
-            isFirstResource: Boolean
-          ): Boolean {
-            return true
-          }
-        })
-        .submit()
+              override fun onLoadFailed(
+                e: GlideException?,
+                model: Any?,
+                target: Target<Drawable>?,
+                isFirstResource: Boolean,
+              ): Boolean = true
+            },
+          ).submit()
     }
   }
 
-  //</editor-fold>
+  // </editor-fold>
 
-  //<editor-fold desc="Controls">
+  // <editor-fold desc="Controls">
 
   fun play() {
     this.imageView.play()
@@ -165,16 +168,18 @@ class GifView(context: Context, appContext: AppContext) : ExpoView(context, appC
     }
   }
 
-  //</editor-fold>
+  // </editor-fold>
 
-  //<editor-fold desc="Util">
+  // <editor-fold desc="Util">
 
   fun firePlayerStateChange() {
-    onPlayerStateChange(mapOf(
-      "isPlaying" to this.isPlaying,
-      "isLoaded" to this.isLoaded,
-    ))
+    onPlayerStateChange(
+      mapOf(
+        "isPlaying" to this.isPlaying,
+        "isLoaded" to this.isLoaded,
+      ),
+    )
   }
 
-  //</editor-fold>
+  // </editor-fold>
 }

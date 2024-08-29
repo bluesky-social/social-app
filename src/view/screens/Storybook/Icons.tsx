@@ -45,6 +45,14 @@ export function Icons() {
         <Loader size="lg" fill={t.atoms.text.color} />
         <Loader size="xl" fill={t.atoms.text.color} />
       </View>
+
+      <View style={[a.flex_row, a.gap_xl]}>
+        <Globe size="xs" gradient="sky" />
+        <Globe size="sm" gradient="sky" />
+        <Globe size="md" gradient="sky" />
+        <Globe size="lg" gradient="sky" />
+        <Globe size="xl" gradient="sky" />
+      </View>
     </View>
   )
 }

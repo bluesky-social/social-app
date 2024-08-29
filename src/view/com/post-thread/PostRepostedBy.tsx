@@ -1,38 +1,57 @@
-import React, {useMemo, useCallback, useState} from 'react'
-import {ActivityIndicator, StyleSheet, View} from 'react-native'
+import React, {useCallback, useMemo, useState} from 'react'
 import {AppBskyActorDefs as ActorDefs} from '@atproto/api'
-import {CenteredView} from '../util/Views'
-import {List} from '../util/List'
-import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {logger} from '#/logger'
-import {LoadingScreen} from '../util/LoadingScreen'
-import {useResolveUriQuery} from '#/state/queries/resolve-uri'
-import {usePostRepostedByQuery} from '#/state/queries/post-reposted-by'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
 import {cleanError} from '#/lib/strings/errors'
+import {logger} from '#/logger'
+import {usePostRepostedByQuery} from '#/state/queries/post-reposted-by'
+import {useResolveUriQuery} from '#/state/queries/resolve-uri'
+import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
+import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
+import {List} from '#/view/com/util/List'
+import {
+  ListFooter,
+  ListHeaderDesktop,
+  ListMaybePlaceholder,
+} from '#/components/Lists'
+
+function renderItem({item}: {item: ActorDefs.ProfileViewBasic}) {
+  return <ProfileCardWithFollowBtn key={item.did} profile={item} />
+}
+
+function keyExtractor(item: ActorDefs.ProfileViewBasic) {
+  return item.did
+}
 
 export function PostRepostedBy({uri}: {uri: string}) {
+  const {_} = useLingui()
+  const initialNumToRender = useInitialNumToRender()
+
   const [isPTRing, setIsPTRing] = useState(false)
+
   const {
     data: resolvedUri,
     error: resolveError,
-    isFetching: isFetchingResolvedUri,
+    isLoading: isLoadingUri,
   } = useResolveUriQuery(uri)
   const {
     data,
-    isFetching,
-    isFetched,
+    isLoading: isLoadingRepostedBy,
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage,
-    isError,
     error,
     refetch,
   } = usePostRepostedByQuery(resolvedUri?.uri)
+
+  const isError = Boolean(resolveError || error)
+
   const repostedBy = useMemo(() => {
     if (data?.pages) {
       return data.pages.flatMap(page => page.repostedBy)
     }
+    return []
   }, [data])
 
   const onRefresh = useCallback(async () => {
@@ -46,35 +65,20 @@ export function PostRepostedBy({uri}: {uri: string}) {
   }, [refetch, setIsPTRing])
 
   const onEndReached = useCallback(async () => {
-    if (isFetching || !hasNextPage || isError) return
+    if (isFetchingNextPage || !hasNextPage || isError) return
     try {
       await fetchNextPage()
     } catch (err) {
       logger.error('Failed to load more reposts', {message: err})
     }
-  }, [isFetching, hasNextPage, isError, fetchNextPage])
+  }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
-  const renderItem = useCallback(
-    ({item}: {item: ActorDefs.ProfileViewBasic}) => {
-      return <ProfileCardWithFollowBtn key={item.did} profile={item} />
-    },
-    [],
-  )
-
-  if (isFetchingResolvedUri || !isFetched) {
-    return <LoadingScreen />
-  }
-
-  // error
-  // =
-  if (resolveError || isError) {
+  if (repostedBy.length < 1) {
     return (
-      <CenteredView>
-        <ErrorMessage
-          message={cleanError(resolveError || error)}
-          onPressTryAgain={onRefresh}
-        />
-      </CenteredView>
+      <ListMaybePlaceholder
+        isLoading={isLoadingUri || isLoadingRepostedBy}
+        isError={isError}
+      />
     )
   }
 
@@ -83,28 +87,24 @@ export function PostRepostedBy({uri}: {uri: string}) {
   return (
     <List
       data={repostedBy}
-      keyExtractor={item => item.did}
+      renderItem={renderItem}
+      keyExtractor={keyExtractor}
       refreshing={isPTRing}
       onRefresh={onRefresh}
       onEndReached={onEndReached}
-      renderItem={renderItem}
-      initialNumToRender={15}
-      // FIXME(dan)
-      // eslint-disable-next-line react/no-unstable-nested-components
-      ListFooterComponent={() => (
-        <View style={styles.footer}>
-          {(isFetching || isFetchingNextPage) && <ActivityIndicator />}
-        </View>
-      )}
+      onEndReachedThreshold={4}
+      ListHeaderComponent={<ListHeaderDesktop title={_(msg`Reposted By`)} />}
+      ListFooterComponent={
+        <ListFooter
+          isFetchingNextPage={isFetchingNextPage}
+          error={cleanError(error)}
+          onRetry={fetchNextPage}
+        />
+      }
       // @ts-ignore our .web version only -prf
       desktopFixedHeight
+      initialNumToRender={initialNumToRender}
+      windowSize={11}
     />
   )
 }
-
-const styles = StyleSheet.create({
-  footer: {
-    height: 200,
-    paddingTop: 20,
-  },
-})

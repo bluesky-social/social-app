@@ -1,6 +1,6 @@
 import React, {ComponentProps} from 'react'
 import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
-import {AppBskyActorDefs, ModerationUI} from '@atproto/api'
+import {AppBskyActorDefs, ModerationCause, ModerationUI} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
@@ -23,6 +23,7 @@ interface Props extends ComponentProps<typeof Link> {
   iconStyles: StyleProp<ViewStyle>
   modui: ModerationUI
   profile: AppBskyActorDefs.ProfileViewBasic
+  interpretFilterAsBlur?: boolean
 }
 
 export function PostHider({
@@ -35,6 +36,7 @@ export function PostHider({
   iconSize,
   iconStyles,
   profile,
+  interpretFilterAsBlur,
   ...props
 }: Props) {
   const queryClient = useQueryClient()
@@ -42,7 +44,9 @@ export function PostHider({
   const {_} = useLingui()
   const [override, setOverride] = React.useState(false)
   const control = useModerationDetailsDialogControl()
-  const blur = modui.blurs[0]
+  const blur =
+    modui.blurs[0] ||
+    (interpretFilterAsBlur ? getBlurrableFilter(modui) : undefined)
   const desc = useModerationCauseDescription(blur)
 
   const onBeforePress = React.useCallback(() => {
@@ -129,6 +133,13 @@ export function PostHider({
       {children}
     </Link>
   )
+}
+
+function getBlurrableFilter(modui: ModerationUI): ModerationCause | undefined {
+  // moderation causes get "downgraded" when they originate from embedded content
+  // a downgraded cause should *only* drive filtering in feeds, so we want to look
+  // for filters that arent downgraded
+  return modui.filters.find(filter => !filter.downgraded)
 }
 
 const styles = StyleSheet.create({

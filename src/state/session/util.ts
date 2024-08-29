@@ -10,11 +10,12 @@ export function readLastActiveAccount() {
   return accounts.find(a => a.did === currentAccount?.did)
 }
 
-export function isSessionDeactivated(accessJwt: string | undefined) {
+export function isSignupQueued(accessJwt: string | undefined) {
   if (accessJwt) {
     const sessData = jwtDecode(accessJwt)
     return (
-      hasProp(sessData, 'scope') && sessData.scope === 'com.atproto.deactivated'
+      hasProp(sessData, 'scope') &&
+      sessData.scope === 'com.atproto.signupQueued'
     )
   }
   return false

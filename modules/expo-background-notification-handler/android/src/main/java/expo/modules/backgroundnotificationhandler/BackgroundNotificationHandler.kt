@@ -5,7 +5,7 @@ import com.google.firebase.messaging.RemoteMessage
 
 class BackgroundNotificationHandler(
   private val context: Context,
-  private val notifInterface: BackgroundNotificationHandlerInterface
+  private val notifInterface: BackgroundNotificationHandlerInterface,
 ) {
   fun handleMessage(remoteMessage: RemoteMessage) {
     if (ExpoBackgroundNotificationHandlerModule.isForegrounded) {

@@ -10,7 +10,7 @@ import * as EmailValidator from 'email-validator'
 
 import {DEFAULT_SERVICE} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
-import {createFullHandle, validateHandle} from '#/lib/strings/handles'
+import {createFullHandle} from '#/lib/strings/handles'
 import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
 import {useSessionApi} from '#/state/session'
@@ -26,9 +26,13 @@ export enum SignupStep {
   CAPTCHA,
 }
 
+type SubmitTask = {
+  verificationCode: string | undefined
+  mutableProcessed: boolean // OK to mutate assuming it's never read in render.
+}
+
 export type SignupState = {
   hasPrev: boolean
-  canNext: boolean
   activeStep: SignupStep
 
   serviceUrl: string
@@ -42,6 +46,8 @@ export type SignupState = {
 
   error: string
   isLoading: boolean
+
+  pendingSubmit: null | SubmitTask
 }
 
 export type SignupAction =
@@ -56,14 +62,12 @@ export type SignupAction =
   | {type: 'setDateOfBirth'; value: Date}
   | {type: 'setInviteCode'; value: string}
   | {type: 'setHandle'; value: string}
-  | {type: 'setVerificationCode'; value: string}
   | {type: 'setError'; value: string}
-  | {type: 'setCanNext'; value: boolean}
   | {type: 'setIsLoading'; value: boolean}
+  | {type: 'submit'; task: SubmitTask}
 
 export const initialState: SignupState = {
   hasPrev: false,
-  canNext: false,
   activeStep: SignupStep.INFO,
 
   serviceUrl: DEFAULT_SERVICE,
@@ -77,6 +81,8 @@ export const initialState: SignupState = {
 
   error: '',
   isLoading: false,
+
+  pendingSubmit: null,
 }
 
 export function is13(date: Date) {
@@ -144,10 +150,6 @@ export function reducer(s: SignupState, a: SignupAction): SignupState {
       next.handle = a.value
       break
     }
-    case 'setCanNext': {
-      next.canNext = a.value
-      break
-    }
     case 'setIsLoading': {
       next.isLoading = a.value
       break
@@ -156,26 +158,13 @@ export function reducer(s: SignupState, a: SignupAction): SignupState {
       next.error = a.value
       break
     }
+    case 'submit': {
+      next.pendingSubmit = a.task
+      break
+    }
   }
 
   next.hasPrev = next.activeStep !== SignupStep.INFO
-
-  switch (next.activeStep) {
-    case SignupStep.INFO: {
-      const isValidEmail = EmailValidator.validate(next.email)
-      next.canNext =
-        !!(next.email && next.password && next.dateOfBirth) &&
-        (!next.serviceDescription?.inviteCodeRequired || !!next.inviteCode) &&
-        is13(next.dateOfBirth) &&
-        isValidEmail
-      break
-    }
-    case SignupStep.HANDLE: {
-      next.canNext =
-        !!next.handle && validateHandle(next.handle, next.userDomain).overall
-      break
-    }
-  }
 
   logger.debug('signup', next)
 
@@ -193,19 +182,13 @@ interface IContext {
 export const SignupContext = React.createContext<IContext>({} as IContext)
 export const useSignupContext = () => React.useContext(SignupContext)
 
-export function useSubmitSignup({
-  state,
-  dispatch,
-}: {
-  state: SignupState
-  dispatch: (action: SignupAction) => void
-}) {
+export function useSubmitSignup() {
   const {_} = useLingui()
   const {createAccount} = useSessionApi()
   const onboardingDispatch = useOnboardingDispatch()
 
   return useCallback(
-    async (verificationCode?: string) => {
+    async (state: SignupState, dispatch: (action: SignupAction) => void) => {
       if (!state.email) {
         dispatch({type: 'setStep', value: SignupStep.INFO})
         return dispatch({
@@ -236,7 +219,7 @@ export function useSubmitSignup({
       }
       if (
         state.serviceDescription?.phoneVerificationRequired &&
-        !verificationCode
+        !state.pendingSubmit?.verificationCode
       ) {
         dispatch({type: 'setStep', value: SignupStep.CAPTCHA})
         logger.error('Signup Flow Error', {
@@ -252,7 +235,6 @@ export function useSubmitSignup({
       dispatch({type: 'setIsLoading', value: true})
 
       try {
-        onboardingDispatch({type: 'start'}) // start now to avoid flashing the wrong view
         await createAccount({
           service: state.serviceUrl,
           email: state.email,
@@ -260,10 +242,14 @@ export function useSubmitSignup({
           password: state.password,
           birthDate: state.dateOfBirth,
           inviteCode: state.inviteCode.trim(),
-          verificationCode: verificationCode,
+          verificationCode: state.pendingSubmit?.verificationCode,
         })
+        /*
+         * Must happen last so that if the user has multiple tabs open and
+         * createAccount fails, one tab is not stuck in onboarding — Eric
+         */
+        onboardingDispatch({type: 'start'})
       } catch (e: any) {
-        onboardingDispatch({type: 'skip'}) // undo starting the onboard
         let errMsg = e.toString()
         if (e instanceof ComAtprotoServerCreateAccount.InvalidInviteCodeError) {
           dispatch({
@@ -291,19 +277,6 @@ export function useSubmitSignup({
         dispatch({type: 'setIsLoading', value: false})
       }
     },
-    [
-      state.email,
-      state.password,
-      state.handle,
-      state.serviceDescription?.phoneVerificationRequired,
-      state.serviceUrl,
-      state.userDomain,
-      state.inviteCode,
-      state.dateOfBirth,
-      dispatch,
-      _,
-      onboardingDispatch,
-      createAccount,
-    ],
+    [_, onboardingDispatch, createAccount],
   )
 }

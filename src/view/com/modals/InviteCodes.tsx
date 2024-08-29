@@ -150,7 +150,7 @@ function InviteCode({
 
   const onPress = React.useCallback(() => {
     setStringAsync(invite.code)
-    Toast.show(_(msg`Copied to clipboard`))
+    Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
     setInviteCopied(invite.code)
   }, [setInviteCopied, invite, _])
 
