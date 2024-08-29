@@ -14,7 +14,9 @@ export function Text({
       style={s([
         a.flex,
         a.flex_wrap,
-        a.gap_xs,
+        {
+          columnGap: a.gap_xs.gap,
+        },
         a.font_normal,
         a.leading_tight,
         a.tracking_wide,
