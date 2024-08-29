@@ -45,7 +45,6 @@ import {
   Message_Stroke2_Corner0_Rounded as Message,
   Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
 } from '#/components/icons/Message'
-import {HomeTourExploreWrapper} from '#/tours/HomeTour'
 import {styles} from './BottomBarStyles'
 
 type TabOptions =
@@ -163,19 +162,17 @@ export function BottomBar({navigation}: BottomTabBarProps) {
             <Btn
               testID="bottomBarSearchBtn"
               icon={
-                <HomeTourExploreWrapper>
-                  {isAtSearch ? (
-                    <MagnifyingGlassFilled
-                      width={iconWidth + 2}
-                      style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
-                    />
-                  ) : (
-                    <MagnifyingGlass
-                      width={iconWidth + 2}
-                      style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
-                    />
-                  )}
-                </HomeTourExploreWrapper>
+                isAtSearch ? (
+                  <MagnifyingGlassFilled
+                    width={iconWidth + 2}
+                    style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
+                  />
+                ) : (
+                  <MagnifyingGlass
+                    width={iconWidth + 2}
+                    style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
+                  />
+                )
               }
               onPress={onPressSearch}
               accessibilityRole="search"
