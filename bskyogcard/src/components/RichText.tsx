@@ -8,41 +8,27 @@ import {Text} from './Text.js'
 export function RichText({
   value,
   disableLinks,
-  cx,
+  cx = [],
 }: {
   value: RichTextApi
   disableLinks?: boolean
   cx?: Record<string, any>[]
 }) {
-  const {facets} = value
-  const baseStyles = [
-    a.leading_snug,
-    {
-      // whiteSpace: 'wrap',
-    },
-    cx ? s(cx) : {},
-  ]
+  const {text, facets} = value
+  const baseStyles = [a.leading_snug, ...cx]
   const linkStyles = [
     {
       color: t.palette.primary_500,
     },
   ]
+  const fontSize: number = s(baseStyles).fontSize || a.text_sm.fontSize
 
   if (!facets?.length) {
-    // if (isOnlyEmoji(text)) {
-    //   const fontSize =
-    //     (flattenedStyle.fontSize ?? a.text_sm.fontSize) * emojiMultiplier
-    //   return (
-    //     <Text
-    //       selectable={selectable}
-    //       testID={testID}
-    //       style={[baseStyles, {fontSize}]}
-    //       // @ts-ignore web only -prf
-    //       dataSet={WORD_WRAP}>
-    //       {text}
-    //     </Text>
-    //   )
-    // }
+    if (isOnlyEmoji(text)) {
+      return (
+        <Text cx={[...baseStyles, {fontSize: fontSize * 1.85}]}>{text}</Text>
+      )
+    }
   }
 
   const els = []
@@ -88,4 +74,11 @@ export function RichText({
   }
 
   return <Text cx={baseStyles}>{els}</Text>
+}
+
+export function isOnlyEmoji(text: string) {
+  return (
+    text.length <= 15 &&
+    /^[\p{Emoji_Presentation}\p{Extended_Pictographic}]+$/u.test(text)
+  )
 }
