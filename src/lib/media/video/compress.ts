@@ -21,7 +21,6 @@ export async function compressVideo(
       bitrate: 3_000_000, // 3mbps
       maxSize: 1920,
       getCancellationId: id => {
-        console.log('id', id)
         if (signal) {
           signal.addEventListener('abort', () => {
             console.log('cancelling video', id)
