@@ -18,7 +18,7 @@ export function RichText({
   const baseStyles = [
     a.leading_snug,
     {
-      whiteSpace: 'pre-wrap',
+      // whiteSpace: 'wrap',
     },
     cx ? s(cx) : {},
   ]
@@ -63,7 +63,7 @@ export function RichText({
     } else if (link && AppBskyRichtextFacet.validateLink(link).success) {
       const url = toShortUrl(text)
       if (disableLinks) {
-        els.push(url)
+        els.push(<span key={key}>{url}</span>)
       } else {
         els.push(
           <span key={key} style={s(linkStyles)}>
@@ -82,7 +82,7 @@ export function RichText({
         </span>,
       )
     } else {
-      els.push(segment.text)
+      els.push(<span key={key}>{segment.text}</span>)
     }
     key++
   }

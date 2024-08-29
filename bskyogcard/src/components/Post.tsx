@@ -12,6 +12,7 @@ import {
   moderateFeedGenerator,
   moderateUserList,
   ModerationDecision,
+  RichText as RichTextApi,
 } from '@atproto/api'
 
 import {ModeratorData} from '../data/getModeratorData.js'
@@ -50,8 +51,12 @@ export function Post({
 }) {
   if (AppBskyFeedPost.isRecord(post.record)) {
     const avatar = data.images.get(post.author.avatar)
-    const text = post.record.text
-    const rt = data.texts.get(text)
+    const rt = post.record.text
+      ? new RichTextApi({
+          text: post.record.text,
+          facets: post.record.facets,
+        })
+      : undefined
     const hasInteractions = post.likeCount > 0 || post.repostCount > 0
     const moderation = moderatePost(post, moderatorData.moderationOptions)
 
@@ -551,7 +556,12 @@ export function QuoteEmbed({
   ) {
     const {author, value: post, embeds} = embed.record
     const avatar = data.images.get(author.avatar)
-    const rt = data.texts.get(post.text)
+    const rt = post.text
+      ? new RichTextApi({
+          text: post.text,
+          facets: post.facets,
+        })
+      : undefined
     const postView = viewRecordToPostView(embed.record)
     const moderation = moderatePost(postView, moderatorData.moderationOptions)
 
@@ -591,11 +601,7 @@ export function QuoteEmbed({
           </Box>
         </Box>
 
-        {rt && (
-          <Box>
-            <RichText value={rt} cx={[a.text_sm]} />
-          </Box>
-        )}
+        {rt && <RichText value={rt} cx={[a.text_sm]} />}
 
         {Boolean(embeds && embeds.length) && (
           <Box cx={[a.pt_sm]}>

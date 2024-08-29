@@ -4,10 +4,7 @@ import {
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
-  AppBskyFeedPost,
   AppBskyGraphDefs,
-  AtpAgent,
-  RichText,
 } from '@atproto/api'
 
 import {httpLogger} from '../logger.js'
@@ -28,7 +25,6 @@ export type Image = Metadata & {
 
 export type PostData = {
   images: Map<string, Image>
-  texts: Map<string, RichText>
 }
 
 function normalizeAspectRatio(aspectRatio?: {
@@ -45,10 +41,8 @@ function normalizeAspectRatio(aspectRatio?: {
 
 export async function getPostData(
   post: AppBskyFeedDefs.PostView,
-  agent: AtpAgent,
 ): Promise<PostData> {
   const images: Map<string, Metadata> = new Map()
-  const texts: Map<string, RichText> = new Map()
 
   // console.log(JSON.stringify(post, null, 2))
 
@@ -59,10 +53,6 @@ export async function getPostData(
         height: 1000,
       },
     })
-  }
-
-  if (AppBskyFeedPost.isRecord(post.record) && post.record.text) {
-    texts.set(post.record.text, new RichText({text: post.record.text}))
   }
 
   if (post.embed) {
@@ -166,16 +156,6 @@ export async function getPostData(
             })
           }
         }
-
-        if (
-          AppBskyFeedPost.isRecord(post.embed.record.value) &&
-          post.embed.record.value.text
-        ) {
-          texts.set(
-            post.embed.record.value.text,
-            new RichText({text: post.embed.record.value.text}),
-          )
-        }
       }
 
       if (AppBskyGraphDefs.isListView(post.embed.record)) {
@@ -271,16 +251,6 @@ export async function getPostData(
             }
           }
         }
-
-        if (
-          AppBskyFeedPost.isRecord(post.embed.record.record.value) &&
-          post.embed.record.record.value.text
-        ) {
-          texts.set(
-            post.embed.record.record.value.text,
-            new RichText({text: post.embed.record.record.value.text}),
-          )
-        }
       }
     }
   }
@@ -309,7 +279,6 @@ export async function getPostData(
       }
     }),
   )
-  await Promise.all(Array.from(texts.values()).map(r => r.detectFacets(agent)))
   const extracted = resolved.filter(([, i]) => i.image !== null) as [
     string,
     Image,
@@ -317,6 +286,5 @@ export async function getPostData(
 
   return {
     images: new Map(extracted),
-    texts,
   }
 }

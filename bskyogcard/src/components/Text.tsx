@@ -13,7 +13,8 @@ export function Text({
     <div
       style={s([
         a.flex,
-        a.flex_col,
+        a.flex_wrap,
+        a.gap_xs,
         a.font_normal,
         a.leading_tight,
         a.tracking_wide,

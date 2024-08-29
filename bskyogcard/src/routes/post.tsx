@@ -40,7 +40,7 @@ export default function (ctx: AppContext, app: Express) {
         }
 
         const [postData, moderatorData] = await Promise.all([
-          getPostData(post, ctx.appviewAgent),
+          getPostData(post),
           getModeratorData(ctx.appviewAgent),
         ])
 
