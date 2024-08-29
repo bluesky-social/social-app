@@ -6,7 +6,11 @@ import {
   TextStyle,
   View,
 } from 'react-native'
-import {AppBskyEmbedRecord, ChatBskyConvoDefs, RichText as RichTextAPI} from '@atproto/api'
+import {
+  AppBskyEmbedRecord,
+  ChatBskyConvoDefs,
+  RichText as RichTextAPI,
+} from '@atproto/api'
 import {I18n} from '@lingui/core'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'

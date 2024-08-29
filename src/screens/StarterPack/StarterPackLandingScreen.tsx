@@ -225,7 +225,9 @@ function LandingScreenLoaded({
                   t.atoms.text_contrast_medium,
                 ]}
                 numberOfLines={1}>
-                <Trans>{formatCount(i18n, JOINED_THIS_WEEK)} joined this week</Trans>
+                <Trans>
+                  {formatCount(i18n, JOINED_THIS_WEEK)} joined this week
+                </Trans>
               </Text>
             </View>
           </View>

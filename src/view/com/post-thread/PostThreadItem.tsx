@@ -723,7 +723,9 @@ function ExpandedPostDetails({
         s.mt2,
         s.mb10,
       ]}>
-      <Text style={[a.text_sm, pal.textLight]}>{niceDate(i18n, post.indexedAt)}</Text>
+      <Text style={[a.text_sm, pal.textLight]}>
+        {niceDate(i18n, post.indexedAt)}
+      </Text>
       {isRootPost && (
         <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
       )}
