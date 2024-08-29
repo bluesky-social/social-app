@@ -32,11 +32,13 @@ export class AppContext {
     const fontFiles = readdirSync(fontDirectory)
     const fonts = fontFiles.map(file => {
       const basename = path.basename(file, path.extname(file))
+      const italic = basename.includes('Italic')
       const [weight, name] = basename.split('-')
       return {
         name,
         data: readFileSync(path.join(fontDirectory, file)),
         weight: parseInt(weight),
+        style: italic ? 'italic' : 'normal',
       }
     })
     return new AppContext({
