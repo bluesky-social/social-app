@@ -224,7 +224,7 @@ let FeedItem = ({
     return null
   }
 
-  let formattedCount =
+  const formattedCount =
     authors.length > 1 ? formatCount(i18n, authors.length - 1) : ''
   const firstAuthorName = sanitizeDisplayName(
     authors[0].profile.displayName || authors[0].profile.handle,
