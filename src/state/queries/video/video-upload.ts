@@ -60,8 +60,6 @@ export const useUploadVideoMutation = ({
         throw new Error('No response')
       }
 
-      // @TODO rm, useful for debugging/getting video cid
-      console.log('[VIDEO]', res.body)
       const responseBody = JSON.parse(res.body) as AppBskyVideoDefs.JobStatus
       return responseBody
     },

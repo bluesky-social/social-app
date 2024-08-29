@@ -73,8 +73,6 @@ export const useUploadVideoMutation = ({
         },
       )
 
-      // @TODO rm for prod
-      console.log('[VIDEO]', res)
       return res
     },
     onError,
