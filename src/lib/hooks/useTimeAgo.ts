@@ -1,25 +1,16 @@
 import {useCallback} from 'react'
-import {msg, plural} from '@lingui/macro'
-import {I18nContext, useLingui} from '@lingui/react'
+import {I18n} from '@lingui/core'
+import {defineMessage, msg, plural} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {differenceInSeconds} from 'date-fns'
 
-export type TimeAgoOptions = {
-  lingui: I18nContext['_']
-  format?: 'long' | 'short'
-}
+export type DateDiffFormat = 'long' | 'short'
 
-export function useGetTimeAgo() {
-  const {_} = useLingui()
-  return useCallback(
-    (
-      earlier: number | string | Date,
-      later: number | string | Date,
-      options?: Omit<TimeAgoOptions, 'lingui'>,
-    ) => {
-      return dateDiff(earlier, later, {lingui: _, format: options?.format})
-    },
-    [_],
-  )
+type DateDiff = {
+  value: number
+  unit: 'now' | 'second' | 'minute' | 'hour' | 'day' | 'month'
+  earlier: Date
+  later: Date
 }
 
 const NOW = 5
@@ -28,59 +19,160 @@ const HOUR = MINUTE * 60
 const DAY = HOUR * 24
 const MONTH_30 = DAY * 30
 
+export function useGetTimeAgo() {
+  const {i18n} = useLingui()
+  return useCallback(
+    (
+      earlier: number | string | Date,
+      later: number | string | Date,
+      options?: {format: DateDiffFormat},
+    ) => {
+      const diff = dateDiff(earlier, later)
+      return formatDateDiff({diff, i18n, format: options?.format})
+    },
+    [i18n],
+  )
+}
+
 /**
- * Returns the difference between `earlier` and `later` dates, formatted as a
- * natural language string.
+ * Returns the difference between `earlier` and `later` dates, based on
+ * opinionated rules.
+ *
+ * - All month are considered exactly 30 days.
+ * - Dates assume `earlier` <= `later`, and will otherwise return 'now'.
+ * - All values round down
+ */
+export function dateDiff(
+  earlier: number | string | Date,
+  later: number | string | Date,
+): DateDiff {
+  let diff = {
+    value: 0,
+    unit: 'now' as DateDiff['unit'],
+  }
+  const e = new Date(earlier)
+  const l = new Date(later)
+  const diffSeconds = differenceInSeconds(l, e)
+
+  if (diffSeconds < NOW) {
+    diff = {
+      value: 0,
+      unit: 'now' as DateDiff['unit'],
+    }
+  } else if (diffSeconds < MINUTE) {
+    diff = {
+      value: diffSeconds,
+      unit: 'second' as DateDiff['unit'],
+    }
+  } else if (diffSeconds < HOUR) {
+    const value = Math.floor(diffSeconds / MINUTE)
+    diff = {
+      value,
+      unit: 'minute' as DateDiff['unit'],
+    }
+  } else if (diffSeconds < DAY) {
+    const value = Math.floor(diffSeconds / HOUR)
+    diff = {
+      value,
+      unit: 'hour' as DateDiff['unit'],
+    }
+  } else if (diffSeconds < MONTH_30) {
+    const value = Math.floor(diffSeconds / DAY)
+    diff = {
+      value,
+      unit: 'day' as DateDiff['unit'],
+    }
+  } else {
+    const value = Math.floor(diffSeconds / MONTH_30)
+    diff = {
+      value,
+      unit: 'month' as DateDiff['unit'],
+    }
+  }
+
+  return {
+    ...diff,
+    earlier: e,
+    later: l,
+  }
+}
+
+/**
+ * Accepts a `DateDiff` and teturns the difference between `earlier` and
+ * `later` dates, formatted as a natural language string.
  *
  * - All month are considered exactly 30 days.
  * - Dates assume `earlier` <= `later`, and will otherwise return 'now'.
  * - Differences >= 360 days are returned as the "M/D/YYYY" string
  * - All values round down
  */
-export function dateDiff(
-  earlier: number | string | Date,
-  later: number | string | Date,
-  options: TimeAgoOptions,
-): string {
-  const _ = options.lingui
-  const format = options?.format || 'short'
+export function formatDateDiff({
+  diff,
+  format = 'short',
+  i18n,
+}: {
+  diff: DateDiff
+  format?: DateDiffFormat
+  i18n: I18n
+}): string {
   const long = format === 'long'
-  const diffSeconds = differenceInSeconds(new Date(later), new Date(earlier))
 
-  if (diffSeconds < NOW) {
-    return _(msg`now`)
-  } else if (diffSeconds < MINUTE) {
-    return `${diffSeconds}${
-      long ? ` ${plural(diffSeconds, {one: 'second', other: 'seconds'})}` : 's'
-    }`
-  } else if (diffSeconds < HOUR) {
-    const diff = Math.floor(diffSeconds / MINUTE)
-    return `${diff}${
-      long ? ` ${plural(diff, {one: 'minute', other: 'minutes'})}` : 'm'
-    }`
-  } else if (diffSeconds < DAY) {
-    const diff = Math.floor(diffSeconds / HOUR)
-    return `${diff}${
-      long ? ` ${plural(diff, {one: 'hour', other: 'hours'})}` : 'h'
-    }`
-  } else if (diffSeconds < MONTH_30) {
-    const diff = Math.floor(diffSeconds / DAY)
-    return `${diff}${
-      long ? ` ${plural(diff, {one: 'day', other: 'days'})}` : 'd'
-    }`
-  } else {
-    const diff = Math.floor(diffSeconds / MONTH_30)
-    if (diff < 12) {
-      return `${diff}${
-        long ? ` ${plural(diff, {one: 'month', other: 'months'})}` : 'mo'
-      }`
-    } else {
-      const str = new Date(earlier).toLocaleDateString()
-
-      if (long) {
-        return _(msg`on ${str}`)
+  switch (diff.unit) {
+    case 'now': {
+      return i18n._(msg`now`)
+    }
+    case 'second': {
+      return long
+        ? i18n._(plural(diff.value, {one: '# second', other: '# seconds'}))
+        : i18n._(
+            defineMessage({
+              message: `${diff.value}s`,
+              comment: `How many seconds have passed, displayed in a narrow form`,
+            }),
+          )
+    }
+    case 'minute': {
+      return long
+        ? i18n._(plural(diff.value, {one: '# minute', other: '# minutes'}))
+        : i18n._(
+            defineMessage({
+              message: `${diff.value}m`,
+              comment: `How many minutes have passed, displayed in a narrow form`,
+            }),
+          )
+    }
+    case 'hour': {
+      return long
+        ? i18n._(plural(diff.value, {one: '# hour', other: '# hours'}))
+        : i18n._(
+            defineMessage({
+              message: `${diff.value}h`,
+              comment: `How many hours have passed, displayed in a narrow form`,
+            }),
+          )
+    }
+    case 'day': {
+      return long
+        ? i18n._(plural(diff.value, {one: '# day', other: '# days'}))
+        : i18n._(
+            defineMessage({
+              message: `${diff.value}d`,
+              comment: `How many days have passed, displayed in a narrow form`,
+            }),
+          )
+    }
+    case 'month': {
+      if (diff.value < 12) {
+        return long
+          ? i18n._(plural(diff.value, {one: '# month', other: '# months'}))
+          : i18n._(
+              defineMessage({
+                message: `${diff.value}mo`,
+                comment: `How many months have passed, displayed in a narrow form`,
+              }),
+            )
       }
-      return str
+      return i18n.date(new Date(diff.earlier))
     }
   }
 }
