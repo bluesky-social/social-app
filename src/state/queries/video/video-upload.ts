@@ -31,11 +31,11 @@ export const useUploadVideoMutation = ({
         name: `${nanoid(12)}.mp4`, // @TODO what are we limiting this to?
       })
 
-      if (!currentAccount?.pdsUrl) {
+      if (!currentAccount?.service) {
         throw new Error('User is not logged in')
       }
 
-      const serviceAuthAud = getServiceAuthAudFromUrl(currentAccount.pdsUrl)
+      const serviceAuthAud = getServiceAuthAudFromUrl(currentAccount.service)
       if (!serviceAuthAud) {
         throw new Error('Agent does not have a PDS URL')
       }

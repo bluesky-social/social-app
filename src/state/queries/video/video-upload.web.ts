@@ -30,11 +30,13 @@ export const useUploadVideoMutation = ({
         name: `${nanoid(12)}.mp4`, // @TODO: make sure it's always mp4'
       })
 
-      if (!currentAccount?.pdsUrl) {
+      console.log(currentAccount)
+
+      if (!currentAccount?.service) {
         throw new Error('User is not logged in')
       }
 
-      const serviceAuthAud = getServiceAuthAudFromUrl(currentAccount.pdsUrl)
+      const serviceAuthAud = getServiceAuthAudFromUrl(currentAccount.service)
       if (!serviceAuthAud) {
         throw new Error('Agent does not have a PDS URL')
       }
