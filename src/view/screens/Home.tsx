@@ -10,7 +10,7 @@ import {logEvent, LogEvents} from '#/lib/statsig/statsig'
 import {useGate} from '#/lib/statsig/statsig'
 import {emitSoftReset} from '#/state/events'
 import {SavedFeedSourceInfo, usePinnedFeedsInfos} from '#/state/queries/feed'
-import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
+import {FeedParams} from '#/state/queries/post-feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useSession} from '#/state/session'
@@ -110,30 +110,6 @@ function HomeScreenReady({
     }
   }, [selectedIndex])
 
-  // Temporary, remove when finished debugging
-  const debugHasLoggedFollowingPrefs = React.useRef(false)
-  const debugLogFollowingPrefs = React.useCallback(
-    (feed: FeedDescriptor) => {
-      if (debugHasLoggedFollowingPrefs.current) return
-      if (feed !== 'following') return
-      logEvent('debug:followingPrefs', {
-        followingShowRepliesFromPref: preferences.feedViewPrefs.hideReplies
-          ? 'off'
-          : preferences.feedViewPrefs.hideRepliesByUnfollowed
-          ? 'following'
-          : 'all',
-        followingRepliesMinLikePref:
-          preferences.feedViewPrefs.hideRepliesByLikeCount,
-      })
-      debugHasLoggedFollowingPrefs.current = true
-    },
-    [
-      preferences.feedViewPrefs.hideReplies,
-      preferences.feedViewPrefs.hideRepliesByLikeCount,
-      preferences.feedViewPrefs.hideRepliesByUnfollowed,
-    ],
-  )
-
   const {hasSession} = useSession()
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
@@ -162,7 +138,6 @@ function HomeScreenReady({
           feedUrl: selectedFeed,
           reason: 'focus',
         })
-        debugLogFollowingPrefs(selectedFeed)
       }
     }),
   )
@@ -213,9 +188,8 @@ function HomeScreenReady({
         feedUrl: feed,
         reason,
       })
-      debugLogFollowingPrefs(feed)
     },
-    [allFeeds, debugLogFollowingPrefs],
+    [allFeeds],
   )
 
   const onPressSelected = React.useCallback(() => {
