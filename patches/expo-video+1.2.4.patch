@@ -250,7 +250,7 @@ index 3315b88..f482390 100644
      if self.appContext != nil {
        self.emit(event: event, arguments: repeat each arguments)
 diff --git a/node_modules/expo-video/ios/VideoPlayerObserver.swift b/node_modules/expo-video/ios/VideoPlayerObserver.swift
-index d289e26..d0fdd30 100644
+index d289e26..de9a26f 100644
 --- a/node_modules/expo-video/ios/VideoPlayerObserver.swift
 +++ b/node_modules/expo-video/ios/VideoPlayerObserver.swift
 @@ -21,6 +21,7 @@ protocol VideoPlayerObserverDelegate: AnyObject {
@@ -291,11 +291,11 @@ index d289e26..d0fdd30 100644
 
      if isPlaying != (player.timeControlStatus == .playing) {
        isPlaying = player.timeControlStatus == .playing
-+      addOrRemovePeriodicTimeObserver()
++      addPeriodicTimeObserverIfNeeded()
      }
    }
 
-@@ -310,4 +317,30 @@ class VideoPlayerObserver {
+@@ -310,4 +317,28 @@ class VideoPlayerObserver {
        }
      }
    }
@@ -306,8 +306,8 @@ index d289e26..d0fdd30 100644
 +    }
 +  }
 +
-+  private func addOrRemovePeriodicTimeObserver() {
-+    guard let player = self.player else {
++  private func addPeriodicTimeObserverIfNeeded() {
++    guard self.playerPeriodicTimeObserver == nil, let player = self.player else {
 +      return
 +    }
 +
@@ -321,8 +321,6 @@ index d289e26..d0fdd30 100644
 +        let timeRemaining = (duration.seconds - event.seconds).rounded()
 +        self.onPlayerTimeRemainingChanged(player, timeRemaining)
 +      }
-+    } else if let playerPeriodicTimeObserver = self.playerPeriodicTimeObserver {
-+      player.removeTimeObserver(playerPeriodicTimeObserver)
 +    }
 +  }
  }
