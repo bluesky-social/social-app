@@ -7,8 +7,6 @@ import {CompressedVideo} from '#/lib/media/video/compress'
 import {createVideoEndpointUrl} from '#/state/queries/video/util'
 import {useAgent, useSession} from '#/state/session'
 
-const UPLOAD_HEADER = process.env.EXPO_PUBLIC_VIDEO_HEADER ?? ''
-
 export const useUploadVideoMutation = ({
   onSuccess,
   onError,
@@ -45,7 +43,6 @@ export const useUploadVideoMutation = ({
         video.uri,
         {
           headers: {
-            'dev-key': UPLOAD_HEADER,
             'content-type': 'video/mp4',
             Authorization: `Bearer ${serviceAuth.token}`,
           },

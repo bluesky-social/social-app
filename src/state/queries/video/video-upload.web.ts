@@ -6,8 +6,6 @@ import {CompressedVideo} from '#/lib/media/video/compress'
 import {createVideoEndpointUrl} from '#/state/queries/video/util'
 import {useAgent, useSession} from '#/state/session'
 
-const UPLOAD_HEADER = process.env.EXPO_PUBLIC_VIDEO_HEADER ?? ''
-
 export const useUploadVideoMutation = ({
   onSuccess,
   onError,
@@ -66,8 +64,6 @@ export const useUploadVideoMutation = ({
           }
           xhr.open('POST', uri)
           xhr.setRequestHeader('Content-Type', 'video/mp4')
-          // @TODO remove this header for prod
-          xhr.setRequestHeader('dev-key', UPLOAD_HEADER)
           xhr.setRequestHeader('Authorization', `Bearer ${serviceAuth.token}`)
           xhr.send(bytes)
         },
