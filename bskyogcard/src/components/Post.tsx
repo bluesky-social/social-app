@@ -9,6 +9,7 @@ import {
   AppBskyFeedPost,
   AppBskyGraphDefs,
   AppBskyGraphStarterpack,
+  ModerationDecision,
 } from '@atproto/api'
 
 import {atoms as a, gradient, theme as t} from '../theme/index.js'
@@ -31,15 +32,18 @@ import {Text} from './Text.js'
 export function Post({
   post,
   data,
+  moderation,
 }: {
   post: AppBskyFeedDefs.PostView
   data: PostData
+  moderation: ModerationDecision
 }) {
   if (AppBskyFeedPost.isRecord(post.record)) {
     const avatar = data.images.get(post.author.avatar)
     const text = post.record.text
     const rt = data.texts.get(text)
     const hasInteractions = post.likeCount > 0 || post.repostCount > 0
+    console.log(moderation.ui('contentView'))
 
     return (
       <Box
