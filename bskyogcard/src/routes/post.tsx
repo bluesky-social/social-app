@@ -6,10 +6,11 @@ import satori from 'satori'
 
 import {Post} from '../components/Post.js'
 import {AppContext} from '../context.js'
+import {getModeratorData} from '../data/getModeratorData.js'
+import {getPost} from '../data/getPost.js'
+import {getPostData} from '../data/getPostData.js'
 import {httpLogger} from '../logger.js'
 import {loadEmojiAsSvg} from '../util.js'
-import {getModerationOptions, moderatePost} from '../util/moderation.js'
-import {resolvePostData} from '../util/resolvePostData.js'
 import {handler, originVerifyMiddleware} from './util.js'
 
 const WIDTH = 600
@@ -23,17 +24,10 @@ export default function (ctx: AppContext, app: Express) {
       let uri = AtUri.make(actor, 'app.bsky.feed.post', rkey)
 
       try {
-        if (!actor.startsWith('did:')) {
-          const res = await ctx.appviewAgent.resolveHandle({
-            handle: actor,
-          })
-          actor = res.data.did
-        }
-        uri = AtUri.make(actor, 'app.bsky.feed.post', rkey)
-        const {data} = await ctx.appviewAgent.getPosts({
-          uris: [uri.toString()],
+        const post = await getPost({
+          uri,
+          agent: ctx.appviewAgent,
         })
-        const post = data.posts.at(0)
 
         if (!AppBskyFeedPost.isRecord(post.record)) {
           return res.status(404).end('not found')
@@ -45,17 +39,13 @@ export default function (ctx: AppContext, app: Express) {
           return res.status(404).end('not found')
         }
 
-        const [postData, moderationOptions] = await Promise.all([
-          resolvePostData(post, ctx.appviewAgent),
-          getModerationOptions(ctx.appviewAgent),
+        const [postData, moderatorData] = await Promise.all([
+          getPostData(post, ctx.appviewAgent),
+          getModeratorData(ctx.appviewAgent),
         ])
 
         const svg = await satori(
-          <Post
-            post={post}
-            data={postData}
-            moderation={moderatePost(post, moderationOptions)}
-          />,
+          <Post post={post} data={postData} moderatorData={moderatorData} />,
           {
             fonts: ctx.fonts,
             width: WIDTH,

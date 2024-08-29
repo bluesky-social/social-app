@@ -87,7 +87,7 @@ export const theme = {
 }
 
 export function style(styleObjects: Record<string, any>[]) {
-  return Object.assign({}, ...styleObjects)
+  return Object.assign({}, ...styleObjects.filter(Boolean))
 }
 
 export function gradient(color: keyof typeof tokens.gradients) {

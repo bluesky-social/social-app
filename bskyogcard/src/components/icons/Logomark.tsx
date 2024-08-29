@@ -1,6 +1,8 @@
 import React from 'react'
 
-export function Logomark({size, fill}: {size: number; fill?: string}) {
+import {IconProps} from './types.js'
+
+export function Logomark({size, fill}: IconProps) {
   return (
     <svg fill="none" viewBox="0 0 500 441" width={size}>
       <path

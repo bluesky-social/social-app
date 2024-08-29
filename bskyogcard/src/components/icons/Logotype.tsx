@@ -1,6 +1,8 @@
 import React from 'react'
 
-export function Logotype({size, fill}: {size: number; fill?: string}) {
+import {IconProps} from './types.js'
+
+export function Logotype({size, fill}: IconProps) {
   return (
     <svg fill="none" viewBox="0 0 398 108" width={size}>
       <path

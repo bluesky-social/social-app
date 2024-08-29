@@ -9,14 +9,25 @@ import {
   AppBskyFeedPost,
   AppBskyGraphDefs,
   AppBskyGraphStarterpack,
+  moderateFeedGenerator,
+  moderateUserList,
   ModerationDecision,
 } from '@atproto/api'
 
+import {ModeratorData} from '../data/getModeratorData.js'
+import {Image as ImageSource, PostData} from '../data/getPostData.js'
 import {atoms as a, gradient, theme as t} from '../theme/index.js'
 import {formatCount} from '../util/formatCount.js'
 import {formatDate} from '../util/formatDate.js'
+import {
+  getModerationCauseInfo,
+  ModerationCauseInfo,
+} from '../util/getModerationCauseInfo.js'
 import {getStarterPackImageUri} from '../util/getStarterPackImageUri.js'
-import {Image as ImageSource, PostData} from '../util/resolvePostData.js'
+import {moderatePost} from '../util/moderatePost.js'
+import {toShortUrl} from '../util/toShortUrl.js'
+import {viewRecordToPostView} from '../util/viewRecordToPostView.js'
+import {Avatar} from './Avatar.js'
 import {Box} from './Box.js'
 import * as Grid from './Grid.js'
 import {CircleInfo} from './icons/CircleInfo.js'
@@ -25,25 +36,24 @@ import {Logomark} from './icons/Logomark.js'
 import {Logotype} from './icons/Logotype.js'
 import {Repost} from './icons/Repost.js'
 import {Image} from './Image.js'
-import {LinkCard} from './LinkCard.js'
 import {RichText} from './RichText.js'
 import {Text} from './Text.js'
 
 export function Post({
   post,
   data,
-  moderation,
+  moderatorData,
 }: {
   post: AppBskyFeedDefs.PostView
   data: PostData
-  moderation: ModerationDecision
+  moderatorData: ModeratorData
 }) {
   if (AppBskyFeedPost.isRecord(post.record)) {
     const avatar = data.images.get(post.author.avatar)
     const text = post.record.text
     const rt = data.texts.get(text)
     const hasInteractions = post.likeCount > 0 || post.repostCount > 0
-    console.log(moderation.ui('contentView'))
+    const moderation = moderatePost(post, moderatorData.moderationOptions)
 
     return (
       <Box
@@ -58,20 +68,24 @@ export function Post({
           },
         ]}>
         <Box
-          cx={[a.flex, a.flex_col, a.w_full, a.p_xl, a.rounded_md, t.atoms.bg]}>
+          cx={[
+            a.flex,
+            a.flex_col,
+            a.w_full,
+            a.p_xl,
+            a.rounded_md,
+            t.atoms.bg,
+            {
+              boxShadow: `0 0 20px rgb(0, 25, 51, 0.2)`,
+            },
+          ]}>
           <Box cx={[a.flex_row, a.align_center, a.gap_sm, a.pb_sm]}>
-            <Box
-              cx={[
-                a.rounded_full,
-                a.overflow_hidden,
-                t.atoms.bg_contrast_25,
-                {
-                  width: '48px',
-                  height: '48px',
-                },
-              ]}>
-              {avatar && <Image height="100%" width="100%" image={avatar} />}
-            </Box>
+            <Avatar
+              size={48}
+              image={avatar}
+              profile={post.author}
+              moderatorData={moderatorData}
+            />
             <Box cx={[a.flex_col]}>
               <Text cx={[a.text_md, a.font_bold, a.pb_2xs]}>
                 {post.author.displayName || post.author.handle}
@@ -85,12 +99,17 @@ export function Post({
           {rt && <RichText value={rt} />}
 
           {post.embed && (
-            <Box cx={[a.pt_md]}>
-              <Embeds embed={post.embed} data={data} />
+            <Box cx={[a.pt_sm]}>
+              <Embeds
+                embed={post.embed}
+                data={data}
+                moderation={moderation}
+                moderatorData={moderatorData}
+              />
             </Box>
           )}
 
-          <Box cx={[a.flex_row, a.align_center, a.justify_between, a.pt_lg]}>
+          <Box cx={[a.flex_row, a.align_center, a.justify_between, a.pt_md]}>
             <Text cx={[a.text_sm, t.atoms.text_contrast_medium]}>
               {formatDate(post.record.createdAt)}
             </Text>
@@ -171,12 +190,50 @@ export function Logo() {
 export function Embeds({
   embed,
   data,
+  moderation,
+  moderatorData,
   hideNestedEmbeds,
 }: {
   embed: AppBskyFeedDefs.PostView['embed']
   data: PostData
+  moderation: ModerationDecision
+  moderatorData: ModeratorData
   hideNestedEmbeds?: boolean
 }) {
+  /**
+   * If record-with-media, pass through the existing moderation into `Embeds`
+   * and move on to `QuoteEmbed`'s own moderation.
+   */
+  if (AppBskyEmbedRecordWithMedia.isView(embed)) {
+    return (
+      <Box cx={[a.gap_md]}>
+        <Embeds
+          embed={embed.media}
+          data={data}
+          moderation={moderation}
+          moderatorData={moderatorData}
+        />
+        {!hideNestedEmbeds && (
+          <QuoteEmbed
+            embed={embed.record}
+            data={data}
+            moderatorData={moderatorData}
+          />
+        )}
+      </Box>
+    )
+  }
+
+  const mod = moderation.ui('contentMedia')
+  const info = getModerationCauseInfo({
+    cause: mod.blurs.at(0),
+    moderatorData,
+  })
+
+  if (info) {
+    return <ModeratedEmbed info={info} />
+  }
+
   if (AppBskyEmbedExternal.isView(embed)) {
     const {title, description, uri, thumb} = embed.external
     const image = data.images.get(thumb)
@@ -243,11 +300,25 @@ export function Embeds({
 
   if (AppBskyEmbedRecord.isView(embed)) {
     if (AppBskyFeedDefs.isGeneratorView(embed.record)) {
-      return <FeedCard embed={embed.record} data={data} />
+      return (
+        <FeedCard
+          embed={embed.record}
+          data={data}
+          moderatorData={moderatorData}
+        />
+      )
     }
+
     if (AppBskyGraphDefs.isListView(embed.record)) {
-      return <ListCard embed={embed.record} data={data} />
+      return (
+        <ListCard
+          embed={embed.record}
+          data={data}
+          moderatorData={moderatorData}
+        />
+      )
     }
+
     if (
       AppBskyGraphDefs.isStarterPackViewBasic(embed.record) &&
       AppBskyGraphStarterpack.isRecord(embed.record.record)
@@ -257,15 +328,9 @@ export function Embeds({
       const image = data.images.get(uri)
       return <LinkCard image={image} title={name} description={description} />
     }
-    return <QuoteEmbed embed={embed} data={data} />
-  }
 
-  if (AppBskyEmbedRecordWithMedia.isView(embed)) {
     return (
-      <Box cx={[a.gap_md]}>
-        <Embeds embed={embed.media} data={data} />
-        {!hideNestedEmbeds && <QuoteEmbed embed={embed.record} data={data} />}
-      </Box>
+      <QuoteEmbed embed={embed} data={data} moderatorData={moderatorData} />
     )
   }
 
@@ -275,12 +340,29 @@ export function Embeds({
 export function FeedCard({
   embed,
   data,
+  moderatorData,
 }: {
   embed: AppBskyFeedDefs.GeneratorView
   data: PostData
+  moderatorData: ModeratorData
 }) {
+  const feedModeration = moderateFeedGenerator(
+    embed,
+    moderatorData.moderationOptions,
+  )
+  const modui = feedModeration.ui('contentList')
+  const info = getModerationCauseInfo({
+    cause: modui.blurs.at(0),
+    moderatorData,
+  })
+
+  if (info) {
+    return <ModeratedEmbed info={info} />
+  }
+
   const {avatar, displayName, likeCount, creator} = embed
   const image = data.images.get(avatar)
+
   return (
     <Box
       cx={[
@@ -321,12 +403,29 @@ export function FeedCard({
 export function ListCard({
   embed,
   data,
+  moderatorData,
 }: {
   embed: AppBskyGraphDefs.ListView
   data: PostData
+  moderatorData: ModeratorData
 }) {
+  const listModeration = moderateUserList(
+    embed,
+    moderatorData.moderationOptions,
+  )
+  const modui = listModeration.ui('contentList')
+  const info = getModerationCauseInfo({
+    cause: modui.blurs.at(0),
+    moderatorData,
+  })
+
+  if (info) {
+    return <ModeratedEmbed info={info} />
+  }
+
   const {avatar, name, creator} = embed
   const image = data.images.get(avatar)
+
   return (
     <Box
       cx={[
@@ -353,6 +452,59 @@ export function ListCard({
           <Text cx={[a.text_md, a.font_bold, a.pb_2xs]}>{name}</Text>
           <Text cx={[a.text_sm, a.leading_snug]}>By @{creator.handle}</Text>
         </Box>
+      </Box>
+    </Box>
+  )
+}
+
+export function LinkCard({
+  image,
+  uri,
+  title,
+  description,
+}: {
+  image?: ImageSource
+  uri?: string
+  title: string
+  description: string
+}) {
+  return (
+    <Box
+      cx={[
+        a.w_full,
+        a.rounded_sm,
+        a.overflow_hidden,
+        a.border,
+        t.atoms.border_contrast_low,
+      ]}>
+      {image && (
+        <Box
+          cx={[
+            a.relative,
+            a.w_full,
+            t.atoms.bg_contrast_25,
+            {paddingTop: (630 / 1200) * 100 + '%'},
+          ]}>
+          <Image
+            image={image}
+            cx={[
+              a.absolute,
+              a.inset_0,
+              {
+                objectFit: 'cover',
+              },
+            ]}
+          />
+        </Box>
+      )}
+      <Box cx={[a.p_md, t.atoms.bg]}>
+        {uri && (
+          <Text cx={[a.text_xs, a.pb_sm, t.atoms.text_contrast_medium]}>
+            {toShortUrl(uri)}
+          </Text>
+        )}
+        <Text cx={[a.text_md, a.font_bold, a.pb_xs]}>{title}</Text>
+        <Text cx={[a.text_sm, a.leading_snug]}>{description}</Text>
       </Box>
     </Box>
   )
@@ -386,9 +538,11 @@ export function SquareImage({image}: {image: ImageSource}) {
 export function QuoteEmbed({
   embed,
   data,
+  moderatorData,
 }: {
   embed: AppBskyEmbedRecord.View
   data: PostData
+  moderatorData: ModeratorData
 }) {
   if (
     AppBskyEmbedRecord.isViewRecord(embed.record) &&
@@ -398,15 +552,17 @@ export function QuoteEmbed({
     const {author, value: post, embeds} = embed.record
     const avatar = data.images.get(author.avatar)
     const rt = data.texts.get(post.text)
-    const notPublic = author.labels.some(l => l.val === `!no-unauthenticated`)
+    const postView = viewRecordToPostView(embed.record)
+    const moderation = moderatePost(postView, moderatorData.moderationOptions)
 
-    if (notPublic) {
-      return (
-        <NotQuoteEmbed>
-          The author of the quoted post has requested their posts not be
-          displayed on external sites
-        </NotQuoteEmbed>
-      )
+    const mod = moderation.ui('contentView')
+    const info = getModerationCauseInfo({
+      cause: mod.blurs.at(0),
+      moderatorData,
+    })
+
+    if (info) {
+      return <ModeratedEmbed info={info} />
     }
 
     return (
@@ -419,18 +575,12 @@ export function QuoteEmbed({
           t.atoms.border_contrast_low,
         ]}>
         <Box cx={[a.flex_row, a.align_center, a.gap_xs, a.pb_sm]}>
-          <Box
-            cx={[
-              a.rounded_full,
-              a.overflow_hidden,
-              t.atoms.bg_contrast_25,
-              {
-                width: '20px',
-                height: '20px',
-              },
-            ]}>
-            {avatar && <Image height="100%" width="100%" image={avatar} />}
-          </Box>
+          <Avatar
+            size={20}
+            image={avatar}
+            profile={author}
+            moderatorData={moderatorData}
+          />
           <Box cx={[a.flex_row, a.align_center, a.gap_xs]}>
             <Text cx={[a.text_sm, a.font_bold]}>
               {author.displayName || author.handle}
@@ -449,7 +599,13 @@ export function QuoteEmbed({
 
         {Boolean(embeds && embeds.length) && (
           <Box cx={[a.pt_sm]}>
-            <Embeds embed={embeds[0]} data={data} hideNestedEmbeds />
+            <Embeds
+              embed={embeds[0]}
+              data={data}
+              moderation={moderation}
+              moderatorData={moderatorData}
+              hideNestedEmbeds
+            />
           </Box>
         )}
       </Box>
@@ -483,6 +639,27 @@ export function NotQuoteEmbed({children}: {children: React.ReactNode}) {
       <Text cx={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
         {children}
       </Text>
+    </Box>
+  )
+}
+
+export function ModeratedEmbed({info}: {info: ModerationCauseInfo}) {
+  return (
+    <Box
+      cx={[
+        a.flex_row,
+        a.align_center,
+        a.gap_sm,
+        a.rounded_sm,
+        a.p_md,
+        t.atoms.bg_contrast_25,
+      ]}>
+      <info.icon size={20} fill={t.atoms.text_contrast_low.color} />
+      <Box cx={[a.gap_xs]}>
+        <Text cx={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
+          {info.name}
+        </Text>
+      </Box>
     </Box>
   )
 }

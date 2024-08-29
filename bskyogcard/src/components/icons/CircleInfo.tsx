@@ -1,6 +1,8 @@
 import React from 'react'
 
-export function CircleInfo({size, fill}: {size: number; fill?: string}) {
+import {IconProps} from './types.js'
+
+export function CircleInfo({size, fill}: IconProps) {
   return (
     <svg fill="none" viewBox="0 0 24 24" width={size} height={size}>
       <path

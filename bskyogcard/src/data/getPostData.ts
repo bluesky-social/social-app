@@ -11,8 +11,8 @@ import {
 } from '@atproto/api'
 
 import {httpLogger} from '../logger.js'
+import {getStarterPackImageUri} from '../util/getStarterPackImageUri.js'
 import {getImage} from './getImage.js'
-import {getStarterPackImageUri} from './getStarterPackImageUri.js'
 
 export type Metadata = {
   aspectRatio: {
@@ -43,7 +43,7 @@ function normalizeAspectRatio(aspectRatio?: {
   return aspectRatio
 }
 
-export async function resolvePostData(
+export async function getPostData(
   post: AppBskyFeedDefs.PostView,
   agent: AtpAgent,
 ): Promise<PostData> {

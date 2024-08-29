@@ -1,7 +1,7 @@
 import React from 'react'
 
+import {Image as ImageSource} from '../data/getPostData.js'
 import {style as s} from '../theme/index.js'
-import {Image as ImageSource} from '../util/resolvePostData.js'
 
 export type ImageProps = Omit<
   React.ImgHTMLAttributes<HTMLImageElement>,
