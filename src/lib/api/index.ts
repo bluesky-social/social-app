@@ -1,4 +1,5 @@
 import {
+  AppBskyEmbedDefs,
   AppBskyEmbedExternal,
   AppBskyEmbedImages,
   AppBskyEmbedRecord,
@@ -49,6 +50,7 @@ interface PostOpts {
     blobRef: BlobRef
     altText: string
     captions: {lang: string; file: File}[]
+    aspectRatio?: AppBskyEmbedDefs.AspectRatio
   }
   extLink?: ExternalEmbedDraft
   images?: ImageModel[]
@@ -149,6 +151,7 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
           video: opts.video.blobRef,
           alt: opts.video.altText || undefined,
           captions: captions.length === 0 ? undefined : captions,
+          aspectRatio: opts.video.aspectRatio,
         } as AppBskyEmbedVideo.Main,
       } as AppBskyEmbedRecordWithMedia.Main
     } else {
@@ -157,6 +160,7 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
         video: opts.video.blobRef,
         alt: opts.video.altText || undefined,
         captions: captions.length === 0 ? undefined : captions,
+        aspectRatio: opts.video.aspectRatio,
       } as AppBskyEmbedVideo.Main
     }
   }

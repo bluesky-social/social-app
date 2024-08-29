@@ -180,6 +180,7 @@ export const ComposePost = observer(function ComposePost({
     selectVideo,
     clearVideo,
     state: videoUploadState,
+    updateVideoDimensions,
   } = useUploadVideo({
     setStatus: setProcessingState,
     onSuccess: () => {
@@ -356,6 +357,12 @@ export const ComposePost = observer(function ComposePost({
                 blobRef: videoUploadState.blobRef,
                 altText: videoAltText,
                 captions: captions,
+                aspectRatio: videoUploadState.asset
+                  ? {
+                      width: videoUploadState.asset?.width,
+                      height: videoUploadState.asset?.height,
+                    }
+                  : undefined,
               }
             : undefined,
         })
@@ -704,16 +711,21 @@ export const ComposePost = observer(function ComposePost({
                 )}
               </View>
             ) : null}
-            {videoUploadState.status === 'compressing' &&
-            videoUploadState.asset ? (
-              <VideoTranscodeProgress
-                asset={videoUploadState.asset}
-                progress={videoUploadState.progress}
-                clear={clearVideo}
-              />
-            ) : videoUploadState.video ? (
-              <VideoPreview video={videoUploadState.video} clear={clearVideo} />
-            ) : null}
+            {videoUploadState.asset &&
+              (videoUploadState.status === 'compressing' ? (
+                <VideoTranscodeProgress
+                  asset={videoUploadState.asset}
+                  progress={videoUploadState.progress}
+                  clear={clearVideo}
+                />
+              ) : videoUploadState.video ? (
+                <VideoPreview
+                  asset={videoUploadState.asset}
+                  video={videoUploadState.video}
+                  setDimensions={updateVideoDimensions}
+                  clear={clearVideo}
+                />
+              ) : null)}
             {(videoUploadState.asset || videoUploadState.video) && (
               <SubtitleDialogBtn
                 altText={videoAltText}
