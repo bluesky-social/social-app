@@ -48,6 +48,7 @@ type ControlsContext = {
 }
 
 const stateContext = React.createContext<StateContext>(undefined)
+const openContext = React.createContext<boolean>(false)
 const controlsContext = React.createContext<ControlsContext>({
   openComposer(_opts: ComposerOpts) {},
   closeComposer() {
@@ -57,14 +58,17 @@ const controlsContext = React.createContext<ControlsContext>({
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [state, setState] = React.useState<StateContext>()
+  const [isOpen, setIsOpen] = React.useState(false)
 
   const openComposer = useNonReactiveCallback((opts: ComposerOpts) => {
     setState(opts)
+    setIsOpen(true)
   })
 
   const closeComposer = useNonReactiveCallback(() => {
     let wasOpen = !!state
     setState(undefined)
+    setIsOpen(false)
     return wasOpen
   })
 
@@ -78,9 +82,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   return (
     <stateContext.Provider value={state}>
-      <controlsContext.Provider value={api}>
-        {children}
-      </controlsContext.Provider>
+      <openContext.Provider value={isOpen}>
+        <controlsContext.Provider value={api}>
+          {children}
+        </controlsContext.Provider>
+      </openContext.Provider>
     </stateContext.Provider>
   )
 }
@@ -91,4 +97,8 @@ export function useComposerState() {
 
 export function useComposerControls() {
   return React.useContext(controlsContext)
+}
+
+export function useIsComposerOpen() {
+  return React.useContext(openContext)
 }
