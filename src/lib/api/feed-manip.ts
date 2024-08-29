@@ -398,15 +398,13 @@ export class FeedTuner {
       }
 
       const candidateSlices = slices.filter(slice => {
-        let hasPreferredLang = false
         for (const item of slice.items) {
           if (isPostInLanguage(item.post, preferredLangsCode2)) {
-            hasPreferredLang = true
-            break
+            return true
           }
         }
         // if item does not fit preferred language, remove it
-        return hasPreferredLang
+        return false
       })
 
       // if the language filter cleared out the entire page, return the original set
