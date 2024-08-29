@@ -135,12 +135,14 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
   // add video embed if present
   if (opts.video) {
     const captions = await Promise.all(
-      opts.video.captions.map(async caption => {
-        const {data} = await agent.uploadBlob(caption.file, {
-          encoding: 'text/vtt',
-        })
-        return {lang: caption.lang, file: data.blob}
-      }),
+      opts.video.captions
+        .filter(caption => caption.lang !== '')
+        .map(async caption => {
+          const {data} = await agent.uploadBlob(caption.file, {
+            encoding: 'text/vtt',
+          })
+          return {lang: caption.lang, file: data.blob}
+        }),
     )
     if (opts.quote) {
       embed = {
