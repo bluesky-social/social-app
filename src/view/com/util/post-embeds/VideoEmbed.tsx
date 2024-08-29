@@ -1,7 +1,7 @@
 import React, {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {AppBskyEmbedVideo} from '@atproto/api-prerelease'
+import {AppBskyEmbedVideo} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -56,12 +56,12 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
       <ErrorBoundary renderError={renderError} key={key}>
         <VisibilityView
           enabled={true}
-          onChangeStatus={isActive => {
-            if (isActive) {
-              setActiveSource(source)
+          onChangeStatus={isVisible => {
+            if (isVisible) {
+              setActiveSource(embed.playlist)
             }
           }}>
-          {active ? (
+          {isActive ? (
             <VideoEmbedInnerNative embed={embed} />
           ) : (
             <>

@@ -7,11 +7,9 @@ import {AppBskyFeedDefs, AppBskyFeedThreadgate} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {TEMP_addVideoEmbed} from '#/lib/media/video/TEMP-add-video-embed'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {clamp} from '#/lib/numbers'
 import {ScrollProvider} from '#/lib/ScrollContext'
-import {useGate} from '#/lib/statsig/statsig'
 import {isAndroid, isNative, isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {
@@ -92,7 +90,6 @@ export function PostThread({uri}: {uri: string | undefined}) {
   const {hasSession, currentAccount} = useSession()
   const {_} = useLingui()
   const t = useTheme()
-  const gate = useGate()
   const {isMobile, isTabletOrMobile} = useWebMediaQueries()
   const initialNumToRender = useInitialNumToRender()
   const {height: windowHeight} = useWindowDimensions()
@@ -437,7 +434,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
           ref={item.ctx.isHighlightedPost ? highlightedPostRef : undefined}
           onLayout={deferParents ? () => setDeferParents(false) : undefined}>
           <PostThreadItem
-            post={TEMP_addVideoEmbed(item.post, item.record, gate('videos'))}
+            post={item.post}
             record={item.record}
             threadgateRecord={threadgateRecord ?? undefined}
             moderation={threadModerationCache.get(item)}

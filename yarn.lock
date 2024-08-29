@@ -72,28 +72,15 @@
   resolved "https://registry.yarnpkg.com/@atproto-labs/simple-store/-/simple-store-0.1.1.tgz#e743a2722b5d8732166f0a72aca8bd10e9bff106"
   integrity sha512-WKILW2b3QbAYKh+w5U2x6p5FqqLl0nAeLwGeDY+KjX01K4Dq3vQTR9b/qNp0jZm48CabPQVrqCv0PPU9LgRRRg==
 
-"@atproto/api-prerelease@npm:@atproto/api@0.13.2-next.0":
-  version "0.13.2-next.0"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.13.2-next.0.tgz#b185e982e0943af7ad1fa3ac6a28548f42ba739b"
-  integrity sha512-4RRnBXlS9Hy7vn55wURMGn+Yu3tQEDpBmkrPKvOsXW5v6IOlS+LvVMCodyMNop2/kdk+KRV3xdhj0EC9brR8rg==
+"@atproto/api@0.13.5":
+  version "0.13.5"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.13.5.tgz#04305cdb0a467ba366305c5e95cebb7ce0d39735"
+  integrity sha512-yT/YimcKYkrI0d282Zxo7O30OSYR+KDW89f81C6oYZfDRBcShC1aniVV8kluP5LrEAg8O27yrOSnBgx2v7XPew==
   dependencies:
     "@atproto/common-web" "^0.3.0"
     "@atproto/lexicon" "^0.4.1"
     "@atproto/syntax" "^0.3.0"
-    "@atproto/xrpc" "^0.6.0"
-    await-lock "^2.2.2"
-    multiformats "^9.9.0"
-    tlds "^1.234.0"
-
-"@atproto/api@0.13.3":
-  version "0.13.3"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.13.3.tgz#d84f2a0e25f38cca59b69d178901634f2d20b4ff"
-  integrity sha512-/PEVTTEQXICOjZCujAPsjArhwR0tR3LiF0SxxpZlWOjaqjVbqnBI/j0MNmddBFgeljC4/DcBobcDJ9HkILn4yQ==
-  dependencies:
-    "@atproto/common-web" "^0.3.0"
-    "@atproto/lexicon" "^0.4.1"
-    "@atproto/syntax" "^0.3.0"
-    "@atproto/xrpc" "^0.6.0"
+    "@atproto/xrpc" "^0.6.1"
     await-lock "^2.2.2"
     multiformats "^9.9.0"
     tlds "^1.234.0"
@@ -452,6 +439,14 @@
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/@atproto/xrpc/-/xrpc-0.6.0.tgz#668c3262e67e2afa65951ea79a03bfe3720ddf5c"
   integrity sha512-5BbhBTv5j6MC3iIQ4+vYxQE7nLy2dDGQ+LYJrH8PptOCUdq0Pwg6aRccQ3y52kUZlhE/mzOTZ8Ngiy9pSAyfVQ==
+  dependencies:
+    "@atproto/lexicon" "^0.4.1"
+    zod "^3.23.8"
+
+"@atproto/xrpc@^0.6.1":
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/@atproto/xrpc/-/xrpc-0.6.1.tgz#dcd1315c8c60eef5af2db7fa4e35a38ebc6d79d5"
+  integrity sha512-Zy5ydXEdk6sY7FDUZcEVfCL1jvbL4tXu5CcdPqbEaW6LQtk9GLds/DK1bCX9kswTGaBC88EMuqQMfkxOhp2t4A==
   dependencies:
     "@atproto/lexicon" "^0.4.1"
     zod "^3.23.8"

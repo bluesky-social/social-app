@@ -1,6 +1,6 @@
 import React, {useEffect, useId, useRef, useState} from 'react'
 import {View} from 'react-native'
-import {AppBskyEmbedVideo} from '@atproto/api-prerelease'
+import {AppBskyEmbedVideo} from '@atproto/api'
 import Hls from 'hls.js'
 
 import {atoms as a} from '#/alf'
