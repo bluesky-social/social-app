@@ -760,7 +760,7 @@ export const ComposePost = observer(function ComposePost({
           ) : (
             <ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
               <SelectPhotoBtn gallery={gallery} disabled={!canSelectImages} />
-              {gate('videos') && (
+              {gate('video_upload') && (
                 <SelectVideoBtn
                   onSelectVideo={selectVideo}
                   disabled={!canSelectImages}
