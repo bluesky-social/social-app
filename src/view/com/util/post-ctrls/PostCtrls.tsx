@@ -6,6 +6,14 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
+import Animated, {
+  Easing,
+  interpolate,
+  SharedValue,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated'
 import * as Clipboard from 'expo-clipboard'
 import {
   AppBskyFeedDefs,
@@ -24,6 +32,7 @@ import {shareUrl} from '#/lib/sharing'
 import {useGate} from '#/lib/statsig/statsig'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {s} from '#/lib/styles'
+import {isWeb} from '#/platform/detection'
 import {Shadow} from '#/state/cache/types'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {
@@ -45,6 +54,7 @@ import {
   Heart2_Stroke2_Corner0_Rounded as HeartIconOutline,
 } from '#/components/icons/Heart2'
 import * as Prompt from '#/components/Prompt'
+import {PlatformInfo} from '../../../../../modules/expo-bluesky-swiss-army'
 import {PostDropdownBtn} from '../forms/PostDropdownBtn'
 import {formatCount} from '../numeric/format'
 import {Text} from '../text/Text'
@@ -109,6 +119,19 @@ let PostCtrls = ({
     [t],
   ) as StyleProp<ViewStyle>
 
+  const likeValue = post.viewer?.like ? 1 : 0
+  const likeIconAnimValue = useSharedValue(likeValue)
+  const likeTextAnimValue = useSharedValue(likeValue)
+  const nextExpectedLikeValue = React.useRef(likeValue)
+  React.useEffect(() => {
+    // Catch nonlocal changes (e.g. shadow update) and always reflect them.
+    if (likeValue !== nextExpectedLikeValue.current) {
+      nextExpectedLikeValue.current = likeValue
+      likeIconAnimValue.value = likeValue
+      likeTextAnimValue.value = likeValue
+    }
+  }, [likeValue, likeIconAnimValue, likeTextAnimValue])
+
   const onPressToggleLike = React.useCallback(async () => {
     if (isBlocked) {
       Toast.show(
@@ -120,6 +143,20 @@ let PostCtrls = ({
 
     try {
       if (!post.viewer?.like) {
+        nextExpectedLikeValue.current = 1
+        if (PlatformInfo.getIsReducedMotionEnabled()) {
+          likeIconAnimValue.value = 1
+          likeTextAnimValue.value = 1
+        } else {
+          likeIconAnimValue.value = withTiming(1, {
+            duration: 400,
+            easing: Easing.out(Easing.cubic),
+          })
+          likeTextAnimValue.value = withTiming(1, {
+            duration: 400,
+            easing: Easing.out(Easing.cubic),
+          })
+        }
         playHaptic()
         sendInteraction({
           item: post.uri,
@@ -129,6 +166,16 @@ let PostCtrls = ({
         captureAction(ProgressGuideAction.Like)
         await queueLike()
       } else {
+        nextExpectedLikeValue.current = 0
+        likeIconAnimValue.value = 0 // Intentionally not animated
+        if (PlatformInfo.getIsReducedMotionEnabled()) {
+          likeTextAnimValue.value = 0
+        } else {
+          likeTextAnimValue.value = withTiming(0, {
+            duration: 400,
+            easing: Easing.out(Easing.cubic),
+          })
+        }
         await queueUnlike()
       }
     } catch (e: any) {
@@ -138,6 +185,8 @@ let PostCtrls = ({
     }
   }, [
     _,
+    likeIconAnimValue,
+    likeTextAnimValue,
     playHaptic,
     post.uri,
     post.viewer?.like,
@@ -315,29 +364,14 @@ let PostCtrls = ({
           }
           accessibilityHint=""
           hitSlop={POST_CTRL_HITSLOP}>
-          {post.viewer?.like ? (
-            <HeartIconFilled style={s.likeColor} width={big ? 22 : 18} />
-          ) : (
-            <HeartIconOutline
-              style={[defaultCtrlColor, {pointerEvents: 'none'}]}
-              width={big ? 22 : 18}
-            />
-          )}
-          {typeof post.likeCount !== 'undefined' && post.likeCount > 0 ? (
-            <Text
-              testID="likeCount"
-              style={[
-                [
-                  big ? a.text_md : {fontSize: 15},
-                  a.user_select_none,
-                  post.viewer?.like
-                    ? [a.font_bold, s.likeColor]
-                    : defaultCtrlColor,
-                ],
-              ]}>
-              {formatCount(i18n, post.likeCount)}
-            </Text>
-          ) : undefined}
+          <AnimatedLikeIcon
+            big={big ?? false}
+            likeIconAnimValue={likeIconAnimValue}
+            likeTextAnimValue={likeTextAnimValue}
+            defaultCtrlColor={defaultCtrlColor}
+            isLiked={Boolean(post.viewer?.like)}
+            likeCount={post.likeCount ?? 0}
+          />
         </Pressable>
       </View>
       {big && (
@@ -416,3 +450,194 @@ let PostCtrls = ({
 }
 PostCtrls = memo(PostCtrls)
 export {PostCtrls}
+
+function AnimatedLikeIcon({
+  big,
+  likeIconAnimValue,
+  likeTextAnimValue,
+  defaultCtrlColor,
+  isLiked,
+  likeCount,
+}: {
+  big: boolean
+  likeIconAnimValue: SharedValue<number>
+  likeTextAnimValue: SharedValue<number>
+  defaultCtrlColor: StyleProp<ViewStyle>
+  isLiked: boolean
+  likeCount: number
+}) {
+  const t = useTheme()
+  const {i18n} = useLingui()
+  const likeStyle = useAnimatedStyle(() => ({
+    transform: [
+      {
+        scale: interpolate(
+          likeIconAnimValue.value,
+          [0, 0.1, 0.4, 1],
+          [1, 0.7, 1.2, 1],
+          'clamp',
+        ),
+      },
+    ],
+  }))
+  const circle1Style = useAnimatedStyle(() => ({
+    opacity: interpolate(
+      likeIconAnimValue.value,
+      [0, 0.1, 0.95, 1],
+      [0, 0.4, 0.4, 0],
+      'clamp',
+    ),
+    transform: [
+      {
+        scale: interpolate(
+          likeIconAnimValue.value,
+          [0, 0.4, 1],
+          [0, 1.5, 1.5],
+          'clamp',
+        ),
+      },
+    ],
+  }))
+  const circle2Style = useAnimatedStyle(() => ({
+    opacity: interpolate(
+      likeIconAnimValue.value,
+      [0, 0.1, 0.95, 1],
+      [0, 1, 1, 0],
+      'clamp',
+    ),
+    transform: [
+      {
+        scale: interpolate(
+          likeIconAnimValue.value,
+          [0, 0.4, 1],
+          [0, 0, 1.5],
+          'clamp',
+        ),
+      },
+    ],
+  }))
+  const countStyle = useAnimatedStyle(() => ({
+    transform: [
+      {
+        translateY: interpolate(
+          likeTextAnimValue.value,
+          [0, 1],
+          [0, big ? -22 : -18],
+          'clamp',
+        ),
+      },
+    ],
+  }))
+
+  const prevFormattedCount = formatCount(
+    i18n,
+    isLiked ? likeCount - 1 : likeCount,
+  )
+  const nextFormattedCount = formatCount(
+    i18n,
+    isLiked ? likeCount : likeCount + 1,
+  )
+  const shouldRollLike =
+    prevFormattedCount !== nextFormattedCount && prevFormattedCount !== '0'
+
+  return (
+    <>
+      <View>
+        <Animated.View
+          style={[
+            {
+              position: 'absolute',
+              backgroundColor: s.likeColor.color,
+              top: 0,
+              left: 0,
+              width: big ? 22 : 18,
+              height: big ? 22 : 18,
+              zIndex: -1,
+              pointerEvents: 'none',
+              borderRadius: (big ? 22 : 18) / 2,
+            },
+            circle1Style,
+          ]}
+        />
+        <Animated.View
+          style={[
+            {
+              position: 'absolute',
+              backgroundColor: isWeb
+                ? t.atoms.bg_contrast_25.backgroundColor
+                : t.atoms.bg.backgroundColor,
+              top: 0,
+              left: 0,
+              width: big ? 22 : 18,
+              height: big ? 22 : 18,
+              zIndex: -1,
+              pointerEvents: 'none',
+              borderRadius: (big ? 22 : 18) / 2,
+            },
+            circle2Style,
+          ]}
+        />
+        <Animated.View style={likeStyle}>
+          {isLiked ? (
+            <HeartIconFilled style={s.likeColor} width={big ? 22 : 18} />
+          ) : (
+            <HeartIconOutline
+              style={[defaultCtrlColor, {pointerEvents: 'none'}]}
+              width={big ? 22 : 18}
+            />
+          )}
+        </Animated.View>
+      </View>
+      <View style={{overflow: 'hidden'}}>
+        <Text
+          testID="likeCount"
+          style={[
+            [
+              big ? a.text_md : {fontSize: 15},
+              a.user_select_none,
+              isLiked ? [a.font_bold, s.likeColor] : defaultCtrlColor,
+              {opacity: shouldRollLike ? 0 : 1},
+            ],
+          ]}>
+          {likeCount > 0 ? formatCount(i18n, likeCount) : ''}
+        </Text>
+        <Animated.View
+          aria-hidden={true}
+          style={[
+            countStyle,
+            {
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              opacity: shouldRollLike ? 1 : 0,
+            },
+          ]}>
+          <Text
+            testID="likeCount"
+            style={[
+              [
+                big ? a.text_md : {fontSize: 15},
+                a.user_select_none,
+                isLiked ? [a.font_bold, s.likeColor] : defaultCtrlColor,
+                {height: big ? 22 : 18},
+              ],
+            ]}>
+            {prevFormattedCount}
+          </Text>
+          <Text
+            testID="likeCount"
+            style={[
+              [
+                big ? a.text_md : {fontSize: 15},
+                a.user_select_none,
+                isLiked ? [a.font_bold, s.likeColor] : defaultCtrlColor,
+                {height: big ? 22 : 18},
+              ],
+            ]}>
+            {nextFormattedCount}
+          </Text>
+        </Animated.View>
+      </View>
+    </>
+  )
+}
