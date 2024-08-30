@@ -4,7 +4,7 @@ import {View} from 'react-native'
 import {ImagePickerAsset} from 'expo-image-picker'
 import {useVideoPlayer, VideoView} from 'expo-video'
 
-import {CompressedVideo} from '#/lib/media/video/compress'
+import {CompressedVideo} from '#/lib/media/video/types'
 import {ExternalEmbedRemoveBtn} from 'view/com/composer/ExternalEmbedRemoveBtn'
 import {atoms as a, useTheme} from '#/alf'
 
