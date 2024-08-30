@@ -1,6 +1,7 @@
 import React from 'react'
-import Svg, {Path, SvgProps, PathProps} from 'react-native-svg'
+import Svg, {Path, PathProps, SvgProps} from 'react-native-svg'
 
+// import {Image} from 'expo-image'
 import {usePalette} from '#/lib/hooks/usePalette'
 
 const ratio = 17 / 64
@@ -12,6 +13,22 @@ export function Logotype({
   const pal = usePalette('default')
   // @ts-ignore it's fiiiiine
   const size = parseInt(rest.width || 32)
+
+  // Uncomment and update when verus name only svg exists
+
+  // return (
+  //   <Image
+  //     source={
+  //       size > 100
+  //         ? require('../../../assets/verus-logo-blue.png')
+  //         : require('../../../assets/verus-logo-blue.png')
+  //     }
+  //     accessibilityLabel="Verus"
+  //     accessibilityHint=""
+  //     accessibilityIgnoresInvertColors
+  //     style={[{height: size, aspectRatio: 1}]}
+  //   />
+  // )
 
   return (
     <Svg
