@@ -54,6 +54,7 @@ import {
   Heart2_Stroke2_Corner0_Rounded as HeartIconOutline,
 } from '#/components/icons/Heart2'
 import * as Prompt from '#/components/Prompt'
+import {PlatformInfo} from '../../../../../modules/expo-bluesky-swiss-army'
 import {PostDropdownBtn} from '../forms/PostDropdownBtn'
 import {formatCount} from '../numeric/format'
 import {Text} from '../text/Text'
@@ -131,10 +132,14 @@ let PostCtrls = ({
 
     try {
       if (!post.viewer?.like) {
-        likeAnimValue.value = withTiming(1, {
-          duration: 400,
-          easing: Easing.out(Easing.cubic),
-        })
+        if (PlatformInfo.getIsReducedMotionEnabled()) {
+          likeAnimValue.value = 1
+        } else {
+          likeAnimValue.value = withTiming(1, {
+            duration: 400,
+            easing: Easing.out(Easing.cubic),
+          })
+        }
         playHaptic()
         sendInteraction({
           item: post.uri,
