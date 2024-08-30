@@ -164,26 +164,6 @@ msgstr "{0}秒"
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
 msgstr "{count, plural, one {# 位用户喜欢} other {# 位用户喜欢}}"
 
-#: src/lib/hooks/useTimeAgo.ts:69
-#~ msgid "{diff, plural, one {day} other {days}}"
-#~ msgstr "{diff, plural, one {日} other {日}}"
-
-#: src/lib/hooks/useTimeAgo.ts:64
-#~ msgid "{diff, plural, one {hour} other {hours}}"
-#~ msgstr "{diff, plural, one {小时} other {小时}}"
-
-#: src/lib/hooks/useTimeAgo.ts:59
-#~ msgid "{diff, plural, one {minute} other {minutes}}"
-#~ msgstr "{diff, plural, one {分} other {分}}"
-
-#: src/lib/hooks/useTimeAgo.ts:75
-#~ msgid "{diff, plural, one {month} other {months}}"
-#~ msgstr "{diff, plural, one {月} other {月}}"
-
-#: src/lib/hooks/useTimeAgo.ts:54
-#~ msgid "{diffSeconds, plural, one {second} other {seconds}}"
-#~ msgstr "{diffSeconds, plural, one {秒} other {秒}}"
-
 #: src/screens/StarterPack/Wizard/index.tsx:174
 msgid "{displayName}'s Starter Pack"
 msgstr "{displayName} 的入门包"
@@ -280,10 +260,6 @@ msgstr "30天"
 #: src/components/dialogs/MutedWords.tsx:217
 msgid "7 days"
 msgstr "7天"
-
-#: src/tours/Tooltip.tsx:70
-#~ msgid "A help tooltip"
-#~ msgstr "帮助工具提示"
 
 #: src/view/com/util/ViewHeader.tsx:92
 #: src/view/screens/Search/Search.tsx:684
@@ -1273,10 +1249,6 @@ msgstr "撰写帖文的长度最多为 {MAX_GRAPHEME_LENGTH} 个字符"
 msgid "Compose reply"
 msgstr "撰写回复"
 
-#: src/view/com/composer/videos/VideoTranscodeProgress.tsx:51
-#~ msgid "Compressing..."
-#~ msgstr "压缩中..."
-
 #: src/components/moderation/LabelPreference.tsx:81
 msgid "Configure content filtering setting for category: {name}"
 msgstr "为类别 {name} 配置内容过滤设置"
@@ -1777,10 +1749,6 @@ msgstr "丢弃草稿？"
 msgid "Discourage apps from showing my account to logged-out users"
 msgstr "阻止应用向未登录用户显示我的账户"
 
-#: src/tours/HomeTour.tsx:70
-#~ msgid "Discover learns which posts you like as you browse."
-#~ msgstr "\"Discover\" 会根据你的浏览喜好向你推荐帖文。"
-
 #: src/view/com/posts/FollowingEmptyState.tsx:70
 #: src/view/com/posts/FollowingEndOfFeed.tsx:71
 msgid "Discover new custom feeds"
@@ -2112,10 +2080,6 @@ msgstr "已启用"
 msgid "End of feed"
 msgstr "已到末尾"
 
-#: src/tours/Tooltip.tsx:159
-#~ msgid "End of onboarding tour window. Do not move forward. Instead, go backward for more options, or press to skip."
-#~ msgstr "入门指南已结束，已没有进一步的选项。若仍需获取更多选项请返回上一步，或点按跳过。"
-
 #: src/view/com/modals/AddAppPasswords.tsx:161
 msgid "Enter a name for this App Password"
 msgstr "为这个应用专用密码命名"
@@ -2439,10 +2403,6 @@ msgstr "最终确定"
 msgid "Find accounts to follow"
 msgstr "寻找一些账户关注"
 
-#: src/tours/HomeTour.tsx:88
-#~ msgid "Find more feeds and accounts to follow in the Explore page."
-#~ msgstr "在探索页面中寻找更多资讯源与账户关注。"
-
 #: src/view/screens/Search/Search.tsx:439
 msgid "Find posts and users on Bluesky"
 msgstr "在 Bluesky 寻找帖文和用户"
@@ -2458,10 +2418,6 @@ msgstr "调整讨论主题。"
 #: src/screens/StarterPack/Wizard/index.tsx:191
 msgid "Finish"
 msgstr "完成"
-
-#: src/tours/Tooltip.tsx:149
-#~ msgid "Finish tour and begin using the application"
-#~ msgstr "完成入门指南并开始使用应用程序"
 
 #: src/screens/Onboarding/index.tsx:35
 msgid "Fitness"
@@ -2598,10 +2554,6 @@ msgstr "\"正在关注\"资讯源首选项"
 #: src/view/screens/Settings/index.tsx:548
 msgid "Following Feed Preferences"
 msgstr "\"正在关注\"资讯源首选项"
-
-#: src/tours/HomeTour.tsx:59
-#~ msgid "Following shows the latest posts from people you follow."
-#~ msgstr "\"正在关注\"显示你已关注的账户所发布的最新帖文。"
 
 #: src/screens/Profile/Header/Handle.tsx:31
 msgid "Follows you"
@@ -2750,10 +2702,6 @@ msgstr "前往下一步"
 #: src/components/dms/ConvoMenu.tsx:167
 msgid "Go to profile"
 msgstr "前往个人资料"
-
-#: src/tours/Tooltip.tsx:138
-#~ msgid "Go to the next step of the tour"
-#~ msgstr "前往入门指南的下一步"
 
 #: src/components/dms/ConvoMenu.tsx:164
 msgid "Go to user's profile"
@@ -4029,17 +3977,9 @@ msgstr "优先显示最旧的回复"
 msgid "on"
 msgstr "于"
 
-#: src/lib/hooks/useTimeAgo.ts:81
-#~ msgid "on {str}"
-#~ msgstr "于 {str}"
-
 #: src/view/screens/Settings/index.tsx:226
 msgid "Onboarding reset"
 msgstr "重新开始引导流程"
-
-#: src/tours/Tooltip.tsx:118
-#~ msgid "Onboarding tour step {0}: {1}"
-#~ msgstr "入门指南步骤：{0}/{1}"
 
 #: src/view/com/composer/Composer.tsx:589
 msgid "One or more images is missing alt text."
@@ -4692,10 +4632,6 @@ msgstr "二维码已下载！"
 msgid "QR code saved to your camera roll!"
 msgstr "二维码已保存至你的照片图库！"
 
-#: src/tours/Tooltip.tsx:111
-#~ msgid "Quick tip"
-#~ msgstr "小建议"
-
 #: src/view/com/util/post-ctrls/RepostButton.tsx:122
 #: src/view/com/util/post-ctrls/RepostButton.tsx:149
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:85
@@ -4857,10 +4793,6 @@ msgstr "从已保存的资讯源中删除"
 msgid "Remove image"
 msgstr "删除图片"
 
-#: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:28
-#~ msgid "Remove image preview"
-#~ msgstr "删除图片预览"
-
 #: src/components/dialogs/MutedWords.tsx:523
 msgid "Remove mute word from your list"
 msgstr "从你的隐藏词汇列表中删除"
@@ -4921,10 +4853,6 @@ msgstr "删除引用的帖文"
 #: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:29
 msgid "Removes the attachment"
 msgstr "删除所有关联"
-
-#: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:29
-#~ msgid "Removes the image preview"
-#~ msgstr "删除图片预览"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:129
 #: src/view/com/posts/FeedShutdownMsg.tsx:133
@@ -5963,10 +5891,6 @@ msgstr "与 {displayName} 开始私信"
 msgid "Start chatting"
 msgstr "开始私信"
 
-#: src/tours/Tooltip.tsx:99
-#~ msgid "Start of onboarding tour window. Do not move backward. Instead, go forward for more options, or press to skip."
-#~ msgstr "开始入门指南吧，若需获取更多选项请点击下一步，或点按跳过。"
-
 #: src/lib/generate-starterpack.ts:68
 #: src/Navigation.tsx:358
 #: src/Navigation.tsx:363
@@ -6056,10 +5980,6 @@ msgstr "支持"
 #: src/components/dialogs/SwitchAccount.tsx:50
 msgid "Switch Account"
 msgstr "切换账户"
-
-#: src/tours/HomeTour.tsx:48
-#~ msgid "Switch between feeds to control your experience."
-#~ msgstr "在资讯源之间切换以刷新你的浏览体验。"
 
 #: src/view/screens/Settings/index.tsx:126
 msgid "Switch to {0}"
