@@ -4,6 +4,7 @@ import {View} from 'react-native'
 import ProgressPie from 'react-native-progress/Pie'
 import {ImagePickerAsset} from 'expo-image-picker'
 
+import {clamp} from '#/lib/numbers'
 import {isWeb} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {ExternalEmbedRemoveBtn} from '../ExternalEmbedRemoveBtn'
@@ -20,9 +21,15 @@ export function VideoTranscodeProgress({
 }) {
   const t = useTheme()
 
-  const aspectRatio = asset.width / asset.height
-
   if (isWeb) return null
+
+  let aspectRatio = asset.width / asset.height
+
+  if (isNaN(aspectRatio)) {
+    aspectRatio = 16 / 9
+  }
+
+  aspectRatio = clamp(aspectRatio, 1 / 1, 3 / 1)
 
   return (
     <View
@@ -32,7 +39,7 @@ export function VideoTranscodeProgress({
         t.atoms.bg_contrast_50,
         a.rounded_md,
         a.overflow_hidden,
-        {aspectRatio: isNaN(aspectRatio) ? 16 / 9 : aspectRatio},
+        {aspectRatio},
       ]}>
       <VideoTranscodeBackdrop uri={asset.uri} />
       <View
