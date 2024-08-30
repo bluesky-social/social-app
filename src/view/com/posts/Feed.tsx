@@ -101,7 +101,7 @@ const feedInterstitialType = 'interstitialFeeds'
 const followInterstitialType = 'interstitialFollows'
 const progressGuideInterstitialType = 'interstitialProgressGuide'
 const interstials: Record<
-  'following' | 'discover',
+  'following' | 'discover' | 'profile',
   (FeedItem & {
     type:
       | 'interstitialFeeds'
@@ -126,6 +126,16 @@ const interstials: Record<
       },
       key: followInterstitialType,
       slot: 20,
+    },
+  ],
+  profile: [
+    {
+      type: followInterstitialType,
+      params: {
+        variant: 'default',
+      },
+      key: followInterstitialType,
+      slot: 5,
     },
   ],
 }
@@ -193,7 +203,7 @@ let Feed = ({
   const [isPTRing, setIsPTRing] = React.useState(false)
   const checkForNewRef = React.useRef<(() => void) | null>(null)
   const lastFetchRef = React.useRef<number>(Date.now())
-  const [feedType, feedUri] = feed.split('|')
+  const [feedType, feedUri, feedTab] = feed.split('|')
   const gate = useGate()
 
   const opts = React.useMemo(
@@ -337,12 +347,18 @@ let Feed = ({
     }
 
     if (hasSession) {
-      const feedKind =
-        feedType === 'following'
-          ? 'following'
-          : feedUri === DISCOVER_FEED_URI
-          ? 'discover'
-          : undefined
+      let feedKind: 'following' | 'discover' | 'profile' | undefined
+      if (feedType === 'following') {
+        feedKind = 'following'
+      } else if (feedUri === DISCOVER_FEED_URI) {
+        feedKind = 'discover'
+      } else if (
+        feedType === 'author' &&
+        (feedTab === 'posts_and_author_threads' ||
+          feedTab === 'posts_with_replies')
+      ) {
+        feedKind = 'profile'
+      }
 
       if (feedKind) {
         for (const interstitial of interstials[feedKind]) {
@@ -378,6 +394,7 @@ let Feed = ({
     data,
     feedType,
     feedUri,
+    feedTab,
     gate,
     hasSession,
   ])
@@ -468,7 +485,7 @@ let Feed = ({
       } else if (item.type === feedInterstitialType) {
         return <SuggestedFeeds />
       } else if (item.type === followInterstitialType) {
-        return <SuggestedFollows />
+        return <SuggestedFollows feed={feed} />
       } else if (item.type === progressGuideInterstitialType) {
         return <ProgressGuide />
       } else if (item.type === 'slice') {

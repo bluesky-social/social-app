@@ -1,7 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
-import {AppBskyFeedDefs, AtUri} from '@atproto/api'
+import {AppBskyActorDefs, AppBskyFeedDefs, AtUri} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -12,7 +12,9 @@ import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
+import {FeedDescriptor} from '#/state/queries/post-feed'
 import {useProfilesQuery} from '#/state/queries/profile'
+import {useSuggestedFollowsByActorQuery} from '#/state/queries/suggested-follows'
 import {useSession} from '#/state/session'
 import {useProgressGuide} from '#/state/shell/progress-guide'
 import * as userActionHistory from '#/state/userActionHistory'
@@ -173,14 +175,59 @@ function useExperimentalSuggestedUsersQuery() {
   }
 }
 
-export function SuggestedFollows() {
-  const t = useTheme()
-  const {_} = useLingui()
+export function SuggestedFollows({feed}: {feed: FeedDescriptor}) {
+  const [feedType, feedUri] = feed.split('|')
+  if (feedType === 'author') {
+    return <SuggestedFollowsProfile did={feedUri} />
+  } else {
+    return <SuggestedFollowsHome />
+  }
+}
+
+export function SuggestedFollowsProfile({did}: {did: string}) {
+  const {
+    isLoading: isSuggestionsLoading,
+    data,
+    error,
+  } = useSuggestedFollowsByActorQuery({
+    did,
+  })
+  return (
+    <ProfileGrid
+      isSuggestionsLoading={isSuggestionsLoading}
+      profiles={data?.suggestions ?? []}
+      error={error}
+    />
+  )
+}
+
+export function SuggestedFollowsHome() {
   const {
     isLoading: isSuggestionsLoading,
     profiles,
     error,
   } = useExperimentalSuggestedUsersQuery()
+  return (
+    <ProfileGrid
+      isSuggestionsLoading={isSuggestionsLoading}
+      profiles={profiles}
+      error={error}
+    />
+  )
+}
+
+export function ProfileGrid({
+  isSuggestionsLoading,
+  error,
+  profiles,
+}: {
+  isSuggestionsLoading: boolean
+  profiles: AppBskyActorDefs.ProfileViewDetailed[]
+  error: Error | null
+}) {
+  const t = useTheme()
+  const {_} = useLingui()
+
   const moderationOpts = useModerationOpts()
   const navigation = useNavigation<NavigationProp>()
   const {gtMobile} = useBreakpoints()
