@@ -164,6 +164,7 @@ msgstr "{0}초"
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
 msgstr "{count, plural, other {#}}명의 사용자가 좋아함"
 
+#: src/lib/generate-starterpack.ts:108
 #: src/screens/StarterPack/Wizard/index.tsx:174
 msgid "{displayName}'s Starter Pack"
 msgstr "{displayName} 님의 스타터 팩"
@@ -319,7 +320,7 @@ msgstr "계정 옵션"
 msgid "Account removed from quick access"
 msgstr "빠른 액세스에서 계정 제거"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:139
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:141
 #: src/view/com/profile/ProfileMenu.tsx:133
 msgid "Account unblocked"
 msgstr "계정 차단 해제됨"
@@ -740,7 +741,7 @@ msgstr "생년월일"
 msgid "Birthday:"
 msgstr "생년월일:"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:314
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:318
 #: src/view/com/profile/ProfileMenu.tsx:365
 msgid "Block"
 msgstr "차단"
@@ -846,23 +847,23 @@ msgstr "이미지 흐리게 및 피드에서 필터링"
 msgid "Books"
 msgstr "책"
 
-#: src/components/FeedInterstitials.tsx:300
+#: src/components/FeedInterstitials.tsx:352
 msgid "Browse more accounts on the Explore page"
 msgstr "탐색 페이지에서 더 많은 계정 찾아보기"
 
-#: src/components/FeedInterstitials.tsx:433
+#: src/components/FeedInterstitials.tsx:485
 msgid "Browse more feeds on the Explore page"
 msgstr "탐색 페이지에서 더 많은 피드 찾아보기"
 
-#: src/components/FeedInterstitials.tsx:282
-#: src/components/FeedInterstitials.tsx:285
-#: src/components/FeedInterstitials.tsx:415
-#: src/components/FeedInterstitials.tsx:418
+#: src/components/FeedInterstitials.tsx:334
+#: src/components/FeedInterstitials.tsx:337
+#: src/components/FeedInterstitials.tsx:467
+#: src/components/FeedInterstitials.tsx:470
 msgid "Browse more suggestions"
 msgstr "더 많은 추천 찾아보기"
 
-#: src/components/FeedInterstitials.tsx:308
-#: src/components/FeedInterstitials.tsx:442
+#: src/components/FeedInterstitials.tsx:360
+#: src/components/FeedInterstitials.tsx:494
 msgid "Browse more suggestions on the Explore page"
 msgstr "탐색 페이지에서 더 많은 추천 찾아보기"
 
@@ -1958,12 +1959,12 @@ msgid "Edit post interaction settings"
 msgstr "게시물 상호작용 설정 편집하기"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:184
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:179
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:181
 msgid "Edit profile"
 msgstr "프로필 편집"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:187
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:182
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:184
 msgid "Edit Profile"
 msgstr "프로필 편집"
 
@@ -2440,7 +2441,7 @@ msgstr "세로로 뒤집기"
 #: src/components/ProfileCard.tsx:351
 #: src/components/ProfileHoverCard/index.web.tsx:446
 #: src/components/ProfileHoverCard/index.web.tsx:457
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:252
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:256
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:144
 msgid "Follow"
 msgstr "팔로우"
@@ -2450,7 +2451,7 @@ msgctxt "action"
 msgid "Follow"
 msgstr "팔로우"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:238
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:242
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:126
 msgid "Follow {0}"
 msgstr "{0} 님을 팔로우"
@@ -2509,8 +2510,8 @@ msgstr "이(가) 나를 팔로우했습니다"
 msgid "followed you back"
 msgstr "이(가) 나를 맞팔로우했습니다"
 
-#: src/view/com/profile/ProfileFollowers.tsx:104
-#: src/view/screens/ProfileFollowers.tsx:25
+#: src/view/screens/ProfileFollowers.tsx:29
+#: src/view/screens/ProfileFollowers.tsx:30
 msgid "Followers"
 msgstr "팔로워"
 
@@ -2527,17 +2528,17 @@ msgstr "내가 아는 팔로워"
 #: src/components/ProfileCard.tsx:345
 #: src/components/ProfileHoverCard/index.web.tsx:445
 #: src/components/ProfileHoverCard/index.web.tsx:456
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:250
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:254
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:147
-#: src/view/com/profile/ProfileFollows.tsx:104
 #: src/view/screens/Feeds.tsx:630
-#: src/view/screens/ProfileFollows.tsx:25
+#: src/view/screens/ProfileFollows.tsx:29
+#: src/view/screens/ProfileFollows.tsx:30
 #: src/view/screens/SavedFeeds.tsx:416
 msgid "Following"
 msgstr "팔로우 중"
 
 #: src/components/ProfileCard.tsx:311
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:98
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:100
 msgid "Following {0}"
 msgstr "{0} 님을 팔로우했습니다"
 
@@ -2833,8 +2834,8 @@ msgstr "이 데이터를 불러오는 데 문제가 있는 것 같습니다. 자
 msgid "Hmmmm, we couldn't load that moderation service."
 msgstr "검토 서비스를 불러올 수 없습니다."
 
-#: src/Navigation.tsx:549
-#: src/Navigation.tsx:569
+#: src/Navigation.tsx:550
+#: src/Navigation.tsx:570
 #: src/view/shell/bottom-bar/BottomBar.tsx:159
 #: src/view/shell/desktop/LeftNav.tsx:341
 #: src/view/shell/Drawer.tsx:429
@@ -3185,9 +3186,9 @@ msgstr "이 피드에 좋아요 표시"
 msgid "Liked by"
 msgstr "좋아요 표시한 사용자"
 
-#: src/screens/Post/PostLikedBy.tsx:29
+#: src/screens/Post/PostLikedBy.tsx:31
+#: src/screens/Post/PostLikedBy.tsx:32
 #: src/screens/Profile/ProfileLabelerLikedBy.tsx:29
-#: src/view/com/post-thread/PostLikedBy.tsx:94
 #: src/view/screens/ProfileFeedLikedBy.tsx:28
 msgid "Liked By"
 msgstr "좋아요 표시한 사용자"
@@ -3398,7 +3399,7 @@ msgstr "메시지가 너무 깁니다"
 msgid "Message settings"
 msgstr "메시지 설정"
 
-#: src/Navigation.tsx:564
+#: src/Navigation.tsx:565
 #: src/screens/Messages/List/index.tsx:164
 #: src/screens/Messages/List/index.tsx:246
 #: src/screens/Messages/List/index.tsx:317
@@ -3789,7 +3790,7 @@ msgid "No feeds found. Try searching for something else."
 msgstr "피드를 찾을 수 없습니다. 다른 피드를 검색해 보세요."
 
 #: src/components/ProfileCard.tsx:331
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:120
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:122
 msgid "No longer following {0}"
 msgstr "더 이상 {0} 님을 팔로우하지 않음"
 
@@ -3920,7 +3921,7 @@ msgstr "알림음"
 msgid "Notification Sounds"
 msgstr "알림음"
 
-#: src/Navigation.tsx:559
+#: src/Navigation.tsx:560
 #: src/view/screens/Notifications.tsx:145
 #: src/view/screens/Notifications.tsx:155
 #: src/view/screens/Notifications.tsx:203
@@ -3973,9 +3974,9 @@ msgstr "확인"
 msgid "Oldest replies first"
 msgstr "오래된 순"
 
-#: src/components/StarterPack/QrCode.tsx:69
-msgid "on"
-msgstr "on"
+#: src/components/StarterPack/QrCode.tsx:70
+msgid "<0><1/><2><3/></2></0>"
+msgstr "<0><1/><2><3/></2></0>"
 
 #: src/view/screens/Settings/index.tsx:226
 msgid "Onboarding reset"
@@ -4663,8 +4664,8 @@ msgstr "게시물 인용 활성화됨"
 msgid "Quote settings"
 msgstr "인용 설정"
 
-#: src/screens/Post/PostQuotes.tsx:29
-#: src/view/com/post-thread/PostQuotes.tsx:122
+#: src/screens/Post/PostQuotes.tsx:31
+#: src/screens/Post/PostQuotes.tsx:32
 msgid "Quotes"
 msgstr "인용"
 
@@ -5017,8 +5018,8 @@ msgstr "재게시"
 msgid "Repost or quote post"
 msgstr "재게시 또는 게시물 인용"
 
-#: src/screens/Post/PostRepostedBy.tsx:29
-#: src/view/com/post-thread/PostRepostedBy.tsx:96
+#: src/screens/Post/PostRepostedBy.tsx:31
+#: src/screens/Post/PostRepostedBy.tsx:32
 msgid "Reposted By"
 msgstr "재게시한 사용자"
 
@@ -5236,7 +5237,7 @@ msgid "Scroll to top"
 msgstr "맨 위로 스크롤"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:504
-#: src/Navigation.tsx:554
+#: src/Navigation.tsx:555
 #: src/view/com/modals/ListAddRemoveUsers.tsx:76
 #: src/view/com/util/forms/SearchInput.tsx:67
 #: src/view/com/util/forms/SearchInput.tsx:79
@@ -5639,7 +5640,7 @@ msgstr "배지 표시"
 msgid "Show badge and filter from feeds"
 msgstr "배지 표시 및 피드에서 필터링"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:215
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:218
 msgid "Show follows similar to {0}"
 msgstr "{0} 님과 비슷한 팔로우 표시"
 
@@ -5816,7 +5817,7 @@ msgstr "이 단계 건너뛰기"
 msgid "Software Dev"
 msgstr "소프트웨어 개발"
 
-#: src/components/FeedInterstitials.tsx:397
+#: src/components/FeedInterstitials.tsx:449
 msgid "Some other feeds you might like"
 msgstr "좋아할 만한 다른 피드"
 
@@ -5891,7 +5892,6 @@ msgstr "{displayName} 님과 대화 시작하기"
 msgid "Start chatting"
 msgstr "대화 시작하기"
 
-#: src/lib/generate-starterpack.ts:68
 #: src/Navigation.tsx:358
 #: src/Navigation.tsx:363
 #: src/screens/StarterPack/Wizard/index.tsx:182
@@ -5962,7 +5962,7 @@ msgstr "이 리스트 구독하기"
 msgid "Suggested accounts"
 msgstr "추천 계정"
 
-#: src/components/FeedInterstitials.tsx:262
+#: src/components/FeedInterstitials.tsx:314
 msgid "Suggested for you"
 msgstr "나를 위한 추천"
 
@@ -6097,11 +6097,11 @@ msgstr "이 핸들은 이미 사용 중입니다."
 msgid "That starter pack could not be found."
 msgstr "스타터 팩을 찾을 수 없습니다."
 
-#: src/view/com/post-thread/PostQuotes.tsx:129
+#: src/view/com/post-thread/PostQuotes.tsx:127
 msgid "That's all, folks!"
 msgstr "이상입니다, 여러분!"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:310
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:314
 #: src/view/com/profile/ProfileMenu.tsx:353
 msgid "The account will be able to interact with you after unblocking."
 msgstr "차단을 해제하면 이 계정이 나와 상호작용할 수 있게 됩니다."
@@ -6219,7 +6219,7 @@ msgstr "서버에 연결하는 동안 문제가 발생했습니다"
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "알림을 가져오는 동안 문제가 발생했습니다. 이곳을 탭하여 다시 시도하세요."
 
-#: src/view/com/posts/Feed.tsx:461
+#: src/view/com/posts/Feed.tsx:476
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "게시물을 가져오는 동안 문제가 발생했습니다. 이곳을 탭하여 다시 시도하세요."
 
@@ -6241,9 +6241,9 @@ msgstr "신고를 전송하는 동안 문제가 발생했습니다. 인터넷 �
 msgid "There was an issue with fetching your app passwords"
 msgstr "앱 비밀번호를 가져오는 동안 문제가 발생했습니다"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:107
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:129
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:143
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:109
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:131
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:145
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:97
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:109
 #: src/view/com/profile/ProfileMenu.tsx:111
@@ -6424,7 +6424,7 @@ msgstr "이 서비스는 서비스 이용약관이나 개인정보 처리방침�
 msgid "This should create a domain record at:"
 msgstr "이 도메인에 레코드가 추가됩니다:"
 
-#: src/view/com/profile/ProfileFollowers.tsx:87
+#: src/view/com/profile/ProfileFollowers.tsx:96
 msgid "This user doesn't have any followers."
 msgstr "이 사용자는 팔로워가 없습니다."
 
@@ -6453,7 +6453,7 @@ msgstr "이 사용자는 내가 뮤트한 <0>{0}</0> 리스트에 포함되어 �
 msgid "This user is new here. Press for more info about when they joined."
 msgstr "이 사용자는 새로 가입했습니다. 언제 가입했는지 자세한 정보를 보려면 누르세요."
 
-#: src/view/com/profile/ProfileFollows.tsx:87
+#: src/view/com/profile/ProfileFollows.tsx:96
 msgid "This user isn't following anyone."
 msgstr "이 사용자는 아무도 팔로우하지 않았습니다."
 
@@ -6570,14 +6570,14 @@ msgstr "삭제할 수 없음"
 #: src/components/dms/MessagesListBlockedFooter.tsx:96
 #: src/components/dms/MessagesListBlockedFooter.tsx:104
 #: src/components/dms/MessagesListBlockedFooter.tsx:111
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:192
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:314
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:194
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:318
 #: src/view/com/profile/ProfileMenu.tsx:365
 #: src/view/screens/ProfileList.tsx:682
 msgid "Unblock"
 msgstr "차단 해제"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:197
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:199
 msgctxt "action"
 msgid "Unblock"
 msgstr "차단 해제"
@@ -6592,7 +6592,7 @@ msgstr "계정 차단 해제"
 msgid "Unblock Account"
 msgstr "계정 차단 해제"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:308
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:312
 #: src/view/com/profile/ProfileMenu.tsx:347
 msgid "Unblock Account?"
 msgstr "계정을 차단 해제하시겠습니까?"
@@ -6608,7 +6608,7 @@ msgctxt "action"
 msgid "Unfollow"
 msgstr "언팔로우"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:237
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:241
 msgid "Unfollow {0}"
 msgstr "{0} 님을 언팔로우"
 
@@ -7230,7 +7230,7 @@ msgstr "나"
 msgid "You are in line."
 msgstr "대기 중입니다."
 
-#: src/view/com/profile/ProfileFollows.tsx:86
+#: src/view/com/profile/ProfileFollows.tsx:95
 msgid "You are not following anyone."
 msgstr "아무도 팔로우하지 않았습니다."
 
@@ -7260,7 +7260,7 @@ msgstr "이제 새 비밀번호로 로그인할 수 있습니다."
 msgid "You can reactivate your account to continue logging in. Your profile and posts will be visible to other users."
 msgstr "계정을 재활성화하여 로그인을 계속할 수 있습니다. 내 프로필과 글이 다른 사용자에게 표시됩니다."
 
-#: src/view/com/profile/ProfileFollowers.tsx:86
+#: src/view/com/profile/ProfileFollowers.tsx:95
 msgid "You do not have any followers."
 msgstr "팔로워가 없습니다."
 
