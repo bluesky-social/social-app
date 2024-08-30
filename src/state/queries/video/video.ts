@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useCallback} from 'react'
 import {ImagePickerAsset} from 'expo-image-picker'
 import {AppBskyVideoDefs, BlobRef} from '@atproto/api'
 import {msg} from '@lingui/macro'
@@ -20,6 +20,7 @@ type Action =
   | {type: 'SetError'; error: string | undefined}
   | {type: 'Reset'}
   | {type: 'SetAsset'; asset: ImagePickerAsset}
+  | {type: 'SetDimensions'; width: number; height: number}
   | {type: 'SetVideo'; video: CompressedVideo}
   | {type: 'SetJobStatus'; jobStatus: AppBskyVideoDefs.JobStatus}
   | {type: 'SetBlobRef'; blobRef: BlobRef}
@@ -58,6 +59,13 @@ function reducer(queryClient: QueryClient) {
       }
     } else if (action.type === 'SetAsset') {
       updatedState = {...state, asset: action.asset}
+    } else if (action.type === 'SetDimensions') {
+      updatedState = {
+        ...state,
+        asset: state.asset
+          ? {...state.asset, width: action.width, height: action.height}
+          : undefined,
+      }
     } else if (action.type === 'SetVideo') {
       updatedState = {...state, video: action.video}
     } else if (action.type === 'SetJobStatus') {
@@ -178,11 +186,20 @@ export function useUploadVideo({
     dispatch({type: 'Reset'})
   }
 
+  const updateVideoDimensions = useCallback((width: number, height: number) => {
+    dispatch({
+      type: 'SetDimensions',
+      width,
+      height,
+    })
+  }, [])
+
   return {
     state,
     dispatch,
     selectVideo,
     clearVideo,
+    updateVideoDimensions,
   }
 }
 

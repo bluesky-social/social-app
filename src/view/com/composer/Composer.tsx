@@ -108,6 +108,7 @@ import {TextInput, TextInputRef} from './text-input/TextInput'
 import {ThreadgateBtn} from './threadgate/ThreadgateBtn'
 import {useExternalLinkFetch} from './useExternalLinkFetch'
 import {SelectVideoBtn} from './videos/SelectVideoBtn'
+import {SubtitleDialogBtn} from './videos/SubtitleDialog'
 import {VideoPreview} from './videos/VideoPreview'
 import {VideoTranscodeProgress} from './videos/VideoTranscodeProgress'
 
@@ -172,10 +173,14 @@ export const ComposePost = observer(function ComposePost({
     initQuote,
   )
 
+  const [videoAltText, setVideoAltText] = useState('')
+  const [captions, setCaptions] = useState<{lang: string; file: File}[]>([])
+
   const {
     selectVideo,
     clearVideo,
     state: videoUploadState,
+    updateVideoDimensions,
   } = useUploadVideo({
     setStatus: setProcessingState,
     onSuccess: () => {
@@ -347,7 +352,19 @@ export const ComposePost = observer(function ComposePost({
           postgate,
           onStateChange: setProcessingState,
           langs: toPostLanguages(langPrefs.postLanguage),
-          video: videoUploadState.blobRef,
+          video: videoUploadState.blobRef
+            ? {
+                blobRef: videoUploadState.blobRef,
+                altText: videoAltText,
+                captions: captions,
+                aspectRatio: videoUploadState.asset
+                  ? {
+                      width: videoUploadState.asset?.width,
+                      height: videoUploadState.asset?.height,
+                    }
+                  : undefined,
+              }
+            : undefined,
         })
       ).uri
       try {
@@ -694,16 +711,29 @@ export const ComposePost = observer(function ComposePost({
                 )}
               </View>
             ) : null}
-            {videoUploadState.status === 'compressing' &&
-            videoUploadState.asset ? (
-              <VideoTranscodeProgress
-                asset={videoUploadState.asset}
-                progress={videoUploadState.progress}
-                clear={clearVideo}
+            {videoUploadState.asset &&
+              (videoUploadState.status === 'compressing' ? (
+                <VideoTranscodeProgress
+                  asset={videoUploadState.asset}
+                  progress={videoUploadState.progress}
+                  clear={clearVideo}
+                />
+              ) : videoUploadState.video ? (
+                <VideoPreview
+                  asset={videoUploadState.asset}
+                  video={videoUploadState.video}
+                  setDimensions={updateVideoDimensions}
+                  clear={clearVideo}
+                />
+              ) : null)}
+            {(videoUploadState.asset || videoUploadState.video) && (
+              <SubtitleDialogBtn
+                altText={videoAltText}
+                setAltText={setVideoAltText}
+                captions={captions}
+                setCaptions={setCaptions}
               />
-            ) : videoUploadState.video ? (
-              <VideoPreview video={videoUploadState.video} clear={clearVideo} />
-            ) : null}
+            )}
           </View>
         </Animated.ScrollView>
         <SuggestedLanguage text={richtext.text} />

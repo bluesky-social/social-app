@@ -853,6 +853,7 @@ export const atoms = {
   mr_auto: {
     marginRight: 'auto',
   },
+
   /*
    * Pointer events & user select
    */
@@ -871,6 +872,7 @@ export const atoms = {
   user_select_all: {
     userSelect: 'all',
   },
+
   /*
    * Text decoration
    */
@@ -879,5 +881,12 @@ export const atoms = {
   },
   strike_through: {
     textDecorationLine: 'line-through',
+  },
+
+  /*
+   * Display
+   */
+  hidden: {
+    display: 'none',
   },
 } as const
