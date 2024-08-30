@@ -52,7 +52,7 @@ import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
 import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
 import {Provider as HiddenRepliesProvider} from '#/state/threadgate-hidden-replies'
 import {TestCtrls} from '#/view/com/testing/TestCtrls'
-import {ActiveVideoProvider} from '#/view/com/util/post-embeds/ActiveVideoContext'
+import {Provider as ActiveVideoProvider} from '#/view/com/util/post-embeds/ActiveVideoNativeContext'
 import * as Toast from '#/view/com/util/Toast'
 import {Shell} from '#/view/shell'
 import {ThemeProvider as Alf} from '#/alf'
@@ -60,7 +60,6 @@ import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {Splash} from '#/Splash'
-import {Provider as TourProvider} from '#/tours'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import {AudioCategory, PlatformInfo} from '../modules/expo-bluesky-swiss-army'
 
@@ -127,15 +126,13 @@ function InnerApp() {
                                   <UnreadNotifsProvider>
                                     <BackgroundNotificationPreferencesProvider>
                                       <MutedThreadsProvider>
-                                        <TourProvider>
-                                          <ProgressGuideProvider>
-                                            <GestureHandlerRootView
-                                              style={s.h100pct}>
-                                              <TestCtrls />
-                                              <Shell />
-                                            </GestureHandlerRootView>
-                                          </ProgressGuideProvider>
-                                        </TourProvider>
+                                        <ProgressGuideProvider>
+                                          <GestureHandlerRootView
+                                            style={s.h100pct}>
+                                            <TestCtrls />
+                                            <Shell />
+                                          </GestureHandlerRootView>
+                                        </ProgressGuideProvider>
                                       </MutedThreadsProvider>
                                     </BackgroundNotificationPreferencesProvider>
                                   </UnreadNotifsProvider>

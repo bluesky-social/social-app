@@ -3,12 +3,14 @@ import {
   AppBskyEmbedImages,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
+  AppBskyEmbedVideo,
   AppBskyFeedPostgate,
+  AtUri,
+  BlobRef,
   BskyAgent,
   ComAtprotoLabelDefs,
   RichText,
 } from '@atproto/api'
-import {AtUri} from '@atproto/api'
 
 import {logger} from '#/logger'
 import {writePostgateRecord} from '#/state/queries/postgate'
@@ -43,10 +45,7 @@ interface PostOpts {
     uri: string
     cid: string
   }
-  video?: {
-    uri: string
-    cid: string
-  }
+  video?: BlobRef
   extLink?: ExternalEmbedDraft
   images?: ImageModel[]
   labels?: string[]
@@ -61,18 +60,16 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
     | AppBskyEmbedImages.Main
     | AppBskyEmbedExternal.Main
     | AppBskyEmbedRecord.Main
+    | AppBskyEmbedVideo.Main
     | AppBskyEmbedRecordWithMedia.Main
     | undefined
   let reply
-  let rt = new RichText(
-    {text: opts.rawText.trimEnd()},
-    {
-      cleanNewlines: true,
-    },
-  )
+  let rt = new RichText({text: opts.rawText.trimEnd()}, {cleanNewlines: true})
 
   opts.onStateChange?.('Processing...')
+
   await rt.detectFacets(agent)
+
   rt = shortenLinks(rt)
   rt = stripInvalidMentions(rt)
 
@@ -126,6 +123,25 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
         $type: 'app.bsky.embed.images',
         images,
       } as AppBskyEmbedImages.Main
+    }
+  }
+
+  // add video embed if present
+  if (opts.video) {
+    if (opts.quote) {
+      embed = {
+        $type: 'app.bsky.embed.recordWithMedia',
+        record: embed,
+        media: {
+          $type: 'app.bsky.embed.video',
+          video: opts.video,
+        } as AppBskyEmbedVideo.Main,
+      } as AppBskyEmbedRecordWithMedia.Main
+    } else {
+      embed = {
+        $type: 'app.bsky.embed.video',
+        video: opts.video,
+      } as AppBskyEmbedVideo.Main
     }
   }
 

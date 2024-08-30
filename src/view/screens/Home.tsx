@@ -10,7 +10,7 @@ import {logEvent, LogEvents} from '#/lib/statsig/statsig'
 import {useGate} from '#/lib/statsig/statsig'
 import {emitSoftReset} from '#/state/events'
 import {SavedFeedSourceInfo, usePinnedFeedsInfos} from '#/state/queries/feed'
-import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
+import {FeedParams} from '#/state/queries/post-feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useSession} from '#/state/session'
@@ -29,7 +29,6 @@ import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
 import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
 import {FollowingEndOfFeed} from 'view/com/posts/FollowingEndOfFeed'
 import {NoFeedsPinned} from '#/screens/Home/NoFeedsPinned'
-import {TOURS, useTriggerTourIfQueued} from '#/tours'
 import {HomeHeader} from '../com/home/HomeHeader'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home' | 'Start'>
@@ -88,7 +87,6 @@ function HomeScreenReady({
   const selectedIndex = Math.max(0, maybeFoundIndex)
   const selectedFeed = allFeeds[selectedIndex]
   const requestNotificationsPermission = useRequestNotificationsPermission()
-  const triggerTourIfQueued = useTriggerTourIfQueued(TOURS.HOME)
   const gate = useGate()
 
   useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName)
@@ -110,30 +108,6 @@ function HomeScreenReady({
     }
   }, [selectedIndex])
 
-  // Temporary, remove when finished debugging
-  const debugHasLoggedFollowingPrefs = React.useRef(false)
-  const debugLogFollowingPrefs = React.useCallback(
-    (feed: FeedDescriptor) => {
-      if (debugHasLoggedFollowingPrefs.current) return
-      if (feed !== 'following') return
-      logEvent('debug:followingPrefs', {
-        followingShowRepliesFromPref: preferences.feedViewPrefs.hideReplies
-          ? 'off'
-          : preferences.feedViewPrefs.hideRepliesByUnfollowed
-          ? 'following'
-          : 'all',
-        followingRepliesMinLikePref:
-          preferences.feedViewPrefs.hideRepliesByLikeCount,
-      })
-      debugHasLoggedFollowingPrefs.current = true
-    },
-    [
-      preferences.feedViewPrefs.hideReplies,
-      preferences.feedViewPrefs.hideRepliesByLikeCount,
-      preferences.feedViewPrefs.hideRepliesByUnfollowed,
-    ],
-  )
-
   const {hasSession} = useSession()
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
@@ -141,16 +115,10 @@ function HomeScreenReady({
     React.useCallback(() => {
       setMinimalShellMode(false)
       setDrawerSwipeDisabled(selectedIndex > 0)
-      triggerTourIfQueued()
       return () => {
         setDrawerSwipeDisabled(false)
       }
-    }, [
-      setDrawerSwipeDisabled,
-      selectedIndex,
-      setMinimalShellMode,
-      triggerTourIfQueued,
-    ]),
+    }, [setDrawerSwipeDisabled, selectedIndex, setMinimalShellMode]),
   )
 
   useFocusEffect(
@@ -162,7 +130,6 @@ function HomeScreenReady({
           feedUrl: selectedFeed,
           reason: 'focus',
         })
-        debugLogFollowingPrefs(selectedFeed)
       }
     }),
   )
@@ -213,9 +180,8 @@ function HomeScreenReady({
         feedUrl: feed,
         reason,
       })
-      debugLogFollowingPrefs(feed)
     },
-    [allFeeds, debugLogFollowingPrefs],
+    [allFeeds],
   )
 
   const onPressSelected = React.useCallback(() => {

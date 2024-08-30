@@ -3,18 +3,19 @@ import {View} from 'react-native'
 // @ts-expect-error no type definition
 import ProgressPie from 'react-native-progress/Pie'
 import {ImagePickerAsset} from 'expo-image-picker'
-import {Trans} from '@lingui/macro'
 
 import {atoms as a, useTheme} from '#/alf'
-import {Text} from '#/components/Typography'
+import {ExternalEmbedRemoveBtn} from '../ExternalEmbedRemoveBtn'
 import {VideoTranscodeBackdrop} from './VideoTranscodeBackdrop'
 
 export function VideoTranscodeProgress({
   asset,
   progress,
+  clear,
 }: {
   asset: ImagePickerAsset
   progress: number
+  clear: () => void
 }) {
   const t = useTheme()
 
@@ -41,16 +42,14 @@ export function VideoTranscodeProgress({
           a.inset_0,
         ]}>
         <ProgressPie
-          size={64}
-          borderWidth={4}
+          size={48}
+          borderWidth={3}
           borderColor={t.atoms.text.color}
           color={t.atoms.text.color}
           progress={progress}
         />
-        <Text>
-          <Trans>Compressing...</Trans>
-        </Text>
       </View>
+      <ExternalEmbedRemoveBtn onRemove={clear} />
     </View>
   )
 }

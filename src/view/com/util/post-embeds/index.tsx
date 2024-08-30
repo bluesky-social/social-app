@@ -13,6 +13,7 @@ import {
   AppBskyEmbedImages,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
+  AppBskyEmbedVideo,
   AppBskyFeedDefs,
   AppBskyGraphDefs,
   moderateFeedGenerator,
@@ -33,10 +34,12 @@ import {AutoSizedImage} from '../images/AutoSizedImage'
 import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
 import {ExternalLinkEmbed} from './ExternalLinkEmbed'
 import {MaybeQuoteEmbed} from './QuoteEmbed'
+import {VideoEmbed} from './VideoEmbed'
 
 type Embed =
   | AppBskyEmbedRecord.View
   | AppBskyEmbedImages.View
+  | AppBskyEmbedVideo.View
   | AppBskyEmbedExternal.View
   | AppBskyEmbedRecordWithMedia.View
   | {$type: string; [k: string]: unknown}
@@ -171,6 +174,14 @@ export function PostEmbeds({
           onOpen={onOpen}
           style={[styles.container, style]}
         />
+      </ContentHider>
+    )
+  }
+
+  if (AppBskyEmbedVideo.isView(embed)) {
+    return (
+      <ContentHider modui={moderation?.ui('contentMedia')}>
+        <VideoEmbed embed={embed} />
       </ContentHider>
     )
   }

@@ -1,5 +1,4 @@
 import React, {
-  Suspense,
   useCallback,
   useEffect,
   useImperativeHandle,
@@ -178,7 +177,7 @@ export const ComposePost = observer(function ComposePost({
     clearVideo,
     state: videoUploadState,
   } = useUploadVideo({
-    setStatus: (status: string) => setProcessingState(status),
+    setStatus: setProcessingState,
     onSuccess: () => {
       if (publishOnUpload) {
         onPressPublish(true)
@@ -348,6 +347,7 @@ export const ComposePost = observer(function ComposePost({
           postgate,
           onStateChange: setProcessingState,
           langs: toPostLanguages(langPrefs.postLanguage),
+          video: videoUploadState.blobRef,
         })
       ).uri
       try {
@@ -699,15 +699,10 @@ export const ComposePost = observer(function ComposePost({
               <VideoTranscodeProgress
                 asset={videoUploadState.asset}
                 progress={videoUploadState.progress}
+                clear={clearVideo}
               />
             ) : videoUploadState.video ? (
-              // remove suspense when we get rid of lazy
-              <Suspense fallback={null}>
-                <VideoPreview
-                  video={videoUploadState.video}
-                  clear={clearVideo}
-                />
-              </Suspense>
+              <VideoPreview video={videoUploadState.video} clear={clearVideo} />
             ) : null}
           </View>
         </Animated.ScrollView>

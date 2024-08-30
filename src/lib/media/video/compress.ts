@@ -8,19 +8,25 @@ export type CompressedVideo = {
 export async function compressVideo(
   file: string,
   opts?: {
-    getCancellationId?: (id: string) => void
+    signal?: AbortSignal
     onProgress?: (progress: number) => void
   },
 ): Promise<CompressedVideo> {
-  const {onProgress, getCancellationId} = opts || {}
+  const {onProgress, signal} = opts || {}
 
   const compressed = await Video.compress(
     file,
     {
-      getCancellationId,
       compressionMethod: 'manual',
       bitrate: 3_000_000, // 3mbps
       maxSize: 1920,
+      getCancellationId: id => {
+        if (signal) {
+          signal.addEventListener('abort', () => {
+            Video.cancelCompression(id)
+          })
+        }
+      },
     },
     onProgress,
   )
