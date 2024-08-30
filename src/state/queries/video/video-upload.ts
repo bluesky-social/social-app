@@ -28,14 +28,11 @@ export const useUploadVideoMutation = ({
     mutationFn: cancelable(async (video: CompressedVideo) => {
       const uri = createVideoEndpointUrl('/xrpc/app.bsky.video.uploadVideo', {
         did: currentAccount!.did,
-        name: `${nanoid(12)}.mp4`, // @TODO what are we limiting this to?
+        name: `${nanoid(12)}.mp4`,
       })
 
-      if (!currentAccount?.service) {
-        throw new Error('User is not logged in')
-      }
+      const serviceAuthAud = getServiceAuthAudFromUrl(agent.dispatchUrl)
 
-      const serviceAuthAud = getServiceAuthAudFromUrl(currentAccount.service)
       if (!serviceAuthAud) {
         throw new Error('Agent does not have a PDS URL')
       }
@@ -44,7 +41,7 @@ export const useUploadVideoMutation = ({
         {
           aud: serviceAuthAud,
           lxm: 'com.atproto.repo.uploadBlob',
-          exp: Date.now() + 1000 * 60 * 30, // 30 minutes
+          exp: Date.now() / 1000 + 60 * 30, // 30 minutes
         },
       )
 

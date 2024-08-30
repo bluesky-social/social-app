@@ -340,7 +340,7 @@ export function shortLinkToHref(url: string): string {
   }
 }
 
-export function getHostnameFromUrl(url: string): string | null {
+export function getHostnameFromUrl(url: string | URL): string | null {
   let urlp
   try {
     urlp = new URL(url)
@@ -350,7 +350,7 @@ export function getHostnameFromUrl(url: string): string | null {
   return urlp.hostname
 }
 
-export function getServiceAuthAudFromUrl(url: string): string | null {
+export function getServiceAuthAudFromUrl(url: string | URL): string | null {
   const hostname = getHostnameFromUrl(url)
   if (!hostname) {
     return null
