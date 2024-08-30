@@ -119,8 +119,18 @@ let PostCtrls = ({
     [t],
   ) as StyleProp<ViewStyle>
 
-  const likeIconAnimValue = useSharedValue(post.viewer?.like ? 1 : 0)
-  const likeTextAnimValue = useSharedValue(post.viewer?.like ? 1 : 0)
+  const likeValue = post.viewer?.like ? 1 : 0
+  const likeIconAnimValue = useSharedValue(likeValue)
+  const likeTextAnimValue = useSharedValue(likeValue)
+  const nextExpectedLikeValue = React.useRef(likeValue)
+  React.useEffect(() => {
+    // Catch nonlocal changes (e.g. shadow update) and always reflect them.
+    if (likeValue !== nextExpectedLikeValue.current) {
+      nextExpectedLikeValue.current = likeValue
+      likeIconAnimValue.value = likeValue
+      likeTextAnimValue.value = likeValue
+    }
+  }, [likeValue, likeIconAnimValue, likeTextAnimValue])
 
   const onPressToggleLike = React.useCallback(async () => {
     if (isBlocked) {
@@ -133,6 +143,7 @@ let PostCtrls = ({
 
     try {
       if (!post.viewer?.like) {
+        nextExpectedLikeValue.current = 1
         if (PlatformInfo.getIsReducedMotionEnabled()) {
           likeIconAnimValue.value = 1
           likeTextAnimValue.value = 1
@@ -155,8 +166,8 @@ let PostCtrls = ({
         captureAction(ProgressGuideAction.Like)
         await queueLike()
       } else {
-        // Don't animate the icon back.
-        likeIconAnimValue.value = 0
+        nextExpectedLikeValue.current = 0
+        likeIconAnimValue.value = 0 // Intentionally not animated
         if (PlatformInfo.getIsReducedMotionEnabled()) {
           likeTextAnimValue.value = 0
         } else {
