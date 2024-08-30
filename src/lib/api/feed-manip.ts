@@ -81,7 +81,14 @@ export class FeedViewPostsSlice {
       isParentBlocked,
       isParentNotFound,
     })
-    if (!reply || reason) {
+    if (!reply) {
+      if (post.record.reply) {
+        // This reply wasn't properly hydrated by the AppView.
+        this.isOrphan = true
+      }
+      return
+    }
+    if (reason) {
       return
     }
     if (
