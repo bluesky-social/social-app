@@ -84,7 +84,7 @@ let FeedItem = ({
 }): React.ReactNode => {
   const queryClient = useQueryClient()
   const pal = usePalette('default')
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const t = useTheme()
   const [isAuthorsExpanded, setAuthorsExpanded] = useState<boolean>(false)
   const itemHref = useMemo(() => {
@@ -225,11 +225,11 @@ let FeedItem = ({
   }
 
   const formattedCount =
-    authors.length > 1 ? formatCount(authors.length - 1) : ''
+    authors.length > 1 ? formatCount(i18n, authors.length - 1) : ''
   const firstAuthorName = sanitizeDisplayName(
     authors[0].profile.displayName || authors[0].profile.handle,
   )
-  const niceTimestamp = niceDate(item.notification.indexedAt)
+  const niceTimestamp = niceDate(i18n, item.notification.indexedAt)
   const a11yLabelUsers =
     authors.length > 1
       ? _(msg` and `) +

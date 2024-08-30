@@ -32,7 +32,7 @@ let RepostButton = ({
   embeddingDisabled,
 }: Props): React.ReactNode => {
   const t = useTheme()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const requireAuth = useRequireAuth()
   const dialogControl = Dialog.useDialogControl()
   const playHaptic = useHaptics()
@@ -79,7 +79,7 @@ let RepostButton = ({
               big ? a.text_md : {fontSize: 15},
               isReposted && a.font_bold,
             ]}>
-            {formatCount(repostCount)}
+            {formatCount(i18n, repostCount)}
           </Text>
         ) : undefined}
       </Button>

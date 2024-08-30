@@ -75,7 +75,7 @@ let PostCtrls = ({
   threadgateRecord?: AppBskyFeedThreadgate.Record
 }): React.ReactNode => {
   const t = useTheme()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const {openComposer} = useComposerControls()
   const {currentAccount} = useSession()
   const [queueLike, queueUnlike] = usePostLikeMutationQueue(post, logContext)
@@ -247,7 +247,7 @@ let PostCtrls = ({
                 big ? a.text_md : {fontSize: 15},
                 a.user_select_none,
               ]}>
-              {formatCount(post.replyCount)}
+              {formatCount(i18n, post.replyCount)}
             </Text>
           ) : undefined}
         </Pressable>
@@ -300,7 +300,7 @@ let PostCtrls = ({
                     : defaultCtrlColor,
                 ],
               ]}>
-              {formatCount(post.likeCount)}
+              {formatCount(i18n, post.likeCount)}
             </Text>
           ) : undefined}
         </Pressable>
