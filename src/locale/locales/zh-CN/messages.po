@@ -117,7 +117,7 @@ msgstr "在本周加入了 {0} 人"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:578
 msgid "{0} of {1}"
-msgstr "当前 {0}，总共 {1}"
+msgstr "总共 {1}，当前 {0}"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:467
 msgid "{0} people have used this starter pack!"
