@@ -158,7 +158,7 @@ let PostCtrls = ({
         // Don't animate the icon back.
         likeIconAnimValue.value = 0
         if (PlatformInfo.getIsReducedMotionEnabled()) {
-          likeTextAnimValue.value = 1
+          likeTextAnimValue.value = 0
         } else {
           likeTextAnimValue.value = withTiming(0, {
             duration: 400,
