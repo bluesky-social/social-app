@@ -486,6 +486,23 @@ function AnimatedLikeIcon({
       },
     ],
   }))
+  const countStyle = useAnimatedStyle(() => ({
+    transform: [
+      {
+        translateY: interpolate(
+          likeAnimValue.value,
+          [0, 1],
+          [0, big ? -22 : -18],
+          'clamp',
+        ),
+      },
+    ],
+  }))
+
+  const prevFormattedCount = formatCount(i18n, isLiked ? likeCount - 1 : likeCount)
+  const nextFormattedCount = formatCount(i18n, isLiked ? likeCount : likeCount + 1)
+  const shouldRollLike =
+    prevFormattedCount !== nextFormattedCount && prevFormattedCount !== '0'
 
   return (
     <>
@@ -535,19 +552,50 @@ function AnimatedLikeIcon({
           )}
         </Animated.View>
       </View>
-      {likeCount > 0 ? (
-        <Text
-          testID="likeCount"
-          style={[
-            [
-              big ? a.text_md : {fontSize: 15},
-              a.user_select_none,
-              isLiked ? [a.font_bold, s.likeColor] : defaultCtrlColor,
-            ],
-          ]}>
-          {formatCount(i18n, likeCount)}
-        </Text>
-      ) : undefined}
+      <View style={{overflow: 'hidden', height: big ? 22 : 18}}>
+        {shouldRollLike ? (
+          <Animated.View style={countStyle}>
+            <Text
+              aria-hidden={isLiked}
+              testID="likeCount"
+              style={[
+                [
+                  big ? a.text_md : {fontSize: 15},
+                  a.user_select_none,
+                  isLiked ? [a.font_bold, s.likeColor] : defaultCtrlColor,
+                  {height: big ? 22 : 18},
+                ],
+              ]}>
+              {prevFormattedCount}
+            </Text>
+            <Text
+              aria-hidden={!isLiked}
+              testID="likeCount"
+              style={[
+                [
+                  big ? a.text_md : {fontSize: 15},
+                  a.user_select_none,
+                  isLiked ? [a.font_bold, s.likeColor] : defaultCtrlColor,
+                  {height: big ? 22 : 18},
+                ],
+              ]}>
+              {nextFormattedCount}
+            </Text>
+          </Animated.View>
+        ) : (
+          <Text
+            testID="likeCount"
+            style={[
+              [
+                big ? a.text_md : {fontSize: 15},
+                a.user_select_none,
+                isLiked ? [a.font_bold, s.likeColor] : defaultCtrlColor,
+              ],
+            ]}>
+            {likeCount > 0 ? formatCount(i18n, likeCount) : ''}
+          </Text>
+        )}
+      </View>
     </>
   )
 }
