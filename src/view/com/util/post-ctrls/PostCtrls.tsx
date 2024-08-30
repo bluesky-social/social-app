@@ -119,7 +119,8 @@ let PostCtrls = ({
     [t],
   ) as StyleProp<ViewStyle>
 
-  const likeAnimValue = useSharedValue(post.viewer?.like ? 1 : 0)
+  const likeIconAnimValue = useSharedValue(post.viewer?.like ? 1 : 0)
+  const likeTextAnimValue = useSharedValue(post.viewer?.like ? 1 : 0)
 
   const onPressToggleLike = React.useCallback(async () => {
     if (isBlocked) {
@@ -133,9 +134,14 @@ let PostCtrls = ({
     try {
       if (!post.viewer?.like) {
         if (PlatformInfo.getIsReducedMotionEnabled()) {
-          likeAnimValue.value = 1
+          likeIconAnimValue.value = 1
+          likeTextAnimValue.value = 1
         } else {
-          likeAnimValue.value = withTiming(1, {
+          likeIconAnimValue.value = withTiming(1, {
+            duration: 400,
+            easing: Easing.out(Easing.cubic),
+          })
+          likeTextAnimValue.value = withTiming(1, {
             duration: 400,
             easing: Easing.out(Easing.cubic),
           })
@@ -149,7 +155,16 @@ let PostCtrls = ({
         captureAction(ProgressGuideAction.Like)
         await queueLike()
       } else {
-        likeAnimValue.value = 0
+        // Don't animate the icon back.
+        likeIconAnimValue.value = 0
+        if (PlatformInfo.getIsReducedMotionEnabled()) {
+          likeTextAnimValue.value = 1
+        } else {
+          likeTextAnimValue.value = withTiming(0, {
+            duration: 400,
+            easing: Easing.out(Easing.cubic),
+          })
+        }
         await queueUnlike()
       }
     } catch (e: any) {
@@ -159,7 +174,8 @@ let PostCtrls = ({
     }
   }, [
     _,
-    likeAnimValue,
+    likeIconAnimValue,
+    likeTextAnimValue,
     playHaptic,
     post.uri,
     post.viewer?.like,
@@ -339,7 +355,8 @@ let PostCtrls = ({
           hitSlop={POST_CTRL_HITSLOP}>
           <AnimatedLikeIcon
             big={big ?? false}
-            likeAnimValue={likeAnimValue}
+            likeIconAnimValue={likeIconAnimValue}
+            likeTextAnimValue={likeTextAnimValue}
             defaultCtrlColor={defaultCtrlColor}
             isLiked={Boolean(post.viewer?.like)}
             likeCount={post.likeCount ?? 0}
@@ -425,13 +442,15 @@ export {PostCtrls}
 
 function AnimatedLikeIcon({
   big,
-  likeAnimValue,
+  likeIconAnimValue,
+  likeTextAnimValue,
   defaultCtrlColor,
   isLiked,
   likeCount,
 }: {
   big: boolean
-  likeAnimValue: SharedValue<number>
+  likeIconAnimValue: SharedValue<number>
+  likeTextAnimValue: SharedValue<number>
   defaultCtrlColor: StyleProp<ViewStyle>
   isLiked: boolean
   likeCount: number
@@ -442,7 +461,7 @@ function AnimatedLikeIcon({
     transform: [
       {
         scale: interpolate(
-          likeAnimValue.value,
+          likeIconAnimValue.value,
           [0, 0.1, 0.4, 1],
           [1, 0.7, 1.2, 1],
           'clamp',
@@ -452,7 +471,7 @@ function AnimatedLikeIcon({
   }))
   const circle1Style = useAnimatedStyle(() => ({
     opacity: interpolate(
-      likeAnimValue.value,
+      likeIconAnimValue.value,
       [0, 0.1, 0.95, 1],
       [0, 0.4, 0.4, 0],
       'clamp',
@@ -460,7 +479,7 @@ function AnimatedLikeIcon({
     transform: [
       {
         scale: interpolate(
-          likeAnimValue.value,
+          likeIconAnimValue.value,
           [0, 0.4, 1],
           [0, 1.5, 1.5],
           'clamp',
@@ -470,7 +489,7 @@ function AnimatedLikeIcon({
   }))
   const circle2Style = useAnimatedStyle(() => ({
     opacity: interpolate(
-      likeAnimValue.value,
+      likeIconAnimValue.value,
       [0, 0.1, 0.95, 1],
       [0, 1, 1, 0],
       'clamp',
@@ -478,7 +497,7 @@ function AnimatedLikeIcon({
     transform: [
       {
         scale: interpolate(
-          likeAnimValue.value,
+          likeIconAnimValue.value,
           [0, 0.4, 1],
           [0, 0, 1.5],
           'clamp',
@@ -490,7 +509,7 @@ function AnimatedLikeIcon({
     transform: [
       {
         translateY: interpolate(
-          likeAnimValue.value,
+          likeTextAnimValue.value,
           [0, 1],
           [0, big ? -22 : -18],
           'clamp',
@@ -499,8 +518,14 @@ function AnimatedLikeIcon({
     ],
   }))
 
-  const prevFormattedCount = formatCount(i18n, isLiked ? likeCount - 1 : likeCount)
-  const nextFormattedCount = formatCount(i18n, isLiked ? likeCount : likeCount + 1)
+  const prevFormattedCount = formatCount(
+    i18n,
+    isLiked ? likeCount - 1 : likeCount,
+  )
+  const nextFormattedCount = formatCount(
+    i18n,
+    isLiked ? likeCount : likeCount + 1,
+  )
   const shouldRollLike =
     prevFormattedCount !== nextFormattedCount && prevFormattedCount !== '0'
 
