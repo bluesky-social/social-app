@@ -557,7 +557,7 @@ function Scrubber({
             {backgroundColor: 'rgba(255, 255, 255, 0.4)'},
             {height: hovered || scrubberActive ? 6 : 3},
           ]}>
-          {currentTime && duration && (
+          {currentTime > 0 && duration > 0 && (
             <View
               style={[
                 a.h_full,

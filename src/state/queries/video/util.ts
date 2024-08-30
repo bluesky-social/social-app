@@ -1,4 +1,7 @@
-const UPLOAD_ENDPOINT = process.env.EXPO_PUBLIC_VIDEO_ROOT_ENDPOINT ?? ''
+import {useMemo} from 'react'
+import {AtpAgent} from '@atproto/api'
+
+const UPLOAD_ENDPOINT = 'https://video.bsky.app/'
 
 export const createVideoEndpointUrl = (
   route: string,
@@ -12,4 +15,12 @@ export const createVideoEndpointUrl = (
     }
   }
   return url.href
+}
+
+export function useVideoAgent() {
+  return useMemo(() => {
+    return new AtpAgent({
+      service: UPLOAD_ENDPOINT,
+    })
+  }, [])
 }

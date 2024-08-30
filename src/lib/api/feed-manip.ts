@@ -392,27 +392,20 @@ export class FeedTuner {
       slices: FeedViewPostsSlice[],
       _dryRun: boolean,
     ): FeedViewPostsSlice[] => {
-      const candidateSlices = slices.slice()
-
       // early return if no languages have been specified
       if (!preferredLangsCode2.length || preferredLangsCode2.length === 0) {
         return slices
       }
 
-      for (let i = 0; i < slices.length; i++) {
-        let hasPreferredLang = false
-        for (const item of slices[i].items) {
+      const candidateSlices = slices.filter(slice => {
+        for (const item of slice.items) {
           if (isPostInLanguage(item.post, preferredLangsCode2)) {
-            hasPreferredLang = true
-            break
+            return true
           }
         }
-
         // if item does not fit preferred language, remove it
-        if (!hasPreferredLang) {
-          candidateSlices.splice(i, 1)
-        }
-      }
+        return false
+      })
 
       // if the language filter cleared out the entire page, return the original set
       // so that something always shows
