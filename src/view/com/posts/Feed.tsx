@@ -339,14 +339,14 @@ let Feed = ({
     }
 
     if (hasSession) {
-      const feedType = feedIsFollowing
+      const feedKind = feedIsFollowing
         ? 'following'
         : feedIsDiscover
         ? 'discover'
         : undefined
 
-      if (feedType) {
-        for (const interstitial of interstials[feedType]) {
+      if (feedKind) {
+        for (const interstitial of interstials[feedKind]) {
           const shouldShow =
             (interstitial.type === feedInterstitialType &&
               gate('suggested_feeds_interstitial')) ||
