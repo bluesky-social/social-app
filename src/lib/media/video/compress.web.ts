@@ -10,8 +10,9 @@ export type CompressedVideo = {
 // doesn't actually compress, but throws if >100MB
 export async function compressVideo(
   file: string,
-  _callbacks?: {
-    onProgress: (progress: number) => void
+  _opts?: {
+    signal?: AbortSignal
+    onProgress?: (progress: number) => void
   },
 ): Promise<CompressedVideo> {
   const blob = await fetch(file).then(res => res.blob())

@@ -428,6 +428,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
         (item.ctx.depth < 0 && !!item.parent) || item.ctx.depth > 1
       const hasUnrevealedParents =
         index === 0 && skeleton?.parents && maxParents < skeleton.parents.length
+
       return (
         <View
           ref={item.ctx.isHighlightedPost ? highlightedPostRef : undefined}

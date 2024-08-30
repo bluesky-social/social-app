@@ -25,8 +25,8 @@ export function ExternalEmbedRemoveBtn({onRemove}: {onRemove: () => void}) {
       }}
       onPress={onRemove}
       accessibilityRole="button"
-      accessibilityLabel={_(msg`Remove image preview`)}
-      accessibilityHint={_(msg`Removes the image preview`)}
+      accessibilityLabel={_(msg`Remove attachment`)}
+      accessibilityHint={_(msg`Removes the attachment`)}
       onAccessibilityEscape={onRemove}>
       <FontAwesomeIcon size={18} icon="xmark" style={s.white} />
     </TouchableOpacity>

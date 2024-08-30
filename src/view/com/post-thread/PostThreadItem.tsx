@@ -398,7 +398,9 @@ let PostThreadItemLoaded = ({
                     </Text>
                   </Link>
                 ) : null}
-                {post.quoteCount != null && post.quoteCount !== 0 ? (
+                {post.quoteCount != null &&
+                post.quoteCount !== 0 &&
+                !post.viewer?.embeddingDisabled ? (
                   <Link
                     style={styles.expandedInfoItem}
                     href={quotesHref}
