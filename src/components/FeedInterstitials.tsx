@@ -233,7 +233,6 @@ export function ProfileGrid({
 }) {
   const t = useTheme()
   const {_} = useLingui()
-
   const moderationOpts = useModerationOpts()
   const navigation = useNavigation<NavigationProp>()
   const {gtMobile} = useBreakpoints()
