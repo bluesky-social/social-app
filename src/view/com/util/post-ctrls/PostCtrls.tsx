@@ -342,22 +342,8 @@ let PostCtrls = ({
             likeAnimValue={likeAnimValue}
             defaultCtrlColor={defaultCtrlColor}
             isLiked={Boolean(post.viewer?.like)}
+            likeCount={post.likeCount ?? 0}
           />
-          {typeof post.likeCount !== 'undefined' && post.likeCount > 0 ? (
-            <Text
-              testID="likeCount"
-              style={[
-                [
-                  big ? a.text_md : {fontSize: 15},
-                  a.user_select_none,
-                  post.viewer?.like
-                    ? [a.font_bold, s.likeColor]
-                    : defaultCtrlColor,
-                ],
-              ]}>
-              {formatCount(i18n, post.likeCount)}
-            </Text>
-          ) : undefined}
         </Pressable>
       </View>
       {big && (
@@ -442,13 +428,16 @@ function AnimatedLikeIcon({
   likeAnimValue,
   defaultCtrlColor,
   isLiked,
+  likeCount,
 }: {
   big: boolean
   likeAnimValue: SharedValue<number>
   defaultCtrlColor: StyleProp<ViewStyle>
   isLiked: boolean
+  likeCount: number
 }) {
   const t = useTheme()
+  const {i18n} = useLingui()
   const likeStyle = useAnimatedStyle(() => ({
     transform: [
       {
@@ -499,51 +488,66 @@ function AnimatedLikeIcon({
   }))
 
   return (
-    <View>
-      <Animated.View
-        style={[
-          {
-            position: 'absolute',
-            backgroundColor: s.likeColor.color,
-            top: 0,
-            left: 0,
-            width: big ? 22 : 18,
-            height: big ? 22 : 18,
-            zIndex: -1,
-            pointerEvents: 'none',
-            borderRadius: (big ? 22 : 18) / 2,
-          },
-          circle1Style,
-        ]}
-      />
-      <Animated.View
-        style={[
-          {
-            position: 'absolute',
-            backgroundColor: isWeb
-              ? t.atoms.bg_contrast_25.backgroundColor
-              : t.atoms.bg.backgroundColor,
-            top: 0,
-            left: 0,
-            width: big ? 22 : 18,
-            height: big ? 22 : 18,
-            zIndex: -1,
-            pointerEvents: 'none',
-            borderRadius: (big ? 22 : 18) / 2,
-          },
-          circle2Style,
-        ]}
-      />
-      <Animated.View style={likeStyle}>
-        {isLiked ? (
-          <HeartIconFilled style={s.likeColor} width={big ? 22 : 18} />
-        ) : (
-          <HeartIconOutline
-            style={[defaultCtrlColor, {pointerEvents: 'none'}]}
-            width={big ? 22 : 18}
-          />
-        )}
-      </Animated.View>
-    </View>
+    <>
+      <View>
+        <Animated.View
+          style={[
+            {
+              position: 'absolute',
+              backgroundColor: s.likeColor.color,
+              top: 0,
+              left: 0,
+              width: big ? 22 : 18,
+              height: big ? 22 : 18,
+              zIndex: -1,
+              pointerEvents: 'none',
+              borderRadius: (big ? 22 : 18) / 2,
+            },
+            circle1Style,
+          ]}
+        />
+        <Animated.View
+          style={[
+            {
+              position: 'absolute',
+              backgroundColor: isWeb
+                ? t.atoms.bg_contrast_25.backgroundColor
+                : t.atoms.bg.backgroundColor,
+              top: 0,
+              left: 0,
+              width: big ? 22 : 18,
+              height: big ? 22 : 18,
+              zIndex: -1,
+              pointerEvents: 'none',
+              borderRadius: (big ? 22 : 18) / 2,
+            },
+            circle2Style,
+          ]}
+        />
+        <Animated.View style={likeStyle}>
+          {isLiked ? (
+            <HeartIconFilled style={s.likeColor} width={big ? 22 : 18} />
+          ) : (
+            <HeartIconOutline
+              style={[defaultCtrlColor, {pointerEvents: 'none'}]}
+              width={big ? 22 : 18}
+            />
+          )}
+        </Animated.View>
+      </View>
+      {likeCount > 0 ? (
+        <Text
+          testID="likeCount"
+          style={[
+            [
+              big ? a.text_md : {fontSize: 15},
+              a.user_select_none,
+              isLiked ? [a.font_bold, s.likeColor] : defaultCtrlColor,
+            ],
+          ]}>
+          {formatCount(i18n, likeCount)}
+        </Text>
+      ) : undefined}
+    </>
   )
 }
