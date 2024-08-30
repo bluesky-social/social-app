@@ -6,5 +6,6 @@ export type Gate =
   | 'onboarding_minimum_interests'
   | 'show_follow_back_label_v2'
   | 'suggested_feeds_interstitial'
+  | 'show_follow_suggestions_in_profile'
   | 'video_debug'
   | 'videos'
