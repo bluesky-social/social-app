@@ -337,13 +337,12 @@ let Feed = ({
     }
 
     if (hasSession) {
-      const feedIsDiscover = feedUri === DISCOVER_FEED_URI
-      const feedIsFollowing = feedType === 'following'
-      const feedKind = feedIsFollowing
-        ? 'following'
-        : feedIsDiscover
-        ? 'discover'
-        : undefined
+      const feedKind =
+        feedType === 'following'
+          ? 'following'
+          : feedUri === DISCOVER_FEED_URI
+          ? 'discover'
+          : undefined
 
       if (feedKind) {
         for (const interstitial of interstials[feedKind]) {
