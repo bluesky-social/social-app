@@ -3,7 +3,7 @@ import {useMutation} from '@tanstack/react-query'
 import {nanoid} from 'nanoid/non-secure'
 
 import {cancelable} from '#/lib/async/cancelable'
-import {CompressedVideo} from '#/lib/media/video/types'
+import {CompressedVideo} from '#/lib/media/video/compress'
 import {createVideoEndpointUrl} from '#/state/queries/video/util'
 import {useAgent, useSession} from '#/state/session'
 import {getServiceAuthAudFromUrl} from 'lib/strings/url-helpers'
