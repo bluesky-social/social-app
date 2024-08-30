@@ -83,8 +83,6 @@ function SubtitleDialogInner({
 
   const subtitleMissingLanguage = captions.some(sub => sub.lang === '')
 
-  console.log({subtitleMissingLanguage})
-
   return (
     <Dialog.ScrollableInner label={_(msg`Video settings`)}>
       <View style={a.gap_md}>
