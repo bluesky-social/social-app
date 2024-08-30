@@ -194,8 +194,6 @@ let Feed = ({
   const checkForNewRef = React.useRef<(() => void) | null>(null)
   const lastFetchRef = React.useRef<number>(Date.now())
   const [feedType, feedUri] = feed.split('|')
-  const feedIsDiscover = feedUri === DISCOVER_FEED_URI
-  const feedIsFollowing = feedType === 'following'
   const gate = useGate()
 
   const opts = React.useMemo(
@@ -339,6 +337,8 @@ let Feed = ({
     }
 
     if (hasSession) {
+      const feedIsDiscover = feedUri === DISCOVER_FEED_URI
+      const feedIsFollowing = feedType === 'following'
       const feedKind = feedIsFollowing
         ? 'following'
         : feedIsDiscover
@@ -377,9 +377,8 @@ let Feed = ({
     isEmpty,
     lastFetchedAt,
     data,
+    feedType,
     feedUri,
-    feedIsDiscover,
-    feedIsFollowing,
     gate,
     hasSession,
   ])
