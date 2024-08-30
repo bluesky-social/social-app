@@ -78,9 +78,7 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
                   setActiveSource(embed.playlist)
                 }}
                 label={_(msg`Play video`)}
-                variant="ghost"
-                color="secondary"
-                size="large">
+                color="secondary">
                 <PlayIcon width={48} fill={t.palette.white} />
               </Button>
             </>
