@@ -151,11 +151,11 @@ function App() {
    * that is set up in the InnerApp component above.
    */
   return (
-    <I18nProvider>
-      <A11yProvider>
-        <SessionProvider>
-          <ShellStateProvider>
-            <PrefsStateProvider>
+    <A11yProvider>
+      <SessionProvider>
+        <PrefsStateProvider>
+          <I18nProvider>
+            <ShellStateProvider>
               <InvitesStateProvider>
                 <ModalStateProvider>
                   <DialogStateProvider>
@@ -169,11 +169,11 @@ function App() {
                   </DialogStateProvider>
                 </ModalStateProvider>
               </InvitesStateProvider>
-            </PrefsStateProvider>
-          </ShellStateProvider>
-        </SessionProvider>
-      </A11yProvider>
-    </I18nProvider>
+            </ShellStateProvider>
+          </I18nProvider>
+        </PrefsStateProvider>
+      </SessionProvider>
+    </A11yProvider>
   )
 }
 

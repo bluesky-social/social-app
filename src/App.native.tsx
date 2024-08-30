@@ -172,12 +172,12 @@ function App() {
    * that is set up in the InnerApp component above.
    */
   return (
-    <I18nProvider>
-      <A11yProvider>
-        <KeyboardProvider enabled={false} statusBarTranslucent={true}>
-          <SessionProvider>
-            <ShellStateProvider>
-              <PrefsStateProvider>
+    <A11yProvider>
+      <KeyboardProvider enabled={false} statusBarTranslucent={true}>
+        <SessionProvider>
+          <PrefsStateProvider>
+            <I18nProvider>
+              <ShellStateProvider>
                 <InvitesStateProvider>
                   <ModalStateProvider>
                     <DialogStateProvider>
@@ -191,12 +191,12 @@ function App() {
                     </DialogStateProvider>
                   </ModalStateProvider>
                 </InvitesStateProvider>
-              </PrefsStateProvider>
-            </ShellStateProvider>
-          </SessionProvider>
-        </KeyboardProvider>
-      </A11yProvider>
-    </I18nProvider>
+              </ShellStateProvider>
+            </I18nProvider>
+          </PrefsStateProvider>
+        </SessionProvider>
+      </KeyboardProvider>
+    </A11yProvider>
   )
 }
 
