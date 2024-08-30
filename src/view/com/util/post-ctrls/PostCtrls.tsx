@@ -89,6 +89,11 @@ let PostCtrls = ({
   const {captureAction} = useProgressGuideControls()
   const playHaptic = useHaptics()
   const gate = useGate()
+  const isBlocked = Boolean(
+    post.author.viewer?.blocking ||
+      post.author.viewer?.blockedBy ||
+      post.author.viewer?.blockingByList,
+  )
 
   const shouldShowLoggedOutWarning = React.useMemo(() => {
     return (
@@ -105,6 +110,14 @@ let PostCtrls = ({
   ) as StyleProp<ViewStyle>
 
   const onPressToggleLike = React.useCallback(async () => {
+    if (isBlocked) {
+      Toast.show(
+        _(msg`Cannot interact with a blocked user`),
+        'exclamation-circle',
+      )
+      return
+    }
+
     try {
       if (!post.viewer?.like) {
         playHaptic()
@@ -124,6 +137,7 @@ let PostCtrls = ({
       }
     }
   }, [
+    _,
     playHaptic,
     post.uri,
     post.viewer?.like,
@@ -132,9 +146,18 @@ let PostCtrls = ({
     sendInteraction,
     captureAction,
     feedContext,
+    isBlocked,
   ])
 
   const onRepost = useCallback(async () => {
+    if (isBlocked) {
+      Toast.show(
+        _(msg`Cannot interact with a blocked user`),
+        'exclamation-circle',
+      )
+      return
+    }
+
     try {
       if (!post.viewer?.repost) {
         sendInteraction({
@@ -152,15 +175,25 @@ let PostCtrls = ({
       }
     }
   }, [
+    _,
     post.uri,
     post.viewer?.repost,
     queueRepost,
     queueUnrepost,
     sendInteraction,
     feedContext,
+    isBlocked,
   ])
 
   const onQuote = useCallback(() => {
+    if (isBlocked) {
+      Toast.show(
+        _(msg`Cannot interact with a blocked user`),
+        'exclamation-circle',
+      )
+      return
+    }
+
     sendInteraction({
       item: post.uri,
       event: 'app.bsky.feed.defs#interactionQuote',
@@ -178,6 +211,7 @@ let PostCtrls = ({
       onPost: onPostReply,
     })
   }, [
+    _,
     sendInteraction,
     post.uri,
     post.cid,
@@ -188,6 +222,7 @@ let PostCtrls = ({
     openComposer,
     record.text,
     onPostReply,
+    isBlocked,
   ])
 
   const onShare = useCallback(() => {
