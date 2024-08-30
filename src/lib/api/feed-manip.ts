@@ -85,6 +85,7 @@ export class FeedViewPostsSlice {
       if (post.record.reply) {
         // This reply wasn't properly hydrated by the AppView.
         this.isOrphan = true
+        this.items[0].isParentNotFound = true
       }
       return
     }
