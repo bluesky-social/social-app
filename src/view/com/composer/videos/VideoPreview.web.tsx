@@ -2,7 +2,7 @@ import React, {useEffect, useRef} from 'react'
 import {View} from 'react-native'
 import {ImagePickerAsset} from 'expo-image-picker'
 
-import {CompressedVideo} from '#/lib/media/video/compress'
+import {CompressedVideo} from '#/lib/media/video/types'
 import {ExternalEmbedRemoveBtn} from 'view/com/composer/ExternalEmbedRemoveBtn'
 import {atoms as a, useTheme} from '#/alf'
 
