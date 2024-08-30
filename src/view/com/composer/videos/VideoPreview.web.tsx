@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {ImagePickerAsset} from 'expo-image-picker'
 
 import {CompressedVideo} from '#/lib/media/video/types'
+import {clamp} from '#/lib/numbers'
 import {ExternalEmbedRemoveBtn} from 'view/com/composer/ExternalEmbedRemoveBtn'
 import {atoms as a, useTheme} from '#/alf'
 
@@ -38,15 +39,20 @@ export function VideoPreview({
     }
   }, [setDimensions])
 
-  const aspectRatio = asset.width / asset.height
+  let aspectRatio = asset.width / asset.height
+
+  if (isNaN(aspectRatio)) {
+    aspectRatio = 16 / 9
+  }
+
+  aspectRatio = clamp(aspectRatio, 1 / 1, 3 / 1)
 
   return (
     <View
       style={[
         a.w_full,
         a.rounded_sm,
-
-        {aspectRatio: isNaN(aspectRatio) ? 16 / 9 : aspectRatio},
+        {aspectRatio},
         a.overflow_hidden,
         {backgroundColor: t.palette.black},
       ]}>
