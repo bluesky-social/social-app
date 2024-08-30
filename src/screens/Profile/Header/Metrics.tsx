@@ -29,16 +29,28 @@ export function ProfileHeaderMetrics({
     other: 'following',
   })
 
+  const tooltipFormattedCountIfNeeded = (count: number) => {
+    const standardCount = i18n.number(count, {
+      notation: 'standard',
+    })
+    const formattedCount = formatCount(i18n, count)
+    return standardCount !== formattedCount ? {tooltip: standardCount} : {}
+  }
+
   return (
     <View
-      style={[a.flex_row, a.gap_sm, a.align_center, a.pb_md]}
+      style={[a.flex_row, a.gap_sm, a.align_center, a.pb_md, {zIndex: 10}]}
       pointerEvents="box-none">
       <InlineLinkText
         testID="profileHeaderFollowersButton"
         style={[a.flex_row, t.atoms.text]}
         to={makeProfileLink(profile, 'followers')}
         label={`${followers} ${pluralizedFollowers}`}>
-        <Text style={[a.font_bold, a.text_md]}>{followers} </Text>
+        <Text
+          style={[a.font_bold, a.text_md]}
+          dataSet={tooltipFormattedCountIfNeeded(profile.followersCount || 0)}>
+          {followers}{' '}
+        </Text>
         <Text style={[t.atoms.text_contrast_medium, a.text_md]}>
           {pluralizedFollowers}
         </Text>
@@ -48,13 +60,21 @@ export function ProfileHeaderMetrics({
         style={[a.flex_row, t.atoms.text]}
         to={makeProfileLink(profile, 'follows')}
         label={_(msg`${following} following`)}>
-        <Text style={[a.font_bold, a.text_md]}>{following} </Text>
+        <Text
+          style={[a.font_bold, a.text_md]}
+          dataSet={tooltipFormattedCountIfNeeded(profile.followsCount || 0)}>
+          {following}{' '}
+        </Text>
         <Text style={[t.atoms.text_contrast_medium, a.text_md]}>
           {pluralizedFollowings}
         </Text>
       </InlineLinkText>
-      <Text style={[a.font_bold, t.atoms.text, a.text_md]}>
-        {formatCount(i18n, profile.postsCount || 0)}{' '}
+      <Text>
+        <Text
+          style={[a.font_bold, t.atoms.text, a.text_md]}
+          dataSet={tooltipFormattedCountIfNeeded(profile.postsCount || 0)}>
+          {formatCount(i18n, profile.postsCount || 0)}{' '}
+        </Text>
         <Text style={[t.atoms.text_contrast_medium, a.font_normal, a.text_md]}>
           {plural(profile.postsCount || 0, {one: 'post', other: 'posts'})}
         </Text>
