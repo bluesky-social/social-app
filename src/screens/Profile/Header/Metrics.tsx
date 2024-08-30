@@ -45,12 +45,9 @@ export function ProfileHeaderMetrics({
         testID="profileHeaderFollowersButton"
         style={[a.flex_row, t.atoms.text]}
         to={makeProfileLink(profile, 'followers')}
-        label={`${followers} ${pluralizedFollowers}`}>
-        <Text
-          style={[a.font_bold, a.text_md]}
-          dataSet={tooltipFormattedCountIfNeeded(profile.followersCount || 0)}>
-          {followers}{' '}
-        </Text>
+        label={`${followers} ${pluralizedFollowers}`}
+        dataSet={tooltipFormattedCountIfNeeded(profile.followersCount || 0)}>
+        <Text style={[a.font_bold, a.text_md]}>{followers} </Text>
         <Text style={[t.atoms.text_contrast_medium, a.text_md]}>
           {pluralizedFollowers}
         </Text>
@@ -59,20 +56,15 @@ export function ProfileHeaderMetrics({
         testID="profileHeaderFollowsButton"
         style={[a.flex_row, t.atoms.text]}
         to={makeProfileLink(profile, 'follows')}
-        label={_(msg`${following} following`)}>
-        <Text
-          style={[a.font_bold, a.text_md]}
-          dataSet={tooltipFormattedCountIfNeeded(profile.followsCount || 0)}>
-          {following}{' '}
-        </Text>
+        label={_(msg`${following} following`)}
+        dataSet={tooltipFormattedCountIfNeeded(profile.followsCount || 0)}>
+        <Text style={[a.font_bold, a.text_md]}>{following} </Text>
         <Text style={[t.atoms.text_contrast_medium, a.text_md]}>
           {pluralizedFollowings}
         </Text>
       </InlineLinkText>
-      <Text>
-        <Text
-          style={[a.font_bold, t.atoms.text, a.text_md]}
-          dataSet={tooltipFormattedCountIfNeeded(profile.postsCount || 0)}>
+      <Text dataSet={tooltipFormattedCountIfNeeded(profile.postsCount || 0)}>
+        <Text style={[a.font_bold, t.atoms.text, a.text_md]}>
           {formatCount(i18n, profile.postsCount || 0)}{' '}
         </Text>
         <Text style={[t.atoms.text_contrast_medium, a.font_normal, a.text_md]}>

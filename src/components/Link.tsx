@@ -237,7 +237,7 @@ export function Link({
 }
 
 export type InlineLinkProps = React.PropsWithChildren<
-  BaseLinkProps & TextStyleProp & Pick<TextProps, 'selectable'>
+  BaseLinkProps & TextStyleProp & Pick<TextProps, 'selectable' | 'dataSet'>
 > &
   Pick<ButtonProps, 'label'> & {
     disableUnderline?: boolean
@@ -317,6 +317,7 @@ export function InlineLinkText({
         dataSet: {
           // default to no underline, apply this ourselves
           noUnderline: '1',
+          ...(rest.dataSet || {}),
         },
       })}>
       {children}
