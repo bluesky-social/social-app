@@ -10,6 +10,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
 import {Shadow} from '#/state/cache/types'
@@ -59,6 +60,7 @@ let ProfileHeaderStandard = ({
   const profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> =
     useProfileShadow(profileUnshadowed)
   const t = useTheme()
+  const gate = useGate()
   const {currentAccount, hasSession} = useSession()
   const {_} = useLingui()
   const {openModal} = useModalControls()
@@ -203,27 +205,29 @@ let ProfileHeaderStandard = ({
               {hasSession && (
                 <>
                   <MessageProfileButton profile={profile} />
-                  <Button
-                    testID="suggestedFollowsBtn"
-                    size="small"
-                    color={showSuggestedFollows ? 'primary' : 'secondary'}
-                    variant="solid"
-                    shape="round"
-                    onPress={() =>
-                      setShowSuggestedFollows(!showSuggestedFollows)
-                    }
-                    label={_(msg`Show follows similar to ${profile.handle}`)}
-                    style={{width: 36, height: 36}}>
-                    <FontAwesomeIcon
-                      icon="user-plus"
-                      style={
-                        showSuggestedFollows
-                          ? {color: t.palette.white}
-                          : t.atoms.text
+                  {!gate('show_follow_suggestions_in_profile') && (
+                    <Button
+                      testID="suggestedFollowsBtn"
+                      size="small"
+                      color={showSuggestedFollows ? 'primary' : 'secondary'}
+                      variant="solid"
+                      shape="round"
+                      onPress={() =>
+                        setShowSuggestedFollows(!showSuggestedFollows)
                       }
-                      size={14}
-                    />
-                  </Button>
+                      label={_(msg`Show follows similar to ${profile.handle}`)}
+                      style={{width: 36, height: 36}}>
+                      <FontAwesomeIcon
+                        icon="user-plus"
+                        style={
+                          showSuggestedFollows
+                            ? {color: t.palette.white}
+                            : t.atoms.text
+                        }
+                        size={14}
+                      />
+                    </Button>
+                  )}
                 </>
               )}
 
