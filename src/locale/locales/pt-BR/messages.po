@@ -121,7 +121,7 @@ msgstr ""
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:68
 msgid "{0}'s favorite feeds and people - join me!"
-msgstr "Os feeds e pessoas favoritos de {0} - junte-se a mim!"
+msgstr "Os feeds e pessoas favoritas de {0} - junte-se a mim!"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:47
 msgid "{0}'s starter pack"
@@ -491,7 +491,7 @@ msgstr "Conteúdo Adulto"
 
 #: src/screens/Moderation/index.tsx:365
 msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
-msgstr ""
+msgstr "Conteúdo adulto só pode ser habilitado através da Web em <0>bsky.app</0>."
 
 #: src/components/moderation/LabelPreference.tsx:242
 msgid "Adult content is disabled."
@@ -522,16 +522,16 @@ msgstr ""
 #: src/screens/Messages/Settings.tsx:61
 #: src/screens/Messages/Settings.tsx:64
 #~ msgid "Allow messages from"
-#~ msgstr ""
+#~ msgstr "Permitir mensagens de"
 
 #: src/screens/Messages/Settings.tsx:62
 #: src/screens/Messages/Settings.tsx:65
 msgid "Allow new messages from"
-msgstr ""
+msgstr "Permitir novas mensagens de"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:359
 msgid "Allow replies from:"
-msgstr ""
+msgstr "Permitir respostas de:"
 
 #: src/view/screens/AppPasswords.tsx:271
 msgid "Allows access to direct messages"
@@ -1150,7 +1150,7 @@ msgstr "Configurações do Chat"
 #: src/screens/Messages/Settings.tsx:59
 #: src/view/screens/Settings/index.tsx:613
 msgid "Chat Settings"
-msgstr ""
+msgstr "Configurações do Chat"
 
 #: src/components/dms/ConvoMenu.tsx:84
 msgid "Chat unmuted"
@@ -1755,7 +1755,7 @@ msgstr "Configurar mídia de sites externos."
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:288
 msgid "Customize who can interact with this post."
-msgstr ""
+msgstr "Personalize quem pode interagir com este post."
 
 #: src/screens/Settings/AppearanceSettings.tsx:95
 #: src/screens/Settings/AppearanceSettings.tsx:97
@@ -1785,11 +1785,11 @@ msgstr "Data de nascimento"
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:73
 #: src/view/screens/Settings/index.tsx:772
 msgid "Deactivate account"
-msgstr ""
+msgstr "Desativar conta"
 
 #: src/view/screens/Settings/index.tsx:784
 msgid "Deactivate my account"
-msgstr ""
+msgstr "Desativar minha conta"
 
 #: src/view/screens/Settings/index.tsx:839
 msgid "Debug Moderation"
@@ -2161,7 +2161,7 @@ msgstr "Editar imagem"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:590
 #: src/view/com/util/forms/PostDropdownBtn.tsx:603
 msgid "Edit interaction settings"
-msgstr ""
+msgstr "Editar configurações de interação"
 
 #: src/view/screens/ProfileList.tsx:515
 msgid "Edit list details"
@@ -2413,18 +2413,18 @@ msgstr "Todos"
 
 #: src/components/WhoCanReply.tsx:67
 msgid "Everybody can reply"
-msgstr ""
+msgstr "Todos podem responder"
 
 #: src/components/WhoCanReply.tsx:213
 msgid "Everybody can reply to this post."
-msgstr ""
+msgstr "Todos podem responder a este post."
 
 #: src/components/dms/MessagesNUX.tsx:131
 #: src/components/dms/MessagesNUX.tsx:134
 #: src/screens/Messages/Settings.tsx:75
 #: src/screens/Messages/Settings.tsx:78
 msgid "Everyone"
-msgstr ""
+msgstr "Todos"
 
 #: src/lib/moderation/useReportOptions.ts:68
 msgid "Excessive mentions or replies"
@@ -3134,7 +3134,7 @@ msgstr "Esconder"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:501
 #: src/view/com/util/forms/PostDropdownBtn.tsx:507
 msgid "Hide post for me"
-msgstr ""
+msgstr "Ocultar post para mim"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:518
 #: src/view/com/util/forms/PostDropdownBtn.tsx:528
@@ -4245,7 +4245,7 @@ msgstr "Nenhuma notificação!"
 #: src/screens/Messages/Settings.tsx:93
 #: src/screens/Messages/Settings.tsx:96
 msgid "No one"
-msgstr ""
+msgstr "Ninguém"
 
 #: src/components/WhoCanReply.tsx:237
 msgid "No one but the author can quote this post."
@@ -4340,7 +4340,7 @@ msgstr "Nota: o Bluesky é uma rede aberta e pública. Esta configuração limit
 
 #: src/screens/Messages/List/index.tsx:215
 msgid "Nothing here"
-msgstr ""
+msgstr "Não há nada aqui"
 
 #: src/view/screens/NotificationsSettings.tsx:54
 msgid "Notification filters"
@@ -4361,7 +4361,7 @@ msgstr ""
 
 #: src/screens/Messages/Settings.tsx:121
 msgid "Notification Sounds"
-msgstr ""
+msgstr "Sons de Notificação"
 
 #: src/Navigation.tsx:559
 #: src/view/screens/Notifications.tsx:145
@@ -4960,7 +4960,7 @@ msgstr "Post Escondido por Você"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:283
 msgid "Post interaction settings"
-msgstr ""
+msgstr "Configurações de interação do post"
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:88
 msgid "Post language"
@@ -6039,7 +6039,7 @@ msgstr "Enviar e-mail de verificação"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:399
 #: src/view/com/util/forms/PostDropdownBtn.tsx:402
 msgid "Send via direct message"
-msgstr ""
+msgstr "Enviar por mensagem direta"
 
 #: src/view/com/modals/DeleteAccount.tsx:151
 msgid "Sends email with confirmation code for account deletion"
@@ -7616,7 +7616,7 @@ msgstr ""
 #: src/screens/Messages/Settings.tsx:84
 #: src/screens/Messages/Settings.tsx:87
 msgid "Users I follow"
-msgstr ""
+msgstr "Usuários que eu sigo"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:416
 msgid "Users in \"{0}\""
@@ -8048,7 +8048,7 @@ msgstr ""
 
 #: src/screens/Messages/Settings.tsx:111
 msgid "You can continue ongoing conversations regardless of which setting you choose."
-msgstr ""
+msgstr "Você pode continuar conversas em andamento, independentemente da configuração que escolher."
 
 #: src/screens/Login/index.tsx:158
 #: src/screens/Login/PasswordUpdatedForm.tsx:33
@@ -8123,7 +8123,7 @@ msgstr "Você silenciou este usuário."
 
 #: src/screens/Messages/List/index.tsx:225
 msgid "You have no conversations yet. Start one!"
-msgstr ""
+msgstr "Você ainda não tem conversas. Comece uma!"
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:138
 msgid "You have no feeds."
