@@ -30,14 +30,14 @@ import {useLanguagePrefs} from '#/state/preferences'
 import {useHiddenPosts, useHiddenPostsApi} from '#/state/preferences'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {
-  usePinPostMutation,
   usePostDeleteMutation,
   useThreadMuteMutationQueue,
 } from '#/state/queries/post'
 import {useToggleQuoteDetachmentMutation} from '#/state/queries/postgate'
 import {getMaybeDetachedQuoteEmbed} from '#/state/queries/postgate/util'
+import {useProfileUpdateMutation} from '#/state/queries/profile'
 import {useToggleReplyVisibilityMutation} from '#/state/queries/threadgate'
-import {useSession} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {getCurrentRoute} from 'lib/routes/helpers'
 import {shareUrl} from 'lib/sharing'
@@ -108,8 +108,9 @@ let PostDropdownBtn = ({
   const {_} = useLingui()
   const defaultCtrlColor = theme.palette.default.postCtrl
   const langPrefs = useLanguagePrefs()
+  const agent = useAgent()
   const {mutateAsync: deletePostMutate} = usePostDeleteMutation()
-  const {mutateAsync: pinPostMutate} = usePinPostMutation()
+  const {mutateAsync: profileUpdateMutate} = useProfileUpdateMutation()
   const hiddenPosts = useHiddenPosts()
   const {hidePost} = useHiddenPostsApi()
   const feedFeedback = useFeedFeedbackContext()
@@ -348,16 +349,40 @@ let PostDropdownBtn = ({
     toggleReplyVisibility,
   ])
 
-  const onPressPin = useCallback(() => {
-    const currentPinStatus = isPinned
-    pinPostMutate({uri: postUri}).then(() => {
-      if (currentPinStatus) {
+  const onPressPin = useCallback(async () => {
+    try {
+      if (!currentAccount) throw new Error('Not logged in')
+      const {data: profile} = await agent.getProfile({
+        actor: currentAccount.did,
+      })
+      await profileUpdateMutate({
+        profile,
+        updates: existing => {
+          existing.pinnedPost = isPinned
+            ? undefined
+            : {uri: postUri, cid: postCid}
+          return existing
+        },
+      })
+
+      if (isPinned) {
         Toast.show(_(msg`Post unpinned`))
       } else {
         Toast.show(_(msg`Post pinned`))
       }
-    })
-  }, [pinPostMutate, postUri, _, isPinned])
+    } catch (e: any) {
+      Toast.show(_(msg`Failed to pin post`))
+      logger.error('Failed to update user profile', {message: String(e)})
+    }
+  }, [
+    _,
+    isPinned,
+    agent,
+    currentAccount,
+    profileUpdateMutate,
+    postUri,
+    postCid,
+  ])
 
   return (
     <EventStopper onKeyDown={false}>
