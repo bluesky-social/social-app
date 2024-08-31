@@ -175,25 +175,25 @@ function App() {
     <A11yProvider>
       <KeyboardProvider enabled={false} statusBarTranslucent={true}>
         <SessionProvider>
-          <ShellStateProvider>
-            <PrefsStateProvider>
-              <InvitesStateProvider>
-                <ModalStateProvider>
-                  <DialogStateProvider>
-                    <LightboxStateProvider>
-                      <I18nProvider>
+          <PrefsStateProvider>
+            <I18nProvider>
+              <ShellStateProvider>
+                <InvitesStateProvider>
+                  <ModalStateProvider>
+                    <DialogStateProvider>
+                      <LightboxStateProvider>
                         <PortalProvider>
                           <StarterPackProvider>
                             <InnerApp />
                           </StarterPackProvider>
                         </PortalProvider>
-                      </I18nProvider>
-                    </LightboxStateProvider>
-                  </DialogStateProvider>
-                </ModalStateProvider>
-              </InvitesStateProvider>
-            </PrefsStateProvider>
-          </ShellStateProvider>
+                      </LightboxStateProvider>
+                    </DialogStateProvider>
+                  </ModalStateProvider>
+                </InvitesStateProvider>
+              </ShellStateProvider>
+            </I18nProvider>
+          </PrefsStateProvider>
         </SessionProvider>
       </KeyboardProvider>
     </A11yProvider>

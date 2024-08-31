@@ -47,7 +47,7 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
     [key],
   )
 
-  if (!gate('videos')) {
+  if (!gate('video_view_on_posts')) {
     return null
   }
 
