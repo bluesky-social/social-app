@@ -6427,7 +6427,7 @@ msgstr "autenticado como @{0}"
 
 #: src/view/com/notifications/FeedItem.tsx:222
 msgid "signed up with your starter pack"
-msgstr ""
+msgstr "se inscreveu com seu kit inicial"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:306
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:313
