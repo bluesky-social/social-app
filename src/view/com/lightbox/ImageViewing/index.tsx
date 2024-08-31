@@ -19,9 +19,12 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated'
 import {Edge, SafeAreaView} from 'react-native-safe-area-context'
+import {Image} from 'expo-image'
 
 import ImageDefaultHeader from './components/ImageDefaultHeader'
 import ImageItem from './components/ImageItem/ImageItem'
+
+const AnimatedImage = Animated.createAnimatedComponent(Image)
 
 type Props = {
   images: {
@@ -181,8 +184,10 @@ function EnhancedImageViewing(props: Props) {
   const openProgress = useSharedValue(0)
   const [isAnimationDone, setIsAnimationDone] = React.useState(false)
 
+  const initialImage = props.images[props.initialImageIndex]
+
   React.useEffect(() => {
-    openProgress.value = withClampedSpring(1)
+    // openProgress.value = withClampedSpring(1)
   }, [openProgress])
 
   const backgroundStyle = useAnimatedStyle(() => ({
@@ -225,6 +230,17 @@ function EnhancedImageViewing(props: Props) {
               },
               backgroundStyle,
             ]}
+          />
+          <AnimatedImage
+            contentFit="contain"
+            source={{uri: initialImage.thumbUri}}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              bottom: 0,
+              right: 0,
+            }}
           />
         </Animated.View>
       )}
