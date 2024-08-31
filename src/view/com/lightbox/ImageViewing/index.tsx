@@ -9,9 +9,11 @@
 // https://github.com/jobtoday/react-native-image-viewing
 
 import React, {ComponentType, useCallback, useMemo, useState} from 'react'
-import {Platform, StyleSheet, View} from 'react-native'
+import {Dimensions, Platform, StyleSheet, View} from 'react-native'
 import PagerView from 'react-native-pager-view'
 import Animated, {
+  Extrapolate,
+  interpolate,
   MeasuredDimensions,
   runOnJS,
   useAnimatedReaction,
@@ -26,6 +28,8 @@ import ImageDefaultHeader from './components/ImageDefaultHeader'
 import ImageItem from './components/ImageItem/ImageItem'
 
 const AnimatedImage = Animated.createAnimatedComponent(Image)
+
+const SCREEN = Dimensions.get('screen')
 
 type Props = {
   thumbDims?: MeasuredDimensions | null
@@ -187,10 +191,9 @@ function EnhancedImageViewing(props: Props) {
   const [isAnimationDone, setIsAnimationDone] = React.useState(false)
 
   const initialImage = props.images[props.initialImageIndex]
-  console.log(props.thumbDims)
 
   React.useEffect(() => {
-    // openProgress.value = withClampedSpring(1)
+    openProgress.value = withClampedSpring(1)
   }, [openProgress])
 
   const backgroundStyle = useAnimatedStyle(() => ({
@@ -205,6 +208,43 @@ function EnhancedImageViewing(props: Props) {
       }
     },
   )
+
+  const initialTransform = calculateOverlayTransform(
+    SCREEN,
+    initialImage.aspectRatio,
+    props.thumbDims,
+  )
+
+  const animatedStyle = useAnimatedStyle(() => {
+    const interpolatedScale = interpolate(
+      openProgress.value,
+      [0, 1],
+      [initialTransform[0].scale, 1],
+      Extrapolate.CLAMP,
+    )
+
+    const interpolatedTranslateX = interpolate(
+      openProgress.value,
+      [0, 1],
+      [initialTransform[1].translateX, 0],
+      Extrapolate.CLAMP,
+    )
+
+    const interpolatedTranslateY = interpolate(
+      openProgress.value,
+      [0, 1],
+      [initialTransform[2].translateY, 0],
+      Extrapolate.CLAMP,
+    )
+
+    return {
+      transform: [
+        {scale: interpolatedScale},
+        {translateX: interpolatedTranslateX},
+        {translateY: interpolatedTranslateY},
+      ],
+    }
+  })
 
   return (
     <>
@@ -237,13 +277,16 @@ function EnhancedImageViewing(props: Props) {
           <AnimatedImage
             contentFit="contain"
             source={{uri: initialImage.thumbUri}}
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              bottom: 0,
-              right: 0,
-            }}
+            style={[
+              {
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                bottom: 0,
+                right: 0,
+              },
+              animatedStyle,
+            ]}
           />
         </Animated.View>
       )}
@@ -261,6 +304,30 @@ function EnhancedImageViewing(props: Props) {
       </Animated.View>
     </>
   )
+}
+
+const calculateOverlayTransform = (
+  screenSize,
+  fullImageSize,
+  thumbnailPlacement,
+) => {
+  console.log(screenSize, fullImageSize, thumbnailPlacement)
+  // Calculate scale to fit the thumbnail width
+  const scale = thumbnailPlacement.width / screenSize.width
+
+  // Calculate the center points
+  const screenCenterX = screenSize.width / 2
+  const screenCenterY = screenSize.height / 2
+  const thumbnailCenterX =
+    thumbnailPlacement.pageX + thumbnailPlacement.width / 2
+  const thumbnailCenterY =
+    thumbnailPlacement.pageY + thumbnailPlacement.height / 2
+
+  // Calculate translations
+  const translateX = (thumbnailCenterX - screenCenterX) / scale
+  const translateY = (thumbnailCenterY - screenCenterY) / scale
+
+  return [{scale}, {translateX}, {translateY}]
 }
 
 function withClampedSpring(value: any) {
