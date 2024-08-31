@@ -3,7 +3,7 @@ import {useMutation} from '@tanstack/react-query'
 import {nanoid} from 'nanoid/non-secure'
 
 import {cancelable} from '#/lib/async/cancelable'
-import {CompressedVideo} from '#/lib/media/video/compress'
+import {CompressedVideo} from '#/lib/media/video/types'
 import {createVideoEndpointUrl} from '#/state/queries/video/util'
 import {useAgent, useSession} from '#/state/session'
 import {getServiceAuthAudFromUrl} from 'lib/strings/url-helpers'
@@ -30,11 +30,8 @@ export const useUploadVideoMutation = ({
         name: `${nanoid(12)}.mp4`, // @TODO: make sure it's always mp4'
       })
 
-      if (!currentAccount?.service) {
-        throw new Error('User is not logged in')
-      }
+      const serviceAuthAud = getServiceAuthAudFromUrl(agent.dispatchUrl)
 
-      const serviceAuthAud = getServiceAuthAudFromUrl(currentAccount.service)
       if (!serviceAuthAud) {
         throw new Error('Agent does not have a PDS URL')
       }
@@ -43,11 +40,15 @@ export const useUploadVideoMutation = ({
         {
           aud: serviceAuthAud,
           lxm: 'com.atproto.repo.uploadBlob',
-          exp: Date.now() + 1000 * 60 * 30, // 30 minutes
+          exp: Date.now() / 1000 + 60 * 30, // 30 minutes
         },
       )
 
-      const bytes = await fetch(video.uri).then(res => res.arrayBuffer())
+      let bytes = video.bytes
+
+      if (!bytes) {
+        bytes = await fetch(video.uri).then(res => res.arrayBuffer())
+      }
 
       const xhr = new XMLHttpRequest()
       const res = await new Promise<AppBskyVideoDefs.JobStatus>(

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useCallback} from 'react'
 import {ImagePickerAsset} from 'expo-image-picker'
 import {AppBskyVideoDefs, BlobRef} from '@atproto/api'
 import {msg} from '@lingui/macro'
@@ -6,8 +6,8 @@ import {useLingui} from '@lingui/react'
 import {QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
-import {CompressedVideo} from 'lib/media/video/compress'
 import {VideoTooLargeError} from 'lib/media/video/errors'
+import {CompressedVideo} from 'lib/media/video/types'
 import {useCompressVideoMutation} from 'state/queries/video/compress-video'
 import {useVideoAgent} from 'state/queries/video/util'
 import {useUploadVideoMutation} from 'state/queries/video/video-upload'
@@ -20,6 +20,7 @@ type Action =
   | {type: 'SetError'; error: string | undefined}
   | {type: 'Reset'}
   | {type: 'SetAsset'; asset: ImagePickerAsset}
+  | {type: 'SetDimensions'; width: number; height: number}
   | {type: 'SetVideo'; video: CompressedVideo}
   | {type: 'SetJobStatus'; jobStatus: AppBskyVideoDefs.JobStatus}
   | {type: 'SetBlobRef'; blobRef: BlobRef}
@@ -58,6 +59,13 @@ function reducer(queryClient: QueryClient) {
       }
     } else if (action.type === 'SetAsset') {
       updatedState = {...state, asset: action.asset}
+    } else if (action.type === 'SetDimensions') {
+      updatedState = {
+        ...state,
+        asset: state.asset
+          ? {...state.asset, width: action.width, height: action.height}
+          : undefined,
+      }
     } else if (action.type === 'SetVideo') {
       updatedState = {...state, video: action.video}
     } else if (action.type === 'SetJobStatus') {
@@ -178,11 +186,20 @@ export function useUploadVideo({
     dispatch({type: 'Reset'})
   }
 
+  const updateVideoDimensions = useCallback((width: number, height: number) => {
+    dispatch({
+      type: 'SetDimensions',
+      width,
+      height,
+    })
+  }, [])
+
   return {
     state,
     dispatch,
     selectVideo,
     clearVideo,
+    updateVideoDimensions,
   }
 }
 
