@@ -122,6 +122,7 @@ export function PostEmbeds({
     if (images.length > 0) {
       const items = embed.images.map(img => ({
         uri: img.fullsize,
+        thumbUri: img.thumb,
         alt: img.alt,
         aspectRatio: img.aspectRatio,
       }))

@@ -9,18 +9,26 @@
 // https://github.com/jobtoday/react-native-image-viewing
 
 import React, {ComponentType, useCallback, useMemo, useState} from 'react'
-import {StyleSheet, View, Platform} from 'react-native'
-
-import ImageItem from './components/ImageItem/ImageItem'
-import ImageDefaultHeader from './components/ImageDefaultHeader'
-
-import {ImageSource} from './@types'
-import Animated, {useAnimatedStyle, withSpring} from 'react-native-reanimated'
-import {Edge, SafeAreaView} from 'react-native-safe-area-context'
+import {Platform, StyleSheet, View} from 'react-native'
 import PagerView from 'react-native-pager-view'
+import Animated, {
+  runOnJS,
+  useAnimatedReaction,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated'
+import {Edge, SafeAreaView} from 'react-native-safe-area-context'
+
+import ImageDefaultHeader from './components/ImageDefaultHeader'
+import ImageItem from './components/ImageItem/ImageItem'
 
 type Props = {
-  images: ImageSource[]
+  images: {
+    uri: string
+    thumbUri: string
+    alt?: string
+  }[]
   initialImageIndex: number
   visible: boolean
   onRequestClose: () => void
@@ -169,9 +177,72 @@ const styles = StyleSheet.create({
   },
 })
 
-const EnhancedImageViewing = (props: Props) => (
-  <ImageViewing key={props.initialImageIndex} {...props} />
-)
+function EnhancedImageViewing(props: Props) {
+  const openProgress = useSharedValue(0)
+  const [isAnimationDone, setIsAnimationDone] = React.useState(false)
+
+  React.useEffect(() => {
+    openProgress.value = withClampedSpring(1)
+  }, [openProgress])
+
+  const backgroundStyle = useAnimatedStyle(() => ({
+    opacity: openProgress.value,
+  }))
+
+  useAnimatedReaction(
+    () => openProgress.value,
+    nextValue => {
+      if (nextValue === 1) {
+        runOnJS(setIsAnimationDone)(true)
+      }
+    },
+  )
+
+  return (
+    <>
+      {!isAnimationDone && (
+        <Animated.View
+          style={[
+            {
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              bottom: 0,
+              right: 0,
+              zIndex: 1,
+              pointerEvents: 'none',
+            },
+          ]}>
+          <Animated.View
+            style={[
+              {
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                bottom: 0,
+                right: 0,
+                backgroundColor: 'black',
+              },
+              backgroundStyle,
+            ]}
+          />
+        </Animated.View>
+      )}
+      <Animated.View
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          pointerEvents: isAnimationDone ? 'auto' : 'none',
+          opacity: isAnimationDone ? 1 : 0,
+        }}>
+        <ImageViewing key={props.initialImageIndex} {...props} />
+      </Animated.View>
+    </>
+  )
+}
 
 function withClampedSpring(value: any) {
   'worklet'

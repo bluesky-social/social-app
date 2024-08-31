@@ -70,7 +70,7 @@ export function ProfileSubpageHeader({
     if (
       avatar // TODO && !(view.moderation.avatar.blur && view.moderation.avatar.noOverride)
     ) {
-      openLightbox(new ImagesLightbox([{uri: avatar}], 0))
+      openLightbox(new ImagesLightbox([{uri: avatar, thumbUri: avatar}], 0))
     }
   }, [openLightbox, avatar])
 
