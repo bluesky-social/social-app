@@ -1,4 +1,5 @@
 import React from 'react'
+import type {MeasuredDimensions} from 'react-native-reanimated'
 import {AppBskyActorDefs} from '@atproto/api'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -20,7 +21,11 @@ interface ImagesLightboxItem {
 
 export class ImagesLightbox implements Lightbox {
   name = 'images'
-  constructor(public images: ImagesLightboxItem[], public index: number) {}
+  constructor(
+    public images: ImagesLightboxItem[],
+    public index: number,
+    public thumbDims?: MeasuredDimensions | null,
+  ) {}
   setIndex(index: number) {
     this.index = index
   }

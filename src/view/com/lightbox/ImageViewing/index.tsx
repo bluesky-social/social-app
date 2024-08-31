@@ -12,6 +12,7 @@ import React, {ComponentType, useCallback, useMemo, useState} from 'react'
 import {Platform, StyleSheet, View} from 'react-native'
 import PagerView from 'react-native-pager-view'
 import Animated, {
+  MeasuredDimensions,
   runOnJS,
   useAnimatedReaction,
   useAnimatedStyle,
@@ -27,6 +28,7 @@ import ImageItem from './components/ImageItem/ImageItem'
 const AnimatedImage = Animated.createAnimatedComponent(Image)
 
 type Props = {
+  thumbDims?: MeasuredDimensions | null
   images: {
     uri: string
     thumbUri: string
@@ -185,6 +187,7 @@ function EnhancedImageViewing(props: Props) {
   const [isAnimationDone, setIsAnimationDone] = React.useState(false)
 
   const initialImage = props.images[props.initialImageIndex]
+  console.log(props.thumbDims)
 
   React.useEffect(() => {
     // openProgress.value = withClampedSpring(1)

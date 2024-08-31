@@ -46,6 +46,7 @@ export function Lightbox() {
     return (
       <ImageView
         images={opts.images.map(img => ({...img}))}
+        thumbDims={opts.thumbDims}
         initialImageIndex={opts.index}
         visible
         onRequestClose={onClose}
