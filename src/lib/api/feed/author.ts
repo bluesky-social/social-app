@@ -8,7 +8,7 @@ import {FeedAPI, FeedAPIResponse} from './types'
 
 export class AuthorFeedAPI implements FeedAPI {
   agent: BskyAgent
-  params: GetAuthorFeed.QueryParams
+  _params: GetAuthorFeed.QueryParams
 
   constructor({
     agent,
@@ -18,7 +18,13 @@ export class AuthorFeedAPI implements FeedAPI {
     feedParams: GetAuthorFeed.QueryParams
   }) {
     this.agent = agent
-    this.params = feedParams
+    this._params = feedParams
+  }
+
+  get params() {
+    const params = this._params
+    params.includePins = params.filter !== 'posts_with_media'
+    return params
   }
 
   async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
