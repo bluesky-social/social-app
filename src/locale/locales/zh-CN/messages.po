@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh_CN\n"
 "Project-Id-Version: zh-CN for bluesky-social-app\n"
 "Report-Msgid-Bugs-To: Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-08-30 09:49+0800\n"
+"PO-Revision-Date: 2024-08-31 22:26+0800\n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
 "Language-Team: Frudrax Cheng (auroursa), Simon Chan (RitsukiP), U2FsdGVkX1, Mikan Harada (mitian233), IceCodeNew\n"
 "Plural-Forms: \n"
@@ -68,7 +68,7 @@ msgstr "{0, plural, one {关注者} other {关注者}}"
 msgid "{0, plural, one {following} other {following}}"
 msgstr "{0, plural, one {正在关注} other {正在关注}}"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:276
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:360
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
 msgstr "{0, plural, one {喜欢 (# 个喜欢)} other {喜欢 (# 个喜欢)}}"
 
@@ -89,7 +89,7 @@ msgstr "{0, plural, one {帖文} other {帖文}}"
 msgid "{0, plural, one {quote} other {quotes}}"
 msgstr "{0, plural, one {引用} other {引用}}"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:233
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:317
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
 msgstr "{0, plural, one {回复 (# 个回复)} other {回复 (# 个回复)}}"
 
@@ -97,7 +97,7 @@ msgstr "{0, plural, one {回复 (# 个回复)} other {回复 (# 个回复)}}"
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr "{0, plural, one {转发} other {转发}}"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:272
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:356
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
 msgstr "{0, plural, one {取消喜欢 (# 个喜欢)} other {取消喜欢 (# 个喜欢)}}"
 
@@ -164,6 +164,7 @@ msgstr "{0}秒"
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
 msgstr "{count, plural, one {# 位用户喜欢} other {# 位用户喜欢}}"
 
+#: src/lib/generate-starterpack.ts:108
 #: src/screens/StarterPack/Wizard/index.tsx:174
 msgid "{displayName}'s Starter Pack"
 msgstr "{displayName} 的入门包"
@@ -319,7 +320,7 @@ msgstr "账户选项"
 msgid "Account removed from quick access"
 msgstr "已从快速访问中移除账户"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:139
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:141
 #: src/view/com/profile/ProfileMenu.tsx:133
 msgid "Account unblocked"
 msgstr "已取消屏蔽账户"
@@ -370,6 +371,10 @@ msgstr "添加账户"
 #: src/view/com/modals/AltImage.tsx:118
 msgid "Add alt text"
 msgstr "新增替代文本"
+
+#: src/view/com/composer/videos/SubtitleDialog.tsx:100
+msgid "Add alt text (optional)"
+msgstr "新增替代文本（可选）"
 
 #: src/view/screens/AppPasswords.tsx:105
 #: src/view/screens/AppPasswords.tsx:147
@@ -488,6 +493,9 @@ msgid "ALT"
 msgstr "ALT"
 
 #: src/view/com/composer/GifAltText.tsx:144
+#: src/view/com/composer/videos/SubtitleDialog.tsx:51
+#: src/view/com/composer/videos/SubtitleDialog.tsx:95
+#: src/view/com/composer/videos/SubtitleDialog.tsx:99
 #: src/view/com/modals/EditImage.tsx:316
 #: src/view/screens/AccessibilitySettings.tsx:87
 msgid "Alt text"
@@ -522,7 +530,7 @@ msgstr "发生错误"
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr "创建入门包时发生错误，重试？"
 
-#: src/view/com/util/post-embeds/VideoEmbed.tsx:98
+#: src/view/com/util/post-embeds/VideoEmbed.tsx:96
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:167
 msgid "An error occurred while loading the video. Please try again later."
 msgstr "播放视频时出现问题，请稍后再试。"
@@ -537,7 +545,7 @@ msgstr "保存二维码时发生错误！"
 msgid "An error occurred while trying to follow all"
 msgstr "关注所有人时发生错误"
 
-#: src/state/queries/video/video.ts:122
+#: src/state/queries/video/video.ts:130
 msgid "An error occurred while uploading the video."
 msgstr "上传视频时出现问题。"
 
@@ -683,7 +691,7 @@ msgstr "你确定要从你的资讯源中删除 {0} 吗？"
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "你确定要从自定义资讯源列表中删除此资讯源吗？"
 
-#: src/view/com/composer/Composer.tsx:767
+#: src/view/com/composer/Composer.tsx:797
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "你确定要丢弃这段草稿吗？"
 
@@ -740,7 +748,7 @@ msgstr "生日"
 msgid "Birthday:"
 msgstr "生日："
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:314
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:318
 #: src/view/com/profile/ProfileMenu.tsx:365
 msgid "Block"
 msgstr "屏蔽"
@@ -846,23 +854,23 @@ msgstr "模糊化图片并从资讯源中过滤"
 msgid "Books"
 msgstr "书籍"
 
-#: src/components/FeedInterstitials.tsx:300
+#: src/components/FeedInterstitials.tsx:352
 msgid "Browse more accounts on the Explore page"
 msgstr "在探索页面浏览更多账户"
 
-#: src/components/FeedInterstitials.tsx:433
+#: src/components/FeedInterstitials.tsx:485
 msgid "Browse more feeds on the Explore page"
 msgstr "在探索页面浏览更多资讯源"
 
-#: src/components/FeedInterstitials.tsx:282
-#: src/components/FeedInterstitials.tsx:285
-#: src/components/FeedInterstitials.tsx:415
-#: src/components/FeedInterstitials.tsx:418
+#: src/components/FeedInterstitials.tsx:334
+#: src/components/FeedInterstitials.tsx:337
+#: src/components/FeedInterstitials.tsx:467
+#: src/components/FeedInterstitials.tsx:470
 msgid "Browse more suggestions"
 msgstr "浏览更多建议"
 
-#: src/components/FeedInterstitials.tsx:308
-#: src/components/FeedInterstitials.tsx:442
+#: src/components/FeedInterstitials.tsx:360
+#: src/components/FeedInterstitials.tsx:494
 msgid "Browse more suggestions on the Explore page"
 msgstr "在探索页面浏览更多建议"
 
@@ -908,8 +916,8 @@ msgstr "只能包含字母、数字、空格、破折号及下划线。 长度�
 #: src/components/Prompt.tsx:121
 #: src/components/TagMenu/index.tsx:282
 #: src/screens/Deactivated.tsx:161
-#: src/view/com/composer/Composer.tsx:512
-#: src/view/com/composer/Composer.tsx:527
+#: src/view/com/composer/Composer.tsx:529
+#: src/view/com/composer/Composer.tsx:544
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangeHandle.tsx:148
@@ -969,6 +977,21 @@ msgstr "取消搜索"
 #: src/view/com/modals/LinkWarning.tsx:106
 msgid "Cancels opening the linked website"
 msgstr "取消打开链接的网站"
+
+#: src/state/shell/composer.tsx:70
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:138
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:204
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:240
+msgid "Cannot interact with a blocked user"
+msgstr "无法与被屏蔽的用户互动"
+
+#: src/view/com/composer/videos/SubtitleDialog.tsx:125
+msgid "Captions (.vtt)"
+msgstr "字幕（.vtt）"
+
+#: src/view/com/composer/videos/SubtitleDialog.tsx:51
+msgid "Captions & alt text"
+msgstr "字幕及替代文本"
 
 #: src/view/com/modals/VerifyEmail.tsx:160
 msgid "Change"
@@ -1202,7 +1225,7 @@ msgstr "关闭底部导航栏"
 msgid "Closes password update alert"
 msgstr "关闭密码更新警告"
 
-#: src/view/com/composer/Composer.tsx:524
+#: src/view/com/composer/Composer.tsx:541
 msgid "Closes post composer and discards post draft"
 msgstr "关闭帖文编辑页并丢弃草稿"
 
@@ -1241,7 +1264,7 @@ msgstr "完成引导并开始使用你的账户"
 msgid "Complete the challenge"
 msgstr "完成验证"
 
-#: src/view/com/composer/Composer.tsx:662
+#: src/view/com/composer/Composer.tsx:679
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "撰写帖文的长度最多为 {MAX_GRAPHEME_LENGTH} 个字符"
 
@@ -1381,7 +1404,7 @@ msgstr "已复制构建版本号至剪贴板"
 #: src/view/com/modals/ChangeHandle.tsx:320
 #: src/view/com/modals/InviteCodes.tsx:153
 #: src/view/com/util/forms/PostDropdownBtn.tsx:234
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:368
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:437
 msgid "Copied to clipboard"
 msgstr "已复制至剪贴板"
 
@@ -1698,7 +1721,7 @@ msgstr "分离引用帖文？"
 msgid "Dialog: adjust who can interact with this post"
 msgstr "对话框：调整谁可以参与这条帖文的互动"
 
-#: src/view/com/composer/Composer.tsx:326
+#: src/view/com/composer/Composer.tsx:331
 msgid "Did you want to say anything?"
 msgstr "有什么想说的吗？"
 
@@ -1736,11 +1759,11 @@ msgstr "禁用字幕"
 msgid "Disabled"
 msgstr "关闭"
 
-#: src/view/com/composer/Composer.tsx:769
+#: src/view/com/composer/Composer.tsx:799
 msgid "Discard"
 msgstr "丢弃"
 
-#: src/view/com/composer/Composer.tsx:766
+#: src/view/com/composer/Composer.tsx:796
 msgid "Discard draft?"
 msgstr "丢弃草稿？"
 
@@ -1766,7 +1789,7 @@ msgstr "探索新的资讯源"
 msgid "Dismiss"
 msgstr "关闭"
 
-#: src/view/com/composer/Composer.tsx:612
+#: src/view/com/composer/Composer.tsx:629
 msgid "Dismiss error"
 msgstr "关闭错误"
 
@@ -1818,6 +1841,8 @@ msgstr "域名已认证！"
 #: src/screens/Onboarding/StepProfile/index.tsx:325
 #: src/view/com/auth/server-input/index.tsx:169
 #: src/view/com/auth/server-input/index.tsx:170
+#: src/view/com/composer/videos/SubtitleDialog.tsx:158
+#: src/view/com/composer/videos/SubtitleDialog.tsx:165
 #: src/view/com/modals/AddAppPasswords.tsx:243
 #: src/view/com/modals/AltImage.tsx:141
 #: src/view/com/modals/crop-image/CropImage.web.tsx:177
@@ -1958,12 +1983,12 @@ msgid "Edit post interaction settings"
 msgstr "调整帖文互动选项"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:184
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:179
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:181
 msgid "Edit profile"
 msgstr "编辑个人资料"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:187
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:182
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:184
 msgid "Edit Profile"
 msgstr "编辑个人资料"
 
@@ -2440,7 +2465,7 @@ msgstr "垂直翻转"
 #: src/components/ProfileCard.tsx:351
 #: src/components/ProfileHoverCard/index.web.tsx:446
 #: src/components/ProfileHoverCard/index.web.tsx:457
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:252
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:256
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:144
 msgid "Follow"
 msgstr "关注"
@@ -2450,7 +2475,7 @@ msgctxt "action"
 msgid "Follow"
 msgstr "关注"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:238
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:242
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:126
 msgid "Follow {0}"
 msgstr "关注 {0}"
@@ -2509,8 +2534,8 @@ msgstr "关注了你"
 msgid "followed you back"
 msgstr "回关"
 
-#: src/view/com/profile/ProfileFollowers.tsx:104
-#: src/view/screens/ProfileFollowers.tsx:25
+#: src/view/screens/ProfileFollowers.tsx:29
+#: src/view/screens/ProfileFollowers.tsx:30
 msgid "Followers"
 msgstr "关注者"
 
@@ -2527,17 +2552,17 @@ msgstr "由你所认识的关注者"
 #: src/components/ProfileCard.tsx:345
 #: src/components/ProfileHoverCard/index.web.tsx:445
 #: src/components/ProfileHoverCard/index.web.tsx:456
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:250
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:254
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:147
-#: src/view/com/profile/ProfileFollows.tsx:104
 #: src/view/screens/Feeds.tsx:630
-#: src/view/screens/ProfileFollows.tsx:25
+#: src/view/screens/ProfileFollows.tsx:29
+#: src/view/screens/ProfileFollows.tsx:30
 #: src/view/screens/SavedFeeds.tsx:416
 msgid "Following"
 msgstr "正在关注"
 
 #: src/components/ProfileCard.tsx:311
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:98
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:100
 msgid "Following {0}"
 msgstr "已关注 {0}"
 
@@ -2833,8 +2858,8 @@ msgstr "看起来在加载数据时遇到了问题，请查看下方获取更多
 msgid "Hmmmm, we couldn't load that moderation service."
 msgstr "无法加载此内容审核提供服务。"
 
-#: src/Navigation.tsx:549
-#: src/Navigation.tsx:569
+#: src/Navigation.tsx:550
+#: src/Navigation.tsx:570
 #: src/view/shell/bottom-bar/BottomBar.tsx:159
 #: src/view/shell/desktop/LeftNav.tsx:341
 #: src/view/shell/Drawer.tsx:429
@@ -3185,9 +3210,9 @@ msgstr "喜欢这个资讯源"
 msgid "Liked by"
 msgstr "喜欢"
 
-#: src/screens/Post/PostLikedBy.tsx:29
+#: src/screens/Post/PostLikedBy.tsx:31
+#: src/screens/Post/PostLikedBy.tsx:32
 #: src/screens/Profile/ProfileLabelerLikedBy.tsx:29
-#: src/view/com/post-thread/PostLikedBy.tsx:94
 #: src/view/screens/ProfileFeedLikedBy.tsx:28
 msgid "Liked By"
 msgstr "喜欢"
@@ -3398,7 +3423,7 @@ msgstr "私信过长"
 msgid "Message settings"
 msgstr "私信设置"
 
-#: src/Navigation.tsx:564
+#: src/Navigation.tsx:565
 #: src/screens/Messages/List/index.tsx:164
 #: src/screens/Messages/List/index.tsx:246
 #: src/screens/Messages/List/index.tsx:317
@@ -3789,7 +3814,7 @@ msgid "No feeds found. Try searching for something else."
 msgstr "未找到资讯源，尝试搜索点别的。"
 
 #: src/components/ProfileCard.tsx:331
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:120
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:122
 msgid "No longer following {0}"
 msgstr "不再关注 {0}"
 
@@ -3887,7 +3912,7 @@ msgstr "暂时不需要"
 
 #: src/view/com/profile/ProfileMenu.tsx:372
 #: src/view/com/util/forms/PostDropdownBtn.tsx:654
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:332
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:401
 msgid "Note about sharing"
 msgstr "分享注意事项"
 
@@ -3920,7 +3945,7 @@ msgstr "通知提示音"
 msgid "Notification Sounds"
 msgstr "通知提示音"
 
-#: src/Navigation.tsx:559
+#: src/Navigation.tsx:560
 #: src/view/screens/Notifications.tsx:145
 #: src/view/screens/Notifications.tsx:155
 #: src/view/screens/Notifications.tsx:203
@@ -3974,14 +3999,18 @@ msgid "Oldest replies first"
 msgstr "优先显示最旧的回复"
 
 #: src/components/StarterPack/QrCode.tsx:69
-msgid "on"
-msgstr "于"
+#~ msgid "on"
+#~ msgstr "于"
+
+#: src/components/StarterPack/QrCode.tsx:70
+msgid "on<0><1/><2><3/></2></0>"
+msgstr "于<0><1/><2><3/></2></0>"
 
 #: src/view/screens/Settings/index.tsx:226
 msgid "Onboarding reset"
 msgstr "重新开始引导流程"
 
-#: src/view/com/composer/Composer.tsx:589
+#: src/view/com/composer/Composer.tsx:606
 msgid "One or more images is missing alt text."
 msgstr "至少有一张图片缺失了替代文本。"
 
@@ -3996,6 +4025,10 @@ msgstr "仅限 {0} 可以回复。"
 #: src/screens/Signup/StepHandle.tsx:152
 msgid "Only contains letters, numbers, and hyphens"
 msgstr "仅限字母、数字和连字符"
+
+#: src/view/com/composer/videos/SubtitleFilePicker.tsx:31
+msgid "Only WebVTT (.vtt) files are supported"
+msgstr "仅支持 WebVTT（.vtt）格式"
 
 #: src/components/Lists.tsx:88
 msgid "Oops, something went wrong!"
@@ -4027,8 +4060,8 @@ msgstr "开启头像创建工具"
 msgid "Open conversation options"
 msgstr "开启对话选项"
 
-#: src/view/com/composer/Composer.tsx:749
-#: src/view/com/composer/Composer.tsx:750
+#: src/view/com/composer/Composer.tsx:779
+#: src/view/com/composer/Composer.tsx:780
 msgid "Open emoji picker"
 msgstr "开启表情符号选择器"
 
@@ -4428,7 +4461,7 @@ msgstr "请以 @{0} 身份登录"
 msgid "Please Verify Your Email"
 msgstr "请验证你的电子邮箱"
 
-#: src/view/com/composer/Composer.tsx:330
+#: src/view/com/composer/Composer.tsx:335
 msgid "Please wait for your link card to finish loading"
 msgstr "请等待你的链接卡片加载完毕"
 
@@ -4441,8 +4474,8 @@ msgstr "政治"
 msgid "Porn"
 msgstr "色情内容"
 
-#: src/view/com/composer/Composer.tsx:564
-#: src/view/com/composer/Composer.tsx:571
+#: src/view/com/composer/Composer.tsx:581
+#: src/view/com/composer/Composer.tsx:588
 msgctxt "action"
 msgid "Post"
 msgstr "发布"
@@ -4612,11 +4645,11 @@ msgstr "公开且可共享的批量隐藏或屏蔽列表。"
 msgid "Public, shareable lists which can drive feeds."
 msgstr "公开且可共享的列表，可作为资讯源使用。"
 
-#: src/view/com/composer/Composer.tsx:549
+#: src/view/com/composer/Composer.tsx:566
 msgid "Publish post"
 msgstr "发布帖文"
 
-#: src/view/com/composer/Composer.tsx:549
+#: src/view/com/composer/Composer.tsx:566
 msgid "Publish reply"
 msgstr "发布回复"
 
@@ -4663,8 +4696,8 @@ msgstr "引用已打开"
 msgid "Quote settings"
 msgstr "引用选项"
 
-#: src/screens/Post/PostQuotes.tsx:29
-#: src/view/com/post-thread/PostQuotes.tsx:122
+#: src/screens/Post/PostQuotes.tsx:31
+#: src/screens/Post/PostQuotes.tsx:32
 msgid "Quotes"
 msgstr "引用"
 
@@ -4814,6 +4847,10 @@ msgstr "删除引用"
 msgid "Remove repost"
 msgstr "删除转发"
 
+#: src/view/com/composer/videos/SubtitleDialog.tsx:248
+msgid "Remove subtitle file"
+msgstr "删除字幕文件"
+
 #: src/view/com/posts/FeedErrorMessage.tsx:211
 msgid "Remove this feed from your saved feeds"
 msgstr "从保存的资讯源列表中删除这个资讯源"
@@ -4871,7 +4908,7 @@ msgstr "回复已被禁用"
 msgid "Replies to this post are disabled."
 msgstr "这条帖文的回复已被关闭。"
 
-#: src/view/com/composer/Composer.tsx:562
+#: src/view/com/composer/Composer.tsx:579
 msgctxt "action"
 msgid "Reply"
 msgstr "回复"
@@ -5017,8 +5054,8 @@ msgstr "转发"
 msgid "Repost or quote post"
 msgstr "转发或引用帖文"
 
-#: src/screens/Post/PostRepostedBy.tsx:29
-#: src/view/com/post-thread/PostRepostedBy.tsx:96
+#: src/screens/Post/PostRepostedBy.tsx:31
+#: src/screens/Post/PostRepostedBy.tsx:32
 msgid "Reposted By"
 msgstr "转发"
 
@@ -5236,7 +5273,7 @@ msgid "Scroll to top"
 msgstr "滚动到顶部"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:504
-#: src/Navigation.tsx:554
+#: src/Navigation.tsx:555
 #: src/view/com/modals/ListAddRemoveUsers.tsx:76
 #: src/view/com/util/forms/SearchInput.tsx:67
 #: src/view/com/util/forms/SearchInput.tsx:79
@@ -5357,6 +5394,10 @@ msgstr "选择 GIF \"{0}\""
 msgid "Select how long to mute this word for."
 msgstr "选择将此词语隐藏多长时间。"
 
+#: src/view/com/composer/videos/SubtitleDialog.tsx:233
+msgid "Select language..."
+msgstr "选择语言..."
+
 #: src/view/screens/LanguageSettings.tsx:303
 msgid "Select languages"
 msgstr "选择语言"
@@ -5368,6 +5409,10 @@ msgstr "选择内容审核服务提供方"
 #: src/view/com/util/Selector.tsx:107
 msgid "Select option {i} of {numItems}"
 msgstr "选择 {numItems} 项中的第 {i} 项"
+
+#: src/view/com/composer/videos/SubtitleFilePicker.tsx:57
+msgid "Select subtitle file (.vtt)"
+msgstr "选择字幕文件（.vtt）"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:83
 msgid "Select the {emojiName} emoji as your avatar"
@@ -5544,7 +5589,7 @@ msgstr "性暗示"
 #: src/view/com/profile/ProfileMenu.tsx:228
 #: src/view/com/util/forms/PostDropdownBtn.tsx:410
 #: src/view/com/util/forms/PostDropdownBtn.tsx:419
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:321
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:390
 #: src/view/screens/ProfileList.tsx:484
 msgid "Share"
 msgstr "分享"
@@ -5564,7 +5609,7 @@ msgstr "分享一个有趣的事实！"
 
 #: src/view/com/profile/ProfileMenu.tsx:377
 #: src/view/com/util/forms/PostDropdownBtn.tsx:659
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:337
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:406
 msgid "Share anyway"
 msgstr "仍然分享"
 
@@ -5639,7 +5684,7 @@ msgstr "显示徽章"
 msgid "Show badge and filter from feeds"
 msgstr "显示徽章并从资讯源中过滤"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:215
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:218
 msgid "Show follows similar to {0}"
 msgstr "显示类似于 {0} 的关注者"
 
@@ -5816,7 +5861,7 @@ msgstr "跳过这段流程"
 msgid "Software Dev"
 msgstr "程序开发"
 
-#: src/components/FeedInterstitials.tsx:397
+#: src/components/FeedInterstitials.tsx:449
 msgid "Some other feeds you might like"
 msgstr "其他你可能喜欢的资讯源"
 
@@ -5891,7 +5936,6 @@ msgstr "与 {displayName} 开始私信"
 msgid "Start chatting"
 msgstr "开始私信"
 
-#: src/lib/generate-starterpack.ts:68
 #: src/Navigation.tsx:358
 #: src/Navigation.tsx:363
 #: src/screens/StarterPack/Wizard/index.tsx:182
@@ -5962,7 +6006,7 @@ msgstr "订阅这个列表"
 msgid "Suggested accounts"
 msgstr "建议的账号"
 
-#: src/components/FeedInterstitials.tsx:262
+#: src/components/FeedInterstitials.tsx:314
 msgid "Suggested for you"
 msgstr "为你推荐"
 
@@ -6097,11 +6141,11 @@ msgstr "该用户识别符已被占用。"
 msgid "That starter pack could not be found."
 msgstr "找不到此入门包。"
 
-#: src/view/com/post-thread/PostQuotes.tsx:129
+#: src/view/com/post-thread/PostQuotes.tsx:127
 msgid "That's all, folks!"
 msgstr "大功告成！"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:310
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:314
 #: src/view/com/profile/ProfileMenu.tsx:353
 msgid "The account will be able to interact with you after unblocking."
 msgstr "解除屏蔽后，该账户将能够与你互动。"
@@ -6161,7 +6205,7 @@ msgstr "这条帖文可能已被删除。"
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr "隐私政策已迁移至 <0/>"
 
-#: src/state/queries/video/video.ts:140
+#: src/state/queries/video/video.ts:148
 msgid "The selected video is larger than 100MB."
 msgstr "选择的视频大小超过 100MB。"
 
@@ -6219,7 +6263,7 @@ msgstr "连接服务器时出现问题"
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "刷新通知时出现问题，点击重试。"
 
-#: src/view/com/posts/Feed.tsx:461
+#: src/view/com/posts/Feed.tsx:476
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "刷新帖文时出现问题，点击重试。"
 
@@ -6241,9 +6285,9 @@ msgstr "提交举报时出现问题，请检查你的网络连接。"
 msgid "There was an issue with fetching your app passwords"
 msgstr "获取应用专用密码时出现问题"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:107
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:129
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:143
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:109
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:131
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:145
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:97
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:109
 #: src/view/com/profile/ProfileMenu.tsx:111
@@ -6396,7 +6440,7 @@ msgid "This post has been deleted."
 msgstr "这条帖文已被删除。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:656
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:334
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:403
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
 msgstr "这条帖文只对已登录用户可见，未登录的用户将无法看到。"
 
@@ -6424,7 +6468,7 @@ msgstr "此服务没有提供服务条款或隐私政策。"
 msgid "This should create a domain record at:"
 msgstr "应该在以下位置创建一个域名记录："
 
-#: src/view/com/profile/ProfileFollowers.tsx:87
+#: src/view/com/profile/ProfileFollowers.tsx:96
 msgid "This user doesn't have any followers."
 msgstr "这个用户目前没有任何关注者。"
 
@@ -6453,7 +6497,7 @@ msgstr "这个用户包含在你已隐藏的 <0>{0}</0> 列表中。"
 msgid "This user is new here. Press for more info about when they joined."
 msgstr "此用户最近加入了 Bluesky，点按此处可获取其加入的具体时间。"
 
-#: src/view/com/profile/ProfileFollows.tsx:87
+#: src/view/com/profile/ProfileFollows.tsx:96
 msgid "This user isn't following anyone."
 msgstr "这个账户目前没有关注任何人。"
 
@@ -6570,14 +6614,14 @@ msgstr "无法删除"
 #: src/components/dms/MessagesListBlockedFooter.tsx:96
 #: src/components/dms/MessagesListBlockedFooter.tsx:104
 #: src/components/dms/MessagesListBlockedFooter.tsx:111
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:192
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:314
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:194
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:318
 #: src/view/com/profile/ProfileMenu.tsx:365
 #: src/view/screens/ProfileList.tsx:682
 msgid "Unblock"
 msgstr "取消屏蔽"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:197
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:199
 msgctxt "action"
 msgid "Unblock"
 msgstr "取消屏蔽"
@@ -6592,7 +6636,7 @@ msgstr "取消屏蔽账户"
 msgid "Unblock Account"
 msgstr "取消屏蔽账户"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:308
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:312
 #: src/view/com/profile/ProfileMenu.tsx:347
 msgid "Unblock Account?"
 msgstr "取消屏蔽账户？"
@@ -6608,7 +6652,7 @@ msgctxt "action"
 msgid "Unfollow"
 msgstr "取消关注"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:237
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:241
 msgid "Unfollow {0}"
 msgstr "取消关注 {0}"
 
@@ -6909,6 +6953,10 @@ msgstr "视频"
 msgid "Video Games"
 msgstr "电子游戏"
 
+#: src/view/com/composer/videos/SubtitleDialog.tsx:92
+msgid "Video settings"
+msgstr "视频设置"
+
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:86
 msgid "Video: {0}"
 msgstr "视频：{0}"
@@ -7070,7 +7118,7 @@ msgstr "很抱歉，我们无法加载你的隐藏词汇列表。请重试。"
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "很抱歉，无法完成你的搜索。请稍后再试。"
 
-#: src/view/com/composer/Composer.tsx:380
+#: src/view/com/composer/Composer.tsx:397
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "很抱歉！你所回复的帖文已被删除。"
 
@@ -7101,7 +7149,7 @@ msgstr "你想如何命名你的入门包？"
 
 #: src/view/com/auth/SplashScreen.tsx:40
 #: src/view/com/auth/SplashScreen.web.tsx:86
-#: src/view/com/composer/Composer.tsx:436
+#: src/view/com/composer/Composer.tsx:453
 msgid "What's up?"
 msgstr "发生了什么新鲜事？"
 
@@ -7168,11 +7216,11 @@ msgstr "宽"
 msgid "Write a message"
 msgstr "编写私信"
 
-#: src/view/com/composer/Composer.tsx:660
+#: src/view/com/composer/Composer.tsx:677
 msgid "Write post"
 msgstr "撰写帖文"
 
-#: src/view/com/composer/Composer.tsx:435
+#: src/view/com/composer/Composer.tsx:452
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:42
 msgid "Write your reply"
 msgstr "撰写你的回复"
@@ -7230,7 +7278,7 @@ msgstr "你"
 msgid "You are in line."
 msgstr "轮到你了。"
 
-#: src/view/com/profile/ProfileFollows.tsx:86
+#: src/view/com/profile/ProfileFollows.tsx:95
 msgid "You are not following anyone."
 msgstr "你没有关注任何账户。"
 
@@ -7260,7 +7308,7 @@ msgstr "你现在可以使用新密码登录。"
 msgid "You can reactivate your account to continue logging in. Your profile and posts will be visible to other users."
 msgstr "你可以重新激活你的账户以继续登录，其他用户将可以重新看到你的个人资料和帖文。"
 
-#: src/view/com/profile/ProfileFollowers.tsx:86
+#: src/view/com/profile/ProfileFollowers.tsx:95
 msgid "You do not have any followers."
 msgstr "你目前还没有任何关注者。"
 
@@ -7535,7 +7583,7 @@ msgstr "你的隐藏词汇"
 msgid "Your password has been changed successfully!"
 msgstr "你的密码已成功更改！"
 
-#: src/view/com/composer/Composer.tsx:426
+#: src/view/com/composer/Composer.tsx:443
 msgid "Your post has been published"
 msgstr "你的帖文已发布"
 
@@ -7551,7 +7599,7 @@ msgstr "你的个人资料"
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "其他 Bluesky 用户将无法再看到你的个人资料、帖文、列表与其他相关信息，你可以随时登录以重新激活你的账户。"
 
-#: src/view/com/composer/Composer.tsx:425
+#: src/view/com/composer/Composer.tsx:442
 msgid "Your reply has been published"
 msgstr "你的回复已发布"
 
