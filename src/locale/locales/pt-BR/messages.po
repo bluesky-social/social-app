@@ -15,7 +15,7 @@ msgstr ""
 
 #: src/screens/Messages/List/ChatListItem.tsx:120
 msgid "(contains embedded content)"
-msgstr ""
+msgstr "(contém conteúdo incorporado)"
 
 #: src/view/com/modals/VerifyEmail.tsx:150
 msgid "(no email)"
