@@ -1,4 +1,4 @@
-import React, {memo} from 'react'
+import React, {memo, useCallback} from 'react'
 import {
   Platform,
   Pressable,
@@ -30,6 +30,7 @@ import {useLanguagePrefs} from '#/state/preferences'
 import {useHiddenPosts, useHiddenPostsApi} from '#/state/preferences'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {
+  usePinPostMutation,
   usePostDeleteMutation,
   useThreadMuteMutationQueue,
 } from '#/state/queries/post'
@@ -65,6 +66,7 @@ import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/E
 import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
 import {PaperPlane_Stroke2_Corner0_Rounded as Send} from '#/components/icons/PaperPlane'
+import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
 import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '#/components/icons/SettingsGear2'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
@@ -106,7 +108,8 @@ let PostDropdownBtn = ({
   const {_} = useLingui()
   const defaultCtrlColor = theme.palette.default.postCtrl
   const langPrefs = useLanguagePrefs()
-  const postDeleteMutation = usePostDeleteMutation()
+  const {mutateAsync: deletePostMutate} = usePostDeleteMutation()
+  const {mutateAsync: pinPostMutate} = usePinPostMutation()
   const hiddenPosts = useHiddenPosts()
   const {hidePost} = useHiddenPostsApi()
   const feedFeedback = useFeedFeedbackContext()
@@ -149,6 +152,7 @@ let PostDropdownBtn = ({
     threadgateRecord,
   })
   const isReplyHiddenByThreadgate = threadgateHiddenReplies.has(postUri)
+  const isPinned = post.viewer?.pinned
 
   const {mutateAsync: toggleQuoteDetachment, isPending} =
     useToggleQuoteDetachmentMutation()
@@ -169,7 +173,7 @@ let PostDropdownBtn = ({
   )
 
   const onDeletePost = React.useCallback(() => {
-    postDeleteMutation.mutateAsync({uri: postUri}).then(
+    deletePostMutate({uri: postUri}).then(
       () => {
         Toast.show(_(msg`Post deleted`))
 
@@ -197,7 +201,7 @@ let PostDropdownBtn = ({
   }, [
     navigation,
     postUri,
-    postDeleteMutation,
+    deletePostMutate,
     postAuthor,
     currentAccount,
     isAuthor,
@@ -344,6 +348,17 @@ let PostDropdownBtn = ({
     toggleReplyVisibility,
   ])
 
+  const onPressPin = useCallback(() => {
+    const currentPinStatus = isPinned
+    pinPostMutate({uri: postUri}).then(() => {
+      if (currentPinStatus) {
+        Toast.show(_(msg`Post unpinned`))
+      } else {
+        Toast.show(_(msg`Post pinned`))
+      }
+    })
+  }, [pinPostMutate, postUri, _, isPinned])
+
   return (
     <EventStopper onKeyDown={false}>
       <Menu.Root>
@@ -372,6 +387,29 @@ let PostDropdownBtn = ({
         </Menu.Trigger>
 
         <Menu.Outer>
+          {isAuthor && (
+            <>
+              <Menu.Group>
+                <Menu.Item
+                  testID="pinPostBtn"
+                  label={
+                    isPinned
+                      ? _(msg`Unpin from profile`)
+                      : _(msg`Pin to your profile`)
+                  }
+                  onPress={onPressPin}>
+                  <Menu.ItemText>
+                    {isPinned
+                      ? _(msg`Unpin from profile`)
+                      : _(msg`Pin to your profile`)}
+                  </Menu.ItemText>
+                  <Menu.ItemIcon icon={PinIcon} position="right" />
+                </Menu.Item>
+              </Menu.Group>
+              <Menu.Divider />
+            </>
+          )}
+
           <Menu.Group>
             {(!hideInPWI || hasSession) && (
               <>

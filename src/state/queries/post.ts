@@ -320,6 +320,20 @@ export function usePostDeleteMutation() {
   })
 }
 
+export function usePinPostMutation() {
+  const queryClient = useQueryClient()
+  const agent = useAgent()
+  return useMutation<void, Error, {uri: string}>({
+    mutationFn: async ({uri}) => {
+      await agent.app.bsky.actor.pinPost({uri})
+    },
+    onSuccess(data, variables) {
+      updatePostShadow(queryClient, variables.uri, {isDeleted: true})
+      track('Post:Delete')
+    },
+  })
+}
+
 export function useThreadMuteMutationQueue(
   post: Shadow<AppBskyFeedDefs.PostView>,
   rootUri: string,
