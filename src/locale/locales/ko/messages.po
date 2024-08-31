@@ -3975,7 +3975,7 @@ msgid "Oldest replies first"
 msgstr "오래된 순"
 
 #: src/components/StarterPack/QrCode.tsx:70
-msgid "<0><1/><2><3/></2></0>"
+msgid "on<0><1/><2><3/></2></0>"
 msgstr "<0><1/><2><3/></2></0>"
 
 #: src/view/screens/Settings/index.tsx:226
