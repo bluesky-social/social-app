@@ -1626,7 +1626,7 @@ msgstr "Copiar texto do post"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:171
 msgid "Copy QR code"
-msgstr "Copiar código QR "
+msgstr "Copiar QR code"
 
 #: src/Navigation.tsx:281
 #: src/view/screens/CopyrightPolicy.tsx:29
