@@ -450,6 +450,11 @@ function shouldDisplayReplyInFollowing(
     // Always show self-threads.
     return true
   }
+  // If the thread is hosted by someone you know,
+  // show it even when the OP replies to someone else.
+  if (rootAuthor && isSelfOrFollowing(rootAuthor, userDid)) {
+    return true
+  }
   // From this point on we need at least one more reason to show it.
   if (
     parentAuthor &&
@@ -462,13 +467,6 @@ function shouldDisplayReplyInFollowing(
     grandparentAuthor &&
     grandparentAuthor.did !== author.did &&
     isSelfOrFollowing(grandparentAuthor, userDid)
-  ) {
-    return true
-  }
-  if (
-    rootAuthor &&
-    rootAuthor.did !== author.did &&
-    isSelfOrFollowing(rootAuthor, userDid)
   ) {
     return true
   }
