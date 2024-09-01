@@ -117,7 +117,7 @@ msgstr "{0} pessoas já usaram este pacote inicial!"
 
 #: src/view/com/util/UserAvatar.tsx:419
 msgid "{0}'s avatar"
-msgstr ""
+msgstr "Avatar de {0}"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:68
 msgid "{0}'s favorite feeds and people - join me!"
@@ -170,7 +170,7 @@ msgstr "{following} seguindo"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:405
 msgid "{handle} can't be messaged"
-msgstr ""
+msgstr "{handle} não pode receber mensagens"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:286
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:299
@@ -291,7 +291,7 @@ msgstr "7 dias"
 
 #: src/tours/Tooltip.tsx:70
 msgid "A help tooltip"
-msgstr ""
+msgstr "Uma sugestão de ajuda"
 
 #: src/view/com/util/ViewHeader.tsx:92
 #: src/view/screens/Search/Search.tsx:684
@@ -435,7 +435,7 @@ msgstr "Adicionar palavras/tags silenciadas"
 
 #: src/screens/StarterPack/Wizard/index.tsx:197
 #~ msgid "Add people to your starter pack that you think others will enjoy following"
-#~ msgstr ""
+#~ msgstr "Adicione pessoas ao seu kit inicial que você acha que outros gostarão de seguir"
 
 #: src/screens/Home/NoFeedsPinned.tsx:99
 msgid "Add recommended feeds"
@@ -4990,7 +4990,7 @@ msgstr "Posts"
 
 #: src/components/dialogs/MutedWords.tsx:115
 msgid "Posts can be muted based on their text, their tags, or both. We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
-msgstr ""
+msgstr "As postagens podem ser silenciadas com base em seu texto, suas tags ou ambos. Recomendamos evitar palavras comuns que aparecem em muitas postagens, pois isso pode resultar em nenhuma postagem sendo exibida."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:68
 msgid "Posts hidden"
@@ -5026,7 +5026,7 @@ msgstr "Tentar novamente"
 
 #: src/components/KnownFollowers.tsx:124
 msgid "Press to view followers of this account that you also follow"
-msgstr ""
+msgstr "Pressione para ver os seguidores desta conta que você também segue"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:150
 msgid "Previous image"
@@ -5332,11 +5332,11 @@ msgstr "Remover este feed dos feeds salvos"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:100
 msgid "Removed by author"
-msgstr ""
+msgstr "Removido pelo autor"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:98
 msgid "Removed by you"
-msgstr ""
+msgstr Removido por você"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:200
 #: src/view/com/modals/UserAddRemoveLists.tsx:164
@@ -5350,7 +5350,7 @@ msgstr "Removido dos meus feeds"
 #: src/screens/List/ListHiddenScreen.tsx:94
 #: src/screens/List/ListHiddenScreen.tsx:160
 msgid "Removed from saved feeds"
-msgstr ""
+msgstr "Removido dos feeds salvos"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:44
 #: src/view/screens/ProfileFeed.tsx:192
@@ -5368,7 +5368,7 @@ msgstr "Remove o post citado"
 
 #: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:29
 msgid "Removes the image preview"
-msgstr ""
+msgstr "Remove a pré-visualização da imagem"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:129
 #: src/view/com/posts/FeedShutdownMsg.tsx:133
@@ -5381,7 +5381,7 @@ msgstr "Respostas"
 
 #: src/components/WhoCanReply.tsx:69
 msgid "Replies disabled"
-msgstr ""
+msgstr "Respostas desabilitadas"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:123
 #~ msgid "Replies on this thread are disabled"
@@ -5389,7 +5389,7 @@ msgstr ""
 
 #: src/components/WhoCanReply.tsx:215
 msgid "Replies to this post are disabled."
-msgstr ""
+msgstr "Respostas para esta postagem estão desativadas."
 
 #: src/components/WhoCanReply.tsx:243
 #~ msgid "Replies to this thread are disabled"
@@ -5407,20 +5407,20 @@ msgstr "Responder"
 #: src/components/moderation/ModerationDetailsDialog.tsx:115
 #: src/lib/moderation/useModerationCauseDescription.ts:123
 msgid "Reply Hidden by Thread Author"
-msgstr ""
+msgstr "Resposta Oculta pelo Autor da Thread"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:114
 #: src/lib/moderation/useModerationCauseDescription.ts:122
 msgid "Reply Hidden by You"
-msgstr ""
+msgstr "Responder Oculto por Você"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:355
 msgid "Reply settings"
-msgstr ""
+msgstr "Configurações de resposta"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:340
 msgid "Reply settings are chosen by the author of the thread"
-msgstr ""
+msgstr "Configurações de resposta são escolhidas pelo autor da thread"
 
 #: src/view/com/post/Post.tsx:177
 #: src/view/com/posts/FeedItem.tsx:285
@@ -5437,26 +5437,26 @@ msgstr "Responder <0><1/></0>"
 #: src/view/com/posts/FeedItem.tsx:513
 msgctxt "description"
 msgid "Reply to a blocked post"
-msgstr ""
+msgstr "Responder a uma postagem bloqueada"
 
 #: src/view/com/posts/FeedItem.tsx:515
 msgctxt "description"
 msgid "Reply to a post"
-msgstr ""
+msgstr "Responder a uma postagem"
 
 #: src/view/com/post/Post.tsx:194
 #: src/view/com/posts/FeedItem.tsx:519
 msgctxt "description"
 msgid "Reply to you"
-msgstr ""
+msgstr "Responder para você"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:332
 msgid "Reply visibility updated"
-msgstr ""
+msgstr "Visibilidade da resposta atualizada"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:331
 msgid "Reply was successfully hidden"
-msgstr ""
+msgstr "Resposta foi ocultada com sucesso"
 
 #: src/components/dms/MessageMenu.tsx:132
 #: src/components/dms/MessagesListBlockedFooter.tsx:77
@@ -5576,7 +5576,7 @@ msgstr "Repostado por <0><1/></0>"
 #: src/view/com/posts/FeedItem.tsx:292
 #: src/view/com/posts/FeedItem.tsx:311
 msgid "Reposted by you"
-msgstr ""
+msgstr "repostou para você"
 
 #: src/view/com/notifications/FeedItem.tsx:184
 msgid "reposted your post"
@@ -5726,7 +5726,7 @@ msgstr "Salvar usuário"
 #: src/components/StarterPack/ShareDialog.tsx:151
 #: src/components/StarterPack/ShareDialog.tsx:158
 msgid "Save image"
-msgstr ""
+msgstr "Salvar imagem"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:169
 msgid "Save image crop"
@@ -5734,7 +5734,7 @@ msgstr "Salvar corte de imagem"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:181
 msgid "Save QR code"
-msgstr ""
+msgstr "Salvar QR code"
 
 #: src/view/screens/ProfileFeed.tsx:334
 #: src/view/screens/ProfileFeed.tsx:340
@@ -5775,7 +5775,7 @@ msgstr "Salva o corte da imagem"
 #: src/view/com/notifications/FeedItem.tsx:416
 #: src/view/com/notifications/FeedItem.tsx:441
 msgid "Say hello!"
-msgstr ""
+msgstr "Diga olá!"
 
 #: src/screens/Onboarding/index.tsx:33
 #: src/screens/Onboarding/state.ts:97
@@ -5866,7 +5866,7 @@ msgstr "Ver posts com <0>{displayTag}</0> deste usuário"
 
 #: src/view/com/auth/SplashScreen.web.tsx:162
 msgid "See jobs at Bluesky"
-msgstr ""
+msgstr "Veja empregos na Bluesky"
 
 #: src/view/com/notifications/FeedItem.tsx:411
 #: src/view/com/util/UserAvatar.tsx:402
@@ -5915,7 +5915,7 @@ msgstr "Selecionar GIF \"{0}\""
 
 #: src/components/dialogs/MutedWords.tsx:142
 msgid "Select how long to mute this word for."
-msgstr ""
+msgstr "Selecione por quanto tempo essa palavra deve ser silenciada."
 
 #: src/view/screens/LanguageSettings.tsx:303
 msgid "Select languages"
@@ -5951,11 +5951,11 @@ msgstr "Selecione o serviço que hospeda seus dados."
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:53
 msgid "Select video"
-msgstr ""
+msgstr "Selecione o vídeo"
 
 #: src/components/dialogs/MutedWords.tsx:242
 msgid "Select what content this mute word should apply to."
-msgstr ""
+msgstr "Selecione a qual conteúdo esta palavra silenciada deve ser aplicada."
 
 #: src/screens/Onboarding/StepModeration/index.tsx:63
 #~ msgid "Select what you want to see (or not see), and we’ll handle the rest."
@@ -5991,7 +5991,7 @@ msgstr "Selecione seu idioma preferido para as traduções no seu feed."
 
 #: src/components/dms/ChatEmptyPill.tsx:38
 msgid "Send a neat website!"
-msgstr ""
+msgstr "Envie um site bacana!"
 
 #: src/view/com/modals/VerifyEmail.tsx:210
 #: src/view/com/modals/VerifyEmail.tsx:212
@@ -6018,7 +6018,7 @@ msgstr "Enviar mensagem"
 
 #: src/components/dms/dialogs/ShareViaChatDialog.tsx:64
 msgid "Send post to..."
-msgstr ""
+msgstr "Enviar postagem para..."
 
 #: src/components/dms/ReportDialog.tsx:234
 #: src/components/dms/ReportDialog.tsx:237
