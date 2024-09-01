@@ -491,7 +491,7 @@ msgstr "Conteúdo Adulto"
 
 #: src/screens/Moderation/index.tsx:365
 msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
-msgstr "Conteúdo adulto só pode ser habilitado por web em <0>bsky.app</0>."
+msgstr "Conteúdo adulto só pode ser habilitado pela web em <0>bsky.app</0>."
 
 #: src/components/moderation/LabelPreference.tsx:242
 msgid "Adult content is disabled."
@@ -1298,7 +1298,7 @@ msgstr "Clique para habilitar citações desta publicação."
 
 #: src/components/dms/MessageItem.tsx:231
 msgid "Click to retry failed message"
-msgstr "Clique para tentar novamente a mensagem falhou"
+msgstr "Clique para tentar novamente a mensagem que falhou"
 
 #: src/screens/Onboarding/index.tsx:32
 msgid "Climate"
@@ -1353,7 +1353,7 @@ msgstr "Fechar visualizador de imagens"
 
 #: src/components/dms/MessagesNUX.tsx:162
 msgid "Close modal"
-msgstr "Fechar modalidade"
+msgstr "Fechar janela"
 
 #: src/view/shell/index.web.tsx:61
 msgid "Close navigation footer"
@@ -1994,11 +1994,11 @@ msgstr "Descubra Novos Feeds"
 
 #: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:108
 msgid "Dismiss"
-msgstr "Liberar"
+msgstr "Ocultar"
 
 #: src/view/com/composer/Composer.tsx:612
 msgid "Dismiss error"
-msgstr "Liberar erro"
+msgstr "Ocultar erro"
 
 #: src/components/ProgressGuide/List.tsx:40
 msgid "Dismiss getting started guide"
@@ -2417,7 +2417,7 @@ msgstr "Todos podem responder"
 
 #: src/components/WhoCanReply.tsx:213
 msgid "Everybody can reply to this post."
-msgstr "Todos podem responder"
+msgstr "Todos podem responder esta postagem."
 
 #: src/components/dms/MessagesNUX.tsx:131
 #: src/components/dms/MessagesNUX.tsx:134
@@ -8340,7 +8340,7 @@ msgstr "Seu e-mail ainda não foi verificado. Esta é uma etapa importante de se
 
 #: src/state/shell/progress-guide.tsx:156
 msgid "Your first like!"
-msgstr "Seu primeiro like"
+msgstr "Sua primeira curtida!"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:43
 msgid "Your following feed is empty! Follow more users to see what's happening."
