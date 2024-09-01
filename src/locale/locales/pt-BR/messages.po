@@ -720,7 +720,7 @@ msgstr "Contestação enviada."
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:99
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:101
 msgid "Appeal this decision"
-msgstr "Apelar desta decisão"
+msgstr "Recorrer desta decisão"
 
 #: src/screens/Settings/AppearanceSettings.tsx:69
 #: src/view/screens/Settings/index.tsx:484
