@@ -475,21 +475,8 @@ function Scrubber({
     if (isFirefox && scrubberActive) {
       document.body.classList.add('force-no-clicks')
 
-      const abortController = new AbortController()
-      const {signal} = abortController
-      document.documentElement.addEventListener(
-        'mouseleave',
-        () => {
-          isSeekingRef.current = false
-          onSeekEnd()
-          setScrubberActive(false)
-        },
-        {signal},
-      )
-
       return () => {
         document.body.classList.remove('force-no-clicks')
-        abortController.abort()
       }
     }
   }, [scrubberActive, onSeekEnd])
@@ -548,7 +535,8 @@ function Scrubber({
         }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
-        onPointerUp={onPointerUp}>
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerUp}>
         <View
           style={[
             a.w_full,
