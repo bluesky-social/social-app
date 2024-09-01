@@ -121,7 +121,7 @@ msgstr ""
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:68
 msgid "{0}'s favorite feeds and people - join me!"
-msgstr "Os feeds e pessoas favoritos de {0} - junte-se a mim!"
+msgstr "Os feeds e pessoas favoritas de {0} - junte-se a mim!"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:47
 msgid "{0}'s starter pack"
@@ -2413,7 +2413,7 @@ msgstr "Todos"
 
 #: src/components/WhoCanReply.tsx:67
 msgid "Everybody can reply"
-msgstr ""
+msgstr "Todos podem responder"
 
 #: src/components/WhoCanReply.tsx:213
 msgid "Everybody can reply to this post."
@@ -4234,7 +4234,7 @@ msgstr "Nenhuma mensagem ainda"
 
 #: src/screens/Messages/List/index.tsx:274
 msgid "No more conversations to show"
-msgstr ""
+msgstr "Não há mais conversas para mostrar"
 
 #: src/view/com/notifications/Feed.tsx:121
 msgid "No notifications yet!"
@@ -4245,15 +4245,15 @@ msgstr "Nenhuma notificação!"
 #: src/screens/Messages/Settings.tsx:93
 #: src/screens/Messages/Settings.tsx:96
 msgid "No one"
-msgstr ""
+msgstr "Ninguém"
 
 #: src/components/WhoCanReply.tsx:237
 msgid "No one but the author can quote this post."
-msgstr ""
+msgstr "Ninguém além do autor pode citar esta postagem."
 
 #: src/screens/Profile/Sections/Feed.tsx:59
 msgid "No posts yet."
-msgstr ""
+msgstr "Nenhuma postagem ainda."
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:101
 #: src/view/com/composer/text-input/web/Autocomplete.tsx:195
@@ -4340,28 +4340,28 @@ msgstr "Nota: o Bluesky é uma rede aberta e pública. Esta configuração limit
 
 #: src/screens/Messages/List/index.tsx:215
 msgid "Nothing here"
-msgstr ""
+msgstr "Não há nada aqui"
 
 #: src/view/screens/NotificationsSettings.tsx:54
 msgid "Notification filters"
-msgstr ""
+msgstr "Filtros de Notificação"
 
 #: src/Navigation.tsx:348
 #: src/view/screens/Notifications.tsx:119
 msgid "Notification settings"
-msgstr ""
+msgstr "Configurações de Notificação"
 
 #: src/view/screens/NotificationsSettings.tsx:39
 msgid "Notification Settings"
-msgstr ""
+msgstr "Configurações de Notificação"
 
 #: src/screens/Messages/Settings.tsx:124
 msgid "Notification sounds"
-msgstr ""
+msgstr "Sons de Notificação"
 
 #: src/screens/Messages/Settings.tsx:121
 msgid "Notification Sounds"
-msgstr ""
+msgstr "Sons de Notificação"
 
 #: src/Navigation.tsx:559
 #: src/view/screens/Notifications.tsx:145
@@ -4960,7 +4960,7 @@ msgstr "Post Escondido por Você"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:283
 msgid "Post interaction settings"
-msgstr ""
+msgstr "Configurações de interação do post"
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:88
 msgid "Post language"
@@ -6039,7 +6039,7 @@ msgstr "Enviar e-mail de verificação"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:399
 #: src/view/com/util/forms/PostDropdownBtn.tsx:402
 msgid "Send via direct message"
-msgstr ""
+msgstr "Enviar por mensagem direta"
 
 #: src/view/com/modals/DeleteAccount.tsx:151
 msgid "Sends email with confirmation code for account deletion"
@@ -7609,14 +7609,14 @@ msgstr "Usuários"
 
 #: src/components/WhoCanReply.tsx:258
 msgid "users followed by <0>@{0}</0>"
-msgstr ""
+msgstr "usuários seguidos por <0>@{0}</0>"
 
 #: src/components/dms/MessagesNUX.tsx:140
 #: src/components/dms/MessagesNUX.tsx:143
 #: src/screens/Messages/Settings.tsx:84
 #: src/screens/Messages/Settings.tsx:87
 msgid "Users I follow"
-msgstr ""
+msgstr "Usuários que eu sigo"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:416
 msgid "Users in \"{0}\""
@@ -8048,7 +8048,7 @@ msgstr ""
 
 #: src/screens/Messages/Settings.tsx:111
 msgid "You can continue ongoing conversations regardless of which setting you choose."
-msgstr ""
+msgstr "Você pode continuar conversas em andamento, independentemente da configuração que escolher."
 
 #: src/screens/Login/index.tsx:158
 #: src/screens/Login/PasswordUpdatedForm.tsx:33
@@ -8123,7 +8123,7 @@ msgstr "Você silenciou este usuário."
 
 #: src/screens/Messages/List/index.tsx:225
 msgid "You have no conversations yet. Start one!"
-msgstr ""
+msgstr "Você ainda não tem conversas. Comece uma!"
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:138
 msgid "You have no feeds."
@@ -8152,7 +8152,7 @@ msgstr "Você ainda não silenciou nenhuma conta. Para silenciar uma conta, aces
 
 #: src/components/Lists.tsx:52
 msgid "You have reached the end"
-msgstr ""
+msgstr "Você chegou ao fim"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:235
 msgid "You haven't created a starter pack yet!"
@@ -8165,7 +8165,7 @@ msgstr "Você não silenciou nenhuma palavra ou tag ainda"
 #: src/components/moderation/ModerationDetailsDialog.tsx:117
 #: src/lib/moderation/useModerationCauseDescription.ts:125
 msgid "You hid this reply."
-msgstr ""
+msgstr "Você escondeu esta resposta."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:86
 msgid "You may appeal non-self labels if you feel they were placed in error."
@@ -8185,11 +8185,11 @@ msgstr "Você pode adicionar no máximo 3 feeds"
 
 #: src/screens/StarterPack/Wizard/State.tsx:95
 #~ msgid "You may only add up to 50 feeds"
-#~ msgstr ""
+#~ msgstr "Você só pode adicionar até 50 feeds"
 
 #: src/screens/StarterPack/Wizard/State.tsx:78
 #~ msgid "You may only add up to 50 profiles"
-#~ msgstr ""
+#~ msgstr "Você só pode adicionar até 50 perfis"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:85
 msgid "You must be 13 years of age or older to sign up."
