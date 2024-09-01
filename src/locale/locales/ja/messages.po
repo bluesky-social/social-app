@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-08-30 10:40+0900\n"
+"PO-Revision-Date: 2024-09-01 18:24+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -370,6 +370,10 @@ msgstr "アカウントを追加"
 #: src/view/com/modals/AltImage.tsx:118
 msgid "Add alt text"
 msgstr "ALTテキストを追加"
+
+#: src/view/com/composer/videos/SubtitleDialog.tsx:100
+msgid "Add alt text (optional)"
+msgstr "ALTテキストを追加（オプション）"
 
 #: src/view/screens/AppPasswords.tsx:106
 #: src/view/screens/AppPasswords.tsx:148
@@ -969,6 +973,21 @@ msgstr "検索をキャンセル"
 #: src/view/com/modals/LinkWarning.tsx:106
 msgid "Cancels opening the linked website"
 msgstr "リンク先のウェブサイトを開くことをキャンセル"
+
+#: src/state/shell/composer.tsx:70
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:138
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:204
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:240
+msgid "Cannot interact with a blocked user"
+msgstr "ブロックしたユーザーとはやりとりできません"
+
+#: src/view/com/composer/videos/SubtitleDialog.tsx:125
+msgid "Captions (.vtt)"
+msgstr "キャプション（.vtt）"
+
+#: src/view/com/composer/videos/SubtitleDialog.tsx:51
+msgid "Captions & alt text"
+msgstr "キャプション＆ALTテキスト"
 
 #: src/view/com/modals/VerifyEmail.tsx:160
 msgid "Change"
@@ -3976,9 +3995,9 @@ msgstr "OK"
 msgid "Oldest replies first"
 msgstr "古い順に返信を表示"
 
-#: src/components/StarterPack/QrCode.tsx:69
-msgid "on"
-msgstr "on"
+#: src/components/StarterPack/QrCode.tsx:70
+msgid "on<0><1/><2><3/></2></0>"
+msgstr "<0><1/><2><3/></2></0>で"
 
 #: src/view/screens/Settings/index.tsx:226
 msgid "Onboarding reset"
@@ -3999,6 +4018,10 @@ msgstr "{0}のみ返信可能。"
 #: src/screens/Signup/StepHandle.tsx:150
 msgid "Only contains letters, numbers, and hyphens"
 msgstr "英数字とハイフンのみ"
+
+#: src/view/com/composer/videos/SubtitleFilePicker.tsx:31
+msgid "Only WebVTT (.vtt) files are supported"
+msgstr "WebVTT（.vtt）ファイルのみに対応してます"
 
 #: src/components/Lists.tsx:88
 msgid "Oops, something went wrong!"
@@ -4817,6 +4840,10 @@ msgstr "引用を削除"
 msgid "Remove repost"
 msgstr "リポストを削除"
 
+#: src/view/com/composer/videos/SubtitleDialog.tsx:248
+msgid "Remove subtitle file"
+msgstr "字幕ファイルを削除"
+
 #: src/view/com/posts/FeedErrorMessage.tsx:211
 msgid "Remove this feed from your saved feeds"
 msgstr "保存したフィードからこのフィードを削除"
@@ -5360,6 +5387,10 @@ msgstr "GIF「{0}」を選ぶ"
 msgid "Select how long to mute this word for."
 msgstr "このワードをどのくらいの間ミュートするのかを選択。"
 
+#: src/view/com/composer/videos/SubtitleDialog.tsx:233
+msgid "Select language..."
+msgstr "言語を選択…"
+
 #: src/view/screens/LanguageSettings.tsx:303
 msgid "Select languages"
 msgstr "言語を選択"
@@ -5371,6 +5402,10 @@ msgstr "モデレーターを選択"
 #: src/view/com/util/Selector.tsx:107
 msgid "Select option {i} of {numItems}"
 msgstr "{numItems}個中{i}個目のオプションを選択"
+
+#: src/view/com/composer/videos/SubtitleFilePicker.tsx:57
+msgid "Select subtitle file (.vtt)"
+msgstr "字幕ファイル（.vtt）を選択"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:83
 msgid "Select the {emojiName} emoji as your avatar"
@@ -6911,6 +6946,10 @@ msgstr "ビデオ"
 #: src/screens/Onboarding/state.ts:88
 msgid "Video Games"
 msgstr "ビデオゲーム"
+
+#: src/view/com/composer/videos/SubtitleDialog.tsx:92
+msgid "Video settings"
+msgstr "ビデオの設定"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:86
 msgid "Video: {0}"
