@@ -4344,20 +4344,20 @@ msgstr "Não há nada aqui"
 
 #: src/view/screens/NotificationsSettings.tsx:54
 msgid "Notification filters"
-msgstr "Filtros de Notificação"
+msgstr "Filtros de notificação"
 
-#: src/Navigation.tsx:348
+#: src/Navigation.tsx348
 #: src/view/screens/Notifications.tsx:119
 msgid "Notification settings"
-msgstr "Configurações de Notificação"
+msgstr "Configurações de notificação"
 
 #: src/view/screens/NotificationsSettings.tsx:39
 msgid "Notification Settings"
-msgstr "Configurações de Notificação"
+msgstr "Configurações de notificação"
 
 #: src/screens/Messages/Settings.tsx:124
 msgid "Notification sounds"
-msgstr "Sons de Notificação"
+msgstr "Sons de notificação"
 
 #: src/screens/Messages/Settings.tsx:121
 msgid "Notification Sounds"
@@ -4475,7 +4475,7 @@ msgstr "Abrir"
 
 #: src/view/com/posts/AviFollowButton.tsx:87
 msgid "Open {name} profile shortcut menu"
-msgstr "Abra o menu de atalho perfil do {name}"
+msgstr "Abra o menu de atalho perfil de {name}"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:277
 msgid "Open avatar creator"
@@ -4712,7 +4712,7 @@ msgstr "Outra conta"
 
 #: src/view/screens/Settings/index.tsx:379
 msgid "Other accounts"
-msgstr "Outra conta"
+msgstr "Outras contas"
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:92
 msgid "Other..."
@@ -4835,7 +4835,7 @@ msgstr "Tocar ou pausar o GIF"
 #: src/view/com/util/post-embeds/VideoEmbed.tsx:52
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:204
 msgid "Play video"
-msgstr "Tocar vídeo"
+msgstr "Reproduzir vídeo"
 
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:57
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:58
@@ -5161,7 +5161,7 @@ msgstr "Postagens de citações habilitadas"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:295
 msgid "Quote settings"
-msgstr "Configurações de Citações"
+msgstr "Configurações de citações"
 
 #: src/screens/Post/PostQuotes.tsx:29
 #: src/view/com/post-thread/PostQuotes.tsx:122
