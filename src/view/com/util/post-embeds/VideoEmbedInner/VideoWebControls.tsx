@@ -253,7 +253,7 @@ export function Controls({
         style={a.flex_1}
         onPress={onPressEmptySpace}
       />
-      {active && !showControls && !focused && (
+      {active && !showControls && !focused && duration > 0 && (
         <TimeIndicator time={Math.floor(duration - currentTime)} />
       )}
       <View
