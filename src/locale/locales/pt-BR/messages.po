@@ -5108,19 +5108,19 @@ msgstr "Publicar resposta"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:128
 msgid "QR code copied to your clipboard!"
-msgstr ""
+msgstr "Código QR copiado para sua área de transferência!"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:106
 msgid "QR code has been downloaded!"
-msgstr ""
+msgstr "O código QR foi baixado!"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:107
 msgid "QR code saved to your camera roll!"
-msgstr ""
+msgstr "Código QR salvo no rolo da sua câmera!"
 
 #: src/tours/Tooltip.tsx:111
 msgid "Quick tip"
-msgstr ""
+msgstr "Dica rápida"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:122
 #: src/view/com/util/post-ctrls/RepostButton.tsx:149
@@ -5141,11 +5141,11 @@ msgstr "Citar post"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:302
 msgid "Quote post was re-attached"
-msgstr ""
+msgstr "A postagem de citação foi anexada novamente"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:301
 msgid "Quote post was successfully detached"
-msgstr ""
+msgstr "A postagem de citação foi desanexada com sucesso"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:313
 #: src/view/com/util/post-ctrls/RepostButton.tsx:121
@@ -5153,24 +5153,24 @@ msgstr ""
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:84
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:91
 msgid "Quote posts disabled"
-msgstr ""
+msgstr "Postagens de citações desabilitadas"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:311
 msgid "Quote posts enabled"
-msgstr ""
+msgstr "Postagens de citações habilitadas"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:295
 msgid "Quote settings"
-msgstr ""
+msgstr "Configurações de Citações"
 
 #: src/screens/Post/PostQuotes.tsx:29
 #: src/view/com/post-thread/PostQuotes.tsx:122
 msgid "Quotes"
-msgstr ""
+msgstr "Citações"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:230
 msgid "Quotes of this post"
-msgstr ""
+msgstr "Citações desta postagem"
 
 #: src/view/screens/PreferencesThreads.tsx:80
 msgid "Random (aka \"Poster's Roulette\")"
@@ -5183,27 +5183,27 @@ msgstr "Índices"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:543
 #: src/view/com/util/forms/PostDropdownBtn.tsx:553
 msgid "Re-attach quote"
-msgstr ""
+msgstr "Reanexar citação"
 
 #: src/screens/Deactivated.tsx:144
 msgid "Reactivate your account"
-msgstr ""
+msgstr "Reative sua conta"
 
 #: src/view/com/auth/SplashScreen.web.tsx:157
 msgid "Read the Bluesky blog"
-msgstr ""
+msgstr "Leia o blog Bluesky"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:59
 msgid "Read the Bluesky Privacy Policy"
-msgstr ""
+msgstr "Leia a Política de Privacidade do Bluesky"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:49
 msgid "Read the Bluesky Terms of Service"
-msgstr ""
+msgstr "Leia os Termos de Serviço do Bluesky"
 
 #: src/components/dms/ReportDialog.tsx:174
 msgid "Reason:"
-msgstr ""
+msgstr "Motivo:"
 
 #: src/components/dms/MessageReportDialog.tsx:149
 #~ msgid "Reason: {0}"
@@ -5223,15 +5223,15 @@ msgstr "Buscas Recentes"
 
 #: src/screens/Messages/Conversation/MessageListError.tsx:20
 msgid "Reconnect"
-msgstr ""
+msgstr "Reconectar"
 
 #: src/view/screens/Notifications.tsx:146
 msgid "Refresh notifications"
-msgstr ""
+msgstr "Atualizar notificações"
 
 #: src/screens/Messages/List/index.tsx:200
 msgid "Reload conversations"
-msgstr ""
+msgstr "Recarregar conversas"
 
 #: src/components/dialogs/MutedWords.tsx:438
 #: src/components/FeedCard.tsx:313
@@ -5248,7 +5248,7 @@ msgstr "Remover"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:58
 msgid "Remove {displayName} from starter pack"
-msgstr ""
+msgstr "Remover {displayName} do pacote inicial"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:26
 msgid "Remove account"
@@ -5385,7 +5385,7 @@ msgstr ""
 
 #: src/view/com/threadgate/WhoCanReply.tsx:123
 #~ msgid "Replies on this thread are disabled"
-#~ msgstr ""
+#~ msgstr "As respostas neste tópico estão desabilitadas"
 
 #: src/components/WhoCanReply.tsx:215
 msgid "Replies to this post are disabled."
@@ -7691,19 +7691,19 @@ msgstr "Ver o avatar de {0}"
 #: src/components/ProfileCard.tsx:110
 #: src/view/com/notifications/FeedItem.tsx:277
 msgid "View {0}'s profile"
-msgstr ""
+msgstr "Ver perfil de {0}"
 
 #: src/components/dms/MessagesListHeader.tsx:160
 msgid "View {displayName}'s profile"
-msgstr ""
+msgstr "Ver perfil de {displayName}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:430
 msgid "View blocked user's profile"
-msgstr ""
+msgstr "Ver perfil do usuário bloqueado"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:97
 msgid "View blogpost for more details"
-msgstr ""
+msgstr "Veja o blogpost para mais detalhes"
 
 #: src/view/screens/Log.tsx:56
 msgid "View debug entry"
@@ -7747,20 +7747,20 @@ msgstr "Ver usuários que curtiram este feed"
 
 #: src/screens/Moderation/index.tsx:274
 msgid "View your blocked accounts"
-msgstr ""
+msgstr "Veja suas contas bloqueadas"
 
 #: src/view/com/home/HomeHeaderLayout.web.tsx:79
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:86
 msgid "View your feeds and explore more"
-msgstr ""
+msgstr "Veja seus feeds e explore mais"
 
 #: src/screens/Moderation/index.tsx:244
 msgid "View your moderation lists"
-msgstr ""
+msgstr "Veja suas listas de moderação"
 
 #: src/screens/Moderation/index.tsx:259
 msgid "View your muted accounts"
-msgstr ""
+msgstr "Visualizar suas contas silenciadas"
 
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
@@ -7831,7 +7831,7 @@ msgstr "Usaremos isto para customizar a sua experiência."
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:90
 msgid "We're having network issues, try again"
-msgstr ""
+msgstr "Estamos com problemas de rede, tente novamente"
 
 #: src/screens/Signup/index.tsx:100
 msgid "We're so excited to have you join us!"
@@ -7851,7 +7851,7 @@ msgstr "Lamentamos, mas sua busca não pôde ser concluída. Por favor, tente no
 
 #: src/view/com/composer/Composer.tsx:380
 msgid "We're sorry! The post you are replying to has been deleted."
-msgstr ""
+msgstr "Sentimos muito! A postagem que você está respondendo foi excluída."
 
 #: src/components/Lists.tsx:220
 #: src/view/screens/NotFound.tsx:48
@@ -7864,11 +7864,11 @@ msgstr "Sentimos muito! Não conseguimos encontrar a página que você estava pr
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:333
 msgid "We're sorry! You can only subscribe to twenty labelers, and you've reached your limit of twenty."
-msgstr ""
+msgstr "Sentimos muito! Você só pode assinar vinte rotuladores, e você atingiu seu limite de vinte."
 
 #: src/screens/Deactivated.tsx:128
 msgid "Welcome back!"
-msgstr ""
+msgstr "Bem vindo de volta!"
 
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:48
 #~ msgid "Welcome to <0>Bluesky</0>"
@@ -7876,7 +7876,7 @@ msgstr ""
 
 #: src/components/NewskieDialog.tsx:103
 msgid "Welcome, friend!"
-msgstr ""
+msgstr "Bem-vindo, amigo!"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:155
 msgid "What are your interests?"
@@ -7902,12 +7902,12 @@ msgstr "Quais idiomas você gostaria de ver nos seus feeds?"
 
 #: src/components/WhoCanReply.tsx:179
 msgid "Who can interact with this post?"
-msgstr ""
+msgstr "Quem pode interagir com esta postagem?"
 
 #: src/components/dms/MessagesNUX.tsx:110
 #: src/components/dms/MessagesNUX.tsx:124
 msgid "Who can message you?"
-msgstr ""
+msgstr "Quem pode enviar mensagens para você?"
 
 #: src/components/WhoCanReply.tsx:87
 msgid "Who can reply"
@@ -7915,11 +7915,11 @@ msgstr "Quem pode responder"
 
 #: src/components/WhoCanReply.tsx:212
 #~ msgid "Who can reply dialog"
-#~ msgstr ""
+#~ msgstr "Quem pode responder ao diálogo"
 
 #: src/components/WhoCanReply.tsx:216
 #~ msgid "Who can reply?"
-#~ msgstr ""
+#~ msgstr "Quem pode responder?"
 
 #: src/screens/Home/NoFeedsPinned.tsx:79
 #: src/screens/Messages/List/index.tsx:185
@@ -7948,7 +7948,7 @@ msgstr "Por que este post deve ser analisado?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:60
 msgid "Why should this starter pack be reviewed?"
-msgstr ""
+msgstr "Por que este pacote inicial deve ser analisado?"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:48
 msgid "Why should this user be reviewed?"
@@ -7990,7 +7990,7 @@ msgstr "Sim"
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:106
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:108
 msgid "Yes, deactivate"
-msgstr ""
+msgstr "Sim, desativar"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:649
 msgid "Yes, delete this starter pack"
@@ -7998,15 +7998,15 @@ msgstr "Sim, exclua este kit inicial"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:692
 msgid "Yes, detach"
-msgstr ""
+msgstr "Sim, desvincule"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:702
 msgid "Yes, hide"
-msgstr ""
+msgstr "Sim, esconda-se"
 
 #: src/screens/Deactivated.tsx:150
 msgid "Yes, reactivate my account"
-msgstr ""
+msgstr "Sim, reative minha conta"
 
 #: src/components/dms/MessageItem.tsx:182
 msgid "Yesterday, {time}"
@@ -8015,11 +8015,11 @@ msgstr "Ontem, {time}"
 #: src/components/StarterPack/StarterPackCard.tsx:76
 #: src/screens/List/ListHiddenScreen.tsx:140
 msgid "you"
-msgstr ""
+msgstr "você"
 
 #: src/components/NewskieDialog.tsx:43
 msgid "You"
-msgstr ""
+msgstr "Você"
 
 #: src/screens/SignupQueued.tsx:136
 msgid "You are in line."
@@ -8036,7 +8036,7 @@ msgstr "Você também pode descobrir novos feeds para seguir."
 
 #: src/view/com/modals/DeleteAccount.tsx:202
 msgid "You can also temporarily deactivate your account instead, and reactivate it at any time."
-msgstr ""
+msgstr "Você também pode desativar temporariamente sua conta e reativá-la a qualquer momento."
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:143
 #~ msgid "You can change these settings later."
@@ -8044,7 +8044,7 @@ msgstr ""
 
 #: src/components/dms/MessagesNUX.tsx:119
 msgid "You can change this at any time."
-msgstr ""
+msgstr "Você pode alterar isso a qualquer momento."
 
 #: src/screens/Messages/Settings.tsx:111
 msgid "You can continue ongoing conversations regardless of which setting you choose."
@@ -8057,7 +8057,7 @@ msgstr "Agora você pode entrar com a sua nova senha."
 
 #: src/screens/Deactivated.tsx:136
 msgid "You can reactivate your account to continue logging in. Your profile and posts will be visible to other users."
-msgstr ""
+msgstr "Você pode reativar sua conta para continuar fazendo login. Seu perfil e suas postagens ficarão visíveis para outros usuários."
 
 #: src/view/com/profile/ProfileFollowers.tsx:86
 msgid "You do not have any followers."
@@ -8065,7 +8065,7 @@ msgstr "Ninguém segue você ainda."
 
 #: src/screens/Profile/KnownFollowers.tsx:99
 msgid "You don't follow any users who follow @{name}."
-msgstr ""
+msgstr "Você não segue nenhum usuário que segue @{name}."
 
 #: src/view/com/modals/InviteCodes.tsx:67
 msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
@@ -8376,7 +8376,7 @@ msgstr "Seu perfil"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:75
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
-msgstr ""
+msgstr "Seu perfil, postagens, feeds e listas não serão mais visíveis para outros usuários do Bluesky. Você pode reativar sua conta a qualquer momento fazendo login."
 
 #: src/view/com/composer/Composer.tsx:425
 msgid "Your reply has been published"
