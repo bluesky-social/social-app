@@ -589,7 +589,7 @@ msgstr "Ocorreu um erro"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:315
 msgid "An error occurred while generating your starter pack. Want to try again?"
-msgstr "Ocorreu um erro ao gerar seu pacote inicial. Quer tentar novamente?"
+msgstr "Ocorreu um erro ao gerar seu kit inicial. Quer tentar novamente?"
 
 #: src/view/com/util/post-embeds/VideoEmbed.tsx:69
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:150
@@ -7760,7 +7760,7 @@ msgstr "Veja suas listas de moderação"
 
 #: src/screens/Moderation/index.tsx:259
 msgid "View your muted accounts"
-msgstr "Visualizar suas contas silenciadas"
+msgstr "Veja suas contas silenciadas"
 
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
@@ -8002,7 +8002,7 @@ msgstr "Sim, desvincule"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:702
 msgid "Yes, hide"
-msgstr "Sim, esconda-se"
+msgstr "Sim, ocultar"
 
 #: src/screens/Deactivated.tsx:150
 msgid "Yes, reactivate my account"
