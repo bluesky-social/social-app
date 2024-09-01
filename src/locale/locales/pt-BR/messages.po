@@ -646,7 +646,7 @@ msgstr "ocorreu um erro desconhecido"
 #: src/components/moderation/ModerationDetailsDialog.tsx:151
 #: src/components/moderation/ModerationDetailsDialog.tsx:147
 msgid "an unknown labeler"
-msgstr ""
+msgstr "um rotulador desconhecido"
 
 #: src/components/WhoCanReply.tsx:295
 #: src/view/com/notifications/FeedItem.tsx:235
@@ -742,7 +742,7 @@ msgstr "Utilizar feeds recomendados"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:610
 #~ msgid "Are you sure you want delete this starter pack?"
-#~ msgstr ""
+#~ msgstr "Tem certeza de que deseja excluir este pacote inicial?"
 
 #: src/view/screens/AppPasswords.tsx:282
 msgid "Are you sure you want to delete the app password \"{name}\"?"
@@ -1080,7 +1080,7 @@ msgstr "Cancelar citação"
 
 #: src/screens/Deactivated.tsx:155
 msgid "Cancel reactivation and log out"
-msgstr ""
+msgstr "Cancelar reativação e sair"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
 msgid "Cancel search"
@@ -2022,7 +2022,7 @@ msgstr "Painel DNS"
 
 #: src/components/dialogs/MutedWords.tsx:302
 msgid "Do not apply this mute word to users you follow"
-msgstr ""
+msgstr "Não aplique esta palavra ocultada aos usuários que você segue"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:39
 msgid "Does not include nudity."
@@ -2089,7 +2089,7 @@ msgstr "Solte para adicionar imagens"
 
 #: src/components/dialogs/MutedWords.tsx:153
 msgid "Duration:"
-msgstr ""
+msgstr "Duração:"
 
 #: src/view/com/modals/ChangeHandle.tsx:252
 msgid "e.g. alice"
@@ -2576,7 +2576,7 @@ msgstr "Não foi possível carregar mensagens antigas."
 #: src/view/screens/Search/Explore.tsx:420
 #: src/view/screens/Search/Explore.tsx:448
 msgid "Failed to load suggested feeds"
-msgstr ""
+msgstr "Falha ao carregar feeds sugeridos"
 
 #: src/view/screens/Search/Explore.tsx:378
 msgid "Failed to load suggested follows"
@@ -2762,7 +2762,7 @@ msgstr "Seguir {0}"
 
 #: src/view/com/posts/AviFollowButton.tsx:69
 msgid "Follow {name}"
-msgstr ""
+msgstr "Seguir {name}"
 
 #: src/components/ProgressGuide/List.tsx:54
 msgid "Follow 7 accounts"
@@ -3500,7 +3500,7 @@ msgstr "Sair"
 #: src/components/dms/MessagesListBlockedFooter.tsx:66
 #: src/components/dms/MessagesListBlockedFooter.tsx:73
 msgid "Leave chat"
-msgstr ""
+msgstr "Sair do chat"
 
 #: src/components/dms/ConvoMenu.tsx:138
 #: src/components/dms/ConvoMenu.tsx:141
@@ -3980,7 +3980,7 @@ msgstr "Silenciar esta palavra apenas nas tags de um post"
 
 #: src/components/dialogs/MutedWords.tsx:170
 msgid "Mute this word until you unmute it"
-msgstr ""
+msgstr "Oculte esta palavra até que você a reative"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:465
 #: src/view/com/util/forms/PostDropdownBtn.tsx:471
@@ -4065,11 +4065,11 @@ msgstr "Natureza"
 
 #: src/components/StarterPack/StarterPackCard.tsx:121
 msgid "Navigate to {0}"
-msgstr ""
+msgstr "Navegar para {0}"
 
 #: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:73
 msgid "Navigate to starter pack"
-msgstr ""
+msgstr "Navegue até o pacote inicial"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:173
 #: src/screens/Login/LoginForm.tsx:332
@@ -4115,7 +4115,7 @@ msgstr "Novo chat"
 
 #: src/components/dms/NewMessagesPill.tsx:92
 msgid "New messages"
-msgstr ""
+msgstr "Nova mensagens"
 
 #: src/view/com/modals/CreateOrEditList.tsx:241
 msgid "New Moderation List"
@@ -4151,7 +4151,7 @@ msgstr "Novo Post"
 
 #: src/components/NewskieDialog.tsx:83
 msgid "New user info dialog"
-msgstr ""
+msgstr "Novo diálogo de informações do usuário"
 
 #: src/view/com/modals/CreateOrEditList.tsx:236
 msgid "New User List"
@@ -4262,7 +4262,7 @@ msgstr "Nenhum resultado"
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:202
 msgid "No results"
-msgstr ""
+msgstr "Nenhum resultados"
 
 #: src/components/Lists.tsx:215
 msgid "No results found"
@@ -4299,7 +4299,7 @@ msgstr "Ninguém"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:46
 #~ msgid "Nobody can reply"
-#~ msgstr ""
+#~ msgstr "Ninguém pode responder"
 
 #: src/components/LikedByList.tsx:79
 #: src/components/LikesDialog.tsx:99
@@ -4376,7 +4376,7 @@ msgstr "Notificações"
 
 #: src/lib/hooks/useTimeAgo.ts:51
 msgid "now"
-msgstr ""
+msgstr "agora"
 
 #: src/components/dms/MessageItem.tsx:169
 msgid "Now"
@@ -4434,7 +4434,7 @@ msgstr "Resetar tutoriais"
 
 #: src/tours/Tooltip.tsx:118
 msgid "Onboarding tour step {0}: {1}"
-msgstr ""
+msgstr "Etapa do tour de integração {0}: {1}"
 
 #: src/view/com/composer/Composer.tsx:589
 msgid "One or more images is missing alt text."
@@ -4446,7 +4446,7 @@ msgstr "Apenas imagens .jpg ou .png são permitidas"
 
 #: src/components/WhoCanReply.tsx:245
 #~ msgid "Only {0} can reply"
-#~ msgstr ""
+#~ msgstr "Apenas {0} pode responder"
 
 #: src/components/WhoCanReply.tsx:217
 msgid "Only {0} can reply."
@@ -4475,7 +4475,7 @@ msgstr "Abrir"
 
 #: src/view/com/posts/AviFollowButton.tsx:87
 msgid "Open {name} profile shortcut menu"
-msgstr ""
+msgstr "Abra o menu de atalho perfil do {name}"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:277
 msgid "Open avatar creator"
@@ -4484,7 +4484,7 @@ msgstr "Abrir criador de avatar"
 #: src/screens/Messages/List/ChatListItem.tsx:219
 #: src/screens/Messages/List/ChatListItem.tsx:220
 msgid "Open conversation options"
-msgstr ""
+msgstr "Abrir opções de conversa"
 
 #: src/view/com/composer/Composer.tsx:754
 #: src/view/com/composer/Composer.tsx:755
@@ -4501,7 +4501,7 @@ msgstr "Abrir links no navegador interno"
 
 #: src/components/dms/ActionsWrapper.tsx:87
 msgid "Open message options"
-msgstr ""
+msgstr "Abrir opções de mensagem"
 
 #: src/screens/Moderation/index.tsx:230
 msgid "Open muted words and tags settings"
@@ -4534,7 +4534,7 @@ msgstr "Abre {numItems} opções"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:68
 msgid "Opens a dialog to choose who can reply to this thread"
-msgstr ""
+msgstr "Abre uma caixa de diálogo para escolher quem pode responder a este tópico"
 
 #: src/view/screens/Settings/index.tsx:455
 msgid "Opens accessibility settings"
@@ -4550,7 +4550,7 @@ msgstr "Abre detalhes adicionais para um registro de depuração"
 
 #: src/view/screens/Settings/index.tsx:476
 msgid "Opens appearance settings"
-msgstr ""
+msgstr "Abre as configurações de aparência"
 
 #: src/view/com/composer/photos/OpenCameraBtn.tsx:74
 msgid "Opens camera on device"
@@ -4558,7 +4558,7 @@ msgstr "Abre a câmera do dispositivo"
 
 #: src/view/screens/Settings/index.tsx:605
 msgid "Opens chat settings"
-msgstr ""
+msgstr "Abre as configurações de chat"
 
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:30
 msgid "Opens composer"
@@ -4596,7 +4596,7 @@ msgstr "Abre a lista de códigos de convite"
 
 #: src/view/screens/Settings/index.tsx:774
 msgid "Opens modal for account deactivation confirmation"
-msgstr ""
+msgstr "Abre janela para confirmação da desativação da conta"
 
 #: src/view/screens/Settings/index.tsx:796
 msgid "Opens modal for account deletion confirmation. Requires email code"
@@ -4671,11 +4671,11 @@ msgstr "Abre as preferências de threads"
 #: src/view/com/notifications/FeedItem.tsx:555
 #: src/view/com/util/UserAvatar.tsx:420
 msgid "Opens this profile"
-msgstr ""
+msgstr "Abre este perfil"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:54
 msgid "Opens video picker"
-msgstr ""
+msgstr "Abre seletor de vídeos"
 
 #: src/view/com/util/forms/DropdownButton.tsx:293
 msgid "Option {0} of {numItems}"
@@ -4688,7 +4688,7 @@ msgstr "Se quiser adicionar mais informações, digite abaixo:"
 
 #: src/components/dialogs/MutedWords.tsx:299
 msgid "Options:"
-msgstr ""
+msgstr "Opções:"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:388
 msgid "Or combine these options:"
@@ -4696,11 +4696,11 @@ msgstr "Ou combine estas opções:"
 
 #: src/screens/Deactivated.tsx:211
 msgid "Or, continue with another account."
-msgstr ""
+msgstr "Ou continue com outra conta."
 
 #: src/screens/Deactivated.tsx:194
 msgid "Or, log into one of your other accounts."
-msgstr ""
+msgstr "Ou faça login em uma de suas outras contas."
 
 #: src/lib/moderation/useReportOptions.ts:27
 msgid "Other"
@@ -4712,7 +4712,7 @@ msgstr "Outra conta"
 
 #: src/view/screens/Settings/index.tsx:379
 msgid "Other accounts"
-msgstr ""
+msgstr "Outra conta"
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:92
 msgid "Other..."
@@ -4720,7 +4720,7 @@ msgstr "Outro..."
 
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:28
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
-msgstr ""
+msgstr "Nossos moderadores analisaram os relatórios e decidiram desabilitar seu acesso aos chats no Bluesky."
 
 #: src/components/Lists.tsx:216
 #: src/view/screens/NotFound.tsx:45
@@ -4757,7 +4757,7 @@ msgstr "Pausar"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:203
 msgid "Pause video"
-msgstr ""
+msgstr "Pausar vídeo"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:171
 #: src/view/screens/Search/Search.tsx:369
@@ -4782,7 +4782,7 @@ msgstr "A permissão de galeria foi recusada. Por favor, habilite-a nas configur
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:55
 msgid "Person toggle"
-msgstr ""
+msgstr "Alternar pessoa"
 
 #: src/screens/Onboarding/index.tsx:28
 #: src/screens/Onboarding/state.ts:94
@@ -4791,7 +4791,7 @@ msgstr "Pets"
 
 #: src/screens/Onboarding/state.ts:95
 msgid "Photography"
-msgstr ""
+msgstr "Fotografia"
 
 #: src/view/com/modals/SelfLabel.tsx:122
 msgid "Pictures meant for adults."
@@ -4812,7 +4812,7 @@ msgstr "Feeds Fixados"
 
 #: src/view/screens/ProfileList.tsx:345
 msgid "Pinned to your feeds"
-msgstr ""
+msgstr "Fixado em seus feeds"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:44
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:226
@@ -4826,7 +4826,7 @@ msgstr "Reproduzir {0}"
 #: src/screens/Messages/Settings.tsx:97
 #: src/screens/Messages/Settings.tsx:104
 #~ msgid "Play notification sounds"
-#~ msgstr ""
+#~ msgstr "Reproduzir sons de notificação"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:43
 msgid "Play or pause the GIF"
@@ -4835,7 +4835,7 @@ msgstr "Tocar ou pausar o GIF"
 #: src/view/com/util/post-embeds/VideoEmbed.tsx:52
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:204
 msgid "Play video"
-msgstr ""
+msgstr "Tocar vídeo"
 
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:57
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:58
@@ -4882,7 +4882,7 @@ msgstr "Por favor, digite o seu e-mail."
 
 #: src/screens/Signup/StepInfo/index.tsx:63
 msgid "Please enter your invite code."
-msgstr ""
+msgstr "Por favor, insira seu código de convite."
 
 #: src/view/com/modals/DeleteAccount.tsx:253
 msgid "Please enter your password as well:"
@@ -4894,7 +4894,7 @@ msgstr "Por favor, explique por que você acha que este rótulo foi aplicado inc
 
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:110
 msgid "Please explain why you think your chats were incorrectly disabled"
-msgstr ""
+msgstr "Por favor, explique por que você acha que seus chats foram desativados incorretamente"
 
 #: src/lib/hooks/useAccountSwitcher.ts:48
 #: src/lib/hooks/useAccountSwitcher.ts:58
@@ -5002,11 +5002,11 @@ msgstr "Link Potencialmente Enganoso"
 
 #: src/state/queries/notifications/settings.ts:44
 msgid "Preference saved"
-msgstr ""
+msgstr "Preferência salva"
 
 #: src/screens/Messages/Conversation/MessageListError.tsx:19
 msgid "Press to attempt reconnection"
-msgstr ""
+msgstr "Pressione para tentar reconectar"
 
 #: src/components/forms/HostingProvider.tsx:46
 msgid "Press to change hosting provider"
