@@ -5042,7 +5042,7 @@ msgstr "Priorizar seus Seguidores"
 
 #: src/view/screens/NotificationsSettings.tsx:57
 msgid "Priority notifications"
-msgstr ""
+msgstr "Notificações prioritárias"
 
 #: src/view/screens/Settings/index.tsx:620
 #: src/view/shell/desktop/RightNav.tsx:81
@@ -5059,7 +5059,7 @@ msgstr "Política de Privacidade"
 
 #: src/components/dms/MessagesNUX.tsx:91
 msgid "Privately chat with other users."
-msgstr ""
+msgstr "Converse em particular com outros usuários."
 
 #: src/screens/Login/ForgotPasswordForm.tsx:156
 msgid "Processing..."
@@ -5264,7 +5264,7 @@ msgstr "Remover banner"
 
 #: src/screens/Messages/Conversation/MessageInputEmbed.tsx:218
 msgid "Remove embed"
-msgstr ""
+msgstr "Remover incorporação"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:169
 #: src/view/com/posts/FeedShutdownMsg.tsx:116
@@ -5291,11 +5291,11 @@ msgstr "Remover dos meus feeds?"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:53
 msgid "Remove from quick access?"
-msgstr ""
+msgstr "Remover do acesso rápido?"
 
 #: src/screens/List/ListHiddenScreen.tsx:156
 msgid "Remove from saved feeds"
-msgstr ""
+msgstr "Remover dos feeds salvos"
 
 #: src/view/com/composer/photos/Gallery.tsx:174
 msgid "Remove image"
@@ -5311,11 +5311,11 @@ msgstr "Remover palavra silenciada da lista"
 
 #: src/view/screens/Search/Search.tsx:969
 msgid "Remove profile"
-msgstr ""
+msgstr "Remover perfil"
 
 #: src/view/screens/Search/Search.tsx:971
 msgid "Remove profile from search history"
-msgstr ""
+msgstr "Remover perfil do histórico de pesquisa"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:255
 msgid "Remove quote"
