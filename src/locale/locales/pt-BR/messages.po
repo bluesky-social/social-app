@@ -1998,7 +1998,7 @@ msgstr "Liberar"
 
 #: src/view/com/composer/Composer.tsx:612
 msgid "Dismiss error"
-msgstr "Liberar error"
+msgstr "Liberar erro"
 
 #: src/components/ProgressGuide/List.tsx:40
 msgid "Dismiss getting started guide"
@@ -2485,7 +2485,7 @@ msgstr "Expirado "
 
 #: src/components/dialogs/MutedWords.tsx:502
 msgid "Expires {0}"
-msgstr "Expirado {0}"
+msgstr "Expirada {0}"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:47
 msgid "Explicit or potentially disturbing media."
@@ -2820,7 +2820,7 @@ msgstr "Seguido por <0>{0}</0> e <1>{1}</1>"
 
 #: src/components/KnownFollowers.tsx:186
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
-msgstr "Seguido por <0>{0}</0>, <1>{1}</1>, e {2, plural, one {# other} outro {# others}}"
+msgstr "Seguido por <0>{0}</0>, <1>{1}</1>, e {2, plural, one {# other} other {# others}}"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:403
 msgid "Followed users"
@@ -3862,7 +3862,7 @@ msgstr "Listas de Moderação"
 
 #: src/components/moderation/LabelPreference.tsx:247
 msgid "moderation settings"
-msgstr "Configurações de Moderação"
+msgstr "configurações de Moderação"
 
 #: src/view/screens/Settings/index.tsx:521
 msgid "Moderation settings"
