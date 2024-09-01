@@ -1,0 +1,106 @@
+diff --git a/node_modules/expo-image/build/ExpoImage.js b/node_modules/expo-image/build/ExpoImage.js
+index 030ae22..e2731f3 100644
+--- a/node_modules/expo-image/build/ExpoImage.js
++++ b/node_modules/expo-image/build/ExpoImage.js
+@@ -67,7 +67,7 @@ class ExpoImage extends React.PureComponent {
+         const borderTopColor = processColor(resolvedStyle.borderTopColor);
+         // @ts-ignore
+         const borderBottomColor = processColor(resolvedStyle.borderBottomColor);
+-        return (<NativeExpoImage {...props} {...resolvedStyle} accessibilityLabel={accessibilityLabel ?? alt} style={resolvedStyle} onLoadStart={this.onLoadStart} onLoad={this.onLoad} onProgress={this.onProgress} onError={this.onError} tintColor={tintColor} borderColor={borderColor} borderLeftColor={borderLeftColor} borderRightColor={borderRightColor} borderTopColor={borderTopColor} borderBottomColor={borderBottomColor} borderStartColor={borderStartColor} borderEndColor={borderEndColor} backgroundColor={backgroundColor} ref={props.nativeViewRef}/>);
++        return (<NativeExpoImage {...props} {...resolvedStyle} accessibilityLabel={accessibilityLabel ?? alt} style={resolvedStyle} onLoadStart={this.onLoadStart} onLoad={this.onLoad} onProgress={this.onProgress} onError={this.onError} tintColor={tintColor} borderColor={borderColor} borderLeftColor={borderLeftColor} borderRightColor={borderRightColor} borderTopColor={borderTopColor} borderBottomColor={borderBottomColor} borderStartColor={borderStartColor} borderEndColor={borderEndColor} backgroundColor={backgroundColor} ref={props.nativeViewRef} runOnFinishRendering={() => {}} shouldHandleFinishRendering={typeof props.onFinishRendering === 'function'}/>);
+     }
+ }
+ export { ExpoImageModule };
+diff --git a/node_modules/expo-image/build/Image.types.d.ts b/node_modules/expo-image/build/Image.types.d.ts
+index 9b1e856..6aa611b 100644
+--- a/node_modules/expo-image/build/Image.types.d.ts
++++ b/node_modules/expo-image/build/Image.types.d.ts
+@@ -293,6 +293,8 @@ export interface ImageProps extends ViewProps {
+      * @platform android
+      */
+     decodeFormat?: ImageDecodeFormat;
++
++    onFinishRendering?: () => void;
+ }
+ /**
+  * It narrows down some props to types expected by the native/web side.
+@@ -306,6 +308,7 @@ export interface ImageNativeProps extends ImageProps {
+     transition?: ImageTransition | null;
+     autoplay?: boolean;
+     nativeViewRef?: React.RefObject<ExpoImage>;
++    shouldHandleFinishRendering?: boolean;
+ }
+ /**
+  * A value that represents the relative position of a single axis.
+diff --git a/node_modules/expo-image/ios/ImageModule.swift b/node_modules/expo-image/ios/ImageModule.swift
+index ca6718b..b00e395 100644
+--- a/node_modules/expo-image/ios/ImageModule.swift
++++ b/node_modules/expo-image/ios/ImageModule.swift
+@@ -22,7 +22,8 @@ public final class ImageModule: Module {
+         "onLoadStart",
+         "onProgress",
+         "onError",
+-        "onLoad"
++        "onLoad",
++        "onFinishRendering"
+       )
+ 
+       Prop("source") { (view, sources: [ImageSource]?) in
+@@ -95,6 +96,10 @@ public final class ImageModule: Module {
+         view.autoplay = autoplay ?? true
+       }
+ 
++      Prop("shouldHandleFinishRendering") { (view, prop: Bool?) in
++        view.shouldHandleFinishRendering = prop ?? false
++      }
++
+       AsyncFunction("startAnimating") { (view: ImageView) in
+         view.sdImageView.startAnimating()
+       }
+diff --git a/node_modules/expo-image/ios/ImageView.swift b/node_modules/expo-image/ios/ImageView.swift
+index ff37747..6fcdef0 100644
+--- a/node_modules/expo-image/ios/ImageView.swift
++++ b/node_modules/expo-image/ios/ImageView.swift
+@@ -45,6 +45,8 @@ public final class ImageView: ExpoView {
+ 
+   var allowDownscaling: Bool = true
+ 
++  var shouldHandleFinishRendering = false
++
+   var recyclingKey: String? {
+     didSet {
+       if oldValue != nil && recyclingKey != oldValue {
+@@ -65,6 +67,8 @@ public final class ImageView: ExpoView {
+ 
+   let onLoad = EventDispatcher()
+ 
++  let onFinishRendering = EventDispatcher()
++
+   // MARK: - View
+ 
+   public override var bounds: CGRect {
+@@ -403,6 +407,13 @@ public final class ImageView: ExpoView {
+   private func setImage(_ image: UIImage?, contentFit: ContentFit, isPlaceholder: Bool) {
+     sdImageView.contentMode = contentFit.toContentMode()
+ 
++    if self.shouldHandleFinishRendering {
++      CATransaction.begin()
++      CATransaction.setCompletionBlock {
++        self.onFinishRendering()
++      }
++    }
++
+     if isPlaceholder {
+       sdImageView.autoPlayAnimatedImage = true
+     } else {
+@@ -417,6 +428,10 @@ public final class ImageView: ExpoView {
+       sdImageView.image = image
+     }
+ 
++    if self.shouldHandleFinishRendering {
++      CATransaction.commit()
++    }
++
+ #if !os(tvOS)
+     if enableLiveTextInteraction {
+       analyzeImage()
