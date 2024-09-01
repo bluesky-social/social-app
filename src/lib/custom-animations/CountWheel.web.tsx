@@ -1,7 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
 import {useReducedMotion} from 'react-native-reanimated'
-import {i18n} from '@lingui/core'
 
 import {decideShouldRoll} from 'lib/custom-animations/util'
 import {s} from 'lib/styles'
@@ -74,8 +73,8 @@ export function CountWheel({
     prevIsLiked.current = isLiked
   }, [isLiked, likeCount, shouldAnimate, shouldRoll])
 
-  const formattedCount = formatCount(i18n, likeCount)
-  const formattedPrevCount = formatCount(i18n, prevCount)
+  const formattedCount = formatCount(likeCount)
+  const formattedPrevCount = formatCount(prevCount)
 
   return (
     <View>
