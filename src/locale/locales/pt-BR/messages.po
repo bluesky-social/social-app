@@ -2631,7 +2631,7 @@ msgstr "Feed por {0}"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:55
 msgid "Feed toggle"
-msgstr "Alterar Feed"
+msgstr "Alternar Feed"
 
 #: src/view/shell/desktop/RightNav.tsx:70
 #: src/view/shell/Drawer.tsx:346
@@ -2845,7 +2845,7 @@ msgstr "Seguidores"
 
 #: src/Navigation.tsx:187
 msgid "Followers of @{0} that you know"
-msgstr "Followers de @{0} que você conhece"
+msgstr "Seguidores de @{0} que você conhece"
 
 #: src/screens/Profile/KnownFollowers.tsx:108
 #: src/screens/Profile/KnownFollowers.tsx:118
@@ -3337,7 +3337,7 @@ msgstr "Interação limitada"
 
 #: src/components/dms/MessagesNUX.tsx:82
 msgid "Introducing Direct Messages"
-msgstr "Apresentando mensagens diretas"
+msgstr "Apresentando Mensagens Diretas"
 
 #: src/screens/Login/LoginForm.tsx:140
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
