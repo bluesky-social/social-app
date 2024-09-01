@@ -8165,7 +8165,7 @@ msgstr "Você não silenciou nenhuma palavra ou tag ainda"
 #: src/components/moderation/ModerationDetailsDialog.tsx:117
 #: src/lib/moderation/useModerationCauseDescription.ts:125
 msgid "You hid this reply."
-msgstr "Você escondeu esta resposta."
+msgstr "Você ocultou esta resposta."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:86
 msgid "You may appeal non-self labels if you feel they were placed in error."
