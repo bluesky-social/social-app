@@ -43,7 +43,7 @@ export function VideoPreview({
         a.overflow_hidden,
         a.border,
         t.atoms.border_contrast_low,
-        {backgroundColor: t.palette.black},
+        {backgroundColor: 'black'},
       ]}>
       <VideoView
         player={player}
