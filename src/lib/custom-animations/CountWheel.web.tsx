@@ -53,6 +53,8 @@ export function CountWheel({
 
   const [prevCount, setPrevCount] = React.useState(likeCount)
   const prevIsLiked = React.useRef(isLiked)
+  const formattedCount = formatCount(i18n, likeCount)
+  const formattedPrevCount = formatCount(i18n, prevCount)
 
   React.useEffect(() => {
     if (isLiked === prevIsLiked.current) {
@@ -73,9 +75,6 @@ export function CountWheel({
     }
     prevIsLiked.current = isLiked
   }, [isLiked, likeCount, shouldAnimate, shouldRoll])
-
-  const formattedCount = formatCount(i18n, likeCount)
-  const formattedPrevCount = formatCount(i18n, prevCount)
 
   return (
     <View>

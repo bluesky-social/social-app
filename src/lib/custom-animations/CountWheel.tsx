@@ -107,6 +107,8 @@ export function CountWheel({
   const [key, setKey] = React.useState(0)
   const [prevCount, setPrevCount] = React.useState(likeCount)
   const prevIsLiked = React.useRef(isLiked)
+  const formattedCount = formatCount(i18n, likeCount)
+  const formattedPrevCount = formatCount(i18n, prevCount)
 
   React.useEffect(() => {
     if (isLiked === prevIsLiked.current) {
@@ -118,9 +120,6 @@ export function CountWheel({
     setPrevCount(newPrevCount)
     prevIsLiked.current = isLiked
   }, [isLiked, likeCount])
-
-  const formattedCount = formatCount(i18n, likeCount)
-  const formattedPrevCount = formatCount(i18n, prevCount)
 
   const enteringAnimation =
     shouldAnimate && shouldRoll
@@ -156,9 +155,9 @@ export function CountWheel({
             </Text>
           </Animated.View>
         ) : null}
-        {/* Add 2 to the key so there are never duplicates */}
         <Animated.View
           entering={exitingAnimation}
+          // Add 2 to the key so there are never duplicates
           key={key + 2}
           style={[a.absolute]}
           aria-disabled={true}>
