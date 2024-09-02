@@ -78,8 +78,8 @@ export function Controls({
   const setSubtitlesEnabled = useSetSubtitlesEnabled()
   const {
     state: hovered,
-    onIn: onMouseEnter,
-    onOut: onMouseLeave,
+    onIn: onHover,
+    onOut: onEndHover,
   } = useInteractionState()
   const [isFullscreen, toggleFullscreen] = useFullscreen(fullscreenRef)
   const {state: hasFocus, onIn: onFocus, onOut: onBlur} = useInteractionState()
@@ -220,6 +220,25 @@ export function Controls({
     onSeek(clamp(currentTime + 5, 0, duration))
   }, [onSeek, videoRef])
 
+  const [showCursor, setShowCursor] = useState(true)
+  const cursorTimeoutRef = useRef<ReturnType<typeof setTimeout>>()
+  const onPointerMoveEmptySpace = useCallback(() => {
+    setShowCursor(true)
+    if (cursorTimeoutRef.current) {
+      clearTimeout(cursorTimeoutRef.current)
+    }
+    cursorTimeoutRef.current = setTimeout(() => {
+      setShowCursor(false)
+      onEndHover()
+    }, 2000)
+  }, [onEndHover])
+  const onPointerLeaveEmptySpace = useCallback(() => {
+    setShowCursor(false)
+    if (cursorTimeoutRef.current) {
+      clearTimeout(cursorTimeoutRef.current)
+    }
+  }, [])
+
   const showControls =
     (focused && !playing) || (interactingViaKeypress ? hasFocus : hovered)
 
@@ -236,13 +255,17 @@ export function Controls({
         evt.stopPropagation()
         setInteractingViaKeypress(false)
       }}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
+      onPointerEnter={onHover}
+      onPointerMove={onHover}
+      onPointerLeave={onEndHover}
       onFocus={onFocus}
       onBlur={onBlur}
       onKeyDown={onKeyDown}>
       <Pressable
         accessibilityRole="button"
+        onPointerEnter={onPointerMoveEmptySpace}
+        onPointerMove={onPointerMoveEmptySpace}
+        onPointerLeave={onPointerLeaveEmptySpace}
         accessibilityHint={_(
           !focused
             ? msg`Unmute video`
@@ -250,7 +273,7 @@ export function Controls({
             ? msg`Pause video`
             : msg`Play video`,
         )}
-        style={a.flex_1}
+        style={[a.flex_1, web({cursor: showCursor ? 'pointer' : 'none'})]}
         onPress={onPressEmptySpace}
       />
       {!showControls && !focused && duration > 0 && (
@@ -407,8 +430,8 @@ function Scrubber({
   const [scrubberActive, setScrubberActive] = useState(false)
   const {
     state: hovered,
-    onIn: onMouseEnter,
-    onOut: onMouseLeave,
+    onIn: onStartHover,
+    onOut: onEndHover,
   } = useInteractionState()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const [seekPosition, setSeekPosition] = useState(0)
@@ -521,9 +544,8 @@ function Scrubber({
     <View
       testID="scrubber"
       style={[{height: 10, width: '100%'}, a.flex_shrink_0, a.px_xs]}
-      // @ts-expect-error web only -sfn
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}>
+      onPointerEnter={onStartHover}
+      onPointerLeave={onEndHover}>
       <div
         ref={barRef}
         style={{
