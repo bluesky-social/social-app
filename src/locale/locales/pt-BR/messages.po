@@ -2690,7 +2690,7 @@ msgstr "Encontre contas para seguir"
 
 #: src/tours/HomeTour.tsx:88
 msgid "Find more feeds and accounts to follow in the Explore page."
-msgstr "Encontre mais feed e contas para seguir na página Explore"
+msgstr "Encontre mais feeds e contas para seguir na página Explore"
 
 #: src/view/screens/Search/Search.tsx:439
 msgid "Find posts and users on Bluesky"
