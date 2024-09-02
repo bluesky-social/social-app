@@ -681,7 +681,7 @@ msgstr "Senha de Aplicativo excluída"
 
 #: src/view/com/modals/AddAppPasswords.tsx:138
 msgid "App Password names can only contain letters, numbers, spaces, dashes, and underscores."
-msgstr "O nome da Senha de Aplicativo só pode conter letras, números, riscas e subtraços."
+msgstr "O nome da Senha de Aplicativo só pode conter letras, números, traços e sublinhados."
 
 #: src/view/com/modals/AddAppPasswords.tsx:103
 msgid "App Password names must be at least 4 characters long."
@@ -1021,7 +1021,7 @@ msgstr "Câmera"
 
 #: src/view/com/modals/AddAppPasswords.tsx:180
 msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
-msgstr "Só pode conter letras, números, espaços, riscas e subtraços. Deve ter pelo menos 4 caracteres, mas não mais de 32 caracteres."
+msgstr "Só pode conter letras, números, espaços, traços e sublinhados. Deve ter pelo menos 4 caracteres, mas não mais de 32 caracteres."
 
 #: src/components/Menu/index.tsx:235
 #: src/components/Prompt.tsx:119
