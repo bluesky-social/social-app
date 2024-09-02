@@ -2208,7 +2208,7 @@ msgstr "Editar Perfil"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:554
 msgid "Edit starter pack"
-msgstr "Editar pacote incial"
+msgstr "Editar pacote inicial"
 
 #: src/view/com/modals/CreateOrEditList.tsx:234
 msgid "Edit User List"
