@@ -137,10 +137,7 @@ export function CountWheel({
     <LayoutAnimationConfig skipEntering skipExiting>
       {likeCount > 0 ? (
         <View style={[a.justify_center]}>
-          <Animated.View
-            entering={enteringAnimation}
-            key={key}
-            style={[a.absolute]}>
+          <Animated.View entering={enteringAnimation} key={key}>
             <Text
               testID="likeCount"
               style={[
@@ -158,7 +155,7 @@ export function CountWheel({
               entering={exitingAnimation}
               // Add 2 to the key so there are never duplicates
               key={key + 2}
-              style={[a.absolute]}
+              style={[a.absolute, {width: 50}]}
               aria-disabled={true}>
               <Text
                 style={[
