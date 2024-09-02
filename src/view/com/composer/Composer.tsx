@@ -181,6 +181,7 @@ export const ComposePost = observer(function ComposePost({
     clearVideo,
     state: videoUploadState,
     updateVideoDimensions,
+    dispatch: videoUploadDispatch,
   } = useUploadVideo({
     setStatus: setProcessingState,
     onSuccess: () => {
@@ -607,7 +608,7 @@ export const ComposePost = observer(function ComposePost({
               </Text>
             </View>
           )}
-          {error !== '' && (
+          {(error !== '' || videoUploadState.error) && (
             <View style={[a.px_lg, a.pb_sm]}>
               <View
                 style={[
@@ -623,7 +624,7 @@ export const ComposePost = observer(function ComposePost({
                 ]}>
                 <CircleInfo fill={t.palette.negative_400} />
                 <NewText style={[a.flex_1, a.leading_snug, {paddingTop: 1}]}>
-                  {error}
+                  {error || videoUploadState.error}
                 </NewText>
                 <Button
                   label={_(msg`Dismiss error`)}
@@ -638,7 +639,10 @@ export const ComposePost = observer(function ComposePost({
                       right: a.px_md.paddingRight,
                     },
                   ]}
-                  onPress={() => setError('')}>
+                  onPress={() => {
+                    if (error) setError('')
+                    else videoUploadDispatch({type: 'Reset'})
+                  }}>
                   <ButtonIcon icon={X} />
                 </Button>
               </View>
@@ -764,6 +768,7 @@ export const ComposePost = observer(function ComposePost({
                 <SelectVideoBtn
                   onSelectVideo={selectVideo}
                   disabled={!canSelectImages}
+                  setError={setError}
                 />
               )}
               <OpenCameraBtn gallery={gallery} disabled={!canSelectImages} />

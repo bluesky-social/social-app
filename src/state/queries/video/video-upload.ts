@@ -1,11 +1,14 @@
 import {createUploadTask, FileSystemUploadType} from 'expo-file-system'
 import {AppBskyVideoDefs} from '@atproto/api'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 import {nanoid} from 'nanoid/non-secure'
 
 import {cancelable} from '#/lib/async/cancelable'
+import {ServerError} from '#/lib/media/video/errors'
 import {CompressedVideo} from '#/lib/media/video/types'
-import {createVideoEndpointUrl} from '#/state/queries/video/util'
+import {createVideoEndpointUrl, mimeToExt} from '#/state/queries/video/util'
 import {useAgent, useSession} from '#/state/session'
 import {getServiceAuthAudFromUrl} from 'lib/strings/url-helpers'
 
@@ -22,13 +25,14 @@ export const useUploadVideoMutation = ({
 }) => {
   const {currentAccount} = useSession()
   const agent = useAgent()
+  const {_} = useLingui()
 
   return useMutation({
     mutationKey: ['video', 'upload'],
     mutationFn: cancelable(async (video: CompressedVideo) => {
       const uri = createVideoEndpointUrl('/xrpc/app.bsky.video.uploadVideo', {
         did: currentAccount!.did,
-        name: `${nanoid(12)}.mp4`,
+        name: `${nanoid(12)}.${mimeToExt(video.mimeType)}`,
       })
 
       const serviceAuthAud = getServiceAuthAudFromUrl(agent.dispatchUrl)
@@ -50,7 +54,7 @@ export const useUploadVideoMutation = ({
         video.uri,
         {
           headers: {
-            'content-type': 'video/mp4',
+            'content-type': video.mimeType,
             Authorization: `Bearer ${serviceAuth.token}`,
           },
           httpMethod: 'POST',
@@ -65,6 +69,13 @@ export const useUploadVideoMutation = ({
       }
 
       const responseBody = JSON.parse(res.body) as AppBskyVideoDefs.JobStatus
+
+      if (!responseBody.jobId) {
+        throw new ServerError(
+          responseBody.error || _(msg`Failed to upload video`),
+        )
+      }
+
       return responseBody
     }, signal),
     onError,

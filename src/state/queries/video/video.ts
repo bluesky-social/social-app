@@ -6,7 +6,8 @@ import {useLingui} from '@lingui/react'
 import {QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
-import {VideoTooLargeError} from 'lib/media/video/errors'
+import {isWeb} from '#/platform/detection'
+import {ServerError, VideoTooLargeError} from 'lib/media/video/errors'
 import {CompressedVideo} from 'lib/media/video/types'
 import {useCompressVideoMutation} from 'state/queries/video/compress-video'
 import {useVideoAgent} from 'state/queries/video/util'
@@ -58,7 +59,12 @@ function reducer(queryClient: QueryClient) {
         abortController: new AbortController(),
       }
     } else if (action.type === 'SetAsset') {
-      updatedState = {...state, asset: action.asset}
+      updatedState = {
+        ...state,
+        asset: action.asset,
+        status: 'compressing',
+        error: undefined,
+      }
     } else if (action.type === 'SetDimensions') {
       updatedState = {
         ...state,
@@ -125,10 +131,17 @@ export function useUploadVideo({
       setJobId(response.jobId)
     },
     onError: e => {
-      dispatch({
-        type: 'SetError',
-        error: _(msg`An error occurred while uploading the video.`),
-      })
+      if (e instanceof ServerError) {
+        dispatch({
+          type: 'SetError',
+          error: e.message,
+        })
+      } else {
+        dispatch({
+          type: 'SetError',
+          error: _(msg`An error occurred while uploading the video.`),
+        })
+      }
       logger.error('Error uploading video', {safeMessage: e})
     },
     setProgress: p => {
@@ -141,21 +154,6 @@ export function useUploadVideo({
     onProgress: p => {
       dispatch({type: 'SetProgress', progress: p})
     },
-    onError: e => {
-      if (e instanceof VideoTooLargeError) {
-        dispatch({
-          type: 'SetError',
-          error: _(msg`The selected video is larger than 100MB.`),
-        })
-      } else {
-        dispatch({
-          type: 'SetError',
-          // @TODO better error message from server, left untranslated on purpose
-          error: 'An error occurred while compressing the video.',
-        })
-        logger.error('Error compressing video', {safeMessage: e})
-      }
-    },
     onSuccess: (video: CompressedVideo) => {
       dispatch({
         type: 'SetVideo',
@@ -167,19 +165,37 @@ export function useUploadVideo({
       })
       onVideoCompressed(video)
     },
+    onError: e => {
+      if (e instanceof VideoTooLargeError) {
+        dispatch({
+          type: 'SetError',
+          error: _(msg`The selected video is larger than 100MB.`),
+        })
+      } else {
+        dispatch({
+          type: 'SetError',
+          error: _(msg`An error occurred while compressing the video.`),
+        })
+        logger.error('Error compressing video', {safeMessage: e})
+      }
+    },
     signal: state.abortController.signal,
   })
 
   const selectVideo = (asset: ImagePickerAsset) => {
-    dispatch({
-      type: 'SetAsset',
-      asset,
-    })
-    dispatch({
-      type: 'SetStatus',
-      status: 'compressing',
-    })
-    onSelectVideo(asset)
+    switch (getMimeType(asset)) {
+      case 'video/mp4':
+      case 'video/mpeg':
+      case 'video/webm':
+        dispatch({
+          type: 'SetAsset',
+          asset,
+        })
+        onSelectVideo(asset)
+        break
+      default:
+        throw new Error(_(msg`Unsupported video type: ${getMimeType(asset)}`))
+    }
   }
 
   const clearVideo = () => {
@@ -243,4 +259,18 @@ const useUploadStatusQuery = ({
       setJobId(_jobId)
     },
   }
+}
+
+function getMimeType(asset: ImagePickerAsset) {
+  if (isWeb) {
+    const [mimeType] = asset.uri.slice('data:'.length).split(';base64,')
+    if (!mimeType) {
+      throw new Error('Could not determine mime type')
+    }
+    return mimeType
+  }
+  if (!asset.mimeType) {
+    throw new Error('Could not determine mime type')
+  }
+  return asset.mimeType
 }

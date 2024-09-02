@@ -1,10 +1,13 @@
 import {AppBskyVideoDefs} from '@atproto/api'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 import {nanoid} from 'nanoid/non-secure'
 
 import {cancelable} from '#/lib/async/cancelable'
+import {ServerError} from '#/lib/media/video/errors'
 import {CompressedVideo} from '#/lib/media/video/types'
-import {createVideoEndpointUrl} from '#/state/queries/video/util'
+import {createVideoEndpointUrl, mimeToExt} from '#/state/queries/video/util'
 import {useAgent, useSession} from '#/state/session'
 import {getServiceAuthAudFromUrl} from 'lib/strings/url-helpers'
 
@@ -21,13 +24,14 @@ export const useUploadVideoMutation = ({
 }) => {
   const {currentAccount} = useSession()
   const agent = useAgent()
+  const {_} = useLingui()
 
   return useMutation({
     mutationKey: ['video', 'upload'],
     mutationFn: cancelable(async (video: CompressedVideo) => {
       const uri = createVideoEndpointUrl('/xrpc/app.bsky.video.uploadVideo', {
         did: currentAccount!.did,
-        name: `${nanoid(12)}.mp4`, // @TODO: make sure it's always mp4'
+        name: `${nanoid(12)}.${mimeToExt(video.mimeType)}`,
       })
 
       const serviceAuthAud = getServiceAuthAudFromUrl(agent.dispatchUrl)
@@ -58,27 +62,29 @@ export const useUploadVideoMutation = ({
             setProgress(progress)
           })
           xhr.onloadend = () => {
+            console.log(xhr.responseText)
             if (xhr.readyState === 4) {
               const uploadRes = JSON.parse(
                 xhr.responseText,
               ) as AppBskyVideoDefs.JobStatus
               resolve(uploadRes)
-              onSuccess(uploadRes)
             } else {
-              reject()
-              onError(new Error('Failed to upload video'))
+              reject(new ServerError(_(msg`Failed to upload video`)))
             }
           }
           xhr.onerror = () => {
-            reject()
-            onError(new Error('Failed to upload video'))
+            reject(new ServerError(_(msg`Failed to upload video`)))
           }
           xhr.open('POST', uri)
-          xhr.setRequestHeader('Content-Type', 'video/mp4')
+          xhr.setRequestHeader('Content-Type', video.mimeType)
           xhr.setRequestHeader('Authorization', `Bearer ${serviceAuth.token}`)
           xhr.send(bytes)
         },
       )
+
+      if (!res.jobId) {
+        throw new ServerError(res.error || _(msg`Failed to upload video`))
+      }
 
       return res
     }, signal),
