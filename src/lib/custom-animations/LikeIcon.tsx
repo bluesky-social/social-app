@@ -109,7 +109,6 @@ export function AnimatedLikeIcon({
                 zIndex: -1,
                 pointerEvents: 'none',
                 borderRadius: size / 2,
-                opacity: 0,
               }}
             />
             <Animated.View
@@ -126,7 +125,6 @@ export function AnimatedLikeIcon({
                 zIndex: -1,
                 pointerEvents: 'none',
                 borderRadius: size / 2,
-                opacity: 0,
               }}
             />
           </>
