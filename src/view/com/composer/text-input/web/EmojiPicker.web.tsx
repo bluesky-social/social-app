@@ -6,14 +6,16 @@ import {
   View,
 } from 'react-native'
 import Picker from '@emoji-mart/react'
+import EventEmitter from 'eventemitter3'
 
 import {atoms as a} from '#/alf'
-import {textInputWebEmitter} from '../TextInput.web'
 
 const HEIGHT_OFFSET = 40
 const WIDTH_OFFSET = 100
 const PICKER_HEIGHT = 435 + HEIGHT_OFFSET
 const PICKER_WIDTH = 350 + WIDTH_OFFSET
+
+export const textInputWebEmitter = new EventEmitter()
 
 export type Emoji = {
   aliases?: string[]
@@ -26,22 +28,37 @@ export type Emoji = {
   unified: string
 }
 
+export interface EmojiPickerPosition {
+  top: number
+  left: number
+  right: number
+  bottom: number
+}
+
 export interface EmojiPickerState {
   isOpen: boolean
-  pos: {top: number; left: number; right: number; bottom: number}
+  pos: EmojiPickerPosition
 }
 
 interface IProps {
   state: EmojiPickerState
   close: () => void
+  showAbove?: boolean
 }
 
-export function EmojiPicker({state, close}: IProps) {
+export function EmojiPicker({state, close, showAbove}: IProps) {
   const {height, width} = useWindowDimensions()
 
   const isShiftDown = React.useRef(false)
 
   const position = React.useMemo(() => {
+    if (showAbove) {
+      return {
+        top: state.pos.top - PICKER_HEIGHT + HEIGHT_OFFSET - 10,
+        left: state.pos.left,
+      }
+    }
+
     const fitsBelow = state.pos.top + PICKER_HEIGHT < height
     const fitsAbove = PICKER_HEIGHT < state.pos.top
     const placeOnLeft = PICKER_WIDTH < state.pos.left
@@ -64,7 +81,7 @@ export function EmojiPicker({state, close}: IProps) {
           : undefined,
       }
     }
-  }, [state.pos, height, width])
+  }, [state.pos, height, width, showAbove])
 
   React.useEffect(() => {
     if (!state.isOpen) return

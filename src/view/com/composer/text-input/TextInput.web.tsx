@@ -12,7 +12,6 @@ import {Placeholder} from '@tiptap/extension-placeholder'
 import {Text as TiptapText} from '@tiptap/extension-text'
 import {generateJSON} from '@tiptap/html'
 import {EditorContent, JSONContent, useEditor} from '@tiptap/react'
-import EventEmitter from 'eventemitter3'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
@@ -25,7 +24,7 @@ import {
 import {Portal} from '#/components/Portal'
 import {Text} from '../../util/text/Text'
 import {createSuggestion} from './web/Autocomplete'
-import {Emoji} from './web/EmojiPicker.web'
+import {Emoji, textInputWebEmitter} from './web/EmojiPicker.web'
 import {LinkDecorator} from './web/LinkDecorator'
 import {TagDecorator} from './web/TagDecorator'
 
@@ -45,8 +44,6 @@ interface TextInputProps {
   onNewLink: (uri: string) => void
   onError: (err: string) => void
 }
-
-export const textInputWebEmitter = new EventEmitter()
 
 export const TextInput = React.forwardRef(function TextInputImpl(
   {

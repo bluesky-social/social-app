@@ -12,9 +12,16 @@ import {
 } from '#/state/messages/message-drafts'
 import {isSafari, isTouchDevice} from 'lib/browser'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {
+  Emoji,
+  EmojiPickerPosition,
+  textInputWebEmitter,
+} from '#/view/com/composer/text-input/web/EmojiPicker.web'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
+import {Button} from '#/components/Button'
 import {useSharedInputStyles} from '#/components/forms/TextField'
+import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
 import {useExtractEmbedFromFacets} from './MessageInputEmbed'
 
@@ -23,11 +30,13 @@ export function MessageInput({
   hasEmbed,
   setEmbed,
   children,
+  openPicker,
 }: {
   onSendMessage: (message: string) => void
   hasEmbed: boolean
   setEmbed: (embedUrl: string | undefined) => void
   children?: React.ReactNode
+  openPicker?: (pos: EmojiPickerPosition) => void
 }) {
   const {isTabletOrDesktop} = useWebMediaQueries()
   const {_} = useLingui()
@@ -40,6 +49,7 @@ export function MessageInput({
   const [isFocused, setIsFocused] = React.useState(false)
   const [isHovered, setIsHovered] = React.useState(false)
   const [textAreaHeight, setTextAreaHeight] = React.useState(38)
+  const textAreaRef = React.useRef<HTMLTextAreaElement>(null)
 
   const onSubmit = React.useCallback(() => {
     if (!hasEmbed && message.trim() === '') {
@@ -94,6 +104,23 @@ export function MessageInput({
     [],
   )
 
+  const onEmojiInserted = React.useCallback(
+    (emoji: Emoji) => {
+      const position = textAreaRef.current?.selectionStart ?? 0
+      setMessage(
+        message =>
+          message.slice(0, position) + emoji.native + message.slice(position),
+      )
+    },
+    [setMessage],
+  )
+  React.useEffect(() => {
+    textInputWebEmitter.addListener('emoji-inserted', onEmojiInserted)
+    return () => {
+      textInputWebEmitter.removeListener('emoji-inserted', onEmojiInserted)
+    }
+  }, [onEmojiInserted])
+
   useSaveMessageDraft(message)
   useExtractEmbedFromFacets(message, setEmbed)
 
@@ -106,7 +133,7 @@ export function MessageInput({
           t.atoms.bg_contrast_25,
           {
             paddingRight: a.p_sm.padding - 2,
-            paddingLeft: a.p_md.padding - 2,
+            paddingLeft: a.p_sm.padding - 2,
             borderWidth: 1,
             borderRadius: 23,
             borderColor: 'transparent',
@@ -118,7 +145,23 @@ export function MessageInput({
         // @ts-expect-error web only
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}>
+        <Button
+          onPress={e => {
+            e.currentTarget.measure((_fx, _fy, _width, _height, px, py) => {
+              openPicker?.({top: py, left: px, right: px, bottom: py})
+            })
+          }}
+          style={[a.p_xs, {marginTop: 3}]}
+          label={_(msg`Open emoji picker`)}
+          accessibilityHint={_(msg`Open emoji picker`)}
+          variant="ghost"
+          shape="round"
+          size="small"
+          color="primary">
+          <EmojiSmile size="lg" />
+        </Button>
         <TextareaAutosize
+          ref={textAreaRef}
           style={StyleSheet.flatten([
             a.flex_1,
             a.px_sm,
