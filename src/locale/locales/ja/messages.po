@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-02 10:42+0900\n"
+"PO-Revision-Date: 2024-09-02 10:48+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -3997,7 +3997,7 @@ msgstr "古い順に返信を表示"
 
 #: src/components/StarterPack/QrCode.tsx:70
 msgid "on<0><1/><2><3/></2></0>"
-msgstr "<0><1/><2><3/></2></0>で"
+msgstr "<0><1/><2><3/></2></0>"
 
 #: src/view/screens/Settings/index.tsx:226
 msgid "Onboarding reset"
