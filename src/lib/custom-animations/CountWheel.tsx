@@ -151,12 +151,12 @@ export function CountWheel({
               {formattedCount}
             </Text>
           </Animated.View>
-          {shouldAnimate ? (
+          {shouldAnimate && (likeCount > 1 || !isLiked) ? (
             <Animated.View
               entering={exitingAnimation}
               // Add 2 to the key so there are never duplicates
               key={key + 2}
-              style={[a.absolute, {width: 50}]}
+              style={[a.absolute, {width: 50, opacity: 0}]}
               aria-disabled={true}>
               <Text
                 style={[

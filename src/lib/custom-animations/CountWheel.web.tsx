@@ -83,7 +83,6 @@ export function CountWheel({
   return (
     <View>
       <View
-        aria-disabled={true}
         // @ts-expect-error is div
         ref={countView}>
         <Text
@@ -98,9 +97,9 @@ export function CountWheel({
           {formattedCount}
         </Text>
       </View>
-      {shouldAnimate ? (
+      {shouldAnimate && (likeCount > 1 || !isLiked) ? (
         <View
-          style={{position: 'absolute'}}
+          style={{position: 'absolute', opacity: 0}}
           aria-disabled={true}
           // @ts-expect-error is div
           ref={prevCountView}>

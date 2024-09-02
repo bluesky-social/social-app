@@ -99,37 +99,33 @@ export function AnimatedLikeIcon({
               entering={
                 shouldAnimate ? circle1Keyframe.duration(300) : undefined
               }
-              style={[
-                {
-                  position: 'absolute',
-                  backgroundColor: s.likeColor.color,
-                  top: 0,
-                  left: 0,
-                  width: size,
-                  height: size,
-                  zIndex: -1,
-                  pointerEvents: 'none',
-                  borderRadius: size / 2,
-                },
-              ]}
+              style={{
+                position: 'absolute',
+                backgroundColor: s.likeColor.color,
+                top: 0,
+                left: 0,
+                width: size,
+                height: size,
+                zIndex: -1,
+                pointerEvents: 'none',
+                borderRadius: size / 2,
+              }}
             />
             <Animated.View
               entering={
                 shouldAnimate ? circle2Keyframe.duration(300) : undefined
               }
-              style={[
-                {
-                  position: 'absolute',
-                  backgroundColor: t.atoms.bg.backgroundColor,
-                  top: 0,
-                  left: 0,
-                  width: size,
-                  height: size,
-                  zIndex: -1,
-                  pointerEvents: 'none',
-                  borderRadius: size / 2,
-                },
-              ]}
+              style={{
+                position: 'absolute',
+                backgroundColor: t.atoms.bg.backgroundColor,
+                top: 0,
+                left: 0,
+                width: size,
+                height: size,
+                zIndex: -1,
+                pointerEvents: 'none',
+                borderRadius: size / 2,
+              }}
             />
           </>
         ) : null}
