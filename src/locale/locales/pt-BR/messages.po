@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2024-05-13 11:41\n"
-"Last-Translator: gildaswise\n"
-"Language-Team: maisondasilva, MightyLoggor, gildaswise, gleydson, faeriarum\n"
+"Last-Translator: fabiohcnobre\n"
+"Language-Team: maisondasilva, MightyLoggor, gildaswise, gleydson, faeriarum, fabiohcnobre\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: src/screens/Messages/List/ChatListItem.tsx:120
@@ -603,7 +603,7 @@ msgstr "Ocorreu um erro ao carregar o vídeo. Tente novamente mais tarde."
 #: src/components/StarterPack/QrCodeDialog.tsx:71
 #: src/components/StarterPack/ShareDialog.tsx:79
 msgid "An error occurred while saving the QR code!"
-msgstr "Ocorreu um erro ao salvar o código QR!"
+msgstr "Ocorreu um erro ao salvar o QR code!"
 
 #: src/components/dms/MessageMenu.tsx:134
 #~ msgid "An error occurred while trying to delete the message. Please try again."
@@ -774,7 +774,7 @@ msgstr "Tem certeza que deseja remover {0} dos seus feeds?"
 
 #: src/components/FeedCard.tsx:310
 msgid "Are you sure you want to remove this from your feeds?"
-msgstr "Tem certeza que deseja remover dos seus feeds?"
+msgstr "Tem certeza que deseja remover isto de seus feeds?"
 
 #: src/view/com/composer/Composer.tsx:772
 msgid "Are you sure you'd like to discard this draft?"
@@ -1676,7 +1676,7 @@ msgstr "Criar uma nova conta do Bluesky"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:154
 msgid "Create a QR code for a starter pack"
-msgstr "Crie um código QR para um kit inicial"
+msgstr "Crie o QR code para um kit inicial"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:165
 #: src/components/StarterPack/ProfileStarterPacks.tsx:259
@@ -4115,7 +4115,7 @@ msgstr "Novo chat"
 
 #: src/components/dms/NewMessagesPill.tsx:92
 msgid "New messages"
-msgstr "Nova mensagens"
+msgstr "Novas mensagens"
 
 #: src/view/com/modals/CreateOrEditList.tsx:241
 msgid "New Moderation List"
@@ -4346,7 +4346,7 @@ msgstr "Não há nada aqui"
 msgid "Notification filters"
 msgstr "Filtros de notificação"
 
-#: src/Navigation.tsx348
+#: src/Navigation.tsx:348
 #: src/view/screens/Notifications.tsx:119
 msgid "Notification settings"
 msgstr "Configurações de notificação"
@@ -4960,7 +4960,7 @@ msgstr "Post Escondido por Você"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:283
 msgid "Post interaction settings"
-msgstr "Configurações de interação do post"
+msgstr "Configurações de interação de postagem"
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:88
 msgid "Post language"
@@ -5108,15 +5108,15 @@ msgstr "Publicar resposta"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:128
 msgid "QR code copied to your clipboard!"
-msgstr "Código QR copiado para sua área de transferência!"
+msgstr "QR code copiado para sua área de transferência!"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:106
 msgid "QR code has been downloaded!"
-msgstr "O código QR foi baixado!"
+msgstr "QR code foi baixado!"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:107
 msgid "QR code saved to your camera roll!"
-msgstr "Código QR salvo no rolo da sua câmera!"
+msgstr "QR code salvo no rolo da sua câmera!"
 
 #: src/tours/Tooltip.tsx:111
 msgid "Quick tip"
@@ -8205,7 +8205,7 @@ msgstr "Você deve estar seguindo pelo menos sete outras pessoas para gerar um k
 
 #: src/components/StarterPack/QrCodeDialog.tsx:60
 msgid "You must grant access to your photo library to save a QR code"
-msgstr "Você deve conceder acesso à sua biblioteca de fotos para salvar um código QR."
+msgstr "Você deve conceder acesso à sua biblioteca de fotos para salvar o QR code."
 
 #: src/components/StarterPack/ShareDialog.tsx:68
 msgid "You must grant access to your photo library to save the image."
