@@ -2481,7 +2481,7 @@ msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:500
 msgid "Expired"
-msgstr ""
+msgstr "Expirado"
 
 #: src/components/dialogs/MutedWords.tsx:502
 msgid "Expires {0}"
@@ -2664,7 +2664,7 @@ msgstr "Os feeds são algoritmos personalizados que os usuários com um pouco de
 
 #: src/components/FeedCard.tsx:270
 msgid "Feeds updated!"
-msgstr ""
+msgstr "Feeds atualizados!"
 
 #: src/view/com/modals/ChangeHandle.tsx:475
 msgid "File Contents"
@@ -2690,7 +2690,7 @@ msgstr "Encontre contas para seguir"
 
 #: src/tours/HomeTour.tsx:88
 msgid "Find more feeds and accounts to follow in the Explore page."
-msgstr ""
+msgstr "Encontre mais feed e contas para seguir na página Explore"
 
 #: src/view/screens/Search/Search.tsx:439
 msgid "Find posts and users on Bluesky"
@@ -2762,11 +2762,11 @@ msgstr "Seguir {0}"
 
 #: src/view/com/posts/AviFollowButton.tsx:69
 msgid "Follow {name}"
-msgstr ""
+msgstr "Seguir {name}"
 
 #: src/components/ProgressGuide/List.tsx:54
 msgid "Follow 7 accounts"
-msgstr ""
+msgstr "Siga 7 contas"
 
 #: src/view/com/profile/ProfileMenu.tsx:246
 #: src/view/com/profile/ProfileMenu.tsx:257
@@ -3500,7 +3500,7 @@ msgstr "Sair"
 #: src/components/dms/MessagesListBlockedFooter.tsx:66
 #: src/components/dms/MessagesListBlockedFooter.tsx:73
 msgid "Leave chat"
-msgstr ""
+msgstr "Sair do chat"
 
 #: src/components/dms/ConvoMenu.tsx:138
 #: src/components/dms/ConvoMenu.tsx:141
@@ -3551,12 +3551,12 @@ msgstr "Claro"
 
 #: src/components/ProgressGuide/List.tsx:48
 msgid "Like 10 posts"
-msgstr ""
+msgstr "Curta 10 posts"
 
 #: src/state/shell/progress-guide.tsx:157
 #: src/state/shell/progress-guide.tsx:162
 msgid "Like 10 posts to train the Discover feed"
-msgstr ""
+msgstr "Curta 10 posts para treinar o feed Discover"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:267
 #: src/view/screens/ProfileFeed.tsx:575
@@ -6794,7 +6794,7 @@ msgstr "A conta poderá interagir com você após o desbloqueio."
 #: src/components/moderation/ModerationDetailsDialog.tsx:118
 #: src/lib/moderation/useModerationCauseDescription.ts:126
 msgid "The author of this thread has hidden this reply."
-msgstr ""
+msgstr "O autor desta thread ocultou esta resposta"
 
 #: src/screens/Moderation/index.tsx:368
 msgid "The Bluesky web application"
@@ -6810,12 +6810,12 @@ msgstr "A Política de Direitos Autorais foi movida para <0/>"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:102
 msgid "The Discover feed"
-msgstr ""
+msgstr "O feed Discover"
 
 #: src/state/shell/progress-guide.tsx:167
 #: src/state/shell/progress-guide.tsx:172
 msgid "The Discover feed now knows what you like"
-msgstr ""
+msgstr "O feed Discover agora sabe o que você gosta"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:327
 msgid "The experience is better in the app. Download Bluesky now and we'll pick back up where you left off."
@@ -6848,7 +6848,7 @@ msgstr "A Política de Privacidade foi movida para <0/>"
 
 #: src/state/queries/video/video.ts:129
 msgid "The selected video is larger than 100MB."
-msgstr ""
+msgstr "O vídeo selecionado é maior que 100MB"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:713
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
