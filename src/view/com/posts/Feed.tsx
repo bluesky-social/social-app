@@ -562,7 +562,9 @@ let Feed = ({
           desktopFixedHeightOffset ? desktopFixedHeightOffset : true
         }
         initialNumToRender={initialNumToRenderOverride ?? initialNumToRender}
-        windowSize={11}
+        windowSize={9}
+        maxToRenderPerBatch={5}
+        updateCellsBatchingPeriod={40}
         onItemSeen={feedFeedback.onItemSeen}
       />
     </View>
