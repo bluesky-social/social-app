@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-01 18:24+0900\n"
+"PO-Revision-Date: 2024-09-02 10:42+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -4021,7 +4021,7 @@ msgstr "英数字とハイフンのみ"
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:31
 msgid "Only WebVTT (.vtt) files are supported"
-msgstr "WebVTT（.vtt）ファイルのみに対応してます"
+msgstr "WebVTT（.vtt）ファイルのみに対応しています"
 
 #: src/components/Lists.tsx:88
 msgid "Oops, something went wrong!"
