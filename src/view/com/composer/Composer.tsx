@@ -1057,10 +1057,11 @@ function VideoUploadToolbar({state}: {state: VideoUploadState}) {
       break
   }
 
+  // we could use state.jobStatus?.progress but 99% of the time it jumps from 0 to 100
   const progress =
     state.status === 'compressing' || state.status === 'uploading'
       ? state.progress
-      : state.jobStatus?.progress ?? 100
+      : 100
 
   return (
     <ToolbarWrapper style={[a.flex_row, a.align_center, {paddingVertical: 5}]}>
