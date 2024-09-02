@@ -1,10 +1,10 @@
 export type Gate =
   // Keep this alphabetic please.
-  | 'autoexpand_suggestions_on_profile_follow_v2'
-  | 'disable_min_shell_on_foregrounding_v3'
-  | 'disable_poll_on_discover_v2'
-  | 'dms'
-  | 'show_follow_back_label_v2'
-  | 'start_session_with_following_v2'
-  | 'test_gate_1'
-  | 'test_gate_2'
+  | 'debug_show_feedcontext'
+  | 'fixed_bottom_bar'
+  | 'onboarding_minimum_interests'
+  | 'suggested_feeds_interstitial'
+  | 'show_follow_suggestions_in_profile'
+  | 'video_debug' // not recommended
+  | 'video_upload' // upload videos
+  | 'video_view_on_posts' // see posted videos

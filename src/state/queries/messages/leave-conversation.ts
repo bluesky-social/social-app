@@ -1,17 +1,13 @@
-import {
-  BskyAgent,
-  ChatBskyConvoLeaveConvo,
-  ChatBskyConvoListConvos,
-} from '@atproto-labs/api'
+import {ChatBskyConvoLeaveConvo, ChatBskyConvoListConvos} from '@atproto/api'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
-import {useDmServiceUrlStorage} from '#/screens/Messages/Temp/useDmServiceUrlStorage'
+import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
+import {useAgent} from '#/state/session'
 import {RQKEY as CONVO_LIST_KEY} from './list-converations'
-import {useHeaders} from './temp-headers'
 
 export function useLeaveConvo(
-  convoId: string,
+  convoId: string | undefined,
   {
     onSuccess,
     onError,
@@ -21,28 +17,29 @@ export function useLeaveConvo(
   },
 ) {
   const queryClient = useQueryClient()
-  const headers = useHeaders()
-  const {serviceUrl} = useDmServiceUrlStorage()
+  const agent = useAgent()
 
   return useMutation({
     mutationFn: async () => {
-      const agent = new BskyAgent({service: serviceUrl})
+      if (!convoId) throw new Error('No convoId provided')
+
       const {data} = await agent.api.chat.bsky.convo.leaveConvo(
         {convoId},
-        {headers, encoding: 'application/json'},
+        {headers: DM_SERVICE_HEADERS, encoding: 'application/json'},
       )
 
       return data
     },
     onMutate: () => {
+      let prevPages: ChatBskyConvoListConvos.OutputSchema[] = []
       queryClient.setQueryData(
         CONVO_LIST_KEY,
         (old?: {
           pageParams: Array<string | undefined>
           pages: Array<ChatBskyConvoListConvos.OutputSchema>
         }) => {
-          console.log('old', old)
           if (!old) return old
+          prevPages = old.pages
           return {
             ...old,
             pages: old.pages.map(page => {
@@ -54,13 +51,27 @@ export function useLeaveConvo(
           }
         },
       )
+      return {prevPages}
     },
     onSuccess: data => {
       queryClient.invalidateQueries({queryKey: CONVO_LIST_KEY})
       onSuccess?.(data)
     },
-    onError: error => {
+    onError: (error, _, context) => {
       logger.error(error)
+      queryClient.setQueryData(
+        CONVO_LIST_KEY,
+        (old?: {
+          pageParams: Array<string | undefined>
+          pages: Array<ChatBskyConvoListConvos.OutputSchema>
+        }) => {
+          if (!old) return old
+          return {
+            ...old,
+            pages: context?.prevPages || old.pages,
+          }
+        },
+      )
       queryClient.invalidateQueries({queryKey: CONVO_LIST_KEY})
       onError?.(error)
     },

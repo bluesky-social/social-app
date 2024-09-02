@@ -1,6 +1,6 @@
 import '../index.css'
 
-import {AppBskyFeedDefs, BskyAgent} from '@atproto/api'
+import {AppBskyFeedDefs, AtpAgent} from '@atproto/api'
 import {h, render} from 'preact'
 
 import logo from '../../assets/logo.svg'
@@ -12,7 +12,7 @@ import {getRkey} from '../utils'
 const root = document.getElementById('app')
 if (!root) throw new Error('No root element')
 
-const agent = new BskyAgent({
+const agent = new AtpAgent({
   service: 'https://public.api.bsky.app',
 })
 
@@ -52,7 +52,7 @@ function PwiOptOut({thread}: {thread: AppBskyFeedDefs.ThreadViewPost}) {
       <Link
         href={href}
         className="transition-transform hover:scale-110 absolute top-4 right-4">
-        <img src={logo as string} className="h-6" />
+        <img src={logo} className="h-6" />
       </Link>
       <div className="w-full py-12 gap-4 flex flex-col items-center">
         <p className="max-w-80 text-center w-full text-textLight">
@@ -75,7 +75,7 @@ function ErrorMessage() {
       <Link
         href="https://bsky.app/"
         className="transition-transform hover:scale-110 absolute top-4 right-4">
-        <img src={logo as string} className="h-6" />
+        <img src={logo} className="h-6" />
       </Link>
       <p className="my-16 text-center w-full text-textLight">
         Post not found, it may have been deleted.

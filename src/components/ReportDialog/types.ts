@@ -4,7 +4,7 @@ export type ReportDialogProps = {
   control: Dialog.DialogOuterProps['control']
   params:
     | {
-        type: 'post' | 'list' | 'feedgen' | 'other'
+        type: 'post' | 'list' | 'feedgen' | 'starterpack' | 'other'
         uri: string
         cid: string
       }
@@ -12,4 +12,5 @@ export type ReportDialogProps = {
         type: 'account'
         did: string
       }
+    | {type: 'convoMessage'}
 }

@@ -13,18 +13,20 @@ export function Links() {
       <H1>Links</H1>
 
       <View style={[a.gap_md, a.align_start]}>
-        <InlineLinkText to="https://google.com" style={[a.text_lg]}>
+        <InlineLinkText label="foo" to="https://google.com" style={[a.text_lg]}>
           https://google.com
         </InlineLinkText>
-        <InlineLinkText to="https://google.com" style={[a.text_lg]}>
+        <InlineLinkText label="foo" to="https://google.com" style={[a.text_lg]}>
           External with custom children (google.com)
         </InlineLinkText>
         <InlineLinkText
+          label="foo"
           to="https://bsky.social"
           style={[a.text_md, t.atoms.text_contrast_low]}>
           Internal (bsky.social)
         </InlineLinkText>
         <InlineLinkText
+          label="foo"
           to="https://bsky.app/profile/bsky.app"
           style={[a.text_md]}>
           Internal (bsky.app)

@@ -9,50 +9,51 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/ico
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
-export function MessageListError({
-  item,
-}: {
-  item: ConvoItem & {type: 'error-recoverable'}
-}) {
+export function MessageListError({item}: {item: ConvoItem & {type: 'error'}}) {
   const t = useTheme()
   const {_} = useLingui()
-  const message = React.useMemo(() => {
+  const {description, help, cta} = React.useMemo(() => {
     return {
-      [ConvoItemError.Network]: _(
-        msg`There was an issue connecting to the chat.`,
-      ),
-      [ConvoItemError.HistoryFailed]: _(msg`Failed to load past messages.`),
-      [ConvoItemError.PollFailed]: _(
-        msg`This chat was disconnected due to a network error.`,
-      ),
+      [ConvoItemError.FirehoseFailed]: {
+        description: _(msg`This chat was disconnected`),
+        help: _(msg`Press to attempt reconnection`),
+        cta: _(msg`Reconnect`),
+      },
+      [ConvoItemError.HistoryFailed]: {
+        description: _(msg`Failed to load past messages`),
+        help: _(msg`Press to retry`),
+        cta: _(msg`Retry`),
+      },
     }[item.code]
   }, [_, item.code])
 
   return (
-    <View style={[a.py_md, a.align_center]}>
+    <View style={[a.py_md, a.w_full, a.flex_row, a.justify_center]}>
       <View
         style={[
+          a.flex_1,
+          a.flex_row,
           a.align_center,
-          a.pt_md,
-          a.pb_lg,
-          a.px_3xl,
-          a.rounded_md,
-          t.atoms.bg_contrast_25,
-          {maxWidth: 300},
+          a.justify_center,
+          a.gap_sm,
+          {maxWidth: 400},
         ]}>
-        <CircleInfo size="lg" fill={t.palette.negative_400} />
-        <Text style={[a.pt_sm, a.leading_snug]}>
-          {message}{' '}
-          <InlineLinkText
-            to="#"
-            label={_(msg`Press to retry`)}
-            onPress={e => {
-              e.preventDefault()
-              item.retry()
-              return false
-            }}>
-            {_(msg`Retry.`)}
-          </InlineLinkText>
+        <CircleInfo size="sm" fill={t.palette.negative_400} />
+
+        <Text style={[a.leading_snug, t.atoms.text_contrast_medium]}>
+          {description} &middot;{' '}
+          {item.retry && (
+            <InlineLinkText
+              to="#"
+              label={help}
+              onPress={e => {
+                e.preventDefault()
+                item.retry?.()
+                return false
+              }}>
+              {cta}
+            </InlineLinkText>
+          )}
         </Text>
       </View>
     </View>

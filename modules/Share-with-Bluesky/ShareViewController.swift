@@ -30,12 +30,11 @@ class ShareViewController: UIViewController {
     }
   }
 
-  private func handleText(item: NSItemProvider) async -> Void {
+  private func handleText(item: NSItemProvider) async {
     do {
       if let data = try await item.loadItem(forTypeIdentifier: "public.text") as? String {
         if let encoded = data.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed),
-           let url = URL(string: "\(self.appScheme)://intent/compose?text=\(encoded)")
-        {
+           let url = URL(string: "\(self.appScheme)://intent/compose?text=\(encoded)") {
           _ = self.openURL(url)
         }
       }
@@ -45,12 +44,11 @@ class ShareViewController: UIViewController {
     }
   }
 
-  private func handleUrl(item: NSItemProvider) async -> Void {
+  private func handleUrl(item: NSItemProvider) async {
     do {
       if let data = try await item.loadItem(forTypeIdentifier: "public.url") as? URL {
         if let encoded = data.absoluteString.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed),
-           let url = URL(string: "\(self.appScheme)://intent/compose?text=\(encoded)")
-        {
+           let url = URL(string: "\(self.appScheme)://intent/compose?text=\(encoded)") {
           _ = self.openURL(url)
         }
       }
@@ -60,7 +58,7 @@ class ShareViewController: UIViewController {
     }
   }
 
-  private func handleImages(items: [NSItemProvider]) async -> Void {
+  private func handleImages(items: [NSItemProvider]) async {
     let firstFourItems: [NSItemProvider]
     if items.count < 4 {
       firstFourItems = items
@@ -72,7 +70,7 @@ class ShareViewController: UIViewController {
     var imageUris = ""
 
     for (index, item) in firstFourItems.enumerated() {
-      var imageUriInfo: String? = nil
+      var imageUriInfo: String?
 
       do {
         if let dataUri = try await item.loadItem(forTypeIdentifier: "public.image") as? URL {
@@ -100,8 +98,7 @@ class ShareViewController: UIViewController {
 
     if valid,
        let encoded = imageUris.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed),
-       let url = URL(string: "\(self.appScheme)://intent/compose?imageUris=\(encoded)")
-    {
+       let url = URL(string: "\(self.appScheme)://intent/compose?imageUris=\(encoded)") {
       _ = self.openURL(url)
     }
 
@@ -119,13 +116,11 @@ class ShareViewController: UIViewController {
       // extension does.
       if let dir = FileManager()
         .containerURL(
-          forSecurityApplicationGroupIdentifier: "group.app.bsky")
-      {
+          forSecurityApplicationGroupIdentifier: "group.app.bsky") {
         let filePath = "\(dir.absoluteString)\(ProcessInfo.processInfo.globallyUniqueString).jpeg"
 
         if let newUri = URL(string: filePath),
-           let jpegData = image.jpegData(compressionQuality: 1)
-        {
+           let jpegData = image.jpegData(compressionQuality: 1) {
           try jpegData.write(to: newUri)
           return "\(newUri.absoluteString)|\(image.size.width)|\(image.size.height)"
         }
@@ -136,7 +131,7 @@ class ShareViewController: UIViewController {
     }
   }
 
-  private func completeRequest() -> Void {
+  private func completeRequest() {
     self.extensionContext?.completeRequest(returningItems: nil)
   }
 

@@ -1,78 +1,42 @@
 import React from 'react'
-import {Dimensions} from 'react-native'
-import * as themes from '#/alf/themes'
+import {useMediaQuery} from 'react-responsive'
 
-export * from '#/alf/types'
-export * as tokens from '#/alf/tokens'
+import {createThemes, defaultTheme} from '#/alf/themes'
+import {Theme, ThemeName} from '#/alf/types'
+import {BLUE_HUE, GREEN_HUE, RED_HUE} from '#/alf/util/colorGeneration'
+
 export {atoms} from '#/alf/atoms'
-export * from '#/alf/util/platform'
+export * as tokens from '#/alf/tokens'
+export * from '#/alf/types'
 export * from '#/alf/util/flatten'
-
-type BreakpointName = keyof typeof breakpoints
-
-/*
- * Breakpoints
- */
-const breakpoints: {
-  [key: string]: number
-} = {
-  gtPhone: 500,
-  gtMobile: 800,
-  gtTablet: 1300,
-}
-function getActiveBreakpoints({width}: {width: number}) {
-  const active: (keyof typeof breakpoints)[] = Object.keys(breakpoints).filter(
-    breakpoint => width >= breakpoints[breakpoint],
-  )
-
-  return {
-    active: active[active.length - 1],
-    gtPhone: active.includes('gtPhone'),
-    gtMobile: active.includes('gtMobile'),
-    gtTablet: active.includes('gtTablet'),
-  }
-}
+export * from '#/alf/util/platform'
+export * from '#/alf/util/themeSelector'
 
 /*
  * Context
  */
 export const Context = React.createContext<{
-  themeName: themes.ThemeName
-  theme: themes.Theme
-  breakpoints: {
-    active: BreakpointName | undefined
-    gtPhone: boolean
-    gtMobile: boolean
-    gtTablet: boolean
-  }
+  themeName: ThemeName
+  theme: Theme
 }>({
   themeName: 'light',
-  theme: themes.light,
-  breakpoints: {
-    active: undefined,
-    gtPhone: false,
-    gtMobile: false,
-    gtTablet: false,
-  },
+  theme: defaultTheme,
 })
 
 export function ThemeProvider({
   children,
   theme: themeName,
-}: React.PropsWithChildren<{theme: themes.ThemeName}>) {
-  const theme = themes[themeName]
-  const [breakpoints, setBreakpoints] = React.useState(() =>
-    getActiveBreakpoints({width: Dimensions.get('window').width}),
-  )
-
-  React.useEffect(() => {
-    const listener = Dimensions.addEventListener('change', ({window}) => {
-      const bp = getActiveBreakpoints({width: window.width})
-      if (bp.active !== breakpoints.active) setBreakpoints(bp)
+}: React.PropsWithChildren<{theme: ThemeName}>) {
+  const themes = React.useMemo(() => {
+    return createThemes({
+      hues: {
+        primary: BLUE_HUE,
+        negative: RED_HUE,
+        positive: GREEN_HUE,
+      },
     })
-
-    return listener.remove
-  }, [breakpoints, setBreakpoints])
+  }, [])
+  const theme = themes[themeName]
 
   return (
     <Context.Provider
@@ -80,9 +44,8 @@ export function ThemeProvider({
         () => ({
           themeName: themeName,
           theme: theme,
-          breakpoints,
         }),
-        [theme, themeName, breakpoints],
+        [theme, themeName],
       )}>
       {children}
     </Context.Provider>
@@ -94,5 +57,12 @@ export function useTheme() {
 }
 
 export function useBreakpoints() {
-  return React.useContext(Context).breakpoints
+  const gtPhone = useMediaQuery({minWidth: 500})
+  const gtMobile = useMediaQuery({minWidth: 800})
+  const gtTablet = useMediaQuery({minWidth: 1300})
+  return {
+    gtPhone,
+    gtMobile,
+    gtTablet,
+  }
 }

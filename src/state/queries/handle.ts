@@ -14,7 +14,7 @@ const fetchDidQueryKey = (handleOrDid: string) => [didQueryKeyRoot, handleOrDid]
 
 export function useFetchHandle() {
   const queryClient = useQueryClient()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
 
   return React.useCallback(
     async (handleOrDid: string) => {
@@ -22,23 +22,23 @@ export function useFetchHandle() {
         const res = await queryClient.fetchQuery({
           staleTime: STALE.MINUTES.FIVE,
           queryKey: fetchHandleQueryKey(handleOrDid),
-          queryFn: () => getAgent().getProfile({actor: handleOrDid}),
+          queryFn: () => agent.getProfile({actor: handleOrDid}),
         })
         return res.data.handle
       }
       return handleOrDid
     },
-    [queryClient, getAgent],
+    [queryClient, agent],
   )
 }
 
 export function useUpdateHandleMutation() {
   const queryClient = useQueryClient()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
 
   return useMutation({
     mutationFn: async ({handle}: {handle: string}) => {
-      await getAgent().updateHandle({handle})
+      await agent.updateHandle({handle})
     },
     onSuccess(_data, variables) {
       queryClient.invalidateQueries({
@@ -50,7 +50,7 @@ export function useUpdateHandleMutation() {
 
 export function useFetchDid() {
   const queryClient = useQueryClient()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
 
   return React.useCallback(
     async (handleOrDid: string) => {
@@ -60,13 +60,13 @@ export function useFetchDid() {
         queryFn: async () => {
           let identifier = handleOrDid
           if (!identifier.startsWith('did:')) {
-            const res = await getAgent().resolveHandle({handle: identifier})
+            const res = await agent.resolveHandle({handle: identifier})
             identifier = res.data.did
           }
           return identifier
         },
       })
     },
-    [queryClient, getAgent],
+    [queryClient, agent],
   )
 }

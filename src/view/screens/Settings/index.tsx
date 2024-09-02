@@ -20,22 +20,17 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {isNative} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
-import {clearLegacyStorage} from '#/state/persisted/legacy'
-import {clear as clearStorage} from '#/state/persisted/store'
+import {clearStorage} from '#/state/persisted'
 import {
   useInAppBrowser,
   useSetInAppBrowser,
 } from '#/state/preferences/in-app-browser'
+import {useDeleteActorDeclaration} from '#/state/queries/messages/actor-declaration'
 import {useClearPreferencesMutation} from '#/state/queries/preferences'
 import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
 import {useProfileQuery} from '#/state/queries/profile'
 import {SessionAccount, useSession, useSessionApi} from '#/state/session'
-import {
-  useOnboardingDispatch,
-  useSetMinimalShellMode,
-  useSetThemePrefs,
-  useThemePrefs,
-} from '#/state/shell'
+import {useOnboardingDispatch, useSetMinimalShellMode} from '#/state/shell'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useAnalytics} from 'lib/analytics/analytics'
@@ -51,7 +46,6 @@ import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {NavigationProp} from 'lib/routes/types'
 import {colors, s} from 'lib/styles'
 import {AccountDropdownBtn} from 'view/com/util/AccountDropdownBtn'
-import {SelectableBtn} from 'view/com/util/forms/SelectableBtn'
 import {ToggleButton} from 'view/com/util/forms/ToggleButton'
 import {Link, TextLink} from 'view/com/util/Link'
 import {SimpleViewHeader} from 'view/com/util/SimpleViewHeader'
@@ -59,10 +53,10 @@ import {Text} from 'view/com/util/text/Text'
 import * as Toast from 'view/com/util/Toast'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {ScrollView} from 'view/com/util/Views'
-import {useTheme} from '#/alf'
+import {DeactivateAccountDialog} from '#/screens/Settings/components/DeactivateAccountDialog'
+import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
-import {navigate, resetToTab} from '#/Navigation'
 import {Email2FAToggle} from './Email2FAToggle'
 import {ExportCarDialog} from './ExportCarDialog'
 
@@ -82,7 +76,6 @@ function SettingsAccountCard({
   const {_} = useLingui()
   const t = useTheme()
   const {currentAccount} = useSession()
-  const {logout} = useSessionApi()
   const {data: profile} = useProfileQuery({did: account.did})
   const isCurrentAccount = account.did === currentAccount?.did
 
@@ -101,38 +94,14 @@ function SettingsAccountCard({
         />
       </View>
       <View style={[s.flex1]}>
-        <Text type="md-bold" style={pal.text}>
+        <Text type="md-bold" style={[pal.text, a.self_start]} numberOfLines={1}>
           {profile?.displayName || account.handle}
         </Text>
-        <Text type="sm" style={pal.textLight}>
+        <Text type="sm" style={pal.textLight} numberOfLines={1}>
           {account.handle}
         </Text>
       </View>
-
-      {isCurrentAccount ? (
-        <TouchableOpacity
-          testID="signOutBtn"
-          onPress={() => {
-            if (isNative) {
-              logout('Settings')
-              resetToTab('HomeTab')
-            } else {
-              navigate('Home').then(() => {
-                logout('Settings')
-              })
-            }
-          }}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Sign out`)}
-          accessibilityHint={`Signs ${profile?.displayName} out of Bluesky`}
-          activeOpacity={0.8}>
-          <Text type="lg" style={pal.link}>
-            <Trans>Sign out</Trans>
-          </Text>
-        </TouchableOpacity>
-      ) : (
-        <AccountDropdownBtn account={account} />
-      )}
+      <AccountDropdownBtn account={account} />
     </View>
   )
 
@@ -165,8 +134,6 @@ function SettingsAccountCard({
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export function SettingsScreen({}: Props) {
   const queryClient = useQueryClient()
-  const {colorMode, darkTheme} = useThemePrefs()
-  const {setColorMode, setDarkTheme} = useSetThemePrefs()
   const pal = usePalette('default')
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
@@ -180,6 +147,7 @@ export function SettingsScreen({}: Props) {
   const {accounts, currentAccount} = useSession()
   const {mutate: clearPreferences} = useClearPreferencesMutation()
   const {setShowLoggedOut} = useLoggedOutViewControls()
+  const {logoutEveryAccount} = useSessionApi()
   const closeAllActiveElements = useCloseAllActiveElements()
   const exportCarControl = useDialogControl()
   const birthdayControl = useDialogControl()
@@ -244,14 +212,19 @@ export function SettingsScreen({}: Props) {
     openModal({name: 'delete-account'})
   }, [openModal])
 
+  const onPressLogoutEveryAccount = React.useCallback(() => {
+    logoutEveryAccount('Settings')
+  }, [logoutEveryAccount])
+
   const onPressResetPreferences = React.useCallback(async () => {
     clearPreferences()
   }, [clearPreferences])
 
   const onPressResetOnboarding = React.useCallback(async () => {
+    navigation.navigate('Home')
     onboardingDispatch({type: 'start'})
     Toast.show(_(msg`Onboarding reset`))
-  }, [onboardingDispatch, _])
+  }, [navigation, onboardingDispatch, _])
 
   const onPressBuildInfo = React.useCallback(() => {
     setStringAsync(
@@ -292,6 +265,10 @@ export function SettingsScreen({}: Props) {
     navigation.navigate('AccessibilitySettings')
   }, [navigation])
 
+  const onPressAppearanceSettings = React.useCallback(() => {
+    navigation.navigate('AppearanceSettings')
+  }, [navigation])
+
   const onPressBirthday = React.useCallback(() => {
     birthdayControl.open()
   }, [birthdayControl])
@@ -300,10 +277,13 @@ export function SettingsScreen({}: Props) {
     await clearStorage()
     Toast.show(_(msg`Storage cleared, you need to restart the app now.`))
   }, [_])
-  const clearAllLegacyStorage = React.useCallback(async () => {
-    await clearLegacyStorage()
-    Toast.show(_(msg`Legacy storage cleared, you need to restart the app now.`))
-  }, [_])
+
+  const deactivateAccountControl = useDialogControl()
+  const onPressDeactivateAccount = React.useCallback(() => {
+    deactivateAccountControl.open()
+  }, [deactivateAccountControl])
+
+  const {mutate: onPressDeleteChatDeclaration} = useDeleteActorDeclaration()
 
   return (
     <View style={s.hContentRegion} testID="settingsScreen">
@@ -314,7 +294,7 @@ export function SettingsScreen({}: Props) {
         showBackButton={isMobile}
         style={[
           pal.border,
-          {borderBottomWidth: 1},
+          {borderBottomWidth: StyleSheet.hairlineWidth},
           !isMobile && {borderLeftWidth: 1, borderRightWidth: 1},
         ]}>
         <View style={{flex: 1}}>
@@ -324,8 +304,7 @@ export function SettingsScreen({}: Props) {
         </View>
       </SimpleViewHeader>
       <ScrollView
-        style={s.hContentRegion}
-        contentContainerStyle={isMobile && pal.viewLight}
+        style={[isMobile && pal.viewLight]}
         scrollIndicatorInsets={{right: 1}}
         // @ts-ignore web only -prf
         dataSet={{'stable-gutters': 1}}>
@@ -378,7 +357,7 @@ export function SettingsScreen({}: Props) {
             {!currentAccount.emailConfirmed && <EmailConfirmationNotice />}
 
             <View style={[s.flexRow, styles.heading]}>
-              <Text type="xl-bold" style={pal.text}>
+              <Text type="xl-bold" style={pal.text} numberOfLines={1}>
                 <Trans>Signed in as</Trans>
               </Text>
               <View style={s.flex1} />
@@ -394,6 +373,15 @@ export function SettingsScreen({}: Props) {
         ) : null}
 
         <View pointerEvents={pendingDid ? 'none' : 'auto'}>
+          {accounts.length > 1 && (
+            <View style={[s.flexRow, styles.heading, a.mt_sm]}>
+              <Text type="xl-bold" style={pal.text} numberOfLines={1}>
+                <Trans>Other accounts</Trans>
+              </Text>
+              <View style={s.flex1} />
+            </View>
+          )}
+
           {accounts
             .filter(a => a.did !== currentAccount?.did)
             .map(account => (
@@ -422,66 +410,32 @@ export function SettingsScreen({}: Props) {
               <Trans>Add account</Trans>
             </Text>
           </TouchableOpacity>
-        </View>
 
-        <View style={styles.spacer20} />
-
-        <Text type="xl-bold" style={[pal.text, styles.heading]}>
-          <Trans>Appearance</Trans>
-        </Text>
-        <View>
-          <View style={[styles.linkCard, pal.view, styles.selectableBtns]}>
-            <SelectableBtn
-              selected={colorMode === 'system'}
-              label={_(msg`System`)}
-              left
-              onSelect={() => setColorMode('system')}
-              accessibilityHint={_(msg`Sets color theme to system setting`)}
-            />
-            <SelectableBtn
-              selected={colorMode === 'light'}
-              label={_(msg`Light`)}
-              onSelect={() => setColorMode('light')}
-              accessibilityHint={_(msg`Sets color theme to light`)}
-            />
-            <SelectableBtn
-              selected={colorMode === 'dark'}
-              label={_(msg`Dark`)}
-              right
-              onSelect={() => setColorMode('dark')}
-              accessibilityHint={_(msg`Sets color theme to dark`)}
-            />
-          </View>
-        </View>
-
-        <View style={styles.spacer20} />
-
-        {colorMode !== 'light' && (
-          <>
-            <Text type="xl-bold" style={[pal.text, styles.heading]}>
-              <Trans>Dark Theme</Trans>
-            </Text>
-            <View>
-              <View style={[styles.linkCard, pal.view, styles.selectableBtns]}>
-                <SelectableBtn
-                  selected={!darkTheme || darkTheme === 'dim'}
-                  label={_(msg`Dim`)}
-                  left
-                  onSelect={() => setDarkTheme('dim')}
-                  accessibilityHint={_(msg`Sets dark theme to the dim theme`)}
-                />
-                <SelectableBtn
-                  selected={darkTheme === 'dark'}
-                  label={_(msg`Dark`)}
-                  right
-                  onSelect={() => setDarkTheme('dark')}
-                  accessibilityHint={_(msg`Sets dark theme to the dark theme`)}
-                />
-              </View>
+          <TouchableOpacity
+            style={[styles.linkCard, pal.view]}
+            onPress={
+              isSwitchingAccounts ? undefined : onPressLogoutEveryAccount
+            }
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`Sign out of all accounts`)}
+            accessibilityHint={undefined}>
+            <View style={[styles.iconContainer, pal.btn]}>
+              <FontAwesomeIcon
+                icon="arrow-right-from-bracket"
+                style={pal.text as FontAwesomeIconStyle}
+              />
             </View>
-            <View style={styles.spacer20} />
-          </>
-        )}
+            <Text type="lg" style={pal.text}>
+              {accounts.length > 1 ? (
+                <Trans>Sign out of all accounts</Trans>
+              ) : (
+                <Trans>Sign out</Trans>
+              )}
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.spacer20} />
 
         <Text type="xl-bold" style={[pal.text, styles.heading]}>
           <Trans>Basics</Trans>
@@ -507,6 +461,27 @@ export function SettingsScreen({}: Props) {
           </View>
           <Text type="lg" style={pal.text}>
             <Trans>Accessibility</Trans>
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          testID="appearanceSettingsBtn"
+          style={[
+            styles.linkCard,
+            pal.view,
+            isSwitchingAccounts && styles.dimmed,
+          ]}
+          onPress={isSwitchingAccounts ? undefined : onPressAppearanceSettings}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Appearance settings`)}
+          accessibilityHint={_(msg`Opens appearance settings`)}>
+          <View style={[styles.iconContainer, pal.btn]}>
+            <FontAwesomeIcon
+              icon="paint-roller"
+              style={pal.text as FontAwesomeIconStyle}
+            />
+          </View>
+          <Text type="lg" style={pal.text}>
+            <Trans>Appearance</Trans>
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -611,6 +586,31 @@ export function SettingsScreen({}: Props) {
           </View>
           <Text type="lg" style={pal.text}>
             <Trans>My Saved Feeds</Trans>
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          testID="linkToChatSettingsBtn"
+          style={[
+            styles.linkCard,
+            pal.view,
+            isSwitchingAccounts && styles.dimmed,
+          ]}
+          onPress={
+            isSwitchingAccounts
+              ? undefined
+              : () => navigation.navigate('MessagesSettings')
+          }
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Chat settings`)}
+          accessibilityHint={_(msg`Opens chat settings`)}>
+          <View style={[styles.iconContainer, pal.btn]}>
+            <FontAwesomeIcon
+              icon={['far', 'comment-dots']}
+              style={pal.text as FontAwesomeIconStyle}
+            />
+          </View>
+          <Text type="lg" style={pal.text}>
+            <Trans>Chat Settings</Trans>
           </Text>
         </TouchableOpacity>
 
@@ -763,6 +763,29 @@ export function SettingsScreen({}: Props) {
             <Trans>Export My Data</Trans>
           </Text>
         </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[pal.view, styles.linkCard]}
+          onPress={onPressDeactivateAccount}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Deactivate account`)}
+          accessibilityHint={_(
+            msg`Opens modal for account deactivation confirmation`,
+          )}>
+          <View style={[styles.iconContainer, dangerBg]}>
+            <FontAwesomeIcon
+              icon={'users-slash'}
+              style={dangerText as FontAwesomeIconStyle}
+              size={18}
+            />
+          </View>
+          <Text type="lg" style={dangerText}>
+            <Trans>Deactivate my account</Trans>
+          </Text>
+        </TouchableOpacity>
+        <DeactivateAccountDialog control={deactivateAccountControl} />
+
         <TouchableOpacity
           style={[pal.view, styles.linkCard]}
           onPress={onPressDeleteAccount}
@@ -828,24 +851,22 @@ export function SettingsScreen({}: Props) {
             </TouchableOpacity>
             <TouchableOpacity
               style={[pal.view, styles.linkCardNoIcon]}
+              onPress={() => onPressDeleteChatDeclaration()}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Delete chat declaration record`)}
+              accessibilityHint={_(msg`Deletes the chat declaration record`)}>
+              <Text type="lg" style={pal.text}>
+                <Trans>Delete chat declaration record</Trans>
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[pal.view, styles.linkCardNoIcon]}
               onPress={onPressResetOnboarding}
               accessibilityRole="button"
               accessibilityLabel={_(msg`Reset onboarding state`)}
               accessibilityHint={_(msg`Resets the onboarding state`)}>
               <Text type="lg" style={pal.text}>
                 <Trans>Reset onboarding state</Trans>
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[pal.view, styles.linkCardNoIcon]}
-              onPress={clearAllLegacyStorage}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Clear all legacy storage data`)}
-              accessibilityHint={_(msg`Clears all legacy storage data`)}>
-              <Text type="lg" style={pal.text}>
-                <Trans>
-                  Clear all legacy storage data (restart after this)
-                </Trans>
               </Text>
             </TouchableOpacity>
             <TouchableOpacity

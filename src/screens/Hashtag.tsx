@@ -1,12 +1,11 @@
 import React from 'react'
-import {ListRenderItemInfo, Pressable, StyleSheet, View} from 'react-native'
+import {ListRenderItemInfo, Pressable, View} from 'react-native'
 import {PostView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {HITSLOP_10} from 'lib/constants'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
 import {CommonNavigatorParams} from 'lib/routes/types'
@@ -39,7 +38,6 @@ export default function HashtagScreen({
 }: NativeStackScreenProps<CommonNavigatorParams, 'Hashtag'>) {
   const {tag, author} = route.params
   const {_} = useLingui()
-  const pal = usePalette('default')
 
   const fullTag = React.useMemo(() => {
     return `#${decodeURIComponent(tag)}`
@@ -111,7 +109,7 @@ export default function HashtagScreen({
 
   return (
     <>
-      <CenteredView sideBorders style={[pal.border, pal.view]}>
+      <CenteredView sideBorders={true}>
         <ViewHeader
           showOnDesktop
           title={headerTitle}
@@ -138,8 +136,17 @@ export default function HashtagScreen({
         onPageSelected={onPageSelected}
         renderTabBar={props => (
           <CenteredView
-            sideBorders
-            style={[pal.border, pal.view, styles.tabBarContainer]}>
+            sideBorders={true}
+            // @ts-ignore web only
+            style={
+              isWeb
+                ? {
+                    position: isWeb ? 'sticky' : '',
+                    top: 0,
+                    zIndex: 1,
+                  }
+                : undefined
+            }>
             <TabBar items={sections.map(section => section.title)} {...props} />
           </CenteredView>
         )}
@@ -169,7 +176,7 @@ function HashtagScreenTab({
 
   const queryParam = React.useMemo(() => {
     if (!author) return fullTag
-    return `${fullTag} from:${sanitizeHandle(author)}`
+    return `${fullTag} from:${author}`
   }, [fullTag, author])
 
   const {
@@ -234,12 +241,3 @@ function HashtagScreenTab({
     </>
   )
 }
-
-const styles = StyleSheet.create({
-  tabBarContainer: {
-    // @ts-ignore web only
-    position: isWeb ? 'sticky' : '',
-    top: 0,
-    zIndex: 1,
-  },
-})

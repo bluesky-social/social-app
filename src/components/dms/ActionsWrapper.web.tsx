@@ -1,6 +1,6 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {ChatBskyConvoDefs} from '@atproto-labs/api'
+import {ChatBskyConvoDefs} from '@atproto/api'
 
 import {atoms as a} from '#/alf'
 import {MessageMenu} from '#/components/dms/MessageMenu'
@@ -57,15 +57,12 @@ export function ActionsWrapper({
             message={message}
             control={menuControl}
             triggerOpacity={showActions || menuControl.isOpen ? 1 : 0}
-            onTriggerPress={onMouseEnter}
-            // @ts-expect-error web only
-            onMouseLeave={onMouseLeave}
           />
         </View>
       )}
       <View
         style={{
-          maxWidth: '65%',
+          maxWidth: '80%',
         }}>
         {children}
       </View>
@@ -75,9 +72,6 @@ export function ActionsWrapper({
             message={message}
             control={menuControl}
             triggerOpacity={showActions || menuControl.isOpen ? 1 : 0}
-            onTriggerPress={onMouseEnter}
-            // @ts-expect-error web only
-            onMouseLeave={onMouseLeave}
           />
         </View>
       )}

@@ -1,0 +1,87 @@
+appId: xyz.blueskyweb.app
+---
+- runScript:
+    file: ../setupServer.js
+    env:
+        SERVER_PATH: ?users
+- runFlow:
+    file: ../setupApp.yml
+- tapOn:
+    id: "e2eSignInAlice"
+- tapOn:
+    id: "composeFAB"
+- inputText: "Post text only"
+- tapOn:
+    id: "composerPublishBtn"
+- assertVisible:
+    id: "composeFAB"
+- tapOn:
+    id: "composeFAB"
+- inputText: "Post with an image"
+- tapOn:
+    id: "openGalleryBtn"
+- tapOn:
+    id: "composerPublishBtn"
+- assertVisible:
+    id: "composeFAB"
+- tapOn:
+    id: "composeFAB"
+- inputText: "Post with a https://example.com link card"
+- tapOn:
+    id: "composerPublishBtn"
+- assertVisible:
+    id: "composeFAB"
+- tapOn:
+    id: "e2eRefreshHome"
+- tapOn:
+    id: "replyBtn"
+- inputText: "Reply text only"
+- tapOn:
+    id: "composerPublishBtn"
+- assertVisible:
+    id: "composeFAB"
+- tapOn:
+    id: "replyBtn"
+- inputText: "Reply with an image"
+- tapOn:
+    id: "openGalleryBtn"
+- tapOn:
+    id: "composerPublishBtn"
+- assertVisible:
+    id: "composeFAB"
+- tapOn:
+    id: "replyBtn"
+- inputText: "Reply with a https://example.com link card"
+- tapOn:
+    id: "composerPublishBtn"
+- assertVisible:
+    id: "composeFAB"
+- tapOn:
+    id: "repostBtn"
+- tapOn:
+    id: "quoteBtn"
+- inputText: "QP text only"   
+- tapOn:
+    id: "composerPublishBtn"
+- assertVisible:
+    id: "composeFAB"
+- tapOn:
+    id: "repostBtn"
+- tapOn:
+    id: "quoteBtn"
+- inputText: "QP with an image"
+- tapOn:
+    id: "openGalleryBtn"
+- tapOn:
+    id: "composerPublishBtn"
+- assertVisible:
+    id: "composeFAB"
+- tapOn:
+    id: "repostBtn"
+- tapOn:
+    id: "quoteBtn"
+- inputText: "QP with a https://example.com link card"
+- tapOn:
+    id: "composerPublishBtn"
+- assertVisible:
+    id: "composeFAB"

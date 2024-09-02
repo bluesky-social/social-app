@@ -1,18 +1,22 @@
-import {BskyAgent, ChatBskyConvoGetLog} from '@atproto-labs/api'
+import {BskyAgent, ChatBskyConvoGetLog} from '@atproto/api'
 import EventEmitter from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 
+import {networkRetry} from '#/lib/async/retry'
 import {logger} from '#/logger'
-import {DEFAULT_POLL_INTERVAL} from '#/state/messages/events/const'
+import {
+  BACKGROUND_POLL_INTERVAL,
+  DEFAULT_POLL_INTERVAL,
+} from '#/state/messages/events/const'
 import {
   MessagesEventBusDispatch,
   MessagesEventBusDispatchEvent,
-  MessagesEventBusError,
   MessagesEventBusErrorCode,
-  MessagesEventBusEvents,
+  MessagesEventBusEvent,
   MessagesEventBusParams,
   MessagesEventBusStatus,
 } from '#/state/messages/events/types'
+import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
 
 const LOGGER_CONTEXT = 'MessagesEventBus'
 
@@ -20,11 +24,9 @@ export class MessagesEventBus {
   private id: string
 
   private agent: BskyAgent
-  private __tempFromUserDid: string
-  private emitter = new EventEmitter<MessagesEventBusEvents>()
+  private emitter = new EventEmitter<{event: [MessagesEventBusEvent]}>()
 
   private status: MessagesEventBusStatus = MessagesEventBusStatus.Initializing
-  private error: MessagesEventBusError | undefined
   private latestRev: string | undefined = undefined
   private pollInterval = DEFAULT_POLL_INTERVAL
   private requestedPollIntervals: Map<string, number> = new Map()
@@ -32,7 +34,6 @@ export class MessagesEventBus {
   constructor(params: MessagesEventBusParams) {
     this.id = nanoid(3)
     this.agent = params.agent
-    this.__tempFromUserDid = params.__tempFromUserDid
 
     this.init()
   }
@@ -51,65 +52,43 @@ export class MessagesEventBus {
     }
   }
 
-  trail(handler: (events: ChatBskyConvoGetLog.OutputSchema['logs']) => void) {
-    this.emitter.on('events', handler)
-    return () => {
-      this.emitter.off('events', handler)
-    }
-  }
-
-  trailConvo(
-    convoId: string,
-    handler: (events: ChatBskyConvoGetLog.OutputSchema['logs']) => void,
-  ) {
-    const handle = (events: ChatBskyConvoGetLog.OutputSchema['logs']) => {
-      const convoEvents = events.filter(ev => {
-        if (typeof ev.convoId === 'string' && ev.convoId === convoId) {
-          return ev.convoId === convoId
-        }
-        return false
-      })
-
-      if (convoEvents.length > 0) {
-        handler(convoEvents)
-      }
-    }
-
-    this.emitter.on('events', handle)
-    return () => {
-      this.emitter.off('events', handle)
-    }
-  }
-
   getLatestRev() {
     return this.latestRev
   }
 
-  onConnect(handler: () => void) {
-    this.emitter.on('connect', handler)
+  on(
+    handler: (event: MessagesEventBusEvent) => void,
+    options: {
+      convoId?: string
+    },
+  ) {
+    const handle = (event: MessagesEventBusEvent) => {
+      if (event.type === 'logs' && options.convoId) {
+        const filteredLogs = event.logs.filter(log => {
+          if (
+            typeof log.convoId === 'string' &&
+            log.convoId === options.convoId
+          ) {
+            return log.convoId === options.convoId
+          }
+          return false
+        })
 
-    if (
-      this.status === MessagesEventBusStatus.Ready ||
-      this.status === MessagesEventBusStatus.Backgrounded ||
-      this.status === MessagesEventBusStatus.Suspended
-    ) {
-      handler()
+        if (filteredLogs.length > 0) {
+          handler({
+            ...event,
+            logs: filteredLogs,
+          })
+        }
+      } else {
+        handler(event)
+      }
     }
+
+    this.emitter.on('event', handle)
 
     return () => {
-      this.emitter.off('connect', handler)
-    }
-  }
-
-  onError(handler: (payload?: MessagesEventBusError) => void) {
-    this.emitter.on('error', handler)
-
-    if (this.status === MessagesEventBusStatus.Error) {
-      handler(this.error)
-    }
-
-    return () => {
-      this.emitter.off('error', handler)
+      this.emitter.off('event', handle)
     }
   }
 
@@ -137,13 +116,13 @@ export class MessagesEventBus {
           case MessagesEventBusDispatchEvent.Ready: {
             this.status = MessagesEventBusStatus.Ready
             this.resetPoll()
-            this.emitter.emit('connect')
+            this.emitter.emit('event', {type: 'connect'})
             break
           }
           case MessagesEventBusDispatchEvent.Background: {
             this.status = MessagesEventBusStatus.Backgrounded
             this.resetPoll()
-            this.emitter.emit('connect')
+            this.emitter.emit('event', {type: 'connect'})
             break
           }
           case MessagesEventBusDispatchEvent.Suspend: {
@@ -152,8 +131,7 @@ export class MessagesEventBus {
           }
           case MessagesEventBusDispatchEvent.Error: {
             this.status = MessagesEventBusStatus.Error
-            this.error = action.payload
-            this.emitter.emit('error', action.payload)
+            this.emitter.emit('event', {type: 'error', error: action.payload})
             break
           }
         }
@@ -173,9 +151,8 @@ export class MessagesEventBus {
           }
           case MessagesEventBusDispatchEvent.Error: {
             this.status = MessagesEventBusStatus.Error
-            this.error = action.payload
             this.stopPoll()
-            this.emitter.emit('error', action.payload)
+            this.emitter.emit('event', {type: 'error', error: action.payload})
             break
           }
           case MessagesEventBusDispatchEvent.UpdatePoll: {
@@ -199,9 +176,8 @@ export class MessagesEventBus {
           }
           case MessagesEventBusDispatchEvent.Error: {
             this.status = MessagesEventBusStatus.Error
-            this.error = action.payload
             this.stopPoll()
-            this.emitter.emit('error', action.payload)
+            this.emitter.emit('event', {type: 'error', error: action.payload})
             break
           }
           case MessagesEventBusDispatchEvent.UpdatePoll: {
@@ -225,9 +201,8 @@ export class MessagesEventBus {
           }
           case MessagesEventBusDispatchEvent.Error: {
             this.status = MessagesEventBusStatus.Error
-            this.error = action.payload
             this.stopPoll()
-            this.emitter.emit('error', action.payload)
+            this.emitter.emit('event', {type: 'error', error: action.payload})
             break
           }
         }
@@ -235,10 +210,10 @@ export class MessagesEventBus {
       }
       case MessagesEventBusStatus.Error: {
         switch (action.event) {
+          case MessagesEventBusDispatchEvent.UpdatePoll:
           case MessagesEventBusDispatchEvent.Resume: {
             // basically reset
             this.status = MessagesEventBusStatus.Initializing
-            this.error = undefined
             this.latestRev = undefined
             this.init()
             break
@@ -265,16 +240,14 @@ export class MessagesEventBus {
     logger.debug(`${LOGGER_CONTEXT}: init`, {}, logger.DebugContext.convo)
 
     try {
-      const response = await this.agent.api.chat.bsky.convo.listConvos(
-        {
-          limit: 1,
-        },
-        {
-          headers: {
-            Authorization: this.__tempFromUserDid,
+      const response = await networkRetry(2, () => {
+        return this.agent.api.chat.bsky.convo.listConvos(
+          {
+            limit: 1,
           },
-        },
-      )
+          {headers: DM_SERVICE_HEADERS},
+        )
+      })
       // throw new Error('UNCOMMENT TO TEST INIT FAILURE')
 
       const {convos} = response.data
@@ -318,6 +291,9 @@ export class MessagesEventBus {
         const lowest = Math.min(DEFAULT_POLL_INTERVAL, ...requested)
         return lowest
       }
+      case MessagesEventBusStatus.Backgrounded: {
+        return BACKGROUND_POLL_INTERVAL
+      }
       default:
         return DEFAULT_POLL_INTERVAL
     }
@@ -358,16 +334,14 @@ export class MessagesEventBus {
     // )
 
     try {
-      const response = await this.agent.api.chat.bsky.convo.getLog(
-        {
-          cursor: this.latestRev,
-        },
-        {
-          headers: {
-            Authorization: this.__tempFromUserDid,
+      const response = await networkRetry(2, () => {
+        return this.agent.api.chat.bsky.convo.getLog(
+          {
+            cursor: this.latestRev,
           },
-        },
-      )
+          {headers: DM_SERVICE_HEADERS},
+        )
+      })
 
       // throw new Error('UNCOMMENT TO TEST POLL FAILURE')
 
@@ -398,7 +372,7 @@ export class MessagesEventBus {
 
       if (needsEmit) {
         try {
-          this.emitter.emit('events', batch)
+          this.emitter.emit('event', {type: 'logs', logs: batch})
         } catch (e: any) {
           logger.error(e, {
             context: `${LOGGER_CONTEXT}: process latest events`,

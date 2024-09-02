@@ -1,7 +1,8 @@
-import React, {useMemo} from 'react'
+import React, {useCallback, useMemo} from 'react'
 import {StyleSheet} from 'react-native'
 import {
   AppBskyActorDefs,
+  AppBskyGraphGetActorStarterPacks,
   moderateProfile,
   ModerationOpts,
   RichText as RichTextAPI,
@@ -9,7 +10,11 @@ import {
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
-import {useQueryClient} from '@tanstack/react-query'
+import {
+  InfiniteData,
+  UseInfiniteQueryResult,
+  useQueryClient,
+} from '@tanstack/react-query'
 
 import {cleanError} from '#/lib/strings/errors'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -29,11 +34,13 @@ import {combinedDisplayName} from 'lib/strings/display-names'
 import {isInvalidHandle} from 'lib/strings/handles'
 import {colors, s} from 'lib/styles'
 import {listenSoftReset} from 'state/events'
+import {useActorStarterPacksQuery} from 'state/queries/actor-starter-packs'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
 import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
 import {ScreenHider} from '#/components/moderation/ScreenHider'
+import {ProfileStarterPacks} from '#/components/StarterPack/ProfileStarterPacks'
 import {ExpoScrollForwarderView} from '../../../modules/expo-scroll-forwarder'
 import {ProfileFeedgens} from '../com/feeds/ProfileFeedgens'
 import {ProfileLists} from '../com/lists/ProfileLists'
@@ -69,6 +76,7 @@ export function ProfileScreen({route}: Props) {
   } = useProfileQuery({
     did: resolvedDid,
   })
+  const starterPacksQuery = useActorStarterPacksQuery({did: resolvedDid})
 
   const onPressTryAgain = React.useCallback(() => {
     if (resolveError) {
@@ -86,7 +94,7 @@ export function ProfileScreen({route}: Props) {
   }, [queryClient, profile?.viewer?.blockedBy, resolvedDid])
 
   // Most pushes will happen here, since we will have only placeholder data
-  if (isLoadingDid || isLoadingProfile) {
+  if (isLoadingDid || isLoadingProfile || starterPacksQuery.isLoading) {
     return (
       <CenteredView>
         <ProfileHeaderLoading />
@@ -108,6 +116,7 @@ export function ProfileScreen({route}: Props) {
     return (
       <ProfileScreenLoaded
         profile={profile}
+        starterPacksQuery={starterPacksQuery}
         moderationOpts={moderationOpts}
         isPlaceholderProfile={isPlaceholderProfile}
         hideBackButton={!!route.params.hideBackButton}
@@ -131,11 +140,16 @@ function ProfileScreenLoaded({
   isPlaceholderProfile,
   moderationOpts,
   hideBackButton,
+  starterPacksQuery,
 }: {
   profile: AppBskyActorDefs.ProfileViewDetailed
   moderationOpts: ModerationOpts
   hideBackButton: boolean
   isPlaceholderProfile: boolean
+  starterPacksQuery: UseInfiniteQueryResult<
+    InfiniteData<AppBskyGraphGetActorStarterPacks.OutputSchema, unknown>,
+    Error
+  >
 }) {
   const profile = useProfileShadow(profileUnshadowed)
   const {hasSession, currentAccount} = useSession()
@@ -162,6 +176,7 @@ function ProfileScreenLoaded({
   const likesSectionRef = React.useRef<SectionRef>(null)
   const feedsSectionRef = React.useRef<SectionRef>(null)
   const listsSectionRef = React.useRef<SectionRef>(null)
+  const starterPacksSectionRef = React.useRef<SectionRef>(null)
   const labelsSectionRef = React.useRef<SectionRef>(null)
 
   useSetTitle(combinedDisplayName(profile))
@@ -183,31 +198,22 @@ function ProfileScreenLoaded({
   const showMediaTab = !hasLabeler
   const showLikesTab = isMe
   const showFeedsTab = isMe || (profile.associated?.feedgens || 0) > 0
+  const showStarterPacksTab =
+    isMe || !!starterPacksQuery.data?.pages?.[0].starterPacks.length
   const showListsTab =
     hasSession && (isMe || (profile.associated?.lists || 0) > 0)
 
-  const sectionTitles = useMemo<string[]>(() => {
-    return [
-      showFiltersTab ? _(msg`Labels`) : undefined,
-      showListsTab && hasLabeler ? _(msg`Lists`) : undefined,
-      showPostsTab ? _(msg`Posts`) : undefined,
-      showRepliesTab ? _(msg`Replies`) : undefined,
-      showMediaTab ? _(msg`Media`) : undefined,
-      showLikesTab ? _(msg`Likes`) : undefined,
-      showFeedsTab ? _(msg`Feeds`) : undefined,
-      showListsTab && !hasLabeler ? _(msg`Lists`) : undefined,
-    ].filter(Boolean) as string[]
-  }, [
-    showPostsTab,
-    showRepliesTab,
-    showMediaTab,
-    showLikesTab,
-    showFeedsTab,
-    showListsTab,
-    showFiltersTab,
-    hasLabeler,
-    _,
-  ])
+  const sectionTitles = [
+    showFiltersTab ? _(msg`Labels`) : undefined,
+    showListsTab && hasLabeler ? _(msg`Lists`) : undefined,
+    showPostsTab ? _(msg`Posts`) : undefined,
+    showRepliesTab ? _(msg`Replies`) : undefined,
+    showMediaTab ? _(msg`Media`) : undefined,
+    showLikesTab ? _(msg`Likes`) : undefined,
+    showFeedsTab ? _(msg`Feeds`) : undefined,
+    showStarterPacksTab ? _(msg`Starter Packs`) : undefined,
+    showListsTab && !hasLabeler ? _(msg`Lists`) : undefined,
+  ].filter(Boolean) as string[]
 
   let nextIndex = 0
   let filtersIndex: number | null = null
@@ -216,6 +222,7 @@ function ProfileScreenLoaded({
   let mediaIndex: number | null = null
   let likesIndex: number | null = null
   let feedsIndex: number | null = null
+  let starterPacksIndex: number | null = null
   let listsIndex: number | null = null
   if (showFiltersTab) {
     filtersIndex = nextIndex++
@@ -235,11 +242,14 @@ function ProfileScreenLoaded({
   if (showFeedsTab) {
     feedsIndex = nextIndex++
   }
+  if (showStarterPacksTab) {
+    starterPacksIndex = nextIndex++
+  }
   if (showListsTab) {
     listsIndex = nextIndex++
   }
 
-  const scrollSectionToTop = React.useCallback(
+  const scrollSectionToTop = useCallback(
     (index: number) => {
       if (index === filtersIndex) {
         labelsSectionRef.current?.scrollToTop()
@@ -253,6 +263,8 @@ function ProfileScreenLoaded({
         likesSectionRef.current?.scrollToTop()
       } else if (index === feedsIndex) {
         feedsSectionRef.current?.scrollToTop()
+      } else if (index === starterPacksIndex) {
+        starterPacksSectionRef.current?.scrollToTop()
       } else if (index === listsIndex) {
         listsSectionRef.current?.scrollToTop()
       }
@@ -265,6 +277,7 @@ function ProfileScreenLoaded({
       likesIndex,
       feedsIndex,
       listsIndex,
+      starterPacksIndex,
     ],
   )
 
@@ -290,7 +303,7 @@ function ProfileScreenLoaded({
   // events
   // =
 
-  const onPressCompose = React.useCallback(() => {
+  const onPressCompose = () => {
     track('ProfileScreen:PressCompose')
     const mention =
       profile.handle === currentAccount?.handle ||
@@ -298,23 +311,20 @@ function ProfileScreenLoaded({
         ? undefined
         : profile.handle
     openComposer({mention})
-  }, [openComposer, currentAccount, track, profile])
+  }
 
-  const onPageSelected = React.useCallback((i: number) => {
+  const onPageSelected = (i: number) => {
     setCurrentPage(i)
-  }, [])
+  }
 
-  const onCurrentPageSelected = React.useCallback(
-    (index: number) => {
-      scrollSectionToTop(index)
-    },
-    [scrollSectionToTop],
-  )
+  const onCurrentPageSelected = (index: number) => {
+    scrollSectionToTop(index)
+  }
 
   // rendering
   // =
 
-  const renderHeader = React.useCallback(() => {
+  const renderHeader = () => {
     return (
       <ExpoScrollForwarderView scrollViewTag={scrollViewTag}>
         <ProfileHeader
@@ -327,16 +337,7 @@ function ProfileScreenLoaded({
         />
       </ExpoScrollForwarderView>
     )
-  }, [
-    scrollViewTag,
-    profile,
-    labelerInfo,
-    hasDescription,
-    descriptionRT,
-    moderationOpts,
-    hideBackButton,
-    showPlaceholder,
-  ])
+  }
 
   return (
     <ScreenHider
@@ -442,6 +443,19 @@ function ProfileScreenLoaded({
               />
             )
           : null}
+        {showStarterPacksTab
+          ? ({headerHeight, isFocused, scrollElRef}) => (
+              <ProfileStarterPacks
+                ref={starterPacksSectionRef}
+                isMe={isMe}
+                starterPacksQuery={starterPacksQuery}
+                scrollElRef={scrollElRef as ListRef}
+                headerOffset={headerHeight}
+                enabled={isFocused}
+                setScrollViewTag={setScrollViewTag}
+              />
+            )
+          : null}
         {showListsTab && !profile.associated?.labeler
           ? ({headerHeight, isFocused, scrollElRef}) => (
               <ProfileLists
@@ -470,7 +484,7 @@ function ProfileScreenLoaded({
 }
 
 function useRichText(text: string): [RichTextAPI, boolean] {
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   const [prevText, setPrevText] = React.useState(text)
   const [rawRT, setRawRT] = React.useState(() => new RichTextAPI({text}))
   const [resolvedRT, setResolvedRT] = React.useState<RichTextAPI | null>(null)
@@ -485,7 +499,7 @@ function useRichText(text: string): [RichTextAPI, boolean] {
     async function resolveRTFacets() {
       // new each time
       const resolvedRT = new RichTextAPI({text})
-      await resolvedRT.detectFacets(getAgent())
+      await resolvedRT.detectFacets(agent)
       if (!ignore) {
         setResolvedRT(resolvedRT)
       }
@@ -494,7 +508,7 @@ function useRichText(text: string): [RichTextAPI, boolean] {
     return () => {
       ignore = true
     }
-  }, [text, getAgent])
+  }, [text, agent])
   const isResolving = resolvedRT === null
   return [resolvedRT ?? rawRT, isResolving]
 }

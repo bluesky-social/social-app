@@ -6,5 +6,14 @@ export function CenteredView({
   sideBorders,
   ...props
 }: React.PropsWithChildren<
-  ViewProps & {sideBorders?: boolean; topBorder?: boolean}
+  ViewProps & {
+    /**
+     * @platform web
+     */
+    sideBorders?: boolean
+    /**
+     * @platform web
+     */
+    topBorder?: boolean
+  }
 >)

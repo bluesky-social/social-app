@@ -1,7 +1,6 @@
 import {
   AppBskyFeedDefs,
   AppBskyFeedGetFeed as GetCustomFeed,
-  AtpAgent,
   BskyAgent,
 } from '@atproto/api'
 
@@ -10,27 +9,27 @@ import {FeedAPI, FeedAPIResponse} from './types'
 import {createBskyTopicsHeader, isBlueskyOwnedFeed} from './utils'
 
 export class CustomFeedAPI implements FeedAPI {
-  getAgent: () => BskyAgent
+  agent: BskyAgent
   params: GetCustomFeed.QueryParams
   userInterests?: string
 
   constructor({
-    getAgent,
+    agent,
     feedParams,
     userInterests,
   }: {
-    getAgent: () => BskyAgent
+    agent: BskyAgent
     feedParams: GetCustomFeed.QueryParams
     userInterests?: string
   }) {
-    this.getAgent = getAgent
+    this.agent = agent
     this.params = feedParams
     this.userInterests = userInterests
   }
 
   async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
     const contentLangs = getContentLanguages().join(',')
-    const res = await this.getAgent().app.bsky.feed.getFeed(
+    const res = await this.agent.app.bsky.feed.getFeed(
       {
         ...this.params,
         limit: 1,
@@ -48,11 +47,11 @@ export class CustomFeedAPI implements FeedAPI {
     limit: number
   }): Promise<FeedAPIResponse> {
     const contentLangs = getContentLanguages().join(',')
-    const agent = this.getAgent()
+    const agent = this.agent
     const isBlueskyOwned = isBlueskyOwnedFeed(this.params.feed)
 
-    const res = agent.session
-      ? await this.getAgent().app.bsky.feed.getFeed(
+    const res = agent.did
+      ? await this.agent.app.bsky.feed.getFeed(
           {
             ...this.params,
             cursor,
@@ -106,34 +105,32 @@ async function loggedOutFetch({
   let contentLangs = getContentLanguages().join(',')
 
   // manually construct fetch call so we can add the `lang` cache-busting param
-  let res = await AtpAgent.fetch!(
+  let res = await fetch(
     `https://api.bsky.app/xrpc/app.bsky.feed.getFeed?feed=${feed}${
       cursor ? `&cursor=${cursor}` : ''
     }&limit=${limit}&lang=${contentLangs}`,
-    'GET',
-    {'Accept-Language': contentLangs},
-    undefined,
+    {method: 'GET', headers: {'Accept-Language': contentLangs}},
   )
-  if (res.body?.feed?.length) {
+  let data = res.ok ? await res.json() : null
+  if (data?.feed?.length) {
     return {
       success: true,
-      data: res.body,
+      data,
     }
   }
 
   // no data, try again with language headers removed
-  res = await AtpAgent.fetch!(
+  res = await fetch(
     `https://api.bsky.app/xrpc/app.bsky.feed.getFeed?feed=${feed}${
       cursor ? `&cursor=${cursor}` : ''
     }&limit=${limit}`,
-    'GET',
-    {'Accept-Language': ''},
-    undefined,
+    {method: 'GET', headers: {'Accept-Language': ''}},
   )
-  if (res.body?.feed?.length) {
+  data = res.ok ? await res.json() : null
+  if (data?.feed?.length) {
     return {
       success: true,
-      data: res.body,
+      data,
     }
   }
 

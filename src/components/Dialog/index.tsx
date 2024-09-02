@@ -1,5 +1,12 @@
 import React, {useImperativeHandle} from 'react'
-import {Dimensions, Pressable, View} from 'react-native'
+import {
+  Dimensions,
+  Keyboard,
+  Pressable,
+  StyleProp,
+  View,
+  ViewStyle,
+} from 'react-native'
 import Animated, {useAnimatedStyle} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import BottomSheet, {
@@ -25,6 +32,7 @@ import {
   DialogOuterProps,
 } from '#/components/Dialog/types'
 import {createInput} from '#/components/forms/TextField'
+import {FullWindowOverlay} from '#/components/FullWindowOverlay'
 import {Portal} from '#/components/Portal'
 
 export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
@@ -163,46 +171,49 @@ export function Outer({
   return (
     isOpen && (
       <Portal>
-        <View
-          // iOS
-          accessibilityViewIsModal
-          // Android
-          importantForAccessibility="yes"
-          style={[a.absolute, a.inset_0]}
-          testID={testID}>
-          <BottomSheet
-            enableDynamicSizing={!hasSnapPoints}
-            enablePanDownToClose
-            keyboardBehavior="interactive"
-            android_keyboardInputMode="adjustResize"
-            keyboardBlurBehavior="restore"
-            topInset={insets.top}
-            {...sheetOptions}
-            snapPoints={sheetOptions.snapPoints || ['100%']}
-            ref={sheet}
-            index={openIndex}
-            backgroundStyle={{backgroundColor: 'transparent'}}
-            backdropComponent={Backdrop}
-            handleIndicatorStyle={{backgroundColor: t.palette.primary_500}}
-            handleStyle={{display: 'none'}}
-            onClose={onCloseAnimationComplete}>
-            <Context.Provider value={context}>
-              <View
-                style={[
-                  a.absolute,
-                  a.inset_0,
-                  t.atoms.bg,
-                  {
-                    borderTopLeftRadius: 40,
-                    borderTopRightRadius: 40,
-                    height: Dimensions.get('window').height * 2,
-                  },
-                ]}
-              />
-              {children}
-            </Context.Provider>
-          </BottomSheet>
-        </View>
+        <FullWindowOverlay>
+          <View
+            // iOS
+            accessibilityViewIsModal
+            // Android
+            importantForAccessibility="yes"
+            style={[a.absolute, a.inset_0]}
+            testID={testID}
+            onTouchMove={() => Keyboard.dismiss()}>
+            <BottomSheet
+              enableDynamicSizing={!hasSnapPoints}
+              enablePanDownToClose
+              keyboardBehavior="interactive"
+              android_keyboardInputMode="adjustResize"
+              keyboardBlurBehavior="restore"
+              topInset={insets.top}
+              {...sheetOptions}
+              snapPoints={sheetOptions.snapPoints || ['100%']}
+              ref={sheet}
+              index={openIndex}
+              backgroundStyle={{backgroundColor: 'transparent'}}
+              backdropComponent={Backdrop}
+              handleIndicatorStyle={{backgroundColor: t.palette.primary_500}}
+              handleStyle={{display: 'none'}}
+              onClose={onCloseAnimationComplete}>
+              <Context.Provider value={context}>
+                <View
+                  style={[
+                    a.absolute,
+                    a.inset_0,
+                    t.atoms.bg,
+                    {
+                      borderTopLeftRadius: 40,
+                      borderTopRightRadius: 40,
+                      height: Dimensions.get('window').height * 2,
+                    },
+                  ]}
+                />
+                {children}
+              </Context.Provider>
+            </BottomSheet>
+          </View>
+        </FullWindowOverlay>
       </Portal>
     )
   )
@@ -213,7 +224,8 @@ export function Inner({children, style}: DialogInnerProps) {
   return (
     <BottomSheetView
       style={[
-        a.p_xl,
+        a.py_xl,
+        a.px_xl,
         {
           paddingTop: 40,
           borderTopLeftRadius: 40,
@@ -256,9 +268,10 @@ export const ScrollableInner = React.forwardRef<
 
 export const InnerFlatList = React.forwardRef<
   BottomSheetFlatListMethods,
-  BottomSheetFlatListProps<any>
+  BottomSheetFlatListProps<any> & {webInnerStyle?: StyleProp<ViewStyle>}
 >(function InnerFlatList({style, contentContainerStyle, ...props}, ref) {
   const insets = useSafeAreaInsets()
+
   return (
     <BottomSheetFlatList
       keyboardShouldPersistTaps="handled"

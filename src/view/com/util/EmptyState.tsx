@@ -5,9 +5,13 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {Text} from './text/Text'
-import {UserGroupIcon} from 'lib/icons'
+
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {usePalette} from 'lib/hooks/usePalette'
+import {UserGroupIcon} from 'lib/icons'
+import {isWeb} from 'platform/detection'
+import {Growth_Stroke2_Corner0_Rounded as Growth} from '#/components/icons/Growth'
+import {Text} from './text/Text'
 
 export function EmptyState({
   testID,
@@ -16,30 +20,41 @@ export function EmptyState({
   style,
 }: {
   testID?: string
-  icon: IconProp | 'user-group'
+  icon: IconProp | 'user-group' | 'growth'
   message: string
   style?: StyleProp<ViewStyle>
 }) {
   const pal = usePalette('default')
+  const {isTabletOrDesktop} = useWebMediaQueries()
+  const iconSize = isTabletOrDesktop ? 80 : 64
   return (
-    <View testID={testID} style={[styles.container, pal.border, style]}>
-      <View style={styles.iconContainer}>
+    <View
+      testID={testID}
+      style={[
+        styles.container,
+        isWeb && pal.border,
+        isTabletOrDesktop && {paddingRight: 20},
+        style,
+      ]}>
+      <View
+        style={[
+          styles.iconContainer,
+          isTabletOrDesktop && styles.iconContainerBig,
+          pal.viewLight,
+        ]}>
         {icon === 'user-group' ? (
-          <UserGroupIcon size="64" style={styles.icon} />
+          <UserGroupIcon size={iconSize} />
+        ) : icon === 'growth' ? (
+          <Growth width={iconSize} fill={pal.colors.emptyStateIcon} />
         ) : (
           <FontAwesomeIcon
             icon={icon}
-            size={64}
-            style={[
-              styles.icon,
-              {color: pal.colors.emptyStateIcon} as FontAwesomeIconStyle,
-            ]}
+            size={iconSize}
+            style={[{color: pal.colors.emptyStateIcon} as FontAwesomeIconStyle]}
           />
         )}
       </View>
-      <Text
-        type="xl-medium"
-        style={[{color: pal.colors.textVeryLight}, styles.text]}>
+      <Text type="xl" style={[{color: pal.colors.textLight}, styles.text]}>
         {message}
       </Text>
     </View>
@@ -48,16 +63,23 @@ export function EmptyState({
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 20,
-    paddingHorizontal: 36,
-    borderTopWidth: 1,
+    borderTopWidth: isWeb ? 1 : undefined,
   },
   iconContainer: {
     flexDirection: 'row',
-  },
-  icon: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 100,
+    width: 100,
     marginLeft: 'auto',
     marginRight: 'auto',
+    borderRadius: 80,
+    marginTop: 30,
+  },
+  iconContainerBig: {
+    width: 140,
+    height: 140,
+    marginTop: 50,
   },
   text: {
     textAlign: 'center',

@@ -12,3 +12,4 @@
 android
 ios
 src/locale/locales
+lib/react-compiler-runtime

@@ -1,9 +1,10 @@
-import {AppBskyFeedGetActorFeeds} from '@atproto/api'
+import {AppBskyFeedGetActorFeeds, moderateFeedGenerator} from '@atproto/api'
 import {InfiniteData, QueryKey, useInfiniteQuery} from '@tanstack/react-query'
 
 import {useAgent} from '#/state/session'
+import {useModerationOpts} from '../preferences/moderation-opts'
 
-const PAGE_SIZE = 30
+const PAGE_SIZE = 50
 type RQPageParam = string | undefined
 
 // TODO refactor invalidate on mutate?
@@ -14,8 +15,9 @@ export function useProfileFeedgensQuery(
   did: string,
   opts?: {enabled?: boolean},
 ) {
-  const enabled = opts?.enabled !== false
-  const {getAgent} = useAgent()
+  const moderationOpts = useModerationOpts()
+  const enabled = opts?.enabled !== false && Boolean(moderationOpts)
+  const agent = useAgent()
   return useInfiniteQuery<
     AppBskyFeedGetActorFeeds.OutputSchema,
     Error,
@@ -25,15 +27,34 @@ export function useProfileFeedgensQuery(
   >({
     queryKey: RQKEY(did),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await getAgent().app.bsky.feed.getActorFeeds({
+      const res = await agent.app.bsky.feed.getActorFeeds({
         actor: did,
         limit: PAGE_SIZE,
         cursor: pageParam,
+      })
+      res.data.feeds.sort((a, b) => {
+        return (b.likeCount || 0) - (a.likeCount || 0)
       })
       return res.data
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
     enabled,
+    select(data) {
+      return {
+        ...data,
+        pages: data.pages.map(page => {
+          return {
+            ...page,
+            feeds: page.feeds
+              // filter by labels
+              .filter(list => {
+                const decision = moderateFeedGenerator(list, moderationOpts!)
+                return !decision.ui('contentList').filter
+              }),
+          }
+        }),
+      }
+    },
   })
 }

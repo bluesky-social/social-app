@@ -5,7 +5,10 @@ import android.graphics.Canvas
 import android.graphics.drawable.Animatable
 import androidx.appcompat.widget.AppCompatImageView
 
-class AppCompatImageViewExtended(context: Context, private val parent: GifView): AppCompatImageView(context) {
+class AppCompatImageViewExtended(
+  context: Context,
+  private val parent: GifView,
+) : AppCompatImageView(context) {
   override fun onDraw(canvas: Canvas) {
     super.onDraw(canvas)
 

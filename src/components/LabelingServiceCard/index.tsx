@@ -1,18 +1,18 @@
 import React from 'react'
 import {View} from 'react-native'
+import {AppBskyLabelerDefs} from '@atproto/api'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {AppBskyLabelerDefs} from '@atproto/api'
 
 import {getLabelingServiceTitle} from '#/lib/moderation'
-import {Link as InternalLink, LinkProps} from '#/components/Link'
-import {Text} from '#/components/Typography'
-import {useLabelerInfoQuery} from '#/state/queries/labeler'
-import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
-import {RichText} from '#/components/RichText'
-import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '../icons/Chevron'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {useLabelerInfoQuery} from '#/state/queries/labeler'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
+import {Link as InternalLink, LinkProps} from '#/components/Link'
+import {RichText} from '#/components/RichText'
+import {Text} from '#/components/Typography'
+import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '../icons/Chevron'
 
 type LabelingServiceProps = {
   labeler: AppBskyLabelerDefs.LabelerViewDetailed

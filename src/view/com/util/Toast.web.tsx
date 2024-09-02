@@ -2,7 +2,7 @@
  * Note: the dataSet properties are used to leverage custom CSS in public/index.html
  */
 
-import React, {useState, useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import {StyleSheet, Text, View} from 'react-native'
 import {
   FontAwesomeIcon,
@@ -39,7 +39,7 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({}) => {
         <View style={styles.container}>
           <FontAwesomeIcon
             icon={activeToast.icon}
-            size={24}
+            size={20}
             style={styles.icon as FontAwesomeIconStyle}
           />
           <Text style={styles.text}>{activeToast.text}</Text>
@@ -79,6 +79,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     color: '#fff',
+    flexShrink: 0,
   },
   text: {
     color: '#fff',

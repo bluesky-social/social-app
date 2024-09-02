@@ -7,22 +7,22 @@ import {
 import {FeedAPI, FeedAPIResponse} from './types'
 
 export class AuthorFeedAPI implements FeedAPI {
-  getAgent: () => BskyAgent
+  agent: BskyAgent
   params: GetAuthorFeed.QueryParams
 
   constructor({
-    getAgent,
+    agent,
     feedParams,
   }: {
-    getAgent: () => BskyAgent
+    agent: BskyAgent
     feedParams: GetAuthorFeed.QueryParams
   }) {
-    this.getAgent = getAgent
+    this.agent = agent
     this.params = feedParams
   }
 
   async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
-    const res = await this.getAgent().getAuthorFeed({
+    const res = await this.agent.getAuthorFeed({
       ...this.params,
       limit: 1,
     })
@@ -36,7 +36,7 @@ export class AuthorFeedAPI implements FeedAPI {
     cursor: string | undefined
     limit: number
   }): Promise<FeedAPIResponse> {
-    const res = await this.getAgent().getAuthorFeed({
+    const res = await this.agent.getAuthorFeed({
       ...this.params,
       cursor,
       limit,

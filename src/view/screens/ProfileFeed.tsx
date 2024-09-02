@@ -1,5 +1,6 @@
 import React, {useCallback, useMemo} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useIsFocused, useNavigation} from '@react-navigation/native'
@@ -16,12 +17,11 @@ import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
 import {FeedDescriptor} from '#/state/queries/post-feed'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {
-  usePinFeedMutation,
+  useAddSavedFeedsMutation,
   usePreferencesQuery,
   UsePreferencesQueryResponse,
   useRemoveFeedMutation,
-  useSaveFeedMutation,
-  useUnpinFeedMutation,
+  useUpdateSavedFeedsMutation,
 } from '#/state/queries/preferences'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {truncateAndInvalidate} from '#/state/queries/util'
@@ -53,9 +53,9 @@ import * as Toast from 'view/com/util/Toast'
 import {CenteredView} from 'view/com/util/Views'
 import {atoms as a, useTheme} from '#/alf'
 import {Button as NewButton, ButtonText} from '#/components/Button'
+import {useRichText} from '#/components/hooks/useRichText'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
 import {
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
   Heart2_Stroke2_Corner0_Rounded as HeartOutline,
@@ -163,37 +163,20 @@ export function ProfileFeedScreenInner({
   const feedSectionRef = React.useRef<SectionRef>(null)
   const isScreenFocused = useIsFocused()
 
-  const {
-    mutateAsync: saveFeed,
-    variables: savedFeed,
-    reset: resetSaveFeed,
-    isPending: isSavePending,
-  } = useSaveFeedMutation()
-  const {
-    mutateAsync: removeFeed,
-    variables: removedFeed,
-    reset: resetRemoveFeed,
-    isPending: isRemovePending,
-  } = useRemoveFeedMutation()
-  const {
-    mutateAsync: pinFeed,
-    variables: pinnedFeed,
-    reset: resetPinFeed,
-    isPending: isPinPending,
-  } = usePinFeedMutation()
-  const {
-    mutateAsync: unpinFeed,
-    variables: unpinnedFeed,
-    reset: resetUnpinFeed,
-    isPending: isUnpinPending,
-  } = useUnpinFeedMutation()
+  const {mutateAsync: addSavedFeeds, isPending: isAddSavedFeedPending} =
+    useAddSavedFeedsMutation()
+  const {mutateAsync: removeFeed, isPending: isRemovePending} =
+    useRemoveFeedMutation()
+  const {mutateAsync: updateSavedFeeds, isPending: isUpdateFeedPending} =
+    useUpdateSavedFeedsMutation()
 
-  const isSaved =
-    !removedFeed &&
-    (!!savedFeed || preferences.feeds.saved.includes(feedInfo.uri))
-  const isPinned =
-    !unpinnedFeed &&
-    (!!pinnedFeed || preferences.feeds.pinned.includes(feedInfo.uri))
+  const isPending =
+    isAddSavedFeedPending || isRemovePending || isUpdateFeedPending
+  const savedFeedConfig = preferences.savedFeeds.find(
+    f => f.value === feedInfo.uri,
+  )
+  const isSaved = Boolean(savedFeedConfig)
+  const isPinned = Boolean(savedFeedConfig?.pinned)
 
   useSetTitle(feedInfo?.displayName)
 
@@ -204,13 +187,17 @@ export function ProfileFeedScreenInner({
     try {
       playHaptic()
 
-      if (isSaved) {
-        await removeFeed({uri: feedInfo.uri})
-        resetRemoveFeed()
+      if (savedFeedConfig) {
+        await removeFeed(savedFeedConfig)
         Toast.show(_(msg`Removed from your feeds`))
       } else {
-        await saveFeed({uri: feedInfo.uri})
-        resetSaveFeed()
+        await addSavedFeeds([
+          {
+            type: 'feed',
+            value: feedInfo.uri,
+            pinned: false,
+          },
+        ])
         Toast.show(_(msg`Saved to your feeds`))
       }
     } catch (err) {
@@ -218,44 +205,43 @@ export function ProfileFeedScreenInner({
         _(
           msg`There was an an issue updating your feeds, please check your internet connection and try again.`,
         ),
+        'xmark',
       )
       logger.error('Failed up update feeds', {message: err})
     }
-  }, [
-    playHaptic,
-    isSaved,
-    removeFeed,
-    feedInfo,
-    resetRemoveFeed,
-    _,
-    saveFeed,
-    resetSaveFeed,
-  ])
+  }, [_, playHaptic, feedInfo, removeFeed, addSavedFeeds, savedFeedConfig])
 
   const onTogglePinned = React.useCallback(async () => {
     try {
       playHaptic()
 
-      if (isPinned) {
-        await unpinFeed({uri: feedInfo.uri})
-        resetUnpinFeed()
+      if (savedFeedConfig) {
+        await updateSavedFeeds([
+          {
+            ...savedFeedConfig,
+            pinned: !savedFeedConfig.pinned,
+          },
+        ])
       } else {
-        await pinFeed({uri: feedInfo.uri})
-        resetPinFeed()
+        await addSavedFeeds([
+          {
+            type: 'feed',
+            value: feedInfo.uri,
+            pinned: true,
+          },
+        ])
       }
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`))
+      Toast.show(_(msg`There was an issue contacting the server`), 'xmark')
       logger.error('Failed to toggle pinned feed', {message: e})
     }
   }, [
     playHaptic,
-    isPinned,
-    unpinFeed,
     feedInfo,
-    resetUnpinFeed,
-    pinFeed,
-    resetPinFeed,
     _,
+    savedFeedConfig,
+    updateSavedFeeds,
+    addSavedFeeds,
   ])
 
   const onPressShare = React.useCallback(() => {
@@ -296,7 +282,7 @@ export function ProfileFeedScreenInner({
             {feedInfo && hasSession && (
               <NewButton
                 testID={isPinned ? 'unpinBtn' : 'pinBtn'}
-                disabled={isPinPending || isUnpinPending}
+                disabled={isPending}
                 size="small"
                 variant="solid"
                 color={isPinned ? 'secondary' : 'primary'}
@@ -319,15 +305,16 @@ export function ProfileFeedScreenInner({
                         a.align_center,
                         a.rounded_full,
                         {height: 36, width: 36},
-                        t.atoms.bg_contrast_50,
+                        t.atoms.bg_contrast_25,
                         (state.hovered || state.pressed) && [
-                          t.atoms.bg_contrast_100,
+                          t.atoms.bg_contrast_50,
                         ],
                       ]}
                       testID="headerDropdownBtn">
-                      <Ellipsis
-                        size="lg"
-                        fill={t.atoms.text_contrast_medium.color}
+                      <FontAwesomeIcon
+                        icon="ellipsis"
+                        size={20}
+                        style={t.atoms.text}
                       />
                     </Pressable>
                   )
@@ -339,7 +326,7 @@ export function ProfileFeedScreenInner({
                   {hasSession && (
                     <>
                       <Menu.Item
-                        disabled={isSavePending || isRemovePending}
+                        disabled={isPending}
                         testID="feedHeaderDropdownToggleSavedBtn"
                         label={
                           isSaved
@@ -395,14 +382,11 @@ export function ProfileFeedScreenInner({
     onTogglePinned,
     onToggleSaved,
     currentAccount?.did,
-    isPinPending,
-    isRemovePending,
-    isSavePending,
     isSaved,
-    isUnpinPending,
     onPressReport,
     onPressShare,
     t,
+    isPending,
   ])
 
   return (
@@ -487,7 +471,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     }, [onScrollToTop, isScreenFocused])
 
     const renderPostsEmpty = useCallback(() => {
-      return <EmptyState icon="feed" message={_(msg`This feed is empty!`)} />
+      return <EmptyState icon="hashtag" message={_(msg`This feed is empty.`)} />
     }, [_])
 
     return (
@@ -536,6 +520,7 @@ function AboutSection({
   const {mutateAsync: likeFeed, isPending: isLikePending} = useLikeMutation()
   const {mutateAsync: unlikeFeed, isPending: isUnlikePending} =
     useUnlikeMutation()
+  const [resolvedRT] = useRichText(feedInfo.description.text || '')
 
   const isLiked = !!likeUri
   const likeCount =
@@ -559,6 +544,7 @@ function AboutSection({
         _(
           msg`There was an an issue contacting the server, please check your internet connection and try again.`,
         ),
+        'xmark',
       )
       logger.error('Failed up toggle like', {message: err})
     }
@@ -571,7 +557,7 @@ function AboutSection({
           <RichText
             testID="listDescription"
             style={[a.text_md]}
-            value={feedInfo.description}
+            value={resolvedRT ?? feedInfo.description}
           />
         ) : (
           <Text type="lg" style={[{fontStyle: 'italic'}, pal.textLight]}>

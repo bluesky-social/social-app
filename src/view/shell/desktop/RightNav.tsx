@@ -11,6 +11,8 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {s} from 'lib/styles'
 import {TextLink} from 'view/com/util/Link'
 import {Text} from 'view/com/util/text/Text'
+import {atoms as a} from '#/alf'
+import {ProgressGuideList} from '#/components/ProgressGuide/List'
 import {DesktopFeeds} from './Feeds'
 import {DesktopSearch} from './Search'
 
@@ -38,9 +40,12 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
             <DesktopSearch />
 
             {hasSession && (
-              <View style={[pal.border, styles.desktopFeedsContainer]}>
-                <DesktopFeeds />
-              </View>
+              <>
+                <ProgressGuideList style={[{marginTop: 22, marginBottom: 8}]} />
+                <View style={[pal.border, styles.desktopFeedsContainer]}>
+                  <DesktopFeeds />
+                </View>
+              </>
             )}
           </>
         )}
@@ -52,7 +57,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
               paddingTop: hasSession ? 0 : 18,
             },
           ]}>
-          <View style={[{flexWrap: 'wrap'}, s.flexRow]}>
+          <View style={[{flexWrap: 'wrap'}, s.flexRow, a.gap_xs]}>
             {hasSession && (
               <>
                 <TextLink
@@ -65,7 +70,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
                   text={_(msg`Feedback`)}
                 />
                 <Text type="md" style={pal.textLight}>
-                  &nbsp;&middot;&nbsp;
+                  &middot;
                 </Text>
               </>
             )}
@@ -76,7 +81,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
               text={_(msg`Privacy`)}
             />
             <Text type="md" style={pal.textLight}>
-              &nbsp;&middot;&nbsp;
+              &middot;
             </Text>
             <TextLink
               type="md"
@@ -85,7 +90,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
               text={_(msg`Terms`)}
             />
             <Text type="md" style={pal.textLight}>
-              &nbsp;&middot;&nbsp;
+              &middot;
             </Text>
             <TextLink
               type="md"
@@ -130,8 +135,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   desktopFeedsContainer: {
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderBottomWidth: StyleSheet.hairlineWidth,
     marginTop: 18,
     marginBottom: 18,
   },

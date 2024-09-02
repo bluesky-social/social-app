@@ -112,7 +112,7 @@ function LandingPage() {
       <Link
         href="https://bsky.social/about"
         className="transition-transform hover:scale-110">
-        <img src={logo as string} className="h-10" />
+        <img src={logo} className="h-10" />
       </Link>
 
       <h1 className="text-4xl font-bold text-center">Embed a Bluesky Post</h1>
@@ -125,7 +125,7 @@ function LandingPage() {
         placeholder={DEFAULT_POST}
       />
 
-      <img src={arrowBottom as string} className="w-6" />
+      <img src={arrowBottom} className="w-6" />
 
       {loading ? (
         <Skeleton />

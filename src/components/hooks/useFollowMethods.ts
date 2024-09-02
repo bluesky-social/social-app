@@ -32,7 +32,7 @@ export function useFollowMethods({
       } catch (e: any) {
         logger.error(`useFollowMethods: failed to follow`, {message: String(e)})
         if (e?.name !== 'AbortError') {
-          Toast.show(_(msg`An issue occurred, please try again.`))
+          Toast.show(_(msg`An issue occurred, please try again.`), 'xmark')
         }
       }
     })
@@ -47,7 +47,7 @@ export function useFollowMethods({
           message: String(e),
         })
         if (e?.name !== 'AbortError') {
-          Toast.show(_(msg`An issue occurred, please try again.`))
+          Toast.show(_(msg`An issue occurred, please try again.`), 'xmark')
         }
       }
     })

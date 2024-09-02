@@ -1,10 +1,11 @@
 import React, {useEffect} from 'react'
+import {Animated, Easing, StyleSheet, View} from 'react-native'
 import {observer} from 'mobx-react-lite'
-import {Animated, Easing, Platform, StyleSheet, View} from 'react-native'
-import {ComposePost} from '../com/composer/Composer'
-import {useComposerState} from 'state/shell/composer'
+
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useComposerState} from 'state/shell/composer'
+import {ComposePost} from '../com/composer/Composer'
 
 export const Composer = observer(function ComposerImpl({
   winHeight,
@@ -54,6 +55,7 @@ export const Composer = observer(function ComposerImpl({
         replyTo={state.replyTo}
         onPost={state.onPost}
         quote={state.quote}
+        quoteCount={state.quoteCount}
         mention={state.mention}
         text={state.text}
         imageUris={state.imageUris}
@@ -68,10 +70,5 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     width: '100%',
-    ...Platform.select({
-      ios: {
-        paddingTop: 24,
-      },
-    }),
   },
 })

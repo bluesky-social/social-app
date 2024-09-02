@@ -5,7 +5,9 @@ import {runOnJS, useSharedValue} from 'react-native-reanimated'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useScrollHandlers} from '#/lib/ScrollContext'
+import {useDedupe} from 'lib/hooks/useDedupe'
 import {addStyle} from 'lib/styles'
+import {updateActiveViewAsync} from '../../../../modules/expo-bluesky-swiss-army/src/VisibilityView'
 import {FlatList_INTERNAL} from './Views'
 
 export type ListMethods = FlatList_INTERNAL
@@ -24,7 +26,9 @@ export type ListProps<ItemT> = Omit<
   refreshing?: boolean
   onRefresh?: () => void
   onItemSeen?: (item: ItemT) => void
-  containWeb?: boolean
+  desktopFixedHeight?: number | boolean
+  // Web only prop to contain the scroll to the container rather than the window
+  disableFullWindowScroll?: boolean
   sideBorders?: boolean
 }
 export type ListRef = React.MutableRefObject<FlatList_INTERNAL | null>
@@ -44,22 +48,30 @@ function ListImpl<ItemT>(
   ref: React.Ref<ListMethods>,
 ) {
   const isScrolledDown = useSharedValue(false)
-  const contextScrollHandlers = useScrollHandlers()
   const pal = usePalette('default')
+  const dedupe = useDedupe()
 
   function handleScrolledDownChange(didScrollDown: boolean) {
     onScrolledDownChange?.(didScrollDown)
   }
 
+  // Intentionally destructured outside the main thread closure.
+  // See https://github.com/bluesky-social/social-app/pull/4108.
+  const {
+    onBeginDrag: onBeginDragFromContext,
+    onEndDrag: onEndDragFromContext,
+    onScroll: onScrollFromContext,
+    onMomentumEnd: onMomentumEndFromContext,
+  } = useScrollHandlers()
   const scrollHandler = useAnimatedScrollHandler({
     onBeginDrag(e, ctx) {
-      contextScrollHandlers.onBeginDrag?.(e, ctx)
+      onBeginDragFromContext?.(e, ctx)
     },
     onEndDrag(e, ctx) {
-      contextScrollHandlers.onEndDrag?.(e, ctx)
+      onEndDragFromContext?.(e, ctx)
     },
     onScroll(e, ctx) {
-      contextScrollHandlers.onScroll?.(e, ctx)
+      onScrollFromContext?.(e, ctx)
 
       const didScrollDown = e.contentOffset.y > SCROLLED_DOWN_LIMIT
       if (isScrolledDown.value !== didScrollDown) {
@@ -68,11 +80,13 @@ function ListImpl<ItemT>(
           runOnJS(handleScrolledDownChange)(didScrollDown)
         }
       }
+
+      runOnJS(dedupe)(updateActiveViewAsync)
     },
     // Note: adding onMomentumBegin here makes simulator scroll
     // lag on Android. So either don't add it, or figure out why.
     onMomentumEnd(e, ctx) {
-      contextScrollHandlers.onMomentumEnd?.(e, ctx)
+      onMomentumEndFromContext?.(e, ctx)
     },
   })
 
@@ -90,7 +104,7 @@ function ListImpl<ItemT>(
       },
       {
         itemVisiblePercentThreshold: 40,
-        minimumViewTime: 2e3,
+        minimumViewTime: 1.5e3,
       },
     ]
   }, [onItemSeen])

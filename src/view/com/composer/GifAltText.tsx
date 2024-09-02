@@ -172,10 +172,15 @@ function AltTextInner({
         {/* below the text input to force tab order */}
         <View>
           <Text style={[a.text_2xl, a.font_bold, a.leading_tight, a.pb_sm]}>
-            <Trans>Add ALT text</Trans>
+            <Trans>Add alt text</Trans>
           </Text>
-          <View style={[a.w_full, a.align_center, native({maxHeight: 200})]}>
-            <GifEmbed link={link} params={params} hideAlt />
+          <View style={[a.align_center]}>
+            <GifEmbed
+              link={link}
+              params={params}
+              hideAlt
+              style={[native({maxHeight: 225})]}
+            />
           </View>
         </View>
       </View>

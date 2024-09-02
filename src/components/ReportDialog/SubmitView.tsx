@@ -35,7 +35,7 @@ export function SubmitView({
 }) {
   const t = useTheme()
   const {_} = useLingui()
-  const {getAgent} = useAgent()
+  const agent = useAgent()
   const [details, setDetails] = React.useState<string>('')
   const [submitting, setSubmitting] = React.useState<boolean>(false)
   const [selectedServices, setSelectedServices] = React.useState<string[]>([
@@ -60,15 +60,19 @@ export function SubmitView({
       reason: details,
     }
     const results = await Promise.all(
-      selectedServices.map(did =>
-        getAgent()
-          .withProxy('atproto_labeler', did)
-          .createModerationReport(report)
+      selectedServices.map(did => {
+        return agent
+          .createModerationReport(report, {
+            encoding: 'application/json',
+            headers: {
+              'atproto-proxy': `${did}#atproto_labeler`,
+            },
+          })
           .then(
             _ => true,
             _ => false,
-          ),
-      ),
+          )
+      }),
     )
 
     setSubmitting(false)
@@ -91,7 +95,7 @@ export function SubmitView({
     selectedServices,
     onSubmitComplete,
     setError,
-    getAgent,
+    agent,
   ])
 
   return (

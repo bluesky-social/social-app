@@ -1,0 +1,37 @@
+appId: xyz.blueskyweb.app
+---
+- runScript:
+    file: ../setupServer.js
+    env:
+        SERVER_PATH: "?users&posts&feeds"
+- runFlow:
+    file: ../setupApp.yml
+- tapOn:
+    id: "e2eSignInAlice"
+
+# Navigate to another user profile
+- tapOn:
+    id: "bottomBarSearchBtn"
+- tapOn:
+    id: "searchTextInput"
+- inputText: "b"
+- tapOn:
+    id: "searchAutoCompleteResult-bob.test"
+- assertVisible:
+    id: "profileView"
+
+# Can follow/unfollow another user
+- tapOn:
+    id: "followBtn"
+- tapOn:
+    id: "unfollowBtn"
+
+# Can mute/unmute another user
+- tapOn:
+    id: "profileHeaderDropdownBtn"
+- tapOn: "Mute Account"
+- assertVisible: "Account Muted"
+- tapOn:
+    id: "profileHeaderDropdownBtn"
+- tapOn: "Unmute Account"
+- assertNotVisible: "Account Muted"

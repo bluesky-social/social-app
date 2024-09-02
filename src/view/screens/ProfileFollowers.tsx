@@ -1,12 +1,16 @@
 import React from 'react'
-import {View} from 'react-native'
-import {useFocusEffect} from '@react-navigation/native'
-import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
-import {ViewHeader} from '../com/util/ViewHeader'
-import {ProfileFollowers as ProfileFollowersComponent} from '../com/profile/ProfileFollowers'
-import {useSetMinimalShellMode} from '#/state/shell'
-import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useFocusEffect} from '@react-navigation/native'
+
+import {useSetMinimalShellMode} from '#/state/shell'
+import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
+import {isWeb} from 'platform/detection'
+import {CenteredView} from 'view/com/util/Views'
+import {atoms as a} from '#/alf'
+import {ListHeaderDesktop} from '#/components/Lists'
+import {ProfileFollowers as ProfileFollowersComponent} from '../com/profile/ProfileFollowers'
+import {ViewHeader} from '../com/util/ViewHeader'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFollowers'>
 export const ProfileFollowersScreen = ({route}: Props) => {
@@ -21,9 +25,10 @@ export const ProfileFollowersScreen = ({route}: Props) => {
   )
 
   return (
-    <View style={{flex: 1}}>
-      <ViewHeader title={_(msg`Followers`)} />
+    <CenteredView style={a.h_full_vh} sideBorders={true}>
+      <ListHeaderDesktop title={_(msg`Followers`)} />
+      <ViewHeader title={_(msg`Followers`)} showBorder={!isWeb} />
       <ProfileFollowersComponent name={name} />
-    </View>
+    </CenteredView>
   )
 }

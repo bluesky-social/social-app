@@ -1,72 +1,86 @@
 import React from 'react'
-import {TouchableOpacity, StyleSheet, Keyboard} from 'react-native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {HITSLOP_10} from 'lib/constants'
-import {useLingui} from '@lingui/react'
+import {Keyboard, StyleProp, ViewStyle} from 'react-native'
+import Animated, {AnimatedStyle} from 'react-native-reanimated'
+import {AppBskyFeedPostgate} from '@atproto/api'
 import {msg} from '@lingui/macro'
-import {useModalControls} from '#/state/modals'
-import {ThreadgateSetting} from '#/state/queries/threadgate'
+import {useLingui} from '@lingui/react'
+
 import {isNative} from '#/platform/detection'
+import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import * as Dialog from '#/components/Dialog'
+import {PostInteractionSettingsControlledDialog} from '#/components/dialogs/PostInteractionSettingsDialog'
+import {Earth_Stroke2_Corner0_Rounded as Earth} from '#/components/icons/Globe'
+import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
 
 export function ThreadgateBtn({
-  threadgate,
-  onChange,
+  postgate,
+  onChangePostgate,
+  threadgateAllowUISettings,
+  onChangeThreadgateAllowUISettings,
+  style,
 }: {
-  threadgate: ThreadgateSetting[]
-  onChange: (v: ThreadgateSetting[]) => void
+  postgate: AppBskyFeedPostgate.Record
+  onChangePostgate: (v: AppBskyFeedPostgate.Record) => void
+
+  threadgateAllowUISettings: ThreadgateAllowUISetting[]
+  onChangeThreadgateAllowUISettings: (v: ThreadgateAllowUISetting[]) => void
+
+  style?: StyleProp<AnimatedStyle<ViewStyle>>
 }) {
-  const pal = usePalette('default')
   const {track} = useAnalytics()
   const {_} = useLingui()
-  const {openModal} = useModalControls()
+  const t = useTheme()
+  const control = Dialog.useDialogControl()
 
   const onPress = () => {
     track('Composer:ThreadgateOpened')
     if (isNative && Keyboard.isVisible()) {
       Keyboard.dismiss()
     }
-    openModal({
-      name: 'threadgate',
-      settings: threadgate,
-      onChange,
-    })
+
+    control.open()
   }
 
+  const anyoneCanReply =
+    threadgateAllowUISettings.length === 1 &&
+    threadgateAllowUISettings[0].type === 'everybody'
+  const anyoneCanQuote =
+    !postgate.embeddingRules || postgate.embeddingRules.length === 0
+  const anyoneCanInteract = anyoneCanReply && anyoneCanQuote
+  const label = anyoneCanInteract
+    ? _(msg`Anybody can interact`)
+    : _(msg`Interaction limited`)
+
   return (
-    <TouchableOpacity
-      testID="openReplyGateButton"
-      onPress={onPress}
-      style={styles.button}
-      hitSlop={HITSLOP_10}
-      accessibilityRole="button"
-      accessibilityLabel={_(msg`Who can reply`)}
-      accessibilityHint="">
-      <FontAwesomeIcon
-        icon={['far', 'comments']}
-        style={pal.link as FontAwesomeIconStyle}
-        size={24}
+    <>
+      <Animated.View style={[a.flex_row, a.p_sm, t.atoms.bg, style]}>
+        <Button
+          variant="solid"
+          color="secondary"
+          size="xsmall"
+          testID="openReplyGateButton"
+          onPress={onPress}
+          label={label}
+          accessibilityHint={_(
+            msg`Opens a dialog to choose who can reply to this thread`,
+          )}>
+          <ButtonIcon icon={anyoneCanInteract ? Earth : Group} />
+          <ButtonText>{label}</ButtonText>
+        </Button>
+      </Animated.View>
+      <PostInteractionSettingsControlledDialog
+        control={control}
+        onSave={() => {
+          control.close()
+        }}
+        postgate={postgate}
+        onChangePostgate={onChangePostgate}
+        threadgateAllowUISettings={threadgateAllowUISettings}
+        onChangeThreadgateAllowUISettings={onChangeThreadgateAllowUISettings}
       />
-      {threadgate.length ? (
-        <FontAwesomeIcon
-          icon="check"
-          size={16}
-          style={pal.link as FontAwesomeIconStyle}
-        />
-      ) : null}
-    </TouchableOpacity>
+    </>
   )
 }
-
-const styles = StyleSheet.create({
-  button: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 6,
-    gap: 4,
-  },
-})

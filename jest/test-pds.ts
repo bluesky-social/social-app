@@ -79,32 +79,33 @@ export async function createServer(
     plc: {port: port2},
   })
 
+  // DISABLED - looks like dev-env added this and now it conflicts
   // add the test mod authority
-  const agent = new BskyAgent({service: pdsUrl})
-  const res = await agent.api.com.atproto.server.createAccount({
-    email: 'mod-authority@test.com',
-    handle: 'mod-authority.test',
-    password: 'hunter2',
-  })
-  agent.api.setHeader('Authorization', `Bearer ${res.data.accessJwt}`)
-  await agent.api.app.bsky.actor.profile.create(
-    {repo: res.data.did},
-    {
-      displayName: 'Dev-env Moderation',
-      description: `The pretend version of mod.bsky.app`,
-    },
-  )
+  // const agent = new BskyAgent({service: pdsUrl})
+  // const res = await agent.api.com.atproto.server.createAccount({
+  //   email: 'mod-authority@test.com',
+  //   handle: 'mod-authority.test',
+  //   password: 'hunter2',
+  // })
+  // agent.api.setHeader('Authorization', `Bearer ${res.data.accessJwt}`)
+  // await agent.api.app.bsky.actor.profile.create(
+  //   {repo: res.data.did},
+  //   {
+  //     displayName: 'Dev-env Moderation',
+  //     description: `The pretend version of mod.bsky.app`,
+  //   },
+  // )
 
-  await agent.api.app.bsky.labeler.service.create(
-    {repo: res.data.did, rkey: 'self'},
-    {
-      policies: {
-        labelValues: ['!hide', '!warn'],
-        labelValueDefinitions: [],
-      },
-      createdAt: new Date().toISOString(),
-    },
-  )
+  // await agent.api.app.bsky.labeler.service.create(
+  //   {repo: res.data.did, rkey: 'self'},
+  //   {
+  //     policies: {
+  //       labelValues: ['!hide', '!warn'],
+  //       labelValueDefinitions: [],
+  //     },
+  //     createdAt: new Date().toISOString(),
+  //   },
+  // )
 
   const pic = fs.readFileSync(
     path.join(__dirname, '..', 'assets', 'default-avatar.png'),
@@ -114,8 +115,7 @@ export async function createServer(
     pdsUrl,
     mocker: new Mocker(testNet, pdsUrl, pic),
     async close() {
-      await testNet.pds.server.destroy()
-      await testNet.plc.server.destroy()
+      await testNet.close()
     },
   }
 }
@@ -157,7 +157,7 @@ class Mocker {
   }
 
   async createUser(name: string) {
-    const agent = new BskyAgent({service: this.agent.service})
+    const agent = new BskyAgent({service: this.service})
 
     const inviteRes = await agent.api.com.atproto.server.createInviteCode(
       {useCount: 1},
@@ -333,7 +333,7 @@ class Mocker {
   }
 
   async createInvite(forAccount: string) {
-    const agent = new BskyAgent({service: this.agent.service})
+    const agent = new BskyAgent({service: this.service})
     await agent.api.com.atproto.server.createInviteCode(
       {useCount: 1, forAccount},
       {

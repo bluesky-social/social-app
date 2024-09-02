@@ -21,8 +21,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   React.useEffect(() => {
-    return persisted.onUpdate(() => {
-      setState(persisted.get('kawaii'))
+    return persisted.onUpdate('kawaii', nextKawaii => {
+      setState(nextKawaii)
     })
   }, [setStateWrapped])
 

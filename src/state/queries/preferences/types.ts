@@ -1,7 +1,7 @@
 import {
+  BskyFeedViewPreference,
   BskyPreferences,
   BskyThreadViewPreference,
-  BskyFeedViewPreference,
 } from '@atproto/api'
 
 export type UsePreferencesQueryResponse = Omit<
@@ -16,9 +16,6 @@ export type UsePreferencesQueryResponse = Omit<
    */
   threadViewPrefs: ThreadViewPreferences
   userAge: number | undefined
-  feeds: Required<BskyPreferences['feeds']> & {
-    unpinned: string[]
-  }
 }
 
 export type ThreadViewPreferences = Pick<

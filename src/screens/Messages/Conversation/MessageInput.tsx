@@ -1,81 +1,140 @@
 import React from 'react'
+import {Pressable, TextInput, useWindowDimensions, View} from 'react-native'
 import {
-  Dimensions,
-  Keyboard,
-  NativeSyntheticEvent,
-  Pressable,
-  TextInput,
-  TextInputContentSizeChangeEventData,
-  View,
-} from 'react-native'
+  useFocusedInputHandler,
+  useReanimatedKeyboardAnimation,
+} from 'react-native-keyboard-controller'
+import Animated, {
+  measure,
+  useAnimatedProps,
+  useAnimatedRef,
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import Graphemer from 'graphemer'
 
-import {HITSLOP_10} from '#/lib/constants'
-import {useHaptics} from 'lib/haptics'
+import {HITSLOP_10, MAX_DM_GRAPHEME_LENGTH} from '#/lib/constants'
+import {useHaptics} from '#/lib/haptics'
+import {
+  useMessageDraft,
+  useSaveMessageDraft,
+} from '#/state/messages/message-drafts'
+import {isIOS} from 'platform/detection'
+import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
+import {useSharedInputStyles} from '#/components/forms/TextField'
 import {PaperPlane_Stroke2_Corner0_Rounded as PaperPlane} from '#/components/icons/PaperPlane'
+import {useExtractEmbedFromFacets} from './MessageInputEmbed'
+
+const AnimatedTextInput = Animated.createAnimatedComponent(TextInput)
 
 export function MessageInput({
   onSendMessage,
-  scrollToEnd,
+  hasEmbed,
+  setEmbed,
+  children,
 }: {
   onSendMessage: (message: string) => void
-  scrollToEnd: () => void
+  hasEmbed: boolean
+  setEmbed: (embedUrl: string | undefined) => void
+  children?: React.ReactNode
 }) {
   const {_} = useLingui()
   const t = useTheme()
   const playHaptic = useHaptics()
-  const [message, setMessage] = React.useState('')
-  const [maxHeight, setMaxHeight] = React.useState<number | undefined>()
-  const [isInputScrollable, setIsInputScrollable] = React.useState(false)
+  const {getDraft, clearDraft} = useMessageDraft()
 
+  // Input layout
   const {top: topInset} = useSafeAreaInsets()
+  const {height: windowHeight} = useWindowDimensions()
+  const {height: keyboardHeight} = useReanimatedKeyboardAnimation()
+  const maxHeight = useSharedValue<undefined | number>(undefined)
+  const isInputScrollable = useSharedValue(false)
 
-  const inputRef = React.useRef<TextInput>(null)
+  const inputStyles = useSharedInputStyles()
+  const [isFocused, setIsFocused] = React.useState(false)
+  const [message, setMessage] = React.useState(getDraft)
+  const inputRef = useAnimatedRef<TextInput>()
+
+  useSaveMessageDraft(message)
+  useExtractEmbedFromFacets(message, setEmbed)
 
   const onSubmit = React.useCallback(() => {
-    if (message.trim() === '') {
+    if (!hasEmbed && message.trim() === '') {
       return
     }
-    onSendMessage(message.trimEnd())
+    if (new Graphemer().countGraphemes(message) > MAX_DM_GRAPHEME_LENGTH) {
+      Toast.show(_(msg`Message is too long`), 'xmark')
+      return
+    }
+    clearDraft()
+    onSendMessage(message)
     playHaptic()
     setMessage('')
+    setEmbed(undefined)
+
+    // Pressing the send button causes the text input to lose focus, so we need to
+    // re-focus it after sending
     setTimeout(() => {
       inputRef.current?.focus()
     }, 100)
-  }, [message, onSendMessage, playHaptic])
+  }, [
+    hasEmbed,
+    message,
+    clearDraft,
+    onSendMessage,
+    playHaptic,
+    setEmbed,
+    _,
+    inputRef,
+  ])
 
-  const onInputLayout = React.useCallback(
-    (e: NativeSyntheticEvent<TextInputContentSizeChangeEventData>) => {
-      const keyboardHeight = Keyboard.metrics()?.height ?? 0
-      const windowHeight = Dimensions.get('window').height
+  useFocusedInputHandler(
+    {
+      onChangeText: () => {
+        'worklet'
+        const measurement = measure(inputRef)
+        if (!measurement) return
 
-      const max = windowHeight - keyboardHeight - topInset - 100
-      const availableSpace = max - e.nativeEvent.contentSize.height
+        const max = windowHeight - -keyboardHeight.value - topInset - 150
+        const availableSpace = max - measurement.height
 
-      setMaxHeight(max)
-      setIsInputScrollable(availableSpace < 30)
-
-      scrollToEnd()
+        maxHeight.value = max
+        isInputScrollable.value = availableSpace < 30
+      },
     },
-    [scrollToEnd, topInset],
+    [windowHeight, topInset],
   )
 
+  const animatedStyle = useAnimatedStyle(() => ({
+    maxHeight: maxHeight.value,
+  }))
+
+  const animatedProps = useAnimatedProps(() => ({
+    scrollEnabled: isInputScrollable.value,
+  }))
+
   return (
-    <View style={a.p_sm}>
+    <View style={[a.px_md, a.pb_sm, a.pt_xs]}>
+      {children}
       <View
         style={[
           a.w_full,
           a.flex_row,
-          a.py_sm,
-          a.px_sm,
-          a.pl_md,
           t.atoms.bg_contrast_25,
-          {borderRadius: 23},
+          {
+            padding: a.p_sm.padding - 2,
+            paddingLeft: a.p_md.padding - 2,
+            borderWidth: 1,
+            borderRadius: 23,
+            borderColor: 'transparent',
+          },
+          isFocused && inputStyles.chromeFocus,
         ]}>
-        <TextInput
+        <AnimatedTextInput
           accessibilityLabel={_(msg`Message input field`)}
           accessibilityHint={_(msg`Type your message here`)}
           placeholder={_(msg`Write a message`)}
@@ -83,13 +142,21 @@ export function MessageInput({
           value={message}
           multiline={true}
           onChangeText={setMessage}
-          style={[a.flex_1, a.text_md, a.px_sm, t.atoms.text, {maxHeight}]}
+          style={[
+            a.flex_1,
+            a.text_md,
+            a.px_sm,
+            t.atoms.text,
+            {paddingBottom: isIOS ? 5 : 0},
+            animatedStyle,
+          ]}
           keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
-          scrollEnabled={isInputScrollable}
           blurOnSubmit={false}
-          onFocus={scrollToEnd}
-          onContentSizeChange={onInputLayout}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
           ref={inputRef}
+          hitSlop={HITSLOP_10}
+          animatedProps={animatedProps}
         />
         <Pressable
           accessibilityRole="button"

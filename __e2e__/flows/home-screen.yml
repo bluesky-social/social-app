@@ -1,0 +1,64 @@
+appId: xyz.blueskyweb.app
+---
+- runScript:
+    file: ../setupServer.js
+    env:
+        SERVER_PATH: ?users&follows&posts&feeds
+- runFlow:
+    file: ../setupApp.yml
+- tapOn:
+    id: "e2eSignInAlice"
+
+- tapOn:
+    label: "Can go to feeds page using feeds button in tab bar"
+    text: "Feeds ✨"
+- assertVisible: "Discover New Feeds"
+
+- tapOn:
+    label: "Feeds button disappears after pinning a feed"
+    id: "bottomBarProfileBtn"
+- swipe:
+    from:
+        id: "profilePager-selector"
+    direction: LEFT
+- tapOn:
+    id: "profilePager-selector-4"
+- tapOn: "alice-favs"
+- tapOn: "Pin to Home"
+- tapOn:
+    id: "bottomBarHomeBtn"
+- tapOn:
+    id: "viewHeaderDrawerBtn"
+- assertNotVisible: "Feeds ✨"
+
+- tapOn:
+    label: "Can like posts"
+    id: "likeBtn"
+- assertVisible:
+    id: "likeCount"
+    text: "1"
+- tapOn:
+    id: "likeBtn"
+- assertNotVisible:
+    id: "likeCount"
+
+- tapOn:
+    label: "Can repost posts"
+    id: "repostBtn"
+- tapOn: "Repost"
+- assertVisible:
+    id: "repostCount"
+    text: "1"
+- tapOn:
+    id: "repostBtn"
+- tapOn: "Remove repost"
+- assertNotVisible:
+    id: "repostCount"
+
+- tapOn:
+    label: "Can delete posts"
+    id: "postDropdownBtn"
+    childOf:
+        id: "feedItem-by-alice.test"
+- tapOn: "Delete post"
+- tapOn: "Delete"

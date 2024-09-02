@@ -1,13 +1,15 @@
 import React from 'react'
+import {Platform, Pressable, StyleSheet, View, ViewStyle} from 'react-native'
+import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as DropdownMenu from 'zeego/dropdown-menu'
-import {Pressable, StyleSheet, Platform, View, ViewStyle} from 'react-native'
-import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {MenuItemCommonProps} from 'zeego/lib/typescript/menu'
-import {usePalette} from 'lib/hooks/usePalette'
-import {isWeb} from 'platform/detection'
-import {useTheme} from 'lib/ThemeContext'
+
 import {HITSLOP_10} from 'lib/constants'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useTheme} from 'lib/ThemeContext'
+import {isIOS, isWeb} from 'platform/detection'
+import {Portal} from '#/components/Portal'
 
 // Custom Dropdown Menu Components
 // ==
@@ -169,74 +171,105 @@ export function NativeDropdown({
 }: React.PropsWithChildren<Props>) {
   const pal = usePalette('default')
   const theme = useTheme()
+  const [isOpen, setIsOpen] = React.useState(false)
   const dropDownBackgroundColor =
     theme.colorScheme === 'dark' ? pal.btn : pal.viewLight
 
   return (
-    <DropdownMenuRoot>
-      <DropdownMenuTrigger
-        action="press"
-        testID={testID}
-        accessibilityLabel={accessibilityLabel}
-        accessibilityHint={accessibilityHint}>
-        {children}
-      </DropdownMenuTrigger>
-      <DropdownMenuContent
-        style={[styles.content, dropDownBackgroundColor]}
-        loop>
-        {items.map((item, index) => {
-          if (item.label === 'separator') {
-            return (
-              <DropdownMenuSeparator
-                key={getKey(item.label, index, item.testID)}
-              />
-            )
-          }
-          if (index > 1 && items[index - 1].label === 'separator') {
-            return (
-              <DropdownMenu.Group key={getKey(item.label, index, item.testID)}>
-                <DropdownMenuItem
+    <>
+      {isIOS && isOpen && (
+        <Portal>
+          <Backdrop />
+        </Portal>
+      )}
+      <DropdownMenuRoot onOpenWillChange={setIsOpen}>
+        <DropdownMenuTrigger
+          action="press"
+          testID={testID}
+          accessibilityLabel={accessibilityLabel}
+          accessibilityHint={accessibilityHint}>
+          {children}
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          style={[styles.content, dropDownBackgroundColor]}
+          loop>
+          {items.map((item, index) => {
+            if (item.label === 'separator') {
+              return (
+                <DropdownMenuSeparator
                   key={getKey(item.label, index, item.testID)}
-                  onSelect={item.onPress}>
-                  <DropdownMenuItemTitle>{item.label}</DropdownMenuItemTitle>
-                  {item.icon && (
-                    <DropdownMenuItemIcon
-                      ios={item.icon.ios}
-                      // androidIconName={item.icon.android} TODO: Add custom android icon support, because these ones are based on https://developer.android.com/reference/android/R.drawable.html and they are ugly
-                    >
-                      <FontAwesomeIcon
-                        icon={item.icon.web}
-                        size={20}
-                        style={[pal.text]}
-                      />
-                    </DropdownMenuItemIcon>
-                  )}
-                </DropdownMenuItem>
-              </DropdownMenu.Group>
+                />
+              )
+            }
+            if (index > 1 && items[index - 1].label === 'separator') {
+              return (
+                <DropdownMenu.Group
+                  key={getKey(item.label, index, item.testID)}>
+                  <DropdownMenuItem
+                    key={getKey(item.label, index, item.testID)}
+                    onSelect={item.onPress}>
+                    <DropdownMenuItemTitle>{item.label}</DropdownMenuItemTitle>
+                    {item.icon && (
+                      <DropdownMenuItemIcon
+                        ios={item.icon.ios}
+                        // androidIconName={item.icon.android} TODO: Add custom android icon support, because these ones are based on https://developer.android.com/reference/android/R.drawable.html and they are ugly
+                      >
+                        <FontAwesomeIcon
+                          icon={item.icon.web}
+                          size={20}
+                          style={[pal.text]}
+                        />
+                      </DropdownMenuItemIcon>
+                    )}
+                  </DropdownMenuItem>
+                </DropdownMenu.Group>
+              )
+            }
+            return (
+              <DropdownMenuItem
+                key={getKey(item.label, index, item.testID)}
+                onSelect={item.onPress}>
+                <DropdownMenuItemTitle>{item.label}</DropdownMenuItemTitle>
+                {item.icon && (
+                  <DropdownMenuItemIcon
+                    ios={item.icon.ios}
+                    // androidIconName={item.icon.android}
+                  >
+                    <FontAwesomeIcon
+                      icon={item.icon.web}
+                      size={20}
+                      style={[pal.text]}
+                    />
+                  </DropdownMenuItemIcon>
+                )}
+              </DropdownMenuItem>
             )
-          }
-          return (
-            <DropdownMenuItem
-              key={getKey(item.label, index, item.testID)}
-              onSelect={item.onPress}>
-              <DropdownMenuItemTitle>{item.label}</DropdownMenuItemTitle>
-              {item.icon && (
-                <DropdownMenuItemIcon
-                  ios={item.icon.ios}
-                  // androidIconName={item.icon.android}
-                >
-                  <FontAwesomeIcon
-                    icon={item.icon.web}
-                    size={20}
-                    style={[pal.text]}
-                  />
-                </DropdownMenuItemIcon>
-              )}
-            </DropdownMenuItem>
-          )
-        })}
-      </DropdownMenuContent>
-    </DropdownMenuRoot>
+          })}
+        </DropdownMenuContent>
+      </DropdownMenuRoot>
+    </>
+  )
+}
+
+function Backdrop() {
+  // Not visible but it eats the click outside.
+  // Only necessary for iOS.
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel="Dialog backdrop"
+      accessibilityHint="Press the backdrop to close the dialog"
+      style={{
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        position: 'absolute',
+      }}
+      onPress={() => {
+        /* noop */
+      }}
+    />
   )
 }
 
