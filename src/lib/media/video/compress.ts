@@ -1,26 +1,29 @@
 import {getVideoMetaData, Video} from 'react-native-compressor'
 
-export type CompressedVideo = {
-  uri: string
-  size: number
-}
+import {CompressedVideo} from './types'
 
 export async function compressVideo(
   file: string,
   opts?: {
-    getCancellationId?: (id: string) => void
+    signal?: AbortSignal
     onProgress?: (progress: number) => void
   },
 ): Promise<CompressedVideo> {
-  const {onProgress, getCancellationId} = opts || {}
+  const {onProgress, signal} = opts || {}
 
   const compressed = await Video.compress(
     file,
     {
-      getCancellationId,
       compressionMethod: 'manual',
       bitrate: 3_000_000, // 3mbps
       maxSize: 1920,
+      getCancellationId: id => {
+        if (signal) {
+          signal.addEventListener('abort', () => {
+            Video.cancelCompression(id)
+          })
+        }
+      },
     },
     onProgress,
   )

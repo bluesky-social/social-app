@@ -17,6 +17,7 @@ import {useLanguagePrefs} from '#/state/preferences'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {ThreadPost} from '#/state/queries/post-thread'
 import {useComposerControls} from '#/state/shell/composer'
+import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {MAX_POST_LINES} from 'lib/constants'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -180,7 +181,7 @@ let PostThreadItemLoaded = ({
   threadgateRecord?: AppBskyFeedThreadgate.Record
 }): React.ReactNode => {
   const pal = usePalette('default')
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const langPrefs = useLanguagePrefs()
   const {openComposer} = useComposerControls()
   const [limitLines, setLimitLines] = React.useState(
@@ -206,24 +207,22 @@ let PostThreadItemLoaded = ({
     return makeProfileLink(post.author, 'post', urip.rkey, 'reposted-by')
   }, [post.uri, post.author])
   const repostsTitle = _(msg`Reposts of this post`)
+  const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
+    threadgateRecord,
+  })
   const additionalPostAlerts: AppModerationCause[] = React.useMemo(() => {
-    const isPostHiddenByThreadgate = threadgateRecord?.hiddenReplies?.includes(
-      post.uri,
-    )
-    const isControlledByViewer =
-      threadgateRecord &&
-      new AtUri(threadgateRecord.post).host === currentAccount?.did
-    if (!isControlledByViewer) return []
-    return threadgateRecord && isPostHiddenByThreadgate
+    const isPostHiddenByThreadgate = threadgateHiddenReplies.has(post.uri)
+    const isControlledByViewer = new AtUri(rootUri).host === currentAccount?.did
+    return isControlledByViewer && isPostHiddenByThreadgate
       ? [
           {
             type: 'reply-hidden',
-            source: {type: 'user', did: new AtUri(threadgateRecord.post).host},
+            source: {type: 'user', did: currentAccount?.did},
             priority: 6,
           },
         ]
       : []
-  }, [post, threadgateRecord, currentAccount?.did])
+  }, [post, currentAccount?.did, threadgateHiddenReplies, rootUri])
   const quotesHref = React.useMemo(() => {
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey, 'quotes')
@@ -389,7 +388,7 @@ let PostThreadItemLoaded = ({
                       type="lg"
                       style={pal.textLight}>
                       <Text type="xl-bold" style={pal.text}>
-                        {formatCount(post.repostCount)}
+                        {formatCount(i18n, post.repostCount)}
                       </Text>{' '}
                       <Plural
                         value={post.repostCount}
@@ -399,7 +398,9 @@ let PostThreadItemLoaded = ({
                     </Text>
                   </Link>
                 ) : null}
-                {post.quoteCount != null && post.quoteCount !== 0 ? (
+                {post.quoteCount != null &&
+                post.quoteCount !== 0 &&
+                !post.viewer?.embeddingDisabled ? (
                   <Link
                     style={styles.expandedInfoItem}
                     href={quotesHref}
@@ -409,7 +410,7 @@ let PostThreadItemLoaded = ({
                       type="lg"
                       style={pal.textLight}>
                       <Text type="xl-bold" style={pal.text}>
-                        {formatCount(post.quoteCount)}
+                        {formatCount(i18n, post.quoteCount)}
                       </Text>{' '}
                       <Plural
                         value={post.quoteCount}
@@ -429,7 +430,7 @@ let PostThreadItemLoaded = ({
                       type="lg"
                       style={pal.textLight}>
                       <Text type="xl-bold" style={pal.text}>
-                        {formatCount(post.likeCount)}
+                        {formatCount(i18n, post.likeCount)}
                       </Text>{' '}
                       <Plural value={post.likeCount} one="like" other="likes" />
                     </Text>
@@ -704,7 +705,7 @@ function ExpandedPostDetails({
   translatorUrl: string
 }) {
   const pal = usePalette('default')
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const openLink = useOpenLink()
   const isRootPost = !('reply' in post.record)
 
@@ -722,7 +723,9 @@ function ExpandedPostDetails({
         s.mt2,
         s.mb10,
       ]}>
-      <Text style={[a.text_sm, pal.textLight]}>{niceDate(post.indexedAt)}</Text>
+      <Text style={[a.text_sm, pal.textLight]}>
+        {niceDate(i18n, post.indexedAt)}
+      </Text>
       {isRootPost && (
         <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
       )}

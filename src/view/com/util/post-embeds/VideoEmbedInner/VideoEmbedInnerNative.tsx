@@ -1,26 +1,33 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import Animated, {FadeInDown, FadeOutDown} from 'react-native-reanimated'
+import Animated, {FadeInDown} from 'react-native-reanimated'
 import {VideoPlayer, VideoView} from 'expo-video'
+import {AppBskyEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useIsFocused} from '@react-navigation/native'
 
 import {HITSLOP_30} from '#/lib/constants'
 import {useAppState} from '#/lib/hooks/useAppState'
+import {clamp} from '#/lib/numbers'
 import {logger} from '#/logger'
-import {useVideoPlayer} from '#/view/com/util/post-embeds/VideoPlayerContext'
-import {android, atoms as a, useTheme} from '#/alf'
+import {useActiveVideoNative} from 'view/com/util/post-embeds/ActiveVideoNativeContext'
+import {atoms as a, useTheme} from '#/alf'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
-import {Text} from '#/components/Typography'
 import {
   AudioCategory,
   PlatformInfo,
 } from '../../../../../../modules/expo-bluesky-swiss-army'
+import {TimeIndicator} from './TimeIndicator'
 
-export function VideoEmbedInnerNative() {
-  const player = useVideoPlayer()
+export function VideoEmbedInnerNative({
+  embed,
+}: {
+  embed: AppBskyEmbedVideo.View
+}) {
+  const {_} = useLingui()
+  const {player} = useActiveVideoNative()
   const ref = useRef<VideoView>(null)
   const isScreenFocused = useIsFocused()
   const isAppFocused = useAppState()
@@ -47,13 +54,23 @@ export function VideoEmbedInnerNative() {
     ref.current?.enterFullscreen()
   }, [])
 
+  let aspectRatio = 16 / 9
+
+  if (embed.aspectRatio) {
+    const {width, height} = embed.aspectRatio
+    aspectRatio = width / height
+    aspectRatio = clamp(aspectRatio, 1 / 1, 3 / 1)
+  }
+
   return (
-    <View style={[a.flex_1, a.relative]}>
+    <View style={[a.flex_1, a.relative, {aspectRatio}]}>
       <VideoView
         ref={ref}
         player={player}
         style={[a.flex_1, a.rounded_sm]}
+        contentFit="contain"
         nativeControls={true}
+        accessibilityIgnoresInvertColors
         onEnterFullscreen={() => {
           PlatformInfo.setAudioCategory(AudioCategory.Playback)
           PlatformInfo.setAudioActive(true)
@@ -65,13 +82,17 @@ export function VideoEmbedInnerNative() {
           player.muted = true
           if (!player.playing) player.play()
         }}
+        accessibilityLabel={
+          embed.alt ? _(msg`Video: ${embed.alt}`) : _(msg`Video`)
+        }
+        accessibilityHint=""
       />
-      <Controls player={player} enterFullscreen={enterFullscreen} />
+      <VideoControls player={player} enterFullscreen={enterFullscreen} />
     </View>
   )
 }
 
-function Controls({
+function VideoControls({
   player,
   enterFullscreen,
 }: {
@@ -81,33 +102,22 @@ function Controls({
   const {_} = useLingui()
   const t = useTheme()
   const [isMuted, setIsMuted] = useState(player.muted)
-  const [duration, setDuration] = useState(() => Math.floor(player.duration))
-  const [currentTime, setCurrentTime] = useState(() =>
-    Math.floor(player.currentTime),
-  )
-
-  const timeRemaining = duration - currentTime
-  const minutes = Math.floor(timeRemaining / 60)
-  const seconds = String(timeRemaining % 60).padStart(2, '0')
+  const [timeRemaining, setTimeRemaining] = React.useState(0)
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      // duration gets reset to 0 on loop
-      if (player.duration) setDuration(Math.floor(player.duration))
-      setCurrentTime(Math.floor(player.currentTime))
-
-      // how often should we update the time?
-      // 1000 gets out of sync with the video time
-    }, 250)
-
     // eslint-disable-next-line @typescript-eslint/no-shadow
-    const sub = player.addListener('volumeChange', ({isMuted}) => {
+    const volumeSub = player.addListener('volumeChange', ({isMuted}) => {
       setIsMuted(isMuted)
     })
-
+    const timeSub = player.addListener(
+      'timeRemainingChange',
+      secondsRemaining => {
+        setTimeRemaining(secondsRemaining)
+      },
+    )
     return () => {
-      clearInterval(interval)
-      sub.remove()
+      volumeSub.remove()
+      timeSub.remove()
     }
   }, [player])
 
@@ -143,37 +153,11 @@ function Controls({
   // 1. timeRemaining is a number - was seeing NaNs
   // 2. duration is greater than 0 - means metadata has loaded
   // 3. we're less than 5 second into the video
-  const showTime = !isNaN(timeRemaining) && duration > 0 && currentTime <= 5
+  const showTime = !isNaN(timeRemaining)
 
   return (
     <View style={[a.absolute, a.inset_0]}>
-      {showTime && (
-        <Animated.View
-          entering={FadeInDown.duration(300)}
-          exiting={FadeOutDown.duration(500)}
-          style={[
-            {
-              backgroundColor: 'rgba(0, 0, 0, 0.75)',
-              borderRadius: 6,
-              paddingHorizontal: 6,
-              paddingVertical: 3,
-              position: 'absolute',
-              left: 5,
-              bottom: 5,
-              minHeight: 20,
-              justifyContent: 'center',
-            },
-          ]}>
-          <Text
-            style={[
-              {color: t.palette.white, fontSize: 12},
-              a.font_bold,
-              android({lineHeight: 1.25}),
-            ]}>
-            {minutes}:{seconds}
-          </Text>
-        </Animated.View>
-      )}
+      {showTime && <TimeIndicator time={timeRemaining} />}
       <Pressable
         onPress={onPressFullscreen}
         style={a.flex_1}
@@ -181,35 +165,33 @@ function Controls({
         accessibilityHint={_(msg`Tap to enter full screen`)}
         accessibilityRole="button"
       />
-      {duration > 0 && (
-        <Animated.View
-          entering={FadeInDown.duration(300)}
-          style={{
-            backgroundColor: 'rgba(0, 0, 0, 0.75)',
-            borderRadius: 6,
-            paddingHorizontal: 6,
-            paddingVertical: 3,
-            position: 'absolute',
-            bottom: 5,
-            right: 5,
-            minHeight: 20,
-            justifyContent: 'center',
-          }}>
-          <Pressable
-            onPress={toggleMuted}
-            style={a.flex_1}
-            accessibilityLabel={isMuted ? _(msg`Muted`) : _(msg`Unmuted`)}
-            accessibilityHint={_(msg`Tap to toggle sound`)}
-            accessibilityRole="button"
-            hitSlop={HITSLOP_30}>
-            {isMuted ? (
-              <MuteIcon width={14} fill={t.palette.white} />
-            ) : (
-              <UnmuteIcon width={14} fill={t.palette.white} />
-            )}
-          </Pressable>
-        </Animated.View>
-      )}
+      <Animated.View
+        entering={FadeInDown.duration(300)}
+        style={{
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          borderRadius: 6,
+          paddingHorizontal: 6,
+          paddingVertical: 3,
+          position: 'absolute',
+          bottom: 5,
+          right: 5,
+          minHeight: 20,
+          justifyContent: 'center',
+        }}>
+        <Pressable
+          onPress={toggleMuted}
+          style={a.flex_1}
+          accessibilityLabel={isMuted ? _(msg`Muted`) : _(msg`Unmuted`)}
+          accessibilityHint={_(msg`Tap to toggle sound`)}
+          accessibilityRole="button"
+          hitSlop={HITSLOP_30}>
+          {isMuted ? (
+            <MuteIcon width={14} fill={t.palette.white} />
+          ) : (
+            <UnmuteIcon width={14} fill={t.palette.white} />
+          )}
+        </Pressable>
+      </Animated.View>
     </View>
   )
 }

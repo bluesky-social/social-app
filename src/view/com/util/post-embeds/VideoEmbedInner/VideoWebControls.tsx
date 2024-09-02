@@ -6,17 +6,19 @@ import React, {
   useSyncExternalStore,
 } from 'react'
 import {Pressable, View} from 'react-native'
-import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
+import {SvgProps} from 'react-native-svg'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import type Hls from 'hls.js'
 
-import {isIPhoneWeb} from 'platform/detection'
+import {isFirefox} from '#/lib/browser'
+import {clamp} from '#/lib/numbers'
+import {isIPhoneWeb} from '#/platform/detection'
 import {
   useAutoplayDisabled,
   useSetSubtitlesEnabled,
   useSubtitlesEnabled,
-} from 'state/preferences'
+} from '#/state/preferences'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button} from '#/components/Button'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -34,6 +36,7 @@ import {Play_Filled_Corner0_Rounded as PlayIcon} from '#/components/icons/Play'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {TimeIndicator} from './TimeIndicator'
 
 export function Controls({
   videoRef,
@@ -173,6 +176,50 @@ export function Controls({
     toggleFullscreen()
   }, [drawFocus, toggleFullscreen])
 
+  const onSeek = useCallback(
+    (time: number) => {
+      if (!videoRef.current) return
+      if (videoRef.current.fastSeek) {
+        videoRef.current.fastSeek(time)
+      } else {
+        videoRef.current.currentTime = time
+      }
+    },
+    [videoRef],
+  )
+
+  const playStateBeforeSeekRef = useRef(false)
+
+  const onSeekStart = useCallback(() => {
+    drawFocus()
+    playStateBeforeSeekRef.current = playing
+    pause()
+  }, [playing, pause, drawFocus])
+
+  const onSeekEnd = useCallback(() => {
+    if (playStateBeforeSeekRef.current) {
+      play()
+    }
+  }, [play])
+
+  const seekLeft = useCallback(() => {
+    if (!videoRef.current) return
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    const currentTime = videoRef.current.currentTime
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    const duration = videoRef.current.duration || 0
+    onSeek(clamp(currentTime - 5, 0, duration))
+  }, [onSeek, videoRef])
+
+  const seekRight = useCallback(() => {
+    if (!videoRef.current) return
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    const currentTime = videoRef.current.currentTime
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    const duration = videoRef.current.duration || 0
+    onSeek(clamp(currentTime + 5, 0, duration))
+  }, [onSeek, videoRef])
+
   const showControls =
     (focused && !playing) || (interactingViaKeypress ? hasFocus : hovered)
 
@@ -197,7 +244,7 @@ export function Controls({
       <Pressable
         accessibilityRole="button"
         accessibilityHint={_(
-          focused
+          !focused
             ? msg`Unmute video`
             : playing
             ? msg`Pause video`
@@ -206,107 +253,87 @@ export function Controls({
         style={a.flex_1}
         onPress={onPressEmptySpace}
       />
+      {active && !showControls && !focused && (
+        <TimeIndicator time={Math.floor(duration - currentTime)} />
+      )}
       <View
         style={[
           a.flex_shrink_0,
           a.w_full,
-          a.px_sm,
-          a.pt_sm,
-          a.pb_md,
-          a.gap_md,
-          a.flex_row,
-          a.align_center,
+          a.px_xs,
           web({
             background:
               'linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7))',
           }),
-          showControls ? {opacity: 1} : {opacity: 0},
+          {opacity: showControls ? 1 : 0},
+          {transition: 'opacity 0.2s ease-in-out'},
         ]}>
-        <Button
-          label={_(playing ? msg`Pause` : msg`Play`)}
-          onPress={onPressPlayPause}
-          {...btnProps}>
-          {playing ? (
-            <PauseIcon fill={t.palette.white} width={20} />
-          ) : (
-            <PlayIcon fill={t.palette.white} width={20} />
-          )}
-        </Button>
-        <View style={a.flex_1} />
-        <Text style={{color: t.palette.white}}>
-          {formatTime(currentTime)} / {formatTime(duration)}
-        </Text>
-        {hasSubtitleTrack && (
-          <Button
-            label={_(
-              subtitlesEnabled ? msg`Disable subtitles` : msg`Enable subtitles`,
-            )}
-            onPress={onPressSubtitles}
-            {...btnProps}>
-            {subtitlesEnabled ? (
-              <CCActiveIcon fill={t.palette.white} width={20} />
-            ) : (
-              <CCInactiveIcon fill={t.palette.white} width={20} />
-            )}
-          </Button>
-        )}
-        <Button
-          label={_(muted ? msg`Unmute` : msg`Mute`)}
-          onPress={onPressMute}
-          {...btnProps}>
-          {muted ? (
-            <MuteIcon fill={t.palette.white} width={20} />
-          ) : (
-            <UnmuteIcon fill={t.palette.white} width={20} />
-          )}
-        </Button>
-        {!isIPhoneWeb && (
-          <Button
-            label={_(muted ? msg`Unmute` : msg`Mute`)}
-            onPress={onPressFullscreen}
-            {...btnProps}>
-            {isFullscreen ? (
-              <ArrowsInIcon fill={t.palette.white} width={20} />
-            ) : (
-              <ArrowsOutIcon fill={t.palette.white} width={20} />
-            )}
-          </Button>
-        )}
-      </View>
-      {(showControls || !focused) && (
-        <Animated.View
-          entering={FadeIn.duration(200)}
-          exiting={FadeOut.duration(200)}
+        <Scrubber
+          duration={duration}
+          currentTime={currentTime}
+          onSeek={onSeek}
+          onSeekStart={onSeekStart}
+          onSeekEnd={onSeekEnd}
+          seekLeft={seekLeft}
+          seekRight={seekRight}
+          togglePlayPause={togglePlayPause}
+          drawFocus={drawFocus}
+        />
+        <View
           style={[
-            a.absolute,
-            {
-              height: 5,
-              bottom: 0,
-              left: 0,
-              right: 0,
-              backgroundColor: 'rgba(255,255,255,0.4)',
-            },
+            a.flex_1,
+            a.px_xs,
+            a.pt_sm,
+            a.pb_md,
+            a.gap_md,
+            a.flex_row,
+            a.align_center,
           ]}>
-          {duration > 0 && (
-            <View
-              style={[
-                a.h_full,
-                a.mr_auto,
-                {
-                  backgroundColor: t.palette.white,
-                  width: `${(currentTime / duration) * 100}%`,
-                  opacity: 0.8,
-                },
-              ]}
+          <ControlButton
+            active={playing}
+            activeLabel={_(msg`Pause`)}
+            inactiveLabel={_(msg`Play`)}
+            activeIcon={PauseIcon}
+            inactiveIcon={PlayIcon}
+            onPress={onPressPlayPause}
+          />
+          <View style={a.flex_1} />
+          <Text style={{color: t.palette.white}}>
+            {formatTime(currentTime)} / {formatTime(duration)}
+          </Text>
+          {hasSubtitleTrack && (
+            <ControlButton
+              active={subtitlesEnabled}
+              activeLabel={_(msg`Disable subtitles`)}
+              inactiveLabel={_(msg`Enable subtitles`)}
+              activeIcon={CCActiveIcon}
+              inactiveIcon={CCInactiveIcon}
+              onPress={onPressSubtitles}
             />
           )}
-        </Animated.View>
-      )}
+          <ControlButton
+            active={muted}
+            activeLabel={_(msg`Unmute`)}
+            inactiveLabel={_(msg`Mute`)}
+            activeIcon={MuteIcon}
+            inactiveIcon={UnmuteIcon}
+            onPress={onPressMute}
+          />
+          {!isIPhoneWeb && (
+            <ControlButton
+              active={isFullscreen}
+              activeLabel={_(msg`Exit fullscreen`)}
+              inactiveLabel={_(msg`Fullscreen`)}
+              activeIcon={ArrowsInIcon}
+              inactiveIcon={ArrowsOutIcon}
+              onPress={onPressFullscreen}
+            />
+          )}
+        </View>
+      </View>
       {(buffering || error) && (
-        <Animated.View
+        <View
           pointerEvents="none"
-          entering={FadeIn.delay(1000).duration(200)}
-          exiting={FadeOut.duration(200)}
           style={[a.absolute, a.inset_0, a.justify_center, a.align_center]}>
           {buffering && <Loader fill={t.palette.white} size="lg" />}
           {error && (
@@ -314,19 +341,278 @@ export function Controls({
               <Trans>An error occurred</Trans>
             </Text>
           )}
-        </Animated.View>
+        </View>
       )}
     </div>
   )
 }
 
-const btnProps = {
-  variant: 'ghost',
-  shape: 'round',
-  size: 'medium',
-  style: a.p_2xs,
-  hoverStyle: {backgroundColor: 'rgba(255, 255, 255, 0.1)'},
-} as const
+function ControlButton({
+  active,
+  activeLabel,
+  inactiveLabel,
+  activeIcon: ActiveIcon,
+  inactiveIcon: InactiveIcon,
+  onPress,
+}: {
+  active: boolean
+  activeLabel: string
+  inactiveLabel: string
+  activeIcon: React.ComponentType<Pick<SvgProps, 'fill' | 'width'>>
+  inactiveIcon: React.ComponentType<Pick<SvgProps, 'fill' | 'width'>>
+  onPress: () => void
+}) {
+  const t = useTheme()
+  return (
+    <Button
+      label={active ? activeLabel : inactiveLabel}
+      onPress={onPress}
+      variant="ghost"
+      shape="round"
+      size="medium"
+      style={a.p_2xs}
+      hoverStyle={{backgroundColor: 'rgba(255, 255, 255, 0.1)'}}>
+      {active ? (
+        <ActiveIcon fill={t.palette.white} width={20} />
+      ) : (
+        <InactiveIcon fill={t.palette.white} width={20} />
+      )}
+    </Button>
+  )
+}
+
+function Scrubber({
+  duration,
+  currentTime,
+  onSeek,
+  onSeekEnd,
+  onSeekStart,
+  seekLeft,
+  seekRight,
+  togglePlayPause,
+  drawFocus,
+}: {
+  duration: number
+  currentTime: number
+  onSeek: (time: number) => void
+  onSeekEnd: () => void
+  onSeekStart: () => void
+  seekLeft: () => void
+  seekRight: () => void
+  togglePlayPause: () => void
+  drawFocus: () => void
+}) {
+  const {_} = useLingui()
+  const t = useTheme()
+  const [scrubberActive, setScrubberActive] = useState(false)
+  const {
+    state: hovered,
+    onIn: onMouseEnter,
+    onOut: onMouseLeave,
+  } = useInteractionState()
+  const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
+  const [seekPosition, setSeekPosition] = useState(0)
+  const isSeekingRef = useRef(false)
+  const barRef = useRef<HTMLDivElement>(null)
+  const circleRef = useRef<HTMLDivElement>(null)
+
+  const seek = useCallback(
+    (evt: React.PointerEvent<HTMLDivElement>) => {
+      if (!barRef.current) return
+      const {left, width} = barRef.current.getBoundingClientRect()
+      const x = evt.clientX
+      const percent = clamp((x - left) / width, 0, 1) * duration
+      onSeek(percent)
+      setSeekPosition(percent)
+    },
+    [duration, onSeek],
+  )
+
+  const onPointerDown = useCallback(
+    (evt: React.PointerEvent<HTMLDivElement>) => {
+      const target = evt.target
+      if (target instanceof Element) {
+        evt.preventDefault()
+        target.setPointerCapture(evt.pointerId)
+        isSeekingRef.current = true
+        seek(evt)
+        setScrubberActive(true)
+        onSeekStart()
+      }
+    },
+    [seek, onSeekStart],
+  )
+
+  const onPointerMove = useCallback(
+    (evt: React.PointerEvent<HTMLDivElement>) => {
+      if (isSeekingRef.current) {
+        evt.preventDefault()
+        seek(evt)
+      }
+    },
+    [seek],
+  )
+
+  const onPointerUp = useCallback(
+    (evt: React.PointerEvent<HTMLDivElement>) => {
+      const target = evt.target
+      if (isSeekingRef.current && target instanceof Element) {
+        evt.preventDefault()
+        target.releasePointerCapture(evt.pointerId)
+        isSeekingRef.current = false
+        onSeekEnd()
+        setScrubberActive(false)
+      }
+    },
+    [onSeekEnd],
+  )
+
+  useEffect(() => {
+    // HACK: there's divergent browser behaviour about what to do when
+    // a pointerUp event is fired outside the element that captured the
+    // pointer. Firefox clicks on the element the mouse is over, so we have
+    // to make everything unclickable while seeking -sfn
+    if (isFirefox && scrubberActive) {
+      document.body.classList.add('force-no-clicks')
+
+      const abortController = new AbortController()
+      const {signal} = abortController
+      document.documentElement.addEventListener(
+        'mouseleave',
+        () => {
+          isSeekingRef.current = false
+          onSeekEnd()
+          setScrubberActive(false)
+        },
+        {signal},
+      )
+
+      return () => {
+        document.body.classList.remove('force-no-clicks')
+        abortController.abort()
+      }
+    }
+  }, [scrubberActive, onSeekEnd])
+
+  useEffect(() => {
+    if (!circleRef.current) return
+    if (focused) {
+      const abortController = new AbortController()
+      const {signal} = abortController
+      circleRef.current.addEventListener(
+        'keydown',
+        evt => {
+          // space: play/pause
+          // arrow left: seek backward
+          // arrow right: seek forward
+
+          if (evt.key === ' ') {
+            evt.preventDefault()
+            drawFocus()
+            togglePlayPause()
+          } else if (evt.key === 'ArrowLeft') {
+            evt.preventDefault()
+            drawFocus()
+            seekLeft()
+          } else if (evt.key === 'ArrowRight') {
+            evt.preventDefault()
+            drawFocus()
+            seekRight()
+          }
+        },
+        {signal},
+      )
+
+      return () => abortController.abort()
+    }
+  }, [focused, seekLeft, seekRight, togglePlayPause, drawFocus])
+
+  const progress = scrubberActive ? seekPosition : currentTime
+  const progressPercent = (progress / duration) * 100
+
+  return (
+    <View
+      testID="scrubber"
+      style={[{height: 10, width: '100%'}, a.flex_shrink_0, a.px_xs]}
+      // @ts-expect-error web only -sfn
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}>
+      <div
+        ref={barRef}
+        style={{
+          flex: 1,
+          display: 'flex',
+          alignItems: 'center',
+          position: 'relative',
+          cursor: scrubberActive ? 'grabbing' : 'grab',
+        }}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}>
+        <View
+          style={[
+            a.w_full,
+            a.rounded_full,
+            a.overflow_hidden,
+            {backgroundColor: 'rgba(255, 255, 255, 0.4)'},
+            {height: hovered || scrubberActive ? 6 : 3},
+          ]}>
+          {duration > 0 && (
+            <View
+              style={[
+                a.h_full,
+                {backgroundColor: t.palette.white},
+                {width: `${progressPercent}%`},
+              ]}
+            />
+          )}
+        </View>
+        <div
+          ref={circleRef}
+          aria-label={_(msg`Seek slider`)}
+          role="slider"
+          aria-valuemax={duration}
+          aria-valuemin={0}
+          aria-valuenow={currentTime}
+          aria-valuetext={_(
+            msg`${formatTime(currentTime)} of ${formatTime(duration)}`,
+          )}
+          tabIndex={0}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          style={{
+            position: 'absolute',
+            height: 16,
+            width: 16,
+            left: `calc(${progressPercent}% - 8px)`,
+            borderRadius: 8,
+            pointerEvents: 'none',
+          }}>
+          <View
+            style={[
+              a.w_full,
+              a.h_full,
+              a.rounded_full,
+              {backgroundColor: t.palette.white},
+              {
+                transform: [
+                  {
+                    scale:
+                      hovered || scrubberActive || focused
+                        ? scrubberActive
+                          ? 1
+                          : 0.6
+                        : 0,
+                  },
+                ],
+              },
+            ]}
+          />
+        </div>
+      </div>
+    </View>
+  )
+}
 
 function formatTime(time: number) {
   if (isNaN(time)) {
@@ -421,14 +707,6 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
       setError(false)
     }
 
-    const handleSeeking = () => {
-      setBuffering(true)
-    }
-
-    const handleSeeked = () => {
-      setBuffering(false)
-    }
-
     const handleStalled = () => {
       if (bufferingTimeout) clearTimeout(bufferingTimeout)
       bufferingTimeout = setTimeout(() => {
@@ -472,12 +750,6 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
       signal: abortController.signal,
     })
     ref.current.addEventListener('playing', handlePlaying, {
-      signal: abortController.signal,
-    })
-    ref.current.addEventListener('seeking', handleSeeking, {
-      signal: abortController.signal,
-    })
-    ref.current.addEventListener('seeked', handleSeeked, {
       signal: abortController.signal,
     })
     ref.current.addEventListener('stalled', handleStalled, {

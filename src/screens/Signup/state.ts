@@ -26,6 +26,11 @@ export enum SignupStep {
   CAPTCHA,
 }
 
+type SubmitTask = {
+  verificationCode: string | undefined
+  mutableProcessed: boolean // OK to mutate assuming it's never read in render.
+}
+
 export type SignupState = {
   hasPrev: boolean
   activeStep: SignupStep
@@ -41,6 +46,8 @@ export type SignupState = {
 
   error: string
   isLoading: boolean
+
+  pendingSubmit: null | SubmitTask
 }
 
 export type SignupAction =
@@ -55,9 +62,9 @@ export type SignupAction =
   | {type: 'setDateOfBirth'; value: Date}
   | {type: 'setInviteCode'; value: string}
   | {type: 'setHandle'; value: string}
-  | {type: 'setVerificationCode'; value: string}
   | {type: 'setError'; value: string}
   | {type: 'setIsLoading'; value: boolean}
+  | {type: 'submit'; task: SubmitTask}
 
 export const initialState: SignupState = {
   hasPrev: false,
@@ -74,6 +81,8 @@ export const initialState: SignupState = {
 
   error: '',
   isLoading: false,
+
+  pendingSubmit: null,
 }
 
 export function is13(date: Date) {
@@ -149,6 +158,10 @@ export function reducer(s: SignupState, a: SignupAction): SignupState {
       next.error = a.value
       break
     }
+    case 'submit': {
+      next.pendingSubmit = a.task
+      break
+    }
   }
 
   next.hasPrev = next.activeStep !== SignupStep.INFO
@@ -169,19 +182,13 @@ interface IContext {
 export const SignupContext = React.createContext<IContext>({} as IContext)
 export const useSignupContext = () => React.useContext(SignupContext)
 
-export function useSubmitSignup({
-  state,
-  dispatch,
-}: {
-  state: SignupState
-  dispatch: (action: SignupAction) => void
-}) {
+export function useSubmitSignup() {
   const {_} = useLingui()
   const {createAccount} = useSessionApi()
   const onboardingDispatch = useOnboardingDispatch()
 
   return useCallback(
-    async (verificationCode?: string) => {
+    async (state: SignupState, dispatch: (action: SignupAction) => void) => {
       if (!state.email) {
         dispatch({type: 'setStep', value: SignupStep.INFO})
         return dispatch({
@@ -212,7 +219,7 @@ export function useSubmitSignup({
       }
       if (
         state.serviceDescription?.phoneVerificationRequired &&
-        !verificationCode
+        !state.pendingSubmit?.verificationCode
       ) {
         dispatch({type: 'setStep', value: SignupStep.CAPTCHA})
         logger.error('Signup Flow Error', {
@@ -235,7 +242,7 @@ export function useSubmitSignup({
           password: state.password,
           birthDate: state.dateOfBirth,
           inviteCode: state.inviteCode.trim(),
-          verificationCode: verificationCode,
+          verificationCode: state.pendingSubmit?.verificationCode,
         })
         /*
          * Must happen last so that if the user has multiple tabs open and
@@ -270,19 +277,6 @@ export function useSubmitSignup({
         dispatch({type: 'setIsLoading', value: false})
       }
     },
-    [
-      state.email,
-      state.password,
-      state.handle,
-      state.serviceDescription?.phoneVerificationRequired,
-      state.serviceUrl,
-      state.userDomain,
-      state.inviteCode,
-      state.dateOfBirth,
-      dispatch,
-      _,
-      onboardingDispatch,
-      createAccount,
-    ],
+    [_, onboardingDispatch, createAccount],
   )
 }

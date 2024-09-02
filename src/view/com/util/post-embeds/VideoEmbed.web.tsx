@@ -1,21 +1,25 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {View} from 'react-native'
+import {AppBskyEmbedVideo} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 
+import {clamp} from '#/lib/numbers'
+import {useGate} from '#/lib/statsig/statsig'
 import {
   HLSUnsupportedError,
   VideoEmbedInnerWeb,
-} from 'view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerWeb'
+} from '#/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerWeb'
 import {atoms as a, useTheme} from '#/alf'
 import {ErrorBoundary} from '../ErrorBoundary'
-import {useActiveVideoView} from './ActiveVideoContext'
+import {useActiveVideoWeb} from './ActiveVideoWebContext'
 import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 
-export function VideoEmbed({source}: {source: string}) {
+export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
   const t = useTheme()
   const ref = useRef<HTMLDivElement>(null)
+  const gate = useGate()
   const {active, setActive, sendPosition, currentActiveView} =
-    useActiveVideoView({source})
+    useActiveVideoWeb()
   const [onScreen, setOnScreen] = useState(false)
 
   useEffect(() => {
@@ -43,12 +47,25 @@ export function VideoEmbed({source}: {source: string}) {
     [key],
   )
 
+  if (!gate('video_view_on_posts')) {
+    return null
+  }
+
+  let aspectRatio = 16 / 9
+
+  if (embed.aspectRatio) {
+    const {width, height} = embed.aspectRatio
+    // min: 3/1, max: square
+    aspectRatio = clamp(width / height, 1 / 1, 3 / 1)
+  }
+
   return (
     <View
       style={[
         a.w_full,
-        {aspectRatio: 16 / 9},
-        t.atoms.bg_contrast_25,
+        {aspectRatio},
+        {backgroundColor: t.palette.black},
+        a.relative,
         a.rounded_sm,
         a.my_xs,
       ]}>
@@ -61,7 +78,7 @@ export function VideoEmbed({source}: {source: string}) {
             sendPosition={sendPosition}
             isAnyViewActive={currentActiveView !== null}>
             <VideoEmbedInnerWeb
-              source={source}
+              embed={embed}
               active={active}
               setActive={setActive}
               onScreen={onScreen}

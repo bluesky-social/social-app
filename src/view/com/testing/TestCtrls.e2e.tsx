@@ -33,6 +33,7 @@ export function TestCtrls() {
       },
       'LoginForm',
     )
+    setShowLoggedOut(false)
   }
   const onPressSignInBob = async () => {
     await login(
@@ -43,6 +44,7 @@ export function TestCtrls() {
       },
       'LoginForm',
     )
+    setShowLoggedOut(false)
   }
   return (
     <View style={{position: 'absolute', top: 100, right: 0, zIndex: 100}}>

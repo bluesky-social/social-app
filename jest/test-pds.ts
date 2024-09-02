@@ -79,32 +79,33 @@ export async function createServer(
     plc: {port: port2},
   })
 
+  // DISABLED - looks like dev-env added this and now it conflicts
   // add the test mod authority
-  const agent = new BskyAgent({service: pdsUrl})
-  const res = await agent.api.com.atproto.server.createAccount({
-    email: 'mod-authority@test.com',
-    handle: 'mod-authority.test',
-    password: 'hunter2',
-  })
-  agent.api.setHeader('Authorization', `Bearer ${res.data.accessJwt}`)
-  await agent.api.app.bsky.actor.profile.create(
-    {repo: res.data.did},
-    {
-      displayName: 'Dev-env Moderation',
-      description: `The pretend version of mod.bsky.app`,
-    },
-  )
+  // const agent = new BskyAgent({service: pdsUrl})
+  // const res = await agent.api.com.atproto.server.createAccount({
+  //   email: 'mod-authority@test.com',
+  //   handle: 'mod-authority.test',
+  //   password: 'hunter2',
+  // })
+  // agent.api.setHeader('Authorization', `Bearer ${res.data.accessJwt}`)
+  // await agent.api.app.bsky.actor.profile.create(
+  //   {repo: res.data.did},
+  //   {
+  //     displayName: 'Dev-env Moderation',
+  //     description: `The pretend version of mod.bsky.app`,
+  //   },
+  // )
 
-  await agent.api.app.bsky.labeler.service.create(
-    {repo: res.data.did, rkey: 'self'},
-    {
-      policies: {
-        labelValues: ['!hide', '!warn'],
-        labelValueDefinitions: [],
-      },
-      createdAt: new Date().toISOString(),
-    },
-  )
+  // await agent.api.app.bsky.labeler.service.create(
+  //   {repo: res.data.did, rkey: 'self'},
+  //   {
+  //     policies: {
+  //       labelValues: ['!hide', '!warn'],
+  //       labelValueDefinitions: [],
+  //     },
+  //     createdAt: new Date().toISOString(),
+  //   },
+  // )
 
   const pic = fs.readFileSync(
     path.join(__dirname, '..', 'assets', 'default-avatar.png'),

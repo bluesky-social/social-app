@@ -143,7 +143,8 @@ export function StepInterests() {
     track('OnboardingV2:StepInterests:Start')
   }, [track])
 
-  const isMinimumInterestsEnabled = gate('onboarding_minimum_interests')
+  const isMinimumInterestsEnabled =
+    gate('onboarding_minimum_interests') && data?.interests.length !== 0
   const meetsMinimumRequirement = isMinimumInterestsEnabled
     ? interests.length >= MIN_INTERESTS
     : true

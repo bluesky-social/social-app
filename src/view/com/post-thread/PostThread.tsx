@@ -3,12 +3,7 @@ import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import {runOnJS} from 'react-native-reanimated'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {
-  AppBskyFeedDefs,
-  AppBskyFeedPost,
-  AppBskyFeedThreadgate,
-  AtUri,
-} from '@atproto/api'
+import {AppBskyFeedDefs, AppBskyFeedThreadgate} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -28,9 +23,9 @@ import {
   usePostThreadQuery,
 } from '#/state/queries/post-thread'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useThreadgateRecordQuery} from '#/state/queries/threadgate'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell'
+import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
 import {useMinimalShellFabTransform} from 'lib/hooks/useMinimalShellTransform'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
@@ -108,7 +103,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
     isError: isThreadError,
     error: threadError,
     refetch,
-    data: thread,
+    data: {thread, threadgate} = {},
   } = usePostThreadQuery(uri)
 
   const treeView = React.useMemo(
@@ -119,28 +114,11 @@ export function PostThread({uri}: {uri: string | undefined}) {
   )
   const rootPost = thread?.type === 'post' ? thread.post : undefined
   const rootPostRecord = thread?.type === 'post' ? thread.record : undefined
-  const replyRef =
-    rootPostRecord && AppBskyFeedPost.isRecord(rootPostRecord)
-      ? rootPostRecord.reply
-      : undefined
-  const rootPostUri = replyRef ? replyRef.root.uri : rootPost?.uri
-
-  const isOP =
-    currentAccount &&
-    rootPostUri &&
-    currentAccount?.did === new AtUri(rootPostUri).host
-  const initialThreadgateRecord = rootPost?.threadgate?.record as
+  const threadgateRecord = threadgate?.record as
     | AppBskyFeedThreadgate.Record
     | undefined
-  const {data: threadgateRecord} = useThreadgateRecordQuery({
-    /**
-     * If the user is the OP and the root post has a threadgate, we should load
-     * the threadgate record. Otherwise, fallback to initialData, which is taken
-     * from the response from `getPostThread`.
-     */
-    enabled: Boolean(isOP && rootPostUri && initialThreadgateRecord),
-    postUri: rootPostUri,
-    initialData: initialThreadgateRecord,
+  const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
+    threadgateRecord,
   })
 
   const moderationOpts = useModerationOpts()
@@ -196,9 +174,6 @@ export function PostThread({uri}: {uri: string | undefined}) {
   const skeleton = React.useMemo(() => {
     const threadViewPrefs = preferences?.threadViewPrefs
     if (!threadViewPrefs || !thread) return null
-    const threadgateRecordHiddenReplies = new Set<string>(
-      threadgateRecord?.hiddenReplies || [],
-    )
 
     return createThreadSkeleton(
       sortThread(
@@ -207,13 +182,13 @@ export function PostThread({uri}: {uri: string | undefined}) {
         threadModerationCache,
         currentDid,
         justPostedUris,
-        threadgateRecordHiddenReplies,
+        threadgateHiddenReplies,
       ),
       currentDid,
       treeView,
       threadModerationCache,
       hiddenRepliesState !== HiddenRepliesState.Hide,
-      threadgateRecordHiddenReplies,
+      threadgateHiddenReplies,
     )
   }, [
     thread,
@@ -223,7 +198,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
     threadModerationCache,
     hiddenRepliesState,
     justPostedUris,
-    threadgateRecord,
+    threadgateHiddenReplies,
   ])
 
   const error = React.useMemo(() => {
@@ -453,6 +428,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
         (item.ctx.depth < 0 && !!item.parent) || item.ctx.depth > 1
       const hasUnrevealedParents =
         index === 0 && skeleton?.parents && maxParents < skeleton.parents.length
+
       return (
         <View
           ref={item.ctx.isHighlightedPost ? highlightedPostRef : undefined}

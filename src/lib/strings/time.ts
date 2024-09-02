@@ -1,13 +1,12 @@
-export function niceDate(date: number | string | Date) {
+import {I18n} from '@lingui/core'
+
+export function niceDate(i18n: I18n, date: number | string | Date) {
   const d = new Date(date)
-  return `${d.toLocaleDateString('en-us', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  })} at ${d.toLocaleTimeString(undefined, {
-    hour: 'numeric',
-    minute: '2-digit',
-  })}`
+
+  return i18n.date(d, {
+    dateStyle: 'long',
+    timeStyle: 'short',
+  })
 }
 
 export function getAge(birthDate: Date): number {

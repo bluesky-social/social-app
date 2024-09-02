@@ -9,12 +9,10 @@ import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {networkRetry, retry} from '#/lib/async/retry'
 import {until} from '#/lib/async/until'
-import {updatePostShadow} from '#/state/cache/post-shadow'
 import {STALE} from '#/state/queries'
 import {RQKEY_ROOT as postThreadQueryKeyRoot} from '#/state/queries/post-thread'
 import {ThreadgateAllowUISetting} from '#/state/queries/threadgate/types'
 import {
-  createTempThreadgateView,
   createThreadgateRecord,
   mergeThreadgateRecords,
   threadgateAllowUISettingToAllowRecordValue,
@@ -33,18 +31,16 @@ export const createThreadgateRecordQueryKey = (uri: string) => [
 ]
 
 export function useThreadgateRecordQuery({
-  enabled,
   postUri,
   initialData,
 }: {
-  enabled?: boolean
   postUri?: string
   initialData?: AppBskyFeedThreadgate.Record
 } = {}) {
   const agent = useAgent()
 
   return useQuery({
-    enabled: enabled ?? !!postUri,
+    enabled: !!postUri,
     queryKey: createThreadgateRecordQueryKey(postUri || ''),
     placeholderData: initialData,
     staleTime: STALE.MINUTES.ONE,
@@ -344,26 +340,17 @@ export function useToggleReplyVisibilityMutation() {
         }
       })
     },
-    onSuccess(_, {postUri, replyUri}) {
-      updatePostShadow(queryClient, postUri, {
-        threadgateView: createTempThreadgateView({
-          postUri,
-          hiddenReplies: [replyUri],
-        }),
-      })
+    onSuccess() {
       queryClient.invalidateQueries({
         queryKey: [threadgateRecordQueryKeyRoot],
       })
     },
-    onError(_, {postUri, replyUri, action}) {
+    onError(_, {replyUri, action}) {
       if (action === 'hide') {
         hiddenReplies.removeHiddenReplyUri(replyUri)
       } else if (action === 'show') {
         hiddenReplies.addHiddenReplyUri(replyUri)
       }
-      updatePostShadow(queryClient, postUri, {
-        threadgateView: undefined,
-      })
     },
   })
 }

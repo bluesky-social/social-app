@@ -106,6 +106,7 @@ export function createEmbedViewRecordFromPost(
     replyCount: post.replyCount,
     repostCount: post.repostCount,
     likeCount: post.likeCount,
+    quoteCount: post.quoteCount,
     indexedAt: post.indexedAt,
   }
 }

@@ -7,9 +7,10 @@ import {logEvent} from '#/lib/statsig/statsig'
 import {createFullHandle, validateHandle} from '#/lib/strings/handles'
 import {useAgent} from '#/state/session'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
-import {useSignupContext, useSubmitSignup} from '#/screens/Signup/state'
+import {useSignupContext} from '#/screens/Signup/state'
 import {atoms as a, useTheme} from '#/alf'
 import * as TextField from '#/components/forms/TextField'
+import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {TimesLarge_Stroke2_Corner0_Rounded as Times} from '#/components/icons/Times'
@@ -20,10 +21,10 @@ export function StepHandle() {
   const {_} = useLingui()
   const t = useTheme()
   const {state, dispatch} = useSignupContext()
-  const submit = useSubmitSignup({state, dispatch})
   const agent = useAgent()
   const handleValueRef = useRef<string>(state.handle)
   const [draftValue, setDraftValue] = React.useState(state.handle)
+  const isLoading = useThrottledValue(state.isLoading, 500)
 
   const onNextPress = React.useCallback(async () => {
     const handle = handleValueRef.current.trim()
@@ -64,7 +65,10 @@ export function StepHandle() {
     })
     // phoneVerificationRequired is actually whether a captcha is required
     if (!state.serviceDescription?.phoneVerificationRequired) {
-      submit()
+      dispatch({
+        type: 'submit',
+        task: {verificationCode: undefined, mutableProcessed: false},
+      })
       return
     }
     dispatch({type: 'next'})
@@ -74,7 +78,6 @@ export function StepHandle() {
     state.activeStep,
     state.serviceDescription?.phoneVerificationRequired,
     state.userDomain,
-    submit,
     agent,
   ])
 
@@ -175,7 +178,7 @@ export function StepHandle() {
         )}
       </View>
       <BackNextButtons
-        isLoading={state.isLoading}
+        isLoading={isLoading}
         isNextDisabled={!validCheck.overall}
         onBackPress={onBackPress}
         onNextPress={onNextPress}

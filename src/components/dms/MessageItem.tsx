@@ -11,6 +11,7 @@ import {
   ChatBskyConvoDefs,
   RichText as RichTextAPI,
 } from '@atproto/api'
+import {I18n} from '@lingui/core'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -153,14 +154,14 @@ let MessageItemMetadata = ({
   )
 
   const relativeTimestamp = useCallback(
-    (timestamp: string) => {
+    (i18n: I18n, timestamp: string) => {
       const date = new Date(timestamp)
       const now = new Date()
 
-      const time = new Intl.DateTimeFormat(undefined, {
+      const time = i18n.date(date, {
         hour: 'numeric',
         minute: 'numeric',
-      }).format(date)
+      })
 
       const diff = now.getTime() - date.getTime()
 
@@ -182,13 +183,13 @@ let MessageItemMetadata = ({
         return _(msg`Yesterday, ${time}`)
       }
 
-      return new Intl.DateTimeFormat(undefined, {
+      return i18n.date(date, {
         hour: 'numeric',
         minute: 'numeric',
         day: 'numeric',
         month: 'numeric',
         year: 'numeric',
-      }).format(date)
+      })
     },
     [_],
   )

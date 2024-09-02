@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.90.0",
+  "version": "1.91.0",
   "private": true,
   "engines": {
     "node": ">=18"
@@ -32,7 +32,7 @@
     "lint-native": "swiftlint ./modules && ktlint ./modules",
     "lint-native:fix": "swiftlint --fix ./modules && ktlint --format ./modules",
     "typecheck": "tsc --project ./tsconfig.check.json",
-    "e2e:mock-server": "./jest/dev-infra/with-test-redis-and-db.sh ts-node --project tsconfig.e2e.json __e2e__/mock-server.ts",
+    "e2e:mock-server": "NODE_ENV=development ./jest/dev-infra/with-test-redis-and-db.sh ts-node --project tsconfig.e2e.json __e2e__/mock-server.ts",
     "e2e:metro": "EXPO_PUBLIC_ENV=e2e NODE_ENV=test RN_SRC_EXT=e2e.ts,e2e.tsx expo run:ios",
     "e2e:metro-android": "EXPO_PUBLIC_ENV=e2e NODE_ENV=test RN_SRC_EXT=e2e.ts,e2e.tsx expo run:android",
     "e2e:run": "maestro test __e2e__",
@@ -52,7 +52,7 @@
     "open-analyzer": "EXPO_PUBLIC_OPEN_ANALYZER=1 yarn build-web"
   },
   "dependencies": {
-    "@atproto/api": "0.13.2",
+    "@atproto/api": "0.13.5",
     "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@braintree/sanitize-url": "^6.0.2",
     "@discord/bottom-sheet": "bluesky-social/react-native-bottom-sheet",
@@ -199,7 +199,6 @@
     "react-responsive": "^9.0.2",
     "react-textarea-autosize": "^8.5.3",
     "rn-fetch-blob": "^0.12.0",
-    "rn-tourguide": "bluesky-social/rn-tourguide",
     "sentry-expo": "~7.0.1",
     "statsig-react-native-expo": "^4.6.1",
     "tippy.js": "^6.3.7",

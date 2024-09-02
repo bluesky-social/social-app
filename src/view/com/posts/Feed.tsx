@@ -101,7 +101,7 @@ const feedInterstitialType = 'interstitialFeeds'
 const followInterstitialType = 'interstitialFollows'
 const progressGuideInterstitialType = 'interstitialProgressGuide'
 const interstials: Record<
-  'following' | 'discover',
+  'following' | 'discover' | 'profile',
   (FeedItem & {
     type:
       | 'interstitialFeeds'
@@ -126,6 +126,16 @@ const interstials: Record<
       },
       key: followInterstitialType,
       slot: 20,
+    },
+  ],
+  profile: [
+    {
+      type: followInterstitialType,
+      params: {
+        variant: 'default',
+      },
+      key: followInterstitialType,
+      slot: 5,
     },
   ],
 }
@@ -161,6 +171,7 @@ let Feed = ({
   ListHeaderComponent,
   extraData,
   savedFeedConfig,
+  initialNumToRender: initialNumToRenderOverride,
 }: {
   feed: FeedDescriptor
   feedParams?: FeedParams
@@ -180,7 +191,7 @@ let Feed = ({
   ListHeaderComponent?: () => JSX.Element
   extraData?: any
   savedFeedConfig?: AppBskyActorDefs.SavedFeed
-  outsideHeaderOffset?: number
+  initialNumToRender?: number
 }): React.ReactNode => {
   const theme = useTheme()
   const {track} = useAnalytics()
@@ -192,9 +203,7 @@ let Feed = ({
   const [isPTRing, setIsPTRing] = React.useState(false)
   const checkForNewRef = React.useRef<(() => void) | null>(null)
   const lastFetchRef = React.useRef<number>(Date.now())
-  const [feedType, feedUri] = feed.split('|')
-  const feedIsDiscover = feedUri === DISCOVER_FEED_URI
-  const feedIsFollowing = feedType === 'following'
+  const [feedType, feedUri, feedTab] = feed.split('|')
   const gate = useGate()
 
   const opts = React.useMemo(
@@ -338,14 +347,21 @@ let Feed = ({
     }
 
     if (hasSession) {
-      const feedType = feedIsFollowing
-        ? 'following'
-        : feedIsDiscover
-        ? 'discover'
-        : undefined
+      let feedKind: 'following' | 'discover' | 'profile' | undefined
+      if (feedType === 'following') {
+        feedKind = 'following'
+      } else if (feedUri === DISCOVER_FEED_URI) {
+        feedKind = 'discover'
+      } else if (
+        feedType === 'author' &&
+        (feedTab === 'posts_and_author_threads' ||
+          feedTab === 'posts_with_replies')
+      ) {
+        feedKind = 'profile'
+      }
 
-      if (feedType) {
-        for (const interstitial of interstials[feedType]) {
+      if (feedKind) {
+        for (const interstitial of interstials[feedKind]) {
           const shouldShow =
             (interstitial.type === feedInterstitialType &&
               gate('suggested_feeds_interstitial')) ||
@@ -376,9 +392,9 @@ let Feed = ({
     isEmpty,
     lastFetchedAt,
     data,
+    feedType,
     feedUri,
-    feedIsDiscover,
-    feedIsFollowing,
+    feedTab,
     gate,
     hasSession,
   ])
@@ -469,7 +485,7 @@ let Feed = ({
       } else if (item.type === feedInterstitialType) {
         return <SuggestedFeeds />
       } else if (item.type === followInterstitialType) {
-        return <SuggestedFollows />
+        return <SuggestedFollows feed={feed} />
       } else if (item.type === progressGuideInterstitialType) {
         return <ProgressGuide />
       } else if (item.type === 'slice') {
@@ -545,7 +561,7 @@ let Feed = ({
         desktopFixedHeight={
           desktopFixedHeightOffset ? desktopFixedHeightOffset : true
         }
-        initialNumToRender={initialNumToRender}
+        initialNumToRender={initialNumToRenderOverride ?? initialNumToRender}
         windowSize={11}
         onItemSeen={feedFeedback.onItemSeen}
       />
