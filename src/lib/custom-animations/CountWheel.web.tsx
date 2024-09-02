@@ -98,22 +98,24 @@ export function CountWheel({
           {formattedCount}
         </Text>
       </View>
-      <View
-        style={{position: 'absolute'}}
-        aria-disabled={true}
-        // @ts-expect-error is div
-        ref={prevCountView}>
-        <Text
-          style={[
-            big ? a.text_md : {fontSize: 15},
-            a.user_select_none,
-            isLiked
-              ? [a.font_bold, s.likeColor]
-              : {color: t.palette.contrast_500},
-          ]}>
-          {formattedPrevCount}
-        </Text>
-      </View>
+      {shouldAnimate ? (
+        <View
+          style={{position: 'absolute'}}
+          aria-disabled={true}
+          // @ts-expect-error is div
+          ref={prevCountView}>
+          <Text
+            style={[
+              big ? a.text_md : {fontSize: 15},
+              a.user_select_none,
+              isLiked
+                ? [a.font_bold, s.likeColor]
+                : {color: t.palette.contrast_500},
+            ]}>
+            {formattedPrevCount}
+          </Text>
+        </View>
+      ) : null}
     </View>
   )
 }
