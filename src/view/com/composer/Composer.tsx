@@ -314,8 +314,8 @@ export const ComposePost = observer(function ComposePost({
 
     if (
       !finishedUploading &&
-      videoUploadState.status !== 'idle' &&
-      videoUploadState.asset
+      videoUploadState.asset &&
+      videoUploadState.status !== 'done'
     ) {
       setPublishOnUpload(true)
       return
@@ -759,7 +759,8 @@ export const ComposePost = observer(function ComposePost({
             t.atoms.border_contrast_medium,
             styles.bottomBar,
           ]}>
-          {videoUploadState.status !== 'idle' ? (
+          {videoUploadState.status !== 'idle' &&
+          videoUploadState.status !== 'done' ? (
             <VideoUploadToolbar state={videoUploadState} />
           ) : (
             <ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
@@ -1037,6 +1038,24 @@ function ToolbarWrapper({
 
 function VideoUploadToolbar({state}: {state: VideoUploadState}) {
   const t = useTheme()
+  const {_} = useLingui()
+
+  let text = ''
+
+  switch (state.status) {
+    case 'compressing':
+      text = _('Compressing video...')
+      break
+    case 'uploading':
+      text = _('Uploading video...')
+      break
+    case 'processing':
+      text = _('Processing video...')
+      break
+    case 'done':
+      text = _('Video uploaded')
+      break
+  }
 
   const progress =
     state.status === 'compressing' || state.status === 'uploading'
@@ -1044,8 +1063,7 @@ function VideoUploadToolbar({state}: {state: VideoUploadState}) {
       : state.jobStatus?.progress ?? 100
 
   return (
-    <ToolbarWrapper
-      style={[a.gap_sm, a.flex_row, a.align_center, {paddingVertical: 5}]}>
+    <ToolbarWrapper style={[a.flex_row, a.align_center, {paddingVertical: 5}]}>
       <ProgressCircle
         size={30}
         borderWidth={1}
@@ -1053,7 +1071,7 @@ function VideoUploadToolbar({state}: {state: VideoUploadState}) {
         color={t.palette.primary_500}
         progress={progress}
       />
-      <Text>{state.status}</Text>
+      <NewText style={[a.font_bold, a.ml_sm]}>{text}</NewText>
     </ToolbarWrapper>
   )
 }

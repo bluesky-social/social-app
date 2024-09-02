@@ -73,11 +73,11 @@ function reducer(queryClient: QueryClient) {
           : undefined,
       }
     } else if (action.type === 'SetVideo') {
-      updatedState = {...state, video: action.video}
+      updatedState = {...state, video: action.video, status: 'uploading'}
     } else if (action.type === 'SetJobStatus') {
       updatedState = {...state, jobStatus: action.jobStatus}
     } else if (action.type === 'SetBlobRef') {
-      updatedState = {...state, blobRef: action.blobRef}
+      updatedState = {...state, blobRef: action.blobRef, status: 'done'}
     }
     return updatedState
   }
@@ -113,10 +113,6 @@ export function useUploadVideo({
       dispatch({
         type: 'SetBlobRef',
         blobRef,
-      })
-      dispatch({
-        type: 'SetStatus',
-        status: 'idle',
       })
       onSuccess()
     },
@@ -158,10 +154,6 @@ export function useUploadVideo({
       dispatch({
         type: 'SetVideo',
         video,
-      })
-      dispatch({
-        type: 'SetStatus',
-        status: 'uploading',
       })
       onVideoCompressed(video)
     },
@@ -257,6 +249,7 @@ const useUploadStatusQuery = ({
     isError,
     setJobId: (_jobId: string) => {
       setJobId(_jobId)
+      setEnabled(true)
     },
   }
 }
