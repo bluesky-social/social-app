@@ -26,30 +26,28 @@ export interface PostShadow {
 export const POST_TOMBSTONE = Symbol('PostTombstone')
 
 const emitter = new EventEmitter()
-const shadows: WeakMap<
-  AppBskyFeedDefs.PostView,
-  Partial<PostShadow>
-> = new WeakMap()
+const shadows: Map<string, Partial<PostShadow>> = new Map()
 
 export function usePostShadow(
   post: AppBskyFeedDefs.PostView,
 ): Shadow<AppBskyFeedDefs.PostView> | typeof POST_TOMBSTONE {
-  const [shadow, setShadow] = useState(() => shadows.get(post))
+  const {uri} = post
+  const [shadow, setShadow] = useState(() => shadows.get(uri))
   const [prevPost, setPrevPost] = useState(post)
   if (post !== prevPost) {
     setPrevPost(post)
-    setShadow(shadows.get(post))
+    setShadow(shadows.get(uri))
   }
 
   useEffect(() => {
     function onUpdate() {
-      setShadow(shadows.get(post))
+      setShadow(shadows.get(uri))
     }
-    emitter.addListener(post.uri, onUpdate)
+    emitter.addListener(uri, onUpdate)
     return () => {
-      emitter.removeListener(post.uri, onUpdate)
+      emitter.removeListener(uri, onUpdate)
     }
-  }, [post, setShadow])
+  }, [uri, setShadow])
 
   return useMemo(() => {
     if (shadow) {
@@ -124,7 +122,7 @@ export function updatePostShadow(
 ) {
   const cachedPosts = findPostsInCache(queryClient, uri)
   for (let post of cachedPosts) {
-    shadows.set(post, {...shadows.get(post), ...value})
+    shadows.set(post.uri, {...shadows.get(post.uri), ...value})
   }
   batchedUpdates(() => {
     emitter.emit(uri)
