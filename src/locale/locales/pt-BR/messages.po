@@ -7394,7 +7394,7 @@ msgstr "Dessilenciar posts com {displayTag}"
 
 #: src/components/dms/ConvoMenu.tsx:176
 msgid "Unmute conversation"
-msgstr "Dessilencia conversa"
+msgstr "Desmutar conversa"
 
 #: src/components/dms/ConvoMenu.tsx:140
 #~ msgid "Unmute notifications"
@@ -7407,11 +7407,11 @@ msgstr "Dessilenciar thread"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:201
 msgid "Unmute video"
-msgstr "Dessilencia vídeo"
+msgstr "Desmutar vídeo"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:201
 msgid "Unmuted"
-msgstr "Dessilenciado"
+msgstr "Desmutar"
 
 #: src/view/screens/ProfileFeed.tsx:292
 #: src/view/screens/ProfileList.tsx:673
@@ -7673,7 +7673,7 @@ msgstr "Versão {appVersion} {bundleInfo}"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:180
 msgid "Video"
-msgstr "Video"
+msgstr "Vídeo"
 
 #: src/screens/Onboarding/index.tsx:39
 #: src/screens/Onboarding/state.ts:88
