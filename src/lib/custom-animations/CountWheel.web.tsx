@@ -1,7 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
 import {useReducedMotion} from 'react-native-reanimated'
-import {i18n} from '@lingui/core'
 
 import {decideShouldRoll} from 'lib/custom-animations/util'
 import {s} from 'lib/styles'
