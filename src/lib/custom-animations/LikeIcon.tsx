@@ -71,13 +71,15 @@ const circle2Keyframe = new Keyframe({
 export function AnimatedLikeIcon({
   isLiked,
   big,
+  isToggle,
 }: {
   isLiked: boolean
   big?: boolean
+  isToggle: boolean
 }) {
   const t = useTheme()
   const size = big ? 22 : 18
-  const shouldAnimate = !useReducedMotion()
+  const shouldAnimate = !useReducedMotion() && isToggle
 
   return (
     <View>
