@@ -11,7 +11,7 @@ import likeIcon from '../../assets/heart2_filled_stroke2_corner0_rounded.svg'
 import logo from '../../assets/logo.svg'
 import repostIcon from '../../assets/repost_stroke2_corner2_rounded.svg'
 import {CONTENT_LABELS} from '../labels'
-import {getRkey, niceDate} from '../utils'
+import {getRkey, niceDate, prettyNumber} from '../utils'
 import {Container} from './container'
 import {Embed} from './embed'
 import {Link} from './link'
@@ -78,7 +78,7 @@ export function Post({thread}: Props) {
             <div className="flex items-center gap-2 cursor-pointer">
               <img src={likeIcon} className="w-5 h-5" />
               <p className="font-bold text-neutral-500 mb-px">
-                {post.likeCount}
+                {prettyNumber(post.likeCount)}
               </p>
             </div>
           )}
@@ -86,7 +86,7 @@ export function Post({thread}: Props) {
             <div className="flex items-center gap-2 cursor-pointer">
               <img src={repostIcon} className="w-5 h-5" />
               <p className="font-bold text-neutral-500 mb-px">
-                {post.repostCount}
+                {prettyNumber(post.repostCount)}
               </p>
             </div>
           )}
@@ -97,7 +97,7 @@ export function Post({thread}: Props) {
           <div className="flex-1" />
           <p className="cursor-pointer text-brand font-bold hover:underline hidden min-[450px]:inline">
             {post.replyCount
-              ? `Read ${post.replyCount} ${
+              ? `Read ${prettyNumber(post.replyCount)} ${
                   post.replyCount > 1 ? 'replies' : 'reply'
                 } on Bluesky`
               : `View on Bluesky`}
