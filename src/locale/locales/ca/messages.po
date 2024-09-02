@@ -2378,7 +2378,7 @@ msgstr "Edita les persones"
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:66
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:204
 msgid "Edit post interaction settings"
-msgstr "Esdita les preferències de les interaccions a la publicació"
+msgstr "Edita les preferències de les interaccions a la publicació"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:184
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:179
@@ -5170,7 +5170,7 @@ msgstr "Posa en pausa"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:203
 msgid "Pause video"
-msgstr "Pausa el vídeo"
+msgstr "Posa en pausa el vídeo"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:171
 #: src/view/screens/Search/Search.tsx:369
