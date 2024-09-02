@@ -9,7 +9,11 @@ import {AbortError} from '#/lib/async/cancelable'
 import {SUPPORTED_MIME_TYPES, SupportedMimeTypes} from '#/lib/constants'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
-import {ServerError, VideoTooLargeError} from 'lib/media/video/errors'
+import {
+  ServerError,
+  UploadLimitError,
+  VideoTooLargeError,
+} from 'lib/media/video/errors'
 import {CompressedVideo} from 'lib/media/video/types'
 import {useCompressVideoMutation} from 'state/queries/video/compress-video'
 import {useVideoAgent} from 'state/queries/video/util'
@@ -149,7 +153,7 @@ export function useUploadVideo({
     onError: e => {
       if (e instanceof AbortError) {
         return
-      } else if (e instanceof ServerError) {
+      } else if (e instanceof ServerError || e instanceof UploadLimitError) {
         dispatch({
           type: 'SetError',
           error: e.message,

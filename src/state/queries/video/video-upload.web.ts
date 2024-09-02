@@ -9,7 +9,7 @@ import {ServerError} from '#/lib/media/video/errors'
 import {CompressedVideo} from '#/lib/media/video/types'
 import {createVideoEndpointUrl, mimeToExt} from '#/state/queries/video/util'
 import {useSession} from '#/state/session'
-import {useServiceAuthToken} from './video-upload.shared'
+import {useServiceAuthToken, useVideoUploadLimits} from './video-upload.shared'
 
 export const useUploadVideoMutation = ({
   onSuccess,
@@ -24,17 +24,20 @@ export const useUploadVideoMutation = ({
 }) => {
   const {currentAccount} = useSession()
   const getToken = useServiceAuthToken()
+  const checkLimits = useVideoUploadLimits()
   const {_} = useLingui()
 
   return useMutation({
     mutationKey: ['video', 'upload'],
     mutationFn: cancelable(async (video: CompressedVideo) => {
+      const token = await getToken()
+
+      await checkLimits(token)
+
       const uri = createVideoEndpointUrl('/xrpc/app.bsky.video.uploadVideo', {
         did: currentAccount!.did,
         name: `${nanoid(12)}.${mimeToExt(video.mimeType)}`,
       })
-
-      const token = await getToken()
 
       let bytes = video.bytes
       if (!bytes) {
