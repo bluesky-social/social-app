@@ -86,6 +86,7 @@ export function PostEmbeds({
       return <MaybeListCard view={embed.record} />
     }
 
+    // starter pack embed
     if (AppBskyGraphDefs.isStarterPackViewBasic(embed.record)) {
       return <StarterPackCard starterPack={embed.record} />
     }
@@ -178,6 +179,8 @@ export function PostEmbeds({
     )
   }
 
+  // video embed
+  // =
   if (AppBskyEmbedVideo.isView(embed)) {
     return (
       <ContentHider modui={moderation?.ui('contentMedia')}>
