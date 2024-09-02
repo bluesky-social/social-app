@@ -106,6 +106,8 @@ export function CountWheel({
   const [key, setKey] = React.useState(0)
   const [prevCount, setPrevCount] = React.useState(likeCount)
   const prevIsLiked = React.useRef(isLiked)
+  const formattedCount = formatCount(likeCount)
+  const formattedPrevCount = formatCount(prevCount)
 
   React.useEffect(() => {
     if (isLiked === prevIsLiked.current) {
@@ -117,9 +119,6 @@ export function CountWheel({
     setPrevCount(newPrevCount)
     prevIsLiked.current = isLiked
   }, [isLiked, likeCount])
-
-  const formattedCount = formatCount(likeCount)
-  const formattedPrevCount = formatCount(prevCount)
 
   const enteringAnimation =
     shouldAnimate && shouldRoll
@@ -136,8 +135,8 @@ export function CountWheel({
 
   return (
     <LayoutAnimationConfig skipEntering skipExiting>
-      <View style={[a.justify_center]}>
-        {likeCount > 0 ? (
+      {likeCount > 0 ? (
+        <View style={[a.justify_center]}>
           <Animated.View
             entering={enteringAnimation}
             key={key}
@@ -154,25 +153,25 @@ export function CountWheel({
               {formattedCount}
             </Text>
           </Animated.View>
-        ) : null}
-        {/* Add 2 to the key so there are never duplicates */}
-        <Animated.View
-          entering={exitingAnimation}
-          key={key + 2}
-          style={[a.absolute]}
-          aria-disabled={true}>
-          <Text
-            style={[
-              big ? a.text_md : {fontSize: 15},
-              a.user_select_none,
-              isLiked
-                ? [a.font_bold, s.likeColor]
-                : {color: t.palette.contrast_500},
-            ]}>
-            {formattedPrevCount}
-          </Text>
-        </Animated.View>
-      </View>
+          <Animated.View
+            entering={exitingAnimation}
+            // Add 2 to the key so there are never duplicates
+            key={key + 2}
+            style={[a.absolute]}
+            aria-disabled={true}>
+            <Text
+              style={[
+                big ? a.text_md : {fontSize: 15},
+                a.user_select_none,
+                isLiked
+                  ? [a.font_bold, s.likeColor]
+                  : {color: t.palette.contrast_500},
+              ]}>
+              {formattedPrevCount}
+            </Text>
+          </Animated.View>
+        </View>
+      ) : null}
     </LayoutAnimationConfig>
   )
 }
