@@ -35,6 +35,7 @@ import {
 } from '#/state/session'
 import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
+import {useComposerControls} from '#/state/shell/composer'
 import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
 import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
@@ -54,6 +55,7 @@ function InnerApp() {
   const [isReady, setIsReady] = React.useState(false)
   const {currentAccount} = useSession()
   const {resumeSession} = useSessionApi()
+  const {openComposer} = useComposerControls()
   const theme = useColorModeTheme()
   const {_} = useLingui()
   useIntentHandler()
@@ -84,6 +86,16 @@ function InnerApp() {
       )
     })
   }, [_])
+
+  useEffect(() => {
+    const handleNShortcut = (event: KeyboardEvent) => {
+      if (event.key === 'n' || event.key === 'N') openComposer({})
+    }
+
+    document.addEventListener('keydown', handleNShortcut)
+
+    return () => document.removeEventListener('keydown', handleNShortcut)
+  }, [openComposer])
 
   // wait for session to resume
   if (!isReady || !hasCheckedReferrer) return null
