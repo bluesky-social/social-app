@@ -62,6 +62,7 @@ export function Lightbox() {
 
   return (
     <LightboxInner
+      key={activeLightbox.id}
       imgs={imgs}
       initialIndex={initialIndex}
       onClose={closeLightbox}

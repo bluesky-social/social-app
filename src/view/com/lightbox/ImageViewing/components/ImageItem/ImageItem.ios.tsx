@@ -47,6 +47,7 @@ const ImageItem = ({
   onTap,
   onZoom,
   onRequestClose,
+  onLoad,
   showControls,
 }: Props) => {
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
@@ -150,7 +151,10 @@ const ImageItem = ({
           style={[styles.image, animatedStyle]}
           accessibilityLabel={imageSrc.alt}
           accessibilityHint=""
-          onLoad={() => setLoaded(true)}
+          onLoad={() => {
+            setLoaded(true)
+            onLoad()
+          }}
           enableLiveTextInteraction={showControls && !scaled}
         />
       </Animated.ScrollView>

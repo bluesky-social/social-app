@@ -52,6 +52,7 @@ function ImageViewing({
   images,
   initialImageIndex,
   visible,
+  onLoad,
   onRequestClose,
   backgroundColor = DEFAULT_BG_COLOR,
   HeaderComponent,
@@ -136,6 +137,7 @@ function ImageViewing({
               <ImageItem
                 onTap={onTap}
                 onZoom={onZoom}
+                onLoad={onLoad}
                 imageSrc={imageSrc}
                 onRequestClose={onRequestClose}
                 isScrollViewBeingDragged={isDragging}
@@ -186,10 +188,11 @@ const styles = StyleSheet.create({
   },
 })
 
-function EnhancedImageViewing(props: Props) {
+function ImageViewingWithSplash(props: Props) {
   const openProgress = useSharedValue(0)
   const [isAnimationDone, setIsAnimationDone] = React.useState(false)
-
+  const [isLoaded, setIsLoaded] =React.useState(false)
+  const isReady = isAnimationDone && isLoaded
   const initialImage = props.images[props.initialImageIndex]
 
   React.useEffect(() => {
@@ -212,7 +215,7 @@ function EnhancedImageViewing(props: Props) {
   const initialTransform = calculateOverlayTransform(
     SCREEN,
     initialImage.aspectRatio,
-    props.thumbDims,
+    props.thumbDims, // TODO: Fix null case
   )
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -248,7 +251,7 @@ function EnhancedImageViewing(props: Props) {
 
   return (
     <>
-      {!isAnimationDone && (
+      {!isReady && (
         <Animated.View
           style={[
             {
@@ -297,10 +300,16 @@ function EnhancedImageViewing(props: Props) {
           left: 0,
           right: 0,
           bottom: 0,
-          pointerEvents: isAnimationDone ? 'auto' : 'none',
-          opacity: isAnimationDone ? 1 : 0,
+          pointerEvents: isReady ? 'auto' : 'none',
+          opacity: isReady ? 1 : 0,
         }}>
-        <ImageViewing key={props.initialImageIndex} {...props} />
+        <ImageViewing
+          key={props.initialImageIndex}
+          {...props}
+          onLoad={() => {
+            setIsLoaded(true)
+          }}
+        />
       </Animated.View>
     </>
   )
@@ -335,4 +344,4 @@ function withClampedSpring(value: any) {
   return withSpring(value, {overshootClamping: true, stiffness: 300})
 }
 
-export default EnhancedImageViewing
+export default ImageViewingWithSplash

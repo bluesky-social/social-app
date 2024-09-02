@@ -32,6 +32,7 @@ export function Lightbox() {
     const opts = activeLightbox as ProfileImageLightbox
     return (
       <ImageView
+        key={activeLightbox.id}
         images={[
           {uri: opts.profile.avatar || '', thumbUri: opts.profile.avatar || ''},
         ]}
@@ -45,6 +46,7 @@ export function Lightbox() {
     const opts = activeLightbox as ImagesLightbox
     return (
       <ImageView
+        key={activeLightbox.id}
         images={opts.images.map(img => ({...img}))}
         thumbDims={opts.thumbDims}
         initialImageIndex={opts.index}

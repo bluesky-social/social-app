@@ -47,6 +47,7 @@ type Props = {
 }
 const ImageItem = ({
   imageSrc,
+  onLoad,
   onTap,
   onZoom,
   onRequestClose,
@@ -326,7 +327,10 @@ const ImageItem = ({
           style={[styles.image, animatedStyle]}
           accessibilityLabel={imageSrc.alt}
           accessibilityHint=""
-          onLoad={() => setIsLoaded(true)}
+          onLoad={() => {
+            setIsLoaded(true)
+            onLoad()
+          }}
           cachePolicy="memory"
         />
       </GestureDetector>
