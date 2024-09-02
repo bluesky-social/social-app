@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2024-05-13 11:41\n"
-"Last-Translator: fabiohcnobre\n"
-"Language-Team: maisondasilva, MightyLoggor, gildaswise, gleydson, faeriarum, fabiohcnobre\n"
+"Last-Translator: garccez\n"
+"Language-Team: maisondasilva, MightyLoggor, gildaswise, gleydson, faeriarum, fabiohcnobre, garccez\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: src/screens/Messages/List/ChatListItem.tsx:120
@@ -79,7 +79,7 @@ msgstr "{0, plural, one {post} other {posts}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:413
 msgid "{0, plural, one {quote} other {quotes}}"
-msgstr ""
+msgstr "{0, plural, one {citação} other {citações}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:233
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
@@ -133,27 +133,27 @@ msgstr "{count, plural, one {Curtido por # usuário} other {Curtido por # usuár
 
 #: src/lib/hooks/useTimeAgo.ts:69
 msgid "{diff, plural, one {day} other {days}}"
-msgstr ""
+msgstr "{diff, plural, one {dia} other {dias}}"
 
 #: src/lib/hooks/useTimeAgo.ts:64
 msgid "{diff, plural, one {hour} other {hours}}"
-msgstr ""
+msgstr "{diff, plural, one {hora} other {horas}}"
 
 #: src/lib/hooks/useTimeAgo.ts:59
 msgid "{diff, plural, one {minute} other {minutes}}"
-msgstr ""
+msgstr "{diff, plural, one {minuto} other {minutos}}"
 
 #: src/lib/hooks/useTimeAgo.ts:75
 msgid "{diff, plural, one {month} other {months}}"
-msgstr ""
+msgstr "{diff, plural, one {mês} other {meses}}"
 
 #: src/lib/hooks/useTimeAgo.ts:54
 msgid "{diffSeconds, plural, one {second} other {seconds}}"
-msgstr ""
+msgstr "{diffSeconds, plural, one {segundo} other {segundos}}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:174
 msgid "{displayName}'s Starter Pack"
-msgstr "O Kit Inicial de {displayName}"
+msgstr "O Pacote Inicial de {displayName}"
 
 #: src/screens/SignupQueued.tsx:207
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
@@ -184,11 +184,11 @@ msgstr "{numUnreadNotifications} não lidas"
 
 #: src/components/NewskieDialog.tsx:116
 msgid "{profileName} joined Bluesky {0} ago"
-msgstr ""
+msgstr "{profileName} juntou-se ao Bluesky há {0}"
 
 #: src/components/NewskieDialog.tsx:111
 msgid "{profileName} joined Bluesky using a starter pack {0} ago"
-msgstr ""
+msgstr "{profileName} juntou-se ao Bluesky utilizando um pacote inicial há {0}"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:67
 #~ msgid "{value, plural, =0 {Show all replies} one {Show replies with at least # like} other {Show replies with at least # likes}}"
@@ -205,12 +205,12 @@ msgstr ""
 #: src/screens/StarterPack/Wizard/index.tsx:466
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}, </0><1>{1}, </1>e {2, plural, one {# outro} other {# outros}} estão incluídos no seu kit inicial"
+msgstr "<0>{0}, </0><1>{1}, </1>e {2, plural, one {# outro} other {# outros}} estão incluídos no seu pacote inicial"
 
 #: src/screens/StarterPack/Wizard/index.tsx:519
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}, </0><1>{1}, </1>e {2, plural, one {# outro} other {# outros}} estão incluídos no seu kit inicial"
+msgstr "<0>{0}, </0><1>{1}, </1>e {2, plural, one {# outro} other {# outros}} estão incluídos no seu pacote inicial"
 
 #: src/screens/StarterPack/Wizard/index.tsx:497
 #~ msgid "<0>{0}, </0><1>{1}, </1>and {2} {3, plural, one {other} other {others}} are included in your starter pack"
@@ -226,7 +226,7 @@ msgstr "<0>{0}</0> {1, plural, one {seguindo} other {seguindo}}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:507
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
-msgstr "<0>{0}</0> e<1> </1><2>{1} </2>estão incluídos no seu kit inicial"
+msgstr "<0>{0}</0> e<1> </1><2>{1} </2>estão incluídos no seu pacote inicial"
 
 #: src/view/shell/Drawer.tsx:96
 #~ msgid "<0>{0}</0> following"
@@ -234,7 +234,7 @@ msgstr "<0>{0}</0> e<1> </1><2>{1} </2>estão incluídos no seu kit inicial"
 
 #: src/screens/StarterPack/Wizard/index.tsx:500
 msgid "<0>{0}</0> is included in your starter pack"
-msgstr "<0>{0}</0> está incluído no seu kit inicial"
+msgstr "<0>{0}</0> está incluído no seu pacote inicial"
 
 #: src/components/WhoCanReply.tsx:274
 msgid "<0>{0}</0> members"
@@ -259,7 +259,7 @@ msgstr "<0>{0}</0> membros"
 
 #: src/view/com/modals/SelfLabel.tsx:135
 msgid "<0>Not Applicable.</0> This warning is only available for posts with media attached."
-msgstr "<0>Não se aplica.</0> Este aviso só funciona para posts com mídia."
+msgstr "<0>Não se aplica.</0> Este aviso só funciona para posts que contenham mídia."
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:21
 #~ msgid "<0>Welcome to</0><1>Bluesky</1>"
@@ -267,7 +267,7 @@ msgstr "<0>Não se aplica.</0> Este aviso só funciona para posts com mídia."
 
 #: src/screens/StarterPack/Wizard/index.tsx:457
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
-msgstr "<0>Você</0> e<1> </1><2>{0} </2>estão incluídos no seu kit inicial"
+msgstr "<0>Você</0> e<1> </1><2>{0} </2>estão incluídos no seu pacote inicial"
 
 #: src/screens/Profile/Header/Handle.tsx:50
 msgid "⚠Invalid Handle"
@@ -279,7 +279,7 @@ msgstr "24 horas"
 
 #: src/screens/Login/LoginForm.tsx:266
 msgid "2FA Confirmation"
-msgstr "Confirmação do 2FA"
+msgstr "Confirmação de 2FA"
 
 #: src/components/dialogs/MutedWords.tsx:232
 msgid "30 days"
@@ -381,7 +381,7 @@ msgstr "Adicione mais {0} para continuar"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:59
 msgid "Add {displayName} to starter pack"
-msgstr "Adicione {displayName} ao kit inicial"
+msgstr "Adicione {displayName} ao pacote inicial"
 
 #: src/view/com/modals/SelfLabel.tsx:57
 msgid "Add a content warning"
@@ -435,7 +435,7 @@ msgstr "Adicionar palavras/tags silenciadas"
 
 #: src/screens/StarterPack/Wizard/index.tsx:197
 #~ msgid "Add people to your starter pack that you think others will enjoy following"
-#~ msgstr "Adicione pessoas ao seu kit inicial que você acha que outros gostarão de seguir"
+#~ msgstr "Adicione pessoas ao seu pacote inicial que você acha que outros gostarão de seguir"
 
 #: src/screens/Home/NoFeedsPinned.tsx:99
 msgid "Add recommended feeds"
@@ -443,7 +443,7 @@ msgstr "Utilizar feeds recomendados"
 
 #: src/screens/StarterPack/Wizard/index.tsx:488
 msgid "Add some feeds to your starter pack!"
-msgstr "Adicione alguns feeds ao seu kit inicial!"
+msgstr "Adicione alguns feeds ao seu pacote inicial!"
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:41
 msgid "Add the default feed of only people you follow"
@@ -589,7 +589,7 @@ msgstr "Ocorreu um erro"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:315
 msgid "An error occurred while generating your starter pack. Want to try again?"
-msgstr "Ocorreu um erro ao gerar seu kit inicial. Quer tentar novamente?"
+msgstr "Ocorreu um erro ao gerar seu pacote inicial. Quer tentar novamente?"
 
 #: src/view/com/util/post-embeds/VideoEmbed.tsx:69
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:150
@@ -665,7 +665,7 @@ msgstr "GIF animado"
 
 #: src/lib/moderation/useReportOptions.ts:33
 msgid "Anti-Social Behavior"
-msgstr "Comportamento anti-social"
+msgstr "Comportamento Anti-Social"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:54
 msgid "Anybody can interact"
@@ -681,7 +681,7 @@ msgstr "Senha de Aplicativo excluída"
 
 #: src/view/com/modals/AddAppPasswords.tsx:138
 msgid "App Password names can only contain letters, numbers, spaces, dashes, and underscores."
-msgstr "O nome da Senha de Aplicativo só pode conter letras, números, traços e sublinhados."
+msgstr "O nome da Senha de Aplicativo só pode conter letras, números, riscas e subtraços."
 
 #: src/view/com/modals/AddAppPasswords.tsx:103
 msgid "App Password names must be at least 4 characters long."
@@ -758,7 +758,7 @@ msgstr "Tem certeza de que deseja excluir esta mensagem? A mensagem será exclu�
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:621
 msgid "Are you sure you want to delete this starter pack?"
-msgstr "Tem certeza de que deseja excluir este kit inicial?"
+msgstr "Tem certeza de que deseja excluir este pacote inicial?"
 
 #: src/components/dms/ConvoMenu.tsx:189
 #~ msgid "Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for other participants."
@@ -887,7 +887,7 @@ msgstr "Contas bloqueadas não podem te responder, mencionar ou interagir com vo
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:117
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
-msgstr "Contas bloqueadas não podem te responder, mencionar ou interagir com você. Você não verá o conteúdo deles e eles serão impedidos de ver o seu."
+msgstr "Contas bloqueadas não podem responder, mencionar ou interagir com você. Você não verá o conteúdo deles e eles serão impedidos de ver o seu."
 
 #: src/view/com/post-thread/PostThread.tsx:412
 msgid "Blocked post."
@@ -899,7 +899,7 @@ msgstr "Bloquear não previne este rotulador de rotular a sua conta."
 
 #: src/view/screens/ProfileList.tsx:741
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
-msgstr "Bloqueios são públicos. Contas bloqueadas não podem te responder, mencionar ou interagir com você."
+msgstr "Bloqueios são públicos. Contas bloqueadas não podem responder, mencionar ou interagir com você."
 
 #: src/view/com/profile/ProfileMenu.tsx:357
 msgid "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
@@ -939,11 +939,11 @@ msgstr "Bluesky é melhor com amigos!"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:282
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
-msgstr "O Bluesky escolherá um conjunto de contas recomendadas de pessoas em sua rede."
+msgstr "O Bluesky escolherá um conjunto de contas recomendadas das pessoas em sua rede."
 
 #: src/screens/Moderation/index.tsx:567
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
-msgstr "O Bluesky não mostrará seu perfil e publicações para usuários desconectados. Outros aplicativos podem não honrar esta solicitação. Isso não torna a sua conta privada."
+msgstr "O Bluesky não mostrará seu perfil e publicações para usuários desconectados. Outros aplicativos podem não respeitar esta solicitação. Isto não torna a sua conta privada."
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:53
 msgid "Blur images"
@@ -1021,7 +1021,7 @@ msgstr "Câmera"
 
 #: src/view/com/modals/AddAppPasswords.tsx:180
 msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
-msgstr "Só pode conter letras, números, espaços, traços e sublinhados. Deve ter pelo menos 4 caracteres, mas não mais de 32 caracteres."
+msgstr "Só pode conter letras, números, espaços, riscas e subtraços. Deve ter pelo menos 4 caracteres, mas não mais de 32 caracteres."
 
 #: src/components/Menu/index.tsx:235
 #: src/components/Prompt.tsx:119
@@ -1092,7 +1092,7 @@ msgstr "Cancela a abertura do link"
 
 #: src/view/com/modals/VerifyEmail.tsx:160
 msgid "Change"
-msgstr "Trocar"
+msgstr "Alterar"
 
 #: src/view/screens/Settings/index.tsx:341
 msgctxt "action"
@@ -1123,7 +1123,7 @@ msgstr "Alterar Senha"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:73
 msgid "Change post language to {0}"
-msgstr "Trocar idioma do post para {0}"
+msgstr "Alterar idioma do post para {0}"
 
 #: src/view/com/modals/ChangeEmail.tsx:104
 msgid "Change Your Email"
@@ -1187,7 +1187,7 @@ msgstr "Verifique em sua caixa de entrada um e-mail com o código de confirmaç�
 
 #: src/screens/Onboarding/StepInterests/index.tsx:191
 msgid "Choose 3 or more:"
-msgstr "Escolha 3 ou mais:"
+msgstr "Escolha três ou mais:"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:326
 msgid "Choose at least {0} more"
@@ -1294,7 +1294,7 @@ msgstr "Clique para desabilitar as citações desta publicação."
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:304
 msgid "Click to enable quote posts of this post."
-msgstr "Clique para habilitar citações desta publicação."
+msgstr "Clique para habilitar as citações desta publicação."
 
 #: src/components/dms/MessageItem.tsx:231
 msgid "Click to retry failed message"
@@ -1306,7 +1306,7 @@ msgstr "Clima e tempo"
 
 #: src/components/dms/ChatEmptyPill.tsx:39
 msgid "Clip 🐴 clop 🐴"
-msgstr ""
+msgstr "Tchic 🐴 tloc 🐴"
 
 #: src/components/dialogs/GifSelect.ios.tsx:250
 #: src/components/dialogs/GifSelect.tsx:270
@@ -1378,7 +1378,7 @@ msgstr "Fecha o editor de post e descarta o rascunho"
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:37
 msgid "Closes viewer for header image"
-msgstr "Fechar o visualizador de banner"
+msgstr "Fecha o visualizador de banner"
 
 #: src/view/com/notifications/FeedItem.tsx:269
 msgid "Collapse list of users"
@@ -1676,17 +1676,17 @@ msgstr "Criar uma nova conta do Bluesky"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:154
 msgid "Create a QR code for a starter pack"
-msgstr "Crie o QR code para um kit inicial"
+msgstr "Crie o QR code para um pacote inicial"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:165
 #: src/components/StarterPack/ProfileStarterPacks.tsx:259
 #: src/Navigation.tsx:368
 msgid "Create a starter pack"
-msgstr "Crie um kit inicial"
+msgstr "Crie um pacote inicial"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:246
 msgid "Create a starter pack for me"
-msgstr "Crie um kit inicial para mim"
+msgstr "Crie um pacote inicial para mim"
 
 #: src/screens/Signup/index.tsx:99
 msgid "Create Account"
@@ -1866,11 +1866,11 @@ msgstr "Excluir post"
 #: src/screens/StarterPack/StarterPackScreen.tsx:567
 #: src/screens/StarterPack/StarterPackScreen.tsx:723
 msgid "Delete starter pack"
-msgstr "Excluir kit inicial"
+msgstr "Excluir pacote inicial"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:618
 msgid "Delete starter pack?"
-msgstr "Excluir kit inicial?"
+msgstr "Excluir pacote inicial?"
 
 #: src/view/screens/ProfileList.tsx:718
 msgid "Delete this list?"
@@ -2208,7 +2208,7 @@ msgstr "Editar Perfil"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:554
 msgid "Edit starter pack"
-msgstr "Editar kit incial"
+msgstr "Editar pacote incial"
 
 #: src/view/com/modals/CreateOrEditList.tsx:234
 msgid "Edit User List"
@@ -2228,7 +2228,7 @@ msgstr "Editar sua descrição"
 
 #: src/Navigation.tsx:373
 msgid "Edit your starter pack"
-msgstr "Editar kit inicial"
+msgstr "Editar pacote inicial"
 
 #: src/screens/Onboarding/index.tsx:31
 #: src/screens/Onboarding/state.ts:86
@@ -2945,7 +2945,7 @@ msgstr "Galeria"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:279
 msgid "Generate a starter pack"
-msgstr "Gere um kit inicial"
+msgstr "Gere um pacote inicial"
 
 #: src/view/shell/Drawer.tsx:350
 msgid "Get help"
@@ -3374,7 +3374,7 @@ msgstr "Convites: 1 disponível"
 
 #: src/components/StarterPack/ShareDialog.tsx:97
 msgid "Invite people to this starter pack!"
-msgstr "Convide pessoas para este kit inicial!"
+msgstr "Convide pessoas para este pacote inicial!"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:35
 msgid "Invite your friends to follow your favorite feeds and people"
@@ -3390,7 +3390,7 @@ msgstr "Convites, mas pessoais"
 
 #: src/screens/StarterPack/Wizard/index.tsx:452
 msgid "It's just you right now! Add more people to your starter pack by searching above."
-msgstr "É só você por enquanto! Adicione mais pessoas ao seu kit inicial pesquisando acima."
+msgstr "É só você por enquanto! Adicione mais pessoas ao seu pacote inicial pesquisando acima."
 
 #: src/view/com/auth/SplashScreen.web.tsx:164
 msgid "Jobs"
@@ -4517,7 +4517,7 @@ msgstr "Abrir opções do post"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:540
 msgid "Open starter pack menu"
-msgstr "Abra o menu do kit inicial"
+msgstr "Abra o menu do pacote inicial"
 
 #: src/view/screens/Settings/index.tsx:826
 #: src/view/screens/Settings/index.tsx:836
@@ -5505,7 +5505,7 @@ msgstr "Denunciar post"
 #: src/screens/StarterPack/StarterPackScreen.tsx:593
 #: src/screens/StarterPack/StarterPackScreen.tsx:596
 msgid "Report starter pack"
-msgstr "Denunciar kit inicial"
+msgstr "Denunciar pacote inicial"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:43
 msgid "Report this content"
@@ -5531,7 +5531,7 @@ msgstr "Denunciar este post"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:59
 msgid "Report this starter pack"
-msgstr "Denunciar este kit inicial"
+msgstr "Denunciar este pacote inicial"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:47
 msgid "Report this user"
@@ -6195,15 +6195,15 @@ msgstr "Compartilhar QR code"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:404
 msgid "Share this starter pack"
-msgstr "Compartilhar este kit inicial"
+msgstr "Compartilhar este pacote inicial"
 
 #: src/components/StarterPack/ShareDialog.tsx:100
 msgid "Share this starter pack and help people join your community on Bluesky."
-msgstr "Compartilhe este kit inicial e ajude as pessoas a se juntarem à sua comunidade no Bluesky."
+msgstr "Compartilhe este pacote inicial e ajude as pessoas a se juntarem à sua comunidade no Bluesky."
 
 #: src/components/dms/ChatEmptyPill.tsx:34
 msgid "Share your favorite feed!"
-msgstr "Compartilhe este kit inicial e ajude as pessoas a se juntarem à sua comunidade no Bluesky."
+msgstr "Compartilhe este pacote inicial e ajude as pessoas a se juntarem à sua comunidade no Bluesky."
 
 #: src/Navigation.tsx:251
 msgid "Shared Preferences Tester"
@@ -6427,12 +6427,12 @@ msgstr "autenticado como @{0}"
 
 #: src/view/com/notifications/FeedItem.tsx:222
 msgid "signed up with your starter pack"
-msgstr "se inscreveu com seu kit inicial"
+msgstr "se inscreveu com seu pacote inicial"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:306
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:313
 msgid "Signup without a starter pack"
-msgstr "Inscreva-se sem um kit inicial"
+msgstr "Inscreva-se sem um pacote inicial"
 
 #: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:102
 msgid "Similar accounts"
@@ -6548,23 +6548,23 @@ msgstr "Início da integração da sua janela. Não retroceda. Em vez disso, ava
 #: src/Navigation.tsx:363
 #: src/screens/StarterPack/Wizard/index.tsx:182
 msgid "Starter Pack"
-msgstr "Kit Inicial"
+msgstr "Pacote Inicial"
 
 #: src/components/StarterPack/StarterPackCard.tsx:73
 msgid "Starter pack by {0}"
-msgstr "Kit inicial por {0}"
+msgstr "Pacote inicial por {0}"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:703
 msgid "Starter pack is invalid"
-msgstr "Kit inicial é inválido"
+msgstr "Pacote inicial é inválido"
 
 #: src/view/screens/Profile.tsx:214
 msgid "Starter Packs"
-msgstr "Kits Iniciais"
+msgstr "Pacotes Iniciais"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:238
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
-msgstr "Kits iniciais permitem que você compartilhe facilmente seus feeds e pessoas favoritas com seus amigos."
+msgstr "Pacotes iniciais permitem que você compartilhe facilmente seus feeds e pessoas favoritas com seus amigos."
 
 #: src/view/screens/Settings/index.tsx:862
 #~ msgid "Status page"
@@ -6776,7 +6776,7 @@ msgstr "Este identificador de usuário já está sendo usado."
 #: src/screens/StarterPack/Wizard/index.tsx:105
 #: src/screens/StarterPack/Wizard/index.tsx:113
 msgid "That starter pack could not be found."
-msgstr "Esse kit inicial não pôde ser encontrado."
+msgstr "Esse pacote inicial não pôde ser encontrado."
 
 #: src/view/com/post-thread/PostQuotes.tsx:129
 msgid "That's all, folks!"
@@ -6852,7 +6852,7 @@ msgstr "Vídeo selecionado é maior que 100 MB."
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:713
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
-msgstr "O kit inicial que você está tentando visualizar é inválido. Você pode excluir este kit inicial em vez disso."
+msgstr "O pacote inicial que você está tentando visualizar é inválido. Você pode excluir este pacote inicial em vez disso."
 
 #: src/view/screens/Support.tsx:36
 msgid "The support form has been moved. If you need help, please <0/> or visit {HELP_DESK_URL} to get in touch with us."
@@ -7884,7 +7884,7 @@ msgstr "Do que você gosta?"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:42
 msgid "What do you want to call your starter pack?"
-msgstr "Como você quer chamar seu kit inicial?"
+msgstr "Como você quer chamar seu pacote inicial?"
 
 #: src/view/com/auth/SplashScreen.tsx:40
 #: src/view/com/auth/SplashScreen.web.tsx:86
@@ -7994,7 +7994,7 @@ msgstr "Sim, desativar"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:649
 msgid "Yes, delete this starter pack"
-msgstr "Sim, exclua este kit inicial"
+msgstr "Sim, exclua este pacote inicial"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:692
 msgid "Yes, detach"
@@ -8156,7 +8156,7 @@ msgstr "Você chegou ao fim"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:235
 msgid "You haven't created a starter pack yet!"
-msgstr "Você ainda não criou um kit inicial!"
+msgstr "Você ainda não criou um pacote inicial!"
 
 #: src/components/dialogs/MutedWords.tsx:398
 msgid "You haven't muted any words or tags yet"
@@ -8177,7 +8177,7 @@ msgstr "Você pode contestar estes rótulos se você acha que estão errados."
 
 #: src/screens/StarterPack/Wizard/State.tsx:79
 msgid "You may only add up to {STARTER_PACK_MAX_SIZE} profiles"
-msgstr "Você pode adicionar no máximo {STARTER_PACK_MAX_SIZE} perfis ao seu kit inicial"
+msgstr "Você pode adicionar no máximo {STARTER_PACK_MAX_SIZE} perfis ao seu pacote inicial"
 
 #: src/screens/StarterPack/Wizard/State.tsx:97
 msgid "You may only add up to 3 feeds"
@@ -8201,7 +8201,7 @@ msgstr "Você precisa ter no mínimo 13 anos de idade para se cadastrar."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:306
 msgid "You must be following at least seven other people to generate a starter pack."
-msgstr "Você deve estar seguindo pelo menos sete outras pessoas para gerar um kit inicial."
+msgstr "Você deve estar seguindo pelo menos sete outras pessoas para gerar um pacote inicial."
 
 #: src/components/StarterPack/QrCodeDialog.tsx:60
 msgid "You must grant access to your photo library to save a QR code"
