@@ -23,7 +23,6 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {shareUrl} from '#/lib/sharing'
 import {useGate} from '#/lib/statsig/statsig'
 import {toShareUrl} from '#/lib/strings/url-helpers'
-import {s} from '#/lib/styles'
 import {Shadow} from '#/state/cache/types'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {
@@ -36,14 +35,12 @@ import {
   ProgressGuideAction,
   useProgressGuideControls,
 } from '#/state/shell/progress-guide'
+import {CountWheel} from 'lib/custom-animations/CountWheel'
+import {AnimatedLikeIcon} from 'lib/custom-animations/LikeIcon'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBox} from '#/components/icons/ArrowOutOfBox'
 import {Bubble_Stroke2_Corner2_Rounded as Bubble} from '#/components/icons/Bubble'
-import {
-  Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled,
-  Heart2_Stroke2_Corner0_Rounded as HeartIconOutline,
-} from '#/components/icons/Heart2'
 import * as Prompt from '#/components/Prompt'
 import {PostDropdownBtn} from '../forms/PostDropdownBtn'
 import {formatCount} from '../numeric/format'
@@ -104,9 +101,13 @@ let PostCtrls = ({
     [t],
   ) as StyleProp<ViewStyle>
 
+  const likeValue = post.viewer?.like ? 1 : 0
+  const nextExpectedLikeValue = React.useRef(likeValue)
+
   const onPressToggleLike = React.useCallback(async () => {
     try {
       if (!post.viewer?.like) {
+        nextExpectedLikeValue.current = 1
         playHaptic()
         sendInteraction({
           item: post.uri,
@@ -116,6 +117,7 @@ let PostCtrls = ({
         captureAction(ProgressGuideAction.Like)
         await queueLike()
       } else {
+        nextExpectedLikeValue.current = 0
         await queueUnlike()
       }
     } catch (e: any) {
@@ -207,8 +209,8 @@ let PostCtrls = ({
       a.gap_xs,
       a.rounded_full,
       a.flex_row,
-      a.align_center,
       a.justify_center,
+      a.align_center,
       {padding: 5},
       (pressed || hovered) && t.atoms.bg_contrast_25,
     ],
@@ -280,29 +282,12 @@ let PostCtrls = ({
           }
           accessibilityHint=""
           hitSlop={POST_CTRL_HITSLOP}>
-          {post.viewer?.like ? (
-            <HeartIconFilled style={s.likeColor} width={big ? 22 : 18} />
-          ) : (
-            <HeartIconOutline
-              style={[defaultCtrlColor, {pointerEvents: 'none'}]}
-              width={big ? 22 : 18}
-            />
-          )}
-          {typeof post.likeCount !== 'undefined' && post.likeCount > 0 ? (
-            <Text
-              testID="likeCount"
-              style={[
-                [
-                  big ? a.text_md : {fontSize: 15},
-                  a.user_select_none,
-                  post.viewer?.like
-                    ? [a.font_bold, s.likeColor]
-                    : defaultCtrlColor,
-                ],
-              ]}>
-              {formatCount(post.likeCount)}
-            </Text>
-          ) : undefined}
+          <AnimatedLikeIcon isLiked={Boolean(post.viewer?.like)} big={big} />
+          <CountWheel
+            likeCount={post.likeCount ?? 0}
+            big={big}
+            isLiked={Boolean(post.viewer?.like)}
+          />
         </Pressable>
       </View>
       {big && (
