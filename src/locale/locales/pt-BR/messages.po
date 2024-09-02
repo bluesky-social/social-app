@@ -75,11 +75,11 @@ msgstr "{0, plural, one {Curtido por # usuário} other {Curtido por # usuários}
 
 #: src/screens/Profile/Header/Metrics.tsx:59
 msgid "{0, plural, one {post} other {posts}}"
-msgstr "{0, plural, one {post} other {posts}}"
+msgstr "{0, plural, one {postagem} other {postagens}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:413
 msgid "{0, plural, one {quote} other {quotes}}"
-msgstr ""
+msgstr "{0, plural, one {citação} other {citações}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:233
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
@@ -87,7 +87,7 @@ msgstr "{0, plural, one {Responder (# resposta)} other {Responder (# respostas)}
 
 #: src/view/com/post-thread/PostThreadItem.tsx:393
 msgid "{0, plural, one {repost} other {reposts}}"
-msgstr "{0, plural, one {repost} other {reposts}}"
+msgstr "{0, plural, one {repostagem} other {repostagens}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:272
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
@@ -133,23 +133,23 @@ msgstr "{count, plural, one {Curtido por # usuário} other {Curtido por # usuár
 
 #: src/lib/hooks/useTimeAgo.ts:69
 msgid "{diff, plural, one {day} other {days}}"
-msgstr ""
+msgstr "{diff, plural, one {dia} other {dias}}"
 
 #: src/lib/hooks/useTimeAgo.ts:64
 msgid "{diff, plural, one {hour} other {hours}}"
-msgstr ""
+msgstr "{diff, plural, one {hora} other {horas}}"
 
 #: src/lib/hooks/useTimeAgo.ts:59
 msgid "{diff, plural, one {minute} other {minutes}}"
-msgstr ""
+msgstr "{diff, plural, one {minuto} other {minutos}}"
 
 #: src/lib/hooks/useTimeAgo.ts:75
 msgid "{diff, plural, one {month} other {months}}"
-msgstr ""
+msgstr "{diff, plural, one {mês} other {meses}}"
 
 #: src/lib/hooks/useTimeAgo.ts:54
 msgid "{diffSeconds, plural, one {second} other {seconds}}"
-msgstr ""
+msgstr "{diffSeconds, plural, one {segundo} other {segundos}}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:174
 msgid "{displayName}'s Starter Pack"
@@ -1133,11 +1133,11 @@ msgstr "Altere o Seu Email"
 #: src/view/shell/bottom-bar/BottomBar.tsx:204
 #: src/view/shell/desktop/LeftNav.tsx:302
 msgid "Chat"
-msgstr "Chat"
+msgstr "Mensagens"
 
 #: src/components/dms/ConvoMenu.tsx:82
 msgid "Chat muted"
-msgstr "Chat silenciado"
+msgstr "Mensagens silenciado"
 
 #: src/components/dms/ConvoMenu.tsx:112
 #: src/components/dms/MessageMenu.tsx:81
@@ -1145,7 +1145,7 @@ msgstr "Chat silenciado"
 #: src/screens/Messages/List/index.tsx:88
 #: src/view/screens/Settings/index.tsx:604
 msgid "Chat settings"
-msgstr "Configurações do Chat"
+msgstr "Configurações de Mensagens"
 
 #: src/screens/Messages/Settings.tsx:59
 #: src/view/screens/Settings/index.tsx:613
@@ -5584,7 +5584,7 @@ msgstr "repostou seu post"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:209
 msgid "Reposts of this post"
-msgstr "Reposts"
+msgstr "Repostagens desta postagem"
 
 #: src/view/com/modals/ChangeEmail.tsx:176
 #: src/view/com/modals/ChangeEmail.tsx:178
@@ -6059,7 +6059,7 @@ msgstr "Definir uma nova senha"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:121
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
-msgstr "Defina esta configuração como \"Não\" para ocultar todas as citações do seu feed. Reposts ainda serão visíveis."
+msgstr "Defina esta configuração como \"Não\" para ocultar todas as citações do seu feed. Repostagens ainda serão visíveis."
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:63
 msgid "Set this setting to \"No\" to hide all replies from your feed."
@@ -6067,7 +6067,7 @@ msgstr "Defina esta configuração como \"Não\" para ocultar todas as respostas
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:87
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
-msgstr "Defina esta configuração como \"Não\" para ocultar todos os reposts do seu feed."
+msgstr "Defina esta configuração como \"Não\" para ocultar todos as repostagens do seu feed."
 
 #: src/view/screens/PreferencesThreads.tsx:116
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
@@ -6293,7 +6293,7 @@ msgstr "Mostrar Citações"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:95
 #~ msgid "Show re-posts in Following feed"
-#~ msgstr "Mostrar reposts no feed Seguindo"
+#~ msgstr "Mostrar repostagens no feed Seguindo"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:60
 msgid "Show Replies"
@@ -6322,11 +6322,11 @@ msgstr "Mostrar resposta para todos"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:84
 msgid "Show Reposts"
-msgstr "Mostrar Reposts"
+msgstr "Mostrar Repostagens"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:111
 #~ msgid "Show reposts in Following"
-#~ msgstr "Mostrar reposts no Seguindo"
+#~ msgstr "Mostrar repostagens no Seguindo"
 
 #: src/components/moderation/ContentHider.tsx:69
 #: src/components/moderation/PostHider.tsx:79
@@ -8048,7 +8048,7 @@ msgstr "Você pode alterar isso a qualquer momento."
 
 #: src/screens/Messages/Settings.tsx:111
 msgid "You can continue ongoing conversations regardless of which setting you choose."
-msgstr "Você pode continuar conversas em andamento, independentemente da configuração que escolher."
+msgstr "Você pode continuar conversando, independentemente da configuração que escolher."
 
 #: src/screens/Login/index.tsx:158
 #: src/screens/Login/PasswordUpdatedForm.tsx:33
