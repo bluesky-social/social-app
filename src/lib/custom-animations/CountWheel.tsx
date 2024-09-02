@@ -136,8 +136,8 @@ export function CountWheel({
 
   return (
     <LayoutAnimationConfig skipEntering skipExiting>
-      <View style={[a.justify_center]}>
-        {likeCount > 0 ? (
+      {likeCount > 0 ? (
+        <View style={[a.justify_center]}>
           <Animated.View
             entering={enteringAnimation}
             key={key}
@@ -154,25 +154,25 @@ export function CountWheel({
               {formattedCount}
             </Text>
           </Animated.View>
-        ) : null}
-        <Animated.View
-          entering={exitingAnimation}
-          // Add 2 to the key so there are never duplicates
-          key={key + 2}
-          style={[a.absolute]}
-          aria-disabled={true}>
-          <Text
-            style={[
-              big ? a.text_md : {fontSize: 15},
-              a.user_select_none,
-              isLiked
-                ? [a.font_bold, s.likeColor]
-                : {color: t.palette.contrast_500},
-            ]}>
-            {formattedPrevCount}
-          </Text>
-        </Animated.View>
-      </View>
+          <Animated.View
+            entering={exitingAnimation}
+            // Add 2 to the key so there are never duplicates
+            key={key + 2}
+            style={[a.absolute]}
+            aria-disabled={true}>
+            <Text
+              style={[
+                big ? a.text_md : {fontSize: 15},
+                a.user_select_none,
+                isLiked
+                  ? [a.font_bold, s.likeColor]
+                  : {color: t.palette.contrast_500},
+              ]}>
+              {formattedPrevCount}
+            </Text>
+          </Animated.View>
+        </View>
+      ) : null}
     </LayoutAnimationConfig>
   )
 }
