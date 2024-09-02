@@ -76,26 +76,28 @@ export function CountWheel({
     prevIsLiked.current = isLiked
   }, [isLiked, likeCount, shouldAnimate, shouldRoll])
 
+  if (likeCount < 1) {
+    return null
+  }
+
   return (
     <View>
-      {likeCount > 0 ? (
-        <View
-          aria-disabled={true}
-          // @ts-expect-error is div
-          ref={countView}>
-          <Text
-            testID="likeCount"
-            style={[
-              big ? a.text_md : {fontSize: 15},
-              a.user_select_none,
-              isLiked
-                ? [a.font_bold, s.likeColor]
-                : {color: t.palette.contrast_500},
-            ]}>
-            {formattedCount}
-          </Text>
-        </View>
-      ) : null}
+      <View
+        aria-disabled={true}
+        // @ts-expect-error is div
+        ref={countView}>
+        <Text
+          testID="likeCount"
+          style={[
+            big ? a.text_md : {fontSize: 15},
+            a.user_select_none,
+            isLiked
+              ? [a.font_bold, s.likeColor]
+              : {color: t.palette.contrast_500},
+          ]}>
+          {formattedCount}
+        </Text>
+      </View>
       <View
         style={{position: 'absolute'}}
         aria-disabled={true}
