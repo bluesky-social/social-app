@@ -297,7 +297,7 @@ let PostThreadItemLoaded = ({
           <View style={[styles.layout]}>
             <View style={[styles.layoutAvi, {paddingBottom: 8}]}>
               <PreviewableUserAvatar
-                size={42}
+                size={40}
                 profile={post.author}
                 moderation={moderation.ui('avatar')}
                 type={post.author.associated?.labeler ? 'labeler' : 'user'}
@@ -519,7 +519,7 @@ let PostThreadItemLoaded = ({
             {!isThreadedChild && (
               <View style={styles.layoutAvi}>
                 <PreviewableUserAvatar
-                  size={38}
+                  size={40}
                   profile={post.author}
                   moderation={moderation.ui('avatar')}
                   type={post.author.associated?.labeler ? 'labeler' : 'user'}
@@ -554,7 +554,7 @@ let PostThreadItemLoaded = ({
                 postHref={postHref}
                 showAvatar={isThreadedChild}
                 avatarModeration={moderation.ui('avatar')}
-                avatarSize={28}
+                avatarSize={24}
                 displayNameType="md-bold"
                 displayNameStyle={isThreadedChild && s.ml2}
                 style={

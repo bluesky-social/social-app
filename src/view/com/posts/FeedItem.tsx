@@ -339,7 +339,7 @@ let FeedItemInner = ({
         <View style={styles.layoutAvi}>
           <AviFollowButton author={post.author} moderation={moderation}>
             <PreviewableUserAvatar
-              size={52}
+              size={40}
               profile={post.author}
               moderation={moderation.ui('avatar')}
               type={post.author.associated?.labeler ? 'labeler' : 'user'}
