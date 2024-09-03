@@ -26,7 +26,7 @@ export function isInvalidHandle(handle: string): boolean {
 export function sanitizeHandle(handle: string, prefix = ''): string {
   return isInvalidHandle(handle)
     ? '⚠Invalid Handle'
-    : forceLTR(`${prefix}${handle}`)
+    : forceLTR(`${prefix}${handle.split('.bsky')[0]}`)
 }
 
 export interface IsValidHandle {

@@ -47,7 +47,7 @@ export function ProfileHeaderHandle({
             : [a.text_md, a.leading_tight, t.atoms.text_contrast_medium],
           web({wordBreak: 'break-all'}),
         ]}>
-        {invalidHandle ? <Trans>⚠Invalid Handle</Trans> : `@${profile.handle}`}
+        {invalidHandle ? <Trans>⚠Invalid Handle</Trans> : `@${profile.handle.split('.bsky')[0]}`}
       </Text>
     </View>
   )
