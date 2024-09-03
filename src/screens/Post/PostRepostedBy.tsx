@@ -27,7 +27,7 @@ export const PostRepostedByScreen = ({route}: Props) => {
   )
 
   return (
-    <CenteredView style={a.h_full_vh} sideBorders={true}>
+    <CenteredView style={a.util_screen_outer} sideBorders={true}>
       <ListHeaderDesktop title={_(msg`Reposted By`)} />
       <ViewHeader title={_(msg`Reposted By`)} showBorder={!isWeb} />
       <PostRepostedByComponent uri={uri} />

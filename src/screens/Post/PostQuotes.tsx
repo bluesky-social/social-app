@@ -10,7 +10,7 @@ import {isWeb} from 'platform/detection'
 import {PostQuotes as PostQuotesComponent} from '#/view/com/post-thread/PostQuotes'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
-import {native, web} from '#/alf'
+import {atoms as a} from '#/alf'
 import {ListHeaderDesktop} from '#/components/Lists'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostQuotes'>
@@ -27,16 +27,7 @@ export const PostQuotesScreen = ({route}: Props) => {
   )
 
   return (
-    <CenteredView
-      style={[
-        web({
-          minHeight: '100vh',
-        }),
-        native({
-          height: '100%',
-        }),
-      ]}
-      sideBorders={true}>
+    <CenteredView style={a.util_screen_outer} sideBorders={true}>
       <ListHeaderDesktop title={_(msg`Quotes`)} />
       <ViewHeader title={_(msg`Quotes`)} showBorder={!isWeb} />
       <PostQuotesComponent uri={uri} />
