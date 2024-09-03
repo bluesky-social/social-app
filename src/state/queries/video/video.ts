@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React, {useCallback, useEffect} from 'react'
 import {ImagePickerAsset} from 'expo-image-picker'
 import {AppBskyVideoDefs, BlobRef} from '@atproto/api'
 import {msg} from '@lingui/macro'
@@ -25,7 +25,7 @@ type Action =
   | {type: 'SetDimensions'; width: number; height: number}
   | {type: 'SetVideo'; video: CompressedVideo}
   | {type: 'SetJobStatus'; jobStatus: AppBskyVideoDefs.JobStatus}
-  | {type: 'SetBlobRef'; blobRef: BlobRef}
+  | {type: 'SetComplete'; blobRef: BlobRef}
 
 export interface State {
   status: Status
@@ -36,6 +36,7 @@ export interface State {
   blobRef?: BlobRef
   error?: string
   abortController: AbortController
+  pendingPublish?: {blobRef: BlobRef; mutableProcessed: boolean}
 }
 
 function reducer(queryClient: QueryClient) {
@@ -77,8 +78,15 @@ function reducer(queryClient: QueryClient) {
       updatedState = {...state, video: action.video, status: 'uploading'}
     } else if (action.type === 'SetJobStatus') {
       updatedState = {...state, jobStatus: action.jobStatus}
-    } else if (action.type === 'SetBlobRef') {
-      updatedState = {...state, blobRef: action.blobRef, status: 'done'}
+    } else if (action.type === 'SetComplete') {
+      updatedState = {
+        ...state,
+        pendingPublish: {
+          blobRef: action.blobRef,
+          mutableProcessed: false,
+        },
+        status: 'done',
+      }
     }
     return updatedState
   }
@@ -86,7 +94,6 @@ function reducer(queryClient: QueryClient) {
 
 export function useUploadVideo({
   setStatus,
-  onSuccess,
 }: {
   setStatus: (status: string) => void
   onSuccess: () => void
@@ -112,11 +119,16 @@ export function useUploadVideo({
     },
     onSuccess: blobRef => {
       dispatch({
-        type: 'SetBlobRef',
+        type: 'SetComplete',
         blobRef,
       })
-      onSuccess()
     },
+    onError: useCallback(() => {
+      dispatch({
+        type: 'SetError',
+        error: _(msg`Video failed to process`),
+      })
+    }, [_]),
   })
 
   const {mutate: onVideoCompressed} = useUploadVideoMutation({
@@ -215,15 +227,17 @@ export function useUploadVideo({
 const useUploadStatusQuery = ({
   onStatusChange,
   onSuccess,
+  onError,
 }: {
   onStatusChange: (status: AppBskyVideoDefs.JobStatus) => void
   onSuccess: (blobRef: BlobRef) => void
+  onError: (error: Error) => void
 }) => {
   const videoAgent = useVideoAgent()
   const [enabled, setEnabled] = React.useState(true)
   const [jobId, setJobId] = React.useState<string>()
 
-  const {isLoading, isError} = useQuery({
+  const {error} = useQuery({
     queryKey: ['video', 'upload status', jobId],
     queryFn: async () => {
       if (!jobId) return // this won't happen, can ignore
@@ -245,9 +259,14 @@ const useUploadStatusQuery = ({
     refetchInterval: 1500,
   })
 
+  useEffect(() => {
+    if (error) {
+      onError(error)
+      setEnabled(false)
+    }
+  }, [error, onError])
+
   return {
-    isLoading,
-    isError,
     setJobId: (_jobId: string) => {
       setJobId(_jobId)
       setEnabled(true)
