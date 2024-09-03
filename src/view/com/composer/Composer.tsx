@@ -560,6 +560,7 @@ export const ComposePost = observer(function ComposePost({
                   onChange={setLabels}
                   hasMedia={hasMedia}
                 />
+                <View style={[styles.spacer]} />
                 {canPost ? (
                   <Button
                     testID="composerPublishBtn"
@@ -1015,6 +1016,9 @@ const styles = StyleSheet.create({
     paddingRight: 16,
     alignItems: 'center',
     borderTopWidth: StyleSheet.hairlineWidth,
+  },
+  spacer: {
+    width: 6,
   },
 })
 
