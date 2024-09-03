@@ -167,17 +167,20 @@ function VideoControls({
       />
       <Animated.View
         entering={FadeInDown.duration(300)}
-        style={{
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          borderRadius: 6,
-          paddingHorizontal: 6,
-          paddingVertical: 3,
-          position: 'absolute',
-          bottom: 5,
-          right: 5,
-          minHeight: 20,
-          justifyContent: 'center',
-        }}>
+        style={[
+          a.absolute,
+          a.rounded_full,
+          a.justify_center,
+          {
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            paddingHorizontal: 4,
+            paddingVertical: 4,
+            bottom: 6,
+            right: 6,
+            minHeight: 21,
+            minWidth: 21,
+          },
+        ]}>
         <Pressable
           onPress={toggleMuted}
           style={a.flex_1}
@@ -186,9 +189,9 @@ function VideoControls({
           accessibilityRole="button"
           hitSlop={HITSLOP_30}>
           {isMuted ? (
-            <MuteIcon width={14} fill={t.palette.white} />
+            <MuteIcon width={13} fill={t.palette.white} />
           ) : (
-            <UnmuteIcon width={14} fill={t.palette.white} />
+            <UnmuteIcon width={13} fill={t.palette.white} />
           )}
         </Pressable>
       </Animated.View>
