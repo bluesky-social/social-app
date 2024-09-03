@@ -181,6 +181,7 @@ export const ComposePost = observer(function ComposePost({
     clearVideo,
     state: videoUploadState,
     updateVideoDimensions,
+    dispatch: videoUploadDispatch,
   } = useUploadVideo({
     setStatus: setProcessingState,
     onSuccess: () => {
@@ -313,8 +314,8 @@ export const ComposePost = observer(function ComposePost({
 
     if (
       !finishedUploading &&
-      videoUploadState.status !== 'idle' &&
-      videoUploadState.asset
+      videoUploadState.asset &&
+      videoUploadState.status !== 'done'
     ) {
       setPublishOnUpload(true)
       return
@@ -607,7 +608,7 @@ export const ComposePost = observer(function ComposePost({
               </Text>
             </View>
           )}
-          {error !== '' && (
+          {(error !== '' || videoUploadState.error) && (
             <View style={[a.px_lg, a.pb_sm]}>
               <View
                 style={[
@@ -623,7 +624,7 @@ export const ComposePost = observer(function ComposePost({
                 ]}>
                 <CircleInfo fill={t.palette.negative_400} />
                 <NewText style={[a.flex_1, a.leading_snug, {paddingTop: 1}]}>
-                  {error}
+                  {error || videoUploadState.error}
                 </NewText>
                 <Button
                   label={_(msg`Dismiss error`)}
@@ -638,7 +639,10 @@ export const ComposePost = observer(function ComposePost({
                       right: a.px_md.paddingRight,
                     },
                   ]}
-                  onPress={() => setError('')}>
+                  onPress={() => {
+                    if (error) setError('')
+                    else videoUploadDispatch({type: 'Reset'})
+                  }}>
                   <ButtonIcon icon={X} />
                 </Button>
               </View>
@@ -755,7 +759,8 @@ export const ComposePost = observer(function ComposePost({
             t.atoms.border_contrast_medium,
             styles.bottomBar,
           ]}>
-          {videoUploadState.status !== 'idle' ? (
+          {videoUploadState.status !== 'idle' &&
+          videoUploadState.status !== 'done' ? (
             <VideoUploadToolbar state={videoUploadState} />
           ) : (
             <ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
@@ -764,6 +769,7 @@ export const ComposePost = observer(function ComposePost({
                 <SelectVideoBtn
                   onSelectVideo={selectVideo}
                   disabled={!canSelectImages}
+                  setError={setError}
                 />
               )}
               <OpenCameraBtn gallery={gallery} disabled={!canSelectImages} />
@@ -1032,15 +1038,33 @@ function ToolbarWrapper({
 
 function VideoUploadToolbar({state}: {state: VideoUploadState}) {
   const t = useTheme()
+  const {_} = useLingui()
 
+  let text = ''
+
+  switch (state.status) {
+    case 'compressing':
+      text = _('Compressing video...')
+      break
+    case 'uploading':
+      text = _('Uploading video...')
+      break
+    case 'processing':
+      text = _('Processing video...')
+      break
+    case 'done':
+      text = _('Video uploaded')
+      break
+  }
+
+  // we could use state.jobStatus?.progress but 99% of the time it jumps from 0 to 100
   const progress =
     state.status === 'compressing' || state.status === 'uploading'
       ? state.progress
-      : state.jobStatus?.progress ?? 100
+      : 100
 
   return (
-    <ToolbarWrapper
-      style={[a.gap_sm, a.flex_row, a.align_center, {paddingVertical: 5}]}>
+    <ToolbarWrapper style={[a.flex_row, a.align_center, {paddingVertical: 5}]}>
       <ProgressCircle
         size={30}
         borderWidth={1}
@@ -1048,7 +1072,7 @@ function VideoUploadToolbar({state}: {state: VideoUploadState}) {
         color={t.palette.primary_500}
         progress={progress}
       />
-      <Text>{state.status}</Text>
+      <NewText style={[a.font_bold, a.ml_sm]}>{text}</NewText>
     </ToolbarWrapper>
   )
 }
