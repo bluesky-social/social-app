@@ -32,7 +32,7 @@ msgstr "{0, plural, one {{formattedCount} outro} other {{formattedCount} outros}
 
 #: src/components/moderation/LabelsOnMe.tsx:55
 msgid "{0, plural, one {# label has been placed on this account} other {# labels have been placed on this account}}"
-msgstr ""
+msgstr "{0, plural, one {# rótulo foi colocado nesta conta} other {# rótulos foram colocado nesta conta}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:61
 #~ msgid "{0, plural, one {# label has been placed on this content} other {# labels has been placed on this content}}"
@@ -40,15 +40,15 @@ msgstr ""
 
 #: src/components/moderation/LabelsOnMe.tsx:61
 msgid "{0, plural, one {# label has been placed on this content} other {# labels have been placed on this content}}"
-msgstr ""
+msgstr "{0, plural, one {# rótulo foi colocado neste conteúdo} other {# rótulos foram colocado neste conteúdo}}"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:68
 msgid "{0, plural, one {# repost} other {# reposts}}"
-msgstr "{0, plural, one {# repost} other {# reposts}}"
+msgstr "{0, plural, one {# repostagem} other {# repostagens}}"
 
 #: src/components/KnownFollowers.tsx:179
 #~ msgid "{0, plural, one {and # other} other {and # others}}"
-#~ msgstr ""
+#~ msgstr "{0, plural, one {e # outro} other {e # outros}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:398
 #: src/screens/Profile/Header/Metrics.tsx:23
@@ -75,11 +75,11 @@ msgstr "{0, plural, one {Curtido por # usuário} other {Curtido por # usuários}
 
 #: src/screens/Profile/Header/Metrics.tsx:59
 msgid "{0, plural, one {post} other {posts}}"
-msgstr "{0, plural, one {post} other {posts}}"
+msgstr "{0, plural, one {postagem} other {postagens}}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:413
 msgid "{0, plural, one {quote} other {quotes}}"
-msgstr ""
+msgstr "{0, plural, one {citação} other {citações}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:233
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
@@ -133,23 +133,23 @@ msgstr "{count, plural, one {Curtido por # usuário} other {Curtido por # usuár
 
 #: src/lib/hooks/useTimeAgo.ts:69
 msgid "{diff, plural, one {day} other {days}}"
-msgstr ""
+msgstr "{diff, plural, one {dia} other {dias}}"
 
 #: src/lib/hooks/useTimeAgo.ts:64
 msgid "{diff, plural, one {hour} other {hours}}"
-msgstr ""
+msgstr "{diff, plural, one {hora} other {horas}}"
 
 #: src/lib/hooks/useTimeAgo.ts:59
 msgid "{diff, plural, one {minute} other {minutes}}"
-msgstr ""
+msgstr "{diff, plural, one {minuto} other {minutos}}"
 
 #: src/lib/hooks/useTimeAgo.ts:75
 msgid "{diff, plural, one {month} other {months}}"
-msgstr ""
+msgstr "{diff, plural, one {mês} other {meses}}"
 
 #: src/lib/hooks/useTimeAgo.ts:54
 msgid "{diffSeconds, plural, one {second} other {seconds}}"
-msgstr ""
+msgstr "{diffSeconds, plural, one {segundo} other {segundos}}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:174
 msgid "{displayName}'s Starter Pack"
@@ -192,7 +192,7 @@ msgstr ""
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:67
 #~ msgid "{value, plural, =0 {Show all replies} one {Show replies with at least # like} other {Show replies with at least # likes}}"
-#~ msgstr "{value, plural, =0 {Show all replies} one {Show replies with at least # like} other {Show replies with at least # likes}}"
+#~ msgstr "{value, plural, =0 {Mostrar todas as respostas} one {Show replies with at least # curtida} other {Show replies with at least # curtidas}}"
 
 #: src/components/WhoCanReply.tsx:296
 #~ msgid "<0/> members"
@@ -200,7 +200,7 @@ msgstr ""
 
 #: src/screens/StarterPack/Wizard/index.tsx:485
 #~ msgid "<0>{0} </0>and<1> </1><2>{1} </2>are included in your starter pack"
-#~ msgstr ""
+#~ msgstr "<0>{0} </0>e<1> </1><2>{1} </2>estão incluídos no seu kit inicial"
 
 #: src/screens/StarterPack/Wizard/index.tsx:466
 msgctxt "profiles"
@@ -214,7 +214,7 @@ msgstr "<0>{0}, </0><1>{1}, </1>e {2, plural, one {# outro} other {# outros}} es
 
 #: src/screens/StarterPack/Wizard/index.tsx:497
 #~ msgid "<0>{0}, </0><1>{1}, </1>and {2} {3, plural, one {other} other {others}} are included in your starter pack"
-#~ msgstr ""
+#~ msgstr  "<0>{0}, </0><1>{1}, </1>e {2} {3, plural, one {outro} other {outros}} estão incluídos no seu kit inicial"
 
 #: src/view/shell/Drawer.tsx:109
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
@@ -891,7 +891,7 @@ msgstr "Contas bloqueadas não podem te responder, mencionar ou interagir com vo
 
 #: src/view/com/post-thread/PostThread.tsx:412
 msgid "Blocked post."
-msgstr "Post bloqueado."
+msgstr "Postagem bloqueada."
 
 #: src/screens/Profile/Sections/Labels.tsx:173
 msgid "Blocking does not prevent this labeler from placing labels on your account."
@@ -1861,7 +1861,7 @@ msgstr "Excluir minha conta…"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:609
 #: src/view/com/util/forms/PostDropdownBtn.tsx:611
 msgid "Delete post"
-msgstr "Excluir post"
+msgstr "Excluir postagem"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:567
 #: src/screens/StarterPack/StarterPackScreen.tsx:723
@@ -1878,7 +1878,7 @@ msgstr "Excluir esta lista?"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:624
 msgid "Delete this post?"
-msgstr "Excluir este post?"
+msgstr "Excluir esta postagem?"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:85
 msgid "Deleted"
@@ -1886,7 +1886,7 @@ msgstr "Excluído"
 
 #: src/view/com/post-thread/PostThread.tsx:398
 msgid "Deleted post."
-msgstr "Post excluído."
+msgstr "Postagem excluída."
 
 #: src/view/screens/Settings/index.tsx:857
 msgid "Deletes the chat declaration record"
@@ -4111,7 +4111,7 @@ msgstr "Novo"
 #: src/screens/Messages/List/index.tsx:331
 #: src/screens/Messages/List/index.tsx:338
 msgid "New chat"
-msgstr "Novo chat"
+msgstr "Nova conversa"
 
 #: src/components/dms/NewMessagesPill.tsx:92
 msgid "New messages"
@@ -4132,7 +4132,7 @@ msgstr "Nova Senha"
 #: src/view/com/feeds/FeedPage.tsx:147
 msgctxt "action"
 msgid "New post"
-msgstr "Novo post"
+msgstr "Postar"
 
 #: src/view/screens/Feeds.tsx:580
 #: src/view/screens/Notifications.tsx:228
@@ -4142,12 +4142,12 @@ msgstr "Novo post"
 #: src/view/screens/ProfileList.tsx:276
 #: src/view/shell/desktop/LeftNav.tsx:278
 msgid "New post"
-msgstr "Novo post"
+msgstr "Postar"
 
 #: src/view/shell/desktop/LeftNav.tsx:284
 msgctxt "action"
 msgid "New Post"
-msgstr "Novo Post"
+msgstr "Postar"
 
 #: src/components/NewskieDialog.tsx:83
 msgid "New user info dialog"
@@ -4927,11 +4927,11 @@ msgstr "Postar"
 #: src/view/com/post-thread/PostThread.tsx:480
 msgctxt "description"
 msgid "Post"
-msgstr "Post"
+msgstr "Postar"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:196
 msgid "Post by {0}"
-msgstr "Post por {0}"
+msgstr "Postado por {0}"
 
 #: src/Navigation.tsx:199
 #: src/Navigation.tsx:206
@@ -4942,21 +4942,21 @@ msgstr "Post por @{0}"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:174
 msgid "Post deleted"
-msgstr "Post excluído"
+msgstr "Postagem excluída"
 
 #: src/view/com/post-thread/PostThread.tsx:212
 msgid "Post hidden"
-msgstr "Post oculto"
+msgstr "Postagem oculta"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:106
 #: src/lib/moderation/useModerationCauseDescription.ts:104
 msgid "Post Hidden by Muted Word"
-msgstr "Post Escondido por Palavra Silenciada"
+msgstr "Postagem Escondida por Palavra Silenciada"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:109
 #: src/lib/moderation/useModerationCauseDescription.ts:113
 msgid "Post Hidden by You"
-msgstr "Post Escondido por Você"
+msgstr "Postagem Escondida por Você"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:283
 msgid "Post interaction settings"
@@ -4968,25 +4968,25 @@ msgstr "Idioma do post"
 
 #: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:75
 msgid "Post Languages"
-msgstr "Idiomas do Post"
+msgstr "Idiomas da Postagem"
 
 #: src/view/com/post-thread/PostThread.tsx:207
 #: src/view/com/post-thread/PostThread.tsx:219
 msgid "Post not found"
-msgstr "Post não encontrado"
+msgstr "Postagem não encontrado"
 
 #: src/components/TagMenu/index.tsx:267
 msgid "posts"
-msgstr "posts"
+msgstr "postagens"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:173
 #: src/view/screens/Profile.tsx:209
 msgid "Posts"
-msgstr "Posts"
+msgstr "Postagens"
 
 #: src/components/dialogs/MutedWords.tsx:89
 #~ msgid "Posts can be muted based on their text, their tags, or both."
-#~ msgstr "Posts podem ser silenciados baseados no seu conteúdo, tags ou ambos."
+#~ msgstr "Postagerns podem ser silenciados baseados no seu conteúdo, tags ou ambos."
 
 #: src/components/dialogs/MutedWords.tsx:115
 msgid "Posts can be muted based on their text, their tags, or both. We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
@@ -4994,7 +4994,7 @@ msgstr "As postagens podem ser silenciadas com base em seu texto, suas tags ou a
 
 #: src/view/com/posts/FeedErrorMessage.tsx:68
 msgid "Posts hidden"
-msgstr "Posts ocultados"
+msgstr "Postagens ocultadas"
 
 #: src/view/com/modals/LinkWarning.tsx:60
 msgid "Potentially Misleading Link"
@@ -5137,7 +5137,7 @@ msgstr "Citar post"
 #: src/view/com/modals/Repost.tsx:71
 #~ msgctxt "action"
 #~ msgid "Quote Post"
-#~ msgstr "Citar Post"
+#~ msgstr "Citar Postagem"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:302
 msgid "Quote post was re-attached"
@@ -6277,7 +6277,7 @@ msgstr "Mostrar respostas silenciadas"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:154
 msgid "Show Posts from My Feeds"
-msgstr "Mostrar Posts dos Meus Feeds"
+msgstr "Mostrar Postagens no Meus Feeds"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:118
 msgid "Show Quote Posts"
