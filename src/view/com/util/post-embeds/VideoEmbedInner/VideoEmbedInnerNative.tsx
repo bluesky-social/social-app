@@ -46,7 +46,7 @@ export function VideoEmbedInnerNative({
         player={player}
         style={[a.flex_1, a.rounded_sm]}
         contentFit="contain"
-        nativeControls={true}
+        nativeControls={false}
         accessibilityIgnoresInvertColors
         onEnterFullscreen={() => {
           PlatformInfo.setAudioCategory(AudioCategory.Playback)
