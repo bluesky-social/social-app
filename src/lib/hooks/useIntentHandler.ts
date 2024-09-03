@@ -6,15 +6,17 @@ import {isNative} from 'platform/detection'
 import {useSession} from 'state/session'
 import {useComposerControls} from 'state/shell'
 import {useCloseAllActiveElements} from 'state/util'
+import {useIntentDialogs} from '#/components/intents/IntentDialogs'
 import {Referrer} from '../../../modules/expo-bluesky-swiss-army'
 
-type IntentType = 'compose'
+type IntentType = 'compose' | 'verify-email'
 
 const VALID_IMAGE_REGEX = /^[\w.:\-_/]+\|\d+(\.\d+)?\|\d+(\.\d+)?$/
 
 export function useIntentHandler() {
   const incomingUrl = Linking.useURL()
   const composeIntent = useComposeIntent()
+  const verifyEmailIntent = useVerifyEmailIntent()
 
   React.useEffect(() => {
     const handleIncomingURL = (url: string) => {
@@ -52,11 +54,14 @@ export function useIntentHandler() {
             imageUrisStr: params.get('imageUris'),
           })
         }
+        case 'verify-email': {
+          verifyEmailIntent(params.get('code') || '')
+        }
       }
     }
 
     if (incomingUrl) handleIncomingURL(incomingUrl)
-  }, [incomingUrl, composeIntent])
+  }, [incomingUrl, composeIntent, verifyEmailIntent])
 }
 
 function useComposeIntent() {
@@ -102,4 +107,19 @@ function useComposeIntent() {
     },
     [hasSession, closeAllActiveElements, openComposer],
   )
+}
+
+function useVerifyEmailIntent() {
+  const closeAllActiveElements = useCloseAllActiveElements()
+  const {verifyEmailDialogControl: control, setVerifyEmailState: setState} =
+    useIntentDialogs()
+  return async (code: string) => {
+    closeAllActiveElements()
+    setState({
+      code,
+    })
+    setTimeout(() => {
+      control.open()
+    }, 1000)
+  }
 }
