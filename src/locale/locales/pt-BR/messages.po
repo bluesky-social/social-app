@@ -8048,7 +8048,7 @@ msgstr "Você pode alterar isso a qualquer momento."
 
 #: src/screens/Messages/Settings.tsx:111
 msgid "You can continue ongoing conversations regardless of which setting you choose."
-msgstr "Você pode continuar conversas em andamento, independentemente da configuração que escolher."
+msgstr "Você pode continuar conversando, independentemente da configuração que escolher."
 
 #: src/screens/Login/index.tsx:158
 #: src/screens/Login/PasswordUpdatedForm.tsx:33
