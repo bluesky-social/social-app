@@ -57,7 +57,9 @@ export function VideoEmbedInnerNative({
           PlatformInfo.setAudioCategory(AudioCategory.Ambient)
           PlatformInfo.setAudioActive(false)
           player.muted = true
-          player.play()
+          if (!player.playing) {
+            player.play()
+          }
         }}
         accessibilityLabel={
           embed.alt ? _(msg`Video: ${embed.alt}`) : _(msg`Video`)
