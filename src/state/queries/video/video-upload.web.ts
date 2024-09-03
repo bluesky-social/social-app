@@ -62,7 +62,6 @@ export const useUploadVideoMutation = ({
             setProgress(progress)
           })
           xhr.onloadend = () => {
-            console.log(xhr.responseText)
             if (xhr.readyState === 4) {
               const uploadRes = JSON.parse(
                 xhr.responseText,
