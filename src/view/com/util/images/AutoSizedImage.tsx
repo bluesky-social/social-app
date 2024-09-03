@@ -1,106 +1,152 @@
 import React from 'react'
-import {StyleProp, StyleSheet, Pressable, View, ViewStyle} from 'react-native'
+import {Pressable, View} from 'react-native'
 import {Image} from 'expo-image'
-import {clamp} from 'lib/numbers'
-import {Dimensions} from 'lib/media/types'
-import * as imageSizes from 'lib/media/image-sizes'
+import {AppBskyEmbedImages} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-const MIN_ASPECT_RATIO = 0.33 // 1/3
-const MAX_ASPECT_RATIO = 10 // 10/1
+import * as imageSizes from '#/lib/media/image-sizes'
+import {Dimensions} from '#/lib/media/types'
+import {atoms as a, useTheme} from '#/alf'
 
-interface Props {
-  alt?: string
-  uri: string
-  dimensionsHint?: Dimensions
-  onPress?: () => void
-  onLongPress?: () => void
-  onPressIn?: () => void
-  style?: StyleProp<ViewStyle>
-  children?: React.ReactNode
+export function useImageAspectRatio({
+  src,
+  dimensions,
+}: {
+  src: string
+  dimensions: Dimensions | undefined
+}) {
+  const [aspectRatio, setAspectRatio] = React.useState<number>(
+    dimensions ? calc(dimensions) : 1,
+  )
+
+  React.useEffect(() => {
+    let aborted = false
+    if (dimensions) return
+    imageSizes.fetch(src).then(newDim => {
+      if (aborted) return
+      setAspectRatio(calc(newDim))
+    })
+    return () => {
+      aborted = true
+    }
+  }, [dimensions, setAspectRatio, src])
+
+  return {
+    dimensions,
+    aspectRatio,
+  }
+}
+
+export function SquareFramedImage({
+  aspectRatio,
+  children,
+}: {
+  aspectRatio: number
+  children: React.ReactNode
+}) {
+  const t = useTheme()
+  const outerAspectRatio = React.useMemo(() => {
+    return Math.min(1 / aspectRatio, 1)
+  }, [aspectRatio])
+  const innerAspectRatio = React.useMemo(() => {
+    return Math.max(aspectRatio, 0.75)
+  }, [aspectRatio])
+
+  return (
+    <View style={[a.w_full]}>
+      <View
+        style={[a.overflow_hidden, {paddingTop: `${outerAspectRatio * 100}%`}]}>
+        <View style={[a.absolute, a.inset_0, a.flex_row]}>
+          <View
+            style={[
+              a.h_full,
+              a.rounded_sm,
+              a.overflow_hidden,
+              t.atoms.bg_contrast_25,
+              {aspectRatio: innerAspectRatio},
+            ]}>
+            {children}
+          </View>
+        </View>
+      </View>
+    </View>
+  )
 }
 
 export function AutoSizedImage({
-  alt,
-  uri,
-  dimensionsHint,
+  image,
+  disableCrop,
   onPress,
   onLongPress,
   onPressIn,
-  style,
   children = null,
-}: Props) {
+}: {
+  image: AppBskyEmbedImages.ViewImage
+  disableCrop?: boolean
+  children?: React.ReactNode
+  onPress?: () => void
+  onLongPress?: () => void
+  onPressIn?: () => void
+}) {
+  const t = useTheme()
   const {_} = useLingui()
-  const [dim, setDim] = React.useState<Dimensions | undefined>(
-    dimensionsHint || imageSizes.get(uri),
-  )
-  const [aspectRatio, setAspectRatio] = React.useState<number>(
-    dim ? calc(dim) : 1,
-  )
-  React.useEffect(() => {
-    let aborted = false
-    if (dim) {
-      return
-    }
-    imageSizes.fetch(uri).then(newDim => {
-      if (aborted) {
-        return
-      }
-      setDim(newDim)
-      setAspectRatio(calc(newDim))
-    })
-  }, [dim, setDim, setAspectRatio, uri])
+  const {aspectRatio} = useImageAspectRatio({
+    src: image.thumb,
+    dimensions: image.aspectRatio,
+  })
 
-  if (onPress || onLongPress || onPressIn) {
+  const contents = (
+    <Image
+      style={[a.w_full, a.h_full]}
+      source={image.thumb}
+      accessible={true} // Must set for `accessibilityLabel` to work
+      accessibilityIgnoresInvertColors
+      accessibilityLabel={image.alt}
+      accessibilityHint=""
+    />
+  )
+
+  if (disableCrop) {
     return (
-      // disable a11y rule because in this case we want the tags on the image (#1640)
-      // eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors
       <Pressable
         onPress={onPress}
         onLongPress={onLongPress}
         onPressIn={onPressIn}
-        style={[styles.container, style]}>
-        <Image
-          style={[styles.image, {aspectRatio}]}
-          source={uri}
-          accessible={true} // Must set for `accessibilityLabel` to work
-          accessibilityIgnoresInvertColors
-          accessibilityLabel={alt}
-          accessibilityHint={_(msg`Tap to view fully`)}
-        />
+        accessibilityLabel={image.alt}
+        accessibilityHint={_(msg`Tap to view fully`)}
+        style={[
+          a.w_full,
+          a.rounded_sm,
+          a.overflow_hidden,
+          t.atoms.bg_contrast_25,
+          {aspectRatio},
+        ]}>
+        {contents}
         {children}
       </Pressable>
     )
+  } else {
+    return (
+      <SquareFramedImage aspectRatio={aspectRatio}>
+        <Pressable
+          onPress={onPress}
+          onLongPress={onLongPress}
+          onPressIn={onPressIn}
+          accessibilityLabel={image.alt}
+          accessibilityHint={_(msg`Tap to view fully`)}
+          style={[a.h_full]}>
+          {contents}
+          {children}
+        </Pressable>
+      </SquareFramedImage>
+    )
   }
-
-  return (
-    <View style={[styles.container, style]}>
-      <Image
-        style={[styles.image, {aspectRatio}]}
-        source={{uri}}
-        accessible={true} // Must set for `accessibilityLabel` to work
-        accessibilityIgnoresInvertColors
-        accessibilityLabel={alt}
-        accessibilityHint=""
-      />
-      {children}
-    </View>
-  )
 }
 
 function calc(dim: Dimensions) {
   if (dim.width === 0 || dim.height === 0) {
     return 1
   }
-  return clamp(dim.width / dim.height, MIN_ASPECT_RATIO, MAX_ASPECT_RATIO)
+  return dim.width / dim.height
 }
-
-const styles = StyleSheet.create({
-  container: {
-    overflow: 'hidden',
-  },
-  image: {
-    width: '100%',
-  },
-})

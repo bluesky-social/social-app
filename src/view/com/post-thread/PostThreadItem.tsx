@@ -363,7 +363,11 @@ let PostThreadItemLoaded = ({
               ) : undefined}
               {post.embed && (
                 <View style={[a.pb_sm]}>
-                  <PostEmbeds embed={post.embed} moderation={moderation} />
+                  <PostEmbeds
+                    embed={post.embed}
+                    moderation={moderation}
+                    isHighlightedThreadItem
+                  />
                 </View>
               )}
             </ContentHider>

@@ -50,12 +50,14 @@ export function PostEmbeds({
   onOpen,
   style,
   allowNestedQuotes,
+  isHighlightedThreadItem,
 }: {
   embed?: Embed
   moderation?: ModerationDecision
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
   allowNestedQuotes?: boolean
+  isHighlightedThreadItem?: boolean
 }) {
   const {openLightbox} = useLightboxControls()
   const largeAltBadge = useLargeAltBadgeEnabled()
@@ -124,18 +126,16 @@ export function PostEmbeds({
       }
 
       if (images.length === 1) {
-        const {alt, thumb, aspectRatio} = images[0]
+        const image = images[0]
         return (
           <ContentHider modui={moderation?.ui('contentMedia')}>
             <View style={[styles.container, style]}>
               <AutoSizedImage
-                alt={alt}
-                uri={thumb}
-                dimensionsHint={aspectRatio}
+                disableCrop={isHighlightedThreadItem}
+                image={image}
                 onPress={() => _openLightbox(0)}
-                onPressIn={() => onPressIn(0)}
-                style={a.rounded_sm}>
-                {alt === '' ? null : (
+                onPressIn={() => onPressIn(0)}>
+                {image.alt === '' ? null : (
                   <View style={styles.altContainer}>
                     <Text
                       style={[styles.alt, largeAltBadge && a.text_xs]}
