@@ -66,7 +66,7 @@ function SuggestedItemsHeader({
           />
           <Text style={[a.text_2xl, a.font_heavy, t.atoms.text]}>{title}</Text>
         </View>
-        <Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
+        <Text style={[a.text_md, t.atoms.text_contrast_high, a.leading_snug]}>
           {description}
         </Text>
       </View>
