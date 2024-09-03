@@ -137,7 +137,7 @@ const RepostInner = ({
           testID="repostCount"
           style={[
             color,
-            big ? a.text_md : {fontSize: 15},
+            big ? a.text_md : a.text_sm,
             isReposted && [a.font_bold],
             a.user_select_none,
           ]}>

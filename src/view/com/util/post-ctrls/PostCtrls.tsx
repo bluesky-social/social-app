@@ -279,7 +279,7 @@ let PostCtrls = ({
             <Text
               style={[
                 defaultCtrlColor,
-                big ? a.text_md : {fontSize: 15},
+                big ? a.text_md : a.text_sm,
                 a.user_select_none,
               ]}>
               {formatCount(i18n, post.replyCount)}

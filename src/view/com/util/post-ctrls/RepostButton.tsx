@@ -76,7 +76,7 @@ let RepostButton = ({
             testID="repostCount"
             style={[
               color,
-              big ? a.text_md : {fontSize: 15},
+              big ? a.text_md : a.text_sm,
               isReposted && a.font_bold,
             ]}>
             {formatCount(i18n, repostCount)}
