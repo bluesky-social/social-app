@@ -26,6 +26,7 @@ export function VideoEmbedInnerNative({
   const {_} = useLingui()
   const {player} = useActiveVideoNative()
   const ref = useRef<VideoView>(null)
+  const [isFullscreen, setIsFullscreen] = useState(false)
 
   const enterFullscreen = useCallback(() => {
     ref.current?.enterFullscreen()
@@ -46,12 +47,13 @@ export function VideoEmbedInnerNative({
         player={player}
         style={[a.flex_1, a.rounded_sm]}
         contentFit="contain"
-        nativeControls={false}
+        nativeControls={isFullscreen}
         accessibilityIgnoresInvertColors
         onEnterFullscreen={() => {
           PlatformInfo.setAudioCategory(AudioCategory.Playback)
           PlatformInfo.setAudioActive(true)
           player.muted = false
+          setIsFullscreen(true)
         }}
         onExitFullscreen={() => {
           PlatformInfo.setAudioCategory(AudioCategory.Ambient)
@@ -60,6 +62,7 @@ export function VideoEmbedInnerNative({
           if (!player.playing) {
             player.play()
           }
+          setIsFullscreen(false)
         }}
         accessibilityLabel={
           embed.alt ? _(msg`Video: ${embed.alt}`) : _(msg`Video`)
