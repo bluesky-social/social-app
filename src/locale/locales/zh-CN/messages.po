@@ -68,7 +68,7 @@ msgstr "{0, plural, one {关注者} other {关注者}}"
 msgid "{0, plural, one {following} other {following}}"
 msgstr "{0, plural, one {正在关注} other {正在关注}}"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:360
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:313
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
 msgstr "{0, plural, one {喜欢 (# 个喜欢)} other {喜欢 (# 个喜欢)}}"
 
@@ -89,7 +89,7 @@ msgstr "{0, plural, one {帖文} other {帖文}}"
 msgid "{0, plural, one {quote} other {quotes}}"
 msgstr "{0, plural, one {引用} other {引用}}"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:317
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:270
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
 msgstr "{0, plural, one {回复 (# 个回复)} other {回复 (# 个回复)}}"
 
@@ -97,7 +97,7 @@ msgstr "{0, plural, one {回复 (# 个回复)} other {回复 (# 个回复)}}"
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr "{0, plural, one {转发} other {转发}}"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:356
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:309
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
 msgstr "{0, plural, one {取消喜欢 (# 个喜欢)} other {取消喜欢 (# 个喜欢)}}"
 
@@ -115,7 +115,7 @@ msgstr "{0} <0>在<1>文本及标签</1></0>中"
 msgid "{0} joined this week"
 msgstr "在本周加入了 {0} 人"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:578
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:566
 msgid "{0} of {1}"
 msgstr "第 {1} 个（共 {0} 个）"
 
@@ -531,7 +531,7 @@ msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr "创建入门包时发生错误，重试？"
 
 #: src/view/com/util/post-embeds/VideoEmbed.tsx:96
-#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:167
+#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:166
 msgid "An error occurred while loading the video. Please try again later."
 msgstr "播放视频时出现问题，请稍后再试。"
 
@@ -979,9 +979,9 @@ msgid "Cancels opening the linked website"
 msgstr "取消打开链接的网站"
 
 #: src/state/shell/composer.tsx:70
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:138
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:204
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:240
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:115
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:157
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:193
 msgid "Cannot interact with a blocked user"
 msgstr "无法与被屏蔽的用户互动"
 
@@ -1404,7 +1404,7 @@ msgstr "已复制构建版本号至剪贴板"
 #: src/view/com/modals/ChangeHandle.tsx:320
 #: src/view/com/modals/InviteCodes.tsx:153
 #: src/view/com/util/forms/PostDropdownBtn.tsx:234
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:437
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:388
 msgid "Copied to clipboard"
 msgstr "已复制至剪贴板"
 
@@ -3597,7 +3597,7 @@ msgstr "隐藏讨论串"
 msgid "Mute words & tags"
 msgstr "隐藏词和标签"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:184
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:187
 msgid "Muted"
 msgstr "已隐藏"
 
@@ -3912,7 +3912,7 @@ msgstr "暂时不需要"
 
 #: src/view/com/profile/ProfileMenu.tsx:372
 #: src/view/com/util/forms/PostDropdownBtn.tsx:654
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:401
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:352
 msgid "Note about sharing"
 msgstr "分享注意事项"
 
@@ -3997,10 +3997,6 @@ msgstr "好的"
 #: src/view/screens/PreferencesThreads.tsx:72
 msgid "Oldest replies first"
 msgstr "优先显示最旧的回复"
-
-#: src/components/StarterPack/QrCode.tsx:69
-#~ msgid "on"
-#~ msgstr "于"
 
 #: src/components/StarterPack/QrCode.tsx:70
 msgid "on<0><1/><2><3/></2></0>"
@@ -5354,7 +5350,7 @@ msgstr "查看 Bluesky 的招聘职缺"
 msgid "See this guide"
 msgstr "查看指南"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:572
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:560
 msgid "Seek slider"
 msgstr "寻找进度条滑块"
 
@@ -5589,7 +5585,7 @@ msgstr "性暗示"
 #: src/view/com/profile/ProfileMenu.tsx:228
 #: src/view/com/util/forms/PostDropdownBtn.tsx:410
 #: src/view/com/util/forms/PostDropdownBtn.tsx:419
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:390
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:341
 #: src/view/screens/ProfileList.tsx:484
 msgid "Share"
 msgstr "分享"
@@ -5609,7 +5605,7 @@ msgstr "分享一个有趣的事实！"
 
 #: src/view/com/profile/ProfileMenu.tsx:377
 #: src/view/com/util/forms/PostDropdownBtn.tsx:659
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:406
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:357
 msgid "Share anyway"
 msgstr "仍然分享"
 
@@ -6062,7 +6058,7 @@ msgstr "点按关闭"
 msgid "Tap to enter full screen"
 msgstr "点击进入全屏模式"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:185
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:188
 msgid "Tap to toggle sound"
 msgstr "点击切换声音播放"
 
@@ -6440,7 +6436,7 @@ msgid "This post has been deleted."
 msgstr "这条帖文已被删除。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:656
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:403
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:354
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
 msgstr "这条帖文只对已登录用户可见，未登录的用户将无法看到。"
 
@@ -6697,7 +6693,7 @@ msgstr "取消隐藏讨论串"
 msgid "Unmute video"
 msgstr "取消隐藏视频"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:184
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:187
 msgid "Unmuted"
 msgstr "已取消隐藏"
 
@@ -7532,7 +7528,7 @@ msgstr "你的账户数据库包含所有公共数据记录，它们将被导出
 msgid "Your birth date"
 msgstr "你的生日"
 
-#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:162
+#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:161
 msgid "Your browser does not support the video format. Please try a different browser."
 msgstr "你的浏览器不支持此视频格式，请更换不同的浏览器。"
 
