@@ -1099,10 +1099,15 @@ function VideoUploadToolbar({state}: {state: VideoUploadState}) {
   }
 
   // we could use state.jobStatus?.progress but 99% of the time it jumps from 0 to 100
-  const progress =
+  let progress =
     state.status === 'compressing' || state.status === 'uploading'
       ? state.progress
       : 100
+
+  if (state.error) {
+    text = _('Error')
+    progress = 100
+  }
 
   return (
     <ToolbarWrapper style={[a.flex_row, a.align_center, {paddingVertical: 5}]}>
@@ -1110,7 +1115,7 @@ function VideoUploadToolbar({state}: {state: VideoUploadState}) {
         size={30}
         borderWidth={1}
         borderColor={t.atoms.border_contrast_low.borderColor}
-        color={t.palette.primary_500}
+        color={state.error ? t.palette.negative_500 : t.palette.primary_500}
         progress={progress}
       />
       <NewText style={[a.font_bold, a.ml_sm]}>{text}</NewText>
