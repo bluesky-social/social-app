@@ -245,7 +245,10 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   React.useEffect(() => {
     if (editor) {
       const handleKeyDown = (event: KeyboardEvent) => {
-        if ((event.metaKey || event.ctrlKey) && event.code === 'ArrowLeft') {
+        if (
+          (event.metaKey || event.ctrlKey || event.altKey) &&
+          event.code === 'ArrowLeft'
+        ) {
           const {state, dispatch} = editor.view
           const {selection} = state
           const {$anchor} = selection
