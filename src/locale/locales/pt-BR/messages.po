@@ -939,7 +939,7 @@ msgstr "Bluesky é melhor com amigos!"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:282
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
-msgstr "O Bluesky escolherá um conjunto de contas recomendadas das pessoas em sua rede."
+msgstr "O Bluesky escolherá um conjunto de contas recomendadas dentre as pessoas em sua rede."
 
 #: src/screens/Moderation/index.tsx:567
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
