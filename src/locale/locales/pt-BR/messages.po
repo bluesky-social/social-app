@@ -214,7 +214,7 @@ msgstr "<0>{0}, </0><1>{1}, </1>e {2, plural, one {# outro} other {# outros}} es
 
 #: src/screens/StarterPack/Wizard/index.tsx:497
 #~ msgid "<0>{0}, </0><1>{1}, </1>and {2} {3, plural, one {other} other {others}} are included in your starter pack"
-#~ msgstr  "<0>{0}, </0><1>{1}, </1>e {2} {3, plural, one {outro} other {outros}} estão incluídos no seu kit inicial"
+#~ msgstr "<0>{0}, </0><1>{1}, </1>e {2} {3, plural, one {outro} other {outros}} estão incluídos no seu kit inicial"
 
 #: src/view/shell/Drawer.tsx:109
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
@@ -4986,7 +4986,7 @@ msgstr "Postagens"
 
 #: src/components/dialogs/MutedWords.tsx:89
 #~ msgid "Posts can be muted based on their text, their tags, or both."
-#~ msgstr "Postagerns podem ser silenciados baseados no seu conteúdo, tags ou ambos."
+#~ msgstr "Postagens podem ser silenciadas baseados no seu conteúdo, tags ou ambos."
 
 #: src/components/dialogs/MutedWords.tsx:115
 msgid "Posts can be muted based on their text, their tags, or both. We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
