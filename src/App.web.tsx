@@ -153,25 +153,25 @@ function App() {
   return (
     <A11yProvider>
       <SessionProvider>
-        <ShellStateProvider>
-          <PrefsStateProvider>
-            <InvitesStateProvider>
-              <ModalStateProvider>
-                <DialogStateProvider>
-                  <LightboxStateProvider>
-                    <I18nProvider>
+        <PrefsStateProvider>
+          <I18nProvider>
+            <ShellStateProvider>
+              <InvitesStateProvider>
+                <ModalStateProvider>
+                  <DialogStateProvider>
+                    <LightboxStateProvider>
                       <PortalProvider>
                         <StarterPackProvider>
                           <InnerApp />
                         </StarterPackProvider>
                       </PortalProvider>
-                    </I18nProvider>
-                  </LightboxStateProvider>
-                </DialogStateProvider>
-              </ModalStateProvider>
-            </InvitesStateProvider>
-          </PrefsStateProvider>
-        </ShellStateProvider>
+                    </LightboxStateProvider>
+                  </DialogStateProvider>
+                </ModalStateProvider>
+              </InvitesStateProvider>
+            </ShellStateProvider>
+          </I18nProvider>
+        </PrefsStateProvider>
       </SessionProvider>
     </A11yProvider>
   )

@@ -81,7 +81,15 @@ export class FeedViewPostsSlice {
       isParentBlocked,
       isParentNotFound,
     })
-    if (!reply || reason) {
+    if (!reply) {
+      if (post.record.reply) {
+        // This reply wasn't properly hydrated by the AppView.
+        this.isOrphan = true
+        this.items[0].isParentNotFound = true
+      }
+      return
+    }
+    if (reason) {
       return
     }
     if (
@@ -366,11 +374,7 @@ export class FeedTuner {
     ): FeedViewPostsSlice[] => {
       for (let i = 0; i < slices.length; i++) {
         const slice = slices[i]
-        if (
-          slice.isReply &&
-          !slice.isRepost &&
-          !shouldDisplayReplyInFollowing(slice.getAuthors(), userDid)
-        ) {
+        if (slice.isReply && !shouldDisplayReplyInFollowing(slice, userDid)) {
           slices.splice(i, 1)
           i--
         }
@@ -434,9 +438,13 @@ function areSameAuthor(authors: AuthorContext): boolean {
 }
 
 function shouldDisplayReplyInFollowing(
-  authors: AuthorContext,
+  slice: FeedViewPostsSlice,
   userDid: string,
 ): boolean {
+  if (slice.isRepost) {
+    return true
+  }
+  const authors = slice.getAuthors()
   const {author, parentAuthor, grandparentAuthor, rootAuthor} = authors
   if (!isSelfOrFollowing(author, userDid)) {
     // Only show replies from self or people you follow.
@@ -449,6 +457,21 @@ function shouldDisplayReplyInFollowing(
   ) {
     // Always show self-threads.
     return true
+  }
+  if (
+    parentAuthor &&
+    parentAuthor.did !== author.did &&
+    rootAuthor &&
+    rootAuthor.did === author.did &&
+    slice.items.length > 2
+  ) {
+    // If you follow A, show A -> someone[>0 likes] -> A chains too.
+    // This is different from cases below because you only know one person.
+    const parentPost = slice.items[1].post
+    const parentLikeCount = parentPost.likeCount ?? 0
+    if (parentLikeCount > 0) {
+      return true
+    }
   }
   // From this point on we need at least one more reason to show it.
   if (

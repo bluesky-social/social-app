@@ -59,20 +59,24 @@ export const QrCode = React.forwardRef<ViewShot, Props>(function QrCode(
             <QrCodeInner link={link} />
           </View>
 
-          <View style={[a.flex_row, a.align_center, {gap: 5}]}>
-            <Text
-              style={[
-                a.font_bold,
-                a.text_center,
-                {color: 'white', fontSize: 18},
-              ]}>
-              <Trans>on</Trans>
-            </Text>
-            <Logo width={26} fill="white" />
-            <View style={[{marginTop: 5, marginLeft: 2.5}]}>
-              <Logotype width={68} fill="white" />
-            </View>
-          </View>
+          <Text
+            style={[
+              a.flex,
+              a.flex_row,
+              a.align_center,
+              a.font_bold,
+              {color: 'white', fontSize: 18, gap: 6},
+            ]}>
+            <Trans>
+              on
+              <View style={[a.flex_row, a.align_center, {gap: 6}]}>
+                <Logo width={25} fill="white" />
+                <View style={[{marginTop: 3.5}]}>
+                  <Logotype width={72} fill="white" />
+                </View>
+              </View>
+            </Trans>
+          </Text>
         </View>
       </LinearGradientBackground>
     </ViewShot>

@@ -15,5 +15,10 @@ export function useInitialNumToRender({
 
   const finalHeight =
     screenHeight - screenHeightOffset - topInset - bottomBarHeight
-  return Math.floor(finalHeight / minItemHeight) + 1
+
+  const minItems = Math.floor(finalHeight / minItemHeight)
+  if (minItems < 1) {
+    return 1
+  }
+  return minItems
 }

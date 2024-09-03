@@ -181,7 +181,7 @@ let PostThreadItemLoaded = ({
   threadgateRecord?: AppBskyFeedThreadgate.Record
 }): React.ReactNode => {
   const pal = usePalette('default')
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const langPrefs = useLanguagePrefs()
   const {openComposer} = useComposerControls()
   const [limitLines, setLimitLines] = React.useState(
@@ -388,7 +388,7 @@ let PostThreadItemLoaded = ({
                       type="lg"
                       style={pal.textLight}>
                       <Text type="xl-bold" style={pal.text}>
-                        {formatCount(post.repostCount)}
+                        {formatCount(i18n, post.repostCount)}
                       </Text>{' '}
                       <Plural
                         value={post.repostCount}
@@ -410,7 +410,7 @@ let PostThreadItemLoaded = ({
                       type="lg"
                       style={pal.textLight}>
                       <Text type="xl-bold" style={pal.text}>
-                        {formatCount(post.quoteCount)}
+                        {formatCount(i18n, post.quoteCount)}
                       </Text>{' '}
                       <Plural
                         value={post.quoteCount}
@@ -430,7 +430,7 @@ let PostThreadItemLoaded = ({
                       type="lg"
                       style={pal.textLight}>
                       <Text type="xl-bold" style={pal.text}>
-                        {formatCount(post.likeCount)}
+                        {formatCount(i18n, post.likeCount)}
                       </Text>{' '}
                       <Plural value={post.likeCount} one="like" other="likes" />
                     </Text>
@@ -705,7 +705,7 @@ function ExpandedPostDetails({
   translatorUrl: string
 }) {
   const pal = usePalette('default')
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const openLink = useOpenLink()
   const isRootPost = !('reply' in post.record)
 
@@ -723,7 +723,9 @@ function ExpandedPostDetails({
         s.mt2,
         s.mb10,
       ]}>
-      <Text style={[a.text_sm, pal.textLight]}>{niceDate(post.indexedAt)}</Text>
+      <Text style={[a.text_sm, pal.textLight]}>
+        {niceDate(i18n, post.indexedAt)}
+      </Text>
       {isRootPost && (
         <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
       )}
