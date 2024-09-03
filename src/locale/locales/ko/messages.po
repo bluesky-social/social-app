@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-08-31 20:40+0900\n"
+"PO-Revision-Date: 2024-09-03 17:41+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -68,7 +68,7 @@ msgstr "팔로워"
 msgid "{0, plural, one {following} other {following}}"
 msgstr "팔로우 중"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:360
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:313
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
 msgstr "좋아요 ({0, plural, other {#}}개)"
 
@@ -89,7 +89,7 @@ msgstr "게시물"
 msgid "{0, plural, one {quote} other {quotes}}"
 msgstr "인용"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:317
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:270
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
 msgstr "답글 ({0, plural, other {#}}개)"
 
@@ -97,7 +97,7 @@ msgstr "답글 ({0, plural, other {#}}개)"
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr "재게시"
 
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:356
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:309
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
 msgstr "좋아요 취소 ({0, plural, other {#}}개)"
 
@@ -115,7 +115,7 @@ msgstr "<0><1>텍스트 및 태그</1>에서</0> {0}"
 msgid "{0} joined this week"
 msgstr "이번 주에 {0}명이 가입함"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:578
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:566
 msgid "{0} of {1}"
 msgstr "{0}/{1}"
 
@@ -531,7 +531,7 @@ msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr "스타터 팩을 만드는 동안 오류가 발생했습니다. 다시 시도하시겠습니까?"
 
 #: src/view/com/util/post-embeds/VideoEmbed.tsx:96
-#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:167
+#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:166
 msgid "An error occurred while loading the video. Please try again later."
 msgstr "동영상을 불러오는 동안 오류가 발생했습니다. 나중에 다시 시도하세요."
 
@@ -979,9 +979,9 @@ msgid "Cancels opening the linked website"
 msgstr "연결된 웹사이트를 여는 것을 취소합니다"
 
 #: src/state/shell/composer.tsx:70
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:138
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:204
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:240
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:115
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:157
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:193
 msgid "Cannot interact with a blocked user"
 msgstr "차단된 사용자와 상호작용할 수 없습니다"
 
@@ -1404,7 +1404,7 @@ msgstr "빌드 버전 클립보드에 복사됨"
 #: src/view/com/modals/ChangeHandle.tsx:320
 #: src/view/com/modals/InviteCodes.tsx:153
 #: src/view/com/util/forms/PostDropdownBtn.tsx:234
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:437
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:388
 msgid "Copied to clipboard"
 msgstr "클립보드에 복사됨"
 
@@ -3597,7 +3597,7 @@ msgstr "스레드 뮤트"
 msgid "Mute words & tags"
 msgstr "단어 및 태그 뮤트"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:184
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:187
 msgid "Muted"
 msgstr "뮤트됨"
 
@@ -3912,7 +3912,7 @@ msgstr "나중에 하기"
 
 #: src/view/com/profile/ProfileMenu.tsx:372
 #: src/view/com/util/forms/PostDropdownBtn.tsx:654
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:401
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:352
 msgid "Note about sharing"
 msgstr "공유 관련 참고 사항"
 
@@ -5350,7 +5350,7 @@ msgstr "Bluesky에 지원하기"
 msgid "See this guide"
 msgstr "이 가이드"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:572
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:560
 msgid "Seek slider"
 msgstr "슬라이더 탐색"
 
@@ -5585,7 +5585,7 @@ msgstr "외설적"
 #: src/view/com/profile/ProfileMenu.tsx:228
 #: src/view/com/util/forms/PostDropdownBtn.tsx:410
 #: src/view/com/util/forms/PostDropdownBtn.tsx:419
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:390
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:341
 #: src/view/screens/ProfileList.tsx:484
 msgid "Share"
 msgstr "공유"
@@ -5605,7 +5605,7 @@ msgstr "재미있는 사실을 전하세요!"
 
 #: src/view/com/profile/ProfileMenu.tsx:377
 #: src/view/com/util/forms/PostDropdownBtn.tsx:659
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:406
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:357
 msgid "Share anyway"
 msgstr "무시하고 공유"
 
@@ -6058,7 +6058,7 @@ msgstr "눌러서 닫기"
 msgid "Tap to enter full screen"
 msgstr "탭하여 전체화면으로 보기"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:185
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:188
 msgid "Tap to toggle sound"
 msgstr "탭하여 소리 켜기/끄기"
 
@@ -6436,7 +6436,7 @@ msgid "This post has been deleted."
 msgstr "이 게시물은 삭제되었습니다."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:656
-#: src/view/com/util/post-ctrls/PostCtrls.tsx:403
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:354
 msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
 msgstr "이 게시물은 로그인한 사용자에게만 표시됩니다. 로그인하지 않은 사용자에게는 표시되지 않습니다."
 
@@ -6693,7 +6693,7 @@ msgstr "스레드 언뮤트"
 msgid "Unmute video"
 msgstr "동영상 음소거 해제"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:184
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:187
 msgid "Unmuted"
 msgstr "음소거 해제됨"
 
@@ -7528,7 +7528,7 @@ msgstr "모든 공개 데이터 레코드가 포함된 계정 저장소를 \"CAR
 msgid "Your birth date"
 msgstr "생년월일"
 
-#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:162
+#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:161
 msgid "Your browser does not support the video format. Please try a different browser."
 msgstr "브라우저가 이 동영상 형식을 지원하지 않습니다. 다른 브라우저를 사용하세요."
 
