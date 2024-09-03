@@ -50,7 +50,7 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
         a.rounded_sm,
         a.overflow_hidden,
         {aspectRatio},
-        {backgroundColor: t.palette.black},
+        {backgroundColor: 'black'},
         a.my_xs,
       ]}>
       <ErrorBoundary renderError={renderError} key={key}>
