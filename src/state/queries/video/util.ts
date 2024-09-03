@@ -30,7 +30,7 @@ export function mimeToExt(mimeType: string) {
     case 'video/mp4':
       return 'mp4'
     case 'video/webm':
-      return 'video/webm'
+      return 'webm'
     case 'video/mpeg':
       return 'mpeg'
     default:
