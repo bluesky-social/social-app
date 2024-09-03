@@ -5,6 +5,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
 
+import {SUPPORTED_MIME_TYPES, SupportedMimeTypes} from '#/lib/constants'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {ServerError, VideoTooLargeError} from 'lib/media/video/errors'
@@ -175,19 +176,19 @@ export function useUploadVideo({
   })
 
   const selectVideo = (asset: ImagePickerAsset) => {
-    switch (getMimeType(asset)) {
-      case 'video/mp4':
-      case 'video/mpeg':
-      case 'video/webm':
-        dispatch({
-          type: 'SetAsset',
-          asset,
-        })
-        onSelectVideo(asset)
-        break
-      default:
-        throw new Error(_(msg`Unsupported video type: ${getMimeType(asset)}`))
+    // compression step on native converts to mp4, so no need to check there
+    if (isWeb) {
+      const mimeType = getMimeType(asset)
+      if (!SUPPORTED_MIME_TYPES.includes(mimeType as SupportedMimeTypes)) {
+        throw new Error(_(msg`Unsupported video type: ${mimeType}`))
+      }
     }
+
+    dispatch({
+      type: 'SetAsset',
+      asset,
+    })
+    onSelectVideo(asset)
   }
 
   const clearVideo = () => {
