@@ -23,16 +23,17 @@ export const useUploadVideoMutation = ({
   signal: AbortSignal
 }) => {
   const {currentAccount} = useSession()
-  const getToken = useServiceAuthToken()
+  const getToken = useServiceAuthToken({
+    lxm: 'com.atproto.repo.uploadBlob',
+    exp: Date.now() / 1000 + 60 * 30, // 30 minutes
+  })
   const checkLimits = useVideoUploadLimits()
   const {_} = useLingui()
 
   return useMutation({
     mutationKey: ['video', 'upload'],
     mutationFn: cancelable(async (video: CompressedVideo) => {
-      const token = await getToken()
-
-      await checkLimits(token)
+      await checkLimits()
 
       const uri = createVideoEndpointUrl('/xrpc/app.bsky.video.uploadVideo', {
         did: currentAccount!.did,
@@ -43,6 +44,8 @@ export const useUploadVideoMutation = ({
       if (!bytes) {
         bytes = await fetch(video.uri).then(res => res.arrayBuffer())
       }
+
+      const token = await getToken()
 
       const xhr = new XMLHttpRequest()
       const res = await new Promise<AppBskyVideoDefs.JobStatus>(

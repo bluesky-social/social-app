@@ -137,6 +137,9 @@ export const GIF_FEATURED = (params: string) =>
 
 export const MAX_LABELERS = 20
 
+export const VIDEO_SERVICE = 'https://video.bsky.app'
+export const VIDEO_SERVICE_DID = 'did:web:video.bsky.app'
+
 export const SUPPORTED_MIME_TYPES = [
   'video/mp4',
   'video/mpeg',
