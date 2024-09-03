@@ -25,7 +25,7 @@ type Action =
   | {type: 'SetDimensions'; width: number; height: number}
   | {type: 'SetVideo'; video: CompressedVideo}
   | {type: 'SetJobStatus'; jobStatus: AppBskyVideoDefs.JobStatus}
-  | {type: 'SetBlobRef'; blobRef: BlobRef}
+  | {type: 'SetComplete'; blobRef: BlobRef}
 
 export interface State {
   status: Status
@@ -36,6 +36,7 @@ export interface State {
   blobRef?: BlobRef
   error?: string
   abortController: AbortController
+  pendingPublish?: {blobRef: BlobRef; mutableProcessed: boolean}
 }
 
 function reducer(queryClient: QueryClient) {
@@ -77,8 +78,15 @@ function reducer(queryClient: QueryClient) {
       updatedState = {...state, video: action.video, status: 'uploading'}
     } else if (action.type === 'SetJobStatus') {
       updatedState = {...state, jobStatus: action.jobStatus}
-    } else if (action.type === 'SetBlobRef') {
-      updatedState = {...state, blobRef: action.blobRef, status: 'done'}
+    } else if (action.type === 'SetComplete') {
+      updatedState = {
+        ...state,
+        pendingPublish: {
+          blobRef: action.blobRef,
+          mutableProcessed: false,
+        },
+        status: 'done',
+      }
     }
     return updatedState
   }
@@ -86,7 +94,6 @@ function reducer(queryClient: QueryClient) {
 
 export function useUploadVideo({
   setStatus,
-  onSuccess,
 }: {
   setStatus: (status: string) => void
   onSuccess: () => void
@@ -112,10 +119,9 @@ export function useUploadVideo({
     },
     onSuccess: blobRef => {
       dispatch({
-        type: 'SetBlobRef',
+        type: 'SetComplete',
         blobRef,
       })
-      onSuccess()
     },
   })
 
