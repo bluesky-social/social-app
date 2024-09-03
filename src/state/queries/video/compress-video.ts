@@ -2,7 +2,8 @@ import {ImagePickerAsset} from 'expo-image-picker'
 import {useMutation} from '@tanstack/react-query'
 
 import {cancelable} from '#/lib/async/cancelable'
-import {CompressedVideo, compressVideo} from 'lib/media/video/compress'
+import {CompressedVideo} from '#/lib/media/video/types'
+import {compressVideo} from 'lib/media/video/compress'
 
 export function useCompressVideoMutation({
   onProgress,

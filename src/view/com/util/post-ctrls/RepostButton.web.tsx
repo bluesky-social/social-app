@@ -128,6 +128,7 @@ const RepostInner = ({
   repostCount?: number
   big?: boolean
 }) => {
+  const {i18n} = useLingui()
   return (
     <View style={[a.flex_row, a.align_center, a.gap_xs, {padding: 5}]}>
       <Repost style={color} width={big ? 22 : 18} />
@@ -140,7 +141,7 @@ const RepostInner = ({
             isReposted && [a.font_bold],
             a.user_select_none,
           ]}>
-          {formatCount(repostCount)}
+          {formatCount(i18n, repostCount)}
         </Text>
       ) : undefined}
     </View>

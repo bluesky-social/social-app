@@ -29,9 +29,9 @@ export function TimeIndicator({time}: {time: number}) {
           paddingHorizontal: 6,
           paddingVertical: 3,
           position: 'absolute',
-          left: 5,
-          bottom: 5,
-          minHeight: 20,
+          left: 6,
+          bottom: 6,
+          minHeight: 21,
           justifyContent: 'center',
         },
       ]}>

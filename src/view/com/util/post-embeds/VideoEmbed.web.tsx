@@ -9,13 +9,12 @@ import {
   HLSUnsupportedError,
   VideoEmbedInnerWeb,
 } from '#/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerWeb'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a} from '#/alf'
 import {ErrorBoundary} from '../ErrorBoundary'
 import {useActiveVideoWeb} from './ActiveVideoWebContext'
 import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 
 export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
-  const t = useTheme()
   const ref = useRef<HTMLDivElement>(null)
   const gate = useGate()
   const {active, setActive, sendPosition, currentActiveView} =
@@ -47,7 +46,7 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
     [key],
   )
 
-  if (!gate('videos')) {
+  if (!gate('video_view_on_posts')) {
     return null
   }
 
@@ -64,7 +63,7 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
       style={[
         a.w_full,
         {aspectRatio},
-        {backgroundColor: t.palette.black},
+        {backgroundColor: 'black'},
         a.relative,
         a.rounded_sm,
         a.my_xs,
