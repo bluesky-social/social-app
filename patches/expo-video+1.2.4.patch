@@ -80,6 +80,57 @@ index 0000000..0249e23
 +  }
 +}
 \ No newline at end of file
+diff --git a/node_modules/expo-video/android/src/main/java/expo/modules/video/VideoManager.kt b/node_modules/expo-video/android/src/main/java/expo/modules/video/VideoManager.kt
+index 4b6c6d8..e20f51a 100644
+--- a/node_modules/expo-video/android/src/main/java/expo/modules/video/VideoManager.kt
++++ b/node_modules/expo-video/android/src/main/java/expo/modules/video/VideoManager.kt
+@@ -1,5 +1,6 @@
+ package expo.modules.video
+
++import android.provider.MediaStore.Video
+ import androidx.annotation.OptIn
+ import androidx.media3.common.util.UnstableApi
+ import expo.modules.kotlin.AppContext
+@@ -15,6 +16,8 @@ object VideoManager {
+   // Keeps track of all existing VideoPlayers, and whether they are attached to a VideoView
+   private var videoPlayersToVideoViews = mutableMapOf<VideoPlayer, MutableList<VideoView>>()
+
++  private var previouslyPlayingViews: MutableList<VideoView>? = null
++
+   private lateinit var audioFocusManager: AudioFocusManager
+
+   fun onModuleCreated(appContext: AppContext) {
+@@ -69,16 +72,24 @@ object VideoManager {
+     return videoPlayersToVideoViews[videoPlayer]?.isNotEmpty() ?: false
+   }
+
+-  fun onAppForegrounded() = Unit
++  fun onAppForegrounded() {
++    val previouslyPlayingViews = this.previouslyPlayingViews ?: return
++    for (videoView in previouslyPlayingViews) {
++      val player = videoView.videoPlayer?.player ?: continue
++      player.play()
++    }
++    this.previouslyPlayingViews = null
++  }
+
+   fun onAppBackgrounded() {
++    val previouslyPlayingViews = mutableListOf<VideoView>()
+     for (videoView in videoViews.values) {
+-      if (videoView.videoPlayer?.staysActiveInBackground == false &&
+-        !videoView.willEnterPiP &&
+-        !videoView.isInFullscreen
+-      ) {
+-        videoView.videoPlayer?.player?.pause()
++      val player = videoView.videoPlayer?.player ?: continue
++      if (player.isPlaying) {
++        player.pause()
++        previouslyPlayingViews.add(videoView)
+       }
+     }
++    this.previouslyPlayingViews = previouslyPlayingViews
+   }
+ }
 diff --git a/node_modules/expo-video/android/src/main/java/expo/modules/video/VideoModule.kt b/node_modules/expo-video/android/src/main/java/expo/modules/video/VideoModule.kt
 index ec3da2a..5a1397a 100644
 --- a/node_modules/expo-video/android/src/main/java/expo/modules/video/VideoModule.kt
@@ -220,12 +271,48 @@ index cb9ca6d..ed8bb7e 100644
  //# sourceMappingURL=VideoView.types.d.ts.map
 \ No newline at end of file
 diff --git a/node_modules/expo-video/ios/VideoManager.swift b/node_modules/expo-video/ios/VideoManager.swift
-index 094a8b0..412fd0c 100644
+index 094a8b0..3f00525 100644
 --- a/node_modules/expo-video/ios/VideoManager.swift
 +++ b/node_modules/expo-video/ios/VideoManager.swift
-@@ -51,45 +51,45 @@ class VideoManager {
+@@ -12,6 +12,7 @@ class VideoManager {
+
+   private var videoViews = NSHashTable<VideoView>.weakObjects()
+   private var videoPlayers = NSHashTable<VideoPlayer>.weakObjects()
++  private var previouslyPlayingPlayers: [VideoPlayer]?
+
+   func register(videoPlayer: VideoPlayer) {
+     videoPlayers.add(videoPlayer)
+@@ -33,63 +34,70 @@ class VideoManager {
+     for videoPlayer in videoPlayers.allObjects {
+       videoPlayer.setTracksEnabled(true)
+     }
++
++    if let previouslyPlayingPlayers = self.previouslyPlayingPlayers {
++      previouslyPlayingPlayers.forEach { player in
++        player.pointer.play()
++      }
++    }
+   }
+
+   func onAppBackgrounded() {
++    var previouslyPlayingPlayers: [VideoPlayer] = []
+     for videoView in videoViews.allObjects {
+       guard let player = videoView.player else {
+         continue
+       }
+-      if player.staysActiveInBackground == true {
+-        player.setTracksEnabled(videoView.isInPictureInPicture)
+-      } else if !videoView.isInPictureInPicture {
++      if player.isPlaying {
+         player.pointer.pause()
++        previouslyPlayingPlayers.append(player)
+       }
+     }
++    self.previouslyPlayingPlayers = previouslyPlayingPlayers
+   }
+
    // MARK: - Audio Session Management
- 
+
    internal func setAppropriateAudioSessionOrWarn() {
 -    let audioSession = AVAudioSession.sharedInstance()
 -    var audioSessionCategoryOptions: AVAudioSession.CategoryOptions = []
