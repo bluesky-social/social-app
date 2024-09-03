@@ -8,6 +8,7 @@ import {useLingui} from '@lingui/react'
 
 import {HITSLOP_30} from '#/lib/constants'
 import {clamp} from '#/lib/numbers'
+import {isIOS} from '#/platform/detection'
 import {useActiveVideoNative} from 'view/com/util/post-embeds/ActiveVideoNativeContext'
 import {atoms as a, useTheme} from '#/alf'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
@@ -46,7 +47,7 @@ export function VideoEmbedInnerNative({
         player={player}
         style={[a.flex_1, a.rounded_sm]}
         contentFit="contain"
-        nativeControls={false}
+        nativeControls={isIOS}
         accessibilityIgnoresInvertColors
         onEnterFullscreen={() => {
           PlatformInfo.setAudioCategory(AudioCategory.Playback)
