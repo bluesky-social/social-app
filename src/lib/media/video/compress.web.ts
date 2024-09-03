@@ -23,6 +23,7 @@ export async function compressVideo(
     size: blob.size,
     uri,
     bytes: await blob.arrayBuffer(),
+    mimeType,
   }
 }
 

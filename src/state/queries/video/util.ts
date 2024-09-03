@@ -24,3 +24,16 @@ export function useVideoAgent() {
     })
   }, [])
 }
+
+export function mimeToExt(mimeType: string) {
+  switch (mimeType) {
+    case 'video/mp4':
+      return 'mp4'
+    case 'video/webm':
+      return 'webm'
+    case 'video/mpeg':
+      return 'mpeg'
+    default:
+      throw new Error(`Unsupported mime type: ${mimeType}`)
+  }
+}
