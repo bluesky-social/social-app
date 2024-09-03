@@ -4,6 +4,11 @@ import * as tokens from '#/alf/tokens'
 import {native, web} from '#/alf/util/platform'
 
 export const atoms = {
+  debug: {
+    borderColor: 'red',
+    borderWidth: 1,
+  },
+
   /*
    * Positioning
    */
