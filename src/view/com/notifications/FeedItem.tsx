@@ -1,4 +1,10 @@
-import React, {memo, ReactElement, useEffect, useMemo, useState} from 'react'
+import React, {
+  memo,
+  type ReactElement,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import {
   Animated,
   Pressable,
