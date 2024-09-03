@@ -18,7 +18,8 @@ import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 
 export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
   const t = useTheme()
-  const {activeSource, setActiveSource} = useActiveVideoNative()
+  const {activeSource, setActiveSource, player} = useActiveVideoNative()
+  const [isFullscreen, setIsFullscreen] = React.useState(false)
   const isActive = embed.playlist === activeSource
   const {_} = useLingui()
 
@@ -30,6 +31,16 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
     [key],
   )
   const gate = useGate()
+
+  const onChangeStatus = (isVisible: boolean) => {
+    if (isVisible) {
+      setActiveSource(embed.playlist)
+      player.play()
+    } else if (!isFullscreen) {
+      player.muted = true
+      player.pause()
+    }
+  }
 
   if (!gate('video_view_on_posts')) {
     return null
@@ -54,15 +65,13 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
         a.my_xs,
       ]}>
       <ErrorBoundary renderError={renderError} key={key}>
-        <VisibilityView
-          enabled={true}
-          onChangeStatus={isVisible => {
-            if (isVisible) {
-              setActiveSource(embed.playlist)
-            }
-          }}>
+        <VisibilityView enabled={true} onChangeStatus={onChangeStatus}>
           {isActive ? (
-            <VideoEmbedInnerNative embed={embed} />
+            <VideoEmbedInnerNative
+              embed={embed}
+              isFullscreen={isFullscreen}
+              setIsFullscreen={setIsFullscreen}
+            />
           ) : (
             <>
               <Image
