@@ -3,6 +3,8 @@ import {Platform, StyleSheet, ViewStyle} from 'react-native'
 import * as tokens from '#/alf/tokens'
 import {native, web} from '#/alf/util/platform'
 
+export const DEFAULT_TRACKING = Platform.OS === 'android' ? 0.1 : 0
+
 export const atoms = {
   debug: {
     borderColor: 'red',
@@ -225,43 +227,43 @@ export const atoms = {
   },
   text_2xs: {
     fontSize: tokens.fontSize._2xs,
-    letterSpacing: 0.25,
+    letterSpacing: DEFAULT_TRACKING,
   },
   text_xs: {
     fontSize: tokens.fontSize.xs,
-    letterSpacing: 0.25,
+    letterSpacing: DEFAULT_TRACKING,
   },
   text_sm: {
     fontSize: tokens.fontSize.sm,
-    letterSpacing: 0.25,
+    letterSpacing: DEFAULT_TRACKING,
   },
   text_md: {
     fontSize: tokens.fontSize.md,
-    letterSpacing: 0.25,
+    letterSpacing: DEFAULT_TRACKING,
   },
   text_lg: {
     fontSize: tokens.fontSize.lg,
-    letterSpacing: 0.25,
+    letterSpacing: DEFAULT_TRACKING,
   },
   text_xl: {
     fontSize: tokens.fontSize.xl,
-    letterSpacing: 0.25,
+    letterSpacing: DEFAULT_TRACKING,
   },
   text_2xl: {
     fontSize: tokens.fontSize._2xl,
-    letterSpacing: 0.25,
+    letterSpacing: DEFAULT_TRACKING,
   },
   text_3xl: {
     fontSize: tokens.fontSize._3xl,
-    letterSpacing: 0.25,
+    letterSpacing: DEFAULT_TRACKING,
   },
   text_4xl: {
     fontSize: tokens.fontSize._4xl,
-    letterSpacing: 0.25,
+    letterSpacing: DEFAULT_TRACKING,
   },
   text_5xl: {
     fontSize: tokens.fontSize._5xl,
-    letterSpacing: 0.25,
+    letterSpacing: DEFAULT_TRACKING,
   },
   leading_tight: {
     lineHeight: 1.15,
@@ -273,10 +275,7 @@ export const atoms = {
     lineHeight: 1.5,
   },
   tracking_normal: {
-    letterSpacing: 0,
-  },
-  tracking_wide: {
-    letterSpacing: 0.25,
+    letterSpacing: DEFAULT_TRACKING,
   },
   font_normal: {
     fontWeight: tokens.fontWeight.normal,

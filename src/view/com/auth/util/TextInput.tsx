@@ -1,9 +1,11 @@
 import React, {ComponentProps} from 'react'
 import {StyleSheet, TextInput as RNTextInput, View} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useTheme} from 'lib/ThemeContext'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useTheme} from '#/lib/ThemeContext'
+import {DEFAULT_TRACKING} from '#/alf'
 
 interface Props extends Omit<ComponentProps<typeof RNTextInput>, 'onChange'> {
   testID?: string
@@ -48,7 +50,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 10,
     fontSize: 17,
-    letterSpacing: 0.25,
+    letterSpacing: DEFAULT_TRACKING,
     fontWeight: '400',
     borderRadius: 10,
   },

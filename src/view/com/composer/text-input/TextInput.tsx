@@ -32,6 +32,7 @@ import {
   suggestLinkCardUri,
 } from 'view/com/composer/text-input/text-input-util'
 import {Text} from 'view/com/util/text/Text'
+import {DEFAULT_TRACKING} from '#/alf'
 import {Autocomplete} from './mobile/Autocomplete'
 
 export interface TextInputRef {
@@ -244,7 +245,7 @@ const styles = StyleSheet.create({
   },
   textInputFormatting: {
     fontSize: 18,
-    letterSpacing: 0.2,
+    letterSpacing: DEFAULT_TRACKING,
     fontWeight: '400',
     // This is broken on ios right now, so don't set it there.
     lineHeight: isIOS ? undefined : 23.4, // 1.3*16

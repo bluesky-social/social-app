@@ -5,7 +5,7 @@ import {createThemes, defaultTheme} from '#/alf/themes'
 import {Theme, ThemeName} from '#/alf/types'
 import {BLUE_HUE, GREEN_HUE, RED_HUE} from '#/alf/util/colorGeneration'
 
-export {atoms} from '#/alf/atoms'
+export {atoms, DEFAULT_TRACKING} from '#/alf/atoms'
 export * as tokens from '#/alf/tokens'
 export * from '#/alf/types'
 export * from '#/alf/util/flatten'

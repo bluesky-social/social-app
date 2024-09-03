@@ -1,8 +1,10 @@
-import React, {useState, useCallback} from 'react'
+import React, {useCallback, useState} from 'react'
 import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
 // @ts-ignore types not available -prf
 import {unstable_createElement} from 'react-native-web'
-import {usePalette} from 'lib/hooks/usePalette'
+
+import {usePalette} from '#/lib/hooks/usePalette'
+import {DEFAULT_TRACKING} from '#/alf'
 
 interface Props {
   testID?: string
@@ -67,7 +69,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 10,
     fontSize: 17,
-    letterSpacing: 0.25,
+    letterSpacing: DEFAULT_TRACKING,
     fontWeight: '400',
     borderRadius: 10,
     borderWidth: 0,

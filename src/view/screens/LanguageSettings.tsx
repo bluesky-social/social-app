@@ -22,6 +22,7 @@ import {s} from 'lib/styles'
 import {Button} from 'view/com/util/forms/Button'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
+import {DEFAULT_TRACKING} from '#/alf'
 import {Text} from '../com/util/text/Text'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'LanguageSettings'>
@@ -117,7 +118,7 @@ export function LanguageSettingsScreen(_props: Props) {
                   backgroundColor: pal.viewLight.backgroundColor,
                   color: pal.text.color,
                   fontSize: 14,
-                  letterSpacing: 0.5,
+                  letterSpacing: DEFAULT_TRACKING,
                   fontWeight: '500',
                   paddingHorizontal: 14,
                   paddingVertical: 8,
@@ -127,7 +128,7 @@ export function LanguageSettingsScreen(_props: Props) {
                   backgroundColor: pal.viewLight.backgroundColor,
                   color: pal.text.color,
                   fontSize: 14,
-                  letterSpacing: 0.5,
+                  letterSpacing: DEFAULT_TRACKING,
                   fontWeight: '500',
                   paddingHorizontal: 14,
                   paddingVertical: 8,
@@ -146,7 +147,7 @@ export function LanguageSettingsScreen(_props: Props) {
                   color: pal.text.color,
                   fontSize: 14,
                   fontFamily: 'inherit',
-                  letterSpacing: 0.5,
+                  letterSpacing: DEFAULT_TRACKING,
                   fontWeight: '500',
                   paddingHorizontal: 14,
                   paddingVertical: 8,
@@ -210,7 +211,7 @@ export function LanguageSettingsScreen(_props: Props) {
                   backgroundColor: pal.viewLight.backgroundColor,
                   color: pal.text.color,
                   fontSize: 14,
-                  letterSpacing: 0.5,
+                  letterSpacing: DEFAULT_TRACKING,
                   fontWeight: '500',
                   paddingHorizontal: 14,
                   paddingVertical: 8,
@@ -220,7 +221,7 @@ export function LanguageSettingsScreen(_props: Props) {
                   backgroundColor: pal.viewLight.backgroundColor,
                   color: pal.text.color,
                   fontSize: 14,
-                  letterSpacing: 0.5,
+                  letterSpacing: DEFAULT_TRACKING,
                   fontWeight: '500',
                   paddingHorizontal: 14,
                   paddingVertical: 8,
@@ -238,7 +239,7 @@ export function LanguageSettingsScreen(_props: Props) {
                   color: pal.text.color,
                   fontSize: 14,
                   fontFamily: 'inherit',
-                  letterSpacing: 0.5,
+                  letterSpacing: DEFAULT_TRACKING,
                   fontWeight: '500',
                   paddingHorizontal: 14,
                   paddingVertical: 8,

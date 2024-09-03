@@ -22,6 +22,7 @@ import {cleanError} from 'lib/strings/errors'
 import {createFullHandle, makeValidHandle} from 'lib/strings/handles'
 import {s} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
+import {DEFAULT_TRACKING} from '#/alf'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Button} from '../util/forms/Button'
 import {SelectableBtn} from '../util/forms/SelectableBtn'
@@ -573,7 +574,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 8,
     fontSize: 17,
-    letterSpacing: 0.25,
+    letterSpacing: DEFAULT_TRACKING,
     fontWeight: '400',
     borderRadius: 10,
   },

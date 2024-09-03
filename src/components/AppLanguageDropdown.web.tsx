@@ -6,7 +6,7 @@ import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {APP_LANGUAGES} from '#/locale/languages'
 import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
 import {resetPostsFeedQueries} from '#/state/queries/post-feed'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, DEFAULT_TRACKING, useTheme} from '#/alf'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
 import {Text} from '#/components/Typography'
 
@@ -63,7 +63,7 @@ export function AppLanguageDropdown() {
         onChange={onChangeAppLanguage}
         style={{
           fontSize: a.text_sm.fontSize,
-          letterSpacing: a.text_sm.letterSpacing,
+          letterSpacing: DEFAULT_TRACKING,
           cursor: 'pointer',
           position: 'absolute',
           inset: 0,

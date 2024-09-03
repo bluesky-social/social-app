@@ -20,7 +20,7 @@ import {
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
-import {atoms as a} from '#/alf'
+import {atoms as a, DEFAULT_TRACKING} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 
 export const snapPoints = ['90%']
@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 8,
     fontSize: 17,
-    letterSpacing: 0.25,
+    letterSpacing: DEFAULT_TRACKING,
     fontWeight: '400',
     borderRadius: 10,
   },
