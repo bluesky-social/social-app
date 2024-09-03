@@ -5,12 +5,9 @@ import {VideoPlayer, VideoView} from 'expo-video'
 import {AppBskyEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useIsFocused} from '@react-navigation/native'
 
 import {HITSLOP_30} from '#/lib/constants'
-import {useAppState} from '#/lib/hooks/useAppState'
 import {clamp} from '#/lib/numbers'
-import {logger} from '#/logger'
 import {useActiveVideoNative} from 'view/com/util/post-embeds/ActiveVideoNativeContext'
 import {atoms as a, useTheme} from '#/alf'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
@@ -29,26 +26,6 @@ export function VideoEmbedInnerNative({
   const {_} = useLingui()
   const {player} = useActiveVideoNative()
   const ref = useRef<VideoView>(null)
-  const isScreenFocused = useIsFocused()
-  const isAppFocused = useAppState()
-
-  useEffect(() => {
-    try {
-      if (isAppFocused === 'active' && isScreenFocused && !player.playing) {
-        PlatformInfo.setAudioCategory(AudioCategory.Ambient)
-        PlatformInfo.setAudioActive(false)
-        player.muted = true
-        player.play()
-      } else if (player.playing) {
-        player.pause()
-      }
-    } catch (err) {
-      logger.error(
-        'Failed to play/pause while backgrounding/switching screens',
-        {safeMessage: err},
-      )
-    }
-  }, [isAppFocused, player, isScreenFocused])
 
   const enterFullscreen = useCallback(() => {
     ref.current?.enterFullscreen()
@@ -80,7 +57,7 @@ export function VideoEmbedInnerNative({
           PlatformInfo.setAudioCategory(AudioCategory.Ambient)
           PlatformInfo.setAudioActive(false)
           player.muted = true
-          if (!player.playing) player.play()
+          player.play()
         }}
         accessibilityLabel={
           embed.alt ? _(msg`Video: ${embed.alt}`) : _(msg`Video`)
