@@ -5905,7 +5905,7 @@ msgstr "Respon a una publicació bloquejada"
 #: src/view/com/posts/FeedItem.tsx:515
 msgctxt "description"
 msgid "Reply to a post"
-msgstr "Respon a una publicació"
+msgstr "Resposta a una publicació"
 
 #: src/view/com/post/Post.tsx:194
 #: src/view/com/posts/FeedItem.tsx:519
