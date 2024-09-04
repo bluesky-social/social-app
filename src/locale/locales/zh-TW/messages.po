@@ -5352,7 +5352,7 @@ msgstr "查看指南"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:560
 msgid "Seek slider"
-msgstr "尋找影片滑桿"
+msgstr "影片進度條"
 
 #: src/view/com/util/Selector.tsx:106
 msgid "Select {item}"
