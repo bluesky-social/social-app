@@ -117,7 +117,7 @@ msgstr "在本周加入了 {0} 人"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:566
 msgid "{0} of {1}"
-msgstr "第 {1} 个（共 {0} 个）"
+msgstr "第 {0} 个（共 {1} 个）"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:467
 msgid "{0} people have used this starter pack!"
@@ -5352,7 +5352,7 @@ msgstr "查看指南"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:560
 msgid "Seek slider"
-msgstr "寻找进度条滑块"
+msgstr "视频进度条"
 
 #: src/view/com/util/Selector.tsx:106
 msgid "Select {item}"
