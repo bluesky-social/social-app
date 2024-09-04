@@ -4,8 +4,9 @@ import {LayoutChangeEvent, ScrollView, StyleSheet, View} from 'react-native'
 import {isNative} from '#/platform/detection'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {atoms as a} from '#/alf'
+import {Text as NewText} from '#/components/Typography'
 import {PressableWithHover} from '../util/PressableWithHover'
-import {Text} from '../util/text/Text'
 import {DraggableScrollView} from './DraggableScrollView'
 
 export interface TabBarProps {
@@ -137,15 +138,16 @@ export function TabBar({
               hoverStyle={pal.viewLight}
               onPress={() => onPressItem(i)}>
               <View style={[styles.itemInner, selected && indicatorStyle]}>
-                <Text
-                  type={isDesktop || isTablet ? 'xl-bold' : 'lg-bold'}
+                <NewText
                   testID={testID ? `${testID}-${item}` : undefined}
                   style={[
                     selected ? pal.text : pal.textLight,
+                    a.font_bold,
                     {lineHeight: 20},
+                    isDesktop || isTablet ? a.text_md : a.text_sm,
                   ]}>
                   {item}
-                </Text>
+                </NewText>
               </View>
             </PressableWithHover>
           )
