@@ -71,9 +71,10 @@ function Inner({embed}: Props) {
     'loading' | 'idle' | 'readyToPlay' | 'error'
   >('loading')
   const [isMuted, setIsMuted] = useState(player.muted)
-  const [timeRemaining, setTimeRemaining] = React.useState(0)
   const [isFullscreen, setIsFullscreen] = React.useState(false)
+  const [timeRemaining, setTimeRemaining] = React.useState(0)
   const isActive = embed.playlist === activeSource && activeViewId === viewId
+  const isLoading = isActive && playerStatus === 'loading'
 
   useEffect(() => {
     if (isActive) {
@@ -133,7 +134,7 @@ function Inner({embed}: Props) {
           setIsFullscreen={setIsFullscreen}
         />
       ) : null}
-      {!isActive || playerStatus === 'loading' ? (
+      {!isActive || isLoading ? (
         <View
           style={[
             {
