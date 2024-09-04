@@ -271,14 +271,16 @@ index cb9ca6d..ed8bb7e 100644
  //# sourceMappingURL=VideoView.types.d.ts.map
 \ No newline at end of file
 diff --git a/node_modules/expo-video/ios/Enums/PlayerStatus.swift b/node_modules/expo-video/ios/Enums/PlayerStatus.swift
-index 6af69ca..7b8dc82 100644
+index 6af69ca..189fbbe 100644
 --- a/node_modules/expo-video/ios/Enums/PlayerStatus.swift
 +++ b/node_modules/expo-video/ios/Enums/PlayerStatus.swift
-@@ -6,5 +6,6 @@ internal enum PlayerStatus: String, Enumerable {
+@@ -6,5 +6,8 @@ internal enum PlayerStatus: String, Enumerable {
    case idle
    case loading
    case readyToPlay
 +  case waitingToPlayAtSpecifiedRate
++  case unlikeToKeepUp
++  case playbackBufferEmpty
    case error
  }
 diff --git a/node_modules/expo-video/ios/VideoManager.swift b/node_modules/expo-video/ios/VideoManager.swift
@@ -438,7 +440,7 @@ index 3315b88..733ab1f 100644
      if self.appContext != nil {
        self.emit(event: event, arguments: repeat each arguments)
 diff --git a/node_modules/expo-video/ios/VideoPlayerObserver.swift b/node_modules/expo-video/ios/VideoPlayerObserver.swift
-index d289e26..eab2ee0 100644
+index d289e26..7de8cbf 100644
 --- a/node_modules/expo-video/ios/VideoPlayerObserver.swift
 +++ b/node_modules/expo-video/ios/VideoPlayerObserver.swift
 @@ -21,6 +21,7 @@ protocol VideoPlayerObserverDelegate: AnyObject {
@@ -475,7 +477,7 @@ index d289e26..eab2ee0 100644
    }
  
    private func initializeCurrentPlayerItemObservers(player: AVPlayer, playerItem: AVPlayerItem) {
-@@ -265,11 +271,12 @@ class VideoPlayerObserver {
+@@ -265,23 +271,24 @@ class VideoPlayerObserver {
      if player.timeControlStatus != .waitingToPlayAtSpecifiedRate && player.status == .readyToPlay && currentItem?.isPlaybackBufferEmpty != true {
        status = .readyToPlay
      } else if player.timeControlStatus == .waitingToPlayAtSpecifiedRate {
@@ -489,6 +491,20 @@ index d289e26..eab2ee0 100644
      }
    }
  
+   private func onIsBufferEmptyChanged(_ playerItem: AVPlayerItem, _ change: NSKeyValueObservedChange<Bool>) {
+     if playerItem.isPlaybackBufferEmpty {
+-      status = .loading
++      status = .playbackBufferEmpty
+     }
+   }
+ 
+   private func onPlayerLikelyToKeepUpChanged(_ playerItem: AVPlayerItem, _ change: NSKeyValueObservedChange<Bool>) {
+     if !playerItem.isPlaybackLikelyToKeepUp && playerItem.isPlaybackBufferEmpty {
+-      status = .loading
++      status = .unlikeToKeepUp
+     } else if playerItem.isPlaybackLikelyToKeepUp {
+       status = .readyToPlay
+     }
 @@ -310,4 +317,28 @@ class VideoPlayerObserver {
        }
      }
