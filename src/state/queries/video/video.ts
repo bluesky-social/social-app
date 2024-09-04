@@ -1,12 +1,14 @@
-import React, {useCallback} from 'react'
+import React, {useCallback, useEffect} from 'react'
 import {ImagePickerAsset} from 'expo-image-picker'
 import {AppBskyVideoDefs, BlobRef} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
 
+import {SUPPORTED_MIME_TYPES, SupportedMimeTypes} from '#/lib/constants'
 import {logger} from '#/logger'
-import {VideoTooLargeError} from 'lib/media/video/errors'
+import {isWeb} from '#/platform/detection'
+import {ServerError, VideoTooLargeError} from 'lib/media/video/errors'
 import {CompressedVideo} from 'lib/media/video/types'
 import {useCompressVideoMutation} from 'state/queries/video/compress-video'
 import {useVideoAgent} from 'state/queries/video/util'
@@ -23,7 +25,7 @@ type Action =
   | {type: 'SetDimensions'; width: number; height: number}
   | {type: 'SetVideo'; video: CompressedVideo}
   | {type: 'SetJobStatus'; jobStatus: AppBskyVideoDefs.JobStatus}
-  | {type: 'SetBlobRef'; blobRef: BlobRef}
+  | {type: 'SetComplete'; blobRef: BlobRef}
 
 export interface State {
   status: Status
@@ -34,6 +36,7 @@ export interface State {
   blobRef?: BlobRef
   error?: string
   abortController: AbortController
+  pendingPublish?: {blobRef: BlobRef; mutableProcessed: boolean}
 }
 
 function reducer(queryClient: QueryClient) {
@@ -58,7 +61,12 @@ function reducer(queryClient: QueryClient) {
         abortController: new AbortController(),
       }
     } else if (action.type === 'SetAsset') {
-      updatedState = {...state, asset: action.asset}
+      updatedState = {
+        ...state,
+        asset: action.asset,
+        status: 'compressing',
+        error: undefined,
+      }
     } else if (action.type === 'SetDimensions') {
       updatedState = {
         ...state,
@@ -67,11 +75,18 @@ function reducer(queryClient: QueryClient) {
           : undefined,
       }
     } else if (action.type === 'SetVideo') {
-      updatedState = {...state, video: action.video}
+      updatedState = {...state, video: action.video, status: 'uploading'}
     } else if (action.type === 'SetJobStatus') {
       updatedState = {...state, jobStatus: action.jobStatus}
-    } else if (action.type === 'SetBlobRef') {
-      updatedState = {...state, blobRef: action.blobRef}
+    } else if (action.type === 'SetComplete') {
+      updatedState = {
+        ...state,
+        pendingPublish: {
+          blobRef: action.blobRef,
+          mutableProcessed: false,
+        },
+        status: 'done',
+      }
     }
     return updatedState
   }
@@ -79,7 +94,6 @@ function reducer(queryClient: QueryClient) {
 
 export function useUploadVideo({
   setStatus,
-  onSuccess,
 }: {
   setStatus: (status: string) => void
   onSuccess: () => void
@@ -105,15 +119,16 @@ export function useUploadVideo({
     },
     onSuccess: blobRef => {
       dispatch({
-        type: 'SetBlobRef',
+        type: 'SetComplete',
         blobRef,
       })
-      dispatch({
-        type: 'SetStatus',
-        status: 'idle',
-      })
-      onSuccess()
     },
+    onError: useCallback(() => {
+      dispatch({
+        type: 'SetError',
+        error: _(msg`Video failed to process`),
+      })
+    }, [_]),
   })
 
   const {mutate: onVideoCompressed} = useUploadVideoMutation({
@@ -125,10 +140,17 @@ export function useUploadVideo({
       setJobId(response.jobId)
     },
     onError: e => {
-      dispatch({
-        type: 'SetError',
-        error: _(msg`An error occurred while uploading the video.`),
-      })
+      if (e instanceof ServerError) {
+        dispatch({
+          type: 'SetError',
+          error: e.message,
+        })
+      } else {
+        dispatch({
+          type: 'SetError',
+          error: _(msg`An error occurred while uploading the video.`),
+        })
+      }
       logger.error('Error uploading video', {safeMessage: e})
     },
     setProgress: p => {
@@ -141,6 +163,13 @@ export function useUploadVideo({
     onProgress: p => {
       dispatch({type: 'SetProgress', progress: p})
     },
+    onSuccess: (video: CompressedVideo) => {
+      dispatch({
+        type: 'SetVideo',
+        video,
+      })
+      onVideoCompressed(video)
+    },
     onError: e => {
       if (e instanceof VideoTooLargeError) {
         dispatch({
@@ -150,34 +179,26 @@ export function useUploadVideo({
       } else {
         dispatch({
           type: 'SetError',
-          // @TODO better error message from server, left untranslated on purpose
-          error: 'An error occurred while compressing the video.',
+          error: _(msg`An error occurred while compressing the video.`),
         })
         logger.error('Error compressing video', {safeMessage: e})
       }
-    },
-    onSuccess: (video: CompressedVideo) => {
-      dispatch({
-        type: 'SetVideo',
-        video,
-      })
-      dispatch({
-        type: 'SetStatus',
-        status: 'uploading',
-      })
-      onVideoCompressed(video)
     },
     signal: state.abortController.signal,
   })
 
   const selectVideo = (asset: ImagePickerAsset) => {
+    // compression step on native converts to mp4, so no need to check there
+    if (isWeb) {
+      const mimeType = getMimeType(asset)
+      if (!SUPPORTED_MIME_TYPES.includes(mimeType as SupportedMimeTypes)) {
+        throw new Error(_(msg`Unsupported video type: ${mimeType}`))
+      }
+    }
+
     dispatch({
       type: 'SetAsset',
       asset,
-    })
-    dispatch({
-      type: 'SetStatus',
-      status: 'compressing',
     })
     onSelectVideo(asset)
   }
@@ -206,15 +227,17 @@ export function useUploadVideo({
 const useUploadStatusQuery = ({
   onStatusChange,
   onSuccess,
+  onError,
 }: {
   onStatusChange: (status: AppBskyVideoDefs.JobStatus) => void
   onSuccess: (blobRef: BlobRef) => void
+  onError: (error: Error) => void
 }) => {
   const videoAgent = useVideoAgent()
   const [enabled, setEnabled] = React.useState(true)
   const [jobId, setJobId] = React.useState<string>()
 
-  const {isLoading, isError} = useQuery({
+  const {error} = useQuery({
     queryKey: ['video', 'upload status', jobId],
     queryFn: async () => {
       if (!jobId) return // this won't happen, can ignore
@@ -236,11 +259,31 @@ const useUploadStatusQuery = ({
     refetchInterval: 1500,
   })
 
+  useEffect(() => {
+    if (error) {
+      onError(error)
+      setEnabled(false)
+    }
+  }, [error, onError])
+
   return {
-    isLoading,
-    isError,
     setJobId: (_jobId: string) => {
       setJobId(_jobId)
+      setEnabled(true)
     },
   }
+}
+
+function getMimeType(asset: ImagePickerAsset) {
+  if (isWeb) {
+    const [mimeType] = asset.uri.slice('data:'.length).split(';base64,')
+    if (!mimeType) {
+      throw new Error('Could not determine mime type')
+    }
+    return mimeType
+  }
+  if (!asset.mimeType) {
+    throw new Error('Could not determine mime type')
+  }
+  return asset.mimeType
 }

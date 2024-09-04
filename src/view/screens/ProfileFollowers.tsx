@@ -25,7 +25,7 @@ export const ProfileFollowersScreen = ({route}: Props) => {
   )
 
   return (
-    <CenteredView style={a.h_full_vh} sideBorders={true}>
+    <CenteredView style={a.util_screen_outer} sideBorders={true}>
       <ListHeaderDesktop title={_(msg`Followers`)} />
       <ViewHeader title={_(msg`Followers`)} showBorder={!isWeb} />
       <ProfileFollowersComponent name={name} />

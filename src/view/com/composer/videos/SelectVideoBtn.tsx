@@ -19,9 +19,10 @@ const VIDEO_MAX_DURATION = 90
 type Props = {
   onSelectVideo: (video: ImagePickerAsset) => void
   disabled?: boolean
+  setError: (error: string) => void
 }
 
-export function SelectVideoBtn({onSelectVideo, disabled}: Props) {
+export function SelectVideoBtn({onSelectVideo, disabled, setError}: Props) {
   const {_} = useLingui()
   const t = useTheme()
   const {requestVideoAccessIfNeeded} = useVideoLibraryPermission()
@@ -41,9 +42,17 @@ export function SelectVideoBtn({onSelectVideo, disabled}: Props) {
         UIImagePickerPreferredAssetRepresentationMode.Current,
     })
     if (response.assets && response.assets.length > 0) {
-      onSelectVideo(response.assets[0])
+      try {
+        onSelectVideo(response.assets[0])
+      } catch (err) {
+        if (err instanceof Error) {
+          setError(err.message)
+        } else {
+          setError(_(msg`An error occurred while selecting the video`))
+        }
+      }
     }
-  }, [onSelectVideo, requestVideoAccessIfNeeded])
+  }, [onSelectVideo, requestVideoAccessIfNeeded, setError, _])
 
   return (
     <>
