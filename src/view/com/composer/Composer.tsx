@@ -224,7 +224,12 @@ export const ComposePost = observer(function ComposePost({
   )
 
   const onPressCancel = useCallback(() => {
-    if (graphemeLength > 0 || !gallery.isEmpty || extGif) {
+    if (
+      graphemeLength > 0 ||
+      !gallery.isEmpty ||
+      extGif ||
+      videoUploadState.status !== 'idle'
+    ) {
       closeAllDialogs()
       Keyboard.dismiss()
       discardPromptControl.open()
@@ -238,6 +243,7 @@ export const ComposePost = observer(function ComposePost({
     closeAllDialogs,
     discardPromptControl,
     onClose,
+    videoUploadState.status,
   ])
 
   useImperativeHandle(cancelRef, () => ({onPressCancel}))
@@ -332,7 +338,8 @@ export const ComposePost = observer(function ComposePost({
         richtext.text.trim().length === 0 &&
         gallery.isEmpty &&
         !extLink &&
-        !quote
+        !quote &&
+        videoUploadState.status === 'idle'
       ) {
         setError(_(msg`Did you want to say anything?`))
         return
