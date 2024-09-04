@@ -91,13 +91,15 @@ export function CountWheel({
   likeCount,
   big,
   isLiked,
+  isToggle,
 }: {
   likeCount: number
   big?: boolean
   isLiked: boolean
+  isToggle: boolean
 }) {
   const t = useTheme()
-  const shouldAnimate = !useReducedMotion()
+  const shouldAnimate = !useReducedMotion() && isToggle
   const shouldRoll = decideShouldRoll(isLiked, likeCount)
 
   // Incrementing the key will cause the `Animated.View` to re-render, with the newly selected entering/exiting

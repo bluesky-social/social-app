@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react'
-import {StyleProp, View, ViewStyle} from 'react-native'
+import {Keyboard, StyleProp, View, ViewStyle} from 'react-native'
 import RNPickerSelect from 'react-native-picker-select'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -45,7 +45,10 @@ export function SubtitleDialogBtn(props: Props) {
         size="xsmall"
         color="secondary"
         variant="ghost"
-        onPress={control.open}>
+        onPress={() => {
+          if (Keyboard.isVisible()) Keyboard.dismiss()
+          control.open()
+        }}>
         <ButtonIcon icon={CCIcon} />
         <ButtonText>
           {isWeb ? <Trans>Captions & alt text</Trans> : <Trans>Alt text</Trans>}

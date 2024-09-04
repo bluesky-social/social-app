@@ -39,13 +39,15 @@ export function CountWheel({
   likeCount,
   big,
   isLiked,
+  isToggle,
 }: {
   likeCount: number
   big?: boolean
   isLiked: boolean
+  isToggle: boolean
 }) {
   const t = useTheme()
-  const shouldAnimate = !useReducedMotion()
+  const shouldAnimate = !useReducedMotion() && isToggle
   const shouldRoll = decideShouldRoll(isLiked, likeCount)
 
   const countView = React.useRef<HTMLDivElement>(null)

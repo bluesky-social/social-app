@@ -11,6 +11,7 @@ import {
   AppBskyEmbedImages,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
+  AppBskyEmbedVideo,
   AppBskyFeedDefs,
   AppBskyFeedPost,
   ModerationDecision,
@@ -180,12 +181,17 @@ export function QuoteEmbed({
     if (allowNestedQuotes) {
       return e
     } else {
-      if (AppBskyEmbedImages.isView(e) || AppBskyEmbedExternal.isView(e)) {
+      if (
+        AppBskyEmbedImages.isView(e) ||
+        AppBskyEmbedExternal.isView(e) ||
+        AppBskyEmbedVideo.isView(e)
+      ) {
         return e
       } else if (
         AppBskyEmbedRecordWithMedia.isView(e) &&
         (AppBskyEmbedImages.isView(e.media) ||
-          AppBskyEmbedExternal.isView(e.media))
+          AppBskyEmbedExternal.isView(e.media) ||
+          AppBskyEmbedVideo.isView(e.media))
       ) {
         return e.media
       }
