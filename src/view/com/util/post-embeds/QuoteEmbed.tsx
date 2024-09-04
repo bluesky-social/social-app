@@ -33,7 +33,7 @@ import {InfoCircleIcon} from 'lib/icons'
 import {makeProfileLink} from 'lib/routes/links'
 import {precacheProfile} from 'state/queries/profile'
 import {ComposerOptsQuote} from 'state/shell/composer'
-import {atoms as a} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {RichText} from '#/components/RichText'
 import {ContentHider} from '../../../../components/moderation/ContentHider'
 import {PostAlerts} from '../../../../components/moderation/PostAlerts'
@@ -175,6 +175,7 @@ export function QuoteEmbed({
   const itemUrip = new AtUri(quote.uri)
   const itemHref = makeProfileLink(quote.author, 'post', itemUrip.rkey)
   const itemTitle = `Post by ${quote.author.handle}`
+  const {gtMobile} = useBreakpoints()
 
   const richText = React.useMemo(
     () =>
@@ -239,7 +240,7 @@ export function QuoteEmbed({
         {viewContext === QuoteEmbedViewContext.FeedEmbedRecordWithMedia ? (
           <View style={[a.flex_row, a.gap_md]}>
             {embed && (
-              <View style={[{width: 100}]}>
+              <View style={[{width: gtMobile ? 100 : 80}]}>
                 <PostEmbeds
                   embed={embed}
                   moderation={moderation}
