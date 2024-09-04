@@ -84,7 +84,7 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
                 source={{uri: embed.thumbnail}}
                 alt={embed.alt}
                 style={a.flex_1}
-                contentFit="contain"
+                contentFit="cover"
                 accessibilityIgnoresInvertColors
               />
               <Button
