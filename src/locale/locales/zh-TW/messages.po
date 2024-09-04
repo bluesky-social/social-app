@@ -117,7 +117,7 @@ msgstr "本週加入了 {0} 人"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:566
 msgid "{0} of {1}"
-msgstr "第 {1} 個（共 {0} 個）"
+msgstr "第 {0} 個（共 {1} 個）"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:467
 msgid "{0} people have used this starter pack!"
