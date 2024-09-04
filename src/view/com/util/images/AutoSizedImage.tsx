@@ -1,5 +1,5 @@
 import React from 'react'
-import {Pressable, View} from 'react-native'
+import {DimensionValue, Pressable, View} from 'react-native'
 import {Image} from 'expo-image'
 import {AppBskyEmbedImages} from '@atproto/api'
 import {msg} from '@lingui/macro'
@@ -46,17 +46,25 @@ export function SquareFramedImage({
   children: React.ReactNode
 }) {
   const t = useTheme()
-  const outerAspectRatio = React.useMemo(() => {
-    return Math.min(1 / aspectRatio, 1)
+  /**
+   * Computed as a % value to apply as `paddingTop`
+   */
+  const outerAspectRatio = React.useMemo<DimensionValue>(() => {
+    // capped to square or shorter
+    const ratio = Math.min(1 / aspectRatio, 1)
+    return `${ratio * 100}%`
   }, [aspectRatio])
+  /**
+   * Computed as a CSS `aspectRatio` value
+   */
   const innerAspectRatio = React.useMemo(() => {
+    // max of 3:4 ratio
     return Math.max(aspectRatio, 0.75)
   }, [aspectRatio])
 
   return (
     <View style={[a.w_full]}>
-      <View
-        style={[a.overflow_hidden, {paddingTop: `${outerAspectRatio * 100}%`}]}>
+      <View style={[a.overflow_hidden, {paddingTop: outerAspectRatio}]}>
         <View style={[a.absolute, a.inset_0, a.flex_row]}>
           <View
             style={[
@@ -113,8 +121,9 @@ export function AutoSizedImage({
         onPress={onPress}
         onLongPress={onLongPress}
         onPressIn={onPressIn}
+        // alt here is what screen readers actually use
         accessibilityLabel={image.alt}
-        accessibilityHint={_(msg`Tap to view fully`)}
+        accessibilityHint={_(msg`Tap to view full image`)}
         style={[
           a.w_full,
           a.rounded_sm,
@@ -133,8 +142,9 @@ export function AutoSizedImage({
           onPress={onPress}
           onLongPress={onLongPress}
           onPressIn={onPressIn}
+          // alt here is what screen readers actually use
           accessibilityLabel={image.alt}
-          accessibilityHint={_(msg`Tap to view fully`)}
+          accessibilityHint={_(msg`Tap to view full image`)}
           style={[a.h_full]}>
           {contents}
           {children}

@@ -7,7 +7,7 @@ import {useLingui} from '@lingui/react'
 
 import {isWeb} from '#/platform/detection'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 
 type EventFunction = (index: number) => void
 
@@ -28,6 +28,7 @@ export const GalleryItem: FC<GalleryItemProps> = ({
   onPressIn,
   onLongPress,
 }) => {
+  const t = useTheme()
   const {_} = useLingui()
   const largeAltBadge = useLargeAltBadgeEnabled()
   const image = images[index]
@@ -37,13 +38,19 @@ export const GalleryItem: FC<GalleryItemProps> = ({
         onPress={onPress ? () => onPress(index) : undefined}
         onPressIn={onPressIn ? () => onPressIn(index) : undefined}
         onLongPress={onLongPress ? () => onLongPress(index) : undefined}
-        style={a.flex_1}
+        style={[
+          a.flex_1,
+          a.rounded_xs,
+          a.overflow_hidden,
+          t.atoms.bg_contrast_25,
+          imageStyle,
+        ]}
         accessibilityRole="button"
         accessibilityLabel={image.alt || _(msg`Image`)}
         accessibilityHint="">
         <Image
           source={{uri: image.thumb}}
-          style={[a.flex_1, a.rounded_xs, imageStyle]}
+          style={[a.flex_1]}
           accessible={true}
           accessibilityLabel={image.alt}
           accessibilityHint=""
