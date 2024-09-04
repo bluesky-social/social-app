@@ -56,13 +56,13 @@ export function VideoEmbed({embed}: Props) {
         a.my_xs,
       ]}>
       <ErrorBoundary renderError={renderError} key={key}>
-        <Inner embed={embed} />
+        <InnerWrapper embed={embed} />
       </ErrorBoundary>
     </View>
   )
 }
 
-function Inner({embed}: Props) {
+function InnerWrapper({embed}: Props) {
   const {_} = useLingui()
   const {activeSource, activeViewId, setActiveSource, player} =
     useActiveVideoNative()
