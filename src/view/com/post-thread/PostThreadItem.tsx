@@ -33,6 +33,7 @@ import {PostThreadFollowBtn} from 'view/com/post-thread/PostThreadFollowBtn'
 import {atoms as a} from '#/alf'
 import {AppModerationCause} from '#/components/Pills'
 import {RichText} from '#/components/RichText'
+import {Text as NewText} from '#/components/Typography'
 import {ContentHider} from '../../../components/moderation/ContentHider'
 import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
 import {PostAlerts} from '../../../components/moderation/PostAlerts'
@@ -307,24 +308,30 @@ let PostThreadItemLoaded = ({
               <View
                 style={[styles.meta, styles.metaExpandedLine1, {zIndex: 1}]}>
                 <Link style={s.flex1} href={authorHref} title={authorTitle}>
-                  <Text
-                    type="xl-bold"
-                    style={[pal.text, a.self_start]}
-                    numberOfLines={1}
-                    lineHeight={1.2}>
+                  <NewText
+                    style={[
+                      pal.text,
+                      a.self_start,
+                      a.text_lg,
+                      a.font_bold,
+                      a.leading_tight,
+                    ]}
+                    numberOfLines={1}>
                     {sanitizeDisplayName(
                       post.author.displayName ||
                         sanitizeHandle(post.author.handle),
                       moderation.ui('displayName'),
                     )}
-                  </Text>
+                  </NewText>
                 </Link>
               </View>
               <View style={styles.meta}>
                 <Link style={s.flex1} href={authorHref} title={authorTitle}>
-                  <Text type="md" style={[pal.textLight]} numberOfLines={1}>
+                  <NewText
+                    style={[pal.textLight, a.text_md, a.leading_tight]}
+                    numberOfLines={1}>
                     {sanitizeHandle(post.author.handle, '@')}
-                  </Text>
+                  </NewText>
                 </Link>
               </View>
             </View>

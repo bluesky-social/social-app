@@ -69,7 +69,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
           numberOfLines={1}
           style={[styles.maxWidth, pal.textLight, opts.displayNameStyle]}>
           <TextLinkOnWebOnly
-            type={opts.displayNameType || 'lg-bold'}
+            type={opts.displayNameType || 'md-bold'}
             style={[pal.text]}
             lineHeight={1.2}
             disableMismatchWarning
@@ -83,7 +83,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             onBeforePress={onBeforePressAuthor}
           />
           <TextLinkOnWebOnly
-            type="md"
+            type="sm"
             disableMismatchWarning
             style={[pal.textLight, {flexShrink: 4}]}
             text={NON_BREAKING_SPACE + sanitizeHandle(handle, '@')}
@@ -101,7 +101,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
       <TimeElapsed timestamp={opts.timestamp}>
         {({timeElapsed}) => (
           <TextLinkOnWebOnly
-            type="md"
+            type="sm"
             style={pal.textLight}
             text={timeElapsed}
             accessibilityLabel={niceDate(i18n, opts.timestamp)}
