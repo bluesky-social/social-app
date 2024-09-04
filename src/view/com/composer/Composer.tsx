@@ -554,13 +554,12 @@ export const ComposePost = observer(function ComposePost({
                 </View>
               </>
             ) : (
-              <>
+              <View style={[styles.postBtnWrapper]}>
                 <LabelsBtn
                   labels={labels}
                   onChange={setLabels}
                   hasMedia={hasMedia}
                 />
-                <View style={[styles.spacer]} />
                 {canPost ? (
                   <Button
                     testID="composerPublishBtn"
@@ -591,7 +590,7 @@ export const ComposePost = observer(function ComposePost({
                     </Text>
                   </View>
                 )}
-              </>
+              </View>
             )}
           </View>
 
@@ -959,6 +958,10 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     marginLeft: 12,
   },
+  postBtnWrapper: {
+    flexDirection: 'row',
+    gap: 14,
+  },
   errorLine: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -1016,9 +1019,6 @@ const styles = StyleSheet.create({
     paddingRight: 16,
     alignItems: 'center',
     borderTopWidth: StyleSheet.hairlineWidth,
-  },
-  spacer: {
-    width: 6,
   },
 })
 
