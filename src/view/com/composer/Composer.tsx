@@ -1082,7 +1082,7 @@ function ToolbarWrapper({
 function VideoUploadToolbar({state}: {state: VideoUploadState}) {
   const t = useTheme()
   const {_} = useLingui()
-  let progress = state.jobStatus?.progress
+  const progress = state.jobStatus?.progress
     ? state.jobStatus.progress / 100
     : state.progress
   let wheelProgress = progress === 0 || progress === 1 ? 0.33 : progress
@@ -1122,7 +1122,7 @@ function VideoUploadToolbar({state}: {state: VideoUploadState}) {
 
   if (state.error) {
     text = _('Error')
-    progress = 100
+    wheelProgress = 100
   }
 
   return (
