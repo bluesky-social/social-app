@@ -4885,7 +4885,7 @@ msgstr "刪除已轉貼貼文"
 
 #: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:29
 msgid "Removes the attachment"
-msgstr "刪除所有分離"
+msgstr "刪除所有附件"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:129
 #: src/view/com/posts/FeedShutdownMsg.tsx:133
