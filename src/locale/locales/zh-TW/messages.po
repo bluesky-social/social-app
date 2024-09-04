@@ -4773,7 +4773,7 @@ msgstr "移除帳號"
 
 #: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:28
 msgid "Remove attachment"
-msgstr "刪除分離"
+msgstr "刪除附件"
 
 #: src/view/com/util/UserAvatar.tsx:387
 msgid "Remove Avatar"
