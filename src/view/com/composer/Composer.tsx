@@ -1080,7 +1080,7 @@ function ToolbarWrapper({
 }
 
 const animConfig = {
-  duration: 300,
+  duration: 2500,
   easing: Easing.out(Easing.cubic),
 }
 
