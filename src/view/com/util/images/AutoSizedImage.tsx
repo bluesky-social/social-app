@@ -19,13 +19,20 @@ export function useImageAspectRatio({
   src: string
   dimensions: Dimensions | undefined
 }) {
-  const [rawAspectRatio, setAspectRatio] = React.useState<number>(
+  const [raw, setAspectRatio] = React.useState<number>(
     dimensions ? calc(dimensions) : 1,
   )
-  const aspectRatio = React.useMemo(() => {
-    // max of 3:4 ratio
-    return Math.max(rawAspectRatio, 0.75)
-  }, [rawAspectRatio])
+  const {isCropped, constrained, max} = React.useMemo(() => {
+    const a34 = 0.75 // max of 3:4 ratio in feeds
+    const constrained = Math.max(raw, a34)
+    const max = Math.max(raw, 0.25) // max of 1:4 in thread
+    const isCropped = raw < constrained
+    return {
+      isCropped,
+      constrained,
+      max,
+    }
+  }, [raw])
 
   React.useEffect(() => {
     let aborted = false
@@ -41,9 +48,10 @@ export function useImageAspectRatio({
 
   return {
     dimensions,
-    rawAspectRatio,
-    aspectRatio,
-    isCropped: rawAspectRatio < aspectRatio,
+    raw,
+    constrained,
+    max,
+    isCropped,
   }
 }
 
@@ -100,7 +108,11 @@ export function AutoSizedImage({
   const t = useTheme()
   const {_} = useLingui()
   const largeAlt = useLargeAltBadgeEnabled()
-  const {aspectRatio, isCropped: rawIsCropped} = useImageAspectRatio({
+  const {
+    constrained,
+    max,
+    isCropped: rawIsCropped,
+  } = useImageAspectRatio({
     src: image.thumb,
     dimensions: image.aspectRatio,
   })
@@ -171,14 +183,14 @@ export function AutoSizedImage({
           a.rounded_sm,
           a.overflow_hidden,
           t.atoms.bg_contrast_25,
-          {aspectRatio},
+          {aspectRatio: max},
         ]}>
         {contents}
       </Pressable>
     )
   } else {
     return (
-      <SquareFramedImage aspectRatio={aspectRatio}>
+      <SquareFramedImage aspectRatio={constrained}>
         <Pressable
           onPress={onPress}
           onLongPress={onLongPress}
