@@ -6471,7 +6471,7 @@ msgstr "Selecciona el vídeo"
 
 #: src/components/dialogs/MutedWords.tsx:242
 msgid "Select what content this mute word should apply to."
-msgstr "Tria a quin contingut s'ha d'aplicar aquesta paraula silenciada"
+msgstr "Tria a quin contingut s'ha d'aplicar aquesta paraula silenciada."
 
 #: src/screens/Onboarding/StepModeration/index.tsx:63
 #~ msgid "Select what you want to see (or not see), and we’ll handle the rest."
