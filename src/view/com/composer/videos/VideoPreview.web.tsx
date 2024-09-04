@@ -59,7 +59,7 @@ export function VideoPreview({
       <video
         ref={ref}
         src={video.uri}
-        style={a.flex_1}
+        style={{width: '100%', height: '100%', objectFit: 'cover'}}
         autoPlay
         loop
         muted
