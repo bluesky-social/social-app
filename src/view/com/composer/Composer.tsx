@@ -25,8 +25,8 @@ import Animated, {
   FadeOut,
   interpolateColor,
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
-  withRepeat,
   withTiming,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -1082,32 +1082,24 @@ function ToolbarWrapper({
 function VideoUploadToolbar({state}: {state: VideoUploadState}) {
   const t = useTheme()
   const {_} = useLingui()
+  let progress = state.jobStatus?.progress
+    ? state.jobStatus.progress / 100
+    : state.progress
+  let wheelProgress = progress === 0 || progress === 1 ? 0.33 : progress
 
-  const rotate = useSharedValue(0)
-  const opacity = useSharedValue(0.35)
-
-  React.useEffect(() => {
-    rotate.value = withRepeat(
-      withTiming(360, {
+  const rotate = useDerivedValue(() => {
+    if (progress === 0 || progress === 1) {
+      return withTiming(360, {
         duration: 2500,
         easing: Easing.out(Easing.cubic),
-      }),
-      -1,
-    )
-    opacity.value = withRepeat(
-      withTiming(1, {
-        duration: 1000,
-        easing: Easing.out(Easing.cubic),
-      }),
-      -1,
-      true,
-    )
-  }, [rotate, opacity])
+      })
+    }
+    return 0
+  })
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
       transform: [{rotateZ: `${rotate.value}deg`}],
-      opacity: opacity.value,
     }
   })
 
@@ -1128,10 +1120,6 @@ function VideoUploadToolbar({state}: {state: VideoUploadState}) {
       break
   }
 
-  let progress = state.jobStatus?.progress
-    ? state.jobStatus.progress / 100
-    : state.progress
-
   if (state.error) {
     text = _('Error')
     progress = 100
@@ -1145,7 +1133,7 @@ function VideoUploadToolbar({state}: {state: VideoUploadState}) {
           borderWidth={1}
           borderColor={t.atoms.border_contrast_low.borderColor}
           color={state.error ? t.palette.negative_500 : t.palette.primary_500}
-          progress={progress}
+          progress={wheelProgress}
         />
       </Animated.View>
       <NewText style={[a.font_bold, a.ml_sm]}>{text}</NewText>
