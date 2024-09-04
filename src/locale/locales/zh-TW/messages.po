@@ -5408,7 +5408,7 @@ msgstr "選擇 {numItems} 個項目中的第 {i} 項"
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:57
 msgid "Select subtitle file (.vtt)"
-msgstr "選擇字幕檔（.vtt）"
+msgstr "選擇字幕檔 (.vtt)"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:83
 msgid "Select the {emojiName} emoji as your avatar"
