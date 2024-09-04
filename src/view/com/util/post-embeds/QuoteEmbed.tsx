@@ -248,12 +248,14 @@ export function QuoteEmbed({
               </View>
             )}
             {richText ? (
-              <RichText
-                value={richText}
-                style={a.text_md}
-                numberOfLines={20}
-                disableLinks
-              />
+              <View style={[a.flex_1, a.pt_xs]}>
+                <RichText
+                  value={richText}
+                  style={a.text_md}
+                  numberOfLines={20}
+                  disableLinks
+                />
+              </View>
             ) : null}
           </View>
         ) : (
