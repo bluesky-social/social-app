@@ -5852,7 +5852,7 @@ msgstr "Respostes deshabilitades"
 
 #: src/components/WhoCanReply.tsx:215
 msgid "Replies to this post are disabled."
-msgstr "Les respostes a aquesta publicació estan deshabilitades"
+msgstr "Les respostes a aquesta publicació estan deshabilitades."
 
 #: src/components/WhoCanReply.tsx:243
 #~ msgid "Replies to this thread are disabled"
