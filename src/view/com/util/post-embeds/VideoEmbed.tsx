@@ -10,6 +10,7 @@ import {useGate} from '#/lib/statsig/statsig'
 import {VideoEmbedInnerNative} from '#/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative'
 import {atoms as a} from '#/alf'
 import {Button} from '#/components/Button'
+import {Loader} from '#/components/Loader'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {VisibilityView} from '../../../../../modules/expo-bluesky-swiss-army'
 import {ErrorBoundary} from '../ErrorBoundary'
@@ -60,7 +61,7 @@ function Inner({embed}: Props) {
     useActiveVideoNative()
   const viewId = useId()
 
-  const [_playerStatus, setPlayerStatus] = useState<
+  const [playerStatus, setPlayerStatus] = useState<
     'loading' | 'idle' | 'readyToPlay' | 'error'
   >('loading')
   const [isMuted, setIsMuted] = useState(player.muted)
@@ -100,12 +101,16 @@ function Inner({embed}: Props) {
   }, [player, isActive])
 
   const onChangeStatus = (isVisible: boolean) => {
+    if (isFullscreen) {
+      return
+    }
+
     if (isVisible) {
       setActiveSource(embed.playlist, viewId)
       if (!player.playing) {
         player.play()
       }
-    } else if (!isFullscreen) {
+    } else {
       player.muted = true
       if (player.playing) {
         player.pause()
@@ -127,8 +132,18 @@ function Inner({embed}: Props) {
           isFullscreen={isFullscreen}
           setIsFullscreen={setIsFullscreen}
         />
-      ) : (
-        <>
+      ) : null}
+      {!isActive || playerStatus === 'loading' ? (
+        <View
+          style={[
+            {
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+            },
+          ]}>
           <Image
             source={{uri: embed.thumbnail}}
             alt={embed.alt}
@@ -143,10 +158,23 @@ function Inner({embed}: Props) {
             }}
             label={_(msg`Play video`)}
             color="secondary">
-            <PlayButtonIcon />
+            {playerStatus === 'loading' ? (
+              <View
+                style={[
+                  a.rounded_full,
+                  a.p_xs,
+                  a.absolute,
+                  {top: 'auto', left: 'auto'},
+                  {backgroundColor: 'rgba(0,0,0,0.5)'},
+                ]}>
+                <Loader size="2xl" style={{color: 'white'}} />
+              </View>
+            ) : (
+              <PlayButtonIcon />
+            )}
           </Button>
-        </>
-      )}
+        </View>
+      ) : null}
     </VisibilityView>
   )
 }

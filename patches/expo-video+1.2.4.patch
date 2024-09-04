@@ -86,7 +86,7 @@ index 4b6c6d8..e20f51a 100644
 +++ b/node_modules/expo-video/android/src/main/java/expo/modules/video/VideoManager.kt
 @@ -1,5 +1,6 @@
  package expo.modules.video
-
+ 
 +import android.provider.MediaStore.Video
  import androidx.annotation.OptIn
  import androidx.media3.common.util.UnstableApi
@@ -94,16 +94,16 @@ index 4b6c6d8..e20f51a 100644
 @@ -15,6 +16,8 @@ object VideoManager {
    // Keeps track of all existing VideoPlayers, and whether they are attached to a VideoView
    private var videoPlayersToVideoViews = mutableMapOf<VideoPlayer, MutableList<VideoView>>()
-
+ 
 +  private var previouslyPlayingViews: MutableList<VideoView>? = null
 +
    private lateinit var audioFocusManager: AudioFocusManager
-
+ 
    fun onModuleCreated(appContext: AppContext) {
 @@ -69,16 +72,24 @@ object VideoManager {
      return videoPlayersToVideoViews[videoPlayer]?.isNotEmpty() ?: false
    }
-
+ 
 -  fun onAppForegrounded() = Unit
 +  fun onAppForegrounded() {
 +    val previouslyPlayingViews = this.previouslyPlayingViews ?: return
@@ -113,7 +113,7 @@ index 4b6c6d8..e20f51a 100644
 +    }
 +    this.previouslyPlayingViews = null
 +  }
-
+ 
    fun onAppBackgrounded() {
 +    val previouslyPlayingViews = mutableListOf<VideoView>()
      for (videoView in videoViews.values) {
@@ -270,16 +270,27 @@ index cb9ca6d..ed8bb7e 100644
  }
  //# sourceMappingURL=VideoView.types.d.ts.map
 \ No newline at end of file
+diff --git a/node_modules/expo-video/ios/Enums/PlayerStatus.swift b/node_modules/expo-video/ios/Enums/PlayerStatus.swift
+index 6af69ca..7b8dc82 100644
+--- a/node_modules/expo-video/ios/Enums/PlayerStatus.swift
++++ b/node_modules/expo-video/ios/Enums/PlayerStatus.swift
+@@ -6,5 +6,6 @@ internal enum PlayerStatus: String, Enumerable {
+   case idle
+   case loading
+   case readyToPlay
++  case waitingToPlayAtSpecifiedRate
+   case error
+ }
 diff --git a/node_modules/expo-video/ios/VideoManager.swift b/node_modules/expo-video/ios/VideoManager.swift
-index 094a8b0..3f00525 100644
+index 094a8b0..16e7081 100644
 --- a/node_modules/expo-video/ios/VideoManager.swift
 +++ b/node_modules/expo-video/ios/VideoManager.swift
 @@ -12,6 +12,7 @@ class VideoManager {
-
+ 
    private var videoViews = NSHashTable<VideoView>.weakObjects()
    private var videoPlayers = NSHashTable<VideoPlayer>.weakObjects()
 +  private var previouslyPlayingPlayers: [VideoPlayer]?
-
+ 
    func register(videoPlayer: VideoPlayer) {
      videoPlayers.add(videoPlayer)
 @@ -33,63 +34,70 @@ class VideoManager {
@@ -293,7 +304,7 @@ index 094a8b0..3f00525 100644
 +      }
 +    }
    }
-
+ 
    func onAppBackgrounded() {
 +    var previouslyPlayingPlayers: [VideoPlayer] = []
      for videoView in videoViews.allObjects {
@@ -310,9 +321,9 @@ index 094a8b0..3f00525 100644
      }
 +    self.previouslyPlayingPlayers = previouslyPlayingPlayers
    }
-
+ 
    // MARK: - Audio Session Management
-
+ 
    internal func setAppropriateAudioSessionOrWarn() {
 -    let audioSession = AVAudioSession.sharedInstance()
 -    var audioSessionCategoryOptions: AVAudioSession.CategoryOptions = []
@@ -427,7 +438,7 @@ index 3315b88..733ab1f 100644
      if self.appContext != nil {
        self.emit(event: event, arguments: repeat each arguments)
 diff --git a/node_modules/expo-video/ios/VideoPlayerObserver.swift b/node_modules/expo-video/ios/VideoPlayerObserver.swift
-index d289e26..ea4d96f 100644
+index d289e26..eab2ee0 100644
 --- a/node_modules/expo-video/ios/VideoPlayerObserver.swift
 +++ b/node_modules/expo-video/ios/VideoPlayerObserver.swift
 @@ -21,6 +21,7 @@ protocol VideoPlayerObserverDelegate: AnyObject {
@@ -464,7 +475,13 @@ index d289e26..ea4d96f 100644
    }
  
    private func initializeCurrentPlayerItemObservers(player: AVPlayer, playerItem: AVPlayerItem) {
-@@ -270,6 +276,7 @@ class VideoPlayerObserver {
+@@ -265,11 +271,12 @@ class VideoPlayerObserver {
+     if player.timeControlStatus != .waitingToPlayAtSpecifiedRate && player.status == .readyToPlay && currentItem?.isPlaybackBufferEmpty != true {
+       status = .readyToPlay
+     } else if player.timeControlStatus == .waitingToPlayAtSpecifiedRate {
+-      status = .loading
++      status = .waitingToPlayAtSpecifiedRate
+     }
  
      if isPlaying != (player.timeControlStatus == .playing) {
        isPlaying = player.timeControlStatus == .playing
