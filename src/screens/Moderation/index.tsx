@@ -22,6 +22,7 @@ import {
   useProfileUpdateMutation,
 } from '#/state/queries/profile'
 import {useSession} from '#/state/session'
+import {isNonConfigurableModerationAuthority} from '#/state/session/additional-moderation-authorities'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
@@ -423,45 +424,52 @@ export function ModerationScreenInner({
         </View>
       ) : (
         <View style={[a.rounded_sm, t.atoms.bg_contrast_25]}>
-          {labelers.map((labeler, i) => {
-            return (
-              <React.Fragment key={labeler.creator.did}>
-                {i !== 0 && <Divider />}
-                <LabelingService.Link labeler={labeler}>
-                  {state => (
-                    <LabelingService.Outer
-                      style={[
-                        i === 0 && {
-                          borderTopLeftRadius: a.rounded_sm.borderRadius,
-                          borderTopRightRadius: a.rounded_sm.borderRadius,
-                        },
-                        i === labelers.length - 1 && {
-                          borderBottomLeftRadius: a.rounded_sm.borderRadius,
-                          borderBottomRightRadius: a.rounded_sm.borderRadius,
-                        },
-                        (state.hovered || state.pressed) && [
-                          t.atoms.bg_contrast_50,
-                        ],
-                      ]}>
-                      <LabelingService.Avatar avatar={labeler.creator.avatar} />
-                      <LabelingService.Content>
-                        <LabelingService.Title
-                          value={getLabelingServiceTitle({
-                            displayName: labeler.creator.displayName,
-                            handle: labeler.creator.handle,
-                          })}
-                        />
-                        <LabelingService.Description
-                          value={labeler.creator.description}
-                          handle={labeler.creator.handle}
-                        />
-                      </LabelingService.Content>
-                    </LabelingService.Outer>
-                  )}
-                </LabelingService.Link>
-              </React.Fragment>
+          {labelers
+            .filter(
+              labeler =>
+                !isNonConfigurableModerationAuthority(labeler.creator.did),
             )
-          })}
+            .map((labeler, i) => {
+              return (
+                <React.Fragment key={labeler.creator.did}>
+                  {i !== 0 && <Divider />}
+                  <LabelingService.Link labeler={labeler}>
+                    {state => (
+                      <LabelingService.Outer
+                        style={[
+                          i === 0 && {
+                            borderTopLeftRadius: a.rounded_sm.borderRadius,
+                            borderTopRightRadius: a.rounded_sm.borderRadius,
+                          },
+                          i === labelers.length - 1 && {
+                            borderBottomLeftRadius: a.rounded_sm.borderRadius,
+                            borderBottomRightRadius: a.rounded_sm.borderRadius,
+                          },
+                          (state.hovered || state.pressed) && [
+                            t.atoms.bg_contrast_50,
+                          ],
+                        ]}>
+                        <LabelingService.Avatar
+                          avatar={labeler.creator.avatar}
+                        />
+                        <LabelingService.Content>
+                          <LabelingService.Title
+                            value={getLabelingServiceTitle({
+                              displayName: labeler.creator.displayName,
+                              handle: labeler.creator.handle,
+                            })}
+                          />
+                          <LabelingService.Description
+                            value={labeler.creator.description}
+                            handle={labeler.creator.handle}
+                          />
+                        </LabelingService.Content>
+                      </LabelingService.Outer>
+                    )}
+                  </LabelingService.Link>
+                </React.Fragment>
+              )
+            })}
         </View>
       )}
 
