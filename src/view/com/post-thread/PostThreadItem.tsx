@@ -392,9 +392,9 @@ let PostThreadItemLoaded = ({
                     title={repostsTitle}>
                     <Text
                       testID="repostCount-expanded"
-                      type="lg"
+                      type="md"
                       style={pal.textLight}>
-                      <Text type="xl-bold" style={pal.text}>
+                      <Text type="md-bold" style={pal.text}>
                         {formatCount(i18n, post.repostCount)}
                       </Text>{' '}
                       <Plural
@@ -414,9 +414,9 @@ let PostThreadItemLoaded = ({
                     title={quotesTitle}>
                     <Text
                       testID="quoteCount-expanded"
-                      type="lg"
+                      type="md"
                       style={pal.textLight}>
-                      <Text type="xl-bold" style={pal.text}>
+                      <Text type="md-bold" style={pal.text}>
                         {formatCount(i18n, post.quoteCount)}
                       </Text>{' '}
                       <Plural
@@ -434,9 +434,9 @@ let PostThreadItemLoaded = ({
                     title={likesTitle}>
                     <Text
                       testID="likeCount-expanded"
-                      type="lg"
+                      type="md"
                       style={pal.textLight}>
-                      <Text type="xl-bold" style={pal.text}>
+                      <Text type="md-bold" style={pal.text}>
                         {formatCount(i18n, post.likeCount)}
                       </Text>{' '}
                       <Plural value={post.likeCount} one="like" other="likes" />
