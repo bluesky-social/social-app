@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     paddingLeft: 18,
   },
   viewFullThreadDots: {
-    width: 52,
+    width: 40,
     alignItems: 'center',
   },
 })

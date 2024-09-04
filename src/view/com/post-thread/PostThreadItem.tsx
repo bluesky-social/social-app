@@ -487,7 +487,7 @@ let PostThreadItemLoaded = ({
               paddingLeft: 8,
               height: isThreadedChildAdjacentTop ? 8 : 16,
             }}>
-            <View style={{width: 38}}>
+            <View style={{width: 40}}>
               {!isThreadedChild && showParentReplyLine && (
                 <View
                   style={[
