@@ -1,4 +1,4 @@
-import React, {useCallback, useId, useState} from 'react'
+import React, {useCallback, useEffect, useId, useState} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {AppBskyEmbedVideo} from '@atproto/api'
@@ -16,23 +16,88 @@ import {ErrorBoundary} from '../ErrorBoundary'
 import {useActiveVideoNative} from './ActiveVideoNativeContext'
 import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 
-export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
-  const {_} = useLingui()
-  const {activeSource, activeViewId, setActiveSource, player} =
-    useActiveVideoNative()
-  const viewId = useId()
+interface Props {
+  embed: AppBskyEmbedVideo.View
+}
 
-  const [isFullscreen, setIsFullscreen] = React.useState(false)
-  const isActive = embed.playlist === activeSource && activeViewId === viewId
-
+export function VideoEmbed({embed}: Props) {
   const [key, setKey] = useState(0)
+
   const renderError = useCallback(
     (error: unknown) => (
       <VideoError error={error} retry={() => setKey(key + 1)} />
     ),
     [key],
   )
+
+  let aspectRatio = 16 / 9
+  if (embed.aspectRatio) {
+    const {width, height} = embed.aspectRatio
+    aspectRatio = width / height
+    aspectRatio = clamp(aspectRatio, 1 / 1, 3 / 1)
+  }
+
+  return (
+    <View
+      style={[
+        a.w_full,
+        a.rounded_sm,
+        a.overflow_hidden,
+        {aspectRatio},
+        {backgroundColor: 'black'},
+        a.my_xs,
+      ]}>
+      <ErrorBoundary renderError={renderError} key={key}>
+        <Inner embed={embed} />
+      </ErrorBoundary>
+    </View>
+  )
+}
+
+function Inner({embed}: Props) {
+  const {_} = useLingui()
+  const {activeSource, activeViewId, setActiveSource, player} =
+    useActiveVideoNative()
+  const viewId = useId()
+
+  const [_playerStatus, setPlayerStatus] = useState<
+    'loading' | 'idle' | 'readyToPlay' | 'error'
+  >('loading')
+  const [isMuted, setIsMuted] = useState(player.muted)
+  const [timeRemaining, setTimeRemaining] = React.useState(0)
+  const [isFullscreen, setIsFullscreen] = React.useState(false)
+  const isActive = embed.playlist === activeSource && activeViewId === viewId
+
   const gate = useGate()
+
+  useEffect(() => {
+    if (isActive) {
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      const volumeSub = player.addListener('volumeChange', ({isMuted}) => {
+        setIsMuted(isMuted)
+      })
+      const timeSub = player.addListener(
+        'timeRemainingChange',
+        secondsRemaining => {
+          setTimeRemaining(secondsRemaining)
+        },
+      )
+      const statusSub = player.addListener(
+        'statusChange',
+        (status, _oldStatus, error) => {
+          setPlayerStatus(status)
+          if (status === 'error') {
+            throw error
+          }
+        },
+      )
+      return () => {
+        volumeSub.remove()
+        timeSub.remove()
+        statusSub.remove()
+      }
+    }
+  }, [player, isActive])
 
   const onChangeStatus = (isVisible: boolean) => {
     if (isVisible) {
@@ -52,55 +117,37 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
     return null
   }
 
-  let aspectRatio = 16 / 9
-
-  if (embed.aspectRatio) {
-    const {width, height} = embed.aspectRatio
-    aspectRatio = width / height
-    aspectRatio = clamp(aspectRatio, 1 / 1, 3 / 1)
-  }
-
   return (
-    <View
-      style={[
-        a.w_full,
-        a.rounded_sm,
-        a.overflow_hidden,
-        {aspectRatio},
-        {backgroundColor: 'black'},
-        a.my_xs,
-      ]}>
-      <ErrorBoundary renderError={renderError} key={key}>
-        <VisibilityView enabled={true} onChangeStatus={onChangeStatus}>
-          {isActive ? (
-            <VideoEmbedInnerNative
-              embed={embed}
-              isFullscreen={isFullscreen}
-              setIsFullscreen={setIsFullscreen}
-            />
-          ) : (
-            <>
-              <Image
-                source={{uri: embed.thumbnail}}
-                alt={embed.alt}
-                style={a.flex_1}
-                contentFit="cover"
-                accessibilityIgnoresInvertColors
-              />
-              <Button
-                style={[a.absolute, a.inset_0]}
-                onPress={() => {
-                  setActiveSource(embed.playlist, viewId)
-                }}
-                label={_(msg`Play video`)}
-                color="secondary">
-                <PlayButtonIcon />
-              </Button>
-            </>
-          )}
-        </VisibilityView>
-      </ErrorBoundary>
-    </View>
+    <VisibilityView enabled={true} onChangeStatus={onChangeStatus}>
+      {isActive ? (
+        <VideoEmbedInnerNative
+          embed={embed}
+          timeRemaining={timeRemaining}
+          isMuted={isMuted}
+          isFullscreen={isFullscreen}
+          setIsFullscreen={setIsFullscreen}
+        />
+      ) : (
+        <>
+          <Image
+            source={{uri: embed.thumbnail}}
+            alt={embed.alt}
+            style={a.flex_1}
+            contentFit="cover"
+            accessibilityIgnoresInvertColors
+          />
+          <Button
+            style={[a.absolute, a.inset_0]}
+            onPress={() => {
+              setActiveSource(embed.playlist, viewId)
+            }}
+            label={_(msg`Play video`)}
+            color="secondary">
+            <PlayButtonIcon />
+          </Button>
+        </>
+      )}
+    </VisibilityView>
   )
 }
 
