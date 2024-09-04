@@ -8,7 +8,6 @@ import {
   ViewStyle,
 } from 'react-native'
 import {AppBskyEmbedExternal} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -22,6 +21,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
+import {PlayButton} from '#/components/video/PlayButton'
 import {GifView} from '../../../../../modules/expo-bluesky-gif-view'
 import {GifViewStateChangeEvent} from '../../../../../modules/expo-bluesky-gif-view/src/GifView.types'
 
@@ -69,24 +69,7 @@ function PlaybackControls({
           </View>
         </View>
       ) : !isPlaying ? (
-        <View
-          style={[
-            a.rounded_full,
-            a.align_center,
-            a.justify_center,
-            {
-              backgroundColor: t.palette.primary_500,
-              width: 60,
-              height: 60,
-            },
-          ]}>
-          <FontAwesomeIcon
-            icon="play"
-            size={42}
-            color="white"
-            style={{marginLeft: 8}}
-          />
-        </View>
+        <PlayButton />
       ) : undefined}
     </Pressable>
   )
@@ -155,7 +138,6 @@ export function GifEmbed({
           accessibilityHint={_(msg`Animated GIF`)}
           accessibilityLabel={parsedAlt.alt}
         />
-
         {!hideAlt && parsedAlt.isPreferred && <AltText text={parsedAlt.alt} />}
       </View>
     </View>
@@ -183,7 +165,6 @@ function AltText({text}: {text: string}) {
           <Trans>ALT</Trans>
         </Text>
       </TouchableOpacity>
-
       <Prompt.Outer control={control}>
         <Prompt.TitleText>
           <Trans>Alt Text</Trans>
