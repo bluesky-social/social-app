@@ -27,7 +27,7 @@ export const PostQuotesScreen = ({route}: Props) => {
   )
 
   return (
-    <CenteredView style={a.h_full_vh} sideBorders={true}>
+    <CenteredView style={a.util_screen_outer} sideBorders={true}>
       <ListHeaderDesktop title={_(msg`Quotes`)} />
       <ViewHeader title={_(msg`Quotes`)} showBorder={!isWeb} />
       <PostQuotesComponent uri={uri} />

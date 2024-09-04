@@ -30,5 +30,5 @@ export async function compressVideo(
 
   const info = await getVideoMetaData(compressed)
 
-  return {uri: compressed, size: info.size, mimeType: `video/${info.extension}`}
+  return {uri: compressed, size: info.size, mimeType: `video/mp4`}
 }
