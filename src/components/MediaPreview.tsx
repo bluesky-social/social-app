@@ -11,8 +11,8 @@ import {Trans} from '@lingui/macro'
 
 import {parseTenorGif} from '#/lib/strings/embed-player'
 import {atoms as a} from '#/alf'
-import {Play_Filled_Corner2_Rounded as PlayIcon} from '#/components/icons/Play'
 import {Text} from '#/components/Typography'
+import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 
 /**
  * Streamlined MediaPreview component which just handles images, gifs, and videos
@@ -111,6 +111,9 @@ export function ImageItem({
 export function GifItem({thumbnail, alt}: {thumbnail: string; alt?: string}) {
   return (
     <ImageItem thumbnail={thumbnail} alt={alt}>
+      <View style={[a.absolute, a.inset_0, a.justify_center, a.align_center]}>
+        <PlayButtonIcon size={24} />
+      </View>
       <View style={styles.altContainer}>
         <Text style={styles.alt}>
           <Trans>GIF</Trans>
@@ -137,14 +140,14 @@ export function VideoItem({
           a.justify_center,
           a.align_center,
         ]}>
-        <PlayIcon size="xl" fill="white" />
+        <PlayButtonIcon size={24} />
       </View>
     )
   }
   return (
     <ImageItem thumbnail={thumbnail} alt={alt}>
       <View style={[a.absolute, a.inset_0, a.justify_center, a.align_center]}>
-        <PlayIcon size="xl" fill="white" />
+        <PlayButtonIcon size={24} />
       </View>
     </ImageItem>
   )
