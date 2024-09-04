@@ -246,7 +246,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     if (editor) {
       const handleKeyDown = (event: KeyboardEvent) => {
         if (
-          (event.metaKey || event.ctrlKey || event.altKey) &&
+          (event.metaKey || event.altKey) &&
           event.code === 'ArrowLeft'
         ) {
           const {state, dispatch} = editor.view
