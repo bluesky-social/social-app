@@ -46,7 +46,7 @@ export function VideoEmbedInnerNative({
         ref={ref}
         player={player}
         style={[a.flex_1, a.rounded_sm]}
-        contentFit="contain"
+        contentFit="cover"
         nativeControls={isFullscreen}
         accessibilityIgnoresInvertColors
         onEnterFullscreen={() => {
