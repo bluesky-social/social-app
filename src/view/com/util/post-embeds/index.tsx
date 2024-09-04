@@ -32,7 +32,10 @@ import {AutoSizedImage} from '../images/AutoSizedImage'
 import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
 import {ExternalLinkEmbed} from './ExternalLinkEmbed'
 import {MaybeQuoteEmbed} from './QuoteEmbed'
+import {PostEmbedViewContext, QuoteEmbedViewContext} from './types'
 import {VideoEmbed} from './VideoEmbed'
+
+export * from './types'
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -55,7 +58,7 @@ export function PostEmbeds({
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
   allowNestedQuotes?: boolean
-  viewContext?: 'thread-highlighted'
+  viewContext?: PostEmbedViewContext
 }) {
   const {openLightbox} = useLightboxControls()
 
@@ -70,7 +73,15 @@ export function PostEmbeds({
           onOpen={onOpen}
           viewContext={viewContext}
         />
-        <MaybeQuoteEmbed embed={embed.record} onOpen={onOpen} />
+        <MaybeQuoteEmbed
+          embed={embed.record}
+          onOpen={onOpen}
+          viewContext={
+            viewContext === PostEmbedViewContext.Feed
+              ? QuoteEmbedViewContext.FeedEmbedRecordWithMedia
+              : undefined
+          }
+        />
       </View>
     )
   }
@@ -129,7 +140,14 @@ export function PostEmbeds({
           <ContentHider modui={moderation?.ui('contentMedia')}>
             <View style={[styles.container, style]}>
               <AutoSizedImage
-                disableCrop={viewContext === 'thread-highlighted'}
+                crop={
+                  viewContext === PostEmbedViewContext.ThreadHighlighted
+                    ? 'none'
+                    : viewContext ===
+                      PostEmbedViewContext.FeedEmbedRecordWithMedia
+                    ? 'square'
+                    : 'constrained'
+                }
                 image={image}
                 onPress={() => _openLightbox(0)}
                 onPressIn={() => onPressIn(0)}

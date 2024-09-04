@@ -55,11 +55,13 @@ export function useImageAspectRatio({
   }
 }
 
-export function SquareFramedImage({
+export function ConstrainedImage({
   aspectRatio,
+  fullBleed,
   children,
 }: {
   aspectRatio: number
+  fullBleed?: boolean
   children: React.ReactNode
 }) {
   const t = useTheme()
@@ -82,7 +84,7 @@ export function SquareFramedImage({
               a.rounded_sm,
               a.overflow_hidden,
               t.atoms.bg_contrast_25,
-              {aspectRatio},
+              {aspectRatio: fullBleed ? 1 : aspectRatio},
             ]}>
             {children}
           </View>
@@ -94,13 +96,13 @@ export function SquareFramedImage({
 
 export function AutoSizedImage({
   image,
-  disableCrop,
+  crop = 'constrained',
   onPress,
   onLongPress,
   onPressIn,
 }: {
   image: AppBskyEmbedImages.ViewImage
-  disableCrop?: boolean
+  crop?: 'none' | 'square' | 'constrained'
   onPress?: () => void
   onLongPress?: () => void
   onPressIn?: () => void
@@ -116,7 +118,8 @@ export function AutoSizedImage({
     src: image.thumb,
     dimensions: image.aspectRatio,
   })
-  const isCropped = rawIsCropped && !disableCrop
+  const cropDisabled = crop === 'none'
+  const isCropped = rawIsCropped && !cropDisabled
   const hasAlt = !!image.alt
 
   const contents = (
@@ -169,7 +172,7 @@ export function AutoSizedImage({
     </>
   )
 
-  if (disableCrop) {
+  if (cropDisabled) {
     return (
       <Pressable
         onPress={onPress}
@@ -190,7 +193,7 @@ export function AutoSizedImage({
     )
   } else {
     return (
-      <SquareFramedImage aspectRatio={constrained}>
+      <ConstrainedImage fullBleed={crop === 'square'} aspectRatio={constrained}>
         <Pressable
           onPress={onPress}
           onLongPress={onLongPress}
@@ -201,7 +204,7 @@ export function AutoSizedImage({
           style={[a.h_full]}>
           {contents}
         </Pressable>
-      </SquareFramedImage>
+      </ConstrainedImage>
     )
   }
 }
