@@ -32,6 +32,7 @@ import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {PressableWithHover} from 'view/com/util/PressableWithHover'
 import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
+import {atoms as a} from '#/alf'
 import {
   Bell_Filled_Corner0_Rounded as BellFilled,
   Bell_Stroke2_Corner0_Rounded as Bell,
@@ -63,6 +64,7 @@ import {
   UserCircle_Filled_Corner0_Rounded as UserCircleFilled,
   UserCircle_Stroke2_Corner0_Rounded as UserCircle,
 } from '#/components/icons/UserCircle'
+import {Text as NewText} from '#/components/Typography'
 import {router} from '../../../routes'
 
 const NAV_ICON_WIDTH = 28
@@ -211,9 +213,9 @@ function NavItem({count, href, icon, iconFilled, label}: NavItemProps) {
         ) : null}
       </View>
       {isDesktop && (
-        <Text type="title" style={[isCurrent ? s.bold : s.normal, pal.text]}>
+        <NewText style={[a.text_xl, isCurrent ? s.bold : s.normal, pal.text]}>
           {label}
-        </Text>
+        </NewText>
       )}
     </PressableWithHover>
   )
@@ -445,7 +447,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 12,
-    padding: 12,
+    padding: 8,
     borderRadius: 8,
     gap: 10,
   },
