@@ -7,7 +7,10 @@ import {useLingui} from '@lingui/react'
 
 import * as imageSizes from '#/lib/media/image-sizes'
 import {Dimensions} from '#/lib/media/types'
+import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {atoms as a, useTheme} from '#/alf'
+import {Crop_Stroke2_Corner0_Rounded as Crop} from '#/components/icons/Crop'
+import {Text} from '#/components/Typography'
 
 export function useImageAspectRatio({
   src,
@@ -16,9 +19,13 @@ export function useImageAspectRatio({
   src: string
   dimensions: Dimensions | undefined
 }) {
-  const [aspectRatio, setAspectRatio] = React.useState<number>(
+  const [rawAspectRatio, setAspectRatio] = React.useState<number>(
     dimensions ? calc(dimensions) : 1,
   )
+  const aspectRatio = React.useMemo(() => {
+    // max of 3:4 ratio
+    return Math.max(rawAspectRatio, 0.75)
+  }, [rawAspectRatio])
 
   React.useEffect(() => {
     let aborted = false
@@ -34,7 +41,9 @@ export function useImageAspectRatio({
 
   return {
     dimensions,
+    rawAspectRatio,
     aspectRatio,
+    isCropped: rawAspectRatio < aspectRatio,
   }
 }
 
@@ -54,13 +63,6 @@ export function SquareFramedImage({
     const ratio = Math.min(1 / aspectRatio, 1)
     return `${ratio * 100}%`
   }, [aspectRatio])
-  /**
-   * Computed as a CSS `aspectRatio` value
-   */
-  const innerAspectRatio = React.useMemo(() => {
-    // max of 3:4 ratio
-    return Math.max(aspectRatio, 0.75)
-  }, [aspectRatio])
 
   return (
     <View style={[a.w_full]}>
@@ -72,7 +74,7 @@ export function SquareFramedImage({
               a.rounded_sm,
               a.overflow_hidden,
               t.atoms.bg_contrast_25,
-              {aspectRatio: innerAspectRatio},
+              {aspectRatio},
             ]}>
             {children}
           </View>
@@ -88,31 +90,71 @@ export function AutoSizedImage({
   onPress,
   onLongPress,
   onPressIn,
-  children = null,
 }: {
   image: AppBskyEmbedImages.ViewImage
   disableCrop?: boolean
-  children?: React.ReactNode
   onPress?: () => void
   onLongPress?: () => void
   onPressIn?: () => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
-  const {aspectRatio} = useImageAspectRatio({
+  const largeAlt = useLargeAltBadgeEnabled()
+  const {aspectRatio, isCropped: rawIsCropped} = useImageAspectRatio({
     src: image.thumb,
     dimensions: image.aspectRatio,
   })
+  const isCropped = rawIsCropped && !disableCrop
+  const hasAlt = !!image.alt
 
   const contents = (
-    <Image
-      style={[a.w_full, a.h_full]}
-      source={image.thumb}
-      accessible={true} // Must set for `accessibilityLabel` to work
-      accessibilityIgnoresInvertColors
-      accessibilityLabel={image.alt}
-      accessibilityHint=""
-    />
+    <>
+      <Image
+        style={[a.w_full, a.h_full]}
+        source={image.thumb}
+        accessible={true} // Must set for `accessibilityLabel` to work
+        accessibilityIgnoresInvertColors
+        accessibilityLabel={image.alt}
+        accessibilityHint=""
+      />
+
+      {hasAlt || isCropped ? (
+        <View
+          accessible={false}
+          style={[
+            a.absolute,
+            a.flex_row,
+            a.align_center,
+            a.rounded_xs,
+            t.atoms.bg_contrast_25,
+            {
+              gap: 3,
+              padding: 3,
+              bottom: a.p_sm.padding,
+              right: a.p_sm.padding,
+              opacity: 0.8,
+            },
+            largeAlt && [
+              {
+                gap: 4,
+                padding: 5,
+              },
+            ],
+          ]}>
+          {isCropped && (
+            <Crop
+              fill={t.atoms.text_contrast_high.color}
+              width={largeAlt ? 18 : 12}
+            />
+          )}
+          {hasAlt && (
+            <Text style={[a.font_heavy, largeAlt ? a.text_xs : {fontSize: 8}]}>
+              ALT
+            </Text>
+          )}
+        </View>
+      ) : null}
+    </>
   )
 
   if (disableCrop) {
@@ -132,7 +174,6 @@ export function AutoSizedImage({
           {aspectRatio},
         ]}>
         {contents}
-        {children}
       </Pressable>
     )
   } else {
@@ -147,7 +188,6 @@ export function AutoSizedImage({
           accessibilityHint={_(msg`Tap to view full image`)}
           style={[a.h_full]}>
           {contents}
-          {children}
         </Pressable>
       </SquareFramedImage>
     )

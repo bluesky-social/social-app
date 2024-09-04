@@ -3,7 +3,6 @@ import {
   InteractionManager,
   StyleProp,
   StyleSheet,
-  Text,
   View,
   ViewStyle,
 } from 'react-native'
@@ -22,7 +21,6 @@ import {
 } from '@atproto/api'
 
 import {ImagesLightbox, useLightboxControls} from '#/state/lightbox'
-import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {usePalette} from 'lib/hooks/usePalette'
 import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
@@ -60,7 +58,6 @@ export function PostEmbeds({
   contextView?: 'thread-highlighted'
 }) {
   const {openLightbox} = useLightboxControls()
-  const largeAltBadge = useLargeAltBadgeEnabled()
 
   // quote post with media
   // =
@@ -134,17 +131,8 @@ export function PostEmbeds({
                 disableCrop={contextView === 'thread-highlighted'}
                 image={image}
                 onPress={() => _openLightbox(0)}
-                onPressIn={() => onPressIn(0)}>
-                {image.alt === '' ? null : (
-                  <View style={styles.altContainer}>
-                    <Text
-                      style={[styles.alt, largeAltBadge && a.text_xs]}
-                      accessible={false}>
-                      ALT
-                    </Text>
-                  </View>
-                )}
-              </AutoSizedImage>
+                onPressIn={() => onPressIn(0)}
+              />
             </View>
           </ContentHider>
         )
