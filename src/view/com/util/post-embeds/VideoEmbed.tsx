@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useId, useState} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
+import {VideoPlayerStatus} from 'expo-video'
 import {AppBskyEmbedVideo} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -67,14 +68,15 @@ function Inner({embed}: Props) {
     useActiveVideoNative()
   const viewId = useId()
 
-  const [playerStatus, setPlayerStatus] = useState<
-    'loading' | 'idle' | 'readyToPlay' | 'error'
-  >('loading')
+  const [playerStatus, setPlayerStatus] = useState<VideoPlayerStatus>('loading')
   const [isMuted, setIsMuted] = useState(player.muted)
   const [isFullscreen, setIsFullscreen] = React.useState(false)
   const [timeRemaining, setTimeRemaining] = React.useState(0)
   const isActive = embed.playlist === activeSource && activeViewId === viewId
-  const isLoading = isActive && playerStatus === 'loading'
+  const isLoading =
+    isActive &&
+    (playerStatus === 'waitingToPlayAtSpecifiedRate' ||
+      playerStatus === 'loading')
 
   useEffect(() => {
     if (isActive) {
@@ -104,6 +106,12 @@ function Inner({embed}: Props) {
       }
     }
   }, [player, isActive])
+
+  useEffect(() => {
+    if (!isActive && playerStatus !== 'loading') {
+      setPlayerStatus('loading')
+    }
+  }, [isActive, playerStatus])
 
   const onChangeStatus = (isVisible: boolean) => {
     if (isFullscreen) {
@@ -159,7 +167,7 @@ function Inner({embed}: Props) {
             }}
             label={_(msg`Play video`)}
             color="secondary">
-            {playerStatus === 'loading' ? (
+            {isLoading ? (
               <View
                 style={[
                   a.rounded_full,
