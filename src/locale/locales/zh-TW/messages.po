@@ -4024,7 +4024,7 @@ msgstr "只包含字母、數字和連字符"
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:31
 msgid "Only WebVTT (.vtt) files are supported"
-msgstr "只支援 WebVTT (.vtt) 檔案"
+msgstr "僅支援 WebVTT (.vtt) 檔案"
 
 #: src/components/Lists.tsx:88
 msgid "Oops, something went wrong!"
