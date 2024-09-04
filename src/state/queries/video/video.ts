@@ -256,7 +256,7 @@ const useUploadStatusQuery = ({
           throw new Error('Job completed, but did not return a blob')
         onSuccess(status.blob)
       } else if (status.state === 'JOB_STATE_FAILED') {
-        throw new Error('Job failed to process')
+        throw new Error(status.error ?? 'Job failed to process')
       }
       onStatusChange(status)
       return status
