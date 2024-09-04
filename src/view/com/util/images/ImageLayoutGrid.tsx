@@ -1,8 +1,9 @@
 import React from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {AppBskyEmbedImages} from '@atproto/api'
-import {GalleryItem} from './Gallery'
+
 import {isWeb} from 'platform/detection'
+import {GalleryItem} from './Gallery'
 
 interface ImageLayoutGridProps {
   images: AppBskyEmbedImages.ViewImage[]
@@ -10,6 +11,7 @@ interface ImageLayoutGridProps {
   onLongPress?: (index: number) => void
   onPressIn?: (index: number) => void
   style?: StyleProp<ViewStyle>
+  hideBadges?: boolean
 }
 
 export function ImageLayoutGrid({style, ...props}: ImageLayoutGridProps) {

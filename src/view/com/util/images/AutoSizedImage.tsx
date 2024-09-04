@@ -97,12 +97,14 @@ export function ConstrainedImage({
 export function AutoSizedImage({
   image,
   crop = 'constrained',
+  hideBadge,
   onPress,
   onLongPress,
   onPressIn,
 }: {
   image: AppBskyEmbedImages.ViewImage
   crop?: 'none' | 'square' | 'constrained'
+  hideBadge?: boolean
   onPress?: () => void
   onLongPress?: () => void
   onPressIn?: () => void
@@ -133,7 +135,7 @@ export function AutoSizedImage({
         accessibilityHint=""
       />
 
-      {hasAlt || isCropped ? (
+      {(hasAlt || isCropped) && !hideBadge ? (
         <View
           accessible={false}
           style={[

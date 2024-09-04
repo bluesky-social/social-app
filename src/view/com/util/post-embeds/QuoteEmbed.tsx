@@ -207,6 +207,7 @@ export function QuoteEmbed({
       }
     }
   }, [quote.embeds, allowNestedQuotes])
+  const isImagesEmbed = AppBskyEmbedImages.isView(embed)
 
   const onBeforePress = React.useCallback(() => {
     precacheProfile(queryClient, quote.author)
@@ -237,7 +238,8 @@ export function QuoteEmbed({
           <PostAlerts modui={moderation.ui('contentView')} style={[a.py_xs]} />
         ) : null}
 
-        {viewContext === QuoteEmbedViewContext.FeedEmbedRecordWithMedia ? (
+        {viewContext === QuoteEmbedViewContext.FeedEmbedRecordWithMedia &&
+        isImagesEmbed ? (
           <View style={[a.flex_row, a.gap_md]}>
             {embed && (
               <View style={[{width: gtMobile ? 100 : 80}]}>
