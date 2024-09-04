@@ -1079,26 +1079,35 @@ function ToolbarWrapper({
   )
 }
 
-const animConfig = {
-  duration: 2500,
-  easing: Easing.out(Easing.cubic),
-}
-
 function VideoUploadToolbar({state}: {state: VideoUploadState}) {
   const t = useTheme()
   const {_} = useLingui()
 
   const rotate = useSharedValue(0)
-  const opacity = useSharedValue(0.8)
+  const opacity = useSharedValue(0.35)
 
   React.useEffect(() => {
-    rotate.value = withRepeat(withTiming(360, animConfig), -1)
-    opacity.value = withRepeat(withTiming(1, animConfig))
+    rotate.value = withRepeat(
+      withTiming(360, {
+        duration: 2500,
+        easing: Easing.out(Easing.cubic),
+      }),
+      -1,
+    )
+    opacity.value = withRepeat(
+      withTiming(1, {
+        duration: 1000,
+        easing: Easing.out(Easing.cubic),
+      }),
+      -1,
+      true,
+    )
   }, [rotate, opacity])
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
       transform: [{rotateZ: `${rotate.value}deg`}],
+      opacity: opacity.value,
     }
   })
 
@@ -1130,7 +1139,7 @@ function VideoUploadToolbar({state}: {state: VideoUploadState}) {
 
   return (
     <ToolbarWrapper style={[a.flex_row, a.align_center, {paddingVertical: 5}]}>
-      <Animated.View style={animatedStyle}>
+      <Animated.View style={[animatedStyle]}>
         <ProgressCircle
           size={30}
           borderWidth={1}
