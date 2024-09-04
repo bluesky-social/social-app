@@ -48,14 +48,14 @@ export function PostEmbeds({
   onOpen,
   style,
   allowNestedQuotes,
-  contextView,
+  viewContext,
 }: {
   embed?: Embed
   moderation?: ModerationDecision
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
   allowNestedQuotes?: boolean
-  contextView?: 'thread-highlighted'
+  viewContext?: 'thread-highlighted'
 }) {
   const {openLightbox} = useLightboxControls()
 
@@ -68,6 +68,7 @@ export function PostEmbeds({
           embed={embed.media}
           moderation={moderation}
           onOpen={onOpen}
+          viewContext={viewContext}
         />
         <MaybeQuoteEmbed embed={embed.record} onOpen={onOpen} />
       </View>
@@ -128,7 +129,7 @@ export function PostEmbeds({
           <ContentHider modui={moderation?.ui('contentMedia')}>
             <View style={[styles.container, style]}>
               <AutoSizedImage
-                disableCrop={contextView === 'thread-highlighted'}
+                disableCrop={viewContext === 'thread-highlighted'}
                 image={image}
                 onPress={() => _openLightbox(0)}
                 onPressIn={() => onPressIn(0)}
