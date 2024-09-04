@@ -3,6 +3,7 @@
 ## `expo-video` Patch
 
 ### `onEnterFullScreen`/`onExitFullScreen`
+
 Adds two props to `VideoView`: `onEnterFullscreen` and `onExitFullscreen` which do exactly what they say on
 the tin.
 
