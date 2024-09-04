@@ -20,11 +20,13 @@ import {
 // @ts-expect-error no type definition
 import ProgressCircle from 'react-native-progress/Circle'
 import Animated, {
+  Easing,
   FadeIn,
   FadeOut,
   interpolateColor,
   useAnimatedStyle,
   useSharedValue,
+  withRepeat,
   withTiming,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -1077,9 +1079,28 @@ function ToolbarWrapper({
   )
 }
 
+const animConfig = {
+  duration: 300,
+  easing: Easing.out(Easing.cubic),
+}
+
 function VideoUploadToolbar({state}: {state: VideoUploadState}) {
   const t = useTheme()
   const {_} = useLingui()
+
+  const rotate = useSharedValue(0)
+  const opacity = useSharedValue(0.8)
+
+  React.useEffect(() => {
+    rotate.value = withRepeat(withTiming(360, animConfig), -1)
+    opacity.value = withRepeat(withTiming(1, animConfig))
+  }, [rotate, opacity])
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{rotateZ: `${rotate.value}deg`}],
+    }
+  })
 
   let text = ''
 
@@ -1102,8 +1123,6 @@ function VideoUploadToolbar({state}: {state: VideoUploadState}) {
     ? state.jobStatus.progress / 100
     : state.progress
 
-  console.log(state.jobStatus)
-
   if (state.error) {
     text = _('Error')
     progress = 100
@@ -1111,13 +1130,15 @@ function VideoUploadToolbar({state}: {state: VideoUploadState}) {
 
   return (
     <ToolbarWrapper style={[a.flex_row, a.align_center, {paddingVertical: 5}]}>
-      <ProgressCircle
-        size={30}
-        borderWidth={1}
-        borderColor={t.atoms.border_contrast_low.borderColor}
-        color={state.error ? t.palette.negative_500 : t.palette.primary_500}
-        progress={progress}
-      />
+      <Animated.View style={animatedStyle}>
+        <ProgressCircle
+          size={30}
+          borderWidth={1}
+          borderColor={t.atoms.border_contrast_low.borderColor}
+          color={state.error ? t.palette.negative_500 : t.palette.primary_500}
+          progress={progress}
+        />
+      </Animated.View>
       <NewText style={[a.font_bold, a.ml_sm]}>{text}</NewText>
     </ToolbarWrapper>
   )
