@@ -27,6 +27,7 @@ import Animated, {
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
+  withRepeat,
   withTiming,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -1089,10 +1090,13 @@ function VideoUploadToolbar({state}: {state: VideoUploadState}) {
 
   const rotate = useDerivedValue(() => {
     if (progress === 0 || progress >= 0.99) {
-      return withTiming(360, {
-        duration: 2500,
-        easing: Easing.out(Easing.cubic),
-      })
+      return withRepeat(
+        withTiming(360, {
+          duration: 2500,
+          easing: Easing.out(Easing.cubic),
+        }),
+        -1,
+      )
     }
     return 0
   })
