@@ -20,13 +20,16 @@ import {TimeIndicator} from './TimeIndicator'
 
 export function VideoEmbedInnerNative({
   embed,
+  isFullscreen,
+  setIsFullscreen,
 }: {
   embed: AppBskyEmbedVideo.View
+  isFullscreen: boolean
+  setIsFullscreen: (isFullscreen: boolean) => void
 }) {
   const {_} = useLingui()
   const {player} = useActiveVideoNative()
   const ref = useRef<VideoView>(null)
-  const [isFullscreen, setIsFullscreen] = useState(false)
 
   const enterFullscreen = useCallback(() => {
     ref.current?.enterFullscreen()
@@ -98,9 +101,18 @@ function VideoControls({
         setTimeRemaining(secondsRemaining)
       },
     )
+    const statusSub = player.addListener(
+      'statusChange',
+      (status, _oldStatus, error) => {
+        if (status === 'error') {
+          throw error
+        }
+      },
+    )
     return () => {
       volumeSub.remove()
       timeSub.remove()
+      statusSub.remove()
     }
   }, [player])
 

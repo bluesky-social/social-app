@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react'
+import React, {useCallback, useId, useState} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {AppBskyEmbedVideo} from '@atproto/api'
@@ -17,10 +17,14 @@ import {useActiveVideoNative} from './ActiveVideoNativeContext'
 import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 
 export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
-  const t = useTheme()
-  const {activeSource, setActiveSource} = useActiveVideoNative()
-  const isActive = embed.playlist === activeSource
   const {_} = useLingui()
+  const t = useTheme()
+  const {activeSource, activeViewId, setActiveSource, player} =
+    useActiveVideoNative()
+  const viewId = useId()
+
+  const [isFullscreen, setIsFullscreen] = React.useState(false)
+  const isActive = embed.playlist === activeSource && activeViewId === viewId
 
   const [key, setKey] = useState(0)
   const renderError = useCallback(
@@ -30,6 +34,20 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
     [key],
   )
   const gate = useGate()
+
+  const onChangeStatus = (isVisible: boolean) => {
+    if (isVisible) {
+      setActiveSource(embed.playlist, viewId)
+      if (!player.playing) {
+        player.play()
+      }
+    } else if (!isFullscreen) {
+      player.muted = true
+      if (player.playing) {
+        player.pause()
+      }
+    }
+  }
 
   if (!gate('video_view_on_posts')) {
     return null
@@ -54,15 +72,13 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
         a.my_xs,
       ]}>
       <ErrorBoundary renderError={renderError} key={key}>
-        <VisibilityView
-          enabled={true}
-          onChangeStatus={isVisible => {
-            if (isVisible) {
-              setActiveSource(embed.playlist)
-            }
-          }}>
+        <VisibilityView enabled={true} onChangeStatus={onChangeStatus}>
           {isActive ? (
-            <VideoEmbedInnerNative embed={embed} />
+            <VideoEmbedInnerNative
+              embed={embed}
+              isFullscreen={isFullscreen}
+              setIsFullscreen={setIsFullscreen}
+            />
           ) : (
             <>
               <Image
@@ -75,7 +91,7 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
               <Button
                 style={[a.absolute, a.inset_0]}
                 onPress={() => {
-                  setActiveSource(embed.playlist)
+                  setActiveSource(embed.playlist, viewId)
                 }}
                 label={_(msg`Play video`)}
                 color="secondary">
