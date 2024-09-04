@@ -63,6 +63,13 @@ export function useReportOptions(): ReportOptions {
       ],
       post: [
         {
+          reason: ComAtprotoModerationDefs.REASONMISLEADING,
+          title: _(msg`Misleading Account`),
+          description: _(
+            msg`Impersonation or false claims about identity or affiliation`,
+          ),
+        },
+        {
           reason: ComAtprotoModerationDefs.REASONSPAM,
           title: _(msg`Spam`),
           description: _(msg`Excessive mentions or replies`),
