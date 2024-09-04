@@ -5915,7 +5915,7 @@ msgstr "Resposta a tu mateix"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:332
 msgid "Reply visibility updated"
-msgstr "S'ha actualitzat la visibilitat de les respostes"
+msgstr "S'ha actualitzat la visibilitat de la resposta"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:331
 msgid "Reply was successfully hidden"
