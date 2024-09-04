@@ -271,7 +271,12 @@ export class FeedTuner {
           }
         } else {
           if (!dryRun) {
-            this.seenUris.add(item.post.uri)
+            // Reposting a reply elevates it to top-level, so its parent/root won't be displayed.
+            // Disable in-thread dedupe for this case since we don't want to miss them later.
+            const disableDedupe = slice.isReply && slice.isRepost
+            if (!disableDedupe) {
+              this.seenUris.add(item.post.uri)
+            }
           }
         }
       }
