@@ -4618,7 +4618,7 @@ msgstr "Ningú"
 
 #: src/components/WhoCanReply.tsx:237
 msgid "No one but the author can quote this post."
-msgstr "Ningú més que l'autor pot citar aquesta publicació"
+msgstr "Ningú més que l'autor pot citar aquesta publicació."
 
 #: src/screens/Profile/Sections/Feed.tsx:59
 msgid "No posts yet."
