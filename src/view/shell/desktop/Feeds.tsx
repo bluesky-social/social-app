@@ -51,7 +51,7 @@ export function DesktopFeeds() {
       })}
       <View style={{paddingTop: 8, paddingBottom: 6}}>
         <TextLink
-          type="lg"
+          type="md"
           href="/feeds"
           text={_(msg`More feeds`)}
           style={[pal.link]}
@@ -76,7 +76,7 @@ function FeedItem({
   return (
     <View style={{paddingVertical: 6}}>
       <TextLink
-        type="xl"
+        type="md"
         href={href}
         text={title}
         onPress={onPress}

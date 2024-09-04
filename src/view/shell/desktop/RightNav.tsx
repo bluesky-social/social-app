@@ -61,7 +61,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
             {hasSession && (
               <>
                 <TextLink
-                  type="md"
+                  type="sm"
                   style={pal.link}
                   href={FEEDBACK_FORM_URL({
                     email: currentAccount?.email,
@@ -69,41 +69,41 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
                   })}
                   text={_(msg`Feedback`)}
                 />
-                <Text type="md" style={pal.textLight}>
+                <Text type="sm" style={pal.textLight}>
                   &middot;
                 </Text>
               </>
             )}
             <TextLink
-              type="md"
+              type="sm"
               style={pal.link}
               href="https://bsky.social/about/support/privacy-policy"
               text={_(msg`Privacy`)}
             />
-            <Text type="md" style={pal.textLight}>
+            <Text type="sm" style={pal.textLight}>
               &middot;
             </Text>
             <TextLink
-              type="md"
+              type="sm"
               style={pal.link}
               href="https://bsky.social/about/support/tos"
               text={_(msg`Terms`)}
             />
-            <Text type="md" style={pal.textLight}>
+            <Text type="sm" style={pal.textLight}>
               &middot;
             </Text>
             <TextLink
-              type="md"
+              type="sm"
               style={pal.link}
               href={HELP_DESK_URL}
               text={_(msg`Help`)}
             />
           </View>
           {kawaii && (
-            <Text type="md" style={[pal.textLight, {marginTop: 12}]}>
+            <Text type="sm" style={[pal.textLight, {marginTop: 12}]}>
               Logo by{' '}
               <TextLink
-                type="md"
+                type="sm"
                 href="/profile/sawaratsuki.bsky.social"
                 text="@sawaratsuki.bsky.social"
                 style={pal.link}
