@@ -123,12 +123,16 @@ export function useUploadVideo({
         blobRef,
       })
     },
-    onError: useCallback(() => {
-      dispatch({
-        type: 'SetError',
-        error: _(msg`Video failed to process`),
-      })
-    }, [_]),
+    onError: useCallback(
+      error => {
+        logger.error('Error processing video', {safeMessage: error})
+        dispatch({
+          type: 'SetError',
+          error: _(msg`Video failed to process`),
+        })
+      },
+      [_],
+    ),
   })
 
   const {mutate: onVideoCompressed} = useUploadVideoMutation({
@@ -140,6 +144,7 @@ export function useUploadVideo({
       setJobId(response.jobId)
     },
     onError: e => {
+      logger.error('Error uploading video', {safeMessage: e})
       if (e instanceof ServerError) {
         dispatch({
           type: 'SetError',
@@ -171,6 +176,7 @@ export function useUploadVideo({
       onVideoCompressed(video)
     },
     onError: e => {
+      logger.error('Error uploading video', {safeMessage: e})
       if (e instanceof VideoTooLargeError) {
         dispatch({
           type: 'SetError',
