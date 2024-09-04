@@ -1,34 +1,20 @@
-import React from 'react'
-import {TextStyle} from 'react-native'
-import {AppBskyRichtextFacet, RichText as RichTextAPI} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
+import React, { Fragment, useCallback, useMemo, useState } from 'react';
+import { View, Text, TextStyle, TouchableOpacity } from 'react-native';
+import { AppBskyRichtextFacet, RichText as RichTextAPI } from '@atproto/api';
+import { msg } from '@lingui/macro';
+import { useLingui } from '@lingui/react';
+import { useNavigation } from '@react-navigation/native';
 
-import {NavigationProp} from '#/lib/routes/types'
-import {toShortUrl} from '#/lib/strings/url-helpers'
-import {isNative} from '#/platform/detection'
-import {atoms as a, flatten, native, TextStyleProp, useTheme, web} from '#/alf'
-import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {InlineLinkText, LinkProps} from '#/components/Link'
-import {ProfileHoverCard} from '#/components/ProfileHoverCard'
-import {TagMenu, useTagMenuControl} from '#/components/TagMenu'
-import {Text, TextProps} from '#/components/Typography'
+import { NavigationProp } from '#/lib/routes/types';
+import { toShortUrl } from '#/lib/strings/url-helpers';
+import { isNative } from '#/platform/detection';
+import { atoms as a, flatten, native, TextStyleProp, useTheme, web } from '#/alf';
+import { useInteractionState } from '#/components/hooks/useInteractionState';
+import { InlineLinkText, LinkProps } from '#/components/Link';
+import { ProfileHoverCard } from '#/components/ProfileHoverCard';
+import { TagMenu, useTagMenuControl } from '#/components/TagMenu';
 
-const WORD_WRAP = {wordWrap: 1}
-
-export type RichTextProps = TextStyleProp &
-  Pick<TextProps, 'selectable'> & {
-    value: RichTextAPI | string
-    testID?: string
-    numberOfLines?: number
-    disableLinks?: boolean
-    enableTags?: boolean
-    authorHandle?: string
-    onLinkPress?: LinkProps['onPress']
-    interactiveStyle?: TextStyle
-    emojiMultiplier?: number
-  }
+const WORD_WRAP = { wordWrap: 'break-word' };  // Updated for accuracy in web CSS
 
 export function RichText({
   testID,
@@ -43,101 +29,94 @@ export function RichText({
   interactiveStyle,
   emojiMultiplier = 1.85,
 }: RichTextProps) {
-  const richText = React.useMemo(
-    () =>
-      value instanceof RichTextAPI ? value : new RichTextAPI({text: value}),
-    [value],
-  )
+  const richText = useMemo(
+    () => value instanceof RichTextAPI ? value : new RichTextAPI({ text: value }),
+    [value]
+  );
 
-  const flattenedStyle = flatten(style)
-  const plainStyles = [a.leading_snug, flattenedStyle]
-  const interactiveStyles = [
-    a.leading_snug,
-    a.pointer_events_auto,
-    flatten(interactiveStyle),
-    flattenedStyle,
-  ]
+  const flattenedStyle = flatten(style);
+  const plainStyles = [a.leading_snug, flattenedStyle];
+  const interactiveStyles = [a.leading_snug, a.pointer_events_auto, flatten(interactiveStyle), flattenedStyle];
 
-  const {text, facets} = richText
+  const { text, facets } = richText;
 
   if (!facets?.length) {
-    if (isOnlyEmoji(text)) {
-      const fontSize =
-        (flattenedStyle.fontSize ?? a.text_sm.fontSize) * emojiMultiplier
-      return (
-        <Text
-          selectable={selectable}
-          testID={testID}
-          style={[plainStyles, {fontSize}]}
-          // @ts-ignore web only -prf
-          dataSet={WORD_WRAP}>
-          {text}
-        </Text>
-      )
-    }
-    return (
-      <Text
-        selectable={selectable}
-        testID={testID}
-        style={plainStyles}
-        numberOfLines={numberOfLines}
-        // @ts-ignore web only -prf
-        dataSet={WORD_WRAP}>
-        {text}
-      </Text>
-    )
+    return renderSimpleText(text, selectable, testID, numberOfLines, plainStyles, emojiMultiplier);
   }
 
-  const els = []
-  let key = 0
-  // N.B. must access segments via `richText.segments`, not via destructuring
+  const els = buildTextElements(richText, disableLinks, enableTags, authorHandle, interactiveStyles, onLinkPress);
+
+  return (
+    <Text selectable={selectable} testID={testID} style={plainStyles} numberOfLines={numberOfLines}>
+      {els}
+    </Text>
+  );
+}
+
+function renderSimpleText(text, selectable, testID, numberOfLines, plainStyles, emojiMultiplier) {
+  if (isOnlyEmoji(text)) {
+    const fontSize = (flattenedStyle.fontSize ?? a.text_sm.fontSize) * emojiMultiplier;
+    return (
+      <Text selectable={selectable} testID={testID} style={[plainStyles, { fontSize }]} numberOfLines={numberOfLines}>
+        {text}
+      </Text>
+    );
+  }
+  return (
+    <Text selectable={selectable} testID={testID} style={plainStyles} numberOfLines={numberOfLines}>
+      {text}
+    </Text>
+  );
+}
+
+const DEFAULT_DOMAIN = 'bsky.social';
+const TLD_REGEX = /.\w+$/;  // Regex to check for a valid top-level domain
+
+function buildTextElements(richText, disableLinks, enableTags, authorHandle, interactiveStyles, onLinkPress) {
+  let key = 0;
+  const elements = [];
   for (const segment of richText.segments()) {
-    const link = segment.link
-    const mention = segment.mention
-    const tag = segment.tag
-    if (
-      mention &&
-      AppBskyRichtextFacet.validateMention(mention).success &&
-      !disableLinks
-    ) {
-      els.push(
-        <ProfileHoverCard key={key} inline did={mention.did}>
-          <InlineLinkText
-            selectable={selectable}
-            to={`/profile/${mention.did}`}
-            style={interactiveStyles}
-            // @ts-ignore TODO
-            dataSet={WORD_WRAP}
-            onPress={onLinkPress}>
-            {segment.text}
-          </InlineLinkText>
-        </ProfileHoverCard>,
-      )
-    } else if (link && AppBskyRichtextFacet.validateLink(link).success) {
-      if (disableLinks) {
-        els.push(toShortUrl(segment.text))
-      } else {
-        els.push(
-          <InlineLinkText
-            selectable={selectable}
-            key={key}
-            to={link.uri}
-            style={interactiveStyles}
-            // @ts-ignore TODO
-            dataSet={WORD_WRAP}
-            shareOnLongPress
-            onPress={onLinkPress}>
-            {toShortUrl(segment.text)}
-          </InlineLinkText>,
-        )
+    const { link, mention, tag } = segment;
+
+    // Process mentions
+    if (mention) {
+      // Check if the mention contains a top-level domain to determine if it's a full handle
+      const hasTLD = TLD_REGEX.test(mention.did);
+      const fullMentionHandle = hasTLD ? mention.did : `${mention.did}@${DEFAULT_DOMAIN}`;
+
+      // Validate the backend handle, but use the display text as provided in the segment
+      if (AppBskyRichtextFacet.validateMention({ did: fullMentionHandle }).success && !disableLinks) {
+        elements.push(
+          <ProfileHoverCard key={key} inline did={fullMentionHandle}>
+            <InlineLinkText
+              selectable={selectable}
+              to={`/profile/${fullMentionHandle}`}
+              style={interactiveStyles}
+              onPress={onLinkPress}>
+              {`@${mention.did}`}  // Displaying the original user handle without domain
+            </InlineLinkText>
+          </ProfileHoverCard>
+        );
       }
-    } else if (
-      !disableLinks &&
-      enableTags &&
-      tag &&
-      AppBskyRichtextFacet.validateTag(tag).success
-    ) {
-      els.push(
+    }
+
+    // Process links
+    else if (link && AppBskyRichtextFacet.validateLink(link).success && !disableLinks) {
+      elements.push(
+        <InlineLinkText
+          key={key}
+          selectable={selectable}
+          to={link.uri}
+          style={interactiveStyles}
+          onPress={onLinkPress}>
+          {toShortUrl(segment.text)}
+        </InlineLinkText>
+      );
+    }
+
+    // Process tags
+    else if (tag && AppBskyRichtextFacet.validateTag(tag).success && enableTags && !disableLinks) {
+      elements.push(
         <RichTextTag
           key={key}
           text={segment.text}
@@ -145,113 +124,19 @@ export function RichText({
           style={interactiveStyles}
           selectable={selectable}
           authorHandle={authorHandle}
-        />,
-      )
-    } else {
-      els.push(segment.text)
+        />
+      );
     }
-    key++
+
+    // Regular text
+    else {
+      elements.push(segment.text);
+    }
+    key++;
   }
-
-  return (
-    <Text
-      selectable={selectable}
-      testID={testID}
-      style={plainStyles}
-      numberOfLines={numberOfLines}
-      // @ts-ignore web only -prf
-      dataSet={WORD_WRAP}>
-      {els}
-    </Text>
-  )
+  return elements;
 }
 
-function RichTextTag({
-  text,
-  tag,
-  style,
-  selectable,
-  authorHandle,
-}: {
-  text: string
-  tag: string
-  selectable?: boolean
-  authorHandle?: string
-} & TextStyleProp) {
-  const t = useTheme()
-  const {_} = useLingui()
-  const control = useTagMenuControl()
-  const {
-    state: hovered,
-    onIn: onHoverIn,
-    onOut: onHoverOut,
-  } = useInteractionState()
-  const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
-  const {
-    state: pressed,
-    onIn: onPressIn,
-    onOut: onPressOut,
-  } = useInteractionState()
-  const navigation = useNavigation<NavigationProp>()
-
-  const navigateToPage = React.useCallback(() => {
-    navigation.push('Hashtag', {
-      tag: encodeURIComponent(tag),
-    })
-  }, [navigation, tag])
-
-  const openDialog = React.useCallback(() => {
-    control.open()
-  }, [control])
-
-  /*
-   * N.B. On web, this is wrapped in another pressable comopnent with a11y
-   * labels, etc. That's why only some of these props are applied here.
-   */
-
-  return (
-    <React.Fragment>
-      <TagMenu control={control} tag={tag} authorHandle={authorHandle}>
-        <Text
-          selectable={selectable}
-          {...native({
-            accessibilityLabel: _(msg`Hashtag: #${tag}`),
-            accessibilityHint: _(msg`Long press to open tag menu for #${tag}`),
-            accessibilityRole: isNative ? 'button' : undefined,
-            onPress: navigateToPage,
-            onLongPress: openDialog,
-            onPressIn: onPressIn,
-            onPressOut: onPressOut,
-          })}
-          {...web({
-            onMouseEnter: onHoverIn,
-            onMouseLeave: onHoverOut,
-          })}
-          // @ts-ignore
-          onFocus={onFocus}
-          onBlur={onBlur}
-          style={[
-            web({
-              cursor: 'pointer',
-            }),
-            {color: t.palette.primary_500},
-            (hovered || focused || pressed) && {
-              ...web({outline: 0}),
-              textDecorationLine: 'underline',
-              textDecorationColor: t.palette.primary_500,
-            },
-            style,
-          ]}>
-          {text}
-        </Text>
-      </TagMenu>
-    </React.Fragment>
-  )
-}
-
-export function isOnlyEmoji(text: string) {
-  return (
-    text.length <= 15 &&
-    /^[\p{Emoji_Presentation}\p{Extended_Pictographic}]+$/u.test(text)
-  )
+function isOnlyEmoji(text) {
+  return text.length <= 15 && /^[\p{Emoji_Presentation}\p{Extended_Pictographic}]+$/u.test(text);
 }
