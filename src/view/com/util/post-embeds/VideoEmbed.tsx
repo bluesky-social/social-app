@@ -8,9 +8,9 @@ import {useLingui} from '@lingui/react'
 import {clamp} from '#/lib/numbers'
 import {useGate} from '#/lib/statsig/statsig'
 import {VideoEmbedInnerNative} from '#/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a} from '#/alf'
 import {Button} from '#/components/Button'
-import {Play_Filled_Corner2_Rounded as PlayIcon} from '#/components/icons/Play'
+import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {VisibilityView} from '../../../../../modules/expo-bluesky-swiss-army'
 import {ErrorBoundary} from '../ErrorBoundary'
 import {useActiveVideoNative} from './ActiveVideoNativeContext'
@@ -18,7 +18,6 @@ import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 
 export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
   const {_} = useLingui()
-  const t = useTheme()
   const {activeSource, activeViewId, setActiveSource, player} =
     useActiveVideoNative()
   const viewId = useId()
@@ -85,7 +84,7 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
                 source={{uri: embed.thumbnail}}
                 alt={embed.alt}
                 style={a.flex_1}
-                contentFit="contain"
+                contentFit="cover"
                 accessibilityIgnoresInvertColors
               />
               <Button
@@ -95,7 +94,7 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
                 }}
                 label={_(msg`Play video`)}
                 color="secondary">
-                <PlayIcon width={48} fill={t.palette.white} />
+                <PlayButtonIcon />
               </Button>
             </>
           )}
