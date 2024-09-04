@@ -101,9 +101,13 @@ function VideoControls({
         setTimeRemaining(secondsRemaining)
       },
     )
+    const statusSub = player.addListener('statusChange', e => {
+      console.log(e)
+    })
     return () => {
       volumeSub.remove()
       timeSub.remove()
+      statusSub.remove()
     }
   }, [player])
 
