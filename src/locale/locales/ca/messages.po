@@ -6426,7 +6426,7 @@ msgstr "Selecciona GIF \"{0}\""
 
 #: src/components/dialogs/MutedWords.tsx:142
 msgid "Select how long to mute this word for."
-msgstr "Tria per quant temps s'ha de silenciar aquesta paraula"
+msgstr "Tria per quant temps s'ha de silenciar aquesta paraula."
 
 #: src/view/screens/LanguageSettings.tsx:303
 msgid "Select languages"
