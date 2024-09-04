@@ -42,7 +42,7 @@ export function VideoPreview({
     ref.current.addEventListener(
       'error',
       () => {
-        Toast.show(_(msg`Could not process your video`))
+        Toast.show(_(msg`Could not process your video`), 'xmark')
         clear()
       },
       {signal},
