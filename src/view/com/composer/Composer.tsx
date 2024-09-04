@@ -1098,11 +1098,11 @@ function VideoUploadToolbar({state}: {state: VideoUploadState}) {
       break
   }
 
-  // we could use state.jobStatus?.progress but 99% of the time it jumps from 0 to 100
-  let progress =
-    state.status === 'compressing' || state.status === 'uploading'
-      ? state.progress
-      : 100
+  let progress = state.jobStatus?.progress
+    ? state.jobStatus.progress / 100
+    : state.progress
+
+  console.log(state.jobStatus)
 
   if (state.error) {
     text = _('Error')
