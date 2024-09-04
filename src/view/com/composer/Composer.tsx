@@ -181,6 +181,7 @@ export const ComposePost = observer(function ComposePost({
     clearVideo,
     state: videoUploadState,
     updateVideoDimensions,
+    dispatch: videoUploadDispatch,
   } = useUploadVideo({
     setStatus: setProcessingState,
     onSuccess: () => {
@@ -189,6 +190,7 @@ export const ComposePost = observer(function ComposePost({
       }
     },
   })
+
   const [publishOnUpload, setPublishOnUpload] = useState(false)
 
   const {extLink, setExtLink} = useExternalLinkFetch({setQuote, setError})
@@ -302,147 +304,187 @@ export const ComposePost = observer(function ComposePost({
     return false
   }, [gallery.needsAltText, extLink, extGif, requireAltTextEnabled])
 
-  const onPressPublish = async (finishedUploading?: boolean) => {
-    if (isProcessing || graphemeLength > MAX_GRAPHEME_LENGTH) {
-      return
-    }
+  const onPressPublish = React.useCallback(
+    async (finishedUploading?: boolean) => {
+      if (isProcessing || graphemeLength > MAX_GRAPHEME_LENGTH) {
+        return
+      }
 
-    if (isAltTextRequiredAndMissing) {
-      return
-    }
+      if (isAltTextRequiredAndMissing) {
+        return
+      }
 
-    if (
-      !finishedUploading &&
-      videoUploadState.status !== 'idle' &&
-      videoUploadState.asset
-    ) {
-      setPublishOnUpload(true)
-      return
-    }
+      if (
+        !finishedUploading &&
+        videoUploadState.asset &&
+        videoUploadState.status !== 'done'
+      ) {
+        setPublishOnUpload(true)
+        return
+      }
 
-    setError('')
+      setError('')
 
-    if (
-      richtext.text.trim().length === 0 &&
-      gallery.isEmpty &&
-      !extLink &&
-      !quote
-    ) {
-      setError(_(msg`Did you want to say anything?`))
-      return
-    }
-    if (extLink?.isLoading) {
-      setError(_(msg`Please wait for your link card to finish loading`))
-      return
-    }
+      if (
+        richtext.text.trim().length === 0 &&
+        gallery.isEmpty &&
+        !extLink &&
+        !quote
+      ) {
+        setError(_(msg`Did you want to say anything?`))
+        return
+      }
+      if (extLink?.isLoading) {
+        setError(_(msg`Please wait for your link card to finish loading`))
+        return
+      }
 
-    setIsProcessing(true)
+      setIsProcessing(true)
 
-    let postUri
-    try {
-      postUri = (
-        await apilib.post(agent, {
-          rawText: richtext.text,
-          replyTo: replyTo?.uri,
-          images: gallery.images,
-          quote,
-          extLink,
-          labels,
-          threadgate: threadgateAllowUISettings,
-          postgate,
-          onStateChange: setProcessingState,
-          langs: toPostLanguages(langPrefs.postLanguage),
-          video: videoUploadState.blobRef
-            ? {
-                blobRef: videoUploadState.blobRef,
-                altText: videoAltText,
-                captions: captions,
-                aspectRatio: videoUploadState.asset
-                  ? {
-                      width: videoUploadState.asset?.width,
-                      height: videoUploadState.asset?.height,
-                    }
-                  : undefined,
-              }
-            : undefined,
-        })
-      ).uri
+      let postUri
       try {
-        await whenAppViewReady(agent, postUri, res => {
-          const thread = res.data.thread
-          return AppBskyFeedDefs.isThreadViewPost(thread)
-        })
-      } catch (waitErr: any) {
-        logger.error(waitErr, {
-          message: `Waiting for app view failed`,
-        })
-        // Keep going because the post *was* published.
-      }
-    } catch (e: any) {
-      logger.error(e, {
-        message: `Composer: create post failed`,
-        hasImages: gallery.size > 0,
-      })
-
-      if (extLink) {
-        setExtLink({
-          ...extLink,
-          isLoading: true,
-          localThumb: undefined,
-        } as apilib.ExternalEmbedDraft)
-      }
-      let err = cleanError(e.message)
-      if (err.includes('not locate record')) {
-        err = _(
-          msg`We're sorry! The post you are replying to has been deleted.`,
-        )
-      }
-      setError(err)
-      setIsProcessing(false)
-      return
-    } finally {
-      if (postUri) {
-        logEvent('post:create', {
-          imageCount: gallery.size,
-          isReply: replyTo != null,
-          hasLink: extLink != null,
-          hasQuote: quote != null,
-          langs: langPrefs.postLanguage,
-          logContext: 'Composer',
-        })
-      }
-      track('Create Post', {
-        imageCount: gallery.size,
-      })
-      if (replyTo && replyTo.uri) track('Post:Reply')
-    }
-    if (postUri && !replyTo) {
-      emitPostCreated()
-    }
-    setLangPrefs.savePostLanguageToHistory()
-    if (quote) {
-      // We want to wait for the quote count to update before we call `onPost`, which will refetch data
-      whenAppViewReady(agent, quote.uri, res => {
-        const thread = res.data.thread
-        if (
-          AppBskyFeedDefs.isThreadViewPost(thread) &&
-          thread.post.quoteCount !== quoteCount
-        ) {
-          onPost?.(postUri)
-          return true
+        postUri = (
+          await apilib.post(agent, {
+            rawText: richtext.text,
+            replyTo: replyTo?.uri,
+            images: gallery.images,
+            quote,
+            extLink,
+            labels,
+            threadgate: threadgateAllowUISettings,
+            postgate,
+            onStateChange: setProcessingState,
+            langs: toPostLanguages(langPrefs.postLanguage),
+            video: videoUploadState.pendingPublish?.blobRef
+              ? {
+                  blobRef: videoUploadState.pendingPublish.blobRef,
+                  altText: videoAltText,
+                  captions: captions,
+                  aspectRatio: videoUploadState.asset
+                    ? {
+                        width: videoUploadState.asset?.width,
+                        height: videoUploadState.asset?.height,
+                      }
+                    : undefined,
+                }
+              : undefined,
+          })
+        ).uri
+        try {
+          await whenAppViewReady(agent, postUri, res => {
+            const thread = res.data.thread
+            return AppBskyFeedDefs.isThreadViewPost(thread)
+          })
+        } catch (waitErr: any) {
+          logger.error(waitErr, {
+            message: `Waiting for app view failed`,
+          })
+          // Keep going because the post *was* published.
         }
-        return false
-      })
-    } else {
-      onPost?.(postUri)
+      } catch (e: any) {
+        logger.error(e, {
+          message: `Composer: create post failed`,
+          hasImages: gallery.size > 0,
+        })
+
+        if (extLink) {
+          setExtLink({
+            ...extLink,
+            isLoading: true,
+            localThumb: undefined,
+          } as apilib.ExternalEmbedDraft)
+        }
+        let err = cleanError(e.message)
+        if (err.includes('not locate record')) {
+          err = _(
+            msg`We're sorry! The post you are replying to has been deleted.`,
+          )
+        }
+        setError(err)
+        setIsProcessing(false)
+        return
+      } finally {
+        if (postUri) {
+          logEvent('post:create', {
+            imageCount: gallery.size,
+            isReply: replyTo != null,
+            hasLink: extLink != null,
+            hasQuote: quote != null,
+            langs: langPrefs.postLanguage,
+            logContext: 'Composer',
+          })
+        }
+        track('Create Post', {
+          imageCount: gallery.size,
+        })
+        if (replyTo && replyTo.uri) track('Post:Reply')
+      }
+      if (postUri && !replyTo) {
+        emitPostCreated()
+      }
+      setLangPrefs.savePostLanguageToHistory()
+      if (quote) {
+        // We want to wait for the quote count to update before we call `onPost`, which will refetch data
+        whenAppViewReady(agent, quote.uri, res => {
+          const thread = res.data.thread
+          if (
+            AppBskyFeedDefs.isThreadViewPost(thread) &&
+            thread.post.quoteCount !== quoteCount
+          ) {
+            onPost?.(postUri)
+            return true
+          }
+          return false
+        })
+      } else {
+        onPost?.(postUri)
+      }
+      onClose()
+      Toast.show(
+        replyTo
+          ? _(msg`Your reply has been published`)
+          : _(msg`Your post has been published`),
+      )
+    },
+    [
+      _,
+      agent,
+      captions,
+      extLink,
+      gallery.images,
+      gallery.isEmpty,
+      gallery.size,
+      graphemeLength,
+      isAltTextRequiredAndMissing,
+      isProcessing,
+      labels,
+      langPrefs.postLanguage,
+      onClose,
+      onPost,
+      postgate,
+      quote,
+      quoteCount,
+      replyTo,
+      richtext.text,
+      setExtLink,
+      setLangPrefs,
+      threadgateAllowUISettings,
+      track,
+      videoAltText,
+      videoUploadState.asset,
+      videoUploadState.pendingPublish,
+      videoUploadState.status,
+    ],
+  )
+
+  React.useEffect(() => {
+    if (videoUploadState.pendingPublish && publishOnUpload) {
+      if (!videoUploadState.pendingPublish.mutableProcessed) {
+        videoUploadState.pendingPublish.mutableProcessed = true
+        onPressPublish(true)
+      }
     }
-    onClose()
-    Toast.show(
-      replyTo
-        ? _(msg`Your reply has been published`)
-        : _(msg`Your post has been published`),
-    )
-  }
+  }, [onPressPublish, publishOnUpload, videoUploadState.pendingPublish])
 
   const canPost = useMemo(
     () => graphemeLength <= MAX_GRAPHEME_LENGTH && !isAltTextRequiredAndMissing,
@@ -607,7 +649,7 @@ export const ComposePost = observer(function ComposePost({
               </Text>
             </View>
           )}
-          {error !== '' && (
+          {(error !== '' || videoUploadState.error) && (
             <View style={[a.px_lg, a.pb_sm]}>
               <View
                 style={[
@@ -623,7 +665,7 @@ export const ComposePost = observer(function ComposePost({
                 ]}>
                 <CircleInfo fill={t.palette.negative_400} />
                 <NewText style={[a.flex_1, a.leading_snug, {paddingTop: 1}]}>
-                  {error}
+                  {error || videoUploadState.error}
                 </NewText>
                 <Button
                   label={_(msg`Dismiss error`)}
@@ -638,7 +680,10 @@ export const ComposePost = observer(function ComposePost({
                       right: a.px_md.paddingRight,
                     },
                   ]}
-                  onPress={() => setError('')}>
+                  onPress={() => {
+                    if (error) setError('')
+                    else videoUploadDispatch({type: 'Reset'})
+                  }}>
                   <ButtonIcon icon={X} />
                 </Button>
               </View>
@@ -755,7 +800,8 @@ export const ComposePost = observer(function ComposePost({
             t.atoms.border_contrast_medium,
             styles.bottomBar,
           ]}>
-          {videoUploadState.status !== 'idle' ? (
+          {videoUploadState.status !== 'idle' &&
+          videoUploadState.status !== 'done' ? (
             <VideoUploadToolbar state={videoUploadState} />
           ) : (
             <ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
@@ -764,6 +810,7 @@ export const ComposePost = observer(function ComposePost({
                 <SelectVideoBtn
                   onSelectVideo={selectVideo}
                   disabled={!canSelectImages}
+                  setError={setError}
                 />
               )}
               <OpenCameraBtn gallery={gallery} disabled={!canSelectImages} />
@@ -1032,23 +1079,46 @@ function ToolbarWrapper({
 
 function VideoUploadToolbar({state}: {state: VideoUploadState}) {
   const t = useTheme()
+  const {_} = useLingui()
 
-  const progress =
+  let text = ''
+
+  switch (state.status) {
+    case 'compressing':
+      text = _('Compressing video...')
+      break
+    case 'uploading':
+      text = _('Uploading video...')
+      break
+    case 'processing':
+      text = _('Processing video...')
+      break
+    case 'done':
+      text = _('Video uploaded')
+      break
+  }
+
+  // we could use state.jobStatus?.progress but 99% of the time it jumps from 0 to 100
+  let progress =
     state.status === 'compressing' || state.status === 'uploading'
       ? state.progress
-      : state.jobStatus?.progress ?? 100
+      : 100
+
+  if (state.error) {
+    text = _('Error')
+    progress = 100
+  }
 
   return (
-    <ToolbarWrapper
-      style={[a.gap_sm, a.flex_row, a.align_center, {paddingVertical: 5}]}>
+    <ToolbarWrapper style={[a.flex_row, a.align_center, {paddingVertical: 5}]}>
       <ProgressCircle
         size={30}
         borderWidth={1}
         borderColor={t.atoms.border_contrast_low.borderColor}
-        color={t.palette.primary_500}
+        color={state.error ? t.palette.negative_500 : t.palette.primary_500}
         progress={progress}
       />
-      <Text>{state.status}</Text>
+      <NewText style={[a.font_bold, a.ml_sm]}>{text}</NewText>
     </ToolbarWrapper>
   )
 }

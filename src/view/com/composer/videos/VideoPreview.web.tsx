@@ -5,7 +5,7 @@ import {ImagePickerAsset} from 'expo-image-picker'
 import {CompressedVideo} from '#/lib/media/video/types'
 import {clamp} from '#/lib/numbers'
 import {ExternalEmbedRemoveBtn} from 'view/com/composer/ExternalEmbedRemoveBtn'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a} from '#/alf'
 
 export function VideoPreview({
   asset,
@@ -18,7 +18,6 @@ export function VideoPreview({
   setDimensions: (width: number, height: number) => void
   clear: () => void
 }) {
-  const t = useTheme()
   const ref = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
@@ -54,13 +53,13 @@ export function VideoPreview({
         a.rounded_sm,
         {aspectRatio},
         a.overflow_hidden,
-        {backgroundColor: t.palette.black},
+        {backgroundColor: 'black'},
       ]}>
       <ExternalEmbedRemoveBtn onRemove={clear} />
       <video
         ref={ref}
         src={video.uri}
-        style={a.flex_1}
+        style={{width: '100%', height: '100%', objectFit: 'cover'}}
         autoPlay
         loop
         muted

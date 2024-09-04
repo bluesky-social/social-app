@@ -25,7 +25,7 @@ export const ProfileFollowsScreen = ({route}: Props) => {
   )
 
   return (
-    <CenteredView style={a.h_full_vh} sideBorders={true}>
+    <CenteredView style={a.util_screen_outer} sideBorders={true}>
       <ListHeaderDesktop title={_(msg`Following`)} />
       <ViewHeader title={_(msg`Following`)} showBorder={!isWeb} />
       <ProfileFollowsComponent name={name} />

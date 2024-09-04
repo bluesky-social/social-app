@@ -5,12 +5,9 @@ import {VideoPlayer, VideoView} from 'expo-video'
 import {AppBskyEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useIsFocused} from '@react-navigation/native'
 
 import {HITSLOP_30} from '#/lib/constants'
-import {useAppState} from '#/lib/hooks/useAppState'
 import {clamp} from '#/lib/numbers'
-import {logger} from '#/logger'
 import {useActiveVideoNative} from 'view/com/util/post-embeds/ActiveVideoNativeContext'
 import {atoms as a, useTheme} from '#/alf'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
@@ -29,26 +26,7 @@ export function VideoEmbedInnerNative({
   const {_} = useLingui()
   const {player} = useActiveVideoNative()
   const ref = useRef<VideoView>(null)
-  const isScreenFocused = useIsFocused()
-  const isAppFocused = useAppState()
-
-  useEffect(() => {
-    try {
-      if (isAppFocused === 'active' && isScreenFocused && !player.playing) {
-        PlatformInfo.setAudioCategory(AudioCategory.Ambient)
-        PlatformInfo.setAudioActive(false)
-        player.muted = true
-        player.play()
-      } else if (player.playing) {
-        player.pause()
-      }
-    } catch (err) {
-      logger.error(
-        'Failed to play/pause while backgrounding/switching screens',
-        {safeMessage: err},
-      )
-    }
-  }, [isAppFocused, player, isScreenFocused])
+  const [isFullscreen, setIsFullscreen] = useState(false)
 
   const enterFullscreen = useCallback(() => {
     ref.current?.enterFullscreen()
@@ -69,18 +47,23 @@ export function VideoEmbedInnerNative({
         player={player}
         style={[a.flex_1, a.rounded_sm]}
         contentFit="contain"
-        nativeControls={true}
+        nativeControls={isFullscreen}
         accessibilityIgnoresInvertColors
         onEnterFullscreen={() => {
           PlatformInfo.setAudioCategory(AudioCategory.Playback)
           PlatformInfo.setAudioActive(true)
           player.muted = false
+          setIsFullscreen(true)
         }}
         onExitFullscreen={() => {
           PlatformInfo.setAudioCategory(AudioCategory.Ambient)
           PlatformInfo.setAudioActive(false)
           player.muted = true
-          if (!player.playing) player.play()
+          player.playbackRate = 1
+          if (!player.playing) {
+            player.play()
+          }
+          setIsFullscreen(false)
         }}
         accessibilityLabel={
           embed.alt ? _(msg`Video: ${embed.alt}`) : _(msg`Video`)
@@ -167,17 +150,20 @@ function VideoControls({
       />
       <Animated.View
         entering={FadeInDown.duration(300)}
-        style={{
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          borderRadius: 6,
-          paddingHorizontal: 6,
-          paddingVertical: 3,
-          position: 'absolute',
-          bottom: 5,
-          right: 5,
-          minHeight: 20,
-          justifyContent: 'center',
-        }}>
+        style={[
+          a.absolute,
+          a.rounded_full,
+          a.justify_center,
+          {
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            paddingHorizontal: 4,
+            paddingVertical: 4,
+            bottom: 6,
+            right: 6,
+            minHeight: 21,
+            minWidth: 21,
+          },
+        ]}>
         <Pressable
           onPress={toggleMuted}
           style={a.flex_1}
@@ -186,9 +172,9 @@ function VideoControls({
           accessibilityRole="button"
           hitSlop={HITSLOP_30}>
           {isMuted ? (
-            <MuteIcon width={14} fill={t.palette.white} />
+            <MuteIcon width={13} fill={t.palette.white} />
           ) : (
-            <UnmuteIcon width={14} fill={t.palette.white} />
+            <UnmuteIcon width={13} fill={t.palette.white} />
           )}
         </Pressable>
       </Animated.View>
