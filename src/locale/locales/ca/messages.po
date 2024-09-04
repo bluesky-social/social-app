@@ -5900,7 +5900,7 @@ msgstr "Resposta a <0><1/></0>"
 #: src/view/com/posts/FeedItem.tsx:513
 msgctxt "description"
 msgid "Reply to a blocked post"
-msgstr "Respon a una publicació bloquejada"
+msgstr "Resposta a una publicació bloquejada"
 
 #: src/view/com/posts/FeedItem.tsx:515
 msgctxt "description"
