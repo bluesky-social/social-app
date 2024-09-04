@@ -22,6 +22,8 @@ interface Props {
 }
 
 export function VideoEmbed({embed}: Props) {
+  const gate = useGate()
+
   const [key, setKey] = useState(0)
 
   const renderError = useCallback(
@@ -36,6 +38,10 @@ export function VideoEmbed({embed}: Props) {
     const {width, height} = embed.aspectRatio
     aspectRatio = width / height
     aspectRatio = clamp(aspectRatio, 1 / 1, 3 / 1)
+  }
+
+  if (!gate('video_view_on_posts')) {
+    return null
   }
 
   return (
@@ -68,8 +74,6 @@ function Inner({embed}: Props) {
   const [timeRemaining, setTimeRemaining] = React.useState(0)
   const [isFullscreen, setIsFullscreen] = React.useState(false)
   const isActive = embed.playlist === activeSource && activeViewId === viewId
-
-  const gate = useGate()
 
   useEffect(() => {
     if (isActive) {
@@ -116,10 +120,6 @@ function Inner({embed}: Props) {
         player.pause()
       }
     }
-  }
-
-  if (!gate('video_view_on_posts')) {
-    return null
   }
 
   return (
