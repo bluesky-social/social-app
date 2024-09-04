@@ -19,6 +19,7 @@ export function Provider({children}: {children: React.ReactNode}) {
   const player = useVideoPlayer(activeSource, p => {
     p.muted = true
     p.loop = true
+    p.play()
   })
 
   return (

@@ -35,10 +35,14 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
   const onChangeStatus = (isVisible: boolean) => {
     if (isVisible) {
       setActiveSource(embed.playlist)
-      player.play()
+      if (!player.playing) {
+        player.play()
+      }
     } else if (!isFullscreen) {
       player.muted = true
-      player.pause()
+      if (player.playing) {
+        player.pause()
+      }
     }
   }
 
