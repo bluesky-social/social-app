@@ -106,8 +106,7 @@ let PostCtrls = ({
     [t],
   ) as StyleProp<ViewStyle>
 
-  const likeValue = post.viewer?.like ? 1 : 0
-  const nextExpectedLikeValue = React.useRef(likeValue)
+  const [isToggleLikeIcon, setIsToggleLikeIcon] = React.useState(false)
 
   const onPressToggleLike = React.useCallback(async () => {
     if (isBlocked) {
@@ -119,8 +118,8 @@ let PostCtrls = ({
     }
 
     try {
+      setIsToggleLikeIcon(true)
       if (!post.viewer?.like) {
-        nextExpectedLikeValue.current = 1
         playHaptic()
         sendInteraction({
           item: post.uri,
@@ -130,7 +129,6 @@ let PostCtrls = ({
         captureAction(ProgressGuideAction.Like)
         await queueLike()
       } else {
-        nextExpectedLikeValue.current = 0
         await queueUnlike()
       }
     } catch (e: any) {
@@ -317,11 +315,16 @@ let PostCtrls = ({
           }
           accessibilityHint=""
           hitSlop={POST_CTRL_HITSLOP}>
-          <AnimatedLikeIcon isLiked={Boolean(post.viewer?.like)} big={big} />
+          <AnimatedLikeIcon
+            isLiked={Boolean(post.viewer?.like)}
+            big={big}
+            isToggle={isToggleLikeIcon}
+          />
           <CountWheel
             likeCount={post.likeCount ?? 0}
             big={big}
             isLiked={Boolean(post.viewer?.like)}
+            isToggle={isToggleLikeIcon}
           />
         </Pressable>
       </View>

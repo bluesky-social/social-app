@@ -136,3 +136,12 @@ export const GIF_FEATURED = (params: string) =>
   `${GIF_SERVICE}/tenor/v2/featured?${params}`
 
 export const MAX_LABELERS = 20
+
+export const SUPPORTED_MIME_TYPES = [
+  'video/mp4',
+  'video/mpeg',
+  'video/webm',
+  'video/quicktime',
+] as const
+
+export type SupportedMimeTypes = (typeof SUPPORTED_MIME_TYPES)[number]
