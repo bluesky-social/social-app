@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-02 10:48+0900\n"
+"PO-Revision-Date: 2024-09-04 10:20+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -522,6 +522,10 @@ msgstr "エラーが発生しました"
 msgid "An error occurred"
 msgstr "エラーが発生しました"
 
+#: src/state/queries/video/video.ts:182
+msgid "An error occurred while compressing the video."
+msgstr "ビデオの圧縮中にエラーが発生しました。"
+
 #: src/components/StarterPack/ProfileStarterPacks.tsx:315
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr "スターターパックの生成中にエラーが発生しました。再度試しますか？"
@@ -535,6 +539,10 @@ msgstr "ビデオの読み込み時にエラーが発生しました。時間を
 #: src/components/StarterPack/ShareDialog.tsx:79
 msgid "An error occurred while saving the QR code!"
 msgstr "QRコードの保存中にエラーが発生しました！"
+
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:51
+msgid "An error occurred while selecting the video"
+msgstr "ビデオの選択中にエラーが発生しました"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:336
 #: src/screens/StarterPack/StarterPackScreen.tsx:358
@@ -2361,6 +2369,13 @@ msgstr "フィードの更新に失敗しました"
 #: src/screens/Messages/Settings.tsx:35
 msgid "Failed to update settings"
 msgstr "設定の更新に失敗しました"
+
+#: src/state/queries/video/video-upload.ts:75
+#: src/state/queries/video/video-upload.web.ts:71
+#: src/state/queries/video/video-upload.web.ts:75
+#: src/state/queries/video/video-upload.web.ts:85
+msgid "Failed to upload video"
+msgstr "ビデオのアップロードに失敗しました"
 
 #: src/Navigation.tsx:226
 msgid "Feed"
@@ -6730,6 +6745,10 @@ msgstr "このラベラーの登録を解除"
 msgid "Unsubscribed from list"
 msgstr "リストの登録を解除しました"
 
+#: src/state/queries/video/video.ts:195
+msgid "Unsupported video type: {mimeType}"
+msgstr "サポートしていないビデオ形式：{mimeType}"
+
 #: src/lib/moderation/useReportOptions.ts:72
 #: src/lib/moderation/useReportOptions.ts:85
 msgid "Unwanted Sexual Content"
@@ -6941,6 +6960,10 @@ msgstr "バージョン {appVersion} {bundleInfo}"
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:180
 msgid "Video"
 msgstr "ビデオ"
+
+#: src/state/queries/video/video.ts:129
+msgid "Video failed to process"
+msgstr "ビデオの処理に失敗"
 
 #: src/screens/Onboarding/index.tsx:39
 #: src/screens/Onboarding/state.ts:88
