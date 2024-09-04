@@ -244,6 +244,7 @@ let PostCtrls = ({
       a.flex_row,
       a.justify_center,
       a.align_center,
+      a.overflow_hidden,
       {padding: 5},
       (pressed || hovered) && t.atoms.bg_contrast_25,
     ],
