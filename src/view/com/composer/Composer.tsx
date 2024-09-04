@@ -1088,7 +1088,7 @@ function VideoUploadToolbar({state}: {state: VideoUploadState}) {
   let wheelProgress = progress === 0 || progress === 1 ? 0.33 : progress
 
   const rotate = useDerivedValue(() => {
-    if (progress === 0 || progress === 1) {
+    if (progress === 0 || progress >= 0.99) {
       return withTiming(360, {
         duration: 2500,
         easing: Easing.out(Easing.cubic),
