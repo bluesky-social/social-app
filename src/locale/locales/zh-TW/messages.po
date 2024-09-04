@@ -4773,7 +4773,7 @@ msgstr "移除帳號"
 
 #: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:28
 msgid "Remove attachment"
-msgstr "刪除附件"
+msgstr "撤銷貼文分離"
 
 #: src/view/com/util/UserAvatar.tsx:387
 msgid "Remove Avatar"
@@ -4885,7 +4885,7 @@ msgstr "刪除已轉貼貼文"
 
 #: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:29
 msgid "Removes the attachment"
-msgstr "刪除所有附件"
+msgstr "撤銷所有貼文分離"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:129
 #: src/view/com/posts/FeedShutdownMsg.tsx:133
