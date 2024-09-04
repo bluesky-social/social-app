@@ -247,6 +247,7 @@ function PostInner({
             richText={richText}
             onPressReply={onPressReply}
             logContext="Post"
+            style={[a.py_2xs]}
           />
         </View>
       </View>
