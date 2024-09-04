@@ -20,10 +20,12 @@ import {
 // @ts-expect-error no type definition
 import ProgressCircle from 'react-native-progress/Circle'
 import Animated, {
+  Easing,
   FadeIn,
   FadeOut,
   interpolateColor,
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
@@ -1080,6 +1082,26 @@ function ToolbarWrapper({
 function VideoUploadToolbar({state}: {state: VideoUploadState}) {
   const t = useTheme()
   const {_} = useLingui()
+  const progress = state.jobStatus?.progress
+    ? state.jobStatus.progress / 100
+    : state.progress
+  let wheelProgress = progress === 0 || progress === 1 ? 0.33 : progress
+
+  const rotate = useDerivedValue(() => {
+    if (progress === 0 || progress >= 0.99) {
+      return withTiming(360, {
+        duration: 2500,
+        easing: Easing.out(Easing.cubic),
+      })
+    }
+    return 0
+  })
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{rotateZ: `${rotate.value}deg`}],
+    }
+  })
 
   let text = ''
 
@@ -1098,26 +1120,22 @@ function VideoUploadToolbar({state}: {state: VideoUploadState}) {
       break
   }
 
-  // we could use state.jobStatus?.progress but 99% of the time it jumps from 0 to 100
-  let progress =
-    state.status === 'compressing' || state.status === 'uploading'
-      ? state.progress
-      : 100
-
   if (state.error) {
     text = _('Error')
-    progress = 100
+    wheelProgress = 100
   }
 
   return (
     <ToolbarWrapper style={[a.flex_row, a.align_center, {paddingVertical: 5}]}>
-      <ProgressCircle
-        size={30}
-        borderWidth={1}
-        borderColor={t.atoms.border_contrast_low.borderColor}
-        color={state.error ? t.palette.negative_500 : t.palette.primary_500}
-        progress={progress}
-      />
+      <Animated.View style={[animatedStyle]}>
+        <ProgressCircle
+          size={30}
+          borderWidth={1}
+          borderColor={t.atoms.border_contrast_low.borderColor}
+          color={state.error ? t.palette.negative_500 : t.palette.primary_500}
+          progress={wheelProgress}
+        />
+      </Animated.View>
       <NewText style={[a.font_bold, a.ml_sm]}>{text}</NewText>
     </ToolbarWrapper>
   )
