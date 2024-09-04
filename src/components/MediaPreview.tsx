@@ -1,0 +1,169 @@
+import React from 'react'
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {Image} from 'expo-image'
+import {
+  AppBskyEmbedExternal,
+  AppBskyEmbedImages,
+  AppBskyEmbedRecordWithMedia,
+  AppBskyEmbedVideo,
+} from '@atproto/api'
+import {Trans} from '@lingui/macro'
+
+import {parseTenorGif} from '#/lib/strings/embed-player'
+import {atoms as a} from '#/alf'
+import {Play_Filled_Corner2_Rounded as PlayIcon} from '#/components/icons/Play'
+import {Text} from '#/components/Typography'
+
+/**
+ * Streamlined MediaPreview component which just handles images, gifs, and videos
+ */
+export function Embed({
+  embed,
+  style,
+}: {
+  embed?:
+    | AppBskyEmbedImages.View
+    | AppBskyEmbedRecordWithMedia.View
+    | AppBskyEmbedExternal.View
+    | AppBskyEmbedVideo.View
+    | {[k: string]: unknown}
+  style?: StyleProp<ViewStyle>
+}) {
+  let media = AppBskyEmbedRecordWithMedia.isView(embed) ? embed.media : embed
+
+  if (AppBskyEmbedImages.isView(media)) {
+    return (
+      <Outer style={style}>
+        {media.images.map(image => (
+          <ImageItem
+            key={image.thumb}
+            thumbnail={image.thumb}
+            alt={image.alt}
+          />
+        ))}
+      </Outer>
+    )
+  } else if (AppBskyEmbedExternal.isView(embed) && embed.external.thumb) {
+    let url: URL | undefined
+    try {
+      url = new URL(embed.external.uri)
+    } catch {}
+    if (url) {
+      const {success} = parseTenorGif(url)
+      if (success) {
+        return (
+          <Outer style={style}>
+            <GifItem
+              thumbnail={embed.external.thumb}
+              alt={embed.external.title}
+            />
+          </Outer>
+        )
+      }
+    }
+  } else if (AppBskyEmbedVideo.isView(embed)) {
+    return (
+      <Outer style={style}>
+        <VideoItem thumbnail={embed.thumbnail} alt={embed.alt} />
+      </Outer>
+    )
+  }
+
+  return null
+}
+
+export function Outer({
+  children,
+  style,
+}: {
+  children?: React.ReactNode
+  style?: StyleProp<ViewStyle>
+}) {
+  return <View style={[a.flex_row, a.gap_xs, style]}>{children}</View>
+}
+
+export function ImageItem({
+  thumbnail,
+  alt,
+  children,
+}: {
+  thumbnail: string
+  alt?: string
+  children?: React.ReactNode
+}) {
+  return (
+    <View style={[a.relative, a.flex_1, {aspectRatio: 1, maxWidth: 100}]}>
+      <Image
+        key={thumbnail}
+        source={{uri: thumbnail}}
+        style={[a.flex_1, a.rounded_xs]}
+        contentFit="cover"
+        accessible={true}
+        accessibilityIgnoresInvertColors
+        accessibilityHint={alt}
+        accessibilityLabel=""
+      />
+      {children}
+    </View>
+  )
+}
+
+export function GifItem({thumbnail, alt}: {thumbnail: string; alt?: string}) {
+  return (
+    <ImageItem thumbnail={thumbnail} alt={alt}>
+      <View style={styles.altContainer}>
+        <Text style={styles.alt}>
+          <Trans>GIF</Trans>
+        </Text>
+      </View>
+    </ImageItem>
+  )
+}
+
+export function VideoItem({
+  thumbnail,
+  alt,
+}: {
+  thumbnail?: string
+  alt?: string
+}) {
+  if (!thumbnail) {
+    return (
+      <View
+        style={[
+          {backgroundColor: 'black'},
+          a.flex_1,
+          {aspectRatio: 1, maxWidth: 100},
+          a.justify_center,
+          a.align_center,
+        ]}>
+        <PlayIcon size="xl" fill="white" />
+      </View>
+    )
+  }
+  return (
+    <ImageItem thumbnail={thumbnail} alt={alt}>
+      <View style={[a.absolute, a.inset_0, a.justify_center, a.align_center]}>
+        <PlayIcon size="xl" fill="white" />
+      </View>
+    </ImageItem>
+  )
+}
+
+const styles = StyleSheet.create({
+  altContainer: {
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    borderRadius: 6,
+    paddingHorizontal: 6,
+    paddingVertical: 3,
+    position: 'absolute',
+    right: 5,
+    bottom: 5,
+    zIndex: 2,
+  },
+  alt: {
+    color: 'white',
+    fontSize: 7,
+    fontWeight: 'bold',
+  },
+})
