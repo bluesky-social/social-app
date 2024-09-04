@@ -21,7 +21,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
-import {PlayButton} from '#/components/video/PlayButton'
+import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {GifView} from '../../../../../modules/expo-bluesky-gif-view'
 import {GifViewStateChangeEvent} from '../../../../../modules/expo-bluesky-gif-view/src/GifView.types'
 
@@ -69,7 +69,7 @@ function PlaybackControls({
           </View>
         </View>
       ) : !isPlaying ? (
-        <PlayButton />
+        <PlayButtonIcon />
       ) : undefined}
     </Pressable>
   )

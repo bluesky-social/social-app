@@ -10,7 +10,7 @@ import {useGate} from '#/lib/statsig/statsig'
 import {VideoEmbedInnerNative} from '#/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative'
 import {atoms as a} from '#/alf'
 import {Button} from '#/components/Button'
-import {PlayButton} from '#/components/video/PlayButton'
+import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {VisibilityView} from '../../../../../modules/expo-bluesky-swiss-army'
 import {ErrorBoundary} from '../ErrorBoundary'
 import {useActiveVideoNative} from './ActiveVideoNativeContext'
@@ -94,7 +94,7 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
                 }}
                 label={_(msg`Play video`)}
                 color="secondary">
-                <PlayButton />
+                <PlayButtonIcon />
               </Button>
             </>
           )}
