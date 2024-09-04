@@ -366,7 +366,7 @@ let PostThreadItemLoaded = ({
                   <PostEmbeds
                     embed={post.embed}
                     moderation={moderation}
-                    isHighlightedThreadItem
+                    contextView="thread-highlighted"
                   />
                 </View>
               )}

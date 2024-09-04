@@ -50,14 +50,14 @@ export function PostEmbeds({
   onOpen,
   style,
   allowNestedQuotes,
-  isHighlightedThreadItem,
+  contextView,
 }: {
   embed?: Embed
   moderation?: ModerationDecision
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
   allowNestedQuotes?: boolean
-  isHighlightedThreadItem?: boolean
+  contextView?: 'thread-highlighted'
 }) {
   const {openLightbox} = useLightboxControls()
   const largeAltBadge = useLargeAltBadgeEnabled()
@@ -131,7 +131,7 @@ export function PostEmbeds({
           <ContentHider modui={moderation?.ui('contentMedia')}>
             <View style={[styles.container, style]}>
               <AutoSizedImage
-                disableCrop={isHighlightedThreadItem}
+                disableCrop={contextView === 'thread-highlighted'}
                 image={image}
                 onPress={() => _openLightbox(0)}
                 onPressIn={() => onPressIn(0)}>
