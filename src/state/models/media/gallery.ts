@@ -1,8 +1,10 @@
-import {makeAutoObservable, runInAction} from 'mobx'
-import {ImageModel} from './image'
+import {LayoutAnimation} from 'react-native'
 import {Image as RNImage} from 'react-native-image-crop-picker'
-import {openPicker} from 'lib/media/picker'
+import {makeAutoObservable, runInAction} from 'mobx'
+
 import {getImageDim} from 'lib/media/manip'
+import {openPicker} from 'lib/media/picker'
+import {ImageModel} from './image'
 
 interface InitialImageUri {
   uri: string
@@ -63,6 +65,7 @@ export class GalleryModel {
     }
 
     runInAction(() => {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
       this.add(image)
     })
   }
@@ -76,6 +79,7 @@ export class GalleryModel {
   }
 
   remove(image: ImageModel) {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     const index = this.images.findIndex(image_ => image_.path === image.path)
     this.images.splice(index, 1)
   }
@@ -90,6 +94,7 @@ export class GalleryModel {
       allowsMultipleSelection: true,
     })
 
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     return await Promise.all(
       images.map(image => {
         this.add(image)
