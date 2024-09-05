@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react'
+import React, {useCallback, useRef} from 'react'
 import {Pressable, View} from 'react-native'
 import Animated, {FadeInDown} from 'react-native-reanimated'
 import {VideoPlayer, VideoView} from 'expo-video'
@@ -22,10 +22,14 @@ export function VideoEmbedInnerNative({
   embed,
   isFullscreen,
   setIsFullscreen,
+  isMuted,
+  timeRemaining,
 }: {
   embed: AppBskyEmbedVideo.View
   isFullscreen: boolean
   setIsFullscreen: (isFullscreen: boolean) => void
+  timeRemaining: number
+  isMuted: boolean
 }) {
   const {_} = useLingui()
   const {player} = useActiveVideoNative()
@@ -73,7 +77,12 @@ export function VideoEmbedInnerNative({
         }
         accessibilityHint=""
       />
-      <VideoControls player={player} enterFullscreen={enterFullscreen} />
+      <VideoControls
+        player={player}
+        enterFullscreen={enterFullscreen}
+        isMuted={isMuted}
+        timeRemaining={timeRemaining}
+      />
     </View>
   )
 }
@@ -81,40 +90,16 @@ export function VideoEmbedInnerNative({
 function VideoControls({
   player,
   enterFullscreen,
+  timeRemaining,
+  isMuted,
 }: {
   player: VideoPlayer
   enterFullscreen: () => void
+  timeRemaining: number
+  isMuted: boolean
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const [isMuted, setIsMuted] = useState(player.muted)
-  const [timeRemaining, setTimeRemaining] = React.useState(0)
-
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-shadow
-    const volumeSub = player.addListener('volumeChange', ({isMuted}) => {
-      setIsMuted(isMuted)
-    })
-    const timeSub = player.addListener(
-      'timeRemainingChange',
-      secondsRemaining => {
-        setTimeRemaining(secondsRemaining)
-      },
-    )
-    const statusSub = player.addListener(
-      'statusChange',
-      (status, _oldStatus, error) => {
-        if (status === 'error') {
-          throw error
-        }
-      },
-    )
-    return () => {
-      volumeSub.remove()
-      timeSub.remove()
-      statusSub.remove()
-    }
-  }, [player])
 
   const onPressFullscreen = useCallback(() => {
     switch (player.status) {
