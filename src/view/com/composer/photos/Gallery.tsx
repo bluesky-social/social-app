@@ -1,5 +1,5 @@
-import React, {useState} from 'react'
-import {ImageStyle, Keyboard, LayoutChangeEvent} from 'react-native'
+import React from 'react'
+import {Keyboard} from 'react-native'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Image} from 'expo-image'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -7,14 +7,13 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {observer} from 'mobx-react-lite'
 
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {colors, s} from '#/lib/styles'
+import {isNative} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {Dimensions} from 'lib/media/types'
-import {colors, s} from 'lib/styles'
-import {isNative} from 'platform/detection'
-import {GalleryModel} from 'state/models/media/gallery'
-import {Text} from 'view/com/util/text/Text'
-import {useTheme} from '#/alf'
+import {GalleryModel} from '#/state/models/media/gallery'
+import {Text} from '#/view/com/util/text/Text'
+import {atoms as a, useTheme} from '#/alf'
 
 const IMAGE_GAP = 8
 
@@ -22,51 +21,11 @@ interface GalleryProps {
   gallery: GalleryModel
 }
 
-export const Gallery = (props: GalleryProps) => {
-  const [containerInfo, setContainerInfo] = useState<Dimensions | undefined>()
-
-  const onLayout = (evt: LayoutChangeEvent) => {
-    const {width, height} = evt.nativeEvent.layout
-    setContainerInfo({
-      width,
-      height,
-    })
-  }
-
-  return (
-    <View onLayout={onLayout}>
-      {containerInfo ? (
-        <GalleryInner {...props} containerInfo={containerInfo} />
-      ) : undefined}
-    </View>
-  )
-}
-
-interface GalleryInnerProps extends GalleryProps {
-  containerInfo: Dimensions
-}
-
-const GalleryInner = observer(function GalleryImpl({
-  gallery,
-  containerInfo,
-}: GalleryInnerProps) {
+export const Gallery = observer(function GalleryImpl({gallery}: GalleryProps) {
   const {_} = useLingui()
   const {isMobile} = useWebMediaQueries()
   const {openModal} = useModalControls()
   const t = useTheme()
-
-  let side: number
-
-  if (gallery.size === 1) {
-    side = 250
-  } else {
-    side = (containerInfo.width - IMAGE_GAP * (gallery.size - 1)) / gallery.size
-  }
-
-  const imageStyle = {
-    height: side,
-    width: side,
-  }
 
   const isOverflow = isMobile && gallery.size > 2
 
@@ -113,7 +72,9 @@ const GalleryInner = observer(function GalleryImpl({
     <>
       <View testID="selectedPhotosView" style={styles.gallery}>
         {gallery.images.map(image => (
-          <View key={`selected-image-${image.path}`} style={[imageStyle]}>
+          <View
+            key={`selected-image-${image.path}`}
+            style={[a.flex_1, {aspectRatio: 1, maxWidth: 250}]}>
             <TouchableOpacity
               testID="altTextButton"
               accessibilityRole="button"
@@ -198,7 +159,7 @@ const GalleryInner = observer(function GalleryImpl({
 
             <Image
               testID="selectedPhotoImage"
-              style={[styles.image, imageStyle] as ImageStyle}
+              style={[styles.image, t.atoms.bg_contrast_25]}
               source={{
                 uri: image.cropped?.path ?? image.path,
               }}
@@ -238,6 +199,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   image: {
+    flex: 1,
     resizeMode: 'cover',
     borderRadius: 8,
   },
@@ -274,7 +236,6 @@ const styles = StyleSheet.create({
     top: 30,
     zIndex: 1,
   },
-
   reminder: {
     flexDirection: 'row',
     alignItems: 'center',
