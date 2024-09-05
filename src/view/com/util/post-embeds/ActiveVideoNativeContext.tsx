@@ -4,8 +4,9 @@ import {useVideoPlayer, VideoPlayer} from 'expo-video'
 import {isNative} from '#/platform/detection'
 
 const Context = React.createContext<{
-  activeSource: string | null
-  setActiveSource: (src: string) => void
+  activeSource: string
+  activeViewId: string | undefined
+  setActiveSource: (src: string, viewId: string) => void
   player: VideoPlayer
 } | null>(null)
 
@@ -15,6 +16,7 @@ export function Provider({children}: {children: React.ReactNode}) {
   }
 
   const [activeSource, setActiveSource] = React.useState('')
+  const [activeViewId, setActiveViewId] = React.useState<string>()
 
   const player = useVideoPlayer(activeSource, p => {
     p.muted = true
@@ -22,8 +24,19 @@ export function Provider({children}: {children: React.ReactNode}) {
     p.play()
   })
 
+  const setActiveSourceOuter = (src: string, viewId: string) => {
+    setActiveSource(src)
+    setActiveViewId(viewId)
+  }
+
   return (
-    <Context.Provider value={{activeSource, setActiveSource, player}}>
+    <Context.Provider
+      value={{
+        activeSource,
+        setActiveSource: setActiveSourceOuter,
+        activeViewId,
+        player,
+      }}>
       {children}
     </Context.Provider>
   )
