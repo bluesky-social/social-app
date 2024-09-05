@@ -67,7 +67,7 @@ export function beginResolveGeolocation() {
       if (geolocation) {
         device.set(['geolocation'], geolocation)
         emitGeolocationUpdate(geolocation)
-        logger.debug(`geolocation: resolved`, {geolocation})
+        logger.debug(`geolocation: success`, {geolocation})
       } else {
         // endpoint should throw on all failures, this is insurance
         throw new Error(`geolocation: nothing returned from initial request`)
@@ -86,7 +86,7 @@ export function beginResolveGeolocation() {
           if (geolocation) {
             device.set(['geolocation'], geolocation)
             emitGeolocationUpdate(geolocation)
-            logger.debug(`geolocation: resolved`, {geolocation})
+            logger.debug(`geolocation: success`, {geolocation})
           } else {
             // endpoint should throw on all failures, this is insurance
             throw new Error(`geolocation: nothing returned from retries`)
