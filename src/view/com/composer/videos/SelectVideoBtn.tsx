@@ -103,7 +103,7 @@ function VerifyEmailPrompt({control}: {control: Prompt.PromptControlProps}) {
       control={control}
       title={_(msg`Verified email required`)}
       description={_(
-        msg`You must have a verified email address in order to post videos.`,
+        msg`To upload videos to Bluesky, you must first verify your email.`,
       )}
       confirmButtonCta={_(msg`Verify now`)}
       confirmButtonColor="primary"
