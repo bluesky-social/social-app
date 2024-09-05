@@ -55,6 +55,11 @@ import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 
+/**
+ * Begin geolocation ASAP
+ */
+beginResolveGeolocation()
+
 function InnerApp() {
   const [isReady, setIsReady] = React.useState(false)
   const {currentAccount} = useSession()
@@ -76,7 +81,6 @@ function InnerApp() {
       } finally {
         setIsReady(true)
       }
-      await ensureGeolocationResolved()
     }
     const account = readLastActiveAccount()
     onLaunch(account)
@@ -145,7 +149,6 @@ function App() {
   const [isReady, setReady] = useState(false)
 
   React.useEffect(() => {
-    beginResolveGeolocation()
     Promise.all([initPersistedState(), ensureGeolocationResolved()]).then(() =>
       setReady(true),
     )

@@ -70,6 +70,11 @@ import {AudioCategory, PlatformInfo} from '../modules/expo-bluesky-swiss-army'
 
 SplashScreen.preventAutoHideAsync()
 
+/**
+ * Begin geolocation ASAP
+ */
+beginResolveGeolocation()
+
 function InnerApp() {
   const [isReady, setIsReady] = React.useState(false)
   const {currentAccount} = useSession()
@@ -90,7 +95,6 @@ function InnerApp() {
           await initialize()
           await tryFetchGates(undefined, 'prefer-fresh-gates')
         }
-        await ensureGeolocationResolved()
       } catch (e) {
         logger.error(`session: resume failed`, {message: e})
       } finally {
@@ -164,7 +168,6 @@ function App() {
   const [isReady, setReady] = useState(false)
 
   React.useEffect(() => {
-    beginResolveGeolocation()
     PlatformInfo.setAudioCategory(AudioCategory.Ambient)
     PlatformInfo.setAudioActive(false)
     Promise.all([initPersistedState(), ensureGeolocationResolved()]).then(() =>
