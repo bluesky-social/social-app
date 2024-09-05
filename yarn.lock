@@ -9917,12 +9917,7 @@ caniuse-api@^3.0.0:
     lodash.memoize "^4.1.2"
     lodash.uniq "^4.5.0"
 
-caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001517, caniuse-lite@^1.0.30001520:
-  version "1.0.30001655"
-  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001655.tgz"
-  integrity sha512-jRGVy3iSGO5Uutn2owlb5gR6qsGngTw9ZTb4ali9f3glshcNmJ2noam4Mo9zia5P9Dk3jNNydy7vQjuE5dQmfg==
-
-caniuse-lite@^1.0.30001587:
+caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001517, caniuse-lite@^1.0.30001520, caniuse-lite@^1.0.30001587:
   version "1.0.30001655"
   resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001655.tgz"
   integrity sha512-jRGVy3iSGO5Uutn2owlb5gR6qsGngTw9ZTb4ali9f3glshcNmJ2noam4Mo9zia5P9Dk3jNNydy7vQjuE5dQmfg==
@@ -12419,10 +12414,9 @@ expo-updates@~0.25.14:
     ignore "^5.3.1"
     resolve-from "^5.0.0"
 
-expo-video@^1.2.4:
+"expo-video@https://github.com/bluesky-social/expo/raw/expo-video-1.2.4-patch/packages/expo-video/expo-video-v1.2.4.tgz":
   version "1.2.4"
-  resolved "https://registry.yarnpkg.com/expo-video/-/expo-video-1.2.4.tgz#787342aded4295a1b6864f59227d178b93e1bb53"
-  integrity sha512-pBK9mt7vYAbuPQjCSQxHQ7xrNjbmRheJep7JIStEg57O183/JRfP2blKuXniiSt1HBdZYPdoQnGRa3jGMXB9pg==
+  resolved "https://github.com/bluesky-social/expo/raw/expo-video-1.2.4-patch/packages/expo-video/expo-video-v1.2.4.tgz#584c17e34f59cb018eed2f4f408b6c94e2a1910f"
 
 expo-web-browser@~13.0.3:
   version "13.0.3"
@@ -19052,6 +19046,11 @@ react-native-keyboard-controller@^1.12.1:
   version "1.12.1"
   resolved "https://registry.yarnpkg.com/react-native-keyboard-controller/-/react-native-keyboard-controller-1.12.1.tgz#6de22ed4d060528a0dd25621eeaa7f71772ce35f"
   integrity sha512-2OpQcesiYsMilrTzgcTafSGexd9UryRQRuHudIcOn0YaqvvzNpnhVZMVuJMH93fJv/iaZYp3138rgUKOdHhtSw==
+
+react-native-mmkv@^2.12.2:
+  version "2.12.2"
+  resolved "https://registry.yarnpkg.com/react-native-mmkv/-/react-native-mmkv-2.12.2.tgz#4bba0f5f04e2cf222494cce3a9794ba6a4894dee"
+  integrity sha512-6058Aq0p57chPrUutLGe9fYoiDVDNMU2PKV+lLFUJ3GhoHvUrLdsS1PDSCLr00yqzL4WJQ7TTzH+V8cpyrNcfg==
 
 react-native-pager-view@6.2.3:
   version "6.2.3"

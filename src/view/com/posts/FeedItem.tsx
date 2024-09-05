@@ -34,7 +34,7 @@ import {useComposerControls} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {FeedNameText} from '#/view/com/util/FeedInfoText'
 import {PostCtrls} from '#/view/com/util/post-ctrls/PostCtrls'
-import {PostEmbeds} from '#/view/com/util/post-embeds'
+import {PostEmbeds, PostEmbedViewContext} from '#/view/com/util/post-embeds'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {Text} from '#/view/com/util/text/Text'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
@@ -488,6 +488,7 @@ let PostContent = ({
             embed={postEmbed}
             moderation={moderation}
             onOpen={onOpenEmbed}
+            viewContext={PostEmbedViewContext.Feed}
           />
         </View>
       ) : null}
