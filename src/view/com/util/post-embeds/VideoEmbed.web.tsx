@@ -1,13 +1,15 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {AppBskyEmbedVideo} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {clamp} from '#/lib/numbers'
 import {useGate} from '#/lib/statsig/statsig'
 import {
   HLSUnsupportedError,
   VideoEmbedInnerWeb,
+  VideoNotFoundError,
 } from '#/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerWeb'
 import {atoms as a} from '#/alf'
 import {ErrorBoundary} from '../ErrorBoundary'
@@ -152,23 +154,26 @@ function ViewportObserver({
 }
 
 function VideoError({error, retry}: {error: unknown; retry: () => void}) {
-  const isHLS = error instanceof HLSUnsupportedError
+  const {_} = useLingui()
+
+  let showRetryButton = true
+  let text = null
+
+  if (error instanceof VideoNotFoundError) {
+    text = _(msg`Video not found.`)
+  } else if (error instanceof HLSUnsupportedError) {
+    showRetryButton = false
+    text = _(
+      msg`Your browser does not support the video format. Please try a different browser.`,
+    )
+  } else {
+    text = _(msg`An error occurred while loading the video. Please try again.`)
+  }
 
   return (
     <VideoFallback.Container>
-      <VideoFallback.Text>
-        {isHLS ? (
-          <Trans>
-            Your browser does not support the video format. Please try a
-            different browser.
-          </Trans>
-        ) : (
-          <Trans>
-            An error occurred while loading the video. Please try again later.
-          </Trans>
-        )}
-      </VideoFallback.Text>
-      {!isHLS && <VideoFallback.RetryButton onPress={retry} />}
+      <VideoFallback.Text>{text}</VideoFallback.Text>
+      {showRetryButton && <VideoFallback.RetryButton onPress={retry} />}
     </VideoFallback.Container>
   )
 }
