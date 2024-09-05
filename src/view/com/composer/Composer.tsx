@@ -770,6 +770,7 @@ export const ComposePost = observer(function ComposePost({
             ) : null}
             {(videoUploadState.asset || videoUploadState.video) && (
               <Animated.View
+                style={[a.w_full, a.mt_xs]}
                 entering={native(ZoomIn)}
                 exiting={native(ZoomOut)}>
                 {videoUploadState.asset &&
