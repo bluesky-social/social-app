@@ -84,7 +84,7 @@ export function ConstrainedImage({
               a.rounded_sm,
               a.overflow_hidden,
               t.atoms.bg_contrast_25,
-              {aspectRatio: fullBleed ? 1 : aspectRatio},
+              fullBleed ? a.w_full : {aspectRatio},
             ]}>
             {children}
           </View>
