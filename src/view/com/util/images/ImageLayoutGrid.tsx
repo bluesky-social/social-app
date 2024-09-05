@@ -25,9 +25,11 @@ export function ImageLayoutGrid({style, ...props}: ImageLayoutGridProps) {
       : gtMobile
       ? a.gap_sm
       : a.gap_xs
+  const count = props.images.length
+  const aspectRatio = count === 2 ? 2 : count === 3 ? 1.5 : 1
   return (
     <View style={style}>
-      <View style={[gap]}>
+      <View style={[gap, {aspectRatio}]}>
         <ImageLayoutGridInner {...props} gap={gap} />
       </View>
     </View>
@@ -50,7 +52,7 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
   switch (count) {
     case 2:
       return (
-        <View style={[a.flex_row, gap]}>
+        <View style={[a.flex_1, a.flex_row, gap]}>
           <View style={[a.flex_1, {aspectRatio: 1}]}>
             <GalleryItem {...props} index={0} />
           </View>
@@ -62,7 +64,7 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
 
     case 3:
       return (
-        <View style={[a.flex_row, gap]}>
+        <View style={[a.flex_1, a.flex_row, gap]}>
           <View style={{flex: 2}}>
             <GalleryItem {...props} index={0} />
           </View>
