@@ -29,6 +29,7 @@ import Animated, {
   useSharedValue,
   withRepeat,
   withTiming,
+  ZoomIn,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {
@@ -84,7 +85,7 @@ import {GalleryModel} from 'state/models/media/gallery'
 import {State as VideoUploadState} from 'state/queries/video/video'
 import {ComposerOpts} from 'state/shell/composer'
 import {ComposerReplyTo} from 'view/com/composer/ComposerReplyTo'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, native, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons/Emoji'
@@ -766,28 +767,32 @@ export const ComposePost = observer(function ComposePost({
                 )}
               </View>
             ) : null}
-            {videoUploadState.asset &&
-              (videoUploadState.status === 'compressing' ? (
-                <VideoTranscodeProgress
-                  asset={videoUploadState.asset}
-                  progress={videoUploadState.progress}
-                  clear={clearVideo}
-                />
-              ) : videoUploadState.video ? (
-                <VideoPreview
-                  asset={videoUploadState.asset}
-                  video={videoUploadState.video}
-                  setDimensions={updateVideoDimensions}
-                  clear={clearVideo}
-                />
-              ) : null)}
             {(videoUploadState.asset || videoUploadState.video) && (
-              <SubtitleDialogBtn
-                altText={videoAltText}
-                setAltText={setVideoAltText}
-                captions={captions}
-                setCaptions={setCaptions}
-              />
+              <Animated.View
+                entering={native(ZoomIn)}
+                exiting={native(FadeOut)}>
+                {videoUploadState.asset &&
+                  (videoUploadState.status === 'compressing' ? (
+                    <VideoTranscodeProgress
+                      asset={videoUploadState.asset}
+                      progress={videoUploadState.progress}
+                      clear={clearVideo}
+                    />
+                  ) : videoUploadState.video ? (
+                    <VideoPreview
+                      asset={videoUploadState.asset}
+                      video={videoUploadState.video}
+                      setDimensions={updateVideoDimensions}
+                      clear={clearVideo}
+                    />
+                  ) : null)}
+                <SubtitleDialogBtn
+                  altText={videoAltText}
+                  setAltText={setVideoAltText}
+                  captions={captions}
+                  setCaptions={setCaptions}
+                />
+              </Animated.View>
             )}
           </View>
         </Animated.ScrollView>
