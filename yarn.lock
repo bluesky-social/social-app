@@ -19047,10 +19047,10 @@ react-native-keyboard-controller@^1.12.1:
   resolved "https://registry.yarnpkg.com/react-native-keyboard-controller/-/react-native-keyboard-controller-1.12.1.tgz#6de22ed4d060528a0dd25621eeaa7f71772ce35f"
   integrity sha512-2OpQcesiYsMilrTzgcTafSGexd9UryRQRuHudIcOn0YaqvvzNpnhVZMVuJMH93fJv/iaZYp3138rgUKOdHhtSw==
 
-react-native-mmkv@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/react-native-mmkv/-/react-native-mmkv-3.0.2.tgz#c6376678d33d51a5ace3285c8bbcb5cb613c2741"
-  integrity sha512-zd+n5qLDy8Ptcj+ZIVa/pkGgL13X/8xFId3o4Ec9TpQVjM3BJaIszNc8jo6UF7dtndtVcvLDoBWBkkYmkpdTYA==
+react-native-mmkv@^2.12.2:
+  version "2.12.2"
+  resolved "https://registry.yarnpkg.com/react-native-mmkv/-/react-native-mmkv-2.12.2.tgz#4bba0f5f04e2cf222494cce3a9794ba6a4894dee"
+  integrity sha512-6058Aq0p57chPrUutLGe9fYoiDVDNMU2PKV+lLFUJ3GhoHvUrLdsS1PDSCLr00yqzL4WJQ7TTzH+V8cpyrNcfg==
 
 react-native-pager-view@6.2.3:
   version "6.2.3"
