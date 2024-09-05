@@ -45,3 +45,11 @@ export function listenPostCreated(fn: () => void): UnlistenFn {
   emitter.on('post-created', fn)
   return () => emitter.off('post-created', fn)
 }
+
+export function emitGeoUpdated({geo}: {geo: any}) {
+  emitter.emit('geo-updated', geo)
+}
+export function listenGeoUpdated(fn: ({geo}: {geo: any}) => void): UnlistenFn {
+  emitter.on('geo-updated', fn)
+  return () => emitter.off('geo-updated', fn)
+}
