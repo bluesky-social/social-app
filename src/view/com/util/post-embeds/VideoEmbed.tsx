@@ -68,7 +68,9 @@ function InnerWrapper({embed}: Props) {
     useActiveVideoNative()
   const viewId = useId()
 
-  const [playerStatus, setPlayerStatus] = useState<VideoPlayerStatus>('loading')
+  const [playerStatus, setPlayerStatus] = useState<
+    VideoPlayerStatus | 'switching'
+  >('loading')
   const [isMuted, setIsMuted] = useState(player.muted)
   const [isFullscreen, setIsFullscreen] = React.useState(false)
   const [timeRemaining, setTimeRemaining] = React.useState(0)
@@ -77,6 +79,8 @@ function InnerWrapper({embed}: Props) {
     isActive &&
     (playerStatus === 'waitingToPlayAtSpecifiedRate' ||
       playerStatus === 'loading')
+  const isSwitching = playerStatus === 'switching'
+  const showOverlay = !isActive || isLoading || isSwitching
 
   // send error up to error boundary
   const [error, setError] = useState<Error | PlayerError | null>(null)
@@ -130,6 +134,7 @@ function InnerWrapper({embed}: Props) {
         player.play()
       }
     } else {
+      setPlayerStatus('switching')
       player.muted = true
       if (player.playing) {
         player.pause()
@@ -148,48 +153,47 @@ function InnerWrapper({embed}: Props) {
           setIsFullscreen={setIsFullscreen}
         />
       ) : null}
-      {!isActive || isLoading ? (
-        <View
-          style={[
-            {
-              position: 'absolute',
-              top: 0,
-              bottom: 0,
-              left: 0,
-              right: 0,
-            },
-          ]}>
-          <Image
-            source={{uri: embed.thumbnail}}
-            alt={embed.alt}
-            style={a.flex_1}
-            contentFit="cover"
-            accessibilityIgnoresInvertColors
-          />
-          <Button
-            style={[a.absolute, a.inset_0]}
-            onPress={() => {
-              setActiveSource(embed.playlist, viewId)
-            }}
-            label={_(msg`Play video`)}
-            color="secondary">
-            {isLoading ? (
-              <View
-                style={[
-                  a.rounded_full,
-                  a.p_xs,
-                  a.absolute,
-                  {top: 'auto', left: 'auto'},
-                  {backgroundColor: 'rgba(0,0,0,0.5)'},
-                ]}>
-                <Loader size="2xl" style={{color: 'white'}} />
-              </View>
-            ) : (
-              <PlayButtonIcon />
-            )}
-          </Button>
-        </View>
-      ) : null}
+      <View
+        style={[
+          {
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            display: showOverlay ? 'flex' : 'none',
+          },
+        ]}>
+        <Image
+          source={{uri: embed.thumbnail}}
+          alt={embed.alt}
+          style={a.flex_1}
+          contentFit="cover"
+          accessibilityIgnoresInvertColors
+        />
+        <Button
+          style={[a.absolute, a.inset_0]}
+          onPress={() => {
+            setActiveSource(embed.playlist, viewId)
+          }}
+          label={_(msg`Play video`)}
+          color="secondary">
+          {isLoading ? (
+            <View
+              style={[
+                a.rounded_full,
+                a.p_xs,
+                a.absolute,
+                {top: 'auto', left: 'auto'},
+                {backgroundColor: 'rgba(0,0,0,0.5)'},
+              ]}>
+              <Loader size="2xl" style={{color: 'white'}} />
+            </View>
+          ) : (
+            <PlayButtonIcon />
+          )}
+        </Button>
+      </View>
     </VisibilityView>
   )
 }
