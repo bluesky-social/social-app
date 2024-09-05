@@ -5,7 +5,7 @@ index 473f964..f37aff9 100644
 @@ -41,6 +41,11 @@ sealed class PlayerEvent {
      override val name = "playToEnd"
    }
- 
+
 +  data class PlayerTimeRemainingChanged(val timeRemaining: Double): PlayerEvent() {
 +    override val name = "timeRemainingChange"
 +    override val arguments = arrayOf(timeRemaining)
@@ -32,10 +32,10 @@ index 9905e13..47342ff 100644
    setTimeBarInteractive(requireLinearPlayback)
 +  setShowSubtitleButton(true)
  }
- 
+
  @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
 @@ -27,7 +28,8 @@ internal fun PlayerView.setTimeBarInteractive(interactive: Boolean) {
- 
+
  @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
  internal fun PlayerView.setFullscreenButtonVisibility(visible: Boolean) {
 -  val fullscreenButton = findViewById<android.widget.ImageButton>(androidx.media3.ui.R.id.exo_fullscreen)
@@ -144,7 +144,7 @@ index ec3da2a..5a1397a 100644
 +        "onEnterFullscreen",
 +        "onExitFullscreen"
        )
- 
+
        Prop("player") { view: VideoView, player: VideoPlayer ->
 diff --git a/node_modules/expo-video/android/src/main/java/expo/modules/video/VideoPlayer.kt b/node_modules/expo-video/android/src/main/java/expo/modules/video/VideoPlayer.kt
 index 58f00af..5ad8237 100644
@@ -152,7 +152,7 @@ index 58f00af..5ad8237 100644
 +++ b/node_modules/expo-video/android/src/main/java/expo/modules/video/VideoPlayer.kt
 @@ -1,5 +1,6 @@
  package expo.modules.video
- 
+
 +import ProgressTracker
  import android.content.Context
  import android.view.SurfaceView
@@ -162,18 +162,18 @@ index 58f00af..5ad8237 100644
      .setLooper(context.mainLooper)
      .build()
 +  var progressTracker: ProgressTracker? = null
- 
+
    val serviceConnection = PlaybackServiceConnection(WeakReference(player))
- 
+
    var playing by IgnoreSameSet(false) { new, old ->
      sendEvent(PlayerEvent.IsPlayingChanged(new, old))
 +    addOrRemoveProgressTracker()
    }
- 
+
    var uncommittedSource: VideoSource? = source
 @@ -141,6 +144,9 @@ class VideoPlayer(val context: Context, appContext: AppContext, source: VideoSou
    }
- 
+
    override fun close() {
 +    this.progressTracker?.remove()
 +    this.progressTracker = null
@@ -184,7 +184,7 @@ index 58f00af..5ad8237 100644
 @@ -228,7 +234,7 @@ class VideoPlayer(val context: Context, appContext: AppContext, source: VideoSou
      listeners.removeAll { it.get() == videoPlayerListener }
    }
- 
+
 -  private fun sendEvent(event: PlayerEvent) {
 +  fun sendEvent(event: PlayerEvent) {
      // Emits to the native listeners
@@ -224,7 +224,7 @@ index a951d80..3932535 100644
    val onPictureInPictureStop by EventDispatcher<Unit>()
 +  val onEnterFullscreen by EventDispatcher()
 +  val onExitFullscreen by EventDispatcher()
- 
+
    var willEnterPiP: Boolean = false
    var isInFullscreen: Boolean = false
 @@ -154,6 +156,7 @@ class VideoView(context: Context, appContext: AppContext) : ExpoView(context, ap
@@ -234,7 +234,7 @@ index a951d80..3932535 100644
 +    onEnterFullscreen(mapOf())
      isInFullscreen = true
    }
- 
+
 @@ -162,6 +165,7 @@ class VideoView(context: Context, appContext: AppContext) : ExpoView(context, ap
      val fullScreenButton: ImageButton = playerView.findViewById(androidx.media3.ui.R.id.exo_fullscreen)
      fullScreenButton.setImageResource(androidx.media3.ui.R.drawable.exo_icon_fullscreen_enter)
@@ -242,9 +242,9 @@ index a951d80..3932535 100644
 +    this.onExitFullscreen(mapOf())
      isInFullscreen = false
    }
- 
+
 diff --git a/node_modules/expo-video/build/VideoPlayer.types.d.ts b/node_modules/expo-video/build/VideoPlayer.types.d.ts
-index a09fcfe..5eac9e5 100644
+index a09fcfe..46cbae7 100644
 --- a/node_modules/expo-video/build/VideoPlayer.types.d.ts
 +++ b/node_modules/expo-video/build/VideoPlayer.types.d.ts
 @@ -128,6 +128,8 @@ export type VideoPlayerEvents = {
@@ -256,6 +256,15 @@ index a09fcfe..5eac9e5 100644
  };
  /**
   * Describes the current status of the player.
+@@ -136,7 +138,7 @@ export type VideoPlayerEvents = {
+  * - `readyToPlay`: The player has loaded enough data to start playing or to continue playback.
+  * - `error`: The player has encountered an error while loading or playing the video.
+  */
+-export type VideoPlayerStatus = 'idle' | 'loading' | 'readyToPlay' | 'error';
++export type VideoPlayerStatus = 'idle' | 'loading' | 'readyToPlay' | 'error' | 'waitingToPlayAtSpecifiedRate';
+ export type VideoSource = string | {
+     /**
+      * The URI of the video.
 diff --git a/node_modules/expo-video/build/VideoView.types.d.ts b/node_modules/expo-video/build/VideoView.types.d.ts
 index cb9ca6d..ed8bb7e 100644
 --- a/node_modules/expo-video/build/VideoView.types.d.ts
@@ -270,8 +279,21 @@ index cb9ca6d..ed8bb7e 100644
  }
  //# sourceMappingURL=VideoView.types.d.ts.map
 \ No newline at end of file
+diff --git a/node_modules/expo-video/ios/Enums/PlayerStatus.swift b/node_modules/expo-video/ios/Enums/PlayerStatus.swift
+index 6af69ca..189fbbe 100644
+--- a/node_modules/expo-video/ios/Enums/PlayerStatus.swift
++++ b/node_modules/expo-video/ios/Enums/PlayerStatus.swift
+@@ -6,5 +6,8 @@ internal enum PlayerStatus: String, Enumerable {
+   case idle
+   case loading
+   case readyToPlay
++  case waitingToPlayAtSpecifiedRate
++  case unlikeToKeepUp
++  case playbackBufferEmpty
+   case error
+ }
 diff --git a/node_modules/expo-video/ios/VideoManager.swift b/node_modules/expo-video/ios/VideoManager.swift
-index 094a8b0..3f00525 100644
+index 094a8b0..16e7081 100644
 --- a/node_modules/expo-video/ios/VideoManager.swift
 +++ b/node_modules/expo-video/ios/VideoManager.swift
 @@ -12,6 +12,7 @@ class VideoManager {
@@ -409,7 +431,7 @@ index c537a12..e4a918f 100644
 +        "onEnterFullscreen",
 +        "onExitFullscreen"
        )
- 
+
        Prop("player") { (view, player: VideoPlayer?) in
 diff --git a/node_modules/expo-video/ios/VideoPlayer.swift b/node_modules/expo-video/ios/VideoPlayer.swift
 index 3315b88..733ab1f 100644
@@ -418,7 +440,7 @@ index 3315b88..733ab1f 100644
 @@ -185,6 +185,10 @@ internal final class VideoPlayer: SharedRef<AVPlayer>, Hashable, VideoPlayerObse
      safeEmit(event: "sourceChange", arguments: newVideoPlayerItem?.videoSource, oldVideoPlayerItem?.videoSource)
    }
- 
+
 +  func onPlayerTimeRemainingChanged(player: AVPlayer, timeRemaining: Double) {
 +    safeEmit(event: "timeRemainingChange", arguments: timeRemaining)
 +  }
@@ -427,7 +449,7 @@ index 3315b88..733ab1f 100644
      if self.appContext != nil {
        self.emit(event: event, arguments: repeat each arguments)
 diff --git a/node_modules/expo-video/ios/VideoPlayerObserver.swift b/node_modules/expo-video/ios/VideoPlayerObserver.swift
-index d289e26..ea4d96f 100644
+index d289e26..7de8cbf 100644
 --- a/node_modules/expo-video/ios/VideoPlayerObserver.swift
 +++ b/node_modules/expo-video/ios/VideoPlayerObserver.swift
 @@ -21,6 +21,7 @@ protocol VideoPlayerObserverDelegate: AnyObject {
@@ -436,7 +458,7 @@ index d289e26..ea4d96f 100644
    func onPlayerItemStatusChanged(player: AVPlayer, oldStatus: AVPlayerItem.Status?, newStatus: AVPlayerItem.Status)
 +  func onPlayerTimeRemainingChanged(player: AVPlayer, timeRemaining: Double)
  }
- 
+
  // Default implementations for the delegate
 @@ -33,6 +34,7 @@ extension VideoPlayerObserverDelegate {
    func onItemChanged(player: AVPlayer, oldVideoPlayerItem: VideoPlayerItem?, newVideoPlayerItem: VideoPlayerItem?) {}
@@ -444,14 +466,14 @@ index d289e26..ea4d96f 100644
    func onPlayerItemStatusChanged(player: AVPlayer, oldStatus: AVPlayerItem.Status?, newStatus: AVPlayerItem.Status) {}
 +  func onPlayerTimeRemainingChanged(player: AVPlayer, timeRemaining: Double) {}
  }
- 
+
  // Wrapper used to store WeakReferences to the observer delegate
 @@ -91,6 +93,7 @@ class VideoPlayerObserver {
    private var playerVolumeObserver: NSKeyValueObservation?
    private var playerCurrentItemObserver: NSKeyValueObservation?
    private var playerIsMutedObserver: NSKeyValueObservation?
 +  private var playerPeriodicTimeObserver: Any?
- 
+
    // Current player item observers
    private var playbackBufferEmptyObserver: NSKeyValueObservation?
 @@ -152,6 +155,9 @@ class VideoPlayerObserver {
@@ -462,16 +484,36 @@ index d289e26..ea4d96f 100644
 +      player?.removeTimeObserver(playerPeriodicTimeObserver)
 +    }
    }
- 
+
    private func initializeCurrentPlayerItemObservers(player: AVPlayer, playerItem: AVPlayerItem) {
-@@ -270,6 +276,7 @@ class VideoPlayerObserver {
- 
+@@ -265,23 +271,24 @@ class VideoPlayerObserver {
+     if player.timeControlStatus != .waitingToPlayAtSpecifiedRate && player.status == .readyToPlay && currentItem?.isPlaybackBufferEmpty != true {
+       status = .readyToPlay
+     } else if player.timeControlStatus == .waitingToPlayAtSpecifiedRate {
+-      status = .loading
++      status = .waitingToPlayAtSpecifiedRate
+     }
+
      if isPlaying != (player.timeControlStatus == .playing) {
        isPlaying = player.timeControlStatus == .playing
 +      addPeriodicTimeObserverIfNeeded()
      }
    }
- 
+
+   private func onIsBufferEmptyChanged(_ playerItem: AVPlayerItem, _ change: NSKeyValueObservedChange<Bool>) {
+     if playerItem.isPlaybackBufferEmpty {
+-      status = .loading
++      status = .playbackBufferEmpty
+     }
+   }
+
+   private func onPlayerLikelyToKeepUpChanged(_ playerItem: AVPlayerItem, _ change: NSKeyValueObservedChange<Bool>) {
+     if !playerItem.isPlaybackLikelyToKeepUp && playerItem.isPlaybackBufferEmpty {
+-      status = .loading
++      status = .unlikeToKeepUp
+     } else if playerItem.isPlaybackLikelyToKeepUp {
+       status = .readyToPlay
+     }
 @@ -310,4 +317,28 @@ class VideoPlayerObserver {
        }
      }
@@ -506,12 +548,12 @@ index f4579e4..10c5908 100644
 --- a/node_modules/expo-video/ios/VideoView.swift
 +++ b/node_modules/expo-video/ios/VideoView.swift
 @@ -41,6 +41,8 @@ public final class VideoView: ExpoView, AVPlayerViewControllerDelegate {
- 
+
    let onPictureInPictureStart = EventDispatcher()
    let onPictureInPictureStop = EventDispatcher()
 +  let onEnterFullscreen = EventDispatcher()
 +  let onExitFullscreen = EventDispatcher()
- 
+
    public override var bounds: CGRect {
      didSet {
 @@ -163,6 +165,7 @@ public final class VideoView: ExpoView, AVPlayerViewControllerDelegate {
@@ -521,7 +563,7 @@ index f4579e4..10c5908 100644
 +    onEnterFullscreen()
      isFullscreen = true
    }
- 
+
 @@ -179,6 +182,7 @@ public final class VideoView: ExpoView, AVPlayerViewControllerDelegate {
          if wasPlaying {
            self.player?.pointer.play()
@@ -531,7 +573,7 @@ index f4579e4..10c5908 100644
        }
      }
 diff --git a/node_modules/expo-video/src/VideoPlayer.types.ts b/node_modules/expo-video/src/VideoPlayer.types.ts
-index aaf4b63..f438196 100644
+index aaf4b63..5ff6b7a 100644
 --- a/node_modules/expo-video/src/VideoPlayer.types.ts
 +++ b/node_modules/expo-video/src/VideoPlayer.types.ts
 @@ -151,6 +151,8 @@ export type VideoPlayerEvents = {
@@ -541,8 +583,17 @@ index aaf4b63..f438196 100644
 +
 +  timeRemainingChange(timeRemaining: number): void;
  };
- 
+
  /**
+@@ -160,7 +162,7 @@ export type VideoPlayerEvents = {
+  * - `readyToPlay`: The player has loaded enough data to start playing or to continue playback.
+  * - `error`: The player has encountered an error while loading or playing the video.
+  */
+-export type VideoPlayerStatus = 'idle' | 'loading' | 'readyToPlay' | 'error';
++export type VideoPlayerStatus = 'idle' | 'loading' | 'readyToPlay' | 'error' | 'waitingToPlayAtSpecifiedRate';
+
+ export type VideoSource =
+   | string
 diff --git a/node_modules/expo-video/src/VideoView.types.ts b/node_modules/expo-video/src/VideoView.types.ts
 index 29fe5db..e1fbf59 100644
 --- a/node_modules/expo-video/src/VideoView.types.ts

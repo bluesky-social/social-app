@@ -1,9 +1,12 @@
 import React, {useEffect, useRef} from 'react'
 import {View} from 'react-native'
 import {ImagePickerAsset} from 'expo-image-picker'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {CompressedVideo} from '#/lib/media/video/types'
 import {clamp} from '#/lib/numbers'
+import * as Toast from '#/view/com/util/Toast'
 import {ExternalEmbedRemoveBtn} from 'view/com/composer/ExternalEmbedRemoveBtn'
 import {atoms as a} from '#/alf'
 
@@ -19,6 +22,7 @@ export function VideoPreview({
   clear: () => void
 }) {
   const ref = useRef<HTMLVideoElement>(null)
+  const {_} = useLingui()
 
   useEffect(() => {
     if (!ref.current) return
@@ -32,11 +36,19 @@ export function VideoPreview({
       },
       {signal},
     )
+    ref.current.addEventListener(
+      'error',
+      () => {
+        Toast.show(_(msg`Could not process your video`))
+        clear()
+      },
+      {signal},
+    )
 
     return () => {
       abortController.abort()
     }
-  }, [setDimensions])
+  }, [setDimensions, _, clear])
 
   let aspectRatio = asset.width / asset.height
 
