@@ -23,6 +23,12 @@ export function VideoEmbedInnerWeb({
   const [hasSubtitleTrack, setHasSubtitleTrack] = useState(false)
   const figId = useId()
 
+  // send error up to error boundary
+  const [error, setError] = useState<Error | null>(null)
+  if (error) {
+    throw error
+  }
+
   const hlsRef = useRef<Hls | undefined>(undefined)
 
   useEffect(() => {
@@ -38,9 +44,22 @@ export function VideoEmbedInnerWeb({
     // initial value, later on it's managed by Controls
     hls.autoLevelCapping = 0
 
-    hls.on(Hls.Events.SUBTITLE_TRACKS_UPDATED, (event, data) => {
+    hls.on(Hls.Events.SUBTITLE_TRACKS_UPDATED, (_event, data) => {
       if (data.subtitleTracks.length > 0) {
         setHasSubtitleTrack(true)
+      }
+    })
+
+    hls.on(Hls.Events.ERROR, (_event, data) => {
+      if (data.fatal) {
+        if (
+          data.details === 'manifestLoadError' &&
+          data.response?.code === 404
+        ) {
+          setError(new VideoNotFoundError())
+        } else {
+          setError(data.error)
+        }
       }
     })
 
@@ -102,5 +121,11 @@ export function VideoEmbedInnerWeb({
 export class HLSUnsupportedError extends Error {
   constructor() {
     super('HLS is not supported')
+  }
+}
+
+export class VideoNotFoundError extends Error {
+  constructor() {
+    super('Video not found')
   }
 }
