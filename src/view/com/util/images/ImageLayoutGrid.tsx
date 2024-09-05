@@ -3,6 +3,8 @@ import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {AppBskyEmbedImages} from '@atproto/api'
 
 import {isWeb} from 'platform/detection'
+import {PostEmbedViewContext} from '#/view/com/util/post-embeds/types'
+import {atoms as a} from '#/alf'
 import {GalleryItem} from './Gallery'
 
 interface ImageLayoutGridProps {
@@ -11,13 +13,17 @@ interface ImageLayoutGridProps {
   onLongPress?: (index: number) => void
   onPressIn?: (index: number) => void
   style?: StyleProp<ViewStyle>
-  hideBadges?: boolean
+  viewContext?: PostEmbedViewContext
 }
 
 export function ImageLayoutGrid({style, ...props}: ImageLayoutGridProps) {
+  const gap =
+    props.viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
+      ? a.gap_2xs
+      : a.gap_xs
   return (
     <View style={style}>
-      <View style={styles.container}>
+      <View style={[styles.container, gap]}>
         <ImageLayoutGridInner {...props} />
       </View>
     </View>
@@ -29,15 +35,20 @@ interface ImageLayoutGridInnerProps {
   onPress?: (index: number) => void
   onLongPress?: (index: number) => void
   onPressIn?: (index: number) => void
+  viewContext?: PostEmbedViewContext
 }
 
 function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
   const count = props.images.length
+  const gap =
+    props.viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
+      ? a.gap_2xs
+      : a.gap_xs
 
   switch (count) {
     case 2:
       return (
-        <View style={styles.flexRow}>
+        <View style={[a.flex_row, gap]}>
           <View style={styles.smallItem}>
             <GalleryItem {...props} index={0} imageStyle={styles.image} />
           </View>
@@ -49,11 +60,11 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
 
     case 3:
       return (
-        <View style={styles.flexRow}>
+        <View style={[a.flex_row, gap]}>
           <View style={styles.threeSingle}>
             <GalleryItem {...props} index={0} imageStyle={styles.image} />
           </View>
-          <View style={styles.threeDouble}>
+          <View style={[styles.threeDouble, gap]}>
             <View style={styles.smallItem}>
               <GalleryItem {...props} index={1} imageStyle={styles.image} />
             </View>
@@ -67,7 +78,7 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
     case 4:
       return (
         <>
-          <View style={styles.flexRow}>
+          <View style={[a.flex_row, gap]}>
             <View style={styles.smallItem}>
               <GalleryItem {...props} index={0} imageStyle={styles.image} />
             </View>
@@ -75,7 +86,7 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
               <GalleryItem {...props} index={1} imageStyle={styles.image} />
             </View>
           </View>
-          <View style={styles.flexRow}>
+          <View style={[a.flex_row, gap]}>
             <View style={styles.smallItem}>
               <GalleryItem {...props} index={2} imageStyle={styles.image} />
             </View>
@@ -104,13 +115,7 @@ const styles = StyleSheet.create({
         marginHorizontal: -IMAGE_GAP / 2,
         marginVertical: -IMAGE_GAP / 2,
       }
-    : {
-        gap: IMAGE_GAP,
-      },
-  flexRow: {
-    flexDirection: 'row',
-    gap: isWeb ? undefined : IMAGE_GAP,
-  },
+    : {},
   smallItem: {flex: 1, aspectRatio: 1},
   image: isWeb
     ? {
@@ -123,6 +128,5 @@ const styles = StyleSheet.create({
   },
   threeDouble: {
     flex: 1,
-    gap: isWeb ? undefined : IMAGE_GAP,
   },
 })

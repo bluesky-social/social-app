@@ -6,6 +6,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
+import {PostEmbedViewContext} from '#/view/com/util/post-embeds/types'
 import {atoms as a, useTheme} from '#/alf'
 import {Crop_Stroke2_Corner0_Rounded as Crop} from '#/components/icons/Crop'
 import {Text} from '#/components/Typography'
@@ -19,7 +20,7 @@ interface GalleryItemProps {
   onLongPress?: EventFunction
   onPressIn?: EventFunction
   imageStyle: ComponentProps<typeof Image>['style']
-  hideBadges?: boolean
+  viewContext?: PostEmbedViewContext
 }
 
 export const GalleryItem: FC<GalleryItemProps> = ({
@@ -29,7 +30,7 @@ export const GalleryItem: FC<GalleryItemProps> = ({
   onPress,
   onPressIn,
   onLongPress,
-  hideBadges,
+  viewContext,
 }) => {
   const t = useTheme()
   const {_} = useLingui()
@@ -41,6 +42,8 @@ export const GalleryItem: FC<GalleryItemProps> = ({
     const aspect = image.aspectRatio.width / image.aspectRatio.height
     return aspect !== 1
   }, [image.aspectRatio])
+  const hideBadges =
+    viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
   return (
     <View style={a.flex_1}>
       <Pressable
@@ -78,8 +81,8 @@ export const GalleryItem: FC<GalleryItemProps> = ({
             {
               gap: 3,
               padding: 3,
-              bottom: a.p_sm.padding,
-              right: a.p_sm.padding,
+              bottom: a.p_xs.padding,
+              right: a.p_xs.padding,
               opacity: 0.8,
             },
             largeAltBadge && [

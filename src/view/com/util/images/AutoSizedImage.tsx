@@ -147,8 +147,8 @@ export function AutoSizedImage({
             {
               gap: 3,
               padding: 3,
-              bottom: a.p_sm.padding,
-              right: a.p_sm.padding,
+              bottom: a.p_xs.padding,
+              right: a.p_xs.padding,
               opacity: 0.8,
             },
             largeAlt && [
