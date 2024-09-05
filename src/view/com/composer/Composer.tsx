@@ -30,6 +30,7 @@ import Animated, {
   withRepeat,
   withTiming,
   ZoomIn,
+  ZoomOut,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {
@@ -770,7 +771,7 @@ export const ComposePost = observer(function ComposePost({
             {(videoUploadState.asset || videoUploadState.video) && (
               <Animated.View
                 entering={native(ZoomIn)}
-                exiting={native(FadeOut)}>
+                exiting={native(ZoomOut)}>
                 {videoUploadState.asset &&
                   (videoUploadState.status === 'compressing' ? (
                     <VideoTranscodeProgress
