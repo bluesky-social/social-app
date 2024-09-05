@@ -1,6 +1,8 @@
+import React from 'react'
 import {
   AppBskyLabelerDefs,
   BskyAgent,
+  ComAtprotoLabelDefs,
   InterpretedLabelValueDefinition,
   LABELS,
   ModerationCause,
@@ -81,4 +83,35 @@ export function isLabelerSubscribed(
     return true
   }
   return modOpts.prefs.labelers.find(l => l.did === labeler)
+}
+
+export type Subject =
+  | {
+      uri: string
+      cid: string
+    }
+  | {
+      did: string
+    }
+
+export function useLabelSubject({label}: {label: ComAtprotoLabelDefs.Label}): {
+  subject: Subject
+} {
+  return React.useMemo(() => {
+    const {cid, uri} = label
+    if (cid) {
+      return {
+        subject: {
+          uri,
+          cid,
+        },
+      }
+    } else {
+      return {
+        subject: {
+          did: uri,
+        },
+      }
+    }
+  }, [label])
 }

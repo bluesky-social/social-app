@@ -17,7 +17,6 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {WebView} from 'react-native-webview'
 import {Image} from 'expo-image'
 import {AppBskyEmbedExternal} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -29,6 +28,7 @@ import {useExternalEmbedsPrefs} from '#/state/preferences'
 import {atoms as a} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {EmbedConsentDialog} from '#/components/dialogs/EmbedConsent'
+import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {EventStopper} from '../EventStopper'
 
 interface ShouldStartLoadRequest {
@@ -59,7 +59,7 @@ function PlaceholderOverlay({
         onPress={onPress}
         style={[styles.overlayContainer, styles.topRadius]}>
         {!isPlayerActive ? (
-          <FontAwesomeIcon icon="play" size={42} color="white" />
+          <PlayButtonIcon />
         ) : (
           <ActivityIndicator size="large" color="white" />
         )}

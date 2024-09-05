@@ -20,11 +20,14 @@ import {
 // @ts-expect-error no type definition
 import ProgressCircle from 'react-native-progress/Circle'
 import Animated, {
+  Easing,
   FadeIn,
   FadeOut,
   interpolateColor,
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
+  withRepeat,
   withTiming,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -221,7 +224,12 @@ export const ComposePost = observer(function ComposePost({
   )
 
   const onPressCancel = useCallback(() => {
-    if (graphemeLength > 0 || !gallery.isEmpty || extGif) {
+    if (
+      graphemeLength > 0 ||
+      !gallery.isEmpty ||
+      extGif ||
+      videoUploadState.status !== 'idle'
+    ) {
       closeAllDialogs()
       Keyboard.dismiss()
       discardPromptControl.open()
@@ -235,6 +243,7 @@ export const ComposePost = observer(function ComposePost({
     closeAllDialogs,
     discardPromptControl,
     onClose,
+    videoUploadState.status,
   ])
 
   useImperativeHandle(cancelRef, () => ({onPressCancel}))
@@ -329,7 +338,8 @@ export const ComposePost = observer(function ComposePost({
         richtext.text.trim().length === 0 &&
         gallery.isEmpty &&
         !extLink &&
-        !quote
+        !quote &&
+        videoUploadState.status === 'idle'
       ) {
         setError(_(msg`Did you want to say anything?`))
         return
@@ -595,7 +605,7 @@ export const ComposePost = observer(function ComposePost({
                 </View>
               </>
             ) : (
-              <>
+              <View style={[styles.postBtnWrapper]}>
                 <LabelsBtn
                   labels={labels}
                   onChange={setLabels}
@@ -631,7 +641,7 @@ export const ComposePost = observer(function ComposePost({
                     </Text>
                   </View>
                 )}
-              </>
+              </View>
             )}
           </View>
 
@@ -999,6 +1009,10 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     marginLeft: 12,
   },
+  postBtnWrapper: {
+    flexDirection: 'row',
+    gap: 14,
+  },
   errorLine: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -1080,6 +1094,29 @@ function ToolbarWrapper({
 function VideoUploadToolbar({state}: {state: VideoUploadState}) {
   const t = useTheme()
   const {_} = useLingui()
+  const progress = state.jobStatus?.progress
+    ? state.jobStatus.progress / 100
+    : state.progress
+  let wheelProgress = progress === 0 || progress === 1 ? 0.33 : progress
+
+  const rotate = useDerivedValue(() => {
+    if (progress === 0 || progress >= 0.99) {
+      return withRepeat(
+        withTiming(360, {
+          duration: 2500,
+          easing: Easing.out(Easing.cubic),
+        }),
+        -1,
+      )
+    }
+    return 0
+  })
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{rotateZ: `${rotate.value}deg`}],
+    }
+  })
 
   let text = ''
 
@@ -1098,26 +1135,22 @@ function VideoUploadToolbar({state}: {state: VideoUploadState}) {
       break
   }
 
-  // we could use state.jobStatus?.progress but 99% of the time it jumps from 0 to 100
-  let progress =
-    state.status === 'compressing' || state.status === 'uploading'
-      ? state.progress
-      : 100
-
   if (state.error) {
     text = _('Error')
-    progress = 100
+    wheelProgress = 100
   }
 
   return (
     <ToolbarWrapper style={[a.flex_row, a.align_center, {paddingVertical: 5}]}>
-      <ProgressCircle
-        size={30}
-        borderWidth={1}
-        borderColor={t.atoms.border_contrast_low.borderColor}
-        color={state.error ? t.palette.negative_500 : t.palette.primary_500}
-        progress={progress}
-      />
+      <Animated.View style={[animatedStyle]}>
+        <ProgressCircle
+          size={30}
+          borderWidth={1}
+          borderColor={t.atoms.border_contrast_low.borderColor}
+          color={state.error ? t.palette.negative_500 : t.palette.primary_500}
+          progress={wheelProgress}
+        />
+      </Animated.View>
       <NewText style={[a.font_bold, a.ml_sm]}>{text}</NewText>
     </ToolbarWrapper>
   )

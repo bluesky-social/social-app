@@ -226,11 +226,11 @@ AppState.addEventListener('change', (state: AppStateStatus) => {
     let secondsActive = 0
     if (lastActive != null) {
       secondsActive = Math.round((performance.now() - lastActive) / 1e3)
+      lastActive = null
+      logEvent('state:background:sampled', {
+        secondsActive,
+      })
     }
-    lastActive = null
-    logEvent('state:background:sampled', {
-      secondsActive,
-    })
   }
 })
 
