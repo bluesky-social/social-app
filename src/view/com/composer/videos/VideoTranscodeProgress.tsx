@@ -35,7 +35,6 @@ export function VideoTranscodeProgress({
     <View
       style={[
         a.w_full,
-        a.mt_md,
         t.atoms.bg_contrast_50,
         a.rounded_md,
         a.overflow_hidden,
