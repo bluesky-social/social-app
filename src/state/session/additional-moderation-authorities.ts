@@ -3,16 +3,16 @@ import {BskyAgent} from '@atproto/api'
 import {logger} from '#/logger'
 import {device} from '#/storage'
 
-export const ADDITIONAL_LABELER = 'did:plc:oz5zavafp7szpd2yyko57ccz'
+export const BR_LABELER = 'did:plc:ekitcvx7uwnauoqy5oest3hm'
 export const ADDITIONAL_LABELERS_MAP: {
   [countryCode: string]: string[]
 } = {
-  US: [ADDITIONAL_LABELER],
+  BR: [BR_LABELER],
 }
 export const ALL_ADDITIONAL_LABELERS = Object.values(
   ADDITIONAL_LABELERS_MAP,
 ).flat()
-export const NON_CONFIGURABLE_LABELERS = [ADDITIONAL_LABELER]
+export const NON_CONFIGURABLE_LABELERS = [BR_LABELER]
 
 export function isNonConfigurableModerationAuthority(did: string) {
   return NON_CONFIGURABLE_LABELERS.includes(did)
@@ -32,7 +32,7 @@ export function configureAdditionalModerationAuthorities() {
     new Set([...BskyAgent.appLabelers, ...additionalLabelers]),
   )
 
-  logger.debug(`applying mod authorities`, {
+  logger.info(`applying mod authorities`, {
     additionalLabelers,
     appLabelers,
   })

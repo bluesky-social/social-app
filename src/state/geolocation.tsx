@@ -34,7 +34,7 @@ async function getGeolocation(): Promise<Device['geolocation']> {
     throw new Error(`geolocation: lookup failed ${res.status}`)
   }
 
-  const json = {country_code: 'US'} // await res.json()
+  const json = {country_code: 'BR'} // await res.json()
 
   if (json.country_code) {
     return {
@@ -112,11 +112,11 @@ export async function ensureGeolocationResolved() {
 
   const cached = device.get(['geolocation'])
   if (cached) {
-    logger.info(`geolocation: using cache`, {cached})
+    logger.debug(`geolocation: using cache`, {cached})
   } else {
-    logger.info(`geolocation: no cache`)
+    logger.debug(`geolocation: no cache`)
     await geolocationResolution
-    logger.info(`geolocation: resolved`, {
+    logger.debug(`geolocation: resolved`, {
       resolved: device.get(['geolocation']),
     })
   }
