@@ -2,6 +2,8 @@ import {MMKV} from 'react-native-mmkv'
 
 import {Device} from '#/storage/schema'
 
+export * from '#/storage/schema'
+
 /**
  * Generic storage class. DO NOT use this directly. Instead, use the exported
  * storage instances below.
@@ -69,4 +71,4 @@ export class Storage<Scopes extends unknown[], Schema> {
  *
  *   `device.set([key], true)`
  */
-export const device = new Storage<[], Device>({id: 'device'})
+export const device = new Storage<[], Device>({id: 'bsky_device'})

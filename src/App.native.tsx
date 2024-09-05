@@ -29,6 +29,11 @@ import {Provider as A11yProvider} from '#/state/a11y'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
 import {listenSessionDropped} from '#/state/events'
+import {
+  beginResolveGeolocation,
+  ensureGeolocationResolved,
+  Provider as GeolocationProvider,
+} from '#/state/geolocation'
 import {Provider as InvitesStateProvider} from '#/state/invites'
 import {Provider as LightboxStateProvider} from '#/state/lightbox'
 import {MessagesProvider} from '#/state/messages'
@@ -85,6 +90,7 @@ function InnerApp() {
           await initialize()
           await tryFetchGates(undefined, 'prefer-fresh-gates')
         }
+        await ensureGeolocationResolved()
       } catch (e) {
         logger.error(`session: resume failed`, {message: e})
       } finally {
@@ -158,9 +164,12 @@ function App() {
   const [isReady, setReady] = useState(false)
 
   React.useEffect(() => {
+    beginResolveGeolocation()
     PlatformInfo.setAudioCategory(AudioCategory.Ambient)
     PlatformInfo.setAudioActive(false)
-    initPersistedState().then(() => setReady(true))
+    Promise.all([initPersistedState(), ensureGeolocationResolved()]).then(() =>
+      setReady(true),
+    )
   }, [])
 
   if (!isReady) {
@@ -172,31 +181,33 @@ function App() {
    * that is set up in the InnerApp component above.
    */
   return (
-    <A11yProvider>
-      <KeyboardProvider enabled={false} statusBarTranslucent={true}>
-        <SessionProvider>
-          <PrefsStateProvider>
-            <I18nProvider>
-              <ShellStateProvider>
-                <InvitesStateProvider>
-                  <ModalStateProvider>
-                    <DialogStateProvider>
-                      <LightboxStateProvider>
-                        <PortalProvider>
-                          <StarterPackProvider>
-                            <InnerApp />
-                          </StarterPackProvider>
-                        </PortalProvider>
-                      </LightboxStateProvider>
-                    </DialogStateProvider>
-                  </ModalStateProvider>
-                </InvitesStateProvider>
-              </ShellStateProvider>
-            </I18nProvider>
-          </PrefsStateProvider>
-        </SessionProvider>
-      </KeyboardProvider>
-    </A11yProvider>
+    <GeolocationProvider>
+      <A11yProvider>
+        <KeyboardProvider enabled={false} statusBarTranslucent={true}>
+          <SessionProvider>
+            <PrefsStateProvider>
+              <I18nProvider>
+                <ShellStateProvider>
+                  <InvitesStateProvider>
+                    <ModalStateProvider>
+                      <DialogStateProvider>
+                        <LightboxStateProvider>
+                          <PortalProvider>
+                            <StarterPackProvider>
+                              <InnerApp />
+                            </StarterPackProvider>
+                          </PortalProvider>
+                        </LightboxStateProvider>
+                      </DialogStateProvider>
+                    </ModalStateProvider>
+                  </InvitesStateProvider>
+                </ShellStateProvider>
+              </I18nProvider>
+            </PrefsStateProvider>
+          </SessionProvider>
+        </KeyboardProvider>
+      </A11yProvider>
+    </GeolocationProvider>
   )
 }
 
