@@ -139,7 +139,7 @@
     "expo-system-ui": "~3.0.4",
     "expo-task-manager": "~11.8.1",
     "expo-updates": "~0.25.14",
-    "expo-video": "^1.2.4",
+    "expo-video": "https://github.com/bluesky-social/expo/raw/main/packages/expo-video/expo-video-v1.2.4.tgz",
     "expo-web-browser": "~13.0.3",
     "fast-text-encoding": "^1.0.6",
     "history": "^5.3.0",
