@@ -48,7 +48,7 @@ msgstr "{0, plural, one {# repostagem} other {# repostagens}}"
 
 #: src/components/KnownFollowers.tsx:179
 #~ msgid "{0, plural, one {and # other} other {and # others}}"
-#~ msgstr "{0, plural, one {e # outro} other {e # outros}"
+#~ msgstr "{0, plural, one {e # outro} other {e # outros}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:398
 #: src/screens/Profile/Header/Metrics.tsx:23

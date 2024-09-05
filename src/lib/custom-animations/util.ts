@@ -5,9 +5,9 @@
 // - The count is going down and is 1 less than a multiple of 100
 export function decideShouldRoll(isSet: boolean, count: number) {
   let shouldRoll = false
-  if (!isSet && count === 0) {
+  if (!isSet && count === 1) {
     shouldRoll = true
-  } else if (count > 0 && count < 1000) {
+  } else if (count > 1 && count < 1000) {
     shouldRoll = true
   } else if (count > 0) {
     const mod = count % 100
