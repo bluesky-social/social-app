@@ -25,6 +25,7 @@ import Animated, {
   FadeOut,
   interpolateColor,
   LayoutAnimationConfig,
+  LinearTransition,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
@@ -581,7 +582,9 @@ export const ComposePost = observer(function ComposePost({
       keyboardVerticalOffset={keyboardVerticalOffset}
       style={a.flex_1}>
       <View style={[a.flex_1, viewStyles]} aria-modal accessibilityViewIsModal>
-        <Animated.View style={topBarAnimatedStyle}>
+        <Animated.View
+          style={topBarAnimatedStyle}
+          layout={native(LinearTransition)}>
           <View style={styles.topbarInner}>
             <Button
               label={_(msg`Cancel`)}
@@ -673,6 +676,7 @@ export const ComposePost = observer(function ComposePost({
           />
         </Animated.View>
         <Animated.ScrollView
+          layout={native(LinearTransition)}
           onScroll={scrollHandler}
           style={styles.scrollView}
           keyboardShouldPersistTaps="always"
