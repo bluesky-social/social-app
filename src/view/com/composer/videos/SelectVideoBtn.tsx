@@ -105,7 +105,7 @@ function VerifyEmailPrompt({control}: {control: Prompt.PromptControlProps}) {
       description={_(
         msg`You must have a verified email address in order to post videos.`,
       )}
-      confirmButtonCta={_(msg`Verify email address`)}
+      confirmButtonCta={_(msg`Verify now`)}
       confirmButtonColor="primary"
       onConfirm={() => {
         control.close(() => {
