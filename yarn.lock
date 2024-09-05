@@ -12416,7 +12416,7 @@ expo-updates@~0.25.14:
 
 "expo-video@https://github.com/bluesky-social/expo/raw/expo-video-1.2.4-patch/packages/expo-video/expo-video-v1.2.4.tgz":
   version "1.2.4"
-  resolved "https://github.com/bluesky-social/expo/raw/expo-video-1.2.4-patch/packages/expo-video/expo-video-v1.2.4.tgz#584c17e34f59cb018eed2f4f408b6c94e2a1910f"
+  resolved "https://github.com/bluesky-social/expo/raw/expo-video-1.2.4-patch/packages/expo-video/expo-video-v1.2.4.tgz#15af07368c72cb847124be9922d5c7a3fe4293a4"
 
 expo-web-browser@~13.0.3:
   version "13.0.3"
