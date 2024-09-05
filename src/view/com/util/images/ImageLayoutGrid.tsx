@@ -1,10 +1,9 @@
 import React from 'react'
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {StyleProp, View, ViewStyle} from 'react-native'
 import {AppBskyEmbedImages} from '@atproto/api'
 
-import {isWeb} from 'platform/detection'
 import {PostEmbedViewContext} from '#/view/com/util/post-embeds/types'
-import {atoms as a} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {GalleryItem} from './Gallery'
 
 interface ImageLayoutGridProps {
@@ -17,14 +16,19 @@ interface ImageLayoutGridProps {
 }
 
 export function ImageLayoutGrid({style, ...props}: ImageLayoutGridProps) {
+  const {gtMobile} = useBreakpoints()
   const gap =
     props.viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
-      ? a.gap_2xs
+      ? gtMobile
+        ? a.gap_xs
+        : a.gap_2xs
+      : gtMobile
+      ? a.gap_sm
       : a.gap_xs
   return (
     <View style={style}>
-      <View style={[styles.container, gap]}>
-        <ImageLayoutGridInner {...props} />
+      <View style={[gap]}>
+        <ImageLayoutGridInner {...props} gap={gap} />
       </View>
     </View>
   )
@@ -36,24 +40,22 @@ interface ImageLayoutGridInnerProps {
   onLongPress?: (index: number) => void
   onPressIn?: (index: number) => void
   viewContext?: PostEmbedViewContext
+  gap: {gap: number}
 }
 
 function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
+  const gap = props.gap
   const count = props.images.length
-  const gap =
-    props.viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
-      ? a.gap_2xs
-      : a.gap_xs
 
   switch (count) {
     case 2:
       return (
         <View style={[a.flex_row, gap]}>
-          <View style={styles.smallItem}>
-            <GalleryItem {...props} index={0} imageStyle={styles.image} />
+          <View style={[a.flex_1, {aspectRatio: 1}]}>
+            <GalleryItem {...props} index={0} />
           </View>
-          <View style={styles.smallItem}>
-            <GalleryItem {...props} index={1} imageStyle={styles.image} />
+          <View style={[a.flex_1, {aspectRatio: 1}]}>
+            <GalleryItem {...props} index={1} />
           </View>
         </View>
       )
@@ -61,15 +63,15 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
     case 3:
       return (
         <View style={[a.flex_row, gap]}>
-          <View style={styles.threeSingle}>
-            <GalleryItem {...props} index={0} imageStyle={styles.image} />
+          <View style={{flex: 2}}>
+            <GalleryItem {...props} index={0} />
           </View>
-          <View style={[styles.threeDouble, gap]}>
-            <View style={styles.smallItem}>
-              <GalleryItem {...props} index={1} imageStyle={styles.image} />
+          <View style={[a.flex_1, gap]}>
+            <View style={[a.flex_1, {aspectRatio: 1}]}>
+              <GalleryItem {...props} index={1} />
             </View>
-            <View style={styles.smallItem}>
-              <GalleryItem {...props} index={2} imageStyle={styles.image} />
+            <View style={[a.flex_1, {aspectRatio: 1}]}>
+              <GalleryItem {...props} index={2} />
             </View>
           </View>
         </View>
@@ -79,19 +81,19 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
       return (
         <>
           <View style={[a.flex_row, gap]}>
-            <View style={styles.smallItem}>
-              <GalleryItem {...props} index={0} imageStyle={styles.image} />
+            <View style={[a.flex_1, {aspectRatio: 1}]}>
+              <GalleryItem {...props} index={0} />
             </View>
-            <View style={styles.smallItem}>
-              <GalleryItem {...props} index={1} imageStyle={styles.image} />
+            <View style={[a.flex_1, {aspectRatio: 1}]}>
+              <GalleryItem {...props} index={1} />
             </View>
           </View>
           <View style={[a.flex_row, gap]}>
-            <View style={styles.smallItem}>
-              <GalleryItem {...props} index={2} imageStyle={styles.image} />
+            <View style={[a.flex_1, {aspectRatio: 1}]}>
+              <GalleryItem {...props} index={2} />
             </View>
-            <View style={styles.smallItem}>
-              <GalleryItem {...props} index={3} imageStyle={styles.image} />
+            <View style={[a.flex_1, {aspectRatio: 1}]}>
+              <GalleryItem {...props} index={3} />
             </View>
           </View>
         </>
@@ -101,32 +103,3 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
       return null
   }
 }
-
-// On web we use margin to calculate gap, as aspectRatio does not properly size
-// all images on web. On native though we cannot rely on margin, since the
-// negative margin interferes with the swipe controls on pagers.
-// https://github.com/facebook/yoga/issues/1418
-// https://github.com/bluesky-social/social-app/issues/2601
-const IMAGE_GAP = 5
-
-const styles = StyleSheet.create({
-  container: isWeb
-    ? {
-        marginHorizontal: -IMAGE_GAP / 2,
-        marginVertical: -IMAGE_GAP / 2,
-      }
-    : {},
-  smallItem: {flex: 1, aspectRatio: 1},
-  image: isWeb
-    ? {
-        margin: IMAGE_GAP / 2,
-      }
-    : {},
-  threeSingle: {
-    flex: 2,
-    aspectRatio: isWeb ? 1 : undefined,
-  },
-  threeDouble: {
-    flex: 1,
-  },
-})

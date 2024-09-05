@@ -19,7 +19,7 @@ interface GalleryItemProps {
   onPress?: EventFunction
   onLongPress?: EventFunction
   onPressIn?: EventFunction
-  imageStyle: ComponentProps<typeof Image>['style']
+  imageStyle?: ComponentProps<typeof Image>['style']
   viewContext?: PostEmbedViewContext
 }
 
