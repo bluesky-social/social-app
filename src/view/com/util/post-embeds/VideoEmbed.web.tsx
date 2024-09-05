@@ -167,9 +167,7 @@ function VideoError({error, retry}: {error: unknown; retry: () => void}) {
       msg`Your browser does not support the video format. Please try a different browser.`,
     )
   } else {
-    text = _(
-      msg`An error occurred while loading the video. Please try again later.`,
-    )
+    text = _(msg`An error occurred while loading the video. Please try again.`)
   }
 
   return (
