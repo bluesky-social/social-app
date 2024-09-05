@@ -101,7 +101,7 @@ function VerifyEmailPrompt({control}: {control: Prompt.PromptControlProps}) {
   return (
     <Prompt.Basic
       control={control}
-      title={_(msg`Verify email address`)}
+      title={_(msg`Verified email required`)}
       description={_(
         msg`You must have a verified email address in order to post videos.`,
       )}
