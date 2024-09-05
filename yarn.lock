@@ -12414,9 +12414,9 @@ expo-updates@~0.25.14:
     ignore "^5.3.1"
     resolve-from "^5.0.0"
 
-"expo-video@https://github.com/bluesky-social/expo/raw/main/packages/expo-video/expo-video-v1.2.4.tgz":
+"expo-video@https://github.com/bluesky-social/expo/raw/expo-video-1.2.4-patch/packages/expo-video/expo-video-v1.2.4.tgz":
   version "1.2.4"
-  resolved "https://github.com/bluesky-social/expo/raw/main/packages/expo-video/expo-video-v1.2.4.tgz#ebb6a672a385f9a059ca614fd148f7803d4267fc"
+  resolved "https://github.com/bluesky-social/expo/raw/expo-video-1.2.4-patch/packages/expo-video/expo-video-v1.2.4.tgz#584c17e34f59cb018eed2f4f408b6c94e2a1910f"
 
 expo-web-browser@~13.0.3:
   version "13.0.3"
