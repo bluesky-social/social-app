@@ -78,6 +78,12 @@ function InnerWrapper({embed}: Props) {
     (playerStatus === 'waitingToPlayAtSpecifiedRate' ||
       playerStatus === 'loading')
 
+  // send error up to error boundary
+  const [error, setError] = useState<Error | null>(null)
+  if (error) {
+    throw error
+  }
+
   useEffect(() => {
     if (isActive) {
       // eslint-disable-next-line @typescript-eslint/no-shadow
@@ -95,7 +101,7 @@ function InnerWrapper({embed}: Props) {
         (status, _oldStatus, error) => {
           setPlayerStatus(status)
           if (status === 'error') {
-            throw error
+            setError(error)
           }
         },
       )
