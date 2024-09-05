@@ -3,7 +3,6 @@ import {
   InteractionManager,
   StyleProp,
   StyleSheet,
-  Text,
   View,
   ViewStyle,
 } from 'react-native'
@@ -22,7 +21,6 @@ import {
 } from '@atproto/api'
 
 import {ImagesLightbox, useLightboxControls} from '#/state/lightbox'
-import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {usePalette} from 'lib/hooks/usePalette'
 import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
@@ -34,7 +32,10 @@ import {AutoSizedImage} from '../images/AutoSizedImage'
 import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
 import {ExternalLinkEmbed} from './ExternalLinkEmbed'
 import {MaybeQuoteEmbed} from './QuoteEmbed'
+import {PostEmbedViewContext, QuoteEmbedViewContext} from './types'
 import {VideoEmbed} from './VideoEmbed'
+
+export * from './types'
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -50,15 +51,16 @@ export function PostEmbeds({
   onOpen,
   style,
   allowNestedQuotes,
+  viewContext,
 }: {
   embed?: Embed
   moderation?: ModerationDecision
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
   allowNestedQuotes?: boolean
+  viewContext?: PostEmbedViewContext
 }) {
   const {openLightbox} = useLightboxControls()
-  const largeAltBadge = useLargeAltBadgeEnabled()
 
   // quote post with media
   // =
@@ -69,8 +71,17 @@ export function PostEmbeds({
           embed={embed.media}
           moderation={moderation}
           onOpen={onOpen}
+          viewContext={viewContext}
         />
-        <MaybeQuoteEmbed embed={embed.record} onOpen={onOpen} />
+        <MaybeQuoteEmbed
+          embed={embed.record}
+          onOpen={onOpen}
+          viewContext={
+            viewContext === PostEmbedViewContext.Feed
+              ? QuoteEmbedViewContext.FeedEmbedRecordWithMedia
+              : undefined
+          }
+        />
       </View>
     )
   }
@@ -124,27 +135,26 @@ export function PostEmbeds({
       }
 
       if (images.length === 1) {
-        const {alt, thumb, aspectRatio} = images[0]
+        const image = images[0]
         return (
           <ContentHider modui={moderation?.ui('contentMedia')}>
             <View style={[styles.container, style]}>
               <AutoSizedImage
-                alt={alt}
-                uri={thumb}
-                dimensionsHint={aspectRatio}
+                crop={
+                  viewContext === PostEmbedViewContext.ThreadHighlighted
+                    ? 'none'
+                    : viewContext ===
+                      PostEmbedViewContext.FeedEmbedRecordWithMedia
+                    ? 'square'
+                    : 'constrained'
+                }
+                image={image}
                 onPress={() => _openLightbox(0)}
                 onPressIn={() => onPressIn(0)}
-                style={a.rounded_sm}>
-                {alt === '' ? null : (
-                  <View style={styles.altContainer}>
-                    <Text
-                      style={[styles.alt, largeAltBadge && a.text_xs]}
-                      accessible={false}>
-                      ALT
-                    </Text>
-                  </View>
-                )}
-              </AutoSizedImage>
+                hideBadge={
+                  viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
+                }
+              />
             </View>
           </ContentHider>
         )
@@ -157,6 +167,7 @@ export function PostEmbeds({
               images={embed.images}
               onPress={_openLightbox}
               onPressIn={onPressIn}
+              viewContext={viewContext}
             />
           </View>
         </ContentHider>
