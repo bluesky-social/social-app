@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useId, useState} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {VideoPlayerStatus} from 'expo-video'
+import {PlayerError, VideoPlayerStatus} from 'expo-video'
 import {AppBskyEmbedVideo} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -78,6 +78,12 @@ function InnerWrapper({embed}: Props) {
     (playerStatus === 'waitingToPlayAtSpecifiedRate' ||
       playerStatus === 'loading')
 
+  // send error up to error boundary
+  const [error, setError] = useState<Error | PlayerError | null>(null)
+  if (error) {
+    throw error
+  }
+
   useEffect(() => {
     if (isActive) {
       // eslint-disable-next-line @typescript-eslint/no-shadow
@@ -92,10 +98,10 @@ function InnerWrapper({embed}: Props) {
       )
       const statusSub = player.addListener(
         'statusChange',
-        (status, _oldStatus, error) => {
+        (status, _oldStatus, playerError) => {
           setPlayerStatus(status)
           if (status === 'error') {
-            throw error
+            setError(playerError ?? new Error('Unknown player error'))
           }
         },
       )

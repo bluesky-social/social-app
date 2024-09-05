@@ -34,7 +34,7 @@ export function SubtitleDialogBtn(props: Props) {
   const {_} = useLingui()
 
   return (
-    <View style={[a.flex_row, a.mt_xs]}>
+    <View style={[a.flex_row, a.my_xs]}>
       <Button
         label={isWeb ? _('Captions & alt text') : _('Alt text')}
         accessibilityHint={
