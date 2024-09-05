@@ -8,7 +8,6 @@ import {useLingui} from '@lingui/react'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {PostEmbedViewContext} from '#/view/com/util/post-embeds/types'
 import {atoms as a, useTheme} from '#/alf'
-import {Crop_Stroke2_Corner0_Rounded as Crop} from '#/components/icons/Crop'
 import {Text} from '#/components/Typography'
 
 type EventFunction = (index: number) => void
@@ -37,11 +36,6 @@ export const GalleryItem: FC<GalleryItemProps> = ({
   const largeAltBadge = useLargeAltBadgeEnabled()
   const image = images[index]
   const hasAlt = !!image.alt
-  const isCropped = React.useMemo(() => {
-    if (!image.aspectRatio) return true
-    const aspect = image.aspectRatio.width / image.aspectRatio.height
-    return aspect !== 1
-  }, [image.aspectRatio])
   const hideBadges =
     viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
   return (
@@ -69,7 +63,7 @@ export const GalleryItem: FC<GalleryItemProps> = ({
           accessibilityIgnoresInvertColors
         />
       </Pressable>
-      {(hasAlt || isCropped) && !hideBadges ? (
+      {hasAlt && !hideBadges ? (
         <View
           accessible={false}
           style={[
@@ -92,18 +86,10 @@ export const GalleryItem: FC<GalleryItemProps> = ({
               },
             ],
           ]}>
-          {isCropped && (
-            <Crop
-              fill={t.atoms.text_contrast_high.color}
-              width={largeAltBadge ? 18 : 12}
-            />
-          )}
-          {hasAlt && (
-            <Text
-              style={[a.font_heavy, largeAltBadge ? a.text_xs : {fontSize: 8}]}>
-              ALT
-            </Text>
-          )}
+          <Text
+            style={[a.font_heavy, largeAltBadge ? a.text_xs : {fontSize: 8}]}>
+            ALT
+          </Text>
         </View>
       ) : null}
     </View>
