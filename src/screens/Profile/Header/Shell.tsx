@@ -86,7 +86,7 @@ let ProfileHeaderShell = ({
           style={[a.px_lg, a.py_xs]}
           pointerEvents={isIOS ? 'auto' : 'box-none'}>
           {isMe ? (
-            <LabelsOnMe details={{did: profile.did}} labels={profile.labels} />
+            <LabelsOnMe type="account" labels={profile.labels} />
           ) : (
             <ProfileHeaderAlerts moderation={moderation} />
           )}

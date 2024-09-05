@@ -5,6 +5,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 
+import {useLabelSubject} from '#/lib/moderation'
 import {useLabelInfo} from '#/lib/moderation/useLabelInfo'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -18,21 +19,13 @@ import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {Divider} from '../Divider'
 import {Loader} from '../Loader'
-export {useDialogControl as useLabelsOnMeDialogControl} from '#/components/Dialog'
 
-type Subject =
-  | {
-      uri: string
-      cid: string
-    }
-  | {
-      did: string
-    }
+export {useDialogControl as useLabelsOnMeDialogControl} from '#/components/Dialog'
 
 export interface LabelsOnMeDialogProps {
   control: Dialog.DialogOuterProps['control']
-  subject: Subject
   labels: ComAtprotoLabelDefs.Label[]
+  type: 'account' | 'content'
 }
 
 export function LabelsOnMeDialog(props: LabelsOnMeDialogProps) {
@@ -51,8 +44,8 @@ function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
   const [appealingLabel, setAppealingLabel] = React.useState<
     ComAtprotoLabelDefs.Label | undefined
   >(undefined)
-  const {subject, labels} = props
-  const isAccount = 'did' in subject
+  const {labels} = props
+  const isAccount = props.type === 'account'
   const containsSelfLabel = React.useMemo(
     () => labels.some(l => l.src === currentAccount?.did),
     [currentAccount?.did, labels],
@@ -68,7 +61,6 @@ function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
       {appealingLabel ? (
         <AppealForm
           label={appealingLabel}
-          subject={subject}
           control={props.control}
           onPressBack={() => setAppealingLabel(undefined)}
         />
@@ -188,12 +180,10 @@ function Label({
 
 function AppealForm({
   label,
-  subject,
   control,
   onPressBack,
 }: {
   label: ComAtprotoLabelDefs.Label
-  subject: Subject
   control: Dialog.DialogOuterProps['control']
   onPressBack: () => void
 }) {
@@ -201,6 +191,7 @@ function AppealForm({
   const {labeler, strings} = useLabelInfo(label)
   const {gtMobile} = useBreakpoints()
   const [details, setDetails] = React.useState('')
+  const {subject} = useLabelSubject({label})
   const isAccountReport = 'did' in subject
   const agent = useAgent()
   const sourceName = labeler
