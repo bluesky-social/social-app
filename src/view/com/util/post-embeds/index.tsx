@@ -151,6 +151,9 @@ export function PostEmbeds({
                 image={image}
                 onPress={() => _openLightbox(0)}
                 onPressIn={() => onPressIn(0)}
+                hideBadge={
+                  viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
+                }
               />
             </View>
           </ContentHider>
