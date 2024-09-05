@@ -56,13 +56,13 @@ export function VideoEmbedInnerNative({
         contentFit="cover"
         nativeControls={isFullscreen}
         accessibilityIgnoresInvertColors
-        onEnterFullscreen={() => {
+        onFullscreenEnter={() => {
           PlatformInfo.setAudioCategory(AudioCategory.Playback)
           PlatformInfo.setAudioActive(true)
           player.muted = false
           setIsFullscreen(true)
         }}
-        onExitFullscreen={() => {
+        onFullscreenExit={() => {
           PlatformInfo.setAudioCategory(AudioCategory.Ambient)
           PlatformInfo.setAudioActive(false)
           player.muted = true
