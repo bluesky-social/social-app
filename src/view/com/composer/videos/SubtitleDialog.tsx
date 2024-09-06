@@ -109,6 +109,7 @@ function SubtitleDialogInner({
             onChangeText={evt => setAltText(enforceLen(evt, MAX_ALT_TEXT))}
             maxLength={MAX_ALT_TEXT * 10}
             multiline
+            style={{maxHeight: 300}}
             numberOfLines={3}
             onKeyPress={({nativeEvent}) => {
               if (nativeEvent.key === 'Escape') {
