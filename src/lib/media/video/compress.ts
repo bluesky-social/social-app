@@ -4,7 +4,7 @@ import {ImagePickerAsset} from 'expo-image-picker'
 import {SUPPORTED_MIME_TYPES, SupportedMimeTypes} from '#/lib/constants'
 import {CompressedVideo} from './types'
 
-const MIN_SIZE_FOR_COMPRESSION = 1024 * 1024 * 20 // 20mb
+const MIN_SIZE_FOR_COMPRESSION = 1024 * 1024 * 25 // 25mb
 
 export async function compressVideo(
   file: ImagePickerAsset,
