@@ -1,12 +1,14 @@
 import React from 'react'
 import {View} from 'react-native'
 import {BSKY_LABELER_DID, ModerationCause} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {msg, plural, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
+import {atoms as a, Theme, useTheme, ViewStyleProp} from '#/alf'
 import {Button} from '#/components/Button'
+import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeftIcon} from '#/components/icons/Chevron'
 import {
   ModerationDetailsDialog,
   useModerationDetailsDialogControl,
@@ -67,39 +69,10 @@ export function Label({
   const isBlueskyLabel =
     desc.sourceType === 'labeler' && desc.sourceDid === BSKY_LABELER_DID
 
-  const {outer, avi, text} = React.useMemo(() => {
-    switch (size) {
-      case 'lg': {
-        return {
-          outer: [
-            t.atoms.bg_contrast_25,
-            {
-              gap: 5,
-              paddingHorizontal: 5,
-              paddingVertical: 5,
-            },
-          ],
-          avi: 16,
-          text: [a.text_sm],
-        }
-      }
-      case 'sm':
-      default: {
-        return {
-          outer: [
-            !noBg && t.atoms.bg_contrast_25,
-            {
-              gap: 3,
-              paddingHorizontal: 3,
-              paddingVertical: 3,
-            },
-          ],
-          avi: 12,
-          text: [a.text_xs],
-        }
-      }
-    }
-  }, [t, size, noBg])
+  const {outer, avi, text} = React.useMemo(
+    () => getLabelStyles(size, t, noBg),
+    [t, size, noBg],
+  )
 
   return (
     <>
@@ -150,6 +123,71 @@ export function Label({
   )
 }
 
+export type OverflowProps = {
+  count: number
+  noBg?: boolean
+  isExpanded?: boolean
+  onToggle: () => void
+} & CommonProps
+
+export function Overflow({
+  count,
+  size = 'sm',
+  isExpanded,
+  onToggle,
+  noBg,
+}: OverflowProps) {
+  const t = useTheme()
+  const {i18n} = useLingui()
+
+  const {outer, text} = React.useMemo(
+    () => getLabelStyles(size, t, noBg),
+    [t, size, noBg],
+  )
+
+  const label = isExpanded
+    ? i18n._(msg`Hide`)
+    : i18n._(plural(count, {one: '+ # other', other: '+# others'}))
+
+  return (
+    <Button
+      label={label}
+      onPress={e => {
+        e.preventDefault()
+        e.stopPropagation()
+        onToggle()
+      }}>
+      {({hovered, pressed}) => (
+        <View
+          style={[
+            a.flex_row,
+            a.align_center,
+            a.rounded_full,
+            outer,
+            (hovered || pressed) && t.atoms.bg_contrast_50,
+          ]}>
+          {isExpanded! && (
+            <ChevronLeftIcon
+              size="xs"
+              style={[t.atoms.text_contrast_medium, {marginLeft: 3}]}
+            />
+          )}
+          <Text
+            style={[
+              text,
+              a.font_semibold,
+              a.leading_tight,
+              t.atoms.text_contrast_medium,
+              {paddingRight: 3, paddingLeft: isExpanded ? 0 : 3},
+            ]}>
+            {label}
+          </Text>
+        </View>
+      )}
+    </Button>
+  )
+}
+
 export function FollowsYou({size = 'sm'}: CommonProps) {
   const t = useTheme()
 
@@ -175,4 +213,38 @@ export function FollowsYou({size = 'sm'}: CommonProps) {
       </Text>
     </View>
   )
+}
+
+function getLabelStyles(size: string, t: Theme, noBg: boolean | undefined) {
+  switch (size) {
+    case 'lg': {
+      return {
+        outer: [
+          t.atoms.bg_contrast_25,
+          {
+            gap: 5,
+            paddingHorizontal: 5,
+            paddingVertical: 5,
+          },
+        ],
+        avi: 16,
+        text: [a.text_sm],
+      }
+    }
+    case 'sm':
+    default: {
+      return {
+        outer: [
+          !noBg && t.atoms.bg_contrast_25,
+          {
+            gap: 3,
+            paddingHorizontal: 3,
+            paddingVertical: 3,
+          },
+        ],
+        avi: 12,
+        text: [a.text_xs],
+      }
+    }
+  }
 }
