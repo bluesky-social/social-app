@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-05 09:33+0900\n"
+"PO-Revision-Date: 2024-09-06 10:39+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -50,7 +50,7 @@ msgstr "{0, plural, other {#}}분"
 msgid "{0, plural, one {# month} other {# months}}"
 msgstr "{0, plural, other {#}}개월"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:68
+#: src/view/com/util/post-ctrls/RepostButton.tsx:71
 msgid "{0, plural, one {# repost} other {# reposts}}"
 msgstr "{0, plural, other {#}}개"
 
@@ -72,7 +72,7 @@ msgstr "팔로우 중"
 msgid "{0, plural, one {Like (# like)} other {Like (# likes)}}"
 msgstr "좋아요 ({0, plural, other {#}}개)"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:435
+#: src/view/com/post-thread/PostThreadItem.tsx:439
 msgid "{0, plural, one {like} other {likes}}"
 msgstr "좋아요"
 
@@ -85,7 +85,7 @@ msgstr "{0, plural, other {#}}명의 사용자가 좋아함"
 msgid "{0, plural, one {post} other {posts}}"
 msgstr "게시물"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:415
+#: src/view/com/post-thread/PostThreadItem.tsx:419
 msgid "{0, plural, one {quote} other {quotes}}"
 msgstr "인용"
 
@@ -93,7 +93,7 @@ msgstr "인용"
 msgid "{0, plural, one {Reply (# reply)} other {Reply (# replies)}}"
 msgstr "답글 ({0, plural, other {#}}개)"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:393
+#: src/view/com/post-thread/PostThreadItem.tsx:397
 msgid "{0, plural, one {repost} other {reposts}}"
 msgstr "재게시"
 
@@ -115,7 +115,7 @@ msgstr "<0><1>텍스트 및 태그</1>에서</0> {0}"
 msgid "{0} joined this week"
 msgstr "이번 주에 {0}명이 가입함"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:588
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:593
 msgid "{0} of {1}"
 msgstr "{0}/{1}"
 
@@ -522,7 +522,7 @@ msgstr "이전 주소인 {0}(으)로 이메일을 보냈습니다. 이 이메일
 msgid "An error has occurred"
 msgstr "오류 발생"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:364
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:369
 msgid "An error occurred"
 msgstr "오류 발생"
 
@@ -534,17 +534,20 @@ msgstr "동영상을 압축하는 동안 오류가 발생했습니다."
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr "스타터 팩을 만드는 동안 오류가 발생했습니다. 다시 시도하시겠습니까?"
 
-#: src/view/com/util/post-embeds/VideoEmbed.tsx:195
-#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:166
+#: src/view/com/util/post-embeds/VideoEmbed.tsx:205
 msgid "An error occurred while loading the video. Please try again later."
 msgstr "동영상을 불러오는 동안 오류가 발생했습니다. 나중에 다시 시도하세요."
+
+#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:170
+msgid "An error occurred while loading the video. Please try again."
+msgstr "동영상을 불러오는 동안 오류가 발생했습니다. 다시 시도하세요."
 
 #: src/components/StarterPack/QrCodeDialog.tsx:71
 #: src/components/StarterPack/ShareDialog.tsx:79
 msgid "An error occurred while saving the QR code!"
 msgstr "QR 코드를 저장하는 동안 오류가 발생했습니다"
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:51
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:61
 msgid "An error occurred while selecting the video"
 msgstr "동영상을 선택하는 동안 오류가 발생했습니다"
 
@@ -699,7 +702,7 @@ msgstr "피드에서 {0}을(를) 제거하시겠습니까?"
 msgid "Are you sure you want to remove this from your feeds?"
 msgstr "내 피드에서 이 피드를 삭제하시겠습니까?"
 
-#: src/view/com/composer/Composer.tsx:854
+#: src/view/com/composer/Composer.tsx:864
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "이 초안을 삭제하시겠습니까?"
 
@@ -787,7 +790,7 @@ msgstr "리스트 차단"
 msgid "Block these accounts?"
 msgstr "이 계정들을 차단하시겠습니까?"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:77
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:81
 msgid "Blocked"
 msgstr "차단됨"
 
@@ -920,12 +923,12 @@ msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must 
 msgstr "글자, 숫자, 공백, 대시, 밑줄만 포함할 수 있습니다. 길이는 4자 이상이어야 하고 32자를 넘지 않아야 합니다."
 
 #: src/components/Menu/index.tsx:235
-#: src/components/Prompt.tsx:119
-#: src/components/Prompt.tsx:121
+#: src/components/Prompt.tsx:122
+#: src/components/Prompt.tsx:124
 #: src/components/TagMenu/index.tsx:282
 #: src/screens/Deactivated.tsx:161
-#: src/view/com/composer/Composer.tsx:581
-#: src/view/com/composer/Composer.tsx:596
+#: src/view/com/composer/Composer.tsx:584
+#: src/view/com/composer/Composer.tsx:599
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangeHandle.tsx:148
@@ -941,7 +944,7 @@ msgstr "글자, 숫자, 공백, 대시, 밑줄만 포함할 수 있습니다. �
 #: src/view/com/modals/LinkWarning.tsx:107
 #: src/view/com/modals/VerifyEmail.tsx:255
 #: src/view/com/modals/VerifyEmail.tsx:261
-#: src/view/com/util/post-ctrls/RepostButton.tsx:160
+#: src/view/com/util/post-ctrls/RepostButton.tsx:163
 #: src/view/screens/Search/Search.tsx:704
 msgid "Cancel"
 msgstr "취소"
@@ -970,7 +973,7 @@ msgstr "이미지 자르기 취소"
 msgid "Cancel profile editing"
 msgstr "프로필 편집 취소"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:154
+#: src/view/com/util/post-ctrls/RepostButton.tsx:157
 msgid "Cancel quote post"
 msgstr "게시물 인용 취소"
 
@@ -1233,7 +1236,7 @@ msgstr "하단 탐색 막대를 닫습니다"
 msgid "Closes password update alert"
 msgstr "비밀번호 변경 알림을 닫습니다"
 
-#: src/view/com/composer/Composer.tsx:593
+#: src/view/com/composer/Composer.tsx:596
 msgid "Closes post composer and discards post draft"
 msgstr "게시물 작성 상자를 닫고 게시물 초안을 삭제합니다"
 
@@ -1272,7 +1275,7 @@ msgstr "온보딩 완료 후 계정 사용 시작"
 msgid "Complete the challenge"
 msgstr "챌린지 완료하기"
 
-#: src/view/com/composer/Composer.tsx:734
+#: src/view/com/composer/Composer.tsx:737
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "최대 {MAX_GRAPHEME_LENGTH}자 길이까지 글을 작성할 수 있습니다"
 
@@ -1288,8 +1291,8 @@ msgstr "{name} 카테고리에 대한 콘텐츠 필터링 설정을 구성합니
 msgid "Configured in <0>moderation settings</0>."
 msgstr "<0>검토 설정</0>에서 설정합니다."
 
-#: src/components/Prompt.tsx:162
 #: src/components/Prompt.tsx:165
+#: src/components/Prompt.tsx:168
 #: src/view/com/modals/SelfLabel.tsx:155
 #: src/view/com/modals/VerifyEmail.tsx:239
 #: src/view/com/modals/VerifyEmail.tsx:241
@@ -1490,7 +1493,7 @@ msgstr "리스트를 불러올 수 없습니다"
 msgid "Could not mute chat"
 msgstr "대화를 뮤트할 수 없습니다"
 
-#: src/view/com/composer/videos/VideoPreview.web.tsx:42
+#: src/view/com/composer/videos/VideoPreview.web.tsx:45
 msgid "Could not process your video"
 msgstr "동영상을 처리할 수 없습니다"
 
@@ -1697,7 +1700,7 @@ msgstr "이 리스트를 삭제하시겠습니까?"
 msgid "Delete this post?"
 msgstr "이 게시물을 삭제하시겠습니까?"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:86
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:90
 msgid "Deleted"
 msgstr "삭제됨"
 
@@ -1733,7 +1736,7 @@ msgstr "인용을 해제하시겠습니까?"
 msgid "Dialog: adjust who can interact with this post"
 msgstr "대화 상자: 이 게시물과 상호작용할 수 있는 사람 조정하기"
 
-#: src/view/com/composer/Composer.tsx:344
+#: src/view/com/composer/Composer.tsx:347
 msgid "Did you want to say anything?"
 msgstr "하고 싶은 말이 없나요?"
 
@@ -1747,8 +1750,8 @@ msgid "Direct messages are here!"
 msgstr "다이렉트 메시지가 생겼습니다!"
 
 #: src/view/screens/AccessibilitySettings.tsx:111
-msgid "Disable autoplay for GIFs"
-msgstr "GIF 자동 재생 끄기"
+msgid "Disable autoplay for videos and GIFs"
+msgstr "동영상 및 GIF 자동 재생 끄기"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:90
 msgid "Disable Email 2FA"
@@ -1758,7 +1761,7 @@ msgstr "이메일 2단계 인증 끄기"
 msgid "Disable haptic feedback"
 msgstr "햅틱 피드백 끄기"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:330
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:335
 msgid "Disable subtitles"
 msgstr "자막 사용 안 함"
 
@@ -1771,11 +1774,11 @@ msgstr "자막 사용 안 함"
 msgid "Disabled"
 msgstr "사용 안 함"
 
-#: src/view/com/composer/Composer.tsx:856
+#: src/view/com/composer/Composer.tsx:866
 msgid "Discard"
 msgstr "삭제"
 
-#: src/view/com/composer/Composer.tsx:853
+#: src/view/com/composer/Composer.tsx:863
 msgid "Discard draft?"
 msgstr "초안 삭제"
 
@@ -1801,7 +1804,7 @@ msgstr "새 피드 발견하기"
 msgid "Dismiss"
 msgstr "닫기"
 
-#: src/view/com/composer/Composer.tsx:681
+#: src/view/com/composer/Composer.tsx:684
 msgid "Dismiss error"
 msgstr "오류 무시"
 
@@ -2099,7 +2102,7 @@ msgstr "미디어 플레이어를 사용할 외부 사이트"
 msgid "Enable priority notifications"
 msgstr "우선순위 알림 사용"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:331
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:336
 msgid "Enable subtitles"
 msgstr "자막 사용"
 
@@ -2215,7 +2218,7 @@ msgstr "내가 팔로우하는 사용자 제외하기"
 msgid "Excludes users you follow"
 msgstr "내가 팔로우하는 사용자 제외"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:348
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:353
 msgid "Exit fullscreen"
 msgstr "전체화면 나가기"
 
@@ -2650,7 +2653,7 @@ msgctxt "from-feed"
 msgid "From <0/>"
 msgstr "<0/>에서"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:349
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:354
 msgid "Fullscreen"
 msgstr "전체화면"
 
@@ -2952,7 +2955,7 @@ msgstr "핸들이나 이메일을 변경하려는 경우 비활성화하기 전�
 msgid "Illegal and Urgent"
 msgstr "불법 및 긴급 사항"
 
-#: src/view/com/util/images/Gallery.tsx:42
+#: src/view/com/util/images/Gallery.tsx:55
 msgid "Image"
 msgstr "이미지"
 
@@ -3527,7 +3530,7 @@ msgstr "검토 도구"
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr "검토자가 콘텐츠에 일반 경고를 설정했습니다."
 
-#: src/view/com/post-thread/PostThreadItem.tsx:621
+#: src/view/com/post-thread/PostThreadItem.tsx:629
 msgid "More"
 msgstr "더 보기"
 
@@ -3552,7 +3555,7 @@ msgid "Music"
 msgstr "음악"
 
 #: src/components/TagMenu/index.tsx:263
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:340
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:345
 msgid "Mute"
 msgstr "뮤트"
 
@@ -4033,7 +4036,7 @@ msgstr "<0><1/><2><3/></2></0>"
 msgid "Onboarding reset"
 msgstr "온보딩 재설정"
 
-#: src/view/com/composer/Composer.tsx:658
+#: src/view/com/composer/Composer.tsx:661
 msgid "One or more images is missing alt text."
 msgstr "하나 이상의 이미지에 대체 텍스트가 누락되었습니다."
 
@@ -4083,8 +4086,8 @@ msgstr "아바타 생성기 열기"
 msgid "Open conversation options"
 msgstr "대화 옵션 열기"
 
-#: src/view/com/composer/Composer.tsx:836
-#: src/view/com/composer/Composer.tsx:837
+#: src/view/com/composer/Composer.tsx:846
+#: src/view/com/composer/Composer.tsx:847
 msgid "Open emoji picker"
 msgstr "이모티콘 선택기 열기"
 
@@ -4257,7 +4260,7 @@ msgstr "스레드 설정을 엽니다"
 msgid "Opens this profile"
 msgstr "이 프로필을 엽니다"
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:63
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:81
 msgid "Opens video picker"
 msgstr "동영상 선택기를 엽니다"
 
@@ -4335,11 +4338,11 @@ msgid "Password updated!"
 msgstr "비밀번호 변경됨"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:44
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:317
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:322
 msgid "Pause"
 msgstr "일시 정지"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:273
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:275
 msgid "Pause video"
 msgstr "동영상 일시 정지"
 
@@ -4399,7 +4402,7 @@ msgid "Pinned to your feeds"
 msgstr "내 피드에 고정됨"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:44
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:318
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:323
 msgid "Play"
 msgstr "재생"
 
@@ -4411,8 +4414,8 @@ msgstr "{0} 재생"
 msgid "Play or pause the GIF"
 msgstr "GIP를 재생하거나 일시 정지합니다"
 
-#: src/view/com/util/post-embeds/VideoEmbed.tsx:168
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:274
+#: src/view/com/util/post-embeds/VideoEmbed.tsx:179
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:276
 msgid "Play video"
 msgstr "동영상 재생"
 
@@ -4484,7 +4487,7 @@ msgstr "@{0}(으)로 로그인하세요"
 msgid "Please Verify Your Email"
 msgstr "이메일 인증하기"
 
-#: src/view/com/composer/Composer.tsx:348
+#: src/view/com/composer/Composer.tsx:351
 msgid "Please wait for your link card to finish loading"
 msgstr "링크 카드를 완전히 불러올 때까지 기다려주세요"
 
@@ -4497,8 +4500,8 @@ msgstr "정치"
 msgid "Porn"
 msgstr "음란물"
 
-#: src/view/com/composer/Composer.tsx:633
-#: src/view/com/composer/Composer.tsx:640
+#: src/view/com/composer/Composer.tsx:636
+#: src/view/com/composer/Composer.tsx:643
 msgctxt "action"
 msgid "Post"
 msgstr "게시하기"
@@ -4668,11 +4671,11 @@ msgstr "일괄 뮤트하거나 차단할 수 있는 공개적이고 공유 가�
 msgid "Public, shareable lists which can drive feeds."
 msgstr "피드를 탐색할 수 있는 공개적이고 공유 가능한 목록입니다."
 
-#: src/view/com/composer/Composer.tsx:618
+#: src/view/com/composer/Composer.tsx:621
 msgid "Publish post"
 msgstr "게시물 게시하기"
 
-#: src/view/com/composer/Composer.tsx:618
+#: src/view/com/composer/Composer.tsx:621
 msgid "Publish reply"
 msgstr "답글 게시하기"
 
@@ -4688,8 +4691,8 @@ msgstr "QR 코드를 다운로드했습니다."
 msgid "QR code saved to your camera roll!"
 msgstr "QR 코드를 사진 보관함에 저장했습니다."
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:122
-#: src/view/com/util/post-ctrls/RepostButton.tsx:149
+#: src/view/com/util/post-ctrls/RepostButton.tsx:125
+#: src/view/com/util/post-ctrls/RepostButton.tsx:152
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:85
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:92
 msgid "Quote post"
@@ -4704,8 +4707,8 @@ msgid "Quote post was successfully detached"
 msgstr "인용을 성공적으로 해제했습니다"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:313
-#: src/view/com/util/post-ctrls/RepostButton.tsx:121
-#: src/view/com/util/post-ctrls/RepostButton.tsx:148
+#: src/view/com/util/post-ctrls/RepostButton.tsx:124
+#: src/view/com/util/post-ctrls/RepostButton.tsx:151
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:84
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:91
 msgid "Quote posts disabled"
@@ -4861,12 +4864,12 @@ msgstr "프로필 제거"
 msgid "Remove profile from search history"
 msgstr "검색 기록에서 프로필을 제거합니다"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:261
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:300
 msgid "Remove quote"
 msgstr "인용 제거"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:95
-#: src/view/com/util/post-ctrls/RepostButton.tsx:111
+#: src/view/com/util/post-ctrls/RepostButton.tsx:98
+#: src/view/com/util/post-ctrls/RepostButton.tsx:114
 msgid "Remove repost"
 msgstr "재게시를 취소합니다"
 
@@ -4878,11 +4881,11 @@ msgstr "자막 파일 제거"
 msgid "Remove this feed from your saved feeds"
 msgstr "저장한 피드에서 이 피드를 제거합니다"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:101
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:105
 msgid "Removed by author"
 msgstr "작성자에 의해 제거됨"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:99
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:103
 msgid "Removed by you"
 msgstr "나에 의해 제거됨"
 
@@ -4906,7 +4909,7 @@ msgstr "저장한 피드에서 제거됨"
 msgid "Removed from your feeds"
 msgstr "내 피드에서 제거됨"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:262
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:301
 msgid "Removes quoted post"
 msgstr "인용된 게시물을 제거합니다"
 
@@ -4931,7 +4934,7 @@ msgstr "답글 비활성화됨"
 msgid "Replies to this post are disabled."
 msgstr "이 게시물에 대한 답글은 비활성화되어 있습니다."
 
-#: src/view/com/composer/Composer.tsx:631
+#: src/view/com/composer/Composer.tsx:634
 msgctxt "action"
 msgid "Reply"
 msgstr "답글"
@@ -4955,23 +4958,23 @@ msgid "Reply settings are chosen by the author of the thread"
 msgstr "답글 설정은 스레드 작성자가 선택합니다"
 
 #: src/view/com/post/Post.tsx:196
-#: src/view/com/posts/FeedItem.tsx:522
+#: src/view/com/posts/FeedItem.tsx:523
 msgctxt "description"
 msgid "Reply to <0><1/></0>"
 msgstr "<0><1/></0> 님에게 보내는 답글"
 
-#: src/view/com/posts/FeedItem.tsx:513
+#: src/view/com/posts/FeedItem.tsx:514
 msgctxt "description"
 msgid "Reply to a blocked post"
 msgstr "차단된 게시물에 보내는 답글"
 
-#: src/view/com/posts/FeedItem.tsx:515
+#: src/view/com/posts/FeedItem.tsx:516
 msgctxt "description"
 msgid "Reply to a post"
 msgstr "게시물에 보내는 답글"
 
 #: src/view/com/post/Post.tsx:194
-#: src/view/com/posts/FeedItem.tsx:519
+#: src/view/com/posts/FeedItem.tsx:520
 msgctxt "description"
 msgid "Reply to you"
 msgstr "나에게 보내는 답글"
@@ -5058,9 +5061,9 @@ msgstr "이 스타터 팩 신고하기"
 msgid "Report this user"
 msgstr "이 사용자 신고하기"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:67
-#: src/view/com/util/post-ctrls/RepostButton.tsx:96
-#: src/view/com/util/post-ctrls/RepostButton.tsx:112
+#: src/view/com/util/post-ctrls/RepostButton.tsx:70
+#: src/view/com/util/post-ctrls/RepostButton.tsx:99
+#: src/view/com/util/post-ctrls/RepostButton.tsx:115
 msgctxt "action"
 msgid "Repost"
 msgstr "재게시"
@@ -5071,7 +5074,7 @@ msgid "Repost"
 msgstr "재게시"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:535
-#: src/view/com/util/post-ctrls/RepostButton.tsx:88
+#: src/view/com/util/post-ctrls/RepostButton.tsx:91
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:49
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:104
 msgid "Repost or quote post"
@@ -5377,7 +5380,7 @@ msgstr "Bluesky에 지원하기"
 msgid "See this guide"
 msgstr "이 가이드"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:582
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:587
 msgid "Seek slider"
 msgstr "슬라이더 탐색"
 
@@ -5449,7 +5452,7 @@ msgstr "신고할 검토 서비스를 선택하세요."
 msgid "Select the service that hosts your data."
 msgstr "데이터를 호스팅할 서비스를 선택하세요."
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:62
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:80
 msgid "Select video"
 msgstr "동영상 선택"
 
@@ -5724,7 +5727,7 @@ msgstr "이런 항목 덜 보기"
 msgid "Show list anyway"
 msgstr "무시하고 리스트 표시하기"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:586
+#: src/view/com/post-thread/PostThreadItem.tsx:590
 #: src/view/com/post/Post.tsx:234
 #: src/view/com/posts/FeedItem.tsx:479
 msgid "Show More"
@@ -6089,9 +6092,10 @@ msgstr "탭하여 전체화면으로 보기"
 msgid "Tap to toggle sound"
 msgstr "탭하여 소리 켜기/끄기"
 
-#: src/view/com/util/images/AutoSizedImage.tsx:70
-msgid "Tap to view fully"
-msgstr "탭하여 전체 크기로 봅니다"
+#: src/view/com/util/images/AutoSizedImage.tsx:185
+#: src/view/com/util/images/AutoSizedImage.tsx:205
+msgid "Tap to view full image"
+msgstr "탭하여 전체 이미지를 봅니다"
 
 #: src/state/shell/progress-guide.tsx:166
 msgid "Task complete - 10 likes!"
@@ -6561,6 +6565,10 @@ msgstr "이메일 2단계 인증을 비활성화하려면 이메일 주소에 �
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
 msgstr "대화를 신고하려면 대화 화면에서 해당 메시지 중 하나를 신고하세요. 이렇게 하면 운영진이 문제의 맥락을 파악할 수 있습니다."
 
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:106
+msgid "To upload videos to Bluesky, you must first verify your email."
+msgstr "Bluesky에 동영상을 업로드하려면 먼저 이메일을 인증해야 합니다."
+
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
 msgstr "이 신고를 누구에게 보내시겠습니까?"
@@ -6584,8 +6592,8 @@ msgstr "변형"
 
 #: src/components/dms/MessageMenu.tsx:103
 #: src/components/dms/MessageMenu.tsx:105
-#: src/view/com/post-thread/PostThreadItem.tsx:738
-#: src/view/com/post-thread/PostThreadItem.tsx:740
+#: src/view/com/post-thread/PostThreadItem.tsx:746
+#: src/view/com/post-thread/PostThreadItem.tsx:748
 #: src/view/com/util/forms/PostDropdownBtn.tsx:380
 #: src/view/com/util/forms/PostDropdownBtn.tsx:382
 msgid "Translate"
@@ -6664,7 +6672,7 @@ msgstr "계정 차단 해제"
 msgid "Unblock Account?"
 msgstr "계정을 차단 해제하시겠습니까?"
 
-#: src/view/com/util/post-ctrls/RepostButton.tsx:66
+#: src/view/com/util/post-ctrls/RepostButton.tsx:69
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:72
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:76
 msgid "Undo repost"
@@ -6689,7 +6697,7 @@ msgid "Unlike this feed"
 msgstr "이 피드 좋아요 취소"
 
 #: src/components/TagMenu/index.tsx:263
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:339
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:344
 #: src/view/screens/ProfileList.tsx:689
 msgid "Unmute"
 msgstr "언뮤트"
@@ -6716,7 +6724,7 @@ msgstr "알림 언뮤트"
 msgid "Unmute thread"
 msgstr "스레드 언뮤트"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:271
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:273
 msgid "Unmute video"
 msgstr "동영상 음소거 해제"
 
@@ -6937,6 +6945,10 @@ msgstr "이 콘텐츠 또는 프로필을 좋아하는 사용자"
 msgid "Value:"
 msgstr "값:"
 
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:104
+msgid "Verified email required"
+msgstr "이메일 인증 필요"
+
 #: src/view/com/modals/ChangeHandle.tsx:504
 msgid "Verify DNS Record"
 msgstr "DNS 레코드 인증"
@@ -6957,6 +6969,10 @@ msgstr "내 이메일 인증하기"
 #: src/view/com/modals/ChangeEmail.tsx:202
 msgid "Verify New Email"
 msgstr "새 이메일 인증"
+
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:108
+msgid "Verify now"
+msgstr "지금 인증하기"
 
 #: src/view/com/modals/ChangeHandle.tsx:505
 msgid "Verify Text File"
@@ -6983,6 +6999,10 @@ msgstr "동영상을 처리하지 못했습니다"
 #: src/screens/Onboarding/state.ts:88
 msgid "Video Games"
 msgstr "비디오 게임"
+
+#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:163
+msgid "Video not found."
+msgstr "동영상을 찾을 수 없습니다."
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:95
 msgid "Video settings"
@@ -7149,7 +7169,7 @@ msgstr "죄송하지만 현재 뮤트한 단어를 불러올 수 없습니다. �
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "죄송하지만 검색을 완료할 수 없습니다. 몇 분 후에 다시 시도해 주세요."
 
-#: src/view/com/composer/Composer.tsx:410
+#: src/view/com/composer/Composer.tsx:413
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "죄송하지만 답글을 달려는 게시물이 삭제되었습니다."
 
@@ -7180,7 +7200,7 @@ msgstr "스타터 팩의 이름을 무엇으로 할까요?"
 
 #: src/view/com/auth/SplashScreen.tsx:40
 #: src/view/com/auth/SplashScreen.web.tsx:86
-#: src/view/com/composer/Composer.tsx:505
+#: src/view/com/composer/Composer.tsx:508
 msgid "What's up?"
 msgstr "무슨 일이 일어나고 있나요?"
 
@@ -7247,11 +7267,11 @@ msgstr "가로"
 msgid "Write a message"
 msgstr "메시지를 입력하세요"
 
-#: src/view/com/composer/Composer.tsx:732
+#: src/view/com/composer/Composer.tsx:735
 msgid "Write post"
 msgstr "게시물 작성"
 
-#: src/view/com/composer/Composer.tsx:504
+#: src/view/com/composer/Composer.tsx:507
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:42
 msgid "Write your reply"
 msgstr "답글 작성하기"
@@ -7563,7 +7583,7 @@ msgstr "모든 공개 데이터 레코드가 포함된 계정 저장소를 \"CAR
 msgid "Your birth date"
 msgstr "생년월일"
 
-#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:161
+#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:167
 msgid "Your browser does not support the video format. Please try a different browser."
 msgstr "브라우저가 이 동영상 형식을 지원하지 않습니다. 다른 브라우저를 사용하세요."
 
@@ -7614,7 +7634,7 @@ msgstr "뮤트한 단어"
 msgid "Your password has been changed successfully!"
 msgstr "비밀번호를 성공적으로 변경했습니다."
 
-#: src/view/com/composer/Composer.tsx:456
+#: src/view/com/composer/Composer.tsx:459
 msgid "Your post has been published"
 msgstr "게시물을 게시했습니다"
 
@@ -7630,7 +7650,7 @@ msgstr "내 프로필"
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "내 프로필, 글, 피드 및 리스트가 더 이상 다른 Bluesky 사용자에게 표시되지 않습니다. 언제든지 로그인하여 계정을 재활성화할 수 있습니다."
 
-#: src/view/com/composer/Composer.tsx:455
+#: src/view/com/composer/Composer.tsx:458
 msgid "Your reply has been published"
 msgstr "내 답글을 게시했습니다"
 
