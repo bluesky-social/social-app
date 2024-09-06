@@ -7,8 +7,9 @@ import {useLingui} from '@lingui/react'
 
 import * as imageSizes from '#/lib/media/image-sizes'
 import {Dimensions} from '#/lib/media/types'
+import {isNative} from '#/platform/detection'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Crop_Stroke2_Corner0_Rounded as Crop} from '#/components/icons/Crop'
 import {Text} from '#/components/Typography'
 
@@ -65,14 +66,18 @@ export function ConstrainedImage({
   children: React.ReactNode
 }) {
   const t = useTheme()
+  const {gtMobile} = useBreakpoints()
   /**
    * Computed as a % value to apply as `paddingTop`
    */
   const outerAspectRatio = React.useMemo<DimensionValue>(() => {
     // capped to square or shorter
-    const ratio = Math.min(1 / aspectRatio, 1)
+    const ratio =
+      isNative || !gtMobile
+        ? Math.min(1 / aspectRatio, 1.5)
+        : Math.min(1 / aspectRatio, 1)
     return `${ratio * 100}%`
-  }, [aspectRatio])
+  }, [aspectRatio, gtMobile])
 
   return (
     <View style={[a.w_full]}>
