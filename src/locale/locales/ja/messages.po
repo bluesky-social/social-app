@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-05 10:00+0900\n"
+"PO-Revision-Date: 2024-09-06 11:03+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -534,6 +534,10 @@ msgstr "スターターパックの生成中にエラーが発生しました。
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:150
 msgid "An error occurred while loading the video. Please try again later."
 msgstr "ビデオの読み込み時にエラーが発生しました。時間をおいてもう一度お試しください。"
+
+#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:170
+msgid "An error occurred while loading the video. Please try again."
+msgstr "ビデオの読み込み時にエラーが発生しました。もう一度お試しください。"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:71
 #: src/components/StarterPack/ShareDialog.tsx:79
@@ -1743,8 +1747,8 @@ msgid "Direct messages are here!"
 msgstr "ダイレクトメッセージはこちら！"
 
 #: src/view/screens/AccessibilitySettings.tsx:111
-msgid "Disable autoplay for GIFs"
-msgstr "GIFを自動再生しない"
+msgid "Disable autoplay for videos and GIFs"
+msgstr "ビデオやGIFを自動再生しない"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:90
 msgid "Disable Email 2FA"
@@ -6087,9 +6091,10 @@ msgstr "タップしてフルスクリーンに"
 msgid "Tap to toggle sound"
 msgstr "タップして音の切り替え"
 
-#: src/view/com/util/images/AutoSizedImage.tsx:70
-msgid "Tap to view fully"
-msgstr "タップして全体を表示"
+#: src/view/com/util/images/AutoSizedImage.tsx:185
+#: src/view/com/util/images/AutoSizedImage.tsx:205
+msgid "Tap to view full image"
+msgstr "タップして画像全体を表示"
 
 #: src/state/shell/progress-guide.tsx:166
 msgid "Task complete - 10 likes!"
@@ -6559,6 +6564,10 @@ msgstr "メールでの２要素認証を無効にするには、メールアド
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
 msgstr "会話を報告するには、会話の画面からメッセージのうちの一つを報告してください。それによって問題の文脈をモデレーターが理解できるようになります。"
 
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:106
+msgid "To upload videos to Bluesky, you must first verify your email."
+msgstr "Blueskyにビデオをアップロードするには、まずメールアドレスを確認しなくてはなりません。"
+
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
 msgstr "この報告を誰に送りたいですか？"
@@ -6936,6 +6945,10 @@ msgstr "このコンテンツやプロフィールにいいねをしているユ
 msgid "Value:"
 msgstr "値："
 
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:104
+msgid "Verified email required"
+msgstr "メールアドレスの確認が必要"
+
 #: src/view/com/modals/ChangeHandle.tsx:504
 msgid "Verify DNS Record"
 msgstr "DNSレコードを確認"
@@ -6956,6 +6969,10 @@ msgstr "メールアドレスを確認"
 #: src/view/com/modals/ChangeEmail.tsx:202
 msgid "Verify New Email"
 msgstr "新しいメールアドレスを確認"
+
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:108
+msgid "Verify now"
+msgstr "確認する"
 
 #: src/view/com/modals/ChangeHandle.tsx:505
 msgid "Verify Text File"
@@ -6981,6 +6998,10 @@ msgstr "ビデオの処理に失敗"
 #: src/screens/Onboarding/state.ts:88
 msgid "Video Games"
 msgstr "ビデオゲーム"
+
+#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:163
+msgid "Video not found."
+msgstr "ビデオが見つかりません。"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:92
 msgid "Video settings"
