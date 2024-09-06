@@ -110,11 +110,7 @@ function InnerWrapper({embed}: Props) {
           if (status === 'error') {
             setError(playerError ?? new Error('Unknown player error'))
           }
-          if (
-            status === 'readyToPlay' &&
-            oldStatus !== 'readyToPlay' &&
-            !disableAutoplay
-          ) {
+          if (status === 'readyToPlay' && oldStatus !== 'readyToPlay') {
             player.play()
           }
         },
@@ -130,8 +126,12 @@ function InnerWrapper({embed}: Props) {
   // The source might already be active (for example, if you are scrolling a list of quotes and its all the same
   // video). In those cases, just start playing. Otherwise, setting the active source will result in the video
   // start playback immediately
-  const startPlaying = () => {
-    if (isActive && !disableAutoplay) {
+  const startPlaying = (ignoreAutoplayPreference: boolean) => {
+    if (disableAutoplay && !ignoreAutoplayPreference) {
+      return
+    }
+
+    if (isActive) {
       player.play()
     } else {
       setActiveSource(embed.playlist, viewId)
@@ -145,7 +145,7 @@ function InnerWrapper({embed}: Props) {
       return
     }
     if (isVisible) {
-      startPlaying()
+      startPlaying(false)
     } else {
       player.muted = true
       if (player.playing) {
@@ -185,7 +185,7 @@ function InnerWrapper({embed}: Props) {
       >
         <Button
           style={[a.flex_1, a.align_center, a.justify_center]}
-          onPress={startPlaying}
+          onPress={() => startPlaying(true)}
           label={_(msg`Play video`)}
           color="secondary">
           {isLoading ? (
