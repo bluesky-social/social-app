@@ -45,10 +45,18 @@ export function useVideoUploadLimits() {
   const {_} = useLingui()
 
   return useCallback(async () => {
-    const {data: limits} = await agent.app.bsky.video.getUploadLimits(
-      {},
-      {headers: {Authorization: `Bearer ${await getToken()}`}},
-    )
+    const {data: limits} = await agent.app.bsky.video
+      .getUploadLimits(
+        {},
+        {headers: {Authorization: `Bearer ${await getToken()}`}},
+      )
+      .catch(err => {
+        if (err instanceof Error) {
+          throw new UploadLimitError(err.message)
+        } else {
+          throw err
+        }
+      })
 
     if (!limits.canUpload) {
       if (limits.message) {

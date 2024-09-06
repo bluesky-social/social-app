@@ -154,9 +154,39 @@ export function useUploadVideo({
       if (e instanceof AbortError) {
         return
       } else if (e instanceof ServerError || e instanceof UploadLimitError) {
+        let message
+        // https://github.com/bluesky-social/tango/blob/lumi/lumi/worker/permissions.go#L77
+        switch (e.message) {
+          case 'User is not allowed to upload videos':
+            message = _(msg`You are not allowed to upload videos.`)
+            break
+          case 'Uploading is disabled at the moment':
+            message = _(
+              msg`Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!`,
+            )
+            break
+          case "Failed to get user's upload stats":
+            message = _(
+              msg`Error: could not determine if you're allowed to upload videos. Please try again.`,
+            )
+            break
+          case 'User has exceeded daily upload bytes limit':
+            message = _(
+              msg`You've reached your daily limit for video uploads (too many bytes)`,
+            )
+            break
+          case 'User has exceeded daily upload videos limit':
+            message = _(
+              msg`You've reached your daily limit for video uploads (too many videos)`,
+            )
+            break
+          default:
+            message = e.message
+            break
+        }
         dispatch({
           type: 'SetError',
-          error: e.message,
+          error: message,
         })
       } else {
         dispatch({
