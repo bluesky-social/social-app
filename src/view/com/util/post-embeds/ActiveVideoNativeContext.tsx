@@ -21,6 +21,7 @@ export function Provider({children}: {children: React.ReactNode}) {
   const player = useVideoPlayer(activeSource, p => {
     p.muted = true
     p.loop = true
+    // We want to immediately call `play` so we get the loading state
     p.play()
   })
 

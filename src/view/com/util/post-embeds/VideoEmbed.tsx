@@ -71,7 +71,7 @@ function InnerWrapper({embed}: Props) {
 
   const [playerStatus, setPlayerStatus] = useState<
     VideoPlayerStatus | 'switching' | 'paused'
-  >('loading')
+  >(player.playing ? 'readyToPlay' : 'paused')
   const [isMuted, setIsMuted] = useState(player.muted)
   const [isFullscreen, setIsFullscreen] = React.useState(false)
   const [timeRemaining, setTimeRemaining] = React.useState(0)
@@ -83,9 +83,7 @@ function InnerWrapper({embed}: Props) {
     (playerStatus === 'waitingToPlayAtSpecifiedRate' ||
       playerStatus === 'loading')
   // This happens whenever the visibility view decides that another video should start playing
-  const isSwitching = playerStatus === 'switching'
-  const showOverlay =
-    !isActive || isLoading || isSwitching || playerStatus === 'paused'
+  const showOverlay = !isActive || isLoading || playerStatus === 'paused'
 
   // send error up to error boundary
   const [error, setError] = useState<Error | PlayerError | null>(null)
@@ -107,10 +105,17 @@ function InnerWrapper({embed}: Props) {
       )
       const statusSub = player.addListener(
         'statusChange',
-        (status, _oldStatus, playerError) => {
+        (status, oldStatus, playerError) => {
           setPlayerStatus(status)
           if (status === 'error') {
             setError(playerError ?? new Error('Unknown player error'))
+          }
+          if (
+            status === 'readyToPlay' &&
+            oldStatus !== 'readyToPlay' &&
+            !disableAutoplay
+          ) {
+            player.play()
           }
         },
       )
@@ -120,7 +125,7 @@ function InnerWrapper({embed}: Props) {
         statusSub.remove()
       }
     }
-  }, [player, isActive])
+  }, [player, isActive, disableAutoplay])
 
   // The source might already be active (for example, if you are scrolling a list of quotes and its all the same
   // video). In those cases, just start playing. Otherwise, setting the active source will result in the video
@@ -128,21 +133,20 @@ function InnerWrapper({embed}: Props) {
   const startPlaying = () => {
     if (isActive && !disableAutoplay) {
       player.play()
-      setPlayerStatus('readyToPlay')
     } else {
       setActiveSource(embed.playlist, viewId)
     }
   }
 
-  const onChangeStatus = (isVisible: boolean) => {
+  const onVisibilityStatusChange = (isVisible: boolean) => {
+    // When `isFullscreen` is true, it means we're actually still exiting the fullscreen player. Ignore these change
+    // events
     if (isFullscreen) {
       return
     }
-
     if (isVisible) {
       startPlaying()
     } else {
-      setPlayerStatus('switching')
       player.muted = true
       if (player.playing) {
         player.pause()
@@ -151,7 +155,7 @@ function InnerWrapper({embed}: Props) {
   }
 
   return (
-    <VisibilityView enabled={true} onChangeStatus={onChangeStatus}>
+    <VisibilityView enabled={true} onChangeStatus={onVisibilityStatusChange}>
       {isActive ? (
         <VideoEmbedInnerNative
           embed={embed}
