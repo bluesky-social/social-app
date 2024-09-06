@@ -107,7 +107,8 @@ const DOWNSAMPLED_EVENTS: Set<keyof LogEvents> = new Set([
   'profile:follow:sampled',
   'profile:unfollow:sampled',
 ])
-const isDownsampledSession = Math.random() < DOWNSAMPLE_RATE
+// const isDownsampledSession = Math.random() < DOWNSAMPLE_RATE
+const isDownsampledSession = false
 
 export function logEvent<E extends keyof LogEvents>(
   eventName: E & string,
@@ -124,13 +125,14 @@ export function logEvent<E extends keyof LogEvents>(
       )
     }
 
-    if (isDownsampledSession && DOWNSAMPLED_EVENTS.has(eventName)) {
+    const isDownsampledEvent = DOWNSAMPLED_EVENTS.has(eventName)
+    if (isDownsampledSession && isDownsampledEvent) {
       return
     }
     const fullMetadata = {
       ...rawMetadata,
     } as Record<string, string> // Statsig typings are unnecessarily strict here.
-    if (isDownsampledSession) {
+    if (isDownsampledEvent) {
       fullMetadata.downsampleRate = DOWNSAMPLE_RATE.toString()
     }
     fullMetadata.routeName = getCurrentRouteName() ?? '(Uninitialized)'
