@@ -8,7 +8,6 @@ import {useLingui} from '@lingui/react'
 
 import {clamp} from '#/lib/numbers'
 import {useGate} from '#/lib/statsig/statsig'
-import {isAndroid, isIOS} from 'platform/detection'
 import {VideoEmbedInnerNative} from '#/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative'
 import {atoms as a} from '#/alf'
 import {Button} from '#/components/Button'
@@ -148,46 +147,46 @@ function InnerWrapper({embed}: Props) {
           setIsFullscreen={setIsFullscreen}
         />
       ) : null}
-      {(isAndroid && showOverlay) || isIOS ? (
-        <ImageBackground
-          source={{uri: embed.thumbnail}}
-          contentFit="cover"
-          alt={embed.alt}
-          accessibilityIgnoresInvertColors
-          style={[
-            {
-              position: 'absolute',
-              top: 0,
-              bottom: 0,
-              left: 0,
-              right: 0,
-              display: showOverlay ? 'flex' : 'none',
-            },
-          ]}>
-          <Button
-            style={[a.flex_1, a.align_center, a.justify_center]}
-            onPress={() => {
-              setActiveSource(embed.playlist, viewId)
-            }}
-            label={_(msg`Play video`)}
-            color="secondary">
-            {isLoading ? (
-              <View
-                style={[
-                  a.rounded_full,
-                  a.p_xs,
-                  a.absolute,
-                  {top: 'auto', left: 'auto'},
-                  {backgroundColor: 'rgba(0,0,0,0.5)'},
-                ]}>
-                <Loader size="2xl" style={{color: 'white'}} />
-              </View>
-            ) : (
-              <PlayButtonIcon />
-            )}
-          </Button>
-        </ImageBackground>
-      ) : null}
+      <ImageBackground
+        source={{uri: embed.thumbnail}}
+        accessibilityIgnoresInvertColors
+        style={[
+          {
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'transparent', // If you don't add `backgroundColor` to the styles here,
+            // the play button won't show up on the first render on android 🥴😮‍💨
+            display: showOverlay ? 'flex' : 'none',
+          },
+        ]}
+        cachePolicy="memory-disk" // Preferring memory cache helps to avoid flicker when re-displaying on android
+      >
+        <Button
+          style={[a.flex_1, a.align_center, a.justify_center]}
+          onPress={() => {
+            setActiveSource(embed.playlist, viewId)
+          }}
+          label={_(msg`Play video`)}
+          color="secondary">
+          {isLoading ? (
+            <View
+              style={[
+                a.rounded_full,
+                a.p_xs,
+                a.align_center,
+                a.justify_center,
+                {backgroundColor: 'rgba(0,0,0,0.5)'},
+              ]}>
+              <Loader size="2xl" style={{color: 'white'}} />
+            </View>
+          ) : (
+            <PlayButtonIcon />
+          )}
+        </Button>
+      </ImageBackground>
     </VisibilityView>
   )
 }
