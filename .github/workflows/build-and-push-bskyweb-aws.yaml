@@ -5,7 +5,7 @@ on:
     branches:
       - main
   pull_request:
-    branches: [brianolson:ipcc-handler]
+    branches: [main]
 
 env:
   REGISTRY: ${{ secrets.AWS_ECR_REGISTRY_USEAST2_PACKAGES_REGISTRY }}
