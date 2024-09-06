@@ -7,7 +7,7 @@ import {useLingui} from '@lingui/react'
 import {MAX_ALT_TEXT} from '#/lib/constants'
 import {useEnforceMaxGraphemeCount} from '#/lib/strings/helpers'
 import {LANGUAGES} from '#/locale/languages'
-import {isWeb} from '#/platform/detection'
+import {isAndroid, isWeb} from '#/platform/detection'
 import {useLanguagePrefs} from '#/state/preferences'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -54,7 +54,9 @@ export function SubtitleDialogBtn(props: Props) {
           {isWeb ? <Trans>Captions & alt text</Trans> : <Trans>Alt text</Trans>}
         </ButtonText>
       </Button>
-      <Dialog.Outer control={control}>
+      <Dialog.Outer
+        control={control}
+        nativeOptions={isAndroid ? {sheet: {snapPoints: ['60%']}} : {}}>
         <Dialog.Handle />
         <SubtitleDialogInner {...props} />
       </Dialog.Outer>
@@ -147,13 +149,12 @@ function SubtitleDialogInner({
                 />
               ))}
             </View>
+            {subtitleMissingLanguage && (
+              <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+                Ensure you have selected a language for each subtitle file.
+              </Text>
+            )}
           </>
-        )}
-
-        {subtitleMissingLanguage && (
-          <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-            Ensure you have selected a language for each subtitle file.
-          </Text>
         )}
 
         <View style={web([a.flex_row, a.justify_end])}>
