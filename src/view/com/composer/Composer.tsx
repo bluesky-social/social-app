@@ -731,7 +731,38 @@ export const ComposePost = observer(function ComposePost({
             </View>
           )}
 
-          <View style={[a.mt_md]}>
+          <LayoutAnimationConfig skipExiting>
+            {(videoUploadState.asset || videoUploadState.video) && (
+              <Animated.View
+                style={[a.w_full, a.mt_md]}
+                entering={native(ZoomIn)}
+                exiting={native(ZoomOut)}>
+                {videoUploadState.asset &&
+                  (videoUploadState.status === 'compressing' ? (
+                    <VideoTranscodeProgress
+                      asset={videoUploadState.asset}
+                      progress={videoUploadState.progress}
+                      clear={clearVideo}
+                    />
+                  ) : videoUploadState.video ? (
+                    <VideoPreview
+                      asset={videoUploadState.asset}
+                      video={videoUploadState.video}
+                      setDimensions={updateVideoDimensions}
+                      clear={clearVideo}
+                    />
+                  ) : null)}
+                <SubtitleDialogBtn
+                  altText={videoAltText}
+                  setAltText={setVideoAltText}
+                  captions={captions}
+                  setCaptions={setCaptions}
+                />
+              </Animated.View>
+            )}
+          </LayoutAnimationConfig>
+
+          <Animated.View style={a.mt_md} layout={native(LinearTransition)}>
             {quote ? (
               <View style={[s.mt5, s.mb2, isWeb && s.mb10]}>
                 <View style={{pointerEvents: 'none'}}>
@@ -742,37 +773,7 @@ export const ComposePost = observer(function ComposePost({
                 )}
               </View>
             ) : null}
-            <LayoutAnimationConfig skipExiting>
-              {(videoUploadState.asset || videoUploadState.video) && (
-                <Animated.View
-                  style={[a.w_full, a.mt_xs]}
-                  entering={native(ZoomIn)}
-                  exiting={native(ZoomOut)}>
-                  {videoUploadState.asset &&
-                    (videoUploadState.status === 'compressing' ? (
-                      <VideoTranscodeProgress
-                        asset={videoUploadState.asset}
-                        progress={videoUploadState.progress}
-                        clear={clearVideo}
-                      />
-                    ) : videoUploadState.video ? (
-                      <VideoPreview
-                        asset={videoUploadState.asset}
-                        video={videoUploadState.video}
-                        setDimensions={updateVideoDimensions}
-                        clear={clearVideo}
-                      />
-                    ) : null)}
-                  <SubtitleDialogBtn
-                    altText={videoAltText}
-                    setAltText={setVideoAltText}
-                    captions={captions}
-                    setCaptions={setCaptions}
-                  />
-                </Animated.View>
-              )}
-            </LayoutAnimationConfig>
-          </View>
+          </Animated.View>
         </Animated.ScrollView>
         <SuggestedLanguage text={richtext.text} />
 
