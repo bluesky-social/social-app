@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React, {useCallback, useState} from 'react'
 import {Keyboard, StyleProp, View, ViewStyle} from 'react-native'
 import RNPickerSelect from 'react-native-picker-select'
 import {msg, Trans} from '@lingui/macro'
@@ -21,9 +21,9 @@ import {Text} from '#/components/Typography'
 import {SubtitleFilePicker} from './SubtitleFilePicker'
 
 interface Props {
-  altText: string
+  defaultAltText: string
   captions: {lang: string; file: File}[]
-  setAltText: (altText: string) => void
+  saveAltText: (altText: string) => void
   setCaptions: React.Dispatch<
     React.SetStateAction<{lang: string; file: File}[]>
   >
@@ -65,8 +65,8 @@ export function SubtitleDialogBtn(props: Props) {
 }
 
 function SubtitleDialogInner({
-  altText,
-  setAltText,
+  defaultAltText,
+  saveAltText,
   captions,
   setCaptions,
 }: Props) {
@@ -75,6 +75,8 @@ function SubtitleDialogInner({
   const t = useTheme()
   const enforceLen = useEnforceMaxGraphemeCount()
   const {primaryLanguage} = useLanguagePrefs()
+
+  const [altText, setAltText] = useState(defaultAltText)
 
   const handleSelectFile = useCallback(
     (file: File) => {
@@ -163,7 +165,10 @@ function SubtitleDialogInner({
             size={isWeb ? 'small' : 'medium'}
             color="primary"
             variant="solid"
-            onPress={() => control.close()}
+            onPress={() => {
+              saveAltText(altText)
+              control.close()
+            }}
             style={a.mt_lg}>
             <ButtonText>
               <Trans>Done</Trans>

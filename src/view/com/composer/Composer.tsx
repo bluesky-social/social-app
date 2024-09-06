@@ -791,8 +791,8 @@ export const ComposePost = observer(function ComposePost({
                       />
                     ) : null)}
                   <SubtitleDialogBtn
-                    altText={videoAltText}
-                    setAltText={setVideoAltText}
+                    defaultAltText={videoAltText}
+                    saveAltText={setVideoAltText}
                     captions={captions}
                     setCaptions={setCaptions}
                   />
