@@ -107,8 +107,7 @@ const DOWNSAMPLED_EVENTS: Set<keyof LogEvents> = new Set([
   'profile:follow:sampled',
   'profile:unfollow:sampled',
 ])
-// const isDownsampledSession = Math.random() < DOWNSAMPLE_RATE
-const isDownsampledSession = false
+const isDownsampledSession = Math.random() < DOWNSAMPLE_RATE
 
 export function logEvent<E extends keyof LogEvents>(
   eventName: E & string,
