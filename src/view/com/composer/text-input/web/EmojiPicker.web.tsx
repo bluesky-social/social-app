@@ -41,16 +41,20 @@ export interface EmojiPickerState {
 interface IProps {
   state: EmojiPickerState
   close: () => void
-  showAbove?: boolean
+  /**
+   * If `true`, verrides position and ensures picker is pinned to the top of
+   * the target element.
+   */
+  pinToTop?: boolean
 }
 
-export function EmojiPicker({state, close, showAbove}: IProps) {
+export function EmojiPicker({state, close, pinToTop}: IProps) {
   const {height, width} = useWindowDimensions()
 
   const isShiftDown = React.useRef(false)
 
   const position = React.useMemo(() => {
-    if (showAbove) {
+    if (pinToTop) {
       return {
         top: state.pos.top - PICKER_HEIGHT + HEIGHT_OFFSET - 10,
         left: state.pos.left,
@@ -79,7 +83,7 @@ export function EmojiPicker({state, close, showAbove}: IProps) {
           : undefined,
       }
     }
-  }, [state.pos, height, width, showAbove])
+  }, [state.pos, height, width, pinToTop])
 
   React.useEffect(() => {
     if (!state.isOpen) return

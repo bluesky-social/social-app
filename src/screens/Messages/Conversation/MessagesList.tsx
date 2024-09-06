@@ -442,7 +442,7 @@ export function MessagesList({
 
       {isWeb && (
         <EmojiPicker
-          showAbove
+          pinToTop
           state={emojiPickerState}
           close={() => setEmojiPickerState(prev => ({...prev, isOpen: false}))}
         />
