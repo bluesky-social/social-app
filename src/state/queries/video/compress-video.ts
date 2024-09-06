@@ -20,7 +20,7 @@ export function useCompressVideoMutation({
     mutationKey: ['video', 'compress'],
     mutationFn: cancelable(
       (asset: ImagePickerAsset) =>
-        compressVideo(asset.uri, {
+        compressVideo(asset, {
           onProgress: num => onProgress(trunc2dp(num)),
           signal,
         }),
