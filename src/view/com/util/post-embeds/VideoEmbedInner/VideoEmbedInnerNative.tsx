@@ -67,9 +67,6 @@ export function VideoEmbedInnerNative({
           PlatformInfo.setAudioActive(false)
           player.muted = true
           player.playbackRate = 1
-          if (!player.playing) {
-            player.play()
-          }
           setIsFullscreen(false)
         }}
         accessibilityLabel={
