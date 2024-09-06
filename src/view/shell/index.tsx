@@ -31,7 +31,6 @@ import {useDialogStateContext} from 'state/dialogs'
 import {Lightbox} from 'view/com/lightbox/Lightbox'
 import {ModalsContainer} from 'view/com/modals/Modal'
 import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
-import {useActiveVideoNative} from 'view/com/util/post-embeds/ActiveVideoNativeContext'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 import {SigninDialog} from '#/components/dialogs/Signin'
 import {Outlet as PortalOutlet} from '#/components/Portal'
@@ -87,11 +86,9 @@ function ShellInner() {
   // To be certain though, we will also dedupe these calls.
   const navigation = useNavigation()
   const dedupe = useDedupe(1000)
-  const {setActiveSource} = useActiveVideoNative()
   React.useEffect(() => {
     if (!isAndroid) return
     const onFocusOrBlur = () => {
-      setActiveSource(null, null)
       setTimeout(() => {
         dedupe(updateActiveViewAsync)
       }, 500)
@@ -100,7 +97,7 @@ function ShellInner() {
     return () => {
       navigation.removeListener('state', onFocusOrBlur)
     }
-  }, [dedupe, navigation, setActiveSource])
+  }, [dedupe, navigation])
 
   return (
     <>
