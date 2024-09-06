@@ -1,4 +1,4 @@
-import {ThemeName} from '#/alf/themes'
+import {ThemeName} from '#/alf/types'
 
 export function select<T>(name: ThemeName, options: Record<ThemeName, T>) {
   switch (name) {

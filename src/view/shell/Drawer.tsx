@@ -9,10 +9,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
+import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {StackActions, useNavigation} from '@react-navigation/native'
@@ -33,10 +30,12 @@ import {colors, s} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
 import {isWeb} from 'platform/detection'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
-import {formatCountShortOnly} from 'view/com/util/numeric/format'
+import {formatCount} from 'view/com/util/numeric/format'
 import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
+import {atoms as a} from '#/alf'
 import {useTheme as useAlfTheme} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {
   Bell_Filled_Corner0_Rounded as BellFilled,
   Bell_Stroke2_Corner0_Rounded as Bell,
@@ -52,6 +51,7 @@ import {
 } from '#/components/icons/HomeOpen'
 import {MagnifyingGlass_Filled_Stroke2_Corner0_Rounded as MagnifyingGlassFilled} from '#/components/icons/MagnifyingGlass'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as MagnifyingGlass} from '#/components/icons/MagnifyingGlass2'
+import {Message_Stroke2_Corner0_Rounded as Message} from '#/components/icons/Message'
 import {SettingsGear2_Stroke2_Corner0_Rounded as Settings} from '#/components/icons/SettingsGear2'
 import {
   UserCircle_Filled_Corner0_Rounded as UserCircleFilled,
@@ -68,7 +68,7 @@ let DrawerProfileCard = ({
   account: SessionAccount
   onPressProfile: () => void
 }): React.ReactNode => {
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const pal = usePalette('default')
   const {data: profile} = useProfileQuery({did: account.did})
 
@@ -97,29 +97,42 @@ let DrawerProfileCard = ({
         numberOfLines={1}>
         @{account.handle}
       </Text>
-      <Text type="xl" style={[pal.textLight, styles.profileCardFollowers]}>
-        <Trans>
-          <Text type="xl-medium" style={pal.text}>
-            {formatCountShortOnly(profile?.followersCount ?? 0)}
-          </Text>{' '}
-          <Plural
-            value={profile?.followersCount || 0}
-            one="follower"
-            other="followers"
-          />
-        </Trans>{' '}
-        &middot;{' '}
-        <Trans>
-          <Text type="xl-medium" style={pal.text}>
-            {formatCountShortOnly(profile?.followsCount ?? 0)}
-          </Text>{' '}
-          <Plural
-            value={profile?.followsCount || 0}
-            one="following"
-            other="following"
-          />
-        </Trans>
-      </Text>
+      <View
+        style={[
+          styles.profileCardFollowers,
+          a.gap_xs,
+          a.flex_row,
+          a.align_center,
+          a.flex_wrap,
+        ]}>
+        <Text type="xl" style={pal.textLight}>
+          <Trans>
+            <Text type="xl-medium" style={pal.text}>
+              {formatCount(i18n, profile?.followersCount ?? 0)}
+            </Text>{' '}
+            <Plural
+              value={profile?.followersCount || 0}
+              one="follower"
+              other="followers"
+            />
+          </Trans>
+        </Text>
+        <Text type="xl" style={pal.textLight}>
+          &middot;
+        </Text>
+        <Text type="xl" style={pal.textLight}>
+          <Trans>
+            <Text type="xl-medium" style={pal.text}>
+              {formatCount(i18n, profile?.followsCount ?? 0)}
+            </Text>{' '}
+            <Plural
+              value={profile?.followsCount || 0}
+              one="following"
+              other="following"
+            />
+          </Trans>
+        </Text>
+      </View>
     </TouchableOpacity>
   )
 }
@@ -186,10 +199,11 @@ let DrawerContent = ({}: {}): React.ReactNode => {
     onPressTab('MyProfile')
   }, [onPressTab])
 
-  const onPressMyFeeds = React.useCallback(
-    () => onPressTab('Feeds'),
-    [onPressTab],
-  )
+  const onPressMyFeeds = React.useCallback(() => {
+    track('Menu:ItemClicked', {url: 'Feeds'})
+    navigation.navigate('Feeds')
+    setDrawerOpen(false)
+  }, [navigation, setDrawerOpen, track])
 
   const onPressLists = React.useCallback(() => {
     track('Menu:ItemClicked', {url: 'Lists'})
@@ -318,42 +332,33 @@ let DrawerFooter = ({
   onPressFeedback: () => void
   onPressHelp: () => void
 }): React.ReactNode => {
-  const theme = useTheme()
-  const pal = usePalette('default')
   const {_} = useLingui()
   return (
     <View style={styles.footer}>
-      <TouchableOpacity
-        accessibilityRole="link"
-        accessibilityLabel={_(msg`Send feedback`)}
-        accessibilityHint=""
-        onPress={onPressFeedback}
-        style={[
-          styles.footerBtn,
-          styles.footerBtnFeedback,
-          theme.colorScheme === 'light'
-            ? styles.footerBtnFeedbackLight
-            : styles.footerBtnFeedbackDark,
-        ]}>
-        <FontAwesomeIcon
-          style={pal.link as FontAwesomeIconStyle}
-          size={18}
-          icon={['far', 'message']}
-        />
-        <Text type="lg-medium" style={[pal.link, s.pl10]}>
+      <Button
+        label={_(msg`Send feedback`)}
+        size="small"
+        variant="solid"
+        color="secondary"
+        onPress={onPressFeedback}>
+        <ButtonIcon icon={Message} position="left" />
+        <ButtonText>
           <Trans>Feedback</Trans>
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        accessibilityRole="link"
-        accessibilityLabel={_(msg`Send feedback`)}
-        accessibilityHint=""
+        </ButtonText>
+      </Button>
+      <Button
+        label={_(msg`Get help`)}
+        size="small"
+        variant="outline"
+        color="secondary"
         onPress={onPressHelp}
-        style={[styles.footerBtn]}>
-        <Text type="lg-medium" style={[pal.link, s.pl10]}>
+        style={{
+          backgroundColor: 'transparent',
+        }}>
+        <ButtonText>
           <Trans>Help</Trans>
-        </Text>
-      </TouchableOpacity>
+        </ButtonText>
+      </Button>
     </View>
   )
 }
@@ -619,7 +624,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1B1919',
   },
   main: {
-    paddingLeft: 20,
+    paddingHorizontal: 20,
     paddingTop: 20,
   },
   smallSpacer: {
@@ -636,14 +641,12 @@ const styles = StyleSheet.create({
   },
   profileCardFollowers: {
     marginTop: 16,
-    paddingRight: 10,
   },
 
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 16,
-    paddingRight: 10,
   },
   menuItemIconWrapper: {
     width: 24,

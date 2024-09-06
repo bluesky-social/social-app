@@ -1,16 +1,15 @@
 import React from 'react'
-import {View, ViewStyle, TextStyle} from 'react-native'
+import {TextStyle, View, ViewStyle} from 'react-native'
 
-import {useTheme, atoms as a, native} from '#/alf'
+import {capitalize} from '#/lib/strings/capitalize'
+import {useInterestsDisplayNames} from '#/screens/Onboarding/state'
+import {atoms as a, native, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
-import {capitalize} from '#/lib/strings/capitalize'
-
-import {Context} from '#/screens/Onboarding/state'
 
 export function InterestButton({interest}: {interest: string}) {
   const t = useTheme()
-  const {interestsDisplayNames} = React.useContext(Context)
+  const interestsDisplayNames = useInterestsDisplayNames()
   const ctx = Toggle.useItemContext()
 
   const styles = React.useMemo(() => {

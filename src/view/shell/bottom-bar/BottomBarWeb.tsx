@@ -6,7 +6,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigationState} from '@react-navigation/native'
 
-import {useMinimalShellMode} from '#/lib/hooks/useMinimalShellMode'
+import {useMinimalShellFooterTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {clamp} from '#/lib/numbers'
 import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
@@ -16,7 +16,6 @@ import {s} from '#/lib/styles'
 import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
-import {useGate} from 'lib/statsig/statsig'
 import {useUnreadMessageCount} from 'state/queries/messages/list-converations'
 import {useUnreadNotifications} from 'state/queries/notifications/unread'
 import {Button} from '#/view/com/util/forms/Button'
@@ -49,8 +48,7 @@ export function BottomBarWeb() {
   const {hasSession, currentAccount} = useSession()
   const pal = usePalette('default')
   const safeAreaInsets = useSafeAreaInsets()
-  const gate = useGate()
-  const {footerMinimalShellTransform} = useMinimalShellMode()
+  const footerMinimalShellTransform = useMinimalShellFooterTransform()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
   const iconWidth = 26
@@ -115,14 +113,13 @@ export function BottomBarWeb() {
                         width={iconWidth - 1}
                         style={[styles.ctrlIcon, pal.text, styles.messagesIcon]}
                       />
-                      {unreadMessageCount.count > 0 &&
-                        gate('show_notification_badge_mobile_web') && (
-                          <View style={styles.notificationCount}>
-                            <Text style={styles.notificationCountLabel}>
-                              {unreadMessageCount.numUnread}
-                            </Text>
-                          </View>
-                        )}
+                      {unreadMessageCount.count > 0 && (
+                        <View style={styles.notificationCount}>
+                          <Text style={styles.notificationCountLabel}>
+                            {unreadMessageCount.numUnread}
+                          </Text>
+                        </View>
+                      )}
                     </>
                   )
                 }}
@@ -136,14 +133,13 @@ export function BottomBarWeb() {
                         width={iconWidth}
                         style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
                       />
-                      {notificationCountStr !== '' &&
-                        gate('show_notification_badge_mobile_web') && (
-                          <View style={styles.notificationCount}>
-                            <Text style={styles.notificationCountLabel}>
-                              {notificationCountStr}
-                            </Text>
-                          </View>
-                        )}
+                      {notificationCountStr !== '' && (
+                        <View style={styles.notificationCount}>
+                          <Text style={styles.notificationCountLabel}>
+                            {notificationCountStr}
+                          </Text>
+                        </View>
+                      )}
                     </>
                   )
                 }}

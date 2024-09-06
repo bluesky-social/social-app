@@ -3,13 +3,10 @@ import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {
   AppBskyActorDefs,
   moderateProfile,
-  ModerationCause,
   ModerationDecision,
 } from '@atproto/api'
-import {Trans} from '@lingui/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {Shadow} from '#/state/cache/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -21,11 +18,16 @@ import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {s} from 'lib/styles'
 import {precacheProfile} from 'state/queries/profile'
+import {atoms as a} from '#/alf'
+import {
+  KnownFollowers,
+  shouldShowKnownFollowers,
+} from '#/components/KnownFollowers'
+import * as Pills from '#/components/Pills'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {FollowButton} from './FollowButton'
-import hairlineWidth = StyleSheet.hairlineWidth
 
 export function ProfileCard({
   testID,
@@ -33,22 +35,22 @@ export function ProfileCard({
   noModFilter,
   noBg,
   noBorder,
-  followers,
   renderButton,
   onPress,
   style,
+  showKnownFollowers,
 }: {
   testID?: string
   profile: AppBskyActorDefs.ProfileViewBasic
   noModFilter?: boolean
   noBg?: boolean
   noBorder?: boolean
-  followers?: AppBskyActorDefs.ProfileView[] | undefined
   renderButton?: (
     profile: Shadow<AppBskyActorDefs.ProfileViewBasic>,
   ) => React.ReactNode
   onPress?: () => void
   style?: StyleProp<ViewStyle>
+  showKnownFollowers?: boolean
 }) {
   const queryClient = useQueryClient()
   const pal = usePalette('default')
@@ -69,6 +71,11 @@ export function ProfileCard({
   if (!noModFilter && modui.filter && !isJustAMute(modui)) {
     return null
   }
+
+  const knownFollowersVisible =
+    showKnownFollowers &&
+    shouldShowKnownFollowers(profile.viewer?.knownFollowers) &&
+    moderationOpts
 
   return (
     <Link
@@ -97,7 +104,7 @@ export function ProfileCard({
         <View style={styles.layoutContent}>
           <Text
             type="lg"
-            style={[s.bold, pal.text]}
+            style={[s.bold, pal.text, a.self_start]}
             numberOfLines={1}
             lineHeight={1.2}>
             {sanitizeDisplayName(
@@ -118,14 +125,30 @@ export function ProfileCard({
           <View style={styles.layoutButton}>{renderButton(profile)}</View>
         ) : undefined}
       </View>
-      {profile.description ? (
+      {profile.description || knownFollowersVisible ? (
         <View style={styles.details}>
-          <Text style={pal.text} numberOfLines={4}>
-            {profile.description as string}
-          </Text>
+          {profile.description ? (
+            <Text style={pal.text} numberOfLines={4}>
+              {profile.description as string}
+            </Text>
+          ) : null}
+          {knownFollowersVisible ? (
+            <View
+              style={[
+                a.flex_row,
+                a.align_center,
+                a.gap_sm,
+                !!profile.description && a.mt_md,
+              ]}>
+              <KnownFollowers
+                minimal
+                profile={profile}
+                moderationOpts={moderationOpts}
+              />
+            </View>
+          ) : null}
         </View>
       ) : null}
-      <FollowersList followers={followers} />
     </Link>
   )
 }
@@ -137,111 +160,21 @@ export function ProfileCardPills({
   followedBy: boolean
   moderation: ModerationDecision
 }) {
-  const pal = usePalette('default')
-
   const modui = moderation.ui('profileList')
   if (!followedBy && !modui.inform && !modui.alert) {
     return null
   }
 
   return (
-    <View style={styles.pills}>
-      {followedBy && (
-        <View style={[s.mt5, pal.btn, styles.pill]}>
-          <Text type="xs" style={pal.text}>
-            <Trans>Follows You</Trans>
-          </Text>
-        </View>
-      )}
+    <Pills.Row style={[a.pt_xs]}>
+      {followedBy && <Pills.FollowsYou />}
       {modui.alerts.map(alert => (
-        <ProfileCardPillModerationCause
-          key={getModerationCauseKey(alert)}
-          cause={alert}
-          severity="alert"
-        />
+        <Pills.Label key={getModerationCauseKey(alert)} cause={alert} />
       ))}
       {modui.informs.map(inform => (
-        <ProfileCardPillModerationCause
-          key={getModerationCauseKey(inform)}
-          cause={inform}
-          severity="inform"
-        />
+        <Pills.Label key={getModerationCauseKey(inform)} cause={inform} />
       ))}
-    </View>
-  )
-}
-
-function ProfileCardPillModerationCause({
-  cause,
-  severity,
-}: {
-  cause: ModerationCause
-  severity: 'alert' | 'inform'
-}) {
-  const pal = usePalette('default')
-  const {name} = useModerationCauseDescription(cause)
-  return (
-    <View
-      style={[s.mt5, pal.btn, styles.pill]}
-      key={getModerationCauseKey(cause)}>
-      <Text type="xs" style={pal.text}>
-        {severity === 'alert' ? '⚠ ' : ''}
-        {name}
-      </Text>
-    </View>
-  )
-}
-
-function FollowersList({
-  followers,
-}: {
-  followers?: AppBskyActorDefs.ProfileView[] | undefined
-}) {
-  const pal = usePalette('default')
-  const moderationOpts = useModerationOpts()
-
-  const followersWithMods = React.useMemo(() => {
-    if (!followers || !moderationOpts) {
-      return []
-    }
-
-    return followers
-      .map(f => ({
-        f,
-        mod: moderateProfile(f, moderationOpts),
-      }))
-      .filter(({mod}) => !mod.ui('profileList').filter)
-  }, [followers, moderationOpts])
-
-  if (!followersWithMods?.length) {
-    return null
-  }
-
-  return (
-    <View style={styles.followedBy}>
-      <Text
-        type="sm"
-        style={[styles.followsByDesc, pal.textLight]}
-        numberOfLines={2}
-        lineHeight={1.2}>
-        <Trans>
-          Followed by{' '}
-          {followersWithMods.map(({f}) => f.displayName || f.handle).join(', ')}
-        </Trans>
-      </Text>
-      {followersWithMods.slice(0, 3).map(({f, mod}) => (
-        <View key={f.did} style={styles.followedByAviContainer}>
-          <View style={[styles.followedByAvi, pal.view]}>
-            <PreviewableUserAvatar
-              size={32}
-              profile={f}
-              moderation={mod.ui('avatar')}
-              type={f.associated?.labeler ? 'labeler' : 'user'}
-            />
-          </View>
-        </View>
-      ))}
-    </View>
+    </Pills.Row>
   )
 }
 
@@ -249,14 +182,16 @@ export function ProfileCardWithFollowBtn({
   profile,
   noBg,
   noBorder,
-  followers,
   onPress,
+  logContext = 'ProfileCard',
+  showKnownFollowers,
 }: {
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: AppBskyActorDefs.ProfileView
   noBg?: boolean
   noBorder?: boolean
-  followers?: AppBskyActorDefs.ProfileView[] | undefined
   onPress?: () => void
+  logContext?: 'ProfileCard' | 'StarterPackProfilesList'
+  showKnownFollowers?: boolean
 }) {
   const {currentAccount} = useSession()
   const isMe = profile.did === currentAccount?.did
@@ -266,22 +201,22 @@ export function ProfileCardWithFollowBtn({
       profile={profile}
       noBg={noBg}
       noBorder={noBorder}
-      followers={followers}
       renderButton={
         isMe
           ? undefined
           : profileShadow => (
-              <FollowButton profile={profileShadow} logContext="ProfileCard" />
+              <FollowButton profile={profileShadow} logContext={logContext} />
             )
       }
       onPress={onPress}
+      showKnownFollowers={!isMe && showKnownFollowers}
     />
   )
 }
 
 const styles = StyleSheet.create({
   outer: {
-    borderTopWidth: hairlineWidth,
+    borderTopWidth: StyleSheet.hairlineWidth,
     paddingHorizontal: 6,
     paddingVertical: 4,
   },
@@ -314,11 +249,13 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   details: {
+    justifyContent: 'center',
     paddingLeft: 54,
     paddingRight: 10,
     paddingBottom: 10,
   },
   pills: {
+    alignItems: 'flex-start',
     flexDirection: 'row',
     flexWrap: 'wrap',
     columnGap: 6,
@@ -328,6 +265,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     paddingHorizontal: 6,
     paddingVertical: 2,
+    justifyContent: 'center',
   },
   btn: {
     paddingVertical: 7,
@@ -338,7 +276,6 @@ const styles = StyleSheet.create({
 
   followedBy: {
     flexDirection: 'row',
-    alignItems: 'center',
     paddingLeft: 54,
     paddingRight: 20,
     marginBottom: 10,

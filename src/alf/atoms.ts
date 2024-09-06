@@ -1,10 +1,14 @@
-import {Platform, StyleSheet} from 'react-native'
+import {Platform, StyleSheet, ViewStyle} from 'react-native'
 
 import * as tokens from '#/alf/tokens'
 import {native, web} from '#/alf/util/platform'
-import hairlineWidth = StyleSheet.hairlineWidth
 
 export const atoms = {
+  debug: {
+    borderColor: 'red',
+    borderWidth: 1,
+  },
+
   /*
    * Positioning
    */
@@ -55,6 +59,19 @@ export const atoms = {
   h_full_vh: web({
     height: '100vh',
   }),
+
+  /**
+   * Used for the outermost components on screens, to ensure that they can fill
+   * the screen and extend beyond.
+   */
+  util_screen_outer: [
+    web({
+      minHeight: '100vh',
+    }),
+    native({
+      height: '100%',
+    }),
+  ] as ViewStyle,
 
   /*
    * Theme-independent bg colors
@@ -144,6 +161,9 @@ export const atoms = {
   },
   flex_shrink: {
     flexShrink: 1,
+  },
+  flex_shrink_0: {
+    flexShrink: 0,
   },
   justify_start: {
     justifyContent: 'flex-start',
@@ -267,6 +287,9 @@ export const atoms = {
   font_bold: {
     fontWeight: tokens.fontWeight.bold,
   },
+  font_heavy: {
+    fontWeight: tokens.fontWeight.heavy,
+  },
   italic: {
     fontStyle: 'italic',
   },
@@ -278,19 +301,19 @@ export const atoms = {
     borderWidth: 0,
   },
   border: {
-    borderWidth: hairlineWidth,
+    borderWidth: StyleSheet.hairlineWidth,
   },
   border_t: {
-    borderTopWidth: hairlineWidth,
+    borderTopWidth: StyleSheet.hairlineWidth,
   },
   border_b: {
-    borderBottomWidth: hairlineWidth,
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   border_l: {
-    borderLeftWidth: hairlineWidth,
+    borderLeftWidth: StyleSheet.hairlineWidth,
   },
   border_r: {
-    borderRightWidth: hairlineWidth,
+    borderRightWidth: StyleSheet.hairlineWidth,
   },
 
   /*
@@ -848,6 +871,7 @@ export const atoms = {
   mr_auto: {
     marginRight: 'auto',
   },
+
   /*
    * Pointer events & user select
    */
@@ -866,6 +890,7 @@ export const atoms = {
   user_select_all: {
     userSelect: 'all',
   },
+
   /*
    * Text decoration
    */
@@ -874,5 +899,12 @@ export const atoms = {
   },
   strike_through: {
     textDecorationLine: 'line-through',
+  },
+
+  /*
+   * Display
+   */
+  hidden: {
+    display: 'none',
   },
 } as const

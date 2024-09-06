@@ -2,21 +2,18 @@ import React from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/core'
-import {StackActions} from '@react-navigation/native'
 
-import {NavigationProp} from 'lib/routes/types'
+import {useGoBack} from 'lib/hooks/useGoBack'
 import {CenteredView} from 'view/com/util/Views'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {Text} from '#/components/Typography'
-import {router} from '#/routes'
 
 export function Error({
   title,
   message,
   onRetry,
-  onGoBack: onGoBackProp,
+  onGoBack,
   hideBackButton,
   sideBorders = true,
 }: {
@@ -27,31 +24,10 @@ export function Error({
   hideBackButton?: boolean
   sideBorders?: boolean
 }) {
-  const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
-
-  const canGoBack = navigation.canGoBack()
-  const onGoBack = React.useCallback(() => {
-    if (onGoBackProp) {
-      onGoBackProp()
-      return
-    }
-    if (canGoBack) {
-      navigation.goBack()
-    } else {
-      navigation.navigate('HomeTab')
-
-      // Checking the state for routes ensures that web doesn't encounter errors while going back
-      if (navigation.getState()?.routes) {
-        navigation.dispatch(StackActions.push(...router.matchPath('/')))
-      } else {
-        navigation.navigate('HomeTab')
-        navigation.dispatch(StackActions.popToTop())
-      }
-    }
-  }, [navigation, canGoBack, onGoBackProp])
+  const goBack = useGoBack(onGoBack)
 
   return (
     <CenteredView
@@ -96,7 +72,7 @@ export function Error({
             variant="solid"
             color={onRetry ? 'secondary' : 'primary'}
             label={_(msg`Return to previous page`)}
-            onPress={onGoBack}
+            onPress={goBack}
             size="large"
             style={[a.rounded_sm, a.overflow_hidden, {paddingVertical: 10}]}>
             <ButtonText>

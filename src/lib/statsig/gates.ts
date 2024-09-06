@@ -1,6 +1,10 @@
 export type Gate =
   // Keep this alphabetic please.
-  | 'request_notifications_permission_after_onboarding_v2'
-  | 'show_avi_follow_button'
-  | 'show_follow_back_label_v2'
-  | 'show_notification_badge_mobile_web'
+  | 'debug_show_feedcontext'
+  | 'fixed_bottom_bar'
+  | 'onboarding_minimum_interests'
+  | 'suggested_feeds_interstitial'
+  | 'show_follow_suggestions_in_profile'
+  | 'video_debug' // not recommended
+  | 'video_upload' // upload videos
+  | 'video_view_on_posts' // see posted videos

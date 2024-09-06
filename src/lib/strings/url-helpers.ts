@@ -2,8 +2,10 @@ import {AtUri} from '@atproto/api'
 import psl from 'psl'
 import TLDs from 'tlds'
 
+import {logger} from '#/logger'
 import {BSKY_SERVICE} from 'lib/constants'
 import {isInvalidHandle} from 'lib/strings/handles'
+import {startUriToStarterPackUri} from 'lib/strings/starter-pack'
 
 export const BSKY_APP_HOST = 'https://bsky.app'
 const BSKY_TRUSTED_HOSTS = [
@@ -151,6 +153,30 @@ export function isBskyListUrl(url: string): boolean {
   return false
 }
 
+export function isBskyStartUrl(url: string): boolean {
+  if (isBskyAppUrl(url)) {
+    try {
+      const urlp = new URL(url)
+      return /start\/(?<name>[^/]+)\/(?<rkey>[^/]+)/i.test(urlp.pathname)
+    } catch {
+      console.error('Unexpected error in isBskyStartUrl()', url)
+    }
+  }
+  return false
+}
+
+export function isBskyStarterPackUrl(url: string): boolean {
+  if (isBskyAppUrl(url)) {
+    try {
+      const urlp = new URL(url)
+      return /starter-pack\/(?<name>[^/]+)\/(?<rkey>[^/]+)/i.test(urlp.pathname)
+    } catch {
+      console.error('Unexpected error in isBskyStartUrl()', url)
+    }
+  }
+  return false
+}
+
 export function isBskyDownloadUrl(url: string): boolean {
   if (isExternalUrl(url)) {
     return false
@@ -162,10 +188,18 @@ export function convertBskyAppUrlIfNeeded(url: string): string {
   if (isBskyAppUrl(url)) {
     try {
       const urlp = new URL(url)
+
+      if (isBskyStartUrl(url)) {
+        return startUriToStarterPackUri(urlp.pathname)
+      }
+
       return urlp.pathname
     } catch (e) {
       console.error('Unexpected error in convertBskyAppUrlIfNeeded()', e)
     }
+  } else if (isShortLink(url)) {
+    // We only want to do this on native, web handles the 301 for us
+    return shortLinkToHref(url)
   }
   return url
 }
@@ -284,4 +318,42 @@ export function splitApexDomain(hostname: string): [string, string] {
 export function createBskyAppAbsoluteUrl(path: string): string {
   const sanitizedPath = path.replace(BSKY_APP_HOST, '').replace(/^\/+/, '')
   return `${BSKY_APP_HOST.replace(/\/$/, '')}/${sanitizedPath}`
+}
+
+export function isShortLink(url: string): boolean {
+  return url.startsWith('https://go.bsky.app/')
+}
+
+export function shortLinkToHref(url: string): string {
+  try {
+    const urlp = new URL(url)
+
+    // For now we only support starter packs, but in the future we should add additional paths to this check
+    const parts = urlp.pathname.split('/').filter(Boolean)
+    if (parts.length === 1) {
+      return `/starter-pack-short/${parts[0]}`
+    }
+    return url
+  } catch (e) {
+    logger.error('Failed to parse possible short link', {safeMessage: e})
+    return url
+  }
+}
+
+export function getHostnameFromUrl(url: string | URL): string | null {
+  let urlp
+  try {
+    urlp = new URL(url)
+  } catch (e) {
+    return null
+  }
+  return urlp.hostname
+}
+
+export function getServiceAuthAudFromUrl(url: string | URL): string | null {
+  const hostname = getHostnameFromUrl(url)
+  if (!hostname) {
+    return null
+  }
+  return `did:web:${hostname}`
 }

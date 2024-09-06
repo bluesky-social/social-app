@@ -91,7 +91,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
         type={replyTo.author.associated?.labeler ? 'labeler' : 'user'}
       />
       <View style={styles.replyToPost}>
-        <Text type="xl-medium" style={t.atoms.text}>
+        <Text type="xl-medium" style={t.atoms.text} numberOfLines={1}>
           {sanitizeDisplayName(
             replyTo.author.displayName || sanitizeHandle(replyTo.author.handle),
           )}

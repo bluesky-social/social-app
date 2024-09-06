@@ -317,7 +317,7 @@ function CustomHandleForm({
   // =
   const onPressCopy = React.useCallback(() => {
     setStringAsync(isDNSForm ? `did=${currentAccount.did}` : currentAccount.did)
-    Toast.show(_(msg`Copied to clipboard`))
+    Toast.show(_(msg`Copied to clipboard`), 'clipboard-check')
   }, [currentAccount, isDNSForm, _])
   const onChangeHandle = React.useCallback(
     (v: string) => {

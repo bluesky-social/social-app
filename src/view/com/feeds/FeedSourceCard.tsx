@@ -1,11 +1,19 @@
 import React from 'react'
-import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {
+  Linking,
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native'
 import {AtUri} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
+import {shouldClickOpenNewTab} from '#/platform/urls'
 import {FeedSourceInfo, useFeedSourceInfoQuery} from '#/state/queries/feed'
 import {
   useAddSavedFeedsMutation,
@@ -25,7 +33,6 @@ import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
-import hairlineWidth = StyleSheet.hairlineWidth
 
 export function FeedSourceCard({
   feedUri,
@@ -117,7 +124,7 @@ export function FeedSourceCardLoaded({
       ])
       Toast.show(_(msg`Added to my feeds`))
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting your server`))
+      Toast.show(_(msg`There was an issue contacting your server`), 'xmark')
       logger.error('Failed to save feed', {message: e})
     }
   }, [_, feed, pinOnSave, addSavedFeeds, isSaved])
@@ -130,7 +137,7 @@ export function FeedSourceCardLoaded({
       // await item.unsave()
       Toast.show(_(msg`Removed from my feeds`))
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting your server`))
+      Toast.show(_(msg`There was an issue contacting your server`), 'xmark')
       logger.error('Failed to unsave feed', {message: e})
     }
   }, [_, removeFeed, savedFeedConfig])
@@ -201,19 +208,32 @@ export function FeedSourceCardLoaded({
           styles.container,
           pal.border,
           style,
-          {borderTopWidth: hideTopBorder ? 0 : hairlineWidth},
+          {borderTopWidth: hideTopBorder ? 0 : StyleSheet.hairlineWidth},
         ]}
-        onPress={() => {
+        onPress={e => {
+          const shouldOpenInNewTab = shouldClickOpenNewTab(e)
           if (feed.type === 'feed') {
-            navigation.push('ProfileFeed', {
-              name: feed.creatorDid,
-              rkey: new AtUri(feed.uri).rkey,
-            })
+            if (shouldOpenInNewTab) {
+              Linking.openURL(
+                `/profile/${feed.creatorDid}/feed/${new AtUri(feed.uri).rkey}`,
+              )
+            } else {
+              navigation.push('ProfileFeed', {
+                name: feed.creatorDid,
+                rkey: new AtUri(feed.uri).rkey,
+              })
+            }
           } else if (feed.type === 'list') {
-            navigation.push('ProfileList', {
-              name: feed.creatorDid,
-              rkey: new AtUri(feed.uri).rkey,
-            })
+            if (shouldOpenInNewTab) {
+              Linking.openURL(
+                `/profile/${feed.creatorDid}/lists/${new AtUri(feed.uri).rkey}`,
+              )
+            } else {
+              navigation.push('ProfileList', {
+                name: feed.creatorDid,
+                rkey: new AtUri(feed.uri).rkey,
+              })
+            }
           }
         }}
         key={feed.uri}>
@@ -307,6 +327,9 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     flex: 1,
     gap: 14,
+  },
+  border: {
+    borderTopWidth: StyleSheet.hairlineWidth,
   },
   headerContainer: {
     flexDirection: 'row',

@@ -7,7 +7,6 @@ import {useNavigation} from '@react-navigation/native'
 
 import {createHitslop} from '#/lib/constants'
 import {NavigationProp} from '#/lib/routes/types'
-import {useGate} from '#/lib/statsig/statsig'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useSession} from '#/state/session'
@@ -37,7 +36,6 @@ export function AviFollowButton({
     profile: profile,
     logContext: 'AvatarButton',
   })
-  const gate = useGate()
   const {currentAccount, hasSession} = useSession()
   const navigation = useNavigation<NavigationProp>()
 
@@ -80,7 +78,7 @@ export function AviFollowButton({
     },
   ]
 
-  return hasSession && gate('show_avi_follow_button') ? (
+  return hasSession ? (
     <View style={a.relative}>
       {children}
 
@@ -90,30 +88,43 @@ export function AviFollowButton({
           hitSlop={createHitslop(3)}
           style={[
             a.rounded_full,
-            select(t.name, {
-              light: t.atoms.bg_contrast_100,
-              dim: t.atoms.bg_contrast_100,
-              dark: t.atoms.bg_contrast_200,
-            }),
             a.absolute,
             {
-              bottom: -1,
-              right: -1,
-              borderWidth: 1,
-              borderColor: t.atoms.bg.backgroundColor,
+              height: 30,
+              width: 30,
+              bottom: -7,
+              right: -7,
             },
           ]}>
           <NativeDropdown items={items}>
-            <Plus
-              size="sm"
-              fill={
-                select(t.name, {
-                  light: t.atoms.bg_contrast_600,
-                  dim: t.atoms.bg_contrast_500,
-                  dark: t.atoms.bg_contrast_600,
-                }).backgroundColor
-              }
-            />
+            <View
+              style={[a.h_full, a.w_full, a.justify_center, a.align_center]}>
+              <View
+                style={[
+                  a.rounded_full,
+                  a.align_center,
+                  select(t.name, {
+                    light: t.atoms.bg_contrast_100,
+                    dim: t.atoms.bg_contrast_100,
+                    dark: t.atoms.bg_contrast_200,
+                  }),
+                  {
+                    borderWidth: 1,
+                    borderColor: t.atoms.bg.backgroundColor,
+                  },
+                ]}>
+                <Plus
+                  size="sm"
+                  fill={
+                    select(t.name, {
+                      light: t.atoms.bg_contrast_600,
+                      dim: t.atoms.bg_contrast_500,
+                      dark: t.atoms.bg_contrast_600,
+                    }).backgroundColor
+                  }
+                />
+              </View>
+            </View>
           </NativeDropdown>
         </Button>
       )}

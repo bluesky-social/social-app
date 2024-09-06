@@ -3,6 +3,7 @@ import {ScrollView, StyleSheet, View} from 'react-native'
 
 import {isWeb} from '#/platform/detection'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
+import {useIsKeyboardVisible} from 'lib/hooks/useIsKeyboardVisible'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {atoms as a} from '#/alf'
@@ -29,13 +30,18 @@ export const LoggedOutLayout = ({
     borderLeftWidth: 1,
   })
 
+  const [isKeyboardVisible] = useIsKeyboardVisible()
+
   if (isMobile) {
     if (scrollable) {
       return (
         <ScrollView
           style={styles.scrollview}
           keyboardShouldPersistTaps="handled"
-          keyboardDismissMode="on-drag">
+          keyboardDismissMode="none"
+          contentContainerStyle={[
+            {paddingBottom: isKeyboardVisible ? 300 : 0},
+          ]}>
           <View style={a.pt_md}>{children}</View>
         </ScrollView>
       )

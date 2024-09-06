@@ -6,5 +6,5 @@
     "strict": true,
     "outDir": "dist"
   },
-  "include": ["snippet"],
+  "include": ["snippet"]
 }

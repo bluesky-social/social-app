@@ -5,12 +5,14 @@ import EventEmitter from 'eventemitter3'
 
 import {batchedUpdates} from '#/lib/batchedUpdates'
 import {findAllProfilesInQueryData as findAllProfilesInActorSearchQueryData} from '../queries/actor-search'
+import {findAllProfilesInQueryData as findAllProfilesInKnownFollowersQueryData} from '../queries/known-followers'
 import {findAllProfilesInQueryData as findAllProfilesInListMembersQueryData} from '../queries/list-members'
 import {findAllProfilesInQueryData as findAllProfilesInListConvosQueryData} from '../queries/messages/list-converations'
 import {findAllProfilesInQueryData as findAllProfilesInMyBlockedAccountsQueryData} from '../queries/my-blocked-accounts'
 import {findAllProfilesInQueryData as findAllProfilesInMyMutedAccountsQueryData} from '../queries/my-muted-accounts'
 import {findAllProfilesInQueryData as findAllProfilesInFeedsQueryData} from '../queries/post-feed'
 import {findAllProfilesInQueryData as findAllProfilesInPostLikedByQueryData} from '../queries/post-liked-by'
+import {findAllProfilesInQueryData as findAllProfilesInPostQuotesQueryData} from '../queries/post-quotes'
 import {findAllProfilesInQueryData as findAllProfilesInPostRepostedByQueryData} from '../queries/post-reposted-by'
 import {findAllProfilesInQueryData as findAllProfilesInPostThreadQueryData} from '../queries/post-thread'
 import {findAllProfilesInQueryData as findAllProfilesInProfileQueryData} from '../queries/profile'
@@ -103,6 +105,7 @@ function* findProfilesInCache(
   yield* findAllProfilesInMyMutedAccountsQueryData(queryClient, did)
   yield* findAllProfilesInPostLikedByQueryData(queryClient, did)
   yield* findAllProfilesInPostRepostedByQueryData(queryClient, did)
+  yield* findAllProfilesInPostQuotesQueryData(queryClient, did)
   yield* findAllProfilesInProfileQueryData(queryClient, did)
   yield* findAllProfilesInProfileFollowersQueryData(queryClient, did)
   yield* findAllProfilesInProfileFollowsQueryData(queryClient, did)
@@ -111,4 +114,5 @@ function* findProfilesInCache(
   yield* findAllProfilesInListConvosQueryData(queryClient, did)
   yield* findAllProfilesInFeedsQueryData(queryClient, did)
   yield* findAllProfilesInPostThreadQueryData(queryClient, did)
+  yield* findAllProfilesInKnownFollowersQueryData(queryClient, did)
 }

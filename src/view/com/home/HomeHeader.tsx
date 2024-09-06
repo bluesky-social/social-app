@@ -5,7 +5,6 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {FeedSourceInfo} from '#/state/queries/feed'
 import {useSession} from '#/state/session'
 import {NavigationProp} from 'lib/routes/types'
-import {isWeb} from 'platform/detection'
 import {RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {TabBar} from '../pager/TabBar'
 import {HomeHeaderLayout} from './HomeHeaderLayout'
@@ -39,12 +38,7 @@ export function HomeHeader(
   }, [hasPinnedCustom, feeds])
 
   const onPressFeedsLink = React.useCallback(() => {
-    if (isWeb) {
-      navigation.navigate('Feeds')
-    } else {
-      navigation.navigate('FeedsTab')
-      navigation.popToTop()
-    }
+    navigation.navigate('Feeds')
   }, [navigation])
 
   const onSelect = React.useCallback(

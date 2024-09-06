@@ -59,12 +59,17 @@ function LightboxFooter({imageIndex}: {imageIndex: number}) {
   const {_} = useLingui()
   const {activeLightbox} = useLightbox()
   const [isAltExpanded, setAltExpanded] = React.useState(false)
-  const [permissionResponse, requestPermission] = MediaLibrary.usePermissions()
+  const [permissionResponse, requestPermission] = MediaLibrary.usePermissions({
+    granularPermissions: ['photo'],
+  })
 
   const saveImageToAlbumWithToasts = React.useCallback(
     async (uri: string) => {
       if (!permissionResponse || permissionResponse.granted === false) {
-        Toast.show(_(msg`Permission to access camera roll is required.`))
+        Toast.show(
+          _(msg`Permission to access camera roll is required.`),
+          'info',
+        )
         if (permissionResponse?.canAskAgain) {
           requestPermission()
         } else {
@@ -72,6 +77,7 @@ function LightboxFooter({imageIndex}: {imageIndex: number}) {
             _(
               msg`Permission to access camera roll was denied. Please enable it in your system settings.`,
             ),
+            'xmark',
           )
         }
         return
@@ -81,7 +87,7 @@ function LightboxFooter({imageIndex}: {imageIndex: number}) {
         await saveImageToMediaLibrary({uri})
         Toast.show(_(msg`Saved to your camera roll`))
       } catch (e: any) {
-        Toast.show(_(msg`Failed to save image: ${String(e)}`))
+        Toast.show(_(msg`Failed to save image: ${String(e)}`), 'xmark')
       }
     },
     [permissionResponse, requestPermission, _],

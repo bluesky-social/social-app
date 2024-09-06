@@ -1,11 +1,19 @@
-import React from 'react'
+import React, {useCallback} from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {useAnalytics} from '#/lib/analytics/analytics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {ComposeIcon2} from '#/lib/icons'
+import {
+  NativeStackScreenProps,
+  NotificationsTabNavigatorParams,
+} from '#/lib/routes/types'
+import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {isNative} from '#/platform/detection'
 import {emitSoftReset, listenSoftReset} from '#/state/events'
@@ -17,35 +25,32 @@ import {
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {ComposeIcon2} from 'lib/icons'
-import {
-  NativeStackScreenProps,
-  NotificationsTabNavigatorParams,
-} from 'lib/routes/types'
-import {colors, s} from 'lib/styles'
-import {TextLink} from 'view/com/util/Link'
+import {Feed} from '#/view/com/notifications/Feed'
+import {FAB} from '#/view/com/util/fab/FAB'
+import {MainScrollProvider} from '#/view/com/util/MainScrollProvider'
+import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {ListMethods} from 'view/com/util/List'
 import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
 import {CenteredView} from 'view/com/util/Views'
-import {Feed} from '../com/notifications/Feed'
-import {FAB} from '../com/util/fab/FAB'
-import {MainScrollProvider} from '../com/util/MainScrollProvider'
-import {ViewHeader} from '../com/util/ViewHeader'
+import {atoms as a, useTheme} from '#/alf'
+import {Button} from '#/components/Button'
+import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/components/icons/SettingsGear2'
+import {Link} from '#/components/Link'
+import {Loader} from '#/components/Loader'
+import {Text} from '#/components/Typography'
 
 type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,
   'Notifications'
 >
-export function NotificationsScreen({}: Props) {
+export function NotificationsScreen({route: {params}}: Props) {
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
   const [isScrolledDown, setIsScrolledDown] = React.useState(false)
+  const [isLoadingLatest, setIsLoadingLatest] = React.useState(false)
   const scrollElRef = React.useRef<ListMethods>(null)
   const {screen} = useAnalytics()
-  const pal = usePalette('default')
+  const t = useTheme()
   const {isDesktop} = useWebMediaQueries()
   const queryClient = useQueryClient()
   const unreadNotifs = useUnreadNotifications()
@@ -68,9 +73,13 @@ export function NotificationsScreen({}: Props) {
       truncateAndInvalidate(queryClient, NOTIFS_RQKEY())
     } else {
       // check with the server
-      unreadApi.checkUnread({invalidate: true})
+      setIsLoadingLatest(true)
+      unreadApi
+        .checkUnread({invalidate: true})
+        .catch(() => undefined)
+        .then(() => setIsLoadingLatest(false))
     }
-  }, [scrollToTop, queryClient, unreadApi, hasNew])
+  }, [scrollToTop, queryClient, unreadApi, hasNew, setIsLoadingLatest])
 
   const onFocusCheckLatest = useNonReactiveCallback(() => {
     // on focus, check for latest, but only invalidate if the user
@@ -103,63 +112,105 @@ export function NotificationsScreen({}: Props) {
     return listenSoftReset(onPressLoadLatest)
   }, [onPressLoadLatest, isScreenFocused])
 
+  const renderButton = useCallback(() => {
+    return (
+      <Link
+        to="/notifications/settings"
+        label={_(msg`Notification settings`)}
+        size="small"
+        variant="ghost"
+        color="secondary"
+        shape="square"
+        style={[a.justify_center]}>
+        <SettingsIcon size="md" style={t.atoms.text_contrast_medium} />
+      </Link>
+    )
+  }, [_, t])
+
   const ListHeaderComponent = React.useCallback(() => {
     if (isDesktop) {
       return (
         <View
           style={[
-            pal.view,
-            {
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              paddingHorizontal: 18,
-              paddingVertical: 12,
-            },
+            t.atoms.bg,
+            a.flex_row,
+            a.align_center,
+            a.justify_between,
+            a.gap_lg,
+            a.px_lg,
+            a.pr_md,
+            a.py_sm,
           ]}>
-          <TextLink
-            type="title-lg"
-            href="/notifications"
-            style={[pal.text, {fontWeight: 'bold'}]}
-            text={
-              <>
-                <Trans>Notifications</Trans>{' '}
+          <Button
+            label={_(msg`Notifications`)}
+            accessibilityHint={_(msg`Refresh notifications`)}
+            onPress={emitSoftReset}>
+            {({hovered, pressed}) => (
+              <Text
+                style={[
+                  a.text_2xl,
+                  a.font_bold,
+                  (hovered || pressed) && a.underline,
+                ]}>
+                <Trans>Notifications</Trans>
                 {hasNew && (
                   <View
                     style={{
+                      left: 4,
                       top: -8,
-                      backgroundColor: colors.blue3,
+                      backgroundColor: t.palette.primary_500,
                       width: 8,
                       height: 8,
                       borderRadius: 4,
                     }}
                   />
                 )}
-              </>
-            }
-            onPress={emitSoftReset}
-          />
+              </Text>
+            )}
+          </Button>
+          <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+            {isLoadingLatest ? <Loader size="md" /> : <></>}
+            {renderButton()}
+          </View>
         </View>
       )
     }
     return <></>
-  }, [isDesktop, pal, hasNew])
+  }, [isDesktop, t, hasNew, renderButton, _, isLoadingLatest])
+
+  const renderHeaderSpinner = React.useCallback(() => {
+    return (
+      <View
+        style={[
+          {width: 30, height: 20},
+          a.flex_row,
+          a.align_center,
+          a.justify_end,
+          a.gap_md,
+        ]}>
+        {isLoadingLatest ? <Loader width={20} /> : <></>}
+        {renderButton()}
+      </View>
+    )
+  }, [renderButton, isLoadingLatest])
 
   return (
     <CenteredView
       testID="notificationsScreen"
-      style={s.hContentRegion}
+      style={[s.hContentRegion, {paddingTop: 2}]}
       sideBorders={true}>
       <ViewHeader
         title={_(msg`Notifications`)}
         canGoBack={false}
         showBorder={true}
+        renderButton={renderHeaderSpinner}
       />
       <MainScrollProvider>
         <Feed
           onScrolledDownChange={setIsScrolledDown}
           scrollElRef={scrollElRef}
           ListHeaderComponent={ListHeaderComponent}
+          overridePriorityNotifications={params?.show === 'all'}
         />
       </MainScrollProvider>
       {(isScrolledDown || hasNew) && (

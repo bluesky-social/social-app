@@ -12,6 +12,16 @@ export const HELP_DESK_URL = `https://blueskyweb.zendesk.com/hc/${HELP_DESK_LANG
 export const EMBED_SERVICE = 'https://embed.bsky.app'
 export const EMBED_SCRIPT = `${EMBED_SERVICE}/static/embed.js`
 export const BSKY_DOWNLOAD_URL = 'https://bsky.app/download'
+export const STARTER_PACK_MAX_SIZE = 150
+
+// HACK
+// Yes, this is exactly what it looks like. It's a hard-coded constant
+// reflecting the number of new users in the last week. We don't have
+// time to add a route to the servers for this so we're just going to hard
+// code and update this number with each release until we can get the
+// server route done.
+// -prf
+export const JOINED_THIS_WEEK = 50676 // as of Aug 17, 2024
 
 const BASE_FEEDBACK_FORM_URL = `${HELP_DESK_URL}/requests/new`
 export function FEEDBACK_FORM_URL({
@@ -84,6 +94,7 @@ export const createHitslop = (size: number): Insets => ({
 export const HITSLOP_10 = createHitslop(10)
 export const HITSLOP_20 = createHitslop(20)
 export const HITSLOP_30 = createHitslop(30)
+export const POST_CTRL_HITSLOP = {top: 5, bottom: 10, left: 10, right: 10}
 export const BACK_HITSLOP = HITSLOP_30
 export const MAX_POST_LINES = 25
 
@@ -123,3 +134,14 @@ export const GIF_SEARCH = (params: string) =>
   `${GIF_SERVICE}/tenor/v2/search?${params}`
 export const GIF_FEATURED = (params: string) =>
   `${GIF_SERVICE}/tenor/v2/featured?${params}`
+
+export const MAX_LABELERS = 20
+
+export const SUPPORTED_MIME_TYPES = [
+  'video/mp4',
+  'video/mpeg',
+  'video/webm',
+  'video/quicktime',
+] as const
+
+export type SupportedMimeTypes = (typeof SUPPORTED_MIME_TYPES)[number]

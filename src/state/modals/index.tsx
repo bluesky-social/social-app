@@ -5,7 +5,6 @@ import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {GalleryModel} from '#/state/models/media/gallery'
 import {ImageModel} from '#/state/models/media/image'
-import {ThreadgateSetting} from '../queries/threadgate'
 
 export interface EditProfileModal {
   name: 'edit-profile'
@@ -65,12 +64,6 @@ export interface SelfLabelModal {
   labels: string[]
   hasMedia: boolean
   onChange: (labels: string[]) => void
-}
-
-export interface ThreadgateModal {
-  name: 'threadgate'
-  settings: ThreadgateSetting[]
-  onChange: (settings: ThreadgateSetting[]) => void
 }
 
 export interface ChangeHandleModal {
@@ -148,7 +141,6 @@ export type Modal =
   | CropImageModal
   | EditImageModal
   | SelfLabelModal
-  | ThreadgateModal
 
   // Bluesky access
   | WaitlistModal
@@ -169,11 +161,11 @@ const ModalContext = React.createContext<{
 const ModalControlContext = React.createContext<{
   openModal: (modal: Modal) => void
   closeModal: () => boolean
-  closeAllModals: () => void
+  closeAllModals: () => boolean
 }>({
   openModal: () => {},
   closeModal: () => false,
-  closeAllModals: () => {},
+  closeAllModals: () => false,
 })
 
 /**
@@ -206,7 +198,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   })
 
   const closeAllModals = useNonReactiveCallback(() => {
+    let wasActive = activeModals.length > 0
     setActiveModals([])
+    return wasActive
   })
 
   unstable__openModal = openModal

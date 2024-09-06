@@ -6,7 +6,6 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {track} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -48,7 +47,6 @@ function PostThreadFollowBtnLoaded({
     'PostThreadItem',
   )
   const requireAuth = useRequireAuth()
-  const gate = useGate()
 
   const isFollowing = !!profile.viewer?.following
   const isFollowedBy = !!profile.viewer?.followedBy
@@ -96,7 +94,7 @@ function PostThreadFollowBtnLoaded({
         } catch (e: any) {
           if (e?.name !== 'AbortError') {
             logger.error('Failed to follow', {message: String(e)})
-            Toast.show(_(msg`There was an issue! ${e.toString()}`))
+            Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
           }
         }
       })
@@ -108,7 +106,7 @@ function PostThreadFollowBtnLoaded({
         } catch (e: any) {
           if (e?.name !== 'AbortError') {
             logger.error('Failed to unfollow', {message: String(e)})
-            Toast.show(_(msg`There was an issue! ${e.toString()}`))
+            Toast.show(_(msg`There was an issue! ${e.toString()}`), 'xmark')
           }
         }
       })
@@ -140,7 +138,7 @@ function PostThreadFollowBtnLoaded({
             style={[!isFollowing ? palInverted.text : pal.text, s.bold]}
             numberOfLines={1}>
             {!isFollowing ? (
-              isFollowedBy && gate('show_follow_back_label_v2') ? (
+              isFollowedBy ? (
                 <Trans>Follow Back</Trans>
               ) : (
                 <Trans>Follow</Trans>

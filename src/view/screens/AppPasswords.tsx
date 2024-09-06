@@ -18,7 +18,6 @@ import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {CommonNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {useModalControls} from '#/state/modals'
-import {useLanguagePrefs} from '#/state/preferences'
 import {
   useAppPasswordDeleteMutation,
   useAppPasswordsQuery,
@@ -218,9 +217,8 @@ function AppPassword({
   privileged?: boolean
 }) {
   const pal = usePalette('default')
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const control = useDialogControl()
-  const {contentLanguages} = useLanguagePrefs()
   const deleteMutation = useAppPasswordDeleteMutation()
 
   const onDelete = React.useCallback(async () => {
@@ -231,9 +229,6 @@ function AppPassword({
   const onPress = React.useCallback(() => {
     control.open()
   }, [control])
-
-  const primaryLocale =
-    contentLanguages.length > 0 ? contentLanguages[0] : 'en-US'
 
   return (
     <TouchableOpacity
@@ -250,14 +245,14 @@ function AppPassword({
         <Text type="md" style={[pal.text, styles.pr10]} numberOfLines={1}>
           <Trans>
             Created{' '}
-            {Intl.DateTimeFormat(primaryLocale, {
+            {i18n.date(createdAt, {
               year: 'numeric',
               month: 'numeric',
               day: 'numeric',
               hour: '2-digit',
               minute: '2-digit',
               second: '2-digit',
-            }).format(new Date(createdAt))}
+            })}
           </Trans>
         </Text>
         {privileged && (
@@ -268,7 +263,7 @@ function AppPassword({
               size={14}
             />
             <Text type="md" style={pal.textLight}>
-              Allows access to direct messages
+              <Trans>Allows access to direct messages</Trans>
             </Text>
           </View>
         )}

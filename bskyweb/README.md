@@ -24,7 +24,7 @@ Then build and copy over the big 'ol `bundle.web.js` file:
 
 ### Golang Daemon
 
-Install golang. We are generally using v1.21+.
+Install golang. We are generally using v1.22+.
 
 In this directory (`bskyweb/`):
 

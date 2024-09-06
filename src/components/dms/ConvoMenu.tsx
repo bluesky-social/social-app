@@ -85,7 +85,7 @@ let ConvoMenu = ({
       }
     },
     onError: () => {
-      Toast.show(_(msg`Could not mute chat`))
+      Toast.show(_(msg`Could not mute chat`), 'xmark')
     },
   })
 

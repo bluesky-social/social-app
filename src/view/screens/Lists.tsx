@@ -16,7 +16,6 @@ import {MyLists} from '#/view/com/lists/MyLists'
 import {Button} from 'view/com/util/forms/Button'
 import {SimpleViewHeader} from 'view/com/util/SimpleViewHeader'
 import {Text} from 'view/com/util/text/Text'
-import hairlineWidth = StyleSheet.hairlineWidth
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Lists'>
 export function ListsScreen({}: Props) {
@@ -55,8 +54,11 @@ export function ListsScreen({}: Props) {
         style={[
           pal.border,
           isMobile
-            ? {borderBottomWidth: hairlineWidth}
-            : {borderLeftWidth: hairlineWidth, borderRightWidth: hairlineWidth},
+            ? {borderBottomWidth: StyleSheet.hairlineWidth}
+            : {
+                borderLeftWidth: StyleSheet.hairlineWidth,
+                borderRightWidth: StyleSheet.hairlineWidth,
+              },
         ]}>
         <View style={{flex: 1}}>
           <Text type="title-lg" style={[pal.text, {fontWeight: 'bold'}]}>

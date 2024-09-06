@@ -46,7 +46,7 @@ export function MessageInput({
       return
     }
     if (new Graphemer().countGraphemes(message) > MAX_DM_GRAPHEME_LENGTH) {
-      Toast.show(_(msg`Message is too long`))
+      Toast.show(_(msg`Message is too long`), 'xmark')
       return
     }
     clearDraft()

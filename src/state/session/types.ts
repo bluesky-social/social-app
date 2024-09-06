@@ -29,12 +29,12 @@ export type SessionApiContext = {
     },
     logContext: LogEvents['account:loggedIn']['logContext'],
   ) => Promise<void>
-  /**
-   * A full logout. Clears the `currentAccount` from session, AND removes
-   * access tokens from all accounts, so that returning as any user will
-   * require a full login.
-   */
-  logout: (logContext: LogEvents['account:loggedOut']['logContext']) => void
+  logoutCurrentAccount: (
+    logContext: LogEvents['account:loggedOut']['logContext'],
+  ) => void
+  logoutEveryAccount: (
+    logContext: LogEvents['account:loggedOut']['logContext'],
+  ) => void
   resumeSession: (account: SessionAccount) => Promise<void>
   removeAccount: (account: SessionAccount) => void
 }

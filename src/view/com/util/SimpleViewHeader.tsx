@@ -8,13 +8,15 @@ import {
 } from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
-import {CenteredView} from './Views'
+
+import {isWeb} from '#/platform/detection'
+import {useSetDrawerOpen} from '#/state/shell'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {useAnalytics} from 'lib/analytics/analytics'
 import {NavigationProp} from 'lib/routes/types'
-import {useSetDrawerOpen} from '#/state/shell'
-import {isWeb} from '#/platform/detection'
+import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
+import {CenteredView} from './Views'
 
 const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 
@@ -72,11 +74,7 @@ export function SimpleViewHeader({
               style={[styles.backIcon, pal.text]}
             />
           ) : (
-            <FontAwesomeIcon
-              size={18}
-              icon="bars"
-              style={[styles.backIcon, pal.textLight]}
-            />
+            <Menu size="lg" style={[{marginTop: 4}, pal.textLight]} />
           )}
         </TouchableOpacity>
       ) : null}
@@ -110,7 +108,8 @@ const styles = StyleSheet.create({
   backBtnWide: {
     width: 30,
     height: 30,
-    paddingHorizontal: 6,
+    paddingLeft: 4,
+    marginRight: 4,
   },
   backIcon: {
     marginTop: 6,

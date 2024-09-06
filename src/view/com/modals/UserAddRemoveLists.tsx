@@ -29,7 +29,6 @@ import {Button} from '../util/forms/Button'
 import {Text} from '../util/text/Text'
 import * as Toast from '../util/Toast'
 import {UserAvatar} from '../util/UserAvatar'
-import hairlineWidth = StyleSheet.hairlineWidth
 
 export const snapPoints = ['fullscreen']
 
@@ -63,7 +62,7 @@ export function Component({
       return [pal.border, {height: screenHeight / 1.5}]
     }
 
-    return [pal.border, {flex: 1, borderTopWidth: hairlineWidth}]
+    return [pal.border, {flex: 1, borderTopWidth: StyleSheet.hairlineWidth}]
   }, [pal.border, screenHeight])
 
   return (
@@ -166,7 +165,7 @@ function ListItem({
         onRemove?.(list.uri)
       }
     } catch (e) {
-      Toast.show(cleanError(e))
+      Toast.show(cleanError(e), 'xmark')
     } finally {
       setIsProcessing(false)
     }
@@ -188,7 +187,7 @@ function ListItem({
       style={[
         styles.listItem,
         pal.border,
-        index !== 0 && {borderTopWidth: hairlineWidth},
+        index !== 0 && {borderTopWidth: StyleSheet.hairlineWidth},
       ]}>
       <View style={styles.listItemAvi}>
         <UserAvatar size={40} avatar={list.avatar} type="list" />
@@ -248,7 +247,7 @@ const styles = StyleSheet.create({
     gap: 10,
     paddingTop: 10,
     paddingBottom: isAndroid ? 10 : 0,
-    borderTopWidth: hairlineWidth,
+    borderTopWidth: StyleSheet.hairlineWidth,
   },
   footerBtn: {
     paddingHorizontal: 24,

@@ -55,6 +55,9 @@ export function SelectReportOptionView({
     } else if (props.params.type === 'feedgen') {
       title = _(msg`Report this feed`)
       description = _(msg`Why should this feed be reviewed?`)
+    } else if (props.params.type === 'starterpack') {
+      title = _(msg`Report this starter pack`)
+      description = _(msg`Why should this starter pack be reviewed?`)
     } else if (props.params.type === 'convoMessage') {
       title = _(msg`Report this message`)
       description = _(msg`Why should this message be reviewed?`)

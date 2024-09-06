@@ -1,27 +1,27 @@
 import React from 'react'
 import {View} from 'react-native'
-import {useNavigation} from '@react-navigation/native'
-import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
 
-import {atoms as a, native, useTheme} from '#/alf'
-import * as Dialog from '#/components/Dialog'
-import {Text} from '#/components/Typography'
-import {Button, ButtonText} from '#/components/Button'
-import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
-import {Person_Stroke2_Corner0_Rounded as Person} from '#/components/icons/Person'
-import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
-import {Divider} from '#/components/Divider'
-import {Link} from '#/components/Link'
 import {makeSearchLink} from '#/lib/routes/links'
 import {NavigationProp} from '#/lib/routes/types'
+import {isInvalidHandle} from '#/lib/strings/handles'
 import {
   usePreferencesQuery,
+  useRemoveMutedWordsMutation,
   useUpsertMutedWordsMutation,
-  useRemoveMutedWordMutation,
 } from '#/state/queries/preferences'
+import {atoms as a, native, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
+import * as Dialog from '#/components/Dialog'
+import {Divider} from '#/components/Divider'
+import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
+import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
+import {Person_Stroke2_Corner0_Rounded as Person} from '#/components/icons/Person'
+import {Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
-import {isInvalidHandle} from '#/lib/strings/handles'
+import {Text} from '#/components/Typography'
 
 export function useTagMenuControl() {
   return Dialog.useDialogControl()
@@ -52,10 +52,10 @@ export function TagMenu({
     reset: resetUpsert,
   } = useUpsertMutedWordsMutation()
   const {
-    mutateAsync: removeMutedWord,
+    mutateAsync: removeMutedWords,
     variables: optimisticRemove,
     reset: resetRemove,
-  } = useRemoveMutedWordMutation()
+  } = useRemoveMutedWordsMutation()
   const displayTag = '#' + tag
 
   const isMuted = Boolean(
@@ -65,8 +65,19 @@ export function TagMenu({
       optimisticUpsert?.find(
         m => m.value === tag && m.targets.includes('tag'),
       )) &&
-      !(optimisticRemove?.value === tag),
+      !optimisticRemove?.find(m => m?.value === tag),
   )
+
+  /*
+   * Mute word records that exactly match the tag in question.
+   */
+  const removeableMuteWords = React.useMemo(() => {
+    return (
+      preferences?.moderationPrefs.mutedWords?.filter(word => {
+        return word.value === tag
+      }) || []
+    )
+  }, [tag, preferences?.moderationPrefs?.mutedWords])
 
   return (
     <>
@@ -212,13 +223,16 @@ export function TagMenu({
                         control.close(() => {
                           if (isMuted) {
                             resetUpsert()
-                            removeMutedWord({
-                              value: tag,
-                              targets: ['tag'],
-                            })
+                            removeMutedWords(removeableMuteWords)
                           } else {
                             resetRemove()
-                            upsertMutedWord([{value: tag, targets: ['tag']}])
+                            upsertMutedWord([
+                              {
+                                value: tag,
+                                targets: ['tag'],
+                                actorTarget: 'all',
+                              },
+                            ])
                           }
                         })
                       }}>

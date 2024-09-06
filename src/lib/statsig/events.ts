@@ -14,10 +14,11 @@ export type LogEvents = {
   }
   'account:loggedOut': {
     logContext: 'SwitchAccount' | 'Settings' | 'SignupQueued' | 'Deactivated'
+    scope: 'current' | 'every'
   }
   'notifications:openApp': {}
   'notifications:request': {
-    context: 'StartOnboarding' | 'AfterOnboarding' | 'Login'
+    context: 'StartOnboarding' | 'AfterOnboarding' | 'Login' | 'Home'
     status: 'granted' | 'denied' | 'undetermined'
   }
   'state:background:sampled': {
@@ -25,13 +26,24 @@ export type LogEvents = {
   }
   'state:foreground:sampled': {}
   'router:navigate:sampled': {}
+  'deepLink:referrerReceived': {
+    to: string
+    referrer: string
+    hostname: string
+  }
 
   // Screen events
   'splash:signInPressed': {}
   'splash:createAccountPressed': {}
   'signup:nextPressed': {
     activeStep: number
+    phoneVerificationRequired?: boolean
   }
+  'signup:backPressed': {
+    activeStep: number
+  }
+  'signup:captchaSuccess': {}
+  'signup:captchaFailure': {}
   'onboarding:interests:nextPressed': {
     selectedInterests: string[]
     selectedInterestsLength: number
@@ -53,7 +65,14 @@ export type LogEvents = {
   }
   'onboarding:moderation:nextPressed': {}
   'onboarding:profile:nextPressed': {}
-  'onboarding:finished:nextPressed': {}
+  'onboarding:finished:nextPressed': {
+    usedStarterPack: boolean
+    starterPackName?: string
+    starterPackCreator?: string
+    starterPackUri?: string
+    profilesFollowed: number
+    feedsPinned: number
+  }
   'onboarding:finished:avatarResult': {
     avatarResult: 'default' | 'created' | 'uploaded'
   }
@@ -61,7 +80,12 @@ export type LogEvents = {
     feedUrl: string
     feedType: string
     index: number
-    reason: 'focus' | 'tabbar-click' | 'pager-swipe' | 'desktop-sidebar-click'
+    reason:
+      | 'focus'
+      | 'tabbar-click'
+      | 'pager-swipe'
+      | 'desktop-sidebar-click'
+      | 'starter-pack-initial-feed'
   }
   'feed:endReached:sampled': {
     feedUrl: string
@@ -73,6 +97,22 @@ export type LogEvents = {
     feedType: string
     reason: 'pull-to-refresh' | 'soft-reset' | 'load-latest'
   }
+  'discover:showMore': {
+    feedContext: string
+  }
+  'discover:showLess': {
+    feedContext: string
+  }
+  'discover:clickthrough:sampled': {
+    count: number
+  }
+  'discover:engaged:sampled': {
+    count: number
+  }
+  'discover:seen:sampled': {
+    count: number
+  }
+
   'composer:gif:open': {}
   'composer:gif:select': {}
 
@@ -103,6 +143,8 @@ export type LogEvents = {
   'post:unrepost': {
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
   }
+  'post:mute': {}
+  'post:unmute': {}
   'profile:follow': {
     didBecomeMutual: boolean | undefined
     followeeClout: number | undefined
@@ -116,6 +158,9 @@ export type LogEvents = {
       | 'ProfileMenu'
       | 'ProfileHoverCard'
       | 'AvatarButton'
+      | 'StarterPackProfilesList'
+      | 'FeedInterstitial'
+      | 'ProfileHeaderSuggestedFollows'
   }
   'profile:unfollow': {
     logContext:
@@ -128,6 +173,9 @@ export type LogEvents = {
       | 'ProfileHoverCard'
       | 'Chat'
       | 'AvatarButton'
+      | 'StarterPackProfilesList'
+      | 'FeedInterstitial'
+      | 'ProfileHeaderSuggestedFollows'
   }
   'chat:create': {
     logContext: 'ProfileHeader' | 'NewChatDialog' | 'SendViaChatDialog'
@@ -139,6 +187,34 @@ export type LogEvents = {
       | 'ChatsList'
       | 'SendViaChatDialog'
   }
+  'starterPack:share': {
+    starterPack: string
+    shareType: 'link' | 'qrcode'
+    qrShareType?: 'save' | 'copy' | 'share'
+  }
+  'starterPack:followAll': {
+    logContext: 'StarterPackProfilesList' | 'Onboarding'
+    starterPack: string
+    count: number
+  }
+  'starterPack:delete': {}
+  'starterPack:create': {
+    setName: boolean
+    setDescription: boolean
+    profilesCount: number
+    feedsCount: number
+  }
+  'starterPack:ctaPress': {
+    starterPack: string
+  }
+  'starterPack:opened': {
+    starterPack: string
+  }
+
+  'feed:interstitial:profileCard:press': {}
+  'feed:interstitial:feedCard:press': {}
+
+  'profile:header:suggestedFollowsCard:press': {}
 
   'test:all:always': {}
   'test:all:sometimes': {}

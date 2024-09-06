@@ -41,6 +41,16 @@ export function Forms() {
           />
         </TextField.Root>
 
+        <TextField.Root>
+          <TextField.Icon icon={Globe} />
+          <TextField.Input
+            value={value}
+            onChangeText={setValue}
+            label="Text field"
+            isInvalid
+          />
+        </TextField.Root>
+
         <View style={[a.w_full]}>
           <TextField.LabelText>Text field</TextField.LabelText>
           <TextField.Root>

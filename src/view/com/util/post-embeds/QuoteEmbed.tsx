@@ -11,9 +11,9 @@ import {
   AppBskyEmbedImages,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
+  AppBskyEmbedVideo,
   AppBskyFeedDefs,
   AppBskyFeedPost,
-  moderatePost,
   ModerationDecision,
   RichText as RichTextAPI,
 } from '@atproto/api'
@@ -24,14 +24,16 @@ import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {HITSLOP_20} from '#/lib/constants'
+import {moderatePost_wrapped} from '#/lib/moderatePost_wrapped'
 import {s} from '#/lib/styles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useSession} from '#/state/session'
 import {usePalette} from 'lib/hooks/usePalette'
 import {InfoCircleIcon} from 'lib/icons'
 import {makeProfileLink} from 'lib/routes/links'
 import {precacheProfile} from 'state/queries/profile'
 import {ComposerOptsQuote} from 'state/shell/composer'
-import {atoms as a} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {RichText} from '#/components/RichText'
 import {ContentHider} from '../../../../components/moderation/ContentHider'
 import {PostAlerts} from '../../../../components/moderation/PostAlerts'
@@ -39,20 +41,23 @@ import {Link} from '../Link'
 import {PostMeta} from '../PostMeta'
 import {Text} from '../text/Text'
 import {PostEmbeds} from '.'
-import hairlineWidth = StyleSheet.hairlineWidth
+import {PostEmbedViewContext, QuoteEmbedViewContext} from './types'
 
 export function MaybeQuoteEmbed({
   embed,
   onOpen,
   style,
   allowNestedQuotes,
+  viewContext,
 }: {
   embed: AppBskyEmbedRecord.View
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
   allowNestedQuotes?: boolean
+  viewContext?: QuoteEmbedViewContext
 }) {
   const pal = usePalette('default')
+  const {currentAccount} = useSession()
   if (
     AppBskyEmbedRecord.isViewRecord(embed.record) &&
     AppBskyFeedPost.isRecord(embed.record.value) &&
@@ -65,6 +70,7 @@ export function MaybeQuoteEmbed({
         onOpen={onOpen}
         style={style}
         allowNestedQuotes={allowNestedQuotes}
+        viewContext={viewContext}
       />
     )
   } else if (AppBskyEmbedRecord.isViewBlocked(embed.record)) {
@@ -85,6 +91,22 @@ export function MaybeQuoteEmbed({
         </Text>
       </View>
     )
+  } else if (AppBskyEmbedRecord.isViewDetached(embed.record)) {
+    const isViewerOwner = currentAccount?.did
+      ? embed.record.uri.includes(currentAccount.did)
+      : false
+    return (
+      <View style={[styles.errorContainer, pal.borderDark]}>
+        <InfoCircleIcon size={18} style={pal.text} />
+        <Text type="lg" style={pal.text}>
+          {isViewerOwner ? (
+            <Trans>Removed by you</Trans>
+          ) : (
+            <Trans>Removed by author</Trans>
+          )}
+        </Text>
+      </View>
+    )
   }
   return null
 }
@@ -95,17 +117,19 @@ function QuoteEmbedModerated({
   onOpen,
   style,
   allowNestedQuotes,
+  viewContext,
 }: {
   viewRecord: AppBskyEmbedRecord.ViewRecord
   postRecord: AppBskyFeedPost.Record
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
   allowNestedQuotes?: boolean
+  viewContext?: QuoteEmbedViewContext
 }) {
   const moderationOpts = useModerationOpts()
   const moderation = React.useMemo(() => {
     return moderationOpts
-      ? moderatePost(viewRecordToPostView(viewRecord), moderationOpts)
+      ? moderatePost_wrapped(viewRecordToPostView(viewRecord), moderationOpts)
       : undefined
   }, [viewRecord, moderationOpts])
 
@@ -126,6 +150,7 @@ function QuoteEmbedModerated({
       onOpen={onOpen}
       style={style}
       allowNestedQuotes={allowNestedQuotes}
+      viewContext={viewContext}
     />
   )
 }
@@ -136,18 +161,21 @@ export function QuoteEmbed({
   onOpen,
   style,
   allowNestedQuotes,
+  viewContext,
 }: {
   quote: ComposerOptsQuote
   moderation?: ModerationDecision
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
   allowNestedQuotes?: boolean
+  viewContext?: QuoteEmbedViewContext
 }) {
   const queryClient = useQueryClient()
   const pal = usePalette('default')
   const itemUrip = new AtUri(quote.uri)
   const itemHref = makeProfileLink(quote.author, 'post', itemUrip.rkey)
   const itemTitle = `Post by ${quote.author.handle}`
+  const {gtMobile} = useBreakpoints()
 
   const richText = React.useMemo(
     () =>
@@ -163,17 +191,23 @@ export function QuoteEmbed({
     if (allowNestedQuotes) {
       return e
     } else {
-      if (AppBskyEmbedImages.isView(e) || AppBskyEmbedExternal.isView(e)) {
+      if (
+        AppBskyEmbedImages.isView(e) ||
+        AppBskyEmbedExternal.isView(e) ||
+        AppBskyEmbedVideo.isView(e)
+      ) {
         return e
       } else if (
         AppBskyEmbedRecordWithMedia.isView(e) &&
         (AppBskyEmbedImages.isView(e.media) ||
-          AppBskyEmbedExternal.isView(e.media))
+          AppBskyEmbedExternal.isView(e.media) ||
+          AppBskyEmbedVideo.isView(e.media))
       ) {
         return e.media
       }
     }
   }, [quote.embeds, allowNestedQuotes])
+  const isImagesEmbed = AppBskyEmbedImages.isView(embed)
 
   const onBeforePress = React.useCallback(() => {
     precacheProfile(queryClient, quote.author)
@@ -203,15 +237,43 @@ export function QuoteEmbed({
         {moderation ? (
           <PostAlerts modui={moderation.ui('contentView')} style={[a.py_xs]} />
         ) : null}
-        {richText ? (
-          <RichText
-            value={richText}
-            style={a.text_md}
-            numberOfLines={20}
-            disableLinks
-          />
-        ) : null}
-        {embed && <PostEmbeds embed={embed} moderation={moderation} />}
+
+        {viewContext === QuoteEmbedViewContext.FeedEmbedRecordWithMedia &&
+        isImagesEmbed ? (
+          <View style={[a.flex_row, a.gap_md]}>
+            {embed && (
+              <View style={[{width: gtMobile ? 100 : 80}]}>
+                <PostEmbeds
+                  embed={embed}
+                  moderation={moderation}
+                  viewContext={PostEmbedViewContext.FeedEmbedRecordWithMedia}
+                />
+              </View>
+            )}
+            {richText ? (
+              <View style={[a.flex_1, a.pt_xs]}>
+                <RichText
+                  value={richText}
+                  style={a.text_md}
+                  numberOfLines={20}
+                  disableLinks
+                />
+              </View>
+            ) : null}
+          </View>
+        ) : (
+          <>
+            {richText ? (
+              <RichText
+                value={richText}
+                style={a.text_md}
+                numberOfLines={20}
+                disableLinks
+              />
+            ) : null}
+            {embed && <PostEmbeds embed={embed} moderation={moderation} />}
+          </>
+        )}
       </Link>
     </ContentHider>
   )
@@ -262,7 +324,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     paddingVertical: 12,
     paddingHorizontal: 12,
-    borderWidth: hairlineWidth,
+    borderWidth: StyleSheet.hairlineWidth,
   },
   errorContainer: {
     flexDirection: 'row',
@@ -272,7 +334,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     paddingVertical: 14,
     paddingHorizontal: 14,
-    borderWidth: hairlineWidth,
+    borderWidth: StyleSheet.hairlineWidth,
   },
   alert: {
     marginBottom: 6,

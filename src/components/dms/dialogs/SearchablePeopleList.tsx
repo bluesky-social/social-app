@@ -395,7 +395,7 @@ function ProfileCard({
           />
           <View style={[a.flex_1, a.gap_2xs]}>
             <Text
-              style={[t.atoms.text, a.font_bold, a.leading_tight]}
+              style={[t.atoms.text, a.font_bold, a.leading_tight, a.self_start]}
               numberOfLines={1}>
               {displayName}
             </Text>

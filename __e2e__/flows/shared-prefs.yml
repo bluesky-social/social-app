@@ -1,0 +1,31 @@
+appId: xyz.blueskyweb.app
+---
+- runScript:
+    file: ../setupServer.js
+    env:
+      SERVER_PATH: "?users&posts&feeds"
+- runFlow:
+    file: ../setupApp.yml
+- tapOn:
+    id: "e2eSignInAlice"
+- tapOn: "/sys/debug"
+- tapOn:
+    id: "sharedPrefsTestOpenBtn"
+- tapOn:
+    id: "setStringBtn"
+- assertVisible: "Hello"
+- tapOn:
+    id: "removeStringBtn"
+- assertVisible: "null"
+- tapOn:
+    id: "setBoolBtn"
+- assertVisible: "true"
+- tapOn:
+    id: "setNumberBtn"
+- assertVisible: "123"
+- tapOn:
+    id: "addToSetBtn"
+- assertVisible: "true"
+- tapOn:
+    id: "removeFromSetBtn"
+- assertVisible: "false"

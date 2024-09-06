@@ -96,7 +96,7 @@ export function MessagesScreen({navigation, route}: Props) {
     )
   }, [_, t])
 
-  const initialNumToRender = useInitialNumToRender(80)
+  const initialNumToRender = useInitialNumToRender({minItemHeight: 80})
   const [isPTRing, setIsPTRing] = useState(false)
 
   const {
@@ -309,7 +309,7 @@ function DesktopHeader({
         a.gap_lg,
         a.px_lg,
         a.pr_md,
-        a.py_md,
+        a.py_sm,
         a.border_b,
         t.atoms.border_contrast_low,
       ]}>

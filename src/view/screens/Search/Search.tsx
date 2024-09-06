@@ -29,15 +29,14 @@ import {MagnifyingGlassIcon} from '#/lib/icons'
 import {makeProfileLink} from '#/lib/routes/links'
 import {NavigationProp} from '#/lib/routes/types'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
-import {s} from '#/lib/styles'
 import {logger} from '#/logger'
-import {isIOS, isNative, isWeb} from '#/platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {useActorSearch} from '#/state/queries/actor-search'
+import {usePopularFeedsSearch} from '#/state/queries/feed'
 import {useSearchPostsQuery} from '#/state/queries/search-posts'
-import {useSuggestedFollowsQuery} from '#/state/queries/suggested-follows'
 import {useSession} from '#/state/session'
 import {useSetDrawerOpen} from '#/state/shell'
 import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
@@ -56,9 +55,11 @@ import {Link} from '#/view/com/util/Link'
 import {List} from '#/view/com/util/List'
 import {Text} from '#/view/com/util/text/Text'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
+import {Explore} from '#/view/screens/Search/Explore'
 import {SearchLinkCard, SearchProfileCard} from '#/view/shell/desktop/Search'
-import {ProfileCardFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme as useThemeNew} from '#/alf'
+import * as FeedCard from '#/components/FeedCard'
+import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 
 function Loader() {
   const pal = usePalette('default')
@@ -120,70 +121,6 @@ function EmptyState({message, error}: {message: string; error?: string}) {
     </CenteredView>
   )
 }
-
-function useSuggestedFollows(): [
-  AppBskyActorDefs.ProfileViewBasic[],
-  () => void,
-] {
-  const {
-    data: suggestions,
-    hasNextPage,
-    isFetchingNextPage,
-    isError,
-    fetchNextPage,
-  } = useSuggestedFollowsQuery()
-
-  const onEndReached = React.useCallback(async () => {
-    if (isFetchingNextPage || !hasNextPage || isError) return
-    try {
-      await fetchNextPage()
-    } catch (err) {
-      logger.error('Failed to load more suggested follows', {message: err})
-    }
-  }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
-
-  const items: AppBskyActorDefs.ProfileViewBasic[] = []
-  if (suggestions) {
-    // Currently the responses contain duplicate items.
-    // Needs to be fixed on backend, but let's dedupe to be safe.
-    let seen = new Set()
-    for (const page of suggestions.pages) {
-      for (const actor of page.actors) {
-        if (!seen.has(actor.did)) {
-          seen.add(actor.did)
-          items.push(actor)
-        }
-      }
-    }
-  }
-  return [items, onEndReached]
-}
-
-let SearchScreenSuggestedFollows = (_props: {}): React.ReactNode => {
-  const pal = usePalette('default')
-  const [suggestions, onEndReached] = useSuggestedFollows()
-
-  return suggestions.length ? (
-    <List
-      data={suggestions}
-      renderItem={({item}) => <ProfileCardWithFollowBtn profile={item} noBg />}
-      keyExtractor={item => item.did}
-      // @ts-ignore web only -prf
-      desktopFixedHeight
-      contentContainerStyle={{paddingBottom: 200}}
-      keyboardShouldPersistTaps="handled"
-      keyboardDismissMode="on-drag"
-      onEndReached={onEndReached}
-      onEndReachedThreshold={2}
-    />
-  ) : (
-    <CenteredView sideBorders style={[pal.border, s.hContentRegion]}>
-      <ProfileCardFeedLoadingPlaceholder />
-      <ProfileCardFeedLoadingPlaceholder />
-    </CenteredView>
-  )
-}
-SearchScreenSuggestedFollows = React.memo(SearchScreenSuggestedFollows)
 
 type SearchResultSlice =
   | {
@@ -341,6 +278,52 @@ let SearchScreenUserResults = ({
 }
 SearchScreenUserResults = React.memo(SearchScreenUserResults)
 
+let SearchScreenFeedsResults = ({
+  query,
+  active,
+}: {
+  query: string
+  active: boolean
+}): React.ReactNode => {
+  const t = useThemeNew()
+  const {_} = useLingui()
+
+  const {data: results, isFetched} = usePopularFeedsSearch({
+    query,
+    enabled: active,
+  })
+
+  return isFetched && results ? (
+    <>
+      {results.length ? (
+        <List
+          data={results}
+          renderItem={({item}) => (
+            <View
+              style={[
+                a.border_b,
+                t.atoms.border_contrast_low,
+                a.px_lg,
+                a.py_lg,
+              ]}>
+              <FeedCard.Default view={item} />
+            </View>
+          )}
+          keyExtractor={item => item.uri}
+          // @ts-ignore web only -prf
+          desktopFixedHeight
+          contentContainerStyle={{paddingBottom: 100}}
+        />
+      ) : (
+        <EmptyState message={_(msg`No results found for ${query}`)} />
+      )}
+    </>
+  ) : (
+    <Loader />
+  )
+}
+SearchScreenFeedsResults = React.memo(SearchScreenFeedsResults)
+
 let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
@@ -388,6 +371,12 @@ let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
           <SearchScreenUserResults query={query} active={activeTab === 2} />
         ),
       },
+      {
+        title: _(msg`Feeds`),
+        component: (
+          <SearchScreenFeedsResults query={query} active={activeTab === 3} />
+        ),
+      },
     ]
   }, [_, query, activeTab])
 
@@ -407,26 +396,7 @@ let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
       ))}
     </Pager>
   ) : hasSession ? (
-    <View>
-      <CenteredView sideBorders style={pal.border}>
-        <Text
-          type="title"
-          style={[
-            pal.text,
-            pal.border,
-            {
-              display: 'flex',
-              paddingVertical: 12,
-              paddingHorizontal: 18,
-              fontWeight: 'bold',
-            },
-          ]}>
-          <Trans>Suggested Follows</Trans>
-        </Text>
-      </CenteredView>
-
-      <SearchScreenSuggestedFollows />
-    </View>
+    <Explore />
   ) : (
     <CenteredView sideBorders style={pal.border}>
       <View
@@ -712,11 +682,7 @@ export function SearchScreen(
             accessibilityRole="button"
             accessibilityLabel={_(msg`Menu`)}
             accessibilityHint={_(msg`Access navigation links and settings`)}>
-            <FontAwesomeIcon
-              icon="bars"
-              size={18}
-              color={pal.colors.textLight}
-            />
+            <Menu size="lg" fill={pal.colors.textLight} />
           </Pressable>
         )}
         <SearchInputBox
@@ -817,7 +783,7 @@ let SearchInputBox = ({
       }}>
       <MagnifyingGlassIcon
         style={[pal.icon, styles.headerSearchIcon]}
-        size={21}
+        size={20}
       />
       <TextInput
         testID="searchTextInput"
@@ -838,12 +804,6 @@ let SearchInputBox = ({
             })
           } else {
             setShowAutocomplete(true)
-            if (isIOS) {
-              // We rely on selectTextOnFocus, but it's broken on iOS:
-              // https://github.com/facebook/react-native/issues/41988
-              textInput.current?.setSelection(0, searchText.length)
-              // We still rely on selectTextOnFocus for it to be instant on Android.
-            }
           }
         }}
         onChangeText={onChangeText}
@@ -934,13 +894,6 @@ let AutocompleteResults = ({
 }
 AutocompleteResults = React.memo(AutocompleteResults)
 
-function truncateText(text: string, maxLength: number) {
-  if (text.length > maxLength) {
-    return text.substring(0, maxLength) + '...'
-  }
-  return text
-}
-
 function SearchHistory({
   searchHistory,
   selectedProfiles,
@@ -1005,8 +958,10 @@ function SearchHistory({
                       style={styles.profileAvatar as StyleProp<ImageStyle>}
                       accessibilityIgnoresInvertColors
                     />
-                    <Text style={[pal.text, styles.profileName]}>
-                      {truncateText(profile.displayName || '', 12)}
+                    <Text
+                      style={[pal.text, styles.profileName]}
+                      numberOfLines={1}>
+                      {profile.displayName || profile.handle}
                     </Text>
                   </Link>
                   <Pressable
@@ -1073,13 +1028,14 @@ function scrollToTopWeb() {
   }
 }
 
-const HEADER_HEIGHT = 50
+const HEADER_HEIGHT = 46
 
 const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 12,
+    paddingLeft: 13,
     paddingVertical: 4,
     height: HEADER_HEIGHT,
     // @ts-ignore web only
@@ -1092,7 +1048,6 @@ const styles = StyleSheet.create({
     height: 30,
     borderRadius: 30,
     marginRight: 6,
-    paddingBottom: 2,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -1111,6 +1066,7 @@ const styles = StyleSheet.create({
   headerSearchInput: {
     flex: 1,
     fontSize: 17,
+    minWidth: 0,
   },
   headerCancelBtn: {
     paddingLeft: 10,
@@ -1157,6 +1113,7 @@ const styles = StyleSheet.create({
     borderRadius: 45,
   },
   profileName: {
+    width: 78,
     fontSize: 12,
     textAlign: 'center',
     marginTop: 5,

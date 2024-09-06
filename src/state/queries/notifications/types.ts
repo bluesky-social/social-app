@@ -1,31 +1,28 @@
 import {
-  AppBskyNotificationListNotifications,
   AppBskyFeedDefs,
+  AppBskyGraphDefs,
+  AppBskyNotificationListNotifications,
 } from '@atproto/api'
 
 export type NotificationType =
-  | 'post-like'
-  | 'feedgen-like'
-  | 'repost'
-  | 'mention'
-  | 'reply'
-  | 'quote'
-  | 'follow'
-  | 'unknown'
+  | StarterPackNotificationType
+  | OtherNotificationType
 
-export interface FeedNotification {
-  _reactKey: string
-  type: NotificationType
-  notification: AppBskyNotificationListNotifications.Notification
-  additional?: AppBskyNotificationListNotifications.Notification[]
-  subjectUri?: string
-  subject?: AppBskyFeedDefs.PostView
-}
+export type FeedNotification =
+  | (FeedNotificationBase & {
+      type: StarterPackNotificationType
+      subject?: AppBskyGraphDefs.StarterPackViewBasic
+    })
+  | (FeedNotificationBase & {
+      type: OtherNotificationType
+      subject?: AppBskyFeedDefs.PostView
+    })
 
 export interface FeedPage {
   cursor: string | undefined
   seenAt: Date
   items: FeedNotification[]
+  priority: boolean
 }
 
 export interface CachedFeedPage {
@@ -36,4 +33,23 @@ export interface CachedFeedPage {
   syncedAt: Date
   data: FeedPage | undefined
   unreadCount: number
+}
+
+type StarterPackNotificationType = 'starterpack-joined'
+type OtherNotificationType =
+  | 'post-like'
+  | 'repost'
+  | 'mention'
+  | 'reply'
+  | 'quote'
+  | 'follow'
+  | 'feedgen-like'
+  | 'unknown'
+
+type FeedNotificationBase = {
+  _reactKey: string
+  notification: AppBskyNotificationListNotifications.Notification
+  additional?: AppBskyNotificationListNotifications.Notification[]
+  subjectUri?: string
+  subject?: AppBskyFeedDefs.PostView | AppBskyGraphDefs.StarterPackViewBasic
 }

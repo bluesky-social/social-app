@@ -1,6 +1,8 @@
 import {z} from 'zod'
 
-import {deviceLocales, prefersReducedMotion} from '#/platform/detection'
+import {logger} from '#/logger'
+import {deviceLocales} from '#/platform/detection'
+import {PlatformInfo} from '../../../modules/expo-bluesky-swiss-army'
 
 const externalEmbedOptions = ['show', 'hide'] as const
 
@@ -42,7 +44,7 @@ const currentAccountSchema = accountSchema.extend({
 })
 export type PersistedCurrentAccount = z.infer<typeof currentAccountSchema>
 
-export const schema = z.object({
+const schema = z.object({
   colorMode: z.enum(['system', 'light', 'dark']),
   darkTheme: z.enum(['dim', 'dark']).optional(),
   session: z.object({
@@ -60,6 +62,7 @@ export const schema = z.object({
     appLanguage: z.string(),
   }),
   requireAltTextEnabled: z.boolean(), // should move to server
+  largeAltBadgeEnabled: z.boolean().optional(),
   externalEmbeds: z
     .object({
       giphy: z.enum(externalEmbedOptions).optional(),
@@ -74,7 +77,6 @@ export const schema = z.object({
       flickr: z.enum(externalEmbedOptions).optional(),
     })
     .optional(),
-  mutedThreads: z.array(z.string()), // should move to server
   invites: z.object({
     copiedInvites: z.array(z.string()),
   }),
@@ -88,6 +90,10 @@ export const schema = z.object({
   disableHaptics: z.boolean().optional(),
   disableAutoplay: z.boolean().optional(),
   kawaii: z.boolean().optional(),
+  hasCheckedForStarterPack: z.boolean().optional(),
+  subtitlesEnabled: z.boolean().optional(),
+  /** @deprecated */
+  mutedThreads: z.array(z.string()),
 })
 export type Schema = z.infer<typeof schema>
 
@@ -111,6 +117,7 @@ export const defaults: Schema = {
     appLanguage: deviceLocales[0] || 'en',
   },
   requireAltTextEnabled: false,
+  largeAltBadgeEnabled: false,
   externalEmbeds: {},
   mutedThreads: [],
   invites: {
@@ -124,6 +131,48 @@ export const defaults: Schema = {
   lastSelectedHomeFeed: undefined,
   pdsAddressHistory: [],
   disableHaptics: false,
-  disableAutoplay: prefersReducedMotion,
+  disableAutoplay: PlatformInfo.getIsReducedMotionEnabled(),
   kawaii: false,
+  hasCheckedForStarterPack: false,
+  subtitlesEnabled: true,
+}
+
+export function tryParse(rawData: string): Schema | undefined {
+  let objData
+  try {
+    objData = JSON.parse(rawData)
+  } catch (e) {
+    logger.error('persisted state: failed to parse root state from storage', {
+      message: e,
+    })
+  }
+  if (!objData) {
+    return undefined
+  }
+  const parsed = schema.safeParse(objData)
+  if (parsed.success) {
+    return objData
+  } else {
+    const errors =
+      parsed.error?.errors?.map(e => ({
+        code: e.code,
+        // @ts-ignore exists on some types
+        expected: e?.expected,
+        path: e.path?.join('.'),
+      })) || []
+    logger.error(`persisted store: data failed validation on read`, {errors})
+    return undefined
+  }
+}
+
+export function tryStringify(value: Schema): string | undefined {
+  try {
+    schema.parse(value)
+    return JSON.stringify(value)
+  } catch (e) {
+    logger.error(`persisted state: failed stringifying root state`, {
+      message: e,
+    })
+    return undefined
+  }
 }
