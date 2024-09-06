@@ -6,7 +6,7 @@ import {isNative} from '#/platform/detection'
 const Context = React.createContext<{
   activeSource: string
   activeViewId: string | undefined
-  setActiveSource: (src: string, viewId: string) => void
+  setActiveSource: (src: string | null, viewId: string | null) => void
   player: VideoPlayer
 } | null>(null)
 
@@ -25,9 +25,9 @@ export function Provider({children}: {children: React.ReactNode}) {
     p.play()
   })
 
-  const setActiveSourceOuter = (src: string, viewId: string) => {
-    setActiveSource(src)
-    setActiveViewId(viewId)
+  const setActiveSourceOuter = (src: string | null, viewId: string | null) => {
+    setActiveSource(src ? src : '')
+    setActiveViewId(viewId ? viewId : '')
   }
 
   return (

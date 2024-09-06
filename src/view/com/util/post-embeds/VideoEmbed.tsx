@@ -147,9 +147,15 @@ function InnerWrapper({embed}: Props) {
     if (isVisible) {
       startPlaying(false)
     } else {
-      player.muted = true
-      if (player.playing) {
-        player.pause()
+      // Clear the active source so the video view unmounts when autoplay is disabled. Otherwise, leave it mounted
+      // until it gets replaced by another video
+      if (disableAutoplay) {
+        setActiveSource(null, null)
+      } else {
+        player.muted = true
+        if (player.playing) {
+          player.pause()
+        }
       }
     }
   }
