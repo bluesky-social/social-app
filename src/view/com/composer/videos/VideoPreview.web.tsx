@@ -83,7 +83,7 @@ export function VideoPreview({
       />
       {autoplayDisabled && (
         <View style={[a.absolute, a.inset_0, a.justify_center, a.align_center]}>
-          <PlayButtonIcon size={48} />
+          <PlayButtonIcon />
         </View>
       )}
     </View>
