@@ -7,6 +7,7 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {useDedupe} from 'lib/hooks/useDedupe'
 import {addStyle} from 'lib/styles'
+import {isIOS} from 'platform/detection'
 import {updateActiveViewAsync} from '../../../../modules/expo-bluesky-swiss-army/src/VisibilityView'
 import {FlatList_INTERNAL} from './Views'
 
@@ -49,7 +50,7 @@ function ListImpl<ItemT>(
 ) {
   const isScrolledDown = useSharedValue(false)
   const pal = usePalette('default')
-  const dedupe = useDedupe()
+  const dedupe = useDedupe(400)
 
   function handleScrolledDownChange(didScrollDown: boolean) {
     onScrolledDownChange?.(didScrollDown)
@@ -68,6 +69,7 @@ function ListImpl<ItemT>(
       onBeginDragFromContext?.(e, ctx)
     },
     onEndDrag(e, ctx) {
+      runOnJS(updateActiveViewAsync)()
       onEndDragFromContext?.(e, ctx)
     },
     onScroll(e, ctx) {
@@ -81,11 +83,14 @@ function ListImpl<ItemT>(
         }
       }
 
-      runOnJS(dedupe)(updateActiveViewAsync)
+      if (isIOS) {
+        runOnJS(dedupe)(updateActiveViewAsync)
+      }
     },
     // Note: adding onMomentumBegin here makes simulator scroll
     // lag on Android. So either don't add it, or figure out why.
     onMomentumEnd(e, ctx) {
+      runOnJS(updateActiveViewAsync)()
       onMomentumEndFromContext?.(e, ctx)
     },
   })
