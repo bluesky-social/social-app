@@ -12,10 +12,10 @@ import {
 } from '#/state/messages/message-drafts'
 import {isSafari, isTouchDevice} from 'lib/browser'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
 import {
   Emoji,
   EmojiPickerPosition,
-  textInputWebEmitter,
 } from '#/view/com/composer/text-input/web/EmojiPicker.web'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'

@@ -6,16 +6,14 @@ import {
   View,
 } from 'react-native'
 import Picker from '@emoji-mart/react'
-import EventEmitter from 'eventemitter3'
 
+import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
 import {atoms as a} from '#/alf'
 
 const HEIGHT_OFFSET = 40
 const WIDTH_OFFSET = 100
 const PICKER_HEIGHT = 435 + HEIGHT_OFFSET
 const PICKER_WIDTH = 350 + WIDTH_OFFSET
-
-export const textInputWebEmitter = new EventEmitter()
 
 export type Emoji = {
   aliases?: string[]

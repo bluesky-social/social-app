@@ -17,6 +17,7 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {blobToDataUri, isUriImage} from 'lib/media/util'
+import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
 import {
   LinkFacetMatch,
   suggestLinkCardUri,
@@ -24,7 +25,7 @@ import {
 import {Portal} from '#/components/Portal'
 import {Text} from '../../util/text/Text'
 import {createSuggestion} from './web/Autocomplete'
-import {Emoji, textInputWebEmitter} from './web/EmojiPicker.web'
+import {Emoji} from './web/EmojiPicker.web'
 import {LinkDecorator} from './web/LinkDecorator'
 import {TagDecorator} from './web/TagDecorator'
 
