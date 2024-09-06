@@ -42,7 +42,7 @@ interface IProps {
   state: EmojiPickerState
   close: () => void
   /**
-   * If `true`, verrides position and ensures picker is pinned to the top of
+   * If `true`, overrides position and ensures picker is pinned to the top of
    * the target element.
    */
   pinToTop?: boolean
