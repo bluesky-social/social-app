@@ -27,9 +27,6 @@ msgstr "(no email)"
 msgid "{0, plural, one {{formattedCount} other} other {{formattedCount} others}}"
 msgstr "{0, plural, one {{formattedCount} altro} other {{formattedCount} altri}}"
 
-#~ msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
-#~ msgstr "{0, plural, one {# codice d'invito disponibile} other {# codici d'inviti disponibili}}"
-
 #: src/components/moderation/LabelsOnMe.tsx:55
 msgid "{0, plural, one {# label has been placed on this account} other {# labels have been placed on this account}}"
 msgstr "{0, plural, one {# etichetta è stata applicata a questo account} other {# etichette sono stata applicate a questo account}}"
@@ -321,12 +318,12 @@ msgstr "Accessibilità"
 
 #: src/view/screens/Settings/index.tsx:454
 msgid "Accessibility settings"
-msgstr "Accessibilità"
+msgstr "Impostazioni di accessibilità"
 
 #: src/Navigation.tsx:318
 #: src/view/screens/AccessibilitySettings.tsx:73
 msgid "Accessibility Settings"
-msgstr "Accessibilità"
+msgstr "Impostazioni di Accessibilità"
 
 #~ msgid "account"
 #~ msgstr "account"
@@ -660,7 +657,7 @@ msgstr "Si è verificato un errore sconosciuto"
 #: src/components/moderation/ModerationDetailsDialog.tsx:151
 #: src/components/moderation/ModerationDetailsDialog.tsx:147
 msgid "an unknown labeler"
-msgstr "Etichettatore sconosciuto"
+msgstr "un etichettatore sconosciuto"
 
 #: src/components/WhoCanReply.tsx:295
 #: src/view/com/notifications/FeedItem.tsx:235
@@ -757,11 +754,11 @@ msgstr "Aspetto"
 
 #: src/view/screens/Settings/index.tsx:475
 msgid "Appearance settings"
-msgstr "Aspetto"
+msgstr "Impostazioni dell'aspetto"
 
 #: src/Navigation.tsx:326
 msgid "Appearance Settings"
-msgstr "Aspetto"
+msgstr "Impostazioni dell'aspetto"
 
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:47
 #: src/screens/Home/NoFeedsPinned.tsx:93
@@ -1193,12 +1190,12 @@ msgstr "Conversazione silenziata"
 #: src/screens/Messages/List/index.tsx:88
 #: src/view/screens/Settings/index.tsx:604
 msgid "Chat settings"
-msgstr "Messaggi"
+msgstr "Impostazioni messaggi"
 
 #: src/screens/Messages/Settings.tsx:59
 #: src/view/screens/Settings/index.tsx:613
 msgid "Chat Settings"
-msgstr "Messaggi"
+msgstr "Impostazioni messaggi"
 
 #: src/components/dms/ConvoMenu.tsx:84
 msgid "Chat unmuted"
@@ -1739,7 +1736,7 @@ msgstr "Crea un nuovo account Bluesky"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:154
 msgid "Create a QR code for a starter pack"
-msgstr Crea un codice QR per uno starter pack"
+msgstr "Crea un codice QR per uno starter pack"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:165
 #: src/components/StarterPack/ProfileStarterPacks.tsx:259
@@ -1823,7 +1820,7 @@ msgstr "Personalizza i media da i siti esterni."
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:288
 msgid "Customize who can interact with this post."
-msgstr "Personalizza chi può interagire con questo post"
+msgstr "Personalizza chi può interagire con questo post."
 
 #~ msgid "Danger Zone"
 #~ msgstr "Zona di Pericolo"
@@ -2776,7 +2773,7 @@ msgstr "Scopri account da seguire"
 
 #: src/tours/HomeTour.tsx:88
 msgid "Find more feeds and accounts to follow in the Explore page."
-msgstr "Scopri nuovi account e feed da seguire in Esplora"
+msgstr "Scopri nuovi account e feed da seguire in Esplora."
 
 #: src/view/screens/Search/Search.tsx:439
 msgid "Find posts and users on Bluesky"
@@ -2964,17 +2961,17 @@ msgstr ""
 
 #: src/view/screens/Settings/index.tsx:539
 msgid "Following feed preferences"
-msgstr "Preferenze del feed Seguiti"
+msgstr "Preferenze del feed Following"
 
 #: src/Navigation.tsx:297
 #: src/view/screens/PreferencesFollowingFeed.tsx:48
 #: src/view/screens/Settings/index.tsx:548
 msgid "Following Feed Preferences"
-msgstr "Feed Seguiti"
+msgstr "Preferenze del Following Feed"
 
 #: src/tours/HomeTour.tsx:59
 msgid "Following shows the latest posts from people you follow."
-msgstr "Il feed Seguiti mostra i post più recenti delle persone che segui."
+msgstr "Il feed Following mostra i post più recenti delle persone che segui."
 
 #: src/screens/Profile/Header/Handle.tsx:31
 msgid "Follows you"
@@ -3381,7 +3378,7 @@ msgstr "Testo alternativo dell'immagine"
 
 #: src/components/StarterPack/ShareDialog.tsx:76
 msgid "Image saved to your camera roll!"
-msgstr "Immagine salvata nella Galleria!"
+msgstr "Immagine salvata nella galleria!"
 
 #: src/lib/moderation/useReportOptions.ts:49
 msgid "Impersonation or false claims about identity or affiliation"
@@ -3696,7 +3693,7 @@ msgstr "Metti like a 10 post"
 #: src/state/shell/progress-guide.tsx:157
 #: src/state/shell/progress-guide.tsx:162
 msgid "Like 10 posts to train the Discover feed"
-msgstr "Metti like a 10 post per allenare il feed Discovery"
+msgstr "Metti like a 10 post per allenare il feed Discover"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:267
 #: src/view/screens/ProfileFeed.tsx:575
@@ -4010,7 +4007,7 @@ msgstr "Liste di Moderazione"
 
 #: src/components/moderation/LabelPreference.tsx:247
 msgid "moderation settings"
-msgstr "Impostazioni di moderazione"
+msgstr "impostazioni di moderazione"
 
 #: src/view/screens/Settings/index.tsx:521
 msgid "Moderation settings"
@@ -4463,7 +4460,7 @@ msgstr "Nessuno"
 #: src/components/LikedByList.tsx:79
 #: src/components/LikesDialog.tsx:99
 msgid "Nobody has liked this yet. Maybe you should be the first!"
-msgstr "Nessuno ha messo like. Fallo tu per prim*!"
+msgstr "Nessuno ha messo like. Fallo tu per primo/a!"
 
 #: src/screens/StarterPack/Wizard/StepProfiles.tsx:103
 msgid "Nobody was found. Try searching for someone else."
@@ -4881,7 +4878,7 @@ msgstr "Oppure, continua con un altro account."
 
 #: src/screens/Deactivated.tsx:194
 msgid "Or, log into one of your other accounts."
-msgstr "Oppure, accedi in uno dei tuoi altri account"
+msgstr "Oppure, accedi in uno dei tuoi altri account."
 
 #: src/lib/moderation/useReportOptions.ts:27
 msgid "Other"
@@ -6439,7 +6436,7 @@ msgstr "Condividi il feed"
 #: src/components/StarterPack/ShareDialog.tsx:131
 #: src/screens/StarterPack/StarterPackScreen.tsx:586
 msgid "Share link"
-msgstr "COndividi link"
+msgstr "Condividi link"
 
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
@@ -7137,7 +7134,7 @@ msgstr "La politica sulla privacy è stata spostata a <0/><0/>"
 
 #: src/state/queries/video/video.ts:129
 msgid "The selected video is larger than 100MB."
-msgstr "Questo video è più grande di 1000MB."
+msgstr "Questo video è più grande di 100MB."
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:713
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
@@ -7482,7 +7479,7 @@ msgstr "Questo utente è incluso nell'elenco <0>{0}</0> che hai silenziato."
 
 #: src/components/NewskieDialog.tsx:65
 msgid "This user is new here. Press for more info about when they joined."
-msgstr "Questo utente è nuovo qui. "
+msgstr "Questo utente è nuovo qui. Clicca per maggiori informazioni riguardo a quando si sono iscritti."
 
 #: src/view/com/profile/ProfileFollows.tsx:87
 msgid "This user isn't following anyone."
@@ -7508,7 +7505,7 @@ msgstr "Questo rimuoverà @{0} dalla lista d'accesso rapido."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:689
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
-msgstr "Questo rimuoberà il tuo post da questa citazione per tutti gli utenti, e la rimpiazzerà con un placeholder."
+msgstr "Questo rimuoverà il tuo post da questa citazione per tutti gli utenti, e la rimpiazzerà con un placeholder."
 
 #: src/view/screens/Settings/index.tsx:560
 msgid "Thread preferences"
@@ -8173,7 +8170,7 @@ msgstr "Siamo spiacenti, ma non è stato possibile completare la ricerca. Riprov
 
 #: src/view/com/composer/Composer.tsx:380
 msgid "We're sorry! The post you are replying to has been deleted."
-msgstr "Ci dispiace! Il post a cui cerchi di rispondere è stato cancellato"
+msgstr "Ci dispiace! Il post a cui cerchi di rispondere è stato cancellato."
 
 #: src/components/Lists.tsx:220
 #: src/view/screens/NotFound.tsx:48
@@ -8514,7 +8511,7 @@ msgstr "Puoi presentare ricorso contro queste etichette se ritieni che siano sta
 
 #: src/screens/StarterPack/Wizard/State.tsx:79
 msgid "You may only add up to {STARTER_PACK_MAX_SIZE} profiles"
-msgstr "Puoi aggiungere un massimo di {STARTER_PACK_MAX_SIZE} utenti."
+msgstr "Puoi aggiungere un massimo di {STARTER_PACK_MAX_SIZE} utenti"
 
 #: src/screens/StarterPack/Wizard/State.tsx:97
 msgid "You may only add up to 3 feeds"
@@ -8541,7 +8538,7 @@ msgstr "Per iscriverti devi avere almeno 13 anni."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:306
 msgid "You must be following at least seven other people to generate a starter pack."
-msgstr "Devi seguire almeno altre 7 utenti per creare uno starter pack"
+msgstr "Devi seguire almeno altre 7 utenti per creare uno starter pack."
 
 #: src/components/StarterPack/QrCodeDialog.tsx:60
 msgid "You must grant access to your photo library to save a QR code"
