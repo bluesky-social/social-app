@@ -28,13 +28,13 @@ export const DEFAULT_GEOLOCATION: Device['geolocation'] = {
 }
 
 async function getGeolocation(): Promise<Device['geolocation']> {
-  const res = await fetch(`https://api.bsky.app/xrpc/_health`)
+  const res = await fetch(`https://ipapi.bsky.workers.dev/`)
 
   if (!res.ok) {
     throw new Error(`geolocation: lookup failed ${res.status}`)
   }
 
-  const json = {country_code: 'BR'} // await res.json()
+  const json = await res.json()
 
   if (json.country_code) {
     return {
