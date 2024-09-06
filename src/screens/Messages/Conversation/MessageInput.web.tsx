@@ -151,14 +151,35 @@ export function MessageInput({
               openEmojiPicker?.({top: py, left: px, right: px, bottom: py})
             })
           }}
-          style={[a.p_xs, {marginTop: 3}]}
-          label={_(msg`Open emoji picker`)}
-          accessibilityHint={_(msg`Open emoji picker`)}
-          variant="ghost"
-          shape="round"
-          size="small"
-          color="primary">
-          <EmojiSmile size="lg" />
+          style={[
+            a.rounded_full,
+            a.overflow_hidden,
+            a.align_center,
+            a.justify_center,
+            {
+              marginTop: 5,
+              height: 30,
+              width: 30,
+            },
+          ]}
+          label={_(msg`Open emoji picker`)}>
+          {state => (
+            <View
+              style={[
+                a.absolute,
+                a.inset_0,
+                a.align_center,
+                a.justify_center,
+                {
+                  backgroundColor:
+                    state.hovered || state.focused || state.pressed
+                      ? t.atoms.bg.backgroundColor
+                      : undefined,
+                },
+              ]}>
+              <EmojiSmile size="lg" />
+            </View>
+          )}
         </Button>
         <TextareaAutosize
           ref={textAreaRef}
