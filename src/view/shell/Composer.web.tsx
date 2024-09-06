@@ -61,7 +61,7 @@ export function Composer({}: {winHeight: number}) {
           quoteCount={state?.quoteCount}
           onPost={state.onPost}
           mention={state.mention}
-          openPicker={onOpenPicker}
+          openEmojiPicker={onOpenPicker}
           text={state.text}
         />
       </View>

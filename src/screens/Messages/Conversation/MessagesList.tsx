@@ -29,6 +29,10 @@ import {useAgent} from '#/state/session'
 import {clamp} from 'lib/numbers'
 import {ScrollProvider} from 'lib/ScrollContext'
 import {isWeb} from 'platform/detection'
+import {
+  EmojiPicker,
+  EmojiPickerState,
+} from '#/view/com/composer/text-input/web/EmojiPicker.web'
 import {List} from 'view/com/util/List'
 import {ChatDisabled} from '#/screens/Messages/Conversation/ChatDisabled'
 import {MessageInput} from '#/screens/Messages/Conversation/MessageInput'
@@ -96,6 +100,12 @@ export function MessagesList({
     show: false,
     startContentOffset: 0,
   })
+
+  const [emojiPickerState, setEmojiPickerState] =
+    React.useState<EmojiPickerState>({
+      isOpen: false,
+      pos: {top: 0, left: 0, right: 0, bottom: 0},
+    })
 
   // We need to keep track of when the scroll offset is at the bottom of the list to know when to scroll as new items
   // are added to the list. For example, if the user is scrolled up to 1iew older messages, we don't want to scroll to
@@ -422,12 +432,21 @@ export function MessagesList({
             <MessageInput
               onSendMessage={onSendMessage}
               hasEmbed={!!embedUri}
-              setEmbed={setEmbed}>
+              setEmbed={setEmbed}
+              openEmojiPicker={pos => setEmojiPickerState({isOpen: true, pos})}>
               <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
             </MessageInput>
           </>
         )}
       </KeyboardStickyView>
+
+      {isWeb && (
+        <EmojiPicker
+          pinToTop
+          state={emojiPickerState}
+          close={() => setEmojiPickerState(prev => ({...prev, isOpen: false}))}
+        />
+      )}
 
       {newMessagesPill.show && <NewMessagesPill onPress={scrollToEndOnPress} />}
     </>
