@@ -8,6 +8,7 @@ import {useLingui} from '@lingui/react'
 
 import {clamp} from '#/lib/numbers'
 import {useGate} from '#/lib/statsig/statsig'
+import {useAutoplayDisabled} from 'state/preferences'
 import {VideoEmbedInnerNative} from '#/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative'
 import {atoms as a} from '#/alf'
 import {Button} from '#/components/Button'
@@ -69,18 +70,22 @@ function InnerWrapper({embed}: Props) {
   const viewId = useId()
 
   const [playerStatus, setPlayerStatus] = useState<
-    VideoPlayerStatus | 'switching'
+    VideoPlayerStatus | 'switching' | 'paused'
   >('loading')
   const [isMuted, setIsMuted] = useState(player.muted)
   const [isFullscreen, setIsFullscreen] = React.useState(false)
   const [timeRemaining, setTimeRemaining] = React.useState(0)
+  const disableAutoplay = useAutoplayDisabled()
   const isActive = embed.playlist === activeSource && activeViewId === viewId
+  // There are some different loading states that we should pay attention to and show a spinner for
   const isLoading =
     isActive &&
     (playerStatus === 'waitingToPlayAtSpecifiedRate' ||
       playerStatus === 'loading')
+  // This happens whenever the visibility view decides that another video should start playing
   const isSwitching = playerStatus === 'switching'
-  const showOverlay = !isActive || isLoading || isSwitching
+  const showOverlay =
+    !isActive || isLoading || isSwitching || playerStatus === 'paused'
 
   // send error up to error boundary
   const [error, setError] = useState<Error | PlayerError | null>(null)
@@ -124,15 +129,9 @@ function InnerWrapper({embed}: Props) {
   }, [isActive, playerStatus])
 
   const onChangeStatus = (isVisible: boolean) => {
-    if (isFullscreen) {
-      return
-    }
-
-    if (isVisible) {
+    if (isVisible && !isFullscreen && !disableAutoplay) {
       setActiveSource(embed.playlist, viewId)
-      if (!player.playing) {
-        player.play()
-      }
+      player.play()
     } else {
       setPlayerStatus('switching')
       player.muted = true
@@ -143,7 +142,7 @@ function InnerWrapper({embed}: Props) {
   }
 
   return (
-    <VisibilityView enabled={true} onChangeStatus={onChangeStatus}>
+    <VisibilityView enabled={!isFullscreen} onChangeStatus={onChangeStatus}>
       {isActive ? (
         <VideoEmbedInnerNative
           embed={embed}
@@ -151,6 +150,7 @@ function InnerWrapper({embed}: Props) {
           isMuted={isMuted}
           isFullscreen={isFullscreen}
           setIsFullscreen={setIsFullscreen}
+          setPlayerStatus={setPlayerStatus}
         />
       ) : null}
       <View
@@ -174,7 +174,14 @@ function InnerWrapper({embed}: Props) {
         <Button
           style={[a.absolute, a.inset_0]}
           onPress={() => {
-            setActiveSource(embed.playlist, viewId)
+            if (isActive) {
+              // If the source is already active, just play the video and update the status
+              player.play()
+              setPlayerStatus('readyToPlay')
+            } else {
+              // Otherwise set the active source and it'll start playing as soon as it has loaded
+              setActiveSource(embed.playlist, viewId)
+            }
           }}
           label={_(msg`Play video`)}
           color="secondary">

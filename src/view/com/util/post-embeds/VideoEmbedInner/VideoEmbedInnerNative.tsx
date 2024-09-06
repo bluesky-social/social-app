@@ -1,13 +1,14 @@
 import React, {useCallback, useRef} from 'react'
 import {Pressable, View} from 'react-native'
 import Animated, {FadeInDown} from 'react-native-reanimated'
-import {VideoPlayer, VideoView} from 'expo-video'
+import {VideoPlayer, VideoPlayerStatus, VideoView} from 'expo-video'
 import {AppBskyEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_30} from '#/lib/constants'
 import {clamp} from '#/lib/numbers'
+import {useAutoplayDisabled} from 'state/preferences'
 import {useActiveVideoNative} from 'view/com/util/post-embeds/ActiveVideoNativeContext'
 import {atoms as a, useTheme} from '#/alf'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
@@ -22,18 +23,21 @@ export function VideoEmbedInnerNative({
   embed,
   isFullscreen,
   setIsFullscreen,
+  setPlayerStatus,
   isMuted,
   timeRemaining,
 }: {
   embed: AppBskyEmbedVideo.View
   isFullscreen: boolean
   setIsFullscreen: (isFullscreen: boolean) => void
+  setPlayerStatus: (status: VideoPlayerStatus | 'switching' | 'paused') => void
   timeRemaining: number
   isMuted: boolean
 }) {
   const {_} = useLingui()
   const {player} = useActiveVideoNative()
   const ref = useRef<VideoView>(null)
+  const disableAutoplay = useAutoplayDisabled()
 
   const enterFullscreen = useCallback(() => {
     ref.current?.enterFullscreen()
@@ -67,8 +71,9 @@ export function VideoEmbedInnerNative({
           PlatformInfo.setAudioActive(false)
           player.muted = true
           player.playbackRate = 1
-          if (!player.playing) {
-            player.play()
+          if (disableAutoplay) {
+            player.pause()
+            setPlayerStatus('paused')
           }
           setIsFullscreen(false)
         }}
