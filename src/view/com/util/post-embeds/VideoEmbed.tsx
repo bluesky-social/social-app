@@ -126,7 +126,7 @@ function InnerWrapper({embed}: Props) {
   // video). In those cases, just start playing. Otherwise, setting the active source will result in the video
   // start playback immediately
   const startPlaying = () => {
-    if (isActive) {
+    if (isActive && !disableAutoplay) {
       player.play()
       setPlayerStatus('readyToPlay')
     } else {
@@ -135,7 +135,11 @@ function InnerWrapper({embed}: Props) {
   }
 
   const onChangeStatus = (isVisible: boolean) => {
-    if (isVisible && !isFullscreen && !disableAutoplay) {
+    if (isFullscreen) {
+      return
+    }
+
+    if (isVisible) {
       startPlaying()
     } else {
       setPlayerStatus('switching')
@@ -147,7 +151,7 @@ function InnerWrapper({embed}: Props) {
   }
 
   return (
-    <VisibilityView enabled={!isFullscreen} onChangeStatus={onChangeStatus}>
+    <VisibilityView enabled={true} onChangeStatus={onChangeStatus}>
       {isActive ? (
         <VideoEmbedInnerNative
           embed={embed}
