@@ -89,6 +89,7 @@ export function toClout(n: number | null | undefined): number | undefined {
   }
 }
 
+const DOWNSAMPLE_RATE = 0.95 // 95% likely
 const DOWNSAMPLED_EVENTS: Set<keyof LogEvents> = new Set([
   'router:navigate:notifications:sampled',
   'state:background:sampled',
@@ -106,7 +107,7 @@ const DOWNSAMPLED_EVENTS: Set<keyof LogEvents> = new Set([
   'profile:follow:sampled',
   'profile:unfollow:sampled',
 ])
-const isDownsampledSession = Math.random() < 0.95 // 95% likely
+const isDownsampledSession = Math.random() < DOWNSAMPLE_RATE
 
 export function logEvent<E extends keyof LogEvents>(
   eventName: E & string,
@@ -129,6 +130,9 @@ export function logEvent<E extends keyof LogEvents>(
     const fullMetadata = {
       ...rawMetadata,
     } as Record<string, string> // Statsig typings are unnecessarily strict here.
+    if (isDownsampledSession) {
+      fullMetadata.downsampleRate = DOWNSAMPLE_RATE.toString()
+    }
     fullMetadata.routeName = getCurrentRouteName() ?? '(Uninitialized)'
     if (Statsig.initializeCalled()) {
       Statsig.logEvent(eventName, null, fullMetadata)
