@@ -433,7 +433,7 @@ export function MessagesList({
               onSendMessage={onSendMessage}
               hasEmbed={!!embedUri}
               setEmbed={setEmbed}
-              openPicker={pos => setEmojiPickerState({isOpen: true, pos})}>
+              openEmojiPicker={pos => setEmojiPickerState({isOpen: true, pos})}>
               <MessageInputEmbed embedUri={embedUri} setEmbed={setEmbed} />
             </MessageInput>
           </>

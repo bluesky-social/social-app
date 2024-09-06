@@ -42,7 +42,7 @@ export function MessageInput({
   hasEmbed: boolean
   setEmbed: (embedUrl: string | undefined) => void
   children?: React.ReactNode
-  openPicker?: (pos: EmojiPickerPosition) => void
+  openEmojiPicker?: (pos: EmojiPickerPosition) => void
 }) {
   const {_} = useLingui()
   const t = useTheme()

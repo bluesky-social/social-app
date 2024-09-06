@@ -123,7 +123,7 @@ export const ComposePost = observer(function ComposePost({
   quote: initQuote,
   quoteCount,
   mention: initMention,
-  openPicker,
+  openEmojiPicker,
   text: initText,
   imageUris: initImageUris,
   cancelRef,
@@ -461,8 +461,8 @@ export const ComposePost = observer(function ComposePost({
     gallery.size > 0 || Boolean(extLink) || Boolean(videoUploadState.video)
 
   const onEmojiButtonPress = useCallback(() => {
-    openPicker?.(textInput.current?.getCursorPosition())
-  }, [openPicker])
+    openEmojiPicker?.(textInput.current?.getCursorPosition())
+  }, [openEmojiPicker])
 
   const focusTextInput = useCallback(() => {
     textInput.current?.focus()

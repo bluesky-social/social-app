@@ -30,13 +30,13 @@ export function MessageInput({
   hasEmbed,
   setEmbed,
   children,
-  openPicker,
+  openEmojiPicker,
 }: {
   onSendMessage: (message: string) => void
   hasEmbed: boolean
   setEmbed: (embedUrl: string | undefined) => void
   children?: React.ReactNode
-  openPicker?: (pos: EmojiPickerPosition) => void
+  openEmojiPicker?: (pos: EmojiPickerPosition) => void
 }) {
   const {isTabletOrDesktop} = useWebMediaQueries()
   const {_} = useLingui()
@@ -148,7 +148,7 @@ export function MessageInput({
         <Button
           onPress={e => {
             e.currentTarget.measure((_fx, _fy, _width, _height, px, py) => {
-              openPicker?.({top: py, left: px, right: px, bottom: py})
+              openEmojiPicker?.({top: py, left: px, right: px, bottom: py})
             })
           }}
           style={[a.p_xs, {marginTop: 3}]}
