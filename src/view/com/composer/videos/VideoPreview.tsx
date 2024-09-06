@@ -6,8 +6,10 @@ import {useVideoPlayer, VideoView} from 'expo-video'
 
 import {CompressedVideo} from '#/lib/media/video/types'
 import {clamp} from '#/lib/numbers'
+import {useAutoplayDisabled} from '#/state/preferences'
 import {ExternalEmbedRemoveBtn} from 'view/com/composer/ExternalEmbedRemoveBtn'
 import {atoms as a, useTheme} from '#/alf'
+import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 
 export function VideoPreview({
   asset,
@@ -20,10 +22,13 @@ export function VideoPreview({
   clear: () => void
 }) {
   const t = useTheme()
+  const autoplayDisabled = useAutoplayDisabled()
   const player = useVideoPlayer(video.uri, player => {
     player.loop = true
     player.muted = true
-    player.play()
+    if (!autoplayDisabled) {
+      player.play()
+    }
   })
 
   let aspectRatio = asset.width / asset.height
@@ -53,6 +58,11 @@ export function VideoPreview({
         contentFit="contain"
       />
       <ExternalEmbedRemoveBtn onRemove={clear} />
+      {autoplayDisabled && (
+        <View style={[a.absolute, a.inset_0, a.justify_center, a.align_center]}>
+          <PlayButtonIcon size={48} />
+        </View>
+      )}
     </View>
   )
 }

@@ -32,7 +32,7 @@ import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
 import {PostAlerts} from '../../../components/moderation/PostAlerts'
 import {Link, TextLink} from '../util/Link'
 import {PostCtrls} from '../util/post-ctrls/PostCtrls'
-import {PostEmbeds} from '../util/post-embeds'
+import {PostEmbeds, PostEmbedViewContext} from '../util/post-embeds'
 import {PostMeta} from '../util/PostMeta'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
@@ -238,7 +238,11 @@ function PostInner({
               />
             ) : undefined}
             {post.embed ? (
-              <PostEmbeds embed={post.embed} moderation={moderation} />
+              <PostEmbeds
+                embed={post.embed}
+                moderation={moderation}
+                viewContext={PostEmbedViewContext.Feed}
+              />
             ) : null}
           </ContentHider>
           <PostCtrls
