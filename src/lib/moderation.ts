@@ -33,6 +33,14 @@ export function isJustAMute(modui: ModerationUI): boolean {
   return modui.filters.length === 1 && modui.filters[0].type === 'muted'
 }
 
+export function isImperative(modui: ModerationUI): boolean {
+  const label = modui.filters.at(0)
+  if (label && label.type === 'label') {
+    return ['!hide', '!takedown'].includes(label.label.val)
+  }
+  return false
+}
+
 export function getLabelingServiceTitle({
   displayName,
   handle,
