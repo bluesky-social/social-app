@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useId, useState} from 'react'
 import {View} from 'react-native'
-import {Image} from 'expo-image'
+import {ImageBackground} from 'expo-image'
 import {PlayerError, VideoPlayerStatus} from 'expo-video'
 import {AppBskyEmbedVideo} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -122,12 +122,6 @@ function InnerWrapper({embed}: Props) {
     }
   }, [player, isActive])
 
-  useEffect(() => {
-    if (!isActive && playerStatus !== 'loading') {
-      setPlayerStatus('loading')
-    }
-  }, [isActive, playerStatus])
-
   const onChangeStatus = (isVisible: boolean) => {
     if (isVisible && !isFullscreen && !disableAutoplay) {
       setActiveSource(embed.playlist, viewId)
@@ -153,26 +147,25 @@ function InnerWrapper({embed}: Props) {
           setPlayerStatus={setPlayerStatus}
         />
       ) : null}
-      <View
+      <ImageBackground
+        source={{uri: embed.thumbnail}}
+        accessibilityIgnoresInvertColors
         style={[
           {
             position: 'absolute',
             top: 0,
-            bottom: 0,
             left: 0,
             right: 0,
+            bottom: 0,
+            backgroundColor: 'transparent', // If you don't add `backgroundColor` to the styles here,
+            // the play button won't show up on the first render on android 🥴😮‍💨
             display: showOverlay ? 'flex' : 'none',
           },
-        ]}>
-        <Image
-          source={{uri: embed.thumbnail}}
-          alt={embed.alt}
-          style={a.flex_1}
-          contentFit="cover"
-          accessibilityIgnoresInvertColors
-        />
+        ]}
+        cachePolicy="memory-disk" // Preferring memory cache helps to avoid flicker when re-displaying on android
+      >
         <Button
-          style={[a.absolute, a.inset_0]}
+          style={[a.flex_1, a.align_center, a.justify_center]}
           onPress={() => {
             if (isActive) {
               // If the source is already active, just play the video and update the status
@@ -190,8 +183,8 @@ function InnerWrapper({embed}: Props) {
               style={[
                 a.rounded_full,
                 a.p_xs,
-                a.absolute,
-                {top: 'auto', left: 'auto'},
+                a.align_center,
+                a.justify_center,
                 {backgroundColor: 'rgba(0,0,0,0.5)'},
               ]}>
               <Loader size="2xl" style={{color: 'white'}} />
@@ -200,7 +193,7 @@ function InnerWrapper({embed}: Props) {
             <PlayButtonIcon />
           )}
         </Button>
-      </View>
+      </ImageBackground>
     </VisibilityView>
   )
 }
