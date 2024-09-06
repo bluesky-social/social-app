@@ -90,7 +90,7 @@ export function toClout(n: number | null | undefined): number | undefined {
 }
 
 const DOWNSAMPLED_EVENTS: Set<keyof LogEvents> = new Set([
-  'router:navigate:sampled',
+  'router:navigate:notifications:sampled',
   'state:background:sampled',
   'state:foreground:sampled',
   'home:feedDisplayed:sampled',
@@ -99,8 +99,14 @@ const DOWNSAMPLED_EVENTS: Set<keyof LogEvents> = new Set([
   'discover:clickthrough:sampled',
   'discover:engaged:sampled',
   'discover:seen:sampled',
+  'post:like:sampled',
+  'post:unlike:sampled',
+  'post:repost:sampled',
+  'post:unrepost:sampled',
+  'profile:follow:sampled',
+  'profile:unfollow:sampled',
 ])
-const isDownsampledSession = Math.random() < 0.9 // 90% likely
+const isDownsampledSession = Math.random() < 0.95 // 95% likely
 
 export function logEvent<E extends keyof LogEvents>(
   eventName: E & string,
