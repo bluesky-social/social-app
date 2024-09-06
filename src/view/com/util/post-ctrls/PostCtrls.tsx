@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 import * as Clipboard from 'expo-clipboard'
 import {
+  AppBskyEmbedImages,
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AppBskyFeedThreadgate,
@@ -206,6 +207,9 @@ let PostCtrls = ({
         text: record.text,
         author: post.author,
         indexedAt: post.indexedAt,
+        embeds: AppBskyEmbedImages.isView(post.embed)
+          ? [post.embed]
+          : undefined,
       },
       quoteCount: post.quoteCount,
       onPost: onPostReply,
@@ -218,6 +222,7 @@ let PostCtrls = ({
     post.author,
     post.indexedAt,
     post.quoteCount,
+    post.embed,
     feedContext,
     openComposer,
     record.text,

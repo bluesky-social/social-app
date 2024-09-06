@@ -1,4 +1,9 @@
-import {AppBskyFeedPost, AppBskyGraphStarterpack, BskyAgent} from '@atproto/api'
+import {
+  AppBskyEmbedImages,
+  AppBskyFeedPost,
+  AppBskyGraphStarterpack,
+  BskyAgent,
+} from '@atproto/api'
 
 import {useFetchDid} from '#/state/queries/handle'
 import {useGetPost} from '#/state/queries/post'
@@ -129,6 +134,7 @@ export async function getPostAsQuote(
     text: AppBskyFeedPost.isRecord(post.record) ? post.record.text : '',
     indexedAt: post.indexedAt,
     author: post.author,
+    embeds: AppBskyEmbedImages.isView(post.embed) ? [post.embed] : undefined,
   }
 }
 
