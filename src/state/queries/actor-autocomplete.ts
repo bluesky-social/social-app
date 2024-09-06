@@ -2,7 +2,7 @@ import React from 'react'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
 import {keepPreviousData, useQuery, useQueryClient} from '@tanstack/react-query'
 
-import {isImperative, isJustAMute} from '#/lib/moderation'
+import {isJustAMute, moduiContainsHideableOffense} from '#/lib/moderation'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {useAgent} from '#/state/session'
@@ -114,7 +114,7 @@ function computeSuggestions({
     const modui = moderateProfile(profile, moderationOpts).ui('profileList')
     const isExactMatch = q && profile.handle.toLowerCase() === q
     return (
-      (isExactMatch && !isImperative(modui)) ||
+      (isExactMatch && !moduiContainsHideableOffense(modui)) ||
       !modui.filter ||
       isJustAMute(modui)
     )
