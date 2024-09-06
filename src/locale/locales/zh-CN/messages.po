@@ -1750,10 +1750,6 @@ msgid "Direct messages are here!"
 msgstr "隆重介绍私信功能！"
 
 #: src/view/screens/AccessibilitySettings.tsx:111
-#~ msgid "Disable autoplay for GIFs"
-#~ msgstr "关闭 GIF 自动播放"
-
-#: src/view/screens/AccessibilitySettings.tsx:111
 msgid "Disable autoplay for videos and GIFs"
 msgstr "关闭自动播放 GIF 及视频"
 
@@ -6100,10 +6096,6 @@ msgstr "点击切换声音播放"
 #: src/view/com/util/images/AutoSizedImage.tsx:205
 msgid "Tap to view full image"
 msgstr "点击查看完整图片"
-
-#: src/view/com/util/images/AutoSizedImage.tsx:70
-#~ msgid "Tap to view fully"
-#~ msgstr "点击查看完整内容"
 
 #: src/state/shell/progress-guide.tsx:166
 msgid "Task complete - 10 likes!"
