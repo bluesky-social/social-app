@@ -5576,7 +5576,7 @@ msgstr "Repostado por <0><1/></0>"
 #: src/view/com/posts/FeedItem.tsx:292
 #: src/view/com/posts/FeedItem.tsx:311
 msgid "Reposted by you"
-msgstr "repostou para você"
+msgstr "Repostado por você"
 
 #: src/view/com/notifications/FeedItem.tsx:184
 msgid "reposted your post"
