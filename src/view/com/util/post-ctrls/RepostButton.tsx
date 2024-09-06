@@ -53,6 +53,9 @@ let RepostButton = ({
         onPress={() => {
           requireAuth(() => dialogControl.open())
         }}
+        onLongPress={() => {
+          requireAuth(() => onQuote())
+        }}
         style={[
           a.flex_row,
           a.align_center,

@@ -57,7 +57,7 @@ const withXcodeTarget = (config, {targetName}) => {
           buildSettingsObj.SWIFT_VERSION = '5.0'
           buildSettingsObj.TARGETED_DEVICE_FAMILY = `"1"`
           buildSettingsObj.DEVELOPMENT_TEAM = 'B3LX46C5HS'
-          buildSettingsObj.IPHONEOS_DEPLOYMENT_TARGET = '14.0'
+          buildSettingsObj.IPHONEOS_DEPLOYMENT_TARGET = '15.1'
           buildSettingsObj.ASSETCATALOG_COMPILER_APPICON_NAME = 'AppIcon'
         }
       }

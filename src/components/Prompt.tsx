@@ -8,7 +8,10 @@ import {Button, ButtonColor, ButtonProps, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Text} from '#/components/Typography'
 
-export {useDialogControl as usePromptControl} from '#/components/Dialog'
+export {
+  type DialogControlProps as PromptControlProps,
+  useDialogControl as usePromptControl,
+} from '#/components/Dialog'
 
 const Context = React.createContext<{
   titleId: string
@@ -23,7 +26,7 @@ export function Outer({
   control,
   testID,
 }: React.PropsWithChildren<{
-  control: Dialog.DialogOuterProps['control']
+  control: Dialog.DialogControlProps
   testID?: string
 }>) {
   const {gtMobile} = useBreakpoints()
