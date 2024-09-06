@@ -70,7 +70,7 @@ function InnerWrapper({embed}: Props) {
   const viewId = useId()
 
   const [playerStatus, setPlayerStatus] = useState<
-    VideoPlayerStatus | 'switching' | 'paused'
+    VideoPlayerStatus | 'paused'
   >(player.playing ? 'readyToPlay' : 'paused')
   const [isMuted, setIsMuted] = useState(player.muted)
   const [isFullscreen, setIsFullscreen] = React.useState(false)
@@ -169,7 +169,6 @@ function InnerWrapper({embed}: Props) {
           isMuted={isMuted}
           isFullscreen={isFullscreen}
           setIsFullscreen={setIsFullscreen}
-          setPlayerStatus={setPlayerStatus}
         />
       ) : null}
       <ImageBackground
