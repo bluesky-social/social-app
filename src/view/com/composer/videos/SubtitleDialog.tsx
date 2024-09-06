@@ -153,7 +153,9 @@ function SubtitleDialogInner({
             </View>
             {subtitleMissingLanguage && (
               <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-                Ensure you have selected a language for each subtitle file.
+                <Trans>
+                  Ensure you have selected a language for each subtitle file.
+                </Trans>
               </Text>
             )}
           </>
