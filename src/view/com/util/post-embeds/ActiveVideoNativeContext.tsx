@@ -6,7 +6,7 @@ import {isNative} from '#/platform/detection'
 const Context = React.createContext<{
   activeSource: string
   activeViewId: string | undefined
-  setActiveSource: (src: string, viewId: string) => void
+  setActiveSource: (src: string | null, viewId: string | null) => void
   player: VideoPlayer
 } | null>(null)
 
@@ -21,12 +21,13 @@ export function Provider({children}: {children: React.ReactNode}) {
   const player = useVideoPlayer(activeSource, p => {
     p.muted = true
     p.loop = true
+    // We want to immediately call `play` so we get the loading state
     p.play()
   })
 
-  const setActiveSourceOuter = (src: string, viewId: string) => {
-    setActiveSource(src)
-    setActiveViewId(viewId)
+  const setActiveSourceOuter = (src: string | null, viewId: string | null) => {
+    setActiveSource(src ? src : '')
+    setActiveViewId(viewId ? viewId : '')
   }
 
   return (
