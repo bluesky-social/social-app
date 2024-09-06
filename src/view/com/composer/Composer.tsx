@@ -121,6 +121,7 @@ import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import * as Prompt from '#/components/Prompt'
 import {Text as NewText} from '#/components/Typography'
+import {QuoteEmbedViewContext} from '../util/post-embeds'
 
 type CancelRef = {
   onPressCancel: () => void
@@ -735,7 +736,10 @@ export const ComposePost = observer(function ComposePost({
             {quote ? (
               <View style={[s.mt5, s.mb2, isWeb && s.mb10]}>
                 <View style={{pointerEvents: 'none'}}>
-                  <QuoteEmbed quote={quote} />
+                  <QuoteEmbed
+                    quote={quote}
+                    viewContext={QuoteEmbedViewContext.FeedEmbedRecordWithMedia}
+                  />
                 </View>
                 {quote.uri !== initQuote?.uri && (
                   <QuoteX onRemove={() => setQuote(undefined)} />
