@@ -64,7 +64,7 @@ func run(args []string) {
 					Name:    "ipcc-host",
 					Usage:   "scheme, hostname, and port of ipcc service",
 					Value:   "https://localhost:8730",
-					EnvVars: []string{"IPCC_HOST", "IPCC_HOST"},
+					EnvVars: []string{"IPCC_HOST"},
 				},
 				&cli.BoolFlag{
 					Name:     "debug",
