@@ -204,14 +204,6 @@ msgstr "{profileName} присоединился к Bluesky {0} назад"
 msgid "{profileName} joined Bluesky using a starter pack {0} ago"
 msgstr "{profileName} присоединился к Bluesky, используя стартовый набор {0} назад"
 
-#: src/view/screens/PreferencesFollowingFeed.tsx:67
-#~ msgid "{value, plural, =0 {Show all replies} one {Show replies with at least # like} other {Show replies with at least # likes}}"
-#~ msgstr "{value, plural, =0 {Показать все ответы} one {Показать ответы, содержащие не менее # лайка} other {Показать ответы, набравшие не менее # лайков}}"
-
-#: src/view/com/threadgate/WhoCanReply.tsx:159
-#~ msgid "<0/> members"
-#~ msgstr "<0/> участников"
-
 #: src/screens/StarterPack/Wizard/index.tsx:466
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
@@ -436,10 +428,6 @@ msgstr "Добавлено в список"
 msgid "Added to my feeds"
 msgstr "Добавлено в мои ленты"
 
-#: src/view/screens/PreferencesFollowingFeed.tsx:172
-#~ msgid "Adjust the number of likes a reply must have to be shown in your feed."
-#~ msgstr "Настройте минимальное количество лайков для того чтобы ответ отобразился в вашей ленте."
-
 #: src/lib/moderation/useGlobalLabelStrings.ts:34
 #: src/lib/moderation/useModerationCauseDescription.ts:144
 #: src/view/com/modals/SelfLabel.tsx:76
@@ -533,10 +521,6 @@ msgstr "Было отправлено письмо на ваш предыдущ�
 #: src/components/dialogs/GifSelect.tsx:254
 msgid "An error has occurred"
 msgstr "Возникла ошибка"
-
-#: src/components/dialogs/GifSelect.tsx:252
-#~ msgid "An error occured"
-#~ msgstr "Возникла ошибка"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:369
 msgid "An error occurred"
@@ -1099,10 +1083,6 @@ msgstr "Проверьте свою электронную почту на на�
 msgid "Check your inbox for an email with the confirmation code to enter below:"
 msgstr "Проверьте свой почтовый ящик на наличие электронного письма с кодом подтверждения и введите его ниже:"
 
-#: src/view/com/modals/Threadgate.tsx:73
-#~ msgid "Choose \"Everybody\" or \"Nobody\""
-#~ msgstr "Выберите \"Все\" или \"Никто\""
-
 #: src/screens/Onboarding/StepInterests/index.tsx:191
 msgid "Choose 3 or more:"
 msgstr "Выберите 3 или более:"
@@ -1139,14 +1119,6 @@ msgstr "Выберите этот цвет в качестве своего ав
 msgid "Choose your password"
 msgstr "Укажите пароль"
 
-#: src/view/screens/Settings/index.tsx:910
-#~ msgid "Clear all legacy storage data"
-#~ msgstr "Очистите все старые данные хранилища"
-
-#: src/view/screens/Settings/index.tsx:913
-#~ msgid "Clear all legacy storage data (restart after this)"
-#~ msgstr "Очистите все старые данные (перезапуститесь после этого)"
-
 #: src/view/screens/Settings/index.tsx:876
 msgid "Clear all storage data"
 msgstr "Очистите все данные хранилища"
@@ -1159,10 +1131,6 @@ msgstr "Очистите все данные хранилища (после эт
 #: src/view/screens/Search/Search.tsx:824
 msgid "Clear search query"
 msgstr "Очистить поисковый запрос"
-
-#: src/view/screens/Settings/index.tsx:911
-#~ msgid "Clears all legacy storage data"
-#~ msgstr "Удаляет все устаревшие данные из хранилища"
 
 #: src/view/screens/Settings/index.tsx:877
 msgid "Clears all storage data"
@@ -1634,10 +1602,6 @@ msgstr "Темный режим"
 msgid "Dark theme"
 msgstr "Темная тема"
 
-#: src/view/screens/Settings/index.tsx:471
-#~ msgid "Dark Theme"
-#~ msgstr "Темная тема"
-
 #: src/screens/Signup/StepInfo/index.tsx:191
 msgid "Date of birth"
 msgstr "Дата рождения"
@@ -1784,10 +1748,6 @@ msgstr "Тусклая"
 #: src/components/dms/MessagesNUX.tsx:88
 msgid "Direct messages are here!"
 msgstr "Прямые сообщения здесь!"
-
-#: src/view/screens/AccessibilitySettings.tsx:94
-#~ msgid "Disable autoplay for GIFs"
-#~ msgstr "Отключить автовоспроизведение для GIF-файлов"
 
 #: src/view/screens/AccessibilitySettings.tsx:111
 msgid "Disable autoplay for videos and GIFs"
@@ -2047,11 +2007,6 @@ msgstr "Редактировать профиль"
 msgid "Edit Profile"
 msgstr "Редактировать профиль"
 
-#: src/view/com/home/HomeHeaderLayout.web.tsx:76
-#: src/view/screens/Feeds.tsx:416
-#~ msgid "Edit Saved Feeds"
-#~ msgstr "Редактировать сохраненные ленты"
-
 #: src/screens/StarterPack/StarterPackScreen.tsx:554
 msgid "Edit starter pack"
 msgstr "Редактировать стартовый набор"
@@ -2150,10 +2105,6 @@ msgstr "Включить приоритетные уведомления"
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:336
 msgid "Enable subtitles"
 msgstr "Включить субтитры"
-
-#: src/view/screens/PreferencesFollowingFeed.tsx:146
-#~ msgid "Enable this setting to only see replies between people you follow."
-#~ msgstr "Включите этот параметр, чтобы видеть ответы только от людей, на которых вы подписаны."
 
 #: src/components/dialogs/EmbedConsent.tsx:94
 msgid "Enable this source only"
@@ -2448,10 +2399,6 @@ msgstr "Лента"
 msgid "Feed by {0}"
 msgstr "Лента от {0}"
 
-#: src/view/screens/Feeds.tsx:736
-#~ msgid "Feed offline"
-#~ msgstr "Лента не работает"
-
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:55
 msgid "Feed toggle"
 msgstr "Переключение ленты"
@@ -2581,10 +2528,6 @@ msgstr "Подписаться в ответ"
 msgid "Follow more accounts to get connected to your interests and build your network."
 msgstr "Подпишитесь на большее число учетных записей, чтобы найти связь со своими интересами и создать свою сеть."
 
-#: src/view/com/profile/ProfileCard.tsx:227
-#~ msgid "Followed by {0}"
-#~ msgstr "Подписаны {0}"
-
 #: src/components/KnownFollowers.tsx:231
 msgid "Followed by <0>{0}</0>"
 msgstr "Подписаны <0>{0}</0>"
@@ -2604,10 +2547,6 @@ msgstr "Подписаны <0>{0}</0>, <1>{1}</1> и {2, plural, one {# друг
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:403
 msgid "Followed users"
 msgstr "Ваши подписки"
-
-#: src/view/screens/PreferencesFollowingFeed.tsx:153
-#~ msgid "Followed users only"
-#~ msgstr "Только ваши подписки"
 
 #: src/view/com/notifications/FeedItem.tsx:207
 msgid "followed you"
@@ -2880,11 +2819,6 @@ msgctxt "action"
 msgid "Hide"
 msgstr "Спрятать"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:390
-#: src/view/com/util/forms/PostDropdownBtn.tsx:392
-#~ msgid "Hide post"
-#~ msgstr "Спрятать пост"
-
 #: src/view/com/util/forms/PostDropdownBtn.tsx:501
 #: src/view/com/util/forms/PostDropdownBtn.tsx:507
 msgid "Hide post for me"
@@ -3068,10 +3002,6 @@ msgstr "Введите пароль для удаления учетной за�
 #: src/screens/Login/LoginForm.tsx:286
 msgid "Input the code which has been emailed to you"
 msgstr "Введите код, который был отправлен вам по электронной почте"
-
-#: src/screens/Login/LoginForm.tsx:218
-#~ msgid "Input the password tied to {identifier}"
-#~ msgstr "Введите пароль, привязанный к {identifier}"
 
 #: src/screens/Login/LoginForm.tsx:215
 msgid "Input the username or email address you used at signup"
@@ -3271,10 +3201,6 @@ msgstr "Вы покидаете Bluesky"
 #: src/screens/SignupQueued.tsx:134
 msgid "left to go."
 msgstr "еще осталось."
-
-#: src/view/screens/Settings/index.tsx:308
-#~ msgid "Legacy storage cleared, you need to restart the app now."
-#~ msgstr "Старое хранилище очищено, теперь вам нужно перезапустить приложение."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:295
 msgid "Let me choose"
@@ -3659,14 +3585,6 @@ msgstr "Игнорировать все посты {displayTag}"
 msgid "Mute conversation"
 msgstr "Отключить звук"
 
-#: src/components/dialogs/MutedWords.tsx:149
-#~ msgid "Mute in tags only"
-#~ msgstr "Игнорировать только в тегах"
-
-#: src/components/dialogs/MutedWords.tsx:134
-#~ msgid "Mute in text & tags"
-#~ msgstr "Игнорировать в тексте и тегах"
-
 #: src/components/dialogs/MutedWords.tsx:253
 msgid "Mute in:"
 msgstr "Игнорируемое:"
@@ -4003,10 +3921,6 @@ msgstr "Нет, спасибо"
 msgid "Nobody"
 msgstr "Никто"
 
-#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:48
-#~ msgid "Nobody can reply"
-#~ msgstr "Никто не может ответить"
-
 #: src/components/LikedByList.tsx:79
 #: src/components/LikesDialog.tsx:99
 msgid "Nobody has liked this yet. Maybe you should be the first!"
@@ -4315,11 +4229,6 @@ msgstr "Открывает настройки модерации"
 #: src/screens/Login/LoginForm.tsx:247
 msgid "Opens password reset form"
 msgstr "Открывает форму сброса пароля"
-
-#: src/view/com/home/HomeHeaderLayout.web.tsx:77
-#: src/view/screens/Feeds.tsx:417
-#~ msgid "Opens screen to edit Saved Feeds"
-#~ msgstr "Открывает страницу со всеми сохраненными лентами"
 
 #: src/view/screens/Settings/index.tsx:583
 msgid "Opens screen with all saved feeds"
@@ -4661,10 +4570,6 @@ msgstr "посты"
 msgid "Posts"
 msgstr "Посты"
 
-#: src/components/dialogs/MutedWords.tsx:90
-#~ msgid "Posts can be muted based on their text, their tags, or both."
-#~ msgstr "Посты могут быть проигнорированы по их тексту, тегам или по обоим."
-
 #: src/components/dialogs/MutedWords.tsx:115
 msgid "Posts can be muted based on their text, their tags, or both. We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
 msgstr "Посты могут быть отключены на основании их текста, тегов или того и другого. Мы рекомендуем избегать общих слов, которые встречаются во многих сообщениях, так как это может привести к тому, что посты не будут показаны."
@@ -4951,10 +4856,6 @@ msgstr "Удалить из сохраненных лент"
 msgid "Remove image"
 msgstr "Удалить изображение"
 
-#: src/view/com/composer/ExternalEmbed.tsx:87
-#~ msgid "Remove image preview"
-#~ msgstr "Удалить предварительный просмотр изображения"
-
 #: src/components/dialogs/MutedWords.tsx:523
 msgid "Remove mute word from your list"
 msgstr "Удалить игнорируемые слова из вашего списка"
@@ -5012,10 +4913,6 @@ msgstr "Удалено из сохраненных лент"
 msgid "Removed from your feeds"
 msgstr "Удалено из моих лент"
 
-#: src/view/com/composer/ExternalEmbed.tsx:88
-#~ msgid "Removes default thumbnail from {0}"
-#~ msgstr "Удаляет миниатюру по умолчанию из {0}"
-
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:301
 msgid "Removes quoted post"
 msgstr "Удаляет процитированное сообщение"
@@ -5041,18 +4938,10 @@ msgstr "Ответы отключены"
 msgid "Replies to this post are disabled."
 msgstr "Ответы на этот пост отключены."
 
-#: src/view/com/threadgate/WhoCanReply.tsx:98
-#~ msgid "Replies to this thread are disabled"
-#~ msgstr "Ответы к этому посту отключены"
-
 #: src/view/com/composer/Composer.tsx:640
 msgctxt "action"
 msgid "Reply"
 msgstr "Ответить"
-
-#: src/view/screens/PreferencesFollowingFeed.tsx:143
-#~ msgid "Reply Filters"
-#~ msgstr "Какие ответы показывать"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:115
 #: src/lib/moderation/useModerationCauseDescription.ts:123
@@ -5691,26 +5580,6 @@ msgstr "Настройте вашу учетную запись"
 msgid "Sets Bluesky username"
 msgstr "Устанавливает псевдоним Bluesky"
 
-#: src/view/screens/Settings/index.tsx:461
-#~ msgid "Sets color theme to dark"
-#~ msgstr "Устанавливает темную тему"
-
-#: src/view/screens/Settings/index.tsx:454
-#~ msgid "Sets color theme to light"
-#~ msgstr "Устанавливает светлую тему"
-
-#: src/view/screens/Settings/index.tsx:448
-#~ msgid "Sets color theme to system setting"
-#~ msgstr "Устанавливает тему в соответствии с системными настройками"
-
-#: src/view/screens/Settings/index.tsx:487
-#~ msgid "Sets dark theme to the dark theme"
-#~ msgstr "Устанавливает черный цвет для темной темы"
-
-#: src/view/screens/Settings/index.tsx:480
-#~ msgid "Sets dark theme to the dim theme"
-#~ msgstr "Устанавливает тусклый цвет для темной темы"
-
 #: src/screens/Login/ForgotPasswordForm.tsx:113
 msgid "Sets email for password reset"
 msgstr "Устанавливает эл. адрес для сброса пароля"
@@ -6063,10 +5932,6 @@ msgstr "Сортировать ответы"
 msgid "Sort replies to the same post by:"
 msgstr "Выберите, как сортировать ответы к постам:"
 
-#: src/components/moderation/LabelsOnMeDialog.tsx:170
-#~ msgid "Source: <0>{0}</0>"
-#~ msgstr "Источник: <0>{0}</0>"
-
 #: src/components/moderation/LabelsOnMeDialog.tsx:163
 msgid "Source: <0>{sourceName}</0>"
 msgstr "Источник: <0>{sourceName}</0>"
@@ -6171,10 +6036,6 @@ msgstr "Подписаться на этот список"
 msgid "Suggested accounts"
 msgstr "Предлагаемые учетные записи"
 
-#: src/view/screens/Search/Search.tsx:424
-#~ msgid "Suggested Follows"
-#~ msgstr "Предлагаемые подписки"
-
 #: src/components/FeedInterstitials.tsx:314
 msgid "Suggested for you"
 msgstr "Предложения для вас"
@@ -6211,10 +6072,6 @@ msgstr "Системное"
 msgid "System log"
 msgstr "Системный журнал"
 
-#: src/components/dialogs/MutedWords.tsx:325
-#~ msgid "tag"
-#~ msgstr "тег"
-
 #: src/components/TagMenu/index.tsx:89
 msgid "Tag menu: {displayTag}"
 msgstr "Меню тегов: {displayTag}"
@@ -6243,10 +6100,6 @@ msgstr "Нажмите, чтобы переключить звук"
 #: src/view/com/util/images/AutoSizedImage.tsx:205
 msgid "Tap to view full image"
 msgstr "Нажмите, чтобы посмотреть полное изображение"
-
-#: src/view/com/util/images/AutoSizedImage.tsx:70
-#~ msgid "Tap to view fully"
-#~ msgstr "Нажмите, чтобы просмотреть полностью"
 
 #: src/state/shell/progress-guide.tsx:166
 msgid "Task complete - 10 likes!"
@@ -6287,10 +6140,6 @@ msgstr "Условия использования"
 #: src/lib/moderation/useReportOptions.ts:115
 msgid "Terms used violate community standards"
 msgstr "Использованные термины нарушают стандарты сообщества"
-
-#: src/components/dialogs/MutedWords.tsx:325
-#~ msgid "text"
-#~ msgstr "текст"
 
 #: src/components/dialogs/MutedWords.tsx:266
 msgid "Text & tags"
@@ -6515,10 +6364,6 @@ msgid "This account is blocked by one or more of your moderation lists. To unblo
 msgstr "Эта учетная запись заблокирована в одном или нескольких ваших списках модерации. Чтобы снять блокировку, пожалуйста, посетите списки непосредственно и удалите этого пользователя."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:241
-#~ msgid "This appeal will be sent to <0>{0}</0>."
-#~ msgstr "Это обращение будет отправлено в <0>{0}</0>."
-
-#: src/components/moderation/LabelsOnMeDialog.tsx:241
 msgid "This appeal will be sent to <0>{sourceName}</0>."
 msgstr "Это обращение будет отправлено на адрес <0>{sourceName}</0>."
 
@@ -6562,12 +6407,6 @@ msgstr "Эта функция находится в бете. Вы можете 
 #: src/view/com/posts/FeedErrorMessage.tsx:120
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
 msgstr "Эта лента сейчас получает слишком много запросов и временно недоступна. Попробуйте еще раз позже."
-
-#: src/screens/Profile/Sections/Feed.tsx:59
-#: src/view/screens/ProfileFeed.tsx:471
-#: src/view/screens/ProfileList.tsx:729
-#~ msgid "This feed is empty!"
-#~ msgstr "Лента пуста!"
 
 #: src/view/com/posts/CustomFeedEmptyState.tsx:37
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
@@ -6640,10 +6479,6 @@ msgstr "Этот пост виден только пользователям, к
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "Этот пост будет скрыт из лент и тем. Это невозможно отменить."
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:443
-#~ msgid "This post will be hidden from feeds."
-#~ msgstr "Этот пост будет скрыт из лент."
-
 #: src/view/com/composer/useExternalLinkFetch.ts:67
 msgid "This post's author has disabled quote posts."
 msgstr "Автор этого поста отключил цитирование сообщений."
@@ -6701,10 +6536,6 @@ msgstr "Этот пользователь не подписан ни на ког
 msgid "This will delete \"{0}\" from your muted words. You can always add it back later."
 msgstr "Это удалит \"{0}\" из ваших отключенных слов. Вы всегда сможете добавить его обратно позже."
 
-#: src/components/dialogs/MutedWords.tsx:285
-#~ msgid "This will delete {0} from your muted words. You can always add it back later."
-#~ msgstr "Это удалит {0} из ваших игнорируемых слов. Вы всегда можете добавить его обратно."
-
 #: src/view/com/util/AccountDropdownBtn.tsx:55
 msgid "This will remove @{0} from the quick access list."
 msgstr "Это удалит @{0} из списка быстрого доступа."
@@ -6745,10 +6576,6 @@ msgstr "Чтобы загрузить видео на Bluesky, необходи�
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
 msgstr "Кому вы хотели бы отправить эту жалобу?"
-
-#: src/components/dialogs/MutedWords.tsx:113
-#~ msgid "Toggle between muted word options."
-#~ msgstr "Переключение между опциями игнорирования слов."
 
 #: src/view/com/util/forms/DropdownButton.tsx:255
 msgid "Toggle dropdown"
@@ -6859,10 +6686,6 @@ msgstr "Отменить репост"
 msgctxt "action"
 msgid "Unfollow"
 msgstr "Отписаться"
-
-#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:247
-#~ msgid "Unfollow"
-#~ msgstr "Отписаться"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:241
 msgid "Unfollow {0}"
@@ -7103,10 +6926,6 @@ msgstr "Имя пользователя или электронный адрес
 msgid "Users"
 msgstr "Пользователи"
 
-#: src/view/com/threadgate/WhoCanReply.tsx:143
-#~ msgid "users followed by <0/>"
-#~ msgstr "пользователи, на которых подписаны <0/>"
-
 #: src/components/WhoCanReply.tsx:258
 msgid "users followed by <0>@{0}</0>"
 msgstr "пользователи, за которыми следуют <0>@{0}</0>"
@@ -7314,10 +7133,6 @@ msgstr "Мы надеемся, что вы отлично проведете в�
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
 msgstr "У нас закончились посты в ваших подписках. Вот последние посты из ленты <0/>."
 
-#: src/components/dialogs/MutedWords.tsx:204
-#~ msgid "We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
-#~ msgstr "Мы рекомендуем избегать общих слов, появляющихся во многих постах, поскольку это может привести к тому, что ни один пост не будет показан."
-
 #: src/components/dialogs/BirthDateSettings.tsx:52
 msgid "We were unable to load your birth date preferences. Please try again."
 msgstr "Не удалось загрузить ваши настройки даты рождения. Повторите попытку."
@@ -7366,10 +7181,6 @@ msgstr "Нам очень жаль! Сообщение, на которое вы
 #: src/view/screens/NotFound.tsx:48
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr "Нам очень жаль! Мы не можем найти страницу, которую вы искали."
-
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:330
-#~ msgid "We're sorry! You can only subscribe to ten labelers, and you've reached your limit of ten."
-#~ msgstr "Нам очень жаль, вы можете подписаться только на десять маркировщиков, и вы уже достигли этого лимита."
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:333
 msgid "We're sorry! You can only subscribe to twenty labelers, and you've reached your limit of twenty."
