@@ -122,10 +122,21 @@ function InnerWrapper({embed}: Props) {
     }
   }, [player, isActive])
 
+  // The source might already be active (for example, if you are scrolling a list of quotes and its all the same
+  // video). In those cases, just start playing. Otherwise, setting the active source will result in the video
+  // start playback immediately
+  const startPlaying = () => {
+    if (isActive) {
+      player.play()
+      setPlayerStatus('readyToPlay')
+    } else {
+      setActiveSource(embed.playlist, viewId)
+    }
+  }
+
   const onChangeStatus = (isVisible: boolean) => {
     if (isVisible && !isFullscreen && !disableAutoplay) {
-      setActiveSource(embed.playlist, viewId)
-      player.play()
+      startPlaying()
     } else {
       setPlayerStatus('switching')
       player.muted = true
@@ -166,16 +177,7 @@ function InnerWrapper({embed}: Props) {
       >
         <Button
           style={[a.flex_1, a.align_center, a.justify_center]}
-          onPress={() => {
-            if (isActive) {
-              // If the source is already active, just play the video and update the status
-              player.play()
-              setPlayerStatus('readyToPlay')
-            } else {
-              // Otherwise set the active source and it'll start playing as soon as it has loaded
-              setActiveSource(embed.playlist, viewId)
-            }
-          }}
+          onPress={startPlaying}
           label={_(msg`Play video`)}
           color="secondary">
           {isLoading ? (
