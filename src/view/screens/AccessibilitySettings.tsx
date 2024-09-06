@@ -108,7 +108,7 @@ export function AccessibilitySettingsScreen({}: Props) {
         <View style={[pal.view, styles.toggleCard]}>
           <ToggleButton
             type="default-light"
-            label={_(msg`Disable autoplay for GIFs`)}
+            label={_(msg`Disable autoplay for videos and GIFs`)}
             labelType="lg"
             isSelected={autoplayDisabled}
             onPress={() => setAutoplayDisabled(!autoplayDisabled)}

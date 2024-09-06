@@ -111,9 +111,9 @@ export function Controls({
   // autoplay/pause based on visibility
   const autoplayDisabled = useAutoplayDisabled()
   useEffect(() => {
-    if (active && !autoplayDisabled) {
+    if (active) {
       if (onScreen) {
-        play()
+        if (!autoplayDisabled) play()
       } else {
         pause()
       }
@@ -151,10 +151,11 @@ export function Controls({
   const onPressEmptySpace = useCallback(() => {
     if (!focused) {
       drawFocus()
+      if (autoplayDisabled) play()
     } else {
       togglePlayPause()
     }
-  }, [togglePlayPause, drawFocus, focused])
+  }, [togglePlayPause, drawFocus, focused, autoplayDisabled, play])
 
   const onPressPlayPause = useCallback(() => {
     drawFocus()
@@ -240,7 +241,8 @@ export function Controls({
   }, [])
 
   const showControls =
-    (focused && !playing) || (interactingViaKeypress ? hasFocus : hovered)
+    ((focused || autoplayDisabled) && !playing) ||
+    (interactingViaKeypress ? hasFocus : hovered)
 
   return (
     <div
@@ -273,7 +275,10 @@ export function Controls({
             ? msg`Pause video`
             : msg`Play video`,
         )}
-        style={[a.flex_1, web({cursor: showCursor ? 'pointer' : 'none'})]}
+        style={[
+          a.flex_1,
+          web({cursor: showCursor || !playing ? 'pointer' : 'none'}),
+        ]}
         onPress={onPressEmptySpace}
       />
       {!showControls && !focused && duration > 0 && (
