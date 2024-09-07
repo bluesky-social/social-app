@@ -7,7 +7,6 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {clamp} from '#/lib/numbers'
-import {useGate} from '#/lib/statsig/statsig'
 import {useAutoplayDisabled} from 'state/preferences'
 import {VideoEmbedInnerNative} from '#/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative'
 import {atoms as a} from '#/alf'
@@ -24,8 +23,6 @@ interface Props {
 }
 
 export function VideoEmbed({embed}: Props) {
-  const gate = useGate()
-
   const [key, setKey] = useState(0)
 
   const renderError = useCallback(
@@ -40,10 +37,6 @@ export function VideoEmbed({embed}: Props) {
     const {width, height} = embed.aspectRatio
     aspectRatio = width / height
     aspectRatio = clamp(aspectRatio, 1 / 1, 3 / 1)
-  }
-
-  if (!gate('video_view_on_posts')) {
-    return null
   }
 
   return (
