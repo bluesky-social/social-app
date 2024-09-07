@@ -463,7 +463,7 @@ msgstr "Adicionar texto alternativo"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:107
 msgid "Add alt text (optional)"
-msgstr ""
+msgstr "Adicionar texto alternativo (opcional)"
 
 #: src/view/screens/AppPasswords.tsx:105
 #: src/view/screens/AppPasswords.tsx:147
@@ -646,7 +646,7 @@ msgstr "Ocorreu um erro"
 
 #: src/state/queries/video/video.ts:227
 msgid "An error occurred while compressing the video."
-msgstr ""
+msgstr "Ocorreu um erro ao compactar o vídeo."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:315
 msgid "An error occurred while generating your starter pack. Want to try again?"
@@ -658,7 +658,7 @@ msgstr "Ocorreu um erro ao carregar o vídeo. Tente novamente mais tarde."
 
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:170
 msgid "An error occurred while loading the video. Please try again."
-msgstr ""
+msgstr "Ocorreu um erro ao carregar o vídeo. Tente novamente."
 
 #: src/components/StarterPack/ShareDialog.tsx:79
 #~ msgid "An error occurred while saving the image."
@@ -671,7 +671,7 @@ msgstr "Ocorreu um erro ao salvar o QR code!"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:61
 msgid "An error occurred while selecting the video"
-msgstr ""
+msgstr "Ocorreu um erro ao selecionar o vídeo"
 
 #: src/components/dms/MessageMenu.tsx:134
 #~ msgid "An error occurred while trying to delete the message. Please try again."
@@ -1167,11 +1167,11 @@ msgstr ""
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:133
 msgid "Captions (.vtt)"
-msgstr ""
+msgstr "Legendas (.vtt)"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:54
 msgid "Captions & alt text"
-msgstr ""
+msgstr "Legendas e texto alt"
 
 #: src/view/com/modals/VerifyEmail.tsx:160
 msgid "Change"
@@ -1744,7 +1744,7 @@ msgstr "Não foi possível silenciar este chat"
 
 #: src/view/com/composer/videos/VideoPreview.web.tsx:45
 msgid "Could not process your video"
-msgstr ""
+msgstr "Não foi possível processar seu vídeo"
 
 #: src/components/dms/ConvoMenu.tsx:68
 #~ msgid "Could not unmute chat"
@@ -2024,7 +2024,7 @@ msgstr "As mensagens diretas estão aqui!"
 
 #: src/view/screens/AccessibilitySettings.tsx:111
 msgid "Disable autoplay for videos and GIFs"
-msgstr ""
+msgstr "Desativar reprodução automática para vídeos e GIFs"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:90
 msgid "Disable Email 2FA"
@@ -2449,7 +2449,7 @@ msgstr "Fim do feed"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:157
 msgid "Ensure you have selected a language for each subtitle file."
-msgstr ""
+msgstr "Certifique-se de ter selecionado um idioma para cada arquivo de legenda."
 
 #: src/view/com/modals/AddAppPasswords.tsx:161
 msgid "Enter a name for this App Password"
@@ -2551,7 +2551,7 @@ msgstr "Excluir usuário que você segue"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:353
 msgid "Exit fullscreen"
-msgstr ""
+msgstr "Sair da tela cheia"
 
 #: src/view/com/modals/DeleteAccount.tsx:293
 msgid "Exits account deletion process"
@@ -2732,7 +2732,7 @@ msgstr "Falha ao atualizar as configurações"
 #: src/state/queries/video/video-upload.web.ts:68
 #: src/state/queries/video/video-upload.web.ts:78
 msgid "Failed to upload video"
-msgstr ""
+msgstr "Falha ao carregar o vídeo"
 
 #: src/Navigation.tsx:226
 msgid "Feed"
@@ -3059,7 +3059,7 @@ msgstr "Por <0/>"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:354
 msgid "Fullscreen"
-msgstr ""
+msgstr "Tela cheia"
 
 #: src/view/com/composer/photos/SelectPhotoBtn.tsx:39
 msgid "Gallery"
@@ -3316,7 +3316,7 @@ msgstr "Hmmmm, não foi possível carregar este serviço de moderação."
 
 #: src/state/queries/video/video.ts:165
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
-msgstr ""
+msgstr "Espere! Estamos gradualmente dando acesso ao vídeo, e você ainda está esperando na fila. Volte em breve!"
 
 #: src/Navigation.tsx:550
 #: src/Navigation.tsx:570
@@ -4601,7 +4601,7 @@ msgstr "Contém apenas letras, números e hífens"
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:31
 msgid "Only WebVTT (.vtt) files are supported"
-msgstr ""
+msgstr "Somente arquivos WebVTT (.vtt) são suportados"
 
 #: src/components/Lists.tsx:88
 msgid "Oops, something went wrong!"
@@ -5480,7 +5480,7 @@ msgstr "Desfazer repost"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:260
 msgid "Remove subtitle file"
-msgstr ""
+msgstr "Remover arquivo de legenda"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:211
 msgid "Remove this feed from your saved feeds"
@@ -5492,7 +5492,7 @@ msgstr "Removido pelo autor"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:103
 msgid "Removed by you"
-msgstr ""
+msgstr "Removido por você"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:200
 #: src/view/com/modals/UserAddRemoveLists.tsx:164
@@ -6051,7 +6051,7 @@ msgstr "Veja o guia"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:587
 msgid "Seek slider"
-msgstr ""
+msgstr "Controle deslizante de busca"
 
 #: src/view/com/util/Selector.tsx:106
 msgid "Select {item}"
@@ -6091,7 +6091,7 @@ msgstr "Selecione por quanto tempo essa palavra deve ser silenciada."
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:245
 msgid "Select language..."
-msgstr ""
+msgstr "Selecione o idioma..."
 
 #: src/view/screens/LanguageSettings.tsx:303
 msgid "Select languages"
@@ -6111,7 +6111,7 @@ msgstr "Seleciona opção {i} de {numItems}"
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:57
 msgid "Select subtitle file (.vtt)"
-msgstr ""
+msgstr "Selecione o arquivo de legenda (.vtt)"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:83
 msgid "Select the {emojiName} emoji as your avatar"
@@ -7427,7 +7427,7 @@ msgstr "Para denunciar uma conversa, por favor, denuncie uma das mensagens indiv
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:106
 msgid "To upload videos to Bluesky, you must first verify your email."
-msgstr ""
+msgstr "Para enviar vídeos para o Bluesky, você deve primeiro verificar seu e-mail."
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
@@ -7644,7 +7644,7 @@ msgstr "Cancelada inscrição na lista"
 
 #: src/state/queries/video/video.ts:240
 msgid "Unsupported video type: {mimeType}"
-msgstr ""
+msgstr "Tipo de vídeo não suportado: {mimeType}"
 
 #: src/lib/moderation/useReportOptions.ts:85
 #~ msgid "Unwanted sexual content"
@@ -7831,7 +7831,7 @@ msgstr "Conteúdo:"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:104
 msgid "Verified email required"
-msgstr ""
+msgstr "E-mail verificado necessário"
 
 #: src/view/com/modals/ChangeHandle.tsx:510
 #~ msgid "Verify {0}"
@@ -7864,7 +7864,7 @@ msgstr "Verificar Novo E-mail"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:108
 msgid "Verify now"
-msgstr ""
+msgstr "Verifique agora"
 
 #: src/view/com/modals/ChangeHandle.tsx:505
 msgid "Verify Text File"
@@ -7889,7 +7889,7 @@ msgstr "Vídeo"
 
 #: src/state/queries/video/video.ts:138
 msgid "Video failed to process"
-msgstr ""
+msgstr "Falha no processamento do vídeo"
 
 #: src/screens/Onboarding/index.tsx:39
 #: src/screens/Onboarding/state.ts:88
@@ -7898,11 +7898,11 @@ msgstr "Games"
 
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:163
 msgid "Video not found."
-msgstr ""
+msgstr "Vídeo não encontrado."
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:99
 msgid "Video settings"
-msgstr ""
+msgstr "Configurações de vídeo"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:77
 msgid "Video: {0}"
@@ -8043,7 +8043,7 @@ msgstr "Não temos mais posts de quem você segue. Aqui estão os mais novos de 
 
 #: src/state/queries/video/video.ts:170
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
-msgstr ""
+msgstr "Não conseguimos determinar se você tem permissão para enviar vídeos. Tente novamente."
 
 #: src/components/dialogs/BirthDateSettings.tsx:52
 msgid "We were unable to load your birth date preferences. Please try again."
@@ -8263,7 +8263,7 @@ msgstr "Você está na fila."
 
 #: src/state/queries/video/video.ts:161
 msgid "You are not allowed to upload videos."
-msgstr ""
+msgstr "Você não tem permissão para enviar vídeos."
 
 #: src/view/com/profile/ProfileFollows.tsx:95
 msgid "You are not following anyone."
@@ -8396,7 +8396,7 @@ msgstr "Você chegou ao fim"
 
 #: src/state/queries/video/video-upload.shared.ts:67
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
-msgstr ""
+msgstr "Você atingiu temporariamente o limite de uploads de vídeo. Tente novamente mais tarde."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:235
 msgid "You haven't created a starter pack yet!"
@@ -8537,11 +8537,11 @@ msgstr "Você chegou ao fim do seu feed! Encontre novas contas para seguir."
 
 #: src/state/queries/video/video.ts:175
 msgid "You've reached your daily limit for video uploads (too many bytes)"
-msgstr ""
+msgstr "Você atingiu seu limite diário de uploads de vídeo (muitos bytes)"
 
 #: src/state/queries/video/video.ts:180
 msgid "You've reached your daily limit for video uploads (too many videos)"
-msgstr ""
+msgstr "Você atingiu seu limite diário de uploads de vídeos (muitos vídeos)"
 
 #: src/screens/Signup/index.tsx:146
 msgid "Your account"
