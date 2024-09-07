@@ -1,7 +1,7 @@
 import React from 'react'
 import {useVideoPlayer, VideoPlayer} from 'expo-video'
 
-import {isNative} from '#/platform/detection'
+import {isAndroid, isNative} from '#/platform/detection'
 
 const Context = React.createContext<{
   activeSource: string
@@ -26,7 +26,18 @@ export function Provider({children}: {children: React.ReactNode}) {
   })
 
   const setActiveSourceOuter = (src: string | null, viewId: string | null) => {
-    setActiveSource(src ? src : '')
+    // HACK
+    // expo-video doesn't like it when you try and move a `player` to another `VideoView`. Instead, we need to actually
+    // unregister that player to let the new screen register it. This is only a problem on Android, so we only need to
+    // apply it there.
+    if (src === activeSource && isAndroid) {
+      setActiveSource('')
+      setTimeout(() => {
+        setActiveSource(src ? src : '')
+      }, 100)
+    } else {
+      setActiveSource(src ? src : '')
+    }
     setActiveViewId(viewId ? viewId : '')
   }
 
