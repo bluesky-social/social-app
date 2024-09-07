@@ -5,6 +5,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
 
+import {AbortError} from '#/lib/async/cancelable'
 import {SUPPORTED_MIME_TYPES, SupportedMimeTypes} from '#/lib/constants'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
@@ -38,6 +39,8 @@ export interface State {
   abortController: AbortController
   pendingPublish?: {blobRef: BlobRef; mutableProcessed: boolean}
 }
+
+export type VideoUploadDispatch = (action: Action) => void
 
 function reducer(queryClient: QueryClient) {
   return (state: State, action: Action): State => {
@@ -144,8 +147,9 @@ export function useUploadVideo({
       setJobId(response.jobId)
     },
     onError: e => {
-      logger.error('Error uploading video', {safeMessage: e})
-      if (e instanceof ServerError) {
+      if (e instanceof AbortError) {
+        return
+      } else if (e instanceof ServerError) {
         dispatch({
           type: 'SetError',
           error: e.message,
@@ -176,8 +180,9 @@ export function useUploadVideo({
       onVideoCompressed(video)
     },
     onError: e => {
-      logger.error('Error uploading video', {safeMessage: e})
-      if (e instanceof VideoTooLargeError) {
+      if (e instanceof AbortError) {
+        return
+      } else if (e instanceof VideoTooLargeError) {
         dispatch({
           type: 'SetError',
           error: _(msg`The selected video is larger than 100MB.`),

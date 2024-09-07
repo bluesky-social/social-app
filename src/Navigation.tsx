@@ -661,16 +661,15 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       linking={LINKING}
       theme={theme}
       onStateChange={() => {
-        logEvent('router:navigate:sampled', {
-          from: prevLoggedRouteName.current,
-        })
-        prevLoggedRouteName.current = getCurrentRouteName()
+        const routeName = getCurrentRouteName()
+        if (routeName === 'Notifications') {
+          logEvent('router:navigate:notifications:sampled', {})
+        }
       }}
       onReady={() => {
         attachRouteToLogEvents(getCurrentRouteName)
         logModuleInitTime()
         onReady()
-        logEvent('router:navigate:sampled', {})
       }}>
       {children}
     </NavigationContainer>
