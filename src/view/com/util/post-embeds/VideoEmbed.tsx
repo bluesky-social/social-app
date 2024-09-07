@@ -110,11 +110,7 @@ function InnerWrapper({embed}: Props) {
           if (status === 'error') {
             setError(playerError ?? new Error('Unknown player error'))
           }
-          if (
-            status === 'readyToPlay' &&
-            oldStatus !== 'readyToPlay' &&
-            oldStatus !== 'waitingToPlayAtSpecifiedRate'
-          ) {
+          if (status === 'readyToPlay' && oldStatus !== 'readyToPlay') {
             player.play()
           }
         },
