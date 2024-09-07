@@ -53,9 +53,16 @@ export function useIntentHandler() {
             text: params.get('text'),
             imageUrisStr: params.get('imageUris'),
           })
+          return
         }
         case 'verify-email': {
-          verifyEmailIntent(params.get('code') || '')
+          const code = params.get('code')
+          if (!code) return
+          verifyEmailIntent(code)
+          return
+        }
+        default: {
+          return
         }
       }
     }
@@ -113,13 +120,16 @@ function useVerifyEmailIntent() {
   const closeAllActiveElements = useCloseAllActiveElements()
   const {verifyEmailDialogControl: control, setVerifyEmailState: setState} =
     useIntentDialogs()
-  return async (code: string) => {
-    closeAllActiveElements()
-    setState({
-      code,
-    })
-    setTimeout(() => {
-      control.open()
-    }, 1000)
-  }
+  return React.useCallback(
+    (code: string) => {
+      closeAllActiveElements()
+      setState({
+        code,
+      })
+      setTimeout(() => {
+        control.open()
+      }, 1000)
+    },
+    [closeAllActiveElements, control, setState],
+  )
 }
