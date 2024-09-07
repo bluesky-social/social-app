@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-06 11:03+0900\n"
+"PO-Revision-Date: 2024-09-07 20:28+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -2115,6 +2115,10 @@ msgstr "有効"
 msgid "End of feed"
 msgstr "フィードの終わり"
 
+#: src/view/com/composer/videos/SubtitleDialog.tsx:157
+msgid "Ensure you have selected a language for each subtitle file."
+msgstr "各字幕ファイルに言語が選択されてることを確認してください。"
+
 #: src/view/com/modals/AddAppPasswords.tsx:161
 msgid "Enter a name for this App Password"
 msgstr "このアプリパスワードの名前を入力"
@@ -3070,6 +3074,10 @@ msgstr "招待、ただし個人的なもの"
 #: src/screens/StarterPack/Wizard/index.tsx:452
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "今はあなただけ！上で検索してスターターパックにより多くのユーザーを追加してください。"
+
+#: src/view/com/composer/Composer.tsx:1125
+msgid "Job ID: {0}"
+msgstr "ジョブID：{0}"
 
 #: src/view/com/auth/SplashScreen.web.tsx:164
 msgid "Jobs"
