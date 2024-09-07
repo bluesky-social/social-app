@@ -19,11 +19,14 @@ export function Provider({children}: {children: React.ReactNode}) {
     {code: string} | undefined
   >()
 
-  const value = {
-    verifyEmailDialogControl,
-    verifyEmailState,
-    setVerifyEmailState,
-  }
+  const value = React.useMemo(
+    () => ({
+      verifyEmailDialogControl,
+      verifyEmailState,
+      setVerifyEmailState,
+    }),
+    [verifyEmailDialogControl, verifyEmailState, setVerifyEmailState],
+  )
 
   return (
     <Context.Provider value={value}>
