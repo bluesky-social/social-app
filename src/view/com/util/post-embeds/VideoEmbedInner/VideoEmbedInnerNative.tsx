@@ -8,6 +8,7 @@ import {useLingui} from '@lingui/react'
 
 import {HITSLOP_30} from '#/lib/constants'
 import {clamp} from '#/lib/numbers'
+import {isAndroid} from 'platform/detection'
 import {useActiveVideoNative} from 'view/com/util/post-embeds/ActiveVideoNativeContext'
 import {atoms as a, useTheme} from '#/alf'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
@@ -61,15 +62,15 @@ export function VideoEmbedInnerNative({
           PlatformInfo.setAudioActive(true)
           player.muted = false
           setIsFullscreen(true)
+          if (isAndroid) {
+            player.play()
+          }
         }}
         onFullscreenExit={() => {
           PlatformInfo.setAudioCategory(AudioCategory.Ambient)
           PlatformInfo.setAudioActive(false)
           player.muted = true
           player.playbackRate = 1
-          if (!player.playing) {
-            player.play()
-          }
           setIsFullscreen(false)
         }}
         accessibilityLabel={

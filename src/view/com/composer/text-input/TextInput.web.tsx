@@ -12,12 +12,12 @@ import {Placeholder} from '@tiptap/extension-placeholder'
 import {Text as TiptapText} from '@tiptap/extension-text'
 import {generateJSON} from '@tiptap/html'
 import {EditorContent, JSONContent, useEditor} from '@tiptap/react'
-import EventEmitter from 'eventemitter3'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {blobToDataUri, isUriImage} from 'lib/media/util'
+import {textInputWebEmitter} from '#/view/com/composer/text-input/textInputWebEmitter'
 import {
   LinkFacetMatch,
   suggestLinkCardUri,
@@ -45,8 +45,6 @@ interface TextInputProps {
   onNewLink: (uri: string) => void
   onError: (err: string) => void
 }
-
-export const textInputWebEmitter = new EventEmitter()
 
 export const TextInput = React.forwardRef(function TextInputImpl(
   {

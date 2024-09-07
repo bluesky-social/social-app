@@ -25,6 +25,7 @@ import Animated, {
   FadeOut,
   interpolateColor,
   LayoutAnimationConfig,
+  LinearTransition,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
@@ -45,18 +46,31 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {observer} from 'mobx-react-lite'
 
+import {useAnalytics} from '#/lib/analytics/analytics'
+import * as apilib from '#/lib/api/index'
 import {until} from '#/lib/async/until'
+import {MAX_GRAPHEME_LENGTH} from '#/lib/constants'
 import {
   createGIFDescription,
   parseAltFromGIFDescription,
 } from '#/lib/gif-alt-text'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
+import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {LikelyType} from '#/lib/link-meta/link-meta'
 import {logEvent, useGate} from '#/lib/statsig/statsig'
+import {cleanError} from '#/lib/strings/errors'
+import {insertMentionAt} from '#/lib/strings/mention-manip'
+import {shortenLinks} from '#/lib/strings/rich-text-manip'
+import {colors, s} from '#/lib/styles'
 import {logger} from '#/logger'
+import {isAndroid, isIOS, isNative, isWeb} from '#/platform/detection'
+import {useDialogStateControlContext} from '#/state/dialogs'
 import {emitPostCreated} from '#/state/events'
 import {useModalControls} from '#/state/modals'
 import {useModals} from '#/state/modals'
+import {GalleryModel} from '#/state/models/media/gallery'
 import {useRequireAltTextEnabled} from '#/state/preferences'
 import {
   toPostLanguages,
@@ -68,25 +82,38 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {Gif} from '#/state/queries/tenor'
 import {ThreadgateAllowUISetting} from '#/state/queries/threadgate'
 import {threadgateViewToAllowUISetting} from '#/state/queries/threadgate/util'
-import {useUploadVideo} from '#/state/queries/video/video'
+import {
+  State as VideoUploadState,
+  useUploadVideo,
+  VideoUploadDispatch,
+} from '#/state/queries/video/video'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
-import {useAnalytics} from 'lib/analytics/analytics'
-import * as apilib from 'lib/api/index'
-import {MAX_GRAPHEME_LENGTH} from 'lib/constants'
-import {useIsKeyboardVisible} from 'lib/hooks/useIsKeyboardVisible'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {cleanError} from 'lib/strings/errors'
-import {insertMentionAt} from 'lib/strings/mention-manip'
-import {shortenLinks} from 'lib/strings/rich-text-manip'
-import {colors, s} from 'lib/styles'
-import {isAndroid, isIOS, isNative, isWeb} from 'platform/detection'
-import {useDialogStateControlContext} from 'state/dialogs'
-import {GalleryModel} from 'state/models/media/gallery'
-import {State as VideoUploadState} from 'state/queries/video/video'
-import {ComposerOpts} from 'state/shell/composer'
-import {ComposerReplyTo} from 'view/com/composer/ComposerReplyTo'
+import {ComposerOpts} from '#/state/shell/composer'
+import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
+import {ComposerReplyTo} from '#/view/com/composer/ComposerReplyTo'
+import {ExternalEmbed} from '#/view/com/composer/ExternalEmbed'
+import {GifAltText} from '#/view/com/composer/GifAltText'
+import {LabelsBtn} from '#/view/com/composer/labels/LabelsBtn'
+import {Gallery} from '#/view/com/composer/photos/Gallery'
+import {OpenCameraBtn} from '#/view/com/composer/photos/OpenCameraBtn'
+import {SelectGifBtn} from '#/view/com/composer/photos/SelectGifBtn'
+import {SelectPhotoBtn} from '#/view/com/composer/photos/SelectPhotoBtn'
+import {SelectLangBtn} from '#/view/com/composer/select-language/SelectLangBtn'
+import {SuggestedLanguage} from '#/view/com/composer/select-language/SuggestedLanguage'
+// TODO: Prevent naming components that coincide with RN primitives
+// due to linting false positives
+import {TextInput, TextInputRef} from '#/view/com/composer/text-input/TextInput'
+import {ThreadgateBtn} from '#/view/com/composer/threadgate/ThreadgateBtn'
+import {useExternalLinkFetch} from '#/view/com/composer/useExternalLinkFetch'
+import {SelectVideoBtn} from '#/view/com/composer/videos/SelectVideoBtn'
+import {SubtitleDialogBtn} from '#/view/com/composer/videos/SubtitleDialog'
+import {VideoPreview} from '#/view/com/composer/videos/VideoPreview'
+import {VideoTranscodeProgress} from '#/view/com/composer/videos/VideoTranscodeProgress'
+import {QuoteEmbed, QuoteX} from '#/view/com/util/post-embeds/QuoteEmbed'
+import {Text} from '#/view/com/util/text/Text'
+import * as Toast from '#/view/com/util/Toast'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
@@ -94,29 +121,6 @@ import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmile} from '#/components/icons
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import * as Prompt from '#/components/Prompt'
 import {Text as NewText} from '#/components/Typography'
-import {QuoteEmbed, QuoteX} from '../util/post-embeds/QuoteEmbed'
-import {Text} from '../util/text/Text'
-import * as Toast from '../util/Toast'
-import {UserAvatar} from '../util/UserAvatar'
-import {CharProgress} from './char-progress/CharProgress'
-import {ExternalEmbed} from './ExternalEmbed'
-import {GifAltText} from './GifAltText'
-import {LabelsBtn} from './labels/LabelsBtn'
-import {Gallery} from './photos/Gallery'
-import {OpenCameraBtn} from './photos/OpenCameraBtn'
-import {SelectGifBtn} from './photos/SelectGifBtn'
-import {SelectPhotoBtn} from './photos/SelectPhotoBtn'
-import {SelectLangBtn} from './select-language/SelectLangBtn'
-import {SuggestedLanguage} from './select-language/SuggestedLanguage'
-// TODO: Prevent naming components that coincide with RN primitives
-// due to linting false positives
-import {TextInput, TextInputRef} from './text-input/TextInput'
-import {ThreadgateBtn} from './threadgate/ThreadgateBtn'
-import {useExternalLinkFetch} from './useExternalLinkFetch'
-import {SelectVideoBtn} from './videos/SelectVideoBtn'
-import {SubtitleDialogBtn} from './videos/SubtitleDialog'
-import {VideoPreview} from './videos/VideoPreview'
-import {VideoTranscodeProgress} from './videos/VideoTranscodeProgress'
 
 type CancelRef = {
   onPressCancel: () => void
@@ -129,7 +133,7 @@ export const ComposePost = observer(function ComposePost({
   quote: initQuote,
   quoteCount,
   mention: initMention,
-  openPicker,
+  openEmojiPicker,
   text: initText,
   imageUris: initImageUris,
   cancelRef,
@@ -516,8 +520,8 @@ export const ComposePost = observer(function ComposePost({
     gallery.size > 0 || Boolean(extLink) || Boolean(videoUploadState.video)
 
   const onEmojiButtonPress = useCallback(() => {
-    openPicker?.(textInput.current?.getCursorPosition())
-  }, [openPicker])
+    openEmojiPicker?.(textInput.current?.getCursorPosition())
+  }, [openEmojiPicker])
 
   const focusTextInput = useCallback(() => {
     textInput.current?.focus()
@@ -578,7 +582,9 @@ export const ComposePost = observer(function ComposePost({
       keyboardVerticalOffset={keyboardVerticalOffset}
       style={a.flex_1}>
       <View style={[a.flex_1, viewStyles]} aria-modal accessibilityViewIsModal>
-        <Animated.View style={topBarAnimatedStyle}>
+        <Animated.View
+          style={topBarAnimatedStyle}
+          layout={native(LinearTransition)}>
           <View style={styles.topbarInner}>
             <Button
               label={_(msg`Cancel`)}
@@ -662,48 +668,15 @@ export const ComposePost = observer(function ComposePost({
               </Text>
             </View>
           )}
-          {(error !== '' || videoUploadState.error) && (
-            <View style={[a.px_lg, a.pb_sm]}>
-              <View
-                style={[
-                  a.px_md,
-                  a.py_sm,
-                  a.rounded_sm,
-                  a.flex_row,
-                  a.gap_sm,
-                  t.atoms.bg_contrast_25,
-                  {
-                    paddingRight: 48,
-                  },
-                ]}>
-                <CircleInfo fill={t.palette.negative_400} />
-                <NewText style={[a.flex_1, a.leading_snug, {paddingTop: 1}]}>
-                  {error || videoUploadState.error}
-                </NewText>
-                <Button
-                  label={_(msg`Dismiss error`)}
-                  size="tiny"
-                  color="secondary"
-                  variant="ghost"
-                  shape="round"
-                  style={[
-                    a.absolute,
-                    {
-                      top: a.py_sm.paddingTop,
-                      right: a.px_md.paddingRight,
-                    },
-                  ]}
-                  onPress={() => {
-                    if (error) setError('')
-                    else videoUploadDispatch({type: 'Reset'})
-                  }}>
-                  <ButtonIcon icon={X} />
-                </Button>
-              </View>
-            </View>
-          )}
+          <ErrorBanner
+            error={error}
+            videoUploadState={videoUploadState}
+            clearError={() => setError('')}
+            videoUploadDispatch={videoUploadDispatch}
+          />
         </Animated.View>
         <Animated.ScrollView
+          layout={native(LinearTransition)}
           onScroll={scrollHandler}
           style={styles.scrollView}
           keyboardShouldPersistTaps="always"
@@ -791,8 +764,8 @@ export const ComposePost = observer(function ComposePost({
                       />
                     ) : null)}
                   <SubtitleDialogBtn
-                    altText={videoAltText}
-                    setAltText={setVideoAltText}
+                    defaultAltText={videoAltText}
+                    saveAltText={setVideoAltText}
                     captions={captions}
                     setCaptions={setCaptions}
                   />
@@ -1082,6 +1055,80 @@ const styles = StyleSheet.create({
     borderTopWidth: StyleSheet.hairlineWidth,
   },
 })
+
+function ErrorBanner({
+  error: standardError,
+  videoUploadState,
+  clearError,
+  videoUploadDispatch,
+}: {
+  error: string
+  videoUploadState: VideoUploadState
+  clearError: () => void
+  videoUploadDispatch: VideoUploadDispatch
+}) {
+  const t = useTheme()
+  const {_} = useLingui()
+
+  const videoError =
+    videoUploadState.status !== 'idle' ? videoUploadState.error : undefined
+  const error = standardError || videoError
+
+  const onClearError = () => {
+    if (standardError) {
+      clearError()
+    } else {
+      videoUploadDispatch({type: 'Reset'})
+    }
+  }
+
+  if (!error) return null
+
+  return (
+    <Animated.View
+      style={[a.px_lg, a.pb_sm]}
+      entering={FadeIn}
+      exiting={FadeOut}>
+      <View
+        style={[
+          a.px_md,
+          a.py_sm,
+          a.gap_xs,
+          a.rounded_sm,
+          t.atoms.bg_contrast_25,
+        ]}>
+        <View style={[a.relative, a.flex_row, a.gap_sm, {paddingRight: 48}]}>
+          <CircleInfo fill={t.palette.negative_400} />
+          <NewText style={[a.flex_1, a.leading_snug, {paddingTop: 1}]}>
+            {error}
+          </NewText>
+          <Button
+            label={_(msg`Dismiss error`)}
+            size="tiny"
+            color="secondary"
+            variant="ghost"
+            shape="round"
+            style={[a.absolute, {top: 0, right: 0}]}
+            onPress={onClearError}>
+            <ButtonIcon icon={X} />
+          </Button>
+        </View>
+        {videoError && videoUploadState.jobStatus?.jobId && (
+          <NewText
+            style={[
+              {paddingLeft: 28},
+              a.text_xs,
+              a.font_bold,
+              a.leading_snug,
+              t.atoms.text_contrast_low,
+            ]}>
+            <Trans>Job ID: {videoUploadState.jobStatus.jobId}</Trans>
+          </NewText>
+        )}
+      </View>
+    </Animated.View>
+  )
+}
 
 function ToolbarWrapper({
   style,

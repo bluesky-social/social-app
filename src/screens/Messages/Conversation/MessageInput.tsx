@@ -23,6 +23,7 @@ import {
   useSaveMessageDraft,
 } from '#/state/messages/message-drafts'
 import {isIOS} from 'platform/detection'
+import {EmojiPickerPosition} from '#/view/com/composer/text-input/web/EmojiPicker.web'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
 import {useSharedInputStyles} from '#/components/forms/TextField'
@@ -41,6 +42,7 @@ export function MessageInput({
   hasEmbed: boolean
   setEmbed: (embedUrl: string | undefined) => void
   children?: React.ReactNode
+  openEmojiPicker?: (pos: EmojiPickerPosition) => void
 }) {
   const {_} = useLingui()
   const t = useTheme()
