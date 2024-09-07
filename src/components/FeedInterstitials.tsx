@@ -8,7 +8,6 @@ import {useNavigation} from '@react-navigation/native'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {NavigationProp} from '#/lib/routes/types'
-import {useGate} from '#/lib/statsig/statsig'
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -177,14 +176,9 @@ function useExperimentalSuggestedUsersQuery() {
 }
 
 export function SuggestedFollows({feed}: {feed: FeedDescriptor}) {
-  const gate = useGate()
   const [feedType, feedUri] = feed.split('|')
   if (feedType === 'author') {
-    if (gate('show_follow_suggestions_in_profile')) {
-      return <SuggestedFollowsProfile did={feedUri} />
-    } else {
-      return null
-    }
+    return <SuggestedFollowsProfile did={feedUri} />
   } else {
     return <SuggestedFollowsHome />
   }
