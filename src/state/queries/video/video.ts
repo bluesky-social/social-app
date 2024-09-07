@@ -167,7 +167,7 @@ export function useUploadVideo({
             break
           case "Failed to get user's upload stats":
             message = _(
-              msg`Error: could not determine if you're allowed to upload videos. Please try again.`,
+              msg`We were unable to determine if you are allowed to upload videos. Please try again.`,
             )
             break
           case 'User has exceeded daily upload bytes limit':
