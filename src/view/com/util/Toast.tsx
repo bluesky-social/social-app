@@ -59,7 +59,6 @@ function Toast({
             a.flex_1,
             t.atoms.bg,
             a.shadow_lg,
-            a.rounded_sm,
             t.atoms.border_contrast_medium,
             a.rounded_sm,
             a.px_md,
