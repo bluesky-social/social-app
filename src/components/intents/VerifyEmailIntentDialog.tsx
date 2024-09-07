@@ -72,8 +72,7 @@ function Inner({control}: {control: DialogControlProps}) {
             </Text>
             <Text style={[a.text_md, a.leading_tight]}>
               <Trans>
-                You have successfully verified your email address. You can now
-                close this window.
+                Thanks, you have successfully verified your email address.
               </Trans>
             </Text>
           </>
