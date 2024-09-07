@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-08-23 13:21+0900\n"
+"PO-Revision-Date: 2024-09-07 20:28+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -26,6 +26,14 @@ msgstr "（メールがありません）"
 msgid "{0, plural, one {{formattedCount} other} other {{formattedCount} others}}"
 msgstr "{0, plural, other {他{formattedCount}人}}"
 
+#: src/lib/hooks/useTimeAgo.ts:156
+msgid "{0, plural, one {# day} other {# days}}"
+msgstr "{0, plural, other {#日}}"
+
+#: src/lib/hooks/useTimeAgo.ts:146
+msgid "{0, plural, one {# hour} other {# hours}}"
+msgstr "{0, plural, other {#時間}}"
+
 #: src/components/moderation/LabelsOnMe.tsx:55
 msgid "{0, plural, one {# label has been placed on this account} other {# labels have been placed on this account}}"
 msgstr "{0, plural, other {#個のラベルがこのアカウントに適用されています}}"
@@ -34,9 +42,21 @@ msgstr "{0, plural, other {#個のラベルがこのアカウントに適用さ�
 msgid "{0, plural, one {# label has been placed on this content} other {# labels have been placed on this content}}"
 msgstr "{0, plural, other {#個のラベルがこのコンテンツに適用されています}}"
 
+#: src/lib/hooks/useTimeAgo.ts:136
+msgid "{0, plural, one {# minute} other {# minutes}}"
+msgstr "{0, plural, other {#分}}"
+
+#: src/lib/hooks/useTimeAgo.ts:167
+msgid "{0, plural, one {# month} other {# months}}"
+msgstr "{0, plural, other {#ヶ月}}"
+
 #: src/view/com/util/post-ctrls/RepostButton.tsx:68
 msgid "{0, plural, one {# repost} other {# reposts}}"
 msgstr "{0, plural, other {#回のリポスト}}"
+
+#: src/lib/hooks/useTimeAgo.ts:126
+msgid "{0, plural, one {# second} other {# seconds}}"
+msgstr "{0, plural, other {#秒}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:398
 #: src/screens/Profile/Header/Metrics.tsx:23
@@ -95,6 +115,10 @@ msgstr "<0><1>テキストとタグ</1>中の</0>{0}"
 msgid "{0} joined this week"
 msgstr "今週、{0}人が参加しました"
 
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:578
+msgid "{0} of {1}"
+msgstr "{0} / {1}"
+
 #: src/screens/StarterPack/StarterPackScreen.tsx:467
 msgid "{0} people have used this starter pack!"
 msgstr "{0}人がこのスターターパックを使用しました！"
@@ -111,29 +135,34 @@ msgstr "{0}のお気に入りのフィードとユーザーです - 参加して
 msgid "{0}'s starter pack"
 msgstr "{0}のスターターパック"
 
+#. How many days have passed, displayed in a narrow form
+#: src/lib/hooks/useTimeAgo.ts:158
+msgid "{0}d"
+msgstr "{0}日"
+
+#. How many hours have passed, displayed in a narrow form
+#: src/lib/hooks/useTimeAgo.ts:148
+msgid "{0}h"
+msgstr "{0}時間"
+
+#. How many minutes have passed, displayed in a narrow form
+#: src/lib/hooks/useTimeAgo.ts:138
+msgid "{0}m"
+msgstr "{0}分"
+
+#. How many months have passed, displayed in a narrow form
+#: src/lib/hooks/useTimeAgo.ts:169
+msgid "{0}mo"
+msgstr "{0}ヶ月"
+
+#. How many seconds have passed, displayed in a narrow form
+#: src/lib/hooks/useTimeAgo.ts:128
+msgid "{0}s"
+msgstr "{0}秒"
+
 #: src/components/LabelingServiceCard/index.tsx:71
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
 msgstr "{count, plural, other {#人のユーザーがいいね}}"
-
-#: src/lib/hooks/useTimeAgo.ts:69
-msgid "{diff, plural, one {day} other {days}}"
-msgstr "{diff, plural, other {日}}"
-
-#: src/lib/hooks/useTimeAgo.ts:64
-msgid "{diff, plural, one {hour} other {hours}}"
-msgstr "{diff, plural, other {時間}}"
-
-#: src/lib/hooks/useTimeAgo.ts:59
-msgid "{diff, plural, one {minute} other {minutes}}"
-msgstr "{diff, plural, other {分}}"
-
-#: src/lib/hooks/useTimeAgo.ts:75
-msgid "{diff, plural, one {month} other {months}}"
-msgstr "{diff, plural, other {ヶ月}}"
-
-#: src/lib/hooks/useTimeAgo.ts:54
-msgid "{diffSeconds, plural, one {second} other {seconds}}"
-msgstr "{diffSeconds, plural, other {秒}}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:174
 msgid "{displayName}'s Starter Pack"
@@ -231,10 +260,6 @@ msgstr "30日"
 #: src/components/dialogs/MutedWords.tsx:217
 msgid "7 days"
 msgstr "７日"
-
-#: src/tours/Tooltip.tsx:70
-msgid "A help tooltip"
-msgstr "ヘルプ・ツールチップ"
 
 #: src/view/com/util/ViewHeader.tsx:92
 #: src/view/screens/Search/Search.tsx:684
@@ -345,6 +370,10 @@ msgstr "アカウントを追加"
 #: src/view/com/modals/AltImage.tsx:118
 msgid "Add alt text"
 msgstr "ALTテキストを追加"
+
+#: src/view/com/composer/videos/SubtitleDialog.tsx:100
+msgid "Add alt text (optional)"
+msgstr "ALTテキストを追加（オプション）"
 
 #: src/view/screens/AppPasswords.tsx:106
 #: src/view/screens/AppPasswords.tsx:148
@@ -493,6 +522,10 @@ msgstr "エラーが発生しました"
 msgid "An error occurred"
 msgstr "エラーが発生しました"
 
+#: src/state/queries/video/video.ts:182
+msgid "An error occurred while compressing the video."
+msgstr "ビデオの圧縮中にエラーが発生しました。"
+
 #: src/components/StarterPack/ProfileStarterPacks.tsx:315
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr "スターターパックの生成中にエラーが発生しました。再度試しますか？"
@@ -502,10 +535,18 @@ msgstr "スターターパックの生成中にエラーが発生しました。
 msgid "An error occurred while loading the video. Please try again later."
 msgstr "ビデオの読み込み時にエラーが発生しました。時間をおいてもう一度お試しください。"
 
+#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:170
+msgid "An error occurred while loading the video. Please try again."
+msgstr "ビデオの読み込み時にエラーが発生しました。もう一度お試しください。"
+
 #: src/components/StarterPack/QrCodeDialog.tsx:71
 #: src/components/StarterPack/ShareDialog.tsx:79
 msgid "An error occurred while saving the QR code!"
 msgstr "QRコードの保存中にエラーが発生しました！"
+
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:51
+msgid "An error occurred while selecting the video"
+msgstr "ビデオの選択中にエラーが発生しました"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:336
 #: src/screens/StarterPack/StarterPackScreen.tsx:358
@@ -945,6 +986,21 @@ msgstr "検索をキャンセル"
 msgid "Cancels opening the linked website"
 msgstr "リンク先のウェブサイトを開くことをキャンセル"
 
+#: src/state/shell/composer.tsx:70
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:138
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:204
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:240
+msgid "Cannot interact with a blocked user"
+msgstr "ブロックしたユーザーとはやりとりできません"
+
+#: src/view/com/composer/videos/SubtitleDialog.tsx:125
+msgid "Captions (.vtt)"
+msgstr "キャプション（.vtt）"
+
+#: src/view/com/composer/videos/SubtitleDialog.tsx:51
+msgid "Captions & alt text"
+msgstr "キャプション＆ALTテキスト"
+
 #: src/view/com/modals/VerifyEmail.tsx:160
 msgid "Change"
 msgstr "変更"
@@ -1224,10 +1280,6 @@ msgstr "{MAX_GRAPHEME_LENGTH}文字までの投稿を作成"
 msgid "Compose reply"
 msgstr "返信を作成"
 
-#: src/view/com/composer/videos/VideoTranscodeProgress.tsx:51
-msgid "Compressing..."
-msgstr "圧縮中…"
-
 #: src/components/moderation/LabelPreference.tsx:81
 msgid "Configure content filtering setting for category: {name}"
 msgstr "このカテゴリのコンテンツフィルタリングを設定：{name}"
@@ -1437,6 +1489,10 @@ msgstr "リストの読み込みに失敗しました"
 #: src/components/dms/ConvoMenu.tsx:88
 msgid "Could not mute chat"
 msgstr "チャットのミュートに失敗しました"
+
+#: src/view/com/composer/videos/VideoPreview.web.tsx:42
+msgid "Could not process your video"
+msgstr "ビデオを処理できませんでした"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:272
 msgid "Create"
@@ -1691,8 +1747,8 @@ msgid "Direct messages are here!"
 msgstr "ダイレクトメッセージはこちら！"
 
 #: src/view/screens/AccessibilitySettings.tsx:111
-msgid "Disable autoplay for GIFs"
-msgstr "GIFを自動再生しない"
+msgid "Disable autoplay for videos and GIFs"
+msgstr "ビデオやGIFを自動再生しない"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:90
 msgid "Disable Email 2FA"
@@ -1727,10 +1783,6 @@ msgstr "下書きを削除しますか？"
 #: src/screens/Moderation/index.tsx:556
 msgid "Discourage apps from showing my account to logged-out users"
 msgstr "アプリがログアウトしたユーザーに自分のアカウントを表示しないようにする"
-
-#: src/tours/HomeTour.tsx:70
-msgid "Discover learns which posts you like as you browse."
-msgstr "Discoverは閲覧中にどの投稿が好みなのかを学習します。"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:70
 #: src/view/com/posts/FollowingEndOfFeed.tsx:71
@@ -2063,9 +2115,9 @@ msgstr "有効"
 msgid "End of feed"
 msgstr "フィードの終わり"
 
-#: src/tours/Tooltip.tsx:159
-msgid "End of onboarding tour window. Do not move forward. Instead, go backward for more options, or press to skip."
-msgstr "オンボーディングツアー・ウインドウ終了。先へ進まないでください。代わりに、戻って他のオプションを見るか、スキップしてください。"
+#: src/view/com/composer/videos/SubtitleDialog.tsx:157
+msgid "Ensure you have selected a language for each subtitle file."
+msgstr "各字幕ファイルに言語が選択されてることを確認してください。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:161
 msgid "Enter a name for this App Password"
@@ -2164,6 +2216,10 @@ msgstr "フォローしているユーザーは除外"
 #: src/components/dialogs/MutedWords.tsx:514
 msgid "Excludes users you follow"
 msgstr "フォローしているユーザーは除外"
+
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:325
+msgid "Exit fullscreen"
+msgstr "全画面表示を終了"
 
 #: src/view/com/modals/DeleteAccount.tsx:293
 msgid "Exits account deletion process"
@@ -2326,6 +2382,13 @@ msgstr "フィードの更新に失敗しました"
 msgid "Failed to update settings"
 msgstr "設定の更新に失敗しました"
 
+#: src/state/queries/video/video-upload.ts:75
+#: src/state/queries/video/video-upload.web.ts:71
+#: src/state/queries/video/video-upload.web.ts:75
+#: src/state/queries/video/video-upload.web.ts:85
+msgid "Failed to upload video"
+msgstr "ビデオのアップロードに失敗しました"
+
 #: src/Navigation.tsx:226
 msgid "Feed"
 msgstr "フィード"
@@ -2386,10 +2449,6 @@ msgstr "最後に"
 msgid "Find accounts to follow"
 msgstr "フォローするアカウントを探す"
 
-#: src/tours/HomeTour.tsx:88
-msgid "Find more feeds and accounts to follow in the Explore page."
-msgstr "検索ページでフォローすべきフィードやアカウントを見つける。"
-
 #: src/view/screens/Search/Search.tsx:439
 msgid "Find posts and users on Bluesky"
 msgstr "投稿やユーザーをBlueskyで検索"
@@ -2405,10 +2464,6 @@ msgstr "ディスカッションスレッドを微調整します。"
 #: src/screens/StarterPack/Wizard/index.tsx:191
 msgid "Finish"
 msgstr "完了"
-
-#: src/tours/Tooltip.tsx:149
-msgid "Finish tour and begin using the application"
-msgstr "ツアーを終了してアプリを使用開始"
 
 #: src/screens/Onboarding/index.tsx:35
 msgid "Fitness"
@@ -2546,10 +2601,6 @@ msgstr "Followingフィードの設定"
 msgid "Following Feed Preferences"
 msgstr "Followingフィードの設定"
 
-#: src/tours/HomeTour.tsx:59
-msgid "Following shows the latest posts from people you follow."
-msgstr "Followingはフォローしてるユーザーの最新の投稿を表示します。"
-
 #: src/screens/Profile/Header/Handle.tsx:31
 msgid "Follows you"
 msgstr "あなたをフォロー"
@@ -2600,6 +2651,10 @@ msgstr "@{sanitizedAuthor}による"
 msgctxt "from-feed"
 msgid "From <0/>"
 msgstr "<0/>から"
+
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:326
+msgid "Fullscreen"
+msgstr "全画面表示"
 
 #: src/view/com/composer/photos/SelectPhotoBtn.tsx:39
 msgid "Gallery"
@@ -2693,10 +2748,6 @@ msgstr "次へ"
 #: src/components/dms/ConvoMenu.tsx:167
 msgid "Go to profile"
 msgstr "プロフィールへ"
-
-#: src/tours/Tooltip.tsx:138
-msgid "Go to the next step of the tour"
-msgstr "ツアーの次のステップへ移動"
 
 #: src/components/dms/ConvoMenu.tsx:164
 msgid "Go to user's profile"
@@ -2919,6 +2970,10 @@ msgstr "画像をカメラロールに保存しました！"
 msgid "Impersonation or false claims about identity or affiliation"
 msgstr "なりすまし、または身元もしくは所属に関する虚偽の主張"
 
+#: src/lib/moderation/useReportOptions.ts:68
+msgid "Impersonation, misinformation, or false claims"
+msgstr "なりすまし、偽情報、あるいは虚偽の主張"
+
 #: src/lib/moderation/useReportOptions.ts:86
 msgid "Inappropriate messages or explicit links"
 msgstr "不適切なメッセージ、または露骨なコンテンツへのリンク"
@@ -3019,6 +3074,10 @@ msgstr "招待、ただし個人的なもの"
 #: src/screens/StarterPack/Wizard/index.tsx:452
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "今はあなただけ！上で検索してスターターパックにより多くのユーザーを追加してください。"
+
+#: src/view/com/composer/Composer.tsx:1125
+msgid "Job ID: {0}"
+msgstr "ジョブID：{0}"
 
 #: src/view/com/auth/SplashScreen.web.tsx:164
 msgid "Jobs"
@@ -3404,6 +3463,10 @@ msgstr "メッセージ"
 #: src/lib/moderation/useReportOptions.ts:47
 msgid "Misleading Account"
 msgstr "誤解を招くアカウント"
+
+#: src/lib/moderation/useReportOptions.ts:67
+msgid "Misleading Post"
+msgstr "誤解を招く投稿"
 
 #: src/screens/Settings/AppearanceSettings.tsx:78
 msgid "Mode"
@@ -3971,21 +4034,13 @@ msgstr "OK"
 msgid "Oldest replies first"
 msgstr "古い順に返信を表示"
 
-#: src/components/StarterPack/QrCode.tsx:69
-msgid "on"
-msgstr "on"
-
-#: src/lib/hooks/useTimeAgo.ts:81
-msgid "on {str}"
-msgstr "{str}"
+#: src/components/StarterPack/QrCode.tsx:70
+msgid "on<0><1/><2><3/></2></0>"
+msgstr "<0><1/><2><3/></2></0>"
 
 #: src/view/screens/Settings/index.tsx:226
 msgid "Onboarding reset"
 msgstr "オンボーディングのリセット"
-
-#: src/tours/Tooltip.tsx:118
-msgid "Onboarding tour step {0}: {1}"
-msgstr "オンボーディングツアー ステップ {0}：{1}"
 
 #: src/view/com/composer/Composer.tsx:589
 msgid "One or more images is missing alt text."
@@ -4002,6 +4057,10 @@ msgstr "{0}のみ返信可能。"
 #: src/screens/Signup/StepHandle.tsx:150
 msgid "Only contains letters, numbers, and hyphens"
 msgstr "英数字とハイフンのみ"
+
+#: src/view/com/composer/videos/SubtitleFilePicker.tsx:31
+msgid "Only WebVTT (.vtt) files are supported"
+msgstr "WebVTT（.vtt）ファイルのみに対応しています"
 
 #: src/components/Lists.tsx:88
 msgid "Oops, something went wrong!"
@@ -4364,12 +4423,12 @@ msgstr "GIFの再生や一時停止"
 #: src/view/com/util/post-embeds/VideoEmbed.tsx:52
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:204
 msgid "Play video"
-msgstr "動画を再生"
+msgstr "ビデオを再生"
 
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:57
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:58
 msgid "Play Video"
-msgstr "動画を再生"
+msgstr "ビデオを再生"
 
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:122
 msgid "Plays the GIF"
@@ -4638,10 +4697,6 @@ msgstr "QRコードをダウンロードしました！"
 msgid "QR code saved to your camera roll!"
 msgstr "QRコードをカメラロールに保存しました！"
 
-#: src/tours/Tooltip.tsx:111
-msgid "Quick tip"
-msgstr "クイック・チップ"
-
 #: src/view/com/util/post-ctrls/RepostButton.tsx:122
 #: src/view/com/util/post-ctrls/RepostButton.tsx:149
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:85
@@ -4752,6 +4807,10 @@ msgstr "{displayName}をスターターパックから削除"
 msgid "Remove account"
 msgstr "アカウントを削除"
 
+#: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:28
+msgid "Remove attachment"
+msgstr "添付を削除"
+
 #: src/view/com/util/UserAvatar.tsx:387
 msgid "Remove Avatar"
 msgstr "アバターを削除"
@@ -4799,10 +4858,6 @@ msgstr "保存フィードから削除"
 msgid "Remove image"
 msgstr "イメージを削除"
 
-#: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:28
-msgid "Remove image preview"
-msgstr "イメージプレビューを削除"
-
 #: src/components/dialogs/MutedWords.tsx:523
 msgid "Remove mute word from your list"
 msgstr "リストからミュートワードを削除"
@@ -4823,6 +4878,10 @@ msgstr "引用を削除"
 #: src/view/com/util/post-ctrls/RepostButton.tsx:111
 msgid "Remove repost"
 msgstr "リポストを削除"
+
+#: src/view/com/composer/videos/SubtitleDialog.tsx:248
+msgid "Remove subtitle file"
+msgstr "字幕ファイルを削除"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:211
 msgid "Remove this feed from your saved feeds"
@@ -4861,8 +4920,8 @@ msgid "Removes quoted post"
 msgstr "引用を削除する"
 
 #: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:29
-msgid "Removes the image preview"
-msgstr "画像のプレビューを削除する"
+msgid "Removes the attachment"
+msgstr "添付を削除する"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:129
 #: src/view/com/posts/FeedShutdownMsg.tsx:133
@@ -5327,6 +5386,10 @@ msgstr "Blueskyの求人を見る"
 msgid "See this guide"
 msgstr "ガイドを見る"
 
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:572
+msgid "Seek slider"
+msgstr "シークバー"
+
 #: src/view/com/util/Selector.tsx:106
 msgid "Select {item}"
 msgstr "{item}を選択"
@@ -5363,6 +5426,10 @@ msgstr "GIF「{0}」を選ぶ"
 msgid "Select how long to mute this word for."
 msgstr "このワードをどのくらいの間ミュートするのかを選択。"
 
+#: src/view/com/composer/videos/SubtitleDialog.tsx:233
+msgid "Select language..."
+msgstr "言語を選択…"
+
 #: src/view/screens/LanguageSettings.tsx:303
 msgid "Select languages"
 msgstr "言語を選択"
@@ -5374,6 +5441,10 @@ msgstr "モデレーターを選択"
 #: src/view/com/util/Selector.tsx:107
 msgid "Select option {i} of {numItems}"
 msgstr "{numItems}個中{i}個目のオプションを選択"
+
+#: src/view/com/composer/videos/SubtitleFilePicker.tsx:57
+msgid "Select subtitle file (.vtt)"
+msgstr "字幕ファイル（.vtt）を選択"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:83
 msgid "Select the {emojiName} emoji as your avatar"
@@ -5897,10 +5968,6 @@ msgstr "{displayName}とのチャットを開始"
 msgid "Start chatting"
 msgstr "チャットを開始"
 
-#: src/tours/Tooltip.tsx:99
-msgid "Start of onboarding tour window. Do not move backward. Instead, go forward for more options, or press to skip."
-msgstr "オンボーディングツアー・ウインドウ開始。前へ戻らないでください。代わりに、進んで他のオプションを見るか、スキップしてください。"
-
 #: src/lib/generate-starterpack.ts:68
 #: src/Navigation.tsx:358
 #: src/Navigation.tsx:363
@@ -5991,10 +6058,6 @@ msgstr "サポート"
 msgid "Switch Account"
 msgstr "アカウントを切り替える"
 
-#: src/tours/HomeTour.tsx:48
-msgid "Switch between feeds to control your experience."
-msgstr "フィードを切り替えて、あなたの体験をコントロールしよう。"
-
 #: src/view/screens/Settings/index.tsx:126
 msgid "Switch to {0}"
 msgstr "{0}に切り替え"
@@ -6036,9 +6099,10 @@ msgstr "タップしてフルスクリーンに"
 msgid "Tap to toggle sound"
 msgstr "タップして音の切り替え"
 
-#: src/view/com/util/images/AutoSizedImage.tsx:70
-msgid "Tap to view fully"
-msgstr "タップして全体を表示"
+#: src/view/com/util/images/AutoSizedImage.tsx:185
+#: src/view/com/util/images/AutoSizedImage.tsx:205
+msgid "Tap to view full image"
+msgstr "タップして画像全体を表示"
 
 #: src/state/shell/progress-guide.tsx:166
 msgid "Task complete - 10 likes!"
@@ -6508,6 +6572,10 @@ msgstr "メールでの２要素認証を無効にするには、メールアド
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
 msgstr "会話を報告するには、会話の画面からメッセージのうちの一つを報告してください。それによって問題の文脈をモデレーターが理解できるようになります。"
 
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:106
+msgid "To upload videos to Bluesky, you must first verify your email."
+msgstr "Blueskyにビデオをアップロードするには、まずメールアドレスを確認しなくてはなりません。"
+
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
 msgstr "この報告を誰に送りたいですか？"
@@ -6706,6 +6774,10 @@ msgstr "このラベラーの登録を解除"
 msgid "Unsubscribed from list"
 msgstr "リストの登録を解除しました"
 
+#: src/state/queries/video/video.ts:195
+msgid "Unsupported video type: {mimeType}"
+msgstr "サポートしていないビデオ形式：{mimeType}"
+
 #: src/lib/moderation/useReportOptions.ts:72
 #: src/lib/moderation/useReportOptions.ts:85
 msgid "Unwanted Sexual Content"
@@ -6881,6 +6953,10 @@ msgstr "このコンテンツやプロフィールにいいねをしているユ
 msgid "Value:"
 msgstr "値："
 
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:104
+msgid "Verified email required"
+msgstr "メールアドレスの確認が必要"
+
 #: src/view/com/modals/ChangeHandle.tsx:504
 msgid "Verify DNS Record"
 msgstr "DNSレコードを確認"
@@ -6902,6 +6978,10 @@ msgstr "メールアドレスを確認"
 msgid "Verify New Email"
 msgstr "新しいメールアドレスを確認"
 
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:108
+msgid "Verify now"
+msgstr "確認する"
+
 #: src/view/com/modals/ChangeHandle.tsx:505
 msgid "Verify Text File"
 msgstr "テキストファイルを確認"
@@ -6918,10 +6998,26 @@ msgstr "バージョン {appVersion} {bundleInfo}"
 msgid "Video"
 msgstr "ビデオ"
 
+#: src/state/queries/video/video.ts:129
+msgid "Video failed to process"
+msgstr "ビデオの処理に失敗"
+
 #: src/screens/Onboarding/index.tsx:39
 #: src/screens/Onboarding/state.ts:88
 msgid "Video Games"
 msgstr "ビデオゲーム"
+
+#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:163
+msgid "Video not found."
+msgstr "ビデオが見つかりません。"
+
+#: src/view/com/composer/videos/SubtitleDialog.tsx:92
+msgid "Video settings"
+msgstr "ビデオの設定"
+
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:86
+msgid "Video: {0}"
+msgstr "ビデオ：{0}"
 
 #: src/screens/Profile/Header/Shell.tsx:113
 msgid "View {0}'s avatar"
