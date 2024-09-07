@@ -5,13 +5,13 @@ const MAX_VIDEO_SIZE = 1024 * 1024 * 100 // 100MB
 
 // doesn't actually compress, but throws if >100MB
 export async function compressVideo(
-  file: string,
+  asset: {uri: string},
   _opts?: {
     signal?: AbortSignal
     onProgress?: (progress: number) => void
   },
 ): Promise<CompressedVideo> {
-  const {mimeType, base64} = parseDataUrl(file)
+  const {mimeType, base64} = parseDataUrl(asset.uri)
   const blob = base64ToBlob(base64, mimeType)
   const uri = URL.createObjectURL(blob)
 
