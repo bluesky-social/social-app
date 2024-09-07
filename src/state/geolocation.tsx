@@ -3,6 +3,7 @@ import EventEmitter from 'eventemitter3'
 
 import {networkRetry} from '#/lib/async/retry'
 import {logger} from '#/logger'
+import {IS_DEV} from '#/env'
 import {Device, device} from '#/storage'
 
 const events = new EventEmitter()
@@ -28,7 +29,7 @@ export const DEFAULT_GEOLOCATION: Device['geolocation'] = {
 }
 
 async function getGeolocation(): Promise<Device['geolocation']> {
-  const res = await fetch(`https://ipapi.bsky.workers.dev/`)
+  const res = await fetch(`https://app.staging.bsky.dev/ipcc `)
 
   if (!res.ok) {
     throw new Error(`geolocation: lookup failed ${res.status}`)
@@ -36,9 +37,9 @@ async function getGeolocation(): Promise<Device['geolocation']> {
 
   const json = await res.json()
 
-  if (json.country_code) {
+  if (json.countryCode) {
     return {
-      countryCode: json.country_code,
+      countryCode: json.countryCode,
     }
   } else {
     return undefined
@@ -60,6 +61,16 @@ let geolocationResolution: Promise<void> | undefined
  * resolved, use {@link ensureGeolocationResolved}
  */
 export function beginResolveGeolocation() {
+  /**
+   * In dev, IP server is unavailable, so we just set the default geolocation
+   * and fail closed.
+   */
+  if (IS_DEV) {
+    geolocationResolution = new Promise(y => y())
+    device.set(['geolocation'], DEFAULT_GEOLOCATION)
+    return
+  }
+
   geolocationResolution = new Promise(async resolve => {
     try {
       // Try once, fail fast
