@@ -71,7 +71,7 @@ function InnerWrapper({embed}: Props) {
 
   const [playerStatus, setPlayerStatus] = useState<
     VideoPlayerStatus | 'paused'
-  >(player.playing ? 'readyToPlay' : 'paused')
+  >('paused')
   const [isMuted, setIsMuted] = useState(player.muted)
   const [isFullscreen, setIsFullscreen] = React.useState(false)
   const [timeRemaining, setTimeRemaining] = React.useState(0)

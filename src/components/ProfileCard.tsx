@@ -276,8 +276,8 @@ export function DescriptionPlaceholder() {
 export type FollowButtonProps = {
   profile: AppBskyActorDefs.ProfileViewBasic
   moderationOpts: ModerationOpts
-  logContext: LogEvents['profile:follow']['logContext'] &
-    LogEvents['profile:unfollow']['logContext']
+  logContext: LogEvents['profile:follow:sampled']['logContext'] &
+    LogEvents['profile:unfollow:sampled']['logContext']
 } & Partial<ButtonProps>
 
 export function FollowButton(props: FollowButtonProps) {

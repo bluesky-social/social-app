@@ -1,24 +1,18 @@
 import React from 'react'
-import {ActivityIndicator, AppState, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {logEvent, LogEvents} from '#/lib/statsig/statsig'
-import {useGate} from '#/lib/statsig/statsig'
 import {emitSoftReset} from '#/state/events'
 import {SavedFeedSourceInfo, usePinnedFeedsInfos} from '#/state/queries/feed'
 import {FeedParams} from '#/state/queries/post-feed'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useSession} from '#/state/session'
-import {
-  useMinimalShellMode,
-  useSetDrawerSwipeDisabled,
-  useSetMinimalShellMode,
-} from '#/state/shell'
+import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
 import {useOTAUpdates} from 'lib/hooks/useOTAUpdates'
 import {useRequestNotificationsPermission} from 'lib/notifications/notifications'
@@ -87,7 +81,6 @@ function HomeScreenReady({
   const selectedIndex = Math.max(0, maybeFoundIndex)
   const selectedFeed = allFeeds[selectedIndex]
   const requestNotificationsPermission = useRequestNotificationsPermission()
-  const gate = useGate()
 
   useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName)
   useOTAUpdates()
@@ -132,29 +125,6 @@ function HomeScreenReady({
         })
       }
     }),
-  )
-
-  const {footerMode} = useMinimalShellMode()
-  const {isMobile} = useWebMediaQueries()
-  useFocusEffect(
-    React.useCallback(() => {
-      if (gate('fixed_bottom_bar')) {
-        // Unnecessary because it's always there.
-        return
-      }
-      const listener = AppState.addEventListener('change', nextAppState => {
-        if (nextAppState === 'active') {
-          if (isMobile && footerMode.value === 1) {
-            // Reveal the bottom bar so you don't miss notifications or messages.
-            // TODO: Experiment with only doing it when unread > 0.
-            setMinimalShellMode(false)
-          }
-        }
-      })
-      return () => {
-        listener.remove()
-      }
-    }, [setMinimalShellMode, footerMode, isMobile, gate]),
   )
 
   const onPageSelected = React.useCallback(

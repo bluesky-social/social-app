@@ -11,7 +11,7 @@ import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import * as NavigationBar from 'expo-navigation-bar'
 import {StatusBar} from 'expo-status-bar'
-import {useNavigationState} from '@react-navigation/native'
+import {useNavigation, useNavigationState} from '@react-navigation/native'
 
 import {useSession} from '#/state/session'
 import {
@@ -20,6 +20,7 @@ import {
   useSetDrawerOpen,
 } from '#/state/shell'
 import {useCloseAnyActiveElement} from '#/state/util'
+import {useDedupe} from 'lib/hooks/useDedupe'
 import {useNotificationsHandler} from 'lib/hooks/useNotificationHandler'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useNotificationsRegistration} from 'lib/notifications/notifications'
@@ -33,6 +34,7 @@ import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 import {SigninDialog} from '#/components/dialogs/Signin'
 import {Outlet as PortalOutlet} from '#/components/Portal'
+import {updateActiveViewAsync} from '../../../modules/expo-bluesky-swiss-army/src/VisibilityView'
 import {RoutesContainer, TabsNavigator} from '../../Navigation'
 import {Composer} from './Composer'
 import {DrawerContent} from './Drawer'
@@ -75,6 +77,27 @@ function ShellInner() {
       listener.remove()
     }
   }, [closeAnyActiveElement])
+
+  // HACK
+  // expo-video doesn't like it when you try and move a `player` to another `VideoView`. Instead, we need to actually
+  // unregister that player to let the new screen register it. This is only a problem on Android, so we only need to
+  // apply it there.
+  // The `state` event should only fire whenever we push or pop to a screen, and should not fire consecutively quickly.
+  // To be certain though, we will also dedupe these calls.
+  const navigation = useNavigation()
+  const dedupe = useDedupe(1000)
+  React.useEffect(() => {
+    if (!isAndroid) return
+    const onFocusOrBlur = () => {
+      setTimeout(() => {
+        dedupe(updateActiveViewAsync)
+      }, 500)
+    }
+    navigation.addListener('state', onFocusOrBlur)
+    return () => {
+      navigation.removeListener('state', onFocusOrBlur)
+    }
+  }, [dedupe, navigation])
 
   return (
     <>
