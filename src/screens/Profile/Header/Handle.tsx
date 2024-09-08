@@ -6,6 +6,7 @@ import {Trans} from '@lingui/macro'
 import {Shadow} from '#/state/cache/types'
 import {isInvalidHandle} from 'lib/strings/handles'
 import {isIOS} from 'platform/detection'
+import {HighlightedHandle} from '#/view/com/util/HighlightedHandle'
 import {atoms as a, useTheme, web} from '#/alf'
 import {NewskieDialog} from '#/components/NewskieDialog'
 import {Text} from '#/components/Typography'
@@ -47,7 +48,7 @@ export function ProfileHeaderHandle({
             : [a.text_md, a.leading_tight, t.atoms.text_contrast_medium],
           web({wordBreak: 'break-all'}),
         ]}>
-        {invalidHandle ? <Trans>⚠Invalid Handle</Trans> : `@${profile.handle}`}
+        <HighlightedHandle handle={profile.handle} />
       </Text>
     </View>
   )

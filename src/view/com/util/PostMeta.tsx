@@ -10,11 +10,11 @@ import {makeProfileLink} from 'lib/routes/links'
 import {forceLTR} from 'lib/strings/bidi'
 import {NON_BREAKING_SPACE} from 'lib/strings/constants'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {sanitizeHandle} from 'lib/strings/handles'
 import {niceDate} from 'lib/strings/time'
 import {TypographyVariant} from 'lib/ThemeContext'
 import {isAndroid} from 'platform/detection'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
+import {HighlightedHandle} from './HighlightedHandle'
 import {TextLinkOnWebOnly} from './Link'
 import {Text} from './text/Text'
 import {TimeElapsed} from './TimeElapsed'
@@ -86,7 +86,12 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             type="md"
             disableMismatchWarning
             style={[pal.textLight, {flexShrink: 4}]}
-            text={NON_BREAKING_SPACE + sanitizeHandle(handle, '@')}
+            text={
+              <>
+                {NON_BREAKING_SPACE}
+                <HighlightedHandle handle={handle} />
+              </>
+            }
             href={profileLink}
             onBeforePress={onBeforePressAuthor}
             anchorNoUnderline

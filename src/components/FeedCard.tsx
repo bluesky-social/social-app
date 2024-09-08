@@ -17,9 +17,9 @@ import {
   usePreferencesQuery,
   useRemoveFeedMutation,
 } from '#/state/queries/preferences'
-import {sanitizeHandle} from 'lib/strings/handles'
 import {precacheFeedFromGeneratorView} from 'state/queries/feed'
 import {useSession} from 'state/session'
+import {HighlightedHandle} from '#/view/com/util/HighlightedHandle'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import * as Toast from 'view/com/util/Toast'
 import {useTheme} from '#/alf'
@@ -128,7 +128,7 @@ export function TitleAndByline({
         <Text
           style={[a.leading_snug, t.atoms.text_contrast_medium]}
           numberOfLines={1}>
-          <Trans>Feed by {sanitizeHandle(creator.handle, '@')}</Trans>
+          <Trans>Feed by {<HighlightedHandle handle={creator.handle} />}</Trans>
         </Text>
       )}
     </View>

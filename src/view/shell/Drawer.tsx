@@ -57,6 +57,7 @@ import {
   UserCircle_Filled_Corner0_Rounded as UserCircleFilled,
   UserCircle_Stroke2_Corner0_Rounded as UserCircle,
 } from '#/components/icons/UserCircle'
+import {HighlightedHandle} from '../com/util/HighlightedHandle'
 import {TextLink} from '../com/util/Link'
 
 const iconWidth = 28
@@ -95,7 +96,7 @@ let DrawerProfileCard = ({
         type="2xl"
         style={[pal.textLight, styles.profileCardHandle]}
         numberOfLines={1}>
-        @{account.handle}
+        <HighlightedHandle handle={account.handle} />
       </Text>
       <View
         style={[
