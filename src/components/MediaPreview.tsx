@@ -43,10 +43,10 @@ export function Embed({
         ))}
       </Outer>
     )
-  } else if (AppBskyEmbedExternal.isView(embed) && embed.external.thumb) {
+  } else if (AppBskyEmbedExternal.isView(media) && media.external.thumb) {
     let url: URL | undefined
     try {
-      url = new URL(embed.external.uri)
+      url = new URL(media.external.uri)
     } catch {}
     if (url) {
       const {success} = parseTenorGif(url)
@@ -54,17 +54,17 @@ export function Embed({
         return (
           <Outer style={style}>
             <GifItem
-              thumbnail={embed.external.thumb}
-              alt={embed.external.title}
+              thumbnail={media.external.thumb}
+              alt={media.external.title}
             />
           </Outer>
         )
       }
     }
-  } else if (AppBskyEmbedVideo.isView(embed)) {
+  } else if (AppBskyEmbedVideo.isView(media)) {
     return (
       <Outer style={style}>
-        <VideoItem thumbnail={embed.thumbnail} alt={embed.alt} />
+        <VideoItem thumbnail={media.thumbnail} alt={media.alt} />
       </Outer>
     )
   }
