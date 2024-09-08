@@ -31,11 +31,11 @@ msgstr "{0, plural, one {{formattedCount} other} other {{formattedCount} others}
 
 #: src/lib/hooks/useTimeAgo.ts:156
 msgid "{0, plural, one {# day} other {# days}}"
-msgstr ""
+msgstr "{0, plural, one {# dia} other {# dies}}"
 
 #: src/lib/hooks/useTimeAgo.ts:146
 msgid "{0, plural, one {# hour} other {# hours}}"
-msgstr ""
+msgstr "{0, plural, one {# hora} other {# hores}}"
 
 #: src/view/shell/desktop/RightNav.tsx:168
 #~ msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
@@ -59,11 +59,11 @@ msgstr "{0, plural, one {# etiqueta s'ha aplicat a aquest contingut} other {# et
 
 #: src/lib/hooks/useTimeAgo.ts:136
 msgid "{0, plural, one {# minute} other {# minutes}}"
-msgstr ""
+msgstr "{0, plural, one {# minut} other {# minuts}}"
 
 #: src/lib/hooks/useTimeAgo.ts:167
 msgid "{0, plural, one {# month} other {# months}}"
-msgstr ""
+msgstr "{0, plural, one {# mes} other {# mesos}}"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:71
 msgid "{0, plural, one {# repost} other {# reposts}}"
@@ -71,11 +71,11 @@ msgstr "{0, plural, one {# republicació} other {# republicacions}}"
 
 #: src/lib/hooks/useTimeAgo.ts:126
 msgid "{0, plural, one {# second} other {# seconds}}"
-msgstr ""
+msgstr "{0, plural, one {# segon} other {# segons}}"
 
 #: src/components/KnownFollowers.tsx:179
 #~ msgid "{0, plural, one {and # other} other {and # others}}"
-#~ msgstr ""
+#~ msgstr "{0, plural, one {i # altre} other {i # altres}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:398
 #: src/screens/Profile/Header/Metrics.tsx:23
@@ -144,7 +144,7 @@ msgstr "{0} s'han unit aquesta setmana"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:593
 msgid "{0} of {1}"
-msgstr ""
+msgstr "{0} de {1}"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:467
 msgid "{0} people have used this starter pack!"
@@ -169,27 +169,27 @@ msgstr "Starter pack de {0}"
 #. How many days have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:158
 msgid "{0}d"
-msgstr ""
+msgstr "{0}d"
 
 #. How many hours have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:148
 msgid "{0}h"
-msgstr ""
+msgstr "{0}h"
 
 #. How many minutes have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:138
 msgid "{0}m"
-msgstr ""
+msgstr "{0}m"
 
 #. How many months have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:169
 msgid "{0}mo"
-msgstr ""
+msgstr "{0}me"
 
 #. How many seconds have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:128
 msgid "{0}s"
-msgstr ""
+msgstr "{0}s"
 
 #: src/components/LabelingServiceCard/index.tsx:71
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
@@ -504,7 +504,7 @@ msgstr "Afegeix text alternatiu"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:107
 msgid "Add alt text (optional)"
-msgstr ""
+msgstr "Afegeix text alternatiu (opcional)"
 
 #: src/view/screens/AppPasswords.tsx:105
 #: src/view/screens/AppPasswords.tsx:147
@@ -700,7 +700,7 @@ msgstr "Hi ha hagut un error"
 
 #: src/state/queries/video/video.ts:227
 msgid "An error occurred while compressing the video."
-msgstr ""
+msgstr "Hi ha hagut un error mentre es comprimia el vídeo."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:315
 msgid "An error occurred while generating your starter pack. Want to try again?"
@@ -712,7 +712,7 @@ msgstr "Hi ha hagut un error mentre es carregava el vídeo. Prova-ho més tard."
 
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:170
 msgid "An error occurred while loading the video. Please try again."
-msgstr ""
+msgstr "Hi ha hagut un error mentre es carregava el vídeo. Prova-ho més tard."
 
 #: src/components/StarterPack/ShareDialog.tsx:79
 #~ msgid "An error occurred while saving the image."
@@ -725,7 +725,7 @@ msgstr "S'ha produït un error en desar el codi QR!"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:61
 msgid "An error occurred while selecting the video"
-msgstr ""
+msgstr "Hi ha hagut un error mentre es seleccionava el vídeo"
 
 #: src/components/dms/MessageMenu.tsx:134
 #~ msgid "An error occurred while trying to delete the message. Please try again."
@@ -1274,15 +1274,15 @@ msgstr "Cancel·la obrir la web enllaçada"
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:155
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:191
 msgid "Cannot interact with a blocked user"
-msgstr ""
+msgstr "No pots interactuar amb un usuari bloquejat"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:133
 msgid "Captions (.vtt)"
-msgstr ""
+msgstr "Subtítols (.vtt)"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:54
 msgid "Captions & alt text"
-msgstr ""
+msgstr "Subtítols i text alternatiu"
 
 #: src/view/com/modals/VerifyEmail.tsx:160
 msgid "Change"
@@ -1889,7 +1889,7 @@ msgstr "No s'ha pogut silenciar el xat"
 
 #: src/view/com/composer/videos/VideoPreview.web.tsx:45
 msgid "Could not process your video"
-msgstr ""
+msgstr "No s'ha pogut processar el teu vídeo"
 
 #: src/components/dms/ConvoMenu.tsx:68
 #~ msgid "Could not unmute chat"
@@ -2197,7 +2197,7 @@ msgstr "Els missatges directes són aquí!"
 
 #: src/view/screens/AccessibilitySettings.tsx:111
 msgid "Disable autoplay for videos and GIFs"
-msgstr ""
+msgstr "Desactiva la reproducció automàtica per GIFs i vídeos"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:90
 msgid "Disable Email 2FA"
@@ -2538,7 +2538,7 @@ msgstr "Adreça de correu"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:95
 msgid "Email Resent"
-msgstr ""
+msgstr "S'ha tornat a enviar el correu"
 
 #: src/view/com/modals/ChangeEmail.tsx:54
 #: src/view/com/modals/ChangeEmail.tsx:83
@@ -2555,7 +2555,7 @@ msgstr "Correu verificat"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:71
 msgid "Email Verified"
-msgstr ""
+msgstr "Correu verificat"
 
 #: src/view/screens/Settings/index.tsx:319
 msgid "Email:"
@@ -2642,7 +2642,7 @@ msgstr "Fi del canal"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:157
 msgid "Ensure you have selected a language for each subtitle file."
-msgstr ""
+msgstr "Assegura't que has seleccionat un idioma per a cada fitxer de subtítols."
 
 #: src/view/com/modals/AddAppPasswords.tsx:161
 msgid "Enter a name for this App Password"
@@ -2756,7 +2756,7 @@ msgstr "Exclou els usuaris que segueixes"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:353
 msgid "Exit fullscreen"
-msgstr ""
+msgstr "Surt de la pantalla completa"
 
 #: src/view/com/modals/DeleteAccount.tsx:293
 msgid "Exits account deletion process"
@@ -2941,7 +2941,7 @@ msgstr "No s'ha pogut actualitzar la configuració"
 #: src/state/queries/video/video-upload.web.ts:68
 #: src/state/queries/video/video-upload.web.ts:78
 msgid "Failed to upload video"
-msgstr ""
+msgstr "No s'ha pogut pujar el vídeo"
 
 #: src/Navigation.tsx:226
 msgid "Feed"
@@ -3288,7 +3288,7 @@ msgstr "De <0/>"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:354
 msgid "Fullscreen"
-msgstr ""
+msgstr "Pantalla completa"
 
 #: src/view/com/composer/photos/SelectPhotoBtn.tsx:39
 msgid "Gallery"
@@ -3553,7 +3553,7 @@ msgstr "No podem carregar el servei de moderació."
 
 #: src/state/queries/video/video.ts:165
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
-msgstr ""
+msgstr "Espera! A poc a poc estem donant accés al vídeo i encara estàs a la cua. Torna més tard!"
 
 #: src/Navigation.tsx:550
 #: src/Navigation.tsx:570
@@ -3665,7 +3665,7 @@ msgstr "Suplantació d'identitat o afirmacions falses sobre identitat o afiliaci
 
 #: src/lib/moderation/useReportOptions.ts:68
 msgid "Impersonation, misinformation, or false claims"
-msgstr ""
+msgstr "Suplantació d'identitat, desinformació o afirmacions falses"
 
 #: src/lib/moderation/useReportOptions.ts:91
 msgid "Inappropriate messages or explicit links"
@@ -3758,7 +3758,7 @@ msgstr "Nom d'usuari o contrasenya incorrectes"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:82
 msgid "Invalid Verification Code"
-msgstr ""
+msgstr "Codi de verificació invàlid"
 
 #: src/view/screens/Settings.tsx:411
 #~ msgid "Invite"
@@ -3810,11 +3810,11 @@ msgstr "Ara només ets tu! Afegeix més persones al teu starter pack cercant a d
 
 #: src/view/com/composer/Composer.tsx:1125
 msgid "Job ID: {0}"
-msgstr ""
+msgstr "Identificador de la tasca: {0}"
 
 #: src/view/com/auth/SplashScreen.web.tsx:164
 msgid "Jobs"
-msgstr "Feines"
+msgstr "Tasques"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:206
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:212
@@ -4290,7 +4290,7 @@ msgstr "Compte enganyós"
 
 #: src/lib/moderation/useReportOptions.ts:67
 msgid "Misleading Post"
-msgstr ""
+msgstr "Publicació enganyosa"
 
 #: src/screens/Settings/AppearanceSettings.tsx:78
 msgid "Mode"
@@ -4942,7 +4942,7 @@ msgstr "Respostes més antigues primer"
 
 #: src/components/StarterPack/QrCode.tsx:70
 msgid "on<0><1/><2><3/></2></0>"
-msgstr ""
+msgstr "en<0><1/><2><3/></2></0>"
 
 #: src/view/screens/Settings/index.tsx:226
 msgid "Onboarding reset"
@@ -4974,7 +4974,7 @@ msgstr "Només pot tenir lletres, nombres i guionets"
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:31
 msgid "Only WebVTT (.vtt) files are supported"
-msgstr ""
+msgstr "Només s'admeten fitxers WebVTT (.vtt)"
 
 #: src/components/Lists.tsx:88
 msgid "Oops, something went wrong!"
@@ -5859,7 +5859,7 @@ msgstr "Elimina el compte"
 
 #: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:28
 msgid "Remove attachment"
-msgstr ""
+msgstr "Elimina l'adjunt"
 
 #: src/view/com/util/UserAvatar.tsx:387
 msgid "Remove Avatar"
@@ -5935,7 +5935,7 @@ msgstr "Elimina la republicació"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:260
 msgid "Remove subtitle file"
-msgstr ""
+msgstr "Elimina el fitxer de subtítols"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:175
 #~ msgid "Remove this feed from my feeds?"
@@ -5987,7 +5987,7 @@ msgstr "Elimina la publicació amb la citació"
 
 #: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:29
 msgid "Removes the attachment"
-msgstr ""
+msgstr "Elimina l'adjunt"
 
 #: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:29
 #~ msgid "Removes the image preview"
@@ -6254,11 +6254,11 @@ msgstr "Torna a enviar el correu"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:130
 msgid "Resend Email"
-msgstr ""
+msgstr "Torna a enviar el correu"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:123
 msgid "Resend Verification Email"
-msgstr ""
+msgstr "Torna a enviar el correu de verificació"
 
 #: src/view/com/modals/ChangePassword.tsx:186
 msgid "Reset code"
@@ -6558,7 +6558,7 @@ msgstr "Consulta aquesta guia"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:587
 msgid "Seek slider"
-msgstr ""
+msgstr "Cerca el control lliscant"
 
 #: src/view/com/util/Selector.tsx:106
 msgid "Select {item}"
@@ -6602,7 +6602,7 @@ msgstr "Tria per quant temps s'ha de silenciar aquesta paraula."
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:245
 msgid "Select language..."
-msgstr ""
+msgstr "Selecciona l'idioma..."
 
 #: src/view/screens/LanguageSettings.tsx:303
 msgid "Select languages"
@@ -6627,7 +6627,7 @@ msgstr "Selecciona l'opció {i} de {numItems}"
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:57
 msgid "Select subtitle file (.vtt)"
-msgstr ""
+msgstr "Tria el fitxer de subtítols (.vtt)"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:83
 msgid "Select the {emojiName} emoji as your avatar"
@@ -7510,7 +7510,7 @@ msgstr "Toca per canviar el so"
 #: src/view/com/util/images/AutoSizedImage.tsx:190
 #: src/view/com/util/images/AutoSizedImage.tsx:210
 msgid "Tap to view full image"
-msgstr ""
+msgstr "Toca per a veure la imatge completa"
 
 #: src/view/com/util/images/AutoSizedImage.tsx:70
 #~ msgid "Tap to view fully"
@@ -7576,7 +7576,7 @@ msgstr "Gràcies. El teu informe s'ha enviat."
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:74
 msgid "Thanks, you have successfully verified your email address."
-msgstr ""
+msgstr "Gràcies, has verificat correctament el teu correu."
 
 #: src/view/com/modals/ChangeHandle.tsx:459
 msgid "That contains the following:"
@@ -7685,7 +7685,7 @@ msgstr "Les condicions del servei han estat traslladades a"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:85
 msgid "The verification code you have provided is invalid. Please make sure that you have used the correct verification link or request a new one."
-msgstr ""
+msgstr "El codi de verificació que has proporcionat no és vàlid. Assegura't que has utilitzat l'enllaç de verificació correcte o sol·licita'n un de nou."
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:141
 #~ msgid "There are many feeds to try:"
@@ -8091,7 +8091,7 @@ msgstr "Per informar d'una conversa, informa d'un dels seus missatges a través 
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:106
 msgid "To upload videos to Bluesky, you must first verify your email."
-msgstr ""
+msgstr "Primer has de verificar el teu correu per poder pujar vídeos a Bluesky."
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
@@ -8324,7 +8324,7 @@ msgstr "T'has dona't de baixa de la llista"
 
 #: src/state/queries/video/video.ts:240
 msgid "Unsupported video type: {mimeType}"
-msgstr ""
+msgstr "Tipus de vídeo no compatible: {mimeType}"
 
 #: src/lib/moderation/useReportOptions.ts:85
 #~ msgid "Unwanted sexual content"
@@ -8527,7 +8527,7 @@ msgstr "Valor:"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:104
 msgid "Verified email required"
-msgstr ""
+msgstr "Es requereix un correu verificat"
 
 #: src/view/com/modals/ChangeHandle.tsx:510
 #~ msgid "Verify {0}"
@@ -8543,7 +8543,7 @@ msgstr "Verifica el correu"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:61
 msgid "Verify email dialog"
-msgstr ""
+msgstr "Diàleg de verificació del correu"
 
 #: src/view/screens/Settings/index.tsx:961
 msgid "Verify my email"
@@ -8560,7 +8560,7 @@ msgstr "Verifica el correu nou"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:108
 msgid "Verify now"
-msgstr ""
+msgstr "Verifica-ho ara"
 
 #: src/view/com/modals/ChangeHandle.tsx:505
 msgid "Verify Text File"
@@ -8585,7 +8585,7 @@ msgstr "Vídeo"
 
 #: src/state/queries/video/video.ts:138
 msgid "Video failed to process"
-msgstr ""
+msgstr "El vídeo no s'ha pogut processar"
 
 #: src/screens/Onboarding/index.tsx:39
 #: src/screens/Onboarding/state.ts:88
@@ -8594,15 +8594,15 @@ msgstr "Videojocs"
 
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:163
 msgid "Video not found."
-msgstr ""
+msgstr "No s'ha trobat el vídeo"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:99
 msgid "Video settings"
-msgstr ""
+msgstr "Configuració de vídeo"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:77
 msgid "Video: {0}"
-msgstr ""
+msgstr "Vídeo: {0}"
 
 #: src/view/com/composer/videos/state.ts:27
 #~ msgid "Videos cannot be larger than 100MB"
@@ -8723,7 +8723,7 @@ msgstr "Calculem {estimatedTime} fins que el teu compte estigui llest."
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:98
 msgid "We have sent another verification email to <0>{0}</0>."
-msgstr ""
+msgstr "Hem enviat un altre correu de verificació a <0>{0}</0>."
 
 #: src/screens/Onboarding/StepFinished.tsx:238
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
@@ -8743,7 +8743,7 @@ msgstr "Ja no hi ha més publicacions dels usuaris que segueixes. Aquí n'hi ha 
 
 #: src/state/queries/video/video.ts:170
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
-msgstr ""
+msgstr "No hem pogut determinar si tens permís per pujar vídeos. Torna-ho a provar."
 
 #: src/components/dialogs/BirthDateSettings.tsx:52
 msgid "We were unable to load your birth date preferences. Please try again."
@@ -8978,7 +8978,7 @@ msgstr "Estàs a la cua."
 
 #: src/state/queries/video/video.ts:161
 msgid "You are not allowed to upload videos."
-msgstr ""
+msgstr "No t'és permés pujar vídeos."
 
 #: src/view/com/profile/ProfileFollows.tsx:95
 msgid "You are not following anyone."
@@ -9127,7 +9127,7 @@ msgstr "Has arribat al final"
 
 #: src/state/queries/video/video-upload.shared.ts:67
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
-msgstr ""
+msgstr "Has arribat temporalment al límit de pujades de vídeos. Torna-ho a provar més tard."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:235
 msgid "You haven't created a starter pack yet!"
@@ -9272,11 +9272,11 @@ msgstr "Has arribat al final del vostre cabal! Cerca alguns comptes més per a s
 
 #: src/state/queries/video/video.ts:175
 msgid "You've reached your daily limit for video uploads (too many bytes)"
-msgstr ""
+msgstr "Has assolit el teu límit diari de pujades de vídeos (massa bytes)"
 
 #: src/state/queries/video/video.ts:180
 msgid "You've reached your daily limit for video uploads (too many videos)"
-msgstr ""
+msgstr "Has assolit el teu límit diari de pujades de vídeos (massa vídeos)"
 
 #: src/screens/Signup/index.tsx:146
 msgid "Your account"
