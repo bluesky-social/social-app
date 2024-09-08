@@ -10,7 +10,7 @@ import {
 import {Trans} from '@lingui/macro'
 
 import {parseTenorGif} from '#/lib/strings/embed-player'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 
@@ -91,12 +91,13 @@ export function ImageItem({
   alt?: string
   children?: React.ReactNode
 }) {
+  const t = useTheme()
   return (
     <View style={[a.relative, a.flex_1, {aspectRatio: 1, maxWidth: 100}]}>
       <Image
         key={thumbnail}
         source={{uri: thumbnail}}
-        style={[a.flex_1, a.rounded_xs]}
+        style={[a.flex_1, a.rounded_xs, t.atoms.bg_contrast_25]}
         contentFit="cover"
         accessible={true}
         accessibilityIgnoresInvertColors
