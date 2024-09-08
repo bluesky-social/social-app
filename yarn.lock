@@ -72,10 +72,10 @@
   resolved "https://registry.yarnpkg.com/@atproto-labs/simple-store/-/simple-store-0.1.1.tgz#e743a2722b5d8732166f0a72aca8bd10e9bff106"
   integrity sha512-WKILW2b3QbAYKh+w5U2x6p5FqqLl0nAeLwGeDY+KjX01K4Dq3vQTR9b/qNp0jZm48CabPQVrqCv0PPU9LgRRRg==
 
-"@atproto/api@0.13.5":
-  version "0.13.5"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.13.5.tgz#04305cdb0a467ba366305c5e95cebb7ce0d39735"
-  integrity sha512-yT/YimcKYkrI0d282Zxo7O30OSYR+KDW89f81C6oYZfDRBcShC1aniVV8kluP5LrEAg8O27yrOSnBgx2v7XPew==
+"@atproto/api@0.13.6":
+  version "0.13.6"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.13.6.tgz#2500e9d7143e6718089632300c42ce50149f8cd5"
+  integrity sha512-58emFFZhqY8nVWD3xFWK0yYqAmJ2un+NaTtZxBbRo00mGq1rz9VXTpVmfoHFcuXL1hoDQN3WyJfsub8r6xGOgg==
   dependencies:
     "@atproto/common-web" "^0.3.0"
     "@atproto/lexicon" "^0.4.1"
