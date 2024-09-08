@@ -39,3 +39,18 @@ export function mimeToExt(mimeType: SupportedMimeTypes | (string & {})) {
       throw new Error(`Unsupported mime type: ${mimeType}`)
   }
 }
+
+export function extToMime(ext: string) {
+  switch (ext) {
+    case 'mp4':
+      return 'video/mp4'
+    case 'webm':
+      return 'video/webm'
+    case 'mpeg':
+      return 'video/mpeg'
+    case 'mov':
+      return 'video/quicktime'
+    default:
+      throw new Error(`Unsupported file extension: ${ext}`)
+  }
+}
