@@ -101,13 +101,10 @@ function getSpoof(suffix: string) {
     .slice(0, suffix.length - publicSuffix.length - 1)
     .split('.')
 
-  // ideally, we'd always start at 0, but the ammount of gTLDs is so large
+  // ideally, we'd start at 0, but the ammount of gTLDs is so large
   // that we end up with a lot of false positives for very common words
-  // in subdomains, like `blog`, `app`, `shop`, etc. We start at zero only
-  // if the suffix is long enough
-  let start = parts.length > 2 ? 0 : 1
-
-  for (let i = start; i < parts.length; i++) {
+  // in subdomains, like `blog`, `app`, `shop`, etc.
+  for (let i = 1; i < parts.length; i++) {
     // TODO: perhaps we should use a more restrictive list of gTLDs to avoid false positives
     if (tlds.includes(parts[i])) {
       return parts.slice(0, i + 1).join('.')
