@@ -8594,7 +8594,7 @@ msgstr "Videojocs"
 
 #: src/view/com/util/post-embeds/VideoEmbed.web.tsx:163
 msgid "Video not found."
-msgstr "No s'ha trobat el vídeo"
+msgstr "No s'ha trobat el vídeo."
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:99
 msgid "Video settings"
