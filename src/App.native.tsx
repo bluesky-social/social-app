@@ -50,16 +50,17 @@ import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
 import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
 import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
+import {Provider as HiddenRepliesProvider} from '#/state/threadgate-hidden-replies'
 import {TestCtrls} from '#/view/com/testing/TestCtrls'
-import {ActiveVideoProvider} from '#/view/com/util/post-embeds/ActiveVideoContext'
+import {Provider as ActiveVideoProvider} from '#/view/com/util/post-embeds/ActiveVideoNativeContext'
 import * as Toast from '#/view/com/util/Toast'
 import {Shell} from '#/view/shell'
 import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
+import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {Splash} from '#/Splash'
-import {Provider as TourProvider} from '#/tours'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import {AudioCategory, PlatformInfo} from '../modules/expo-bluesky-swiss-army'
 
@@ -105,52 +106,50 @@ function InnerApp() {
   }, [_])
 
   return (
-    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-      <Alf theme={theme}>
-        <ThemeProvider theme={theme}>
-          <Splash isReady={isReady && hasCheckedReferrer}>
-            <ActiveVideoProvider>
-              <RootSiblingParent>
-                <React.Fragment
-                  // Resets the entire tree below when it changes:
-                  key={currentAccount?.did}>
-                  <QueryProvider currentDid={currentAccount?.did}>
-                    <StatsigProvider>
-                      <MessagesProvider>
-                        {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                        <LabelDefsProvider>
-                          <ModerationOptsProvider>
-                            <LoggedOutViewProvider>
-                              <SelectedFeedProvider>
+    <Alf theme={theme}>
+      <ThemeProvider theme={theme}>
+        <Splash isReady={isReady && hasCheckedReferrer}>
+          <ActiveVideoProvider>
+            <RootSiblingParent>
+              <React.Fragment
+                // Resets the entire tree below when it changes:
+                key={currentAccount?.did}>
+                <QueryProvider currentDid={currentAccount?.did}>
+                  <StatsigProvider>
+                    <MessagesProvider>
+                      {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                      <LabelDefsProvider>
+                        <ModerationOptsProvider>
+                          <LoggedOutViewProvider>
+                            <SelectedFeedProvider>
+                              <HiddenRepliesProvider>
                                 <UnreadNotifsProvider>
                                   <BackgroundNotificationPreferencesProvider>
                                     <MutedThreadsProvider>
-                                      <TourProvider>
-                                        <ProgressGuideProvider>
-                                          <GestureHandlerRootView
-                                            style={s.h100pct}>
-                                            <TestCtrls />
-                                            <Shell />
-                                          </GestureHandlerRootView>
-                                        </ProgressGuideProvider>
-                                      </TourProvider>
+                                      <ProgressGuideProvider>
+                                        <GestureHandlerRootView
+                                          style={s.h100pct}>
+                                          <TestCtrls />
+                                          <Shell />
+                                        </GestureHandlerRootView>
+                                      </ProgressGuideProvider>
                                     </MutedThreadsProvider>
                                   </BackgroundNotificationPreferencesProvider>
                                 </UnreadNotifsProvider>
-                              </SelectedFeedProvider>
-                            </LoggedOutViewProvider>
-                          </ModerationOptsProvider>
-                        </LabelDefsProvider>
-                      </MessagesProvider>
-                    </StatsigProvider>
-                  </QueryProvider>
-                </React.Fragment>
-              </RootSiblingParent>
-            </ActiveVideoProvider>
-          </Splash>
-        </ThemeProvider>
-      </Alf>
-    </SafeAreaProvider>
+                              </HiddenRepliesProvider>
+                            </SelectedFeedProvider>
+                          </LoggedOutViewProvider>
+                        </ModerationOptsProvider>
+                      </LabelDefsProvider>
+                    </MessagesProvider>
+                  </StatsigProvider>
+                </QueryProvider>
+              </React.Fragment>
+            </RootSiblingParent>
+          </ActiveVideoProvider>
+        </Splash>
+      </ThemeProvider>
+    </Alf>
   )
 }
 
@@ -159,7 +158,7 @@ function App() {
 
   React.useEffect(() => {
     PlatformInfo.setAudioCategory(AudioCategory.Ambient)
-    PlatformInfo.setAudioActive(true)
+    PlatformInfo.setAudioActive(false)
     initPersistedState().then(() => setReady(true))
   }, [])
 
@@ -175,25 +174,30 @@ function App() {
     <A11yProvider>
       <KeyboardProvider enabled={false} statusBarTranslucent={true}>
         <SessionProvider>
-          <ShellStateProvider>
-            <PrefsStateProvider>
-              <InvitesStateProvider>
-                <ModalStateProvider>
-                  <DialogStateProvider>
-                    <LightboxStateProvider>
-                      <I18nProvider>
+          <PrefsStateProvider>
+            <I18nProvider>
+              <ShellStateProvider>
+                <InvitesStateProvider>
+                  <ModalStateProvider>
+                    <DialogStateProvider>
+                      <LightboxStateProvider>
                         <PortalProvider>
                           <StarterPackProvider>
-                            <InnerApp />
+                            <SafeAreaProvider
+                              initialMetrics={initialWindowMetrics}>
+                              <IntentDialogProvider>
+                                <InnerApp />
+                              </IntentDialogProvider>
+                            </SafeAreaProvider>
                           </StarterPackProvider>
                         </PortalProvider>
-                      </I18nProvider>
-                    </LightboxStateProvider>
-                  </DialogStateProvider>
-                </ModalStateProvider>
-              </InvitesStateProvider>
-            </PrefsStateProvider>
-          </ShellStateProvider>
+                      </LightboxStateProvider>
+                    </DialogStateProvider>
+                  </ModalStateProvider>
+                </InvitesStateProvider>
+              </ShellStateProvider>
+            </I18nProvider>
+          </PrefsStateProvider>
         </SessionProvider>
       </KeyboardProvider>
     </A11yProvider>

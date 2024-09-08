@@ -1,6 +1,8 @@
 import React from 'react'
 import {
   AccessibilityProps,
+  GestureResponderEvent,
+  MouseEvent,
   Pressable,
   PressableProps,
   StyleProp,
@@ -65,7 +67,15 @@ type NonTextElements =
 
 export type ButtonProps = Pick<
   PressableProps,
-  'disabled' | 'onPress' | 'testID' | 'onLongPress' | 'hitSlop'
+  | 'disabled'
+  | 'onPress'
+  | 'testID'
+  | 'onLongPress'
+  | 'hitSlop'
+  | 'onHoverIn'
+  | 'onHoverOut'
+  | 'onPressIn'
+  | 'onPressOut'
 > &
   AccessibilityProps &
   VariantProps & {
@@ -115,30 +125,50 @@ export const Button = React.forwardRef<View, ButtonProps>(
       focused: false,
     })
 
-    const onPressIn = React.useCallback(() => {
-      setState(s => ({
-        ...s,
-        pressed: true,
-      }))
-    }, [setState])
-    const onPressOut = React.useCallback(() => {
-      setState(s => ({
-        ...s,
-        pressed: false,
-      }))
-    }, [setState])
-    const onHoverIn = React.useCallback(() => {
-      setState(s => ({
-        ...s,
-        hovered: true,
-      }))
-    }, [setState])
-    const onHoverOut = React.useCallback(() => {
-      setState(s => ({
-        ...s,
-        hovered: false,
-      }))
-    }, [setState])
+    const onPressInOuter = rest.onPressIn
+    const onPressIn = React.useCallback(
+      (e: GestureResponderEvent) => {
+        setState(s => ({
+          ...s,
+          pressed: true,
+        }))
+        onPressInOuter?.(e)
+      },
+      [setState, onPressInOuter],
+    )
+    const onPressOutOuter = rest.onPressOut
+    const onPressOut = React.useCallback(
+      (e: GestureResponderEvent) => {
+        setState(s => ({
+          ...s,
+          pressed: false,
+        }))
+        onPressOutOuter?.(e)
+      },
+      [setState, onPressOutOuter],
+    )
+    const onHoverInOuter = rest.onHoverIn
+    const onHoverIn = React.useCallback(
+      (e: MouseEvent) => {
+        setState(s => ({
+          ...s,
+          hovered: true,
+        }))
+        onHoverInOuter?.(e)
+      },
+      [setState, onHoverInOuter],
+    )
+    const onHoverOutOuter = rest.onHoverOut
+    const onHoverOut = React.useCallback(
+      (e: MouseEvent) => {
+        setState(s => ({
+          ...s,
+          hovered: false,
+        }))
+        onHoverOutOuter?.(e)
+      },
+      [setState, onHoverOutOuter],
+    )
     const onFocus = React.useCallback(() => {
       setState(s => ({
         ...s,

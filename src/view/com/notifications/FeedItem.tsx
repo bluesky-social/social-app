@@ -8,9 +8,6 @@ import {
 } from 'react-native'
 import {
   AppBskyActorDefs,
-  AppBskyEmbedExternal,
-  AppBskyEmbedImages,
-  AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AppBskyGraphFollow,
@@ -25,7 +22,6 @@ import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {parseTenorGif} from '#/lib/strings/embed-player'
 import {logger} from '#/logger'
 import {FeedNotification} from '#/state/queries/notifications/feed'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
@@ -52,11 +48,11 @@ import {PersonPlus_Filled_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/com
 import {Repost_Stroke2_Corner2_Rounded as RepostIcon} from '#/components/icons/Repost'
 import {StarterPack} from '#/components/icons/StarterPack'
 import {Link as NewLink} from '#/components/Link'
+import * as MediaPreview from '#/components/MediaPreview'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Notification as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {FeedSourceCard} from '../feeds/FeedSourceCard'
 import {Post} from '../post/Post'
-import {ImageHorzList} from '../util/images/ImageHorzList'
 import {Link, TextLink} from '../util/Link'
 import {formatCount} from '../util/numeric/format'
 import {Text} from '../util/text/Text'
@@ -84,7 +80,7 @@ let FeedItem = ({
 }): React.ReactNode => {
   const queryClient = useQueryClient()
   const pal = usePalette('default')
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const t = useTheme()
   const [isAuthorsExpanded, setAuthorsExpanded] = useState<boolean>(false)
   const itemHref = useMemo(() => {
@@ -225,11 +221,11 @@ let FeedItem = ({
   }
 
   const formattedCount =
-    authors.length > 1 ? formatCount(authors.length - 1) : ''
+    authors.length > 1 ? formatCount(i18n, authors.length - 1) : ''
   const firstAuthorName = sanitizeDisplayName(
     authors[0].profile.displayName || authors[0].profile.handle,
   )
-  const niceTimestamp = niceDate(item.notification.indexedAt)
+  const niceTimestamp = niceDate(i18n, item.notification.indexedAt)
   const a11yLabelUsers =
     authors.length > 1
       ? _(msg` and `) +
@@ -593,49 +589,14 @@ function AdditionalPostText({post}: {post?: AppBskyFeedDefs.PostView}) {
   const pal = usePalette('default')
   if (post && AppBskyFeedPost.isRecord(post?.record)) {
     const text = post.record.text
-    let images
-    let isGif = false
-
-    if (AppBskyEmbedImages.isView(post.embed)) {
-      images = post.embed.images
-    } else if (
-      AppBskyEmbedRecordWithMedia.isView(post.embed) &&
-      AppBskyEmbedImages.isView(post.embed.media)
-    ) {
-      images = post.embed.media.images
-    } else if (
-      AppBskyEmbedExternal.isView(post.embed) &&
-      post.embed.external.thumb
-    ) {
-      let url: URL | undefined
-      try {
-        url = new URL(post.embed.external.uri)
-      } catch {}
-      if (url) {
-        const {success} = parseTenorGif(url)
-        if (success) {
-          isGif = true
-          images = [
-            {
-              thumb: post.embed.external.thumb,
-              alt: post.embed.external.title,
-              fullsize: post.embed.external.thumb,
-            },
-          ]
-        }
-      }
-    }
 
     return (
       <>
         {text?.length > 0 && <Text style={pal.textLight}>{text}</Text>}
-        {images && images.length > 0 && (
-          <ImageHorzList
-            images={images}
-            style={styles.additionalPostImages}
-            gif={isGif}
-          />
-        )}
+        <MediaPreview.Embed
+          embed={post.embed}
+          style={styles.additionalPostImages}
+        />
       </>
     )
   }

@@ -58,9 +58,10 @@ export function Composer({}: {winHeight: number}) {
         <ComposePost
           replyTo={state.replyTo}
           quote={state.quote}
+          quoteCount={state?.quoteCount}
           onPost={state.onPost}
           mention={state.mention}
-          openPicker={onOpenPicker}
+          openEmojiPicker={onOpenPicker}
           text={state.text}
         />
       </View>

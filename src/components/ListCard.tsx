@@ -1,13 +1,20 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyActorDefs, AppBskyGraphDefs, AtUri} from '@atproto/api'
+import {
+  AppBskyActorDefs,
+  AppBskyGraphDefs,
+  AtUri,
+  moderateUserList,
+  ModerationUI,
+} from '@atproto/api'
 import {Trans} from '@lingui/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {sanitizeHandle} from 'lib/strings/handles'
+import {useModerationOpts} from 'state/preferences/moderation-opts'
 import {precacheList} from 'state/queries/feed'
-import {useTheme} from '#/alf'
-import {atoms as a} from '#/alf'
+import {useSession} from 'state/session'
+import {atoms as a, useTheme} from '#/alf'
 import {
   Avatar,
   Description,
@@ -16,6 +23,7 @@ import {
   SaveButton,
 } from '#/components/FeedCard'
 import {Link as InternalLink, LinkProps} from '#/components/Link'
+import * as Hider from '#/components/moderation/Hider'
 import {Text} from '#/components/Typography'
 
 /*
@@ -43,6 +51,11 @@ type Props = {
 
 export function Default(props: Props) {
   const {view, showPinButton} = props
+  const moderationOpts = useModerationOpts()
+  const moderation = moderationOpts
+    ? moderateUserList(view, moderationOpts)
+    : undefined
+
   return (
     <Link {...props}>
       <Outer>
@@ -52,6 +65,7 @@ export function Default(props: Props) {
             title={view.name}
             creator={view.creator}
             purpose={view.purpose}
+            modUi={moderation?.ui('contentView')}
           />
           {showPinButton && view.purpose === CURATELIST && (
             <SaveButton view={view} pin />
@@ -89,18 +103,40 @@ export function TitleAndByline({
   title,
   creator,
   purpose = CURATELIST,
+  modUi,
 }: {
   title: string
   creator?: AppBskyActorDefs.ProfileViewBasic
   purpose?: AppBskyGraphDefs.ListView['purpose']
+  modUi?: ModerationUI
 }) {
   const t = useTheme()
+  const {currentAccount} = useSession()
 
   return (
     <View style={[a.flex_1]}>
-      <Text style={[a.text_md, a.font_bold, a.leading_snug]} numberOfLines={1}>
-        {title}
-      </Text>
+      <Hider.Outer
+        modui={modUi}
+        isContentVisibleInitialState={
+          creator && currentAccount?.did === creator.did
+        }
+        allowOverride={creator && currentAccount?.did === creator.did}>
+        <Hider.Mask>
+          <Text
+            style={[a.text_md, a.font_bold, a.leading_snug, a.italic]}
+            numberOfLines={1}>
+            <Trans>Hidden list</Trans>
+          </Text>
+        </Hider.Mask>
+        <Hider.Content>
+          <Text
+            style={[a.text_md, a.font_bold, a.leading_snug]}
+            numberOfLines={1}>
+            {title}
+          </Text>
+        </Hider.Content>
+      </Hider.Outer>
+
       {creator && (
         <Text
           style={[a.leading_snug, t.atoms.text_contrast_medium]}

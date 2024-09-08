@@ -11,9 +11,9 @@ import {
   AppBskyEmbedImages,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
+  AppBskyEmbedVideo,
   AppBskyFeedDefs,
   AppBskyFeedPost,
-  moderatePost,
   ModerationDecision,
   RichText as RichTextAPI,
 } from '@atproto/api'
@@ -24,8 +24,10 @@ import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {HITSLOP_20} from '#/lib/constants'
+import {moderatePost_wrapped} from '#/lib/moderatePost_wrapped'
 import {s} from '#/lib/styles'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useSession} from '#/state/session'
 import {usePalette} from 'lib/hooks/usePalette'
 import {InfoCircleIcon} from 'lib/icons'
 import {makeProfileLink} from 'lib/routes/links'
@@ -39,19 +41,23 @@ import {Link} from '../Link'
 import {PostMeta} from '../PostMeta'
 import {Text} from '../text/Text'
 import {PostEmbeds} from '.'
+import {QuoteEmbedViewContext} from './types'
 
 export function MaybeQuoteEmbed({
   embed,
   onOpen,
   style,
   allowNestedQuotes,
+  viewContext,
 }: {
   embed: AppBskyEmbedRecord.View
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
   allowNestedQuotes?: boolean
+  viewContext?: QuoteEmbedViewContext
 }) {
   const pal = usePalette('default')
+  const {currentAccount} = useSession()
   if (
     AppBskyEmbedRecord.isViewRecord(embed.record) &&
     AppBskyFeedPost.isRecord(embed.record.value) &&
@@ -64,6 +70,7 @@ export function MaybeQuoteEmbed({
         onOpen={onOpen}
         style={style}
         allowNestedQuotes={allowNestedQuotes}
+        viewContext={viewContext}
       />
     )
   } else if (AppBskyEmbedRecord.isViewBlocked(embed.record)) {
@@ -84,6 +91,22 @@ export function MaybeQuoteEmbed({
         </Text>
       </View>
     )
+  } else if (AppBskyEmbedRecord.isViewDetached(embed.record)) {
+    const isViewerOwner = currentAccount?.did
+      ? embed.record.uri.includes(currentAccount.did)
+      : false
+    return (
+      <View style={[styles.errorContainer, pal.borderDark]}>
+        <InfoCircleIcon size={18} style={pal.text} />
+        <Text type="lg" style={pal.text}>
+          {isViewerOwner ? (
+            <Trans>Removed by you</Trans>
+          ) : (
+            <Trans>Removed by author</Trans>
+          )}
+        </Text>
+      </View>
+    )
   }
   return null
 }
@@ -94,17 +117,19 @@ function QuoteEmbedModerated({
   onOpen,
   style,
   allowNestedQuotes,
+  viewContext,
 }: {
   viewRecord: AppBskyEmbedRecord.ViewRecord
   postRecord: AppBskyFeedPost.Record
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
   allowNestedQuotes?: boolean
+  viewContext?: QuoteEmbedViewContext
 }) {
   const moderationOpts = useModerationOpts()
   const moderation = React.useMemo(() => {
     return moderationOpts
-      ? moderatePost(viewRecordToPostView(viewRecord), moderationOpts)
+      ? moderatePost_wrapped(viewRecordToPostView(viewRecord), moderationOpts)
       : undefined
   }, [viewRecord, moderationOpts])
 
@@ -125,6 +150,7 @@ function QuoteEmbedModerated({
       onOpen={onOpen}
       style={style}
       allowNestedQuotes={allowNestedQuotes}
+      viewContext={viewContext}
     />
   )
 }
@@ -141,6 +167,7 @@ export function QuoteEmbed({
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
   allowNestedQuotes?: boolean
+  viewContext?: QuoteEmbedViewContext
 }) {
   const queryClient = useQueryClient()
   const pal = usePalette('default')
@@ -162,12 +189,17 @@ export function QuoteEmbed({
     if (allowNestedQuotes) {
       return e
     } else {
-      if (AppBskyEmbedImages.isView(e) || AppBskyEmbedExternal.isView(e)) {
+      if (
+        AppBskyEmbedImages.isView(e) ||
+        AppBskyEmbedExternal.isView(e) ||
+        AppBskyEmbedVideo.isView(e)
+      ) {
         return e
       } else if (
         AppBskyEmbedRecordWithMedia.isView(e) &&
         (AppBskyEmbedImages.isView(e.media) ||
-          AppBskyEmbedExternal.isView(e.media))
+          AppBskyEmbedExternal.isView(e.media) ||
+          AppBskyEmbedVideo.isView(e.media))
       ) {
         return e.media
       }

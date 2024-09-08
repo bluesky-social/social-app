@@ -1,4 +1,6 @@
 import {useEffect, useState} from 'react'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
 import {useFetchDid} from '#/state/queries/handle'
@@ -7,6 +9,7 @@ import {useAgent} from '#/state/session'
 import * as apilib from 'lib/api/index'
 import {POST_IMG_MAX} from 'lib/constants'
 import {
+  EmbeddingDisabledError,
   getFeedAsEmbed,
   getListAsEmbed,
   getPostAsQuote,
@@ -28,9 +31,12 @@ import {ComposerOpts} from 'state/shell/composer'
 
 export function useExternalLinkFetch({
   setQuote,
+  setError,
 }: {
   setQuote: (opts: ComposerOpts['quote']) => void
+  setError: (err: string) => void
 }) {
+  const {_} = useLingui()
   const [extLink, setExtLink] = useState<apilib.ExternalEmbedDraft | undefined>(
     undefined,
   )
@@ -57,9 +63,13 @@ export function useExternalLinkFetch({
             setExtLink(undefined)
           },
           err => {
-            logger.error('Failed to fetch post for quote embedding', {
-              message: err.toString(),
-            })
+            if (err instanceof EmbeddingDisabledError) {
+              setError(_(msg`This post's author has disabled quote posts.`))
+            } else {
+              logger.error('Failed to fetch post for quote embedding', {
+                message: err.toString(),
+              })
+            }
             setExtLink(undefined)
           },
         )
@@ -170,7 +180,7 @@ export function useExternalLinkFetch({
       })
     }
     return cleanup
-  }, [extLink, setQuote, getPost, fetchDid, agent])
+  }, [_, extLink, setQuote, getPost, fetchDid, agent, setError])
 
   return {extLink, setExtLink}
 }

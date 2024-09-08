@@ -13,6 +13,7 @@ import {QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useAgent} from '#/state/session'
+import {findAllPostsInQueryData as findAllPostsInQuoteQueryData} from 'state/queries/post-quotes'
 import {
   findAllPostsInQueryData as findAllPostsInSearchQueryData,
   findAllProfilesInQueryData as findAllProfilesInSearchQueryData,
@@ -84,10 +85,15 @@ export type ThreadNode =
 
 export type ThreadModerationCache = WeakMap<ThreadNode, ModerationDecision>
 
+export type PostThreadQueryData = {
+  thread: ThreadNode
+  threadgate?: AppBskyFeedDefs.ThreadgateView
+}
+
 export function usePostThreadQuery(uri: string | undefined) {
   const queryClient = useQueryClient()
   const agent = useAgent()
-  return useQuery<ThreadNode, Error>({
+  return useQuery<PostThreadQueryData, Error>({
     gcTime: 0,
     queryKey: RQKEY(uri || ''),
     async queryFn() {
@@ -98,16 +104,21 @@ export function usePostThreadQuery(uri: string | undefined) {
       if (res.success) {
         const thread = responseToThreadNodes(res.data.thread)
         annotateSelfThread(thread)
-        return thread
+        return {
+          thread,
+          threadgate: res.data.threadgate as
+            | AppBskyFeedDefs.ThreadgateView
+            | undefined,
+        }
       }
-      return {type: 'unknown', uri: uri!}
+      return {thread: {type: 'unknown', uri: uri!}}
     },
     enabled: !!uri,
     placeholderData: () => {
       if (!uri) return
       const post = findPostInQueryData(queryClient, uri)
       if (post) {
-        return post
+        return {thread: post}
       }
       return undefined
     },
@@ -138,6 +149,7 @@ export function sortThread(
   modCache: ThreadModerationCache,
   currentDid: string | undefined,
   justPostedUris: Set<string>,
+  threadgateRecordHiddenReplies: Set<string>,
 ): ThreadNode {
   if (node.type !== 'post') {
     return node
@@ -185,6 +197,14 @@ export function sortThread(
         return 1 // current account's reply
       }
 
+      const aHidden = threadgateRecordHiddenReplies.has(a.uri)
+      const bHidden = threadgateRecordHiddenReplies.has(b.uri)
+      if (aHidden && !aIsBySelf && !bHidden) {
+        return 1
+      } else if (bHidden && !bIsBySelf && !aHidden) {
+        return -1
+      }
+
       const aBlur = Boolean(modCache.get(a)?.ui('contentList').blur)
       const bBlur = Boolean(modCache.get(b)?.ui('contentList').blur)
       if (aBlur !== bBlur) {
@@ -222,7 +242,14 @@ export function sortThread(
       return b.post.indexedAt.localeCompare(a.post.indexedAt)
     })
     node.replies.forEach(reply =>
-      sortThread(reply, opts, modCache, currentDid, justPostedUris),
+      sortThread(
+        reply,
+        opts,
+        modCache,
+        currentDid,
+        justPostedUris,
+        threadgateRecordHiddenReplies,
+      ),
     )
   }
   return node
@@ -359,14 +386,15 @@ export function* findAllPostsInQueryData(
 ): Generator<ThreadNode, void> {
   const atUri = new AtUri(uri)
 
-  const queryDatas = queryClient.getQueriesData<ThreadNode>({
+  const queryDatas = queryClient.getQueriesData<PostThreadQueryData>({
     queryKey: [RQKEY_ROOT],
   })
   for (const [_queryKey, queryData] of queryDatas) {
     if (!queryData) {
       continue
     }
-    for (const item of traverseThread(queryData)) {
+    const {thread} = queryData
+    for (const item of traverseThread(thread)) {
       if (item.type === 'post' && didOrHandleUriMatches(atUri, item.post)) {
         const placeholder = threadNodeToPlaceholderThread(item)
         if (placeholder) {
@@ -386,6 +414,9 @@ export function* findAllPostsInQueryData(
   for (let post of findAllPostsInNotifsQueryData(queryClient, uri)) {
     yield postViewToPlaceholderThread(post)
   }
+  for (let post of findAllPostsInQuoteQueryData(queryClient, uri)) {
+    yield postViewToPlaceholderThread(post)
+  }
   for (let post of findAllPostsInSearchQueryData(queryClient, uri)) {
     yield postViewToPlaceholderThread(post)
   }
@@ -395,14 +426,15 @@ export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
 ): Generator<AppBskyActorDefs.ProfileView, void> {
-  const queryDatas = queryClient.getQueriesData<ThreadNode>({
+  const queryDatas = queryClient.getQueriesData<PostThreadQueryData>({
     queryKey: [RQKEY_ROOT],
   })
   for (const [_queryKey, queryData] of queryDatas) {
     if (!queryData) {
       continue
     }
-    for (const item of traverseThread(queryData)) {
+    const {thread} = queryData
+    for (const item of traverseThread(thread)) {
       if (item.type === 'post' && item.post.author.did === did) {
         yield item.post.author
       }

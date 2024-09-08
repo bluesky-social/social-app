@@ -12,7 +12,7 @@ import {GeneratorView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {DISCOVER_FEED_URI} from 'lib/constants'
+import {DISCOVER_FEED_URI, STARTER_PACK_MAX_SIZE} from 'lib/constants'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {useSession} from 'state/session'
@@ -130,7 +130,8 @@ export function WizardProfileCard({
 
   const isMe = profile.did === currentAccount?.did
   const included = isMe || state.profiles.some(p => p.did === profile.did)
-  const disabled = isMe || (!included && state.profiles.length >= 49)
+  const disabled =
+    isMe || (!included && state.profiles.length >= STARTER_PACK_MAX_SIZE - 1)
   const moderationUi = moderateProfile(profile, moderationOpts).ui('avatar')
   const displayName = profile.displayName
     ? sanitizeDisplayName(profile.displayName)

@@ -20,6 +20,7 @@ interface Props {
   onRepost: () => void
   onQuote: () => void
   big?: boolean
+  embeddingDisabled: boolean
 }
 
 let RepostButton = ({
@@ -28,9 +29,10 @@ let RepostButton = ({
   onRepost,
   onQuote,
   big,
+  embeddingDisabled,
 }: Props): React.ReactNode => {
   const t = useTheme()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const requireAuth = useRequireAuth()
   const dialogControl = Dialog.useDialogControl()
   const playHaptic = useHaptics()
@@ -50,6 +52,9 @@ let RepostButton = ({
         testID="repostBtn"
         onPress={() => {
           requireAuth(() => dialogControl.open())
+        }}
+        onLongPress={() => {
+          requireAuth(() => onQuote())
         }}
         style={[
           a.flex_row,
@@ -77,7 +82,7 @@ let RepostButton = ({
               big ? a.text_md : {fontSize: 15},
               isReposted && a.font_bold,
             ]}>
-            {formatCount(repostCount)}
+            {formatCount(i18n, repostCount)}
           </Text>
         ) : undefined}
       </Button>
@@ -111,9 +116,14 @@ let RepostButton = ({
                 </Text>
               </Button>
               <Button
+                disabled={embeddingDisabled}
                 testID="quoteBtn"
                 style={[a.justify_start, a.px_md]}
-                label={_(msg`Quote post`)}
+                label={
+                  embeddingDisabled
+                    ? _(msg`Quote posts disabled`)
+                    : _(msg`Quote post`)
+                }
                 onPress={() => {
                   playHaptic()
                   dialogControl.close(() => {
@@ -123,9 +133,23 @@ let RepostButton = ({
                 size="large"
                 variant="ghost"
                 color="primary">
-                <Quote size="lg" fill={t.palette.primary_500} />
-                <Text style={[a.font_bold, a.text_xl]}>
-                  {_(msg`Quote post`)}
+                <Quote
+                  size="lg"
+                  fill={
+                    embeddingDisabled
+                      ? t.atoms.text_contrast_low.color
+                      : t.palette.primary_500
+                  }
+                />
+                <Text
+                  style={[
+                    a.font_bold,
+                    a.text_xl,
+                    embeddingDisabled && t.atoms.text_contrast_low,
+                  ]}>
+                  {embeddingDisabled
+                    ? _(msg`Quote posts disabled`)
+                    : _(msg`Quote post`)}
                 </Text>
               </Button>
             </View>

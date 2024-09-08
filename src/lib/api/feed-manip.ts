@@ -23,6 +23,7 @@ type FeedSliceItem = {
   record: AppBskyFeedPost.Record
   parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
   isParentBlocked: boolean
+  isParentNotFound: boolean
 }
 
 type AuthorContext = {
@@ -68,6 +69,7 @@ export class FeedViewPostsSlice {
     }
     const parent = reply?.parent
     const isParentBlocked = AppBskyFeedDefs.isBlockedPost(parent)
+    const isParentNotFound = AppBskyFeedDefs.isNotFoundPost(parent)
     let parentAuthor: AppBskyActorDefs.ProfileViewBasic | undefined
     if (AppBskyFeedDefs.isPostView(parent)) {
       parentAuthor = parent.author
@@ -77,8 +79,17 @@ export class FeedViewPostsSlice {
       record: post.record,
       parentAuthor,
       isParentBlocked,
+      isParentNotFound,
     })
-    if (!reply || reason) {
+    if (!reply) {
+      if (post.record.reply) {
+        // This reply wasn't properly hydrated by the AppView.
+        this.isOrphan = true
+        this.items[0].isParentNotFound = true
+      }
+      return
+    }
+    if (reason) {
       return
     }
     if (
@@ -89,23 +100,40 @@ export class FeedViewPostsSlice {
       this.isOrphan = true
       return
     }
+    const root = reply.root
+    const rootIsView =
+      AppBskyFeedDefs.isPostView(root) ||
+      AppBskyFeedDefs.isBlockedPost(root) ||
+      AppBskyFeedDefs.isNotFoundPost(root)
+    /*
+     * If the parent is also the root, we just so happen to have the data we
+     * need to compute if the parent's parent (grandparent) is blocked. This
+     * doesn't always happen, of course, but we can take advantage of it when
+     * it does.
+     */
+    const grandparent =
+      rootIsView && parent.record.reply?.parent.uri === root.uri
+        ? root
+        : undefined
     const grandparentAuthor = reply.grandparentAuthor
     const isGrandparentBlocked = Boolean(
-      grandparentAuthor?.viewer?.blockedBy ||
-        grandparentAuthor?.viewer?.blocking ||
-        grandparentAuthor?.viewer?.blockingByList,
+      grandparent && AppBskyFeedDefs.isBlockedPost(grandparent),
+    )
+    const isGrandparentNotFound = Boolean(
+      grandparent && AppBskyFeedDefs.isNotFoundPost(grandparent),
     )
     this.items.unshift({
       post: parent,
       record: parent.record,
       parentAuthor: grandparentAuthor,
       isParentBlocked: isGrandparentBlocked,
+      isParentNotFound: isGrandparentNotFound,
     })
     if (isGrandparentBlocked) {
       this.isOrphan = true
-      // Keep going, it might still have a root.
+      // Keep going, it might still have a root, and we need this for thread
+      // de-deduping
     }
-    const root = reply.root
     if (
       !AppBskyFeedDefs.isPostView(root) ||
       !AppBskyFeedPost.isRecord(root.record) ||
@@ -121,6 +149,7 @@ export class FeedViewPostsSlice {
       post: root,
       record: root.record,
       isParentBlocked: false,
+      isParentNotFound: false,
       parentAuthor: undefined,
     })
     if (parent.record.reply?.parent.uri !== root.uri) {
@@ -242,7 +271,12 @@ export class FeedTuner {
           }
         } else {
           if (!dryRun) {
-            this.seenUris.add(item.post.uri)
+            // Reposting a reply elevates it to top-level, so its parent/root won't be displayed.
+            // Disable in-thread dedupe for this case since we don't want to miss them later.
+            const disableDedupe = slice.isReply && slice.isRepost
+            if (!disableDedupe) {
+              this.seenUris.add(item.post.uri)
+            }
           }
         }
       }
@@ -345,11 +379,7 @@ export class FeedTuner {
     ): FeedViewPostsSlice[] => {
       for (let i = 0; i < slices.length; i++) {
         const slice = slices[i]
-        if (
-          slice.isReply &&
-          !slice.isRepost &&
-          !shouldDisplayReplyInFollowing(slice.getAuthors(), userDid)
-        ) {
+        if (slice.isReply && !shouldDisplayReplyInFollowing(slice, userDid)) {
           slices.splice(i, 1)
           i--
         }
@@ -371,27 +401,20 @@ export class FeedTuner {
       slices: FeedViewPostsSlice[],
       _dryRun: boolean,
     ): FeedViewPostsSlice[] => {
-      const candidateSlices = slices.slice()
-
       // early return if no languages have been specified
       if (!preferredLangsCode2.length || preferredLangsCode2.length === 0) {
         return slices
       }
 
-      for (let i = 0; i < slices.length; i++) {
-        let hasPreferredLang = false
-        for (const item of slices[i].items) {
+      const candidateSlices = slices.filter(slice => {
+        for (const item of slice.items) {
           if (isPostInLanguage(item.post, preferredLangsCode2)) {
-            hasPreferredLang = true
-            break
+            return true
           }
         }
-
         // if item does not fit preferred language, remove it
-        if (!hasPreferredLang) {
-          candidateSlices.splice(i, 1)
-        }
-      }
+        return false
+      })
 
       // if the language filter cleared out the entire page, return the original set
       // so that something always shows
@@ -420,9 +443,13 @@ function areSameAuthor(authors: AuthorContext): boolean {
 }
 
 function shouldDisplayReplyInFollowing(
-  authors: AuthorContext,
+  slice: FeedViewPostsSlice,
   userDid: string,
 ): boolean {
+  if (slice.isRepost) {
+    return true
+  }
+  const authors = slice.getAuthors()
   const {author, parentAuthor, grandparentAuthor, rootAuthor} = authors
   if (!isSelfOrFollowing(author, userDid)) {
     // Only show replies from self or people you follow.
@@ -435,6 +462,21 @@ function shouldDisplayReplyInFollowing(
   ) {
     // Always show self-threads.
     return true
+  }
+  if (
+    parentAuthor &&
+    parentAuthor.did !== author.did &&
+    rootAuthor &&
+    rootAuthor.did === author.did &&
+    slice.items.length > 2
+  ) {
+    // If you follow A, show A -> someone[>0 likes] -> A chains too.
+    // This is different from cases below because you only know one person.
+    const parentPost = slice.items[1].post
+    const parentLikeCount = parentPost.likeCount ?? 0
+    if (parentLikeCount > 0) {
+      return true
+    }
   }
   // From this point on we need at least one more reason to show it.
   if (

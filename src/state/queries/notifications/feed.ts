@@ -16,7 +16,7 @@
  * 3. Don't call this query's `refetch()` if you're trying to sync latest; call `checkUnread()` instead.
  */
 
-import {useEffect, useRef} from 'react'
+import {useCallback, useEffect, useMemo, useRef} from 'react'
 import {AppBskyActorDefs, AppBskyFeedDefs, AtUri} from '@atproto/api'
 import {
   InfiniteData,
@@ -27,6 +27,7 @@ import {
 } from '@tanstack/react-query'
 
 import {useAgent} from '#/state/session'
+import {useThreadgateHiddenReplyUris} from '#/state/threadgate-hidden-replies'
 import {useModerationOpts} from '../../preferences/moderation-opts'
 import {STALE} from '..'
 import {
@@ -58,10 +59,17 @@ export function useNotificationFeedQuery(opts?: {
   const moderationOpts = useModerationOpts()
   const unreads = useUnreadNotificationsApi()
   const enabled = opts?.enabled !== false
+  const {uris: hiddenReplyUris} = useThreadgateHiddenReplyUris()
 
   // false: force showing all notifications
   // undefined: let the server decide
   const priority = opts?.overridePriorityNotifications ? false : undefined
+
+  const selectArgs = useMemo(() => {
+    return {
+      hiddenReplyUris,
+    }
+  }, [hiddenReplyUris])
 
   const query = useInfiniteQuery<
     FeedPage,
@@ -101,20 +109,41 @@ export function useNotificationFeedQuery(opts?: {
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
     enabled,
-    select(data: InfiniteData<FeedPage>) {
-      // override 'isRead' using the first page's returned seenAt
-      // we do this because the `markAllRead()` call above will
-      // mark subsequent pages as read prematurely
-      const seenAt = data.pages[0]?.seenAt || new Date()
-      for (const page of data.pages) {
-        for (const item of page.items) {
-          item.notification.isRead =
-            seenAt > new Date(item.notification.indexedAt)
-        }
-      }
+    select: useCallback(
+      (data: InfiniteData<FeedPage>) => {
+        const {hiddenReplyUris} = selectArgs
 
-      return data
-    },
+        // override 'isRead' using the first page's returned seenAt
+        // we do this because the `markAllRead()` call above will
+        // mark subsequent pages as read prematurely
+        const seenAt = data.pages[0]?.seenAt || new Date()
+        for (const page of data.pages) {
+          for (const item of page.items) {
+            item.notification.isRead =
+              seenAt > new Date(item.notification.indexedAt)
+          }
+        }
+
+        data = {
+          ...data,
+          pages: data.pages.map(page => {
+            return {
+              ...page,
+              items: page.items.filter(item => {
+                const isHiddenReply =
+                  item.type === 'reply' &&
+                  item.subjectUri &&
+                  hiddenReplyUris.has(item.subjectUri)
+                return !isHiddenReply
+              }),
+            }
+          }),
+        }
+
+        return data
+      },
+      [selectArgs],
+    ),
   })
 
   // The server may end up returning an empty page, a page with too few items,

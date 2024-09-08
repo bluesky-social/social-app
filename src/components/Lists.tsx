@@ -178,7 +178,7 @@ let ListMaybePlaceholder = ({
     return (
       <CenteredView
         style={[
-          a.flex_1,
+          a.h_full_vh,
           a.align_center,
           !gtMobile ? a.justify_between : a.gap_5xl,
           t.atoms.border_contrast_low,

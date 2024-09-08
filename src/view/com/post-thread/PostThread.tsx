@@ -3,7 +3,7 @@ import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import {runOnJS} from 'react-native-reanimated'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {AppBskyFeedDefs} from '@atproto/api'
+import {AppBskyFeedDefs, AppBskyFeedThreadgate} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -25,6 +25,7 @@ import {
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell'
+import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
 import {useMinimalShellFabTransform} from 'lib/hooks/useMinimalShellTransform'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
@@ -102,7 +103,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
     isError: isThreadError,
     error: threadError,
     refetch,
-    data: thread,
+    data: {thread, threadgate} = {},
   } = usePostThreadQuery(uri)
 
   const treeView = React.useMemo(
@@ -113,6 +114,12 @@ export function PostThread({uri}: {uri: string | undefined}) {
   )
   const rootPost = thread?.type === 'post' ? thread.post : undefined
   const rootPostRecord = thread?.type === 'post' ? thread.record : undefined
+  const threadgateRecord = threadgate?.record as
+    | AppBskyFeedThreadgate.Record
+    | undefined
+  const threadgateHiddenReplies = useMergedThreadgateHiddenReplies({
+    threadgateRecord,
+  })
 
   const moderationOpts = useModerationOpts()
   const isNoPwi = React.useMemo(() => {
@@ -175,11 +182,13 @@ export function PostThread({uri}: {uri: string | undefined}) {
         threadModerationCache,
         currentDid,
         justPostedUris,
+        threadgateHiddenReplies,
       ),
-      !!currentDid,
+      currentDid,
       treeView,
       threadModerationCache,
       hiddenRepliesState !== HiddenRepliesState.Hide,
+      threadgateHiddenReplies,
     )
   }, [
     thread,
@@ -189,6 +198,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
     threadModerationCache,
     hiddenRepliesState,
     justPostedUris,
+    threadgateHiddenReplies,
   ])
 
   const error = React.useMemo(() => {
@@ -418,6 +428,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
         (item.ctx.depth < 0 && !!item.parent) || item.ctx.depth > 1
       const hasUnrevealedParents =
         index === 0 && skeleton?.parents && maxParents < skeleton.parents.length
+
       return (
         <View
           ref={item.ctx.isHighlightedPost ? highlightedPostRef : undefined}
@@ -425,6 +436,7 @@ export function PostThread({uri}: {uri: string | undefined}) {
           <PostThreadItem
             post={item.post}
             record={item.record}
+            threadgateRecord={threadgateRecord ?? undefined}
             moderation={threadModerationCache.get(item)}
             treeView={treeView}
             depth={item.ctx.depth}
@@ -545,23 +557,25 @@ function isThreadBlocked(v: unknown): v is ThreadBlocked {
 
 function createThreadSkeleton(
   node: ThreadNode,
-  hasSession: boolean,
+  currentDid: string | undefined,
   treeView: boolean,
   modCache: ThreadModerationCache,
   showHiddenReplies: boolean,
+  threadgateRecordHiddenReplies: Set<string>,
 ): ThreadSkeletonParts | null {
   if (!node) return null
 
   return {
-    parents: Array.from(flattenThreadParents(node, hasSession)),
+    parents: Array.from(flattenThreadParents(node, !!currentDid)),
     highlightedPost: node,
     replies: Array.from(
       flattenThreadReplies(
         node,
-        hasSession,
+        currentDid,
         treeView,
         modCache,
         showHiddenReplies,
+        threadgateRecordHiddenReplies,
       ),
     ),
   }
@@ -594,14 +608,15 @@ enum HiddenReplyType {
 
 function* flattenThreadReplies(
   node: ThreadNode,
-  hasSession: boolean,
+  currentDid: string | undefined,
   treeView: boolean,
   modCache: ThreadModerationCache,
   showHiddenReplies: boolean,
+  threadgateRecordHiddenReplies: Set<string>,
 ): Generator<YieldedItem, HiddenReplyType> {
   if (node.type === 'post') {
     // dont show pwi-opted-out posts to logged out users
-    if (!hasSession && hasPwiOptOut(node)) {
+    if (!currentDid && hasPwiOptOut(node)) {
       return HiddenReplyType.None
     }
 
@@ -616,6 +631,16 @@ function* flattenThreadReplies(
           return HiddenReplyType.Hidden
         }
       }
+
+      if (!showHiddenReplies) {
+        const hiddenByThreadgate = threadgateRecordHiddenReplies.has(
+          node.post.uri,
+        )
+        const authorIsViewer = node.post.author.did === currentDid
+        if (hiddenByThreadgate && !authorIsViewer) {
+          return HiddenReplyType.Hidden
+        }
+      }
     }
 
     if (!node.ctx.isHighlightedPost) {
@@ -627,10 +652,11 @@ function* flattenThreadReplies(
       for (const reply of node.replies) {
         let hiddenReply = yield* flattenThreadReplies(
           reply,
-          hasSession,
+          currentDid,
           treeView,
           modCache,
           showHiddenReplies,
+          threadgateRecordHiddenReplies,
         )
         if (hiddenReply > hiddenReplies) {
           hiddenReplies = hiddenReply

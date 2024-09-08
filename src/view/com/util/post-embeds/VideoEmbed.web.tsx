@@ -1,21 +1,26 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {View} from 'react-native'
-import {Trans} from '@lingui/macro'
+import {AppBskyEmbedVideo} from '@atproto/api'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
+import {clamp} from '#/lib/numbers'
+import {useGate} from '#/lib/statsig/statsig'
 import {
   HLSUnsupportedError,
   VideoEmbedInnerWeb,
-} from 'view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerWeb'
-import {atoms as a, useTheme} from '#/alf'
+  VideoNotFoundError,
+} from '#/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerWeb'
+import {atoms as a} from '#/alf'
 import {ErrorBoundary} from '../ErrorBoundary'
-import {useActiveVideoView} from './ActiveVideoContext'
+import {useActiveVideoWeb} from './ActiveVideoWebContext'
 import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 
-export function VideoEmbed({source}: {source: string}) {
-  const t = useTheme()
+export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
   const ref = useRef<HTMLDivElement>(null)
+  const gate = useGate()
   const {active, setActive, sendPosition, currentActiveView} =
-    useActiveVideoView({source})
+    useActiveVideoWeb()
   const [onScreen, setOnScreen] = useState(false)
 
   useEffect(() => {
@@ -43,12 +48,25 @@ export function VideoEmbed({source}: {source: string}) {
     [key],
   )
 
+  if (!gate('video_view_on_posts')) {
+    return null
+  }
+
+  let aspectRatio = 16 / 9
+
+  if (embed.aspectRatio) {
+    const {width, height} = embed.aspectRatio
+    // min: 3/1, max: square
+    aspectRatio = clamp(width / height, 1 / 1, 3 / 1)
+  }
+
   return (
     <View
       style={[
         a.w_full,
-        {aspectRatio: 16 / 9},
-        t.atoms.bg_contrast_25,
+        {aspectRatio},
+        {backgroundColor: 'black'},
+        a.relative,
         a.rounded_sm,
         a.my_xs,
       ]}>
@@ -61,7 +79,7 @@ export function VideoEmbed({source}: {source: string}) {
             sendPosition={sendPosition}
             isAnyViewActive={currentActiveView !== null}>
             <VideoEmbedInnerWeb
-              source={source}
+              embed={embed}
               active={active}
               setActive={setActive}
               onScreen={onScreen}
@@ -136,23 +154,26 @@ function ViewportObserver({
 }
 
 function VideoError({error, retry}: {error: unknown; retry: () => void}) {
-  const isHLS = error instanceof HLSUnsupportedError
+  const {_} = useLingui()
+
+  let showRetryButton = true
+  let text = null
+
+  if (error instanceof VideoNotFoundError) {
+    text = _(msg`Video not found.`)
+  } else if (error instanceof HLSUnsupportedError) {
+    showRetryButton = false
+    text = _(
+      msg`Your browser does not support the video format. Please try a different browser.`,
+    )
+  } else {
+    text = _(msg`An error occurred while loading the video. Please try again.`)
+  }
 
   return (
     <VideoFallback.Container>
-      <VideoFallback.Text>
-        {isHLS ? (
-          <Trans>
-            Your browser does not support the video format. Please try a
-            different browser.
-          </Trans>
-        ) : (
-          <Trans>
-            An error occurred while loading the video. Please try again later.
-          </Trans>
-        )}
-      </VideoFallback.Text>
-      {!isHLS && <VideoFallback.RetryButton onPress={retry} />}
+      <VideoFallback.Text>{text}</VideoFallback.Text>
+      {showRetryButton && <VideoFallback.RetryButton onPress={retry} />}
     </VideoFallback.Container>
   )
 }

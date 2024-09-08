@@ -20,7 +20,7 @@ const BTN = {height: 1, width: 1, backgroundColor: 'red'}
 
 export function TestCtrls() {
   const queryClient = useQueryClient()
-  const {logout, login} = useSessionApi()
+  const {logoutEveryAccount, login} = useSessionApi()
   const {openModal} = useModalControls()
   const onboardingDispatch = useOnboardingDispatch()
   const {setShowLoggedOut} = useLoggedOutViewControls()
@@ -33,6 +33,7 @@ export function TestCtrls() {
       },
       'LoginForm',
     )
+    setShowLoggedOut(false)
   }
   const onPressSignInBob = async () => {
     await login(
@@ -43,6 +44,7 @@ export function TestCtrls() {
       },
       'LoginForm',
     )
+    setShowLoggedOut(false)
   }
   return (
     <View style={{position: 'absolute', top: 100, right: 0, zIndex: 100}}>
@@ -60,7 +62,7 @@ export function TestCtrls() {
       />
       <Pressable
         testID="e2eSignOut"
-        onPress={() => logout('Settings')}
+        onPress={() => logoutEveryAccount('Settings')}
         accessibilityRole="button"
         style={BTN}
       />

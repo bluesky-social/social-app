@@ -39,15 +39,16 @@ import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
 import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
 import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
-import {ActiveVideoProvider} from '#/view/com/util/post-embeds/ActiveVideoContext'
+import {Provider as HiddenRepliesProvider} from '#/state/threadgate-hidden-replies'
+import {Provider as ActiveVideoProvider} from '#/view/com/util/post-embeds/ActiveVideoWebContext'
 import * as Toast from '#/view/com/util/Toast'
 import {ToastContainer} from '#/view/com/util/Toast.web'
 import {Shell} from '#/view/shell/index'
 import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
+import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
 import {Provider as PortalProvider} from '#/components/Portal'
-import {Provider as TourProvider} from '#/tours'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 
 function InnerApp() {
@@ -105,19 +106,19 @@ function InnerApp() {
                         <ModerationOptsProvider>
                           <LoggedOutViewProvider>
                             <SelectedFeedProvider>
-                              <UnreadNotifsProvider>
-                                <BackgroundNotificationPreferencesProvider>
-                                  <MutedThreadsProvider>
-                                    <SafeAreaProvider>
-                                      <TourProvider>
+                              <HiddenRepliesProvider>
+                                <UnreadNotifsProvider>
+                                  <BackgroundNotificationPreferencesProvider>
+                                    <MutedThreadsProvider>
+                                      <SafeAreaProvider>
                                         <ProgressGuideProvider>
                                           <Shell />
                                         </ProgressGuideProvider>
-                                      </TourProvider>
-                                    </SafeAreaProvider>
-                                  </MutedThreadsProvider>
-                                </BackgroundNotificationPreferencesProvider>
-                              </UnreadNotifsProvider>
+                                      </SafeAreaProvider>
+                                    </MutedThreadsProvider>
+                                  </BackgroundNotificationPreferencesProvider>
+                                </UnreadNotifsProvider>
+                              </HiddenRepliesProvider>
                             </SelectedFeedProvider>
                           </LoggedOutViewProvider>
                         </ModerationOptsProvider>
@@ -153,25 +154,27 @@ function App() {
   return (
     <A11yProvider>
       <SessionProvider>
-        <ShellStateProvider>
-          <PrefsStateProvider>
-            <InvitesStateProvider>
-              <ModalStateProvider>
-                <DialogStateProvider>
-                  <LightboxStateProvider>
-                    <I18nProvider>
+        <PrefsStateProvider>
+          <I18nProvider>
+            <ShellStateProvider>
+              <InvitesStateProvider>
+                <ModalStateProvider>
+                  <DialogStateProvider>
+                    <LightboxStateProvider>
                       <PortalProvider>
                         <StarterPackProvider>
-                          <InnerApp />
+                          <IntentDialogProvider>
+                            <InnerApp />
+                          </IntentDialogProvider>
                         </StarterPackProvider>
                       </PortalProvider>
-                    </I18nProvider>
-                  </LightboxStateProvider>
-                </DialogStateProvider>
-              </ModalStateProvider>
-            </InvitesStateProvider>
-          </PrefsStateProvider>
-        </ShellStateProvider>
+                    </LightboxStateProvider>
+                  </DialogStateProvider>
+                </ModalStateProvider>
+              </InvitesStateProvider>
+            </ShellStateProvider>
+          </I18nProvider>
+        </PrefsStateProvider>
       </SessionProvider>
     </A11yProvider>
   )

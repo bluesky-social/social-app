@@ -1,52 +1,53 @@
 import {createUploadTask, FileSystemUploadType} from 'expo-file-system'
+import {AppBskyVideoDefs} from '@atproto/api'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
 import {nanoid} from 'nanoid/non-secure'
 
-import {CompressedVideo} from '#/lib/media/video/compress'
-import {UploadVideoResponse} from '#/lib/media/video/types'
-import {createVideoEndpointUrl} from '#/state/queries/video/util'
-import {useAgent, useSession} from '#/state/session'
-
-const UPLOAD_HEADER = process.env.EXPO_PUBLIC_VIDEO_HEADER ?? ''
+import {cancelable} from '#/lib/async/cancelable'
+import {ServerError} from '#/lib/media/video/errors'
+import {CompressedVideo} from '#/lib/media/video/types'
+import {createVideoEndpointUrl, mimeToExt} from '#/state/queries/video/util'
+import {useSession} from '#/state/session'
+import {useServiceAuthToken, useVideoUploadLimits} from './video-upload.shared'
 
 export const useUploadVideoMutation = ({
   onSuccess,
   onError,
   setProgress,
+  signal,
 }: {
-  onSuccess: (response: UploadVideoResponse) => void
+  onSuccess: (response: AppBskyVideoDefs.JobStatus) => void
   onError: (e: any) => void
   setProgress: (progress: number) => void
+  signal: AbortSignal
 }) => {
   const {currentAccount} = useSession()
-  const agent = useAgent()
+  const getToken = useServiceAuthToken({
+    lxm: 'com.atproto.repo.uploadBlob',
+    exp: Date.now() / 1000 + 60 * 30, // 30 minutes
+  })
+  const checkLimits = useVideoUploadLimits()
+  const {_} = useLingui()
 
   return useMutation({
-    mutationFn: async (video: CompressedVideo) => {
-      const uri = createVideoEndpointUrl('/upload', {
+    mutationKey: ['video', 'upload'],
+    mutationFn: cancelable(async (video: CompressedVideo) => {
+      await checkLimits()
+
+      const uri = createVideoEndpointUrl('/xrpc/app.bsky.video.uploadVideo', {
         did: currentAccount!.did,
-        name: `${nanoid(12)}.mp4`, // @TODO what are we limiting this to?
+        name: `${nanoid(12)}.${mimeToExt(video.mimeType)}`,
       })
-
-      // a logged-in agent should have this set, but we'll check just in case
-      if (!agent.pdsUrl) {
-        throw new Error('Agent does not have a PDS URL')
-      }
-
-      const {data: serviceAuth} =
-        await agent.api.com.atproto.server.getServiceAuth({
-          aud: `did:web:${agent.pdsUrl.hostname}`,
-          lxm: 'com.atproto.repo.uploadBlob',
-        })
 
       const uploadTask = createUploadTask(
         uri,
         video.uri,
         {
           headers: {
-            'dev-key': UPLOAD_HEADER,
-            'content-type': 'video/mp4', // @TODO same question here. does the compression step always output mp4?
-            Authorization: `Bearer ${serviceAuth.token}`,
+            'content-type': video.mimeType,
+            Authorization: `Bearer ${await getToken()}`,
           },
           httpMethod: 'POST',
           uploadType: FileSystemUploadType.BINARY_CONTENT,
@@ -59,12 +60,16 @@ export const useUploadVideoMutation = ({
         throw new Error('No response')
       }
 
-      // @TODO rm, useful for debugging/getting video cid
-      console.log('[VIDEO]', res.body)
-      const responseBody = JSON.parse(res.body) as UploadVideoResponse
-      onSuccess(responseBody)
+      const responseBody = JSON.parse(res.body) as AppBskyVideoDefs.JobStatus
+
+      if (!responseBody.jobId) {
+        throw new ServerError(
+          responseBody.error || _(msg`Failed to upload video`),
+        )
+      }
+
       return responseBody
-    },
+    }, signal),
     onError,
     onSuccess,
   })

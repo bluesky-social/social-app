@@ -1,23 +1,24 @@
 import React, {useCallback, useMemo, useState} from 'react'
 import {AppBskyFeedGetLikes as GetLikes} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useLikedByQuery} from '#/state/queries/post-liked-by'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
-import {
-  ListFooter,
-  ListHeaderDesktop,
-  ListMaybePlaceholder,
-} from '#/components/Lists'
-import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
-import {List} from '../util/List'
+import {isWeb} from 'platform/detection'
+import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
+import {List} from '#/view/com/util/List'
+import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 
-function renderItem({item}: {item: GetLikes.Like}) {
-  return <ProfileCardWithFollowBtn key={item.actor.did} profile={item.actor} />
+function renderItem({item, index}: {item: GetLikes.Like; index: number}) {
+  return (
+    <ProfileCardWithFollowBtn
+      key={item.actor.did}
+      profile={item.actor}
+      noBorder={index === 0 && !isWeb}
+    />
+  )
 }
 
 function keyExtractor(item: GetLikes.Like) {
@@ -25,7 +26,6 @@ function keyExtractor(item: GetLikes.Like) {
 }
 
 export function PostLikedBy({uri}: {uri: string}) {
-  const {_} = useLingui()
   const initialNumToRender = useInitialNumToRender()
 
   const [isPTRing, setIsPTRing] = useState(false)
@@ -78,6 +78,7 @@ export function PostLikedBy({uri}: {uri: string}) {
       <ListMaybePlaceholder
         isLoading={isLoadingUri || isLoadingLikes}
         isError={isError}
+        sideBorders={false}
       />
     )
   }
@@ -91,7 +92,6 @@ export function PostLikedBy({uri}: {uri: string}) {
       onRefresh={onRefresh}
       onEndReached={onEndReached}
       onEndReachedThreshold={4}
-      ListHeaderComponent={<ListHeaderDesktop title={_(msg`Liked By`)} />}
       ListFooterComponent={
         <ListFooter
           isFetchingNextPage={isFetchingNextPage}
@@ -103,6 +103,7 @@ export function PostLikedBy({uri}: {uri: string}) {
       desktopFixedHeight
       initialNumToRender={initialNumToRender}
       windowSize={11}
+      sideBorders={false}
     />
   )
 }

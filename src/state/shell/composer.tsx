@@ -5,8 +5,11 @@ import {
   AppBskyRichtextFacet,
   ModerationDecision,
 } from '@atproto/api'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import * as Toast from '#/view/com/util/Toast'
 
 export interface ComposerOptsPostRef {
   uri: string
@@ -22,20 +25,16 @@ export interface ComposerOptsQuote {
   text: string
   facets?: AppBskyRichtextFacet.Main[]
   indexedAt: string
-  author: {
-    did: string
-    handle: string
-    displayName?: string
-    avatar?: string
-  }
+  author: AppBskyActorDefs.ProfileViewBasic
   embeds?: AppBskyEmbedRecord.ViewRecord['embeds']
 }
 export interface ComposerOpts {
   replyTo?: ComposerOptsPostRef
   onPost?: (postUri: string | undefined) => void
   quote?: ComposerOptsQuote
+  quoteCount?: number
   mention?: string // handle of user to mention
-  openPicker?: (pos: DOMRect | undefined) => void
+  openEmojiPicker?: (pos: DOMRect | undefined) => void
   text?: string
   imageUris?: {uri: string; width: number; height: number}[]
 }
@@ -55,10 +54,25 @@ const controlsContext = React.createContext<ControlsContext>({
 })
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
+  const {_} = useLingui()
   const [state, setState] = React.useState<StateContext>()
 
   const openComposer = useNonReactiveCallback((opts: ComposerOpts) => {
-    setState(opts)
+    const author = opts.replyTo?.author || opts.quote?.author
+    const isBlocked = Boolean(
+      author &&
+        (author.viewer?.blocking ||
+          author.viewer?.blockedBy ||
+          author.viewer?.blockingByList),
+    )
+    if (isBlocked) {
+      Toast.show(
+        _(msg`Cannot interact with a blocked user`),
+        'exclamation-circle',
+      )
+    } else {
+      setState(opts)
+    }
   })
 
   const closeComposer = useNonReactiveCallback(() => {

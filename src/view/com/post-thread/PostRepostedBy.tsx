@@ -1,20 +1,14 @@
 import React, {useCallback, useMemo, useState} from 'react'
 import {AppBskyActorDefs as ActorDefs} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {usePostRepostedByQuery} from '#/state/queries/post-reposted-by'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
-import {
-  ListFooter,
-  ListHeaderDesktop,
-  ListMaybePlaceholder,
-} from '#/components/Lists'
-import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
-import {List} from '../util/List'
+import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
+import {List} from '#/view/com/util/List'
+import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 
 function renderItem({item}: {item: ActorDefs.ProfileViewBasic}) {
   return <ProfileCardWithFollowBtn key={item.did} profile={item} />
@@ -25,7 +19,6 @@ function keyExtractor(item: ActorDefs.ProfileViewBasic) {
 }
 
 export function PostRepostedBy({uri}: {uri: string}) {
-  const {_} = useLingui()
   const initialNumToRender = useInitialNumToRender()
 
   const [isPTRing, setIsPTRing] = useState(false)
@@ -78,6 +71,7 @@ export function PostRepostedBy({uri}: {uri: string}) {
       <ListMaybePlaceholder
         isLoading={isLoadingUri || isLoadingRepostedBy}
         isError={isError}
+        sideBorders={false}
       />
     )
   }
@@ -93,7 +87,6 @@ export function PostRepostedBy({uri}: {uri: string}) {
       onRefresh={onRefresh}
       onEndReached={onEndReached}
       onEndReachedThreshold={4}
-      ListHeaderComponent={<ListHeaderDesktop title={_(msg`Reposted By`)} />}
       ListFooterComponent={
         <ListFooter
           isFetchingNextPage={isFetchingNextPage}
@@ -105,6 +98,7 @@ export function PostRepostedBy({uri}: {uri: string}) {
       desktopFixedHeight
       initialNumToRender={initialNumToRender}
       windowSize={11}
+      sideBorders={false}
     />
   )
 }

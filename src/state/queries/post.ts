@@ -73,10 +73,34 @@ export function useGetPost() {
   )
 }
 
+export function useGetPosts() {
+  const queryClient = useQueryClient()
+  const agent = useAgent()
+  return useCallback(
+    async ({uris}: {uris: string[]}) => {
+      return queryClient.fetchQuery({
+        queryKey: RQKEY(uris.join(',') || ''),
+        async queryFn() {
+          const res = await agent.getPosts({
+            uris,
+          })
+
+          if (res.success) {
+            return res.data.posts
+          } else {
+            throw new Error('useGetPosts failed')
+          }
+        },
+      })
+    },
+    [queryClient, agent],
+  )
+}
+
 export function usePostLikeMutationQueue(
   post: Shadow<AppBskyFeedDefs.PostView>,
-  logContext: LogEvents['post:like']['logContext'] &
-    LogEvents['post:unlike']['logContext'],
+  logContext: LogEvents['post:like:sampled']['logContext'] &
+    LogEvents['post:unlike:sampled']['logContext'],
 ) {
   const queryClient = useQueryClient()
   const postUri = post.uri
@@ -134,7 +158,7 @@ export function usePostLikeMutationQueue(
 }
 
 function usePostLikeMutation(
-  logContext: LogEvents['post:like']['logContext'],
+  logContext: LogEvents['post:like:sampled']['logContext'],
   post: Shadow<AppBskyFeedDefs.PostView>,
 ) {
   const {currentAccount} = useSession()
@@ -151,7 +175,7 @@ function usePostLikeMutation(
       if (currentAccount) {
         ownProfile = findProfileQueryData(queryClient, currentAccount.did)
       }
-      logEvent('post:like', {
+      logEvent('post:like:sampled', {
         logContext,
         doesPosterFollowLiker: postAuthor.viewer
           ? Boolean(postAuthor.viewer.followedBy)
@@ -176,12 +200,12 @@ function usePostLikeMutation(
 }
 
 function usePostUnlikeMutation(
-  logContext: LogEvents['post:unlike']['logContext'],
+  logContext: LogEvents['post:unlike:sampled']['logContext'],
 ) {
   const agent = useAgent()
   return useMutation<void, Error, {postUri: string; likeUri: string}>({
     mutationFn: ({likeUri}) => {
-      logEvent('post:unlike', {logContext})
+      logEvent('post:unlike:sampled', {logContext})
       return agent.deleteLike(likeUri)
     },
     onSuccess() {
@@ -192,8 +216,8 @@ function usePostUnlikeMutation(
 
 export function usePostRepostMutationQueue(
   post: Shadow<AppBskyFeedDefs.PostView>,
-  logContext: LogEvents['post:repost']['logContext'] &
-    LogEvents['post:unrepost']['logContext'],
+  logContext: LogEvents['post:repost:sampled']['logContext'] &
+    LogEvents['post:unrepost:sampled']['logContext'],
 ) {
   const queryClient = useQueryClient()
   const postUri = post.uri
@@ -249,7 +273,7 @@ export function usePostRepostMutationQueue(
 }
 
 function usePostRepostMutation(
-  logContext: LogEvents['post:repost']['logContext'],
+  logContext: LogEvents['post:repost:sampled']['logContext'],
 ) {
   const agent = useAgent()
   return useMutation<
@@ -258,7 +282,7 @@ function usePostRepostMutation(
     {uri: string; cid: string} // the post's uri and cid
   >({
     mutationFn: post => {
-      logEvent('post:repost', {logContext})
+      logEvent('post:repost:sampled', {logContext})
       return agent.repost(post.uri, post.cid)
     },
     onSuccess() {
@@ -268,12 +292,12 @@ function usePostRepostMutation(
 }
 
 function usePostUnrepostMutation(
-  logContext: LogEvents['post:unrepost']['logContext'],
+  logContext: LogEvents['post:unrepost:sampled']['logContext'],
 ) {
   const agent = useAgent()
   return useMutation<void, Error, {postUri: string; repostUri: string}>({
     mutationFn: ({repostUri}) => {
-      logEvent('post:unrepost', {logContext})
+      logEvent('post:unrepost:sampled', {logContext})
       return agent.deleteRepost(repostUri)
     },
     onSuccess() {

@@ -12,6 +12,7 @@ export const HELP_DESK_URL = `https://blueskyweb.zendesk.com/hc/${HELP_DESK_LANG
 export const EMBED_SERVICE = 'https://embed.bsky.app'
 export const EMBED_SCRIPT = `${EMBED_SERVICE}/static/embed.js`
 export const BSKY_DOWNLOAD_URL = 'https://bsky.app/download'
+export const STARTER_PACK_MAX_SIZE = 150
 
 // HACK
 // Yes, this is exactly what it looks like. It's a hard-coded constant
@@ -20,7 +21,7 @@ export const BSKY_DOWNLOAD_URL = 'https://bsky.app/download'
 // code and update this number with each release until we can get the
 // server route done.
 // -prf
-export const JOINED_THIS_WEEK = 21797 // as of Jul5 2024
+export const JOINED_THIS_WEEK = 3060000 // estimate as of 9/6/24
 
 const BASE_FEEDBACK_FORM_URL = `${HELP_DESK_URL}/requests/new`
 export function FEEDBACK_FORM_URL({
@@ -135,3 +136,15 @@ export const GIF_FEATURED = (params: string) =>
   `${GIF_SERVICE}/tenor/v2/featured?${params}`
 
 export const MAX_LABELERS = 20
+
+export const VIDEO_SERVICE = 'https://video.bsky.app'
+export const VIDEO_SERVICE_DID = 'did:web:video.bsky.app'
+
+export const SUPPORTED_MIME_TYPES = [
+  'video/mp4',
+  'video/mpeg',
+  'video/webm',
+  'video/quicktime',
+] as const
+
+export type SupportedMimeTypes = (typeof SUPPORTED_MIME_TYPES)[number]

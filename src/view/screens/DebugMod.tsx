@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-imports */
 import React from 'react'
 import {View} from 'react-native'
 import {
@@ -807,6 +808,7 @@ function MockPostFeedItem({
       showReplyTo={false}
       reason={undefined}
       feedContext={''}
+      rootPost={post}
     />
   )
 }

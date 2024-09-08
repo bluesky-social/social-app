@@ -2,7 +2,7 @@ import {useEffect, useRef, useState} from 'react'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 
-export function useThrottledValue<T>(value: T, time?: number) {
+export function useThrottledValue<T>(value: T, time: number) {
   const pendingValueRef = useRef(value)
   const [throttledValue, setThrottledValue] = useState(value)
 

@@ -7,6 +7,7 @@ import {BottomSheetFlatListMethods} from '@gorhom/bottom-sheet'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
 import {isWeb} from 'platform/detection'
 import {useSession} from 'state/session'
 import {WizardAction, WizardState} from '#/screens/StarterPack/Wizard/State'
@@ -42,6 +43,7 @@ export function WizardEditListDialog({
   const {_} = useLingui()
   const t = useTheme()
   const {currentAccount} = useSession()
+  const initialNumToRender = useInitialNumToRender()
 
   const listRef = useRef<BottomSheetFlatListMethods>(null)
 
@@ -148,6 +150,7 @@ export function WizardEditListDialog({
         webInnerStyle={[a.py_0, {maxWidth: 500, minWidth: 200}]}
         keyboardDismissMode="on-drag"
         removeClippedSubviews={true}
+        initialNumToRender={initialNumToRender}
       />
     </Dialog.Outer>
   )
