@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-07 20:28+0900\n"
+"PO-Revision-Date: 2024-09-08 09:39+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -1083,14 +1083,6 @@ msgstr "確認コードが記載されたメールを確認し、ここに入力
 msgid "Check your inbox for an email with the confirmation code to enter below:"
 msgstr "入力したメールアドレスの受信トレイを確認して、以下に入力するための確認コードが記載されたメールが届いていないか確認してください："
 
-#: src/screens/Onboarding/StepInterests/index.tsx:191
-#~ msgid "Choose 3 or more:"
-#~ msgstr "3つ以上選んでください："
-
-#: src/screens/Onboarding/StepInterests/index.tsx:326
-#~ msgid "Choose at least {0} more"
-#~ msgstr "少なくともさらに{0}つ選んでください"
-
 #: src/screens/StarterPack/Wizard/index.tsx:190
 msgid "Choose Feeds"
 msgstr "フィードの選択"
@@ -1802,10 +1794,6 @@ msgstr "新しいフィードを探す"
 msgid "Discover New Feeds"
 msgstr "新しいフィードを探す"
 
-#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:108
-#~ msgid "Dismiss"
-#~ msgstr "消す"
-
 #: src/view/com/composer/Composer.tsx:1106
 msgid "Dismiss error"
 msgstr "エラーを消す"
@@ -2053,7 +2041,7 @@ msgstr "メールアドレス"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:95
 msgid "Email Resent"
-msgstr ""
+msgstr "メール再送済"
 
 #: src/view/com/modals/ChangeEmail.tsx:54
 #: src/view/com/modals/ChangeEmail.tsx:83
@@ -2070,7 +2058,7 @@ msgstr "メールアドレスは認証されました"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:71
 msgid "Email Verified"
-msgstr ""
+msgstr "メールアドレス確認完了"
 
 #: src/view/screens/Settings/index.tsx:319
 msgid "Email:"
@@ -2190,7 +2178,7 @@ msgstr "ファイルの保存中にエラーが発生しました"
 
 #: src/screens/Signup/StepCaptcha/index.tsx:56
 msgid "Error receiving captcha response."
-msgstr "Captchaレスポンスの受信中にエラーが発生しました。"
+msgstr "CAPTCHAレスポンスの受信中にエラーが発生しました。"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:197
 #: src/view/screens/Search/Search.tsx:116
@@ -2896,7 +2884,7 @@ msgstr "そのモデレーションサービスを読み込めませんでした
 
 #: src/state/queries/video/video.ts:165
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
-msgstr ""
+msgstr "待って！徐々にビデオへのアクセスを許可していますが、あなたの順番はまだです。しばらくしてもう一度確認を！"
 
 #: src/Navigation.tsx:550
 #: src/Navigation.tsx:570
@@ -3060,7 +3048,7 @@ msgstr "無効なユーザー名またはパスワード"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:82
 msgid "Invalid Verification Code"
-msgstr ""
+msgstr "無効な確認コード"
 
 #: src/view/com/modals/InviteCodes.tsx:94
 msgid "Invite a Friend"
@@ -4466,7 +4454,7 @@ msgstr "パスワードを選択してください。"
 
 #: src/screens/Signup/state.ts:231
 msgid "Please complete the verification captcha."
-msgstr "Captcha認証を完了してください。"
+msgstr "CAPTCHA認証を完了してください。"
 
 #: src/view/com/modals/ChangeEmail.tsx:65
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
@@ -5162,11 +5150,11 @@ msgstr "メールを再送"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:130
 msgid "Resend Email"
-msgstr ""
+msgstr "メール再送済"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:123
 msgid "Resend Verification Email"
-msgstr ""
+msgstr "確認メールを再送済"
 
 #: src/view/com/modals/ChangePassword.tsx:186
 msgid "Reset code"
@@ -5745,10 +5733,6 @@ msgstr "バッジを表示"
 msgid "Show badge and filter from feeds"
 msgstr "バッジの表示とフィードからのフィルタリング"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:215
-#~ msgid "Show follows similar to {0}"
-#~ msgstr "{0}に似たおすすめのフォロー候補を表示"
-
 #: src/view/com/post-thread/PostThreadShowHiddenReplies.tsx:23
 msgid "Show hidden replies"
 msgstr "非表示の返信を表示"
@@ -5903,10 +5887,6 @@ msgstr "あなたのスターターパックでサインアップ"
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:315
 msgid "Signup without a starter pack"
 msgstr "スターターパックを使わずにサインアップ"
-
-#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:102
-#~ msgid "Similar accounts"
-#~ msgstr "類似のアカウント"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:245
 #: src/screens/StarterPack/Wizard/index.tsx:191
@@ -6188,7 +6168,7 @@ msgstr "ありがとうございます。あなたの報告は送信されまし
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:74
 msgid "Thanks, you have successfully verified your email address."
-msgstr ""
+msgstr "ありがとう、メールアドレスの確認に成功しました。"
 
 #: src/view/com/modals/ChangeHandle.tsx:459
 msgid "That contains the following:"
@@ -6289,7 +6269,7 @@ msgstr "サービス規約は移動しました"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:85
 msgid "The verification code you have provided is invalid. Please make sure that you have used the correct verification link or request a new one."
-msgstr ""
+msgstr "入力された確認コードが正しくありません。正しい確認リンクを使用したのかを確認するか、新しい確認コードを要求してください。"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:86
 msgid "There is no time limit for account deactivation, come back any time."
@@ -7002,7 +6982,7 @@ msgstr "メールアドレスを確認"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:61
 msgid "Verify email dialog"
-msgstr ""
+msgstr "メールアドレス確認ダイアログ"
 
 #: src/view/screens/Settings/index.tsx:961
 msgid "Verify my email"
@@ -7170,7 +7150,7 @@ msgstr "あなたのアカウントが準備できるまで{estimatedTime}ほど
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:98
 msgid "We have sent another verification email to <0>{0}</0>."
-msgstr ""
+msgstr "別の確認コードを<0>{0}</0>へ送りました。"
 
 #: src/screens/Onboarding/StepFinished.tsx:238
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
@@ -7182,7 +7162,7 @@ msgstr "あなたのフォロー中のユーザーの投稿を読み終わりま
 
 #: src/state/queries/video/video.ts:170
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
-msgstr ""
+msgstr "あたながビデオのアップロードを許可されているかどうか判断できません。あとでもう一度試してください。"
 
 #: src/components/dialogs/BirthDateSettings.tsx:52
 msgid "We were unable to load your birth date preferences. Please try again."
@@ -7386,7 +7366,7 @@ msgstr "あなたは並んでいます。"
 
 #: src/state/queries/video/video.ts:161
 msgid "You are not allowed to upload videos."
-msgstr ""
+msgstr "あなたはビデオのアップロードを許可されていません。"
 
 #: src/view/com/profile/ProfileFollows.tsx:95
 msgid "You are not following anyone."
@@ -7507,7 +7487,7 @@ msgstr "最後まで到達しました"
 
 #: src/state/queries/video/video-upload.shared.ts:67
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
-msgstr ""
+msgstr "ビデオのアップロードの制限に一時的に到達しました。時間をおいてもう一度お試しください。"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:235
 msgid "You haven't created a starter pack yet!"
@@ -7632,11 +7612,11 @@ msgstr "フィードはここまでです！もっとフォローするアカウ
 
 #: src/state/queries/video/video.ts:175
 msgid "You've reached your daily limit for video uploads (too many bytes)"
-msgstr ""
+msgstr "ビデオのアップロードの一日の上限に到達しました（バイト数が多すぎます）"
 
 #: src/state/queries/video/video.ts:180
 msgid "You've reached your daily limit for video uploads (too many videos)"
-msgstr ""
+msgstr "ビデオのアップロードの一日の上限に到達しました（ビデオの数が多すぎます）"
 
 #: src/screens/Signup/index.tsx:146
 msgid "Your account"
