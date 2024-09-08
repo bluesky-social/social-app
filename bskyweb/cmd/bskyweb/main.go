@@ -80,6 +80,13 @@ func run(args []string) {
 					Value:    "",
 					EnvVars:  []string{"BASIC_AUTH_PASSWORD"},
 				},
+				&cli.StringSliceFlag{
+					Name:     "cors-allowed-origins",
+					Usage:    "list of allowed origins for CORS requests",
+					Required: false,
+					Value:    cli.NewStringSlice("https://bsky.app", "https://main.bsky.dev", "https://app.staging.bsky.dev"),
+					EnvVars:  []string{"CORS_ALLOWED_ORIGINS"},
+				},
 			},
 		},
 	}

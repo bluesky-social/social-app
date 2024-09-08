@@ -57,6 +57,7 @@ func serve(cctx *cli.Context) error {
 	linkHost := cctx.String("link-host")
 	ipccHost := cctx.String("ipcc-host")
 	basicAuthPassword := cctx.String("basic-auth-password")
+	corsOrigins := cctx.StringSlice("cors-allowed-origins")
 
 	// Echo
 	e := echo.New()
@@ -166,6 +167,12 @@ func serve(cctx *cli.Context) error {
 	// all of our current endpoints have no trailing slash.
 	e.Use(middleware.RemoveTrailingSlashWithConfig(middleware.TrailingSlashConfig{
 		RedirectCode: http.StatusFound,
+	}))
+
+	// CORS middleware
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: corsOrigins,
+		AllowMethods: []string{http.MethodGet, http.MethodHead, http.MethodOptions},
 	}))
 
 	//
