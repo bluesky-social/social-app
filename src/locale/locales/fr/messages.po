@@ -117,7 +117,7 @@ msgstr "{0} personnes se sont inscrites cette semaine"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:593
 msgid "{0} of {1}"
-msgstr "{0} de {1}"
+msgstr "{0} sur {1}"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:467
 msgid "{0} people have used this starter pack!"
@@ -558,7 +558,7 @@ msgstr "Une erreur s’est produite en essayant de suivre tous les comptes"
 
 #: src/state/queries/video/video.ts:194
 msgid "An error occurred while uploading the video."
-msgstr "Une erreur s’est produite lors du téléchargement de la vidéo."
+msgstr "Une erreur s’est produite lors de l’envoi de la vidéo."
 
 #: src/lib/moderation/useReportOptions.ts:28
 msgid "An issue not included in these options"
@@ -1728,7 +1728,7 @@ msgstr "Détacher la citation ?"
 
 #: src/components/WhoCanReply.tsx:175
 msgid "Dialog: adjust who can interact with this post"
-msgstr "Un dialogue : réglez qui peut interagir avec ce post"
+msgstr "Une boîte de dialogue : réglez qui peut interagir avec ce post"
 
 #: src/view/com/composer/Composer.tsx:351
 msgid "Did you want to say anything?"
@@ -1796,7 +1796,7 @@ msgstr "Découvrir de nouveaux fils d’actu"
 
 #: src/view/com/composer/Composer.tsx:1106
 msgid "Dismiss error"
-msgstr "Annuler l’erreur"
+msgstr "Ignorer l’erreur"
 
 #: src/components/ProgressGuide/List.tsx:40
 msgid "Dismiss getting started guide"
@@ -1820,7 +1820,7 @@ msgstr "Panneau DNS"
 
 #: src/components/dialogs/MutedWords.tsx:302
 msgid "Do not apply this mute word to users you follow"
-msgstr "N’appliquez pas ce mot masqué aux comptes que vous suivez"
+msgstr "Ne pas appliquer ce mot masqué aux comptes que vous suivez"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:39
 msgid "Does not include nudity."
@@ -2041,7 +2041,7 @@ msgstr "Adresse e-mail"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:95
 msgid "Email Resent"
-msgstr "L’e-mail a été renvoyé"
+msgstr "E-mail renvoyé"
 
 #: src/view/com/modals/ChangeEmail.tsx:54
 #: src/view/com/modals/ChangeEmail.tsx:83
@@ -2390,7 +2390,7 @@ msgstr "Échec de la mise à jour des paramètres"
 #: src/state/queries/video/video-upload.web.ts:68
 #: src/state/queries/video/video-upload.web.ts:78
 msgid "Failed to upload video"
-msgstr "Échec du téléchargement de la vidéo"
+msgstr "Échec de l’envoi de la vidéo"
 
 #: src/Navigation.tsx:226
 msgid "Feed"
@@ -3088,7 +3088,7 @@ msgstr "Il n’y a que vous pour l’instant ! Ajoutez d’autres personnes à 
 
 #: src/view/com/composer/Composer.tsx:1125
 msgid "Job ID: {0}"
-msgstr "Job ID : {0}"
+msgstr "ID de job : {0}"
 
 #: src/view/com/auth/SplashScreen.web.tsx:164
 msgid "Jobs"
@@ -3116,7 +3116,7 @@ msgstr "Étiqueté par {0}."
 
 #: src/components/moderation/ContentHider.tsx:145
 msgid "Labeled by the author."
-msgstr "Étiqueté par l’aut·eur·rice."
+msgstr "Étiqueté par l’auteur·ice."
 
 #: src/view/screens/Profile.tsx:207
 msgid "Labels"
@@ -3629,7 +3629,7 @@ msgstr "Masquer ce mot dans les mots-clés uniquement"
 
 #: src/components/dialogs/MutedWords.tsx:170
 msgid "Mute this word until you unmute it"
-msgstr "Masquer ce mot jusqu’à ce que vous le réafficher"
+msgstr "Masquer ce mot jusqu’à ce que vous le réaffichiez"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:465
 #: src/view/com/util/forms/PostDropdownBtn.tsx:471
@@ -3887,7 +3887,7 @@ msgstr "Personne"
 
 #: src/components/WhoCanReply.tsx:237
 msgid "No one but the author can quote this post."
-msgstr "Personne d’autre que l’aut·eur·rice ne peut citer ce post."
+msgstr "Personne d’autre que l’auteur·ice ne peut citer ce post."
 
 #: src/screens/Profile/Sections/Feed.tsx:64
 msgid "No posts yet."
@@ -4715,7 +4715,7 @@ msgstr "Citer le post"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:302
 msgid "Quote post was re-attached"
-msgstr "La citation a été ré-attaché"
+msgstr "La citation a été ré-attachée"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:301
 msgid "Quote post was successfully detached"
@@ -4765,15 +4765,15 @@ msgstr "Réactiver votre compte"
 
 #: src/view/com/auth/SplashScreen.web.tsx:157
 msgid "Read the Bluesky blog"
-msgstr "Lisez le blog de Bluesky"
+msgstr "Lire le blog de Bluesky"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:59
 msgid "Read the Bluesky Privacy Policy"
-msgstr "Lisez la politique de confidentialité de Bluesky"
+msgstr "Lire la politique de confidentialité de Bluesky"
 
 #: src/screens/Signup/StepInfo/Policies.tsx:49
 msgid "Read the Bluesky Terms of Service"
-msgstr "Lisez les conditions d’utilisation de Bluesky"
+msgstr "Lire les conditions d’utilisation de Bluesky"
 
 #: src/components/dms/ReportDialog.tsx:174
 msgid "Reason:"
@@ -4898,7 +4898,7 @@ msgstr "Supprimer ce fil d’actu de vos fils d’actu enregistrés"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:105
 msgid "Removed by author"
-msgstr "Supprimé par l’aut·eur·rice"
+msgstr "Supprimé par l’auteur·ice"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:103
 msgid "Removed by you"
@@ -4957,7 +4957,7 @@ msgstr "Répondre"
 #: src/components/moderation/ModerationDetailsDialog.tsx:115
 #: src/lib/moderation/useModerationCauseDescription.ts:123
 msgid "Reply Hidden by Thread Author"
-msgstr "Réponse cachée par l’aut·eur·rice du fil de discussion"
+msgstr "Réponse cachée par l’auteur·ice du fil de discussion"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:114
 #: src/lib/moderation/useModerationCauseDescription.ts:122
@@ -4970,7 +4970,7 @@ msgstr "Paramètres de réponse"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:340
 msgid "Reply settings are chosen by the author of the thread"
-msgstr "Les paramètres de réponse sont choisis par l’aut·eur·rice du fil de discussion"
+msgstr "Les paramètres de réponse sont choisis par l’auteur·ice du fil de discussion"
 
 #: src/view/com/post/Post.tsx:196
 #: src/view/com/posts/FeedItem.tsx:520
@@ -5481,7 +5481,7 @@ msgstr "Sélectionner une vidéo"
 
 #: src/components/dialogs/MutedWords.tsx:242
 msgid "Select what content this mute word should apply to."
-msgstr "Sélectionnez le contenu auquel ce mot masqué doit s’appliquer."
+msgstr "Sélectionnez le contenu pour lequel ce mot masqué doit s’appliquer."
 
 #: src/view/screens/LanguageSettings.tsx:285
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
@@ -6101,16 +6101,16 @@ msgstr "Tapper pour annuler"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:146
 msgid "Tap to enter full screen"
-msgstr "Tapper pour accéder au plein écran"
+msgstr "Taper pour accéder au plein écran"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:169
 msgid "Tap to toggle sound"
-msgstr "Tapper pour alterner le son"
+msgstr "Taper pour activer ou désactiver le son"
 
 #: src/view/com/util/images/AutoSizedImage.tsx:190
 #: src/view/com/util/images/AutoSizedImage.tsx:210
 msgid "Tap to view full image"
-msgstr "Tapper pour voir l’image complète"
+msgstr "Taper pour voir l’image complète"
 
 #: src/state/shell/progress-guide.tsx:166
 msgid "Task complete - 10 likes!"
@@ -6189,7 +6189,7 @@ msgstr "Ce kit de démarrage n’a pas pu être trouvé."
 
 #: src/view/com/post-thread/PostQuotes.tsx:127
 msgid "That's all, folks!"
-msgstr "C’est tout, les ami·e·s !"
+msgstr "Et voilà, c’est tout !"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:268
 #: src/view/com/profile/ProfileMenu.tsx:353
@@ -6199,7 +6199,7 @@ msgstr "Ce compte pourra interagir avec vous après le déblocage."
 #: src/components/moderation/ModerationDetailsDialog.tsx:118
 #: src/lib/moderation/useModerationCauseDescription.ts:126
 msgid "The author of this thread has hidden this reply."
-msgstr "L’aut·eur·rice de ce fil de discussion a masqué cette réponse."
+msgstr "L’auteur·ice de ce fil de discussion a masqué cette réponse."
 
 #: src/screens/Moderation/index.tsx:368
 msgid "The Bluesky web application"
@@ -6253,7 +6253,7 @@ msgstr "Notre politique de confidentialité a été déplacée vers <0/>"
 
 #: src/state/queries/video/video.ts:222
 msgid "The selected video is larger than 100MB."
-msgstr "La vidéo sélectionnée a une taille supérieure à 100 Mo."
+msgstr "La vidéo sélectionnée a une taille supérieure à 100 Mo."
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:713
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
@@ -6269,7 +6269,7 @@ msgstr "Nos conditions d’utilisation ont été déplacées vers"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:85
 msgid "The verification code you have provided is invalid. Please make sure that you have used the correct verification link or request a new one."
-msgstr "Le code de vérification que vous avez fourni n’est pas valide. Veuillez vous assurer que vous avez utilisé le bon lien de vérification ou en demander un nouveau."
+msgstr "Le code de vérification que vous avez fourni n’est pas valide. Veuillez vous assurer que vous avez utilisé le bon lien de vérification ou demandez-en un nouveau."
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:86
 msgid "There is no time limit for account deactivation, come back any time."
@@ -6455,7 +6455,7 @@ msgstr "Cette étiquette a été apposée par <0>{0}</0>."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:142
 msgid "This label was applied by the author."
-msgstr "Cette étiquette a été apposée par l’aut·eur·rice."
+msgstr "Cette étiquette a été apposée par l’auteur·ice."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:161
 msgid "This label was applied by you."
@@ -6496,11 +6496,11 @@ msgstr "Ce post n’est visible que pour les personnes connectées. Il ne sera p
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:637
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
-msgstr "Ce post sera masqué des fils d’actu et des fils de discussion. Cela est irréversible."
+msgstr "Ce post sera masqué des fils d’actu et des fils de discussion. C’est irréversible."
 
 #: src/view/com/composer/useExternalLinkFetch.ts:67
 msgid "This post's author has disabled quote posts."
-msgstr "L’aut·eur·rice de ce post a désactivé les citations."
+msgstr "L’auteur·ice de ce post a désactivé les citations."
 
 #: src/view/com/profile/ProfileMenu.tsx:374
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't logged in."
@@ -6561,7 +6561,7 @@ msgstr "Cela supprimera @{0} de la liste d’accès rapide."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:689
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
-msgstr "Cela supprimera votre post de cette citation pour tous les comptes, et le remplacera par un espace réservé."
+msgstr "Cela retirera votre post de cette citation pour tout le monde, et le remplacera par un espace vide."
 
 #: src/view/screens/Settings/index.tsx:560
 msgid "Thread preferences"
@@ -6590,7 +6590,7 @@ msgstr "Pour signaler une conversation, veuillez signaler un de ses messages via
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:106
 msgid "To upload videos to Bluesky, you must first verify your email."
-msgstr "Pour télécharger des vidéos sur Bluesky, vous devez d’abord vérifier votre e-mail."
+msgstr "Pour envoyer des vidéos sur Bluesky, vous devez d’abord vérifier votre e-mail."
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
@@ -6970,7 +6970,7 @@ msgstr "Valeur :"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:104
 msgid "Verified email required"
-msgstr "Adresse e-mail vérifiée requise"
+msgstr "Vérification de l’adresse e-mail requise"
 
 #: src/view/com/modals/ChangeHandle.tsx:504
 msgid "Verify DNS Record"
@@ -6982,7 +6982,7 @@ msgstr "Confirmer l’e-mail"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:61
 msgid "Verify email dialog"
-msgstr "Dialogue de vérification de l’adresse e-mail"
+msgstr "Boîte de dialogue de vérification de l’adresse e-mail"
 
 #: src/view/screens/Settings/index.tsx:961
 msgid "Verify my email"
@@ -7102,7 +7102,7 @@ msgstr "Voir les comptes qui a liké ce fil d’actu"
 
 #: src/screens/Moderation/index.tsx:274
 msgid "View your blocked accounts"
-msgstr "Consultez vos comptes bloqués"
+msgstr "Consulter vos comptes bloqués"
 
 #: src/view/com/home/HomeHeaderLayout.web.tsx:79
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:86
@@ -7111,11 +7111,11 @@ msgstr "Consultez vos fils d’actu et explorez-en plus"
 
 #: src/screens/Moderation/index.tsx:244
 msgid "View your moderation lists"
-msgstr "Consultez vos listes de modération"
+msgstr "Consulter vos listes de modération"
 
 #: src/screens/Moderation/index.tsx:259
 msgid "View your muted accounts"
-msgstr "Consultez vos comptes masqués"
+msgstr "Consulter vos comptes masqués"
 
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
@@ -7162,7 +7162,7 @@ msgstr "Nous n’avons plus de posts provenant des comptes que vous suivez. Voic
 
 #: src/state/queries/video/video.ts:170
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
-msgstr "Nous n’avons pas pu déterminer si vous étiez autorisé à télécharger des vidéos. Veuillez réessayer."
+msgstr "Nous n’avons pas pu déterminer si vous étiez autorisé à envoyer des vidéos. Veuillez réessayer."
 
 #: src/components/dialogs/BirthDateSettings.tsx:52
 msgid "We were unable to load your birth date preferences. Please try again."
@@ -7366,7 +7366,7 @@ msgstr "Vous êtes dans la file d’attente."
 
 #: src/state/queries/video/video.ts:161
 msgid "You are not allowed to upload videos."
-msgstr "Vous n’êtes pas autorisé à télécharger des vidéos."
+msgstr "Vous n’êtes pas autorisé à envoyer des vidéos."
 
 #: src/view/com/profile/ProfileFollows.tsx:95
 msgid "You are not following anyone."
@@ -7420,7 +7420,7 @@ msgstr "Vous n’avez encore aucun fil d’actu enregistré."
 
 #: src/view/com/post-thread/PostThread.tsx:214
 msgid "You have blocked the author or you have been blocked by the author."
-msgstr "Vous avez bloqué cet·te l’aut·eur·rice ou vous avez été bloqué par celui-ci."
+msgstr "Vous avez bloqué cet·te auteur·ice ou vous avez été bloqué par celui-ci."
 
 #: src/components/dms/MessagesListBlockedFooter.tsx:58
 msgid "You have blocked this user"
@@ -7487,7 +7487,7 @@ msgstr "Vous avez atteint la fin"
 
 #: src/state/queries/video/video-upload.shared.ts:67
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
-msgstr "Vous avez temporairement atteint la limite de téléchargement des vidéos. Veuillez réessayer plus tard."
+msgstr "Vous avez temporairement atteint la limite d’envoi de vidéos. Veuillez réessayer plus tard."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:235
 msgid "You haven't created a starter pack yet!"
@@ -7612,11 +7612,11 @@ msgstr "Vous avez atteint la fin de votre fil d’actu ! Trouvez d’autres com
 
 #: src/state/queries/video/video.ts:175
 msgid "You've reached your daily limit for video uploads (too many bytes)"
-msgstr "Vous avez atteint votre limite quotidienne de téléchargement de vidéos (trop d’octets)"
+msgstr "Vous avez atteint votre limite quotidienne d’envoi de vidéos (trop d’octets)"
 
 #: src/state/queries/video/video.ts:180
 msgid "You've reached your daily limit for video uploads (too many videos)"
-msgstr "Vous avez atteint votre limite quotidienne de téléchargement de vidéos (trop de vidéos)"
+msgstr "Vous avez atteint votre limite quotidienne d’envoi de vidéos (trop de vidéos)"
 
 #: src/screens/Signup/index.tsx:146
 msgid "Your account"
