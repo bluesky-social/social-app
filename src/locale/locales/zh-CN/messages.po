@@ -1083,14 +1083,6 @@ msgstr "在这里输入刚才发送到你电子邮箱里的验证码。"
 msgid "Check your inbox for an email with the confirmation code to enter below:"
 msgstr "查看发送至你电子邮箱的确认邮件，并在下方输入收到的验证码："
 
-#: src/screens/Onboarding/StepInterests/index.tsx:191
-#~ msgid "Choose 3 or more:"
-#~ msgstr "选择至少 3 个或更多："
-
-#: src/screens/Onboarding/StepInterests/index.tsx:326
-#~ msgid "Choose at least {0} more"
-#~ msgstr "还需选择至少 {0} 个"
-
 #: src/screens/StarterPack/Wizard/index.tsx:190
 msgid "Choose Feeds"
 msgstr "选择资讯源"
@@ -1801,10 +1793,6 @@ msgstr "探索新的资讯源"
 #: src/view/screens/Feeds.tsx:756
 msgid "Discover New Feeds"
 msgstr "探索新的资讯源"
-
-#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:108
-#~ msgid "Dismiss"
-#~ msgstr "关闭"
 
 #: src/view/com/composer/Composer.tsx:1106
 msgid "Dismiss error"
@@ -5745,10 +5733,6 @@ msgstr "显示徽章"
 msgid "Show badge and filter from feeds"
 msgstr "显示徽章并从资讯源中过滤"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:218
-#~ msgid "Show follows similar to {0}"
-#~ msgstr "显示类似于 {0} 的关注者"
-
 #: src/view/com/post-thread/PostThreadShowHiddenReplies.tsx:23
 msgid "Show hidden replies"
 msgstr "显示已隐藏的回复"
@@ -5903,10 +5887,6 @@ msgstr "使用你的入门包注册"
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:315
 msgid "Signup without a starter pack"
 msgstr "注册但不使用入门包"
-
-#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:102
-#~ msgid "Similar accounts"
-#~ msgstr "类似账户"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:245
 #: src/screens/StarterPack/Wizard/index.tsx:191
