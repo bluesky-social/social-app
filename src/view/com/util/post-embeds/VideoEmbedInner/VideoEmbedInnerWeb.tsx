@@ -1,7 +1,7 @@
 import React, {useEffect, useId, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {AppBskyEmbedVideo} from '@atproto/api'
-import Hls from 'hls.js'
+import Hls, {MediaPlaylist} from 'hls.js'
 
 import {atoms as a} from '#/alf'
 import {Controls} from './VideoWebControls'
@@ -20,7 +20,7 @@ export function VideoEmbedInnerWeb({
   const containerRef = useRef<HTMLDivElement>(null)
   const ref = useRef<HTMLVideoElement>(null)
   const [focused, setFocused] = useState(false)
-  const [hasSubtitleTrack, setHasSubtitleTrack] = useState(false)
+  const [subtitleTracks, setSubtitleTracks] = useState<MediaPlaylist[]>([])
   const figId = useId()
 
   // send error up to error boundary
@@ -46,7 +46,7 @@ export function VideoEmbedInnerWeb({
 
     hls.on(Hls.Events.SUBTITLE_TRACKS_UPDATED, (_event, data) => {
       if (data.subtitleTracks.length > 0) {
-        setHasSubtitleTrack(true)
+        setSubtitleTracks(data.subtitleTracks)
       }
     })
 
@@ -111,7 +111,7 @@ export function VideoEmbedInnerWeb({
           setFocused={setFocused}
           onScreen={onScreen}
           fullscreenRef={containerRef}
-          hasSubtitleTrack={hasSubtitleTrack}
+          subtitleTracks={subtitleTracks}
         />
       </div>
     </View>

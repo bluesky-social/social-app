@@ -4,6 +4,7 @@ import {SvgProps} from 'react-native-svg'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import type Hls from 'hls.js'
+import {MediaPlaylist} from 'hls.js'
 
 import {isFirefox} from '#/lib/browser'
 import {clamp} from '#/lib/numbers'
@@ -42,7 +43,7 @@ export function Controls({
   setFocused,
   onScreen,
   fullscreenRef,
-  hasSubtitleTrack,
+  subtitleTracks,
 }: {
   videoRef: React.RefObject<HTMLVideoElement>
   hlsRef: React.RefObject<Hls | undefined>
@@ -52,7 +53,7 @@ export function Controls({
   setFocused: (focused: boolean) => void
   onScreen: boolean
   fullscreenRef: React.RefObject<HTMLDivElement>
-  hasSubtitleTrack: boolean
+  subtitleTracks: MediaPlaylist[]
 }) {
   const {
     play,
@@ -128,12 +129,12 @@ export function Controls({
 
   useEffect(() => {
     if (!hlsRef.current) return
-    if (hasSubtitleTrack && subtitlesEnabled && canPlay) {
+    if (subtitleTracks.length > 0 && subtitlesEnabled && canPlay) {
       hlsRef.current.subtitleTrack = 0
     } else {
       hlsRef.current.subtitleTrack = -1
     }
-  }, [hasSubtitleTrack, subtitlesEnabled, hlsRef, canPlay])
+  }, [subtitleTracks, subtitlesEnabled, hlsRef, canPlay])
 
   // clicking on any button should focus the player, if it's not already focused
   const drawFocus = useCallback(() => {
@@ -324,7 +325,7 @@ export function Controls({
           <Text style={{color: t.palette.white}}>
             {formatTime(currentTime)} / {formatTime(duration)}
           </Text>
-          {hasSubtitleTrack && (
+          {subtitleTracks.length > 0 && (
             <ControlButton
               active={subtitlesEnabled}
               activeLabel={_(msg`Disable subtitles`)}
