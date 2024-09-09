@@ -325,10 +325,11 @@ export const LoginForm = ({
               <Trans>Connecting...</Trans>
             </Text>
           </>
-        ) : isReady ? (
+        ) : (
           <Button
             testID="loginNextButton"
             label={_(msg`Next`)}
+            disabled={!isReady}
             accessibilityHint={_(msg`Navigates to the next screen`)}
             variant="solid"
             color="primary"
@@ -339,7 +340,7 @@ export const LoginForm = ({
             </ButtonText>
             {isProcessing && <ButtonIcon icon={Loader} />}
           </Button>
-        ) : undefined}
+        )}
       </View>
     </FormContainer>
   )
