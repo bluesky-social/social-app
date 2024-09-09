@@ -603,6 +603,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
+    paddingTop: 4,
     paddingBottom: 2,
     overflow: 'hidden',
   },
