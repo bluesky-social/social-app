@@ -2050,7 +2050,7 @@ msgstr "Adresse e-mail mise à jour"
 
 #: src/view/com/modals/ChangeEmail.tsx:106
 msgid "Email Updated"
-msgstr "Adresse e-mail mis à jour"
+msgstr "Adresse e-mail mise à jour"
 
 #: src/view/com/modals/VerifyEmail.tsx:85
 msgid "Email verified"
