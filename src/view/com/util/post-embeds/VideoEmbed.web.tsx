@@ -5,7 +5,6 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {clamp} from '#/lib/numbers'
-import {useGate} from '#/lib/statsig/statsig'
 import {
   HLSUnsupportedError,
   VideoEmbedInnerWeb,
@@ -18,7 +17,6 @@ import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 
 export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
   const ref = useRef<HTMLDivElement>(null)
-  const gate = useGate()
   const {active, setActive, sendPosition, currentActiveView} =
     useActiveVideoWeb()
   const [onScreen, setOnScreen] = useState(false)
@@ -47,10 +45,6 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
     ),
     [key],
   )
-
-  if (!gate('video_view_on_posts')) {
-    return null
-  }
 
   let aspectRatio = 16 / 9
 
