@@ -8,7 +8,7 @@ import {
   SuggestionKeyDownProps,
 } from '@tiptap/suggestion'
 
-import {TagsAutocompleteModel} from 'state/models/ui/tags-autocomplete'
+// import {TagsAutocompleteModel} from 'state/models/ui/tags-autocomplete'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Text} from 'view/com/util/text/Text'
 
@@ -16,25 +16,25 @@ import {parsePunctuationFromTag} from './utils'
 
 type AutocompleteResult = string
 type ListProps = SuggestionProps<AutocompleteResult> & {
-  autocompleteModel: TagsAutocompleteModel
+  // autocompleteModel: TagsAutocompleteModel
 }
 type AutocompleteRef = {
   onKeyDown: (props: SuggestionKeyDownProps) => boolean
 }
 
 export function createTagsAutocomplete({
-  autocompleteModel,
+  // autocompleteModel,
 }: {
-  autocompleteModel: TagsAutocompleteModel
+  // autocompleteModel: TagsAutocompleteModel
 }): Omit<SuggestionOptions, 'editor'> {
   return {
     /**
      * This `query` param comes from the result of `findSuggestionMatch`
      */
     async items({query}) {
-      autocompleteModel.setActive(true)
-      await autocompleteModel.search(query)
-      return autocompleteModel.suggestions.slice(0, 8)
+      // autocompleteModel.setActive(true)
+      // await autocompleteModel.search(query)
+      return ['tag']//autocompleteModel.suggestions.slice(0, 8)
     },
     render() {
       let component: ReactRenderer<AutocompleteRef> | undefined
@@ -45,7 +45,7 @@ export function createTagsAutocomplete({
           component = new ReactRenderer(Autocomplete, {
             props: {
               ...props,
-              autocompleteModel,
+              //autocompleteModel,
             },
             editor: props.editor,
           })
@@ -95,7 +95,7 @@ export function createTagsAutocomplete({
 
 const Autocomplete = forwardRef<AutocompleteRef, ListProps>(
   function AutocompleteImpl(props, ref) {
-    const {items, command, autocompleteModel} = props
+    const {items, command} = props
     const pal = usePalette('default')
     const [selectedIndex, setSelectedIndex] = useState(0)
 
@@ -141,7 +141,7 @@ const Autocomplete = forwardRef<AutocompleteRef, ListProps>(
         if (event.key === 'Enter') {
           if (!props.items.length) {
             // no items, use whatever the user typed
-            commit(autocompleteModel.query)
+            // commit(autocompleteModel.query)
           } else {
             selectItem(selectedIndex)
           }
@@ -149,7 +149,7 @@ const Autocomplete = forwardRef<AutocompleteRef, ListProps>(
         }
 
         if (event.key === ' ') {
-          commit(autocompleteModel.query)
+          // commit(autocompleteModel.query)
           return true
         }
 

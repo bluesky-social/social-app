@@ -30,6 +30,7 @@ import {createSuggestion} from './web/Autocomplete'
 import {Emoji} from './web/EmojiPicker.web'
 import {LinkDecorator} from './web/LinkDecorator'
 import {TagDecorator} from './web/TagDecorator'
+import {Tags, createTagsAutocomplete} from './web/Tags'
 
 export interface TextInputRef {
   focus: () => void
@@ -71,7 +72,14 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     () => [
       Document,
       LinkDecorator,
-      TagDecorator,
+      // TagDecorator,
+      Tags.configure({
+        HTMLAttributes: {
+          class: 'inline-tag',
+        },
+        suggestion: createTagsAutocomplete({
+        }),
+      }),
       Mention.configure({
         HTMLAttributes: {
           class: 'mention',

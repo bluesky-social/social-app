@@ -1,8 +1,5 @@
-import {
-  HASHTAG_WITH_TRAILING_PUNCTUATION_REGEX,
-  TRAILING_PUNCTUATION_REGEX,
-  LEADING_HASH_REGEX,
-} from '@atproto/api'
+import {TAG_REGEX, TRAILING_PUNCTUATION_REGEX} from '@atproto/api'
+import {findSuggestionMatch as defaultFindSuggestionMatch} from '@tiptap/suggestion'
 
 /**
  * This method eventually receives the `query` property from the result of
@@ -22,51 +19,42 @@ export function parsePunctuationFromTag(value: string) {
  *
  * That's why we use the loose regex form that includes trialing punctuation.
  * We strip that our later.
+ *
+ * @see https://github.com/ueberdosis/tiptap/blob/cf2067906f506486c6613f872be8b1fd318526c9/packages/suggestion/src/findSuggestionMatch.ts
  */
 export function findSuggestionMatch({
-  text,
-  cursorPosition,
-}: {
-  text: string
-  cursorPosition: number
-}) {
-  const match = Array.from(
-    text.matchAll(HASHTAG_WITH_TRAILING_PUNCTUATION_REGEX),
-  ).pop()
+  $position,
+}: Parameters<typeof defaultFindSuggestionMatch>[0]) {
+  const text = $position.nodeBefore?.isText && $position.nodeBefore.text
+
+  if (!text) {
+    return null
+  }
+
+  const textFrom = $position.pos - text.length
+  const match = Array.from(text.matchAll(TAG_REGEX)).pop()
 
   if (!match || match.input === undefined || match.index === undefined) {
     return null
   }
 
-  const startIndex = cursorPosition - text.length
-  let [matchedString, tagWithTrailingPunctuation] = match
+  const [fullMatch, , tag] = match
 
-  const sanitized = tagWithTrailingPunctuation
-    .replace(TRAILING_PUNCTUATION_REGEX, '')
-    .replace(LEADING_HASH_REGEX, '')
+  if (!tag || tag.length === 0 || tag.length > 64) return null
 
-  // one of our hashtag spec rules
-  if (sanitized.length > 64) return null
+  // The absolute position of the match in the document
+  const from = textFrom + fullMatch.indexOf(tag)
+  const to = from + tag.length + 1
 
-  const from =
-    startIndex + match.index + matchedString.indexOf(tagWithTrailingPunctuation)
-  const to = from + tagWithTrailingPunctuation.length
-
-  if (from < cursorPosition && to >= cursorPosition) {
+  // If the $position is located within the matched substring, return that range
+  if (from < $position.pos && to >= $position.pos) {
     return {
       range: {
         from,
         to,
       },
-      /**
-       * This is passed to the `items({ query })` method configured in
-       * `createTagsAutocomplete`.
-       *
-       * We parse out the punctuation later.
-       */
-      query: tagWithTrailingPunctuation.replace(LEADING_HASH_REGEX, ''),
-      // raw text string
-      text: matchedString,
+      query: tag.replace(TRAILING_PUNCTUATION_REGEX, ''),
+      text: fullMatch,
     }
   }
 
