@@ -115,6 +115,9 @@ export type LogEvents = {
 
   'composer:gif:open': {}
   'composer:gif:select': {}
+  'composer:language:suggest': {
+    lang: string
+  }
 
   // Data events
   'account:create:begin': {}

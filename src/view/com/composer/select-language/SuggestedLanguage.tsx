@@ -1,22 +1,24 @@
 import React, {useEffect, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
-import lande from 'lande'
-import {Trans, msg} from '@lingui/macro'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {Text} from '../../util/text/Text'
-import {Button} from '../../util/forms/Button'
+import lande from 'lande'
+
+import {usePalette} from '#/lib/hooks/usePalette'
+import {logEvent} from '#/lib/statsig/statsig'
+import {s} from '#/lib/styles'
 import {code3ToCode2Strict, codeToLanguageName} from '#/locale/helpers'
 import {
   toPostLanguages,
   useLanguagePrefs,
   useLanguagePrefsApi,
 } from '#/state/preferences/languages'
-import {usePalette} from '#/lib/hooks/usePalette'
-import {s} from '#/lib/styles'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
+import {Button} from '../../util/forms/Button'
+import {Text} from '../../util/text/Text'
 
 // fallbacks for safari
 const onIdle = globalThis.requestIdleCallback || (cb => setTimeout(cb, 1))
@@ -30,6 +32,9 @@ export function SuggestedLanguage({text}: {text: string}) {
   const setLangPrefs = useLanguagePrefsApi()
   const pal = usePalette('default')
   const {_} = useLingui()
+  const shouldSuggestLanguage =
+    suggestedLanguage &&
+    !toPostLanguages(langPrefs.postLanguage).includes(suggestedLanguage)
 
   useEffect(() => {
     const textTrimmed = text.trim()
@@ -48,8 +53,17 @@ export function SuggestedLanguage({text}: {text: string}) {
     return () => cancelIdle(idle)
   }, [text])
 
-  return suggestedLanguage &&
-    !toPostLanguages(langPrefs.postLanguage).includes(suggestedLanguage) ? (
+  const trackedSuggestedLanguage = React.useRef<string | undefined>()
+  useEffect(() => {
+    if (!trackedSuggestedLanguage.current && shouldSuggestLanguage) {
+      trackedSuggestedLanguage.current = suggestedLanguage
+      logEvent('composer:language:suggest', {
+        lang: suggestedLanguage,
+      })
+    }
+  }, [suggestedLanguage, shouldSuggestLanguage])
+
+  return shouldSuggestLanguage ? (
     <View style={[pal.border, styles.infoBar]}>
       <FontAwesomeIcon
         icon="language"
