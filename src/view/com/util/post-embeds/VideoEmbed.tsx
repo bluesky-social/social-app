@@ -1,13 +1,13 @@
 import React, {useCallback, useEffect, useId, useState} from 'react'
 import {View} from 'react-native'
-import {Image} from 'expo-image'
+import {ImageBackground} from 'expo-image'
 import {PlayerError, VideoPlayerStatus} from 'expo-video'
 import {AppBskyEmbedVideo} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {clamp} from '#/lib/numbers'
-import {useGate} from '#/lib/statsig/statsig'
+import {useAutoplayDisabled} from 'state/preferences'
 import {VideoEmbedInnerNative} from '#/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative'
 import {atoms as a} from '#/alf'
 import {Button} from '#/components/Button'
@@ -23,8 +23,6 @@ interface Props {
 }
 
 export function VideoEmbed({embed}: Props) {
-  const gate = useGate()
-
   const [key, setKey] = useState(0)
 
   const renderError = useCallback(
@@ -39,10 +37,6 @@ export function VideoEmbed({embed}: Props) {
     const {width, height} = embed.aspectRatio
     aspectRatio = width / height
     aspectRatio = clamp(aspectRatio, 1 / 1, 3 / 1)
-  }
-
-  if (!gate('video_view_on_posts')) {
-    return null
   }
 
   return (
@@ -69,18 +63,20 @@ function InnerWrapper({embed}: Props) {
   const viewId = useId()
 
   const [playerStatus, setPlayerStatus] = useState<
-    VideoPlayerStatus | 'switching'
-  >('loading')
+    VideoPlayerStatus | 'paused'
+  >('paused')
   const [isMuted, setIsMuted] = useState(player.muted)
   const [isFullscreen, setIsFullscreen] = React.useState(false)
   const [timeRemaining, setTimeRemaining] = React.useState(0)
+  const disableAutoplay = useAutoplayDisabled()
   const isActive = embed.playlist === activeSource && activeViewId === viewId
+  // There are some different loading states that we should pay attention to and show a spinner for
   const isLoading =
     isActive &&
     (playerStatus === 'waitingToPlayAtSpecifiedRate' ||
       playerStatus === 'loading')
-  const isSwitching = playerStatus === 'switching'
-  const showOverlay = !isActive || isLoading || isSwitching
+  // This happens whenever the visibility view decides that another video should start playing
+  const showOverlay = !isActive || isLoading || playerStatus === 'paused'
 
   // send error up to error boundary
   const [error, setError] = useState<Error | PlayerError | null>(null)
@@ -102,10 +98,13 @@ function InnerWrapper({embed}: Props) {
       )
       const statusSub = player.addListener(
         'statusChange',
-        (status, _oldStatus, playerError) => {
+        (status, oldStatus, playerError) => {
           setPlayerStatus(status)
           if (status === 'error') {
             setError(playerError ?? new Error('Unknown player error'))
+          }
+          if (status === 'readyToPlay' && oldStatus !== 'readyToPlay') {
+            player.play()
           }
         },
       )
@@ -115,35 +114,47 @@ function InnerWrapper({embed}: Props) {
         statusSub.remove()
       }
     }
-  }, [player, isActive])
+  }, [player, isActive, disableAutoplay])
 
-  useEffect(() => {
-    if (!isActive && playerStatus !== 'loading') {
-      setPlayerStatus('loading')
-    }
-  }, [isActive, playerStatus])
-
-  const onChangeStatus = (isVisible: boolean) => {
-    if (isFullscreen) {
+  // The source might already be active (for example, if you are scrolling a list of quotes and its all the same
+  // video). In those cases, just start playing. Otherwise, setting the active source will result in the video
+  // start playback immediately
+  const startPlaying = (ignoreAutoplayPreference: boolean) => {
+    if (disableAutoplay && !ignoreAutoplayPreference) {
       return
     }
 
-    if (isVisible) {
-      setActiveSource(embed.playlist, viewId)
-      if (!player.playing) {
-        player.play()
-      }
+    if (isActive) {
+      player.play()
     } else {
-      setPlayerStatus('switching')
-      player.muted = true
-      if (player.playing) {
-        player.pause()
+      setActiveSource(embed.playlist, viewId)
+    }
+  }
+
+  const onVisibilityStatusChange = (isVisible: boolean) => {
+    // When `isFullscreen` is true, it means we're actually still exiting the fullscreen player. Ignore these change
+    // events
+    if (isFullscreen) {
+      return
+    }
+    if (isVisible) {
+      startPlaying(false)
+    } else {
+      // Clear the active source so the video view unmounts when autoplay is disabled. Otherwise, leave it mounted
+      // until it gets replaced by another video
+      if (disableAutoplay) {
+        setActiveSource(null, null)
+      } else {
+        player.muted = true
+        if (player.playing) {
+          player.pause()
+        }
       }
     }
   }
 
   return (
-    <VisibilityView enabled={true} onChangeStatus={onChangeStatus}>
+    <VisibilityView enabled={true} onChangeStatus={onVisibilityStatusChange}>
       {isActive ? (
         <VideoEmbedInnerNative
           embed={embed}
@@ -153,29 +164,26 @@ function InnerWrapper({embed}: Props) {
           setIsFullscreen={setIsFullscreen}
         />
       ) : null}
-      <View
+      <ImageBackground
+        source={{uri: embed.thumbnail}}
+        accessibilityIgnoresInvertColors
         style={[
           {
             position: 'absolute',
             top: 0,
-            bottom: 0,
             left: 0,
             right: 0,
+            bottom: 0,
+            backgroundColor: 'transparent', // If you don't add `backgroundColor` to the styles here,
+            // the play button won't show up on the first render on android 🥴😮‍💨
             display: showOverlay ? 'flex' : 'none',
           },
-        ]}>
-        <Image
-          source={{uri: embed.thumbnail}}
-          alt={embed.alt}
-          style={a.flex_1}
-          contentFit="cover"
-          accessibilityIgnoresInvertColors
-        />
+        ]}
+        cachePolicy="memory-disk" // Preferring memory cache helps to avoid flicker when re-displaying on android
+      >
         <Button
-          style={[a.absolute, a.inset_0]}
-          onPress={() => {
-            setActiveSource(embed.playlist, viewId)
-          }}
+          style={[a.flex_1, a.align_center, a.justify_center]}
+          onPress={() => startPlaying(true)}
           label={_(msg`Play video`)}
           color="secondary">
           {isLoading ? (
@@ -183,8 +191,8 @@ function InnerWrapper({embed}: Props) {
               style={[
                 a.rounded_full,
                 a.p_xs,
-                a.absolute,
-                {top: 'auto', left: 'auto'},
+                a.align_center,
+                a.justify_center,
                 {backgroundColor: 'rgba(0,0,0,0.5)'},
               ]}>
               <Loader size="2xl" style={{color: 'white'}} />
@@ -193,7 +201,7 @@ function InnerWrapper({embed}: Props) {
             <PlayButtonIcon />
           )}
         </Button>
-      </View>
+      </ImageBackground>
     </VisibilityView>
   )
 }
