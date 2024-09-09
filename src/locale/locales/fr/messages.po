@@ -3643,7 +3643,7 @@ msgstr "Masquer les mots et les mots-clés"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
 msgid "Muted"
-msgstr "Masqué"
+msgstr "Son désactivé"
 
 #: src/screens/Moderation/index.tsx:264
 msgid "Muted accounts"
@@ -6105,7 +6105,7 @@ msgstr "Taper pour accéder au plein écran"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:169
 msgid "Tap to toggle sound"
-msgstr "Taper pour activer ou désactiver le son"
+msgstr "Taper pour désactiver ou rétablir le son"
 
 #: src/view/com/util/images/AutoSizedImage.tsx:190
 #: src/view/com/util/images/AutoSizedImage.tsx:210
@@ -6753,7 +6753,7 @@ msgstr "Rétablir le son de la vidéo"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
 msgid "Unmuted"
-msgstr "Rétabli"
+msgstr "Son rétabli"
 
 #: src/view/screens/ProfileFeed.tsx:292
 #: src/view/screens/ProfileList.tsx:673
