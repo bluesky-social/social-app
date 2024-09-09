@@ -180,6 +180,11 @@ export function useUploadVideo({
               msg`You've reached your daily limit for video uploads (too many videos)`,
             )
             break
+          case 'Account is not old enough to upload videos':
+            message = _(
+              msg`Your account is not yet old enough to upload videos. Please try again later.`,
+            )
+            break
           default:
             message = e.message
             break
