@@ -1,7 +1,7 @@
 const pkg = require('./package.json')
 
 const SPLASH_CONFIG = {
-  backgroundColor: '#ffffff',
+  backgroundColor: '#333',
   image: './assets/splash.png',
   resizeMode: 'cover',
 }
