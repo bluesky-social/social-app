@@ -153,13 +153,18 @@ export const TextInput = React.forwardRef(function TextInputImpl(
           let preventDefault = false
 
           if (clipboardData) {
-            if (clipboardData.types.includes('text/html')) {
-              // Rich-text formatting is pasted, try retrieving plain text
-              const text = clipboardData.getData('text/plain')
-              // `pasteText` will invoke this handler again, but `clipboardData` will be null.
-              view.pasteText(text)
-              preventDefault = true
-            }
+            // !! IMPORTANT = NOT NEEDED, TIPTAP DOES IT BY DEFAULT !!
+            //
+            // if (clipboardData.types.includes('text/html')) {
+            //   // Rich-text formatting is pasted, try retrieving plain text
+            //   const text = clipboardData.getData('text/plain')
+
+            //   console.log({text})
+            //   // `pasteText` will invoke this handler again, but `clipboardData` will be null.
+            //   view.pasteText(text)
+            //   preventDefault = true
+            // }
+
             getImageFromUri(clipboardData.items, (uri: string) => {
               textInputWebEmitter.emit('photo-pasted', uri)
             })
@@ -192,6 +197,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       },
       onUpdate({editor: editorProp}) {
         const json = editorProp.getJSON()
+
         const newText = editorJsonToText(json)
         const isPaste = window.event?.type === 'paste'
 
