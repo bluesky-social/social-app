@@ -5,10 +5,15 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
 
+import {AbortError} from '#/lib/async/cancelable'
 import {SUPPORTED_MIME_TYPES, SupportedMimeTypes} from '#/lib/constants'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
-import {ServerError, VideoTooLargeError} from 'lib/media/video/errors'
+import {
+  ServerError,
+  UploadLimitError,
+  VideoTooLargeError,
+} from 'lib/media/video/errors'
 import {CompressedVideo} from 'lib/media/video/types'
 import {useCompressVideoMutation} from 'state/queries/video/compress-video'
 import {useVideoAgent} from 'state/queries/video/util'
@@ -38,6 +43,8 @@ export interface State {
   abortController: AbortController
   pendingPublish?: {blobRef: BlobRef; mutableProcessed: boolean}
 }
+
+export type VideoUploadDispatch = (action: Action) => void
 
 function reducer(queryClient: QueryClient) {
   return (state: State, action: Action): State => {
@@ -144,11 +151,42 @@ export function useUploadVideo({
       setJobId(response.jobId)
     },
     onError: e => {
-      logger.error('Error uploading video', {safeMessage: e})
-      if (e instanceof ServerError) {
+      if (e instanceof AbortError) {
+        return
+      } else if (e instanceof ServerError || e instanceof UploadLimitError) {
+        let message
+        // https://github.com/bluesky-social/tango/blob/lumi/lumi/worker/permissions.go#L77
+        switch (e.message) {
+          case 'User is not allowed to upload videos':
+            message = _(msg`You are not allowed to upload videos.`)
+            break
+          case 'Uploading is disabled at the moment':
+            message = _(
+              msg`Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!`,
+            )
+            break
+          case "Failed to get user's upload stats":
+            message = _(
+              msg`We were unable to determine if you are allowed to upload videos. Please try again.`,
+            )
+            break
+          case 'User has exceeded daily upload bytes limit':
+            message = _(
+              msg`You've reached your daily limit for video uploads (too many bytes)`,
+            )
+            break
+          case 'User has exceeded daily upload videos limit':
+            message = _(
+              msg`You've reached your daily limit for video uploads (too many videos)`,
+            )
+            break
+          default:
+            message = e.message
+            break
+        }
         dispatch({
           type: 'SetError',
-          error: e.message,
+          error: message,
         })
       } else {
         dispatch({
@@ -176,8 +214,9 @@ export function useUploadVideo({
       onVideoCompressed(video)
     },
     onError: e => {
-      logger.error('Error uploading video', {safeMessage: e})
-      if (e instanceof VideoTooLargeError) {
+      if (e instanceof AbortError) {
+        return
+      } else if (e instanceof VideoTooLargeError) {
         dispatch({
           type: 'SetError',
           error: _(msg`The selected video is larger than 100MB.`),

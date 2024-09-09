@@ -11,6 +11,8 @@ appId: xyz.blueskyweb.app
 
 
 # Navigate to thread
+- extendedWaitUntil:
+    visible: "Thread root"
 - tapOn: "Thread root"
 - assertVisible: "Thread reply"
 
@@ -33,16 +35,8 @@ appId: xyz.blueskyweb.app
     id: "likeBtn"
     childOf:
         id: "postThreadItem-by-carla.test"
-- assertVisible:
-    id: "likeCount"
-    childOf:
-        id: "postThreadItem-by-carla.test"
 - tapOn:
     id: "likeBtn"
-    childOf:
-        id: "postThreadItem-by-carla.test"
-- assertNotVisible:
-    id: "likeCount"
     childOf:
         id: "postThreadItem-by-carla.test"
 

@@ -40,7 +40,7 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
     ref,
   ) {
     const t = useTheme()
-    const bottomBarOffset = useBottomBarOffset(200)
+    const bottomBarOffset = useBottomBarOffset(300)
     const initialNumToRender = useInitialNumToRender()
     const {currentAccount} = useSession()
     const {data, refetch, isError} = useAllListMembersQuery(listUri)

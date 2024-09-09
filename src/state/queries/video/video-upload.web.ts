@@ -8,8 +8,8 @@ import {cancelable} from '#/lib/async/cancelable'
 import {ServerError} from '#/lib/media/video/errors'
 import {CompressedVideo} from '#/lib/media/video/types'
 import {createVideoEndpointUrl, mimeToExt} from '#/state/queries/video/util'
-import {useAgent, useSession} from '#/state/session'
-import {getServiceAuthAudFromUrl} from 'lib/strings/url-helpers'
+import {useSession} from '#/state/session'
+import {useServiceAuthToken, useVideoUploadLimits} from './video-upload.shared'
 
 export const useUploadVideoMutation = ({
   onSuccess,
@@ -23,36 +23,29 @@ export const useUploadVideoMutation = ({
   signal: AbortSignal
 }) => {
   const {currentAccount} = useSession()
-  const agent = useAgent()
+  const getToken = useServiceAuthToken({
+    lxm: 'com.atproto.repo.uploadBlob',
+    exp: Date.now() / 1000 + 60 * 30, // 30 minutes
+  })
+  const checkLimits = useVideoUploadLimits()
   const {_} = useLingui()
 
   return useMutation({
     mutationKey: ['video', 'upload'],
     mutationFn: cancelable(async (video: CompressedVideo) => {
+      await checkLimits()
+
       const uri = createVideoEndpointUrl('/xrpc/app.bsky.video.uploadVideo', {
         did: currentAccount!.did,
         name: `${nanoid(12)}.${mimeToExt(video.mimeType)}`,
       })
 
-      const serviceAuthAud = getServiceAuthAudFromUrl(agent.dispatchUrl)
-
-      if (!serviceAuthAud) {
-        throw new Error('Agent does not have a PDS URL')
-      }
-
-      const {data: serviceAuth} = await agent.com.atproto.server.getServiceAuth(
-        {
-          aud: serviceAuthAud,
-          lxm: 'com.atproto.repo.uploadBlob',
-          exp: Date.now() / 1000 + 60 * 30, // 30 minutes
-        },
-      )
-
       let bytes = video.bytes
-
       if (!bytes) {
         bytes = await fetch(video.uri).then(res => res.arrayBuffer())
       }
+
+      const token = await getToken()
 
       const xhr = new XMLHttpRequest()
       const res = await new Promise<AppBskyVideoDefs.JobStatus>(
@@ -76,7 +69,7 @@ export const useUploadVideoMutation = ({
           }
           xhr.open('POST', uri)
           xhr.setRequestHeader('Content-Type', video.mimeType)
-          xhr.setRequestHeader('Authorization', `Bearer ${serviceAuth.token}`)
+          xhr.setRequestHeader('Authorization', `Bearer ${token}`)
           xhr.send(bytes)
         },
       )

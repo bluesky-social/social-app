@@ -79,6 +79,7 @@ const styles = StyleSheet.create({
     // @ts-ignore web-only
     position: isWeb ? 'fixed' : 'absolute',
     zIndex: 1,
+    cursor: 'pointer',
   },
   inner: {
     justifyContent: 'center',

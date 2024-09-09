@@ -1,15 +1,13 @@
 import {useMemo} from 'react'
 import {AtpAgent} from '@atproto/api'
 
-import {SupportedMimeTypes} from '#/lib/constants'
-
-const UPLOAD_ENDPOINT = 'https://video.bsky.app/'
+import {SupportedMimeTypes, VIDEO_SERVICE} from '#/lib/constants'
 
 export const createVideoEndpointUrl = (
   route: string,
   params?: Record<string, string>,
 ) => {
-  const url = new URL(`${UPLOAD_ENDPOINT}`)
+  const url = new URL(VIDEO_SERVICE)
   url.pathname = route
   if (params) {
     for (const key in params) {
@@ -22,7 +20,7 @@ export const createVideoEndpointUrl = (
 export function useVideoAgent() {
   return useMemo(() => {
     return new AtpAgent({
-      service: UPLOAD_ENDPOINT,
+      service: VIDEO_SERVICE,
     })
   }, [])
 }
@@ -39,5 +37,20 @@ export function mimeToExt(mimeType: SupportedMimeTypes | (string & {})) {
       return 'mov'
     default:
       throw new Error(`Unsupported mime type: ${mimeType}`)
+  }
+}
+
+export function extToMime(ext: string) {
+  switch (ext) {
+    case 'mp4':
+      return 'video/mp4'
+    case 'webm':
+      return 'video/webm'
+    case 'mpeg':
+      return 'video/mpeg'
+    case 'mov':
+      return 'video/quicktime'
+    default:
+      throw new Error(`Unsupported file extension: ${ext}`)
   }
 }

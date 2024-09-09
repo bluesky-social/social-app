@@ -58,6 +58,7 @@ import {Shell} from '#/view/shell'
 import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
+import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {Splash} from '#/Splash'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
@@ -105,52 +106,50 @@ function InnerApp() {
   }, [_])
 
   return (
-    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-      <Alf theme={theme}>
-        <ThemeProvider theme={theme}>
-          <Splash isReady={isReady && hasCheckedReferrer}>
-            <ActiveVideoProvider>
-              <RootSiblingParent>
-                <React.Fragment
-                  // Resets the entire tree below when it changes:
-                  key={currentAccount?.did}>
-                  <QueryProvider currentDid={currentAccount?.did}>
-                    <StatsigProvider>
-                      <MessagesProvider>
-                        {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                        <LabelDefsProvider>
-                          <ModerationOptsProvider>
-                            <LoggedOutViewProvider>
-                              <SelectedFeedProvider>
-                                <HiddenRepliesProvider>
-                                  <UnreadNotifsProvider>
-                                    <BackgroundNotificationPreferencesProvider>
-                                      <MutedThreadsProvider>
-                                        <ProgressGuideProvider>
-                                          <GestureHandlerRootView
-                                            style={s.h100pct}>
-                                            <TestCtrls />
-                                            <Shell />
-                                          </GestureHandlerRootView>
-                                        </ProgressGuideProvider>
-                                      </MutedThreadsProvider>
-                                    </BackgroundNotificationPreferencesProvider>
-                                  </UnreadNotifsProvider>
-                                </HiddenRepliesProvider>
-                              </SelectedFeedProvider>
-                            </LoggedOutViewProvider>
-                          </ModerationOptsProvider>
-                        </LabelDefsProvider>
-                      </MessagesProvider>
-                    </StatsigProvider>
-                  </QueryProvider>
-                </React.Fragment>
-              </RootSiblingParent>
-            </ActiveVideoProvider>
-          </Splash>
-        </ThemeProvider>
-      </Alf>
-    </SafeAreaProvider>
+    <Alf theme={theme}>
+      <ThemeProvider theme={theme}>
+        <Splash isReady={isReady && hasCheckedReferrer}>
+          <ActiveVideoProvider>
+            <RootSiblingParent>
+              <React.Fragment
+                // Resets the entire tree below when it changes:
+                key={currentAccount?.did}>
+                <QueryProvider currentDid={currentAccount?.did}>
+                  <StatsigProvider>
+                    <MessagesProvider>
+                      {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                      <LabelDefsProvider>
+                        <ModerationOptsProvider>
+                          <LoggedOutViewProvider>
+                            <SelectedFeedProvider>
+                              <HiddenRepliesProvider>
+                                <UnreadNotifsProvider>
+                                  <BackgroundNotificationPreferencesProvider>
+                                    <MutedThreadsProvider>
+                                      <ProgressGuideProvider>
+                                        <GestureHandlerRootView
+                                          style={s.h100pct}>
+                                          <TestCtrls />
+                                          <Shell />
+                                        </GestureHandlerRootView>
+                                      </ProgressGuideProvider>
+                                    </MutedThreadsProvider>
+                                  </BackgroundNotificationPreferencesProvider>
+                                </UnreadNotifsProvider>
+                              </HiddenRepliesProvider>
+                            </SelectedFeedProvider>
+                          </LoggedOutViewProvider>
+                        </ModerationOptsProvider>
+                      </LabelDefsProvider>
+                    </MessagesProvider>
+                  </StatsigProvider>
+                </QueryProvider>
+              </React.Fragment>
+            </RootSiblingParent>
+          </ActiveVideoProvider>
+        </Splash>
+      </ThemeProvider>
+    </Alf>
   )
 }
 
@@ -184,7 +183,12 @@ function App() {
                       <LightboxStateProvider>
                         <PortalProvider>
                           <StarterPackProvider>
-                            <InnerApp />
+                            <SafeAreaProvider
+                              initialMetrics={initialWindowMetrics}>
+                              <IntentDialogProvider>
+                                <InnerApp />
+                              </IntentDialogProvider>
+                            </SafeAreaProvider>
                           </StarterPackProvider>
                         </PortalProvider>
                       </LightboxStateProvider>
