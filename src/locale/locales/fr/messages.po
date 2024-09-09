@@ -3568,8 +3568,12 @@ msgstr "Cinéma"
 msgid "Music"
 msgstr "Musique"
 
-#: src/components/TagMenu/index.tsx:263
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:345
+msgctxt "video"
+msgid "Mute"
+msgstr "Désactiver le son"
+
+#: src/components/TagMenu/index.tsx:263
 msgid "Mute"
 msgstr "Masquer"
 
@@ -6719,8 +6723,12 @@ msgstr "Se désabonner du compte"
 msgid "Unlike this feed"
 msgstr "Déliker ce fil d’actu"
 
-#: src/components/TagMenu/index.tsx:263
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:344
+msgctxt "video"
+msgid "Unmute"
+msgstr "Rétablir le son"
+
+#: src/components/TagMenu/index.tsx:263
 #: src/view/screens/ProfileList.tsx:689
 msgid "Unmute"
 msgstr "Réafficher"
@@ -7625,6 +7633,10 @@ msgstr "Votre compte"
 #: src/view/com/modals/DeleteAccount.tsx:88
 msgid "Your account has been deleted"
 msgstr "Votre compte a été supprimé"
+
+#: src/state/queries/video/video.ts:185
+msgid "Your account is not yet old enough to upload videos. Please try again later."
+msgstr "Votre compte n’est pas encore assez ancien pour envoyer des vidéos. Veuillez réessayer plus tard."
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:65
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
