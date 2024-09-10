@@ -43,7 +43,7 @@ import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Link, TextLink} from '../util/Link'
 import {formatCount} from '../util/numeric/format'
 import {PostCtrls} from '../util/post-ctrls/PostCtrls'
-import {PostEmbeds} from '../util/post-embeds'
+import {PostEmbeds, PostEmbedViewContext} from '../util/post-embeds'
 import {PostMeta} from '../util/PostMeta'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
@@ -363,7 +363,11 @@ let PostThreadItemLoaded = ({
               ) : undefined}
               {post.embed && (
                 <View style={[a.pb_sm]}>
-                  <PostEmbeds embed={post.embed} moderation={moderation} />
+                  <PostEmbeds
+                    embed={post.embed}
+                    moderation={moderation}
+                    viewContext={PostEmbedViewContext.ThreadHighlighted}
+                  />
                 </View>
               )}
             </ContentHider>
@@ -591,7 +595,11 @@ let PostThreadItemLoaded = ({
               ) : undefined}
               {post.embed && (
                 <View style={[a.pb_xs]}>
-                  <PostEmbeds embed={post.embed} moderation={moderation} />
+                  <PostEmbeds
+                    embed={post.embed}
+                    moderation={moderation}
+                    viewContext={PostEmbedViewContext.Feed}
+                  />
                 </View>
               )}
               <PostCtrls

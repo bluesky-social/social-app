@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  useSyncExternalStore,
-} from 'react'
+import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {SvgProps} from 'react-native-svg'
 import {msg, Trans} from '@lingui/macro'
@@ -21,6 +15,7 @@ import {
 } from '#/state/preferences'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button} from '#/components/Button'
+import {useFullscreen} from '#/components/hooks/useFullscreen'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {
   ArrowsDiagonalIn_Stroke2_Corner0_Rounded as ArrowsInIcon,
@@ -78,8 +73,8 @@ export function Controls({
   const setSubtitlesEnabled = useSetSubtitlesEnabled()
   const {
     state: hovered,
-    onIn: onMouseEnter,
-    onOut: onMouseLeave,
+    onIn: onHover,
+    onOut: onEndHover,
   } = useInteractionState()
   const [isFullscreen, toggleFullscreen] = useFullscreen(fullscreenRef)
   const {state: hasFocus, onIn: onFocus, onOut: onBlur} = useInteractionState()
@@ -111,9 +106,9 @@ export function Controls({
   // autoplay/pause based on visibility
   const autoplayDisabled = useAutoplayDisabled()
   useEffect(() => {
-    if (active && !autoplayDisabled) {
+    if (active) {
       if (onScreen) {
-        play()
+        if (!autoplayDisabled) play()
       } else {
         pause()
       }
@@ -151,10 +146,11 @@ export function Controls({
   const onPressEmptySpace = useCallback(() => {
     if (!focused) {
       drawFocus()
+      if (autoplayDisabled) play()
     } else {
       togglePlayPause()
     }
-  }, [togglePlayPause, drawFocus, focused])
+  }, [togglePlayPause, drawFocus, focused, autoplayDisabled, play])
 
   const onPressPlayPause = useCallback(() => {
     drawFocus()
@@ -220,8 +216,28 @@ export function Controls({
     onSeek(clamp(currentTime + 5, 0, duration))
   }, [onSeek, videoRef])
 
+  const [showCursor, setShowCursor] = useState(true)
+  const cursorTimeoutRef = useRef<ReturnType<typeof setTimeout>>()
+  const onPointerMoveEmptySpace = useCallback(() => {
+    setShowCursor(true)
+    if (cursorTimeoutRef.current) {
+      clearTimeout(cursorTimeoutRef.current)
+    }
+    cursorTimeoutRef.current = setTimeout(() => {
+      setShowCursor(false)
+      onEndHover()
+    }, 2000)
+  }, [onEndHover])
+  const onPointerLeaveEmptySpace = useCallback(() => {
+    setShowCursor(false)
+    if (cursorTimeoutRef.current) {
+      clearTimeout(cursorTimeoutRef.current)
+    }
+  }, [])
+
   const showControls =
-    (focused && !playing) || (interactingViaKeypress ? hasFocus : hovered)
+    ((focused || autoplayDisabled) && !playing) ||
+    (interactingViaKeypress ? hasFocus : hovered)
 
   return (
     <div
@@ -236,13 +252,17 @@ export function Controls({
         evt.stopPropagation()
         setInteractingViaKeypress(false)
       }}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
+      onPointerEnter={onHover}
+      onPointerMove={onHover}
+      onPointerLeave={onEndHover}
       onFocus={onFocus}
       onBlur={onBlur}
       onKeyDown={onKeyDown}>
       <Pressable
         accessibilityRole="button"
+        onPointerEnter={onPointerMoveEmptySpace}
+        onPointerMove={onPointerMoveEmptySpace}
+        onPointerLeave={onPointerLeaveEmptySpace}
         accessibilityHint={_(
           !focused
             ? msg`Unmute video`
@@ -250,10 +270,13 @@ export function Controls({
             ? msg`Pause video`
             : msg`Play video`,
         )}
-        style={a.flex_1}
+        style={[
+          a.flex_1,
+          web({cursor: showCursor || !playing ? 'pointer' : 'none'}),
+        ]}
         onPress={onPressEmptySpace}
       />
-      {active && !showControls && !focused && duration > 0 && (
+      {!showControls && !focused && duration > 0 && (
         <TimeIndicator time={Math.floor(duration - currentTime)} />
       )}
       <View
@@ -313,8 +336,8 @@ export function Controls({
           )}
           <ControlButton
             active={muted}
-            activeLabel={_(msg`Unmute`)}
-            inactiveLabel={_(msg`Mute`)}
+            activeLabel={_(msg({message: `Unmute`, context: 'video'}))}
+            inactiveLabel={_(msg({message: `Mute`, context: 'video'}))}
             activeIcon={MuteIcon}
             inactiveIcon={UnmuteIcon}
             onPress={onPressMute}
@@ -407,8 +430,8 @@ function Scrubber({
   const [scrubberActive, setScrubberActive] = useState(false)
   const {
     state: hovered,
-    onIn: onMouseEnter,
-    onOut: onMouseLeave,
+    onIn: onStartHover,
+    onOut: onEndHover,
   } = useInteractionState()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const [seekPosition, setSeekPosition] = useState(0)
@@ -521,9 +544,8 @@ function Scrubber({
     <View
       testID="scrubber"
       style={[{height: 10, width: '100%'}, a.flex_shrink_0, a.px_xs]}
-      // @ts-expect-error web only -sfn
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}>
+      onPointerEnter={onStartHover}
+      onPointerLeave={onEndHover}>
       <div
         ref={barRef}
         style={{
@@ -822,26 +844,4 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
     error,
     canPlay,
   }
-}
-
-function fullscreenSubscribe(onChange: () => void) {
-  document.addEventListener('fullscreenchange', onChange)
-  return () => document.removeEventListener('fullscreenchange', onChange)
-}
-
-function useFullscreen(ref: React.RefObject<HTMLElement>) {
-  const isFullscreen = useSyncExternalStore(fullscreenSubscribe, () =>
-    Boolean(document.fullscreenElement),
-  )
-
-  const toggleFullscreen = useCallback(() => {
-    if (isFullscreen) {
-      document.exitFullscreen()
-    } else {
-      if (!ref.current) return
-      ref.current.requestFullscreen()
-    }
-  }, [isFullscreen, ref])
-
-  return [isFullscreen, toggleFullscreen] as const
 }

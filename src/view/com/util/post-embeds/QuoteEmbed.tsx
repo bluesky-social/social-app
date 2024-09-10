@@ -11,6 +11,7 @@ import {
   AppBskyEmbedImages,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
+  AppBskyEmbedVideo,
   AppBskyFeedDefs,
   AppBskyFeedPost,
   ModerationDecision,
@@ -40,17 +41,20 @@ import {Link} from '../Link'
 import {PostMeta} from '../PostMeta'
 import {Text} from '../text/Text'
 import {PostEmbeds} from '.'
+import {QuoteEmbedViewContext} from './types'
 
 export function MaybeQuoteEmbed({
   embed,
   onOpen,
   style,
   allowNestedQuotes,
+  viewContext,
 }: {
   embed: AppBskyEmbedRecord.View
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
   allowNestedQuotes?: boolean
+  viewContext?: QuoteEmbedViewContext
 }) {
   const pal = usePalette('default')
   const {currentAccount} = useSession()
@@ -66,6 +70,7 @@ export function MaybeQuoteEmbed({
         onOpen={onOpen}
         style={style}
         allowNestedQuotes={allowNestedQuotes}
+        viewContext={viewContext}
       />
     )
   } else if (AppBskyEmbedRecord.isViewBlocked(embed.record)) {
@@ -112,12 +117,14 @@ function QuoteEmbedModerated({
   onOpen,
   style,
   allowNestedQuotes,
+  viewContext,
 }: {
   viewRecord: AppBskyEmbedRecord.ViewRecord
   postRecord: AppBskyFeedPost.Record
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
   allowNestedQuotes?: boolean
+  viewContext?: QuoteEmbedViewContext
 }) {
   const moderationOpts = useModerationOpts()
   const moderation = React.useMemo(() => {
@@ -143,6 +150,7 @@ function QuoteEmbedModerated({
       onOpen={onOpen}
       style={style}
       allowNestedQuotes={allowNestedQuotes}
+      viewContext={viewContext}
     />
   )
 }
@@ -159,6 +167,7 @@ export function QuoteEmbed({
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
   allowNestedQuotes?: boolean
+  viewContext?: QuoteEmbedViewContext
 }) {
   const queryClient = useQueryClient()
   const pal = usePalette('default')
@@ -180,12 +189,17 @@ export function QuoteEmbed({
     if (allowNestedQuotes) {
       return e
     } else {
-      if (AppBskyEmbedImages.isView(e) || AppBskyEmbedExternal.isView(e)) {
+      if (
+        AppBskyEmbedImages.isView(e) ||
+        AppBskyEmbedExternal.isView(e) ||
+        AppBskyEmbedVideo.isView(e)
+      ) {
         return e
       } else if (
         AppBskyEmbedRecordWithMedia.isView(e) &&
         (AppBskyEmbedImages.isView(e.media) ||
-          AppBskyEmbedExternal.isView(e.media))
+          AppBskyEmbedExternal.isView(e.media) ||
+          AppBskyEmbedVideo.isView(e.media))
       ) {
         return e.media
       }

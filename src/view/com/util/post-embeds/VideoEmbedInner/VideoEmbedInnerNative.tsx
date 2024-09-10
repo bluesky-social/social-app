@@ -1,16 +1,14 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react'
+import React, {useCallback, useRef} from 'react'
 import {Pressable, View} from 'react-native'
 import Animated, {FadeInDown} from 'react-native-reanimated'
 import {VideoPlayer, VideoView} from 'expo-video'
 import {AppBskyEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useIsFocused} from '@react-navigation/native'
 
 import {HITSLOP_30} from '#/lib/constants'
-import {useAppState} from '#/lib/hooks/useAppState'
 import {clamp} from '#/lib/numbers'
-import {logger} from '#/logger'
+import {isAndroid} from 'platform/detection'
 import {useActiveVideoNative} from 'view/com/util/post-embeds/ActiveVideoNativeContext'
 import {atoms as a, useTheme} from '#/alf'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
@@ -23,32 +21,20 @@ import {TimeIndicator} from './TimeIndicator'
 
 export function VideoEmbedInnerNative({
   embed,
+  isFullscreen,
+  setIsFullscreen,
+  isMuted,
+  timeRemaining,
 }: {
   embed: AppBskyEmbedVideo.View
+  isFullscreen: boolean
+  setIsFullscreen: (isFullscreen: boolean) => void
+  timeRemaining: number
+  isMuted: boolean
 }) {
   const {_} = useLingui()
   const {player} = useActiveVideoNative()
   const ref = useRef<VideoView>(null)
-  const isScreenFocused = useIsFocused()
-  const isAppFocused = useAppState()
-
-  useEffect(() => {
-    try {
-      if (isAppFocused === 'active' && isScreenFocused && !player.playing) {
-        PlatformInfo.setAudioCategory(AudioCategory.Ambient)
-        PlatformInfo.setAudioActive(false)
-        player.muted = true
-        player.play()
-      } else if (player.playing) {
-        player.pause()
-      }
-    } catch (err) {
-      logger.error(
-        'Failed to play/pause while backgrounding/switching screens',
-        {safeMessage: err},
-      )
-    }
-  }, [isAppFocused, player, isScreenFocused])
 
   const enterFullscreen = useCallback(() => {
     ref.current?.enterFullscreen()
@@ -68,26 +54,36 @@ export function VideoEmbedInnerNative({
         ref={ref}
         player={player}
         style={[a.flex_1, a.rounded_sm]}
-        contentFit="contain"
-        nativeControls={true}
+        contentFit="cover"
+        nativeControls={isFullscreen}
         accessibilityIgnoresInvertColors
-        onEnterFullscreen={() => {
+        onFullscreenEnter={() => {
           PlatformInfo.setAudioCategory(AudioCategory.Playback)
           PlatformInfo.setAudioActive(true)
           player.muted = false
+          setIsFullscreen(true)
+          if (isAndroid) {
+            player.play()
+          }
         }}
-        onExitFullscreen={() => {
+        onFullscreenExit={() => {
           PlatformInfo.setAudioCategory(AudioCategory.Ambient)
           PlatformInfo.setAudioActive(false)
           player.muted = true
-          if (!player.playing) player.play()
+          player.playbackRate = 1
+          setIsFullscreen(false)
         }}
         accessibilityLabel={
           embed.alt ? _(msg`Video: ${embed.alt}`) : _(msg`Video`)
         }
         accessibilityHint=""
       />
-      <VideoControls player={player} enterFullscreen={enterFullscreen} />
+      <VideoControls
+        player={player}
+        enterFullscreen={enterFullscreen}
+        isMuted={isMuted}
+        timeRemaining={timeRemaining}
+      />
     </View>
   )
 }
@@ -95,31 +91,16 @@ export function VideoEmbedInnerNative({
 function VideoControls({
   player,
   enterFullscreen,
+  timeRemaining,
+  isMuted,
 }: {
   player: VideoPlayer
   enterFullscreen: () => void
+  timeRemaining: number
+  isMuted: boolean
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const [isMuted, setIsMuted] = useState(player.muted)
-  const [timeRemaining, setTimeRemaining] = React.useState(0)
-
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-shadow
-    const volumeSub = player.addListener('volumeChange', ({isMuted}) => {
-      setIsMuted(isMuted)
-    })
-    const timeSub = player.addListener(
-      'timeRemainingChange',
-      secondsRemaining => {
-        setTimeRemaining(secondsRemaining)
-      },
-    )
-    return () => {
-      volumeSub.remove()
-      timeSub.remove()
-    }
-  }, [player])
 
   const onPressFullscreen = useCallback(() => {
     switch (player.status) {

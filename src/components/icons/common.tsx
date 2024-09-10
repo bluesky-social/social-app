@@ -19,6 +19,7 @@ export const sizes = {
   md: 20,
   lg: 24,
   xl: 28,
+  '2xl': 32,
 }
 
 export function useCommonSVGProps(props: Props) {

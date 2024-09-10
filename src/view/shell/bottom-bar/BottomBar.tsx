@@ -160,7 +160,6 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               accessibilityHint=""
             />
             <Btn
-              testID="bottomBarSearchBtn"
               icon={
                 isAtSearch ? (
                   <MagnifyingGlassFilled
@@ -169,6 +168,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                   />
                 ) : (
                   <MagnifyingGlass
+                    testID="bottomBarSearchBtn"
                     width={iconWidth + 2}
                     style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
                   />
