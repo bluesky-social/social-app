@@ -43,6 +43,7 @@ interface BaseUserAvatarProps {
 interface UserAvatarProps extends BaseUserAvatarProps {
   moderation?: ModerationUI
   usePlainRNImage?: boolean
+  onLoad?: () => void
 }
 
 interface EditableUserAvatarProps extends BaseUserAvatarProps {
@@ -174,6 +175,7 @@ let UserAvatar = ({
   avatar,
   moderation,
   usePlainRNImage = false,
+  onLoad,
 }: UserAvatarProps): React.ReactNode => {
   const pal = usePalette('default')
   const backgroundColor = pal.colors.backgroundLight
@@ -224,6 +226,7 @@ let UserAvatar = ({
             uri: hackModifyThumbnailPath(avatar, size < 90),
           }}
           blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
+          onLoad={onLoad}
         />
       ) : (
         <HighPriorityImage
@@ -234,6 +237,7 @@ let UserAvatar = ({
             uri: hackModifyThumbnailPath(avatar, size < 90),
           }}
           blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
+          onLoad={onLoad}
         />
       )}
       {alert}
