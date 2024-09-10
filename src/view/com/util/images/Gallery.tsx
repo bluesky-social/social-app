@@ -46,7 +46,7 @@ export const GalleryItem: FC<GalleryItemProps> = ({
         onLongPress={onLongPress ? () => onLongPress(index) : undefined}
         style={[
           a.flex_1,
-          a.rounded_xs,
+          a.rounded_sm,
           a.overflow_hidden,
           t.atoms.bg_contrast_25,
           imageStyle,
@@ -61,6 +61,19 @@ export const GalleryItem: FC<GalleryItemProps> = ({
           accessibilityLabel={image.alt}
           accessibilityHint=""
           accessibilityIgnoresInvertColors
+        />
+        <View
+          style={[
+            a.rounded_sm,
+            a.absolute,
+            a.w_full,
+            a.h_full,
+            a.border,
+            {
+              borderColor: t.palette.contrast_800,
+              opacity: 0.2,
+            },
+          ]}
         />
       </Pressable>
       {hasAlt && !hideBadges ? (
