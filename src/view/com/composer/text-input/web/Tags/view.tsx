@@ -1,17 +1,16 @@
 import React, {forwardRef, useImperativeHandle, useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import {ReactRenderer} from '@tiptap/react'
-import tippy, {Instance as TippyInstance} from 'tippy.js'
 import {
+  SuggestionKeyDownProps,
   SuggestionOptions,
   SuggestionProps,
-  SuggestionKeyDownProps,
 } from '@tiptap/suggestion'
+import tippy, {Instance as TippyInstance} from 'tippy.js'
 
 // import {TagsAutocompleteModel} from 'state/models/ui/tags-autocomplete'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Text} from 'view/com/util/text/Text'
-
 import {parsePunctuationFromTag} from './utils'
 
 type AutocompleteResult = string
@@ -22,9 +21,8 @@ type AutocompleteRef = {
   onKeyDown: (props: SuggestionKeyDownProps) => boolean
 }
 
-export function createTagsAutocomplete({
-  // autocompleteModel,
-}: {
+export function createTagsAutocomplete({}: // autocompleteModel,
+{
   // autocompleteModel: TagsAutocompleteModel
 }): Omit<SuggestionOptions, 'editor'> {
   return {
@@ -32,9 +30,7 @@ export function createTagsAutocomplete({
      * This `query` param comes from the result of `findSuggestionMatch`
      */
     async items({query}) {
-      // autocompleteModel.setActive(true)
-      // await autocompleteModel.search(query)
-      return ['tag']//autocompleteModel.suggestions.slice(0, 8)
+      return [query, 'javascript']
     },
     render() {
       let component: ReactRenderer<AutocompleteRef> | undefined
@@ -45,7 +41,6 @@ export function createTagsAutocomplete({
           component = new ReactRenderer(Autocomplete, {
             props: {
               ...props,
-              //autocompleteModel,
             },
             editor: props.editor,
           })
@@ -110,7 +105,6 @@ const Autocomplete = forwardRef<AutocompleteRef, ListProps>(
          * separately above. We could do this in `command` definition, but we
          * only want to `commitRecentTag` with the sanitized tag.
          */
-        // @ts-ignore
         command({tag, punctuation})
       },
       [command],
@@ -141,7 +135,7 @@ const Autocomplete = forwardRef<AutocompleteRef, ListProps>(
         if (event.key === 'Enter') {
           if (!props.items.length) {
             // no items, use whatever the user typed
-            // commit(autocompleteModel.query)
+            commit(props.query)
           } else {
             selectItem(selectedIndex)
           }
@@ -149,7 +143,7 @@ const Autocomplete = forwardRef<AutocompleteRef, ListProps>(
         }
 
         if (event.key === ' ') {
-          // commit(autocompleteModel.query)
+          commit(props.query)
           return true
         }
 

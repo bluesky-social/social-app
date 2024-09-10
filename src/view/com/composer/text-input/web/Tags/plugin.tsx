@@ -94,7 +94,9 @@ export const TagsPluginKey = new PluginKey('tags')
  * This extension allows you to insert mentions into the editor.
  * @see https://www.tiptap.dev/api/extensions/mention
  */
-export const Tags = Node.create<MentionOptions>({
+export const Tags = Node.create<
+  MentionOptions<any, {tag: string; punctuation?: string}>
+>({
   name: 'tags',
 
   addOptions() {
@@ -115,6 +117,8 @@ export const Tags = Node.create<MentionOptions>({
         char: '#',
         pluginKey: TagsPluginKey,
         command: ({editor, range, props}) => {
+          const {tag, punctuation} = props
+
           // increase range.to by one when the next node is of type "text"
           // and starts with a space character
           const nodeAfter = editor.view.state.selection.$to.nodeAfter
@@ -130,11 +134,11 @@ export const Tags = Node.create<MentionOptions>({
             .insertContentAt(range, [
               {
                 type: this.name,
-                attrs: props,
+                attrs: {id: tag},
               },
               {
                 type: 'text',
-                text: ' ',
+                text: `${punctuation || ''} `,
               },
             ])
             .run()
@@ -145,6 +149,7 @@ export const Tags = Node.create<MentionOptions>({
           const $from = state.doc.resolve(range.from)
           const type = state.schema.nodes[this.name]
           const allow = !!$from.parent.type.contentMatch.matchType(type)
+
           return allow
         },
         findSuggestionMatch: findSuggestionMatch,
