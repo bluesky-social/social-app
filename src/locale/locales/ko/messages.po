@@ -7069,7 +7069,7 @@ msgstr "동영상: {0}"
 
 #: src/screens/Profile/Header/Shell.tsx:113
 msgid "View {0}'s avatar"
-msgstr "{0} 님의 아바타를 봅니다"
+msgstr "{0} 님의 아바타 보기"
 
 #: src/components/ProfileCard.tsx:110
 #: src/view/com/notifications/FeedItem.tsx:273
