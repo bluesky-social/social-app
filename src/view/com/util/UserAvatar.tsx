@@ -19,7 +19,7 @@ import {colors} from 'lib/styles'
 import {isAndroid, isNative, isWeb} from 'platform/detection'
 import {precacheProfile} from 'state/queries/profile'
 import {HighPriorityImage} from 'view/com/util/images/Image'
-import {tokens, useTheme} from '#/alf'
+import {atoms as a, tokens, useTheme} from '#/alf'
 import {
   Camera_Filled_Stroke2_Corner0_Rounded as CameraFilled,
   Camera_Stroke2_Corner0_Rounded as Camera,
@@ -176,6 +176,7 @@ let UserAvatar = ({
   usePlainRNImage = false,
 }: UserAvatarProps): React.ReactNode => {
   const pal = usePalette('default')
+  const t = useTheme()
   const backgroundColor = pal.colors.backgroundLight
   const finalShape = overrideShape ?? (type === 'user' ? 'circle' : 'square')
 
@@ -215,16 +216,31 @@ let UserAvatar = ({
     !((moderation?.blur && isAndroid) /* android crashes with blur */) ? (
     <View style={{width: size, height: size}}>
       {usePlainRNImage ? (
-        <Image
-          accessibilityIgnoresInvertColors
-          testID="userAvatarImage"
-          style={aviStyle}
-          resizeMode="cover"
-          source={{
-            uri: hackModifyThumbnailPath(avatar, size < 90),
-          }}
-          blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
-        />
+        <>
+          <Image
+            accessibilityIgnoresInvertColors
+            testID="userAvatarImage"
+            style={aviStyle}
+            resizeMode="cover"
+            source={{
+              uri: hackModifyThumbnailPath(avatar, size < 90),
+            }}
+            blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
+          />
+          <View
+            style={[
+              a.rounded_full,
+              a.absolute,
+              a.w_full,
+              a.h_full,
+              a.border,
+              {
+                borderColor: t.palette.contrast_800,
+                opacity: 0.2,
+              },
+            ]}
+          />
+        </>
       ) : (
         <HighPriorityImage
           testID="userAvatarImage"
@@ -406,6 +422,7 @@ let PreviewableUserAvatar = ({
   ...rest
 }: PreviewableUserAvatarProps): React.ReactNode => {
   const {_} = useLingui()
+  const t = useTheme()
   const queryClient = useQueryClient()
 
   const onPress = React.useCallback(() => {
@@ -424,6 +441,19 @@ let PreviewableUserAvatar = ({
         })}
         onPress={onPress}>
         <UserAvatar avatar={profile.avatar} moderation={moderation} {...rest} />
+        <View
+          style={[
+            a.rounded_full,
+            a.absolute,
+            a.w_full,
+            a.h_full,
+            a.border,
+            {
+              borderColor: t.palette.contrast_800,
+              opacity: 0.2,
+            },
+          ]}
+        />
       </Link>
     </ProfileHoverCard>
   )
