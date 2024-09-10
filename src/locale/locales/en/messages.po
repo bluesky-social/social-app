@@ -644,7 +644,7 @@ msgstr ""
 msgid "An error occurred"
 msgstr ""
 
-#: src/state/queries/video/video.ts:227
+#: src/state/queries/video/video.ts:232
 msgid "An error occurred while compressing the video."
 msgstr ""
 
@@ -682,7 +682,7 @@ msgstr ""
 msgid "An error occurred while trying to follow all"
 msgstr ""
 
-#: src/state/queries/video/video.ts:194
+#: src/state/queries/video/video.ts:199
 msgid "An error occurred while uploading the video."
 msgstr ""
 
@@ -1096,8 +1096,8 @@ msgstr ""
 #: src/components/Prompt.tsx:124
 #: src/components/TagMenu/index.tsx:282
 #: src/screens/Deactivated.tsx:161
-#: src/view/com/composer/Composer.tsx:590
-#: src/view/com/composer/Composer.tsx:605
+#: src/view/com/composer/Composer.tsx:591
+#: src/view/com/composer/Composer.tsx:606
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangeHandle.tsx:148
@@ -1457,7 +1457,7 @@ msgstr ""
 msgid "Closes password update alert"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:602
+#: src/view/com/composer/Composer.tsx:603
 msgid "Closes post composer and discards post draft"
 msgstr ""
 
@@ -1496,7 +1496,7 @@ msgstr ""
 msgid "Complete the challenge"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:710
+#: src/view/com/composer/Composer.tsx:711
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr ""
 
@@ -2005,7 +2005,7 @@ msgstr ""
 msgid "Dialog: adjust who can interact with this post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:351
+#: src/view/com/composer/Composer.tsx:352
 msgid "Did you want to say anything?"
 msgstr ""
 
@@ -3086,7 +3086,7 @@ msgstr ""
 msgid "Getting started"
 msgstr ""
 
-#: src/components/MediaPreview.tsx:119
+#: src/components/MediaPreview.tsx:120
 msgid "GIF"
 msgstr ""
 
@@ -4046,8 +4046,12 @@ msgstr ""
 msgid "Music"
 msgstr ""
 
-#: src/components/TagMenu/index.tsx:263
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:345
+msgctxt "video"
+msgid "Mute"
+msgstr ""
+
+#: src/components/TagMenu/index.tsx:263
 msgid "Mute"
 msgstr ""
 
@@ -4579,7 +4583,7 @@ msgstr ""
 #~ msgid "Onboarding tour step {0}: {1}"
 #~ msgstr ""
 
-#: src/view/com/composer/Composer.tsx:667
+#: src/view/com/composer/Composer.tsx:668
 msgid "One or more images is missing alt text."
 msgstr ""
 
@@ -5053,7 +5057,7 @@ msgstr ""
 msgid "Please Verify Your Email"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:355
+#: src/view/com/composer/Composer.tsx:356
 msgid "Please wait for your link card to finish loading"
 msgstr ""
 
@@ -5066,8 +5070,8 @@ msgstr ""
 msgid "Porn"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:642
-#: src/view/com/composer/Composer.tsx:649
+#: src/view/com/composer/Composer.tsx:643
+#: src/view/com/composer/Composer.tsx:650
 msgctxt "action"
 msgid "Post"
 msgstr ""
@@ -5246,11 +5250,11 @@ msgstr ""
 msgid "Public, shareable lists which can drive feeds."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:627
+#: src/view/com/composer/Composer.tsx:628
 msgid "Publish post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:627
+#: src/view/com/composer/Composer.tsx:628
 msgid "Publish reply"
 msgstr ""
 
@@ -5555,7 +5559,7 @@ msgstr ""
 #~ msgid "Replies to this thread are disabled"
 #~ msgstr ""
 
-#: src/view/com/composer/Composer.tsx:640
+#: src/view/com/composer/Composer.tsx:641
 msgctxt "action"
 msgid "Reply"
 msgstr ""
@@ -7034,8 +7038,8 @@ msgstr ""
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr ""
 
-#: src/state/queries/video/video.ts:222
-msgid "The selected video is larger than 100MB."
+#: src/state/queries/video/video.ts:227
+msgid "The selected video is larger than 50MB."
 msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:713
@@ -7568,8 +7572,12 @@ msgstr ""
 msgid "Unlike this feed"
 msgstr ""
 
-#: src/components/TagMenu/index.tsx:263
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:344
+msgctxt "video"
+msgid "Unmute"
+msgstr ""
+
+#: src/components/TagMenu/index.tsx:263
 #: src/view/screens/ProfileList.tsx:689
 msgid "Unmute"
 msgstr ""
@@ -7642,7 +7650,7 @@ msgstr ""
 msgid "Unsubscribed from list"
 msgstr ""
 
-#: src/state/queries/video/video.ts:240
+#: src/state/queries/video/video.ts:245
 msgid "Unsupported video type: {mimeType}"
 msgstr ""
 
@@ -7909,7 +7917,7 @@ msgid "Video: {0}"
 msgstr ""
 
 #: src/view/com/composer/videos/state.ts:27
-#~ msgid "Videos cannot be larger than 100MB"
+#~ msgid "Videos cannot be larger than 50MB"
 #~ msgstr ""
 
 #: src/screens/Profile/Header/Shell.tsx:113
@@ -8085,7 +8093,7 @@ msgstr ""
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:417
+#: src/view/com/composer/Composer.tsx:418
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr ""
 
@@ -8124,7 +8132,7 @@ msgstr ""
 
 #: src/view/com/auth/SplashScreen.tsx:40
 #: src/view/com/auth/SplashScreen.web.tsx:86
-#: src/view/com/composer/Composer.tsx:512
+#: src/view/com/composer/Composer.tsx:513
 msgid "What's up?"
 msgstr ""
 
@@ -8199,11 +8207,11 @@ msgstr ""
 msgid "Write a message"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:708
+#: src/view/com/composer/Composer.tsx:709
 msgid "Write post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:511
+#: src/view/com/composer/Composer.tsx:512
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:42
 msgid "Write your reply"
 msgstr ""
@@ -8551,6 +8559,10 @@ msgstr ""
 msgid "Your account has been deleted"
 msgstr ""
 
+#: src/state/queries/video/video.ts:185
+msgid "Your account is not yet old enough to upload videos. Please try again later."
+msgstr ""
+
 #: src/view/screens/Settings/ExportCarDialog.tsx:65
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr ""
@@ -8614,7 +8626,7 @@ msgstr ""
 msgid "Your password has been changed successfully!"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:463
+#: src/view/com/composer/Composer.tsx:464
 msgid "Your post has been published"
 msgstr ""
 
@@ -8630,7 +8642,7 @@ msgstr ""
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:462
+#: src/view/com/composer/Composer.tsx:463
 msgid "Your reply has been published"
 msgstr ""
 

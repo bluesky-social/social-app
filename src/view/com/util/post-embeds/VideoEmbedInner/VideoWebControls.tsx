@@ -341,8 +341,8 @@ export function Controls({
           )}
           <ControlButton
             active={muted}
-            activeLabel={_(msg`Unmute`)}
-            inactiveLabel={_(msg`Mute`)}
+            activeLabel={_(msg({message: `Unmute`, context: 'video'}))}
+            inactiveLabel={_(msg({message: `Mute`, context: 'video'}))}
             activeIcon={MuteIcon}
             inactiveIcon={UnmuteIcon}
             onPress={onPressMute}
