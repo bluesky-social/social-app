@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-09 10:23+0900\n"
+"PO-Revision-Date: 2024-09-10 09:10+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -526,7 +526,7 @@ msgstr "오류 발생"
 msgid "An error occurred"
 msgstr "오류 발생"
 
-#: src/state/queries/video/video.ts:227
+#: src/state/queries/video/video.ts:232
 msgid "An error occurred while compressing the video."
 msgstr "동영상을 압축하는 동안 오류가 발생했습니다."
 
@@ -556,7 +556,7 @@ msgstr "동영상을 선택하는 동안 오류가 발생했습니다"
 msgid "An error occurred while trying to follow all"
 msgstr "모두 팔로우하려고 하는 동안 오류가 발생했습니다"
 
-#: src/state/queries/video/video.ts:194
+#: src/state/queries/video/video.ts:199
 msgid "An error occurred while uploading the video."
 msgstr "동영상을 업로드하는 동안 오류가 발생했습니다."
 
@@ -2696,7 +2696,7 @@ msgstr "시작하기"
 msgid "Getting started"
 msgstr "시작하기"
 
-#: src/components/MediaPreview.tsx:119
+#: src/components/MediaPreview.tsx:120
 msgid "GIF"
 msgstr "GIF"
 
@@ -2951,7 +2951,7 @@ msgstr "아무것도 선택하지 않으면 모든 연령대에 적합하다는 
 
 #: src/screens/Signup/StepInfo/Policies.tsx:89
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
-msgstr "해당 국가의 법률에 따라 아직 성인이 아닌 경우, 부모 또는 법적 보호자가 대신 이 약관을 읽어야 합니다."
+msgstr "해당 국가의 법률에 따라 아직 성인이 아닌 경우 부모 또는 법적 보호자가 대신 이 약관을 읽어야 합니다."
 
 #: src/view/screens/ProfileList.tsx:720
 msgid "If you delete this list, you won't be able to recover it."
@@ -3580,8 +3580,12 @@ msgstr "영화"
 msgid "Music"
 msgstr "음악"
 
-#: src/components/TagMenu/index.tsx:263
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:345
+msgctxt "video"
+msgid "Mute"
+msgstr "음소거"
+
+#: src/components/TagMenu/index.tsx:263
 msgid "Mute"
 msgstr "뮤트"
 
@@ -3888,7 +3892,7 @@ msgstr "더 이상 표시할 대화가 없습니다"
 
 #: src/view/com/notifications/Feed.tsx:121
 msgid "No notifications yet!"
-msgstr "아직 알림이 없습니다."
+msgstr "아직 알림이 없습니다"
 
 #: src/components/dms/MessagesNUX.tsx:149
 #: src/components/dms/MessagesNUX.tsx:152
@@ -6271,7 +6275,7 @@ msgstr "게시물이 삭제되었을 수 있습니다."
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr "개인정보 처리방침을 <0/>(으)로 이동했습니다"
 
-#: src/state/queries/video/video.ts:222
+#: src/state/queries/video/video.ts:227
 msgid "The selected video is larger than 50MB."
 msgstr "선택한 동영상이 50MB를 초과합니다."
 
@@ -6739,8 +6743,12 @@ msgstr "계정 언팔로우"
 msgid "Unlike this feed"
 msgstr "이 피드 좋아요 취소"
 
-#: src/components/TagMenu/index.tsx:263
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:344
+msgctxt "video"
+msgid "Unmute"
+msgstr "음소거 해제"
+
+#: src/components/TagMenu/index.tsx:263
 #: src/view/screens/ProfileList.tsx:689
 msgid "Unmute"
 msgstr "언뮤트"
@@ -6809,7 +6817,7 @@ msgstr "이 라벨러 구독 취소하기"
 msgid "Unsubscribed from list"
 msgstr "리스트 구독 취소됨"
 
-#: src/state/queries/video/video.ts:240
+#: src/state/queries/video/video.ts:245
 msgid "Unsupported video type: {mimeType}"
 msgstr "지원되지 않는 동영상 유형: {mimeType}"
 
@@ -7645,6 +7653,10 @@ msgstr "내 계정"
 #: src/view/com/modals/DeleteAccount.tsx:88
 msgid "Your account has been deleted"
 msgstr "계정을 삭제했습니다"
+
+#: src/state/queries/video/video.ts:185
+msgid "Your account is not yet old enough to upload videos. Please try again later."
+msgstr "내 계정은 아직 동영상을 업로드할 수 없습니다. 나중에 다시 시도해 주세요."
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:65
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
