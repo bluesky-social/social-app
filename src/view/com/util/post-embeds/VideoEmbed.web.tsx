@@ -4,6 +4,7 @@ import {AppBskyEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {isFirefox} from '#/lib/browser'
 import {clamp} from '#/lib/numbers'
 import {useGate} from '#/lib/statsig/statsig'
 import {
@@ -27,7 +28,7 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
 
   useEffect(() => {
     if (!ref.current) return
-    if (isFullscreen) return
+    if (isFullscreen && !isFirefox) return
     const observer = new IntersectionObserver(
       entries => {
         const entry = entries[0]
@@ -115,7 +116,7 @@ function ViewportObserver({
   // observing a div of 100vh height
   useEffect(() => {
     if (!ref.current) return
-    if (isFullscreen) return
+    if (isFullscreen && !isFirefox) return
     const observer = new IntersectionObserver(
       entries => {
         const entry = entries[0]
