@@ -6238,7 +6238,7 @@ msgstr "Политика конфиденциальности была пере�
 
 #: src/state/queries/video/video.ts:188
 msgid "The selected video is larger than 50MB."
-msgstr "Размер выбранного видео превышает 100МБ."
+msgstr "Размер выбранного видео превышает 50МБ."
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:713
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
