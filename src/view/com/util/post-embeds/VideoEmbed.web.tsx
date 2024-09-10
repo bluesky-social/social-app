@@ -23,9 +23,11 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
   const {active, setActive, sendPosition, currentActiveView} =
     useActiveVideoWeb()
   const [onScreen, setOnScreen] = useState(false)
+  const [isFullscreen] = useFullscreen()
 
   useEffect(() => {
     if (!ref.current) return
+    if (isFullscreen) return
     const observer = new IntersectionObserver(
       entries => {
         const entry = entries[0]
@@ -39,7 +41,7 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
     )
     observer.observe(ref.current)
     return () => observer.disconnect()
-  }, [sendPosition])
+  }, [sendPosition, isFullscreen])
 
   const [key, setKey] = useState(0)
   const renderError = useCallback(
@@ -108,12 +110,12 @@ function ViewportObserver({
   const ref = useRef<HTMLDivElement>(null)
   const [nearScreen, setNearScreen] = useState(false)
   const [isFullscreen] = useFullscreen()
-  const [nearScreenOrFullscreen, setNearScreenOrFullscreen] = useState(false)
 
   // Send position when scrolling. This is done with an IntersectionObserver
   // observing a div of 100vh height
   useEffect(() => {
     if (!ref.current) return
+    if (isFullscreen) return
     const observer = new IntersectionObserver(
       entries => {
         const entry = entries[0]
@@ -127,7 +129,7 @@ function ViewportObserver({
     )
     observer.observe(ref.current)
     return () => observer.disconnect()
-  }, [sendPosition])
+  }, [sendPosition, isFullscreen])
 
   // In case scrolling hasn't started yet, send up the position
   useEffect(() => {
@@ -138,17 +140,9 @@ function ViewportObserver({
     }
   }, [isAnyViewActive, sendPosition])
 
-  // disguesting effect - it should be `nearScreen` except when fullscreen
-  // when it should be whatever it was before fullscreen changed
-  useEffect(() => {
-    if (!isFullscreen) {
-      setNearScreenOrFullscreen(nearScreen)
-    }
-  }, [isFullscreen, nearScreen])
-
   return (
     <View style={[a.flex_1, a.flex_row]}>
-      {nearScreenOrFullscreen && children}
+      {nearScreen && children}
       <div
         ref={ref}
         style={{

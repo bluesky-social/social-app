@@ -98,6 +98,7 @@ export function Controls({
   // pause + unfocus when another video is active
   useEffect(() => {
     if (!active) {
+      console.log('pause from inactive')
       pause()
       setFocused(false)
     }
@@ -110,6 +111,7 @@ export function Controls({
       if (onScreen) {
         if (!autoplayDisabled) play()
       } else {
+        console.log('pause from not onScreen')
         pause()
       }
     }
@@ -189,6 +191,7 @@ export function Controls({
   const onSeekStart = useCallback(() => {
     drawFocus()
     playStateBeforeSeekRef.current = playing
+    console.log('pause from onSeekStart')
     pause()
   }, [playing, pause, drawFocus])
 
@@ -807,6 +810,7 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
     if (ref.current.paused) {
       play()
     } else {
+      console.log('pause from togglePlayPause')
       pause()
     }
   }, [ref, play, pause])
