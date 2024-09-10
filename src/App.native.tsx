@@ -63,6 +63,7 @@ import {Provider as PortalProvider} from '#/components/Portal'
 import {Splash} from '#/Splash'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import {AudioCategory, PlatformInfo} from '../modules/expo-bluesky-swiss-army'
+import {NudgeDialogs} from '#/components/dialogs/nudges'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -131,6 +132,7 @@ function InnerApp() {
                                           style={s.h100pct}>
                                           <TestCtrls />
                                           <Shell />
+                                          <NudgeDialogs />
                                         </GestureHandlerRootView>
                                       </ProgressGuideProvider>
                                     </MutedThreadsProvider>
