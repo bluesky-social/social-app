@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh_CN\n"
 "Project-Id-Version: zh-CN for bluesky-social-app\n"
 "Report-Msgid-Bugs-To: Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-09-09 14:17+0800\n"
+"PO-Revision-Date: 2024-09-10 13:53+0800\n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
 "Language-Team: Frudrax Cheng (auroursa), Simon Chan (RitsukiP), U2FsdGVkX1, Mikan Harada (mitian233), IceCodeNew\n"
 "Plural-Forms: \n"
@@ -372,7 +372,7 @@ msgstr "添加账户"
 msgid "Add alt text"
 msgstr "新增替代文本"
 
-#: src/view/com/composer/videos/SubtitleDialog.tsx:107
+#: src/view/com/composer/videos/SubtitleDialog.tsx:109
 msgid "Add alt text (optional)"
 msgstr "新增替代文本（可选）"
 
@@ -493,9 +493,9 @@ msgid "ALT"
 msgstr "ALT"
 
 #: src/view/com/composer/GifAltText.tsx:144
-#: src/view/com/composer/videos/SubtitleDialog.tsx:54
-#: src/view/com/composer/videos/SubtitleDialog.tsx:102
-#: src/view/com/composer/videos/SubtitleDialog.tsx:106
+#: src/view/com/composer/videos/SubtitleDialog.tsx:56
+#: src/view/com/composer/videos/SubtitleDialog.tsx:104
+#: src/view/com/composer/videos/SubtitleDialog.tsx:108
 #: src/view/com/modals/EditImage.tsx:316
 #: src/view/screens/AccessibilitySettings.tsx:87
 msgid "Alt text"
@@ -526,7 +526,7 @@ msgstr "发生错误"
 msgid "An error occurred"
 msgstr "发生错误"
 
-#: src/state/queries/video/video.ts:227
+#: src/state/queries/video/video.ts:232
 msgid "An error occurred while compressing the video."
 msgstr "压缩视频时发生错误。"
 
@@ -556,7 +556,7 @@ msgstr "选择视频时发生错误"
 msgid "An error occurred while trying to follow all"
 msgstr "关注所有人时发生错误"
 
-#: src/state/queries/video/video.ts:194
+#: src/state/queries/video/video.ts:199
 msgid "An error occurred while uploading the video."
 msgstr "上传视频时出现问题。"
 
@@ -996,11 +996,11 @@ msgstr "取消打开链接的网站"
 msgid "Cannot interact with a blocked user"
 msgstr "无法与被屏蔽的用户互动"
 
-#: src/view/com/composer/videos/SubtitleDialog.tsx:133
+#: src/view/com/composer/videos/SubtitleDialog.tsx:135
 msgid "Captions (.vtt)"
 msgstr "字幕（.vtt）"
 
-#: src/view/com/composer/videos/SubtitleDialog.tsx:54
+#: src/view/com/composer/videos/SubtitleDialog.tsx:56
 msgid "Captions & alt text"
 msgstr "字幕及替代文本"
 
@@ -1846,8 +1846,8 @@ msgstr "域名已认证！"
 #: src/screens/Onboarding/StepProfile/index.tsx:325
 #: src/view/com/auth/server-input/index.tsx:169
 #: src/view/com/auth/server-input/index.tsx:170
-#: src/view/com/composer/videos/SubtitleDialog.tsx:167
-#: src/view/com/composer/videos/SubtitleDialog.tsx:177
+#: src/view/com/composer/videos/SubtitleDialog.tsx:171
+#: src/view/com/composer/videos/SubtitleDialog.tsx:181
 #: src/view/com/modals/AddAppPasswords.tsx:243
 #: src/view/com/modals/AltImage.tsx:141
 #: src/view/com/modals/crop-image/CropImage.web.tsx:177
@@ -2118,7 +2118,7 @@ msgstr "已启用"
 msgid "End of feed"
 msgstr "已到末尾"
 
-#: src/view/com/composer/videos/SubtitleDialog.tsx:157
+#: src/view/com/composer/videos/SubtitleDialog.tsx:161
 msgid "Ensure you have selected a language for each subtitle file."
 msgstr "确保为每个字幕文件都选择了一种语言。"
 
@@ -2684,7 +2684,7 @@ msgstr "开始吧"
 msgid "Getting started"
 msgstr "开始吧"
 
-#: src/components/MediaPreview.tsx:119
+#: src/components/MediaPreview.tsx:120
 msgid "GIF"
 msgstr "GIF"
 
@@ -3569,7 +3569,11 @@ msgid "Music"
 msgstr "音乐"
 
 #: src/components/TagMenu/index.tsx:263
+msgid "Mute"
+msgstr "隐藏"
+
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:345
+msgctxt "video"
 msgid "Mute"
 msgstr "隐藏"
 
@@ -4888,7 +4892,7 @@ msgstr "删除引用"
 msgid "Remove repost"
 msgstr "删除转发"
 
-#: src/view/com/composer/videos/SubtitleDialog.tsx:260
+#: src/view/com/composer/videos/SubtitleDialog.tsx:264
 msgid "Remove subtitle file"
 msgstr "删除字幕文件"
 
@@ -5443,7 +5447,7 @@ msgstr "选择 GIF \"{0}\""
 msgid "Select how long to mute this word for."
 msgstr "选择将此词语隐藏多长时间。"
 
-#: src/view/com/composer/videos/SubtitleDialog.tsx:245
+#: src/view/com/composer/videos/SubtitleDialog.tsx:249
 msgid "Select language..."
 msgstr "选择语言..."
 
@@ -6251,7 +6255,7 @@ msgstr "这条帖文可能已被删除。"
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr "隐私政策已迁移至 <0/>"
 
-#: src/state/queries/video/video.ts:222
+#: src/state/queries/video/video.ts:227
 msgid "The selected video is larger than 50MB."
 msgstr "选择的视频大小超过 50MB。"
 
@@ -6720,8 +6724,12 @@ msgid "Unlike this feed"
 msgstr "取消喜欢这个资讯源"
 
 #: src/components/TagMenu/index.tsx:263
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:344
 #: src/view/screens/ProfileList.tsx:689
+msgid "Unmute"
+msgstr "取消隐藏"
+
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:344
+msgctxt "video"
 msgid "Unmute"
 msgstr "取消隐藏"
 
@@ -6789,7 +6797,7 @@ msgstr "取消订阅这个标记者"
 msgid "Unsubscribed from list"
 msgstr "已从列表中取消订阅"
 
-#: src/state/queries/video/video.ts:240
+#: src/state/queries/video/video.ts:245
 msgid "Unsupported video type: {mimeType}"
 msgstr "不支持的视频格式：{mimeType}"
 
@@ -7031,7 +7039,7 @@ msgstr "电子游戏"
 msgid "Video not found."
 msgstr "无法找到视频。"
 
-#: src/view/com/composer/videos/SubtitleDialog.tsx:99
+#: src/view/com/composer/videos/SubtitleDialog.tsx:101
 msgid "Video settings"
 msgstr "视频设置"
 
@@ -7625,6 +7633,10 @@ msgstr "你的账户"
 #: src/view/com/modals/DeleteAccount.tsx:88
 msgid "Your account has been deleted"
 msgstr "你的账户已删除"
+
+#: src/state/queries/video/video.ts:185
+msgid "Your account is not yet old enough to upload videos. Please try again later."
+msgstr "你的账户注册时间过短，暂时无法上传视频。请过段时间再试。"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:65
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
