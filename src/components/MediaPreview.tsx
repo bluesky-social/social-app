@@ -104,6 +104,19 @@ export function ImageItem({
         accessibilityHint={alt}
         accessibilityLabel=""
       />
+      <View
+        style={[
+          a.rounded_xs,
+          a.absolute,
+          a.w_full,
+          a.h_full,
+          a.border,
+          {
+            borderColor: t.palette.contrast_800,
+            opacity: 0.2,
+          },
+        ]}
+      />
       {children}
     </View>
   )
