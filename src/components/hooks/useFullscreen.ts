@@ -7,7 +7,7 @@ function fullscreenSubscribe(onChange: () => void) {
   return () => document.removeEventListener('fullscreenchange', onChange)
 }
 
-export function useFullscreen(ref: React.RefObject<HTMLElement>) {
+export function useFullscreen(ref?: React.RefObject<HTMLElement>) {
   if (!isWeb) throw new Error("'useFullscreen' is a web-only hook")
   const isFullscreen = useSyncExternalStore(fullscreenSubscribe, () =>
     Boolean(document.fullscreenElement),
@@ -17,6 +17,7 @@ export function useFullscreen(ref: React.RefObject<HTMLElement>) {
     if (isFullscreen) {
       document.exitFullscreen()
     } else {
+      if (!ref) throw new Error('No ref provided')
       if (!ref.current) return
       ref.current.requestFullscreen()
     }
