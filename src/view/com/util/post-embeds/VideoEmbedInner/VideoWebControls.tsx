@@ -15,6 +15,7 @@ import {
 } from '#/state/preferences'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button} from '#/components/Button'
+import {useIsWithinMessage} from '#/components/dms/MessageContext'
 import {useFullscreen} from '#/components/hooks/useFullscreen'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {
@@ -113,7 +114,8 @@ export function Controls({
   }, [active, pause, setFocused])
 
   // autoplay/pause based on visibility
-  const autoplayDisabled = useAutoplayDisabled()
+  const isWithinMessage = useIsWithinMessage()
+  const autoplayDisabled = useAutoplayDisabled() || isWithinMessage
   useEffect(() => {
     if (active) {
       if (onScreen) {
