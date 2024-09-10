@@ -313,7 +313,8 @@ let EditableUserAvatar = ({
 
       onSelectNewAvatar(croppedImage)
     } catch (e: any) {
-      if (!String(e).includes('Canceled')) {
+      // Don't log errors for cancelling selection to sentry on ios or android
+      if (!String(e).toLowerCase().includes('cancel')) {
         logger.error('Failed to crop banner', {error: e})
       }
     }
