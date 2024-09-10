@@ -7575,7 +7575,7 @@ msgstr "Descurtir este feed"
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:344
 msgctxt "video"
 msgid "Unmute"
-msgstr "Dessilenciar"
+msgstr "Ativar o áudio"
 
 #: src/components/TagMenu/index.tsx:263
 #: src/view/screens/ProfileList.tsx:689
@@ -7610,11 +7610,11 @@ msgstr "Dessilenciar thread"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:273
 msgid "Unmute video"
-msgstr "Desmutar vídeo"
+msgstr "Ativar o áudio do vídeo"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
 msgid "Unmuted"
-msgstr "Desmutar"
+msgstr "Áudio ativado"
 
 #: src/view/screens/ProfileFeed.tsx:292
 #: src/view/screens/ProfileList.tsx:673
