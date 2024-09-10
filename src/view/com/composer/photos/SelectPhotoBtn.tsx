@@ -1,5 +1,6 @@
 /* eslint-disable react-native-a11y/has-valid-accessibility-ignores-invert-colors */
 import React, {useCallback} from 'react'
+import {ImagePickerAsset} from 'expo-image-picker'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -14,9 +15,10 @@ import {Image_Stroke2_Corner0_Rounded as Image} from '#/components/icons/Image'
 type Props = {
   gallery: GalleryModel
   disabled?: boolean
+  onSelectVideo: (video: ImagePickerAsset) => void
 }
 
-export function SelectPhotoBtn({gallery, disabled}: Props) {
+export function SelectPhotoBtn({gallery, disabled, onSelectVideo}: Props) {
   const {track} = useAnalytics()
   const {_} = useLingui()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
@@ -29,8 +31,16 @@ export function SelectPhotoBtn({gallery, disabled}: Props) {
       return
     }
 
-    gallery.pick()
-  }, [track, requestPhotoAccessIfNeeded, gallery])
+    gallery.pick(gif => {
+      onSelectVideo({
+        uri: gif.path,
+        fileSize: gif.size,
+        height: gif.height,
+        width: gif.width,
+        mimeType: 'image/gif',
+      })
+    })
+  }, [track, requestPhotoAccessIfNeeded, gallery, onSelectVideo])
 
   return (
     <Button

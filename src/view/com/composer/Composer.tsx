@@ -798,7 +798,11 @@ export const ComposePost = observer(function ComposePost({
             <VideoUploadToolbar state={videoUploadState} />
           ) : (
             <ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
-              <SelectPhotoBtn gallery={gallery} disabled={!canSelectImages} />
+              <SelectPhotoBtn
+                gallery={gallery}
+                disabled={!canSelectImages}
+                onSelectVideo={selectVideo}
+              />
               {gate('video_upload') && (
                 <SelectVideoBtn
                   onSelectVideo={selectVideo}

@@ -27,8 +27,12 @@ export async function openPicker(opts?: ImagePickerOptions) {
       Toast.show('Only image files are supported', 'exclamation-circle')
       return false
     })
-    .map(image => ({
-      mime: 'image/jpeg',
+    .map((image, _, arr) => ({
+      // Unsure why mimeType is forced to be image/jpeg - let's keep it that way unless it's a single gif
+      mime:
+        arr.length === 1 && image.mimeType === 'image/gif'
+          ? 'image/gif'
+          : 'image/jpeg',
       height: image.height,
       width: image.width,
       path: image.uri,

@@ -1,8 +1,10 @@
-import {makeAutoObservable, runInAction} from 'mobx'
-import {ImageModel} from './image'
 import {Image as RNImage} from 'react-native-image-crop-picker'
-import {openPicker} from 'lib/media/picker'
+import {makeAutoObservable, runInAction} from 'mobx'
+
+import {isNative} from '#/platform/detection'
 import {getImageDim} from 'lib/media/manip'
+import {openPicker} from 'lib/media/picker'
+import {ImageModel} from './image'
 
 interface InitialImageUri {
   uri: string
@@ -84,11 +86,23 @@ export class GalleryModel {
     image.previous()
   }
 
-  async pick() {
+  async pick(
+    onPickGif?: (gif: Awaited<ReturnType<typeof openPicker>>[number]) => void,
+  ) {
     const images = await openPicker({
       selectionLimit: 4 - this.size,
       allowsMultipleSelection: true,
     })
+
+    if (
+      isNative &&
+      onPickGif &&
+      images.length === 1 &&
+      images[0]?.mime === 'image/gif'
+    ) {
+      onPickGif(images[0])
+      return
+    }
 
     return await Promise.all(
       images.map(image => {
