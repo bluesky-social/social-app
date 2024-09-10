@@ -12,6 +12,7 @@ import {
   VideoNotFoundError,
 } from '#/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerWeb'
 import {atoms as a} from '#/alf'
+import {useFullscreen} from '#/components/hooks/useFullscreen'
 import {ErrorBoundary} from '../ErrorBoundary'
 import {useActiveVideoWeb} from './ActiveVideoWebContext'
 import * as VideoFallback from './VideoEmbedInner/VideoFallback'
@@ -106,6 +107,8 @@ function ViewportObserver({
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const [nearScreen, setNearScreen] = useState(false)
+  const [isFullscreen] = useFullscreen()
+  const [nearScreenOrFullscreen, setNearScreenOrFullscreen] = useState(false)
 
   // Send position when scrolling. This is done with an IntersectionObserver
   // observing a div of 100vh height
@@ -135,9 +138,17 @@ function ViewportObserver({
     }
   }, [isAnyViewActive, sendPosition])
 
+  // disguesting effect - it should be `nearScreen` except when fullscreen
+  // when it should be whatever it was before fullscreen changed
+  useEffect(() => {
+    if (!isFullscreen) {
+      setNearScreenOrFullscreen(nearScreen)
+    }
+  }, [isFullscreen, nearScreen])
+
   return (
     <View style={[a.flex_1, a.flex_row]}>
-      {nearScreen && children}
+      {nearScreenOrFullscreen && children}
       <div
         ref={ref}
         style={{
