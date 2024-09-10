@@ -20,6 +20,8 @@ import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons
 import {Text} from '#/components/Typography'
 import {SubtitleFilePicker} from './SubtitleFilePicker'
 
+const MAX_NUM_CAPTIONS = 1
+
 interface Props {
   defaultAltText: string
   captions: {lang: string; file: File}[]
@@ -134,7 +136,9 @@ function SubtitleDialogInner({
             </Text>
             <SubtitleFilePicker
               onSelectFile={handleSelectFile}
-              disabled={subtitleMissingLanguage || captions.length >= 4}
+              disabled={
+                subtitleMissingLanguage || captions.length >= MAX_NUM_CAPTIONS
+              }
             />
             <View>
               {captions.map((subtitle, i) => (

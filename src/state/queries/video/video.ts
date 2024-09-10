@@ -180,6 +180,11 @@ export function useUploadVideo({
               msg`You've reached your daily limit for video uploads (too many videos)`,
             )
             break
+          case 'Account is not old enough to upload videos':
+            message = _(
+              msg`Your account is not yet old enough to upload videos. Please try again later.`,
+            )
+            break
           default:
             message = e.message
             break
@@ -219,7 +224,7 @@ export function useUploadVideo({
       } else if (e instanceof VideoTooLargeError) {
         dispatch({
           type: 'SetError',
-          error: _(msg`The selected video is larger than 100MB.`),
+          error: _(msg`The selected video is larger than 50MB.`),
         })
       } else {
         dispatch({
