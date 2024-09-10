@@ -42,9 +42,12 @@ export function findSuggestionMatch({
 
   if (!tag || tag.length === 0 || tag.length > 64) return null
 
+  const leadingSpaceOffset = fullMatch.startsWith(' ') ? 1 : 0
+  const hashtagOffset = 1
+
   // The absolute position of the match in the document
-  const from = textFrom + fullMatch.indexOf(tag)
-  const to = from + tag.length + 1
+  const from = textFrom + match.index + leadingSpaceOffset
+  const to = from + tag.length + hashtagOffset
 
   // If the $position is located within the matched substring, return that range
   if (from < $position.pos && to >= $position.pos) {
@@ -54,7 +57,7 @@ export function findSuggestionMatch({
         to,
       },
       query: tag.replace(TRAILING_PUNCTUATION_REGEX, ''),
-      text: fullMatch,
+      text: fullMatch.replace(/^\s{1}/, ''),
     }
   }
 

@@ -4,10 +4,10 @@
  * @see https://github.com/ueberdosis/tiptap/blob/ec6121da1c3f808987d32de7a8c56b52520bfea8/packages/extension-mention/src/mention.ts
  */
 
-import { mergeAttributes, Node } from '@tiptap/core'
-import { DOMOutputSpec, Node as ProseMirrorNode } from '@tiptap/pm/model'
-import { PluginKey } from '@tiptap/pm/state'
-import Suggestion, { SuggestionOptions } from '@tiptap/suggestion'
+import {mergeAttributes, Node} from '@tiptap/core'
+import {DOMOutputSpec, Node as ProseMirrorNode} from '@tiptap/pm/model'
+import {PluginKey} from '@tiptap/pm/state'
+import Suggestion, {SuggestionOptions} from '@tiptap/suggestion'
 
 import {findSuggestionMatch} from './utils'
 
@@ -17,15 +17,18 @@ export interface MentionNodeAttrs {
    * The identifier for the selected item that was mentioned, stored as a `data-id`
    * attribute.
    */
-  id: string | null;
+  id: string | null
   /**
    * The label to be rendered by the editor as the displayed text for this mentioned
    * item, if provided. Stored as a `data-label` attribute. See `renderLabel`.
    */
-  label?: string | null;
+  label?: string | null
 }
 
-export type MentionOptions<SuggestionItem = any, Attrs extends Record<string, any> = MentionNodeAttrs> = {
+export type MentionOptions<
+  SuggestionItem = any,
+  Attrs extends Record<string, any> = MentionNodeAttrs,
+> = {
   /**
    * The HTML attributes for a mention node.
    * @default {}
@@ -40,7 +43,10 @@ export type MentionOptions<SuggestionItem = any, Attrs extends Record<string, an
    * @returns The label
    * @example ({ options, node }) => `${options.suggestion.char}${node.attrs.label ?? node.attrs.id}`
    */
-  renderLabel?: (props: { options: MentionOptions<SuggestionItem, Attrs>; node: ProseMirrorNode }) => string
+  renderLabel?: (props: {
+    options: MentionOptions<SuggestionItem, Attrs>
+    node: ProseMirrorNode
+  }) => string
 
   /**
    * A function to render the text of a mention.
@@ -48,7 +54,10 @@ export type MentionOptions<SuggestionItem = any, Attrs extends Record<string, an
    * @returns The text
    * @example ({ options, node }) => `${options.suggestion.char}${node.attrs.label ?? node.attrs.id}`
    */
-  renderText: (props: { options: MentionOptions<SuggestionItem, Attrs>; node: ProseMirrorNode }) => string
+  renderText: (props: {
+    options: MentionOptions<SuggestionItem, Attrs>
+    node: ProseMirrorNode
+  }) => string
 
   /**
    * A function to render the HTML of a mention.
@@ -56,7 +65,10 @@ export type MentionOptions<SuggestionItem = any, Attrs extends Record<string, an
    * @returns The HTML as a ProseMirror DOM Output Spec
    * @example ({ options, node }) => ['span', { 'data-type': 'mention' }, `${options.suggestion.char}${node.attrs.label ?? node.attrs.id}`]
    */
-  renderHTML: (props: { options: MentionOptions<SuggestionItem, Attrs>; node: ProseMirrorNode }) => DOMOutputSpec
+  renderHTML: (props: {
+    options: MentionOptions<SuggestionItem, Attrs>
+    node: ProseMirrorNode
+  }) => DOMOutputSpec
 
   /**
    * Whether to delete the trigger character with backspace.
@@ -88,11 +100,11 @@ export const Tags = Node.create<MentionOptions>({
   addOptions() {
     return {
       HTMLAttributes: {},
-      renderText({ options, node }) {
+      renderText({options, node}) {
         return `${options.suggestion.char}${node.attrs.label ?? node.attrs.id}`
       },
       deleteTriggerWithBackspace: false,
-      renderHTML({ options, node }) {
+      renderHTML({options, node}) {
         return [
           'span',
           mergeAttributes(this.HTMLAttributes, options.HTMLAttributes),
@@ -102,7 +114,7 @@ export const Tags = Node.create<MentionOptions>({
       suggestion: {
         char: '#',
         pluginKey: TagsPluginKey,
-        command: ({ editor, range, props }) => {
+        command: ({editor, range, props}) => {
           // increase range.to by one when the next node is of type "text"
           // and starts with a space character
           const nodeAfter = editor.view.state.selection.$to.nodeAfter
@@ -129,19 +141,13 @@ export const Tags = Node.create<MentionOptions>({
 
           window.getSelection()?.collapseToEnd()
         },
-        allow: ({ state, range }) => {
+        allow: ({state, range}) => {
           const $from = state.doc.resolve(range.from)
           const type = state.schema.nodes[this.name]
           const allow = !!$from.parent.type.contentMatch.matchType(type)
-          console.log({
-            allow,
-            $from,
-            state,
-          })
-
           return allow
         },
-        findSuggestionMatch: findSuggestionMatch
+        findSuggestionMatch: findSuggestionMatch,
       },
     }
   },
@@ -194,21 +200,31 @@ export const Tags = Node.create<MentionOptions>({
     ]
   },
 
-  renderHTML({ node, HTMLAttributes }) {
+  renderHTML({node, HTMLAttributes}) {
     if (this.options.renderLabel !== undefined) {
-      console.warn('renderLabel is deprecated use renderText and renderHTML instead')
+      console.warn(
+        'renderLabel is deprecated use renderText and renderHTML instead',
+      )
       return [
         'span',
-        mergeAttributes({ 'data-type': this.name }, this.options.HTMLAttributes, HTMLAttributes),
+        mergeAttributes(
+          {'data-type': this.name},
+          this.options.HTMLAttributes,
+          HTMLAttributes,
+        ),
         this.options.renderLabel({
           options: this.options,
           node,
         }),
       ]
     }
-    const mergedOptions = { ...this.options }
+    const mergedOptions = {...this.options}
 
-    mergedOptions.HTMLAttributes = mergeAttributes({ 'data-type': this.name }, this.options.HTMLAttributes, HTMLAttributes)
+    mergedOptions.HTMLAttributes = mergeAttributes(
+      {'data-type': this.name},
+      this.options.HTMLAttributes,
+      HTMLAttributes,
+    )
     const html = this.options.renderHTML({
       options: mergedOptions,
       node,
@@ -217,16 +233,22 @@ export const Tags = Node.create<MentionOptions>({
     if (typeof html === 'string') {
       return [
         'span',
-        mergeAttributes({ 'data-type': this.name }, this.options.HTMLAttributes, HTMLAttributes),
+        mergeAttributes(
+          {'data-type': this.name},
+          this.options.HTMLAttributes,
+          HTMLAttributes,
+        ),
         html,
       ]
     }
     return html
   },
 
-  renderText({ node }) {
+  renderText({node}) {
     if (this.options.renderLabel !== undefined) {
-      console.warn('renderLabel is deprecated use renderText and renderHTML instead')
+      console.warn(
+        'renderLabel is deprecated use renderText and renderHTML instead',
+      )
       return this.options.renderLabel({
         options: this.options,
         node,
@@ -240,30 +262,33 @@ export const Tags = Node.create<MentionOptions>({
 
   addKeyboardShortcuts() {
     return {
-      Backspace: () => this.editor.commands.command(({ tr, state }) => {
-        let isMention = false
-        const { selection } = state
-        const { empty, anchor } = selection
+      Backspace: () =>
+        this.editor.commands.command(({tr, state}) => {
+          let isMention = false
+          const {selection} = state
+          const {empty, anchor} = selection
 
-        if (!empty) {
-          return false
-        }
-
-        state.doc.nodesBetween(anchor - 1, anchor, (node, pos) => {
-          if (node.type.name === this.name) {
-            isMention = true
-            tr.insertText(
-              this.options.deleteTriggerWithBackspace ? '' : this.options.suggestion.char || '',
-              pos,
-              pos + node.nodeSize,
-            )
-
+          if (!empty) {
             return false
           }
-        })
 
-        return isMention
-      }),
+          state.doc.nodesBetween(anchor - 1, anchor, (node, pos) => {
+            if (node.type.name === this.name) {
+              isMention = true
+              tr.insertText(
+                this.options.deleteTriggerWithBackspace
+                  ? ''
+                  : this.options.suggestion.char || '',
+                pos,
+                pos + node.nodeSize,
+              )
+
+              return false
+            }
+          })
+
+          return isMention
+        }),
     }
   },
 
