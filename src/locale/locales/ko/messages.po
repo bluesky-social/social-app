@@ -6272,8 +6272,8 @@ msgid "The Privacy Policy has been moved to <0/>"
 msgstr "개인정보 처리방침을 <0/>(으)로 이동했습니다"
 
 #: src/state/queries/video/video.ts:222
-msgid "The selected video is larger than 100MB."
-msgstr "선택한 동영상이 100MB를 초과합니다."
+msgid "The selected video is larger than 50MB."
+msgstr "선택한 동영상이 50MB를 초과합니다."
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:713
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
