@@ -7,15 +7,16 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {getCanvas} from '#/lib/canvas'
+import {shareUrl} from '#/lib/sharing'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {isNative} from '#/platform/detection'
+import {isAndroid, isNative, isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {useComposerControls} from 'state/shell'
 import {formatCount} from '#/view/com/util/numeric/format'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
+// import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Logomark} from '#/view/icons/Logomark'
 import {
   atoms as a,
@@ -30,6 +31,7 @@ import {useContext} from '#/components/dialogs/nudges'
 import {Divider} from '#/components/Divider'
 import {GradientFill} from '#/components/GradientFill'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
+import {Download_Stroke2_Corner0_Rounded as Download} from '#/components/icons/Download'
 import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -88,12 +90,9 @@ export function TenMillion() {
   const isLoadingData = isProfileLoading || !moderation || !profile
   const isLoadingImage = !uri
 
-  const userNumber = 56738 // TODO
+  const userNumber = 10_000_000 // TODO
 
-  const captureInProgress = React.useRef(false)
-  const imageRef = React.useRef<ViewShot>(null)
-
-  const share = () => {
+  const sharePost = () => {
     if (uri) {
       controls.tenMillion.close(() => {
         setTimeout(() => {
@@ -112,15 +111,11 @@ export function TenMillion() {
     }
   }
 
-  const onCanvasReady = async () => {
-    if (
-      imageRef.current &&
-      imageRef.current.capture &&
-      !captureInProgress.current
-    ) {
-      captureInProgress.current = true
-      const uri = await imageRef.current.capture()
-      setUri(uri)
+  const onNativeShare = () => {
+    if (uri) {
+      controls.tenMillion.close(() => {
+        shareUrl(uri)
+      })
     }
   }
 
@@ -134,6 +129,31 @@ export function TenMillion() {
       link.setAttribute('download', `Bluesky 10M Users.png`)
       link.setAttribute('href', imgHref)
       link.click()
+    }
+  }
+
+  const imageRef = React.useRef<ViewShot>(null)
+  // const captureInProgress = React.useRef(false)
+  // const [cavasRelayout, setCanvasRelayout] = React.useState('key')
+  // const onCanvasReady = async () => {
+  //   if (
+  //     imageRef.current &&
+  //     imageRef.current.capture &&
+  //     !captureInProgress.current
+  //   ) {
+  //     captureInProgress.current = true
+  //     setCanvasRelayout('updated')
+  //   }
+  // }
+  const onCanvasLayout = async () => {
+    if (
+      imageRef.current &&
+      imageRef.current.capture // &&
+      // cavasRelayout === 'updated'
+    ) {
+      console.log('LAYOUT')
+      const uri = await imageRef.current.capture()
+      setUri(uri)
     }
   }
 
@@ -160,6 +180,8 @@ export function TenMillion() {
               options={{width: WIDTH, height: HEIGHT}}
               style={[a.absolute, a.inset_0]}>
               <View
+                // key={cavasRelayout}
+                onLayout={onCanvasLayout}
                 style={[
                   a.absolute,
                   a.inset_0,
@@ -170,7 +192,7 @@ export function TenMillion() {
                     bottom: -1,
                     left: -1,
                     right: -1,
-                    paddingVertical: 32,
+                    paddingVertical: 48,
                     paddingHorizontal: 48,
                   },
                 ]}>
@@ -208,7 +230,7 @@ export function TenMillion() {
                   <View
                     style={[
                       {
-                        paddingBottom: 48,
+                        paddingBottom: 32,
                       },
                     ]}>
                     <Text
@@ -216,7 +238,7 @@ export function TenMillion() {
                         a.text_md,
                         a.font_bold,
                         a.text_center,
-                        a.pb_xs,
+                        a.pb_md,
                         lightTheme.atoms.text_contrast_medium,
                       ]}>
                       <Trans>
@@ -224,17 +246,7 @@ export function TenMillion() {
                       </Trans>{' '}
                       🎉
                     </Text>
-                    <Text
-                      style={[
-                        a.relative,
-                        a.text_center,
-                        {
-                          fontStyle: 'italic',
-                          fontSize: getFontSize(userNumber),
-                          fontWeight: '900',
-                          letterSpacing: -2,
-                        },
-                      ]}>
+                    <View>
                       <Text
                         style={[
                           a.absolute,
@@ -242,13 +254,27 @@ export function TenMillion() {
                             color: t.palette.primary_500,
                             fontSize: 32,
                             left: -18,
-                            top: 8,
+                            top: isAndroid ? -8 : isWeb ? 5 : -5,
+                            fontWeight: '900',
                           },
                         ]}>
                         #
                       </Text>
-                      {i18n.number(userNumber)}
-                    </Text>
+                      <Text
+                        style={[
+                          a.relative,
+                          a.text_center,
+                          {
+                            fontStyle: 'italic',
+                            fontSize: getFontSize(userNumber),
+                            lineHeight: getFontSize(userNumber),
+                            fontWeight: '900',
+                            letterSpacing: -2,
+                          },
+                        ]}>
+                        {i18n.number(userNumber)}
+                      </Text>
+                    </View>
                   </View>
                   {/* End centered content */}
 
@@ -264,14 +290,16 @@ export function TenMillion() {
                       },
                     ]}>
                     <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                      {/*
                       <UserAvatar
                         size={36}
                         avatar={profile.avatar}
                         moderation={moderation.ui('avatar')}
                         onLoad={onCanvasReady}
                       />
+                        */}
                       <View style={[a.gap_2xs, a.flex_1]}>
-                        <Text style={[a.text_sm, a.font_bold]}>
+                        <Text style={[a.text_sm, a.font_bold, a.leading_tight]}>
                           {sanitizeDisplayName(
                             profile.displayName ||
                               sanitizeHandle(profile.handle),
@@ -283,6 +311,8 @@ export function TenMillion() {
                             style={[
                               a.text_sm,
                               a.font_semibold,
+                              ,
+                              a.leading_tight,
                               lightTheme.atoms.text_contrast_medium,
                             ]}>
                             {sanitizeHandle(profile.handle, '@')}
@@ -293,11 +323,16 @@ export function TenMillion() {
                               style={[
                                 a.text_sm,
                                 a.font_semibold,
+                                ,
+                                a.leading_tight,
                                 lightTheme.atoms.text_contrast_low,
                               ]}>
-                              {i18n.date(profile.createdAt, {
-                                dateStyle: 'long',
-                              })}
+                              <Trans>
+                                Joined{' '}
+                                {i18n.date(profile.createdAt, {
+                                  dateStyle: 'long',
+                                })}
+                              </Trans>
                             </Text>
                           )}
                         </View>
@@ -315,13 +350,12 @@ export function TenMillion() {
 
   return (
     <Dialog.Outer control={controls.tenMillion}>
-      <Dialog.Handle />
-
       <Dialog.ScrollableInner
         label={_(msg`Ten Million`)}
         style={[
           {
             padding: 0,
+            paddingTop: 0,
           },
         ]}>
         <View
@@ -355,6 +389,7 @@ export function TenMillion() {
             <Text
               style={[
                 a.text_5xl,
+                a.leading_tight,
                 a.pb_lg,
                 {
                   fontWeight: '900',
@@ -387,20 +422,26 @@ export function TenMillion() {
               </Text>
 
               <Button
-                label={_(msg`Share image externally`)}
+                disabled={isLoadingImage}
+                label={
+                  isNative
+                    ? _(msg`Share image externally`)
+                    : _(msg`Download image`)
+                }
                 size="large"
                 variant="solid"
                 color="secondary"
                 shape="square"
-                onPress={download}>
-                <ButtonIcon icon={Share} />
+                onPress={isNative ? onNativeShare : download}>
+                <ButtonIcon icon={isNative ? Share : Download} />
               </Button>
               <Button
+                disabled={isLoadingImage}
                 label={_(msg`Share image in post`)}
                 size="large"
                 variant="solid"
                 color="primary"
-                onPress={share}>
+                onPress={sharePost}>
                 <ButtonText>{_(msg`Share post`)}</ButtonText>
                 <ButtonIcon position="right" icon={ImageIcon} />
               </Button>
