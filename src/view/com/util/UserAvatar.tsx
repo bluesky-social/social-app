@@ -216,31 +216,16 @@ let UserAvatar = ({
     !((moderation?.blur && isAndroid) /* android crashes with blur */) ? (
     <View style={{width: size, height: size}}>
       {usePlainRNImage ? (
-        <>
-          <Image
-            accessibilityIgnoresInvertColors
-            testID="userAvatarImage"
-            style={aviStyle}
-            resizeMode="cover"
-            source={{
-              uri: hackModifyThumbnailPath(avatar, size < 90),
-            }}
-            blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
-          />
-          <View
-            style={[
-              a.rounded_full,
-              a.absolute,
-              a.w_full,
-              a.h_full,
-              a.border,
-              {
-                borderColor: t.palette.contrast_800,
-                opacity: 0.2,
-              },
-            ]}
-          />
-        </>
+        <Image
+          accessibilityIgnoresInvertColors
+          testID="userAvatarImage"
+          style={aviStyle}
+          resizeMode="cover"
+          source={{
+            uri: hackModifyThumbnailPath(avatar, size < 90),
+          }}
+          blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
+        />
       ) : (
         <HighPriorityImage
           testID="userAvatarImage"
@@ -252,6 +237,19 @@ let UserAvatar = ({
           blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
         />
       )}
+      <View
+        style={[
+          a.rounded_full,
+          a.absolute,
+          a.w_full,
+          a.h_full,
+          a.border,
+          {
+            borderColor: t.palette.contrast_800,
+            opacity: 0.2,
+          },
+        ]}
+      />
       {alert}
     </View>
   ) : (
@@ -422,7 +420,6 @@ let PreviewableUserAvatar = ({
   ...rest
 }: PreviewableUserAvatarProps): React.ReactNode => {
   const {_} = useLingui()
-  const t = useTheme()
   const queryClient = useQueryClient()
 
   const onPress = React.useCallback(() => {
@@ -441,19 +438,6 @@ let PreviewableUserAvatar = ({
         })}
         onPress={onPress}>
         <UserAvatar avatar={profile.avatar} moderation={moderation} {...rest} />
-        <View
-          style={[
-            a.rounded_full,
-            a.absolute,
-            a.w_full,
-            a.h_full,
-            a.border,
-            {
-              borderColor: t.palette.contrast_800,
-              opacity: 0.2,
-            },
-          ]}
-        />
       </Link>
     </ProfileHoverCard>
   )
