@@ -10,7 +10,7 @@ import {getCanvas} from '#/lib/canvas'
 import {shareUrl} from '#/lib/sharing'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {isAndroid, isNative, isWeb} from '#/platform/detection'
+import {isNative} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
@@ -28,6 +28,9 @@ import {
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useContext} from '#/components/dialogs/nudges'
+import {OnePercent} from '#/components/dialogs/nudges/TenMillion/icons/OnePercent'
+import {PointOnePercent} from '#/components/dialogs/nudges/TenMillion/icons/PointOnePercent'
+import {TenPercent} from '#/components/dialogs/nudges/TenMillion/icons/TenPercent'
 import {Divider} from '#/components/Divider'
 import {GradientFill} from '#/components/GradientFill'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
@@ -35,6 +38,7 @@ import {Download_Stroke2_Corner0_Rounded as Download} from '#/components/icons/D
 import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+// import {TwentyFivePercent} from '#/components/dialogs/nudges/TenMillion/icons/TwentyFivePercent'
 
 const DEBUG = false
 const RATIO = 8 / 10
@@ -50,6 +54,20 @@ function getFontSize(count: number) {
   } else {
     return 70
   }
+}
+
+function getPercentBadge(percent: number) {
+  if (percent <= 0.001) {
+    return PointOnePercent
+  } else if (percent <= 0.01) {
+    return OnePercent
+  } else if (percent <= 0.1) {
+    return TenPercent
+  }
+  // else if (percent <= 0.25) {
+  //   return TwentyFivePercent
+  // }
+  return null
 }
 
 function Frame({children}: {children: React.ReactNode}) {
@@ -90,7 +108,9 @@ export function TenMillion() {
   const isLoadingData = isProfileLoading || !moderation || !profile
   const isLoadingImage = !uri
 
-  const userNumber = 10_000_000 // TODO
+  const userNumber = 56_738 // TODO
+  const percent = userNumber / 10_000_000
+  const Badge = getPercentBadge(percent)
 
   const sharePost = () => {
     if (uri) {
@@ -151,7 +171,6 @@ export function TenMillion() {
       imageRef.current.capture // &&
       // cavasRelayout === 'updated'
     ) {
-      console.log('LAYOUT')
       const uri = await imageRef.current.capture()
       setUri(uri)
     }
@@ -230,7 +249,7 @@ export function TenMillion() {
                   <View
                     style={[
                       {
-                        paddingBottom: 32,
+                        paddingBottom: isNative ? 0 : 24,
                       },
                     ]}>
                     <Text
@@ -238,7 +257,7 @@ export function TenMillion() {
                         a.text_md,
                         a.font_bold,
                         a.text_center,
-                        a.pb_md,
+                        a.pb_sm,
                         lightTheme.atoms.text_contrast_medium,
                       ]}>
                       <Trans>
@@ -246,16 +265,22 @@ export function TenMillion() {
                       </Trans>{' '}
                       🎉
                     </Text>
-                    <View>
+                    <View style={[a.flex_row, a.align_start]}>
                       <Text
                         style={[
                           a.absolute,
                           {
                             color: t.palette.primary_500,
                             fontSize: 32,
-                            left: -18,
-                            top: isAndroid ? -8 : isWeb ? 5 : -5,
                             fontWeight: '900',
+                            width: 32,
+                            top: isNative ? -10 : 0,
+                            left: 0,
+                            transform: [
+                              {
+                                translateX: -16,
+                              },
+                            ],
                           },
                         ]}>
                         #
@@ -275,6 +300,26 @@ export function TenMillion() {
                         {i18n.number(userNumber)}
                       </Text>
                     </View>
+
+                    {Badge && (
+                      <View
+                        style={[
+                          a.absolute,
+                          {
+                            width: 64,
+                            height: 64,
+                            top: isNative ? 75 : 85,
+                            right: '5%',
+                            transform: [
+                              {
+                                rotate: '8deg',
+                              },
+                            ],
+                          },
+                        ]}>
+                        <Badge fill={t.palette.primary_500} />
+                      </View>
+                    )}
                   </View>
                   {/* End centered content */}
 
@@ -398,13 +443,21 @@ export function TenMillion() {
               You're part of the next wave of the internet.
             </Text>
 
-            <Text style={[a.leading_snug, a.text_lg, a.pb_xl]}>
-              Online culture is too important to be controlled by a few
-              corporations.{' '}
+            <Text style={[a.leading_snug, a.text_lg, a.pb_md]}>
+              <Trans>
+                Online culture is too important to be controlled by a few
+                corporations.
+              </Trans>{' '}
               <Text style={[a.leading_snug, a.text_lg, a.italic]}>
-                We’re dedicated to building an open foundation for the social
-                internet so that we can all shape its future.
+                <Trans>
+                  We’re dedicated to building an open foundation for the social
+                  internet so that we can all shape its future.
+                </Trans>
               </Text>
+            </Text>
+
+            <Text style={[a.leading_snug, a.text_lg, a.font_bold, a.pb_xl]}>
+              <Trans>Congratulations. We're glad you're here.</Trans>
             </Text>
 
             <Divider />
