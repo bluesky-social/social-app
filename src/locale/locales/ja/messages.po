@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-08 09:39+0900\n"
+"PO-Revision-Date: 2024-09-10 22:46+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -532,7 +532,7 @@ msgstr "ビデオの圧縮中にエラーが発生しました。"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:315
 msgid "An error occurred while generating your starter pack. Want to try again?"
-msgstr "スターターパックの生成中にエラーが発生しました。再度試しますか？"
+msgstr "スターターパックの生成中にエラーが発生しました。もう一度試しますか？"
 
 #: src/view/com/util/post-embeds/VideoEmbed.tsx:213
 msgid "An error occurred while loading the video. Please try again later."
@@ -2318,7 +2318,7 @@ msgstr "スターターパックの作成に失敗しました"
 
 #: src/view/com/modals/CreateOrEditList.tsx:194
 msgid "Failed to create the list. Check your internet connection and try again."
-msgstr "リストの作成に失敗しました。インターネットへの接続を確認の上、もう一度お試しください。"
+msgstr "リストの作成に失敗しました。インターネットへの接続を確認の上、もう一度試してください。"
 
 #: src/components/dms/MessageMenu.tsx:73
 msgid "Failed to delete message"
@@ -2361,7 +2361,7 @@ msgstr "画像の保存に失敗しました：{0}"
 
 #: src/state/queries/notifications/settings.ts:39
 msgid "Failed to save notification preferences, please try again"
-msgstr "通知の設定の保存に失敗しました。再度試してください"
+msgstr "通知の設定の保存に失敗しました。もう一度お試しください"
 
 #: src/components/dms/MessageItem.tsx:225
 msgid "Failed to send"
@@ -2370,11 +2370,11 @@ msgstr "送信に失敗"
 #: src/components/moderation/LabelsOnMeDialog.tsx:225
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:87
 msgid "Failed to submit appeal, please try again."
-msgstr "異議申し立ての送信に失敗しました。再度試してください。"
+msgstr "異議申し立ての送信に失敗しました。もう一度お試しください。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:223
 msgid "Failed to toggle thread mute, please try again"
-msgstr "スレッドのミュートの切り替えに失敗しました。再度試してください"
+msgstr "スレッドのミュートの切り替えに失敗しました。もう一度お試しください"
 
 #: src/components/FeedCard.tsx:273
 msgid "Failed to update feeds"
@@ -3060,7 +3060,7 @@ msgstr "招待コード"
 
 #: src/screens/Signup/state.ts:258
 msgid "Invite code not accepted. Check that you input it correctly and try again."
-msgstr "招待コードが確認できません。正しく入力されていることを確認し、もう一度実行してください。"
+msgstr "招待コードが確認できません。正しく入力されていることを確認し、もう一度試してください。"
 
 #: src/view/com/modals/InviteCodes.tsx:171
 msgid "Invite codes: {0} available"
@@ -3569,7 +3569,12 @@ msgid "Music"
 msgstr "音楽"
 
 #: src/components/TagMenu/index.tsx:263
+msgid "Mute"
+msgstr "ミュート"
+
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:340
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:345
+msgctxt "video"
 msgid "Mute"
 msgstr "ミュート"
 
@@ -6278,17 +6283,17 @@ msgstr "アカウントの無効化に期限はありません。いつでも戻
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:117
 #: src/view/screens/ProfileFeed.tsx:545
 msgid "There was an an issue contacting the server, please check your internet connection and try again."
-msgstr "サーバーへの問い合わせ中に問題が発生しました。インターネットへの接続を確認の上、もう一度お試しください。"
+msgstr "サーバーへの問い合わせ中に問題が発生しました。インターネットへの接続を確認の上、もう一度試してください。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:145
 msgid "There was an an issue removing this feed. Please check your internet connection and try again."
-msgstr "フィードの削除中に問題が発生しました。インターネットへの接続を確認の上、もう一度お試しください。"
+msgstr "フィードの削除中に問題が発生しました。インターネットへの接続を確認の上、もう一度試してください。"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:52
 #: src/view/com/posts/FeedShutdownMsg.tsx:71
 #: src/view/screens/ProfileFeed.tsx:206
 msgid "There was an an issue updating your feeds, please check your internet connection and try again."
-msgstr "フィードの更新中に問題が発生しました。インターネットへの接続を確認の上、もう一度お試しください。"
+msgstr "フィードの更新中に問題が発生しました。インターネットへの接続を確認の上、もう一度試してください。"
 
 #: src/components/dialogs/GifSelect.ios.tsx:197
 #: src/components/dialogs/GifSelect.tsx:213
@@ -6722,6 +6727,11 @@ msgstr "このフィードからいいねを外す"
 #: src/components/TagMenu/index.tsx:263
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:344
 #: src/view/screens/ProfileList.tsx:689
+msgid "Unmute"
+msgstr "ミュートを解除"
+
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:339
+msgctxt "video"
 msgid "Unmute"
 msgstr "ミュートを解除"
 
@@ -7162,7 +7172,7 @@ msgstr "あなたのフォロー中のユーザーの投稿を読み終わりま
 
 #: src/state/queries/video/video.ts:170
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
-msgstr "あたながビデオのアップロードを許可されているかどうか判断できません。あとでもう一度試してください。"
+msgstr "あたながビデオのアップロードを許可されているかどうか判断できません。もう一度お試しください。"
 
 #: src/components/dialogs/BirthDateSettings.tsx:52
 msgid "We were unable to load your birth date preferences. Please try again."
@@ -7186,7 +7196,7 @@ msgstr "これはあなたの体験をカスタマイズするために使用さ
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:90
 msgid "We're having network issues, try again"
-msgstr "ネットワークで問題が発生しています。再度試してください"
+msgstr "ネットワークで問題が発生しています。もう一度試してください"
 
 #: src/screens/Signup/index.tsx:100
 msgid "We're so excited to have you join us!"
@@ -7202,7 +7212,7 @@ msgstr "大変申し訳ありませんが、現在ミュートされたワード
 
 #: src/view/screens/Search/Search.tsx:206
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
-msgstr "大変申し訳ありませんが、検索を完了できませんでした。数分後に再試行してください。"
+msgstr "大変申し訳ありませんが、検索を完了できませんでした。数分後にもう一度お試しください。"
 
 #: src/view/com/composer/Composer.tsx:417
 msgid "We're sorry! The post you are replying to has been deleted."
@@ -7625,6 +7635,10 @@ msgstr "あなたのアカウント"
 #: src/view/com/modals/DeleteAccount.tsx:88
 msgid "Your account has been deleted"
 msgstr "あなたのアカウントは削除されました"
+
+#: src/state/queries/video/video.ts:185
+msgid "Your account is not yet old enough to upload videos. Please try again later."
+msgstr "あなたのアカウントはまだ新しいのでビデオをアップロードできません。もう一度お試しください。"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:65
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
