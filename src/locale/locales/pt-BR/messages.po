@@ -7855,7 +7855,7 @@ msgstr "Verificar e-mail"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:61
 msgid "Verify email dialog"
-msgstr "Caixa de diálogo de verificação de e-mail"
+msgstr "Caixa de diálogo da verificação de e-mail"
 
 #: src/view/screens/Settings/index.tsx:961
 msgid "Verify my email"
