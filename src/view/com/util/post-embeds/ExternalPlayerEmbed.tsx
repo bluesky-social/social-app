@@ -78,6 +78,7 @@ function Player({
   params: EmbedPlayerParams
   onLoad: () => void
 }) {
+  const t = useTheme()
   // ensures we only load what's requested
   // when it's a youtube video, we need to allow both bsky.app and youtube.com
   const onShouldStartLoadWithRequest = React.useCallback(
@@ -105,6 +106,20 @@ function Player({
         onLoad={onLoad}
         style={styles.webview}
         setSupportMultipleWindows={false} // Prevent any redirects from opening a new window (ads)
+      />
+      <View
+        style={[
+          a.absolute,
+          a.w_full,
+          a.h_full,
+          a.border,
+          {
+            borderTopRightRadius: 8,
+            borderTopLeftRadius: 8,
+            borderColor: t.palette.contrast_800,
+            opacity: 0.2,
+          },
+        ]}
       />
     </EventStopper>
   )
@@ -280,6 +295,8 @@ const styles = StyleSheet.create({
     zIndex: 3,
   },
   webview: {
+    borderTopRightRadius: 8,
+    borderTopLeftRadius: 8,
     backgroundColor: 'transparent',
   },
   gifContainer: {
