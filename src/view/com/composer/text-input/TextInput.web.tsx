@@ -93,9 +93,9 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     }
   }, [onPressPublish])
   React.useEffect(() => {
-    textInputWebEmitter.addListener('photo-pasted', onPhotoPasted)
+    textInputWebEmitter.addListener('media-pasted', onPhotoPasted)
     return () => {
-      textInputWebEmitter.removeListener('photo-pasted', onPhotoPasted)
+      textInputWebEmitter.removeListener('media-pasted', onPhotoPasted)
     }
   }, [onPhotoPasted])
 
@@ -105,8 +105,8 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       if (transfer) {
         const items = transfer.items
 
-        getImageFromUri(items, (uri: string) => {
-          textInputWebEmitter.emit('photo-pasted', uri)
+        getImageOrVideoFromUri(items, (uri: string) => {
+          textInputWebEmitter.emit('media-pasted', uri)
         })
       }
 
@@ -160,8 +160,8 @@ export const TextInput = React.forwardRef(function TextInputImpl(
               view.pasteText(text)
               preventDefault = true
             }
-            getImageFromUri(clipboardData.items, (uri: string) => {
-              textInputWebEmitter.emit('photo-pasted', uri)
+            getImageOrVideoFromUri(clipboardData.items, (uri: string) => {
+              textInputWebEmitter.emit('media-pasted', uri)
             })
             if (preventDefault) {
               // Return `true` to prevent ProseMirror's default paste behavior.
@@ -346,7 +346,7 @@ const styles = StyleSheet.create({
   },
 })
 
-function getImageFromUri(
+function getImageOrVideoFromUri(
   items: DataTransferItemList,
   callback: (uri: string) => void,
 ) {
@@ -363,9 +363,19 @@ function getImageFromUri(
           if (blob.type.startsWith('image/')) {
             blobToDataUri(blob).then(callback, err => console.error(err))
           }
+
+          if (blob.type.startsWith('video/')) {
+            blobToDataUri(blob).then(callback, err => console.error(err))
+          }
         }
       })
     } else if (type.startsWith('image/')) {
+      const file = item.getAsFile()
+
+      if (file) {
+        blobToDataUri(file).then(callback, err => console.error(err))
+      }
+    } else if (type.startsWith('video/')) {
       const file = item.getAsFile()
 
       if (file) {
