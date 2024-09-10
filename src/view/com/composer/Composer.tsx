@@ -304,7 +304,7 @@ export const ComposePost = observer(function ComposePost({
     async (uri: string) => {
       track('Composer:PastedPhotos')
       if (uri.startsWith('data:video/')) {
-        await selectVideo({uri, type: 'video', height: 0, width: 0})
+        selectVideo({uri, type: 'video', height: 0, width: 0})
       } else {
         await gallery.paste(uri)
       }
