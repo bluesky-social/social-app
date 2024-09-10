@@ -86,6 +86,7 @@ export function GifEmbed({
   hideAlt?: boolean
   style?: StyleProp<ViewStyle>
 }) {
+  const t = useTheme()
   const {_} = useLingui()
   const autoplayDisabled = useAutoplayDisabled()
 
@@ -137,6 +138,19 @@ export function GifEmbed({
           ref={playerRef}
           accessibilityHint={_(msg`Animated GIF`)}
           accessibilityLabel={parsedAlt.alt}
+        />
+        <View
+          style={[
+            a.absolute,
+            a.w_full,
+            a.h_full,
+            a.border,
+            a.rounded_sm,
+            {
+              borderColor: t.palette.contrast_800,
+              opacity: 0.2,
+            },
+          ]}
         />
         {!hideAlt && parsedAlt.isPreferred && <AltText text={parsedAlt.alt} />}
       </View>
