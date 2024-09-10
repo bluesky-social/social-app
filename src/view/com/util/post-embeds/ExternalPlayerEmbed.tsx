@@ -25,7 +25,7 @@ import {NavigationProp} from '#/lib/routes/types'
 import {EmbedPlayerParams, getPlayerAspect} from '#/lib/strings/embed-player'
 import {isNative} from '#/platform/detection'
 import {useExternalEmbedsPrefs} from '#/state/preferences'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {EmbedConsentDialog} from '#/components/dialogs/EmbedConsent'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
@@ -118,6 +118,7 @@ export function ExternalPlayer({
   link: AppBskyEmbedExternal.ViewExternal
   params: EmbedPlayerParams
 }) {
+  const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
   const insets = useSafeAreaInsets()
   const windowDims = useWindowDimensions()
@@ -213,11 +214,39 @@ export function ExternalPlayer({
 
       <Animated.View ref={viewRef} collapsable={false} style={[aspect]}>
         {link.thumb && (!isPlayerActive || isLoading) && (
-          <Image
-            style={[a.flex_1, styles.topRadius]}
-            source={{uri: link.thumb}}
-            accessibilityIgnoresInvertColors
-          />
+          <>
+            <Image
+              style={[a.flex_1, styles.topRadius]}
+              source={{uri: link.thumb}}
+              accessibilityIgnoresInvertColors
+            />
+            <View
+              style={[
+                a.absolute,
+                a.w_full,
+                a.h_full,
+                {
+                  borderTopRightRadius: 8,
+                  borderTopLeftRadius: 8,
+                  backgroundColor: 'rgba(0,0,0,0.5)',
+                },
+              ]}
+            />
+            <View
+              style={[
+                a.absolute,
+                a.w_full,
+                a.h_full,
+                a.border,
+                {
+                  borderTopRightRadius: 8,
+                  borderTopLeftRadius: 8,
+                  borderColor: t.palette.contrast_800,
+                  opacity: 0.2,
+                },
+              ]}
+            />
+          </>
         )}
         <PlaceholderOverlay
           isLoading={isLoading}
@@ -236,14 +265,13 @@ export function ExternalPlayer({
 
 const styles = StyleSheet.create({
   topRadius: {
-    borderTopLeftRadius: 6,
-    borderTopRightRadius: 6,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
   },
   overlayContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   overlayLayer: {
     zIndex: 2,
