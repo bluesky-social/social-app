@@ -152,6 +152,20 @@ export function ExternalGifEmbed({
           accessibilityHint={link.title}
           cachePolicy={isIOS ? 'disk' : 'memory-disk'} // cant control playback with memory-disk on ios
         />
+        {(!isPrefetched || !isAnimating) && (
+          <View
+            style={[
+              a.absolute,
+              a.w_full,
+              a.h_full,
+              {
+                borderTopRightRadius: 8,
+                borderTopLeftRadius: 8,
+                backgroundColor: 'rgba(0,0,0,0.5)',
+              },
+            ]}
+          />
+        )}
         <View
           style={[
             a.absolute,
@@ -187,7 +201,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   overlayLayer: {
     zIndex: 2,
