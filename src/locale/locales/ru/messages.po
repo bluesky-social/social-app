@@ -6237,7 +6237,7 @@ msgid "The Privacy Policy has been moved to <0/>"
 msgstr "Политика конфиденциальности была перемещена в <0/>"
 
 #: src/state/queries/video/video.ts:188
-msgid "The selected video is larger than 100MB."
+msgid "The selected video is larger than 50MB."
 msgstr "Размер выбранного видео превышает 100МБ."
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:713

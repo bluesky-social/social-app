@@ -644,7 +644,7 @@ msgstr "Ocorreu um erro"
 msgid "An error occurred"
 msgstr "Ocorreu um erro"
 
-#: src/state/queries/video/video.ts:227
+#: src/state/queries/video/video.ts:232
 msgid "An error occurred while compressing the video."
 msgstr "Ocorreu um erro ao compactar o vídeo."
 
@@ -682,7 +682,7 @@ msgstr "Ocorreu um erro ao selecionar o vídeo"
 msgid "An error occurred while trying to follow all"
 msgstr "Ocorreu um erro ao tentar seguir todos"
 
-#: src/state/queries/video/video.ts:194
+#: src/state/queries/video/video.ts:199
 msgid "An error occurred while uploading the video."
 msgstr "Ocorreu um erro ao enviar o vídeo."
 
@@ -1096,8 +1096,8 @@ msgstr "Só pode conter letras, números, espaços, riscas e subtraços. Deve te
 #: src/components/Prompt.tsx:124
 #: src/components/TagMenu/index.tsx:282
 #: src/screens/Deactivated.tsx:161
-#: src/view/com/composer/Composer.tsx:590
-#: src/view/com/composer/Composer.tsx:605
+#: src/view/com/composer/Composer.tsx:591
+#: src/view/com/composer/Composer.tsx:606
 #: src/view/com/modals/ChangeEmail.tsx:213
 #: src/view/com/modals/ChangeEmail.tsx:215
 #: src/view/com/modals/ChangeHandle.tsx:148
@@ -1457,7 +1457,7 @@ msgstr "Fecha barra de navegação inferior"
 msgid "Closes password update alert"
 msgstr "Fecha alerta de troca de senha"
 
-#: src/view/com/composer/Composer.tsx:602
+#: src/view/com/composer/Composer.tsx:603
 msgid "Closes post composer and discards post draft"
 msgstr "Fecha o editor de post e descarta o rascunho"
 
@@ -1496,7 +1496,7 @@ msgstr "Completar e começar a usar sua conta"
 msgid "Complete the challenge"
 msgstr "Complete o captcha"
 
-#: src/view/com/composer/Composer.tsx:710
+#: src/view/com/composer/Composer.tsx:711
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "Escreva posts de até {MAX_GRAPHEME_LENGTH} caracteres"
 
@@ -2005,7 +2005,7 @@ msgstr "Desanexar postagem de citação?"
 msgid "Dialog: adjust who can interact with this post"
 msgstr "Diálogo: ajuste quem pode interagir com esta postagem"
 
-#: src/view/com/composer/Composer.tsx:351
+#: src/view/com/composer/Composer.tsx:352
 msgid "Did you want to say anything?"
 msgstr "Você gostaria de dizer alguma coisa?"
 
@@ -3086,7 +3086,7 @@ msgstr "Vamos começar"
 msgid "Getting started"
 msgstr "Começando"
 
-#: src/components/MediaPreview.tsx:119
+#: src/components/MediaPreview.tsx:120
 msgid "GIF"
 msgstr ""
 
@@ -4046,8 +4046,12 @@ msgstr "Filmes"
 msgid "Music"
 msgstr "Música"
 
-#: src/components/TagMenu/index.tsx:263
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:345
+msgctxt "video"
+msgid "Mute"
+msgstr ""
+
+#: src/components/TagMenu/index.tsx:263
 msgid "Mute"
 msgstr "Silenciar"
 
@@ -4579,7 +4583,7 @@ msgstr "Resetar tutoriais"
 #~ msgid "Onboarding tour step {0}: {1}"
 #~ msgstr "Etapa do tour de integração {0}: {1}"
 
-#: src/view/com/composer/Composer.tsx:667
+#: src/view/com/composer/Composer.tsx:668
 msgid "One or more images is missing alt text."
 msgstr "Uma ou mais imagens estão sem texto alternativo."
 
@@ -5053,7 +5057,7 @@ msgstr "Por favor entre como @{0}"
 msgid "Please Verify Your Email"
 msgstr "Por favor, verifique seu e-mail"
 
-#: src/view/com/composer/Composer.tsx:355
+#: src/view/com/composer/Composer.tsx:356
 msgid "Please wait for your link card to finish loading"
 msgstr "Aguarde até que a prévia de link termine de carregar"
 
@@ -5066,8 +5070,8 @@ msgstr "Política"
 msgid "Porn"
 msgstr "Pornografia"
 
-#: src/view/com/composer/Composer.tsx:642
-#: src/view/com/composer/Composer.tsx:649
+#: src/view/com/composer/Composer.tsx:643
+#: src/view/com/composer/Composer.tsx:650
 msgctxt "action"
 msgid "Post"
 msgstr "Postar"
@@ -5246,11 +5250,11 @@ msgstr "Listas públicas e compartilháveis para silenciar ou bloquear usuários
 msgid "Public, shareable lists which can drive feeds."
 msgstr "Listas públicas e compartilháveis que geram feeds."
 
-#: src/view/com/composer/Composer.tsx:627
+#: src/view/com/composer/Composer.tsx:628
 msgid "Publish post"
 msgstr "Publicar post"
 
-#: src/view/com/composer/Composer.tsx:627
+#: src/view/com/composer/Composer.tsx:628
 msgid "Publish reply"
 msgstr "Publicar resposta"
 
@@ -5555,7 +5559,7 @@ msgstr "Respostas para esta postagem estão desativadas."
 #~ msgid "Replies to this thread are disabled"
 #~ msgstr "Respostas para esta thread estão desativadas"
 
-#: src/view/com/composer/Composer.tsx:640
+#: src/view/com/composer/Composer.tsx:641
 msgctxt "action"
 msgid "Reply"
 msgstr "Responder"
@@ -7034,8 +7038,8 @@ msgstr "O post pode ter sido excluído."
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr "A Política de Privacidade foi movida para <0/>"
 
-#: src/state/queries/video/video.ts:222
-msgid "The selected video is larger than 100MB."
+#: src/state/queries/video/video.ts:227
+msgid "The selected video is larger than 50MB."
 msgstr "Vídeo selecionado é maior que 100 MB."
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:713
@@ -7568,8 +7572,12 @@ msgstr "Deixar de seguir"
 msgid "Unlike this feed"
 msgstr "Descurtir este feed"
 
-#: src/components/TagMenu/index.tsx:263
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:344
+msgctxt "video"
+msgid "Unmute"
+msgstr ""
+
+#: src/components/TagMenu/index.tsx:263
 #: src/view/screens/ProfileList.tsx:689
 msgid "Unmute"
 msgstr "Dessilenciar"
@@ -7642,7 +7650,7 @@ msgstr "Desinscrever-se deste rotulador"
 msgid "Unsubscribed from list"
 msgstr "Cancelada inscrição na lista"
 
-#: src/state/queries/video/video.ts:240
+#: src/state/queries/video/video.ts:245
 msgid "Unsupported video type: {mimeType}"
 msgstr "Tipo de vídeo não suportado: {mimeType}"
 
@@ -7909,7 +7917,7 @@ msgid "Video: {0}"
 msgstr ""
 
 #: src/view/com/composer/videos/state.ts:27
-#~ msgid "Videos cannot be larger than 100MB"
+#~ msgid "Videos cannot be larger than 50MB"
 #~ msgstr "Vídeos não podem ter mais de 100 MB"
 
 #: src/screens/Profile/Header/Shell.tsx:113
@@ -8085,7 +8093,7 @@ msgstr "Não foi possível carregar sua lista de palavras silenciadas. Por favor
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "Lamentamos, mas sua busca não pôde ser concluída. Por favor, tente novamente em alguns minutos."
 
-#: src/view/com/composer/Composer.tsx:417
+#: src/view/com/composer/Composer.tsx:418
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "Sentimos muito! A postagem que você está respondendo foi excluída."
 
@@ -8124,7 +8132,7 @@ msgstr "Como você quer chamar seu pacote inicial?"
 
 #: src/view/com/auth/SplashScreen.tsx:40
 #: src/view/com/auth/SplashScreen.web.tsx:86
-#: src/view/com/composer/Composer.tsx:512
+#: src/view/com/composer/Composer.tsx:513
 msgid "What's up?"
 msgstr "E aí?"
 
@@ -8199,11 +8207,11 @@ msgstr "Largo"
 msgid "Write a message"
 msgstr "Escreva uma mensagem"
 
-#: src/view/com/composer/Composer.tsx:708
+#: src/view/com/composer/Composer.tsx:709
 msgid "Write post"
 msgstr "Escrever post"
 
-#: src/view/com/composer/Composer.tsx:511
+#: src/view/com/composer/Composer.tsx:512
 #: src/view/com/post-thread/PostThreadComposePrompt.tsx:42
 msgid "Write your reply"
 msgstr "Escreva sua resposta"
@@ -8551,6 +8559,10 @@ msgstr "Sua conta"
 msgid "Your account has been deleted"
 msgstr "Sua conta foi excluída"
 
+#: src/state/queries/video/video.ts:185
+msgid "Your account is not yet old enough to upload videos. Please try again later."
+msgstr "Sua conta ainda não tem idade suficiente para enviar vídeos. Por favor, tente novamente mais tarde."
+
 #: src/view/screens/Settings/ExportCarDialog.tsx:65
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr "O repositório da sua conta, contendo todos os seus dados públicos, pode ser baixado como um arquivo \"CAR\". Este arquivo não inclui imagens ou dados privados, estes devem ser exportados separadamente."
@@ -8614,7 +8626,7 @@ msgstr "Suas palavras silenciadas"
 msgid "Your password has been changed successfully!"
 msgstr "Sua senha foi alterada com sucesso!"
 
-#: src/view/com/composer/Composer.tsx:463
+#: src/view/com/composer/Composer.tsx:464
 msgid "Your post has been published"
 msgstr "Seu post foi publicado"
 
@@ -8630,7 +8642,7 @@ msgstr "Seu perfil"
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "Seu perfil, postagens, feeds e listas não serão mais visíveis para outros usuários do Bluesky. Você pode reativar sua conta a qualquer momento fazendo login."
 
-#: src/view/com/composer/Composer.tsx:462
+#: src/view/com/composer/Composer.tsx:463
 msgid "Your reply has been published"
 msgstr "Sua resposta foi publicada"
 
