@@ -6272,8 +6272,8 @@ msgid "The Privacy Policy has been moved to <0/>"
 msgstr "隱私政策已移動到 <0/>"
 
 #: src/state/queries/video/video.ts:222
-msgid "The selected video is larger than 100MB."
-msgstr "選擇的影片檔案大小超過 100MB。"
+msgid "The selected video is larger than 50MB."
+msgstr "選擇的影片檔案大小超過 50MB。"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:713
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."

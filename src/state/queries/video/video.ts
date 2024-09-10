@@ -224,7 +224,7 @@ export function useUploadVideo({
       } else if (e instanceof VideoTooLargeError) {
         dispatch({
           type: 'SetError',
-          error: _(msg`The selected video is larger than 100MB.`),
+          error: _(msg`The selected video is larger than 50MB.`),
         })
       } else {
         dispatch({

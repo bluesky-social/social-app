@@ -7321,8 +7321,8 @@ msgid "The Privacy Policy has been moved to <0/>"
 msgstr "La politica sulla privacy è stata spostata a <0/><0/>"
 
 #: src/state/queries/video/video.ts:222
-msgid "The selected video is larger than 100MB."
-msgstr "Questo video è più grande di 100MB."
+msgid "The selected video is larger than 50MB."
+msgstr "Questo video è più grande di 50MB."
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:713
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
@@ -8222,8 +8222,8 @@ msgid "Video: {0}"
 msgstr ""
 
 #: src/view/com/composer/videos/state.ts:27
-#~ msgid "Videos cannot be larger than 100MB"
-#~ msgstr "I video non possono essere più grandi di 100MB"
+#~ msgid "Videos cannot be larger than 50MB"
+#~ msgstr "I video non possono essere più grandi di 50MB"
 
 #: src/screens/Profile/Header/Shell.tsx:113
 msgid "View {0}'s avatar"
