@@ -5,7 +5,6 @@ import {AppBskyEmbedImages} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import * as imageSizes from '#/lib/media/image-sizes'
 import {Dimensions} from '#/lib/media/types'
 import {isNative} from '#/platform/detection'
@@ -116,7 +115,6 @@ export function AutoSizedImage({
   onPressIn?: () => void
 }) {
   const t = useTheme()
-  const pal = usePalette('default')
   const {_} = useLingui()
   const largeAlt = useLargeAltBadgeEnabled()
   const {
@@ -143,13 +141,15 @@ export function AutoSizedImage({
       />
       <View
         style={[
-          pal.borderDark,
           a.rounded_sm,
           a.absolute,
           a.w_full,
           a.h_full,
           a.border,
-          {opacity: 0.75},
+          {
+            borderColor: t.palette.contrast_800,
+            opacity: 0.2,
+          },
         ]}
       />
 
