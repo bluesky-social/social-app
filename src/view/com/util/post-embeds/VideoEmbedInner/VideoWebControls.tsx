@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  useSyncExternalStore,
-} from 'react'
+import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {SvgProps} from 'react-native-svg'
 import {msg, Trans} from '@lingui/macro'
@@ -21,6 +15,7 @@ import {
 } from '#/state/preferences'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button} from '#/components/Button'
+import {useFullscreen} from '#/components/hooks/useFullscreen'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {
   ArrowsDiagonalIn_Stroke2_Corner0_Rounded as ArrowsInIcon,
@@ -341,8 +336,8 @@ export function Controls({
           )}
           <ControlButton
             active={muted}
-            activeLabel={_(msg`Unmute`)}
-            inactiveLabel={_(msg`Mute`)}
+            activeLabel={_(msg({message: `Unmute`, context: 'video'}))}
+            inactiveLabel={_(msg({message: `Mute`, context: 'video'}))}
             activeIcon={MuteIcon}
             inactiveIcon={UnmuteIcon}
             onPress={onPressMute}
@@ -849,26 +844,4 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
     error,
     canPlay,
   }
-}
-
-function fullscreenSubscribe(onChange: () => void) {
-  document.addEventListener('fullscreenchange', onChange)
-  return () => document.removeEventListener('fullscreenchange', onChange)
-}
-
-function useFullscreen(ref: React.RefObject<HTMLElement>) {
-  const isFullscreen = useSyncExternalStore(fullscreenSubscribe, () =>
-    Boolean(document.fullscreenElement),
-  )
-
-  const toggleFullscreen = useCallback(() => {
-    if (isFullscreen) {
-      document.exitFullscreen()
-    } else {
-      if (!ref.current) return
-      ref.current.requestFullscreen()
-    }
-  }, [isFullscreen, ref])
-
-  return [isFullscreen, toggleFullscreen] as const
 }

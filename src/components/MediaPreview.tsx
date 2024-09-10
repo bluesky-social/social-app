@@ -10,7 +10,7 @@ import {
 import {Trans} from '@lingui/macro'
 
 import {parseTenorGif} from '#/lib/strings/embed-player'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 
@@ -43,10 +43,10 @@ export function Embed({
         ))}
       </Outer>
     )
-  } else if (AppBskyEmbedExternal.isView(embed) && embed.external.thumb) {
+  } else if (AppBskyEmbedExternal.isView(media) && media.external.thumb) {
     let url: URL | undefined
     try {
-      url = new URL(embed.external.uri)
+      url = new URL(media.external.uri)
     } catch {}
     if (url) {
       const {success} = parseTenorGif(url)
@@ -54,17 +54,17 @@ export function Embed({
         return (
           <Outer style={style}>
             <GifItem
-              thumbnail={embed.external.thumb}
-              alt={embed.external.title}
+              thumbnail={media.external.thumb}
+              alt={media.external.title}
             />
           </Outer>
         )
       }
     }
-  } else if (AppBskyEmbedVideo.isView(embed)) {
+  } else if (AppBskyEmbedVideo.isView(media)) {
     return (
       <Outer style={style}>
-        <VideoItem thumbnail={embed.thumbnail} alt={embed.alt} />
+        <VideoItem thumbnail={media.thumbnail} alt={media.alt} />
       </Outer>
     )
   }
@@ -91,12 +91,13 @@ export function ImageItem({
   alt?: string
   children?: React.ReactNode
 }) {
+  const t = useTheme()
   return (
     <View style={[a.relative, a.flex_1, {aspectRatio: 1, maxWidth: 100}]}>
       <Image
         key={thumbnail}
         source={{uri: thumbnail}}
-        style={[a.flex_1, a.rounded_xs]}
+        style={[a.flex_1, a.rounded_xs, t.atoms.bg_contrast_25]}
         contentFit="cover"
         accessible={true}
         accessibilityIgnoresInvertColors
