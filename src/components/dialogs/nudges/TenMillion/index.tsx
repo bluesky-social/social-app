@@ -440,24 +440,14 @@ export function TenMillion() {
                   fontWeight: '900',
                 },
               ]}>
-              You're part of the next wave of the internet.
+              Thanks for being an early part of Bluesky.
             </Text>
 
-            <Text style={[a.leading_snug, a.text_lg, a.pb_md]}>
+            <Text style={[a.leading_snug, a.text_lg, a.pb_xl]}>
               <Trans>
-                Online culture is too important to be controlled by a few
-                corporations.
+                We're rebuilding the social internet together. Congratulations,
+                we're glad you're here.
               </Trans>{' '}
-              <Text style={[a.leading_snug, a.text_lg, a.italic]}>
-                <Trans>
-                  We’re dedicated to building an open foundation for the social
-                  internet so that we can all shape its future.
-                </Trans>
-              </Text>
-            </Text>
-
-            <Text style={[a.leading_snug, a.text_lg, a.font_bold, a.pb_xl]}>
-              <Trans>Congratulations. We're glad you're here.</Trans>
             </Text>
 
             <Divider />
@@ -471,7 +461,7 @@ export function TenMillion() {
                 a.pt_xl,
               ]}>
               <Text style={[a.text_md, a.italic, t.atoms.text_contrast_medium]}>
-                Brag a little ;)
+                Brag a little!
               </Text>
 
               <Button
@@ -495,7 +485,7 @@ export function TenMillion() {
                 variant="solid"
                 color="primary"
                 onPress={sharePost}>
-                <ButtonText>{_(msg`Share post`)}</ButtonText>
+                <ButtonText>{_(msg`Share`)}</ButtonText>
                 <ButtonIcon position="right" icon={ImageIcon} />
               </Button>
             </View>
