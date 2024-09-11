@@ -6931,7 +6931,7 @@ msgstr "Obrigado. Sua denúncia foi enviada."
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:74
 msgid "Thanks, you have successfully verified your email address."
-msgstr "Obrigado, você verificou seu endereço de e-mail com sucesso."
+msgstr "Obrigado, seu endereço de e-mail foi verificado com sucesso."
 
 #: src/view/com/modals/ChangeHandle.tsx:459
 msgid "That contains the following:"
@@ -7036,7 +7036,7 @@ msgstr "Os Termos de Serviço foram movidos para"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:85
 msgid "The verification code you have provided is invalid. Please make sure that you have used the correct verification link or request a new one."
-msgstr "O código de verificação que você forneceu é inválido. Certifique-se de que você usou o link de verificação correto ou solicite um novo."
+msgstr "O código de verificação que você forneceu é inválido. Certifique-se de que você usou o link de verificação correto ou solicite novamente."
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:141
 #~ msgid "There are many feeds to try:"
