@@ -12,6 +12,7 @@ import {
   VideoNotFoundError,
 } from '#/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerWeb'
 import {atoms as a} from '#/alf'
+import {useIsWithinMessage} from '#/components/dms/MessageContext'
 import {useFullscreen} from '#/components/hooks/useFullscreen'
 import {ErrorBoundary} from '../ErrorBoundary'
 import {useActiveVideoWeb} from './ActiveVideoWebContext'
@@ -41,6 +42,16 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
     observer.observe(ref.current)
     return () => observer.disconnect()
   }, [sendPosition, isFullscreen])
+
+  // In case scrolling hasn't started yet, send up the position
+  const isAnyViewActive = currentActiveView !== null
+  useEffect(() => {
+    if (ref.current && !isAnyViewActive) {
+      const rect = ref.current.getBoundingClientRect()
+      const position = rect.y + rect.height / 2
+      sendPosition(position)
+    }
+  }, [isAnyViewActive, sendPosition])
 
   const [key, setKey] = useState(0)
   const renderError = useCallback(
@@ -73,9 +84,7 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
         style={{display: 'flex', flex: 1, cursor: 'default'}}
         onClick={evt => evt.stopPropagation()}>
         <ErrorBoundary renderError={renderError} key={key}>
-          <ViewportObserver
-            sendPosition={sendPosition}
-            isAnyViewActive={currentActiveView !== null}>
+          <ViewportObserver sendPosition={sendPosition}>
             <VideoEmbedInnerWeb
               embed={embed}
               active={active}
@@ -96,15 +105,14 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
 function ViewportObserver({
   children,
   sendPosition,
-  isAnyViewActive,
 }: {
   children: React.ReactNode
   sendPosition: (position: number) => void
-  isAnyViewActive?: boolean
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const [nearScreen, setNearScreen] = useState(false)
   const [isFullscreen] = useFullscreen()
+  const isWithinMessage = useIsWithinMessage()
 
   // Send position when scrolling. This is done with an IntersectionObserver
   // observing a div of 100vh height
@@ -126,25 +134,18 @@ function ViewportObserver({
     return () => observer.disconnect()
   }, [sendPosition, isFullscreen])
 
-  // In case scrolling hasn't started yet, send up the position
-  useEffect(() => {
-    if (ref.current && !isAnyViewActive) {
-      const rect = ref.current.getBoundingClientRect()
-      const position = rect.y + rect.height / 2
-      sendPosition(position)
-    }
-  }, [isAnyViewActive, sendPosition])
-
   return (
     <View style={[a.flex_1, a.flex_row]}>
       {nearScreen && children}
       <div
         ref={ref}
         style={{
+          // Don't escape bounds when in a message
+          ...(isWithinMessage
+            ? {top: 0, height: '100%'}
+            : {top: 'calc(50% - 50vh)', height: '100vh'}),
           position: 'absolute',
-          top: 'calc(50% - 50vh)',
           left: '50%',
-          height: '100vh',
           width: 1,
           pointerEvents: 'none',
         }}
