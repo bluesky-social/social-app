@@ -102,9 +102,12 @@ function InnerWrapper({embed}: Props) {
           setPlayerStatus(status)
           if (status === 'error') {
             setError(playerError ?? new Error('Unknown player error'))
-          }
-          if (status === 'readyToPlay' && oldStatus !== 'readyToPlay') {
+          } else if (status === 'readyToPlay' && oldStatus !== 'readyToPlay') {
             player.play()
+            // @ts-expect-error This exists! It is a temporary hack fix that we can OTA while pending the native real fix
+            // for looping with captions
+          } else if (status === 'playbackBufferEmpty') {
+            player.replay()
           }
         },
       )
