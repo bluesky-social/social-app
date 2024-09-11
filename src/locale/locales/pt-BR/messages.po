@@ -4563,14 +4563,6 @@ msgstr "Ok"
 msgid "Oldest replies first"
 msgstr "Respostas mais antigas primeiro"
 
-#: src/components/StarterPack/QrCode.tsx:69
-#~ msgid "on"
-#~ msgstr ""
-
-#: src/lib/hooks/useTimeAgo.ts:81
-#~ msgid "on {str}"
-#~ msgstr ""
-
 #: src/components/StarterPack/QrCode.tsx:70
 msgid "on<0><1/><2><3/></2></0>"
 msgstr "no<0><1/><2><3/></2></0>"
@@ -6644,10 +6636,6 @@ msgstr "Alguns outros feeds que você pode gostar"
 msgid "Some people can reply"
 msgstr "Algumas pessoas podem responder"
 
-#: src/screens/StarterPack/Wizard/index.tsx:203
-#~ msgid "Some subtitle"
-#~ msgstr ""
-
 #: src/screens/Messages/Conversation/index.tsx:106
 msgid "Something went wrong"
 msgstr "Algo deu errado"
@@ -6680,14 +6668,6 @@ msgstr "Classificar Respostas"
 #: src/view/screens/PreferencesThreads.tsx:66
 msgid "Sort replies to the same post by:"
 msgstr "Classificar respostas de um post por:"
-
-#: src/components/moderation/LabelsOnMeDialog.tsx:168
-#~ msgid "Source:"
-#~ msgstr "Fonte:"
-
-#: src/components/moderation/LabelsOnMeDialog.tsx:169
-#~ msgid "Source: <0>{0}</0>"
-#~ msgstr ""
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:163
 msgid "Source: <0>{sourceName}</0>"
