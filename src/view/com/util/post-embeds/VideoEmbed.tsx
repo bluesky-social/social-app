@@ -104,9 +104,13 @@ function InnerWrapper({embed}: Props) {
             setError(playerError ?? new Error('Unknown player error'))
           } else if (status === 'readyToPlay' && oldStatus !== 'readyToPlay') {
             player.play()
-            // @ts-expect-error This exists! It is a temporary hack fix that we can OTA while pending the native real fix
+          } else if (
+            // @ts-expect-error - Read below
+            status === 'playbackBufferEmpty' &&
+            oldStatus === 'readyToPlay'
+          ) {
+            // This status exists! It is a temporary hack fix that we can OTA while pending the native real fix
             // for looping with captions
-          } else if (status === 'playbackBufferEmpty') {
             player.replay()
           }
         },
