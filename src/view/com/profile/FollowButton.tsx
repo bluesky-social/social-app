@@ -67,7 +67,12 @@ export function FollowButton({
         type={unfollowedType}
         labelStyle={labelStyle}
         onPress={onPressFollow}
-        label={_(msg({message: 'Follow', context: 'action'}))}
+        label={_(
+          msg({
+            message: profile.viewer.followedBy ? 'Follow back' : 'Follow',
+            context: 'action',
+          }),
+        )}
       />
     )
   }
