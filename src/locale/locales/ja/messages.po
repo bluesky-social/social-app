@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-10 22:46+0900\n"
+"PO-Revision-Date: 2024-09-11 09:54+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -7622,7 +7622,7 @@ msgstr "フィードはここまでです！もっとフォローするアカウ
 
 #: src/state/queries/video/video.ts:175
 msgid "You've reached your daily limit for video uploads (too many bytes)"
-msgstr "ビデオのアップロードの一日の上限に到達しました（バイト数が多すぎます）"
+msgstr "ビデオのアップロードの一日の上限に到達しました（容量が大きすぎます）"
 
 #: src/state/queries/video/video.ts:180
 msgid "You've reached your daily limit for video uploads (too many videos)"
