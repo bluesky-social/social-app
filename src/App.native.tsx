@@ -52,7 +52,6 @@ import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
 import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
 import {Provider as HiddenRepliesProvider} from '#/state/threadgate-hidden-replies'
 import {TestCtrls} from '#/view/com/testing/TestCtrls'
-import {Provider as ActiveVideoProvider} from '#/view/com/util/post-embeds/ActiveVideoNativeContext'
 import * as Toast from '#/view/com/util/Toast'
 import {Shell} from '#/view/shell'
 import {ThemeProvider as Alf} from '#/alf'
@@ -110,45 +109,42 @@ function InnerApp() {
     <Alf theme={theme}>
       <ThemeProvider theme={theme}>
         <Splash isReady={isReady && hasCheckedReferrer}>
-          <ActiveVideoProvider>
-            <RootSiblingParent>
-              <React.Fragment
-                // Resets the entire tree below when it changes:
-                key={currentAccount?.did}>
-                <QueryProvider currentDid={currentAccount?.did}>
-                  <StatsigProvider>
-                    <MessagesProvider>
-                      {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                      <LabelDefsProvider>
-                        <ModerationOptsProvider>
-                          <LoggedOutViewProvider>
-                            <SelectedFeedProvider>
-                              <HiddenRepliesProvider>
-                                <UnreadNotifsProvider>
-                                  <BackgroundNotificationPreferencesProvider>
-                                    <MutedThreadsProvider>
-                                      <ProgressGuideProvider>
-                                        <GestureHandlerRootView
-                                          style={s.h100pct}>
-                                          <TestCtrls />
-                                          <Shell />
-                                          <NuxDialogs />
-                                        </GestureHandlerRootView>
-                                      </ProgressGuideProvider>
-                                    </MutedThreadsProvider>
-                                  </BackgroundNotificationPreferencesProvider>
-                                </UnreadNotifsProvider>
-                              </HiddenRepliesProvider>
-                            </SelectedFeedProvider>
-                          </LoggedOutViewProvider>
-                        </ModerationOptsProvider>
-                      </LabelDefsProvider>
-                    </MessagesProvider>
-                  </StatsigProvider>
-                </QueryProvider>
-              </React.Fragment>
-            </RootSiblingParent>
-          </ActiveVideoProvider>
+          <RootSiblingParent>
+            <React.Fragment
+              // Resets the entire tree below when it changes:
+              key={currentAccount?.did}>
+              <QueryProvider currentDid={currentAccount?.did}>
+                <StatsigProvider>
+                  <MessagesProvider>
+                    {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                    <LabelDefsProvider>
+                      <ModerationOptsProvider>
+                        <LoggedOutViewProvider>
+                          <SelectedFeedProvider>
+                            <HiddenRepliesProvider>
+                              <UnreadNotifsProvider>
+                                <BackgroundNotificationPreferencesProvider>
+                                  <MutedThreadsProvider>
+                                    <ProgressGuideProvider>
+                                      <GestureHandlerRootView style={s.h100pct}>
+                                        <TestCtrls />
+                                        <Shell />
+                                        <NuxDialogs />
+                                      </GestureHandlerRootView>
+                                    </ProgressGuideProvider>
+                                  </MutedThreadsProvider>
+                                </BackgroundNotificationPreferencesProvider>
+                              </UnreadNotifsProvider>
+                            </HiddenRepliesProvider>
+                          </SelectedFeedProvider>
+                        </LoggedOutViewProvider>
+                      </ModerationOptsProvider>
+                    </LabelDefsProvider>
+                  </MessagesProvider>
+                </StatsigProvider>
+              </QueryProvider>
+            </React.Fragment>
+          </RootSiblingParent>
         </Splash>
       </ThemeProvider>
     </Alf>
