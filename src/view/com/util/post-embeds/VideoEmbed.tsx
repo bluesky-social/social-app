@@ -11,6 +11,7 @@ import {useAutoplayDisabled} from 'state/preferences'
 import {VideoEmbedInnerNative} from '#/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative'
 import {atoms as a} from '#/alf'
 import {Button} from '#/components/Button'
+import {useIsWithinMessage} from '#/components/dms/MessageContext'
 import {Loader} from '#/components/Loader'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {VisibilityView} from '../../../../../modules/expo-bluesky-swiss-army'
@@ -68,7 +69,8 @@ function InnerWrapper({embed}: Props) {
   const [isMuted, setIsMuted] = useState(player.muted)
   const [isFullscreen, setIsFullscreen] = React.useState(false)
   const [timeRemaining, setTimeRemaining] = React.useState(0)
-  const disableAutoplay = useAutoplayDisabled()
+  const isWithinMessage = useIsWithinMessage()
+  const disableAutoplay = useAutoplayDisabled() || isWithinMessage
   const isActive = embed.playlist === activeSource && activeViewId === viewId
   // There are some different loading states that we should pay attention to and show a spinner for
   const isLoading =
