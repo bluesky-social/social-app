@@ -5,7 +5,7 @@ import {
   Nux,
   nuxNames,
   NuxSchemas,
-} from '#/state/queries/nux/definitions'
+} from '#/state/queries/nuxs/definitions'
 
 export function parseAppNux(nux: AppBskyActorDefs.Nux): AppNux | undefined {
   if (!nuxNames.has(nux.id as Nux)) return

@@ -1,14 +1,14 @@
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
-import {AppNux, Nux} from '#/state/queries/nux/definitions'
-import {parseAppNux, serializeAppNux} from '#/state/queries/nux/util'
+import {AppNux, Nux} from '#/state/queries/nuxs/definitions'
+import {parseAppNux, serializeAppNux} from '#/state/queries/nuxs/util'
 import {
   preferencesQueryKey,
   usePreferencesQuery,
 } from '#/state/queries/preferences'
 import {useAgent} from '#/state/session'
 
-export {Nux} from '#/state/queries/nux/definitions'
+export {Nux} from '#/state/queries/nuxs/definitions'
 
 export function useNuxs() {
   const {data, ...rest} = usePreferencesQuery()

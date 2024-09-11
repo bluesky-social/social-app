@@ -1,6 +1,6 @@
 import zod from 'zod'
 
-import {BaseNux} from '#/state/queries/nux/types'
+import {BaseNux} from '#/state/queries/nuxs/types'
 
 export enum Nux {
   One = 'one',
