@@ -95,6 +95,15 @@ export function Controls({
     }
   }, [interactingViaKeypress])
 
+  useEffect(() => {
+    if (isFullscreen) {
+      document.documentElement.style.scrollbarGutter = 'unset'
+      return () => {
+        document.documentElement.style.removeProperty('scrollbar-gutter')
+      }
+    }
+  }, [isFullscreen])
+
   // pause + unfocus when another video is active
   useEffect(() => {
     if (!active) {
