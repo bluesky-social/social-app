@@ -5,3 +5,7 @@
 .break-word {
   word-break: break-word;
 }
+
+svg:focus {
+  outline: none;
+}
