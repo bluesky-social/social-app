@@ -8,7 +8,7 @@ msgstr ""
 "Language: fr\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-10 01:00+0100\n"
+"PO-Revision-Date: 2024-09-11 21:50+0100\n"
 "Last-Translator: surfdude29\n"
 "Language-Team: Stanislas Signoud (@signez.fr), surfdude29\n"
 "Plural-Forms: \n"
@@ -7046,6 +7046,11 @@ msgstr "Paramètres vidéo"
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:77
 msgid "Video: {0}"
 msgstr "Vidéo : {0}"
+
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:58
+#: src/view/com/composer/videos/VideoPreview.web.tsx:44
+msgid "Videos must be less than 60 seconds long"
+msgstr "Les vidéos doivent durer moins de 60 secondes"
 
 #: src/screens/Profile/Header/Shell.tsx:113
 msgid "View {0}'s avatar"
