@@ -18,7 +18,7 @@ import {Button} from '#/components/Button'
 import {VideoClip_Stroke2_Corner0_Rounded as VideoClipIcon} from '#/components/icons/VideoClip'
 import * as Prompt from '#/components/Prompt'
 
-const VIDEO_MAX_DURATION = 60
+const VIDEO_MAX_DURATION = 60 * 1000 // 60s in milliseconds
 
 type Props = {
   onSelectVideo: (video: ImagePickerAsset) => void
@@ -45,13 +45,20 @@ export function SelectVideoBtn({onSelectVideo, disabled, setError}: Props) {
       const response = await launchImageLibraryAsync({
         exif: false,
         mediaTypes: MediaTypeOptions.Videos,
-        videoMaxDuration: VIDEO_MAX_DURATION,
         quality: 1,
         legacy: true,
         preferredAssetRepresentationMode:
           UIImagePickerPreferredAssetRepresentationMode.Current,
       })
       if (response.assets && response.assets.length > 0) {
+        if (isNative) {
+          if (typeof response.assets[0].duration !== 'number')
+            throw Error('Asset is not a video')
+          if (response.assets[0].duration > VIDEO_MAX_DURATION) {
+            setError(_(msg`Videos must be less than 60 seconds long`))
+            return
+          }
+        }
         try {
           onSelectVideo(response.assets[0])
         } catch (err) {
