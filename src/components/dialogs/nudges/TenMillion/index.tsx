@@ -87,6 +87,11 @@ function Frame({children}: {children: React.ReactNode}) {
 }
 
 export function TenMillion() {
+  const {hasSession} = useSession()
+  return hasSession ? <TenMillionInner /> : null
+}
+
+export function TenMillionInner() {
   const t = useTheme()
   const lightTheme = useTheme('light')
   const {_, i18n} = useLingui()
@@ -96,7 +101,7 @@ export function TenMillion() {
   const {currentAccount} = useSession()
   const {isLoading: isProfileLoading, data: profile} = useProfileQuery({
     did: currentAccount!.did,
-  }) // TODO PWI
+  })
   const moderationOpts = useModerationOpts()
   const moderation = React.useMemo(() => {
     return profile && moderationOpts

@@ -1,7 +1,7 @@
 import React from 'react'
 
+import {useSession} from '#/state/session'
 import * as Dialog from '#/components/Dialog'
-
 import {TenMillion} from '#/components/dialogs/nudges/TenMillion'
 
 type Context = {
@@ -12,7 +12,7 @@ type Context = {
 
 const Context = React.createContext<Context>({
   // @ts-ignore
-  controls: {}
+  controls: {},
 })
 
 export function useContext() {
@@ -22,17 +22,20 @@ export function useContext() {
 let SHOWN = false
 
 export function NudgeDialogs() {
+  const {hasSession} = useSession()
   const tenMillion = Dialog.useDialogControl()
 
   const ctx = React.useMemo(() => {
     return {
       controls: {
-        tenMillion
-      }
+        tenMillion,
+      },
     }
   }, [tenMillion])
 
   React.useEffect(() => {
+    if (!hasSession) return
+
     const t = setTimeout(() => {
       if (!SHOWN) {
         SHOWN = true
@@ -43,7 +46,7 @@ export function NudgeDialogs() {
     return () => {
       clearTimeout(t)
     }
-  }, [ctx])
+  }, [ctx, hasSession])
 
   return (
     <Context.Provider value={ctx}>
