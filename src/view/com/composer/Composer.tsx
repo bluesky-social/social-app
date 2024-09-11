@@ -303,9 +303,13 @@ export const ComposePost = observer(function ComposePost({
   const onPhotoPasted = useCallback(
     async (uri: string) => {
       track('Composer:PastedPhotos')
-      await gallery.paste(uri)
+      if (uri.startsWith('data:video/')) {
+        selectVideo({uri, type: 'video', height: 0, width: 0})
+      } else {
+        await gallery.paste(uri)
+      }
     },
-    [gallery, track],
+    [gallery, track, selectVideo],
   )
 
   const isAltTextRequiredAndMissing = useMemo(() => {

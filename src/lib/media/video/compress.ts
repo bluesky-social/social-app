@@ -5,7 +5,7 @@ import {SUPPORTED_MIME_TYPES, SupportedMimeTypes} from '#/lib/constants'
 import {extToMime} from '#/state/queries/video/util'
 import {CompressedVideo} from './types'
 
-const MIN_SIZE_FOR_COMPRESSION = 1024 * 1024 * 25 // 25mb
+const MIN_SIZE_FOR_COMPRESSION = 25 // 25mb
 
 export async function compressVideo(
   file: ImagePickerAsset,
@@ -30,6 +30,7 @@ export async function compressVideo(
       compressionMethod: 'manual',
       bitrate: 3_000_000, // 3mbps
       maxSize: 1920,
+      // WARNING: this ONE SPECIFIC ARG is in MB -sfn
       minimumFileSizeForCompress,
       getCancellationId: id => {
         if (signal) {
