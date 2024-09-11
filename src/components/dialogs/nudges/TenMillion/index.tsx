@@ -6,6 +6,7 @@ import {moderateProfile} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {networkRetry} from '#/lib/async/retry'
 import {getCanvas} from '#/lib/canvas'
 import {shareUrl} from '#/lib/sharing'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -13,7 +14,7 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {isNative} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfileQuery} from '#/state/queries/profile'
-import {useSession} from '#/state/session'
+import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from 'state/shell'
 import {formatCount} from '#/view/com/util/numeric/format'
 // import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -109,13 +110,55 @@ export function TenMillionInner() {
       : undefined
   }, [profile, moderationOpts])
   const [uri, setUri] = React.useState<string | null>(null)
+  const [userNumber, setUserNumber] = React.useState<number>(0)
+  const [error, setError] = React.useState('')
 
-  const isLoadingData = isProfileLoading || !moderation || !profile
+  const isLoadingData =
+    isProfileLoading || !moderation || !profile || !userNumber
   const isLoadingImage = !uri
 
-  const userNumber = 56_738 // TODO
   const percent = userNumber / 10_000_000
   const Badge = getPercentBadge(percent)
+
+  const agent = useAgent()
+  React.useEffect(() => {
+    async function fetchUserNumber() {
+      if (agent.session?.accessJwt) {
+        const res = await fetch(
+          `https://bsky.social/xrpc/com.atproto.temp.getSignupNumber`,
+          {
+            headers: {
+              Authorization: `Bearer ${agent.session.accessJwt}`,
+            },
+          },
+        )
+
+        if (!res.ok) {
+          throw new Error('Network request failed')
+        }
+
+        const data = await res.json()
+
+        if (data.number) {
+          setUserNumber(data.number)
+        }
+      }
+    }
+
+    networkRetry(3, fetchUserNumber).catch(() => {
+      setError(
+        _(
+          msg`Oh no! We couldn't fetch your user number. Rest assured, we're glad you're here ❤️`,
+        ),
+      )
+    })
+  }, [
+    _,
+    agent.session?.accessJwt,
+    setUserNumber,
+    controls.tenMillion,
+    setError,
+  ])
 
   const sharePost = () => {
     if (uri) {
@@ -421,7 +464,34 @@ export function TenMillionInner() {
             <View
               style={[a.absolute, a.inset_0, a.align_center, a.justify_center]}>
               <GradientFill gradient={tokens.gradients.bonfire} />
-              {isLoadingData || isLoadingImage ? (
+              {error ? (
+                <View>
+                  <Text
+                    style={[
+                      a.text_md,
+                      a.leading_snug,
+                      a.text_center,
+                      a.pb_md,
+                      {
+                        maxWidth: 300,
+                      },
+                    ]}>
+                    (╯°□°)╯︵ ┻━┻
+                  </Text>
+                  <Text
+                    style={[
+                      a.text_xl,
+                      a.font_bold,
+                      a.leading_snug,
+                      a.text_center,
+                      {
+                        maxWidth: 300,
+                      },
+                    ]}>
+                    {error}
+                  </Text>
+                </View>
+              ) : isLoadingData || isLoadingImage ? (
                 <Loader size="xl" fill="white" />
               ) : (
                 <Image
