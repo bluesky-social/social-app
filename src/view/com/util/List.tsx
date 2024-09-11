@@ -1,6 +1,7 @@
 import React, {memo} from 'react'
 import {FlatListProps, RefreshControl, ViewToken} from 'react-native'
 import {runOnJS, useSharedValue} from 'react-native-reanimated'
+import {updateActiveVideoViewAsync} from 'bluesky-video/build/BlueskyVideoModule'
 
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -69,7 +70,7 @@ function ListImpl<ItemT>(
       onBeginDragFromContext?.(e, ctx)
     },
     onEndDrag(e, ctx) {
-      runOnJS(updateActiveViewAsync)()
+      runOnJS(updateActiveVideoViewAsync)()
       onEndDragFromContext?.(e, ctx)
     },
     onScroll(e, ctx) {
@@ -84,13 +85,13 @@ function ListImpl<ItemT>(
       }
 
       if (isIOS) {
-        runOnJS(dedupe)(updateActiveViewAsync)
+        runOnJS(dedupe)(updateActiveVideoViewAsync)
       }
     },
     // Note: adding onMomentumBegin here makes simulator scroll
     // lag on Android. So either don't add it, or figure out why.
     onMomentumEnd(e, ctx) {
-      runOnJS(updateActiveViewAsync)()
+      runOnJS(updateActiveVideoViewAsync)()
       onMomentumEndFromContext?.(e, ctx)
     },
   })

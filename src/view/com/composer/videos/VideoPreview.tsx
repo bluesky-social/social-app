@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-shadow */
 import React from 'react'
 import {View} from 'react-native'
 import {ImagePickerAsset} from 'expo-image-picker'
-import {useVideoPlayer, VideoView} from 'expo-video'
+import {BlueskyVideoView} from 'bluesky-video'
 
 import {CompressedVideo} from '#/lib/media/video/types'
 import {clamp} from '#/lib/numbers'
@@ -22,15 +21,8 @@ export function VideoPreview({
   clear: () => void
 }) {
   const t = useTheme()
+  const playerRef = React.useRef<BlueskyVideoView>(null)
   const autoplayDisabled = useAutoplayDisabled()
-  const player = useVideoPlayer(video.uri, player => {
-    player.loop = true
-    player.muted = true
-    if (!autoplayDisabled) {
-      player.play()
-    }
-  })
-
   let aspectRatio = asset.width / asset.height
 
   if (isNaN(aspectRatio)) {
@@ -50,12 +42,20 @@ export function VideoPreview({
         t.atoms.border_contrast_low,
         {backgroundColor: 'black'},
       ]}>
-      <VideoView
-        player={player}
+      <BlueskyVideoView
+        url={video.uri}
         style={a.flex_1}
-        allowsPictureInPicture={false}
-        nativeControls={false}
-        contentFit="contain"
+        onStatusChange={e => {
+          if (e.nativeEvent.status === 'readyToPlay') {
+            // player.play()
+          }
+        }}
+        onError={e => {
+          console.error('error', e.nativeEvent.error)
+        }}
+        ref={playerRef}
+        autoplay={!autoplayDisabled}
+        // contentFit="contain"
       />
       <ExternalEmbedRemoveBtn onRemove={clear} />
       {autoplayDisabled && (
