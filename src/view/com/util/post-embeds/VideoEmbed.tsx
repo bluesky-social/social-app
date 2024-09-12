@@ -6,6 +6,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {clamp} from '#/lib/numbers'
+import {useAutoplayDisabled} from 'state/preferences'
 import {VideoEmbedInnerNative} from '#/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative'
 import {atoms as a} from '#/alf'
 import {Button} from '#/components/Button'
@@ -54,11 +55,13 @@ export function VideoEmbed({embed}: Props) {
 
 function InnerWrapper({embed}: Props) {
   const {_} = useLingui()
+  const autoplayDisabled = useAutoplayDisabled()
 
   const [status, setStatus] = React.useState<'playing' | 'paused'>('paused')
   const [isLoading, setIsLoading] = React.useState(true)
+  const [isActive, setIsActive] = React.useState(false)
 
-  const showOverlay = status === 'paused' || isLoading
+  const showOverlay = !isActive || status === 'paused' || isLoading
 
   return (
     <>
@@ -66,6 +69,7 @@ function InnerWrapper({embed}: Props) {
         embed={embed}
         setStatus={setStatus}
         setIsLoading={setIsLoading}
+        setIsActive={setIsActive}
       />
       <ImageBackground
         source={{uri: embed.thumbnail}}
@@ -89,7 +93,7 @@ function InnerWrapper({embed}: Props) {
           onPress={() => {}}
           label={_(msg`Play video`)}
           color="secondary">
-          {isLoading ? (
+          {isActive && isLoading ? (
             <View
               style={[
                 a.rounded_full,
@@ -100,8 +104,10 @@ function InnerWrapper({embed}: Props) {
               ]}>
               <Loader size="2xl" style={{color: 'white'}} />
             </View>
-          ) : (
+          ) : !autoplayDisabled ? (
             <PlayButtonIcon />
+          ) : (
+            <></>
           )}
         </Button>
       </ImageBackground>

@@ -19,10 +19,12 @@ export function VideoEmbedInnerNative({
   embed,
   setStatus,
   setIsLoading,
+  setIsActive,
 }: {
   embed: AppBskyEmbedVideo.View
   setStatus: (status: 'playing' | 'paused') => void
   setIsLoading: (isLoading: boolean) => void
+  setIsActive: (isActive: boolean) => void
 }) {
   const ref = useRef<BlueskyVideoView>(null)
   const autoplayDisabled = useAutoplayDisabled()
@@ -65,6 +67,9 @@ export function VideoEmbedInnerNative({
         }}
         onLoadingChange={e => {
           setIsLoading(e.nativeEvent.isLoading)
+        }}
+        onActiveChange={e => {
+          setIsActive(e.nativeEvent.isActive)
         }}
         // contentFit="cover"
         // accessibilityLabel={
