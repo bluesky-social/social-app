@@ -6627,7 +6627,7 @@ msgstr "Selecciona l'opció {i} de {numItems}"
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:57
 msgid "Select subtitle file (.vtt)"
-msgstr "Tria el fitxer de subtítols (.vtt)"
+msgstr "Tria el arxiu de subtítols (.vtt)"
 
 #: src/screens/Onboarding/StepProfile/AvatarCreatorItems.tsx:83
 msgid "Select the {emojiName} emoji as your avatar"
