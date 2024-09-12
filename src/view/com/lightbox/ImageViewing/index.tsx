@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
 function ImageViewingWithSplash(props: Props) {
   const openProgress = useSharedValue(0)
   const [isAnimationDone, setIsAnimationDone] = React.useState(false)
-  const [isLoaded, setIsLoaded] =React.useState(false)
+  const [isLoaded, setIsLoaded] = React.useState(false)
   const isReady = isAnimationDone && isLoaded
   const initialImage = props.images[props.initialImageIndex]
 
@@ -307,7 +307,9 @@ function ImageViewingWithSplash(props: Props) {
           key={props.initialImageIndex}
           {...props}
           onLoad={() => {
-            setIsLoaded(true)
+            setTimeout(() => {
+              setIsLoaded(true)
+            }, 200)
           }}
         />
       </Animated.View>

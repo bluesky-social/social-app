@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {ActivityIndicator, Dimensions, StyleSheet} from 'react-native'
+import {Dimensions, StyleSheet} from 'react-native'
 import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import Animated, {
   runOnJS,
@@ -314,12 +314,8 @@ const ImageItem = ({
         singleTap,
       )
 
-  const isLoading = !isLoaded || !imageDimensions
   return (
     <Animated.View ref={containerRef} style={styles.container}>
-      {isLoading && (
-        <ActivityIndicator size="small" color="#FFF" style={styles.loading} />
-      )}
       <GestureDetector gesture={composedGesture}>
         <AnimatedImage
           contentFit="contain"
@@ -346,13 +342,6 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-  },
-  loading: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
   },
 })
 

@@ -23,7 +23,6 @@ import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import useImageDimensions from '../../hooks/useImageDimensions'
 
 import {ImageSource, Dimensions as ImageDimensions} from '../../@types'
-import {ImageLoading} from './ImageLoading'
 
 const SWIPE_CLOSE_OFFSET = 75
 const SWIPE_CLOSE_VELOCITY = 1
@@ -52,7 +51,6 @@ const ImageItem = ({
 }: Props) => {
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
   const translationY = useSharedValue(0)
-  const [loaded, setLoaded] = useState(false)
   const [scaled, setScaled] = useState(false)
   const imageDimensions = useImageDimensions(imageSrc)
   const maxZoomScale = imageDimensions
@@ -144,17 +142,13 @@ const ImageItem = ({
         maximumZoomScale={maxZoomScale}
         contentContainerStyle={styles.imageScrollContainer}
         onScroll={scrollHandler}>
-        {(!loaded || !imageDimensions) && <ImageLoading />}
         <AnimatedImage
           contentFit="contain"
           source={{uri: imageSrc.uri}}
           style={[styles.image, animatedStyle]}
           accessibilityLabel={imageSrc.alt}
           accessibilityHint=""
-          onLoad={() => {
-            setLoaded(true)
-            onLoad()
-          }}
+          onLoad={onLoad}
           enableLiveTextInteraction={showControls && !scaled}
         />
       </Animated.ScrollView>
