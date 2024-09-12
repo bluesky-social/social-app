@@ -41,6 +41,7 @@ import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
 import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
 import {ScreenHider} from '#/components/moderation/ScreenHider'
 import {ProfileStarterPacks} from '#/components/StarterPack/ProfileStarterPacks'
+import {navigate} from '#/Navigation'
 import {ExpoScrollForwarderView} from '../../../modules/expo-scroll-forwarder'
 import {ProfileFeedgens} from '../com/feeds/ProfileFeedgens'
 import {ProfileLists} from '../com/lists/ProfileLists'
@@ -85,6 +86,16 @@ export function ProfileScreen({route}: Props) {
       refetchProfile()
     }
   }, [resolveError, refetchDid, refetchProfile])
+
+  // Apply hard-coded redirects as need
+  React.useEffect(() => {
+    if (resolveError) {
+      if (name === 'lulaoficial.bsky.social') {
+        console.log('Applying redirect to lula.com.br')
+        navigate('Profile', {name: 'lula.com.br'})
+      }
+    }
+  }, [name, resolveError])
 
   // When we open the profile, we want to reset the posts query if we are blocked.
   React.useEffect(() => {
