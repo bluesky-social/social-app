@@ -87,6 +87,7 @@ export function TenMillion() {
   const agent = useAgent()
   const nuxDialogs = useNuxDialogContext()
   const [userNumber, setUserNumber] = React.useState<number>(0)
+  const fetching = React.useRef(false)
 
   React.useEffect(() => {
     async function fetchUserNumber() {
@@ -119,9 +120,12 @@ export function TenMillion() {
       }
     }
 
-    networkRetry(3, fetchUserNumber).catch(() => {
-      nuxDialogs.dismissActiveNux()
-    })
+    if (!fetching.current) {
+      fetching.current = true
+      networkRetry(3, fetchUserNumber).catch(() => {
+        nuxDialogs.dismissActiveNux()
+      })
+    }
   }, [
     agent.sessionManager.pdsUrl,
     agent.session?.accessJwt,

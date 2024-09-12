@@ -49,14 +49,7 @@ function Inner() {
   const dismissActiveNux = React.useCallback(() => {
     if (!activeNux) return
     setActiveNux(undefined)
-    const nux = nuxs?.find(nux => nux.id === activeNux)
-    upsertNux({
-      id: activeNux,
-      completed: true,
-      data: nux?.data,
-      expiresAt: nux?.expiresAt,
-    })
-  }, [activeNux, setActiveNux, upsertNux, nuxs])
+  }, [activeNux, setActiveNux])
 
   if (IS_DEV && typeof window !== 'undefined') {
     // @ts-ignore
@@ -77,12 +70,18 @@ function Inner() {
       if (nux && nux.completed) continue
 
       setActiveNux(id)
-      // snooze immediately upon enabling
+      // immediately snooze (in memory)
       snoozeNuxDialog()
+      // immediately update remote data
+      upsertNux({
+        id,
+        completed: true,
+        data: undefined,
+      })
 
       break
     }
-  }, [nuxs, snoozed, snoozeNuxDialog])
+  }, [nuxs, snoozed, snoozeNuxDialog, upsertNux])
 
   const ctx = React.useMemo(() => {
     return {
