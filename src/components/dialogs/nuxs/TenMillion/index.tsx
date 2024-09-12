@@ -417,7 +417,15 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
                       />
                         */}
                       <View style={[a.gap_2xs, a.flex_1]}>
-                        <Text style={[a.text_sm, a.font_bold, a.leading_tight]}>
+                        <Text
+                          numberOfLines={1}
+                          style={[
+                            a.flex_1,
+                            a.text_sm,
+                            a.font_bold,
+                            a.leading_snug,
+                            {maxWidth: '60%'},
+                          ]}>
                           {sanitizeDisplayName(
                             profile.displayName ||
                               sanitizeHandle(profile.handle),
