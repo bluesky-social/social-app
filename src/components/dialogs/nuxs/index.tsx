@@ -2,7 +2,7 @@ import React from 'react'
 
 import {useSession} from '#/state/session'
 import * as Dialog from '#/components/Dialog'
-import {TenMillion} from '#/components/dialogs/nudges/TenMillion'
+import {TenMillion} from '#/components/dialogs/nuxs/TenMillion'
 
 type Context = {
   controls: {
@@ -21,7 +21,7 @@ export function useContext() {
 
 let SHOWN = false
 
-export function NudgeDialogs() {
+export function NuxDialogs() {
   const {hasSession} = useSession()
   const tenMillion = Dialog.useDialogControl()
 

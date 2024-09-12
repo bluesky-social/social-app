@@ -57,13 +57,13 @@ import * as Toast from '#/view/com/util/Toast'
 import {Shell} from '#/view/shell'
 import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
+import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {Splash} from '#/Splash'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import {AudioCategory, PlatformInfo} from '../modules/expo-bluesky-swiss-army'
-import {NudgeDialogs} from '#/components/dialogs/nudges'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -132,7 +132,7 @@ function InnerApp() {
                                           style={s.h100pct}>
                                           <TestCtrls />
                                           <Shell />
-                                          <NudgeDialogs />
+                                          <NuxDialogs />
                                         </GestureHandlerRootView>
                                       </ProgressGuideProvider>
                                     </MutedThreadsProvider>

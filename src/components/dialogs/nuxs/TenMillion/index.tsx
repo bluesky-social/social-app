@@ -28,10 +28,10 @@ import {
 } from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {useContext} from '#/components/dialogs/nudges'
-import {OnePercent} from '#/components/dialogs/nudges/TenMillion/icons/OnePercent'
-import {PointOnePercent} from '#/components/dialogs/nudges/TenMillion/icons/PointOnePercent'
-import {TenPercent} from '#/components/dialogs/nudges/TenMillion/icons/TenPercent'
+import {useContext} from '#/components/dialogs/nuxs'
+import {OnePercent} from '#/components/dialogs/nuxs/TenMillion/icons/OnePercent'
+import {PointOnePercent} from '#/components/dialogs/nuxs/TenMillion/icons/PointOnePercent'
+import {TenPercent} from '#/components/dialogs/nuxs/TenMillion/icons/TenPercent'
 import {Divider} from '#/components/Divider'
 import {GradientFill} from '#/components/GradientFill'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
@@ -39,7 +39,7 @@ import {Download_Stroke2_Corner0_Rounded as Download} from '#/components/icons/D
 import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-// import {TwentyFivePercent} from '#/components/dialogs/nudges/TenMillion/icons/TwentyFivePercent'
+// import {TwentyFivePercent} from '#/components/dialogs/nuxs/TenMillion/icons/TwentyFivePercent'
 
 const DEBUG = false
 const RATIO = 8 / 10
