@@ -1,4 +1,4 @@
-import React, {useCallback, useRef} from 'react'
+import React, {useRef} from 'react'
 import {Pressable, View} from 'react-native'
 import Animated, {FadeInDown} from 'react-native-reanimated'
 import {AppBskyEmbedVideo} from '@atproto/api'
@@ -12,30 +12,18 @@ import {atoms as a, useTheme} from '#/alf'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
-import {
-  AudioCategory,
-  PlatformInfo,
-} from '../../../../../../modules/expo-bluesky-swiss-army'
 import {TimeIndicator} from './TimeIndicator'
 
 export function VideoEmbedInnerNative({
   embed,
-  isFullscreen,
-  isMuted,
-  timeRemaining,
 }: {
   embed: AppBskyEmbedVideo.View
-  isFullscreen: boolean
-  setIsFullscreen: (isFullscreen: boolean) => void
-  timeRemaining: number
-  isMuted: boolean
 }) {
   const {_} = useLingui()
   const ref = useRef<BlueskyVideoView>(null)
 
-  const enterFullscreen = useCallback(() => {
-    ref.current?.enterFullscreen()
-  }, [])
+  const [isMuted, setIsMuted] = React.useState(true)
+  const [timeRemaining, setTimeRemaining] = React.useState(0)
 
   let aspectRatio = 16 / 9
 
@@ -52,7 +40,18 @@ export function VideoEmbedInnerNative({
         ref={ref}
         style={[a.flex_1, a.rounded_sm]}
         onError={e => {
-          console.log(e.nativeEvent.error, e.nativeEvent.errorDescription)
+          console.log(e.nativeEvent.error)
+        }}
+        onMutedChange={e => {
+          console.log(e.nativeEvent.isMuted)
+          setIsMuted(e.nativeEvent.isMuted)
+        }}
+        onTimeRemainingChange={e => {
+          console.log(e.nativeEvent.timeRemaining)
+          setTimeRemaining(e.nativeEvent.timeRemaining)
+        }}
+        onStatusChange={e => {
+          console.log(e.nativeEvent.status)
         }}
 
         // contentFit="cover"
@@ -62,7 +61,12 @@ export function VideoEmbedInnerNative({
         // accessibilityHint=""
       />
       <VideoControls
-        enterFullscreen={enterFullscreen}
+        enterFullscreen={() => {
+          ref.current?.enterFullscreen()
+        }}
+        toggleMuted={() => {
+          ref.current?.toggleMuted()
+        }}
         isMuted={isMuted}
         timeRemaining={timeRemaining}
       />
@@ -73,42 +77,17 @@ export function VideoEmbedInnerNative({
 
 function VideoControls({
   enterFullscreen,
+  toggleMuted,
   timeRemaining,
   isMuted,
 }: {
   enterFullscreen: () => void
+  toggleMuted: () => void
   timeRemaining: number
   isMuted: boolean
 }) {
   const {_} = useLingui()
   const t = useTheme()
-
-  const onPressFullscreen = useCallback(() => {
-    switch ('idle') {
-      case 'idle':
-      case 'loading':
-      case 'readyToPlay': {
-        // if (!player.playing) player.play()
-        enterFullscreen()
-        break
-      }
-      case 'error': {
-        // player.replay()
-        break
-      }
-    }
-  }, [enterFullscreen])
-
-  const toggleMuted = useCallback(() => {
-    const muted = false
-    // We want to set this to the _inverse_ of the new value, because we actually want for the audio to be mixed when
-    // the video is muted, and vice versa.
-    const mix = !muted
-    const category = muted ? AudioCategory.Ambient : AudioCategory.Playback
-
-    PlatformInfo.setAudioCategory(category)
-    PlatformInfo.setAudioActive(mix)
-  }, [])
 
   // show countdown when:
   // 1. timeRemaining is a number - was seeing NaNs
@@ -120,7 +99,7 @@ function VideoControls({
     <View style={[a.absolute, a.inset_0]}>
       {showTime && <TimeIndicator time={timeRemaining} />}
       <Pressable
-        onPress={onPressFullscreen}
+        onPress={enterFullscreen}
         style={a.flex_1}
         accessibilityLabel={_(msg`Video`)}
         accessibilityHint={_(msg`Tap to enter full screen`)}
