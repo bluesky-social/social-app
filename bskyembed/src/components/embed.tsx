@@ -372,7 +372,7 @@ function VideoEmbed({content}: {content: AppBskyEmbedVideo.View}) {
 
   return (
     <div
-      className="w-full overflow-hidden rounded-lg aspect-square"
+      className="w-full overflow-hidden rounded-lg aspect-square relative"
       style={{aspectRatio: `${aspectRatio} / 1`}}>
       <img
         src={content.thumbnail}
