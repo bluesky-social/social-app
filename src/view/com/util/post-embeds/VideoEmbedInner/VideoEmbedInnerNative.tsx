@@ -1,5 +1,5 @@
-import React, {useCallback, useRef} from 'react'
-import {Pressable, View} from 'react-native'
+import React, {useCallback, useEffect, useRef} from 'react'
+import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
 import Animated, {FadeInDown} from 'react-native-reanimated'
 import {VideoView} from 'expo-video'
 import {AppBskyEmbedVideo} from '@atproto/api'
@@ -8,10 +8,13 @@ import {useLingui} from '@lingui/react'
 
 import {HITSLOP_30} from '#/lib/constants'
 import {clamp} from '#/lib/numbers'
+import {useAutoplayDisabled} from '#/state/preferences'
 import {isAndroid} from 'platform/detection'
 import {useActiveVideoNative} from 'view/com/util/post-embeds/ActiveVideoNativeContext'
 import {atoms as a, useTheme} from '#/alf'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
+import {Pause_Filled_Corner0_Rounded as PauseIcon} from '#/components/icons/Pause'
+import {Play_Filled_Corner0_Rounded as PlayIcon} from '#/components/icons/Play'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
 import {
   AudioCategory,
@@ -99,6 +102,18 @@ function VideoControls({
   const {_} = useLingui()
   const t = useTheme()
   const {player, setMutedInFeed} = useActiveVideoNative()
+  const autoplayDisabled = useAutoplayDisabled()
+  const [isPlaying, setIsPlaying] = React.useState(player.playing)
+
+  useEffect(() => {
+    function listener(newIsPlaying: boolean) {
+      setIsPlaying(newIsPlaying)
+    }
+    player.addListener('playingChange', listener)
+    return () => {
+      player.removeListener('playingChange', listener)
+    }
+  }, [player])
 
   const onPressFullscreen = useCallback(() => {
     switch (player.status) {
@@ -115,6 +130,15 @@ function VideoControls({
       }
     }
   }, [player, enterFullscreen])
+
+  const togglePlayPause = useCallback(() => {
+    setIsPlaying(!player.playing)
+    if (player.playing) {
+      player.pause()
+    } else {
+      player.play()
+    }
+  }, [player])
 
   const toggleMuted = useCallback(() => {
     const muted = !player.muted
@@ -137,7 +161,6 @@ function VideoControls({
 
   return (
     <View style={[a.absolute, a.inset_0]}>
-      {showTime && <TimeIndicator time={timeRemaining} />}
       <Pressable
         onPress={onPressFullscreen}
         style={a.flex_1}
@@ -145,36 +168,80 @@ function VideoControls({
         accessibilityHint={_(msg`Tap to enter full screen`)}
         accessibilityRole="button"
       />
-      <Animated.View
-        entering={FadeInDown.duration(300)}
-        style={[
-          a.absolute,
-          a.rounded_full,
-          a.justify_center,
-          {
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            paddingHorizontal: 4,
-            paddingVertical: 4,
-            bottom: 6,
-            right: 6,
-            minHeight: 21,
-            minWidth: 21,
-          },
-        ]}>
-        <Pressable
-          onPress={toggleMuted}
-          style={a.flex_1}
-          accessibilityLabel={isMuted ? _(msg`Muted`) : _(msg`Unmuted`)}
-          accessibilityHint={_(msg`Tap to toggle sound`)}
-          accessibilityRole="button"
-          hitSlop={HITSLOP_30}>
-          {isMuted ? (
-            <MuteIcon width={13} fill={t.palette.white} />
+      {autoplayDisabled && (
+        <ControlButton
+          onPress={togglePlayPause}
+          label={isPlaying ? _(msg`Pause`) : _(msg`Play`)}
+          accessibilityHint={_(msg`Tap to play or pause`)}
+          style={{left: 6}}>
+          {isPlaying ? (
+            <PauseIcon width={13} fill={t.palette.white} />
           ) : (
-            <UnmuteIcon width={13} fill={t.palette.white} />
+            <PlayIcon width={13} fill={t.palette.white} />
           )}
-        </Pressable>
-      </Animated.View>
+        </ControlButton>
+      )}
+      {showTime && (
+        <TimeIndicator
+          time={timeRemaining}
+          style={autoplayDisabled ? {left: 33} : {}}
+        />
+      )}
+
+      <ControlButton
+        onPress={toggleMuted}
+        label={isMuted ? _(msg`Unmute`) : _(msg`Mute`)}
+        accessibilityHint={_(msg`Tap to toggle sound`)}
+        style={{right: 6}}>
+        {isMuted ? (
+          <MuteIcon width={13} fill={t.palette.white} />
+        ) : (
+          <UnmuteIcon width={13} fill={t.palette.white} />
+        )}
+      </ControlButton>
     </View>
+  )
+}
+
+function ControlButton({
+  onPress,
+  children,
+  label,
+  accessibilityHint,
+  style,
+}: {
+  onPress: () => void
+  children: React.ReactNode
+  label: string
+  accessibilityHint: string
+  style?: StyleProp<ViewStyle>
+}) {
+  return (
+    <Animated.View
+      entering={FadeInDown.duration(300)}
+      style={[
+        a.absolute,
+        a.rounded_full,
+        a.justify_center,
+        {
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          paddingHorizontal: 4,
+          paddingVertical: 4,
+          bottom: 6,
+          minHeight: 21,
+          minWidth: 21,
+        },
+        style,
+      ]}>
+      <Pressable
+        onPress={onPress}
+        style={a.flex_1}
+        accessibilityLabel={label}
+        accessibilityHint={accessibilityHint}
+        accessibilityRole="button"
+        hitSlop={HITSLOP_30}>
+        {children}
+      </Pressable>
+    </Animated.View>
   )
 }
