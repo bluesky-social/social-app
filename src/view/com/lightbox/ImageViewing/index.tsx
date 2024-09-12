@@ -24,6 +24,8 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Image} from 'expo-image'
 
 import {isAndroid} from '#/platform/detection'
+import {useTheme} from '#/alf'
+import {PlatformInfo} from '../../../../../modules/expo-bluesky-swiss-army'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
 import ImageItem from './components/ImageItem/ImageItem'
 
@@ -175,6 +177,7 @@ function ImageViewingWithSplash(props: Props) {
   const openProgress = useSharedValue(0)
   const [isAnimationDone, setIsAnimationDone] = React.useState(false)
   const [isLoaded, setIsLoaded] = React.useState(false)
+  const [isThumbLoaded, setIsThumbLoaded] = React.useState(false)
   const isReady = isAnimationDone && isLoaded
   const initialImage = props.images[props.initialImageIndex]
 
@@ -226,12 +229,14 @@ function ImageViewingWithSplash(props: Props) {
     }
   })
   const insets = useSafeAreaInsets()
+  const t = useTheme()
+  const showSplash =
+    !PlatformInfo.getIsReducedMotionEnabled() && initialTransform && !isReady
 
   if (!props.visible) {
     return null
   }
 
-  const showSplash = initialTransform && !isReady
   return (
     <View
       aria-modal
@@ -256,6 +261,18 @@ function ImageViewingWithSplash(props: Props) {
               pointerEvents: 'none',
             },
           ]}>
+          {props.thumbDims && isThumbLoaded && (
+            <View
+              style={{
+                position: 'absolute',
+                top: props.thumbDims.pageY - (isAndroid ? insets.top : 0),
+                left: props.thumbDims.pageX,
+                width: props.thumbDims.width,
+                height: props.thumbDims.height,
+                backgroundColor: t.atoms.bg.backgroundColor,
+              }}
+            />
+          )}
           <Animated.View
             style={[
               {
@@ -272,6 +289,7 @@ function ImageViewingWithSplash(props: Props) {
           <AnimatedImage
             contentFit="contain"
             source={{uri: initialImage.thumbUri}}
+            onLoad={() => setIsThumbLoaded(true)}
             style={[
               {
                 position: 'absolute',
