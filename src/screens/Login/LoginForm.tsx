@@ -83,11 +83,17 @@ export const LoginForm = ({
     Keyboard.dismiss()
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setError('')
-    setIsProcessing(true)
 
     const identifier = identifierValueRef.current.toLowerCase().trim()
     const password = passwordValueRef.current
     const authFactorToken = authFactorTokenValueRef.current
+
+    if (!identifier || !password) {
+      setError(_(msg`Invalid username or password`))
+      return
+    }
+
+    setIsProcessing(true)
 
     try {
       // try to guess the handle if the user just gave their own username
@@ -329,7 +335,6 @@ export const LoginForm = ({
           <Button
             testID="loginNextButton"
             label={_(msg`Next`)}
-            disabled={!isReady}
             accessibilityHint={_(msg`Navigates to the next screen`)}
             variant="solid"
             color="primary"
