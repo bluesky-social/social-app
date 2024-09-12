@@ -60,16 +60,13 @@ function CardOuter({
 export function SuggestedFollowPlaceholder() {
   const t = useTheme()
   return (
-    <CardOuter style={[a.gap_sm, t.atoms.border_contrast_low]}>
+    <CardOuter style={[a.gap_md, t.atoms.border_contrast_low]}>
       <ProfileCard.Header>
         <ProfileCard.AvatarPlaceholder />
+        <ProfileCard.NameAndHandlePlaceholder />
       </ProfileCard.Header>
 
-      <View style={[a.py_xs]}>
-        <ProfileCard.NameAndHandlePlaceholder />
-      </View>
-
-      <ProfileCard.DescriptionPlaceholder />
+      <ProfileCard.DescriptionPlaceholder numberOfLines={2} />
     </CardOuter>
   )
 }
