@@ -9637,7 +9637,7 @@ bluebird@^3.5.5:
 
 bluesky-video@bluesky-social/bluesky-video:
   version "0.1.0"
-  resolved "git+ssh://git@github.com/bluesky-social/bluesky-video.git#5b772979331d8f7b00dc55dccd8e696d1ca1a33a"
+  resolved "git+ssh://git@github.com/bluesky-social/bluesky-video.git#659dc6f4896952c054d2313568a68426a0f33b9f"
 
 bn.js@^4.0.0, bn.js@^4.11.8, bn.js@^4.11.9:
   version "4.12.0"

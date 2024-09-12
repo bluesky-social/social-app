@@ -8,7 +8,9 @@ import {BlueskyVideoView} from 'bluesky-video'
 
 import {HITSLOP_30} from '#/lib/constants'
 import {clamp} from '#/lib/numbers'
+import {useAutoplayDisabled} from 'state/preferences'
 import {atoms as a, useTheme} from '#/alf'
+import {useIsWithinMessage} from '#/components/dms/MessageContext'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
@@ -16,14 +18,24 @@ import {TimeIndicator} from './TimeIndicator'
 
 export function VideoEmbedInnerNative({
   embed,
+  setStatus,
+  setIsLoading,
 }: {
   embed: AppBskyEmbedVideo.View
+  setStatus: (status: 'playing' | 'paused') => void
+  setIsLoading: (isLoading: boolean) => void
 }) {
-  const {_} = useLingui()
   const ref = useRef<BlueskyVideoView>(null)
+  const autoplayDisabled = useAutoplayDisabled()
+  const isWithinMessage = useIsWithinMessage()
 
   const [isMuted, setIsMuted] = React.useState(true)
   const [timeRemaining, setTimeRemaining] = React.useState(0)
+
+  const [error, setError] = React.useState<string>()
+  if (error) {
+    throw new Error(error)
+  }
 
   let aspectRatio = 16 / 9
 
@@ -37,23 +49,24 @@ export function VideoEmbedInnerNative({
     <View style={[a.flex_1, a.relative, {aspectRatio}]}>
       <BlueskyVideoView
         url={embed.playlist}
+        autoplay={!autoplayDisabled && !isWithinMessage}
         ref={ref}
         style={[a.flex_1, a.rounded_sm]}
         onError={e => {
-          console.log(e.nativeEvent.error)
+          setError(e.nativeEvent.error)
         }}
         onMutedChange={e => {
-          console.log(e.nativeEvent.isMuted)
           setIsMuted(e.nativeEvent.isMuted)
         }}
         onTimeRemainingChange={e => {
-          console.log(e.nativeEvent.timeRemaining)
           setTimeRemaining(e.nativeEvent.timeRemaining)
         }}
         onStatusChange={e => {
-          console.log(e.nativeEvent.status)
+          setStatus(e.nativeEvent.status)
         }}
-
+        onLoadingChange={e => {
+          setIsLoading(e.nativeEvent.isLoading)
+        }}
         // contentFit="cover"
         // accessibilityLabel={
         //   embed.alt ? _(msg`Video: ${embed.alt}`) : _(msg`Video`)
