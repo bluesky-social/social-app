@@ -25,7 +25,11 @@ export function SubtitleFilePicker({
   const handlePick = (evt: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = evt.target.files?.[0]
     if (selectedFile) {
-      if (selectedFile.type === 'text/vtt') {
+      if (
+        selectedFile.type === 'text/vtt' ||
+        (selectedFile.type === 'text/plain' &&
+          selectedFile.name.endsWith('.vtt'))
+      ) {
         onSelectFile(selectedFile)
       } else {
         Toast.show(_(msg`Only WebVTT (.vtt) files are supported`))
