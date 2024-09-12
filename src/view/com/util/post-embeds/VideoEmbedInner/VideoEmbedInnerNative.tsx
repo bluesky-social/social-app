@@ -55,27 +55,27 @@ export function VideoEmbedInnerNative({
         url={embed.playlist}
         autoplay={!autoplayDisabled && !isWithinMessage}
         beginMuted={true}
-        ref={ref}
-        style={[a.flex_1, a.rounded_sm]}
-        onError={e => {
-          setError(e.nativeEvent.error)
+        style={[a.rounded_sm]}
+        onActiveChange={e => {
+          setIsActive(e.nativeEvent.isActive)
+        }}
+        onLoadingChange={e => {
+          setIsLoading(e.nativeEvent.isLoading)
         }}
         onMutedChange={e => {
           setIsMuted(e.nativeEvent.isMuted)
-        }}
-        onTimeRemainingChange={e => {
-          setTimeRemaining(e.nativeEvent.timeRemaining)
         }}
         onStatusChange={e => {
           setStatus(e.nativeEvent.status)
           setIsPlaying(e.nativeEvent.status === 'playing')
         }}
-        onLoadingChange={e => {
-          setIsLoading(e.nativeEvent.isLoading)
+        onTimeRemainingChange={e => {
+          setTimeRemaining(e.nativeEvent.timeRemaining)
         }}
-        onActiveChange={e => {
-          setIsActive(e.nativeEvent.isActive)
+        onError={e => {
+          setError(e.nativeEvent.error)
         }}
+        ref={ref}
         // accessibilityLabel={
         //   embed.alt ? _(msg`Video: ${embed.alt}`) : _(msg`Video`)
         // }
@@ -122,7 +122,6 @@ function VideoControls({
   // 2. duration is greater than 0 - means metadata has loaded
   // 3. we're less than 5 second into the video
   const showTime = !isNaN(timeRemaining)
-  const autoplayDisabled = useAutoplayDisabled()
 
   return (
     <View style={[a.absolute, a.inset_0]}>
@@ -133,25 +132,18 @@ function VideoControls({
         accessibilityHint={_(msg`Tap to enter full screen`)}
         accessibilityRole="button"
       />
-      {autoplayDisabled && (
-        <ControlButton
-          onPress={togglePlayback}
-          label={isPlaying ? _(msg`Pause`) : _(msg`Play`)}
-          accessibilityHint={_(msg`Tap to play or pause`)}
-          style={{left: 6}}>
-          {isPlaying ? (
-            <PauseIcon width={13} fill={t.palette.white} />
-          ) : (
-            <PlayIcon width={13} fill={t.palette.white} />
-          )}
-        </ControlButton>
-      )}
-      {showTime && (
-        <TimeIndicator
-          time={timeRemaining}
-          style={autoplayDisabled ? {left: 33} : {}}
-        />
-      )}
+      <ControlButton
+        onPress={togglePlayback}
+        label={isPlaying ? _(msg`Pause`) : _(msg`Play`)}
+        accessibilityHint={_(msg`Tap to play or pause`)}
+        style={{left: 6}}>
+        {isPlaying ? (
+          <PauseIcon width={13} fill={t.palette.white} />
+        ) : (
+          <PlayIcon width={13} fill={t.palette.white} />
+        )}
+      </ControlButton>
+      {showTime && <TimeIndicator time={timeRemaining} style={{left: 33}} />}
 
       <ControlButton
         onPress={toggleMuted}
