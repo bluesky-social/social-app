@@ -45,11 +45,6 @@ export function VideoPreview({
       <BlueskyVideoView
         url={video.uri}
         style={a.flex_1}
-        onStatusChange={e => {
-          if (e.nativeEvent.status === 'readyToPlay') {
-            // player.play()
-          }
-        }}
         onError={e => {
           console.error('error', e.nativeEvent.error)
         }}

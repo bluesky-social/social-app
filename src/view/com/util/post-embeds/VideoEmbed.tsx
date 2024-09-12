@@ -6,11 +6,9 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {clamp} from '#/lib/numbers'
-import {useAutoplayDisabled} from 'state/preferences'
 import {VideoEmbedInnerNative} from '#/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative'
 import {atoms as a} from '#/alf'
 import {Button} from '#/components/Button'
-import {useIsWithinMessage} from '#/components/dms/MessageContext'
 import {Loader} from '#/components/Loader'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {ErrorBoundary} from '../ErrorBoundary'
@@ -57,32 +55,18 @@ export function VideoEmbed({embed}: Props) {
 function InnerWrapper({embed}: Props) {
   const {_} = useLingui()
 
-  // TODO
-  const [isMuted, setIsMuted] = useState(false)
-  const [isFullscreen, setIsFullscreen] = React.useState(false)
-  const isWithinMessage = useIsWithinMessage()
-  const disableAutoplay = useAutoplayDisabled() || isWithinMessage
-  // There are some different loading states that we should pay attention to and show a spinner for
+  const [status, setStatus] = React.useState<'playing' | 'paused'>('paused')
+  const [isLoading, setIsLoading] = React.useState(true)
 
-  // This happens whenever the visibility view decides that another video should start playing
-  const showOverlay = false
-
-  // send error up to error boundary
-  // const [error, setError] = useState<Error | PlayerError | null>(null)
-  // if (error) {
-  //   throw error
-  // }
+  const showOverlay = status === 'paused' || isLoading
 
   return (
     <>
-      {true ? (
-        <VideoEmbedInnerNative
-          embed={embed}
-          isMuted={isMuted}
-          isFullscreen={isFullscreen}
-          setIsFullscreen={setIsFullscreen}
-        />
-      ) : null}
+      <VideoEmbedInnerNative
+        embed={embed}
+        setStatus={setStatus}
+        setIsLoading={setIsLoading}
+      />
       <ImageBackground
         source={{uri: embed.thumbnail}}
         accessibilityIgnoresInvertColors
@@ -105,7 +89,7 @@ function InnerWrapper({embed}: Props) {
           onPress={() => {}}
           label={_(msg`Play video`)}
           color="secondary">
-          {false ? ( // isLoading
+          {isLoading ? (
             <View
               style={[
                 a.rounded_full,
