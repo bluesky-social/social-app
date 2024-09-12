@@ -50,13 +50,15 @@ export function VideoEmbedInnerNative({
         url={embed.playlist}
         ref={ref}
         style={[a.flex_1, a.rounded_sm]}
-        contentFit="cover"
-        nativeControls={isFullscreen}
-        accessibilityIgnoresInvertColors
-        accessibilityLabel={
-          embed.alt ? _(msg`Video: ${embed.alt}`) : _(msg`Video`)
-        }
-        accessibilityHint=""
+        onError={e => {
+          console.log(e.nativeEvent.error, e.nativeEvent.errorDescription)
+        }}
+
+        // contentFit="cover"
+        // accessibilityLabel={
+        //   embed.alt ? _(msg`Video: ${embed.alt}`) : _(msg`Video`)
+        // }
+        // accessibilityHint=""
       />
       <VideoControls
         enterFullscreen={enterFullscreen}
