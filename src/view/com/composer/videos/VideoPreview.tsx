@@ -44,13 +44,12 @@ export function VideoPreview({
       ]}>
       <BlueskyVideoView
         url={video.uri}
-        style={a.flex_1}
+        autoplay={!autoplayDisabled}
+        beginMuted={true}
         onError={e => {
           console.error('error', e.nativeEvent.error)
         }}
         ref={playerRef}
-        autoplay={!autoplayDisabled}
-        // contentFit="contain"
       />
       <ExternalEmbedRemoveBtn onRemove={clear} />
       {autoplayDisabled && (
