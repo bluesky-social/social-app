@@ -172,6 +172,7 @@ export function StepInfo({
                   defaultValue={state.password}
                   secureTextEntry
                   autoComplete="new-password"
+                  autoCapitalize="none"
                 />
               </TextField.Root>
             </View>

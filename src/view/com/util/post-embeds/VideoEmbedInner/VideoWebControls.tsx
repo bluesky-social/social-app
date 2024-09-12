@@ -15,6 +15,7 @@ import {
 } from '#/state/preferences'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button} from '#/components/Button'
+import {useIsWithinMessage} from '#/components/dms/MessageContext'
 import {useFullscreen} from '#/components/hooks/useFullscreen'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {
@@ -95,6 +96,15 @@ export function Controls({
     }
   }, [interactingViaKeypress])
 
+  useEffect(() => {
+    if (isFullscreen) {
+      document.documentElement.style.scrollbarGutter = 'unset'
+      return () => {
+        document.documentElement.style.removeProperty('scrollbar-gutter')
+      }
+    }
+  }, [isFullscreen])
+
   // pause + unfocus when another video is active
   useEffect(() => {
     if (!active) {
@@ -104,7 +114,8 @@ export function Controls({
   }, [active, pause, setFocused])
 
   // autoplay/pause based on visibility
-  const autoplayDisabled = useAutoplayDisabled()
+  const isWithinMessage = useIsWithinMessage()
+  const autoplayDisabled = useAutoplayDisabled() || isWithinMessage
   useEffect(() => {
     if (active) {
       if (onScreen) {
@@ -121,8 +132,12 @@ export function Controls({
     if (focused) {
       // auto decide quality based on network conditions
       hlsRef.current.autoLevelCapping = -1
+      // allow 30s of buffering
+      hlsRef.current.config.maxMaxBufferLength = 30
     } else {
+      // back to what we initially set
       hlsRef.current.autoLevelCapping = 0
+      hlsRef.current.config.maxMaxBufferLength = 10
     }
   }, [hlsRef, focused])
 
@@ -235,6 +250,39 @@ export function Controls({
     }
   }, [])
 
+  // these are used to trigger the hover state. on mobile, the hover state
+  // should stick around for a bit after they tap, and if the controls aren't
+  // present this initial tab should *only* show the controls and not activate anything
+
+  const onPointerDown = useCallback(
+    (evt: React.PointerEvent<HTMLDivElement>) => {
+      if (evt.pointerType !== 'mouse' && !hovered) {
+        evt.preventDefault()
+      }
+    },
+    [hovered],
+  )
+
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>()
+
+  const onHoverWithTimeout = useCallback(() => {
+    onHover()
+    clearTimeout(timeoutRef.current)
+  }, [onHover])
+
+  const onEndHoverWithTimeout = useCallback(
+    (evt: React.PointerEvent<HTMLDivElement>) => {
+      // if touch, end after 3s
+      // if mouse, end immediately
+      if (evt.pointerType !== 'mouse') {
+        setTimeout(onEndHover, 3000)
+      } else {
+        onEndHover()
+      }
+    },
+    [onEndHover],
+  )
+
   const showControls =
     ((focused || autoplayDisabled) && !playing) ||
     (interactingViaKeypress ? hasFocus : hovered)
@@ -252,9 +300,10 @@ export function Controls({
         evt.stopPropagation()
         setInteractingViaKeypress(false)
       }}
-      onPointerEnter={onHover}
-      onPointerMove={onHover}
-      onPointerLeave={onEndHover}
+      onPointerEnter={onHoverWithTimeout}
+      onPointerMove={onHoverWithTimeout}
+      onPointerLeave={onEndHoverWithTimeout}
+      onPointerDown={onPointerDown}
       onFocus={onFocus}
       onBlur={onBlur}
       onKeyDown={onKeyDown}>
@@ -543,7 +592,7 @@ function Scrubber({
   return (
     <View
       testID="scrubber"
-      style={[{height: 10, width: '100%'}, a.flex_shrink_0, a.px_xs]}
+      style={[{height: 18, width: '100%'}, a.flex_shrink_0, a.px_xs, a.py_xs]}
       onPointerEnter={onStartHover}
       onPointerLeave={onEndHover}>
       <div
