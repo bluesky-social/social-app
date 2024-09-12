@@ -543,14 +543,14 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
                   fontWeight: '900',
                 },
               ]}>
-              <Trans>You're part of the next wave of the internet.</Trans>
+              <Trans>Thanks for being one of our first 10 million users.</Trans>
             </Text>
 
             <Text style={[a.leading_snug, a.text_lg, a.pb_xl]}>
               <Trans>
-                Thanks for being part of our first 10 million users. We're glad
+                Together, we're rebuilding the social internet. We're glad
                 you're here.
-              </Trans>{' '}
+              </Trans>
             </Text>
 
             <Divider />
