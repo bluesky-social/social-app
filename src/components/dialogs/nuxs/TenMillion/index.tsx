@@ -1,5 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
+import Animated, {FadeIn} from 'react-native-reanimated'
 import ViewShot from 'react-native-view-shot'
 import {Image} from 'expo-image'
 import {moderateProfile} from '@atproto/api'
@@ -17,7 +18,6 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from 'state/shell'
 import {formatCount} from '#/view/com/util/numeric/format'
-// import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Logomark} from '#/view/icons/Logomark'
 import {
   atoms as a,
@@ -28,7 +28,7 @@ import {
 } from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {useContext} from '#/components/dialogs/nuxs'
+import {useNuxDialogContext} from '#/components/dialogs/nuxs'
 import {OnePercent} from '#/components/dialogs/nuxs/TenMillion/icons/OnePercent'
 import {PointOnePercent} from '#/components/dialogs/nuxs/TenMillion/icons/PointOnePercent'
 import {TenPercent} from '#/components/dialogs/nuxs/TenMillion/icons/TenPercent'
@@ -39,7 +39,6 @@ import {Download_Stroke2_Corner0_Rounded as Download} from '#/components/icons/D
 import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-// import {TwentyFivePercent} from '#/components/dialogs/nuxs/TenMillion/icons/TwentyFivePercent'
 
 const DEBUG = false
 const RATIO = 8 / 10
@@ -65,9 +64,6 @@ function getPercentBadge(percent: number) {
   } else if (percent <= 0.1) {
     return TenPercent
   }
-  // else if (percent <= 0.25) {
-  //   return TwentyFivePercent
-  // }
   return null
 }
 
@@ -88,41 +84,13 @@ function Frame({children}: {children: React.ReactNode}) {
 }
 
 export function TenMillion() {
-  const {hasSession} = useSession()
-  return hasSession ? <TenMillionInner /> : null
-}
-
-export function TenMillionInner() {
-  const t = useTheme()
-  const lightTheme = useTheme('light')
-  const {_, i18n} = useLingui()
-  const {controls} = useContext()
-  const {gtMobile} = useBreakpoints()
-  const {openComposer} = useComposerControls()
-  const {currentAccount} = useSession()
-  const {isLoading: isProfileLoading, data: profile} = useProfileQuery({
-    did: currentAccount!.did,
-  })
-  const moderationOpts = useModerationOpts()
-  const moderation = React.useMemo(() => {
-    return profile && moderationOpts
-      ? moderateProfile(profile, moderationOpts)
-      : undefined
-  }, [profile, moderationOpts])
-  const [uri, setUri] = React.useState<string | null>(null)
-  const [userNumber, setUserNumber] = React.useState<number>(0)
-  const [error, setError] = React.useState('')
-
-  const isLoadingData =
-    isProfileLoading || !moderation || !profile || !userNumber
-  const isLoadingImage = !uri
-
-  const percent = userNumber / 10_000_000
-  const Badge = getPercentBadge(percent)
-
   const agent = useAgent()
+  const nuxDialogs = useNuxDialogContext()
+  const [userNumber, setUserNumber] = React.useState<number>(0)
+
   React.useEffect(() => {
     async function fetchUserNumber() {
+      // TODO check for 3p PDS
       if (agent.session?.accessJwt) {
         const res = await fetch(
           `https://bsky.social/xrpc/com.atproto.temp.getSignupNumber`,
@@ -146,26 +114,83 @@ export function TenMillionInner() {
     }
 
     networkRetry(3, fetchUserNumber).catch(() => {
-      setError(
-        _(
-          msg`Oh no! We couldn't fetch your user number. Rest assured, we're glad you're here ❤️`,
-        ),
-      )
+      nuxDialogs.dismissActiveNux()
     })
   }, [
-    _,
     agent.session?.accessJwt,
     setUserNumber,
-    controls.tenMillion,
-    setError,
+    nuxDialogs.dismissActiveNux,
+    nuxDialogs,
   ])
 
-  const sharePost = () => {
+  return userNumber ? <TenMillionInner userNumber={userNumber} /> : null
+}
+
+export function TenMillionInner({userNumber}: {userNumber: number}) {
+  const t = useTheme()
+  const lightTheme = useTheme('light')
+  const {_, i18n} = useLingui()
+  const control = Dialog.useDialogControl()
+  const {gtMobile} = useBreakpoints()
+  const {openComposer} = useComposerControls()
+  const {currentAccount} = useSession()
+  const {
+    isLoading: isProfileLoading,
+    data: profile,
+    error: profileError,
+  } = useProfileQuery({
+    did: currentAccount!.did,
+  })
+  const moderationOpts = useModerationOpts()
+  const nuxDialogs = useNuxDialogContext()
+  const moderation = React.useMemo(() => {
+    return profile && moderationOpts
+      ? moderateProfile(profile, moderationOpts)
+      : undefined
+  }, [profile, moderationOpts])
+  const [uri, setUri] = React.useState<string | null>(null)
+  const percent = userNumber / 10_000_000
+  const Badge = getPercentBadge(percent)
+  const isLoadingData = isProfileLoading || !moderation || !profile
+  const isLoadingImage = !uri
+
+  const error: string = React.useMemo(() => {
+    if (profileError) {
+      return _(
+        msg`Oh no! We weren't able to generate an image for you to share. Rest assured, we're glad you're here 🦋`,
+      )
+    }
+    return ''
+  }, [_, profileError])
+
+  /*
+   * Opening and closing
+   */
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      control.open()
+    }, 3e3)
+    return () => {
+      clearTimeout(timeout)
+    }
+  }, [control])
+  const onClose = React.useCallback(() => {
+    nuxDialogs.dismissActiveNux()
+  }, [nuxDialogs])
+
+  /*
+   * Actions
+   */
+  const sharePost = React.useCallback(() => {
     if (uri) {
-      controls.tenMillion.close(() => {
+      control.close(() => {
         setTimeout(() => {
           openComposer({
-            text: '10 milly, babyyy',
+            text: _(
+              msg`I'm user #${i18n.number(
+                userNumber,
+              )} out of 10M. What a ride 😎`,
+            ), // TODO
             imageUris: [
               {
                 uri,
@@ -177,17 +202,15 @@ export function TenMillionInner() {
         }, 1e3)
       })
     }
-  }
-
-  const onNativeShare = () => {
+  }, [_, i18n, control, openComposer, uri, userNumber])
+  const onNativeShare = React.useCallback(() => {
     if (uri) {
-      controls.tenMillion.close(() => {
+      control.close(() => {
         shareUrl(uri)
       })
     }
-  }
-
-  const download = async () => {
+  }, [uri, control])
+  const download = React.useCallback(async () => {
     if (uri) {
       const canvas = await getCanvas(uri)
       const imgHref = canvas
@@ -198,32 +221,24 @@ export function TenMillionInner() {
       link.setAttribute('href', imgHref)
       link.click()
     }
-  }
+  }, [uri])
 
+  /*
+   * Canvas stuff
+   */
   const imageRef = React.useRef<ViewShot>(null)
-  // const captureInProgress = React.useRef(false)
-  // const [cavasRelayout, setCanvasRelayout] = React.useState('key')
-  // const onCanvasReady = async () => {
-  //   if (
-  //     imageRef.current &&
-  //     imageRef.current.capture &&
-  //     !captureInProgress.current
-  //   ) {
-  //     captureInProgress.current = true
-  //     setCanvasRelayout('updated')
-  //   }
-  // }
-  const onCanvasLayout = async () => {
+  const captureInProgress = React.useRef(false)
+  const onCanvasReady = React.useCallback(async () => {
     if (
       imageRef.current &&
-      imageRef.current.capture // &&
-      // cavasRelayout === 'updated'
+      imageRef.current.capture &&
+      !captureInProgress.current
     ) {
+      captureInProgress.current = true
       const uri = await imageRef.current.capture()
       setUri(uri)
     }
-  }
-
+  }, [setUri])
   const canvas = isLoadingData ? null : (
     <View
       style={[
@@ -247,8 +262,7 @@ export function TenMillionInner() {
               options={{width: WIDTH, height: HEIGHT}}
               style={[a.absolute, a.inset_0]}>
               <View
-                // key={cavasRelayout}
-                onLayout={onCanvasLayout}
+                onLayout={onCanvasReady}
                 style={[
                   a.absolute,
                   a.inset_0,
@@ -442,7 +456,7 @@ export function TenMillionInner() {
   )
 
   return (
-    <Dialog.Outer control={controls.tenMillion}>
+    <Dialog.Outer control={control} onClose={onClose}>
       <Dialog.ScrollableInner
         label={_(msg`Ten Million`)}
         style={[
@@ -494,11 +508,15 @@ export function TenMillionInner() {
               ) : isLoadingData || isLoadingImage ? (
                 <Loader size="xl" fill="white" />
               ) : (
-                <Image
-                  accessibilityIgnoresInvertColors
-                  source={{uri}}
-                  style={[a.w_full, a.h_full]}
-                />
+                <Animated.View
+                  entering={FadeIn.duration(150)}
+                  style={[a.w_full, a.h_full]}>
+                  <Image
+                    accessibilityIgnoresInvertColors
+                    source={{uri}}
+                    style={[a.w_full, a.h_full]}
+                  />
+                </Animated.View>
               )}
             </View>
           </Frame>
