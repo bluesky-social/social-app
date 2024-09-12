@@ -8,11 +8,10 @@
 // Original code copied and simplified from the link below as the codebase is currently not maintained:
 // https://github.com/jobtoday/react-native-image-viewing
 
-import React, {ComponentType, useCallback, useMemo, useState} from 'react'
-import {Dimensions, Platform, StyleSheet, View} from 'react-native'
+import React, {ComponentType, useCallback, useState} from 'react'
+import {Dimensions, StyleSheet, View} from 'react-native'
 import PagerView from 'react-native-pager-view'
 import Animated, {
-  Extrapolate,
   interpolate,
   MeasuredDimensions,
   runOnJS,
@@ -21,15 +20,16 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated'
-import {Edge, SafeAreaView} from 'react-native-safe-area-context'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Image} from 'expo-image'
 
+import {isAndroid} from '#/platform/detection'
 import ImageDefaultHeader from './components/ImageDefaultHeader'
 import ImageItem from './components/ImageItem/ImageItem'
 
 const AnimatedImage = Animated.createAnimatedComponent(Image)
 
-const SCREEN = Dimensions.get('screen')
+const SCREEN: {width: number; height: number} = Dimensions.get('screen')
 
 type Props = {
   thumbDims?: MeasuredDimensions | null
@@ -52,7 +52,6 @@ const DEFAULT_BG_COLOR = '#000'
 function ImageViewing({
   images,
   initialImageIndex,
-  visible,
   onLoad,
   onRequestClose,
   backgroundColor = DEFAULT_BG_COLOR,
@@ -94,68 +93,51 @@ function ImageViewing({
     }
   }, [])
 
-  const edges = useMemo(() => {
-    if (Platform.OS === 'android') {
-      return ['top', 'bottom', 'left', 'right'] satisfies Edge[]
-    }
-    return ['left', 'right'] satisfies Edge[] // iOS, so no top/bottom safe area
-  }, [])
-
-  if (!visible) {
-    return null
-  }
-
   return (
-    <SafeAreaView
-      style={styles.screen}
-      edges={edges}
-      aria-modal
-      accessibilityViewIsModal>
-      <View style={[styles.container, {backgroundColor}]}>
-        <Animated.View style={[styles.header, animatedHeaderStyle]}>
-          {typeof HeaderComponent !== 'undefined' ? (
-            React.createElement(HeaderComponent, {
-              imageIndex,
-            })
-          ) : (
-            <ImageDefaultHeader onRequestClose={onRequestClose} />
-          )}
-        </Animated.View>
-        <PagerView
-          scrollEnabled={!isScaled}
-          initialPage={initialImageIndex}
-          onPageSelected={e => {
-            setImageIndex(e.nativeEvent.position)
-            setIsScaled(false)
-          }}
-          onPageScrollStateChanged={e => {
-            setIsDragging(e.nativeEvent.pageScrollState !== 'idle')
-          }}
-          overdrag={true}
-          style={styles.pager}>
-          {images.map(imageSrc => (
-            <View key={imageSrc.uri}>
-              <ImageItem
-                onTap={onTap}
-                onZoom={onZoom}
-                onLoad={onLoad}
-                imageSrc={imageSrc}
-                onRequestClose={onRequestClose}
-                isScrollViewBeingDragged={isDragging}
-                showControls={showControls}
-              />
-            </View>
-          ))}
-        </PagerView>
-        {typeof FooterComponent !== 'undefined' && (
-          <Animated.View style={[styles.footer, animatedFooterStyle]}>
-            {React.createElement(FooterComponent, {
-              imageIndex,
-            })}
-          </Animated.View>
+    <View style={[styles.container, {backgroundColor}]}>
+      <Animated.View style={[styles.header, animatedHeaderStyle]}>
+        {typeof HeaderComponent !== 'undefined' ? (
+          React.createElement(HeaderComponent, {
+            imageIndex,
+          })
+        ) : (
+          <ImageDefaultHeader onRequestClose={onRequestClose} />
         )}
-      </View>
-    </SafeAreaView>
+      </Animated.View>
+      <PagerView
+        scrollEnabled={!isScaled}
+        initialPage={initialImageIndex}
+        onPageSelected={e => {
+          setImageIndex(e.nativeEvent.position)
+          setIsScaled(false)
+        }}
+        onPageScrollStateChanged={e => {
+          setIsDragging(e.nativeEvent.pageScrollState !== 'idle')
+        }}
+        overdrag={true}
+        style={styles.pager}>
+        {images.map(imageSrc => (
+          <View key={imageSrc.uri}>
+            <ImageItem
+              onTap={onTap}
+              onZoom={onZoom}
+              onLoad={onLoad}
+              imageSrc={imageSrc}
+              onRequestClose={onRequestClose}
+              isScrollViewBeingDragged={isDragging}
+              showControls={showControls}
+            />
+          </View>
+        ))}
+      </PagerView>
+      {typeof FooterComponent !== 'undefined' && (
+        <Animated.View style={[styles.footer, animatedFooterStyle]}>
+          {React.createElement(FooterComponent, {
+            imageIndex,
+          })}
+        </Animated.View>
+      )}
+    </View>
   )
 }
 
@@ -200,10 +182,6 @@ function ImageViewingWithSplash(props: Props) {
     openProgress.value = withClampedSpring(1)
   }, [openProgress])
 
-  const backgroundStyle = useAnimatedStyle(() => ({
-    opacity: openProgress.value,
-  }))
-
   useAnimatedReaction(
     () => openProgress.value,
     nextValue => {
@@ -214,7 +192,9 @@ function ImageViewingWithSplash(props: Props) {
   )
 
   const initialTransform = calculateOverlayTransform(SCREEN, props.thumbDims)
-
+  const backgroundStyle = useAnimatedStyle(() => ({
+    opacity: openProgress.value,
+  }))
   const animatedStyle = useAnimatedStyle(() => {
     if (!initialTransform) {
       return {}
@@ -226,7 +206,6 @@ function ImageViewingWithSplash(props: Props) {
             openProgress.value,
             [0, 1],
             [initialTransform.scale, 1],
-            Extrapolate.CLAMP,
           ),
         },
         {
@@ -234,7 +213,6 @@ function ImageViewingWithSplash(props: Props) {
             openProgress.value,
             [0, 1],
             [initialTransform.translateX, 0],
-            Extrapolate.CLAMP,
           ),
         },
         {
@@ -242,16 +220,29 @@ function ImageViewingWithSplash(props: Props) {
             openProgress.value,
             [0, 1],
             [initialTransform.translateY, 0],
-            Extrapolate.CLAMP,
           ),
         },
       ],
     }
   })
+  const insets = useSafeAreaInsets()
+
+  if (!props.visible) {
+    return null
+  }
 
   const showSplash = initialTransform && !isReady
   return (
-    <>
+    <View
+      aria-modal
+      accessibilityViewIsModal
+      style={{
+        position: 'absolute',
+        top: isAndroid ? insets.top : 0,
+        left: 0,
+        bottom: 0,
+        right: 0,
+      }}>
       {showSplash && (
         <Animated.View
           style={[
@@ -310,11 +301,11 @@ function ImageViewingWithSplash(props: Props) {
           onLoad={() => {
             setTimeout(() => {
               setIsLoaded(true)
-            }, 200)
+            }, 200 /* give it time to render on screen, we don't have exact callback for this. */)
           }}
         />
       </Animated.View>
-    </>
+    </View>
   )
 }
 
@@ -333,21 +324,15 @@ const calculateOverlayTransform = (
   if (!thumbnailPlacement) {
     return null
   }
-  // Calculate scale to fit the thumbnail width
   const scale = thumbnailPlacement.width / screenSize.width
-
-  // Calculate the center points
   const screenCenterX = screenSize.width / 2
   const screenCenterY = screenSize.height / 2
   const thumbnailCenterX =
     thumbnailPlacement.pageX + thumbnailPlacement.width / 2
   const thumbnailCenterY =
     thumbnailPlacement.pageY + thumbnailPlacement.height / 2
-
-  // Calculate translations
   const translateX = (thumbnailCenterX - screenCenterX) / scale
   const translateY = (thumbnailCenterY - screenCenterY) / scale
-
   return {scale, translateX, translateY}
 }
 
