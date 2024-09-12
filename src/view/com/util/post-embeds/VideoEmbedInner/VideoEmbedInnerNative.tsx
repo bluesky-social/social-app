@@ -1,5 +1,5 @@
 import React, {useRef} from 'react'
-import {Pressable, View} from 'react-native'
+import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
 import Animated, {FadeInDown} from 'react-native-reanimated'
 import {AppBskyEmbedVideo} from '@atproto/api'
 import {BlueskyVideoView} from '@haileyok/bluesky-video'
@@ -8,10 +8,12 @@ import {useLingui} from '@lingui/react'
 
 import {HITSLOP_30} from '#/lib/constants'
 import {clamp} from '#/lib/numbers'
-import {useAutoplayDisabled} from 'state/preferences'
+import {useAutoplayDisabled} from '#/state/preferences'
 import {atoms as a, useTheme} from '#/alf'
 import {useIsWithinMessage} from '#/components/dms/MessageContext'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
+import {Pause_Filled_Corner0_Rounded as PauseIcon} from '#/components/icons/Pause'
+import {Play_Filled_Corner0_Rounded as PlayIcon} from '#/components/icons/Play'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
 import {TimeIndicator} from './TimeIndicator'
 
@@ -31,6 +33,7 @@ export function VideoEmbedInnerNative({
   const isWithinMessage = useIsWithinMessage()
 
   const [isMuted, setIsMuted] = React.useState(true)
+  const [isPlaying, setIsPlaying] = React.useState(false)
   const [timeRemaining, setTimeRemaining] = React.useState(0)
 
   const [error, setError] = React.useState<string>()
@@ -51,6 +54,7 @@ export function VideoEmbedInnerNative({
       <BlueskyVideoView
         url={embed.playlist}
         autoplay={!autoplayDisabled && !isWithinMessage}
+        beginMuted={true}
         ref={ref}
         style={[a.flex_1, a.rounded_sm]}
         onError={e => {
@@ -64,6 +68,7 @@ export function VideoEmbedInnerNative({
         }}
         onStatusChange={e => {
           setStatus(e.nativeEvent.status)
+          setIsPlaying(e.nativeEvent.status === 'playing')
         }}
         onLoadingChange={e => {
           setIsLoading(e.nativeEvent.isLoading)
@@ -83,7 +88,11 @@ export function VideoEmbedInnerNative({
         toggleMuted={() => {
           ref.current?.toggleMuted()
         }}
+        togglePlayback={() => {
+          ref.current?.togglePlayback()
+        }}
         isMuted={isMuted}
+        isPlaying={isPlaying}
         timeRemaining={timeRemaining}
       />
     </View>
@@ -93,12 +102,16 @@ export function VideoEmbedInnerNative({
 function VideoControls({
   enterFullscreen,
   toggleMuted,
+  togglePlayback,
   timeRemaining,
+  isPlaying,
   isMuted,
 }: {
   enterFullscreen: () => void
   toggleMuted: () => void
+  togglePlayback: () => void
   timeRemaining: number
+  isPlaying: boolean
   isMuted: boolean
 }) {
   const {_} = useLingui()
@@ -109,10 +122,10 @@ function VideoControls({
   // 2. duration is greater than 0 - means metadata has loaded
   // 3. we're less than 5 second into the video
   const showTime = !isNaN(timeRemaining)
+  const autoplayDisabled = useAutoplayDisabled()
 
   return (
     <View style={[a.absolute, a.inset_0]}>
-      {showTime && <TimeIndicator time={timeRemaining} />}
       <Pressable
         onPress={enterFullscreen}
         style={a.flex_1}
@@ -120,36 +133,80 @@ function VideoControls({
         accessibilityHint={_(msg`Tap to enter full screen`)}
         accessibilityRole="button"
       />
-      <Animated.View
-        entering={FadeInDown.duration(300)}
-        style={[
-          a.absolute,
-          a.rounded_full,
-          a.justify_center,
-          {
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            paddingHorizontal: 4,
-            paddingVertical: 4,
-            bottom: 6,
-            right: 6,
-            minHeight: 21,
-            minWidth: 21,
-          },
-        ]}>
-        <Pressable
-          onPress={toggleMuted}
-          style={a.flex_1}
-          accessibilityLabel={isMuted ? _(msg`Muted`) : _(msg`Unmuted`)}
-          accessibilityHint={_(msg`Tap to toggle sound`)}
-          accessibilityRole="button"
-          hitSlop={HITSLOP_30}>
-          {isMuted ? (
-            <MuteIcon width={13} fill={t.palette.white} />
+      {autoplayDisabled && (
+        <ControlButton
+          onPress={togglePlayback}
+          label={isPlaying ? _(msg`Pause`) : _(msg`Play`)}
+          accessibilityHint={_(msg`Tap to play or pause`)}
+          style={{left: 6}}>
+          {isPlaying ? (
+            <PauseIcon width={13} fill={t.palette.white} />
           ) : (
-            <UnmuteIcon width={13} fill={t.palette.white} />
+            <PlayIcon width={13} fill={t.palette.white} />
           )}
-        </Pressable>
-      </Animated.View>
+        </ControlButton>
+      )}
+      {showTime && (
+        <TimeIndicator
+          time={timeRemaining}
+          style={autoplayDisabled ? {left: 33} : {}}
+        />
+      )}
+
+      <ControlButton
+        onPress={toggleMuted}
+        label={isMuted ? _(msg`Unmute`) : _(msg`Mute`)}
+        accessibilityHint={_(msg`Tap to toggle sound`)}
+        style={{right: 6}}>
+        {isMuted ? (
+          <MuteIcon width={13} fill={t.palette.white} />
+        ) : (
+          <UnmuteIcon width={13} fill={t.palette.white} />
+        )}
+      </ControlButton>
     </View>
+  )
+}
+
+function ControlButton({
+  onPress,
+  children,
+  label,
+  accessibilityHint,
+  style,
+}: {
+  onPress: () => void
+  children: React.ReactNode
+  label: string
+  accessibilityHint: string
+  style?: StyleProp<ViewStyle>
+}) {
+  return (
+    <Animated.View
+      entering={FadeInDown.duration(300)}
+      style={[
+        a.absolute,
+        a.rounded_full,
+        a.justify_center,
+        {
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          paddingHorizontal: 4,
+          paddingVertical: 4,
+          bottom: 6,
+          minHeight: 21,
+          minWidth: 21,
+        },
+        style,
+      ]}>
+      <Pressable
+        onPress={onPress}
+        style={a.flex_1}
+        accessibilityLabel={label}
+        accessibilityHint={accessibilityHint}
+        accessibilityRole="button"
+        hitSlop={HITSLOP_30}>
+        {children}
+      </Pressable>
+    </Animated.View>
   )
 }
