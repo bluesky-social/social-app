@@ -5935,7 +5935,7 @@ msgstr "Elimina la republicació"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:260
 msgid "Remove subtitle file"
-msgstr "Elimina el fitxer de subtítols"
+msgstr "Eliminar arxiu de subtítols"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:175
 #~ msgid "Remove this feed from my feeds?"
