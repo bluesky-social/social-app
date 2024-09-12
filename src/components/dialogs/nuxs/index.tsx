@@ -40,13 +40,16 @@ function Inner() {
   }, [setSnoozed])
 
   const dismissActiveNux = React.useCallback(() => {
+    if (!activeNux) return
     setActiveNux(undefined)
+    const nux = nuxs?.find(nux => nux.id === activeNux)
     upsertNux({
-      id: activeNux!,
+      id: activeNux,
       completed: true,
-      data: undefined,
+      data: nux?.data,
+      expiresAt: nux?.expiresAt,
     })
-  }, [activeNux, setActiveNux, upsertNux])
+  }, [activeNux, setActiveNux, upsertNux, nuxs])
 
   React.useEffect(() => {
     if (snoozed) return
