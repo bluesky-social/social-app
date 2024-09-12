@@ -41,7 +41,7 @@ export function TimeIndicator({time}: {time: number}) {
           a.font_bold,
           {lineHeight: 1.25},
         ]}>
-        {minutes}:{seconds}
+        {`${minutes}:${seconds}`}
       </Text>
     </Animated.View>
   )
