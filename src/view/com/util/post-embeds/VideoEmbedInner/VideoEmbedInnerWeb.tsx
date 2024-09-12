@@ -35,7 +35,13 @@ export function VideoEmbedInnerWeb({
     if (!ref.current) return
     if (!Hls.isSupported()) throw new HLSUnsupportedError()
 
-    const hls = new Hls({capLevelToPlayerSize: true})
+    const hls = new Hls({
+      capLevelToPlayerSize: true,
+      maxMaxBufferLength: 10, // only load 10s ahead
+      // note: the amount buffered is affected by both maxBufferLength and maxBufferSize
+      // it will buffer until it it's greater than *both* of those values
+      // so we use maxMaxBufferLength to set the actual maximum amount of buffering instead
+    })
     hlsRef.current = hls
 
     hls.attachMedia(ref.current)
