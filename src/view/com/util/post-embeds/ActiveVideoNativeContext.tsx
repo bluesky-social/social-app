@@ -2,12 +2,19 @@ import React from 'react'
 import {useVideoPlayer, VideoPlayer} from 'expo-video'
 
 import {isAndroid, isNative} from '#/platform/detection'
+import {useAutoplayDisabled} from '#/state/preferences'
+import {
+  AudioCategory,
+  PlatformInfo,
+} from '../../../../../modules/expo-bluesky-swiss-army'
 
 const Context = React.createContext<{
   activeSource: string
   activeViewId: string | undefined
   setActiveSource: (src: string | null, viewId: string | null) => void
   player: VideoPlayer
+  mutedInFeed: boolean
+  setMutedInFeed: (muted: boolean) => void
 } | null>(null)
 
 export function Provider({children}: {children: React.ReactNode}) {
@@ -17,9 +24,17 @@ export function Provider({children}: {children: React.ReactNode}) {
 
   const [activeSource, setActiveSource] = React.useState('')
   const [activeViewId, setActiveViewId] = React.useState<string>()
+  const autoplayDisabled = useAutoplayDisabled()
+  const [mutedInFeed, setMutedInFeed] = React.useState(!autoplayDisabled)
 
   const player = useVideoPlayer(activeSource, p => {
-    p.muted = true
+    const mix = !mutedInFeed
+    const category = mutedInFeed
+      ? AudioCategory.Ambient
+      : AudioCategory.Playback
+    PlatformInfo.setAudioCategory(category)
+    PlatformInfo.setAudioActive(mix)
+    p.muted = mutedInFeed
     p.loop = true
     // We want to immediately call `play` so we get the loading state
     p.play()
@@ -48,6 +63,8 @@ export function Provider({children}: {children: React.ReactNode}) {
         setActiveSource: setActiveSourceOuter,
         activeViewId,
         player,
+        mutedInFeed,
+        setMutedInFeed,
       }}>
       {children}
     </Context.Provider>

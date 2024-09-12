@@ -1,7 +1,7 @@
 import React, {useCallback, useRef} from 'react'
 import {Pressable, View} from 'react-native'
 import Animated, {FadeInDown} from 'react-native-reanimated'
-import {VideoPlayer, VideoView} from 'expo-video'
+import {VideoView} from 'expo-video'
 import {AppBskyEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -33,7 +33,7 @@ export function VideoEmbedInnerNative({
   isMuted: boolean
 }) {
   const {_} = useLingui()
-  const {player} = useActiveVideoNative()
+  const {player, mutedInFeed} = useActiveVideoNative()
   const ref = useRef<VideoView>(null)
 
   const enterFullscreen = useCallback(() => {
@@ -69,7 +69,7 @@ export function VideoEmbedInnerNative({
         onFullscreenExit={() => {
           PlatformInfo.setAudioCategory(AudioCategory.Ambient)
           PlatformInfo.setAudioActive(false)
-          player.muted = true
+          player.muted = mutedInFeed
           player.playbackRate = 1
           setIsFullscreen(false)
         }}
@@ -79,7 +79,6 @@ export function VideoEmbedInnerNative({
         accessibilityHint=""
       />
       <VideoControls
-        player={player}
         enterFullscreen={enterFullscreen}
         isMuted={isMuted}
         timeRemaining={timeRemaining}
@@ -89,18 +88,17 @@ export function VideoEmbedInnerNative({
 }
 
 function VideoControls({
-  player,
   enterFullscreen,
   timeRemaining,
   isMuted,
 }: {
-  player: VideoPlayer
   enterFullscreen: () => void
   timeRemaining: number
   isMuted: boolean
 }) {
   const {_} = useLingui()
   const t = useTheme()
+  const {player, setMutedInFeed} = useActiveVideoNative()
 
   const onPressFullscreen = useCallback(() => {
     switch (player.status) {
@@ -128,7 +126,8 @@ function VideoControls({
     PlatformInfo.setAudioCategory(category)
     PlatformInfo.setAudioActive(mix)
     player.muted = muted
-  }, [player])
+    setMutedInFeed(muted)
+  }, [player, setMutedInFeed])
 
   // show countdown when:
   // 1. timeRemaining is a number - was seeing NaNs
