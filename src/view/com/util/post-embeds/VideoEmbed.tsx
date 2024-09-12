@@ -60,7 +60,6 @@ function InnerWrapper({embed}: Props) {
   // TODO
   const [isMuted, setIsMuted] = useState(false)
   const [isFullscreen, setIsFullscreen] = React.useState(false)
-  const [timeRemaining, setTimeRemaining] = React.useState(0)
   const isWithinMessage = useIsWithinMessage()
   const disableAutoplay = useAutoplayDisabled() || isWithinMessage
   // There are some different loading states that we should pay attention to and show a spinner for
@@ -79,7 +78,6 @@ function InnerWrapper({embed}: Props) {
       {true ? (
         <VideoEmbedInnerNative
           embed={embed}
-          timeRemaining={timeRemaining}
           isMuted={isMuted}
           isFullscreen={isFullscreen}
           setIsFullscreen={setIsFullscreen}
