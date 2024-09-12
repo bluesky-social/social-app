@@ -37,7 +37,7 @@ export function TimeIndicator({time}: {time: number}) {
       ]}>
       <Text
         style={[
-          {color: t.palette.white, fontSize: 12},
+          {color: t.palette.white, fontSize: 12, fontVariant: ['tabular-nums']},
           a.font_bold,
           {lineHeight: 1.25},
         ]}>
