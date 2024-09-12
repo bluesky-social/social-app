@@ -1,3 +1,6 @@
 export type Gate =
   // Keep this alphabetic please.
-  'debug_show_feedcontext' | 'suggested_feeds_interstitial' | 'video_upload' // upload videos
+  | 'debug_show_feedcontext'
+  | 'suggested_feeds_interstitial'
+  | 'ten_million_dialog'
+  | 'video_upload' // upload videos

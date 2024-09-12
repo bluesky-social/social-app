@@ -1,5 +1,6 @@
 import React from 'react'
 
+import {useGate} from '#/lib/statsig/statsig'
 import {
   Nux,
   useNuxs,
@@ -16,7 +17,17 @@ type Context = {
   dismissActiveNux: () => void
 }
 
-const queuedNuxs = [Nux.TenMillionDialog]
+const queuedNuxs: {
+  id: Nux
+  enabled(props: {gate: ReturnType<typeof useGate>}): boolean
+}[] = [
+  {
+    id: Nux.TenMillionDialog,
+    enabled({gate}) {
+      return gate('ten_million_dialog')
+    },
+  },
+]
 
 const Context = React.createContext<Context>({
   activeNux: undefined,
@@ -33,6 +44,7 @@ export function NuxDialogs() {
 }
 
 function Inner() {
+  const gate = useGate()
   const {nuxs} = useNuxs()
   const [snoozed, setSnoozed] = React.useState(() => {
     return isSnoozed()
@@ -64,15 +76,19 @@ function Inner() {
     if (snoozed) return
     if (!nuxs) return
 
-    for (const id of queuedNuxs) {
+    for (const {id, enabled} of queuedNuxs) {
       const nux = nuxs.find(nux => nux.id === id)
 
+      // check if completed first
       if (nux && nux.completed) continue
+      // then check gate (track exposure)
+      if (!enabled({gate})) continue
 
+      // we have a winner
       setActiveNux(id)
       // immediately snooze (in memory)
       snoozeNuxDialog()
-      // immediately update remote data
+      // immediately update remote data (affects next reload)
       upsertNux({
         id,
         completed: true,
@@ -81,7 +97,7 @@ function Inner() {
 
       break
     }
-  }, [nuxs, snoozed, snoozeNuxDialog, upsertNux])
+  }, [nuxs, snoozed, snoozeNuxDialog, upsertNux, gate])
 
   const ctx = React.useMemo(() => {
     return {
