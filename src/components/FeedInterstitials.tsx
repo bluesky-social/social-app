@@ -174,11 +174,13 @@ function useExperimentalSuggestedUsersQuery() {
 
 export function SuggestedFollows({feed}: {feed: FeedDescriptor}) {
   const {currentAccount} = useSession()
-  const [feedType, feedUri] = feed.split('|')
+  const [feedType, feedUriOrDid] = feed.split('|')
   if (feedType === 'author') {
-    return currentAccount?.did !== feedUri ? (
-      <SuggestedFollowsProfile did={feedUri} />
-    ) : null
+    if (currentAccount?.did === feedUriOrDid) {
+      return null
+    } else {
+      return <SuggestedFollowsProfile did={feedUriOrDid} />
+    }
   } else {
     return <SuggestedFollowsHome />
   }
@@ -213,6 +215,7 @@ export function SuggestedFollowsHome() {
       isSuggestionsLoading={isSuggestionsLoading}
       profiles={profiles}
       error={error}
+      viewContext="feed"
     />
   )
 }
@@ -226,7 +229,7 @@ export function ProfileGrid({
   isSuggestionsLoading: boolean
   profiles: AppBskyActorDefs.ProfileViewDetailed[]
   error: Error | null
-  viewContext?: 'profile' | 'feed'
+  viewContext: 'profile' | 'feed'
 }) {
   const t = useTheme()
   const {_} = useLingui()
