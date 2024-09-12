@@ -12,6 +12,8 @@ import {ExternalEmbedRemoveBtn} from 'view/com/composer/ExternalEmbedRemoveBtn'
 import {atoms as a} from '#/alf'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 
+const MAX_DURATION = 60
+
 export function VideoPreview({
   asset,
   video,
@@ -36,6 +38,15 @@ export function VideoPreview({
       'loadedmetadata',
       function () {
         setDimensions(this.videoWidth, this.videoHeight)
+        if (!isNaN(this.duration)) {
+          if (this.duration > MAX_DURATION) {
+            Toast.show(
+              _(msg`Videos must be less than 60 seconds long`),
+              'xmark',
+            )
+            clear()
+          }
+        }
       },
       {signal},
     )
