@@ -1,7 +1,7 @@
 import React, {memo} from 'react'
 import {FlatListProps, RefreshControl, ViewToken} from 'react-native'
 import {runOnJS, useSharedValue} from 'react-native-reanimated'
-import {updateActiveVideoViewAsync} from 'bluesky-video/build/BlueskyVideoModule'
+import {updateActiveVideoViewAsync} from '@haileyok/bluesky-video'
 
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -9,7 +9,6 @@ import {useScrollHandlers} from '#/lib/ScrollContext'
 import {useDedupe} from 'lib/hooks/useDedupe'
 import {addStyle} from 'lib/styles'
 import {isIOS} from 'platform/detection'
-import {updateActiveViewAsync} from '../../../../modules/expo-bluesky-swiss-army/src/VisibilityView'
 import {FlatList_INTERNAL} from './Views'
 
 export type ListMethods = FlatList_INTERNAL

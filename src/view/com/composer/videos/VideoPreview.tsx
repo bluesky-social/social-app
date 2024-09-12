@@ -1,7 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
 import {ImagePickerAsset} from 'expo-image-picker'
-import {BlueskyVideoView} from 'bluesky-video'
+import {BlueskyVideoView} from '@haileyok/bluesky-video'
 
 import {CompressedVideo} from '#/lib/media/video/types'
 import {clamp} from '#/lib/numbers'
