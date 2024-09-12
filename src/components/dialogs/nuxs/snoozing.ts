@@ -5,6 +5,10 @@ export function snooze() {
   device.set(['lastNuxDialog'], new Date().toISOString())
 }
 
+export function unsnooze() {
+  device.set(['lastNuxDialog'], undefined)
+}
+
 export function isSnoozed() {
   const lastNuxDialog = device.get(['lastNuxDialog'])
   if (!lastNuxDialog) return false

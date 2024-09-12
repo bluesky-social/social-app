@@ -1,9 +1,15 @@
 import React from 'react'
 
-import {Nux, useNuxs, useUpsertNuxMutation} from '#/state/queries/nuxs'
+import {
+  Nux,
+  useNuxs,
+  useRemoveNuxsMutation,
+  useUpsertNuxMutation,
+} from '#/state/queries/nuxs'
 import {useSession} from '#/state/session'
-import {isSnoozed, snooze} from '#/components/dialogs/nuxs/snoozing'
+import {isSnoozed, snooze, unsnooze} from '#/components/dialogs/nuxs/snoozing'
 import {TenMillion} from '#/components/dialogs/nuxs/TenMillion'
+import {IS_DEV} from '#/env'
 
 type Context = {
   activeNux: Nux | undefined
@@ -33,6 +39,7 @@ function Inner() {
   })
   const [activeNux, setActiveNux] = React.useState<Nux | undefined>()
   const {mutate: upsertNux} = useUpsertNuxMutation()
+  const {mutate: removeNuxs} = useRemoveNuxsMutation()
 
   const snoozeNuxDialog = React.useCallback(() => {
     snooze()
@@ -50,6 +57,15 @@ function Inner() {
       expiresAt: nux?.expiresAt,
     })
   }, [activeNux, setActiveNux, upsertNux, nuxs])
+
+  if (IS_DEV && typeof window !== 'undefined') {
+    // @ts-ignore
+    window.clearNuxDialog = (id: Nux) => {
+      if (!IS_DEV || !id) return
+      removeNuxs([id])
+      unsnooze()
+    }
+  }
 
   React.useEffect(() => {
     if (snoozed) return

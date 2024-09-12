@@ -430,7 +430,6 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
                               style={[
                                 a.text_sm,
                                 a.font_semibold,
-                                ,
                                 a.leading_tight,
                                 lightTheme.atoms.text_contrast_low,
                               ]}>
@@ -533,13 +532,13 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
                   fontWeight: '900',
                 },
               ]}>
-              Thanks for being an early part of Bluesky.
+              <Trans>You're part of the next wave of the internet.</Trans>
             </Text>
 
             <Text style={[a.leading_snug, a.text_lg, a.pb_xl]}>
               <Trans>
-                We're rebuilding the social internet together. Congratulations,
-                we're glad you're here.
+                Thanks for being part of our first 10 million users. We're glad
+                you're here.
               </Trans>{' '}
             </Text>
 
@@ -554,7 +553,7 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
                 a.pt_xl,
               ]}>
               <Text style={[a.text_md, a.italic, t.atoms.text_contrast_medium]}>
-                Brag a little!
+                <Trans>Brag a little!</Trans>
               </Text>
 
               <Button
