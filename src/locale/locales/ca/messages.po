@@ -4974,7 +4974,7 @@ msgstr "Només pot tenir lletres, nombres i guionets"
 
 #: src/view/com/composer/videos/SubtitleFilePicker.tsx:31
 msgid "Only WebVTT (.vtt) files are supported"
-msgstr "Només s'admeten fitxers WebVTT (.vtt)"
+msgstr "Només s'admeten arxius WebVTT (.vtt)"
 
 #: src/components/Lists.tsx:88
 msgid "Oops, something went wrong!"
