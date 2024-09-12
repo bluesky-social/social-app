@@ -424,13 +424,15 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
                             moderation.ui('displayName'),
                           )}
                         </Text>
-                        <View style={[a.flex_row, a.justify_between]}>
+                        <View
+                          style={[a.flex_row, a.justify_between, a.gap_4xl]}>
                           <Text
+                            numberOfLines={1}
                             style={[
+                              a.flex_1,
                               a.text_sm,
                               a.font_semibold,
-                              ,
-                              a.leading_tight,
+                              a.leading_snug,
                               lightTheme.atoms.text_contrast_medium,
                             ]}>
                             {sanitizeHandle(profile.handle, '@')}
@@ -438,16 +440,22 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
 
                           {profile.createdAt && (
                             <Text
+                              numberOfLines={1}
+                              ellipsizeMode="head"
                               style={[
+                                a.flex_1,
                                 a.text_sm,
                                 a.font_semibold,
-                                a.leading_tight,
+                                a.leading_snug,
+                                a.text_right,
                                 lightTheme.atoms.text_contrast_low,
                               ]}>
                               <Trans>
                                 Joined{' '}
                                 {i18n.date(profile.createdAt, {
-                                  dateStyle: 'long',
+                                  month: 'short',
+                                  day: 'numeric',
+                                  year: 'numeric',
                                 })}
                               </Trans>
                             </Text>
