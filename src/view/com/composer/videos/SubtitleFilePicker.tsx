@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {logger} from '#/logger'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -32,6 +33,9 @@ export function SubtitleFilePicker({
       ) {
         onSelectFile(selectedFile)
       } else {
+        logger.error('Invalid subtitle file type', {
+          safeMessage: `File: ${selectedFile.name} (${selectedFile.type})`,
+        })
         Toast.show(_(msg`Only WebVTT (.vtt) files are supported`))
       }
     }
