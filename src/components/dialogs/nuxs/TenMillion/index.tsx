@@ -90,8 +90,11 @@ export function TenMillion() {
 
   React.useEffect(() => {
     async function fetchUserNumber() {
-      // TODO check for 3p PDS
-      if (agent.session?.accessJwt) {
+      const isBlueskyHosted = agent.sessionManager.pdsUrl
+        ?.toString()
+        .includes('bsky.network')
+
+      if (isBlueskyHosted && agent.session?.accessJwt) {
         const res = await fetch(
           `https://bsky.social/xrpc/com.atproto.temp.getSignupNumber`,
           {
@@ -109,6 +112,9 @@ export function TenMillion() {
 
         if (data.number) {
           setUserNumber(data.number)
+        } else {
+          // should be rare
+          nuxDialogs.dismissActiveNux()
         }
       }
     }
@@ -117,6 +123,7 @@ export function TenMillion() {
       nuxDialogs.dismissActiveNux()
     })
   }, [
+    agent.sessionManager.pdsUrl,
     agent.session?.accessJwt,
     setUserNumber,
     nuxDialogs.dismissActiveNux,
@@ -187,9 +194,9 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
         setTimeout(() => {
           openComposer({
             text: _(
-              msg`I'm user #${i18n.number(
+              msg`Bluesky now has over 10 million users, and I was #${i18n.number(
                 userNumber,
-              )} out of 10M. What a ride 😎`,
+              )}!`,
             ), // TODO
             imageUris: [
               {
