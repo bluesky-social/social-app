@@ -72,7 +72,6 @@ export function VideoEmbedInnerNative({
         onActiveChange={e => {
           setIsActive(e.nativeEvent.isActive)
         }}
-        // contentFit="cover"
         // accessibilityLabel={
         //   embed.alt ? _(msg`Video: ${embed.alt}`) : _(msg`Video`)
         // }
