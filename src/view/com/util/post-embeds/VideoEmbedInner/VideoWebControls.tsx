@@ -15,6 +15,7 @@ import {
 } from '#/state/preferences'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button} from '#/components/Button'
+import {useIsWithinMessage} from '#/components/dms/MessageContext'
 import {useFullscreen} from '#/components/hooks/useFullscreen'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {
@@ -113,7 +114,8 @@ export function Controls({
   }, [active, pause, setFocused])
 
   // autoplay/pause based on visibility
-  const autoplayDisabled = useAutoplayDisabled()
+  const isWithinMessage = useIsWithinMessage()
+  const autoplayDisabled = useAutoplayDisabled() || isWithinMessage
   useEffect(() => {
     if (active) {
       if (onScreen) {
@@ -130,8 +132,12 @@ export function Controls({
     if (focused) {
       // auto decide quality based on network conditions
       hlsRef.current.autoLevelCapping = -1
+      // allow 30s of buffering
+      hlsRef.current.config.maxMaxBufferLength = 30
     } else {
+      // back to what we initially set
       hlsRef.current.autoLevelCapping = 0
+      hlsRef.current.config.maxMaxBufferLength = 10
     }
   }, [hlsRef, focused])
 
@@ -586,7 +592,7 @@ function Scrubber({
   return (
     <View
       testID="scrubber"
-      style={[{height: 10, width: '100%'}, a.flex_shrink_0, a.px_xs]}
+      style={[{height: 18, width: '100%'}, a.flex_shrink_0, a.px_xs, a.py_xs]}
       onPointerEnter={onStartHover}
       onPointerLeave={onEndHover}>
       <div

@@ -12,6 +12,7 @@ import {
   VideoNotFoundError,
 } from '#/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerWeb'
 import {atoms as a} from '#/alf'
+import {useIsWithinMessage} from '#/components/dms/MessageContext'
 import {useFullscreen} from '#/components/hooks/useFullscreen'
 import {ErrorBoundary} from '../ErrorBoundary'
 import {useActiveVideoWeb} from './ActiveVideoWebContext'
@@ -100,11 +101,12 @@ function ViewportObserver({
 }: {
   children: React.ReactNode
   sendPosition: (position: number) => void
-  isAnyViewActive?: boolean
+  isAnyViewActive: boolean
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const [nearScreen, setNearScreen] = useState(false)
   const [isFullscreen] = useFullscreen()
+  const isWithinMessage = useIsWithinMessage()
 
   // Send position when scrolling. This is done with an IntersectionObserver
   // observing a div of 100vh height
@@ -141,10 +143,12 @@ function ViewportObserver({
       <div
         ref={ref}
         style={{
+          // Don't escape bounds when in a message
+          ...(isWithinMessage
+            ? {top: 0, height: '100%'}
+            : {top: 'calc(50% - 50vh)', height: '100vh'}),
           position: 'absolute',
-          top: 'calc(50% - 50vh)',
           left: '50%',
-          height: '100vh',
           width: 1,
           pointerEvents: 'none',
         }}
