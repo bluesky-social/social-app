@@ -104,7 +104,7 @@ function InnerWrapper({embed}: Props) {
               ]}>
               <Loader size="2xl" style={{color: 'white'}} />
             </View>
-          ) : !autoplayDisabled ? (
+          ) : autoplayDisabled ? (
             <PlayButtonIcon />
           ) : (
             <></>
