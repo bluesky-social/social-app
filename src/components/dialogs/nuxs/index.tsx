@@ -20,12 +20,18 @@ type Context = {
 const queuedNuxs: {
   id: Nux
   enabled(props: {gate: ReturnType<typeof useGate>}): boolean
+  /**
+   * TEMP only intended for use with the 10Milly dialog rn, since there are no
+   * other NUX dialogs configured
+   */
+  unsafe_disableSnooze: boolean
 }[] = [
   {
     id: Nux.TenMillionDialog,
     enabled({gate}) {
       return gate('ten_million_dialog')
     },
+    unsafe_disableSnooze: true,
   },
 ]
 
@@ -76,18 +82,27 @@ function Inner() {
     if (snoozed) return
     if (!nuxs) return
 
-    for (const {id, enabled} of queuedNuxs) {
+    for (const {id, enabled, unsafe_disableSnooze} of queuedNuxs) {
       const nux = nuxs.find(nux => nux.id === id)
 
       // check if completed first
       if (nux && nux.completed) continue
+
       // then check gate (track exposure)
       if (!enabled({gate})) continue
 
       // we have a winner
       setActiveNux(id)
-      // immediately snooze (in memory)
-      snoozeNuxDialog()
+
+      /**
+       * TEMP only intended for use with the 10Milly dialog rn, since there are no
+       * other NUX dialogs configured
+       */
+      if (!unsafe_disableSnooze) {
+        // immediately snooze (in memory)
+        snoozeNuxDialog()
+      }
+
       // immediately update remote data (affects next reload)
       upsertNux({
         id,
