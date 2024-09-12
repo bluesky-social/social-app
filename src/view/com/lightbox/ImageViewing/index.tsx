@@ -41,6 +41,7 @@ type Props = {
   initialImageIndex: number
   visible: boolean
   onRequestClose: () => void
+  onLoad: () => void
   backgroundColor?: string
   HeaderComponent?: ComponentType<{imageIndex: number}>
   FooterComponent?: ComponentType<{imageIndex: number}>
@@ -212,46 +213,46 @@ function ImageViewingWithSplash(props: Props) {
     },
   )
 
-  const initialTransform = calculateOverlayTransform(
-    SCREEN,
-    initialImage.aspectRatio,
-    props.thumbDims, // TODO: Fix null case
-  )
+  const initialTransform = calculateOverlayTransform(SCREEN, props.thumbDims)
 
   const animatedStyle = useAnimatedStyle(() => {
-    const interpolatedScale = interpolate(
-      openProgress.value,
-      [0, 1],
-      [initialTransform[0].scale, 1],
-      Extrapolate.CLAMP,
-    )
-
-    const interpolatedTranslateX = interpolate(
-      openProgress.value,
-      [0, 1],
-      [initialTransform[1].translateX, 0],
-      Extrapolate.CLAMP,
-    )
-
-    const interpolatedTranslateY = interpolate(
-      openProgress.value,
-      [0, 1],
-      [initialTransform[2].translateY, 0],
-      Extrapolate.CLAMP,
-    )
-
+    if (!initialTransform) {
+      return {}
+    }
     return {
       transform: [
-        {scale: interpolatedScale},
-        {translateX: interpolatedTranslateX},
-        {translateY: interpolatedTranslateY},
+        {
+          scale: interpolate(
+            openProgress.value,
+            [0, 1],
+            [initialTransform.scale, 1],
+            Extrapolate.CLAMP,
+          ),
+        },
+        {
+          translateX: interpolate(
+            openProgress.value,
+            [0, 1],
+            [initialTransform.translateX, 0],
+            Extrapolate.CLAMP,
+          ),
+        },
+        {
+          translateY: interpolate(
+            openProgress.value,
+            [0, 1],
+            [initialTransform.translateY, 0],
+            Extrapolate.CLAMP,
+          ),
+        },
       ],
     }
   })
 
+  const showSplash = initialTransform && !isReady
   return (
     <>
-      {!isReady && (
+      {showSplash && (
         <Animated.View
           style={[
             {
@@ -300,8 +301,8 @@ function ImageViewingWithSplash(props: Props) {
           left: 0,
           right: 0,
           bottom: 0,
-          pointerEvents: isReady ? 'auto' : 'none',
-          opacity: isReady ? 1 : 0,
+          pointerEvents: showSplash ? 'none' : 'auto',
+          opacity: showSplash ? 0 : 1,
         }}>
         <ImageViewing
           key={props.initialImageIndex}
@@ -318,11 +319,20 @@ function ImageViewingWithSplash(props: Props) {
 }
 
 const calculateOverlayTransform = (
-  screenSize,
-  fullImageSize,
-  thumbnailPlacement,
+  screenSize: {width: number; height: number},
+  thumbnailPlacement:
+    | {
+        pageX: number
+        width: number
+        pageY: number
+        height: number
+      }
+    | null
+    | undefined,
 ) => {
-  console.log(screenSize, fullImageSize, thumbnailPlacement)
+  if (!thumbnailPlacement) {
+    return null
+  }
   // Calculate scale to fit the thumbnail width
   const scale = thumbnailPlacement.width / screenSize.width
 
@@ -338,7 +348,7 @@ const calculateOverlayTransform = (
   const translateX = (thumbnailCenterX - screenCenterX) / scale
   const translateY = (thumbnailCenterY - screenCenterY) / scale
 
-  return [{scale}, {translateX}, {translateY}]
+  return {scale, translateX, translateY}
 }
 
 function withClampedSpring(value: any) {

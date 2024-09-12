@@ -7,9 +7,8 @@
  */
 
 import React, {useState} from 'react'
-
 import {Dimensions, StyleSheet} from 'react-native'
-import {Image} from 'expo-image'
+import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import Animated, {
   interpolate,
   runOnJS,
@@ -17,12 +16,11 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
+import {Image} from 'expo-image'
+
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
-import {Gesture, GestureDetector} from 'react-native-gesture-handler'
-
+import {Dimensions as ImageDimensions, ImageSource} from '../../@types'
 import useImageDimensions from '../../hooks/useImageDimensions'
-
-import {ImageSource, Dimensions as ImageDimensions} from '../../@types'
 
 const SWIPE_CLOSE_OFFSET = 75
 const SWIPE_CLOSE_VELOCITY = 1
@@ -35,6 +33,7 @@ type Props = {
   onRequestClose: () => void
   onTap: () => void
   onZoom: (scaled: boolean) => void
+  onLoad: () => void
   isScrollViewBeingDragged: boolean
   showControls: boolean
 }

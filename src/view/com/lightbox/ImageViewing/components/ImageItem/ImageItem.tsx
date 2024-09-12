@@ -2,6 +2,7 @@
 
 import React from 'react'
 import {View} from 'react-native'
+
 import {ImageSource} from '../../@types'
 
 type Props = {
@@ -9,6 +10,7 @@ type Props = {
   onRequestClose: () => void
   onTap: () => void
   onZoom: (scaled: boolean) => void
+  onLoad: () => void
   isScrollViewBeingDragged: boolean
   showControls: boolean
 }

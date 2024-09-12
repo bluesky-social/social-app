@@ -42,6 +42,7 @@ type Props = {
   onRequestClose: () => void
   onTap: () => void
   onZoom: (isZoomed: boolean) => void
+  onLoad: () => void
   isScrollViewBeingDragged: boolean
   showControls: boolean
 }
@@ -54,7 +55,6 @@ const ImageItem = ({
   isScrollViewBeingDragged,
 }: Props) => {
   const [isScaled, setIsScaled] = useState(false)
-  const [isLoaded, setIsLoaded] = useState(false)
   const imageDimensions = useImageDimensions(imageSrc)
   const committedTransform = useSharedValue(initialTransform)
   const panTranslation = useSharedValue({x: 0, y: 0})
@@ -323,10 +323,7 @@ const ImageItem = ({
           style={[styles.image, animatedStyle]}
           accessibilityLabel={imageSrc.alt}
           accessibilityHint=""
-          onLoad={() => {
-            setIsLoaded(true)
-            onLoad()
-          }}
+          onLoad={onLoad}
           cachePolicy="memory"
         />
       </GestureDetector>
