@@ -7,6 +7,7 @@ import {
   ViewStyle,
 } from 'react-native'
 import Animated, {
+  AnimatedRef,
   measure,
   MeasuredDimensions,
   runOnJS,
@@ -140,10 +141,13 @@ export function PostEmbeds({
       ) => {
         openLightbox(new ImagesLightbox(items, index, dims))
       }
-      const onPress = (index: number) => {
+      const onPress = (
+        index: number,
+        ref: AnimatedRef<React.Component<{}, {}, any>>,
+      ) => {
         runOnUI(() => {
           'worklet'
-          const dims = measure(containerRef)
+          const dims = measure(ref)
           runOnJS(_openLightbox)(index, dims)
         })()
       }
@@ -168,7 +172,7 @@ export function PostEmbeds({
                     : 'constrained'
                 }
                 image={image}
-                onPress={() => onPress(0)}
+                onPress={() => onPress(0, containerRef)}
                 onPressIn={() => onPressIn(0)}
                 hideBadge={
                   viewContext === PostEmbedViewContext.FeedEmbedRecordWithMedia
