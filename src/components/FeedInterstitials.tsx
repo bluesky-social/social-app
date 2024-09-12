@@ -176,9 +176,12 @@ function useExperimentalSuggestedUsersQuery() {
 }
 
 export function SuggestedFollows({feed}: {feed: FeedDescriptor}) {
+  const {currentAccount} = useSession()
   const [feedType, feedUri] = feed.split('|')
   if (feedType === 'author') {
-    return <SuggestedFollowsProfile did={feedUri} />
+    return currentAccount?.did !== feedUri ? (
+      <SuggestedFollowsProfile did={feedUri} />
+    ) : null
   } else {
     return <SuggestedFollowsHome />
   }
