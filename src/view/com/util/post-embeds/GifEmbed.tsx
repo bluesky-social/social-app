@@ -18,7 +18,9 @@ import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {EmbedPlayerParams} from 'lib/strings/embed-player'
 import {useAutoplayDisabled} from 'state/preferences'
 import {atoms as a, useTheme} from '#/alf'
+import {Fill} from '#/components/Fill'
 import {Loader} from '#/components/Loader'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
@@ -56,8 +58,6 @@ function PlaybackControls({
           zIndex: 2,
           backgroundColor: !isLoaded
             ? t.atoms.bg_contrast_25.backgroundColor
-            : !isPlaying
-            ? 'rgba(0, 0, 0, 0.3)'
             : undefined,
         },
       ]}
@@ -86,6 +86,7 @@ export function GifEmbed({
   hideAlt?: boolean
   style?: StyleProp<ViewStyle>
 }) {
+  const t = useTheme()
   const {_} = useLingui()
   const autoplayDisabled = useAutoplayDisabled()
 
@@ -138,6 +139,17 @@ export function GifEmbed({
           accessibilityHint={_(msg`Animated GIF`)}
           accessibilityLabel={parsedAlt.alt}
         />
+        {!playerState.isPlaying && (
+          <Fill
+            style={[
+              t.name === 'light' ? t.atoms.bg_contrast_975 : t.atoms.bg,
+              {
+                opacity: 0.3,
+              },
+            ]}
+          />
+        )}
+        <MediaInsetBorder />
         {!hideAlt && parsedAlt.isPreferred && <AltText text={parsedAlt.alt} />}
       </View>
     </View>

@@ -13,6 +13,7 @@ import {useActiveVideoNative} from 'view/com/util/post-embeds/ActiveVideoNativeC
 import {atoms as a, useTheme} from '#/alf'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {
   AudioCategory,
   PlatformInfo,
@@ -84,6 +85,7 @@ export function VideoEmbedInnerNative({
         isMuted={isMuted}
         timeRemaining={timeRemaining}
       />
+      <MediaInsetBorder />
     </View>
   )
 }
