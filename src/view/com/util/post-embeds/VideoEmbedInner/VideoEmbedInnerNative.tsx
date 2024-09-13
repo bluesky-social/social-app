@@ -67,7 +67,7 @@ export const VideoEmbedInnerNative = React.forwardRef(
         <BlueskyVideoView
           url={embed.playlist}
           autoplay={!autoplayDisabled && !isWithinMessage}
-          beginMuted={!autoplayDisabled || !muted}
+          beginMuted={autoplayDisabled ? false : muted}
           style={[a.rounded_sm]}
           onActiveChange={e => {
             setIsActive(e.nativeEvent.isActive)
