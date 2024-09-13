@@ -1,6 +1,7 @@
 import React from 'react'
 
 import {useGate} from '#/lib/statsig/statsig'
+import {logger} from '#/logger'
 import {
   Nux,
   useNuxs,
@@ -16,6 +17,16 @@ type Context = {
   activeNux: Nux | undefined
   dismissActiveNux: () => void
 }
+
+/**
+ * If we fail to complete a NUX here, it may show again on next reload,
+ * or if prefs state updates. If `true`, this fallback ensures that the last
+ * shown NUX won't show again, at least for this session.
+ *
+ * This is temporary, and only needed for the 10Milly dialog rn, since we
+ * aren't snoozing that one in device storage.
+ */
+let __isSnoozedFallback = false
 
 const queuedNuxs: {
   id: Nux
@@ -56,7 +67,7 @@ function Inner() {
     return isSnoozed()
   })
   const [activeNux, setActiveNux] = React.useState<Nux | undefined>()
-  const {mutate: upsertNux} = useUpsertNuxMutation()
+  const {mutateAsync: upsertNux} = useUpsertNuxMutation()
   const {mutate: removeNuxs} = useRemoveNuxsMutation()
 
   const snoozeNuxDialog = React.useCallback(() => {
@@ -79,6 +90,7 @@ function Inner() {
   }
 
   React.useEffect(() => {
+    if (__isSnoozedFallback) return
     if (snoozed) return
     if (!nuxs) return
 
@@ -99,7 +111,7 @@ function Inner() {
        * other NUX dialogs configured
        */
       if (!unsafe_disableSnooze) {
-        // immediately snooze (in memory)
+        // immediately snooze for a day
         snoozeNuxDialog()
       }
 
@@ -108,6 +120,16 @@ function Inner() {
         id,
         completed: true,
         data: undefined,
+      }).catch(e => {
+        logger.error(`NUX dialogs: failed to upsert '${id}' NUX`, {
+          safeMessage: e.message,
+        })
+        /*
+         * TEMP only intended for use with the 10Milly dialog rn
+         */
+        if (unsafe_disableSnooze) {
+          __isSnoozedFallback = true
+        }
       })
 
       break
