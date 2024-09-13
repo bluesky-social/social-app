@@ -139,7 +139,7 @@ msgstr "{0} pessoas já usaram este pacote inicial!"
 #~ msgid "{0} your feeds"
 #~ msgstr "{0} seus feeds"
 
-#: src/view/com/util/UserAvatar.tsx:419
+#: src/view/com/util/UserAvatar.tsx:423
 msgid "{0}'s avatar"
 msgstr "Avatar de {0}"
 
@@ -656,7 +656,7 @@ msgstr "Ocorreu um erro ao gerar seu pacote inicial. Quer tentar novamente?"
 msgid "An error occurred while loading the video. Please try again later."
 msgstr "Ocorreu um erro ao carregar o vídeo. Tente novamente mais tarde."
 
-#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:171
+#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:174
 msgid "An error occurred while loading the video. Please try again."
 msgstr "Ocorreu um erro ao carregar o vídeo. Tente novamente."
 
@@ -1005,6 +1005,10 @@ msgstr "Bluesky é melhor com amigos!"
 #~ msgid "Bluesky is public."
 #~ msgstr "Bluesky é público."
 
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:201
+msgid "Bluesky now has over 10 million users, and I was #{0}!"
+msgstr "O Bluesky agora tem mais de 10 milhões de usuários, e eu tinha #{0}!"
+
 #: src/components/StarterPack/ProfileStarterPacks.tsx:282
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
 msgstr "O Bluesky escolherá um conjunto de contas recomendadas dentre as pessoas em sua rede."
@@ -1025,6 +1029,10 @@ msgstr "Desfocar imagens e filtrar dos feeds"
 #: src/screens/Onboarding/state.ts:81
 msgid "Books"
 msgstr "Livros"
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:583
+msgid "Brag a little!"
+msgstr "Gabe-se um pouco!"
 
 #: src/components/FeedInterstitials.tsx:346
 msgid "Browse more accounts on the Explore page"
@@ -1172,6 +1180,10 @@ msgstr "Legendas (.vtt)"
 #: src/view/com/composer/videos/SubtitleDialog.tsx:56
 msgid "Captions & alt text"
 msgstr "Legendas e texto alt"
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:336
+msgid "Celebrating {0} users"
+msgstr "Comemorando {0} usuários"
 
 #: src/view/com/modals/VerifyEmail.tsx:160
 msgid "Change"
@@ -1867,7 +1879,7 @@ msgstr "Tema escuro"
 #~ msgid "Dark Theme"
 #~ msgstr "Modo Escuro"
 
-#: src/screens/Signup/StepInfo/index.tsx:191
+#: src/screens/Signup/StepInfo/index.tsx:192
 msgid "Date of birth"
 msgstr "Data de nascimento"
 
@@ -2174,6 +2186,10 @@ msgstr "Baixe o Bluesky"
 msgid "Download CAR file"
 msgstr "Baixar arquivo CAR"
 
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:591
+msgid "Download image"
+msgstr "Baixar imagem"
+
 #: src/view/com/composer/text-input/TextInput.web.tsx:269
 msgid "Drop to add images"
 msgstr "Solte para adicionar imagens"
@@ -2239,7 +2255,7 @@ msgctxt "action"
 msgid "Edit"
 msgstr "Editar"
 
-#: src/view/com/util/UserAvatar.tsx:328
+#: src/view/com/util/UserAvatar.tsx:332
 #: src/view/com/util/UserBanner.tsx:92
 msgid "Edit avatar"
 msgstr "Editar avatar"
@@ -3545,6 +3561,10 @@ msgstr "Crie uma conta no Bluesky"
 msgid "Join the conversation"
 msgstr "Participe da conversa"
 
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:461
+msgid "Joined {0}"
+msgstr "Juntou-se {0}"
+
 #: src/screens/Onboarding/index.tsx:21
 #: src/screens/Onboarding/state.ts:89
 msgid "Journalism"
@@ -4551,6 +4571,10 @@ msgstr "Opa!"
 msgid "Oh no! Something went wrong."
 msgstr "Opa! Algo deu errado."
 
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:171
+msgid "Oh no! We weren't able to generate an image for you to share. Rest assured, we're glad you're here 🦋"
+msgstr "Ah, não! Não conseguimos gerar uma imagem para você compartilhar. Fique tranquilo, estamos felizes que você esteja aqui 🦋"
+
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:339
 msgid "OK"
 msgstr "OK"
@@ -4821,7 +4845,7 @@ msgid "Opens the threads preferences"
 msgstr "Abre as preferências de threads"
 
 #: src/view/com/notifications/FeedItem.tsx:551
-#: src/view/com/util/UserAvatar.tsx:420
+#: src/view/com/util/UserAvatar.tsx:424
 msgid "Opens this profile"
 msgstr "Abre este perfil"
 
@@ -5410,7 +5434,7 @@ msgstr "Remover conta"
 msgid "Remove attachment"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:387
+#: src/view/com/util/UserAvatar.tsx:391
 msgid "Remove Avatar"
 msgstr "Remover avatar"
 
@@ -6153,7 +6177,7 @@ msgstr "Selecione quais idiomas você deseja ver nos seus feeds. Se nenhum for s
 msgid "Select your app language for the default text to display in the app."
 msgstr "Selecione o idioma do seu aplicativo"
 
-#: src/screens/Signup/StepInfo/index.tsx:192
+#: src/screens/Signup/StepInfo/index.tsx:193
 msgid "Select your date of birth"
 msgstr "Selecione sua data de nascimento"
 
@@ -6321,6 +6345,7 @@ msgstr "Atividade sexual ou nudez erótica."
 msgid "Sexually Suggestive"
 msgstr "Sexualmente Sugestivo"
 
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:607
 #: src/components/StarterPack/QrCodeDialog.tsx:177
 #: src/screens/StarterPack/StarterPackScreen.tsx:411
 #: src/screens/StarterPack/StarterPackScreen.tsx:582
@@ -6356,6 +6381,14 @@ msgstr "Compartilhar assim"
 #: src/view/screens/ProfileFeed.tsx:362
 msgid "Share feed"
 msgstr "Compartilhar feed"
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:590
+msgid "Share image externally"
+msgstr "Compartilhar imagem externamente"
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:602
+msgid "Share image in post"
+msgstr "Compartilhe a imagem na postagem"
 
 #: src/components/StarterPack/ShareDialog.tsx:124
 #: src/components/StarterPack/ShareDialog.tsx:131
@@ -6668,8 +6701,8 @@ msgstr "Algo deu errado. Por favor, tente novamente."
 msgid "Something went wrong!"
 msgstr "Algo deu errado!"
 
-#: src/App.native.tsx:102
-#: src/App.web.tsx:83
+#: src/App.native.tsx:103
+#: src/App.web.tsx:84
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "Opa! Sua sessão expirou. Por favor, entre novamente."
 
@@ -6912,6 +6945,10 @@ msgstr "Conte uma piada!"
 msgid "Tell us a little more"
 msgstr "Conte-nos um pouco mais"
 
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:487
+msgid "Ten Million"
+msgstr "Dez milhões"
+
 #: src/view/shell/desktop/RightNav.tsx:90
 msgid "Terms"
 msgstr "Termos"
@@ -6948,6 +6985,10 @@ msgstr "Campo de entrada de texto"
 #: src/components/ReportDialog/SubmitView.tsx:81
 msgid "Thank you. Your report has been sent."
 msgstr "Obrigado. Sua denúncia foi enviada."
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:562
+msgid "Thanks for being one of our first 10 million users."
+msgstr "Obrigado por ser um dos nossos primeiros 10 milhões de usuários."
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:74
 msgid "Thanks, you have successfully verified your email address."
@@ -7437,6 +7478,10 @@ msgstr "Para enviar vídeos para o Bluesky, você deve primeiro verificar seu e-
 msgid "To whom would you like to send this report?"
 msgstr "Para quem você gostaria de enviar esta denúncia?"
 
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:566
+msgid "Together, we're rebuilding the social internet. We're glad you're here."
+msgstr "Juntos, estamos reconstruindo a internet social. Estamos felizes que você esteja aqui."
+
 #: src/components/dialogs/MutedWords.tsx:112
 #~ msgid "Toggle between muted word options."
 #~ msgstr "Alternar entre opções de uma palavra silenciada"
@@ -7691,20 +7736,20 @@ msgstr "Enviar uma foto"
 msgid "Upload a text file to:"
 msgstr "Carregar um arquivo de texto para:"
 
-#: src/view/com/util/UserAvatar.tsx:355
-#: src/view/com/util/UserAvatar.tsx:358
+#: src/view/com/util/UserAvatar.tsx:359
+#: src/view/com/util/UserAvatar.tsx:362
 #: src/view/com/util/UserBanner.tsx:123
 #: src/view/com/util/UserBanner.tsx:126
 msgid "Upload from Camera"
 msgstr "Tirar uma foto"
 
-#: src/view/com/util/UserAvatar.tsx:372
+#: src/view/com/util/UserAvatar.tsx:376
 #: src/view/com/util/UserBanner.tsx:140
 msgid "Upload from Files"
 msgstr "Carregar um arquivo"
 
-#: src/view/com/util/UserAvatar.tsx:366
 #: src/view/com/util/UserAvatar.tsx:370
+#: src/view/com/util/UserAvatar.tsx:374
 #: src/view/com/util/UserBanner.tsx:134
 #: src/view/com/util/UserBanner.tsx:138
 msgid "Upload from Library"
@@ -7904,7 +7949,7 @@ msgstr "Falha no processamento do vídeo"
 msgid "Video Games"
 msgstr "Games"
 
-#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:164
+#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:167
 msgid "Video not found."
 msgstr "Vídeo não encontrado."
 
@@ -8572,11 +8617,11 @@ msgstr "Sua conta ainda não tem idade suficiente para enviar vídeos. Por favor
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr "O repositório da sua conta, contendo todos os seus dados públicos, pode ser baixado como um arquivo \"CAR\". Este arquivo não inclui imagens ou dados privados, estes devem ser exportados separadamente."
 
-#: src/screens/Signup/StepInfo/index.tsx:180
+#: src/screens/Signup/StepInfo/index.tsx:181
 msgid "Your birth date"
 msgstr "Sua data de nascimento"
 
-#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:168
+#: src/view/com/util/post-embeds/VideoEmbed.web.tsx:171
 msgid "Your browser does not support the video format. Please try a different browser."
 msgstr "Seu navegador não suporta o formato de vídeo. Por favor, tente um navegador diferente."
 

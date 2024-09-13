@@ -46,6 +46,7 @@ import {ToastContainer} from '#/view/com/util/Toast.web'
 import {Shell} from '#/view/shell/index'
 import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
+import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
 import {Provider as PortalProvider} from '#/components/Portal'
@@ -113,6 +114,7 @@ function InnerApp() {
                                       <SafeAreaProvider>
                                         <ProgressGuideProvider>
                                           <Shell />
+                                          <NuxDialogs />
                                         </ProgressGuideProvider>
                                       </SafeAreaProvider>
                                     </MutedThreadsProvider>
