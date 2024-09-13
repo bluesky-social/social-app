@@ -3,6 +3,7 @@ import React from 'react'
 import {useDialogStateContext} from '#/state/dialogs'
 import {useLightbox} from '#/state/lightbox'
 import {useModals} from '#/state/modals'
+import {useIsDrawerOpen} from '#/state/shell/drawer-open'
 import {useComposerControls} from './'
 
 /**
@@ -41,11 +42,17 @@ export function useComposerKeyboardShortcut() {
   const {openDialogs} = useDialogStateContext()
   const {isModalActive} = useModals()
   const {activeLightbox} = useLightbox()
+  const isDrawerOpen = useIsDrawerOpen()
 
   React.useEffect(() => {
     function handler(event: KeyboardEvent) {
       if (shouldIgnore(event)) return
-      if (openDialogs.current.size > 0 || isModalActive || activeLightbox)
+      if (
+        openDialogs.current.size > 0 ||
+        isModalActive ||
+        activeLightbox ||
+        isDrawerOpen
+      )
         return
       if (event.key === 'n' || event.key === 'N') {
         openComposer({})
@@ -53,5 +60,5 @@ export function useComposerKeyboardShortcut() {
     }
     document.addEventListener('keydown', handler)
     return () => document.removeEventListener('keydown', handler)
-  }, [openComposer, isModalActive, openDialogs, activeLightbox])
+  }, [openComposer, isModalActive, openDialogs, activeLightbox, isDrawerOpen])
 }
