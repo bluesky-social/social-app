@@ -13,6 +13,8 @@ import {useVideoLibraryPermission} from '#/lib/hooks/usePermissions'
 import {isNative} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
 import {useSession} from '#/state/session'
+import {BSKY_SERVICE} from 'lib/constants'
+import {getHostnameFromUrl} from 'lib/strings/url-helpers'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {VideoClip_Stroke2_Corner0_Rounded as VideoClipIcon} from '#/components/icons/VideoClip'
@@ -38,9 +40,13 @@ export function SelectVideoBtn({onSelectVideo, disabled, setError}: Props) {
       return
     }
 
+    console.log('currentAccount', currentAccount?.service)
+
     if (
-      !currentAccount?.emailConfirmed &&
-      currentAccount?.service === 'bsky.social'
+      currentAccount &&
+      !currentAccount.emailConfirmed &&
+      getHostnameFromUrl(currentAccount.service) ===
+        getHostnameFromUrl(BSKY_SERVICE)
     ) {
       Keyboard.dismiss()
       control.open()
@@ -74,13 +80,12 @@ export function SelectVideoBtn({onSelectVideo, disabled, setError}: Props) {
       }
     }
   }, [
-    onSelectVideo,
     requestVideoAccessIfNeeded,
+    currentAccount,
+    control,
     setError,
     _,
-    control,
-    currentAccount?.emailConfirmed,
-    currentAccount?.service,
+    onSelectVideo,
   ])
 
   return (
