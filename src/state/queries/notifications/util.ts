@@ -175,19 +175,9 @@ async function fetchSubjects(
 }> {
   const postUris = new Set<string>()
   const packUris = new Set<string>()
-
-  const postUrisWithLikes = new Set<string>()
-  const postUrisWithReposts = new Set<string>()
-
   for (const notif of groupedNotifs) {
     if (notif.subjectUri?.includes('app.bsky.feed.post')) {
       postUris.add(notif.subjectUri)
-      if (notif.type === 'post-like') {
-        postUrisWithLikes.add(notif.subjectUri)
-      }
-      if (notif.type === 'repost') {
-        postUrisWithReposts.add(notif.subjectUri)
-      }
     } else if (
       notif.notification.reasonSubject?.includes('app.bsky.graph.starterpack')
     ) {
@@ -216,15 +206,6 @@ async function fetchSubjects(
       AppBskyFeedPost.validateRecord(post.record).success
     ) {
       postsMap.set(post.uri, post)
-
-      // HACK. In some cases, the appview appears to lag behind and returns empty counters.
-      // To prevent scroll jump due to missing metrics, fill in 1 like/repost instead of 0.
-      if (post.likeCount === 0 && postUrisWithLikes.has(post.uri)) {
-        post.likeCount = 1
-      }
-      if (post.repostCount === 0 && postUrisWithReposts.has(post.uri)) {
-        post.repostCount = 1
-      }
     }
   }
   for (const pack of packsChunks.flat()) {
