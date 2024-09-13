@@ -34,6 +34,9 @@ export function MediaInsetBorder({
                 : t.atoms.border_contrast_high,
               {opacity: 0.6},
             ],
+        {
+          pointerEvents: 'none',
+        },
         style,
       ]}>
       {children}
