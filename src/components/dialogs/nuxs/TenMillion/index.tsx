@@ -418,12 +418,11 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
                         */}
                       <View style={[a.gap_2xs, a.flex_1]}>
                         <Text
-                          numberOfLines={1}
                           style={[
                             a.flex_1,
                             a.text_sm,
                             a.font_bold,
-                            a.leading_snug,
+                            a.leading_tight,
                             {maxWidth: '60%'},
                           ]}>
                           {sanitizeDisplayName(
