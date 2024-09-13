@@ -40,8 +40,6 @@ export function SelectVideoBtn({onSelectVideo, disabled, setError}: Props) {
       return
     }
 
-    console.log('currentAccount', currentAccount?.service)
-
     if (
       currentAccount &&
       !currentAccount.emailConfirmed &&
