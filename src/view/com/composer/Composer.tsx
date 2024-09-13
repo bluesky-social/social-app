@@ -807,7 +807,11 @@ export const ComposePost = observer(function ComposePost({
                 disabled={!canSelectImages}
                 setError={setError}
               />
-              <OpenCameraBtn gallery={gallery} disabled={!canSelectImages} />
+              <OpenCameraBtn
+                gallery={gallery}
+                disabled={!canSelectImages}
+                selectVideo={selectVideo}
+              />
               <SelectGifBtn
                 onClose={focusTextInput}
                 onSelectGif={onSelectGif}
