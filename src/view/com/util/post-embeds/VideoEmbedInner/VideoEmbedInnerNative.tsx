@@ -32,6 +32,7 @@ export const VideoEmbedInnerNative = React.forwardRef(
     },
     ref: React.Ref<{togglePlayback: () => void}>,
   ) {
+    const {_} = useLingui()
     const videoRef = useRef<BlueskyVideoView>(null)
     const autoplayDisabled = useAutoplayDisabled()
     const isWithinMessage = useIsWithinMessage()
@@ -86,10 +87,10 @@ export const VideoEmbedInnerNative = React.forwardRef(
             setError(e.nativeEvent.error)
           }}
           ref={videoRef}
-          // accessibilityLabel={
-          //   embed.alt ? _(msg`Video: ${embed.alt}`) : _(msg`Video`)
-          // }
-          // accessibilityHint=""
+          accessibilityLabel={
+            embed.alt ? _(msg`Video: ${embed.alt}`) : _(msg`Video`)
+          }
+          accessibilityHint=""
         />
         <VideoControls
           enterFullscreen={() => {
