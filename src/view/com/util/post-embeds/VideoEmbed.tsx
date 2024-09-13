@@ -106,7 +106,6 @@ function InnerWrapper({embed}: Props) {
                 a.p_xs,
                 a.align_center,
                 a.justify_center,
-                {backgroundColor: 'rgba(0,0,0,0.5)'},
               ]}>
               <Loader size="2xl" style={{color: 'white'}} />
             </View>
