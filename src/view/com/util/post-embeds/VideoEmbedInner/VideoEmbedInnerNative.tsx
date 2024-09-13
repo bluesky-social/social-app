@@ -18,88 +18,99 @@ import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/compone
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {TimeIndicator} from './TimeIndicator'
 
-export function VideoEmbedInnerNative({
-  embed,
-  setStatus,
-  setIsLoading,
-  setIsActive,
-}: {
-  embed: AppBskyEmbedVideo.View
-  setStatus: (status: 'playing' | 'paused') => void
-  setIsLoading: (isLoading: boolean) => void
-  setIsActive: (isActive: boolean) => void
-}) {
-  const ref = useRef<BlueskyVideoView>(null)
-  const autoplayDisabled = useAutoplayDisabled()
-  const isWithinMessage = useIsWithinMessage()
+export const VideoEmbedInnerNative = React.forwardRef(
+  function VideoEmbedInnerNative(
+    {
+      embed,
+      setStatus,
+      setIsLoading,
+      setIsActive,
+    }: {
+      embed: AppBskyEmbedVideo.View
+      setStatus: (status: 'playing' | 'paused') => void
+      setIsLoading: (isLoading: boolean) => void
+      setIsActive: (isActive: boolean) => void
+    },
+    ref: React.Ref<{togglePlayback: () => void}>,
+  ) {
+    const videoRef = useRef<BlueskyVideoView>(null)
+    const autoplayDisabled = useAutoplayDisabled()
+    const isWithinMessage = useIsWithinMessage()
 
-  const [isMuted, setIsMuted] = React.useState(true)
-  const [isPlaying, setIsPlaying] = React.useState(false)
-  const [timeRemaining, setTimeRemaining] = React.useState(0)
+    const [isMuted, setIsMuted] = React.useState(true)
+    const [isPlaying, setIsPlaying] = React.useState(false)
+    const [timeRemaining, setTimeRemaining] = React.useState(0)
+    const [error, setError] = React.useState<string>()
 
-  const [error, setError] = React.useState<string>()
-  if (error) {
-    throw new Error(error)
-  }
+    React.useImperativeHandle(ref, () => ({
+      togglePlayback: () => {
+        videoRef.current?.togglePlayback()
+      },
+    }))
 
-  let aspectRatio = 16 / 9
+    if (error) {
+      throw new Error(error)
+    }
 
-  if (embed.aspectRatio) {
-    const {width, height} = embed.aspectRatio
-    aspectRatio = width / height
-    aspectRatio = clamp(aspectRatio, 1 / 1, 3 / 1)
-  }
+    let aspectRatio = 16 / 9
 
-  return (
-    <View style={[a.flex_1, a.relative, {aspectRatio}]}>
-      <BlueskyVideoView
-        url={embed.playlist}
-        autoplay={!autoplayDisabled && !isWithinMessage}
-        beginMuted={true}
-        style={[a.rounded_sm]}
-        onActiveChange={e => {
-          setIsActive(e.nativeEvent.isActive)
-        }}
-        onLoadingChange={e => {
-          setIsLoading(e.nativeEvent.isLoading)
-        }}
-        onMutedChange={e => {
-          setIsMuted(e.nativeEvent.isMuted)
-        }}
-        onStatusChange={e => {
-          setStatus(e.nativeEvent.status)
-          setIsPlaying(e.nativeEvent.status === 'playing')
-        }}
-        onTimeRemainingChange={e => {
-          setTimeRemaining(e.nativeEvent.timeRemaining)
-        }}
-        onError={e => {
-          setError(e.nativeEvent.error)
-        }}
-        ref={ref}
-        // accessibilityLabel={
-        //   embed.alt ? _(msg`Video: ${embed.alt}`) : _(msg`Video`)
-        // }
-        // accessibilityHint=""
-      />
-      <VideoControls
-        enterFullscreen={() => {
-          ref.current?.enterFullscreen()
-        }}
-        toggleMuted={() => {
-          ref.current?.toggleMuted()
-        }}
-        togglePlayback={() => {
-          ref.current?.togglePlayback()
-        }}
-        isMuted={isMuted}
-        isPlaying={isPlaying}
-        timeRemaining={timeRemaining}
-      />
-      <MediaInsetBorder />
-    </View>
-  )
-}
+    if (embed.aspectRatio) {
+      const {width, height} = embed.aspectRatio
+      aspectRatio = width / height
+      aspectRatio = clamp(aspectRatio, 1 / 1, 3 / 1)
+    }
+
+    return (
+      <View style={[a.flex_1, a.relative, {aspectRatio}]}>
+        <BlueskyVideoView
+          url={embed.playlist}
+          autoplay={!autoplayDisabled && !isWithinMessage}
+          beginMuted={true}
+          style={[a.rounded_sm]}
+          onActiveChange={e => {
+            setIsActive(e.nativeEvent.isActive)
+          }}
+          onLoadingChange={e => {
+            setIsLoading(e.nativeEvent.isLoading)
+          }}
+          onMutedChange={e => {
+            setIsMuted(e.nativeEvent.isMuted)
+          }}
+          onStatusChange={e => {
+            setStatus(e.nativeEvent.status)
+            setIsPlaying(e.nativeEvent.status === 'playing')
+          }}
+          onTimeRemainingChange={e => {
+            setTimeRemaining(e.nativeEvent.timeRemaining)
+          }}
+          onError={e => {
+            setError(e.nativeEvent.error)
+          }}
+          ref={ref}
+          // accessibilityLabel={
+          //   embed.alt ? _(msg`Video: ${embed.alt}`) : _(msg`Video`)
+          // }
+          // accessibilityHint=""
+        />
+        <VideoControls
+          enterFullscreen={() => {
+            ref.current?.enterFullscreen()
+          }}
+          toggleMuted={() => {
+            ref.current?.toggleMuted()
+          }}
+          togglePlayback={() => {
+            ref.current?.togglePlayback()
+          }}
+          isMuted={isMuted}
+          isPlaying={isPlaying}
+          timeRemaining={timeRemaining}
+        />
+        <MediaInsetBorder />
+      </View>
+    )
+  },
+)
 
 function VideoControls({
   enterFullscreen,
