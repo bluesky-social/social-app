@@ -70,8 +70,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
           style={[styles.maxWidth, pal.textLight, opts.displayNameStyle]}>
           <TextLinkOnWebOnly
             type={opts.displayNameType || 'lg-bold'}
-            style={[pal.text]}
-            lineHeight={1.2}
+            style={pal.text}
             disableMismatchWarning
             text={forceLTR(
               sanitizeDisplayName(
@@ -85,7 +84,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
           <TextLinkOnWebOnly
             type="md"
             disableMismatchWarning
-            style={[pal.textLight, {flexShrink: 4}]}
+            style={pal.textLight}
             text={NON_BREAKING_SPACE + sanitizeHandle(handle, '@')}
             href={profileLink}
             onBeforePress={onBeforePressAuthor}
@@ -102,7 +101,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
         {({timeElapsed}) => (
           <TextLinkOnWebOnly
             type="md"
-            style={pal.textLight}
+            style={[pal.textLight, {whiteSpace: 'nowrap'}]}
             text={timeElapsed}
             accessibilityLabel={niceDate(i18n, opts.timestamp)}
             title={niceDate(i18n, opts.timestamp)}
