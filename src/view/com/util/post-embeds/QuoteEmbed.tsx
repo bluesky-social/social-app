@@ -214,7 +214,7 @@ export function QuoteEmbed({
   return (
     <ContentHider
       modui={moderation?.ui('contentList')}
-      style={[styles.container, pal.borderDark, style]}
+      style={[styles.container, pal.border, style]}
       childContainerStyle={[a.pt_sm]}>
       <Link
         hoverStyle={{borderColor: pal.colors.borderLinkHover}}
