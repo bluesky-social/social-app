@@ -6,10 +6,10 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {clamp} from '#/lib/numbers'
-import {useAutoplayDisabled} from 'state/preferences'
 import {VideoEmbedInnerNative} from '#/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative'
 import {atoms as a} from '#/alf'
 import {Button} from '#/components/Button'
+import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {Loader} from '#/components/Loader'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {ErrorBoundary} from '../ErrorBoundary'
@@ -55,11 +55,12 @@ export function VideoEmbed({embed}: Props) {
 
 function InnerWrapper({embed}: Props) {
   const {_} = useLingui()
-  const autoplayDisabled = useAutoplayDisabled()
+  const ref = React.useRef<{togglePlayback: () => void}>(null)
 
   const [status, setStatus] = React.useState<'playing' | 'paused'>('paused')
   const [isLoading, setIsLoading] = React.useState(true)
   const [isActive, setIsActive] = React.useState(false)
+  const showSpinner = useThrottledValue(isActive && isLoading, 100)
 
   const showOverlay = !isActive || status === 'paused' || isLoading
 
@@ -70,6 +71,7 @@ function InnerWrapper({embed}: Props) {
         setStatus={setStatus}
         setIsLoading={setIsLoading}
         setIsActive={setIsActive}
+        ref={ref}
       />
       <ImageBackground
         source={{uri: embed.thumbnail}}
@@ -90,10 +92,12 @@ function InnerWrapper({embed}: Props) {
       >
         <Button
           style={[a.flex_1, a.align_center, a.justify_center]}
-          onPress={() => {}}
+          onPress={() => {
+            ref.current?.togglePlayback()
+          }}
           label={_(msg`Play video`)}
           color="secondary">
-          {isActive && isLoading ? (
+          {showSpinner ? (
             <View
               style={[
                 a.rounded_full,
@@ -104,10 +108,8 @@ function InnerWrapper({embed}: Props) {
               ]}>
               <Loader size="2xl" style={{color: 'white'}} />
             </View>
-          ) : autoplayDisabled ? (
-            <PlayButtonIcon />
           ) : (
-            <></>
+            <PlayButtonIcon />
           )}
         </Button>
       </ImageBackground>
