@@ -8,7 +8,7 @@ msgstr ""
 "Language: pt-BR\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-11 21:20+01:00\n"
+"PO-Revision-Date: 2024-09-13 03:30+01:00\n"
 "Last-Translator: fabiohcnobre\n"
 "Language-Team: maisondasilva, MightyLoggor, gildaswise, gleydson, faeriarum, fabiohcnobre, garccez\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -2896,10 +2896,12 @@ msgstr "Seguir Conta"
 msgid "Follow all"
 msgstr "Siga todos"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:187
-#~ msgid "Follow All"
-#~ msgstr "Seguir Todas"
+#: src/view/com/profile/FollowButton.tsx:79
+msgctxt "action"
+msgid "Follow Back"
+msgstr "Seguir De Volta"
 
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:223
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:142
 msgid "Follow Back"
 msgstr "Seguir De Volta"
@@ -6610,9 +6612,9 @@ msgstr "se inscreveu com seu pacote inicial"
 msgid "Signup without a starter pack"
 msgstr "Inscreva-se sem um pacote inicial"
 
-#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:102
-#~ msgid "Similar accounts"
-#~ msgstr "Contas semelhantes"
+#: src/components/FeedInterstitials.tsx:316
+msgid "Similar accounts"
+msgstr "Contas semelhantes"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:245
 #: src/screens/StarterPack/Wizard/index.tsx:191
