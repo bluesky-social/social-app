@@ -2522,6 +2522,12 @@ msgstr "Suivre le compte"
 msgid "Follow all"
 msgstr "Suivre tous"
 
+#: src/view/com/profile/FollowButton.tsx:79
+msgctxt "action"
+msgid "Follow Back"
+msgstr "Suivre en retour"
+
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:223
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:142
 msgid "Follow Back"
 msgstr "Suivre en retour"
@@ -5891,6 +5897,10 @@ msgstr "s’est inscrit·e avec votre kit de démarrage"
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:315
 msgid "Signup without a starter pack"
 msgstr "S’inscrire sans kit de démarrage"
+
+#: src/components/FeedInterstitials.tsx:316
+msgid "Similar accounts"
+msgstr "Comptes similaires"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:245
 #: src/screens/StarterPack/Wizard/index.tsx:191
