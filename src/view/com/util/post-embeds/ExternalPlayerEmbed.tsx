@@ -28,6 +28,8 @@ import {useExternalEmbedsPrefs} from '#/state/preferences'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {EmbedConsentDialog} from '#/components/dialogs/EmbedConsent'
+import {Fill} from '#/components/Fill'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {EventStopper} from '../EventStopper'
 
@@ -105,6 +107,16 @@ function Player({
         onLoad={onLoad}
         style={styles.webview}
         setSupportMultipleWindows={false} // Prevent any redirects from opening a new window (ads)
+      />
+
+      <MediaInsetBorder
+        opaque
+        style={[
+          {
+            borderBottomLeftRadius: 0,
+            borderBottomRightRadius: 0,
+          },
+        ]}
       />
     </EventStopper>
   )
@@ -212,7 +224,10 @@ export function ExternalPlayer({
         onAccept={onAcceptConsent}
       />
 
-      <Animated.View ref={viewRef} collapsable={false} style={[aspect]}>
+      <Animated.View
+        ref={viewRef}
+        collapsable={false}
+        style={[aspect, a.rounded_sm]}>
         {link.thumb && (!isPlayerActive || isLoading) && (
           <>
             <Image
@@ -220,29 +235,23 @@ export function ExternalPlayer({
               source={{uri: link.thumb}}
               accessibilityIgnoresInvertColors
             />
-            <View
+            <Fill
               style={[
-                a.absolute,
-                a.w_full,
-                a.h_full,
+                a.rounded_sm,
+                t.name === 'light' ? t.atoms.bg_contrast_975 : t.atoms.bg,
                 {
-                  borderTopRightRadius: 8,
-                  borderTopLeftRadius: 8,
-                  backgroundColor: 'rgba(0,0,0,0.5)',
+                  borderBottomLeftRadius: 0,
+                  borderBottomRightRadius: 0,
+                  opacity: 0.3,
                 },
               ]}
             />
-            <View
+            <MediaInsetBorder
+              opaque
               style={[
-                a.absolute,
-                a.w_full,
-                a.h_full,
-                a.border,
                 {
-                  borderTopRightRadius: 8,
-                  borderTopLeftRadius: 8,
-                  borderColor: t.palette.contrast_800,
-                  opacity: 0.2,
+                  borderBottomLeftRadius: 0,
+                  borderBottomRightRadius: 0,
                 },
               ]}
             />

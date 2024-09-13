@@ -13,6 +13,7 @@ import {useActiveVideoNative} from 'view/com/util/post-embeds/ActiveVideoNativeC
 import {atoms as a, useTheme} from '#/alf'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {
   AudioCategory,
   PlatformInfo,
@@ -32,7 +33,6 @@ export function VideoEmbedInnerNative({
   timeRemaining: number
   isMuted: boolean
 }) {
-  const t = useTheme()
   const {_} = useLingui()
   const {player} = useActiveVideoNative()
   const ref = useRef<VideoView>(null)
@@ -79,25 +79,13 @@ export function VideoEmbedInnerNative({
         }
         accessibilityHint=""
       />
-      <View
-        style={[
-          a.rounded_sm,
-          a.absolute,
-          a.w_full,
-          a.h_full,
-          a.border,
-          {
-            borderColor: t.palette.contrast_800,
-            opacity: 0.2,
-          },
-        ]}
-      />
       <VideoControls
         player={player}
         enterFullscreen={enterFullscreen}
         isMuted={isMuted}
         timeRemaining={timeRemaining}
       />
+      <MediaInsetBorder />
     </View>
   )
 }

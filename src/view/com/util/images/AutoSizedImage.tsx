@@ -11,6 +11,7 @@ import {isNative} from '#/platform/detection'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {ArrowsDiagonalOut_Stroke2_Corner0_Rounded as Fullscreen} from '#/components/icons/ArrowsDiagonal'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
 
 export function useImageAspectRatio({
@@ -140,19 +141,7 @@ export function AutoSizedImage({
         accessibilityLabel={image.alt}
         accessibilityHint=""
       />
-      <View
-        style={[
-          a.rounded_sm,
-          a.absolute,
-          a.w_full,
-          a.h_full,
-          a.border,
-          {
-            borderColor: t.palette.contrast_800,
-            opacity: 0.2,
-          },
-        ]}
-      />
+      <MediaInsetBorder />
 
       {(hasAlt || isCropped) && !hideBadge ? (
         <View

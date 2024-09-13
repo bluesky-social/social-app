@@ -27,6 +27,7 @@ import {
 import {StreamingLive_Stroke2_Corner0_Rounded as Library} from '#/components/icons/StreamingLive'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {Link} from '#/components/Link'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Menu from '#/components/Menu'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
@@ -176,7 +177,6 @@ let UserAvatar = ({
   usePlainRNImage = false,
 }: UserAvatarProps): React.ReactNode => {
   const pal = usePalette('default')
-  const t = useTheme()
   const backgroundColor = pal.colors.backgroundLight
   const finalShape = overrideShape ?? (type === 'user' ? 'circle' : 'square')
 
@@ -237,19 +237,7 @@ let UserAvatar = ({
           blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
         />
       )}
-      <View
-        style={[
-          a.rounded_full,
-          a.absolute,
-          a.w_full,
-          a.h_full,
-          a.border,
-          {
-            borderColor: t.palette.contrast_800,
-            opacity: 0.2,
-          },
-        ]}
-      />
+      <MediaInsetBorder style={[a.rounded_full]} />
       {alert}
     </View>
   ) : (

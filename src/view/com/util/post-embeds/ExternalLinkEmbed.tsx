@@ -21,6 +21,7 @@ import {ExternalGifEmbed} from 'view/com/util/post-embeds/ExternalGifEmbed'
 import {ExternalPlayer} from 'view/com/util/post-embeds/ExternalPlayerEmbed'
 import {GifEmbed} from 'view/com/util/post-embeds/GifEmbed'
 import {atoms as a, useTheme} from '#/alf'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '../text/Text'
 
 export const ExternalLinkEmbed = ({
@@ -75,17 +76,12 @@ export const ExternalLinkEmbed = ({
                 starterPackParsed ? _(msg`Navigate to starter pack`) : undefined
               }
             />
-            <View
+            <MediaInsetBorder
+              opaque
               style={[
-                a.absolute,
-                a.w_full,
-                a.h_full,
-                a.border,
                 {
-                  borderTopRightRadius: 8,
-                  borderTopLeftRadius: 8,
-                  borderColor: t.palette.contrast_800,
-                  opacity: 0.2,
+                  borderBottomLeftRadius: 0,
+                  borderBottomRightRadius: 0,
                 },
               ]}
             />
@@ -98,12 +94,12 @@ export const ExternalLinkEmbed = ({
         ) : undefined}
         <View
           style={[
-            pal.border,
             a.border_b,
             a.border_l,
             a.border_r,
             a.flex_1,
             a.py_sm,
+            t.atoms.border_contrast_low,
             {
               borderBottomRightRadius: 8,
               borderBottomLeftRadius: 8,

@@ -18,7 +18,9 @@ import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {EmbedPlayerParams} from 'lib/strings/embed-player'
 import {useAutoplayDisabled} from 'state/preferences'
 import {atoms as a, useTheme} from '#/alf'
+import {Fill} from '#/components/Fill'
 import {Loader} from '#/components/Loader'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
@@ -138,30 +140,16 @@ export function GifEmbed({
           accessibilityLabel={parsedAlt.alt}
         />
         {!playerState.isPlaying && (
-          <View
+          <Fill
             style={[
-              a.absolute,
-              a.w_full,
-              a.h_full,
+              t.name === 'light' ? t.atoms.bg_contrast_975 : t.atoms.bg,
               {
-                backgroundColor: 'rgba(0,0,0,0.5)',
+                opacity: 0.3,
               },
             ]}
           />
         )}
-        <View
-          style={[
-            a.absolute,
-            a.w_full,
-            a.h_full,
-            a.border,
-            a.rounded_sm,
-            {
-              borderColor: t.palette.contrast_800,
-              opacity: 0.2,
-            },
-          ]}
-        />
+        <MediaInsetBorder />
         {!hideAlt && parsedAlt.isPreferred && <AltText text={parsedAlt.alt} />}
       </View>
     </View>

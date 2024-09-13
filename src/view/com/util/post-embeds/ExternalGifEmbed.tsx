@@ -5,11 +5,9 @@ import {
   LayoutChangeEvent,
   Pressable,
   StyleSheet,
-  View,
 } from 'react-native'
 import {Image, ImageLoadEventData} from 'expo-image'
 import {AppBskyEmbedExternal} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -19,6 +17,9 @@ import {useExternalEmbedsPrefs} from '#/state/preferences'
 import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {EmbedConsentDialog} from '#/components/dialogs/EmbedConsent'
+import {Fill} from '#/components/Fill'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
+import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 
 export function ExternalGifEmbed({
   link,
@@ -115,26 +116,19 @@ export function ExternalGifEmbed({
       <Pressable
         style={[
           {height: imageDims.height},
-          styles.topRadius,
           styles.gifContainer,
+          a.rounded_sm,
+          a.overflow_hidden,
+          {
+            borderBottomLeftRadius: 0,
+            borderBottomRightRadius: 0,
+          },
         ]}
         onPress={onPlayPress}
         onLayout={onLayout}
         accessibilityRole="button"
         accessibilityHint={_(msg`Plays the GIF`)}
         accessibilityLabel={_(msg`Play ${link.title}`)}>
-        {(!isPrefetched || !isAnimating) && ( // If we have not loaded or are not animating, show the overlay
-          <View style={[styles.layer, styles.overlayLayer]}>
-            <View style={[styles.overlayContainer, styles.topRadius]}>
-              {!isAnimating || !isPlayerActive ? ( // Play button when not animating or not active
-                <FontAwesomeIcon icon="play" size={42} color="white" />
-              ) : (
-                // Activity indicator while gif loads
-                <ActivityIndicator size="large" color="white" />
-              )}
-            </View>
-          </View>
-        )}
         <Image
           source={{
             uri:
@@ -152,31 +146,32 @@ export function ExternalGifEmbed({
           accessibilityHint={link.title}
           cachePolicy={isIOS ? 'disk' : 'memory-disk'} // cant control playback with memory-disk on ios
         />
+
         {(!isPrefetched || !isAnimating) && (
-          <View
-            style={[
-              a.absolute,
-              a.w_full,
-              a.h_full,
-              {
-                borderTopRightRadius: 8,
-                borderTopLeftRadius: 8,
-                backgroundColor: 'rgba(0,0,0,0.5)',
-              },
-            ]}
-          />
+          <Fill style={[a.align_center, a.justify_center]}>
+            <Fill
+              style={[
+                t.name === 'light' ? t.atoms.bg_contrast_975 : t.atoms.bg,
+                {
+                  opacity: 0.3,
+                },
+              ]}
+            />
+
+            {!isAnimating || !isPlayerActive ? ( // Play button when not animating or not active
+              <PlayButtonIcon />
+            ) : (
+              // Activity indicator while gif loads
+              <ActivityIndicator size="large" color="white" />
+            )}
+          </Fill>
         )}
-        <View
+        <MediaInsetBorder
+          opaque
           style={[
-            a.absolute,
-            a.w_full,
-            a.h_full,
-            a.border,
             {
-              borderTopRightRadius: 8,
-              borderTopLeftRadius: 8,
-              borderColor: t.palette.contrast_800,
-              opacity: 0.2,
+              borderBottomLeftRadius: 0,
+              borderBottomRightRadius: 0,
             },
           ]}
         />

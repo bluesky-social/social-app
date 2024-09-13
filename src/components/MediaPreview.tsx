@@ -11,6 +11,7 @@ import {Trans} from '@lingui/macro'
 
 import {parseTenorGif} from '#/lib/strings/embed-player'
 import {atoms as a, useTheme} from '#/alf'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 
@@ -104,19 +105,7 @@ export function ImageItem({
         accessibilityHint={alt}
         accessibilityLabel=""
       />
-      <View
-        style={[
-          a.rounded_xs,
-          a.absolute,
-          a.w_full,
-          a.h_full,
-          a.border,
-          {
-            borderColor: t.palette.contrast_800,
-            opacity: 0.2,
-          },
-        ]}
-      />
+      <MediaInsetBorder style={[a.rounded_xs]} />
       {children}
     </View>
   )
