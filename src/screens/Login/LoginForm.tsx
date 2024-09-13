@@ -83,11 +83,17 @@ export const LoginForm = ({
     Keyboard.dismiss()
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setError('')
-    setIsProcessing(true)
 
     const identifier = identifierValueRef.current.toLowerCase().trim()
     const password = passwordValueRef.current
     const authFactorToken = authFactorTokenValueRef.current
+
+    if (!identifier || !password) {
+      setError(_(msg`Invalid username or password`))
+      return
+    }
+
+    setIsProcessing(true)
 
     try {
       // try to guess the handle if the user just gave their own username
@@ -325,7 +331,7 @@ export const LoginForm = ({
               <Trans>Connecting...</Trans>
             </Text>
           </>
-        ) : isReady ? (
+        ) : (
           <Button
             testID="loginNextButton"
             label={_(msg`Next`)}
@@ -339,7 +345,7 @@ export const LoginForm = ({
             </ButtonText>
             {isProcessing && <ButtonIcon icon={Loader} />}
           </Button>
-        ) : undefined}
+        )}
       </View>
     </FormContainer>
   )
