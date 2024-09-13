@@ -23,9 +23,10 @@ export function useImageAspectRatio({
   const [raw, setAspectRatio] = React.useState<number>(
     dimensions ? calc(dimensions) : 1,
   )
+  // this basically controls the width of the image
   const {isCropped, constrained, max} = React.useMemo(() => {
-    const a34 = 0.75 // max of 3:4 ratio in feeds
-    const constrained = Math.max(raw, a34)
+    const ratio = 1 / 2 // max of 1:2 ratio in feeds
+    const constrained = Math.max(raw, ratio)
     const max = Math.max(raw, 0.25) // max of 1:4 in thread
     const isCropped = raw < constrained
     return {
@@ -68,14 +69,14 @@ export function ConstrainedImage({
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   /**
-   * Computed as a % value to apply as `paddingTop`
+   * Computed as a % value to apply as `paddingTop`, this basically controls
+   * the height of the image.
    */
   const outerAspectRatio = React.useMemo<DimensionValue>(() => {
-    // capped to square or shorter
     const ratio =
       isNative || !gtMobile
-        ? Math.min(1 / aspectRatio, 1.5)
-        : Math.min(1 / aspectRatio, 1)
+        ? Math.min(1 / aspectRatio, 16 / 9) // 9:16 bounding box
+        : Math.min(1 / aspectRatio, 1) // 1:1 bounding box
     return `${ratio * 100}%`
   }, [aspectRatio, gtMobile])
 
