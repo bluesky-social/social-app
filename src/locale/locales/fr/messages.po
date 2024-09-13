@@ -846,7 +846,7 @@ msgstr "Bluesky est meilleur entre ami·e·s !"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:206
 msgid "Bluesky now has over 10 million users, and I was #{0}!"
-msgstr "Bluesky comprend aujourd’hui plus de 10 millions de comptes, et j’étais n° {0} !"
+msgstr "Nous sommes désormais plus de 10 millions sur Bluesky, et j’étais n°{0} !"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:282
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
@@ -871,7 +871,7 @@ msgstr "Livres"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:614
 msgid "Brag a little!"
-msgstr "Vantez un peu !"
+msgstr "Soyez-en fier !"
 
 #: src/components/FeedInterstitials.tsx:346
 msgid "Browse more accounts on the Explore page"
@@ -1014,7 +1014,7 @@ msgstr "Sous-titres et texte alt"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:369
 msgid "Celebrating {0} users"
-msgstr "Célébration de {0} de comptes"
+msgstr "Célébrons les {0} comptes"
 
 #: src/view/com/modals/VerifyEmail.tsx:160
 msgid "Change"
@@ -3130,7 +3130,7 @@ msgstr "Participez à la conversation"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:493
 msgid "Joined {0}"
-msgstr "Inscrit le {0}"
+msgstr "Inscrit·e le {0}"
 
 #: src/screens/Onboarding/index.tsx:21
 #: src/screens/Onboarding/state.ts:89
@@ -5704,7 +5704,7 @@ msgstr "Partager le fil d’actu"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:621
 msgid "Share image externally"
-msgstr "Partager l’image avec d’autres personnes"
+msgstr "Partager l’image ailleurs"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:639
 msgid "Share image in post"
@@ -6653,7 +6653,7 @@ msgstr "À qui souhaitez-vous envoyer ce rapport ?"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:598
 msgid "Together, we're rebuilding the social internet. We're glad you're here."
-msgstr "Ensemble, nous reconstruisons l’internet social. Nous sommes heureux que vous soyez là."
+msgstr "Ensemble, nous reconstruisons le web social. Nous sommes ravis que vous soyez parmi nous."
 
 #: src/view/com/util/forms/DropdownButton.tsx:255
 msgid "Toggle dropdown"
