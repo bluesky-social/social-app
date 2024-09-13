@@ -1,5 +1,7 @@
 import React from 'react'
 
+import {useDialogStateContext} from '#/state/dialogs'
+import {useModals} from '#/state/modals'
 import {useComposerControls} from './'
 
 /**
@@ -35,15 +37,18 @@ function shouldIgnore(event: KeyboardEvent) {
 
 export function useComposerKeyboardShortcut() {
   const {openComposer} = useComposerControls()
+  const {openDialogs} = useDialogStateContext()
+  const {isModalActive} = useModals()
 
   React.useEffect(() => {
     function handler(event: KeyboardEvent) {
       if (shouldIgnore(event)) return
+      if (openDialogs.current.size > 0 || isModalActive) return
       if (event.key === 'n' || event.key === 'N') {
         openComposer({})
       }
     }
     document.addEventListener('keydown', handler)
     return () => document.removeEventListener('keydown', handler)
-  }, [openComposer])
+  }, [openComposer, isModalActive, openDialogs])
 }
