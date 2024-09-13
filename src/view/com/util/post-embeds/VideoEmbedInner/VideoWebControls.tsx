@@ -370,7 +370,7 @@ export function Controls({
             onPress={onPressPlayPause}
           />
           <View style={a.flex_1} />
-          <Text style={{color: t.palette.white}}>
+          <Text style={{color: t.palette.white, fontVariant: ['tabular-nums']}}>
             {formatTime(currentTime)} / {formatTime(duration)}
           </Text>
           {hasSubtitleTrack && (
