@@ -46,6 +46,7 @@ export function VideoPreview({
         url={video.uri}
         autoplay={!autoplayDisabled}
         beginMuted={true}
+        forceTakeover={true}
         onError={e => {
           console.error('error', e.nativeEvent.error)
         }}
