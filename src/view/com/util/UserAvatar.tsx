@@ -19,7 +19,7 @@ import {colors} from 'lib/styles'
 import {isAndroid, isNative, isWeb} from 'platform/detection'
 import {precacheProfile} from 'state/queries/profile'
 import {HighPriorityImage} from 'view/com/util/images/Image'
-import {tokens, useTheme} from '#/alf'
+import {atoms as a, tokens, useTheme} from '#/alf'
 import {
   Camera_Filled_Stroke2_Corner0_Rounded as CameraFilled,
   Camera_Stroke2_Corner0_Rounded as Camera,
@@ -176,6 +176,7 @@ let UserAvatar = ({
   usePlainRNImage = false,
 }: UserAvatarProps): React.ReactNode => {
   const pal = usePalette('default')
+  const t = useTheme()
   const backgroundColor = pal.colors.backgroundLight
   const finalShape = overrideShape ?? (type === 'user' ? 'circle' : 'square')
 
@@ -236,6 +237,19 @@ let UserAvatar = ({
           blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
         />
       )}
+      <View
+        style={[
+          a.rounded_full,
+          a.absolute,
+          a.w_full,
+          a.h_full,
+          a.border,
+          {
+            borderColor: t.palette.contrast_800,
+            opacity: 0.2,
+          },
+        ]}
+      />
       {alert}
     </View>
   ) : (

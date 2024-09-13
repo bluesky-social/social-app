@@ -3,7 +3,7 @@ import {View} from 'react-native'
 import {AppBskyEmbedVideo} from '@atproto/api'
 import Hls from 'hls.js'
 
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Controls} from './VideoWebControls'
 
 export function VideoEmbedInnerWeb({
@@ -17,6 +17,7 @@ export function VideoEmbedInnerWeb({
   setActive: () => void
   onScreen: boolean
 }) {
+  const t = useTheme()
   const containerRef = useRef<HTMLDivElement>(null)
   const ref = useRef<HTMLVideoElement>(null)
   const [focused, setFocused] = useState(false)
@@ -108,6 +109,19 @@ export function VideoEmbedInnerWeb({
             </figcaption>
           )}
         </figure>
+        <View
+          style={[
+            a.rounded_sm,
+            a.absolute,
+            a.w_full,
+            a.h_full,
+            a.border,
+            {
+              borderColor: t.palette.contrast_800,
+              opacity: 0.2,
+            },
+          ]}
+        />
         <Controls
           videoRef={ref}
           hlsRef={hlsRef}

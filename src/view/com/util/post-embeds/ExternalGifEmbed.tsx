@@ -16,6 +16,7 @@ import {useLingui} from '@lingui/react'
 import {EmbedPlayerParams, getGifDims} from '#/lib/strings/embed-player'
 import {isIOS, isNative, isWeb} from '#/platform/detection'
 import {useExternalEmbedsPrefs} from '#/state/preferences'
+import {atoms as a, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {EmbedConsentDialog} from '#/components/dialogs/EmbedConsent'
 
@@ -26,6 +27,7 @@ export function ExternalGifEmbed({
   link: AppBskyEmbedExternal.ViewExternal
   params: EmbedPlayerParams
 }) {
+  const t = useTheme()
   const externalEmbedsPrefs = useExternalEmbedsPrefs()
 
   const {_} = useLingui()
@@ -150,6 +152,34 @@ export function ExternalGifEmbed({
           accessibilityHint={link.title}
           cachePolicy={isIOS ? 'disk' : 'memory-disk'} // cant control playback with memory-disk on ios
         />
+        {(!isPrefetched || !isAnimating) && (
+          <View
+            style={[
+              a.absolute,
+              a.w_full,
+              a.h_full,
+              {
+                borderTopRightRadius: 8,
+                borderTopLeftRadius: 8,
+                backgroundColor: 'rgba(0,0,0,0.5)',
+              },
+            ]}
+          />
+        )}
+        <View
+          style={[
+            a.absolute,
+            a.w_full,
+            a.h_full,
+            a.border,
+            {
+              borderTopRightRadius: 8,
+              borderTopLeftRadius: 8,
+              borderColor: t.palette.contrast_800,
+              opacity: 0.2,
+            },
+          ]}
+        />
       </Pressable>
     </>
   )
@@ -171,7 +201,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   overlayLayer: {
     zIndex: 2,

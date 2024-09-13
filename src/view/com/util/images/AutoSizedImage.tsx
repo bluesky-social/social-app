@@ -140,6 +140,19 @@ export function AutoSizedImage({
         accessibilityLabel={image.alt}
         accessibilityHint=""
       />
+      <View
+        style={[
+          a.rounded_sm,
+          a.absolute,
+          a.w_full,
+          a.h_full,
+          a.border,
+          {
+            borderColor: t.palette.contrast_800,
+            opacity: 0.2,
+          },
+        ]}
+      />
 
       {(hasAlt || isCropped) && !hideBadge ? (
         <View

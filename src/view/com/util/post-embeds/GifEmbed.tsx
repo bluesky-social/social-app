@@ -56,8 +56,6 @@ function PlaybackControls({
           zIndex: 2,
           backgroundColor: !isLoaded
             ? t.atoms.bg_contrast_25.backgroundColor
-            : !isPlaying
-            ? 'rgba(0, 0, 0, 0.3)'
             : undefined,
         },
       ]}
@@ -86,6 +84,7 @@ export function GifEmbed({
   hideAlt?: boolean
   style?: StyleProp<ViewStyle>
 }) {
+  const t = useTheme()
   const {_} = useLingui()
   const autoplayDisabled = useAutoplayDisabled()
 
@@ -137,6 +136,31 @@ export function GifEmbed({
           ref={playerRef}
           accessibilityHint={_(msg`Animated GIF`)}
           accessibilityLabel={parsedAlt.alt}
+        />
+        {!playerState.isPlaying && (
+          <View
+            style={[
+              a.absolute,
+              a.w_full,
+              a.h_full,
+              {
+                backgroundColor: 'rgba(0,0,0,0.5)',
+              },
+            ]}
+          />
+        )}
+        <View
+          style={[
+            a.absolute,
+            a.w_full,
+            a.h_full,
+            a.border,
+            a.rounded_sm,
+            {
+              borderColor: t.palette.contrast_800,
+              opacity: 0.2,
+            },
+          ]}
         />
         {!hideAlt && parsedAlt.isPreferred && <AltText text={parsedAlt.alt} />}
       </View>

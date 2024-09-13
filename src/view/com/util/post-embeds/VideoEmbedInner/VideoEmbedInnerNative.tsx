@@ -32,6 +32,7 @@ export function VideoEmbedInnerNative({
   timeRemaining: number
   isMuted: boolean
 }) {
+  const t = useTheme()
   const {_} = useLingui()
   const {player} = useActiveVideoNative()
   const ref = useRef<VideoView>(null)
@@ -77,6 +78,19 @@ export function VideoEmbedInnerNative({
           embed.alt ? _(msg`Video: ${embed.alt}`) : _(msg`Video`)
         }
         accessibilityHint=""
+      />
+      <View
+        style={[
+          a.rounded_sm,
+          a.absolute,
+          a.w_full,
+          a.h_full,
+          a.border,
+          {
+            borderColor: t.palette.contrast_800,
+            opacity: 0.2,
+          },
+        ]}
       />
       <VideoControls
         player={player}
