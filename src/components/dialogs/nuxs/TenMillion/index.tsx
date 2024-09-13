@@ -12,6 +12,7 @@ import {useLingui} from '@lingui/react'
 import {networkRetry} from '#/lib/async/retry'
 import {getCanvas} from '#/lib/canvas'
 import {shareUrl} from '#/lib/sharing'
+import {logEvent} from '#/lib/statsig/statsig'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {isIOS, isNative} from '#/platform/detection'
@@ -199,6 +200,7 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
     if (uri) {
       control.close(() => {
         setTimeout(() => {
+          logEvent('tmd:post', {})
           openComposer({
             text: _(
               msg`Bluesky now has over 10 million users, and I was #${i18n.number(
@@ -220,6 +222,7 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
   const onNativeShare = React.useCallback(() => {
     if (uri) {
       control.close(() => {
+        logEvent('tmd:share', {})
         shareUrl(uri)
       })
     }
@@ -240,6 +243,7 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
 
       try {
         await MediaLibrary.createAssetAsync(uri)
+        logEvent('tmd:download', {})
         Toast.show(_(msg`Image saved to your camera roll!`))
       } catch (e: unknown) {
         console.log(e)
@@ -258,6 +262,7 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
       link.setAttribute('download', `Bluesky 10M Users.png`)
       link.setAttribute('href', imgHref)
       link.click()
+      logEvent('tmd:download', {})
     }
   }, [uri])
 
