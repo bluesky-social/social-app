@@ -38,7 +38,10 @@ export function SelectVideoBtn({onSelectVideo, disabled, setError}: Props) {
       return
     }
 
-    if (!currentAccount?.emailConfirmed) {
+    if (
+      !currentAccount?.emailConfirmed &&
+      currentAccount?.service === 'bsky.social'
+    ) {
       Keyboard.dismiss()
       control.open()
     } else {
@@ -77,6 +80,7 @@ export function SelectVideoBtn({onSelectVideo, disabled, setError}: Props) {
     _,
     control,
     currentAccount?.emailConfirmed,
+    currentAccount?.service,
   ])
 
   return (
