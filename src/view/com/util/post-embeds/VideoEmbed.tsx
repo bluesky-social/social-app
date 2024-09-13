@@ -58,14 +58,23 @@ function InnerWrapper({embed}: Props) {
   const ref = React.useRef<{togglePlayback: () => void}>(null)
 
   const [status, setStatus] = React.useState<'playing' | 'paused' | 'pending'>(
-    'paused',
+    'pending',
   )
   const [isLoading, setIsLoading] = React.useState(false)
   const [isActive, setIsActive] = React.useState(false)
   const showSpinner = useThrottledValue(isActive && isLoading, 100)
 
   const showOverlay =
-    !isActive || isLoading || (status === 'paused' && !isActive)
+    !isActive ||
+    isLoading ||
+    (status === 'paused' && !isActive) ||
+    status === 'pending'
+
+  React.useEffect(() => {
+    if (!isActive && status !== 'pending') {
+      setStatus('pending')
+    }
+  }, [isActive, status])
 
   return (
     <>
