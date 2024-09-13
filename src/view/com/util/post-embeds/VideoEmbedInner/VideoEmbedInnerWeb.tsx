@@ -4,6 +4,7 @@ import {AppBskyEmbedVideo} from '@atproto/api'
 import Hls from 'hls.js'
 
 import {atoms as a} from '#/alf'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Controls} from './VideoWebControls'
 
 export function VideoEmbedInnerWeb({
@@ -119,6 +120,7 @@ export function VideoEmbedInnerWeb({
           fullscreenRef={containerRef}
           hasSubtitleTrack={hasSubtitleTrack}
         />
+        <MediaInsetBorder />
       </div>
     </View>
   )
