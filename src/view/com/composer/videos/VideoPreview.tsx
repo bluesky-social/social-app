@@ -44,7 +44,7 @@ export function VideoPreview({
       ]}>
       <BlueskyVideoView
         url={video.uri}
-        autoplay={true}
+        autoplay={autoplayDisabled}
         beginMuted={true}
         forceTakeover={true}
         ref={playerRef}

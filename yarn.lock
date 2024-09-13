@@ -4104,10 +4104,10 @@
   resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.2.0.tgz#5f3d96ec6b2354ad6d8a28bf216a1d97b5426861"
   integrity sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==
 
-"@haileyok/bluesky-video@0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@haileyok/bluesky-video/-/bluesky-video-0.1.1.tgz#0aa85a8ddb0ea2f2c9aca2658e853057c0285c04"
-  integrity sha512-pb8nPFz6d6fJUiGleGrtMrDOCC7s9gGlKbNMbrjVqakHlFx0OqI2YicIzTVAP8E1veOJ0acXTOaTFfjOuXaKqQ==
+"@haileyok/bluesky-video@0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@haileyok/bluesky-video/-/bluesky-video-0.1.2.tgz#53abb04c22885fcf8a1d8a7510d2cfbe7d45ff91"
+  integrity sha512-OPltVPNhjrm/+d4YYbaSsKLK7VQWC62ci8J05GO4I/PhWsYLWsAu79CGfZ1YTpfpIjYXyo0HjMmiig5X/hhOsQ==
 
 "@hapi/accept@^6.0.3":
   version "6.0.3"
