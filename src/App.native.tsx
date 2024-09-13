@@ -62,7 +62,6 @@ import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialo
 import {Provider as PortalProvider} from '#/components/Portal'
 import {Splash} from '#/Splash'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
-import {AudioCategory, PlatformInfo} from '../modules/expo-bluesky-swiss-army'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -155,8 +154,6 @@ function App() {
   const [isReady, setReady] = useState(false)
 
   React.useEffect(() => {
-    PlatformInfo.setAudioCategory(AudioCategory.Ambient)
-    PlatformInfo.setAudioActive(false)
     initPersistedState().then(() => setReady(true))
   }, [])
 
