@@ -60,7 +60,6 @@ export const LoginForm = ({
   const {track} = useAnalytics()
   const t = useTheme()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
-  const [isReady, setIsReady] = useState<boolean>(false)
   const [isAuthFactorTokenNeeded, setIsAuthFactorTokenNeeded] =
     useState<boolean>(false)
   const identifierValueRef = useRef<string>(initialHandle || '')
@@ -163,22 +162,6 @@ export const LoginForm = ({
     }
   }
 
-  const checkIsReady = () => {
-    if (
-      !!serviceDescription &&
-      !!identifierValueRef.current &&
-      !!passwordValueRef.current
-    ) {
-      if (!isReady) {
-        setIsReady(true)
-      }
-    } else {
-      if (isReady) {
-        setIsReady(false)
-      }
-    }
-  }
-
   return (
     <FormContainer testID="loginForm" titleText={<Trans>Sign in</Trans>}>
       <View>
@@ -210,7 +193,6 @@ export const LoginForm = ({
               defaultValue={initialHandle || ''}
               onChangeText={v => {
                 identifierValueRef.current = v
-                checkIsReady()
               }}
               onSubmitEditing={() => {
                 passwordRef.current?.focus()
@@ -239,7 +221,6 @@ export const LoginForm = ({
               clearButtonMode="while-editing"
               onChangeText={v => {
                 passwordValueRef.current = v
-                checkIsReady()
               }}
               onSubmitEditing={onPressNext}
               blurOnSubmit={false} // HACK: https://github.com/facebook/react-native/issues/21911#issuecomment-558343069 Keyboard blur behavior is now handled in onSubmitEditing
