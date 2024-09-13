@@ -8,7 +8,7 @@ msgstr ""
 "Language: fr\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-11 21:50+0100\n"
+"PO-Revision-Date: 2024-09-13 23:50+0100\n"
 "Last-Translator: surfdude29\n"
 "Language-Team: Stanislas Signoud (@signez.fr), surfdude29\n"
 "Plural-Forms: \n"
@@ -844,6 +844,10 @@ msgstr "Bluesky est un réseau ouvert où vous pouvez choisir votre hébergeur. 
 msgid "Bluesky is better with friends!"
 msgstr "Bluesky est meilleur entre ami·e·s !"
 
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:206
+msgid "Bluesky now has over 10 million users, and I was #{0}!"
+msgstr "Bluesky comprend aujourd’hui plus de 10 millions de comptes, et j’étais n° {0} !"
+
 #: src/components/StarterPack/ProfileStarterPacks.tsx:282
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
 msgstr "Bluesky choisira un ensemble de comptes recommandés parmi les personnes de votre réseau."
@@ -864,6 +868,10 @@ msgstr "Flouter les images et les filtrer des fils d’actu"
 #: src/screens/Onboarding/state.ts:81
 msgid "Books"
 msgstr "Livres"
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:614
+msgid "Brag a little!"
+msgstr "Vantez un peu !"
 
 #: src/components/FeedInterstitials.tsx:346
 msgid "Browse more accounts on the Explore page"
@@ -1003,6 +1011,10 @@ msgstr "Sous-titres (.vtt)"
 #: src/view/com/composer/videos/SubtitleDialog.tsx:54
 msgid "Captions & alt text"
 msgstr "Sous-titres et texte alt"
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:369
+msgid "Celebrating {0} users"
+msgstr "Célébration de {0} de comptes"
 
 #: src/view/com/modals/VerifyEmail.tsx:160
 msgid "Change"
@@ -1878,6 +1890,10 @@ msgstr "Télécharger Bluesky"
 #: src/view/screens/Settings/ExportCarDialog.tsx:81
 msgid "Download CAR file"
 msgstr "Télécharger le fichier CAR"
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:622
+msgid "Download image"
+msgstr "Télécharger l’image"
 
 #: src/view/com/composer/text-input/TextInput.web.tsx:269
 msgid "Drop to add images"
@@ -3048,7 +3064,7 @@ msgstr "Code de confirmation 2FA invalide."
 msgid "Invalid or unsupported post record"
 msgstr "Enregistrement de post invalide ou non pris en charge"
 
-#: src/screens/Login/LoginForm.tsx:145
+#: src/screens/Login/LoginForm.tsx:91
 msgid "Invalid username or password"
 msgstr "Pseudo ou mot de passe incorrect"
 
@@ -3110,6 +3126,10 @@ msgstr "Rejoignez Bluesky"
 #: src/components/StarterPack/QrCode.tsx:56
 msgid "Join the conversation"
 msgstr "Participez à la conversation"
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:493
+msgid "Joined {0}"
+msgstr "Inscrit le {0}"
 
 #: src/screens/Onboarding/index.tsx:21
 #: src/screens/Onboarding/state.ts:89
@@ -4039,6 +4059,10 @@ msgstr "Oh non !"
 #: src/screens/Onboarding/StepInterests/index.tsx:138
 msgid "Oh no! Something went wrong."
 msgstr "Oh non ! Il y a eu un problème."
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:175
+msgid "Oh no! We weren't able to generate an image for you to share. Rest assured, we're glad you're here 🦋"
+msgstr "Oh non ! Nous n’avons pas réussi à générer une image à partager. Rassurez-vous, nous sommes heureux que vous soyez là 🦋"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:339
 msgid "OK"
@@ -5677,6 +5701,14 @@ msgstr "Partager quand même"
 msgid "Share feed"
 msgstr "Partager le fil d’actu"
 
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:621
+msgid "Share image externally"
+msgstr "Partager l’image avec d’autres personnes"
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:639
+msgid "Share image in post"
+msgstr "Partager l’image dans un post"
+
 #: src/components/StarterPack/ShareDialog.tsx:124
 #: src/components/StarterPack/ShareDialog.tsx:131
 #: src/screens/StarterPack/StarterPackScreen.tsx:586
@@ -6147,6 +6179,10 @@ msgstr "Racontez une blague !"
 msgid "Tell us a little more"
 msgstr "Dites-nous en un peu plus"
 
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:518
+msgid "Ten Million"
+msgstr "Dix millions"
+
 #: src/view/shell/desktop/RightNav.tsx:90
 msgid "Terms"
 msgstr "Conditions générales"
@@ -6179,6 +6215,10 @@ msgstr "Champ de saisie de texte"
 #: src/components/ReportDialog/SubmitView.tsx:81
 msgid "Thank you. Your report has been sent."
 msgstr "Nous vous remercions. Votre rapport a été envoyé."
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:593
+msgid "Thanks for being one of our first 10 million users."
+msgstr "Merci d’avoir été l’une des 10 premières millions de personnes à s’inscrire à Bluesky."
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:74
 msgid "Thanks, you have successfully verified your email address."
@@ -6609,6 +6649,10 @@ msgstr "Pour envoyer des vidéos sur Bluesky, vous devez d’abord vérifier vot
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
 msgstr "À qui souhaitez-vous envoyer ce rapport ?"
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:598
+msgid "Together, we're rebuilding the social internet. We're glad you're here."
+msgstr "Ensemble, nous reconstruisons l’internet social. Nous sommes heureux que vous soyez là."
 
 #: src/view/com/util/forms/DropdownButton.tsx:255
 msgid "Toggle dropdown"
