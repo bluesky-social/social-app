@@ -101,7 +101,9 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
         {({timeElapsed}) => (
           <TextLinkOnWebOnly
             type="md"
-            style={[pal.textLight, {whiteSpace: 'nowrap'}]}
+            style={
+              [pal.textLight, {whiteSpace: 'nowrap'}] as StyleProp<TextStyle>
+            }
             text={timeElapsed}
             accessibilityLabel={niceDate(i18n, opts.timestamp)}
             title={niceDate(i18n, opts.timestamp)}
