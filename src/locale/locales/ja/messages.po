@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-12 09:43+0900\n"
+"PO-Revision-Date: 2024-09-13 10:00+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -2523,6 +2523,11 @@ msgid "Follow all"
 msgstr "すべてフォロー"
 
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:142
+msgid "Follow Back"
+msgstr "フォローバック"
+
+#: src/view/com/profile/FollowButton.tsx:79
+msgctxt "action"
 msgid "Follow Back"
 msgstr "フォローバック"
 
@@ -5892,6 +5897,10 @@ msgstr "あなたのスターターパックでサインアップ"
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:315
 msgid "Signup without a starter pack"
 msgstr "スターターパックを使わずにサインアップ"
+
+#: src/components/FeedInterstitials.tsx:316
+msgid "Similar accounts"
+msgstr "似ているアカウント"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:245
 #: src/screens/StarterPack/Wizard/index.tsx:191
