@@ -144,8 +144,7 @@ export const ForgotPasswordForm = ({
             variant="solid"
             color={'primary'}
             size="medium"
-            onPress={onPressNext}
-            disabled={!email}>
+            onPress={onPressNext}>
             <ButtonText>
               <Trans>Next</Trans>
             </ButtonText>
