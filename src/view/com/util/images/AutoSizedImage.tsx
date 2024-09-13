@@ -10,7 +10,7 @@ import {Dimensions} from '#/lib/media/types'
 import {isNative} from '#/platform/detection'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Crop_Stroke2_Corner0_Rounded as Crop} from '#/components/icons/Crop'
+import {ArrowsDiagonalOut_Stroke2_Corner0_Rounded as Fullscreen} from '#/components/icons/ArrowsDiagonal'
 import {Text} from '#/components/Typography'
 
 export function useImageAspectRatio({
@@ -147,33 +147,59 @@ export function AutoSizedImage({
           style={[
             a.absolute,
             a.flex_row,
-            a.align_center,
-            a.rounded_xs,
-            t.atoms.bg_contrast_25,
             {
-              gap: 3,
-              padding: 3,
               bottom: a.p_xs.padding,
               right: a.p_xs.padding,
-              opacity: 0.8,
+              gap: 3,
             },
             largeAlt && [
               {
                 gap: 4,
-                padding: 5,
               },
             ],
           ]}>
           {isCropped && (
-            <Crop
-              fill={t.atoms.text_contrast_high.color}
-              width={largeAlt ? 18 : 12}
-            />
+            <View
+              style={[
+                a.rounded_xs,
+                t.atoms.bg_contrast_25,
+                {
+                  padding: 3,
+                  opacity: 0.8,
+                },
+                largeAlt && [
+                  {
+                    padding: 5,
+                  },
+                ],
+              ]}>
+              <Fullscreen
+                fill={t.atoms.text_contrast_high.color}
+                width={largeAlt ? 18 : 12}
+              />
+            </View>
           )}
           {hasAlt && (
-            <Text style={[a.font_heavy, largeAlt ? a.text_xs : {fontSize: 8}]}>
-              ALT
-            </Text>
+            <View
+              style={[
+                a.justify_center,
+                a.rounded_xs,
+                t.atoms.bg_contrast_25,
+                {
+                  padding: 3,
+                  opacity: 0.8,
+                },
+                largeAlt && [
+                  {
+                    padding: 5,
+                  },
+                ],
+              ]}>
+              <Text
+                style={[a.font_heavy, largeAlt ? a.text_xs : {fontSize: 8}]}>
+                ALT
+              </Text>
+            </View>
           )}
         </View>
       ) : null}
