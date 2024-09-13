@@ -4104,6 +4104,11 @@
   resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.2.0.tgz#5f3d96ec6b2354ad6d8a28bf216a1d97b5426861"
   integrity sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==
 
+"@haileyok/bluesky-video@0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@haileyok/bluesky-video/-/bluesky-video-0.1.2.tgz#53abb04c22885fcf8a1d8a7510d2cfbe7d45ff91"
+  integrity sha512-OPltVPNhjrm/+d4YYbaSsKLK7VQWC62ci8J05GO4I/PhWsYLWsAu79CGfZ1YTpfpIjYXyo0HjMmiig5X/hhOsQ==
+
 "@hapi/accept@^6.0.3":
   version "6.0.3"
   resolved "https://registry.yarnpkg.com/@hapi/accept/-/accept-6.0.3.tgz#eef0800a4f89cd969da8e5d0311dc877c37279ab"
@@ -12414,10 +12419,6 @@ expo-updates@~0.25.14:
     fbemitter "^3.0.0"
     ignore "^5.3.1"
     resolve-from "^5.0.0"
-
-"expo-video@https://github.com/bluesky-social/expo/raw/expo-video-1.2.4-patch/packages/expo-video/expo-video-v1.2.4-2.tgz":
-  version "1.2.4"
-  resolved "https://github.com/bluesky-social/expo/raw/expo-video-1.2.4-patch/packages/expo-video/expo-video-v1.2.4-2.tgz#4127dd5cea5fdf7ab745104c73b8ecf5506f5d34"
 
 expo-web-browser@~13.0.3:
   version "13.0.3"
