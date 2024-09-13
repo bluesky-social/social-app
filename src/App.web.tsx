@@ -92,48 +92,44 @@ function InnerApp() {
 
   return (
     <KeyboardProvider enabled={false}>
-      <Alf theme={theme}>
-        <ThemeProvider theme={theme}>
-          <RootSiblingParent>
-            <ActiveVideoProvider>
-              <React.Fragment
-                // Resets the entire tree below when it changes:
-                key={currentAccount?.did}>
+      <StatsigProvider key={currentAccount?.did}>
+        <Alf theme={theme}>
+          <ThemeProvider theme={theme}>
+            <RootSiblingParent>
+              <ActiveVideoProvider>
                 <QueryProvider currentDid={currentAccount?.did}>
-                  <StatsigProvider>
-                    <MessagesProvider>
-                      {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                      <LabelDefsProvider>
-                        <ModerationOptsProvider>
-                          <LoggedOutViewProvider>
-                            <SelectedFeedProvider>
-                              <HiddenRepliesProvider>
-                                <UnreadNotifsProvider>
-                                  <BackgroundNotificationPreferencesProvider>
-                                    <MutedThreadsProvider>
-                                      <SafeAreaProvider>
-                                        <ProgressGuideProvider>
-                                          <Shell />
-                                          <NuxDialogs />
-                                        </ProgressGuideProvider>
-                                      </SafeAreaProvider>
-                                    </MutedThreadsProvider>
-                                  </BackgroundNotificationPreferencesProvider>
-                                </UnreadNotifsProvider>
-                              </HiddenRepliesProvider>
-                            </SelectedFeedProvider>
-                          </LoggedOutViewProvider>
-                        </ModerationOptsProvider>
-                      </LabelDefsProvider>
-                    </MessagesProvider>
-                  </StatsigProvider>
+                  <MessagesProvider>
+                    {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                    <LabelDefsProvider>
+                      <ModerationOptsProvider>
+                        <LoggedOutViewProvider>
+                          <SelectedFeedProvider>
+                            <HiddenRepliesProvider>
+                              <UnreadNotifsProvider>
+                                <BackgroundNotificationPreferencesProvider>
+                                  <MutedThreadsProvider>
+                                    <SafeAreaProvider>
+                                      <ProgressGuideProvider>
+                                        <Shell />
+                                        <NuxDialogs />
+                                      </ProgressGuideProvider>
+                                    </SafeAreaProvider>
+                                  </MutedThreadsProvider>
+                                </BackgroundNotificationPreferencesProvider>
+                              </UnreadNotifsProvider>
+                            </HiddenRepliesProvider>
+                          </SelectedFeedProvider>
+                        </LoggedOutViewProvider>
+                      </ModerationOptsProvider>
+                    </LabelDefsProvider>
+                  </MessagesProvider>
                 </QueryProvider>
-              </React.Fragment>
-              <ToastContainer />
-            </ActiveVideoProvider>
-          </RootSiblingParent>
-        </ThemeProvider>
-      </Alf>
+                <ToastContainer />
+              </ActiveVideoProvider>
+            </RootSiblingParent>
+          </ThemeProvider>
+        </Alf>
+      </StatsigProvider>
     </KeyboardProvider>
   )
 }

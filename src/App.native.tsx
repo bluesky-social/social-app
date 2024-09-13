@@ -107,51 +107,46 @@ function InnerApp() {
   }, [_])
 
   return (
-    <Alf theme={theme}>
-      <ThemeProvider theme={theme}>
-        <Splash isReady={isReady && hasCheckedReferrer}>
-          <ActiveVideoProvider>
-            <RootSiblingParent>
-              <React.Fragment
-                // Resets the entire tree below when it changes:
-                key={currentAccount?.did}>
+    <StatsigProvider key={currentAccount?.did}>
+      <Alf theme={theme}>
+        <ThemeProvider theme={theme}>
+          <Splash isReady={isReady && hasCheckedReferrer}>
+            <ActiveVideoProvider>
+              <RootSiblingParent>
                 <QueryProvider currentDid={currentAccount?.did}>
-                  <StatsigProvider>
-                    <MessagesProvider>
-                      {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                      <LabelDefsProvider>
-                        <ModerationOptsProvider>
-                          <LoggedOutViewProvider>
-                            <SelectedFeedProvider>
-                              <HiddenRepliesProvider>
-                                <UnreadNotifsProvider>
-                                  <BackgroundNotificationPreferencesProvider>
-                                    <MutedThreadsProvider>
-                                      <ProgressGuideProvider>
-                                        <GestureHandlerRootView
-                                          style={s.h100pct}>
-                                          <TestCtrls />
-                                          <Shell />
-                                          <NuxDialogs />
-                                        </GestureHandlerRootView>
-                                      </ProgressGuideProvider>
-                                    </MutedThreadsProvider>
-                                  </BackgroundNotificationPreferencesProvider>
-                                </UnreadNotifsProvider>
-                              </HiddenRepliesProvider>
-                            </SelectedFeedProvider>
-                          </LoggedOutViewProvider>
-                        </ModerationOptsProvider>
-                      </LabelDefsProvider>
-                    </MessagesProvider>
-                  </StatsigProvider>
+                  <MessagesProvider>
+                    {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                    <LabelDefsProvider>
+                      <ModerationOptsProvider>
+                        <LoggedOutViewProvider>
+                          <SelectedFeedProvider>
+                            <HiddenRepliesProvider>
+                              <UnreadNotifsProvider>
+                                <BackgroundNotificationPreferencesProvider>
+                                  <MutedThreadsProvider>
+                                    <ProgressGuideProvider>
+                                      <GestureHandlerRootView style={s.h100pct}>
+                                        <TestCtrls />
+                                        <Shell />
+                                        <NuxDialogs />
+                                      </GestureHandlerRootView>
+                                    </ProgressGuideProvider>
+                                  </MutedThreadsProvider>
+                                </BackgroundNotificationPreferencesProvider>
+                              </UnreadNotifsProvider>
+                            </HiddenRepliesProvider>
+                          </SelectedFeedProvider>
+                        </LoggedOutViewProvider>
+                      </ModerationOptsProvider>
+                    </LabelDefsProvider>
+                  </MessagesProvider>
                 </QueryProvider>
-              </React.Fragment>
-            </RootSiblingParent>
-          </ActiveVideoProvider>
-        </Splash>
-      </ThemeProvider>
-    </Alf>
+              </RootSiblingParent>
+            </ActiveVideoProvider>
+          </Splash>
+        </ThemeProvider>
+      </Alf>
+    </StatsigProvider>
   )
 }
 
