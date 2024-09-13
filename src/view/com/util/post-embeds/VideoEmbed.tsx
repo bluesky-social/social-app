@@ -57,8 +57,10 @@ function InnerWrapper({embed}: Props) {
   const {_} = useLingui()
   const ref = React.useRef<{togglePlayback: () => void}>(null)
 
-  const [status, setStatus] = React.useState<'playing' | 'paused'>('paused')
-  const [isLoading, setIsLoading] = React.useState(true)
+  const [status, setStatus] = React.useState<'playing' | 'paused' | 'pending'>(
+    'paused',
+  )
+  const [isLoading, setIsLoading] = React.useState(false)
   const [isActive, setIsActive] = React.useState(false)
   const showSpinner = useThrottledValue(isActive && isLoading, 100)
 
