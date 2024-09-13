@@ -9,6 +9,7 @@ import {useLingui} from '@lingui/react'
 import {HITSLOP_30} from '#/lib/constants'
 import {clamp} from '#/lib/numbers'
 import {useAutoplayDisabled} from '#/state/preferences'
+import {useVideoVolumeState} from 'view/com/util/post-embeds/VideoVolumeContext'
 import {atoms as a, useTheme} from '#/alf'
 import {useIsWithinMessage} from '#/components/dms/MessageContext'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
@@ -37,8 +38,8 @@ export const VideoEmbedInnerNative = React.forwardRef(
     const videoRef = useRef<BlueskyVideoView>(null)
     const autoplayDisabled = useAutoplayDisabled()
     const isWithinMessage = useIsWithinMessage()
+    const {muted, setMuted} = useVideoVolumeState()
 
-    const [isMuted, setIsMuted] = React.useState(true)
     const [isPlaying, setIsPlaying] = React.useState(false)
     const [timeRemaining, setTimeRemaining] = React.useState(0)
     const [error, setError] = React.useState<string>()
@@ -66,7 +67,7 @@ export const VideoEmbedInnerNative = React.forwardRef(
         <BlueskyVideoView
           url={embed.playlist}
           autoplay={!autoplayDisabled && !isWithinMessage}
-          beginMuted={true}
+          beginMuted={autoplayDisabled ? false : muted}
           style={[a.rounded_sm]}
           onActiveChange={e => {
             setIsActive(e.nativeEvent.isActive)
@@ -75,7 +76,7 @@ export const VideoEmbedInnerNative = React.forwardRef(
             setIsLoading(e.nativeEvent.isLoading)
           }}
           onMutedChange={e => {
-            setIsMuted(e.nativeEvent.isMuted)
+            setMuted(e.nativeEvent.isMuted)
           }}
           onStatusChange={e => {
             setStatus(e.nativeEvent.status)
@@ -103,7 +104,6 @@ export const VideoEmbedInnerNative = React.forwardRef(
           togglePlayback={() => {
             videoRef.current?.togglePlayback()
           }}
-          isMuted={isMuted}
           isPlaying={isPlaying}
           timeRemaining={timeRemaining}
         />
@@ -119,17 +119,16 @@ function VideoControls({
   togglePlayback,
   timeRemaining,
   isPlaying,
-  isMuted,
 }: {
   enterFullscreen: () => void
   toggleMuted: () => void
   togglePlayback: () => void
   timeRemaining: number
   isPlaying: boolean
-  isMuted: boolean
 }) {
   const {_} = useLingui()
   const t = useTheme()
+  const {muted} = useVideoVolumeState()
 
   // show countdown when:
   // 1. timeRemaining is a number - was seeing NaNs
@@ -161,10 +160,10 @@ function VideoControls({
 
       <ControlButton
         onPress={toggleMuted}
-        label={isMuted ? _(msg`Unmute`) : _(msg`Mute`)}
+        label={muted ? _(msg`Unmute`) : _(msg`Mute`)}
         accessibilityHint={_(msg`Tap to toggle sound`)}
         style={{right: 6}}>
-        {isMuted ? (
+        {muted ? (
           <MuteIcon width={13} fill={t.palette.white} />
         ) : (
           <UnmuteIcon width={13} fill={t.palette.white} />
