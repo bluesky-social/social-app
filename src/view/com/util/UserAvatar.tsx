@@ -19,7 +19,7 @@ import {colors} from 'lib/styles'
 import {isAndroid, isNative, isWeb} from 'platform/detection'
 import {precacheProfile} from 'state/queries/profile'
 import {HighPriorityImage} from 'view/com/util/images/Image'
-import {tokens, useTheme} from '#/alf'
+import {atoms as a, tokens, useTheme} from '#/alf'
 import {
   Camera_Filled_Stroke2_Corner0_Rounded as CameraFilled,
   Camera_Stroke2_Corner0_Rounded as Camera,
@@ -27,6 +27,7 @@ import {
 import {StreamingLive_Stroke2_Corner0_Rounded as Library} from '#/components/icons/StreamingLive'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {Link} from '#/components/Link'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Menu from '#/components/Menu'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
@@ -240,6 +241,7 @@ let UserAvatar = ({
           onLoad={onLoad}
         />
       )}
+      <MediaInsetBorder style={[a.rounded_full]} />
       {alert}
     </View>
   ) : (

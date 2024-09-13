@@ -52,7 +52,7 @@ import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
 import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
 import {Provider as HiddenRepliesProvider} from '#/state/threadgate-hidden-replies'
 import {TestCtrls} from '#/view/com/testing/TestCtrls'
-import {Provider as ActiveVideoProvider} from '#/view/com/util/post-embeds/ActiveVideoNativeContext'
+import {Provider as VideoVolumeProvider} from '#/view/com/util/post-embeds/VideoVolumeContext'
 import * as Toast from '#/view/com/util/Toast'
 import {Shell} from '#/view/shell'
 import {ThemeProvider as Alf} from '#/alf'
@@ -63,7 +63,6 @@ import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialo
 import {Provider as PortalProvider} from '#/components/Portal'
 import {Splash} from '#/Splash'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
-import {AudioCategory, PlatformInfo} from '../modules/expo-bluesky-swiss-army'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -110,8 +109,8 @@ function InnerApp() {
     <Alf theme={theme}>
       <ThemeProvider theme={theme}>
         <Splash isReady={isReady && hasCheckedReferrer}>
-          <ActiveVideoProvider>
-            <RootSiblingParent>
+          <RootSiblingParent>
+            <VideoVolumeProvider>
               <React.Fragment
                 // Resets the entire tree below when it changes:
                 key={currentAccount?.did}>
@@ -147,8 +146,8 @@ function InnerApp() {
                   </StatsigProvider>
                 </QueryProvider>
               </React.Fragment>
-            </RootSiblingParent>
-          </ActiveVideoProvider>
+            </VideoVolumeProvider>
+          </RootSiblingParent>
         </Splash>
       </ThemeProvider>
     </Alf>
@@ -159,8 +158,6 @@ function App() {
   const [isReady, setReady] = useState(false)
 
   React.useEffect(() => {
-    PlatformInfo.setAudioCategory(AudioCategory.Ambient)
-    PlatformInfo.setAudioActive(false)
     initPersistedState().then(() => setReady(true))
   }, [])
 
