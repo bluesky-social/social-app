@@ -3,6 +3,8 @@ import {View} from 'react-native'
 import Animated, {FadeIn} from 'react-native-reanimated'
 import ViewShot from 'react-native-view-shot'
 import {Image} from 'expo-image'
+import {requestMediaLibraryPermissionsAsync} from 'expo-image-picker'
+import * as MediaLibrary from 'expo-media-library'
 import {moderateProfile} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -12,13 +14,14 @@ import {getCanvas} from '#/lib/canvas'
 import {shareUrl} from '#/lib/sharing'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {isNative} from '#/platform/detection'
+import {isIOS, isNative} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useAgent, useSession} from '#/state/session'
 import {useComposerControls} from 'state/shell'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {Logomark} from '#/view/icons/Logomark'
+import * as Toast from 'view/com/util/Toast'
 import {
   atoms as a,
   ThemeProvider,
@@ -221,7 +224,31 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
       })
     }
   }, [uri, control])
-  const download = React.useCallback(async () => {
+  const onNativeDownload = React.useCallback(async () => {
+    if (uri) {
+      const res = await requestMediaLibraryPermissionsAsync()
+
+      if (!res) {
+        Toast.show(
+          _(
+            msg`You must grant access to your photo library to save the image.`,
+          ),
+          'xmark',
+        )
+        return
+      }
+
+      try {
+        await MediaLibrary.createAssetAsync(uri)
+        Toast.show(_(msg`Image saved to your camera roll!`))
+      } catch (e: unknown) {
+        console.log(e)
+        Toast.show(_(msg`An error occurred while saving the image!`), 'xmark')
+        return
+      }
+    }
+  }, [_, uri])
+  const onWebDownload = React.useCallback(async () => {
     if (uri) {
       const canvas = await getCanvas(uri)
       const imgHref = canvas
@@ -585,7 +612,7 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
               <Button
                 disabled={isLoadingImage}
                 label={
-                  isNative
+                  isNative && isIOS
                     ? _(msg`Share image externally`)
                     : _(msg`Download image`)
                 }
@@ -593,8 +620,14 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
                 variant="solid"
                 color="secondary"
                 shape="square"
-                onPress={isNative ? onNativeShare : download}>
-                <ButtonIcon icon={isNative ? Share : Download} />
+                onPress={
+                  isNative
+                    ? isIOS
+                      ? onNativeShare
+                      : onNativeDownload
+                    : onWebDownload
+                }>
+                <ButtonIcon icon={isNative && isIOS ? Share : Download} />
               </Button>
               <Button
                 disabled={isLoadingImage}
