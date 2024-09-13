@@ -256,7 +256,7 @@ export const ScrollableInner = React.forwardRef<
           borderTopLeftRadius: 40,
           borderTopRightRadius: 40,
         },
-        flatten(style),
+        style,
       ]}
       contentContainerStyle={a.pb_4xl}
       ref={ref}>
