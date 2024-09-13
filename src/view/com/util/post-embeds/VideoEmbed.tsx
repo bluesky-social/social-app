@@ -64,7 +64,8 @@ function InnerWrapper({embed}: Props) {
   const [isActive, setIsActive] = React.useState(false)
   const showSpinner = useThrottledValue(isActive && isLoading, 100)
 
-  const showOverlay = !isActive || status === 'paused' || isLoading
+  const showOverlay =
+    !isActive || isLoading || (status === 'paused' && !isActive)
 
   return (
     <>
