@@ -35,6 +35,7 @@ import {
 } from '#/state/session'
 import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
+import {useComposerKeyboardShortcut} from '#/state/shell/composer/useComposerKeyboardShortcut'
 import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
 import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
@@ -61,6 +62,8 @@ function InnerApp() {
   const {_} = useLingui()
   useIntentHandler()
   const hasCheckedReferrer = useStarterPackEntry()
+
+  useComposerKeyboardShortcut()
 
   // init
   useEffect(() => {
