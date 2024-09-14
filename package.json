@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.91.0",
+  "version": "1.91.1",
   "private": true,
   "engines": {
     "node": ">=18"
@@ -68,6 +68,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.1.1",
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "@fortawesome/react-native-fontawesome": "^0.3.2",
+    "@haileyok/bluesky-video": "0.1.6",
     "@lingui/react": "^4.5.0",
     "@mattermost/react-native-paste-input": "^0.7.1",
     "@miblanchard/react-native-slider": "^2.3.1",
@@ -139,7 +140,6 @@
     "expo-system-ui": "~3.0.4",
     "expo-task-manager": "~11.8.1",
     "expo-updates": "~0.25.14",
-    "expo-video": "https://github.com/bluesky-social/expo/raw/expo-video-1.2.4-patch/packages/expo-video/expo-video-v1.2.4-2.tgz",
     "expo-web-browser": "~13.0.3",
     "fast-text-encoding": "^1.0.6",
     "history": "^5.3.0",
