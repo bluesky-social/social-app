@@ -396,7 +396,7 @@ msgstr "Добавить рекомендуемые ленты"
 
 #: src/screens/StarterPack/Wizard/index.tsx:488
 msgid "Add some feeds to your starter pack!"
-msgstr ""
+msgstr "Добавьте ленты в свой стартовый набор!"
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:41
 msgid "Add the default feed of only people you follow"
@@ -544,7 +544,7 @@ msgstr "При загрузке видео возникла ошибка. Пож
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:250
 msgid "An error occurred while saving the image!"
-msgstr ""
+msgstr "При сохранении изображения возникла ошибка!"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:71
 #: src/components/StarterPack/ShareDialog.tsx:79
@@ -850,7 +850,7 @@ msgstr "Bluesky лучше с друзьями!"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:206
 msgid "Bluesky now has over 10 million users, and I was #{0}!"
-msgstr ""
+msgstr "В Bluesky уже больше 10 миллионов пользователей, и я стал(-а) #{0}"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:282
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
@@ -875,7 +875,7 @@ msgstr "Книги"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:614
 msgid "Brag a little!"
-msgstr ""
+msgstr "Похвастаться!"
 
 #: src/components/FeedInterstitials.tsx:350
 msgid "Browse more accounts on the Explore page"
@@ -1018,7 +1018,7 @@ msgstr "Подписи и альтернативный текст"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:368
 msgid "Celebrating {0} users"
-msgstr ""
+msgstr "Празднуем {0} пользователей"
 
 #: src/view/com/modals/VerifyEmail.tsx:160
 msgid "Change"
@@ -1909,7 +1909,7 @@ msgstr "Загрузить CAR файл"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:622
 msgid "Download image"
-msgstr ""
+msgstr "Скачать изображение"
 
 #: src/view/com/composer/text-input/TextInput.web.tsx:269
 msgid "Drop to add images"
@@ -2073,7 +2073,7 @@ msgstr "Адрес электронной почты"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:95
 msgid "Email Resent"
-msgstr ""
+msgstr "Подтверждение отправлено повторно"
 
 #: src/view/com/modals/ChangeEmail.tsx:54
 #: src/view/com/modals/ChangeEmail.tsx:83
@@ -2090,7 +2090,7 @@ msgstr "Электронный адрес проверен"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:71
 msgid "Email Verified"
-msgstr ""
+msgstr "Электронный адрес подтвержден"
 
 #: src/view/screens/Settings/index.tsx:319
 msgid "Email:"
@@ -2152,7 +2152,7 @@ msgstr "Конец ленты"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:161
 msgid "Ensure you have selected a language for each subtitle file."
-msgstr ""
+msgstr "Убедитесь, что выбрали язык для каждого файла субтитров."
 
 #: src/view/com/modals/AddAppPasswords.tsx:161
 msgid "Enter a name for this App Password"
@@ -2557,7 +2557,7 @@ msgstr "Подписаться на все"
 #: src/view/com/profile/FollowButton.tsx:79
 msgctxt "action"
 msgid "Follow Back"
-msgstr ""
+msgstr "Подписаться в ответ"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:223
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:142
@@ -2922,7 +2922,7 @@ msgstr "Хммм, мы не смогли загрузить этот серви�
 
 #: src/state/queries/video/video.ts:165
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
-msgstr ""
+msgstr "Подождите! Мы постепенно даем доступ к видео, и вы все еще в очереди. Возвращайтесь позже!"
 
 #: src/Navigation.tsx:550
 #: src/Navigation.tsx:570
@@ -3088,7 +3088,7 @@ msgstr "Неверное имя пользователя или пароль"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:82
 msgid "Invalid Verification Code"
-msgstr ""
+msgstr "Неверный код подтверждения"
 
 #: src/view/com/modals/InviteCodes.tsx:94
 msgid "Invite a Friend"
@@ -3147,7 +3147,7 @@ msgstr "Присоединиться к беседе"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:492
 msgid "Joined {0}"
-msgstr ""
+msgstr "Присоединил(ся/ась) {0}"
 
 #: src/screens/Onboarding/index.tsx:21
 #: src/screens/Onboarding/state.ts:89
@@ -3615,7 +3615,7 @@ msgstr "Музыка"
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:389
 msgctxt "video"
 msgid "Mute"
-msgstr ""
+msgstr "Выключить звук"
 
 #: src/components/TagMenu/index.tsx:263
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:163
@@ -4081,7 +4081,7 @@ msgstr "Ой! Что-то пошло не так."
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:175
 msgid "Oh no! We weren't able to generate an image for you to share. Rest assured, we're glad you're here 🦋"
-msgstr ""
+msgstr "О нет! Мы не смогли сгенерировать изображение для вас. Не волнуйтесь, мы рады, что вы здесь 🦋"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:339
 msgid "OK"
@@ -5205,11 +5205,11 @@ msgstr "Отправить письмо повторно"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:130
 msgid "Resend Email"
-msgstr ""
+msgstr "Отправить письмо повторно"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:123
 msgid "Resend Verification Email"
-msgstr ""
+msgstr "Отправить письмо с подтверждением повторно"
 
 #: src/view/com/modals/ChangePassword.tsx:186
 msgid "Reset code"
@@ -5725,11 +5725,11 @@ msgstr "Распространить ленту"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:621
 msgid "Share image externally"
-msgstr ""
+msgstr "Поделиться изображением в стороннем приложении"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:639
 msgid "Share image in post"
-msgstr ""
+msgstr "Поделиться изображением в посте"
 
 #: src/components/StarterPack/ShareDialog.tsx:124
 #: src/components/StarterPack/ShareDialog.tsx:131
@@ -6177,7 +6177,7 @@ msgstr "Нажмите, чтобы перейти в полноэкранный 
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
 msgid "Tap to play or pause"
-msgstr ""
+msgstr "Нажмите, чтобы начать или остановить проигрывание"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:164
 msgid "Tap to toggle sound"
@@ -6211,7 +6211,7 @@ msgstr "Расскажите нам немного больше"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:518
 msgid "Ten Million"
-msgstr ""
+msgstr "Десять миллионов"
 
 #: src/view/shell/desktop/RightNav.tsx:90
 msgid "Terms"
@@ -6248,11 +6248,11 @@ msgstr "Спасибо. Ваша жалоба была отправлена."
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:593
 msgid "Thanks for being one of our first 10 million users."
-msgstr ""
+msgstr "Спасибо, что стали одним из первых наших 10 миллионов пользователей."
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:74
 msgid "Thanks, you have successfully verified your email address."
-msgstr ""
+msgstr "Спасибо, вы успешно подтвердили адрес электронной почты."
 
 #: src/view/com/modals/ChangeHandle.tsx:459
 msgid "That contains the following:"
@@ -6353,7 +6353,7 @@ msgstr "Условия Использования перенесены в"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:85
 msgid "The verification code you have provided is invalid. Please make sure that you have used the correct verification link or request a new one."
-msgstr ""
+msgstr "Вы ввели неверный код подтверждения. Пожалуйста, убедитесь, что перешли по правильной ссылке подтверждения, или запросите новую."
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:86
 msgid "There is no time limit for account deactivation, come back any time."
@@ -6682,7 +6682,7 @@ msgstr "Кому вы хотели бы отправить эту жалобу?"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:597
 msgid "Together, we're rebuilding the social internet. We're glad you're here."
-msgstr ""
+msgstr "Вместе мы строим социальный интернет заново. Мы рады, что вы здесь."
 
 #: src/view/com/util/forms/DropdownButton.tsx:255
 msgid "Toggle dropdown"
@@ -6810,7 +6810,7 @@ msgstr "Удалить предпочтения этой ленты"
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:388
 msgctxt "video"
 msgid "Unmute"
-msgstr ""
+msgstr "Включить звук"
 
 #: src/components/TagMenu/index.tsx:263
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:163
@@ -7075,7 +7075,7 @@ msgstr "Подтвердить мой электронный адрес"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:61
 msgid "Verify email dialog"
-msgstr ""
+msgstr "Окно подтверждения электронной почты"
 
 #: src/view/screens/Settings/index.tsx:961
 msgid "Verify my email"
@@ -7135,7 +7135,7 @@ msgstr "Видео: {0}"
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:65
 #: src/view/com/composer/videos/VideoPreview.web.tsx:44
 msgid "Videos must be less than 60 seconds long"
-msgstr ""
+msgstr "Видео должно длиться меньше 60 секунд"
 
 #: src/screens/Profile/Header/Shell.tsx:113
 msgid "View {0}'s avatar"
@@ -7148,7 +7148,7 @@ msgstr "Посмотреть профиль {0}"
 
 #: src/components/dms/MessagesListHeader.tsx:160
 msgid "View {displayName}'s profile"
-msgstr ""
+msgstr "Показать профиль {displayName}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:430
 msgid "View blocked user's profile"
@@ -7248,7 +7248,7 @@ msgstr "Мы оцениваем {estimatedTime} до готовности ваш
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:98
 msgid "We have sent another verification email to <0>{0}</0>."
-msgstr ""
+msgstr "Мы повторно отправили письмо с подтверждением на <0>{0}</0>."
 
 #: src/screens/Onboarding/StepFinished.tsx:238
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
@@ -7260,7 +7260,7 @@ msgstr "У нас закончились посты в ваших подписк
 
 #: src/state/queries/video/video.ts:170
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
-msgstr ""
+msgstr "Мы не смогли определить, доступна ли вам загрузка видео. Попробуйте еще раз."
 
 #: src/components/dialogs/BirthDateSettings.tsx:52
 msgid "We were unable to load your birth date preferences. Please try again."
@@ -7464,7 +7464,7 @@ msgstr "Вы в очереди."
 
 #: src/state/queries/video/video.ts:161
 msgid "You are not allowed to upload videos."
-msgstr ""
+msgstr "Вы не можете загружать видео."
 
 #: src/view/com/profile/ProfileFollows.tsx:95
 msgid "You are not following anyone."
@@ -7585,7 +7585,7 @@ msgstr "Вы добрались до конца"
 
 #: src/state/queries/video/video-upload.shared.ts:67
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
-msgstr ""
+msgstr "Вы достигли временного лимита по загрузкам видео. Попробуйте еще раз позже."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:235
 msgid "You haven't created a starter pack yet!"
@@ -7711,11 +7711,11 @@ msgstr "Ваша домашняя лента закончилась! Подпи�
 
 #: src/state/queries/video/video.ts:175
 msgid "You've reached your daily limit for video uploads (too many bytes)"
-msgstr ""
+msgstr "Вы достигли дневного лимита по загрузкам видео (слишком много байт)"
 
 #: src/state/queries/video/video.ts:180
 msgid "You've reached your daily limit for video uploads (too many videos)"
-msgstr ""
+msgstr "Вы достигли дневного лимита по загрузкам видео (слишком много видео)"
 
 #: src/screens/Signup/index.tsx:146
 msgid "Your account"
@@ -7727,7 +7727,7 @@ msgstr "Ваша учетная запись удалена"
 
 #: src/state/queries/video/video.ts:185
 msgid "Your account is not yet old enough to upload videos. Please try again later."
-msgstr ""
+msgstr "Ваш аккаунт создан еще недостаточно давно, чтобы вы могли загружать видео. Попробуйте еще раз позже."
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:65
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
