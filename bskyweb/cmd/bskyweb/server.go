@@ -457,7 +457,7 @@ func (srv *Server) WebPost(c echo.Context) error {
 		} else if postView.Embed.EmbedVideo_View != nil {
 			data["width"] = postView.Embed.EmbedVideo_View.AspectRatio.Width
 			data["height"] = postView.Embed.EmbedVideo_View.AspectRatio.Height
-			data["videoUrl"] = postView.Embed.EmbedVideo_View.Thumbnail
+			data["videoUrl"] = fmt.Sprintf("https://%s/xrpc/com.atproto.sync.getBlob?did=did:plc:%s&cid=%s", srv.xrpcc.Host, did, postView.Embed.EmbedVideo_View.Cid)
 		}
 	}
 
