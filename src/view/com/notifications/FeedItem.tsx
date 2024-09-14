@@ -616,8 +616,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   layoutIcon: {
-    width: 70,
-    alignItems: 'flex-end',
+    width: 50,
+    alignItems: 'center',
     paddingTop: 2,
   },
   icon: {

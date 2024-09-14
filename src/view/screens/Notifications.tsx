@@ -197,7 +197,7 @@ export function NotificationsScreen({route: {params}}: Props) {
   return (
     <CenteredView
       testID="notificationsScreen"
-      style={[s.hContentRegion, {paddingTop: 2}]}
+      style={[s.hContentRegion]}
       sideBorders={true}>
       <ViewHeader
         title={_(msg`Notifications`)}
