@@ -8,7 +8,7 @@ msgstr ""
 "Language: pt-BR\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-13 03:30+01:00\n"
+"PO-Revision-Date: 2024-09-14 02:40+01:00\n"
 "Last-Translator: fabiohcnobre\n"
 "Language-Team: maisondasilva, MightyLoggor, gildaswise, gleydson, faeriarum, fabiohcnobre, garccez\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -662,11 +662,7 @@ msgstr "Ocorreu um erro ao carregar o vídeo. Tente novamente."
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:250
 msgid "An error occurred while saving the image!"
-msgstr ""
-
-#: src/components/StarterPack/ShareDialog.tsx:79
-#~ msgid "An error occurred while saving the image."
-#~ msgstr "Ocorreu um erro ao salvar a imagem."
+msgstr "Ocorreu um erro ao salvar a imagem!"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:71
 #: src/components/StarterPack/ShareDialog.tsx:79
@@ -6904,7 +6900,7 @@ msgstr "Toque para entrar em tela cheia"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
 msgid "Tap to play or pause"
-msgstr ""
+msgstr "Toque para reproduzir ou pausar"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:164
 msgid "Tap to toggle sound"
