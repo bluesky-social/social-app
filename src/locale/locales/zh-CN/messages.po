@@ -1810,10 +1810,6 @@ msgstr "探索新的资讯源"
 msgid "Discover New Feeds"
 msgstr "探索新的资讯源"
 
-#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:108
-#~ msgid "Dismiss"
-#~ msgstr "关闭"
-
 #: src/view/com/composer/Composer.tsx:1107
 msgid "Dismiss error"
 msgstr "关闭错误"
@@ -3681,10 +3677,6 @@ msgstr "隐藏讨论串"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:483
 msgid "Mute words & tags"
 msgstr "隐藏词和标签"
-
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
-#~ msgid "Muted"
-#~ msgstr "已隐藏"
 
 #: src/screens/Moderation/index.tsx:264
 msgid "Muted accounts"
@@ -6831,10 +6823,6 @@ msgstr "取消隐藏讨论串"
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:317
 msgid "Unmute video"
 msgstr "取消隐藏视频"
-
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
-#~ msgid "Unmuted"
-#~ msgstr "已取消隐藏"
 
 #: src/view/screens/ProfileFeed.tsx:292
 #: src/view/screens/ProfileList.tsx:673
