@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh_CN\n"
 "Project-Id-Version: zh-CN for bluesky-social-app\n"
 "Report-Msgid-Bugs-To: Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-09-13 09:16+0800\n"
+"PO-Revision-Date: 2024-09-14 10:09+0800\n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
 "Language-Team: Frudrax Cheng (auroursa), Simon Chan (RitsukiP), U2FsdGVkX1, Mikan Harada (mitian233), IceCodeNew\n"
 "Plural-Forms: \n"
@@ -544,7 +544,7 @@ msgstr "播放视频时出现问题，请再试一次。"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:250
 msgid "An error occurred while saving the image!"
-msgstr ""
+msgstr "保存图片时发生错误！"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:71
 #: src/components/StarterPack/ShareDialog.tsx:79
@@ -850,7 +850,7 @@ msgstr "Bluesky 因朋友而更好！"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:206
 msgid "Bluesky now has over 10 million users, and I was #{0}!"
-msgstr ""
+msgstr "Bluesky 现在拥有一千万名用户，我是其中的第 #{0} 位！"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:282
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
@@ -875,7 +875,7 @@ msgstr "书籍"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:614
 msgid "Brag a little!"
-msgstr ""
+msgstr "吹个牛！"
 
 #: src/components/FeedInterstitials.tsx:350
 msgid "Browse more accounts on the Explore page"
@@ -1018,7 +1018,7 @@ msgstr "字幕及替代文本"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:368
 msgid "Celebrating {0} users"
-msgstr ""
+msgstr "庆祝第 {0} 位用户"
 
 #: src/view/com/modals/VerifyEmail.tsx:160
 msgid "Change"
@@ -1761,7 +1761,7 @@ msgstr "隆重介绍私信功能！"
 
 #: src/view/screens/AccessibilitySettings.tsx:111
 msgid "Disable autoplay for videos and GIFs"
-msgstr "关闭自动播放 GIF 及视频"
+msgstr "关闭自动播放视频及 GIF"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:90
 msgid "Disable Email 2FA"
@@ -1901,7 +1901,7 @@ msgstr "下载 CAR 文件"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:622
 msgid "Download image"
-msgstr ""
+msgstr "下载图片"
 
 #: src/view/com/composer/text-input/TextInput.web.tsx:269
 msgid "Drop to add images"
@@ -2546,13 +2546,13 @@ msgstr "关注账户"
 msgid "Follow all"
 msgstr "关注所有人"
 
-#: src/view/com/profile/FollowButton.tsx:79
-msgctxt "action"
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:223
+#: src/view/com/post-thread/PostThreadFollowBtn.tsx:142
 msgid "Follow Back"
 msgstr "回关"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:223
-#: src/view/com/post-thread/PostThreadFollowBtn.tsx:142
+#: src/view/com/profile/FollowButton.tsx:79
+msgctxt "action"
 msgid "Follow Back"
 msgstr "回关"
 
@@ -3139,7 +3139,7 @@ msgstr "加入对话"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:492
 msgid "Joined {0}"
-msgstr ""
+msgstr "{0} 已加入"
 
 #: src/screens/Onboarding/index.tsx:21
 #: src/screens/Onboarding/state.ts:89
@@ -3604,13 +3604,13 @@ msgstr "电影"
 msgid "Music"
 msgstr "音乐"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:389
-msgctxt "video"
-msgid "Mute"
-msgstr ""
-
 #: src/components/TagMenu/index.tsx:263
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:163
+msgid "Mute"
+msgstr "隐藏"
+
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:389
+msgctxt "video"
 msgid "Mute"
 msgstr "隐藏"
 
@@ -4073,7 +4073,7 @@ msgstr "糟糕！发生了一些错误。"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:175
 msgid "Oh no! We weren't able to generate an image for you to share. Rest assured, we're glad you're here 🦋"
-msgstr ""
+msgstr "糟糕！我们无法生成图片供你分享。请放心，我们很高兴你还在这里 🦋"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:339
 msgid "OK"
@@ -5717,11 +5717,11 @@ msgstr "分享资讯源"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:621
 msgid "Share image externally"
-msgstr ""
+msgstr "向外部分享图片"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:639
 msgid "Share image in post"
-msgstr ""
+msgstr "在帖文里分享图片"
 
 #: src/components/StarterPack/ShareDialog.tsx:124
 #: src/components/StarterPack/ShareDialog.tsx:131
@@ -6165,7 +6165,7 @@ msgstr "点击进入全屏模式"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
 msgid "Tap to play or pause"
-msgstr ""
+msgstr "点击以播放或静音"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:164
 msgid "Tap to toggle sound"
@@ -6199,7 +6199,7 @@ msgstr "告诉我们更多"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:518
 msgid "Ten Million"
-msgstr ""
+msgstr "一千万"
 
 #: src/view/shell/desktop/RightNav.tsx:90
 msgid "Terms"
@@ -6236,7 +6236,7 @@ msgstr "谢谢，你的举报已提交。"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:593
 msgid "Thanks for being one of our first 10 million users."
-msgstr ""
+msgstr "感谢你成为我们的首批一千万用户的其中一份子。"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:74
 msgid "Thanks, you have successfully verified your email address."
@@ -6670,7 +6670,7 @@ msgstr "你想将举报提交给谁？"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:597
 msgid "Together, we're rebuilding the social internet. We're glad you're here."
-msgstr ""
+msgstr "很高兴你能来到这里，让我们一起重新打造社交网络。"
 
 #: src/view/com/util/forms/DropdownButton.tsx:255
 msgid "Toggle dropdown"
@@ -6794,11 +6794,6 @@ msgstr "取消关注账户"
 #: src/view/screens/ProfileFeed.tsx:575
 msgid "Unlike this feed"
 msgstr "取消喜欢这个资讯源"
-
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:388
-msgctxt "video"
-msgid "Unmute"
-msgstr ""
 
 #: src/components/TagMenu/index.tsx:263
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:163
