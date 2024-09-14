@@ -14,6 +14,7 @@ import {sanitizeHandle} from 'lib/strings/handles'
 import {niceDate} from 'lib/strings/time'
 import {TypographyVariant} from 'lib/ThemeContext'
 import {isAndroid} from 'platform/detection'
+import {web} from '#/alf'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {TextLinkOnWebOnly} from './Link'
 import {Text} from './text/Text'
@@ -102,7 +103,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
         {({timeElapsed}) => (
           <TextLinkOnWebOnly
             type="md"
-            style={pal.textLight}
+            style={[pal.textLight, web({whiteSpace: 'nowrap'})]}
             text={timeElapsed}
             accessibilityLabel={niceDate(i18n, opts.timestamp)}
             title={niceDate(i18n, opts.timestamp)}
