@@ -7457,7 +7457,7 @@ msgstr "您正處於隊列之中。"
 
 #: src/state/queries/video/video.ts:161
 msgid "You are not allowed to upload videos."
-msgstr "您不被允許上傳影片。"
+msgstr "您沒有上傳影片的權限。"
 
 #: src/view/com/profile/ProfileFollows.tsx:95
 msgid "You are not following anyone."
