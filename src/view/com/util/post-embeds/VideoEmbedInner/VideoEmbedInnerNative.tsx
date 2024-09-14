@@ -160,7 +160,7 @@ function VideoControls({
 
       <ControlButton
         onPress={toggleMuted}
-        label={muted ? _(msg`Unmute`) : _(msg`Mute`)}
+        label={muted ? _(msg({message: `Unmute`, context: 'video'})) : _(msg({message: `Mute`, context: 'video'}))}
         accessibilityHint={_(msg`Tap to toggle sound`)}
         style={{right: 6}}>
         {muted ? (
