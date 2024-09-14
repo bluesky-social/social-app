@@ -123,7 +123,7 @@ msgstr "{0}/{1}"
 msgid "{0} people have used this starter pack!"
 msgstr "{0}명이 이 스타터 팩을 사용했습니다!"
 
-#: src/view/com/util/UserAvatar.tsx:419
+#: src/view/com/util/UserAvatar.tsx:425
 msgid "{0}'s avatar"
 msgstr "{0} 님의 아바타"
 
@@ -250,7 +250,7 @@ msgstr "⚠잘못된 핸들"
 msgid "24 hours"
 msgstr "24시간"
 
-#: src/screens/Login/LoginForm.tsx:266
+#: src/screens/Login/LoginForm.tsx:253
 msgid "2FA Confirmation"
 msgstr "2단계 인증"
 
@@ -285,7 +285,7 @@ msgstr "접근성 설정"
 msgid "Accessibility Settings"
 msgstr "접근성 설정"
 
-#: src/screens/Login/LoginForm.tsx:190
+#: src/screens/Login/LoginForm.tsx:179
 #: src/view/screens/Settings/index.tsx:315
 #: src/view/screens/Settings/index.tsx:718
 msgid "Account"
@@ -477,7 +477,7 @@ msgstr "답글을 허용할 대상"
 msgid "Allows access to direct messages"
 msgstr "다이렉트 메시지 접근 허용"
 
-#: src/screens/Login/ForgotPasswordForm.tsx:178
+#: src/screens/Login/ForgotPasswordForm.tsx:177
 #: src/view/com/modals/ChangePassword.tsx:171
 msgid "Already have a code?"
 msgstr "이미 코드가 있나요?"
@@ -488,7 +488,7 @@ msgstr "이미 @{0}(으)로 로그인했습니다"
 
 #: src/view/com/composer/GifAltText.tsx:93
 #: src/view/com/composer/photos/Gallery.tsx:144
-#: src/view/com/util/post-embeds/GifEmbed.tsx:165
+#: src/view/com/util/post-embeds/GifEmbed.tsx:177
 msgid "ALT"
 msgstr "ALT"
 
@@ -501,7 +501,7 @@ msgstr "ALT"
 msgid "Alt text"
 msgstr "대체 텍스트"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:170
+#: src/view/com/util/post-embeds/GifEmbed.tsx:182
 msgid "Alt Text"
 msgstr "대체 텍스트"
 
@@ -534,7 +534,7 @@ msgstr "동영상을 압축하는 동안 오류가 발생했습니다."
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr "스타터 팩을 만드는 동안 오류가 발생했습니다. 다시 시도하시겠습니까?"
 
-#: src/view/com/util/post-embeds/VideoEmbed.tsx:215
+#: src/view/com/util/post-embeds/VideoEmbed.tsx:135
 msgid "An error occurred while loading the video. Please try again later."
 msgstr "동영상을 불러오는 동안 오류가 발생했습니다. 나중에 다시 시도하세요."
 
@@ -542,12 +542,16 @@ msgstr "동영상을 불러오는 동안 오류가 발생했습니다. 나중에
 msgid "An error occurred while loading the video. Please try again."
 msgstr "동영상을 불러오는 동안 오류가 발생했습니다. 다시 시도하세요."
 
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:250
+msgid "An error occurred while saving the image!"
+msgstr "이미지를 저장하는 동안 오류가 발생했습니다"
+
 #: src/components/StarterPack/QrCodeDialog.tsx:71
 #: src/components/StarterPack/ShareDialog.tsx:79
 msgid "An error occurred while saving the QR code!"
 msgstr "QR 코드를 저장하는 동안 오류가 발생했습니다"
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:68
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:75
 msgid "An error occurred while selecting the video"
 msgstr "동영상을 선택하는 동안 오류가 발생했습니다"
 
@@ -601,7 +605,7 @@ msgstr "및"
 msgid "Animals"
 msgstr "동물"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:138
+#: src/view/com/util/post-embeds/GifEmbed.tsx:139
 msgid "Animated GIF"
 msgstr "움직이는 GIF"
 
@@ -734,8 +738,8 @@ msgstr "3자 이상"
 #: src/screens/Login/ChooseAccountForm.tsx:103
 #: src/screens/Login/ForgotPasswordForm.tsx:129
 #: src/screens/Login/ForgotPasswordForm.tsx:135
-#: src/screens/Login/LoginForm.tsx:298
-#: src/screens/Login/LoginForm.tsx:304
+#: src/screens/Login/LoginForm.tsx:285
+#: src/screens/Login/LoginForm.tsx:291
 #: src/screens/Login/SetNewPasswordForm.tsx:160
 #: src/screens/Login/SetNewPasswordForm.tsx:166
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:133
@@ -790,7 +794,7 @@ msgstr "리스트 차단"
 msgid "Block these accounts?"
 msgstr "이 계정들을 차단하시겠습니까?"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:81
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:83
 msgid "Blocked"
 msgstr "차단됨"
 
@@ -844,6 +848,10 @@ msgstr "Bluesky는 호스팅 제공자를 선택할 수 있는 개방형 네트�
 msgid "Bluesky is better with friends!"
 msgstr "Bluesky는 친구와 함께하면 더 좋답니다!"
 
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:206
+msgid "Bluesky now has over 10 million users, and I was #{0}!"
+msgstr "Bluesky는 현재 천만 명이 넘는 사용자를 보유하고 있으며, 나는 {0}번째였습니다!"
+
 #: src/components/StarterPack/ProfileStarterPacks.tsx:282
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
 msgstr "Bluesky가 네트워크에 있는 사람들 중에서 임의로 추천 계정 세트를 선택합니다."
@@ -864,6 +872,10 @@ msgstr "이미지 흐리게 및 피드에서 필터링"
 #: src/screens/Onboarding/state.ts:81
 msgid "Books"
 msgstr "책"
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:614
+msgid "Brag a little!"
+msgstr "자랑해 보세요!"
 
 #: src/components/FeedInterstitials.tsx:350
 msgid "Browse more accounts on the Explore page"
@@ -989,7 +1001,7 @@ msgstr "검색 취소"
 msgid "Cancels opening the linked website"
 msgstr "연결된 웹사이트를 여는 것을 취소합니다"
 
-#: src/state/shell/composer.tsx:70
+#: src/state/shell/composer/index.tsx:70
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:114
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:155
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:191
@@ -1003,6 +1015,10 @@ msgstr "자막(.vtt)"
 #: src/view/com/composer/videos/SubtitleDialog.tsx:56
 msgid "Captions & alt text"
 msgstr "자막 및 대체 텍스트"
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:368
+msgid "Celebrating {0} users"
+msgstr "사용자 {0}명 축하하기"
 
 #: src/view/com/modals/VerifyEmail.tsx:160
 msgid "Change"
@@ -1075,7 +1091,7 @@ msgstr "대화 언뮤트됨"
 msgid "Check my status"
 msgstr "내 상태 확인"
 
-#: src/screens/Login/LoginForm.tsx:291
+#: src/screens/Login/LoginForm.tsx:278
 msgid "Check your email for a login code and enter it here."
 msgstr "이메일에서 로그인 코드를 확인한 후 여기에 입력하세요."
 
@@ -1175,7 +1191,7 @@ msgstr "다그닥 🐴 다그닥 🐴"
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:131
 #: src/view/com/modals/ChangePassword.tsx:268
 #: src/view/com/modals/ChangePassword.tsx:271
-#: src/view/com/util/post-embeds/GifEmbed.tsx:176
+#: src/view/com/util/post-embeds/GifEmbed.tsx:188
 msgid "Close"
 msgstr "닫기"
 
@@ -1316,7 +1332,7 @@ msgstr "나이를 확인하세요:"
 msgid "Confirm your birthdate"
 msgstr "생년월일 확인"
 
-#: src/screens/Login/LoginForm.tsx:272
+#: src/screens/Login/LoginForm.tsx:259
 #: src/view/com/modals/ChangeEmail.tsx:152
 #: src/view/com/modals/DeleteAccount.tsx:238
 #: src/view/com/modals/DeleteAccount.tsx:244
@@ -1326,7 +1342,7 @@ msgstr "생년월일 확인"
 msgid "Confirmation code"
 msgstr "인증 코드"
 
-#: src/screens/Login/LoginForm.tsx:325
+#: src/screens/Login/LoginForm.tsx:312
 msgid "Connecting..."
 msgstr "연결 중…"
 
@@ -1694,7 +1710,7 @@ msgstr "이 리스트를 삭제하시겠습니까?"
 msgid "Delete this post?"
 msgstr "이 게시물을 삭제하시겠습니까?"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:90
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:93
 msgid "Deleted"
 msgstr "삭제됨"
 
@@ -1879,6 +1895,10 @@ msgstr "Bluesky 다운로드"
 msgid "Download CAR file"
 msgstr "CAR 파일 다운로드"
 
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:622
+msgid "Download image"
+msgstr "이미지 다운로드"
+
 #: src/view/com/composer/text-input/TextInput.web.tsx:269
 msgid "Drop to add images"
 msgstr "드롭하여 이미지 추가"
@@ -1940,7 +1960,7 @@ msgctxt "action"
 msgid "Edit"
 msgstr "편집"
 
-#: src/view/com/util/UserAvatar.tsx:328
+#: src/view/com/util/UserAvatar.tsx:334
 #: src/view/com/util/UserBanner.tsx:92
 msgid "Edit avatar"
 msgstr "아바타 편집"
@@ -2640,11 +2660,11 @@ msgstr "무기한"
 msgid "Forgot Password"
 msgstr "비밀번호 분실"
 
-#: src/screens/Login/LoginForm.tsx:246
+#: src/screens/Login/LoginForm.tsx:233
 msgid "Forgot password?"
 msgstr "비밀번호를 잊으셨나요?"
 
-#: src/screens/Login/LoginForm.tsx:257
+#: src/screens/Login/LoginForm.tsx:244
 msgid "Forgot?"
 msgstr "분실"
 
@@ -2690,7 +2710,7 @@ msgstr "시작하기"
 msgid "Getting started"
 msgstr "시작하기"
 
-#: src/components/MediaPreview.tsx:120
+#: src/components/MediaPreview.tsx:122
 msgid "GIF"
 msgstr "GIF"
 
@@ -2749,7 +2769,7 @@ msgstr "홈으로 이동"
 msgid "Go to conversation with {0}"
 msgstr "{0} 님과의 대화로 이동합니다"
 
-#: src/screens/Login/ForgotPasswordForm.tsx:172
+#: src/screens/Login/ForgotPasswordForm.tsx:171
 #: src/view/com/modals/ChangePassword.tsx:168
 msgid "Go to next"
 msgstr "다음"
@@ -2906,7 +2926,7 @@ msgid "Host:"
 msgstr "호스트:"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:89
-#: src/screens/Login/LoginForm.tsx:180
+#: src/screens/Login/LoginForm.tsx:169
 #: src/screens/Signup/StepInfo/index.tsx:106
 #: src/view/com/modals/ChangeHandle.tsx:275
 msgid "Hosting provider"
@@ -2967,7 +2987,7 @@ msgstr "핸들이나 이메일을 변경하려는 경우 비활성화하기 전�
 msgid "Illegal and Urgent"
 msgstr "불법 및 긴급 사항"
 
-#: src/view/com/util/images/Gallery.tsx:55
+#: src/view/com/util/images/Gallery.tsx:56
 msgid "Image"
 msgstr "이미지"
 
@@ -2975,6 +2995,7 @@ msgstr "이미지"
 msgid "Image alt text"
 msgstr "이미지 대체 텍스트"
 
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:247
 #: src/components/StarterPack/ShareDialog.tsx:76
 msgid "Image saved to your camera roll!"
 msgstr "이미지를 사진 보관함에 저장했습니다"
@@ -3011,15 +3032,15 @@ msgstr "새 비밀번호를 입력합니다"
 msgid "Input password for account deletion"
 msgstr "계정을 삭제하기 위해 비밀번호를 입력합니다"
 
-#: src/screens/Login/LoginForm.tsx:286
+#: src/screens/Login/LoginForm.tsx:273
 msgid "Input the code which has been emailed to you"
 msgstr "이메일로 전송된 코드를 입력합니다"
 
-#: src/screens/Login/LoginForm.tsx:215
+#: src/screens/Login/LoginForm.tsx:203
 msgid "Input the username or email address you used at signup"
 msgstr "가입 시 사용한 사용자 이름 또는 이메일 주소를 입력합니다"
 
-#: src/screens/Login/LoginForm.tsx:241
+#: src/screens/Login/LoginForm.tsx:228
 msgid "Input your password"
 msgstr "비밀번호를 입력합니다"
 
@@ -3039,7 +3060,7 @@ msgstr "상호작용 제한됨"
 msgid "Introducing Direct Messages"
 msgstr "다이렉트 메시지 소개"
 
-#: src/screens/Login/LoginForm.tsx:140
+#: src/screens/Login/LoginForm.tsx:145
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
 msgstr "잘못된 2단계 인증 코드입니다."
@@ -3048,7 +3069,8 @@ msgstr "잘못된 2단계 인증 코드입니다."
 msgid "Invalid or unsupported post record"
 msgstr "유효하지 않거나 지원되지 않는 게시물 기록"
 
-#: src/screens/Login/LoginForm.tsx:145
+#: src/screens/Login/LoginForm.tsx:91
+#: src/screens/Login/LoginForm.tsx:150
 msgid "Invalid username or password"
 msgstr "잘못된 사용자 이름 또는 비밀번호"
 
@@ -3110,6 +3132,10 @@ msgstr "Bluesky 가입하기"
 #: src/components/StarterPack/QrCode.tsx:56
 msgid "Join the conversation"
 msgstr "대화에 참여하기"
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:492
+msgid "Joined {0}"
+msgstr "{0}에 가입함"
 
 #: src/screens/Onboarding/index.tsx:21
 #: src/screens/Onboarding/state.ts:89
@@ -3575,6 +3601,7 @@ msgid "Music"
 msgstr "음악"
 
 #: src/components/TagMenu/index.tsx:263
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:163
 msgid "Mute"
 msgstr "뮤트"
 
@@ -3652,8 +3679,8 @@ msgid "Mute words & tags"
 msgstr "단어 및 태그 뮤트"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
-msgid "Muted"
-msgstr "뮤트됨"
+#~ msgid "Muted"
+#~ msgstr "뮤트됨"
 
 #: src/screens/Moderation/index.tsx:264
 msgid "Muted accounts"
@@ -3726,12 +3753,12 @@ msgstr "자연"
 msgid "Navigate to {0}"
 msgstr "{0}(으)로 이동"
 
-#: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:73
+#: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:76
 msgid "Navigate to starter pack"
 msgstr "스타터 팩으로 이동합니다"
 
-#: src/screens/Login/ForgotPasswordForm.tsx:173
-#: src/screens/Login/LoginForm.tsx:332
+#: src/screens/Login/ForgotPasswordForm.tsx:172
+#: src/screens/Login/LoginForm.tsx:319
 #: src/view/com/modals/ChangePassword.tsx:169
 msgid "Navigates to the next screen"
 msgstr "다음 화면으로 이동합니다"
@@ -3821,9 +3848,9 @@ msgid "News"
 msgstr "뉴스"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:143
-#: src/screens/Login/ForgotPasswordForm.tsx:150
-#: src/screens/Login/LoginForm.tsx:331
-#: src/screens/Login/LoginForm.tsx:338
+#: src/screens/Login/ForgotPasswordForm.tsx:149
+#: src/screens/Login/LoginForm.tsx:318
+#: src/screens/Login/LoginForm.tsx:325
 #: src/screens/Login/SetNewPasswordForm.tsx:174
 #: src/screens/Login/SetNewPasswordForm.tsx:180
 #: src/screens/Signup/BackNextButtons.tsx:66
@@ -4040,6 +4067,10 @@ msgstr "이런!"
 msgid "Oh no! Something went wrong."
 msgstr "이런! 뭔가 잘못되었습니다."
 
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:175
+msgid "Oh no! We weren't able to generate an image for you to share. Rest assured, we're glad you're here 🦋"
+msgstr "이런! 공유할 이미지를 생성할 수 없습니다. 안심하고 방문해 주셔서 감사합니다."
+
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:339
 msgid "OK"
 msgstr "확인"
@@ -4247,7 +4278,7 @@ msgstr "사용자 지정 도메인을 사용하기 위한 대화 상자를 엽�
 msgid "Opens moderation settings"
 msgstr "검토 설정을 엽니다"
 
-#: src/screens/Login/LoginForm.tsx:247
+#: src/screens/Login/LoginForm.tsx:234
 msgid "Opens password reset form"
 msgstr "비밀번호 재설정 양식을 엽니다"
 
@@ -4281,11 +4312,11 @@ msgid "Opens the threads preferences"
 msgstr "스레드 설정을 엽니다"
 
 #: src/view/com/notifications/FeedItem.tsx:551
-#: src/view/com/util/UserAvatar.tsx:420
+#: src/view/com/util/UserAvatar.tsx:426
 msgid "Opens this profile"
 msgstr "이 프로필을 엽니다"
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:88
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:95
 msgid "Opens video picker"
 msgstr "동영상 선택기를 엽니다"
 
@@ -4343,7 +4374,7 @@ msgstr "페이지를 찾을 수 없음"
 msgid "Page Not Found"
 msgstr "페이지를 찾을 수 없음"
 
-#: src/screens/Login/LoginForm.tsx:225
+#: src/screens/Login/LoginForm.tsx:213
 #: src/screens/Signup/StepInfo/index.tsx:162
 #: src/view/com/modals/DeleteAccount.tsx:257
 #: src/view/com/modals/DeleteAccount.tsx:264
@@ -4362,7 +4393,8 @@ msgstr "비밀번호 변경됨"
 msgid "Password updated!"
 msgstr "비밀번호 변경됨"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:44
+#: src/view/com/util/post-embeds/GifEmbed.tsx:46
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:150
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:366
 msgid "Pause"
 msgstr "일시 정지"
@@ -4426,30 +4458,31 @@ msgstr "고정한 피드"
 msgid "Pinned to your feeds"
 msgstr "내 피드에 고정됨"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:44
+#: src/view/com/util/post-embeds/GifEmbed.tsx:46
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:150
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:367
 msgid "Play"
 msgstr "재생"
 
-#: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:123
+#: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:131
 msgid "Play {0}"
 msgstr "{0} 재생"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:43
+#: src/view/com/util/post-embeds/GifEmbed.tsx:45
 msgid "Play or pause the GIF"
 msgstr "GIP를 재생하거나 일시 정지합니다"
 
-#: src/view/com/util/post-embeds/VideoEmbed.tsx:189
+#: src/view/com/util/post-embeds/VideoEmbed.tsx:110
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:320
 msgid "Play video"
 msgstr "동영상 재생"
 
-#: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:57
-#: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:58
+#: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:59
+#: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:60
 msgid "Play Video"
 msgstr "동영상 재생"
 
-#: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:122
+#: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:130
 msgid "Plays the GIF"
 msgstr "GIF를 재생합니다"
 
@@ -4659,7 +4692,7 @@ msgstr "개인정보 처리방침"
 msgid "Privately chat with other users."
 msgstr "다른 사용자와 비공개로 대화하세요."
 
-#: src/screens/Login/ForgotPasswordForm.tsx:156
+#: src/screens/Login/ForgotPasswordForm.tsx:155
 msgid "Processing..."
 msgstr "처리 중…"
 
@@ -4830,7 +4863,7 @@ msgstr "계정 제거"
 msgid "Remove attachment"
 msgstr "첨부 파일 제거"
 
-#: src/view/com/util/UserAvatar.tsx:387
+#: src/view/com/util/UserAvatar.tsx:393
 msgid "Remove Avatar"
 msgstr "아바타 제거"
 
@@ -4889,7 +4922,7 @@ msgstr "프로필 제거"
 msgid "Remove profile from search history"
 msgstr "검색 기록에서 프로필을 제거합니다"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:269
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:274
 msgid "Remove quote"
 msgstr "인용 제거"
 
@@ -4906,11 +4939,11 @@ msgstr "자막 파일 제거"
 msgid "Remove this feed from your saved feeds"
 msgstr "저장한 피드에서 이 피드를 제거합니다"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:105
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:109
 msgid "Removed by author"
 msgstr "작성자에 의해 제거됨"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:103
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:107
 msgid "Removed by you"
 msgstr "나에 의해 제거됨"
 
@@ -4934,7 +4967,7 @@ msgstr "저장한 피드에서 제거됨"
 msgid "Removed from your feeds"
 msgstr "내 피드에서 제거됨"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:270
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:275
 msgid "Removes quoted post"
 msgstr "인용된 게시물을 제거합니다"
 
@@ -5196,7 +5229,7 @@ msgstr "온보딩 상태 초기화"
 msgid "Resets the preferences state"
 msgstr "설정 상태 초기화"
 
-#: src/screens/Login/LoginForm.tsx:312
+#: src/screens/Login/LoginForm.tsx:299
 msgid "Retries login"
 msgstr "로그인을 다시 시도합니다"
 
@@ -5209,8 +5242,8 @@ msgstr "오류가 발생한 마지막 작업을 다시 시도합니다"
 #: src/components/Error.tsx:66
 #: src/components/Lists.tsx:104
 #: src/components/StarterPack/ProfileStarterPacks.tsx:318
-#: src/screens/Login/LoginForm.tsx:311
-#: src/screens/Login/LoginForm.tsx:318
+#: src/screens/Login/LoginForm.tsx:298
+#: src/screens/Login/LoginForm.tsx:305
 #: src/screens/Messages/Conversation/MessageListError.tsx:25
 #: src/screens/Onboarding/StepInterests/index.tsx:231
 #: src/screens/Onboarding/StepInterests/index.tsx:234
@@ -5485,7 +5518,7 @@ msgstr "신고할 검토 서비스를 선택하세요."
 msgid "Select the service that hosts your data."
 msgstr "데이터를 호스팅할 서비스를 선택하세요."
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:87
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:94
 msgid "Select video"
 msgstr "동영상 선택"
 
@@ -5641,6 +5674,7 @@ msgstr "성행위 또는 선정적인 노출."
 msgid "Sexually Suggestive"
 msgstr "외설적"
 
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:644
 #: src/components/StarterPack/QrCodeDialog.tsx:177
 #: src/screens/StarterPack/StarterPackScreen.tsx:411
 #: src/screens/StarterPack/StarterPackScreen.tsx:582
@@ -5676,6 +5710,14 @@ msgstr "무시하고 공유"
 #: src/view/screens/ProfileFeed.tsx:362
 msgid "Share feed"
 msgstr "피드 공유"
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:621
+msgid "Share image externally"
+msgstr "외부로 이미지 공유"
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:639
+msgid "Share image in post"
+msgstr "게시물로 이미지 공유"
 
 #: src/components/StarterPack/ShareDialog.tsx:124
 #: src/components/StarterPack/ShareDialog.tsx:131
@@ -5724,7 +5766,7 @@ msgstr "연결된 웹사이트를 공유합니다"
 msgid "Show"
 msgstr "표시"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:157
+#: src/view/com/util/post-embeds/GifEmbed.tsx:169
 msgid "Show alt text"
 msgstr "대체 텍스트 표시"
 
@@ -5817,7 +5859,7 @@ msgstr "피드에 {0} 님의 게시물을 표시합니다"
 #: src/components/dialogs/Signin.tsx:99
 #: src/screens/Login/index.tsx:100
 #: src/screens/Login/index.tsx:119
-#: src/screens/Login/LoginForm.tsx:177
+#: src/screens/Login/LoginForm.tsx:166
 #: src/view/com/auth/SplashScreen.tsx:63
 #: src/view/com/auth/SplashScreen.tsx:72
 #: src/view/com/auth/SplashScreen.web.tsx:112
@@ -5945,7 +5987,7 @@ msgid "Something went wrong!"
 msgstr "문제가 발생했습니다!"
 
 #: src/App.native.tsx:102
-#: src/App.web.tsx:83
+#: src/App.web.tsx:88
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "죄송합니다. 세션이 만료되었습니다. 다시 로그인해 주세요."
 
@@ -6113,16 +6155,20 @@ msgstr "세로"
 msgid "Tap to dismiss"
 msgstr "눌러서 닫기"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:146
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:145
 msgid "Tap to enter full screen"
 msgstr "탭하여 전체화면으로 보기"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:169
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
+msgid "Tap to play or pause"
+msgstr "탭하여 재생/일시 정지"
+
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:164
 msgid "Tap to toggle sound"
 msgstr "탭하여 소리 켜기/끄기"
 
-#: src/view/com/util/images/AutoSizedImage.tsx:191
-#: src/view/com/util/images/AutoSizedImage.tsx:211
+#: src/view/com/util/images/AutoSizedImage.tsx:219
+#: src/view/com/util/images/AutoSizedImage.tsx:239
 msgid "Tap to view full image"
 msgstr "탭하여 전체 이미지를 봅니다"
 
@@ -6146,6 +6192,10 @@ msgstr "농담해 보세요!"
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:63
 msgid "Tell us a little more"
 msgstr "좀 더 자세히 알려주세요"
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:518
+msgid "Ten Million"
+msgstr "천만 명"
 
 #: src/view/shell/desktop/RightNav.tsx:90
 msgid "Terms"
@@ -6179,6 +6229,10 @@ msgstr "텍스트 입력 필드"
 #: src/components/ReportDialog/SubmitView.tsx:81
 msgid "Thank you. Your report has been sent."
 msgstr "감사합니다. 신고를 전송했습니다."
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:593
+msgid "Thanks for being one of our first 10 million users."
+msgstr "사용자 천만 명 중 한 명이 되어 주셔서 감사합니다."
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:74
 msgid "Thanks, you have successfully verified your email address."
@@ -6602,13 +6656,17 @@ msgstr "이메일 2단계 인증을 비활성화하려면 이메일 주소에 �
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
 msgstr "대화를 신고하려면 대화 화면에서 해당 메시지 중 하나를 신고하세요. 이렇게 하면 운영진이 문제의 맥락을 파악할 수 있습니다."
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:113
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:120
 msgid "To upload videos to Bluesky, you must first verify your email."
 msgstr "Bluesky에 동영상을 업로드하려면 먼저 이메일을 인증해야 합니다."
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
 msgstr "이 신고를 누구에게 보내시겠습니까?"
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:597
+msgid "Together, we're rebuilding the social internet. We're glad you're here."
+msgstr "우리는 함께 소셜 인터넷을 재건하고 있습니다. 함께해 주셔서 감사합니다."
 
 #: src/view/com/util/forms/DropdownButton.tsx:255
 msgid "Toggle dropdown"
@@ -6667,7 +6725,7 @@ msgstr "리스트 언뮤트"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:74
 #: src/screens/Login/index.tsx:78
-#: src/screens/Login/LoginForm.tsx:150
+#: src/screens/Login/LoginForm.tsx:155
 #: src/screens/Login/SetNewPasswordForm.tsx:77
 #: src/screens/Signup/index.tsx:77
 #: src/view/com/modals/ChangePassword.tsx:71
@@ -6734,6 +6792,7 @@ msgid "Unlike this feed"
 msgstr "이 피드 좋아요 취소"
 
 #: src/components/TagMenu/index.tsx:263
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:163
 #: src/view/screens/ProfileList.tsx:689
 msgid "Unmute"
 msgstr "언뮤트"
@@ -6770,8 +6829,8 @@ msgid "Unmute video"
 msgstr "동영상 음소거 해제"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
-msgid "Unmuted"
-msgstr "음소거 해제됨"
+#~ msgid "Unmuted"
+#~ msgstr "음소거 해제됨"
 
 #: src/view/screens/ProfileFeed.tsx:292
 #: src/view/screens/ProfileList.tsx:673
@@ -6844,20 +6903,20 @@ msgstr "대신 사진 업로드하기"
 msgid "Upload a text file to:"
 msgstr "텍스트 파일 업로드 경로:"
 
-#: src/view/com/util/UserAvatar.tsx:355
-#: src/view/com/util/UserAvatar.tsx:358
+#: src/view/com/util/UserAvatar.tsx:361
+#: src/view/com/util/UserAvatar.tsx:364
 #: src/view/com/util/UserBanner.tsx:123
 #: src/view/com/util/UserBanner.tsx:126
 msgid "Upload from Camera"
 msgstr "카메라에서 업로드"
 
-#: src/view/com/util/UserAvatar.tsx:372
+#: src/view/com/util/UserAvatar.tsx:378
 #: src/view/com/util/UserBanner.tsx:140
 msgid "Upload from Files"
 msgstr "파일에서 업로드"
 
-#: src/view/com/util/UserAvatar.tsx:366
-#: src/view/com/util/UserAvatar.tsx:370
+#: src/view/com/util/UserAvatar.tsx:372
+#: src/view/com/util/UserAvatar.tsx:376
 #: src/view/com/util/UserBanner.tsx:134
 #: src/view/com/util/UserBanner.tsx:138
 msgid "Upload from Library"
@@ -6955,7 +7014,7 @@ msgstr "사용자 리스트 업데이트됨"
 msgid "User Lists"
 msgstr "사용자 리스트"
 
-#: src/screens/Login/LoginForm.tsx:197
+#: src/screens/Login/LoginForm.tsx:186
 msgid "Username or email address"
 msgstr "사용자 이름 또는 이메일 주소"
 
@@ -6986,7 +7045,7 @@ msgstr "이 콘텐츠 또는 프로필을 좋아하는 사용자"
 msgid "Value:"
 msgstr "값:"
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:111
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:118
 msgid "Verified email required"
 msgstr "이메일 인증 필요"
 
@@ -7015,7 +7074,7 @@ msgstr "내 이메일 인증하기"
 msgid "Verify New Email"
 msgstr "새 이메일 인증"
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:115
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:122
 msgid "Verify now"
 msgstr "지금 인증하기"
 
@@ -7031,8 +7090,8 @@ msgstr "이메일 인증하기"
 msgid "Version {appVersion} {bundleInfo}"
 msgstr "버전 {appVersion} {bundleInfo}"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:77
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:145
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:93
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:144
 msgid "Video"
 msgstr "동영상"
 
@@ -7053,11 +7112,11 @@ msgstr "동영상을 찾을 수 없습니다."
 msgid "Video settings"
 msgstr "동영상 설정"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:77
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:93
 msgid "Video: {0}"
 msgstr "동영상: {0}"
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:58
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:65
 #: src/view/com/composer/videos/VideoPreview.web.tsx:44
 msgid "Videos must be less than 60 seconds long"
 msgstr "동영상 길이는 60초 미만이어야 합니다."
@@ -7553,6 +7612,7 @@ msgstr "스타터 팩을 만들려면 최소 7명 이상의 다른 사람을 팔
 msgid "You must grant access to your photo library to save a QR code"
 msgstr "QR 코드를 저장하려면 사진 보관함에 대한 접근 권한을 부여해야 합니다"
 
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:237
 #: src/components/StarterPack/ShareDialog.tsx:68
 msgid "You must grant access to your photo library to save the image."
 msgstr "이미지를 저장하려면 사진 보관함에 대한 접근 권한을 부여해야 합니다"
