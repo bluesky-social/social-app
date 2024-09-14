@@ -2914,7 +2914,7 @@ msgstr "抱歉，我們無法載入該內容管理服務。"
 
 #: src/state/queries/video/video.ts:165
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
-msgstr "請稍後！我們將逐步開放影片功能，而您還在排隊。請稍後再來查看！"
+msgstr "別急！我們將逐步開放影片功能，您還在隊列中。請稍後再回來！"
 
 #: src/Navigation.tsx:550
 #: src/Navigation.tsx:570
