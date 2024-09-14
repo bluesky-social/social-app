@@ -844,6 +844,10 @@ msgstr "Bluesky は、ホスティング プロバイダーを選択できるオ
 msgid "Bluesky is better with friends!"
 msgstr "Blueskyは友達と一緒のほうが楽しい！"
 
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:206
+msgid "Bluesky now has over 10 million users, and I was #{0}!"
+msgstr "Bluesky のユーザー数は現在 1,000 万人を超えており、私は #{0} でした。"
+
 #: src/components/StarterPack/ProfileStarterPacks.tsx:282
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
 msgstr "Blueskyはあなたのつながっているユーザーからおすすめのアカウントを選びます。"
@@ -864,6 +868,10 @@ msgstr "画像のぼかしとフィードからのフィルタリング"
 #: src/screens/Onboarding/state.ts:81
 msgid "Books"
 msgstr "書籍"
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:614
+msgid "Brag a little!"
+msgstr "ちょっと自慢してみよう！"
 
 #: src/components/FeedInterstitials.tsx:346
 msgid "Browse more accounts on the Explore page"
@@ -1003,6 +1011,10 @@ msgstr "キャプション（.vtt）"
 #: src/view/com/composer/videos/SubtitleDialog.tsx:54
 msgid "Captions & alt text"
 msgstr "キャプション＆ALTテキスト"
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:368
+msgid "Celebrating {0} users"
+msgstr "{0} 人のユーザーを祝福"
 
 #: src/view/com/modals/VerifyEmail.tsx:160
 msgid "Change"
@@ -1878,6 +1890,10 @@ msgstr "Blueskyをダウンロード"
 #: src/view/screens/Settings/ExportCarDialog.tsx:81
 msgid "Download CAR file"
 msgstr "CARファイルをダウンロード"
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:622
+msgid "Download image"
+msgstr "画像をダウンロード"
 
 #: src/view/com/composer/text-input/TextInput.web.tsx:269
 msgid "Drop to add images"
@@ -3110,6 +3126,10 @@ msgstr "Blueskyに参加"
 msgid "Join the conversation"
 msgstr "会話に参加"
 
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:492
+msgid "Joined {0}"
+msgstr "{0} 参加"
+
 #: src/screens/Onboarding/index.tsx:21
 #: src/screens/Onboarding/state.ts:89
 msgid "Journalism"
@@ -4039,6 +4059,10 @@ msgstr "ちょっと！"
 #: src/screens/Onboarding/StepInterests/index.tsx:138
 msgid "Oh no! Something went wrong."
 msgstr "ちょっと！何らかの問題が発生したようです。"
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:175
+msgid "Oh no! We weren't able to generate an image for you to share. Rest assured, we're glad you're here 🦋"
+msgstr "ああ、残念！共有するための画像を生成できませんでした。ご安心ください、ここに来てくれて嬉しいです🦋"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:339
 msgid "OK"
@@ -5677,6 +5701,14 @@ msgstr "とにかく共有"
 msgid "Share feed"
 msgstr "フィードを共有"
 
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:621
+msgid "Share image externally"
+msgstr "画像を外部に共有する"
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:639
+msgid "Share image in post"
+msgstr "投稿で画像を共有"
+
 #: src/components/StarterPack/ShareDialog.tsx:124
 #: src/components/StarterPack/ShareDialog.tsx:131
 #: src/screens/StarterPack/StarterPackScreen.tsx:586
@@ -6147,6 +6179,10 @@ msgstr "ジョークを言って！"
 msgid "Tell us a little more"
 msgstr "もう少し教えて"
 
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:518
+msgid "Ten Million"
+msgstr "1000万"
+
 #: src/view/shell/desktop/RightNav.tsx:90
 msgid "Terms"
 msgstr "条件"
@@ -6179,6 +6215,10 @@ msgstr "テキストの入力フィールド"
 #: src/components/ReportDialog/SubmitView.tsx:81
 msgid "Thank you. Your report has been sent."
 msgstr "ありがとうございます。あなたの報告は送信されました。"
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:593
+msgid "Thanks for being one of our first 10 million users."
+msgstr "最初の 1,000 万人のユーザーの 1 人になっていただきありがとうございます。"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:74
 msgid "Thanks, you have successfully verified your email address."
@@ -6609,6 +6649,10 @@ msgstr "Blueskyにビデオをアップロードするには、まずメール�
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
 msgstr "この報告を誰に送りたいですか？"
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:597
+msgid "Together, we're rebuilding the social internet. We're glad you're here."
+msgstr "私たちは一緒にソーシャル インターネットを再構築しています。ご参加いただきありがとうございます。"
 
 #: src/view/com/util/forms/DropdownButton.tsx:255
 msgid "Toggle dropdown"
