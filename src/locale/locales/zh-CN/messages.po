@@ -123,7 +123,7 @@ msgstr "第 {0} 个（共 {1} 个）"
 msgid "{0} people have used this starter pack!"
 msgstr "{0} 人已使用过此入门包！"
 
-#: src/view/com/util/UserAvatar.tsx:419
+#: src/view/com/util/UserAvatar.tsx:425
 msgid "{0}'s avatar"
 msgstr "{0}的头像"
 
@@ -250,7 +250,7 @@ msgstr "⚠无效的用户识别符"
 msgid "24 hours"
 msgstr "24小时"
 
-#: src/screens/Login/LoginForm.tsx:266
+#: src/screens/Login/LoginForm.tsx:253
 msgid "2FA Confirmation"
 msgstr "两步验证"
 
@@ -285,7 +285,7 @@ msgstr "无障碍设置"
 msgid "Accessibility Settings"
 msgstr "无障碍设置"
 
-#: src/screens/Login/LoginForm.tsx:190
+#: src/screens/Login/LoginForm.tsx:179
 #: src/view/screens/Settings/index.tsx:315
 #: src/view/screens/Settings/index.tsx:718
 msgid "Account"
@@ -477,7 +477,7 @@ msgstr "允许回复："
 msgid "Allows access to direct messages"
 msgstr "允许访问私信"
 
-#: src/screens/Login/ForgotPasswordForm.tsx:178
+#: src/screens/Login/ForgotPasswordForm.tsx:177
 #: src/view/com/modals/ChangePassword.tsx:171
 msgid "Already have a code?"
 msgstr "已经有验证码了？"
@@ -488,7 +488,7 @@ msgstr "已以@{0}身份登录"
 
 #: src/view/com/composer/GifAltText.tsx:93
 #: src/view/com/composer/photos/Gallery.tsx:144
-#: src/view/com/util/post-embeds/GifEmbed.tsx:165
+#: src/view/com/util/post-embeds/GifEmbed.tsx:177
 msgid "ALT"
 msgstr "ALT"
 
@@ -501,7 +501,7 @@ msgstr "ALT"
 msgid "Alt text"
 msgstr "替代文本"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:170
+#: src/view/com/util/post-embeds/GifEmbed.tsx:182
 msgid "Alt Text"
 msgstr "替代文本"
 
@@ -534,7 +534,7 @@ msgstr "压缩视频时发生错误。"
 msgid "An error occurred while generating your starter pack. Want to try again?"
 msgstr "创建入门包时发生错误，想再试一次吗？"
 
-#: src/view/com/util/post-embeds/VideoEmbed.tsx:215
+#: src/view/com/util/post-embeds/VideoEmbed.tsx:135
 msgid "An error occurred while loading the video. Please try again later."
 msgstr "播放视频时出现问题，请稍后再试。"
 
@@ -542,12 +542,16 @@ msgstr "播放视频时出现问题，请稍后再试。"
 msgid "An error occurred while loading the video. Please try again."
 msgstr "播放视频时出现问题，请再试一次。"
 
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:250
+msgid "An error occurred while saving the image!"
+msgstr ""
+
 #: src/components/StarterPack/QrCodeDialog.tsx:71
 #: src/components/StarterPack/ShareDialog.tsx:79
 msgid "An error occurred while saving the QR code!"
 msgstr "保存二维码时发生错误！"
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:68
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:75
 msgid "An error occurred while selecting the video"
 msgstr "选择视频时发生错误"
 
@@ -601,7 +605,7 @@ msgstr "和"
 msgid "Animals"
 msgstr "动物"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:138
+#: src/view/com/util/post-embeds/GifEmbed.tsx:139
 msgid "Animated GIF"
 msgstr "GIF 动画"
 
@@ -734,8 +738,8 @@ msgstr "至少 3 个字符"
 #: src/screens/Login/ChooseAccountForm.tsx:103
 #: src/screens/Login/ForgotPasswordForm.tsx:129
 #: src/screens/Login/ForgotPasswordForm.tsx:135
-#: src/screens/Login/LoginForm.tsx:298
-#: src/screens/Login/LoginForm.tsx:304
+#: src/screens/Login/LoginForm.tsx:285
+#: src/screens/Login/LoginForm.tsx:291
 #: src/screens/Login/SetNewPasswordForm.tsx:160
 #: src/screens/Login/SetNewPasswordForm.tsx:166
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:133
@@ -790,7 +794,7 @@ msgstr "屏蔽列表"
 msgid "Block these accounts?"
 msgstr "屏蔽这些账户？"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:81
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:83
 msgid "Blocked"
 msgstr "已屏蔽"
 
@@ -844,6 +848,10 @@ msgstr "Bluesky 是一个开放的公共网络，你可以选择自己的托管�
 msgid "Bluesky is better with friends!"
 msgstr "Bluesky 因朋友而更好！"
 
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:206
+msgid "Bluesky now has over 10 million users, and I was #{0}!"
+msgstr ""
+
 #: src/components/StarterPack/ProfileStarterPacks.tsx:282
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
 msgstr "Bluesky 将从你的社交网络中选择一组推荐的账户。"
@@ -864,6 +872,10 @@ msgstr "模糊化图片并从资讯源中过滤"
 #: src/screens/Onboarding/state.ts:81
 msgid "Books"
 msgstr "书籍"
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:614
+msgid "Brag a little!"
+msgstr ""
 
 #: src/components/FeedInterstitials.tsx:350
 msgid "Browse more accounts on the Explore page"
@@ -989,7 +1001,7 @@ msgstr "取消搜索"
 msgid "Cancels opening the linked website"
 msgstr "取消打开链接的网站"
 
-#: src/state/shell/composer.tsx:70
+#: src/state/shell/composer/index.tsx:70
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:114
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:155
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:191
@@ -1003,6 +1015,10 @@ msgstr "字幕（.vtt）"
 #: src/view/com/composer/videos/SubtitleDialog.tsx:56
 msgid "Captions & alt text"
 msgstr "字幕及替代文本"
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:368
+msgid "Celebrating {0} users"
+msgstr ""
 
 #: src/view/com/modals/VerifyEmail.tsx:160
 msgid "Change"
@@ -1075,7 +1091,7 @@ msgstr "已解除隐藏对话"
 msgid "Check my status"
 msgstr "检查我的状态"
 
-#: src/screens/Login/LoginForm.tsx:291
+#: src/screens/Login/LoginForm.tsx:278
 msgid "Check your email for a login code and enter it here."
 msgstr "在这里输入刚才发送到你电子邮箱里的验证码。"
 
@@ -1175,7 +1191,7 @@ msgstr "哒哒🐴哒哒🐴"
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:131
 #: src/view/com/modals/ChangePassword.tsx:268
 #: src/view/com/modals/ChangePassword.tsx:271
-#: src/view/com/util/post-embeds/GifEmbed.tsx:176
+#: src/view/com/util/post-embeds/GifEmbed.tsx:188
 msgid "Close"
 msgstr "关闭"
 
@@ -1316,7 +1332,7 @@ msgstr "确认你的年龄："
 msgid "Confirm your birthdate"
 msgstr "确认你的出生日期"
 
-#: src/screens/Login/LoginForm.tsx:272
+#: src/screens/Login/LoginForm.tsx:259
 #: src/view/com/modals/ChangeEmail.tsx:152
 #: src/view/com/modals/DeleteAccount.tsx:238
 #: src/view/com/modals/DeleteAccount.tsx:244
@@ -1326,7 +1342,7 @@ msgstr "确认你的出生日期"
 msgid "Confirmation code"
 msgstr "验证码"
 
-#: src/screens/Login/LoginForm.tsx:325
+#: src/screens/Login/LoginForm.tsx:312
 msgid "Connecting..."
 msgstr "连接中..."
 
@@ -1694,7 +1710,7 @@ msgstr "删除这个列表？"
 msgid "Delete this post?"
 msgstr "删除这条帖文？"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:90
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:93
 msgid "Deleted"
 msgstr "已删除"
 
@@ -1794,6 +1810,10 @@ msgstr "探索新的资讯源"
 msgid "Discover New Feeds"
 msgstr "探索新的资讯源"
 
+#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:108
+#~ msgid "Dismiss"
+#~ msgstr "关闭"
+
 #: src/view/com/composer/Composer.tsx:1107
 msgid "Dismiss error"
 msgstr "关闭错误"
@@ -1879,6 +1899,10 @@ msgstr "下载 Bluesky"
 msgid "Download CAR file"
 msgstr "下载 CAR 文件"
 
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:622
+msgid "Download image"
+msgstr ""
+
 #: src/view/com/composer/text-input/TextInput.web.tsx:269
 msgid "Drop to add images"
 msgstr "拖放即可新增图片"
@@ -1940,7 +1964,7 @@ msgctxt "action"
 msgid "Edit"
 msgstr "编辑"
 
-#: src/view/com/util/UserAvatar.tsx:328
+#: src/view/com/util/UserAvatar.tsx:334
 #: src/view/com/util/UserBanner.tsx:92
 msgid "Edit avatar"
 msgstr "编辑头像"
@@ -2640,11 +2664,11 @@ msgstr "永久"
 msgid "Forgot Password"
 msgstr "忘记密码"
 
-#: src/screens/Login/LoginForm.tsx:246
+#: src/screens/Login/LoginForm.tsx:233
 msgid "Forgot password?"
 msgstr "忘记密码？"
 
-#: src/screens/Login/LoginForm.tsx:257
+#: src/screens/Login/LoginForm.tsx:244
 msgid "Forgot?"
 msgstr "忘记？"
 
@@ -2690,7 +2714,7 @@ msgstr "开始吧"
 msgid "Getting started"
 msgstr "开始吧"
 
-#: src/components/MediaPreview.tsx:120
+#: src/components/MediaPreview.tsx:122
 msgid "GIF"
 msgstr "GIF"
 
@@ -2749,7 +2773,7 @@ msgstr "返回主页"
 msgid "Go to conversation with {0}"
 msgstr "转到与 {0} 的对话"
 
-#: src/screens/Login/ForgotPasswordForm.tsx:172
+#: src/screens/Login/ForgotPasswordForm.tsx:171
 #: src/view/com/modals/ChangePassword.tsx:168
 msgid "Go to next"
 msgstr "前往下一步"
@@ -2906,7 +2930,7 @@ msgid "Host:"
 msgstr "主机："
 
 #: src/screens/Login/ForgotPasswordForm.tsx:89
-#: src/screens/Login/LoginForm.tsx:180
+#: src/screens/Login/LoginForm.tsx:169
 #: src/screens/Signup/StepInfo/index.tsx:106
 #: src/view/com/modals/ChangeHandle.tsx:275
 msgid "Hosting provider"
@@ -2967,7 +2991,7 @@ msgstr "如果你想更改你的用户识别符或电子邮件，请在停用之
 msgid "Illegal and Urgent"
 msgstr "违法"
 
-#: src/view/com/util/images/Gallery.tsx:55
+#: src/view/com/util/images/Gallery.tsx:56
 msgid "Image"
 msgstr "图片"
 
@@ -2975,6 +2999,7 @@ msgstr "图片"
 msgid "Image alt text"
 msgstr "图片替代文本"
 
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:247
 #: src/components/StarterPack/ShareDialog.tsx:76
 msgid "Image saved to your camera roll!"
 msgstr "图片已保存到你的照片图库！"
@@ -3011,15 +3036,15 @@ msgstr "输入新的密码"
 msgid "Input password for account deletion"
 msgstr "输入密码以删除账户"
 
-#: src/screens/Login/LoginForm.tsx:286
+#: src/screens/Login/LoginForm.tsx:273
 msgid "Input the code which has been emailed to you"
 msgstr "输入发送至你电子邮箱的验证码"
 
-#: src/screens/Login/LoginForm.tsx:215
+#: src/screens/Login/LoginForm.tsx:203
 msgid "Input the username or email address you used at signup"
 msgstr "输入注册时使用的用户名或电子邮箱"
 
-#: src/screens/Login/LoginForm.tsx:241
+#: src/screens/Login/LoginForm.tsx:228
 msgid "Input your password"
 msgstr "输入你的密码"
 
@@ -3039,7 +3064,7 @@ msgstr "互动受限"
 msgid "Introducing Direct Messages"
 msgstr "介绍私信"
 
-#: src/screens/Login/LoginForm.tsx:140
+#: src/screens/Login/LoginForm.tsx:145
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
 msgstr "无效的两步验证码。"
@@ -3048,7 +3073,8 @@ msgstr "无效的两步验证码。"
 msgid "Invalid or unsupported post record"
 msgstr "帖文记录无效或不受支持"
 
-#: src/screens/Login/LoginForm.tsx:145
+#: src/screens/Login/LoginForm.tsx:91
+#: src/screens/Login/LoginForm.tsx:150
 msgid "Invalid username or password"
 msgstr "用户名或密码无效"
 
@@ -3110,6 +3136,10 @@ msgstr "加入 Bluesky"
 #: src/components/StarterPack/QrCode.tsx:56
 msgid "Join the conversation"
 msgstr "加入对话"
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:492
+msgid "Joined {0}"
+msgstr ""
 
 #: src/screens/Onboarding/index.tsx:21
 #: src/screens/Onboarding/state.ts:89
@@ -3574,12 +3604,13 @@ msgstr "电影"
 msgid "Music"
 msgstr "音乐"
 
-#: src/components/TagMenu/index.tsx:263
-msgid "Mute"
-msgstr "隐藏"
-
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:389
 msgctxt "video"
+msgid "Mute"
+msgstr ""
+
+#: src/components/TagMenu/index.tsx:263
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:163
 msgid "Mute"
 msgstr "隐藏"
 
@@ -3652,8 +3683,8 @@ msgid "Mute words & tags"
 msgstr "隐藏词和标签"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
-msgid "Muted"
-msgstr "已隐藏"
+#~ msgid "Muted"
+#~ msgstr "已隐藏"
 
 #: src/screens/Moderation/index.tsx:264
 msgid "Muted accounts"
@@ -3726,12 +3757,12 @@ msgstr "自然"
 msgid "Navigate to {0}"
 msgstr "转到 {0}"
 
-#: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:73
+#: src/view/com/util/post-embeds/ExternalLinkEmbed.tsx:76
 msgid "Navigate to starter pack"
 msgstr "转到入门包"
 
-#: src/screens/Login/ForgotPasswordForm.tsx:173
-#: src/screens/Login/LoginForm.tsx:332
+#: src/screens/Login/ForgotPasswordForm.tsx:172
+#: src/screens/Login/LoginForm.tsx:319
 #: src/view/com/modals/ChangePassword.tsx:169
 msgid "Navigates to the next screen"
 msgstr "转到下一页"
@@ -3821,9 +3852,9 @@ msgid "News"
 msgstr "新闻"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:143
-#: src/screens/Login/ForgotPasswordForm.tsx:150
-#: src/screens/Login/LoginForm.tsx:331
-#: src/screens/Login/LoginForm.tsx:338
+#: src/screens/Login/ForgotPasswordForm.tsx:149
+#: src/screens/Login/LoginForm.tsx:318
+#: src/screens/Login/LoginForm.tsx:325
 #: src/screens/Login/SetNewPasswordForm.tsx:174
 #: src/screens/Login/SetNewPasswordForm.tsx:180
 #: src/screens/Signup/BackNextButtons.tsx:66
@@ -4040,6 +4071,10 @@ msgstr "糟糕！"
 msgid "Oh no! Something went wrong."
 msgstr "糟糕！发生了一些错误。"
 
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:175
+msgid "Oh no! We weren't able to generate an image for you to share. Rest assured, we're glad you're here 🦋"
+msgstr ""
+
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:339
 msgid "OK"
 msgstr "好的"
@@ -4247,7 +4282,7 @@ msgstr "开启使用自定义域名的模式"
 msgid "Opens moderation settings"
 msgstr "开启内容审核设置"
 
-#: src/screens/Login/LoginForm.tsx:247
+#: src/screens/Login/LoginForm.tsx:234
 msgid "Opens password reset form"
 msgstr "开启密码重置申请"
 
@@ -4281,11 +4316,11 @@ msgid "Opens the threads preferences"
 msgstr "开启讨论串首选项"
 
 #: src/view/com/notifications/FeedItem.tsx:551
-#: src/view/com/util/UserAvatar.tsx:420
+#: src/view/com/util/UserAvatar.tsx:426
 msgid "Opens this profile"
 msgstr "开启此个人资料"
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:88
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:95
 msgid "Opens video picker"
 msgstr "开启视频选择器"
 
@@ -4343,7 +4378,7 @@ msgstr "无法找到这个页面"
 msgid "Page Not Found"
 msgstr "无法找到这个页面"
 
-#: src/screens/Login/LoginForm.tsx:225
+#: src/screens/Login/LoginForm.tsx:213
 #: src/screens/Signup/StepInfo/index.tsx:162
 #: src/view/com/modals/DeleteAccount.tsx:257
 #: src/view/com/modals/DeleteAccount.tsx:264
@@ -4362,7 +4397,8 @@ msgstr "密码已更新"
 msgid "Password updated!"
 msgstr "密码已更新！"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:44
+#: src/view/com/util/post-embeds/GifEmbed.tsx:46
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:150
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:366
 msgid "Pause"
 msgstr "暂停"
@@ -4426,30 +4462,31 @@ msgstr "固定资讯源列表"
 msgid "Pinned to your feeds"
 msgstr "固定到你的资讯源"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:44
+#: src/view/com/util/post-embeds/GifEmbed.tsx:46
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:150
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:367
 msgid "Play"
 msgstr "播放"
 
-#: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:123
+#: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:131
 msgid "Play {0}"
 msgstr "播放 {0}"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:43
+#: src/view/com/util/post-embeds/GifEmbed.tsx:45
 msgid "Play or pause the GIF"
 msgstr "播放或暂停 GIF"
 
-#: src/view/com/util/post-embeds/VideoEmbed.tsx:189
+#: src/view/com/util/post-embeds/VideoEmbed.tsx:110
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:320
 msgid "Play video"
 msgstr "播放视频"
 
-#: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:57
-#: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:58
+#: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:59
+#: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:60
 msgid "Play Video"
 msgstr "播放视频"
 
-#: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:122
+#: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:130
 msgid "Plays the GIF"
 msgstr "播放 GIF"
 
@@ -4659,7 +4696,7 @@ msgstr "隐私政策"
 msgid "Privately chat with other users."
 msgstr "与其他用户开始私信。"
 
-#: src/screens/Login/ForgotPasswordForm.tsx:156
+#: src/screens/Login/ForgotPasswordForm.tsx:155
 msgid "Processing..."
 msgstr "处理中..."
 
@@ -4830,7 +4867,7 @@ msgstr "删除账户"
 msgid "Remove attachment"
 msgstr "删除关联"
 
-#: src/view/com/util/UserAvatar.tsx:387
+#: src/view/com/util/UserAvatar.tsx:393
 msgid "Remove Avatar"
 msgstr "删除头像"
 
@@ -4889,7 +4926,7 @@ msgstr "删除个人资料"
 msgid "Remove profile from search history"
 msgstr "从搜索历史中删除个人资料"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:269
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:274
 msgid "Remove quote"
 msgstr "删除引用"
 
@@ -4906,11 +4943,11 @@ msgstr "删除字幕文件"
 msgid "Remove this feed from your saved feeds"
 msgstr "从保存的资讯源列表中删除这个资讯源"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:105
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:109
 msgid "Removed by author"
 msgstr "已被作者删除"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:103
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:107
 msgid "Removed by you"
 msgstr "已被你删除"
 
@@ -4934,7 +4971,7 @@ msgstr "已从保存的资讯源中删除"
 msgid "Removed from your feeds"
 msgstr "从你的自定义资讯源中删除"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:270
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:275
 msgid "Removes quoted post"
 msgstr "删除引用的帖文"
 
@@ -5196,7 +5233,7 @@ msgstr "重置引导流程状态"
 msgid "Resets the preferences state"
 msgstr "重置首选项状态"
 
-#: src/screens/Login/LoginForm.tsx:312
+#: src/screens/Login/LoginForm.tsx:299
 msgid "Retries login"
 msgstr "重试登录"
 
@@ -5209,8 +5246,8 @@ msgstr "重试上次出错的操作"
 #: src/components/Error.tsx:66
 #: src/components/Lists.tsx:104
 #: src/components/StarterPack/ProfileStarterPacks.tsx:318
-#: src/screens/Login/LoginForm.tsx:311
-#: src/screens/Login/LoginForm.tsx:318
+#: src/screens/Login/LoginForm.tsx:298
+#: src/screens/Login/LoginForm.tsx:305
 #: src/screens/Messages/Conversation/MessageListError.tsx:25
 #: src/screens/Onboarding/StepInterests/index.tsx:231
 #: src/screens/Onboarding/StepInterests/index.tsx:234
@@ -5485,7 +5522,7 @@ msgstr "请选择你要向哪个内容审核服务提供方提交举报"
 msgid "Select the service that hosts your data."
 msgstr "选择托管你数据的服务器。"
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:87
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:94
 msgid "Select video"
 msgstr "选择视频"
 
@@ -5641,6 +5678,7 @@ msgstr "性行为或性暗示裸露。"
 msgid "Sexually Suggestive"
 msgstr "性暗示"
 
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:644
 #: src/components/StarterPack/QrCodeDialog.tsx:177
 #: src/screens/StarterPack/StarterPackScreen.tsx:411
 #: src/screens/StarterPack/StarterPackScreen.tsx:582
@@ -5676,6 +5714,14 @@ msgstr "仍然分享"
 #: src/view/screens/ProfileFeed.tsx:362
 msgid "Share feed"
 msgstr "分享资讯源"
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:621
+msgid "Share image externally"
+msgstr ""
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:639
+msgid "Share image in post"
+msgstr ""
 
 #: src/components/StarterPack/ShareDialog.tsx:124
 #: src/components/StarterPack/ShareDialog.tsx:131
@@ -5724,7 +5770,7 @@ msgstr "分享链接的网站"
 msgid "Show"
 msgstr "显示"
 
-#: src/view/com/util/post-embeds/GifEmbed.tsx:157
+#: src/view/com/util/post-embeds/GifEmbed.tsx:169
 msgid "Show alt text"
 msgstr "显示替代文本"
 
@@ -5817,7 +5863,7 @@ msgstr "在你的资讯源中显示来自 {0} 的帖文"
 #: src/components/dialogs/Signin.tsx:99
 #: src/screens/Login/index.tsx:100
 #: src/screens/Login/index.tsx:119
-#: src/screens/Login/LoginForm.tsx:177
+#: src/screens/Login/LoginForm.tsx:166
 #: src/view/com/auth/SplashScreen.tsx:63
 #: src/view/com/auth/SplashScreen.tsx:72
 #: src/view/com/auth/SplashScreen.web.tsx:112
@@ -5900,7 +5946,7 @@ msgstr "注册但不使用入门包"
 
 #: src/components/FeedInterstitials.tsx:316
 msgid "Similar accounts"
-msgstr "类似的账户"
+msgstr "类似账户"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:245
 #: src/screens/StarterPack/Wizard/index.tsx:191
@@ -5945,7 +5991,7 @@ msgid "Something went wrong!"
 msgstr "出了点问题！"
 
 #: src/App.native.tsx:102
-#: src/App.web.tsx:83
+#: src/App.web.tsx:88
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "很抱歉，你的登录会话已过期，请重新登录。"
 
@@ -6113,16 +6159,20 @@ msgstr "高"
 msgid "Tap to dismiss"
 msgstr "点按关闭"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:146
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:145
 msgid "Tap to enter full screen"
 msgstr "点击进入全屏模式"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:169
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
+msgid "Tap to play or pause"
+msgstr ""
+
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:164
 msgid "Tap to toggle sound"
 msgstr "点击切换声音播放"
 
-#: src/view/com/util/images/AutoSizedImage.tsx:191
-#: src/view/com/util/images/AutoSizedImage.tsx:211
+#: src/view/com/util/images/AutoSizedImage.tsx:219
+#: src/view/com/util/images/AutoSizedImage.tsx:239
 msgid "Tap to view full image"
 msgstr "点击查看完整图片"
 
@@ -6146,6 +6196,10 @@ msgstr "讲个笑话！"
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:63
 msgid "Tell us a little more"
 msgstr "告诉我们更多"
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:518
+msgid "Ten Million"
+msgstr ""
 
 #: src/view/shell/desktop/RightNav.tsx:90
 msgid "Terms"
@@ -6179,6 +6233,10 @@ msgstr "文本输入框"
 #: src/components/ReportDialog/SubmitView.tsx:81
 msgid "Thank you. Your report has been sent."
 msgstr "谢谢，你的举报已提交。"
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:593
+msgid "Thanks for being one of our first 10 million users."
+msgstr ""
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:74
 msgid "Thanks, you have successfully verified your email address."
@@ -6602,13 +6660,17 @@ msgstr "在关闭电子邮件两步验证前，请先验证你的电子邮箱地
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
 msgstr "要举报对话，请在会话中选择一条私信并举报。这有助于使内容审核服务提供方了解有关问题的背景信息。"
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:113
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:120
 msgid "To upload videos to Bluesky, you must first verify your email."
 msgstr "要上传视频至 Bluesky，你必须首先验证邮箱地址。"
 
 #: src/components/ReportDialog/SelectLabelerView.tsx:33
 msgid "To whom would you like to send this report?"
 msgstr "你想将举报提交给谁？"
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:597
+msgid "Together, we're rebuilding the social internet. We're glad you're here."
+msgstr ""
 
 #: src/view/com/util/forms/DropdownButton.tsx:255
 msgid "Toggle dropdown"
@@ -6667,7 +6729,7 @@ msgstr "取消隐藏列表"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:74
 #: src/screens/Login/index.tsx:78
-#: src/screens/Login/LoginForm.tsx:150
+#: src/screens/Login/LoginForm.tsx:155
 #: src/screens/Login/SetNewPasswordForm.tsx:77
 #: src/screens/Signup/index.tsx:77
 #: src/view/com/modals/ChangePassword.tsx:71
@@ -6733,7 +6795,13 @@ msgstr "取消关注账户"
 msgid "Unlike this feed"
 msgstr "取消喜欢这个资讯源"
 
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:388
+msgctxt "video"
+msgid "Unmute"
+msgstr ""
+
 #: src/components/TagMenu/index.tsx:263
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:163
 #: src/view/screens/ProfileList.tsx:689
 msgid "Unmute"
 msgstr "取消隐藏"
@@ -6770,8 +6838,8 @@ msgid "Unmute video"
 msgstr "取消隐藏视频"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
-msgid "Unmuted"
-msgstr "已取消隐藏"
+#~ msgid "Unmuted"
+#~ msgstr "已取消隐藏"
 
 #: src/view/screens/ProfileFeed.tsx:292
 #: src/view/screens/ProfileList.tsx:673
@@ -6844,20 +6912,20 @@ msgstr "上传图片"
 msgid "Upload a text file to:"
 msgstr "将文本文件上传至："
 
-#: src/view/com/util/UserAvatar.tsx:355
-#: src/view/com/util/UserAvatar.tsx:358
+#: src/view/com/util/UserAvatar.tsx:361
+#: src/view/com/util/UserAvatar.tsx:364
 #: src/view/com/util/UserBanner.tsx:123
 #: src/view/com/util/UserBanner.tsx:126
 msgid "Upload from Camera"
 msgstr "从相机上传"
 
-#: src/view/com/util/UserAvatar.tsx:372
+#: src/view/com/util/UserAvatar.tsx:378
 #: src/view/com/util/UserBanner.tsx:140
 msgid "Upload from Files"
 msgstr "从文件上传"
 
-#: src/view/com/util/UserAvatar.tsx:366
-#: src/view/com/util/UserAvatar.tsx:370
+#: src/view/com/util/UserAvatar.tsx:372
+#: src/view/com/util/UserAvatar.tsx:376
 #: src/view/com/util/UserBanner.tsx:134
 #: src/view/com/util/UserBanner.tsx:138
 msgid "Upload from Library"
@@ -6955,7 +7023,7 @@ msgstr "用户列表已更新"
 msgid "User Lists"
 msgstr "用户列表"
 
-#: src/screens/Login/LoginForm.tsx:197
+#: src/screens/Login/LoginForm.tsx:186
 msgid "Username or email address"
 msgstr "用户名或电子邮箱"
 
@@ -6986,7 +7054,7 @@ msgstr "已喜欢此内容或个人资料的账户"
 msgid "Value:"
 msgstr "值："
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:111
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:118
 msgid "Verified email required"
 msgstr "要求验证邮件地址"
 
@@ -7015,7 +7083,7 @@ msgstr "验证我的邮箱"
 msgid "Verify New Email"
 msgstr "验证新的邮箱"
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:115
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:122
 msgid "Verify now"
 msgstr "立即验证"
 
@@ -7031,8 +7099,8 @@ msgstr "验证你的邮箱"
 msgid "Version {appVersion} {bundleInfo}"
 msgstr "版本 {appVersion} {bundleInfo}"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:77
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:145
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:93
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:144
 msgid "Video"
 msgstr "视频"
 
@@ -7053,14 +7121,14 @@ msgstr "无法找到视频。"
 msgid "Video settings"
 msgstr "视频设置"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:77
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:93
 msgid "Video: {0}"
 msgstr "视频：{0}"
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:58
+#: src/view/com/composer/videos/SelectVideoBtn.tsx:65
 #: src/view/com/composer/videos/VideoPreview.web.tsx:44
 msgid "Videos must be less than 60 seconds long"
-msgstr "视频必须少于60秒"
+msgstr "视频必须短于60秒"
 
 #: src/screens/Profile/Header/Shell.tsx:113
 msgid "View {0}'s avatar"
@@ -7553,6 +7621,7 @@ msgstr "你必须至少关注 7 个人以创建入门包。"
 msgid "You must grant access to your photo library to save a QR code"
 msgstr "你必须授权照片图库权限以保存二维码"
 
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:237
 #: src/components/StarterPack/ShareDialog.tsx:68
 msgid "You must grant access to your photo library to save the image."
 msgstr "你必须授权照片图库权限以保存图片。"

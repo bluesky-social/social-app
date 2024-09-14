@@ -71,7 +71,7 @@ export function useIntentHandler() {
   }, [incomingUrl, composeIntent, verifyEmailIntent])
 }
 
-function useComposeIntent() {
+export function useComposeIntent() {
   const closeAllActiveElements = useCloseAllActiveElements()
   const {openComposer} = useComposerControls()
   const {hasSession} = useSession()
@@ -97,6 +97,10 @@ function useComposeIntent() {
           if (part.includes('https://') || part.includes('http://')) {
             return false
           }
+          console.log({
+            part,
+            text: VALID_IMAGE_REGEX.test(part),
+          })
           // We also should just filter out cases that don't have all the info we need
           return VALID_IMAGE_REGEX.test(part)
         })
