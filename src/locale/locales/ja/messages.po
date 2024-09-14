@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-14 11:36+0900\n"
+"PO-Revision-Date: 2024-09-14 17:17+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -850,7 +850,7 @@ msgstr "Blueskyは友達と一緒のほうが楽しい！"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:206
 msgid "Bluesky now has over 10 million users, and I was #{0}!"
-msgstr "Bluesky のユーザー数は現在 1,000 万人を超えており、私は #{0} でした。"
+msgstr "Bluesky のユーザー数は現在 1,000 万人を超えており、私は #{0} 番目でした。"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:282
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
@@ -3135,7 +3135,7 @@ msgstr "会話に参加"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:492
 msgid "Joined {0}"
-msgstr "{0} 参加"
+msgstr "{0} に参加"
 
 #: src/screens/Onboarding/index.tsx:21
 #: src/screens/Onboarding/state.ts:89
@@ -6191,7 +6191,7 @@ msgstr "もう少し教えて"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:518
 msgid "Ten Million"
-msgstr "1000万"
+msgstr "1,000万"
 
 #: src/view/shell/desktop/RightNav.tsx:90
 msgid "Terms"
@@ -7236,7 +7236,7 @@ msgstr "あなたのフォロー中のユーザーの投稿を読み終わりま
 
 #: src/state/queries/video/video.ts:170
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
-msgstr "あたながビデオのアップロードを許可されているかどうか判断できません。もう一度お試しください。"
+msgstr "あなたがビデオのアップロードを許可されているかどうか判断できません。もう一度お試しください。"
 
 #: src/components/dialogs/BirthDateSettings.tsx:52
 msgid "We were unable to load your birth date preferences. Please try again."
