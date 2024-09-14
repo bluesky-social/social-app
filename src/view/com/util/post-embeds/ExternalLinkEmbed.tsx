@@ -21,6 +21,7 @@ import {ExternalGifEmbed} from 'view/com/util/post-embeds/ExternalGifEmbed'
 import {ExternalPlayer} from 'view/com/util/post-embeds/ExternalPlayerEmbed'
 import {GifEmbed} from 'view/com/util/post-embeds/GifEmbed'
 import {atoms as a, useTheme} from '#/alf'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '../text/Text'
 
 export const ExternalLinkEmbed = ({
@@ -36,6 +37,7 @@ export const ExternalLinkEmbed = ({
 }) => {
   const {_} = useLingui()
   const pal = usePalette('default')
+  const t = useTheme()
   const {isMobile} = useWebMediaQueries()
   const externalEmbedPrefs = useExternalEmbedsPrefs()
 
@@ -60,19 +62,30 @@ export const ExternalLinkEmbed = ({
     <View style={[a.flex_col, a.rounded_sm, a.overflow_hidden]}>
       <LinkWrapper link={link} onOpen={onOpen} style={style}>
         {imageUri && !embedPlayerParams ? (
-          <Image
-            style={{
-              aspectRatio: 1.91,
-              borderTopRightRadius: 6,
-              borderTopLeftRadius: 6,
-            }}
-            source={{uri: imageUri}}
-            accessibilityIgnoresInvertColors
-            accessibilityLabel={starterPackParsed ? link.title : undefined}
-            accessibilityHint={
-              starterPackParsed ? _(msg`Navigate to starter pack`) : undefined
-            }
-          />
+          <View>
+            <Image
+              style={{
+                aspectRatio: 1.91,
+                borderTopRightRadius: 8,
+                borderTopLeftRadius: 8,
+              }}
+              source={{uri: imageUri}}
+              accessibilityIgnoresInvertColors
+              accessibilityLabel={starterPackParsed ? link.title : undefined}
+              accessibilityHint={
+                starterPackParsed ? _(msg`Navigate to starter pack`) : undefined
+              }
+            />
+            <MediaInsetBorder
+              opaque
+              style={[
+                {
+                  borderBottomLeftRadius: 0,
+                  borderBottomRightRadius: 0,
+                },
+              ]}
+            />
+          </View>
         ) : undefined}
         {embedPlayerParams?.isGif ? (
           <ExternalGifEmbed link={link} params={embedPlayerParams} />
@@ -81,11 +94,18 @@ export const ExternalLinkEmbed = ({
         ) : undefined}
         <View
           style={[
+            a.border_b,
+            a.border_l,
+            a.border_r,
             a.flex_1,
             a.py_sm,
+            t.atoms.border_contrast_low,
             {
+              borderBottomRightRadius: 8,
+              borderBottomLeftRadius: 8,
               paddingHorizontal: isMobile ? 10 : 14,
             },
+            !imageUri && !embedPlayerParams && [a.border, a.rounded_sm],
           ]}>
           <Text
             type="sm"
@@ -124,8 +144,6 @@ function LinkWrapper({
   style?: StyleProp<ViewStyle>
   children: React.ReactNode
 }) {
-  const t = useTheme()
-
   const onShareExternal = useCallback(() => {
     if (link.uri && isNative) {
       shareUrl(link.uri)
@@ -137,14 +155,7 @@ function LinkWrapper({
       asAnchor
       anchorNoUnderline
       href={link.uri}
-      style={[
-        a.flex_1,
-        a.border,
-        a.rounded_sm,
-        t.atoms.border_contrast_medium,
-        style,
-      ]}
-      hoverStyle={t.atoms.border_contrast_high}
+      style={[a.flex_1, a.rounded_sm, style]}
       onBeforePress={onOpen}
       onLongPress={onShareExternal}>
       {children}

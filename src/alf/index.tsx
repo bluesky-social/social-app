@@ -18,9 +18,17 @@ export * from '#/alf/util/themeSelector'
 export const Context = React.createContext<{
   themeName: ThemeName
   theme: Theme
+  themes: ReturnType<typeof createThemes>
 }>({
   themeName: 'light',
   theme: defaultTheme,
+  themes: createThemes({
+    hues: {
+      primary: BLUE_HUE,
+      negative: RED_HUE,
+      positive: GREEN_HUE,
+    },
+  }),
 })
 
 export function ThemeProvider({
@@ -42,18 +50,22 @@ export function ThemeProvider({
     <Context.Provider
       value={React.useMemo(
         () => ({
+          themes,
           themeName: themeName,
           theme: theme,
         }),
-        [theme, themeName],
+        [theme, themeName, themes],
       )}>
       {children}
     </Context.Provider>
   )
 }
 
-export function useTheme() {
-  return React.useContext(Context).theme
+export function useTheme(theme?: ThemeName) {
+  const ctx = React.useContext(Context)
+  return React.useMemo(() => {
+    return theme ? ctx.themes[theme] : ctx.theme
+  }, [theme, ctx])
 }
 
 export function useBreakpoints() {
