@@ -8,7 +8,7 @@ msgstr ""
 "Language: fr\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-14 00:30+0100\n"
+"PO-Revision-Date: 2024-09-14 02:20+0100\n"
 "Last-Translator: surfdude29\n"
 "Language-Team: Stanislas Signoud (@signez.fr), surfdude29\n"
 "Plural-Forms: \n"
@@ -544,7 +544,7 @@ msgstr "Une erreur s’est produite lors du chargement de la vidéo. Veuillez r�
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:250
 msgid "An error occurred while saving the image!"
-msgstr ""
+msgstr "Une erreur s’est produite lors de l’enregistrement de l’image !"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:71
 #: src/components/StarterPack/ShareDialog.tsx:79
@@ -1016,13 +1016,9 @@ msgstr "Sous-titres (.vtt)"
 msgid "Captions & alt text"
 msgstr "Sous-titres et texte alt"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:369
-msgid "Celebrating {0} users"
-msgstr "Célébrons les {0} comptes"
-
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:368
 msgid "Celebrating {0} users"
-msgstr ""
+msgstr "Célébrons les {0} comptes"
 
 #: src/view/com/modals/VerifyEmail.tsx:160
 msgid "Change"
@@ -6165,7 +6161,7 @@ msgstr "Taper pour accéder au plein écran"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
 msgid "Tap to play or pause"
-msgstr ""
+msgstr "Taper pour lire ou mettre en pause"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:164
 msgid "Tap to toggle sound"
@@ -7120,15 +7116,10 @@ msgstr "Paramètres vidéo"
 msgid "Video: {0}"
 msgstr "Vidéo : {0}"
 
-#: src/view/com/composer/videos/SelectVideoBtn.tsx:58
-#: src/view/com/composer/videos/VideoPreview.web.tsx:44
-msgid "Videos must be less than 60 seconds long"
-msgstr "Les vidéos doivent durer moins de 60 secondes"
-
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:65
 #: src/view/com/composer/videos/VideoPreview.web.tsx:44
 msgid "Videos must be less than 60 seconds long"
-msgstr ""
+msgstr "Les vidéos doivent durer moins de 60 secondes"
 
 #: src/screens/Profile/Header/Shell.tsx:113
 msgid "View {0}'s avatar"
