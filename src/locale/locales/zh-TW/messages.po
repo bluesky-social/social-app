@@ -7253,7 +7253,7 @@ msgstr "您已看完了您跟隨的貼文。這是來自 <0/> 的最新貼文。
 
 #: src/state/queries/video/video.ts:170
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
-msgstr "我們無法確定是否被允許您上傳影片。 請再試一次。"
+msgstr "我們無法確定您是否有上傳影片的權限。請再試一次。"
 
 #: src/components/dialogs/BirthDateSettings.tsx:52
 msgid "We were unable to load your birth date preferences. Please try again."
