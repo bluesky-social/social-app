@@ -695,6 +695,8 @@ function AudioControls({
   muted: boolean
   toggleMute: () => void
 }) {
+  const VOLUME_SLIDER_WIDTH = 60
+
   const {_} = useLingui()
   const {
     state: hovered,
@@ -715,18 +717,28 @@ function AudioControls({
       style={[a.flex_row]}
       onPointerEnter={onStartHover}
       onPointerLeave={onEndHover}>
-      {hovered && (
+      <View
+        style={[
+          a.mr_2xs,
+          a.justify_center,
+          a.overflow_hidden,
+          {width: hovered ? VOLUME_SLIDER_WIDTH : 0},
+          web({
+            transition: 'width 0.2s cubic-bezier(0.4, 0, 1, 1)',
+          }),
+        ]}>
         <input
           type="range"
           style={{
-            width: 60,
+            padding: 0,
+            width: VOLUME_SLIDER_WIDTH,
           }}
           value={volume * 100}
           onChange={onChangeVolume}
           min={0}
           max={100}
         />
-      )}
+      </View>
       <ControlButton
         active={muted}
         activeLabel={_(msg({message: `Unmute`, context: 'video'}))}
