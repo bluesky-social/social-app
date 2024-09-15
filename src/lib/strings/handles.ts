@@ -13,6 +13,11 @@ export function makeValidHandle(str: string): string {
   return str.replace(/^[^a-z0-9]+/g, '').replace(/[^a-z0-9-]/g, '')
 }
 
+export function makeValidCustomDomainHandle(str: string): string {
+  str = str.toLowerCase()
+  return str.replace(/^[-]+/g, '').replace(/[!@#$%^&*()_;:,?/\\=+<> ]/g, '');
+}
+
 export function createFullHandle(name: string, domain: string): string {
   name = (name || '').replace(/[.]+$/, '')
   domain = (domain || '').replace(/^[.]+/, '')
