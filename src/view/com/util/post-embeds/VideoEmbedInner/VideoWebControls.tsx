@@ -703,6 +703,14 @@ function AudioControls({
     onIn: onStartHover,
     onOut: onEndHover,
   } = useInteractionState()
+  const [focused, setFocused] = useState(false)
+
+  const onFocus = useCallback(() => {
+    setFocused(true)
+  }, [setFocused])
+  const onBlur = useCallback(() => {
+    setFocused(false)
+  }, [setFocused])
 
   const onChangeVolume = useCallback(
     (evnt: React.ChangeEvent<HTMLInputElement>) => {
@@ -716,15 +724,18 @@ function AudioControls({
     <View
       style={[a.flex_row]}
       onPointerEnter={onStartHover}
-      onPointerLeave={onEndHover}>
+      onPointerLeave={onEndHover}
+      // @ts-expect-error web only
+      onFocus={onFocus}
+      onBlur={onBlur}>
       <View
         style={[
           a.mr_2xs,
           a.justify_center,
           a.overflow_hidden,
-          {width: hovered ? VOLUME_SLIDER_WIDTH : 0},
+          {width: focused || hovered ? VOLUME_SLIDER_WIDTH : 0},
           web({
-            transition: 'width 0.2s cubic-bezier(0.4, 0, 1, 1)',
+            transition: !focused && 'width 0.2s cubic-bezier(0.4, 0, 1, 1)',
           }),
         ]}>
         <input
@@ -737,6 +748,7 @@ function AudioControls({
           onChange={onChangeVolume}
           min={0}
           max={100}
+          tabIndex={0}
         />
       </View>
       <ControlButton
