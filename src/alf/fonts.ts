@@ -3,8 +3,7 @@ import {useFonts as defaultUseFonts} from 'expo-font'
 import {Device, device} from '#/storage'
 
 export function getFontScale() {
-  const fontScale = device.get(['fontScale']) || 1
-  return fontScale
+  return device.get(['fontScale']) || 1
 }
 
 export function setFontScale(fontScale: Device['fontScale']) {
