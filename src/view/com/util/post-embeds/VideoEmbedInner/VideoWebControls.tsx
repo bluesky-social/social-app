@@ -751,6 +751,13 @@ function formatTime(time: number) {
   return `${minutes}:${seconds}`
 }
 
+function sliderVolumeToVideoVolume(value: number) {
+  return Math.pow(value, 4)
+}
+function videoVolumeToSliderVolume(value: number) {
+  return Math.pow(value, 1 / 4)
+}
+
 const INITIAL_VOLUME = 0.5
 
 function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
@@ -778,7 +785,7 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
     setDuration(round(ref.current.duration) || 0)
     setMuted(ref.current.muted)
     setPlaying(!ref.current.paused)
-    ref.current.volume = INITIAL_VOLUME
+    ref.current.volume = sliderVolumeToVideoVolume(INITIAL_VOLUME)
 
     const handleTimeUpdate = () => {
       if (!ref.current) return
@@ -800,7 +807,7 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
 
     const handleVolumeChange = () => {
       if (!ref.current) return
-      setVolume(ref.current.volume)
+      setVolume(videoVolumeToSliderVolume(ref.current.volume))
       setMuted(ref.current.muted)
     }
 
@@ -952,7 +959,7 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
     (value: number) => {
       if (!ref.current) return
 
-      ref.current.volume = value
+      ref.current.volume = sliderVolumeToVideoVolume(value)
     },
     [ref],
   )
