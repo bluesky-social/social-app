@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-13 10:05+0900\n"
+"PO-Revision-Date: 2024-09-16 00:35+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -2542,13 +2542,13 @@ msgstr "계정 팔로우"
 msgid "Follow all"
 msgstr "모두 팔로우"
 
-#: src/view/com/profile/FollowButton.tsx:79
-msgctxt "action"
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:223
+#: src/view/com/post-thread/PostThreadFollowBtn.tsx:142
 msgid "Follow Back"
 msgstr "맞팔로우"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:223
-#: src/view/com/post-thread/PostThreadFollowBtn.tsx:142
+#: src/view/com/profile/FollowButton.tsx:79
+msgctxt "action"
 msgid "Follow Back"
 msgstr "맞팔로우"
 
