@@ -60,7 +60,10 @@ export function Controls({
     pause,
     playing,
     muted,
+    unmute,
     toggleMute,
+    volume,
+    changeVolume,
     togglePlayPause,
     currentTime,
     duration,
@@ -177,7 +180,16 @@ export function Controls({
     setSubtitlesEnabled(!subtitlesEnabled)
   }, [drawFocus, setSubtitlesEnabled, subtitlesEnabled])
 
-  const onPressMute = useCallback(() => {
+  const onChangeVolume = useCallback(
+    (newVolume: number) => {
+      drawFocus()
+      changeVolume(newVolume)
+      unmute()
+    },
+    [drawFocus, changeVolume, unmute],
+  )
+
+  const onToggleMute = useCallback(() => {
     drawFocus()
     toggleMute()
   }, [drawFocus, toggleMute])
@@ -383,13 +395,11 @@ export function Controls({
               onPress={onPressSubtitles}
             />
           )}
-          <ControlButton
-            active={muted}
-            activeLabel={_(msg({message: `Unmute`, context: 'video'}))}
-            inactiveLabel={_(msg({message: `Mute`, context: 'video'}))}
-            activeIcon={MuteIcon}
-            inactiveIcon={UnmuteIcon}
-            onPress={onPressMute}
+          <AudioControls
+            volume={volume}
+            setVolume={onChangeVolume}
+            muted={muted}
+            toggleMute={onToggleMute}
           />
           {!isIPhoneWeb && (
             <ControlButton
@@ -673,6 +683,61 @@ function Scrubber({
   )
 }
 
+function AudioControls({
+  volume,
+  setVolume,
+  muted,
+  toggleMute,
+}: {
+  volume: number
+  setVolume: (value: number) => void
+  muted: boolean
+  toggleMute: () => void
+}) {
+  const {_} = useLingui()
+  const {
+    state: hovered,
+    onIn: onStartHover,
+    onOut: onEndHover,
+  } = useInteractionState()
+
+  const onChangeVolume = useCallback(
+    (evnt: React.ChangeEvent<HTMLInputElement>) => {
+      const value = parseInt(evnt.currentTarget.value, 10) / 100
+      setVolume(value)
+    },
+    [setVolume],
+  )
+
+  return (
+    <View
+      style={[a.flex_row]}
+      onPointerEnter={onStartHover}
+      onPointerLeave={onEndHover}>
+      {hovered && (
+        <input
+          type="range"
+          style={{
+            width: 60,
+          }}
+          value={volume * 100}
+          onChange={onChangeVolume}
+          min={0}
+          max={100}
+        />
+      )}
+      <ControlButton
+        active={muted}
+        activeLabel={_(msg({message: `Unmute`, context: 'video'}))}
+        inactiveLabel={_(msg({message: `Mute`, context: 'video'}))}
+        activeIcon={MuteIcon}
+        inactiveIcon={UnmuteIcon}
+        onPress={toggleMute}
+      />
+    </View>
+  )
+}
+
 function formatTime(time: number) {
   if (isNaN(time)) {
     return '--'
@@ -686,9 +751,12 @@ function formatTime(time: number) {
   return `${minutes}:${seconds}`
 }
 
+const INITIAL_VOLUME = 0.5
+
 function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
   const [playing, setPlaying] = useState(false)
   const [muted, setMuted] = useState(true)
+  const [volume, setVolume] = useState(INITIAL_VOLUME)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   const [buffering, setBuffering] = useState(false)
@@ -710,6 +778,7 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
     setDuration(round(ref.current.duration) || 0)
     setMuted(ref.current.muted)
     setPlaying(!ref.current.paused)
+    ref.current.volume = INITIAL_VOLUME
 
     const handleTimeUpdate = () => {
       if (!ref.current) return
@@ -731,6 +800,7 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
 
     const handleVolumeChange = () => {
       if (!ref.current) return
+      setVolume(ref.current.volume)
       setMuted(ref.current.muted)
     }
 
@@ -878,6 +948,15 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
     ref.current.muted = !ref.current.muted
   }, [ref])
 
+  const changeVolume = useCallback(
+    (value: number) => {
+      if (!ref.current) return
+
+      ref.current.volume = value
+    },
+    [ref],
+  )
+
   return {
     play,
     pause,
@@ -889,6 +968,8 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
     mute,
     unmute,
     toggleMute,
+    volume,
+    changeVolume,
     buffering,
     error,
     canPlay,
