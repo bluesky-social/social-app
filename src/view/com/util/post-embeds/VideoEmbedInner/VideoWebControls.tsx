@@ -32,6 +32,7 @@ import {Play_Filled_Corner0_Rounded as PlayIcon} from '#/components/icons/Play'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {useVideoVolumeState} from '../VideoVolumeContext'
 import {TimeIndicator} from './TimeIndicator'
 
 export function Controls({
@@ -758,12 +759,10 @@ function videoVolumeToSliderVolume(value: number) {
   return Math.pow(value, 1 / 4)
 }
 
-const INITIAL_VOLUME = 0.5
-
 function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
   const [playing, setPlaying] = useState(false)
+  const {volume, setVolume} = useVideoVolumeState()
   const [muted, setMuted] = useState(true)
-  const [volume, setVolume] = useState(INITIAL_VOLUME)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   const [buffering, setBuffering] = useState(false)
@@ -785,7 +784,6 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
     setDuration(round(ref.current.duration) || 0)
     setMuted(ref.current.muted)
     setPlaying(!ref.current.paused)
-    ref.current.volume = sliderVolumeToVideoVolume(INITIAL_VOLUME)
 
     const handleTimeUpdate = () => {
       if (!ref.current) return
@@ -899,7 +897,13 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
       abortController.abort()
       clearTimeout(bufferingTimeout)
     }
-  }, [ref])
+  }, [ref, setMuted, setVolume])
+
+  useEffect(() => {
+    if (!ref.current) return
+
+    ref.current.volume = sliderVolumeToVideoVolume(volume)
+  }, [ref, volume])
 
   const play = useCallback(() => {
     if (!ref.current) return
@@ -940,20 +944,23 @@ function useVideoUtils(ref: React.RefObject<HTMLVideoElement>) {
   const mute = useCallback(() => {
     if (!ref.current) return
 
+    setMuted(true)
     ref.current.muted = true
-  }, [ref])
+  }, [ref, setMuted])
 
   const unmute = useCallback(() => {
     if (!ref.current) return
 
+    setMuted(false)
     ref.current.muted = false
-  }, [ref])
+  }, [ref, setMuted])
 
   const toggleMute = useCallback(() => {
     if (!ref.current) return
 
+    setMuted(!ref.current.muted)
     ref.current.muted = !ref.current.muted
-  }, [ref])
+  }, [ref, setMuted])
 
   const changeVolume = useCallback(
     (value: number) => {
