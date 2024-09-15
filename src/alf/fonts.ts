@@ -1,5 +1,24 @@
 import {useFonts as defaultUseFonts} from 'expo-font'
 
+import {Device, device} from '#/storage'
+
+export function getFontScale() {
+  const fontScale = device.get(['fontScale']) || 1
+  return fontScale
+}
+
+export function setFontScale(fontScale: Device['fontScale']) {
+  device.set(['fontScale'], fontScale)
+}
+
+export function getFontFamily() {
+  return device.get(['fontFamily']) || 'system'
+}
+
+export function setFontFamily(fontFamily: Device['fontFamily']) {
+  device.set(['fontFamily'], fontFamily)
+}
+
 export function useFonts() {
   return defaultUseFonts({
     'Inter-Thin': require('../../assets/fonts/inter/Inter-Thin.otf'),

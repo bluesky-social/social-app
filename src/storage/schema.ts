@@ -3,5 +3,6 @@
  */
 export type Device = {
   fontScale: number | undefined
+  fontFamily: 'system' | 'theme'
   lastNuxDialog: string | undefined
 }

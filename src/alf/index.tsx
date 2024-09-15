@@ -2,10 +2,16 @@ import React from 'react'
 import {useMediaQuery} from 'react-responsive'
 
 import {useGate} from '#/lib/statsig/statsig'
+import {
+  getFontFamily,
+  getFontScale,
+  setFontFamily as persistFontFamily,
+  setFontScale as persistFontScale,
+} from '#/alf/fonts'
 import {createThemes, defaultTheme} from '#/alf/themes'
 import {Theme, ThemeName} from '#/alf/types'
 import {BLUE_HUE, GREEN_HUE, RED_HUE} from '#/alf/util/colorGeneration'
-import * as fontScaling from '#/alf/util/fontScaling'
+import {Device} from '#/storage'
 
 export {atoms} from '#/alf/atoms'
 export * from '#/alf/fonts'
@@ -19,8 +25,12 @@ export type Alf = {
   themeName: ThemeName
   theme: Theme
   themes: ReturnType<typeof createThemes>
-  fontScale: number
-  setFontScale: (fontScale: number) => void
+  fonts: {
+    scale: Exclude<Device['fontScale'], undefined>
+    family: Device['fontFamily']
+    setFontScale: (fontScale: Exclude<Device['fontScale'], undefined>) => void
+    setFontFamily: (fontFamily: Device['fontFamily']) => void
+  }
   flags: {
     neue: boolean
   }
@@ -39,8 +49,12 @@ export const Context = React.createContext<Alf>({
       positive: GREEN_HUE,
     },
   }),
-  fontScale: fontScaling.get(),
-  setFontScale: () => {},
+  fonts: {
+    scale: getFontScale(),
+    family: getFontFamily(),
+    setFontScale: () => {},
+    setFontFamily: () => {},
+  },
   flags: {
     neue: false,
   },
@@ -52,16 +66,32 @@ export function ThemeProvider({
 }: React.PropsWithChildren<{theme: ThemeName}>) {
   const gate = useGate()
   const [neue] = React.useState(() => gate('typography_neue'))
-  const [fontScale, setFontScale] = React.useState(() => {
-    if (!neue) return 1
-    return fontScaling.get()
-  })
-  const setFontScaleAndPersist = React.useCallback(
-    (fontScale: number) => {
+  const [fontScale, setFontScale] = React.useState<Alf['fonts']['scale']>(
+    () => {
+      if (!neue) return 1
+      return getFontScale()
+    },
+  )
+  const setFontScaleAndPersist = React.useCallback<
+    Alf['fonts']['setFontScale']
+  >(
+    fontScale => {
       setFontScale(fontScale)
-      fontScaling.set(fontScale)
+      persistFontScale(fontScale)
     },
     [setFontScale],
+  )
+  const [fontFamily, setFontFamily] = React.useState<Alf['fonts']['family']>(
+    () => getFontFamily(),
+  )
+  const setFontFamilyAndPersist = React.useCallback<
+    Alf['fonts']['setFontFamily']
+  >(
+    fontFamily => {
+      setFontFamily(fontFamily)
+      persistFontFamily(fontFamily)
+    },
+    [setFontFamily],
   )
   const themes = React.useMemo(() => {
     return createThemes({
@@ -80,13 +110,25 @@ export function ThemeProvider({
           themes,
           themeName: themeName,
           theme: themes[themeName],
-          fontScale,
-          setFontScale: setFontScaleAndPersist,
+          fonts: {
+            scale: fontScale,
+            family: fontFamily,
+            setFontScale: setFontScaleAndPersist,
+            setFontFamily: setFontFamilyAndPersist,
+          },
           flags: {
             neue,
           },
         }),
-        [themeName, themes, fontScale, setFontScaleAndPersist, neue],
+        [
+          themeName,
+          themes,
+          neue,
+          fontScale,
+          setFontScaleAndPersist,
+          fontFamily,
+          setFontFamilyAndPersist,
+        ],
       )}>
       {children}
     </Context.Provider>
@@ -95,11 +137,6 @@ export function ThemeProvider({
 
 export function useAlf() {
   return React.useContext(Context)
-}
-
-export function useFontScale() {
-  const {fontScale, setFontScale} = useAlf()
-  return {fontScale, setFontScale}
 }
 
 export function useTheme(theme?: ThemeName) {

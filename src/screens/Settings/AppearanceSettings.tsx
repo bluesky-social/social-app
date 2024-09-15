@@ -10,11 +10,13 @@ import {useLingui} from '@lingui/react'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {useGate} from '#/lib/statsig/statsig'
 import {s} from '#/lib/styles'
 import {useSetThemePrefs, useThemePrefs} from '#/state/shell'
 import {SimpleViewHeader} from '#/view/com/util/SimpleViewHeader'
 import {ScrollView} from '#/view/com/util/Views'
-import {atoms as a, native, useTheme} from '#/alf'
+import {atoms as a, native, useAlf, useTheme} from '#/alf'
+import * as Toggle from '#/components/forms/Toggle'
 import * as ToggleButton from '#/components/forms/ToggleButton'
 import {Moon_Stroke2_Corner0_Rounded as MoonIcon} from '#/components/icons/Moon'
 import {Phone_Stroke2_Corner0_Rounded as PhoneIcon} from '#/components/icons/Phone'
@@ -22,12 +24,20 @@ import {Text} from '#/components/Typography'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppearanceSettings'>
 export function AppearanceSettingsScreen({}: Props) {
-  const {_} = useLingui()
   const t = useTheme()
+  const {_} = useLingui()
+  const gate = useGate()
+  const [neue] = React.useState(() => gate('typography_neue'))
   const {isTabletOrMobile} = useWebMediaQueries()
+  const {fonts} = useAlf()
 
   const {colorMode, darkTheme} = useThemePrefs()
   const {setColorMode, setDarkTheme} = useSetThemePrefs()
+
+  const [fontScale, setFontScale] = React.useState(() => fonts.scale !== 1)
+  const [fontFamily, setFontFamily] = React.useState(
+    () => fonts.family === 'theme',
+  )
 
   const onChangeAppearance = useCallback(
     (keys: string[]) => {
@@ -128,6 +138,34 @@ export function AppearanceSettingsScreen({}: Props) {
               </Animated.View>
             )}
           </View>
+
+          {neue && (
+            <View style={[a.p_xl, a.gap_lg]}>
+              <Text>Neue options</Text>
+              <Toggle.Item
+                name="Font scale"
+                label="Font scale"
+                value={fontScale}
+                onChange={checked => {
+                  setFontScale(checked)
+                  fonts.setFontScale(checked ? 0.9375 : 1)
+                }}>
+                <Toggle.LabelText>Enable new font scale</Toggle.LabelText>
+                <Toggle.Switch />
+              </Toggle.Item>
+              <Toggle.Item
+                name="Font family"
+                label="Font family"
+                value={fontFamily}
+                onChange={checked => {
+                  setFontFamily(checked)
+                  fonts.setFontFamily(checked ? 'theme' : 'system')
+                }}>
+                <Toggle.LabelText>Use theme font</Toggle.LabelText>
+                <Toggle.Switch />
+              </Toggle.Item>
+            </View>
+          )}
         </ScrollView>
       </View>
     </LayoutAnimationConfig>
