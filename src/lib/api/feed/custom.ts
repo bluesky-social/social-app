@@ -2,6 +2,7 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedGetFeed as GetCustomFeed,
   BskyAgent,
+  jsonStringToLex,
 } from '@atproto/api'
 
 import {getContentLanguages} from '#/state/preferences/languages'
@@ -111,7 +112,7 @@ async function loggedOutFetch({
     }&limit=${limit}&lang=${contentLangs}`,
     {method: 'GET', headers: {'Accept-Language': contentLangs}},
   )
-  let data = res.ok ? await res.json() : null
+  let data = res.ok ? jsonStringToLex(await res.text()) : null
   if (data?.feed?.length) {
     return {
       success: true,
@@ -126,7 +127,7 @@ async function loggedOutFetch({
     }&limit=${limit}`,
     {method: 'GET', headers: {'Accept-Language': ''}},
   )
-  data = res.ok ? await res.json() : null
+  data = res.ok ? jsonStringToLex(await res.text()) : null
   if (data?.feed?.length) {
     return {
       success: true,

@@ -35,16 +35,18 @@ import {
 } from '#/state/session'
 import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
+import {useComposerKeyboardShortcut} from '#/state/shell/composer/useComposerKeyboardShortcut'
 import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
 import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
 import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
 import {Provider as HiddenRepliesProvider} from '#/state/threadgate-hidden-replies'
 import {Provider as ActiveVideoProvider} from '#/view/com/util/post-embeds/ActiveVideoWebContext'
+import {Provider as VideoVolumeProvider} from '#/view/com/util/post-embeds/VideoVolumeContext'
 import * as Toast from '#/view/com/util/Toast'
 import {ToastContainer} from '#/view/com/util/Toast.web'
 import {Shell} from '#/view/shell/index'
-import {ThemeProvider as Alf, useFonts} from '#/alf'
+import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
@@ -60,7 +62,8 @@ function InnerApp() {
   const {_} = useLingui()
   useIntentHandler()
   const hasCheckedReferrer = useStarterPackEntry()
-  const [fontsLoaded] = useFonts()
+
+  useComposerKeyboardShortcut()
 
   // init
   useEffect(() => {
@@ -89,44 +92,48 @@ function InnerApp() {
   }, [_])
 
   // wait for session to resume
-  if (!isReady || !hasCheckedReferrer || !fontsLoaded) return null
+  if (!isReady || !hasCheckedReferrer) return null
 
   return (
     <KeyboardProvider enabled={false}>
-      <StatsigProvider key={currentAccount?.did}>
+      <StatsigProvider
+        // Resets the entire tree below when it changes:
+        key={currentAccount?.did}>
         <Alf theme={theme}>
           <ThemeProvider theme={theme}>
             <RootSiblingParent>
-              <ActiveVideoProvider>
-                <QueryProvider currentDid={currentAccount?.did}>
-                  <MessagesProvider>
-                    {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                    <LabelDefsProvider>
-                      <ModerationOptsProvider>
-                        <LoggedOutViewProvider>
-                          <SelectedFeedProvider>
-                            <HiddenRepliesProvider>
-                              <UnreadNotifsProvider>
-                                <BackgroundNotificationPreferencesProvider>
-                                  <MutedThreadsProvider>
-                                    <SafeAreaProvider>
-                                      <ProgressGuideProvider>
-                                        <Shell />
-                                        <NuxDialogs />
-                                      </ProgressGuideProvider>
-                                    </SafeAreaProvider>
-                                  </MutedThreadsProvider>
-                                </BackgroundNotificationPreferencesProvider>
-                              </UnreadNotifsProvider>
-                            </HiddenRepliesProvider>
-                          </SelectedFeedProvider>
-                        </LoggedOutViewProvider>
-                      </ModerationOptsProvider>
-                    </LabelDefsProvider>
-                  </MessagesProvider>
-                </QueryProvider>
-                <ToastContainer />
-              </ActiveVideoProvider>
+              <VideoVolumeProvider>
+                <ActiveVideoProvider>
+                  <QueryProvider currentDid={currentAccount?.did}>
+                    <MessagesProvider>
+                      {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                      <LabelDefsProvider>
+                        <ModerationOptsProvider>
+                          <LoggedOutViewProvider>
+                            <SelectedFeedProvider>
+                              <HiddenRepliesProvider>
+                                <UnreadNotifsProvider>
+                                  <BackgroundNotificationPreferencesProvider>
+                                    <MutedThreadsProvider>
+                                      <SafeAreaProvider>
+                                        <ProgressGuideProvider>
+                                          <Shell />
+                                          <NuxDialogs />
+                                        </ProgressGuideProvider>
+                                      </SafeAreaProvider>
+                                    </MutedThreadsProvider>
+                                  </BackgroundNotificationPreferencesProvider>
+                                </UnreadNotifsProvider>
+                              </HiddenRepliesProvider>
+                            </SelectedFeedProvider>
+                          </LoggedOutViewProvider>
+                        </ModerationOptsProvider>
+                      </LabelDefsProvider>
+                    </MessagesProvider>
+                  </QueryProvider>
+                  <ToastContainer />
+                </ActiveVideoProvider>
+              </VideoVolumeProvider>
             </RootSiblingParent>
           </ThemeProvider>
         </Alf>
