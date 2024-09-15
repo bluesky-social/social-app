@@ -115,7 +115,7 @@ export function TenMillion() {
 
         const data = await res.json()
 
-        if (data.number) {
+        if (data.number && data.number <= 10_000_000) {
           setUserNumber(data.number)
         } else {
           // should be rare
