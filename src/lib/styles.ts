@@ -79,7 +79,7 @@ export const s = StyleSheet.create({
 
   // font weights
   fw600: {fontWeight: '600'},
-  bold: {fontWeight: 'bold'},
+  bold: {fontWeight: '700'},
   fw500: {fontWeight: '500'},
   semiBold: {fontWeight: '500'},
   fw400: {fontWeight: '400'},
