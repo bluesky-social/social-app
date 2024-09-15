@@ -265,30 +265,28 @@ export function ExternalPlayer({
             />
           </>
         ) : (
-          <>
-            <Fill
-              style={[
-                a.rounded_sm,
-                {
-                  backgroundColor:
-                    t.name === 'light' ? t.palette.contrast_975 : 'black',
-                  borderBottomLeftRadius: 0,
-                  borderBottomRightRadius: 0,
-                  opacity: 0.3,
-                },
-              ]}
-            />
-            <MediaInsetBorder
-              opaque
-              style={[
-                {
-                  borderBottomLeftRadius: 0,
-                  borderBottomRightRadius: 0,
-                },
-              ]}
-            />
-          </>
+          <Fill
+            style={[
+              a.rounded_sm,
+              {
+                backgroundColor:
+                  t.name === 'light' ? t.palette.contrast_975 : 'black',
+                borderBottomLeftRadius: 0,
+                borderBottomRightRadius: 0,
+                opacity: 0.3,
+              },
+            ]}
+          />
         )}
+        <MediaInsetBorder
+          opaque
+          style={[
+            {
+              borderBottomLeftRadius: 0,
+              borderBottomRightRadius: 0,
+            },
+          ]}
+        />
         <PlaceholderOverlay
           isLoading={isLoading}
           isPlayerActive={isPlayerActive}
