@@ -3,7 +3,7 @@ import {StyleProp, TextProps as RNTextProps, TextStyle} from 'react-native'
 import {UITextView} from 'react-native-uitextview'
 
 import {isNative} from '#/platform/detection'
-import {atoms, flatten, useAlf, useTheme, web} from '#/alf'
+import {applyFonts, atoms, flatten, useAlf, useTheme, web} from '#/alf'
 
 export type TextProps = RNTextProps & {
   /**
@@ -36,7 +36,7 @@ export function leading<
  */
 export function normalizeTextStyles(
   styles: StyleProp<TextStyle>,
-  {fontScale}: {fontScale: number},
+  {fontScale, flags}: {fontScale: number; flags: {neue: boolean}},
 ) {
   const s = flatten(styles)
   // should always be defined on these components
@@ -50,6 +50,10 @@ export function normalizeTextStyles(
     s.lineHeight = s.fontSize
   }
 
+  if (flags.neue) {
+    applyFonts(s)
+  }
+
   return s
 }
 
@@ -57,10 +61,11 @@ export function normalizeTextStyles(
  * Our main text component. Use this most of the time.
  */
 export function Text({style, selectable, ...rest}: TextProps) {
-  const {fontScale} = useAlf()
+  const {fontScale, flags} = useAlf()
   const t = useTheme()
   const s = normalizeTextStyles([atoms.text_sm, t.atoms.text, flatten(style)], {
     fontScale,
+    flags,
   })
 
   return <UITextView selectable={selectable} uiTextView style={s} {...rest} />

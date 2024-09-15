@@ -55,7 +55,7 @@ import {TestCtrls} from '#/view/com/testing/TestCtrls'
 import {Provider as ActiveVideoProvider} from '#/view/com/util/post-embeds/ActiveVideoNativeContext'
 import * as Toast from '#/view/com/util/Toast'
 import {Shell} from '#/view/shell'
-import {ThemeProvider as Alf} from '#/alf'
+import {ThemeProvider as Alf, useFonts} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
@@ -73,6 +73,7 @@ function InnerApp() {
   const {resumeSession} = useSessionApi()
   const theme = useColorModeTheme()
   const {_} = useLingui()
+  const [fontsLoaded] = useFonts()
 
   useIntentHandler()
   const hasCheckedReferrer = useStarterPackEntry()
@@ -110,7 +111,7 @@ function InnerApp() {
     <StatsigProvider key={currentAccount?.did}>
       <Alf theme={theme}>
         <ThemeProvider theme={theme}>
-          <Splash isReady={isReady && hasCheckedReferrer}>
+          <Splash isReady={isReady && hasCheckedReferrer && fontsLoaded}>
             <ActiveVideoProvider>
               <RootSiblingParent>
                 <QueryProvider currentDid={currentAccount?.did}>

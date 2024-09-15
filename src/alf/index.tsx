@@ -8,6 +8,7 @@ import {BLUE_HUE, GREEN_HUE, RED_HUE} from '#/alf/util/colorGeneration'
 import * as fontScaling from '#/alf/util/fontScaling'
 
 export {atoms} from '#/alf/atoms'
+export * from '#/alf/fonts'
 export * as tokens from '#/alf/tokens'
 export * from '#/alf/types'
 export * from '#/alf/util/flatten'
@@ -51,7 +52,10 @@ export function ThemeProvider({
 }: React.PropsWithChildren<{theme: ThemeName}>) {
   const gate = useGate()
   const [neue] = React.useState(() => gate('typography_neue'))
-  const [fontScale, setFontScale] = React.useState(() => fontScaling.get())
+  const [fontScale, setFontScale] = React.useState(() => {
+    if (!neue) return 1
+    return fontScaling.get()
+  })
   const setFontScaleAndPersist = React.useCallback(
     (fontScale: number) => {
       setFontScale(fontScale)

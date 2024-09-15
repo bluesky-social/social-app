@@ -44,7 +44,7 @@ import {Provider as ActiveVideoProvider} from '#/view/com/util/post-embeds/Activ
 import * as Toast from '#/view/com/util/Toast'
 import {ToastContainer} from '#/view/com/util/Toast.web'
 import {Shell} from '#/view/shell/index'
-import {ThemeProvider as Alf} from '#/alf'
+import {ThemeProvider as Alf, useFonts} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
@@ -60,6 +60,7 @@ function InnerApp() {
   const {_} = useLingui()
   useIntentHandler()
   const hasCheckedReferrer = useStarterPackEntry()
+  const [fontsLoaded] = useFonts()
 
   // init
   useEffect(() => {
@@ -88,7 +89,7 @@ function InnerApp() {
   }, [_])
 
   // wait for session to resume
-  if (!isReady || !hasCheckedReferrer) return null
+  if (!isReady || !hasCheckedReferrer || !fontsLoaded) return null
 
   return (
     <KeyboardProvider enabled={false}>

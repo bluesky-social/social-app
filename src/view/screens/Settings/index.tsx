@@ -54,7 +54,7 @@ import * as Toast from 'view/com/util/Toast'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {ScrollView} from 'view/com/util/Views'
 import {DeactivateAccountDialog} from '#/screens/Settings/components/DeactivateAccountDialog'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useAlf, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
 import {Email2FAToggle} from './Email2FAToggle'
@@ -133,6 +133,7 @@ function SettingsAccountCard({
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export function SettingsScreen({}: Props) {
+  const {setFontScale} = useAlf()
   const queryClient = useQueryClient()
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -819,6 +820,16 @@ export function SettingsScreen({}: Props) {
         </TouchableOpacity>
         {__DEV__ ? (
           <>
+            <TouchableOpacity
+              style={[pal.view, styles.linkCardNoIcon]}
+              onPress={() => setFontScale(0.9375)}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Set test font scale`)}
+              accessibilityHint={_(msg`Set test font scale`)}>
+              <Text type="lg" style={pal.text}>
+                <Trans>Enable neue font scale</Trans>
+              </Text>
+            </TouchableOpacity>
             <TouchableOpacity
               style={[pal.view, styles.linkCardNoIcon]}
               onPress={onPressStorybook}
