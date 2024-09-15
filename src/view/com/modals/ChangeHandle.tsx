@@ -19,7 +19,7 @@ import {SessionAccount, useAgent, useSession} from '#/state/session'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {cleanError} from 'lib/strings/errors'
-import {createFullHandle, makeValidHandle} from 'lib/strings/handles'
+import {createFullHandle, makeValidHandle, makeValidCustomDomainHandle} from 'lib/strings/handles'
 import {s} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
 import {ErrorMessage} from '../util/error/ErrorMessage'
@@ -321,7 +321,8 @@ function CustomHandleForm({
   }, [currentAccount, isDNSForm, _])
   const onChangeHandle = React.useCallback(
     (v: string) => {
-      setHandle(v)
+      const newHandle = makeValidCustomDomainHandle(v)
+      setHandle(newHandle)
       setCanSave(false)
     },
     [setHandle, setCanSave],
