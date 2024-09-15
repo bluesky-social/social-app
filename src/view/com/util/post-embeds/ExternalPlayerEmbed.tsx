@@ -228,7 +228,7 @@ export function ExternalPlayer({
         ref={viewRef}
         collapsable={false}
         style={[aspect, a.rounded_sm]}>
-        {link.thumb && (!isPlayerActive || isLoading) && (
+        {link.thumb && (!isPlayerActive || isLoading) ? (
           <>
             <Image
               style={[a.flex_1, styles.topRadius]}
@@ -256,6 +256,16 @@ export function ExternalPlayer({
               ]}
             />
           </>
+        ) : (
+          <MediaInsetBorder
+            opaque
+            style={[
+              {
+                borderBottomLeftRadius: 0,
+                borderBottomRightRadius: 0,
+              },
+            ]}
+          />
         )}
         <PlaceholderOverlay
           isLoading={isLoading}
