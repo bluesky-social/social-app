@@ -1,6 +1,15 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import Animated from 'react-native-reanimated'
+import Animated, {
+  useAnimatedStyle,
+  useReducedMotion,
+  useSharedValue,
+  withDelay,
+  withRepeat,
+  withSequence,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -40,6 +49,43 @@ export function HomeHeaderLayoutMobile({
     setDrawerOpen(true)
   }, [setDrawerOpen])
 
+  // TEMPORARY - REMOVE AFTER MILLY
+  // This will just cause the icon to shake a bit when the user first opens the app, drawing attention to the celebration
+  // 🎉
+  const rotate = useSharedValue(0)
+  const reducedMotion = useReducedMotion()
+
+  // Run this a single time on app mount.
+  React.useEffect(() => {
+    if (reducedMotion) return
+
+    // Waits 1500ms, then rotates 10 degrees with a spring animation. Repeats once.
+    rotate.value = withDelay(
+      1000,
+      withRepeat(
+        withSequence(
+          withTiming(10, {duration: 100}),
+          withSpring(0, {
+            mass: 1,
+            damping: 1,
+            stiffness: 200,
+            overshootClamping: false,
+          }),
+        ),
+        2,
+        false,
+      ),
+    )
+  }, [rotate, reducedMotion])
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [
+      {
+        rotateZ: `${rotate.value}deg`,
+      },
+    ],
+  }))
+
   return (
     <Animated.View
       style={[pal.view, pal.border, styles.tabBar, headerMinimalShellTransform]}
@@ -60,7 +106,7 @@ export function HomeHeaderLayoutMobile({
             <Menu size="lg" fill={t.atoms.text_contrast_medium.color} />
           </TouchableOpacity>
         </View>
-        <View>
+        <Animated.View style={animatedStyle}>
           <Trigger>
             {ctx => (
               <Icon
@@ -72,7 +118,7 @@ export function HomeHeaderLayoutMobile({
             )}
           </Trigger>
           {/* <Logo width={30} /> */}
-        </View>
+        </Animated.View>
         <View
           style={[
             atoms.flex_row,
