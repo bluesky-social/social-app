@@ -8,7 +8,7 @@ msgstr ""
 "Language: pt-BR\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-05-13 11:41\n"
+"PO-Revision-Date: 2024-09-16 17:30+01:00\n"
 "Last-Translator: fabiohcnobre\n"
 "Language-Team: maisondasilva, MightyLoggor, gildaswise, gleydson, faeriarum, fabiohcnobre, garccez\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -28,11 +28,11 @@ msgstr "{0, plural, one {{formattedCount} outro} other {{formattedCount} outros}
 
 #: src/lib/hooks/useTimeAgo.ts:156
 msgid "{0, plural, one {# day} other {# days}}"
-msgstr ""
+msgstr "{0, plural, one {# dia} other {# dias}}"
 
 #: src/lib/hooks/useTimeAgo.ts:146
 msgid "{0, plural, one {# hour} other {# hours}}"
-msgstr ""
+msgstr "{0, plural, one {# hora} other {# horas}}"
 
 #: src/components/moderation/LabelsOnMe.tsx:55
 #~ msgid "{0, plural, one {# label has been placed on this account} other {# labels has been placed on this account}}"
@@ -52,11 +52,11 @@ msgstr "{0, plural, one {# rótulo foi colocado neste conteúdo} other {# rótul
 
 #: src/lib/hooks/useTimeAgo.ts:136
 msgid "{0, plural, one {# minute} other {# minutes}}"
-msgstr ""
+msgstr "{0, plural, one {# minuto} other {# minutos}}"
 
 #: src/lib/hooks/useTimeAgo.ts:167
 msgid "{0, plural, one {# month} other {# months}}"
-msgstr ""
+msgstr "{0, plural, one {# mês} other {# meses}}"
 
 #: src/view/com/util/post-ctrls/RepostButton.tsx:71
 msgid "{0, plural, one {# repost} other {# reposts}}"
@@ -64,7 +64,7 @@ msgstr "{0, plural, one {# repostagem} other {# repostagens}}"
 
 #: src/lib/hooks/useTimeAgo.ts:126
 msgid "{0, plural, one {# second} other {# seconds}}"
-msgstr ""
+msgstr "{0, plural, one {# segundo} other {# segundos}}"
 
 #: src/components/KnownFollowers.tsx:179
 #~ msgid "{0, plural, one {and # other} other {and # others}}"
@@ -116,12 +116,12 @@ msgstr "{0, plural, one {Descurtir (# curtida)} other {Descurtir (# curtidas)}}"
 #. Pattern: {wordValue} in tags
 #: src/components/dialogs/MutedWords.tsx:475
 msgid "{0} <0>in <1>tags</1></0>"
-msgstr ""
+msgstr "{0} <0>em <1>tags</1></0>"
 
 #. Pattern: {wordValue} in text, tags
 #: src/components/dialogs/MutedWords.tsx:465
 msgid "{0} <0>in <1>text & tags</1></0>"
-msgstr ""
+msgstr "{0} <0>em <1>texto e tags</1></0>"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:228
 msgid "{0} joined this week"
@@ -129,7 +129,7 @@ msgstr "{0} entrou esta semana"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:637
 msgid "{0} of {1}"
-msgstr ""
+msgstr "{0} de {1}"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:467
 msgid "{0} people have used this starter pack!"
@@ -154,27 +154,27 @@ msgstr "O pacote inicial de {0}"
 #. How many days have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:158
 msgid "{0}d"
-msgstr ""
+msgstr "{0}d"
 
 #. How many hours have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:148
 msgid "{0}h"
-msgstr ""
+msgstr "{0}h"
 
 #. How many minutes have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:138
 msgid "{0}m"
-msgstr ""
+msgstr "{0}m"
 
 #. How many months have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:169
 msgid "{0}mo"
-msgstr ""
+msgstr "{0}me"
 
 #. How many seconds have passed, displayed in a narrow form
 #: src/lib/hooks/useTimeAgo.ts:128
 msgid "{0}s"
-msgstr ""
+msgstr "{0}s"
 
 #: src/components/LabelingServiceCard/index.tsx:71
 msgid "{count, plural, one {Liked by # user} other {Liked by # users}}"
@@ -662,11 +662,7 @@ msgstr "Ocorreu um erro ao carregar o vídeo. Tente novamente."
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:250
 msgid "An error occurred while saving the image!"
-msgstr ""
-
-#: src/components/StarterPack/ShareDialog.tsx:79
-#~ msgid "An error occurred while saving the image."
-#~ msgstr "Ocorreu um erro ao salvar a imagem."
+msgstr "Ocorreu um erro ao salvar a imagem!"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:71
 #: src/components/StarterPack/ShareDialog.tsx:79
@@ -1175,7 +1171,7 @@ msgstr "Cancela a abertura do link"
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:155
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:191
 msgid "Cannot interact with a blocked user"
-msgstr ""
+msgstr "Não é possível interagir com um usuário bloqueado"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:135
 msgid "Captions (.vtt)"
@@ -2369,7 +2365,7 @@ msgstr "Endereço de e-mail"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:95
 msgid "Email Resent"
-msgstr ""
+msgstr "E-mail Reenviado"
 
 #: src/view/com/modals/ChangeEmail.tsx:54
 #: src/view/com/modals/ChangeEmail.tsx:83
@@ -2386,7 +2382,7 @@ msgstr "E-mail verificado"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:71
 msgid "Email Verified"
-msgstr ""
+msgstr "E-mail Verificado"
 
 #: src/view/screens/Settings/index.tsx:319
 msgid "Email:"
@@ -2612,7 +2608,7 @@ msgstr "Experimental: Quando essa preferência estiver habilitada, você receber
 
 #: src/components/dialogs/MutedWords.tsx:500
 msgid "Expired"
-msgstr "Expirado "
+msgstr "Expirado"
 
 #: src/components/dialogs/MutedWords.tsx:502
 msgid "Expires {0}"
@@ -2740,7 +2736,7 @@ msgstr "Falha ao alternar o silenciamento do tópico, tente novamente"
 
 #: src/components/FeedCard.tsx:273
 msgid "Failed to update feeds"
-msgstr "Falha ao atualizar os feeds\""
+msgstr "Falha ao atualizar os feeds"
 
 #: src/components/dms/MessagesNUX.tsx:60
 #: src/screens/Messages/Settings.tsx:35
@@ -2916,14 +2912,10 @@ msgstr "Seguir Conta"
 msgid "Follow all"
 msgstr "Siga todos"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:187
-#~ msgid "Follow All"
-#~ msgstr "Seguir Todas"
-
 #: src/view/com/profile/FollowButton.tsx:79
 msgctxt "action"
 msgid "Follow Back"
-msgstr ""
+msgstr "Seguir De Volta"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:223
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:142
@@ -3114,7 +3106,7 @@ msgstr "Começando"
 
 #: src/components/MediaPreview.tsx:122
 msgid "GIF"
-msgstr ""
+msgstr "GIF"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:225
 msgid "Give your profile a face"
@@ -3438,7 +3430,7 @@ msgstr "Falsificação de identidade ou alegações falsas sobre identidade ou f
 
 #: src/lib/moderation/useReportOptions.ts:68
 msgid "Impersonation, misinformation, or false claims"
-msgstr ""
+msgstr "Falsificação de identidade, desinformação ou alegações falsas"
 
 #: src/lib/moderation/useReportOptions.ts:91
 msgid "Inappropriate messages or explicit links"
@@ -3512,7 +3504,7 @@ msgstr "Credenciais inválidas"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:82
 msgid "Invalid Verification Code"
-msgstr ""
+msgstr "Código de Verificação Inválido"
 
 #: src/view/com/modals/InviteCodes.tsx:94
 msgid "Invite a Friend"
@@ -3556,7 +3548,7 @@ msgstr "É só você por enquanto! Adicione mais pessoas ao seu pacote inicial p
 
 #: src/view/com/composer/Composer.tsx:1126
 msgid "Job ID: {0}"
-msgstr ""
+msgstr "Job ID: {0}"
 
 #: src/view/com/auth/SplashScreen.web.tsx:164
 msgid "Jobs"
@@ -3986,7 +3978,7 @@ msgstr "Conta Enganosa"
 
 #: src/lib/moderation/useReportOptions.ts:67
 msgid "Misleading Post"
-msgstr ""
+msgstr "Postagem Enganosa"
 
 #: src/screens/Settings/AppearanceSettings.tsx:78
 msgid "Mode"
@@ -4079,14 +4071,14 @@ msgid "Music"
 msgstr "Música"
 
 #: src/components/TagMenu/index.tsx:263
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:163
 msgid "Mute"
 msgstr "Silenciar"
 
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:166
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:389
 msgctxt "video"
 msgid "Mute"
-msgstr ""
+msgstr "Silenciar"
 
 #: src/components/TagMenu/index.web.tsx:116
 msgid "Mute {truncatedTag}"
@@ -4600,17 +4592,9 @@ msgstr "Ok"
 msgid "Oldest replies first"
 msgstr "Respostas mais antigas primeiro"
 
-#: src/components/StarterPack/QrCode.tsx:69
-#~ msgid "on"
-#~ msgstr ""
-
-#: src/lib/hooks/useTimeAgo.ts:81
-#~ msgid "on {str}"
-#~ msgstr ""
-
 #: src/components/StarterPack/QrCode.tsx:70
 msgid "on<0><1/><2><3/></2></0>"
-msgstr ""
+msgstr "no<0><1/><2><3/></2></0>"
 
 #: src/view/screens/Settings/index.tsx:226
 msgid "Onboarding reset"
@@ -5447,7 +5431,7 @@ msgstr "Remover conta"
 
 #: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:28
 msgid "Remove attachment"
-msgstr ""
+msgstr "Remover anexo"
 
 #: src/view/com/util/UserAvatar.tsx:393
 msgid "Remove Avatar"
@@ -5567,7 +5551,7 @@ msgstr "Remove o post citado"
 
 #: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:29
 msgid "Removes the attachment"
-msgstr ""
+msgstr "Remove o anexo"
 
 #: src/view/com/composer/ExternalEmbedRemoveBtn.tsx:29
 #~ msgid "Removes the image preview"
@@ -5818,11 +5802,11 @@ msgstr "Reenviar e-mail"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:130
 msgid "Resend Email"
-msgstr ""
+msgstr "Reenviar E-mail"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:123
 msgid "Resend Verification Email"
-msgstr ""
+msgstr "Reenviar E-mail de Verificação"
 
 #: src/view/com/modals/ChangePassword.tsx:186
 msgid "Reset code"
@@ -6692,10 +6676,6 @@ msgstr "Alguns outros feeds que você pode gostar"
 msgid "Some people can reply"
 msgstr "Algumas pessoas podem responder"
 
-#: src/screens/StarterPack/Wizard/index.tsx:203
-#~ msgid "Some subtitle"
-#~ msgstr ""
-
 #: src/screens/Messages/Conversation/index.tsx:106
 msgid "Something went wrong"
 msgstr "Algo deu errado"
@@ -6728,14 +6708,6 @@ msgstr "Classificar Respostas"
 #: src/view/screens/PreferencesThreads.tsx:66
 msgid "Sort replies to the same post by:"
 msgstr "Classificar respostas de um post por:"
-
-#: src/components/moderation/LabelsOnMeDialog.tsx:168
-#~ msgid "Source:"
-#~ msgstr "Fonte:"
-
-#: src/components/moderation/LabelsOnMeDialog.tsx:169
-#~ msgid "Source: <0>{0}</0>"
-#~ msgstr ""
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:163
 msgid "Source: <0>{sourceName}</0>"
@@ -6928,7 +6900,7 @@ msgstr "Toque para entrar em tela cheia"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
 msgid "Tap to play or pause"
-msgstr ""
+msgstr "Toque para reproduzir ou pausar"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:164
 msgid "Tap to toggle sound"
@@ -6937,7 +6909,7 @@ msgstr "Toque para alternar o som"
 #: src/view/com/util/images/AutoSizedImage.tsx:219
 #: src/view/com/util/images/AutoSizedImage.tsx:239
 msgid "Tap to view full image"
-msgstr ""
+msgstr "Toque para ver a imagem completa"
 
 #: src/view/com/util/images/AutoSizedImage.tsx:70
 #~ msgid "Tap to view fully"
@@ -7011,7 +6983,7 @@ msgstr "Obrigado por ser um dos nossos primeiros 10 milhões de usuários."
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:74
 msgid "Thanks, you have successfully verified your email address."
-msgstr ""
+msgstr "Obrigado, seu endereço de e-mail foi verificado com sucesso."
 
 #: src/view/com/modals/ChangeHandle.tsx:459
 msgid "That contains the following:"
@@ -7116,7 +7088,7 @@ msgstr "Os Termos de Serviço foram movidos para"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:85
 msgid "The verification code you have provided is invalid. Please make sure that you have used the correct verification link or request a new one."
-msgstr ""
+msgstr "O código de verificação que você forneceu é inválido. Certifique-se de que você usou o link de verificação correto ou solicite novamente."
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:141
 #~ msgid "There are many feeds to try:"
@@ -7637,15 +7609,15 @@ msgid "Unlike this feed"
 msgstr "Descurtir este feed"
 
 #: src/components/TagMenu/index.tsx:263
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:163
 #: src/view/screens/ProfileList.tsx:689
 msgid "Unmute"
 msgstr "Dessilenciar"
 
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:165
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:388
 msgctxt "video"
 msgid "Unmute"
-msgstr ""
+msgstr "Ativar o áudio"
 
 #: src/components/TagMenu/index.web.tsx:115
 msgid "Unmute {truncatedTag}"
@@ -7675,11 +7647,11 @@ msgstr "Dessilenciar thread"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:317
 msgid "Unmute video"
-msgstr "Desmutar vídeo"
+msgstr "Ativar o áudio do vídeo"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
-#~ msgid "Unmuted"
-#~ msgstr "Desmutar"
+msgid "Unmuted"
+msgstr "Áudio ativado"
 
 #: src/view/screens/ProfileFeed.tsx:292
 #: src/view/screens/ProfileList.tsx:673
@@ -7920,7 +7892,7 @@ msgstr "Verificar e-mail"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:61
 msgid "Verify email dialog"
-msgstr ""
+msgstr "Caixa de diálogo da verificação de e-mail"
 
 #: src/view/screens/Settings/index.tsx:961
 msgid "Verify my email"
@@ -7979,11 +7951,7 @@ msgstr "Configurações de vídeo"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:93
 msgid "Video: {0}"
-msgstr ""
-
-#: src/view/com/composer/videos/state.ts:27
-#~ msgid "Videos cannot be larger than 50MB"
-#~ msgstr "Vídeos não podem ter mais de 100 MB"
+msgstr "Vídeo: {0}"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:65
 #: src/view/com/composer/videos/VideoPreview.web.tsx:44
@@ -8101,7 +8069,7 @@ msgstr "Estimamos que sua conta estará pronta em mais ou menos {estimatedTime}.
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:98
 msgid "We have sent another verification email to <0>{0}</0>."
-msgstr ""
+msgstr "Enviamos outro e-mail de verificação para <0>{0}</0>."
 
 #: src/screens/Onboarding/StepFinished.tsx:238
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
