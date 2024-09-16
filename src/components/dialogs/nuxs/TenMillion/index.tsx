@@ -90,9 +90,11 @@ function Frame({children}: {children: React.ReactNode}) {
 export function TenMillion({
   showTimeout,
   onClose,
+  onFallback,
 }: {
   showTimeout?: number
   onClose?: () => void
+  onFallback?: () => void
 }) {
   const agent = useAgent()
   const nuxDialogs = useNuxDialogContext()
@@ -126,6 +128,7 @@ export function TenMillion({
         } else {
           // should be rare
           nuxDialogs.dismissActiveNux()
+          onFallback?.()
         }
       }
     }
@@ -134,6 +137,7 @@ export function TenMillion({
       fetching.current = true
       networkRetry(3, fetchUserNumber).catch(() => {
         nuxDialogs.dismissActiveNux()
+        onFallback?.()
       })
     }
   }, [
@@ -142,6 +146,7 @@ export function TenMillion({
     setUserNumber,
     nuxDialogs.dismissActiveNux,
     nuxDialogs,
+    onFallback,
   ])
 
   return userNumber ? (
