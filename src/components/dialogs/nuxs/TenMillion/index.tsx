@@ -87,7 +87,15 @@ function Frame({children}: {children: React.ReactNode}) {
   )
 }
 
-export function TenMillion() {
+export function TenMillion({
+  showTimeout,
+  onClose,
+  onFallback,
+}: {
+  showTimeout?: number
+  onClose?: () => void
+  onFallback?: () => void
+}) {
   const agent = useAgent()
   const nuxDialogs = useNuxDialogContext()
   const [userNumber, setUserNumber] = React.useState<number>(0)
@@ -120,7 +128,11 @@ export function TenMillion() {
         } else {
           // should be rare
           nuxDialogs.dismissActiveNux()
+          onFallback?.()
         }
+      } else {
+        nuxDialogs.dismissActiveNux()
+        onFallback?.()
       }
     }
 
@@ -128,6 +140,7 @@ export function TenMillion() {
       fetching.current = true
       networkRetry(3, fetchUserNumber).catch(() => {
         nuxDialogs.dismissActiveNux()
+        onFallback?.()
       })
     }
   }, [
@@ -136,12 +149,27 @@ export function TenMillion() {
     setUserNumber,
     nuxDialogs.dismissActiveNux,
     nuxDialogs,
+    onFallback,
   ])
 
-  return userNumber ? <TenMillionInner userNumber={userNumber} /> : null
+  return userNumber ? (
+    <TenMillionInner
+      userNumber={userNumber}
+      showTimeout={showTimeout ?? 3e3}
+      onClose={onClose}
+    />
+  ) : null
 }
 
-export function TenMillionInner({userNumber}: {userNumber: number}) {
+export function TenMillionInner({
+  userNumber,
+  showTimeout,
+  onClose: onCloseOuter,
+}: {
+  userNumber: number
+  showTimeout: number
+  onClose?: () => void
+}) {
   const t = useTheme()
   const lightTheme = useTheme('light')
   const {_, i18n} = useLingui()
@@ -184,14 +212,15 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
   React.useEffect(() => {
     const timeout = setTimeout(() => {
       control.open()
-    }, 3e3)
+    }, showTimeout)
     return () => {
       clearTimeout(timeout)
     }
-  }, [control])
+  }, [control, showTimeout])
   const onClose = React.useCallback(() => {
     nuxDialogs.dismissActiveNux()
-  }, [nuxDialogs])
+    onCloseOuter?.()
+  }, [nuxDialogs, onCloseOuter])
 
   /*
    * Actions
@@ -617,9 +646,12 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
                 a.gap_md,
                 a.pt_xl,
               ]}>
-              <Text style={[a.text_md, a.italic, t.atoms.text_contrast_medium]}>
-                <Trans>Brag a little!</Trans>
-              </Text>
+              {gtMobile && (
+                <Text
+                  style={[a.text_md, a.italic, t.atoms.text_contrast_medium]}>
+                  <Trans>Brag a little!</Trans>
+                </Text>
+              )}
 
               <Button
                 disabled={isLoadingImage}
