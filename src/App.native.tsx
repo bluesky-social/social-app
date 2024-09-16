@@ -10,7 +10,7 @@ import {
   initialWindowMetrics,
   SafeAreaProvider,
 } from 'react-native-safe-area-context'
-import * as SplashScreen from 'expo-splash-screen'
+// import * as SplashScreen from 'expo-splash-screen'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -61,20 +61,20 @@ import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
 import {Provider as PortalProvider} from '#/components/Portal'
-import {Splash} from '#/Splash'
+// import {Splash} from '#/Splash'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 
-SplashScreen.preventAutoHideAsync()
+// SplashScreen.preventAutoHideAsync()
 
 function InnerApp() {
-  const [isReady, setIsReady] = React.useState(false)
+  const [_isReady, setIsReady] = React.useState(false)
   const {currentAccount} = useSession()
   const {resumeSession} = useSessionApi()
   const theme = useColorModeTheme()
   const {_} = useLingui()
 
   useIntentHandler()
-  const hasCheckedReferrer = useStarterPackEntry()
+  useStarterPackEntry()
 
   // init
   useEffect(() => {
@@ -108,47 +108,46 @@ function InnerApp() {
   return (
     <Alf theme={theme}>
       <ThemeProvider theme={theme}>
-        <Splash isReady={isReady && hasCheckedReferrer}>
-          <RootSiblingParent>
-            <VideoVolumeProvider>
-              <React.Fragment
-                // Resets the entire tree below when it changes:
-                key={currentAccount?.did}>
-                <QueryProvider currentDid={currentAccount?.did}>
-                  <StatsigProvider>
-                    <MessagesProvider>
-                      {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                      <LabelDefsProvider>
-                        <ModerationOptsProvider>
-                          <LoggedOutViewProvider>
-                            <SelectedFeedProvider>
-                              <HiddenRepliesProvider>
-                                <UnreadNotifsProvider>
-                                  <BackgroundNotificationPreferencesProvider>
-                                    <MutedThreadsProvider>
-                                      <ProgressGuideProvider>
-                                        <GestureHandlerRootView
-                                          style={s.h100pct}>
-                                          <TestCtrls />
-                                          <Shell />
-                                          <NuxDialogs />
-                                        </GestureHandlerRootView>
-                                      </ProgressGuideProvider>
-                                    </MutedThreadsProvider>
-                                  </BackgroundNotificationPreferencesProvider>
-                                </UnreadNotifsProvider>
-                              </HiddenRepliesProvider>
-                            </SelectedFeedProvider>
-                          </LoggedOutViewProvider>
-                        </ModerationOptsProvider>
-                      </LabelDefsProvider>
-                    </MessagesProvider>
-                  </StatsigProvider>
-                </QueryProvider>
-              </React.Fragment>
-            </VideoVolumeProvider>
-          </RootSiblingParent>
-        </Splash>
+        {/*<Splash isReady={isReady && hasCheckedReferrer}>*/}
+        <RootSiblingParent>
+          <VideoVolumeProvider>
+            <React.Fragment
+              // Resets the entire tree below when it changes:
+              key={currentAccount?.did}>
+              <QueryProvider currentDid={currentAccount?.did}>
+                <StatsigProvider>
+                  <MessagesProvider>
+                    {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                    <LabelDefsProvider>
+                      <ModerationOptsProvider>
+                        <LoggedOutViewProvider>
+                          <SelectedFeedProvider>
+                            <HiddenRepliesProvider>
+                              <UnreadNotifsProvider>
+                                <BackgroundNotificationPreferencesProvider>
+                                  <MutedThreadsProvider>
+                                    <ProgressGuideProvider>
+                                      <GestureHandlerRootView style={s.h100pct}>
+                                        <TestCtrls />
+                                        <Shell />
+                                        <NuxDialogs />
+                                      </GestureHandlerRootView>
+                                    </ProgressGuideProvider>
+                                  </MutedThreadsProvider>
+                                </BackgroundNotificationPreferencesProvider>
+                              </UnreadNotifsProvider>
+                            </HiddenRepliesProvider>
+                          </SelectedFeedProvider>
+                        </LoggedOutViewProvider>
+                      </ModerationOptsProvider>
+                    </LabelDefsProvider>
+                  </MessagesProvider>
+                </StatsigProvider>
+              </QueryProvider>
+            </React.Fragment>
+          </VideoVolumeProvider>
+        </RootSiblingParent>
+        {/*</Splash>*/}
       </ThemeProvider>
     </Alf>
   )

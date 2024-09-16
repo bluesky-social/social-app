@@ -19298,7 +19298,7 @@ react-native-keyboard-controller@^1.13.4:
   resolved "https://registry.yarnpkg.com/react-native-keyboard-controller/-/react-native-keyboard-controller-1.13.4.tgz#0f85ac2a1b594fd65283d98cb044f331ab598ec5"
   integrity sha512-80unzD4S+ybgYOluhdeV4zV62ejg6Jt0l5iw7PuA1y3aM1a1+5tS2WoHLNk8605oDaGcVLGNMNF0Qv4GWe97Bg==
 
-react-native-mmkv@^3.:
+react-native-mmkv@3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/react-native-mmkv/-/react-native-mmkv-3.0.2.tgz#c6376678d33d51a5ace3285c8bbcb5cb613c2741"
   integrity sha512-zd+n5qLDy8Ptcj+ZIVa/pkGgL13X/8xFId3o4Ec9TpQVjM3BJaIszNc8jo6UF7dtndtVcvLDoBWBkkYmkpdTYA==
@@ -19347,10 +19347,10 @@ react-native-reanimated@^3.15.2:
     convert-source-map "^2.0.0"
     invariant "^2.2.4"
 
-react-native-root-siblings@^4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/react-native-root-siblings/-/react-native-root-siblings-4.1.1.tgz#b7742db7634a87f507eb99a5fd699c4f10c46ab0"
-  integrity sha512-sdmLElNs5PDWqmZmj4/aNH4anyxreaPm61c4ZkRiR8SO/GzLg6KjAbb0e17RmMdnBdD0AIQbS38h/l55YKN4ZA==
+react-native-root-siblings@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-root-siblings/-/react-native-root-siblings-5.0.1.tgz#97e050e5155228f65810fb1c466ff8e769c5272c"
+  integrity sha512-Ay3k/fBj6ReUkWX5WNS+oEAcgPLEGOK8n7K/L7D85mf3xvd8rm/b4spsv26E4HlFzluVx5HKbxEt9cl0wQ1u3g==
 
 react-native-safe-area-context@^4.11.0:
   version "4.11.0"
@@ -19391,10 +19391,10 @@ react-native-uuid@^2.0.2:
   resolved "https://registry.yarnpkg.com/react-native-uuid/-/react-native-uuid-2.0.2.tgz#3da192e342ef35ee95a7def676ab41c1256dfd66"
   integrity sha512-5ypj/hV58P+6VREdjkW0EudSibsH3WdqDERoHKnD9syFWjF+NfRWWrJb2sa3LIwI5zpzMvUiabs+DX40WHpEMw==
 
-react-native-view-shot@^3.8.0:
-  version "3.8.0"
-  resolved "https://registry.yarnpkg.com/react-native-view-shot/-/react-native-view-shot-3.8.0.tgz#1aa1905f0e79428ca32bf80c16fd4abc719c600b"
-  integrity sha512-4cU8SOhMn3YQIrskh+5Q8VvVRxQOu8/s1M9NAL4z5BY1Rm0HXMWkQJ4N0XsZ42+Yca+y86ISF3LC5qdLPvPuiA==
+react-native-view-shot@^4.0.0-alpha.3:
+  version "4.0.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/react-native-view-shot/-/react-native-view-shot-4.0.0-alpha.3.tgz#f119291b40c92f54a31642ca5f64de9dac0b4746"
+  integrity sha512-o0KVgC6XZqWmLUKVc4q6Ev1QW1kA4g/TF45wj8CgYS13wJuWYJ+nPGCHT9C2jvX/L65mtTollKXp2L8hbDnelg==
   dependencies:
     html2canvas "^1.4.1"
 
