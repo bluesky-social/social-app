@@ -183,11 +183,6 @@ export function Controls({
     setSubtitlesEnabled(!subtitlesEnabled)
   }, [drawFocus, setSubtitlesEnabled, subtitlesEnabled])
 
-  const onPressMute = useCallback(() => {
-    drawFocus()
-    toggleMute()
-  }, [drawFocus, toggleMute])
-
   const onPressFullscreen = useCallback(() => {
     drawFocus()
     toggleFullscreen()
@@ -396,7 +391,7 @@ export function Controls({
             muted={muted}
             volume={volume}
             changeVolume={changeVolume}
-            onMute={onPressMute}
+            toggleMute={toggleMute}
             hovered={volumeHovered}
             onHover={onVolumeHover}
             onEndHover={onVolumeEndHover}

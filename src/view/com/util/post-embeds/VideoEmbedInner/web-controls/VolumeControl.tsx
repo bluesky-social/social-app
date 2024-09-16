@@ -10,7 +10,7 @@ import {ControlButton} from './ControlButton'
 
 export function VolumeControl({
   muted,
-  onMute,
+  toggleMute,
   volume,
   changeVolume,
   hovered,
@@ -21,7 +21,7 @@ export function VolumeControl({
   muted: boolean
   volume: number
   changeVolume: (volume: number) => void
-  onMute: () => void
+  toggleMute: () => void
   hovered: boolean
   onHover: () => void
   onEndHover: () => void
@@ -30,12 +30,25 @@ export function VolumeControl({
   const {_} = useLingui()
 
   const onVolumeChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    (evt: React.ChangeEvent<HTMLInputElement>) => {
       drawFocus()
-      changeVolume(sliderVolumeToVideoVolume(Number(e.target.value)))
+      const vol = sliderVolumeToVideoVolume(Number(evt.target.value))
+      if ((muted && vol !== 0) || (!muted && vol === 0)) toggleMute()
+      changeVolume(vol)
     },
-    [changeVolume, drawFocus],
+    [changeVolume, drawFocus, muted, toggleMute],
   )
+
+  const sliderVolume = muted ? 0 : videoVolumeToSliderVolume(volume)
+
+  const isZeroVolume = volume === 0
+  const onPressMute = useCallback(() => {
+    drawFocus()
+    if (isZeroVolume) {
+      changeVolume(1)
+    }
+    toggleMute()
+  }, [drawFocus, changeVolume, isZeroVolume, toggleMute])
 
   return (
     <View
@@ -58,7 +71,7 @@ export function VolumeControl({
               type="range"
               min={0}
               max={100}
-              value={videoVolumeToSliderVolume(volume)}
+              value={sliderVolume}
               style={{height: '100%'}}
               onChange={onVolumeChange}
               // @ts-expect-error for old versions of firefox -sfn
@@ -68,12 +81,12 @@ export function VolumeControl({
         </View>
       )}
       <ControlButton
-        active={muted}
+        active={muted || volume === 0}
         activeLabel={_(msg({message: `Unmute`, context: 'video'}))}
         inactiveLabel={_(msg({message: `Mute`, context: 'video'}))}
         activeIcon={MuteIcon}
         inactiveIcon={UnmuteIcon}
-        onPress={onMute}
+        onPress={onPressMute}
       />
     </View>
   )
