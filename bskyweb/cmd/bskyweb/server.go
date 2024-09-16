@@ -448,12 +448,18 @@ func (srv *Server) WebPost(c echo.Context) error {
 				thumbUrls = append(thumbUrls, postView.Embed.EmbedImages_View.Images[i].Thumb)
 			}
 			data["imgThumbUrls"] = thumbUrls
-		} else if postView.Embed.EmbedRecordWithMedia_View != nil && postView.Embed.EmbedRecordWithMedia_View.Media != nil && postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View != nil {
-			var thumbUrls []string
-			for i := range postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View.Images {
-				thumbUrls = append(thumbUrls, postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View.Images[i].Thumb)
+		} else if postView.Embed.EmbedVideo_View != nil {
+			data["videoUrl"] = postView.Embed.EmbedVideo_View.Playlist
+		} else if postView.Embed.EmbedRecordWithMedia_View != nil && postView.Embed.EmbedRecordWithMedia_View.Media != nil {
+			if postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View != nil {
+				var thumbUrls []string
+				for i := range postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View.Images {
+					thumbUrls = append(thumbUrls, postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View.Images[i].Thumb)
+				}
+				data["imgThumbUrls"] = thumbUrls
+			} else if postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View != nil {
+				data["videoUrl"] = postView.Embed.EmbedRecordWithMedia_View.Media.EmbedVideo_View.Playlist
 			}
-			data["imgThumbUrls"] = thumbUrls
 		}
 	}
 
