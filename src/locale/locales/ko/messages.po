@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-16 00:35+0900\n"
+"PO-Revision-Date: 2024-09-17 00:08+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -873,7 +873,7 @@ msgstr "이미지 흐리게 및 피드에서 필터링"
 msgid "Books"
 msgstr "책"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:614
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:621
 msgid "Brag a little!"
 msgstr "자랑해 보세요!"
 
@@ -1016,7 +1016,7 @@ msgstr "자막(.vtt)"
 msgid "Captions & alt text"
 msgstr "자막 및 대체 텍스트"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:368
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:369
 msgid "Celebrating {0} users"
 msgstr "사용자 {0}명 축하하기"
 
@@ -1895,7 +1895,7 @@ msgstr "Bluesky 다운로드"
 msgid "Download CAR file"
 msgstr "CAR 파일 다운로드"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:622
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:629
 msgid "Download image"
 msgstr "이미지 다운로드"
 
@@ -3133,7 +3133,7 @@ msgstr "Bluesky 가입하기"
 msgid "Join the conversation"
 msgstr "대화에 참여하기"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:492
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:498
 msgid "Joined {0}"
 msgstr "{0}에 가입함"
 
@@ -3601,10 +3601,10 @@ msgid "Music"
 msgstr "음악"
 
 #: src/components/TagMenu/index.tsx:263
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:163
 msgid "Mute"
 msgstr "뮤트"
 
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:166
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:389
 msgctxt "video"
 msgid "Mute"
@@ -3677,10 +3677,6 @@ msgstr "스레드 뮤트"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:483
 msgid "Mute words & tags"
 msgstr "단어 및 태그 뮤트"
-
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
-#~ msgid "Muted"
-#~ msgstr "뮤트됨"
 
 #: src/screens/Moderation/index.tsx:264
 msgid "Muted accounts"
@@ -3894,6 +3890,11 @@ msgstr "인기 GIF를 찾을 수 없습니다. Tenor에 문제가 있을 수 있
 msgid "No feeds found. Try searching for something else."
 msgstr "피드를 찾을 수 없습니다. 다른 피드를 검색해 보세요."
 
+#: src/components/LikedByList.tsx:78
+#: src/view/com/post-thread/PostLikedBy.tsx:85
+msgid "No likes yet"
+msgstr "아직 좋아요 없음"
+
 #: src/components/ProfileCard.tsx:336
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:116
 msgid "No longer following {0}"
@@ -3929,6 +3930,14 @@ msgstr "이 게시물은 작성자 외에는 누구도 인용할 수 없습니�
 #: src/screens/Profile/Sections/Feed.tsx:64
 msgid "No posts yet."
 msgstr "아직 게시물이 없습니다."
+
+#: src/view/com/post-thread/PostQuotes.tsx:106
+msgid "No quotes yet"
+msgstr "아직 인용 없음"
+
+#: src/view/com/post-thread/PostRepostedBy.tsx:78
+msgid "No reposts yet"
+msgstr "아직 재게시 없음"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:101
 #: src/view/com/composer/text-input/web/Autocomplete.tsx:195
@@ -3968,10 +3977,19 @@ msgstr "사용하지 않음"
 msgid "Nobody"
 msgstr "없음"
 
-#: src/components/LikedByList.tsx:79
+#: src/components/LikedByList.tsx:80
 #: src/components/LikesDialog.tsx:99
+#: src/view/com/post-thread/PostLikedBy.tsx:87
 msgid "Nobody has liked this yet. Maybe you should be the first!"
 msgstr "아직 아무도 좋아요를 누르지 않았습니다. 첫 번째가 되어 보세요!"
+
+#: src/view/com/post-thread/PostQuotes.tsx:108
+msgid "Nobody has quoted this yet. Maybe you should be the first!"
+msgstr "아직 아무도 인용하지 않았습니다. 첫 번째가 되어 보세요!"
+
+#: src/view/com/post-thread/PostRepostedBy.tsx:80
+msgid "Nobody has reposted this yet. Maybe you should be the first!"
+msgstr "아직 아무도 재게시하지 않았습니다. 첫 번째가 되어 보세요!"
 
 #: src/screens/StarterPack/Wizard/StepProfiles.tsx:103
 msgid "Nobody was found. Try searching for someone else."
@@ -5674,7 +5692,7 @@ msgstr "성행위 또는 선정적인 노출."
 msgid "Sexually Suggestive"
 msgstr "외설적"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:644
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:651
 #: src/components/StarterPack/QrCodeDialog.tsx:177
 #: src/screens/StarterPack/StarterPackScreen.tsx:411
 #: src/screens/StarterPack/StarterPackScreen.tsx:582
@@ -5711,11 +5729,11 @@ msgstr "무시하고 공유"
 msgid "Share feed"
 msgstr "피드 공유"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:621
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:628
 msgid "Share image externally"
 msgstr "외부로 이미지 공유"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:639
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:646
 msgid "Share image in post"
 msgstr "게시물로 이미지 공유"
 
@@ -6163,7 +6181,7 @@ msgstr "탭하여 전체화면으로 보기"
 msgid "Tap to play or pause"
 msgstr "탭하여 재생/일시 정지"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:164
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
 msgid "Tap to toggle sound"
 msgstr "탭하여 소리 켜기/끄기"
 
@@ -6193,7 +6211,7 @@ msgstr "농담해 보세요!"
 msgid "Tell us a little more"
 msgstr "좀 더 자세히 알려주세요"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:518
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:524
 msgid "Ten Million"
 msgstr "천만 명"
 
@@ -6230,7 +6248,7 @@ msgstr "텍스트 입력 필드"
 msgid "Thank you. Your report has been sent."
 msgstr "감사합니다. 신고를 전송했습니다."
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:593
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:600
 msgid "Thanks for being one of our first 10 million users."
 msgstr "사용자 천만 명 중 한 명이 되어 주셔서 감사합니다."
 
@@ -6255,7 +6273,7 @@ msgstr "이 핸들은 이미 사용 중입니다."
 msgid "That starter pack could not be found."
 msgstr "스타터 팩을 찾을 수 없습니다."
 
-#: src/view/com/post-thread/PostQuotes.tsx:127
+#: src/view/com/post-thread/PostQuotes.tsx:133
 msgid "That's all, folks!"
 msgstr "이상입니다, 여러분!"
 
@@ -6664,7 +6682,7 @@ msgstr "Bluesky에 동영상을 업로드하려면 먼저 이메일을 인증해
 msgid "To whom would you like to send this report?"
 msgstr "이 신고를 누구에게 보내시겠습니까?"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:597
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:604
 msgid "Together, we're rebuilding the social internet. We're glad you're here."
 msgstr "우리는 함께 소셜 인터넷을 재건하고 있습니다. 함께해 주셔서 감사합니다."
 
@@ -6792,11 +6810,11 @@ msgid "Unlike this feed"
 msgstr "이 피드 좋아요 취소"
 
 #: src/components/TagMenu/index.tsx:263
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:163
 #: src/view/screens/ProfileList.tsx:689
 msgid "Unmute"
 msgstr "언뮤트"
 
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:165
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:388
 msgctxt "video"
 msgid "Unmute"
@@ -6827,10 +6845,6 @@ msgstr "스레드 언뮤트"
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:317
 msgid "Unmute video"
 msgstr "동영상 음소거 해제"
-
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
-#~ msgid "Unmuted"
-#~ msgstr "음소거 해제됨"
 
 #: src/view/screens/ProfileFeed.tsx:292
 #: src/view/screens/ProfileList.tsx:673
