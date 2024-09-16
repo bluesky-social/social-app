@@ -55,10 +55,27 @@ const schema = z.object({
     lastEmailConfirm: z.string().optional(),
   }),
   languagePrefs: z.object({
+    /**
+     * Used as the target for translations.
+     */
     primaryLanguage: z.string(), // should move to server
+    /**
+     * The languages the user can read, passed to feeds.
+     */
     contentLanguages: z.array(z.string()), // should move to server
+    /**
+     * The language the user is currently posting in, configured within the
+     * composer.
+     */
     postLanguage: z.string(), // should move to server
+    /**
+     * The user's post language history, used to pre-populate the post language
+     * selector in the composer.
+     */
     postLanguageHistory: z.array(z.string()),
+    /**
+     * The language for all UI translations in the app.
+     */
     appLanguage: z.string(),
   }),
   requireAltTextEnabled: z.boolean(), // should move to server
