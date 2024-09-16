@@ -19,7 +19,7 @@ let _state: Schema = defaults
 export async function init() {
   const stored = await readFromStorage()
   if (stored) {
-    _state = stored
+    _state = normalizeData(stored)
   }
 }
 init satisfies PersistedApi['init']
@@ -33,10 +33,10 @@ export async function write<K extends keyof Schema>(
   key: K,
   value: Schema[K],
 ): Promise<void> {
-  _state = {
+  _state = normalizeData({
     ..._state,
     [key]: value,
-  }
+  })
   await writeToStorage(_state)
 }
 write satisfies PersistedApi['write']
@@ -83,4 +83,42 @@ async function readFromStorage(): Promise<Schema | undefined> {
   if (rawData) {
     return tryParse(rawData)
   }
+}
+
+function normalizeData(data: Schema) {
+  /**
+   * Normalize language prefs to ensure that these values only contain 2-letter
+   * country codes without region.
+   */
+  try {
+    const next = {...data.languagePrefs}
+    next.primaryLanguage = next.primaryLanguage.split('-')[0]
+    next.contentLanguages = next.contentLanguages.map(lang =>
+      normalizeLocaleToTwoLetterCode(lang),
+    )
+    next.postLanguage = next.postLanguage
+      .split(',')
+      .map(lang => normalizeLocaleToTwoLetterCode(lang))
+      .filter(Boolean)
+      .join(',')
+    next.postLanguageHistory = next.postLanguageHistory.map(postLanguage => {
+      return postLanguage
+        .split(',')
+        .map(lang => normalizeLocaleToTwoLetterCode(lang))
+        .filter(Boolean)
+        .join(',')
+    })
+    // mutate last in case anything above fails
+    data.languagePrefs = next
+  } catch (e: any) {
+    logger.error(`persisted state: failed to normalize language prefs`, {
+      safeMessage: e.message,
+    })
+  }
+
+  return data
+}
+
+function normalizeLocaleToTwoLetterCode(lang: string) {
+  return lang.split('-')[0]
 }
