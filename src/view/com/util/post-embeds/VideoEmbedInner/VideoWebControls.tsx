@@ -259,6 +259,7 @@ export function Controls({
       if (evt.pointerType !== 'mouse' && !hovered) {
         evt.preventDefault()
       }
+      clearTimeout(timeoutRef.current)
     },
     [hovered],
   )
