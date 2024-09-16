@@ -62,7 +62,7 @@ function MutedWordsInner() {
   const [excludeFollowing, setExcludeFollowing] = React.useState(false)
 
   const submit = React.useCallback(async () => {
-  // Divide a entrada em várias palavras, removendo espaços extras
+  // Split the input into multiple words or phrases, trimming extra spaces
   const words = field.split(',').map(word => sanitizeMutedWordValue(word.trim()));
   
   const surfaces = ['tag', targets.includes('content') && 'content'].filter(
@@ -82,7 +82,7 @@ function MutedWordsInner() {
     duration = new Date(now + 30 * ONE_DAY).toISOString();
   }
 
-  // Verifica se há palavras válidas
+  // Validate if the entered words are valid
   if (words.some(word => !word || !surfaces.length)) {
     setField('');
     setError(_(msg`Please enter valid words, tags, or phrases to mute`));
@@ -90,7 +90,7 @@ function MutedWordsInner() {
   }
 
   try {
-    // Envia todas as palavras
+    // Submit all words for muting
     await addMutedWord(
       words.map(word => ({
         value: word,
@@ -99,7 +99,7 @@ function MutedWordsInner() {
         expiresAt: duration,
       }))
     );
-    setField(''); // Limpa o campo de entrada
+    setField(''); // Clear the input field after submission
   } catch (e: any) {
     logger.error(`Failed to save muted words`, { message: e.message });
     setError(e.message);
