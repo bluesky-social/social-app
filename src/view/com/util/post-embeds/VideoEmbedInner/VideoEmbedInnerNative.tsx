@@ -7,7 +7,6 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_30} from '#/lib/constants'
-import {clamp} from '#/lib/numbers'
 import {useAutoplayDisabled} from '#/state/preferences'
 import {useVideoMuteState} from 'view/com/util/post-embeds/VideoVolumeContext'
 import {atoms as a, useTheme} from '#/alf'
@@ -54,16 +53,8 @@ export const VideoEmbedInnerNative = React.forwardRef(
       throw new Error(error)
     }
 
-    let aspectRatio = 16 / 9
-
-    if (embed.aspectRatio) {
-      const {width, height} = embed.aspectRatio
-      aspectRatio = width / height
-      aspectRatio = clamp(aspectRatio, 1 / 1, 3 / 1)
-    }
-
     return (
-      <View style={[a.flex_1, a.relative, {aspectRatio}]}>
+      <View style={[a.flex_1, a.relative]}>
         <BlueskyVideoView
           url={embed.playlist}
           autoplay={!autoplayDisabled && !isWithinMessage}
