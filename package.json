@@ -52,7 +52,7 @@
     "open-analyzer": "EXPO_PUBLIC_OPEN_ANALYZER=1 yarn build-web"
   },
   "dependencies": {
-    "@atproto/api": "0.13.6",
+    "@atproto/api": "0.13.7",
     "@bam.tech/react-native-image-resizer": "^3.0.10",
     "@braintree/sanitize-url": "^6.0.2",
     "@gorhom/bottom-sheet": "5.0.0-alpha.11",
