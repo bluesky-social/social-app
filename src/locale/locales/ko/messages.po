@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-06 14:25+0900\n"
+"PO-Revision-Date: 2024-09-17 00:08+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -544,7 +544,7 @@ msgstr "동영상을 불러오는 동안 오류가 발생했습니다. 다시 �
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:250
 msgid "An error occurred while saving the image!"
-msgstr ""
+msgstr "이미지를 저장하는 동안 오류가 발생했습니다"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:71
 #: src/components/StarterPack/ShareDialog.tsx:79
@@ -850,7 +850,7 @@ msgstr "Bluesky는 친구와 함께하면 더 좋답니다!"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:206
 msgid "Bluesky now has over 10 million users, and I was #{0}!"
-msgstr ""
+msgstr "Bluesky는 현재 천만 명이 넘는 사용자를 보유하고 있으며, 나는 {0}번째였습니다!"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:282
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
@@ -873,9 +873,9 @@ msgstr "이미지 흐리게 및 피드에서 필터링"
 msgid "Books"
 msgstr "책"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:614
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:621
 msgid "Brag a little!"
-msgstr ""
+msgstr "자랑해 보세요!"
 
 #: src/components/FeedInterstitials.tsx:350
 msgid "Browse more accounts on the Explore page"
@@ -1016,9 +1016,9 @@ msgstr "자막(.vtt)"
 msgid "Captions & alt text"
 msgstr "자막 및 대체 텍스트"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:368
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:369
 msgid "Celebrating {0} users"
-msgstr ""
+msgstr "사용자 {0}명 축하하기"
 
 #: src/view/com/modals/VerifyEmail.tsx:160
 msgid "Change"
@@ -1098,14 +1098,6 @@ msgstr "이메일에서 로그인 코드를 확인한 후 여기에 입력하세
 #: src/view/com/modals/DeleteAccount.tsx:231
 msgid "Check your inbox for an email with the confirmation code to enter below:"
 msgstr "받은 편지함에서 아래에 입력할 인증 코드가 포함된 이메일이 있는지 확인하세요."
-
-#: src/screens/Onboarding/StepInterests/index.tsx:191
-#~ msgid "Choose 3 or more:"
-#~ msgstr "3개 이상 선택하세요."
-
-#: src/screens/Onboarding/StepInterests/index.tsx:326
-#~ msgid "Choose at least {0} more"
-#~ msgstr "최소 {0}개 이상 선택하세요"
 
 #: src/screens/StarterPack/Wizard/index.tsx:190
 msgid "Choose Feeds"
@@ -1818,10 +1810,6 @@ msgstr "새 피드 발견하기"
 msgid "Discover New Feeds"
 msgstr "새 피드 발견하기"
 
-#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:108
-#~ msgid "Dismiss"
-#~ msgstr "닫기"
-
 #: src/view/com/composer/Composer.tsx:1107
 msgid "Dismiss error"
 msgstr "오류 무시"
@@ -1907,9 +1895,9 @@ msgstr "Bluesky 다운로드"
 msgid "Download CAR file"
 msgstr "CAR 파일 다운로드"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:622
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:629
 msgid "Download image"
-msgstr ""
+msgstr "이미지 다운로드"
 
 #: src/view/com/composer/text-input/TextInput.web.tsx:269
 msgid "Drop to add images"
@@ -2073,7 +2061,7 @@ msgstr "이메일 주소"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:95
 msgid "Email Resent"
-msgstr ""
+msgstr "이메일 다시 전송됨"
 
 #: src/view/com/modals/ChangeEmail.tsx:54
 #: src/view/com/modals/ChangeEmail.tsx:83
@@ -2086,11 +2074,11 @@ msgstr "이메일 변경됨"
 
 #: src/view/com/modals/VerifyEmail.tsx:85
 msgid "Email verified"
-msgstr "이메일 확인됨"
+msgstr "이메일 인증됨"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:71
 msgid "Email Verified"
-msgstr ""
+msgstr "이메일 인증됨"
 
 #: src/view/screens/Settings/index.tsx:319
 msgid "Email:"
@@ -2152,7 +2140,7 @@ msgstr "피드 끝"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:161
 msgid "Ensure you have selected a language for each subtitle file."
-msgstr ""
+msgstr "각 자막 파일에 대한 언어를 선택했는지 확인하세요."
 
 #: src/view/com/modals/AddAppPasswords.tsx:161
 msgid "Enter a name for this App Password"
@@ -2554,13 +2542,13 @@ msgstr "계정 팔로우"
 msgid "Follow all"
 msgstr "모두 팔로우"
 
-#: src/view/com/profile/FollowButton.tsx:79
-msgctxt "action"
-msgid "Follow Back"
-msgstr ""
-
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:223
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:142
+msgid "Follow Back"
+msgstr "맞팔로우"
+
+#: src/view/com/profile/FollowButton.tsx:79
+msgctxt "action"
 msgid "Follow Back"
 msgstr "맞팔로우"
 
@@ -2922,7 +2910,7 @@ msgstr "검토 서비스를 불러올 수 없습니다."
 
 #: src/state/queries/video/video.ts:165
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
-msgstr ""
+msgstr "잠깐! 동영상에 대한 접근 권한이 점차적으로 제공되고 있지만 아직은 기다려야 합니다. 나중에 다시 확인해 주세요!"
 
 #: src/Navigation.tsx:550
 #: src/Navigation.tsx:570
@@ -2977,7 +2965,7 @@ msgstr "아무것도 선택하지 않으면 모든 연령대에 적합하다는 
 
 #: src/screens/Signup/StepInfo/Policies.tsx:89
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
-msgstr "해당 국가의 법률에 따라 아직 성인이 아닌 경우, 부모 또는 법적 보호자가 대신 이 약관을 읽어야 합니다."
+msgstr "해당 국가의 법률에 따라 아직 성인이 아닌 경우 부모 또는 법적 보호자가 대신 이 약관을 읽어야 합니다."
 
 #: src/view/screens/ProfileList.tsx:720
 msgid "If you delete this list, you won't be able to recover it."
@@ -3088,7 +3076,7 @@ msgstr "잘못된 사용자 이름 또는 비밀번호"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:82
 msgid "Invalid Verification Code"
-msgstr ""
+msgstr "잘못된 인증 코드"
 
 #: src/view/com/modals/InviteCodes.tsx:94
 msgid "Invite a Friend"
@@ -3145,9 +3133,9 @@ msgstr "Bluesky 가입하기"
 msgid "Join the conversation"
 msgstr "대화에 참여하기"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:492
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:498
 msgid "Joined {0}"
-msgstr ""
+msgstr "{0}에 가입함"
 
 #: src/screens/Onboarding/index.tsx:21
 #: src/screens/Onboarding/state.ts:89
@@ -3612,15 +3600,15 @@ msgstr "영화"
 msgid "Music"
 msgstr "음악"
 
+#: src/components/TagMenu/index.tsx:263
+msgid "Mute"
+msgstr "뮤트"
+
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:166
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:389
 msgctxt "video"
 msgid "Mute"
-msgstr ""
-
-#: src/components/TagMenu/index.tsx:263
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:163
-msgid "Mute"
-msgstr "뮤트"
+msgstr "음소거"
 
 #: src/components/TagMenu/index.web.tsx:116
 msgid "Mute {truncatedTag}"
@@ -3689,10 +3677,6 @@ msgstr "스레드 뮤트"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:483
 msgid "Mute words & tags"
 msgstr "단어 및 태그 뮤트"
-
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
-#~ msgid "Muted"
-#~ msgstr "뮤트됨"
 
 #: src/screens/Moderation/index.tsx:264
 msgid "Muted accounts"
@@ -3906,6 +3890,11 @@ msgstr "인기 GIF를 찾을 수 없습니다. Tenor에 문제가 있을 수 있
 msgid "No feeds found. Try searching for something else."
 msgstr "피드를 찾을 수 없습니다. 다른 피드를 검색해 보세요."
 
+#: src/components/LikedByList.tsx:78
+#: src/view/com/post-thread/PostLikedBy.tsx:85
+msgid "No likes yet"
+msgstr "아직 좋아요 없음"
+
 #: src/components/ProfileCard.tsx:336
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:116
 msgid "No longer following {0}"
@@ -3925,7 +3914,7 @@ msgstr "더 이상 표시할 대화가 없습니다"
 
 #: src/view/com/notifications/Feed.tsx:121
 msgid "No notifications yet!"
-msgstr "아직 알림이 없습니다."
+msgstr "아직 알림이 없습니다"
 
 #: src/components/dms/MessagesNUX.tsx:149
 #: src/components/dms/MessagesNUX.tsx:152
@@ -3941,6 +3930,14 @@ msgstr "이 게시물은 작성자 외에는 누구도 인용할 수 없습니�
 #: src/screens/Profile/Sections/Feed.tsx:64
 msgid "No posts yet."
 msgstr "아직 게시물이 없습니다."
+
+#: src/view/com/post-thread/PostQuotes.tsx:106
+msgid "No quotes yet"
+msgstr "아직 인용 없음"
+
+#: src/view/com/post-thread/PostRepostedBy.tsx:78
+msgid "No reposts yet"
+msgstr "아직 재게시 없음"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:101
 #: src/view/com/composer/text-input/web/Autocomplete.tsx:195
@@ -3980,10 +3977,19 @@ msgstr "사용하지 않음"
 msgid "Nobody"
 msgstr "없음"
 
-#: src/components/LikedByList.tsx:79
+#: src/components/LikedByList.tsx:80
 #: src/components/LikesDialog.tsx:99
+#: src/view/com/post-thread/PostLikedBy.tsx:87
 msgid "Nobody has liked this yet. Maybe you should be the first!"
 msgstr "아직 아무도 좋아요를 누르지 않았습니다. 첫 번째가 되어 보세요!"
+
+#: src/view/com/post-thread/PostQuotes.tsx:108
+msgid "Nobody has quoted this yet. Maybe you should be the first!"
+msgstr "아직 아무도 인용하지 않았습니다. 첫 번째가 되어 보세요!"
+
+#: src/view/com/post-thread/PostRepostedBy.tsx:80
+msgid "Nobody has reposted this yet. Maybe you should be the first!"
+msgstr "아직 아무도 재게시하지 않았습니다. 첫 번째가 되어 보세요!"
 
 #: src/screens/StarterPack/Wizard/StepProfiles.tsx:103
 msgid "Nobody was found. Try searching for someone else."
@@ -4081,7 +4087,7 @@ msgstr "이런! 뭔가 잘못되었습니다."
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:175
 msgid "Oh no! We weren't able to generate an image for you to share. Rest assured, we're glad you're here 🦋"
-msgstr ""
+msgstr "이런! 공유할 이미지를 생성할 수 없습니다. 안심하고 방문해 주셔서 감사합니다."
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:339
 msgid "OK"
@@ -5201,15 +5207,15 @@ msgstr "이 제공자에서 필수"
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:168
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:171
 msgid "Resend email"
-msgstr "이메일 다시 보내기"
+msgstr "이메일 다시 전송"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:130
 msgid "Resend Email"
-msgstr ""
+msgstr "이메일 다시 전송"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:123
 msgid "Resend Verification Email"
-msgstr ""
+msgstr "인증 이메일 다시 전송하기"
 
 #: src/view/com/modals/ChangePassword.tsx:186
 msgid "Reset code"
@@ -5686,7 +5692,7 @@ msgstr "성행위 또는 선정적인 노출."
 msgid "Sexually Suggestive"
 msgstr "외설적"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:644
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:651
 #: src/components/StarterPack/QrCodeDialog.tsx:177
 #: src/screens/StarterPack/StarterPackScreen.tsx:411
 #: src/screens/StarterPack/StarterPackScreen.tsx:582
@@ -5723,13 +5729,13 @@ msgstr "무시하고 공유"
 msgid "Share feed"
 msgstr "피드 공유"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:621
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:628
 msgid "Share image externally"
-msgstr ""
+msgstr "외부로 이미지 공유"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:639
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:646
 msgid "Share image in post"
-msgstr ""
+msgstr "게시물로 이미지 공유"
 
 #: src/components/StarterPack/ShareDialog.tsx:124
 #: src/components/StarterPack/ShareDialog.tsx:131
@@ -5796,10 +5802,6 @@ msgstr "배지 표시"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:61
 msgid "Show badge and filter from feeds"
 msgstr "배지 표시 및 피드에서 필터링"
-
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:218
-#~ msgid "Show follows similar to {0}"
-#~ msgstr "{0} 님과 비슷한 팔로우 표시"
 
 #: src/view/com/post-thread/PostThreadShowHiddenReplies.tsx:23
 msgid "Show hidden replies"
@@ -6177,9 +6179,9 @@ msgstr "탭하여 전체화면으로 보기"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
 msgid "Tap to play or pause"
-msgstr ""
+msgstr "탭하여 재생/일시 정지"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:164
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
 msgid "Tap to toggle sound"
 msgstr "탭하여 소리 켜기/끄기"
 
@@ -6209,9 +6211,9 @@ msgstr "농담해 보세요!"
 msgid "Tell us a little more"
 msgstr "좀 더 자세히 알려주세요"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:518
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:524
 msgid "Ten Million"
-msgstr ""
+msgstr "천만 명"
 
 #: src/view/shell/desktop/RightNav.tsx:90
 msgid "Terms"
@@ -6246,13 +6248,13 @@ msgstr "텍스트 입력 필드"
 msgid "Thank you. Your report has been sent."
 msgstr "감사합니다. 신고를 전송했습니다."
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:593
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:600
 msgid "Thanks for being one of our first 10 million users."
-msgstr ""
+msgstr "사용자 천만 명 중 한 명이 되어 주셔서 감사합니다."
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:74
 msgid "Thanks, you have successfully verified your email address."
-msgstr ""
+msgstr "이메일 주소를 성공적으로 인증했습니다."
 
 #: src/view/com/modals/ChangeHandle.tsx:459
 msgid "That contains the following:"
@@ -6271,7 +6273,7 @@ msgstr "이 핸들은 이미 사용 중입니다."
 msgid "That starter pack could not be found."
 msgstr "스타터 팩을 찾을 수 없습니다."
 
-#: src/view/com/post-thread/PostQuotes.tsx:127
+#: src/view/com/post-thread/PostQuotes.tsx:133
 msgid "That's all, folks!"
 msgstr "이상입니다, 여러분!"
 
@@ -6353,7 +6355,7 @@ msgstr "서비스 이용약관을 다음으로 이동했습니다:"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:85
 msgid "The verification code you have provided is invalid. Please make sure that you have used the correct verification link or request a new one."
-msgstr ""
+msgstr "입력한 인증 코드가 올바르지 않습니다. 올바른 인증 링크를 사용했는지 확인하거나 새 인증 링크를 요청하세요."
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:86
 msgid "There is no time limit for account deactivation, come back any time."
@@ -6680,9 +6682,9 @@ msgstr "Bluesky에 동영상을 업로드하려면 먼저 이메일을 인증해
 msgid "To whom would you like to send this report?"
 msgstr "이 신고를 누구에게 보내시겠습니까?"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:597
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:604
 msgid "Together, we're rebuilding the social internet. We're glad you're here."
-msgstr ""
+msgstr "우리는 함께 소셜 인터넷을 재건하고 있습니다. 함께해 주셔서 감사합니다."
 
 #: src/view/com/util/forms/DropdownButton.tsx:255
 msgid "Toggle dropdown"
@@ -6807,16 +6809,16 @@ msgstr "계정 언팔로우"
 msgid "Unlike this feed"
 msgstr "이 피드 좋아요 취소"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:388
-msgctxt "video"
-msgid "Unmute"
-msgstr ""
-
 #: src/components/TagMenu/index.tsx:263
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:163
 #: src/view/screens/ProfileList.tsx:689
 msgid "Unmute"
 msgstr "언뮤트"
+
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:165
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:388
+msgctxt "video"
+msgid "Unmute"
+msgstr "음소거 해제"
 
 #: src/components/TagMenu/index.web.tsx:115
 msgid "Unmute {truncatedTag}"
@@ -6843,10 +6845,6 @@ msgstr "스레드 언뮤트"
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:317
 msgid "Unmute video"
 msgstr "동영상 음소거 해제"
-
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
-#~ msgid "Unmuted"
-#~ msgstr "음소거 해제됨"
 
 #: src/view/screens/ProfileFeed.tsx:292
 #: src/view/screens/ProfileList.tsx:673
@@ -7075,7 +7073,7 @@ msgstr "이메일 인증"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:61
 msgid "Verify email dialog"
-msgstr ""
+msgstr "이메일 인증 대화 상자"
 
 #: src/view/screens/Settings/index.tsx:961
 msgid "Verify my email"
@@ -7135,11 +7133,11 @@ msgstr "동영상: {0}"
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:65
 #: src/view/com/composer/videos/VideoPreview.web.tsx:44
 msgid "Videos must be less than 60 seconds long"
-msgstr ""
+msgstr "동영상 길이는 60초 미만이어야 합니다."
 
 #: src/screens/Profile/Header/Shell.tsx:113
 msgid "View {0}'s avatar"
-msgstr "{0} 님의 아바타를 봅니다"
+msgstr "{0} 님의 아바타 보기"
 
 #: src/components/ProfileCard.tsx:110
 #: src/view/com/notifications/FeedItem.tsx:273
@@ -7248,7 +7246,7 @@ msgstr "계정이 준비될 때까지 {estimatedTime}이(가) 걸릴 것으로 �
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:98
 msgid "We have sent another verification email to <0>{0}</0>."
-msgstr ""
+msgstr "<0>{0}</0>(으)로 또 다른 인증 이메일을 보냈습니다."
 
 #: src/screens/Onboarding/StepFinished.tsx:238
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
@@ -7260,7 +7258,7 @@ msgstr "팔로우한 사용자의 게시물이 부족합니다. 대신 <0/>의 �
 
 #: src/state/queries/video/video.ts:170
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
-msgstr ""
+msgstr "동영상을 업로드할 수 있는지 확인할 수 없습니다. 다시 시도해 주세요."
 
 #: src/components/dialogs/BirthDateSettings.tsx:52
 msgid "We were unable to load your birth date preferences. Please try again."
@@ -7464,7 +7462,7 @@ msgstr "대기 중입니다."
 
 #: src/state/queries/video/video.ts:161
 msgid "You are not allowed to upload videos."
-msgstr ""
+msgstr "동영상을 업로드할 수 없습니다."
 
 #: src/view/com/profile/ProfileFollows.tsx:95
 msgid "You are not following anyone."
@@ -7585,7 +7583,7 @@ msgstr "끝에 도달했습니다"
 
 #: src/state/queries/video/video-upload.shared.ts:67
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
-msgstr ""
+msgstr "일시적으로 동영상 업로드 한도에 도달했습니다. 나중에 다시 시도해 주세요."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:235
 msgid "You haven't created a starter pack yet!"
@@ -7711,11 +7709,11 @@ msgstr "피드 끝에 도달했습니다! 팔로우할 계정을 더 찾아보�
 
 #: src/state/queries/video/video.ts:175
 msgid "You've reached your daily limit for video uploads (too many bytes)"
-msgstr ""
+msgstr "동영상 업로드 일일 한도에 도달했습니다 (용량이 너무 큼)"
 
 #: src/state/queries/video/video.ts:180
 msgid "You've reached your daily limit for video uploads (too many videos)"
-msgstr ""
+msgstr "동영상 업로드 일일 한도에 도달했습니다 (동영상 수가 너무 많음)"
 
 #: src/screens/Signup/index.tsx:146
 msgid "Your account"
@@ -7727,7 +7725,7 @@ msgstr "계정을 삭제했습니다"
 
 #: src/state/queries/video/video.ts:185
 msgid "Your account is not yet old enough to upload videos. Please try again later."
-msgstr ""
+msgstr "내 계정은 아직 동영상을 업로드할 수 없습니다. 나중에 다시 시도해 주세요."
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:65
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."

@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-07 20:28+0900\n"
+"PO-Revision-Date: 2024-09-14 17:17+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -532,7 +532,7 @@ msgstr "ビデオの圧縮中にエラーが発生しました。"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:315
 msgid "An error occurred while generating your starter pack. Want to try again?"
-msgstr "スターターパックの生成中にエラーが発生しました。再度試しますか？"
+msgstr "スターターパックの生成中にエラーが発生しました。もう一度試しますか？"
 
 #: src/view/com/util/post-embeds/VideoEmbed.tsx:135
 msgid "An error occurred while loading the video. Please try again later."
@@ -544,7 +544,7 @@ msgstr "ビデオの読み込み時にエラーが発生しました。もう一
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:250
 msgid "An error occurred while saving the image!"
-msgstr ""
+msgstr "画像の保存中にエラーが発生しました！"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:71
 #: src/components/StarterPack/ShareDialog.tsx:79
@@ -850,7 +850,7 @@ msgstr "Blueskyは友達と一緒のほうが楽しい！"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:206
 msgid "Bluesky now has over 10 million users, and I was #{0}!"
-msgstr "Bluesky のユーザー数は現在 1,000 万人を超えており、私は #{0} でした。"
+msgstr "Bluesky のユーザー数は現在 1,000 万人を超えており、私は #{0} 番目でした。"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:282
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
@@ -1098,14 +1098,6 @@ msgstr "確認コードが記載されたメールを確認し、ここに入力
 #: src/view/com/modals/DeleteAccount.tsx:231
 msgid "Check your inbox for an email with the confirmation code to enter below:"
 msgstr "入力したメールアドレスの受信トレイを確認して、以下に入力するための確認コードが記載されたメールが届いていないか確認してください："
-
-#: src/screens/Onboarding/StepInterests/index.tsx:191
-#~ msgid "Choose 3 or more:"
-#~ msgstr "3つ以上選んでください："
-
-#: src/screens/Onboarding/StepInterests/index.tsx:326
-#~ msgid "Choose at least {0} more"
-#~ msgstr "少なくともさらに{0}つ選んでください"
 
 #: src/screens/StarterPack/Wizard/index.tsx:190
 msgid "Choose Feeds"
@@ -1818,10 +1810,6 @@ msgstr "新しいフィードを探す"
 msgid "Discover New Feeds"
 msgstr "新しいフィードを探す"
 
-#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:108
-#~ msgid "Dismiss"
-#~ msgstr "消す"
-
 #: src/view/com/composer/Composer.tsx:1107
 msgid "Dismiss error"
 msgstr "エラーを消す"
@@ -2073,7 +2061,7 @@ msgstr "メールアドレス"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:95
 msgid "Email Resent"
-msgstr ""
+msgstr "メール再送済"
 
 #: src/view/com/modals/ChangeEmail.tsx:54
 #: src/view/com/modals/ChangeEmail.tsx:83
@@ -2090,7 +2078,7 @@ msgstr "メールアドレスは認証されました"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:71
 msgid "Email Verified"
-msgstr ""
+msgstr "メールアドレス確認完了"
 
 #: src/view/screens/Settings/index.tsx:319
 msgid "Email:"
@@ -2210,7 +2198,7 @@ msgstr "ファイルの保存中にエラーが発生しました"
 
 #: src/screens/Signup/StepCaptcha/index.tsx:56
 msgid "Error receiving captcha response."
-msgstr "Captchaレスポンスの受信中にエラーが発生しました。"
+msgstr "CAPTCHAレスポンスの受信中にエラーが発生しました。"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:197
 #: src/view/screens/Search/Search.tsx:116
@@ -2350,7 +2338,7 @@ msgstr "スターターパックの作成に失敗しました"
 
 #: src/view/com/modals/CreateOrEditList.tsx:194
 msgid "Failed to create the list. Check your internet connection and try again."
-msgstr "リストの作成に失敗しました。インターネットへの接続を確認の上、もう一度お試しください。"
+msgstr "リストの作成に失敗しました。インターネットへの接続を確認の上、もう一度試してください。"
 
 #: src/components/dms/MessageMenu.tsx:73
 msgid "Failed to delete message"
@@ -2393,7 +2381,7 @@ msgstr "画像の保存に失敗しました：{0}"
 
 #: src/state/queries/notifications/settings.ts:39
 msgid "Failed to save notification preferences, please try again"
-msgstr "通知の設定の保存に失敗しました。再度試してください"
+msgstr "通知の設定の保存に失敗しました。もう一度お試しください"
 
 #: src/components/dms/MessageItem.tsx:225
 msgid "Failed to send"
@@ -2402,11 +2390,11 @@ msgstr "送信に失敗"
 #: src/components/moderation/LabelsOnMeDialog.tsx:225
 #: src/screens/Messages/Conversation/ChatDisabled.tsx:87
 msgid "Failed to submit appeal, please try again."
-msgstr "異議申し立ての送信に失敗しました。再度試してください。"
+msgstr "異議申し立ての送信に失敗しました。もう一度お試しください。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:223
 msgid "Failed to toggle thread mute, please try again"
-msgstr "スレッドのミュートの切り替えに失敗しました。再度試してください"
+msgstr "スレッドのミュートの切り替えに失敗しました。もう一度お試しください"
 
 #: src/components/FeedCard.tsx:273
 msgid "Failed to update feeds"
@@ -2554,13 +2542,13 @@ msgstr "アカウントをフォロー"
 msgid "Follow all"
 msgstr "すべてフォロー"
 
-#: src/view/com/profile/FollowButton.tsx:79
-msgctxt "action"
-msgid "Follow Back"
-msgstr ""
-
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:223
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:142
+msgid "Follow Back"
+msgstr "フォローバック"
+
+#: src/view/com/profile/FollowButton.tsx:79
+msgctxt "action"
 msgid "Follow Back"
 msgstr "フォローバック"
 
@@ -2922,7 +2910,7 @@ msgstr "そのモデレーションサービスを読み込めませんでした
 
 #: src/state/queries/video/video.ts:165
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
-msgstr ""
+msgstr "待って！徐々にビデオへのアクセスを許可していますが、あなたの順番はまだです。しばらくしてもう一度確認を！"
 
 #: src/Navigation.tsx:550
 #: src/Navigation.tsx:570
@@ -3088,7 +3076,7 @@ msgstr "無効なユーザー名またはパスワード"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:82
 msgid "Invalid Verification Code"
-msgstr ""
+msgstr "無効な確認コード"
 
 #: src/view/com/modals/InviteCodes.tsx:94
 msgid "Invite a Friend"
@@ -3100,7 +3088,7 @@ msgstr "招待コード"
 
 #: src/screens/Signup/state.ts:258
 msgid "Invite code not accepted. Check that you input it correctly and try again."
-msgstr "招待コードが確認できません。正しく入力されていることを確認し、もう一度実行してください。"
+msgstr "招待コードが確認できません。正しく入力されていることを確認し、もう一度試してください。"
 
 #: src/view/com/modals/InviteCodes.tsx:171
 msgid "Invite codes: {0} available"
@@ -3147,7 +3135,7 @@ msgstr "会話に参加"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:492
 msgid "Joined {0}"
-msgstr "{0} 参加"
+msgstr "{0} に参加"
 
 #: src/screens/Onboarding/index.tsx:21
 #: src/screens/Onboarding/state.ts:89
@@ -3620,7 +3608,7 @@ msgstr "ミュート"
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:389
 msgctxt "video"
 msgid "Mute"
-msgstr ""
+msgstr "ミュート"
 
 #: src/components/TagMenu/index.web.tsx:116
 msgid "Mute {truncatedTag}"
@@ -3689,10 +3677,6 @@ msgstr "スレッドをミュート"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:483
 msgid "Mute words & tags"
 msgstr "ワードとタグをミュート"
-
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
-#~ msgid "Muted"
-#~ msgstr "ミュートされています"
 
 #: src/screens/Moderation/index.tsx:264
 msgid "Muted accounts"
@@ -4509,7 +4493,7 @@ msgstr "パスワードを選択してください。"
 
 #: src/screens/Signup/state.ts:231
 msgid "Please complete the verification captcha."
-msgstr "Captcha認証を完了してください。"
+msgstr "CAPTCHA認証を完了してください。"
 
 #: src/view/com/modals/ChangeEmail.tsx:65
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
@@ -5205,11 +5189,11 @@ msgstr "メールを再送"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:130
 msgid "Resend Email"
-msgstr ""
+msgstr "メール再送済"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:123
 msgid "Resend Verification Email"
-msgstr ""
+msgstr "確認メールを再送済"
 
 #: src/view/com/modals/ChangePassword.tsx:186
 msgid "Reset code"
@@ -5797,10 +5781,6 @@ msgstr "バッジを表示"
 msgid "Show badge and filter from feeds"
 msgstr "バッジの表示とフィードからのフィルタリング"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:215
-#~ msgid "Show follows similar to {0}"
-#~ msgstr "{0}に似たおすすめのフォロー候補を表示"
-
 #: src/view/com/post-thread/PostThreadShowHiddenReplies.tsx:23
 msgid "Show hidden replies"
 msgstr "非表示の返信を表示"
@@ -5958,7 +5938,7 @@ msgstr "スターターパックを使わずにサインアップ"
 
 #: src/components/FeedInterstitials.tsx:316
 msgid "Similar accounts"
-msgstr "類似のアカウント"
+msgstr "似ているアカウント"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:245
 #: src/screens/StarterPack/Wizard/index.tsx:191
@@ -6177,7 +6157,7 @@ msgstr "タップしてフルスクリーンに"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
 msgid "Tap to play or pause"
-msgstr ""
+msgstr "タップして再生または一時停止"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:164
 msgid "Tap to toggle sound"
@@ -6211,7 +6191,7 @@ msgstr "もう少し教えて"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:518
 msgid "Ten Million"
-msgstr "1000万"
+msgstr "1,000万"
 
 #: src/view/shell/desktop/RightNav.tsx:90
 msgid "Terms"
@@ -6252,7 +6232,7 @@ msgstr "最初の 1,000 万人のユーザーの 1 人になっていただき�
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:74
 msgid "Thanks, you have successfully verified your email address."
-msgstr ""
+msgstr "ありがとう、メールアドレスの確認に成功しました。"
 
 #: src/view/com/modals/ChangeHandle.tsx:459
 msgid "That contains the following:"
@@ -6353,7 +6333,7 @@ msgstr "サービス規約は移動しました"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:85
 msgid "The verification code you have provided is invalid. Please make sure that you have used the correct verification link or request a new one."
-msgstr ""
+msgstr "入力された確認コードが正しくありません。正しいリンクを使用したかを確認するか、新しい確認コードを要求してください。"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:86
 msgid "There is no time limit for account deactivation, come back any time."
@@ -6362,17 +6342,17 @@ msgstr "アカウントの無効化に期限はありません。いつでも戻
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:117
 #: src/view/screens/ProfileFeed.tsx:545
 msgid "There was an an issue contacting the server, please check your internet connection and try again."
-msgstr "サーバーへの問い合わせ中に問題が発生しました。インターネットへの接続を確認の上、もう一度お試しください。"
+msgstr "サーバーへの問い合わせ中に問題が発生しました。インターネットへの接続を確認の上、もう一度試してください。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:145
 msgid "There was an an issue removing this feed. Please check your internet connection and try again."
-msgstr "フィードの削除中に問題が発生しました。インターネットへの接続を確認の上、もう一度お試しください。"
+msgstr "フィードの削除中に問題が発生しました。インターネットへの接続を確認の上、もう一度試してください。"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:52
 #: src/view/com/posts/FeedShutdownMsg.tsx:71
 #: src/view/screens/ProfileFeed.tsx:206
 msgid "There was an an issue updating your feeds, please check your internet connection and try again."
-msgstr "フィードの更新中に問題が発生しました。インターネットへの接続を確認の上、もう一度お試しください。"
+msgstr "フィードの更新中に問題が発生しました。インターネットへの接続を確認の上、もう一度試してください。"
 
 #: src/components/dialogs/GifSelect.ios.tsx:197
 #: src/components/dialogs/GifSelect.tsx:213
@@ -6816,7 +6796,7 @@ msgstr "ミュートを解除"
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:388
 msgctxt "video"
 msgid "Unmute"
-msgstr ""
+msgstr "ミュートを解除"
 
 #: src/components/TagMenu/index.web.tsx:115
 msgid "Unmute {truncatedTag}"
@@ -6843,10 +6823,6 @@ msgstr "スレッドのミュートを解除"
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:317
 msgid "Unmute video"
 msgstr "ビデオのミュートを解除"
-
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
-#~ msgid "Unmuted"
-#~ msgstr "ミュート解除中"
 
 #: src/view/screens/ProfileFeed.tsx:292
 #: src/view/screens/ProfileList.tsx:673
@@ -7075,7 +7051,7 @@ msgstr "メールアドレスを確認"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:61
 msgid "Verify email dialog"
-msgstr ""
+msgstr "メールアドレス確認ダイアログ"
 
 #: src/view/screens/Settings/index.tsx:961
 msgid "Verify my email"
@@ -7135,7 +7111,7 @@ msgstr "ビデオ：{0}"
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:65
 #: src/view/com/composer/videos/VideoPreview.web.tsx:44
 msgid "Videos must be less than 60 seconds long"
-msgstr ""
+msgstr "ビデオは60秒より短くなくてはなりません"
 
 #: src/screens/Profile/Header/Shell.tsx:113
 msgid "View {0}'s avatar"
@@ -7248,7 +7224,7 @@ msgstr "あなたのアカウントが準備できるまで{estimatedTime}ほど
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:98
 msgid "We have sent another verification email to <0>{0}</0>."
-msgstr ""
+msgstr "別の確認コードを<0>{0}</0>へ送りました。"
 
 #: src/screens/Onboarding/StepFinished.tsx:238
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
@@ -7260,7 +7236,7 @@ msgstr "あなたのフォロー中のユーザーの投稿を読み終わりま
 
 #: src/state/queries/video/video.ts:170
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
-msgstr ""
+msgstr "あなたがビデオのアップロードを許可されているかどうか判断できません。もう一度お試しください。"
 
 #: src/components/dialogs/BirthDateSettings.tsx:52
 msgid "We were unable to load your birth date preferences. Please try again."
@@ -7284,7 +7260,7 @@ msgstr "これはあなたの体験をカスタマイズするために使用さ
 
 #: src/components/dms/dialogs/SearchablePeopleList.tsx:90
 msgid "We're having network issues, try again"
-msgstr "ネットワークで問題が発生しています。再度試してください"
+msgstr "ネットワークで問題が発生しています。もう一度試してください"
 
 #: src/screens/Signup/index.tsx:100
 msgid "We're so excited to have you join us!"
@@ -7300,7 +7276,7 @@ msgstr "大変申し訳ありませんが、現在ミュートされたワード
 
 #: src/view/screens/Search/Search.tsx:206
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
-msgstr "大変申し訳ありませんが、検索を完了できませんでした。数分後に再試行してください。"
+msgstr "大変申し訳ありませんが、検索を完了できませんでした。数分後にもう一度お試しください。"
 
 #: src/view/com/composer/Composer.tsx:421
 msgid "We're sorry! The post you are replying to has been deleted."
@@ -7464,7 +7440,7 @@ msgstr "あなたは並んでいます。"
 
 #: src/state/queries/video/video.ts:161
 msgid "You are not allowed to upload videos."
-msgstr ""
+msgstr "あなたはビデオのアップロードを許可されていません。"
 
 #: src/view/com/profile/ProfileFollows.tsx:95
 msgid "You are not following anyone."
@@ -7585,7 +7561,7 @@ msgstr "最後まで到達しました"
 
 #: src/state/queries/video/video-upload.shared.ts:67
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
-msgstr ""
+msgstr "ビデオのアップロードの制限に一時的に到達しました。時間をおいてもう一度お試しください。"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:235
 msgid "You haven't created a starter pack yet!"
@@ -7711,11 +7687,11 @@ msgstr "フィードはここまでです！もっとフォローするアカウ
 
 #: src/state/queries/video/video.ts:175
 msgid "You've reached your daily limit for video uploads (too many bytes)"
-msgstr ""
+msgstr "ビデオのアップロードの一日の上限に到達しました（容量が大きすぎます）"
 
 #: src/state/queries/video/video.ts:180
 msgid "You've reached your daily limit for video uploads (too many videos)"
-msgstr ""
+msgstr "ビデオのアップロードの一日の上限に到達しました（ビデオの数が多すぎます）"
 
 #: src/screens/Signup/index.tsx:146
 msgid "Your account"
@@ -7727,7 +7703,7 @@ msgstr "あなたのアカウントは削除されました"
 
 #: src/state/queries/video/video.ts:185
 msgid "Your account is not yet old enough to upload videos. Please try again later."
-msgstr ""
+msgstr "あなたのアカウントはまだ新しいのでビデオをアップロードできません。もう一度お試しください。"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:65
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
