@@ -1,15 +1,22 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react'
 
+import {useSharedVolume} from '../../ActiveVideoWebContext'
+
 export function useVideoElement(ref: React.RefObject<HTMLVideoElement>) {
   const [playing, setPlaying] = useState(false)
   const [muted, setMuted] = useState(true)
   const [currentTime, setCurrentTime] = useState(0)
-  const [volume, setVolume] = useState(0)
+  const [volume, setVolume] = useSharedVolume()
   const [duration, setDuration] = useState(0)
   const [buffering, setBuffering] = useState(false)
   const [error, setError] = useState(false)
   const [canPlay, setCanPlay] = useState(false)
   const playWhenReadyRef = useRef(false)
+
+  useEffect(() => {
+    if (!ref.current) return
+    ref.current.volume = volume
+  }, [ref, volume])
 
   useEffect(() => {
     if (!ref.current) return
@@ -143,7 +150,7 @@ export function useVideoElement(ref: React.RefObject<HTMLVideoElement>) {
       abortController.abort()
       clearTimeout(bufferingTimeout)
     }
-  }, [ref])
+  }, [ref, setVolume])
 
   const play = useCallback(() => {
     if (!ref.current) return
@@ -181,29 +188,13 @@ export function useVideoElement(ref: React.RefObject<HTMLVideoElement>) {
     }
   }, [ref, play, pause])
 
-  const mute = useCallback(() => {
-    if (!ref.current) return
-
-    ref.current.muted = true
-  }, [ref])
-
-  const unmute = useCallback(() => {
-    if (!ref.current) return
-
-    ref.current.muted = false
-  }, [ref])
-
-  const toggleMute = useCallback(() => {
-    if (!ref.current) return
-
-    ref.current.muted = !ref.current.muted
-  }, [ref])
-
-  const changeVolume = useCallback(
-    (vol: number) => {
+  const changeMuted = useCallback(
+    (newMuted: boolean | ((prev: boolean) => boolean)) => {
       if (!ref.current) return
-      setVolume(vol)
-      ref.current.volume = vol
+
+      const value =
+        typeof newMuted === 'function' ? newMuted(ref.current.muted) : newMuted
+      ref.current.muted = value
     },
     [ref],
   )
@@ -216,14 +207,10 @@ export function useVideoElement(ref: React.RefObject<HTMLVideoElement>) {
     currentTime,
     playing,
     muted,
-    mute,
-    unmute,
-    toggleMute,
+    changeMuted,
     buffering,
     error,
     canPlay,
-    volume,
-    changeVolume,
   }
 }
 

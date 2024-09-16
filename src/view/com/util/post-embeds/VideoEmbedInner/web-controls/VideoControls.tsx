@@ -59,15 +59,13 @@ export function Controls({
     pause,
     playing,
     muted,
-    toggleMute,
+    changeMuted,
     togglePlayPause,
     currentTime,
     duration,
     buffering,
     error,
     canPlay,
-    volume,
-    changeVolume,
   } = useVideoElement(videoRef)
   const t = useTheme()
   const {_} = useLingui()
@@ -389,9 +387,7 @@ export function Controls({
           )}
           <VolumeControl
             muted={muted}
-            volume={volume}
-            changeVolume={changeVolume}
-            toggleMute={toggleMute}
+            changeMuted={changeMuted}
             hovered={volumeHovered}
             onHover={onVolumeHover}
             onEndHover={onVolumeEndHover}

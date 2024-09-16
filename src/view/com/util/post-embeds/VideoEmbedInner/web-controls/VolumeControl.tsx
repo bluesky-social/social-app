@@ -6,38 +6,38 @@ import {useLingui} from '@lingui/react'
 import {atoms as a} from '#/alf'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
+import {useSharedVolume} from '../../ActiveVideoWebContext'
 import {ControlButton} from './ControlButton'
 
 export function VolumeControl({
   muted,
-  toggleMute,
-  volume,
-  changeVolume,
+  changeMuted,
   hovered,
   onHover,
   onEndHover,
   drawFocus,
 }: {
   muted: boolean
-  volume: number
-  changeVolume: (volume: number) => void
-  toggleMute: () => void
+  changeMuted: (muted: boolean | ((prev: boolean) => boolean)) => void
   hovered: boolean
   onHover: () => void
   onEndHover: () => void
   drawFocus: () => void
 }) {
   const {_} = useLingui()
+  const [volume, setVolume] = useSharedVolume()
 
   const onVolumeChange = useCallback(
     (evt: React.ChangeEvent<HTMLInputElement>) => {
       drawFocus()
       const vol = sliderVolumeToVideoVolume(Number(evt.target.value))
-      if ((muted && vol !== 0) || (!muted && vol === 0)) toggleMute()
-      changeVolume(vol)
+      setVolume(vol)
+      changeMuted(vol === 0)
     },
-    [changeVolume, drawFocus, muted, toggleMute],
+    [setVolume, drawFocus, changeMuted],
   )
+
+  console.log(muted ? 'muted' : 'not muted', volume, 'volume')
 
   const sliderVolume = muted ? 0 : videoVolumeToSliderVolume(volume)
 
@@ -45,10 +45,12 @@ export function VolumeControl({
   const onPressMute = useCallback(() => {
     drawFocus()
     if (isZeroVolume) {
-      changeVolume(1)
+      setVolume(1)
+      changeMuted(false)
+    } else {
+      changeMuted(prevMuted => !prevMuted)
     }
-    toggleMute()
-  }, [drawFocus, changeVolume, isZeroVolume, toggleMute])
+  }, [drawFocus, setVolume, isZeroVolume, changeMuted])
 
   return (
     <View
@@ -97,5 +99,5 @@ function sliderVolumeToVideoVolume(value: number) {
 }
 
 function videoVolumeToSliderVolume(value: number) {
-  return Math.pow(value, 1 / 4) * 100
+  return Math.round(Math.pow(value, 1 / 4) * 100)
 }
