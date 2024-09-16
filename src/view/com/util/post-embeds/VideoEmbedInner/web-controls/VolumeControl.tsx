@@ -80,10 +80,9 @@ export function VolumeControl({
 }
 
 function sliderVolumeToVideoVolume(value: number) {
-  // return Math.pow(value / 100, 4)
-  return value / 100
+  return Math.pow(value / 100, 4)
 }
+
 function videoVolumeToSliderVolume(value: number) {
-  // return Math.pow(value * 100, 1 / 4)
-  return value * 100
+  return Math.pow(value, 1 / 4) * 100
 }
