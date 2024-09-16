@@ -74,7 +74,19 @@ function MutedWordsInner() {
   const rawDuration = durations.at(0);
   let duration: string | undefined;
 
-  if (rawDuration === '24_hours') {
+  switch (rawDuration) {
+  case '24_hours':
+    duration = new Date(now + ONE_DAY).toISOString();
+    break;
+  case '7_days':
+    duration = new Date(now + 7 * ONE_DAY).toISOString();
+    break;
+  case '30_days':
+    duration = new Date(now + 30 * ONE_DAY).toISOString();
+    break;
+  default:
+    duration = null;
+}
     duration = new Date(now + ONE_DAY).toISOString();
   } else if (rawDuration === '7_days') {
     duration = new Date(now + 7 * ONE_DAY).toISOString();
