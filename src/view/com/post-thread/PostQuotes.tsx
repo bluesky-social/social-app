@@ -97,11 +97,17 @@ export function PostQuotes({uri}: {uri: string}) {
     }
   }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
-  if (isLoadingUri || isLoadingQuotes || isError) {
+  if (quotes.length < 1) {
     return (
       <ListMaybePlaceholder
         isLoading={isLoadingUri || isLoadingQuotes}
         isError={isError}
+        emptyType="results"
+        emptyTitle={_(msg`No quotes yet`)}
+        emptyMessage={_(
+          msg`Nobody has quoted this yet. Maybe you should be the first!`,
+        )}
+        errorMessage={cleanError(resolveError || error)}
         sideBorders={false}
       />
     )

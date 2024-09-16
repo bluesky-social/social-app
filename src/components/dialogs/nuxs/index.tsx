@@ -9,6 +9,7 @@ import {
   useUpsertNuxMutation,
 } from '#/state/queries/nuxs'
 import {useSession} from '#/state/session'
+import {useOnboardingState} from '#/state/shell'
 import {isSnoozed, snooze, unsnooze} from '#/components/dialogs/nuxs/snoozing'
 import {TenMillion} from '#/components/dialogs/nuxs/TenMillion'
 import {IS_DEV} from '#/env'
@@ -57,7 +58,8 @@ export function useNuxDialogContext() {
 
 export function NuxDialogs() {
   const {hasSession} = useSession()
-  return hasSession ? <Inner /> : null
+  const onboardingState = useOnboardingState()
+  return hasSession && !onboardingState.isActive ? <Inner /> : null
 }
 
 function Inner() {
