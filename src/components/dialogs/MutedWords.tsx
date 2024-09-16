@@ -62,6 +62,48 @@ function MutedWordsInner() {
   const [excludeFollowing, setExcludeFollowing] = React.useState(false)
 
   const submit = React.useCallback(async () => {
+  // Divide a entrada em várias palavras, removendo espaços extras
+  const words = field.split(',').map(word => sanitizeMutedWordValue(word.trim()));
+  
+  const surfaces = ['tag', targets.includes('content') && 'content'].filter(
+    Boolean,
+  ) as AppBskyActorDefs.MutedWord['targets'];
+  const actorTarget = excludeFollowing ? 'exclude-following' : 'all';
+
+  const now = Date.now();
+  const rawDuration = durations.at(0);
+  let duration: string | undefined;
+
+  if (rawDuration === '24_hours') {
+    duration = new Date(now + ONE_DAY).toISOString();
+  } else if (rawDuration === '7_days') {
+    duration = new Date(now + 7 * ONE_DAY).toISOString();
+  } else if (rawDuration === '30_days') {
+    duration = new Date(now + 30 * ONE_DAY).toISOString();
+  }
+
+  // Verifica se há palavras válidas
+  if (words.some(word => !word || !surfaces.length)) {
+    setField('');
+    setError(_(msg`Please enter valid words, tags, or phrases to mute`));
+    return;
+  }
+
+  try {
+    // Envia todas as palavras
+    await addMutedWord(
+      words.map(word => ({
+        value: word,
+        targets: surfaces,
+        actorTarget,
+        expiresAt: duration,
+      }))
+    );
+    setField(''); // Limpa o campo de entrada
+  } catch (e: any) {
+    logger.error(`Failed to save muted words`, { message: e.message });
+    setError(e.message);
+  }
     const sanitizedValue = sanitizeMutedWordValue(field)
     const surfaces = ['tag', targets.includes('content') && 'content'].filter(
       Boolean,
