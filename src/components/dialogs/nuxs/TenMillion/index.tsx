@@ -358,6 +358,7 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
                       },
                     ]}>
                     <Text
+                      allowFontScaling={false}
                       style={[
                         a.text_md,
                         a.font_bold,
@@ -372,6 +373,7 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
                     </Text>
                     <View style={[a.flex_row, a.align_start]}>
                       <Text
+                        allowFontScaling={false}
                         style={[
                           a.absolute,
                           {
@@ -391,6 +393,7 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
                         #
                       </Text>
                       <Text
+                        allowFontScaling={false}
                         style={[
                           a.relative,
                           a.text_center,
@@ -450,6 +453,7 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
                         */}
                       <View style={[a.gap_2xs, a.flex_1]}>
                         <Text
+                          allowFontScaling={false}
                           style={[
                             a.flex_1,
                             a.text_sm,
@@ -466,6 +470,7 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
                         <View
                           style={[a.flex_row, a.justify_between, a.gap_4xl]}>
                           <Text
+                            allowFontScaling={false}
                             numberOfLines={1}
                             style={[
                               a.flex_1,
@@ -479,6 +484,7 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
 
                           {profile.createdAt && (
                             <Text
+                              allowFontScaling={false}
                               numberOfLines={1}
                               ellipsizeMode="head"
                               style={[
@@ -582,6 +588,7 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
 
           <View style={[gtMobile ? a.p_2xl : a.p_xl]}>
             <Text
+              allowFontScaling={false}
               style={[
                 a.text_5xl,
                 a.leading_tight,
