@@ -77,7 +77,7 @@ export function VolumeControl({
               min={0}
               max={100}
               value={sliderVolume}
-              style={{height: '100%'}}
+              style={{height: '100%', minHeight: '100%'}}
               onChange={onVolumeChange}
               // @ts-expect-error for old versions of firefox, and then re-using it for targeting the CSS -sfn
               orient="vertical"
