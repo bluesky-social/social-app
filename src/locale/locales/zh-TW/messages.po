@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: zh-TW for bluesky-social-app\n"
 "POT-Creation-Date: \n"
 "Report-Msgid-Bugs-To: Kuwa Lee <kuwalee1069@gmail.com>, Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-09-06 10:08+0800\n"
+"PO-Revision-Date: 2024-09-13 09:16+0800\n"
 "Last-Translator: \n"
 "Language-Team: Frudrax Cheng <i@cynosura.one>, Kuwa Lee <kuwalee1069@gmail.com>, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Language: zh_TW\n"
@@ -1099,14 +1099,6 @@ msgstr "在此輸入寄送至您電子郵件地址的驗證碼。"
 msgid "Check your inbox for an email with the confirmation code to enter below:"
 msgstr "在下方輸入寄送至您電子郵件地址的驗證碼："
 
-#: src/screens/Onboarding/StepInterests/index.tsx:191
-#~ msgid "Choose 3 or more:"
-#~ msgstr "選擇至少 3 個："
-
-#: src/screens/Onboarding/StepInterests/index.tsx:326
-#~ msgid "Choose at least {0} more"
-#~ msgstr "選擇至少 {0} 個"
-
 #: src/screens/StarterPack/Wizard/index.tsx:190
 msgid "Choose Feeds"
 msgstr "選擇動態源"
@@ -2073,7 +2065,7 @@ msgstr "電子郵件地址"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:95
 msgid "Email Resent"
-msgstr ""
+msgstr "重新發送電子郵件"
 
 #: src/view/com/modals/ChangeEmail.tsx:54
 #: src/view/com/modals/ChangeEmail.tsx:83
@@ -2090,7 +2082,7 @@ msgstr "電子郵件已驗證"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:71
 msgid "Email Verified"
-msgstr ""
+msgstr "電子郵件地址已驗證"
 
 #: src/view/screens/Settings/index.tsx:319
 msgid "Email:"
@@ -2152,7 +2144,7 @@ msgstr "已經到底部啦！"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:161
 msgid "Ensure you have selected a language for each subtitle file."
-msgstr ""
+msgstr "請確認您已為每個字幕檔案選擇一種語言。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:161
 msgid "Enter a name for this App Password"
@@ -2557,7 +2549,7 @@ msgstr "全部跟隨"
 #: src/view/com/profile/FollowButton.tsx:79
 msgctxt "action"
 msgid "Follow Back"
-msgstr ""
+msgstr "回跟"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:223
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:142
@@ -2922,7 +2914,7 @@ msgstr "抱歉，我們無法載入該內容管理服務。"
 
 #: src/state/queries/video/video.ts:165
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
-msgstr ""
+msgstr "別急！我們將逐步開放影片功能，您還在隊列中。請稍後再回來！"
 
 #: src/Navigation.tsx:550
 #: src/Navigation.tsx:570
@@ -3088,7 +3080,7 @@ msgstr "用戶名稱或密碼無效"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:82
 msgid "Invalid Verification Code"
-msgstr ""
+msgstr "無效的驗證碼"
 
 #: src/view/com/modals/InviteCodes.tsx:94
 msgid "Invite a Friend"
@@ -3128,7 +3120,7 @@ msgstr "現在只有您一個人！使用上面的搜尋功能，將更多人加
 
 #: src/view/com/composer/Composer.tsx:1126
 msgid "Job ID: {0}"
-msgstr ""
+msgstr "Job ID: {0}"
 
 #: src/view/com/auth/SplashScreen.web.tsx:164
 msgid "Jobs"
@@ -5205,11 +5197,11 @@ msgstr "重新傳送郵件"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:130
 msgid "Resend Email"
-msgstr ""
+msgstr "重新傳送電子郵件"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:123
 msgid "Resend Verification Email"
-msgstr ""
+msgstr "重新傳送驗證電子郵件"
 
 #: src/view/com/modals/ChangePassword.tsx:186
 msgid "Reset code"
@@ -5797,10 +5789,6 @@ msgstr "顯示標記"
 msgid "Show badge and filter from feeds"
 msgstr "顯示標記並從動態源中篩選"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:218
-#~ msgid "Show follows similar to {0}"
-#~ msgstr "顯示類似於 {0} 的跟隨者"
-
 #: src/view/com/post-thread/PostThreadShowHiddenReplies.tsx:23
 msgid "Show hidden replies"
 msgstr "顯示隱藏回覆"
@@ -6252,7 +6240,7 @@ msgstr ""
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:74
 msgid "Thanks, you have successfully verified your email address."
-msgstr ""
+msgstr "謝謝，您已成功驗證您的電子郵件地址。"
 
 #: src/view/com/modals/ChangeHandle.tsx:459
 msgid "That contains the following:"
@@ -6353,7 +6341,7 @@ msgstr "服務條款已遷移到"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:85
 msgid "The verification code you have provided is invalid. Please make sure that you have used the correct verification link or request a new one."
-msgstr ""
+msgstr "您提供的驗證碼無效。請確認您使用了正確的驗證連結，或申請新的驗證連結。"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:86
 msgid "There is no time limit for account deactivation, come back any time."
@@ -6818,6 +6806,11 @@ msgstr ""
 msgid "Unmute"
 msgstr "取消靜音"
 
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:388
+msgctxt "video"
+msgid "Unmute"
+msgstr "取消靜音"
+
 #: src/components/TagMenu/index.web.tsx:115
 msgid "Unmute {truncatedTag}"
 msgstr "取消靜音 {truncatedTag}"
@@ -7075,7 +7068,7 @@ msgstr "驗證電子郵件"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:61
 msgid "Verify email dialog"
-msgstr ""
+msgstr "驗證電子郵件對話窗"
 
 #: src/view/screens/Settings/index.tsx:961
 msgid "Verify my email"
@@ -7135,7 +7128,7 @@ msgstr "影片：{0}"
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:65
 #: src/view/com/composer/videos/VideoPreview.web.tsx:44
 msgid "Videos must be less than 60 seconds long"
-msgstr ""
+msgstr "影片長度必須少於 60 秒"
 
 #: src/screens/Profile/Header/Shell.tsx:113
 msgid "View {0}'s avatar"
@@ -7248,7 +7241,7 @@ msgstr "我們估計還需要 {estimatedTime} 才能準備好您的帳號。"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:98
 msgid "We have sent another verification email to <0>{0}</0>."
-msgstr ""
+msgstr "我們已發送另一封驗證電子郵件至 <0>{0}</0>。"
 
 #: src/screens/Onboarding/StepFinished.tsx:238
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
@@ -7260,7 +7253,7 @@ msgstr "您已看完了您跟隨的貼文。這是來自 <0/> 的最新貼文。
 
 #: src/state/queries/video/video.ts:170
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
-msgstr ""
+msgstr "我們無法確定您是否有上傳影片的權限。請再試一次。"
 
 #: src/components/dialogs/BirthDateSettings.tsx:52
 msgid "We were unable to load your birth date preferences. Please try again."
@@ -7464,7 +7457,7 @@ msgstr "您正處於隊列之中。"
 
 #: src/state/queries/video/video.ts:161
 msgid "You are not allowed to upload videos."
-msgstr ""
+msgstr "您沒有上傳影片的權限。"
 
 #: src/view/com/profile/ProfileFollows.tsx:95
 msgid "You are not following anyone."
@@ -7585,7 +7578,7 @@ msgstr "已經到底部啦！"
 
 #: src/state/queries/video/video-upload.shared.ts:67
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
-msgstr ""
+msgstr "您已暫時達到影片上傳的限制。請稍後再試。"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:235
 msgid "You haven't created a starter pack yet!"
@@ -7711,11 +7704,11 @@ msgstr "您已經瀏覽完貼文啦！跟隨其他帳號吧。"
 
 #: src/state/queries/video/video.ts:175
 msgid "You've reached your daily limit for video uploads (too many bytes)"
-msgstr ""
+msgstr "您已達到每日影片上傳限制（位元組過多）"
 
 #: src/state/queries/video/video.ts:180
 msgid "You've reached your daily limit for video uploads (too many videos)"
-msgstr ""
+msgstr "您已達到每日影片上傳限制（影片數過多）"
 
 #: src/screens/Signup/index.tsx:146
 msgid "Your account"
@@ -7727,7 +7720,7 @@ msgstr "您的帳號已刪除"
 
 #: src/state/queries/video/video.ts:185
 msgid "Your account is not yet old enough to upload videos. Please try again later."
-msgstr ""
+msgstr "您的帳號太新以至於無法上傳影片。請稍後重試。"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:65
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
