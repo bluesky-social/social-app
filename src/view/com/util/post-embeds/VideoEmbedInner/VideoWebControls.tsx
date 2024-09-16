@@ -355,7 +355,7 @@ export function Controls({
           style={[
             a.flex_1,
             a.px_xs,
-            a.pt_sm,
+            a.pt_2xs,
             a.pb_md,
             a.gap_md,
             a.flex_row,
@@ -592,7 +592,7 @@ function Scrubber({
   return (
     <View
       testID="scrubber"
-      style={[{height: 18, width: '100%'}, a.flex_shrink_0, a.px_xs, a.py_xs]}
+      style={[{height: 18, width: '100%'}, a.flex_shrink_0, a.px_xs]}
       onPointerEnter={onStartHover}
       onPointerLeave={onEndHover}>
       <div
@@ -603,6 +603,7 @@ function Scrubber({
           alignItems: 'center',
           position: 'relative',
           cursor: scrubberActive ? 'grabbing' : 'grab',
+          padding: '4px 0',
         }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
