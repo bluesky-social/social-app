@@ -37,8 +37,6 @@ export function VolumeControl({
     [setVolume, drawFocus, changeMuted],
   )
 
-  console.log(muted ? 'muted' : 'not muted', volume, 'volume')
-
   const sliderVolume = muted ? 0 : videoVolumeToSliderVolume(volume)
 
   const isZeroVolume = volume === 0
