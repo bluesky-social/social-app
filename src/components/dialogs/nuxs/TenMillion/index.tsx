@@ -130,6 +130,9 @@ export function TenMillion({
           nuxDialogs.dismissActiveNux()
           onFallback?.()
         }
+      } else {
+        nuxDialogs.dismissActiveNux()
+        onFallback?.()
       }
     }
 
