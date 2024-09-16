@@ -4,6 +4,7 @@ import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {isTouchDevice} from '#/lib/browser'
 import {atoms as a} from '#/alf'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
@@ -56,7 +57,7 @@ export function VolumeControl({
       onPointerEnter={onHover}
       onPointerLeave={onEndHover}
       style={[a.relative]}>
-      {hovered && (
+      {hovered && !isTouchDevice && (
         <Animated.View
           entering={FadeIn.duration(100)}
           exiting={FadeOut.duration(100)}
