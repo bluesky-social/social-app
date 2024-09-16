@@ -12,7 +12,7 @@ import {
 } from 'expo-file-system'
 import * as MediaLibrary from 'expo-media-library'
 import * as Sharing from 'expo-sharing'
-import ImageResizer from '@bam.tech/react-native-image-resizer'
+// import ImageResizer from '@bam.tech/react-native-image-resizer'
 import {Buffer} from 'buffer'
 import RNFetchBlob from 'rn-fetch-blob'
 
@@ -166,29 +166,29 @@ interface DoResizeOpts {
 
 async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
   for (let i = 0; i < 9; i++) {
-    const quality = 100 - i * 10
-    const resizeRes = await ImageResizer.createResizedImage(
-      localUri,
-      opts.width,
-      opts.height,
-      'JPEG',
-      quality,
-      undefined,
-      undefined,
-      undefined,
-      {mode: opts.mode},
-    )
-    if (resizeRes.size < opts.maxSize) {
-      return {
-        path: normalizePath(resizeRes.path),
-        mime: 'image/jpeg',
-        size: resizeRes.size,
-        width: resizeRes.width,
-        height: resizeRes.height,
-      }
-    } else {
-      safeDeleteAsync(resizeRes.path)
-    }
+    // const quality = 100 - i * 10
+    // const resizeRes = await ImageResizer.createResizedImage(
+    //   localUri,
+    //   opts.width,
+    //   opts.height,
+    //   'JPEG',
+    //   quality,
+    //   undefined,
+    //   undefined,
+    //   undefined,
+    //   {mode: opts.mode},
+    // )
+    // if (resizeRes.size < opts.maxSize) {
+    //   return {
+    //     path: normalizePath(resizeRes.path),
+    //     mime: 'image/jpeg',
+    //     size: resizeRes.size,
+    //     width: resizeRes.width,
+    //     height: resizeRes.height,
+    //   }
+    // } else {
+    //   safeDeleteAsync(resizeRes.path)
+    // }
   }
   throw new Error(
     `This image is too big! We couldn't compress it down to ${opts.maxSize} bytes`,
