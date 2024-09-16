@@ -1,12 +1,12 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react'
 
-import {useSharedVolume} from '../../ActiveVideoWebContext'
+import {useVideoVolumeState} from '../../VideoVolumeContext'
 
 export function useVideoElement(ref: React.RefObject<HTMLVideoElement>) {
   const [playing, setPlaying] = useState(false)
   const [muted, setMuted] = useState(true)
   const [currentTime, setCurrentTime] = useState(0)
-  const [volume, setVolume] = useSharedVolume()
+  const [volume, setVolume] = useVideoVolumeState()
   const [duration, setDuration] = useState(0)
   const [buffering, setBuffering] = useState(false)
   const [error, setError] = useState(false)

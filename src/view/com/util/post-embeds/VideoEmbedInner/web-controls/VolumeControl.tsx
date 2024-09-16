@@ -8,7 +8,7 @@ import {isTouchDevice} from '#/lib/browser'
 import {atoms as a} from '#/alf'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
-import {useSharedVolume} from '../../ActiveVideoWebContext'
+import {useVideoVolumeState} from '../../VideoVolumeContext'
 import {ControlButton} from './ControlButton'
 
 export function VolumeControl({
@@ -27,7 +27,7 @@ export function VolumeControl({
   drawFocus: () => void
 }) {
   const {_} = useLingui()
-  const [volume, setVolume] = useSharedVolume()
+  const [volume, setVolume] = useVideoVolumeState()
 
   const onVolumeChange = useCallback(
     (evt: React.ChangeEvent<HTMLInputElement>) => {

@@ -14,8 +14,6 @@ const Context = React.createContext<{
   activeViewId: string | null
   setActiveView: (viewId: string) => void
   sendViewPosition: (viewId: string, y: number) => void
-  volume: number
-  setVolume: React.Dispatch<React.SetStateAction<number>>
 } | null>(null)
 
 export function Provider({children}: {children: React.ReactNode}) {
@@ -24,7 +22,6 @@ export function Provider({children}: {children: React.ReactNode}) {
   }
 
   const [activeViewId, setActiveViewId] = useState<string | null>(null)
-  const [volume, setVolume] = useState(1)
   const activeViewLocationRef = useRef(Infinity)
   const {height: windowHeight} = useWindowDimensions()
 
@@ -88,10 +85,8 @@ export function Provider({children}: {children: React.ReactNode}) {
       activeViewId,
       setActiveView,
       sendViewPosition,
-      volume,
-      setVolume,
     }),
-    [activeViewId, setActiveView, sendViewPosition, volume, setVolume],
+    [activeViewId, setActiveView, sendViewPosition],
   )
 
   return <Context.Provider value={value}>{children}</Context.Provider>
@@ -116,12 +111,4 @@ export function useActiveVideoWeb() {
     currentActiveView: activeViewId,
     sendPosition: (y: number) => sendViewPosition(id, y),
   }
-}
-
-export function useSharedVolume() {
-  const context = React.useContext(Context)
-  if (!context) {
-    throw new Error('useVolume must be used within a ActiveVideoWebProvider')
-  }
-  return [context.volume, context.setVolume] as const
 }
