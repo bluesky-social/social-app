@@ -8,7 +8,7 @@ msgstr ""
 "Language: fr\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-14 02:20+0100\n"
+"PO-Revision-Date: 2024-09-16 16:30+0100\n"
 "Last-Translator: surfdude29\n"
 "Language-Team: Stanislas Signoud (@signez.fr), surfdude29\n"
 "Plural-Forms: \n"
@@ -3600,13 +3600,13 @@ msgstr "Cinéma"
 msgid "Music"
 msgstr "Musique"
 
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:166
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:389
 msgctxt "video"
 msgid "Mute"
 msgstr "Désactiver le son"
 
 #: src/components/TagMenu/index.tsx:263
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:163
 msgid "Mute"
 msgstr "Masquer"
 
@@ -3894,6 +3894,11 @@ msgstr "Aucun GIFs vedettes à afficher. Il y a peut-être un souci chez Tenor."
 msgid "No feeds found. Try searching for something else."
 msgstr "Aucun fil d’actu n’a été trouvé. Essayez de chercher autre chose."
 
+#: src/components/LikedByList.tsx:78
+#: src/view/com/post-thread/PostLikedBy.tsx:85
+msgid "No likes yet"
+msgstr "Pas encore de likes"
+
 #: src/components/ProfileCard.tsx:336
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:116
 msgid "No longer following {0}"
@@ -3929,6 +3934,14 @@ msgstr "Personne d’autre que l’auteur·ice ne peut citer ce post."
 #: src/screens/Profile/Sections/Feed.tsx:64
 msgid "No posts yet."
 msgstr "Pas encore de posts."
+
+#: src/view/com/post-thread/PostQuotes.tsx:106
+msgid "No quotes yet"
+msgstr "Pas encore de citations"
+
+#: src/view/com/post-thread/PostRepostedBy.tsx:78
+msgid "No reposts yet"
+msgstr "Pas encore de reposts"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:101
 #: src/view/com/composer/text-input/web/Autocomplete.tsx:195
@@ -3968,10 +3981,19 @@ msgstr "Non merci"
 msgid "Nobody"
 msgstr "Personne"
 
-#: src/components/LikedByList.tsx:79
+#: src/components/LikedByList.tsx:80
 #: src/components/LikesDialog.tsx:99
+#: src/view/com/post-thread/PostLikedBy.tsx:87
 msgid "Nobody has liked this yet. Maybe you should be the first!"
 msgstr "Personne n’a encore liké. Peut-être devriez-vous ouvrir la voie !"
+
+#: src/view/com/post-thread/PostQuotes.tsx:108
+msgid "Nobody has quoted this yet. Maybe you should be the first!"
+msgstr "Personne n’a encore cité. Peut-être devriez-vous ouvrir la voie !"
+
+#: src/view/com/post-thread/PostRepostedBy.tsx:80
+msgid "Nobody has reposted this yet. Maybe you should be the first!"
+msgstr "Personne n’a encore republié. Peut-être devriez-vous ouvrir la voie !"
 
 #: src/screens/StarterPack/Wizard/StepProfiles.tsx:103
 msgid "Nobody was found. Try searching for someone else."
@@ -6791,13 +6813,13 @@ msgstr "Se désabonner du compte"
 msgid "Unlike this feed"
 msgstr "Déliker ce fil d’actu"
 
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:165
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:388
 msgctxt "video"
 msgid "Unmute"
 msgstr "Rétablir le son"
 
 #: src/components/TagMenu/index.tsx:263
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:163
 #: src/view/screens/ProfileList.tsx:689
 msgid "Unmute"
 msgstr "Réafficher"
