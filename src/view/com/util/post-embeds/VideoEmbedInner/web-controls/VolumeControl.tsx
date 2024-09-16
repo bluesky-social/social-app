@@ -4,7 +4,7 @@ import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {isTouchDevice} from '#/lib/browser'
+import {isSafari, isTouchDevice} from '#/lib/browser'
 import {atoms as a} from '#/alf'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
@@ -77,7 +77,10 @@ export function VolumeControl({
               min={0}
               max={100}
               value={sliderVolume}
-              style={{height: '100%', minHeight: '100%'}}
+              style={
+                // Ridiculous safari hack for old version of safari. Fixed in sonoma beta -h
+                isSafari ? {height: 100, minHeight: '100%'} : {height: '100%'}
+              }
               onChange={onVolumeChange}
               // @ts-expect-error for old versions of firefox, and then re-using it for targeting the CSS -sfn
               orient="vertical"
