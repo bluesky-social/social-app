@@ -18,7 +18,7 @@ const Context = React.createContext<{
 
 export function Provider({children}: {children: React.ReactNode}) {
   if (!isWeb) {
-    throw new Error('ActiveVideoWebContext may onl be used on web.')
+    throw new Error('ActiveVideoWebContext may only be used on web.')
   }
 
   const [activeViewId, setActiveViewId] = useState<string | null>(null)

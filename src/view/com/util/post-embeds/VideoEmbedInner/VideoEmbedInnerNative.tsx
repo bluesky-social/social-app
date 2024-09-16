@@ -9,7 +9,7 @@ import {useLingui} from '@lingui/react'
 import {HITSLOP_30} from '#/lib/constants'
 import {clamp} from '#/lib/numbers'
 import {useAutoplayDisabled} from '#/state/preferences'
-import {useVideoVolumeState} from 'view/com/util/post-embeds/VideoVolumeContext'
+import {useVideoMuteState} from 'view/com/util/post-embeds/VideoVolumeContext'
 import {atoms as a, useTheme} from '#/alf'
 import {useIsWithinMessage} from '#/components/dms/MessageContext'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
@@ -38,7 +38,7 @@ export const VideoEmbedInnerNative = React.forwardRef(
     const videoRef = useRef<BlueskyVideoView>(null)
     const autoplayDisabled = useAutoplayDisabled()
     const isWithinMessage = useIsWithinMessage()
-    const {muted, setMuted} = useVideoVolumeState()
+    const [muted, setMuted] = useVideoMuteState()
 
     const [isPlaying, setIsPlaying] = React.useState(false)
     const [timeRemaining, setTimeRemaining] = React.useState(0)
@@ -128,7 +128,7 @@ function VideoControls({
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const {muted} = useVideoVolumeState()
+  const [muted] = useVideoMuteState()
 
   // show countdown when:
   // 1. timeRemaining is a number - was seeing NaNs
