@@ -4,6 +4,7 @@ export function useVideoElement(ref: React.RefObject<HTMLVideoElement>) {
   const [playing, setPlaying] = useState(false)
   const [muted, setMuted] = useState(true)
   const [currentTime, setCurrentTime] = useState(0)
+  const [volume, setVolume] = useState(0)
   const [duration, setDuration] = useState(0)
   const [buffering, setBuffering] = useState(false)
   const [error, setError] = useState(false)
@@ -24,6 +25,7 @@ export function useVideoElement(ref: React.RefObject<HTMLVideoElement>) {
     setDuration(round(ref.current.duration) || 0)
     setMuted(ref.current.muted)
     setPlaying(!ref.current.paused)
+    setVolume(ref.current.volume)
 
     const handleTimeUpdate = () => {
       if (!ref.current) return
@@ -53,6 +55,7 @@ export function useVideoElement(ref: React.RefObject<HTMLVideoElement>) {
     }
 
     const handleCanPlay = () => {
+      if (bufferingTimeout) clearTimeout(bufferingTimeout)
       setBuffering(false)
       setCanPlay(true)
 
@@ -64,6 +67,7 @@ export function useVideoElement(ref: React.RefObject<HTMLVideoElement>) {
     }
 
     const handleCanPlayThrough = () => {
+      if (bufferingTimeout) clearTimeout(bufferingTimeout)
       setBuffering(false)
     }
 
@@ -131,6 +135,9 @@ export function useVideoElement(ref: React.RefObject<HTMLVideoElement>) {
     ref.current.addEventListener('ended', handleEnded, {
       signal: abortController.signal,
     })
+    ref.current.addEventListener('volumechange', handleVolumeChange, {
+      signal: abortController.signal,
+    })
 
     return () => {
       abortController.abort()
@@ -192,6 +199,15 @@ export function useVideoElement(ref: React.RefObject<HTMLVideoElement>) {
     ref.current.muted = !ref.current.muted
   }, [ref])
 
+  const changeVolume = useCallback(
+    (vol: number) => {
+      if (!ref.current) return
+      setVolume(vol)
+      ref.current.volume = vol
+    },
+    [ref],
+  )
+
   return {
     play,
     pause,
@@ -206,6 +222,8 @@ export function useVideoElement(ref: React.RefObject<HTMLVideoElement>) {
     buffering,
     error,
     canPlay,
+    volume,
+    changeVolume,
   }
 }
 

@@ -66,6 +66,8 @@ export function Controls({
     buffering,
     error,
     canPlay,
+    volume,
+    changeVolume,
   } = useVideoElement(videoRef)
   const t = useTheme()
   const {_} = useLingui()
@@ -79,7 +81,11 @@ export function Controls({
   const [isFullscreen, toggleFullscreen] = useFullscreen(fullscreenRef)
   const {state: hasFocus, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const [interactingViaKeypress, setInteractingViaKeypress] = useState(false)
-  const [volumeHovered, setVolumeHovered] = useState(false)
+  const {
+    state: volumeHovered,
+    onIn: onVolumeHover,
+    onOut: onVolumeEndHover,
+  } = useInteractionState()
 
   const onKeyDown = useCallback(() => {
     setInteractingViaKeypress(true)
@@ -388,10 +394,13 @@ export function Controls({
           )}
           <VolumeControl
             muted={muted}
-            // volume={volume}
-            // onVolumeChange={onVolumeChange}
+            volume={volume}
+            changeVolume={changeVolume}
             onMute={onPressMute}
-            onHover={setVolumeHovered}
+            hovered={volumeHovered}
+            onHover={onVolumeHover}
+            onEndHover={onVolumeEndHover}
+            drawFocus={drawFocus}
           />
           {!isIPhoneWeb && (
             <ControlButton
