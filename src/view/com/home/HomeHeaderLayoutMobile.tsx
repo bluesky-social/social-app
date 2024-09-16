@@ -11,10 +11,11 @@ import {HITSLOP_10} from 'lib/constants'
 import {useMinimalShellHeaderTransform} from 'lib/hooks/useMinimalShellTransform'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
-import {Logo} from '#/view/icons/Logo'
+// import {Logo} from '#/view/icons/Logo'
 import {atoms} from '#/alf'
 import {useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
+import {Icon, Trigger} from '#/components/dialogs/nuxs/TenMillion/Trigger'
 import {ColorPalette_Stroke2_Corner0_Rounded as ColorPalette} from '#/components/icons/ColorPalette'
 import {Hashtag_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/Hashtag'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
@@ -60,7 +61,17 @@ export function HomeHeaderLayoutMobile({
           </TouchableOpacity>
         </View>
         <View>
-          <Logo width={30} />
+          <Trigger>
+            {ctx => (
+              <Icon
+                width={28}
+                style={{
+                  opacity: ctx.pressed ? 0.8 : 1,
+                }}
+              />
+            )}
+          </Trigger>
+          {/* <Logo width={30} /> */}
         </View>
         <View
           style={[
