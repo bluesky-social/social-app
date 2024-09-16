@@ -39,7 +39,7 @@ export function useVideoElement(ref: React.RefObject<HTMLVideoElement>) {
       if (!ref.current) return
       setCurrentTime(round(ref.current.currentTime) || 0)
       // HACK: Safari randomly fires `stalled` events when changing between segments
-      // let's just clear the buffering state if the video is still progressing
+      // let's just clear the buffering state if the video is still progressing -sfn
       if (isSafari) {
         if (bufferingTimeout) clearTimeout(bufferingTimeout)
         setBuffering(false)
