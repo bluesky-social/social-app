@@ -1,34 +1,86 @@
 import React from 'react'
+import {View} from 'react-native'
 import Svg, {Circle, Path} from 'react-native-svg'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {Nux, useUpsertNuxMutation} from '#/state/queries/nuxs'
-import {ViewStyleProp} from '#/alf'
+import {atoms as a, ViewStyleProp} from '#/alf'
 import {Button, ButtonProps} from '#/components/Button'
+import * as Dialog from '#/components/Dialog'
+import {InlineLinkText} from '#/components/Link'
+import * as Prompt from '#/components/Prompt'
 import {TenMillion} from './'
 
 export function Trigger({children}: {children: ButtonProps['children']}) {
   const {_} = useLingui()
   const {mutate: upsertNux} = useUpsertNuxMutation()
   const [show, setShow] = React.useState(false)
+  const [fallback, setFallback] = React.useState(false)
+  const control = Prompt.usePromptControl()
 
   const handleOnPress = () => {
-    setShow(true)
-    upsertNux({
-      id: Nux.TenMillionDialog,
-      completed: true,
-      data: undefined,
-    })
+    if (!fallback) {
+      setShow(true)
+      upsertNux({
+        id: Nux.TenMillionDialog,
+        completed: true,
+        data: undefined,
+      })
+    } else {
+      control.open()
+    }
+  }
+
+  const onHandleFallback = () => {
+    setFallback(true)
+    control.open()
   }
 
   return (
     <>
-      <Button label={_(msg`Celebrating 10M users!`)} onPress={handleOnPress}>
+      <Button
+        label={_(msg`Bluesky is celebrating 10 million users!`)}
+        onPress={handleOnPress}>
         {children}
       </Button>
 
-      {show && <TenMillion showTimeout={0} onClose={() => setShow(false)} />}
+      {show && !fallback && (
+        <TenMillion
+          showTimeout={0}
+          onClose={() => setShow(false)}
+          onFallback={onHandleFallback}
+        />
+      )}
+
+      <Prompt.Outer control={control}>
+        <View style={{maxWidth: 300}}>
+          <Prompt.TitleText>
+            <Trans>Bluesky is celebrating 10 million users!</Trans>
+          </Prompt.TitleText>
+        </View>
+        <Prompt.DescriptionText>
+          <Trans>
+            Together, we're rebuilding the social internet. We're glad you're
+            here.
+          </Trans>
+        </Prompt.DescriptionText>
+        <Prompt.DescriptionText>
+          <Trans>
+            To learn more,{' '}
+            <InlineLinkText
+              label={_(msg`View our post`)}
+              to="/profile/bsky.app/post/3l47prg3wgy23"
+              onPress={() => {
+                control.close()
+              }}
+              style={[a.text_md, a.leading_snug]}>
+              <Trans>check out our post.</Trans>
+            </InlineLinkText>
+          </Trans>
+        </Prompt.DescriptionText>
+        <Dialog.Close />
+      </Prompt.Outer>
     </>
   )
 }
