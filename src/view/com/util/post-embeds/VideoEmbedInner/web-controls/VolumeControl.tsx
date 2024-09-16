@@ -1,5 +1,6 @@
 import React, {useCallback} from 'react'
 import {View} from 'react-native'
+import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -56,7 +57,10 @@ export function VolumeControl({
       onPointerLeave={onEndHover}
       style={[a.relative]}>
       {hovered && (
-        <View style={[a.absolute, a.w_full, {height: 100, bottom: '100%'}]}>
+        <Animated.View
+          entering={FadeIn.duration(100)}
+          exiting={FadeOut.duration(100)}
+          style={[a.absolute, a.w_full, {height: 100, bottom: '100%'}]}>
           <View
             style={[
               a.flex_1,
@@ -78,7 +82,7 @@ export function VolumeControl({
               orient="vertical"
             />
           </View>
-        </View>
+        </Animated.View>
       )}
       <ControlButton
         active={muted || volume === 0}
