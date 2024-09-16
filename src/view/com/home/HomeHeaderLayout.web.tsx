@@ -8,11 +8,11 @@ import {useSession} from '#/state/session'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {useMinimalShellHeaderTransform} from 'lib/hooks/useMinimalShellTransform'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {Logo} from '#/view/icons/Logo'
+// import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
+import {Icon, Trigger} from '#/components/dialogs/nuxs/TenMillion/Trigger'
 import {Hashtag_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/Hashtag'
 import {Link} from '#/components/Link'
-import {useKawaiiMode} from '../../../state/preferences/kawaii'
 import {HomeHeaderLayoutMobile} from './HomeHeaderLayoutMobile'
 
 export function HomeHeaderLayout(props: {
@@ -40,8 +40,6 @@ function HomeHeaderLayoutDesktopAndTablet({
   const {hasSession} = useSession()
   const {_} = useLingui()
 
-  const kawaii = useKawaiiMode()
-
   return (
     <>
       {hasSession && (
@@ -57,7 +55,6 @@ function HomeHeaderLayoutDesktopAndTablet({
             t.atoms.bg,
             t.atoms.border_contrast_low,
             styles.bar,
-            kawaii && {paddingTop: 22, paddingBottom: 16},
           ]}>
           <View
             style={[
@@ -65,12 +62,21 @@ function HomeHeaderLayoutDesktopAndTablet({
               a.inset_0,
               a.pt_lg,
               a.m_auto,
-              kawaii && {paddingTop: 4, paddingBottom: 0},
               {
-                width: kawaii ? 84 : 28,
+                width: 28,
               },
             ]}>
-            <Logo width={kawaii ? 60 : 28} />
+            <Trigger>
+              {ctx => (
+                <Icon
+                  width={28}
+                  style={{
+                    opacity: ctx.hovered || ctx.pressed ? 0.8 : 1,
+                  }}
+                />
+              )}
+            </Trigger>
+            {/* <Logo width={28} /> */}
           </View>
 
           <Link
