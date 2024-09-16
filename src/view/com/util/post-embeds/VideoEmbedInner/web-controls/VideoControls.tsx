@@ -4,6 +4,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import type Hls from 'hls.js'
 
+import {isTouchDevice} from '#/lib/browser'
 import {clamp} from '#/lib/numbers'
 import {isIPhoneWeb} from '#/platform/detection'
 import {
@@ -340,7 +341,7 @@ export function Controls({
           {opacity: showControls ? 1 : 0},
           {transition: 'opacity 0.2s ease-in-out'},
         ]}>
-        {!volumeHovered && (
+        {(!volumeHovered || isTouchDevice) && (
           <Scrubber
             duration={duration}
             currentTime={currentTime}
