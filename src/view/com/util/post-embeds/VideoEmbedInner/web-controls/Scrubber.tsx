@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 
 import {isFirefox} from '#/lib/browser'
 import {clamp} from '#/lib/numbers'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {formatTime} from './utils'
 
@@ -172,6 +172,7 @@ export function Scrubber({
             a.overflow_hidden,
             {backgroundColor: 'rgba(255, 255, 255, 0.4)'},
             {height: hovered || scrubberActive ? 6 : 3},
+            web({transition: 'height 0.1s ease'}),
           ]}>
           {duration > 0 && (
             <View
