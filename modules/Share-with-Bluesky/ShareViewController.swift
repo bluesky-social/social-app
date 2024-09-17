@@ -97,23 +97,23 @@ class ShareViewController: UIViewController {
 
     self.completeRequest()
   }
-  
+
   private func handleVideos(items: [NSItemProvider]) async {
     let firstItem = items.first
-    
+
     if let dataUri = try? await firstItem?.loadItem(forTypeIdentifier: "public.video") as? URL {
       let ext = String(dataUri.lastPathComponent.split(separator: ".").last ?? "mp4")
       if let tempUrl = getTempUrl(ext: ext) {
         let data = try? Data(contentsOf: dataUri)
         try? data?.write(to: tempUrl)
-        
+
         if let encoded = dataUri.absoluteString.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed),
            let url = URL(string: "\(self.appScheme)://intent/compose?videoUri=\(encoded)") {
           _ = self.openURL(url)
         }
       }
     }
-    
+
     self.completeRequest()
   }
 
@@ -138,7 +138,7 @@ class ShareViewController: UIViewController {
   private func completeRequest() {
     self.extensionContext?.completeRequest(returningItems: nil)
   }
-  
+
   private func getTempUrl(ext: String) -> URL? {
     if let dir = FileManager().containerURL(forSecurityApplicationGroupIdentifier: "group.app.bsky") {
       return URL(string: "\(dir.absoluteString)\(ProcessInfo.processInfo.globallyUniqueString).\(ext)")!
