@@ -1007,7 +1007,7 @@ msgstr "Bluesky é melhor com amigos!"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:206
 msgid "Bluesky now has over 10 million users, and I was #{0}!"
-msgstr "O Bluesky agora tem mais de 10 milhões de usuários, e eu tinha #{0}!"
+msgstr "O Bluesky agora tem mais de 10 milhões de usuários, e eu fui o #{0}!"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:282
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
