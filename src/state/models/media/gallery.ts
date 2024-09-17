@@ -14,9 +14,7 @@ interface InitialImageUri {
 export class GalleryModel {
   images: ImageModel[] = []
 
-  constructor(
-    uris?: {uri: string; width: number; height: number; altText?: string}[],
-  ) {
+  constructor(uris?: InitialImageUri[]) {
     makeAutoObservable(this)
 
     if (uris) {
@@ -62,7 +60,6 @@ export class GalleryModel {
       path: uri,
       height,
       width,
-      mime: 'image/jpeg',
     }
 
     runInAction(() => {
