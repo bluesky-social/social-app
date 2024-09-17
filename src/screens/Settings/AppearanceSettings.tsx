@@ -16,6 +16,7 @@ import {useSetThemePrefs, useThemePrefs} from '#/state/shell'
 import {SimpleViewHeader} from '#/view/com/util/SimpleViewHeader'
 import {ScrollView} from '#/view/com/util/Views'
 import {atoms as a, native, useAlf, useTheme} from '#/alf'
+import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
 import * as ToggleButton from '#/components/forms/ToggleButton'
 import {Moon_Stroke2_Corner0_Rounded as MoonIcon} from '#/components/icons/Moon'
@@ -81,52 +82,27 @@ export function AppearanceSettingsScreen({}: Props) {
             </View>
           </SimpleViewHeader>
 
-          <View style={[a.p_xl, a.gap_lg]}>
-            <View style={[a.flex_row, a.align_center, a.gap_md]}>
-              <PhoneIcon style={t.atoms.text} />
-              <Text style={a.text_md}>
-                <Trans>Mode</Trans>
-              </Text>
-            </View>
-            <ToggleButton.Group
-              label={_(msg`Dark mode`)}
-              values={[colorMode]}
-              onChange={onChangeAppearance}>
-              <ToggleButton.Button label={_(msg`System`)} name="system">
-                <ToggleButton.ButtonText>
-                  <Trans>System</Trans>
-                </ToggleButton.ButtonText>
-              </ToggleButton.Button>
-              <ToggleButton.Button label={_(msg`Light`)} name="light">
-                <ToggleButton.ButtonText>
-                  <Trans>Light</Trans>
-                </ToggleButton.ButtonText>
-              </ToggleButton.Button>
-              <ToggleButton.Button label={_(msg`Dark`)} name="dark">
-                <ToggleButton.ButtonText>
-                  <Trans>Dark</Trans>
-                </ToggleButton.ButtonText>
-              </ToggleButton.Button>
-            </ToggleButton.Group>
-            {colorMode !== 'light' && (
-              <Animated.View
-                entering={native(FadeInDown)}
-                exiting={native(FadeOutDown)}
-                style={[a.mt_md, a.gap_lg]}>
+          <View style={[a.gap_3xl, a.pt_xl, a.px_xl]}>
+            <View style={[a.gap_lg]}>
+              <View style={[a.gap_md]}>
                 <View style={[a.flex_row, a.align_center, a.gap_md]}>
-                  <MoonIcon style={t.atoms.text} />
+                  <PhoneIcon style={t.atoms.text} />
                   <Text style={a.text_md}>
-                    <Trans>Dark theme</Trans>
+                    <Trans>Mode</Trans>
                   </Text>
                 </View>
-
                 <ToggleButton.Group
-                  label={_(msg`Dark theme`)}
-                  values={[darkTheme ?? 'dim']}
-                  onChange={onChangeDarkTheme}>
-                  <ToggleButton.Button label={_(msg`Dim`)} name="dim">
+                  label={_(msg`Dark mode`)}
+                  values={[colorMode]}
+                  onChange={onChangeAppearance}>
+                  <ToggleButton.Button label={_(msg`System`)} name="system">
                     <ToggleButton.ButtonText>
-                      <Trans>Dim</Trans>
+                      <Trans>System</Trans>
+                    </ToggleButton.ButtonText>
+                  </ToggleButton.Button>
+                  <ToggleButton.Button label={_(msg`Light`)} name="light">
+                    <ToggleButton.ButtonText>
+                      <Trans>Light</Trans>
                     </ToggleButton.ButtonText>
                   </ToggleButton.Button>
                   <ToggleButton.Button label={_(msg`Dark`)} name="dark">
@@ -135,37 +111,137 @@ export function AppearanceSettingsScreen({}: Props) {
                     </ToggleButton.ButtonText>
                   </ToggleButton.Button>
                 </ToggleButton.Group>
-              </Animated.View>
+              </View>
+
+              {colorMode !== 'light' && (
+                <Animated.View
+                  entering={native(FadeInDown)}
+                  exiting={native(FadeOutDown)}
+                  style={[a.gap_md]}>
+                  <View style={[a.flex_row, a.align_center, a.gap_md]}>
+                    <MoonIcon style={t.atoms.text} />
+                    <Text style={a.text_md}>
+                      <Trans>Dark theme</Trans>
+                    </Text>
+                  </View>
+
+                  <ToggleButton.Group
+                    label={_(msg`Dark theme`)}
+                    values={[darkTheme ?? 'dim']}
+                    onChange={onChangeDarkTheme}>
+                    <ToggleButton.Button label={_(msg`Dim`)} name="dim">
+                      <ToggleButton.ButtonText>
+                        <Trans>Dim</Trans>
+                      </ToggleButton.ButtonText>
+                    </ToggleButton.Button>
+                    <ToggleButton.Button label={_(msg`Dark`)} name="dark">
+                      <ToggleButton.ButtonText>
+                        <Trans>Dark</Trans>
+                      </ToggleButton.ButtonText>
+                    </ToggleButton.Button>
+                  </ToggleButton.Group>
+                </Animated.View>
+              )}
+            </View>
+
+            {neue && (
+              <View style={[a.gap_lg]}>
+                <Text style={[a.text_lg, a.font_bold]}>Typography</Text>
+
+                <Divider />
+
+                <View
+                  style={[
+                    a.flex_row,
+                    a.align_start,
+                    a.justify_between,
+                    a.gap_xl,
+                  ]}>
+                  <View style={[a.flex_1, a.gap_xs, {maxWidth: 360}]}>
+                    <Text style={[a.text_sm, a.font_bold, a.leading_snug]}>
+                      <Trans>Theme font</Trans>
+                    </Text>
+                    <Text
+                      style={[
+                        a.text_sm,
+                        a.leading_snug,
+                        t.atoms.text_contrast_medium,
+                      ]}>
+                      <Trans>
+                        Enables a consistent typeface for a clean user
+                        experience across devices. To use your default system
+                        font, disable this.
+                      </Trans>
+                    </Text>
+                  </View>
+
+                  <Toggle.Item
+                    name="font"
+                    label={_(msg`Use theme font`)}
+                    value={fontFamily}
+                    onChange={checked => {
+                      setFontFamily(checked)
+                      fonts.setFontFamily(checked ? 'theme' : 'system')
+                    }}>
+                    <Toggle.LabelText>
+                      {fontFamily ? (
+                        <Trans>Enabled</Trans>
+                      ) : (
+                        <Trans>Disabled</Trans>
+                      )}
+                    </Toggle.LabelText>
+                    <Toggle.Switch />
+                  </Toggle.Item>
+                </View>
+
+                <Divider />
+
+                <View
+                  style={[
+                    a.flex_row,
+                    a.align_start,
+                    a.justify_between,
+                    a.gap_xl,
+                  ]}>
+                  <View style={[a.flex_1, a.gap_xs, {maxWidth: 360}]}>
+                    <Text style={[a.text_sm, a.font_bold, a.leading_snug]}>
+                      <Trans>Theme font size</Trans>
+                    </Text>
+                    <Text
+                      style={[
+                        a.text_sm,
+                        a.leading_snug,
+                        t.atoms.text_contrast_medium,
+                      ]}>
+                      <Trans>
+                        Subtly scales the type size for a clean user experience
+                        across devices. To use the font size defined by your
+                        operating system, disable this.
+                      </Trans>
+                    </Text>
+                  </View>
+
+                  <Toggle.Item
+                    name="fontScale"
+                    label={_(msg`Enable new font scale`)}
+                    value={fontScale}
+                    onChange={checked => {
+                      setFontScale(checked)
+                      fonts.setFontScale(checked ? 0.9375 : 1)
+                    }}>
+                    <Toggle.LabelText>
+                      {fontScale ? (
+                        <Trans>Enabled</Trans>
+                      ) : (
+                        <Trans>Disabled</Trans>
+                      )}
+                    </Toggle.LabelText>
+                    <Toggle.Switch />
+                  </Toggle.Item>
+                </View>
+              </View>
             )}
           </View>
-
-          {neue && (
-            <View style={[a.p_xl, a.gap_lg]}>
-              <Text>Neue options</Text>
-              <Toggle.Item
-                name="Font scale"
-                label="Font scale"
-                value={fontScale}
-                onChange={checked => {
-                  setFontScale(checked)
-                  fonts.setFontScale(checked ? 0.9375 : 1)
-                }}>
-                <Toggle.LabelText>Enable new font scale</Toggle.LabelText>
-                <Toggle.Switch />
-              </Toggle.Item>
-              <Toggle.Item
-                name="Font family"
-                label="Font family"
-                value={fontFamily}
-                onChange={checked => {
-                  setFontFamily(checked)
-                  fonts.setFontFamily(checked ? 'theme' : 'system')
-                }}>
-                <Toggle.LabelText>Use theme font</Toggle.LabelText>
-                <Toggle.Switch />
-              </Toggle.Item>
-            </View>
-          )}
         </ScrollView>
       </View>
     </LayoutAnimationConfig>
