@@ -104,6 +104,25 @@ class ShareViewController: UIViewController {
 
     self.completeRequest()
   }
+  
+  private func handleVideos(items: [NSItemProvider]) async {
+    let firstItem = items.first
+    
+    if let dataUri = try? await firstItem?.loadItem(forTypeIdentifier: "public.video") as? URL {
+      let ext = String(dataUri.lastPathComponent.split(separator: ".").last ?? "mp4")
+      if let tempUrl = getTempUrl(ext: ext) {
+        let data = try? Data(contentsOf: dataUri)
+        try? data?.write(to: tempUrl)
+        
+        if let encoded = dataUri.absoluteString.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed),
+           let url = URL(string: "\(self.appScheme)://intent/compose?videoUri=\(encoded)") {
+          _ = self.openURL(url)
+        }
+      }
+    }
+    
+    self.completeRequest()
+  }
 
   private func saveImageWithInfo(_ image: UIImage?) -> String? {
     guard let image = image else {
@@ -114,16 +133,10 @@ class ShareViewController: UIViewController {
       // Saving this file to the bundle group's directory lets us access it from
       // inside of the app. Otherwise, we wouldn't have access even though the
       // extension does.
-      if let dir = FileManager()
-        .containerURL(
-          forSecurityApplicationGroupIdentifier: "group.app.bsky") {
-        let filePath = "\(dir.absoluteString)\(ProcessInfo.processInfo.globallyUniqueString).jpeg"
-
-        if let newUri = URL(string: filePath),
-           let jpegData = image.jpegData(compressionQuality: 1) {
-          try jpegData.write(to: newUri)
-          return "\(newUri.absoluteString)|\(image.size.width)|\(image.size.height)"
-        }
+      if let tempUrl = getTempUrl(ext: "jpeg"),
+         let jpegData = image.jpegData(compressionQuality: 1) {
+          try jpegData.write(to: tempUrl)
+          return "\(tempUrl.absoluteString)|\(image.size.width)|\(image.size.height)"
       }
       return nil
     } catch {
@@ -133,6 +146,13 @@ class ShareViewController: UIViewController {
 
   private func completeRequest() {
     self.extensionContext?.completeRequest(returningItems: nil)
+  }
+  
+  private func getTempUrl(ext: String) -> URL? {
+    if let dir = FileManager().containerURL(forSecurityApplicationGroupIdentifier: "group.app.bsky") {
+      return URL(string: "\(dir.absoluteString)\(ProcessInfo.processInfo.globallyUniqueString).\(ext)")!
+    }
+    return nil
   }
 
   @objc func openURL(_ url: URL) -> Bool {
