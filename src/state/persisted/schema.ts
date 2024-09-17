@@ -57,25 +57,37 @@ const schema = z.object({
   }),
   languagePrefs: z.object({
     /**
-     * Used as the target for translations.
+     * The target language for translating posts.
+     *
+     * BCP-47 2-letter language code without region.
      */
-    primaryLanguage: z.string(), // should move to server
+    primaryLanguage: z.string(),
     /**
      * The languages the user can read, passed to feeds.
+     *
+     * BCP-47 2-letter language codes without region.
      */
-    contentLanguages: z.array(z.string()), // should move to server
+    contentLanguages: z.array(z.string()),
     /**
-     * The language the user is currently posting in, configured within the
-     * composer.
+     * The language(s) the user is currently posting in, configured within the
+     * composer. Multiple languages are psearate by commas.
+     *
+     * BCP-47 2-letter language code without region.
      */
-    postLanguage: z.string(), // should move to server
+    postLanguage: z.string(),
     /**
      * The user's post language history, used to pre-populate the post language
-     * selector in the composer.
+     * selector in the composer. Within each value, multiple languages are
+     * separated by values.
+     *
+     * BCP-47 2-letter language codes without region.
      */
     postLanguageHistory: z.array(z.string()),
     /**
-     * The language for all UI translations in the app.
+     * The language for UI translations in the app.
+     *
+     * BCP-47 2-letter language code with or without region,
+     * to match with {@link AppLanguage}.
      */
     appLanguage: z.string(),
   }),
