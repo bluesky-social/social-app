@@ -5,7 +5,6 @@ class ShareViewController: UIViewController {
   // scheme.
   let appScheme = Bundle.main.object(forInfoDictionaryKey: "MainAppScheme") as? String ?? "bluesky"
 
-  //
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
 
@@ -24,6 +23,8 @@ class ShareViewController: UIViewController {
         await self.handleUrl(item: firstAttachment)
       } else if firstAttachment.hasItemConformingToTypeIdentifier("public.image") {
         await self.handleImages(items: attachments)
+      } else if firstAttachment.hasItemConformingToTypeIdentifier("public.video") {
+        await self.handleVideos(items: attachments)
       } else {
         self.completeRequest()
       }
@@ -31,31 +32,23 @@ class ShareViewController: UIViewController {
   }
 
   private func handleText(item: NSItemProvider) async {
-    do {
-      if let data = try await item.loadItem(forTypeIdentifier: "public.text") as? String {
-        if let encoded = data.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed),
-           let url = URL(string: "\(self.appScheme)://intent/compose?text=\(encoded)") {
-          _ = self.openURL(url)
-        }
+    if let data = try? await item.loadItem(forTypeIdentifier: "public.text") as? String {
+      if let encoded = data.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed),
+         let url = URL(string: "\(self.appScheme)://intent/compose?text=\(encoded)") {
+        _ = self.openURL(url)
       }
-      self.completeRequest()
-    } catch {
-      self.completeRequest()
     }
+    self.completeRequest()
   }
 
   private func handleUrl(item: NSItemProvider) async {
-    do {
-      if let data = try await item.loadItem(forTypeIdentifier: "public.url") as? URL {
-        if let encoded = data.absoluteString.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed),
-           let url = URL(string: "\(self.appScheme)://intent/compose?text=\(encoded)") {
-          _ = self.openURL(url)
-        }
+    if let data = try? await item.loadItem(forTypeIdentifier: "public.url") as? URL {
+      if let encoded = data.absoluteString.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed),
+         let url = URL(string: "\(self.appScheme)://intent/compose?text=\(encoded)") {
+        _ = self.openURL(url)
       }
-      self.completeRequest()
-    } catch {
-      self.completeRequest()
     }
+    self.completeRequest()
   }
 
   private func handleImages(items: [NSItemProvider]) async {
@@ -138,10 +131,8 @@ class ShareViewController: UIViewController {
           try jpegData.write(to: tempUrl)
           return "\(tempUrl.absoluteString)|\(image.size.width)|\(image.size.height)"
       }
-      return nil
-    } catch {
-      return nil
-    }
+    } catch {}
+    return nil
   }
 
   private func completeRequest() {
