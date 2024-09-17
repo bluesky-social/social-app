@@ -5599,7 +5599,7 @@ msgstr "Resposta Oculta pelo Autor da Thread"
 #: src/components/moderation/ModerationDetailsDialog.tsx:114
 #: src/lib/moderation/useModerationCauseDescription.ts:122
 msgid "Reply Hidden by You"
-msgstr "Responder Oculto por Você"
+msgstr "Resposta oculta por você"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:355
 msgid "Reply settings"
