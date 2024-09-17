@@ -144,6 +144,7 @@ export const defaults: Schema = {
     postLanguageHistory: (deviceLanguageCodes || [])
       .concat(['en', 'ja', 'pt', 'de'])
       .slice(0, 6),
+    // try full language tag first, then fallback to language code
     appLanguage: findSupportedAppLanguage([
       deviceLocales[0].languageTag,
       deviceLanguageCodes[0],
