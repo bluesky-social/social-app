@@ -127,7 +127,7 @@ msgstr "{0} <0>em <1>texto e tags</1></0>"
 msgid "{0} joined this week"
 msgstr "{0} entrou esta semana"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:637
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:195
 msgid "{0} of {1}"
 msgstr "{0} de {1}"
 
@@ -343,12 +343,16 @@ msgstr "7 dias"
 #~ msgid "A help tooltip"
 #~ msgstr "Uma sugestão de ajuda"
 
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:266
+msgid "A virtual certificate with text \"Celebrating 10M users on Bluesky, #{0}, {displayName} {handle}, joined on {joinedDate}\""
+msgstr "Um certificado virtual com o texto \"Comemorando 10 milhões de usuários no Bluesky, #{0}, {displayName} {handle}, ingressou em {joinedDate}\""
+
 #: src/view/com/util/ViewHeader.tsx:92
 #: src/view/screens/Search/Search.tsx:684
 msgid "Access navigation links and settings"
 msgstr "Acessar links de navegação e configurações"
 
-#: src/view/com/home/HomeHeaderLayoutMobile.tsx:56
+#: src/view/com/home/HomeHeaderLayoutMobile.tsx:103
 msgid "Access profile and other navigation links"
 msgstr "Acessar perfil e outros links de navegação"
 
@@ -640,7 +644,7 @@ msgstr "Ocorreu um erro"
 #~ msgid "An error occured"
 #~ msgstr "Tivemos um problema"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:413
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:416
 msgid "An error occurred"
 msgstr "Ocorreu um erro"
 
@@ -660,7 +664,7 @@ msgstr "Ocorreu um erro ao carregar o vídeo. Tente novamente mais tarde."
 msgid "An error occurred while loading the video. Please try again."
 msgstr "Ocorreu um erro ao carregar o vídeo. Tente novamente."
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:250
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:315
 msgid "An error occurred while saving the image!"
 msgstr "Ocorreu um erro ao salvar a imagem!"
 
@@ -990,6 +994,11 @@ msgstr "Bluesky é uma rede aberta que permite a escolha do seu provedor de hosp
 msgid "Bluesky is better with friends!"
 msgstr "Bluesky é melhor com amigos!"
 
+#: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:43
+#: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:59
+msgid "Bluesky is celebrating 10 million users!"
+msgstr ""
+
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:80
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:82
 #~ msgid "Bluesky is flexible."
@@ -1005,7 +1014,7 @@ msgstr "Bluesky é melhor com amigos!"
 #~ msgid "Bluesky is public."
 #~ msgstr "Bluesky é público."
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:206
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:256
 msgid "Bluesky now has over 10 million users, and I was #{0}!"
 msgstr "O Bluesky agora tem mais de 10 milhões de usuários, e eu fui o #{0}!"
 
@@ -1030,7 +1039,7 @@ msgstr "Desfocar imagens e filtrar dos feeds"
 msgid "Books"
 msgstr "Livros"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:614
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:677
 msgid "Brag a little!"
 msgstr "Gabe-se um pouco!"
 
@@ -1100,8 +1109,8 @@ msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must 
 msgstr "Só pode conter letras, números, espaços, riscas e subtraços. Deve ter pelo menos 4 caracteres, mas não mais de 32 caracteres."
 
 #: src/components/Menu/index.tsx:235
-#: src/components/Prompt.tsx:122
 #: src/components/Prompt.tsx:124
+#: src/components/Prompt.tsx:126
 #: src/components/TagMenu/index.tsx:282
 #: src/screens/Deactivated.tsx:161
 #: src/view/com/composer/Composer.tsx:594
@@ -1181,7 +1190,7 @@ msgstr "Legendas (.vtt)"
 msgid "Captions & alt text"
 msgstr "Legendas e texto alt"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:368
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:434
 msgid "Celebrating {0} users"
 msgstr "Comemorando {0} usuários"
 
@@ -1532,8 +1541,8 @@ msgstr "Configure o filtro de conteúdo por categoria: {name}"
 msgid "Configured in <0>moderation settings</0>."
 msgstr "Configure no <0>painel de moderação</0>."
 
-#: src/components/Prompt.tsx:165
-#: src/components/Prompt.tsx:168
+#: src/components/Prompt.tsx:167
+#: src/components/Prompt.tsx:170
 #: src/view/com/modals/SelfLabel.tsx:155
 #: src/view/com/modals/VerifyEmail.tsx:239
 #: src/view/com/modals/VerifyEmail.tsx:241
@@ -2050,7 +2059,7 @@ msgstr "Desabilitar feedback tátil"
 #~ msgid "Disable haptics"
 #~ msgstr "Desabilitar feedback tátil"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:379
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:382
 msgid "Disable subtitles"
 msgstr "Desativar legendas"
 
@@ -2186,7 +2195,7 @@ msgstr "Baixe o Bluesky"
 msgid "Download CAR file"
 msgstr "Baixar arquivo CAR"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:622
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:686
 msgid "Download image"
 msgstr "Baixar imagem"
 
@@ -2433,7 +2442,7 @@ msgstr "Habilitar mídia para"
 msgid "Enable priority notifications"
 msgstr "Habilitar notificações prioritárias"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:380
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:383
 msgid "Enable subtitles"
 msgstr "Habilitar legendas"
 
@@ -2565,7 +2574,7 @@ msgstr "Excluir usuário que você segue"
 msgid "Excludes users you follow"
 msgstr "Excluir usuário que você segue"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:397
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:400
 msgid "Exit fullscreen"
 msgstr "Sair da tela cheia"
 
@@ -2912,13 +2921,13 @@ msgstr "Seguir Conta"
 msgid "Follow all"
 msgstr "Siga todos"
 
-#: src/view/com/profile/FollowButton.tsx:79
-msgctxt "action"
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:223
+#: src/view/com/post-thread/PostThreadFollowBtn.tsx:142
 msgid "Follow Back"
 msgstr "Seguir De Volta"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:223
-#: src/view/com/post-thread/PostThreadFollowBtn.tsx:142
+#: src/view/com/profile/FollowButton.tsx:79
+msgctxt "action"
 msgid "Follow Back"
 msgstr "Seguir De Volta"
 
@@ -3075,7 +3084,7 @@ msgctxt "from-feed"
 msgid "From <0/>"
 msgstr "Por <0/>"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:398
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:401
 msgid "Fullscreen"
 msgstr "Tela cheia"
 
@@ -3419,7 +3428,7 @@ msgstr "Imagem"
 msgid "Image alt text"
 msgstr "Texto alternativo da imagem"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:247
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:312
 #: src/components/StarterPack/ShareDialog.tsx:76
 msgid "Image saved to your camera roll!"
 msgstr "Imagem salva no rolo da câmera!"
@@ -3566,8 +3575,12 @@ msgid "Join the conversation"
 msgstr "Participe da conversa"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:492
-msgid "Joined {0}"
-msgstr "Juntou-se {0}"
+#~ msgid "Joined {0}"
+#~ msgstr "Juntou-se {0}"
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:559
+msgid "Joined on {joinedDate}"
+msgstr ""
 
 #: src/screens/Onboarding/index.tsx:21
 #: src/screens/Onboarding/state.ts:89
@@ -4074,8 +4087,8 @@ msgstr "Música"
 msgid "Mute"
 msgstr "Silenciar"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:166
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:389
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:157
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:94
 msgctxt "video"
 msgid "Mute"
 msgstr "Silenciar"
@@ -4387,6 +4400,11 @@ msgstr "Nenhum GIF em destaque encontrado."
 msgid "No feeds found. Try searching for something else."
 msgstr "Nenhum feed encontrado. Tente pesquisar por outra coisa."
 
+#: src/components/LikedByList.tsx:78
+#: src/view/com/post-thread/PostLikedBy.tsx:85
+msgid "No likes yet"
+msgstr ""
+
 #: src/components/ProfileCard.tsx:336
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:116
 msgid "No longer following {0}"
@@ -4422,6 +4440,14 @@ msgstr "Ninguém além do autor pode citar esta postagem."
 #: src/screens/Profile/Sections/Feed.tsx:64
 msgid "No posts yet."
 msgstr "Nenhuma postagem ainda."
+
+#: src/view/com/post-thread/PostQuotes.tsx:106
+msgid "No quotes yet"
+msgstr ""
+
+#: src/view/com/post-thread/PostRepostedBy.tsx:78
+msgid "No reposts yet"
+msgstr ""
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:101
 #: src/view/com/composer/text-input/web/Autocomplete.tsx:195
@@ -4469,10 +4495,19 @@ msgstr "Ninguém"
 #~ msgid "Nobody can reply"
 #~ msgstr "Ninguém pode responder"
 
-#: src/components/LikedByList.tsx:79
+#: src/components/LikedByList.tsx:80
 #: src/components/LikesDialog.tsx:99
+#: src/view/com/post-thread/PostLikedBy.tsx:87
 msgid "Nobody has liked this yet. Maybe you should be the first!"
 msgstr "Ninguém curtiu isso ainda. Você pode ser o primeiro!"
+
+#: src/view/com/post-thread/PostQuotes.tsx:108
+msgid "Nobody has quoted this yet. Maybe you should be the first!"
+msgstr ""
+
+#: src/view/com/post-thread/PostRepostedBy.tsx:80
+msgid "Nobody has reposted this yet. Maybe you should be the first!"
+msgstr ""
 
 #: src/screens/StarterPack/Wizard/StepProfiles.tsx:103
 msgid "Nobody was found. Try searching for someone else."
@@ -4576,7 +4611,7 @@ msgstr "Opa!"
 msgid "Oh no! Something went wrong."
 msgstr "Opa! Algo deu errado."
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:175
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:224
 msgid "Oh no! We weren't able to generate an image for you to share. Rest assured, we're glad you're here 🦋"
 msgstr "Ah, não! Não conseguimos gerar uma imagem para você compartilhar. Fique tranquilo, estamos felizes que você esteja aqui 🦋"
 
@@ -4624,7 +4659,7 @@ msgstr "Apenas {0} pode responder."
 msgid "Only contains letters, numbers, and hyphens"
 msgstr "Contém apenas letras, números e hífens"
 
-#: src/view/com/composer/videos/SubtitleFilePicker.tsx:39
+#: src/view/com/composer/videos/SubtitleFilePicker.tsx:40
 msgid "Only WebVTT (.vtt) files are supported"
 msgstr "Somente arquivos WebVTT (.vtt) são suportados"
 
@@ -4680,7 +4715,7 @@ msgstr "Abrir opções de mensagem"
 msgid "Open muted words and tags settings"
 msgstr "Abrir opções de palavras/tags silenciadas"
 
-#: src/view/com/home/HomeHeaderLayoutMobile.tsx:54
+#: src/view/com/home/HomeHeaderLayoutMobile.tsx:101
 msgid "Open navigation"
 msgstr "Abrir navegação"
 
@@ -4924,12 +4959,12 @@ msgid "Password updated!"
 msgstr "Senha atualizada!"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:46
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:150
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:366
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:369
 msgid "Pause"
 msgstr "Pausar"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:319
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:320
 msgid "Pause video"
 msgstr "Pausar vídeo"
 
@@ -4989,8 +5024,8 @@ msgid "Pinned to your feeds"
 msgstr "Fixado em seus feeds"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:46
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:150
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:367
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:370
 msgid "Play"
 msgstr "Tocar"
 
@@ -5008,7 +5043,7 @@ msgid "Play or pause the GIF"
 msgstr "Tocar ou pausar o GIF"
 
 #: src/view/com/util/post-embeds/VideoEmbed.tsx:110
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:320
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:321
 msgid "Play video"
 msgstr "Reproduzir vídeo"
 
@@ -6076,7 +6111,7 @@ msgstr "Veja o guia"
 #~ msgid "See what's next"
 #~ msgstr "Veja o que vem por aí"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:631
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:189
 msgid "Seek slider"
 msgstr "Controle deslizante de busca"
 
@@ -6136,7 +6171,7 @@ msgstr "Seleciona opção {i} de {numItems}"
 #~ msgid "Select some accounts below to follow"
 #~ msgstr "Selecione algumas contas para seguir"
 
-#: src/view/com/composer/videos/SubtitleFilePicker.tsx:65
+#: src/view/com/composer/videos/SubtitleFilePicker.tsx:66
 msgid "Select subtitle file (.vtt)"
 msgstr "Selecione o arquivo de legenda (.vtt)"
 
@@ -6344,7 +6379,7 @@ msgstr "Atividade sexual ou nudez erótica."
 msgid "Sexually Suggestive"
 msgstr "Sexualmente Sugestivo"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:644
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:708
 #: src/components/StarterPack/QrCodeDialog.tsx:177
 #: src/screens/StarterPack/StarterPackScreen.tsx:411
 #: src/screens/StarterPack/StarterPackScreen.tsx:582
@@ -6381,11 +6416,11 @@ msgstr "Compartilhar assim"
 msgid "Share feed"
 msgstr "Compartilhar feed"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:621
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:685
 msgid "Share image externally"
 msgstr "Compartilhar imagem externamente"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:639
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:703
 msgid "Share image in post"
 msgstr "Compartilhe a imagem na postagem"
 
@@ -6894,15 +6929,15 @@ msgstr "Alto"
 msgid "Tap to dismiss"
 msgstr "Toque para dispensar"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:145
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:136
 msgid "Tap to enter full screen"
 msgstr "Toque para entrar em tela cheia"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:142
 msgid "Tap to play or pause"
 msgstr "Toque para reproduzir ou pausar"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:164
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:159
 msgid "Tap to toggle sound"
 msgstr "Toque para alternar o som"
 
@@ -6936,7 +6971,7 @@ msgstr "Conte uma piada!"
 msgid "Tell us a little more"
 msgstr "Conte-nos um pouco mais"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:518
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:578
 msgid "Ten Million"
 msgstr "Dez milhões"
 
@@ -6977,7 +7012,7 @@ msgstr "Campo de entrada de texto"
 msgid "Thank you. Your report has been sent."
 msgstr "Obrigado. Sua denúncia foi enviada."
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:593
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:654
 msgid "Thanks for being one of our first 10 million users."
 msgstr "Obrigado por ser um dos nossos primeiros 10 milhões de usuários."
 
@@ -7002,7 +7037,7 @@ msgstr "Este identificador de usuário já está sendo usado."
 msgid "That starter pack could not be found."
 msgstr "Esse pacote inicial não pôde ser encontrado."
 
-#: src/view/com/post-thread/PostQuotes.tsx:127
+#: src/view/com/post-thread/PostQuotes.tsx:133
 msgid "That's all, folks!"
 msgstr "É isso, pessoal!"
 
@@ -7457,6 +7492,10 @@ msgstr "Preferências das Threads"
 msgid "To disable the email 2FA method, please verify your access to the email address."
 msgstr "Para desabilitar o 2FA via e-mail, por favor verifique seu acesso a este endereço de e-mail."
 
+#: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:69
+msgid "To learn more, <0>check out our post.</0>"
+msgstr ""
+
 #: src/components/dms/ReportConversationPrompt.tsx:20
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
 msgstr "Para denunciar uma conversa, por favor, denuncie uma das mensagens individualmente. Isso vai permitir a análise da situação pelos nossos moderadores."
@@ -7469,7 +7508,8 @@ msgstr "Para enviar vídeos para o Bluesky, você deve primeiro verificar seu e-
 msgid "To whom would you like to send this report?"
 msgstr "Para quem você gostaria de enviar esta denúncia?"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:597
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:658
+#: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:63
 msgid "Together, we're rebuilding the social internet. We're glad you're here."
 msgstr "Juntos, estamos reconstruindo a internet social. Estamos felizes que você esteja aqui."
 
@@ -7613,8 +7653,8 @@ msgstr "Descurtir este feed"
 msgid "Unmute"
 msgstr "Dessilenciar"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:165
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:388
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:156
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:93
 msgctxt "video"
 msgid "Unmute"
 msgstr "Ativar o áudio"
@@ -7645,13 +7685,13 @@ msgstr "Desmutar conversa"
 msgid "Unmute thread"
 msgstr "Dessilenciar thread"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:317
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:318
 msgid "Unmute video"
 msgstr "Ativar o áudio do vídeo"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
-msgid "Unmuted"
-msgstr "Áudio ativado"
+#~ msgid "Unmuted"
+#~ msgstr "Áudio ativado"
 
 #: src/view/screens/ProfileFeed.tsx:292
 #: src/view/screens/ProfileList.tsx:673
@@ -7927,8 +7967,8 @@ msgstr "Verificar Seu E-mail"
 msgid "Version {appVersion} {bundleInfo}"
 msgstr "Versão {appVersion} {bundleInfo}"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:93
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:144
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:84
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:135
 msgid "Video"
 msgstr "Vídeo"
 
@@ -7949,7 +7989,7 @@ msgstr "Vídeo não encontrado."
 msgid "Video settings"
 msgstr "Configurações de vídeo"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:93
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:84
 msgid "Video: {0}"
 msgstr "Vídeo: {0}"
 
@@ -7999,6 +8039,10 @@ msgstr "Ver thread completa"
 msgid "View information about these labels"
 msgstr "Ver informações sobre estes rótulos"
 
+#: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:72
+msgid "View our post"
+msgstr ""
+
 #: src/components/ProfileHoverCard/index.web.tsx:418
 #: src/components/ProfileHoverCard/index.web.tsx:436
 #: src/components/ProfileHoverCard/index.web.tsx:463
@@ -8023,8 +8067,8 @@ msgstr "Ver usuários que curtiram este feed"
 msgid "View your blocked accounts"
 msgstr "Veja suas contas bloqueadas"
 
-#: src/view/com/home/HomeHeaderLayout.web.tsx:79
-#: src/view/com/home/HomeHeaderLayoutMobile.tsx:86
+#: src/view/com/home/HomeHeaderLayout.web.tsx:132
+#: src/view/com/home/HomeHeaderLayoutMobile.tsx:143
 msgid "View your feeds and explore more"
 msgstr "Veja seus feeds e explore mais"
 
@@ -8497,7 +8541,7 @@ msgstr "Você deve estar seguindo pelo menos sete outras pessoas para gerar um p
 msgid "You must grant access to your photo library to save a QR code"
 msgstr "Você deve conceder acesso à sua biblioteca de fotos para salvar o QR code."
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:237
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:302
 #: src/components/StarterPack/ShareDialog.tsx:68
 msgid "You must grant access to your photo library to save the image."
 msgstr "Você deve conceder acesso à sua biblioteca de fotos para salvar a imagem."
