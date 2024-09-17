@@ -197,6 +197,27 @@ export function TenMillionInner({
   const isLoadingData = isProfileLoading || !moderation || !profile
   const isLoadingImage = !uri
 
+  const displayName = React.useMemo(() => {
+    if (!profile || !moderation) return ''
+    return sanitizeDisplayName(
+      profile.displayName || sanitizeHandle(profile.handle),
+      moderation.ui('displayName'),
+    )
+  }, [profile, moderation])
+  const handle = React.useMemo(() => {
+    if (!profile) return ''
+    return sanitizeHandle(profile.handle, '@')
+  }, [profile])
+  const joinedDate = React.useMemo(() => {
+    if (!profile || !profile.createdAt) return ''
+    const date = i18n.date(profile.createdAt, {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    })
+    return date
+  }, [i18n, profile])
+
   const error: string = React.useMemo(() => {
     if (profileError) {
       return _(
@@ -235,16 +256,16 @@ export function TenMillionInner({
               msg`Bluesky now has over 10 million users, and I was #${i18n.number(
                 userNumber,
               )}!`,
-            ), // TODO
+            ),
             imageUris: [
               {
                 uri,
                 width: WIDTH,
                 height: HEIGHT,
                 altText: _(
-                  msg`A virtual card celebrating 10 million users on Bluesky for user #${i18n.number(
+                  msg`A virtual certificate with text "Celebrating 10M users on Bluesky, #${i18n.number(
                     userNumber,
-                  )}`,
+                  )}, ${displayName} ${handle}, joined on ${joinedDate}"`,
                 ),
               },
             ],
@@ -252,7 +273,17 @@ export function TenMillionInner({
         }, 1e3)
       })
     }
-  }, [_, i18n, control, openComposer, uri, userNumber])
+  }, [
+    _,
+    i18n,
+    control,
+    openComposer,
+    uri,
+    userNumber,
+    displayName,
+    handle,
+    joinedDate,
+  ])
   const onNativeShare = React.useCallback(() => {
     if (uri) {
       control.close(() => {
@@ -495,11 +526,7 @@ export function TenMillionInner({
                             a.leading_tight,
                             {maxWidth: '60%'},
                           ]}>
-                          {sanitizeDisplayName(
-                            profile.displayName ||
-                              sanitizeHandle(profile.handle),
-                            moderation.ui('displayName'),
-                          )}
+                          {displayName}
                         </Text>
                         <View
                           style={[a.flex_row, a.justify_between, a.gap_4xl]}>
@@ -513,7 +540,7 @@ export function TenMillionInner({
                               a.leading_snug,
                               lightTheme.atoms.text_contrast_medium,
                             ]}>
-                            {sanitizeHandle(profile.handle, '@')}
+                            {handle}
                           </Text>
 
                           {profile.createdAt && (
@@ -529,14 +556,7 @@ export function TenMillionInner({
                                 a.text_right,
                                 lightTheme.atoms.text_contrast_low,
                               ]}>
-                              <Trans>
-                                Joined{' '}
-                                {i18n.date(profile.createdAt, {
-                                  month: 'short',
-                                  day: 'numeric',
-                                  year: 'numeric',
-                                })}
-                              </Trans>
+                              <Trans>Joined on {joinedDate}</Trans>
                             </Text>
                           )}
                         </View>
