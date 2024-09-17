@@ -316,8 +316,7 @@ let FeedItem = ({
             {authors.length > 1 ? (
               <>
                 <Text style={[pal.text, s.mr5, s.ml5]}>
-                  {' '}
-                  <Trans>and</Trans>{' '}
+                  <Trans>and</Trans>
                 </Text>
                 <Text style={[pal.text, s.bold]}>
                   {plural(authors.length - 1, {
