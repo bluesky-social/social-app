@@ -177,7 +177,7 @@
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "~2.16.2",
     "react-native-get-random-values": "~1.11.0",
-    "react-native-image-crop-picker": "0.40.3",
+    "react-native-image-crop-picker": "0.41.2",
     "react-native-ios-context-menu": "^1.15.3",
     "react-native-keyboard-controller": "^1.12.1",
     "react-native-mmkv": "^2.12.2",
