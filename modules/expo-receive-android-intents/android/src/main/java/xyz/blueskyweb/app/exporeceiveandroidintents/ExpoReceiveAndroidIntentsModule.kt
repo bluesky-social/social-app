@@ -36,13 +36,14 @@ class ExpoReceiveAndroidIntentsModule : Module() {
         return
       }
 
-      val type = if (it.type.toString().startsWith("image/")) {
-        AttachmentType.IMAGE
-      } else if (it.type.toString().startsWith("video/")) {
-        AttachmentType.VIDEO
-      } else {
-        return
-      }
+      val type =
+        if (it.type.toString().startsWith("image/")) {
+          AttachmentType.IMAGE
+        } else if (it.type.toString().startsWith("video/")) {
+          AttachmentType.VIDEO
+        } else {
+          return
+        }
 
       if (it.action == Intent.ACTION_SEND) {
         handleAttachmentIntent(it, type)
@@ -62,7 +63,10 @@ class ExpoReceiveAndroidIntentsModule : Module() {
     }
   }
 
-  private fun handleAttachmentIntent(intent: Intent, type: AttachmentType) {
+  private fun handleAttachmentIntent(
+    intent: Intent,
+    type: AttachmentType,
+  ) {
     val uri =
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         intent.getParcelableExtra(Intent.EXTRA_STREAM, Uri::class.java)
@@ -78,15 +82,22 @@ class ExpoReceiveAndroidIntentsModule : Module() {
     }
   }
 
-  private fun handleAttachmentsIntent(intent: Intent, type: AttachmentType) {
-    val uris = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-      intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM, Uri::class.java)
-        ?.filterIsInstance<Uri>()
-        ?.take(4)
-    } else {
-      intent.getParcelableArrayListExtra<Uri>(Intent.EXTRA_STREAM)
-        ?.filterIsInstance<Uri>()?.take(4)
-    }
+  private fun handleAttachmentsIntent(
+    intent: Intent,
+    type: AttachmentType,
+  ) {
+    val uris =
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        intent
+          .getParcelableArrayListExtra(Intent.EXTRA_STREAM, Uri::class.java)
+          ?.filterIsInstance<Uri>()
+          ?.take(4)
+      } else {
+        intent
+          .getParcelableArrayListExtra<Uri>(Intent.EXTRA_STREAM)
+          ?.filterIsInstance<Uri>()
+          ?.take(4)
+      }
 
     uris?.let {
       when (type) {
@@ -148,8 +159,7 @@ class ExpoReceiveAndroidIntentsModule : Module() {
     )
   }
 
-  private fun createFile(extension: String): File =
-    File.createTempFile(extension, "temp.$extension", appContext.currentActivity?.cacheDir)
+  private fun createFile(extension: String): File = File.createTempFile(extension, "temp.$extension", appContext.currentActivity?.cacheDir)
 
   // We will pas the width and height to the app here, since getting measurements
   // on the RN side is a bit more involved, and we already have them here anyway.
