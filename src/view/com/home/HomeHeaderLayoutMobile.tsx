@@ -1,25 +1,25 @@
 import React from 'react'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import Animated from 'react-native-reanimated'
-import { msg } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-import { useSession } from '#/state/session'
-import { useSetDrawerOpen } from '#/state/shell/drawer-open'
-import { useShellLayout } from '#/state/shell/shell-layout'
-import { HITSLOP_10 } from 'lib/constants'
-import { useMinimalShellHeaderTransform } from 'lib/hooks/useMinimalShellTransform'
-import { usePalette } from 'lib/hooks/usePalette'
-import { isWeb } from 'platform/detection'
-import { Logo } from '#/view/icons/Logo'
-import { atoms } from '#/alf'
-import { useTheme } from '#/alf'
-import { atoms as a } from '#/alf'
-import { ColorPalette_Stroke2_Corner0_Rounded as ColorPalette } from '#/components/icons/ColorPalette'
-import { Hashtag_Stroke2_Corner0_Rounded as FeedsIcon } from '#/components/icons/Hashtag'
-import { Menu_Stroke2_Corner0_Rounded as Menu } from '#/components/icons/Menu'
-import { Link } from '#/components/Link'
-import { IS_DEV } from '#/env'
+import {useSession} from '#/state/session'
+import {useSetDrawerOpen} from '#/state/shell/drawer-open'
+import {useShellLayout} from '#/state/shell/shell-layout'
+import {HITSLOP_10} from 'lib/constants'
+import {useMinimalShellHeaderTransform} from 'lib/hooks/useMinimalShellTransform'
+import {usePalette} from 'lib/hooks/usePalette'
+import {isWeb} from 'platform/detection'
+import {Logo} from '#/view/icons/Logo'
+import {atoms} from '#/alf'
+import {useTheme} from '#/alf'
+import {atoms as a} from '#/alf'
+import {ColorPalette_Stroke2_Corner0_Rounded as ColorPalette} from '#/components/icons/ColorPalette'
+import {Hashtag_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/Hashtag'
+import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
+import {Link} from '#/components/Link'
+import {IS_DEV} from '#/env'
 
 export function HomeHeaderLayoutMobile({
   children,
@@ -29,11 +29,11 @@ export function HomeHeaderLayoutMobile({
 }) {
   const t = useTheme()
   const pal = usePalette('default')
-  const { _ } = useLingui()
+  const {_} = useLingui()
   const setDrawerOpen = useSetDrawerOpen()
-  const { headerHeight } = useShellLayout()
+  const {headerHeight} = useShellLayout()
   const headerMinimalShellTransform = useMinimalShellHeaderTransform()
-  const { hasSession } = useSession()
+  const {hasSession} = useSession()
 
   const onPressAvi = React.useCallback(() => {
     setDrawerOpen(true)
@@ -46,7 +46,7 @@ export function HomeHeaderLayoutMobile({
         headerHeight.value = e.nativeEvent.layout.height
       }}>
       <View style={[pal.view, styles.topBar]}>
-        <View style={[pal.view, { width: 100 }]}>
+        <View style={[pal.view, {width: 100}]}>
           <TouchableOpacity
             testID="viewHeaderDrawerBtn"
             onPress={onPressAvi}
@@ -69,7 +69,7 @@ export function HomeHeaderLayoutMobile({
             atoms.align_center,
             atoms.gap_md,
             pal.view,
-            { width: 100 },
+            {width: 100},
           ]}>
           {IS_DEV && (
             <>

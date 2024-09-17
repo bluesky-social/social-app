@@ -1,25 +1,25 @@
 import React from 'react'
-import { StyleSheet, View } from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import Animated from 'react-native-reanimated'
-import { msg } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-import { useSession } from '#/state/session'
-import { useShellLayout } from '#/state/shell/shell-layout'
-import { useMinimalShellHeaderTransform } from 'lib/hooks/useMinimalShellTransform'
-import { useWebMediaQueries } from 'lib/hooks/useWebMediaQueries'
-import { Logo } from '#/view/icons/Logo'
-import { atoms as a, useTheme } from '#/alf'
-import { Hashtag_Stroke2_Corner0_Rounded as FeedsIcon } from '#/components/icons/Hashtag'
-import { Link } from '#/components/Link'
-import { useKawaiiMode } from '../../../state/preferences/kawaii'
-import { HomeHeaderLayoutMobile } from './HomeHeaderLayoutMobile'
+import {useSession} from '#/state/session'
+import {useShellLayout} from '#/state/shell/shell-layout'
+import {useMinimalShellHeaderTransform} from 'lib/hooks/useMinimalShellTransform'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {Logo} from '#/view/icons/Logo'
+import {atoms as a, useTheme} from '#/alf'
+import {Hashtag_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/Hashtag'
+import {Link} from '#/components/Link'
+import {useKawaiiMode} from '../../../state/preferences/kawaii'
+import {HomeHeaderLayoutMobile} from './HomeHeaderLayoutMobile'
 
 export function HomeHeaderLayout(props: {
   children: React.ReactNode
   tabBarAnchor: JSX.Element | null | undefined
 }) {
-  const { isMobile } = useWebMediaQueries()
+  const {isMobile} = useWebMediaQueries()
   if (isMobile) {
     return <HomeHeaderLayoutMobile {...props} />
   } else {
@@ -36,9 +36,9 @@ function HomeHeaderLayoutDesktopAndTablet({
 }) {
   const t = useTheme()
   const headerMinimalShellTransform = useMinimalShellHeaderTransform()
-  const { headerHeight } = useShellLayout()
-  const { hasSession } = useSession()
-  const { _ } = useLingui()
+  const {headerHeight} = useShellLayout()
+  const {hasSession} = useSession()
+  const {_} = useLingui()
 
   const kawaii = useKawaiiMode()
 
@@ -57,7 +57,7 @@ function HomeHeaderLayoutDesktopAndTablet({
             t.atoms.bg,
             t.atoms.border_contrast_low,
             styles.bar,
-            kawaii && { paddingTop: 22, paddingBottom: 16 },
+            kawaii && {paddingTop: 22, paddingBottom: 16},
           ]}>
           <View
             style={[
@@ -65,7 +65,7 @@ function HomeHeaderLayoutDesktopAndTablet({
               a.inset_0,
               a.pt_lg,
               a.m_auto,
-              kawaii && { paddingTop: 4, paddingBottom: 0 },
+              kawaii && {paddingTop: 4, paddingBottom: 0},
               {
                 width: kawaii ? 84 : 28,
               },
