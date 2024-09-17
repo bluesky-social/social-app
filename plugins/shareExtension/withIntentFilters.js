@@ -96,29 +96,6 @@ const withIntentFilters = config => {
           },
         ],
       },
-      {
-        action: [
-          {
-            $: {
-              'android:name': 'android.intent.action.SEND_MULTIPLE',
-            },
-          },
-        ],
-        category: [
-          {
-            $: {
-              'android:name': 'android.intent.category.DEFAULT',
-            },
-          },
-        ],
-        data: [
-          {
-            $: {
-              'android:mimeType': 'video/*',
-            },
-          },
-        ],
-      },
     ]
 
     const intentFilter =
