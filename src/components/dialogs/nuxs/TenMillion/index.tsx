@@ -241,6 +241,11 @@ export function TenMillionInner({
                 uri,
                 width: WIDTH,
                 height: HEIGHT,
+                altText: _(
+                  msg`A virtual card celebrating 10 million users on Bluesky for user #${i18n.number(
+                    userNumber,
+                  )}`,
+                ),
               },
             ],
           })
