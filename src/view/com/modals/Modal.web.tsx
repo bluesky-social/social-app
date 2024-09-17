@@ -15,7 +15,6 @@ import * as ChangePasswordModal from './ChangePassword'
 import * as CreateOrEditListModal from './CreateOrEditList'
 import * as CropImageModal from './crop-image/CropImage.web'
 import * as DeleteAccountModal from './DeleteAccount'
-import * as EditImageModal from './EditImage'
 import * as EditProfileModal from './EditProfile'
 import * as InviteCodesModal from './InviteCodes'
 import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
@@ -54,11 +53,7 @@ function Modal({modal}: {modal: ModalIface}) {
   }
 
   const onPressMask = () => {
-    if (
-      modal.name === 'crop-image' ||
-      modal.name === 'edit-image' ||
-      modal.name === 'alt-text-image'
-    ) {
+    if (modal.name === 'crop-image' || modal.name === 'alt-text-image') {
       return // dont close on mask presses during crop
     }
     closeModal()
@@ -95,8 +90,6 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <PostLanguagesSettingsModal.Component />
   } else if (modal.name === 'alt-text-image') {
     element = <AltTextImageModal.Component {...modal} />
-  } else if (modal.name === 'edit-image') {
-    element = <EditImageModal.Component {...modal} />
   } else if (modal.name === 'verify-email') {
     element = <VerifyEmailModal.Component {...modal} />
   } else if (modal.name === 'change-email') {
