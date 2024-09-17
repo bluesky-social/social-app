@@ -45,6 +45,29 @@ const withIntentFilters = config => {
         data: [
           {
             $: {
+              'android:mimeType': 'video/*',
+            },
+          },
+        ],
+      },
+      {
+        action: [
+          {
+            $: {
+              'android:name': 'android.intent.action.SEND',
+            },
+          },
+        ],
+        category: [
+          {
+            $: {
+              'android:name': 'android.intent.category.DEFAULT',
+            },
+          },
+        ],
+        data: [
+          {
+            $: {
               'android:mimeType': 'text/plain',
             },
           },
@@ -69,6 +92,29 @@ const withIntentFilters = config => {
           {
             $: {
               'android:mimeType': 'image/*',
+            },
+          },
+        ],
+      },
+      {
+        action: [
+          {
+            $: {
+              'android:name': 'android.intent.action.SEND_MULTIPLE',
+            },
+          },
+        ],
+        category: [
+          {
+            $: {
+              'android:name': 'android.intent.category.DEFAULT',
+            },
+          },
+        ],
+        data: [
+          {
+            $: {
+              'android:mimeType': 'video/*',
             },
           },
         ],
