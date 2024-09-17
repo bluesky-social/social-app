@@ -227,8 +227,16 @@ export function ExternalPlayer({
       <Animated.View
         ref={viewRef}
         collapsable={false}
-        style={[aspect, a.rounded_sm]}>
-        {link.thumb && (!isPlayerActive || isLoading) && (
+        style={[
+          aspect,
+          a.rounded_sm,
+          a.overflow_hidden,
+          {
+            borderBottomLeftRadius: 0,
+            borderBottomRightRadius: 0,
+          },
+        ]}>
+        {link.thumb && (!isPlayerActive || isLoading) ? (
           <>
             <Image
               style={[a.flex_1, styles.topRadius]}
@@ -256,7 +264,29 @@ export function ExternalPlayer({
               ]}
             />
           </>
+        ) : (
+          <Fill
+            style={[
+              a.rounded_sm,
+              {
+                backgroundColor:
+                  t.name === 'light' ? t.palette.contrast_975 : 'black',
+                borderBottomLeftRadius: 0,
+                borderBottomRightRadius: 0,
+                opacity: 0.3,
+              },
+            ]}
+          />
         )}
+        <MediaInsetBorder
+          opaque
+          style={[
+            {
+              borderBottomLeftRadius: 0,
+              borderBottomRightRadius: 0,
+            },
+          ]}
+        />
         <PlaceholderOverlay
           isLoading={isLoading}
           isPlayerActive={isPlayerActive}

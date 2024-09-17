@@ -4104,10 +4104,10 @@
   resolved "https://registry.yarnpkg.com/@graphql-typed-document-node/core/-/core-3.2.0.tgz#5f3d96ec6b2354ad6d8a28bf216a1d97b5426861"
   integrity sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==
 
-"@haileyok/bluesky-video@0.1.8":
-  version "0.1.8"
-  resolved "https://registry.yarnpkg.com/@haileyok/bluesky-video/-/bluesky-video-0.1.8.tgz#26fc6ec64993d593e7a0ecb96febff96c5037ebd"
-  integrity sha512-jMtGSMU5jpacLvAFRWGC5gVvVKuKHrGH3gluz9MsBEbSRvS8bb9FhNtC1VHb+A4UUgLufOyzrSbDw9fa8hR8lg==
+"@haileyok/bluesky-video@0.1.10":
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/@haileyok/bluesky-video/-/bluesky-video-0.1.10.tgz#2756e8c83a78caeb6b120a175578eac1eb6889a9"
+  integrity sha512-W8+DNdek+xjAqTO1zmuuSrkVFxDepcP8+Gs8MvIcYSgXEJlpQimZpcMwAduiDI/jZMn/2U6cnMahx7YuiZlZ7g==
 
 "@hapi/accept@^6.0.3":
   version "6.0.3"
@@ -19127,10 +19127,10 @@ react-native-svg@^15.3.0:
     css-select "^5.1.0"
     css-tree "^1.1.3"
 
-react-native-uitextview@^1.1.7:
-  version "1.1.7"
-  resolved "https://registry.yarnpkg.com/react-native-uitextview/-/react-native-uitextview-1.1.7.tgz#ee60ca279b0f4d081451f0df707b0ceac4580de1"
-  integrity sha512-7NaeizflafRvdsuomR6F4UxGV3XY8ilgntX0npLkE3YyH0YJTikBAHunrRWEPtj1vjybYN2DuThMYRELcVqyuA==
+react-native-uitextview@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/react-native-uitextview/-/react-native-uitextview-1.3.0.tgz#78b24e2b790e1197c73758df30ed2bfb4b8a0c98"
+  integrity sha512-UXW1xIg1qeYvwBvdL8BLIkqZhbQ5TVVcHJho3vKDjOK+FW4ZLPygefcDXaCTX56ztisV4ARxJNdzblRAytFCHQ==
 
 react-native-url-polyfill@^1.3.0:
   version "1.3.0"

@@ -28,8 +28,9 @@ export function SubtitleFilePicker({
     if (selectedFile) {
       if (
         selectedFile.type === 'text/vtt' ||
-        (selectedFile.type === 'text/plain' &&
-          selectedFile.name.endsWith('.vtt'))
+        // HACK: sometimes the mime type is just straight-up missing
+        // best we can do is check the file extension and hope for the best
+        selectedFile.name.endsWith('.vtt')
       ) {
         onSelectFile(selectedFile)
       } else {

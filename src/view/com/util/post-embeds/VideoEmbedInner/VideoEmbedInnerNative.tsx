@@ -7,9 +7,8 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_30} from '#/lib/constants'
-import {clamp} from '#/lib/numbers'
 import {useAutoplayDisabled} from '#/state/preferences'
-import {useVideoVolumeState} from 'view/com/util/post-embeds/VideoVolumeContext'
+import {useVideoMuteState} from 'view/com/util/post-embeds/VideoVolumeContext'
 import {atoms as a, useTheme} from '#/alf'
 import {useIsWithinMessage} from '#/components/dms/MessageContext'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
@@ -38,7 +37,7 @@ export const VideoEmbedInnerNative = React.forwardRef(
     const videoRef = useRef<BlueskyVideoView>(null)
     const autoplayDisabled = useAutoplayDisabled()
     const isWithinMessage = useIsWithinMessage()
-    const {muted, setMuted} = useVideoVolumeState()
+    const [muted, setMuted] = useVideoMuteState()
 
     const [isPlaying, setIsPlaying] = React.useState(false)
     const [timeRemaining, setTimeRemaining] = React.useState(0)
@@ -54,16 +53,8 @@ export const VideoEmbedInnerNative = React.forwardRef(
       throw new Error(error)
     }
 
-    let aspectRatio = 16 / 9
-
-    if (embed.aspectRatio) {
-      const {width, height} = embed.aspectRatio
-      aspectRatio = width / height
-      aspectRatio = clamp(aspectRatio, 1 / 1, 3 / 1)
-    }
-
     return (
-      <View style={[a.flex_1, a.relative, {aspectRatio}]}>
+      <View style={[a.flex_1, a.relative]}>
         <BlueskyVideoView
           url={embed.playlist}
           autoplay={!autoplayDisabled && !isWithinMessage}
@@ -128,7 +119,7 @@ function VideoControls({
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const {muted} = useVideoVolumeState()
+  const [muted] = useVideoMuteState()
 
   // show countdown when:
   // 1. timeRemaining is a number - was seeing NaNs
@@ -160,7 +151,11 @@ function VideoControls({
 
       <ControlButton
         onPress={toggleMuted}
-        label={muted ? _(msg`Unmute`) : _(msg`Mute`)}
+        label={
+          muted
+            ? _(msg({message: `Unmute`, context: 'video'}))
+            : _(msg({message: `Mute`, context: 'video'}))
+        }
         accessibilityHint={_(msg`Tap to toggle sound`)}
         style={{right: 6}}>
         {muted ? (

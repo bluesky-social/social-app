@@ -9,6 +9,7 @@ import {
   useUpsertNuxMutation,
 } from '#/state/queries/nuxs'
 import {useSession} from '#/state/session'
+import {useOnboardingState} from '#/state/shell'
 import {isSnoozed, snooze, unsnooze} from '#/components/dialogs/nuxs/snoozing'
 import {TenMillion} from '#/components/dialogs/nuxs/TenMillion'
 import {IS_DEV} from '#/env'
@@ -18,31 +19,12 @@ type Context = {
   dismissActiveNux: () => void
 }
 
-/**
- * If we fail to complete a NUX here, it may show again on next reload,
- * or if prefs state updates. If `true`, this fallback ensures that the last
- * shown NUX won't show again, at least for this session.
- *
- * This is temporary, and only needed for the 10Milly dialog rn, since we
- * aren't snoozing that one in device storage.
- */
-let __isSnoozedFallback = false
-
 const queuedNuxs: {
   id: Nux
-  enabled(props: {gate: ReturnType<typeof useGate>}): boolean
-  /**
-   * TEMP only intended for use with the 10Milly dialog rn, since there are no
-   * other NUX dialogs configured
-   */
-  unsafe_disableSnooze: boolean
+  enabled?: (props: {gate: ReturnType<typeof useGate>}) => boolean
 }[] = [
   {
     id: Nux.TenMillionDialog,
-    enabled({gate}) {
-      return gate('ten_million_dialog')
-    },
-    unsafe_disableSnooze: true,
   },
 ]
 
@@ -57,7 +39,8 @@ export function useNuxDialogContext() {
 
 export function NuxDialogs() {
   const {hasSession} = useSession()
-  return hasSession ? <Inner /> : null
+  const onboardingState = useOnboardingState()
+  return hasSession && !onboardingState.isActive ? <Inner /> : null
 }
 
 function Inner() {
@@ -90,30 +73,23 @@ function Inner() {
   }
 
   React.useEffect(() => {
-    if (__isSnoozedFallback) return
     if (snoozed) return
     if (!nuxs) return
 
-    for (const {id, enabled, unsafe_disableSnooze} of queuedNuxs) {
+    for (const {id, enabled} of queuedNuxs) {
       const nux = nuxs.find(nux => nux.id === id)
 
       // check if completed first
       if (nux && nux.completed) continue
 
       // then check gate (track exposure)
-      if (!enabled({gate})) continue
+      if (enabled && !enabled({gate})) continue
 
       // we have a winner
       setActiveNux(id)
 
-      /**
-       * TEMP only intended for use with the 10Milly dialog rn, since there are no
-       * other NUX dialogs configured
-       */
-      if (!unsafe_disableSnooze) {
-        // immediately snooze for a day
-        snoozeNuxDialog()
-      }
+      // immediately snooze for a day
+      snoozeNuxDialog()
 
       // immediately update remote data (affects next reload)
       upsertNux({
@@ -124,12 +100,6 @@ function Inner() {
         logger.error(`NUX dialogs: failed to upsert '${id}' NUX`, {
           safeMessage: e.message,
         })
-        /*
-         * TEMP only intended for use with the 10Milly dialog rn
-         */
-        if (unsafe_disableSnooze) {
-          __isSnoozedFallback = true
-        }
       })
 
       break

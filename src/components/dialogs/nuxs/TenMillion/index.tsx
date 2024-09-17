@@ -87,7 +87,15 @@ function Frame({children}: {children: React.ReactNode}) {
   )
 }
 
-export function TenMillion() {
+export function TenMillion({
+  showTimeout,
+  onClose,
+  onFallback,
+}: {
+  showTimeout?: number
+  onClose?: () => void
+  onFallback?: () => void
+}) {
   const agent = useAgent()
   const nuxDialogs = useNuxDialogContext()
   const [userNumber, setUserNumber] = React.useState<number>(0)
@@ -115,12 +123,16 @@ export function TenMillion() {
 
         const data = await res.json()
 
-        if (data.number) {
+        if (data.number && data.number <= 10_000_000) {
           setUserNumber(data.number)
         } else {
           // should be rare
           nuxDialogs.dismissActiveNux()
+          onFallback?.()
         }
+      } else {
+        nuxDialogs.dismissActiveNux()
+        onFallback?.()
       }
     }
 
@@ -128,6 +140,7 @@ export function TenMillion() {
       fetching.current = true
       networkRetry(3, fetchUserNumber).catch(() => {
         nuxDialogs.dismissActiveNux()
+        onFallback?.()
       })
     }
   }, [
@@ -136,12 +149,27 @@ export function TenMillion() {
     setUserNumber,
     nuxDialogs.dismissActiveNux,
     nuxDialogs,
+    onFallback,
   ])
 
-  return userNumber ? <TenMillionInner userNumber={userNumber} /> : null
+  return userNumber ? (
+    <TenMillionInner
+      userNumber={userNumber}
+      showTimeout={showTimeout ?? 3e3}
+      onClose={onClose}
+    />
+  ) : null
 }
 
-export function TenMillionInner({userNumber}: {userNumber: number}) {
+export function TenMillionInner({
+  userNumber,
+  showTimeout,
+  onClose: onCloseOuter,
+}: {
+  userNumber: number
+  showTimeout: number
+  onClose?: () => void
+}) {
   const t = useTheme()
   const lightTheme = useTheme('light')
   const {_, i18n} = useLingui()
@@ -169,6 +197,27 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
   const isLoadingData = isProfileLoading || !moderation || !profile
   const isLoadingImage = !uri
 
+  const displayName = React.useMemo(() => {
+    if (!profile || !moderation) return ''
+    return sanitizeDisplayName(
+      profile.displayName || sanitizeHandle(profile.handle),
+      moderation.ui('displayName'),
+    )
+  }, [profile, moderation])
+  const handle = React.useMemo(() => {
+    if (!profile) return ''
+    return sanitizeHandle(profile.handle, '@')
+  }, [profile])
+  const joinedDate = React.useMemo(() => {
+    if (!profile || !profile.createdAt) return ''
+    const date = i18n.date(profile.createdAt, {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    })
+    return date
+  }, [i18n, profile])
+
   const error: string = React.useMemo(() => {
     if (profileError) {
       return _(
@@ -184,14 +233,15 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
   React.useEffect(() => {
     const timeout = setTimeout(() => {
       control.open()
-    }, 3e3)
+    }, showTimeout)
     return () => {
       clearTimeout(timeout)
     }
-  }, [control])
+  }, [control, showTimeout])
   const onClose = React.useCallback(() => {
     nuxDialogs.dismissActiveNux()
-  }, [nuxDialogs])
+    onCloseOuter?.()
+  }, [nuxDialogs, onCloseOuter])
 
   /*
    * Actions
@@ -206,19 +256,34 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
               msg`Bluesky now has over 10 million users, and I was #${i18n.number(
                 userNumber,
               )}!`,
-            ), // TODO
+            ),
             imageUris: [
               {
                 uri,
                 width: WIDTH,
                 height: HEIGHT,
+                altText: _(
+                  msg`A virtual certificate with text "Celebrating 10M users on Bluesky, #${i18n.number(
+                    userNumber,
+                  )}, ${displayName} ${handle}, joined on ${joinedDate}"`,
+                ),
               },
             ],
           })
         }, 1e3)
       })
     }
-  }, [_, i18n, control, openComposer, uri, userNumber])
+  }, [
+    _,
+    i18n,
+    control,
+    openComposer,
+    uri,
+    userNumber,
+    displayName,
+    handle,
+    joinedDate,
+  ])
   const onNativeShare = React.useCallback(() => {
     if (uri) {
       control.close(() => {
@@ -358,6 +423,7 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
                       },
                     ]}>
                     <Text
+                      allowFontScaling={false}
                       style={[
                         a.text_md,
                         a.font_bold,
@@ -372,6 +438,7 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
                     </Text>
                     <View style={[a.flex_row, a.align_start]}>
                       <Text
+                        allowFontScaling={false}
                         style={[
                           a.absolute,
                           {
@@ -391,6 +458,7 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
                         #
                       </Text>
                       <Text
+                        allowFontScaling={false}
                         style={[
                           a.relative,
                           a.text_center,
@@ -450,6 +518,7 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
                         */}
                       <View style={[a.gap_2xs, a.flex_1]}>
                         <Text
+                          allowFontScaling={false}
                           style={[
                             a.flex_1,
                             a.text_sm,
@@ -457,15 +526,12 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
                             a.leading_tight,
                             {maxWidth: '60%'},
                           ]}>
-                          {sanitizeDisplayName(
-                            profile.displayName ||
-                              sanitizeHandle(profile.handle),
-                            moderation.ui('displayName'),
-                          )}
+                          {displayName}
                         </Text>
                         <View
                           style={[a.flex_row, a.justify_between, a.gap_4xl]}>
                           <Text
+                            allowFontScaling={false}
                             numberOfLines={1}
                             style={[
                               a.flex_1,
@@ -474,11 +540,12 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
                               a.leading_snug,
                               lightTheme.atoms.text_contrast_medium,
                             ]}>
-                            {sanitizeHandle(profile.handle, '@')}
+                            {handle}
                           </Text>
 
                           {profile.createdAt && (
                             <Text
+                              allowFontScaling={false}
                               numberOfLines={1}
                               ellipsizeMode="head"
                               style={[
@@ -489,14 +556,7 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
                                 a.text_right,
                                 lightTheme.atoms.text_contrast_low,
                               ]}>
-                              <Trans>
-                                Joined{' '}
-                                {i18n.date(profile.createdAt, {
-                                  month: 'short',
-                                  day: 'numeric',
-                                  year: 'numeric',
-                                })}
-                              </Trans>
+                              <Trans>Joined on {joinedDate}</Trans>
                             </Text>
                           )}
                         </View>
@@ -582,6 +642,7 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
 
           <View style={[gtMobile ? a.p_2xl : a.p_xl]}>
             <Text
+              allowFontScaling={false}
               style={[
                 a.text_5xl,
                 a.leading_tight,
@@ -610,9 +671,12 @@ export function TenMillionInner({userNumber}: {userNumber: number}) {
                 a.gap_md,
                 a.pt_xl,
               ]}>
-              <Text style={[a.text_md, a.italic, t.atoms.text_contrast_medium]}>
-                <Trans>Brag a little!</Trans>
-              </Text>
+              {gtMobile && (
+                <Text
+                  style={[a.text_md, a.italic, t.atoms.text_contrast_medium]}>
+                  <Trans>Brag a little!</Trans>
+                </Text>
+              )}
 
               <Button
                 disabled={isLoadingImage}
