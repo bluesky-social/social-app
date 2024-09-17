@@ -1,14 +1,15 @@
 import {Image as RNImage} from 'react-native-image-crop-picker'
-import {makeAutoObservable, runInAction} from 'mobx'
-import {POST_IMG_MAX} from 'lib/constants'
 import * as ImageManipulator from 'expo-image-manipulator'
-import {getDataUriSize} from 'lib/media/util'
-import {openCropper} from 'lib/media/picker'
 import {ActionCrop, FlipType, SaveFormat} from 'expo-image-manipulator'
+import {makeAutoObservable, runInAction} from 'mobx'
 import {Position} from 'react-avatar-editor'
-import {Dimensions} from 'lib/media/types'
-import {isIOS} from 'platform/detection'
+
 import {logger} from '#/logger'
+import {POST_IMG_MAX} from 'lib/constants'
+import {openCropper} from 'lib/media/picker'
+import {Dimensions} from 'lib/media/types'
+import {getDataUriSize} from 'lib/media/util'
+import {isIOS} from 'platform/detection'
 
 export interface ImageManipulationAttributes {
   aspectRatio?: '4:3' | '1:1' | '3:4' | 'None'
@@ -17,6 +18,13 @@ export interface ImageManipulationAttributes {
   position?: Position
   flipHorizontal?: boolean
   flipVertical?: boolean
+}
+
+export interface ImageInitOptions {
+  path: string
+  width: number
+  height: number
+  altText?: string
 }
 
 const MAX_IMAGE_SIZE_IN_BYTES = 976560
@@ -41,12 +49,15 @@ export class ImageModel implements Omit<RNImage, 'size'> {
   }
   prevAttributes: ImageManipulationAttributes = {}
 
-  constructor(image: Omit<RNImage, 'size'>) {
+  constructor(image: ImageInitOptions) {
     makeAutoObservable(this)
 
     this.path = image.path
     this.width = image.width
     this.height = image.height
+    if (image.altText !== undefined) {
+      this.setAltText(image.altText)
+    }
   }
 
   setRatio(aspectRatio: ImageManipulationAttributes['aspectRatio']) {
