@@ -1,0 +1,53 @@
+diff --git a/node_modules/@sentry/react-native/dist/js/utils/ignorerequirecyclelogs.js b/node_modules/@sentry/react-native/dist/js/utils/ignorerequirecyclelogs.js
+index 7e0b4cd..177454c 100644
+--- a/node_modules/@sentry/react-native/dist/js/utils/ignorerequirecyclelogs.js
++++ b/node_modules/@sentry/react-native/dist/js/utils/ignorerequirecyclelogs.js
+@@ -3,6 +3,8 @@ import { LogBox } from 'react-native';
+  * This is a workaround for using fetch on RN, this is a known issue in react-native and only generates a warning.
+  */
+ export function ignoreRequireCycleLogs() {
+-    LogBox.ignoreLogs(['Require cycle:']);
++    try {
++        LogBox.ignoreLogs(['Require cycle:']);
++    } catch (e) {}
+ }
+ //# sourceMappingURL=ignorerequirecyclelogs.js.map
+\ No newline at end of file
+diff --git a/node_modules/@sentry/react-native/ios/RNSentry.h b/node_modules/@sentry/react-native/ios/RNSentry.h
+index 4b5233c..f0c2d07 100644
+--- a/node_modules/@sentry/react-native/ios/RNSentry.h
++++ b/node_modules/@sentry/react-native/ios/RNSentry.h
+@@ -1,7 +1,7 @@
+ #if __has_include(<React/RCTBridge.h>)
+ #import <React/RCTBridge.h>
+ #else
+-#import "RCTBridge.h"
++#import <React/RCTBridge.h>
+ #endif
+ 
+ #import <dlfcn.h>
+diff --git a/node_modules/@sentry/react-native/ios/RNSentry.mm b/node_modules/@sentry/react-native/ios/RNSentry.mm
+index 392869c..13b8e49 100644
+--- a/node_modules/@sentry/react-native/ios/RNSentry.mm
++++ b/node_modules/@sentry/react-native/ios/RNSentry.mm
+@@ -4,7 +4,7 @@
+ #if __has_include(<React/RCTConvert.h>)
+ #import <React/RCTConvert.h>
+ #else
+-#import "RCTConvert.h"
++#import <React/RCTConvert.h>
+ #endif
+ 
+ #if __has_include(<hermes/hermes.h>) && SENTRY_PROFILING_SUPPORTED
+@@ -452,6 +452,11 @@ - (NSDictionary*) fetchNativeStackFramesBy: (NSArray<NSNumber*>*)instructionsAdd
+                   resolve:(RCTPromiseResolveBlock)resolve
+                   rejecter:(RCTPromiseRejectBlock)reject)
+ {
++    if ([rawBytes isKindOfClass:[NSArray class]]) {
++        resolve(@YES);
++        return;
++    }
++
+     NSData *data = [[NSData alloc] initWithBase64EncodedString:rawBytes options:0];
+ 
+     SentryEnvelope *envelope = [PrivateSentrySDKOnly envelopeWithData:data];
