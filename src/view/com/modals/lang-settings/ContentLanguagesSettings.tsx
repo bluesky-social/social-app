@@ -1,19 +1,20 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {ScrollView} from '../util'
-import {Text} from '../../util/text/Text'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {deviceLocales} from 'platform/detection'
-import {LANGUAGES, LANGUAGES_MAP_CODE2} from '../../../../locale/languages'
-import {LanguageToggle} from './LanguageToggle'
-import {ConfirmLanguagesButton} from './ConfirmLanguagesButton'
 import {Trans} from '@lingui/macro'
+
+import {deviceLanguageCodes} from '#/locale/deviceLocales'
 import {useModalControls} from '#/state/modals'
 import {
   useLanguagePrefs,
   useLanguagePrefsApi,
 } from '#/state/preferences/languages'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {LANGUAGES, LANGUAGES_MAP_CODE2} from '../../../../locale/languages'
+import {Text} from '../../util/text/Text'
+import {ScrollView} from '../util'
+import {ConfirmLanguagesButton} from './ConfirmLanguagesButton'
+import {LanguageToggle} from './LanguageToggle'
 
 export const snapPoints = ['100%']
 
@@ -37,10 +38,10 @@ export function Component({}: {}) {
     langs.sort((a, b) => {
       const hasA =
         langPrefs.contentLanguages.includes(a.code2) ||
-        deviceLocales.includes(a.code2)
+        deviceLanguageCodes.includes(a.code2)
       const hasB =
         langPrefs.contentLanguages.includes(b.code2) ||
-        deviceLocales.includes(b.code2)
+        deviceLanguageCodes.includes(b.code2)
       if (hasA === hasB) return a.name.localeCompare(b.name)
       if (hasA) return -1
       return 1

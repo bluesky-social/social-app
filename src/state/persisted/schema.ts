@@ -1,7 +1,7 @@
 import {z} from 'zod'
 
+import {deviceLanguageCodes} from '#/locale/deviceLocales'
 import {logger} from '#/logger'
-import {deviceLocales} from '#/platform/detection'
 import {PlatformInfo} from '../../../modules/expo-bluesky-swiss-army'
 
 const externalEmbedOptions = ['show', 'hide'] as const
@@ -125,13 +125,13 @@ export const defaults: Schema = {
     lastEmailConfirm: undefined,
   },
   languagePrefs: {
-    primaryLanguage: deviceLocales[0] || 'en',
-    contentLanguages: deviceLocales || [],
-    postLanguage: deviceLocales[0] || 'en',
-    postLanguageHistory: (deviceLocales || [])
+    primaryLanguage: deviceLanguageCodes[0] || 'en',
+    contentLanguages: deviceLanguageCodes || [],
+    postLanguage: deviceLanguageCodes[0] || 'en',
+    postLanguageHistory: (deviceLanguageCodes || [])
       .concat(['en', 'ja', 'pt', 'de'])
       .slice(0, 6),
-    appLanguage: deviceLocales[0] || 'en',
+    appLanguage: deviceLanguageCodes[0] || 'en',
   },
   requireAltTextEnabled: false,
   largeAltBadgeEnabled: false,

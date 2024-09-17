@@ -160,8 +160,13 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
   return AppLanguage.en
 }
 
+/**
+ * Handles legacy migration for Java devices.
+ *
+ * {@link https://github.com/bluesky-social/social-app/pull/4461}
+ * {@link https://xml.coverpages.org/iso639a.html}
+ */
 export function fixLegacyLanguageCode(code: string | null): string | null {
-  // handle some legacy code conversions, see https://xml.coverpages.org/iso639a.html
   if (code === 'in') {
     // indonesian
     return 'id'
