@@ -36,7 +36,7 @@ export interface ComposerOpts {
   mention?: string // handle of user to mention
   openEmojiPicker?: (pos: DOMRect | undefined) => void
   text?: string
-  imageUris?: {uri: string; width: number; height: number}[]
+  imageUris?: {uri: string; width: number; height: number; altText?: string}[]
 }
 
 type StateContext = ComposerOpts | undefined
