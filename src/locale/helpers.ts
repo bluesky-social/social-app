@@ -181,3 +181,19 @@ export function fixLegacyLanguageCode(code: string | null): string | null {
   }
   return code
 }
+
+/**
+ * Find the first language supported by our translation infra. Values should be
+ * in order of preference, and match the values of {@link AppLanguage}.
+ *
+ * If no match, returns `en`.
+ */
+export function findSupportedAppLanguage(languageTags: string[]) {
+  const supported = new Set(Object.values(AppLanguage))
+  for (const tag of languageTags) {
+    if (supported.has(tag as AppLanguage)) {
+      return tag
+    }
+  }
+  return AppLanguage.en
+}

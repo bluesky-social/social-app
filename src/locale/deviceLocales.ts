@@ -41,11 +41,13 @@ export function getLocales() {
   return output
 }
 
+export const deviceLocales = getLocales()
+
 /**
  * BCP-47 language tag without region e.g. array of 2-char lang codes
  *
  * {@link https://docs.expo.dev/versions/latest/sdk/localization/#locale}
  */
 export const deviceLanguageCodes = dedupArray(
-  getLocales().map(l => l.languageCode),
+  deviceLocales.map(l => l.languageCode),
 )
