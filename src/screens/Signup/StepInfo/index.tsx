@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import * as EmailValidator from 'email-validator'
+import type tldts from 'tldts'
 
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
@@ -48,10 +49,38 @@ export function StepInfo({
   const emailValueRef = useRef<string>(state.email)
   const passwordValueRef = useRef<string>(state.password)
 
-  const onNextPress = React.useCallback(async () => {
+  const [hasWarnedEmail, setHasWarnedEmail] = React.useState<boolean>(false)
+
+  const tldtsRef = React.useRef<typeof tldts>()
+  React.useEffect(() => {
+    // @ts-expect-error - valid path
+    import('../../../../node_modules/tldts/dist/index.cjs.min.js').then(
+      tldts => {
+        tldtsRef.current = tldts
+      },
+    )
+  }, [])
+
+  const onNextPress = () => {
     const inviteCode = inviteCodeValueRef.current
     const email = emailValueRef.current
     const password = passwordValueRef.current
+
+    if (!hasWarnedEmail && tldtsRef.current) {
+      console.log(tldtsRef.current)
+      const isIcann = tldtsRef.current.parse(email).isIcann
+      if (!isIcann) {
+        setHasWarnedEmail(true)
+        return dispatch({
+          type: 'setError',
+          value: _(
+            msg`It looks like you may have entered your email address incorrectly. Are you sure it's right?`,
+          ),
+        })
+      }
+    } else if (hasWarnedEmail) {
+      setHasWarnedEmail(false)
+    }
 
     if (!is13(state.dateOfBirth)) {
       return
@@ -89,13 +118,7 @@ export function StepInfo({
     logEvent('signup:nextPressed', {
       activeStep: state.activeStep,
     })
-  }, [
-    _,
-    dispatch,
-    state.activeStep,
-    state.dateOfBirth,
-    state.serviceDescription?.inviteCodeRequired,
-  ])
+  }
 
   return (
     <ScreenTransition>
@@ -208,6 +231,7 @@ export function StepInfo({
         onBackPress={onPressBack}
         onNextPress={onNextPress}
         onRetryPress={refetchServer}
+        overrideNextText={hasWarnedEmail ? _(msg`It's correct`) : undefined}
       />
     </ScreenTransition>
   )
