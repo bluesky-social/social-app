@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-17 11:17+0900\n"
+"PO-Revision-Date: 2024-09-17 14:16+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -6676,7 +6676,7 @@ msgstr "メールでの２要素認証を無効にするには、メールアド
 
 #: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:69
 msgid "To learn more, <0>check out our post.</0>"
-msgstr "詳しくは、<0>私達のこの投稿をチェックして。</0>"
+msgstr "詳しくは、<0>私達のこの投稿をチェックしてください。</0>"
 
 #: src/components/dms/ReportConversationPrompt.tsx:20
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
