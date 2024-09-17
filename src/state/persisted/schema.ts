@@ -146,7 +146,7 @@ export const defaults: Schema = {
       .slice(0, 6),
     // try full language tag first, then fallback to language code
     appLanguage: findSupportedAppLanguage([
-      deviceLocales[0].languageTag,
+      deviceLocales.at(0)?.languageTag,
       deviceLanguageCodes[0],
     ]),
   },

@@ -188,9 +188,10 @@ export function fixLegacyLanguageCode(code: string | null): string | null {
  *
  * If no match, returns `en`.
  */
-export function findSupportedAppLanguage(languageTags: string[]) {
+export function findSupportedAppLanguage(languageTags: (string | undefined)[]) {
   const supported = new Set(Object.values(AppLanguage))
   for (const tag of languageTags) {
+    if (!tag) continue
     if (supported.has(tag as AppLanguage)) {
       return tag
     }
