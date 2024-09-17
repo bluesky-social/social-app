@@ -56,6 +56,10 @@ export function applyFonts(style: Record<string, any>) {
     }[style.fontWeight as string] || 'Inter-Regular'
 
   if (style.fontStyle === 'italic') {
-    style.fontFamily += 'Italic'
+    if (style.fontFamily === 'Inter-Regular') {
+      style.fontFamily = 'Inter-Italic'
+    } else {
+      style.fontFamily += 'Italic'
+    }
   }
 }
