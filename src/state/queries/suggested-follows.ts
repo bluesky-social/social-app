@@ -106,13 +106,16 @@ export function useSuggestedFollowsQuery(options?: SuggestedFollowsOptions) {
 export function useSuggestedFollowsByActorQuery({did}: {did: string}) {
   const agent = useAgent()
   return useQuery<AppBskyGraphGetSuggestedFollowsByActor.OutputSchema, Error>({
-    gcTime: 0,
     queryKey: suggestedFollowsByActorQueryKey(did),
     queryFn: async () => {
       const res = await agent.app.bsky.graph.getSuggestedFollowsByActor({
         actor: did,
       })
-      return res.data
+      const data = res.data.isFallback ? {suggestions: []} : res.data
+      data.suggestions = data.suggestions.filter(profile => {
+        return !profile.viewer?.following
+      })
+      return data
     },
   })
 }

@@ -1,4 +1,4 @@
-import React, {memo, useId, useMemo, useState} from 'react'
+import React, {memo, useMemo, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {
   AppBskyActorDefs,
@@ -21,7 +21,6 @@ import {isReasonFeedSource, ReasonFeedSource} from '#/lib/api/feed/types'
 import {MAX_POST_LINES} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
-import {useGate} from '#/lib/statsig/statsig'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {countLines} from '#/lib/strings/helpers'
@@ -47,7 +46,6 @@ import {AppModerationCause} from '#/components/Pills'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichText} from '#/components/RichText'
 import {Link, TextLink, TextLinkOnWebOnly} from '../util/Link'
-import {VideoEmbed} from '../util/post-embeds/VideoEmbed'
 import {AviFollowButton} from './AviFollowButton'
 
 interface FeedItemProps {
@@ -386,7 +384,6 @@ let FeedItemInner = ({
             post={post}
             threadgateRecord={threadgateRecord}
           />
-          <VideoDebug />
           <PostCtrls
             post={post}
             record={record}
@@ -561,23 +558,6 @@ function ReplyToLabel({
         {label}
       </Text>
     </View>
-  )
-}
-
-function VideoDebug() {
-  const gate = useGate()
-  const id = useId()
-
-  if (!gate('video_debug')) return null
-
-  return (
-    <VideoEmbed
-      embed={{
-        playlist: `https://lumi.jazco.dev/watch/did:plc:q6gjnaw2blty4crticxkmujt/Qmc8w93UpTa2adJHg4ZhnDPrBs1EsbzrekzPcqF5SwusuZ/playlist.m3u8?ignore_me_just_testing_frontend_stuff=${id}`,
-        cid: 'Qmc8w93UpTa2adJHg4ZhnDPrBs1EsbzrekzPcqF5SwusuZ',
-        aspectRatio: {height: 9, width: 16},
-      }}
-    />
   )
 }
 

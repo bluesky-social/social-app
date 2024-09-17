@@ -1,4 +1,5 @@
 import React from 'react'
+import {StyleProp, ViewStyle} from 'react-native'
 import Animated, {FadeInDown, FadeOutDown} from 'react-native-reanimated'
 
 import {atoms as a, native, useTheme} from '#/alf'
@@ -8,7 +9,13 @@ import {Text} from '#/components/Typography'
  * Absolutely positioned time indicator showing how many seconds are remaining
  * Time is in seconds
  */
-export function TimeIndicator({time}: {time: number}) {
+export function TimeIndicator({
+  time,
+  style,
+}: {
+  time: number
+  style?: StyleProp<ViewStyle>
+}) {
   const t = useTheme()
 
   if (isNaN(time)) {
@@ -22,26 +29,28 @@ export function TimeIndicator({time}: {time: number}) {
     <Animated.View
       entering={native(FadeInDown.duration(300))}
       exiting={native(FadeOutDown.duration(500))}
+      pointerEvents="none"
       style={[
         {
           backgroundColor: 'rgba(0, 0, 0, 0.5)',
           borderRadius: 6,
           paddingHorizontal: 6,
           paddingVertical: 3,
-          position: 'absolute',
           left: 6,
           bottom: 6,
           minHeight: 21,
-          justifyContent: 'center',
         },
+        a.absolute,
+        a.justify_center,
+        style,
       ]}>
       <Text
         style={[
-          {color: t.palette.white, fontSize: 12},
+          {color: t.palette.white, fontSize: 12, fontVariant: ['tabular-nums']},
           a.font_bold,
           {lineHeight: 1.25},
         ]}>
-        {minutes}:{seconds}
+        {`${minutes}:${seconds}`}
       </Text>
     </Animated.View>
   )

@@ -40,18 +40,22 @@ import {
 } from '#/state/session'
 import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
+import {useComposerKeyboardShortcut} from '#/state/shell/composer/useComposerKeyboardShortcut'
 import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
 import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
 import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
 import {Provider as HiddenRepliesProvider} from '#/state/threadgate-hidden-replies'
 import {Provider as ActiveVideoProvider} from '#/view/com/util/post-embeds/ActiveVideoWebContext'
+import {Provider as VideoVolumeProvider} from '#/view/com/util/post-embeds/VideoVolumeContext'
 import * as Toast from '#/view/com/util/Toast'
 import {ToastContainer} from '#/view/com/util/Toast.web'
 import {Shell} from '#/view/shell/index'
 import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
+import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
+import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 
@@ -68,6 +72,8 @@ function InnerApp() {
   const {_} = useLingui()
   useIntentHandler()
   const hasCheckedReferrer = useStarterPackEntry()
+
+  useComposerKeyboardShortcut()
 
   // init
   useEffect(() => {
@@ -103,41 +109,44 @@ function InnerApp() {
       <Alf theme={theme}>
         <ThemeProvider theme={theme}>
           <RootSiblingParent>
-            <ActiveVideoProvider>
-              <React.Fragment
-                // Resets the entire tree below when it changes:
-                key={currentAccount?.did}>
-                <QueryProvider currentDid={currentAccount?.did}>
-                  <StatsigProvider>
-                    <MessagesProvider>
-                      {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                      <LabelDefsProvider>
-                        <ModerationOptsProvider>
-                          <LoggedOutViewProvider>
-                            <SelectedFeedProvider>
-                              <HiddenRepliesProvider>
-                                <UnreadNotifsProvider>
-                                  <BackgroundNotificationPreferencesProvider>
-                                    <MutedThreadsProvider>
-                                      <SafeAreaProvider>
-                                        <ProgressGuideProvider>
-                                          <Shell />
-                                        </ProgressGuideProvider>
-                                      </SafeAreaProvider>
-                                    </MutedThreadsProvider>
-                                  </BackgroundNotificationPreferencesProvider>
-                                </UnreadNotifsProvider>
-                              </HiddenRepliesProvider>
-                            </SelectedFeedProvider>
-                          </LoggedOutViewProvider>
-                        </ModerationOptsProvider>
-                      </LabelDefsProvider>
-                    </MessagesProvider>
-                  </StatsigProvider>
-                </QueryProvider>
-              </React.Fragment>
-              <ToastContainer />
-            </ActiveVideoProvider>
+            <VideoVolumeProvider>
+              <ActiveVideoProvider>
+                <React.Fragment
+                  // Resets the entire tree below when it changes:
+                  key={currentAccount?.did}>
+                  <QueryProvider currentDid={currentAccount?.did}>
+                    <StatsigProvider>
+                      <MessagesProvider>
+                        {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                        <LabelDefsProvider>
+                          <ModerationOptsProvider>
+                            <LoggedOutViewProvider>
+                              <SelectedFeedProvider>
+                                <HiddenRepliesProvider>
+                                  <UnreadNotifsProvider>
+                                    <BackgroundNotificationPreferencesProvider>
+                                      <MutedThreadsProvider>
+                                        <SafeAreaProvider>
+                                          <ProgressGuideProvider>
+                                            <Shell />
+                                            <NuxDialogs />
+                                          </ProgressGuideProvider>
+                                        </SafeAreaProvider>
+                                      </MutedThreadsProvider>
+                                    </BackgroundNotificationPreferencesProvider>
+                                  </UnreadNotifsProvider>
+                                </HiddenRepliesProvider>
+                              </SelectedFeedProvider>
+                            </LoggedOutViewProvider>
+                          </ModerationOptsProvider>
+                        </LabelDefsProvider>
+                      </MessagesProvider>
+                    </StatsigProvider>
+                  </QueryProvider>
+                </React.Fragment>
+                <ToastContainer />
+              </ActiveVideoProvider>
+            </VideoVolumeProvider>
           </RootSiblingParent>
         </ThemeProvider>
       </Alf>
@@ -175,7 +184,9 @@ function App() {
                       <LightboxStateProvider>
                         <PortalProvider>
                           <StarterPackProvider>
-                            <InnerApp />
+                            <IntentDialogProvider>
+                              <InnerApp />
+                            </IntentDialogProvider>
                           </StarterPackProvider>
                         </PortalProvider>
                       </LightboxStateProvider>

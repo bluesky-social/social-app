@@ -220,8 +220,10 @@ export function NameAndHandlePlaceholder() {
 
 export function Description({
   profile: profileUnshadowed,
+  numberOfLines = 3,
 }: {
   profile: AppBskyActorDefs.ProfileViewDetailed
+  numberOfLines?: number
 }) {
   const profile = useProfileShadow(profileUnshadowed)
   const {description} = profile
@@ -244,31 +246,34 @@ export function Description({
       <RichText
         value={rt}
         style={[a.leading_snug]}
-        numberOfLines={3}
+        numberOfLines={numberOfLines}
         disableLinks
       />
     </View>
   )
 }
 
-export function DescriptionPlaceholder() {
+export function DescriptionPlaceholder({
+  numberOfLines = 3,
+}: {
+  numberOfLines?: number
+}) {
   const t = useTheme()
   return (
-    <View style={[a.gap_xs]}>
-      <View
-        style={[a.rounded_xs, a.w_full, t.atoms.bg_contrast_50, {height: 12}]}
-      />
-      <View
-        style={[a.rounded_xs, a.w_full, t.atoms.bg_contrast_50, {height: 12}]}
-      />
-      <View
-        style={[
-          a.rounded_xs,
-          a.w_full,
-          t.atoms.bg_contrast_50,
-          {height: 12, width: 100},
-        ]}
-      />
+    <View style={[{gap: 8}]}>
+      {Array(numberOfLines)
+        .fill(0)
+        .map((_, i) => (
+          <View
+            key={i}
+            style={[
+              a.rounded_xs,
+              a.w_full,
+              t.atoms.bg_contrast_50,
+              {height: 12, width: i + 1 === numberOfLines ? '60%' : '100%'},
+            ]}
+          />
+        ))}
     </View>
   )
 }

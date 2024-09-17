@@ -1,134 +1,125 @@
-import React, {useCallback, useRef} from 'react'
-import {Pressable, View} from 'react-native'
+import React, {useRef} from 'react'
+import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
 import Animated, {FadeInDown} from 'react-native-reanimated'
-import {VideoPlayer, VideoView} from 'expo-video'
 import {AppBskyEmbedVideo} from '@atproto/api'
+import {BlueskyVideoView} from '@haileyok/bluesky-video'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {HITSLOP_30} from '#/lib/constants'
-import {clamp} from '#/lib/numbers'
-import {isAndroid} from 'platform/detection'
-import {useActiveVideoNative} from 'view/com/util/post-embeds/ActiveVideoNativeContext'
+import {useAutoplayDisabled} from '#/state/preferences'
+import {useVideoMuteState} from 'view/com/util/post-embeds/VideoVolumeContext'
 import {atoms as a, useTheme} from '#/alf'
+import {useIsWithinMessage} from '#/components/dms/MessageContext'
 import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
+import {Pause_Filled_Corner0_Rounded as PauseIcon} from '#/components/icons/Pause'
+import {Play_Filled_Corner0_Rounded as PlayIcon} from '#/components/icons/Play'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
-import {
-  AudioCategory,
-  PlatformInfo,
-} from '../../../../../../modules/expo-bluesky-swiss-army'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {TimeIndicator} from './TimeIndicator'
 
-export function VideoEmbedInnerNative({
-  embed,
-  isFullscreen,
-  setIsFullscreen,
-  isMuted,
-  timeRemaining,
-}: {
-  embed: AppBskyEmbedVideo.View
-  isFullscreen: boolean
-  setIsFullscreen: (isFullscreen: boolean) => void
-  timeRemaining: number
-  isMuted: boolean
-}) {
-  const {_} = useLingui()
-  const {player} = useActiveVideoNative()
-  const ref = useRef<VideoView>(null)
+export const VideoEmbedInnerNative = React.forwardRef(
+  function VideoEmbedInnerNative(
+    {
+      embed,
+      setStatus,
+      setIsLoading,
+      setIsActive,
+    }: {
+      embed: AppBskyEmbedVideo.View
+      setStatus: (status: 'playing' | 'paused') => void
+      setIsLoading: (isLoading: boolean) => void
+      setIsActive: (isActive: boolean) => void
+    },
+    ref: React.Ref<{togglePlayback: () => void}>,
+  ) {
+    const {_} = useLingui()
+    const videoRef = useRef<BlueskyVideoView>(null)
+    const autoplayDisabled = useAutoplayDisabled()
+    const isWithinMessage = useIsWithinMessage()
+    const [muted, setMuted] = useVideoMuteState()
 
-  const enterFullscreen = useCallback(() => {
-    ref.current?.enterFullscreen()
-  }, [])
+    const [isPlaying, setIsPlaying] = React.useState(false)
+    const [timeRemaining, setTimeRemaining] = React.useState(0)
+    const [error, setError] = React.useState<string>()
 
-  let aspectRatio = 16 / 9
+    React.useImperativeHandle(ref, () => ({
+      togglePlayback: () => {
+        videoRef.current?.togglePlayback()
+      },
+    }))
 
-  if (embed.aspectRatio) {
-    const {width, height} = embed.aspectRatio
-    aspectRatio = width / height
-    aspectRatio = clamp(aspectRatio, 1 / 1, 3 / 1)
-  }
+    if (error) {
+      throw new Error(error)
+    }
 
-  return (
-    <View style={[a.flex_1, a.relative, {aspectRatio}]}>
-      <VideoView
-        ref={ref}
-        player={player}
-        style={[a.flex_1, a.rounded_sm]}
-        contentFit="cover"
-        nativeControls={isFullscreen}
-        accessibilityIgnoresInvertColors
-        onFullscreenEnter={() => {
-          PlatformInfo.setAudioCategory(AudioCategory.Playback)
-          PlatformInfo.setAudioActive(true)
-          player.muted = false
-          setIsFullscreen(true)
-          if (isAndroid) {
-            player.play()
+    return (
+      <View style={[a.flex_1, a.relative]}>
+        <BlueskyVideoView
+          url={embed.playlist}
+          autoplay={!autoplayDisabled && !isWithinMessage}
+          beginMuted={autoplayDisabled ? false : muted}
+          style={[a.rounded_sm]}
+          onActiveChange={e => {
+            setIsActive(e.nativeEvent.isActive)
+          }}
+          onLoadingChange={e => {
+            setIsLoading(e.nativeEvent.isLoading)
+          }}
+          onMutedChange={e => {
+            setMuted(e.nativeEvent.isMuted)
+          }}
+          onStatusChange={e => {
+            setStatus(e.nativeEvent.status)
+            setIsPlaying(e.nativeEvent.status === 'playing')
+          }}
+          onTimeRemainingChange={e => {
+            setTimeRemaining(e.nativeEvent.timeRemaining)
+          }}
+          onError={e => {
+            setError(e.nativeEvent.error)
+          }}
+          ref={videoRef}
+          accessibilityLabel={
+            embed.alt ? _(msg`Video: ${embed.alt}`) : _(msg`Video`)
           }
-        }}
-        onFullscreenExit={() => {
-          PlatformInfo.setAudioCategory(AudioCategory.Ambient)
-          PlatformInfo.setAudioActive(false)
-          player.muted = true
-          player.playbackRate = 1
-          setIsFullscreen(false)
-        }}
-        accessibilityLabel={
-          embed.alt ? _(msg`Video: ${embed.alt}`) : _(msg`Video`)
-        }
-        accessibilityHint=""
-      />
-      <VideoControls
-        player={player}
-        enterFullscreen={enterFullscreen}
-        isMuted={isMuted}
-        timeRemaining={timeRemaining}
-      />
-    </View>
-  )
-}
+          accessibilityHint=""
+        />
+        <VideoControls
+          enterFullscreen={() => {
+            videoRef.current?.enterFullscreen()
+          }}
+          toggleMuted={() => {
+            videoRef.current?.toggleMuted()
+          }}
+          togglePlayback={() => {
+            videoRef.current?.togglePlayback()
+          }}
+          isPlaying={isPlaying}
+          timeRemaining={timeRemaining}
+        />
+        <MediaInsetBorder />
+      </View>
+    )
+  },
+)
 
 function VideoControls({
-  player,
   enterFullscreen,
+  toggleMuted,
+  togglePlayback,
   timeRemaining,
-  isMuted,
+  isPlaying,
 }: {
-  player: VideoPlayer
   enterFullscreen: () => void
+  toggleMuted: () => void
+  togglePlayback: () => void
   timeRemaining: number
-  isMuted: boolean
+  isPlaying: boolean
 }) {
   const {_} = useLingui()
   const t = useTheme()
-
-  const onPressFullscreen = useCallback(() => {
-    switch (player.status) {
-      case 'idle':
-      case 'loading':
-      case 'readyToPlay': {
-        if (!player.playing) player.play()
-        enterFullscreen()
-        break
-      }
-      case 'error': {
-        player.replay()
-        break
-      }
-    }
-  }, [player, enterFullscreen])
-
-  const toggleMuted = useCallback(() => {
-    const muted = !player.muted
-    // We want to set this to the _inverse_ of the new value, because we actually want for the audio to be mixed when
-    // the video is muted, and vice versa.
-    const mix = !muted
-    const category = muted ? AudioCategory.Ambient : AudioCategory.Playback
-
-    PlatformInfo.setAudioCategory(category)
-    PlatformInfo.setAudioActive(mix)
-    player.muted = muted
-  }, [player])
+  const [muted] = useVideoMuteState()
 
   // show countdown when:
   // 1. timeRemaining is a number - was seeing NaNs
@@ -138,44 +129,84 @@ function VideoControls({
 
   return (
     <View style={[a.absolute, a.inset_0]}>
-      {showTime && <TimeIndicator time={timeRemaining} />}
       <Pressable
-        onPress={onPressFullscreen}
+        onPress={enterFullscreen}
         style={a.flex_1}
         accessibilityLabel={_(msg`Video`)}
         accessibilityHint={_(msg`Tap to enter full screen`)}
         accessibilityRole="button"
       />
-      <Animated.View
-        entering={FadeInDown.duration(300)}
-        style={[
-          a.absolute,
-          a.rounded_full,
-          a.justify_center,
-          {
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            paddingHorizontal: 4,
-            paddingVertical: 4,
-            bottom: 6,
-            right: 6,
-            minHeight: 21,
-            minWidth: 21,
-          },
-        ]}>
-        <Pressable
-          onPress={toggleMuted}
-          style={a.flex_1}
-          accessibilityLabel={isMuted ? _(msg`Muted`) : _(msg`Unmuted`)}
-          accessibilityHint={_(msg`Tap to toggle sound`)}
-          accessibilityRole="button"
-          hitSlop={HITSLOP_30}>
-          {isMuted ? (
-            <MuteIcon width={13} fill={t.palette.white} />
-          ) : (
-            <UnmuteIcon width={13} fill={t.palette.white} />
-          )}
-        </Pressable>
-      </Animated.View>
+      <ControlButton
+        onPress={togglePlayback}
+        label={isPlaying ? _(msg`Pause`) : _(msg`Play`)}
+        accessibilityHint={_(msg`Tap to play or pause`)}
+        style={{left: 6}}>
+        {isPlaying ? (
+          <PauseIcon width={13} fill={t.palette.white} />
+        ) : (
+          <PlayIcon width={13} fill={t.palette.white} />
+        )}
+      </ControlButton>
+      {showTime && <TimeIndicator time={timeRemaining} style={{left: 33}} />}
+
+      <ControlButton
+        onPress={toggleMuted}
+        label={
+          muted
+            ? _(msg({message: `Unmute`, context: 'video'}))
+            : _(msg({message: `Mute`, context: 'video'}))
+        }
+        accessibilityHint={_(msg`Tap to toggle sound`)}
+        style={{right: 6}}>
+        {muted ? (
+          <MuteIcon width={13} fill={t.palette.white} />
+        ) : (
+          <UnmuteIcon width={13} fill={t.palette.white} />
+        )}
+      </ControlButton>
     </View>
+  )
+}
+
+function ControlButton({
+  onPress,
+  children,
+  label,
+  accessibilityHint,
+  style,
+}: {
+  onPress: () => void
+  children: React.ReactNode
+  label: string
+  accessibilityHint: string
+  style?: StyleProp<ViewStyle>
+}) {
+  return (
+    <Animated.View
+      entering={FadeInDown.duration(300)}
+      style={[
+        a.absolute,
+        a.rounded_full,
+        a.justify_center,
+        {
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          paddingHorizontal: 4,
+          paddingVertical: 4,
+          bottom: 6,
+          minHeight: 21,
+          minWidth: 21,
+        },
+        style,
+      ]}>
+      <Pressable
+        onPress={onPress}
+        style={a.flex_1}
+        accessibilityLabel={label}
+        accessibilityHint={accessibilityHint}
+        accessibilityRole="button"
+        hitSlop={HITSLOP_30}>
+        {children}
+      </Pressable>
+    </Animated.View>
   )
 }

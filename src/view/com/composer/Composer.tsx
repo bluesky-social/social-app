@@ -59,7 +59,7 @@ import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {LikelyType} from '#/lib/link-meta/link-meta'
-import {logEvent, useGate} from '#/lib/statsig/statsig'
+import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {insertMentionAt} from '#/lib/strings/mention-manip'
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
@@ -140,7 +140,6 @@ export const ComposePost = observer(function ComposePost({
 }: Props & {
   cancelRef?: React.RefObject<CancelRef>
 }) {
-  const gate = useGate()
   const {currentAccount} = useSession()
   const agent = useAgent()
   const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
@@ -200,6 +199,7 @@ export const ComposePost = observer(function ComposePost({
       }
     },
   })
+  const hasVideo = Boolean(videoUploadState.asset || videoUploadState.video)
 
   const [publishOnUpload, setPublishOnUpload] = useState(false)
 
@@ -302,9 +302,13 @@ export const ComposePost = observer(function ComposePost({
   const onPhotoPasted = useCallback(
     async (uri: string) => {
       track('Composer:PastedPhotos')
-      await gallery.paste(uri)
+      if (uri.startsWith('data:video/')) {
+        selectVideo({uri, type: 'video', height: 0, width: 0})
+      } else {
+        await gallery.paste(uri)
+      }
     },
-    [gallery, track],
+    [gallery, track, selectVideo],
   )
 
   const isAltTextRequiredAndMissing = useMemo(() => {
@@ -730,8 +734,37 @@ export const ComposePost = observer(function ComposePost({
               />
             </View>
           )}
-
-          <View style={[a.mt_md]}>
+          <LayoutAnimationConfig skipExiting>
+            {hasVideo && (
+              <Animated.View
+                style={[a.w_full, a.mt_lg]}
+                entering={native(ZoomIn)}
+                exiting={native(ZoomOut)}>
+                {videoUploadState.asset &&
+                  (videoUploadState.status === 'compressing' ? (
+                    <VideoTranscodeProgress
+                      asset={videoUploadState.asset}
+                      progress={videoUploadState.progress}
+                      clear={clearVideo}
+                    />
+                  ) : videoUploadState.video ? (
+                    <VideoPreview
+                      asset={videoUploadState.asset}
+                      video={videoUploadState.video}
+                      setDimensions={updateVideoDimensions}
+                      clear={clearVideo}
+                    />
+                  ) : null)}
+                <SubtitleDialogBtn
+                  defaultAltText={videoAltText}
+                  saveAltText={setVideoAltText}
+                  captions={captions}
+                  setCaptions={setCaptions}
+                />
+              </Animated.View>
+            )}
+          </LayoutAnimationConfig>
+          <View style={!hasVideo ? [a.mt_md] : []}>
             {quote ? (
               <View style={[s.mt5, s.mb2, isWeb && s.mb10]}>
                 <View style={{pointerEvents: 'none'}}>
@@ -742,36 +775,6 @@ export const ComposePost = observer(function ComposePost({
                 )}
               </View>
             ) : null}
-            <LayoutAnimationConfig skipExiting>
-              {(videoUploadState.asset || videoUploadState.video) && (
-                <Animated.View
-                  style={[a.w_full, a.mt_xs]}
-                  entering={native(ZoomIn)}
-                  exiting={native(ZoomOut)}>
-                  {videoUploadState.asset &&
-                    (videoUploadState.status === 'compressing' ? (
-                      <VideoTranscodeProgress
-                        asset={videoUploadState.asset}
-                        progress={videoUploadState.progress}
-                        clear={clearVideo}
-                      />
-                    ) : videoUploadState.video ? (
-                      <VideoPreview
-                        asset={videoUploadState.asset}
-                        video={videoUploadState.video}
-                        setDimensions={updateVideoDimensions}
-                        clear={clearVideo}
-                      />
-                    ) : null)}
-                  <SubtitleDialogBtn
-                    defaultAltText={videoAltText}
-                    saveAltText={setVideoAltText}
-                    captions={captions}
-                    setCaptions={setCaptions}
-                  />
-                </Animated.View>
-              )}
-            </LayoutAnimationConfig>
           </View>
         </Animated.ScrollView>
         <SuggestedLanguage text={richtext.text} />
@@ -799,13 +802,11 @@ export const ComposePost = observer(function ComposePost({
           ) : (
             <ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
               <SelectPhotoBtn gallery={gallery} disabled={!canSelectImages} />
-              {gate('video_upload') && (
-                <SelectVideoBtn
-                  onSelectVideo={selectVideo}
-                  disabled={!canSelectImages}
-                  setError={setError}
-                />
-              )}
+              <SelectVideoBtn
+                onSelectVideo={selectVideo}
+                disabled={!canSelectImages}
+                setError={setError}
+              />
               <OpenCameraBtn gallery={gallery} disabled={!canSelectImages} />
               <SelectGifBtn
                 onClose={focusTextInput}
@@ -1154,10 +1155,12 @@ function VideoUploadToolbar({state}: {state: VideoUploadState}) {
   const progress = state.jobStatus?.progress
     ? state.jobStatus.progress / 100
     : state.progress
-  let wheelProgress = progress === 0 || progress === 1 ? 0.33 : progress
+  const shouldRotate =
+    state.status === 'processing' && (progress === 0 || progress === 1)
+  let wheelProgress = shouldRotate ? 0.33 : progress
 
   const rotate = useDerivedValue(() => {
-    if (progress === 0 || progress >= 0.99) {
+    if (shouldRotate) {
       return withRepeat(
         withTiming(360, {
           duration: 2500,

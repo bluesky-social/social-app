@@ -6,10 +6,8 @@ import {useQuery} from '@tanstack/react-query'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {logEvent} from '#/lib/statsig/statsig'
-import {useGate} from '#/lib/statsig/statsig'
 import {capitalize} from '#/lib/strings/capitalize'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {useAgent} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {
@@ -29,23 +27,16 @@ import * as Toggle from '#/components/forms/Toggle'
 import {IconCircle} from '#/components/IconCircle'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateCounterClockwise} from '#/components/icons/ArrowRotateCounterClockwise'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
-import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {EmojiSad_Stroke2_Corner0_Rounded as EmojiSad} from '#/components/icons/Emoji'
 import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-
-const PROMPT_HEIGHT = isWeb ? 42 : 36
-// matches the padding of the OnboardingControls.Portal
-const PROMPT_OFFSET = isWeb ? a.pb_2xl.paddingBottom : a.pb_lg.paddingBottom
-const MIN_INTERESTS = 3
 
 export function StepInterests() {
   const {_} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {track} = useAnalytics()
-  const gate = useGate()
   const interestsDisplayNames = useInterestsDisplayNames()
 
   const {state, dispatch} = React.useContext(Context)
@@ -143,12 +134,6 @@ export function StepInterests() {
     track('OnboardingV2:StepInterests:Start')
   }, [track])
 
-  const isMinimumInterestsEnabled =
-    gate('onboarding_minimum_interests') && data?.interests.length !== 0
-  const meetsMinimumRequirement = isMinimumInterestsEnabled
-    ? interests.length >= MIN_INTERESTS
-    : true
-
   const title = isError ? (
     <Trans>Oh no! Something went wrong.</Trans>
   ) : (
@@ -186,13 +171,8 @@ export function StepInterests() {
 
       <TitleText>{title}</TitleText>
       <DescriptionText>{description}</DescriptionText>
-      {isMinimumInterestsEnabled && (
-        <DescriptionText style={[a.pt_sm]}>
-          <Trans>Choose 3 or more:</Trans>
-        </DescriptionText>
-      )}
 
-      <View style={[a.w_full, isMinimumInterestsEnabled ? a.pt_md : a.pt_2xl]}>
+      <View style={[a.w_full, a.pt_2xl]}>
         {isLoading ? (
           <Loader size="xl" />
         ) : isError || !data ? (
@@ -268,7 +248,7 @@ export function StepInterests() {
           </View>
         ) : (
           <Button
-            disabled={saving || !data || !meetsMinimumRequirement}
+            disabled={saving || !data}
             variant="gradient"
             color="gradient_sky"
             size="large"
@@ -282,53 +262,6 @@ export function StepInterests() {
               position="right"
             />
           </Button>
-        )}
-
-        {!meetsMinimumRequirement && (
-          <View
-            style={[
-              a.align_center,
-              a.absolute,
-              {
-                top: 0,
-                left: 0,
-                right: 0,
-                margin: 'auto',
-                transform: [
-                  {
-                    translateY:
-                      -1 *
-                      (PROMPT_OFFSET + PROMPT_HEIGHT + a.pb_lg.paddingBottom),
-                  },
-                ],
-              },
-            ]}>
-            <View
-              style={[
-                a.flex_row,
-                a.align_center,
-                a.gap_sm,
-                a.rounded_full,
-                a.border,
-                t.atoms.bg_contrast_25,
-                t.atoms.border_contrast_medium,
-                {
-                  height: PROMPT_HEIGHT,
-                  ...t.atoms.shadow_sm,
-                  shadowOpacity: 0.1,
-                },
-                isWeb
-                  ? [a.py_md, a.px_lg, a.pr_xl]
-                  : [a.py_sm, a.px_md, a.pr_lg],
-              ]}>
-              <CircleInfo />
-              <Text>
-                <Trans>
-                  Choose at least {MIN_INTERESTS - interests.length} more
-                </Trans>
-              </Text>
-            </View>
-          </View>
         )}
       </OnboardingControls.Portal>
     </View>
