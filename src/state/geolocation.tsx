@@ -29,7 +29,7 @@ export const DEFAULT_GEOLOCATION: Device['geolocation'] = {
 }
 
 async function getGeolocation(): Promise<Device['geolocation']> {
-  const res = await fetch(`https://app.staging.bsky.dev/ipcc `)
+  const res = await fetch(`https://app.staging.bsky.dev/ipcc`)
 
   if (!res.ok) {
     throw new Error(`geolocation: lookup failed ${res.status}`)
