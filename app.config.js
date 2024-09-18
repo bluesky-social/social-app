@@ -55,6 +55,7 @@ module.exports = function (config) {
     : undefined
   const UPDATES_ENABLED = !!UPDATES_CHANNEL
 
+  const USE_SENTRY = Boolean(process.env.SENTRY_AUTH_TOKEN)
   const SENTRY_DIST = `${PLATFORM}.${VERSION}.${IS_TESTFLIGHT ? 'tf' : ''}${
     IS_DEV ? 'dev' : ''
   }`
@@ -186,7 +187,15 @@ module.exports = function (config) {
       },
       plugins: [
         'expo-localization',
-        Boolean(process.env.SENTRY_AUTH_TOKEN) && 'sentry-expo',
+        [
+          '@sentry/react-native/expo',
+          {
+            organization: 'blueskyweb',
+            project: 'react-native',
+            release: VERSION,
+            dist: SENTRY_DIST,
+          },
+        ],
         [
           'expo-build-properties',
           {
@@ -263,7 +272,7 @@ module.exports = function (config) {
            * @see https://docs.expo.dev/guides/using-sentry/#app-configuration
            */
           {
-            file: 'sentry-expo/upload-sourcemaps',
+            file: '@sentry/react-native/scripts/expo-post-publish',
             config: {
               organization: 'blueskyweb',
               project: 'react-native',
