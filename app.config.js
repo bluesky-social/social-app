@@ -187,7 +187,7 @@ module.exports = function (config) {
       },
       plugins: [
         'expo-localization',
-        [
+        USE_SENTRY && [
           '@sentry/react-native/expo',
           {
             organization: 'blueskyweb',
