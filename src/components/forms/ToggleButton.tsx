@@ -89,6 +89,9 @@ function ButtonInner({children}: React.PropsWithChildren<{}>) {
         {
           borderLeftWidth: 1,
           marginLeft: -1,
+          transitionProperty: 'all',
+          transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+          transitionDuration: '100ms',
         },
         a.flex_grow,
         a.py_md,
