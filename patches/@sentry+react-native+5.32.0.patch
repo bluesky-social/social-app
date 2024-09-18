@@ -13,3 +13,19 @@ index 7e0b4cd..177454c 100644
  }
  //# sourceMappingURL=ignorerequirecyclelogs.js.map
 \ No newline at end of file
+diff --git a/node_modules/@sentry/react-native/ios/RNSentry.mm b/node_modules/@sentry/react-native/ios/RNSentry.mm
+index 392869c..29bcd8b 100644
+--- a/node_modules/@sentry/react-native/ios/RNSentry.mm
++++ b/node_modules/@sentry/react-native/ios/RNSentry.mm
+@@ -452,6 +452,11 @@ - (NSDictionary*) fetchNativeStackFramesBy: (NSArray<NSNumber*>*)instructionsAdd
+                   resolve:(RCTPromiseResolveBlock)resolve
+                   rejecter:(RCTPromiseRejectBlock)reject)
+ {
++    if ([rawBytes isKindOfClass:[NSArray class]]) {
++      resolve(@YES);
++      return;
++    }
++  
+     NSData *data = [[NSData alloc] initWithBase64EncodedString:rawBytes options:0];
+ 
+     SentryEnvelope *envelope = [PrivateSentrySDKOnly envelopeWithData:data];
