@@ -282,6 +282,12 @@ export function createSharedToggleStyles({
   const baseHover: ViewStyle[] = []
   const indicator: ViewStyle[] = []
 
+  base.push({
+    transitionProperty: 'all',
+    transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+    transitionDuration: '100ms',
+  })
+
   if (selected) {
     base.push({
       backgroundColor: t.palette.primary_25,
