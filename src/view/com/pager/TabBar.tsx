@@ -169,6 +169,9 @@ const desktopStyles = StyleSheet.create({
     paddingTop: 14,
     paddingHorizontal: 14,
     justifyContent: 'center',
+    transitionProperty: 'all',
+    transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+    transitionDuration: '150ms',
   },
   itemInner: {
     paddingBottom: 12,

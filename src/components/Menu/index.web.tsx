@@ -246,6 +246,11 @@ export function Item({children, label, onPress, ...rest}: ItemProps) {
                 ? t.atoms.bg_contrast_25
                 : t.atoms.bg_contrast_50,
             ],
+          {
+            transitionProperty: 'all',
+            transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+            transitionDuration: '100ms',
+          },
         ])}
         {...web({
           onMouseEnter,
