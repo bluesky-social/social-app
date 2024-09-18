@@ -30,7 +30,7 @@ export type ButtonColor =
   | 'gradient_sunset'
   | 'gradient_nordic'
   | 'gradient_bonfire'
-export type ButtonSize = 'tiny' | 'xsmall' | 'small' | 'medium' | 'large'
+export type ButtonSize = 'tiny' | 'small' | 'large'
 export type ButtonShape = 'round' | 'square' | 'default'
 export type VariantProps = {
   /**
@@ -342,14 +342,14 @@ export const Button = React.forwardRef<View, ButtonProps>(
       }
 
       if (shape === 'default') {
-        if (size === 'large' || size === 'medium') {
+        if (size === 'large') {
           baseStyles.push({
             paddingVertical: 13,
             paddingHorizontal: 20,
             borderRadius: 8,
             gap: 8,
           })
-        } else if (size === 'small' || size === 'xsmall') {
+        } else if (size === 'small') {
           baseStyles.push({
             paddingVertical: 9,
             paddingHorizontal: 14,
@@ -365,13 +365,13 @@ export const Button = React.forwardRef<View, ButtonProps>(
           })
         }
       } else if (shape === 'round' || shape === 'square') {
-        if (size === 'large' || size === 'medium') {
+        if (size === 'large') {
           if (shape === 'round') {
             baseStyles.push({height: 46, width: 46})
           } else {
             baseStyles.push({height: 44, width: 44})
           }
-        } else if (size === 'small' || size === 'xsmall') {
+        } else if (size === 'small') {
           if (shape === 'round') {
             baseStyles.push({height: 36, width: 36})
           } else {
@@ -625,9 +625,9 @@ export function useSharedButtonTextStyles() {
       }
     }
 
-    if (size === 'large' || size === 'medium') {
+    if (size === 'large') {
       baseStyles.push(a.text_md, a.leading_tight, web({paddingTop: 1}))
-    } else if (size === 'small' || size === 'xsmall') {
+    } else if (size === 'small') {
       baseStyles.push(a.text_sm, a.leading_tight, web({paddingTop: 1}))
     } else if (size === 'tiny') {
       baseStyles.push(a.text_xs, a.leading_tight)
@@ -666,9 +666,7 @@ export function ButtonIcon({
       size ??
       (({
         large: 'sm',
-        medium: 'sm',
         small: 'xs',
-        xsmall: 'xs',
         tiny: 'xs',
       }[buttonSize || 'small'] || 'sm') as Exclude<
         SVGIconProps['size'],
@@ -694,9 +692,7 @@ export function ButtonIcon({
      */
     const iconContainerSize = {
       large: 18,
-      medium: 18,
       small: 16,
-      xsmall: 16,
       tiny: 13,
     }[buttonSize || 'small']
 

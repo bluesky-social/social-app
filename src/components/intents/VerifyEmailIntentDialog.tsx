@@ -112,7 +112,7 @@ function Inner({control}: {control: DialogControlProps}) {
               onPress={() => control.close()}
               variant="solid"
               color={status === 'failure' ? 'secondary' : 'primary'}
-              size="medium"
+              size="large"
               style={{marginLeft: 'auto'}}>
               <ButtonText>
                 <Trans>Close</Trans>
@@ -124,7 +124,7 @@ function Inner({control}: {control: DialogControlProps}) {
                 onPress={onPressResendEmail}
                 variant="solid"
                 color="primary"
-                size="medium"
+                size="large"
                 disabled={sending}>
                 <ButtonText>
                   <Trans>Resend Email</Trans>

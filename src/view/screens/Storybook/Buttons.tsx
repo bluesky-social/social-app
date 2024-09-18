@@ -81,25 +81,12 @@ export function Buttons() {
           <ButtonIcon icon={Globe} position="right" />
         </Button>
 
-        <Button variant="solid" color="primary" size="medium" label="Link out">
-          <ButtonText>Button</ButtonText>
-        </Button>
-        <Button variant="solid" color="primary" size="medium" label="Link out">
-          <ButtonText>Button</ButtonText>
-          <ButtonIcon icon={Globe} position="right" />
-        </Button>
-
         <Button variant="solid" color="primary" size="small" label="Link out">
           <ButtonText>Button</ButtonText>
         </Button>
         <Button variant="solid" color="primary" size="small" label="Link out">
           <ButtonText>Button</ButtonText>
           <ButtonIcon icon={Globe} position="right" />
-        </Button>
-
-        <Button variant="solid" color="primary" size="xsmall" label="Link out">
-          <ButtonIcon icon={Globe} position="left" />
-          <ButtonText>Button</ButtonText>
         </Button>
 
         <Button variant="solid" color="primary" size="tiny" label="Link out">

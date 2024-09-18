@@ -308,7 +308,7 @@ function LandingScreenLoaded({
             label={_(msg`Signup without a starter pack`)}
             variant="solid"
             color="secondary"
-            size="medium"
+            size="large"
             style={[a.py_lg]}
             onPress={onJoinWithoutPress}>
             <ButtonText>

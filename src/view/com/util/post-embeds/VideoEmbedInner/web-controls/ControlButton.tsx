@@ -26,7 +26,7 @@ export function ControlButton({
       onPress={onPress}
       variant="ghost"
       shape="round"
-      size="medium"
+      size="large"
       style={a.p_2xs}
       hoverStyle={{backgroundColor: 'rgba(255, 255, 255, 0.1)'}}>
       {active ? (
