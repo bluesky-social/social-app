@@ -16,7 +16,7 @@ export function computeFontScaleMultiplier(scale: Device['fontScale']) {
 }
 
 export function getFontScale() {
-  return device.get(['fontScale']) || '0'
+  return device.get(['fontScale']) ?? '0'
 }
 
 export function setFontScale(fontScale: Device['fontScale']) {
@@ -24,7 +24,7 @@ export function setFontScale(fontScale: Device['fontScale']) {
 }
 
 export function getFontFamily() {
-  return device.get(['fontFamily']) || 'system'
+  return device.get(['fontFamily']) || 'theme'
 }
 
 export function setFontFamily(fontFamily: Device['fontFamily']) {
