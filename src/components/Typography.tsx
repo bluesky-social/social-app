@@ -39,12 +39,10 @@ export function normalizeTextStyles(
   {
     fontScale,
     fontFamily,
-    flags,
   }: {
     fontScale: number
     fontFamily: Alf['fonts']['family']
-    flags: {neue: boolean}
-  },
+  } & Pick<Alf, 'flags'>,
 ) {
   const s = flatten(styles)
   // should always be defined on these components
@@ -58,7 +56,7 @@ export function normalizeTextStyles(
     s.lineHeight = s.fontSize
   }
 
-  if (flags.neue && fontFamily === 'theme') {
+  if (fontFamily === 'theme') {
     applyFonts(s)
   }
 

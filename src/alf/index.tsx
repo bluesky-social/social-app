@@ -1,7 +1,6 @@
 import React from 'react'
 import {useMediaQuery} from 'react-responsive'
 
-import {useGate} from '#/lib/statsig/statsig'
 import {
   computeFontScaleMultiplier,
   getFontFamily,
@@ -33,9 +32,10 @@ export type Alf = {
     setFontScale: (fontScale: Exclude<Device['fontScale'], undefined>) => void
     setFontFamily: (fontFamily: Device['fontFamily']) => void
   }
-  flags: {
-    neue: boolean
-  }
+  /**
+   * Feature flags or other gated options
+   */
+  flags: {}
 }
 
 /*
@@ -58,17 +58,13 @@ export const Context = React.createContext<Alf>({
     setFontScale: () => {},
     setFontFamily: () => {},
   },
-  flags: {
-    neue: false,
-  },
+  flags: {},
 })
 
 export function ThemeProvider({
   children,
   theme: themeName,
 }: React.PropsWithChildren<{theme: ThemeName}>) {
-  const gate = useGate()
-  const [neue] = React.useState(() => gate('typography_neue'))
   const [fontScale, setFontScale] = React.useState<Alf['fonts']['scale']>(() =>
     getFontScale(),
   )
@@ -121,14 +117,11 @@ export function ThemeProvider({
             setFontScale: setFontScaleAndPersist,
             setFontFamily: setFontFamilyAndPersist,
           },
-          flags: {
-            neue,
-          },
+          flags: {},
         }),
         [
           themeName,
           themes,
-          neue,
           fontScale,
           setFontScaleAndPersist,
           fontFamily,

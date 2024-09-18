@@ -33,7 +33,7 @@ export function Text({
   const theme = useTheme()
   const typography = theme.typography[type]
   const lineHeightStyle = lineHeight ? lh(theme, type, lineHeight) : undefined
-  const {fonts, flags} = useAlf()
+  const {fonts} = useAlf()
 
   if (selectable && isIOS) {
     const flattened = StyleSheet.flatten([
@@ -43,7 +43,7 @@ export function Text({
       style,
     ])
 
-    if (flags.neue && fonts.family === 'theme') {
+    if (fonts.family === 'theme') {
       applyFonts(flattened)
     }
 
@@ -73,7 +73,7 @@ export function Text({
     style,
   ])
 
-  if (flags.neue && fonts.family === 'theme') {
+  if (fonts.family === 'theme') {
     applyFonts(flattened)
   }
 
