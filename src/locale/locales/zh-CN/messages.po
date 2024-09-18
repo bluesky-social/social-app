@@ -264,7 +264,7 @@ msgstr "7天"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:266
 msgid "A virtual certificate with text \"Celebrating 10M users on Bluesky, #{0}, {displayName} {handle}, joined on {joinedDate}\""
-msgstr "带有\"庆祝 Bluesky 用户数突破一千万，#{0}, {displayName} {handle}，于 {joinedDate} 加入\"的虚拟证书"
+msgstr "带有\"庆祝 Bluesky 用户数突破一千万，排名第 #{0}，{displayName} {handle}，于 {joinedDate} 加入\"的虚拟证书"
 
 #: src/view/com/util/ViewHeader.tsx:92
 #: src/view/screens/Search/Search.tsx:684
@@ -884,7 +884,7 @@ msgstr "书籍"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:677
 msgid "Brag a little!"
-msgstr "吹个牛！"
+msgstr "炫耀你的排名！"
 
 #: src/components/FeedInterstitials.tsx:350
 msgid "Browse more accounts on the Explore page"
