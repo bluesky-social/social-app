@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-17 14:16+0900\n"
+"PO-Revision-Date: 2024-09-18 11:01+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -261,6 +261,10 @@ msgstr "30日"
 #: src/components/dialogs/MutedWords.tsx:217
 msgid "7 days"
 msgstr "７日"
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:266
+msgid "A virtual certificate with text \"Celebrating 10M users on Bluesky, #{0}, {displayName} {handle}, joined on {joinedDate}\""
+msgstr "「Blueskyの1,000万ユーザーを祝福し、{0} 番目に、{displayName} {handle} が {joinedDate} に 参加した」というテキストが書かれた仮想証明書"
 
 #: src/view/com/util/ViewHeader.tsx:92
 #: src/view/screens/Search/Search.tsx:684
@@ -3138,8 +3142,8 @@ msgstr "Blueskyに参加"
 msgid "Join the conversation"
 msgstr "会話に参加"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:492
-msgid "Joined {0}"
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:559
+msgid "Joined on {joinedDate}"
 msgstr "{0} に参加"
 
 #: src/screens/Onboarding/index.tsx:21
