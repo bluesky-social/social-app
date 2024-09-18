@@ -1,4 +1,5 @@
 import React from 'react'
+import {AppBskyActorDefs} from '@atproto/api'
 
 import {useGate} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
@@ -8,9 +9,16 @@ import {
   useRemoveNuxsMutation,
   useUpsertNuxMutation,
 } from '#/state/queries/nuxs'
-import {useSession} from '#/state/session'
+import {
+  usePreferencesQuery,
+  UsePreferencesQueryResponse,
+} from '#/state/queries/preferences'
+import {useProfileQuery} from '#/state/queries/profile'
+import {SessionAccount, useSession} from '#/state/session'
 import {useOnboardingState} from '#/state/shell'
+import {NeueTypography} from '#/components/dialogs/nuxs/NeueTypography'
 import {isSnoozed, snooze, unsnooze} from '#/components/dialogs/nuxs/snoozing'
+// NUXs
 import {TenMillion} from '#/components/dialogs/nuxs/TenMillion'
 import {IS_DEV} from '#/env'
 
@@ -21,10 +29,26 @@ type Context = {
 
 const queuedNuxs: {
   id: Nux
-  enabled?: (props: {gate: ReturnType<typeof useGate>}) => boolean
+  enabled?: (props: {
+    gate: ReturnType<typeof useGate>
+    currentAccount: SessionAccount
+    currentProfile: AppBskyActorDefs.ProfileViewDetailed
+    preferences: UsePreferencesQueryResponse
+  }) => boolean
 }[] = [
   {
     id: Nux.TenMillionDialog,
+  },
+  {
+    id: Nux.NeueTypography,
+    enabled(props) {
+      if (props.currentProfile.createdAt) {
+        if (new Date(props.currentProfile.createdAt) < new Date('2024-09-25')) {
+          return true
+        }
+      }
+      return false
+    },
   },
 ]
 
@@ -38,12 +62,31 @@ export function useNuxDialogContext() {
 }
 
 export function NuxDialogs() {
-  const {hasSession} = useSession()
-  const onboardingState = useOnboardingState()
-  return hasSession && !onboardingState.isActive ? <Inner /> : null
+  const {currentAccount} = useSession()
+  const {data: preferences} = usePreferencesQuery()
+  const {data: profile} = useProfileQuery({did: currentAccount?.did})
+  const onboardingActive = useOnboardingState().isActive
+
+  const isLoading =
+    !currentAccount || !preferences || !profile || onboardingActive
+  return isLoading ? null : (
+    <Inner
+      currentAccount={currentAccount}
+      currentProfile={profile}
+      preferences={preferences}
+    />
+  )
 }
 
-function Inner() {
+function Inner({
+  currentAccount,
+  currentProfile,
+  preferences,
+}: {
+  currentAccount: SessionAccount
+  currentProfile: AppBskyActorDefs.ProfileViewDetailed
+  preferences: UsePreferencesQueryResponse
+}) {
   const gate = useGate()
   const {nuxs} = useNuxs()
   const [snoozed, setSnoozed] = React.useState(() => {
@@ -83,7 +126,13 @@ function Inner() {
       if (nux && nux.completed) continue
 
       // then check gate (track exposure)
-      if (enabled && !enabled({gate})) continue
+      if (
+        enabled &&
+        !enabled({gate, currentAccount, currentProfile, preferences})
+      )
+        continue
+
+      logger.debug(`NUX dialogs: activating '${id}' NUX`)
 
       // we have a winner
       setActiveNux(id)
@@ -104,7 +153,16 @@ function Inner() {
 
       break
     }
-  }, [nuxs, snoozed, snoozeNuxDialog, upsertNux, gate])
+  }, [
+    nuxs,
+    snoozed,
+    snoozeNuxDialog,
+    upsertNux,
+    gate,
+    currentAccount,
+    currentProfile,
+    preferences,
+  ])
 
   const ctx = React.useMemo(() => {
     return {
@@ -116,6 +174,7 @@ function Inner() {
   return (
     <Context.Provider value={ctx}>
       {activeNux === Nux.TenMillionDialog && <TenMillion />}
+      {activeNux === Nux.NeueTypography && <NeueTypography />}
     </Context.Provider>
   )
 }
