@@ -46,7 +46,7 @@ import {Provider as VideoVolumeProvider} from '#/view/com/util/post-embeds/Video
 import * as Toast from '#/view/com/util/Toast'
 import {ToastContainer} from '#/view/com/util/Toast.web'
 import {Shell} from '#/view/shell/index'
-import {ThemeProvider as Alf} from '#/alf'
+import {ThemeProvider as Alf, useFonts} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
@@ -144,12 +144,13 @@ function InnerApp() {
 
 function App() {
   const [isReady, setReady] = useState(false)
+  const [loaded] = useFonts()
 
   React.useEffect(() => {
     initPersistedState().then(() => setReady(true))
   }, [])
 
-  if (!isReady) {
+  if (!isReady || !loaded) {
     return null
   }
 

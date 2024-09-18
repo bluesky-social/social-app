@@ -1,5 +1,6 @@
 import {useFonts as defaultUseFonts} from 'expo-font'
 
+import {IS_PROD} from '#/env'
 import {Device, device} from '#/storage'
 
 const factor = 0.0625 // 1 - (15/16)
@@ -35,6 +36,7 @@ export function setFontFamily(fontFamily: Device['fontFamily']) {
  * Unused fonts are commented out, but the files are there if we need them.
  */
 export function useFonts() {
+  if (IS_PROD) return [true, undefined]
   return defaultUseFonts({
     // 'Inter-Thin': require('../../assets/fonts/inter/Inter-Thin.otf'),
     // 'Inter-ThinItalic': require('../../assets/fonts/inter/Inter-ThinItalic.otf'),
@@ -84,4 +86,7 @@ export function applyFonts(style: Record<string, any>) {
       style.fontFamily += 'Italic'
     }
   }
+
+  style.fontFamily +=
+    ', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Liberation Sans", Helvetica, Arial, sans-serif'
 }
