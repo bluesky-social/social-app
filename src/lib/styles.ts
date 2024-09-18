@@ -84,8 +84,8 @@ export const s = StyleSheet.create({
   semiBold: {fontWeight: '500'},
   fw400: {fontWeight: '400'},
   normal: {fontWeight: '400'},
-  fw300: {fontWeight: '300'},
-  light: {fontWeight: '300'},
+  fw300: {fontWeight: '400'},
+  light: {fontWeight: '400'},
   fw200: {fontWeight: '200'},
 
   // text decoration

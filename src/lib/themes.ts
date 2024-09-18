@@ -90,7 +90,7 @@ export const defaultTheme: Theme = {
     '2xl-thin': {
       fontSize: 18,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '300',
+      fontWeight: '400',
     },
     '2xl': {
       fontSize: 18,
@@ -115,7 +115,7 @@ export const defaultTheme: Theme = {
     'xl-thin': {
       fontSize: 17,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '300',
+      fontWeight: '400',
     },
     xl: {
       fontSize: 17,
@@ -140,7 +140,7 @@ export const defaultTheme: Theme = {
     'lg-thin': {
       fontSize: 16,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '300',
+      fontWeight: '400',
     },
     lg: {
       fontSize: 16,
@@ -165,7 +165,7 @@ export const defaultTheme: Theme = {
     'md-thin': {
       fontSize: 15,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '300',
+      fontWeight: '400',
     },
     md: {
       fontSize: 15,
@@ -190,7 +190,7 @@ export const defaultTheme: Theme = {
     'sm-thin': {
       fontSize: 14,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '300',
+      fontWeight: '400',
     },
     sm: {
       fontSize: 14,
@@ -215,7 +215,7 @@ export const defaultTheme: Theme = {
     'xs-thin': {
       fontSize: 13,
       letterSpacing: tokens.TRACKING,
-      fontWeight: '300',
+      fontWeight: '400',
     },
     xs: {
       fontSize: 13,

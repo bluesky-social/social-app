@@ -31,14 +31,17 @@ export function setFontFamily(fontFamily: Device['fontFamily']) {
   device.set(['fontFamily'], fontFamily)
 }
 
+/*
+ * Unused fonts are commented out, but the files are there if we need them.
+ */
 export function useFonts() {
   return defaultUseFonts({
-    'Inter-Thin': require('../../assets/fonts/inter/Inter-Thin.otf'),
-    'Inter-ThinItalic': require('../../assets/fonts/inter/Inter-ThinItalic.otf'),
-    'Inter-ExtraLight': require('../../assets/fonts/inter/Inter-ExtraLight.otf'),
-    'Inter-ExtraLightItalic': require('../../assets/fonts/inter/Inter-ExtraLightItalic.otf'),
-    'Inter-Light': require('../../assets/fonts/inter/Inter-Light.otf'),
-    'Inter-LightItalic': require('../../assets/fonts/inter/Inter-LightItalic.otf'),
+    // 'Inter-Thin': require('../../assets/fonts/inter/Inter-Thin.otf'),
+    // 'Inter-ThinItalic': require('../../assets/fonts/inter/Inter-ThinItalic.otf'),
+    // 'Inter-ExtraLight': require('../../assets/fonts/inter/Inter-ExtraLight.otf'),
+    // 'Inter-ExtraLightItalic': require('../../assets/fonts/inter/Inter-ExtraLightItalic.otf'),
+    // 'Inter-Light': require('../../assets/fonts/inter/Inter-Light.otf'),
+    // 'Inter-LightItalic': require('../../assets/fonts/inter/Inter-LightItalic.otf'),
     'Inter-Regular': require('../../assets/fonts/inter/Inter-Regular.otf'),
     'Inter-Italic': require('../../assets/fonts/inter/Inter-Italic.otf'),
     'Inter-Medium': require('../../assets/fonts/inter/Inter-Medium.otf'),
@@ -54,12 +57,18 @@ export function useFonts() {
   })
 }
 
+/*
+ * Unused fonts are commented out, but the files are there if we need them.
+ */
 export function applyFonts(style: Record<string, any>) {
   style.fontFamily =
     {
-      '100': 'Inter-Thin',
-      '200': 'Inter-ExtraLight',
-      '300': 'Inter-Light',
+      // '100': 'Inter-Thin',
+      // '200': 'Inter-ExtraLight',
+      // '300': 'Inter-Light',
+      '100': 'Inter-Regular',
+      '200': 'Inter-Regular',
+      '300': 'Inter-Regular',
       '400': 'Inter-Regular',
       '500': 'Inter-Medium',
       '600': 'Inter-SemiBold',
