@@ -200,7 +200,6 @@
     "react-responsive": "^9.0.2",
     "react-textarea-autosize": "^8.5.3",
     "rn-fetch-blob": "^0.12.0",
-    "sentry-expo": "~7.0.1",
     "statsig-react-native-expo": "^4.6.1",
     "tippy.js": "^6.3.7",
     "tlds": "^1.234.0",
