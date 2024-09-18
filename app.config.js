@@ -272,7 +272,7 @@ module.exports = function (config) {
            * @see https://docs.expo.dev/guides/using-sentry/#app-configuration
            */
           {
-            file: '@sentry/react-native/scripts/expo-post-publish',
+            file: './postHooks/uploadSentrySourcemapsPostHook',
             config: {
               organization: 'blueskyweb',
               project: 'react-native',
