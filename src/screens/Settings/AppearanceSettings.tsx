@@ -10,7 +10,6 @@ import {useLingui} from '@lingui/react'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
-import {useGate} from '#/lib/statsig/statsig'
 import {s} from '#/lib/styles'
 import {useSetThemePrefs, useThemePrefs} from '#/state/shell'
 import {SimpleViewHeader} from '#/view/com/util/SimpleViewHeader'
@@ -27,8 +26,6 @@ type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppearanceSettings'>
 export function AppearanceSettingsScreen({}: Props) {
   const t = useTheme()
   const {_} = useLingui()
-  const gate = useGate()
-  const [neue] = React.useState(() => gate('typography_neue'))
   const {isTabletOrMobile} = useWebMediaQueries()
   const {fonts} = useAlf()
 
@@ -159,78 +156,74 @@ export function AppearanceSettingsScreen({}: Props) {
                 </Animated.View>
               )}
 
-              {neue && (
-                <>
-                  <View style={[a.gap_md]}>
-                    <View style={[a.gap_xs]}>
-                      <View style={[a.flex_row, a.align_center, a.gap_md]}>
-                        <Aa style={t.atoms.text} />
-                        <Text style={[a.text_md, a.font_bold]}>
-                          <Trans>Font</Trans>
-                        </Text>
-                      </View>
-                      <Text
-                        style={[
-                          a.text_sm,
-                          a.leading_snug,
-                          t.atoms.text_contrast_medium,
-                        ]}>
-                        <Trans>
-                          For the best experience, we recommend using the theme
-                          font.
-                        </Trans>
-                      </Text>
-                    </View>
-                    <ToggleButton.Group
-                      label={_(msg`Font`)}
-                      values={[fontFamily]}
-                      onChange={onChangeFontFamily}>
-                      <ToggleButton.Button label={_(msg`System`)} name="system">
-                        <ToggleButton.ButtonText>
-                          <Trans>System</Trans>
-                        </ToggleButton.ButtonText>
-                      </ToggleButton.Button>
-                      <ToggleButton.Button label={_(msg`Theme`)} name="theme">
-                        <ToggleButton.ButtonText>
-                          <Trans>Theme</Trans>
-                        </ToggleButton.ButtonText>
-                      </ToggleButton.Button>
-                    </ToggleButton.Group>
+              <View style={[a.gap_md]}>
+                <View style={[a.gap_xs]}>
+                  <View style={[a.flex_row, a.align_center, a.gap_md]}>
+                    <Aa style={t.atoms.text} />
+                    <Text style={[a.text_md, a.font_bold]}>
+                      <Trans>Font</Trans>
+                    </Text>
                   </View>
+                  <Text
+                    style={[
+                      a.text_sm,
+                      a.leading_snug,
+                      t.atoms.text_contrast_medium,
+                    ]}>
+                    <Trans>
+                      For the best experience, we recommend using the theme
+                      font.
+                    </Trans>
+                  </Text>
+                </View>
+                <ToggleButton.Group
+                  label={_(msg`Font`)}
+                  values={[fontFamily]}
+                  onChange={onChangeFontFamily}>
+                  <ToggleButton.Button label={_(msg`System`)} name="system">
+                    <ToggleButton.ButtonText>
+                      <Trans>System</Trans>
+                    </ToggleButton.ButtonText>
+                  </ToggleButton.Button>
+                  <ToggleButton.Button label={_(msg`Theme`)} name="theme">
+                    <ToggleButton.ButtonText>
+                      <Trans>Theme</Trans>
+                    </ToggleButton.ButtonText>
+                  </ToggleButton.Button>
+                </ToggleButton.Group>
+              </View>
 
-                  <View style={[a.gap_md]}>
-                    <View style={[a.gap_xs]}>
-                      <View style={[a.flex_row, a.align_center, a.gap_md]}>
-                        <TextSize style={t.atoms.text} />
-                        <Text style={[a.text_md, a.font_bold]}>
-                          <Trans>Font size</Trans>
-                        </Text>
-                      </View>
-                    </View>
-
-                    <ToggleButton.Group
-                      label={_(msg`Font`)}
-                      values={[fontScale]}
-                      onChange={onChangeFontScale}>
-                      <ToggleButton.Button label={_(msg`Small`)} name="-1">
-                        <ToggleButton.ButtonText>
-                          <Trans>Smaller</Trans>
-                        </ToggleButton.ButtonText>
-                      </ToggleButton.Button>
-                      <ToggleButton.Button label={_(msg`Default`)} name="0">
-                        <ToggleButton.ButtonText>
-                          <Trans>Default</Trans>
-                        </ToggleButton.ButtonText>
-                      </ToggleButton.Button>
-                      <ToggleButton.Button label={_(msg`Large`)} name="1">
-                        <ToggleButton.ButtonText>
-                          <Trans>Larger</Trans>
-                        </ToggleButton.ButtonText>
-                      </ToggleButton.Button>
-                    </ToggleButton.Group>
+              <View style={[a.gap_md]}>
+                <View style={[a.gap_xs]}>
+                  <View style={[a.flex_row, a.align_center, a.gap_md]}>
+                    <TextSize style={t.atoms.text} />
+                    <Text style={[a.text_md, a.font_bold]}>
+                      <Trans>Font size</Trans>
+                    </Text>
                   </View>
-                </>
-              )}
+                </View>
+
+                <ToggleButton.Group
+                  label={_(msg`Font`)}
+                  values={[fontScale]}
+                  onChange={onChangeFontScale}>
+                  <ToggleButton.Button label={_(msg`Small`)} name="-1">
+                    <ToggleButton.ButtonText>
+                      <Trans>Smaller</Trans>
+                    </ToggleButton.ButtonText>
+                  </ToggleButton.Button>
+                  <ToggleButton.Button label={_(msg`Default`)} name="0">
+                    <ToggleButton.ButtonText>
+                      <Trans>Default</Trans>
+                    </ToggleButton.ButtonText>
+                  </ToggleButton.Button>
+                  <ToggleButton.Button label={_(msg`Large`)} name="1">
+                    <ToggleButton.ButtonText>
+                      <Trans>Larger</Trans>
+                    </ToggleButton.ButtonText>
+                  </ToggleButton.Button>
+                </ToggleButton.Group>
+              </View>
             </View>
           </View>
         </ScrollView>
