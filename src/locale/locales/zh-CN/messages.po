@@ -3142,10 +3142,6 @@ msgstr "加入 Bluesky"
 msgid "Join the conversation"
 msgstr "加入对话"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:492
-#~ msgid "Joined {0}"
-#~ msgstr "{0} 已加入"
-
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:559
 msgid "Joined on {joinedDate}"
 msgstr "于 {joinedDate} 加入"
