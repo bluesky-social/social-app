@@ -448,6 +448,9 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 8,
     gap: 10,
+    transitionProperty: 'all',
+    transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
+    transitionDuration: '100ms',
   },
   navItemIconWrapper: {
     alignItems: 'center',
