@@ -1231,17 +1231,17 @@ msgstr "Alterar idioma do post para {0}"
 
 #: src/view/com/modals/ChangeEmail.tsx:104
 msgid "Change Your Email"
-msgstr "Altere o Seu Email"
+msgstr "Alterar seu Email"
 
 #: src/Navigation.tsx:338
 #: src/view/shell/bottom-bar/BottomBar.tsx:201
 #: src/view/shell/desktop/LeftNav.tsx:301
 msgid "Chat"
-msgstr "Chat"
+msgstr "Mensagens"
 
 #: src/components/dms/ConvoMenu.tsx:82
 msgid "Chat muted"
-msgstr "Chat silenciado"
+msgstr "Conversa silenciada"
 
 #: src/components/dms/ConvoMenu.tsx:112
 #: src/components/dms/MessageMenu.tsx:81
@@ -1249,20 +1249,20 @@ msgstr "Chat silenciado"
 #: src/screens/Messages/List/index.tsx:88
 #: src/view/screens/Settings/index.tsx:604
 msgid "Chat settings"
-msgstr "Configurações do Chat"
+msgstr "Configurações das Mensagens"
 
 #: src/screens/Messages/Settings.tsx:59
 #: src/view/screens/Settings/index.tsx:613
 msgid "Chat Settings"
-msgstr "Configurações do Chat"
+msgstr "Configurações das Mensagens"
 
 #: src/components/dms/ConvoMenu.tsx:84
 msgid "Chat unmuted"
-msgstr "Chat dessilenciado"
+msgstr "Conversa dessilenciada"
 
 #: src/screens/Messages/Conversation/index.tsx:26
 #~ msgid "Chat with {chatId}"
-#~ msgstr "Chat com {chatId}"
+#~ msgstr "Converse com {chatId}"
 
 #: src/screens/SignupQueued.tsx:78
 #: src/screens/SignupQueued.tsx:82
@@ -2924,12 +2924,12 @@ msgstr "Siga todos"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:223
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:142
 msgid "Follow Back"
-msgstr "Seguir De Volta"
+msgstr "Seguir de volta"
 
 #: src/view/com/profile/FollowButton.tsx:79
 msgctxt "action"
 msgid "Follow Back"
-msgstr "Seguir De Volta"
+msgstr "Seguir de volta"
 
 #: src/view/screens/Search/Explore.tsx:334
 msgid "Follow more accounts to get connected to your interests and build your network."
