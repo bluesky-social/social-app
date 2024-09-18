@@ -72,7 +72,7 @@ export function Text({style, selectable, ...rest}: TextProps) {
   const {fonts, flags} = useAlf()
   const t = useTheme()
   const s = normalizeTextStyles([atoms.text_sm, t.atoms.text, flatten(style)], {
-    fontScale: fonts.scale,
+    fontScale: fonts.scaleMultiplier,
     fontFamily: fonts.family,
     flags,
   })

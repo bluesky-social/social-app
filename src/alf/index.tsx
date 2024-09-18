@@ -3,6 +3,7 @@ import {useMediaQuery} from 'react-responsive'
 
 import {useGate} from '#/lib/statsig/statsig'
 import {
+  computeFontScaleMultiplier,
   getFontFamily,
   getFontScale,
   setFontFamily as persistFontFamily,
@@ -27,6 +28,7 @@ export type Alf = {
   themes: ReturnType<typeof createThemes>
   fonts: {
     scale: Exclude<Device['fontScale'], undefined>
+    scaleMultiplier: number
     family: Device['fontFamily']
     setFontScale: (fontScale: Exclude<Device['fontScale'], undefined>) => void
     setFontFamily: (fontFamily: Device['fontFamily']) => void
@@ -51,6 +53,7 @@ export const Context = React.createContext<Alf>({
   }),
   fonts: {
     scale: getFontScale(),
+    scaleMultiplier: computeFontScaleMultiplier(getFontScale()),
     family: getFontFamily(),
     setFontScale: () => {},
     setFontFamily: () => {},
@@ -66,11 +69,11 @@ export function ThemeProvider({
 }: React.PropsWithChildren<{theme: ThemeName}>) {
   const gate = useGate()
   const [neue] = React.useState(() => gate('typography_neue'))
-  const [fontScale, setFontScale] = React.useState<Alf['fonts']['scale']>(
-    () => {
-      if (!neue) return 1
-      return getFontScale()
-    },
+  const [fontScale, setFontScale] = React.useState<Alf['fonts']['scale']>(() =>
+    getFontScale(),
+  )
+  const [fontScaleMultiplier, setFontScaleMultiplier] = React.useState(() =>
+    computeFontScaleMultiplier(fontScale),
   )
   const setFontScaleAndPersist = React.useCallback<
     Alf['fonts']['setFontScale']
@@ -78,6 +81,7 @@ export function ThemeProvider({
     fontScale => {
       setFontScale(fontScale)
       persistFontScale(fontScale)
+      setFontScaleMultiplier(computeFontScaleMultiplier(fontScale))
     },
     [setFontScale],
   )
@@ -112,6 +116,7 @@ export function ThemeProvider({
           theme: themes[themeName],
           fonts: {
             scale: fontScale,
+            scaleMultiplier: fontScaleMultiplier,
             family: fontFamily,
             setFontScale: setFontScaleAndPersist,
             setFontFamily: setFontFamilyAndPersist,
@@ -128,6 +133,7 @@ export function ThemeProvider({
           setFontScaleAndPersist,
           fontFamily,
           setFontFamilyAndPersist,
+          fontScaleMultiplier,
         ],
       )}>
       {children}

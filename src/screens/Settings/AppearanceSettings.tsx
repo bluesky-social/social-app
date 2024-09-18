@@ -16,11 +16,11 @@ import {useSetThemePrefs, useThemePrefs} from '#/state/shell'
 import {SimpleViewHeader} from '#/view/com/util/SimpleViewHeader'
 import {ScrollView} from '#/view/com/util/Views'
 import {atoms as a, native, useAlf, useTheme} from '#/alf'
-import {Divider} from '#/components/Divider'
-import * as Toggle from '#/components/forms/Toggle'
 import * as ToggleButton from '#/components/forms/ToggleButton'
 import {Moon_Stroke2_Corner0_Rounded as MoonIcon} from '#/components/icons/Moon'
 import {Phone_Stroke2_Corner0_Rounded as PhoneIcon} from '#/components/icons/Phone'
+import {TextSize_Stroke2_Corner0_Rounded as TextSize} from '#/components/icons/TextSize'
+import {TitleCase_Stroke2_Corner0_Rounded as Aa} from '#/components/icons/TitleCase'
 import {Text} from '#/components/Typography'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppearanceSettings'>
@@ -35,10 +35,8 @@ export function AppearanceSettingsScreen({}: Props) {
   const {colorMode, darkTheme} = useThemePrefs()
   const {setColorMode, setDarkTheme} = useSetThemePrefs()
 
-  const [fontScale, setFontScale] = React.useState(() => fonts.scale !== 1)
-  const [fontFamily, setFontFamily] = React.useState(
-    () => fonts.family === 'theme',
-  )
+  const [fontFamily, setFontFamily] = React.useState(fonts.family)
+  const [fontScale, setFontScale] = React.useState(() => fonts.scale)
 
   const onChangeAppearance = useCallback(
     (keys: string[]) => {
@@ -65,6 +63,24 @@ export function AppearanceSettingsScreen({}: Props) {
     [setDarkTheme, darkTheme],
   )
 
+  const onChangeFontFamily = useCallback(
+    (values: string[]) => {
+      const next = values[0] === 'system' ? 'system' : 'theme'
+      setFontFamily(next)
+      fonts.setFontFamily(next)
+    },
+    [setFontFamily, fonts],
+  )
+
+  const onChangeFontScale = useCallback(
+    (values: string[]) => {
+      const next = values[0] || ('0' as any)
+      setFontScale(next)
+      fonts.setFontScale(next)
+    },
+    [setFontScale, fonts],
+  )
+
   return (
     <LayoutAnimationConfig skipExiting skipEntering>
       <View testID="preferencesThreadsScreen" style={s.hContentRegion}>
@@ -87,7 +103,7 @@ export function AppearanceSettingsScreen({}: Props) {
               <View style={[a.gap_md]}>
                 <View style={[a.flex_row, a.align_center, a.gap_md]}>
                   <PhoneIcon style={t.atoms.text} />
-                  <Text style={a.text_md}>
+                  <Text style={[a.text_md, a.font_bold]}>
                     <Trans>Mode</Trans>
                   </Text>
                 </View>
@@ -120,7 +136,7 @@ export function AppearanceSettingsScreen({}: Props) {
                   style={[a.gap_md]}>
                   <View style={[a.flex_row, a.align_center, a.gap_md]}>
                     <MoonIcon style={t.atoms.text} />
-                    <Text style={a.text_md}>
+                    <Text style={[a.text_md, a.font_bold]}>
                       <Trans>Dark theme</Trans>
                     </Text>
                   </View>
@@ -142,105 +158,80 @@ export function AppearanceSettingsScreen({}: Props) {
                   </ToggleButton.Group>
                 </Animated.View>
               )}
+
+              {neue && (
+                <>
+                  <View style={[a.gap_md]}>
+                    <View style={[a.gap_xs]}>
+                      <View style={[a.flex_row, a.align_center, a.gap_md]}>
+                        <Aa style={t.atoms.text} />
+                        <Text style={[a.text_md, a.font_bold]}>
+                          <Trans>Font</Trans>
+                        </Text>
+                      </View>
+                      <Text
+                        style={[
+                          a.text_sm,
+                          a.leading_snug,
+                          t.atoms.text_contrast_medium,
+                        ]}>
+                        <Trans>
+                          For the best experience, we recommend using the theme
+                          font.
+                        </Trans>
+                      </Text>
+                    </View>
+                    <ToggleButton.Group
+                      label={_(msg`Font`)}
+                      values={[fontFamily]}
+                      onChange={onChangeFontFamily}>
+                      <ToggleButton.Button label={_(msg`System`)} name="system">
+                        <ToggleButton.ButtonText>
+                          <Trans>System</Trans>
+                        </ToggleButton.ButtonText>
+                      </ToggleButton.Button>
+                      <ToggleButton.Button label={_(msg`Theme`)} name="theme">
+                        <ToggleButton.ButtonText>
+                          <Trans>Theme</Trans>
+                        </ToggleButton.ButtonText>
+                      </ToggleButton.Button>
+                    </ToggleButton.Group>
+                  </View>
+
+                  <View style={[a.gap_md]}>
+                    <View style={[a.gap_xs]}>
+                      <View style={[a.flex_row, a.align_center, a.gap_md]}>
+                        <TextSize style={t.atoms.text} />
+                        <Text style={[a.text_md, a.font_bold]}>
+                          <Trans>Font size</Trans>
+                        </Text>
+                      </View>
+                    </View>
+
+                    <ToggleButton.Group
+                      label={_(msg`Font`)}
+                      values={[fontScale]}
+                      onChange={onChangeFontScale}>
+                      <ToggleButton.Button label={_(msg`Small`)} name="-1">
+                        <ToggleButton.ButtonText>
+                          <Trans>Smaller</Trans>
+                        </ToggleButton.ButtonText>
+                      </ToggleButton.Button>
+                      <ToggleButton.Button label={_(msg`Default`)} name="0">
+                        <ToggleButton.ButtonText>
+                          <Trans>Default</Trans>
+                        </ToggleButton.ButtonText>
+                      </ToggleButton.Button>
+                      <ToggleButton.Button label={_(msg`Large`)} name="1">
+                        <ToggleButton.ButtonText>
+                          <Trans>Larger</Trans>
+                        </ToggleButton.ButtonText>
+                      </ToggleButton.Button>
+                    </ToggleButton.Group>
+                  </View>
+                </>
+              )}
             </View>
-
-            {neue && (
-              <View style={[a.gap_lg]}>
-                <Text style={[a.text_lg, a.font_bold]}>Typography</Text>
-
-                <Divider />
-
-                <View
-                  style={[
-                    a.flex_row,
-                    a.align_start,
-                    a.justify_between,
-                    a.gap_xl,
-                  ]}>
-                  <View style={[a.flex_1, a.gap_xs, {maxWidth: 360}]}>
-                    <Text style={[a.text_sm, a.font_bold, a.leading_snug]}>
-                      <Trans>Theme font</Trans>
-                    </Text>
-                    <Text
-                      style={[
-                        a.text_sm,
-                        a.leading_snug,
-                        t.atoms.text_contrast_medium,
-                      ]}>
-                      <Trans>
-                        Enables a consistent typeface for a clean user
-                        experience across devices. To use your default system
-                        font, disable this.
-                      </Trans>
-                    </Text>
-                  </View>
-
-                  <Toggle.Item
-                    name="font"
-                    label={_(msg`Use theme font`)}
-                    value={fontFamily}
-                    onChange={checked => {
-                      setFontFamily(checked)
-                      fonts.setFontFamily(checked ? 'theme' : 'system')
-                    }}>
-                    <Toggle.LabelText>
-                      {fontFamily ? (
-                        <Trans>Enabled</Trans>
-                      ) : (
-                        <Trans>Disabled</Trans>
-                      )}
-                    </Toggle.LabelText>
-                    <Toggle.Switch />
-                  </Toggle.Item>
-                </View>
-
-                <Divider />
-
-                <View
-                  style={[
-                    a.flex_row,
-                    a.align_start,
-                    a.justify_between,
-                    a.gap_xl,
-                  ]}>
-                  <View style={[a.flex_1, a.gap_xs, {maxWidth: 360}]}>
-                    <Text style={[a.text_sm, a.font_bold, a.leading_snug]}>
-                      <Trans>Theme font size</Trans>
-                    </Text>
-                    <Text
-                      style={[
-                        a.text_sm,
-                        a.leading_snug,
-                        t.atoms.text_contrast_medium,
-                      ]}>
-                      <Trans>
-                        Subtly scales the type size for a clean user experience
-                        across devices. To use the font size defined by your
-                        operating system, disable this.
-                      </Trans>
-                    </Text>
-                  </View>
-
-                  <Toggle.Item
-                    name="fontScale"
-                    label={_(msg`Enable new font scale`)}
-                    value={fontScale}
-                    onChange={checked => {
-                      setFontScale(checked)
-                      fonts.setFontScale(checked ? 0.9375 : 1)
-                    }}>
-                    <Toggle.LabelText>
-                      {fontScale ? (
-                        <Trans>Enabled</Trans>
-                      ) : (
-                        <Trans>Disabled</Trans>
-                      )}
-                    </Toggle.LabelText>
-                    <Toggle.Switch />
-                  </Toggle.Item>
-                </View>
-              </View>
-            )}
           </View>
         </ScrollView>
       </View>

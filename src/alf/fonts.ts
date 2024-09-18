@@ -2,8 +2,21 @@ import {useFonts as defaultUseFonts} from 'expo-font'
 
 import {Device, device} from '#/storage'
 
+const factor = 0.0625 // 1 - (15/16)
+const fontScaleMultipliers: Record<Device['fontScale'], number> = {
+  '-2': 1 - factor * 3,
+  '-1': 1 - factor * 2,
+  '0': 1 - factor * 1, // default
+  '1': 1,
+  '2': 1 + factor * 1,
+}
+
+export function computeFontScaleMultiplier(scale: Device['fontScale']) {
+  return fontScaleMultipliers[scale]
+}
+
 export function getFontScale() {
-  return device.get(['fontScale']) || 1
+  return device.get(['fontScale']) || '0'
 }
 
 export function setFontScale(fontScale: Device['fontScale']) {

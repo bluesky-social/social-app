@@ -51,7 +51,7 @@ export function Text({
     // @ts-ignore
     if (flattened.fontSize) {
       // @ts-ignore
-      flattened.fontSize = flattened.fontSize * fonts.scale
+      flattened.fontSize = flattened.fontSize * fonts.scaleMultiplier
     }
 
     return (
@@ -81,7 +81,7 @@ export function Text({
   // @ts-ignore
   if (flattened.fontSize) {
     // @ts-ignore
-    flattened.fontSize = flattened.fontSize * fonts.scale
+    flattened.fontSize = flattened.fontSize * fonts.scaleMultiplier
   }
 
   return (
