@@ -6698,7 +6698,7 @@ msgstr "你想将举报提交给谁？"
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:658
 #: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:63
 msgid "Together, we're rebuilding the social internet. We're glad you're here."
-msgstr "很高兴你能来到这里，让我们一起重新打造社交网络。"
+msgstr "很高兴你能来到这里，让我们一起构建全新的社交网络。"
 
 #: src/view/com/util/forms/DropdownButton.tsx:255
 msgid "Toggle dropdown"
