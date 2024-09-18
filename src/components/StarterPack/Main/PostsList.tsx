@@ -18,7 +18,7 @@ interface ProfilesListProps {
 
 export const PostsList = React.forwardRef<SectionRef, ProfilesListProps>(
   function PostsListImpl({listUri, headerHeight, scrollElRef}, ref) {
-    const feed: FeedDescriptor = `list|${listUri}|as_following`
+    const feed: FeedDescriptor = `list|${listUri}`
     const {_} = useLingui()
 
     const onScrollToTop = useCallback(() => {

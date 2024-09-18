@@ -258,6 +258,51 @@
     .force-no-clicks * {
       pointer-events: none !important;
     }
+
+    input[type=range][orient=vertical] {
+      writing-mode: vertical-lr;
+      direction: rtl;
+      appearance: slider-vertical;
+      width: 16px;
+      vertical-align: bottom;
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    input[type="range"][orient=vertical]::-webkit-slider-runnable-track {
+      background: white;
+      height: 100%;
+      width: 4px;
+      border-radius: 4px;
+    }
+
+    input[type="range"][orient=vertical]::-moz-range-track {
+      background: white;
+      height: 100%;
+      width: 4px;
+      border-radius: 4px;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      border-radius: 50%;
+      background-color: white;
+      height: 16px;
+      width: 16px;
+      margin-left: -6px;
+    }
+
+    input[type="range"][orient=vertical]::-moz-range-thumb {
+      border: none;
+      border-radius: 50%;
+      background-color: white;
+      height: 16px;
+      width: 16px;
+      margin-left: -6px;
+    }
   </style>
   {% include "scripts.html" %}
   <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">

@@ -8,6 +8,7 @@ import {useLingui} from '@lingui/react'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {PostEmbedViewContext} from '#/view/com/util/post-embeds/types'
 import {atoms as a, useTheme} from '#/alf'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
 
 type EventFunction = (index: number) => void
@@ -46,7 +47,7 @@ export const GalleryItem: FC<GalleryItemProps> = ({
         onLongPress={onLongPress ? () => onLongPress(index) : undefined}
         style={[
           a.flex_1,
-          a.rounded_xs,
+          a.rounded_sm,
           a.overflow_hidden,
           t.atoms.bg_contrast_25,
           imageStyle,
@@ -62,6 +63,7 @@ export const GalleryItem: FC<GalleryItemProps> = ({
           accessibilityHint=""
           accessibilityIgnoresInvertColors
         />
+        <MediaInsetBorder />
       </Pressable>
       {hasAlt && !hideBadges ? (
         <View
