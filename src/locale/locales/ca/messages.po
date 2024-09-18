@@ -75,7 +75,7 @@ msgstr "{0, plural, one {# segon} other {# segons}}"
 
 #: src/components/KnownFollowers.tsx:179
 #~ msgid "{0, plural, one {and # other} other {and # others}}"
-#~ msgstr "{0, plural, one {i # altre} other {i # altres}"
+#~ msgstr "{0, plural, one {i # altre} other {i # altres}}"
 
 #: src/components/ProfileHoverCard/index.web.tsx:398
 #: src/screens/Profile/Header/Metrics.tsx:23

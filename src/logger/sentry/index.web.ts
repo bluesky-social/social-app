@@ -1,1 +1,1 @@
-export {Browser as Sentry} from 'sentry-expo'
+export * as Sentry from '@sentry/react-native'
