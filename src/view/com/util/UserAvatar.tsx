@@ -19,7 +19,7 @@ import {colors} from 'lib/styles'
 import {isAndroid, isNative, isWeb} from 'platform/detection'
 import {precacheProfile} from 'state/queries/profile'
 import {HighPriorityImage} from 'view/com/util/images/Image'
-import {atoms as a, tokens, useTheme} from '#/alf'
+import {tokens, useTheme} from '#/alf'
 import {
   Camera_Filled_Stroke2_Corner0_Rounded as CameraFilled,
   Camera_Stroke2_Corner0_Rounded as Camera,
@@ -241,7 +241,13 @@ let UserAvatar = ({
           onLoad={onLoad}
         />
       )}
-      <MediaInsetBorder style={[a.rounded_full]} />
+      <MediaInsetBorder
+        style={[
+          {
+            borderRadius: aviStyle.borderRadius,
+          },
+        ]}
+      />
       {alert}
     </View>
   ) : (

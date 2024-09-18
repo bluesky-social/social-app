@@ -5,7 +5,7 @@ import Hls from 'hls.js'
 
 import {atoms as a} from '#/alf'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
-import {Controls} from './VideoWebControls'
+import {Controls} from './web-controls/VideoControls'
 
 export function VideoEmbedInnerWeb({
   embed,
