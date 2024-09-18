@@ -1,7 +1,6 @@
 import {useFonts as defaultUseFonts} from 'expo-font'
 
-import {isWeb} from '#/platform/detection'
-import {IS_PROD} from '#/env'
+import {isNative, isWeb} from '#/platform/detection'
 import {Device, device} from '#/storage'
 
 const FAMILIES = `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Liberation Sans", Helvetica, Arial, sans-serif`
@@ -40,11 +39,11 @@ export function setFontFamily(fontFamily: Device['fontFamily']) {
  */
 export function useFonts() {
   /**
-   * Local native builds work fine with `expo-font` config plugin, but web does
-   * not. So in dev, we ensure things are loaded using the async hook. In
-   * production, fonts load via the config plugin on all platforms.
+   * For native, the `expo-font` config plugin embeds the fonts in the
+   * application binary. But `expo-font` isn't supported on web, so we fall
+   * back to async loading here.
    */
-  if (IS_PROD) return [true, null]
+  if (isNative) return [true, null]
   return defaultUseFonts({
     // 'Inter-Thin': require('../../assets/fonts/inter/Inter-Thin.otf'),
     // 'Inter-ThinItalic': require('../../assets/fonts/inter/Inter-ThinItalic.otf'),
