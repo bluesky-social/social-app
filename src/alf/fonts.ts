@@ -1,7 +1,10 @@
 import {useFonts as defaultUseFonts} from 'expo-font'
 
+import {isWeb} from '#/platform/detection'
 import {IS_PROD} from '#/env'
 import {Device, device} from '#/storage'
+
+const FAMILIES = `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Liberation Sans", Helvetica, Arial, sans-serif`
 
 const factor = 0.0625 // 1 - (15/16)
 const fontScaleMultipliers: Record<Device['fontScale'], number> = {
@@ -36,7 +39,12 @@ export function setFontFamily(fontFamily: Device['fontFamily']) {
  * Unused fonts are commented out, but the files are there if we need them.
  */
 export function useFonts() {
-  if (IS_PROD) return [true, undefined]
+  /**
+   * Local native builds work fine with `expo-font` config plugin, but web does
+   * not. So in dev, we ensure things are loaded using the async hook. In
+   * production, fonts load via the config plugin on all platforms.
+   */
+  if (IS_PROD) return [true, null]
   return defaultUseFonts({
     // 'Inter-Thin': require('../../assets/fonts/inter/Inter-Thin.otf'),
     // 'Inter-ThinItalic': require('../../assets/fonts/inter/Inter-ThinItalic.otf'),
@@ -62,31 +70,43 @@ export function useFonts() {
 /*
  * Unused fonts are commented out, but the files are there if we need them.
  */
-export function applyFonts(style: Record<string, any>) {
-  style.fontFamily =
-    {
-      // '100': 'Inter-Thin',
-      // '200': 'Inter-ExtraLight',
-      // '300': 'Inter-Light',
-      '100': 'Inter-Regular',
-      '200': 'Inter-Regular',
-      '300': 'Inter-Regular',
-      '400': 'Inter-Regular',
-      '500': 'Inter-Medium',
-      '600': 'Inter-SemiBold',
-      '700': 'Inter-Bold',
-      '800': 'Inter-ExtraBold',
-      '900': 'Inter-Black',
-    }[style.fontWeight as string] || 'Inter-Regular'
+export function applyFonts(
+  style: Record<string, any>,
+  fontFamily: 'system' | 'theme',
+) {
+  if (fontFamily === 'theme') {
+    style.fontFamily =
+      {
+        // '100': 'Inter-Thin',
+        // '200': 'Inter-ExtraLight',
+        // '300': 'Inter-Light',
+        '100': 'Inter-Regular',
+        '200': 'Inter-Regular',
+        '300': 'Inter-Regular',
+        '400': 'Inter-Regular',
+        '500': 'Inter-Medium',
+        '600': 'Inter-SemiBold',
+        '700': 'Inter-Bold',
+        '800': 'Inter-ExtraBold',
+        '900': 'Inter-Black',
+      }[style.fontWeight as string] || 'Inter-Regular'
 
-  if (style.fontStyle === 'italic') {
-    if (style.fontFamily === 'Inter-Regular') {
-      style.fontFamily = 'Inter-Italic'
-    } else {
-      style.fontFamily += 'Italic'
+    if (style.fontStyle === 'italic') {
+      if (style.fontFamily === 'Inter-Regular') {
+        style.fontFamily = 'Inter-Italic'
+      } else {
+        style.fontFamily += 'Italic'
+      }
+    }
+
+    // fallback families only supported on web
+    if (isWeb) {
+      style.fontFamily += `, ${FAMILIES}`
+    }
+  } else {
+    // fallback families only supported on web
+    if (isWeb) {
+      style.fontFamily = style.fontFamily || FAMILIES
     }
   }
-
-  style.fontFamily +=
-    ', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Liberation Sans", Helvetica, Arial, sans-serif'
 }

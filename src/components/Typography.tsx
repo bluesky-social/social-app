@@ -56,9 +56,7 @@ export function normalizeTextStyles(
     s.lineHeight = s.fontSize
   }
 
-  if (fontFamily === 'theme') {
-    applyFonts(s)
-  }
+  applyFonts(s, fontFamily)
 
   return s
 }

@@ -43,9 +43,7 @@ export function Text({
       style,
     ])
 
-    if (fonts.family === 'theme') {
-      applyFonts(flattened)
-    }
+    applyFonts(flattened, fonts.family)
 
     // should always be defined on `typography`
     // @ts-ignore
@@ -73,9 +71,7 @@ export function Text({
     style,
   ])
 
-  if (fonts.family === 'theme') {
-    applyFonts(flattened)
-  }
+  applyFonts(flattened, fonts.family)
 
   // should always be defined on `typography`
   // @ts-ignore

@@ -225,12 +225,12 @@ module.exports = function (config) {
           'expo-font',
           {
             fonts: [
-              './assets/fonts/inter/Inter-Thin.otf',
-              './assets/fonts/inter/Inter-ThinItalic.otf',
-              './assets/fonts/inter/Inter-ExtraLight.otf',
-              './assets/fonts/inter/Inter-ExtraLightItalic.otf',
-              './assets/fonts/inter/Inter-Light.otf',
-              './assets/fonts/inter/Inter-LightItalic.otf',
+              // './assets/fonts/inter/Inter-Thin.otf',
+              // './assets/fonts/inter/Inter-ThinItalic.otf',
+              // './assets/fonts/inter/Inter-ExtraLight.otf',
+              // './assets/fonts/inter/Inter-ExtraLightItalic.otf',
+              // './assets/fonts/inter/Inter-Light.otf',
+              // './assets/fonts/inter/Inter-LightItalic.otf',
               './assets/fonts/inter/Inter-Regular.otf',
               './assets/fonts/inter/Inter-Italic.otf',
               './assets/fonts/inter/Inter-Medium.otf',
