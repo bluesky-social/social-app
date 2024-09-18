@@ -225,4 +225,8 @@ export type LogEvents = {
   'test:gate1:sometimes': {}
   'test:gate2:always': {}
   'test:gate2:sometimes': {}
+
+  'tmd:share': {}
+  'tmd:download': {}
+  'tmd:post': {}
 }

@@ -71,7 +71,7 @@ export function useIntentHandler() {
   }, [incomingUrl, composeIntent, verifyEmailIntent])
 }
 
-function useComposeIntent() {
+export function useComposeIntent() {
   const closeAllActiveElements = useCloseAllActiveElements()
   const {openComposer} = useComposerControls()
   const {hasSession} = useSession()

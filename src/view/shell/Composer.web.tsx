@@ -63,6 +63,7 @@ export function Composer({}: {winHeight: number}) {
           mention={state.mention}
           openEmojiPicker={onOpenPicker}
           text={state.text}
+          imageUris={state.imageUris}
         />
       </View>
       <EmojiPicker state={pickerState} close={onClosePicker} />

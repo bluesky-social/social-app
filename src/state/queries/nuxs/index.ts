@@ -57,6 +57,7 @@ export function useUpsertNuxMutation() {
   const agent = useAgent()
 
   return useMutation({
+    retry: 3,
     mutationFn: async (nux: AppNux) => {
       await agent.bskyAppUpsertNux(serializeAppNux(nux))
       // triggers a refetch
@@ -72,6 +73,7 @@ export function useRemoveNuxsMutation() {
   const agent = useAgent()
 
   return useMutation({
+    retry: 3,
     mutationFn: async (ids: string[]) => {
       await agent.bskyAppRemoveNuxs(ids)
       // triggers a refetch
