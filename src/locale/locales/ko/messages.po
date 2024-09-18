@@ -115,7 +115,7 @@ msgstr "<0><1>텍스트 및 태그</1>에서</0> {0}"
 msgid "{0} joined this week"
 msgstr "이번 주에 {0}명이 가입함"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:637
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:195
 msgid "{0} of {1}"
 msgstr "{0}/{1}"
 
@@ -123,7 +123,7 @@ msgstr "{0}/{1}"
 msgid "{0} people have used this starter pack!"
 msgstr "{0}명이 이 스타터 팩을 사용했습니다!"
 
-#: src/view/com/util/UserAvatar.tsx:425
+#: src/view/com/util/UserAvatar.tsx:431
 msgid "{0}'s avatar"
 msgstr "{0} 님의 아바타"
 
@@ -262,12 +262,16 @@ msgstr "30일"
 msgid "7 days"
 msgstr "7일"
 
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:266
+msgid "A virtual certificate with text \"Celebrating 10M users on Bluesky, #{0}, {displayName} {handle}, joined on {joinedDate}\""
+msgstr "\"Bluesky의 사용자 1000만 명 축하하기, #{0}, {displayName} {handle}, {joinedDate}에 가입함\"이라는 문구가 적혀 있는 가상 인증서"
+
 #: src/view/com/util/ViewHeader.tsx:92
 #: src/view/screens/Search/Search.tsx:684
 msgid "Access navigation links and settings"
 msgstr "탐색 링크 및 설정으로 이동합니다"
 
-#: src/view/com/home/HomeHeaderLayoutMobile.tsx:56
+#: src/view/com/home/HomeHeaderLayoutMobile.tsx:103
 msgid "Access profile and other navigation links"
 msgstr "프로필 및 기타 탐색 링크로 이동합니다"
 
@@ -522,7 +526,7 @@ msgstr "이전 주소인 {0}(으)로 이메일을 보냈습니다. 이 이메일
 msgid "An error has occurred"
 msgstr "오류 발생"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:413
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:416
 msgid "An error occurred"
 msgstr "오류 발생"
 
@@ -542,7 +546,7 @@ msgstr "동영상을 불러오는 동안 오류가 발생했습니다. 나중에
 msgid "An error occurred while loading the video. Please try again."
 msgstr "동영상을 불러오는 동안 오류가 발생했습니다. 다시 시도하세요."
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:250
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:315
 msgid "An error occurred while saving the image!"
 msgstr "이미지를 저장하는 동안 오류가 발생했습니다"
 
@@ -848,9 +852,14 @@ msgstr "Bluesky는 호스팅 제공자를 선택할 수 있는 개방형 네트�
 msgid "Bluesky is better with friends!"
 msgstr "Bluesky는 친구와 함께하면 더 좋답니다!"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:206
+#: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:43
+#: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:59
+msgid "Bluesky is celebrating 10 million users!"
+msgstr "Bluesky의 사용자 1000만 명 돌파를 축하합니다!"
+
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:256
 msgid "Bluesky now has over 10 million users, and I was #{0}!"
-msgstr "Bluesky는 현재 천만 명이 넘는 사용자를 보유하고 있으며, 나는 {0}번째였습니다!"
+msgstr "Bluesky는 현재 사용자 1000만 명을 돌파했으며, 나는 {0}번째였습니다!"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:282
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
@@ -873,7 +882,7 @@ msgstr "이미지 흐리게 및 피드에서 필터링"
 msgid "Books"
 msgstr "책"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:621
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:677
 msgid "Brag a little!"
 msgstr "자랑해 보세요!"
 
@@ -935,8 +944,8 @@ msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must 
 msgstr "글자, 숫자, 공백, 대시, 밑줄만 포함할 수 있습니다. 길이는 4자 이상이어야 하고 32자를 넘지 않아야 합니다."
 
 #: src/components/Menu/index.tsx:235
-#: src/components/Prompt.tsx:122
 #: src/components/Prompt.tsx:124
+#: src/components/Prompt.tsx:126
 #: src/components/TagMenu/index.tsx:282
 #: src/screens/Deactivated.tsx:161
 #: src/view/com/composer/Composer.tsx:594
@@ -1016,7 +1025,7 @@ msgstr "자막(.vtt)"
 msgid "Captions & alt text"
 msgstr "자막 및 대체 텍스트"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:369
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:434
 msgid "Celebrating {0} users"
 msgstr "사용자 {0}명 축하하기"
 
@@ -1301,8 +1310,8 @@ msgstr "{name} 카테고리에 대한 콘텐츠 필터링 설정을 구성합니
 msgid "Configured in <0>moderation settings</0>."
 msgstr "<0>검토 설정</0>에서 설정합니다."
 
-#: src/components/Prompt.tsx:165
-#: src/components/Prompt.tsx:168
+#: src/components/Prompt.tsx:167
+#: src/components/Prompt.tsx:170
 #: src/view/com/modals/SelfLabel.tsx:155
 #: src/view/com/modals/VerifyEmail.tsx:239
 #: src/view/com/modals/VerifyEmail.tsx:241
@@ -1771,7 +1780,7 @@ msgstr "이메일 2단계 인증 끄기"
 msgid "Disable haptic feedback"
 msgstr "햅틱 피드백 끄기"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:379
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:382
 msgid "Disable subtitles"
 msgstr "자막 사용 안 함"
 
@@ -1895,7 +1904,7 @@ msgstr "Bluesky 다운로드"
 msgid "Download CAR file"
 msgstr "CAR 파일 다운로드"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:629
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:686
 msgid "Download image"
 msgstr "이미지 다운로드"
 
@@ -1960,7 +1969,7 @@ msgctxt "action"
 msgid "Edit"
 msgstr "편집"
 
-#: src/view/com/util/UserAvatar.tsx:334
+#: src/view/com/util/UserAvatar.tsx:340
 #: src/view/com/util/UserBanner.tsx:92
 msgid "Edit avatar"
 msgstr "아바타 편집"
@@ -2120,7 +2129,7 @@ msgstr "미디어 플레이어를 사용할 외부 사이트"
 msgid "Enable priority notifications"
 msgstr "우선순위 알림 사용"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:380
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:383
 msgid "Enable subtitles"
 msgstr "자막 사용"
 
@@ -2240,7 +2249,7 @@ msgstr "내가 팔로우하는 사용자 제외하기"
 msgid "Excludes users you follow"
 msgstr "내가 팔로우하는 사용자 제외"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:397
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:400
 msgid "Exit fullscreen"
 msgstr "전체화면 나가기"
 
@@ -2681,7 +2690,7 @@ msgctxt "from-feed"
 msgid "From <0/>"
 msgstr "<0/>에서"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:398
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:401
 msgid "Fullscreen"
 msgstr "전체화면"
 
@@ -2995,7 +3004,7 @@ msgstr "이미지"
 msgid "Image alt text"
 msgstr "이미지 대체 텍스트"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:247
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:312
 #: src/components/StarterPack/ShareDialog.tsx:76
 msgid "Image saved to your camera roll!"
 msgstr "이미지를 사진 보관함에 저장했습니다"
@@ -3133,8 +3142,8 @@ msgstr "Bluesky 가입하기"
 msgid "Join the conversation"
 msgstr "대화에 참여하기"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:498
-msgid "Joined {0}"
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:559
+msgid "Joined on {joinedDate}"
 msgstr "{0}에 가입함"
 
 #: src/screens/Onboarding/index.tsx:21
@@ -3604,8 +3613,8 @@ msgstr "음악"
 msgid "Mute"
 msgstr "뮤트"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:166
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:389
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:157
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:94
 msgctxt "video"
 msgid "Mute"
 msgstr "음소거"
@@ -4085,7 +4094,7 @@ msgstr "이런!"
 msgid "Oh no! Something went wrong."
 msgstr "이런! 뭔가 잘못되었습니다."
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:175
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:224
 msgid "Oh no! We weren't able to generate an image for you to share. Rest assured, we're glad you're here 🦋"
 msgstr "이런! 공유할 이미지를 생성할 수 없습니다. 안심하고 방문해 주셔서 감사합니다."
 
@@ -4125,7 +4134,7 @@ msgstr "{0}만 답글을 달 수 있습니다."
 msgid "Only contains letters, numbers, and hyphens"
 msgstr "문자, 숫자, 하이픈만 포함"
 
-#: src/view/com/composer/videos/SubtitleFilePicker.tsx:39
+#: src/view/com/composer/videos/SubtitleFilePicker.tsx:40
 msgid "Only WebVTT (.vtt) files are supported"
 msgstr "WebVTT(.vtt) 파일만 지원됩니다"
 
@@ -4181,7 +4190,7 @@ msgstr "메시지 옵션 열기"
 msgid "Open muted words and tags settings"
 msgstr "뮤트한 단어 및 태그 설정 열기"
 
-#: src/view/com/home/HomeHeaderLayoutMobile.tsx:54
+#: src/view/com/home/HomeHeaderLayoutMobile.tsx:101
 msgid "Open navigation"
 msgstr "내비게이션 열기"
 
@@ -4330,7 +4339,7 @@ msgid "Opens the threads preferences"
 msgstr "스레드 설정을 엽니다"
 
 #: src/view/com/notifications/FeedItem.tsx:551
-#: src/view/com/util/UserAvatar.tsx:426
+#: src/view/com/util/UserAvatar.tsx:432
 msgid "Opens this profile"
 msgstr "이 프로필을 엽니다"
 
@@ -4412,12 +4421,12 @@ msgid "Password updated!"
 msgstr "비밀번호 변경됨"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:46
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:150
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:366
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:369
 msgid "Pause"
 msgstr "일시 정지"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:319
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:320
 msgid "Pause video"
 msgstr "동영상 일시 정지"
 
@@ -4477,8 +4486,8 @@ msgid "Pinned to your feeds"
 msgstr "내 피드에 고정됨"
 
 #: src/view/com/util/post-embeds/GifEmbed.tsx:46
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:150
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:367
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:141
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:370
 msgid "Play"
 msgstr "재생"
 
@@ -4491,7 +4500,7 @@ msgid "Play or pause the GIF"
 msgstr "GIP를 재생하거나 일시 정지합니다"
 
 #: src/view/com/util/post-embeds/VideoEmbed.tsx:110
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:320
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:321
 msgid "Play video"
 msgstr "동영상 재생"
 
@@ -4881,7 +4890,7 @@ msgstr "계정 제거"
 msgid "Remove attachment"
 msgstr "첨부 파일 제거"
 
-#: src/view/com/util/UserAvatar.tsx:393
+#: src/view/com/util/UserAvatar.tsx:399
 msgid "Remove Avatar"
 msgstr "아바타 제거"
 
@@ -5464,7 +5473,7 @@ msgstr "Bluesky에 지원하기"
 msgid "See this guide"
 msgstr "이 가이드"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:631
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/Scrubber.tsx:189
 msgid "Seek slider"
 msgstr "슬라이더 탐색"
 
@@ -5520,7 +5529,7 @@ msgstr "검토자 선택"
 msgid "Select option {i} of {numItems}"
 msgstr "{numItems}개 중 {i}번째 옵션을 선택합니다"
 
-#: src/view/com/composer/videos/SubtitleFilePicker.tsx:65
+#: src/view/com/composer/videos/SubtitleFilePicker.tsx:66
 msgid "Select subtitle file (.vtt)"
 msgstr "자막 파일(.vtt) 선택"
 
@@ -5692,7 +5701,7 @@ msgstr "성행위 또는 선정적인 노출."
 msgid "Sexually Suggestive"
 msgstr "외설적"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:651
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:708
 #: src/components/StarterPack/QrCodeDialog.tsx:177
 #: src/screens/StarterPack/StarterPackScreen.tsx:411
 #: src/screens/StarterPack/StarterPackScreen.tsx:582
@@ -5729,11 +5738,11 @@ msgstr "무시하고 공유"
 msgid "Share feed"
 msgstr "피드 공유"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:628
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:685
 msgid "Share image externally"
 msgstr "외부로 이미지 공유"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:646
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:703
 msgid "Share image in post"
 msgstr "게시물로 이미지 공유"
 
@@ -6173,15 +6182,15 @@ msgstr "세로"
 msgid "Tap to dismiss"
 msgstr "눌러서 닫기"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:145
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:136
 msgid "Tap to enter full screen"
 msgstr "탭하여 전체화면으로 보기"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:142
 msgid "Tap to play or pause"
 msgstr "탭하여 재생/일시 정지"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:159
 msgid "Tap to toggle sound"
 msgstr "탭하여 소리 켜기/끄기"
 
@@ -6211,9 +6220,9 @@ msgstr "농담해 보세요!"
 msgid "Tell us a little more"
 msgstr "좀 더 자세히 알려주세요"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:524
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:578
 msgid "Ten Million"
-msgstr "천만 명"
+msgstr "1000만 명"
 
 #: src/view/shell/desktop/RightNav.tsx:90
 msgid "Terms"
@@ -6248,9 +6257,9 @@ msgstr "텍스트 입력 필드"
 msgid "Thank you. Your report has been sent."
 msgstr "감사합니다. 신고를 전송했습니다."
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:600
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:654
 msgid "Thanks for being one of our first 10 million users."
-msgstr "사용자 천만 명 중 한 명이 되어 주셔서 감사합니다."
+msgstr "사용자 1000만 명 중 한 명이 되어 주셔서 감사합니다."
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:74
 msgid "Thanks, you have successfully verified your email address."
@@ -6670,6 +6679,10 @@ msgstr "스레드 설정"
 msgid "To disable the email 2FA method, please verify your access to the email address."
 msgstr "이메일 2단계 인증을 비활성화하려면 이메일 주소에 대한 접근 권한을 인증하세요."
 
+#: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:69
+msgid "To learn more, <0>check out our post.</0>"
+msgstr "자세한 내용은 <0>게시물을 확인하세요.</0>"
+
 #: src/components/dms/ReportConversationPrompt.tsx:20
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
 msgstr "대화를 신고하려면 대화 화면에서 해당 메시지 중 하나를 신고하세요. 이렇게 하면 운영진이 문제의 맥락을 파악할 수 있습니다."
@@ -6682,7 +6695,8 @@ msgstr "Bluesky에 동영상을 업로드하려면 먼저 이메일을 인증해
 msgid "To whom would you like to send this report?"
 msgstr "이 신고를 누구에게 보내시겠습니까?"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:604
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:658
+#: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:63
 msgid "Together, we're rebuilding the social internet. We're glad you're here."
 msgstr "우리는 함께 소셜 인터넷을 재건하고 있습니다. 함께해 주셔서 감사합니다."
 
@@ -6814,8 +6828,8 @@ msgstr "이 피드 좋아요 취소"
 msgid "Unmute"
 msgstr "언뮤트"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:165
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:388
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:156
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:93
 msgctxt "video"
 msgid "Unmute"
 msgstr "음소거 해제"
@@ -6842,7 +6856,7 @@ msgstr "알림 언뮤트"
 msgid "Unmute thread"
 msgstr "스레드 언뮤트"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:317
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:318
 msgid "Unmute video"
 msgstr "동영상 음소거 해제"
 
@@ -6917,20 +6931,20 @@ msgstr "대신 사진 업로드하기"
 msgid "Upload a text file to:"
 msgstr "텍스트 파일 업로드 경로:"
 
-#: src/view/com/util/UserAvatar.tsx:361
-#: src/view/com/util/UserAvatar.tsx:364
+#: src/view/com/util/UserAvatar.tsx:367
+#: src/view/com/util/UserAvatar.tsx:370
 #: src/view/com/util/UserBanner.tsx:123
 #: src/view/com/util/UserBanner.tsx:126
 msgid "Upload from Camera"
 msgstr "카메라에서 업로드"
 
-#: src/view/com/util/UserAvatar.tsx:378
+#: src/view/com/util/UserAvatar.tsx:384
 #: src/view/com/util/UserBanner.tsx:140
 msgid "Upload from Files"
 msgstr "파일에서 업로드"
 
-#: src/view/com/util/UserAvatar.tsx:372
-#: src/view/com/util/UserAvatar.tsx:376
+#: src/view/com/util/UserAvatar.tsx:378
+#: src/view/com/util/UserAvatar.tsx:382
 #: src/view/com/util/UserBanner.tsx:134
 #: src/view/com/util/UserBanner.tsx:138
 msgid "Upload from Library"
@@ -7104,8 +7118,8 @@ msgstr "이메일 인증하기"
 msgid "Version {appVersion} {bundleInfo}"
 msgstr "버전 {appVersion} {bundleInfo}"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:93
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:144
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:84
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:135
 msgid "Video"
 msgstr "동영상"
 
@@ -7126,7 +7140,7 @@ msgstr "동영상을 찾을 수 없습니다."
 msgid "Video settings"
 msgstr "동영상 설정"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:93
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:84
 msgid "Video: {0}"
 msgstr "동영상: {0}"
 
@@ -7176,6 +7190,10 @@ msgstr "전체 스레드 보기"
 msgid "View information about these labels"
 msgstr "이 라벨에 대한 정보 보기"
 
+#: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:72
+msgid "View our post"
+msgstr "게시물 보기"
+
 #: src/components/ProfileHoverCard/index.web.tsx:418
 #: src/components/ProfileHoverCard/index.web.tsx:436
 #: src/components/ProfileHoverCard/index.web.tsx:463
@@ -7200,8 +7218,8 @@ msgstr "이 피드를 좋아하는 사용자 보기"
 msgid "View your blocked accounts"
 msgstr "내가 차단한 계정 보기"
 
-#: src/view/com/home/HomeHeaderLayout.web.tsx:79
-#: src/view/com/home/HomeHeaderLayoutMobile.tsx:86
+#: src/view/com/home/HomeHeaderLayout.web.tsx:132
+#: src/view/com/home/HomeHeaderLayoutMobile.tsx:143
 msgid "View your feeds and explore more"
 msgstr "내 피드를 보거나 새 피드 탐색하기"
 
@@ -7626,7 +7644,7 @@ msgstr "스타터 팩을 만들려면 최소 7명 이상의 다른 사람을 팔
 msgid "You must grant access to your photo library to save a QR code"
 msgstr "QR 코드를 저장하려면 사진 보관함에 대한 접근 권한을 부여해야 합니다"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:237
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:302
 #: src/components/StarterPack/ShareDialog.tsx:68
 msgid "You must grant access to your photo library to save the image."
 msgstr "이미지를 저장하려면 사진 보관함에 대한 접근 권한을 부여해야 합니다"
