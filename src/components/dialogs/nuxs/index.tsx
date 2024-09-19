@@ -69,13 +69,13 @@ export function NuxDialogs() {
 
   const isLoading =
     !currentAccount || !preferences || !profile || onboardingActive
-  return isLoading ? null : (
+  return !isLoading ? (
     <Inner
       currentAccount={currentAccount}
       currentProfile={profile}
       preferences={preferences}
     />
-  )
+  ) : null
 }
 
 function Inner({
@@ -123,14 +123,17 @@ function Inner({
       const nux = nuxs.find(nux => nux.id === id)
 
       // check if completed first
-      if (nux && nux.completed) continue
+      if (nux && nux.completed) {
+        continue
+      }
 
       // then check gate (track exposure)
       if (
         enabled &&
         !enabled({gate, currentAccount, currentProfile, preferences})
-      )
+      ) {
         continue
+      }
 
       logger.debug(`NUX dialogs: activating '${id}' NUX`)
 
