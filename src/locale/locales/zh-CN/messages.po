@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh_CN\n"
 "Project-Id-Version: zh-CN for bluesky-social-app\n"
 "Report-Msgid-Bugs-To: Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-09-18 15:20+0800\n"
+"PO-Revision-Date: 2024-09-19 10:46+0800\n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
 "Language-Team: Frudrax Cheng (auroursa), Simon Chan (RitsukiP), U2FsdGVkX1, Mikan Harada (mitian233), IceCodeNew\n"
 "Plural-Forms: \n"
@@ -668,7 +668,7 @@ msgstr "申诉已提交"
 msgid "Appeal this decision"
 msgstr "对此结果提出申诉"
 
-#: src/screens/Settings/AppearanceSettings.tsx:69
+#: src/screens/Settings/AppearanceSettings.tsx:89
 #: src/view/screens/Settings/index.tsx:484
 msgid "Appearance"
 msgstr "外观"
@@ -1204,8 +1204,8 @@ msgstr "哒哒🐴哒哒🐴"
 msgid "Close"
 msgstr "关闭"
 
-#: src/components/Dialog/index.web.tsx:116
-#: src/components/Dialog/index.web.tsx:254
+#: src/components/Dialog/index.web.tsx:117
+#: src/components/Dialog/index.web.tsx:255
 msgid "Close active dialog"
 msgstr "关闭活动对话框"
 
@@ -1270,6 +1270,10 @@ msgstr "折叠用户列表"
 #: src/view/com/notifications/FeedItem.tsx:466
 msgid "Collapses list of users for a given notification"
 msgstr "折叠给定通知的用户列表"
+
+#: src/screens/Settings/AppearanceSettings.tsx:97
+msgid "Color mode"
+msgstr "主题模式"
 
 #: src/screens/Onboarding/index.tsx:38
 #: src/screens/Onboarding/state.ts:82
@@ -1604,20 +1608,16 @@ msgstr "自定义外部站点的媒体。"
 msgid "Customize who can interact with this post."
 msgstr "自定义谁可以参与这条帖文的互动。"
 
-#: src/screens/Settings/AppearanceSettings.tsx:95
-#: src/screens/Settings/AppearanceSettings.tsx:97
-#: src/screens/Settings/AppearanceSettings.tsx:122
-#: src/screens/Settings/AppearanceSettings.tsx:124
+#: src/screens/Settings/AppearanceSettings.tsx:109
+#: src/screens/Settings/AppearanceSettings.tsx:130
 msgid "Dark"
 msgstr "暗色"
 
-#: src/screens/Settings/AppearanceSettings.tsx:82
 #: src/view/screens/Debug.tsx:63
 msgid "Dark mode"
 msgstr "深色模式"
 
-#: src/screens/Settings/AppearanceSettings.tsx:109
-#: src/screens/Settings/AppearanceSettings.tsx:114
+#: src/screens/Settings/AppearanceSettings.tsx:122
 msgid "Dark theme"
 msgstr "深色模式"
 
@@ -1641,6 +1641,15 @@ msgstr "调试内容审核"
 #: src/view/screens/Debug.tsx:83
 msgid "Debug panel"
 msgstr "调试面板"
+
+#: src/components/dialogs/nuxs/NeueTypography.tsx:101
+#: src/screens/Settings/AppearanceSettings.tsx:169
+msgid "Default"
+msgstr "默认"
+
+#: src/components/dialogs/nuxs/NeueTypography.tsx:62
+msgid "Defaults are shown below. You can edit these in your Appearance Settings later."
+msgstr "默认设置如下所示，你可以稍后在外观设置中调整这些设置。"
 
 #: src/components/dms/MessageMenu.tsx:151
 #: src/screens/StarterPack/StarterPackScreen.tsx:573
@@ -1759,8 +1768,7 @@ msgstr "对话框：调整谁可以参与这条帖文的互动"
 msgid "Did you want to say anything?"
 msgstr "有什么想说的吗？"
 
-#: src/screens/Settings/AppearanceSettings.tsx:117
-#: src/screens/Settings/AppearanceSettings.tsx:119
+#: src/screens/Settings/AppearanceSettings.tsx:126
 msgid "Dim"
 msgstr "暗淡"
 
@@ -2647,6 +2655,16 @@ msgstr "关注了你"
 msgid "Follows You"
 msgstr "关注了你"
 
+#: src/components/dialogs/nuxs/NeueTypography.tsx:73
+#: src/screens/Settings/AppearanceSettings.tsx:141
+msgid "Font"
+msgstr "字体"
+
+#: src/components/dialogs/nuxs/NeueTypography.tsx:93
+#: src/screens/Settings/AppearanceSettings.tsx:161
+msgid "Font size"
+msgstr "字体大小"
+
 #: src/screens/Onboarding/index.tsx:40
 #: src/screens/Onboarding/state.ts:87
 msgid "Food"
@@ -2659,6 +2677,11 @@ msgstr "出于安全原因，我们需要向你的电子邮箱发送验证码。
 #: src/view/com/modals/AddAppPasswords.tsx:233
 msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
 msgstr "出于安全原因，你将无法再次查看此内容。如果你丢失了该密码，则需要生成一个新的密码。"
+
+#: src/components/dialogs/nuxs/NeueTypography.tsx:75
+#: src/screens/Settings/AppearanceSettings.tsx:143
+msgid "For the best experience, we recommend using the theme font."
+msgstr "出于用户体验考虑，我们建议你使用主题字体。"
 
 #: src/components/dialogs/MutedWords.tsx:178
 msgid "Forever"
@@ -3069,6 +3092,14 @@ msgstr "互动受限"
 msgid "Introducing Direct Messages"
 msgstr "介绍私信"
 
+#: src/components/dialogs/nuxs/NeueTypography.tsx:48
+msgid "Introducing new font settings"
+msgstr "介绍全新的字体设置"
+
+#: src/components/dialogs/nuxs/NeueTypography.tsx:52
+msgid "Introducing new font settings ✨"
+msgstr "介绍全新的字体设置 ✨"
+
 #: src/screens/Login/LoginForm.tsx:145
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
@@ -3192,6 +3223,11 @@ msgstr "语言设置"
 msgid "Languages"
 msgstr "语言"
 
+#: src/components/dialogs/nuxs/NeueTypography.tsx:105
+#: src/screens/Settings/AppearanceSettings.tsx:173
+msgid "Larger"
+msgstr "更大"
+
 #: src/screens/Hashtag.tsx:97
 #: src/view/screens/Search/Search.tsx:359
 msgid "Latest"
@@ -3266,8 +3302,7 @@ msgstr "让我们来重置你的密码！"
 msgid "Let's go!"
 msgstr "让我们开始！"
 
-#: src/screens/Settings/AppearanceSettings.tsx:90
-#: src/screens/Settings/AppearanceSettings.tsx:92
+#: src/screens/Settings/AppearanceSettings.tsx:105
 msgid "Light"
 msgstr "亮色"
 
@@ -3520,8 +3555,8 @@ msgid "Misleading Post"
 msgstr "误导性帖文"
 
 #: src/screens/Settings/AppearanceSettings.tsx:78
-msgid "Mode"
-msgstr "模式"
+#~ msgid "Mode"
+#~ msgstr "模式"
 
 #: src/Navigation.tsx:135
 #: src/screens/Moderation/index.tsx:105
@@ -5980,6 +6015,11 @@ msgstr "跳过"
 msgid "Skip this flow"
 msgstr "跳过这段流程"
 
+#: src/components/dialogs/nuxs/NeueTypography.tsx:97
+#: src/screens/Settings/AppearanceSettings.tsx:165
+msgid "Smaller"
+msgstr "更小"
+
 #: src/screens/Onboarding/index.tsx:37
 #: src/screens/Onboarding/state.ts:85
 msgid "Software Dev"
@@ -6157,8 +6197,9 @@ msgstr "切换到 {0}"
 msgid "Switches the account you are logged in to"
 msgstr "切换你登录的账户"
 
-#: src/screens/Settings/AppearanceSettings.tsx:85
-#: src/screens/Settings/AppearanceSettings.tsx:87
+#: src/components/dialogs/nuxs/NeueTypography.tsx:80
+#: src/screens/Settings/AppearanceSettings.tsx:101
+#: src/screens/Settings/AppearanceSettings.tsx:148
 msgid "System"
 msgstr "系统"
 
@@ -6365,6 +6406,11 @@ msgstr "服务条款已迁移至"
 #: src/components/intents/VerifyEmailIntentDialog.tsx:85
 msgid "The verification code you have provided is invalid. Please make sure that you have used the correct verification link or request a new one."
 msgstr "你提供的验证码无效，请检查你所使用的验证链接，或是申请新的验证链接。"
+
+#: src/components/dialogs/nuxs/NeueTypography.tsx:84
+#: src/screens/Settings/AppearanceSettings.tsx:152
+msgid "Theme"
+msgstr "主题"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:86
 msgid "There is no time limit for account deactivation, come back any time."
@@ -6686,6 +6732,10 @@ msgstr "要了解更多资讯，请<0>点击查看我们所发布的文章。</0
 #: src/components/dms/ReportConversationPrompt.tsx:20
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
 msgstr "要举报对话，请在会话中选择一条私信并举报。这有助于使内容审核服务提供方了解有关问题的背景信息。"
+
+#: src/components/dialogs/nuxs/NeueTypography.tsx:55
+msgid "To the ensure the best possible experience, we're introducing a new theme font, along with adjustable font sizing settings."
+msgstr "为了确保最佳的用户体验，我们新推出了主题字体及字体大小设置。"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:120
 msgid "To upload videos to Bluesky, you must first verify your email."
