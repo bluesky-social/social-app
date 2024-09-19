@@ -204,6 +204,7 @@
     "statsig-react-native-expo": "^4.6.1",
     "tippy.js": "^6.3.7",
     "tlds": "^1.234.0",
+    "tldts": "^6.1.46",
     "zeego": "^1.6.2",
     "zod": "^3.20.2"
   },
