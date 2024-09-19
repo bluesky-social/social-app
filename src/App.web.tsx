@@ -96,48 +96,50 @@ function InnerApp() {
 
   return (
     <KeyboardProvider enabled={false}>
-      <StatsigProvider
-        // Resets the entire tree below when it changes:
-        key={currentAccount?.did}>
-        <Alf theme={theme}>
-          <ThemeProvider theme={theme}>
-            <RootSiblingParent>
-              <VideoVolumeProvider>
-                <ActiveVideoProvider>
+      <Alf theme={theme}>
+        <ThemeProvider theme={theme}>
+          <RootSiblingParent>
+            <VideoVolumeProvider>
+              <ActiveVideoProvider>
+                <React.Fragment
+                  // Resets the entire tree below when it changes:
+                  key={currentAccount?.did}>
                   <QueryProvider currentDid={currentAccount?.did}>
-                    <MessagesProvider>
-                      {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                      <LabelDefsProvider>
-                        <ModerationOptsProvider>
-                          <LoggedOutViewProvider>
-                            <SelectedFeedProvider>
-                              <HiddenRepliesProvider>
-                                <UnreadNotifsProvider>
-                                  <BackgroundNotificationPreferencesProvider>
-                                    <MutedThreadsProvider>
-                                      <SafeAreaProvider>
-                                        <ProgressGuideProvider>
-                                          <Shell />
-                                          <NuxDialogs />
-                                        </ProgressGuideProvider>
-                                      </SafeAreaProvider>
-                                    </MutedThreadsProvider>
-                                  </BackgroundNotificationPreferencesProvider>
-                                </UnreadNotifsProvider>
-                              </HiddenRepliesProvider>
-                            </SelectedFeedProvider>
-                          </LoggedOutViewProvider>
-                        </ModerationOptsProvider>
-                      </LabelDefsProvider>
-                    </MessagesProvider>
+                    <StatsigProvider>
+                      <MessagesProvider>
+                        {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                        <LabelDefsProvider>
+                          <ModerationOptsProvider>
+                            <LoggedOutViewProvider>
+                              <SelectedFeedProvider>
+                                <HiddenRepliesProvider>
+                                  <UnreadNotifsProvider>
+                                    <BackgroundNotificationPreferencesProvider>
+                                      <MutedThreadsProvider>
+                                        <SafeAreaProvider>
+                                          <ProgressGuideProvider>
+                                            <Shell />
+                                            <NuxDialogs />
+                                          </ProgressGuideProvider>
+                                        </SafeAreaProvider>
+                                      </MutedThreadsProvider>
+                                    </BackgroundNotificationPreferencesProvider>
+                                  </UnreadNotifsProvider>
+                                </HiddenRepliesProvider>
+                              </SelectedFeedProvider>
+                            </LoggedOutViewProvider>
+                          </ModerationOptsProvider>
+                        </LabelDefsProvider>
+                      </MessagesProvider>
+                    </StatsigProvider>
                   </QueryProvider>
                   <ToastContainer />
-                </ActiveVideoProvider>
-              </VideoVolumeProvider>
-            </RootSiblingParent>
-          </ThemeProvider>
-        </Alf>
-      </StatsigProvider>
+                </React.Fragment>
+              </ActiveVideoProvider>
+            </VideoVolumeProvider>
+          </RootSiblingParent>
+        </ThemeProvider>
+      </Alf>
     </KeyboardProvider>
   )
 }
