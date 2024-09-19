@@ -174,6 +174,9 @@ export function StepInfo({
                   testID="emailInput"
                   onChangeText={value => {
                     emailValueRef.current = value.trim()
+                    if (hasWarnedEmail) {
+                      setHasWarnedEmail(false)
+                    }
                   }}
                   label={_(msg`Enter your email address`)}
                   defaultValue={state.email}
