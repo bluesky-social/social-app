@@ -351,8 +351,8 @@ export const Button = React.forwardRef<View, ButtonProps>(
           })
         } else if (size === 'small') {
           baseStyles.push({
-            paddingVertical: 9,
-            paddingHorizontal: 14,
+            paddingVertical: 8,
+            paddingHorizontal: 12,
             borderRadius: 6,
             gap: 6,
           })
