@@ -7,7 +7,6 @@ import {
   PressableProps,
   StyleProp,
   StyleSheet,
-  Text,
   TextProps,
   TextStyle,
   View,
@@ -17,7 +16,7 @@ import {LinearGradient} from 'expo-linear-gradient'
 
 import {android, atoms as a, flatten, select, tokens, useTheme} from '#/alf'
 import {Props as SVGIconProps} from '#/components/icons/common'
-import {normalizeTextStyles} from '#/components/Typography'
+import {Text} from '#/components/Typography'
 
 export type ButtonVariant = 'solid' | 'outline' | 'ghost' | 'gradient'
 export type ButtonColor =
@@ -635,14 +634,7 @@ export function ButtonText({children, style, ...rest}: ButtonTextProps) {
   const textStyles = useSharedButtonTextStyles()
 
   return (
-    <Text
-      {...rest}
-      style={normalizeTextStyles([
-        a.font_bold,
-        a.text_center,
-        textStyles,
-        style,
-      ])}>
+    <Text {...rest} style={[a.font_bold, a.text_center, textStyles, style]}>
       {children}
     </Text>
   )

@@ -1,3 +1,7 @@
+import {Platform} from 'react-native'
+
+export const TRACKING = Platform.OS === 'android' ? 0.1 : 0
+
 export const color = {
   temp_purple: 'rgb(105 0 255)',
   temp_purple_dark: 'rgb(83 0 202)',
