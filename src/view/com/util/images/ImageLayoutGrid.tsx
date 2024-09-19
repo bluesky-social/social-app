@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleProp, View, ViewStyle} from 'react-native'
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {AppBskyEmbedImages} from '@atproto/api'
 
 import {PostEmbedViewContext} from '#/view/com/util/post-embeds/types'
@@ -24,7 +24,7 @@ export function ImageLayoutGrid({style, ...props}: ImageLayoutGridProps) {
         : a.gap_2xs
       : a.gap_xs
   const count = props.images.length
-  let aspectRatio = 1
+  let aspectRatio
   switch (count) {
     case 2:
       aspectRatio = 2
@@ -33,7 +33,7 @@ export function ImageLayoutGrid({style, ...props}: ImageLayoutGridProps) {
       aspectRatio = 2
       break
     case 4:
-      aspectRatio = 1.5
+      aspectRatio = undefined
       break
   }
   return (
@@ -63,10 +63,18 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
       return (
         <View style={[a.flex_1, a.flex_row, gap]}>
           <View style={[a.flex_1, {aspectRatio: 1}]}>
-            <GalleryItem {...props} index={0} />
+            <GalleryItem
+              {...props}
+              index={0}
+              insetBorderStyle={noCorners(['topRight', 'bottomRight'])}
+            />
           </View>
           <View style={[a.flex_1, {aspectRatio: 1}]}>
-            <GalleryItem {...props} index={1} />
+            <GalleryItem
+              {...props}
+              index={1}
+              insetBorderStyle={noCorners(['topLeft', 'bottomLeft'])}
+            />
           </View>
         </View>
       )
@@ -75,14 +83,34 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
       return (
         <View style={[a.flex_1, a.flex_row, gap]}>
           <View style={[a.flex_1]}>
-            <GalleryItem {...props} index={0} />
+            <GalleryItem
+              {...props}
+              index={0}
+              insetBorderStyle={noCorners(['topRight', 'bottomRight'])}
+            />
           </View>
           <View style={[a.flex_1, gap]}>
             <View style={[a.flex_1]}>
-              <GalleryItem {...props} index={1} />
+              <GalleryItem
+                {...props}
+                index={1}
+                insetBorderStyle={noCorners([
+                  'topLeft',
+                  'bottomLeft',
+                  'bottomRight',
+                ])}
+              />
             </View>
             <View style={[a.flex_1]}>
-              <GalleryItem {...props} index={2} />
+              <GalleryItem
+                {...props}
+                index={2}
+                insetBorderStyle={noCorners([
+                  'topLeft',
+                  'bottomLeft',
+                  'topRight',
+                ])}
+              />
             </View>
           </View>
         </View>
@@ -93,18 +121,50 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
         <>
           <View style={[a.flex_row, gap]}>
             <View style={[a.flex_1, {aspectRatio: 1.5}]}>
-              <GalleryItem {...props} index={0} />
+              <GalleryItem
+                {...props}
+                index={0}
+                insetBorderStyle={noCorners([
+                  'bottomLeft',
+                  'topRight',
+                  'bottomRight',
+                ])}
+              />
             </View>
             <View style={[a.flex_1, {aspectRatio: 1.5}]}>
-              <GalleryItem {...props} index={1} />
+              <GalleryItem
+                {...props}
+                index={1}
+                insetBorderStyle={noCorners([
+                  'topLeft',
+                  'bottomLeft',
+                  'bottomRight',
+                ])}
+              />
             </View>
           </View>
           <View style={[a.flex_row, gap]}>
             <View style={[a.flex_1, {aspectRatio: 1.5}]}>
-              <GalleryItem {...props} index={2} />
+              <GalleryItem
+                {...props}
+                index={2}
+                insetBorderStyle={noCorners([
+                  'topLeft',
+                  'topRight',
+                  'bottomRight',
+                ])}
+              />
             </View>
             <View style={[a.flex_1, {aspectRatio: 1.5}]}>
-              <GalleryItem {...props} index={3} />
+              <GalleryItem
+                {...props}
+                index={3}
+                insetBorderStyle={noCorners([
+                  'topLeft',
+                  'bottomLeft',
+                  'topRight',
+                ])}
+              />
             </View>
           </View>
         </>
@@ -113,4 +173,23 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
     default:
       return null
   }
+}
+
+function noCorners(
+  corners: ('topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight')[],
+) {
+  const styles: StyleProp<ViewStyle>[] = []
+  if (corners.includes('topLeft')) {
+    styles.push({borderTopLeftRadius: 0})
+  }
+  if (corners.includes('topRight')) {
+    styles.push({borderTopRightRadius: 0})
+  }
+  if (corners.includes('bottomLeft')) {
+    styles.push({borderBottomLeftRadius: 0})
+  }
+  if (corners.includes('bottomRight')) {
+    styles.push({borderBottomRightRadius: 0})
+  }
+  return StyleSheet.flatten(styles)
 }
