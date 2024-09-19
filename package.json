@@ -124,6 +124,7 @@
     "expo-dev-client": "^4.0.14",
     "expo-device": "~6.0.2",
     "expo-file-system": "^17.0.1",
+    "expo-font": "~12.0.10",
     "expo-haptics": "^13.0.1",
     "expo-image": "~1.12.9",
     "expo-image-manipulator": "^12.0.5",
