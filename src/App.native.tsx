@@ -55,7 +55,7 @@ import {TestCtrls} from '#/view/com/testing/TestCtrls'
 import {Provider as VideoVolumeProvider} from '#/view/com/util/post-embeds/VideoVolumeContext'
 import * as Toast from '#/view/com/util/Toast'
 import {Shell} from '#/view/shell'
-import {ThemeProvider as Alf, useFonts} from '#/alf'
+import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
@@ -156,13 +156,12 @@ function InnerApp() {
 
 function App() {
   const [isReady, setReady] = useState(false)
-  const [loaded] = useFonts()
 
   React.useEffect(() => {
     initPersistedState().then(() => setReady(true))
   }, [])
 
-  if (!isReady || !loaded) {
+  if (!isReady) {
     return null
   }
 
