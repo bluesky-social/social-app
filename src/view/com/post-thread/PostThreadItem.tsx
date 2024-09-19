@@ -19,6 +19,7 @@ import {ThreadPost} from '#/state/queries/post-thread'
 import {useComposerControls} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {MAX_POST_LINES} from 'lib/constants'
+import {GestureActionView} from 'lib/custom-animations/GestureActionView'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {makeProfileLink} from 'lib/routes/links'
@@ -28,9 +29,12 @@ import {countLines} from 'lib/strings/helpers'
 import {niceDate} from 'lib/strings/time'
 import {s} from 'lib/styles'
 import {isWeb} from 'platform/detection'
+import {usePostLikeMutationQueue} from 'state/queries/post'
 import {useSession} from 'state/session'
 import {PostThreadFollowBtn} from 'view/com/post-thread/PostThreadFollowBtn'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
+import {Bubble_Stroke2_Corner2_Rounded} from '#/components/icons/Bubble'
+import {Heart2_Filled_Stroke2_Corner0_Rounded} from '#/components/icons/Heart2'
 import {AppModerationCause} from '#/components/Pills'
 import {RichText} from '#/components/RichText'
 import {ContentHider} from '../../../components/moderation/ContentHider'
@@ -181,11 +185,16 @@ let PostThreadItemLoaded = ({
   threadgateRecord?: AppBskyFeedThreadgate.Record
 }): React.ReactNode => {
   const pal = usePalette('default')
+  const t = useTheme()
   const {_, i18n} = useLingui()
   const langPrefs = useLanguagePrefs()
   const {openComposer} = useComposerControls()
   const [limitLines, setLimitLines] = React.useState(
     () => countLines(richText?.text) >= MAX_POST_LINES,
+  )
+  const [queueLike, queueUnlike] = usePostLikeMutationQueue(
+    post,
+    'PostThreadItem',
   )
   const {currentAccount} = useSession()
   const rootUri = record.reply?.root?.uri || post.uri
@@ -465,178 +474,204 @@ let PostThreadItemLoaded = ({
     const isThreadedChildAdjacentBot =
       isThreadedChild && nextPost?.ctx.depth === depth
     return (
-      <PostOuterWrapper
-        post={post}
-        depth={depth}
-        showParentReplyLine={!!showParentReplyLine}
-        treeView={treeView}
-        hasPrecedingItem={hasPrecedingItem}
-        hideTopBorder={hideTopBorder}>
-        <PostHider
-          testID={`postThreadItem-by-${post.author.handle}`}
-          href={postHref}
-          disabled={overrideBlur}
-          style={[pal.view]}
-          modui={moderation.ui('contentList')}
-          iconSize={isThreadedChild ? 26 : 38}
-          iconStyles={
-            isThreadedChild ? {marginRight: 4} : {marginLeft: 2, marginRight: 2}
-          }
-          profile={post.author}
-          interpretFilterAsBlur>
-          <View
-            style={{
-              flexDirection: 'row',
-              gap: 10,
-              paddingLeft: 8,
-              height: isThreadedChildAdjacentTop ? 8 : 16,
-            }}>
-            <View style={{width: 38}}>
-              {!isThreadedChild && showParentReplyLine && (
-                <View
-                  style={[
-                    styles.replyLine,
-                    {
-                      flexGrow: 1,
-                      backgroundColor: pal.colors.replyLine,
-                      marginBottom: 4,
-                    },
-                  ]}
-                />
-              )}
-            </View>
-          </View>
-
-          <View
-            style={[
-              styles.layout,
-              {
-                paddingBottom:
-                  showChildReplyLine && !isThreadedChild
-                    ? 0
-                    : isThreadedChildAdjacentBot
-                    ? 4
-                    : 8,
-              },
-            ]}>
-            {/* If we are in threaded mode, the avatar is rendered in PostMeta */}
-            {!isThreadedChild && (
-              <View style={styles.layoutAvi}>
-                <PreviewableUserAvatar
-                  size={38}
-                  profile={post.author}
-                  moderation={moderation.ui('avatar')}
-                  type={post.author.associated?.labeler ? 'labeler' : 'user'}
-                />
-
-                {showChildReplyLine && (
+      <GestureActionView
+        actions={{
+          leftFirst: {
+            color: '#ec4899',
+            action: () => {
+              if (!post.viewer?.like) {
+                queueLike()
+              } else {
+                queueUnlike()
+              }
+            },
+            threshold: 85,
+            icon: Heart2_Filled_Stroke2_Corner0_Rounded,
+          },
+          leftSecond: {
+            color: t.palette.primary_500,
+            action: () => {
+              onPressReply()
+            },
+            threshold: 170,
+            icon: Bubble_Stroke2_Corner2_Rounded,
+          },
+        }}>
+        <PostOuterWrapper
+          post={post}
+          depth={depth}
+          showParentReplyLine={!!showParentReplyLine}
+          treeView={treeView}
+          hasPrecedingItem={hasPrecedingItem}
+          hideTopBorder={hideTopBorder}>
+          <PostHider
+            testID={`postThreadItem-by-${post.author.handle}`}
+            href={postHref}
+            disabled={overrideBlur}
+            style={[pal.view]}
+            modui={moderation.ui('contentList')}
+            iconSize={isThreadedChild ? 26 : 38}
+            iconStyles={
+              isThreadedChild
+                ? {marginRight: 4}
+                : {marginLeft: 2, marginRight: 2}
+            }
+            profile={post.author}
+            interpretFilterAsBlur>
+            <View
+              style={{
+                flexDirection: 'row',
+                gap: 10,
+                paddingLeft: 8,
+                height: isThreadedChildAdjacentTop ? 8 : 16,
+              }}>
+              <View style={{width: 38}}>
+                {!isThreadedChild && showParentReplyLine && (
                   <View
                     style={[
                       styles.replyLine,
                       {
                         flexGrow: 1,
                         backgroundColor: pal.colors.replyLine,
-                        marginTop: 4,
+                        marginBottom: 4,
                       },
                     ]}
                   />
                 )}
               </View>
-            )}
+            </View>
 
             <View
-              style={
-                isThreadedChild
-                  ? styles.layoutContentThreaded
-                  : styles.layoutContent
-              }>
-              <PostMeta
-                author={post.author}
-                moderation={moderation}
-                authorHasWarning={!!post.author.labels?.length}
-                timestamp={post.indexedAt}
-                postHref={postHref}
-                showAvatar={isThreadedChild}
-                avatarModeration={moderation.ui('avatar')}
-                avatarSize={28}
-                displayNameType="md-bold"
-                displayNameStyle={isThreadedChild && s.ml2}
-                style={
-                  isThreadedChild && {
-                    alignItems: 'center',
-                    paddingBottom: isWeb ? 5 : 2,
-                  }
-                }
-              />
-              <LabelsOnMyPost post={post} />
-              <PostAlerts
-                modui={moderation.ui('contentList')}
-                style={[a.pt_2xs, a.pb_2xs]}
-                additionalCauses={additionalPostAlerts}
-              />
-              {richText?.text ? (
-                <View style={styles.postTextContainer}>
-                  <RichText
-                    enableTags
-                    value={richText}
-                    style={[a.flex_1, a.text_md]}
-                    numberOfLines={limitLines ? MAX_POST_LINES : undefined}
-                    authorHandle={post.author.handle}
+              style={[
+                styles.layout,
+                {
+                  paddingBottom:
+                    showChildReplyLine && !isThreadedChild
+                      ? 0
+                      : isThreadedChildAdjacentBot
+                      ? 4
+                      : 8,
+                },
+              ]}>
+              {/* If we are in threaded mode, the avatar is rendered in PostMeta */}
+              {!isThreadedChild && (
+                <View style={styles.layoutAvi}>
+                  <PreviewableUserAvatar
+                    size={38}
+                    profile={post.author}
+                    moderation={moderation.ui('avatar')}
+                    type={post.author.associated?.labeler ? 'labeler' : 'user'}
                   />
-                </View>
-              ) : undefined}
-              {limitLines ? (
-                <TextLink
-                  text={_(msg`Show More`)}
-                  style={pal.link}
-                  onPress={onPressShowMore}
-                  href="#"
-                />
-              ) : undefined}
-              {post.embed && (
-                <View style={[a.pb_xs]}>
-                  <PostEmbeds
-                    embed={post.embed}
-                    moderation={moderation}
-                    viewContext={PostEmbedViewContext.Feed}
-                  />
+
+                  {showChildReplyLine && (
+                    <View
+                      style={[
+                        styles.replyLine,
+                        {
+                          flexGrow: 1,
+                          backgroundColor: pal.colors.replyLine,
+                          marginTop: 4,
+                        },
+                      ]}
+                    />
+                  )}
                 </View>
               )}
-              <PostCtrls
-                post={post}
-                record={record}
-                richText={richText}
-                onPressReply={onPressReply}
-                logContext="PostThreadItem"
-                threadgateRecord={threadgateRecord}
-              />
+
+              <View
+                style={
+                  isThreadedChild
+                    ? styles.layoutContentThreaded
+                    : styles.layoutContent
+                }>
+                <PostMeta
+                  author={post.author}
+                  moderation={moderation}
+                  authorHasWarning={!!post.author.labels?.length}
+                  timestamp={post.indexedAt}
+                  postHref={postHref}
+                  showAvatar={isThreadedChild}
+                  avatarModeration={moderation.ui('avatar')}
+                  avatarSize={28}
+                  displayNameType="md-bold"
+                  displayNameStyle={isThreadedChild && s.ml2}
+                  style={
+                    isThreadedChild && {
+                      alignItems: 'center',
+                      paddingBottom: isWeb ? 5 : 2,
+                    }
+                  }
+                />
+                <LabelsOnMyPost post={post} />
+                <PostAlerts
+                  modui={moderation.ui('contentList')}
+                  style={[a.pt_2xs, a.pb_2xs]}
+                  additionalCauses={additionalPostAlerts}
+                />
+                {richText?.text ? (
+                  <View style={styles.postTextContainer}>
+                    <RichText
+                      enableTags
+                      value={richText}
+                      style={[a.flex_1, a.text_md]}
+                      numberOfLines={limitLines ? MAX_POST_LINES : undefined}
+                      authorHandle={post.author.handle}
+                    />
+                  </View>
+                ) : undefined}
+                {limitLines ? (
+                  <TextLink
+                    text={_(msg`Show More`)}
+                    style={pal.link}
+                    onPress={onPressShowMore}
+                    href="#"
+                  />
+                ) : undefined}
+                {post.embed && (
+                  <View style={[a.pb_xs]}>
+                    <PostEmbeds
+                      embed={post.embed}
+                      moderation={moderation}
+                      viewContext={PostEmbedViewContext.Feed}
+                    />
+                  </View>
+                )}
+                <PostCtrls
+                  post={post}
+                  record={record}
+                  richText={richText}
+                  onPressReply={onPressReply}
+                  logContext="PostThreadItem"
+                  threadgateRecord={threadgateRecord}
+                />
+              </View>
             </View>
-          </View>
-          {hasMore ? (
-            <Link
-              style={[
-                styles.loadMore,
-                {
-                  paddingLeft: treeView ? 8 : 70,
-                  paddingTop: 0,
-                  paddingBottom: treeView ? 4 : 12,
-                },
-              ]}
-              href={postHref}
-              title={itemTitle}
-              noFeedback>
-              <Text type="sm-medium" style={pal.textLight}>
-                <Trans>More</Trans>
-              </Text>
-              <FontAwesomeIcon
-                icon="angle-right"
-                color={pal.colors.textLight}
-                size={14}
-              />
-            </Link>
-          ) : undefined}
-        </PostHider>
-      </PostOuterWrapper>
+            {hasMore ? (
+              <Link
+                style={[
+                  styles.loadMore,
+                  {
+                    paddingLeft: treeView ? 8 : 70,
+                    paddingTop: 0,
+                    paddingBottom: treeView ? 4 : 12,
+                  },
+                ]}
+                href={postHref}
+                title={itemTitle}
+                noFeedback>
+                <Text type="sm-medium" style={pal.textLight}>
+                  <Trans>More</Trans>
+                </Text>
+                <FontAwesomeIcon
+                  icon="angle-right"
+                  color={pal.colors.textLight}
+                  size={14}
+                />
+              </Link>
+            ) : undefined}
+          </PostHider>
+        </PostOuterWrapper>
+      </GestureActionView>
     )
   }
 }
