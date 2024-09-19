@@ -15,6 +15,7 @@ import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {useProfileShadow} from 'state/cache/profile-shadow'
 import {useSession} from 'state/session'
+import {HighlightedHandle} from '#/view/com/util/HighlightedHandle'
 import * as Toast from '#/view/com/util/Toast'
 import {ProfileCardPills} from 'view/com/profile/ProfileCard'
 import {UserAvatar} from 'view/com/util/UserAvatar'
@@ -170,8 +171,6 @@ export function NameAndHandle({
     profile.displayName || sanitizeHandle(profile.handle),
     moderation.ui('displayName'),
   )
-  const handle = sanitizeHandle(profile.handle, '@')
-
   return (
     <View style={[a.flex_1]}>
       <Text
@@ -182,7 +181,7 @@ export function NameAndHandle({
       <Text
         style={[a.leading_snug, t.atoms.text_contrast_medium]}
         numberOfLines={1}>
-        {handle}
+        <HighlightedHandle handle={profile.handle} />
       </Text>
     </View>
   )

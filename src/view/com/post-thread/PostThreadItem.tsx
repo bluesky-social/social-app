@@ -40,6 +40,7 @@ import {PostHider} from '../../../components/moderation/PostHider'
 import {WhoCanReply} from '../../../components/WhoCanReply'
 import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
 import {ErrorMessage} from '../util/error/ErrorMessage'
+import {HighlightedHandle} from '../util/HighlightedHandle'
 import {Link, TextLink} from '../util/Link'
 import {formatCount} from '../util/numeric/format'
 import {PostCtrls} from '../util/post-ctrls/PostCtrls'
@@ -323,7 +324,7 @@ let PostThreadItemLoaded = ({
               <View style={styles.meta}>
                 <Link style={s.flex1} href={authorHref} title={authorTitle}>
                   <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-                    {sanitizeHandle(post.author.handle, '@')}
+                    <HighlightedHandle handle={post.author.handle} />
                   </Text>
                 </Link>
               </View>

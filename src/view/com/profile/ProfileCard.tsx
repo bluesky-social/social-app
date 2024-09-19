@@ -24,6 +24,7 @@ import {
   shouldShowKnownFollowers,
 } from '#/components/KnownFollowers'
 import * as Pills from '#/components/Pills'
+import {HighlightedHandle} from '../util/HighlightedHandle'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
@@ -113,7 +114,7 @@ export function ProfileCard({
             )}
           </Text>
           <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-            {sanitizeHandle(profile.handle, '@')}
+            <HighlightedHandle handle={profile.handle} />
           </Text>
           <ProfileCardPills
             followedBy={!!profile.viewer?.followedBy}

@@ -25,6 +25,7 @@ import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {usePalette} from 'lib/hooks/usePalette'
 import {NavigationProp} from 'lib/routes/types'
 import {precacheProfile} from 'state/queries/profile'
+import {HighlightedHandle} from '#/view/com/util/HighlightedHandle'
 import {Link} from '#/view/com/util/Link'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {SearchInput} from 'view/com/util/forms/SearchInput'
@@ -136,7 +137,7 @@ let SearchProfileCard = ({
             )}
           </Text>
           <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-            {sanitizeHandle(profile.handle, '@')}
+            <HighlightedHandle handle={profile.handle} />
           </Text>
         </View>
       </View>

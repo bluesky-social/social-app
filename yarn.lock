@@ -21216,6 +21216,18 @@ tlds@^1.234.0:
   resolved "https://registry.yarnpkg.com/tlds/-/tlds-1.242.0.tgz#da136a9c95b0efa1a4cd57dca8ef240c08ada4b7"
   integrity sha512-aP3dXawgmbfU94mA32CJGHmJUE1E58HCB1KmlKRhBNtqBL27mSQcAEmcaMaQ1Za9kIVvOdbxJD3U5ycDy7nJ3w==
 
+tldts-core@^6.1.43:
+  version "6.1.43"
+  resolved "https://registry.yarnpkg.com/tldts-core/-/tldts-core-6.1.43.tgz#ed90a48d746a59280108df1e3b612ffc170b21f6"
+  integrity sha512-iO1G3F2NqtmJUYlTfcH2liSdaqDnjpYn6iGftbLRNx8DF6IRIjbknVt+q0ijwZ2KGZX3J8zeYGFoiI+ZtHT5MQ==
+
+tldts@^6.1.43:
+  version "6.1.43"
+  resolved "https://registry.yarnpkg.com/tldts/-/tldts-6.1.43.tgz#fd98b012b6be323ede760a56484fbbe6b71208e7"
+  integrity sha512-5J2v/CbNH8CkwsQV+igsuu0+3eeTfRDn1CFf38a24ZD6FIrbm3DZFu4UrrpoOSejhuP4N1PNDNUvJcw+f4nXNw==
+  dependencies:
+    tldts-core "^6.1.43"
+
 tmp@^0.0.33:
   version "0.0.33"
   resolved "https://registry.yarnpkg.com/tmp/-/tmp-0.0.33.tgz#6d34335889768d21b2bcda0aa277ced3b1bfadf9"
