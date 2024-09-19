@@ -1,11 +1,11 @@
 import React from 'react'
 import {createClient} from '@segment/analytics-react'
+import * as Sentry from '@sentry/react-native'
 import {sha256} from 'js-sha256'
-import {Browser} from 'sentry-expo'
 
-import {ScreenPropertiesMap, TrackPropertiesMap} from './types'
-import {useSession, SessionAccount} from '#/state/session'
 import {logger} from '#/logger'
+import {SessionAccount, useSession} from '#/state/session'
+import {ScreenPropertiesMap, TrackPropertiesMap} from './types'
 
 type SegmentClient = ReturnType<typeof createClient>
 
@@ -70,7 +70,7 @@ export function init(account: SessionAccount | undefined) {
     if (account.did) {
       const did_hashed = sha256(account.did)
       client.identify(did_hashed, {did_hashed})
-      Browser.setUser({id: did_hashed})
+      Sentry.setUser({id: did_hashed})
       logger.debug('Ping w/hash')
     } else {
       logger.debug('Ping w/o hash')

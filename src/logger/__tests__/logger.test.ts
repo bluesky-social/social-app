@@ -1,6 +1,6 @@
+import {beforeAll, describe, expect, jest, test} from '@jest/globals'
+import * as Sentry from '@sentry/react-native'
 import {nanoid} from 'nanoid/non-secure'
-import {jest, describe, expect, test, beforeAll} from '@jest/globals'
-import {Native as Sentry} from 'sentry-expo'
 
 import {Logger, LogLevel, sentryTransport} from '#/logger'
 
@@ -16,12 +16,10 @@ jest.mock('#/env', () => ({
   LOG_DEBUG: '',
 }))
 
-jest.mock('sentry-expo', () => ({
-  Native: {
-    addBreadcrumb: jest.fn(),
-    captureException: jest.fn(),
-    captureMessage: jest.fn(),
-  },
+jest.mock('@sentry/react-native', () => ({
+  addBreadcrumb: jest.fn(),
+  captureException: jest.fn(),
+  captureMessage: jest.fn(),
 }))
 
 beforeAll(() => {
