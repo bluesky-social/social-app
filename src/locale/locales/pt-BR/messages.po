@@ -343,6 +343,10 @@ msgstr "7 dias"
 msgid "A help tooltip"
 msgstr "Uma sugestão de ajuda"
 
+#: src/components/dialogs/nuxs/TenMillion/index.tsx:266
+msgid "A virtual certificate with text \"Celebrating 10M users on Bluesky, #{0}, {displayName} {handle}, joined on {joinedDate}\""
+msgstr "Um certificado virtual com o texto \"Comemorando 10 milhões de usuários no Bluesky, #{0}, {displayName} {handle}, ingressou em {joinedDate}\""
+
 #: src/view/com/util/ViewHeader.tsx:92
 #: src/view/screens/Search/Search.tsx:684
 msgid "Access navigation links and settings"
