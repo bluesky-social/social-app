@@ -26,10 +26,21 @@ export function ImageLayoutGrid({style, ...props}: ImageLayoutGridProps) {
       ? a.gap_sm
       : a.gap_xs
   const count = props.images.length
-  const aspectRatio = count === 2 ? 2 : count === 3 ? 1.5 : 1
+  let aspectRatio = 1
+  switch (count) {
+    case 2:
+      aspectRatio = 2
+      break
+    case 3:
+      aspectRatio = 2
+      break
+    case 4:
+      aspectRatio = 1.5
+      break
+  }
   return (
     <View style={style}>
-      <View style={[gap, {aspectRatio}]}>
+      <View style={[gap, a.rounded_md, a.overflow_hidden, {aspectRatio}]}>
         <ImageLayoutGridInner {...props} gap={gap} />
       </View>
     </View>
@@ -65,14 +76,14 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
     case 3:
       return (
         <View style={[a.flex_1, a.flex_row, gap]}>
-          <View style={{flex: 2}}>
+          <View style={[a.flex_1]}>
             <GalleryItem {...props} index={0} />
           </View>
           <View style={[a.flex_1, gap]}>
-            <View style={[a.flex_1, {aspectRatio: 1}]}>
+            <View style={[a.flex_1]}>
               <GalleryItem {...props} index={1} />
             </View>
-            <View style={[a.flex_1, {aspectRatio: 1}]}>
+            <View style={[a.flex_1]}>
               <GalleryItem {...props} index={2} />
             </View>
           </View>
@@ -83,18 +94,18 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
       return (
         <>
           <View style={[a.flex_row, gap]}>
-            <View style={[a.flex_1, {aspectRatio: 1}]}>
+            <View style={[a.flex_1, {aspectRatio: 1.5}]}>
               <GalleryItem {...props} index={0} />
             </View>
-            <View style={[a.flex_1, {aspectRatio: 1}]}>
+            <View style={[a.flex_1, {aspectRatio: 1.5}]}>
               <GalleryItem {...props} index={1} />
             </View>
           </View>
           <View style={[a.flex_row, gap]}>
-            <View style={[a.flex_1, {aspectRatio: 1}]}>
+            <View style={[a.flex_1, {aspectRatio: 1.5}]}>
               <GalleryItem {...props} index={2} />
             </View>
-            <View style={[a.flex_1, {aspectRatio: 1}]}>
+            <View style={[a.flex_1, {aspectRatio: 1.5}]}>
               <GalleryItem {...props} index={3} />
             </View>
           </View>

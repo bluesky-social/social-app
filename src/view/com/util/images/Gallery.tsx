@@ -47,7 +47,6 @@ export const GalleryItem: FC<GalleryItemProps> = ({
         onLongPress={onLongPress ? () => onLongPress(index) : undefined}
         style={[
           a.flex_1,
-          a.rounded_sm,
           a.overflow_hidden,
           t.atoms.bg_contrast_25,
           imageStyle,
