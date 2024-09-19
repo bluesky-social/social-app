@@ -108,4 +108,10 @@ export function applyFonts(
       style.fontFamily = style.fontFamily || FAMILIES
     }
   }
+
+  /**
+   * Disable contextual ligatures
+   * {@link https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant}
+   */
+  style.fontVariant = ['no-contextual']
 }
