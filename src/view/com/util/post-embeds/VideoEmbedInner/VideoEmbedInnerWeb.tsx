@@ -36,7 +36,7 @@ export function VideoEmbedInnerWeb({
   useEffect(() => {
     let hls: Hls | undefined
     // @ts-expect-error - dynamic import
-    import('hls.js/dist/hls.min').then(
+    import(/* webpackPreload: true */ 'hls.js/dist/hls.min').then(
       ({default: DynamicHls}: {default: typeof Hls}) => {
         setHlsLoading(false)
         if (!DynamicHls.isSupported()) {
