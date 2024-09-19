@@ -48,7 +48,7 @@ export function useComposerKeyboardShortcut() {
     function handler(event: KeyboardEvent) {
       if (shouldIgnore(event)) return
       if (
-        openDialogs.current.size > 0 ||
+        openDialogs?.current.size > 0 ||
         isModalActive ||
         activeLightbox ||
         isDrawerOpen

@@ -2,6 +2,8 @@ import {MMKV} from 'react-native-mmkv'
 
 import {Device} from '#/storage/schema'
 
+export * from '#/storage/schema'
+
 /**
  * Generic storage class. DO NOT use this directly. Instead, use the exported
  * storage instances below.
