@@ -308,6 +308,133 @@
         margin-left: -6px;
       }
     </style>
+
+    <script>
+      try {
+        const InterRegular = new FontFace(
+          'Inter-Regular',
+          'url(/static/media/Inter-Regular.1f5ed03b6dd9fd1f9982.otf)',
+          {
+            style: 'normal',
+            weight: 400,
+          }
+        );
+        const InterItalic = new FontFace(
+          'Inter-Italic',
+          'url(/static/media/Inter-Italic.95778eb0c75dc956257e.otf)',
+          {
+            style: 'italic',
+            weight: 400,
+          }
+        );
+        const InterMedium = new FontFace(
+          'Inter-Medium',
+          'url(/static/media/Inter-Medium.296aa2d65964269836b3.otf)',
+          {
+            style: 'normal',
+            weight: 500,
+          }
+        );
+        const InterMediumItalic = new FontFace(
+          'Inter-MediumItalic',
+          'url(/static/media/Inter-MediumItalic.0e57e17a6311368e2114.otf)',
+          {
+            style: 'italic',
+            weight: 500,
+          }
+        );
+        const InterSemiBold = new FontFace(
+          'Inter-SemiBold',
+          'url(/static/media/Inter-SemiBold.2277990330981b8409bb.otf)',
+          {
+            style: 'normal',
+            weight: 600,
+          }
+        );
+        const InterSemiBoldItalic = new FontFace(
+          'Inter-SemiBoldItalic',
+          'url(/static/media/Inter-SemiBoldItalic.f62fea3df3a521d6c8a7.otf)',
+          {
+            style: 'italic',
+            weight: 600,
+          }
+        );
+        const InterBold = new FontFace(
+          'Inter-Bold',
+          'url(/static/media/Inter-Bold.8d330503e1d034ad68de.otf)',
+          {
+            style: 'normal',
+            weight: 700,
+          }
+        );
+        const InterBoldItalic = new FontFace(
+          'Inter-BoldItalic',
+          'url(/static/media/Inter-BoldItalic.bb17e63f9baa0d861a20.otf)',
+          {
+            style: 'italic',
+            weight: 700,
+          }
+        );
+        const InterExtraBold = new FontFace(
+          'Inter-ExtraBold',
+          'url(/static/media/Inter-ExtraBold.ff2581a193bf6b7e0b06.otf)',
+          {
+            style: 'normal',
+            weight: 800,
+          }
+        );
+        const InterExtraBoldItalic = new FontFace(
+          'Inter-ExtraBoldItalic',
+          'url(/static/media/Inter-ExtraBoldItalic.0e50b40728d24d40fdf4.otf)',
+          {
+            style: 'italic',
+            weight: 800,
+          }
+        );
+        const InterBlack = new FontFace(
+          'Inter-Black',
+          'url(/static/media/Inter-Black.66e9a87f1c921e844ed4.otf)',
+          {
+            style: 'normal',
+            weight: 900,
+          }
+        );
+        const InterBlackItalic = new FontFace(
+          'Inter-BlackItalic',
+          'url(/static/media/Inter-BlackItalic.27b9f0ad06fd13a7b9da.otf)',
+          {
+            style: 'italic',
+            weight: 900,
+          }
+        );
+
+        document.fonts.add(InterRegular);
+        document.fonts.add(InterItalic);
+        document.fonts.add(InterMedium);
+        document.fonts.add(InterMediumItalic);
+        document.fonts.add(InterSemiBold);
+        document.fonts.add(InterSemiBoldItalic);
+        document.fonts.add(InterBold);
+        document.fonts.add(InterBoldItalic);
+        document.fonts.add(InterExtraBold);
+        document.fonts.add(InterExtraBoldItalic);
+        document.fonts.add(InterBlack);
+        document.fonts.add(InterBlackItalic);
+
+        InterRegular.load();
+        InterItalic.load();
+        InterMedium.load();
+        InterMediumItalic.load();
+        InterSemiBold.load();
+        InterSemiBoldItalic.load();
+        InterBold.load();
+        InterBoldItalic.load();
+        InterExtraBold.load();
+        InterExtraBoldItalic.load();
+        InterBlack.load();
+        InterBlackItalic.load();
+      } catch () {}
+    </script>
   </head>
 
   <body>
