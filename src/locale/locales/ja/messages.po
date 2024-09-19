@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-18 11:01+0900\n"
+"PO-Revision-Date: 2024-09-19 15:32+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -671,15 +671,15 @@ msgstr "この決定に異議を申し立てる"
 #: src/screens/Settings/AppearanceSettings.tsx:69
 #: src/view/screens/Settings/index.tsx:484
 msgid "Appearance"
-msgstr "背景"
+msgstr "外観"
 
 #: src/view/screens/Settings/index.tsx:475
 msgid "Appearance settings"
-msgstr "背景の設定"
+msgstr "外観の設定"
 
 #: src/Navigation.tsx:326
 msgid "Appearance Settings"
-msgstr "背景の設定"
+msgstr "外観の設定"
 
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:47
 #: src/screens/Home/NoFeedsPinned.tsx:93
@@ -1271,6 +1271,10 @@ msgstr "ユーザーリストを折りたたむ"
 msgid "Collapses list of users for a given notification"
 msgstr "指定した通知のユーザーリストを折りたたむ"
 
+#: src/screens/Settings/AppearanceSettings.tsx:97
+msgid "Color mode"
+msgstr "カラーモード"
+
 #: src/screens/Onboarding/index.tsx:38
 #: src/screens/Onboarding/state.ts:82
 msgid "Comedy"
@@ -1641,6 +1645,15 @@ msgstr "モデレーションをデバッグ"
 #: src/view/screens/Debug.tsx:83
 msgid "Debug panel"
 msgstr "デバッグパネル"
+
+#: src/components/dialogs/nuxs/NeueTypography.tsx:101
+#: src/screens/Settings/AppearanceSettings.tsx:169
+msgid "Default"
+msgstr "デフォルト"
+
+#: src/components/dialogs/nuxs/NeueTypography.tsx:62
+msgid "Defaults are shown below. You can edit these in your Appearance Settings later."
+msgstr "デフォルトは以下のとおり。後で外観の設定で編集できます。"
 
 #: src/components/dms/MessageMenu.tsx:151
 #: src/screens/StarterPack/StarterPackScreen.tsx:573
@@ -2647,6 +2660,16 @@ msgstr "あなたをフォロー"
 msgid "Follows You"
 msgstr "あなたをフォロー"
 
+#: src/components/dialogs/nuxs/NeueTypography.tsx:73
+#: src/screens/Settings/AppearanceSettings.tsx:141
+msgid "Font"
+msgstr "フォント"
+
+#: src/components/dialogs/nuxs/NeueTypography.tsx:93
+#: src/screens/Settings/AppearanceSettings.tsx:161
+msgid "Font size"
+msgstr "フォントサイズ"
+
 #: src/screens/Onboarding/index.tsx:40
 #: src/screens/Onboarding/state.ts:87
 msgid "Food"
@@ -2659,6 +2682,11 @@ msgstr "セキュリティ上の理由から、あなたのメールアドレス
 #: src/view/com/modals/AddAppPasswords.tsx:233
 msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
 msgstr "セキュリティ上の理由から、これを再度表示することはできません。このパスワードを紛失した場合は、新しいパスワードを生成する必要があります。"
+
+#: src/components/dialogs/nuxs/NeueTypography.tsx:75
+#: src/screens/Settings/AppearanceSettings.tsx:143
+msgid "For the best experience, we recommend using the theme font."
+msgstr "ベストな体験のために、テーマフォントの使用をお勧めします。"
 
 #: src/components/dialogs/MutedWords.tsx:178
 msgid "Forever"
@@ -3069,6 +3097,14 @@ msgstr "反応が制限されています"
 msgid "Introducing Direct Messages"
 msgstr "ダイレクトメッセージの紹介"
 
+#: src/components/dialogs/nuxs/NeueTypography.tsx:48
+msgid "Introducing new font settings"
+msgstr "新しいフォント設定の紹介"
+
+#: src/components/dialogs/nuxs/NeueTypography.tsx:52
+msgid "Introducing new font settings ✨"
+msgstr "新しいフォント設定の紹介 ✨"
+
 #: src/screens/Login/LoginForm.tsx:145
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
@@ -3191,6 +3227,11 @@ msgstr "言語の設定"
 #: src/view/screens/Settings/index.tsx:505
 msgid "Languages"
 msgstr "言語"
+
+#: src/components/dialogs/nuxs/NeueTypography.tsx:105
+#: src/screens/Settings/AppearanceSettings.tsx:173
+msgid "Larger"
+msgstr "大きく"
 
 #: src/screens/Hashtag.tsx:97
 #: src/view/screens/Search/Search.tsx:359
@@ -3518,10 +3559,6 @@ msgstr "誤解を招くアカウント"
 #: src/lib/moderation/useReportOptions.ts:67
 msgid "Misleading Post"
 msgstr "誤解を招く投稿"
-
-#: src/screens/Settings/AppearanceSettings.tsx:78
-msgid "Mode"
-msgstr "モード"
 
 #: src/Navigation.tsx:135
 #: src/screens/Moderation/index.tsx:105
@@ -4228,7 +4265,7 @@ msgstr "デバッグエントリーの追加詳細を開く"
 
 #: src/view/screens/Settings/index.tsx:476
 msgid "Opens appearance settings"
-msgstr "背景の設定を開く"
+msgstr "外観の設定を開く"
 
 #: src/view/com/composer/photos/OpenCameraBtn.tsx:74
 msgid "Opens camera on device"
@@ -5979,6 +6016,11 @@ msgstr "スキップ"
 msgid "Skip this flow"
 msgstr "この手順をスキップする"
 
+#: src/components/dialogs/nuxs/NeueTypography.tsx:97
+#: src/screens/Settings/AppearanceSettings.tsx:165
+msgid "Smaller"
+msgstr "小さく"
+
 #: src/screens/Onboarding/index.tsx:37
 #: src/screens/Onboarding/state.ts:85
 msgid "Software Dev"
@@ -6365,6 +6407,11 @@ msgstr "サービス規約は移動しました"
 msgid "The verification code you have provided is invalid. Please make sure that you have used the correct verification link or request a new one."
 msgstr "入力された確認コードが正しくありません。正しいリンクを使用したかを確認するか、新しい確認コードを要求してください。"
 
+#: src/components/dialogs/nuxs/NeueTypography.tsx:84
+#: src/screens/Settings/AppearanceSettings.tsx:152
+msgid "Theme"
+msgstr "テーマ"
+
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:86
 msgid "There is no time limit for account deactivation, come back any time."
 msgstr "アカウントの無効化に期限はありません。いつでも戻ってこられます。"
@@ -6685,6 +6732,10 @@ msgstr "詳しくは、<0>私達のこの投稿をチェックしてください
 #: src/components/dms/ReportConversationPrompt.tsx:20
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
 msgstr "会話を報告するには、会話の画面からメッセージのうちの一つを報告してください。それによって問題の文脈をモデレーターが理解できるようになります。"
+
+#: src/components/dialogs/nuxs/NeueTypography.tsx:55
+msgid "To the ensure the best possible experience, we're introducing a new theme font, along with adjustable font sizing settings."
+msgstr "可能な限りの最高の体験を得られるように、新しいテーマフォントと調整可能なフォントサイズ設定を導入しました。"
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:120
 msgid "To upload videos to Bluesky, you must first verify your email."
