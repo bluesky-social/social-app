@@ -1,10 +1,11 @@
 import React from 'react'
-import {Text as RNText, TextProps} from 'react-native'
+import {StyleSheet, Text as RNText, TextProps} from 'react-native'
 import {UITextView} from 'react-native-uitextview'
 
 import {lh, s} from 'lib/styles'
 import {TypographyVariant, useTheme} from 'lib/ThemeContext'
 import {isIOS, isWeb} from 'platform/detection'
+import {applyFonts, useAlf} from '#/alf'
 
 export type CustomTextProps = TextProps & {
   type?: TypographyVariant
@@ -32,11 +33,28 @@ export function Text({
   const theme = useTheme()
   const typography = theme.typography[type]
   const lineHeightStyle = lineHeight ? lh(theme, type, lineHeight) : undefined
+  const {fonts} = useAlf()
 
   if (selectable && isIOS) {
+    const flattened = StyleSheet.flatten([
+      s.black,
+      typography,
+      lineHeightStyle,
+      style,
+    ])
+
+    applyFonts(flattened, fonts.family)
+
+    // should always be defined on `typography`
+    // @ts-ignore
+    if (flattened.fontSize) {
+      // @ts-ignore
+      flattened.fontSize = flattened.fontSize * fonts.scaleMultiplier
+    }
+
     return (
       <UITextView
-        style={[s.black, typography, lineHeightStyle, style]}
+        style={flattened}
         selectable={selectable}
         uiTextView
         {...props}>
@@ -45,15 +63,26 @@ export function Text({
     )
   }
 
+  const flattened = StyleSheet.flatten([
+    s.black,
+    typography,
+    isWeb && fontFamilyStyle,
+    lineHeightStyle,
+    style,
+  ])
+
+  applyFonts(flattened, fonts.family)
+
+  // should always be defined on `typography`
+  // @ts-ignore
+  if (flattened.fontSize) {
+    // @ts-ignore
+    flattened.fontSize = flattened.fontSize * fonts.scaleMultiplier
+  }
+
   return (
     <RNText
-      style={[
-        s.black,
-        typography,
-        isWeb && fontFamilyStyle,
-        lineHeightStyle,
-        style,
-      ]}
+      style={flattened}
       // @ts-ignore web only -esb
       dataSet={Object.assign({tooltip: title}, dataSet || {})}
       selectable={selectable}

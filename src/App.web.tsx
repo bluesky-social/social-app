@@ -46,7 +46,7 @@ import {Provider as VideoVolumeProvider} from '#/view/com/util/post-embeds/Video
 import * as Toast from '#/view/com/util/Toast'
 import {ToastContainer} from '#/view/com/util/Toast.web'
 import {Shell} from '#/view/shell/index'
-import {ThemeProvider as Alf} from '#/alf'
+import {ThemeProvider as Alf, useFonts} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
@@ -96,62 +96,61 @@ function InnerApp() {
 
   return (
     <KeyboardProvider enabled={false}>
-      <Alf theme={theme}>
-        <ThemeProvider theme={theme}>
-          <RootSiblingParent>
-            <VideoVolumeProvider>
-              <ActiveVideoProvider>
-                <React.Fragment
-                  // Resets the entire tree below when it changes:
-                  key={currentAccount?.did}>
+      <StatsigProvider
+        // Resets the entire tree below when it changes:
+        key={currentAccount?.did}>
+        <Alf theme={theme}>
+          <ThemeProvider theme={theme}>
+            <RootSiblingParent>
+              <VideoVolumeProvider>
+                <ActiveVideoProvider>
                   <QueryProvider currentDid={currentAccount?.did}>
-                    <StatsigProvider>
-                      <MessagesProvider>
-                        {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
-                        <LabelDefsProvider>
-                          <ModerationOptsProvider>
-                            <LoggedOutViewProvider>
-                              <SelectedFeedProvider>
-                                <HiddenRepliesProvider>
-                                  <UnreadNotifsProvider>
-                                    <BackgroundNotificationPreferencesProvider>
-                                      <MutedThreadsProvider>
-                                        <SafeAreaProvider>
-                                          <ProgressGuideProvider>
-                                            <Shell />
-                                            <NuxDialogs />
-                                          </ProgressGuideProvider>
-                                        </SafeAreaProvider>
-                                      </MutedThreadsProvider>
-                                    </BackgroundNotificationPreferencesProvider>
-                                  </UnreadNotifsProvider>
-                                </HiddenRepliesProvider>
-                              </SelectedFeedProvider>
-                            </LoggedOutViewProvider>
-                          </ModerationOptsProvider>
-                        </LabelDefsProvider>
-                      </MessagesProvider>
-                    </StatsigProvider>
+                    <MessagesProvider>
+                      {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
+                      <LabelDefsProvider>
+                        <ModerationOptsProvider>
+                          <LoggedOutViewProvider>
+                            <SelectedFeedProvider>
+                              <HiddenRepliesProvider>
+                                <UnreadNotifsProvider>
+                                  <BackgroundNotificationPreferencesProvider>
+                                    <MutedThreadsProvider>
+                                      <SafeAreaProvider>
+                                        <ProgressGuideProvider>
+                                          <Shell />
+                                          <NuxDialogs />
+                                        </ProgressGuideProvider>
+                                      </SafeAreaProvider>
+                                    </MutedThreadsProvider>
+                                  </BackgroundNotificationPreferencesProvider>
+                                </UnreadNotifsProvider>
+                              </HiddenRepliesProvider>
+                            </SelectedFeedProvider>
+                          </LoggedOutViewProvider>
+                        </ModerationOptsProvider>
+                      </LabelDefsProvider>
+                    </MessagesProvider>
                   </QueryProvider>
-                </React.Fragment>
-                <ToastContainer />
-              </ActiveVideoProvider>
-            </VideoVolumeProvider>
-          </RootSiblingParent>
-        </ThemeProvider>
-      </Alf>
+                  <ToastContainer />
+                </ActiveVideoProvider>
+              </VideoVolumeProvider>
+            </RootSiblingParent>
+          </ThemeProvider>
+        </Alf>
+      </StatsigProvider>
     </KeyboardProvider>
   )
 }
 
 function App() {
   const [isReady, setReady] = useState(false)
+  const [loaded, error] = useFonts()
 
   React.useEffect(() => {
     initPersistedState().then(() => setReady(true))
   }, [])
 
-  if (!isReady) {
+  if (!isReady || (!loaded && !error)) {
     return null
   }
 
