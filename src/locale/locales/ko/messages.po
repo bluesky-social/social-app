@@ -668,7 +668,7 @@ msgstr "이의신청 제출함"
 msgid "Appeal this decision"
 msgstr "이 결정에 이의신청"
 
-#: src/screens/Settings/AppearanceSettings.tsx:69
+#: src/screens/Settings/AppearanceSettings.tsx:89
 #: src/view/screens/Settings/index.tsx:484
 msgid "Appearance"
 msgstr "모양"
@@ -1204,8 +1204,8 @@ msgstr "다그닥 🐴 다그닥 🐴"
 msgid "Close"
 msgstr "닫기"
 
-#: src/components/Dialog/index.web.tsx:116
-#: src/components/Dialog/index.web.tsx:254
+#: src/components/Dialog/index.web.tsx:117
+#: src/components/Dialog/index.web.tsx:255
 msgid "Close active dialog"
 msgstr "열려 있는 대화 상자 닫기"
 
@@ -1270,6 +1270,10 @@ msgstr "사용자 목록 접기"
 #: src/view/com/notifications/FeedItem.tsx:466
 msgid "Collapses list of users for a given notification"
 msgstr "이 알림에 대한 사용자 목록을 축소합니다"
+
+#: src/screens/Settings/AppearanceSettings.tsx:97
+msgid "Color mode"
+msgstr "색상 모드"
 
 #: src/screens/Onboarding/index.tsx:38
 #: src/screens/Onboarding/state.ts:82
@@ -1604,20 +1608,16 @@ msgstr "외부 사이트 미디어를 사용자 지정합니다."
 msgid "Customize who can interact with this post."
 msgstr "이 게시물과 상호작용할 수 있는 사람을 사용자 지정합니다."
 
-#: src/screens/Settings/AppearanceSettings.tsx:95
-#: src/screens/Settings/AppearanceSettings.tsx:97
-#: src/screens/Settings/AppearanceSettings.tsx:122
-#: src/screens/Settings/AppearanceSettings.tsx:124
+#: src/screens/Settings/AppearanceSettings.tsx:109
+#: src/screens/Settings/AppearanceSettings.tsx:130
 msgid "Dark"
 msgstr "어두움"
 
-#: src/screens/Settings/AppearanceSettings.tsx:82
 #: src/view/screens/Debug.tsx:63
 msgid "Dark mode"
 msgstr "어두운 모드"
 
-#: src/screens/Settings/AppearanceSettings.tsx:109
-#: src/screens/Settings/AppearanceSettings.tsx:114
+#: src/screens/Settings/AppearanceSettings.tsx:122
 msgid "Dark theme"
 msgstr "어두운 테마"
 
@@ -1641,6 +1641,15 @@ msgstr "검토 디버그"
 #: src/view/screens/Debug.tsx:83
 msgid "Debug panel"
 msgstr "디버그 패널"
+
+#: src/components/dialogs/nuxs/NeueTypography.tsx:101
+#: src/screens/Settings/AppearanceSettings.tsx:169
+msgid "Default"
+msgstr "기본"
+
+#: src/components/dialogs/nuxs/NeueTypography.tsx:62
+msgid "Defaults are shown below. You can edit these in your Appearance Settings later."
+msgstr "기본값은 아래와 같습니다. 나중에 모양 설정에서 수정할 수 있습니다."
 
 #: src/components/dms/MessageMenu.tsx:151
 #: src/screens/StarterPack/StarterPackScreen.tsx:573
@@ -1759,8 +1768,7 @@ msgstr "대화 상자: 이 게시물과 상호작용할 수 있는 사람 조정
 msgid "Did you want to say anything?"
 msgstr "하고 싶은 말이 없나요?"
 
-#: src/screens/Settings/AppearanceSettings.tsx:117
-#: src/screens/Settings/AppearanceSettings.tsx:119
+#: src/screens/Settings/AppearanceSettings.tsx:126
 msgid "Dim"
 msgstr "어둑함"
 
@@ -2647,6 +2655,16 @@ msgstr "나를 팔로우함"
 msgid "Follows You"
 msgstr "나를 팔로우함"
 
+#: src/components/dialogs/nuxs/NeueTypography.tsx:73
+#: src/screens/Settings/AppearanceSettings.tsx:141
+msgid "Font"
+msgstr "글꼴"
+
+#: src/components/dialogs/nuxs/NeueTypography.tsx:93
+#: src/screens/Settings/AppearanceSettings.tsx:161
+msgid "Font size"
+msgstr "글꼴 크기"
+
 #: src/screens/Onboarding/index.tsx:40
 #: src/screens/Onboarding/state.ts:87
 msgid "Food"
@@ -2659,6 +2677,11 @@ msgstr "보안상의 이유로 이메일 주소로 인증 코드를 보내야 �
 #: src/view/com/modals/AddAppPasswords.tsx:233
 msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
 msgstr "보안상의 이유로 이 비밀번호는 다시 볼 수 없습니다. 이 비밀번호를 분실한 경우 새 비밀번호를 생성해야 합니다."
+
+#: src/components/dialogs/nuxs/NeueTypography.tsx:75
+#: src/screens/Settings/AppearanceSettings.tsx:143
+msgid "For the best experience, we recommend using the theme font."
+msgstr "최상의 경험을 위해 테마 글꼴을 사용하는 것을 추천합니다."
 
 #: src/components/dialogs/MutedWords.tsx:178
 msgid "Forever"
@@ -3069,6 +3092,14 @@ msgstr "상호작용 제한됨"
 msgid "Introducing Direct Messages"
 msgstr "다이렉트 메시지 소개"
 
+#: src/components/dialogs/nuxs/NeueTypography.tsx:48
+msgid "Introducing new font settings"
+msgstr "새 글꼴 설정을 소개합니다"
+
+#: src/components/dialogs/nuxs/NeueTypography.tsx:52
+msgid "Introducing new font settings ✨"
+msgstr "새 글꼴 설정을 소개합니다 ✨"
+
 #: src/screens/Login/LoginForm.tsx:145
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
@@ -3192,6 +3223,11 @@ msgstr "언어 설정"
 msgid "Languages"
 msgstr "언어"
 
+#: src/components/dialogs/nuxs/NeueTypography.tsx:105
+#: src/screens/Settings/AppearanceSettings.tsx:173
+msgid "Larger"
+msgstr "큼"
+
 #: src/screens/Hashtag.tsx:97
 #: src/view/screens/Search/Search.tsx:359
 msgid "Latest"
@@ -3266,8 +3302,7 @@ msgstr "비밀번호를 재설정해 봅시다!"
 msgid "Let's go!"
 msgstr "출발!"
 
-#: src/screens/Settings/AppearanceSettings.tsx:90
-#: src/screens/Settings/AppearanceSettings.tsx:92
+#: src/screens/Settings/AppearanceSettings.tsx:105
 msgid "Light"
 msgstr "밝음"
 
@@ -3520,8 +3555,8 @@ msgid "Misleading Post"
 msgstr "오해의 소지가 있는 게시물"
 
 #: src/screens/Settings/AppearanceSettings.tsx:78
-msgid "Mode"
-msgstr "모드"
+#~ msgid "Mode"
+#~ msgstr "모드"
 
 #: src/Navigation.tsx:135
 #: src/screens/Moderation/index.tsx:105
@@ -5980,6 +6015,11 @@ msgstr "건너뛰기"
 msgid "Skip this flow"
 msgstr "이 단계 건너뛰기"
 
+#: src/components/dialogs/nuxs/NeueTypography.tsx:97
+#: src/screens/Settings/AppearanceSettings.tsx:165
+msgid "Smaller"
+msgstr "작음"
+
 #: src/screens/Onboarding/index.tsx:37
 #: src/screens/Onboarding/state.ts:85
 msgid "Software Dev"
@@ -6157,8 +6197,9 @@ msgstr "{0}(으)로 전환"
 msgid "Switches the account you are logged in to"
 msgstr "로그인 중인 계정을 전환합니다"
 
-#: src/screens/Settings/AppearanceSettings.tsx:85
-#: src/screens/Settings/AppearanceSettings.tsx:87
+#: src/components/dialogs/nuxs/NeueTypography.tsx:80
+#: src/screens/Settings/AppearanceSettings.tsx:101
+#: src/screens/Settings/AppearanceSettings.tsx:148
 msgid "System"
 msgstr "시스템"
 
@@ -6365,6 +6406,11 @@ msgstr "서비스 이용약관을 다음으로 이동했습니다:"
 #: src/components/intents/VerifyEmailIntentDialog.tsx:85
 msgid "The verification code you have provided is invalid. Please make sure that you have used the correct verification link or request a new one."
 msgstr "입력한 인증 코드가 올바르지 않습니다. 올바른 인증 링크를 사용했는지 확인하거나 새 인증 링크를 요청하세요."
+
+#: src/components/dialogs/nuxs/NeueTypography.tsx:84
+#: src/screens/Settings/AppearanceSettings.tsx:152
+msgid "Theme"
+msgstr "테마"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:86
 msgid "There is no time limit for account deactivation, come back any time."
@@ -6686,6 +6732,10 @@ msgstr "자세한 내용은 <0>게시물을 확인하세요.</0>"
 #: src/components/dms/ReportConversationPrompt.tsx:20
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
 msgstr "대화를 신고하려면 대화 화면에서 해당 메시지 중 하나를 신고하세요. 이렇게 하면 운영진이 문제의 맥락을 파악할 수 있습니다."
+
+#: src/components/dialogs/nuxs/NeueTypography.tsx:55
+msgid "To the ensure the best possible experience, we're introducing a new theme font, along with adjustable font sizing settings."
+msgstr "최상의 경험을 제공하기 위해 글꼴 크기 조정 설정과 함께 새로운 테마 글꼴을 도입합니다."
 
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:120
 msgid "To upload videos to Bluesky, you must first verify your email."
