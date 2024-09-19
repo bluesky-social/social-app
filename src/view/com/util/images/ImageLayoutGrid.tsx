@@ -22,8 +22,6 @@ export function ImageLayoutGrid({style, ...props}: ImageLayoutGridProps) {
       ? gtMobile
         ? a.gap_xs
         : a.gap_2xs
-      : gtMobile
-      ? a.gap_sm
       : a.gap_xs
   const count = props.images.length
   let aspectRatio = 1
