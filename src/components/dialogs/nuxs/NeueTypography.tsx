@@ -53,8 +53,8 @@ export function NeueTypography() {
             </Text>
             <Text style={[a.text_lg, a.leading_snug]}>
               <Trans>
-                To the ensure the best possible experience, we're introducing a
-                new theme font, along with adjustable font sizing settings.
+                To ensure the best possible experience, we're introducing a new
+                theme font, along with adjustable font sizing settings.
               </Trans>
             </Text>
             <Text

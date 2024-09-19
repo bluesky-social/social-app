@@ -205,18 +205,10 @@ export function AppearanceToggleButtonGroup({
 }) {
   const t = useTheme()
   return (
-    <View style={[a.gap_md]}>
-      <View style={[a.gap_xs]}>
-        <View style={[a.flex_row, a.align_center, a.gap_md]}>
-          <Icon style={t.atoms.text} />
-          <Text style={[a.text_md, a.font_bold]}>{title}</Text>
-        </View>
-        {description && (
-          <Text
-            style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
-            {description}
-          </Text>
-        )}
+    <View style={[a.gap_sm]}>
+      <View style={[a.flex_row, a.align_center, a.gap_md]}>
+        <Icon style={t.atoms.text} />
+        <Text style={[a.text_md, a.font_bold]}>{title}</Text>
       </View>
       <ToggleButton.Group label={title} values={values} onChange={onChange}>
         {items.map(item => (
@@ -228,6 +220,12 @@ export function AppearanceToggleButtonGroup({
           </ToggleButton.Button>
         ))}
       </ToggleButton.Group>
+
+      {description && (
+        <Text style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
+          {description}
+        </Text>
+      )}
     </View>
   )
 }
