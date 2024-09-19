@@ -105,7 +105,7 @@ export const ExternalLinkEmbed = ({
               borderBottomLeftRadius: 8,
               paddingHorizontal: isMobile ? 10 : 14,
             },
-            !imageUri && !embedPlayerParams && [a.border, a.rounded_md],
+            !imageUri && !embedPlayerParams && [a.border, a.rounded_sm],
           ]}>
           <Text
             type="sm"
