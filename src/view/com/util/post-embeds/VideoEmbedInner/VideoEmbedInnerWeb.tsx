@@ -1,7 +1,7 @@
 import React, {useEffect, useId, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {AppBskyEmbedVideo} from '@atproto/api'
-import Hls from 'hls.js'
+import Hls, {Events, FragChangedData, Fragment} from 'hls.js'
 
 import {atoms as a} from '#/alf'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
@@ -31,14 +31,7 @@ export function VideoEmbedInnerWeb({
   }
 
   const hlsRef = useRef<Hls | undefined>(undefined)
-
-  const [bufferedFragments, setBufferedFragments] = useState<
-    {
-      start: number
-      end: number
-      level: number
-    }[]
-  >([])
+  const [lowQualityFragments, setLowQualityFragments] = useState<Fragment[]>([])
 
   useEffect(() => {
     if (!videoRef.current) return
@@ -64,15 +57,10 @@ export function VideoEmbedInnerWeb({
       }
     })
 
-    hls.on(Hls.Events.FRAG_BUFFERED, (_event, data) => {
-      setBufferedFragments(buffered => [
-        ...buffered.filter(frag => frag.start !== data.frag.start),
-        {
-          start: data.frag.start,
-          end: data.frag.end,
-          level: data.frag.level,
-        },
-      ])
+    hls.on(Hls.Events.FRAG_BUFFERED, (_event, {frag}) => {
+      if (frag.level === 0) {
+        setLowQualityFragments(prev => [...prev, frag])
+      }
     })
 
     hls.on(Hls.Events.ERROR, (_event, data) => {
@@ -97,61 +85,47 @@ export function VideoEmbedInnerWeb({
     }
   }, [embed.playlist])
 
-  const hasLowQualitySegments = bufferedFragments.some(frag => frag.level === 0)
-
-  // purge low quality segments from buffer
+  // purge low quality segments from buffer on next frag change
   useEffect(() => {
     if (!hlsRef.current) return
-    if (focused) {
-      if (hasLowQualitySegments) {
-        hlsRef.current.config.backBufferLength = 5
-      } else {
-        hlsRef.current.config.backBufferLength = Infinity
-      }
 
-      let interval = setInterval(() => {
-        if (!videoRef.current) return
-        if (videoRef.current.buffered.length > 0) {
-          const buffered = videoRef.current.buffered
-          const knownBufferedTimes: {start: number; end: number}[] = []
-          for (let i = 0; i < buffered.length; i++) {
-            knownBufferedTimes.push({
-              start: buffered.start(i),
-              end: buffered.end(i),
+    if (focused) {
+      function fragChanged(
+        _event: Events.FRAG_CHANGED,
+        {frag}: FragChangedData,
+      ) {
+        if (!hlsRef.current) return
+
+        // if the current quality level goes above 0, flush the low quality segments
+        if (hlsRef.current.nextAutoLevel > 0) {
+          const flushed: Fragment[] = []
+
+          for (const lowQualFrag of lowQualityFragments) {
+            // avoid if close to the current fragment
+            if (Math.abs(frag.start - lowQualFrag.start) < 0.1) {
+              return
+            }
+
+            hlsRef.current.trigger(Hls.Events.BUFFER_FLUSHING, {
+              startOffset: lowQualFrag.start,
+              endOffset: lowQualFrag.end,
+              type: 'video',
             })
+
+            flushed.push(lowQualFrag)
           }
 
-          setBufferedFragments(buffered => [
-            ...buffered.filter(frag => {
-              // if the buffered fragment is not in the known buffered times, it's been evicted
-              // and we should remove it from the bufferedFragments array
-              // however, the web API groups buffered times together, so we need to do intersection checks
-              for (let i = 0; i < knownBufferedTimes.length; i++) {
-                if (
-                  knownBufferedTimes[i].start <= frag.start &&
-                  knownBufferedTimes[i].end >= frag.end
-                ) {
-                  return false
-                }
-
-                if (
-                  knownBufferedTimes[i].start >= frag.start &&
-                  knownBufferedTimes[i].end <= frag.end
-                ) {
-                  return false
-                }
-              }
-              return true
-            }),
-          ])
+          setLowQualityFragments(prev => prev.filter(f => !flushed.includes(f)))
         }
-      }, 1000)
+      }
+      hlsRef.current.on(Hls.Events.FRAG_CHANGED, fragChanged)
 
+      const current = hlsRef.current
       return () => {
-        clearInterval(interval)
+        current.off(Hls.Events.FRAG_CHANGED, fragChanged)
       }
     }
-  }, [focused, hasLowQualitySegments])
+  }, [focused, lowQualityFragments])
 
   return (
     <View style={[a.flex_1, a.rounded_sm, a.overflow_hidden]}>
