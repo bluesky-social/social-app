@@ -1,7 +1,7 @@
 import React, {useEffect, useId, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {AppBskyEmbedVideo} from '@atproto/api'
-import Hls from 'hls.js'
+import type Hls from 'hls.js'
 
 import {atoms as a} from '#/alf'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
@@ -22,6 +22,7 @@ export function VideoEmbedInnerWeb({
   const ref = useRef<HTMLVideoElement>(null)
   const [focused, setFocused] = useState(false)
   const [hasSubtitleTrack, setHasSubtitleTrack] = useState(false)
+  const [hlsLoading, setHlsLoading] = React.useState(false)
   const figId = useId()
 
   // send error up to error boundary
@@ -33,47 +34,57 @@ export function VideoEmbedInnerWeb({
   const hlsRef = useRef<Hls | undefined>(undefined)
 
   useEffect(() => {
-    if (!ref.current) return
-    if (!Hls.isSupported()) throw new HLSUnsupportedError()
-
-    const hls = new Hls({
-      capLevelToPlayerSize: true,
-      maxMaxBufferLength: 10, // only load 10s ahead
-      // note: the amount buffered is affected by both maxBufferLength and maxBufferSize
-      // it will buffer until it it's greater than *both* of those values
-      // so we use maxMaxBufferLength to set the actual maximum amount of buffering instead
-    })
-    hlsRef.current = hls
-
-    hls.attachMedia(ref.current)
-    hls.loadSource(embed.playlist)
-
-    // initial value, later on it's managed by Controls
-    hls.autoLevelCapping = 0
-
-    hls.on(Hls.Events.SUBTITLE_TRACKS_UPDATED, (_event, data) => {
-      if (data.subtitleTracks.length > 0) {
-        setHasSubtitleTrack(true)
-      }
-    })
-
-    hls.on(Hls.Events.ERROR, (_event, data) => {
-      if (data.fatal) {
-        if (
-          data.details === 'manifestLoadError' &&
-          data.response?.code === 404
-        ) {
-          setError(new VideoNotFoundError())
-        } else {
-          setError(data.error)
+    let hls: Hls | undefined
+    // @ts-expect-error - dynamic import
+    import('hls.js/dist/hls.min').then(
+      ({default: DynamicHls}: {default: typeof Hls}) => {
+        setHlsLoading(false)
+        if (!DynamicHls.isSupported()) {
+          throw new HLSUnsupportedError()
         }
-      }
-    })
+        hls = new DynamicHls({
+          capLevelToPlayerSize: true,
+          maxMaxBufferLength: 10, // only load 10s ahead
+          // note: the amount buffered is affected by both maxBufferLength and maxBufferSize
+          // it will buffer until it it's greater than *both* of those values
+          // so we use maxMaxBufferLength to set the actual maximum amount of buffering instead
+        })
+        if (!ref.current) return
+
+        if (!hls) return
+        hlsRef.current = hls
+
+        hls.attachMedia(ref.current)
+        hls.loadSource(embed.playlist)
+
+        // initial value, later on it's managed by Controls
+        hls.autoLevelCapping = 0
+
+        hls.on(DynamicHls.Events.SUBTITLE_TRACKS_UPDATED, (_event, data) => {
+          if (data.subtitleTracks.length > 0) {
+            setHasSubtitleTrack(true)
+          }
+        })
+
+        hls.on(DynamicHls.Events.ERROR, (_event, data) => {
+          if (data.fatal) {
+            if (
+              data.details === 'manifestLoadError' &&
+              data.response?.code === 404
+            ) {
+              setError(new VideoNotFoundError())
+            } else {
+              setError(data.error)
+            }
+          }
+        })
+      },
+    )
 
     return () => {
       hlsRef.current = undefined
-      hls.detachMedia()
-      hls.destroy()
+      hls?.detachMedia()
+      hls?.destroy()
     }
   }, [embed.playlist])
 
@@ -116,6 +127,7 @@ export function VideoEmbedInnerWeb({
           setActive={setActive}
           focused={focused}
           setFocused={setFocused}
+          hlsLoading={hlsLoading}
           onScreen={onScreen}
           fullscreenRef={containerRef}
           hasSubtitleTrack={hasSubtitleTrack}
