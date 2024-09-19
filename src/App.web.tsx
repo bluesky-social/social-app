@@ -144,13 +144,13 @@ function InnerApp() {
 
 function App() {
   const [isReady, setReady] = useState(false)
-  const [loaded] = useFonts()
+  const [loaded, error] = useFonts()
 
   React.useEffect(() => {
     initPersistedState().then(() => setReady(true))
   }, [])
 
-  if (!isReady || !loaded) {
+  if (!isReady || (!loaded && !error)) {
     return null
   }
 
