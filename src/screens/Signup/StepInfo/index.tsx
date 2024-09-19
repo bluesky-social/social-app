@@ -56,11 +56,9 @@ export function StepInfo({
   const tldtsRef = React.useRef<typeof tldts>()
   React.useEffect(() => {
     // @ts-expect-error - valid path
-    import('../../../../node_modules/tldts/dist/index.cjs.min.js').then(
-      tldts => {
-        tldtsRef.current = tldts
-      },
-    )
+    import('tldts/dist/index.cjs.min.js').then(tldts => {
+      tldtsRef.current = tldts
+    })
   }, [])
 
   const onNextPress = () => {
