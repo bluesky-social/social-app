@@ -304,8 +304,8 @@ export function ExternalPlayer({
 
 const styles = StyleSheet.create({
   topRadius: {
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
+    borderTopLeftRadius: a.rounded_md.borderRadius,
+    borderTopRightRadius: a.rounded_md.borderRadius,
   },
   overlayContainer: {
     flex: 1,
@@ -319,8 +319,8 @@ const styles = StyleSheet.create({
     zIndex: 3,
   },
   webview: {
-    borderTopRightRadius: 8,
-    borderTopLeftRadius: 8,
+    borderTopRightRadius: a.rounded_md.borderRadius,
+    borderTopLeftRadius: a.rounded_md.borderRadius,
     backgroundColor: 'transparent',
   },
   gifContainer: {

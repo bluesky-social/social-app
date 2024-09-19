@@ -40,11 +40,11 @@ export function VideoEmbed({embed}: Props) {
     <View
       style={[
         a.w_full,
-        a.rounded_sm,
+        a.rounded_md,
         a.overflow_hidden,
         {aspectRatio},
         {backgroundColor: 'black'},
-        a.my_xs,
+        a.mt_xs,
       ]}>
       <ErrorBoundary renderError={renderError} key={key}>
         <InnerWrapper embed={embed} />

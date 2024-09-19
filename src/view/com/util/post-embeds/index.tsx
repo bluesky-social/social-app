@@ -138,7 +138,7 @@ export function PostEmbeds({
         const image = images[0]
         return (
           <ContentHider modui={moderation?.ui('contentMedia')}>
-            <View style={[styles.container, style]}>
+            <View style={[a.mt_sm, style]}>
               <AutoSizedImage
                 crop={
                   viewContext === PostEmbedViewContext.ThreadHighlighted
@@ -162,7 +162,7 @@ export function PostEmbeds({
 
       return (
         <ContentHider modui={moderation?.ui('contentMedia')}>
-          <View style={[styles.container, style]}>
+          <View style={[a.mt_sm, style]}>
             <ImageLayoutGrid
               images={embed.images}
               onPress={_openLightbox}
@@ -184,7 +184,7 @@ export function PostEmbeds({
         <ExternalLinkEmbed
           link={link}
           onOpen={onOpen}
-          style={[styles.container, style]}
+          style={[a.mt_sm, style]}
         />
       </ContentHider>
     )
@@ -247,9 +247,6 @@ function MaybeListCard({view}: {view: AppBskyGraphDefs.ListView}) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginTop: 8,
-  },
   altContainer: {
     backgroundColor: 'rgba(0, 0, 0, 0.75)',
     borderRadius: 6,
