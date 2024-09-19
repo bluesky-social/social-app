@@ -265,8 +265,9 @@ export const TextInput = React.forwardRef(function TextInputImpl(
      *
      * `lineHeight` should always be defined here, this is defensive.
      */
-    // @ts-ignore
-    style.lineHeight = style.lineHeight ? (style.lineHeight += 'px') : undefined
+    style.lineHeight = style.lineHeight
+      ? ((style.lineHeight + 'px') as unknown as number)
+      : undefined
     return style
   }, [t, fonts])
 
