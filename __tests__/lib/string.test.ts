@@ -1,5 +1,7 @@
 import {RichText} from '@atproto/api'
+import tldts from 'tldts'
 
+import {emailTypoCheck} from 'lib/strings/email-typo'
 import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
 import {
   createStarterPackGooglePlayUri,
@@ -984,4 +986,84 @@ describe('createStarterPackGooglePlayUri', () => {
     // @ts-expect-error test
     expect(createStarterPackGooglePlayUri(undefined, 'rkey')).toEqual(null)
   })
+})
+
+describe('emailTypoChecker', () => {
+  const invalidCases = [
+    'gnail.com',
+    'gnail.co',
+    'gmaill.com',
+    'gmaill.co',
+    'gmai.com',
+    'gmai.co',
+    'gmal.com',
+    'gmal.co',
+    'gmail.co',
+    'iclod.com',
+    'iclod.co',
+    'outllok.com',
+    'outllok.co',
+    'outlook.co',
+    'yaoo.com',
+    'yaoo.co',
+    'yaho.com',
+    'yaho.co',
+    'yahooo.com',
+    'yahooo.co',
+    'yahoo.co',
+    'hithere.jul',
+    'agpowj.notshop',
+    'thisisnot.avalid.tld.nope',
+    // old tld for czechoslovakia
+    'czechoslovakia.cs',
+    // tlds that cbs was registering in 2024 but cancelled
+    'liveon.cbs',
+    'its.showtime',
+  ]
+  const validCases = [
+    'gmail.com',
+    'outlook.com',
+    'yahoo.com',
+    'icloud.com',
+    'firefox.com',
+    'firefox.co',
+    'hello.world.com',
+    'buy.me.a.coffee.shop',
+    'mayotte.yt',
+    'aland.ax',
+    'bouvet.bv',
+    'uk.gb',
+    'chad.td',
+    'somalia.so',
+    'plane.aero',
+    'cute.cat',
+    'together.coop',
+    'findme.jobs',
+    'nightatthe.museum',
+    'industrial.mil',
+    'czechrepublic.cz',
+    'lovakia.sk',
+    // new gtlds in 2024
+    'whatsinyour.locker',
+    'letsmakea.deal',
+    'skeet.now',
+    'everyone.みんな',
+    'bourgeois.lifestyle',
+    'california.living',
+    'skeet.ing',
+    'listeningto.music',
+    'createa.meme',
+  ]
+
+  for (const domain of invalidCases) {
+    it(`returns true when calling emailTypoCheck for abcde@${domain}`, () => {
+      expect(emailTypoCheck(`abcde@${domain}`, tldts)).toEqual(true)
+    })
+  }
+
+  for (const domain of validCases) {
+    it(`returns false when calling emailTypoCheck for abcde@${domain}`, () => {
+      expect(emailTypoCheck(`abcde@${domain}`, tldts)).toEqual(false)
+    })
+  }
 })

@@ -7,6 +7,7 @@ import type tldts from 'tldts'
 
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
+import {emailTypoCheck} from 'lib/strings/email-typo'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {is13, is18, useSignupContext} from '#/screens/Signup/state'
 import {Policies} from '#/screens/Signup/StepInfo/Policies'
@@ -31,9 +32,6 @@ function sanitizeDate(date: Date): Date {
   return date
 }
 
-const COMMON_ERROR_PATTERN =
-  /\b([a-zA-Z0-9._%+-]+)@(gnail\.com|gmaill\.com|gmai\.com|gmail\.co|gmal\.com|iclod\.com|icloud\.co|outllok\.com|outlok\.com|outlook\.co|yaoo\.com|yaho\.com|yahoo\.co|yahooo\.com)\b/
-
 export function StepInfo({
   onPressBack,
   isServerError,
@@ -50,6 +48,7 @@ export function StepInfo({
 
   const inviteCodeValueRef = useRef<string>(state.inviteCode)
   const emailValueRef = useRef<string>(state.email)
+  const prevEmailValueRef = useRef<string>(state.email)
   const passwordValueRef = useRef<string>(state.password)
 
   const [hasWarnedEmail, setHasWarnedEmail] = React.useState<boolean>(false)
@@ -67,11 +66,12 @@ export function StepInfo({
   const onNextPress = () => {
     const inviteCode = inviteCodeValueRef.current
     const email = emailValueRef.current
+    const emailChanged = prevEmailValueRef.current !== email
     const password = passwordValueRef.current
 
-    if (!hasWarnedEmail && tldtsRef.current) {
-      const isIcann = tldtsRef.current.parse(email).isIcann
-      if (!isIcann || COMMON_ERROR_PATTERN.test(email)) {
+    if (emailChanged && tldtsRef.current) {
+      if (emailTypoCheck(email, tldtsRef.current)) {
+        prevEmailValueRef.current = email
         setHasWarnedEmail(true)
         return dispatch({
           type: 'setError',
@@ -83,6 +83,7 @@ export function StepInfo({
     } else if (hasWarnedEmail) {
       setHasWarnedEmail(false)
     }
+    prevEmailValueRef.current = email
 
     if (!is13(state.dateOfBirth)) {
       return
