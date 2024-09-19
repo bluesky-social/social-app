@@ -57,7 +57,6 @@ import * as Toast from '#/view/com/util/Toast'
 import {Shell} from '#/view/shell'
 import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
-import {useFonts} from '#/alf/util/useFonts'
 import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
@@ -154,13 +153,12 @@ function InnerApp() {
 
 function App() {
   const [isReady, setReady] = useState(false)
-  const [loaded] = useFonts()
 
   React.useEffect(() => {
     initPersistedState().then(() => setReady(true))
   }, [])
 
-  if (!isReady || !loaded) {
+  if (!isReady) {
     return null
   }
 
