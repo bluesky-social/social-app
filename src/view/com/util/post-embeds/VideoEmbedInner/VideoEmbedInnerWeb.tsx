@@ -19,7 +19,7 @@ export function VideoEmbedInnerWeb({
   onScreen: boolean
 }) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const ref = useRef<HTMLVideoElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
   const [focused, setFocused] = useState(false)
   const [hasSubtitleTrack, setHasSubtitleTrack] = useState(false)
   const figId = useId()
@@ -32,12 +32,19 @@ export function VideoEmbedInnerWeb({
 
   const hlsRef = useRef<Hls | undefined>(undefined)
 
+  const [bufferedFragments, setBufferedFragments] = useState<
+    {
+      start: number
+      end: number
+      level: number
+    }[]
+  >([])
+
   useEffect(() => {
-    if (!ref.current) return
+    if (!videoRef.current) return
     if (!Hls.isSupported()) throw new HLSUnsupportedError()
 
     const hls = new Hls({
-      capLevelToPlayerSize: true,
       maxMaxBufferLength: 10, // only load 10s ahead
       // note: the amount buffered is affected by both maxBufferLength and maxBufferSize
       // it will buffer until it it's greater than *both* of those values
@@ -45,7 +52,7 @@ export function VideoEmbedInnerWeb({
     })
     hlsRef.current = hls
 
-    hls.attachMedia(ref.current)
+    hls.attachMedia(videoRef.current)
     hls.loadSource(embed.playlist)
 
     // initial value, later on it's managed by Controls
@@ -55,6 +62,17 @@ export function VideoEmbedInnerWeb({
       if (data.subtitleTracks.length > 0) {
         setHasSubtitleTrack(true)
       }
+    })
+
+    hls.on(Hls.Events.FRAG_BUFFERED, (_event, data) => {
+      setBufferedFragments(buffered => [
+        ...buffered.filter(frag => frag.start !== data.frag.start),
+        {
+          start: data.frag.start,
+          end: data.frag.end,
+          level: data.frag.level,
+        },
+      ])
     })
 
     hls.on(Hls.Events.ERROR, (_event, data) => {
@@ -67,6 +85,8 @@ export function VideoEmbedInnerWeb({
         } else {
           setError(data.error)
         }
+      } else {
+        console.error(data.error)
       }
     })
 
@@ -77,12 +97,68 @@ export function VideoEmbedInnerWeb({
     }
   }, [embed.playlist])
 
+  const hasLowQualitySegments = bufferedFragments.some(frag => frag.level === 0)
+
+  // purge low quality segments from buffer
+  useEffect(() => {
+    if (!hlsRef.current) return
+    if (focused) {
+      if (hasLowQualitySegments) {
+        hlsRef.current.config.backBufferLength = 5
+      } else {
+        hlsRef.current.config.backBufferLength = Infinity
+      }
+
+      let interval = setInterval(() => {
+        if (!videoRef.current) return
+        if (videoRef.current.buffered.length > 0) {
+          const buffered = videoRef.current.buffered
+          const knownBufferedTimes: {start: number; end: number}[] = []
+          for (let i = 0; i < buffered.length; i++) {
+            knownBufferedTimes.push({
+              start: buffered.start(i),
+              end: buffered.end(i),
+            })
+          }
+
+          setBufferedFragments(buffered => [
+            ...buffered.filter(frag => {
+              // if the buffered fragment is not in the known buffered times, it's been evicted
+              // and we should remove it from the bufferedFragments array
+              // however, the web API groups buffered times together, so we need to do intersection checks
+              for (let i = 0; i < knownBufferedTimes.length; i++) {
+                if (
+                  knownBufferedTimes[i].start <= frag.start &&
+                  knownBufferedTimes[i].end >= frag.end
+                ) {
+                  return false
+                }
+
+                if (
+                  knownBufferedTimes[i].start >= frag.start &&
+                  knownBufferedTimes[i].end <= frag.end
+                ) {
+                  return false
+                }
+              }
+              return true
+            }),
+          ])
+        }
+      }, 1000)
+
+      return () => {
+        clearInterval(interval)
+      }
+    }
+  }, [focused, hasLowQualitySegments])
+
   return (
     <View style={[a.flex_1, a.rounded_sm, a.overflow_hidden]}>
       <div ref={containerRef} style={{height: '100%', width: '100%'}}>
         <figure style={{margin: 0, position: 'absolute', inset: 0}}>
           <video
-            ref={ref}
+            ref={videoRef}
             poster={embed.thumbnail}
             style={{width: '100%', height: '100%', objectFit: 'contain'}}
             playsInline
@@ -110,7 +186,7 @@ export function VideoEmbedInnerWeb({
           )}
         </figure>
         <Controls
-          videoRef={ref}
+          videoRef={videoRef}
           hlsRef={hlsRef}
           active={active}
           setActive={setActive}
