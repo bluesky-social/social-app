@@ -49,19 +49,18 @@ export function NeueTypography() {
         <View style={[a.gap_xl]}>
           <View style={[a.gap_md]}>
             <Text style={[a.text_3xl, {fontWeight: '900'}]}>
-              <Trans>Introducing new font settings ✨</Trans>
+              <Trans>New font settings ✨</Trans>
             </Text>
-            <Text style={[a.text_lg, a.leading_snug]}>
+            <Text style={[a.text_lg, a.leading_snug, {maxWidth: 400}]}>
               <Trans>
-                To ensure the best possible experience, we're introducing a new
-                theme font, along with adjustable font sizing settings.
+                We're introducing a new theme font, along with adjustable font
+                sizing.
               </Trans>
             </Text>
             <Text
               style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
               <Trans>
-                Defaults are shown below. You can edit these in your Appearance
-                Settings later.
+                You can adjust these in your Appearance Settings later.
               </Trans>
             </Text>
           </View>
