@@ -67,7 +67,6 @@ export function StepInfo({
     const password = passwordValueRef.current
 
     if (!hasWarnedEmail && tldtsRef.current) {
-      console.log(tldtsRef.current)
       const isIcann = tldtsRef.current.parse(email).isIcann
       if (!isIcann) {
         setHasWarnedEmail(true)
