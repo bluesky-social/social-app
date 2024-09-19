@@ -3,27 +3,23 @@ import zod from 'zod'
 import {BaseNux} from '#/state/queries/nuxs/types'
 
 export enum Nux {
-  One = 'one',
-  Two = 'two',
+  TenMillionDialog = 'TenMillionDialog',
+  NeueTypography = 'NeueTypography',
 }
 
 export const nuxNames = new Set(Object.values(Nux))
 
 export type AppNux =
   | BaseNux<{
-      id: Nux.One
-      data: {
-        likes: number
-      }
+      id: Nux.TenMillionDialog
+      data: undefined
     }>
   | BaseNux<{
-      id: Nux.Two
+      id: Nux.NeueTypography
       data: undefined
     }>
 
-export const NuxSchemas = {
-  [Nux.One]: zod.object({
-    likes: zod.number(),
-  }),
-  [Nux.Two]: undefined,
+export const NuxSchemas: Record<Nux, zod.ZodObject<any> | undefined> = {
+  [Nux.TenMillionDialog]: undefined,
+  [Nux.NeueTypography]: undefined,
 }

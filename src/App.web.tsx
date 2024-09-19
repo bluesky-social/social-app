@@ -35,17 +35,20 @@ import {
 } from '#/state/session'
 import {readLastActiveAccount} from '#/state/session/util'
 import {Provider as ShellStateProvider} from '#/state/shell'
+import {useComposerKeyboardShortcut} from '#/state/shell/composer/useComposerKeyboardShortcut'
 import {Provider as LoggedOutViewProvider} from '#/state/shell/logged-out'
 import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
 import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
 import {Provider as HiddenRepliesProvider} from '#/state/threadgate-hidden-replies'
 import {Provider as ActiveVideoProvider} from '#/view/com/util/post-embeds/ActiveVideoWebContext'
+import {Provider as VideoVolumeProvider} from '#/view/com/util/post-embeds/VideoVolumeContext'
 import * as Toast from '#/view/com/util/Toast'
 import {ToastContainer} from '#/view/com/util/Toast.web'
 import {Shell} from '#/view/shell/index'
-import {ThemeProvider as Alf} from '#/alf'
+import {ThemeProvider as Alf, useFonts} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
+import {NuxDialogs} from '#/components/dialogs/nuxs'
 import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
 import {Provider as PortalProvider} from '#/components/Portal'
@@ -59,6 +62,8 @@ function InnerApp() {
   const {_} = useLingui()
   useIntentHandler()
   const hasCheckedReferrer = useStarterPackEntry()
+
+  useComposerKeyboardShortcut()
 
   // init
   useEffect(() => {
@@ -91,15 +96,15 @@ function InnerApp() {
 
   return (
     <KeyboardProvider enabled={false}>
-      <Alf theme={theme}>
-        <ThemeProvider theme={theme}>
-          <RootSiblingParent>
-            <ActiveVideoProvider>
-              <React.Fragment
-                // Resets the entire tree below when it changes:
-                key={currentAccount?.did}>
-                <QueryProvider currentDid={currentAccount?.did}>
-                  <StatsigProvider>
+      <StatsigProvider
+        // Resets the entire tree below when it changes:
+        key={currentAccount?.did}>
+        <Alf theme={theme}>
+          <ThemeProvider theme={theme}>
+            <RootSiblingParent>
+              <VideoVolumeProvider>
+                <ActiveVideoProvider>
+                  <QueryProvider currentDid={currentAccount?.did}>
                     <MessagesProvider>
                       {/* LabelDefsProvider MUST come before ModerationOptsProvider */}
                       <LabelDefsProvider>
@@ -113,6 +118,7 @@ function InnerApp() {
                                       <SafeAreaProvider>
                                         <ProgressGuideProvider>
                                           <Shell />
+                                          <NuxDialogs />
                                         </ProgressGuideProvider>
                                       </SafeAreaProvider>
                                     </MutedThreadsProvider>
@@ -124,26 +130,27 @@ function InnerApp() {
                         </ModerationOptsProvider>
                       </LabelDefsProvider>
                     </MessagesProvider>
-                  </StatsigProvider>
-                </QueryProvider>
-              </React.Fragment>
-              <ToastContainer />
-            </ActiveVideoProvider>
-          </RootSiblingParent>
-        </ThemeProvider>
-      </Alf>
+                  </QueryProvider>
+                  <ToastContainer />
+                </ActiveVideoProvider>
+              </VideoVolumeProvider>
+            </RootSiblingParent>
+          </ThemeProvider>
+        </Alf>
+      </StatsigProvider>
     </KeyboardProvider>
   )
 }
 
 function App() {
   const [isReady, setReady] = useState(false)
+  const [loaded] = useFonts()
 
   React.useEffect(() => {
     initPersistedState().then(() => setReady(true))
   }, [])
 
-  if (!isReady) {
+  if (!isReady || !loaded) {
     return null
   }
 

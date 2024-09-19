@@ -55,6 +55,7 @@ module.exports = function (config) {
     : undefined
   const UPDATES_ENABLED = !!UPDATES_CHANNEL
 
+  const USE_SENTRY = Boolean(process.env.SENTRY_AUTH_TOKEN)
   const SENTRY_DIST = `${PLATFORM}.${VERSION}.${IS_TESTFLIGHT ? 'tf' : ''}${
     IS_DEV ? 'dev' : ''
   }`
@@ -186,7 +187,15 @@ module.exports = function (config) {
       },
       plugins: [
         'expo-localization',
-        Boolean(process.env.SENTRY_AUTH_TOKEN) && 'sentry-expo',
+        USE_SENTRY && [
+          '@sentry/react-native/expo',
+          {
+            organization: 'blueskyweb',
+            project: 'react-native',
+            release: VERSION,
+            dist: SENTRY_DIST,
+          },
+        ],
         [
           'expo-build-properties',
           {
@@ -211,7 +220,6 @@ module.exports = function (config) {
             sounds: PLATFORM === 'ios' ? ['assets/dm.aiff'] : ['assets/dm.mp3'],
           },
         ],
-        'expo-video',
         'react-native-compressor',
         './plugins/starterPackAppClipExtension/withStarterPackAppClip.js',
         './plugins/withAndroidManifestPlugin.js',
@@ -222,6 +230,31 @@ module.exports = function (config) {
         './plugins/shareExtension/withShareExtensions.js',
         './plugins/notificationsExtension/withNotificationsExtension.js',
         './plugins/withAppDelegateReferrer.js',
+        [
+          'expo-font',
+          {
+            fonts: [
+              // './assets/fonts/inter/Inter-Thin.otf',
+              // './assets/fonts/inter/Inter-ThinItalic.otf',
+              // './assets/fonts/inter/Inter-ExtraLight.otf',
+              // './assets/fonts/inter/Inter-ExtraLightItalic.otf',
+              // './assets/fonts/inter/Inter-Light.otf',
+              // './assets/fonts/inter/Inter-LightItalic.otf',
+              './assets/fonts/inter/Inter-Regular.otf',
+              './assets/fonts/inter/Inter-Italic.otf',
+              './assets/fonts/inter/Inter-Medium.otf',
+              './assets/fonts/inter/Inter-MediumItalic.otf',
+              './assets/fonts/inter/Inter-SemiBold.otf',
+              './assets/fonts/inter/Inter-SemiBoldItalic.otf',
+              './assets/fonts/inter/Inter-Bold.otf',
+              './assets/fonts/inter/Inter-BoldItalic.otf',
+              './assets/fonts/inter/Inter-ExtraBold.otf',
+              './assets/fonts/inter/Inter-ExtraBoldItalic.otf',
+              './assets/fonts/inter/Inter-Black.otf',
+              './assets/fonts/inter/Inter-BlackItalic.otf',
+            ],
+          },
+        ],
       ].filter(Boolean),
       extra: {
         eas: {
@@ -264,7 +297,7 @@ module.exports = function (config) {
            * @see https://docs.expo.dev/guides/using-sentry/#app-configuration
            */
           {
-            file: 'sentry-expo/upload-sourcemaps',
+            file: './postHooks/uploadSentrySourcemapsPostHook',
             config: {
               organization: 'blueskyweb',
               project: 'react-native',

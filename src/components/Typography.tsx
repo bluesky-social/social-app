@@ -3,7 +3,7 @@ import {StyleProp, TextProps as RNTextProps, TextStyle} from 'react-native'
 import {UITextView} from 'react-native-uitextview'
 
 import {isNative} from '#/platform/detection'
-import {atoms, flatten, useTheme, web} from '#/alf'
+import {Alf, applyFonts, atoms, flatten, useAlf, useTheme, web} from '#/alf'
 
 export type TextProps = RNTextProps & {
   /**
@@ -34,18 +34,29 @@ export function leading<
  * If the `lineHeight` value is > 2, we assume it's an absolute value and
  * returns it as-is.
  */
-export function normalizeTextStyles(styles: StyleProp<TextStyle>) {
+export function normalizeTextStyles(
+  styles: StyleProp<TextStyle>,
+  {
+    fontScale,
+    fontFamily,
+  }: {
+    fontScale: number
+    fontFamily: Alf['fonts']['family']
+  } & Pick<Alf, 'flags'>,
+) {
   const s = flatten(styles)
   // should always be defined on these components
-  const fontSize = s.fontSize || atoms.text_md.fontSize
+  s.fontSize = (s.fontSize || atoms.text_md.fontSize) * fontScale
 
   if (s?.lineHeight) {
     if (s.lineHeight !== 0 && s.lineHeight <= 2) {
-      s.lineHeight = Math.round(fontSize * s.lineHeight)
+      s.lineHeight = Math.round(s.fontSize * s.lineHeight)
     }
   } else if (!isNative) {
     s.lineHeight = s.fontSize
   }
+
+  applyFonts(s, fontFamily)
 
   return s
 }
@@ -54,8 +65,13 @@ export function normalizeTextStyles(styles: StyleProp<TextStyle>) {
  * Our main text component. Use this most of the time.
  */
 export function Text({style, selectable, ...rest}: TextProps) {
+  const {fonts, flags} = useAlf()
   const t = useTheme()
-  const s = normalizeTextStyles([atoms.text_sm, t.atoms.text, flatten(style)])
+  const s = normalizeTextStyles([atoms.text_sm, t.atoms.text, flatten(style)], {
+    fontScale: fonts.scaleMultiplier,
+    fontFamily: fonts.family,
+    flags,
+  })
 
   return <UITextView selectable={selectable} uiTextView style={s} {...rest} />
 }
