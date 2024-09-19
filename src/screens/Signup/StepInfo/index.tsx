@@ -31,6 +31,9 @@ function sanitizeDate(date: Date): Date {
   return date
 }
 
+const COMMON_ERROR_PATTERN =
+  /\b([a-zA-Z0-9._%+-]+)@(gnail\.com|gmaill\.com|gmai\.com|gmail\.co|gmal\.com|iclod\.com|icloud\.co|outllok\.com|outlok\.com|outlook\.co|yaoo\.com|yaho\.com|yahoo\.co|yahooo\.com)\b/
+
 export function StepInfo({
   onPressBack,
   isServerError,
@@ -68,7 +71,7 @@ export function StepInfo({
 
     if (!hasWarnedEmail && tldtsRef.current) {
       const isIcann = tldtsRef.current.parse(email).isIcann
-      if (!isIcann) {
+      if (!isIcann || COMMON_ERROR_PATTERN.test(email)) {
         setHasWarnedEmail(true)
         return dispatch({
           type: 'setError',
