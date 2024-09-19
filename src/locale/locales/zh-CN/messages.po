@@ -3554,10 +3554,6 @@ msgstr "误导性账户"
 msgid "Misleading Post"
 msgstr "误导性帖文"
 
-#: src/screens/Settings/AppearanceSettings.tsx:78
-#~ msgid "Mode"
-#~ msgstr "模式"
-
 #: src/Navigation.tsx:135
 #: src/screens/Moderation/index.tsx:105
 #: src/view/screens/Settings/index.tsx:527
