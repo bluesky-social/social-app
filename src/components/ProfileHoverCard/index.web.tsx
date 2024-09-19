@@ -411,7 +411,7 @@ function Inner({
     () => currentAccount?.did === profile.did,
     [currentAccount, profile],
   )
-  const isLabeler = React.useMemo(() => profile.associated?.labeler, [profile])
+  const isLabeler = profile.associated?.labeler
 
   return (
     <View>
