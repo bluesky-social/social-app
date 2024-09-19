@@ -26,12 +26,13 @@ import {isUriImage} from 'lib/media/util'
 import {cleanError} from 'lib/strings/errors'
 import {getMentionAt, insertMentionAt} from 'lib/strings/mention-manip'
 import {useTheme} from 'lib/ThemeContext'
-import {isIOS} from 'platform/detection'
 import {
   LinkFacetMatch,
   suggestLinkCardUri,
 } from 'view/com/composer/text-input/text-input-util'
 import {Text} from 'view/com/util/text/Text'
+import {atoms as a, useAlf} from '#/alf'
+import {normalizeTextStyles} from '#/components/Typography'
 import {Autocomplete} from './mobile/Autocomplete'
 
 export interface TextInputRef {
@@ -67,6 +68,7 @@ export const TextInput = forwardRef(function TextInputImpl(
   }: TextInputProps,
   ref,
 ) {
+  const {theme: t, fonts} = useAlf()
   const pal = usePalette('default')
   const textInput = useRef<PasteInputRef>(null)
   const textInputSelection = useRef<Selection>({start: 0, end: 0})
@@ -180,6 +182,14 @@ export const TextInput = forwardRef(function TextInputImpl(
     [onChangeText, richtext, setAutocompletePrefix],
   )
 
+  const inputTextStyle = React.useMemo(() => {
+    return normalizeTextStyles([a.text_lg, a.leading_snug, t.atoms.text], {
+      fontScale: fonts.scaleMultiplier,
+      fontFamily: fonts.family,
+      flags: {},
+    })
+  }, [t, fonts])
+
   const textDecorated = useMemo(() => {
     let i = 0
 
@@ -187,15 +197,12 @@ export const TextInput = forwardRef(function TextInputImpl(
       return (
         <Text
           key={i++}
-          style={[
-            segment.facet ? pal.link : pal.text,
-            styles.textInputFormatting,
-          ]}>
+          style={[inputTextStyle, segment.facet ? pal.link : pal.text]}>
           {segment.text}
         </Text>
       )
     })
-  }, [richtext, pal.link, pal.text])
+  }, [richtext, pal.link, pal.text, inputTextStyle])
 
   return (
     <View style={styles.container}>
@@ -213,12 +220,7 @@ export const TextInput = forwardRef(function TextInputImpl(
         multiline
         scrollEnabled={false}
         numberOfLines={4}
-        style={[
-          pal.text,
-          styles.textInput,
-          styles.textInputFormatting,
-          {textAlignVertical: 'top'},
-        ]}
+        style={[inputTextStyle, styles.textInput, {textAlignVertical: 'top'}]}
         {...props}>
         {textDecorated}
       </PasteInput>
@@ -241,12 +243,5 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     marginLeft: 8,
     alignSelf: 'flex-start',
-  },
-  textInputFormatting: {
-    fontSize: 18,
-    letterSpacing: 0.2,
-    fontWeight: '400',
-    // This is broken on ios right now, so don't set it there.
-    lineHeight: isIOS ? undefined : 23.4, // 1.3*16
   },
 })
