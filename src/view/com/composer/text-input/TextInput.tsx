@@ -19,6 +19,7 @@ import PasteInput, {
   PasteInputRef,
 } from '@mattermost/react-native-paste-input'
 
+import {isAndroid} from '#/platform/detection'
 import {POST_IMG_MAX} from 'lib/constants'
 import {usePalette} from 'lib/hooks/usePalette'
 import {downloadAndResize} from 'lib/media/manip'
@@ -183,11 +184,30 @@ export const TextInput = forwardRef(function TextInputImpl(
   )
 
   const inputTextStyle = React.useMemo(() => {
-    return normalizeTextStyles([a.text_lg, a.leading_snug, t.atoms.text], {
-      fontScale: fonts.scaleMultiplier,
-      fontFamily: fonts.family,
-      flags: {},
-    })
+    const style = normalizeTextStyles(
+      [a.text_xl, a.leading_snug, t.atoms.text],
+      {
+        fontScale: fonts.scaleMultiplier,
+        fontFamily: fonts.family,
+        flags: {},
+      },
+    )
+
+    /*
+     * `PasteInput` appears to prefer no `lineHeight`
+     */
+    style.lineHeight = undefined
+
+    /*
+     * Android impl of `PasteInput` doesn't support the array syntax for `fontVariant`
+     */
+    if (isAndroid) {
+      // @ts-ignore
+      style.fontVariant = style.fontVariant
+        ? style.fontVariant.join(' ')
+        : undefined
+    }
+    return style
   }, [t, fonts])
 
   const textDecorated = useMemo(() => {

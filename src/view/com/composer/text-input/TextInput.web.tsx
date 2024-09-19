@@ -259,16 +259,21 @@ export const TextInput = React.forwardRef(function TextInputImpl(
         flags: {},
       },
     )
-    // TipTap component isn't a RN View, need to convert some props - esb
+    /*
+     * TipTap component isn't a RN View and while it seems to convert
+     * `fontSize` to `px`, it doesn't convert `lineHeight`.
+     *
+     * `lineHeight` should always be defined here, this is defensive.
+     */
     // @ts-ignore
-    style.lineHeight = style.lineHeight += 'px'
+    style.lineHeight = style.lineHeight ? (style.lineHeight += 'px') : undefined
     return style
   }, [t, fonts])
 
   return (
     <>
       <View style={styles.container}>
-        {/* @ts-ignore inputStyle is fine - esb */}
+        {/* @ts-ignore inputStyle is fine */}
         <EditorContent editor={editor} style={inputStyle} />
       </View>
 
