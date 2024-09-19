@@ -82,7 +82,7 @@ export function Controls({
   const [isFullscreen, toggleFullscreen] = useFullscreen(fullscreenRef)
   const {state: hasFocus, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const [interactingViaKeypress, setInteractingViaKeypress] = useState(false)
-  const showSpinner = buffering || hlsLoading
+  const showSpinner = hlsLoading || buffering
   const {
     state: volumeHovered,
     onIn: onVolumeHover,
