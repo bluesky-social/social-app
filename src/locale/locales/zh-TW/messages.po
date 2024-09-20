@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: zh-TW for bluesky-social-app\n"
 "POT-Creation-Date: \n"
 "Report-Msgid-Bugs-To: Kuwa Lee <kuwalee1069@gmail.com>, Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-09-20 13:56+0800\n"
+"PO-Revision-Date: 2024-09-20 14:11+0800\n"
 "Last-Translator: \n"
 "Language-Team: Frudrax Cheng <i@cynosura.one>, Kuwa Lee <kuwalee1069@gmail.com>, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Language: zh_TW\n"
@@ -1027,7 +1027,7 @@ msgstr "字幕和替代文字"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:434
 msgid "Celebrating {0} users"
-msgstr "慶祝第 {0} 個用戶"
+msgstr "慶祝{0}用戶"
 
 #: src/view/com/modals/VerifyEmail.tsx:160
 msgid "Change"
@@ -2554,13 +2554,13 @@ msgstr "跟隨帳號"
 msgid "Follow all"
 msgstr "全部跟隨"
 
-#: src/view/com/profile/FollowButton.tsx:79
-msgctxt "action"
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:223
+#: src/view/com/post-thread/PostThreadFollowBtn.tsx:142
 msgid "Follow Back"
 msgstr "回跟"
 
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:223
-#: src/view/com/post-thread/PostThreadFollowBtn.tsx:142
+#: src/view/com/profile/FollowButton.tsx:79
+msgctxt "action"
 msgid "Follow Back"
 msgstr "回跟"
 
@@ -3631,13 +3631,13 @@ msgstr "電影"
 msgid "Music"
 msgstr "音樂"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:157
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:94
-msgctxt "video"
+#: src/components/TagMenu/index.tsx:263
 msgid "Mute"
 msgstr "靜音"
 
-#: src/components/TagMenu/index.tsx:263
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:157
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:94
+msgctxt "video"
 msgid "Mute"
 msgstr "靜音"
 
@@ -6735,7 +6735,7 @@ msgstr "您希望向誰提交此檢舉？"
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:658
 #: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:63
 msgid "Together, we're rebuilding the social internet. We're glad you're here."
-msgstr "我們很高興您在這裡，讓我們正在共同重建社交網路。"
+msgstr "我們很高興您在這裡，讓我們共同重建社交網路。"
 
 #: src/view/com/util/forms/DropdownButton.tsx:255
 msgid "Toggle dropdown"
@@ -6860,14 +6860,14 @@ msgstr "取消跟隨"
 msgid "Unlike this feed"
 msgstr "取消喜歡這個動態源"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:156
-#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:93
-msgctxt "video"
+#: src/components/TagMenu/index.tsx:263
+#: src/view/screens/ProfileList.tsx:689
 msgid "Unmute"
 msgstr "取消靜音"
 
-#: src/components/TagMenu/index.tsx:263
-#: src/view/screens/ProfileList.tsx:689
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:156
+#: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:93
+msgctxt "video"
 msgid "Unmute"
 msgstr "取消靜音"
 
