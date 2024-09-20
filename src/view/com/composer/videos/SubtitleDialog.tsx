@@ -44,7 +44,7 @@ export function SubtitleDialogBtn(props: Props) {
             ? _('Opens captions and alt text dialog')
             : _('Opens alt text dialog')
         }
-        size="xsmall"
+        size="small"
         color="secondary"
         variant="ghost"
         onPress={() => {
@@ -169,7 +169,7 @@ function SubtitleDialogInner({
         <View style={web([a.flex_row, a.justify_end])}>
           <Button
             label={_(msg`Done`)}
-            size={isWeb ? 'small' : 'medium'}
+            size={isWeb ? 'small' : 'large'}
             color="primary"
             variant="solid"
             onPress={() => {

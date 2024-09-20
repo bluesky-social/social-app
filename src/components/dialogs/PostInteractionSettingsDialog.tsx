@@ -439,7 +439,7 @@ export function PostInteractionSettingsForm({
         onPress={onSave}
         onAccessibilityEscape={control.close}
         color="primary"
-        size="medium"
+        size="large"
         variant="solid"
         style={a.mt_xl}>
         <ButtonText>{_(msg`Save`)}</ButtonText>

@@ -91,7 +91,7 @@ export function NoFeedsPinned({
           <Button
             disabled={isPending}
             label={_(msg`Apply default recommended feeds`)}
-            size="medium"
+            size="large"
             variant="solid"
             color="primary"
             onPress={addRecommendedFeeds}>
@@ -102,7 +102,7 @@ export function NoFeedsPinned({
           <Link
             label={_(msg`Browse other feeds`)}
             to="/feeds"
-            size="medium"
+            size="large"
             variant="solid"
             color="secondary">
             <ButtonIcon icon={ListSparkle} position="left" />

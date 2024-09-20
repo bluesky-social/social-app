@@ -152,7 +152,7 @@ export function ListHiddenScreen({
             <Button
               variant="solid"
               color="secondary"
-              size="medium"
+              size="large"
               label={_(msg`Remove from saved feeds`)}
               onPress={onRemoveList}
               disabled={isProcessing}>
@@ -168,7 +168,7 @@ export function ListHiddenScreen({
             <Button
               variant="solid"
               color="secondary"
-              size="medium"
+              size="large"
               label={_(msg`Show list anyway`)}
               onPress={() => setIsContentVisible(true)}
               disabled={isProcessing}>
@@ -180,7 +180,7 @@ export function ListHiddenScreen({
             <Button
               variant="solid"
               color="secondary"
-              size="medium"
+              size="large"
               label={_(msg`Unsubscribe from list`)}
               onPress={() => {
                 if (isModList) {
@@ -204,7 +204,7 @@ export function ListHiddenScreen({
           color="primary"
           label={_(msg`Return to previous page`)}
           onPress={goBack}
-          size="medium"
+          size="large"
           disabled={isProcessing}>
           <ButtonText>
             <Trans>Go Back</Trans>
