@@ -339,7 +339,7 @@ export function ModerationScreenInner({
                   a.justify_between,
                   disabledOnIOS && {opacity: 0.5},
                 ]}>
-                <Text style={[a.font_semibold, t.atoms.text_contrast_high]}>
+                <Text style={[a.font_bold, t.atoms.text_contrast_high]}>
                   <Trans>Enable adult content</Trans>
                 </Text>
                 <Toggle.Item

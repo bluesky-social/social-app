@@ -44,7 +44,7 @@ export function PreferencesFollowingFeed({}: Props) {
           showBackButton={isTabletOrMobile}
           style={[pal.border, a.border_b]}>
           <View style={a.flex_1}>
-            <Text type="title-lg" style={[pal.text, {fontWeight: 'bold'}]}>
+            <Text type="title-lg" style={[pal.text, {fontWeight: '600'}]}>
               <Trans>Following Feed Preferences</Trans>
             </Text>
             <Text style={pal.textLight}>

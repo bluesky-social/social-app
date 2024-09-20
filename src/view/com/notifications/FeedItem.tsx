@@ -632,7 +632,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   aviExtraCount: {
-    fontWeight: 'bold',
+    fontWeight: '600',
     paddingLeft: 6,
   },
   meta: {
