@@ -8,8 +8,8 @@ msgstr ""
 "Language: pt-BR\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-16 17:30+01:00\n"
-"Last-Translator: fabiohcnobre\n"
+"PO-Revision-Date: 2024-09-20 10:25:00\n"
+"Last-Translator: Felps3000\n"
 "Language-Team: maisondasilva, MightyLoggor, gildaswise, gleydson, faeriarum, fabiohcnobre, garccez\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
@@ -1645,15 +1645,15 @@ msgstr "Continuar o tópico..."
 #: src/screens/Onboarding/StepProfile/index.tsx:266
 #: src/screens/Signup/BackNextButtons.tsx:59
 msgid "Continue to next step"
-msgstr "Continuar para o próximo passo"
+msgstr "Continuar para a próxima etapa"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:158
 #~ msgid "Continue to the next step"
-#~ msgstr "Continuar para o próximo passo"
+#~ msgstr "Continuar para a próxima etapa"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:199
 #~ msgid "Continue to the next step without following any accounts"
-#~ msgstr "Continuar para o próximo passo sem seguir contas"
+#~ msgstr "Continuar para a próxima etapa sem seguir contas"
 
 #: src/screens/Messages/List/ChatListItem.tsx:154
 msgid "Conversation deleted"
@@ -2795,7 +2795,7 @@ msgstr "Feeds"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:58
 #~ msgid "Feeds are created by users to curate content. Choose some feeds that you find interesting."
-#~ msgstr "Os feeds são criados por usuários para curadoria de conteúdo. Escolha alguns feeds que você acha interessantes."
+#~ msgstr "Os feeds são criados por usuários para curadoria de conteúdo. Escolha alguns feeds que você acha interessante."
 
 #: src/view/screens/SavedFeeds.tsx:181
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
@@ -2937,7 +2937,7 @@ msgstr "Siga mais contas para se conectar aos seus interesses e construir sua re
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:182
 #~ msgid "Follow selected accounts and continue to the next step"
-#~ msgstr "Siga algumas contas e continue para o próximo passo"
+#~ msgstr "Siga algumas contas e continue para a próxima etapa"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:65
 #~ msgid "Follow some users to get started. We can recommend you more users based on who you find interesting."
@@ -3158,7 +3158,7 @@ msgstr "Voltar"
 #: src/screens/Onboarding/Layout.tsx:191
 #: src/screens/Signup/BackNextButtons.tsx:34
 msgid "Go back to previous step"
-msgstr "Voltar para o passo anterior"
+msgstr "Voltar para a etapa anterior"
 
 #: src/screens/StarterPack/Wizard/index.tsx:299
 msgid "Go back to the previous step"
@@ -3406,15 +3406,15 @@ msgstr "Se você deletar esta lista, você não poderá recuperá-la."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:626
 msgid "If you remove this post, you won't be able to recover it."
-msgstr "Se você remover este post, você não poderá recuperá-la."
+msgstr "Se você remover este post, você não poderá recuperá-lo."
 
 #: src/view/com/modals/ChangePassword.tsx:149
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
-msgstr "Se você quiser alterar sua senha, enviaremos um código que para verificar sua identidade."
+msgstr "Se você quiser alterar sua senha, enviaremos um código para verificar sua identidade."
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:92
 msgid "If you're trying to change your handle or email, do so before you deactivate."
-msgstr "Se você estiver tentando alterar seu endereço ou e-mail, faça isso antes de desativar."
+msgstr "Se você estiver tentando alterar seu usuário ou e-mail, faça isso antes de desativar."
 
 #: src/lib/moderation/useReportOptions.ts:38
 msgid "Illegal and Urgent"
@@ -3500,7 +3500,7 @@ msgstr "Apresentando Mensagens Diretas"
 #: src/screens/Login/LoginForm.tsx:145
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
-msgstr "Código de confirmação inválido."
+msgstr "Código de confirmação da autenticação de dois fatores inválido."
 
 #: src/view/com/post-thread/PostThreadItem.tsx:264
 msgid "Invalid or unsupported post record"
@@ -3625,7 +3625,7 @@ msgstr "Seleção de idioma"
 
 #: src/view/screens/Settings/index.tsx:496
 msgid "Language settings"
-msgstr "Configuração de Idioma"
+msgstr "Configuração de idioma"
 
 #: src/Navigation.tsx:160
 #: src/view/screens/LanguageSettings.tsx:90
@@ -3647,7 +3647,7 @@ msgstr "Saiba Mais"
 
 #: src/view/com/auth/SplashScreen.web.tsx:152
 msgid "Learn more about Bluesky"
-msgstr "Saiba mais sobre Bluesky"
+msgstr "Saiba mais sobre o Bluesky"
 
 #: src/components/moderation/ContentHider.tsx:66
 #: src/components/moderation/ContentHider.tsx:131
@@ -3907,7 +3907,7 @@ msgstr "Parece que você desafixou todos os seus feeds, mas não esquenta, dá u
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:38
 #~ msgid "Looks like you're missing a following feed."
-#~ msgstr "Parece que você está sem seu feed principal."
+#~ msgstr "Parece que você não está seguindo nenhum feed."
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:37
 msgid "Looks like you're missing a following feed. <0>Click here to add one.</0>"
@@ -4162,7 +4162,7 @@ msgstr "Silenciar esta palavra apenas nas tags de um post"
 
 #: src/components/dialogs/MutedWords.tsx:170
 msgid "Mute this word until you unmute it"
-msgstr "Oculte esta palavra até que você a reative"
+msgstr "Silenciar esta palavra até que você a reative"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:465
 #: src/view/com/util/forms/PostDropdownBtn.tsx:471
@@ -4394,7 +4394,7 @@ msgstr "Não tenho painel de DNS"
 #: src/components/dialogs/GifSelect.ios.tsx:202
 #: src/components/dialogs/GifSelect.tsx:218
 msgid "No featured GIFs found. There may be an issue with Tenor."
-msgstr "Nenhum GIF em destaque encontrado."
+msgstr "Nenhum GIF em destaque encontrado. Pode haver um problema com o Tenor."
 
 #: src/screens/StarterPack/Wizard/StepFeeds.tsx:120
 msgid "No feeds found. Try searching for something else."
@@ -4403,7 +4403,7 @@ msgstr "Nenhum feed encontrado. Tente pesquisar por outra coisa."
 #: src/components/LikedByList.tsx:78
 #: src/view/com/post-thread/PostLikedBy.tsx:85
 msgid "No likes yet"
-msgstr ""
+msgstr "Sem curtidas ainda"
 
 #: src/components/ProfileCard.tsx:336
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:116
@@ -4443,11 +4443,11 @@ msgstr "Nenhuma postagem ainda."
 
 #: src/view/com/post-thread/PostQuotes.tsx:106
 msgid "No quotes yet"
-msgstr ""
+msgstr "Sem citações ainda"
 
 #: src/view/com/post-thread/PostRepostedBy.tsx:78
 msgid "No reposts yet"
-msgstr ""
+msgstr "Sem reposts ainda"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:101
 #: src/view/com/composer/text-input/web/Autocomplete.tsx:195
@@ -4591,7 +4591,7 @@ msgstr "Nudez"
 
 #: src/lib/moderation/useReportOptions.ts:78
 msgid "Nudity or adult content not labeled as such"
-msgstr "Nudez ou pornografia sem aviso aplicado"
+msgstr "Nudez ou conteúdo adulto sem rótulo aplicado"
 
 #: src/screens/Signup/index.tsx:145
 #~ msgid "of"
@@ -6076,7 +6076,7 @@ msgstr "Pesquisar via Tenor"
 
 #: src/view/com/modals/ChangeEmail.tsx:105
 msgid "Security Step Required"
-msgstr "Passo de Segurança Necessário"
+msgstr "Etapa de Segurança Necessária"
 
 #: src/components/TagMenu/index.web.tsx:77
 msgid "See {truncatedTag} posts"
@@ -6814,11 +6814,11 @@ msgstr "Página de status"
 
 #: src/screens/Signup/index.tsx:145
 #~ msgid "Step"
-#~ msgstr "Passo"
+#~ msgstr "Etapa"
 
 #: src/screens/Signup/index.tsx:136
 msgid "Step {0} of {1}"
-msgstr "Passo {0} de {1}"
+msgstr "Etapa {0} de {1}"
 
 #: src/view/screens/Settings/index.tsx:278
 msgid "Storage cleared, you need to restart the app now."
@@ -7094,7 +7094,7 @@ msgstr "Os seguintes rótulos foram aplicados sobre seu conteúdo."
 
 #: src/screens/Onboarding/Layout.tsx:58
 msgid "The following steps will help customize your Bluesky experience."
-msgstr "Os seguintes passos vão ajudar a customizar sua experiência no Bluesky."
+msgstr "As seguintes etapas vão ajudar a customizar sua experiência no Bluesky."
 
 #: src/view/com/post-thread/PostThread.tsx:208
 #: src/view/com/post-thread/PostThread.tsx:220
@@ -8679,7 +8679,7 @@ msgstr "Seu e-mail parece ser inválido."
 
 #: src/view/com/modals/ChangeEmail.tsx:120
 msgid "Your email has been updated but not verified. As a next step, please verify your new email."
-msgstr "Seu e-mail foi atualizado mas não foi verificado. Como próximo passo, por favor verifique seu novo e-mail."
+msgstr "Seu e-mail foi atualizado mas não foi verificado. Como próxima etapa, por favor verifique seu novo e-mail."
 
 #: src/view/com/modals/VerifyEmail.tsx:122
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
