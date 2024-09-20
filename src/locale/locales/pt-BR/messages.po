@@ -107,7 +107,7 @@ msgstr "{0, plural, one {Responder (# resposta)} other {Responder (# respostas)}
 
 #: src/view/com/post-thread/PostThreadItem.tsx:397
 msgid "{0, plural, one {repost} other {reposts}}"
-msgstr "{0, plural, one {repost} other {reposts}}"
+msgstr "{0, plural, one {repostagem} other {repostagens}}"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:308
 msgid "{0, plural, one {Unlike (# like)} other {Unlike (# likes)}}"
@@ -2795,7 +2795,7 @@ msgstr "Feeds"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:58
 #~ msgid "Feeds are created by users to curate content. Choose some feeds that you find interesting."
-#~ msgstr "Os feeds são criados por usuários para curadoria de conteúdo. Escolha alguns feeds que você acha interessante."
+#~ msgstr "Os feeds são criados por usuários para curadoria de conteúdo. Escolha alguns feeds que você acha interessantes."
 
 #: src/view/screens/SavedFeeds.tsx:181
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
@@ -4394,7 +4394,7 @@ msgstr "Não tenho painel de DNS"
 #: src/components/dialogs/GifSelect.ios.tsx:202
 #: src/components/dialogs/GifSelect.tsx:218
 msgid "No featured GIFs found. There may be an issue with Tenor."
-msgstr "Nenhum GIF em destaque encontrado. Pode haver um problema com o Tenor."
+msgstr "Nenhum GIF em destaque encontrado."
 
 #: src/screens/StarterPack/Wizard/StepFeeds.tsx:120
 msgid "No feeds found. Try searching for something else."
@@ -4447,7 +4447,7 @@ msgstr "Sem citações ainda"
 
 #: src/view/com/post-thread/PostRepostedBy.tsx:78
 msgid "No reposts yet"
-msgstr "Sem reposts ainda"
+msgstr "Sem repostagens ainda"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:101
 #: src/view/com/composer/text-input/web/Autocomplete.tsx:195
@@ -4507,7 +4507,7 @@ msgstr ""
 
 #: src/view/com/post-thread/PostRepostedBy.tsx:80
 msgid "Nobody has reposted this yet. Maybe you should be the first!"
-msgstr ""
+msgstr "Ninguém repostou isso ainda. Talvez você devesse ser o primeiro!"
 
 #: src/screens/StarterPack/Wizard/StepProfiles.tsx:103
 msgid "Nobody was found. Try searching for someone else."
@@ -5337,12 +5337,12 @@ msgstr "QR code salvo no rolo da sua câmera!"
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:85
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:92
 msgid "Quote post"
-msgstr "Citar post"
+msgstr "Citar postagem"
 
 #: src/view/com/modals/Repost.tsx:66
 #~ msgctxt "action"
 #~ msgid "Quote post"
-#~ msgstr "Citar post"
+#~ msgstr "Citar postagem"
 
 #: src/view/com/modals/Repost.tsx:71
 #~ msgctxt "action"
@@ -5538,7 +5538,7 @@ msgstr "Remover citação"
 #: src/view/com/util/post-ctrls/RepostButton.tsx:98
 #: src/view/com/util/post-ctrls/RepostButton.tsx:114
 msgid "Remove repost"
-msgstr "Desfazer repost"
+msgstr "Desfazer repostagem"
 
 #: src/view/com/composer/videos/SubtitleDialog.tsx:264
 msgid "Remove subtitle file"
@@ -5806,7 +5806,7 @@ msgstr "repostou seu post"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:209
 msgid "Reposts of this post"
-msgstr "Reposts"
+msgstr "Repostagens"
 
 #: src/view/com/modals/ChangeEmail.tsx:176
 #: src/view/com/modals/ChangeEmail.tsx:178
@@ -6301,7 +6301,7 @@ msgstr "Definir uma nova senha"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:121
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
-msgstr "Defina esta configuração como \"Não\" para ocultar todas as citações do seu feed. Reposts ainda serão visíveis."
+msgstr "Defina esta configuração como \"Não\" para ocultar todas as citações do seu feed. Repostagens ainda serão visíveis."
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:63
 msgid "Set this setting to \"No\" to hide all replies from your feed."
@@ -6309,7 +6309,7 @@ msgstr "Defina esta configuração como \"Não\" para ocultar todas as respostas
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:87
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
-msgstr "Defina esta configuração como \"Não\" para ocultar todos os reposts do seu feed."
+msgstr "Defina esta configuração como \"Não\" para ocultar todos os repostagens do seu feed."
 
 #: src/view/screens/PreferencesThreads.tsx:116
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
@@ -6544,7 +6544,7 @@ msgstr "Mostrar Citações"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:95
 #~ msgid "Show re-posts in Following feed"
-#~ msgstr "Mostrar reposts no feed Seguindo"
+#~ msgstr "Mostrar repostagens no feed Seguindo"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:60
 msgid "Show Replies"
@@ -6573,11 +6573,11 @@ msgstr "Mostrar resposta para todos"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:84
 msgid "Show Reposts"
-msgstr "Mostrar Reposts"
+msgstr "Mostrar Repostagens"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:111
 #~ msgid "Show reposts in Following"
-#~ msgstr "Mostrar reposts no Seguindo"
+#~ msgstr "Mostrar repostagens no Seguindo"
 
 #: src/components/moderation/ContentHider.tsx:69
 #: src/components/moderation/PostHider.tsx:79
@@ -7620,7 +7620,7 @@ msgstr "Desbloquear Conta?"
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:72
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:76
 msgid "Undo repost"
-msgstr "Desfazer repost"
+msgstr "Desfazer repostagem"
 
 #: src/view/com/profile/FollowButton.tsx:61
 msgctxt "action"
