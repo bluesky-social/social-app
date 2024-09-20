@@ -143,8 +143,8 @@ function InnerApp() {
                       </MessagesProvider>
                     </StatsigProvider>
                   </QueryProvider>
+                  <ToastContainer />
                 </React.Fragment>
-                <ToastContainer />
               </ActiveVideoProvider>
             </VideoVolumeProvider>
           </RootSiblingParent>

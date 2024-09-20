@@ -59,7 +59,7 @@ export const ExternalLinkEmbed = ({
   }
 
   return (
-    <View style={[a.flex_col, a.rounded_sm]}>
+    <View style={[a.flex_col, a.w_full]}>
       <LinkWrapper link={link} onOpen={onOpen} style={style}>
         {imageUri && !embedPlayerParams ? (
           <View>
