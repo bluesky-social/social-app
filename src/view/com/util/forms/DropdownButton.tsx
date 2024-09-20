@@ -1,4 +1,10 @@
-import React, {PropsWithChildren, useMemo, useRef} from 'react'
+import React, {
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react'
 import {
   Dimensions,
   GestureResponderEvent,
@@ -17,11 +23,11 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {HITSLOP_10} from 'lib/constants'
-import {usePalette} from 'lib/hooks/usePalette'
-import {colors} from 'lib/styles'
-import {useTheme} from 'lib/ThemeContext'
-import {isWeb} from 'platform/detection'
+import {HITSLOP_10} from '#/lib/constants'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {colors} from '#/lib/styles'
+import {useTheme} from '#/lib/ThemeContext'
+import {isWeb} from '#/platform/detection'
 import {native} from '#/alf'
 import {FullWindowOverlay} from '#/components/FullWindowOverlay'
 import {Text} from '../text/Text'
@@ -241,6 +247,22 @@ const DropdownItems = ({
     theme.colorScheme === 'dark' ? pal.borderDark : pal.border
 
   const numItems = items.filter(isBtn).length
+
+  const onEscape = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onOuterPress()
+      }
+    },
+    [onOuterPress],
+  )
+
+  useEffect(() => {
+    if (isWeb) {
+      window.addEventListener('keydown', onEscape)
+      return () => window.removeEventListener('keydown', onEscape)
+    }
+  }, [onEscape])
 
   // TODO: Refactor dropdown components to:
   // - (On web, if not handled by React Native) use semantic <select />
