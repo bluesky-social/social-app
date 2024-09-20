@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-18 09:43+0900\n"
+"PO-Revision-Date: 2024-09-20 14:09+0900\n"
 "Last-Translator: quiple\n"
 "Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
@@ -275,7 +275,7 @@ msgstr "탐색 링크 및 설정으로 이동합니다"
 msgid "Access profile and other navigation links"
 msgstr "프로필 및 기타 탐색 링크로 이동합니다"
 
-#: src/view/com/modals/EditImage.tsx:300
+#: src/view/com/modals/EditImage.tsx:284
 #: src/view/screens/Settings/index.tsx:463
 msgid "Accessibility"
 msgstr "접근성"
@@ -500,7 +500,7 @@ msgstr "ALT"
 #: src/view/com/composer/videos/SubtitleDialog.tsx:56
 #: src/view/com/composer/videos/SubtitleDialog.tsx:104
 #: src/view/com/composer/videos/SubtitleDialog.tsx:108
-#: src/view/com/modals/EditImage.tsx:316
+#: src/view/com/modals/EditImage.tsx:300
 #: src/view/screens/AccessibilitySettings.tsx:87
 msgid "Alt text"
 msgstr "대체 텍스트"
@@ -957,7 +957,7 @@ msgstr "글자, 숫자, 공백, 대시, 밑줄만 포함할 수 있습니다. �
 #: src/view/com/modals/ChangePassword.tsx:271
 #: src/view/com/modals/CreateOrEditList.tsx:344
 #: src/view/com/modals/crop-image/CropImage.web.tsx:162
-#: src/view/com/modals/EditImage.tsx:324
+#: src/view/com/modals/EditImage.tsx:308
 #: src/view/com/modals/EditProfile.tsx:250
 #: src/view/com/modals/InAppBrowserConsent.tsx:78
 #: src/view/com/modals/InAppBrowserConsent.tsx:80
@@ -1642,14 +1642,10 @@ msgstr "검토 디버그"
 msgid "Debug panel"
 msgstr "디버그 패널"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:101
+#: src/components/dialogs/nuxs/NeueTypography.tsx:100
 #: src/screens/Settings/AppearanceSettings.tsx:169
 msgid "Default"
 msgstr "기본"
-
-#: src/components/dialogs/nuxs/NeueTypography.tsx:62
-msgid "Defaults are shown below. You can edit these in your Appearance Settings later."
-msgstr "기본값은 아래와 같습니다. 나중에 모양 설정에서 수정할 수 있습니다."
 
 #: src/components/dms/MessageMenu.tsx:151
 #: src/screens/StarterPack/StarterPackScreen.tsx:573
@@ -1890,7 +1886,7 @@ msgstr "도메인을 확인했습니다."
 msgid "Done"
 msgstr "완료"
 
-#: src/view/com/modals/EditImage.tsx:334
+#: src/view/com/modals/EditImage.tsx:318
 #: src/view/com/modals/ListAddRemoveUsers.tsx:145
 #: src/view/com/modals/SelfLabel.tsx:158
 #: src/view/com/modals/UserAddRemoveLists.tsx:107
@@ -1916,7 +1912,7 @@ msgstr "CAR 파일 다운로드"
 msgid "Download image"
 msgstr "이미지 다운로드"
 
-#: src/view/com/composer/text-input/TextInput.web.tsx:269
+#: src/view/com/composer/text-input/TextInput.web.tsx:291
 msgid "Drop to add images"
 msgstr "드롭하여 이미지 추가"
 
@@ -1987,7 +1983,7 @@ msgid "Edit Feeds"
 msgstr "피드 편집하기"
 
 #: src/view/com/composer/photos/Gallery.tsx:151
-#: src/view/com/modals/EditImage.tsx:208
+#: src/view/com/modals/EditImage.tsx:205
 msgid "Edit image"
 msgstr "이미지 편집하기"
 
@@ -2513,12 +2509,11 @@ msgstr "건강"
 msgid "Flexible"
 msgstr "유연성"
 
-#: src/view/com/modals/EditImage.tsx:116
+#: src/view/com/modals/EditImage.tsx:124
 msgid "Flip horizontal"
 msgstr "가로로 뒤집기"
 
-#: src/view/com/modals/EditImage.tsx:121
-#: src/view/com/modals/EditImage.tsx:288
+#: src/view/com/modals/EditImage.tsx:129
 msgid "Flip vertically"
 msgstr "세로로 뒤집기"
 
@@ -2655,12 +2650,12 @@ msgstr "나를 팔로우함"
 msgid "Follows You"
 msgstr "나를 팔로우함"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:73
+#: src/components/dialogs/nuxs/NeueTypography.tsx:72
 #: src/screens/Settings/AppearanceSettings.tsx:141
 msgid "Font"
 msgstr "글꼴"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:93
+#: src/components/dialogs/nuxs/NeueTypography.tsx:92
 #: src/screens/Settings/AppearanceSettings.tsx:161
 msgid "Font size"
 msgstr "글꼴 크기"
@@ -2678,7 +2673,7 @@ msgstr "보안상의 이유로 이메일 주소로 인증 코드를 보내야 �
 msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
 msgstr "보안상의 이유로 이 비밀번호는 다시 볼 수 없습니다. 이 비밀번호를 분실한 경우 새 비밀번호를 생성해야 합니다."
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:75
+#: src/components/dialogs/nuxs/NeueTypography.tsx:74
 #: src/screens/Settings/AppearanceSettings.tsx:143
 msgid "For the best experience, we recommend using the theme font."
 msgstr "최상의 경험을 위해 테마 글꼴을 사용하는 것을 추천합니다."
@@ -3096,10 +3091,6 @@ msgstr "다이렉트 메시지 소개"
 msgid "Introducing new font settings"
 msgstr "새 글꼴 설정을 소개합니다"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:52
-msgid "Introducing new font settings ✨"
-msgstr "새 글꼴 설정을 소개합니다 ✨"
-
 #: src/screens/Login/LoginForm.tsx:145
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
@@ -3223,7 +3214,7 @@ msgstr "언어 설정"
 msgid "Languages"
 msgstr "언어"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:105
+#: src/components/dialogs/nuxs/NeueTypography.tsx:104
 #: src/screens/Settings/AppearanceSettings.tsx:173
 msgid "Larger"
 msgstr "큼"
@@ -3554,10 +3545,6 @@ msgstr "오해의 소지가 있는 계정"
 msgid "Misleading Post"
 msgstr "오해의 소지가 있는 게시물"
 
-#: src/screens/Settings/AppearanceSettings.tsx:78
-#~ msgid "Mode"
-#~ msgstr "모드"
-
 #: src/Navigation.tsx:135
 #: src/screens/Moderation/index.tsx:105
 #: src/view/screens/Settings/index.tsx:527
@@ -3833,6 +3820,10 @@ msgstr "새로 만들기"
 #: src/screens/Messages/List/index.tsx:338
 msgid "New chat"
 msgstr "새 대화"
+
+#: src/components/dialogs/nuxs/NeueTypography.tsx:52
+msgid "New font settings ✨"
+msgstr "새 폰트 설정 ✨"
 
 #: src/components/dms/NewMessagesPill.tsx:92
 msgid "New messages"
@@ -4855,7 +4846,7 @@ msgstr "이 게시물의 인용"
 msgid "Random (aka \"Poster's Roulette\")"
 msgstr "무작위"
 
-#: src/view/com/modals/EditImage.tsx:237
+#: src/view/com/modals/EditImage.tsx:234
 msgid "Ratios"
 msgstr "비율"
 
@@ -6015,7 +6006,7 @@ msgstr "건너뛰기"
 msgid "Skip this flow"
 msgstr "이 단계 건너뛰기"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:97
+#: src/components/dialogs/nuxs/NeueTypography.tsx:96
 #: src/screens/Settings/AppearanceSettings.tsx:165
 msgid "Smaller"
 msgstr "작음"
@@ -6197,7 +6188,7 @@ msgstr "{0}(으)로 전환"
 msgid "Switches the account you are logged in to"
 msgstr "로그인 중인 계정을 전환합니다"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:80
+#: src/components/dialogs/nuxs/NeueTypography.tsx:79
 #: src/screens/Settings/AppearanceSettings.tsx:101
 #: src/screens/Settings/AppearanceSettings.tsx:148
 msgid "System"
@@ -6407,7 +6398,7 @@ msgstr "서비스 이용약관을 다음으로 이동했습니다:"
 msgid "The verification code you have provided is invalid. Please make sure that you have used the correct verification link or request a new one."
 msgstr "입력한 인증 코드가 올바르지 않습니다. 올바른 인증 링크를 사용했는지 확인하거나 새 인증 링크를 요청하세요."
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:84
+#: src/components/dialogs/nuxs/NeueTypography.tsx:83
 #: src/screens/Settings/AppearanceSettings.tsx:152
 msgid "Theme"
 msgstr "테마"
@@ -6733,10 +6724,6 @@ msgstr "자세한 내용은 <0>게시물을 확인하세요.</0>"
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
 msgstr "대화를 신고하려면 대화 화면에서 해당 메시지 중 하나를 신고하세요. 이렇게 하면 운영진이 문제의 맥락을 파악할 수 있습니다."
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:55
-msgid "To the ensure the best possible experience, we're introducing a new theme font, along with adjustable font sizing settings."
-msgstr "최상의 경험을 제공하기 위해 글꼴 크기 조정 설정과 함께 새로운 테마 글꼴을 도입합니다."
-
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:120
 msgid "To upload videos to Bluesky, you must first verify your email."
 msgstr "Bluesky에 동영상을 업로드하려면 먼저 이메일을 인증해야 합니다."
@@ -6763,7 +6750,7 @@ msgstr "성인 콘텐츠 활성화 또는 비활성화 전환"
 msgid "Top"
 msgstr "인기"
 
-#: src/view/com/modals/EditImage.tsx:272
+#: src/view/com/modals/EditImage.tsx:263
 msgid "Transformations"
 msgstr "변형"
 
@@ -7352,6 +7339,10 @@ msgstr "이를 통해 사용자 환경을 맞춤 설정할 수 있습니다."
 msgid "We're having network issues, try again"
 msgstr "네트워크 문제가 발생했습니다. 다시 시도하세요"
 
+#: src/components/dialogs/nuxs/NeueTypography.tsx:55
+msgid "We're introducing a new theme font, along with adjustable font sizing."
+msgstr "글꼴 크기 조정 기능과 함께 새 테마 글꼴을 소개합니다."
+
 #: src/screens/Signup/index.tsx:100
 msgid "We're so excited to have you join us!"
 msgstr "함께하게 되어 정말 기뻐요!"
@@ -7535,6 +7526,10 @@ msgstr "동영상을 업로드할 수 없습니다."
 #: src/view/com/profile/ProfileFollows.tsx:95
 msgid "You are not following anyone."
 msgstr "아무도 팔로우하지 않았습니다."
+
+#: src/components/dialogs/nuxs/NeueTypography.tsx:62
+msgid "You can adjust these in your Appearance Settings later."
+msgstr "나중에 모양 설정에서 수정할 수 있습니다."
 
 #: src/view/com/posts/FollowingEmptyState.tsx:63
 #: src/view/com/posts/FollowingEndOfFeed.tsx:64
