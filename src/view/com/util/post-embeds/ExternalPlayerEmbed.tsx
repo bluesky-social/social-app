@@ -229,7 +229,7 @@ export function ExternalPlayer({
         collapsable={false}
         style={[
           aspect,
-          a.rounded_sm,
+          a.rounded_md,
           a.overflow_hidden,
           {
             borderBottomLeftRadius: 0,
@@ -245,7 +245,7 @@ export function ExternalPlayer({
             />
             <Fill
               style={[
-                a.rounded_sm,
+                a.rounded_md,
                 t.name === 'light' ? t.atoms.bg_contrast_975 : t.atoms.bg,
                 {
                   borderBottomLeftRadius: 0,
@@ -267,7 +267,7 @@ export function ExternalPlayer({
         ) : (
           <Fill
             style={[
-              a.rounded_sm,
+              a.rounded_md,
               {
                 backgroundColor:
                   t.name === 'light' ? t.palette.contrast_975 : 'black',
