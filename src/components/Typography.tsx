@@ -10,6 +10,11 @@ export type TextProps = RNTextProps & {
    * Lets the user select text, to use the native copy and paste functionality.
    */
   selectable?: boolean
+  /**
+   * Provides `data-*` attributes to the underlying `UITextView` component on
+   * web only.
+   */
+  dataSet?: Record<string, string | number | undefined>
 }
 
 /**
