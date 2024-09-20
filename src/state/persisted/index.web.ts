@@ -9,6 +9,7 @@ import {
   tryStringify,
 } from '#/state/persisted/schema'
 import {PersistedApi} from './types'
+import {normalizeData} from './util'
 
 export type {PersistedAccount, Schema} from '#/state/persisted/schema'
 export {defaults} from '#/state/persisted/schema'
@@ -56,10 +57,10 @@ export async function write<K extends keyof Schema>(
   } catch (e) {
     // Ignore and go through the normal path.
   }
-  _state = {
+  _state = normalizeData({
     ..._state,
     [key]: value,
-  }
+  })
   writeToStorage(_state)
   broadcast.postMessage({event: {type: UPDATE_EVENT, key}})
   broadcast.postMessage({event: UPDATE_EVENT}) // Backcompat while upgrading
@@ -140,9 +141,11 @@ function readFromStorage(): Schema | undefined {
       return lastResult
     } else {
       const result = tryParse(rawData)
-      lastRawData = rawData
-      lastResult = result
-      return result
+      if (result) {
+        lastRawData = rawData
+        lastResult = normalizeData(result)
+        return lastResult
+      }
     }
   }
 }
