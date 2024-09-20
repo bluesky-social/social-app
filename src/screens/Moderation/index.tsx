@@ -7,6 +7,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
+import {useAnalytics} from '#/lib/analytics/analytics'
 import {getLabelingServiceTitle} from '#/lib/moderation'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
 import {logger} from '#/logger'
@@ -24,7 +25,6 @@ import {
 import {useSession} from '#/state/session'
 import {isNonConfigurableModerationAuthority} from '#/state/session/additional-moderation-authorities'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {useAnalytics} from 'lib/analytics/analytics'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {CenteredView} from '#/view/com/util/Views'
 import {ScrollView} from '#/view/com/util/Views'
@@ -39,6 +39,7 @@ import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components
 import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/components/icons/CircleBanSign'
 import {Props as SVGIconProps} from '#/components/icons/common'
 import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
+import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
 import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
 import {Person_Stroke2_Corner0_Rounded as Person} from '#/components/icons/Person'
 import * as LabelingService from '#/components/LabelingServiceCard'
@@ -472,6 +473,27 @@ export function ModerationScreenInner({
             })}
         </View>
       )}
+
+      {labelers?.some(
+        labeler => !isNonConfigurableModerationAuthority(labeler.creator.did),
+      ) && (
+        <View
+          style={[
+            a.p_lg,
+            a.mb_md,
+            a.flex_row,
+            a.align_center,
+            a.justify_center,
+            a.gap_sm,
+          ]}>
+          <Flag fill={t.atoms.text_contrast_low.color} size="sm" />
+          <Text style={[a.italic]}>
+            <Trans>Additional moderation may apply in your region.</Trans>
+          </Text>
+        </View>
+      )}
+
+      <Divider />
 
       <Text
         style={[
