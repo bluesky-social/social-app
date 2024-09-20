@@ -1,5 +1,6 @@
 import {parse} from 'bcp-47'
 
+import {dedupArray} from '#/lib/functions'
 import {logger} from '#/logger'
 import {Schema} from '#/state/persisted/schema'
 
@@ -15,22 +16,24 @@ export function normalizeData(data: Schema) {
     langPrefs.primaryLanguage = normalizeLanguageTagToTwoLetterCode(
       langPrefs.primaryLanguage,
     )
-    langPrefs.contentLanguages = langPrefs.contentLanguages.map(lang =>
-      normalizeLanguageTagToTwoLetterCode(lang),
+    langPrefs.contentLanguages = dedupArray(
+      langPrefs.contentLanguages.map(lang =>
+        normalizeLanguageTagToTwoLetterCode(lang),
+      ),
     )
     langPrefs.postLanguage = langPrefs.postLanguage
       .split(',')
       .map(lang => normalizeLanguageTagToTwoLetterCode(lang))
       .filter(Boolean)
       .join(',')
-    langPrefs.postLanguageHistory = langPrefs.postLanguageHistory.map(
-      postLanguage => {
+    langPrefs.postLanguageHistory = dedupArray(
+      langPrefs.postLanguageHistory.map(postLanguage => {
         return postLanguage
           .split(',')
           .map(lang => normalizeLanguageTagToTwoLetterCode(lang))
           .filter(Boolean)
           .join(',')
-      },
+      }),
     )
     next.languagePrefs = langPrefs
   } catch (e: any) {
