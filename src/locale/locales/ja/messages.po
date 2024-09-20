@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-19 15:32+0900\n"
+"PO-Revision-Date: 2024-09-20 11:01+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -1651,10 +1651,6 @@ msgstr "デバッグパネル"
 msgid "Default"
 msgstr "デフォルト"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:62
-msgid "Defaults are shown below. You can edit these in your Appearance Settings later."
-msgstr "デフォルトは以下のとおり。後で外観の設定で編集できます。"
-
 #: src/components/dms/MessageMenu.tsx:151
 #: src/screens/StarterPack/StarterPackScreen.tsx:573
 #: src/screens/StarterPack/StarterPackScreen.tsx:652
@@ -3101,10 +3097,6 @@ msgstr "ダイレクトメッセージの紹介"
 msgid "Introducing new font settings"
 msgstr "新しいフォント設定の紹介"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:52
-msgid "Introducing new font settings ✨"
-msgstr "新しいフォント設定の紹介 ✨"
-
 #: src/screens/Login/LoginForm.tsx:145
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
@@ -3835,6 +3827,10 @@ msgstr "新規"
 #: src/screens/Messages/List/index.tsx:338
 msgid "New chat"
 msgstr "新しいチャット"
+
+#: src/components/dialogs/nuxs/NeueTypography.tsx:52
+msgid "New font settings ✨"
+msgstr "新しいフォント設定 ✨"
 
 #: src/components/dms/NewMessagesPill.tsx:92
 msgid "New messages"
@@ -6733,10 +6729,6 @@ msgstr "詳しくは、<0>私達のこの投稿をチェックしてください
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
 msgstr "会話を報告するには、会話の画面からメッセージのうちの一つを報告してください。それによって問題の文脈をモデレーターが理解できるようになります。"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:55
-msgid "To the ensure the best possible experience, we're introducing a new theme font, along with adjustable font sizing settings."
-msgstr "可能な限りの最高の体験を得られるように、新しいテーマフォントと調整可能なフォントサイズ設定を導入しました。"
-
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:120
 msgid "To upload videos to Bluesky, you must first verify your email."
 msgstr "Blueskyにビデオをアップロードするには、まずメールアドレスを確認しなくてはなりません。"
@@ -7351,6 +7343,10 @@ msgstr "これはあなたの体験をカスタマイズするために使用さ
 msgid "We're having network issues, try again"
 msgstr "ネットワークで問題が発生しています。もう一度試してください"
 
+#: src/components/dialogs/nuxs/NeueTypography.tsx:55
+msgid "We're introducing a new theme font, along with adjustable font sizing."
+msgstr "新しいテーマフォントを導入し、フォントサイズを調整可能にしました。"
+
 #: src/screens/Signup/index.tsx:100
 msgid "We're so excited to have you join us!"
 msgstr "私たちはあなたが参加してくれることをとても楽しみにしています！"
@@ -7534,6 +7530,10 @@ msgstr "あなたはビデオのアップロードを許可されていません
 #: src/view/com/profile/ProfileFollows.tsx:95
 msgid "You are not following anyone."
 msgstr "あなたはまだだれもフォローしていません。"
+
+#: src/components/dialogs/nuxs/NeueTypography.tsx:62
+msgid "You can adjust these in your Appearance Settings later."
+msgstr "これらは後で外観の設定で調整できます。"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:63
 #: src/view/com/posts/FollowingEndOfFeed.tsx:64
