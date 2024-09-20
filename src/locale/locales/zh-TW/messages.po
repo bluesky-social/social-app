@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: zh-TW for bluesky-social-app\n"
 "POT-Creation-Date: \n"
 "Report-Msgid-Bugs-To: Kuwa Lee <kuwalee1069@gmail.com>, Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-09-13 09:16+0800\n"
+"PO-Revision-Date: 2024-09-20 13:56+0800\n"
 "Last-Translator: \n"
 "Language-Team: Frudrax Cheng <i@cynosura.one>, Kuwa Lee <kuwalee1069@gmail.com>, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Language: zh_TW\n"
@@ -264,7 +264,7 @@ msgstr "7 天"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:266
 msgid "A virtual certificate with text \"Celebrating 10M users on Bluesky, #{0}, {displayName} {handle}, joined on {joinedDate}\""
-msgstr ""
+msgstr "虛擬證書，其中包含文字「慶祝 Bluesky 上的 1000 萬用戶，#{0}，{displayName} {handle}，於 {joinedDate} 加入」"
 
 #: src/view/com/util/ViewHeader.tsx:92
 #: src/view/screens/Search/Search.tsx:684
@@ -548,7 +548,7 @@ msgstr "載入影片時發生錯誤。請再試一次。"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:315
 msgid "An error occurred while saving the image!"
-msgstr ""
+msgstr "儲存圖片時發生錯誤！"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:71
 #: src/components/StarterPack/ShareDialog.tsx:79
@@ -855,11 +855,11 @@ msgstr "Bluesky 因朋友而更好！"
 #: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:43
 #: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:59
 msgid "Bluesky is celebrating 10 million users!"
-msgstr ""
+msgstr "Bluesky 正在慶祝用戶突破 1000 萬！"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:256
 msgid "Bluesky now has over 10 million users, and I was #{0}!"
-msgstr ""
+msgstr "Bluesky 現在擁有超過 1000 萬用戶，而我是第#{0}個！"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:282
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
@@ -884,7 +884,7 @@ msgstr "書籍"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:677
 msgid "Brag a little!"
-msgstr ""
+msgstr "炫耀一下！"
 
 #: src/components/FeedInterstitials.tsx:350
 msgid "Browse more accounts on the Explore page"
@@ -1027,7 +1027,7 @@ msgstr "字幕和替代文字"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:434
 msgid "Celebrating {0} users"
-msgstr ""
+msgstr "慶祝第 {0} 個用戶"
 
 #: src/view/com/modals/VerifyEmail.tsx:160
 msgid "Change"
@@ -1273,7 +1273,7 @@ msgstr "折疊指定通知的用戶清單"
 
 #: src/screens/Settings/AppearanceSettings.tsx:97
 msgid "Color mode"
-msgstr ""
+msgstr "色彩模式"
 
 #: src/screens/Onboarding/index.tsx:38
 #: src/screens/Onboarding/state.ts:82
@@ -1645,7 +1645,7 @@ msgstr "偵錯面板"
 #: src/components/dialogs/nuxs/NeueTypography.tsx:100
 #: src/screens/Settings/AppearanceSettings.tsx:169
 msgid "Default"
-msgstr ""
+msgstr "預設"
 
 #: src/components/dms/MessageMenu.tsx:151
 #: src/screens/StarterPack/StarterPackScreen.tsx:573
@@ -1914,7 +1914,7 @@ msgstr "下載 CAR 檔案"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:686
 msgid "Download image"
-msgstr ""
+msgstr "下載圖片"
 
 #: src/view/com/composer/text-input/TextInput.web.tsx:291
 msgid "Drop to add images"
@@ -2657,12 +2657,12 @@ msgstr "跟隨您"
 #: src/components/dialogs/nuxs/NeueTypography.tsx:72
 #: src/screens/Settings/AppearanceSettings.tsx:141
 msgid "Font"
-msgstr ""
+msgstr "字體"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:92
 #: src/screens/Settings/AppearanceSettings.tsx:161
 msgid "Font size"
-msgstr ""
+msgstr "字體大小"
 
 #: src/screens/Onboarding/index.tsx:40
 #: src/screens/Onboarding/state.ts:87
@@ -2680,7 +2680,7 @@ msgstr "為了保護您的帳號安全，您將無法再次查看此內容。如
 #: src/components/dialogs/nuxs/NeueTypography.tsx:74
 #: src/screens/Settings/AppearanceSettings.tsx:143
 msgid "For the best experience, we recommend using the theme font."
-msgstr ""
+msgstr "為了獲得最佳體驗，我們建議使用主題字體。"
 
 #: src/components/dialogs/MutedWords.tsx:178
 msgid "Forever"
@@ -3093,7 +3093,7 @@ msgstr "為您隆重介紹「私人訊息」"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:48
 msgid "Introducing new font settings"
-msgstr ""
+msgstr "為您隆重介紹「字體設定」"
 
 #: src/screens/Login/LoginForm.tsx:145
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
@@ -3174,7 +3174,7 @@ msgstr "加入對話"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:559
 msgid "Joined on {joinedDate}"
-msgstr ""
+msgstr "加入於 {joinedDate}"
 
 #: src/screens/Onboarding/index.tsx:21
 #: src/screens/Onboarding/state.ts:89
@@ -3225,7 +3225,7 @@ msgstr "語言"
 #: src/components/dialogs/nuxs/NeueTypography.tsx:104
 #: src/screens/Settings/AppearanceSettings.tsx:173
 msgid "Larger"
-msgstr ""
+msgstr "更大"
 
 #: src/screens/Hashtag.tsx:97
 #: src/view/screens/Search/Search.tsx:359
@@ -3647,7 +3647,7 @@ msgstr "音樂"
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VolumeControl.tsx:94
 msgctxt "video"
 msgid "Mute"
-msgstr ""
+msgstr "靜音"
 
 #: src/components/TagMenu/index.tsx:263
 msgid "Mute"
@@ -3839,7 +3839,7 @@ msgstr "新對話"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:52
 msgid "New font settings ✨"
-msgstr ""
+msgstr "全新字體設定 ✨"
 
 #: src/components/dms/NewMessagesPill.tsx:92
 msgid "New messages"
@@ -3944,7 +3944,7 @@ msgstr "沒有找到任何動態。請嘗試以其他關鍵字搜尋。"
 #: src/components/LikedByList.tsx:78
 #: src/view/com/post-thread/PostLikedBy.tsx:85
 msgid "No likes yet"
-msgstr ""
+msgstr "目前還沒有喜歡"
 
 #: src/components/ProfileCard.tsx:336
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:116
@@ -3957,7 +3957,7 @@ msgstr "不超過 253 個字元"
 
 #: src/screens/Messages/List/ChatListItem.tsx:106
 msgid "No messages yet"
-msgstr "還沒有訊息"
+msgstr "目前還沒有訊息"
 
 #: src/screens/Messages/List/index.tsx:274
 msgid "No more conversations to show"
@@ -3965,7 +3965,7 @@ msgstr "已經沒有對話啦！"
 
 #: src/view/com/notifications/Feed.tsx:121
 msgid "No notifications yet!"
-msgstr "還沒有通知！"
+msgstr "目前還沒有通知！"
 
 #: src/components/dms/MessagesNUX.tsx:149
 #: src/components/dms/MessagesNUX.tsx:152
@@ -3984,11 +3984,11 @@ msgstr "目前還沒有貼文。"
 
 #: src/view/com/post-thread/PostQuotes.tsx:106
 msgid "No quotes yet"
-msgstr ""
+msgstr "目前還沒有引用"
 
 #: src/view/com/post-thread/PostRepostedBy.tsx:78
 msgid "No reposts yet"
-msgstr ""
+msgstr "目前還沒有轉貼"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:101
 #: src/view/com/composer/text-input/web/Autocomplete.tsx:195
@@ -4036,11 +4036,11 @@ msgstr "還沒有人對此表示喜歡，也許您可以成為第一個！"
 
 #: src/view/com/post-thread/PostQuotes.tsx:108
 msgid "Nobody has quoted this yet. Maybe you should be the first!"
-msgstr ""
+msgstr "還沒有人引用此貼文，也許您可以成為第一個！"
 
 #: src/view/com/post-thread/PostRepostedBy.tsx:80
 msgid "Nobody has reposted this yet. Maybe you should be the first!"
-msgstr ""
+msgstr "還沒有人轉貼此貼文，也許您可以成為第一個！"
 
 #: src/screens/StarterPack/Wizard/StepProfiles.tsx:103
 msgid "Nobody was found. Try searching for someone else."
@@ -4138,7 +4138,7 @@ msgstr "糟糕！發生了一些錯誤。"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:224
 msgid "Oh no! We weren't able to generate an image for you to share. Rest assured, we're glad you're here 🦋"
-msgstr ""
+msgstr "糟糕！我們無法產生圖像供您分享。請放心，我們仍然很高興您持續使用藍天 🦋"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:339
 msgid "OK"
@@ -5782,11 +5782,11 @@ msgstr "分享動態源"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:685
 msgid "Share image externally"
-msgstr ""
+msgstr "外部分享圖片"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:703
 msgid "Share image in post"
-msgstr ""
+msgstr "在貼文中分享圖片"
 
 #: src/components/StarterPack/ShareDialog.tsx:124
 #: src/components/StarterPack/ShareDialog.tsx:131
@@ -6025,7 +6025,7 @@ msgstr "跳過此流程"
 #: src/components/dialogs/nuxs/NeueTypography.tsx:96
 #: src/screens/Settings/AppearanceSettings.tsx:165
 msgid "Smaller"
-msgstr ""
+msgstr "更小"
 
 #: src/screens/Onboarding/index.tsx:37
 #: src/screens/Onboarding/state.ts:85
@@ -6236,7 +6236,7 @@ msgstr "點擊以進入全螢幕"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:142
 msgid "Tap to play or pause"
-msgstr ""
+msgstr "點擊以播放或暫停"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:159
 msgid "Tap to toggle sound"
@@ -6270,7 +6270,7 @@ msgstr "告訴我們更多"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:578
 msgid "Ten Million"
-msgstr ""
+msgstr "1000 萬"
 
 #: src/view/shell/desktop/RightNav.tsx:90
 msgid "Terms"
@@ -6307,7 +6307,7 @@ msgstr "謝謝，您的檢舉已提交。"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:654
 msgid "Thanks for being one of our first 10 million users."
-msgstr ""
+msgstr "感謝您成為我們首批 1000 萬用戶之一。"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:74
 msgid "Thanks, you have successfully verified your email address."
@@ -6417,7 +6417,7 @@ msgstr "您提供的驗證碼無效。請確認您使用了正確的驗證連結
 #: src/components/dialogs/nuxs/NeueTypography.tsx:83
 #: src/screens/Settings/AppearanceSettings.tsx:152
 msgid "Theme"
-msgstr ""
+msgstr "主題"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:86
 msgid "There is no time limit for account deactivation, come back any time."
@@ -6734,7 +6734,7 @@ msgstr "若要關閉電子郵件雙重驗證，請驗證您的電子郵件地址
 
 #: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:69
 msgid "To learn more, <0>check out our post.</0>"
-msgstr ""
+msgstr "要了解更多訊息，請<0>查看我們的貼文。</0>"
 
 #: src/components/dms/ReportConversationPrompt.tsx:20
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
@@ -6751,7 +6751,7 @@ msgstr "您希望向誰提交此檢舉？"
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:658
 #: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:63
 msgid "Together, we're rebuilding the social internet. We're glad you're here."
-msgstr ""
+msgstr "我們很高興您在這裡，讓我們正在共同重建社交網路。"
 
 #: src/view/com/util/forms/DropdownButton.tsx:255
 msgid "Toggle dropdown"
@@ -7249,7 +7249,7 @@ msgstr "查看有關這些標記的資訊"
 
 #: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:72
 msgid "View our post"
-msgstr ""
+msgstr "查看我們的貼文"
 
 #: src/components/ProfileHoverCard/index.web.tsx:418
 #: src/components/ProfileHoverCard/index.web.tsx:436
@@ -7361,7 +7361,7 @@ msgstr "我們遇到網路問題，請再試一次"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:55
 msgid "We're introducing a new theme font, along with adjustable font sizing."
-msgstr ""
+msgstr "我們引入了一種新的主題字體，以及字體大小的客製化。"
 
 #: src/screens/Signup/index.tsx:100
 msgid "We're so excited to have you join us!"
@@ -7549,7 +7549,7 @@ msgstr "您沒有跟隨任何人。"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:62
 msgid "You can adjust these in your Appearance Settings later."
-msgstr ""
+msgstr "您可以稍後在「外觀設定」中調整。"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:63
 #: src/view/com/posts/FollowingEndOfFeed.tsx:64
