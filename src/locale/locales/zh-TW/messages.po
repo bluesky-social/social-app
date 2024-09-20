@@ -1823,10 +1823,6 @@ msgstr "探索新的動態源"
 msgid "Discover New Feeds"
 msgstr "探索新的動態源"
 
-#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:108
-#~ msgid "Dismiss"
-#~ msgstr "跳過"
-
 #: src/view/com/composer/Composer.tsx:1107
 msgid "Dismiss error"
 msgstr "跳過錯誤"
@@ -3168,10 +3164,6 @@ msgstr "加入 Bluesky"
 msgid "Join the conversation"
 msgstr "加入對話"
 
-#: src/components/dialogs/nuxs/TenMillion/index.tsx:492
-#~ msgid "Joined {0}"
-#~ msgstr ""
-
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:559
 msgid "Joined on {joinedDate}"
 msgstr "加入於 {joinedDate}"
@@ -3553,10 +3545,6 @@ msgstr "誤導性帳號"
 msgid "Misleading Post"
 msgstr "誤導性貼文"
 
-#: src/screens/Settings/AppearanceSettings.tsx:78
-#~ msgid "Mode"
-#~ msgstr "模式"
-
 #: src/Navigation.tsx:135
 #: src/screens/Moderation/index.tsx:105
 #: src/view/screens/Settings/index.tsx:527
@@ -3720,10 +3708,6 @@ msgstr "靜音討論串"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:483
 msgid "Mute words & tags"
 msgstr "靜音文字和標籤"
-
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
-#~ msgid "Muted"
-#~ msgstr "已靜音"
 
 #: src/screens/Moderation/index.tsx:264
 msgid "Muted accounts"
@@ -6912,10 +6896,6 @@ msgstr "取消靜音討論串"
 #: src/view/com/util/post-embeds/VideoEmbedInner/web-controls/VideoControls.tsx:318
 msgid "Unmute video"
 msgstr "取消靜音影片"
-
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
-#~ msgid "Unmuted"
-#~ msgstr "取消靜音"
 
 #: src/view/screens/ProfileFeed.tsx:292
 #: src/view/screens/ProfileList.tsx:673
