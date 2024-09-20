@@ -96,10 +96,8 @@ export function VideoEmbedInnerWeb({
         _event: Events.FRAG_CHANGED,
         {frag}: FragChangedData,
       ) {
-        if (!hlsRef.current) return
-
         // if the current quality level goes above 0, flush the low quality segments
-        if (hlsRef.current.nextAutoLevel > 0) {
+        if (current.nextAutoLevel > 0) {
           const flushed: Fragment[] = []
 
           for (const lowQualFrag of lowQualityFragments) {
@@ -108,7 +106,7 @@ export function VideoEmbedInnerWeb({
               return
             }
 
-            hlsRef.current.trigger(Hls.Events.BUFFER_FLUSHING, {
+            current.trigger(Hls.Events.BUFFER_FLUSHING, {
               startOffset: lowQualFrag.start,
               endOffset: lowQualFrag.end,
               type: 'video',
