@@ -1,6 +1,6 @@
 import {useFonts as defaultUseFonts} from 'expo-font'
 
-import {isNative, isWeb} from '#/platform/detection'
+import {isWeb} from '#/platform/detection'
 import {Device, device} from '#/storage'
 
 const FAMILIES = `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Liberation Sans", Helvetica, Arial, sans-serif`
@@ -35,15 +35,16 @@ export function setFontFamily(fontFamily: Device['fontFamily']) {
 }
 
 /*
- * Unused fonts are commented out, but the files are there if we need them.
+ * IMPORTANT: This is unused. Expo statically extracts these fonts, but we load
+ * them manually so that we can parallelize the loading along with the JS
+ * bundle.
+ *
+ * See `#/alf/util/useFonts` for the actually used hooks.
+ *
+ * All used fonts MUST be configured here. Unused fonts are commented out, but
+ * the files are there if we need them.
  */
-export function useFonts() {
-  /**
-   * For native, the `expo-font` config plugin embeds the fonts in the
-   * application binary. But `expo-font` isn't supported on web, so we fall
-   * back to async loading here.
-   */
-  if (isNative) return [true, null]
+export function DO_NOT_USE() {
   return defaultUseFonts({
     // 'Inter-Thin': require('../../assets/fonts/inter/Inter-Thin.otf'),
     // 'Inter-ThinItalic': require('../../assets/fonts/inter/Inter-ThinItalic.otf'),
@@ -108,4 +109,10 @@ export function applyFonts(
       style.fontFamily = style.fontFamily || FAMILIES
     }
   }
+
+  /**
+   * Disable contextual ligatures
+   * {@link https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant}
+   */
+  style.fontVariant = ['no-contextual']
 }
