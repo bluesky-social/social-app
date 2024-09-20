@@ -89,6 +89,8 @@ export function VideoEmbedInnerWeb({
   useEffect(() => {
     if (!hlsRef.current) return
 
+    const current = hlsRef.current
+
     if (focused) {
       function fragChanged(
         _event: Events.FRAG_CHANGED,
@@ -118,9 +120,8 @@ export function VideoEmbedInnerWeb({
           setLowQualityFragments(prev => prev.filter(f => !flushed.includes(f)))
         }
       }
-      hlsRef.current.on(Hls.Events.FRAG_CHANGED, fragChanged)
+      current.on(Hls.Events.FRAG_CHANGED, fragChanged)
 
-      const current = hlsRef.current
       return () => {
         current.off(Hls.Events.FRAG_CHANGED, fragChanged)
       }
