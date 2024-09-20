@@ -53,7 +53,7 @@ function PlaybackControls({
         a.inset_0,
         a.w_full,
         a.h_full,
-        a.rounded_sm,
+        a.rounded_md,
         {
           zIndex: 2,
           backgroundColor: !isLoaded
@@ -117,10 +117,10 @@ export function GifEmbed({
   )
 
   return (
-    <View style={[a.rounded_sm, a.overflow_hidden, a.mt_sm, style]}>
+    <View style={[a.rounded_md, a.overflow_hidden, a.mt_sm, style]}>
       <View
         style={[
-          a.rounded_sm,
+          a.rounded_md,
           a.overflow_hidden,
           {aspectRatio: params.dimensions!.width / params.dimensions!.height},
         ]}>
@@ -132,7 +132,7 @@ export function GifEmbed({
         <GifView
           source={params.playerUri}
           placeholderSource={link.thumb}
-          style={[a.flex_1, a.rounded_sm]}
+          style={[a.flex_1, a.rounded_md]}
           autoplay={!autoplayDisabled}
           onPlayerStateChange={onPlayerStateChange}
           ref={playerRef}
