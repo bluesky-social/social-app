@@ -54,16 +54,16 @@ export function DO_NOT_USE() {
     // 'Inter-LightItalic': require('../../assets/fonts/inter/Inter-LightItalic.otf'),
     'Inter-Regular': require('../../assets/fonts/inter/Inter-Regular.otf'),
     'Inter-Italic': require('../../assets/fonts/inter/Inter-Italic.otf'),
-    'Inter-Medium': require('../../assets/fonts/inter/Inter-Medium.otf'),
-    'Inter-MediumItalic': require('../../assets/fonts/inter/Inter-MediumItalic.otf'),
+    // 'Inter-Medium': require('../../assets/fonts/inter/Inter-Medium.otf'),
+    // 'Inter-MediumItalic': require('../../assets/fonts/inter/Inter-MediumItalic.otf'),
     'Inter-SemiBold': require('../../assets/fonts/inter/Inter-SemiBold.otf'),
     'Inter-SemiBoldItalic': require('../../assets/fonts/inter/Inter-SemiBoldItalic.otf'),
-    'Inter-Bold': require('../../assets/fonts/inter/Inter-Bold.otf'),
-    'Inter-BoldItalic': require('../../assets/fonts/inter/Inter-BoldItalic.otf'),
+    // 'Inter-Bold': require('../../assets/fonts/inter/Inter-Bold.otf'),
+    // 'Inter-BoldItalic': require('../../assets/fonts/inter/Inter-BoldItalic.otf'),
     'Inter-ExtraBold': require('../../assets/fonts/inter/Inter-ExtraBold.otf'),
     'Inter-ExtraBoldItalic': require('../../assets/fonts/inter/Inter-ExtraBoldItalic.otf'),
-    'Inter-Black': require('../../assets/fonts/inter/Inter-Black.otf'),
-    'Inter-BlackItalic': require('../../assets/fonts/inter/Inter-BlackItalic.otf'),
+    // 'Inter-Black': require('../../assets/fonts/inter/Inter-Black.otf'),
+    // 'Inter-BlackItalic': require('../../assets/fonts/inter/Inter-BlackItalic.otf'),
   })
 }
 
