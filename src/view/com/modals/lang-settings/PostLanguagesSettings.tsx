@@ -2,6 +2,8 @@ import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {Trans} from '@lingui/macro'
 
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {deviceLanguageCodes} from '#/locale/deviceLocales'
 import {useModalControls} from '#/state/modals'
 import {
@@ -9,9 +11,7 @@ import {
   useLanguagePrefs,
   useLanguagePrefsApi,
 } from '#/state/preferences/languages'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {ToggleButton} from 'view/com/util/forms/ToggleButton'
+import {ToggleButton} from '#/view/com/util/forms/ToggleButton'
 import {LANGUAGES, LANGUAGES_MAP_CODE2} from '../../../../locale/languages'
 import {Text} from '../../util/text/Text'
 import {ScrollView} from '../util'
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
   },
   title: {
     textAlign: 'center',
-    fontWeight: 'bold',
+    fontWeight: '600',
     fontSize: 24,
     marginBottom: 12,
   },

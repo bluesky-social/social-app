@@ -20,10 +20,10 @@ import {
   ModerationDecision,
 } from '@atproto/api'
 
+import {usePalette} from '#/lib/hooks/usePalette'
 import {ImagesLightbox, useLightboxControls} from '#/state/lightbox'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {usePalette} from 'lib/hooks/usePalette'
-import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
+import {FeedSourceCard} from '#/view/com/feeds/FeedSourceCard'
 import {atoms as a, useTheme} from '#/alf'
 import * as ListCard from '#/components/ListCard'
 import {Embed as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
   alt: {
     color: 'white',
     fontSize: 7,
-    fontWeight: 'bold',
+    fontWeight: '600',
   },
   customFeedOuter: {
     borderWidth: StyleSheet.hairlineWidth,

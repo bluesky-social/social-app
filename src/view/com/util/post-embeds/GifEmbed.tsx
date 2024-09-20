@@ -13,10 +13,10 @@ import {useLingui} from '@lingui/react'
 
 import {HITSLOP_20} from '#/lib/constants'
 import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
+import {EmbedPlayerParams} from '#/lib/strings/embed-player'
 import {isWeb} from '#/platform/detection'
+import {useAutoplayDisabled} from '#/state/preferences'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
-import {EmbedPlayerParams} from 'lib/strings/embed-player'
-import {useAutoplayDisabled} from 'state/preferences'
 import {atoms as a, useTheme} from '#/alf'
 import {Fill} from '#/components/Fill'
 import {Loader} from '#/components/Loader'
@@ -210,6 +210,6 @@ const styles = StyleSheet.create({
   alt: {
     color: 'white',
     fontSize: isWeb ? 10 : 7,
-    fontWeight: 'bold',
+    fontWeight: '600',
   },
 })

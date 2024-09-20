@@ -26,7 +26,7 @@ export function ProgressGuideList({style}: {style?: StyleProp<ViewStyle>}) {
           <Text
             style={[
               t.atoms.text_contrast_medium,
-              a.font_semibold,
+              a.font_bold,
               a.text_sm,
               {textTransform: 'uppercase'},
             ]}>
