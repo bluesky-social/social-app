@@ -206,6 +206,7 @@ let PostCtrls = ({
         text: record.text,
         author: post.author,
         indexedAt: post.indexedAt,
+        embeds: post.embed ? [post.embed] : undefined,
       },
       quoteCount: post.quoteCount,
       onPost: onPostReply,
@@ -223,6 +224,7 @@ let PostCtrls = ({
     record.text,
     onPostReply,
     isBlocked,
+    post.embed,
   ])
 
   const onShare = useCallback(() => {
