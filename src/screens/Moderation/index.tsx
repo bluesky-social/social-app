@@ -7,6 +7,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
+import {useAnalytics} from '#/lib/analytics/analytics'
 import {getLabelingServiceTitle} from '#/lib/moderation'
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
 import {logger} from '#/logger'
@@ -22,8 +23,8 @@ import {
   useProfileUpdateMutation,
 } from '#/state/queries/profile'
 import {useSession} from '#/state/session'
+import {isNonConfigurableModerationAuthority} from '#/state/session/additional-moderation-authorities'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {useAnalytics} from 'lib/analytics/analytics'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {CenteredView} from '#/view/com/util/Views'
 import {ScrollView} from '#/view/com/util/Views'
@@ -455,6 +456,9 @@ export function ModerationScreenInner({
                           value={labeler.creator.description}
                           handle={labeler.creator.handle}
                         />
+                        {isNonConfigurableModerationAuthority(
+                          labeler.creator.did,
+                        ) && <LabelingService.RegionalNotice />}
                       </LabelingService.Content>
                     </LabelingService.Outer>
                   )}
