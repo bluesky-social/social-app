@@ -1,7 +1,7 @@
 import {describe, expect, it} from '@jest/globals'
 import tldts from 'tldts'
 
-import {emailTypoCheck} from '#/lib/strings/email-typo'
+import {isEmailMaybeInvalid} from '#/lib/strings/email'
 
 describe('emailTypoChecker', () => {
   const invalidCases = [
@@ -73,10 +73,10 @@ describe('emailTypoChecker', () => {
   ]
 
   it.each(invalidCases)(`should be invalid: abcde@%s`, domain => {
-    expect(emailTypoCheck(`abcde@${domain}`, tldts)).toEqual(true)
+    expect(isEmailMaybeInvalid(`abcde@${domain}`, tldts)).toEqual(true)
   })
 
   it.each(validCases)(`should be valid: abcde@%s`, domain => {
-    expect(emailTypoCheck(`abcde@${domain}`, tldts)).toEqual(false)
+    expect(isEmailMaybeInvalid(`abcde@${domain}`, tldts)).toEqual(false)
   })
 })

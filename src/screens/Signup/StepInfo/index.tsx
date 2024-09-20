@@ -7,7 +7,7 @@ import type tldts from 'tldts'
 
 import {logEvent} from '#/lib/statsig/statsig'
 import {logger} from '#/logger'
-import {emailTypoCheck} from 'lib/strings/email-typo'
+import {isEmailMaybeInvalid} from 'lib/strings/email'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {is13, is18, useSignupContext} from '#/screens/Signup/state'
 import {Policies} from '#/screens/Signup/StepInfo/Policies'
@@ -68,7 +68,7 @@ export function StepInfo({
     const password = passwordValueRef.current
 
     if (emailChanged && tldtsRef.current) {
-      if (emailTypoCheck(email, tldtsRef.current)) {
+      if (isEmailMaybeInvalid(email, tldtsRef.current)) {
         prevEmailValueRef.current = email
         setHasWarnedEmail(true)
         return dispatch({
