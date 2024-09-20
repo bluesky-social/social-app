@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh_CN\n"
 "Project-Id-Version: zh-CN for bluesky-social-app\n"
 "Report-Msgid-Bugs-To: Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-09-19 10:46+0800\n"
+"PO-Revision-Date: 2024-09-20 09:11+0800\n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
 "Language-Team: Frudrax Cheng (auroursa), Simon Chan (RitsukiP), U2FsdGVkX1, Mikan Harada (mitian233), IceCodeNew\n"
 "Plural-Forms: \n"
@@ -275,7 +275,7 @@ msgstr "访问导航链接及设置"
 msgid "Access profile and other navigation links"
 msgstr "访问个人资料及其他导航链接"
 
-#: src/view/com/modals/EditImage.tsx:300
+#: src/view/com/modals/EditImage.tsx:284
 #: src/view/screens/Settings/index.tsx:463
 msgid "Accessibility"
 msgstr "无障碍"
@@ -500,7 +500,7 @@ msgstr "ALT"
 #: src/view/com/composer/videos/SubtitleDialog.tsx:56
 #: src/view/com/composer/videos/SubtitleDialog.tsx:104
 #: src/view/com/composer/videos/SubtitleDialog.tsx:108
-#: src/view/com/modals/EditImage.tsx:316
+#: src/view/com/modals/EditImage.tsx:300
 #: src/view/screens/AccessibilitySettings.tsx:87
 msgid "Alt text"
 msgstr "替代文本"
@@ -957,7 +957,7 @@ msgstr "只能包含字母、数字、空格、破折号及下划线。 长度�
 #: src/view/com/modals/ChangePassword.tsx:271
 #: src/view/com/modals/CreateOrEditList.tsx:344
 #: src/view/com/modals/crop-image/CropImage.web.tsx:162
-#: src/view/com/modals/EditImage.tsx:324
+#: src/view/com/modals/EditImage.tsx:308
 #: src/view/com/modals/EditProfile.tsx:250
 #: src/view/com/modals/InAppBrowserConsent.tsx:78
 #: src/view/com/modals/InAppBrowserConsent.tsx:80
@@ -1642,14 +1642,10 @@ msgstr "调试内容审核"
 msgid "Debug panel"
 msgstr "调试面板"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:101
+#: src/components/dialogs/nuxs/NeueTypography.tsx:100
 #: src/screens/Settings/AppearanceSettings.tsx:169
 msgid "Default"
 msgstr "默认"
-
-#: src/components/dialogs/nuxs/NeueTypography.tsx:62
-msgid "Defaults are shown below. You can edit these in your Appearance Settings later."
-msgstr "默认设置如下所示，你可以稍后在外观设置中调整这些设置。"
 
 #: src/components/dms/MessageMenu.tsx:151
 #: src/screens/StarterPack/StarterPackScreen.tsx:573
@@ -1890,7 +1886,7 @@ msgstr "域名已认证！"
 msgid "Done"
 msgstr "完成"
 
-#: src/view/com/modals/EditImage.tsx:334
+#: src/view/com/modals/EditImage.tsx:318
 #: src/view/com/modals/ListAddRemoveUsers.tsx:145
 #: src/view/com/modals/SelfLabel.tsx:158
 #: src/view/com/modals/UserAddRemoveLists.tsx:107
@@ -1916,7 +1912,7 @@ msgstr "下载 CAR 文件"
 msgid "Download image"
 msgstr "下载图片"
 
-#: src/view/com/composer/text-input/TextInput.web.tsx:269
+#: src/view/com/composer/text-input/TextInput.web.tsx:291
 msgid "Drop to add images"
 msgstr "拖放即可新增图片"
 
@@ -1987,7 +1983,7 @@ msgid "Edit Feeds"
 msgstr "编辑资讯源"
 
 #: src/view/com/composer/photos/Gallery.tsx:151
-#: src/view/com/modals/EditImage.tsx:208
+#: src/view/com/modals/EditImage.tsx:205
 msgid "Edit image"
 msgstr "编辑图片"
 
@@ -2513,12 +2509,11 @@ msgstr "健康"
 msgid "Flexible"
 msgstr "灵活"
 
-#: src/view/com/modals/EditImage.tsx:116
+#: src/view/com/modals/EditImage.tsx:124
 msgid "Flip horizontal"
 msgstr "水平翻转"
 
-#: src/view/com/modals/EditImage.tsx:121
-#: src/view/com/modals/EditImage.tsx:288
+#: src/view/com/modals/EditImage.tsx:129
 msgid "Flip vertically"
 msgstr "垂直翻转"
 
@@ -2655,12 +2650,12 @@ msgstr "关注了你"
 msgid "Follows You"
 msgstr "关注了你"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:73
+#: src/components/dialogs/nuxs/NeueTypography.tsx:72
 #: src/screens/Settings/AppearanceSettings.tsx:141
 msgid "Font"
 msgstr "字体"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:93
+#: src/components/dialogs/nuxs/NeueTypography.tsx:92
 #: src/screens/Settings/AppearanceSettings.tsx:161
 msgid "Font size"
 msgstr "字体大小"
@@ -2678,7 +2673,7 @@ msgstr "出于安全原因，我们需要向你的电子邮箱发送验证码。
 msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
 msgstr "出于安全原因，你将无法再次查看此内容。如果你丢失了该密码，则需要生成一个新的密码。"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:75
+#: src/components/dialogs/nuxs/NeueTypography.tsx:74
 #: src/screens/Settings/AppearanceSettings.tsx:143
 msgid "For the best experience, we recommend using the theme font."
 msgstr "出于用户体验考虑，我们建议你使用主题字体。"
@@ -3096,10 +3091,6 @@ msgstr "介绍私信"
 msgid "Introducing new font settings"
 msgstr "介绍全新的字体设置"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:52
-msgid "Introducing new font settings ✨"
-msgstr "介绍全新的字体设置 ✨"
-
 #: src/screens/Login/LoginForm.tsx:145
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:70
 msgid "Invalid 2FA confirmation code."
@@ -3223,7 +3214,7 @@ msgstr "语言设置"
 msgid "Languages"
 msgstr "语言"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:105
+#: src/components/dialogs/nuxs/NeueTypography.tsx:104
 #: src/screens/Settings/AppearanceSettings.tsx:173
 msgid "Larger"
 msgstr "更大"
@@ -3829,6 +3820,10 @@ msgstr "新建"
 #: src/screens/Messages/List/index.tsx:338
 msgid "New chat"
 msgstr "新私信"
+
+#: src/components/dialogs/nuxs/NeueTypography.tsx:52
+msgid "New font settings ✨"
+msgstr "全新字体设置 ✨"
 
 #: src/components/dms/NewMessagesPill.tsx:92
 msgid "New messages"
@@ -4851,7 +4846,7 @@ msgstr "引用这条帖文"
 msgid "Random (aka \"Poster's Roulette\")"
 msgstr "随机显示 (手气不错)"
 
-#: src/view/com/modals/EditImage.tsx:237
+#: src/view/com/modals/EditImage.tsx:234
 msgid "Ratios"
 msgstr "比率"
 
@@ -6011,7 +6006,7 @@ msgstr "跳过"
 msgid "Skip this flow"
 msgstr "跳过这段流程"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:97
+#: src/components/dialogs/nuxs/NeueTypography.tsx:96
 #: src/screens/Settings/AppearanceSettings.tsx:165
 msgid "Smaller"
 msgstr "更小"
@@ -6193,7 +6188,7 @@ msgstr "切换到 {0}"
 msgid "Switches the account you are logged in to"
 msgstr "切换你登录的账户"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:80
+#: src/components/dialogs/nuxs/NeueTypography.tsx:79
 #: src/screens/Settings/AppearanceSettings.tsx:101
 #: src/screens/Settings/AppearanceSettings.tsx:148
 msgid "System"
@@ -6403,7 +6398,7 @@ msgstr "服务条款已迁移至"
 msgid "The verification code you have provided is invalid. Please make sure that you have used the correct verification link or request a new one."
 msgstr "你提供的验证码无效，请检查你所使用的验证链接，或是申请新的验证链接。"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:84
+#: src/components/dialogs/nuxs/NeueTypography.tsx:83
 #: src/screens/Settings/AppearanceSettings.tsx:152
 msgid "Theme"
 msgstr "主题"
@@ -6729,10 +6724,6 @@ msgstr "要了解更多资讯，请<0>点击查看我们所发布的文章。</0
 msgid "To report a conversation, please report one of its messages via the conversation screen. This lets our moderators understand the context of your issue."
 msgstr "要举报对话，请在会话中选择一条私信并举报。这有助于使内容审核服务提供方了解有关问题的背景信息。"
 
-#: src/components/dialogs/nuxs/NeueTypography.tsx:55
-msgid "To the ensure the best possible experience, we're introducing a new theme font, along with adjustable font sizing settings."
-msgstr "为了确保最佳的用户体验，我们新推出了主题字体及字体大小设置。"
-
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:120
 msgid "To upload videos to Bluesky, you must first verify your email."
 msgstr "要上传视频至 Bluesky，你必须首先验证邮箱地址。"
@@ -6759,7 +6750,7 @@ msgstr "切换以启用或禁用成人内容"
 msgid "Top"
 msgstr "热门"
 
-#: src/view/com/modals/EditImage.tsx:272
+#: src/view/com/modals/EditImage.tsx:263
 msgid "Transformations"
 msgstr "转换"
 
@@ -7348,6 +7339,10 @@ msgstr "我们将使用这些信息来帮助定制你的体验。"
 msgid "We're having network issues, try again"
 msgstr "我们遇到了网络问题，请再试一次"
 
+#: src/components/dialogs/nuxs/NeueTypography.tsx:55
+msgid "We're introducing a new theme font, along with adjustable font sizing."
+msgstr "隆重推出全新的主题字体及字体大小调整功能。"
+
 #: src/screens/Signup/index.tsx:100
 msgid "We're so excited to have you join us!"
 msgstr "我们非常高兴你加入我们！"
@@ -7531,6 +7526,10 @@ msgstr "你无法上传视频。"
 #: src/view/com/profile/ProfileFollows.tsx:95
 msgid "You are not following anyone."
 msgstr "你没有关注任何账户。"
+
+#: src/components/dialogs/nuxs/NeueTypography.tsx:62
+msgid "You can adjust these in your Appearance Settings later."
+msgstr "你可以稍后在外观设置中重新调整这些设置。"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:63
 #: src/view/com/posts/FollowingEndOfFeed.tsx:64
