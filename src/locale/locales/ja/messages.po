@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-21 16:44+0900\n"
+"PO-Revision-Date: 2024-09-21 17:24+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -3180,7 +3180,7 @@ msgstr "会話に参加"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:559
 msgid "Joined on {joinedDate}"
-msgstr "{0} に参加"
+msgstr "{joinedDate} に参加"
 
 #: src/screens/Onboarding/index.tsx:21
 #: src/screens/Onboarding/state.ts:89
@@ -3231,7 +3231,7 @@ msgstr "言語"
 #: src/components/dialogs/nuxs/NeueTypography.tsx:105
 #: src/screens/Settings/AppearanceSettings.tsx:173
 msgid "Larger"
-msgstr "大きく"
+msgstr "大きい"
 
 #: src/screens/Hashtag.tsx:97
 #: src/view/screens/Search/Search.tsx:359
@@ -6027,7 +6027,7 @@ msgstr "この手順をスキップする"
 #: src/components/dialogs/nuxs/NeueTypography.tsx:97
 #: src/screens/Settings/AppearanceSettings.tsx:165
 msgid "Smaller"
-msgstr "小さく"
+msgstr "小さい"
 
 #: src/screens/Onboarding/index.tsx:37
 #: src/screens/Onboarding/state.ts:85
