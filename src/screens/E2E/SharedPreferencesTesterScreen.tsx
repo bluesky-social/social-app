@@ -23,7 +23,7 @@ export function SharedPreferencesTesterScreen() {
             style={[a.self_center]}
             variant="solid"
             color="primary"
-            size="xsmall"
+            size="small"
             onPress={async () => {
               SharedPrefs.removeValue('testerString')
               SharedPrefs.setValue('testerString', 'Hello')
@@ -39,7 +39,7 @@ export function SharedPreferencesTesterScreen() {
             style={[a.self_center]}
             variant="solid"
             color="primary"
-            size="xsmall"
+            size="small"
             onPress={async () => {
               SharedPrefs.removeValue('testerString')
               const str = SharedPrefs.getString('testerString')
@@ -53,7 +53,7 @@ export function SharedPreferencesTesterScreen() {
             style={[a.self_center]}
             variant="solid"
             color="primary"
-            size="xsmall"
+            size="small"
             onPress={async () => {
               SharedPrefs.removeValue('testerBool')
               SharedPrefs.setValue('testerBool', true)
@@ -68,7 +68,7 @@ export function SharedPreferencesTesterScreen() {
             style={[a.self_center]}
             variant="solid"
             color="primary"
-            size="xsmall"
+            size="small"
             onPress={async () => {
               SharedPrefs.removeValue('testerNumber')
               SharedPrefs.setValue('testerNumber', 123)
@@ -83,7 +83,7 @@ export function SharedPreferencesTesterScreen() {
             style={[a.self_center]}
             variant="solid"
             color="primary"
-            size="xsmall"
+            size="small"
             onPress={async () => {
               SharedPrefs.removeFromSet('testerSet', 'Hello!')
               SharedPrefs.addToSet('testerSet', 'Hello!')
@@ -98,7 +98,7 @@ export function SharedPreferencesTesterScreen() {
             style={[a.self_center]}
             variant="solid"
             color="primary"
-            size="xsmall"
+            size="small"
             onPress={async () => {
               SharedPrefs.removeFromSet('testerSet', 'Hello!')
               const contains = SharedPrefs.setContains('testerSet', 'Hello!')

@@ -78,7 +78,7 @@ export function VideoEmbedInnerWeb({
   }, [embed.playlist])
 
   return (
-    <View style={[a.flex_1, a.rounded_sm, a.overflow_hidden]}>
+    <View style={[a.flex_1, a.rounded_md, a.overflow_hidden]}>
       <div ref={containerRef} style={{height: '100%', width: '100%'}}>
         <figure style={{margin: 0, position: 'absolute', inset: 0}}>
           <video

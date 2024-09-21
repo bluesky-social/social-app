@@ -77,8 +77,7 @@ function LabelerButton({
             handle: labeler.creator.handle,
           })}
         />
-        <Text
-          style={[t.atoms.text_contrast_medium, a.text_sm, a.font_semibold]}>
+        <Text style={[t.atoms.text_contrast_medium, a.text_sm, a.font_bold]}>
           @{labeler.creator.handle}
         </Text>
       </LabelingServiceCard.Content>

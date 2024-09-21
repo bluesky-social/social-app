@@ -48,7 +48,7 @@ export function NeueTypography() {
       <Dialog.ScrollableInner label={_(msg`Introducing new font settings`)}>
         <View style={[a.gap_xl]}>
           <View style={[a.gap_md]}>
-            <Text style={[a.text_3xl, {fontWeight: '900'}]}>
+            <Text style={[a.text_3xl, a.font_heavy]}>
               <Trans>New font settings ✨</Trans>
             </Text>
             <Text style={[a.text_lg, a.leading_snug, {maxWidth: 400}]}>

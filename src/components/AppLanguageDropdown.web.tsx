@@ -27,8 +27,6 @@ export function AppLanguageDropdown() {
       if (sanitizedLang !== value) {
         setLangPrefs.setAppLanguage(sanitizeAppLanguageSetting(value))
       }
-      setLangPrefs.setPrimaryLanguage(value)
-      setLangPrefs.setContentLanguage(value)
 
       // reset feeds to refetch content
       resetPostsFeedQueries(queryClient)

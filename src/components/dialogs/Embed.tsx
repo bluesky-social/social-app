@@ -120,7 +120,7 @@ function EmbedDialogInner({
           label={_(msg`Copy code`)}
           color="primary"
           variant="solid"
-          size="medium"
+          size="large"
           onPress={() => {
             ref.current?.focus()
             ref.current?.setSelection(0, snippet.length)

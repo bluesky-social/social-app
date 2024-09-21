@@ -8,16 +8,16 @@ import {Slider} from '@miblanchard/react-native-slider'
 import {observer} from 'mobx-react-lite'
 import ImageEditor, {Position} from 'react-avatar-editor'
 
+import {MAX_ALT_TEXT} from '#/lib/constants'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {enforceLen} from '#/lib/strings/helpers'
+import {gradients, s} from '#/lib/styles'
+import {useTheme} from '#/lib/ThemeContext'
+import {getKeys} from '#/lib/type-assertions'
 import {useModalControls} from '#/state/modals'
-import {MAX_ALT_TEXT} from 'lib/constants'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {enforceLen} from 'lib/strings/helpers'
-import {gradients, s} from 'lib/styles'
-import {useTheme} from 'lib/ThemeContext'
-import {getKeys} from 'lib/type-assertions'
-import {GalleryModel} from 'state/models/media/gallery'
-import {ImageModel} from 'state/models/media/image'
+import {GalleryModel} from '#/state/models/media/gallery'
+import {ImageModel} from '#/state/models/media/image'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {
@@ -333,7 +333,7 @@ const styles = StyleSheet.create({
   subsection: {marginTop: 12},
   gap18: {gap: 18},
   title: {
-    fontWeight: 'bold',
+    fontWeight: '600',
     fontSize: 24,
   },
   btns: {

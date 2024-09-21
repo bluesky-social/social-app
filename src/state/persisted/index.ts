@@ -8,6 +8,7 @@ import {
   tryStringify,
 } from '#/state/persisted/schema'
 import {PersistedApi} from './types'
+import {normalizeData} from './util'
 
 export type {PersistedAccount, Schema} from '#/state/persisted/schema'
 export {defaults} from '#/state/persisted/schema'
@@ -33,10 +34,10 @@ export async function write<K extends keyof Schema>(
   key: K,
   value: Schema[K],
 ): Promise<void> {
-  _state = {
+  _state = normalizeData({
     ..._state,
     [key]: value,
-  }
+  })
   await writeToStorage(_state)
 }
 write satisfies PersistedApi['write']
@@ -81,6 +82,9 @@ async function readFromStorage(): Promise<Schema | undefined> {
     })
   }
   if (rawData) {
-    return tryParse(rawData)
+    const parsed = tryParse(rawData)
+    if (parsed) {
+      return normalizeData(parsed)
+    }
   }
 }

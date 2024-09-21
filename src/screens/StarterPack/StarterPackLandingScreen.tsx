@@ -11,22 +11,22 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {isAndroidWeb} from '#/lib/browser'
 import {JOINED_THIS_WEEK} from '#/lib/constants'
-import {isAndroidWeb} from 'lib/browser'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {logEvent} from 'lib/statsig/statsig'
-import {createStarterPackGooglePlayUri} from 'lib/strings/starter-pack'
-import {isWeb} from 'platform/detection'
-import {useModerationOpts} from 'state/preferences/moderation-opts'
-import {useStarterPackQuery} from 'state/queries/starter-packs'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {logEvent} from '#/lib/statsig/statsig'
+import {createStarterPackGooglePlayUri} from '#/lib/strings/starter-pack'
+import {isWeb} from '#/platform/detection'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {useStarterPackQuery} from '#/state/queries/starter-packs'
 import {
   useActiveStarterPack,
   useSetActiveStarterPack,
-} from 'state/shell/starter-pack'
+} from '#/state/shell/starter-pack'
+import {LoggedOutScreenState} from '#/view/com/auth/LoggedOut'
 import {formatCount} from '#/view/com/util/numeric/format'
-import {LoggedOutScreenState} from 'view/com/auth/LoggedOut'
-import {CenteredView} from 'view/com/util/Views'
-import {Logo} from 'view/icons/Logo'
+import {CenteredView} from '#/view/com/util/Views'
+import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
@@ -188,12 +188,7 @@ function LandingScreenLoaded({
             {record.name}
           </Text>
           <Text
-            style={[
-              a.text_center,
-              a.font_semibold,
-              a.text_md,
-              {color: 'white'},
-            ]}>
+            style={[a.text_center, a.font_bold, a.text_md, {color: 'white'}]}>
             Starter pack by {`@${creator.handle}`}
           </Text>
         </LinearGradientBackground>
@@ -219,11 +214,7 @@ function LandingScreenLoaded({
                 color={t.atoms.text_contrast_medium.color}
               />
               <Text
-                style={[
-                  a.font_semibold,
-                  a.text_sm,
-                  t.atoms.text_contrast_medium,
-                ]}
+                style={[a.font_bold, a.text_sm, t.atoms.text_contrast_medium]}
                 numberOfLines={1}>
                 <Trans>
                   {formatCount(i18n, JOINED_THIS_WEEK)} joined this week
@@ -308,7 +299,7 @@ function LandingScreenLoaded({
             label={_(msg`Signup without a starter pack`)}
             variant="solid"
             color="secondary"
-            size="medium"
+            size="large"
             style={[a.py_lg]}
             onPress={onJoinWithoutPress}>
             <ButtonText>
