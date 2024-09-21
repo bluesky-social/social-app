@@ -109,7 +109,7 @@ export function RichText({
             // @ts-ignore TODO
             dataSet={WORD_WRAP}
             onPress={onLinkPress}>
-            {segment.text}
+            {segment.text.split('.bsky')[0]}
           </InlineLinkText>
         </ProfileHoverCard>,
       )
