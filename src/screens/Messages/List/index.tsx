@@ -198,7 +198,7 @@ export function MessagesScreen({navigation, route}: Props) {
 
                     <Button
                       label={_(msg`Reload conversations`)}
-                      size="medium"
+                      size="large"
                       color="secondary"
                       variant="solid"
                       onPress={() => refetch()}>

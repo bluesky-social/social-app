@@ -17,7 +17,118 @@
     <link rel="preconnect" href="https://bsky.social">
     <link rel="preconnect" href="https://bsky.network">
     <title>%WEB_TITLE%</title>
+
+    <link rel="preload" as="font" type="font/otf" href="/static/media/Inter-Regular.1f5ed03b6dd9fd1f9982.otf">
+    <link rel="preload" as="font" type="font/otf" href="/static/media/Inter-Italic.95778eb0c75dc956257e.otf">
+    <!--
+    <link rel="preload" as="font" type="font/otf" href="/static/media/Inter-Medium.296aa2d65964269836b3.otf">
+    <link rel="preload" as="font" type="font/otf" href="/static/media/Inter-MediumItalic.0e57e17a6311368e2114.otf">
+    -->
+    <link rel="preload" as="font" type="font/otf" href="/static/media/Inter-SemiBold.2277990330981b8409bb.otf">
+    <link rel="preload" as="font" type="font/otf" href="/static/media/Inter-SemiBoldItalic.f62fea3df3a521d6c8a7.otf">
+    <!--
+    <link rel="preload" as="font" type="font/otf" href="/static/media/Inter-Bold.8d330503e1d034ad68de.otf">
+    <link rel="preload" as="font" type="font/otf" href="/static/media/Inter-BoldItalic.bb17e63f9baa0d861a20.otf">
+    -->
+    <link rel="preload" as="font" type="font/otf" href="/static/media/Inter-ExtraBold.ff2581a193bf6b7e0b06.otf">
+    <link rel="preload" as="font" type="font/otf" href="/static/media/Inter-ExtraBoldItalic.0e50b40728d24d40fdf4.otf">
+    <!--
+    <link rel="preload" as="font" type="font/otf" href="/static/media/Inter-Black.66e9a87f1c921e844ed4.otf">
+    <link rel="preload" as="font" type="font/otf" href="/static/media/Inter-BlackItalic.27b9f0ad06fd13a7b9da.otf">
+    -->
+
     <style>
+      @font-face {
+        font-family: "Inter-Regular";
+        src: local("Inter-Regular"), url(/static/media/Inter-Regular.1f5ed03b6dd9fd1f9982.otf) format("font/otf");
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "Inter-Italic";
+        src: local("Inter-Italic"), url(/static/media/Inter-Italic.95778eb0c75dc956257e.otf) format("font/otf");
+        font-weight: 400;
+        font-style: italic;
+        font-display: swap;
+      }
+      /*
+      @font-face {
+        font-family: "Inter-Medium";
+        src: local("Inter-Medium"), url(/static/media/Inter-Medium.296aa2d65964269836b3.otf) format("font/otf");
+        font-weight: 500;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "Inter-MediumItalic";
+        src: local("Inter-MediumItalic"), url(/static/media/Inter-MediumItalic.0e57e17a6311368e2114.otf) format("font/otf");
+        font-weight: 500;
+        font-style: italic;
+        font-display: swap;
+      }
+      */
+      @font-face {
+        font-family: "Inter-SemiBold";
+        src: local("Inter-SemiBold"), url(/static/media/Inter-SemiBold.2277990330981b8409bb.otf) format("font/otf");
+        font-weight: 600;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "Inter-SemiBoldItalic";
+        src: local("Inter-SemiBoldItalic"), url(/static/media/Inter-SemiBoldItalic.f62fea3df3a521d6c8a7.otf) format("font/otf");
+        font-weight: 600;
+        font-style: italic;
+        font-display: swap;
+      }
+      /*
+      @font-face {
+        font-family: "Inter-Bold";
+        src: local("Inter-Bold"), url(/static/media/Inter-Bold.8d330503e1d034ad68de.otf) format("font/otf");
+        font-weight: 700;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "Inter-BoldItalic";
+        src: local("Inter-BoldItalic"), url(/static/media/Inter-BoldItalic.bb17e63f9baa0d861a20.otf) format("font/otf");
+        font-weight: 700;
+        font-style: italic;
+        font-display: swap;
+      }
+      */
+      @font-face {
+        font-family: "Inter-ExtraBold";
+        src: local("Inter-ExtraBold"), url(/static/media/Inter-ExtraBold.ff2581a193bf6b7e0b06.otf) format("font/otf");
+        font-weight: 800;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "Inter-ExtraBoldItalic";
+        src: local("Inter-ExtraBoldItalic"), url(/static/media/Inter-ExtraBoldItalic.0e50b40728d24d40fdf4.otf) format("font/otf");
+        font-weight: 800;
+        font-style: italic;
+        font-display: swap;
+      }
+      /*
+      @font-face {
+        font-family: "Inter-Black";
+        src: local("Inter-Black"), url(/static/media/Inter-Black.66e9a87f1c921e844ed4.otf) format("font/otf");
+        font-weight: 900;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "Inter-BlackItalic";
+        src: local("Inter-BlackItalic"), url(/static/media/Inter-BlackItalic.27b9f0ad06fd13a7b9da.otf) format("font/otf");
+        font-weight: 900;
+        font-style: italic;
+        font-display: swap;
+      }
+      */
+
       /**
        * Extend the react-native-web reset:
        * https://github.com/necolas/react-native-web/blob/master/packages/react-native-web/src/exports/StyleSheet/initialRules.js
@@ -153,7 +264,6 @@
 
       /* ProseMirror */
       .ProseMirror {
-        font: 18px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Liberation Sans", Helvetica, Arial, sans-serif;
         min-height: 140px;
       }
       .ProseMirror-dark {

@@ -1,3 +1,7 @@
+import {Platform} from 'react-native'
+
+export const TRACKING = Platform.OS === 'android' ? 0.1 : 0
+
 export const color = {
   temp_purple: 'rgb(105 0 255)',
   temp_purple_dark: 'rgb(83 0 202)',
@@ -43,11 +47,16 @@ export const borderRadius = {
   full: 999,
 } as const
 
+/**
+ * These correspond to Inter font files we actually load.
+ */
 export const fontWeight = {
-  normal: '400',
-  semibold: '500',
-  bold: '600',
-  heavy: '700',
+  regular: '400',
+  // medium: '500',
+  semibold: '600',
+  // bold: '700',
+  extrabold: '800',
+  // black: '900',
 } as const
 
 export const gradients = {

@@ -9,7 +9,6 @@ import {
   ButtonText,
   ButtonVariant,
 } from '#/components/Button'
-import {ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRight} from '#/components/icons/Arrow'
 import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
 import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
 import {H1} from '#/components/Typography'
@@ -70,81 +69,115 @@ export function Buttons() {
               ),
             )}
           </View>
-          {/*
-          <View style={[a.gap_md, a.align_start]}>
-            {['gradient_sunset', 'gradient_nordic', 'gradient_bonfire'].map(
-              name => (
-                <React.Fragment key={name}>
-                  <Button
-                    variant="gradient"
-                    color={name as ButtonColor}
-                    size="large"
-                    label="Click here">
-                    <ButtonText>Button</ButtonText>
-                  </Button>
-                  <Button
-                    disabled
-                    variant="gradient"
-                    color={name as ButtonColor}
-                    size="large"
-                    label="Click here">
-                    <ButtonText>Button</ButtonText>
-                  </Button>
-                </React.Fragment>
-              ),
-            )}
-          </View>
-            */}
         </View>
       </View>
 
       <View style={[a.flex_wrap, a.gap_md, a.align_start]}>
-        <Button
-          variant="gradient"
-          color="gradient_sky"
-          size="large"
-          label="Link out">
-          <ButtonText>Link out</ButtonText>
-          <ButtonIcon icon={ArrowTopRight} position="right" />
+        <Button variant="solid" color="primary" size="large" label="Link out">
+          <ButtonText>Button</ButtonText>
+        </Button>
+        <Button variant="solid" color="primary" size="large" label="Link out">
+          <ButtonText>Button</ButtonText>
+          <ButtonIcon icon={Globe} position="right" />
         </Button>
 
-        <Button
-          variant="gradient"
-          color="gradient_sky"
-          size="small"
-          label="Link out">
-          <ButtonText>Link out</ButtonText>
-          <ButtonIcon icon={ArrowTopRight} position="right" />
+        <Button variant="solid" color="primary" size="small" label="Link out">
+          <ButtonText>Button</ButtonText>
+        </Button>
+        <Button variant="solid" color="primary" size="small" label="Link out">
+          <ButtonText>Button</ButtonText>
+          <ButtonIcon icon={Globe} position="right" />
         </Button>
 
-        <Button
-          variant="gradient"
-          color="gradient_sky"
-          size="small"
-          label="Link out">
-          <ButtonText>Link xxxxxx</ButtonText>
-        </Button>
-
-        <Button
-          variant="gradient"
-          color="gradient_sky"
-          size="small"
-          label="Link out">
+        <Button variant="solid" color="primary" size="tiny" label="Link out">
           <ButtonIcon icon={Globe} position="left" />
-          <ButtonText>Link out</ButtonText>
-        </Button>
-
-        <Button
-          variant="gradient"
-          color="gradient_sky"
-          size="tiny"
-          label="Link out">
-          <ButtonIcon icon={Globe} position="left" />
-          <ButtonText>Link out</ButtonText>
+          <ButtonText>Button</ButtonText>
         </Button>
       </View>
 
-      <View style={[a.flex_row, a.gap_md, a.align_start]}>
+      <View style={[a.flex_row, a.gap_md, a.align_center]}>
+        <Button variant="solid" color="primary" size="large" label="Link out">
+          <ButtonText>Button</ButtonText>
+        </Button>
+        <Button variant="solid" color="primary" size="large" label="Link out">
+          <ButtonText>Button</ButtonText>
+          <ButtonIcon icon={Globe} position="right" />
+        </Button>
+        <Button variant="solid" color="primary" size="large" label="Link out">
+          <ButtonText>Button</ButtonText>
+          <ButtonIcon icon={Globe} position="right" size="lg" />
+        </Button>
+        <Button
+          variant="solid"
+          color="primary"
+          size="large"
+          shape="round"
+          label="Link out">
+          <ButtonIcon icon={ChevronLeft} />
+        </Button>
+        <Button
+          variant="solid"
+          color="primary"
+          size="large"
+          shape="round"
+          label="Link out">
+          <ButtonIcon icon={ChevronLeft} size="lg" />
+        </Button>
+      </View>
+
+      <View style={[a.flex_row, a.gap_md, a.align_center]}>
+        <Button variant="solid" color="primary" size="small" label="Link out">
+          <ButtonText>Button</ButtonText>
+        </Button>
+        <Button variant="solid" color="primary" size="small" label="Link out">
+          <ButtonText>Button</ButtonText>
+          <ButtonIcon icon={Globe} position="right" />
+        </Button>
+        <Button
+          variant="solid"
+          color="primary"
+          size="small"
+          shape="round"
+          label="Link out">
+          <ButtonIcon icon={ChevronLeft} />
+        </Button>
+        <Button
+          variant="solid"
+          color="primary"
+          size="small"
+          shape="round"
+          label="Link out">
+          <ButtonIcon icon={ChevronLeft} size="lg" />
+        </Button>
+      </View>
+
+      <View style={[a.flex_row, a.gap_md, a.align_center]}>
+        <Button variant="solid" color="primary" size="tiny" label="Link out">
+          <ButtonText>Button</ButtonText>
+        </Button>
+        <Button variant="solid" color="primary" size="tiny" label="Link out">
+          <ButtonText>Button</ButtonText>
+          <ButtonIcon icon={Globe} position="right" />
+        </Button>
+        <Button
+          variant="solid"
+          color="primary"
+          size="tiny"
+          shape="round"
+          label="Link out">
+          <ButtonIcon icon={ChevronLeft} />
+        </Button>
+        <Button
+          variant="solid"
+          color="primary"
+          size="tiny"
+          shape="round"
+          label="Link out">
+          <ButtonIcon icon={ChevronLeft} size="md" />
+        </Button>
+      </View>
+
+      <View style={[a.flex_row, a.gap_md, a.align_center]}>
         <Button
           variant="solid"
           color="primary"

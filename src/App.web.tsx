@@ -18,6 +18,11 @@ import {Provider as A11yProvider} from '#/state/a11y'
 import {Provider as MutedThreadsProvider} from '#/state/cache/thread-mutes'
 import {Provider as DialogStateProvider} from '#/state/dialogs'
 import {listenSessionDropped} from '#/state/events'
+import {
+  beginResolveGeolocation,
+  ensureGeolocationResolved,
+  Provider as GeolocationProvider,
+} from '#/state/geolocation'
 import {Provider as InvitesStateProvider} from '#/state/invites'
 import {Provider as LightboxStateProvider} from '#/state/lightbox'
 import {MessagesProvider} from '#/state/messages'
@@ -53,6 +58,11 @@ import {useStarterPackEntry} from '#/components/hooks/useStarterPackEntry'
 import {Provider as IntentDialogProvider} from '#/components/intents/IntentDialogs'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
+
+/**
+ * Begin geolocation ASAP
+ */
+beginResolveGeolocation()
 
 function InnerApp() {
   const [isReady, setIsReady] = React.useState(false)
@@ -133,8 +143,8 @@ function InnerApp() {
                       </MessagesProvider>
                     </StatsigProvider>
                   </QueryProvider>
+                  <ToastContainer />
                 </React.Fragment>
-                <ToastContainer />
               </ActiveVideoProvider>
             </VideoVolumeProvider>
           </RootSiblingParent>
@@ -148,7 +158,9 @@ function App() {
   const [isReady, setReady] = useState(false)
 
   React.useEffect(() => {
-    initPersistedState().then(() => setReady(true))
+    Promise.all([initPersistedState(), ensureGeolocationResolved()]).then(() =>
+      setReady(true),
+    )
   }, [])
 
   if (!isReady) {
@@ -160,31 +172,33 @@ function App() {
    * that is set up in the InnerApp component above.
    */
   return (
-    <A11yProvider>
-      <SessionProvider>
-        <PrefsStateProvider>
-          <I18nProvider>
-            <ShellStateProvider>
-              <InvitesStateProvider>
-                <ModalStateProvider>
-                  <DialogStateProvider>
-                    <LightboxStateProvider>
-                      <PortalProvider>
-                        <StarterPackProvider>
-                          <IntentDialogProvider>
-                            <InnerApp />
-                          </IntentDialogProvider>
-                        </StarterPackProvider>
-                      </PortalProvider>
-                    </LightboxStateProvider>
-                  </DialogStateProvider>
-                </ModalStateProvider>
-              </InvitesStateProvider>
-            </ShellStateProvider>
-          </I18nProvider>
-        </PrefsStateProvider>
-      </SessionProvider>
-    </A11yProvider>
+    <GeolocationProvider>
+      <A11yProvider>
+        <SessionProvider>
+          <PrefsStateProvider>
+            <I18nProvider>
+              <ShellStateProvider>
+                <InvitesStateProvider>
+                  <ModalStateProvider>
+                    <DialogStateProvider>
+                      <LightboxStateProvider>
+                        <PortalProvider>
+                          <StarterPackProvider>
+                            <IntentDialogProvider>
+                              <InnerApp />
+                            </IntentDialogProvider>
+                          </StarterPackProvider>
+                        </PortalProvider>
+                      </LightboxStateProvider>
+                    </DialogStateProvider>
+                  </ModalStateProvider>
+                </InvitesStateProvider>
+              </ShellStateProvider>
+            </I18nProvider>
+          </PrefsStateProvider>
+        </SessionProvider>
+      </A11yProvider>
+    </GeolocationProvider>
   )
 }
 

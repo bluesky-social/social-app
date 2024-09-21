@@ -449,7 +449,7 @@ function Header({
               }}
               variant="solid"
               color="primary"
-              size="medium">
+              size="large">
               <ButtonText style={[a.text_lg]}>
                 <Trans>Join Bluesky</Trans>
               </ButtonText>
@@ -645,7 +645,7 @@ function OverflowMenu({
           <Button
             variant="solid"
             color="negative"
-            size={gtMobile ? 'small' : 'medium'}
+            size={gtMobile ? 'small' : 'large'}
             label={_(msg`Yes, delete this starter pack`)}
             onPress={onDeleteStarterPack}>
             <ButtonText>

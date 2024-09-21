@@ -1,8 +1,4 @@
 import {Platform} from 'react-native'
-import {getLocales} from 'expo-localization'
-
-import {fixLegacyLanguageCode} from '#/locale/helpers'
-import {dedupArray} from 'lib/functions'
 
 export const isIOS = Platform.OS === 'ios'
 export const isAndroid = Platform.OS === 'android'
@@ -15,9 +11,3 @@ export const isMobileWeb =
   // @ts-ignore we know window exists -prf
   global.window.matchMedia(isMobileWebMediaQuery)?.matches
 export const isIPhoneWeb = isWeb && /iPhone/.test(navigator.userAgent)
-
-export const deviceLocales = dedupArray(
-  getLocales?.()
-    .map?.(locale => fixLegacyLanguageCode(locale.languageCode))
-    .filter(code => typeof code === 'string'),
-) as string[]

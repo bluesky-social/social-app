@@ -179,8 +179,10 @@ export function Outer({
           style={[
             a.rounded_sm,
             a.p_xs,
+            a.border,
             t.name === 'light' ? t.atoms.bg : t.atoms.bg_contrast_25,
             t.atoms.shadow_md,
+            t.atoms.border_contrast_low,
             style,
           ]}>
           {children}

@@ -2,24 +2,34 @@ import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
 import {useWindowDimensions} from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient'
-import {MaterialIcons} from '@expo/vector-icons'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {Slider} from '@miblanchard/react-native-slider'
 import {observer} from 'mobx-react-lite'
 import ImageEditor, {Position} from 'react-avatar-editor'
 
+import {MAX_ALT_TEXT} from '#/lib/constants'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {enforceLen} from '#/lib/strings/helpers'
+import {gradients, s} from '#/lib/styles'
+import {useTheme} from '#/lib/ThemeContext'
+import {getKeys} from '#/lib/type-assertions'
 import {useModalControls} from '#/state/modals'
-import {MAX_ALT_TEXT} from 'lib/constants'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {RectTallIcon, RectWideIcon, SquareIcon} from 'lib/icons'
-import {enforceLen} from 'lib/strings/helpers'
-import {gradients, s} from 'lib/styles'
-import {useTheme} from 'lib/ThemeContext'
-import {getKeys} from 'lib/type-assertions'
-import {GalleryModel} from 'state/models/media/gallery'
-import {ImageModel} from 'state/models/media/image'
+import {GalleryModel} from '#/state/models/media/gallery'
+import {ImageModel} from '#/state/models/media/image'
+import {atoms as a} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {
+  AspectRatio11_Stroke2_Corner0_Rounded as A11,
+  AspectRatio34_Stroke2_Corner0_Rounded as A34,
+  AspectRatio43_Stroke2_Corner0_Rounded as A43,
+} from '#/components/icons/AspectRatio'
+import {CircleBanSign_Stroke2_Corner0_Rounded as Ban} from '#/components/icons/CircleBanSign'
+import {
+  FlipHorizontal_Stroke2_Corner0_Rounded as FlipHorizontal,
+  FlipVertical_Stroke2_Corner0_Rounded as FlipVertical,
+} from '#/components/icons/FlipImage'
 import {Text} from '../util/text/Text'
 import {TextInput} from './util'
 
@@ -27,18 +37,16 @@ export const snapPoints = ['80%']
 
 const RATIOS = {
   '4:3': {
-    Icon: RectWideIcon,
+    icon: A43,
   },
   '1:1': {
-    Icon: SquareIcon,
+    icon: A11,
   },
   '3:4': {
-    Icon: RectTallIcon,
+    icon: A34,
   },
   None: {
-    label: 'None',
-    Icon: MaterialIcons,
-    name: 'do-not-disturb-alt',
+    icon: Ban,
   },
 } as const
 
@@ -112,12 +120,12 @@ export const Component = observer(function EditImageImpl({
       //   },
       // },
       {
-        name: 'flip' as const,
+        icon: FlipHorizontal,
         label: _(msg`Flip horizontal`),
         onPress: onFlipHorizontal,
       },
       {
-        name: 'flip' as const,
+        icon: FlipVertical,
         label: _(msg`Flip vertically`),
         onPress: onFlipVertical,
       },
@@ -164,17 +172,6 @@ export const Component = observer(function EditImageImpl({
     image.prevAttributes = image.attributes
     onCloseModal()
   }, [altText, image, position, scale, onCloseModal])
-
-  const getLabelIconSize = useCallback((as: AspectRatio) => {
-    switch (as) {
-      case 'None':
-        return 22
-      case '1:1':
-        return 32
-      default:
-        return 26
-    }
-  }, [])
 
   if (image.cropped === undefined) {
     return null
@@ -231,7 +228,7 @@ export const Component = observer(function EditImageImpl({
             maximumValue={3}
           />
         </View>
-        <View>
+        <View style={[a.gap_sm]}>
           {!isMobile ? (
             <Text type="sm-bold" style={pal.text}>
               <Trans>Ratios</Trans>
@@ -239,31 +236,25 @@ export const Component = observer(function EditImageImpl({
           ) : null}
           <View style={imgControlStyles}>
             {getKeys(RATIOS).map(ratio => {
-              const {Icon, ...props} = RATIOS[ratio]
-              const labelIconSize = getLabelIconSize(ratio)
+              const {icon} = RATIOS[ratio]
               const isSelected = aspectRatio === ratio
 
               return (
-                <Pressable
+                <Button
                   key={ratio}
+                  label={ratio}
+                  size="large"
+                  shape="square"
+                  variant="outline"
+                  color={isSelected ? 'primary' : 'secondary'}
                   onPress={() => {
                     onSetRatio(ratio)
-                  }}
-                  accessibilityLabel={ratio}
-                  accessibilityHint="">
-                  <Icon
-                    size={labelIconSize}
-                    style={[styles.imgControl, isSelected ? s.blue3 : pal.text]}
-                    color={(isSelected ? s.blue3 : pal.text).color}
-                    {...props}
-                  />
-
-                  <Text
-                    type={isSelected ? 'xs-bold' : 'xs-medium'}
-                    style={[isSelected ? s.blue3 : pal.text, s.textCenter]}>
-                    {ratio}
-                  </Text>
-                </Pressable>
+                  }}>
+                  <View style={[a.align_center, a.gap_2xs]}>
+                    <ButtonIcon icon={icon} />
+                    <ButtonText style={[a.text_xs]}>{ratio}</ButtonText>
+                  </View>
+                </Button>
               )
             })}
           </View>
@@ -273,24 +264,17 @@ export const Component = observer(function EditImageImpl({
             </Text>
           ) : null}
           <View style={imgControlStyles}>
-            {adjustments.map(({label, name, onPress}) => (
-              <Pressable
+            {adjustments.map(({label, icon, onPress}) => (
+              <Button
                 key={label}
-                onPress={onPress}
-                accessibilityLabel={label}
-                accessibilityHint=""
-                style={styles.flipBtn}>
-                <MaterialIcons
-                  name={name}
-                  size={label?.startsWith('Flip') ? 22 : 24}
-                  style={[
-                    pal.text,
-                    label === _(msg`Flip vertically`)
-                      ? styles.flipVertical
-                      : undefined,
-                  ]}
-                />
-              </Pressable>
+                label={label}
+                size="large"
+                shape="square"
+                variant="outline"
+                color="secondary"
+                onPress={onPress}>
+                <ButtonIcon icon={icon} />
+              </Button>
             ))}
           </View>
         </View>
@@ -349,7 +333,7 @@ const styles = StyleSheet.create({
   subsection: {marginTop: 12},
   gap18: {gap: 18},
   title: {
-    fontWeight: 'bold',
+    fontWeight: '600',
     fontSize: 24,
   },
   btns: {
@@ -361,12 +345,6 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     paddingVertical: 8,
     paddingHorizontal: 24,
-  },
-  imgControl: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 40,
   },
   imgEditor: {
     maxWidth: '100%',

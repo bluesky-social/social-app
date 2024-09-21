@@ -117,7 +117,7 @@ function BirthdayInner({
       <View style={isWeb && [a.flex_row, a.justify_end]}>
         <Button
           label={hasChanged ? _(msg`Save birthday`) : _(msg`Done`)}
-          size="medium"
+          size="large"
           onPress={onSave}
           variant="solid"
           color="primary">

@@ -439,7 +439,7 @@ export function PostInteractionSettingsForm({
         onPress={onSave}
         onAccessibilityEscape={control.close}
         color="primary"
-        size="medium"
+        size="large"
         variant="solid"
         style={a.mt_xl}>
         <ButtonText>{_(msg`Save`)}</ButtonText>
@@ -491,9 +491,7 @@ function Selectable({
             },
             style,
           ]}>
-          <Text style={[a.text_sm, isSelected && a.font_semibold]}>
-            {label}
-          </Text>
+          <Text style={[a.text_sm, isSelected && a.font_bold]}>{label}</Text>
           {isSelected ? (
             <Check size="sm" fill={t.palette.primary_500} />
           ) : (

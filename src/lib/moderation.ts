@@ -33,6 +33,20 @@ export function isJustAMute(modui: ModerationUI): boolean {
   return modui.filters.length === 1 && modui.filters[0].type === 'muted'
 }
 
+export function moduiContainsHideableOffense(modui: ModerationUI): boolean {
+  const label = modui.filters.at(0)
+  if (label && label.type === 'label') {
+    return labelIsHideableOffense(label.label)
+  }
+  return false
+}
+
+export function labelIsHideableOffense(
+  label: ComAtprotoLabelDefs.Label,
+): boolean {
+  return ['!hide', '!takedown'].includes(label.val)
+}
+
 export function getLabelingServiceTitle({
   displayName,
   handle,

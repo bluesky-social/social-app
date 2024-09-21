@@ -160,7 +160,7 @@ function AltTextInner({
           </View>
           <Button
             label={_(msg`Save`)}
-            size="medium"
+            size="large"
             color="primary"
             variant="solid"
             onPress={onPressSubmit}>

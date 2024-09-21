@@ -358,7 +358,7 @@ function Container({children}: {children: React.ReactNode}) {
             label={_(msg`Next`)}
             variant="solid"
             color="primary"
-            size="medium"
+            size="large"
             style={[a.mx_xl, a.mb_lg, {marginTop: 35}]}
             onPress={() => dispatch({type: 'Next'})}>
             <ButtonText>

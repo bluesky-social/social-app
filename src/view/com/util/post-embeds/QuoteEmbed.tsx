@@ -219,7 +219,14 @@ export function QuoteEmbed({
   return (
     <ContentHider
       modui={moderation?.ui('contentList')}
-      style={[styles.container, a.border, t.atoms.border_contrast_low, style]}
+      style={[
+        a.rounded_md,
+        a.p_md,
+        a.mt_sm,
+        a.border,
+        t.atoms.border_contrast_low,
+        style,
+      ]}
       childContainerStyle={[a.pt_sm]}>
       <Link
         hoverStyle={{borderColor: pal.colors.borderLinkHover}}
@@ -293,13 +300,6 @@ function viewRecordToPostView(
 }
 
 const styles = StyleSheet.create({
-  container: {
-    borderRadius: 8,
-    marginTop: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 12,
-    borderWidth: StyleSheet.hairlineWidth,
-  },
   errorContainer: {
     flexDirection: 'row',
     alignItems: 'center',

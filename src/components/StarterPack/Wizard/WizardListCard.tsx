@@ -101,7 +101,7 @@ function WizardListCard({
           label={_(msg`Remove`)}
           variant="solid"
           color="secondary"
-          size="xsmall"
+          size="small"
           style={[a.self_center, {marginLeft: 'auto'}]}
           onPress={onPress}>
           <ButtonText>

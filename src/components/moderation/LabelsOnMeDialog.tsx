@@ -279,7 +279,7 @@ function AppealForm({
           testID="backBtn"
           variant="solid"
           color="secondary"
-          size="medium"
+          size="large"
           onPress={onPressBack}
           label={_(msg`Back`)}>
           <ButtonText>{_(msg`Back`)}</ButtonText>
@@ -288,7 +288,7 @@ function AppealForm({
           testID="submitBtn"
           variant="solid"
           color="primary"
-          size="medium"
+          size="large"
           onPress={onSubmit}
           label={_(msg`Submit`)}>
           <ButtonText>{_(msg`Submit`)}</ButtonText>
