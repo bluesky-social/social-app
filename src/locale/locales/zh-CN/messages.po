@@ -3143,11 +3143,11 @@ msgstr "邀请，但保持私密"
 
 #: src/screens/Signup/StepInfo/index.tsx:77
 msgid "It looks like you may have entered your email address incorrectly. Are you sure it's right?"
-msgstr ""
+msgstr "你可能输入了错误的电子邮箱地址。确认是否输入正确？"
 
 #: src/screens/Signup/StepInfo/index.tsx:238
 msgid "It's correct"
-msgstr ""
+msgstr "输入正确"
 
 #: src/screens/StarterPack/Wizard/index.tsx:452
 msgid "It's just you right now! Add more people to your starter pack by searching above."
@@ -5249,7 +5249,7 @@ msgstr "服务提供者要求"
 
 #: src/components/LabelingServiceCard/index.tsx:75
 msgid "Required in your region"
-msgstr ""
+msgstr "你所在的地区有此要求"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:168
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:171
