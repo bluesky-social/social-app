@@ -236,8 +236,7 @@ export function LabelerLabelPreference({
           <View style={[a.flex_row, a.gap_xs, a.align_center, a.mt_xs]}>
             <CircleInfo size="sm" fill={t.atoms.text_contrast_high.color} />
 
-            <Text
-              style={[t.atoms.text_contrast_medium, a.font_semibold, a.italic]}>
+            <Text style={[t.atoms.text_contrast_medium, a.font_bold, a.italic]}>
               {adultDisabled ? (
                 <Trans>Adult content is disabled.</Trans>
               ) : isGlobalLabel ? (

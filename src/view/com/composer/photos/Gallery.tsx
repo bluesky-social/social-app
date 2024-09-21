@@ -7,13 +7,13 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {observer} from 'mobx-react-lite'
 
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {Dimensions} from '#/lib/media/types'
+import {colors, s} from '#/lib/styles'
+import {isNative} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {Dimensions} from 'lib/media/types'
-import {colors, s} from 'lib/styles'
-import {isNative} from 'platform/detection'
-import {GalleryModel} from 'state/models/media/gallery'
-import {Text} from 'view/com/util/text/Text'
+import {GalleryModel} from '#/state/models/media/gallery'
+import {Text} from '#/view/com/util/text/Text'
 import {useTheme} from '#/alf'
 
 const IMAGE_GAP = 8
@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
   altTextControlLabel: {
     color: 'white',
     fontSize: 12,
-    fontWeight: 'bold',
+    fontWeight: '600',
     letterSpacing: 1,
   },
   altTextHiddenRegion: {

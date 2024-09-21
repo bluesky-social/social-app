@@ -132,7 +132,7 @@ export function Label({
             <Text
               style={[
                 text,
-                a.font_semibold,
+                a.font_bold,
                 a.leading_tight,
                 t.atoms.text_contrast_medium,
                 {paddingRight: 3},

@@ -20,10 +20,10 @@ import {
   ModerationDecision,
 } from '@atproto/api'
 
+import {usePalette} from '#/lib/hooks/usePalette'
 import {ImagesLightbox, useLightboxControls} from '#/state/lightbox'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {usePalette} from 'lib/hooks/usePalette'
-import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
+import {FeedSourceCard} from '#/view/com/feeds/FeedSourceCard'
 import {atoms as a, useTheme} from '#/alf'
 import * as ListCard from '#/components/ListCard'
 import {Embed as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
@@ -138,7 +138,7 @@ export function PostEmbeds({
         const image = images[0]
         return (
           <ContentHider modui={moderation?.ui('contentMedia')}>
-            <View style={[styles.container, style]}>
+            <View style={[a.mt_sm, style]}>
               <AutoSizedImage
                 crop={
                   viewContext === PostEmbedViewContext.ThreadHighlighted
@@ -162,7 +162,7 @@ export function PostEmbeds({
 
       return (
         <ContentHider modui={moderation?.ui('contentMedia')}>
-          <View style={[styles.container, style]}>
+          <View style={[a.mt_sm, style]}>
             <ImageLayoutGrid
               images={embed.images}
               onPress={_openLightbox}
@@ -184,7 +184,7 @@ export function PostEmbeds({
         <ExternalLinkEmbed
           link={link}
           onOpen={onOpen}
-          style={[styles.container, style]}
+          style={[a.mt_sm, style]}
         />
       </ContentHider>
     )
@@ -247,9 +247,6 @@ function MaybeListCard({view}: {view: AppBskyGraphDefs.ListView}) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginTop: 8,
-  },
   altContainer: {
     backgroundColor: 'rgba(0, 0, 0, 0.75)',
     borderRadius: 6,
@@ -262,7 +259,7 @@ const styles = StyleSheet.create({
   alt: {
     color: 'white',
     fontSize: 7,
-    fontWeight: 'bold',
+    fontWeight: '600',
   },
   customFeedOuter: {
     borderWidth: StyleSheet.hairlineWidth,
