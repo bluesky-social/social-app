@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-09-20 11:01+0900\n"
+"PO-Revision-Date: 2024-09-21 16:44+0900\n"
 "Last-Translator: tkusano\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -3147,6 +3147,14 @@ msgstr "お気に入りのフィードやユーザーをフォローするよう
 msgid "Invites, but personal"
 msgstr "招待、ただし個人的なもの"
 
+#: src/screens/Signup/StepInfo/index.tsx:77
+msgid "It looks like you may have entered your email address incorrectly. Are you sure it's right?"
+msgstr "入力したメールアドレスは間違ってるようです。本当にそれで合ってますか？"
+
+#: src/screens/Signup/StepInfo/index.tsx:238
+msgid "It's correct"
+msgstr "合ってます"
+
 #: src/screens/StarterPack/Wizard/index.tsx:452
 msgid "It's just you right now! Add more people to your starter pack by searching above."
 msgstr "今はあなただけ！上で検索してスターターパックにより多くのユーザーを追加してください。"
@@ -5244,6 +5252,10 @@ msgstr "アカウントにログインする時にメールのコードを必須
 #: src/screens/Signup/StepInfo/index.tsx:132
 msgid "Required for this provider"
 msgstr "このプロバイダーに必要"
+
+#: src/components/LabelingServiceCard/index.tsx:75
+msgid "Required in your region"
+msgstr "あなたの地域では必要"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:168
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:171
