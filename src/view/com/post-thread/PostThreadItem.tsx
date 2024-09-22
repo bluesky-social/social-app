@@ -559,11 +559,8 @@ let PostThreadItemLoaded = ({
                 showAvatar={isThreadedChild}
                 avatarModeration={moderation.ui('avatar')}
                 avatarSize={24}
-                displayNameType="md-bold"
-                displayNameStyle={isThreadedChild && s.ml2}
                 style={
                   isThreadedChild && {
-                    alignItems: 'center',
                     paddingBottom: isWeb ? 5 : 4,
                   }
                 }
