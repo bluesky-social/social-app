@@ -11,13 +11,13 @@ import {useLingui} from '@lingui/react'
 
 import {LogEvents} from '#/lib/statsig/statsig'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
-import {sanitizeHandle} from 'lib/strings/handles'
-import {useProfileShadow} from 'state/cache/profile-shadow'
-import {useSession} from 'state/session'
+import {useSession} from '#/state/session'
+import {ProfileCardPills} from '#/view/com/profile/ProfileCard'
 import * as Toast from '#/view/com/util/Toast'
-import {ProfileCardPills} from 'view/com/profile/ProfileCard'
-import {UserAvatar} from 'view/com/util/UserAvatar'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonProps, ButtonText} from '#/components/Button'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
@@ -175,6 +175,7 @@ export function NameAndHandle({
   return (
     <View style={[a.flex_1]}>
       <Text
+        emoji
         style={[a.text_md, a.font_bold, a.leading_snug, a.self_start]}
         numberOfLines={1}>
         {name}

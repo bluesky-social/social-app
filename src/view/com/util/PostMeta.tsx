@@ -4,16 +4,16 @@ import {AppBskyActorDefs, ModerationDecision, ModerationUI} from '@atproto/api'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {usePalette} from '#/lib/hooks/usePalette'
+import {makeProfileLink} from '#/lib/routes/links'
+import {forceLTR} from '#/lib/strings/bidi'
+import {NON_BREAKING_SPACE} from '#/lib/strings/constants'
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {niceDate} from '#/lib/strings/time'
+import {TypographyVariant} from '#/lib/ThemeContext'
+import {isAndroid} from '#/platform/detection'
 import {precacheProfile} from '#/state/queries/profile'
-import {usePalette} from 'lib/hooks/usePalette'
-import {makeProfileLink} from 'lib/routes/links'
-import {forceLTR} from 'lib/strings/bidi'
-import {NON_BREAKING_SPACE} from 'lib/strings/constants'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {sanitizeHandle} from 'lib/strings/handles'
-import {niceDate} from 'lib/strings/time'
-import {TypographyVariant} from 'lib/ThemeContext'
-import {isAndroid} from 'platform/detection'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {TextLinkOnWebOnly} from './Link'
 import {Text} from './text/Text'
@@ -73,12 +73,20 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             style={[pal.text]}
             lineHeight={1.2}
             disableMismatchWarning
-            text={forceLTR(
-              sanitizeDisplayName(
-                displayName,
-                opts.moderation?.ui('displayName'),
-              ),
-            )}
+            text={
+              <Text
+                type={opts.displayNameType || 'lg-bold'}
+                emoji
+                style={[pal.text]}
+                lineHeight={1.2}>
+                {forceLTR(
+                  sanitizeDisplayName(
+                    displayName,
+                    opts.moderation?.ui('displayName'),
+                  ),
+                )}
+              </Text>
+            }
             href={profileLink}
             onBeforePress={onBeforePressAuthor}
           />

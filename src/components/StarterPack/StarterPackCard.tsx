@@ -6,11 +6,11 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {sanitizeHandle} from 'lib/strings/handles'
-import {getStarterPackOgCard} from 'lib/strings/starter-pack'
-import {precacheResolvedUri} from 'state/queries/resolve-uri'
-import {precacheStarterPack} from 'state/queries/starter-packs'
-import {useSession} from 'state/session'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {getStarterPackOgCard} from '#/lib/strings/starter-pack'
+import {precacheResolvedUri} from '#/state/queries/resolve-uri'
+import {precacheStarterPack} from '#/state/queries/starter-packs'
+import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {StarterPack} from '#/components/icons/StarterPack'
 import {BaseLink} from '#/components/Link'
@@ -66,7 +66,7 @@ export function Card({
       <View style={[a.flex_row, a.gap_sm]}>
         {!noIcon ? <StarterPack width={40} gradient="sky" /> : null}
         <View>
-          <Text style={[a.text_md, a.font_bold, a.leading_snug]}>
+          <Text emoji style={[a.text_md, a.font_bold, a.leading_snug]}>
             {record.name}
           </Text>
           <Text style={[a.leading_snug, t.atoms.text_contrast_medium]}>
@@ -80,7 +80,7 @@ export function Card({
         </View>
       </View>
       {!noDescription && record.description ? (
-        <Text numberOfLines={3} style={[a.leading_snug]}>
+        <Text emoji numberOfLines={3} style={[a.leading_snug]}>
           {record.description}
         </Text>
       ) : null}

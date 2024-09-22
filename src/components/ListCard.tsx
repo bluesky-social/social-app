@@ -10,10 +10,10 @@ import {
 import {Trans} from '@lingui/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {sanitizeHandle} from 'lib/strings/handles'
-import {useModerationOpts} from 'state/preferences/moderation-opts'
-import {precacheList} from 'state/queries/feed'
-import {useSession} from 'state/session'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {precacheList} from '#/state/queries/feed'
+import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {
   Avatar,
@@ -130,6 +130,7 @@ export function TitleAndByline({
         </Hider.Mask>
         <Hider.Content>
           <Text
+            emoji
             style={[a.text_md, a.font_bold, a.leading_snug]}
             numberOfLines={1}>
             {title}

@@ -44,7 +44,11 @@ export function Avatar({avatar}: {avatar?: string}) {
 }
 
 export function Title({value}: {value: string}) {
-  return <Text style={[a.text_md, a.font_bold, a.leading_tight]}>{value}</Text>
+  return (
+    <Text emoji style={[a.text_md, a.font_bold, a.leading_tight]}>
+      {value}
+    </Text>
+  )
 }
 
 export function Description({value, handle}: {value?: string; handle: string}) {
