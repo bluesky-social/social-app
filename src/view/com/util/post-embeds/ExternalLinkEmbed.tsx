@@ -59,15 +59,15 @@ export const ExternalLinkEmbed = ({
   }
 
   return (
-    <View style={[a.flex_col, a.w_full]}>
+    <View style={[a.flex_col, a.rounded_md, a.w_full]}>
       <LinkWrapper link={link} onOpen={onOpen} style={style}>
         {imageUri && !embedPlayerParams ? (
           <View>
             <Image
               style={{
                 aspectRatio: 1.91,
-                borderTopRightRadius: 8,
-                borderTopLeftRadius: 8,
+                borderTopRightRadius: a.rounded_md.borderRadius,
+                borderTopLeftRadius: a.rounded_md.borderRadius,
               }}
               source={{uri: imageUri}}
               accessibilityIgnoresInvertColors
@@ -101,11 +101,11 @@ export const ExternalLinkEmbed = ({
             a.py_sm,
             t.atoms.border_contrast_low,
             {
-              borderBottomRightRadius: 8,
-              borderBottomLeftRadius: 8,
+              borderBottomRightRadius: a.rounded_md.borderRadius,
+              borderBottomLeftRadius: a.rounded_md.borderRadius,
               paddingHorizontal: isMobile ? 10 : 14,
             },
-            !imageUri && !embedPlayerParams && [a.border, a.rounded_sm],
+            !imageUri && !embedPlayerParams && [a.border, a.rounded_md],
           ]}>
           <Text
             type="sm"

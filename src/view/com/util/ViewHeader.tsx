@@ -6,12 +6,12 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
+import {useAnalytics} from '#/lib/analytics/analytics'
+import {useMinimalShellHeaderTransform} from '#/lib/hooks/useMinimalShellTransform'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {NavigationProp} from '#/lib/routes/types'
 import {useSetDrawerOpen} from '#/state/shell'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {useMinimalShellHeaderTransform} from 'lib/hooks/useMinimalShellTransform'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {NavigationProp} from 'lib/routes/types'
 import {useTheme} from '#/alf'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {Text} from './text/Text'
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontWeight: 'bold',
+    fontWeight: '600',
   },
   subtitle: {
     fontSize: 13,

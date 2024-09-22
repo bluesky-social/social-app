@@ -24,11 +24,18 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {createHitslop} from '#/lib/constants'
 import {HITSLOP_10} from '#/lib/constants'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {MagnifyingGlassIcon} from '#/lib/icons'
 import {makeProfileLink} from '#/lib/routes/links'
 import {NavigationProp} from '#/lib/routes/types'
+import {
+  NativeStackScreenProps,
+  SearchTabNavigatorParams,
+} from '#/lib/routes/types'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
+import {useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
@@ -40,13 +47,6 @@ import {useSearchPostsQuery} from '#/state/queries/search-posts'
 import {useSession} from '#/state/session'
 import {useSetDrawerOpen} from '#/state/shell'
 import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
-import {useNonReactiveCallback} from 'lib/hooks/useNonReactiveCallback'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {
-  NativeStackScreenProps,
-  SearchTabNavigatorParams,
-} from 'lib/routes/types'
-import {useTheme} from 'lib/ThemeContext'
 import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
 import {Post} from '#/view/com/post/Post'
@@ -414,7 +414,7 @@ let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
                 display: 'flex',
                 paddingVertical: 12,
                 paddingHorizontal: 18,
-                fontWeight: 'bold',
+                fontWeight: '600',
                 borderBottomWidth: 1,
               },
             ]}>
@@ -1134,7 +1134,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   searchHistoryTitle: {
-    fontWeight: 'bold',
+    fontWeight: '600',
     paddingVertical: 12,
     paddingHorizontal: 10,
   },

@@ -1,16 +1,17 @@
 import * as React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useTheme} from 'lib/ThemeContext'
-import {Text} from './text/Text'
-import {TextLink} from './Link'
 import {
   H1 as ExpoH1,
   H2 as ExpoH2,
   H3 as ExpoH3,
   H4 as ExpoH4,
 } from '@expo/html-elements'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {useTheme} from '#/lib/ThemeContext'
+import {TextLink} from './Link'
+import {Text} from './text/Text'
 
 /**
  * These utilities are used to define long documents in an html-like
@@ -166,7 +167,7 @@ const useStyles = () => {
     h4: {
       marginTop: 0,
       marginBottom: 10,
-      fontWeight: 'bold',
+      fontWeight: '600',
     },
     p: {
       marginBottom: 10,

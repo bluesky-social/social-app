@@ -12,7 +12,13 @@ import {
   useNavigationState,
 } from '@react-navigation/native'
 
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {getCurrentRoute, isStateAtTabRoot, isTab} from '#/lib/routes/helpers'
+import {makeProfileLink} from '#/lib/routes/links'
+import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {isInvalidHandle} from '#/lib/strings/handles'
+import {colors, s} from '#/lib/styles'
 import {emitSoftReset} from '#/state/events'
 import {useFetchHandle} from '#/state/queries/handle'
 import {useUnreadMessageCount} from '#/state/queries/messages/list-converations'
@@ -20,18 +26,12 @@ import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {useComposerControls} from '#/state/shell/composer'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {getCurrentRoute, isStateAtTabRoot, isTab} from 'lib/routes/helpers'
-import {makeProfileLink} from 'lib/routes/links'
-import {CommonNavigatorParams, NavigationProp} from 'lib/routes/types'
-import {colors, s} from 'lib/styles'
+import {Link} from '#/view/com/util/Link'
+import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {PressableWithHover} from '#/view/com/util/PressableWithHover'
+import {Text} from '#/view/com/util/text/Text'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
-import {Link} from 'view/com/util/Link'
-import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
-import {PressableWithHover} from 'view/com/util/PressableWithHover'
-import {Text} from 'view/com/util/text/Text'
-import {UserAvatar} from 'view/com/util/UserAvatar'
 import {
   Bell_Filled_Corner0_Rounded as BellFilled,
   Bell_Stroke2_Corner0_Rounded as Bell,
@@ -468,7 +468,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.blue3,
     color: colors.white,
     fontSize: 12,
-    fontWeight: 'bold',
+    fontWeight: '600',
     paddingHorizontal: 4,
     borderRadius: 6,
   },
