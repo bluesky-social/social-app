@@ -246,7 +246,7 @@ export type InlineLinkProps = React.PropsWithChildren<
 > &
   Pick<ButtonProps, 'label'> & {
     disableUnderline?: boolean
-    title?: string
+    title?: TextProps['title']
   }
 
 export function InlineLinkText({
@@ -382,8 +382,6 @@ export function WebOnlyInlineLinkText({
       {children}
     </InlineLinkText>
   ) : (
-    <Text selectable={false} accessible={false} {...props}>
-      {children}
-    </Text>
+    <Text {...props}>{children}</Text>
   )
 }
