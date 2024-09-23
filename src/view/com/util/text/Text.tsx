@@ -56,9 +56,7 @@ export function Text({
     }
 
     if (emoji && !childIsString(children)) {
-      throw new Error(
-        'Text: when <Text emoji />, children can only be strings.',
-      )
+      logger.error('Text: when <Text emoji />, children can only be strings.')
     }
   }
 
