@@ -22,7 +22,7 @@ export class AuthorFeedAPI implements FeedAPI {
   }
 
   get params() {
-    const params = this._params
+    const params = {...this._params}
     params.includePins = params.filter !== 'posts_with_media'
     return params
   }
