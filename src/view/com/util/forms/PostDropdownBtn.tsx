@@ -377,9 +377,9 @@ let PostDropdownBtn = ({
       })
 
       if (pinCurrentPost) {
-        Toast.show(_(msg`Post unpinned`))
-      } else {
         Toast.show(_(msg`Post pinned`))
+      } else {
+        Toast.show(_(msg`Post unpinned`))
       }
     } catch (e: any) {
       Toast.show(_(msg`Failed to pin post`))
