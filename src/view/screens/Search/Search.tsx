@@ -35,7 +35,6 @@ import {
   SearchTabNavigatorParams,
 } from '#/lib/routes/types'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
-import {useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
@@ -57,9 +56,15 @@ import {Text} from '#/view/com/util/text/Text'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
 import {Explore} from '#/view/screens/Search/Explore'
 import {SearchLinkCard, SearchProfileCard} from '#/view/shell/desktop/Search'
-import {atoms as a, useTheme as useThemeNew} from '#/alf'
+import {atoms as a, useBreakpoints,useTheme as useThemeNew, web} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
+import * as TextField from '#/components/forms/TextField'
+import {MagnifyingGlass2_Stroke2_Corner0_Rounded as MagnifyingGlass} from '#/components/icons/MagnifyingGlass2'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
+import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
+
+const HEADER_HEIGHT = 56
 
 function Loader() {
   const pal = usePalette('default')
@@ -448,14 +453,14 @@ SearchScreenInner = React.memo(SearchScreenInner)
 export function SearchScreen(
   props: NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>,
 ) {
+  const t = useThemeNew()
+  const {gtMobile} = useBreakpoints()
   const navigation = useNavigation<NavigationProp>()
   const textInput = React.useRef<TextInput>(null)
   const {_} = useLingui()
-  const pal = usePalette('default')
   const {track} = useAnalytics()
   const setDrawerOpen = useSetDrawerOpen()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {isTabletOrDesktop, isTabletOrMobile} = useWebMediaQueries()
 
   // Query terms
   const queryParam = props.route?.params?.q ?? ''
@@ -506,13 +511,6 @@ export function SearchScreen(
     setSearchText('')
     textInput.current?.focus()
   }, [])
-
-  const onPressCancelSearch = React.useCallback(() => {
-    scrollToTopWeb()
-    textInput.current?.blur()
-    setShowAutocomplete(false)
-    setSearchText(queryParam)
-  }, [queryParam])
 
   const onChangeText = React.useCallback(async (text: string) => {
     scrollToTopWeb()
@@ -585,6 +583,14 @@ export function SearchScreen(
     },
     [updateSearchHistory, navigation],
   )
+
+  const onPressCancelSearch = React.useCallback(() => {
+    scrollToTopWeb()
+    textInput.current?.blur()
+    setShowAutocomplete(false)
+    setSearchText('')
+    navigateToItem('')
+  }, [setSearchText, navigateToItem])
 
   const onSubmit = React.useCallback(() => {
     navigateToItem(searchText)
@@ -667,23 +673,32 @@ export function SearchScreen(
     <View style={isWeb ? null : {flex: 1}}>
       <CenteredView
         style={[
-          styles.header,
-          pal.border,
-          pal.view,
-          isTabletOrDesktop && {paddingTop: 10},
+          a.p_md,
+          a.pb_0,
+          a.flex_row,
+          a.gap_sm,
+          t.atoms.bg,
+          web({
+            height: HEADER_HEIGHT, // TODO
+            position: 'sticky',
+            top: 0,
+            zIndex: 1,
+          }),
         ]}
-        sideBorders={isTabletOrDesktop}>
-        {isTabletOrMobile && (
-          <Pressable
+        sideBorders={gtMobile}>
+        {!gtMobile && (
+          <Button
             testID="viewHeaderBackOrMenuBtn"
             onPress={onPressMenu}
             hitSlop={HITSLOP_10}
-            style={styles.headerMenuBtn}
-            accessibilityRole="button"
-            accessibilityLabel={_(msg`Menu`)}
-            accessibilityHint={_(msg`Access navigation links and settings`)}>
-            <Menu size="lg" fill={pal.colors.textLight} />
-          </Pressable>
+            label={_(msg`Menu`)}
+            accessibilityHint={_(msg`Access navigation links and settings`)}
+            size="large"
+            variant="ghost"
+            color="secondary"
+            shape="square">
+            <ButtonIcon icon={Menu} size="lg" />
+          </Button>
         )}
         <SearchInputBox
           textInput={textInput}
@@ -695,18 +710,21 @@ export function SearchScreen(
           onPressClearQuery={onPressClearQuery}
         />
         {showAutocomplete && (
-          <View style={[styles.headerCancelBtn]}>
-            <Pressable
-              onPress={onPressCancelSearch}
-              accessibilityRole="button"
-              hitSlop={HITSLOP_10}>
-              <Text style={pal.text}>
-                <Trans>Cancel</Trans>
-              </Text>
-            </Pressable>
-          </View>
+          <Button
+            label={_(msg`Cancel search`)}
+            size="large"
+            variant="ghost"
+            color="secondary"
+            style={[a.px_sm]}
+            onPress={onPressCancelSearch}
+            hitSlop={HITSLOP_10}>
+            <ButtonText>
+              <Trans>Cancel</Trans>
+            </ButtonText>
+          </Button>
         )}
       </CenteredView>
+
       <View
         style={{
           display: showAutocomplete ? 'flex' : 'none',
@@ -760,78 +778,67 @@ let SearchInputBox = ({
   onSubmit: () => void
   onPressClearQuery: () => void
 }): React.ReactNode => {
-  const pal = usePalette('default')
   const {_} = useLingui()
-  const theme = useTheme()
+  const t = useThemeNew()
+
   return (
-    <Pressable
-      // This only exists only for extra hitslop so don't expose it to the a11y tree.
-      accessible={false}
-      focusable={false}
-      // @ts-ignore web-only
-      tabIndex={-1}
-      style={[
-        {backgroundColor: pal.colors.backgroundLight},
-        styles.headerSearchContainer,
-        // @ts-expect-error web only
-        isWeb && {
-          cursor: 'default',
-        },
-      ]}
-      onPress={() => {
-        textInput.current?.focus()
-      }}>
-      <MagnifyingGlassIcon
-        style={[pal.icon, styles.headerSearchIcon]}
-        size={20}
-      />
-      <TextInput
-        testID="searchTextInput"
-        ref={textInput}
-        placeholder={_(msg`Search`)}
-        placeholderTextColor={pal.colors.textLight}
-        returnKeyType="search"
-        value={searchText}
-        style={[pal.text, styles.headerSearchInput]}
-        keyboardAppearance={theme.colorScheme}
-        selectTextOnFocus={isNative}
-        onFocus={() => {
-          if (isWeb) {
-            // Prevent a jump on iPad by ensuring that
-            // the initial focused render has no result list.
-            requestAnimationFrame(() => {
+    <View style={[a.flex_1, a.relative]}>
+      <TextField.Root>
+        <TextField.Icon icon={MagnifyingGlass} />
+        <TextField.Input
+          inputRef={textInput}
+          label={_(msg`Search`)}
+          value={searchText}
+          placeholder={_(msg`Search`)}
+          returnKeyType="search"
+          onChangeText={onChangeText}
+          onSubmitEditing={onSubmit}
+          onFocus={() => {
+            if (isWeb) {
+              // Prevent a jump on iPad by ensuring that
+              // the initial focused render has no result list.
+              requestAnimationFrame(() => {
+                setShowAutocomplete(true)
+              })
+            } else {
               setShowAutocomplete(true)
-            })
-          } else {
-            setShowAutocomplete(true)
-          }
-        }}
-        onChangeText={onChangeText}
-        onSubmitEditing={onSubmit}
-        autoFocus={false}
-        accessibilityRole="search"
-        accessibilityLabel={_(msg`Search`)}
-        accessibilityHint=""
-        autoCorrect={false}
-        autoComplete="off"
-        autoCapitalize="none"
-      />
+            }
+          }}
+          keyboardAppearance={t.scheme}
+          selectTextOnFocus={isNative}
+          autoFocus={false}
+          accessibilityRole="search"
+          autoCorrect={false}
+          autoComplete="off"
+          autoCapitalize="none"
+        />
+      </TextField.Root>
+
       {showAutocomplete && searchText.length > 0 && (
-        <Pressable
-          testID="searchTextInputClearBtn"
-          onPress={onPressClearQuery}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Clear search query`)}
-          accessibilityHint=""
-          hitSlop={HITSLOP_10}>
-          <FontAwesomeIcon
-            icon="xmark"
-            size={16}
-            style={pal.textLight as FontAwesomeIconStyle}
-          />
-        </Pressable>
+        <View
+          style={[
+            a.absolute,
+            a.z_10,
+            a.my_auto,
+            a.inset_0,
+            a.justify_center,
+            a.pr_sm,
+            {left: 'auto'},
+          ]}>
+          <Button
+            testID="searchTextInputClearBtn"
+            onPress={onPressClearQuery}
+            label={_(msg`Clear search query`)}
+            hitSlop={HITSLOP_10}
+            size="tiny"
+            shape="round"
+            variant="ghost"
+            color="secondary">
+            <ButtonIcon icon={X} size="sm" />
+          </Button>
+        </View>
       )}
-    </Pressable>
+    </View>
   )
 }
 SearchInputBox = React.memo(SearchInputBox)
@@ -1029,8 +1036,6 @@ function scrollToTopWeb() {
   }
 }
 
-const HEADER_HEIGHT = 46
-
 const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
@@ -1038,7 +1043,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingLeft: 13,
     paddingVertical: 4,
-    height: HEADER_HEIGHT,
+    height: isWeb ? HEADER_HEIGHT : undefined,
     // @ts-ignore web only
     position: isWeb ? 'sticky' : '',
     top: 0,
