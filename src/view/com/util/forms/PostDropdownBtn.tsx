@@ -352,27 +352,31 @@ let PostDropdownBtn = ({
   ])
 
   const onPressPin = useCallback(async () => {
+    const pinCurrentPost = !isPinned
+    let prevPinnedPost: string | undefined
     try {
       if (!currentAccount) throw new Error('Not logged in')
       const {data: profile} = await agent.getProfile({
         actor: currentAccount.did,
       })
+      prevPinnedPost = profile.pinnedPost?.uri
 
-      updatePostShadow(queryClient, postUri, {
-        pinned: !isPinned,
-      })
+      updatePostShadow(queryClient, postUri, {pinned: pinCurrentPost})
+      if (prevPinnedPost && prevPinnedPost !== postUri) {
+        updatePostShadow(queryClient, prevPinnedPost, {pinned: false})
+      }
 
       await profileUpdateMutate({
         profile,
         updates: existing => {
-          existing.pinnedPost = isPinned
-            ? undefined
-            : {uri: postUri, cid: postCid}
+          existing.pinnedPost = pinCurrentPost
+            ? {uri: postUri, cid: postCid}
+            : undefined
           return existing
         },
       })
 
-      if (isPinned) {
+      if (pinCurrentPost) {
         Toast.show(_(msg`Post unpinned`))
       } else {
         Toast.show(_(msg`Post pinned`))
@@ -382,8 +386,11 @@ let PostDropdownBtn = ({
       logger.error('Failed to update user profile', {message: String(e)})
       // revert optimistic update
       updatePostShadow(queryClient, postUri, {
-        pinned: isPinned,
+        pinned: !pinCurrentPost,
       })
+      if (prevPinnedPost && prevPinnedPost !== postUri) {
+        updatePostShadow(queryClient, prevPinnedPost, {pinned: true})
+      }
     }
   }, [
     _,
