@@ -1027,7 +1027,7 @@ msgstr "字幕和替代文字"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:434
 msgid "Celebrating {0} users"
-msgstr "慶祝{0}用戶"
+msgstr "慶祝達到 {0} 位用戶"
 
 #: src/view/com/modals/VerifyEmail.tsx:160
 msgid "Change"
