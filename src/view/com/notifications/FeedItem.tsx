@@ -310,7 +310,11 @@ let FeedItem = ({
               key={authors[0].href}
               style={[pal.text, s.bold]}
               href={authors[0].href}
-              text={forceLTR(firstAuthorName)}
+              text={
+                <Text emoji style={[pal.text, s.bold]}>
+                  {forceLTR(firstAuthorName)}
+                </Text>
+              }
               disableMismatchWarning
             />
             {authors.length > 1 ? (
@@ -570,12 +574,13 @@ function ExpandedAuthorsList({
                 numberOfLines={1}
                 style={pal.text}
                 lineHeight={1.2}>
-                {sanitizeDisplayName(
-                  author.profile.displayName || author.profile.handle,
-                )}
-                &nbsp;
+                <Text emoji type="lg-bold" style={pal.text} lineHeight={1.2}>
+                  {sanitizeDisplayName(
+                    author.profile.displayName || author.profile.handle,
+                  )}
+                </Text>{' '}
                 <Text style={[pal.textLight]} lineHeight={1.2}>
-                  {sanitizeHandle(author.profile.handle)}
+                  {sanitizeHandle(author.profile.handle, '@')}
                 </Text>
               </Text>
             </View>
@@ -592,7 +597,11 @@ function AdditionalPostText({post}: {post?: AppBskyFeedDefs.PostView}) {
 
     return (
       <>
-        {text?.length > 0 && <Text style={pal.textLight}>{text}</Text>}
+        {text?.length > 0 && (
+          <Text emoji style={pal.textLight}>
+            {text}
+          </Text>
+        )}
         <MediaPreview.Embed
           embed={post.embed}
           style={styles.additionalPostImages}

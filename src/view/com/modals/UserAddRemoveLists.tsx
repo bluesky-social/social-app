@@ -65,21 +65,27 @@ export function Component({
     return [pal.border, {flex: 1, borderTopWidth: StyleSheet.hairlineWidth}]
   }, [pal.border, screenHeight])
 
+  const headerStyles = [
+    {
+      textAlign: 'center',
+      fontWeight: '600',
+      fontSize: 20,
+      marginBottom: 12,
+      paddingHorizontal: 12,
+    } as const,
+    pal.text,
+  ]
+
   return (
     <View testID="userAddRemoveListsModal" style={s.hContentRegion}>
-      <Text
-        style={[
-          {
-            textAlign: 'center',
-            fontWeight: '600',
-            fontSize: 20,
-            marginBottom: 12,
-            paddingHorizontal: 12,
-          },
-          pal.text,
-        ]}
-        numberOfLines={1}>
-        <Trans>Update {displayName} in Lists</Trans>
+      <Text style={headerStyles} numberOfLines={1}>
+        <Trans>
+          Update{' '}
+          <Text style={headerStyles} numberOfLines={1}>
+            {displayName}
+          </Text>{' '}
+          in Lists
+        </Trans>
       </Text>
       <MyLists
         filter="all"

@@ -138,6 +138,7 @@ export function TabBar({
               onPress={() => onPressItem(i)}>
               <View style={[styles.itemInner, selected && indicatorStyle]}>
                 <Text
+                  emoji
                   type={isDesktop || isTablet ? 'xl-bold' : 'lg-bold'}
                   testID={testID ? `${testID}-${item}` : undefined}
                   style={[

@@ -1,15 +1,85 @@
 import React from 'react'
 import {StyleProp, TextProps as RNTextProps, TextStyle} from 'react-native'
 import {UITextView} from 'react-native-uitextview'
+import createEmojiRegex from 'emoji-regex'
 
-import {isNative} from '#/platform/detection'
+import {logger} from '#/logger'
+import {isIOS, isNative} from '#/platform/detection'
 import {Alf, applyFonts, atoms, flatten, useAlf, useTheme, web} from '#/alf'
+import {IS_DEV} from '#/env'
 
-export type TextProps = RNTextProps & {
+export type StringChild = string | (string | null)[]
+
+export type TextProps = Omit<RNTextProps, 'children'> & {
   /**
    * Lets the user select text, to use the native copy and paste functionality.
    */
   selectable?: boolean
+  /**
+   * Provides `data-*` attributes to the underlying `UITextView` component on
+   * web only.
+   */
+  dataSet?: Record<string, string | number | undefined>
+  /**
+   * Appears as a small tooltip on web hover.
+   */
+  title?: string
+} & (
+    | {
+        emoji: true
+        children: StringChild
+      }
+    | {
+        emoji?: false
+        children: RNTextProps['children']
+      }
+  )
+
+const EMOJI = createEmojiRegex()
+
+export function childHasEmoji(children: React.ReactNode) {
+  return (Array.isArray(children) ? children : [children]).some(
+    child => typeof child === 'string' && createEmojiRegex().test(child),
+  )
+}
+
+export function childIsString(
+  children: React.ReactNode,
+): children is StringChild {
+  return (
+    typeof children === 'string' ||
+    (Array.isArray(children) &&
+      children.every(child => typeof child === 'string' || child === null))
+  )
+}
+
+export function renderChildrenWithEmoji(children: StringChild) {
+  const normalized = Array.isArray(children) ? children : [children]
+
+  return (
+    <UITextView>
+      {normalized.map(child => {
+        if (typeof child !== 'string') return child
+
+        const emojis = child.match(EMOJI)
+
+        if (emojis === null) {
+          return child
+        }
+
+        return child.split(EMOJI).map((stringPart, index) => (
+          <UITextView key={index}>
+            {stringPart}
+            {emojis[index] ? (
+              <UITextView style={{color: 'black', fontFamily: 'System'}}>
+                {emojis[index]}
+              </UITextView>
+            ) : null}
+          </UITextView>
+        ))
+      })}
+    </UITextView>
+  )
 }
 
 /**
@@ -64,7 +134,15 @@ export function normalizeTextStyles(
 /**
  * Our main text component. Use this most of the time.
  */
-export function Text({style, selectable, ...rest}: TextProps) {
+export function Text({
+  children,
+  emoji,
+  style,
+  selectable,
+  title,
+  dataSet,
+  ...rest
+}: TextProps) {
   const {fonts, flags} = useAlf()
   const t = useTheme()
   const s = normalizeTextStyles([atoms.text_sm, t.atoms.text, flatten(style)], {
@@ -73,7 +151,29 @@ export function Text({style, selectable, ...rest}: TextProps) {
     flags,
   })
 
-  return <UITextView selectable={selectable} uiTextView style={s} {...rest} />
+  if (IS_DEV) {
+    if (!emoji && childHasEmoji(children)) {
+      logger.warn(
+        `Text: emoji detected but emoji not enabled: "${children}"\n\nPlease add <Text emoji />'`,
+      )
+    }
+
+    if (emoji && !childIsString(children)) {
+      logger.error('Text: when <Text emoji />, children can only be strings.')
+    }
+  }
+
+  return (
+    <UITextView
+      selectable={selectable}
+      uiTextView
+      style={s}
+      {...rest}
+      // @ts-ignore
+      dataSet={Object.assign({tooltip: title}, dataSet || {})}>
+      {isIOS && emoji ? renderChildrenWithEmoji(children) : children}
+    </UITextView>
+  )
 }
 
 export function createHeadingElement({level}: {level: number}) {
