@@ -855,7 +855,7 @@ msgstr "Bluesky 因朋友而更好！"
 #: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:43
 #: src/components/dialogs/nuxs/TenMillion/Trigger.tsx:59
 msgid "Bluesky is celebrating 10 million users!"
-msgstr "Bluesky 正在慶祝用戶突破 1000 萬！"
+msgstr "Bluesky 正在慶祝達到 1,000 萬用戶的里程碑！"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:256
 msgid "Bluesky now has over 10 million users, and I was #{0}!"
