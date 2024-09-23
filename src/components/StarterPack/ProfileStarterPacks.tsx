@@ -20,7 +20,7 @@ import {parseStarterPackUri} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
 import {List, ListRef} from '#/view/com/util/List'
 import {Text} from '#/view/com/util/text/Text'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, ios, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
@@ -132,7 +132,7 @@ export const ProfileStarterPacks = React.forwardRef<
         keyExtractor={keyExtractor}
         refreshing={isPTRing}
         headerOffset={headerOffset}
-        allowOverScroll={true}
+        progressViewOffset={ios(0)}
         contentContainerStyle={{paddingBottom: headerOffset + bottomBarOffset}}
         indicatorStyle={t.name === 'light' ? 'black' : 'white'}
         removeClippedSubviews={true}

@@ -17,7 +17,7 @@ import {isNative, isWeb} from '#/platform/detection'
 import {RQKEY, useProfileListsQuery} from '#/state/queries/profile-lists'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, ios, useTheme} from '#/alf'
 import * as ListCard from '#/components/ListCard'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {List, ListRef} from '../util/List'
@@ -192,7 +192,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
           refreshing={isPTRing}
           onRefresh={onRefresh}
           headerOffset={headerOffset}
-          allowOverScroll={true}
+          progressViewOffset={ios(0)}
           contentContainerStyle={
             isNative && {paddingBottom: headerOffset + 100}
           }

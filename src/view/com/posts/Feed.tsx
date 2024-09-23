@@ -167,7 +167,7 @@ let Feed = ({
   renderEndOfFeed,
   testID,
   headerOffset = 0,
-  allowOverScroll,
+  progressViewOffset,
   desktopFixedHeightOffset,
   ListHeaderComponent,
   extraData,
@@ -188,7 +188,7 @@ let Feed = ({
   renderEndOfFeed?: () => JSX.Element
   testID?: string
   headerOffset?: number
-  allowOverScroll?: boolean
+  progressViewOffset?: number
   desktopFixedHeightOffset?: number
   ListHeaderComponent?: () => JSX.Element
   extraData?: any
@@ -550,7 +550,7 @@ let Feed = ({
         refreshing={isPTRing}
         onRefresh={onRefresh}
         headerOffset={headerOffset}
-        allowOverScroll={allowOverScroll}
+        progressViewOffset={progressViewOffset}
         contentContainerStyle={{
           minHeight: Dimensions.get('window').height * 1.5,
         }}

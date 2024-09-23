@@ -31,7 +31,6 @@ export type ListProps<ItemT> = Omit<
   // Web only prop to contain the scroll to the container rather than the window
   disableFullWindowScroll?: boolean
   sideBorders?: boolean
-  allowOverScroll?: boolean
 }
 export type ListRef = React.MutableRefObject<FlatList_INTERNAL | null>
 
@@ -45,7 +44,7 @@ function ListImpl<ItemT>(
     onItemSeen,
     headerOffset,
     style,
-    allowOverScroll,
+    progressViewOffset,
     ...props
   }: ListProps<ItemT>,
   ref: React.Ref<ListMethods>,
@@ -124,7 +123,7 @@ function ListImpl<ItemT>(
         onRefresh={onRefresh}
         tintColor={t.atoms.text.color}
         titleColor={t.atoms.text.color}
-        progressViewOffset={isIOS && allowOverScroll ? 0 : headerOffset}
+        progressViewOffset={progressViewOffset ?? headerOffset}
       />
     )
   }

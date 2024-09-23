@@ -15,6 +15,7 @@ import {EmptyState} from '#/view/com/util/EmptyState'
 import {ListRef} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {Text} from '#/view/com/util/text/Text'
+import {ios} from '#/alf'
 import {SectionRef} from './types'
 
 interface FeedSectionProps {
@@ -82,7 +83,7 @@ export const ProfileFeedSection = React.forwardRef<
         onScrolledDownChange={setIsScrolledDown}
         renderEmptyState={renderPostsEmpty}
         headerOffset={headerHeight}
-        allowOverScroll={true}
+        progressViewOffset={ios(0)}
         renderEndOfFeed={ProfileEndOfFeed}
         ignoreFilterFor={ignoreFilterFor}
         initialNumToRender={
