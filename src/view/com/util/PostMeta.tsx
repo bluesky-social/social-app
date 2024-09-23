@@ -1,5 +1,5 @@
 import React, {memo, useCallback} from 'react'
-import {StyleProp, TextStyle, View, ViewStyle} from 'react-native'
+import {StyleProp, View, ViewStyle} from 'react-native'
 import {AppBskyActorDefs, ModerationDecision, ModerationUI} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -22,16 +22,11 @@ import {PreviewableUserAvatar} from './UserAvatar'
 interface PostMetaOpts {
   author: AppBskyActorDefs.ProfileViewBasic
   moderation: ModerationDecision | undefined
-  /**
-   * @deprecated not in use for 6+ months
-   */
-  authorHasWarning: boolean
   postHref: string
   timestamp: string
   showAvatar?: boolean
   avatarModeration?: ModerationUI
   avatarSize?: number
-  displayNameStyle?: StyleProp<TextStyle>
   onOpenAuthor?: () => void
   style?: StyleProp<ViewStyle>
 }
@@ -75,7 +70,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
         </View>
       )}
       <ProfileHoverCard inline did={opts.author.did}>
-        <Text numberOfLines={1} style={[a.flex_shrink, opts.displayNameStyle]}>
+        <Text numberOfLines={1} style={[a.flex_shrink]}>
           <WebOnlyInlineLinkText
             to={profileLink}
             label={_(msg`View profile`)}
