@@ -5778,7 +5778,7 @@ msgstr "分享動態源"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:678
 msgid "Share image externally"
-msgstr "外部分享圖片"
+msgstr "將圖片分享至外部"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:696
 msgid "Share image in post"
