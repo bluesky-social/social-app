@@ -33,8 +33,7 @@
 @font-face {
   font-family: 'Inter-SemiBold';
   src: local('Inter-SemiBold'),
-    url(/assets/fonts/inter/Inter-SemiBold.otf)
-      format('font/otf');
+    url(/assets/fonts/inter/Inter-SemiBold.otf) format('font/otf');
   font-weight: 600;
   font-style: normal;
   font-display: swap;
@@ -42,8 +41,7 @@
 @font-face {
   font-family: 'Inter-SemiBoldItalic';
   src: local('Inter-SemiBoldItalic'),
-    url(/assets/fonts/inter/Inter-SemiBoldItalic.otf)
-      format('font/otf');
+    url(/assets/fonts/inter/Inter-SemiBoldItalic.otf) format('font/otf');
   font-weight: 600;
   font-style: italic;
   font-display: swap;
@@ -67,8 +65,7 @@
 @font-face {
   font-family: 'Inter-ExtraBold';
   src: local('Inter-ExtraBold'),
-    url(/assets/fonts/inter/Inter-ExtraBold.otf)
-      format('font/otf');
+    url(/assets/fonts/inter/Inter-ExtraBold.otf) format('font/otf');
   font-weight: 800;
   font-style: normal;
   font-display: swap;
@@ -76,8 +73,7 @@
 @font-face {
   font-family: 'Inter-ExtraBoldItalic';
   src: local('Inter-ExtraBoldItalic'),
-    url(/assets/fonts/inter/Inter-ExtraBoldItalic.otf)
-      format('font/otf');
+    url(/assets/fonts/inter/Inter-ExtraBoldItalic.otf) format('font/otf');
   font-weight: 800;
   font-style: italic;
   font-display: swap;
