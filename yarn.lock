@@ -19394,10 +19394,10 @@ react-native-svg@^15.6.0:
     css-tree "^1.1.3"
     warn-once "0.1.1"
 
-react-native-uitextview@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/react-native-uitextview/-/react-native-uitextview-1.3.0.tgz#78b24e2b790e1197c73758df30ed2bfb4b8a0c98"
-  integrity sha512-UXW1xIg1qeYvwBvdL8BLIkqZhbQ5TVVcHJho3vKDjOK+FW4ZLPygefcDXaCTX56ztisV4ARxJNdzblRAytFCHQ==
+react-native-uitextview@^2.0.0-rc.0:
+  version "2.0.0-rc.0"
+  resolved "https://registry.yarnpkg.com/react-native-uitextview/-/react-native-uitextview-2.0.0-rc.0.tgz#fd69b7a56a1b9b9d5b3c687b11bee79f5d3e96c2"
+  integrity sha512-8Mt9rc/V5LEwnOvSPGvXwI68Zqzlp/wzR7ocZDNzIciFVs2WQFj7tDBHOaUeSk/7n98AqgfvhhoQX/PzfL5SYQ==
 
 react-native-url-polyfill@^1.3.0:
   version "1.3.0"
