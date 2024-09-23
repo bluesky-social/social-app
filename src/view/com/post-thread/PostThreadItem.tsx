@@ -308,6 +308,7 @@ let PostThreadItemLoaded = ({
                 style={[styles.meta, styles.metaExpandedLine1, {zIndex: 1}]}>
                 <Link style={s.flex1} href={authorHref} title={authorTitle}>
                   <Text
+                    emoji
                     type="xl-bold"
                     style={[pal.text, a.self_start]}
                     numberOfLines={1}
@@ -322,7 +323,11 @@ let PostThreadItemLoaded = ({
               </View>
               <View style={styles.meta}>
                 <Link style={s.flex1} href={authorHref} title={authorTitle}>
-                  <Text type="md" style={[pal.textLight]} numberOfLines={1}>
+                  <Text
+                    emoji
+                    type="md"
+                    style={[pal.textLight]}
+                    numberOfLines={1}>
                     {sanitizeHandle(post.author.handle, '@')}
                   </Text>
                 </Link>
