@@ -94,7 +94,11 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             type="md"
             disableMismatchWarning
             style={[pal.textLight, {flexShrink: 4}]}
-            text={NON_BREAKING_SPACE + sanitizeHandle(handle, '@')}
+            text={
+              <Text emoji style={[pal.textLight, {flexShrink: 4}]}>
+                {NON_BREAKING_SPACE + sanitizeHandle(handle, '@')}
+              </Text>
+            }
             href={profileLink}
             onBeforePress={onBeforePressAuthor}
             anchorNoUnderline

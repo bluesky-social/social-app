@@ -959,6 +959,7 @@ function SearchHistory({
                       accessibilityIgnoresInvertColors
                     />
                     <Text
+                      emoji
                       style={[pal.text, styles.profileName]}
                       numberOfLines={1}>
                       {profile.displayName || profile.handle}
