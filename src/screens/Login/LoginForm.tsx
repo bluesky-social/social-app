@@ -285,7 +285,7 @@ export const LoginForm = ({
           label={_(msg`Back`)}
           variant="solid"
           color="secondary"
-          size="medium"
+          size="large"
           onPress={onPressBack}>
           <ButtonText>
             <Trans>Back</Trans>
@@ -299,7 +299,7 @@ export const LoginForm = ({
             accessibilityHint={_(msg`Retries login`)}
             variant="solid"
             color="secondary"
-            size="medium"
+            size="large"
             onPress={onPressRetryConnect}>
             <ButtonText>
               <Trans>Retry</Trans>
@@ -319,7 +319,7 @@ export const LoginForm = ({
             accessibilityHint={_(msg`Navigates to the next screen`)}
             variant="solid"
             color="primary"
-            size="medium"
+            size="large"
             onPress={onPressNext}>
             <ButtonText>
               <Trans>Next</Trans>

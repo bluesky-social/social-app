@@ -22,7 +22,9 @@ import {
   LinkFacetMatch,
   suggestLinkCardUri,
 } from 'view/com/composer/text-input/text-input-util'
+import {atoms as a, useAlf} from '#/alf'
 import {Portal} from '#/components/Portal'
+import {normalizeTextStyles} from '#/components/Typography'
 import {Text} from '../../util/text/Text'
 import {createSuggestion} from './web/Autocomplete'
 import {Emoji} from './web/EmojiPicker.web'
@@ -58,6 +60,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   TextInputProps,
   ref,
 ) {
+  const {theme: t, fonts} = useAlf()
   const autocomplete = useActorAutocompleteFn()
   const pal = usePalette('default')
   const modeClass = useColorSchemeStyle('ProseMirror-light', 'ProseMirror-dark')
@@ -247,13 +250,32 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     },
   }))
 
+  const inputStyle = React.useMemo(() => {
+    const style = normalizeTextStyles(
+      [a.text_lg, a.leading_snug, t.atoms.text],
+      {
+        fontScale: fonts.scaleMultiplier,
+        fontFamily: fonts.family,
+        flags: {},
+      },
+    )
+    /*
+     * TipTap component isn't a RN View and while it seems to convert
+     * `fontSize` to `px`, it doesn't convert `lineHeight`.
+     *
+     * `lineHeight` should always be defined here, this is defensive.
+     */
+    style.lineHeight = style.lineHeight
+      ? ((style.lineHeight + 'px') as unknown as number)
+      : undefined
+    return style
+  }, [t, fonts])
+
   return (
     <>
       <View style={styles.container}>
-        <EditorContent
-          editor={editor}
-          style={{color: pal.text.color as string}}
-        />
+        {/* @ts-ignore inputStyle is fine */}
+        <EditorContent editor={editor} style={inputStyle} />
       </View>
 
       {isDropping && (

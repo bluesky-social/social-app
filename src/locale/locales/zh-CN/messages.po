@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh_CN\n"
 "Project-Id-Version: zh-CN for bluesky-social-app\n"
 "Report-Msgid-Bugs-To: Frudrax Cheng <i@cynosura.one>\n"
-"PO-Revision-Date: 2024-09-07 22:51+0800\n"
+"PO-Revision-Date: 2024-09-14 10:09+0800\n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
 "Language-Team: Frudrax Cheng (auroursa), Simon Chan (RitsukiP), U2FsdGVkX1, Mikan Harada (mitian233), IceCodeNew\n"
 "Plural-Forms: \n"
@@ -544,7 +544,7 @@ msgstr "播放视频时出现问题，请再试一次。"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:250
 msgid "An error occurred while saving the image!"
-msgstr ""
+msgstr "保存图片时发生错误！"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:71
 #: src/components/StarterPack/ShareDialog.tsx:79
@@ -850,7 +850,7 @@ msgstr "Bluesky 因朋友而更好！"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:206
 msgid "Bluesky now has over 10 million users, and I was #{0}!"
-msgstr ""
+msgstr "Bluesky 现在拥有一千万名用户，我是其中的第 #{0} 位！"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:282
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
@@ -875,7 +875,7 @@ msgstr "书籍"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:614
 msgid "Brag a little!"
-msgstr ""
+msgstr "吹个牛！"
 
 #: src/components/FeedInterstitials.tsx:350
 msgid "Browse more accounts on the Explore page"
@@ -1018,7 +1018,7 @@ msgstr "字幕及替代文本"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:368
 msgid "Celebrating {0} users"
-msgstr ""
+msgstr "庆祝第 {0} 位用户"
 
 #: src/view/com/modals/VerifyEmail.tsx:160
 msgid "Change"
@@ -1098,14 +1098,6 @@ msgstr "在这里输入刚才发送到你电子邮箱里的验证码。"
 #: src/view/com/modals/DeleteAccount.tsx:231
 msgid "Check your inbox for an email with the confirmation code to enter below:"
 msgstr "查看发送至你电子邮箱的确认邮件，并在下方输入收到的验证码："
-
-#: src/screens/Onboarding/StepInterests/index.tsx:191
-#~ msgid "Choose 3 or more:"
-#~ msgstr "选择至少 3 个或更多："
-
-#: src/screens/Onboarding/StepInterests/index.tsx:326
-#~ msgid "Choose at least {0} more"
-#~ msgstr "还需选择至少 {0} 个"
 
 #: src/screens/StarterPack/Wizard/index.tsx:190
 msgid "Choose Feeds"
@@ -1769,7 +1761,7 @@ msgstr "隆重介绍私信功能！"
 
 #: src/view/screens/AccessibilitySettings.tsx:111
 msgid "Disable autoplay for videos and GIFs"
-msgstr "关闭自动播放 GIF 及视频"
+msgstr "关闭自动播放视频及 GIF"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:90
 msgid "Disable Email 2FA"
@@ -1817,10 +1809,6 @@ msgstr "探索新的资讯源"
 #: src/view/screens/Feeds.tsx:756
 msgid "Discover New Feeds"
 msgstr "探索新的资讯源"
-
-#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:108
-#~ msgid "Dismiss"
-#~ msgstr "关闭"
 
 #: src/view/com/composer/Composer.tsx:1107
 msgid "Dismiss error"
@@ -1909,7 +1897,7 @@ msgstr "下载 CAR 文件"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:622
 msgid "Download image"
-msgstr ""
+msgstr "下载图片"
 
 #: src/view/com/composer/text-input/TextInput.web.tsx:269
 msgid "Drop to add images"
@@ -2073,7 +2061,7 @@ msgstr "邮箱地址"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:95
 msgid "Email Resent"
-msgstr ""
+msgstr "重新发送电子邮件"
 
 #: src/view/com/modals/ChangeEmail.tsx:54
 #: src/view/com/modals/ChangeEmail.tsx:83
@@ -2090,7 +2078,7 @@ msgstr "电子邮箱已验证"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:71
 msgid "Email Verified"
-msgstr ""
+msgstr "电子邮箱已验证"
 
 #: src/view/screens/Settings/index.tsx:319
 msgid "Email:"
@@ -2554,13 +2542,13 @@ msgstr "关注账户"
 msgid "Follow all"
 msgstr "关注所有人"
 
-#: src/view/com/profile/FollowButton.tsx:79
-msgctxt "action"
-msgid "Follow Back"
-msgstr ""
-
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:223
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:142
+msgid "Follow Back"
+msgstr "回关"
+
+#: src/view/com/profile/FollowButton.tsx:79
+msgctxt "action"
 msgid "Follow Back"
 msgstr "回关"
 
@@ -2922,7 +2910,7 @@ msgstr "无法加载此内容审核提供服务。"
 
 #: src/state/queries/video/video.ts:165
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
-msgstr ""
+msgstr "请稍等！我们正在逐步开放视频功能权限，你仍在等待队伍中。请稍后再回来查看！"
 
 #: src/Navigation.tsx:550
 #: src/Navigation.tsx:570
@@ -3088,7 +3076,7 @@ msgstr "用户名或密码无效"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:82
 msgid "Invalid Verification Code"
-msgstr ""
+msgstr "验证码无效"
 
 #: src/view/com/modals/InviteCodes.tsx:94
 msgid "Invite a Friend"
@@ -3147,7 +3135,7 @@ msgstr "加入对话"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:492
 msgid "Joined {0}"
-msgstr ""
+msgstr "{0} 已加入"
 
 #: src/screens/Onboarding/index.tsx:21
 #: src/screens/Onboarding/state.ts:89
@@ -3612,13 +3600,13 @@ msgstr "电影"
 msgid "Music"
 msgstr "音乐"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:389
-msgctxt "video"
-msgid "Mute"
-msgstr ""
-
 #: src/components/TagMenu/index.tsx:263
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:163
+msgid "Mute"
+msgstr "隐藏"
+
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:389
+msgctxt "video"
 msgid "Mute"
 msgstr "隐藏"
 
@@ -3689,10 +3677,6 @@ msgstr "隐藏讨论串"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:483
 msgid "Mute words & tags"
 msgstr "隐藏词和标签"
-
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
-#~ msgid "Muted"
-#~ msgstr "已隐藏"
 
 #: src/screens/Moderation/index.tsx:264
 msgid "Muted accounts"
@@ -4081,7 +4065,7 @@ msgstr "糟糕！发生了一些错误。"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:175
 msgid "Oh no! We weren't able to generate an image for you to share. Rest assured, we're glad you're here 🦋"
-msgstr ""
+msgstr "糟糕！我们无法生成图片供你分享。请放心，我们很高兴你还在这里 🦋"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:339
 msgid "OK"
@@ -4669,7 +4653,7 @@ msgstr "点按重试"
 
 #: src/components/KnownFollowers.tsx:124
 msgid "Press to view followers of this account that you also follow"
-msgstr "点按以查看同样关注此账号的共同关注者"
+msgstr "点按以查看同样关注此账户的共同关注者"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:150
 msgid "Previous image"
@@ -5205,11 +5189,11 @@ msgstr "重新发送电子邮件"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:130
 msgid "Resend Email"
-msgstr ""
+msgstr "重新发送电子邮件"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:123
 msgid "Resend Verification Email"
-msgstr ""
+msgstr "重新发送验证码电子邮件"
 
 #: src/view/com/modals/ChangePassword.tsx:186
 msgid "Reset code"
@@ -5725,11 +5709,11 @@ msgstr "分享资讯源"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:621
 msgid "Share image externally"
-msgstr ""
+msgstr "向外部分享图片"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:639
 msgid "Share image in post"
-msgstr ""
+msgstr "在帖文里分享图片"
 
 #: src/components/StarterPack/ShareDialog.tsx:124
 #: src/components/StarterPack/ShareDialog.tsx:131
@@ -5796,10 +5780,6 @@ msgstr "显示徽章"
 #: src/lib/moderation/useLabelBehaviorDescription.ts:61
 msgid "Show badge and filter from feeds"
 msgstr "显示徽章并从资讯源中过滤"
-
-#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:218
-#~ msgid "Show follows similar to {0}"
-#~ msgstr "显示类似于 {0} 的关注者"
 
 #: src/view/com/post-thread/PostThreadShowHiddenReplies.tsx:23
 msgid "Show hidden replies"
@@ -6117,7 +6097,7 @@ msgstr "订阅这个列表"
 
 #: src/view/screens/Search/Explore.tsx:332
 msgid "Suggested accounts"
-msgstr "建议的账号"
+msgstr "建议的账户"
 
 #: src/components/FeedInterstitials.tsx:318
 msgid "Suggested for you"
@@ -6177,7 +6157,7 @@ msgstr "点击进入全屏模式"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:151
 msgid "Tap to play or pause"
-msgstr ""
+msgstr "点击以播放或静音"
 
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:164
 msgid "Tap to toggle sound"
@@ -6211,7 +6191,7 @@ msgstr "告诉我们更多"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:518
 msgid "Ten Million"
-msgstr ""
+msgstr "一千万"
 
 #: src/view/shell/desktop/RightNav.tsx:90
 msgid "Terms"
@@ -6248,11 +6228,11 @@ msgstr "谢谢，你的举报已提交。"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:593
 msgid "Thanks for being one of our first 10 million users."
-msgstr ""
+msgstr "感谢你成为我们的首批一千万用户的其中一份子。"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:74
 msgid "Thanks, you have successfully verified your email address."
-msgstr ""
+msgstr "谢谢，你已成功验证邮箱地址。"
 
 #: src/view/com/modals/ChangeHandle.tsx:459
 msgid "That contains the following:"
@@ -6353,7 +6333,7 @@ msgstr "服务条款已迁移至"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:85
 msgid "The verification code you have provided is invalid. Please make sure that you have used the correct verification link or request a new one."
-msgstr ""
+msgstr "你提供的验证码无效，请检查你所使用的验证链接，或是申请新的验证链接。"
 
 #: src/screens/Settings/components/DeactivateAccountDialog.tsx:86
 msgid "There is no time limit for account deactivation, come back any time."
@@ -6501,7 +6481,7 @@ msgstr "没有 Bluesky 账户，无法查看此内容。"
 
 #: src/screens/Messages/List/ChatListItem.tsx:213
 msgid "This conversation is with a deleted or a deactivated account. Press for options."
-msgstr "此对话的参与者已停用或删除账号，点击以获取更多详情。"
+msgstr "此对话的参与者已停用或删除账户，点击以获取更多详情。"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:93
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
@@ -6682,7 +6662,7 @@ msgstr "你想将举报提交给谁？"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:597
 msgid "Together, we're rebuilding the social internet. We're glad you're here."
-msgstr ""
+msgstr "很高兴你能来到这里，让我们一起重新打造社交网络。"
 
 #: src/view/com/util/forms/DropdownButton.tsx:255
 msgid "Toggle dropdown"
@@ -6807,14 +6787,14 @@ msgstr "取消关注账户"
 msgid "Unlike this feed"
 msgstr "取消喜欢这个资讯源"
 
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:388
-msgctxt "video"
-msgid "Unmute"
-msgstr ""
-
 #: src/components/TagMenu/index.tsx:263
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:163
 #: src/view/screens/ProfileList.tsx:689
+msgid "Unmute"
+msgstr "取消隐藏"
+
+#: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:388
+msgctxt "video"
 msgid "Unmute"
 msgstr "取消隐藏"
 
@@ -6843,10 +6823,6 @@ msgstr "取消隐藏讨论串"
 #: src/view/com/util/post-embeds/VideoEmbedInner/VideoWebControls.tsx:317
 msgid "Unmute video"
 msgstr "取消隐藏视频"
-
-#: src/view/com/util/post-embeds/VideoEmbedInner/VideoEmbedInnerNative.tsx:168
-#~ msgid "Unmuted"
-#~ msgstr "已取消隐藏"
 
 #: src/view/screens/ProfileFeed.tsx:292
 #: src/view/screens/ProfileList.tsx:673
@@ -7075,7 +7051,7 @@ msgstr "验证邮箱"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:61
 msgid "Verify email dialog"
-msgstr ""
+msgstr "验证邮箱对话框"
 
 #: src/view/screens/Settings/index.tsx:961
 msgid "Verify my email"
@@ -7135,7 +7111,7 @@ msgstr "视频：{0}"
 #: src/view/com/composer/videos/SelectVideoBtn.tsx:65
 #: src/view/com/composer/videos/VideoPreview.web.tsx:44
 msgid "Videos must be less than 60 seconds long"
-msgstr ""
+msgstr "视频必须短于60秒"
 
 #: src/screens/Profile/Header/Shell.tsx:113
 msgid "View {0}'s avatar"
@@ -7200,7 +7176,7 @@ msgstr "查看这个资讯源被谁喜欢"
 
 #: src/screens/Moderation/index.tsx:274
 msgid "View your blocked accounts"
-msgstr "查看你屏蔽的账号"
+msgstr "查看你屏蔽的账户"
 
 #: src/view/com/home/HomeHeaderLayout.web.tsx:79
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:86
@@ -7213,7 +7189,7 @@ msgstr "查看你的内容审核列表"
 
 #: src/screens/Moderation/index.tsx:259
 msgid "View your muted accounts"
-msgstr "查看你隐藏的账号"
+msgstr "查看你隐藏的账户"
 
 #: src/view/com/modals/LinkWarning.tsx:89
 #: src/view/com/modals/LinkWarning.tsx:95
@@ -7248,7 +7224,7 @@ msgstr "我们估计还需要 {estimatedTime} 才能完成你的账户准备。"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:98
 msgid "We have sent another verification email to <0>{0}</0>."
-msgstr ""
+msgstr "我们将发送另一封验证邮件至 <0>{0}</0>。"
 
 #: src/screens/Onboarding/StepFinished.tsx:238
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
@@ -7260,7 +7236,7 @@ msgstr "我们已经看完了你关注的帖文。这是来自 <0/> 的最新消
 
 #: src/state/queries/video/video.ts:170
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
-msgstr ""
+msgstr "我们无法确定你是否有权上传视频，请重试。"
 
 #: src/components/dialogs/BirthDateSettings.tsx:52
 msgid "We were unable to load your birth date preferences. Please try again."
@@ -7464,7 +7440,7 @@ msgstr "轮到你了。"
 
 #: src/state/queries/video/video.ts:161
 msgid "You are not allowed to upload videos."
-msgstr ""
+msgstr "你无法上传视频。"
 
 #: src/view/com/profile/ProfileFollows.tsx:95
 msgid "You are not following anyone."
@@ -7585,7 +7561,7 @@ msgstr "你已经到末尾了"
 
 #: src/state/queries/video/video-upload.shared.ts:67
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
-msgstr ""
+msgstr "您已暂时达到视频上传的限制，请稍后重试。"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:235
 msgid "You haven't created a starter pack yet!"
@@ -7711,11 +7687,11 @@ msgstr "你已经浏览完你的订阅资讯源啦！寻找一些更多的账户
 
 #: src/state/queries/video/video.ts:175
 msgid "You've reached your daily limit for video uploads (too many bytes)"
-msgstr ""
+msgstr "你已达到每日上传视频上限（文件太大）"
 
 #: src/state/queries/video/video.ts:180
 msgid "You've reached your daily limit for video uploads (too many videos)"
-msgstr ""
+msgstr "你已达到每日上传视频上限（数量太多）"
 
 #: src/screens/Signup/index.tsx:146
 msgid "Your account"
@@ -7727,7 +7703,7 @@ msgstr "你的账户已删除"
 
 #: src/state/queries/video/video.ts:185
 msgid "Your account is not yet old enough to upload videos. Please try again later."
-msgstr ""
+msgstr "你的账户注册时间过短，暂时无法上传视频。请过段时间再试。"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:65
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."

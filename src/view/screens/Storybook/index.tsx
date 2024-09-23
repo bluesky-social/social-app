@@ -80,6 +80,8 @@ function StorybookInner() {
               </Button>
             </View>
 
+            <Buttons />
+
             <Dialogs />
             <ThemeProvider theme="light">
               <Theming />
