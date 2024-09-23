@@ -19,8 +19,8 @@ import Animated, {
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {ScrollProvider} from '#/lib/ScrollContext'
-import {isIOS} from 'platform/detection'
-import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
+import {isIOS} from '#/platform/detection'
+import {Pager, PagerRef, RenderTabBarFnProps} from '#/view/com/pager/Pager'
 import {ListMethods} from '../util/List'
 import {TabBar} from './TabBar'
 
@@ -41,6 +41,7 @@ export interface PagerWithHeaderProps {
   initialPage?: number
   onPageSelected?: (index: number) => void
   onCurrentPageSelected?: (index: number) => void
+  allowOverScroll?: boolean
 }
 export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
   function PageWithHeaderImpl(
@@ -53,6 +54,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       initialPage,
       onPageSelected,
       onCurrentPageSelected,
+      allowOverScroll,
     }: PagerWithHeaderProps,
     ref,
   ) {
@@ -92,6 +94,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
             onSelect={props.onSelect}
             scrollY={scrollY}
             testID={testID}
+            allowOverScroll={allowOverScroll}
           />
         )
       },
@@ -106,6 +109,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
         onHeaderOnlyLayout,
         scrollY,
         testID,
+        allowOverScroll,
       ],
     )
 
@@ -216,6 +220,7 @@ let PagerTabBar = ({
   onTabBarLayout,
   onCurrentPageSelected,
   onSelect,
+  allowOverScroll,
 }: {
   currentPage: number
   headerOnlyHeight: number
@@ -228,14 +233,18 @@ let PagerTabBar = ({
   onTabBarLayout: (e: LayoutChangeEvent) => void
   onCurrentPageSelected?: (index: number) => void
   onSelect?: (index: number) => void
+  allowOverScroll?: boolean
 }): React.ReactNode => {
-  const headerTransform = useAnimatedStyle(() => ({
-    transform: [
-      {
-        translateY: Math.min(Math.min(scrollY.value, headerOnlyHeight) * -1, 0),
-      },
-    ],
-  }))
+  const headerTransform = useAnimatedStyle(() => {
+    const translateY = Math.min(scrollY.value, headerOnlyHeight) * -1
+    return {
+      transform: [
+        {
+          translateY: allowOverScroll ? translateY : Math.min(translateY, 0),
+        },
+      ],
+    }
+  })
   const headerRef = React.useRef(null)
   return (
     <Animated.View
