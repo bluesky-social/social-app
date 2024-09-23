@@ -264,7 +264,7 @@ msgstr "7 天"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:266
 msgid "A virtual certificate with text \"Celebrating 10M users on Bluesky, #{0}, {displayName} {handle}, joined on {joinedDate}\""
-msgstr "虛擬證書，其中包含文字「慶祝 Bluesky 上的 1000 萬用戶，#{0}，{displayName} {handle}，於 {joinedDate} 加入」"
+msgstr "一張虛擬證書，上面寫著「慶祝 Bluesky 達到 1000 萬用戶，#{0}，{displayName} {handle}，於 {joinedDate} 加入」"
 
 #: src/view/com/util/ViewHeader.tsx:92
 #: src/view/screens/Search/Search.tsx:684
