@@ -41,7 +41,7 @@ export interface PagerWithHeaderProps {
   initialPage?: number
   onPageSelected?: (index: number) => void
   onCurrentPageSelected?: (index: number) => void
-  allowOverScroll?: boolean
+  allowHeaderOverScroll?: boolean
 }
 export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
   function PageWithHeaderImpl(
@@ -54,7 +54,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       initialPage,
       onPageSelected,
       onCurrentPageSelected,
-      allowOverScroll,
+      allowHeaderOverScroll,
     }: PagerWithHeaderProps,
     ref,
   ) {
@@ -94,7 +94,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
             onSelect={props.onSelect}
             scrollY={scrollY}
             testID={testID}
-            allowOverScroll={allowOverScroll}
+            allowHeaderOverScroll={allowHeaderOverScroll}
           />
         )
       },
@@ -109,7 +109,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
         onHeaderOnlyLayout,
         scrollY,
         testID,
-        allowOverScroll,
+        allowHeaderOverScroll,
       ],
     )
 
@@ -220,7 +220,7 @@ let PagerTabBar = ({
   onTabBarLayout,
   onCurrentPageSelected,
   onSelect,
-  allowOverScroll,
+  allowHeaderOverScroll,
 }: {
   currentPage: number
   headerOnlyHeight: number
@@ -233,14 +233,16 @@ let PagerTabBar = ({
   onTabBarLayout: (e: LayoutChangeEvent) => void
   onCurrentPageSelected?: (index: number) => void
   onSelect?: (index: number) => void
-  allowOverScroll?: boolean
+  allowHeaderOverScroll?: boolean
 }): React.ReactNode => {
   const headerTransform = useAnimatedStyle(() => {
     const translateY = Math.min(scrollY.value, headerOnlyHeight) * -1
     return {
       transform: [
         {
-          translateY: allowOverScroll ? translateY : Math.min(translateY, 0),
+          translateY: allowHeaderOverScroll
+            ? translateY
+            : Math.min(translateY, 0),
         },
       ],
     }
