@@ -7353,7 +7353,7 @@ msgstr "我們遇到網路問題，請再試一次"
 
 #: src/components/dialogs/nuxs/NeueTypography.tsx:55
 msgid "We're introducing a new theme font, along with adjustable font sizing."
-msgstr "我們引入了一種新的主題字體，以及字體大小的客製化。"
+msgstr "我們推出了一款新的主題字體，並加入了字體大小的調整功能。"
 
 #: src/screens/Signup/index.tsx:100
 msgid "We're so excited to have you join us!"
