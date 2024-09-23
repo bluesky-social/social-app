@@ -48,9 +48,7 @@ let MessageItem = ({
   const isNextFromSameSender = isNextFromSelf === isFromSelf
 
   const isNewDay = useMemo(() => {
-    // TODO: figure out how we can show this for when we're at the start
-    // of the conversation
-    if (!prevMessage) return false
+    if (!prevMessage) return true
 
     const thisDate = new Date(message.sentAt)
     const prevDate = new Date(prevMessage.sentAt)
