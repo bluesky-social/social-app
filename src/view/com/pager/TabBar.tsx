@@ -1,9 +1,9 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {LayoutChangeEvent, ScrollView, StyleSheet, View} from 'react-native'
 
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {isNative} from '#/platform/detection'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {PressableWithHover} from '../util/PressableWithHover'
 import {Text} from '../util/text/Text'
 import {DraggableScrollView} from './DraggableScrollView'
@@ -138,6 +138,7 @@ export function TabBar({
               onPress={() => onPressItem(i)}>
               <View style={[styles.itemInner, selected && indicatorStyle]}>
                 <Text
+                  emoji
                   type={isDesktop || isTablet ? 'xl-bold' : 'lg-bold'}
                   testID={testID ? `${testID}-${item}` : undefined}
                   style={[
