@@ -21,13 +21,15 @@ export const PressableWithHover = forwardRef<
     onIn: onHoverIn,
     onOut: onHoverOut,
   } = useInteractionState()
-  style =
-    typeof style !== 'function' && hovered ? addStyle(style, hoverStyle) : style
 
   return (
     <Pressable
       {...props}
-      style={style}
+      style={
+        typeof style !== 'function' && hovered
+          ? addStyle(style, hoverStyle)
+          : style
+      }
       onHoverIn={onHoverIn}
       onHoverOut={onHoverOut}
       ref={ref}>
