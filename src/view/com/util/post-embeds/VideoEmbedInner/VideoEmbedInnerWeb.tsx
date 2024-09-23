@@ -51,6 +51,18 @@ export function VideoEmbedInnerWeb({
     // initial value, later on it's managed by Controls
     hls.autoLevelCapping = 0
 
+    // manually loop, so if we've flushed the first buffer it doesn't get confused
+    const abortController = new AbortController()
+    const {signal} = abortController
+    videoRef.current.addEventListener(
+      'ended',
+      function () {
+        this.currentTime = 0
+        this.play()
+      },
+      {signal},
+    )
+
     hls.on(Hls.Events.SUBTITLE_TRACKS_UPDATED, (_event, data) => {
       if (data.subtitleTracks.length > 0) {
         setHasSubtitleTrack(true)
@@ -82,6 +94,7 @@ export function VideoEmbedInnerWeb({
       hlsRef.current = undefined
       hls.detachMedia()
       hls.destroy()
+      abortController.abort()
     }
   }, [embed.playlist])
 
@@ -136,7 +149,6 @@ export function VideoEmbedInnerWeb({
             style={{width: '100%', height: '100%', objectFit: 'contain'}}
             playsInline
             preload="none"
-            loop
             muted={!focused}
             aria-labelledby={embed.alt ? figId : undefined}
           />
