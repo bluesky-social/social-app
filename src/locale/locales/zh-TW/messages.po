@@ -859,7 +859,7 @@ msgstr "Bluesky 正在慶祝達到 1,000 萬用戶的里程碑！"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:256
 msgid "Bluesky now has over 10 million users, and I was #{0}!"
-msgstr "Bluesky 現在擁有超過 1000 萬用戶，而我是第#{0}個！"
+msgstr "Bluesky 現在已經有超過 1,000 萬的用戶，而我是第 #{0} 位！"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:282
 msgid "Bluesky will choose a set of recommended accounts from people in your network."
