@@ -3147,7 +3147,7 @@ msgstr "您似乎輸入了錯誤的電子郵件地址，您確定這是正確的
 
 #: src/screens/Signup/StepInfo/index.tsx:238
 msgid "It's correct"
-msgstr ""
+msgstr "這是正確的地址。"
 
 #: src/screens/StarterPack/Wizard/index.tsx:452
 msgid "It's just you right now! Add more people to your starter pack by searching above."
