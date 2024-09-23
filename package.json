@@ -338,7 +338,9 @@
   },
   "lint-staged": {
     "*{.js,.jsx,.ts,.tsx}": [
-      "eslint --cache --fix",
+      "eslint --cache --fix"
+    ],
+    "*{.js,.jsx,.ts,.tsx,.css}": [
       "prettier --cache --write --ignore-unknown"
     ]
   }
