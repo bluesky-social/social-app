@@ -157,10 +157,6 @@ let PostDropdownBtn = ({
   const isReplyHiddenByThreadgate = threadgateHiddenReplies.has(postUri)
   const isPinned = post.viewer?.pinned
 
-  console.log(post.viewer)
-
-  console.log(isPinned ? 'pinned' : 'unpinned')
-
   const {mutateAsync: toggleQuoteDetachment, isPending} =
     useToggleQuoteDetachmentMutation()
 
