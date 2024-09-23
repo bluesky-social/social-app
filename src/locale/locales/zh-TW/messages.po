@@ -3143,7 +3143,7 @@ msgstr "邀請，但僅限個人"
 
 #: src/screens/Signup/StepInfo/index.tsx:77
 msgid "It looks like you may have entered your email address incorrectly. Are you sure it's right?"
-msgstr ""
+msgstr "您似乎輸入了錯誤的電子郵件地址，您確定這是正確的嗎？"
 
 #: src/screens/Signup/StepInfo/index.tsx:238
 msgid "It's correct"
