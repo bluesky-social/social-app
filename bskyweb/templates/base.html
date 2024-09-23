@@ -38,38 +38,38 @@
      *
      * ALL OTHER STYLES BELONG IN `src/style.css`
      *
-     * THIS NEEDS TO BE DUPLICATED IN `web/index.html`
+     * THIS NEEDS TO BE DUPLICATED IN `bskyweb/templates/base.html`
      */
-    :root {
-      --background: white;
+    html {
+      background-color: white;
+      scrollbar-gutter: stable both-edges;
     }
     @media (prefers-color-scheme: dark) {
-      :root {
-        color-scheme: dark;
-        --background: black;
+      html {
+        background-color: black;
       }
     }
-    html {
-      height: calc(100% + env(safe-area-inset-top));
-      scrollbar-gutter: stable both-edges;
+    html,
+    body {
+      margin: 0px;
+      padding: 0px;
+      font-family: 'Inter-Regular', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Liberation Sans', Helvetica, Arial, sans-serif;
+      text-rendering: optimizeLegibility;
+      /* Platform-specific reset */
+      -webkit-overflow-scrolling: touch;
+      -webkit-text-size-adjust: 100%;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      -ms-overflow-style: scrollbar;
+      font-synthesis-weight: none;
     }
     html,
     body,
     #root {
       display: flex;
       flex: 1 0 auto;
-      width: 100%;
-      margin: 0px;
-      padding: 0px;
       min-height: 100%;
-      font-family: 'Inter-Regular', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Liberation Sans', Helvetica, Arial, sans-serif;
-      background-color: var(--background);
-
-      -webkit-overflow-scrolling: touch;
-      /* Prevent text size change on orientation change https://gist.github.com/tfausak/2222823#file-ios-8-web-app-html-L138 */
-      -webkit-text-size-adjust: 100%;
     }
-
     #splash {
       position: fixed;
       width: 100px;

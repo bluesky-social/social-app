@@ -104,7 +104,9 @@
 */
 
 /**
- * BEGIN STYLE
+ * BEGIN STYLES
+ *
+ * HTML & BODY STYLES IN `web/index.html` and `bskyweb/templates/base.html`
  */
 :root {
   --text: black;
@@ -120,53 +122,25 @@
   }
 }
 
-html {
-  height: calc(100% + env(safe-area-inset-top));
-  scrollbar-gutter: stable both-edges;
-}
-html,
-body,
-#root {
-  display: flex;
-  flex: 1 0 auto;
-  width: 100%;
-  margin: 0px;
-  padding: 0px;
-  min-height: 100%;
-  font-family: 'Inter-Regular', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    Roboto, 'Liberation Sans', Helvetica, Arial, sans-serif;
-  background-color: var(--background);
-
-  /* Platform-specific */
-  -webkit-overflow-scrolling: touch;
-  /* Prevent text size change on orientation change https://gist.github.com/tfausak/2222823#file-ios-8-web-app-html-L138 */
-  -webkit-text-size-adjust: 100%;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -ms-overflow-style: scrollbar;
-  font-synthesis-weight: none;
-}
 html.theme--light {
   --text: black;
   --background: white;
   --backgroundLight: hsl(211, 20%, 95%);
+  background-color: white;
 }
 html.theme--dark {
+  color-scheme: dark;
+  background-color: black;
   --text: white;
   --background: black;
   --backgroundLight: hsl(211, 20%, 20%);
-  color-scheme: dark;
 }
 html.theme--dim {
+  color-scheme: dark;
+  background-color: hsl(211, 28%, 12%);
   --text: white;
   --background: hsl(211, 20%, 4%);
   --backgroundLight: hsl(211, 20%, 10%);
-  color-scheme: dark;
-}
-body {
-  overflow-y: auto;
-  overscroll-behavior-y: none;
 }
 
 /* Buttons and inputs have a font set by UA, so we'll have to reset that */

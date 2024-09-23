@@ -303,6 +303,7 @@ export function createThemes({
     negative_950: `hsl(${hues.negative}, 91%, ${dimScale[12]}%)`,
     negative_975: `hsl(${hues.negative}, 91%, ${dimScale[13]}%)`,
   } as const
+  console.log(dimPalette)
 
   const light: Theme = {
     name: 'light',
