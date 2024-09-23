@@ -325,11 +325,11 @@ export const darkTheme: Theme = {
       textInverted: colors.green2,
     },
     inverted: {
-      background: lightPalette.white,
+      background: darkPalette.white,
       backgroundLight: lightPalette.contrast_50,
       text: lightPalette.black,
       textLight: lightPalette.contrast_700,
-      textInverted: lightPalette.white,
+      textInverted: darkPalette.white,
       link: lightPalette.primary_500,
       border: lightPalette.contrast_100,
       borderDark: lightPalette.contrast_200,
