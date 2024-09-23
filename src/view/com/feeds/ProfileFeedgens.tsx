@@ -15,8 +15,8 @@ import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {RQKEY, useProfileFeedgensQuery} from '#/state/queries/profile-feedgens'
+import {EmptyState} from '#/view/com/util/EmptyState'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {EmptyState} from 'view/com/util/EmptyState'
 import {atoms as a, useTheme} from '#/alf'
 import * as FeedCard from '#/components/FeedCard'
 import {ErrorMessage} from '../util/error/ErrorMessage'
@@ -191,6 +191,7 @@ export const ProfileFeedgens = React.forwardRef<
         refreshing={isPTRing}
         onRefresh={onRefresh}
         headerOffset={headerOffset}
+        allowOverScroll={true}
         contentContainerStyle={isNative && {paddingBottom: headerOffset + 100}}
         indicatorStyle={t.name === 'light' ? 'black' : 'white'}
         removeClippedSubviews={true}

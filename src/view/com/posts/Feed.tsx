@@ -14,8 +14,11 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {useAnalytics} from '#/lib/analytics/analytics'
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
+import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {logEvent, useGate} from '#/lib/statsig/statsig'
+import {useTheme} from '#/lib/ThemeContext'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
 import {listenPostCreated} from '#/state/events'
@@ -30,9 +33,6 @@ import {
   usePostFeedQuery,
 } from '#/state/queries/post-feed'
 import {useSession} from '#/state/session'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
-import {useTheme} from 'lib/ThemeContext'
 import {
   ProgressGuide,
   SuggestedFeeds,
@@ -167,6 +167,7 @@ let Feed = ({
   renderEndOfFeed,
   testID,
   headerOffset = 0,
+  allowOverScroll,
   desktopFixedHeightOffset,
   ListHeaderComponent,
   extraData,
@@ -187,6 +188,7 @@ let Feed = ({
   renderEndOfFeed?: () => JSX.Element
   testID?: string
   headerOffset?: number
+  allowOverScroll?: boolean
   desktopFixedHeightOffset?: number
   ListHeaderComponent?: () => JSX.Element
   extraData?: any
@@ -548,6 +550,7 @@ let Feed = ({
         refreshing={isPTRing}
         onRefresh={onRefresh}
         headerOffset={headerOffset}
+        allowOverScroll={allowOverScroll}
         contentContainerStyle={{
           minHeight: Dimensions.get('window').height * 1.5,
         }}
