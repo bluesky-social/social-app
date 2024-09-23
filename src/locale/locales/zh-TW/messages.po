@@ -6303,7 +6303,7 @@ msgstr "謝謝，您的檢舉已提交。"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:647
 msgid "Thanks for being one of our first 10 million users."
-msgstr "感謝您成為我們首批 1000 萬用戶之一。"
+msgstr "感謝您成為我們的前 1000 萬用戶之一。"
 
 #: src/components/intents/VerifyEmailIntentDialog.tsx:74
 msgid "Thanks, you have successfully verified your email address."
