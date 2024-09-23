@@ -17,14 +17,19 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
 
+import {getCurrentRoute} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
 import {CommonNavigatorParams, NavigationProp} from '#/lib/routes/types'
+import {shareUrl} from '#/lib/sharing'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
+import {toShareUrl} from '#/lib/strings/url-helpers'
+import {useTheme} from '#/lib/ThemeContext'
 import {getTranslatorLink} from '#/locale/helpers'
 import {logger} from '#/logger'
 import {isWeb} from '#/platform/detection'
-import {Shadow} from '#/state/cache/post-shadow'
+import {Shadow, updatePostShadow} from '#/state/cache/post-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useHiddenPosts, useHiddenPostsApi} from '#/state/preferences'
@@ -39,10 +44,6 @@ import {useProfileUpdateMutation} from '#/state/queries/profile'
 import {useToggleReplyVisibilityMutation} from '#/state/queries/threadgate'
 import {useAgent, useSession} from '#/state/session'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
-import {getCurrentRoute} from 'lib/routes/helpers'
-import {shareUrl} from 'lib/sharing'
-import {toShareUrl} from 'lib/strings/url-helpers'
-import {useTheme} from 'lib/ThemeContext'
 import {atoms as a, useBreakpoints, useTheme as useAlf} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
@@ -109,6 +110,7 @@ let PostDropdownBtn = ({
   const defaultCtrlColor = theme.palette.default.postCtrl
   const langPrefs = useLanguagePrefs()
   const agent = useAgent()
+  const queryClient = useQueryClient()
   const {mutateAsync: deletePostMutate} = usePostDeleteMutation()
   const {mutateAsync: profileUpdateMutate} = useProfileUpdateMutation()
   const hiddenPosts = useHiddenPosts()
@@ -154,6 +156,10 @@ let PostDropdownBtn = ({
   })
   const isReplyHiddenByThreadgate = threadgateHiddenReplies.has(postUri)
   const isPinned = post.viewer?.pinned
+
+  console.log(post.viewer)
+
+  console.log(isPinned ? 'pinned' : 'unpinned')
 
   const {mutateAsync: toggleQuoteDetachment, isPending} =
     useToggleQuoteDetachmentMutation()
@@ -355,6 +361,11 @@ let PostDropdownBtn = ({
       const {data: profile} = await agent.getProfile({
         actor: currentAccount.did,
       })
+
+      updatePostShadow(queryClient, postUri, {
+        pinned: !isPinned,
+      })
+
       await profileUpdateMutate({
         profile,
         updates: existing => {
@@ -373,6 +384,10 @@ let PostDropdownBtn = ({
     } catch (e: any) {
       Toast.show(_(msg`Failed to pin post`))
       logger.error('Failed to update user profile', {message: String(e)})
+      // revert optimistic update
+      updatePostShadow(queryClient, postUri, {
+        pinned: isPinned,
+      })
     }
   }, [
     _,
@@ -382,6 +397,7 @@ let PostDropdownBtn = ({
     profileUpdateMutate,
     postUri,
     postCid,
+    queryClient,
   ])
 
   return (
