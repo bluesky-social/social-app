@@ -5249,7 +5249,7 @@ msgstr "此供應商要求必填"
 
 #: src/components/LabelingServiceCard/index.tsx:75
 msgid "Required in your region"
-msgstr ""
+msgstr "您所在的區域必填"
 
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:168
 #: src/view/screens/Settings/DisableEmail2FADialog.tsx:171
