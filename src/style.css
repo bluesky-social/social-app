@@ -1,3 +1,11 @@
+/**
+ * IMPORTANT
+ *
+ * Some of these styles are duplicated in the `web/index.html` and
+ * `bskyweb/templates/base.html` files. Depending on what you're updating, you
+ * may need to touch all three. Ask Eric if you aren't sure.
+ */
+
 @font-face {
   font-family: 'Inter-Regular';
   src: local('Inter-Regular'),
@@ -96,74 +104,49 @@
 */
 
 /**
- * Extend the react-native-web reset:
- * https://github.com/necolas/react-native-web/blob/master/packages/react-native-web/src/exports/StyleSheet/initialRules.js
+ * BEGIN STYLE
  */
-html,
-body,
-#root {
-  width: 100%;
-  /* To smooth any scrolling behavior */
-  -webkit-overflow-scrolling: touch;
-  margin: 0px;
-  padding: 0px;
-  /* Allows content to fill the viewport and go beyond the bottom */
-  min-height: 100%;
-}
-#root {
-  flex-shrink: 0;
-  flex-basis: auto;
-  flex-grow: 1;
-  display: flex;
-  flex: 1;
-}
-
-html {
-  /* Prevent text size change on orientation change https://gist.github.com/tfausak/2222823#file-ios-8-web-app-html-L138 */
-  -webkit-text-size-adjust: 100%;
-  height: calc(100% + env(safe-area-inset-top));
-  scrollbar-gutter: stable both-edges;
-}
-html,
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    'Liberation Sans', Helvetica, Arial, sans-serif;
-}
-
-#preload {
-  width: 100px;
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
-
-/* Buttons and inputs have a font set by UA, so we'll have to reset that */
-button,
-input,
-textarea {
-  font: inherit;
-  line-height: inherit;
-}
-
-/* Color theming */
-/* Default will always be white */
 :root {
   --text: black;
   --background: white;
   --backgroundLight: hsl(211, 20%, 95%);
 }
-/* This gives us a black background when system is dark and we have not loaded the theme/color scheme values in JS */
 @media (prefers-color-scheme: dark) {
   :root {
+    color-scheme: dark;
     --text: white;
     --background: black;
     --backgroundLight: hsl(211, 20%, 20%);
-    color-scheme: dark;
   }
 }
 
-/* Overwrite those preferences with the selected theme */
+html {
+  height: calc(100% + env(safe-area-inset-top));
+  scrollbar-gutter: stable both-edges;
+}
+html,
+body,
+#root {
+  display: flex;
+  flex: 1 0 auto;
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+  min-height: 100%;
+  font-family: 'Inter-Regular', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, 'Liberation Sans', Helvetica, Arial, sans-serif;
+  background-color: var(--background);
+
+  /* Platform-specific */
+  -webkit-overflow-scrolling: touch;
+  /* Prevent text size change on orientation change https://gist.github.com/tfausak/2222823#file-ios-8-web-app-html-L138 */
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -ms-overflow-style: scrollbar;
+  font-synthesis-weight: none;
+}
 html.theme--light {
   --text: black;
   --background: white;
@@ -180,6 +163,18 @@ html.theme--dim {
   --background: hsl(211, 20%, 4%);
   --backgroundLight: hsl(211, 20%, 10%);
   color-scheme: dark;
+}
+body {
+  overflow-y: auto;
+  overscroll-behavior-y: none;
+}
+
+/* Buttons and inputs have a font set by UA, so we'll have to reset that */
+button,
+input,
+textarea {
+  font: inherit;
+  line-height: inherit;
 }
 
 /* Remove autofill styles on Webkit */
@@ -198,19 +193,6 @@ input:-webkit-autofill:active {
 /* Force left-align date/time inputs on iOS mobile */
 input::-webkit-date-and-time-value {
   text-align: left;
-}
-
-body {
-  display: flex;
-  /* Allows you to scroll below the viewport; default value is visible */
-  overflow-y: auto;
-  overscroll-behavior-y: none;
-  text-rendering: optimizeLegibility;
-  background-color: var(--background);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -ms-overflow-style: scrollbar;
-  font-synthesis-weight: none;
 }
 
 /* Remove default link styling */

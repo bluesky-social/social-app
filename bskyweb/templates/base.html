@@ -32,6 +32,53 @@
   <link rel="preload" as="font" type="font/otf" href="/static/media/Inter-BlackItalic.27b9f0ad06fd13a7b9da.otf">
   -->
 
+  <style>
+    /**
+     * Minimum styles required to render splash.
+     *
+     * ALL OTHER STYLES BELONG IN `src/style.css`
+     *
+     * THIS NEEDS TO BE DUPLICATED IN `web/index.html`
+     */
+    :root {
+      --background: white;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        color-scheme: dark;
+        --background: black;
+      }
+    }
+    html {
+      height: calc(100% + env(safe-area-inset-top));
+      scrollbar-gutter: stable both-edges;
+    }
+    html,
+    body,
+    #root {
+      display: flex;
+      flex: 1 0 auto;
+      width: 100%;
+      margin: 0px;
+      padding: 0px;
+      min-height: 100%;
+      font-family: 'Inter-Regular', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Liberation Sans', Helvetica, Arial, sans-serif;
+      background-color: var(--background);
+
+      -webkit-overflow-scrolling: touch;
+      /* Prevent text size change on orientation change https://gist.github.com/tfausak/2222823#file-ios-8-web-app-html-L138 */
+      -webkit-text-size-adjust: 100%;
+    }
+
+    #splash {
+      position: fixed;
+      width: 100px;
+      left: 50%;
+      top: 50%;
+      transform: translateX(-50%) translateY(-50%) translateY(-50px);
+    }
+  </style>
+
   {% include "scripts.html" %}
   <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
