@@ -11,6 +11,7 @@ import {
   View,
 } from 'react-native'
 import {ScrollView as RNGHScrollView} from 'react-native-gesture-handler'
+import RNPickerSelect from 'react-native-picker-select'
 import {AppBskyActorDefs, AppBskyFeedDefs, moderateProfile} from '@atproto/api'
 import {
   FontAwesomeIcon,
@@ -21,6 +22,7 @@ import {useLingui} from '@lingui/react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 
+import {LANGUAGES} from '#/lib/../locale/languages'
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {createHitslop} from '#/lib/constants'
 import {HITSLOP_10} from '#/lib/constants'
@@ -38,6 +40,7 @@ import {augmentSearchQuery} from '#/lib/strings/helpers'
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
+import {useLanguagePrefs} from '#/state/preferences/languages'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {useActorSearch} from '#/state/queries/actor-search'
@@ -56,13 +59,15 @@ import {Text} from '#/view/com/util/text/Text'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
 import {Explore} from '#/view/screens/Search/Explore'
 import {SearchLinkCard, SearchProfileCard} from '#/view/shell/desktop/Search'
-import {atoms as a, useBreakpoints,useTheme as useThemeNew, web} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme as useThemeNew, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as FeedCard from '#/components/FeedCard'
 import * as TextField from '#/components/forms/TextField'
+import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as MagnifyingGlass} from '#/components/icons/MagnifyingGlass2'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
+import {Text as NewText} from '#/components/Typography'
 
 const HEADER_HEIGHT = 56
 
@@ -256,7 +261,7 @@ let SearchScreenUserResults = ({
   const {_} = useLingui()
 
   const {data: results, isFetched} = useActorSearch({
-    query: query,
+    query: sanitizeLangFromQuery(query),
     enabled: active,
   })
 
@@ -294,7 +299,7 @@ let SearchScreenFeedsResults = ({
   const {_} = useLingui()
 
   const {data: results, isFetched} = usePopularFeedsSearch({
-    query,
+    query: sanitizeLangFromQuery(query),
     enabled: active,
   })
 
@@ -329,7 +334,83 @@ let SearchScreenFeedsResults = ({
 }
 SearchScreenFeedsResults = React.memo(SearchScreenFeedsResults)
 
+function SearchLanguageDropdown({
+  value,
+  onChange,
+}: {
+  value: string
+  onChange(value: string): void
+}) {
+  const t = useThemeNew()
+  const {contentLanguages} = useLanguagePrefs()
+
+  const items = React.useMemo(() => {
+    return LANGUAGES.filter(l => Boolean(l.code2))
+      .map(l => ({
+        label: l.name,
+        inputLabel: l.name,
+        value: l.code2,
+        key: l.code2 + l.code3,
+      }))
+      .sort(a => (contentLanguages.includes(a.value) ? -1 : 1))
+  }, [contentLanguages])
+
+  const style = {
+    backgroundColor: t.atoms.bg_contrast_25.backgroundColor,
+    color: t.atoms.text.color,
+    fontSize: a.text_xs.fontSize,
+    fontFamily: 'inherit',
+    fontWeight: a.font_bold.fontWeight,
+    paddingHorizontal: 12,
+    paddingRight: 32,
+    paddingVertical: 6,
+    borderRadius: a.rounded_full.borderRadius,
+  }
+
+  return (
+    <RNPickerSelect
+      placeholder={{}}
+      value={value}
+      onValueChange={onChange}
+      items={items}
+      Icon={() => (
+        <ChevronDown fill={t.atoms.text_contrast_low.color} size="sm" />
+      )}
+      style={{
+        iconContainer: {
+          pointerEvents: 'none',
+          right: a.px_sm.paddingRight,
+          top: 0,
+          bottom: 0,
+          display: 'flex',
+          justifyContent: 'center',
+        },
+        inputAndroid: {
+          ...style,
+        },
+        inputIOS: {
+          ...style,
+        },
+        inputWeb: web({
+          ...style,
+          cursor: 'pointer',
+          // @ts-ignore web only
+          '-moz-appearance': 'none',
+          '-webkit-appearance': 'none',
+          appearance: 'none',
+          outline: 0,
+          borderWidth: 0,
+          overflow: 'hidden',
+          whiteSpace: 'nowrap',
+          textOverflow: 'ellipsis',
+        }),
+      }}
+    />
+  )
+}
+
 let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
+  const t = useThemeNew()
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
@@ -337,6 +418,14 @@ let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
   const {isDesktop} = useWebMediaQueries()
   const [activeTab, setActiveTab] = React.useState(0)
   const {_} = useLingui()
+  const {gtMobile} = useBreakpoints()
+
+  const {contentLanguages} = useLanguagePrefs()
+  const [language, setLanguage] = React.useState(
+    parseLanguageFromQuery(query || '') || contentLanguages[0],
+  )
+  const queryWithoutLang = sanitizeLangFromQuery(query || '')
+  const queryWithLang = queryWithoutLang + ` lang:${language}`
 
   const onPageSelected = React.useCallback(
     (index: number) => {
@@ -348,13 +437,13 @@ let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
   )
 
   const sections = React.useMemo(() => {
-    if (!query) return []
+    if (!queryWithoutLang) return []
     return [
       {
         title: _(msg`Top`),
         component: (
           <SearchScreenPostResults
-            query={query}
+            query={queryWithLang}
             sort="top"
             active={activeTab === 0}
           />
@@ -364,7 +453,7 @@ let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
         title: _(msg`Latest`),
         component: (
           <SearchScreenPostResults
-            query={query}
+            query={queryWithLang}
             sort="latest"
             active={activeTab === 1}
           />
@@ -373,33 +462,59 @@ let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
       {
         title: _(msg`People`),
         component: (
-          <SearchScreenUserResults query={query} active={activeTab === 2} />
+          <SearchScreenUserResults
+            query={queryWithoutLang}
+            active={activeTab === 2}
+          />
         ),
       },
       {
         title: _(msg`Feeds`),
         component: (
-          <SearchScreenFeedsResults query={query} active={activeTab === 3} />
+          <SearchScreenFeedsResults
+            query={queryWithoutLang}
+            active={activeTab === 3}
+          />
         ),
       },
     ]
-  }, [_, query, activeTab])
+  }, [_, queryWithoutLang, queryWithLang, activeTab])
 
-  return query ? (
-    <Pager
-      onPageSelected={onPageSelected}
-      renderTabBar={props => (
-        <CenteredView
-          sideBorders
-          style={[pal.border, pal.view, styles.tabBarContainer]}>
-          <TabBar items={sections.map(section => section.title)} {...props} />
-        </CenteredView>
-      )}
-      initialPage={0}>
-      {sections.map((section, i) => (
-        <View key={i}>{section.component}</View>
-      ))}
-    </Pager>
+  return queryWithoutLang ? (
+    <>
+      <CenteredView
+        sideBorders={gtMobile}
+        style={[
+          isWeb && a.pt_sm,
+          isNative && a.pb_xs,
+          a.px_md,
+          t.atoms.border_contrast_low,
+        ]}>
+        <View style={[a.flex_row, a.justify_end, a.align_center, a.gap_sm]}>
+          <NewText style={[a.font_bold, t.atoms.text_contrast_medium]}>
+            <Trans>Language:</Trans>
+          </NewText>
+          <View style={[{width: 120}]}>
+            <SearchLanguageDropdown value={language} onChange={setLanguage} />
+          </View>
+        </View>
+      </CenteredView>
+
+      <Pager
+        onPageSelected={onPageSelected}
+        renderTabBar={props => (
+          <CenteredView
+            sideBorders
+            style={[pal.border, pal.view, styles.tabBarContainer]}>
+            <TabBar items={sections.map(section => section.title)} {...props} />
+          </CenteredView>
+        )}
+        initialPage={0}>
+        {sections.map((section, i) => (
+          <View key={i}>{section.component}</View>
+        ))}
+      </Pager>
+    </>
   ) : hasSession ? (
     <Explore />
   ) : (
@@ -1034,6 +1149,18 @@ function scrollToTopWeb() {
   if (isWeb) {
     window.scrollTo(0, 0)
   }
+}
+
+function sanitizeLangFromQuery(query: string) {
+  return query.replace(/lang:[a-z-]+/gi, '').trim()
+}
+
+function parseLanguageFromQuery(query: string) {
+  const match = query.match(/lang:[a-z-]+/gi)
+  if (match && match[0]) {
+    return match[0].replace('lang:', '').split('-')[0]
+  }
+  return ''
 }
 
 const styles = StyleSheet.create({
