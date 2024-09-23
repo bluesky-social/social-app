@@ -4130,7 +4130,7 @@ msgstr "糟糕！發生了一些錯誤。"
 
 #: src/components/dialogs/nuxs/TenMillion/index.tsx:224
 msgid "Oh no! We weren't able to generate an image for you to share. Rest assured, we're glad you're here 🦋"
-msgstr "糟糕！我們無法產生圖像供您分享。請放心，我們仍然很高興您持續使用藍天 🦋"
+msgstr "抱歉！我們無法產生可供你分享的圖片。不過，我們仍然很高興您願意持續使用 Bluesky 🦋"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:339
 msgid "OK"
