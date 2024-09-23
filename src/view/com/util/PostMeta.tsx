@@ -11,7 +11,6 @@ import {NON_BREAKING_SPACE} from '#/lib/strings/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {niceDate} from '#/lib/strings/time'
-import {isAndroid} from '#/platform/detection'
 import {precacheProfile} from '#/state/queries/profile'
 import {atoms as a, useTheme} from '#/alf'
 import {WebOnlyInlineLinkText} from '#/components/Link'
@@ -100,18 +99,20 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             disableUnderline
             onPress={onBeforePressAuthor}
             style={[a.text_md, t.atoms.text_contrast_medium, a.leading_snug]}>
-            {NON_BREAKING_SPACE + sanitizeHandle(handle, '@')}
+            <Text
+              emoji
+              style={[a.text_md, t.atoms.text_contrast_medium, a.leading_snug]}>
+              {NON_BREAKING_SPACE + sanitizeHandle(handle, '@')}
+            </Text>
           </WebOnlyInlineLinkText>
         </Text>
       </ProfileHoverCard>
 
-      {!isAndroid && (
-        <Text
-          style={[a.text_md, t.atoms.text_contrast_medium]}
-          accessible={false}>
-          &middot;
-        </Text>
-      )}
+      <Text
+        style={[a.text_md, t.atoms.text_contrast_medium]}
+        accessible={false}>
+        &middot;
+      </Text>
 
       <TimeElapsed timestamp={opts.timestamp}>
         {({timeElapsed}) => (
