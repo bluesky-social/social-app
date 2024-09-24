@@ -67,6 +67,7 @@ import * as TextField from '#/components/forms/TextField'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as MagnifyingGlass} from '#/components/icons/MagnifyingGlass2'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
+import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '#/components/icons/SettingsGear2'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 
 const HEADER_HEIGHT = 56
@@ -415,14 +416,19 @@ function SearchLanguageDropdown({
 
 function useQueryManager({initialQuery}: {initialQuery: string}) {
   const {contentLanguages} = useLanguagePrefs()
-  const {query, params: initialParams} = React.useMemo(
-    () => parseSearchQuery(initialQuery || ''),
-    [initialQuery],
-  )
+  const {query, params: initialParams} = React.useMemo(() => {
+    return parseSearchQuery(initialQuery || '')
+  }, [initialQuery])
+  const prevInitialQuery = React.useRef(initialQuery)
 
   const [lang, setLang] = React.useState(
     initialParams.lang || contentLanguages[0],
   )
+
+  if (initialQuery !== prevInitialQuery.current) {
+    prevInitialQuery.current = initialQuery
+    setLang(initialParams.lang || contentLanguages[0])
+  }
 
   const params = React.useMemo(
     () => ({
@@ -609,6 +615,13 @@ export function SearchScreen(
     AppBskyActorDefs.ProfileViewBasic[]
   >([])
 
+  const {params, query, queryWithParams} = useQueryManager({
+    initialQuery: queryParam,
+  })
+  const showFiltersButton = Boolean(query && !showAutocomplete)
+  const [showFilters, setShowFilters] = React.useState(false)
+  const headerHeight = HEADER_HEIGHT + (showFilters ? 40 : 0)
+
   useFocusEffect(
     useNonReactiveCallback(() => {
       if (isWeb) {
@@ -765,6 +778,7 @@ export function SearchScreen(
       setSearchText('')
       navigation.setParams({q: ''})
     }
+    setShowFilters(false)
   }, [navigation])
 
   useFocusEffect(
@@ -804,11 +818,18 @@ export function SearchScreen(
     [selectedProfiles],
   )
 
-  const {params, query, queryWithParams} = useQueryManager({
-    initialQuery: queryParam,
-  })
-  const showFilters = Boolean(query && !showAutocomplete)
-  const headerHeight = HEADER_HEIGHT + (showFilters ? 40 : 0)
+  const onSearchInputFocus = React.useCallback(() => {
+    if (isWeb) {
+      // Prevent a jump on iPad by ensuring that
+      // the initial focused render has no result list.
+      requestAnimationFrame(() => {
+        setShowAutocomplete(true)
+      })
+    } else {
+      setShowAutocomplete(true)
+    }
+    setShowFilters(false)
+  }, [setShowAutocomplete])
 
   return (
     <View style={isWeb ? null : {flex: 1}}>
@@ -845,11 +866,30 @@ export function SearchScreen(
             textInput={textInput}
             searchText={searchText}
             showAutocomplete={showAutocomplete}
-            setShowAutocomplete={setShowAutocomplete}
+            onFocus={onSearchInputFocus}
             onChangeText={onChangeText}
             onSubmit={onSubmit}
             onPressClearQuery={onPressClearQuery}
           />
+          {showFiltersButton && (
+            <Button
+              onPress={() => setShowFilters(!showFilters)}
+              hitSlop={HITSLOP_10}
+              label={_(msg`Show advanced filters`)}
+              size="large"
+              variant="solid"
+              color="secondary"
+              shape="square">
+              <Gear
+                size="md"
+                fill={
+                  showFilters
+                    ? t.palette.primary_500
+                    : t.atoms.text_contrast_low.color
+                }
+              />
+            </Button>
+          )}
           {showAutocomplete && (
             <Button
               label={_(msg`Cancel search`)}
@@ -866,7 +906,7 @@ export function SearchScreen(
           )}
         </View>
 
-        {query && !showAutocomplete && (
+        {showFilters && (
           <View
             style={[a.flex_row, a.align_center, a.justify_between, a.gap_sm]}>
             <View style={[{width: 140}]}>
@@ -924,7 +964,7 @@ let SearchInputBox = ({
   textInput,
   searchText,
   showAutocomplete,
-  setShowAutocomplete,
+  onFocus,
   onChangeText,
   onSubmit,
   onPressClearQuery,
@@ -932,7 +972,7 @@ let SearchInputBox = ({
   textInput: React.RefObject<TextInput>
   searchText: string
   showAutocomplete: boolean
-  setShowAutocomplete: (show: boolean) => void
+  onFocus: () => void
   onChangeText: (text: string) => void
   onSubmit: () => void
   onPressClearQuery: () => void
@@ -952,17 +992,7 @@ let SearchInputBox = ({
           returnKeyType="search"
           onChangeText={onChangeText}
           onSubmitEditing={onSubmit}
-          onFocus={() => {
-            if (isWeb) {
-              // Prevent a jump on iPad by ensuring that
-              // the initial focused render has no result list.
-              requestAnimationFrame(() => {
-                setShowAutocomplete(true)
-              })
-            } else {
-              setShowAutocomplete(true)
-            }
-          }}
+          onFocus={onFocus}
           keyboardAppearance={t.scheme}
           selectTextOnFocus={isNative}
           autoFocus={false}
