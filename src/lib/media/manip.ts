@@ -28,7 +28,6 @@ export async function compressIfNeeded(
 ): Promise<Image> {
   const origUri = `file://${img.path}`
   if (img.size < maxSize) {
-    console.log('no compress needed')
     return img
   }
   const resizedImage = await doResize(origUri, {
@@ -179,10 +178,7 @@ async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
     height: imageRes.height,
   })
 
-  console.log(newDimensions)
-
   for (let i = 0; i <= 9; i++) {
-    console.log('resizing image', i)
     const quality = 1 - 0.1 * i
     const resizeRes = await manipulateAsync(
       localUri,
