@@ -345,6 +345,9 @@
     ],
     "*{.js,.jsx,.ts,.tsx,.css}": [
       "prettier --cache --write --ignore-unknown"
+    ],
+    "/assets/icons/*.svg": [
+      "svgo"
     ]
   }
 }
