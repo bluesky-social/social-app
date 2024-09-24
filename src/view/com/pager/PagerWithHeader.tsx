@@ -22,6 +22,7 @@ import {ScrollProvider} from '#/lib/ScrollContext'
 import {isIOS} from '#/platform/detection'
 import {Pager, PagerRef, RenderTabBarFnProps} from '#/view/com/pager/Pager'
 import {ListMethods} from '../util/List'
+import {PagerHeaderProvider} from './PagerHeaderContext'
 import {TabBar} from './TabBar'
 
 export interface PagerWithHeaderChildParams {
@@ -82,20 +83,22 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     const renderTabBar = React.useCallback(
       (props: RenderTabBarFnProps) => {
         return (
-          <PagerTabBar
-            headerOnlyHeight={headerOnlyHeight}
-            items={items}
-            isHeaderReady={isHeaderReady}
-            renderHeader={renderHeader}
-            currentPage={currentPage}
-            onCurrentPageSelected={onCurrentPageSelected}
-            onTabBarLayout={onTabBarLayout}
-            onHeaderOnlyLayout={onHeaderOnlyLayout}
-            onSelect={props.onSelect}
-            scrollY={scrollY}
-            testID={testID}
-            allowHeaderOverScroll={allowHeaderOverScroll}
-          />
+          <PagerHeaderProvider scrollY={scrollY}>
+            <PagerTabBar
+              headerOnlyHeight={headerOnlyHeight}
+              items={items}
+              isHeaderReady={isHeaderReady}
+              renderHeader={renderHeader}
+              currentPage={currentPage}
+              onCurrentPageSelected={onCurrentPageSelected}
+              onTabBarLayout={onTabBarLayout}
+              onHeaderOnlyLayout={onHeaderOnlyLayout}
+              onSelect={props.onSelect}
+              scrollY={scrollY}
+              testID={testID}
+              allowHeaderOverScroll={allowHeaderOverScroll}
+            />
+          </PagerHeaderProvider>
         )
       },
       [
