@@ -12,15 +12,18 @@ import {compressIfNeeded} from './manip'
 import {CropperOptions} from './types'
 
 async function getFile() {
-  let files = await readDirectoryAsync(
-    documentDirectory!
-      .split('/')
-      .slice(0, -5)
-      .concat(['Media', 'DCIM', '100APPLE'])
-      .join('/'),
-  )
+  const imagesDir = documentDirectory!
+    .split('/')
+    .slice(0, -6)
+    .concat(['Media', 'DCIM', '100APPLE'])
+    .join('/')
+
+  let files = await readDirectoryAsync(imagesDir)
   files = files.filter(file => file.endsWith('.JPG'))
-  const file = files[0]
+  const file = `${imagesDir}/${files[0]}`
+
+  console.log(file)
+
   const fileInfo = await getInfoAsync(file)
 
   if (!fileInfo.exists) {
