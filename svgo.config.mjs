@@ -41,7 +41,11 @@ export default {
     name,
     params: {
       floatPrecision: 3,
-      transformPrecision: 5
+      transformPrecision: 5,
+      // minimise diff in ouput from svgomg
+      // maybe remove in future? will produce smaller output
+      convertToZ: false,
+      removeUseless: false,
     }
   }))
 };
