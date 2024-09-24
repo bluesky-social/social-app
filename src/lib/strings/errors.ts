@@ -29,5 +29,9 @@ const NETWORK_ERRORS = [
 
 export function isNetworkError(e: unknown) {
   const str = String(e)
-  return NETWORK_ERRORS.includes(str)
+  for (const err of NETWORK_ERRORS) {
+    if (str.includes(err)) {
+      return true
+    }
+  }
 }
