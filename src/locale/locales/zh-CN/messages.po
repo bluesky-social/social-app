@@ -6115,7 +6115,7 @@ msgstr "由 {0} 创建的入门包"
 
 #: src/components/StarterPack/StarterPackCard.tsx:74
 msgid "Starter pack by you"
-msgstr ""
+msgstr "由你创建的入门包"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:703
 msgid "Starter pack is invalid"
@@ -6957,12 +6957,8 @@ msgid "Unwanted Sexual Content"
 msgstr "不受欢迎的性内容"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:82
-#~ msgid "Update {displayName} in Lists"
-#~ msgstr "更新列表中的 {displayName}"
-
-#: src/view/com/modals/UserAddRemoveLists.tsx:82
 msgid "Update <0>{displayName}</0> in Lists"
-msgstr ""
+msgstr "更新列表中的 <0>{displayName}</0>"
 
 #: src/view/com/modals/ChangeHandle.tsx:502
 msgid "Update to {handle}"
