@@ -3,7 +3,6 @@ import {Image as RNImage} from 'react-native-image-crop-picker'
 import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {ComposerImage} from '../gallery'
 
 export interface EditProfileModal {
   name: 'edit-profile'
@@ -41,12 +40,6 @@ export interface CropImageModal {
   uri: string
   dimensions?: {width: number; height: number}
   onSelect: (img?: RNImage) => void
-}
-
-export interface AltTextImageModal {
-  name: 'alt-text-image'
-  image: ComposerImage
-  onChange: (next: ComposerImage) => void
 }
 
 export interface DeleteAccountModal {
@@ -131,7 +124,6 @@ export type Modal =
   | ListAddRemoveUsersModal
 
   // Posts
-  | AltTextImageModal
   | CropImageModal
   | SelfLabelModal
 

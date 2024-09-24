@@ -18,9 +18,10 @@ import {Dimensions} from '#/lib/media/types'
 import {colors, s} from '#/lib/styles'
 import {isNative} from '#/platform/detection'
 import {ComposerImage, cropImage} from '#/state/gallery'
-import {useModalControls} from '#/state/modals'
 import {Text} from '#/view/com/util/text/Text'
 import {useTheme} from '#/alf'
+import * as Dialog from '#/components/Dialog'
+import {ImageAltTextDialog} from './ImageAltTextDialog'
 
 const IMAGE_GAP = 8
 
@@ -141,7 +142,8 @@ const GalleryItem = ({
 }: GalleryItemProps): React.ReactNode => {
   const {_} = useLingui()
   const t = useTheme()
-  const {openModal} = useModalControls()
+
+  const altTextControl = Dialog.useDialogControl()
 
   const onImageEdit = () => {
     if (isNative) {
@@ -153,7 +155,7 @@ const GalleryItem = ({
 
   const onAltTextEdit = () => {
     Keyboard.dismiss()
-    openModal({name: 'alt-text-image', image, onChange})
+    altTextControl.open()
   }
 
   return (
@@ -228,6 +230,12 @@ const GalleryItem = ({
         }}
         accessible={true}
         accessibilityIgnoresInvertColors
+      />
+
+      <ImageAltTextDialog
+        control={altTextControl}
+        image={image}
+        onChange={onChange}
       />
     </View>
   )
