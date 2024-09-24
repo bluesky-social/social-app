@@ -22,7 +22,6 @@ import {useLingui} from '@lingui/react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 
-import {LANGUAGES} from '#/lib/../locale/languages'
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {createHitslop} from '#/lib/constants'
 import {HITSLOP_10} from '#/lib/constants'
@@ -37,6 +36,7 @@ import {
   SearchTabNavigatorParams,
 } from '#/lib/routes/types'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
+import {LANGUAGES} from '#/locale/languages'
 import {logger} from '#/logger'
 import {isNative, isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
@@ -61,11 +61,13 @@ import {Explore} from '#/view/screens/Search/Explore'
 import {SearchLinkCard, SearchProfileCard} from '#/view/shell/desktop/Search'
 import {atoms as a, useBreakpoints, useTheme as useThemeNew, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import * as Dialog from '#/components/Dialog'
 import * as FeedCard from '#/components/FeedCard'
 import * as TextField from '#/components/forms/TextField'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as MagnifyingGlass} from '#/components/icons/MagnifyingGlass2'
 import {Menu_Stroke2_Corner0_Rounded as Menu} from '#/components/icons/Menu'
+import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '#/components/icons/SettingsGear2'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Text as NewText} from '#/components/Typography'
 
@@ -409,8 +411,14 @@ function SearchLanguageDropdown({
   )
 }
 
-let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
-  const t = useThemeNew()
+let SearchScreenInner = ({
+  queryWithoutLanguage,
+  queryWithLanguage,
+}: {
+  query?: string
+  queryWithoutLanguage: string
+  queryWithLanguage: string
+}): React.ReactNode => {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
@@ -418,14 +426,6 @@ let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
   const {isDesktop} = useWebMediaQueries()
   const [activeTab, setActiveTab] = React.useState(0)
   const {_} = useLingui()
-  const {gtMobile} = useBreakpoints()
-
-  const {contentLanguages} = useLanguagePrefs()
-  const [language, setLanguage] = React.useState(
-    parseLanguageFromQuery(query || '') || contentLanguages[0],
-  )
-  const queryWithoutLang = sanitizeLangFromQuery(query || '')
-  const queryWithLang = queryWithoutLang + ` lang:${language}`
 
   const onPageSelected = React.useCallback(
     (index: number) => {
@@ -437,13 +437,13 @@ let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
   )
 
   const sections = React.useMemo(() => {
-    if (!queryWithoutLang) return []
+    if (!queryWithoutLanguage) return []
     return [
       {
         title: _(msg`Top`),
         component: (
           <SearchScreenPostResults
-            query={queryWithLang}
+            query={queryWithLanguage}
             sort="top"
             active={activeTab === 0}
           />
@@ -453,7 +453,7 @@ let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
         title: _(msg`Latest`),
         component: (
           <SearchScreenPostResults
-            query={queryWithLang}
+            query={queryWithLanguage}
             sort="latest"
             active={activeTab === 1}
           />
@@ -463,7 +463,7 @@ let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
         title: _(msg`People`),
         component: (
           <SearchScreenUserResults
-            query={queryWithoutLang}
+            query={queryWithoutLanguage}
             active={activeTab === 2}
           />
         ),
@@ -472,49 +472,29 @@ let SearchScreenInner = ({query}: {query?: string}): React.ReactNode => {
         title: _(msg`Feeds`),
         component: (
           <SearchScreenFeedsResults
-            query={queryWithoutLang}
+            query={queryWithoutLanguage}
             active={activeTab === 3}
           />
         ),
       },
     ]
-  }, [_, queryWithoutLang, queryWithLang, activeTab])
+  }, [_, queryWithoutLanguage, queryWithLanguage, activeTab])
 
-  return queryWithoutLang ? (
-    <>
-      <CenteredView
-        sideBorders={gtMobile}
-        style={[
-          isWeb && a.pt_sm,
-          isNative && a.pb_xs,
-          a.px_md,
-          t.atoms.border_contrast_low,
-        ]}>
-        <View style={[a.flex_row, a.justify_end, a.align_center, a.gap_sm]}>
-          <NewText style={[a.font_bold, t.atoms.text_contrast_medium]}>
-            <Trans>Language:</Trans>
-          </NewText>
-          <View style={[{width: 120}]}>
-            <SearchLanguageDropdown value={language} onChange={setLanguage} />
-          </View>
-        </View>
-      </CenteredView>
-
-      <Pager
-        onPageSelected={onPageSelected}
-        renderTabBar={props => (
-          <CenteredView
-            sideBorders
-            style={[pal.border, pal.view, styles.tabBarContainer]}>
-            <TabBar items={sections.map(section => section.title)} {...props} />
-          </CenteredView>
-        )}
-        initialPage={0}>
-        {sections.map((section, i) => (
-          <View key={i}>{section.component}</View>
-        ))}
-      </Pager>
-    </>
+  return queryWithoutLanguage ? (
+    <Pager
+      onPageSelected={onPageSelected}
+      renderTabBar={props => (
+        <CenteredView
+          sideBorders
+          style={[pal.border, pal.view, styles.tabBarContainer]}>
+          <TabBar items={sections.map(section => section.title)} {...props} />
+        </CenteredView>
+      )}
+      initialPage={0}>
+      {sections.map((section, i) => (
+        <View key={i}>{section.component}</View>
+      ))}
+    </Pager>
   ) : hasSession ? (
     <Explore />
   ) : (
@@ -784,95 +764,153 @@ export function SearchScreen(
     [selectedProfiles],
   )
 
-  return (
-    <View style={isWeb ? null : {flex: 1}}>
-      <CenteredView
-        style={[
-          a.p_md,
-          a.pb_0,
-          a.flex_row,
-          a.gap_sm,
-          t.atoms.bg,
-          web({
-            height: HEADER_HEIGHT, // TODO
-            position: 'sticky',
-            top: 0,
-            zIndex: 1,
-          }),
-        ]}
-        sideBorders={gtMobile}>
-        {!gtMobile && (
-          <Button
-            testID="viewHeaderBackOrMenuBtn"
-            onPress={onPressMenu}
-            hitSlop={HITSLOP_10}
-            label={_(msg`Menu`)}
-            accessibilityHint={_(msg`Access navigation links and settings`)}
-            size="large"
-            variant="ghost"
-            color="secondary"
-            shape="square">
-            <ButtonIcon icon={Menu} size="lg" />
-          </Button>
-        )}
-        <SearchInputBox
-          textInput={textInput}
-          searchText={searchText}
-          showAutocomplete={showAutocomplete}
-          setShowAutocomplete={setShowAutocomplete}
-          onChangeText={onChangeText}
-          onSubmit={onSubmit}
-          onPressClearQuery={onPressClearQuery}
-        />
-        {showAutocomplete && (
-          <Button
-            label={_(msg`Cancel search`)}
-            size="large"
-            variant="ghost"
-            color="secondary"
-            style={[a.px_sm]}
-            onPress={onPressCancelSearch}
-            hitSlop={HITSLOP_10}>
-            <ButtonText>
-              <Trans>Cancel</Trans>
-            </ButtonText>
-          </Button>
-        )}
-      </CenteredView>
+  const {contentLanguages} = useLanguagePrefs()
+  const [language, setLanguage] = React.useState(
+    parseLanguageFromQuery(queryParam || '') || contentLanguages[0],
+  )
+  const queryWithoutLanguage = sanitizeLangFromQuery(queryParam || '')
+  const queryWithLanguage = queryWithoutLanguage + ` lang:${language}`
+  const control = Dialog.useDialogControl()
 
-      <View
-        style={{
-          display: showAutocomplete ? 'flex' : 'none',
-          flex: 1,
-        }}>
-        {searchText.length > 0 ? (
-          <AutocompleteResults
-            isAutocompleteFetching={isAutocompleteFetching}
-            autocompleteData={autocompleteData}
-            searchText={searchText}
-            onSubmit={onSubmit}
-            onResultPress={onAutocompleteResultPress}
-            onProfileClick={handleProfileClick}
+  return (
+    <>
+      <Dialog.Outer control={control}>
+        <Dialog.Handle />
+
+        <Dialog.ScrollableInner
+          label={_(msg`Advanced search parameters`)}
+          style={[
+            gtMobile ? {width: 'auto', maxWidth: 400, minWidth: 200} : a.w_full,
+          ]}>
+          <View style={[a.gap_xs]}>
+            <NewText style={[a.text_lg, a.font_heavy]}>
+              <Trans>Advanced search</Trans>
+            </NewText>
+            <NewText style={[a.text_md, t.atoms.text_contrast_medium]}>
+              <Trans>For more tips and tricks, check out this blog post.</Trans>
+            </NewText>
+          </View>
+
+          <View style={[a.pt_md]}>
+            <SearchLanguageDropdown value={language} onChange={setLanguage} />
+          </View>
+          <Dialog.Close />
+        </Dialog.ScrollableInner>
+      </Dialog.Outer>
+
+      <View style={isWeb ? null : {flex: 1}}>
+        <CenteredView
+          style={[
+            a.p_md,
+            a.pb_0,
+            a.flex_row,
+            a.gap_xs,
+            t.atoms.bg,
+            web({
+              height: HEADER_HEIGHT, // TODO
+              position: 'sticky',
+              top: 0,
+              zIndex: 1,
+            }),
+          ]}
+          sideBorders={gtMobile}>
+          {!gtMobile && (
+            <Button
+              testID="viewHeaderBackOrMenuBtn"
+              onPress={onPressMenu}
+              hitSlop={HITSLOP_10}
+              label={_(msg`Menu`)}
+              accessibilityHint={_(msg`Access navigation links and settings`)}
+              size="large"
+              variant="ghost"
+              color="secondary"
+              shape="square"
+              style={{
+                marginLeft: -6,
+              }}>
+              <ButtonIcon icon={Menu} size="lg" />
+            </Button>
+          )}
+          <View style={[a.flex_1]}>
+            <SearchInputBox
+              textInput={textInput}
+              searchText={searchText}
+              showAutocomplete={showAutocomplete}
+              setShowAutocomplete={setShowAutocomplete}
+              onChangeText={onChangeText}
+              onSubmit={onSubmit}
+              onPressClearQuery={onPressClearQuery}
+            />
+          </View>
+          {showAutocomplete && (
+            <Button
+              label={_(msg`Cancel search`)}
+              size="large"
+              variant="ghost"
+              color="secondary"
+              style={[a.px_sm]}
+              onPress={onPressCancelSearch}
+              hitSlop={HITSLOP_10}>
+              <ButtonText>
+                <Trans>Cancel</Trans>
+              </ButtonText>
+            </Button>
+          )}
+          {searchText && !showAutocomplete && (
+            <Button
+              label={_(msg`Customize search`)}
+              size="large"
+              shape="square"
+              color="secondary"
+              variant="ghost"
+              style={{
+                marginRight: -6,
+              }}
+              onPress={() => {
+                control.open()
+              }}>
+              <ButtonIcon icon={Gear} size="lg" />
+            </Button>
+          )}
+        </CenteredView>
+
+        <View
+          style={{
+            display: showAutocomplete ? 'flex' : 'none',
+            flex: 1,
+          }}>
+          {searchText.length > 0 ? (
+            <AutocompleteResults
+              isAutocompleteFetching={isAutocompleteFetching}
+              autocompleteData={autocompleteData}
+              searchText={searchText}
+              onSubmit={onSubmit}
+              onResultPress={onAutocompleteResultPress}
+              onProfileClick={handleProfileClick}
+            />
+          ) : (
+            <SearchHistory
+              searchHistory={searchHistory}
+              selectedProfiles={selectedProfiles}
+              onItemClick={handleHistoryItemClick}
+              onProfileClick={handleProfileClick}
+              onRemoveItemClick={handleRemoveHistoryItem}
+              onRemoveProfileClick={handleRemoveProfile}
+            />
+          )}
+        </View>
+        <View
+          style={{
+            display: showAutocomplete ? 'none' : 'flex',
+            flex: 1,
+          }}>
+          <SearchScreenInner
+            queryWithoutLanguage={queryWithoutLanguage}
+            queryWithLanguage={queryWithLanguage}
           />
-        ) : (
-          <SearchHistory
-            searchHistory={searchHistory}
-            selectedProfiles={selectedProfiles}
-            onItemClick={handleHistoryItemClick}
-            onProfileClick={handleProfileClick}
-            onRemoveItemClick={handleRemoveHistoryItem}
-            onRemoveProfileClick={handleRemoveProfile}
-          />
-        )}
+        </View>
       </View>
-      <View
-        style={{
-          display: showAutocomplete ? 'none' : 'flex',
-          flex: 1,
-        }}>
-        <SearchScreenInner query={queryParam} />
-      </View>
-    </View>
+    </>
   )
 }
 
@@ -897,7 +935,7 @@ let SearchInputBox = ({
   const t = useThemeNew()
 
   return (
-    <View style={[a.flex_1, a.relative]}>
+    <View style={[a.w_full, a.relative]}>
       <TextField.Root>
         <TextField.Icon icon={MagnifyingGlass} />
         <TextField.Input
