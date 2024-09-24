@@ -316,11 +316,19 @@ let FeedItemInner = ({
                         style={pal.textLight}
                         lineHeight={1.2}
                         numberOfLines={1}
-                        text={sanitizeDisplayName(
-                          reason.by.displayName ||
-                            sanitizeHandle(reason.by.handle),
-                          moderation.ui('displayName'),
-                        )}
+                        text={
+                          <Text
+                            emoji
+                            type="sm-bold"
+                            style={pal.textLight}
+                            lineHeight={1.2}>
+                            {sanitizeDisplayName(
+                              reason.by.displayName ||
+                                sanitizeHandle(reason.by.handle),
+                              moderation.ui('displayName'),
+                            )}
+                          </Text>
+                        }
                         href={makeProfileLink(reason.by)}
                         onBeforePress={onOpenReposter}
                       />
@@ -527,9 +535,11 @@ function ReplyToLabel({
               numberOfLines={1}
               href={makeProfileLink(profile)}
               text={
-                profile.displayName
-                  ? sanitizeDisplayName(profile.displayName)
-                  : sanitizeHandle(profile.handle)
+                <Text emoji type="md" style={pal.textLight} lineHeight={1.2}>
+                  {profile.displayName
+                    ? sanitizeDisplayName(profile.displayName)
+                    : sanitizeHandle(profile.handle)}
+                </Text>
               }
             />
           </ProfileHoverCard>

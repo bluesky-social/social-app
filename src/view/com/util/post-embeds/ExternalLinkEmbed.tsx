@@ -5,21 +5,21 @@ import {AppBskyEmbedExternal} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {shareUrl} from 'lib/sharing'
-import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {shareUrl} from '#/lib/sharing'
+import {parseEmbedPlayerFromUrl} from '#/lib/strings/embed-player'
 import {
   getStarterPackOgCard,
   parseStarterPackUri,
-} from 'lib/strings/starter-pack'
-import {toNiceDomain} from 'lib/strings/url-helpers'
-import {isNative} from 'platform/detection'
-import {useExternalEmbedsPrefs} from 'state/preferences'
-import {Link} from 'view/com/util/Link'
-import {ExternalGifEmbed} from 'view/com/util/post-embeds/ExternalGifEmbed'
-import {ExternalPlayer} from 'view/com/util/post-embeds/ExternalPlayerEmbed'
-import {GifEmbed} from 'view/com/util/post-embeds/GifEmbed'
+} from '#/lib/strings/starter-pack'
+import {toNiceDomain} from '#/lib/strings/url-helpers'
+import {isNative} from '#/platform/detection'
+import {useExternalEmbedsPrefs} from '#/state/preferences'
+import {Link} from '#/view/com/util/Link'
+import {ExternalGifEmbed} from '#/view/com/util/post-embeds/ExternalGifEmbed'
+import {ExternalPlayer} from '#/view/com/util/post-embeds/ExternalPlayerEmbed'
+import {GifEmbed} from '#/view/com/util/post-embeds/GifEmbed'
 import {atoms as a, useTheme} from '#/alf'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '../text/Text'
@@ -115,12 +115,13 @@ export const ExternalLinkEmbed = ({
           </Text>
 
           {!embedPlayerParams?.isGif && !embedPlayerParams?.dimensions && (
-            <Text type="lg-bold" numberOfLines={3} style={[pal.text]}>
+            <Text emoji type="lg-bold" numberOfLines={3} style={[pal.text]}>
               {link.title || link.uri}
             </Text>
           )}
           {link.description ? (
             <Text
+              emoji
               type="md"
               numberOfLines={link.thumb ? 2 : 4}
               style={[pal.text, a.mt_xs]}>

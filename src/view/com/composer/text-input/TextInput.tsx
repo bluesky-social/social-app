@@ -19,19 +19,19 @@ import PasteInput, {
   PasteInputRef,
 } from '@mattermost/react-native-paste-input'
 
+import {POST_IMG_MAX} from '#/lib/constants'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {downloadAndResize} from '#/lib/media/manip'
+import {isUriImage} from '#/lib/media/util'
+import {cleanError} from '#/lib/strings/errors'
+import {getMentionAt, insertMentionAt} from '#/lib/strings/mention-manip'
+import {useTheme} from '#/lib/ThemeContext'
 import {isAndroid} from '#/platform/detection'
-import {POST_IMG_MAX} from 'lib/constants'
-import {usePalette} from 'lib/hooks/usePalette'
-import {downloadAndResize} from 'lib/media/manip'
-import {isUriImage} from 'lib/media/util'
-import {cleanError} from 'lib/strings/errors'
-import {getMentionAt, insertMentionAt} from 'lib/strings/mention-manip'
-import {useTheme} from 'lib/ThemeContext'
 import {
   LinkFacetMatch,
   suggestLinkCardUri,
-} from 'view/com/composer/text-input/text-input-util'
-import {Text} from 'view/com/util/text/Text'
+} from '#/view/com/composer/text-input/text-input-util'
+import {Text} from '#/view/com/util/text/Text'
 import {atoms as a, useAlf} from '#/alf'
 import {normalizeTextStyles} from '#/components/Typography'
 import {Autocomplete} from './mobile/Autocomplete'
@@ -216,6 +216,7 @@ export const TextInput = forwardRef(function TextInputImpl(
     return Array.from(richtext.segments()).map(segment => {
       return (
         <Text
+          emoji
           key={i++}
           style={[inputTextStyle, segment.facet ? pal.link : pal.text]}>
           {segment.text}

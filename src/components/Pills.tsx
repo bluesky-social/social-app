@@ -130,6 +130,7 @@ export function Label({
             )}
 
             <Text
+              emoji
               style={[
                 text,
                 a.font_bold,
