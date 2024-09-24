@@ -22,7 +22,9 @@ import {
   LinkFacetMatch,
   suggestLinkCardUri,
 } from 'view/com/composer/text-input/text-input-util'
+import {atoms as a, useAlf} from '#/alf'
 import {Portal} from '#/components/Portal'
+import {normalizeTextStyles} from '#/components/Typography'
 import {Text} from '../../util/text/Text'
 import {createSuggestion} from './web/Autocomplete'
 import {Emoji} from './web/EmojiPicker.web'
@@ -58,6 +60,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   TextInputProps,
   ref,
 ) {
+  const {theme: t, fonts} = useAlf()
   const autocomplete = useActorAutocompleteFn()
   const pal = usePalette('default')
   const modeClass = useColorSchemeStyle('ProseMirror-light', 'ProseMirror-dark')
@@ -93,9 +96,9 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     }
   }, [onPressPublish])
   React.useEffect(() => {
-    textInputWebEmitter.addListener('photo-pasted', onPhotoPasted)
+    textInputWebEmitter.addListener('media-pasted', onPhotoPasted)
     return () => {
-      textInputWebEmitter.removeListener('photo-pasted', onPhotoPasted)
+      textInputWebEmitter.removeListener('media-pasted', onPhotoPasted)
     }
   }, [onPhotoPasted])
 
@@ -105,8 +108,8 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       if (transfer) {
         const items = transfer.items
 
-        getImageFromUri(items, (uri: string) => {
-          textInputWebEmitter.emit('photo-pasted', uri)
+        getImageOrVideoFromUri(items, (uri: string) => {
+          textInputWebEmitter.emit('media-pasted', uri)
         })
       }
 
@@ -160,8 +163,8 @@ export const TextInput = React.forwardRef(function TextInputImpl(
               view.pasteText(text)
               preventDefault = true
             }
-            getImageFromUri(clipboardData.items, (uri: string) => {
-              textInputWebEmitter.emit('photo-pasted', uri)
+            getImageOrVideoFromUri(clipboardData.items, (uri: string) => {
+              textInputWebEmitter.emit('media-pasted', uri)
             })
             if (preventDefault) {
               // Return `true` to prevent ProseMirror's default paste behavior.
@@ -247,13 +250,32 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     },
   }))
 
+  const inputStyle = React.useMemo(() => {
+    const style = normalizeTextStyles(
+      [a.text_lg, a.leading_snug, t.atoms.text],
+      {
+        fontScale: fonts.scaleMultiplier,
+        fontFamily: fonts.family,
+        flags: {},
+      },
+    )
+    /*
+     * TipTap component isn't a RN View and while it seems to convert
+     * `fontSize` to `px`, it doesn't convert `lineHeight`.
+     *
+     * `lineHeight` should always be defined here, this is defensive.
+     */
+    style.lineHeight = style.lineHeight
+      ? ((style.lineHeight + 'px') as unknown as number)
+      : undefined
+    return style
+  }, [t, fonts])
+
   return (
     <>
       <View style={styles.container}>
-        <EditorContent
-          editor={editor}
-          style={{color: pal.text.color as string}}
-        />
+        {/* @ts-ignore inputStyle is fine */}
+        <EditorContent editor={editor} style={inputStyle} />
       </View>
 
       {isDropping && (
@@ -346,7 +368,7 @@ const styles = StyleSheet.create({
   },
 })
 
-function getImageFromUri(
+function getImageOrVideoFromUri(
   items: DataTransferItemList,
   callback: (uri: string) => void,
 ) {
@@ -363,9 +385,19 @@ function getImageFromUri(
           if (blob.type.startsWith('image/')) {
             blobToDataUri(blob).then(callback, err => console.error(err))
           }
+
+          if (blob.type.startsWith('video/')) {
+            blobToDataUri(blob).then(callback, err => console.error(err))
+          }
         }
       })
     } else if (type.startsWith('image/')) {
+      const file = item.getAsFile()
+
+      if (file) {
+        blobToDataUri(file).then(callback, err => console.error(err))
+      }
+    } else if (type.startsWith('video/')) {
       const file = item.getAsFile()
 
       if (file) {

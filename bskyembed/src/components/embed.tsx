@@ -158,6 +158,12 @@ export function Embed({
         return <Info>The quoted post is blocked.</Info>
       }
 
+      // Case 3.8: Detached quote post
+      if (AppBskyEmbedRecord.isViewDetached(record)) {
+        // Just don't show anything
+        return null
+      }
+
       // Unknown embed type
       return null
     }
@@ -372,7 +378,7 @@ function VideoEmbed({content}: {content: AppBskyEmbedVideo.View}) {
 
   return (
     <div
-      className="w-full overflow-hidden rounded-lg aspect-square"
+      className="w-full overflow-hidden rounded-lg aspect-square relative"
       style={{aspectRatio: `${aspectRatio} / 1`}}>
       <img
         src={content.thumbnail}

@@ -37,6 +37,7 @@ import {Portal} from '#/components/Portal'
 
 export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
+export * from '#/components/Dialog/utils'
 // @ts-ignore
 export const Input = createInput(BottomSheetTextInput)
 
@@ -256,7 +257,7 @@ export const ScrollableInner = React.forwardRef<
           borderTopLeftRadius: 40,
           borderTopRightRadius: 40,
         },
-        flatten(style),
+        style,
       ]}
       contentContainerStyle={a.pb_4xl}
       ref={ref}>

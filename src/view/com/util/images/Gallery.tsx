@@ -1,6 +1,6 @@
-import React, {ComponentProps, FC} from 'react'
-import {Pressable, View} from 'react-native'
-import {Image} from 'expo-image'
+import React from 'react'
+import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
+import {Image, ImageStyle} from 'expo-image'
 import {AppBskyEmbedImages} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -8,21 +8,23 @@ import {useLingui} from '@lingui/react'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {PostEmbedViewContext} from '#/view/com/util/post-embeds/types'
 import {atoms as a, useTheme} from '#/alf'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
 
 type EventFunction = (index: number) => void
 
-interface GalleryItemProps {
+interface Props {
   images: AppBskyEmbedImages.ViewImage[]
   index: number
   onPress?: EventFunction
   onLongPress?: EventFunction
   onPressIn?: EventFunction
-  imageStyle?: ComponentProps<typeof Image>['style']
+  imageStyle?: StyleProp<ImageStyle>
   viewContext?: PostEmbedViewContext
+  insetBorderStyle?: StyleProp<ViewStyle>
 }
 
-export const GalleryItem: FC<GalleryItemProps> = ({
+export function GalleryItem({
   images,
   index,
   imageStyle,
@@ -30,7 +32,8 @@ export const GalleryItem: FC<GalleryItemProps> = ({
   onPressIn,
   onLongPress,
   viewContext,
-}) => {
+  insetBorderStyle,
+}: Props) {
   const t = useTheme()
   const {_} = useLingui()
   const largeAltBadge = useLargeAltBadgeEnabled()
@@ -46,7 +49,6 @@ export const GalleryItem: FC<GalleryItemProps> = ({
         onLongPress={onLongPress ? () => onLongPress(index) : undefined}
         style={[
           a.flex_1,
-          a.rounded_xs,
           a.overflow_hidden,
           t.atoms.bg_contrast_25,
           imageStyle,
@@ -62,6 +64,7 @@ export const GalleryItem: FC<GalleryItemProps> = ({
           accessibilityHint=""
           accessibilityIgnoresInvertColors
         />
+        <MediaInsetBorder style={insetBorderStyle} />
       </Pressable>
       {hasAlt && !hideBadges ? (
         <View

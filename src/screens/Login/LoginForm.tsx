@@ -60,7 +60,6 @@ export const LoginForm = ({
   const {track} = useAnalytics()
   const t = useTheme()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
-  const [isReady, setIsReady] = useState<boolean>(false)
   const [isAuthFactorTokenNeeded, setIsAuthFactorTokenNeeded] =
     useState<boolean>(false)
   const identifierValueRef = useRef<string>(initialHandle || '')
@@ -83,11 +82,17 @@ export const LoginForm = ({
     Keyboard.dismiss()
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setError('')
-    setIsProcessing(true)
 
     const identifier = identifierValueRef.current.toLowerCase().trim()
     const password = passwordValueRef.current
     const authFactorToken = authFactorTokenValueRef.current
+
+    if (!identifier || !password) {
+      setError(_(msg`Invalid username or password`))
+      return
+    }
+
+    setIsProcessing(true)
 
     try {
       // try to guess the handle if the user just gave their own username
@@ -157,22 +162,6 @@ export const LoginForm = ({
     }
   }
 
-  const checkIsReady = () => {
-    if (
-      !!serviceDescription &&
-      !!identifierValueRef.current &&
-      !!passwordValueRef.current
-    ) {
-      if (!isReady) {
-        setIsReady(true)
-      }
-    } else {
-      if (isReady) {
-        setIsReady(false)
-      }
-    }
-  }
-
   return (
     <FormContainer testID="loginForm" titleText={<Trans>Sign in</Trans>}>
       <View>
@@ -204,7 +193,6 @@ export const LoginForm = ({
               defaultValue={initialHandle || ''}
               onChangeText={v => {
                 identifierValueRef.current = v
-                checkIsReady()
               }}
               onSubmitEditing={() => {
                 passwordRef.current?.focus()
@@ -233,7 +221,6 @@ export const LoginForm = ({
               clearButtonMode="while-editing"
               onChangeText={v => {
                 passwordValueRef.current = v
-                checkIsReady()
               }}
               onSubmitEditing={onPressNext}
               blurOnSubmit={false} // HACK: https://github.com/facebook/react-native/issues/21911#issuecomment-558343069 Keyboard blur behavior is now handled in onSubmitEditing
@@ -298,7 +285,7 @@ export const LoginForm = ({
           label={_(msg`Back`)}
           variant="solid"
           color="secondary"
-          size="medium"
+          size="large"
           onPress={onPressBack}>
           <ButtonText>
             <Trans>Back</Trans>
@@ -312,7 +299,7 @@ export const LoginForm = ({
             accessibilityHint={_(msg`Retries login`)}
             variant="solid"
             color="secondary"
-            size="medium"
+            size="large"
             onPress={onPressRetryConnect}>
             <ButtonText>
               <Trans>Retry</Trans>
@@ -325,21 +312,21 @@ export const LoginForm = ({
               <Trans>Connecting...</Trans>
             </Text>
           </>
-        ) : isReady ? (
+        ) : (
           <Button
             testID="loginNextButton"
             label={_(msg`Next`)}
             accessibilityHint={_(msg`Navigates to the next screen`)}
             variant="solid"
             color="primary"
-            size="medium"
+            size="large"
             onPress={onPressNext}>
             <ButtonText>
               <Trans>Next</Trans>
             </ButtonText>
             {isProcessing && <ButtonIcon icon={Loader} />}
           </Button>
-        ) : undefined}
+        )}
       </View>
     </FormContainer>
   )

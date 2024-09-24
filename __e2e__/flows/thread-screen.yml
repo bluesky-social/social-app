@@ -21,14 +21,12 @@ appId: xyz.blueskyweb.app
     id: "likeBtn"
     childOf:
         id: "postThreadItem-by-bob.test"
-- assertVisible:
-    id: "likeCount-expanded"
+- assertVisible: "1 like"
 - tapOn:
     id: "likeBtn"
     childOf:
         id: "postThreadItem-by-bob.test"
-- assertNotVisible:
-    id: "likeCount-expanded"
+- assertNotVisible: "1 like"
 
 # Can like a reply post
 - tapOn:

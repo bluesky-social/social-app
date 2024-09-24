@@ -11,6 +11,7 @@ import {Trans} from '@lingui/macro'
 
 import {parseTenorGif} from '#/lib/strings/embed-player'
 import {atoms as a, useTheme} from '#/alf'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 
@@ -104,6 +105,7 @@ export function ImageItem({
         accessibilityHint={alt}
         accessibilityLabel=""
       />
+      <MediaInsetBorder style={[a.rounded_xs]} />
       {children}
     </View>
   )
@@ -168,6 +170,6 @@ const styles = StyleSheet.create({
   alt: {
     color: 'white',
     fontSize: 7,
-    fontWeight: 'bold',
+    fontWeight: '600',
   },
 })

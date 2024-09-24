@@ -33,7 +33,7 @@ import {InfoCircleIcon} from 'lib/icons'
 import {makeProfileLink} from 'lib/routes/links'
 import {precacheProfile} from 'state/queries/profile'
 import {ComposerOptsQuote} from 'state/shell/composer'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {RichText} from '#/components/RichText'
 import {ContentHider} from '../../../../components/moderation/ContentHider'
 import {PostAlerts} from '../../../../components/moderation/PostAlerts'
@@ -56,6 +56,7 @@ export function MaybeQuoteEmbed({
   allowNestedQuotes?: boolean
   viewContext?: QuoteEmbedViewContext
 }) {
+  const t = useTheme()
   const pal = usePalette('default')
   const {currentAccount} = useSession()
   if (
@@ -75,7 +76,8 @@ export function MaybeQuoteEmbed({
     )
   } else if (AppBskyEmbedRecord.isViewBlocked(embed.record)) {
     return (
-      <View style={[styles.errorContainer, pal.borderDark]}>
+      <View
+        style={[styles.errorContainer, a.border, t.atoms.border_contrast_low]}>
         <InfoCircleIcon size={18} style={pal.text} />
         <Text type="lg" style={pal.text}>
           <Trans>Blocked</Trans>
@@ -84,7 +86,8 @@ export function MaybeQuoteEmbed({
     )
   } else if (AppBskyEmbedRecord.isViewNotFound(embed.record)) {
     return (
-      <View style={[styles.errorContainer, pal.borderDark]}>
+      <View
+        style={[styles.errorContainer, a.border, t.atoms.border_contrast_low]}>
         <InfoCircleIcon size={18} style={pal.text} />
         <Text type="lg" style={pal.text}>
           <Trans>Deleted</Trans>
@@ -96,7 +99,8 @@ export function MaybeQuoteEmbed({
       ? embed.record.uri.includes(currentAccount.did)
       : false
     return (
-      <View style={[styles.errorContainer, pal.borderDark]}>
+      <View
+        style={[styles.errorContainer, a.border, t.atoms.border_contrast_low]}>
         <InfoCircleIcon size={18} style={pal.text} />
         <Text type="lg" style={pal.text}>
           {isViewerOwner ? (
@@ -169,6 +173,7 @@ export function QuoteEmbed({
   allowNestedQuotes?: boolean
   viewContext?: QuoteEmbedViewContext
 }) {
+  const t = useTheme()
   const queryClient = useQueryClient()
   const pal = usePalette('default')
   const itemUrip = new AtUri(quote.uri)
@@ -214,7 +219,14 @@ export function QuoteEmbed({
   return (
     <ContentHider
       modui={moderation?.ui('contentList')}
-      style={[styles.container, pal.borderDark, style]}
+      style={[
+        a.rounded_md,
+        a.p_md,
+        a.mt_sm,
+        a.border,
+        t.atoms.border_contrast_low,
+        style,
+      ]}
       childContainerStyle={[a.pt_sm]}>
       <Link
         hoverStyle={{borderColor: pal.colors.borderLinkHover}}
@@ -288,13 +300,6 @@ function viewRecordToPostView(
 }
 
 const styles = StyleSheet.create({
-  container: {
-    borderRadius: 8,
-    marginTop: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 12,
-    borderWidth: StyleSheet.hairlineWidth,
-  },
   errorContainer: {
     flexDirection: 'row',
     alignItems: 'center',

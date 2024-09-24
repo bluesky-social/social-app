@@ -27,6 +27,7 @@ import {
 import {StreamingLive_Stroke2_Corner0_Rounded as Library} from '#/components/icons/StreamingLive'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {Link} from '#/components/Link'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Menu from '#/components/Menu'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
@@ -43,6 +44,7 @@ interface BaseUserAvatarProps {
 interface UserAvatarProps extends BaseUserAvatarProps {
   moderation?: ModerationUI
   usePlainRNImage?: boolean
+  onLoad?: () => void
 }
 
 interface EditableUserAvatarProps extends BaseUserAvatarProps {
@@ -174,6 +176,7 @@ let UserAvatar = ({
   avatar,
   moderation,
   usePlainRNImage = false,
+  onLoad,
 }: UserAvatarProps): React.ReactNode => {
   const pal = usePalette('default')
   const backgroundColor = pal.colors.backgroundLight
@@ -224,6 +227,7 @@ let UserAvatar = ({
             uri: hackModifyThumbnailPath(avatar, size < 90),
           }}
           blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
+          onLoad={onLoad}
         />
       ) : (
         <HighPriorityImage
@@ -234,8 +238,16 @@ let UserAvatar = ({
             uri: hackModifyThumbnailPath(avatar, size < 90),
           }}
           blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
+          onLoad={onLoad}
         />
       )}
+      <MediaInsetBorder
+        style={[
+          {
+            borderRadius: aviStyle.borderRadius,
+          },
+        ]}
+      />
       {alert}
     </View>
   ) : (

@@ -69,7 +69,7 @@ export function AccessibilitySettingsScreen({}: Props) {
           },
         ]}>
         <View style={a.flex_1}>
-          <Text type="title-lg" style={[pal.text, {fontWeight: 'bold'}]}>
+          <Text type="title-lg" style={[pal.text, {fontWeight: '600'}]}>
             <Trans>Accessibility Settings</Trans>
           </Text>
         </View>

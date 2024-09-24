@@ -10,7 +10,8 @@ import {Dimensions} from '#/lib/media/types'
 import {isNative} from '#/platform/detection'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Crop_Stroke2_Corner0_Rounded as Crop} from '#/components/icons/Crop'
+import {ArrowsDiagonalOut_Stroke2_Corner0_Rounded as Fullscreen} from '#/components/icons/ArrowsDiagonal'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Text} from '#/components/Typography'
 
 export function useImageAspectRatio({
@@ -23,9 +24,10 @@ export function useImageAspectRatio({
   const [raw, setAspectRatio] = React.useState<number>(
     dimensions ? calc(dimensions) : 1,
   )
+  // this basically controls the width of the image
   const {isCropped, constrained, max} = React.useMemo(() => {
-    const a34 = 0.75 // max of 3:4 ratio in feeds
-    const constrained = Math.max(raw, a34)
+    const ratio = 1 / 2 // max of 1:2 ratio in feeds
+    const constrained = Math.max(raw, ratio)
     const max = Math.max(raw, 0.25) // max of 1:4 in thread
     const isCropped = raw < constrained
     return {
@@ -68,14 +70,14 @@ export function ConstrainedImage({
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   /**
-   * Computed as a % value to apply as `paddingTop`
+   * Computed as a % value to apply as `paddingTop`, this basically controls
+   * the height of the image.
    */
   const outerAspectRatio = React.useMemo<DimensionValue>(() => {
-    // capped to square or shorter
     const ratio =
       isNative || !gtMobile
-        ? Math.min(1 / aspectRatio, 1.5)
-        : Math.min(1 / aspectRatio, 1)
+        ? Math.min(1 / aspectRatio, 16 / 9) // 9:16 bounding box
+        : Math.min(1 / aspectRatio, 1) // 1:1 bounding box
     return `${ratio * 100}%`
   }, [aspectRatio, gtMobile])
 
@@ -86,7 +88,7 @@ export function ConstrainedImage({
           <View
             style={[
               a.h_full,
-              a.rounded_sm,
+              a.rounded_md,
               a.overflow_hidden,
               t.atoms.bg_contrast_25,
               fullBleed ? a.w_full : {aspectRatio},
@@ -139,6 +141,7 @@ export function AutoSizedImage({
         accessibilityLabel={image.alt}
         accessibilityHint=""
       />
+      <MediaInsetBorder />
 
       {(hasAlt || isCropped) && !hideBadge ? (
         <View
@@ -146,33 +149,59 @@ export function AutoSizedImage({
           style={[
             a.absolute,
             a.flex_row,
-            a.align_center,
-            a.rounded_xs,
-            t.atoms.bg_contrast_25,
             {
-              gap: 3,
-              padding: 3,
               bottom: a.p_xs.padding,
               right: a.p_xs.padding,
-              opacity: 0.8,
+              gap: 3,
             },
             largeAlt && [
               {
                 gap: 4,
-                padding: 5,
               },
             ],
           ]}>
           {isCropped && (
-            <Crop
-              fill={t.atoms.text_contrast_high.color}
-              width={largeAlt ? 18 : 12}
-            />
+            <View
+              style={[
+                a.rounded_xs,
+                t.atoms.bg_contrast_25,
+                {
+                  padding: 3,
+                  opacity: 0.8,
+                },
+                largeAlt && [
+                  {
+                    padding: 5,
+                  },
+                ],
+              ]}>
+              <Fullscreen
+                fill={t.atoms.text_contrast_high.color}
+                width={largeAlt ? 18 : 12}
+              />
+            </View>
           )}
           {hasAlt && (
-            <Text style={[a.font_heavy, largeAlt ? a.text_xs : {fontSize: 8}]}>
-              ALT
-            </Text>
+            <View
+              style={[
+                a.justify_center,
+                a.rounded_xs,
+                t.atoms.bg_contrast_25,
+                {
+                  padding: 3,
+                  opacity: 0.8,
+                },
+                largeAlt && [
+                  {
+                    padding: 5,
+                  },
+                ],
+              ]}>
+              <Text
+                style={[a.font_heavy, largeAlt ? a.text_xs : {fontSize: 8}]}>
+                ALT
+              </Text>
+            </View>
           )}
         </View>
       ) : null}
@@ -190,7 +219,7 @@ export function AutoSizedImage({
         accessibilityHint={_(msg`Tap to view full image`)}
         style={[
           a.w_full,
-          a.rounded_sm,
+          a.rounded_md,
           a.overflow_hidden,
           t.atoms.bg_contrast_25,
           {aspectRatio: max},

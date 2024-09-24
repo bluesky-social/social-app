@@ -59,7 +59,7 @@ import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {LikelyType} from '#/lib/link-meta/link-meta'
-import {logEvent, useGate} from '#/lib/statsig/statsig'
+import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {insertMentionAt} from '#/lib/strings/mention-manip'
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
@@ -140,7 +140,6 @@ export const ComposePost = observer(function ComposePost({
 }: Props & {
   cancelRef?: React.RefObject<CancelRef>
 }) {
-  const gate = useGate()
   const {currentAccount} = useSession()
   const agent = useAgent()
   const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
@@ -303,9 +302,13 @@ export const ComposePost = observer(function ComposePost({
   const onPhotoPasted = useCallback(
     async (uri: string) => {
       track('Composer:PastedPhotos')
-      await gallery.paste(uri)
+      if (uri.startsWith('data:video/')) {
+        selectVideo({uri, type: 'video', height: 0, width: 0})
+      } else {
+        await gallery.paste(uri)
+      }
     },
-    [gallery, track],
+    [gallery, track, selectVideo],
   )
 
   const isAltTextRequiredAndMissing = useMemo(() => {
@@ -799,13 +802,11 @@ export const ComposePost = observer(function ComposePost({
           ) : (
             <ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
               <SelectPhotoBtn gallery={gallery} disabled={!canSelectImages} />
-              {gate('video_upload') && (
-                <SelectVideoBtn
-                  onSelectVideo={selectVideo}
-                  disabled={!canSelectImages}
-                  setError={setError}
-                />
-              )}
+              <SelectVideoBtn
+                onSelectVideo={selectVideo}
+                disabled={!canSelectImages}
+                setError={setError}
+              />
               <OpenCameraBtn gallery={gallery} disabled={!canSelectImages} />
               <SelectGifBtn
                 onClose={focusTextInput}

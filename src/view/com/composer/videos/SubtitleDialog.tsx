@@ -20,6 +20,8 @@ import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons
 import {Text} from '#/components/Typography'
 import {SubtitleFilePicker} from './SubtitleFilePicker'
 
+const MAX_NUM_CAPTIONS = 1
+
 interface Props {
   defaultAltText: string
   captions: {lang: string; file: File}[]
@@ -42,7 +44,7 @@ export function SubtitleDialogBtn(props: Props) {
             ? _('Opens captions and alt text dialog')
             : _('Opens alt text dialog')
         }
-        size="xsmall"
+        size="small"
         color="secondary"
         variant="ghost"
         onPress={() => {
@@ -134,7 +136,9 @@ function SubtitleDialogInner({
             </Text>
             <SubtitleFilePicker
               onSelectFile={handleSelectFile}
-              disabled={subtitleMissingLanguage || captions.length >= 4}
+              disabled={
+                subtitleMissingLanguage || captions.length >= MAX_NUM_CAPTIONS
+              }
             />
             <View>
               {captions.map((subtitle, i) => (
@@ -165,7 +169,7 @@ function SubtitleDialogInner({
         <View style={web([a.flex_row, a.justify_end])}>
           <Button
             label={_(msg`Done`)}
-            size={isWeb ? 'small' : 'medium'}
+            size={isWeb ? 'small' : 'large'}
             color="primary"
             variant="solid"
             onPress={() => {

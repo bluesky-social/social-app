@@ -1,10 +1,11 @@
 import React, {useEffect, useId, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {AppBskyEmbedVideo} from '@atproto/api'
-import Hls from 'hls.js'
+import Hls, {Events, FragChangedData, Fragment} from 'hls.js'
 
 import {atoms as a} from '#/alf'
-import {Controls} from './VideoWebControls'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
+import {Controls} from './web-controls/VideoControls'
 
 export function VideoEmbedInnerWeb({
   embed,
@@ -18,7 +19,7 @@ export function VideoEmbedInnerWeb({
   onScreen: boolean
 }) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const ref = useRef<HTMLVideoElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
   const [focused, setFocused] = useState(false)
   const [hasSubtitleTrack, setHasSubtitleTrack] = useState(false)
   const figId = useId()
@@ -30,23 +31,47 @@ export function VideoEmbedInnerWeb({
   }
 
   const hlsRef = useRef<Hls | undefined>(undefined)
+  const [lowQualityFragments, setLowQualityFragments] = useState<Fragment[]>([])
 
   useEffect(() => {
-    if (!ref.current) return
+    if (!videoRef.current) return
     if (!Hls.isSupported()) throw new HLSUnsupportedError()
 
-    const hls = new Hls({capLevelToPlayerSize: true})
+    const hls = new Hls({
+      maxMaxBufferLength: 10, // only load 10s ahead
+      // note: the amount buffered is affected by both maxBufferLength and maxBufferSize
+      // it will buffer until it it's greater than *both* of those values
+      // so we use maxMaxBufferLength to set the actual maximum amount of buffering instead
+    })
     hlsRef.current = hls
 
-    hls.attachMedia(ref.current)
+    hls.attachMedia(videoRef.current)
     hls.loadSource(embed.playlist)
 
     // initial value, later on it's managed by Controls
     hls.autoLevelCapping = 0
 
+    // manually loop, so if we've flushed the first buffer it doesn't get confused
+    const abortController = new AbortController()
+    const {signal} = abortController
+    videoRef.current.addEventListener(
+      'ended',
+      function () {
+        this.currentTime = 0
+        this.play()
+      },
+      {signal},
+    )
+
     hls.on(Hls.Events.SUBTITLE_TRACKS_UPDATED, (_event, data) => {
       if (data.subtitleTracks.length > 0) {
         setHasSubtitleTrack(true)
+      }
+    })
+
+    hls.on(Hls.Events.FRAG_BUFFERED, (_event, {frag}) => {
+      if (frag.level === 0) {
+        setLowQualityFragments(prev => [...prev, frag])
       }
     })
 
@@ -60,6 +85,8 @@ export function VideoEmbedInnerWeb({
         } else {
           setError(data.error)
         }
+      } else {
+        console.error(data.error)
       }
     })
 
@@ -67,20 +94,61 @@ export function VideoEmbedInnerWeb({
       hlsRef.current = undefined
       hls.detachMedia()
       hls.destroy()
+      abortController.abort()
     }
   }, [embed.playlist])
 
+  // purge low quality segments from buffer on next frag change
+  useEffect(() => {
+    if (!hlsRef.current) return
+
+    const current = hlsRef.current
+
+    if (focused) {
+      function fragChanged(
+        _event: Events.FRAG_CHANGED,
+        {frag}: FragChangedData,
+      ) {
+        // if the current quality level goes above 0, flush the low quality segments
+        if (current.nextAutoLevel > 0) {
+          const flushed: Fragment[] = []
+
+          for (const lowQualFrag of lowQualityFragments) {
+            // avoid if close to the current fragment
+            if (Math.abs(frag.start - lowQualFrag.start) < 0.1) {
+              return
+            }
+
+            current.trigger(Hls.Events.BUFFER_FLUSHING, {
+              startOffset: lowQualFrag.start,
+              endOffset: lowQualFrag.end,
+              type: 'video',
+            })
+
+            flushed.push(lowQualFrag)
+          }
+
+          setLowQualityFragments(prev => prev.filter(f => !flushed.includes(f)))
+        }
+      }
+      current.on(Hls.Events.FRAG_CHANGED, fragChanged)
+
+      return () => {
+        current.off(Hls.Events.FRAG_CHANGED, fragChanged)
+      }
+    }
+  }, [focused, lowQualityFragments])
+
   return (
-    <View style={[a.flex_1, a.rounded_sm, a.overflow_hidden]}>
+    <View style={[a.flex_1, a.rounded_md, a.overflow_hidden]}>
       <div ref={containerRef} style={{height: '100%', width: '100%'}}>
         <figure style={{margin: 0, position: 'absolute', inset: 0}}>
           <video
-            ref={ref}
+            ref={videoRef}
             poster={embed.thumbnail}
             style={{width: '100%', height: '100%', objectFit: 'contain'}}
             playsInline
             preload="none"
-            loop
             muted={!focused}
             aria-labelledby={embed.alt ? figId : undefined}
           />
@@ -103,7 +171,7 @@ export function VideoEmbedInnerWeb({
           )}
         </figure>
         <Controls
-          videoRef={ref}
+          videoRef={videoRef}
           hlsRef={hlsRef}
           active={active}
           setActive={setActive}
@@ -113,6 +181,7 @@ export function VideoEmbedInnerWeb({
           fullscreenRef={containerRef}
           hasSubtitleTrack={hasSubtitleTrack}
         />
+        <MediaInsetBorder />
       </div>
     </View>
   )

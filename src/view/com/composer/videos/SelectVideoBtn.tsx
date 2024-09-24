@@ -13,12 +13,14 @@ import {useVideoLibraryPermission} from '#/lib/hooks/usePermissions'
 import {isNative} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
 import {useSession} from '#/state/session'
+import {BSKY_SERVICE} from 'lib/constants'
+import {getHostnameFromUrl} from 'lib/strings/url-helpers'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {VideoClip_Stroke2_Corner0_Rounded as VideoClipIcon} from '#/components/icons/VideoClip'
 import * as Prompt from '#/components/Prompt'
 
-const VIDEO_MAX_DURATION = 60
+const VIDEO_MAX_DURATION = 60 * 1000 // 60s in milliseconds
 
 type Props = {
   onSelectVideo: (video: ImagePickerAsset) => void
@@ -38,20 +40,32 @@ export function SelectVideoBtn({onSelectVideo, disabled, setError}: Props) {
       return
     }
 
-    if (!currentAccount?.emailConfirmed) {
+    if (
+      currentAccount &&
+      !currentAccount.emailConfirmed &&
+      getHostnameFromUrl(currentAccount.service) ===
+        getHostnameFromUrl(BSKY_SERVICE)
+    ) {
       Keyboard.dismiss()
       control.open()
     } else {
       const response = await launchImageLibraryAsync({
         exif: false,
         mediaTypes: MediaTypeOptions.Videos,
-        videoMaxDuration: VIDEO_MAX_DURATION,
         quality: 1,
         legacy: true,
         preferredAssetRepresentationMode:
           UIImagePickerPreferredAssetRepresentationMode.Current,
       })
       if (response.assets && response.assets.length > 0) {
+        if (isNative) {
+          if (typeof response.assets[0].duration !== 'number')
+            throw Error('Asset is not a video')
+          if (response.assets[0].duration > VIDEO_MAX_DURATION) {
+            setError(_(msg`Videos must be less than 60 seconds long`))
+            return
+          }
+        }
         try {
           onSelectVideo(response.assets[0])
         } catch (err) {
@@ -64,12 +78,12 @@ export function SelectVideoBtn({onSelectVideo, disabled, setError}: Props) {
       }
     }
   }, [
-    onSelectVideo,
     requestVideoAccessIfNeeded,
+    currentAccount,
+    control,
     setError,
     _,
-    control,
-    currentAccount?.emailConfirmed,
+    onSelectVideo,
   ])
 
   return (

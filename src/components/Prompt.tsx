@@ -59,7 +59,9 @@ export function Outer({
 export function TitleText({children}: React.PropsWithChildren<{}>) {
   const {titleId} = React.useContext(Context)
   return (
-    <Text nativeID={titleId} style={[a.text_2xl, a.font_bold, a.pb_sm]}>
+    <Text
+      nativeID={titleId}
+      style={[a.text_2xl, a.font_bold, a.pb_sm, a.leading_snug]}>
       {children}
     </Text>
   )
@@ -118,7 +120,7 @@ export function Cancel({
     <Button
       variant="solid"
       color="secondary"
-      size={gtMobile ? 'small' : 'medium'}
+      size={gtMobile ? 'small' : 'large'}
       label={cta || _(msg`Cancel`)}
       onPress={onPress}>
       <ButtonText>{cta || _(msg`Cancel`)}</ButtonText>
@@ -161,7 +163,7 @@ export function Action({
     <Button
       variant="solid"
       color={color}
-      size={gtMobile ? 'small' : 'medium'}
+      size={gtMobile ? 'small' : 'large'}
       label={cta || _(msg`Confirm`)}
       onPress={handleOnPress}
       testID={testID}>
