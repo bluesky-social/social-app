@@ -71,7 +71,7 @@ const ImageAltTextInner = ({
 
       <View>
         <Text style={[a.text_2xl, a.font_bold, a.leading_tight, a.pb_sm]}>
-          <Trans>Add ALT text</Trans>
+          <Trans>Add alt text</Trans>
         </Text>
 
         <View style={[t.atoms.bg_contrast_50, a.rounded_sm, a.overflow_hidden]}>
