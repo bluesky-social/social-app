@@ -44,7 +44,6 @@ import {RichText} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {observer} from 'mobx-react-lite'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
 import * as apilib from '#/lib/api/index'
@@ -68,9 +67,9 @@ import {logger} from '#/logger'
 import {isAndroid, isIOS, isNative, isWeb} from '#/platform/detection'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {emitPostCreated} from '#/state/events'
+import {ComposerImage, createInitialImages, pasteImage} from '#/state/gallery'
 import {useModalControls} from '#/state/modals'
 import {useModals} from '#/state/modals'
-import {GalleryModel} from '#/state/models/media/gallery'
 import {useRequireAltTextEnabled} from '#/state/preferences'
 import {
   toPostLanguages,
@@ -122,12 +121,14 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import * as Prompt from '#/components/Prompt'
 import {Text as NewText} from '#/components/Typography'
 
+const MAX_IMAGES = 4
+
 type CancelRef = {
   onPressCancel: () => void
 }
 
 type Props = ComposerOpts
-export const ComposePost = observer(function ComposePost({
+export const ComposePost = ({
   replyTo,
   onPost,
   quote: initQuote,
@@ -139,7 +140,7 @@ export const ComposePost = observer(function ComposePost({
   cancelRef,
 }: Props & {
   cancelRef?: React.RefObject<CancelRef>
-}) {
+}) => {
   const {currentAccount} = useSession()
   const agent = useAgent()
   const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
@@ -212,9 +213,8 @@ export const ComposePost = observer(function ComposePost({
     )
   const [postgate, setPostgate] = useState(createPostgateRecord({post: ''}))
 
-  const gallery = useMemo(
-    () => new GalleryModel(initImageUris),
-    [initImageUris],
+  const [images, setImages] = useState<ComposerImage[]>(() =>
+    createInitialImages(initImageUris),
   )
   const onClose = useCallback(() => {
     closeComposer()
@@ -233,7 +233,7 @@ export const ComposePost = observer(function ComposePost({
   const onPressCancel = useCallback(() => {
     if (
       graphemeLength > 0 ||
-      !gallery.isEmpty ||
+      images.length !== 0 ||
       extGif ||
       videoUploadState.status !== 'idle'
     ) {
@@ -246,7 +246,7 @@ export const ComposePost = observer(function ComposePost({
   }, [
     extGif,
     graphemeLength,
-    gallery.isEmpty,
+    images.length,
     closeAllDialogs,
     discardPromptControl,
     onClose,
@@ -299,22 +299,31 @@ export const ComposePost = observer(function ComposePost({
     [extLink, setExtLink],
   )
 
+  const onImageAdd = useCallback(
+    (next: ComposerImage[]) => {
+      setImages(prev => prev.concat(next.slice(0, MAX_IMAGES - prev.length)))
+    },
+    [setImages],
+  )
+
   const onPhotoPasted = useCallback(
     async (uri: string) => {
       track('Composer:PastedPhotos')
       if (uri.startsWith('data:video/')) {
         selectVideo({uri, type: 'video', height: 0, width: 0})
       } else {
-        await gallery.paste(uri)
+        const res = await pasteImage(uri)
+        onImageAdd([res])
       }
     },
-    [gallery, track, selectVideo],
+    [track, selectVideo, onImageAdd],
   )
 
   const isAltTextRequiredAndMissing = useMemo(() => {
     if (!requireAltTextEnabled) return false
 
-    if (gallery.needsAltText) return true
+    if (images.some(img => img.alt === '')) return true
+
     if (extGif) {
       if (!extLink?.meta?.description) return true
 
@@ -322,7 +331,7 @@ export const ComposePost = observer(function ComposePost({
       if (!parsedAlt.isPreferred) return true
     }
     return false
-  }, [gallery.needsAltText, extLink, extGif, requireAltTextEnabled])
+  }, [images, extLink, extGif, requireAltTextEnabled])
 
   const onPressPublish = React.useCallback(
     async (finishedUploading?: boolean) => {
@@ -347,7 +356,7 @@ export const ComposePost = observer(function ComposePost({
 
       if (
         richtext.text.trim().length === 0 &&
-        gallery.isEmpty &&
+        images.length === 0 &&
         !extLink &&
         !quote &&
         videoUploadState.status === 'idle'
@@ -368,7 +377,7 @@ export const ComposePost = observer(function ComposePost({
           await apilib.post(agent, {
             rawText: richtext.text,
             replyTo: replyTo?.uri,
-            images: gallery.images,
+            images,
             quote,
             extLink,
             labels,
@@ -405,7 +414,7 @@ export const ComposePost = observer(function ComposePost({
       } catch (e: any) {
         logger.error(e, {
           message: `Composer: create post failed`,
-          hasImages: gallery.size > 0,
+          hasImages: images.length > 0,
         })
 
         if (extLink) {
@@ -427,7 +436,7 @@ export const ComposePost = observer(function ComposePost({
       } finally {
         if (postUri) {
           logEvent('post:create', {
-            imageCount: gallery.size,
+            imageCount: images.length,
             isReply: replyTo != null,
             hasLink: extLink != null,
             hasQuote: quote != null,
@@ -436,7 +445,7 @@ export const ComposePost = observer(function ComposePost({
           })
         }
         track('Create Post', {
-          imageCount: gallery.size,
+          imageCount: images.length,
         })
         if (replyTo && replyTo.uri) track('Post:Reply')
       }
@@ -472,9 +481,7 @@ export const ComposePost = observer(function ComposePost({
       agent,
       captions,
       extLink,
-      gallery.images,
-      gallery.isEmpty,
-      gallery.size,
+      images,
       graphemeLength,
       isAltTextRequiredAndMissing,
       isProcessing,
@@ -516,12 +523,12 @@ export const ComposePost = observer(function ComposePost({
     : _(msg`What's up?`)
 
   const canSelectImages =
-    gallery.size < 4 &&
+    images.length < MAX_IMAGES &&
     !extLink &&
     videoUploadState.status === 'idle' &&
     !videoUploadState.video
   const hasMedia =
-    gallery.size > 0 || Boolean(extLink) || Boolean(videoUploadState.video)
+    images.length > 0 || Boolean(extLink) || Boolean(videoUploadState.video)
 
   const onEmojiButtonPress = useCallback(() => {
     openEmojiPicker?.(textInput.current?.getCursorPosition())
@@ -716,8 +723,8 @@ export const ComposePost = observer(function ComposePost({
             />
           </View>
 
-          <Gallery gallery={gallery} />
-          {gallery.isEmpty && extLink && (
+          <Gallery images={images} onChange={setImages} />
+          {images.length === 0 && extLink && (
             <View style={a.relative}>
               <ExternalEmbed
                 link={extLink}
@@ -801,13 +808,17 @@ export const ComposePost = observer(function ComposePost({
             <VideoUploadToolbar state={videoUploadState} />
           ) : (
             <ToolbarWrapper style={[a.flex_row, a.align_center, a.gap_xs]}>
-              <SelectPhotoBtn gallery={gallery} disabled={!canSelectImages} />
+              <SelectPhotoBtn
+                size={images.length}
+                disabled={!canSelectImages}
+                onAdd={onImageAdd}
+              />
               <SelectVideoBtn
                 onSelectVideo={selectVideo}
                 disabled={!canSelectImages}
                 setError={setError}
               />
-              <OpenCameraBtn gallery={gallery} disabled={!canSelectImages} />
+              <OpenCameraBtn disabled={!canSelectImages} onAdd={onImageAdd} />
               <SelectGifBtn
                 onClose={focusTextInput}
                 onSelectGif={onSelectGif}
@@ -842,7 +853,7 @@ export const ComposePost = observer(function ComposePost({
       />
     </KeyboardAvoidingView>
   )
-})
+}
 
 export function useComposerCancelRef() {
   return useRef<CancelRef>(null)

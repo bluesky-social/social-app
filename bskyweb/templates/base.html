@@ -32,6 +32,53 @@
   <link rel="preload" as="font" type="font/otf" href="/static/media/Inter-BlackItalic.27b9f0ad06fd13a7b9da.otf">
   -->
 
+  <style>
+    /**
+     * Minimum styles required to render splash.
+     *
+     * ALL OTHER STYLES BELONG IN `src/style.css`
+     *
+     * THIS NEEDS TO BE DUPLICATED IN `bskyweb/templates/base.html`
+     */
+    html {
+      background-color: white;
+      scrollbar-gutter: stable both-edges;
+    }
+    @media (prefers-color-scheme: dark) {
+      html {
+        background-color: black;
+      }
+    }
+    html,
+    body {
+      margin: 0px;
+      padding: 0px;
+      font-family: 'Inter-Regular', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Liberation Sans', Helvetica, Arial, sans-serif;
+      text-rendering: optimizeLegibility;
+      /* Platform-specific reset */
+      -webkit-overflow-scrolling: touch;
+      -webkit-text-size-adjust: 100%;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      -ms-overflow-style: scrollbar;
+      font-synthesis-weight: none;
+    }
+    html,
+    body,
+    #root {
+      display: flex;
+      flex: 1 0 auto;
+      min-height: 100%;
+    }
+    #splash {
+      position: fixed;
+      width: 100px;
+      left: 50%;
+      top: 50%;
+      transform: translateX(-50%) translateY(-50%) translateY(-50px);
+    }
+  </style>
+
   {% include "scripts.html" %}
   <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
@@ -48,7 +95,7 @@
 <body>
 {%- block body_all %}
   <div id="root">
-    <div id="preload">
+    <div id="splash">
       <!-- Bluesky SVG -->
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 320"><path fill="#0085ff" d="M180 142c-16.3-31.7-60.7-90.8-102-120C38.5-5.9 23.4-1 13.5 3.4 2.1 8.6 0 26.2 0 36.5c0 10.4 5.7 84.8 9.4 97.2 12.2 41 55.7 55 95.7 50.5-58.7 8.6-110.8 30-42.4 106.1 75.1 77.9 103-16.7 117.3-64.6 14.3 48 30.8 139 116 64.6 64-64.6 17.6-97.5-41.1-106.1 40 4.4 83.5-9.5 95.7-50.5 3.7-12.4 9.4-86.8 9.4-97.2 0-10.3-2-27.9-13.5-33C336.5-1 321.5-6 282 22c-41.3 29.2-85.7 88.3-102 120Z"/></svg>
     </div>

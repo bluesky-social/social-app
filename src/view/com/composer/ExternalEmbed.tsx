@@ -26,7 +26,7 @@ export const ExternalEmbed = ({
         title: link.meta?.title ?? link.uri,
         uri: link.uri,
         description: link.meta?.description ?? '',
-        thumb: link.localThumb?.path,
+        thumb: link.localThumb?.source.path,
       },
     [link],
   )
