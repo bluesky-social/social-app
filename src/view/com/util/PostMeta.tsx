@@ -118,7 +118,14 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             disableMismatchWarning
             disableUnderline
             onPress={onBeforePressPost}
-            style={[a.text_md, t.atoms.text_contrast_medium, a.leading_snug]}>
+            style={[
+              a.text_md,
+              t.atoms.text_contrast_medium,
+              a.leading_snug,
+              {
+                whiteSpace: 'nowrap',
+              },
+            ]}>
             {timeElapsed}
           </WebOnlyInlineLinkText>
         )}
