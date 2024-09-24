@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {AppBskyEmbedVideo} from '@atproto/api'
 import Hls, {Events, FragChangedData, Fragment} from 'hls.js'
 
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {atoms as a} from '#/alf'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {Controls} from './web-controls/VideoControls'
@@ -114,6 +115,36 @@ function useHLS({
   const hlsRef = useRef<Hls | undefined>(undefined)
   const [lowQualityFragments, setLowQualityFragments] = useState<Fragment[]>([])
 
+  // purge low quality segments from buffer on next frag change
+  const handleFragChange = useNonReactiveCallback(
+    (_event: Events.FRAG_CHANGED, {frag}: FragChangedData) => {
+      if (!hlsRef.current) return
+      const hls = hlsRef.current
+
+      if (focused && hls.nextAutoLevel > 0) {
+        // if the current quality level goes above 0, flush the low quality segments
+        const flushed: Fragment[] = []
+
+        for (const lowQualFrag of lowQualityFragments) {
+          // avoid if close to the current fragment
+          if (Math.abs(frag.start - lowQualFrag.start) < 0.1) {
+            return
+          }
+
+          hls.trigger(Hls.Events.BUFFER_FLUSHING, {
+            startOffset: lowQualFrag.start,
+            endOffset: lowQualFrag.end,
+            type: 'video',
+          })
+
+          flushed.push(lowQualFrag)
+        }
+
+        setLowQualityFragments(prev => prev.filter(f => !flushed.includes(f)))
+      }
+    },
+  )
+
   useEffect(() => {
     if (!videoRef.current) return
     if (!Hls.isSupported()) throw new HLSUnsupportedError()
@@ -172,53 +203,15 @@ function useHLS({
       }
     })
 
+    hls.on(Hls.Events.FRAG_CHANGED, handleFragChange)
+
     return () => {
       hlsRef.current = undefined
       hls.detachMedia()
       hls.destroy()
       abortController.abort()
     }
-  }, [playlist, setError, setHasSubtitleTrack, videoRef])
-
-  // purge low quality segments from buffer on next frag change
-  useEffect(() => {
-    if (!hlsRef.current) return
-    const hls = hlsRef.current
-
-    if (focused) {
-      function fragChanged(
-        _event: Events.FRAG_CHANGED,
-        {frag}: FragChangedData,
-      ) {
-        // if the current quality level goes above 0, flush the low quality segments
-        if (hls.nextAutoLevel > 0) {
-          const flushed: Fragment[] = []
-
-          for (const lowQualFrag of lowQualityFragments) {
-            // avoid if close to the current fragment
-            if (Math.abs(frag.start - lowQualFrag.start) < 0.1) {
-              return
-            }
-
-            hls.trigger(Hls.Events.BUFFER_FLUSHING, {
-              startOffset: lowQualFrag.start,
-              endOffset: lowQualFrag.end,
-              type: 'video',
-            })
-
-            flushed.push(lowQualFrag)
-          }
-
-          setLowQualityFragments(prev => prev.filter(f => !flushed.includes(f)))
-        }
-      }
-      hls.on(Hls.Events.FRAG_CHANGED, fragChanged)
-
-      return () => {
-        hls.off(Hls.Events.FRAG_CHANGED, fragChanged)
-      }
-    }
-  }, [focused, lowQualityFragments])
+  }, [playlist, setError, setHasSubtitleTrack, videoRef, handleFragChange])
 
   return hlsRef
 }
