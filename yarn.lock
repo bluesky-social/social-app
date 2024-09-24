@@ -4294,6 +4294,13 @@
   resolved "https://registry.yarnpkg.com/@haileyok/bluesky-video/-/bluesky-video-0.1.10.tgz#2756e8c83a78caeb6b120a175578eac1eb6889a9"
   integrity sha512-W8+DNdek+xjAqTO1zmuuSrkVFxDepcP8+Gs8MvIcYSgXEJlpQimZpcMwAduiDI/jZMn/2U6cnMahx7YuiZlZ7g==
 
+"@haileyok/react-native-paste-input@^0.8.1-rc.3":
+  version "0.8.1-rc.3"
+  resolved "https://registry.yarnpkg.com/@haileyok/react-native-paste-input/-/react-native-paste-input-0.8.1-rc.3.tgz#59f87e829a56416703a8f9e2dc0cc9746b9d4315"
+  integrity sha512-u2vieFxDbpnC4I0Qdt1MGcS8+k8aG9LzwkLS5Z1td4bRz0SoHXiB0EkF8eItRyzHgBF8HckC1eiKfPHxbgqQ4g==
+  dependencies:
+    semver "7.6.0"
+
 "@hapi/accept@^6.0.3":
   version "6.0.3"
   resolved "https://registry.yarnpkg.com/@hapi/accept/-/accept-6.0.3.tgz#eef0800a4f89cd969da8e5d0311dc877c37279ab"
@@ -5101,13 +5108,6 @@
   integrity sha512-qC72D4+CDdjGqJvkFMMEAtancHUQ7/d/tAiHf64z8MopFDmcrtbcJuerDtFceuAfQJ2pDSfCKCtbqoGBNnwg0w==
   dependencies:
     "@lukeed/csprng" "^1.1.0"
-
-"@mattermost/react-native-paste-input@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@mattermost/react-native-paste-input/-/react-native-paste-input-0.8.0.tgz#c5fb334b4bf5b43785292955a593af135e5b9de7"
-  integrity sha512-Tn+9gmq/Z+xr+sUlbnggUFBDYadSvDJotFgILQaXYjjff0huxnDrfGLPYGS07iXW8fokgPVaLEtsyuf1YxrC6w==
-  dependencies:
-    semver "7.6.0"
 
 "@messageformat/parser@^5.0.0":
   version "5.1.0"
@@ -19394,7 +19394,7 @@ react-native-svg@^15.6.0:
     css-tree "^1.1.3"
     warn-once "0.1.1"
 
-react-native-uitextview@^2.0.0-rc.0:
+react-native-uitextview@2.0.0-rc.0:
   version "2.0.0-rc.0"
   resolved "https://registry.yarnpkg.com/react-native-uitextview/-/react-native-uitextview-2.0.0-rc.0.tgz#fd69b7a56a1b9b9d5b3c687b11bee79f5d3e96c2"
   integrity sha512-8Mt9rc/V5LEwnOvSPGvXwI68Zqzlp/wzR7ocZDNzIciFVs2WQFj7tDBHOaUeSk/7n98AqgfvhhoQX/PzfL5SYQ==
