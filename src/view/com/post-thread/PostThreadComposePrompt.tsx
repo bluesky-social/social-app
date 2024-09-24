@@ -3,7 +3,7 @@ import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {ScaleOnPressIn} from '#/lib/custom-animations/ScaleOnPressIn'
+import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
@@ -23,11 +23,10 @@ export function PostThreadComposePrompt({
   const t = useTheme()
 
   return (
-    <ScaleOnPressIn
+    <PressableScale
       accessibilityRole="button"
       accessibilityLabel={_(msg`Compose reply`)}
       accessibilityHint={_(msg`Opens composer`)}
-      targetScale={isTabletOrDesktop ? 1 : 0.975}
       style={[
         {paddingTop: 8, paddingBottom: isTabletOrDesktop ? 8 : 11},
         a.px_sm,
@@ -58,6 +57,6 @@ export function PostThreadComposePrompt({
           <Trans>Write your reply</Trans>
         </Text>
       </View>
-    </ScaleOnPressIn>
+    </PressableScale>
   )
 }
